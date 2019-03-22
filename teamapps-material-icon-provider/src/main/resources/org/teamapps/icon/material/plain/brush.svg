@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>brush icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M883.63,257.71l-382.3,382.29l-117.33,-117.33l382.29,-382.3c16.64,-16.64 43.52,-16.64 60.16,0l57.18,57.18c16.64,16.64 16.64,43.52 0,60.16zM426.67,725.33c0,94.29 -76.38,170.67 -170.67,170.67c-64.43,0 -131.42,-33.28 -170.67,-85.33c35.84,0 85.34,-29.45 85.34,-85.34c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

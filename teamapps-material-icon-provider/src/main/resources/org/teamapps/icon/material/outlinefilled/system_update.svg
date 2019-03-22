@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>system_update icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M837.76,176.77v670.46c0,76.89 -62.65,139.52 -139.53,139.52h-372.47c-76.87,0 -139.53,-62.63 -139.53,-139.52v-670.46c0,-76.89 62.65,-139.52 139.53,-139.52l372.54,0.37c76.41,0.03 139.46,61.85 139.46,139.15zM698.29,52.98l-372.52,-0.37c-68.39,0 -124.17,55.75 -124.17,124.16v670.46c0,68.41 55.78,124.16 124.17,124.16h372.47c68.39,0 124.17,-55.75 124.17,-124.16v-670.46c0,-68.71 -56.07,-123.77 -124.12,-123.79zM772.74,176.77v670.46c0,40.97 -33.53,74.49 -74.5,74.49h-372.47c-40.97,0 -74.5,-33.52 -74.5,-74.49v-670.46c0,-40.97 33.53,-74.49 74.5,-74.49l372.47,0.37c40.97,0 74.5,33.16 74.5,74.13zM698.24,251.26h-372.47v521.48h372.47zM512,698.24l-148.99,-148.99h111.74v-186.25h74.5v186.25h111.74z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

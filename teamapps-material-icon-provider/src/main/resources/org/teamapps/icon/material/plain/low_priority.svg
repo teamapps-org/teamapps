@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>low_priority icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M362.67,213.33h149.33v85.34h-149.33c-105.81,0 -192,86.19 -192,192c0,105.81 86.19,192 192,192h21.33v-85.34l128,128l-128,128v-85.33h-21.33c-152.75,0 -277.34,-124.58 -277.34,-277.33c0,-152.75 124.59,-277.34 277.34,-277.34zM597.33,682.67h341.34v85.33h-341.34zM597.33,213.33h341.34v85.34h-341.34zM597.33,448h341.34v85.33h-341.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

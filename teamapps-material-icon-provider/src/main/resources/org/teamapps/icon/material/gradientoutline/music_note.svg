@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>music_note icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-BNnqLxHF" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-j1dWYPpJ" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-xsobCzNu" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-4JXntu0D">
+			<path d="M780.8,147.2v162.14c0,14.14 -11.46,25.6 -25.6,25.6h-136.54v379.73c0,103.71 -84.01,187.74 -187.73,187.74c-103.71,0 -187.74,-84.02 -187.74,-187.74c0,-103.72 84.02,-187.73 187.74,-187.73c19.44,0 38.04,3.14 55.46,8.7v-388.43c0,-14.14 11.46,-25.6 25.6,-25.6h243.2c14.14,0 25.6,11.46 25.6,25.6zM512,147.2v427.62c-23.91,-13.78 -51.47,-22.29 -81.06,-22.29c-89.58,0 -162.14,72.55 -162.14,162.13c0,89.58 72.56,162.14 162.14,162.14c89.58,0 162.13,-72.56 162.13,-162.14v-405.33h162.14v-162.14z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-i0Ifg66A">
+			<path d="M780.8,147.2v162.14c0,14.14 -11.46,25.6 -25.6,25.6h-136.54v379.73c0,103.71 -84.01,187.74 -187.73,187.74c-103.71,0 -187.74,-84.02 -187.74,-187.74c0,-103.72 84.02,-187.73 187.74,-187.73c19.44,0 38.04,3.14 55.46,8.7v-388.43c0,-14.14 11.46,-25.6 25.6,-25.6h243.2c14.14,0 25.6,11.46 25.6,25.6zM512,147.2v427.62c-23.91,-13.78 -51.47,-22.29 -81.06,-22.29c-89.58,0 -162.14,72.55 -162.14,162.13c0,89.58 72.56,162.14 162.14,162.14c89.58,0 162.13,-72.56 162.13,-162.14v-405.33h162.14v-162.14z" fill="url(#color-BNnqLxHF)"/>
+		</mask>
+		<mask id="mask-vJObI1w9">
+			<rect fill="url(#color-j1dWYPpJ)" x="243.2" y="121.6" width="537.6" height="780.8"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-4JXntu0D)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="243.2" y="121.6" width="537.6" height="780.8" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-vJObI1w9)">
+				<rect x="243.2" y="121.6" width="537.6" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-xsobCzNu)" mask="url(#mask-i0Ifg66A)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="243.2" y="121.6" width="537.6" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

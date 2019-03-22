@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_backup_restore icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,512c0,212.05 -171.95,384 -384,384c-87.89,0 -168.96,-29.87 -233.81,-79.36l60.58,-61.44c49.07,34.56 108.8,55.47 173.23,55.47c165.12,0 298.67,-133.55 298.67,-298.67c0,-165.12 -133.55,-298.67 -298.67,-298.67c-165.12,0 -298.67,133.55 -298.67,298.67h128l-170.66,170.67l-170.67,-170.67h128c0,-212.05 171.95,-384 384,-384c212.05,0 384,171.95 384,384zM512,597.33c-46.93,0 -85.33,-38.4 -85.33,-85.33c0,-46.93 38.4,-85.33 85.33,-85.33c46.93,0 85.33,38.4 85.33,85.33c0,46.93 -38.4,85.33 -85.33,85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>edit_location icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M836.27,399.36c0,220.76 -278.67,529.29 -278.67,529.29c-11.65,12.9 -28.22,20.26 -45.59,20.26c-17.38,0 -33.95,-7.36 -45.59,-20.26c0,0 -278.67,-308.53 -278.67,-529.29c0,-178.86 145.41,-324.27 324.27,-324.27c178.86,0 324.27,145.41 324.27,324.27zM512,136.53c-144.93,0 -262.83,117.9 -262.83,262.83c0,197.12 262.83,488.11 262.83,488.11c0,0 262.83,-290.99 262.83,-488.11c0,-144.93 -117.9,-262.83 -262.83,-262.83zM453.43,512h-54.07v-54.07l125.78,-125.41l53.7,53.7zM620.51,344.91l-26.29,26.29l-54.07,-54.07l26.29,-26.29c5.63,-5.63 14.64,-5.63 20.28,0l33.79,33.79c5.63,5.63 5.63,14.64 0,20.28z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

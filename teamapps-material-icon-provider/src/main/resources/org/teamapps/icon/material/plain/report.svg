@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>report icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,352.85v318.3l-224.85,224.85h-318.3l-224.85,-224.85v-318.3l224.85,-224.85h318.3zM554.67,298.67h-85.34v256h85.34zM567.47,682.67c0,-30.72 -24.75,-55.47 -55.47,-55.47c-30.72,0 -55.47,24.75 -55.47,55.47c0,30.72 24.75,55.46 55.47,55.46c30.72,0 55.47,-24.74 55.47,-55.46z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

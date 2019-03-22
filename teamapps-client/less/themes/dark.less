@@ -1,0 +1,184 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+@dark-theme-text-color: #f3f3f3;
+@dark-theme-placeholder-color: #f3f3f355;
+@dark-theme-background-color: rgba(50, 50, 65, .93);
+@dark-theme-background-color-transparent: rgba(80, 80, 90, 0.65);
+@dark-theme-background-color-light: rgb(80, 80, 90);
+@dark-theme-border-color: rgba(0, 0, 0, 0.15);
+@dark-theme-field-border: rgb(95, 95, 95);
+@dark-theme-field-background: rgba(95, 95, 95, .1);
+
+.theme-dark {
+  color: @dark-theme-text-color;
+
+  .UiToolbar {
+    > .background-color-div {
+      background-color: @dark-theme-background-color-transparent;
+      border-bottom-color: @dark-theme-border-color;
+
+      > .inner-container .button-group-wrapper > .toolbar-group-separator {
+        border-right: 1px solid rgba(78, 78, 78, 0.5);
+      }
+    }
+    .toolbar-button-wrapper:hover, .UiToolbar-size-testing-container .toolbar-button-wrapper:hover {
+      background-color: @dark-theme-background-color-light;
+    }
+  }
+
+  .UiToolAccordion {
+    .toolbar-button-wrapper:hover {
+      background-color: @dark-theme-background-color-light;
+    }
+  }
+
+  .UiPanel {
+    .panel-heading {
+      border-bottom-color: @dark-theme-border-color;
+      background-color: @dark-theme-background-color-transparent;
+
+      .panel-heading-window-buttons {
+        background-color: rgba(0, 0, 0, 0.12);
+      }
+      .panel-heading-window-buttons > .UiToolButton {
+        filter: invert(100%);
+      }
+
+      .panel-component-wrapper > .icon-and-field-wrapper {
+        background-color: rgba(255, 255, 255, 0.07);
+      }
+    }
+    .panel-body {
+      background-color: @dark-theme-background-color;
+    }
+  }
+
+  .UiTabPanel {
+    > .tab-panel-header > .background-color-div {
+      background-color: @dark-theme-background-color-transparent;
+
+      .tab-button .tab-button-close-button {
+        filter: invert(100%);
+      }
+    }
+    &.tab-style-blocks > .tab-panel-header .tab-button-container .tab-button.selected {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .UiItemView .item-group .item-group-header:after {
+    bottom: 0;
+    background: linear-gradient(to right, rgba(78, 78, 78, 0.5) 0%, rgba(78, 78, 78, 0.5) 50%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  .UiInfiniteItemView > .slickgrid .item-wrapper > *:hover {
+    border-color: @dark-theme-border-color;
+    background: linear-gradient(to bottom, @dark-theme-background-color 0%, @dark-theme-background-color 62%, @dark-theme-background-color-light 100%);
+  }
+
+  .UiDropDown {
+    border-color: rgba(146, 146, 146, 0.2); // TODO @dark-theme-border-color, chrome bug...
+
+    .background-color-div {
+      background-color: @dark-theme-background-color-transparent;
+    }
+  }
+
+  .UiField {
+    .field-border,
+    .field-border-visibility {
+      border-color: @dark-theme-field-border;
+    }
+    .field-background {
+      background-color: @dark-theme-field-background;
+    }
+  }
+
+  .UiField,
+  .form-control {
+    color: @dark-theme-text-color;
+
+    ::placeholder {
+      color: @dark-theme-placeholder-color;
+    }
+  }
+
+  .UiButton {
+    &:hover,
+    &:focus,
+    &.focus {
+      color: lighten(@dark-theme-text-color, 20%);
+    }
+  }
+
+  .UiWorkSpaceLayout .minimized-tabpanel-bar {
+    background-color: @dark-theme-background-color;
+
+    .minimized-tabpanel-button {
+      border: @dark-theme-border-color;
+      background-color: @dark-theme-background-color-light;
+
+      >.tab-icon:first-child {
+        filter: invert(100%);
+      }
+    }
+  }
+
+  .UiTable {
+    .slick-cell {
+      border-bottom-color: @dark-theme-border-color;
+    }
+    .slick-cell.selected,
+    .slick-table.list-mode .slick-cell.selected {
+      background-color: rgba(102, 174, 255, 0.45);
+    }
+    &.striped-rows .slick-row.odd {
+      background-color: rgba(255, 255, 255, .05);
+    }
+    .slick-headerrow {
+      background-color: rgba(255, 255, 255, .05);
+      border-bottom-color: @dark-theme-border-color;
+    }
+    .slick-footerrow {
+      background-color: rgba(255, 255, 255, .05);
+      border-color: @dark-theme-border-color;
+    }
+  }
+
+  .UiChatInput {
+    background-color: @dark-theme-field-background;
+    border-top-color: @dark-theme-field-border;
+
+    textarea {
+      background-color: transparent;
+    }
+  }
+
+  .glyphicon-button {
+    color: fadeout(@dark-theme-text-color, 30%);
+    &:hover {
+      color: @dark-theme-text-color;
+    }
+    &.disabled {
+      color: fadeout(@dark-theme-text-color, 70%);
+    }
+  }
+}
+

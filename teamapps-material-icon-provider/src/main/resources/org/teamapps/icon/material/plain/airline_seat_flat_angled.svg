@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_flat_angled icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M93.44,437.33l811.52,292.7l-29.44,80.64l-192.85,-69.55v69.55h-341.34v-192.86l-277.33,-99.84zM949.33,609.71l-29.44,80.64l-527.36,-190.72l88.75,-241.5l365.23,131.84c89.6,32.43 135.67,130.57 102.82,219.74zM140.8,375.47c-30.72,-64 -3.84,-140.38 59.73,-170.67c64,-30.72 140.38,-3.84 171.1,59.73c30.29,63.57 3.41,139.95 -60.16,170.67c-64,30.72 -140.38,3.84 -170.67,-59.73z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

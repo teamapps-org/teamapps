@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>pie_chart icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-rrpmpqK4">
+			<path d="M39.26,89.26h945.47v934.74h-945.47z"/>
+		</clipPath>
+		<filter id="filter-AGliGzUW" x="-13%" y="-6%" width="143%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-rrpmpqK4)">
+			<path d="M474.02,132.26v759.47c-192.52,-18.98 -341.76,-181.9 -341.76,-379.74c0,-197.84 149.24,-360.75 341.76,-379.74zM891.74,550.35c-17.84,179.99 -160.63,323.54 -340.62,341.39v-341.39zM891.74,473.65h-340.62v-341.39c179.61,17.84 322.78,161.39 340.62,341.39z" fill="#000000" filter="url(#filter-AGliGzUW)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M474.02,132.26v759.47c-192.52,-18.98 -341.76,-181.9 -341.76,-379.74c0,-197.84 149.24,-360.75 341.76,-379.74zM891.74,550.35c-17.84,179.99 -160.63,323.54 -340.62,341.39v-341.39zM891.74,473.65h-340.62v-341.39c179.61,17.84 322.78,161.39 340.62,341.39z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

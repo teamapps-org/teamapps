@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>smoking_rooms icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-FB7dOcBl" x="-13%" y="-7%" width="143%" height="150%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M796.8,563.65v62.27h-56.96v-49.37c0,-49.74 -34.93,-77.84 -74.8,-77.84h-58.1c-70.25,0 -127.22,-56.97 -127.22,-127.22c0,-70.25 56.97,-127.21 127.22,-127.21v56.96c-38.73,0 -70.26,27.72 -70.26,66.46c0,38.73 31.52,75.94 70.26,75.94h58.1c71.01,0 131.76,51.26 131.76,120zM891.74,540.86v85.06h-56.96v-84.68c0,-85.06 -66.84,-154.55 -151.9,-154.55v-56.96c38.73,0 70.25,-31.51 70.25,-70.25c0,-38.73 -31.51,-70.26 -70.25,-70.26v-56.96c70.25,0 127.21,56.97 127.21,127.22c0,35.32 -14.43,67.2 -37.97,90.37c71.01,33.79 119.62,106.71 119.62,191.01zM132.26,663.9h569.6v113.92h-569.6zM834.78,663.9h56.96v113.92h-56.96zM739.84,663.9h56.96v113.92h-56.96z" fill="#000000" filter="url(#filter-FB7dOcBl)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M796.8,563.65v62.27h-56.96v-49.37c0,-49.74 -34.93,-77.84 -74.8,-77.84h-58.1c-70.25,0 -127.22,-56.97 -127.22,-127.22c0,-70.25 56.97,-127.21 127.22,-127.21v56.96c-38.73,0 -70.26,27.72 -70.26,66.46c0,38.73 31.52,75.94 70.26,75.94h58.1c71.01,0 131.76,51.26 131.76,120zM891.74,540.86v85.06h-56.96v-84.68c0,-85.06 -66.84,-154.55 -151.9,-154.55v-56.96c38.73,0 70.25,-31.51 70.25,-70.25c0,-38.73 -31.51,-70.26 -70.25,-70.26v-56.96c70.25,0 127.21,56.97 127.21,127.22c0,35.32 -14.43,67.2 -37.97,90.37c71.01,33.79 119.62,106.71 119.62,191.01zM132.26,663.9h569.6v113.92h-569.6zM834.78,663.9h56.96v113.92h-56.96zM739.84,663.9h56.96v113.92h-56.96z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

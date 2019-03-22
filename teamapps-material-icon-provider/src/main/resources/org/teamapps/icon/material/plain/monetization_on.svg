@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>monetization_on icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,512c0,235.52 -191.15,426.67 -426.67,426.67c-235.52,0 -426.67,-191.15 -426.67,-426.67c0,-235.52 191.15,-426.67 426.67,-426.67c235.52,0 426.67,191.15 426.67,426.67zM705.28,637.01c0,-107.52 -92.16,-144.63 -178.35,-166.82c-86.19,-22.19 -113.92,-45.66 -113.92,-81.5c0,-40.96 38.4,-69.97 102.4,-69.97c67.41,0 92.59,32.43 94.72,79.79h83.63c-2.56,-65.28 -42.24,-125.44 -121.6,-144.64v-83.2h-113.92v82.34c-73.39,15.79 -132.69,63.57 -132.69,136.96c0,87.47 72.53,130.99 178.34,156.59c95.15,22.61 113.92,55.9 113.92,91.31c0,26.03 -18.77,67.84 -102.4,67.84c-78.08,0 -108.79,-34.99 -113.06,-79.79h-83.63c4.69,82.77 66.56,129.71 139.52,145.07v82.34h113.92v-81.49c74.24,-14.08 132.69,-56.75 133.12,-134.83z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

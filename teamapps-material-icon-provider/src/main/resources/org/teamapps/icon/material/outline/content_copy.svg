@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>content_copy icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,324.27v525.65c0,75.23 -61.3,136.53 -136.53,136.53h-413.02c-75.23,0 -136.53,-61.3 -136.53,-136.53v-90.27c-4.39,1 -8.96,1.52 -13.65,1.52h-75.1c-33.93,0 -61.44,-27.51 -61.44,-61.44v-525.65c0,-75.24 61.32,-136.53 136.54,-136.53h450.56c33.93,0 61.44,27.51 61.44,61.44v75.09c0,4.69 -0.53,9.26 -1.52,13.65h52.72c75.24,0 136.53,61.32 136.53,136.54zM423.25,385.71v402.77h290.14v-402.77zM774.83,249.17h-413.02c-41.3,0 -75.09,33.8 -75.09,75.1v525.65c0,41.3 33.79,75.09 75.09,75.09h413.02c41.3,0 75.09,-33.79 75.09,-75.09v-525.65c0,-41.3 -33.79,-75.1 -75.09,-75.1zM662.19,98.99h-450.56c-41.3,0 -75.1,33.79 -75.1,75.09v525.65h75.1v-525.65h450.56zM774.83,849.92h-413.02v-525.65h413.02z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

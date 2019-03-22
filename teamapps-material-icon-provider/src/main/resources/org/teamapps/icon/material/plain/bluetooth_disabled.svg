@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>bluetooth_disabled icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M853.33,793.17l-60.16,60.16l-98.13,-97.7l-183.04,183.04h-42.67v-323.84l-195.84,195.84l-60.16,-60.16l238.51,-238.51l-281.17,-281.17l60.16,-60.16zM554.67,385.28l-85.34,-85.33v-214.62h42.67l243.63,243.2l-128.86,128.86l-60.16,-60.16l68.27,-68.27l-80.21,-80.21zM634.88,695.04l-80.21,-80.21v160.42z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

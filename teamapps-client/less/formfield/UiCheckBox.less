@@ -1,0 +1,45 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.UiCheckBox {
+  display: flex;
+  align-items: center;
+  .checkbox-check {
+    flex: 0 0 auto;
+    width: 17px;
+    height: 17px;
+    border: 1px solid;
+    border-radius: 3px;
+    background-color: #fff;
+    font-family: 'Glyphicons Halflings';
+    font-size: 10px;
+    padding-left: 2px;
+    color: #555555;
+    cursor: default;
+    user-select: none;
+    outline: none;
+  }
+  .checkbox-label:not(:empty) {
+    margin-left: 8px;
+  }
+
+  &.disabled > .checkbox-check {
+    opacity: .5;
+  }
+}

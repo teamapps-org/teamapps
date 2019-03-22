@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_hospital icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,249.17v525.66c0,75.23 -61.3,136.53 -136.53,136.53h-525.66c-75.23,0 -136.53,-61.3 -136.53,-136.53l0.38,-525.69c0.01,-74.81 60.52,-136.5 136.15,-136.5h525.66c75.23,0 136.53,61.3 136.53,136.53zM587.09,498.35c-33.93,0 -61.44,-27.51 -61.44,-61.44v-88.75h-27.3v88.75c0,33.93 -27.51,61.44 -61.44,61.44h-88.75v27.3h88.75c33.93,0 61.44,27.51 61.44,61.44v88.75h27.3v-88.75c0,-33.93 27.51,-61.44 61.44,-61.44h88.75v-27.3zM774.83,174.08h-525.66c-41.3,0 -74.71,33.79 -74.71,75.09l-0.38,525.66c0,41.3 33.79,75.09 75.09,75.09h525.66c41.3,0 75.09,-33.79 75.09,-75.09v-525.66c0,-41.3 -33.79,-75.09 -75.09,-75.09zM737.28,587.09h-150.19v150.19h-150.18v-150.19h-150.19v-150.18h150.19v-150.19h150.18v150.19h150.19z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

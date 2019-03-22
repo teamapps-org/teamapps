@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>fiber_manual_record icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M150.19,512c0,-199.82 161.99,-361.81 361.81,-361.81c199.82,0 361.81,161.99 361.81,361.81c0,199.82 -161.99,361.81 -361.81,361.81c-199.82,0 -361.81,-161.99 -361.81,-361.81zM512,812.37c165.89,0 300.37,-134.48 300.37,-300.37c0,-165.89 -134.48,-300.37 -300.37,-300.37c-165.89,0 -300.37,134.48 -300.37,300.37c0,165.89 134.48,300.37 300.37,300.37z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

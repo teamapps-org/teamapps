@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>donut_small icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M384,512c0,56.32 42.66,103.68 85.33,121.17v305.5c-213.33,-21.33 -384,-204.38 -384,-426.67c0,-222.29 170.67,-405.34 384,-426.67v305.5c-42.67,17.49 -85.33,64.85 -85.33,121.17zM554.67,390.83v-305.5c213.33,20.05 363.52,181.33 384,384h-304.64c-14.51,-36.69 -36.69,-65.7 -79.36,-78.5zM634.03,554.67h304.64c-20.48,202.67 -170.67,363.95 -384,384v-305.5c42.67,-12.8 64.85,-41.81 79.36,-78.5z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

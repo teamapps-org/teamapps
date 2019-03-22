@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>usb icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M810.67,298.67v170.66h-42.67v85.34c0,47.36 -37.97,85.33 -85.33,85.33h-128v130.13c30.29,15.79 51.2,46.93 51.2,83.2c0,52.05 -42.24,93.87 -93.87,93.87c-51.63,0 -93.87,-41.82 -93.87,-93.87c0,-36.27 20.91,-67.41 51.2,-83.2v-130.13h-128c-47.36,0 -85.33,-37.97 -85.33,-85.33v-88.32c-29.87,-15.79 -51.2,-46.08 -51.2,-82.35c0,-51.63 42.24,-93.87 93.87,-93.87c51.63,0 93.86,42.24 93.86,93.87c0,36.27 -21.33,66.56 -51.2,82.35v88.32h128v-341.34h-85.33l128,-170.66l128,170.66h-85.33v341.34h128v-85.34h-42.67v-170.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

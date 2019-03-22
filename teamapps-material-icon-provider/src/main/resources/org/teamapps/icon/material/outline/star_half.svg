@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>star_half icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M751.04,608.12l52.85,227.92c5.58,24.05 -3.78,49.1 -23.76,63.6c-19.98,14.5 -46.7,15.63 -67.84,2.88l-200.29,-120.89l-200.29,120.89c-21.15,12.77 -47.89,11.62 -67.87,-2.9c-19.98,-14.52 -29.32,-39.6 -23.71,-63.66l53.15,-227.84l-176.98,-153.31c-18.67,-16.18 -25.84,-41.96 -18.2,-65.45c7.64,-23.49 28.61,-40.12 53.23,-42.21l233.05,-19.77l91.05,-214.82c9.62,-22.71 31.89,-37.46 56.55,-37.46c24.66,-0.01 46.94,14.73 56.57,37.43l91.06,214.53l233.13,20.1c24.59,2.12 45.52,18.75 53.15,42.21c7.63,23.47 0.48,49.23 -18.16,65.4zM590.79,505.1l-17.35,-1.51v16.66zM887.47,408.37l-269.97,-23.28l-105.5,-248.56l-105.5,248.93l-269.97,22.91l205,177.59l-61.57,263.96l232.04,-140.05l232.04,140.05l-61.2,-263.96zM512,639.66v-349.18l64.2,151.69l164.45,14.26l-124.65,108.13l37.54,160.71z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

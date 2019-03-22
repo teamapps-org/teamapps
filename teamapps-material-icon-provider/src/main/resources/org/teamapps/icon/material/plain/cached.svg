@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>cached icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M384,512l-170.67,170.67l-170.66,-170.67h128c0,-188.59 152.74,-341.33 341.33,-341.33c66.99,0 129.28,19.62 181.76,52.9l-62.29,62.3c-35.41,-19.2 -76.38,-29.87 -119.47,-29.87c-141.23,0 -256,114.77 -256,256zM981.33,512h-128c0,188.59 -152.74,341.33 -341.33,341.33c-66.99,0 -129.28,-19.62 -181.76,-52.9l62.29,-62.3c35.41,19.2 76.38,29.87 119.47,29.87c141.23,0 256,-114.77 256,-256h-128l170.67,-170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

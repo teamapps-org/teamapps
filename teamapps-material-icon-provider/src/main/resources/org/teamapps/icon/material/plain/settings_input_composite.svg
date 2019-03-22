@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_input_composite icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,256v256h-256v-256h85.34v-170.67c0,-23.47 19.19,-42.66 42.66,-42.66c23.47,0 42.67,19.19 42.67,42.66v170.67zM554.67,256h85.33v256h-256v-256h85.33v-170.67c0,-23.47 19.2,-42.66 42.67,-42.66c23.47,0 42.67,19.19 42.67,42.66zM213.33,256h85.34v256h-256v-256h85.33v-170.67c0,-23.47 19.2,-42.66 42.67,-42.66c23.47,0 42.66,19.19 42.66,42.66zM384,597.33h256v85.34c0,55.89 -35.84,102.83 -85.33,120.32v178.34h-85.34v-178.34c-49.49,-17.92 -85.33,-64.85 -85.33,-120.32zM725.33,597.33h256v85.34c0,55.89 -35.84,102.83 -85.33,120.32v178.34h-85.33v-178.34c-49.49,-17.92 -85.34,-64.85 -85.34,-120.32zM42.67,597.33h256v85.34c0,55.47 -35.85,102.4 -85.34,120.32v178.34h-85.33v-178.34c-49.49,-17.92 -85.33,-64.85 -85.33,-120.32z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

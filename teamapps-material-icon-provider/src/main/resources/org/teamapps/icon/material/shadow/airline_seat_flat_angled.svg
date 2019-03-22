@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_flat_angled icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-c48aNOc1" x="-12%" y="-8%" width="138%" height="176%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M139.48,445.54l722.25,260.5l-26.2,71.77l-171.64,-61.9v61.9h-303.79v-171.65l-246.82,-88.86zM901.22,598.96l-26.2,71.77l-469.35,-169.74l78.99,-214.93l325.05,117.34c79.74,28.86 120.75,116.21 91.51,195.57zM181.63,390.49c-27.34,-56.96 -3.42,-124.94 53.16,-151.9c56.96,-27.34 124.94,-3.42 152.28,53.16c26.96,56.58 3.03,124.56 -53.54,151.9c-56.96,27.34 -124.94,3.42 -151.9,-53.16z" fill="#000000" filter="url(#filter-c48aNOc1)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M139.48,445.54l722.25,260.5l-26.2,71.77l-171.64,-61.9v61.9h-303.79v-171.65l-246.82,-88.86zM901.22,598.96l-26.2,71.77l-469.35,-169.74l78.99,-214.93l325.05,117.34c79.74,28.86 120.75,116.21 91.51,195.57zM181.63,390.49c-27.34,-56.96 -3.42,-124.94 53.16,-151.9c56.96,-27.34 124.94,-3.42 152.28,53.16c26.96,56.58 3.03,124.56 -53.54,151.9c-56.96,27.34 -124.94,3.42 -151.9,-53.16z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

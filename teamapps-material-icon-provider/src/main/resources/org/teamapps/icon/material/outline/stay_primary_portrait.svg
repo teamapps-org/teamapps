@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>stay_primary_portrait icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M836.27,174.08v675.84c0,75.24 -61.32,136.53 -136.54,136.53h-375.46c-75.63,0 -136.16,-61.7 -136.16,-136.53v-675.84c0,-74.83 60.53,-136.53 136.16,-136.53l375.52,0.37c74.8,0.03 136.48,60.54 136.48,136.16zM385.71,310.61v402.78h252.58v-402.78zM699.73,99.36l-375.46,-0.37c-41.3,0 -74.72,33.79 -74.72,75.09v675.84c0,41.3 33.42,75.09 74.72,75.09h375.46c41.3,0 75.1,-33.79 75.1,-75.09v-675.84c0,-41.3 -33.8,-74.72 -75.1,-74.72zM699.73,774.83h-375.46v-525.66h375.46z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

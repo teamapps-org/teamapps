@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>sim_card_alert icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-AkaD2Adu" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-BIc4OLAx" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-Vkzfzeey" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-Hu09XXD7">
+			<path d="M861.86,187.74v648.53c0,58.72 -47.94,106.67 -106.66,106.67h-486.4c-58.73,0 -106.66,-47.95 -106.66,-106.67l0.81,-486.44c0.01,-6.76 2.7,-13.24 7.47,-18.03l242.39,-243.2c4.8,-4.82 11.33,-7.53 18.13,-7.53h324.26c58.73,0 106.66,47.95 106.66,106.67zM497.06,375.46v151.47h29.87v-151.47zM497.06,659.2v29.86h29.87v-29.86zM755.2,106.66h-324.26l-242.39,243.2l-0.81,486.4c0,44.58 36.48,81.07 81.06,81.07h486.4c44.58,0 81.06,-36.49 81.06,-81.07v-648.53c0,-44.58 -36.48,-81.07 -81.06,-81.07zM552.54,552.54h-81.07v-202.67h81.07zM552.54,714.66h-81.07v-81.06h81.07z" fill="url(#color-AkaD2Adu)"/>
+		</mask>
+		<mask id="mask-llxlNs3H">
+			<rect fill="url(#color-BIc4OLAx)" x="162.14" y="81.06" width="699.73" height="861.87"/>
+		</mask>
+		<mask id="mask-WdZZaO5g">
+			<path d="M861.86,187.74v648.53c0,58.72 -47.94,106.67 -106.66,106.67h-486.4c-58.73,0 -106.66,-47.95 -106.66,-106.67l0.81,-486.44c0.01,-6.76 2.7,-13.24 7.47,-18.03l242.39,-243.2c4.8,-4.82 11.33,-7.53 18.13,-7.53h324.26c58.73,0 106.66,47.95 106.66,106.67zM497.06,375.46v151.47h29.87v-151.47zM497.06,659.2v29.86h29.87v-29.86zM755.2,106.66h-324.26l-242.39,243.2l-0.81,486.4c0,44.58 36.48,81.07 81.06,81.07h486.4c44.58,0 81.06,-36.49 81.06,-81.07v-648.53c0,-44.58 -36.48,-81.07 -81.06,-81.07zM552.54,552.54h-81.07v-202.67h81.07zM552.54,714.66h-81.07v-81.06h81.07z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-WdZZaO5g)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="162.14" y="81.06" width="699.73" height="861.87" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-llxlNs3H)">
+				<rect x="162.14" y="81.06" width="699.73" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-Vkzfzeey)" mask="url(#mask-Hu09XXD7)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="162.14" y="81.06" width="699.73" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>panorama_vertical icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M853.76,914.35c0,14.08 -10.24,24.32 -26.88,24.32h-629.33c-17.07,0 -26.88,-10.24 -26.88,-24.32c0,-3.84 0.85,-8.54 2.98,-13.23c46.51,-125.44 69.98,-257.28 69.98,-389.12c0,-131.84 -23.47,-263.68 -70.4,-389.12c-1.71,-4.69 -2.56,-8.96 -2.56,-13.23c0,-14.51 9.81,-24.32 26.88,-24.32h628.9c17.07,0 26.88,9.81 26.88,24.32c0,3.84 -0.85,8.54 -2.56,13.23c-46.51,125.44 -69.97,257.28 -69.97,389.12c0,131.84 23.04,263.68 69.97,389.12c1.71,4.69 2.56,8.96 2.99,13.23zM744.53,853.33c-32.85,-110.93 -49.49,-225.28 -49.49,-341.33c0,-116.05 16.64,-230.4 49.49,-341.33h-465.49c32.85,110.93 49.49,225.28 49.49,341.33c0,116.05 -16.64,230.4 -49.49,341.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

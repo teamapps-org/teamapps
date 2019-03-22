@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>filter_list icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,286.72v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-78.67c16.55,11.01 27.47,29.83 27.47,51.2v75.1c0,33.93 -27.51,61.44 -61.44,61.44h-116.22c16.55,11.01 27.47,29.83 27.47,51.2v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-150.18c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-21.37 10.91,-40.19 27.47,-51.2h-116.22c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.1c0,-21.37 10.91,-40.19 27.47,-51.2h-78.67c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h675.84c33.93,0 61.44,27.51 61.44,61.44zM174.08,286.72v75.09h675.84v-75.09zM286.72,549.55h450.56v-75.1h-450.56zM436.91,737.28h150.18v-75.09h-150.18z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

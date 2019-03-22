@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>stop_screen_share icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M943.36,915.63l-54.19,54.18l-115.62,-115.62h-773.55v-85.34h170.67c-47.36,0 -85.34,-38.4 -85.34,-85.33v-426.67c0,-25.17 10.67,-47.78 27.74,-63.14l-65.71,-65.71l54.61,-54.19zM894.29,757.76l-236.37,-236.37l67.41,-62.72l-170.66,-159.15v90.88c-8.11,1.28 -15.79,2.56 -23.47,4.27l-223.15,-223.15h545.28c46.93,0 85.34,37.97 85.34,85.33l-0.43,426.67c0,32 -17.92,60.16 -43.95,74.24zM454.83,535.47l-67.84,-67.84c-49.07,47.36 -75.09,110.07 -88.32,173.22c40.96,-55.04 90.45,-89.17 156.16,-105.38zM1024,768.85v85.34h-33.28l-85.33,-85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>widgets icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M952.32,313.17l-241.49,241.5h185.17v341.33h-341.33v-341.33h156.16l-241.5,-241.5v156.16h-341.33v-341.33h341.33v185.17l241.5,-241.06zM128,554.67h341.33v341.33h-341.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

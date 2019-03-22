@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>card_membership icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,211.63v413.01c0,75.62 -60.94,136.53 -136.54,136.53h-88.74v126.3c0,21.29 -11.03,41.07 -29.14,52.26c-18.11,11.19 -40.73,12.21 -59.78,2.69l-122.71,-61.36l-122.71,61.36c-19.05,9.52 -41.66,8.51 -59.78,-2.69c-18.11,-11.19 -29.14,-30.97 -29.14,-52.26v-126.3h-88.74c-75.6,0 -136.54,-60.91 -136.54,-136.53v-413.01c0,-75.61 60.93,-136.54 136.54,-136.54h600.74c75.61,0 136.54,60.93 136.54,136.54zM273.07,273.07v102.4h477.86v-102.4zM812.37,136.53h-600.74c-41.68,0 -75.1,33.42 -75.1,75.1v413.01c0,41.68 33.42,75.09 75.1,75.09h150.18v187.74l150.19,-75.1l150.19,75.1v-187.74h150.18c41.68,0 75.1,-33.41 75.1,-75.09v-413.01c0,-41.68 -33.42,-75.1 -75.1,-75.1zM812.37,436.91h-600.74v-225.28h600.74zM812.37,624.64h-600.74v-75.09h600.74z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

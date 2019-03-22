@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>adb icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M213.33,512h597.34v170.67c0,165.12 -133.55,298.66 -298.67,298.66c-165.12,0 -298.67,-133.54 -298.67,-298.66zM810.67,426.67v42.66h-597.34v-42.66c0,-98.99 48.64,-186.03 122.88,-240.22l-89.6,-89.6l34.99,-35.41l98.56,98.56c39.68,-20.05 84.05,-32 131.84,-32c47.79,0 92.16,11.95 132.27,32l98.13,-98.56l34.99,35.41l-89.6,89.6c74.24,54.19 122.88,141.23 122.88,240.22zM682.67,341.33c0,-23.47 -19.2,-42.66 -42.67,-42.66c-23.47,0 -42.67,19.19 -42.67,42.66c0,23.47 19.2,42.67 42.67,42.67c23.47,0 42.67,-19.2 42.67,-42.67zM426.67,341.33c0,-23.47 -19.2,-42.66 -42.67,-42.66c-23.47,0 -42.67,19.19 -42.67,42.66c0,23.47 19.2,42.67 42.67,42.67c23.47,0 42.67,-19.2 42.67,-42.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

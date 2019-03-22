@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>audiotrack icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-cxnJwIMF" x="-19%" y="-7%" width="196%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M777.82,170.24v113.92h-151.9v417.7h-1.9c-9.5,85.44 -81.27,151.9 -168.98,151.9c-94.55,0 -170.88,-76.33 -170.88,-170.88c0,-94.55 76.33,-170.88 170.88,-170.88c20.12,0 39.12,4.18 56.96,10.64v-352.4z" fill="#000000" filter="url(#filter-cxnJwIMF)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M777.82,170.24v113.92h-151.9v417.7h-1.9c-9.5,85.44 -81.27,151.9 -168.98,151.9c-94.55,0 -170.88,-76.33 -170.88,-170.88c0,-94.55 76.33,-170.88 170.88,-170.88c20.12,0 39.12,4.18 56.96,10.64v-352.4z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

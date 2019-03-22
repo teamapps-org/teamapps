@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>arrow_drop_up icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M280.82,543.65l187.73,-187.73c23.99,-23.99 62.9,-23.99 86.89,0l187.73,187.73c17.57,17.57 22.83,44 13.32,66.96c-9.51,22.96 -31.91,37.93 -56.76,37.93h-375.46c-24.85,0 -47.25,-14.97 -56.76,-37.93c-9.51,-22.96 -4.25,-49.38 13.32,-66.96zM699.73,587.09l-187.73,-187.73l-187.73,187.73z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

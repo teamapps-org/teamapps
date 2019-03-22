@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>battery_charging_full icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M763.26,263.55v571.39c0,63.44 -51.8,114.57 -114.93,114.57h-273.03c-63.47,0 -114.56,-51.84 -114.56,-114.94v-571.01c0,-62.17 49.93,-113.02 111.74,-114.52v-9.51c0,-35.91 29.11,-65.02 65.02,-65.02h148.99c35.91,0 65.02,29.11 65.02,65.02v9.51c61.81,1.5 111.74,52.36 111.74,114.52zM648.7,164.35h-12.55v-24.84c0,-27.43 -22.24,-49.66 -49.66,-49.66h-148.99c-27.43,0 -49.66,22.24 -49.66,49.66v24.84h-12.55c-54.62,0 -99.2,44.58 -99.2,99.2v571.01c0,54.72 44.31,99.58 99.2,99.58h273.03c54.74,0 99.57,-44.34 99.57,-99.21v-571.39c0,-54.62 -44.58,-99.2 -99.2,-99.2zM698.24,263.55v571.39c0,27.19 -22.35,49.54 -49.91,49.54h-273.03c-27.19,0 -49.53,-22.36 -49.53,-49.92v-571.01c0,-27.19 22.34,-49.53 49.53,-49.53h62.21v-74.5h148.99v74.5h62.21c27.19,0 49.53,22.34 49.53,49.53zM623.74,530.62h-74.49v-204.86l-148.99,279.36h74.49v204.86z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

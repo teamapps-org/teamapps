@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>expand_less icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M781.47,632.47l-52.52,52.52c-25.37,25.37 -66.51,25.4 -91.91,0.05l-125.04,-124.77l-125.04,124.77c-25.4,25.35 -66.53,25.32 -91.91,-0.05l-52.52,-52.52c-25.39,-25.39 -25.39,-66.56 0,-91.96l223.49,-223.49c25.39,-25.39 66.56,-25.39 91.96,0l223.49,223.49c25.39,25.39 25.39,66.56 0,91.96zM770.61,551.38l-223.49,-223.49c-19.39,-19.39 -50.84,-19.39 -70.24,0l-223.49,223.49c-19.4,19.39 -19.4,50.84 0,70.24l52.52,52.52c19.38,19.38 50.8,19.4 70.2,0.04l135.89,-135.59l135.89,135.59c19.4,19.36 50.82,19.34 70.2,-0.04l52.52,-52.52c19.39,-19.39 19.39,-50.84 0,-70.24zM735.49,586.49l-52.52,52.52l-170.97,-170.59l-170.97,170.59l-52.52,-52.52l223.49,-223.49z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

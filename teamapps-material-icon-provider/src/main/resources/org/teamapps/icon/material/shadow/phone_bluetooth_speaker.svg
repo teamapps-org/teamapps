@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>phone_bluetooth_speaker icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-VCJc6DIC" x="-14%" y="-6%" width="153%" height="138%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M853.76,682.88v132.9c0,20.89 -17.09,37.98 -37.98,37.98c-356.57,0 -645.54,-288.97 -645.54,-645.54c0,-20.89 17.09,-37.98 37.98,-37.98h132.9c20.89,0 37.98,17.09 37.98,37.98c0,47.46 7.59,93.03 21.64,135.56c4.17,13.29 1.14,28.1 -9.5,37.97l-83.54,83.93c54.68,107.84 142.78,195.56 250.25,250.24l83.54,-83.54c10.64,-10.25 25.45,-13.29 38.73,-9.11c42.53,14.05 88.1,21.64 135.56,21.64c20.89,0 37.98,17.09 37.98,37.98zM587.94,390.11l105.95,-105.95l-105.95,-105.95l26.97,-26.96l86.95,86.95v-143.91h18.99l108.6,108.22l-81.64,81.64l81.27,81.64l-108.22,108.22h-18.99v-143.91l-86.95,86.95zM739.84,238.21l35.7,-35.69l-35.7,-35.7zM739.84,401.5l35.7,-35.7l-35.7,-35.69z" fill="#000000" filter="url(#filter-VCJc6DIC)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,682.88v132.9c0,20.89 -17.09,37.98 -37.98,37.98c-356.57,0 -645.54,-288.97 -645.54,-645.54c0,-20.89 17.09,-37.98 37.98,-37.98h132.9c20.89,0 37.98,17.09 37.98,37.98c0,47.46 7.59,93.03 21.64,135.56c4.17,13.29 1.14,28.1 -9.5,37.97l-83.54,83.93c54.68,107.84 142.78,195.56 250.25,250.24l83.54,-83.54c10.64,-10.25 25.45,-13.29 38.73,-9.11c42.53,14.05 88.1,21.64 135.56,21.64c20.89,0 37.98,17.09 37.98,37.98zM587.94,390.11l105.95,-105.95l-105.95,-105.95l26.97,-26.96l86.95,86.95v-143.91h18.99l108.6,108.22l-81.64,81.64l81.27,81.64l-108.22,108.22h-18.99v-143.91l-86.95,86.95zM739.84,238.21l35.7,-35.69l-35.7,-35.7zM739.84,401.5l35.7,-35.7l-35.7,-35.69z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>brightness_auto icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-B8fvrfoK" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-xvtgIL0s" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-WUNPf8gB" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-cqZwO45z">
+			<path d="M988.53,530.1l-126.67,126.67v179.49c0,14.14 -11.46,25.6 -25.6,25.6h-179.49l-126.67,126.67c-10,10 -26.21,10 -36.2,0l-126.67,-126.67h-179.49c-14.14,0 -25.6,-11.46 -25.6,-25.6v-179.49l-126.67,-126.67c-10,-10 -10,-26.21 0,-36.2l126.67,-126.67v-179.49c0,-14.14 11.46,-25.6 25.6,-25.6h179.49l126.67,-126.67c10,-10 26.21,-10 36.2,0l126.67,126.67h179.49c14.14,0 25.6,11.46 25.6,25.6v179.49l126.67,126.67c10,10 10,26.21 0,36.2zM489.53,334.94l-111.5,313.6h22.58l22.37,-63.93c3.59,-10.27 13.28,-17.15 24.16,-17.15h129.71c10.88,0 20.57,6.88 24.16,17.15l22.37,63.93h22.58l-111.5,-313.6zM536.42,382.71l46.62,147.94c2.45,7.78 1.05,16.26 -3.77,22.83c-4.82,6.58 -12.49,10.46 -20.64,10.46h-93.23c-8.15,0 -15.82,-3.88 -20.64,-10.46c-4.82,-6.58 -6.22,-15.06 -3.77,-22.83l46.62,-147.94c3.36,-10.66 13.24,-17.91 24.42,-17.91c11.17,0 21.06,7.25 24.42,17.91zM836.26,377.83v-190.09h-190.1l-134.17,-134.17l-134.17,134.17h-190.09v190.1l-134.17,134.17l134.17,134.17v190.1h190.1l134.17,134.17l134.17,-134.17h190.1v-190.1l134.17,-134.17zM605.22,674.14l-28.37,-81.07h-129.71l-28.37,81.07h-77.02l129.7,-364.8h81.07l129.7,364.8zM465.38,538.34h93.23l-46.62,-147.94z" fill="url(#color-B8fvrfoK)"/>
+		</mask>
+		<mask id="mask-L8Pf3fjJ">
+			<path d="M988.53,530.1l-126.67,126.67v179.49c0,14.14 -11.46,25.6 -25.6,25.6h-179.49l-126.67,126.67c-10,10 -26.21,10 -36.2,0l-126.67,-126.67h-179.49c-14.14,0 -25.6,-11.46 -25.6,-25.6v-179.49l-126.67,-126.67c-10,-10 -10,-26.21 0,-36.2l126.67,-126.67v-179.49c0,-14.14 11.46,-25.6 25.6,-25.6h179.49l126.67,-126.67c10,-10 26.21,-10 36.2,0l126.67,126.67h179.49c14.14,0 25.6,11.46 25.6,25.6v179.49l126.67,126.67c10,10 10,26.21 0,36.2zM489.53,334.94l-111.5,313.6h22.58l22.37,-63.93c3.59,-10.27 13.28,-17.15 24.16,-17.15h129.71c10.88,0 20.57,6.88 24.16,17.15l22.37,63.93h22.58l-111.5,-313.6zM536.42,382.71l46.62,147.94c2.45,7.78 1.05,16.26 -3.77,22.83c-4.82,6.58 -12.49,10.46 -20.64,10.46h-93.23c-8.15,0 -15.82,-3.88 -20.64,-10.46c-4.82,-6.58 -6.22,-15.06 -3.77,-22.83l46.62,-147.94c3.36,-10.66 13.24,-17.91 24.42,-17.91c11.17,0 21.06,7.25 24.42,17.91zM836.26,377.83v-190.09h-190.1l-134.17,-134.17l-134.17,134.17h-190.09v190.1l-134.17,134.17l134.17,134.17v190.1h190.1l134.17,134.17l134.17,-134.17h190.1v-190.1l134.17,-134.17zM605.22,674.14l-28.37,-81.07h-129.71l-28.37,81.07h-77.02l129.7,-364.8h81.07l129.7,364.8zM465.38,538.34h93.23l-46.62,-147.94z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-PchtC0pB">
+			<rect fill="url(#color-xvtgIL0s)" x="27.97" y="27.97" width="968.06" height="968.06"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-L8Pf3fjJ)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="27.97" y="27.97" width="968.06" height="968.06" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-PchtC0pB)">
+				<rect x="27.97" y="27.97" width="968.06" height="968.06" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-WUNPf8gB)" mask="url(#mask-cqZwO45z)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="27.97" y="27.97" width="968.06" height="968.06" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

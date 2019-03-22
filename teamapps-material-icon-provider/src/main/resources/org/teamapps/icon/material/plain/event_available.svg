@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>event_available icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,213.33v597.34c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-47.36,0 -85.33,-38.4 -85.33,-85.33l0.43,-597.34c0,-46.93 37.54,-85.33 84.9,-85.33h42.67v-85.33h85.33v85.33h341.34v-85.33h85.33v85.33h42.67c46.93,0 85.33,38.4 85.33,85.33zM810.67,341.33h-597.34v469.34h597.34zM451.84,725.33l-135.68,-135.68l45.23,-45.22l90.45,90.45l208.21,-208.21l45.23,45.22z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

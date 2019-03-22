@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>group_add icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-Szi0ZKsh">
+			<path d="M0,203.18h1024v679.66h-1024z"/>
+		</clipPath>
+		<filter id="filter-3sYvN5Ig" x="-11%" y="-9%" width="128%" height="188%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-Szi0ZKsh)">
+			<path d="M360.1,512h-113.92v113.92h-75.94v-113.92h-113.92v-75.94h113.92v-113.92h75.94v113.92h113.92zM777.82,663.9v75.94h-455.68v-75.94c0,-75.94 151.9,-113.92 227.84,-113.92c75.94,0 227.84,37.98 227.84,113.92zM436.06,360.1c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.54,50.88 113.54,113.92c0,63.04 -50.5,113.92 -113.54,113.92c-63.04,0 -113.92,-50.88 -113.92,-113.92zM705.28,468.71c21.26,-31.14 34.18,-67.98 34.18,-108.61c0,-40.63 -12.53,-77.84 -34.18,-108.6c10.64,-3.42 22.41,-5.32 34.56,-5.32c63.04,0 113.54,50.88 113.54,113.92c0,63.04 -50.5,113.92 -113.54,113.92c-12.15,0 -23.92,-1.9 -34.56,-5.31zM967.68,663.9v75.94h-113.92v-75.94c0,-44.81 -20.89,-80.13 -52.4,-107.85c76.33,13.29 166.32,49.37 166.32,107.85z" fill="#000000" filter="url(#filter-3sYvN5Ig)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M360.1,512h-113.92v113.92h-75.94v-113.92h-113.92v-75.94h113.92v-113.92h75.94v113.92h113.92zM777.82,663.9v75.94h-455.68v-75.94c0,-75.94 151.9,-113.92 227.84,-113.92c75.94,0 227.84,37.98 227.84,113.92zM436.06,360.1c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.54,50.88 113.54,113.92c0,63.04 -50.5,113.92 -113.54,113.92c-63.04,0 -113.92,-50.88 -113.92,-113.92zM705.28,468.71c21.26,-31.14 34.18,-67.98 34.18,-108.61c0,-40.63 -12.53,-77.84 -34.18,-108.6c10.64,-3.42 22.41,-5.32 34.56,-5.32c63.04,0 113.54,50.88 113.54,113.92c0,63.04 -50.5,113.92 -113.54,113.92c-12.15,0 -23.92,-1.9 -34.56,-5.31zM967.68,663.9v75.94h-113.92v-75.94c0,-44.81 -20.89,-80.13 -52.4,-107.85c76.33,13.29 166.32,49.37 166.32,107.85z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

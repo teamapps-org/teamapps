@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_backup_restore icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-58dw3Bll">
+			<path d="M946.76,127.24v869.52h-946.76v-869.52z"/>
+		</clipPath>
+		<filter id="filter-A2PX4iqM" x="-12%" y="-7%" width="131%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-58dw3Bll)">
+			<path d="M853.76,512c0,188.72 -153.04,341.76 -341.76,341.76c-78.22,0 -150.37,-26.58 -208.09,-70.63l53.92,-54.68c43.67,30.76 96.83,49.37 154.17,49.37c146.96,0 265.82,-118.86 265.82,-265.82c0,-146.96 -118.86,-265.82 -265.82,-265.82c-146.96,0 -265.82,118.86 -265.82,265.82h113.92l-151.89,151.9l-151.9,-151.9h113.92c0,-188.72 153.04,-341.76 341.76,-341.76c188.72,0 341.76,153.04 341.76,341.76zM512,587.94c-41.77,0 -75.94,-34.18 -75.94,-75.94c0,-41.77 34.18,-75.94 75.94,-75.94c41.77,0 75.94,34.18 75.94,75.94c0,41.77 -34.18,75.94 -75.94,75.94z" fill="#000000" filter="url(#filter-A2PX4iqM)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,512c0,188.72 -153.04,341.76 -341.76,341.76c-78.22,0 -150.37,-26.58 -208.09,-70.63l53.92,-54.68c43.67,30.76 96.83,49.37 154.17,49.37c146.96,0 265.82,-118.86 265.82,-265.82c0,-146.96 -118.86,-265.82 -265.82,-265.82c-146.96,0 -265.82,118.86 -265.82,265.82h113.92l-151.89,151.9l-151.9,-151.9h113.92c0,-188.72 153.04,-341.76 341.76,-341.76c188.72,0 341.76,153.04 341.76,341.76zM512,587.94c-41.77,0 -75.94,-34.18 -75.94,-75.94c0,-41.77 34.18,-75.94 75.94,-75.94c41.77,0 75.94,34.18 75.94,75.94c0,41.77 -34.18,75.94 -75.94,75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>center_focus_weak icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M682.67,512c0,94.29 -76.38,170.67 -170.67,170.67c-94.29,0 -170.67,-76.38 -170.67,-170.67c0,-94.29 76.38,-170.67 170.67,-170.67c94.29,0 170.67,76.38 170.67,170.67zM213.33,810.67h170.67v85.33h-170.67c-46.93,0 -85.33,-38.4 -85.33,-85.33v-170.67h85.33zM213.33,384h-85.33v-170.67c0,-46.93 38.4,-85.33 85.33,-85.33h170.67v85.33h-170.67zM896,213.33v170.67h-85.33v-170.67h-170.67v-85.33h170.67c46.93,0 85.33,38.4 85.33,85.33zM810.67,640h85.33v170.67c0,46.93 -38.4,85.33 -85.33,85.33h-170.67v-85.33h170.67zM597.33,512c0,-46.93 -38.4,-85.33 -85.33,-85.33c-46.93,0 -85.33,38.4 -85.33,85.33c0,46.93 38.4,85.33 85.33,85.33c46.93,0 85.33,-38.4 85.33,-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

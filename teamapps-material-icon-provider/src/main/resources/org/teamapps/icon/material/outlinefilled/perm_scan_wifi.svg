@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>perm_scan_wifi icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1009.42,376.1l-446.98,549.41c-12.35,15.18 -30.89,23.99 -50.46,23.99c-19.57,-0.01 -38.1,-8.83 -50.45,-24.02l-446.98,-550.16c-23.21,-28.57 -18.1,-70.69 11.27,-92.88c125.21,-94.61 280.18,-170.7 486.18,-170.7c206.17,0 361.14,76.97 486.18,171.45c29.38,22.2 34.48,64.35 11.24,92.92zM988.92,295.44c-123.21,-93.1 -275.01,-168.34 -476.92,-168.34c-201.77,0 -353.56,74.4 -476.92,167.6c-22.43,16.95 -26.33,49.12 -8.61,70.94l446.98,550.16c9.43,11.6 23.58,18.34 38.53,18.35c14.95,0 29.11,-6.72 38.54,-18.32l446.98,-549.41c17.75,-21.82 13.86,-54.01 -8.59,-70.97zM958.98,335.07l-446.98,549.41l-446.98,-550.16c117.33,-88.65 258.87,-157.56 446.98,-157.56c188.11,0 329.64,69.65 446.98,158.3zM549.25,437.51h-74.5v223.49h74.5zM549.25,363.01v-74.49h-74.5v74.49z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

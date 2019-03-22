@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>drag_handle icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M873.81,549.55v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-600.74c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-14.14 4.78,-27.17 12.81,-37.55c-8.03,-10.38 -12.81,-23.41 -12.81,-37.55v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h600.74c33.93,0 61.44,27.51 61.44,61.44v75.09c0,14.14 -4.78,27.17 -12.81,37.55c8.03,10.38 12.81,23.41 12.81,37.55zM211.63,624.64h600.74v-75.09h-600.74zM812.37,399.36h-600.74v75.09h600.74z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

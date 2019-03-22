@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>panorama_horizontal icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-O6AoR2My" x="-13%" y="-8%" width="143%" height="166%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M891.74,232.14v559.72c0,15.19 -9.11,23.92 -21.64,23.92c-3.8,0 -7.6,-0.76 -11.77,-2.28c-111.64,-41.39 -228.98,-62.27 -346.32,-62.27c-117.34,0 -234.68,20.51 -346.32,62.27c-4.17,1.52 -7.97,2.28 -11.77,2.28c-12.91,0 -21.64,-8.73 -21.64,-23.54v-560.1c0,-15.19 8.73,-23.92 21.64,-23.92c3.42,0 7.6,0.76 11.77,2.28c111.64,41.39 228.98,62.27 346.32,62.27c117.34,0 234.68,-20.51 346.32,-62.27c4.17,-1.52 7.97,-2.28 11.77,-2.28c12.53,0 21.64,8.73 21.64,23.92zM815.78,304.67c-98.73,29.62 -200.5,44.43 -303.78,44.05c-103.28,0 -205.06,-14.81 -303.78,-44.05v414.29c98.73,-29.24 200.5,-44.05 303.78,-44.05c103.28,0 205.06,14.81 303.78,44.05z" fill="#000000" filter="url(#filter-O6AoR2My)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,232.14v559.72c0,15.19 -9.11,23.92 -21.64,23.92c-3.8,0 -7.6,-0.76 -11.77,-2.28c-111.64,-41.39 -228.98,-62.27 -346.32,-62.27c-117.34,0 -234.68,20.51 -346.32,62.27c-4.17,1.52 -7.97,2.28 -11.77,2.28c-12.91,0 -21.64,-8.73 -21.64,-23.54v-560.1c0,-15.19 8.73,-23.92 21.64,-23.92c3.42,0 7.6,0.76 11.77,2.28c111.64,41.39 228.98,62.27 346.32,62.27c117.34,0 234.68,-20.51 346.32,-62.27c4.17,-1.52 7.97,-2.28 11.77,-2.28c12.53,0 21.64,8.73 21.64,23.92zM815.78,304.67c-98.73,29.62 -200.5,44.43 -303.78,44.05c-103.28,0 -205.06,-14.81 -303.78,-44.05v414.29c98.73,-29.24 200.5,-44.05 303.78,-44.05c103.28,0 205.06,14.81 303.78,44.05z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

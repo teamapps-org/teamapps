@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>label icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M937.52,549.62l-162.74,229.4c-25.3,35.79 -67.21,58.74 -113.78,58.74l-409.79,-0.38c-76.41,-0.03 -139.46,-61.85 -139.46,-139.15v-372.47c0,-77.31 63.06,-139.14 139.49,-139.15l409.76,-0.38c46.57,0 88.48,22.95 113.78,58.74l162.74,229.4c15.99,22.54 15.99,52.71 0,75.25zM924.99,483.26l-162.75,-229.41c-22.49,-31.83 -59.78,-52.26 -101.24,-52.26l-409.75,0.38c-68.06,0.01 -124.14,55.07 -124.14,123.79v372.47c0,68.71 56.06,123.77 124.11,123.79l409.78,0.38c41.46,0 78.75,-20.43 101.24,-52.26l162.75,-229.41c12.21,-17.21 12.21,-40.26 0,-57.47zM884.48,512l-162.78,229.45c-13.41,19 -35.75,31.29 -60.71,31.29l-409.73,-0.38c-40.97,0 -74.49,-33.16 -74.49,-74.13v-372.47c0,-40.97 33.52,-74.13 74.49,-74.13l409.73,-0.38c24.96,0 47.3,12.29 60.71,31.29z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

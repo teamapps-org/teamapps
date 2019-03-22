@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>wb_auto icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-DyjmwJVk">
+			<path d="M0,165.22h1024v793.57h-1024z"/>
+		</clipPath>
+		<filter id="filter-IqSH8sbC" x="-11%" y="-8%" width="128%" height="166%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-DyjmwJVk)">
+			<path d="M960.09,322.14l-77.85,341.76h-66.46l-56.96,-231.64l-56.96,231.64h-66.45l-3.8,-16.33c-49.74,99.49 -152.65,168.22 -271.51,168.22c-167.85,0 -303.78,-135.94 -303.78,-303.78c0,-167.85 135.94,-303.78 303.78,-303.78c96.08,0 181.13,44.43 236.95,113.92h28.86l45.95,238.85l56.58,-238.85h60.76l56.96,238.85l45.57,-238.85zM519.59,663.9l-121.51,-341.76h-75.94l-121.52,341.76h72.15l26.58,-75.95h121.51l26.58,75.95zM360.1,398.08l43.67,138.6h-87.34z" fill="#000000" filter="url(#filter-IqSH8sbC)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M960.09,322.14l-77.85,341.76h-66.46l-56.96,-231.64l-56.96,231.64h-66.45l-3.8,-16.33c-49.74,99.49 -152.65,168.22 -271.51,168.22c-167.85,0 -303.78,-135.94 -303.78,-303.78c0,-167.85 135.94,-303.78 303.78,-303.78c96.08,0 181.13,44.43 236.95,113.92h28.86l45.95,238.85l56.58,-238.85h60.76l56.96,238.85l45.57,-238.85zM519.59,663.9l-121.51,-341.76h-75.94l-121.52,341.76h72.15l26.58,-75.95h121.51l26.58,75.95zM360.1,398.08l43.67,138.6h-87.34z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

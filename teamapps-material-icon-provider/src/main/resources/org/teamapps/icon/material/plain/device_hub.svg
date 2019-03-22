@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>device_hub icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,682.67v213.33h-213.33v-130.13l-170.67,-179.2l-170.67,179.2v130.13h-213.33v-213.33h170.67l170.66,-170.67v-135.68c-49.49,-17.92 -85.33,-64.85 -85.33,-120.32c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128c0,55.47 -35.84,102.4 -85.33,120.32v135.68l170.66,170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

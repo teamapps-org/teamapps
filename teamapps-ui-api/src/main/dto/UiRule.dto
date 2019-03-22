@@ -1,0 +1,54 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class UiValueMatcher {
+	required enum {EQUALS, LESSER, LESSER_EQUALS, GREATER, GREATER_EQUALS, CONTAINS, STARTS_WITH, ENDS_WITH, MINIMUM_SIZE, MAXIMUM_SIZE, REGEX_MATCH, CONTAINS_REGEX, CONTAINS_SCRIPT, CONTAINS_SCRIPT_TYPE, CONTAINS_ONLY_SCRIPT_TYPE } comparator;
+	boolean caseSensitive = false;
+	boolean invertMatch;
+	required Object compareValue; //on CONTAINS_SCRIPT_TYPE the value is the enum name as String
+}
+
+class UiMatcherRule {
+	required List<UiValueMatcher> valueMatcher;
+	boolean executeRuleIfAnyMatcherMatches = true; //if false, all matchers have to match to fire the rule
+}
+
+class UiValidationRule extends UiMatcherRule {
+	enum {POPUP_WINDOW, NOTIFICATION, INLINE } displayType = DisplayType.INLINE;
+	required String errorMessage;
+	boolean markFieldsThatRuleMatches = true; //if true, mark all the fields that would match the rule, e.g. with red border
+	boolean checkOnFieldUpdate = true; //if false, the rule will only be checked before the form data or the row data are sent to the server
+}
+
+class UiFormattingRule extends UiMatcherRule {
+	String icon;
+	String color;
+	String borderColor;
+	String backgroundColor;
+	boolean bold;
+	boolean underline;
+	boolean italic;
+}
+
+class UiVisibilityRule extends UiMatcherRule {
+	required enum {SHOW_ON_MATCH, HIDE_ON_MATCH, SHOW_ON_MATCH_AND_HIDE_IF_NO_MATCH} actionType;
+	List<String> propertyNames;
+	List<String> fieldGroupIds;
+}
+

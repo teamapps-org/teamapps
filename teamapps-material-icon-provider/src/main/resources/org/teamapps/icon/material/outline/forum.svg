@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>forum icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,324.27v563.2c0,24.85 -14.97,47.25 -37.93,56.76c-22.96,9.51 -49.38,4.25 -66.96,-13.32l-132.19,-132.19h-387.56c-54.59,0 -98.99,-44.4 -98.99,-98.99v-1.86l-45.31,45.3c-17.57,17.57 -44,22.83 -66.96,13.32c-22.96,-9.51 -37.93,-31.91 -37.93,-56.76v-525.65c0,-54.59 44.4,-98.99 98.99,-98.99h488.11c54.61,0 98.98,44.42 98.98,98.99v52.72c4.39,-1 8.96,-1.52 13.66,-1.52h75.09c54.59,0 98.99,44.4 98.99,98.99zM849.92,286.72h-75.09v337.92h-488.11v75.09c0,20.65 16.9,37.55 37.55,37.55h413.01l150.19,150.19v-563.2c0,-20.65 -16.9,-37.55 -37.55,-37.55zM699.73,512v-337.92c0,-20.65 -16.89,-37.55 -37.54,-37.55h-488.11c-20.65,0 -37.55,16.9 -37.55,37.55v525.65l150.19,-150.18h375.47c20.65,0 37.54,-16.9 37.54,-37.55z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

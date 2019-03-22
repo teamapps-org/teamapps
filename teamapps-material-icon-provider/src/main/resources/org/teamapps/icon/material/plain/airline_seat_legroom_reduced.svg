@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_legroom_reduced icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M852.05,819.2c7.68,40.96 -23.47,76.8 -62.72,76.8h-192v-128l42.67,-170.67h-256c-70.4,0 -128,-57.6 -128,-128v-341.33h256v256h213.33c46.93,0 85.34,38.4 85.34,85.33l-85.34,298.67h61.44c31.15,0 59.31,20.91 65.28,51.2zM341.33,640h170.67v85.33h-170.67c-117.76,0 -213.33,-95.57 -213.33,-213.33v-384h85.33v384c0,70.83 57.17,128 128,128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

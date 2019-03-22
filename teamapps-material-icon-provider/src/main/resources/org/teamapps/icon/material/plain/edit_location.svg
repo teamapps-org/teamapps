@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>edit_location icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M810.67,384c0,224 -298.67,554.67 -298.67,554.67c0,0 -298.67,-330.67 -298.67,-554.67c0,-164.69 133.98,-298.67 298.67,-298.67c164.69,0 298.67,133.98 298.67,298.67zM587.95,369.07l-61.02,-61.02l-142.93,142.51v61.44h61.44zM635.31,299.09l-38.4,-38.4c-6.4,-6.4 -16.64,-6.4 -23.04,0l-29.87,29.87l61.44,61.44l29.87,-29.87c6.4,-6.4 6.4,-16.64 0,-23.04z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

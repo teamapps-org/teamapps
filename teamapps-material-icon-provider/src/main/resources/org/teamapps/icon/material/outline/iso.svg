@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>iso icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,249.17v525.66c0,75.23 -61.3,136.53 -136.53,136.53h-525.66c-75.23,0 -136.53,-61.3 -136.53,-136.53v-525.66c0,-75.23 61.3,-136.53 136.53,-136.53h525.66c75.23,0 136.53,61.3 136.53,136.53zM713.39,397.5l-184.47,184.47h170.81c4.69,0 9.27,0.53 13.66,1.52zM397.5,713.39h54.58c-1,-4.39 -1.52,-8.96 -1.52,-13.66v-39.4zM774.83,174.08h-525.66c-41.3,0 -75.09,33.79 -75.09,75.09v525.66c0,41.3 33.79,75.09 75.09,75.09h525.66c41.3,0 75.09,-33.79 75.09,-75.09v-525.66c0,-41.3 -33.79,-75.09 -75.09,-75.09zM774.83,774.83h-525.66l525.66,-525.66zM267.95,343.04h75.09v-75.09h56.32v75.09h75.09v56.32h-75.09v75.09h-56.32v-75.09h-75.09zM699.73,699.73v-56.32h-187.73v56.32z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

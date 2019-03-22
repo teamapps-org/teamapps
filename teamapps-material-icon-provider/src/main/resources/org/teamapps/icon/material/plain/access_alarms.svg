@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>access_alarms icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,554.67c0,213.33 -170.67,384 -384,384c-213.33,0 -384,-170.67 -384,-384c0,-213.33 170.67,-384 384,-384c213.33,0 384,170.67 384,384zM810.67,554.67c0,-166.4 -132.27,-298.67 -298.67,-298.67c-166.4,0 -298.67,132.27 -298.67,298.67c0,166.4 132.27,298.66 298.67,298.66c166.4,0 298.67,-132.26 298.67,-298.66zM533.33,567.47l170.67,102.4l-34.13,51.2l-200.54,-123.74v-256h64zM883.2,307.2l-196.27,-166.4l55.47,-64l196.27,166.4zM140.8,307.2l-55.47,-64l196.27,-162.13l55.47,64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

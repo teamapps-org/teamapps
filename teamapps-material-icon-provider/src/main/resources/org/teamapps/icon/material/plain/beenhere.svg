@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>beenhere icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,128l-0.43,551.68c0,29.44 -14.93,55.47 -37.54,70.83l-346.03,230.82l-346.45,-230.82c-22.61,-15.36 -37.55,-41.39 -37.55,-70.83l0.43,-551.68c0,-46.93 37.97,-85.33 84.9,-85.33h597.34c46.93,0 85.33,38.4 85.33,85.33zM810.67,298.67l-60.16,-60.59l-323.84,323.84l-153.18,-152.75l-60.16,60.16l213.34,213.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

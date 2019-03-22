@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>multiline_chart icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-RtfECS8B" x="-13%" y="-9%" width="143%" height="185%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M776.29,448.96c41.39,66.46 69.11,145.83 77.47,233.16h-76.33c-7.22,-62.66 -26.2,-121.52 -54.68,-172.78l-153.79,172.78l-151.9,-151.9l-227.84,228.22l-56.96,-56.96l284.8,-285.18l151.9,151.9l109.36,-123.03c-63.8,-75.19 -153.03,-123.03 -257.08,-123.03c-88.86,0 -170.51,35.32 -235.06,91.89l-53.93,-53.93c78.6,-69.87 179.24,-113.92 288.98,-113.92c122.28,0 230.5,53.16 308.72,141.26l108.22,-121.89l53.54,53.54z" fill="#000000" filter="url(#filter-RtfECS8B)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M776.29,448.96c41.39,66.46 69.11,145.83 77.47,233.16h-76.33c-7.22,-62.66 -26.2,-121.52 -54.68,-172.78l-153.79,172.78l-151.9,-151.9l-227.84,228.22l-56.96,-56.96l284.8,-285.18l151.9,151.9l109.36,-123.03c-63.8,-75.19 -153.03,-123.03 -257.08,-123.03c-88.86,0 -170.51,35.32 -235.06,91.89l-53.93,-53.93c78.6,-69.87 179.24,-113.92 288.98,-113.92c122.28,0 230.5,53.16 308.72,141.26l108.22,-121.89l53.54,53.54z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>audiotrack icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M836.27,174.08v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-88.75v351.57c0,8.41 -1.71,16.44 -4.77,23.75c-19.92,106.63 -112.77,187.88 -225.63,187.88c-127.42,0 -230.4,-102.98 -230.4,-230.4c0,-125.71 100.23,-227.63 225.28,-230.34v-276.54c0,-33.93 27.51,-61.44 61.44,-61.44h262.83c33.93,0 61.44,27.51 61.44,61.44zM512,174.08v348.44c-17.64,-6.38 -36.42,-10.52 -56.32,-10.52c-93.49,0 -168.96,75.47 -168.96,168.96c0,93.49 75.47,168.96 168.96,168.96c86.73,0 157.7,-65.71 167.09,-150.19h1.87v-413.01h150.19v-112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

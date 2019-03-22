@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>transfer_within_a_station icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-Hl7o1dmN">
+			<path d="M39.26,70.28h945.47v953.72h-945.47z"/>
+		</clipPath>
+		<filter id="filter-JlwwC1Q6" x="-13%" y="-6%" width="143%" height="138%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-Hl7o1dmN)">
+			<path d="M274.66,394.28l-66.45,28.48v127.22h-75.95v-178.48l199.36,-81.64c9.5,-3.8 18.98,-5.7 28.48,-5.7c26.58,0 51.27,13.29 64.56,36.07l36.07,60.76c34.18,55.06 94.94,93.03 165.18,93.03v75.95c-83.54,0 -157.58,-37.98 -206.95,-98.74l-22.78,113.92l77.84,77.85v286.7h-75.94v-227.84l-81.64,-75.94l-66.46,303.78h-79.74zM891.74,644.9v56.96h-209.24v66.46l-94.55,-94.94l94.55,-94.93v66.45zM797.18,739.84l94.55,94.94l-94.55,94.93v-66.45h-209.24v-56.96h209.24zM341.12,189.22c0,-41.77 34.18,-75.94 75.94,-75.94c41.77,0 75.95,34.18 75.95,75.94c0,41.77 -34.18,75.95 -75.95,75.95c-41.77,0 -75.94,-34.18 -75.94,-75.95z" fill="#000000" filter="url(#filter-JlwwC1Q6)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M274.66,394.28l-66.45,28.48v127.22h-75.95v-178.48l199.36,-81.64c9.5,-3.8 18.98,-5.7 28.48,-5.7c26.58,0 51.27,13.29 64.56,36.07l36.07,60.76c34.18,55.06 94.94,93.03 165.18,93.03v75.95c-83.54,0 -157.58,-37.98 -206.95,-98.74l-22.78,113.92l77.84,77.85v286.7h-75.94v-227.84l-81.64,-75.94l-66.46,303.78h-79.74zM891.74,644.9v56.96h-209.24v66.46l-94.55,-94.94l94.55,-94.93v66.45zM797.18,739.84l94.55,94.94l-94.55,94.93v-66.45h-209.24v-56.96h209.24zM341.12,189.22c0,-41.77 34.18,-75.94 75.94,-75.94c41.77,0 75.95,34.18 75.95,75.94c0,41.77 -34.18,75.95 -75.95,75.95c-41.77,0 -75.94,-34.18 -75.94,-75.95z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

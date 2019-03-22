@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>unarchive icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,277.33v533.34c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-47.36,0 -85.33,-38.4 -85.33,-85.33v-533.34c0,-20.91 7.26,-39.68 19.63,-54.61l59.3,-71.25c11.52,-14.51 29.02,-23.47 49.07,-23.47h512c20.05,0 37.54,8.96 49.49,23.04l59.31,71.68c11.95,14.93 19.2,33.7 19.2,54.61zM277.33,640h149.34v85.33h170.66v-85.33h149.34l-234.67,-234.67zM805.12,213.33l-39.68,-42.66h-512l-34.99,42.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

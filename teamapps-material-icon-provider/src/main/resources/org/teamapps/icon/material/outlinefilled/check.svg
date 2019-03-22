@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>check icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M840.69,227.26l52.52,52.52c25.39,25.39 25.39,66.56 0,91.96l-446.98,446.98c-25.39,25.39 -66.56,25.39 -91.96,0l-208.22,-208.22c-25.46,-25.46 -25.38,-66.75 0.16,-92.12l52.9,-52.52c25.42,-25.24 66.46,-25.17 91.79,0.16l109.37,109.37l348.48,-348.15c25.4,-25.37 66.55,-25.36 91.94,0.02zM759.61,238.11l-359.34,359l-120.22,-120.22c-19.35,-19.35 -50.7,-19.4 -70.11,-0.12l-52.9,52.52c-19.51,19.37 -19.57,50.92 -0.13,70.36l208.22,208.22c19.39,19.39 50.84,19.39 70.24,0l446.98,-446.98c19.39,-19.39 19.39,-50.84 0,-70.24l-52.52,-52.52c-19.39,-19.39 -50.82,-19.4 -70.22,-0.02zM794.71,273.24l52.52,52.52l-446.98,446.98l-208.22,-208.22l52.9,-52.52l155.32,155.32z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

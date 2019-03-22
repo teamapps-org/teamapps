@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>perm_scan_wifi icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-tRkMdxdm" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-xowoWV6C" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-UEAbJW6K" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-5AFKZKJA">
+			<path d="M1018.26,335.62l-486.4,597.87c-4.86,5.98 -12.16,9.45 -19.87,9.44c-7.71,0 -15,-3.48 -19.86,-9.46l-486.4,-598.68c-9.14,-11.25 -7.13,-27.83 4.44,-36.57c130.78,-98.82 290.09,-176.63 501.83,-176.63c211.81,0 371.12,78.67 501.83,177.44c11.57,8.74 13.58,25.33 4.43,36.58zM497.06,456.54v192h29.87v-192zM497.06,294.4v29.86h29.87v-29.86zM512,147.2c-204.7,0 -358.72,74.98 -486.4,171.46l486.4,598.68l486.4,-597.87c-127.68,-96.47 -281.7,-172.26 -486.4,-172.26zM552.54,674.14h-81.07v-243.2h81.07zM471.46,349.86v-81.06h81.07v81.06z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-fEs9zkX5">
+			<path d="M1018.26,335.62l-486.4,597.87c-4.86,5.98 -12.16,9.45 -19.87,9.44c-7.71,0 -15,-3.48 -19.86,-9.46l-486.4,-598.68c-9.14,-11.25 -7.13,-27.83 4.44,-36.57c130.78,-98.82 290.09,-176.63 501.83,-176.63c211.81,0 371.12,78.67 501.83,177.44c11.57,8.74 13.58,25.33 4.43,36.58zM497.06,456.54v192h29.87v-192zM497.06,294.4v29.86h29.87v-29.86zM512,147.2c-204.7,0 -358.72,74.98 -486.4,171.46l486.4,598.68l486.4,-597.87c-127.68,-96.47 -281.7,-172.26 -486.4,-172.26zM552.54,674.14h-81.07v-243.2h81.07zM471.46,349.86v-81.06h81.07v81.06z" fill="url(#color-tRkMdxdm)"/>
+		</mask>
+		<mask id="mask-XGu3R3bK">
+			<rect fill="url(#color-xowoWV6C)" x="0" y="121.6" width="1024" height="821.34"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-5AFKZKJA)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="0" y="121.6" width="1024" height="821.34" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-XGu3R3bK)">
+				<rect x="0" y="121.6" width="1024" height="821.34" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-UEAbJW6K)" mask="url(#mask-fEs9zkX5)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="0" y="121.6" width="1024" height="821.34" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

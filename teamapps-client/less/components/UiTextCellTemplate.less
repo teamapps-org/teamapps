@@ -1,0 +1,126 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.custom-entry-template-wrapper {
+  overflow: hidden;
+  display: flex;
+
+  > .custom-entry-template {
+    display: flex;
+    align-items: stretch;
+    padding: 1px;
+    line-height: 1.1em;
+    flex: 1 1 0px;
+
+    .tr-input-wrapper & {
+      padding-left: 3px;
+    }
+
+    * {
+      cursor: default;
+    }
+
+    .content-wrapper {
+      flex: 1 1 auto; // CAUTION check the symbol view and the toolbar widthoptimizations (also for dropdowns) if you change this to auto. Especially in IE!!!!
+      // height set by javascript
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+
+      &.justify-lines-top {
+        justify-content: flex-start;
+        > .lines-justify-wrapper {
+          justify-content: flex-start;
+          flex: 0 1 auto;
+        }
+      }
+      &.justify-lines-center {
+        justify-content: center;
+        > .lines-justify-wrapper {
+          justify-content: center;
+          flex: 0 0 auto;
+        }
+      }
+      &.justify-lines-center-overflow-bottom {
+        justify-content: center;
+        > .lines-justify-wrapper {
+          justify-content: flex-start;
+          flex: 0 1 auto;
+        }
+      }
+
+      > .lines-justify-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        > .line {
+          flex: 0 0 auto;
+          display: flex;
+
+          > .element {
+            &.left {
+              text-align: left;
+            }
+            &.centered {
+              text-align: center;
+            }
+            &.right {
+              text-align: right;
+            }
+            &.text-element {
+              display: block;
+              flex: 0 1 auto;
+              padding-left: 5px;
+
+              &:first-child,
+              &.no-horizontal-space {
+                padding-left: 0;
+              }
+
+              .badge {
+                padding: 3px 6px;
+                background-color: #4D82B8;
+              }
+            }
+            &.image-element {
+              display: block;
+              flex: 0 0 auto;
+            }
+          }
+          > .line-spacer {
+            flex: 1 0 0px;
+          }
+        }
+      }
+    }
+
+    > .image-template {
+      flex: 0 0 auto; // basis set by javascript
+      align-self: center;
+      // height set by javascript
+      // width set by javascript
+    }
+  }
+}
+
+.image-template {
+  background: transparent none no-repeat center;
+  background-size: cover;
+  border: 0 solid black; // defaults overridden by javascript
+}

@@ -1,0 +1,98 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class UiWorkSpaceLayout extends UiComponent {
+	required List<UiWorkSpaceLayoutView> views;
+	required UiWorkSpaceLayoutItem initialLayout;
+	required String childWindowPageTitle;
+	UiToolbar* toolbar;
+	String newWindowBackgroundImage;
+	String newWindowBlurredBackgroundImage;
+
+	command setToolbar(UiToolbar* toolbar);
+
+	command addViewAsTab(UiWorkSpaceLayoutView newView, String viewGroupId, boolean select);
+	command addViewAsNeighbourTab(UiWorkSpaceLayoutView newView, String existingViewName, boolean select);
+	command addViewRelativeToOtherView(UiWorkSpaceLayoutView newView, String existingViewName, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, float referenceChildSize);
+	command addViewToTopLevel(UiWorkSpaceLayoutView newView, String windowId, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, float referenceChildSize);
+
+	command moveViewToNeighbourTab(String viewName, String existingViewName, boolean select);
+  	command moveViewRelativeToOtherView(String viewName, String existingViewName, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, float referenceChildSize);
+  	command moveViewToTopLevel(String viewName, String windowId, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, float referenceChildSize);
+
+	command redefineLayout(Dictionary<UiWorkSpaceLayoutItem> layoutsByWindowId, List<UiWorkSpaceLayoutView> addedViews);
+
+	command removeView(String viewName);
+	command refreshViewAttributes(String viewName, String tabIcon, String tabCaption, boolean tabCloseable, boolean visible);
+	command refreshViewComponent(String viewName, UiComponent* component);
+	command selectView(String viewName);
+	command setViewGroupPanelState(String viewGroupId, UiViewGroupPanelState panelState);
+
+    event layoutChanged(Dictionary<UiWorkSpaceLayoutItem> layoutsByWindowId); // root window has id "ROOT_WINDOW" TODO not yet sure if these events should get a little more fine-grained...
+    event viewDraggedToNewWindow(String windowId, String viewName, Dictionary<UiWorkSpaceLayoutItem> layoutsByWindowId);
+    event viewNeedsRefresh(String viewName);
+    event childWindowCreationFailed(String viewName); // due to popup blocker...
+    event childWindowClosed(String windowId);
+    event viewSelected(String viewGroupId, String viewName, List<String> siblingViewNames);
+    event viewClosed(String viewName);
+    event viewGroupPanelStateChanged(String viewGroupId, UiViewGroupPanelState panelState);
+}
+
+enum UiViewGroupPanelState {
+	NORMAL, MAXIMIZED, MINIMIZED
+}
+
+class UiWorkSpaceLayoutView {
+	required String viewName;
+	required String tabIcon;
+    required String tabCaption;
+	required UiComponent* component;
+    boolean tabCloseable = true;
+    boolean lazyLoading = false;
+    boolean visible = true;
+}
+
+enum UiRelativeWorkSpaceViewPosition {
+	TOP, RIGHT, BOTTOM, LEFT
+}
+
+enum UiSplitDirection {
+	HORIZONTAL, VERTICAL
+}
+
+abstract class UiWorkSpaceLayoutItem {
+	required String id;
+}
+
+@TypeScriptFactory
+class UiWorkSpaceLayoutSplitItem extends UiWorkSpaceLayoutItem {
+    required UiSplitDirection splitDirection;
+    UiSplitSizePolicy sizePolicy = UiSplitSizePolicy.RELATIVE;
+    float referenceChildSize = 0.5f;
+    required UiWorkSpaceLayoutItem firstChild;
+    required UiWorkSpaceLayoutItem lastChild;
+}
+
+@TypeScriptFactory
+class UiWorkSpaceLayoutViewGroupItem extends UiWorkSpaceLayoutItem {
+    required List<String> viewNames = java.util.Collections.emptyList();
+    String selectedViewName;
+    boolean persistent; // if true, this viewGroup will never be removed from the tree of items on the client side, even if there are no more views left inside it.
+    UiViewGroupPanelState panelState = UiViewGroupPanelState.NORMAL;
+}

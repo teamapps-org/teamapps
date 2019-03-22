@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>speaker_notes_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-Bu32MmF9">
+			<path d="M938.67,958.29l-54.19,54.19l-244.48,-244.48h-384l-170.67,170.67l0.43,-724.91l-85.76,-85.76l54.19,-54.19l395.52,395.52zM938.67,170.67v512c0,46.08 -36.7,83.19 -82.35,84.9l-298.24,-298.24h209.92v-85.33h-295.25l-42.67,-42.67h337.92v-85.33h-341.33v81.92l-252.59,-252.59h679.25c46.93,0 85.34,38.41 85.34,85.34zM341.33,469.33l-85.33,-85.33v85.33zM341.33,512h-85.33v85.33h85.33z"/>
+		</clipPath>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-4QdX4z1B" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-9vkufemT" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-lhop9cMy" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<filter id="filter-qlZAWRkH" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-DnjyKU7c">
+			<rect fill="url(#color-4QdX4z1B)" x="0" y="73.81" width="938.67" height="938.67"/>
+		</mask>
+		<mask id="mask-MvQsLT5g">
+			<path d="M938.67,958.29l-54.19,54.19l-244.48,-244.48h-384l-170.67,170.67l0.43,-724.91l-85.76,-85.76l54.19,-54.19l395.52,395.52zM938.67,170.67v512c0,46.08 -36.7,83.19 -82.35,84.9l-298.24,-298.24h209.92v-85.33h-295.25l-42.67,-42.67h337.92v-85.33h-341.33v81.92l-252.59,-252.59h679.25c46.93,0 85.34,38.41 85.34,85.34zM341.33,469.33l-85.33,-85.33v85.33zM341.33,512h-85.33v85.33h85.33z" fill="url(#color-9vkufemT)"/>
+		</mask>
+		<mask id="mask-z3nP3pWA">
+			<path d="M938.67,958.29l-54.19,54.19l-244.48,-244.48h-384l-170.67,170.67l0.43,-724.91l-85.76,-85.76l54.19,-54.19l395.52,395.52zM938.67,170.67v512c0,46.08 -36.7,83.19 -82.35,84.9l-298.24,-298.24h209.92v-85.33h-295.25l-42.67,-42.67h337.92v-85.33h-341.33v81.92l-252.59,-252.59h679.25c46.93,0 85.34,38.41 85.34,85.34zM341.33,469.33l-85.33,-85.33v85.33zM341.33,512h-85.33v85.33h85.33z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-z3nP3pWA)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="0" y="73.81" width="938.67" height="938.67" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-DnjyKU7c)">
+				<rect x="0" y="73.81" width="938.67" height="938.67" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-qlZAWRkH)" mask="url(#mask-MvQsLT5g)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="0" y="73.81" width="938.67" height="938.67" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-Bu32MmF9)">
+			<path d="M-93,1055.48v-1124.67h1124.67v1124.67zM54.19,73.81l-54.19,54.19l85.76,85.76l-0.43,724.91l170.67,-170.67h384l244.48,244.48l54.19,-54.19zM853.33,85.33h-679.25l252.59,252.59v-81.92h341.33v85.33h-337.92l42.67,42.67h295.25v85.33h-209.92l298.24,298.24c45.65,-1.71 82.35,-38.82 82.35,-84.9v-512c0,-46.93 -38.41,-85.34 -85.34,-85.34zM256,469.33v-85.33l85.33,85.33zM341.33,597.33h-85.33v-85.33h85.33z" fill="#000000" filter="url(#filter-lhop9cMy)"/>
+		</g>
+	</g>
+</svg>

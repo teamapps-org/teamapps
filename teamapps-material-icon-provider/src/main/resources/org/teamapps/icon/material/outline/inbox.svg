@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>inbox icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,249.17v525.66c0,75.23 -61.3,136.53 -136.53,136.53h-526.03c-76.22,0 -136.16,-61.91 -136.16,-136.53l0.38,-525.69c0.01,-74.78 59.36,-136.5 135.78,-136.5h526.03c75.02,0 136.53,60.71 136.53,136.53zM310.24,310.61v252.59h89.12c33.93,0 61.44,27.51 61.44,61.44c0,28.27 23.05,51.2 51.2,51.2c28.15,0 51.2,-22.93 51.2,-51.2c0,-33.93 27.51,-61.44 61.44,-61.44h88.75v-252.59zM774.83,174.08h-526.03c-41.68,0 -74.34,33.41 -74.34,75.09l-0.38,525.66c0,41.3 33.04,75.09 74.72,75.09h526.03c41.3,0 75.09,-33.79 75.09,-75.09v-525.66c0,-41.68 -33.79,-75.09 -75.09,-75.09zM774.83,624.64h-150.19c0,62.33 -50.69,112.64 -112.64,112.64c-61.95,0 -112.64,-50.31 -112.64,-112.64h-150.56v-375.47h526.03z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

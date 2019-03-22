@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>reply_all icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-mDmPUGCI">
+			<path d="M0,203.18h1024v755.6h-1024z"/>
+		</clipPath>
+		<filter id="filter-wkH8nLXq" x="-11%" y="-8%" width="128%" height="177%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-mDmPUGCI)">
+			<path d="M967.68,815.78c-94.94,-132.9 -227.84,-193.66 -417.7,-193.66v155.7l-265.82,-265.82l265.82,-265.82v151.9c265.82,37.98 379.73,227.84 417.7,417.7zM170.24,512l151.9,151.9v113.92l-265.82,-265.82l265.82,-265.82v113.92z" fill="#000000" filter="url(#filter-wkH8nLXq)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M967.68,815.78c-94.94,-132.9 -227.84,-193.66 -417.7,-193.66v155.7l-265.82,-265.82l265.82,-265.82v151.9c265.82,37.98 379.73,227.84 417.7,417.7zM170.24,512l151.9,151.9v113.92l-265.82,-265.82l265.82,-265.82v113.92z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

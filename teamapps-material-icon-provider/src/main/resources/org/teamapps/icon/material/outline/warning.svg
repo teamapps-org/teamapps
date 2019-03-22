@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>warning icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M565.17,105.75l413.01,713.39c11,19.01 11.03,42.44 0.05,61.47c-10.97,19.03 -31.26,30.75 -53.23,30.75h-826.02c-21.96,0 -42.26,-11.72 -53.23,-30.75c-10.97,-19.03 -10.95,-42.46 0.05,-61.47l413.01,-713.39c10.98,-18.97 31.25,-30.66 53.17,-30.66c21.92,0 42.19,11.68 53.17,30.66zM98.99,849.92h826.02l-413.01,-713.39zM549.55,587.09h-75.1v-150.18h75.1zM549.55,737.28h-75.1v-75.09h75.1z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

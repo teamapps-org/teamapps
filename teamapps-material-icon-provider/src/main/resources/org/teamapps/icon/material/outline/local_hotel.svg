@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_hotel icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M986.45,474.45v337.92c0,33.93 -27.51,61.44 -61.44,61.44h-75.09c-33.93,0 -61.44,-27.51 -61.44,-61.44v-51.2h-552.96v51.2c0,33.93 -27.51,61.44 -61.44,61.44h-75.09c-33.93,0 -61.44,-27.51 -61.44,-61.44v-563.2c0,-33.93 27.51,-61.44 61.44,-61.44h75.09c33.93,0 61.44,27.51 61.44,61.44v37.89c25.98,-15.4 56.32,-24.23 88.75,-24.23c36.15,0 69.71,10.98 97.51,29.79c10.75,-17.85 30.32,-29.79 52.67,-29.79h300.38c116.91,0 211.62,94.71 211.62,211.62zM774.83,324.27h-300.38v262.82h-300.37v-337.92h-75.09v563.2h75.09v-112.64h675.84v112.64h75.09v-337.92c0,-82.98 -67.21,-150.18 -150.18,-150.18zM324.27,549.55c62.33,0 112.64,-50.31 112.64,-112.64c0,-62.33 -50.31,-112.64 -112.64,-112.64c-62.33,0 -112.64,50.31 -112.64,112.64c0,62.33 50.31,112.64 112.64,112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>flight_takeoff icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,490.24l-226.56,60.59l-185.6,49.49l-226.56,60.59l-68.27,18.34l-32.85,-56.74l-77.65,-134.83l61.86,-16.64l84.06,65.71l212.05,-56.75l-176.64,-305.92l82.35,-21.76l294.4,274.35l226.56,-60.59c34.13,-9.39 69.54,11.1 78.5,45.23c8.96,34.13 -11.09,69.12 -45.65,78.93zM106.67,810.67h810.66v85.33h-810.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

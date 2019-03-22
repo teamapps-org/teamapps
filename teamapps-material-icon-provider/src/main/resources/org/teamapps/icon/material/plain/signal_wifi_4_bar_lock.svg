@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>signal_wifi_4_bar_lock icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M661.33,729.6l-149.33,187.73l-494.93,-618.66c17.07,-12.8 209.06,-170.67 494.93,-170.67c285.87,0 477.86,157.87 494.93,170.67l-89.6,110.93c-12.8,-4.27 -25.59,-4.27 -42.66,-4.27c-119.47,0 -213.34,93.87 -213.34,213.34zM1024,725.33v170.67c0,21.33 -21.34,42.67 -42.67,42.67h-213.33c-21.33,0 -42.67,-21.34 -42.67,-42.67v-170.67c0,-21.33 21.34,-42.66 42.67,-42.66v-64c0,-59.73 46.94,-106.67 106.67,-106.67c59.73,0 106.66,46.94 106.66,106.67v64c21.33,0 42.67,21.33 42.67,42.66zM938.67,618.67c0,-34.13 -29.87,-64 -64,-64c-34.13,0 -64,29.87 -64,64v64h128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

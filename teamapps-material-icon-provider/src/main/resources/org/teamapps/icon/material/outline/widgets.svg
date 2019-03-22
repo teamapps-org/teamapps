@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>widgets icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M942.93,380.47l-107.63,107.64h14.62c33.93,0 61.44,27.51 61.44,61.44v300.37c0,33.93 -27.51,61.44 -61.44,61.44h-300.37c-14.14,0 -27.17,-4.78 -37.55,-12.81c-10.38,8.03 -23.41,12.81 -37.55,12.81h-300.37c-33.93,0 -61.44,-27.51 -61.44,-61.44v-300.37c0,-14.14 4.78,-27.17 12.81,-37.55c-8.03,-10.38 -12.81,-23.41 -12.81,-37.55v-300.37c0,-33.93 27.51,-61.44 61.44,-61.44h300.37c33.93,0 61.44,27.51 61.44,61.44v14.81l107.67,-107.48c23.99,-23.94 62.83,-23.94 86.81,0l212.51,212.13c24.03,23.99 24.05,62.92 0.04,86.93zM535.07,484.54c-0.31,1.89 -0.71,3.76 -1.19,5.59c1.83,-0.48 3.7,-0.88 5.59,-1.19zM686.97,124.9l-212.52,212.13v-162.95h-300.37v300.37h300.37v-137.42l212.52,212.52h-137.42v300.37h300.37v-300.37h-162.95l212.51,-212.52zM174.08,849.92h300.37v-300.37h-300.37z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

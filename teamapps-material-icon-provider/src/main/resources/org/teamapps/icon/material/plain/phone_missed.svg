@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>phone_missed icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1024.43,741.12c0,11.95 -4.7,22.61 -12.38,30.29l-105.81,105.82c-7.68,7.68 -18.34,12.37 -30.29,12.37c-11.52,0 -22.19,-4.27 -29.87,-11.95c-34.13,-31.15 -72.11,-58.02 -113.92,-78.93c-14.08,-6.83 -23.89,-21.76 -23.89,-38.4v-132.27c-61.87,-20.05 -128,-30.72 -196.27,-30.72c-68.27,0 -134.4,10.67 -196.27,31.15v132.27c0,17.07 -9.81,31.57 -23.89,38.4c-41.39,20.91 -79.78,47.36 -113.49,78.93c-7.68,7.25 -18.35,11.95 -29.87,11.95c-11.95,0 -22.61,-4.7 -30.29,-12.38l-105.82,-105.81c-7.68,-7.68 -12.37,-18.34 -12.37,-30.29c0,-11.95 4.69,-22.62 12.37,-30.3c130.13,-123.31 305.92,-199.25 499.63,-199.25c193.71,0 369.5,75.94 499.63,199.25c7.68,7.68 12.8,17.92 12.8,29.87zM277.33,384h-64v-256h256v64h-149.33l192,192l256,-256l42.67,42.67l-298.67,298.66l-234.67,-234.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

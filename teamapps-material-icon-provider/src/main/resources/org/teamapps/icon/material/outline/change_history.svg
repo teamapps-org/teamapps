@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>change_history icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M887.47,873.81h-750.94c-22.34,0 -42.91,-12.12 -53.74,-31.66c-10.83,-19.54 -10.2,-43.41 1.64,-62.35l375.47,-600.74c11.23,-17.96 30.92,-28.88 52.1,-28.88c21.18,0 40.87,10.91 52.1,28.88l375.47,600.74c11.84,18.94 12.46,42.81 1.64,62.35c-10.83,19.54 -31.4,31.66 -53.74,31.66zM512,469.15l-129.1,206.69h258.21zM512,211.63l-375.47,600.74h750.94zM751.92,737.28h-479.85l239.92,-384.1z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

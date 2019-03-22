@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>attachment icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-XBzGaINA" x="-13%" y="-11%" width="143%" height="223%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M132.26,530.98c0,-115.44 93.41,-208.85 208.86,-208.85h398.72c83.92,0 151.9,67.97 151.9,151.89c0,83.92 -67.98,151.9 -151.9,151.9h-322.78c-52.4,0 -94.93,-42.53 -94.93,-94.94c0,-52.4 42.52,-94.93 94.93,-94.93h284.8v75.94h-288.22c-20.89,0 -20.89,37.98 0,37.98h326.19c41.77,0 75.94,-34.18 75.94,-75.95c0,-41.77 -34.18,-75.94 -75.94,-75.94h-398.72c-73.29,0 -132.9,59.61 -132.9,132.9c0,73.29 59.61,132.91 132.9,132.91h360.74v75.94h-360.74c-115.44,0 -208.86,-93.41 -208.86,-208.86z" fill="#000000" filter="url(#filter-XBzGaINA)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M132.26,530.98c0,-115.44 93.41,-208.85 208.86,-208.85h398.72c83.92,0 151.9,67.97 151.9,151.89c0,83.92 -67.98,151.9 -151.9,151.9h-322.78c-52.4,0 -94.93,-42.53 -94.93,-94.94c0,-52.4 42.52,-94.93 94.93,-94.93h284.8v75.94h-288.22c-20.89,0 -20.89,37.98 0,37.98h326.19c41.77,0 75.94,-34.18 75.94,-75.95c0,-41.77 -34.18,-75.94 -75.94,-75.94h-398.72c-73.29,0 -132.9,59.61 -132.9,132.9c0,73.29 59.61,132.91 132.9,132.91h360.74v75.94h-360.74c-115.44,0 -208.86,-93.41 -208.86,-208.86z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

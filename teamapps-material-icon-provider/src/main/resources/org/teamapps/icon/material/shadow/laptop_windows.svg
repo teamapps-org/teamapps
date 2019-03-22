@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>laptop_windows icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-9T7hiDVO">
+			<path d="M0,127.24h1024v831.54h-1024z"/>
+		</clipPath>
+		<filter id="filter-Ks6e9ym4" x="-11%" y="-7%" width="128%" height="156%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-9T7hiDVO)">
+			<path d="M967.68,739.84v75.94h-911.36v-75.94h151.9v-37.98c-41.77,0 -75.95,-34.18 -75.95,-75.94v-379.74c0,-41.77 34.18,-75.94 75.95,-75.94h607.57c41.77,0 75.95,34.18 75.95,75.94l-0.38,379.74c0,41.77 -33.8,75.94 -75.57,75.94v37.98zM208.22,625.92h607.57v-379.74h-607.57z" fill="#000000" filter="url(#filter-Ks6e9ym4)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M967.68,739.84v75.94h-911.36v-75.94h151.9v-37.98c-41.77,0 -75.95,-34.18 -75.95,-75.94v-379.74c0,-41.77 34.18,-75.94 75.95,-75.94h607.57c41.77,0 75.95,34.18 75.95,75.94l-0.38,379.74c0,41.77 -33.8,75.94 -75.57,75.94v37.98zM208.22,625.92h607.57v-379.74h-607.57z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

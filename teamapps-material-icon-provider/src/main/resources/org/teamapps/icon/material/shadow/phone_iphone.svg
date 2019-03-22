@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>phone_iphone icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-G7AhljsP">
+			<path d="M153.18,51.3h679.66v972.7h-679.66z"/>
+		</clipPath>
+		<filter id="filter-YcsnWnLZ" x="-19%" y="-6%" width="188%" height="135%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-G7AhljsP)">
+			<path d="M739.84,189.22v645.55c0,52.4 -42.53,94.93 -94.94,94.93h-303.78c-52.4,0 -94.94,-42.52 -94.94,-94.93v-645.55c0,-52.4 42.53,-94.93 94.94,-94.93h303.78c52.4,0 94.94,42.52 94.94,94.93zM663.9,208.22h-341.76v531.62h341.76zM549.98,834.78c0,-31.51 -25.45,-56.96 -56.96,-56.96c-31.51,0 -56.96,25.45 -56.96,56.96c0,31.51 25.45,56.96 56.96,56.96c31.51,0 56.96,-25.45 56.96,-56.96z" fill="#000000" filter="url(#filter-YcsnWnLZ)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M739.84,189.22v645.55c0,52.4 -42.53,94.93 -94.94,94.93h-303.78c-52.4,0 -94.94,-42.52 -94.94,-94.93v-645.55c0,-52.4 42.53,-94.93 94.94,-94.93h303.78c52.4,0 94.94,42.52 94.94,94.93zM663.9,208.22h-341.76v531.62h341.76zM549.98,834.78c0,-31.51 -25.45,-56.96 -56.96,-56.96c-31.51,0 -56.96,25.45 -56.96,56.96c0,31.51 25.45,56.96 56.96,56.96c31.51,0 56.96,-25.45 56.96,-56.96z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

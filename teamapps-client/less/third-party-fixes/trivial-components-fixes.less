@@ -1,0 +1,76 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+@tr-tree-indent: 15px;
+@tr-editor-font-size: 100%;
+@tr-input-min-height: @input-height-base;
+
+.tr-tree-expander {
+  margin: 0 1px 0 3px !important;
+}
+
+.tr-input-wrapper:not(.focus) .tr-editor {
+  background-color: transparent;
+}
+
+.tr-input-wrapper {
+  border-radius: @border-radius-base;
+  min-height: @input-height-base;
+}
+
+.tr-combobox-selected-entry-wrapper {
+  align-items: stretch;
+}
+
+.tr-combobox-selected-entry-wrapper {
+  .tr-combobox-entry {
+    flex: 1 1 auto;
+  }
+}
+
+.tr-dropdown {
+  max-height: 200px;
+  z-index: 10000000;
+}
+
+.tr-datetimefield .tr-editor-wrapper .tr-date-editor,
+.tr-datetimefield .tr-editor-wrapper .tr-time-editor {
+  padding-left: 3px;
+}
+.tr-datetimefield .tr-editor-wrapper .tr-time-icon-wrapper {
+  margin-left: 6px;
+}
+
+.tr-input-wrapper {
+  box-shadow: none;
+  transition: border-color @default-color-transition-time, box-shadow @default-color-transition-time;
+}
+
+.tr-remove-button {
+  opacity: .6;
+}
+
+.tr-editor {
+  border-radius: 4px;
+}
+
+.tr-tree-entry-children-wrapper:empty {
+  display: none !important;
+}
+

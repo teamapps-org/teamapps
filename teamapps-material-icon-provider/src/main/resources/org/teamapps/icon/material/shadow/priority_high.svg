@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>priority_high icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-ifd8yWIm" x="-62%" y="-7%" width="511%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M436.06,777.82c0,-41.95 34,-75.95 75.94,-75.95c41.95,0 75.94,34.01 75.94,75.95c0,41.95 -34,75.94 -75.94,75.94c-41.95,0 -75.94,-34 -75.94,-75.94zM436.06,170.24h151.89v455.68h-151.89z" fill="#000000" filter="url(#filter-ifd8yWIm)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M436.06,777.82c0,-41.95 34,-75.95 75.94,-75.95c41.95,0 75.94,34.01 75.94,75.95c0,41.95 -34,75.94 -75.94,75.94c-41.95,0 -75.94,-34 -75.94,-75.94z" fill="currentColor"/>
+			</g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M436.06,170.24h151.89v455.68h-151.89z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

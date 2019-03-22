@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>restore_page icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M853.33,341.33v512c0,46.93 -38.4,85.34 -85.33,85.34h-512.43c-46.93,0 -84.9,-38.41 -84.9,-85.34l0.42,-682.66c0,-46.93 37.98,-85.34 84.91,-85.34h341.33zM725.33,554.67c0,-117.76 -95.57,-213.34 -213.33,-213.34c-75.52,0 -141.23,39.26 -179.2,98.14l-55.47,-55.47v170.67h170.67l-68.27,-68.27c24.75,-47.79 74.67,-81.07 132.27,-81.07c82.35,0 149.33,66.99 149.33,149.34c0,82.35 -66.98,149.33 -149.33,149.33c-50.77,0 -95.57,-25.6 -122.45,-64h-72.96c32.85,75.09 107.94,128 195.41,128c117.76,0 213.33,-95.57 213.33,-213.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

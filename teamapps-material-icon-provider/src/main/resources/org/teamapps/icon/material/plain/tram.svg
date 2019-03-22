@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>tram icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M700.59,853.33h3.41l64,64v21.34h-85.33l-85.34,-85.34h-160.85l-85.33,85.34h-95.15v-21.34l67.84,-67.84c-59.73,-13.23 -110.51,-64.85 -110.51,-126.72v-360.1c0,-118.19 122.03,-144.64 255.58,-148.48l32.42,-64.86h-202.66v-64h426.66v64h-138.66l-32.43,64.43c145.07,3.84 256.43,29.87 256.43,148.91v360.1c0,72.11 -37.97,130.56 -110.08,130.56zM725.33,384h-426.66v213.33h426.66zM576,725.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>kitchen icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M853.33,170.67v682.66c0,46.93 -38.4,85.34 -85.33,85.34h-512c-46.93,0 -85.33,-38.41 -85.33,-85.34v-682.66c0,-47.36 38.4,-85.34 85.33,-85.34l512,0.43c46.93,0 85.33,37.55 85.33,84.91zM768,468.48h-512v384.85h512zM768,170.67h-512v213.33h512zM341.33,512h85.34v213.33h-85.34zM341.33,213.33h85.34v128h-85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

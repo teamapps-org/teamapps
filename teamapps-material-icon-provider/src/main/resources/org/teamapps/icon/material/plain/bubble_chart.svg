@@ -1,0 +1,15 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>bubble_chart icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M170.67,614.4c0,-75.41 61.12,-136.53 136.53,-136.53c75.41,0 136.53,61.12 136.53,136.53c0,75.41 -61.12,136.53 -136.53,136.53c-75.41,0 -136.53,-61.12 -136.53,-136.53z" fill="currentColor"/>
+		</g>
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M546.13,768c0,-47.13 38.21,-85.33 85.34,-85.33c47.13,0 85.33,38.2 85.33,85.33c0,47.13 -38.2,85.33 -85.33,85.33c-47.13,0 -85.34,-38.2 -85.34,-85.33z" fill="currentColor"/>
+		</g>
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M443.73,375.47c0,-113.11 91.69,-204.8 204.8,-204.8c113.11,0 204.8,91.69 204.8,204.8c0,113.11 -91.69,204.8 -204.8,204.8c-113.11,0 -204.8,-91.69 -204.8,-204.8z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

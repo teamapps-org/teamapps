@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>airline_seat_legroom_normal icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-ok4D2eiL" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-qb0Epqas" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-vpFpWKAp" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-BHYWjC7Y">
+			<path d="M942.94,816c0,47.78 -38.62,86.4 -86.4,86.4h-182.4c-14.14,0 -25.6,-11.46 -25.6,-25.6v-258.14h-34.68c3.03,4.2 4.81,9.36 4.81,14.94v81.06c0,14.14 -11.46,25.6 -25.6,25.6h-243.2c-126.01,0 -228.26,-102.25 -228.26,-228.26v-364.8c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c8.25,0 15.59,3.9 20.27,9.96c4.68,-6.06 12.02,-9.96 20.27,-9.96h243.2c14.14,0 25.6,11.46 25.6,25.6v217.6h177.06c58.72,0 106.67,47.94 106.67,106.66v258.14h35.2c47.78,0 86.4,38.62 86.4,86.4zM331.27,606.21c-33.64,-14.86 -60.76,-41.98 -75.62,-75.62c7.45,38.19 37.43,68.17 75.62,75.62zM856.54,755.2h-60.8v-283.74c0,-44.58 -36.49,-81.06 -81.07,-81.06h-202.66v-243.2h-243.2v324.26c0,66.88 54.72,121.6 121.6,121.6h283.74v283.74h182.4c33.64,0 60.8,-27.16 60.8,-60.8c0,-33.64 -27.16,-60.8 -60.8,-60.8zM228.26,512v-364.8h-81.06v364.8c0,111.87 90.79,202.66 202.66,202.66h243.2v-81.06h-243.2c-67.29,0 -121.6,-54.31 -121.6,-121.6z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-OKwjr9xe">
+			<rect fill="url(#color-qb0Epqas)" x="121.6" y="121.6" width="821.34" height="780.8"/>
+		</mask>
+		<mask id="mask-SbkBEhD2">
+			<path d="M942.94,816c0,47.78 -38.62,86.4 -86.4,86.4h-182.4c-14.14,0 -25.6,-11.46 -25.6,-25.6v-258.14h-34.68c3.03,4.2 4.81,9.36 4.81,14.94v81.06c0,14.14 -11.46,25.6 -25.6,25.6h-243.2c-126.01,0 -228.26,-102.25 -228.26,-228.26v-364.8c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c8.25,0 15.59,3.9 20.27,9.96c4.68,-6.06 12.02,-9.96 20.27,-9.96h243.2c14.14,0 25.6,11.46 25.6,25.6v217.6h177.06c58.72,0 106.67,47.94 106.67,106.66v258.14h35.2c47.78,0 86.4,38.62 86.4,86.4zM331.27,606.21c-33.64,-14.86 -60.76,-41.98 -75.62,-75.62c7.45,38.19 37.43,68.17 75.62,75.62zM856.54,755.2h-60.8v-283.74c0,-44.58 -36.49,-81.06 -81.07,-81.06h-202.66v-243.2h-243.2v324.26c0,66.88 54.72,121.6 121.6,121.6h283.74v283.74h182.4c33.64,0 60.8,-27.16 60.8,-60.8c0,-33.64 -27.16,-60.8 -60.8,-60.8zM228.26,512v-364.8h-81.06v364.8c0,111.87 90.79,202.66 202.66,202.66h243.2v-81.06h-243.2c-67.29,0 -121.6,-54.31 -121.6,-121.6z" fill="url(#color-ok4D2eiL)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-BHYWjC7Y)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="121.6" y="121.6" width="821.34" height="780.8" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-OKwjr9xe)">
+				<rect x="121.6" y="121.6" width="821.34" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-vpFpWKAp)" mask="url(#mask-SbkBEhD2)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="121.6" y="121.6" width="821.34" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

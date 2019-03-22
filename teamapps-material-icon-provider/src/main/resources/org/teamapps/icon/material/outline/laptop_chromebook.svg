@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>laptop_chromebook icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1024,737.28v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-901.12c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h13.65v-501.76c0,-33.93 27.51,-61.44 61.44,-61.44h750.94c33.93,0 61.44,27.51 61.44,61.44v501.76h13.65c33.93,0 61.44,27.51 61.44,61.44zM273.07,310.61v252.59h477.86v-252.59zM887.47,737.28v-563.2h-750.94v563.2h-75.09v75.09h901.12v-75.09zM812.37,624.64h-600.74v-375.47h600.74zM587.09,737.28h-150.18v-37.55h150.18z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

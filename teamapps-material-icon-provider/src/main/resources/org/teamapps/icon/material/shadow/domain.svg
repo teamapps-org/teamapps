@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>domain icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-TNbaFMk0" x="-13%" y="-7%" width="143%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M891.74,322.14v531.62h-759.47v-683.52h379.74v151.9zM815.78,398.08h-303.78v75.94h75.94v75.95h-75.94v75.94h75.94v75.94h-75.94v75.95h303.78zM284.16,701.86h-75.94v75.95h75.94zM284.16,549.98h-75.94v75.94h75.94zM436.06,701.86h-75.95v75.95h75.95zM436.06,549.98h-75.95v75.94h75.95zM739.84,549.98h-75.94v-75.95h75.94zM284.16,398.08h-75.94v75.94h75.94zM284.16,246.18h-75.94v75.95h75.94zM436.06,398.08h-75.95v75.94h75.95zM436.06,246.18h-75.95v75.95h75.95zM739.84,701.86h-75.94v-75.94h75.94z" fill="#000000" filter="url(#filter-TNbaFMk0)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,322.14v531.62h-759.47v-683.52h379.74v151.9zM815.78,398.08h-303.78v75.94h75.94v75.95h-75.94v75.94h75.94v75.94h-75.94v75.95h303.78zM284.16,701.86h-75.94v75.95h75.94zM284.16,549.98h-75.94v75.94h75.94zM436.06,701.86h-75.95v75.95h75.95zM436.06,549.98h-75.95v75.94h75.95zM739.84,549.98h-75.94v-75.95h75.94zM284.16,398.08h-75.94v75.94h75.94zM284.16,246.18h-75.94v75.95h75.94zM436.06,398.08h-75.95v75.94h75.95zM436.06,246.18h-75.95v75.95h75.95zM739.84,701.86h-75.94v-75.94h75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

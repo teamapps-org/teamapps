@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>verified_user icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,213.33v256c0,236.8 -163.84,458.24 -384,512c-220.16,-53.76 -384,-275.2 -384,-512v-256l384,-170.66zM768,384l-60.16,-60.59l-281.17,281.18l-110.51,-110.08l-60.16,60.16l170.67,170.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

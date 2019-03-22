@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>fullscreen_exit icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-kZyEa0AF" x="-18%" y="-9%" width="182%" height="183%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M587.94,587.94h189.87v75.95h-113.92v113.92h-75.95zM246.18,587.94h189.87v189.87h-75.95v-113.92h-113.92zM777.82,360.1v75.95h-189.87v-189.87h75.95v113.92zM360.1,246.18h75.95v189.87h-189.87v-75.95h113.92z" fill="#000000" filter="url(#filter-kZyEa0AF)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M587.94,587.94h189.87v75.95h-113.92v113.92h-75.95zM246.18,587.94h189.87v189.87h-75.95v-113.92h-113.92zM777.82,360.1v75.95h-189.87v-189.87h75.95v113.92zM360.1,246.18h75.95v189.87h-189.87v-75.95h113.92z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

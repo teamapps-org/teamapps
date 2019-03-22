@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>broken_image icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,213.33v281.18l-128,-128.43l-170.67,171.09l-170.66,-170.66l-170.67,170.66l-128,-128.42v-195.42c0,-46.93 38.4,-85.33 85.33,-85.33h597.34c46.93,0 85.33,38.4 85.33,85.33zM768,487.25l128,128.43v194.99c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-46.93,0 -85.33,-38.4 -85.33,-85.33v-280.75l128,127.57l170.67,-170.66l170.66,170.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

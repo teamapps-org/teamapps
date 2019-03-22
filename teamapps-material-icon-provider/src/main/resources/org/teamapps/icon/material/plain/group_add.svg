@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>group_add icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M341.33,512h-128v128h-85.33v-128h-128v-85.33h128v-128h85.33v128h128zM810.67,682.67v85.33h-512v-85.33c0,-85.33 170.67,-128 256,-128c85.33,0 256,42.67 256,128zM426.67,341.33c0,-70.83 57.17,-128 128,-128c70.83,0 127.57,57.17 127.57,128c0,70.83 -56.74,128 -127.57,128c-70.83,0 -128,-57.17 -128,-128zM729.17,463.36c23.89,-34.99 38.4,-76.38 38.4,-122.03c0,-45.65 -14.08,-87.46 -38.4,-122.02c11.95,-3.84 25.18,-5.98 38.83,-5.98c70.83,0 127.57,57.17 127.57,128c0,70.83 -56.74,128 -127.57,128c-13.65,0 -26.88,-2.13 -38.83,-5.97zM1024,682.67v85.33h-128v-85.33c0,-50.35 -23.47,-90.03 -58.88,-121.18c85.76,14.93 186.88,55.47 186.88,121.18z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

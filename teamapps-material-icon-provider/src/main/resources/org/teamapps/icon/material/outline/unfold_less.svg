@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>unfold_less icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M468.56,480.35l-172.34,-172.34c-24.05,-24.05 -23.98,-63.08 0.15,-87.04l53.32,-52.94c24.02,-23.85 62.8,-23.78 86.73,0.15l75.58,75.58l75.58,-75.58c23.93,-23.93 62.72,-24 86.73,-0.15l53.32,52.94c24.14,23.97 24.21,62.99 0.15,87.04l-172.34,172.34c-23.99,23.99 -62.9,23.99 -86.89,0zM555.49,543.69l171.96,172.34c23.95,24 23.93,62.87 -0.05,86.84l-52.94,52.94c-23.99,23.99 -62.9,23.99 -86.89,0l-75.58,-75.58l-75.58,75.58c-23.93,23.93 -62.72,24 -86.73,0.15l-53.32,-52.94c-24.14,-23.97 -24.21,-62.99 -0.15,-87.04l172.34,-172.34c24.01,-24.01 62.95,-23.99 86.94,0.05zM684.34,264.57l-53.32,-52.94l-119.02,119.02l-119.02,-119.02l-53.32,52.94l172.34,172.34zM339.66,759.43l53.32,52.94l119.02,-119.02l119.02,119.02l52.94,-52.94l-171.96,-172.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

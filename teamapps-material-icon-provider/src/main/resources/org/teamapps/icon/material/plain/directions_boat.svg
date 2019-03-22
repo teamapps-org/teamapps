@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>directions_boat icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M87.47,525.65c-3.84,-11.09 -2.56,-23.04 2.56,-33.28c5.12,-10.24 14.51,-17.92 25.6,-21.33l55.04,-17.92v-197.12c0,-46.93 38.4,-85.33 85.33,-85.33h128v-128h256v128h128c46.93,0 85.33,38.4 85.33,85.33v197.12l54.62,17.92c11.09,3.41 20.48,11.09 25.6,21.33c5.12,10.24 5.97,22.19 2.56,33.28l-80.64,285.02h-2.14c-68.27,0 -128.85,-37.55 -170.66,-85.34c-41.81,47.79 -102.4,85.34 -170.67,85.34c-68.27,0 -128.86,-37.55 -170.67,-85.34c-41.81,47.79 -102.39,85.34 -170.66,85.34h-2.14zM938.67,896v85.33h-85.34c-58.88,0 -116.9,-14.51 -170.66,-42.24c-107.52,55.04 -233.82,55.04 -341.34,0c-53.76,27.31 -111.78,42.24 -170.66,42.24h-85.34v-85.33h85.34c59.31,0 118.61,-20.05 170.66,-56.32c104.11,72.96 237.23,72.96 341.34,0c52.05,36.27 111.35,56.32 170.66,56.32zM256,425.39l256,-84.06l256,84.06v-169.39h-512z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

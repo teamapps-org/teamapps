@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>swap_horiz icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M725.76,554.67v-128h-299.09v-85.34h299.09v-128l170.24,170.67zM298.24,597.33h299.09v85.34h-299.09v128l-170.24,-170.67l170.24,-170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

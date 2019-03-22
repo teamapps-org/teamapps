@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>grid_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M969.81,969.81l-54.18,54.19l-85.34,-85.33h-659.62c-46.93,0 -85.34,-38.41 -85.34,-85.34v-659.2l-85.33,-85.33l54.19,-54.61zM279.47,170.67l-85.34,-85.34h659.2c46.93,0 85.34,38.41 85.34,85.34v659.2l-85.34,-85.34v-61.86h-61.86l-85.34,-85.34h147.2v-170.66h-170.66v147.2l-85.34,-85.34v-61.86h-61.86l-85.34,-85.34h147.2v-170.66h-170.66v147.2l-85.34,-85.34v-61.86zM682.67,341.33h170.66v-170.66h-170.66zM341.33,682.67h-170.66v170.66h170.66zM341.33,450.13l-23.46,-23.46h-147.2v170.66h170.66zM597.33,705.71l-23.46,-23.04h-147.2v170.66h170.66zM744.96,853.33l-62.29,-62.29v62.29zM170.67,341.33h61.86l-61.86,-61.86zM426.67,597.33h61.86l-61.86,-61.86z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

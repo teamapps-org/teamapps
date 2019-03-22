@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>directions_bus icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M170.67,256c0,-149.33 152.74,-170.67 341.33,-170.67c188.59,0 341.33,21.34 341.33,170.67v426.67c0,37.55 -16.63,71.25 -42.66,94.72v75.94c0,23.47 -19.2,42.67 -42.67,42.67h-42.67c-23.47,0 -42.66,-19.2 -42.66,-42.67v-42.66h-341.34v42.66c0,23.47 -19.19,42.67 -42.66,42.67h-42.67c-23.47,0 -42.67,-19.2 -42.67,-42.67v-75.94c-26.03,-23.47 -42.66,-57.17 -42.66,-94.72zM768,256h-512v213.33h512zM384,661.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64zM768,661.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

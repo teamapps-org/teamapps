@@ -1,0 +1,12 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>golf_course icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M768,832c0,-35.35 28.65,-64 64,-64c35.35,0 64,28.65 64,64c0,35.35 -28.65,64 -64,64c-35.35,0 -64,-28.65 -64,-64z" fill="currentColor"/>
+		</g>
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M469.33,383.15v386.13c121.17,6.83 213.34,41.81 213.34,84.05c0,46.93 -114.77,85.34 -256,85.34c-141.23,0 -256,-38.41 -256,-85.34c0,-31.57 51.63,-58.88 128,-73.81v73.81h85.33v-768l341.33,167.26z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

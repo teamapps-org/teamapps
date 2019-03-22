@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>room_service icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-wOP6LSTI" x="-13%" y="-9%" width="143%" height="183%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M853.76,663.9h-683.52c10.25,-154.55 123.41,-281.01 271.89,-311.77c-3.8,-9.11 -6.07,-19.36 -6.07,-29.99c0,-41.77 34.18,-75.95 75.94,-75.95c41.77,0 75.94,34.18 75.94,75.95c0,10.64 -2.27,20.88 -6.07,29.99c148.48,30.76 261.63,157.22 271.89,311.77zM132.26,701.86h759.47v75.95h-759.47z" fill="#000000" filter="url(#filter-wOP6LSTI)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,663.9h-683.52c10.25,-154.55 123.41,-281.01 271.89,-311.77c-3.8,-9.11 -6.07,-19.36 -6.07,-29.99c0,-41.77 34.18,-75.95 75.94,-75.95c41.77,0 75.94,34.18 75.94,75.95c0,10.64 -2.27,20.88 -6.07,29.99c148.48,30.76 261.63,157.22 271.89,311.77zM132.26,701.86h759.47v75.95h-759.47z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

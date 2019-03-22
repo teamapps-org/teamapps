@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>toll icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-VLH5LBIn">
+			<path d="M981.33,512c0,188.59 -152.74,341.33 -341.33,341.33c-188.59,0 -341.33,-152.74 -341.33,-341.33c0,-188.59 152.74,-341.33 341.33,-341.33c188.59,0 341.33,152.74 341.33,341.33zM896,512c0,-141.23 -114.77,-256 -256,-256c-141.23,0 -256,114.77 -256,256c0,141.23 114.77,256 256,256c141.23,0 256,-114.77 256,-256zM298.67,753.07v89.17c-147.2,-37.97 -256,-171.09 -256,-330.24c0,-159.15 108.8,-292.27 256,-330.24v89.17c-99.41,34.99 -170.67,129.71 -170.67,241.07c0,111.36 71.26,206.08 170.67,241.07z"/>
+		</clipPath>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-k1cIjFVp" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-Vk3WFwhI" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-LR43p5kx" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<filter id="filter-nwjhgZAj" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-EWw3Dy0R">
+			<path d="M981.33,512c0,188.59 -152.74,341.33 -341.33,341.33c-188.59,0 -341.33,-152.74 -341.33,-341.33c0,-188.59 152.74,-341.33 341.33,-341.33c188.59,0 341.33,152.74 341.33,341.33zM896,512c0,-141.23 -114.77,-256 -256,-256c-141.23,0 -256,114.77 -256,256c0,141.23 114.77,256 256,256c141.23,0 256,-114.77 256,-256zM298.67,753.07v89.17c-147.2,-37.97 -256,-171.09 -256,-330.24c0,-159.15 108.8,-292.27 256,-330.24v89.17c-99.41,34.99 -170.67,129.71 -170.67,241.07c0,111.36 71.26,206.08 170.67,241.07z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-Q0HbSRWD">
+			<rect fill="url(#color-Vk3WFwhI)" x="42.67" y="170.67" width="938.66" height="682.66"/>
+		</mask>
+		<mask id="mask-tGrJxMME">
+			<path d="M981.33,512c0,188.59 -152.74,341.33 -341.33,341.33c-188.59,0 -341.33,-152.74 -341.33,-341.33c0,-188.59 152.74,-341.33 341.33,-341.33c188.59,0 341.33,152.74 341.33,341.33zM896,512c0,-141.23 -114.77,-256 -256,-256c-141.23,0 -256,114.77 -256,256c0,141.23 114.77,256 256,256c141.23,0 256,-114.77 256,-256zM298.67,753.07v89.17c-147.2,-37.97 -256,-171.09 -256,-330.24c0,-159.15 108.8,-292.27 256,-330.24v89.17c-99.41,34.99 -170.67,129.71 -170.67,241.07c0,111.36 71.26,206.08 170.67,241.07z" fill="url(#color-k1cIjFVp)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-EWw3Dy0R)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="42.67" y="170.67" width="938.66" height="682.66" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-Q0HbSRWD)">
+				<rect x="42.67" y="170.67" width="938.66" height="682.66" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-nwjhgZAj)" mask="url(#mask-tGrJxMME)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="42.67" y="170.67" width="938.66" height="682.66" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-VLH5LBIn)">
+			<path d="M-50.33,896.33v-868.66h1124.66v868.66zM640,170.67c-188.59,0 -341.33,152.74 -341.33,341.33c0,188.59 152.74,341.33 341.33,341.33c188.59,0 341.33,-152.74 341.33,-341.33c0,-188.59 -152.74,-341.33 -341.33,-341.33zM640,768c-141.23,0 -256,-114.77 -256,-256c0,-141.23 114.77,-256 256,-256c141.23,0 256,114.77 256,256c0,141.23 -114.77,256 -256,256zM128,512c0,-111.36 71.26,-206.08 170.67,-241.07v-89.17c-147.2,37.97 -256,171.09 -256,330.24c0,159.15 108.8,292.27 256,330.24v-89.17c-99.41,-34.99 -170.67,-129.71 -170.67,-241.07z" fill="#000000" filter="url(#filter-LR43p5kx)"/>
+		</g>
+	</g>
+</svg>

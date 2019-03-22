@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>call_missed_outgoing icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-4YjkOJHy" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-EgLc9NfW" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-JlxzMBPw" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-DI8cfNzn">
+			<rect fill="url(#color-EgLc9NfW)" x="121.6" y="283.74" width="780.8" height="473.15"/>
+		</mask>
+		<mask id="mask-nYx0Uk8z">
+			<path d="M222.45,291.23l289.55,289.55l164.78,-164.78h-124.24c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6h324.26c14.14,0 25.6,11.46 25.6,25.6v324.26c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-124.24l-240.03,240.03c-10,10 -26.21,10 -36.2,0l-364.8,-364.8c-10,-10 -10,-26.21 0,-36.2l57.15,-57.15c10,-10 26.21,-10 36.2,0zM147.2,366.49l364.8,364.8l283.74,-283.74v186.05h81.06v-324.26h-324.26v81.06h186.05l-226.58,226.58l-307.65,-307.65z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-sfDDmYyn">
+			<path d="M222.45,291.23l289.55,289.55l164.78,-164.78h-124.24c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6h324.26c14.14,0 25.6,11.46 25.6,25.6v324.26c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-124.24l-240.03,240.03c-10,10 -26.21,10 -36.2,0l-364.8,-364.8c-10,-10 -10,-26.21 0,-36.2l57.15,-57.15c10,-10 26.21,-10 36.2,0zM147.2,366.49l364.8,364.8l283.74,-283.74v186.05h81.06v-324.26h-324.26v81.06h186.05l-226.58,226.58l-307.65,-307.65z" fill="url(#color-4YjkOJHy)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-nYx0Uk8z)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="121.6" y="283.74" width="780.8" height="473.15" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-DI8cfNzn)">
+				<rect x="121.6" y="283.74" width="780.8" height="473.15" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-JlxzMBPw)" mask="url(#mask-sfDDmYyn)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="121.6" y="283.74" width="780.8" height="473.15" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

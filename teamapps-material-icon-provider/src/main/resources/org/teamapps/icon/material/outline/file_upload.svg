@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>file_upload icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M249.17,498.35c-24.85,0 -47.25,-14.97 -56.76,-37.93c-9.51,-22.96 -4.25,-49.38 13.32,-66.96l262.83,-262.83c23.99,-23.99 62.9,-23.99 86.89,0l262.83,262.83c17.57,17.57 22.83,44 13.32,66.96c-9.51,22.96 -31.91,37.93 -56.76,37.93h-88.75v163.84c0,4.69 -0.53,9.26 -1.52,13.65h90.27c33.93,0 61.44,27.51 61.44,61.44v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-525.66c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h90.27c-1,-4.39 -1.52,-8.96 -1.52,-13.65v-163.84zM399.36,662.19h225.28v-225.28h150.19l-262.83,-262.83l-262.83,262.83h150.19zM249.17,812.37h525.66v-75.09h-525.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>signal_cellular_4_bar icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-bOvtSckD" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-dwfHNcaA" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-KBULAqaJ" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-ilPOS2Jm">
+			<path d="M942.94,106.66v810.67c0,14.14 -11.46,25.6 -25.6,25.6h-810.67c-10.35,0 -19.69,-6.24 -23.65,-15.8c-3.96,-9.57 -1.77,-20.58 5.55,-27.9l810.67,-810.67c7.32,-7.32 18.33,-9.51 27.9,-5.55c9.57,3.96 15.8,13.3 15.8,23.65zM106.66,917.34h810.67v-810.67z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-QKtx9Uwz">
+			<path d="M942.94,106.66v810.67c0,14.14 -11.46,25.6 -25.6,25.6h-810.67c-10.35,0 -19.69,-6.24 -23.65,-15.8c-3.96,-9.57 -1.77,-20.58 5.55,-27.9l810.67,-810.67c7.32,-7.32 18.33,-9.51 27.9,-5.55c9.57,3.96 15.8,13.3 15.8,23.65zM106.66,917.34h810.67v-810.67z" fill="url(#color-bOvtSckD)"/>
+		</mask>
+		<mask id="mask-qsvh0TlB">
+			<rect fill="url(#color-dwfHNcaA)" x="81.06" y="81.06" width="861.87" height="861.87"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-ilPOS2Jm)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-qsvh0TlB)">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-KBULAqaJ)" mask="url(#mask-QKtx9Uwz)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

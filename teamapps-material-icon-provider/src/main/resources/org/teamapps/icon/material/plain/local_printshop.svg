@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_printshop icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,469.33v256h-170.67v170.67h-512v-170.67h-170.67v-256c0,-70.83 57.17,-128 128,-128h597.34c70.83,0 128,57.17 128,128zM768,298.67h-512v-170.67h512zM682.67,597.33h-341.34v213.34h341.34zM853.33,469.33c0,-23.47 -19.19,-42.66 -42.66,-42.66c-23.47,0 -42.67,19.19 -42.67,42.66c0,23.47 19.2,42.67 42.67,42.67c23.47,0 42.66,-19.2 42.66,-42.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

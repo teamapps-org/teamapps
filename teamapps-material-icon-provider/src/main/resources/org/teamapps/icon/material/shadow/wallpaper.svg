@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>wallpaper icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-KFITnyYg">
+			<path d="M39.26,89.26h945.47v934.74h-945.47z"/>
+		</clipPath>
+		<filter id="filter-qehcPWWO" x="-13%" y="-6%" width="143%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-KFITnyYg)">
+			<path d="M208.22,474.02h-75.95v-265.81c0,-41.77 34.18,-75.95 75.95,-75.95h265.81v75.95h-265.81zM891.74,208.22v265.81h-75.95v-265.81h-265.81v-75.95h265.81c41.77,0 75.95,34.18 75.95,75.95zM815.78,549.98h75.95v265.81c0,41.77 -34.18,75.95 -75.95,75.95h-265.81v-75.95h265.81zM208.22,815.78h265.81v75.95h-265.81c-41.77,0 -75.95,-34.18 -75.95,-75.95v-265.81h75.95zM548.84,690.85l77.08,-102.91l113.92,151.9h-455.68l151.9,-189.86zM644.9,436.06c-31.51,0 -56.96,-25.45 -56.96,-56.96c0,-31.51 25.45,-56.96 56.96,-56.96c31.51,0 56.96,25.45 56.96,56.96c0,31.51 -25.45,56.96 -56.96,56.96z" fill="#000000" filter="url(#filter-qehcPWWO)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M208.22,474.02h-75.95v-265.81c0,-41.77 34.18,-75.95 75.95,-75.95h265.81v75.95h-265.81zM891.74,208.22v265.81h-75.95v-265.81h-265.81v-75.95h265.81c41.77,0 75.95,34.18 75.95,75.95zM815.78,549.98h75.95v265.81c0,41.77 -34.18,75.95 -75.95,75.95h-265.81v-75.95h265.81zM208.22,815.78h265.81v75.95h-265.81c-41.77,0 -75.95,-34.18 -75.95,-75.95v-265.81h75.95zM548.84,690.85l77.08,-102.91l113.92,151.9h-455.68l151.9,-189.86zM644.9,436.06c-31.51,0 -56.96,-25.45 -56.96,-56.96c0,-31.51 25.45,-56.96 56.96,-56.96c31.51,0 56.96,25.45 56.96,56.96c0,31.51 -25.45,56.96 -56.96,56.96z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

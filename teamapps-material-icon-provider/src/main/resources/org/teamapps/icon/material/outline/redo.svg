@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>redo icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,324.27v337.92c0,33.93 -27.51,61.44 -61.44,61.44h-337.92c-24.85,0 -47.25,-14.97 -56.76,-37.93c-9.51,-22.96 -4.25,-49.38 13.32,-66.96l81.63,-81.64c-29.1,-12.84 -61.02,-19.99 -94.51,-19.99c-105.9,0 -195.6,68.88 -227,164.28c-10.62,32.26 -45.39,49.79 -77.64,39.13l-88.61,-29.29c-32.19,-10.64 -49.68,-45.35 -39.08,-77.56c59.81,-181.6 230.25,-313.31 432.32,-313.31c94.34,0 181.33,28.92 253.64,77.61l97.15,-97.15c17.57,-17.57 44,-22.83 66.96,-13.32c22.96,9.51 37.93,31.91 37.93,56.76zM752.3,459.44c-69.46,-60.45 -159.57,-97.63 -259.07,-97.63c-174.59,0 -322.15,113.78 -373.96,271.09l88.61,29.29c39.42,-119.78 152.06,-206.51 285.36,-206.51c73.22,0 140.04,27.03 192.24,70.58l-135.92,135.92h337.92v-337.92z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

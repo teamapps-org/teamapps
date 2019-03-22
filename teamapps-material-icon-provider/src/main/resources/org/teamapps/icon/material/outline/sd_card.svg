@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>sd_card icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M873.81,211.63v600.74c0,75.22 -61.29,136.54 -136.53,136.54h-450.56c-75.24,0 -136.53,-61.32 -136.53,-136.54l0.75,-450.66c0.03,-16.22 6.47,-31.78 17.92,-43.27l224.53,-225.28c11.53,-11.57 27.19,-18.07 43.52,-18.07h300.37c75.24,0 136.53,61.32 136.53,136.54zM737.28,136.53h-300.37l-224.53,225.28l-0.75,450.56c0,41.3 33.79,75.1 75.09,75.1h450.56c41.3,0 75.09,-33.8 75.09,-75.1v-600.74c0,-41.3 -33.79,-75.1 -75.09,-75.1zM512,361.81h-75.09v-150.18h75.09zM624.64,361.81h-75.09v-150.18h75.09zM737.28,361.81h-75.09v-150.18h75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

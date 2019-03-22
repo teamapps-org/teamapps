@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>brush icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-Q4jLW2vW" x="-13%" y="-7%" width="145%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M842.75,285.68l-340.25,340.24l-104.42,-104.42l340.24,-340.25c14.81,-14.81 38.73,-14.81 53.54,0l50.89,50.89c14.81,14.81 14.81,38.73 0,53.54zM436.06,701.86c0,83.92 -67.98,151.9 -151.9,151.9c-57.34,0 -116.96,-29.62 -151.9,-75.94c31.9,0 75.95,-26.21 75.95,-75.95c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.92,50.88 113.92,113.92z" fill="#000000" filter="url(#filter-Q4jLW2vW)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M842.75,285.68l-340.25,340.24l-104.42,-104.42l340.24,-340.25c14.81,-14.81 38.73,-14.81 53.54,0l50.89,50.89c14.81,14.81 14.81,38.73 0,53.54zM436.06,701.86c0,83.92 -67.98,151.9 -151.9,151.9c-57.34,0 -116.96,-29.62 -151.9,-75.94c31.9,0 75.95,-26.21 75.95,-75.95c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.92,50.88 113.92,113.92z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

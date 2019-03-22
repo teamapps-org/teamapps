@@ -1,0 +1,325 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+@UiTabPanelButtonHeight: 23px;
+@UiTabPanelMobileHeight: @input-height-large - 2px;
+
+.UiTabPanel {
+
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
+
+  > .tab-panel-header {
+    flex: 0 0 auto;
+    user-select: none;
+    cursor: default;
+
+    > .background-color-div {
+      background-color: rgba(255, 255, 255, @direct-transparency-alpha);
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+      border-bottom: 1px solid @table-border-color;
+
+      .UiRootPanel > & {
+        padding: 0 7px;
+      }
+
+      .spacer {
+        flex: 1 1 0;
+      }
+
+      .tab-button {
+        display: inline-flex;
+        height: @UiTabPanelButtonHeight;
+        padding: 0 9px;
+        align-items: center;
+
+        .tab-button-icon {
+          margin-right: 5px;
+        }
+        .tab-button-close-button {
+          margin-left: 7px;
+          margin-right: -4px;
+          filter: grayscale(100%);
+          &:hover {
+            filter: none;
+          }
+        }
+        .tab-button-caption {
+          white-space: nowrap;
+          max-width: 180px;
+          overflow-x: hidden;
+          text-overflow: ellipsis;
+        }
+        .tab-button-filler {
+          flex: 1 1 0px;
+        }
+
+        &.selected {
+          box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, .09);
+          position: relative;
+        }
+      }
+
+      > .tab-button-container {
+        flex: 0 0 auto;
+      }
+
+      .tool-button-container, .window-button-container {
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+        padding: 0 2px;
+      }
+      .tool-button-container:empty, .window-button-container:empty {
+        display: none;
+      }
+
+      .dropdown-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: @UiTabPanelButtonHeight;
+        height: auto;
+        flex: 0 0 auto;
+        text-align: center;
+        padding-top: 1px;
+        outline: none;
+        &:before {
+          content: '';
+          .caret;
+        }
+      }
+
+      .tab-panel-dropdown {
+        position: absolute;
+        z-index: 10000;
+        box-shadow: 0 3px 8px -1px rgba(0, 0, 0, .4);
+        border-radius: 0 0 @border-radius-base @border-radius-base;
+        .dropdown-button-container {
+          display: flex;
+          flex-direction: column;
+          background-color: rgba(255, 255, 255, @direct-transparency-alpha);
+
+          > .tab-button.selected {
+            background-color: @teamapps-hover-color;
+
+            &:after {
+              position: absolute;
+              left: -3px;
+              top: 50%;
+              display: inline-block;
+              margin-top: -7px;
+              content: '';
+              border-bottom: 7px solid transparent;
+              border-left: 7px solid rgba(255, 255, 255, 1);
+              border-top: 7px solid transparent;
+              z-index: 1000;
+              box-shadow: -1px 0 2px -1px rgba(0, 0, 0, .7);
+            }
+          }
+
+          .tab-button .tab-button-caption {
+            max-width: none;
+          }
+
+          &:last-child {
+            border-radius: 0 0 @border-radius-base @border-radius-base;
+          }
+        }
+      }
+    }
+  }
+
+  > .tabpanel-content-wrapper-wrapper {
+    flex: 1 1 1px;
+    overflow: visible;
+    position: relative;
+    //background-color: white; // NO! cannot do this, otherwise the background of the whole application is not visible if used as top level
+
+    > .tabpanel-content-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+
+      > .tab-content-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-content: stretch;
+
+        &:not(.selected) {
+          .pseudo-hidden;
+        }
+
+        .tab-toolbar-container {
+          flex: 0 0 auto;
+        }
+        .tab-component-container {
+          flex: 1 1 1px;
+          height: 100%;
+          overflow: visible;
+
+          > * {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+.UiTabPanel.tab-style-blocks {
+
+  > .tab-panel-header {
+
+    .tab-button-container .tab-button.selected {
+      background-color: @teamapps-hover-color;
+
+      &:after {
+        position: absolute;
+        bottom: -3px;
+        left: 50%;
+        display: inline-block;
+        margin-left: -7px;
+        content: '';
+        border-right: 7px solid transparent;
+        border-bottom: 7px solid rgba(255, 255, 255, 1);
+        border-left: 7px solid transparent;
+        z-index: 1000;
+        box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .3);
+      }
+    }
+
+    > .background-color-div > .tab-button-container {
+      > .tab-button:not(.tool-tab-button),
+      > .dropdown-button:not(.tool-tab-button) {
+        transition: background-color .2s;
+        &:hover {
+          background-color: @teamapps-hover-color;
+        }
+        &:active {
+          background-color: @teamapps-active-color;
+        }
+      }
+    }
+
+  }
+
+}
+
+.UiTabPanel.tab-style-ears {
+
+  &.tab-bar-hidden {
+    > .tab-panel-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      overflow: hidden;
+    }
+  }
+
+  > .tab-panel-header {
+    background: none !important;
+
+    > .background-color-div {
+      background-color: unset;
+      border-bottom: none;
+      padding: 0 1px 0 5px;
+    }
+
+    .tab-button {
+      height: 22px;
+      border-top: 1px solid;
+      border-left: 1px solid;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+
+      &:not(.selected) {
+        border-top-color: rgba(0, 0, 0, .2);
+        border-left-color: rgba(0, 0, 0, .1);
+      }
+
+      &:not(.selected) {
+        background-color: rgba(220, 220, 220, @direct-transparency-alpha);
+        box-shadow: inset 0 -5px 5px -5px rgba(0, 0, 0, .2);
+      }
+
+      &.selected {
+        border-left-color: rgba(0, 0, 0, .2);
+        background-color: rgba(255, 255, 255, @direct-transparency-alpha);
+      }
+
+      &:last-child {
+        border-right: 1px solid rgba(0, 0, 0, .2);
+      }
+
+      &.selected {
+        border-top-color: @brand-warning;
+      }
+    }
+
+    .tab-button,
+    .dropdown-button {
+      transition: background-color .1s;
+      &:active {
+        background-color: white;
+      }
+    }
+
+    .tab-button.tool-tab-button {
+      border-top: 1px solid;
+      border-left: 1px solid;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      border-top-color: rgba(0, 0, 0, .2);
+      border-left-color: rgba(0, 0, 0, .1);
+      padding: 0px 3px 2px 3px;
+      background-color: rgba(240, 240, 240, @direct-transparency-alpha);
+      box-shadow: none;
+      border-right: 1px solid rgba(0, 0, 0, .2);
+    }
+
+  }
+
+  &.teamapps-component-maximized .background-color-div {
+    background-color: @maximized-shadow-color !important;
+  }
+
+}
+
+.optimized-for-touch .UiTabPanel > .tab-panel-header {
+  height: @UiTabPanelMobileHeight;
+  .tab-button {
+    height: @UiTabPanelMobileHeight;
+  }
+  .dropdown-button {
+    width: @UiTabPanelMobileHeight;
+  }
+
+}

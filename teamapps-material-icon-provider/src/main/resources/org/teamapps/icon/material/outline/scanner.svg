@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>scanner icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,530.77v206.51c0,75.23 -61.3,136.53 -136.53,136.53h-525.66c-75.23,0 -136.53,-61.3 -136.53,-136.53v-150.19c0,-75.23 61.3,-136.53 136.53,-136.53h122.59l-199.81,-72.27c-32.04,-11.59 -48.53,-47.04 -36.75,-79.02l26.29,-71.34c11.71,-31.78 46.93,-48.09 78.74,-36.47l584.05,213.4c57.43,17.85 87.09,76.45 87.09,125.91zM804.86,463.19l-585.73,-214.02l-26.29,71.34l529.41,191.49h-473.09c-41.3,0 -75.09,33.79 -75.09,75.09v150.19c0,41.3 33.79,75.09 75.09,75.09h525.66c41.3,0 75.09,-33.79 75.09,-75.09v-206.51c0,-30.03 -18.77,-60.08 -45.06,-67.58zM774.83,699.73h-375.47v-75.09h375.47zM324.27,699.73h-75.1v-75.09h75.1z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

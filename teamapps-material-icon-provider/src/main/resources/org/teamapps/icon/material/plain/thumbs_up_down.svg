@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>thumbs_up_down icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1024,490.67v277.33c0,17.49 -7.25,33.71 -18.77,45.23l-210.78,210.77l-33.7,-33.28c-8.53,-8.96 -14.08,-20.9 -14.08,-34.13l0.85,-10.24l28.16,-135.68h-221.01c-23.47,0 -42.67,-19.2 -42.67,-42.67v-53.33c0,-8.11 1.7,-16.22 4.69,-23.47l96.43,-225.71c9.81,-22.61 32.43,-38.82 58.88,-38.82h288c35.41,0 64,28.59 64,64zM512,309.33c0,8.11 -1.7,16.22 -4.69,23.47l-96.43,225.71c-9.81,22.61 -32.43,38.82 -58.88,38.82h-288c-35.41,0 -64,-28.59 -64,-64v-277.33c0,-17.49 7.25,-33.71 18.77,-45.23l210.78,-210.77l33.7,33.71c8.53,8.96 14.08,20.9 14.08,34.13l-0.85,9.81l-28.16,135.68h221.01c23.47,0 42.67,19.2 42.67,42.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

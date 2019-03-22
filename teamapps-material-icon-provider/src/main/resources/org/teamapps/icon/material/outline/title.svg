@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>title icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M836.27,211.63v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-145.07v389.12c0,33.93 -27.51,61.44 -61.44,61.44h-112.64c-33.93,0 -61.44,-27.51 -61.44,-61.44v-389.12h-145.07c-33.93,0 -61.44,-27.51 -61.44,-61.44v-112.64c0,-33.93 27.51,-61.44 61.44,-61.44h525.66c33.93,0 61.44,27.51 61.44,61.44zM249.17,211.63v112.64h206.51v450.56h112.64v-450.56h206.51v-112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

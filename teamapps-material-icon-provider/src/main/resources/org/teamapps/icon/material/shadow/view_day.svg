@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>view_day icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-JnGw9hSZ" x="-13%" y="-7%" width="145%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M853.76,398.08v227.84c0,20.89 -17.09,37.98 -37.98,37.98h-645.54c-20.89,0 -37.98,-17.09 -37.98,-37.98v-227.84c0,-20.89 17.09,-37.98 37.98,-37.98h645.54c20.89,0 37.98,17.09 37.98,37.98zM132.26,739.84h721.5v113.92h-721.5zM853.76,170.24v113.92h-721.5v-113.92z" fill="#000000" filter="url(#filter-JnGw9hSZ)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,398.08v227.84c0,20.89 -17.09,37.98 -37.98,37.98h-645.54c-20.89,0 -37.98,-17.09 -37.98,-37.98v-227.84c0,-20.89 17.09,-37.98 37.98,-37.98h645.54c20.89,0 37.98,17.09 37.98,37.98zM132.26,739.84h721.5v113.92h-721.5zM853.76,170.24v113.92h-721.5v-113.92z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

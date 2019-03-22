@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>place icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M810.67,384c0,224 -298.67,554.67 -298.67,554.67c0,0 -298.67,-330.67 -298.67,-554.67c0,-165.12 133.55,-298.67 298.67,-298.67c165.12,0 298.67,133.55 298.67,298.67zM618.67,384c0,-58.88 -47.79,-106.67 -106.67,-106.67c-58.88,0 -106.67,47.79 -106.67,106.67c0,58.88 47.79,106.67 106.67,106.67c58.88,0 106.67,-47.79 106.67,-106.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

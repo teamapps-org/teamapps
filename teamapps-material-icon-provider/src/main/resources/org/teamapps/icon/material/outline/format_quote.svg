@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>format_quote icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M549.55,610.99c-11.93,0 -23.06,-3.4 -32.49,-9.28l-62.75,125.5c-10.41,20.81 -31.68,33.96 -54.95,33.96h-112.64c-21.29,0 -41.07,-11.03 -52.26,-29.14c-11.19,-18.11 -12.21,-40.73 -2.69,-59.78l30.63,-61.26h-13.23c-33.93,0 -61.44,-27.51 -61.44,-61.44v-225.28c0,-33.93 27.51,-61.44 61.44,-61.44h225.28c14.14,0 27.17,4.78 37.55,12.81c10.38,-8.03 23.41,-12.81 37.55,-12.81h225.28c33.93,0 61.44,27.51 61.44,61.44v225.28c0,9.54 -2.22,18.95 -6.49,27.48l-75.1,150.18c-10.41,20.81 -31.68,33.96 -54.95,33.96h-112.64c-21.29,0 -41.07,-11.03 -52.26,-29.14c-11.19,-18.11 -12.21,-40.73 -2.69,-59.78l30.63,-61.26zM286.72,699.73h112.64l75.09,-150.18v-225.28h-225.28v225.28h112.64zM587.09,699.73h112.64l75.1,-150.18v-225.28h-225.28v225.28h112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>check_box icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,249.17v525.66c0,75.02 -60.71,136.53 -136.53,136.53h-525.66c-75.82,0 -136.53,-61.51 -136.53,-136.53v-525.66c0,-75.02 60.71,-136.53 136.53,-136.53h525.66c75.82,0 136.53,61.51 136.53,136.53zM774.83,174.08h-525.66c-41.68,0 -75.09,33.79 -75.09,75.09v525.66c0,41.3 33.41,75.09 75.09,75.09h525.66c41.68,0 75.09,-33.79 75.09,-75.09v-525.66c0,-41.3 -33.41,-75.09 -75.09,-75.09zM436.91,699.73l-187.74,-187.73l52.94,-52.94l134.8,134.42l284.98,-284.98l52.94,53.31z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

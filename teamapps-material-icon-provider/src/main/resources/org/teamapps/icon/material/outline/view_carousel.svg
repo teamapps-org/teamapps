@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>view_carousel icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M324.27,150.19h375.46c33.93,0 61.44,27.51 61.44,61.44v13.65h126.3c33.93,0 61.44,27.51 61.44,61.44v413.01c0,33.93 -27.51,61.44 -61.44,61.44h-126.3v13.66c0,33.93 -27.51,61.44 -61.44,61.44h-375.46c-33.93,0 -61.44,-27.51 -61.44,-61.44v-13.66h-126.3c-33.93,0 -61.44,-27.51 -61.44,-61.44v-413.01c0,-33.93 27.51,-61.44 61.44,-61.44h126.3v-13.65c0,-33.93 27.51,-61.44 61.44,-61.44zM324.27,774.83h375.46v-563.2h-375.46zM136.53,699.73h150.19v-413.01h-150.19zM737.28,286.72v413.01h150.19v-413.01z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

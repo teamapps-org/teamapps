@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>signal_cellular_null icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-cYwwQ7qs" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-rlYjTZkk" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-dSv34Da1" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-aowPT8kI">
+			<path d="M917.34,942.94h-810.67c-10.35,0 -19.69,-6.24 -23.65,-15.8c-3.96,-9.57 -1.77,-20.58 5.55,-27.9l810.67,-810.67c7.32,-7.32 18.33,-9.51 27.9,-5.55c9.57,3.96 15.8,13.3 15.8,23.65v810.67c0,14.14 -11.46,25.6 -25.6,25.6zM810.66,364.24l-446.42,446.42h446.42zM917.34,106.66l-810.67,810.67h810.67zM836.26,836.26h-533.82l533.82,-533.82z" fill="url(#color-rlYjTZkk)"/>
+		</mask>
+		<mask id="mask-GEKHfIHS">
+			<rect fill="url(#color-cYwwQ7qs)" x="81.06" y="81.06" width="861.87" height="861.87"/>
+		</mask>
+		<mask id="mask-WzZk7FXr">
+			<path d="M917.34,942.94h-810.67c-10.35,0 -19.69,-6.24 -23.65,-15.8c-3.96,-9.57 -1.77,-20.58 5.55,-27.9l810.67,-810.67c7.32,-7.32 18.33,-9.51 27.9,-5.55c9.57,3.96 15.8,13.3 15.8,23.65v810.67c0,14.14 -11.46,25.6 -25.6,25.6zM810.66,364.24l-446.42,446.42h446.42zM917.34,106.66l-810.67,810.67h810.67zM836.26,836.26h-533.82l533.82,-533.82z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-WzZk7FXr)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-GEKHfIHS)">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-dSv34Da1)" mask="url(#mask-aowPT8kI)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

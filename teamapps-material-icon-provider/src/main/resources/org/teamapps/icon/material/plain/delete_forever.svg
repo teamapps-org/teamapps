@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>delete_forever icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M256,298.67h512v512c0,46.93 -38.4,85.33 -85.33,85.33h-341.34c-46.93,0 -85.33,-38.4 -85.33,-85.33zM451.84,597.33l-90.45,90.46l60.16,60.16l90.45,-90.46l90.45,90.46l60.16,-60.16l-90.45,-90.46l90.45,-90.45l-60.16,-60.16l-90.45,90.45l-90.88,-90.45l-60.16,60.16zM810.67,170.67v85.33h-597.34v-85.33h149.34l42.66,-42.67h213.34l42.66,42.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

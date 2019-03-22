@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>speaker_notes_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M748.37,768l190.3,190.29l-54.19,54.19l-244.48,-244.48h-384l-170.67,170.67l0.43,-724.91l-85.76,-85.76l54.19,-54.19l47.36,47.36l154.45,154.46l65.71,65.7l128,128zM938.67,170.67v512c0,46.08 -36.7,83.19 -82.35,84.9l-298.24,-298.24h209.92v-85.33h-295.25l-42.67,-42.67h337.92v-85.33h-341.33v81.92l-252.59,-252.59h679.25c46.93,0 85.34,38.41 85.34,85.34zM341.33,469.33l-85.33,-85.33v85.33zM341.33,512h-85.33v85.33h85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

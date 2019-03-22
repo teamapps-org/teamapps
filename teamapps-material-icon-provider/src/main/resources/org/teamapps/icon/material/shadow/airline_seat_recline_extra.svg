@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_recline_extra icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-5JLcih71" x="-13%" y="-6%" width="143%" height="145%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M891.74,796.8l-56.96,56.96l-145.06,-113.92h-260.12c-54.68,0 -101.38,-38.73 -112.02,-92.66l-51.26,-224.8c-7.97,-46.32 23.16,-90.75 69.87,-99.11h0.77c12.53,-2.28 25.45,-1.14 37.59,2.28c10.25,3.03 20.12,7.59 28.85,14.43l62.28,48.23c47.46,37.21 116.19,59.24 178.09,47.46v80.88c-71.01,12.15 -135.56,-12.53 -195.56,-46.32l39.12,155.69h185.31zM663.9,853.76h-268.09c-93.8,0 -173.54,-68.35 -187.97,-161.01l-75.57,-370.61h75.95l74.8,359.22c8.36,55.44 56.19,96.46 112.4,96.46h268.48zM259.48,270.49c-34.18,-24.31 -42.53,-71.39 -18.61,-105.95c23.92,-34.18 71.39,-42.53 105.95,-18.61c34.18,24.31 42.53,71.39 18.61,105.95c-24.31,34.18 -71.39,42.53 -105.95,18.61z" fill="#000000" filter="url(#filter-5JLcih71)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,796.8l-56.96,56.96l-145.06,-113.92h-260.12c-54.68,0 -101.38,-38.73 -112.02,-92.66l-51.26,-224.8c-7.97,-46.32 23.16,-90.75 69.87,-99.11h0.77c12.53,-2.28 25.45,-1.14 37.59,2.28c10.25,3.03 20.12,7.59 28.85,14.43l62.28,48.23c47.46,37.21 116.19,59.24 178.09,47.46v80.88c-71.01,12.15 -135.56,-12.53 -195.56,-46.32l39.12,155.69h185.31zM663.9,853.76h-268.09c-93.8,0 -173.54,-68.35 -187.97,-161.01l-75.57,-370.61h75.95l74.8,359.22c8.36,55.44 56.19,96.46 112.4,96.46h268.48zM259.48,270.49c-34.18,-24.31 -42.53,-71.39 -18.61,-105.95c23.92,-34.18 71.39,-42.53 105.95,-18.61c34.18,24.31 42.53,71.39 18.61,105.95c-24.31,34.18 -71.39,42.53 -105.95,18.61z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

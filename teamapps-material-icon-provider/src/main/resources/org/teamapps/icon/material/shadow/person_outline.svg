@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>person_outline icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-GbykQIUc" x="-16%" y="-8%" width="166%" height="166%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M815.78,701.86v113.92h-607.57v-113.92c0,-101.01 202.39,-151.89 303.78,-151.89c101.39,0 303.78,50.88 303.78,151.89zM663.9,360.1c0,83.92 -67.98,151.9 -151.9,151.9c-83.92,0 -151.9,-67.98 -151.9,-151.9c0,-83.92 67.98,-151.89 151.9,-151.89c83.92,0 151.9,67.97 151.9,151.89zM512,622.12c-112.78,0 -231.64,55.44 -231.64,79.74v41.78h463.28v-41.78c0,-24.31 -118.86,-79.74 -231.64,-79.74zM512,280.36c-44.05,0 -79.74,35.7 -79.74,79.74c0,44.05 35.7,79.74 79.74,79.74c44.05,0 79.74,-35.7 79.74,-79.74c0,-44.05 -35.7,-79.74 -79.74,-79.74z" fill="#000000" filter="url(#filter-GbykQIUc)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M815.78,701.86v113.92h-607.57v-113.92c0,-101.01 202.39,-151.89 303.78,-151.89c101.39,0 303.78,50.88 303.78,151.89zM663.9,360.1c0,83.92 -67.98,151.9 -151.9,151.9c-83.92,0 -151.9,-67.98 -151.9,-151.9c0,-83.92 67.98,-151.89 151.9,-151.89c83.92,0 151.9,67.97 151.9,151.89zM512,622.12c-112.78,0 -231.64,55.44 -231.64,79.74v41.78h463.28v-41.78c0,-24.31 -118.86,-79.74 -231.64,-79.74zM512,280.36c-44.05,0 -79.74,35.7 -79.74,79.74c0,44.05 35.7,79.74 79.74,79.74c44.05,0 79.74,-35.7 79.74,-79.74c0,-44.05 -35.7,-79.74 -79.74,-79.74z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

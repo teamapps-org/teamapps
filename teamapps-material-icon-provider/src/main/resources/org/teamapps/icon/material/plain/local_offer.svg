@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_offer icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,554.67c0,23.47 -9.39,44.8 -25.18,60.16l-298.66,298.66c-15.36,15.79 -36.69,25.18 -60.16,25.18c-23.47,0 -44.8,-9.39 -60.16,-24.75l-384,-384c-15.79,-15.79 -25.18,-37.12 -25.18,-60.59v-298.66c0,-46.93 38.41,-85.34 85.34,-85.34h298.66c23.47,0 44.8,9.39 60.16,24.75l384,384c15.36,15.36 25.18,37.12 25.18,60.59zM298.67,234.67c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

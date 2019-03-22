@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>insert_drive_file icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M632.47,93.54l223.49,223.49c12.19,12.19 19.05,28.73 19.05,45.98v446.98c0,76.87 -62.63,139.53 -139.52,139.53h-447.35c-77.34,0 -139.14,-63.11 -139.14,-139.53l0.37,-595.99c0.01,-76.43 61.83,-139.5 139.15,-139.5h297.98c17.25,0 33.78,6.85 45.98,19.05zM586.49,89.85h-297.98c-68.72,0 -123.78,56.09 -123.79,124.15l-0.37,595.98c0,68.06 55.04,124.17 123.78,124.17h447.35c68.41,0 124.16,-55.78 124.16,-124.17v-446.98c0,-13.17 -5.23,-25.8 -14.55,-35.12l-223.49,-223.49c-9.31,-9.31 -21.95,-14.55 -35.12,-14.55zM586.49,139.52l223.49,223.49v446.98c0,40.97 -33.52,74.5 -74.49,74.5h-447.35c-40.97,0 -74.12,-33.53 -74.12,-74.5l0.37,-595.96c0,-40.97 33.16,-74.5 74.13,-74.5zM754.11,400.26l-204.86,-204.87v204.87z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

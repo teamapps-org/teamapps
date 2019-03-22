@@ -1,0 +1,15 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>subway icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M618.67,682.67c0,-23.56 19.1,-42.67 42.66,-42.67c23.56,0 42.67,19.11 42.67,42.67c0,23.56 -19.11,42.66 -42.67,42.66c-23.56,0 -42.66,-19.1 -42.66,-42.66z" fill="currentColor"/>
+		</g>
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M320,682.67c0,-23.56 19.11,-42.67 42.67,-42.67c23.56,0 42.66,19.11 42.66,42.67c0,23.56 -19.1,42.66 -42.66,42.66c-23.56,0 -42.67,-19.1 -42.67,-42.66z" fill="currentColor"/>
+		</g>
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,378.03v560.64h-853.34v-560.64c0,-119.89 65.28,-214.19 179.2,-258.56c76.8,-30.29 168.11,-34.14 247.47,-34.14c79.36,0 170.67,3.85 247.47,34.14c113.92,44.37 179.2,138.67 179.2,258.56zM768,384c0,-111.79 -114.35,-128 -256,-128c-128,0 -256,15.79 -256,128v293.55c0,61.44 50.35,111.78 111.79,111.78l-47.79,47.79v16.21h71.25l64,-64h120.75l64,64h64v-16.21l-48.21,-47.79c61.87,0 112.21,-49.91 112.21,-111.78zM299.09,384h426.67v213.33h-426.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>mic_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,841.81l-54.19,54.19l-178.77,-178.35c-32.85,19.2 -69.54,32.85 -108.37,38.4v139.95h-85.34v-139.95c-139.95,-20.91 -256,-141.23 -256,-286.72h72.54c0,128 108.37,217.6 226.13,217.6c34.56,0 68.27,-8.1 98.56,-22.18l-70.83,-70.83c-8.96,2.13 -18.34,3.41 -27.73,3.41c-70.83,0 -127.57,-57.17 -127.57,-128v-30.72l-256.43,-256.42l54.19,-54.19zM384,221.01v-7.68c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128v256c0,2.56 -0.85,4.7 -0.85,7.26zM772.27,609.28l-52.48,-52.48c11.52,-26.45 18.34,-55.9 18.34,-87.47h72.54c0,50.77 -14.51,98.14 -38.4,139.95z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

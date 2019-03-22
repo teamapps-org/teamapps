@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>youtube_searched_for icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,810.67l-63.58,63.14l-213.76,-212.9v-33.71l-11.52,-11.52c-48.64,41.81 -111.36,66.99 -180.05,66.99c-51.63,0 -99.41,-14.08 -140.8,-38.4l63.15,-63.15c23.89,10.24 49.92,16.21 77.65,16.21c105.81,0 192,-86.19 192,-192c0,-106.24 -86.19,-192 -192,-192c-105.81,0 -192,85.33 -192,192h148.91l-177.5,170.67l-163.84,-170.67h107.1c0,-149.33 124.16,-277.33 277.33,-277.33c153.17,0 277.33,124.16 277.33,277.33c0,69.12 -25.17,131.84 -66.98,180.48l11.52,11.52h34.13z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

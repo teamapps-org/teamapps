@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>brightness_3 icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M836.27,512c0,241.19 -195.72,436.91 -436.91,436.91c-45.77,0 -89.56,-6.99 -131.14,-20.13c-25.59,-8.08 -42.97,-31.84 -42.94,-58.67c0.04,-26.84 17.49,-50.54 43.1,-58.55c127.48,-39.88 219.73,-158.91 219.73,-299.56c0,-140.65 -92.26,-259.68 -219.73,-299.56c-25.61,-8.01 -43.06,-31.72 -43.1,-58.55c-0.04,-26.84 17.35,-50.59 42.94,-58.67c41.58,-13.13 85.37,-20.13 131.14,-20.13c241.19,0 436.91,195.72 436.91,436.91zM399.36,136.53c-39.42,0 -76.97,6.01 -112.64,17.27c152.44,47.69 262.83,189.98 262.83,358.2c0,168.21 -110.39,310.51 -262.83,358.2c35.67,11.26 73.22,17.27 112.64,17.27c207.26,0 375.47,-168.21 375.47,-375.47c0,-207.26 -168.21,-375.47 -375.47,-375.47z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

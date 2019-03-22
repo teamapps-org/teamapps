@@ -1,0 +1,110 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+abstract class AbstractClientMessage {
+	 required String sessionId;
+}
+
+class INIT extends AbstractClientMessage {
+    required UiClientInfo clientInfo;
+    required int maxRequestedCommandId;
+}
+
+class REINIT extends AbstractClientMessage {
+    required int lastReceivedCommandId;
+    required int maxRequestedCommandId;
+}
+
+abstract class AbstractClientPayloadMessage extends AbstractClientMessage {
+	required int id;
+}
+
+class EVENT extends AbstractClientPayloadMessage {
+    required UiEvent uiEvent;
+}
+
+class CMD_RESULT extends AbstractClientPayloadMessage {
+	required int cmdId;
+	required Object result;
+}
+
+class CMD_REQUEST extends AbstractClientMessage {
+	required int lastReceivedCommandId;
+	required int maxRequestedCommandId;
+}
+
+
+class KEEPALIVE extends AbstractClientMessage {
+}
+
+class TERMINATE extends AbstractClientMessage {
+}
+
+class CLIENT_ERROR extends AbstractServerMessage {
+    required enum { EXCEPTION } reason;
+    String message;
+}
+
+@TypeScriptFactory
+class UiClientInfo {
+	String ip;
+	String userAgentString;
+	String preferredLanguageIso;
+	int screenWidth;
+	int screenHeight;
+	int viewPortWidth;
+	int viewPortHeight;
+	boolean highDensityScreen;
+	String timezoneIana;
+	int timezoneOffsetMinutes;
+	List<String> clientTokens;
+	String clientUrl;
+	Dictionary<Object> clientParameters;
+}
+
+
+abstract class AbstractServerMessage { }
+
+class INIT_OK extends AbstractServerMessage {
+}
+
+class INIT_NOK extends AbstractServerMessage {
+	required enum {SESSION_NOT_FOUND} reason;
+}
+
+class REINIT_OK extends AbstractServerMessage {
+    required int lastReceivedEventId;
+}
+
+class REINIT_NOK extends AbstractServerMessage {
+    required enum {SESSION_NOT_FOUND, COMMAND_ID_NOT_FOUND} reason;
+}
+
+class SERVER_ERROR extends AbstractServerMessage {
+    required enum {
+		SESSION_NOT_FOUND,
+		EXCEPTION,
+		CMD_REQUEST_TOO_LARGE // the client is requesting a too high amount of commands
+    } reason;
+    String message;
+}
+
+class MULTI_CMD extends AbstractServerMessage {
+    required List<Object> cmds; // the CMS class does not get generated!
+}

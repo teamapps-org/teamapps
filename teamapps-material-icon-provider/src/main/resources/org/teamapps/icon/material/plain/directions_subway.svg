@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>directions_subway icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M853.33,256v405.33c0,82.35 -66.98,149.34 -149.33,149.34l64,64v21.33h-512v-21.33l64,-64c-82.35,0 -149.33,-66.99 -149.33,-149.34v-405.33c0,-149.33 152.74,-170.67 341.33,-170.67c188.59,0 341.33,21.34 341.33,170.67zM768,256h-213.33v213.33h213.33zM469.33,256h-213.33v213.33h213.33zM384,661.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64zM768,661.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

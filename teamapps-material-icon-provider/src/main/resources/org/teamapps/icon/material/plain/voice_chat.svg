@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>voice_chat icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,170.67v512c0,46.93 -38.41,85.33 -85.34,85.33h-597.33l-170.67,170.67l0.43,-768c0,-46.93 37.98,-85.34 84.91,-85.34h682.66c46.93,0 85.34,38.41 85.34,85.34zM768,256l-170.67,136.53v-136.53h-341.33v341.33h341.33v-136.53l170.67,136.53z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

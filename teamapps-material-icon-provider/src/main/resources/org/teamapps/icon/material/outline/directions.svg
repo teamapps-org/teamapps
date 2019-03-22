@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>directions icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M919.8,581.95l-337.7,337.7c-38.64,38.64 -101.19,38.64 -139.83,0l-337.92,-337.92c-38.64,-38.64 -38.64,-101.19 0,-139.83l337.92,-337.92c38.64,-38.64 101.19,-38.64 139.83,0l337.99,337.99c0.16,0.16 0.32,0.32 0.48,0.49c37.12,38.08 38.94,100.43 -0.77,139.49zM876.58,485.34l-337.92,-337.92c-14.64,-14.64 -38.3,-14.64 -52.94,0l-337.92,337.92c-14.64,14.64 -14.64,38.3 0,52.94l337.92,337.92c14.64,14.64 38.3,14.64 52.94,0l337.92,-337.92c14.64,-14.26 14.64,-37.92 0,-52.94zM587.09,605.87v-93.87h-150.18v112.64h-75.1v-150.19c0,-20.65 16.9,-37.54 37.55,-37.54h187.73v-93.87l131.42,131.41z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

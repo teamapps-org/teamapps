@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>import_contacts icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,256v622.93c0,10.67 -10.66,21.34 -21.33,21.34c-4.27,0 -6.4,-0.01 -10.67,-2.14c-59.73,-32 -132.26,-44.8 -202.66,-44.8c-72.53,0 -177.07,27.73 -234.67,64c-61.87,-46.93 -151.47,-64 -234.67,-64c-61.87,0 -145.06,19.21 -202.66,46.94c-4.27,0 -6.4,2.13 -10.67,2.13c-10.67,0 -21.33,-10.66 -21.33,-21.33v-625.07c61.87,-46.93 151.46,-64 234.66,-64c83.2,0 172.8,17.07 234.67,64c61.87,-46.93 151.47,-64 234.67,-64c49.92,0 101.97,6.4 149.33,21.33c32,10.67 59.73,23.47 85.33,42.67zM896,298.67c-46.93,-14.93 -98.13,-21.34 -149.33,-21.34c-72.53,0 -177.07,27.73 -234.67,64v490.67c57.6,-36.27 162.14,-64 234.67,-64c51.2,0 102.4,6.4 149.33,21.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>wallpaper icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M170.67,469.33h-85.34v-298.66c0,-46.93 38.41,-85.34 85.34,-85.34h298.66v85.34h-298.66zM938.67,170.67v298.66h-85.34v-298.66h-298.66v-85.34h298.66c46.93,0 85.34,38.41 85.34,85.34zM853.33,554.67h85.34v298.66c0,46.93 -38.41,85.34 -85.34,85.34h-298.66v-85.34h298.66zM170.67,853.33h298.66v85.34h-298.66c-46.93,0 -85.34,-38.41 -85.34,-85.34v-298.66h85.34zM553.39,712.96l86.61,-115.63l128,170.67h-512l170.67,-213.33zM661.33,426.67c-35.41,0 -64,-28.59 -64,-64c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64c0,35.41 -28.59,64 -64,64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

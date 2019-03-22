@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>web_asset icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M912.26,288.51v446.98c0,76.88 -62.64,139.52 -139.52,139.52h-521.48c-77.48,0 -139.52,-62.86 -139.52,-139.52v-446.98c0,-76.66 62.04,-139.52 139.52,-139.52h521.48c77.48,0 139.52,62.86 139.52,139.52zM772.74,164.35h-521.48c-68.94,0 -124.16,55.93 -124.16,124.16v446.98c0,68.23 55.22,124.16 124.16,124.16h521.48c68.4,0 124.16,-55.76 124.16,-124.16v-446.98c0,-68.23 -55.22,-124.16 -124.16,-124.16zM847.23,288.51v446.98c0,40.97 -33.52,74.49 -74.49,74.49h-521.48c-41.35,0 -74.49,-33.52 -74.49,-74.49v-446.98c0,-40.97 33.15,-74.49 74.49,-74.49h521.48c41.35,0 74.49,33.52 74.49,74.49zM772.74,363.01h-521.48v372.48h521.48z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

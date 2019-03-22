@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>flash_on icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M754.68,164.01l-105.73,211.46h50.77c22,0 42.32,11.76 53.28,30.84c10.96,19.08 10.88,42.56 -0.21,61.56l-262.82,450.56c-13.99,23.98 -42.31,35.6 -69.11,28.35c-26.8,-7.24 -45.41,-31.55 -45.41,-59.31v-276.48h-51.2c-33.93,0 -61.44,-27.51 -61.44,-61.44v-413.02c0,-33.93 27.51,-61.44 61.44,-61.44h375.46c21.29,0 41.07,11.03 52.26,29.14c11.19,18.11 12.21,40.73 2.69,59.78zM324.27,136.53v413.02h112.64v337.92l262.82,-450.56h-150.18l150.18,-300.38z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

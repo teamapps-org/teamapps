@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>signal_cellular_no_sim icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M897.87,906.5l-47.69,47.69c-23.99,23.99 -62.9,23.99 -86.89,0l-44.22,-44.22c-6.11,0.9 -12.44,1.39 -18.97,1.39h-375.84c-75.22,0 -136.54,-61.29 -136.54,-136.53v-396.2l-80.37,-80.38c-23.99,-23.99 -23.99,-62.89 0,-86.89l47.68,-47.68c23.99,-23.99 62.9,-23.99 86.89,0l59.47,59.47c1.31,-1.6 2.71,-3.16 4.21,-4.65l87.86,-87.86c11.52,-11.52 27.15,-18 43.44,-18h262.82c75.63,0 136.16,61.7 136.16,136.53l0.38,438.49c0.02,18.8 -8.54,36.21 -22.65,47.7l84.25,84.25c23.99,23.99 23.99,62.9 0,86.89zM198.48,207.12l-47.68,47.68l98.37,98.38v421.65c0,41.3 33.8,75.09 75.1,75.09h375.84c13.14,0 25.16,-3.75 36.04,-9.76l70.58,70.58l47.69,-47.69zM774.45,249.17c0,-41.3 -33.42,-75.09 -74.72,-75.09h-262.82l-87.86,87.86l425.78,425.78z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

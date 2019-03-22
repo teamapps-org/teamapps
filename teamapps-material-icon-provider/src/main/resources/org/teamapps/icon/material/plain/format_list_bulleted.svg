@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>format_list_bulleted icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M298.67,725.33h597.33v85.34h-597.33zM298.67,469.33h597.33v85.34h-597.33zM896,213.33v85.34h-597.33v-85.34zM234.67,512c0,35.41 -28.59,64 -64,64c-35.41,0 -64,-28.59 -64,-64c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64zM234.67,256c0,35.41 -28.59,64 -64,64c-35.41,0 -64,-28.59 -64,-64c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64zM234.67,768c0,34.99 -29.01,64 -64,64c-34.99,0 -64,-29.01 -64,-64c0,-34.99 28.59,-64 64,-64c35.41,0 64,29.01 64,64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

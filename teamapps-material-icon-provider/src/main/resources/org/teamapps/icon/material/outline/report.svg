@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>report icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,371.95v280.1c0,16.29 -6.47,31.92 -18,43.44l-197.87,197.87c-11.52,11.52 -27.15,18 -43.44,18h-280.1c-16.29,0 -31.92,-6.47 -43.44,-18l-197.87,-197.87c-11.52,-11.52 -18,-27.15 -18,-43.44v-280.1c0,-16.29 6.47,-31.92 18,-43.44l197.87,-197.87c11.52,-11.52 27.15,-18 43.44,-18h280.1c16.29,0 31.92,6.47 43.44,18l197.87,197.87c11.52,11.52 18,27.15 18,43.44zM652.05,174.08h-280.1l-197.87,197.87v280.1l197.87,197.87h280.1l197.87,-197.87v-280.1zM549.55,549.55h-75.1v-225.28h75.1zM512,710.99c-27.03,0 -48.81,-21.77 -48.81,-48.8c0,-27.03 21.78,-48.81 48.81,-48.81c27.03,0 48.81,21.78 48.81,48.81c0,27.03 -21.78,48.8 -48.81,48.8z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

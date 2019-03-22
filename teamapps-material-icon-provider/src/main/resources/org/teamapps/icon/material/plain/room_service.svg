@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>room_service icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,682.67h-768c11.52,-173.65 138.66,-315.74 305.49,-350.3c-4.27,-10.24 -6.82,-21.75 -6.82,-33.7c0,-46.93 38.4,-85.34 85.33,-85.34c46.93,0 85.33,38.41 85.33,85.34c0,11.95 -2.55,23.46 -6.82,33.7c166.83,34.56 293.97,176.65 305.49,350.3zM85.33,725.33h853.34v85.34h-853.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

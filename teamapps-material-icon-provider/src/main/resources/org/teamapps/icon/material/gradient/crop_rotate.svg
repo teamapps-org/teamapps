@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>crop_rotate icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-163C86bV">
+			<path d="M853.33,682.67v85.33h-85.33v85.33h-85.33v-85.33h-341.34c-47.36,0 -85.33,-38.4 -85.33,-85.33v-341.34h-85.33v-85.33h85.33v-85.33h85.33v512zM375.47,859.73l162.56,162.99c-9.39,0.43 -18.35,1.28 -28.16,1.28c-268.37,0 -488.11,-206.5 -509.87,-469.33h64c15.36,160.43 115.2,295.68 254.72,362.24zM1024,469.33h-64c-15.36,-160.43 -115.2,-295.68 -254.72,-361.81l-56.75,56.75l-162.56,-162.56c9.39,-0.85 18.35,-1.71 28.16,-1.71c268.37,0 488.11,206.5 509.87,469.33zM682.67,341.33h-256v-85.33h256c46.93,0 85.33,37.97 85.33,85.33v256h-85.33z"/>
+		</clipPath>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-2rli5Tp8" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-fMCUW7CY" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-24eGnxb2" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<filter id="filter-EkLTJTCx" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<mask id="mask-DaWGyL6H">
+			<path d="M853.33,682.67v85.33h-85.33v85.33h-85.33v-85.33h-341.34c-47.36,0 -85.33,-38.4 -85.33,-85.33v-341.34h-85.33v-85.33h85.33v-85.33h85.33v512zM375.47,859.73l162.56,162.99c-9.39,0.43 -18.35,1.28 -28.16,1.28c-268.37,0 -488.11,-206.5 -509.87,-469.33h64c15.36,160.43 115.2,295.68 254.72,362.24zM1024,469.33h-64c-15.36,-160.43 -115.2,-295.68 -254.72,-361.81l-56.75,56.75l-162.56,-162.56c9.39,-0.85 18.35,-1.71 28.16,-1.71c268.37,0 488.11,206.5 509.87,469.33zM682.67,341.33h-256v-85.33h256c46.93,0 85.33,37.97 85.33,85.33v256h-85.33z" fill="url(#color-2rli5Tp8)"/>
+		</mask>
+		<mask id="mask-LzHkyqZl">
+			<rect fill="url(#color-fMCUW7CY)" x="0" y="0" width="1024" height="1024"/>
+		</mask>
+		<mask id="mask-SB8kNqbE">
+			<path d="M853.33,682.67v85.33h-85.33v85.33h-85.33v-85.33h-341.34c-47.36,0 -85.33,-38.4 -85.33,-85.33v-341.34h-85.33v-85.33h85.33v-85.33h85.33v512zM375.47,859.73l162.56,162.99c-9.39,0.43 -18.35,1.28 -28.16,1.28c-268.37,0 -488.11,-206.5 -509.87,-469.33h64c15.36,160.43 115.2,295.68 254.72,362.24zM1024,469.33h-64c-15.36,-160.43 -115.2,-295.68 -254.72,-361.81l-56.75,56.75l-162.56,-162.56c9.39,-0.85 18.35,-1.71 28.16,-1.71c268.37,0 488.11,206.5 509.87,469.33zM682.67,341.33h-256v-85.33h256c46.93,0 85.33,37.97 85.33,85.33v256h-85.33z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-SB8kNqbE)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="0" y="0" width="1024" height="1024" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-LzHkyqZl)">
+				<rect x="0" y="0" width="1024" height="1024" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-24eGnxb2)" mask="url(#mask-DaWGyL6H)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="0" y="0" width="1024" height="1024" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-163C86bV)">
+			<path d="M-93,1067v-1210h1210v1210zM341.33,682.67v-512h-85.33v85.33h-85.33v85.33h85.33v341.34c0,46.93 37.97,85.33 85.33,85.33h341.34v85.33h85.33v-85.33h85.33v-85.33zM318.72,916.91c-139.52,-66.56 -239.36,-201.81 -254.72,-362.24h-64c21.76,262.83 241.5,469.33 509.87,469.33c9.81,0 18.77,-0.85 28.16,-1.28l-162.56,-162.99zM514.13,0c-9.81,0 -18.77,0.86 -28.16,1.71l162.56,162.56l56.75,-56.75c139.52,66.13 239.36,201.38 254.72,361.81h64c-21.76,-262.83 -241.5,-469.33 -509.87,-469.33zM682.67,597.33h85.33v-256c0,-47.36 -38.4,-85.33 -85.33,-85.33h-256v85.33h256z" fill="#000000" filter="url(#filter-EkLTJTCx)"/>
+		</g>
+	</g>
+</svg>

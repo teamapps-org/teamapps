@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>turned_in icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M836.27,249.17v600.75c0,20.65 -10.38,39.92 -27.62,51.29c-17.24,11.37 -39.04,13.32 -58.02,5.18l-238.63,-102.27l-238.63,102.27c-18.99,8.14 -40.8,6.19 -58.04,-5.19c-17.24,-11.38 -27.61,-30.66 -27.6,-51.32l0.38,-600.73c0.01,-74.82 60.54,-136.51 136.16,-136.51h375.46c75.22,0 136.54,61.29 136.54,136.53zM699.73,174.08h-375.46c-41.3,0 -74.72,33.79 -74.72,75.09l-0.38,600.75l262.83,-112.64l262.83,112.64v-600.75c0,-41.3 -33.8,-75.09 -75.1,-75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

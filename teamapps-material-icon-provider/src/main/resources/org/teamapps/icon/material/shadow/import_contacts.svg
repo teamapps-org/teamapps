@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>import_contacts icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-WXgBp3SH" x="-12%" y="-7%" width="135%" height="165%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M929.7,284.16v554.41c0,9.5 -9.49,18.99 -18.98,18.99c-3.8,0 -5.7,-0.01 -9.5,-1.9c-53.16,-28.48 -117.71,-39.87 -180.37,-39.87c-64.55,0 -157.59,24.68 -208.86,56.96c-55.06,-41.77 -134.81,-56.96 -208.86,-56.96c-55.06,0 -129.1,17.1 -180.37,41.78c-3.8,0 -5.7,1.9 -9.5,1.9c-9.5,0 -18.98,-9.49 -18.98,-18.98v-556.31c55.06,-41.77 134.8,-56.96 208.85,-56.96c74.05,0 153.79,15.19 208.86,56.96c55.06,-41.77 134.81,-56.96 208.86,-56.96c44.43,0 90.75,5.7 132.9,18.98c28.48,9.5 53.16,20.89 75.94,37.98zM853.76,322.14c-41.77,-13.29 -87.34,-18.99 -132.9,-18.99c-64.55,0 -157.59,24.68 -208.86,56.96v436.7c51.26,-32.28 144.3,-56.96 208.86,-56.96c45.57,0 91.14,5.7 132.9,18.98z" fill="#000000" filter="url(#filter-WXgBp3SH)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M929.7,284.16v554.41c0,9.5 -9.49,18.99 -18.98,18.99c-3.8,0 -5.7,-0.01 -9.5,-1.9c-53.16,-28.48 -117.71,-39.87 -180.37,-39.87c-64.55,0 -157.59,24.68 -208.86,56.96c-55.06,-41.77 -134.81,-56.96 -208.86,-56.96c-55.06,0 -129.1,17.1 -180.37,41.78c-3.8,0 -5.7,1.9 -9.5,1.9c-9.5,0 -18.98,-9.49 -18.98,-18.98v-556.31c55.06,-41.77 134.8,-56.96 208.85,-56.96c74.05,0 153.79,15.19 208.86,56.96c55.06,-41.77 134.81,-56.96 208.86,-56.96c44.43,0 90.75,5.7 132.9,18.98c28.48,9.5 53.16,20.89 75.94,37.98zM853.76,322.14c-41.77,-13.29 -87.34,-18.99 -132.9,-18.99c-64.55,0 -157.59,24.68 -208.86,56.96v436.7c51.26,-32.28 144.3,-56.96 208.86,-56.96c45.57,0 91.14,5.7 132.9,18.98z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

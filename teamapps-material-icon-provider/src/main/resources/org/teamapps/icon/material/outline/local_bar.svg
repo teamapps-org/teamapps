@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_bar icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M610.99,610.45v102.94h126.29c33.93,0 61.44,27.51 61.44,61.44v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-450.56c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h126.29v-102.94l-284.85,-320.46c-10,-11.25 -15.52,-25.77 -15.52,-40.82v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h675.84c33.93,0 61.44,27.51 61.44,61.44v75.09c0,15.05 -5.52,29.57 -15.52,40.82zM849.92,249.17v-75.09h-675.84v75.09l300.37,337.92v187.74h-187.73v75.09h450.56v-75.09h-187.73v-187.74zM340.41,324.27l-66.46,-75.1h476.47l-66.83,75.1z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

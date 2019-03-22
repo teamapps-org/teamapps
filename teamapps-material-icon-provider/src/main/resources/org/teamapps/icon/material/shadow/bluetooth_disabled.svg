@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>bluetooth_disabled icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-ybFOqmyO">
+			<path d="M115.22,89.26h793.57v934.74h-793.57z"/>
+		</clipPath>
+		<filter id="filter-1t7VxG58" x="-16%" y="-6%" width="166%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-ybFOqmyO)">
+			<path d="M815.78,762.24l-53.54,53.54l-87.34,-86.95l-162.91,162.91h-37.98v-288.22l-174.3,174.3l-53.54,-53.54l212.27,-212.27l-250.24,-250.24l53.54,-53.54zM549.98,399.22l-75.95,-75.94v-191.01h37.98l216.83,216.45l-114.69,114.69l-53.54,-53.54l60.76,-60.76l-71.39,-71.39zM621.36,674.91l-71.39,-71.39v142.77z" fill="#000000" filter="url(#filter-1t7VxG58)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M815.78,762.24l-53.54,53.54l-87.34,-86.95l-162.91,162.91h-37.98v-288.22l-174.3,174.3l-53.54,-53.54l212.27,-212.27l-250.24,-250.24l53.54,-53.54zM549.98,399.22l-75.95,-75.94v-191.01h37.98l216.83,216.45l-114.69,114.69l-53.54,-53.54l60.76,-60.76l-71.39,-71.39zM621.36,674.91l-71.39,-71.39v142.77z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

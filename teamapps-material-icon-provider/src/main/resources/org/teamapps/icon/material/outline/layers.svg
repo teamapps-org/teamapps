@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>layers icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M136.36,350.86l337.92,-262.83c22.19,-17.26 53.25,-17.26 75.44,0l337.92,262.83c14.97,11.64 23.72,29.54 23.72,48.5c0,18.96 -8.75,36.86 -23.72,48.5l-59.97,46.64l60.01,46.76c14.95,11.65 23.69,29.54 23.68,48.49c-0.01,18.95 -8.76,36.84 -23.72,48.47l-337.92,262.83c-22.19,17.26 -53.25,17.26 -75.44,0l-337.92,-262.83c-14.97,-11.64 -23.72,-29.54 -23.72,-48.5c0,-18.96 8.75,-36.86 23.72,-48.5l60.02,-46.68l-60.02,-46.68c-14.97,-11.64 -23.72,-29.54 -23.72,-48.5c0,-18.96 8.75,-36.86 23.72,-48.5zM512,662.19l276.35,-215.14l61.57,-47.69l-337.92,-262.83l-337.92,262.83l61.2,47.69zM511.62,757.56l-276.72,-215.14l-60.83,47.31l337.92,262.83l337.92,-262.83l-61.2,-47.69z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>sort_by_alpha icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-E2c1RQvx" x="-13%" y="-6%" width="141%" height="145%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M350.23,294.41l170.5,435.17h-69.87l-34.94,-93.03h-194.04l-34.94,93.03h-69.87l170.88,-435.17zM653.64,669.21h232.4v60.38h-323.92v-48.99l224.81,-325.05h-223.28v-60.75h315.18v47.85zM392.38,574.27l-73.67,-196.7l-73.67,196.7zM623.64,233.28h-179.24l89.62,-89.62zM445.54,791.86h176.96l-88.47,88.48z" fill="#000000" filter="url(#filter-E2c1RQvx)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M350.23,294.41l170.5,435.17h-69.87l-34.94,-93.03h-194.04l-34.94,93.03h-69.87l170.88,-435.17zM653.64,669.21h232.4v60.38h-323.92v-48.99l224.81,-325.05h-223.28v-60.75h315.18v47.85zM392.38,574.27l-73.67,-196.7l-73.67,196.7zM623.64,233.28h-179.24l89.62,-89.62zM445.54,791.86h176.96l-88.47,88.48z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

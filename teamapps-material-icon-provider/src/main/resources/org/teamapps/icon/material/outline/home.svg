@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>home icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M187.73,812.37v-238.93h-51.2c-25.44,0 -48.25,-15.68 -57.36,-39.43c-9.11,-23.75 -2.65,-50.66 16.26,-67.68l375.47,-337.92c23.37,-21.03 58.84,-21.03 82.2,0l375.47,337.92c18.91,17.02 25.37,43.93 16.26,67.68c-9.11,23.75 -31.92,39.43 -57.36,39.43h-51.2v238.93c0,33.93 -27.51,61.44 -61.44,61.44h-187.74c-33.93,0 -61.44,-27.51 -61.44,-61.44v-163.84h-27.3v163.84c0,33.93 -27.51,61.44 -61.44,61.44h-187.74c-33.93,0 -61.44,-27.51 -61.44,-61.44zM436.91,812.37v-225.28h150.18v225.28h187.74v-300.37h112.64l-375.47,-337.92l-375.47,337.92h112.64v300.37z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

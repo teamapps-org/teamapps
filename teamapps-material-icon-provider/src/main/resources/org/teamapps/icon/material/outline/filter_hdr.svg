@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>filter_hdr icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M925.01,798.72h-826.02c-23.27,0 -44.55,-13.15 -54.95,-33.96c-10.41,-20.81 -8.16,-45.72 5.8,-64.34l225.28,-300.37c11.61,-15.47 29.82,-24.58 49.17,-24.58c19.34,0 37.56,9.12 49.15,24.6c0,0 10.09,13.47 25.91,34.57l138.59,-184.78c11.6,-15.47 29.81,-24.58 49.15,-24.58c19.34,0 37.55,9.11 49.15,24.58l337.92,450.56c13.96,18.62 16.21,43.53 5.8,64.34c-10.41,20.81 -31.68,33.96 -54.95,33.96zM587.09,286.72l-140.8,187.73l107.01,142.68l-60.07,45.06c-63.46,-84.48 -168.96,-225.28 -168.96,-225.28l-225.28,300.37h826.02z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

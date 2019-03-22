@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>flip icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M213.33,128h170.67v85.33h-170.67v597.34h170.67v85.33h-170.67c-46.93,0 -85.33,-38.4 -85.33,-85.33v-597.34c0,-46.93 38.4,-85.33 85.33,-85.33zM469.33,42.67h85.34v938.66h-85.34zM810.67,298.67h85.33v85.33h-85.33zM810.67,810.67h85.33c0,46.93 -38.4,85.33 -85.33,85.33zM896,213.33h-85.33v-85.33c46.93,0 85.33,38.4 85.33,85.33zM810.67,469.33h85.33v85.34h-85.33zM640,810.67h85.33v85.33h-85.33zM810.67,640h85.33v85.33h-85.33zM640,128h85.33v85.33h-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

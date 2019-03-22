@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>location_city icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-x5cmeVTL">
+			<path d="M896,469.33v426.67h-768v-597.33h256v-85.34l128,-128l128,128v256zM810.67,725.33h-85.34v85.34h85.34zM810.67,554.67h-85.34v85.33h85.34zM298.67,725.33h-85.34v85.34h85.34zM298.67,554.67h-85.34v85.33h85.34zM554.67,725.33h-85.34v85.34h85.34zM554.67,554.67h-85.34v85.33h85.34zM298.67,384h-85.34v85.33h85.34zM554.67,384h-85.34v85.33h85.34zM554.67,213.33h-85.34v85.34h85.34z"/>
+		</clipPath>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-ovGdXkIU" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-PrOdx7SV" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-bN4Vx6l8" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<filter id="filter-VRAxdXBN" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-90c3pXFz">
+			<rect fill="url(#color-PrOdx7SV)" x="128" y="85.33" width="768" height="810.67"/>
+		</mask>
+		<mask id="mask-FKb5EDH1">
+			<path d="M896,469.33v426.67h-768v-597.33h256v-85.34l128,-128l128,128v256zM810.67,725.33h-85.34v85.34h85.34zM810.67,554.67h-85.34v85.33h85.34zM298.67,725.33h-85.34v85.34h85.34zM298.67,554.67h-85.34v85.33h85.34zM554.67,725.33h-85.34v85.34h85.34zM554.67,554.67h-85.34v85.33h85.34zM298.67,384h-85.34v85.33h85.34zM554.67,384h-85.34v85.33h85.34zM554.67,213.33h-85.34v85.34h85.34z" fill="url(#color-ovGdXkIU)"/>
+		</mask>
+		<mask id="mask-rxx7iYbG">
+			<path d="M896,469.33v426.67h-768v-597.33h256v-85.34l128,-128l128,128v256zM810.67,725.33h-85.34v85.34h85.34zM810.67,554.67h-85.34v85.33h85.34zM298.67,725.33h-85.34v85.34h85.34zM298.67,554.67h-85.34v85.33h85.34zM554.67,725.33h-85.34v85.34h85.34zM554.67,554.67h-85.34v85.33h85.34zM298.67,384h-85.34v85.33h85.34zM554.67,384h-85.34v85.33h85.34zM554.67,213.33h-85.34v85.34h85.34z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-rxx7iYbG)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="128" y="85.33" width="768" height="810.67" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-90c3pXFz)">
+				<rect x="128" y="85.33" width="768" height="810.67" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-VRAxdXBN)" mask="url(#mask-FKb5EDH1)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="128" y="85.33" width="768" height="810.67" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-x5cmeVTL)">
+			<path d="M35,939v-996.67h954v996.67zM640,469.33v-256l-128,-128l-128,128v85.34h-256v597.33h768v-426.67zM810.67,810.67h-85.34v-85.34h85.34zM810.67,640h-85.34v-85.33h85.34zM298.67,810.67h-85.34v-85.34h85.34zM298.67,640h-85.34v-85.33h85.34zM554.67,810.67h-85.34v-85.34h85.34zM554.67,640h-85.34v-85.33h85.34zM298.67,469.33h-85.34v-85.33h85.34zM554.67,469.33h-85.34v-85.33h85.34zM554.67,298.67h-85.34v-85.34h85.34z" fill="#000000" filter="url(#filter-bN4Vx6l8)"/>
+		</g>
+	</g>
+</svg>

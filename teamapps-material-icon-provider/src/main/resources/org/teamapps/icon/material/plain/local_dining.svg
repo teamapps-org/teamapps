@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_dining icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M572.16,554.67l293.55,293.54l-60.16,60.16l-293.55,-293.54l-293.97,293.12l-60.16,-60.16l416.42,-416.43c-30.29,-65.28 -8.96,-157.01 58.88,-224.85c81.92,-81.49 198.83,-96.85 261.12,-34.56c62.72,62.72 46.93,179.63 -34.56,261.12c-67.84,67.84 -159.57,89.17 -224.85,58.88zM166.83,390.83c-66.56,-66.99 -66.56,-174.94 0,-241.5l299.52,299.1l-120.75,120.74z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

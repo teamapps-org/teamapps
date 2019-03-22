@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>perm_scan_wifi icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1010.22,372.42l-450.56,553.82c-11.67,14.35 -29.19,22.67 -47.68,22.67c-18.49,-0.01 -36,-8.34 -47.67,-22.7l-450.56,-554.57c-21.93,-26.99 -17.1,-66.8 10.65,-87.76c125.72,-94.99 281.08,-171.24 487.6,-171.24c206.68,0 362.05,77.13 487.6,171.99c27.76,20.98 32.58,60.8 10.62,87.79zM512,174.08c-189.61,0 -332.29,69.46 -450.56,158.82l450.56,554.57l450.56,-553.82c-118.27,-89.36 -260.95,-159.57 -450.56,-159.57zM549.55,662.19h-75.1v-225.28h75.1zM474.45,361.81v-75.09h75.1v75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

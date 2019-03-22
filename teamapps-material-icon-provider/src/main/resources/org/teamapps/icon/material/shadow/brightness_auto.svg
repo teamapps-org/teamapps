@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>brightness_auto icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-uzzLiWPu">
+			<path d="M0,1024v-984.48h1024v984.48z"/>
+		</clipPath>
+		<filter id="filter-WmqAgOWH" x="-11%" y="-6%" width="132%" height="133%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-uzzLiWPu)">
+			<path d="M941.48,512l-125.69,125.69v178.09h-178.09l-125.69,125.69l-125.69,-125.69h-178.09v-178.09l-125.69,-125.69l125.69,-125.69v-178.09h178.09l125.69,-125.69l125.69,125.69h178.09v178.09zM671.49,663.9l-121.51,-341.76h-75.95l-121.51,341.76h72.15l26.58,-75.95h121.52l26.58,75.95zM512,398.08l43.67,138.6h-87.34z" fill="#000000" filter="url(#filter-WmqAgOWH)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M941.48,512l-125.69,125.69v178.09h-178.09l-125.69,125.69l-125.69,-125.69h-178.09v-178.09l-125.69,-125.69l125.69,-125.69v-178.09h178.09l125.69,-125.69l125.69,125.69h178.09v178.09zM671.49,663.9l-121.51,-341.76h-75.95l-121.51,341.76h72.15l26.58,-75.95h121.52l26.58,75.95zM512,398.08l43.67,138.6h-87.34z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

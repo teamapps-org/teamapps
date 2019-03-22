@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>audiotrack icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-7zMqp6k0" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-opZDO8BF" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-zquKN9iA" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-FCgcTz5J">
+			<path d="M821.34,147.2v121.6c0,14.14 -11.46,25.6 -25.6,25.6h-136.54v420.26c0,4.76 -1.31,9.22 -3.57,13.04c-15.94,98.91 -100.98,174.7 -204.43,174.7c-115.07,0 -208,-92.93 -208,-208c0,-115.07 92.93,-208 208,-208c12.17,0 23.91,1.23 35.2,3.37v-342.57c0,-14.14 11.46,-25.6 25.6,-25.6h283.74c14.14,0 25.6,11.46 25.6,25.6zM512,147.2v376.15c-19.05,-6.89 -39.32,-11.35 -60.8,-11.35c-100.93,0 -182.4,81.47 -182.4,182.4c0,100.93 81.47,182.4 182.4,182.4c93.63,0 170.24,-70.94 180.38,-162.14h2.02v-445.86h162.14v-121.6z" fill="url(#color-opZDO8BF)"/>
+		</mask>
+		<mask id="mask-GXdThTUU">
+			<rect fill="url(#color-7zMqp6k0)" x="243.2" y="121.6" width="578.14" height="780.8"/>
+		</mask>
+		<mask id="mask-kdnUHaDY">
+			<path d="M821.34,147.2v121.6c0,14.14 -11.46,25.6 -25.6,25.6h-136.54v420.26c0,4.76 -1.31,9.22 -3.57,13.04c-15.94,98.91 -100.98,174.7 -204.43,174.7c-115.07,0 -208,-92.93 -208,-208c0,-115.07 92.93,-208 208,-208c12.17,0 23.91,1.23 35.2,3.37v-342.57c0,-14.14 11.46,-25.6 25.6,-25.6h283.74c14.14,0 25.6,11.46 25.6,25.6zM512,147.2v376.15c-19.05,-6.89 -39.32,-11.35 -60.8,-11.35c-100.93,0 -182.4,81.47 -182.4,182.4c0,100.93 81.47,182.4 182.4,182.4c93.63,0 170.24,-70.94 180.38,-162.14h2.02v-445.86h162.14v-121.6z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-kdnUHaDY)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="243.2" y="121.6" width="578.14" height="780.8" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-GXdThTUU)">
+				<rect x="243.2" y="121.6" width="578.14" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-zquKN9iA)" mask="url(#mask-FCgcTz5J)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="243.2" y="121.6" width="578.14" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>money_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M850.77,797.01l-54.18,54.19l-94.72,-94.72c-26.88,24.32 -63.58,40.11 -104.54,47.79v91.73h-128v-92.59c-81.92,-17.49 -151.89,-69.97 -157.01,-163.41h93.87c4.69,50.35 39.25,89.6 127.14,89.6c58.45,0 88.75,-18.35 103.26,-38.83l-149.76,-149.76c-100.27,-29.87 -166.83,-78.07 -166.83,-166.82l-146.77,-146.78l54.18,-54.18zM468.91,305.92l-62.72,-62.72c19.2,-10.24 40.53,-17.92 63.14,-23.04v-92.16h128v93.44c89.17,21.76 133.97,89.17 136.96,162.56h-94.29c-2.56,-53.33 -30.72,-89.6 -106.67,-89.6c-25.6,0 -46.93,4.27 -64.42,11.52z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

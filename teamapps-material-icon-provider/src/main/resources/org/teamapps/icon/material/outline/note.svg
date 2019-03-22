@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>note icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,737.28c0,75.64 -61.72,136.16 -136.54,136.16l-600.74,0.37c-74.81,0 -136.54,-60.5 -136.54,-136.15v-450.94c0,-75.24 61.32,-136.53 136.54,-136.53h450.56c16.29,0 31.92,6.47 43.44,18l225.28,225.28c11.52,11.52 18,27.15 18,43.44zM887.47,436.91l-225.28,-225.28h-450.56c-41.3,0 -75.1,33.79 -75.1,75.09v450.94c0,41.3 33.8,74.71 75.1,74.71l600.74,-0.37c41.3,0 75.1,-33.42 75.1,-74.72zM624.64,267.95l206.51,206.5h-206.51z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

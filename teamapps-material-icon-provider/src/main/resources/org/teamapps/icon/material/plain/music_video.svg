@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>music_video icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,213.33v597.34c0,46.93 -38.4,85.33 -85.33,85.33h-768c-46.93,0 -85.33,-38.4 -85.33,-85.33v-597.34c0,-46.93 38.4,-85.33 85.33,-85.33h768c46.93,0 85.33,38.4 85.33,85.33zM896,213.33h-768v597.34h768zM341.33,640c0,-70.83 57.17,-128 128,-128c14.93,0 29.44,2.99 42.67,7.68v-263.68h213.33v85.33h-128v299.95c-0.85,69.97 -57.6,126.72 -128,126.72c-70.83,0 -128,-57.17 -128,-128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

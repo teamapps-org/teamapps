@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>backup icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1024,624.64c0,137.56 -111.61,249.17 -249.17,249.17h-488.11c-158.21,0 -286.72,-128.51 -286.72,-286.72c0,-136.55 95.58,-251.01 223.79,-279.62c60.96,-94.49 167.23,-157.29 288.21,-157.29c151.39,0 279.61,97.91 325.1,234.15c107.29,27.46 186.9,123.99 186.9,240.3zM512,448.7l-46.47,46.47c19.51,10.29 32.82,30.78 32.82,54.38v88.74h27.3v-88.74c0,-23.6 13.3,-44.09 32.82,-54.38zM787.97,438.41c-25.53,-129.54 -139.3,-226.78 -275.97,-226.78c-108.51,0 -202.75,61.57 -249.68,151.69c-113.02,12.01 -200.88,107.76 -200.88,223.78c0,124.28 101,225.28 225.28,225.28h488.11c103.63,0 187.73,-84.1 187.73,-187.73c0,-99.12 -76.97,-179.48 -174.59,-186.23zM587.09,549.55v150.18h-150.18v-150.18h-112.64l187.73,-187.74l187.73,187.74z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

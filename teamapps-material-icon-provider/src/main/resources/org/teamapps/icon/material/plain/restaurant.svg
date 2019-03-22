@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>restaurant icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M469.33,85.33h85.34v298.67c0,90.45 -70.83,163.84 -160,169.39v385.28h-106.67v-385.28c-89.17,-5.55 -160,-78.94 -160,-169.39v-298.67h85.33v298.67h85.34v-298.67h85.33v298.67h85.33zM896,85.33v853.34h-106.67v-341.34h-106.66v-341.33c0,-75.09 95.57,-170.67 213.33,-170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

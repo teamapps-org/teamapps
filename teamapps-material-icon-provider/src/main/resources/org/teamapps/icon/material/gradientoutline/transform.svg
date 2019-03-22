@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>transform icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-mtz9gWFr" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-TkFxGuof" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-yJJcFe0S" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-5rQPGlsZ">
+			<rect fill="url(#color-TkFxGuof)" x="81.06" y="40.54" width="861.87" height="942.93"/>
+		</mask>
+		<mask id="mask-cQmBTnP6">
+			<path d="M780.8,780.8v29.86h55.46c10.35,0 19.69,6.24 23.65,15.8c3.96,9.57 1.77,20.58 -5.55,27.9l-121.6,121.6c-10,10 -26.21,10 -36.2,0l-121.6,-121.6c-7.32,-7.32 -9.51,-18.33 -5.55,-27.9c3.96,-9.57 13.3,-15.8 23.65,-15.8h55.47v-29.86h-298.67c-58.72,0 -106.66,-47.94 -106.66,-106.66v-298.67h-136.54c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6h136.54v-29.86h-55.46c-10.35,0 -19.69,-6.24 -23.65,-15.8c-3.96,-9.57 -1.77,-20.58 5.55,-27.9l121.6,-121.6c10,-10 26.21,-10 36.2,0l121.6,121.6c7.32,7.32 9.51,18.33 5.55,27.9c-3.96,9.57 -13.3,15.8 -23.65,15.8h-55.47v435.2h541.87c14.14,0 25.6,11.46 25.6,25.6v81.06c0,14.14 -11.46,25.6 -25.6,25.6zM430.94,243.2h243.2c58.72,0 106.66,47.94 106.66,106.66v243.2c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-217.6h-217.6c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6zM917.34,755.2v-81.06h-567.47v-486.4h81.07l-121.6,-121.6l-121.6,121.6h81.06v81.06h-162.14v81.06h162.14v324.27c0,44.58 36.48,81.06 81.06,81.06h324.27v81.06h-81.07l121.6,121.6l121.6,-121.6h-81.06v-81.06zM430.94,349.86h243.2v243.2h81.06v-243.2c0,-44.58 -36.48,-81.06 -81.06,-81.06h-243.2z" fill="url(#color-mtz9gWFr)"/>
+		</mask>
+		<mask id="mask-J18HJJxq">
+			<path d="M780.8,780.8v29.86h55.46c10.35,0 19.69,6.24 23.65,15.8c3.96,9.57 1.77,20.58 -5.55,27.9l-121.6,121.6c-10,10 -26.21,10 -36.2,0l-121.6,-121.6c-7.32,-7.32 -9.51,-18.33 -5.55,-27.9c3.96,-9.57 13.3,-15.8 23.65,-15.8h55.47v-29.86h-298.67c-58.72,0 -106.66,-47.94 -106.66,-106.66v-298.67h-136.54c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6h136.54v-29.86h-55.46c-10.35,0 -19.69,-6.24 -23.65,-15.8c-3.96,-9.57 -1.77,-20.58 5.55,-27.9l121.6,-121.6c10,-10 26.21,-10 36.2,0l121.6,121.6c7.32,7.32 9.51,18.33 5.55,27.9c-3.96,9.57 -13.3,15.8 -23.65,15.8h-55.47v435.2h541.87c14.14,0 25.6,11.46 25.6,25.6v81.06c0,14.14 -11.46,25.6 -25.6,25.6zM430.94,243.2h243.2c58.72,0 106.66,47.94 106.66,106.66v243.2c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-217.6h-217.6c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6zM917.34,755.2v-81.06h-567.47v-486.4h81.07l-121.6,-121.6l-121.6,121.6h81.06v81.06h-162.14v81.06h162.14v324.27c0,44.58 36.48,81.06 81.06,81.06h324.27v81.06h-81.07l121.6,121.6l121.6,-121.6h-81.06v-81.06zM430.94,349.86h243.2v243.2h81.06v-243.2c0,-44.58 -36.48,-81.06 -81.06,-81.06h-243.2z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-J18HJJxq)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="81.06" y="40.54" width="861.87" height="942.93" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-5rQPGlsZ)">
+				<rect x="81.06" y="40.54" width="861.87" height="942.93" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-yJJcFe0S)" mask="url(#mask-cQmBTnP6)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="81.06" y="40.54" width="861.87" height="942.93" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

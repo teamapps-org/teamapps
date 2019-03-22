@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>flight_takeoff icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-CzwCdIWV" x="-13%" y="-7%" width="142%" height="158%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M853.76,492.63l-201.64,53.93l-165.18,44.05l-201.64,53.93l-60.76,16.32l-29.24,-50.5l-69.11,-120l55.06,-14.81l74.81,58.48l188.72,-50.51l-157.21,-272.27l73.29,-19.37l262.02,244.17l201.64,-53.93c30.38,-8.36 61.89,9.88 69.87,40.25c7.97,30.38 -9.87,61.52 -40.63,70.25zM151.26,777.82h721.49v75.94h-721.49z" fill="#000000" filter="url(#filter-CzwCdIWV)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,492.63l-201.64,53.93l-165.18,44.05l-201.64,53.93l-60.76,16.32l-29.24,-50.5l-69.11,-120l55.06,-14.81l74.81,58.48l188.72,-50.51l-157.21,-272.27l73.29,-19.37l262.02,244.17l201.64,-53.93c30.38,-8.36 61.89,9.88 69.87,40.25c7.97,30.38 -9.87,61.52 -40.63,70.25zM151.26,777.82h721.49v75.94h-721.49z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

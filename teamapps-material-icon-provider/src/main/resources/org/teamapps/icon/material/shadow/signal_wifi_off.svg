@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>signal_wifi_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-cg37VW66">
+			<path d="M0,68h1024v947.74h-1024z"/>
+		</clipPath>
+		<filter id="filter-tx8vOupi" x="-11%" y="-6%" width="130%" height="140%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-cg37VW66)">
+			<path d="M834.78,765.66l-48.23,48.23l-126.07,-126.07l-148.1,184.55l-0.38,0.37l-0.38,-0.37l-441.63,-550.23c8.73,-6.84 58.86,-47.09 140.12,-84.3l-77.85,-78.23l48.23,-48.6l522.89,523.28zM746.68,580.35l-392.27,-391.88c47.85,-11.01 100.63,-18.23 157.59,-18.23c254.8,0 424.92,138.98 442.01,151.9z" fill="#000000" filter="url(#filter-tx8vOupi)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M834.78,765.66l-48.23,48.23l-126.07,-126.07l-148.1,184.55l-0.38,0.37l-0.38,-0.37l-441.63,-550.23c8.73,-6.84 58.86,-47.09 140.12,-84.3l-77.85,-78.23l48.23,-48.6l522.89,523.28zM746.68,580.35l-392.27,-391.88c47.85,-11.01 100.63,-18.23 157.59,-18.23c254.8,0 424.92,138.98 442.01,151.9z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

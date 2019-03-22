@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>data_usage icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M744.53,698.88l110.94,65.28c-77.65,105.81 -202.67,174.51 -343.9,174.51c-235.52,0 -426.24,-191.15 -426.24,-426.67c0,-221.44 168.11,-403.2 384,-424.53v129.28c-144.64,20.91 -256,144.64 -256,295.25c0,165.12 133.55,298.67 298.67,298.67c94.29,0 177.92,-43.52 232.53,-111.79zM938.67,512c0,61.87 -13.66,120.74 -37.55,173.65l-110.93,-65.28c12.8,-33.71 20.48,-69.97 20.48,-108.37c0,-150.61 -111.36,-274.34 -256,-295.25v-129.28c215.47,21.33 384,203.52 384,424.53z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

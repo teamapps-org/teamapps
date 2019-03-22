@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>flare icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-2ZxZQNK5">
+			<path d="M1.3,51.3h1021.41v972.7h-1021.41z"/>
+		</clipPath>
+		<filter id="filter-3fWZbPqM" x="-12%" y="-6%" width="135%" height="135%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-2ZxZQNK5)">
+			<path d="M625.92,512c0,63.04 -50.88,113.92 -113.92,113.92c-63.04,0 -113.92,-50.88 -113.92,-113.92c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.92,50.88 113.92,113.92zM350.99,619.47l53.54,53.54l-80.5,80.5l-53.54,-53.54zM350.99,404.53l-80.5,-80.5l53.54,-53.54l80.5,80.5zM673.01,404.53l-53.54,-53.54l80.5,-80.5l53.54,53.54zM673.01,619.47l80.5,80.5l-53.54,53.54l-80.5,-80.5zM929.7,474.02v75.95h-227.84v-75.95zM474.02,701.86h75.95v227.84h-75.95zM322.14,549.98h-227.84v-75.95h227.84zM549.98,322.14h-75.95v-227.84h75.95z" fill="#000000" filter="url(#filter-3fWZbPqM)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M625.92,512c0,63.04 -50.88,113.92 -113.92,113.92c-63.04,0 -113.92,-50.88 -113.92,-113.92c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.92,50.88 113.92,113.92zM350.99,619.47l53.54,53.54l-80.5,80.5l-53.54,-53.54zM350.99,404.53l-80.5,-80.5l53.54,-53.54l80.5,80.5zM673.01,404.53l-53.54,-53.54l80.5,-80.5l53.54,53.54zM673.01,619.47l80.5,80.5l-53.54,53.54l-80.5,-80.5zM929.7,474.02v75.95h-227.84v-75.95zM474.02,701.86h75.95v227.84h-75.95zM322.14,549.98h-227.84v-75.95h227.84zM549.98,322.14h-75.95v-227.84h75.95z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>signal_wifi_4_bar_lock icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-1bKsjWwX">
+			<path d="M0,1024v-896.76h1024v896.76z"/>
+		</clipPath>
+		<filter id="filter-0ZJYzWvA" x="-11%" y="-6%" width="130%" height="150%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-1bKsjWwX)">
+			<path d="M644.9,705.66l-132.9,167.08l-440.49,-550.61c15.19,-11.39 186.06,-151.9 440.49,-151.9c254.42,0 425.3,140.5 440.49,151.9l-79.74,98.73c-11.39,-3.8 -22.78,-3.8 -37.97,-3.8c-106.33,0 -189.87,83.54 -189.87,189.87zM967.68,701.86v151.9c0,18.98 -18.99,37.98 -37.98,37.98h-189.86c-18.98,0 -37.98,-18.99 -37.98,-37.98v-151.9c0,-18.98 18.99,-37.97 37.98,-37.97v-56.96c0,-53.16 41.78,-94.94 94.94,-94.94c53.16,0 94.93,41.78 94.93,94.94v56.96c18.98,0 37.98,18.98 37.98,37.97zM891.74,606.94c0,-30.38 -26.58,-56.96 -56.96,-56.96c-30.38,0 -56.96,26.58 -56.96,56.96v56.96h113.92z" fill="#000000" filter="url(#filter-0ZJYzWvA)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M644.9,705.66l-132.9,167.08l-440.49,-550.61c15.19,-11.39 186.06,-151.9 440.49,-151.9c254.42,0 425.3,140.5 440.49,151.9l-79.74,98.73c-11.39,-3.8 -22.78,-3.8 -37.97,-3.8c-106.33,0 -189.87,83.54 -189.87,189.87zM967.68,701.86v151.9c0,18.98 -18.99,37.98 -37.98,37.98h-189.86c-18.98,0 -37.98,-18.99 -37.98,-37.98v-151.9c0,-18.98 18.99,-37.97 37.98,-37.97v-56.96c0,-53.16 41.78,-94.94 94.94,-94.94c53.16,0 94.93,41.78 94.93,94.94v56.96c18.98,0 37.98,18.98 37.98,37.97zM891.74,606.94c0,-30.38 -26.58,-56.96 -56.96,-56.96c-30.38,0 -56.96,26.58 -56.96,56.96v56.96h113.92z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

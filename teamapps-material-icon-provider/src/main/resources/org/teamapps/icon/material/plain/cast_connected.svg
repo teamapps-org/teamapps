@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>cast_connected icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,213.33v597.34c0,46.93 -38.4,85.33 -85.33,85.33h-298.67v-85.33h298.67v-597.34h-768v128h-85.33v-128c0,-46.93 38.4,-85.33 85.33,-85.33h768c46.93,0 85.33,38.4 85.33,85.33zM810.67,725.33h-240.22c-54.61,-168.96 -188.16,-302.51 -357.12,-357.12v-69.54h597.34zM512,896h-85.33c0,-212.05 -171.95,-384 -384,-384v-85.33c258.99,0 469.33,209.92 469.33,469.33zM341.33,896h-85.33c0,-117.76 -95.57,-213.33 -213.33,-213.33v-85.34c165.12,0 298.66,133.55 298.66,298.67zM170.67,896h-128v-128c70.83,0 128,57.17 128,128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>tonality icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,512c0,235.52 -191.15,426.67 -426.67,426.67c-235.52,0 -426.67,-191.15 -426.67,-426.67c0,-235.52 191.15,-426.67 426.67,-426.67c235.52,0 426.67,191.15 426.67,426.67zM469.33,173.65c-168.53,20.91 -298.66,164.27 -298.66,338.35c0,174.08 130.55,317.44 298.66,338.35zM554.67,469.33h295.68c-1.71,-14.51 -4.7,-28.58 -8.11,-42.66h-287.57zM850.35,554.67h-295.68v42.66h287.57c3.41,-14.08 6.4,-28.15 8.11,-42.66zM554.67,341.33h252.58c-8.53,-14.93 -18.34,-29.43 -29.01,-42.66h-223.57zM807.25,682.67h-252.58v42.66h223.57c10.67,-13.23 20.48,-27.73 29.01,-42.66zM554.67,213.33h122.45c-37.12,-20.48 -78.5,-34.13 -122.45,-39.68zM677.12,810.67h-122.45v39.68c43.95,-5.55 85.33,-19.2 122.45,-39.68z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

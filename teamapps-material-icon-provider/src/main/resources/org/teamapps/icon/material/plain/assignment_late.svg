@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>assignment_late icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,213.33v597.34c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-46.93,0 -85.33,-38.4 -85.33,-85.33v-597.34c0,-46.93 38.4,-85.33 85.33,-85.33h178.35c17.92,-49.49 64.85,-85.33 120.32,-85.33c55.47,0 102.4,35.84 120.32,85.33h178.35c46.93,0 85.33,38.4 85.33,85.33zM554.67,341.33h-85.34v256h85.34zM554.67,682.67h-85.34v85.33h85.34zM554.67,170.67c0,-23.47 -19.2,-42.67 -42.67,-42.67c-23.47,0 -42.67,19.2 -42.67,42.67c0,23.47 19.2,42.66 42.67,42.66c23.47,0 42.67,-19.19 42.67,-42.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

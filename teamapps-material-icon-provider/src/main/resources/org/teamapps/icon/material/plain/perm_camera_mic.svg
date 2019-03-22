@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>perm_camera_mic icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,298.67v512c0,46.93 -38.41,85.33 -85.34,85.33h-298.66v-89.17c120.75,-20.48 213.33,-125.44 213.33,-252.16h-85.33c0,94.29 -76.38,170.66 -170.67,170.66c-94.29,0 -170.67,-76.37 -170.67,-170.66h-85.33c0,126.72 92.58,231.68 213.33,252.16v89.17h-298.66c-46.93,0 -85.34,-38.4 -85.34,-85.33v-512c0,-46.93 38.41,-85.34 85.34,-85.34h135.25l78.08,-85.33h256l78.08,85.33h135.25c46.93,0 85.34,38.41 85.34,85.34zM597.33,384c0,-46.93 -38.4,-85.33 -85.33,-85.33c-46.93,0 -85.33,38.4 -85.33,85.33v170.67c0,46.93 38.4,85.33 85.33,85.33c46.93,0 85.33,-38.4 85.33,-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

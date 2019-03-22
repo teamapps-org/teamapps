@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>whatshot icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-ms3xUGGa">
+			<path d="M853.33,597.33c0,188.59 -152.74,341.34 -341.33,341.34c-188.59,0 -341.33,-152.75 -341.33,-341.34c0,-144.21 51.62,-276.9 137.81,-379.3l-1.28,15.36c0,87.89 66.56,159.14 154.88,159.14c87.89,0 145.49,-71.25 145.49,-159.14c0,-91.73 -31.57,-204.8 -31.57,-204.8c166.83,133.55 277.33,338.77 277.33,568.74zM704.43,605.87c0,-59.31 -8.54,-117.34 -25.18,-172.38c-43.52,58.45 -121.6,94.72 -197.12,110.08c-75.09,15.36 -119.89,64 -119.89,133.12c0,74.24 61.44,133.98 137.39,133.98c113.07,0 204.8,-91.73 204.8,-204.8z"/>
+		</clipPath>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-8QBMAucb" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-SStXwiAe" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-G5HP5ajM" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<filter id="filter-Jbjn36t1" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<mask id="mask-BBZDFeQx">
+			<path d="M853.33,597.33c0,188.59 -152.74,341.34 -341.33,341.34c-188.59,0 -341.33,-152.75 -341.33,-341.34c0,-144.21 51.62,-276.9 137.81,-379.3l-1.28,15.36c0,87.89 66.56,159.14 154.88,159.14c87.89,0 145.49,-71.25 145.49,-159.14c0,-91.73 -31.57,-204.8 -31.57,-204.8c166.83,133.55 277.33,338.77 277.33,568.74zM704.43,605.87c0,-59.31 -8.54,-117.34 -25.18,-172.38c-43.52,58.45 -121.6,94.72 -197.12,110.08c-75.09,15.36 -119.89,64 -119.89,133.12c0,74.24 61.44,133.98 137.39,133.98c113.07,0 204.8,-91.73 204.8,-204.8z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-G382SdDP">
+			<path d="M853.33,597.33c0,188.59 -152.74,341.34 -341.33,341.34c-188.59,0 -341.33,-152.75 -341.33,-341.34c0,-144.21 51.62,-276.9 137.81,-379.3l-1.28,15.36c0,87.89 66.56,159.14 154.88,159.14c87.89,0 145.49,-71.25 145.49,-159.14c0,-91.73 -31.57,-204.8 -31.57,-204.8c166.83,133.55 277.33,338.77 277.33,568.74zM704.43,605.87c0,-59.31 -8.54,-117.34 -25.18,-172.38c-43.52,58.45 -121.6,94.72 -197.12,110.08c-75.09,15.36 -119.89,64 -119.89,133.12c0,74.24 61.44,133.98 137.39,133.98c113.07,0 204.8,-91.73 204.8,-204.8z" fill="url(#color-8QBMAucb)"/>
+		</mask>
+		<mask id="mask-vrSV5ISD">
+			<rect fill="url(#color-SStXwiAe)" x="170.67" y="28.59" width="682.66" height="910.08"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-BBZDFeQx)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="170.67" y="28.59" width="682.66" height="910.08" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-vrSV5ISD)">
+				<rect x="170.67" y="28.59" width="682.66" height="910.08" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-G5HP5ajM)" mask="url(#mask-G382SdDP)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="170.67" y="28.59" width="682.66" height="910.08" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-ms3xUGGa)">
+			<path d="M77.67,981.67v-1096.08h868.66v1096.08zM576,28.59c0,0 31.57,113.07 31.57,204.8c0,87.89 -57.6,159.14 -145.49,159.14c-88.32,0 -154.88,-71.25 -154.88,-159.14l1.28,-15.36c-86.19,102.4 -137.81,235.09 -137.81,379.3c0,188.59 152.74,341.34 341.33,341.34c188.59,0 341.33,-152.75 341.33,-341.34c0,-229.97 -110.5,-435.19 -277.33,-568.74zM499.63,810.67c-75.95,0 -137.39,-59.74 -137.39,-133.98c0,-69.12 44.8,-117.76 119.89,-133.12c75.52,-15.36 153.6,-51.63 197.12,-110.08c16.64,55.04 25.18,113.07 25.18,172.38c0,113.07 -91.73,204.8 -204.8,204.8z" fill="#000000" filter="url(#filter-Jbjn36t1)"/>
+		</g>
+	</g>
+</svg>

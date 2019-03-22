@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>domain icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,324.27v525.65c0,33.93 -27.51,61.44 -61.44,61.44h-750.94c-33.93,0 -61.44,-27.51 -61.44,-61.44v-675.84c0,-33.93 27.51,-61.44 61.44,-61.44h375.47c33.93,0 61.44,27.51 61.44,61.44v88.75h314.03c33.93,0 61.44,27.51 61.44,61.44zM512,324.27v-150.19h-375.47v675.84h750.94v-525.65zM812.37,774.83h-300.37v-75.1h75.09v-75.09h-75.09v-75.09h75.09v-75.1h-75.09v-75.09h300.37zM286.72,774.83h-75.09v-75.1h75.09zM286.72,624.64h-75.09v-75.09h75.09zM436.91,774.83h-75.1v-75.1h75.1zM436.91,624.64h-75.1v-75.09h75.1zM737.28,474.45h-75.09v75.1h75.09zM286.72,474.45h-75.09v-75.09h75.09zM286.72,324.27h-75.09v-75.1h75.09zM436.91,474.45h-75.1v-75.09h75.1zM436.91,324.27h-75.1v-75.1h75.1zM737.28,624.64h-75.09v75.09h75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

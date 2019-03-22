@@ -1,0 +1,12 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>spa icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M512,523.09c-43.95,-45.65 -94.3,-83.2 -148.91,-112.21c9.81,-118.19 60.16,-234.24 151.47,-325.55c90.45,90.45 138.67,206.51 146.35,325.55c-54.61,29.44 -104.96,66.98 -148.91,112.21z" fill="currentColor"/>
+		</g>
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,426.67c0,226.99 -143.37,418.99 -342.62,490.24c-27.31,9.39 -55.04,16.64 -84.05,21.76c-29.01,-4.69 -57.17,-11.95 -84.05,-21.76c-199.25,-71.25 -342.62,-263.25 -342.62,-490.24c178.35,0 334.94,92.58 426.67,232.53c91.73,-139.95 248.32,-232.53 426.67,-232.53z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>voice_chat icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-9hyEyCrI" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-JBrf267p" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-Yy2EKr1t" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-3FBvaF5R">
+			<path d="M942.94,187.74v486.4c0,58.73 -47.95,106.66 -106.67,106.66h-556.86l-154.64,154.64c-7.32,7.32 -18.34,9.51 -27.91,5.55c-9.57,-3.97 -15.8,-13.31 -15.8,-23.66l0.41,-729.6c0,-58.55 47.37,-106.66 106.26,-106.66h648.53c58.72,0 106.67,47.95 106.67,106.67zM609.06,418.49c-7.68,6.15 -18.21,7.35 -27.08,3.08c-8.87,-4.26 -14.51,-13.23 -14.51,-23.07v-104.1h-273.06v273.06h273.06v-104.1c0,-9.84 5.64,-18.81 14.51,-23.07c8.87,-4.26 19.4,-3.06 27.08,3.08l120.54,96.43v-217.74zM836.26,106.66h-648.53c-44.58,0 -80.66,36.49 -80.66,81.07l-0.41,729.6l162.14,-162.14h567.46c44.58,0 81.07,-36.48 81.07,-81.06v-486.4c0,-44.58 -36.49,-81.07 -81.07,-81.07zM755.2,593.06l-162.14,-129.7v129.7h-324.26v-324.26h324.26v129.7l162.14,-129.7z" fill="url(#color-JBrf267p)"/>
+		</mask>
+		<mask id="mask-cgT60rMJ">
+			<path d="M942.94,187.74v486.4c0,58.73 -47.95,106.66 -106.67,106.66h-556.86l-154.64,154.64c-7.32,7.32 -18.34,9.51 -27.91,5.55c-9.57,-3.97 -15.8,-13.31 -15.8,-23.66l0.41,-729.6c0,-58.55 47.37,-106.66 106.26,-106.66h648.53c58.72,0 106.67,47.95 106.67,106.67zM609.06,418.49c-7.68,6.15 -18.21,7.35 -27.08,3.08c-8.87,-4.26 -14.51,-13.23 -14.51,-23.07v-104.1h-273.06v273.06h273.06v-104.1c0,-9.84 5.64,-18.81 14.51,-23.07c8.87,-4.26 19.4,-3.06 27.08,3.08l120.54,96.43v-217.74zM836.26,106.66h-648.53c-44.58,0 -80.66,36.49 -80.66,81.07l-0.41,729.6l162.14,-162.14h567.46c44.58,0 81.07,-36.48 81.07,-81.06v-486.4c0,-44.58 -36.49,-81.07 -81.07,-81.07zM755.2,593.06l-162.14,-129.7v129.7h-324.26v-324.26h324.26v129.7l162.14,-129.7z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-fvjtq6rl">
+			<rect fill="url(#color-9hyEyCrI)" x="81.06" y="81.06" width="861.87" height="861.87"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-cgT60rMJ)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-fvjtq6rl)">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-Yy2EKr1t)" mask="url(#mask-3FBvaF5R)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

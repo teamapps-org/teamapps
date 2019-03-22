@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>devices_other icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M128,768h170.67v85.33h-170.67c-46.93,0 -85.33,-38.4 -85.33,-85.33v-512c0,-46.93 38.4,-85.33 85.33,-85.33h768v85.33h-768zM981.33,384v426.67c0,21.33 -21.33,42.66 -42.66,42.66h-256c-21.33,0 -42.67,-21.33 -42.67,-42.66v-426.67c0,-21.33 21.34,-42.67 42.67,-42.67h256c21.33,0 42.66,21.34 42.66,42.67zM554.67,587.95c26.03,23.47 42.66,57.17 42.66,94.72c0,37.55 -16.63,71.25 -42.66,94.72v75.94h-170.67v-75.94c-26.03,-23.47 -42.67,-56.75 -42.67,-94.72c0,-37.97 16.64,-71.25 42.67,-94.72v-75.95h170.67zM896,426.67h-170.67v341.33h170.67zM533.33,682.67c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

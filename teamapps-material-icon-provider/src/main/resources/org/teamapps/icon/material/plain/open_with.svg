@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>open_with icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M426.67,256h-128l213.33,-213.33l213.33,213.33h-128v128h-170.66zM384,597.33h-128v128l-213.33,-213.33l213.33,-213.33v128h128zM768,725.33v-128h-128v-170.66h128v-128l213.33,213.33zM597.33,768h128l-213.33,213.33l-213.33,-213.33h128v-128h170.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>local_parking icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-CIW5w5kj" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-ocWFDiyH" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-y9jm3Lne" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-d3eEkve4">
+			<rect fill="url(#color-ocWFDiyH)" x="243.2" y="121.6" width="578.14" height="780.8"/>
+		</mask>
+		<mask id="mask-dtW6KB7y">
+			<path d="M821.34,390.4c0,148.31 -120.49,268.8 -268.8,268.8h-96v217.6c0,14.14 -11.46,25.6 -25.6,25.6h-162.14c-14.14,0 -25.6,-11.46 -25.6,-25.6v-729.6c0,-14.14 11.46,-25.6 25.6,-25.6h283.74c148.31,0 268.8,120.49 268.8,268.8zM616.1,390.4c0,-30.45 -25.02,-55.46 -55.46,-55.46h-104.1v110.93h104.1c30.45,0 55.46,-25.02 55.46,-55.46zM552.54,147.2h-283.74v729.6h162.14v-243.2h121.6c134.17,0 243.2,-109.03 243.2,-243.2c0,-134.17 -109.03,-243.2 -243.2,-243.2zM560.64,471.46h-129.7v-162.13h129.7c44.58,0 81.06,36.48 81.06,81.06c0,44.58 -36.48,81.06 -81.06,81.06z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-gEBbTHAo">
+			<path d="M821.34,390.4c0,148.31 -120.49,268.8 -268.8,268.8h-96v217.6c0,14.14 -11.46,25.6 -25.6,25.6h-162.14c-14.14,0 -25.6,-11.46 -25.6,-25.6v-729.6c0,-14.14 11.46,-25.6 25.6,-25.6h283.74c148.31,0 268.8,120.49 268.8,268.8zM616.1,390.4c0,-30.45 -25.02,-55.46 -55.46,-55.46h-104.1v110.93h104.1c30.45,0 55.46,-25.02 55.46,-55.46zM552.54,147.2h-283.74v729.6h162.14v-243.2h121.6c134.17,0 243.2,-109.03 243.2,-243.2c0,-134.17 -109.03,-243.2 -243.2,-243.2zM560.64,471.46h-129.7v-162.13h129.7c44.58,0 81.06,36.48 81.06,81.06c0,44.58 -36.48,81.06 -81.06,81.06z" fill="url(#color-CIW5w5kj)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-dtW6KB7y)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="243.2" y="121.6" width="578.14" height="780.8" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-d3eEkve4)">
+				<rect x="243.2" y="121.6" width="578.14" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-y9jm3Lne)" mask="url(#mask-gEBbTHAo)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="243.2" y="121.6" width="578.14" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

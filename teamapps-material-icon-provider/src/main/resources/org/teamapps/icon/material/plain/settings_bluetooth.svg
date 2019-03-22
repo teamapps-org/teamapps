@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_bluetooth icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M572.16,426.67l183.47,183.04l-243.63,243.62h-42.67v-323.84l-195.84,195.84l-60.16,-60.16l238.51,-238.5l-238.51,-238.51l60.16,-60.16l195.84,195.84v-323.84h42.67l243.63,243.63zM554.67,529.49v160.43l80.21,-80.21zM554.67,323.84l80.21,-80.21l-80.21,-80.22zM298.67,938.67h85.33v85.33h-85.33zM469.33,938.67h85.34v85.33h-85.34zM640,938.67h85.33v85.33h-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

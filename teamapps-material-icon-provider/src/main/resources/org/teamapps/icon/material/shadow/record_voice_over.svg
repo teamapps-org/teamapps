@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>record_voice_over icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-cmGsjdHc" x="-12%" y="-6%" width="135%" height="145%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M246.18,398.08c0,-83.89 68,-151.9 151.9,-151.9c83.89,0 151.9,68 151.9,151.9c0,83.89 -68,151.9 -151.9,151.9c-83.89,0 -151.9,-68 -151.9,-151.9zM701.86,777.82v75.94h-607.57v-75.94c0,-101.01 202.39,-151.9 303.78,-151.9c101.39,0 303.78,50.89 303.78,151.9zM818.44,663.9l-61.9,-61.9c105.19,-120.76 105.19,-293.16 0,-407.83l61.9,-61.9c148.48,153.79 148.1,383.92 0,531.63zM692.75,535.92l-63.8,-64.18c31.9,-44.81 31.9,-102.9 0,-147.71l63.8,-64.18c76.71,83.54 76.71,199.36 0,276.07z" fill="#000000" filter="url(#filter-cmGsjdHc)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M246.18,398.08c0,-83.89 68,-151.9 151.9,-151.9c83.89,0 151.9,68 151.9,151.9c0,83.89 -68,151.9 -151.9,151.9c-83.89,0 -151.9,-68 -151.9,-151.9z" fill="currentColor"/>
+			</g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M701.86,777.82v75.94h-607.57v-75.94c0,-101.01 202.39,-151.9 303.78,-151.9c101.39,0 303.78,50.89 303.78,151.9zM818.44,663.9l-61.9,-61.9c105.19,-120.76 105.19,-293.16 0,-407.83l61.9,-61.9c148.48,153.79 148.1,383.92 0,531.63zM692.75,535.92l-63.8,-64.18c31.9,-44.81 31.9,-102.9 0,-147.71l63.8,-64.18c76.71,83.54 76.71,199.36 0,276.07z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

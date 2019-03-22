@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>favorite_border icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-wzRncA9V" x="-13%" y="-7%" width="143%" height="152%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M891.74,379.1c0,143.54 -129.11,260.49 -324.67,437.83l-55.06,50.12l-55.06,-49.74c-195.56,-177.72 -324.67,-294.67 -324.67,-438.21c0,-116.95 91.9,-208.86 208.86,-208.86c66.07,0 129.49,30.76 170.88,79.36c41.39,-48.6 104.81,-79.36 170.88,-79.36c116.95,0 208.86,91.9 208.86,208.86zM815.78,379.1c0,-75.94 -56.96,-132.91 -132.9,-132.91c-58.48,0 -115.43,37.6 -135.18,89.62h-71.01c-20.12,-52.02 -77.08,-89.62 -135.56,-89.62c-75.94,0 -132.9,56.97 -132.9,132.91c0,109.75 119.23,217.97 299.98,381.63l3.8,3.79l3.8,-3.79c180.75,-163.66 299.98,-271.89 299.98,-381.63z" fill="#000000" filter="url(#filter-wzRncA9V)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,379.1c0,143.54 -129.11,260.49 -324.67,437.83l-55.06,50.12l-55.06,-49.74c-195.56,-177.72 -324.67,-294.67 -324.67,-438.21c0,-116.95 91.9,-208.86 208.86,-208.86c66.07,0 129.49,30.76 170.88,79.36c41.39,-48.6 104.81,-79.36 170.88,-79.36c116.95,0 208.86,91.9 208.86,208.86zM815.78,379.1c0,-75.94 -56.96,-132.91 -132.9,-132.91c-58.48,0 -115.43,37.6 -135.18,89.62h-71.01c-20.12,-52.02 -77.08,-89.62 -135.56,-89.62c-75.94,0 -132.9,56.97 -132.9,132.91c0,109.75 119.23,217.97 299.98,381.63l3.8,3.79l3.8,-3.79c180.75,-163.66 299.98,-271.89 299.98,-381.63z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

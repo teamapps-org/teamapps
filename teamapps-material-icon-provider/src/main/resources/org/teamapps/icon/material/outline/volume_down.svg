@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>volume_down icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M543.65,168.18c17.57,-17.57 44,-22.83 66.96,-13.32c22.96,9.51 37.93,31.91 37.93,56.76v89.15c13.68,-3.12 28.22,-1.51 41.13,4.95c75.38,37.68 127.83,115.43 127.83,206.27c0,90.78 -52.42,168.7 -128.12,206.04c-12.84,6.33 -27.27,7.89 -40.84,4.8v89.53c0,24.85 -14.97,47.25 -37.93,56.76c-22.96,9.51 -49.38,4.25 -66.96,-13.32l-169.74,-169.74h-124.74c-33.93,0 -61.44,-27.51 -61.44,-61.44v-225.28c0,-33.93 27.51,-61.44 61.44,-61.44h124.74zM249.17,399.36v225.28h150.19l187.73,187.73v-600.74l-187.73,187.73zM756.05,512c0,-66.46 -38.29,-123.53 -93.86,-151.32v302.25c55.57,-27.41 93.86,-84.48 93.86,-150.94z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

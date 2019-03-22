@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>arrow_upward icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M555.44,168.18l300.37,300.37c23.99,23.99 23.99,62.89 0,86.89l-53.31,53.32c-24.01,24.01 -62.94,24 -86.93,-0.04l-104.59,-104.78v308.42c0,33.93 -27.51,61.44 -61.44,61.44h-75.1c-33.93,0 -61.44,-27.51 -61.44,-61.44v-308.8l-105.03,104.85c-24,23.96 -62.87,23.94 -86.85,-0.04l-52.94,-52.94c-23.99,-23.99 -23.99,-62.9 0,-86.89l300.37,-300.37c23.99,-23.99 62.9,-23.99 86.89,0zM211.63,512l52.94,52.94l209.88,-209.51v456.94h75.1v-456.94l209.51,209.89l53.31,-53.32l-300.37,-300.37z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

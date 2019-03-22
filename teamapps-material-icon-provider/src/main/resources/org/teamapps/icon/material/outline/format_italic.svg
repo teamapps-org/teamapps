@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>format_italic icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M798.72,211.63v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-64.2l-76.21,178.26c29.28,4.68 51.66,30.06 51.66,60.67v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-300.37c-33.93,0 -61.44,-27.51 -61.44,-61.44v-112.64c0,-33.93 27.51,-61.44 61.44,-61.44h64.2l76.21,-178.26c-29.28,-4.68 -51.66,-30.06 -51.66,-60.67v-112.64c0,-33.93 27.51,-61.44 61.44,-61.44h300.37c33.93,0 61.44,27.51 61.44,61.44zM436.91,211.63v112.64h82.98l-128.41,300.37h-104.76v112.64h300.37v-112.64h-82.98l128.41,-300.37h104.76v-112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

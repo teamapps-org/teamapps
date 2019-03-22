@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>spellcheck icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-Qjtsr5Kx">
+			<path d="M56.73,127.24h965.97v896.76h-965.97z"/>
+		</clipPath>
+		<filter id="filter-yCSqEryT" x="-12%" y="-6%" width="144%" height="149%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-Qjtsr5Kx)">
+			<path d="M929.7,549.98l-360.36,360.74l-193.29,-193.28l53.54,-53.54l139.37,139.74l307.2,-307.2zM485.8,549.98h-214.17l-42.53,113.92h-79.36l194.05,-493.66h70.63l194.04,493.66h-79.36zM457.7,474.02l-78.6,-209.61l-78.6,209.61z" fill="#000000" filter="url(#filter-yCSqEryT)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M929.7,549.98l-360.36,360.74l-193.29,-193.28l53.54,-53.54l139.37,139.74l307.2,-307.2zM485.8,549.98h-214.17l-42.53,113.92h-79.36l194.05,-493.66h70.63l194.04,493.66h-79.36zM457.7,474.02l-78.6,-209.61l-78.6,209.61z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>airline_seat_individual_suite icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-KcegGeUc" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-xWhPY8AR" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-bP3ZuvMk" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-4Vn6wkIt">
+			<path d="M983.46,471.46v243.2c0,14.14 -11.46,25.6 -25.6,25.6h-891.73c-14.14,0 -25.6,-11.46 -25.6,-25.6v-405.33c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c14.14,0 25.6,11.46 25.6,25.6v66.7c21.86,-54 74.9,-92.3 136.54,-92.3c61.62,0 114.66,38.29 136.53,92.27v-66.67c0,-14.14 11.46,-25.6 25.6,-25.6h324.27c103.71,0 187.73,84.01 187.73,187.73zM172.8,567.46h81.61c-37,-14.99 -66.63,-44.62 -81.61,-81.62zM445.86,567.46v-81.6c-14.98,36.99 -44.61,66.62 -81.6,81.6zM795.74,309.34h-324.27v283.73h-324.26v-283.73h-81.06v405.33h891.73v-243.2c0,-89.58 -72.55,-162.13 -162.13,-162.13zM309.34,552.54c66.88,0 121.6,-54.72 121.6,-121.6c0,-66.88 -54.72,-121.6 -121.6,-121.6c-66.88,0 -121.6,54.72 -121.6,121.6c0,66.88 54.72,121.6 121.6,121.6z" fill="url(#color-xWhPY8AR)"/>
+		</mask>
+		<mask id="mask-iGKHhXQC">
+			<path d="M983.46,471.46v243.2c0,14.14 -11.46,25.6 -25.6,25.6h-891.73c-14.14,0 -25.6,-11.46 -25.6,-25.6v-405.33c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c14.14,0 25.6,11.46 25.6,25.6v66.7c21.86,-54 74.9,-92.3 136.54,-92.3c61.62,0 114.66,38.29 136.53,92.27v-66.67c0,-14.14 11.46,-25.6 25.6,-25.6h324.27c103.71,0 187.73,84.01 187.73,187.73zM172.8,567.46h81.61c-37,-14.99 -66.63,-44.62 -81.61,-81.62zM445.86,567.46v-81.6c-14.98,36.99 -44.61,66.62 -81.6,81.6zM795.74,309.34h-324.27v283.73h-324.26v-283.73h-81.06v405.33h891.73v-243.2c0,-89.58 -72.55,-162.13 -162.13,-162.13zM309.34,552.54c66.88,0 121.6,-54.72 121.6,-121.6c0,-66.88 -54.72,-121.6 -121.6,-121.6c-66.88,0 -121.6,54.72 -121.6,121.6c0,66.88 54.72,121.6 121.6,121.6z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-Ow24C11r">
+			<rect fill="url(#color-KcegGeUc)" x="40.54" y="283.74" width="942.93" height="456.53"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-iGKHhXQC)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="40.54" y="283.74" width="942.93" height="456.53" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-Ow24C11r)">
+				<rect x="40.54" y="283.74" width="942.93" height="456.53" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-bP3ZuvMk)" mask="url(#mask-4Vn6wkIt)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="40.54" y="283.74" width="942.93" height="456.53" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

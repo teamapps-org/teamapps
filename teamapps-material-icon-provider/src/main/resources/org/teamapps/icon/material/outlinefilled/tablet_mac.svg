@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>tablet_mac icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M912.26,158.15v707.71c0,87.31 -70.83,158.15 -158.15,158.15h-521.47c-87.31,0 -158.15,-70.83 -158.15,-158.15v-707.71c0,-87.31 70.83,-158.15 158.15,-158.15h521.47c87.31,0 158.15,70.83 158.15,158.15zM754.11,15.36h-521.47c-78.83,0 -142.79,63.96 -142.79,142.79v707.71c0,78.83 63.96,142.79 142.79,142.79h521.47c78.83,0 142.79,-63.96 142.79,-142.79v-707.71c0,-78.83 -63.96,-142.79 -142.79,-142.79zM847.23,158.15v707.71c0,51.4 -41.72,93.12 -93.12,93.12h-521.47c-51.4,0 -93.12,-41.72 -93.12,-93.12v-707.71c0,-51.4 41.72,-93.12 93.12,-93.12h521.47c51.4,0 93.12,41.72 93.12,93.12zM772.74,176.77h-558.72v595.97h558.72zM549.25,865.85c0,-30.91 -24.96,-55.87 -55.87,-55.87c-30.91,0 -55.87,24.96 -55.87,55.87c0,30.91 24.96,55.87 55.87,55.87c30.91,0 55.87,-24.96 55.87,-55.87z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

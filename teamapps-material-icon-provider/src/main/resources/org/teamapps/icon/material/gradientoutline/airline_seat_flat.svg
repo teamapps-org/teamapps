@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>airline_seat_flat icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-DCV5vc4a" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-i4yipCMo" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-LIJZUPoC" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-jvkwLVwv">
+			<path d="M942.94,593.06v81.07c0,14.14 -11.46,25.6 -25.6,25.6h-217.6v55.46c0,14.14 -11.46,25.6 -25.6,25.6h-324.27c-14.14,0 -25.6,-11.46 -25.6,-25.6v-55.46h-217.6c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.07c0,-14.14 11.46,-25.6 25.6,-25.6h66.84c-17.47,-7 -33.89,-17.48 -48.23,-31.46c-57.92,-56.93 -58.9,-149.76 -2.08,-208.06c56.92,-57.91 149.76,-58.92 208.06,-2.09c14.98,14.73 26.2,31.9 33.55,50.21v-66.74c0,-14.14 11.46,-25.6 25.6,-25.6h364.8c103.71,0 187.74,84.01 187.74,187.73v81.07c0,8.25 -3.9,15.58 -9.95,20.26c6.05,4.68 9.95,12.02 9.95,20.26zM369.6,567.46c-3.02,-4.2 -4.8,-9.36 -4.8,-14.93v-66.85c-7,17.47 -17.48,33.89 -31.46,48.23c-14.72,14.98 -31.89,26.2 -50.19,33.54zM106.66,593.06v81.07h243.2v81.06h324.27v-81.06h243.2v-81.07zM755.2,309.34h-364.8v243.2h526.94v-81.07c0,-89.58 -72.56,-162.13 -162.14,-162.13zM315.01,516.06c47.02,-48.23 46.21,-124.85 -1.62,-171.86c-48.23,-47.02 -124.84,-46.21 -171.85,1.62c-47.02,48.23 -46.22,124.84 1.61,171.86c48.23,47.02 124.85,46.22 171.86,-1.62z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-OrX5aaIv">
+			<path d="M942.94,593.06v81.07c0,14.14 -11.46,25.6 -25.6,25.6h-217.6v55.46c0,14.14 -11.46,25.6 -25.6,25.6h-324.27c-14.14,0 -25.6,-11.46 -25.6,-25.6v-55.46h-217.6c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.07c0,-14.14 11.46,-25.6 25.6,-25.6h66.84c-17.47,-7 -33.89,-17.48 -48.23,-31.46c-57.92,-56.93 -58.9,-149.76 -2.08,-208.06c56.92,-57.91 149.76,-58.92 208.06,-2.09c14.98,14.73 26.2,31.9 33.55,50.21v-66.74c0,-14.14 11.46,-25.6 25.6,-25.6h364.8c103.71,0 187.74,84.01 187.74,187.73v81.07c0,8.25 -3.9,15.58 -9.95,20.26c6.05,4.68 9.95,12.02 9.95,20.26zM369.6,567.46c-3.02,-4.2 -4.8,-9.36 -4.8,-14.93v-66.85c-7,17.47 -17.48,33.89 -31.46,48.23c-14.72,14.98 -31.89,26.2 -50.19,33.54zM106.66,593.06v81.07h243.2v81.06h324.27v-81.06h243.2v-81.07zM755.2,309.34h-364.8v243.2h526.94v-81.07c0,-89.58 -72.56,-162.13 -162.14,-162.13zM315.01,516.06c47.02,-48.23 46.21,-124.85 -1.62,-171.86c-48.23,-47.02 -124.84,-46.21 -171.85,1.62c-47.02,48.23 -46.22,124.84 1.61,171.86c48.23,47.02 124.85,46.22 171.86,-1.62z" fill="url(#color-DCV5vc4a)"/>
+		</mask>
+		<mask id="mask-XB5evkjV">
+			<rect fill="url(#color-i4yipCMo)" x="81.06" y="283.74" width="861.87" height="497.06"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-jvkwLVwv)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="81.06" y="283.74" width="861.87" height="497.06" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-XB5evkjV)">
+				<rect x="81.06" y="283.74" width="861.87" height="497.06" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-LIJZUPoC)" mask="url(#mask-OrX5aaIv)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="81.06" y="283.74" width="861.87" height="497.06" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

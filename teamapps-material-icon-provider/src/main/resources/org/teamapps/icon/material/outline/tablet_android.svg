@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>tablet_android icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,174.08v675.84c0,96.26 -77.82,174.08 -174.08,174.08h-450.56c-96.26,0 -174.08,-77.82 -174.08,-174.08v-675.84c0,-96.26 77.82,-174.08 174.08,-174.08h450.56c96.26,0 174.08,77.82 174.08,174.08zM301.23,235.52v477.87h421.54v-477.87zM737.28,61.44h-450.56c-62.33,0 -112.64,50.31 -112.64,112.64v675.84c0,62.33 50.31,112.64 112.64,112.64h450.56c62.33,0 112.64,-50.31 112.64,-112.64v-675.84c0,-62.33 -50.31,-112.64 -112.64,-112.64zM784.21,774.83h-544.42v-600.75h544.42zM587.09,887.47h-150.18v-37.55h150.18z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

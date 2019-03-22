@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>location_city icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,474.45v375.47c0,33.93 -27.51,61.44 -61.44,61.44h-675.84c-33.93,0 -61.44,-27.51 -61.44,-61.44v-525.65c0,-33.93 27.51,-61.44 61.44,-61.44h163.84v-13.66c0,-16.29 6.47,-31.92 18,-43.44l112.64,-112.64c23.99,-23.99 62.9,-23.99 86.89,0l112.64,112.64c11.52,11.52 18,27.15 18,43.44v163.84h163.84c33.93,0 61.44,27.51 61.44,61.44zM624.64,474.45v-225.28l-112.64,-112.64l-112.64,112.64v75.1h-225.28v525.65h675.84v-375.47zM774.83,774.83h-75.1v-75.1h75.1zM774.83,624.64h-75.1v-75.09h75.1zM324.27,774.83h-75.1v-75.1h75.1zM324.27,624.64h-75.1v-75.09h75.1zM549.55,774.83h-75.1v-75.1h75.1zM549.55,624.64h-75.1v-75.09h75.1zM324.27,474.45h-75.1v-75.09h75.1zM549.55,474.45h-75.1v-75.09h75.1zM549.55,324.27h-75.1v-75.1h75.1z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

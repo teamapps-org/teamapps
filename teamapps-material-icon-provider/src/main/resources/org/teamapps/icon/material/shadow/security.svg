@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>security icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-SpUDmTlb">
+			<path d="M77.24,51.3h869.52v972.7h-869.52z"/>
+		</clipPath>
+		<filter id="filter-btQejd3w" x="-14%" y="-6%" width="153%" height="135%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-SpUDmTlb)">
+			<path d="M853.76,246.18v227.84c0,210.75 -145.82,407.83 -341.76,455.68c-195.94,-47.85 -341.76,-244.93 -341.76,-455.68v-227.84l341.76,-151.89zM512,177.46l-265.82,118.09v216.45h265.82v339.1c141.26,-43.67 245.69,-183.03 265.82,-339.48h-265.82z" fill="#000000" filter="url(#filter-btQejd3w)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,246.18v227.84c0,210.75 -145.82,407.83 -341.76,455.68c-195.94,-47.85 -341.76,-244.93 -341.76,-455.68v-227.84l341.76,-151.89zM512,177.46l-265.82,118.09v216.45h265.82v339.1c141.26,-43.67 245.69,-183.03 265.82,-339.48h-265.82z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

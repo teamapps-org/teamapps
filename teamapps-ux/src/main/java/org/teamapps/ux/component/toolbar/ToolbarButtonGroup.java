@@ -1,0 +1,173 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.ux.component.toolbar;
+
+import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.dto.UiToolbarButton;
+import org.teamapps.dto.UiToolbarButtonGroup;
+import org.teamapps.ux.component.template.Template;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
+
+	private AbstractToolContainer toolContainer;
+	private String clientId = UUID.randomUUID().toString();
+	
+	private final List<ToolbarButton> buttons = new ArrayList<>();
+	private ToolbarButtonGroupPosition position;
+
+	private boolean visible = true;
+	private boolean showGroupSeparator = true;
+
+	private Template buttonTemplate; // if null, will fallback to toolbar's valueExtractor
+	private PropertyExtractor propertyExtractor; // if null, will fallback to toolbar's valueExtractor
+
+	public ToolbarButtonGroup() {
+		this(new ArrayList<>(), ToolbarButtonGroupPosition.CENTER);
+	}
+
+	public ToolbarButtonGroup(ToolbarButtonGroupPosition position) {
+		this(new ArrayList<>(), position);
+	}
+
+	public ToolbarButtonGroup(List<ToolbarButton> buttons, ToolbarButtonGroupPosition position) {
+		buttons.forEach(this::addButton);
+		this.position = position;
+	}
+
+	public void setToolContainer(AbstractToolContainer toolContainer) {
+		this.toolContainer = toolContainer;
+	}
+
+	public void setButtons(List<ToolbarButton> buttons) {
+		new ArrayList<>(this.buttons).forEach(button -> removeButton(button));
+		buttons.forEach(button -> addButton(button));
+	}
+
+	public ToolbarButton addButton(ToolbarButton button) {
+		return addButton(button, null, false);
+	}
+
+	public ToolbarButton addButton(ToolbarButton button, ToolbarButton neighborButton, boolean beforeNeighbor) {
+		buttons.add(button);
+		button.setToolbarButtonGroup(this);
+		if (toolContainer != null) {
+			toolContainer.handleAddButton(this, button, neighborButton != null ? neighborButton.getClientId() : null, beforeNeighbor);
+		}
+		return button;
+	}
+
+	public void removeButton(ToolbarButton button) {
+		buttons.remove(button);
+		button.setToolbarButtonGroup(null);
+		if (toolContainer != null) {
+			toolContainer.handleButtonRemoved(this, button);
+		}
+	}
+
+	protected String getClientId() {
+		return clientId;
+	}
+
+	public List<ToolbarButton> getButtons() {
+		return buttons;
+	}
+
+	public ToolbarButtonGroupPosition getPosition() {
+		return position;
+	}
+
+	public UiToolbarButtonGroup createUiToolbarButtonGroup() {
+		List<UiToolbarButton> buttons = this.buttons.stream()
+				.map(button -> button.createUiToolbarButton())
+				.collect(Collectors.toList());
+		UiToolbarButtonGroup buttonGroup = new UiToolbarButtonGroup(clientId, buttons);
+		buttonGroup.setVisible(visible);
+		buttonGroup.setShowGroupSeparator(showGroupSeparator);
+		return buttonGroup;
+	}
+
+	public AbstractToolContainer getToolContainer() {
+		return toolContainer;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		boolean oldValue = this.visible;
+		this.visible = visible;
+		if (oldValue != visible && this.toolContainer != null) {
+			toolContainer.handleGroupVisibilityChange(this.clientId, visible);
+		}
+	}
+
+	public boolean isShowGroupSeparator() {
+		return showGroupSeparator;
+	}
+
+	public void setShowGroupSeparator(boolean showGroupSeparator) {
+		this.showGroupSeparator = showGroupSeparator;
+	}
+
+	public void setPosition(ToolbarButtonGroupPosition position) {
+		this.position = position;
+	}
+
+	@Override
+	public int compareTo(ToolbarButtonGroup o) {
+		return position.compareTo(o.getPosition());
+	}
+
+	/*package-private*/ void handleButtonVisibilityChange(String buttonClientId, boolean visible) {
+		if (this.toolContainer != null) {
+			this.toolContainer.handleButtonVisibilityChange(this.clientId, buttonClientId, visible);
+		}
+	}
+
+	public Template getButtonTemplate() {
+		return buttonTemplate;
+	}
+
+	public void setButtonTemplate(Template buttonTemplate) {
+		this.buttonTemplate = buttonTemplate;
+	}
+
+	public Template getAppliedTemplate() {
+		return this.buttonTemplate != null ? this.buttonTemplate : this.toolContainer.getButtonTemplate();
+	}
+
+	public PropertyExtractor getPropertyExtractor() {
+		return propertyExtractor;
+	}
+
+	public void setPropertyExtractor(PropertyExtractor propertyExtractor) {
+		this.propertyExtractor = propertyExtractor;
+	}
+
+	public PropertyExtractor getAppliedPropertyExtractor() {
+		return propertyExtractor != null ? propertyExtractor : toolContainer.getPropertyExtractor();
+	}
+}

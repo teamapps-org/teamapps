@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>wc icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M640,938.67v-256h-128l108.37,-325.55c11.52,-34.99 44.38,-58.45 81.07,-58.45h5.12c36.69,0 69.12,23.46 81.07,58.45l108.37,325.55h-128v256zM234.67,938.67v-320h-64v-234.67c0,-46.93 38.4,-85.33 85.33,-85.33h128c46.93,0 85.33,38.4 85.33,85.33v234.67h-64v320zM234.67,170.67c0,-47.36 37.97,-85.34 85.33,-85.34c47.36,0 85.33,37.98 85.33,85.34c0,47.36 -37.97,85.33 -85.33,85.33c-47.36,0 -85.33,-37.97 -85.33,-85.33zM618.67,170.67c0,-47.36 37.97,-85.34 85.33,-85.34c47.36,0 85.33,37.98 85.33,85.34c0,47.36 -37.97,85.33 -85.33,85.33c-47.36,0 -85.33,-37.97 -85.33,-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

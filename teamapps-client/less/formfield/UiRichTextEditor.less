@@ -1,0 +1,181 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.UiRichTextEditor {
+  min-width: @default-input-width;
+  background-color: @input-bg;
+
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+
+  .toolbar-container {
+    width: 100% !important;
+    height: auto !important;
+    flex: 0 0 auto;
+
+    border-top-left-radius: @input-border-radius;
+    border-top-right-radius: @input-border-radius;
+    overflow: hidden;
+    
+    transition: opacity @default-color-transition-time;
+
+    > .mce-panel {
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      box-shadow: none;
+      border-color: @input-border-hover;
+      border-width: 0 0 1px 0 !important;
+      transition: border-color @default-color-transition-time;
+
+      > .mce-container-body {
+        width: 100% !important;
+        height: auto !important;
+
+        > .mce-toolbar-grp {
+          position: static;
+          width: 100% !important;
+          height: auto !important;
+          border-radius: @input-border-radius;
+
+          > .mce-container-body {
+            height: auto !important;
+            width: 100% !important;
+
+            > .mce-toolbar {
+              height: auto !important;
+              width: 100% !important;
+
+              > .mce-flow-layout {
+                height: auto !important;
+                width: 100% !important;
+                display: flex;
+                flex-wrap: wrap;
+
+                > .mce-btn-group {
+                  padding: 0;
+                  margin: 0;
+                  transition: border-color @default-color-transition-time;
+
+                  &:last-child {
+                    flex: 1 1 auto;
+                    text-align: right;
+                    border-left: none;
+                    > * {
+                      display: inline-block;
+                    }
+                  }
+
+                  .mce-btn {
+                    margin: 0;
+                    border: none;
+
+                    &:hover {
+                      background-color: @teamapps-hover-color;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .inline-editor {
+    flex: 1 1 auto;
+    outline: none !important;
+    //border: 1px solid transparent; // prevent margin merging!
+    padding: 5px;
+    overflow: auto;
+
+    alert {
+      display: block;
+
+      padding: ((@line-height-computed - 1) / 2);
+      border: 1px solid transparent;
+      border-radius: @alert-border-radius;
+      margin-bottom: (@line-height-computed / 2);
+
+      > *:last-child {
+        margin-bottom: 0;
+      }
+
+      .alert-variant(@alert-info-bg; @alert-info-border; @alert-info-text);
+    }
+
+    blockquote {
+      font-style: italic;
+    }
+  }
+
+  .mce-container {
+    box-sizing: border-box;
+  }
+
+  .file-upload-button {
+    position: absolute;
+    top: -10000px;
+  }
+
+  .spinner-wrapper {
+    position: absolute;
+    top: 32px;
+    right: 3px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &.editable-if-focused:not(:hover):not(.focus) .toolbar-container {
+    opacity: .5;
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, .5);
+    border-radius: @input-border-radius;
+
+    > .mce-panel {
+      border-color: transparent;
+
+      .mce-btn-group {
+        border-color: transparent;
+      }
+    }
+  }
+
+  &.readonly,
+  &.disabled {
+    > * {
+      display: none;
+    }
+    > .readonly-view {
+      display: block;
+      overflow-y: scroll;
+    }
+  }
+  &.disabled > .readonly-view {
+    padding: 5px;
+  }
+  &:not(.readonly):not(.disabled) {
+    > .readonly-view {
+      display: none;
+    }
+  }
+
+}

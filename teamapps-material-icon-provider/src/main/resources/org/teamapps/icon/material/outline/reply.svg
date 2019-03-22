@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>reply icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M799.93,848.08c-70.25,-98.34 -164.02,-151.52 -301.58,-163.26v90c0,24.85 -14.97,47.25 -37.93,56.76c-22.96,9.51 -49.38,4.25 -66.96,-13.32l-262.83,-262.83c-23.99,-23.99 -23.99,-62.9 0,-86.89l262.83,-262.83c17.57,-17.57 44,-22.83 66.96,-13.32c22.96,9.51 37.93,31.91 37.93,56.76v99.09c259.93,59.22 373.66,261.27 411.82,452.06c5.68,28.4 -9.24,56.91 -35.82,68.43c-26.58,11.51 -57.58,2.9 -74.42,-20.66zM436.91,399.36v-150.19l-262.83,262.83l262.83,262.83v-153.95c187.73,0 319.14,60.08 413.01,191.49c-37.55,-187.73 -150.18,-375.46 -413.01,-413.01z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

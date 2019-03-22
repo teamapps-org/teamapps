@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>offline_pin icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-hNZlsmeq" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-pqu5d6pN" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-tuuRNVa6" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-KgHA45ls">
+			<path d="M942.94,512c0,237.07 -193.86,430.94 -430.94,430.94c-237.07,0 -430.94,-193.86 -430.94,-430.94c0,-237.07 193.86,-430.94 430.94,-430.94c237.07,0 430.94,193.86 430.94,430.94zM657.92,300.95l-196.72,196.73c-10,10 -26.21,10 -36.2,0l-58.91,-58.91l-20.54,20.54l97.56,97.56l235.36,-235.36zM689.06,699.74h-354.13v29.86h354.13zM512,106.66c-222.94,0 -405.34,182.4 -405.34,405.34c0,222.94 182.4,405.34 405.34,405.34c222.94,0 405.34,-182.4 405.34,-405.34c0,-222.94 -182.4,-405.34 -405.34,-405.34zM443.1,593.06l-133.76,-133.76l56.74,-56.74l77.02,77.02l214.82,-214.83l56.74,56.75zM714.66,755.2h-405.33v-81.06h405.33z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-loBHKgYR">
+			<path d="M942.94,512c0,237.07 -193.86,430.94 -430.94,430.94c-237.07,0 -430.94,-193.86 -430.94,-430.94c0,-237.07 193.86,-430.94 430.94,-430.94c237.07,0 430.94,193.86 430.94,430.94zM657.92,300.95l-196.72,196.73c-10,10 -26.21,10 -36.2,0l-58.91,-58.91l-20.54,20.54l97.56,97.56l235.36,-235.36zM689.06,699.74h-354.13v29.86h354.13zM512,106.66c-222.94,0 -405.34,182.4 -405.34,405.34c0,222.94 182.4,405.34 405.34,405.34c222.94,0 405.34,-182.4 405.34,-405.34c0,-222.94 -182.4,-405.34 -405.34,-405.34zM443.1,593.06l-133.76,-133.76l56.74,-56.74l77.02,77.02l214.82,-214.83l56.74,56.75zM714.66,755.2h-405.33v-81.06h405.33z" fill="url(#color-pqu5d6pN)"/>
+		</mask>
+		<mask id="mask-vd1RwWtv">
+			<rect fill="url(#color-hNZlsmeq)" x="81.06" y="81.06" width="861.87" height="861.87"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-KgHA45ls)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-vd1RwWtv)">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-tuuRNVa6)" mask="url(#mask-loBHKgYR)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="81.06" y="81.06" width="861.87" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

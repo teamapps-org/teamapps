@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>flight_land icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-kZX8MA27" x="-13%" y="-6%" width="147%" height="145%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M222.26,505.92l-60.75,-16.32v-196.33l55.06,14.81l35.32,88.1l188.73,50.5v-314.42l73.28,19.37l104.81,342.53l201.64,53.92c30.38,8.36 48.23,39.5 40.25,69.87c-8.36,30.38 -39.5,48.23 -69.87,40.25l-201.64,-53.93l-165.18,-44.05zM151.26,777.82h721.49v75.94h-721.49z" fill="#000000" filter="url(#filter-kZX8MA27)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M222.26,505.92l-60.75,-16.32v-196.33l55.06,14.81l35.32,88.1l188.73,50.5v-314.42l73.28,19.37l104.81,342.53l201.64,53.92c30.38,8.36 48.23,39.5 40.25,69.87c-8.36,30.38 -39.5,48.23 -69.87,40.25l-201.64,-53.93l-165.18,-44.05zM151.26,777.82h721.49v75.94h-721.49z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

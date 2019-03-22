@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>keyboard_arrow_left icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-DvgE2r2M" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-LtYmH20p" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-7xTgyVFQ" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-AKfysv28">
+			<path d="M574.96,753.04l-243.2,-243.2c-10,-10 -10,-26.21 0,-36.2l243.2,-243.2c10,-10 26.21,-10 36.2,0l57.15,57.15c9.99,9.99 10,26.18 0.02,36.18l-167.6,167.97l167.6,167.97c9.98,10 9.97,26.19 -0.02,36.18l-57.15,57.15c-10,10 -26.21,10 -36.2,0zM650.22,677.78l-185.64,-186.05l185.64,-186.05l-57.15,-57.15l-243.2,243.2l243.2,243.2z" fill="url(#color-LtYmH20p)"/>
+		</mask>
+		<mask id="mask-tkmR9WKD">
+			<rect fill="url(#color-DvgE2r2M)" x="324.26" y="222.94" width="351.55" height="537.6"/>
+		</mask>
+		<mask id="mask-XVDVtTyH">
+			<path d="M574.96,753.04l-243.2,-243.2c-10,-10 -10,-26.21 0,-36.2l243.2,-243.2c10,-10 26.21,-10 36.2,0l57.15,57.15c9.99,9.99 10,26.18 0.02,36.18l-167.6,167.97l167.6,167.97c9.98,10 9.97,26.19 -0.02,36.18l-57.15,57.15c-10,10 -26.21,10 -36.2,0zM650.22,677.78l-185.64,-186.05l185.64,-186.05l-57.15,-57.15l-243.2,243.2l243.2,243.2z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-XVDVtTyH)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="324.26" y="222.94" width="351.55" height="537.6" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-tkmR9WKD)">
+				<rect x="324.26" y="222.94" width="351.55" height="537.6" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-7xTgyVFQ)" mask="url(#mask-AKfysv28)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="324.26" y="222.94" width="351.55" height="537.6" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

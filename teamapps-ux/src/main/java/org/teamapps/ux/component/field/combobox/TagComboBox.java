@@ -1,0 +1,201 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.ux.component.field.combobox;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teamapps.dto.UiComboBoxTreeRecord;
+import org.teamapps.dto.UiField;
+import org.teamapps.dto.UiTagComboBox;
+import org.teamapps.event.Event;
+import org.teamapps.ux.cache.CacheManipulationHandle;
+import org.teamapps.ux.model.TreeModel;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, List<RECORD>> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TagComboBox.class);
+
+	public final Event<String> onFreeTextEntered = new Event<>();
+	public final Event<String> onFreeTextRemoved = new Event<>();
+
+	private int maxEntries; // if 0, then the list is unbounded
+	private TagBoxWrappingMode wrappingMode = TagBoxWrappingMode.MULTI_LINE;
+	private boolean distinct = false; // if true, do not allow the same entry to be selected multiple times!
+
+	private List<String> freeTextEntries = new ArrayList<>();
+
+	public TagComboBox(TreeModel<RECORD> model) {
+		super(model);
+		init();
+	}
+
+	public TagComboBox(List<RECORD> staticData) {
+		super(staticData);
+		init();
+	}
+
+	public TagComboBox() {
+		super((List<RECORD>) null);
+		init();
+	}
+
+	private void init() {
+		recordCache.setPurgeDecider((record, clientId) -> !(getValue() != null && getValue().contains(record)));
+	}
+
+
+	public static <ENUM extends Enum> TagComboBox<ENUM> createForEnum(Class<ENUM> enumClass) {
+		TagComboBox<ENUM> tagComboBox = new TagComboBox<>(Arrays.asList(enumClass.getEnumConstants()));
+		tagComboBox.setShowClearButton(true);
+		return tagComboBox;
+	}
+
+	@Override
+	public UiField createUiComponent() {
+		UiTagComboBox comboBox = new UiTagComboBox(getId());
+		mapCommonUiComboBoxProperties(comboBox);
+		comboBox.setMaxEntries(maxEntries);
+		comboBox.setWrappingMode(this.wrappingMode.toUiWrappingMode());
+		comboBox.setDistinct(distinct);
+		return comboBox;
+	}
+
+	@Override
+	public void setValue(List<RECORD> records) {
+		super.setValue(records);
+		this.freeTextEntries.clear();
+	}
+
+	@Override
+	public List<RECORD> convertUiValueToUxValue(Object value) {
+		if (value != null && !(value instanceof List)) {
+			throw new IllegalArgumentException("Invalid TagComboBox value coming from ui: " + value);
+		}
+		
+		if (value == null) {
+			value = Collections.emptyList();
+		}
+
+		List<Object> uiValues = (List<Object>) value;
+		List<RECORD> records = new ArrayList<>();
+		List<String> uiFreeTextEntries = new ArrayList<>();
+		for (Object entry : uiValues) {
+			if (entry instanceof Integer) {
+				RECORD recordFromSelectedRecordCache = recordCache.getRecordByClientId((Integer) entry);
+				if (recordFromSelectedRecordCache == null) {
+					LOGGER.error("Could not find record in client record cache: " + entry);
+				} else {
+					records.add(recordFromSelectedRecordCache);
+				}
+			} else {
+				uiFreeTextEntries.add("" + entry);
+			}
+		}
+
+		List<String> newFreeTextEntries = uiFreeTextEntries.stream().filter(uiFreeTextEntry -> !this.freeTextEntries.contains(uiFreeTextEntry)).collect(Collectors.toList());
+		List<String> removedFreeTextEntries = this.freeTextEntries.stream().filter(existingFreeTextEntry -> !uiFreeTextEntries.contains(existingFreeTextEntry)).collect(Collectors.toList());
+
+		if (!newFreeTextEntries.isEmpty()) {
+			newFreeTextEntries.forEach(newFreeText -> {
+				if (freeTextRecordFactory != null) {
+					RECORD record = freeTextRecordFactory.apply(newFreeText);
+					CacheManipulationHandle<UiComboBoxTreeRecord> cacheResponse = recordCache.addRecord(record);
+					records.add(record);
+					
+					if (isRendered()) {
+						getSessionContext().queueCommand(
+								new UiTagComboBox.ReplaceFreeTextEntryCommand(getId(), newFreeText, cacheResponse.getResult()),
+								aVoid -> {
+									cacheResponse.commit();
+								}
+						);
+					} else {
+						cacheResponse.commit();
+					}
+					uiFreeTextEntries.remove(newFreeText);
+				} else {
+					this.onFreeTextEntered.fire(newFreeText);
+				}
+			});
+			this.freeTextEntries = uiFreeTextEntries;
+		}
+		if (removedFreeTextEntries.size() > 0) {
+			removedFreeTextEntries.forEach(removedEntryText -> {
+				this.onFreeTextRemoved.fire(removedFreeTextEntries.get(0));
+			});
+			this.freeTextEntries = uiFreeTextEntries;
+		}
+		
+		recordCache.replaceRecords(records).commit();
+
+		return records;
+	}
+
+	@Override
+	public Object convertUxValueToUiValue(List<RECORD> uxValue) {
+		if (uxValue == null) {
+			return null;
+		}
+		CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(uxValue);
+		cacheResponse.commit();
+		return cacheResponse.getResult();
+	}
+
+	public int getMaxEntries() {
+		return maxEntries;
+	}
+
+	public void setMaxEntries(int maxEntries) {
+		this.maxEntries = maxEntries;
+		reRenderIfRendered();
+	}
+
+	public TagBoxWrappingMode getWrappingMode() {
+		return wrappingMode;
+	}
+
+	public void setWrappingMode(TagBoxWrappingMode wrappingMode) {
+		this.wrappingMode = wrappingMode;
+		reRenderIfRendered();
+	}
+
+	public boolean isDistinct() {
+		return distinct;
+	}
+
+	public void setDistinct(boolean distinct) {
+		this.distinct = distinct;
+		reRenderIfRendered();
+	}
+
+	public List<String> getFreeTextEntries() {
+		return freeTextEntries;
+	}
+
+	public void setFreeTextEntries(List<String> freeTextEntries) {
+		this.freeTextEntries = freeTextEntries;
+	}
+}

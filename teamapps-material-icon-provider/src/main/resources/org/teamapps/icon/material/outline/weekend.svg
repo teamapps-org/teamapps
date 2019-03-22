@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>weekend icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M986.45,512v187.73c0,75.22 -61.29,136.54 -136.53,136.54h-675.84c-75.24,0 -136.53,-61.32 -136.53,-136.54v-187.73c0,-67.08 48.74,-123.09 112.64,-134.43v-53.3c0,-75.22 61.29,-136.54 136.53,-136.54h450.56c75.24,0 136.53,61.32 136.53,136.54v53.3c63.9,11.34 112.64,67.35 112.64,134.43zM849.92,436.91c-41.3,0 -75.09,33.79 -75.09,75.09v112.64h-525.66v-112.64c0,-41.3 -33.79,-75.09 -75.09,-75.09c-41.3,0 -75.09,33.79 -75.09,75.09v187.73c0,41.3 33.79,75.1 75.09,75.1h675.84c41.3,0 75.09,-33.8 75.09,-75.1v-187.73c0,-41.3 -33.79,-75.09 -75.09,-75.09zM737.28,249.17h-450.56c-41.3,0 -75.09,33.8 -75.09,75.1v80.72c43.55,15.39 75.09,56.7 75.09,105.88v76.22h450.56v-76.22c0,-48.81 31.54,-90.11 75.09,-105.88v-80.72c0,-41.3 -33.79,-75.1 -75.09,-75.1z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

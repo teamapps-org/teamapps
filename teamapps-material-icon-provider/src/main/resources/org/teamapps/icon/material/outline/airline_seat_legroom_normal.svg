@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_legroom_normal icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,793.6c0,65.09 -52.67,117.76 -117.76,117.76h-168.96c-33.93,0 -61.44,-27.51 -61.44,-61.44v-90.27c-4.39,1 -8.96,1.52 -13.66,1.52h-225.28c-137.56,0 -249.17,-111.61 -249.17,-249.17v-337.92c0,-33.93 27.51,-61.44 61.44,-61.44h75.09c6.55,0 12.86,1.02 18.77,2.92c5.92,-1.9 12.23,-2.92 18.77,-2.92h225.28c33.93,0 61.44,27.51 61.44,61.44v163.84h126.29c75.22,0 136.54,61.29 136.54,136.53v201.5c62.71,2.68 112.64,54.27 112.64,117.65zM831.15,737.28h-56.32v-262.83c0,-41.3 -33.8,-75.09 -75.1,-75.09h-187.73v-225.28h-225.28v300.37c0,61.95 50.69,112.64 112.64,112.64h262.83v262.83h168.96c31.16,0 56.32,-25.16 56.32,-56.32c0,-31.16 -25.16,-56.32 -56.32,-56.32zM249.17,512v-337.92h-75.09v337.92c0,103.63 84.1,187.73 187.73,187.73h225.28v-75.09h-225.28c-62.33,0 -112.64,-50.31 -112.64,-112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>spellcheck icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M968.48,592.97l-356.31,356.69c-23.99,24.02 -62.91,24.03 -86.91,0.02l-191.12,-191.11c-23.99,-23.99 -24,-62.9 0,-86.89l52.94,-52.94c2.95,-2.95 6.12,-5.53 9.46,-7.76h-79.56l-27.14,72.69c-8.97,24.02 -31.92,39.95 -57.56,39.95h-78.47c-20.32,0 -39.33,-10.05 -50.77,-26.84c-11.44,-16.79 -13.84,-38.16 -6.41,-57.07l191.87,-488.11c9.24,-23.51 31.92,-38.96 57.18,-38.96h69.84c25.26,0 47.94,15.46 57.18,38.96l185.52,471.98l170.42,-170.42c23.99,-23.99 62.9,-23.99 86.89,0l52.94,52.94c23.98,23.98 24,62.87 0.02,86.87zM872.07,496.61l-303.75,303.75l-137.8,-138.17l-52.94,52.94l191.12,191.11l356.31,-356.69zM528.9,662.19h78.47l-191.86,-488.11h-69.84l-191.87,488.11h78.47l42.06,-112.64h211.76zM302.87,474.45l77.72,-207.26l77.72,207.26z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

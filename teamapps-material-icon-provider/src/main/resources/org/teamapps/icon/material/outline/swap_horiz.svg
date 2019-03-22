@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>swap_horiz icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M638.67,498.35h-201.76c-21.72,0 -40.81,-11.27 -51.73,-28.28l0.16,55.58h201.76c21.72,0 40.81,11.27 51.73,28.28zM375.47,361.81c0,-33.93 27.51,-61.44 61.44,-61.44h201.76v-51.2c0,-24.86 14.99,-47.28 37.96,-56.78c22.98,-9.5 49.42,-4.22 66.98,13.39l149.81,150.19c23.92,23.98 23.92,62.8 0,86.78l-149.81,150.19c-17.56,17.6 -44,22.89 -66.98,13.39c-11.88,-4.91 -21.62,-13.27 -28.26,-23.63l0.15,79.5c0,33.93 -27.51,61.44 -61.44,61.44h-201.76v51.2c0,24.86 -14.99,47.28 -37.96,56.78c-22.98,9.5 -49.42,4.22 -66.98,-13.39l-149.81,-150.19c-23.92,-23.98 -23.92,-62.8 0,-86.78l149.81,-150.19c17.56,-17.6 44,-22.89 66.98,-13.39c11.88,4.91 21.62,13.27 28.26,23.63zM849.92,399.36l-149.81,-150.19v112.64h-263.2v75.1h263.2v112.64zM323.89,474.45l-149.81,150.19l149.81,150.19v-112.64h263.2v-75.1h-263.2z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

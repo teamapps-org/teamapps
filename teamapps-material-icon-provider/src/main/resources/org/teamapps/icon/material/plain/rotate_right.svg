@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>rotate_right icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M469.33,426.67v-166.83c-121.17,20.48 -213.33,125.44 -213.33,252.16c0,126.72 92.16,231.68 213.33,252.16v86.19c-168.53,-20.91 -298.66,-164.27 -298.66,-338.35c0,-174.08 130.55,-317.44 298.66,-338.35v-130.98l194.14,194.13zM659.63,719.79l61.44,61.44c-49.49,38.4 -107.09,61.44 -166.4,68.69v-86.19c37.12,-5.97 72.96,-20.9 104.96,-43.94zM764.16,554.67h86.19c-7.25,59.31 -30.72,116.48 -69.12,165.97l-60.59,-60.16c23.04,-32.43 37.55,-68.69 43.52,-105.81zM764.16,469.33c-5.97,-37.12 -20.48,-73.38 -43.52,-105.38l60.59,-60.59c38.4,49.49 61.87,106.66 69.12,165.97z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

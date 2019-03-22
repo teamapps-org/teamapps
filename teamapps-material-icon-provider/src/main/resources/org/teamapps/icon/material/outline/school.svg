@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>school icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M986.45,399.36v300.37c0,33.93 -27.51,61.44 -61.44,61.44h-75.09c-12.23,0 -23.63,-3.57 -33.2,-9.73c-3.71,3.46 -7.89,6.49 -12.46,8.98l-262.83,143.43c-18.34,10.01 -40.52,10.01 -58.86,0l-262.83,-143.43c-19.73,-10.77 -32.01,-31.45 -32.01,-53.93v-150.18c0,-11.98 3.49,-23.48 9.76,-33.23l-127.92,-69.78c-19.74,-10.77 -32.02,-31.45 -32.02,-53.94c0,-22.48 12.28,-43.17 32.02,-53.94l413.01,-225.28c18.34,-10 40.5,-10 58.84,0l413.01,225.28c19.74,10.77 32.02,31.45 32.02,53.94zM512,174.08l-413.01,225.28l413.01,225.28l337.92,-184.35v259.44h75.09v-300.37zM249.17,556.31v150.18l262.83,143.43l262.83,-143.43v-150.18l-262.83,143.42z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>sync_problem icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M384,181.76v89.17c-99.41,34.99 -170.67,129.71 -170.67,241.07c0,70.83 29.02,134.4 75.1,180.91l95.57,-95.58v256h-256l100.69,-100.69c-61.87,-61.44 -100.69,-146.35 -100.69,-240.64c0,-159.15 108.8,-292.27 256,-330.24zM795.31,271.36c61.87,61.44 100.69,146.35 100.69,240.64c0,159.15 -108.8,292.27 -256,330.24v-89.17c99.41,-34.99 170.67,-129.71 170.67,-241.07c0,-70.83 -29.02,-134.4 -75.1,-180.91l-95.57,95.58v-256h256zM469.33,298.67h85.34v256h-85.34zM469.33,640h85.34v85.33h-85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

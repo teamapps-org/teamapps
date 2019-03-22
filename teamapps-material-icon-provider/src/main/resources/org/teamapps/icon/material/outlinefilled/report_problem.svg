@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>report_problem icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M568.27,106.94l409.73,707.71c11.65,20.12 11.67,44.92 0.06,65.06c-11.61,20.14 -33.09,32.55 -56.33,32.55h-819.45c-23.24,0 -44.72,-12.41 -56.33,-32.55c-11.61,-20.14 -11.59,-44.94 0.06,-65.06l409.73,-707.71c11.63,-20.08 33.07,-32.44 56.27,-32.44c23.2,0 44.65,12.36 56.27,32.44zM512,89.85c-17.72,0 -34.1,9.44 -42.98,24.78l-409.73,707.71c-8.9,15.36 -8.91,34.31 -0.04,49.69c8.87,15.38 25.27,24.86 43.03,24.86h819.45c17.75,0 34.16,-9.48 43.03,-24.86c8.87,-15.38 8.85,-34.32 -0.04,-49.69l-409.73,-707.71c-8.88,-15.34 -25.26,-24.78 -42.98,-24.78zM512,139.52l409.73,707.71h-819.45zM549.25,437.51h-74.5v148.99h74.5zM549.25,660.99h-74.5v74.49h74.5z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

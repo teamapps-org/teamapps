@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>next_week icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,384v469.33c0,46.93 -38.41,85.34 -85.34,85.34h-682.66c-46.93,0 -85.34,-38.41 -85.34,-85.34v-469.33c0,-46.93 38.41,-85.33 85.34,-85.33h170.66v-85.34c0,-46.93 38.41,-85.33 85.34,-85.33h170.66c23.47,0 44.8,9.38 60.16,25.17c15.79,15.36 25.18,36.69 25.18,60.16v85.34h170.66c46.93,0 85.34,38.4 85.34,85.33zM640,618.67l-170.67,-170.67l-42.66,42.67l128,128l-128,128l42.66,42.66zM426.67,298.67h170.66v-85.34h-170.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

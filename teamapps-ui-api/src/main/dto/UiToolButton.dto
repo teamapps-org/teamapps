@@ -1,0 +1,40 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+@TypeScriptFactory
+class UiToolButton extends UiComponent {
+	required String icon; // hack to make the ux ToolButton not require SessionContext
+	required String popoverText;
+	boolean grayOutIfNotHovered = true;
+
+	int minDropDownWidth = 450;
+	int minDropDownHeight = 200;
+	boolean openDropDownIfNotSet = false;
+	UiComponent* dropDownComponent;
+
+    command setIcon(String icon);
+    command setPopoverText(String popoverText);
+    command setGrayOutIfNotHovered(boolean grayOutIfNotHovered);
+	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
+	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
+	command setDropDownComponent(UiComponent* dropDownComponent);
+
+	event clicked();
+	event dropDownOpened();
+}

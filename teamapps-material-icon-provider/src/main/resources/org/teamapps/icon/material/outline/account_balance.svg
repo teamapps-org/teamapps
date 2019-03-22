@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>account_balance icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,286.72v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-15.17c1,4.39 1.52,8.96 1.52,13.66v262.82c0,4.69 -0.53,9.27 -1.52,13.66h15.17c33.93,0 61.44,27.51 61.44,61.44v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-713.39c-33.93,0 -61.44,-27.51 -61.44,-61.44v-112.64c0,-33.93 27.51,-61.44 61.44,-61.44h15.18c-1,-4.39 -1.52,-8.96 -1.52,-13.66v-262.82c0,-4.69 0.53,-9.27 1.52,-13.66h-15.18c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-22.81 12.64,-43.75 32.83,-54.37l356.7,-187.73c17.91,-9.43 39.32,-9.43 57.23,0l356.69,187.73c20.19,10.62 32.82,31.56 32.82,54.37zM493.23,98.99l-356.7,187.73v75.09h713.39v-75.09zM136.53,887.47h713.39v-112.64h-713.39zM436.91,436.91v262.82h112.64v-262.82zM662.19,436.91v262.82h112.64v-262.82zM211.63,436.91v262.82h112.64v-262.82z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

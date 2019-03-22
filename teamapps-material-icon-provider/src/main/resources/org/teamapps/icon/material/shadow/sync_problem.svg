@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>sync_problem icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-6Bv4gnY5" x="-14%" y="-8%" width="153%" height="166%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M398.08,218.09v79.36c-88.47,31.14 -151.9,115.44 -151.9,214.55c0,63.04 25.83,119.62 66.84,161.01l85.06,-85.07v227.84h-227.84l89.61,-89.61c-55.06,-54.68 -89.61,-130.25 -89.61,-214.17c0,-141.64 96.83,-260.12 227.84,-293.91zM764.15,297.83c55.06,54.68 89.61,130.25 89.61,214.17c0,141.64 -96.83,260.12 -227.84,293.91v-79.36c88.47,-31.14 151.9,-115.44 151.9,-214.55c0,-63.04 -25.83,-119.62 -66.84,-161.01l-85.06,85.07v-227.84h227.84zM474.02,322.14h75.95v227.84h-75.95zM474.02,625.92h75.95v75.94h-75.95z" fill="#000000" filter="url(#filter-6Bv4gnY5)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M398.08,218.09v79.36c-88.47,31.14 -151.9,115.44 -151.9,214.55c0,63.04 25.83,119.62 66.84,161.01l85.06,-85.07v227.84h-227.84l89.61,-89.61c-55.06,-54.68 -89.61,-130.25 -89.61,-214.17c0,-141.64 96.83,-260.12 227.84,-293.91zM764.15,297.83c55.06,54.68 89.61,130.25 89.61,214.17c0,141.64 -96.83,260.12 -227.84,293.91v-79.36c88.47,-31.14 151.9,-115.44 151.9,-214.55c0,-63.04 -25.83,-119.62 -66.84,-161.01l-85.06,85.07v-227.84h227.84zM474.02,322.14h75.95v227.84h-75.95zM474.02,625.92h75.95v75.94h-75.95z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

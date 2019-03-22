@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>skip_next icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M322.15,236.53l278.6,196.66v-146.46c0,-33.93 27.51,-61.44 61.44,-61.44h75.09c33.93,0 61.44,27.51 61.44,61.44v450.56c0,33.93 -27.51,61.44 -61.44,61.44h-75.09c-33.93,0 -61.44,-27.51 -61.44,-61.44v-146.46l-278.6,196.66c-18.75,13.24 -43.32,14.92 -63.7,4.36c-20.38,-10.56 -33.17,-31.6 -33.17,-54.55v-450.56c0,-22.95 12.79,-43.99 33.17,-54.55c20.38,-10.56 44.95,-8.88 63.7,4.36zM286.72,737.28l319.15,-225.28l-319.15,-225.28zM662.19,286.72v450.56h75.09v-450.56z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

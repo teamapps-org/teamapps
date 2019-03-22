@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_bar icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-x4i6Bwzu" x="-14%" y="-7%" width="153%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M549.98,587.94v189.87h189.86v75.94h-455.68v-75.94h189.86v-189.87l-303.78,-341.76v-75.94h683.52v75.94zM685.54,322.14l67.59,-75.95h-481.88l67.21,75.95z" fill="#000000" filter="url(#filter-x4i6Bwzu)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M549.98,587.94v189.87h189.86v75.94h-455.68v-75.94h189.86v-189.87l-303.78,-341.76v-75.94h683.52v75.94zM685.54,322.14l67.59,-75.95h-481.88l67.21,75.95z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

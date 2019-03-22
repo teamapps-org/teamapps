@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>timelapse icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-KBenLFKi">
+			<path d="M39.26,89.26h945.47v934.74h-945.47z"/>
+		</clipPath>
+		<filter id="filter-VQUnyQA5" x="-13%" y="-6%" width="143%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-KBenLFKi)">
+			<path d="M891.74,512c0,209.61 -170.12,379.74 -379.74,379.74c-209.61,0 -379.74,-170.12 -379.74,-379.74c0,-209.61 170.12,-379.74 379.74,-379.74c209.61,0 379.74,170.12 379.74,379.74zM815.78,512c0,-167.85 -135.94,-303.78 -303.78,-303.78c-167.85,0 -303.78,135.94 -303.78,303.78c0,167.85 135.94,303.78 303.78,303.78c167.85,0 303.78,-135.94 303.78,-303.78zM673.38,673.01c-89.24,88.86 -233.54,88.86 -322.39,0l161.01,-161.01v-227.84c58.48,0 116.58,22.4 161.01,66.83c89.24,88.86 89.23,233.16 0.37,322.02z" fill="#000000" filter="url(#filter-VQUnyQA5)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,512c0,209.61 -170.12,379.74 -379.74,379.74c-209.61,0 -379.74,-170.12 -379.74,-379.74c0,-209.61 170.12,-379.74 379.74,-379.74c209.61,0 379.74,170.12 379.74,379.74zM815.78,512c0,-167.85 -135.94,-303.78 -303.78,-303.78c-167.85,0 -303.78,135.94 -303.78,303.78c0,167.85 135.94,303.78 303.78,303.78c167.85,0 303.78,-135.94 303.78,-303.78zM673.38,673.01c-89.24,88.86 -233.54,88.86 -322.39,0l161.01,-161.01v-227.84c58.48,0 116.58,22.4 161.01,66.83c89.24,88.86 89.23,233.16 0.37,322.02z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

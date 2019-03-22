@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>call_received icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M525.54,638.29h99.1c33.93,0 61.44,27.51 61.44,61.44v75.1c0,33.93 -27.51,61.44 -61.44,61.44h-375.47c-33.93,0 -61.44,-27.51 -61.44,-61.44v-375.47c0,-33.93 27.51,-61.44 61.44,-61.44h75.1c33.93,0 61.44,27.51 61.44,61.44v99.1l330.28,-330.28c23.99,-23.99 62.9,-23.99 86.89,0l52.94,52.94c23.99,23.99 23.99,62.9 0,86.89zM812.37,264.57l-52.94,-52.94l-435.16,435.16v-247.43h-75.1v375.47h375.47v-75.1h-247.43z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

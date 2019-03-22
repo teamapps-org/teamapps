@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>rss_feed icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-QYcvG0M3" x="-16%" y="-8%" width="167%" height="171%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M208.22,733c0,-45.72 37.06,-82.78 82.78,-82.78c45.72,0 82.78,37.06 82.78,82.78c0,45.72 -37.06,82.78 -82.78,82.78c-45.72,0 -82.78,-37.06 -82.78,-82.78zM799.08,815.78h-107.47c0,-266.96 -216.44,-483.39 -483.39,-483.39v-107.47c326.19,0 590.86,264.67 590.86,590.86zM584.15,815.78h-107.47c0,-148.1 -120.37,-268.47 -268.47,-268.47v-107.47c207.72,0 375.94,168.22 375.94,375.94z" fill="#000000" filter="url(#filter-QYcvG0M3)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M208.22,733c0,-45.72 37.06,-82.78 82.78,-82.78c45.72,0 82.78,37.06 82.78,82.78c0,45.72 -37.06,82.78 -82.78,82.78c-45.72,0 -82.78,-37.06 -82.78,-82.78z" fill="currentColor"/>
+			</g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M799.08,815.78h-107.47c0,-266.96 -216.44,-483.39 -483.39,-483.39v-107.47c326.19,0 590.86,264.67 590.86,590.86zM584.15,815.78h-107.47c0,-148.1 -120.37,-268.47 -268.47,-268.47v-107.47c207.72,0 375.94,168.22 375.94,375.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

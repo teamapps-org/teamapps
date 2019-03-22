@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>toll icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,512c0,188.59 -152.74,341.33 -341.33,341.33c-188.59,0 -341.33,-152.74 -341.33,-341.33c0,-188.59 152.74,-341.33 341.33,-341.33c188.59,0 341.33,152.74 341.33,341.33zM896,512c0,-141.23 -114.77,-256 -256,-256c-141.23,0 -256,114.77 -256,256c0,141.23 114.77,256 256,256c141.23,0 256,-114.77 256,-256zM298.67,753.07v89.17c-147.2,-37.97 -256,-171.09 -256,-330.24c0,-159.15 108.8,-292.27 256,-330.24v89.17c-99.41,34.99 -170.67,129.71 -170.67,241.07c0,111.36 71.26,206.08 170.67,241.07z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

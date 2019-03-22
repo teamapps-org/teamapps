@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>shop_two icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,213.33v469.34c0,47.36 -37.97,85.33 -85.33,85.33h-597.33c-47.36,0 -85.34,-37.97 -85.34,-85.33v-469.34h213.34v-85.33c0,-47.36 37.97,-85.33 85.33,-85.33h170.67c47.36,0 85.33,37.97 85.33,85.33v85.33zM128,853.33h682.67c0,47.36 -37.98,85.34 -85.34,85.34h-597.33c-47.36,0 -85.33,-37.98 -85.33,-85.34v-469.33h85.33zM746.67,469.33l-234.67,-128v298.67zM512,213.33h170.67v-85.33h-170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

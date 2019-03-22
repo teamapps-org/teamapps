@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>format_color_reset icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-iSSuxjTR" x="-16%" y="-7%" width="167%" height="155%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M810.47,810.47l-48.23,48.23l-99.87,-99.88c-40.25,35.32 -92.66,56.96 -150.37,56.96c-125.69,0 -227.84,-102.15 -227.84,-227.84c0,-45.95 20.89,-101.76 50.12,-156.83l-126.07,-126.07l48.22,-48.61zM734.53,637.69l-326.19,-326.19c53.16,-76.33 103.67,-133.67 103.67,-133.67c0,0 227.84,258.22 227.84,410.11c0,17.09 -1.9,33.8 -5.31,49.75z" fill="#000000" filter="url(#filter-iSSuxjTR)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M810.47,810.47l-48.23,48.23l-99.87,-99.88c-40.25,35.32 -92.66,56.96 -150.37,56.96c-125.69,0 -227.84,-102.15 -227.84,-227.84c0,-45.95 20.89,-101.76 50.12,-156.83l-126.07,-126.07l48.22,-48.61zM734.53,637.69l-326.19,-326.19c53.16,-76.33 103.67,-133.67 103.67,-133.67c0,0 227.84,258.22 227.84,410.11c0,17.09 -1.9,33.8 -5.31,49.75z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

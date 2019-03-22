@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>add_alert icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,808.11v45.22h-768v-45.22l90.45,-90.46v-248.32c0,-138.67 96,-254.72 225.71,-285.44v-30.72c0,-37.55 30.29,-67.84 67.84,-67.84c37.55,0 67.84,30.29 67.84,67.84v30.72c129.71,30.72 225.71,146.77 225.71,285.44v248.32zM682.67,469.33h-128v-128h-85.34v128h-128v85.76h128v128h85.34v-128h128zM596.91,896.43c0,46.93 -37.98,84.9 -84.91,84.9c-46.93,0 -84.91,-37.97 -84.91,-84.9z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

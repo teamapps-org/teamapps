@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>subdirectory_arrow_left icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M517.9,355.92l53.32,53.32c24.02,24.02 23.99,62.97 -0.06,86.95l-29.55,29.47h134.24v-314.02c0,-33.93 27.51,-61.44 61.44,-61.44h75.09c33.93,0 61.44,27.51 61.44,61.44v450.56c0,33.93 -27.51,61.44 -61.44,61.44h-270.77l29.55,29.47c24.05,23.98 24.08,62.93 0.06,86.95l-53.32,53.32c-23.99,23.99 -62.9,23.99 -86.89,0l-225.28,-225.28c-23.99,-23.99 -23.99,-62.9 0,-86.89l225.28,-225.28c23.99,-23.99 62.9,-23.99 86.89,0zM249.17,624.64l225.28,225.28l53.32,-53.32l-134.79,-134.41h419.39v-450.56h-75.09v375.46h-344.3l134.79,-134.41l-53.32,-53.32z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

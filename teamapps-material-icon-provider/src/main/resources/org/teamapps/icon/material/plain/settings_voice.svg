@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_voice icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M554.67,713.39v139.94h-85.34v-139.94c-139.95,-20.91 -256,-141.23 -256,-286.72h72.54c0,128 108.37,217.6 226.13,217.6c117.76,0 226.13,-89.6 226.13,-217.6h72.54c0,145.49 -116.05,265.81 -256,286.72zM384,426.67v-256c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128l-0.43,256c0,70.83 -56.74,128 -127.57,128c-70.83,0 -128,-57.17 -128,-128zM298.67,938.67h85.33v85.33h-85.33zM469.33,938.67h85.34v85.33h-85.34zM640,938.67h85.33v85.33h-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

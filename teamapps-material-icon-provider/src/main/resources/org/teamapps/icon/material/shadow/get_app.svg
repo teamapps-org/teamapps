@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>get_app icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-6CD88XFB" x="-18%" y="-7%" width="182%" height="156%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M512,663.9l-265.82,-265.82h151.9v-227.84h227.84v227.84h151.9zM777.82,739.84v75.94h-531.63v-75.94z" fill="#000000" filter="url(#filter-6CD88XFB)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M512,663.9l-265.82,-265.82h151.9v-227.84h227.84v227.84h151.9zM777.82,739.84v75.94h-531.63v-75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

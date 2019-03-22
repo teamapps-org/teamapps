@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>multiline_chart icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M808.96,441.17c46.51,74.67 77.65,163.85 87.04,261.98h-85.76c-8.11,-70.4 -29.44,-136.54 -61.44,-194.14l-172.8,194.14l-170.67,-170.67l-256,256.43l-64,-64l320,-320.43l170.67,170.67l122.88,-138.24c-71.68,-84.48 -171.94,-138.24 -288.85,-138.24c-99.84,0 -191.58,39.68 -264.11,103.25l-60.59,-60.59c88.32,-78.51 201.39,-128 324.7,-128c137.39,0 258.99,59.73 346.88,158.72l121.6,-136.96l60.16,60.16z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

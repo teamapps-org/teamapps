@@ -1,0 +1,359 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+typeScriptFilePrelude() ::= <<
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+export const typescriptDeclarationFixConstant = 1;
+>>
+
+classConfigDefinition(c) ::= <<
+<typeScriptFilePrelude()>
+
+import {UiEvent} from "./UiEvent";
+import {UiCommand} from "./UiCommand";
+<! import {UiSubEvent} from "./UiSubEvent";!>
+<! import {UiSubCommand} from "./UiSubCommand";!>
+import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
+<c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
+<c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithSubCommands:{c|import {<c.Identifier>SubCommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithSubEvents:{c|import {<c.Identifier>SubEventSource\} from "./<c.Identifier>Config";}; separator="\n">
+
+<c.inlineEnumProperties:inlineEnum(); separator="\n\n">
+
+export interface <c.Identifier.text>Config <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.Identifier>Config};  separator=", "> <endif>{
+	_type?: string;
+	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
+}
+
+<if(c.referenceableBaseClass)>
+export interface <c.Identifier>Reference {
+	<c.referenceableProperties:typeScriptPropertyDeclaration(true); separator="\n">
+}
+<endif>
+
+<if(c.typescriptFactoryAnnotation)>
+export function create<c.Identifier.text; format="cap">Config(<c.allRequiredProperties:parameter(false); separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>, <endif><if(c.allNonRequiredProperties)>nonRequiredProperties?: {<c.allNonRequiredProperties:parameter(true); separator=", ">}<endif>): <c.Identifier.text>Config {
+	return {
+		_type: "<c.Identifier.text>"<if(c.allProperties)>,<endif>
+		<c.allRequiredProperties:{p|<p.Identifier>}; separator=", "><if(c.allRequiredProperties && c.allNonRequiredProperties)>,<endif>
+		<if(c.allNonRequiredProperties)>...(nonRequiredProperties||{})<endif>
+	};
+}
+<endif>
+
+<if(c.hasCommands)>
+export interface <c.Identifier.text>CommandHandler <if(c.superClassAndDirectlyImplementedInterfacesWithCommands)>extends <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
+	<c.nonStaticCommandDeclaration:commandMethodStub(); separator="\n">
+}
+<endif>
+
+<if(c.hasEvents)>
+export interface <c.Identifier>EventSource <if(c.superClassAndDirectlyImplementedInterfacesWithEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
+	<c.eventDeclaration:teamAppsEventDeclaration(); separator="\n">
+}
+<endif>
+
+<if(c.hasSubCommands)>
+export interface <c.Identifier.text>SubCommandHandler <if(c.superClassAndDirectlyImplementedInterfacesWithSubCommands)>extends <c.superClassAndDirectlyImplementedInterfacesWithSubCommands:{c|<c.Identifier>SubCommandHandler}; separator=", "> <endif>{
+	<c.subCommandDeclaration:commandMethodStub(); separator="\n">
+}
+<endif>
+
+<if(c.subEventInterfaceNeeded)>
+export interface <c.Identifier>SubEventSource <if(c.superClassAndDirectlyImplementedInterfacesWithSubEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithSubEvents:{c|<c.Identifier>SubEventSource}; separator=", "> <endif>{
+	<c.subEventDeclaration:teamAppsEventDeclaration(); separator="\n">
+}
+<endif>
+
+<if(c.eventDeclaration)>
+<c.eventDeclaration:eventInterface("UiEvent"); separator="\n\n">
+<endif>
+
+<if(c.subEventDeclaration)>
+<c.subEventDeclaration:eventInterface("UiSubEvent"); separator="\n\n">
+<endif>
+>>
+
+commandMethodStub(cmd) ::= <<
+<cmd.Identifier>(<cmd.formalParameterWithDefault:parameter(false); separator=", ">): void;
+>>
+
+teamAppsEventDeclaration(evt) ::= <<
+on<evt.Identifier.text; format="cap">: TeamAppsEvent\<<evt.typeScriptInterfaceName>\>;
+>>
+
+eventInterface(evt, eventKind) ::= <<
+export interface <evt.typeScriptInterfaceName> extends <eventKind> {
+	_type: "<evt._type>";
+	<evt.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
+}
+>>
+
+parameter(p, optional) ::= "<p.Identifier><if(optional)>?<endif>: <p.type.typeScriptType>"
+
+interfaceConfigDefinition(c) ::= <<
+<typeScriptFilePrelude()>
+
+import {UiEvent} from "./UiEvent";
+import {UiCommand} from "./UiCommand";
+<! import {UiSubEvent} from "./UiSubEvent"; !>
+<! import {UiSubCommand} from "./UiSubCommand"; !>
+import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
+<c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
+<c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithSubCommands:{c|import {<c.Identifier>SubCommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
+<c.superClassAndDirectlyImplementedInterfacesWithSubEvents:{c|import {<c.Identifier>SubEventSource\} from "./<c.Identifier>Config";}; separator="\n">
+
+<c.inlineEnumProperties:inlineEnum(); separator="\n\n">
+
+export interface <c.Identifier.text>Config <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|<superInterface.Identifier>Config}; separator=", "> <endif>{
+	_type?: string;
+	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
+}
+
+<if(c.hasCommands)>
+export interface <c.Identifier.text>CommandHandler <if(c.superInterfacesWithCommands)>extends <c.superInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
+	<c.nonStaticCommandDeclaration:commandMethodStub(); separator="\n">
+}
+<endif>
+
+<if(c.hasEvents)>
+export interface <c.Identifier>EventSource <if(c.superInterfacesWithEvents)>extends <c.superInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
+	<c.eventDeclaration:teamAppsEventDeclaration(); separator="\n">
+}
+<endif>
+
+<if(c.hasSubCommands)>
+export interface <c.Identifier.text>SubCommandHandler <if(c.superInterfacesWithSubCommands)>extends <c.superInterfacesWithSubCommands:{c|<c.Identifier>SubCommandHandler}; separator=", "> <endif>{
+	<c.subCommandDeclaration:commandMethodStub(); separator="\n">
+}
+<endif>
+
+<if(c.subEventInterfaceNeeded)>
+export interface <c.Identifier>SubEventSource <if(c.superInterfacesWithSubEvents)>extends <c.superInterfacesWithSubEvents:{c|<c.Identifier>SubEventSource}; separator=", "> <endif>{
+	<c.subEventDeclaration:teamAppsEventDeclaration(); separator="\n">
+}
+<endif>
+
+<if(c.eventDeclaration)>
+<c.eventDeclaration:eventInterface("UiEvent"); separator="\n\n">
+<endif>
+
+<if(c.subEventDeclaration)>
+<c.subEventDeclaration:eventInterface("UiSubEvent")>
+<endif>
+>>
+
+inlineEnum(propertyDeclaration) ::= <<
+export enum <propertyDeclaration.parent.Identifier>_<propertyDeclaration.Identifier.text; format="cap"> {
+	<propertyDeclaration.type.inlineEnum.enumConstant:{c|<c.Identifier>}; separator=", ">
+}
+>>
+
+typeScriptPropertyDeclaration(p, forceRequired) ::= <<
+<p.Identifier.text><if(!p.requiredModifier && !forceRequired)>?<endif>: <p.type.typeScriptType>
+>>
+
+enum(e) ::= <<
+<typeScriptFilePrelude()>
+export enum <e.Identifier> {
+	<if(!e.stringJsonValuesAnnotation)>
+	<e.enumConstant:{e|<e.Identifier>}; separator=", ">
+	<else>
+	<e.enumConstant:{e|<e.Identifier> = "<e.Identifier>"}; separator=", ">
+	<endif>
+}
+>>
+
+commandExecutor(nonStaticCommands, staticCommands, name) ::= <<
+<typeScriptFilePrelude()>
+
+<if (staticCommands)>
+import {UiComponent} from "../modules/UiComponent";
+import {UiComponentReference} from "./UiComponentConfig";
+import {TeamAppsUiComponentRegistry} from "../modules/TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "../modules/TeamAppsUiContext";
+<endif>
+
+export class <name> {
+	private commandExecutorsByCommandName: {[commandName: string]: (targetObject: any, command: any) => void} = {
+		<nonStaticCommands:nonStaticCommandExecutorEntry(); separator=",\n">
+	};
+
+	private staticCommandExecutorsByCommandName: {[commandName: string]: (command: any, context: TeamAppsUiContext) => void} = {
+		<staticCommands:staticCommandExecutorEntry(); separator=",\n">
+	};
+
+	constructor(private componentRegistry: (reference: UiComponentReference) => UiComponent) {
+	}
+
+	private getComponentForReference(reference: UiComponentReference) {
+		this.componentRegistry(reference);
+	}
+
+	public executeCommand(targetObject: any, command: any) {
+		return this.commandExecutorsByCommandName[command._type](targetObject, command);
+	}
+
+	public executeStaticCommand(command: any, context: TeamAppsUiContext) {
+		return this.staticCommandExecutorsByCommandName[command._type](command, context);
+	}
+}
+>>
+nonStaticCommandExecutorEntry(command) ::= <<
+    '<command._type>': (targetObject: any, command: any) => {
+		targetObject.<command.Identifier>(<command.formalParameterWithDefault:commandExecutorMethodInvocationParameter(); separator=", ">);
+	}
+>>
+staticCommandExecutorEntry(command) ::= <<
+    '<command._type>': (command: any, context: TeamAppsUiContext) => {
+		(TeamAppsUiComponentRegistry.getComponentClassForName("<command.declaringClass.Identifier>") as any).<command.Identifier>(<command.formalParameterWithDefault:commandExecutorMethodInvocationParameter(); separator=", "><if (command.formalParameterWithDefault)>, <endif>context);
+	}
+>>
+commandExecutorMethodInvocationParameter(p) ::= "command.<p.Identifier>"
+
+eventRegistrator(classesAndInterfacesWithEvents) ::= <<
+<typeScriptFilePrelude()>
+
+import {UiEvent} from "./UiEvent";
+import {TeamAppsEventListener} from "../modules/util/TeamAppsEvent";
+
+export class EventRegistrator {
+	public static registerForEvents(eventSource: any, type: string, eventHandler: TeamAppsEventListener\<UiEvent>) {
+		switch (type) {
+			<classesAndInterfacesWithEvents:eventRegistrations(); separator="\n">
+		}
+	}
+}
+>>
+
+eventRegistrations(c) ::= <<
+case "<c.Identifier.text>":
+	<c.allEvents:eventRegistration(); separator="\n">
+	break;
+>>
+
+subEventRegistrator(classesAndInterfacesReferencedForSubEvents) ::= <<
+<typeScriptFilePrelude()>
+
+<! import {UiSubEvent} from "./UiSubEvent"; !>
+import {TeamAppsEventListener} from "../modules/util/TeamAppsEvent";
+
+export class SubEventRegistrator {
+	<classesAndInterfacesReferencedForSubEvents:subEventRegistrations(); separator="\n">
+}
+>>
+
+subEventRegistrations(c) ::= <<
+public static registerFor<c.Identifier>SubEvents(eventSource: any, eventHandler: TeamAppsEventListener\<UiSubEvent>) {
+	<c.allSubEventsInHierarchy:eventRegistration(); separator="\n">
+}
+>>
+
+eventRegistration(evt) ::= <<
+	 eventSource.on<evt.Identifier.text; format="cap"> && eventSource.on<evt.Identifier.text; format="cap">.addListener(eventHandler);
+>>
+
+eventFactory(allClassesAndInterfacesWithEvents, allClassesInterfacesAndEnumsReferencedByEvents) ::= <<
+<typeScriptFilePrelude()>
+
+<! import {UiSubEvent\} from "./UiSubEvent"; !>
+<allClassesAndInterfacesWithEvents:{c|<c.eventDeclaration:{e|import {<e.typeScriptInterfaceName>\} from "./<c.Identifier>Config"}; separator="\n">}; separator="\n">
+<allClassesInterfacesAndEnumsReferencedByEvents:{rc|import {<rc.typeScriptIdentifier>\} from "./<rc.declaringTypeScriptFileBaseName>";}; separator="\n">
+
+export class EventFactory {
+
+	<allClassesAndInterfacesWithEvents:{c|<c.eventDeclaration:eventFactoryMethod()>}; separator="\n">
+
+}
+>>
+
+eventFactoryMethod(event) ::= <<
+    public static create<event.typeScriptInterfaceName>(componentId:string<if(event.formalParameterWithDefault)>, <endif><event.formalParameterWithDefault:{p|<p.Identifier>: <p.type.typeScriptType>}; separator=", ">): <event.typeScriptInterfaceName> {
+        return {
+            _type: "<event._type>",
+            componentId: componentId,
+            <event.formalParameterWithDefault:{p|<p.Identifier>: <p.Identifier>}; separator=",\n">
+        };
+    }
+>>
+
+subEventFactory(allClassesAndInterfacesWithSubEvents, allClassesInterfacesAndEnumsReferencedBySubEvents) ::= <<
+<typeScriptFilePrelude()>
+
+<allClassesAndInterfacesWithSubEvents:{c|<c.subEventDeclaration:{e|import {<e.typeScriptInterfaceName>\} from "./<c.Identifier>Config"}; separator="\n">}; separator="\n">
+<allClassesInterfacesAndEnumsReferencedBySubEvents:{rc|import {<rc.typeScriptIdentifier>\} from "./<rc.declaringTypeScriptFileBaseName>";}; separator="\n">
+
+export class SubEventFactory {
+
+	<allClassesAndInterfacesWithSubEvents:{c|<c.subEventDeclaration:subEventFactoryMethod()>}; separator="\n">
+
+}
+>>
+subEventFactoryMethod(subEvent) ::= <<
+    public static create<subEvent.typeScriptInterfaceName>(<subEvent.formalParameterWithDefault:{p|<p.Identifier>: <p.type.typeScriptType>}; separator=", ">): <subEvent.typeScriptInterfaceName> {
+        return {
+            _type: "<subEvent._type>",
+            <subEvent.formalParameterWithDefault:{p|<p.Identifier>: <p.Identifier>}; separator=",\n">
+        };
+    }
+>>
+
+uiCommandBaseDefinition() ::= <<
+<typeScriptFilePrelude()>
+export interface UiCommand {
+	_type: string;
+	componentId?: string;
+	[key: string]: any;
+}
+>>
+
+uiEventBaseDefinition(eventDeclarations) ::= <<
+<typeScriptFilePrelude()>
+export interface UiEvent {
+	_type: <eventDeclarations:{event|"<event._type>"}; separator="\n\t\t\t| ">;
+	componentId: string;
+	[key: string]: any;
+}
+>>
+
+uiSubCommandBaseDefinition() ::= <<
+<typeScriptFilePrelude()>
+export interface UiSubCommand {
+	_type: string;
+	[key: string]: any;
+}
+>>
+
+uiSubEventBaseDefinition(subEventDeclarations) ::= <<
+<typeScriptFilePrelude()>
+export interface UiSubEvent {
+	_type: string;
+	[key: string]: any;
+}
+>>
+

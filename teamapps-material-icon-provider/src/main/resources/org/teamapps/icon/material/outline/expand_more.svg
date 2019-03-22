@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>expand_more icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M780.72,480.35l-225.28,225.28c-23.99,23.99 -62.9,23.99 -86.89,0l-225.28,-225.28c-23.99,-23.99 -23.99,-62.9 0,-86.89l52.94,-52.94c23.98,-23.98 62.84,-24 86.84,-0.05l128.94,128.66l128.94,-128.66c24,-23.95 62.87,-23.93 86.84,0.05l52.94,52.94c23.99,23.99 23.99,62.9 0,86.89zM684.34,383.97l-172.34,171.96l-172.34,-171.96l-52.94,52.94l225.28,225.28l225.28,-225.28z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_hotel icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,469.33v384h-85.33v-128h-768v128h-85.33v-640h85.33v384h341.33v-298.66h341.34c94.29,0 170.66,76.37 170.66,170.66zM170.67,426.67c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128c0,70.83 -57.17,128 -128,128c-70.83,0 -128,-57.17 -128,-128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

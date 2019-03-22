@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>map icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,149.33v645.12c0,9.81 -6.4,17.49 -15.36,20.48l-240.64,81.07l-256,-89.6l-227.84,88.32l-6.83,1.28c-11.95,0 -21.33,-9.38 -21.33,-21.33v-645.12c0,-9.81 6.4,-17.49 15.36,-20.48l240.64,-81.07l256,89.6l227.84,-88.32l6.83,-1.28c11.95,0 21.33,9.38 21.33,21.33zM640,303.36l-256,-90.03v507.31l256,90.03z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

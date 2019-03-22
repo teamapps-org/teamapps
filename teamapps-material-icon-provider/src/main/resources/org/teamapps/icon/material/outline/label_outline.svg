@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>label_outline icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M937.58,547.55l-164.05,231.24c-24.75,35.02 -65.77,57.48 -111.34,57.48l-413.08,-0.38c-74.8,-0.03 -136.47,-60.55 -136.47,-136.16v-375.46c0,-75.63 61.69,-136.15 136.5,-136.16l413.05,-0.38c45.57,0 86.59,22.46 111.34,57.48l164.05,231.24c15.11,21.29 15.11,49.81 0,71.1zM630.46,385.71h-319.85v252.58h319.85l89.66,-126.29zM723.38,280.71c-13.52,-19.15 -36.04,-31.54 -61.2,-31.54l-413.02,0.38c-41.3,0 -75.09,33.42 -75.09,74.72v375.46c0,41.3 33.79,74.72 75.09,74.72l413.02,0.38c25.16,0 47.68,-12.39 61.2,-31.54l164.08,-231.29zM662.19,699.73h-413.02v-375.46h413.02l133.28,187.73z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

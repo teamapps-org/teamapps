@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>fiber_new icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,286.72v450.56c0,75.62 -60.94,136.53 -136.54,136.53h-600.74c-75.6,0 -136.54,-60.91 -136.54,-136.53l0.38,-450.59c0.01,-75.2 60.16,-136.5 136.16,-136.5h600.74c75.6,0 136.54,60.91 136.54,136.53zM812.37,211.63h-600.74c-41.68,0 -74.72,33.41 -74.72,75.09l-0.38,450.56c0,41.68 33.42,75.09 75.1,75.09h600.74c41.68,0 75.1,-33.41 75.1,-75.09v-450.56c0,-41.68 -33.42,-75.09 -75.1,-75.09zM831.15,587.09c0,20.65 -16.9,37.55 -37.55,37.55h-150.19c-20.65,0 -37.54,-16.9 -37.54,-37.55v-187.73h46.93v169.34h42.42v-132.17h46.94v131.79h42.05v-168.96h46.94zM380.59,624.64h-45.06l-95.74,-131.41v131.41h-46.94v-225.28h46.94l93.86,131.41v-131.41h46.94zM568.32,446.67h-93.87v42.06h93.87v47.31h-93.87v41.68h93.87v46.93h-150.19v-225.28h150.19z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

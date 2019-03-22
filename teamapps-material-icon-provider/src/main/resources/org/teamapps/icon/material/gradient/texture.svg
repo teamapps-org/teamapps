@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>texture icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-fc12QJuh">
+			<path d="M893.01,191.57l-701.44,701.02c-14.51,-3.84 -27.73,-11.52 -38.4,-21.76c-10.24,-10.67 -17.92,-23.89 -21.76,-38.4l701.02,-701.02c29.44,7.68 52.47,30.72 60.58,60.16zM896,396.37v120.75l-378.88,378.88h-120.75zM627.63,128l-499.63,499.63v-120.75l378.88,-378.88zM725.33,896l170.67,-170.67v85.34c0,23.47 -9.38,44.8 -25.17,60.16c-15.36,15.79 -36.69,25.17 -60.16,25.17zM298.67,128l-170.67,170.67v-85.34c0,-46.93 38.4,-85.33 85.33,-85.33z"/>
+		</clipPath>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-BKoIAEFG" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-NAbpj3ND" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-QXbyhmzd" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<filter id="filter-XBmTEt0F" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<mask id="mask-Hlhbns5a">
+			<path d="M893.01,191.57l-701.44,701.02c-14.51,-3.84 -27.73,-11.52 -38.4,-21.76c-10.24,-10.67 -17.92,-23.89 -21.76,-38.4l701.02,-701.02c29.44,7.68 52.47,30.72 60.58,60.16zM896,396.37v120.75l-378.88,378.88h-120.75zM627.63,128l-499.63,499.63v-120.75l378.88,-378.88zM725.33,896l170.67,-170.67v85.34c0,23.47 -9.38,44.8 -25.17,60.16c-15.36,15.79 -36.69,25.17 -60.16,25.17zM298.67,128l-170.67,170.67v-85.34c0,-46.93 38.4,-85.33 85.33,-85.33z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-lW3tLeek">
+			<rect fill="url(#color-BKoIAEFG)" x="128" y="128" width="768" height="768"/>
+		</mask>
+		<mask id="mask-NTu3dtjV">
+			<path d="M893.01,191.57l-701.44,701.02c-14.51,-3.84 -27.73,-11.52 -38.4,-21.76c-10.24,-10.67 -17.92,-23.89 -21.76,-38.4l701.02,-701.02c29.44,7.68 52.47,30.72 60.58,60.16zM896,396.37v120.75l-378.88,378.88h-120.75zM627.63,128l-499.63,499.63v-120.75l378.88,-378.88zM725.33,896l170.67,-170.67v85.34c0,23.47 -9.38,44.8 -25.17,60.16c-15.36,15.79 -36.69,25.17 -60.16,25.17zM298.67,128l-170.67,170.67v-85.34c0,-46.93 38.4,-85.33 85.33,-85.33z" fill="url(#color-NAbpj3ND)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-Hlhbns5a)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="128" y="128" width="768" height="768" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-lW3tLeek)">
+				<rect x="128" y="128" width="768" height="768" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-QXbyhmzd)" mask="url(#mask-NTu3dtjV)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="128" y="128" width="768" height="768" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-fc12QJuh)">
+			<path d="M35,939v-954h954v954zM832.43,131.41l-701.02,701.02c3.84,14.51 11.52,27.73 21.76,38.4c10.67,10.24 23.89,17.92 38.4,21.76l701.44,-701.02c-8.11,-29.44 -31.14,-52.48 -60.58,-60.16zM396.37,896h120.75l378.88,-378.88v-120.75zM506.88,128l-378.88,378.88v120.75l499.63,-499.63zM810.67,896c23.47,0 44.8,-9.38 60.16,-25.17c15.79,-15.36 25.17,-36.69 25.17,-60.16v-85.34l-170.67,170.67zM213.33,128c-46.93,0 -85.33,38.4 -85.33,85.33v85.34l170.67,-170.67z" fill="#000000" filter="url(#filter-XBmTEt0F)"/>
+		</g>
+	</g>
+</svg>

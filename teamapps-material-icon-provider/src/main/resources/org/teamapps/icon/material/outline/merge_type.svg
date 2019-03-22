@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>merge_type icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M555.44,149.41l168.96,168.96c17.57,17.57 22.83,44 13.32,66.96c-9.51,22.96 -31.91,37.93 -56.76,37.93h-69.97v163.63c19.9,-4.51 41.6,0.98 57.1,16.47l128.03,128.04c23.99,23.99 23.99,62.89 0,86.89l-52.94,52.94c-23.99,23.99 -62.9,23.99 -86.89,0l-128.03,-128.04c-5.74,-5.75 -10.11,-12.34 -13.11,-19.39l-147.43,147.43c-23.99,23.99 -62.9,23.99 -86.89,0l-52.94,-52.94c-23.99,-23.99 -23.99,-62.89 0,-86.89l185.13,-185.14v-123h-69.97c-24.85,0 -47.25,-14.97 -56.76,-37.93c-9.51,-22.96 -4.25,-49.38 13.32,-66.96l168.96,-168.96c23.99,-23.99 62.9,-23.99 86.89,0zM343.04,361.81h131.41v209.89l-203.12,203.13l52.94,52.94l225.28,-225.28v-240.68h131.41l-168.96,-168.96zM699.73,827.77l52.94,-52.94l-128.03,-128.04l-52.94,52.94z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>sort_by_alpha icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M330.24,267.52l191.57,488.96h-78.5l-39.26,-104.53h-218.02l-39.26,104.53h-78.5l192,-488.96zM671.15,688.64h261.12v67.84h-363.95v-55.04l252.59,-365.23h-250.88v-68.26h354.13v53.76zM377.6,581.97l-82.77,-221.01l-82.78,221.01zM637.44,198.83h-201.39l100.7,-100.7zM437.33,826.45h198.83l-99.41,99.42z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5",
+    "experimentalDecorators": true,
+    "alwaysStrict": true,
+    "lib": ["es2017", "dom"],
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "declaration": true,
+    "declarationDir": "../../dist/tsd"
+  },
+  "files": [
+    "index.ts",
+    "../custom-declarations/jquery.ui.position.d.ts",
+    "../custom-declarations/webui-popover.d.ts",
+    "../custom-declarations/pickr-widget.d.ts",
+    "../../node_modules/@types/node/index.d.ts"
+  ],
+  "exclude": [
+    "../../node_modules"
+  ]
+}

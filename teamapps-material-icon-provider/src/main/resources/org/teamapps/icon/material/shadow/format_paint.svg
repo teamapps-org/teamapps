@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>format_paint icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-a380gAOF">
+			<path d="M115.22,89.26h831.54v934.74h-831.54z"/>
+		</clipPath>
+		<filter id="filter-9vSBxCsX" x="-15%" y="-6%" width="162%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-a380gAOF)">
+			<path d="M853.76,208.22v303.78h-303.78v341.76c0,20.89 -17.09,37.98 -37.98,37.98h-75.94c-20.89,0 -37.98,-17.09 -37.98,-37.98v-417.7h379.74v-151.9h-37.98v37.98c0,20.89 -17.09,37.97 -37.98,37.97h-455.68c-20.89,0 -37.97,-17.08 -37.97,-37.97v-151.9c0,-20.89 17.08,-37.98 37.97,-37.98h455.68c20.89,0 37.98,17.09 37.98,37.98v37.98z" fill="#000000" filter="url(#filter-9vSBxCsX)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,208.22v303.78h-303.78v341.76c0,20.89 -17.09,37.98 -37.98,37.98h-75.94c-20.89,0 -37.98,-17.09 -37.98,-37.98v-417.7h379.74v-151.9h-37.98v37.98c0,20.89 -17.09,37.97 -37.98,37.97h-455.68c-20.89,0 -37.97,-17.08 -37.97,-37.97v-151.9c0,-20.89 17.08,-37.98 37.97,-37.98h455.68c20.89,0 37.98,17.09 37.98,37.98v37.98z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

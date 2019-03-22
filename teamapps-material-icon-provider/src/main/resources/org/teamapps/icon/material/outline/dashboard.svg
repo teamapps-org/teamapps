@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>dashboard icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,474.45v375.47c0,33.93 -27.51,61.44 -61.44,61.44h-300.37c-14.14,0 -27.17,-4.78 -37.55,-12.81c-10.38,8.03 -23.41,12.81 -37.55,12.81h-300.37c-33.93,0 -61.44,-27.51 -61.44,-61.44v-225.28c0,-14.14 4.78,-27.16 12.8,-37.55c-8.03,-10.38 -12.8,-23.41 -12.8,-37.55v-375.47c0,-33.93 27.51,-61.44 61.44,-61.44h300.37c14.14,0 27.17,4.78 37.55,12.81c10.38,-8.03 23.41,-12.81 37.55,-12.81h300.37c33.93,0 61.44,27.51 61.44,61.44v225.28c0,14.14 -4.78,27.16 -12.8,37.55c8.03,10.38 12.8,23.41 12.8,37.55zM549.55,849.92h300.37v-375.47h-300.37zM174.08,549.55h300.37v-375.47h-300.37zM549.55,174.08v225.28h300.37v-225.28zM174.08,849.92h300.37v-225.28h-300.37z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

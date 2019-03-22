@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>slideshow icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,249.17v525.66c0,75.23 -61.3,136.53 -136.53,136.53h-525.66c-75.23,0 -136.53,-61.3 -136.53,-136.53v-525.66c0,-75.23 61.3,-136.53 136.53,-136.53h525.66c75.23,0 136.53,61.3 136.53,136.53zM310.61,310.61v402.78h92.33c-17,-11.28 -27.47,-30.43 -27.47,-51.2v-300.38c0,-20.77 10.47,-39.92 27.47,-51.2zM713.39,713.39v-402.78h-242.52c1.51,1 2.99,2.08 4.42,3.22l187.73,150.19c14.57,11.66 23.06,29.31 23.06,47.98c0,18.66 -8.48,36.32 -23.06,47.98l-187.73,150.19c-1.43,1.15 -2.91,2.22 -4.42,3.22zM774.83,174.08h-525.66c-41.3,0 -75.09,33.79 -75.09,75.09v525.66c0,41.3 33.79,75.09 75.09,75.09h525.66c41.3,0 75.09,-33.79 75.09,-75.09v-525.66c0,-41.3 -33.79,-75.09 -75.09,-75.09zM774.83,774.83h-525.66v-525.66h525.66zM436.91,361.81v300.38l187.73,-150.19z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

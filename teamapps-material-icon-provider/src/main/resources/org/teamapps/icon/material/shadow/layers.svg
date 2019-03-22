@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>layers icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-HdTWJ3Of" x="-14%" y="-6%" width="153%" height="145%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M232.14,446.31l-61.9,-48.23l341.76,-265.82l341.76,265.82l-62.27,48.23l-279.49,217.59zM791.86,542.38l61.9,48.23l-341.76,265.82l-341.76,-265.82l61.52,-47.85l279.86,217.59z" fill="#000000" filter="url(#filter-HdTWJ3Of)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M232.14,446.31l-61.9,-48.23l341.76,-265.82l341.76,265.82l-62.27,48.23l-279.49,217.59zM791.86,542.38l61.9,48.23l-341.76,265.82l-341.76,-265.82l61.52,-47.85l279.86,217.59z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

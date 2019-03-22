@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>view_quilt icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,249.17v225.28c0,6.55 -1.02,12.86 -2.92,18.77c1.9,5.92 2.92,12.23 2.92,18.77v225.28c0,33.93 -27.51,61.44 -61.44,61.44h-187.73c-6.55,0 -12.86,-1.02 -18.77,-2.92c-5.92,1.9 -12.23,2.92 -18.77,2.92h-187.73c-6.55,0 -12.86,-1.02 -18.77,-2.92c-5.92,1.9 -12.23,2.92 -18.77,2.92h-187.73c-33.93,0 -61.44,-27.51 -61.44,-61.44v-488.11c0,-33.93 27.51,-61.44 61.44,-61.44h187.73c6.55,0 12.86,1.02 18.77,2.92c5.92,-1.9 12.23,-2.92 18.77,-2.92h413.01c33.93,0 61.44,27.51 61.44,61.44zM436.91,249.17v225.28h413.01v-225.28zM211.63,737.28h187.73v-488.11h-187.73zM436.91,737.28h187.73v-225.28h-187.73zM662.19,737.28h187.73v-225.28h-187.73z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

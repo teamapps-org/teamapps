@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>done icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M840.81,228.26l52.56,52.57c23.99,23.99 23.99,62.89 0,86.89l-450.56,450.56c-23.99,23.99 -62.9,23.99 -86.89,0l-210.26,-210.27c-23.99,-23.99 -23.99,-62.89 0,-86.89l52.56,-52.56c23.99,-23.99 62.9,-23.99 86.89,0l114.25,114.25l354.55,-354.55c24,-24 62.9,-23.99 86.89,0zM399.36,669.7l-157.7,-157.7l-52.56,52.56l210.26,210.27l450.56,-450.56l-52.56,-52.57z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

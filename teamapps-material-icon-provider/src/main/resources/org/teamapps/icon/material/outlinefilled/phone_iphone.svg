@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>phone_iphone icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M800.51,195.39v633.22c0,87.32 -70.84,158.14 -158.15,158.14h-297.98c-87.31,0 -158.15,-70.82 -158.15,-158.14v-633.22c0,-87.32 70.84,-158.14 158.15,-158.14h297.98c87.31,0 158.15,70.82 158.15,158.14zM642.37,52.61h-297.98c-78.82,0 -142.79,63.94 -142.79,142.78v633.22c0,78.84 63.96,142.78 142.79,142.78h297.98c78.82,0 142.79,-63.94 142.79,-142.78v-633.22c0,-78.84 -63.96,-142.78 -142.79,-142.78zM735.49,195.39v633.22c0,51.4 -41.72,93.11 -93.12,93.11h-297.98c-51.4,0 -93.12,-41.71 -93.12,-93.11v-633.22c0,-51.4 41.72,-93.11 93.12,-93.11h297.98c51.4,0 93.12,41.71 93.12,93.11zM660.99,214.02h-335.23v521.47h335.23zM549.25,828.61c0,-30.91 -24.96,-55.87 -55.87,-55.87c-30.91,0 -55.87,24.96 -55.87,55.87c0,30.91 24.96,55.87 55.87,55.87c30.91,0 55.87,-24.96 55.87,-55.87z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>mic_none icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M810.67,469.33c0,145.92 -116.05,266.24 -256,286.72v139.95h-85.34v-139.95c-139.95,-20.91 -256,-141.23 -256,-286.72h72.54c0,128 108.37,217.6 226.13,217.6c117.76,0 226.13,-89.6 226.13,-217.6zM384,469.33v-256c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128l-0.43,256c0,70.83 -56.74,128 -127.57,128c-70.83,0 -128,-57.17 -128,-128zM460.8,473.6c0,28.16 23.04,51.2 51.2,51.2c28.16,0 50.77,-23.04 50.77,-51.2l0.43,-264.53c0,-28.16 -23.04,-51.2 -51.2,-51.2c-28.16,0 -51.2,23.04 -51.2,51.2z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

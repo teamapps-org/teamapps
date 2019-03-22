@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>network_check icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M699.73,234.67l-104.1,549.54l-0.43,1.28c-8.11,38.83 -42.67,67.84 -83.63,67.84c-47.36,0 -85.76,-38.4 -85.76,-85.76c0,-14.93 4.27,-28.59 11.1,-40.96l221.01,-497.06l2.99,-6.4c3.84,-5.97 10.24,-9.82 17.49,-9.82c11.95,0 21.33,9.39 21.33,21.34zM628.05,200.53l-50.77,114.35c-159.57,-19.63 -326.4,31.57 -449.28,154.45l-85.33,-85.33c159.57,-159.15 379.3,-220.16 585.38,-183.47zM525.23,431.79l-54.62,122.88c-62.72,8.96 -123.73,37.12 -171.94,85.33l-85.34,-85.33c85.76,-85.76 199.69,-126.29 311.9,-122.88zM720.21,352l22.62,-120.32c87.04,32 168.53,82.35 238.5,152.32l-85.33,85.33c-52.05,-52.05 -111.79,-90.88 -175.79,-117.33zM673.71,598.61l23.46,-124.58c40.96,20.05 79.37,46.51 113.5,80.64l-85.34,85.33c-16.21,-16.21 -33.7,-29.87 -51.62,-41.39z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

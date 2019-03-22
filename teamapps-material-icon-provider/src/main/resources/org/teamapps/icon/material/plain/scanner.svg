@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>scanner icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,533.33v234.67c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-46.93,0 -85.33,-38.4 -85.33,-85.33v-170.67c0,-46.93 38.4,-85.33 85.33,-85.33h537.6l-601.6,-217.6l29.87,-81.07l665.6,243.2c29.87,8.53 51.2,42.67 51.2,76.8zM810.67,640h-426.67v85.33h426.67zM298.67,640h-85.34v85.33h85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

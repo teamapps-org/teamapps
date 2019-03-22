@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>filter_7 icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-bvafD4WH" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-HqBVQU2l" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-4urjk2D1" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-AfAuJp9C">
+			<rect fill="url(#color-HqBVQU2l)" x="40.54" y="40.54" width="942.93" height="942.93"/>
+		</mask>
+		<mask id="mask-DUezqGfI">
+			<path d="M983.46,147.2v567.46c0,58.72 -47.94,106.67 -106.66,106.67h-567.46c-58.72,0 -106.67,-47.95 -106.67,-106.67v-567.46c0,-58.73 47.95,-106.66 106.67,-106.66h567.46c58.72,0 106.66,47.94 106.66,106.66zM795.74,851.2c14.14,0 25.6,11.46 25.6,25.6v81.06c0,14.14 -11.46,25.6 -25.6,25.6h-648.54c-58.72,0 -106.66,-47.94 -106.66,-106.66v-648.54c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c14.14,0 25.6,11.46 25.6,25.6v622.94zM334.94,172.8v516.26h516.26v-516.26zM448.57,622.15l143.61,-287.21h-120.71c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.07c0,-14.14 11.46,-25.6 25.6,-25.6h243.2c14.14,0 25.6,11.46 25.6,25.6v81.07c0,3.97 -0.93,7.89 -2.7,11.45l-162.13,324.26c-4.34,8.67 -13.2,14.15 -22.9,14.15h-81.07c-8.87,0 -17.11,-4.59 -21.78,-12.14c-4.66,-7.55 -5.09,-16.97 -1.12,-24.91zM147.2,228.26h-81.06v648.54c0,44.58 36.48,81.06 81.06,81.06h648.54v-81.06h-648.54zM876.8,66.14h-567.46c-44.58,0 -81.07,36.48 -81.07,81.06v567.46c0,44.58 36.49,81.07 81.07,81.07h567.46c44.58,0 81.06,-36.49 81.06,-81.07v-567.46c0,-44.58 -36.48,-81.06 -81.06,-81.06zM876.8,714.66h-567.46v-567.46h567.46zM552.54,633.6l162.13,-324.26v-81.07h-243.2v81.07h162.14l-162.14,324.26z" fill="url(#color-bvafD4WH)"/>
+		</mask>
+		<mask id="mask-TIfAllM5">
+			<path d="M983.46,147.2v567.46c0,58.72 -47.94,106.67 -106.66,106.67h-567.46c-58.72,0 -106.67,-47.95 -106.67,-106.67v-567.46c0,-58.73 47.95,-106.66 106.67,-106.66h567.46c58.72,0 106.66,47.94 106.66,106.66zM795.74,851.2c14.14,0 25.6,11.46 25.6,25.6v81.06c0,14.14 -11.46,25.6 -25.6,25.6h-648.54c-58.72,0 -106.66,-47.94 -106.66,-106.66v-648.54c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c14.14,0 25.6,11.46 25.6,25.6v622.94zM334.94,172.8v516.26h516.26v-516.26zM448.57,622.15l143.61,-287.21h-120.71c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.07c0,-14.14 11.46,-25.6 25.6,-25.6h243.2c14.14,0 25.6,11.46 25.6,25.6v81.07c0,3.97 -0.93,7.89 -2.7,11.45l-162.13,324.26c-4.34,8.67 -13.2,14.15 -22.9,14.15h-81.07c-8.87,0 -17.11,-4.59 -21.78,-12.14c-4.66,-7.55 -5.09,-16.97 -1.12,-24.91zM147.2,228.26h-81.06v648.54c0,44.58 36.48,81.06 81.06,81.06h648.54v-81.06h-648.54zM876.8,66.14h-567.46c-44.58,0 -81.07,36.48 -81.07,81.06v567.46c0,44.58 36.49,81.07 81.07,81.07h567.46c44.58,0 81.06,-36.49 81.06,-81.07v-567.46c0,-44.58 -36.48,-81.06 -81.06,-81.06zM876.8,714.66h-567.46v-567.46h567.46zM552.54,633.6l162.13,-324.26v-81.07h-243.2v81.07h162.14l-162.14,324.26z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-TIfAllM5)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="40.54" y="40.54" width="942.93" height="942.93" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-AfAuJp9C)">
+				<rect x="40.54" y="40.54" width="942.93" height="942.93" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-4urjk2D1)" mask="url(#mask-DUezqGfI)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="40.54" y="40.54" width="942.93" height="942.93" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

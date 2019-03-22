@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>bluetooth_searching icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M486.83,512l183.46,183.04l-243.62,243.63h-42.67v-323.84l-195.84,195.84l-60.16,-60.16l238.51,-238.51l-238.51,-238.51l60.16,-60.16l195.84,195.84v-323.84h42.67l243.62,243.63zM896.43,507.73c0,83.2 -24.32,160.85 -65.71,226.56l-51.2,-51.2c26.45,-51.2 41.81,-109.65 41.81,-171.52c0,-61.87 -14.93,-119.89 -41.81,-171.52l53.76,-53.76c39.68,64.85 62.72,140.8 63.15,221.44zM706.99,413.44c11.52,30.72 18.34,63.57 18.34,98.56c0,34.99 -6.82,68.69 -18.77,99.41l-98.99,-98.98zM469.33,409.17l80.22,-80.21l-80.22,-80.21zM469.33,614.83v160.42l80.22,-80.21z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

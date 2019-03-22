@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>battery_full icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M761.17,261.56v575.97c0,61.65 -50.34,111.38 -111.75,111.38h-275.22c-61.68,0 -111.37,-50.38 -111.37,-111.76v-575.59c0,-61.34 50.03,-111.37 111.37,-111.37h1.27v-13.66c0,-33.93 27.51,-61.44 61.44,-61.44h150.18c33.93,0 61.44,27.51 61.44,61.44v13.66h1.27c61.34,0 111.37,50.03 111.37,111.37zM649.8,211.63h-62.71v-75.1h-150.18v75.1h-62.71c-27.41,0 -49.93,22.52 -49.93,49.93v575.59c0,27.78 22.52,50.32 49.93,50.32h275.22c27.78,0 50.31,-22.53 50.31,-49.94v-575.97c0,-27.41 -22.52,-49.93 -49.93,-49.93z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

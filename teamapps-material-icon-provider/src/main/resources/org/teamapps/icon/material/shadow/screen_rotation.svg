@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>screen_rotation icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-zrO3hq4j">
+			<path d="M0,1024v-1010.68h1024v1010.68z"/>
+		</clipPath>
+		<filter id="filter-k4OIC0Do" x="-11%" y="-5%" width="128%" height="127%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-zrO3hq4j)">
+			<path d="M901.22,579.21c22.4,22.03 22.4,58.1 0,80.5l-241.51,241.51c-22.03,22.4 -58.1,22.4 -80.5,0l-456.44,-456.44c-22.4,-22.03 -22.4,-58.1 0,-80.5l241.51,-241.51c22.03,-22.4 58.1,-22.4 80.5,0zM860.98,619.47l-456.45,-456.45l-241.51,241.51l456.45,456.45zM392.38,821.86l144.68,144.68l-25.06,1.14c-238.85,0 -434.42,-183.78 -453.78,-417.7h56.96c13.67,142.78 102.53,263.53 226.7,322.01zM631.62,202.14l-144.68,-144.68l25.06,-1.14c238.85,0 434.42,183.79 453.78,417.7h-56.96c-13.67,-142.78 -102.53,-263.16 -226.7,-322.01z" fill="#000000" filter="url(#filter-k4OIC0Do)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M901.22,579.21c22.4,22.03 22.4,58.1 0,80.5l-241.51,241.51c-22.03,22.4 -58.1,22.4 -80.5,0l-456.44,-456.44c-22.4,-22.03 -22.4,-58.1 0,-80.5l241.51,-241.51c22.03,-22.4 58.1,-22.4 80.5,0zM860.98,619.47l-456.45,-456.45l-241.51,241.51l456.45,456.45zM392.38,821.86l144.68,144.68l-25.06,1.14c-238.85,0 -434.42,-183.78 -453.78,-417.7h56.96c13.67,142.78 102.53,263.53 226.7,322.01zM631.62,202.14l-144.68,-144.68l25.06,-1.14c238.85,0 434.42,183.79 453.78,417.7h-56.96c-13.67,-142.78 -102.53,-263.16 -226.7,-322.01z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,12 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>record_voice_over icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M213.33,384c0,-94.26 76.41,-170.67 170.67,-170.67c94.26,0 170.67,76.41 170.67,170.67c0,94.26 -76.41,170.67 -170.67,170.67c-94.26,0 -170.67,-76.41 -170.67,-170.67z" fill="currentColor"/>
+		</g>
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M725.33,810.67v85.33h-682.66v-85.33c0,-113.49 227.41,-170.67 341.33,-170.67c113.92,0 341.33,57.18 341.33,170.67zM856.32,682.67l-69.55,-69.55c118.19,-135.68 118.19,-329.39 0,-458.24l69.55,-69.55c166.83,172.8 166.4,431.37 0,597.34zM715.09,538.88l-71.68,-72.11c35.84,-50.35 35.84,-115.62 0,-165.97l71.68,-72.11c86.19,93.87 86.19,224 0,310.19z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

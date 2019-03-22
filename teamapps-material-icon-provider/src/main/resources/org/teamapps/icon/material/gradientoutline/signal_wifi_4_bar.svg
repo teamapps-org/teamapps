@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>signal_wifi_4_bar icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-4wf6UlMc" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-SQtwOHvL" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-QrRdMK3q" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-0QZbh6K3">
+			<path d="M492.04,913.09l-471.81,-587.73c-9.03,-11.25 -6.99,-27.75 4.53,-36.45c18.62,-14.07 205.74,-167.31 487.24,-167.31c281.08,0 468.61,153.23 487.24,167.31c11.51,8.7 13.56,25.2 4.53,36.45l-471.81,587.73c-4.86,6.05 -12.2,9.57 -19.96,9.57c-7.76,0 -15.1,-3.52 -19.96,-9.57zM512.41,896.66l471.4,-587.33c-18.24,-13.78 -199.83,-162.14 -471.81,-162.14c-272.38,0 -453.57,148.35 -471.81,162.14l471.4,587.33l0.41,0.4z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-GeWkT3aX">
+			<rect fill="url(#color-4wf6UlMc)" x="14.59" y="121.6" width="994.82" height="801.06"/>
+		</mask>
+		<mask id="mask-lULJklDq">
+			<path d="M492.04,913.09l-471.81,-587.73c-9.03,-11.25 -6.99,-27.75 4.53,-36.45c18.62,-14.07 205.74,-167.31 487.24,-167.31c281.08,0 468.61,153.23 487.24,167.31c11.51,8.7 13.56,25.2 4.53,36.45l-471.81,587.73c-4.86,6.05 -12.2,9.57 -19.96,9.57c-7.76,0 -15.1,-3.52 -19.96,-9.57zM512.41,896.66l471.4,-587.33c-18.24,-13.78 -199.83,-162.14 -471.81,-162.14c-272.38,0 -453.57,148.35 -471.81,162.14l471.4,587.33l0.41,0.4z" fill="url(#color-SQtwOHvL)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-0QZbh6K3)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="14.59" y="121.6" width="994.82" height="801.06" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-GeWkT3aX)">
+				<rect x="14.59" y="121.6" width="994.82" height="801.06" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-QrRdMK3q)" mask="url(#mask-lULJklDq)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="14.59" y="121.6" width="994.82" height="801.06" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

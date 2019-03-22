@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>mail_outline icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,286.72v450.56c0,75.24 -61.32,136.53 -136.54,136.53h-600.74c-75.22,0 -136.54,-61.29 -136.54,-136.53l0.38,-450.59c0.01,-74.82 60.54,-136.5 136.16,-136.5h600.74c75.22,0 136.54,61.29 136.54,136.53zM544.56,601.65c-19.92,12.45 -45.2,12.45 -65.13,0l-206.37,-128.98v203.17h477.86v-203.17zM425.86,348.16l86.14,53.84l86.14,-53.84zM812.37,211.63h-600.74c-41.3,0 -74.72,33.79 -74.72,75.09l-0.38,450.56c0,41.3 33.8,75.09 75.1,75.09h600.74c41.3,0 75.1,-33.79 75.1,-75.09v-450.56c0,-41.3 -33.8,-75.09 -75.1,-75.09zM812.37,737.28h-600.74v-375.47l300.37,187.74l300.37,-187.74zM512,474.45l-300.37,-187.73h600.74z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

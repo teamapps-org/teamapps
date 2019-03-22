@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>flare icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-YACH7z0S">
+			<path d="M640,512c0,70.83 -57.17,128 -128,128c-70.83,0 -128,-57.17 -128,-128c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128zM331.09,632.75l60.16,60.16l-90.45,90.45l-60.16,-60.16zM331.09,391.25l-90.45,-90.45l60.16,-60.16l90.45,90.45zM692.91,391.25l-60.16,-60.16l90.45,-90.45l60.16,60.16zM692.91,632.75l90.45,90.45l-60.16,60.16l-90.45,-90.45zM981.33,469.33v85.34h-256v-85.34zM469.33,725.33h85.34v256h-85.34zM298.67,554.67h-256v-85.34h256zM554.67,298.67h-85.34v-256h85.34z"/>
+		</clipPath>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-bLwis0ws" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-SdtzRDxe" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-9fbTzk9J" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<filter id="filter-ggE569UG" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-8soHKJFN">
+			<rect fill="url(#color-bLwis0ws)" x="42.67" y="42.67" width="938.66" height="938.66"/>
+		</mask>
+		<mask id="mask-L5BpHBLB">
+			<path d="M640,512c0,70.83 -57.17,128 -128,128c-70.83,0 -128,-57.17 -128,-128c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128zM331.09,632.75l60.16,60.16l-90.45,90.45l-60.16,-60.16zM331.09,391.25l-90.45,-90.45l60.16,-60.16l90.45,90.45zM692.91,391.25l-60.16,-60.16l90.45,-90.45l60.16,60.16zM692.91,632.75l90.45,90.45l-60.16,60.16l-90.45,-90.45zM981.33,469.33v85.34h-256v-85.34zM469.33,725.33h85.34v256h-85.34zM298.67,554.67h-256v-85.34h256zM554.67,298.67h-85.34v-256h85.34z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-oxOB2EPu">
+			<path d="M640,512c0,70.83 -57.17,128 -128,128c-70.83,0 -128,-57.17 -128,-128c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128zM331.09,632.75l60.16,60.16l-90.45,90.45l-60.16,-60.16zM331.09,391.25l-90.45,-90.45l60.16,-60.16l90.45,90.45zM692.91,391.25l-60.16,-60.16l90.45,-90.45l60.16,60.16zM692.91,632.75l90.45,90.45l-60.16,60.16l-90.45,-90.45zM981.33,469.33v85.34h-256v-85.34zM469.33,725.33h85.34v256h-85.34zM298.67,554.67h-256v-85.34h256zM554.67,298.67h-85.34v-256h85.34z" fill="url(#color-SdtzRDxe)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-L5BpHBLB)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="42.67" y="42.67" width="938.66" height="938.66" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-8soHKJFN)">
+				<rect x="42.67" y="42.67" width="938.66" height="938.66" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-ggE569UG)" mask="url(#mask-oxOB2EPu)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="42.67" y="42.67" width="938.66" height="938.66" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-YACH7z0S)">
+			<path d="M-50.33,1024.33v-1124.66h1124.66v1124.66zM512,384c-70.83,0 -128,57.17 -128,128c0,70.83 57.17,128 128,128c70.83,0 128,-57.17 128,-128c0,-70.83 -57.17,-128 -128,-128zM240.64,723.2l60.16,60.16l90.45,-90.45l-60.16,-60.16zM391.25,331.09l-90.45,-90.45l-60.16,60.16l90.45,90.45zM783.36,300.8l-60.16,-60.16l-90.45,90.45l60.16,60.16zM632.75,692.91l90.45,90.45l60.16,-60.16l-90.45,-90.45zM725.33,469.33v85.34h256v-85.34zM469.33,981.33h85.34v-256h-85.34zM298.67,469.33h-256v85.34h256zM554.67,42.67h-85.34v256h85.34z" fill="#000000" filter="url(#filter-9fbTzk9J)"/>
+		</g>
+	</g>
+</svg>

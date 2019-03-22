@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>image_aspect_ratio icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M949.51,288.51v446.98c0,76.89 -62.65,139.52 -139.53,139.52h-595.96c-76.87,0 -139.53,-62.63 -139.53,-139.52v-446.98c0,-76.89 62.65,-139.52 139.53,-139.52h595.96c76.87,0 139.53,62.63 139.53,139.52zM809.98,164.35h-595.96c-68.39,0 -124.17,55.75 -124.17,124.16v446.98c0,68.41 55.78,124.16 124.17,124.16h595.96c68.39,0 124.17,-55.75 124.17,-124.16v-446.98c0,-68.41 -55.78,-124.16 -124.17,-124.16zM884.48,288.51v446.98c0,40.97 -33.53,74.49 -74.5,74.49h-595.96c-40.97,0 -74.5,-33.52 -74.5,-74.49v-446.98c0,-40.97 33.53,-74.49 74.5,-74.49h595.96c40.97,0 74.5,33.52 74.5,74.49zM809.98,288.51h-595.96v446.98h595.96zM660.99,512h-74.5v-74.49h74.5zM660.99,660.99h-74.5v-74.5h74.5zM512,512h-74.49v-74.49h74.49zM363.01,512h-74.49v-74.49h74.49z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

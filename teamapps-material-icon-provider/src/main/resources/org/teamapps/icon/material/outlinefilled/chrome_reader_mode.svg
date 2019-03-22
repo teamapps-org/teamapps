@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>chrome_reader_mode icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M986.75,288.51v484.23c0,76.88 -62.64,139.52 -139.52,139.52h-670.46c-76.88,0 -139.52,-62.64 -139.52,-139.52v-484.23c0,-76.88 62.64,-139.52 139.52,-139.52h670.46c76.88,0 139.52,62.64 139.52,139.52zM847.23,164.35h-670.46c-68.4,0 -124.16,55.76 -124.16,124.16v484.23c0,68.4 55.76,124.16 124.16,124.16h670.46c68.4,0 124.16,-55.76 124.16,-124.16v-484.23c0,-68.4 -55.76,-124.16 -124.16,-124.16zM921.73,288.51v484.23c0,40.97 -33.52,74.49 -74.49,74.49h-670.46c-40.97,0 -74.49,-33.52 -74.49,-74.49v-484.23c0,-40.97 33.52,-74.49 74.49,-74.49h670.46c40.97,0 74.49,33.52 74.49,74.49zM847.23,288.51h-335.23v484.23h335.23zM549.25,512h260.73v55.87h-260.73zM549.25,418.88h260.73v55.87h-260.73zM549.25,605.12h260.73v55.87h-260.73z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

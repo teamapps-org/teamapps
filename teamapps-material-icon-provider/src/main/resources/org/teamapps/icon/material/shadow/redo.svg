@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>redo icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-8rvw3ZU4" x="-12%" y="-13%" width="139%" height="250%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M891.74,322.14v341.76h-341.76l137.46,-137.47c-52.79,-44.05 -120.37,-71.39 -194.42,-71.39c-134.81,0 -248.73,87.72 -288.6,208.86l-89.61,-29.62c52.4,-159.11 201.64,-274.17 378.21,-274.17c100.63,0 191.77,37.6 262.02,98.74z" fill="#000000" filter="url(#filter-8rvw3ZU4)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,322.14v341.76h-341.76l137.46,-137.47c-52.79,-44.05 -120.37,-71.39 -194.42,-71.39c-134.81,0 -248.73,87.72 -288.6,208.86l-89.61,-29.62c52.4,-159.11 201.64,-274.17 378.21,-274.17c100.63,0 191.77,37.6 262.02,98.74z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

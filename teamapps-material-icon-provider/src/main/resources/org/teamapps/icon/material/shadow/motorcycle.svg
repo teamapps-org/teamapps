@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>motorcycle icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-cMShlZJT">
+			<path d="M0,203.18h1024v717.63h-1024z"/>
+		</clipPath>
+		<filter id="filter-NDMaUngJ" x="-11%" y="-9%" width="128%" height="183%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-cMShlZJT)">
+			<path d="M967.68,587.94c0,106.33 -83.54,189.87 -189.86,189.87c-106.33,0 -189.87,-83.54 -189.87,-189.87c0,-23.92 4.18,-46.71 12.16,-67.21l-105.19,105.19h-62.66c-17.09,87.72 -92.66,151.9 -186.07,151.9c-106.33,0 -189.86,-83.54 -189.86,-189.87c0,-106.33 83.54,-189.86 189.86,-189.86h440.11l-75.94,-75.94h-136.33v-75.95h167.46l153.04,153.04c98.35,7.59 173.16,88.09 173.16,188.72zM891.74,587.94c0,-63.04 -50.88,-113.92 -113.92,-113.92c-63.04,0 -113.92,50.88 -113.92,113.92c0,63.04 50.88,113.92 113.92,113.92c63.04,0 113.92,-50.88 113.92,-113.92zM246.18,625.92v-75.94h107.08c-15.95,-43.67 -58.48,-75.95 -107.08,-75.95c-61.9,0 -113.92,52.02 -113.92,113.92c0,61.9 52.02,113.92 113.92,113.92c48.6,0 91.14,-32.27 107.08,-75.94z" fill="#000000" filter="url(#filter-NDMaUngJ)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M967.68,587.94c0,106.33 -83.54,189.87 -189.86,189.87c-106.33,0 -189.87,-83.54 -189.87,-189.87c0,-23.92 4.18,-46.71 12.16,-67.21l-105.19,105.19h-62.66c-17.09,87.72 -92.66,151.9 -186.07,151.9c-106.33,0 -189.86,-83.54 -189.86,-189.87c0,-106.33 83.54,-189.86 189.86,-189.86h440.11l-75.94,-75.94h-136.33v-75.95h167.46l153.04,153.04c98.35,7.59 173.16,88.09 173.16,188.72zM891.74,587.94c0,-63.04 -50.88,-113.92 -113.92,-113.92c-63.04,0 -113.92,50.88 -113.92,113.92c0,63.04 50.88,113.92 113.92,113.92c63.04,0 113.92,-50.88 113.92,-113.92zM246.18,625.92v-75.94h107.08c-15.95,-43.67 -58.48,-75.95 -107.08,-75.95c-61.9,0 -113.92,52.02 -113.92,113.92c0,61.9 52.02,113.92 113.92,113.92c48.6,0 91.14,-32.27 107.08,-75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

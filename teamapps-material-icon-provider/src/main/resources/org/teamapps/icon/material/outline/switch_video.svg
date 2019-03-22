@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>switch_video icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,267.95v488.1c0,24.85 -14.97,47.25 -37.93,56.76c-22.96,9.51 -49.38,4.25 -66.96,-13.32l-46.55,-46.54c-7.53,47.16 -48.5,83.32 -97.75,83.32h-525.65c-54.59,0 -98.99,-44.4 -98.99,-98.99v-450.56c0,-54.59 44.4,-98.99 98.99,-98.99h525.65c49.25,0 90.22,36.15 97.75,83.32l46.55,-46.54c17.57,-17.57 44,-22.83 66.96,-13.32c22.96,9.51 37.93,31.91 37.93,56.76zM737.28,418.13v-131.41c0,-20.65 -16.9,-37.55 -37.55,-37.55h-525.65c-20.65,0 -37.55,16.9 -37.55,37.55v450.56c0,20.65 16.9,37.55 37.55,37.55h525.65c20.65,0 37.55,-16.9 37.55,-37.55v-131.41l150.19,150.18v-488.1zM549.55,643.41v-93.86h-225.28v93.86l-131.42,-131.41l131.42,-131.41v93.86h225.28v-93.86l131.41,131.41z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>videocam_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,841.81l-54.19,54.19l-136.1,-135.68c-6.4,4.27 -14.08,7.68 -23.04,7.68h-512c-23.47,0 -42.67,-19.2 -42.67,-42.67v-426.66c0,-23.47 19.2,-42.67 42.67,-42.67h31.14l-116.48,-116.48l54.19,-54.19zM896,733.01l-477.01,-477.01h263.68c23.47,0 42.66,19.2 42.66,42.67v149.33l170.67,-170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

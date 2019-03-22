@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>desktop_mac icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M986.45,211.63v450.56c0,75.23 -61.3,136.53 -136.53,136.53h-148.02l11.41,17.12c6.73,10.09 10.32,21.95 10.32,34.08v37.55c0,33.93 -27.51,61.44 -61.44,61.44h-300.38c-33.93,0 -61.44,-27.51 -61.44,-61.44v-37.55c0,-12.13 3.59,-23.99 10.32,-34.08l11.41,-17.12h-148.02c-75.23,0 -136.53,-61.3 -136.53,-136.53v-450.56c0,-75.22 61.29,-136.54 136.53,-136.54h675.84c75.24,0 136.53,61.32 136.53,136.54zM235.52,273.07v252.58h552.96v-252.58zM849.92,136.53h-675.84c-41.3,0 -75.09,33.8 -75.09,75.1v450.56c0,41.3 33.79,75.09 75.09,75.09h262.83l-75.1,112.64v37.55h300.38v-37.55l-75.1,-112.64h262.83c41.3,0 75.09,-33.79 75.09,-75.09v-450.56c0,-41.3 -33.79,-75.1 -75.09,-75.1zM849.92,587.09h-675.84v-375.46h675.84z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

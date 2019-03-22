@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>sim_card icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M875.01,809.98c0,76.42 -61.8,139.53 -139.14,139.53h-447.35c-76.89,0 -139.52,-62.65 -139.52,-139.53v-446.98c0,-17.25 6.85,-33.78 19.05,-45.98l223.49,-223.49c12.19,-12.19 28.73,-19.05 45.98,-19.05h297.98c77.33,0 139.15,63.1 139.15,139.53zM859.28,214.02c0,-68.06 -55.06,-124.17 -123.79,-124.17h-297.98c-13.17,0 -25.8,5.23 -35.12,14.55l-223.49,223.49c-9.31,9.31 -14.55,21.95 -14.55,35.12v446.98c0,68.39 55.75,124.17 124.16,124.17h447.35c68.74,0 123.78,-56.11 123.78,-124.17zM809.98,809.98c0,40.97 -33.15,74.5 -74.12,74.5h-447.35c-40.97,0 -74.49,-33.53 -74.49,-74.5v-446.98l223.49,-223.49h297.98c40.97,0 74.13,33.53 74.13,74.5zM400.26,474.75h-74.49v148.99h74.49zM549.25,623.74h-74.5v148.99h74.5zM698.24,474.75h-74.49v148.99h74.49zM400.26,698.24h-74.49v74.5h74.49zM698.24,698.24h-74.49v74.5h74.49zM549.25,474.75h-74.5v74.5h74.5z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

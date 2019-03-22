@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>trending_flat icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M675.84,662.19v-51.2h-501.76c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.1c0,-33.93 27.51,-61.44 61.44,-61.44h501.76v-51.2c0,-24.85 14.97,-47.25 37.93,-56.76c22.96,-9.51 49.38,-4.25 66.96,13.32l150.19,150.19c23.99,23.99 23.99,62.9 0,86.89l-150.19,150.19c-17.57,17.57 -44,22.83 -66.96,13.32c-22.96,-9.51 -37.93,-31.91 -37.93,-56.76zM887.47,512l-150.19,-150.19v112.64h-563.2v75.1h563.2v112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

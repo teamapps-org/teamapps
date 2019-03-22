@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>translate icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M516.69,730.03l-132.69,-132.7l-213.33,213.34l-60.59,-60.59l217.17,-214.19c-53.33,-59.31 -95.99,-125.01 -127.14,-194.56h85.33c26.03,50.77 58.88,98.99 98.56,142.94c61.44,-68.27 106.66,-146.35 135.25,-228.7h-476.58v-84.9h298.66v-85.34h85.34v85.34h298.66v85.33h-125.01c-31.15,100.69 -84.05,195.84 -158.29,278.61l-1.28,1.28l108.37,107.1zM981.33,938.67h-85.33l-48.21,-128h-202.67l-47.79,128h-85.33l192,-512h85.33zM815.79,725.33l-69.12,-184.74l-69.12,184.74z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

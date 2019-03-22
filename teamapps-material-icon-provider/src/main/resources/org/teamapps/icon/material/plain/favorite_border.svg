@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>favorite_border icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,362.67c0,161.28 -145.07,292.69 -364.8,491.94l-61.87,56.32l-61.87,-55.89c-219.73,-199.68 -364.8,-331.09 -364.8,-492.37c0,-131.41 103.26,-234.67 234.67,-234.67c74.24,0 145.49,34.56 192,89.17c46.51,-54.61 117.76,-89.17 192,-89.17c131.41,0 234.67,103.26 234.67,234.67zM853.33,362.67c0,-85.33 -64,-149.34 -149.33,-149.34c-65.71,0 -129.7,42.25 -151.89,100.7h-79.79c-22.61,-58.45 -86.61,-100.7 -152.32,-100.7c-85.33,0 -149.33,64.01 -149.33,149.34c0,123.31 133.97,244.91 337.06,428.8l4.27,4.26l4.27,-4.26c203.09,-183.89 337.06,-305.49 337.06,-428.8z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

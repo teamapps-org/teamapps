@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>queue_play_next icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,213.33v341.34h-85.33v-341.34h-768v512h640v85.34h-85.33v85.33h-341.34v-85.33h-213.33c-47.36,0 -85.33,-38.41 -85.33,-85.34v-512c0,-47.36 37.97,-85.33 85.33,-85.33h768c46.93,0 85.33,37.97 85.33,85.33zM682.67,426.67v85.33h-128v128h-85.34v-128h-128v-85.33h128v-128h85.34v128zM1024,768l-192,192l-64,-64l128,-128l-128,-128l64,-64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

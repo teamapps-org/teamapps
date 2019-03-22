@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>text_fields icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M704.85,211.63v112.64c0,4.69 -0.53,9.26 -1.52,13.65h165.36c33.93,0 61.44,27.51 61.44,61.44v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-51.2v201.39c0,33.93 -27.51,61.44 -61.44,61.44h-112.64c-33.93,0 -61.44,-27.51 -61.44,-61.44v-201.39h-51.2c-4.69,0 -9.26,-0.53 -13.65,-1.52v202.91c0,33.93 -27.51,61.44 -61.44,61.44h-112.64c-33.93,0 -61.44,-27.51 -61.44,-61.44v-389.12h-126.29c-33.93,0 -61.44,-27.51 -61.44,-61.44v-112.64c0,-33.93 27.51,-61.44 61.44,-61.44h488.1c33.93,0 61.44,27.51 61.44,61.44zM155.31,211.63v112.64h187.73v450.56h112.64v-450.56h187.73v-112.64zM868.69,399.36h-337.92v112.64h112.64v262.83h112.64v-262.83h112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

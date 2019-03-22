@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>fiber_pin icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,286.72v450.56c0,75.62 -60.94,136.53 -136.54,136.53h-600.74c-75.6,0 -136.54,-60.91 -136.54,-136.53l0.38,-450.59c0.01,-75.2 60.16,-136.5 136.16,-136.5h600.74c75.6,0 136.54,60.91 136.54,136.53zM812.37,211.63h-600.74c-41.68,0 -74.72,33.41 -74.72,75.09l-0.38,450.56c0,41.68 33.42,75.09 75.1,75.09h600.74c41.68,0 75.1,-33.41 75.1,-75.09v-450.56c0,-41.68 -33.42,-75.09 -75.1,-75.09zM399.36,493.23c0,31.92 -24.4,56.32 -56.32,56.32h-75.09v75.09h-56.32v-225.28h131.41c31.92,0 56.32,24.4 56.32,56.32zM812.37,624.64h-45.06l-95.74,-131.41v131.41h-46.93v-225.28h46.93l93.87,131.41v-131.41h46.93zM530.77,624.64h-56.32v-225.28h56.32zM267.95,493.23h75.09v-37.55h-75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

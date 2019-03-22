@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>signal_wifi_4_bar icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M464.09,907.15l-437.04,-544.42c-21.68,-27.01 -16.76,-66.6 10.87,-87.48c17.81,-13.46 199.9,-162.61 474.09,-162.61c273.8,0 456.25,149.14 474.09,162.61c27.63,20.88 32.55,60.47 10.87,87.48l-437.04,544.42c-11.66,14.53 -29.28,22.98 -47.91,22.98c-18.63,0 -36.25,-8.45 -47.91,-22.98zM512.38,868.32l436.66,-544.05c-16.9,-12.77 -185.11,-150.19 -437.04,-150.19c-252.31,0 -420.15,137.42 -437.04,150.19l436.66,544.05l0.38,0.37z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

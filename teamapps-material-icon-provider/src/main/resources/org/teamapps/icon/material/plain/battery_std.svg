@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>battery_std icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M725.33,227.41v654.51c0,31.15 -25.6,56.75 -57.17,56.75h-312.75c-31.15,0 -56.74,-25.61 -56.74,-57.18v-654.08c0,-31.15 25.59,-56.74 56.74,-56.74h71.26v-85.34h170.66v85.34h71.26c31.15,0 56.74,25.59 56.74,56.74z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

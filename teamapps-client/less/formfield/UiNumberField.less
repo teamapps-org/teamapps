@@ -1,0 +1,104 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.UiNumberField {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  min-width: @default-input-width;
+  padding: 0;
+  overflow: hidden;
+  height: initial;
+
+  .clearable-field-wrapper {
+    min-height: initial;
+    background-color: transparent;
+
+    input {
+      text-align: right;
+    }
+    .optimized-for-touch & input {
+      height: @input-height-large - 2px;
+    }
+  }
+
+  .slider {
+    .slider(16px, 14px);
+
+    .optimized-for-touch & {
+      .slider(22px, 18px)
+    }
+  }
+
+  &.slider-mode-disabled,
+  .UiField:not(.focus) > &.slider-mode-visible-if-focused {
+    .slider {
+      height: 0px;
+      border-width: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+}
+
+.static-readonly-UiNumberField {
+  text-align: right;
+  width: 100%;
+  padding: @padding-base-vertical @padding-base-horizontal;
+}
+
+.slider(@slider-height, @slider-handle-size) {
+  @slider-separator-width: 1px;
+  @slider-track-width: 2px;
+  @slider-track-offset: (@slider-height - @slider-track-width) / 2;
+  @slider-handle-offset: (@slider-height - @slider-handle-size) / 2;
+  height: @slider-height + @slider-separator-width;
+  border-top: @slider-separator-width solid rgba(0, 0, 0, .07);
+  position: relative;
+
+  transition: height .2s, opacity .2s;
+
+  .slider-track {
+    position: absolute;
+    top: @slider-track-offset;
+    left: @slider-track-offset;
+    width: ~"calc(100% - "(2 * @slider-track-offset)~")";
+    height: @slider-track-width;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+  }
+
+  .slider-handle {
+    position: absolute;
+    top: @slider-handle-offset;
+    left: @slider-handle-offset;
+    width: @slider-handle-size;
+    height: @slider-handle-size;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: @slider-handle-size / 2;
+    background-color: white;
+
+    &:hover {
+      box-shadow: 0 0.5px 6px rgba(0, 0, 0, .5);
+    }
+  }
+}

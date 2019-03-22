@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_drink icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,85.33l-85.76,777.82c-5.12,42.67 -40.96,75.52 -84.91,75.52h-426.66c-43.95,0 -79.79,-32.85 -84.91,-75.52l-85.76,-777.82zM800.43,170.67h-577.28l18.77,170.66h540.16zM640,682.67c0,-85.33 -128,-230.4 -128,-230.4c0,0 -128,145.07 -128,230.4c0,70.83 57.17,128 128,128c70.83,0 128,-57.17 128,-128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

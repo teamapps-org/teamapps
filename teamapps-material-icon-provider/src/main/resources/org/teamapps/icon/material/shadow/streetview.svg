@@ -1,0 +1,32 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>streetview icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-nN7FOlqb" x="-13%" y="-6%" width="148%" height="138%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M739.84,530.98c39.87,0 78.22,7.22 113.92,19.75v227.08c0,41.77 -34.18,75.94 -75.94,75.94h-265.82v-208.86c0,-17.84 8.35,-34.18 21.26,-44.43c57.34,-42.91 129.5,-69.49 206.58,-69.49zM549.98,284.16c0,-104.86 85,-189.86 189.86,-189.86c104.86,0 189.86,85 189.86,189.86c0,104.86 -85,189.86 -189.86,189.86c-104.86,0 -189.86,-85 -189.86,-189.86zM565.54,458.46l-372.9,372.9c-13.67,-13.67 -22.4,-32.65 -22.4,-53.54v-531.63c0,-41.77 34.18,-75.94 75.94,-75.94h274.93c-17.84,34.18 -28.1,72.91 -28.1,113.92c0,68.35 27.71,129.87 72.53,174.3z" fill="#000000" filter="url(#filter-nN7FOlqb)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M739.84,530.98c39.87,0 78.22,7.22 113.92,19.75v227.08c0,41.77 -34.18,75.94 -75.94,75.94h-265.82v-208.86c0,-17.84 8.35,-34.18 21.26,-44.43c57.34,-42.91 129.5,-69.49 206.58,-69.49z" fill="currentColor"/>
+			</g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M549.98,284.16c0,-104.86 85,-189.86 189.86,-189.86c104.86,0 189.86,85 189.86,189.86c0,104.86 -85,189.86 -189.86,189.86c-104.86,0 -189.86,-85 -189.86,-189.86z" fill="currentColor"/>
+			</g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M565.54,458.46l-372.9,372.9c-13.67,-13.67 -22.4,-32.65 -22.4,-53.54v-531.63c0,-41.77 34.18,-75.94 75.94,-75.94h274.93c-17.84,34.18 -28.1,72.91 -28.1,113.92c0,68.35 27.71,129.87 72.53,174.3z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

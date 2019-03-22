@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>timer_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M885.33,927.15l-54.18,54.18l-106.67,-106.66c-61.01,40.53 -133.97,64 -212.48,64c-212.48,0 -384,-171.95 -384,-384c0,-78.51 23.47,-151.47 64,-212.06l-117.33,-117.76l54.18,-54.18zM872.53,254.72l-60.58,60.59c52.48,65.71 84.05,148.91 84.05,239.36c0,78.08 -23.46,150.61 -63.57,210.77l-61.87,-61.87c25.17,-43.52 40.11,-94.71 40.11,-148.9c0,-165.12 -133.55,-298.67 -298.67,-298.67c-54.19,0 -105.39,14.94 -148.91,40.11l-62.29,-62.3c60.59,-39.68 133.12,-63.14 211.2,-63.14c90.45,0 173.66,31.57 239.79,84.05l60.58,-60.59zM661.76,812.37l-407.89,-407.89c-25.6,44.37 -40.54,95.58 -40.54,150.19c0,165.12 133.55,298.66 298.67,298.66c54.61,0 105.81,-14.93 149.76,-40.96zM640,128h-256v-85.33h256zM469.33,341.33h85.34v146.78l-85.34,-85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

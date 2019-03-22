@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>pie_chart icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M468.42,948.61c-221.89,-21.88 -393.33,-209.49 -393.33,-436.61c0,-227.12 171.44,-414.73 393.33,-436.61c15.89,-1.57 31.7,3.12 44.14,12.95c12.45,-9.85 28.28,-14.53 44.19,-12.95c206.84,20.55 371.34,185.64 391.86,392.63c1.57,15.82 -3.06,31.56 -12.8,43.98c9.74,12.42 14.37,28.16 12.8,43.98c-20.52,206.94 -184.6,372.08 -391.87,392.63c-15.9,1.58 -31.73,-3.1 -44.17,-12.95c-12.44,9.84 -28.25,14.52 -44.14,12.95zM136.53,512c0,195.62 147.56,356.7 337.92,375.47v-750.94c-190.36,18.77 -337.92,179.85 -337.92,375.47zM550.68,549.92v337.55c177.97,-17.64 319.15,-159.58 336.79,-337.55zM550.68,136.53v337.55h336.79c-17.64,-177.97 -159.2,-319.91 -336.79,-337.55z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

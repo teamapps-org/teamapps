@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>directions_railway icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M170.67,213.33c0,-149.33 152.74,-170.66 341.33,-170.66c188.59,0 341.33,21.33 341.33,170.66v448c0,82.35 -66.98,149.34 -149.33,149.34l64,64v21.33h-512v-21.33l64,-64c-82.35,0 -149.33,-66.99 -149.33,-149.34zM768,213.33h-512v213.34h512zM597.33,640c0,-46.93 -38.4,-85.33 -85.33,-85.33c-46.93,0 -85.33,38.4 -85.33,85.33c0,46.93 38.4,85.33 85.33,85.33c46.93,0 85.33,-38.4 85.33,-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>invert_colors_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,905.81l-54.19,54.19l-115.2,-115.2c-62.29,50.77 -138.24,75.95 -214.61,75.95c-87.47,0 -174.93,-33.28 -241.49,-99.84c-124.59,-125.01 -132.7,-322.14 -23.9,-456.11l-118.61,-118.61l54.19,-54.19l117.33,117.33l60.59,60.16l151.89,152.32l268.8,268.38l100.27,100.26zM414.29,314.88l-60.16,-60.16l157.87,-157.87l241.07,241.5c104.11,104.11 126.71,258.13 68.26,384.42l-309.33,-309.76v-195.41zM512,630.19l-204.37,-203.95c-33.28,43.95 -51.63,97.28 -51.63,153.6c0,68.27 26.45,132.27 75.09,180.91c48.21,48.64 112.64,75.09 180.91,75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

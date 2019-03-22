@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>vibration icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-0S4lhzv3" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-mpvYomPV" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-llEsnirk" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-6xVh0Wa7">
+			<rect fill="url(#color-0S4lhzv3)" x="0" y="121.6" width="1024" height="780.8"/>
+		</mask>
+		<mask id="mask-PobngH16">
+			<path d="M780.8,208v80.54c4.2,-3.03 9.36,-4.81 14.94,-4.81h81.06c14.14,0 25.6,11.46 25.6,25.6v60.27c4.2,-3.03 9.36,-4.81 14.94,-4.81h81.06c14.14,0 25.6,11.46 25.6,25.6v243.2c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-5.57,0 -10.73,-1.78 -14.94,-4.81v60.27c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-5.57,0 -10.73,-1.78 -14.94,-4.81v80.54c0,47.78 -38.62,86.4 -86.4,86.4h-364.8c-47.78,0 -86.4,-38.62 -86.4,-86.4v-80.54c-4.2,3.03 -9.36,4.81 -14.94,4.81h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-60.27c-4.2,3.03 -9.36,4.81 -14.94,4.81h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-243.2c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c5.57,0 10.73,1.78 14.94,4.81v-60.27c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c5.57,0 10.73,1.78 14.94,4.81v-80.54c0,-47.78 38.62,-86.4 86.4,-86.4h364.8c47.78,0 86.4,38.62 86.4,86.4zM375.46,253.86v516.27h273.07v-516.27zM694.4,147.2h-364.8c-33.64,0 -60.8,27.16 -60.8,60.8v608c0,33.64 27.16,60.8 60.8,60.8h364.8c33.64,0 60.8,-27.16 60.8,-60.8v-608c0,-33.64 -27.16,-60.8 -60.8,-60.8zM674.14,795.74h-324.27v-567.47h324.27zM795.74,714.66h81.06v-405.33h-81.06zM147.2,714.66h81.06v-405.33h-81.06zM917.34,390.4v243.2h81.06v-243.2zM25.6,633.6h81.06v-243.2h-81.06z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-whh6rjMI">
+			<path d="M780.8,208v80.54c4.2,-3.03 9.36,-4.81 14.94,-4.81h81.06c14.14,0 25.6,11.46 25.6,25.6v60.27c4.2,-3.03 9.36,-4.81 14.94,-4.81h81.06c14.14,0 25.6,11.46 25.6,25.6v243.2c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-5.57,0 -10.73,-1.78 -14.94,-4.81v60.27c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-5.57,0 -10.73,-1.78 -14.94,-4.81v80.54c0,47.78 -38.62,86.4 -86.4,86.4h-364.8c-47.78,0 -86.4,-38.62 -86.4,-86.4v-80.54c-4.2,3.03 -9.36,4.81 -14.94,4.81h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-60.27c-4.2,3.03 -9.36,4.81 -14.94,4.81h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-243.2c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c5.57,0 10.73,1.78 14.94,4.81v-60.27c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c5.57,0 10.73,1.78 14.94,4.81v-80.54c0,-47.78 38.62,-86.4 86.4,-86.4h364.8c47.78,0 86.4,38.62 86.4,86.4zM375.46,253.86v516.27h273.07v-516.27zM694.4,147.2h-364.8c-33.64,0 -60.8,27.16 -60.8,60.8v608c0,33.64 27.16,60.8 60.8,60.8h364.8c33.64,0 60.8,-27.16 60.8,-60.8v-608c0,-33.64 -27.16,-60.8 -60.8,-60.8zM674.14,795.74h-324.27v-567.47h324.27zM795.74,714.66h81.06v-405.33h-81.06zM147.2,714.66h81.06v-405.33h-81.06zM917.34,390.4v243.2h81.06v-243.2zM25.6,633.6h81.06v-243.2h-81.06z" fill="url(#color-mpvYomPV)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-PobngH16)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="0" y="121.6" width="1024" height="780.8" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-6xVh0Wa7)">
+				<rect x="0" y="121.6" width="1024" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-llEsnirk)" mask="url(#mask-whh6rjMI)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="0" y="121.6" width="1024" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

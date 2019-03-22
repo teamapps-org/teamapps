@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>drive_eta icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,469.33v341.34c0,23.47 -19.2,42.66 -42.67,42.66h-42.66c-23.47,0 -42.67,-19.19 -42.67,-42.66v-42.67h-512v42.67c0,23.47 -19.2,42.66 -42.67,42.66h-42.66c-23.47,0 -42.67,-19.19 -42.67,-42.66v-341.34l88.75,-255.57c8.96,-25.17 32.42,-43.09 60.58,-43.09h469.34c28.16,0 52.05,17.92 60.58,43.09zM810.67,426.67l-64,-192h-469.34l-64,192zM341.33,576c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64zM810.67,576c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

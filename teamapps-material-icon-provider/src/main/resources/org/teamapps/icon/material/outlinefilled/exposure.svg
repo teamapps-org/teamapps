@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>exposure icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M949.51,214.02v595.96c0,76.88 -62.64,139.53 -139.53,139.53h-595.96c-76.88,0 -139.53,-62.64 -139.53,-139.53v-595.96c0,-76.88 62.64,-139.53 139.53,-139.53h595.96c76.88,0 139.53,62.64 139.53,139.53zM809.98,89.85h-595.96c-68.4,0 -124.17,55.77 -124.17,124.17v595.96c0,68.4 55.77,124.17 124.17,124.17h595.96c68.4,0 124.17,-55.77 124.17,-124.17v-595.96c0,-68.4 -55.77,-124.17 -124.17,-124.17zM884.48,214.02v595.96c0,40.97 -33.53,74.5 -74.5,74.5h-595.96c-40.97,0 -74.5,-33.53 -74.5,-74.5v-595.96c0,-40.97 33.53,-74.5 74.5,-74.5h595.96c40.97,0 74.5,33.53 74.5,74.5zM809.98,214.02l-595.96,595.96h595.96zM549.25,698.24v-74.49h74.49v-74.49h74.49v74.49h74.5v74.49h-74.5v74.5h-74.49v-74.5zM251.26,325.76h223.49v-74.5h-223.49z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

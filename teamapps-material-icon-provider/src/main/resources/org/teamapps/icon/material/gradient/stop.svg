@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>stop icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-EvM8C05k">
+			<path d="M256,256h512v512h-512z"/>
+		</clipPath>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-6uHroaqh" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-71NZ0zKG" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-2NW5dRmv" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<filter id="filter-JTfw6HVg" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<mask id="mask-3C7LOQwu">
+			<path d="M256,256h512v512h-512z" fill="url(#color-6uHroaqh)"/>
+		</mask>
+		<mask id="mask-HTx5y5Te">
+			<path d="M256,256h512v512h-512z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-V84KKUC6">
+			<rect fill="url(#color-71NZ0zKG)" x="256" y="256" width="512" height="512"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-HTx5y5Te)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="256" y="256" width="512" height="512" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-V84KKUC6)">
+				<rect x="256" y="256" width="512" height="512" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-2NW5dRmv)" mask="url(#mask-3C7LOQwu)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="256" y="256" width="512" height="512" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-EvM8C05k)">
+			<path d="M163,811v-698h698v698zM256,768h512v-512h-512z" fill="#000000" filter="url(#filter-JTfw6HVg)"/>
+		</g>
+	</g>
+</svg>

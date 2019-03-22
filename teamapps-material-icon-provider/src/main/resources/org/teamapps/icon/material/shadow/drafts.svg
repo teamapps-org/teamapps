@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>drafts icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-YToWKC6f" x="-13%" y="-6%" width="143%" height="139%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M891.74,739.84c0,41.77 -34.18,75.94 -75.95,75.94h-607.57c-41.77,0 -75.95,-34.18 -75.95,-75.94v-379.74c0,-27.34 14.44,-51.26 36.08,-64.55l343.66,-201.26l343.66,201.26c21.64,13.29 35.7,37.21 35.7,64.55zM825.66,354.03l-313.66,-183.79l-313.66,183.79l313.66,195.94z" fill="#000000" filter="url(#filter-YToWKC6f)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,739.84c0,41.77 -34.18,75.94 -75.95,75.94h-607.57c-41.77,0 -75.95,-34.18 -75.95,-75.94v-379.74c0,-27.34 14.44,-51.26 36.08,-64.55l343.66,-201.26l343.66,201.26c21.64,13.29 35.7,37.21 35.7,64.55zM825.66,354.03l-313.66,-183.79l-313.66,183.79l313.66,195.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

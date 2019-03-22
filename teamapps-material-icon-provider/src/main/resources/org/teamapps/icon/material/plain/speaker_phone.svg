@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>speaker_phone icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M682.24,475.31v414.29c0,26.88 -21.76,48.64 -48.64,48.64h-243.63c-26.88,0 -48.64,-21.76 -48.64,-48.64v-414.29c0,-26.88 21.76,-48.64 48.64,-48.64l244.06,0.42c26.88,0 48.64,21.34 48.21,48.22zM842.67,179.63l-60.16,60.16c-69.12,-69.12 -165.12,-111.79 -270.51,-111.79c-105.39,0 -201.39,42.67 -270.51,111.79l-60.16,-60.16c84.91,-84.48 201.82,-136.96 330.67,-136.96c128.85,0 245.76,52.48 330.67,136.96zM640,512h-256v341.33h256zM512,213.33c83.2,0 158.72,33.71 213.33,88.32l-61.01,61.02c-38.83,-38.83 -93.01,-63.15 -152.32,-63.15c-59.31,0 -113.49,24.32 -152.32,63.15l-61.01,-61.02c54.61,-54.61 130.13,-88.32 213.33,-88.32z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>playlist_play icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M75.09,324.27v-75.1c0,-33.93 27.51,-61.44 61.44,-61.44h638.3c33.93,0 61.44,27.51 61.44,61.44v75.1c0,14.14 -4.78,27.16 -12.8,37.55c8.03,10.38 12.8,23.41 12.8,37.55v75.09c0,27.89 -18.58,51.44 -44.05,58.94l126.86,76.11c18.51,11.1 29.83,31.1 29.83,52.68c0,21.58 -11.32,41.58 -29.83,52.68l-187.74,112.64c-18.98,11.39 -42.62,11.69 -61.88,0.78c-19.26,-10.91 -31.17,-31.33 -31.17,-53.46v-90.27c-4.39,1 -8.96,1.52 -13.65,1.52h-488.11c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-14.14 4.78,-27.17 12.81,-37.55c-8.03,-10.38 -12.81,-23.41 -12.81,-37.55v-75.09c0,-14.14 4.78,-27.16 12.8,-37.55c-8.03,-10.38 -12.8,-23.41 -12.8,-37.55zM774.83,399.36h-638.3v75.09h638.3zM774.83,249.17h-638.3v75.1h638.3zM699.73,549.55v225.28l187.74,-112.64zM136.53,624.64h488.11v-75.09h-488.11z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>gps_not_fixed icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,469.33v85.34h-87.89c-19.63,177.92 -160.85,319.14 -338.77,338.77v87.89h-85.34v-87.89c-177.92,-19.63 -319.14,-160.85 -338.77,-338.77h-87.89v-85.34h87.89c19.63,-177.92 160.85,-319.14 338.77,-338.77v-87.89h85.34v87.89c177.92,19.63 319.14,160.85 338.77,338.77zM810.67,512c0,-165.12 -133.55,-298.67 -298.67,-298.67c-165.12,0 -298.67,133.55 -298.67,298.67c0,165.12 133.55,298.67 298.67,298.67c165.12,0 298.67,-133.55 298.67,-298.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

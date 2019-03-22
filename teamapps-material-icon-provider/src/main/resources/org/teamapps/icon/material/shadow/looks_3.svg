@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>looks_3 icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-oIKuOv7G" x="-14%" y="-7%" width="153%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M854.14,246.18v531.63c0,41.77 -34.18,75.94 -75.95,75.94h-531.62c-41.77,0 -75.94,-34.18 -75.94,-75.94v-531.63c0,-41.77 34.18,-75.94 75.94,-75.94h531.62c41.77,0 75.95,34.18 75.95,75.94zM626.3,398.08c0,-42.15 -34.18,-75.94 -75.95,-75.94h-151.89v75.94h151.89v75.94h-75.94v75.95h75.94v75.94h-151.89v75.94h151.89c41.77,0 75.95,-33.79 75.95,-75.94v-56.96c0,-31.51 -25.45,-56.96 -56.96,-56.96c31.51,0 56.96,-25.45 56.96,-56.96z" fill="#000000" filter="url(#filter-oIKuOv7G)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M854.14,246.18v531.63c0,41.77 -34.18,75.94 -75.95,75.94h-531.62c-41.77,0 -75.94,-34.18 -75.94,-75.94v-531.63c0,-41.77 34.18,-75.94 75.94,-75.94h531.62c41.77,0 75.95,34.18 75.95,75.94zM626.3,398.08c0,-42.15 -34.18,-75.94 -75.95,-75.94h-151.89v75.94h151.89v75.94h-75.94v75.95h75.94v75.94h-151.89v75.94h151.89c41.77,0 75.95,-33.79 75.95,-75.94v-56.96c0,-31.51 -25.45,-56.96 -56.96,-56.96c31.51,0 56.96,-25.45 56.96,-56.96z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

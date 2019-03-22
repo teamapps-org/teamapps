@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>share icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M892.59,810.67c0,68.69 -55.9,124.58 -124.59,124.58c-68.69,0 -124.59,-55.89 -124.59,-124.58c0,-9.39 1.29,-18.78 3.42,-27.74l-303.79,-177.49c-23.04,21.33 -53.33,34.56 -87.04,34.56c-70.83,0 -128,-57.17 -128,-128c0,-70.83 57.17,-128 128,-128c33.71,0 64,13.23 87.04,34.56l300.8,-175.36c-2.13,-9.81 -3.84,-19.63 -3.84,-29.87c0,-70.83 57.17,-128 128,-128c70.83,0 128,57.17 128,128c0,70.83 -57.17,128 -128,128c-33.71,0 -64,-13.23 -87.04,-34.56l-300.8,175.36c2.13,9.81 3.84,19.63 3.84,29.87c0,10.24 -1.71,20.06 -3.84,29.87l304.21,177.06c22.19,-20.05 51.2,-32.85 83.63,-32.85c68.69,0 124.59,55.9 124.59,124.59z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

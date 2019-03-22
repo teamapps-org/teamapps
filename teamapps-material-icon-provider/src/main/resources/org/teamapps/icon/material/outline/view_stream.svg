@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>view_stream icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,249.17v225.28c0,6.55 -1.02,12.86 -2.92,18.77c1.9,5.92 2.92,12.23 2.92,18.77v225.28c0,33.93 -27.51,61.44 -61.44,61.44h-638.29c-33.93,0 -61.44,-27.51 -61.44,-61.44v-225.28c0,-6.55 1.02,-12.86 2.92,-18.77c-1.9,-5.92 -2.92,-12.23 -2.92,-18.77v-225.28c0,-33.93 27.51,-61.44 61.44,-61.44h638.29c33.93,0 61.44,27.51 61.44,61.44zM211.63,737.28h638.29v-225.28h-638.29zM211.63,249.17v225.28h638.29v-225.28z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>stay_current_landscape icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M128,213.33h768c46.93,0 85.33,38.41 85.33,85.34v426.66c0,46.93 -38.4,85.34 -85.33,85.34h-768c-46.93,0 -85.33,-38.41 -85.33,-85.34l0.42,-426.66c0,-46.93 37.98,-85.34 84.91,-85.34zM213.33,298.67v426.66h597.34v-426.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

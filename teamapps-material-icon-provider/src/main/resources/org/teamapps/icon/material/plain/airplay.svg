@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airplay icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,213.33v512c0,46.93 -38.4,85.34 -85.33,85.34h-170.67v-85.34h170.67v-512h-768v512h170.67v85.34h-170.67c-46.93,0 -85.33,-38.41 -85.33,-85.34v-512c0,-46.93 38.4,-85.33 85.33,-85.33h768c46.93,0 85.33,38.4 85.33,85.33zM512,682.67l256,256h-512z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

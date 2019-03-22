@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>explore icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,512c0,241.19 -195.72,436.91 -436.91,436.91c-241.19,0 -436.91,-195.72 -436.91,-436.91c0,-241.19 195.72,-436.91 436.91,-436.91c241.19,0 436.91,195.72 436.91,436.91zM413.43,610.57l36.22,-16.85c-7.29,-5.56 -13.81,-12.08 -19.37,-19.37zM610.57,413.43l-36.22,16.85c7.29,5.56 13.81,12.08 19.37,19.37zM512,136.53c-207.26,0 -375.47,168.21 -375.47,375.47c0,207.26 168.21,375.47 375.47,375.47c207.26,0 375.47,-168.21 375.47,-375.47c0,-207.26 -168.21,-375.47 -375.47,-375.47zM594.23,594.23l-307.51,143.05l143.05,-307.51l307.51,-143.05zM512,470.7c-22.91,0 -41.3,18.39 -41.3,41.3c0,22.91 18.39,41.3 41.3,41.3c22.91,0 41.3,-18.39 41.3,-41.3c0,-22.91 -18.39,-41.3 -41.3,-41.3z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

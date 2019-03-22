@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>find_replace icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M916.91,853.33l-63.58,63.58l-207.36,-206.94c-49.49,36.27 -110.51,58.03 -176.64,58.03c-82.35,0 -157.01,-33.28 -211.2,-87.47l-87.46,87.47v-256h256l-108.38,108.37c38.83,38.4 92.16,62.3 151.04,62.3c103.25,0 189.44,-73.39 209.07,-170.67h86.19c-6.83,49.92 -26.46,95.57 -54.62,133.97zM260.27,426.67h-86.19c20.91,-144.64 144.64,-256 295.25,-256c82.35,0 157.01,33.27 211.2,87.46l87.47,-87.46v256h-256l108.37,-108.38c-38.83,-38.4 -92.16,-62.29 -151.04,-62.29c-103.25,0 -189.43,73.39 -209.06,170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

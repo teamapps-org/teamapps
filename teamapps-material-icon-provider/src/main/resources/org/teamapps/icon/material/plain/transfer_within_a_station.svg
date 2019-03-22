@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>transfer_within_a_station icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M245.33,379.73l-74.66,32v142.94h-85.34v-200.54l224,-91.73c10.67,-4.27 21.33,-6.4 32,-6.4c29.87,0 57.61,14.93 72.54,40.53l40.53,68.27c38.4,61.87 106.67,104.53 185.6,104.53v85.34c-93.87,0 -177.06,-42.67 -232.53,-110.94l-25.6,128l87.46,87.47v322.13h-85.33v-256l-91.73,-85.33l-74.67,341.33h-89.6zM938.67,661.33v64h-235.1v74.67l-106.24,-106.67l106.24,-106.66v74.66zM832.43,768l106.24,106.67l-106.24,106.66v-74.66h-235.1v-64h235.1zM320,149.33c0,-46.93 38.4,-85.33 85.33,-85.33c46.93,0 85.34,38.4 85.34,85.33c0,46.93 -38.41,85.34 -85.34,85.34c-46.93,0 -85.33,-38.41 -85.33,-85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

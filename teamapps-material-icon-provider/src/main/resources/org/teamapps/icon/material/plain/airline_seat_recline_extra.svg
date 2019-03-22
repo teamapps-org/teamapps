@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_recline_extra icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,832l-64,64l-162.99,-128h-292.27c-61.44,0 -113.91,-43.52 -125.86,-104.11l-57.6,-252.58c-8.96,-52.05 26.02,-101.97 78.5,-111.36h0.86c14.08,-2.56 28.59,-1.28 42.24,2.56c11.52,3.41 22.61,8.53 32.42,16.21l69.98,54.19c53.33,41.81 130.55,66.56 200.1,53.33v90.88c-79.79,13.65 -152.32,-14.08 -219.73,-52.05l43.95,174.93h208.21zM682.67,896h-301.23c-105.39,0 -194.99,-76.8 -211.2,-180.91l-84.91,-416.42h85.34l84.05,403.62c9.39,62.29 63.14,108.38 126.29,108.38h301.66zM228.27,240.64c-38.4,-27.31 -47.79,-80.21 -20.91,-119.04c26.88,-38.4 80.21,-47.79 119.04,-20.91c38.4,27.31 47.79,80.21 20.91,119.04c-27.31,38.4 -80.21,47.79 -119.04,20.91z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

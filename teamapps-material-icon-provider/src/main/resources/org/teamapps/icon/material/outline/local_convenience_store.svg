@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_convenience_store icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,324.27v488.1c0,33.93 -27.51,61.44 -61.44,61.44h-300.38c-33.93,0 -61.44,-27.51 -61.44,-61.44v-88.74h-27.3v88.74c0,33.93 -27.51,61.44 -61.44,61.44h-300.38c-33.93,0 -61.44,-27.51 -61.44,-61.44v-488.1c0,-33.93 27.51,-61.44 61.44,-61.44h51.2v-51.2c0,-33.93 27.51,-61.44 61.44,-61.44h525.66c33.93,0 61.44,27.51 61.44,61.44v51.2h51.2c33.93,0 61.44,27.51 61.44,61.44zM774.83,324.27v-112.64h-525.66v112.64h-112.64v488.1h300.38v-150.18h150.18v150.18h300.38v-488.1zM474.45,436.91h-75.09v37.54h75.09v37.55h-112.64v-112.64h75.1v-37.55h-75.1v-37.54h112.64zM662.19,512h-37.55v-75.09h-75.09v-112.64h37.54v75.09h37.55v-75.09h37.55z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

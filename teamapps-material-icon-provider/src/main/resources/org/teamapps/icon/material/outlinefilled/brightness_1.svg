@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>brightness_1 icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M74.49,512c0,-241.63 195.88,-437.51 437.51,-437.51c241.63,0 437.51,195.88 437.51,437.51c0,241.63 -195.88,437.51 -437.51,437.51c-241.63,0 -437.51,-195.88 -437.51,-437.51zM512,934.15c233.14,0 422.15,-189 422.15,-422.15c0,-233.14 -189,-422.15 -422.15,-422.15c-233.14,0 -422.15,189 -422.15,422.15c0,233.14 189,422.15 422.15,422.15zM139.52,512c0,-205.71 166.77,-372.48 372.48,-372.48c205.71,0 372.48,166.77 372.48,372.48c0,205.71 -166.77,372.48 -372.48,372.48c-205.71,0 -372.48,-166.77 -372.48,-372.48z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

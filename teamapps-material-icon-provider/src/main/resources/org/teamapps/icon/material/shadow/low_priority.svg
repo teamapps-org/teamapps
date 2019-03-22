@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>low_priority icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-JhRK6883" x="-13%" y="-8%" width="143%" height="177%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M379.1,246.18h132.9v75.95h-132.9c-94.17,0 -170.88,76.71 -170.88,170.88c0,94.17 76.71,170.88 170.88,170.88h18.98v-75.95l113.92,113.92l-113.92,113.92v-75.94h-18.98c-135.95,0 -246.83,-110.88 -246.83,-246.82c0,-135.95 110.89,-246.83 246.83,-246.83zM587.94,663.9h303.79v75.94h-303.79zM587.94,246.18h303.79v75.95h-303.79zM587.94,455.04h303.79v75.94h-303.79z" fill="#000000" filter="url(#filter-JhRK6883)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M379.1,246.18h132.9v75.95h-132.9c-94.17,0 -170.88,76.71 -170.88,170.88c0,94.17 76.71,170.88 170.88,170.88h18.98v-75.95l113.92,113.92l-113.92,113.92v-75.94h-18.98c-135.95,0 -246.83,-110.88 -246.83,-246.82c0,-135.95 110.89,-246.83 246.83,-246.83zM587.94,663.9h303.79v75.94h-303.79zM587.94,246.18h303.79v75.95h-303.79zM587.94,455.04h303.79v75.94h-303.79z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

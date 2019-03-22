@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>crop_5_4 icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M912.26,325.76v372.47c0,76.87 -62.63,139.53 -139.52,139.53h-521.48c-76.89,0 -139.52,-62.65 -139.52,-139.53v-372.47c0,-76.87 62.63,-139.53 139.52,-139.53h521.48c76.89,0 139.52,62.65 139.52,139.53zM772.74,201.6h-521.48c-68.41,0 -124.16,55.78 -124.16,124.17v372.47c0,68.39 55.75,124.17 124.16,124.17h521.48c68.41,0 124.16,-55.78 124.16,-124.17v-372.47c0,-68.39 -55.75,-124.17 -124.16,-124.17zM847.23,325.76v372.47c0,40.97 -33.52,74.5 -74.49,74.5h-521.48c-40.97,0 -74.49,-33.53 -74.49,-74.5v-372.47c0,-40.97 33.52,-74.5 74.49,-74.5h521.48c40.97,0 74.49,33.53 74.49,74.5zM772.74,325.76h-521.48v372.47h521.48z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

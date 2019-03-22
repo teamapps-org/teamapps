@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>router icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,640v170.67c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-46.93,0 -85.33,-38.4 -85.33,-85.33v-170.67c0,-46.93 38.4,-85.33 85.33,-85.33h426.67v-170.67h85.33v170.67h85.34c46.93,0 85.33,38.4 85.33,85.33zM682.67,179.2c-64,0 -128,25.6 -179.2,72.53l-34.14,-34.13c59.73,-59.73 136.54,-89.6 213.34,-89.6c76.8,0 153.6,29.87 213.33,89.6l-34.13,34.13c-51.2,-46.93 -115.2,-72.53 -179.2,-72.53zM789.33,320c-29.87,-29.87 -68.26,-42.67 -106.66,-42.67c-38.4,0 -76.8,12.8 -106.67,42.67l-34.13,-34.13c38.4,-38.4 89.6,-59.74 140.8,-59.74c51.2,0 102.4,21.34 140.8,59.74zM640,682.67h-85.33v85.33h85.33zM341.33,682.67h-85.33v85.33h85.33zM490.67,682.67h-85.34v85.33h85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

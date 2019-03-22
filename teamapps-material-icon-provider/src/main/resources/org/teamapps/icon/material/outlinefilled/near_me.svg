@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>near_me icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M566.38,912.26h-36.5c-26.88,0 -50.98,-16.54 -60.66,-41.61l-87.98,-227.95l-227.96,-88.32c-25.03,-9.7 -41.53,-33.79 -41.53,-60.63v-36.5c0,-26.22 15.74,-49.87 39.93,-59.99l670.46,-280.48c24.34,-10.18 52.43,-4.65 71.08,14.02c18.66,18.66 24.18,46.75 13.98,71.09l-280.85,670.46c-10.12,24.17 -33.77,39.9 -59.97,39.9zM612.19,866.42l280.85,-670.46c7.79,-18.59 3.57,-40.04 -10.68,-54.3c-14.25,-14.26 -35.7,-18.49 -54.29,-10.71l-670.46,280.48c-18.47,7.73 -30.5,25.79 -30.5,45.82v36.5c0,20.5 12.6,38.9 31.72,46.31l234.29,90.77l90.43,234.28c7.39,19.15 25.8,31.78 46.33,31.78h36.5c20.02,0 38.07,-12.01 45.81,-30.48zM566.38,847.23h-36.5l-98.33,-254.78l-254.78,-98.71v-36.5l670.46,-280.48z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>bluetooth_searching icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-tVsUFxYf">
+			<path d="M486.83,512l183.46,183.04l-243.62,243.63h-42.67v-323.84l-195.84,195.84l-60.16,-60.16l238.51,-238.51l-238.51,-238.51l60.16,-60.16l195.84,195.84v-323.84h42.67l243.62,243.63zM896.43,507.73c0,83.2 -24.32,160.85 -65.71,226.56l-51.2,-51.2c26.45,-51.2 41.81,-109.65 41.81,-171.52c0,-61.87 -14.93,-119.89 -41.81,-171.52l53.76,-53.76c39.68,64.85 62.72,140.8 63.15,221.44zM706.99,413.44c11.52,30.72 18.34,63.57 18.34,98.56c0,34.99 -6.82,68.69 -18.77,99.41l-98.99,-98.98zM469.33,409.17l80.22,-80.21l-80.22,-80.21zM469.33,614.83v160.42l80.22,-80.21z"/>
+		</clipPath>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-KiBoTt1o" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-lAseWU4P" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-BiRmKtxP" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<filter id="filter-Fk8x3Kar" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<mask id="mask-8YRjSNrT">
+			<path d="M486.83,512l183.46,183.04l-243.62,243.63h-42.67v-323.84l-195.84,195.84l-60.16,-60.16l238.51,-238.51l-238.51,-238.51l60.16,-60.16l195.84,195.84v-323.84h42.67l243.62,243.63zM896.43,507.73c0,83.2 -24.32,160.85 -65.71,226.56l-51.2,-51.2c26.45,-51.2 41.81,-109.65 41.81,-171.52c0,-61.87 -14.93,-119.89 -41.81,-171.52l53.76,-53.76c39.68,64.85 62.72,140.8 63.15,221.44zM706.99,413.44c11.52,30.72 18.34,63.57 18.34,98.56c0,34.99 -6.82,68.69 -18.77,99.41l-98.99,-98.98zM469.33,409.17l80.22,-80.21l-80.22,-80.21zM469.33,614.83v160.42l80.22,-80.21z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-bwsUITCB">
+			<rect fill="url(#color-KiBoTt1o)" x="128" y="85.33" width="768.43" height="853.34"/>
+		</mask>
+		<mask id="mask-Ru8OQGkG">
+			<path d="M486.83,512l183.46,183.04l-243.62,243.63h-42.67v-323.84l-195.84,195.84l-60.16,-60.16l238.51,-238.51l-238.51,-238.51l60.16,-60.16l195.84,195.84v-323.84h42.67l243.62,243.63zM896.43,507.73c0,83.2 -24.32,160.85 -65.71,226.56l-51.2,-51.2c26.45,-51.2 41.81,-109.65 41.81,-171.52c0,-61.87 -14.93,-119.89 -41.81,-171.52l53.76,-53.76c39.68,64.85 62.72,140.8 63.15,221.44zM706.99,413.44c11.52,30.72 18.34,63.57 18.34,98.56c0,34.99 -6.82,68.69 -18.77,99.41l-98.99,-98.98zM469.33,409.17l80.22,-80.21l-80.22,-80.21zM469.33,614.83v160.42l80.22,-80.21z" fill="url(#color-lAseWU4P)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-8YRjSNrT)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="128" y="85.33" width="768.43" height="853.34" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-bwsUITCB)">
+				<rect x="128" y="85.33" width="768.43" height="853.34" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-BiRmKtxP)" mask="url(#mask-Ru8OQGkG)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="128" y="85.33" width="768.43" height="853.34" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-tVsUFxYf)">
+			<path d="M35,981.67v-1039.34h954.43v1039.34zM670.29,328.96l-243.62,-243.63h-42.67v323.84l-195.84,-195.84l-60.16,60.16l238.51,238.51l-238.51,238.51l60.16,60.16l195.84,-195.84v323.84h42.67l243.62,-243.63l-183.46,-183.04zM833.28,286.29l-53.76,53.76c26.88,51.63 41.81,109.65 41.81,171.52c0,61.87 -15.36,120.32 -41.81,171.52l51.2,51.2c41.39,-65.71 65.71,-143.36 65.71,-226.56c-0.43,-80.64 -23.47,-156.59 -63.15,-221.44zM607.57,512.43l98.99,98.98c11.95,-30.72 18.77,-64.42 18.77,-99.41c0,-34.99 -6.82,-67.84 -18.34,-98.56zM469.33,248.75l80.22,80.21l-80.22,80.21zM549.55,695.04l-80.22,80.21v-160.42z" fill="#000000" filter="url(#filter-Fk8x3Kar)"/>
+		</g>
+	</g>
+</svg>

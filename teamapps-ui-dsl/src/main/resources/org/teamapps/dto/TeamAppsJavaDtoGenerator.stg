@@ -1,0 +1,477 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class(c, package) ::= <<
+<javaFilePrelude(package)>
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
+@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superClassDecl)>extends <c.superClassDecl.Identifier> <endif>implements <if(c.implementsDecl)><c.implementsDecl.classList.Identifier:{id|<id>}; separator=", ">, <endif>UiObject {
+
+	<c.inlineEnumProperties:inlineEnum(); separator="\n\n">
+
+	<c.propertiesNotImplementedBySuperClasses:propertyDeclaration(); separator="\n">
+
+	<constructor(c, "")>
+
+	<if(!c.abstractModifier)><uiObjectTypeGetter(c)><endif>
+
+	<toString(c)>
+
+	<c.propertiesNotImplementedBySuperClasses:getter(); separator="\n\n">
+
+	<c.allNonRequiredProperties:setter(c); separator="\n\n">
+
+	<c.eventDeclaration:eventClass(); separator="\n\n">
+
+	<c.commandDeclaration:commandClass(); separator="\n\n">
+
+	<if(c.subCommandInterfaceNeeded)><subCommandInterface(c)><endif>
+
+	<if(c.subEventInterfaceNeeded)><subEventInterface(c)><endif>
+
+	<c.subEventDeclaration:subEventClass(); separator="\n\n">
+
+	<c.subCommandDeclaration:subCommandClass(); separator="\n\n">
+}>>
+
+classReference(c, package) ::= <<
+<javaFilePrelude(package)>
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
+@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class <c.Identifier>Reference {
+	<c.referenceableProperties:propertyDeclaration(); separator="\n">
+
+	public <c.Identifier.text; format="cap">Reference(<c.referenceableProperties:parameter(); separator=", ">) {
+    	<c.referenceableProperties:propertyAssignment(); separator="\n">
+    }
+
+	<c.referenceableProperties:getter(); separator="\n\n">
+
+}>>
+
+interface(i, package) ::= <<
+<javaFilePrelude(package)>
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
+@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public interface <i.Identifier> extends <if(i.superInterfaceDecl)><i.superInterfaces:{si|<si.Identifier>}; separator=", ">, <endif>UiObject {
+
+	<i.propertyDeclaration:getterStub(); separator="\n">
+	<i.nonRequiredProperties:setterStub(i); separator="\n">
+	
+	<i.inlineEnumProperties:inlineEnum(); separator="\n\n">
+
+	<i.eventDeclaration:eventClass(); separator="\n\n">
+
+	<i.commandDeclaration:commandClass(); separator="\n\n">
+
+	<if(i.subCommandInterfaceNeeded)><subCommandInterface(i)><endif>
+
+	<if(i.subEventInterfaceNeeded)><subEventInterface(i)><endif>
+
+	<i.subEventDeclaration:subEventClass(); separator="\n\n">
+
+	<i.subCommandDeclaration:subCommandClass(); separator="\n\n">
+}>>
+
+javaFilePrelude(package) ::= <<
+package <package>;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+>>
+
+propertyDeclaration(p) ::= <<
+<if(p.type.isObjectReference)>
+@JsonSerialize(using = ObjectSerializer.class)
+@JsonDeserialize(using = ObjectDeserializer.class)
+<endif>
+<if(p.type.isUiComponentId)>@UiComponentId <endif>protected <p.type.javaTypeString> <p.Identifier><if(p.defaultValueAssignment)> = <defaultValue(p)><endif>;
+>>
+
+getterStub(p) ::= <<
+public <p.type.javaTypeString> get<p.Identifier.text; format="cap">();
+>>
+
+setterStub(p, c) ::= <<
+public <c.Identifier> set<p.Identifier.text; format="cap">(<p.type.javaTypeString> <p.Identifier>);
+>>
+
+constructor(c, classNameSuffix) ::= <<
+<if(c.allRequiredProperties)>
+/**
+ * @deprecated Only for Jackson deserialization. Use the other constructor instead.
+ */
+@Deprecated
+public <c.Identifier.text; format="cap"><classNameSuffix>() {
+	// default constructor for Jackson
+}
+<endif>
+
+public <c.Identifier.text; format="cap"><classNameSuffix>(<c.allRequiredProperties:parameter(); separator=", ">) {
+	<if(c.superClassDecl)>super(<c.superClass.allRequiredProperties:{p|<p.Identifier>}; separator=", ">);<endif>
+	<c.requiredPropertiesNotImplementedBySuperClasses:propertyAssignment(); separator="\n">
+}
+>>
+
+toString(c) ::= <<
+@SuppressWarnings("unchecked")
+public String toString() {
+	return new StringBuilder(getClass().getSimpleName()).append(": ")
+			<c.simplePropertiesByRelevance:propertyToString(); separator=".append(\", \")\n">
+			.toString();
+}
+>>
+
+propertyToString(p) ::= <<
+.append(<if(!p.type.isReferenceToJsonAware)>"<p.Identifier>=" + <p.Identifier><else><p.Identifier> != null ? "<p.Identifier>={" + <p.Identifier>.toString() + "}" : ""<endif>)
+>>
+
+jsonSetter(p) ::= <<
+<! if (<if(p.type.isPrimitiveType)><p.Identifier> != <defaultValue(p)><else>!Objects.equals(<p.Identifier>, <defaultValue(p)>)<endif>) { !><\\>
+<if(!p.type.isPrimitiveType)>if (<p.Identifier> != null) {<endif>
+<if(!p.type.isPrimitiveType)>	<endif>obj.put("<p.Identifier>", <p.Identifier.text>);
+<if(!p.type.isPrimitiveType)>}<endif>
+<! } !>
+>>
+
+defaultValue(p) ::=  <<
+  <if(p.defaultValueAssignment)><p.defaultValueAssignment.expression.fullText><else><p.type.defaultValue><endif>
+>>
+
+parameter(p) ::= "<p.type.javaTypeString> <p.Identifier>"
+
+getter(propertyDeclaration) ::= <<
+@com.fasterxml.jackson.annotation.JsonGetter("<propertyDeclaration.Identifier.text>")
+public <propertyDeclaration.type.javaTypeString> get<propertyDeclaration.Identifier.text; format="cap">() {
+	return <propertyDeclaration.Identifier>;
+}
+>>
+
+setter(propertyDeclaration, clazz) ::= <<
+@com.fasterxml.jackson.annotation.JsonSetter("<propertyDeclaration.Identifier.text>")
+public <clazz.Identifier> set<propertyDeclaration.Identifier.text; format="cap">(<propertyDeclaration.type.javaTypeString> <propertyDeclaration.Identifier>) {
+	<propertyAssignment(propertyDeclaration)>
+	return this;
+}
+>>
+
+propertyAssignment(p) ::= "this.<p.Identifier> = <p.Identifier>;"
+
+inlineEnum(propertyDeclaration) ::= <<
+public enum <propertyDeclaration.Identifier.text; format="cap"> {
+	<propertyDeclaration.type.inlineEnum.enumConstant:{c|<c.Identifier>}; separator=", ">;
+
+	@com.fasterxml.jackson.annotation.JsonValue
+	public int jsonValue() {
+		return ordinal();
+	}
+}
+>>
+
+enumClass(e, package) ::= <<
+<javaFilePrelude(package)>
+public enum <e.Identifier> {
+	<e.enumConstant:{e|<e.Identifier>}; separator=", ">;
+
+	<if(!e.stringJsonValuesAnnotation)>
+	@com.fasterxml.jackson.annotation.JsonValue
+	public int jsonValue() {
+		return ordinal();
+	}
+	<else>
+	@com.fasterxml.jackson.annotation.JsonValue
+	public String jsonValue() {
+		return toString();
+	}
+	<endif>
+}>>
+
+eventClass(ed) ::= <<
+public static class <ed.Identifier.text; format="cap">Event implements UiEvent {
+
+	<ed.allProperties:propertyDeclaration(); separator="\n">
+
+	<constructor(ed, "Event")>
+
+	<uiEventTypeGetter(ed, "Event")>
+
+	<toString(ed)>
+
+	<ed.allProperties:getter(); separator="\n\n">
+
+}
+>>
+
+subEventClass(ed) ::= <<
+public static class <ed.Identifier.text; format="cap">SubEvent implements <ed.declaringClass.Identifier>SubEvent<if (ed.declaringClass.isInterface && ed.declaringClass.allImplementingClasses)>, <ed.declaringClass.allImplementingClasses:{c|<c.Identifier>.<c.Identifier>SubEvent}; separator=", "><endif> {
+
+	<ed.allProperties:propertyDeclaration(); separator="\n">
+
+	<constructor(ed, "SubEvent")>
+
+	<uiEventTypeGetter(ed, "SubEvent")>
+
+	<toString(ed)>
+
+	<ed.allProperties:getter(); separator="\n\n">
+
+}
+>>
+
+subEventInterface(c) ::= <<
+public static interface <c.Identifier.text>SubEvent <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.Identifier>SubEvent};  separator=", "><else>extends UiSubEvent<endif> {
+
+}
+>>
+
+uiEventTypeGetter(e, eventKind) ::= <<
+public Ui<eventKind>Type getUi<eventKind>Type() {
+	return Ui<eventKind>Type.<e.parent.Identifier.text; format="javaConstant">_<e.Identifier.text; format="javaConstant">;
+}
+>>
+
+commandClass(cmd) ::= <<
+public static class <cmd.Identifier.text; format="cap">Command implements UiCommand\<<cmd.returnType>\> {
+
+	<cmd.allProperties:propertyDeclaration(); separator="\n">
+
+	<constructor(cmd, "Command")>
+
+	<toString(cmd)>
+
+	<cmd.allProperties:getter(); separator="\n\n">
+
+	<if(cmd.staticModifier)>
+	public String getComponentId() {
+		return null;
+	}
+	<endif>
+
+}
+>>
+
+subCommandClass(cmd) ::= <<
+public static class <cmd.Identifier.text; format="cap">SubCommand implements <cmd.declaringClass.Identifier.text>SubCommand {
+
+	<cmd.allProperties:propertyDeclaration(); separator="\n">
+
+	<constructor(cmd, "SubCommand")>
+
+	<toString(cmd)>
+
+	<cmd.allProperties:getter(); separator="\n\n">
+
+}
+>>
+
+subCommandInterface(c) ::= <<
+public static interface <c.Identifier.text>SubCommand <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.Identifier>SubCommand};  separator=", "><else>extends UiSubCommand<endif> {
+
+}
+>>
+
+uiObjectTypeEnum(package, allClasses) ::= <<
+<javaFilePrelude(package)>
+
+public enum UiObjectType {
+
+	<allClasses:{e|<e.Identifier.text; format="javaConstant">(<e.Identifier.text; format="cap">.class)}; separator=",\n">;
+
+	private final Class\<?> apiClass;
+
+	UiObjectType(Class\<?> apiClass) {
+		this.apiClass = apiClass;
+	}
+
+	public Class\<?> getApiClass() {
+		return apiClass;
+	}
+
+}
+>>
+
+uiObjectTypeGetter(enumTypeString) ::= <<
+@com.fasterxml.jackson.annotation.JsonIgnore
+public UiObjectType getUiObjectType() {
+	return UiObjectType.<c.Identifier.text; format="javaConstant">;
+}
+>>
+
+
+uiEventBaseClass(package, allEventDeclarations) ::= <<
+<javaFilePrelude(package)>
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
+@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public interface UiEvent {
+
+	String getComponentId();
+
+	UiEventType getUiEventType();
+
+}
+>>
+
+uiSubEventBaseClass(package, allEventDeclarations) ::= <<
+<javaFilePrelude(package)>
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
+@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public interface UiSubEvent {
+
+	UiSubEventType getUiSubEventType();
+
+}
+>>
+
+uiObjectBaseClass(package, allClasses) ::= <<
+<javaFilePrelude(package)>
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
+@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public interface UiObject {
+
+	UiObjectType getUiObjectType();
+
+}
+>>
+
+uiEventEnum(package, eventKind, allEventDeclarations) ::= <<
+<javaFilePrelude(package)>
+
+public enum Ui<eventKind>Type {
+
+	<allEventDeclarations:{e|<e.parent.Identifier.text; format="javaConstant">_<e.Identifier.text; format="javaConstant">(<e.parent.Identifier.text>.<e.Identifier.text; format="cap"><eventKind>.class)}; separator=",\n">;
+
+	private final Class\<? extends Ui<eventKind>\> apiClass;
+
+	Ui<eventKind>Type(Class\<? extends Ui<eventKind>\> apiClass) {
+		this.apiClass = apiClass;
+	}
+
+	public Class\<? extends Ui<eventKind>\> getApiClass() {
+		return apiClass;
+	}
+
+}
+>>
+
+uiCommandBaseClass(package, allCommandDeclarations) ::= <<
+<javaFilePrelude(package)>
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
+@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public interface UiCommand\<RESULT> {
+
+	String getComponentId();
+
+}
+>>
+
+uiSubCommandBaseClass(package, allCommandDeclarations) ::= <<
+<javaFilePrelude(package)>
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
+@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public interface UiSubCommand {
+
+}
+>>
+
+jacksonTypeIdMaps(package, allJsonSerializableClasses) ::= <<
+<javaFilePrelude(package)>
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+public class UiObjectJacksonTypeIdMaps {
+	public static final Map\<Class, String> ID_BY_CLASS = Collections.unmodifiableMap(new HashMap\<Class, String>() {{
+		<allJsonSerializableClasses:{c|this.put(<c.javaClassName>.class, "<c._type>");}; separator=";\n">
+	}});
+	public static final Map\<String, Class> CLASS_BY_ID = Collections.unmodifiableMap(new HashMap\<String, Class>() {{
+		<allJsonSerializableClasses:{c|this.put("<c._type>", <c.javaClassName>.class);}; separator=";\n">
+	}});
+}
+>>
+
+cmd(package) ::= <<
+<javaFilePrelude(package)>
+import com.fasterxml.jackson.annotation.JsonRawValue;
+
+public class CMD {
+
+	protected long id;
+
+	@JsonRawValue
+	protected String uiCommand;
+
+	/**
+	 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
+	 */
+	@Deprecated
+	public CMD() {
+		// default constructor for Jackson
+	}
+
+	public CMD(long id, String uiCommand) {
+		this.id = id;
+		this.uiCommand = uiCommand;
+	}
+
+	@Override
+	public String toString() {
+		return "CMD{uiCommand='" + uiCommand.substring(0, 20) + '\'' + ", id=" + id + '}';
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public String getUiCommand() {
+		return uiCommand;
+	}
+
+}
+>>

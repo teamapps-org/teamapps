@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>subscriptions icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,512v300.37c0,75.23 -61.31,136.54 -136.54,136.54h-600.74c-75.23,0 -136.54,-61.31 -136.54,-136.54v-300.37c0,-55.35 33.19,-103.16 80.68,-124.56c-3.59,-7.8 -5.58,-16.48 -5.58,-25.63v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h15.17c-1,-4.39 -1.52,-8.96 -1.52,-13.65v-75.1c0,-33.93 27.51,-61.44 61.44,-61.44h450.56c33.93,0 61.44,27.51 61.44,61.44v75.1c0,4.69 -0.53,9.26 -1.52,13.65h15.17c33.93,0 61.44,27.51 61.44,61.44v75.09c0,9.15 -2,17.83 -5.58,25.63c47.5,21.4 80.68,69.21 80.68,124.56zM498.35,642.87v38.42l35.3,-19.18zM812.37,436.91h-600.74c-41.3,0 -75.1,33.79 -75.1,75.09v300.37c0,41.3 33.8,75.1 75.1,75.1h600.74c41.3,0 75.1,-33.8 75.1,-75.1v-300.37c0,-41.3 -33.8,-75.09 -75.1,-75.09zM436.91,784.59v-245.18l225.28,122.78zM812.37,286.72h-600.74v75.09h600.74zM737.28,136.53h-450.56v75.1h450.56z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

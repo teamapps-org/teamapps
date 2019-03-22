@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>folder_special icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,361.81v375.47c0,75.24 -61.32,136.53 -136.54,136.53h-600.74c-75.22,0 -136.54,-61.29 -136.54,-136.53v-450.56c0,-75.24 61.32,-136.53 136.54,-136.53h225.28c16.29,0 31.92,6.47 43.44,18l57.1,57.1h274.92c75.22,0 136.54,61.29 136.54,136.53zM624.64,514.98c-7.72,11.01 -18.85,19.19 -31.64,23.27c8.23,11.16 12.45,24.82 11.94,38.71c12.77,-4.32 26.63,-4.32 39.4,0c-0.51,-13.89 3.71,-27.55 11.94,-38.71c-12.79,-4.08 -23.92,-12.26 -31.64,-23.27zM812.37,286.72h-300.37l-75.09,-75.09h-225.28c-41.3,0 -75.1,33.79 -75.1,75.09v450.56c0,41.3 33.8,75.09 75.1,75.09h600.74c41.3,0 75.1,-33.79 75.1,-75.09v-375.47c0,-41.3 -33.8,-75.09 -75.1,-75.09zM735.03,699.73l-110.39,-64.57l-110.39,64.57l29.29,-125.03l-97.25,-84.1l128.04,-10.89l50.31,-117.9l50.31,117.9l128.04,10.89l-97.25,84.1z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

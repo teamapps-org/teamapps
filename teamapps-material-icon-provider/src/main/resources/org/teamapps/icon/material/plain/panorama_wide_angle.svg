@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>panorama_wide_angle icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M851.2,201.81l39.68,6.83l10.67,37.97c24.75,88.32 37.12,177.07 37.12,265.39c0,88.32 -12.37,177.06 -37.12,265.81l-10.67,37.98l-39.68,6.82c-116.48,20.48 -222.72,30.72 -339.2,30.72c-116.48,0 -222.72,-10.23 -339.2,-31.14l-39.68,-6.83l-10.67,-37.97c-24.75,-88.32 -37.12,-177.07 -37.12,-265.39c0,-88.32 12.37,-177.07 37.12,-265.39l10.67,-38.4l39.68,-6.82c116.48,-20.48 222.72,-30.72 339.2,-30.72c116.48,0 222.72,10.23 339.2,31.14zM512,256c-104.53,0 -200.96,8.54 -311.04,27.31c-20.05,75.95 -30.29,152.74 -30.29,228.69c0,75.95 10.24,152.74 30.29,228.69c110.08,18.77 206.51,27.31 311.04,27.31c104.53,0 200.96,-8.54 311.04,-27.31c20.05,-75.95 30.29,-152.74 30.29,-228.69c0,-75.95 -10.24,-152.74 -30.29,-228.69c-110.08,-18.77 -206.51,-27.31 -311.04,-27.31z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

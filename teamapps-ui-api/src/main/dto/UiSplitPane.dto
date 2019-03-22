@@ -1,0 +1,45 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+enum UiSplitSizePolicy {
+	FIRST_FIXED,
+	LAST_FIXED,
+	RELATIVE
+}
+
+class UiSplitPane extends UiComponent implements Emptyable {
+	required UiSplitDirection splitDirection;
+	required UiSplitSizePolicy sizePolicy;
+	float referenceChildSize = 0.5f; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1
+	UiComponent* firstChild;
+	UiComponent* lastChild;
+	int firstChildMinSize = 10; // in pixels
+	int lastChildMinSize = 10;  // in pixels
+	boolean resizable = true;
+	boolean fillIfSingleChild = true; // if one element is missing the other takes the whole place
+	boolean collapseEmptyChildren = true; // if true, empty children (implementing Emptyable) will be collapsed
+
+	command setFirstChild(UiComponent* firstChild);
+	command setLastChild(UiComponent* lastChild);
+	command setSize(float referenceChildSize, UiSplitSizePolicy sizePolicy);
+	command setFirstChildMinSize(int firstChildMinSize);
+	command setLastChildMinSize(int lastChildMinSize);
+
+	event splitResized(float referenceChildSize);
+}

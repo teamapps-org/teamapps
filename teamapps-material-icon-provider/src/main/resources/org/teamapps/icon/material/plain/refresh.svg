@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>refresh icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M853.33,170.67v298.66h-298.66l137.38,-137.38c-46.08,-46.51 -109.22,-75.95 -180.05,-75.95c-141.23,0 -256,114.77 -256,256c0,141.23 114.77,256 256,256c111.36,0 206.08,-71.26 241.07,-170.67h88.74c-37.97,147.2 -170.66,256 -329.81,256c-188.59,0 -340.91,-152.74 -340.91,-341.33c0,-188.59 152.32,-341.33 340.91,-341.33c94.29,0 179.2,38.39 241.07,100.26z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

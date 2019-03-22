@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>subtitles icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,286.72v450.56c0,75.24 -61.32,136.53 -136.54,136.53h-600.74c-75.22,0 -136.54,-61.29 -136.54,-136.53v-450.56c0,-75.24 61.32,-136.53 136.54,-136.53h600.74c75.22,0 136.54,61.29 136.54,136.53zM812.37,211.63h-600.74c-41.3,0 -75.1,33.79 -75.1,75.09v450.56c0,41.3 33.8,75.09 75.1,75.09h600.74c41.3,0 75.1,-33.79 75.1,-75.09v-450.56c0,-41.3 -33.8,-75.09 -75.1,-75.09zM587.09,737.28h-375.46v-75.09h375.46zM812.37,587.09h-375.46v-75.09h375.46zM812.37,737.28h-150.18v-75.09h150.18zM211.63,512h150.18v75.09h-150.18z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

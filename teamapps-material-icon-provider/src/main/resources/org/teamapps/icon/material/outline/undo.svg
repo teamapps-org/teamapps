@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>undo icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M924.32,691.26l-88.99,29.29c-32.23,10.61 -66.96,-6.92 -77.57,-39.15c-31.39,-95.36 -121.43,-164.28 -227,-164.28c-33.67,0 -65.52,7.13 -94.54,19.95l81.67,81.68c17.57,17.57 22.83,44 13.32,66.96c-9.51,22.96 -31.91,37.93 -56.76,37.93h-337.92c-33.93,0 -61.44,-27.51 -61.44,-61.44v-337.92c0,-24.85 14.97,-47.25 37.93,-56.76c22.96,-9.51 49.38,-4.25 66.96,13.32l97.15,97.15c72.32,-48.68 159.3,-77.61 253.64,-77.61c202.09,0 372.45,131.72 432.66,313.19c10.7,32.26 -6.82,67.08 -39.11,77.71zM530.77,361.81c-99.5,0 -189.61,37.18 -259.07,97.63l-135.17,-135.17v337.92h337.92l-135.92,-135.92c52.19,-43.55 118.64,-70.58 192.24,-70.58c132.92,0 245.93,86.73 285.36,206.51l88.99,-29.29c-52.19,-157.32 -199.75,-271.09 -374.34,-271.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

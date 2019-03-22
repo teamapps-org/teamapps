@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>keyboard_hide icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,213.33v426.67c0,46.93 -38.41,85.33 -85.34,85.33h-682.66c-46.93,0 -85.34,-38.4 -85.34,-85.33l0.43,-426.67c0,-46.93 37.98,-85.33 84.91,-85.33h682.66c46.93,0 85.34,38.4 85.34,85.33zM341.33,810.67h341.34l-170.67,170.66zM682.67,554.67h-341.34v85.33h341.34zM682.67,384h-85.34v85.33h85.34zM682.67,256h-85.34v85.33h85.34zM810.67,384h-85.34v85.33h85.34zM810.67,256h-85.34v85.33h85.34zM469.33,341.33h85.34v-85.33h-85.34zM469.33,469.33h85.34v-85.33h-85.34zM341.33,341.33h85.34v-85.33h-85.34zM341.33,469.33h85.34v-85.33h-85.34zM298.67,384h-85.34v85.33h85.34zM298.67,256h-85.34v85.33h85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

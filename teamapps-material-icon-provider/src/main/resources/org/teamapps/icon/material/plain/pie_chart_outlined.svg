@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>pie_chart_outlined icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,512c0,234.67 -192,426.67 -426.67,426.67c-234.67,0 -426.67,-192 -426.67,-426.67c0,-234.67 192,-426.67 426.67,-426.67c234.67,0 426.67,192 426.67,426.67zM469.33,850.77v-677.12c-167.68,20.91 -298.66,165.12 -298.66,338.35c0,173.23 130.98,317.44 298.66,338.77zM554.67,469.33h295.68c-19.2,-153.6 -141.65,-276.48 -295.68,-295.68zM850.35,554.67h-295.68v295.68c154.03,-19.2 276.48,-141.65 295.68,-295.68z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

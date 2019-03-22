@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>attach_money icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M704,652.8c0,87.47 -66.13,135.68 -149.33,151.47v91.73h-128v-92.59c-81.92,-17.49 -151.9,-69.97 -157.02,-163.41h93.87c4.69,50.35 39.26,89.6 127.15,89.6c94.29,0 115.2,-46.93 115.2,-76.37c0,-39.68 -21.33,-77.23 -128,-102.83c-119.04,-28.59 -200.54,-77.65 -200.54,-176.21c0,-82.35 66.57,-136.11 149.34,-154.03v-92.16h128v93.44c89.17,21.76 133.97,89.17 136.96,162.56h-94.3c-2.56,-53.33 -30.71,-89.6 -106.66,-89.6c-72.11,0 -115.2,32.42 -115.2,78.93c0,40.53 31.15,66.57 128,91.74c96.85,25.17 200.53,66.56 200.53,187.73z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

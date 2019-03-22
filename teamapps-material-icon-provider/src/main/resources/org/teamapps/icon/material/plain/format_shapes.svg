@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>format_shapes icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,298.67v426.66h85.33v256h-256v-85.33h-426.66v85.33h-256v-256h85.33v-426.66h-85.33v-256h256v85.33h426.66v-85.33h256v256zM725.33,725.33h85.34v-426.66h-85.34v-85.34h-426.66v85.34h-85.34v426.66h85.34v85.34h426.66zM585.81,597.33h-148.9l-31.15,85.34h-69.12l145.07,-384h59.73l145.49,384h-69.54zM456.11,543.57h111.36l-55.47,-163.41zM896,810.67h-85.33v85.33h85.33zM213.33,810.67h-85.33v85.33h85.33zM896,213.33v-85.33h-85.33v85.33zM128,213.33h85.33v-85.33h-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

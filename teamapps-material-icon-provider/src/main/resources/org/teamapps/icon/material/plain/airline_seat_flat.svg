@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_flat icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,597.33v85.34h-256v85.33h-341.34v-85.33h-256v-85.34zM938.67,469.33v85.34h-554.67v-256h384c94.29,0 170.67,76.37 170.67,170.66zM123.73,517.97c-50.35,-49.49 -51.19,-130.13 -1.7,-180.9c49.49,-50.35 130.13,-51.2 180.9,-1.71c50.35,49.49 51.2,130.14 1.71,180.91c-49.49,50.35 -130.14,51.19 -180.91,1.7z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

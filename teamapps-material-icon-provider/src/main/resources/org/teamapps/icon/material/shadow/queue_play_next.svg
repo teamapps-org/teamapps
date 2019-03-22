@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>queue_play_next icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-32EUEs1N">
+			<path d="M1.3,127.24h1022.7v896.76h-1022.7z"/>
+		</clipPath>
+		<filter id="filter-Xp60MKI0" x="-11%" y="-6%" width="133%" height="149%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-32EUEs1N)">
+			<path d="M929.7,246.18v303.79h-75.94v-303.79h-683.52v455.68h569.6v75.95h-75.94v75.94h-303.79v-75.94h-189.86c-42.15,0 -75.94,-34.18 -75.94,-75.95v-455.68c0,-42.15 33.79,-75.94 75.94,-75.94h683.52c41.77,0 75.94,33.79 75.94,75.94zM663.9,436.06v75.94h-113.92v113.92h-75.95v-113.92h-113.92v-75.94h113.92v-113.92h75.95v113.92zM967.68,739.84l-170.88,170.88l-56.96,-56.96l113.92,-113.92l-113.92,-113.92l56.96,-56.96z" fill="#000000" filter="url(#filter-Xp60MKI0)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M929.7,246.18v303.79h-75.94v-303.79h-683.52v455.68h569.6v75.95h-75.94v75.94h-303.79v-75.94h-189.86c-42.15,0 -75.94,-34.18 -75.94,-75.95v-455.68c0,-42.15 33.79,-75.94 75.94,-75.94h683.52c41.77,0 75.94,33.79 75.94,75.94zM663.9,436.06v75.94h-113.92v113.92h-75.95v-113.92h-113.92v-75.94h113.92v-113.92h75.95v113.92zM967.68,739.84l-170.88,170.88l-56.96,-56.96l113.92,-113.92l-113.92,-113.92l56.96,-56.96z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

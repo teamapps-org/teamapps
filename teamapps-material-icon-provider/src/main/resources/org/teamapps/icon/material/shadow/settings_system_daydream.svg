@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_system_daydream icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-8bPZ17jh" x="-12%" y="-7%" width="135%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M929.7,246.18v531.63c0,41.77 -34.18,75.94 -75.94,75.94h-683.52c-41.77,0 -75.94,-34.18 -75.94,-75.94v-531.63c0,-41.77 34.18,-75.94 75.94,-75.94h683.52c41.77,0 75.94,34.18 75.94,75.94zM853.76,245.81h-683.52v532.38h683.52zM284.16,549.98c0,-58.86 44.43,-107.08 101.77,-113.16h6.07c21.26,-45.19 66.84,-76.71 120,-76.71c66.83,0 121.89,49.74 131.01,113.92h1.9c52.4,0 94.94,42.53 94.94,94.94c0,52.4 -42.53,94.94 -94.94,94.94h-246.82c-63.04,0 -113.92,-50.88 -113.92,-113.92z" fill="#000000" filter="url(#filter-8bPZ17jh)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M929.7,246.18v531.63c0,41.77 -34.18,75.94 -75.94,75.94h-683.52c-41.77,0 -75.94,-34.18 -75.94,-75.94v-531.63c0,-41.77 34.18,-75.94 75.94,-75.94h683.52c41.77,0 75.94,34.18 75.94,75.94zM853.76,245.81h-683.52v532.38h683.52zM284.16,549.98c0,-58.86 44.43,-107.08 101.77,-113.16h6.07c21.26,-45.19 66.84,-76.71 120,-76.71c66.83,0 121.89,49.74 131.01,113.92h1.9c52.4,0 94.94,42.53 94.94,94.94c0,52.4 -42.53,94.94 -94.94,94.94h-246.82c-63.04,0 -113.92,-50.88 -113.92,-113.92z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

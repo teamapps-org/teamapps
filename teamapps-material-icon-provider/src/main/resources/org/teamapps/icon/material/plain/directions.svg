@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>directions icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M926.29,541.87l-384,384c-16.64,16.64 -43.52,16.64 -60.16,0l-384,-384c-16.64,-16.64 -16.64,-43.52 0,-60.16l384,-384c16.64,-16.64 43.52,-16.64 60.16,0l384,384c16.64,17.07 16.64,43.95 0,60.16zM746.67,469.33l-149.34,-149.33v106.67h-213.33c-23.47,0 -42.67,19.19 -42.67,42.66v170.67h85.34v-128h170.66v106.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>navigation icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M837.04,866.71l-26.66,26.66c-17.94,17.94 -45.07,23.01 -68.27,12.75l-230.11,-101.67l-230.11,101.67c-23.21,10.25 -50.33,5.19 -68.27,-12.75l-26.66,-26.66c-17.52,-17.52 -22.8,-43.84 -13.4,-66.75l281.6,-686.73c9.46,-23.07 31.92,-38.13 56.85,-38.13c24.93,0 47.39,15.06 56.85,38.13l281.6,686.73c9.4,22.92 4.11,49.24 -13.4,66.75zM512,136.53l-281.6,686.73l26.66,26.66l254.94,-112.64l254.94,112.64l26.66,-26.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

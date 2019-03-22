@@ -1,0 +1,12 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>accessible icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M426.67,170.67c0,-47.13 38.2,-85.34 85.33,-85.34c47.13,0 85.33,38.21 85.33,85.34c0,47.13 -38.2,85.33 -85.33,85.33c-47.13,0 -85.33,-38.2 -85.33,-85.33z" fill="currentColor"/>
+		</g>
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M597.33,471.47v147.2h128c46.93,0 85.34,38.4 85.34,85.33v234.67h-85.34v-213.34h-213.33c-46.93,0 -85.33,-38.4 -85.33,-85.33v-252.16c0,-44.8 32.42,-84.48 77.22,-88.32c18.77,-1.71 35.85,2.56 50.78,11.09h0.42c0.43,0 0.43,0.43 0.86,0.43c9.81,4.69 18.77,11.09 26.02,19.2l55.04,61.01c41.81,46.08 107.95,78.93 173.66,78.08v85.34c-74.67,-0.43 -158.3,-37.55 -213.34,-83.2zM635.73,768c-19.63,97.28 -105.81,170.67 -209.06,170.67c-117.76,0 -213.34,-95.58 -213.34,-213.34c0,-103.25 73.39,-189.43 170.67,-209.06v88.32c-49.49,17.92 -85.33,64.85 -85.33,120.74c0,70.83 57.17,128 128,128c55.89,0 103.25,-35.84 120.74,-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

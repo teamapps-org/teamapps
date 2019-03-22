@@ -1,0 +1,12 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>rss_feed icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M170.67,760.32c0,-51.37 41.64,-93.01 93.01,-93.01c51.37,0 93.01,41.64 93.01,93.01c0,51.37 -41.64,93.01 -93.01,93.01c-51.37,0 -93.01,-41.64 -93.01,-93.01z" fill="currentColor"/>
+		</g>
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M834.56,853.33h-120.75c0,-299.95 -243.19,-543.14 -543.14,-543.14v-120.75c366.51,0 663.89,297.38 663.89,663.89zM593.07,853.33h-120.75c0,-166.4 -135.25,-301.65 -301.65,-301.65v-120.75c233.39,0 422.4,189.01 422.4,422.4z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

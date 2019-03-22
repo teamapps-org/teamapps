@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>speaker icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-V7YLn38p">
+			<path d="M153.18,89.26h717.63v934.74h-717.63z"/>
+		</clipPath>
+		<filter id="filter-rG5t9mAI" x="-18%" y="-6%" width="182%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-V7YLn38p)">
+			<path d="M777.82,208.22v607.57c0,41.77 -34.18,75.95 -75.95,75.95l-379.73,-0.38c-41.77,0 -75.95,-33.8 -75.95,-75.57v-607.57c0,-41.77 34.18,-75.95 75.95,-75.95h379.73c41.77,0 75.95,34.18 75.95,75.95zM701.86,625.92c0,-104.81 -85.06,-189.86 -189.86,-189.86c-104.81,0 -189.86,85.06 -189.86,189.86c0,104.81 85.06,189.86 189.86,189.86c104.81,0 189.86,-85.06 189.86,-189.86zM625.92,625.92c0,63.04 -50.88,113.92 -113.92,113.92c-63.04,0 -113.92,-50.88 -113.92,-113.92c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.92,50.88 113.92,113.92zM436.06,284.16c0,41.77 33.79,75.94 75.94,75.94c41.77,0 75.94,-34.18 75.94,-75.94c0,-41.77 -34.18,-75.94 -75.94,-75.94c-42.15,0 -75.94,34.18 -75.94,75.94z" fill="#000000" filter="url(#filter-rG5t9mAI)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M777.82,208.22v607.57c0,41.77 -34.18,75.95 -75.95,75.95l-379.73,-0.38c-41.77,0 -75.95,-33.8 -75.95,-75.57v-607.57c0,-41.77 34.18,-75.95 75.95,-75.95h379.73c41.77,0 75.95,34.18 75.95,75.95zM701.86,625.92c0,-104.81 -85.06,-189.86 -189.86,-189.86c-104.81,0 -189.86,85.06 -189.86,189.86c0,104.81 85.06,189.86 189.86,189.86c104.81,0 189.86,-85.06 189.86,-189.86zM625.92,625.92c0,63.04 -50.88,113.92 -113.92,113.92c-63.04,0 -113.92,-50.88 -113.92,-113.92c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.92,50.88 113.92,113.92zM436.06,284.16c0,41.77 33.79,75.94 75.94,75.94c41.77,0 75.94,-34.18 75.94,-75.94c0,-41.77 -34.18,-75.94 -75.94,-75.94c-42.15,0 -75.94,34.18 -75.94,75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

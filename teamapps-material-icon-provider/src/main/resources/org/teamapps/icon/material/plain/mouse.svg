@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>mouse icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M170.67,469.33h682.66v170.67c0,188.59 -152.74,341.33 -341.33,341.33c-188.59,0 -341.33,-152.74 -341.33,-341.33zM853.33,384h-298.66v-338.35c168.53,20.91 298.66,164.27 298.66,338.35zM469.33,384h-298.66c0,-174.08 130.13,-317.44 298.66,-338.35z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

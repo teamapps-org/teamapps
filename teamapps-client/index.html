@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
+    <title></title>
+
+    <script>
+		(function () {
+			function allUrlParameters() {
+				query = location.search.substr(1);
+				let result = {};
+				query.split("&").forEach(function(part) {
+					let [key, value] = part.split("=");
+					if (value !== null) {
+						result[key] = decodeURIComponent(value);
+					}
+				});
+				return result;
+			}
+
+			window.$ = undefined;
+			window.addEventListener('load', function() {
+				var appServerUrl = allUrlParameters()["appServerUrl"] || "<%= htmlWebpackPlugin.options.appServerUrl %>";
+                var webSocketUrl;
+                if (appServerUrl) {
+	                webSocketUrl = appServerUrl.replace("https://", "wss://").replace("http://", "ws://") + "/communication";
+			    } else {
+                    var port = window.location.port || (window.location.protocol === "https:" ? "443" : "80");
+                    webSocketUrl = (window.location.protocol === "https:" ? "wss:" : "ws:") + "//" + window.location.hostname + ':' + port + "/communication";
+                }
+
+				var contextClass = teamapps[allUrlParameters()["teamAppsContext"]] || teamapps.DefaultTeamAppsUiContext;
+
+				window.teamAppsContext = new contextClass(webSocketUrl, allUrlParameters());
+			});
+		})();
+    </script>
+
+</head>
+<body>
+</body>
+</html>

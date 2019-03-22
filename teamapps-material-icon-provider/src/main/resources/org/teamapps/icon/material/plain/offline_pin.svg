@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>offline_pin icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,512c0,234.67 -192,426.67 -426.67,426.67c-234.67,0 -426.67,-192 -426.67,-426.67c0,-234.67 192,-426.67 426.67,-426.67c234.67,0 426.67,192 426.67,426.67zM725.33,311.47l-59.73,-59.74l-226.13,226.14l-81.07,-81.07l-59.73,59.73l140.8,140.8zM725.33,682.67h-426.66v85.33h426.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

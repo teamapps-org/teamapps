@@ -1,0 +1,104 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class UiMap extends UiComponent {
+	required Dictionary<UiTemplate> markerTemplates;
+	UiMapType mapType = UiMapType.MAP_BOX_STREETS;
+	int zoomLevel = 5;
+	UiMapLocation mapPosition;
+	Dictionary<UiMapPolyline> polylines;
+	List<UiMapMarkerClientRecord> markers;
+
+	command registerTemplate(String id, UiTemplate template);
+	command addMarker(UiMapMarkerClientRecord marker);
+	command removeMarker(int id);
+	command setMapMarkerCluster(UiMapMarkerCluster cluster);
+	command addPolyline(String lineId, UiMapPolyline polyline);
+	command addPolylinePoints(String lineId, List<UiMapLocation> points);
+	command removePolyline(String lineId);
+	command setZoomLevel(int zoom);
+	command setLocation(UiMapLocation location);
+	command setMapType(UiMapType mapType);
+	command setHeatMap(UiHeatMapData data);
+
+	event zoomLevelChanged(int zoomLevel);
+	event locationChanged(UiMapLocation center, UiMapArea displayedArea);
+	event mapClicked(UiMapLocation location);
+	event markerClicked(int markerId);
+}
+
+enum UiMapType {
+	INTERNAL,
+	MAP_BOX_STREETS,
+	MAP_BOX_STREETS_BASIC,
+	MAP_BOX_STREETS_SATELLITE,
+	MAP_BOX_SATELLITE,
+	MAP_BOX_RUN_BIKE_HIKE,
+	MAP_BOX_EMERALD,
+	MAP_BOX_OUTDOORS,
+	MAP_QUEST_OSM, MAP_QUEST_SATELLITE,
+	OSM_TOPO_MAP,
+	NASA_EARTH_AT_NIGHT,
+	INFO_WEATHER_TEMPERATURE
+}
+
+@TypeScriptFactory
+class UiMapLocation {
+	required float latitude;
+	required float longitude;
+}
+
+@TypeScriptFactory
+class UiMapArea {
+	required float minLatitude;
+	required float maxLatitude;
+	required float minLongitude;
+	required float maxLongitude;
+}
+
+class UiMapPolyline {
+	required List<UiMapLocation> path;
+	UiShapeProperties shapeProperties;
+}
+
+class UiMapMarkerCluster {
+	required List<UiMapMarkerClientRecord> markers;
+}
+
+class UiHeatMapData {
+	required List<UiHeatMapDataElement> elements;
+	int maxCount = 10;
+	int radius = 25;
+	int blur = 15;
+}
+
+class UiHeatMapDataElement {
+	required float latitude;
+	required float longitude;
+	required int count;
+}
+
+class UiShapeProperties {
+  String strokeColor = "#0000FF";
+  float strokeOpacity = 0.8f;
+  float strokeWeight = 2f;
+  String strokeDashArray;
+  String fillColor = "#0000FF";
+  float fillOpacity = 0.4f;
+}

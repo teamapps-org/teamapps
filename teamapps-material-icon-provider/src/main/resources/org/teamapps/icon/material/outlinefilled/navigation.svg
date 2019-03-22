@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>navigation icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M837.34,866.77l-26.44,26.44c-18.99,18.99 -47.69,24.35 -72.26,13.5l-226.64,-100.13l-226.64,100.13c-24.56,10.85 -53.27,5.49 -72.26,-13.5l-26.44,-26.44c-18.54,-18.54 -24.13,-46.39 -14.18,-70.65l279.36,-681.27c10.01,-24.41 33.78,-40.35 60.16,-40.35c26.38,0 50.15,15.94 60.16,40.35l279.36,681.27c9.95,24.26 4.35,52.11 -14.18,70.65zM837.31,801.95l-279.36,-681.27c-7.65,-18.64 -25.8,-30.82 -45.95,-30.82c-20.15,0 -38.31,12.18 -45.95,30.82l-279.36,681.27c-7.6,18.53 -3.33,39.8 10.83,53.96l26.44,26.44c14.5,14.5 36.43,18.6 55.19,10.31l232.85,-102.88l232.85,102.88c18.76,8.29 40.69,4.19 55.19,-10.31l26.44,-26.44c14.16,-14.16 18.43,-35.43 10.83,-53.96zM791.36,820.79l-26.44,26.44l-252.92,-111.74l-252.92,111.74l-26.44,-26.44l279.36,-681.27z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

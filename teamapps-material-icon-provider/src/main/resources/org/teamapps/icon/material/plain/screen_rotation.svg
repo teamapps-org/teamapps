@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>screen_rotation icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M949.33,587.52c25.17,24.75 25.17,65.28 0,90.45l-271.36,271.36c-24.75,25.17 -65.28,25.17 -90.45,0l-512.85,-512.85c-25.17,-24.75 -25.17,-65.28 0,-90.45l271.36,-271.36c24.75,-25.17 65.28,-25.17 90.45,0zM904.11,632.75l-512.86,-512.86l-271.36,271.36l512.86,512.86zM377.6,860.16l162.56,162.56l-28.16,1.28c-268.37,0 -488.11,-206.5 -509.87,-469.33h64c15.36,160.43 115.2,296.1 254.72,361.81zM646.4,163.84l-162.56,-162.56l28.16,-1.28c268.37,0 488.11,206.5 509.87,469.33h-64c-15.36,-160.43 -115.2,-295.68 -254.72,-361.81z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

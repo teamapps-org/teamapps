@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>exposure_neg_1 icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M774.83,798.72h-75.1c-33.93,0 -61.44,-27.51 -61.44,-61.44v-312.96l-31.42,10.68c-18.76,6.38 -39.44,3.32 -55.55,-8.22c-16.11,-11.54 -25.66,-30.14 -25.66,-49.95v-63.83c0,-25.87 16.21,-48.98 40.54,-57.78l176.48,-63.84c6.7,-2.42 13.77,-3.66 20.9,-3.66h11.26c33.93,0 61.44,27.51 61.44,61.44v488.11c0,33.93 -27.51,61.44 -61.44,61.44zM573.44,474.45v75.1c0,33.93 -27.51,61.44 -61.44,61.44h-300.37c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.1c0,-33.93 27.51,-61.44 61.44,-61.44h300.37c33.93,0 61.44,27.51 61.44,61.44zM774.83,249.17h-11.26l-176.48,63.84v63.83l112.64,-38.3v398.75h75.1zM211.63,474.45v75.1h300.37v-75.1z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

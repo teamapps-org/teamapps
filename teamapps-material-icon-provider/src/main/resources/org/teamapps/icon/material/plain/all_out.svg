@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>all_out icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M732.16,730.03c-116.48,116.48 -305.92,116.48 -422.4,0c-116.48,-116.48 -116.48,-305.92 0,-422.4c116.48,-116.48 305.92,-116.48 422.4,0c116.48,116.91 116.48,305.92 0,422.4zM685.23,354.56c-90.88,-90.88 -237.66,-90.88 -328.54,0c-90.88,90.88 -90.88,237.65 0,328.53c90.88,90.88 237.66,90.88 328.54,0c90.88,-90.88 90.88,-237.65 0,-328.53zM179.63,860.16v-170.67l170.66,170.67zM179.63,177.49h170.66l-170.66,170.67zM862.29,177.49v170.67l-170.66,-170.67zM862.29,860.16h-170.66l170.66,-170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

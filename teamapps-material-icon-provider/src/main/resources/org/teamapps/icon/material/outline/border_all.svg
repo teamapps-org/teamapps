@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>border_all icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,174.08v675.84c0,33.93 -27.51,61.44 -61.44,61.44h-675.84c-33.93,0 -61.44,-27.51 -61.44,-61.44v-675.84c0,-33.93 27.51,-61.44 61.44,-61.44h675.84c33.93,0 61.44,27.51 61.44,61.44zM610.99,610.99v102.4h102.4v-102.4zM610.99,310.61v102.4h102.4v-102.4zM310.61,610.99v102.4h102.4v-102.4zM310.61,310.61v102.4h102.4v-102.4zM174.08,174.08v675.84h675.84v-675.84zM474.45,774.83h-225.28v-225.28h225.28zM474.45,474.45h-225.28v-225.28h225.28zM774.83,774.83h-225.28v-225.28h225.28zM774.83,474.45h-225.28v-225.28h225.28z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

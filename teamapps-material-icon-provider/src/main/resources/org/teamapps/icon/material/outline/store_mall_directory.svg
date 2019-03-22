@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>store_mall_directory icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M873.81,812.37c0,33.93 -27.51,61.44 -61.44,61.44h-75.09c-33.93,0 -61.44,-27.51 -61.44,-61.44v-163.84h-27.31v163.84c0,33.93 -27.51,61.44 -61.44,61.44h-375.46c-33.93,0 -61.44,-27.51 -61.44,-61.44v-168.66c-22.06,-9.32 -37.55,-31.16 -37.55,-56.62l0.16,-76.77c0.01,-3.48 0.35,-6.96 1.04,-10.37l37.55,-187.73c0.46,-2.29 1.04,-4.52 1.74,-6.7c-1.9,-5.92 -2.93,-12.24 -2.93,-18.8v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h600.74c33.93,0 61.44,27.51 61.44,61.44v75.09c0,6.56 -1.03,12.87 -2.93,18.8l1.74,6.74l37.7,189.3c0.68,3.44 1.03,6.93 1.03,10.44v75.09c0,25.46 -15.48,47.3 -37.55,56.62zM450.56,648.53h-102.4v27.31h102.4zM849.92,587.09v-75.09l-37.55,-187.73h-600.74l-37.55,187.73v75.09h37.55v225.28h375.46v-225.28h150.19v225.28h75.09v-225.28zM812.37,211.63h-600.74v75.09h600.74zM512,737.28h-225.28v-150.19h225.28z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

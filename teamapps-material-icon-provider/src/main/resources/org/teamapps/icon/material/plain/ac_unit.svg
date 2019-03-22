@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>ac_unit icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,554.67h-177.92l138.24,138.24l-60.16,60.58l-198.83,-198.82h-85.33v85.33l198.82,198.83l-60.58,60.16l-138.24,-138.24v177.92h-85.34v-177.92l-138.24,138.24l-60.58,-60.16l198.82,-198.83v-85.33h-85.33l-198.83,198.82l-60.16,-60.58l138.24,-138.24h-177.92v-85.34h177.92l-138.24,-138.24l60.16,-60.58l198.83,198.82h85.33v-85.33l-198.82,-198.83l60.58,-60.16l138.24,138.24v-177.92h85.34v177.92l138.24,-138.24l60.58,60.16l-198.82,198.83v85.33h85.33l198.83,-198.82l60.16,60.58l-138.24,138.24h177.92z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

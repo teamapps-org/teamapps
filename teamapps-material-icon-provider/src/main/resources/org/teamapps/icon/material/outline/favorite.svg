@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>favorite icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M470.64,908.49l-54.4,-49.52c-183.26,-166.18 -341.15,-302.62 -341.15,-478.38c0,-149.57 118.38,-267.95 267.95,-267.95c61.77,0 121.14,21 168.96,56.44c47.82,-35.44 107.19,-56.44 168.96,-56.44c149.57,0 267.95,118.38 267.95,267.95c0,175.74 -157.89,312.23 -341.14,478.76l-54.58,49.31c-23.46,21.19 -59.17,21.12 -82.54,-0.16zM566.45,813.88c193.36,-175.72 321.02,-291.36 321.02,-433.29c0,-115.64 -90.87,-206.51 -206.51,-206.51c-65.33,0 -128.03,30.41 -168.96,78.47c-40.93,-48.06 -103.63,-78.47 -168.96,-78.47c-115.64,0 -206.51,90.87 -206.51,206.51c0,141.93 127.66,257.57 321.02,432.91l54.45,49.56z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

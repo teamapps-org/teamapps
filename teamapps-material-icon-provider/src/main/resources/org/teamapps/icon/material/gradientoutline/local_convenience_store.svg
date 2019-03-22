@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>local_convenience_store icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-8hpxKvAM" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-JXdSwTjf" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-RY6vGDuP" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-4uq4JOfP">
+			<path d="M942.94,309.34v526.93c0,14.14 -11.46,25.6 -25.6,25.6h-324.27c-14.14,0 -25.6,-11.46 -25.6,-25.6v-136.53h-110.93v136.53c0,14.14 -11.46,25.6 -25.6,25.6h-324.27c-14.14,0 -25.6,-11.46 -25.6,-25.6v-526.93c0,-14.14 11.46,-25.6 25.6,-25.6h96v-96c0,-14.14 11.46,-25.6 25.6,-25.6h567.47c14.14,0 25.6,11.46 25.6,25.6v96h96c14.14,0 25.6,11.46 25.6,25.6zM795.74,309.34v-121.6h-567.47v121.6h-121.6v526.93h324.27v-162.13h162.13v162.13h324.27v-526.93zM471.46,430.94h-81.06v40.53h81.06v40.54h-121.6v-121.6h81.07v-40.54h-81.07v-40.53h121.6zM674.14,512h-40.54v-81.06h-81.06v-121.6h40.53v81.06h40.54v-81.06h40.54z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-6qOkhbOV">
+			<rect fill="url(#color-JXdSwTjf)" x="81.06" y="162.14" width="861.87" height="699.73"/>
+		</mask>
+		<mask id="mask-ExohtXHu">
+			<path d="M942.94,309.34v526.93c0,14.14 -11.46,25.6 -25.6,25.6h-324.27c-14.14,0 -25.6,-11.46 -25.6,-25.6v-136.53h-110.93v136.53c0,14.14 -11.46,25.6 -25.6,25.6h-324.27c-14.14,0 -25.6,-11.46 -25.6,-25.6v-526.93c0,-14.14 11.46,-25.6 25.6,-25.6h96v-96c0,-14.14 11.46,-25.6 25.6,-25.6h567.47c14.14,0 25.6,11.46 25.6,25.6v96h96c14.14,0 25.6,11.46 25.6,25.6zM795.74,309.34v-121.6h-567.47v121.6h-121.6v526.93h324.27v-162.13h162.13v162.13h324.27v-526.93zM471.46,430.94h-81.06v40.53h81.06v40.54h-121.6v-121.6h81.07v-40.54h-81.07v-40.53h121.6zM674.14,512h-40.54v-81.06h-81.06v-121.6h40.53v81.06h40.54v-81.06h40.54z" fill="url(#color-8hpxKvAM)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-4uq4JOfP)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="81.06" y="162.14" width="861.87" height="699.73" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-6qOkhbOV)">
+				<rect x="81.06" y="162.14" width="861.87" height="699.73" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-RY6vGDuP)" mask="url(#mask-ExohtXHu)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="81.06" y="162.14" width="861.87" height="699.73" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

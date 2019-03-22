@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>notifications_paused icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-h5Kj0J34" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-hQKrkQj7" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-gjGNG4oB" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-jJmEBUMU">
+			<rect fill="url(#color-hQKrkQj7)" x="162.14" y="101.34" width="699.73" height="841.6"/>
+		</mask>
+		<mask id="mask-lEk4xc1h">
+			<path d="M861.86,755.2v40.54c0,14.14 -11.46,25.6 -25.6,25.6h-222.4c3.02,4.2 4.8,9.36 4.8,14.93c0,58.72 -47.94,106.67 -106.66,106.67c-59.22,0 -106.66,-48.04 -106.66,-106.67c0,-5.57 1.78,-10.72 4.8,-14.93h-222.4c-14.14,0 -25.6,-11.46 -25.6,-25.6v-40.54c0,-6.79 2.7,-13.3 7.5,-18.1l73.57,-73.57v-192.07c0,-126.42 64.32,-238.04 182.4,-275.62v-8.1c0,-47.78 38.62,-86.4 86.4,-86.4c47.78,0 86.4,38.62 86.4,86.4v8.12c117.7,37.59 182.4,149.15 182.4,275.6v192.07l73.57,73.57c4.8,4.8 7.5,11.31 7.5,18.1zM587.74,375.46h-151.47v21.76h87.9c9.91,0 18.92,5.72 23.15,14.67c4.23,8.96 2.91,19.55 -3.39,27.2l-107.66,130.73v38.18h151.47v-21.76h-87.9c-9.91,0 -18.92,-5.72 -23.15,-14.67c-4.23,-8.96 -2.91,-19.55 3.39,-27.2l107.66,-130.73zM755.2,674.14v-202.67c0,-124.44 -66.47,-228.61 -182.4,-256.17v-27.56c0,-33.64 -27.16,-60.8 -60.8,-60.8c-33.64,0 -60.8,27.16 -60.8,60.8v27.56c-116.33,27.56 -182.4,131.73 -182.4,256.17v202.67l-81.06,81.06v40.54h648.53v-40.54zM613.34,422.82l-113.5,137.82h113.5v72.96h-202.67v-72.96l113.5,-137.82h-113.5v-72.96h202.67zM512,917.34c44.58,0 81.06,-36.49 81.06,-81.07h-162.13c0,44.58 36.07,81.07 81.06,81.07z" fill="url(#color-h5Kj0J34)"/>
+		</mask>
+		<mask id="mask-WCIzKxSB">
+			<path d="M861.86,755.2v40.54c0,14.14 -11.46,25.6 -25.6,25.6h-222.4c3.02,4.2 4.8,9.36 4.8,14.93c0,58.72 -47.94,106.67 -106.66,106.67c-59.22,0 -106.66,-48.04 -106.66,-106.67c0,-5.57 1.78,-10.72 4.8,-14.93h-222.4c-14.14,0 -25.6,-11.46 -25.6,-25.6v-40.54c0,-6.79 2.7,-13.3 7.5,-18.1l73.57,-73.57v-192.07c0,-126.42 64.32,-238.04 182.4,-275.62v-8.1c0,-47.78 38.62,-86.4 86.4,-86.4c47.78,0 86.4,38.62 86.4,86.4v8.12c117.7,37.59 182.4,149.15 182.4,275.6v192.07l73.57,73.57c4.8,4.8 7.5,11.31 7.5,18.1zM587.74,375.46h-151.47v21.76h87.9c9.91,0 18.92,5.72 23.15,14.67c4.23,8.96 2.91,19.55 -3.39,27.2l-107.66,130.73v38.18h151.47v-21.76h-87.9c-9.91,0 -18.92,-5.72 -23.15,-14.67c-4.23,-8.96 -2.91,-19.55 3.39,-27.2l107.66,-130.73zM755.2,674.14v-202.67c0,-124.44 -66.47,-228.61 -182.4,-256.17v-27.56c0,-33.64 -27.16,-60.8 -60.8,-60.8c-33.64,0 -60.8,27.16 -60.8,60.8v27.56c-116.33,27.56 -182.4,131.73 -182.4,256.17v202.67l-81.06,81.06v40.54h648.53v-40.54zM613.34,422.82l-113.5,137.82h113.5v72.96h-202.67v-72.96l113.5,-137.82h-113.5v-72.96h202.67zM512,917.34c44.58,0 81.06,-36.49 81.06,-81.07h-162.13c0,44.58 36.07,81.07 81.06,81.07z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-WCIzKxSB)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="162.14" y="101.34" width="699.73" height="841.6" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-jJmEBUMU)">
+				<rect x="162.14" y="101.34" width="699.73" height="841.6" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-gjGNG4oB)" mask="url(#mask-lEk4xc1h)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="162.14" y="101.34" width="699.73" height="841.6" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

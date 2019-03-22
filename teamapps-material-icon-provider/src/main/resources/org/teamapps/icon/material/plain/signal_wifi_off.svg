@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>signal_wifi_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M874.67,797.01l-54.19,54.19l-141.65,-141.65l-166.4,207.36l-0.43,0.42l-0.43,-0.42l-496.21,-618.24c9.81,-7.68 66.13,-52.91 157.44,-94.72l-87.47,-87.9l54.19,-54.61l587.52,587.95zM775.68,588.8l-440.75,-440.32c53.76,-12.37 113.07,-20.48 177.07,-20.48c286.29,0 477.44,156.16 496.64,170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

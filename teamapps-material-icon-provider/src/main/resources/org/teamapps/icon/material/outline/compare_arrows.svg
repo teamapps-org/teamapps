@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>compare_arrows icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M593.05,668.03l-149.81,150.19c-17.56,17.6 -44,22.89 -66.98,13.39c-22.98,-9.5 -37.96,-31.91 -37.96,-56.78v-51.2h-201.77c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.1c0,-33.93 27.51,-61.44 61.44,-61.44h201.77v-51.2c0,-24.86 14.99,-47.28 37.96,-56.78c12.55,-5.19 26.14,-5.97 38.75,-2.73c-5.32,-20.39 -0.01,-42.98 15.94,-58.97l149.81,-150.19c17.56,-17.6 44,-22.89 66.98,-13.39c22.98,9.5 37.96,31.91 37.96,56.78v51.2h201.77c33.93,0 61.44,27.51 61.44,61.44v75.1c0,33.93 -27.51,61.44 -61.44,61.44h-201.77v51.2c0,24.86 -14.99,47.28 -37.96,56.78c-12.55,5.19 -26.14,5.97 -38.75,2.73c5.32,20.39 0.01,42.98 -15.94,58.97zM399.74,587.09h-263.21v75.1h263.21v112.64l149.81,-150.19l-149.81,-150.19zM624.26,549.55v-112.64h263.21v-75.1h-263.21v-112.64l-149.81,150.19z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

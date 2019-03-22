@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>navigate_next icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M706.97,557.98l-223.49,223.49c-25.39,25.39 -66.56,25.39 -91.96,0l-52.52,-52.52c-25.37,-25.37 -25.4,-66.51 -0.05,-91.91l124.77,-125.04l-124.77,-125.04c-25.35,-25.4 -25.32,-66.53 0.05,-91.91l52.52,-52.52c25.39,-25.39 66.56,-25.39 91.96,0l223.49,223.49c25.39,25.39 25.39,66.56 0,91.96zM696.11,476.88l-223.49,-223.49c-19.39,-19.4 -50.84,-19.4 -70.24,0l-52.52,52.52c-19.38,19.38 -19.4,50.8 -0.04,70.2l135.59,135.89l-135.59,135.89c-19.36,19.4 -19.34,50.82 0.04,70.2l52.52,52.52c19.39,19.39 50.84,19.39 70.24,0l223.49,-223.49c19.39,-19.39 19.39,-50.84 0,-70.24zM660.99,512l-223.49,223.49l-52.52,-52.52l170.59,-170.97l-170.59,-170.97l52.52,-52.52z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>airline_seat_flat_angled icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-eXqWy33T">
+			<path d="M93.44,437.33l811.52,292.7l-29.44,80.64l-192.85,-69.55v69.55h-341.34v-192.86l-277.33,-99.84zM949.33,609.71l-29.44,80.64l-527.36,-190.72l88.75,-241.5l365.23,131.84c89.6,32.43 135.67,130.57 102.82,219.74zM140.8,375.47c-30.72,-64 -3.84,-140.38 59.73,-170.67c64,-30.72 140.38,-3.84 171.1,59.73c30.29,63.57 3.41,139.95 -60.16,170.67c-64,30.72 -140.38,3.84 -170.67,-59.73z"/>
+		</clipPath>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-7dxEVXO9" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-Kb3IFjzy" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-jnt3eLpv" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<filter id="filter-lymrMQLi" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-k1nYeeqa">
+			<path d="M93.44,437.33l811.52,292.7l-29.44,80.64l-192.85,-69.55v69.55h-341.34v-192.86l-277.33,-99.84zM949.33,609.71l-29.44,80.64l-527.36,-190.72l88.75,-241.5l365.23,131.84c89.6,32.43 135.67,130.57 102.82,219.74zM140.8,375.47c-30.72,-64 -3.84,-140.38 59.73,-170.67c64,-30.72 140.38,-3.84 171.1,59.73c30.29,63.57 3.41,139.95 -60.16,170.67c-64,30.72 -140.38,3.84 -170.67,-59.73z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-TcoLOewx">
+			<rect fill="url(#color-Kb3IFjzy)" x="64" y="192.08" width="895.93" height="618.59"/>
+		</mask>
+		<mask id="mask-uh0KuLBJ">
+			<path d="M93.44,437.33l811.52,292.7l-29.44,80.64l-192.85,-69.55v69.55h-341.34v-192.86l-277.33,-99.84zM949.33,609.71l-29.44,80.64l-527.36,-190.72l88.75,-241.5l365.23,131.84c89.6,32.43 135.67,130.57 102.82,219.74zM140.8,375.47c-30.72,-64 -3.84,-140.38 59.73,-170.67c64,-30.72 140.38,-3.84 171.1,59.73c30.29,63.57 3.41,139.95 -60.16,170.67c-64,30.72 -140.38,3.84 -170.67,-59.73z" fill="url(#color-7dxEVXO9)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-k1nYeeqa)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="64" y="192.08" width="895.93" height="618.59" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-TcoLOewx)">
+				<rect x="64" y="192.08" width="895.93" height="618.59" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-lymrMQLi)" mask="url(#mask-uh0KuLBJ)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="64" y="192.08" width="895.93" height="618.59" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-eXqWy33T)">
+			<path d="M-29,853.67v-804.59h1081.93v804.59zM64,517.97l277.33,99.84v192.86h341.34v-69.55l192.85,69.55l29.44,-80.64l-811.52,-292.7zM846.51,389.97l-365.23,-131.84l-88.75,241.5l527.36,190.72l29.44,-80.64c32.85,-89.17 -13.22,-187.31 -102.82,-219.74zM311.47,435.2c63.57,-30.72 90.45,-107.1 60.16,-170.67c-30.72,-63.57 -107.1,-90.45 -171.1,-59.73c-63.57,30.29 -90.45,106.67 -59.73,170.67c30.29,63.57 106.67,90.45 170.67,59.73z" fill="#000000" filter="url(#filter-jnt3eLpv)"/>
+		</g>
+	</g>
+</svg>

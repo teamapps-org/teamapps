@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_play icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,597.33v170.67c0,46.93 -38.41,85.33 -85.34,85.33h-682.66c-46.93,0 -85.34,-38.4 -85.34,-85.33v-170.67c47.36,0 85.34,-38.4 85.34,-85.33c0,-46.93 -37.98,-85.33 -84.91,-85.33v-170.67c0,-46.93 37.98,-85.33 84.91,-85.33h682.66c46.93,0 85.34,38.4 85.34,85.33v170.67c-46.93,0 -85.34,38.4 -85.34,85.33c0,46.93 38.41,85.33 85.34,85.33zM618.24,541.44l140.37,-114.77l-180.9,-10.67l-65.71,-168.53l-66.13,168.1l-180.91,10.67l140.37,114.77l-46.08,175.79l152.75,-98.13l152.75,98.13z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

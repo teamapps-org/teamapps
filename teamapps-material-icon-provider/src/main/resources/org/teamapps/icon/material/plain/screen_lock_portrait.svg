@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>screen_lock_portrait icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M810.67,128v768c0,46.93 -38.41,85.33 -85.34,85.33h-426.66c-46.93,0 -85.34,-38.4 -85.34,-85.33v-768c0,-46.93 38.41,-85.33 85.34,-85.33h426.66c46.93,0 85.34,38.4 85.34,85.33zM725.33,213.33h-426.66v597.34h426.66zM384,640v-128c0,-23.47 19.2,-42.67 42.67,-42.67v-42.66c0,-46.93 37.97,-85.34 85.33,-85.34c46.93,0 85.33,37.98 85.33,85.34v42.66c23.47,0 42.67,19.2 42.67,42.67v128c0,23.47 -19.2,42.67 -42.67,42.67h-170.66c-23.47,0 -42.67,-19.2 -42.67,-42.67zM460.8,469.33h102.4v-42.66c0,-28.16 -23.04,-51.2 -51.2,-51.2c-28.16,0 -51.2,23.04 -51.2,51.2z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

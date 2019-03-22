@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>cached icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-LTTeTy4y" x="-12%" y="-8%" width="135%" height="166%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M398.08,512l-151.9,151.9l-151.89,-151.9h113.92c0,-167.85 135.94,-303.78 303.78,-303.78c59.62,0 115.06,17.46 161.77,47.08l-55.44,55.45c-31.51,-17.09 -67.98,-26.58 -106.33,-26.58c-125.69,0 -227.84,102.15 -227.84,227.84zM929.7,512h-113.92c0,167.85 -135.94,303.78 -303.78,303.78c-59.62,0 -115.06,-17.46 -161.77,-47.08l55.44,-55.45c31.51,17.09 67.98,26.58 106.33,26.58c125.69,0 227.84,-102.15 227.84,-227.84h-113.92l151.9,-151.9z" fill="#000000" filter="url(#filter-LTTeTy4y)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M398.08,512l-151.9,151.9l-151.89,-151.9h113.92c0,-167.85 135.94,-303.78 303.78,-303.78c59.62,0 115.06,17.46 161.77,47.08l-55.44,55.45c-31.51,-17.09 -67.98,-26.58 -106.33,-26.58c-125.69,0 -227.84,102.15 -227.84,227.84zM929.7,512h-113.92c0,167.85 -135.94,303.78 -303.78,303.78c-59.62,0 -115.06,-17.46 -161.77,-47.08l55.44,-55.45c31.51,17.09 67.98,26.58 106.33,26.58c125.69,0 227.84,-102.15 227.84,-227.84h-113.92l151.9,-151.9z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

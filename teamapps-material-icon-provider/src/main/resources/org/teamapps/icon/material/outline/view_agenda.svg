@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>view_agenda icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,587.09v225.28c0,54.59 -44.4,98.99 -98.99,98.99h-638.29c-54.59,0 -98.99,-44.4 -98.99,-98.99v-225.28c0,-30.01 13.42,-56.93 34.56,-75.09c-21.14,-18.16 -34.56,-45.08 -34.56,-75.09v-225.28c0,-54.59 44.4,-98.99 98.99,-98.99h638.29c54.59,0 98.99,44.4 98.99,98.99v225.28c0,30.01 -13.42,56.93 -34.56,75.09c21.14,18.16 34.56,45.08 34.56,75.09zM812.37,549.55h-638.29c-20.65,0 -37.55,16.89 -37.55,37.54v225.28c0,20.65 16.9,37.55 37.55,37.55h638.29c20.65,0 37.55,-16.9 37.55,-37.55v-225.28c0,-20.65 -16.9,-37.54 -37.55,-37.54zM812.37,174.08h-638.29c-20.65,0 -37.55,16.9 -37.55,37.55v225.28c0,20.65 16.9,37.54 37.55,37.54h638.29c20.65,0 37.55,-16.89 37.55,-37.54v-225.28c0,-20.65 -16.9,-37.55 -37.55,-37.55z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

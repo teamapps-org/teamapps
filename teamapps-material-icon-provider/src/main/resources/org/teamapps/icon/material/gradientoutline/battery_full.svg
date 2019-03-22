@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>battery_full icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-AtX6JNpp" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-czCbwY82" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-OXhP3Edq" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-AWbSeqne">
+			<path d="M740.26,241.64v621.78c0,43.86 -35.91,79.51 -79.91,79.51h-297.11c-43.87,0 -79.5,-35.93 -79.5,-79.92v-621.38c0,-43.73 35.77,-79.5 79.5,-79.5h42.1v-55.47c0,-14.14 11.46,-25.6 25.6,-25.6h162.13c14.14,0 25.6,11.46 25.6,25.6v55.47h42.1c43.73,0 79.5,35.77 79.5,79.5zM660.76,187.74h-67.7v-81.07h-162.13v81.07h-67.7c-29.59,0 -53.9,24.31 -53.9,53.9v621.38c0,29.99 24.31,54.32 53.9,54.32h297.11c29.99,0 54.31,-24.32 54.31,-53.91v-621.78c0,-29.59 -24.31,-53.9 -53.9,-53.9z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-OyrQbB5l">
+			<path d="M740.26,241.64v621.78c0,43.86 -35.91,79.51 -79.91,79.51h-297.11c-43.87,0 -79.5,-35.93 -79.5,-79.92v-621.38c0,-43.73 35.77,-79.5 79.5,-79.5h42.1v-55.47c0,-14.14 11.46,-25.6 25.6,-25.6h162.13c14.14,0 25.6,11.46 25.6,25.6v55.47h42.1c43.73,0 79.5,35.77 79.5,79.5zM660.76,187.74h-67.7v-81.07h-162.13v81.07h-67.7c-29.59,0 -53.9,24.31 -53.9,53.9v621.38c0,29.99 24.31,54.32 53.9,54.32h297.11c29.99,0 54.31,-24.32 54.31,-53.91v-621.78c0,-29.59 -24.31,-53.9 -53.9,-53.9z" fill="url(#color-czCbwY82)"/>
+		</mask>
+		<mask id="mask-TOPPGDaM">
+			<rect fill="url(#color-AtX6JNpp)" x="283.74" y="81.06" width="456.53" height="861.87"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-AWbSeqne)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="283.74" y="81.06" width="456.53" height="861.87" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-TOPPGDaM)">
+				<rect x="283.74" y="81.06" width="456.53" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-OXhP3Edq)" mask="url(#mask-OyrQbB5l)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="283.74" y="81.06" width="456.53" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>texture icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M893.01,191.57l-701.44,701.02c-14.51,-3.84 -27.73,-11.52 -38.4,-21.76c-10.24,-10.67 -17.92,-23.89 -21.76,-38.4l701.02,-701.02c29.44,7.68 52.47,30.72 60.58,60.16zM896,396.37v120.75l-378.88,378.88h-120.75zM627.63,128l-499.63,499.63v-120.75l378.88,-378.88zM725.33,896l170.67,-170.67v85.34c0,23.47 -9.38,44.8 -25.17,60.16c-15.36,15.79 -36.69,25.17 -60.16,25.17zM298.67,128l-170.67,170.67v-85.34c0,-46.93 38.4,-85.33 85.33,-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

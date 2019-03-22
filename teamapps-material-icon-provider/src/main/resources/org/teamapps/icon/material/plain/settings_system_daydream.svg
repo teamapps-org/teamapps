@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_system_daydream icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M981.33,213.33v597.34c0,46.93 -38.4,85.33 -85.33,85.33h-768c-46.93,0 -85.33,-38.4 -85.33,-85.33v-597.34c0,-46.93 38.4,-85.33 85.33,-85.33h768c46.93,0 85.33,38.4 85.33,85.33zM896,212.91h-768v598.18h768zM256,554.67c0,-66.13 49.92,-120.32 114.35,-127.15h6.82c23.89,-50.77 75.1,-86.19 134.83,-86.19c75.09,0 136.96,55.89 147.2,128h2.13c58.88,0 106.67,47.79 106.67,106.67c0,58.88 -47.79,106.67 -106.67,106.67h-277.33c-70.83,0 -128,-57.17 -128,-128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

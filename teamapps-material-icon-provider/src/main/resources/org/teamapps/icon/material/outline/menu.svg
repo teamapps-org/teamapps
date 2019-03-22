@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>menu icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,474.45v75.1c0,25.19 -15.16,46.84 -36.85,56.32c21.69,9.48 36.85,31.13 36.85,56.32v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-675.84c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-25.19 15.16,-46.84 36.85,-56.32c-21.69,-9.48 -36.85,-31.13 -36.85,-56.32v-75.1c0,-25.19 15.16,-46.84 36.85,-56.32c-21.69,-9.48 -36.85,-31.13 -36.85,-56.32v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h675.84c33.93,0 61.44,27.51 61.44,61.44v75.09c0,25.19 -15.16,46.84 -36.85,56.32c21.69,9.48 36.85,31.13 36.85,56.32zM174.08,737.28h675.84v-75.09h-675.84zM174.08,549.55h675.84v-75.1h-675.84zM174.08,286.72v75.09h675.84v-75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

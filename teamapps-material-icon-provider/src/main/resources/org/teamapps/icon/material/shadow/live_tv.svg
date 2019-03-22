@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>live_tv icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-pIR2Prgi">
+			<path d="M1.3,89.26h1021.41v934.74h-1021.41z"/>
+		</clipPath>
+		<filter id="filter-HwYZtLyo" x="-12%" y="-6%" width="135%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-pIR2Prgi)">
+			<path d="M929.7,360.1v455.68c0,41.77 -34.18,75.95 -75.94,75.95h-683.52c-41.77,0 -75.94,-34.18 -75.94,-75.95v-455.68c0,-42.15 34.18,-75.94 75.94,-75.94h288.22l-125.31,-124.93l26.96,-26.97l151.9,151.9l151.9,-151.9l26.58,26.97l-124.93,124.93h288.22c41.77,0 75.94,33.79 75.94,75.94zM853.76,360.1h-683.52v455.68h683.52zM663.9,587.94l-265.82,151.9v-303.78z" fill="#000000" filter="url(#filter-HwYZtLyo)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M929.7,360.1v455.68c0,41.77 -34.18,75.95 -75.94,75.95h-683.52c-41.77,0 -75.94,-34.18 -75.94,-75.95v-455.68c0,-42.15 34.18,-75.94 75.94,-75.94h288.22l-125.31,-124.93l26.96,-26.97l151.9,151.9l151.9,-151.9l26.58,26.97l-124.93,124.93h288.22c41.77,0 75.94,33.79 75.94,75.94zM853.76,360.1h-683.52v455.68h683.52zM663.9,587.94l-265.82,151.9v-303.78z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

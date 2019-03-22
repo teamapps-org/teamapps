@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>cloud_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M182.19,170.67l713.81,713.81l-54.19,54.19l-85.33,-85.34h-500.48c-141.23,0 -256,-114.77 -256,-256c0,-137.81 109.22,-249.6 245.33,-255.57l-117.33,-116.91zM1024,640c0,71.68 -35.84,134.82 -90.03,173.65l-61.86,-61.86c39.25,-21.76 66.56,-63.58 66.56,-111.79c0,-70.83 -57.17,-128 -128,-128h-64v-21.33c0,-129.71 -104.96,-234.67 -234.67,-234.67c-39.25,0 -76.37,9.81 -108.8,26.88l-62.29,-62.29c49.49,-31.57 107.94,-49.92 171.09,-49.92c155.31,0 284.59,110.5 313.6,257.7c110.93,7.68 198.4,98.99 198.4,211.63zM256,426.67c-94.29,0 -170.67,76.37 -170.67,170.66c0,94.29 76.38,170.67 170.67,170.67h415.15l-341.34,-341.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>error_outline icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,512c0,235.52 -191.15,426.67 -427.1,426.67c-235.52,0 -426.24,-191.15 -426.24,-426.67c0,-235.52 190.72,-426.67 426.24,-426.67c235.95,0 427.1,191.15 427.1,426.67zM853.33,512c0,-188.59 -152.74,-341.33 -341.33,-341.33c-188.59,0 -341.33,152.74 -341.33,341.33c0,188.59 152.74,341.33 341.33,341.33c188.59,0 341.33,-152.74 341.33,-341.33zM469.33,298.67h85.34v256h-85.34zM469.33,640h85.34v85.33h-85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

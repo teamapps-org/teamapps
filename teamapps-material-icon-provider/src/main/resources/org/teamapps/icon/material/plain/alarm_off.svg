@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>alarm_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M165.97,139.52l745.39,744.96l-54.19,54.19l-93.86,-93.87c-67.41,58.45 -155.31,93.87 -251.31,93.87c-212.48,0 -384,-171.95 -384,-384c0,-96 35.42,-183.9 93.87,-251.31l-34.14,-34.13l-47.36,40.1l-60.58,-60.58l47.36,-39.68l-56.75,-56.75l54.19,-54.61zM409.6,274.35l-64.85,-64.86c50.77,-24.75 107.09,-38.82 167.25,-38.82c212.05,0 384,171.95 384,384c0,60.16 -14.08,116.48 -38.83,167.25l-64.85,-64.85c11.52,-32 18.35,-66.56 18.35,-102.4c0,-165.12 -133.55,-298.67 -298.67,-298.67c-35.84,0 -70.4,6.83 -102.4,18.35zM282.03,363.95c-42.67,51.63 -68.7,118.19 -68.7,190.72c0,165.12 133.55,298.66 298.67,298.66c72.53,0 139.09,-26.02 190.72,-68.69zM883.63,309.33l-196.27,-164.69l55.04,-65.28l196.27,164.69zM305.49,170.24l-60.58,-60.59l36.69,-30.29l60.59,60.59z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

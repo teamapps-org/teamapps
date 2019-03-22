@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>shopping_basket icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-5bFOKExh" x="-12%" y="-6%" width="135%" height="145%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M891.74,398.08c20.89,0 37.97,17.09 37.97,37.98l-1.14,10.25l-96.45,352.01c-9.11,31.9 -38.36,55.44 -73.29,55.44h-493.65c-34.93,0 -64.18,-23.54 -72.91,-55.44l-96.46,-352.01c-1.14,-3.42 -1.51,-6.84 -1.51,-10.25c0,-20.89 17.08,-37.98 37.97,-37.98h181.9l166.32,-248.73c7.22,-11.01 19.37,-16.32 31.51,-16.32c12.15,0 24.3,5.31 31.51,15.95l166.32,249.1zM625.92,398.08l-113.92,-167.08l-113.92,167.08zM587.94,625.92c0,-41.77 -34.18,-75.94 -75.94,-75.94c-41.77,0 -75.94,34.18 -75.94,75.94c0,41.77 34.18,75.94 75.94,75.94c41.77,0 75.94,-34.18 75.94,-75.94z" fill="#000000" filter="url(#filter-5bFOKExh)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,398.08c20.89,0 37.97,17.09 37.97,37.98l-1.14,10.25l-96.45,352.01c-9.11,31.9 -38.36,55.44 -73.29,55.44h-493.65c-34.93,0 -64.18,-23.54 -72.91,-55.44l-96.46,-352.01c-1.14,-3.42 -1.51,-6.84 -1.51,-10.25c0,-20.89 17.08,-37.98 37.97,-37.98h181.9l166.32,-248.73c7.22,-11.01 19.37,-16.32 31.51,-16.32c12.15,0 24.3,5.31 31.51,15.95l166.32,249.1zM625.92,398.08l-113.92,-167.08l-113.92,167.08zM587.94,625.92c0,-41.77 -34.18,-75.94 -75.94,-75.94c-41.77,0 -75.94,34.18 -75.94,75.94c0,41.77 34.18,75.94 75.94,75.94c41.77,0 75.94,-34.18 75.94,-75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

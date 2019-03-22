@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>notifications_active icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M768,682.67l85.33,85.33v42.67h-682.66v-42.67l85.33,-85.33v-213.34c0,-131.41 69.55,-240.64 192,-269.65v-29.01c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v29.01c122.03,29.01 192,138.66 192,269.65zM171.95,448h-85.34c5.97,-136.53 73.39,-256.85 175.79,-334.93l61.01,61.01c-87.04,61.87 -145.06,160.85 -151.46,273.92zM701.01,174.08l60.59,-61.01c101.97,78.08 169.39,198.4 175.79,334.93h-85.34c-6.4,-113.07 -64.85,-212.05 -151.04,-273.92zM426.24,853.33h170.67c0,11.95 -2.13,23.04 -6.4,33.28c-11.09,25.6 -33.71,44.38 -61.44,50.35c-5.55,1.28 -11.1,1.71 -17.07,1.71c-47.36,0 -85.33,-38.41 -85.76,-85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

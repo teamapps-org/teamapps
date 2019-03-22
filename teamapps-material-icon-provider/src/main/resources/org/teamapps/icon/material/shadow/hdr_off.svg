@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>hdr_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-e7cK3z6s">
+			<path d="M16.48,108.26h953.06v915.74h-953.06z"/>
+		</clipPath>
+		<filter id="filter-lLv5tLfM" x="-13%" y="-6%" width="140%" height="145%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-e7cK3z6s)">
+			<path d="M876.54,872.74l-41.77,41.78l-288.6,-288.6h-129.11v-129.11l-56.96,-56.96v186.07h-56.96v-94.94h-75.94v94.94h-56.96v-227.84h56.96v75.94h75.94v-75.94h15.19l-208.86,-208.86l41.78,-37.97l265.81,265.81zM705.66,625.92l-41.77,-41.77v-186.07h132.9c30.38,0 56.96,26.58 56.96,56.96v37.98c0,22.78 -15.19,45.57 -34.18,53.16l34.18,79.74h-56.96l-34.18,-75.94h-41.77v75.94zM534.78,455.04l-56.96,-56.96h72.15c30.38,0 56.96,26.58 56.96,56.96v72.15l-56.96,-56.96v-15.19zM720.86,493.02h75.94v-37.98h-75.94z" fill="#000000" filter="url(#filter-lLv5tLfM)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M876.54,872.74l-41.77,41.78l-288.6,-288.6h-129.11v-129.11l-56.96,-56.96v186.07h-56.96v-94.94h-75.94v94.94h-56.96v-227.84h56.96v75.94h75.94v-75.94h15.19l-208.86,-208.86l41.78,-37.97l265.81,265.81zM705.66,625.92l-41.77,-41.77v-186.07h132.9c30.38,0 56.96,26.58 56.96,56.96v37.98c0,22.78 -15.19,45.57 -34.18,53.16l34.18,79.74h-56.96l-34.18,-75.94h-41.77v75.94zM534.78,455.04l-56.96,-56.96h72.15c30.38,0 56.96,26.58 56.96,56.96v72.15l-56.96,-56.96v-15.19zM720.86,493.02h75.94v-37.98h-75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

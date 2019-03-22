@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>important_devices icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,170.67v213.33h-85.34v-213.33h-768v512h554.67v85.33h-85.33v85.33h85.33v85.34h-341.33v-85.34h85.33v-85.33h-298.67c-47.36,0 -85.33,-38.4 -85.33,-85.33v-512c0,-47.36 37.97,-85.34 85.33,-85.34h768c46.93,0 85.34,37.98 85.34,85.34zM1024,512v384c0,23.47 -19.2,42.67 -42.67,42.67h-213.33c-23.47,0 -42.67,-19.2 -42.67,-42.67v-384c0,-23.47 19.2,-42.67 42.67,-42.67l213.33,0.43c23.47,0 42.67,18.77 42.67,42.24zM640,384l-105.39,75.09l40.11,124.16l-105.39,-76.8l-105.38,76.8l40.1,-124.16l-105.38,-75.09h129.28l41.38,-128l41.39,128zM981.33,554.67h-213.33v298.66h213.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

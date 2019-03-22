@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>border_outer icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,128v768h-768v-768zM810.67,213.33h-597.34v597.34h597.34zM554.67,384h-85.34v-85.33h85.34zM384,554.67h-85.33v-85.34h85.33zM554.67,554.67h-85.34v-85.34h85.34zM725.33,554.67h-85.33v-85.34h85.33zM554.67,725.33h-85.34v-85.33h85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

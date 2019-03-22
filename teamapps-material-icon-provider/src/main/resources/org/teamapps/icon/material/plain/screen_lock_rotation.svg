@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>screen_lock_rotation icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M992,635.31l-271.36,271.36c-24.75,25.17 -65.28,25.17 -90.45,0l-512.86,-512.86c-25.17,-24.75 -25.17,-65.28 0,-90.45l271.36,-271.36c24.75,-25.17 65.29,-25.17 90.46,0l104.53,104.53l-60.16,60.16l-89.6,-89.6l-241.49,241.5l482.98,482.98l241.5,-241.49l-94.72,-94.72l60.16,-60.16l109.65,109.65c25.17,24.75 25.17,65.29 0,90.46zM418.13,817.07l162.56,162.98l-28.16,1.28c-268.37,0 -488.1,-206.5 -509.86,-469.33h64c15.36,160.43 115.2,296.1 254.72,361.81zM640,341.33v-170.66c0,-23.47 19.2,-42.67 42.67,-42.67v-21.33c0,-58.88 47.78,-106.67 106.66,-106.67c58.88,0 106.67,47.79 106.67,106.67v21.33c23.47,0 42.67,19.2 42.67,42.67v170.66c0,23.47 -19.2,42.67 -42.67,42.67h-213.33c-23.47,0 -42.67,-19.2 -42.67,-42.67zM716.8,128h145.07v-21.33c0,-40.11 -32.43,-72.54 -72.54,-72.54c-40.11,0 -72.53,32.43 -72.53,72.54z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

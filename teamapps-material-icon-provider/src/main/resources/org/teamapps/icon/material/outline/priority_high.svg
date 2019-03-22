@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>priority_high icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M436.91,112.64h150.18c33.93,0 61.44,27.51 61.44,61.44v450.56c0,25.33 -15.33,47.09 -37.23,56.48c23.08,24.45 37.23,57.43 37.23,93.7c0,75.41 -61.12,136.53 -136.53,136.53c-75.41,0 -136.53,-61.12 -136.53,-136.53c0,-36.28 14.15,-69.25 37.23,-93.7c-21.89,-9.4 -37.23,-31.15 -37.23,-56.48v-450.56c0,-33.93 27.51,-61.44 61.44,-61.44zM512,849.92c41.47,0 75.09,-33.62 75.09,-75.09c0,-41.47 -33.62,-75.1 -75.09,-75.1c-41.47,0 -75.09,33.62 -75.09,75.1c0,41.47 33.62,75.09 75.09,75.09zM436.91,624.64h150.18v-450.56h-150.18z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

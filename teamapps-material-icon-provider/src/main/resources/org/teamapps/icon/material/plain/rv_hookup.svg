@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>rv_hookup icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,725.33v85.34h-341.34c0,70.83 -57.17,128 -128,128c-70.83,0 -128,-57.17 -128,-128h-85.33c-46.93,0 -85.33,-38.41 -85.33,-85.34v-128h298.66v-128h-170.66v85.34l-128,-128l128,-128v85.33h469.33c46.93,0 85.33,38.4 85.33,85.33v256zM853.33,213.33l-128,128v-85.33h-341.33v-85.33h341.33v-85.34zM768,469.33h-170.67v128h170.67zM512,810.67c0,-23.47 -19.2,-42.67 -42.67,-42.67c-23.47,0 -42.66,19.2 -42.66,42.67c0,23.47 19.19,42.66 42.66,42.66c23.47,0 42.67,-19.19 42.67,-42.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

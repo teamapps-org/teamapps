@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_legroom_normal icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,832c0,35.41 -28.59,64 -64,64h-192v-298.67h-298.67c-70.4,0 -128,-57.6 -128,-128v-341.33h256v256h213.33c46.93,0 85.34,38.4 85.34,85.33v298.67h64c35.41,0 64,28.59 64,64zM341.33,640h256v85.33h-256c-117.76,0 -213.33,-95.57 -213.33,-213.33v-384h85.33v384c0,70.83 57.17,128 128,128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>bluetooth_audio icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-NEq9XxCm">
+			<path d="M77.24,89.26h869.9v934.74h-869.9z"/>
+		</clipPath>
+		<filter id="filter-nCw0KKpV" x="-14%" y="-6%" width="153%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-NEq9XxCm)">
+			<path d="M489.6,512l163.28,162.91l-216.82,216.83h-37.98v-288.22l-174.3,174.3l-53.54,-53.54l212.27,-212.27l-212.27,-212.27l53.54,-53.54l174.3,174.3v-288.22h37.98l216.82,216.83zM854.14,508.2c0,74.05 -21.64,143.16 -58.48,201.64l-45.57,-45.57c23.54,-45.57 37.21,-97.59 37.21,-152.65c0,-55.06 -13.29,-106.7 -37.21,-152.65l47.85,-47.85c35.32,57.72 55.82,125.31 56.2,197.08zM685.54,424.28c10.25,27.34 16.32,56.58 16.32,87.72c0,31.14 -6.07,61.13 -16.71,88.47l-88.1,-88.09zM474.02,420.48l71.4,-71.39l-71.4,-71.39zM474.02,603.52v142.77l71.4,-71.39z" fill="#000000" filter="url(#filter-nCw0KKpV)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M489.6,512l163.28,162.91l-216.82,216.83h-37.98v-288.22l-174.3,174.3l-53.54,-53.54l212.27,-212.27l-212.27,-212.27l53.54,-53.54l174.3,174.3v-288.22h37.98l216.82,216.83zM854.14,508.2c0,74.05 -21.64,143.16 -58.48,201.64l-45.57,-45.57c23.54,-45.57 37.21,-97.59 37.21,-152.65c0,-55.06 -13.29,-106.7 -37.21,-152.65l47.85,-47.85c35.32,57.72 55.82,125.31 56.2,197.08zM685.54,424.28c10.25,27.34 16.32,56.58 16.32,87.72c0,31.14 -6.07,61.13 -16.71,88.47l-88.1,-88.09zM474.02,420.48l71.4,-71.39l-71.4,-71.39zM474.02,603.52v142.77l71.4,-71.39z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

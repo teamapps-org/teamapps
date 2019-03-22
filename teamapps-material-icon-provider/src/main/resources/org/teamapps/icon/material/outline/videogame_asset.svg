@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>videogame_asset icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M986.45,361.81v300.38c0,75.23 -61.3,136.53 -136.53,136.53h-675.84c-75.23,0 -136.53,-61.3 -136.53,-136.53v-300.38c0,-75.23 61.3,-136.53 136.53,-136.53h675.84c75.23,0 136.53,61.3 136.53,136.53zM849.92,286.72h-675.84c-41.3,0 -75.09,33.79 -75.09,75.09v300.38c0,41.3 33.79,75.09 75.09,75.09h675.84c41.3,0 75.09,-33.79 75.09,-75.09v-300.38c0,-41.3 -33.79,-75.09 -75.09,-75.09zM474.45,549.55h-112.64v112.64h-75.09v-112.64h-112.64v-75.1h112.64v-112.64h75.09v112.64h112.64zM643.41,624.64c-31.16,0 -56.32,-25.16 -56.32,-56.32c0,-31.16 25.16,-56.32 56.32,-56.32c31.16,0 56.32,25.16 56.32,56.32c0,31.16 -25.16,56.32 -56.32,56.32zM793.6,512c-31.16,0 -56.32,-25.16 -56.32,-56.32c0,-31.16 25.16,-56.32 56.32,-56.32c31.16,0 56.32,25.16 56.32,56.32c0,31.16 -25.16,56.32 -56.32,56.32z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

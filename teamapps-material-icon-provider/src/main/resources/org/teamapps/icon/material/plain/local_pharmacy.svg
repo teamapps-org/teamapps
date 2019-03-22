@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_pharmacy icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,298.67l-85.33,256l85.33,256v85.33h-768v-85.33l85.33,-256l-85.33,-256v-85.34h541.44l62.29,-170.66l100.27,36.69l-48.64,133.97h112.64zM682.67,512h-128v-128h-85.34v128h-128v85.33h128v128h85.34v-128h128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

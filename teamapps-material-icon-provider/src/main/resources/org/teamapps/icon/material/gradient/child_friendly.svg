@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>child_friendly icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-LavVThGx">
+			<path d="M874.67,789.33c0,82.35 -66.99,149.34 -149.34,149.34c-75.09,0 -137.38,-55.47 -147.62,-128h-88.75c-10.24,72.53 -72.54,128 -147.63,128c-82.35,0 -149.33,-66.99 -149.33,-149.34c0,-56.75 31.58,-106.24 78.51,-131.41c-9.81,-14.93 -90.46,-188.59 -90.46,-188.59h-94.72v-85.33h148.91l40.53,85.33h621.23c0,78.51 -26.88,151.04 -71.68,208.64c30.72,27.31 50.35,66.99 50.35,111.36zM896,426.67h-341.33v-341.34c188.59,0 341.33,152.75 341.33,341.34zM405.33,789.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64zM789.33,789.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64z"/>
+		</clipPath>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-2qva4qR8" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-ZLOrDyHD" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-arcqEymA" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<filter id="filter-KkKPTy8N" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-ACh2bfbY">
+			<path d="M874.67,789.33c0,82.35 -66.99,149.34 -149.34,149.34c-75.09,0 -137.38,-55.47 -147.62,-128h-88.75c-10.24,72.53 -72.54,128 -147.63,128c-82.35,0 -149.33,-66.99 -149.33,-149.34c0,-56.75 31.58,-106.24 78.51,-131.41c-9.81,-14.93 -90.46,-188.59 -90.46,-188.59h-94.72v-85.33h148.91l40.53,85.33h621.23c0,78.51 -26.88,151.04 -71.68,208.64c30.72,27.31 50.35,66.99 50.35,111.36zM896,426.67h-341.33v-341.34c188.59,0 341.33,152.75 341.33,341.34zM405.33,789.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64zM789.33,789.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64z" fill="url(#color-2qva4qR8)"/>
+		</mask>
+		<mask id="mask-aflosQN5">
+			<path d="M874.67,789.33c0,82.35 -66.99,149.34 -149.34,149.34c-75.09,0 -137.38,-55.47 -147.62,-128h-88.75c-10.24,72.53 -72.54,128 -147.63,128c-82.35,0 -149.33,-66.99 -149.33,-149.34c0,-56.75 31.58,-106.24 78.51,-131.41c-9.81,-14.93 -90.46,-188.59 -90.46,-188.59h-94.72v-85.33h148.91l40.53,85.33h621.23c0,78.51 -26.88,151.04 -71.68,208.64c30.72,27.31 50.35,66.99 50.35,111.36zM896,426.67h-341.33v-341.34c188.59,0 341.33,152.75 341.33,341.34zM405.33,789.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64zM789.33,789.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64c0,35.41 28.59,64 64,64c35.41,0 64,-28.59 64,-64z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-B7sXBfJV">
+			<rect fill="url(#color-ZLOrDyHD)" x="85.33" y="85.33" width="810.67" height="853.34"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-aflosQN5)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="85.33" y="85.33" width="810.67" height="853.34" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-B7sXBfJV)">
+				<rect x="85.33" y="85.33" width="810.67" height="853.34" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-KkKPTy8N)" mask="url(#mask-ACh2bfbY)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="85.33" y="85.33" width="810.67" height="853.34" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-LavVThGx)">
+			<path d="M-7.67,981.67v-1039.34h996.67v1039.34zM824.32,677.97c44.8,-57.6 71.68,-130.13 71.68,-208.64h-621.23l-40.53,-85.33h-148.91v85.33h94.72c0,0 80.65,173.66 90.46,188.59c-46.93,25.17 -78.51,74.66 -78.51,131.41c0,82.35 66.98,149.34 149.33,149.34c75.09,0 137.39,-55.47 147.63,-128h88.75c10.24,72.53 72.53,128 147.62,128c82.35,0 149.34,-66.99 149.34,-149.34c0,-44.37 -19.63,-84.05 -50.35,-111.36zM554.67,85.33v341.34h341.33c0,-188.59 -152.74,-341.34 -341.33,-341.34zM341.33,853.33c-35.41,0 -64,-28.59 -64,-64c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64c0,35.41 -28.59,64 -64,64zM725.33,853.33c-35.41,0 -64,-28.59 -64,-64c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64c0,35.41 -28.59,64 -64,64z" fill="#000000" filter="url(#filter-arcqEymA)"/>
+		</g>
+	</g>
+</svg>

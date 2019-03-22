@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>card_travel icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,341.33v469.34c0,47.36 -37.98,85.33 -85.34,85.33h-682.66c-47.36,0 -85.34,-37.97 -85.34,-85.33v-469.34c0,-47.36 37.98,-85.33 85.34,-85.33h128v-85.33c0,-47.36 37.97,-85.34 85.33,-85.34h256c47.36,0 85.33,37.98 85.33,85.34v85.33h128c47.36,0 85.34,37.97 85.34,85.33zM853.33,341.33h-128v85.34h-85.33v-85.34h-256v85.34h-85.33v-85.34h-128v256h682.66zM853.33,725.33h-682.66v85.34h682.66zM384,256h256v-85.33h-256z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

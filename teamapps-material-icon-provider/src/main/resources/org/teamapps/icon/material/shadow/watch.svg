@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>watch icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-35j84rjD">
+			<path d="M115.22,13.32h793.57v1010.68h-793.57z"/>
+		</clipPath>
+		<filter id="filter-6RGQ1lk1" x="-16%" y="-5%" width="166%" height="127%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-35j84rjD)">
+			<path d="M700.35,750.09l-36.45,217.59h-303.79l-36.07,-217.59c-70.63,-55.44 -115.82,-141.26 -115.82,-238.09c0,-96.83 45.19,-182.65 115.82,-238.09l36.07,-217.59h303.79l36.45,217.59c70.25,55.44 115.43,141.64 115.43,238.09c0,96.45 -45.19,182.65 -115.43,238.09zM512,739.84c125.69,0 227.84,-102.15 227.84,-227.84c0,-125.69 -102.15,-227.84 -227.84,-227.84c-125.69,0 -227.84,102.15 -227.84,227.84c0,125.69 102.15,227.84 227.84,227.84z" fill="#000000" filter="url(#filter-6RGQ1lk1)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M700.35,750.09l-36.45,217.59h-303.79l-36.07,-217.59c-70.63,-55.44 -115.82,-141.26 -115.82,-238.09c0,-96.83 45.19,-182.65 115.82,-238.09l36.07,-217.59h303.79l36.45,217.59c70.25,55.44 115.43,141.64 115.43,238.09c0,96.45 -45.19,182.65 -115.43,238.09zM512,739.84c125.69,0 227.84,-102.15 227.84,-227.84c0,-125.69 -102.15,-227.84 -227.84,-227.84c-125.69,0 -227.84,102.15 -227.84,227.84c0,125.69 102.15,227.84 227.84,227.84z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

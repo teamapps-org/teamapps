@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>bookmark_border icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M837.76,251.26v595.97c0,21.86 -10.98,42.25 -29.23,54.28c-18.25,12.03 -41.32,14.09 -61.41,5.48l-235.12,-100.77l-235.12,100.77c-20.1,8.61 -43.18,6.55 -61.43,-5.49c-18.25,-12.04 -29.23,-32.45 -29.21,-54.31l0.38,-595.96c0.01,-76.44 61.84,-139.49 139.15,-139.49h372.47c76.87,0 139.53,62.63 139.53,139.52zM698.24,127.1h-372.47c-68.72,0 -123.78,56.07 -123.79,124.14l-0.38,595.96c-0.01,16.7 8.37,32.29 22.31,41.48c13.94,9.2 31.57,10.77 46.92,4.2l241.18,-103.36l241.18,103.36c15.34,6.58 32.97,5 46.9,-4.19c13.94,-9.19 22.32,-24.77 22.32,-41.46v-595.97c0,-68.41 -55.78,-124.16 -124.17,-124.16zM772.74,251.26v595.97l-260.74,-111.74l-260.74,111.74l0.38,-595.97c0,-40.97 33.16,-74.49 74.13,-74.49h372.47c40.97,0 74.5,33.52 74.5,74.49zM698.24,251.26h-372.47v484.23l186.24,-81.2l186.24,81.2z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

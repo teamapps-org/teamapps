@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>gavel icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-29MrPS4T">
+			<path d="M1.18,51.3h991.72v972.7h-991.72z"/>
+		</clipPath>
+		<filter id="filter-9dv2FhvG" x="-12%" y="-6%" width="136%" height="135%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-29MrPS4T)">
+			<path d="M255.49,362.76l107.46,-107.35l536.95,537.02l-107.39,107.39zM201.57,416.49l214.82,214.82l-107.4,107.39l-214.81,-214.82zM524.04,94.3l214.81,214.77l-107.47,107.47l-214.69,-214.93zM94.3,853.76h455.68v75.94h-455.68z" fill="#000000" filter="url(#filter-9dv2FhvG)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M255.49,362.76l107.46,-107.35l536.95,537.02l-107.39,107.39zM201.57,416.49l214.82,214.82l-107.4,107.39l-214.81,-214.82zM524.04,94.3l214.81,214.77l-107.47,107.47l-214.69,-214.93zM94.3,853.76h455.68v75.94h-455.68z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>signal_cellular_no_sim icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M901.12,910.93l-54.19,54.19l-80.21,-80.21c-12.37,6.83 -26.03,11.09 -40.96,11.09h-427.09c-46.93,0 -85.34,-38.4 -85.34,-85.33v-479.15l-111.78,-111.79l54.18,-54.18zM810.67,711.68l-483.84,-483.84l99.84,-99.84h298.66c46.93,0 84.91,38.4 84.91,85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

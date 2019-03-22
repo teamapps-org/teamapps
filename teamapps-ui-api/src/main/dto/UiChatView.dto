@@ -1,0 +1,77 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class UiChatDisplay extends UiComponent {
+	List<UiChatMessage> messages;
+	boolean includesFirstMessage;
+
+	command addChatMessages(List<UiChatMessage> chatMessages, boolean prepend, boolean includesFirstMessage);
+	command replaceChatMessages(List<UiChatMessage> chatMessages, boolean includesFirstMessage);
+
+	event previousMessagesRequested(String earliestKnownMessageId);
+}
+
+class UiChatInput extends UiComponent {
+	required String defaultFileIcon;
+	long maxBytesPerUpload = 5000000;
+	String uploadUrl = "/upload";
+
+	event messageSent(UiNewChatMessage message);
+	event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
+	event uploadStarted(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event uploadCanceled(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event uploadFailed(String fileItemUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event uploadSuccessful(String fileItemUuid, String uploadedFileUuid, String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event fileItemClicked(String fileItemUuid);
+	event fileItemRemoved(String fileItemUuid);
+}
+
+class UiChatMessage {
+	String id;
+	String userImageUrl;
+	String userNickname;
+	String text;
+	List<UiChatPhoto> photos;
+	List<UiChatFile> files;
+}
+
+class UiChatPhoto {
+	String fileName;
+	String thumbnailUrl;
+	String imageUrl;
+}
+
+class UiChatFile {
+	String name;
+	String icon;
+	String thumbnailUrl;
+	String downloadUrl;
+}
+
+@TypeScriptFactory
+class UiNewChatMessage {
+	String text;
+	List<UiChatNewFile> uploadedFiles;
+}
+
+@TypeScriptFactory
+class UiChatNewFile {
+	String uploadedFileUuid;
+	String fileName;
+}

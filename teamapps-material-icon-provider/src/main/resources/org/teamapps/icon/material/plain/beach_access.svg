@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>beach_access icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M682.24,437.76l-244.48,244.48c-133.55,-133.97 -199.68,-299.09 -183.47,-427.52l0.43,-0.43c128.43,-16.21 293.97,49.92 427.52,183.47zM376.75,743.25l-122.03,122.03c-168.53,-168.53 -168.96,-441.6 -0.85,-610.13c-55.47,167.68 -10.67,354.55 122.88,488.1zM255.15,253.87c168.53,-168.11 441.6,-167.68 610.13,0.85l-122.03,122.03c-133.55,-133.55 -320.42,-178.35 -488.1,-122.88zM560.09,621.23l61.01,-61.02l274.77,274.9l-60.88,60.89z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

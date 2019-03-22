@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>note icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M949.51,735.49c0,77.33 -63.1,139.15 -139.53,139.15l-595.96,0.37c-76.42,0 -139.53,-61.8 -139.53,-139.14v-447.35c0,-76.89 62.65,-139.52 139.53,-139.52h446.98c17.25,0 33.78,6.85 45.98,19.05l223.49,223.49c12.19,12.19 19.05,28.73 19.05,45.98zM934.15,437.51c0,-13.17 -5.23,-25.8 -14.55,-35.12l-223.49,-223.49c-9.31,-9.31 -21.95,-14.55 -35.12,-14.55h-446.98c-68.39,0 -124.17,55.75 -124.17,124.16v447.35c0,68.74 56.11,123.78 124.17,123.78l595.96,-0.37c68.06,0 124.17,-55.06 124.17,-123.79zM884.48,735.49c0,40.97 -33.53,74.13 -74.5,74.13l-595.96,0.37c-40.97,0 -74.5,-33.15 -74.5,-74.12v-447.35c0,-40.97 33.53,-74.49 74.5,-74.49h446.98l223.49,223.49zM623.74,474.75h204.87l-204.87,-204.86z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

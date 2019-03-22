@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>hourglass_full icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M798.72,361.67c0.13,15.83 -5.89,31.88 -18.05,44.01l-106.64,106.37l106.69,106.69c12.13,12.13 18.12,28.15 17.99,43.95l0,224.78c0,33.93 -27.51,61.44 -61.44,61.44h-450.56c-33.93,0 -61.44,-27.51 -61.44,-61.44l0,-224.78c-0.13,-15.8 5.87,-31.82 17.99,-43.95l106.69,-106.69l-106.64,-106.37c-12.16,-12.13 -18.18,-28.18 -18.05,-44.01l0,-225.14c0,-33.93 27.51,-61.44 61.44,-61.44h450.56c33.93,0 61.44,27.51 61.44,61.44zM286.72,136.53v225.28h0.38l-0.38,0.38l150.19,149.81l-150.19,150.19l0.38,0.37h-0.38v224.91h450.56v-224.91h-0.38l0.38,-0.37l-150.19,-150.19l150.19,-149.81l-0.38,-0.38h0.38v-225.28z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

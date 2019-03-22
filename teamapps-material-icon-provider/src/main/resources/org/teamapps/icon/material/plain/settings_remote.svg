@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_remote icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M682.67,426.67v512c0,23.47 -19.2,42.66 -42.67,42.66h-256c-23.47,0 -42.67,-19.19 -42.67,-42.66v-512c0,-23.47 19.2,-42.67 42.67,-42.67h256c23.47,0 42.67,19.2 42.67,42.67zM843.52,137.81l-60.16,60.16c-69.12,-69.55 -165.12,-112.64 -271.36,-112.64c-106.24,0 -202.24,43.1 -271.79,112.22l-60.16,-60.16c84.91,-84.91 202.24,-137.39 331.95,-137.39c129.71,0 247.04,52.48 331.52,137.81zM512,170.67c82.35,0 157.01,33.27 211.2,87.46l-60.16,60.16c-38.83,-38.4 -92.16,-62.29 -151.04,-62.29c-58.88,0 -112.21,23.89 -151.04,62.29l-60.16,-60.16c54.19,-54.19 128.85,-87.46 211.2,-87.46zM597.33,554.67c0,-46.93 -38.4,-85.34 -85.33,-85.34c-46.93,0 -85.33,38.41 -85.33,85.34c0,46.93 38.4,85.33 85.33,85.33c46.93,0 85.33,-38.4 85.33,-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

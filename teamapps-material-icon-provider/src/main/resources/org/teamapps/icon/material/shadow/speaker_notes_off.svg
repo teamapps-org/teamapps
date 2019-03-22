@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>speaker_notes_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-94QGHpI8">
+			<path d="M984.74,79.01v944.99h-984.74v-944.99z"/>
+		</clipPath>
+		<filter id="filter-MVHLUy13" x="-12%" y="-6%" width="130%" height="138%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-94QGHpI8)">
+			<path d="M891.74,909.2l-48.23,48.23l-217.59,-217.59h-341.76l-151.9,151.9l0.38,-645.17l-76.33,-76.33l48.23,-48.23l352.01,352.01zM891.74,208.22v455.68c0,41.01 -32.66,74.04 -73.29,75.56l-265.43,-265.43h186.83v-75.94h-262.77l-37.98,-37.98h300.75v-75.94h-303.78v72.91l-224.81,-224.81h604.53c41.77,0 75.95,34.18 75.95,75.95zM360.1,474.02l-75.94,-75.94v75.94zM360.1,512h-75.94v75.94h75.94z" fill="#000000" filter="url(#filter-MVHLUy13)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M722.37,739.84l169.37,169.36l-48.23,48.23l-217.59,-217.59h-341.76l-151.9,151.9l0.38,-645.17l-76.33,-76.33l48.23,-48.23l42.15,42.15l137.46,137.47l58.48,58.47l113.92,113.92zM891.74,208.22v455.68c0,41.01 -32.66,74.04 -73.29,75.56l-265.43,-265.43h186.83v-75.94h-262.77l-37.98,-37.98h300.75v-75.94h-303.78v72.91l-224.81,-224.81h604.53c41.77,0 75.95,34.18 75.95,75.95zM360.1,474.02l-75.94,-75.94v75.94zM360.1,512h-75.94v75.94h75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

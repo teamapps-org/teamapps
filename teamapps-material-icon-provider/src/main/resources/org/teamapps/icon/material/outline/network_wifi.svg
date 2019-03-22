@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>network_wifi icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M37.91,275.25c17.81,-13.46 199.9,-162.61 474.09,-162.61c273.8,0 456.25,149.14 474.09,162.61c27.63,20.88 32.55,60.46 10.87,87.47l-119.03,148.32l-318.02,396.11c-11.66,14.52 -29.28,22.98 -47.91,22.98c-18.63,0 -36.25,-8.45 -47.91,-22.98l-318.03,-396.12l-119.02,-148.31c-21.68,-27.01 -16.76,-66.59 10.87,-87.47zM193.99,472.57c0,0 -0.01,0 -0.01,0.01l317.64,395.74l0.38,0.37l0.38,-0.37l317.64,-395.74c0,0 -0.01,0 -0.01,-0.01l119.03,-148.3c-16.9,-12.77 -185.11,-150.19 -437.04,-150.19c-252.31,0 -420.15,137.42 -437.04,150.19z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_parking icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M837.76,400.26c0,159.21 -129.31,288.51 -288.51,288.51h-46.72v158.46c0,35.91 -29.11,65.02 -65.02,65.02h-148.99c-35.91,0 -65.02,-29.11 -65.02,-65.02v-670.46c0,-35.91 29.11,-65.02 65.02,-65.02h260.74c159.21,0 288.51,129.31 288.51,288.51zM549.25,127.1h-260.74c-27.43,0 -49.66,22.24 -49.66,49.66v670.46c0,27.43 22.24,49.66 49.66,49.66h148.99c27.43,0 49.66,-22.24 49.66,-49.66v-173.82h62.08c150.72,0 273.15,-122.43 273.15,-273.15c0,-150.72 -122.43,-273.15 -273.15,-273.15zM772.74,400.26c0,123.29 -100.19,223.49 -223.49,223.49h-111.74v223.49h-148.99v-670.46h260.74c123.29,0 223.49,100.19 223.49,223.49zM631.19,400.26c0,-40.97 -33.52,-74.49 -74.49,-74.49h-119.19v148.99h119.19c40.97,0 74.49,-33.52 74.49,-74.49z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

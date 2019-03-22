@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>power icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M768,383.57v234.67l-149.33,149.76v128h-213.34v-128l-149.33,-150.19v-234.24c0,-42.67 42.67,-85.33 84.91,-84.9h0.42v-170.67h85.34v170.67h170.66v-170.67h85.34l0.42,170.67c42.24,-0.43 84.91,42.23 84.91,84.9z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

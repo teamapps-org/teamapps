@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>videocam_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-oCeAj86K" x="-13%" y="-6%" width="145%" height="145%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M853.76,805.53l-48.23,48.23l-121.13,-120.76c-5.7,3.8 -12.53,6.84 -20.51,6.84h-455.68c-20.89,0 -37.98,-17.09 -37.98,-37.98v-379.73c0,-20.89 17.09,-37.98 37.98,-37.98h27.71l-103.67,-103.67l48.23,-48.23zM853.76,708.7l-424.54,-424.54h234.68c20.89,0 37.97,17.09 37.97,37.98v132.9l151.9,-151.9z" fill="#000000" filter="url(#filter-oCeAj86K)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,805.53l-48.23,48.23l-121.13,-120.76c-5.7,3.8 -12.53,6.84 -20.51,6.84h-455.68c-20.89,0 -37.98,-17.09 -37.98,-37.98v-379.73c0,-20.89 17.09,-37.98 37.98,-37.98h27.71l-103.67,-103.67l48.23,-48.23zM853.76,708.7l-424.54,-424.54h234.68c20.89,0 37.97,17.09 37.97,37.98v132.9l151.9,-151.9z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

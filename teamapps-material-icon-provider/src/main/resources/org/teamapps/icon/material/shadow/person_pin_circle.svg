@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>person_pin_circle icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-QbafZTNj">
+			<path d="M153.18,89.26h717.63v934.74h-717.63z"/>
+		</clipPath>
+		<filter id="filter-J8r72Y5G" x="-18%" y="-6%" width="182%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-QbafZTNj)">
+			<path d="M777.82,398.08c0,199.36 -265.82,493.66 -265.82,493.66c0,0 -265.82,-294.3 -265.82,-493.66c0,-146.57 119.24,-265.82 265.82,-265.82c146.57,0 265.82,119.24 265.82,265.82zM663.9,506.3c-0.76,-50.12 -101.39,-77.85 -151.9,-77.85c-50.51,0 -151.14,27.72 -151.9,77.85c32.65,49.37 88.48,81.64 151.9,81.64c63.41,0 119.24,-32.27 151.9,-81.64zM436.06,284.16c0,42.15 34.18,75.94 75.94,75.94c41.77,0 75.94,-33.79 75.94,-75.94c0,-41.77 -34.18,-75.94 -75.94,-75.94c-41.77,0 -75.94,34.18 -75.94,75.94z" fill="#000000" filter="url(#filter-J8r72Y5G)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M777.82,398.08c0,199.36 -265.82,493.66 -265.82,493.66c0,0 -265.82,-294.3 -265.82,-493.66c0,-146.57 119.24,-265.82 265.82,-265.82c146.57,0 265.82,119.24 265.82,265.82zM663.9,506.3c-0.76,-50.12 -101.39,-77.85 -151.9,-77.85c-50.51,0 -151.14,27.72 -151.9,77.85c32.65,49.37 88.48,81.64 151.9,81.64c63.41,0 119.24,-32.27 151.9,-81.64zM436.06,284.16c0,42.15 34.18,75.94 75.94,75.94c41.77,0 75.94,-33.79 75.94,-75.94c0,-41.77 -34.18,-75.94 -75.94,-75.94c-41.77,0 -75.94,34.18 -75.94,75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

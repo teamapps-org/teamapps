@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>fiber_new icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-sTx405O4" x="-13%" y="-8%" width="143%" height="166%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M891.74,284.16v455.68c0,42.15 -33.8,75.94 -75.95,75.94h-607.57c-42.15,0 -75.95,-33.79 -75.95,-75.94l0.38,-455.68c0,-42.15 33.42,-75.94 75.57,-75.94h607.57c42.15,0 75.95,33.79 75.95,75.94zM834.78,398.08h-47.47v170.88h-42.52v-133.29h-47.47v133.67h-42.91v-171.26h-47.46v189.86c0,20.89 17.08,37.98 37.97,37.98h151.9c20.89,0 37.98,-17.09 37.98,-37.98zM379.1,398.08h-47.47v132.9l-94.93,-132.9h-47.47v227.84h47.47v-132.9l96.83,132.9h45.57zM568.96,398.08h-151.9v227.84h151.9v-47.46h-94.94v-42.15h94.94v-47.85h-94.94v-42.53h94.94z" fill="#000000" filter="url(#filter-sTx405O4)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,284.16v455.68c0,42.15 -33.8,75.94 -75.95,75.94h-607.57c-42.15,0 -75.95,-33.79 -75.95,-75.94l0.38,-455.68c0,-42.15 33.42,-75.94 75.57,-75.94h607.57c42.15,0 75.95,33.79 75.95,75.94zM834.78,398.08h-47.47v170.88h-42.52v-133.29h-47.47v133.67h-42.91v-171.26h-47.46v189.86c0,20.89 17.08,37.98 37.97,37.98h151.9c20.89,0 37.98,-17.09 37.98,-37.98zM379.1,398.08h-47.47v132.9l-94.93,-132.9h-47.47v227.84h47.47v-132.9l96.83,132.9h45.57zM568.96,398.08h-151.9v227.84h151.9v-47.46h-94.94v-42.15h94.94v-47.85h-94.94v-42.53h94.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

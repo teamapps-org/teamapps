@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>weekend icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-qFLkGl0s" x="-12%" y="-9%" width="135%" height="183%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M929.7,512v189.86c0,41.77 -34.18,75.95 -75.94,75.95h-683.52c-41.77,0 -75.94,-34.18 -75.94,-75.95v-189.86c0,-41.77 34.18,-75.94 75.94,-75.94c41.77,0 75.94,34.18 75.94,75.94v113.92h531.63v-113.92c0,-41.77 34.18,-75.94 75.94,-75.94c41.77,0 75.94,34.18 75.94,75.94zM815.78,322.14v81.64c-44.05,15.95 -75.94,57.72 -75.94,107.08v77.08h-455.68v-77.08c0,-49.74 -31.9,-91.52 -75.94,-107.08v-81.64c0,-41.77 34.18,-75.95 75.94,-75.95h455.68c41.77,0 75.94,34.18 75.94,75.95z" fill="#000000" filter="url(#filter-qFLkGl0s)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M929.7,512v189.86c0,41.77 -34.18,75.95 -75.94,75.95h-683.52c-41.77,0 -75.94,-34.18 -75.94,-75.95v-189.86c0,-41.77 34.18,-75.94 75.94,-75.94c41.77,0 75.94,34.18 75.94,75.94v113.92h531.63v-113.92c0,-41.77 34.18,-75.94 75.94,-75.94c41.77,0 75.94,34.18 75.94,75.94zM815.78,322.14v81.64c-44.05,15.95 -75.94,57.72 -75.94,107.08v77.08h-455.68v-77.08c0,-49.74 -31.9,-91.52 -75.94,-107.08v-81.64c0,-41.77 34.18,-75.95 75.94,-75.95h455.68c41.77,0 75.94,34.18 75.94,75.95z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

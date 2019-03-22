@@ -1,0 +1,69 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class UiItemView extends UiComponent {
+	UiTemplate groupHeaderTemplate;
+	List<UiItemViewItemGroup> itemGroups;
+	int horizontalPadding = 10;
+	int verticalPadding = 0;
+	int groupSpacing;
+	UiItemViewItemBackgroundMode itemBackgroundMode = UiItemViewItemBackgroundMode.LIGHT;
+	String filter;
+
+	command setFilter(String filter);
+	command addItemGroup(UiItemViewItemGroup itemGroup); // if a group with this id already exists, it is first removed.
+	command refreshItemGroup(UiItemViewItemGroup itemGroup); // reconfigure in-place!
+	command removeItemGroup(String groupId);
+
+	command addItem(String groupId, UiIdentifiableClientRecord item);
+	command removeItem(String groupId, int itemId);
+
+	event itemClicked(String groupId, int itemId);
+}
+
+class UiItemViewItemGroup {
+	String id;
+	required UiTemplate itemTemplate;
+	UiIdentifiableClientRecord headerData;
+	List<UiIdentifiableClientRecord> items;
+	boolean headerVisible = true;
+	UiItemViewFloatStyle floatStyle = UiItemViewFloatStyle.HORIZONTAL_FLOAT; // if true, the buttons are placed one
+	float buttonWidth = -1; // -1: use natural width, 0: full width, 0<x<1: relative width, >=1: fixed width
+	int horizontalPadding = 0;
+	int verticalPadding = 0;
+	int horizontalItemMargin = 0;
+	int verticalItemMargin = 0;
+	UiItemJustification itemJustification = UiItemJustification.LEFT;
+}
+
+enum UiItemViewItemBackgroundMode {
+	LIGHT, OPAQUE, DARK
+}
+
+enum UiItemViewFloatStyle {
+	VERTICAL_LIST, HORIZONTAL_FLOAT
+}
+
+enum UiItemJustification {
+	LEFT, RIGHT, CENTER, SPACE_AROUND, SPACE_BETWEEN
+}
+
+enum UiVerticalItemAlignment {
+	TOP, CENTER, BOTTOM, STRETCH
+}

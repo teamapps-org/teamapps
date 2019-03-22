@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>movie_filter icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,170.67v597.33c0,46.93 -38.41,85.33 -85.34,85.33h-682.66c-46.93,0 -85.34,-38.4 -85.34,-85.33l0.43,-512c0,-46.93 37.98,-85.33 84.91,-85.33h42.66l85.34,128h128l-85.34,-128h85.34l85.33,128h128l-85.33,-128h85.33l85.33,128h128l-85.33,-128zM597.33,597.33l-117.33,-53.33l-53.33,-117.33l-53.34,117.33l-117.33,53.33l117.33,53.34l53.34,117.33l53.33,-117.33zM810.67,469.33l-87.9,-40.1l-40.1,-87.9l-40.11,87.9l-87.89,40.1l87.89,40.11l40.11,87.89l40.1,-87.89z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

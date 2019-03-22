@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>panorama_horizontal icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,197.55v628.9c0,17.07 -10.24,26.88 -24.32,26.88c-4.27,0 -8.54,-0.85 -13.23,-2.56c-125.44,-46.51 -257.28,-69.97 -389.12,-69.97c-131.84,0 -263.68,23.04 -389.12,69.97c-4.69,1.71 -8.96,2.56 -13.23,2.56c-14.51,0 -24.32,-9.81 -24.32,-26.45v-629.33c0,-17.07 9.81,-26.88 24.32,-26.88c3.84,0 8.54,0.85 13.23,2.56c125.44,46.51 257.28,69.97 389.12,69.97c131.84,0 263.68,-23.04 389.12,-69.97c4.69,-1.71 8.96,-2.56 13.23,-2.56c14.08,0 24.32,9.81 24.32,26.88zM853.33,279.04c-110.93,33.28 -225.28,49.92 -341.33,49.49c-116.05,0 -230.4,-16.64 -341.33,-49.49v465.49c110.93,-32.85 225.28,-49.49 341.33,-49.49c116.05,0 230.4,16.64 341.33,49.49z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

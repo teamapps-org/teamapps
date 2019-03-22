@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>linear_scale icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-xKME8qET" x="-13%" y="-23%" width="143%" height="418%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M891.74,512c0,52.4 -42.53,94.94 -94.94,94.94c-39.12,0 -72.15,-23.54 -86.96,-56.96h-110.88c-14.81,33.42 -47.85,56.96 -86.96,56.96c-39.12,0 -72.15,-23.54 -86.96,-56.96h-110.88c-14.81,33.42 -47.85,56.96 -86.96,56.96c-52.4,0 -94.94,-42.53 -94.94,-94.94c0,-52.4 42.53,-94.94 94.94,-94.94c39.12,0 72.15,23.54 86.96,56.96h110.88c14.81,-33.42 47.85,-56.96 86.96,-56.96c39.12,0 72.15,23.54 86.96,56.96h110.88c14.81,-33.42 47.85,-56.96 86.96,-56.96c52.4,0 94.94,42.53 94.94,94.94z" fill="#000000" filter="url(#filter-xKME8qET)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,512c0,52.4 -42.53,94.94 -94.94,94.94c-39.12,0 -72.15,-23.54 -86.96,-56.96h-110.88c-14.81,33.42 -47.85,56.96 -86.96,56.96c-39.12,0 -72.15,-23.54 -86.96,-56.96h-110.88c-14.81,33.42 -47.85,56.96 -86.96,56.96c-52.4,0 -94.94,-42.53 -94.94,-94.94c0,-52.4 42.53,-94.94 94.94,-94.94c39.12,0 72.15,23.54 86.96,56.96h110.88c14.81,-33.42 47.85,-56.96 86.96,-56.96c39.12,0 72.15,23.54 86.96,56.96h110.88c14.81,-33.42 47.85,-56.96 86.96,-56.96c52.4,0 94.94,42.53 94.94,94.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>cloud_queue icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1024,640c0,117.76 -95.57,213.33 -213.33,213.33h-554.67c-141.23,0 -256,-114.77 -256,-256c0,-131.84 99.84,-240.64 228.27,-254.29c53.33,-102.4 160.42,-172.37 283.73,-172.37c155.31,0 284.59,110.5 313.6,257.7c110.93,7.68 198.4,98.99 198.4,211.63zM938.67,640c0,-70.83 -57.17,-128 -128,-128h-64v-21.33c0,-129.71 -104.96,-234.67 -234.67,-234.67c-107.52,0 -197.55,72.11 -225.71,170.67h-30.29c-94.29,0 -170.67,76.37 -170.67,170.66c0,94.29 76.38,170.67 170.67,170.67h554.67c70.83,0 128,-57.17 128,-128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

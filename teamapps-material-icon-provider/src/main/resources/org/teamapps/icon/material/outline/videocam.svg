@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>videocam icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,305.49v413.02c0,24.85 -14.97,47.25 -37.93,56.76c-22.96,9.51 -49.38,4.25 -66.96,-13.32l-46.55,-46.55c-7.53,47.15 -48.47,83.31 -97.74,83.31h-450.56c-54.59,0 -98.99,-44.4 -98.99,-98.99v-375.46c0,-54.59 44.4,-98.99 98.99,-98.99h450.56c49.27,0 90.21,36.16 97.74,83.31l46.55,-46.55c17.57,-17.57 44,-22.83 66.96,-13.32c22.96,9.51 37.93,31.91 37.93,56.76zM699.73,455.68v-131.41c0,-20.65 -16.89,-37.55 -37.54,-37.55h-450.56c-20.65,0 -37.55,16.9 -37.55,37.55v375.46c0,20.65 16.9,37.55 37.55,37.55h450.56c20.65,0 37.54,-16.9 37.54,-37.55v-131.41l150.19,150.19v-413.02z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

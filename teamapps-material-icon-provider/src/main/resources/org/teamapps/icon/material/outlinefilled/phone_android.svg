@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>phone_android icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M837.76,214.02v595.96c0,97.75 -79.02,176.77 -176.77,176.77h-297.99c-97.75,0 -176.77,-79.02 -176.77,-176.77v-595.96c0,-97.75 79.02,-176.77 176.77,-176.77h297.99c97.75,0 176.77,79.02 176.77,176.77zM660.99,52.61h-297.99c-89.26,0 -161.41,72.14 -161.41,161.41v595.96c0,89.26 72.14,161.41 161.41,161.41h297.99c89.26,0 161.41,-72.14 161.41,-161.41v-595.96c0,-89.26 -72.14,-161.41 -161.41,-161.41zM772.74,214.02v595.96c0,61.83 -49.91,111.74 -111.74,111.74h-297.99c-61.83,0 -111.74,-49.91 -111.74,-111.74v-595.96c0,-61.83 49.91,-111.74 111.74,-111.74h297.99c61.83,0 111.74,49.91 111.74,111.74zM707.55,214.02h-391.1v521.47h391.1zM586.49,809.98h-148.99v37.25h148.99z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

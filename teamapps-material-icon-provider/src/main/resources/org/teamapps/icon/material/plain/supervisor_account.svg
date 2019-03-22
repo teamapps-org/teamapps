@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>supervisor_account icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M485.12,566.61c-87.04,48.21 -101.12,111.79 -101.12,148.06v96h-298.67v-106.67c0,-99.41 199.26,-149.33 298.67,-149.33c28.16,0 64,4.26 101.12,11.94zM938.67,714.67v96h-469.34v-96c0,-78.08 156.59,-117.34 234.67,-117.34c78.08,0 234.67,39.26 234.67,117.34zM256,341.33c0,-70.83 57.17,-128 128,-128c70.83,0 127.57,57.17 127.57,128c0,70.83 -56.74,128 -127.57,128c-70.83,0 -128,-57.17 -128,-128zM597.33,405.33c0,-58.88 47.79,-106.66 106.67,-106.66c58.88,0 106.24,47.78 106.24,106.66c0,58.88 -47.36,106.67 -106.24,106.67c-58.88,0 -106.67,-47.79 -106.67,-106.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>shopping_basket icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,384c23.47,0 42.66,19.2 42.66,42.67l-1.28,11.52l-108.37,395.52c-10.24,35.84 -43.1,62.29 -82.35,62.29h-554.66c-39.25,0 -72.11,-26.45 -81.92,-62.29l-108.38,-395.52c-1.28,-3.84 -1.7,-7.68 -1.7,-11.52c0,-23.47 19.19,-42.67 42.66,-42.67h204.38l186.88,-279.47c8.11,-12.37 21.76,-18.34 35.41,-18.34c13.65,0 27.3,5.97 35.41,17.92l186.88,279.89zM640,384l-128,-187.73l-128,187.73zM597.33,640c0,-46.93 -38.4,-85.33 -85.33,-85.33c-46.93,0 -85.33,38.4 -85.33,85.33c0,46.93 38.4,85.33 85.33,85.33c46.93,0 85.33,-38.4 85.33,-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

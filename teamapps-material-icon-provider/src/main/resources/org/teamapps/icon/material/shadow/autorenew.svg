@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>autorenew icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-EGWAmwAb">
+			<path d="M115.22,51.3h793.57v972.7h-793.57z"/>
+		</clipPath>
+		<filter id="filter-tSlezQNi" x="-16%" y="-6%" width="166%" height="135%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-EGWAmwAb)">
+			<path d="M284.16,512c0,38.35 9.5,74.81 26.58,106.33l-55.45,55.44c-29.62,-46.71 -47.08,-102.15 -47.08,-161.77c0,-167.85 135.94,-303.78 303.78,-303.78v-113.92l151.9,151.89l-151.9,151.9v-113.92c-125.69,0 -227.84,102.15 -227.84,227.84zM815.78,512c0,167.85 -135.94,303.78 -303.78,303.78v113.92l-151.9,-151.89l151.9,-151.9v113.92c125.69,0 227.84,-102.15 227.84,-227.84c0,-38.35 -9.88,-74.43 -26.58,-106.33l55.45,-55.44c29.62,46.71 47.08,102.15 47.08,161.77z" fill="#000000" filter="url(#filter-tSlezQNi)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M284.16,512c0,38.35 9.5,74.81 26.58,106.33l-55.45,55.44c-29.62,-46.71 -47.08,-102.15 -47.08,-161.77c0,-167.85 135.94,-303.78 303.78,-303.78v-113.92l151.9,151.89l-151.9,151.9v-113.92c-125.69,0 -227.84,102.15 -227.84,227.84zM815.78,512c0,167.85 -135.94,303.78 -303.78,303.78v113.92l-151.9,-151.89l151.9,-151.9v113.92c125.69,0 227.84,-102.15 227.84,-227.84c0,-38.35 -9.88,-74.43 -26.58,-106.33l55.45,-55.44c29.62,46.71 47.08,102.15 47.08,161.77z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

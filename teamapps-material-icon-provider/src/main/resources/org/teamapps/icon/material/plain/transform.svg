@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>transform icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M768,768v85.33h85.33l-128,128l-128,-128h85.34v-85.33h-341.34c-46.93,0 -85.33,-38.4 -85.33,-85.33v-341.34h-170.67v-85.33h170.67v-85.33h-85.33l128,-128l128,128h-85.34v512h597.34v85.33zM426.67,256h256c46.93,0 85.33,38.4 85.33,85.33v256h-85.33v-256h-256z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

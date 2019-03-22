@@ -1,0 +1,171 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class UiGridTemplate implements UiTemplate {
+    required List<UiGridColumn> columns;
+    required List<UiGridRow> rows;
+    required List<AbstractUiTemplateElement> elements;
+    int minWidth = 0;
+    int maxWidth = 0;
+	int minHeight = 0;
+    int maxHeight = 0;
+    UiSpacing padding;
+    int gridGap = 0;
+}
+
+abstract class AbstractUiTemplateElement {
+	required String dataKey;
+    required int row;
+    required int column;
+    int rowSpan = 1;
+    int colSpan = 1;
+    UiHorizontalElementAlignment horizontalAlignment = UiHorizontalElementAlignment.LEFT;
+    UiVerticalElementAlignment verticalAlignment = UiVerticalElementAlignment.CENTER;
+    UiSpacing margin;
+    UiColor backgroundColor; 
+}
+
+class UiTextElement extends AbstractUiTemplateElement {
+	UiFontStyle fontStyle;
+	float lineHeight = 1.2f;
+	boolean wrapLines;
+	UiSpacing padding;
+	UiTextAlignment textAlignment = UiTextAlignment.LEFT;
+}
+
+class UiBadgeElement extends UiTextElement {
+	// the badge background color is defined by the font background color. This only makes the element look like a badge.
+	UiColor borderColor;
+}
+
+class UiFloatingElement extends AbstractUiTemplateElement {
+	required List<AbstractUiTemplateElement> elements;
+	boolean wrap;
+}
+
+class UiImageElement extends AbstractUiTemplateElement {
+	required int width;
+	required int height;
+	UiBorder border;
+	UiSpacing padding;
+	UiShadow shadow;
+	UiImageSizing imageSizing = UiImageSizing.COVER;
+}
+
+enum UiImageSizing {
+	COVER, CONTAIN, ORIGINAL, STRETCH
+}
+
+class UiIconElement extends AbstractUiTemplateElement {
+	required int size;
+}
+
+class UiGlyphIconElement extends AbstractUiTemplateElement {
+	required int size;
+	UiColor fontColor;
+}
+
+enum UiHorizontalElementAlignment {
+	LEFT,
+	CENTER,
+	RIGHT,
+	STRETCH
+}
+
+enum UiVerticalElementAlignment {
+	TOP,
+	CENTER,
+	BOTTOM,
+	STRETCH
+}
+
+enum UiTextAlignment {
+	LEFT,
+	CENTER,
+	RIGHT,
+	JUSTIFY
+}
+
+// ========== Format =============
+
+@TypeScriptFactory
+class UiColor {
+	required int red;
+	required int green;
+	required int blue;
+	float alpha = 1f;
+}
+
+class UiFontStyle {
+	UiColor fontColor;
+	UiColor backgroundColor;
+	boolean bold;
+	boolean underline;
+	boolean italic;
+	float relativeFontSize = 1;
+}
+
+class UiSizingPolicy {
+	required UiSizeType type;
+    float value;
+    int minAbsoluteSize;
+}
+
+class UiSpacing {
+	int top = 0;
+	int right = 0;
+	int bottom = 0;
+	int left = 0;
+}
+
+class UiBorder {
+	UiLine top;
+	UiLine left;
+	UiLine bottom;
+	UiLine right;
+	float borderRadius;
+}
+
+class UiShadow {
+	required UiColor color;
+	required float blur;
+	float offsetX;
+	float offsetY;
+	float spread;
+}
+
+enum UiSizeType {
+	FIXED,
+	RELATIVE,
+	AUTO,
+	FRACTION
+}
+
+class UiLine {
+	required float thickness;
+	required UiColor color;
+	UiLineType type = UiLineType.SOLID;
+}
+
+enum UiLineType {
+	SOLID,
+	DOTTED,
+	DASHED,
+	DOUBLE
+}

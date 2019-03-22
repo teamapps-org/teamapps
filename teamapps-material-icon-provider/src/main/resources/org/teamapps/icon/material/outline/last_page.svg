@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>last_page icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M367.71,243.28l225.28,225.28c2.95,2.95 5.53,6.12 7.76,9.46v-191.3c0,-33.93 27.51,-61.44 61.44,-61.44h75.09c33.93,0 61.44,27.51 61.44,61.44v450.56c0,33.93 -27.51,61.44 -61.44,61.44h-75.09c-33.93,0 -61.44,-27.51 -61.44,-61.44v-191.3c-2.22,3.34 -4.81,6.51 -7.76,9.46l-225.28,225.28c-23.99,23.99 -62.9,23.99 -86.89,0l-52.94,-52.94c-23.99,-23.99 -23.99,-62.9 0,-86.89l128.89,-128.89l-128.89,-128.89c-23.99,-23.99 -23.99,-62.9 0,-86.89l52.94,-52.94c23.99,-23.99 62.9,-23.99 86.89,0zM271.33,339.66l172.34,172.34l-172.34,172.34l52.94,52.94l225.28,-225.28l-225.28,-225.28zM662.19,737.28h75.09v-450.56h-75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_input_component icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-iBQHTsgC">
+			<path d="M1.3,51.3h1021.41v972.7h-1021.41z"/>
+		</clipPath>
+		<filter id="filter-mPfpLxiJ" x="-12%" y="-6%" width="135%" height="135%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-iBQHTsgC)">
+			<path d="M929.7,284.16v227.84h-227.84v-227.84h75.95v-151.9c0,-20.89 17.08,-37.97 37.97,-37.97c20.89,0 37.98,17.08 37.98,37.97v151.9zM549.98,284.16h75.94v227.84h-227.84v-227.84h75.94v-151.9c0,-20.89 17.09,-37.97 37.98,-37.97c20.89,0 37.98,17.08 37.98,37.97zM246.18,284.16h75.95v227.84h-227.84v-227.84h75.94v-151.9c0,-20.89 17.09,-37.97 37.98,-37.97c20.89,0 37.97,17.08 37.97,37.97zM398.08,587.94h227.84v75.95c0,49.74 -31.9,91.52 -75.94,107.08v158.72h-75.95v-158.72c-44.05,-15.95 -75.94,-57.72 -75.94,-107.08zM701.86,587.94h227.84v75.95c0,49.74 -31.9,91.52 -75.94,107.08v158.72h-75.94v-158.72c-44.05,-15.95 -75.95,-57.72 -75.95,-107.08zM94.3,587.94h227.84v75.95c0,49.37 -31.91,91.14 -75.95,107.08v158.72h-75.94v-158.72c-44.05,-15.95 -75.94,-57.72 -75.94,-107.08z" fill="#000000" filter="url(#filter-mPfpLxiJ)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M929.7,284.16v227.84h-227.84v-227.84h75.95v-151.9c0,-20.89 17.08,-37.97 37.97,-37.97c20.89,0 37.98,17.08 37.98,37.97v151.9zM549.98,284.16h75.94v227.84h-227.84v-227.84h75.94v-151.9c0,-20.89 17.09,-37.97 37.98,-37.97c20.89,0 37.98,17.08 37.98,37.97zM246.18,284.16h75.95v227.84h-227.84v-227.84h75.94v-151.9c0,-20.89 17.09,-37.97 37.98,-37.97c20.89,0 37.97,17.08 37.97,37.97zM398.08,587.94h227.84v75.95c0,49.74 -31.9,91.52 -75.94,107.08v158.72h-75.95v-158.72c-44.05,-15.95 -75.94,-57.72 -75.94,-107.08zM701.86,587.94h227.84v75.95c0,49.74 -31.9,91.52 -75.94,107.08v158.72h-75.94v-158.72c-44.05,-15.95 -75.95,-57.72 -75.95,-107.08zM94.3,587.94h227.84v75.95c0,49.37 -31.91,91.14 -75.95,107.08v158.72h-75.94v-158.72c-44.05,-15.95 -75.94,-57.72 -75.94,-107.08z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

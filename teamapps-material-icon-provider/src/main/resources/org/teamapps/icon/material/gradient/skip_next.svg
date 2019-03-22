@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>skip_next icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-C2qFCAyW">
+			<path d="M256,256l362.67,256l-362.67,256zM768,256v512h-85.33v-512z"/>
+		</clipPath>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-4blRmMAI" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-NHqTwa1m" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-8CxNSxDt" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<filter id="filter-FrTSDPlR" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<mask id="mask-D3dtS6sM">
+			<rect fill="url(#color-4blRmMAI)" x="256" y="256" width="512" height="512"/>
+		</mask>
+		<mask id="mask-DrC2NBpz">
+			<path d="M256,256l362.67,256l-362.67,256zM768,256v512h-85.33v-512z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-q3llSkx3">
+			<path d="M256,256l362.67,256l-362.67,256zM768,256v512h-85.33v-512z" fill="url(#color-NHqTwa1m)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-DrC2NBpz)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="256" y="256" width="512" height="512" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-D3dtS6sM)">
+				<rect x="256" y="256" width="512" height="512" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-8CxNSxDt)" mask="url(#mask-q3llSkx3)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="256" y="256" width="512" height="512" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-C2qFCAyW)">
+			<path d="M163,811v-698h698v698zM256,768l362.67,-256l-362.67,-256zM682.67,256v512h85.33v-512z" fill="#000000" filter="url(#filter-FrTSDPlR)"/>
+		</g>
+	</g>
+</svg>

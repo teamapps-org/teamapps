@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_ethernet icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M989.01,512l-230.82,278.19l-65.71,-54.62l185.6,-223.57l-185.6,-223.57l65.71,-54.62zM145.92,512l185.6,223.57l-65.71,54.62l-230.82,-278.19l230.82,-278.19l65.71,54.62zM298.67,469.33h85.33v85.34h-85.33zM469.33,469.33h85.34v85.34h-85.34zM725.33,554.67h-85.33v-85.34h85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

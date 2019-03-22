@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>stars icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-TGCcST1b">
+			<path d="M39.26,89.26h945.47v934.74h-945.47z"/>
+		</clipPath>
+		<filter id="filter-G8MDUoLh" x="-13%" y="-6%" width="143%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-TGCcST1b)">
+			<path d="M891.74,512c0,209.61 -170.12,379.74 -380.12,379.74c-209.61,0 -379.35,-170.12 -379.35,-379.74c0,-209.61 169.74,-379.74 379.35,-379.74c210,0 380.12,170.12 380.12,379.74zM630.09,556.81l141.64,-122.66l-186.83,-15.95l-72.91,-172.02l-72.91,172.4l-186.83,15.95l141.64,122.65l-42.53,182.65l160.63,-96.83l160.63,96.83z" fill="#000000" filter="url(#filter-G8MDUoLh)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M891.74,512c0,209.61 -170.12,379.74 -380.12,379.74c-209.61,0 -379.35,-170.12 -379.35,-379.74c0,-209.61 169.74,-379.74 379.35,-379.74c210,0 380.12,170.12 380.12,379.74zM630.09,556.81l141.64,-122.66l-186.83,-15.95l-72.91,-172.02l-72.91,172.4l-186.83,15.95l141.64,122.65l-42.53,182.65l160.63,-96.83l160.63,96.83z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

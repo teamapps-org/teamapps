@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>invert_colors icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M767.96,827.29c-70.6,70.6 -163.42,105.85 -255.96,105.85c-92.54,0 -185.35,-35.25 -255.96,-105.85c-141.14,-141.14 -141.14,-370.4 0,-511.54l212.51,-212.52c23.99,-24 62.9,-24 86.89,0l212.51,212.52c141.14,141.14 141.14,370.4 0,511.54zM396.08,456.1c-31.01,30.74 -47.92,71.7 -47.92,115.6c0,43.75 16.78,84.45 48.08,115.76c0.06,0.06 0.11,0.11 0.17,0.17c15.71,15.85 34.09,28.01 54.15,36.12v-322.24zM724.51,359.19l-212.51,-212.52l-212.51,212.52c-117.15,117.15 -117.15,307.51 0,424.65c58.57,58.57 135.54,87.86 212.51,87.86c76.97,0 153.94,-29.29 212.51,-87.86c117.15,-117.15 117.15,-307.51 0,-424.65zM512,796.98c-60.08,0 -116.78,-23.28 -159.2,-66.08c-42.8,-42.8 -66.08,-99.12 -66.08,-159.2c0,-60.08 23.28,-116.78 66.08,-159.2l159.2,-159.57z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

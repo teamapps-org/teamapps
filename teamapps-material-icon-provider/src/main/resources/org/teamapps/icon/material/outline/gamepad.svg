@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>gamepad icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M337.92,136.53c0,-33.93 27.51,-61.44 61.44,-61.44h225.28c33.93,0 61.44,27.51 61.44,61.44v201.39h201.39c33.93,0 61.44,27.51 61.44,61.44v225.28c0,33.93 -27.51,61.44 -61.44,61.44h-201.39v201.39c0,33.93 -27.51,61.44 -61.44,61.44h-225.28c-33.93,0 -61.44,-27.51 -61.44,-61.44v-201.39h-201.39c-33.93,0 -61.44,-27.51 -61.44,-61.44v-225.28c0,-33.93 27.51,-61.44 61.44,-61.44h201.39zM624.64,343.04v-206.51h-225.28v206.51l112.64,112.64zM343.04,399.36h-206.51v225.28h206.51l112.64,-112.64zM399.36,680.96v206.51h225.28v-206.51l-112.64,-112.64zM680.96,399.36l-112.64,112.64l112.64,112.64h206.51v-225.28z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

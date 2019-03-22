@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>eject icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M207.39,653.62c-10.69,-19.98 -9.51,-44.22 3.06,-63.08l250.44,-375.47c11.4,-17.09 30.58,-27.35 51.11,-27.35c20.54,0 39.72,10.26 51.11,27.35l250.44,375.47c12.57,18.85 13.75,43.1 3.06,63.08c-0.13,0.24 -0.25,0.47 -0.38,0.71c12.31,11.24 20.04,27.42 20.04,45.4v75.1c0,33.93 -27.51,61.44 -61.44,61.44h-525.66c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.1c0,-17.98 7.73,-34.16 20.04,-45.4c-0.13,-0.23 -0.26,-0.47 -0.38,-0.71zM512,249.17l-250.44,375.47h500.88zM249.17,774.83h525.66v-75.1h-525.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

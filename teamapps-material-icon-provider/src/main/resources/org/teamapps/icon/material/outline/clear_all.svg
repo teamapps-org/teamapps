@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>clear_all icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M249.17,413.01h15.18c-1,-4.39 -1.52,-8.96 -1.52,-13.65v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h525.65c33.93,0 61.44,27.51 61.44,61.44v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-15.17c1,4.39 1.52,8.96 1.52,13.65v75.1c0,33.93 -27.51,61.44 -61.44,61.44h-15.18c1,4.39 1.52,8.96 1.52,13.65v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-525.65c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h15.17c-1,-4.39 -1.52,-8.96 -1.52,-13.65v-75.1c0,-33.93 27.51,-61.44 61.44,-61.44zM324.27,324.27v75.09h525.65v-75.09zM249.17,549.55h525.66v-75.1h-525.66zM174.08,699.73h525.65v-75.09h-525.65z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

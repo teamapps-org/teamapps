@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>network_locked icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M640,618.67v11.52c-26.03,23.47 -42.67,57.17 -42.67,95.14v128h-554.66l810.66,-810.66v386.13c-7.25,-0.85 -14.08,-2.13 -21.33,-2.13c-105.81,0 -192,86.19 -192,192zM981.33,725.33v170.67c0,23.47 -19.19,42.67 -42.66,42.67h-213.34c-23.47,0 -42.66,-19.2 -42.66,-42.67v-170.67c0,-23.47 19.19,-42.66 42.66,-42.66v-64c0,-58.88 47.79,-106.67 106.67,-106.67c58.88,0 106.67,47.79 106.67,106.67v64c23.47,0 42.66,19.19 42.66,42.66zM896,618.67c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64v64h128z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

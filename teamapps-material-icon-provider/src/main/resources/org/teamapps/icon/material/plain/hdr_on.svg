@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>hdr_on icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M857.6,550.4l38.4,89.6h-64l-38.4,-85.33h-46.93v85.33h-64v-256h149.33c34.13,0 64,29.87 64,64v42.67c0,25.6 -17.07,46.93 -38.4,59.73zM277.33,384h64v256h-64v-106.67h-85.33v106.67h-64v-256h64v85.33h85.33zM618.67,448v128c0,34.13 -29.87,64 -64,64h-149.34v-256h149.34c34.13,0 64,29.87 64,64zM554.67,448h-85.34v128h85.34zM832,448h-85.33v42.67h85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

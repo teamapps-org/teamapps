@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>arrow_back icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M812.37,610.99h-308.8l104.85,105.03c23.96,24 23.94,62.87 -0.04,86.85l-52.94,52.94c-23.99,23.99 -62.9,23.99 -86.89,0l-300.37,-300.37c-23.99,-23.99 -23.99,-62.9 0,-86.89l300.37,-300.37c23.93,-23.93 62.72,-24 86.73,-0.15l53.32,52.94c24.14,23.97 24.21,62.99 0.15,87.04l-105,104.99h308.61c33.93,0 61.44,27.51 61.44,61.44v75.1c0,33.93 -27.51,61.44 -61.44,61.44zM812.37,474.45h-456.94l209.89,-209.88l-53.32,-52.94l-300.37,300.37l300.37,300.37l52.94,-52.94l-209.51,-209.88h456.94z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

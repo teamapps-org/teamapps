@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>speaker_phone icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-wj2VhHdz">
+			<path d="M124.7,51.3h774.59v972.7h-774.59z"/>
+		</clipPath>
+		<filter id="filter-k4dIYj1K" x="-16%" y="-6%" width="169%" height="136%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-wj2VhHdz)">
+			<path d="M663.51,479.35v368.72c0,23.92 -19.37,43.29 -43.29,43.29h-216.83c-23.92,0 -43.29,-19.37 -43.29,-43.29v-368.72c0,-23.92 19.37,-43.29 43.29,-43.29l217.21,0.37c23.92,0 43.29,18.99 42.91,42.92zM806.3,216.19l-53.54,53.54c-61.52,-61.52 -146.96,-99.49 -240.75,-99.49c-93.8,0 -179.24,37.98 -240.75,99.49l-53.54,-53.54c75.57,-75.19 179.62,-121.89 294.3,-121.89c114.68,0 218.73,46.71 294.3,121.89zM625.92,512h-227.84v303.78h227.84zM512,246.18c74.05,0 141.26,30 189.86,78.6l-54.3,54.31c-34.56,-34.56 -82.78,-56.2 -135.56,-56.2c-52.79,0 -101.01,21.64 -135.56,56.2l-54.3,-54.31c48.6,-48.6 115.82,-78.6 189.86,-78.6z" fill="#000000" filter="url(#filter-k4dIYj1K)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M663.51,479.35v368.72c0,23.92 -19.37,43.29 -43.29,43.29h-216.83c-23.92,0 -43.29,-19.37 -43.29,-43.29v-368.72c0,-23.92 19.37,-43.29 43.29,-43.29l217.21,0.37c23.92,0 43.29,18.99 42.91,42.92zM806.3,216.19l-53.54,53.54c-61.52,-61.52 -146.96,-99.49 -240.75,-99.49c-93.8,0 -179.24,37.98 -240.75,99.49l-53.54,-53.54c75.57,-75.19 179.62,-121.89 294.3,-121.89c114.68,0 218.73,46.71 294.3,121.89zM625.92,512h-227.84v303.78h227.84zM512,246.18c74.05,0 141.26,30 189.86,78.6l-54.3,54.31c-34.56,-34.56 -82.78,-56.2 -135.56,-56.2c-52.79,0 -101.01,21.64 -135.56,56.2l-54.3,-54.31c48.6,-48.6 115.82,-78.6 189.86,-78.6z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

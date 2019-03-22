@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>settings_input_hdmi icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M836.27,324.27v225.28c0,9.54 -2.22,18.95 -6.49,27.48l-106.15,212.31v98.14c0,33.93 -27.51,61.44 -61.44,61.44h-300.38c-33.93,0 -61.44,-27.51 -61.44,-61.44v-98.14l-106.15,-212.31c-4.27,-8.53 -6.49,-17.94 -6.49,-27.48v-225.28c0,-25.46 15.48,-47.3 37.55,-56.62v-56.02c0,-75.22 61.29,-136.54 136.53,-136.54h300.38c75.24,0 136.53,61.32 136.53,136.54v56.02c22.06,9.32 37.55,31.16 37.55,56.62zM737.28,324.27v-112.64c0,-41.3 -33.79,-75.1 -75.09,-75.1h-300.38c-41.3,0 -75.09,33.8 -75.09,75.1v112.64h-37.55v225.28l112.64,225.28v112.64h300.38v-112.64l112.64,-225.28v-225.28zM361.81,211.63h300.38v112.64h-75.1v-75.1h-37.54v75.1h-75.1v-75.1h-37.54v75.1h-75.1z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

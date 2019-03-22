@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>format_underlined icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M256,469.33v-341.33h106.67v341.33c0,82.35 66.98,149.34 149.33,149.34c82.35,0 149.33,-66.99 149.33,-149.34v-341.33h106.67v341.33c0,141.23 -114.77,256 -256,256c-141.23,0 -256,-114.77 -256,-256zM810.67,810.67v85.33h-597.34v-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>arrow_forward icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-gvB582Y5" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-S1PCzfHN" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-7XuzWkuc" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-CF8OArUO">
+			<path d="M854.37,530.1l-324.26,324.26c-10,10 -26.21,10 -36.2,0l-57.15,-57.15c-9.99,-9.99 -10,-26.19 -0.02,-36.19l182.57,-182.89h-431.56c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.07c0,-14.14 11.46,-25.6 25.6,-25.6h431.56l-182.57,-182.89c-9.98,-10 -9.98,-26.2 0.02,-36.19l57.15,-57.15c10,-10 26.21,-10 36.2,0l324.26,324.26c10,10 10,26.21 0,36.2zM512,187.74l-57.15,57.15l226.18,226.58h-493.29v81.07h493.29l-226.18,226.57l57.15,57.15l324.26,-324.26z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-IYTgqwSM">
+			<path d="M854.37,530.1l-324.26,324.26c-10,10 -26.21,10 -36.2,0l-57.15,-57.15c-9.99,-9.99 -10,-26.19 -0.02,-36.19l182.57,-182.89h-431.56c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.07c0,-14.14 11.46,-25.6 25.6,-25.6h431.56l-182.57,-182.89c-9.98,-10 -9.98,-26.2 0.02,-36.19l57.15,-57.15c10,-10 26.21,-10 36.2,0l324.26,324.26c10,10 10,26.21 0,36.2zM512,187.74l-57.15,57.15l226.18,226.58h-493.29v81.07h493.29l-226.18,226.57l57.15,57.15l324.26,-324.26z" fill="url(#color-S1PCzfHN)"/>
+		</mask>
+		<mask id="mask-lP9TS1iR">
+			<rect fill="url(#color-gvB582Y5)" x="162.14" y="162.14" width="699.73" height="699.73"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-CF8OArUO)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="162.14" y="162.14" width="699.73" height="699.73" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-lP9TS1iR)">
+				<rect x="162.14" y="162.14" width="699.73" height="699.73" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-7XuzWkuc)" mask="url(#mask-IYTgqwSM)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="162.14" y="162.14" width="699.73" height="699.73" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

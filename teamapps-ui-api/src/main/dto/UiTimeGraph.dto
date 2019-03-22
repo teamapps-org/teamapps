@@ -1,0 +1,106 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class UiTimeGraph extends UiComponent {
+	UiLineChartYScaleZoomMode yScaleZoomMode = UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
+	required UiLongInterval intervalX;
+	required List<UiTimeChartZoomLevel> zoomLevels;
+	required int maxPixelsBetweenDataPoints;  // ... before switching to higher zoom level
+	required Dictionary<UiLineChartLineFormat> lineFormats;
+	UiScaleType yScaleType = UiScaleType.LINEAR;
+	UiLineChartMouseScrollZoomPanMode mouseScrollZoomPanMode = UiLineChartMouseScrollZoomPanMode.ENABLED;
+
+	command setIntervalX(UiLongInterval intervalX);
+	command setMaxPixelsBetweenDataPoints(int maxPixelsBetweenDataPoints);
+	command addData(int zoomLevel, UiLongInterval intervalX, Dictionary<List<UiTimeGraphDataPoint>> data);
+	command resetAllData(List<UiTimeChartZoomLevel> newZoomLevels); // client will request data again (corresponding to zoom and component size)
+	command replaceAllData(List<UiTimeChartZoomLevel> newZoomLevels, int zoomLevel, UiLongInterval intervalX, Dictionary<List<UiTimeGraphDataPoint>> data); // acts similar to resetAllData() + addData(), but without the extra round trip of a client request for the new data
+	command setMouseScrollZoomPanMode(UiLineChartMouseScrollZoomPanMode mouseScrollZoomPanMode);
+	command setSelectedInterval(UiLongInterval intervalX);
+	command setLineFormats(Dictionary<UiLineChartLineFormat> lineFormats);
+	
+	command setIntervalY(String lineId, UiLongInterval intervalY);
+	command setYScaleType(String lineId, UiScaleType yScaleType);
+	command setYScaleZoomMode(String lineId, UiLineChartYScaleZoomMode yScaleZoomMode);
+
+	event dataNeeded(int zoomLevelIndex, UiLongInterval neededIntervalX);
+	event zoomed(UiLongInterval intervalX, int zoomLevelIndex);
+	event intervalSelected(UiLongInterval intervalX);
+}
+
+enum UiLineChartYScaleZoomMode {
+    FIXED,
+    DYNAMIC,
+    DYNAMIC_INCLUDING_ZERO
+}
+
+enum UiLineChartMouseScrollZoomPanMode {
+	ENABLED,
+	WITH_MODIFIER_KEY,
+	DISABLED
+}
+
+class UiTimeChartZoomLevel {
+	required long approximateMillisecondsPerDataPoint;
+}
+
+class UiLineChartLineFormat {
+	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
+    float dataDotRadius;
+    UiColor lineColorScaleMin = new UiColor(73, 128, 192);
+    UiColor lineColorScaleMax = new UiColor(73, 128, 192);
+    UiColor areaColorScaleMin = new UiColor(255, 255, 255).setAlpha(0f);
+    UiColor areaColorScaleMax = new UiColor(255, 255, 255).setAlpha(0f);
+    UiColor yAxisColor = new UiColor(0, 0, 0);
+
+    UiScaleType yScaleType = UiScaleType.LINEAR;
+    UiLongInterval intervalY;
+	UiLineChartYScaleZoomMode yScaleZoomMode = UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
+}
+
+class UiTimeGraphSeriesData {
+    required List<UiTimeGraphDataPoint> data;
+}
+
+class UiTimeGraphDataPoint {
+	required double x;
+	required double y;
+}
+
+@TypeScriptFactory
+class UiLongInterval {
+ 	required long min;
+ 	required long max;
+}
+
+enum UiLineChartCurveType {
+	LINEAR,
+    STEP,
+    STEPBEFORE,
+    STEPAFTER,
+    BASIS,
+    CARDINAL,
+	MONOTONE,
+    CATMULLROM
+}
+
+enum UiScaleType {
+	LINEAR, LOG10
+}
+

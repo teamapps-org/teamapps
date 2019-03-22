@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>format_strikethrough icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M836.27,211.63v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-126.3v51.2c0,4.69 -0.53,9.26 -1.52,13.65h202.91c33.93,0 61.44,27.51 61.44,61.44v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-202.91c1,4.39 1.52,8.96 1.52,13.66v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-150.18c-33.93,0 -61.44,-27.51 -61.44,-61.44v-112.64c0,-4.69 0.53,-9.27 1.52,-13.66h-202.91c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h202.91c-1,-4.39 -1.52,-8.96 -1.52,-13.65v-51.2h-126.3c-33.93,0 -61.44,-27.51 -61.44,-61.44v-112.64c0,-33.93 27.51,-61.44 61.44,-61.44h525.66c33.93,0 61.44,27.51 61.44,61.44zM249.17,211.63v112.64h187.74v112.64h150.18v-112.64h187.74v-112.64zM174.08,587.09h675.84v-75.09h-675.84zM436.91,774.83h150.18v-112.64h-150.18z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

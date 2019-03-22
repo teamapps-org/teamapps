@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>smoking_rooms icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M832,570.03v69.97h-64v-55.47c0,-55.89 -39.25,-87.46 -84.05,-87.46h-65.28c-78.93,0 -142.94,-64.01 -142.94,-142.94c0,-78.93 64.01,-142.93 142.94,-142.93v64c-43.52,0 -78.94,31.15 -78.94,74.67c0,43.52 35.42,85.33 78.94,85.33h65.28c79.79,0 148.05,57.6 148.05,134.83zM938.67,544.43v95.57h-64v-95.15c0,-95.57 -75.1,-173.65 -170.67,-173.65v-64c43.52,0 78.93,-35.41 78.93,-78.93c0,-43.52 -35.41,-78.94 -78.93,-78.94v-64c78.93,0 142.93,64.01 142.93,142.94c0,39.68 -16.21,75.51 -42.66,101.54c79.79,37.97 134.4,119.9 134.4,214.62zM85.33,682.67h640v128h-640zM874.67,682.67h64v128h-64zM768,682.67h64v128h-64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

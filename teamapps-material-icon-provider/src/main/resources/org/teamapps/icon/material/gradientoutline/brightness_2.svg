@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>brightness_2 icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-4bBOC9Zl" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-8LclpuM4" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-RuEO5GnX" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-ANnYKVij">
+			<path d="M861.86,512c0,237.88 -193.04,430.94 -430.93,430.94c-78.51,0 -152.22,-21.57 -215.49,-58.16c-7.91,-4.57 -12.78,-13.02 -12.78,-22.16c0,-9.14 4.87,-17.58 12.78,-22.16c113.64,-65.75 189.89,-188.02 189.89,-328.46c0,-140.44 -76.26,-262.71 -189.89,-328.46c-7.91,-4.58 -12.78,-13.02 -12.78,-22.16c0,-9.14 4.87,-17.58 12.78,-22.16c63.27,-36.59 136.98,-58.16 215.49,-58.16c237.88,0 430.93,193.05 430.93,430.94zM430.94,106.66c-73.77,0 -143.09,20.26 -202.67,54.72c121.19,70.12 202.67,200.64 202.67,350.62c0,149.98 -81.48,280.5 -202.67,350.62c59.58,34.46 128.91,54.72 202.67,54.72c223.74,0 405.33,-181.59 405.33,-405.34c0,-223.74 -181.58,-405.34 -405.33,-405.34z" fill="url(#color-4bBOC9Zl)"/>
+		</mask>
+		<mask id="mask-gISnyA6q">
+			<rect fill="url(#color-8LclpuM4)" x="202.66" y="81.06" width="659.2" height="861.87"/>
+		</mask>
+		<mask id="mask-MBk9p657">
+			<path d="M861.86,512c0,237.88 -193.04,430.94 -430.93,430.94c-78.51,0 -152.22,-21.57 -215.49,-58.16c-7.91,-4.57 -12.78,-13.02 -12.78,-22.16c0,-9.14 4.87,-17.58 12.78,-22.16c113.64,-65.75 189.89,-188.02 189.89,-328.46c0,-140.44 -76.26,-262.71 -189.89,-328.46c-7.91,-4.58 -12.78,-13.02 -12.78,-22.16c0,-9.14 4.87,-17.58 12.78,-22.16c63.27,-36.59 136.98,-58.16 215.49,-58.16c237.88,0 430.93,193.05 430.93,430.94zM430.94,106.66c-73.77,0 -143.09,20.26 -202.67,54.72c121.19,70.12 202.67,200.64 202.67,350.62c0,149.98 -81.48,280.5 -202.67,350.62c59.58,34.46 128.91,54.72 202.67,54.72c223.74,0 405.33,-181.59 405.33,-405.34c0,-223.74 -181.58,-405.34 -405.33,-405.34z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-MBk9p657)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="202.66" y="81.06" width="659.2" height="861.87" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-gISnyA6q)">
+				<rect x="202.66" y="81.06" width="659.2" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-RuEO5GnX)" mask="url(#mask-ANnYKVij)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="202.66" y="81.06" width="659.2" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

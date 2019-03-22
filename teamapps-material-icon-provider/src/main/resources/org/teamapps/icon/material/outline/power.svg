@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>power icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M798.72,398.98v206.51c0,16.26 -6.45,31.87 -17.93,43.38l-113.48,113.8v87.24c0,33.93 -27.51,61.44 -61.44,61.44h-187.74c-33.93,0 -61.44,-27.51 -61.44,-61.44v-87.29l-113.54,-114.19c-11.45,-11.51 -17.87,-27.09 -17.87,-43.32v-206.13c0,-50.42 32.03,-96.81 75.09,-120.22v-104.69c0,-33.93 27.51,-61.44 61.44,-61.44h75.1c33.93,0 61.44,27.51 61.44,61.44v88.75h27.3v-88.75c0,-33.93 27.51,-61.44 61.44,-61.44h75.1c33.87,0 61.36,27.42 61.44,61.29l0.26,104.98c42.91,23.43 74.83,69.72 74.83,120.07zM662.56,324.27l-0.37,-150.19h-75.1v150.19h-150.18v-150.19h-75.1v150.19h-0.37c-37.17,-0.38 -74.72,37.16 -74.72,74.71v206.13l131.41,132.17v112.64h187.74v-112.64l131.41,-131.79v-206.51c0,-37.55 -37.55,-75.09 -74.72,-74.71z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

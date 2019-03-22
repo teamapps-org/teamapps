@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>keyboard_capslock icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-wfUj6a2m" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-zZeAr9Zl" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-tvFXboZk" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-7JTIQxly">
+			<rect fill="url(#color-zZeAr9Zl)" x="243.2" y="226.58" width="537.6" height="554.22"/>
+		</mask>
+		<mask id="mask-ARfTQLN5">
+			<path d="M307.85,570.64l-57.15,-57.15c-10,-10 -10,-26.21 0,-36.2l243.2,-243.2c10,-10 26.21,-10 36.2,0l243.2,243.2c10,10 10,26.21 0,36.2l-57.15,57.15c-10,10 -26.21,10 -36.2,0l-167.95,-167.95l-167.95,167.95c-10,10 -26.21,10 -36.2,0zM268.8,648.54h486.4c14.14,0 25.6,11.46 25.6,25.6v81.06c0,14.14 -11.46,25.6 -25.6,25.6h-486.4c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6zM512,366.49l186.05,186.05l57.15,-57.15l-243.2,-243.2l-243.2,243.2l57.15,57.15zM268.8,755.2h486.4v-81.06h-486.4z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-sIWPsXBK">
+			<path d="M307.85,570.64l-57.15,-57.15c-10,-10 -10,-26.21 0,-36.2l243.2,-243.2c10,-10 26.21,-10 36.2,0l243.2,243.2c10,10 10,26.21 0,36.2l-57.15,57.15c-10,10 -26.21,10 -36.2,0l-167.95,-167.95l-167.95,167.95c-10,10 -26.21,10 -36.2,0zM268.8,648.54h486.4c14.14,0 25.6,11.46 25.6,25.6v81.06c0,14.14 -11.46,25.6 -25.6,25.6h-486.4c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6zM512,366.49l186.05,186.05l57.15,-57.15l-243.2,-243.2l-243.2,243.2l57.15,57.15zM268.8,755.2h486.4v-81.06h-486.4z" fill="url(#color-wfUj6a2m)"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-ARfTQLN5)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="243.2" y="226.58" width="537.6" height="554.22" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-7JTIQxly)">
+				<rect x="243.2" y="226.58" width="537.6" height="554.22" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-tvFXboZk)" mask="url(#mask-sIWPsXBK)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="243.2" y="226.58" width="537.6" height="554.22" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

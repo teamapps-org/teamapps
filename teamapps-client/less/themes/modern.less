@@ -1,0 +1,110 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.UiRootPanel.theme-modern {
+  .UiApplicationLayout_toolbarContainer {
+    margin: 0;
+  }
+
+  .UiApplicationLayout_contentContainerWrapper {
+    margin: 0;
+  }
+
+  .splitpane {
+    &.splitpane-horizontal > .splitpane-component-wrapper {
+      &:first-child > .splitpane-component {
+        bottom: 0;
+      }
+      &:last-child > .splitpane-component {
+        top: 0;
+      }
+    }
+
+    &.splitpane-vertical > .splitpane-component-wrapper {
+      &:first-child > .splitpane-component {
+        right: 0;
+      }
+      &:last-child > .splitpane-component {
+        left: 0;
+      }
+    }
+    > .splitpane-divider-wrapper {
+      flex: 0 1 1px;
+      background-color: rgba(220, 220, 220, .7);
+      > .splitpane-divider {
+        &:hover,
+        &.dragged {
+          background: rgba(0, 0, 0, 0.15);
+        }
+      }
+    }
+    &.splitpane-horizontal > .splitpane-divider-wrapper > .splitpane-divider {
+      height: @UiSplitPane-divider-width + 1px;
+      .optimized-for-touch & {
+        height: @UiSplitPane-divider-width-touch + 1px;
+        top: -@UiSplitPane-divider-width-touch/2;
+      }
+    }
+    &.splitpane-vertical > .splitpane-divider-wrapper > .splitpane-divider {
+      width: @UiSplitPane-divider-width + 1px;
+      .optimized-for-touch & {
+        width: @UiSplitPane-divider-width-touch + 1px;
+        left: -@UiSplitPane-divider-width-touch/2;
+      }
+    }
+  }
+
+  .UiPanel {
+    box-shadow: none;
+    border-radius: 0;
+    .panel-heading {
+      border-radius: 0;
+      border-bottom-width: 0;
+      padding-bottom: 1px;
+    }
+    .body-container {
+      border-radius: 0;
+    }
+  }
+
+  .UiToolbar {
+    border-radius: 0;
+    box-shadow: none;
+    .background-color-div {
+      border-bottom: 1px solid @table-border-color;
+      border-radius: 0;
+    }
+    .button-group-wrapper:first-child > .toolbar-button-group > .toolbar-button-wrapper:first-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+
+  .UiPageView {
+    .left-column, .right-column {
+      padding: 0;
+    }
+    .panel {
+      margin-bottom: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+}
+

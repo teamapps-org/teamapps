@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>tablet_android icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M912.26,176.77v670.46c0,97.75 -79.02,176.77 -176.77,176.77h-446.98c-97.75,0 -176.77,-79.02 -176.77,-176.77v-670.46c0,-97.75 79.02,-176.77 176.77,-176.77h446.98c97.75,0 176.77,79.02 176.77,176.77zM735.49,15.36h-446.98c-89.26,0 -161.41,72.14 -161.41,161.41v670.46c0,89.26 72.14,161.41 161.41,161.41h446.98c89.26,0 161.41,-72.14 161.41,-161.41v-670.46c0,-89.26 -72.14,-161.41 -161.41,-161.41zM847.23,176.77v670.46c0,61.83 -49.91,111.74 -111.74,111.74h-446.98c-61.83,0 -111.74,-49.91 -111.74,-111.74v-670.46c0,-61.83 49.91,-111.74 111.74,-111.74h446.98c61.83,0 111.74,49.91 111.74,111.74zM782.05,176.77h-540.09v595.97h540.09zM586.49,847.23h-148.99v37.25h148.99z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

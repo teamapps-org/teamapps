@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>contact_mail icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1024,213.33l-0.43,597.34c0,46.93 -37.97,85.33 -84.9,85.33h-853.34c-46.93,0 -85.33,-38.4 -85.33,-85.33v-597.34c0,-46.93 38.4,-85.33 85.33,-85.33h853.34c46.93,0 85.33,38.4 85.33,85.33zM597.33,725.33c0,-85.33 -170.67,-132.26 -256,-132.26c-85.33,0 -256,46.93 -256,132.26v42.67h512zM938.67,256h-341.34v256h341.34zM213.33,384c0,70.83 57.17,128 128,128c70.83,0 128,-57.17 128,-128c0,-70.83 -57.17,-128 -128,-128c-70.83,0 -128,57.17 -128,128zM768,426.67l-128,-85.34v-42.66l128,85.33l128,-85.33v42.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

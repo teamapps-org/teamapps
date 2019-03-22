@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>keyboard_backspace icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-4SUChG2y" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-jXyi8Xmw" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-wVe5Nl9F" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-90FQFlwk">
+			<path d="M876.8,578.14h-512.68l101.56,101.83c9.97,10 9.96,26.19 -0.02,36.18l-57.15,57.15c-10,10 -26.21,10 -36.2,0l-243.2,-243.2c-10,-10 -10,-26.21 0,-36.2l243.2,-243.2c10,-10 26.21,-10 36.2,0l57.15,57.15c9.99,9.99 10,26.18 0.02,36.18l-101.56,101.83h512.68c14.14,0 25.6,11.46 25.6,25.6v81.07c0,14.14 -11.46,25.6 -25.6,25.6zM876.8,471.46h-574.36l145.11,-145.51l-57.15,-57.15l-243.2,243.2l243.2,243.2l57.15,-57.15l-145.11,-145.51h574.36z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-CbZS2SHX">
+			<path d="M876.8,578.14h-512.68l101.56,101.83c9.97,10 9.96,26.19 -0.02,36.18l-57.15,57.15c-10,10 -26.21,10 -36.2,0l-243.2,-243.2c-10,-10 -10,-26.21 0,-36.2l243.2,-243.2c10,-10 26.21,-10 36.2,0l57.15,57.15c9.99,9.99 10,26.18 0.02,36.18l-101.56,101.83h512.68c14.14,0 25.6,11.46 25.6,25.6v81.07c0,14.14 -11.46,25.6 -25.6,25.6zM876.8,471.46h-574.36l145.11,-145.51l-57.15,-57.15l-243.2,243.2l243.2,243.2l57.15,-57.15l-145.11,-145.51h574.36z" fill="url(#color-jXyi8Xmw)"/>
+		</mask>
+		<mask id="mask-HQxW0eFf">
+			<rect fill="url(#color-4SUChG2y)" x="121.6" y="243.2" width="780.8" height="537.6"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-90FQFlwk)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="121.6" y="243.2" width="780.8" height="537.6" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-HQxW0eFf)">
+				<rect x="121.6" y="243.2" width="780.8" height="537.6" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-wVe5Nl9F)" mask="url(#mask-CbZS2SHX)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="121.6" y="243.2" width="780.8" height="537.6" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

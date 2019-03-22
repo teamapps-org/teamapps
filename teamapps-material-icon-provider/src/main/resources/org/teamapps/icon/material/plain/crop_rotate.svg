@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>crop_rotate icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M853.33,682.67v85.33h-85.33v85.33h-85.33v-85.33h-341.34c-47.36,0 -85.33,-38.4 -85.33,-85.33v-341.34h-85.33v-85.33h85.33v-85.33h85.33v512zM375.47,859.73l162.56,162.99c-9.39,0.43 -18.35,1.28 -28.16,1.28c-268.37,0 -488.11,-206.5 -509.87,-469.33h64c15.36,160.43 115.2,295.68 254.72,362.24zM1024,469.33h-64c-15.36,-160.43 -115.2,-295.68 -254.72,-361.81l-56.75,56.75l-162.56,-162.56c9.39,-0.85 18.35,-1.71 28.16,-1.71c268.37,0 488.11,206.5 509.87,469.33zM682.67,341.33h-256v-85.33h256c46.93,0 85.33,37.97 85.33,85.33v256h-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

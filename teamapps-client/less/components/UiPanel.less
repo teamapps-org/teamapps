@@ -1,0 +1,210 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.UiPanel {
+  background-size: cover;
+
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+  overflow: hidden;
+
+  border: none;
+
+  display: flex;
+  flex-direction: column;
+
+  margin: 0;
+
+  .panel-heading {
+    flex: 0 0 auto;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    border-bottom-color: @table-border-color;
+    padding: 0 1px 0 8px;
+    background-color: rgba(255, 255, 255, .72);
+
+    //position: relative;
+    //.minAllExpandedWidth {
+    //  height: 2px;
+    //  position: absolute;
+    //  background-color: red;
+    //}
+    //.minFirstMinimizedWidth {
+    //  height: 2px;
+    //  position: absolute;
+    //  background-color: rgba(0, 0, 255, .5);
+    //}
+    //.minFirstMinimizedAndHiddenTitleWidth {
+    //  height: 2px;
+    //  position: absolute;
+    //  background-color: rgba(255, 255, 0, .5);
+    //}
+
+    .optimized-for-touch & {
+      min-height: 40px;
+    }
+
+    .panel-icon {
+      flex: 0 0 auto;
+      margin-right: 7px;
+      .single-line-snipper();
+    }
+
+    .panel-title {
+      flex: 0 0 auto;
+      padding-right: 7px;
+      font-size: 15px;
+      .single-line-snipper();
+    }
+
+    > .panel-component-wrapper {
+      flex: 0 0 auto; // derived from subcomponents
+      display: flex;
+
+      > .icon-and-field-wrapper {
+        display: flex;
+        flex: 0 0 auto; // derived from subcomponents
+        align-items: center;
+        background-color: rgba(255, 255, 255, .5);
+        border-radius: @border-radius-base;
+        > .icon {
+          align-self: stretch;
+          height: auto;
+          padding: 0 15px;
+          border: 1px solid fadeout(@tr-border-color, 40%);
+          border-right-width: 0;
+          border-top-left-radius: @border-radius-base;
+          border-bottom-left-radius: @border-radius-base;
+          .optimized-for-touch & {
+            padding: 0 20px;
+          }
+        }
+        > .field-wrapper {
+          flex: 0 0 auto; // width will be set by javascript
+          transition: width .5s, flex-basis .5s;
+
+          > * {
+            min-width: 0 !important;
+          }
+
+          .UiField:not(.focus) .field-border {
+            transition: border-color 1s, background-color 1s, box-shadow 1s;
+            background-color: transparent;
+            border-color: transparent;
+          }
+        }
+      }
+
+      &.display-icon .field-wrapper {
+        .tr-input-wrapper,
+        .form-control {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+      }
+      &:not(.display-icon) > .icon-and-field-wrapper > .icon {
+        display: none;
+      }
+      &.minimized {
+        > .icon-and-field-wrapper {
+          > .icon {
+            border-right-width: 1px;
+            border-top-right-radius: @border-radius-base;
+            border-bottom-right-radius: @border-radius-base;
+          }
+          > .field-wrapper {
+            flex: 0 0 0px !important;
+            width: 0 !important;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+
+    .panel-heading-spacer {
+      flex: 1 0 3px;
+    }
+
+    .panel-heading-buttons {
+      flex: 0 0 auto;
+      padding: 1px 4px 0 4px;
+      display: flex;
+      align-self: flex-start;
+      margin-top: 1px;
+    }
+
+    .panel-heading-window-buttons {
+      -webkit-box-flex: 0;
+      flex: 0 0 auto;
+      padding: 2px 4px;
+      display: -webkit-box;
+      display: flex;
+      align-self: flex-start;
+      border-left: 1px solid rgba(0, 0, 0, .1);
+      border-bottom: 1px solid rgba(0, 0, 0, .07);
+      background-color: rgba(0, 0, 0, .05);
+      border-top-right-radius: @panel-border-radius;
+      border-bottom-left-radius: @panel-border-radius + 2px;
+
+      &:empty {
+        display: none;
+      }
+
+    }
+  }
+
+  .toolbar-container {
+    flex: 0 0 auto;
+  }
+
+  .panel-body {
+    flex: 1 1 auto;
+    overflow: hidden;
+    padding: 0;
+    background-color: white;
+    position: relative;
+
+    .body-container {
+      .flex-filler();
+      overflow-y: auto;
+      overflow-x: hidden;
+      border-bottom-left-radius: @border-radius-base;
+      border-bottom-right-radius: @border-radius-base;
+    }
+  }
+
+  &.empty-heading .panel-body {
+    padding: 8px;
+  }
+
+  &.stretch-content > .panel-body > .body-container > * {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.teamapps-component-maximized {
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  width: ~"calc(100% - 10px)";
+  height: ~"calc(100% - 10px)";
+  box-shadow: 0 0 0 10px @maximized-shadow-color;
+  z-index: 100000;
+}

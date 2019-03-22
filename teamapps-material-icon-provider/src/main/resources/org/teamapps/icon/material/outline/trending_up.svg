@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>trending_up icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,286.72v225.28c0,24.85 -14.97,47.25 -37.93,56.76c-22.96,9.51 -49.38,4.25 -66.96,-13.32l-42.57,-42.57l-193.1,192.8c-24,23.96 -62.87,23.95 -86.86,-0.03l-106.74,-106.74l-181.84,181.84c-23.99,23.99 -62.9,23.99 -86.89,0l-52.94,-52.94c-23.98,-23.98 -24,-62.86 -0.03,-86.86l278.22,-278.6c23.99,-24.02 62.91,-24.03 86.92,-0.03l106.74,106.74l96.34,-96.34l-42.54,-42.54c-17.57,-17.57 -22.83,-44 -13.32,-66.96c9.51,-22.96 31.91,-37.93 56.76,-37.93h225.28c33.93,0 61.44,27.51 61.44,61.44zM662.19,286.72l85.98,85.98l-183.22,183.22l-150.19,-150.19l-278.22,278.6l52.94,52.94l225.28,-225.28l150.19,150.19l236.54,-236.17l85.98,85.98v-225.28z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

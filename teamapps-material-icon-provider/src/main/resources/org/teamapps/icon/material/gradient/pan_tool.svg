@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>pan_tool icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-Q39VAZeQ">
+			<path d="M981.33,234.67v618.66c0,93.87 -76.79,170.67 -170.66,170.67h-311.47c-46.08,0 -89.6,-18.34 -121.6,-50.77l-334.93,-340.48c0,0 53.75,-52.49 55.46,-53.34c9.39,-8.11 20.91,-12.37 33.71,-12.37c9.39,0 17.92,2.56 25.6,6.83c1.71,0.43 183.89,104.96 183.89,104.96v-508.16c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v298.66h42.67v-405.33c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v405.33h42.67v-362.66c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v362.66h42.66v-234.66c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64z"/>
+		</clipPath>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-f0GPMFS2" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-WXgdGLSE" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-4oBkUaFq" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<filter id="filter-R45IJbrT" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<mask id="mask-dHG59fsE">
+			<path d="M981.33,234.67v618.66c0,93.87 -76.79,170.67 -170.66,170.67h-311.47c-46.08,0 -89.6,-18.34 -121.6,-50.77l-334.93,-340.48c0,0 53.75,-52.49 55.46,-53.34c9.39,-8.11 20.91,-12.37 33.71,-12.37c9.39,0 17.92,2.56 25.6,6.83c1.71,0.43 183.89,104.96 183.89,104.96v-508.16c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v298.66h42.67v-405.33c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v405.33h42.67v-362.66c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v362.66h42.66v-234.66c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-ea7vPcQE">
+			<path d="M981.33,234.67v618.66c0,93.87 -76.79,170.67 -170.66,170.67h-311.47c-46.08,0 -89.6,-18.34 -121.6,-50.77l-334.93,-340.48c0,0 53.75,-52.49 55.46,-53.34c9.39,-8.11 20.91,-12.37 33.71,-12.37c9.39,0 17.92,2.56 25.6,6.83c1.71,0.43 183.89,104.96 183.89,104.96v-508.16c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v298.66h42.67v-405.33c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v405.33h42.67v-362.66c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64v362.66h42.66v-234.66c0,-35.41 28.59,-64 64,-64c35.41,0 64,28.59 64,64z" fill="url(#color-WXgdGLSE)"/>
+		</mask>
+		<mask id="mask-oyV15dC2">
+			<rect fill="url(#color-f0GPMFS2)" x="42.67" y="0" width="938.66" height="1024"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-dHG59fsE)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="42.67" y="0" width="938.66" height="1024" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-oyV15dC2)">
+				<rect x="42.67" y="0" width="938.66" height="1024" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-4oBkUaFq)" mask="url(#mask-ea7vPcQE)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="42.67" y="0" width="938.66" height="1024" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-Q39VAZeQ)">
+			<path d="M-50.33,1067v-1210h1124.66v1210zM917.33,170.67c-35.41,0 -64,28.59 -64,64v234.66h-42.66v-362.66c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64v362.66h-42.67v-405.33c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64v405.33h-42.67v-298.66c0,-35.41 -28.59,-64 -64,-64c-35.41,0 -64,28.59 -64,64v508.16c0,0 -182.18,-104.53 -183.89,-104.96c-7.68,-4.27 -16.21,-6.83 -25.6,-6.83c-12.8,0 -24.32,4.26 -33.71,12.37c-1.71,0.85 -55.46,53.34 -55.46,53.34l334.93,340.48c32,32.43 75.52,50.77 121.6,50.77h311.47c93.87,0 170.66,-76.8 170.66,-170.67v-618.66c0,-35.41 -28.59,-64 -64,-64z" fill="#000000" filter="url(#filter-R45IJbrT)"/>
+		</g>
+	</g>
+</svg>

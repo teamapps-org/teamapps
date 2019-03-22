@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>rotate_90_degrees_ccw icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M826.03,826.03c-74.67,75.09 -173.23,112.64 -271.36,112.64c-63.57,0 -127.15,-16.22 -184.75,-47.79l63.57,-63.57c38.4,17.07 79.79,26.02 121.18,26.02c76.37,0 152.75,-29.01 211.2,-87.46c116.48,-116.48 116.48,-305.92 0,-422.4c-58.45,-58.45 -134.83,-87.47 -211.2,-87.47v138.24l-180.91,-180.91l180.91,-180.9v138.24c98.13,0 196.69,37.55 271.36,112.64c150.19,149.76 150.19,392.96 0,542.72zM590.51,550.4l-276.91,276.48l-276.91,-276.48l276.48,-276.91zM313.17,706.56l156.16,-156.16l-155.73,-156.16l-156.16,156.16z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

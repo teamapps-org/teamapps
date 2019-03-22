@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>mic icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-Fw1ztacT" x="-18%" y="-6%" width="182%" height="145%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M777.82,474.02c0,129.87 -103.28,236.95 -227.84,255.18v124.56h-75.95v-124.56c-124.56,-18.61 -227.84,-125.69 -227.84,-255.18h64.56c0,113.92 96.45,193.66 201.26,193.66c104.81,0 201.26,-79.74 201.26,-193.66zM398.08,474.02v-227.84c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.92,50.88 113.92,113.92l-0.38,227.84c0,63.04 -50.5,113.92 -113.54,113.92c-63.04,0 -113.92,-50.88 -113.92,-113.92z" fill="#000000" filter="url(#filter-Fw1ztacT)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M777.82,474.02c0,129.87 -103.28,236.95 -227.84,255.18v124.56h-75.95v-124.56c-124.56,-18.61 -227.84,-125.69 -227.84,-255.18h64.56c0,113.92 96.45,193.66 201.26,193.66c104.81,0 201.26,-79.74 201.26,-193.66zM398.08,474.02v-227.84c0,-63.04 50.88,-113.92 113.92,-113.92c63.04,0 113.92,50.88 113.92,113.92l-0.38,227.84c0,63.04 -50.5,113.92 -113.54,113.92c-63.04,0 -113.92,-50.88 -113.92,-113.92z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,62 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class AbstractUiChart extends UiComponent {
+
+}
+
+class UiLineChart extends AbstractUiChart {
+	UiChartMargin margin = new UiChartMargin(); // not pixels! this defines the space available for tick and axis labels
+	boolean useInteractiveGuideline = true;
+	int animationDuration = 200;
+	boolean showLegend = true;
+
+	UiChartAxisConfig xAxisConfig = new UiChartAxisConfig(); // if null, no axis details are drawn
+	UiChartAxisConfig yAxisConfig = new UiChartAxisConfig(); // if null, no axis details are drawn
+
+	List<UiLineChartData> data;
+
+	command setData(List<UiLineChartData> data, boolean clear);
+}
+
+class UiChartAxisConfig {
+	boolean drawAxisLine = true;
+	String axisLabel = null;
+	int axisLabelDistance = 0;
+	boolean showMaxMin = true;
+	String tickFormat; // see https://github.com/d3/d3-axis/blob/master/README.md#axis_tickFormat
+}
+
+class UiChartMargin {
+	int top = 30;
+	int left = 62;
+	int bottom = 62;
+	int right = 30;
+}
+
+class UiLineChartData {
+//    UiLineChartDataPoint[] values; //values - represents the array of {x,y} data points
+//    String key =  'Sine Wave', //key  - the name of the series.
+//    String color =  '#ff7f0e'  //color - optional: choose your own line color.
+}
+
+class UiLineChartDataPoint {
+	double x;
+	double y;
+}

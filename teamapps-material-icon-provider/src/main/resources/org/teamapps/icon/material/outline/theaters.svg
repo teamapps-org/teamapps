@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>theaters icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M873.81,174.08v675.84c0,33.93 -27.51,61.44 -61.44,61.44h-75.09c-14.14,0 -27.16,-4.78 -37.55,-12.8c-10.38,8.03 -23.41,12.8 -37.55,12.8h-300.38c-14.14,0 -27.16,-4.78 -37.55,-12.8c-10.38,8.03 -23.41,12.8 -37.55,12.8h-75.09c-33.93,0 -61.44,-27.51 -61.44,-61.44v-675.84c0,-33.93 27.51,-61.44 61.44,-61.44h75.09c14.14,0 27.16,4.78 37.55,12.8c10.38,-8.03 23.41,-12.8 37.55,-12.8h300.38c14.14,0 27.16,4.78 37.55,12.8c10.38,-8.03 23.41,-12.8 37.55,-12.8h75.09c33.93,0 61.44,27.51 61.44,61.44zM737.28,174.08v75.09h-75.09v-75.09h-300.38v75.09h-75.09v-75.09h-75.09v675.84h75.09v-75.09h75.09v75.09h300.38v-75.09h75.09v75.09h75.09v-675.84zM737.28,399.36h-75.09v-75.09h75.09zM361.81,399.36h-75.09v-75.09h75.09zM737.28,549.55h-75.09v-75.1h75.09zM361.81,549.55h-75.09v-75.1h75.09zM737.28,699.73h-75.09v-75.09h75.09zM361.81,699.73h-75.09v-75.09h75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

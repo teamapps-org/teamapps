@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>vibration icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M768,192v640c0,35.41 -28.59,64 -64,64h-384c-35.41,0 -64,-28.59 -64,-64v-640c0,-35.41 28.59,-64 64,-64h384c35.41,0 64,28.59 64,64zM682.67,213.33h-341.34v597.34h341.34zM810.67,298.67h85.33v426.66h-85.33zM128,298.67h85.33v426.66h-85.33zM1024,384v256h-85.33v-256zM0,384h85.33v256h-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

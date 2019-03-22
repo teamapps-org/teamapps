@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>star_half icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-kcisV26m" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-oe5bt6Al" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-3KgGHt0N" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-4gOwgBx4">
+			<rect fill="url(#color-oe5bt6Al)" x="81.06" y="81.06" width="861.88" height="821.34"/>
+		</mask>
+		<mask id="mask-KHhfQoAb">
+			<path d="M724.84,601.08l62.59,269.94c2.32,10.02 -1.58,20.46 -9.9,26.5c-8.33,6.04 -19.46,6.51 -28.27,1.2l-237.27,-143.21l-237.27,143.21c-8.81,5.32 -19.95,4.84 -28.28,-1.21c-8.33,-6.05 -12.22,-16.5 -9.88,-26.52l62.96,-269.9l-209.63,-181.6c-7.78,-6.74 -10.77,-17.48 -7.58,-27.27c3.19,-9.79 11.92,-16.72 22.18,-17.59l276.06,-23.42l107.87,-254.52c4.01,-9.46 13.29,-15.61 23.56,-15.61c10.28,0 19.56,6.14 23.57,15.6l107.88,254.16l276.09,23.8c10.24,0.88 18.97,7.81 22.15,17.59c3.18,9.78 0.2,20.51 -7.57,27.25zM599.35,574.57c-2.16,-9.25 0.98,-18.94 8.15,-25.16l88.9,-77.12l-117.3,-10.17c-9.45,-0.82 -17.67,-6.79 -21.36,-15.53l-20.14,-47.57v236.37l88.45,53.5zM917.34,400.13l-291.44,-25.13l-113.9,-268.34l-113.9,268.74l-291.44,24.73l221.31,191.72l-66.47,284.95l250.5,-151.19l250.5,151.19l-66.07,-284.95zM512,649.82v-376.96l69.31,163.75l177.54,15.4l-134.57,116.74l40.53,173.49z" fill="url(#color-kcisV26m)"/>
+		</mask>
+		<mask id="mask-qfdpi2t6">
+			<path d="M724.84,601.08l62.59,269.94c2.32,10.02 -1.58,20.46 -9.9,26.5c-8.33,6.04 -19.46,6.51 -28.27,1.2l-237.27,-143.21l-237.27,143.21c-8.81,5.32 -19.95,4.84 -28.28,-1.21c-8.33,-6.05 -12.22,-16.5 -9.88,-26.52l62.96,-269.9l-209.63,-181.6c-7.78,-6.74 -10.77,-17.48 -7.58,-27.27c3.19,-9.79 11.92,-16.72 22.18,-17.59l276.06,-23.42l107.87,-254.52c4.01,-9.46 13.29,-15.61 23.56,-15.61c10.28,0 19.56,6.14 23.57,15.6l107.88,254.16l276.09,23.8c10.24,0.88 18.97,7.81 22.15,17.59c3.18,9.78 0.2,20.51 -7.57,27.25zM599.35,574.57c-2.16,-9.25 0.98,-18.94 8.15,-25.16l88.9,-77.12l-117.3,-10.17c-9.45,-0.82 -17.67,-6.79 -21.36,-15.53l-20.14,-47.57v236.37l88.45,53.5zM917.34,400.13l-291.44,-25.13l-113.9,-268.34l-113.9,268.74l-291.44,24.73l221.31,191.72l-66.47,284.95l250.5,-151.19l250.5,151.19l-66.07,-284.95zM512,649.82v-376.96l69.31,163.75l177.54,15.4l-134.57,116.74l40.53,173.49z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-qfdpi2t6)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="81.06" y="81.06" width="861.88" height="821.34" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-4gOwgBx4)">
+				<rect x="81.06" y="81.06" width="861.88" height="821.34" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-3KgGHt0N)" mask="url(#mask-KHhfQoAb)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="81.06" y="81.06" width="861.88" height="821.34" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

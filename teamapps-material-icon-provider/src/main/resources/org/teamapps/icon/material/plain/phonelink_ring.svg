@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>phonelink_ring icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M682.67,128v768c0,46.93 -38.41,85.33 -85.34,85.33h-426.66c-46.93,0 -85.34,-38.4 -85.34,-85.33v-768c0,-46.93 38.41,-85.33 85.34,-85.33h426.66c46.93,0 85.34,38.4 85.34,85.33zM597.33,170.67h-426.66v682.66h426.66zM857.6,691.2l-42.67,-42.67c76.8,-81.07 76.8,-200.53 0,-277.33l42.67,-42.67c106.67,102.4 106.67,264.54 0,362.67zM768,601.6l-42.67,-42.67c21.33,-29.87 21.33,-68.26 0,-98.13l42.67,-42.67c51.2,55.47 51.2,132.27 0,183.47z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

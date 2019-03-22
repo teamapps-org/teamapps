@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>near_me icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M566.82,911.36h-36.79c-25.4,0 -48.17,-15.62 -57.32,-39.32l-89.34,-231.47l-231.48,-89.68c-23.65,-9.16 -39.24,-31.92 -39.24,-57.29v-36.79c0,-24.77 14.88,-47.12 37.73,-56.68l675.84,-282.73c23,-9.62 49.54,-4.39 67.17,13.25c17.63,17.64 22.85,44.17 13.21,67.17l-283.1,675.84c-9.57,22.84 -31.91,37.7 -56.67,37.7zM849.92,174.08l-675.84,282.73v36.79l256.82,99.5l99.12,256.82h36.79z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

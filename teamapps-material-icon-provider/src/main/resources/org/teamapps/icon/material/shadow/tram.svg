@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>tram icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-kCKG5LyS">
+			<path d="M153.18,89.26h717.63v934.74h-717.63z"/>
+		</clipPath>
+		<filter id="filter-Gk7fJl4G" x="-18%" y="-6%" width="182%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-kCKG5LyS)">
+			<path d="M679.85,815.78h3.03l56.96,56.96v18.99h-75.94l-75.95,-75.95h-143.16l-75.94,75.95h-84.68v-18.99l60.38,-60.38c-53.16,-11.77 -98.35,-57.72 -98.35,-112.78v-320.49c0,-105.19 108.61,-128.73 227.47,-132.15l28.85,-57.73h-180.37v-56.96h379.73v56.96h-123.41l-28.86,57.34c129.11,3.42 228.22,26.58 228.22,132.53v320.49c0,64.18 -33.79,116.2 -97.97,116.2zM701.86,398.08h-379.73v189.86h379.73zM568.96,701.86c0,-31.51 -25.45,-56.96 -56.96,-56.96c-31.51,0 -56.96,25.45 -56.96,56.96c0,31.51 25.45,56.96 56.96,56.96c31.51,0 56.96,-25.45 56.96,-56.96z" fill="#000000" filter="url(#filter-Gk7fJl4G)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M679.85,815.78h3.03l56.96,56.96v18.99h-75.94l-75.95,-75.95h-143.16l-75.94,75.95h-84.68v-18.99l60.38,-60.38c-53.16,-11.77 -98.35,-57.72 -98.35,-112.78v-320.49c0,-105.19 108.61,-128.73 227.47,-132.15l28.85,-57.73h-180.37v-56.96h379.73v56.96h-123.41l-28.86,57.34c129.11,3.42 228.22,26.58 228.22,132.53v320.49c0,64.18 -33.79,116.2 -97.97,116.2zM701.86,398.08h-379.73v189.86h379.73zM568.96,701.86c0,-31.51 -25.45,-56.96 -56.96,-56.96c-31.51,0 -56.96,25.45 -56.96,56.96c0,31.51 25.45,56.96 56.96,56.96c31.51,0 56.96,-25.45 56.96,-56.96z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

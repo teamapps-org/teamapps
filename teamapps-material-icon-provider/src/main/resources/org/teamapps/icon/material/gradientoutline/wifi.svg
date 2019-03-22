@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>wifi icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-eGJDofcD" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-KyEEtjKB" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-tlvZem48" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-9nYOSZ8V">
+			<path d="M975.97,408.5l-81.06,81.06c-10,10 -26.21,10 -36.2,0c-191.45,-191.45 -501.95,-191.45 -693.4,0c-10,10 -26.21,10 -36.2,0l-81.06,-81.06c-10,-10 -10,-26.22 0.01,-36.22c256.43,-256.01 671.87,-256.03 927.92,0.01c10,10 10,26.21 0,36.2zM813.84,570.64l-81.07,81.06c-10,10 -26.21,10 -36.2,0c-101.87,-101.87 -267.25,-101.87 -369.12,0c-10,10 -26.21,10 -36.2,0l-81.07,-81.06c-10.01,-10.01 -10,-26.23 0.02,-36.23c166.84,-166.41 437.19,-166.44 603.65,0.02c10,10 10,26.21 0,36.2zM651.7,732.77l-121.6,121.6c-10,10 -26.21,10 -36.2,0l-121.6,-121.6c-10,-10 -10,-26.21 0,-36.2c77.25,-77.25 202.54,-77.34 279.46,0.06c9.95,10.01 9.92,26.17 -0.06,36.15zM66.14,390.4l81.06,81.06c201.45,-201.45 528.15,-201.45 729.6,0l81.06,-81.06c-246.04,-246.04 -645.29,-246.04 -891.73,0zM228.26,552.54l81.07,81.06c111.87,-111.87 293.46,-111.87 405.33,0l81.07,-81.06c-156.46,-156.46 -410.61,-156.46 -567.47,0zM390.4,714.66l121.6,121.6l121.6,-121.6c-66.88,-67.29 -175.91,-67.29 -243.2,0z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-dd2k2Rm0">
+			<path d="M975.97,408.5l-81.06,81.06c-10,10 -26.21,10 -36.2,0c-191.45,-191.45 -501.95,-191.45 -693.4,0c-10,10 -26.21,10 -36.2,0l-81.06,-81.06c-10,-10 -10,-26.22 0.01,-36.22c256.43,-256.01 671.87,-256.03 927.92,0.01c10,10 10,26.21 0,36.2zM813.84,570.64l-81.07,81.06c-10,10 -26.21,10 -36.2,0c-101.87,-101.87 -267.25,-101.87 -369.12,0c-10,10 -26.21,10 -36.2,0l-81.07,-81.06c-10.01,-10.01 -10,-26.23 0.02,-36.23c166.84,-166.41 437.19,-166.44 603.65,0.02c10,10 10,26.21 0,36.2zM651.7,732.77l-121.6,121.6c-10,10 -26.21,10 -36.2,0l-121.6,-121.6c-10,-10 -10,-26.21 0,-36.2c77.25,-77.25 202.54,-77.34 279.46,0.06c9.95,10.01 9.92,26.17 -0.06,36.15zM66.14,390.4l81.06,81.06c201.45,-201.45 528.15,-201.45 729.6,0l81.06,-81.06c-246.04,-246.04 -645.29,-246.04 -891.73,0zM228.26,552.54l81.07,81.06c111.87,-111.87 293.46,-111.87 405.33,0l81.07,-81.06c-156.46,-156.46 -410.61,-156.46 -567.47,0zM390.4,714.66l121.6,121.6l121.6,-121.6c-66.88,-67.29 -175.91,-67.29 -243.2,0z" fill="url(#color-KyEEtjKB)"/>
+		</mask>
+		<mask id="mask-k9F1IW7T">
+			<rect fill="url(#color-eGJDofcD)" x="40.54" y="180.27" width="942.93" height="681.59"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-9nYOSZ8V)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="40.54" y="180.27" width="942.93" height="681.59" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-k9F1IW7T)">
+				<rect x="40.54" y="180.27" width="942.93" height="681.59" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-tlvZem48)" mask="url(#mask-dd2k2Rm0)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="40.54" y="180.27" width="942.93" height="681.59" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

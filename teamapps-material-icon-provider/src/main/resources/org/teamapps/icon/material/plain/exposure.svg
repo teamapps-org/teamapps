@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>exposure icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,170.67v682.66c0,46.93 -38.41,85.34 -85.34,85.34h-682.66c-46.93,0 -85.34,-38.41 -85.34,-85.34v-682.66c0,-46.93 38.41,-85.34 85.34,-85.34h682.66c46.93,0 85.34,38.41 85.34,85.34zM853.33,170.67l-682.66,682.66h682.66zM554.67,725.33v-85.33h85.33v-85.33h85.33v85.33h85.34v85.33h-85.34v85.34h-85.33v-85.34zM213.33,298.67h256v-85.34h-256z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

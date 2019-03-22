@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>comment icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M838.5,930.46l-129.95,-129.95h-494.54c-76.87,0 -139.53,-62.63 -139.53,-139.52v-446.98c0,-76.88 62.64,-139.53 139.53,-139.53h595.96c77.33,0 139.15,63.1 139.15,139.53l0.38,670.43c0.01,26.31 -15.82,50.03 -40.12,60.1c-24.3,10.07 -52.28,4.51 -70.88,-14.09zM903.5,930.36c18.56,-7.69 30.66,-25.81 30.65,-45.91l-0.38,-670.44c0,-68.06 -55.06,-124.17 -123.79,-124.17h-595.96c-68.4,0 -124.17,55.77 -124.17,124.17v446.98c0,68.41 55.78,124.16 124.17,124.16h500.9l134.45,134.45c14.21,14.21 35.58,18.45 54.14,10.76zM884.48,884.48l-148.99,-148.99h-521.47c-40.97,0 -74.5,-33.52 -74.5,-74.49v-446.98c0,-40.97 33.53,-74.5 74.5,-74.5h595.96c40.97,0 74.13,33.53 74.13,74.5zM735.49,400.26h-446.98v74.49h446.98zM735.49,288.51h-446.98v74.49h446.98zM735.49,512h-446.98v74.49h446.98z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

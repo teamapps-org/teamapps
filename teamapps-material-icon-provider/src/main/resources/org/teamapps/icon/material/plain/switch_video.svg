@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>switch_video icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,234.67v554.66l-170.67,-170.66v149.33c0,23.47 -19.2,42.67 -42.67,42.67h-597.33c-23.47,0 -42.67,-19.2 -42.67,-42.67v-512c0,-23.47 19.2,-42.67 42.67,-42.67h597.33c23.47,0 42.67,19.2 42.67,42.67v149.33zM704,512l-149.33,-149.33v106.66h-256v-106.66l-149.34,149.33l149.34,149.33v-106.66h256v106.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

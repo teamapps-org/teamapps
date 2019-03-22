@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>fiber_pin icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,256v512c0,47.36 -37.98,85.33 -85.34,85.33h-682.66c-47.36,0 -85.34,-37.97 -85.34,-85.33l0.43,-512c0,-47.36 37.55,-85.33 84.91,-85.33h682.66c47.36,0 85.34,37.97 85.34,85.33zM384,448c0,-36.27 -27.73,-64 -64,-64h-149.33v256h64v-85.33h85.33c36.27,0 64,-27.73 64,-64zM853.33,384h-53.33v149.33l-106.67,-149.33h-53.33v256h53.33v-149.33l108.8,149.33h51.2zM533.33,384h-64v256h64zM234.67,448h85.33v42.67h-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

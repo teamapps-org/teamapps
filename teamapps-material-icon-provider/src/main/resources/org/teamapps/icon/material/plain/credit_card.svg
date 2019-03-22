@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>credit_card icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,256v512c0,47.36 -37.98,85.33 -85.34,85.33h-682.66c-47.36,0 -85.34,-37.97 -85.34,-85.33l0.43,-512c0,-47.36 37.55,-85.33 84.91,-85.33h682.66c47.36,0 85.34,37.97 85.34,85.33zM853.33,512h-682.66v256h682.66zM853.33,256h-682.66v85.33h682.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

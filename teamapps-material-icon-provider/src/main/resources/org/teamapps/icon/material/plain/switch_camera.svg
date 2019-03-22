@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>switch_camera icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,256v512c0,46.93 -38.41,85.33 -85.34,85.33h-682.66c-46.93,0 -85.34,-38.4 -85.34,-85.33v-512c0,-46.93 38.41,-85.33 85.34,-85.33h135.25l78.08,-85.34h256l78.08,85.34h135.25c46.93,0 85.34,38.4 85.34,85.33zM789.33,512l-149.33,-149.33v106.66h-256v-106.66l-149.33,149.33l149.33,149.33v-106.66h256v106.66z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>replay icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M853.33,554.67c0,188.59 -152.74,341.33 -341.33,341.33c-188.59,0 -341.33,-152.74 -341.33,-341.33h85.33c0,141.23 114.77,256 256,256c141.23,0 256,-114.77 256,-256c0,-141.23 -114.77,-256 -256,-256v170.66l-213.33,-213.33l213.33,-213.33v170.66c188.59,0 341.33,152.75 341.33,341.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

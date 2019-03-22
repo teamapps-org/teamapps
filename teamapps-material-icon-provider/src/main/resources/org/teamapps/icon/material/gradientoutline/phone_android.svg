@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>phone_android icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-CI8yT8BR" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-vLKKfLG0" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-oKReq77n" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-4yNebxB8">
+			<rect fill="url(#color-vLKKfLG0)" x="202.66" y="40.54" width="618.67" height="942.93"/>
+		</mask>
+		<mask id="mask-AyeOp1Gt">
+			<path d="M821.34,187.74v648.53c0,81.43 -65.77,147.2 -147.2,147.2h-324.27c-81.43,0 -147.2,-65.77 -147.2,-147.2v-648.53c0,-81.43 65.77,-147.2 147.2,-147.2h324.27c81.43,0 147.2,65.77 147.2,147.2zM324.8,213.34v516.26h374.4v-516.26zM674.14,66.14h-324.27c-67.29,0 -121.6,54.31 -121.6,121.6v648.53c0,67.29 54.31,121.6 121.6,121.6h324.27c67.29,0 121.6,-54.31 121.6,-121.6v-648.53c0,-67.29 -54.31,-121.6 -121.6,-121.6zM724.8,755.2h-425.6v-567.46h425.6zM593.06,876.8h-162.13v-40.54h162.13z" fill="url(#color-CI8yT8BR)"/>
+		</mask>
+		<mask id="mask-ie1blP1K">
+			<path d="M821.34,187.74v648.53c0,81.43 -65.77,147.2 -147.2,147.2h-324.27c-81.43,0 -147.2,-65.77 -147.2,-147.2v-648.53c0,-81.43 65.77,-147.2 147.2,-147.2h324.27c81.43,0 147.2,65.77 147.2,147.2zM324.8,213.34v516.26h374.4v-516.26zM674.14,66.14h-324.27c-67.29,0 -121.6,54.31 -121.6,121.6v648.53c0,67.29 54.31,121.6 121.6,121.6h324.27c67.29,0 121.6,-54.31 121.6,-121.6v-648.53c0,-67.29 -54.31,-121.6 -121.6,-121.6zM724.8,755.2h-425.6v-567.46h425.6zM593.06,876.8h-162.13v-40.54h162.13z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-ie1blP1K)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="202.66" y="40.54" width="618.67" height="942.93" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-4yNebxB8)">
+				<rect x="202.66" y="40.54" width="618.67" height="942.93" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-oKReq77n)" mask="url(#mask-AyeOp1Gt)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="202.66" y="40.54" width="618.67" height="942.93" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

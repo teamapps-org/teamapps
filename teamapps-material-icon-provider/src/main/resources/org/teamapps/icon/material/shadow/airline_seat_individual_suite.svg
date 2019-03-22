@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_individual_suite icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-6JTeAo5p" x="-12%" y="-12%" width="135%" height="235%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M929.7,474.02v227.84h-835.41v-379.73h75.94v265.81h303.78v-265.81h303.79c83.92,0 151.89,67.97 151.89,151.89zM208.22,436.06c0,-62.66 51.26,-113.92 113.92,-113.92c62.66,0 113.92,51.26 113.92,113.92c0,62.66 -51.26,113.92 -113.92,113.92c-62.66,0 -113.92,-51.26 -113.92,-113.92z" fill="#000000" filter="url(#filter-6JTeAo5p)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M929.7,474.02v227.84h-835.41v-379.73h75.94v265.81h303.78v-265.81h303.79c83.92,0 151.89,67.97 151.89,151.89zM208.22,436.06c0,-62.66 51.26,-113.92 113.92,-113.92c62.66,0 113.92,51.26 113.92,113.92c0,62.66 -51.26,113.92 -113.92,113.92c-62.66,0 -113.92,-51.26 -113.92,-113.92z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

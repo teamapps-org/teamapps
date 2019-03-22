@@ -1,0 +1,31 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>filter_9_plus icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-8wxP6VRX">
+			<path d="M1.3,51.3h1021.41v972.7h-1021.41z"/>
+		</clipPath>
+		<filter id="filter-0DNzBDo9" x="-12%" y="-6%" width="135%" height="135%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-8wxP6VRX)">
+			<path d="M170.24,853.76h607.58v75.94h-607.58c-41.77,0 -75.94,-34.18 -75.94,-75.94v-607.58h75.94zM929.7,170.24v531.62c0,41.77 -34.18,75.95 -75.94,75.95h-531.62c-41.77,0 -75.95,-34.18 -75.95,-75.95v-531.62c0,-41.77 34.18,-75.94 75.95,-75.94h531.62c41.77,0 75.94,34.18 75.94,75.94zM853.76,170.24h-531.62v531.62h531.62v-227.84h-75.94v75.95h-75.95v-75.95h-75.94v-75.94h75.94v-75.94h75.95v75.94h75.94zM512,587.94h-113.92v-75.94h113.92v-37.98h-37.98c-41.77,0 -75.94,-33.79 -75.94,-75.94v-37.98c0,-42.15 34.18,-75.94 75.94,-75.94h37.98c41.77,0 75.94,33.79 75.94,75.94v151.9c0,42.15 -34.18,75.94 -75.94,75.94zM512,398.08v-37.98h-37.98v37.98z" fill="#000000" filter="url(#filter-0DNzBDo9)"/>
+		</g>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M170.24,853.76h607.58v75.94h-607.58c-41.77,0 -75.94,-34.18 -75.94,-75.94v-607.58h75.94zM929.7,170.24v531.62c0,41.77 -34.18,75.95 -75.94,75.95h-531.62c-41.77,0 -75.95,-34.18 -75.95,-75.95v-531.62c0,-41.77 34.18,-75.94 75.95,-75.94h531.62c41.77,0 75.94,34.18 75.94,75.94zM853.76,170.24h-531.62v531.62h531.62v-227.84h-75.94v75.95h-75.95v-75.95h-75.94v-75.94h75.94v-75.94h75.95v75.94h75.94zM512,587.94h-113.92v-75.94h113.92v-37.98h-37.98c-41.77,0 -75.94,-33.79 -75.94,-75.94v-37.98c0,-42.15 34.18,-75.94 75.94,-75.94h37.98c41.77,0 75.94,33.79 75.94,75.94v151.9c0,42.15 -34.18,75.94 -75.94,75.94zM512,398.08v-37.98h-37.98v37.98z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

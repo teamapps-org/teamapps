@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>hd icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,213.33v597.34c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-47.36,0 -85.33,-38.4 -85.33,-85.33v-597.34c0,-46.93 37.97,-85.33 85.33,-85.33h597.34c46.93,0 85.33,38.4 85.33,85.33zM554.67,640h170.66c23.47,0 42.67,-19.2 42.67,-42.67v-170.66c0,-23.47 -19.2,-42.67 -42.67,-42.67h-170.66zM469.33,384h-64v106.67h-85.33v-106.67h-64v256h64v-85.33h85.33v85.33h64zM618.67,448h85.33v128h-85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

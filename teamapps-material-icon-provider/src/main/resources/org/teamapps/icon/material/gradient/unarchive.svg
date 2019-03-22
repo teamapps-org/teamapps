@@ -1,0 +1,59 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>unarchive icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-tHAXZc8a">
+			<path d="M896,277.33v533.34c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-47.36,0 -85.33,-38.4 -85.33,-85.33v-533.34c0,-20.91 7.26,-39.68 19.63,-54.61l59.3,-71.25c11.52,-14.51 29.02,-23.47 49.07,-23.47h512c20.05,0 37.54,8.96 49.49,23.04l59.31,71.68c11.95,14.93 19.2,33.7 19.2,54.61zM277.33,640h149.34v85.33h170.66v-85.33h149.34l-234.67,-234.67zM805.12,213.33l-39.68,-42.66h-512l-34.99,42.66z"/>
+		</clipPath>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-3FnRMw1u" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-PlWtsPNO" gradientUnits="userSpaceOnUse">
+			<stop offset="0.07" stop-color="#ffffff"/>
+			<stop offset="0.75" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-0NgiUtGl" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<filter id="filter-jMrh4PZh" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.07 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+		<mask id="mask-d3WlFrYB">
+			<path d="M896,277.33v533.34c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-47.36,0 -85.33,-38.4 -85.33,-85.33v-533.34c0,-20.91 7.26,-39.68 19.63,-54.61l59.3,-71.25c11.52,-14.51 29.02,-23.47 49.07,-23.47h512c20.05,0 37.54,8.96 49.49,23.04l59.31,71.68c11.95,14.93 19.2,33.7 19.2,54.61zM277.33,640h149.34v85.33h170.66v-85.33h149.34l-234.67,-234.67zM805.12,213.33l-39.68,-42.66h-512l-34.99,42.66z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-iRi7Z5T9">
+			<path d="M896,277.33v533.34c0,46.93 -38.4,85.33 -85.33,85.33h-597.34c-47.36,0 -85.33,-38.4 -85.33,-85.33v-533.34c0,-20.91 7.26,-39.68 19.63,-54.61l59.3,-71.25c11.52,-14.51 29.02,-23.47 49.07,-23.47h512c20.05,0 37.54,8.96 49.49,23.04l59.31,71.68c11.95,14.93 19.2,33.7 19.2,54.61zM277.33,640h149.34v85.33h170.66v-85.33h149.34l-234.67,-234.67zM805.12,213.33l-39.68,-42.66h-512l-34.99,42.66z" fill="url(#color-PlWtsPNO)"/>
+		</mask>
+		<mask id="mask-z8YhaTXW">
+			<rect fill="url(#color-3FnRMw1u)" x="128" y="128" width="768" height="768"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-d3WlFrYB)">
+			<g color="#ffc107" class="teamapps-color-2">
+				<rect x="128" y="128" width="768" height="768" fill="currentColor"/>
+			</g>
+			<g color="#e65100" class="teamapps-color-3" mask="url(#mask-z8YhaTXW)">
+				<rect x="128" y="128" width="768" height="768" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-0NgiUtGl)" mask="url(#mask-iRi7Z5T9)">
+			<g color="#fff59d" class="teamapps-color-1">
+				<rect x="128" y="128" width="768" height="768" fill="currentColor"/>
+			</g>
+		</g>
+		<g clip-path="url(#clip-tHAXZc8a)">
+			<path d="M35,939v-954h954v954zM876.8,222.72l-59.31,-71.68c-11.95,-14.08 -29.44,-23.04 -49.49,-23.04h-512c-20.05,0 -37.55,8.96 -49.07,23.47l-59.3,71.25c-12.37,14.93 -19.63,33.7 -19.63,54.61v533.34c0,46.93 37.97,85.33 85.33,85.33h597.34c46.93,0 85.33,-38.4 85.33,-85.33v-533.34c0,-20.91 -7.25,-39.68 -19.2,-54.61zM512,405.33l234.67,234.67h-149.34v85.33h-170.66v-85.33h-149.34zM218.45,213.33l34.99,-42.66h512l39.68,42.66z" fill="#000000" filter="url(#filter-jMrh4PZh)"/>
+		</g>
+	</g>
+</svg>

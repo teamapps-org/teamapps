@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>picture_in_picture_alt icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M849.92,911.36h-675.84c-75.23,0 -136.53,-61.3 -136.53,-136.53v-526.41c0,-76.05 62.12,-135.78 136.53,-135.78h675.84c74.41,0 136.53,59.73 136.53,135.78v526.41c0,75.23 -61.3,136.53 -136.53,136.53zM235.52,309.48v404.65h179.19c-1.11,-4.62 -1.7,-9.45 -1.7,-14.41v-225.28c0,-33.93 27.51,-61.44 61.44,-61.44h300.38c4.69,0 9.26,0.53 13.65,1.52v-105.05zM925.01,774.83v-526.41c0,-41.3 -33.79,-74.34 -75.09,-74.34h-675.84c-41.3,0 -75.09,33.04 -75.09,74.34v526.41c0,41.3 33.79,75.09 75.09,75.09h675.84c41.3,0 75.09,-33.79 75.09,-75.09zM849.92,775.58h-675.84v-527.53h675.84zM774.83,474.45h-300.38v225.28h300.38z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

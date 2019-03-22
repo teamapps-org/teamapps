@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>phonelink_off icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M910.93,899.41l-54.18,54.19l-100.27,-100.27h-756.48v-128h85.33v-469.33c0,-20.48 7.69,-39.25 20.06,-53.76l-77.66,-77.65l54.19,-54.19zM170.67,725.33h457.81l-457.81,-457.81zM1024,384v426.67c0,23.47 -19.2,42.66 -42.67,42.66h-7.68l-128,-128h93.02v-298.66h-170.67v221.01l-85.33,-85.33v-178.35c0,-23.47 19.19,-42.67 42.66,-42.67h256c23.47,0 42.67,19.2 42.67,42.67zM376.32,256l-85.33,-85.33h647.68v85.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

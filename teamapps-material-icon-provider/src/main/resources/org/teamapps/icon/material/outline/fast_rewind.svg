@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>fast_rewind icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M119.88,461.81l319.14,-225.28c18.75,-13.24 43.32,-14.92 63.7,-4.36c20.38,10.56 33.17,31.6 33.17,54.55v119.96l241.05,-170.15c18.75,-13.24 43.32,-14.92 63.7,-4.36c20.38,10.56 33.17,31.6 33.17,54.55v450.56c0,22.95 -12.79,43.99 -33.17,54.55c-20.38,10.56 -44.95,8.88 -63.7,-4.36l-241.05,-170.15v119.96c0,22.95 -12.79,43.99 -33.17,54.55c-20.38,10.56 -44.95,8.88 -63.7,-4.36l-319.14,-225.28c-16.31,-11.51 -26.01,-30.23 -26.01,-50.19c0,-19.96 9.7,-38.68 26.01,-50.19zM474.45,737.28v-450.56l-319.14,225.28zM493.23,512l319.14,225.28v-450.56z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

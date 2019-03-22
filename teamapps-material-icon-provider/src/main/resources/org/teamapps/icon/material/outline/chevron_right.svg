@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>chevron_right icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M705.63,555.44l-225.28,225.28c-23.99,23.99 -62.9,23.99 -86.89,0l-52.94,-52.94c-23.98,-23.98 -24,-62.84 -0.05,-86.84l128.66,-128.94l-128.66,-128.94c-23.95,-24 -23.93,-62.87 0.05,-86.84l52.94,-52.94c23.99,-23.99 62.9,-23.99 86.89,0l225.28,225.28c23.99,23.99 23.99,62.9 0,86.89zM436.91,286.72l-52.94,52.94l171.96,172.34l-171.96,172.34l52.94,52.94l225.28,-225.28z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

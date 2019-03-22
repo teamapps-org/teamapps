@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>airline_seat_recline_normal icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-ZtqVlo6H" x="-16%" y="-6%" width="166%" height="144%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M761.48,872.74l-132.9,-132.9h-192.52c-63.04,0 -113.92,-50.88 -113.92,-113.92v-218.34c0,-47.09 38.35,-85.44 85.44,-85.44h1.14c12.91,0 25.45,3.42 36.45,8.73c9.87,4.56 18.98,11.01 26.2,18.98l53.16,58.86c40.25,44.43 114.29,78.22 177.33,77.47v82.02c-72.15,0 -155.69,-38.35 -208.85,-82.02v139.74h130.24l192.52,192.52zM398.08,777.82h227.84v75.94h-227.84c-104.81,0 -189.86,-85.06 -189.86,-189.86v-341.76h75.94v341.76c0,63.04 50.88,113.92 113.92,113.92zM344.54,261.76c-29.62,-29.62 -29.62,-77.85 0,-107.47c29.62,-29.62 77.85,-29.62 107.47,0c29.62,29.62 29.62,77.85 0,107.47c-30,30 -77.85,30 -107.47,0z" fill="#000000" filter="url(#filter-ZtqVlo6H)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M761.48,872.74l-132.9,-132.9h-192.52c-63.04,0 -113.92,-50.88 -113.92,-113.92v-218.34c0,-47.09 38.35,-85.44 85.44,-85.44h1.14c12.91,0 25.45,3.42 36.45,8.73c9.87,4.56 18.98,11.01 26.2,18.98l53.16,58.86c40.25,44.43 114.29,78.22 177.33,77.47v82.02c-72.15,0 -155.69,-38.35 -208.85,-82.02v139.74h130.24l192.52,192.52zM398.08,777.82h227.84v75.94h-227.84c-104.81,0 -189.86,-85.06 -189.86,-189.86v-341.76h75.94v341.76c0,63.04 50.88,113.92 113.92,113.92zM344.54,261.76c-29.62,-29.62 -29.62,-77.85 0,-107.47c29.62,-29.62 77.85,-29.62 107.47,0c29.62,29.62 29.62,77.85 0,107.47c-30,30 -77.85,30 -107.47,0z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

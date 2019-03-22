@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>play_arrow icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M807.82,563.83l-413.02,262.83c-18.92,12.04 -42.89,12.81 -62.55,2.02c-19.66,-10.79 -31.87,-31.43 -31.87,-53.86v-525.66c0,-22.42 12.22,-43.07 31.87,-53.86c19.66,-10.79 43.63,-10.02 62.55,2.02l413.02,262.83c17.72,11.28 28.45,30.83 28.45,51.83c0,21.01 -10.73,40.56 -28.45,51.83zM361.81,249.17v525.66l413.02,-262.83z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

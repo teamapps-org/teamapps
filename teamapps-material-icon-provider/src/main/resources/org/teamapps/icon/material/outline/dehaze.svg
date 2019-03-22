@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>dehaze icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,643.41v75.1c0,33.93 -27.51,61.44 -61.44,61.44h-750.94c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.1c0,-25.19 15.16,-46.84 36.85,-56.32c-21.69,-9.48 -36.85,-31.13 -36.85,-56.32v-75.09c0,-25.19 15.16,-46.84 36.85,-56.32c-21.69,-9.48 -36.85,-31.13 -36.85,-56.32v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h750.94c33.93,0 61.44,27.51 61.44,61.44v75.09c0,25.19 -15.16,46.84 -36.85,56.32c21.69,9.48 36.85,31.13 36.85,56.32v75.09c0,25.19 -15.16,46.84 -36.85,56.32c21.69,9.48 36.85,31.13 36.85,56.32zM136.53,643.41v75.1h750.94v-75.1zM136.53,267.95v75.09h750.94v-75.09zM136.53,455.68v75.09h750.94v-75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

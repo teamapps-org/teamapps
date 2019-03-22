@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>functions icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M737.28,385.71h-114.5l82.85,82.84c24,23.99 24,62.9 0,86.89l-82.85,82.84h114.5c33.93,0 61.44,27.51 61.44,61.44v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-450.56c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-17.15 7.17,-33.52 19.77,-45.15l195.14,-180.13l-195.14,-180.13c-12.6,-11.63 -19.77,-28 -19.77,-45.15v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h450.56c33.93,0 61.44,27.51 61.44,61.44v112.64c0,33.93 -27.51,61.44 -61.44,61.44zM737.28,211.63h-450.56v75.09l244.05,225.28l-244.05,225.28v75.09h450.56v-112.64h-262.83l187.74,-187.73l-187.74,-187.73h262.83z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

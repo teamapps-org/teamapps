@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>hourglass_empty icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M768,85.33v256h-0.43l0.43,0.43l-170.67,170.24l170.67,170.67l-0.43,0.42h0.43v255.58h-512v-255.58h0.43l-0.43,-0.42l170.67,-170.67l-170.67,-170.24l0.43,-0.43h-0.43v-256zM512,533.33l-170.67,170.67v149.33h341.34v-149.33zM682.67,320v-149.33h-341.34v149.33l170.67,170.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

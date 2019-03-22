@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>graphic_eq icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-Dmo8tWj2" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-XCbHOKFx" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-EgL0RNKF" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-1vl98Sd2">
+			<rect fill="url(#color-XCbHOKFx)" x="121.6" y="81.06" width="780.8" height="861.87"/>
+		</mask>
+		<mask id="mask-On4AkkOt">
+			<path d="M471.46,81.06h81.07c14.14,0 25.6,11.46 25.6,25.6v810.67c0,14.14 -11.46,25.6 -25.6,25.6h-81.07c-14.14,0 -25.6,-11.46 -25.6,-25.6v-810.67c0,-14.14 11.46,-25.6 25.6,-25.6zM309.34,243.2h81.06c14.14,0 25.6,11.46 25.6,25.6v486.4c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-486.4c0,-14.14 11.46,-25.6 25.6,-25.6zM633.6,243.2h81.06c14.14,0 25.6,11.46 25.6,25.6v486.4c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-486.4c0,-14.14 11.46,-25.6 25.6,-25.6zM147.2,405.34h81.06c14.14,0 25.6,11.46 25.6,25.6v162.13c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-162.13c0,-14.14 11.46,-25.6 25.6,-25.6zM902.4,430.94v162.13c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-162.13c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c14.14,0 25.6,11.46 25.6,25.6zM471.46,917.34h81.07v-810.67h-81.07zM309.34,755.2h81.06v-486.4h-81.06zM633.6,755.2h81.06v-486.4h-81.06zM795.74,430.94v162.13h81.06v-162.13zM147.2,593.06h81.06v-162.13h-81.06z" fill="url(#color-Dmo8tWj2)"/>
+		</mask>
+		<mask id="mask-SAKDzhoP">
+			<path d="M471.46,81.06h81.07c14.14,0 25.6,11.46 25.6,25.6v810.67c0,14.14 -11.46,25.6 -25.6,25.6h-81.07c-14.14,0 -25.6,-11.46 -25.6,-25.6v-810.67c0,-14.14 11.46,-25.6 25.6,-25.6zM309.34,243.2h81.06c14.14,0 25.6,11.46 25.6,25.6v486.4c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-486.4c0,-14.14 11.46,-25.6 25.6,-25.6zM633.6,243.2h81.06c14.14,0 25.6,11.46 25.6,25.6v486.4c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-486.4c0,-14.14 11.46,-25.6 25.6,-25.6zM147.2,405.34h81.06c14.14,0 25.6,11.46 25.6,25.6v162.13c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-162.13c0,-14.14 11.46,-25.6 25.6,-25.6zM902.4,430.94v162.13c0,14.14 -11.46,25.6 -25.6,25.6h-81.06c-14.14,0 -25.6,-11.46 -25.6,-25.6v-162.13c0,-14.14 11.46,-25.6 25.6,-25.6h81.06c14.14,0 25.6,11.46 25.6,25.6zM471.46,917.34h81.07v-810.67h-81.07zM309.34,755.2h81.06v-486.4h-81.06zM633.6,755.2h81.06v-486.4h-81.06zM795.74,430.94v162.13h81.06v-162.13zM147.2,593.06h81.06v-162.13h-81.06z" fill="#ffffff"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-SAKDzhoP)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="121.6" y="81.06" width="780.8" height="861.87" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-1vl98Sd2)">
+				<rect x="121.6" y="81.06" width="780.8" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-EgL0RNKF)" mask="url(#mask-On4AkkOt)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="121.6" y="81.06" width="780.8" height="861.87" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

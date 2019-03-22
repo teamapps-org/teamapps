@@ -1,0 +1,66 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+enum UiCalendarViewMode {
+	YEAR, MONTH, WEEK, DAY
+}
+enum UiWeekDay {
+	SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+}
+enum UiCalendarEventRenderingStyle { // see http://fullcalendar.io/docs/event_rendering/Background_Events/
+	DEFAULT, // normal event display
+	BACKGROUND, // only show colored shadow for the event. this may useful for subtly showing a secondary calendar with anonymous events inside the main one.
+	INVERSE_BACKGROUND // highlight the whole calendar except the time period of the event.
+}
+
+class UiCalendar extends UiComponent {
+	Dictionary<UiTemplate> templates;
+	List<UiCalendarEventClientRecord> initialData;
+	
+	UiCalendarViewMode activeViewMode = UiCalendarViewMode.MONTH;
+	long displayedDate = System.currentTimeMillis();
+	boolean showHeader = true;
+	boolean tableBorder = true;
+	boolean showWeekNumbers = true;
+	int businessHoursStart = 8;
+	int businessHoursEnd = 17;
+	UiWeekDay firstDayOfWeek = null; // if set, overrides default set via UiConfiguration.firstDayOfWeek
+	List<UiWeekDay> workingDays = java.util.Arrays.asList(UiWeekDay.MONDAY, UiWeekDay.TUESDAY, UiWeekDay.WEDNESDAY, UiWeekDay.THURSDAY, UiWeekDay.FRIDAY);
+	UiColor tableHeaderBackgroundColor = new UiColor(255, 255, 255);
+    UiColor defaultBackgroundColor = new UiColor(154, 204, 228);
+    UiColor defaultBorderColor = new UiColor(154, 204, 228);
+
+	command setViewMode(UiCalendarViewMode viewMode);
+	command setDisplayedDate(long date);
+	command addEvent(UiCalendarEventClientRecord theEvent); // an existing event with the same id gets removed before the new one is added
+	command removeEvent(int eventId);
+	command setCalendarData(List<UiCalendarEventClientRecord> events);
+	command clearCalendar();
+	command registerTemplate(String id, UiTemplate template);
+
+	event eventClicked(int eventId, boolean isDoubleClick);
+	event eventMoved(int eventId, long newStart, long newEnd); // fired when an event gets moved or resized
+	event dayClicked(long date, boolean isDoubleClick);
+	event viewChanged(
+		UiCalendarViewMode viewMode,
+		long mainIntervalStart, long mainIntervalEnd, // the interval the calendar currently formally represents. (e.g. 1. January 2016 0:00 to 1 February 2016 0:00)
+		long displayedIntervalStart, long displayedIntervalEnd // the interval the calendar displays. (e.g. 28. December 2015 0:00 to 8 February 2016 0:00)
+	);
+	event dataNeeded(long requestIntervalStart, long requestIntervalEnd); // interval of missing calendar data
+}

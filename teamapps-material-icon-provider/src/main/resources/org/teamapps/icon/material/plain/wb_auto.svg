@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>wb_auto icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1015.47,298.67l-87.47,384h-74.67l-64,-260.27l-64,260.27h-74.66l-4.27,-18.35c-55.89,111.79 -171.52,189.01 -305.07,189.01c-188.59,0 -341.33,-152.74 -341.33,-341.33c0,-188.59 152.74,-341.33 341.33,-341.33c107.95,0 203.52,49.92 266.24,128h32.43l51.63,268.37l63.57,-268.37h68.27l64,268.37l51.2,-268.37zM520.53,682.67l-136.53,-384h-85.33l-136.54,384h81.07l29.87,-85.34h136.53l29.87,85.34zM341.33,384l49.07,155.73h-98.13z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>shop icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,286.72v488.11c0,75.62 -60.94,136.53 -136.54,136.53h-600.74c-75.6,0 -136.54,-60.91 -136.54,-136.53v-488.11c0,-33.93 27.51,-61.44 61.44,-61.44h163.84v-13.65c0,-75.61 60.93,-136.54 136.54,-136.54h150.18c75.61,0 136.54,60.93 136.54,136.54v13.65h163.84c33.93,0 61.44,27.51 61.44,61.44zM460.8,501.76v120.72l100.6,-67.06zM662.19,286.72v-75.09c0,-41.68 -33.42,-75.1 -75.1,-75.1h-150.18c-41.68,0 -75.1,33.42 -75.1,75.1v75.09h-225.28v488.11c0,41.68 33.42,75.09 75.1,75.09h600.74c41.68,0 75.1,-33.41 75.1,-75.09v-488.11zM399.36,737.28v-337.92l281.6,150.19zM436.91,211.63h150.18v75.09h-150.18z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

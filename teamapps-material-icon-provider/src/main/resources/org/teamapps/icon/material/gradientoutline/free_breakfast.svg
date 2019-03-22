@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>free_breakfast icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-CSxoU0gs" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-pvqLyyfI" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<filter id="filter-ct9vQnuX" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-Q0cHToc0">
+			<path d="M942.94,228.26v121.6c0,58.64 -47.46,106.67 -106.67,106.67h-55.46v96c0,103.72 -84.02,187.73 -187.74,187.73h-243.2c-103.71,0 -187.73,-84.01 -187.73,-187.73v-405.34c0,-14.14 11.46,-25.6 25.6,-25.6h648.53c59.13,0 106.67,47.53 106.67,106.66zM187.74,770.14h648.53c14.14,0 25.6,11.46 25.6,25.6v81.06c0,14.14 -11.46,25.6 -25.6,25.6h-648.53c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6zM780.8,253.86v70.4h29.86v-70.4zM836.26,147.2h-648.53v405.34c0,89.58 72.55,162.13 162.13,162.13h243.2c89.58,0 162.14,-72.55 162.14,-162.13v-121.6h81.06c44.99,0 81.07,-36.49 81.07,-81.07v-121.6c0,-44.99 -36.08,-81.06 -81.07,-81.06zM187.74,876.8h648.53v-81.06h-648.53zM836.26,349.86h-81.06v-121.6h81.06z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-q2JRxw4j">
+			<path d="M942.94,228.26v121.6c0,58.64 -47.46,106.67 -106.67,106.67h-55.46v96c0,103.72 -84.02,187.73 -187.74,187.73h-243.2c-103.71,0 -187.73,-84.01 -187.73,-187.73v-405.34c0,-14.14 11.46,-25.6 25.6,-25.6h648.53c59.13,0 106.67,47.53 106.67,106.66zM187.74,770.14h648.53c14.14,0 25.6,11.46 25.6,25.6v81.06c0,14.14 -11.46,25.6 -25.6,25.6h-648.53c-14.14,0 -25.6,-11.46 -25.6,-25.6v-81.06c0,-14.14 11.46,-25.6 25.6,-25.6zM780.8,253.86v70.4h29.86v-70.4zM836.26,147.2h-648.53v405.34c0,89.58 72.55,162.13 162.13,162.13h243.2c89.58,0 162.14,-72.55 162.14,-162.13v-121.6h81.06c44.99,0 81.07,-36.49 81.07,-81.07v-121.6c0,-44.99 -36.08,-81.06 -81.07,-81.06zM187.74,876.8h648.53v-81.06h-648.53zM836.26,349.86h-81.06v-121.6h81.06z" fill="url(#color-pvqLyyfI)"/>
+		</mask>
+		<mask id="mask-ySqS94XH">
+			<rect fill="url(#color-CSxoU0gs)" x="162.14" y="121.6" width="780.8" height="780.8"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-Q0cHToc0)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="162.14" y="121.6" width="780.8" height="780.8" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-ySqS94XH)">
+				<rect x="162.14" y="121.6" width="780.8" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-ct9vQnuX)" mask="url(#mask-q2JRxw4j)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="162.14" y="121.6" width="780.8" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

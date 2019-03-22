@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>power_settings_new icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,512c0,212.05 -171.95,384 -384,384c-212.05,0 -384,-171.95 -384,-384c0,-116.91 52.48,-221.01 135.25,-291.41l60.16,60.16c-66.99,54.61 -110.08,137.81 -110.08,231.25c0,165.12 133.55,298.67 298.67,298.67c165.12,0 298.67,-133.55 298.67,-298.67c0,-93.44 -43.1,-176.64 -110.51,-230.83l60.59,-60.58c82.77,70.4 135.25,174.5 135.25,291.41zM554.67,554.67h-85.34v-426.67h85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

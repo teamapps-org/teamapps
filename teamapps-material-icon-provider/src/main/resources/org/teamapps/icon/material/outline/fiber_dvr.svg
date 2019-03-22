@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>fiber_dvr icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M986.45,249.17v525.66c0,75.02 -60.71,136.53 -136.53,136.53h-675.84c-75.82,0 -136.53,-61.51 -136.53,-136.53v-525.66c0,-75.61 60.92,-136.53 136.53,-136.53h675.84c75.61,0 136.53,60.92 136.53,136.53zM849.92,174.08h-675.84c-41.68,0 -75.09,33.41 -75.09,75.09v525.66c0,41.3 33.41,75.09 75.09,75.09h675.84c41.68,0 75.09,-33.79 75.09,-75.09v-525.66c0,-41.68 -33.41,-75.09 -75.09,-75.09zM849.92,493.23c0,22.53 -15.02,43.17 -33.79,52.56l33.79,78.85h-56.32l-31.92,-75.09h-43.17v75.09h-56.32v-225.28h131.41c31.92,0 56.32,24.4 56.32,56.32zM361.81,568.32c0,31.92 -24.4,56.32 -56.32,56.32h-131.41v-225.28h131.41c31.92,0 56.32,24.4 56.32,56.32zM535.28,624.64h-56.32l-65.7,-225.28h56.32l37.54,128.79l37.55,-128.79h56.32zM230.4,568.32h75.09v-112.64h-75.09zM718.51,493.23h75.09v-37.55h-75.09z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

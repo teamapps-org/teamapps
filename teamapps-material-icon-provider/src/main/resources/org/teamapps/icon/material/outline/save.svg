@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>save icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,324.27v450.56c0,75.23 -61.3,136.53 -136.53,136.53h-525.66c-75.82,0 -136.53,-61.51 -136.53,-136.53v-525.66c0,-75.02 60.71,-136.53 136.53,-136.53h450.56c16.29,0 31.92,6.47 43.44,18l150.19,150.19c11.52,11.52 18,27.15 18,43.44zM563.2,310.61h-252.59v27.31h252.59zM563.2,662.19c0,-28.4 -22.8,-51.2 -51.2,-51.2c-28.4,0 -51.2,22.8 -51.2,51.2c0,28.4 22.8,51.2 51.2,51.2c28.4,0 51.2,-22.8 51.2,-51.2zM699.73,174.08h-450.56c-41.68,0 -75.09,33.79 -75.09,75.09v525.66c0,41.3 33.41,75.09 75.09,75.09h525.66c41.3,0 75.09,-33.79 75.09,-75.09v-450.56zM624.64,399.36h-375.47v-150.19h375.47zM512,774.83c-62.33,0 -112.64,-50.31 -112.64,-112.64c0,-62.33 50.31,-112.64 112.64,-112.64c62.33,0 112.64,50.31 112.64,112.64c0,62.33 -50.31,112.64 -112.64,112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>voicemail icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1024,490.67c0,129.71 -104.96,234.66 -234.67,234.66h-554.66c-129.71,0 -234.67,-104.95 -234.67,-234.66c0,-129.71 104.96,-234.67 234.67,-234.67c129.71,0 234.66,104.96 234.66,234.67c0,56.75 -20.05,108.8 -53.76,149.33h192.86c-33.71,-40.53 -53.76,-92.58 -53.76,-149.33c0,-129.71 104.95,-234.67 234.66,-234.67c129.71,0 234.67,104.96 234.67,234.67zM384,490.67c0,-82.35 -66.98,-149.34 -149.33,-149.34c-82.35,0 -149.34,66.99 -149.34,149.34c0,82.35 66.99,149.33 149.34,149.33c82.35,0 149.33,-66.98 149.33,-149.33zM938.67,490.67c0,-82.35 -66.99,-149.34 -149.34,-149.34c-82.35,0 -149.33,66.99 -149.33,149.34c0,82.35 66.98,149.33 149.33,149.33c82.35,0 149.34,-66.98 149.34,-149.33z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>map icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-WEFhiLR7" x="-14%" y="-7%" width="153%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M853.76,189.22v574.16c0,8.73 -5.7,15.57 -13.67,18.23l-214.17,72.15l-227.84,-79.74l-202.78,78.6l-6.08,1.14c-10.64,0 -18.98,-8.35 -18.98,-18.98v-574.16c0,-8.73 5.7,-15.57 13.67,-18.23l214.17,-72.15l227.84,79.74l202.78,-78.6l6.08,-1.14c10.64,0 18.98,8.35 18.98,18.98zM625.92,326.31l-227.84,-80.13v451.51l227.84,80.13z" fill="#000000" filter="url(#filter-WEFhiLR7)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,189.22v574.16c0,8.73 -5.7,15.57 -13.67,18.23l-214.17,72.15l-227.84,-79.74l-202.78,78.6l-6.08,1.14c-10.64,0 -18.98,-8.35 -18.98,-18.98v-574.16c0,-8.73 5.7,-15.57 13.67,-18.23l214.17,-72.15l227.84,79.74l202.78,-78.6l6.08,-1.14c10.64,0 18.98,8.35 18.98,18.98zM625.92,326.31l-227.84,-80.13v451.51l227.84,80.13z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

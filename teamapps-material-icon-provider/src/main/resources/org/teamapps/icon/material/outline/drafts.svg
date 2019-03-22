@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>drafts icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M948.91,737.28c0,75.24 -61.32,136.53 -136.54,136.53h-600.74c-75.22,0 -136.54,-61.29 -136.54,-136.53v-375.47c0,-49.21 26.07,-92.31 64.97,-116.19l340.89,-199.65c19.18,-11.23 42.92,-11.23 62.1,0l339.94,199.08c0.32,0.19 0.64,0.38 0.95,0.57c39.43,24.21 64.59,67.59 64.59,116.19zM512,245.29l-191.48,112.2l191.48,119.62l191.48,-119.62zM887.09,361.81c0,-27.03 -13.9,-50.69 -35.3,-63.83l-339.79,-198.99l-339.79,198.99c-21.4,13.14 -35.68,36.79 -35.68,63.83v375.47c0,41.3 33.8,75.09 75.1,75.09h600.74c41.3,0 75.1,-33.79 75.1,-75.09zM512,549.55l-310.14,-193.74l310.14,-181.73l310.14,181.73z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

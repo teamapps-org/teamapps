@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>wb_sunny icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M768,490.67c0,141.23 -114.77,256 -256,256c-141.23,0 -256,-114.77 -256,-256c0,-141.23 114.77,-256 256,-256c141.23,0 256,114.77 256,256zM227.84,714.24l60.16,60.16l-76.37,76.8l-60.16,-60.16zM227.84,266.67l-76.37,-76.38l60.16,-60.16l76.8,76.38zM796.16,266.67l-60.16,-60.16l76.37,-76.38l60.16,60.16zM795.31,715.09l76.8,76.38l-60.16,60.16l-76.38,-76.8zM170.67,533.33h-128v-85.33h128zM981.33,448v85.33h-128v-85.33zM554.67,149.33h-85.34v-125.86h85.34zM469.33,832h85.34v125.87h-85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

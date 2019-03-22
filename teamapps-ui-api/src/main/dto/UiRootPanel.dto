@@ -1,0 +1,56 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class UiRootPanel extends UiComponent {
+	List<UiComponent*> childComponents;
+	String visibleChildComponentId;
+
+	command addChildComponent(UiComponent* childComponent, boolean show); // TODO #componentRef No more necessary... Preloading by instantiation :-)
+	command setVisibleChildComponent(String childComponentId, UiComponentRevealAnimation animation, long animationDuration); // TODO #componentRef replace childComponentId with UiComponentReference...
+    command removeChildComponent(String childComponentId); // TODO #componentRef No more necessary...
+
+	static command createComponent(UiComponent component);
+	static command destroyComponent(UiComponent* component);
+	static command refreshComponent(UiComponent component);
+
+	static command setConfig(UiConfiguration config);
+	static command setThemeClassName(String theme);
+
+	static command setPageTitle(String pageTitle);
+	static command buildRootPanel(String containerElementId, UiRootPanel* uiRootPanel); // containerDomSelector == null --> body
+    static command registerTemplate(String id, UiTemplate template);
+    static command registerTemplates(Dictionary<UiTemplate> templates);
+
+    static command addClientToken(String token);
+    static command removeClientToken(String token);
+    static command clearClientTokens();
+
+	static command showWindow(UiWindow* window, int animationDuration);
+	static command closeWindow(String windowId, int animationDuration);
+    static command downloadFile(String fileUrl, String downloadFileName);
+	static command registerBackgroundImage(String id, String image, String blurredImage); // downloads the image without displaying it.
+	static command setBackgroundImage(String id, int animationDuration = 1000); // cross-fading to some pre-registered background image
+	static command exitFullScreen();
+	static command showNotification(UiNotification notification);
+	static command showDialogMessage(String icon, String title, String message, List<UiGenericErrorMessageOption> options);
+}
+
+enum UiGenericErrorMessageOption {
+	OK, RELOAD
+}

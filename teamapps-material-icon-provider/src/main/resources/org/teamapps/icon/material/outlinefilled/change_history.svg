@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>change_history icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M884.48,875.01h-744.97c-23.64,0 -45.41,-12.83 -56.87,-33.5c-11.46,-20.67 -10.8,-45.94 1.73,-65.98l372.48,-595.96c11.88,-19.01 32.72,-30.56 55.14,-30.56c22.42,0 43.26,11.55 55.14,30.56l372.48,595.96c12.53,20.04 13.19,45.31 1.73,65.98c-11.46,20.67 -33.23,33.5 -56.87,33.5zM927.92,834.06c8.75,-15.79 8.25,-35.09 -1.32,-50.4l-372.48,-595.96c-9.08,-14.52 -24.99,-23.34 -42.11,-23.34c-17.12,0 -33.04,8.82 -42.11,23.34l-372.48,595.96c-9.57,15.31 -10.08,34.61 -1.32,50.4c8.75,15.79 25.38,25.59 43.44,25.59h744.97c18.05,0 34.69,-9.8 43.44,-25.59zM884.48,809.98h-744.97l372.48,-595.96zM512,354.44l-238.01,381.05h476.03z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

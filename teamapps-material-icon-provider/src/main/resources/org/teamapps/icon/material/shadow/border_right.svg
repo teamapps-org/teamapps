@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>border_right icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-i50x3Odo" x="-14%" y="-7%" width="153%" height="153%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M853.76,170.24v683.52h-75.94v-683.52zM322.14,777.82h75.94v75.94h-75.94zM322.14,170.24h75.94v75.94h-75.94zM322.14,474.02h75.94v75.95h-75.94zM170.24,777.82h75.94v75.94h-75.94zM474.02,777.82h75.95v75.94h-75.95zM170.24,322.14h75.94v75.94h-75.94zM474.02,322.14h75.95v75.94h-75.95zM170.24,170.24h75.94v75.94h-75.94zM170.24,474.02h75.94v75.95h-75.94zM625.92,777.82h75.94v75.94h-75.94zM474.02,474.02h75.95v75.95h-75.95zM474.02,170.24h75.95v75.94h-75.95zM170.24,625.92h75.94v75.94h-75.94zM474.02,625.92h75.95v75.94h-75.95zM625.92,474.02h75.94v75.95h-75.94zM625.92,170.24h75.94v75.94h-75.94z" fill="#000000" filter="url(#filter-i50x3Odo)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M853.76,170.24v683.52h-75.94v-683.52zM322.14,777.82h75.94v75.94h-75.94zM322.14,170.24h75.94v75.94h-75.94zM322.14,474.02h75.94v75.95h-75.94zM170.24,777.82h75.94v75.94h-75.94zM474.02,777.82h75.95v75.94h-75.95zM170.24,322.14h75.94v75.94h-75.94zM474.02,322.14h75.95v75.94h-75.95zM170.24,170.24h75.94v75.94h-75.94zM170.24,474.02h75.94v75.95h-75.94zM625.92,777.82h75.94v75.94h-75.94zM474.02,474.02h75.95v75.95h-75.95zM474.02,170.24h75.95v75.94h-75.95zM170.24,625.92h75.94v75.94h-75.94zM474.02,625.92h75.95v75.94h-75.95zM625.92,474.02h75.94v75.95h-75.94zM625.92,170.24h75.94v75.94h-75.94z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

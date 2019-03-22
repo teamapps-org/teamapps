@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>laptop_windows icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M1024,737.28v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-901.12c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-33.93 27.51,-61.44 61.44,-61.44h23.62c-6.43,-15.82 -9.97,-33.1 -9.97,-51.2v-375.47c0,-75.24 61.32,-136.53 136.54,-136.53h600.74c75.22,0 136.54,61.29 136.54,136.53l-0.38,375.53c-0.01,18.04 -3.53,35.31 -9.93,51.14h23.96c33.93,0 61.44,27.51 61.44,61.44zM273.07,310.61v252.59h477.86v-252.59zM812.37,737.28v-37.55c41.3,0 74.72,-33.79 74.72,-75.09l0.38,-375.47c0,-41.3 -33.8,-75.09 -75.1,-75.09h-600.74c-41.3,0 -75.1,33.79 -75.1,75.09v375.47c0,41.3 33.8,75.09 75.1,75.09v37.55h-150.19v75.09h901.12v-75.09zM211.63,249.17h600.74v375.47h-600.74z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

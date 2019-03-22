@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>phone_locked icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M896,704v149.33c0,23.47 -19.2,42.67 -42.67,42.67c-400.64,0 -725.33,-324.69 -725.33,-725.33c0,-23.47 19.2,-42.67 42.67,-42.67h149.33c23.47,0 42.67,19.2 42.67,42.67c0,53.33 8.53,104.53 24.32,152.32c4.69,14.93 1.28,31.57 -10.67,42.66l-93.87,94.3c61.44,121.17 160.43,219.73 281.18,281.17l93.86,-93.87c11.95,-11.52 28.59,-14.93 43.52,-10.24c47.79,15.79 98.99,24.32 152.32,24.32c23.47,0 42.67,19.2 42.67,42.67zM896,213.33v170.67c0,23.47 -19.2,42.67 -42.67,42.67h-213.33c-23.47,0 -42.67,-19.2 -42.67,-42.67v-170.67c0,-23.47 19.2,-42.66 42.67,-42.66v-21.34c0,-58.88 47.79,-106.66 106.67,-106.66c58.88,0 106.66,47.78 106.66,106.66v21.34c23.47,0 42.67,19.19 42.67,42.66zM819.2,149.33c0,-40.11 -32.42,-72.53 -72.53,-72.53c-40.11,0 -72.54,32.42 -72.54,72.53v21.34h145.07z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

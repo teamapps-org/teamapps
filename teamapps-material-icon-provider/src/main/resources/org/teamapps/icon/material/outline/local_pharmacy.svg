@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_pharmacy icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M908.21,343.7l-68.61,205.85l68.61,205.85c2.09,6.26 3.15,12.82 3.15,19.43v75.09c0,33.93 -27.51,61.44 -61.44,61.44h-675.84c-33.93,0 -61.44,-27.51 -61.44,-61.44v-75.09c0,-6.6 1.06,-13.16 3.15,-19.43l68.61,-205.85l-68.61,-205.85c-2.09,-6.26 -3.15,-12.82 -3.15,-19.43v-75.1c0,-33.93 27.51,-61.44 61.44,-61.44h433.49l40.08,-109.81c11.64,-31.89 46.94,-48.3 78.83,-36.63l88.24,32.29c31.81,11.64 48.2,46.83 36.64,78.67l-12.88,35.49h11.45c33.93,0 61.44,27.51 61.44,61.44v75.1c0,6.6 -1.06,13.16 -3.15,19.43zM849.92,249.17h-99.12l42.8,-117.89l-88.24,-32.29l-54.82,150.18h-476.47v75.1l75.09,225.28l-75.09,225.28v75.09h675.84v-75.09l-75.09,-225.28l75.09,-225.28zM662.19,587.09h-112.64v112.64h-75.1v-112.64h-112.64v-75.09h112.64v-112.64h75.1v112.64h112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

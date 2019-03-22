@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>swap_vert icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M498.35,385.33v201.76c0,21.72 -11.27,40.81 -28.28,51.73l55.58,-0.16v-201.76c0,-21.72 11.27,-40.81 28.28,-51.73zM361.81,648.53c-33.93,0 -61.44,-27.51 -61.44,-61.44v-201.76h-51.2c-24.86,0 -47.28,-14.99 -56.78,-37.96c-9.5,-22.98 -4.22,-49.42 13.39,-66.98l150.19,-149.81c23.98,-23.92 62.8,-23.92 86.78,0l150.19,149.81c17.6,17.56 22.89,44 13.39,66.98c-4.91,11.88 -13.27,21.62 -23.63,28.26l79.5,-0.15c33.93,0 61.44,27.51 61.44,61.44v201.76h51.2c24.86,0 47.28,14.99 56.78,37.96c9.5,22.98 4.22,49.42 -13.39,66.98l-150.19,149.81c-23.98,23.92 -62.8,23.92 -86.78,0l-150.19,-149.81c-17.6,-17.56 -22.89,-44 -13.39,-66.98c4.91,-11.88 13.27,-21.62 23.63,-28.26zM662.19,700.11v-263.2h-75.1v263.2h-112.64l150.19,149.81l150.19,-149.81zM399.36,174.08l-150.19,149.81h112.64v263.2h75.1v-263.2h112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>view_day icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M911.36,399.36v225.28c0,24.46 -8.92,46.88 -23.67,64.17c14.41,11.24 23.67,28.77 23.67,48.47v112.64c0,33.93 -27.51,61.44 -61.44,61.44h-713.39c-33.93,0 -61.44,-27.51 -61.44,-61.44v-112.64c0,-19.69 9.27,-37.22 23.67,-48.47c-14.76,-17.29 -23.67,-39.71 -23.67,-64.17v-225.28c0,-24.46 8.92,-46.88 23.67,-64.17c-14.41,-11.24 -23.67,-28.77 -23.67,-48.47v-112.64c0,-33.93 27.51,-61.44 61.44,-61.44h713.39c33.93,0 61.44,27.51 61.44,61.44v112.64c0,19.69 -9.27,37.22 -23.67,48.47c14.76,17.29 23.67,39.71 23.67,64.17zM812.37,361.81h-638.29c-20.65,0 -37.55,16.9 -37.55,37.55v225.28c0,20.65 16.9,37.55 37.55,37.55h638.29c20.65,0 37.55,-16.9 37.55,-37.55v-225.28c0,-20.65 -16.9,-37.55 -37.55,-37.55zM136.53,849.92h713.39v-112.64h-713.39zM136.53,174.08v112.64h713.39v-112.64z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

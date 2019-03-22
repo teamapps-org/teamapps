@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>pie_chart icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M469.33,85.33v853.34c-216.32,-21.33 -384,-204.38 -384,-426.67c0,-222.29 167.68,-405.34 384,-426.67zM938.67,555.09c-20.05,202.24 -180.48,363.53 -382.72,383.58v-383.58zM938.67,468.91h-382.72v-383.58c201.81,20.05 362.67,181.34 382.72,383.58z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

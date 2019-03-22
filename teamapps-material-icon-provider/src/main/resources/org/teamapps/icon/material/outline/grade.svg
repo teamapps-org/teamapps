@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>grade icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M220.13,835.96l53.15,-227.84l-176.98,-153.31c-18.67,-16.18 -25.84,-41.96 -18.2,-65.45c7.64,-23.49 28.61,-40.12 53.23,-42.21l233.05,-19.77l91.05,-214.82c9.63,-22.71 31.9,-37.46 56.57,-37.46c24.67,0 46.94,14.75 56.57,37.46l91.05,214.82l233.05,19.77c24.62,2.09 45.59,18.72 53.23,42.21c7.64,23.49 0.48,49.28 -18.2,65.45l-176.98,153.31l53.15,227.84c5.61,24.06 -3.73,49.14 -23.71,63.66c-19.98,14.52 -46.72,15.67 -67.87,2.9l-200.29,-120.89l-200.29,120.89c-21.15,12.77 -47.89,11.62 -67.87,-2.9c-19.98,-14.52 -29.32,-39.6 -23.71,-63.66zM512,709.87l232.04,140.05l-61.57,-263.96l205,-177.59l-269.97,-22.91l-105.5,-248.93l-105.5,248.93l-269.97,22.91l205,177.59l-61.57,263.96z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

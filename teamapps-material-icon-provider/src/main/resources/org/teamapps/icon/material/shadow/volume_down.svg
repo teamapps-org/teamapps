@@ -1,0 +1,26 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>volume_down icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-tmD6xZI0" x="-19%" y="-8%" width="186%" height="166%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0" in="SourceGraphic"/>
+			<feOffset dy="20"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0" in="SourceGraphic"/>
+			<feOffset dy="30"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M398.08,398.08l189.86,-189.86v607.57l-189.86,-189.86h-151.9v-227.84zM663.9,664.65v-305.69c56.2,28.1 94.93,85.82 94.93,153.04c0,67.21 -38.72,124.93 -94.93,152.65z" fill="#000000" filter="url(#filter-tmD6xZI0)"/>
+		<g>
+			<g color="#039be5" class="teamapps-color-1">
+				<path d="M398.08,398.08l189.86,-189.86v607.57l-189.86,-189.86h-151.9v-227.84zM663.9,664.65v-305.69c56.2,28.1 94.93,85.82 94.93,153.04c0,67.21 -38.72,124.93 -94.93,152.65z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

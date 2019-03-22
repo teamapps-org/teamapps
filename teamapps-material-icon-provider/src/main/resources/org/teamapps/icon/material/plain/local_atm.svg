@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>local_atm icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M938.67,256v512c0,47.36 -37.98,85.33 -85.34,85.33h-682.66c-47.36,0 -85.34,-37.97 -85.34,-85.33l0.43,-512c0,-47.36 37.55,-85.33 84.91,-85.33h682.66c47.36,0 85.34,37.97 85.34,85.33zM853.33,256h-682.66v512h682.66zM469.33,682.67h-85.33v-85.34h170.67v-42.66h-128c-23.47,0 -42.67,-19.2 -42.67,-42.67v-128c0,-23.47 19.2,-42.67 42.67,-42.67h42.66v-42.66h85.34v42.66h85.33v85.34h-170.67v42.66h128c23.47,0 42.67,19.2 42.67,42.67v128c0,23.47 -19.2,42.67 -42.67,42.67h-42.66v42.66h-85.34z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>

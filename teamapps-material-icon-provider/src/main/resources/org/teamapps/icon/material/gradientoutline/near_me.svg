@@ -1,0 +1,41 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-color-2, teamapps-color-3 -->
+	<desc>near_me icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<radialGradient cx="0" cy="0" r="1448.15" id="color-j5o9vEEv" gradientUnits="userSpaceOnUse">
+			<stop offset="0.08" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#000000"/>
+		</radialGradient>
+		<linearGradient x1="0" y1="1024" x2="1024" y2="0" id="color-yirxVEx2" gradientUnits="userSpaceOnUse">
+			<stop offset="0.2" stop-color="#000000"/>
+			<stop offset="0.8" stop-color="#ffffff"/>
+		</linearGradient>
+		<filter id="filter-HU4yxBlC" color-interpolation-filters="sRGB">
+			<feOffset/>
+		</filter>
+		<mask id="mask-pVTd2rFD">
+			<path d="M571.18,902.4h-39.72c-10.58,0 -20.07,-6.51 -23.88,-16.38l-102.93,-266.69l-266.69,-103.33c-9.86,-3.82 -16.35,-13.3 -16.35,-23.87v-39.72c0,-10.32 6.2,-19.63 15.72,-23.62l729.6,-305.22c9.58,-4.01 20.64,-1.83 27.99,5.52c7.34,7.35 9.52,18.41 5.51,27.99l-305.62,729.6c-3.99,9.52 -13.29,15.71 -23.61,15.71zM876.8,147.2l-729.6,305.22v39.72l277.25,107.42l107.01,277.25h39.72z" fill="url(#color-j5o9vEEv)"/>
+		</mask>
+		<mask id="mask-uTAnKaKm">
+			<path d="M571.18,902.4h-39.72c-10.58,0 -20.07,-6.51 -23.88,-16.38l-102.93,-266.69l-266.69,-103.33c-9.86,-3.82 -16.35,-13.3 -16.35,-23.87v-39.72c0,-10.32 6.2,-19.63 15.72,-23.62l729.6,-305.22c9.58,-4.01 20.64,-1.83 27.99,5.52c7.34,7.35 9.52,18.41 5.51,27.99l-305.62,729.6c-3.99,9.52 -13.29,15.71 -23.61,15.71zM876.8,147.2l-729.6,305.22v39.72l277.25,107.42l107.01,277.25h39.72z" fill="#ffffff"/>
+		</mask>
+		<mask id="mask-W8UqcxGK">
+			<rect fill="url(#color-yirxVEx2)" x="121.6" y="121.6" width="780.8" height="780.8"/>
+		</mask>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g mask="url(#mask-uTAnKaKm)">
+			<g color="#ff0000" class="teamapps-color-2">
+				<rect x="121.6" y="121.6" width="780.8" height="780.8" fill="currentColor"/>
+			</g>
+			<g color="#bc13e0" class="teamapps-color-3" mask="url(#mask-W8UqcxGK)">
+				<rect x="121.6" y="121.6" width="780.8" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+		<g filter="url(#filter-HU4yxBlC)" mask="url(#mask-pVTd2rFD)">
+			<g color="#fff961" class="teamapps-color-1">
+				<rect x="121.6" y="121.6" width="780.8" height="780.8" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

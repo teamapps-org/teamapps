@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1 -->
+	<desc>ev_station icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g color="#039be5" class="teamapps-color-1">
+			<path d="M874.67,384v405.33c0,58.88 -47.79,106.67 -106.67,106.67c-58.88,0 -106.67,-47.79 -106.67,-106.67v-213.33h-64v320h-426.66v-682.67c0,-46.93 38.4,-85.33 85.33,-85.33h256c46.93,0 85.33,38.4 85.33,85.33v298.67h42.67c46.93,0 85.33,38.4 85.33,85.33v192c0,23.47 19.2,42.67 42.67,42.67c23.47,0 42.67,-19.2 42.67,-42.67v-307.62c-13.23,5.55 -27.31,8.96 -42.67,8.96c-58.88,0 -106.67,-47.79 -106.67,-106.67c0,-45.65 28.59,-84.05 68.7,-99.41l-90.03,-90.03l45.23,-45.23l158.72,158.72l-0.43,0.43c19.2,19.2 31.15,46.08 31.15,75.52zM512,469.33h-85.33v-213.33l-170.67,320h85.33v192zM810.67,384c0,-23.47 -19.2,-42.67 -42.67,-42.67c-23.47,0 -42.67,19.2 -42.67,42.67c0,23.47 19.2,42.67 42.67,42.67c23.47,0 42.67,-19.2 42.67,-42.67z" fill="currentColor"/>
+		</g>
+	</g>
+</svg>
