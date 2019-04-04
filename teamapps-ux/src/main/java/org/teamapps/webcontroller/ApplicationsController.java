@@ -20,8 +20,8 @@
 package org.teamapps.webcontroller;
 
 import org.teamapps.data.value.SimpleDataRecord;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.icons.api.Icons;
 import org.teamapps.ux.application.*;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.Animation;
@@ -90,12 +90,12 @@ public class ApplicationsController implements ApplicationDesktop {
 		applicationsListing.setGroupSpacing(5);
 		Map<String, ItemGroup<SimpleDataRecord, SimpleDataRecord>> itemGroupsByApplicationGroupId = new HashMap<>();
 
-		applicationsListingPanel = new Panel(Icons.SHELF_FULL, "Anwendungen", applicationsListing);
+		applicationsListingPanel = new Panel(MaterialIcon.APPS, "Anwendungen", applicationsListing);
 		TextField appFilterField = new TextField();
 		appFilterField.setShowClearButton(true);
 		//appFilterField.setEmptyText(context.getMessageBundle().getString("Search") + "...");
 		appFilterField.onTextInput.addListener(applicationsListing::setFilter);
-		applicationsListingPanel.setRightHeaderField(appFilterField, Icons.MAGNIFYING_GLASS, 100, 200);
+		applicationsListingPanel.setRightHeaderField(appFilterField, MaterialIcon.SEARCH, 100, 200);
 		applicationsListingPanel.setAlwaysShowHeaderFieldIcons(true);
 
 
@@ -126,7 +126,7 @@ public class ApplicationsController implements ApplicationDesktop {
 		if (isMobile) {
 
 
-			SimpleDataRecord headerData = new SimpleDataRecord(PROPERTY_CAPTION, "Abmelden").setValue(PROPERTY_ICON, Icons.LOG_OUT);
+			SimpleDataRecord headerData = new SimpleDataRecord(PROPERTY_CAPTION, "Abmelden").setValue(PROPERTY_ICON, MaterialIcon.EXIT_TO_APP);
 			ItemGroup<SimpleDataRecord, SimpleDataRecord> group = new ItemGroup<>(headerData, BaseTemplate.APPLICATION_LISTING);
 			group.setItemPropertyExtractor(SimpleDataRecord::getValue);
 			group.setButtonWidth(0);
@@ -135,7 +135,7 @@ public class ApplicationsController implements ApplicationDesktop {
 
 
 			group.addItem(new SimpleDataRecord(PROPERTY_ID, CMD_LOGOUT)
-					.setValue(PROPERTY_ICON, Icons.LOG_OUT)
+					.setValue(PROPERTY_ICON, MaterialIcon.EXIT_TO_APP)
 					.setValue(PROPERTY_CAPTION, "Abmelden")
 					.setValue(PROPERTY_DESCRIPTION, "Vom System abmelden"));
 		}
@@ -169,11 +169,11 @@ public class ApplicationsController implements ApplicationDesktop {
 			workSpaceLayout.getCenterViewGroup().addView(new WorkSpaceLayoutView(workSpaceLayout, applicationsListingPanel, null, false, false));
 			applicationsListingPanel.setBodyBackgroundColor(Color.WHITE.withAlpha(.92f));
 
-			Tab applicationsTab = new Tab(Icons.SHELF_FULL, "Applications", workSpaceLayout);
+			Tab applicationsTab = new Tab(MaterialIcon.APPS, "Applications", workSpaceLayout);
 			tabPanel.addTab(applicationsTab, true);
 
 			if (settingsBuilder != null) {
-				Tab settingsTab = new Tab(Icons.CLIPBOARD_CHECKS, "Einstellungen", null, true);
+				Tab settingsTab = new Tab(MaterialIcon.MORE_VERT, "Einstellungen", null, true);
 				settingsTab.onSelected.addListener(aVoid -> {
 					settingsTab.setContent(settingsBuilder.createApplication(this).createUi());
 				});
@@ -181,7 +181,7 @@ public class ApplicationsController implements ApplicationDesktop {
 				tabPanel.addTab(settingsTab);
 			}
 
-			Tab logoutTab = new Tab(Icons.LOG_OUT, "Logout", null, true);
+			Tab logoutTab = new Tab(MaterialIcon.EXIT_TO_APP, "Logout", null, true);
 			logoutTab.setRightSide(true);
 			logoutTab.onSelected.addListener(aVoid -> {
 				context.setBackgroundImage("login", 1000);

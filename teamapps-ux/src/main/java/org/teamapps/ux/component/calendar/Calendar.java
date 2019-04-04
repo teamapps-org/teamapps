@@ -31,8 +31,7 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiWeekDay;
 import org.teamapps.event.Event;
 import org.teamapps.event.EventListener;
-import org.teamapps.icons.api.ComposedIcon;
-import org.teamapps.icons.api.Icons;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
@@ -267,28 +266,28 @@ public class Calendar<RECORD> extends AbstractComponent {
 
 		ToolbarButton yearViewButton = new ToolbarButton(
 				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(Icons.CALENDAR_52, "Year", "12 Months Overview" /*TODO*/)
+				new BaseTemplateRecord(MaterialIcon.EVENT_NOTE, "Year", "12 Months Overview" /*TODO*/)
 		);
 		yearViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.YEAR));
 		group.addButton(yearViewButton);
 
 		ToolbarButton monthViewButton = new ToolbarButton(
 				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(Icons.CALENDAR_31, "Month", "Full Month View")
+				new BaseTemplateRecord(MaterialIcon.DATE_RANGE, "Month", "Full Month View")
 		);
 		monthViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.MONTH));
 		group.addButton(monthViewButton);
 
 		ToolbarButton weekViewButton = new ToolbarButton(
 				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(Icons.CALENDAR_7, "Week", "Week View")
+				new BaseTemplateRecord(MaterialIcon.VIEW_WEEK, "Week", "Week View")
 		);
 		weekViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.WEEK));
 		group.addButton(weekViewButton);
 
 		ToolbarButton dayViewButton = new ToolbarButton(
 				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(Icons.CALENDAR_52, "Day", "Single Day View")
+				new BaseTemplateRecord(MaterialIcon.VIEW_DAY, "Day", "Single Day View")
 		);
 		dayViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.DAY));
 		group.addButton(dayViewButton);
@@ -301,14 +300,14 @@ public class Calendar<RECORD> extends AbstractComponent {
 
 		ToolbarButton forwardButton = new ToolbarButton(
 				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(ComposedIcon.of(Icons.CALENDAR, Icons.ARROW_LEFT), "Previous", null)
+				new BaseTemplateRecord(MaterialIcon.NAVIGATE_BEFORE, "Previous", null)
 		);
 		forwardButton.onClick.addListener(toolbarButtonClickEvent -> this.setDisplayedDate(activeViewMode.decrement(displayedDate)));
 		group.addButton(forwardButton);
 
 		ToolbarButton backButton = new ToolbarButton(
 				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(ComposedIcon.of(Icons.CALENDAR, Icons.ARROW_RIGHT), "Next", null)
+				new BaseTemplateRecord(MaterialIcon.NAVIGATE_NEXT, "Next", null)
 		);
 		backButton.onClick.addListener(toolbarButtonClickEvent -> this.setDisplayedDate(activeViewMode.increment(displayedDate)));
 		group.addButton(backButton);

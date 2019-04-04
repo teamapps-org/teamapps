@@ -27,7 +27,7 @@ import org.teamapps.dto.UiFileField;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.event.Event;
 import org.teamapps.formatter.FileSizeFormatter;
-import org.teamapps.icons.api.Icons;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.field.AbstractField;
@@ -61,7 +61,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Template uploadButtonTemplate = BaseTemplate.FORM_BUTTON;
-	private Object uploadButtonData = new BaseTemplateRecord(Icons.CLOUD_UPLOAD, getSessionContext().getLocalized("ux.fileField.upload_verb"));
+	private Object uploadButtonData = new BaseTemplateRecord(MaterialIcon.BACKUP, getSessionContext().getLocalized("ux.fileField.upload_verb"));
 	private PropertyExtractor uploadButtonPropertyExtractor = new BeanPropertyExtractor();
 
 	private final UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter;
@@ -75,7 +75,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	public static FileField<BaseTemplateRecord<UploadedFile>> create() {
-		return new FileField<>(file -> new BaseTemplateRecord<>(Icons.DOCUMENT_EMPTY, file.getName(), FileSizeFormatter.humanReadableByteCount(file.getSizeInBytes(), true, 1), file));
+		return new FileField<>(file -> new BaseTemplateRecord<>(MaterialIcon.ATTACH_FILE, file.getName(), FileSizeFormatter.humanReadableByteCount(file.getSizeInBytes(), true, 1), file));
 	}
 
 	@Override

@@ -22,7 +22,7 @@ package org.teamapps.ux.component.chat;
 import org.teamapps.dto.UiChatInput;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icons;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class ChatInput extends AbstractComponent {
 
 	@Override
 	public UiChatInput createUiComponent() {
-		UiChatInput uiChatInput = new UiChatInput(getId(), getSessionContext().resolveIcon(Icons.DOCUMENT_EMPTY));
+		UiChatInput uiChatInput = new UiChatInput(getId(), getSessionContext().resolveIcon(MaterialIcon.ATTACHMENT));
 		mapAbstractUiComponentProperties(uiChatInput);
 		uiChatInput.setMaxBytesPerUpload(maxBytesPerUpload);
 		uiChatInput.setUploadUrl(uploadUrl);

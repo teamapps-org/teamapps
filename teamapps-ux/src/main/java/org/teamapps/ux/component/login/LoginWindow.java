@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.login;
 
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icons;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.DisplayField;
 import org.teamapps.ux.component.field.PasswordField;
@@ -58,7 +58,7 @@ public class LoginWindow {
 	private ElegantPanel elegantPanel;
 
 	public LoginWindow() {
-		loginButton = new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(Icons.OK, "Ok"));
+		loginButton = new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(MaterialIcon.CHECK, "Ok"));
 		//loginButton.setColor(Color.LIGHT_GRAY);
 		headerField = new DisplayField(false, true);
 		errorField = new DisplayField(false, true);
@@ -76,10 +76,10 @@ public class LoginWindow {
 		layout.addSection().setDrawHeaderLine(false).setPadding(new Spacing(30, 25)).setCollapsible(false);
 		layout.addLabelField(headerField).setColSpan(2);
 		layout.addLabelField(errorField).setColSpan(2);
-		ResponsiveFormLayout.LabelAndField labelAndField = layout.addLabelAndField(Icons.USER, sessionContext.getLocalized("ux.loginWindow.login"), loginField, true);
+		ResponsiveFormLayout.LabelAndField labelAndField = layout.addLabelAndField(MaterialIcon.PERSON, sessionContext.getLocalized("ux.loginWindow.login"), loginField, true);
 		labelAndField.label.getColumnDefinition().setWidthPolicy(SizingPolicy.AUTO);
 		labelAndField.field.getColumnDefinition().setWidthPolicy(SizingPolicy.FRACTION);
-		layout.addLabelAndField(Icons.KEY, sessionContext.getLocalized("ux.loginWindow.password"), passwordField, true);
+		layout.addLabelAndField(MaterialIcon.VPN_KEY, sessionContext.getLocalized("ux.loginWindow.password"), passwordField, true);
 		layout.addLabelField(loginButton, 1).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setMinWidth(100).getRowDefinition().setTopPadding(10);
 
 		loginButton.onValueChanged.addListener(value -> login());

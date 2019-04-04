@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.dialogue;
 
 import org.teamapps.event.Event;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.icons.api.Icons;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.FieldEditingMode;
@@ -73,7 +73,7 @@ public class FormDialogue extends Window {
 	}
 
 	public Button<?> addOkButton(String caption) {
-		okButton = Button.create(Icons.OK, caption);
+		okButton = Button.create(MaterialIcon.CHECK, caption);
 		okButton.onValueChanged.addListener((o) -> {
 			close(250);
 			getSessionContext().flushCommands();
@@ -85,7 +85,7 @@ public class FormDialogue extends Window {
 	}
 
 	public Button<?> addCancelButton(String caption) {
-		cancelButton = Button.create(Icons.ERROR, caption);
+		cancelButton = Button.create(MaterialIcon.CANCEL, caption);
 		cancelButton.onValueChanged.addListener((o) -> {
 			close(250);
 			getSessionContext().flushCommands();

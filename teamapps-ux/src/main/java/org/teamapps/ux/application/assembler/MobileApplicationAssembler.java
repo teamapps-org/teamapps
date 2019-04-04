@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.application.assembler;
 
-import org.teamapps.icons.api.Icons;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.application.*;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
@@ -69,11 +69,11 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
         navigationBar.preloadFanOutComponent(viewsItemView);
         mobileLayout.setNavigationBar(navigationBar);
 
-        applicationLauncherButton = NavigationBarButton.create(Icons.WINDOW_EXPLORER);
-        applicationTreeButton = NavigationBarButton.create(Icons.ELEMENTS_TREE);
-        applicationViewsButton = NavigationBarButton.create(Icons.WINDOWS);
-        applicationToolbarButton = NavigationBarButton.create(Icons.DROP_DOWN_LIST);
-        applicationBackButton = NavigationBarButton.create(Icons.ARROW_LEFT);
+        applicationLauncherButton = NavigationBarButton.create(MaterialIcon.VIEW_MODULE);
+        applicationTreeButton = NavigationBarButton.create(MaterialIcon.TOC);
+        applicationViewsButton = NavigationBarButton.create(MaterialIcon.VIEW_CAROUSEL);
+        applicationToolbarButton = NavigationBarButton.create(MaterialIcon.SUBTITLES);
+        applicationBackButton = NavigationBarButton.create(MaterialIcon.NAVIGATE_BEFORE);
 
 
         applicationLauncherButton.setVisible(false);
@@ -239,14 +239,14 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 
         viewsItemView.removeAllGroups();
         if (applicationLauncher != null) {
-            SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(Icons.WINDOW_EXPLORER, "Launcher");
+            SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_MODULE, "Launcher");
             group.addItem(applicationLauncher.getPanel().getIcon(), applicationLauncher.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
                 showView(applicationLauncher);
             });
         }
 
         if (!applicationViews.isEmpty()) {
-            SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(Icons.ELEMENTS_TREE, "Application views");
+            SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.TOC, "Application views");
             applicationViews.forEach(view -> {
                 group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
                     showView(view);
@@ -255,7 +255,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
         }
 
         if (!perspectiveViews.isEmpty()) {
-            SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(Icons.WINDOWS, "Perspective views");
+            SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_CAROUSEL, "Perspective views");
             perspectiveViews.forEach(view -> {
                 group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
                     showView(view);

@@ -21,8 +21,7 @@ package org.teamapps.ux.application.data;
 
 import org.apache.commons.lang3.StringUtils;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.ComposedIcon;
-import org.teamapps.icons.api.Icons;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.application.filter.FilterProvider;
 import org.teamapps.ux.application.validation.RecordChangeSet;
 import org.teamapps.ux.application.view.View;
@@ -132,11 +131,11 @@ public class TableRecordHandler<RECORD> {
 	}
 
 	private void createCRUDButtons() {
-		buttonAdd = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(Icons.ADD, context.getLocalized("dict.add"), context.getLocalized("dict.addNewRecord"))).setVisible(false);
-		buttonSave = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(Icons.FLOPPY_DISKS, context.getLocalized("dict.save"))).setVisible(false);
-		buttonDiscardChanges = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(Icons.UNDO, context.getLocalized("dict.discard"))).setVisible(false);
-		buttonDelete = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(Icons.ERROR, context.getLocalized("dict.delete"))).setVisible(false);
-		buttonMultiDeleteRecord = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(new ComposedIcon(Icons.DELETE, Icons.SELECTION_DELETE), context.getLocalized("dict.deleteAll"))).setVisible(false);
+		buttonAdd = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(MaterialIcon.ADD_CIRCLE, context.getLocalized("dict.add"), context.getLocalized("dict.addNewRecord"))).setVisible(false);
+		buttonSave = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(MaterialIcon.SAVE, context.getLocalized("dict.save"))).setVisible(false);
+		buttonDiscardChanges = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(MaterialIcon.UNDO, context.getLocalized("dict.discard"))).setVisible(false);
+		buttonDelete = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(MaterialIcon.DELETE, context.getLocalized("dict.delete"))).setVisible(false);
+		buttonMultiDeleteRecord = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(MaterialIcon.DELETE_FOREVER, context.getLocalized("dict.deleteAll"))).setVisible(false);
 
 		if (emptyRecordSupplier != null) {
 			buttonAdd.setVisible(true);
@@ -257,48 +256,48 @@ public class TableRecordHandler<RECORD> {
 	}
 
 	private void createTableOptions() {
-		buttonDisplayedColumns = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(Icons.TABLE_SELECTION_COLUMN, context.getLocalized("dict.columns"))).setVisible(true);
-		buttonColumnWidth = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(Icons.VIEW_1_1, context.getLocalized("dict.columnWidth"))).setVisible(true);
-		buttonFilter = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(Icons.FUNNEL, context.getLocalized("dict.filter"))).setVisible(true);
-		buttonOptions = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(Icons.GEARWHEEL, context.getLocalized("dict.options"))).setVisible(true);
+		buttonDisplayedColumns = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(MaterialIcon.ADD, context.getLocalized("dict.columns"))).setVisible(true);
+		buttonColumnWidth = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(MaterialIcon.ADD, context.getLocalized("dict.columnWidth"))).setVisible(true);
+		buttonFilter = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(MaterialIcon.ADD, context.getLocalized("dict.filter"))).setVisible(true);
+		buttonOptions = new ToolbarButton(BaseTemplate.TOOLBAR_BUTTON_TINY, new BaseTemplateRecord(MaterialIcon.ADD, context.getLocalized("dict.options"))).setVisible(true);
 
 		SimpleItemView<?> itemView = new SimpleItemView<>();
 		buttonDisplayedColumns.setDropDownComponent(itemView);
-		SimpleItemGroup<?> itemGroup = itemView.addSingleColumnGroup(Icons.TABLE_SELECTION_COLUMN, context.getLocalized("dict.baseSettings"));
-		itemGroup.addItem(Icons.TABLE_SELECTION_COLUMN, context.getLocalized("dict.defaultColumns"), context.getLocalized("dict.displayTheDefaultColumns")).onClick.addListener(o -> {
+		SimpleItemGroup<?> itemGroup = itemView.addSingleColumnGroup(MaterialIcon.ADD, context.getLocalized("dict.baseSettings"));
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.defaultColumns"), context.getLocalized("dict.displayTheDefaultColumns")).onClick.addListener(o -> {
 			//todo: implement
 		});
-		itemGroup.addItem(Icons.TABLE_SELECTION_ALL, context.getLocalized("dict.allColumns"), context.getLocalized("dict.displayAllColumns")).onClick.addListener(o -> {
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.allColumns"), context.getLocalized("dict.displayAllColumns")).onClick.addListener(o -> {
 			table.getColumns().stream().map(TableColumn::getField).forEach(field -> {
 				if (!field.isVisible()) {
 					field.setVisible(true);
 				}
 			});
 		});
-		itemGroup = itemView.addSingleColumnGroup(Icons.FORM, context.getLocalized("dict.selectColumnToDisplayOrHide"));
+		itemGroup = itemView.addSingleColumnGroup(MaterialIcon.ADD, context.getLocalized("dict.selectColumnToDisplayOrHide"));
 		for (TableColumn column : table.getColumns()) {
-			itemGroup.addItem(Icons.TEXT_FIELD, column.getTitle(), context.getLocalized("dict.setVisibilityOfColumn", column.getTitle())).onClick.addListener(o -> {
+			itemGroup.addItem(MaterialIcon.ADD, column.getTitle(), context.getLocalized("dict.setVisibilityOfColumn", column.getTitle())).onClick.addListener(o -> {
 				column.getField().setVisible(!column.getField().isVisible());
 			});
 		}
 
 		itemView = new SimpleItemView();
 		buttonColumnWidth.setDropDownComponent(itemView);
-		itemGroup = itemView.addSingleColumnGroup(Icons.TABLE_SELECTION_COLUMN, context.getLocalized("dict.columnWidth"));
-		itemGroup.addItem(Icons.FIT_TO_WIDTH, context.getLocalized("dict.autoFit"), context.getLocalized("dict.setAllColumnWidthsToTheWidthOfTheTable")).onClick.addListener(o -> {
+		itemGroup = itemView.addSingleColumnGroup(MaterialIcon.ADD, context.getLocalized("dict.columnWidth"));
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.autoFit"), context.getLocalized("dict.setAllColumnWidthsToTheWidthOfTheTable")).onClick.addListener(o -> {
 			table.setForceFitWidth(true);
 		});
-		itemGroup.addItem(Icons.VIEW_1_1, context.getLocalized("dict.standardWidth"), context.getLocalized("dict.setColumnWidthsToTheDefaultWidths")).onClick.addListener(o -> {
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.standardWidth"), context.getLocalized("dict.setColumnWidthsToTheDefaultWidths")).onClick.addListener(o -> {
 			table.setForceFitWidth(false);
 		});
 
-		itemGroup = itemView.addSingleColumnGroup(Icons.FIT_TO_WIDTH, context.getLocalized("dict.automaticColumnDisplay"));
+		itemGroup = itemView.addSingleColumnGroup(MaterialIcon.ADD, context.getLocalized("dict.automaticColumnDisplay"));
 		//todo: implement
-		itemGroup.addItem(Icons.TABLE_SELECTION_COLUMN, context.getLocalized("dict.hideEmptyColumns"), context.getLocalized("dict.hideAllColumnsThatDoNotContainAnyData"));
-		itemGroup.addItem(Icons.TABLE_SELECTION_COLUMN, context.getLocalized("dict.displayEmptyColumns"), context.getLocalized("dict.displayAllColumnsEventEmptyOnes"));
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.hideEmptyColumns"), context.getLocalized("dict.hideAllColumnsThatDoNotContainAnyData"));
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.displayEmptyColumns"), context.getLocalized("dict.displayAllColumnsEventEmptyOnes"));
 
-		itemGroup = itemView.addSingleColumnGroup(Icons.FIT_TO_WIDTH, context.getLocalized("dict.changeWidth"));
-		itemGroup.addItem(Icons.ZOOM_OUT, context.getLocalized("dict.decreaseColumnWidths"), context.getLocalized("dict.decreaseTheWidthsOfAllColumns")).onClick.addListener(o -> {
+		itemGroup = itemView.addSingleColumnGroup(MaterialIcon.ADD, context.getLocalized("dict.changeWidth"));
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.decreaseColumnWidths"), context.getLocalized("dict.decreaseTheWidthsOfAllColumns")).onClick.addListener(o -> {
 			for (TableColumn column : table.getColumns()) {
 				column.setDefaultWidth((int) (column.getDefaultWidth() / 1.5));
 			}
@@ -308,7 +307,7 @@ public class TableRecordHandler<RECORD> {
 				table.reRenderIfRendered();
 			}
 		});
-		itemGroup.addItem(Icons.ZOOM_IN, context.getLocalized("dict.increaseColumnWidths"), context.getLocalized("dict.increaseTheWidthsOfAllColumns")).onClick.addListener(o -> {
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.increaseColumnWidths"), context.getLocalized("dict.increaseTheWidthsOfAllColumns")).onClick.addListener(o -> {
 			for (TableColumn column : table.getColumns()) {
 				column.setDefaultWidth((int) (column.getDefaultWidth() * 1.5));
 			}
@@ -321,15 +320,15 @@ public class TableRecordHandler<RECORD> {
 
 		itemView = new SimpleItemView();
 		buttonOptions.setDropDownComponent(itemView);
-		itemGroup = itemView.addSingleColumnGroup(Icons.TABLES, context.getLocalized("dict.tableOptions"));
-		itemGroup.addItem(Icons.TABLE_SELECTION_ROW, context.getLocalized("dict.shadedRows"), context.getLocalized("dict.displayTableWithShadedRows")).onClick.addListener(o -> {
+		itemGroup = itemView.addSingleColumnGroup(MaterialIcon.ADD, context.getLocalized("dict.tableOptions"));
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.shadedRows"), context.getLocalized("dict.displayTableWithShadedRows")).onClick.addListener(o -> {
 			table.setStripedRows(!table.isStripedRows());
 		});
-		itemGroup.addItem(Icons.LIST_STYLE_NUMBERED, context.getLocalized("dict.showNumbering"), context.getLocalized("dict.displayRowNumbers")).onClick.addListener(o -> {
+		itemGroup.addItem(MaterialIcon.ADD, context.getLocalized("dict.showNumbering"), context.getLocalized("dict.displayRowNumbers")).onClick.addListener(o -> {
 			table.setShowNumbering(!table.isShowNumbering());
 		});
 
-		//itemGroup = itemView.addSingleColumnGroup(Icons.EDIT, context.getLocalized("dict.editOptions"));
+		//itemGroup = itemView.addSingleColumnGroup(MaterialIcon.ADD, context.getLocalized("dict.editOptions"));
 
 		buttonFilter.onClick.addListener(toolbarButtonClickEvent -> {
 			if (table.isShowHeaderRow()) {

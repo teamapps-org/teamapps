@@ -22,7 +22,7 @@ package org.teamapps.ux.component.media;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiComponentReference;
 import org.teamapps.dto.UiEvent;
-import org.teamapps.icons.api.Icons;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.splitpane.SplitDirection;
 import org.teamapps.ux.component.splitpane.SplitPane;
@@ -56,9 +56,9 @@ public class MediaPlayer extends AbstractComponent {
 	}
 
 	public List<ToolbarButton> createToolbarControls() {
-		ToolbarButton play = ToolbarButton.createLarge(Icons.MEDIA_PLAY, "Play", null);
-		ToolbarButton pause = ToolbarButton.createLarge(Icons.MEDIA_PAUSE, "Pause", null);
-		ToolbarButton stop = ToolbarButton.createLarge(Icons.MEDIA_STOP, "Stop", null);
+		ToolbarButton play = ToolbarButton.createLarge(MaterialIcon.PLAY_ARROW, "Play", null);
+		ToolbarButton pause = ToolbarButton.createLarge(MaterialIcon.PAUSE, "Pause", null);
+		ToolbarButton stop = ToolbarButton.createLarge(MaterialIcon.STOP, "Stop", null);
 		pause.setVisible(false);
 
 		play.onClick.addListener(toolbarButtonClickEvent -> {

@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.dialogue;
 
 import org.teamapps.event.Event;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.icons.api.Icons;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.FieldEditingMode;
 import org.teamapps.ux.component.field.combobox.ComboBox;
@@ -92,13 +92,13 @@ public class Dialogue extends Window {
 		comboBox.setTemplate(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES);
 		comboBox.setEditingMode(FieldEditingMode.READONLY);
 		formLayout.addField(0, 0, "data", comboBox).setHorizontalAlignment(HorizontalElementAlignment.CENTER).setColSpan(3);
-		okButton = Button.create(Icons.OK, "OK");
+		okButton = Button.create(MaterialIcon.CHECK, "OK");
 		okButton.onValueChanged.addListener((o) -> {
 			close(250);
 			getSessionContext().flushCommands();
 			onResult.fire(true);
 		});
-		cancelButton = Button.create(Icons.ERROR, "Abbrechen");
+		cancelButton = Button.create(MaterialIcon.CANCEL, "Abbrechen");
 		cancelButton.onValueChanged.addListener((o) -> {
 			close(250);
 			getSessionContext().flushCommands();
