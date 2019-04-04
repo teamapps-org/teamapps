@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>clear_all icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-075PRQkW" x="-8%" y="-13%" width="147%" height="205%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M278.14,418.69h7.31c-0.26,-2.27 -0.39,-4.57 -0.39,-6.91v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h467.71c33.08,0 59.9,26.82 59.9,59.9v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-7.3c0.26,2.27 0.39,4.57 0.39,6.91v66.82c0,33.08 -26.82,59.9 -59.9,59.9h-7.31c0.26,2.27 0.39,4.57 0.39,6.91v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-467.71c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h7.3c-0.26,-2.27 -0.39,-4.57 -0.39,-6.91v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9z" fill="#000000" filter="url(#filter-075PRQkW)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M278.14,418.69h7.31c-0.26,-2.27 -0.39,-4.57 -0.39,-6.91v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h467.71c33.08,0 59.9,26.82 59.9,59.9v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-7.3c0.26,2.27 0.39,4.57 0.39,6.91v66.82c0,33.08 -26.82,59.9 -59.9,59.9h-7.31c0.26,2.27 0.39,4.57 0.39,6.91v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-467.71c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h7.3c-0.26,-2.27 -0.39,-4.57 -0.39,-6.91v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M812.67,344.96v66.81h-467.71v-66.81zM278.14,478.59h467.72v66.82h-467.72zM211.33,612.22h467.71v66.81h-467.71z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

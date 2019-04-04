@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>call icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-b7cs4Yo9" x="-8%" y="-8%" width="147%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M406.94,481.61c34.68,54.26 81.05,100.53 135.5,135.38l41.11,-41.12c25.04,-25.04 62.16,-33.71 95.45,-22.46c31.31,10.32 65.3,15.94 100.25,15.94c51.46,0 93.31,41.85 93.31,93.31v116.59c0,51.46 -41.85,93.31 -93.31,93.31c-346.79,0 -627.84,-281.05 -627.84,-627.84c0,-51.46 41.85,-93.31 93.31,-93.31h116.93c51.46,0 93.31,41.85 93.31,93.31c0,35.33 5.65,69.08 16.02,100.47c0.08,0.24 0.16,0.48 0.23,0.73c10,31.85 2.85,68.54 -23.11,94.5z" fill="#000000" filter="url(#filter-b7cs4Yo9)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M406.94,481.61c34.68,54.26 81.05,100.53 135.5,135.38l41.11,-41.12c25.04,-25.04 62.16,-33.71 95.45,-22.46c31.31,10.32 65.3,15.94 100.25,15.94c51.46,0 93.31,41.85 93.31,93.31v116.59c0,51.46 -41.85,93.31 -93.31,93.31c-346.79,0 -627.84,-281.05 -627.84,-627.84c0,-51.46 41.85,-93.31 93.31,-93.31h116.93c51.46,0 93.31,41.85 93.31,93.31c0,35.33 5.65,69.08 16.02,100.47c0.08,0.24 0.16,0.48 0.23,0.73c10,31.85 2.85,68.54 -23.11,94.5z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M332.26,471.57c48.11,94.55 125.62,171.72 220.16,220.16l73.49,-73.5c9.02,-9.02 22.39,-12.03 34.08,-8.02c37.42,12.36 77.84,19.04 119.27,19.04c18.38,0 33.41,15.03 33.41,33.41v116.59c0,18.38 -15.03,33.41 -33.41,33.41c-313.7,0 -567.93,-254.23 -567.93,-567.93c0,-18.38 15.03,-33.41 33.41,-33.41h116.93c18.38,0 33.41,15.03 33.41,33.41c0,41.76 6.68,81.85 19.04,119.27c3.67,11.69 1,24.72 -8.35,34.08z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

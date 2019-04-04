@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>pageview icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-qFyRm83g">
+			<path d="M60.37,967.52v-840.33h963.63v840.33z"/>
+		</clipPath>
+		<filter id="filter-bd0iyexU" x="-8%" y="-9%" width="140%" height="157%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-qFyRm83g)">
+			<path d="M905.99,311.55v400.9c0,69.84 -56.9,126.72 -126.73,126.72h-534.52c-69.82,0 -126.73,-56.88 -126.73,-126.72v-400.9c0,-69.84 56.9,-126.72 126.73,-126.72h534.52c69.82,0 126.73,56.88 126.73,126.72z" fill="#000000" filter="url(#filter-bd0iyexU)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M905.99,311.55v400.9c0,69.84 -56.9,126.72 -126.73,126.72h-534.52c-69.82,0 -126.73,-56.88 -126.73,-126.72v-400.9c0,-69.84 56.9,-126.72 126.73,-126.72h534.52c69.82,0 126.73,56.88 126.73,126.72z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M846.08,311.55v400.9c0,36.75 -30.08,66.81 -66.82,66.81h-534.52c-36.75,0 -66.82,-30.07 -66.82,-66.81v-400.9c0,-36.75 30.08,-66.81 66.82,-66.81h534.52c36.75,0 66.82,30.07 66.82,66.81zM719.46,672.02l-97.22,-96.88c14.7,-23.39 23.39,-50.44 23.39,-79.84c0,-83.19 -67.15,-150.34 -150.34,-150.34c-83.19,0 -150.34,67.15 -150.34,150.34c0,83.19 67.15,150.34 150,150.34c29.4,0 56.79,-8.69 79.84,-23.39l97.22,97.22zM578.81,495.3c0,46.1 -37.41,83.51 -83.51,83.51c-46.1,0 -83.52,-37.41 -83.52,-83.51c0,-46.1 37.42,-83.52 83.52,-83.52c46.1,0 83.51,37.42 83.51,83.52z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

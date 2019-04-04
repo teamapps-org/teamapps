@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>unarchive icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-oBMspZE7" x="-8%" y="-8%" width="147%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M872.58,328.25v417.61c0,69.83 -56.89,126.72 -126.72,126.72h-467.72c-70.37,0 -126.72,-57.09 -126.72,-126.72v-417.61c0,-30.78 10.85,-58.89 29.15,-80.98l46.16,-55.46c20.2,-25.05 50.83,-40.39 84.82,-40.39h400.9c34.36,0 64.39,15.58 84.42,39.18l46.92,56.7c0.18,0.22 0.36,0.44 0.53,0.65c17.35,21.67 28.25,49.51 28.25,80.29z" fill="#000000" filter="url(#filter-oBMspZE7)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M872.58,328.25v417.61c0,69.83 -56.89,126.72 -126.72,126.72h-467.72c-70.37,0 -126.72,-57.09 -126.72,-126.72v-417.61c0,-30.78 10.85,-58.89 29.15,-80.98l46.16,-55.46c20.2,-25.05 50.83,-40.39 84.82,-40.39h400.9c34.36,0 64.39,15.58 84.42,39.18l46.92,56.7c0.18,0.22 0.36,0.44 0.53,0.65c17.35,21.67 28.25,49.51 28.25,80.29z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M812.67,328.25v417.61c0,36.75 -30.07,66.81 -66.81,66.81h-467.72c-37.08,0 -66.81,-30.07 -66.81,-66.81v-417.61c0,-16.37 5.68,-31.07 15.37,-42.76l46.43,-55.79c9.02,-11.36 22.72,-18.38 38.42,-18.38h400.9c15.7,0 29.39,7.02 38.75,18.04l46.44,56.13c9.36,11.69 15.03,26.39 15.03,42.76zM328.25,612.22h116.93v66.81h133.63v-66.81h116.93l-183.75,-183.75zM741.51,278.14l-31.07,-33.4h-400.9l-27.4,33.4z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

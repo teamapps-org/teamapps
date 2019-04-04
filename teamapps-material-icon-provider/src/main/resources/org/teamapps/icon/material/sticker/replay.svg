@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>replay icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-P3daWin3" x="-9%" y="-8%" width="157%" height="136%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M839.17,545.41c0,180.75 -146.42,327.17 -327.17,327.17c-180.75,0 -327.17,-146.42 -327.17,-327.17c0,-33.08 26.82,-59.9 59.9,-59.9h66.81c33.08,0 59.9,26.82 59.9,59.9c0,77.5 63.04,140.54 140.54,140.54c77.5,0 140.54,-63.04 140.54,-140.54c0,-56.08 -33.02,-104.61 -80.64,-127.14v60.31c0,24.23 -14.6,46.07 -36.98,55.34c-22.38,9.27 -48.15,4.15 -65.28,-12.99l-167.04,-167.04c-23.39,-23.39 -23.39,-61.32 0,-84.72l167.04,-167.04c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34v79.19c152.13,28.13 267.26,161.42 267.26,321.7z" fill="#000000" filter="url(#filter-P3daWin3)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M839.17,545.41c0,180.75 -146.42,327.17 -327.17,327.17c-180.75,0 -327.17,-146.42 -327.17,-327.17c0,-33.08 26.82,-59.9 59.9,-59.9h66.81c33.08,0 59.9,26.82 59.9,59.9c0,77.5 63.04,140.54 140.54,140.54c77.5,0 140.54,-63.04 140.54,-140.54c0,-56.08 -33.02,-104.61 -80.64,-127.14v60.31c0,24.23 -14.6,46.07 -36.98,55.34c-22.38,9.27 -48.15,4.15 -65.28,-12.99l-167.04,-167.04c-23.39,-23.39 -23.39,-61.32 0,-84.72l167.04,-167.04c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34v79.19c152.13,28.13 267.26,161.42 267.26,321.7z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M779.26,545.41c0,147.67 -119.6,267.26 -267.26,267.26c-147.67,0 -267.26,-119.6 -267.26,-267.26h66.81c0,110.58 89.86,200.45 200.45,200.45c110.58,0 200.45,-89.86 200.45,-200.45c0,-110.58 -89.86,-200.45 -200.45,-200.45v133.63l-167.04,-167.04l167.04,-167.04v133.63c147.67,0 267.26,119.6 267.26,267.27z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,35 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>bubble_chart icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-dlbXgjXi" x="-9%" y="-9%" width="157%" height="157%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M398.64,405.1c0,-121.65 98.61,-220.26 220.26,-220.26c121.65,0 220.26,98.61 220.26,220.26c0,98.12 -64.15,181.25 -152.81,209.74c28.04,23.24 45.9,58.34 45.9,97.61c0,69.99 -56.73,126.72 -126.72,126.72c-69.98,0 -126.73,-56.72 -126.73,-126.72c0,-4.43 0.23,-8.81 0.67,-13.12c-30.6,36.47 -76.51,59.66 -127.85,59.66c-92.13,0 -166.81,-74.68 -166.81,-166.81c0,-92.13 74.68,-166.81 166.81,-166.81c16.94,0 33.29,2.53 48.7,7.22c-1.12,-9.01 -1.7,-18.18 -1.7,-27.49z" fill="#000000" filter="url(#filter-dlbXgjXi)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M398.64,405.1c0,-121.65 98.61,-220.26 220.26,-220.26c121.65,0 220.26,98.61 220.26,220.26c0,98.12 -64.15,181.25 -152.81,209.74c28.04,23.24 45.9,58.34 45.9,97.61c0,69.99 -56.73,126.72 -126.72,126.72c-69.98,0 -126.73,-56.72 -126.73,-126.72c0,-4.43 0.23,-8.81 0.67,-13.12c-30.6,36.47 -76.51,59.66 -127.85,59.66c-92.13,0 -166.81,-74.68 -166.81,-166.81c0,-92.13 74.68,-166.81 166.81,-166.81c16.94,0 33.29,2.53 48.7,7.22c-1.12,-9.01 -1.7,-18.18 -1.7,-27.49z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M244.74,592.18c0,-59.05 47.86,-106.9 106.9,-106.9c59.05,0 106.9,47.86 106.9,106.9c0,59.05 -47.86,106.9 -106.9,106.9c-59.05,0 -106.9,-47.86 -106.9,-106.9z" fill="currentColor"/>
+			</g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M538.72,712.45c0,-36.9 29.92,-66.81 66.82,-66.81c36.9,0 66.81,29.91 66.81,66.81c0,36.9 -29.91,66.81 -66.81,66.81c-36.9,0 -66.82,-29.91 -66.82,-66.81z" fill="currentColor"/>
+			</g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M458.54,405.1c0,-88.57 71.79,-160.36 160.36,-160.36c88.57,0 160.36,71.79 160.36,160.36c0,88.57 -71.79,160.36 -160.36,160.36c-88.57,0 -160.36,-71.79 -160.36,-160.36z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

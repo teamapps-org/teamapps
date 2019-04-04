@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>eject icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-oG0hxIOU" x="-10%" y="-10%" width="169%" height="169%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M239.33,578.98l222.83,-334.08c11.11,-16.66 29.81,-26.66 49.84,-26.66c20.02,0 38.72,10.01 49.84,26.66l222.83,334.08c11.66,17.48 13.27,39.71 4.44,58.6c10.32,10.76 16.66,25.37 16.66,41.45v66.82c0,33.08 -26.82,59.9 -59.9,59.9h-467.72c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.82c0,-16.09 6.34,-30.69 16.66,-41.45c-8.83,-18.89 -7.22,-41.12 4.44,-58.6z" fill="#000000" filter="url(#filter-oG0hxIOU)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M239.33,578.98l222.83,-334.08c11.11,-16.66 29.81,-26.66 49.84,-26.66c20.02,0 38.72,10.01 49.84,26.66l222.83,334.08c11.66,17.48 13.27,39.71 4.44,58.6c10.32,10.76 16.66,25.37 16.66,41.45v66.82c0,33.08 -26.82,59.9 -59.9,59.9h-467.72c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.82c0,-16.09 6.34,-30.69 16.66,-41.45c-8.83,-18.89 -7.22,-41.12 4.44,-58.6z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M734.83,612.22h-445.67l222.83,-334.08zM278.14,679.04h467.72v66.82h-467.72z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

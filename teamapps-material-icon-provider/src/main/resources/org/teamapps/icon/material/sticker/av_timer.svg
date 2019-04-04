@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>av_timer icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-XMxT2DbC" x="-8%" y="-8%" width="147%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M512,151.42c199.12,0 360.58,161.46 360.58,360.58c0,199.12 -161.46,360.58 -360.58,360.58c-199.5,0 -360.58,-161.5 -360.58,-360.58c0,-115.37 54.25,-217.35 138.03,-283.11c5.48,-5.51 12.09,-10.01 19.55,-13.11c22.38,-9.27 48.15,-4.15 65.28,12.99l44.39,44.39v-61.83c0,-33.08 26.82,-59.9 59.9,-59.9z" fill="#000000" filter="url(#filter-XMxT2DbC)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M512,151.42c199.12,0 360.58,161.46 360.58,360.58c0,199.12 -161.46,360.58 -360.58,360.58c-199.5,0 -360.58,-161.5 -360.58,-360.58c0,-115.37 54.25,-217.35 138.03,-283.11c5.48,-5.51 12.09,-10.01 19.55,-13.11c22.38,-9.27 48.15,-4.15 65.28,12.99l44.39,44.39v-61.83c0,-33.08 26.82,-59.9 59.9,-59.9z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M512,211.33c166.04,0 300.67,134.64 300.67,300.67c0,166.04 -134.64,300.67 -300.67,300.67c-166.37,0 -300.67,-134.64 -300.67,-300.67c0,-98.56 47.44,-185.41 120.61,-240.2v-0.67l227.17,227.18l-47.11,47.11l-181.07,-181.08c-33.07,40.09 -52.79,91.54 -52.79,147.67c0,129.29 104.57,233.86 233.86,233.86c129.29,0 233.86,-104.57 233.86,-233.86c0,-117.93 -87.19,-214.81 -200.45,-231.18v64.14h-66.82v-133.63zM512,645.63c18.38,0 33.41,15.03 33.41,33.4c0,18.38 -15.03,33.41 -33.41,33.41c-18.38,0 -33.41,-15.03 -33.41,-33.41c0,-18.38 15.03,-33.4 33.41,-33.4zM679.04,545.41c-18.38,0 -33.4,-15.03 -33.4,-33.41c0,-18.38 15.03,-33.41 33.4,-33.41c18.38,0 33.41,15.03 33.41,33.41c0,18.38 -15.03,33.41 -33.41,33.41zM344.96,478.59c18.38,0 33.4,15.03 33.4,33.41c0,18.38 -15.03,33.41 -33.4,33.41c-18.38,0 -33.41,-15.03 -33.41,-33.41c0,-18.38 15.03,-33.41 33.41,-33.41z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>library_music icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-NrsJcsjn">
+			<path d="M60.37,60.37h963.63v963.63h-963.63z"/>
+		</clipPath>
+		<filter id="filter-0F5Yopiz" x="-8%" y="-8%" width="140%" height="140%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-NrsJcsjn)">
+			<path d="M772.35,779.26v66.82c0,33.08 -26.82,59.9 -59.9,59.9h-467.71c-69.83,0 -126.73,-56.89 -126.73,-126.73v-467.71c0,-33.08 26.82,-59.9 59.9,-59.9h66.82c2.34,0 4.64,0.13 6.91,0.39v-7.3c0,-69.82 56.88,-126.73 126.72,-126.73h400.9c69.83,0 126.73,56.89 126.73,126.73v400.9c0,69.84 -56.9,126.72 -126.73,126.72h-7.3c0.26,2.27 0.39,4.57 0.39,6.91z" fill="#000000" filter="url(#filter-0F5Yopiz)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M772.35,779.26v66.82c0,33.08 -26.82,59.9 -59.9,59.9h-467.71c-69.83,0 -126.73,-56.89 -126.73,-126.73v-467.71c0,-33.08 26.82,-59.9 59.9,-59.9h66.82c2.34,0 4.64,0.13 6.91,0.39v-7.3c0,-69.82 56.88,-126.73 126.72,-126.73h400.9c69.83,0 126.73,56.89 126.73,126.73v400.9c0,69.84 -56.9,126.72 -126.73,126.72h-7.3c0.26,2.27 0.39,4.57 0.39,6.91z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M846.08,244.74v400.9c0,36.75 -30.08,66.81 -66.82,66.81h-400.9c-36.75,0 -66.81,-30.07 -66.81,-66.81v-400.9c0,-36.75 30.07,-66.82 66.81,-66.82h400.9c36.75,0 66.82,30.08 66.82,66.82zM244.74,779.26h467.71v66.82h-467.71c-36.75,0 -66.82,-30.08 -66.82,-66.82v-467.71h66.82zM712.45,278.14h-133.63v184.08c-14.03,-10.69 -31.07,-17.04 -50.11,-17.04c-46.1,0 -83.51,37.41 -83.51,83.51c0,46.1 37.41,83.52 83.51,83.52c46.1,0 83.52,-37.42 83.52,-83.52v-183.74h100.22z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

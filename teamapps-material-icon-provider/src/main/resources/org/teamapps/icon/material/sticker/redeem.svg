@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>redeem icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-cgKzzpAM">
+			<path d="M60.37,1000.93v-940.56h963.63v940.56z"/>
+		</clipPath>
+		<filter id="filter-3dv3cjPb" x="-8%" y="-8%" width="140%" height="141%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-cgKzzpAM)">
+			<path d="M905.99,378.37v367.49c0,70.18 -56.57,126.72 -126.73,126.72h-534.52c-70.16,0 -126.73,-56.54 -126.73,-126.72l0.34,-367.53c0.01,-69.76 55.84,-126.68 126.39,-126.68h9.08c12.6,-75.9 78.44,-133.63 157.95,-133.63c38.39,0 73.09,13.5 100.29,35.4c27.2,-21.95 61.87,-35.4 100.16,-35.4c79.52,0 145.36,57.73 157.95,133.63h9.08c70.16,0 126.73,56.54 126.73,126.72z" fill="#000000" filter="url(#filter-3dv3cjPb)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M905.99,378.37v367.49c0,70.18 -56.57,126.72 -126.73,126.72h-534.52c-70.16,0 -126.73,-56.54 -126.73,-126.72l0.34,-367.53c0.01,-69.76 55.84,-126.68 126.39,-126.68h9.08c12.6,-75.9 78.44,-133.63 157.95,-133.63c38.39,0 73.09,13.5 100.29,35.4c27.2,-21.95 61.87,-35.4 100.16,-35.4c79.52,0 145.36,57.73 157.95,133.63h9.08c70.16,0 126.73,56.54 126.73,126.72z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M846.08,378.37v367.49c0,37.08 -29.74,66.81 -66.82,66.81h-534.52c-37.08,0 -66.82,-29.73 -66.82,-66.81l0.34,-367.49c0,-37.08 29.4,-66.81 66.48,-66.81h72.83c-3.67,-10.36 -6.01,-21.72 -6.01,-33.41c0,-55.46 44.76,-100.22 100.22,-100.22c35.08,0 65.48,18.05 83.52,44.77l16.7,22.71l16.7,-22.39c18.04,-27.06 48.44,-45.1 83.52,-45.1c55.46,0 100.22,44.76 100.22,100.22c0,11.69 -2.34,23.05 -6.01,33.41h72.83c37.08,0 66.82,29.73 66.82,66.81zM779.26,378.37h-169.71l69.48,94.55l-54.12,39.09l-79.51,-108.24l-33.41,-45.44l-33.41,45.44l-79.51,108.24l-54.12,-39.09l69.48,-94.55h-169.71v200.45h534.52zM779.26,679.04h-534.52v66.82h534.52zM578.81,278.14c0,18.38 15.03,33.41 33.41,33.41c18.38,0 33.41,-15.03 33.41,-33.41c0,-18.38 -15.03,-33.4 -33.41,-33.4c-18.38,0 -33.41,15.03 -33.41,33.4zM378.37,278.14c0,18.38 15.03,33.41 33.41,33.41c18.38,0 33.41,-15.03 33.41,-33.41c0,-18.38 -15.03,-33.4 -33.41,-33.4c-18.38,0 -33.41,15.03 -33.41,33.4z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

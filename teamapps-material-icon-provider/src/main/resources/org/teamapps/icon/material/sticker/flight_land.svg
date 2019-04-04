@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>flight_land icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-2d4fCRbY" x="-8%" y="-8%" width="143%" height="141%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M143.74,492.29v-172.72c0,-18.63 8.67,-36.21 23.46,-47.54c14.79,-11.34 34.01,-15.15 52,-10.3l48.44,13.03c18.2,4.9 33.03,18.07 40.04,35.56l19.91,49.68l61.69,16.51v-198.58c0,-18.59 8.63,-36.12 23.36,-47.46c14.73,-11.34 33.88,-15.2 51.85,-10.45l64.47,17.04c20.04,5.3 35.91,20.57 41.98,40.39l82.49,269.58l145.72,38.97c58.44,16.08 92.79,76.07 77.47,134.44c-0.05,0.2 -0.1,0.39 -0.16,0.59c-7.75,28.18 -25.74,50.81 -48.86,64.95h1.76c33.08,0 59.9,26.82 59.9,59.9v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-634.75c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h500.16l-275.85,-73.67l-230.86,-62.14c-26.16,-7.04 -44.33,-30.76 -44.33,-57.84z" fill="#000000" filter="url(#filter-2d4fCRbY)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M143.74,492.29v-172.72c0,-18.63 8.67,-36.21 23.46,-47.54c14.79,-11.34 34.01,-15.15 52,-10.3l48.44,13.03c18.2,4.9 33.03,18.07 40.04,35.56l19.91,49.68l61.69,16.51v-198.58c0,-18.59 8.63,-36.12 23.36,-47.46c14.73,-11.34 33.88,-15.2 51.85,-10.45l64.47,17.04c20.04,5.3 35.91,20.57 41.98,40.39l82.49,269.58l145.72,38.97c58.44,16.08 92.79,76.07 77.47,134.44c-0.05,0.2 -0.1,0.39 -0.16,0.59c-7.75,28.18 -25.74,50.81 -48.86,64.95h1.76c33.08,0 59.9,26.82 59.9,59.9v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-634.75c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h500.16l-275.85,-73.67l-230.86,-62.14c-26.16,-7.04 -44.33,-30.76 -44.33,-57.84z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M257.09,506.65l-53.45,-14.36v-172.72l48.44,13.03l31.07,77.51l166.04,44.43v-276.62l64.47,17.04l92.21,301.35l177.4,47.43c26.72,7.35 42.43,34.75 35.42,61.47c-7.35,26.72 -34.75,42.43 -61.47,35.42l-177.4,-47.44l-145.32,-38.75zM194.63,745.86h634.75v66.81h-634.75z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

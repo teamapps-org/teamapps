@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>directions_bus icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-qQ6XKJl0" x="-9%" y="-8%" width="157%" height="141%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M184.83,311.55c0,-186.01 201.67,-193.54 327.17,-193.54c125.5,0 327.17,7.53 327.17,193.54v334.08c0,36.9 -12.73,70.58 -33.4,97.32v36.31c0,51.46 -41.85,93.31 -93.31,93.31h-33.41c-42.27,0 -78.03,-28.23 -89.48,-66.81h-155.12c-11.44,38.58 -47.2,66.81 -89.48,66.81h-33.41c-51.46,0 -93.31,-41.85 -93.31,-93.31v-36.31c-20.67,-26.73 -33.4,-60.41 -33.4,-97.32z" fill="#000000" filter="url(#filter-qQ6XKJl0)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M184.83,311.55c0,-186.01 201.67,-193.54 327.17,-193.54c125.5,0 327.17,7.53 327.17,193.54v334.08c0,36.9 -12.73,70.58 -33.4,97.32v36.31c0,51.46 -41.85,93.31 -93.31,93.31h-33.41c-42.27,0 -78.03,-28.23 -89.48,-66.81h-155.12c-11.44,38.58 -47.2,66.81 -89.48,66.81h-33.41c-51.46,0 -93.31,-41.85 -93.31,-93.31v-36.31c-20.67,-26.73 -33.4,-60.41 -33.4,-97.32z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M244.74,311.55c0,-116.93 119.6,-133.63 267.26,-133.63c147.67,0 267.26,16.71 267.26,133.63v334.08c0,29.4 -13.02,55.79 -33.4,74.17v59.46c0,18.38 -15.03,33.41 -33.41,33.41h-33.41c-18.38,0 -33.4,-15.03 -33.4,-33.41v-33.4h-267.27v33.4c0,18.38 -15.03,33.41 -33.4,33.41h-33.41c-18.38,0 -33.41,-15.03 -33.41,-33.41v-59.46c-20.38,-18.38 -33.4,-44.76 -33.4,-74.17zM712.45,311.55h-400.9v167.04h400.9zM411.78,628.93c0,-27.73 -22.39,-50.11 -50.11,-50.11c-27.73,0 -50.11,22.39 -50.11,50.11c0,27.73 22.39,50.11 50.11,50.11c27.73,0 50.11,-22.39 50.11,-50.11zM712.45,628.93c0,-27.73 -22.39,-50.11 -50.11,-50.11c-27.73,0 -50.11,22.39 -50.11,50.11c0,27.73 22.39,50.11 50.11,50.11c27.73,0 50.11,-22.39 50.11,-50.11z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

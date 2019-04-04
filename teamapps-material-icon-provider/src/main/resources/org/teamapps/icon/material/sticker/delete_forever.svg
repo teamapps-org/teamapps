@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>delete_forever icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-fylaYdrs" x="-10%" y="-8%" width="169%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M772.35,745.86c0,69.83 -56.89,126.72 -126.72,126.72h-267.27c-69.83,0 -126.72,-56.89 -126.72,-126.72v-380.56c-19.8,-9.78 -33.41,-30.17 -33.41,-53.74v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h92.12l15.86,-15.86c11.23,-11.24 26.47,-17.55 42.36,-17.55h167.05c15.89,0 31.13,6.31 42.36,17.55l15.86,15.86h92.12c33.08,0 59.9,26.82 59.9,59.9v66.81c0,23.57 -13.62,43.96 -33.41,53.74z" fill="#000000" filter="url(#filter-fylaYdrs)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M772.35,745.86c0,69.83 -56.89,126.72 -126.72,126.72h-267.27c-69.83,0 -126.72,-56.89 -126.72,-126.72v-380.56c-19.8,-9.78 -33.41,-30.17 -33.41,-53.74v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h92.12l15.86,-15.86c11.23,-11.24 26.47,-17.55 42.36,-17.55h167.05c15.89,0 31.13,6.31 42.36,17.55l15.86,15.86h92.12c33.08,0 59.9,26.82 59.9,59.9v66.81c0,23.57 -13.62,43.96 -33.41,53.74z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M311.55,344.96h400.9v400.9c0,36.75 -30.07,66.81 -66.81,66.81h-267.27c-36.75,0 -66.81,-30.07 -66.81,-66.81zM464.89,578.81l-70.82,70.83l47.11,47.11l70.82,-70.83l70.82,70.83l47.11,-47.11l-70.82,-70.83l70.82,-70.82l-47.11,-47.11l-70.82,70.82l-71.16,-70.82l-47.11,47.11zM745.86,244.74v66.81h-467.72v-66.81h116.93l33.4,-33.41h167.05l33.4,33.41z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

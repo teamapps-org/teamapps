@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>beenhere icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-g1J9fQpr">
+			<path d="M93.78,26.97h907.15v997.03h-907.15z"/>
+		</clipPath>
+		<filter id="filter-GxIBUJRo" x="-8%" y="-7%" width="147%" height="132%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-g1J9fQpr)">
+			<path d="M872.24,643.34c-0.02,43.73 -22.25,82.28 -55.64,104.96l-271.36,181.02c-20.12,13.42 -46.33,13.43 -66.46,0.02l-271.33,-180.77c-0.13,-0.09 -0.26,-0.17 -0.39,-0.26c-33.39,-22.68 -55.64,-61.25 -55.64,-105.01l0.34,-431.99c0.01,-69.42 56.16,-126.69 126.38,-126.69h467.72c69.83,0 126.72,56.89 126.72,126.72z" fill="#000000" filter="url(#filter-GxIBUJRo)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M872.24,643.34c-0.02,43.73 -22.25,82.28 -55.64,104.96l-271.36,181.02c-20.12,13.42 -46.33,13.43 -66.46,0.02l-271.33,-180.77c-0.13,-0.09 -0.26,-0.17 -0.39,-0.26c-33.39,-22.68 -55.64,-61.25 -55.64,-105.01l0.34,-431.99c0.01,-69.42 56.16,-126.69 126.38,-126.69h467.72c69.83,0 126.72,56.89 126.72,126.72z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M812.67,211.33l-0.34,431.97c0,23.05 -11.69,43.43 -29.39,55.46l-270.94,180.73l-271.27,-180.73c-17.7,-12.03 -29.4,-32.41 -29.4,-55.46l0.34,-431.97c0,-36.75 29.73,-66.81 66.48,-66.81h467.72c36.75,0 66.81,30.07 66.81,66.81zM745.86,344.96l-47.11,-47.44l-253.57,253.57l-119.94,-119.6l-47.11,47.11l167.05,167.05z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

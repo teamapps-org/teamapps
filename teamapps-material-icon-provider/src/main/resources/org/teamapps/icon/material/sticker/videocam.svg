@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>videocam icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-H1KHWwmj" x="-8%" y="-12%" width="147%" height="185%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M872.58,328.25v367.49c0,24.23 -14.6,46.07 -36.98,55.34c-22.38,9.27 -48.15,4.15 -65.28,-12.99l-34.62,-34.62c-10.76,39.63 -47.04,68.87 -90.06,68.87h-400.9c-51.46,0 -93.31,-41.85 -93.31,-93.31v-334.07c0,-51.46 41.85,-93.31 93.31,-93.31h400.9c43.02,0 79.3,29.24 90.06,68.87l34.62,-34.62c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34z" fill="#000000" filter="url(#filter-H1KHWwmj)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M872.58,328.25v367.49c0,24.23 -14.6,46.07 -36.98,55.34c-22.38,9.27 -48.15,4.15 -65.28,-12.99l-34.62,-34.62c-10.76,39.63 -47.04,68.87 -90.06,68.87h-400.9c-51.46,0 -93.31,-41.85 -93.31,-93.31v-334.07c0,-51.46 41.85,-93.31 93.31,-93.31h400.9c43.02,0 79.3,29.24 90.06,68.87l34.62,-34.62c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M812.67,328.25v367.49l-133.63,-133.63v116.93c0,18.38 -15.03,33.41 -33.4,33.41h-400.9c-18.38,0 -33.41,-15.03 -33.41,-33.41v-334.07c0,-18.38 15.03,-33.41 33.41,-33.41h400.9c18.38,0 33.4,15.03 33.4,33.41v116.93z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>signal_cellular_null icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-p2Y7fVkt">
+			<path d="M60.37,60.37h963.63v963.63h-963.63z"/>
+		</clipPath>
+		<filter id="filter-LrWAc78u" x="-8%" y="-8%" width="140%" height="140%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-p2Y7fVkt)">
+			<path d="M846.08,905.99h-668.17c-24.23,0 -46.07,-14.6 -55.34,-36.98c-9.27,-22.38 -4.15,-48.15 12.99,-65.28l668.17,-668.17c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34v668.17c0,33.08 -26.82,59.9 -59.9,59.9z" fill="#000000" filter="url(#filter-LrWAc78u)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M846.08,905.99h-668.17c-24.23,0 -46.07,-14.6 -55.34,-36.98c-9.27,-22.38 -4.15,-48.15 12.99,-65.28l668.17,-668.17c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34v668.17c0,33.08 -26.82,59.9 -59.9,59.9z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M846.08,846.08h-668.17l668.17,-668.17zM779.26,339.28l-439.98,439.98h439.98z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

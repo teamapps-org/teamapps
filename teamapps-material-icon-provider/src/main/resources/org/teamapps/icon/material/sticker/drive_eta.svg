@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>drive_eta icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-t9K7TE0k" x="-8%" y="-9%" width="147%" height="157%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M872.58,478.59v267.27c0,51.48 -41.87,93.31 -93.31,93.31h-33.4c-42.25,0 -78.04,-28.21 -89.49,-66.81h-288.74c-11.44,38.6 -47.24,66.81 -89.49,66.81h-33.4c-51.44,0 -93.31,-41.83 -93.31,-93.31v-267.27c0,-6.69 1.12,-13.33 3.31,-19.65l69.51,-200.17c0.04,-0.13 0.09,-0.25 0.13,-0.38c15.06,-42.3 55.14,-73.55 103.87,-73.55h367.49c47.98,0 89.2,30.61 104.08,74.16l69.43,199.94c2.19,6.32 3.31,12.96 3.31,19.65z" fill="#000000" filter="url(#filter-t9K7TE0k)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M872.58,478.59v267.27c0,51.48 -41.87,93.31 -93.31,93.31h-33.4c-42.25,0 -78.04,-28.21 -89.49,-66.81h-288.74c-11.44,38.6 -47.24,66.81 -89.49,66.81h-33.4c-51.44,0 -93.31,-41.83 -93.31,-93.31v-267.27c0,-6.69 1.12,-13.33 3.31,-19.65l69.51,-200.17c0.04,-0.13 0.09,-0.25 0.13,-0.38c15.06,-42.3 55.14,-73.55 103.87,-73.55h367.49c47.98,0 89.2,30.61 104.08,74.16l69.43,199.94c2.19,6.32 3.31,12.96 3.31,19.65z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M812.67,478.59v267.27c0,18.38 -15.03,33.4 -33.41,33.4h-33.4c-18.38,0 -33.41,-15.03 -33.41,-33.4v-33.41h-400.9v33.41c0,18.38 -15.03,33.4 -33.41,33.4h-33.4c-18.38,0 -33.41,-15.03 -33.41,-33.4v-267.27l69.49,-200.11c7.02,-19.71 25.38,-33.74 47.43,-33.74h367.49c22.05,0 40.76,14.03 47.43,33.74zM745.86,445.19l-50.11,-150.34h-367.49l-50.11,150.34zM378.37,562.11c0,-27.73 -22.39,-50.11 -50.11,-50.11c-27.73,0 -50.11,22.39 -50.11,50.11c0,27.73 22.39,50.11 50.11,50.11c27.73,0 50.11,-22.39 50.11,-50.11zM745.86,562.11c0,-27.73 -22.39,-50.11 -50.11,-50.11c-27.73,0 -50.11,22.39 -50.11,50.11c0,27.73 22.39,50.11 50.11,50.11c27.73,0 50.11,-22.39 50.11,-50.11z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

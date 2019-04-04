@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>account_balance_wallet icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-Miph6MzQ">
+			<path d="M93.78,1000.93v-907.15h930.22v907.15z"/>
+		</clipPath>
+		<filter id="filter-6IOKYyWY" x="-8%" y="-8%" width="146%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-Miph6MzQ)">
+			<path d="M872.58,712.45v33.41c0,69.83 -56.89,126.72 -126.72,126.72h-467.72c-70.37,0 -126.72,-57.09 -126.72,-126.72v-467.72c0,-69.63 56.35,-126.72 126.72,-126.72h467.72c69.83,0 126.72,56.89 126.72,126.72v33.41c0,4.27 -0.45,8.43 -1.3,12.45c20.49,9.52 34.71,30.28 34.71,54.36v267.27c0,24.08 -14.21,44.85 -34.71,54.36c0.85,4.02 1.3,8.18 1.3,12.45z" fill="#000000" filter="url(#filter-6IOKYyWY)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M872.58,712.45v33.41c0,69.83 -56.89,126.72 -126.72,126.72h-467.72c-70.37,0 -126.72,-57.09 -126.72,-126.72v-467.72c0,-69.63 56.35,-126.72 126.72,-126.72h467.72c69.83,0 126.72,56.89 126.72,126.72v33.41c0,4.27 -0.45,8.43 -1.3,12.45c20.49,9.52 34.71,30.28 34.71,54.36v267.27c0,24.08 -14.21,44.85 -34.71,54.36c0.85,4.02 1.3,8.18 1.3,12.45z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M812.67,712.45v33.41c0,36.75 -30.07,66.81 -66.81,66.81h-467.72c-37.08,0 -66.81,-30.07 -66.81,-66.81v-467.72c0,-36.75 29.73,-66.81 66.81,-66.81h467.72c36.75,0 66.81,30.07 66.81,66.81v33.41h-300.67c-37.08,0 -66.81,30.07 -66.81,66.81v267.27c0,36.75 29.73,66.81 66.81,66.81zM512,378.37h334.08v267.27h-334.08zM695.75,512c0,-27.73 -22.39,-50.11 -50.11,-50.11c-27.73,0 -50.11,22.39 -50.11,50.11c0,27.73 22.39,50.11 50.11,50.11c27.73,0 50.11,-22.39 50.11,-50.11z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

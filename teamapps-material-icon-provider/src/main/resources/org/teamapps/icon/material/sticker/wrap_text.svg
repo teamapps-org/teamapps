@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>wrap_text icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-0REwxUqm" x="-9%" y="-9%" width="155%" height="162%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M872.58,612.22c0,106.91 -86.63,193.54 -193.54,193.54h-6.91v6.91c0,24.23 -14.6,46.07 -36.98,55.34c-22.38,9.27 -48.15,4.15 -65.28,-12.99l-75.28,-75.28c-10.8,15.71 -28.9,26.01 -49.4,26.01h-200.45c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9h200.45c20.5,0 38.6,10.3 49.4,26.01l39.83,-39.83h-289.68c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9h434.3c106.91,0 193.54,86.63 193.54,193.54zM779.26,404.87h-534.52c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9h534.52c33.08,0 59.9,26.82 59.9,59.9v66.82c0,33.08 -26.82,59.9 -59.9,59.9z" fill="#000000" filter="url(#filter-0REwxUqm)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M872.58,612.22c0,106.91 -86.63,193.54 -193.54,193.54h-6.91v6.91c0,24.23 -14.6,46.07 -36.98,55.34c-22.38,9.27 -48.15,4.15 -65.28,-12.99l-75.28,-75.28c-10.8,15.71 -28.9,26.01 -49.4,26.01h-200.45c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9h200.45c20.5,0 38.6,10.3 49.4,26.01l39.83,-39.83h-289.68c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9h434.3c106.91,0 193.54,86.63 193.54,193.54zM779.26,404.87h-534.52c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9h534.52c33.08,0 59.9,26.82 59.9,59.9v66.82c0,33.08 -26.82,59.9 -59.9,59.9z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M812.67,612.22c0,73.83 -59.81,133.63 -133.63,133.63h-66.81v66.81l-100.22,-100.22l100.22,-100.22v66.81h75.17c36.75,0 66.81,-30.07 66.81,-66.81c0,-36.75 -30.07,-66.81 -66.81,-66.81h-442.65v-66.82h434.3c73.83,0 133.63,59.81 133.63,133.63zM779.26,344.96h-534.52v-66.82h534.52zM244.74,679.04h200.45v66.82h-200.45z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>phonelink_erase icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-Vhvl3hhc">
+			<path d="M93.78,26.97h907.15v997.03h-907.15z"/>
+		</clipPath>
+		<filter id="filter-zorjpIcV" x="-8%" y="-7%" width="147%" height="132%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-Vhvl3hhc)">
+			<path d="M872.58,211.33v601.34c0,69.83 -56.89,126.72 -126.72,126.72h-334.08c-69.83,0 -126.72,-56.89 -126.72,-126.72v-82.64c-23.51,21.43 -59.95,20.78 -82.68,-1.95l-33.41,-33.41c-23.39,-23.39 -23.39,-61.32 0,-84.72l91.27,-91.27l-91.27,-91.27c-23.4,-23.39 -23.4,-61.32 0,-84.72l33.41,-33.41c22.73,-22.73 59.17,-23.37 82.68,-1.95v-96.01c0,-69.83 56.89,-126.72 126.72,-126.72h334.08c69.83,0 126.72,56.89 126.72,126.72z" fill="#000000" filter="url(#filter-zorjpIcV)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M872.58,211.33v601.34c0,69.83 -56.89,126.72 -126.72,126.72h-334.08c-69.83,0 -126.72,-56.89 -126.72,-126.72v-82.64c-23.51,21.43 -59.95,20.78 -82.68,-1.95l-33.41,-33.41c-23.39,-23.39 -23.39,-61.32 0,-84.72l91.27,-91.27l-91.27,-91.27c-23.4,-23.39 -23.4,-61.32 0,-84.72l33.41,-33.41c22.73,-22.73 59.17,-23.37 82.68,-1.95v-96.01c0,-69.83 56.89,-126.72 126.72,-126.72h334.08c69.83,0 126.72,56.89 126.72,126.72z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M812.67,211.33v601.34c0,36.75 -30.07,66.81 -66.81,66.81h-334.08c-36.75,0 -66.81,-30.07 -66.81,-66.81v-100.22h66.81v66.81h334.08v-534.52h-334.08v66.81h-66.81v-100.22c0,-36.75 30.07,-66.81 66.81,-66.81h334.08c36.75,0 66.81,30.07 66.81,66.81zM411.78,518.68l133.63,133.63l-33.41,33.41l-133.63,-133.63l-133.63,133.63l-33.41,-33.41l133.63,-133.63l-133.63,-133.63l33.41,-33.41l133.63,133.63l133.63,-133.63l33.41,33.41z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

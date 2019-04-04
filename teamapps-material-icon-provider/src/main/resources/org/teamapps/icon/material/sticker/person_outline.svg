@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>person_outline icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-UuZfmFs1" x="-9%" y="-9%" width="157%" height="157%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M839.17,679.04v100.22c0,33.08 -26.82,59.9 -59.9,59.9h-534.52c-33.08,0 -59.9,-26.82 -59.9,-59.9v-100.22c0,-94.78 93.84,-145.6 183.45,-171.03c-30.97,-34.31 -49.82,-79.77 -49.82,-129.65c0,-106.92 86.63,-193.53 193.54,-193.53c106.91,0 193.54,86.61 193.54,193.53c0,49.88 -18.85,95.34 -49.82,129.65c89.61,25.43 183.45,76.25 183.45,171.03z" fill="#000000" filter="url(#filter-UuZfmFs1)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M839.17,679.04v100.22c0,33.08 -26.82,59.9 -59.9,59.9h-534.52c-33.08,0 -59.9,-26.82 -59.9,-59.9v-100.22c0,-94.78 93.84,-145.6 183.45,-171.03c-30.97,-34.31 -49.82,-79.77 -49.82,-129.65c0,-106.92 86.63,-193.53 193.54,-193.53c106.91,0 193.54,86.61 193.54,193.53c0,49.88 -18.85,95.34 -49.82,129.65c89.61,25.43 183.45,76.25 183.45,171.03z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M779.26,679.04v100.22h-534.52v-100.22c0,-88.86 178.06,-133.63 267.26,-133.63c89.2,0 267.26,44.76 267.26,133.63zM645.63,378.37c0,73.83 -59.81,133.63 -133.63,133.63c-73.83,0 -133.63,-59.81 -133.63,-133.63c0,-73.83 59.81,-133.63 133.63,-133.63c73.83,0 133.63,59.8 133.63,133.63zM512,608.88c-99.22,0 -203.79,48.77 -203.79,70.16v36.75h407.58v-36.75c0,-21.38 -104.57,-70.16 -203.79,-70.16zM512,308.21c-38.75,0 -70.16,31.41 -70.16,70.16c0,38.75 31.41,70.16 70.16,70.16c38.75,0 70.16,-31.41 70.16,-70.16c0,-38.75 -31.41,-70.16 -70.16,-70.16z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

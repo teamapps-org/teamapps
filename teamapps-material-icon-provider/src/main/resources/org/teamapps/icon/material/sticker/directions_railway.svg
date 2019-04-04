@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>directions_railway icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-mI531eHV" x="-9%" y="-8%" width="157%" height="136%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M184.83,278.14c0,-186.01 201.67,-193.53 327.17,-193.53c125.49,0 327.17,7.52 327.17,193.53v350.78c0,58.42 -28.39,110.23 -72.1,142.43c3.45,7.66 5.29,16.04 5.29,24.61v16.7c0,33.08 -26.82,59.9 -59.9,59.9h-400.9c-33.08,0 -59.9,-26.82 -59.9,-59.9v-16.7c0,-8.57 1.84,-16.95 5.29,-24.61c-43.71,-32.2 -72.1,-84.01 -72.1,-142.43z" fill="#000000" filter="url(#filter-mI531eHV)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M184.83,278.14c0,-186.01 201.67,-193.53 327.17,-193.53c125.49,0 327.17,7.52 327.17,193.53v350.78c0,58.42 -28.39,110.23 -72.1,142.43c3.45,7.66 5.29,16.04 5.29,24.61v16.7c0,33.08 -26.82,59.9 -59.9,59.9h-400.9c-33.08,0 -59.9,-26.82 -59.9,-59.9v-16.7c0,-8.57 1.84,-16.95 5.29,-24.61c-43.71,-32.2 -72.1,-84.01 -72.1,-142.43z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M244.74,278.14c0,-116.93 119.6,-133.63 267.26,-133.63c147.67,0 267.26,16.7 267.26,133.63v350.78c0,64.48 -52.45,116.93 -116.93,116.93l50.11,50.11v16.7h-400.9v-16.7l50.11,-50.11c-64.48,0 -116.93,-52.45 -116.93,-116.93zM712.45,278.14h-400.9v167.05h400.9zM578.81,612.22c0,-36.75 -30.07,-66.81 -66.81,-66.81c-36.75,0 -66.81,30.07 -66.81,66.81c0,36.75 30.07,66.81 66.81,66.81c36.75,0 66.81,-30.07 66.81,-66.81z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

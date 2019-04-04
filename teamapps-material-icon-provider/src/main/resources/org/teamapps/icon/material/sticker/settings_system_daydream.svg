@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>settings_system_daydream icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-Z0B6m2WQ">
+			<path d="M26.97,1000.93v-907.15h997.03v907.15z"/>
+		</clipPath>
+		<filter id="filter-lgsSzfEi" x="-7%" y="-8%" width="132%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-Z0B6m2WQ)">
+			<path d="M939.39,278.14v467.72c0,69.83 -56.89,126.72 -126.72,126.72h-601.34c-69.83,0 -126.72,-56.89 -126.72,-126.72v-467.72c0,-69.83 56.89,-126.72 126.72,-126.72h601.34c69.83,0 126.72,56.89 126.72,126.72z" fill="#000000" filter="url(#filter-lgsSzfEi)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M939.39,278.14v467.72c0,69.83 -56.89,126.72 -126.72,126.72h-601.34c-69.83,0 -126.72,-56.89 -126.72,-126.72v-467.72c0,-69.83 56.89,-126.72 126.72,-126.72h601.34c69.83,0 126.72,56.89 126.72,126.72z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M879.49,278.14v467.72c0,36.75 -30.07,66.81 -66.81,66.81h-601.34c-36.75,0 -66.81,-30.07 -66.81,-66.81v-467.72c0,-36.75 30.07,-66.81 66.81,-66.81h601.34c36.75,0 66.81,30.07 66.81,66.81zM812.67,277.81h-601.34v468.37h601.34zM311.55,545.41c0,-51.78 39.09,-94.21 89.54,-99.56h5.34c18.71,-39.75 58.8,-67.49 105.57,-67.49c58.8,0 107.24,43.76 115.26,100.22h1.67c46.1,0 83.52,37.42 83.52,83.52c0,46.1 -37.42,83.52 -83.52,83.52h-217.15c-55.46,0 -100.22,-44.76 -100.22,-100.22z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

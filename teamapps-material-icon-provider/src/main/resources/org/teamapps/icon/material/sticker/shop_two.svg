@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>shop_two icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-1sd5pic9">
+			<path d="M26.97,26.97h997.03v997.03h-997.03z"/>
+		</clipPath>
+		<filter id="filter-0Q9HtHJd" x="-7%" y="-8%" width="132%" height="134%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-1sd5pic9)">
+			<path d="M939.39,278.14v367.49c0,70.17 -56.55,126.72 -126.72,126.72h-7.3c0.26,2.27 0.39,4.57 0.39,6.91c0,70.17 -56.56,126.73 -126.73,126.73h-467.71c-70.18,0 -126.72,-56.57 -126.72,-126.73v-367.49c0,-33.08 26.82,-59.9 59.9,-59.9h66.81c2.34,0 4.64,0.13 6.91,0.39v-74.12c0,-33.08 26.82,-59.9 59.9,-59.9h107.14v-6.91c0,-70.17 56.55,-126.72 126.72,-126.72h133.63c70.17,0 126.72,56.55 126.72,126.72v6.91h107.13c33.08,0 59.9,26.82 59.9,59.9z" fill="#000000" filter="url(#filter-0Q9HtHJd)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M939.39,278.14v367.49c0,70.17 -56.55,126.72 -126.72,126.72h-7.3c0.26,2.27 0.39,4.57 0.39,6.91c0,70.17 -56.56,126.73 -126.73,126.73h-467.71c-70.18,0 -126.72,-56.57 -126.72,-126.73v-367.49c0,-33.08 26.82,-59.9 59.9,-59.9h66.81c2.34,0 4.64,0.13 6.91,0.39v-74.12c0,-33.08 26.82,-59.9 59.9,-59.9h107.14v-6.91c0,-70.17 56.55,-126.72 126.72,-126.72h133.63c70.17,0 126.72,56.55 126.72,126.72v6.91h107.13c33.08,0 59.9,26.82 59.9,59.9z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M879.49,278.14v367.49c0,37.08 -29.73,66.81 -66.81,66.81h-467.71c-37.08,0 -66.82,-29.73 -66.82,-66.81v-367.49h167.05v-66.81c0,-37.08 29.73,-66.81 66.81,-66.81h133.63c37.08,0 66.81,29.73 66.81,66.81v66.81zM211.33,779.26h534.53c0,37.08 -29.74,66.82 -66.82,66.82h-467.71c-37.08,0 -66.81,-29.74 -66.81,-66.82v-367.49h66.81zM695.75,478.59l-183.75,-100.22v233.86zM512,278.14h133.63v-66.81h-133.63z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

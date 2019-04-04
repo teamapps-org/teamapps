@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>refresh icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-3SYzcgou" x="-9%" y="-9%" width="157%" height="157%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M839.17,244.74v233.85c0,23.02 -12.98,43 -32.02,53.03c3.87,3.02 7.38,6.54 10.45,10.5c11.35,14.64 15.28,33.71 10.65,51.65c-36.33,140.86 -163.44,245.39 -316.25,245.39c-180.85,0 -326.84,-146.51 -326.84,-327.17c0,-180.65 145.99,-327.17 326.84,-327.17c68.8,0 132.4,21.35 184.9,57.55l40,-40c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34z" fill="#000000" filter="url(#filter-3SYzcgou)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M839.17,244.74v233.85c0,23.02 -12.98,43 -32.02,53.03c3.87,3.02 7.38,6.54 10.45,10.5c11.35,14.64 15.28,33.71 10.65,51.65c-36.33,140.86 -163.44,245.39 -316.25,245.39c-180.85,0 -326.84,-146.51 -326.84,-327.17c0,-180.65 145.99,-327.17 326.84,-327.17c68.8,0 132.4,21.35 184.9,57.55l40,-40c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M779.26,244.74v233.85h-233.85l107.57,-107.57c-36.08,-36.42 -85.52,-59.47 -140.98,-59.47c-110.58,0 -200.45,89.86 -200.45,200.45c0,110.58 89.86,200.45 200.45,200.45c87.19,0 161.36,-55.8 188.76,-133.63h69.48c-29.73,115.26 -133.63,200.45 -258.24,200.45c-147.67,0 -266.93,-119.6 -266.93,-267.26c0,-147.67 119.27,-267.26 266.93,-267.26c73.83,0 140.31,30.06 188.76,78.5z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

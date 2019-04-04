@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>local_pharmacy icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-61pxAQVl" x="-8%" y="-8%" width="147%" height="136%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M869.5,363.91l-60.5,181.51l60.5,181.51c2.04,6.11 3.07,12.5 3.07,18.94v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-601.34c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.81c0,-6.44 1.04,-12.83 3.07,-18.94l60.5,-181.51l-60.5,-181.51c-2.04,-6.11 -3.07,-12.5 -3.07,-18.94v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9h382.04l34.41,-94.26c11.35,-31.1 45.77,-47.09 76.86,-35.72l78.51,28.73c31.01,11.35 46.99,45.66 35.72,76.7l-8.91,24.55h2.72c33.08,0 59.9,26.82 59.9,59.9v66.82c0,6.44 -1.04,12.83 -3.07,18.94z" fill="#000000" filter="url(#filter-61pxAQVl)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M869.5,363.91l-60.5,181.51l60.5,181.51c2.04,6.11 3.07,12.5 3.07,18.94v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-601.34c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.81c0,-6.44 1.04,-12.83 3.07,-18.94l60.5,-181.51l-60.5,-181.51c-2.04,-6.11 -3.07,-12.5 -3.07,-18.94v-66.82c0,-33.08 26.82,-59.9 59.9,-59.9h382.04l34.41,-94.26c11.35,-31.1 45.77,-47.09 76.86,-35.72l78.51,28.73c31.01,11.35 46.99,45.66 35.72,76.7l-8.91,24.55h2.72c33.08,0 59.9,26.82 59.9,59.9v66.82c0,6.44 -1.04,12.83 -3.07,18.94z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M812.67,344.96l-66.81,200.45l66.81,200.45v66.81h-601.34v-66.81l66.81,-200.45l-66.81,-200.45v-66.82h423.95l48.77,-133.63l78.51,28.73l-38.09,104.9h88.2zM645.63,512h-100.22v-100.22h-66.82v100.22h-100.22v66.81h100.22v100.22h66.82v-100.22h100.22z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

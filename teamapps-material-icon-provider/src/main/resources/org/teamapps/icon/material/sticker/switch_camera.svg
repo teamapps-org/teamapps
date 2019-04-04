@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>switch_camera icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-h1MMddmC">
+			<path d="M60.37,967.52v-907.15h963.63v907.15z"/>
+		</clipPath>
+		<filter id="filter-vfH1cZPq" x="-8%" y="-8%" width="140%" height="143%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-h1MMddmC)">
+			<path d="M905.99,311.55v400.9c0,69.84 -56.9,126.72 -126.73,126.72h-534.52c-69.82,0 -126.73,-56.88 -126.73,-126.72v-400.9c0,-69.84 56.9,-126.72 126.73,-126.72h79.52l43.33,-47.35c11.35,-12.4 27.39,-19.47 44.2,-19.47h200.45c16.81,0 32.85,7.06 44.2,19.47l43.33,47.35h79.52c69.82,0 126.73,56.88 126.73,126.72z" fill="#000000" filter="url(#filter-vfH1cZPq)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M905.99,311.55v400.9c0,69.84 -56.9,126.72 -126.73,126.72h-534.52c-69.82,0 -126.73,-56.88 -126.73,-126.72v-400.9c0,-69.84 56.9,-126.72 126.73,-126.72h79.52l43.33,-47.35c11.35,-12.4 27.39,-19.47 44.2,-19.47h200.45c16.81,0 32.85,7.06 44.2,19.47l43.33,47.35h79.52c69.82,0 126.73,56.88 126.73,126.72z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M846.08,311.55v400.9c0,36.75 -30.08,66.81 -66.82,66.81h-534.52c-36.75,0 -66.82,-30.07 -66.82,-66.81v-400.9c0,-36.75 30.08,-66.81 66.82,-66.81h105.9l61.14,-66.82h200.45l61.14,66.82h105.9c36.75,0 66.82,30.07 66.82,66.81zM729.15,512l-116.93,-116.93v83.51h-200.45v-83.51l-116.93,116.93l116.93,116.93v-83.51h200.45v83.51z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

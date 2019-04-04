@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>kitchen icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-8Gu8p8nr">
+			<path d="M127.19,60.37h840.33v963.63h-840.33z"/>
+		</clipPath>
+		<filter id="filter-9lMxUoMn" x="-9%" y="-8%" width="157%" height="140%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-8Gu8p8nr)">
+			<path d="M839.17,244.74v534.52c0,69.82 -56.88,126.73 -126.72,126.73h-400.9c-69.84,0 -126.72,-56.9 -126.72,-126.73v-534.52c0,-70.36 57.08,-126.73 126.72,-126.73l400.93,0.34c69.22,0.01 126.69,55.64 126.69,126.39z" fill="#000000" filter="url(#filter-9lMxUoMn)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M839.17,244.74v534.52c0,69.82 -56.88,126.73 -126.72,126.73h-400.9c-69.84,0 -126.72,-56.9 -126.72,-126.73v-534.52c0,-70.36 57.08,-126.73 126.72,-126.73l400.93,0.34c69.22,0.01 126.69,55.64 126.69,126.39z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M779.26,244.74v534.52c0,36.75 -30.07,66.82 -66.81,66.82h-400.9c-36.75,0 -66.81,-30.08 -66.81,-66.82v-534.52c0,-37.08 30.07,-66.82 66.81,-66.82l400.9,0.34c36.75,0 66.81,29.4 66.81,66.48zM712.45,477.92h-400.9v301.34h400.9zM712.45,244.74h-400.9v167.04h400.9zM378.37,512h66.82v167.04h-66.82zM378.37,278.14h66.82v100.22h-66.82z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

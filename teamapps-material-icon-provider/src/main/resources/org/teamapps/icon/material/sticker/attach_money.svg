@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>attach_money icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-ZUcQyAgC" x="-13%" y="-8%" width="198%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M722.24,622.25c0,87.17 -54.9,138.54 -116.93,163.36v27.07c0,33.08 -26.82,59.9 -59.9,59.9h-100.22c-33.08,0 -59.9,-26.82 -59.9,-59.9v-28.79c-62.76,-26.61 -118.04,-80.49 -122.86,-168.39c-1.88,-34.32 25.44,-63.18 59.81,-63.18h28.8c-47.6,-31 -82.7,-77.38 -82.7,-148.23c0,-83.66 54.89,-137.37 116.93,-164.09v-28.68c0,-33.08 26.82,-59.9 59.9,-59.9h100.22c33.08,0 59.9,26.82 59.9,59.9v31.45c68.2,33.65 104.41,98.37 107.19,166.56c1.39,34.01 -25.81,62.34 -59.85,62.34h-5.74c42.12,30.87 75.33,77.67 75.33,150.57z" fill="#000000" filter="url(#filter-ZUcQyAgC)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M722.24,622.25c0,87.17 -54.9,138.54 -116.93,163.36v27.07c0,33.08 -26.82,59.9 -59.9,59.9h-100.22c-33.08,0 -59.9,-26.82 -59.9,-59.9v-28.79c-62.76,-26.61 -118.04,-80.49 -122.86,-168.39c-1.88,-34.32 25.44,-63.18 59.81,-63.18h28.8c-47.6,-31 -82.7,-77.38 -82.7,-148.23c0,-83.66 54.89,-137.37 116.93,-164.09v-28.68c0,-33.08 26.82,-59.9 59.9,-59.9h100.22c33.08,0 59.9,26.82 59.9,59.9v31.45c68.2,33.65 104.41,98.37 107.19,166.56c1.39,34.01 -25.81,62.34 -59.85,62.34h-5.74c42.12,30.87 75.33,77.67 75.33,150.57z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M662.34,622.25c0,68.49 -51.78,106.24 -116.93,118.6v71.82h-100.22v-72.5c-64.14,-13.69 -118.94,-54.79 -122.95,-127.95h73.5c3.67,39.42 30.74,70.16 99.56,70.16c73.83,0 90.2,-36.75 90.2,-59.8c0,-31.07 -16.7,-60.47 -100.22,-80.52c-93.21,-22.39 -157.02,-60.8 -157.02,-137.97c0,-64.48 52.12,-106.57 116.93,-120.61v-72.16h100.22v73.16c69.82,17.04 104.9,69.82 107.24,127.28h-73.84c-2,-41.76 -24.05,-70.16 -83.51,-70.16c-56.46,0 -90.2,25.38 -90.2,61.8c0,31.73 24.39,52.12 100.22,71.83c75.83,19.71 157.01,52.12 157.01,146.99z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

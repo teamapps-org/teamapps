@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>voicemail icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-dzEwn6sa">
+			<path d="M0,194h1024v673.29h-1024z"/>
+		</clipPath>
+		<filter id="filter-1HFR62Ru" x="-7%" y="-12%" width="127%" height="190%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-dzEwn6sa)">
+			<path d="M972.8,495.3c0,134.65 -109.01,243.64 -243.65,243.64h-434.3c-134.64,0 -243.65,-108.99 -243.65,-243.64c0,-134.65 109,-243.65 243.65,-243.65c94.79,0 176.86,54.02 217.15,132.98c40.29,-78.96 122.36,-132.98 217.15,-132.98c134.65,0 243.65,109 243.65,243.65z" fill="#000000" filter="url(#filter-1HFR62Ru)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M972.8,495.3c0,134.65 -109.01,243.64 -243.65,243.64h-434.3c-134.64,0 -243.65,-108.99 -243.65,-243.64c0,-134.65 109,-243.65 243.65,-243.65c94.79,0 176.86,54.02 217.15,132.98c40.29,-78.96 122.36,-132.98 217.15,-132.98c134.65,0 243.65,109 243.65,243.65z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M912.9,495.3c0,101.56 -82.18,183.74 -183.75,183.74h-434.3c-101.56,0 -183.75,-82.18 -183.75,-183.74c0,-101.56 82.18,-183.75 183.75,-183.75c101.56,0 183.74,82.18 183.74,183.75c0,44.44 -15.7,85.19 -42.09,116.93h151.01c-26.39,-31.73 -42.09,-72.49 -42.09,-116.93c0,-101.56 82.18,-183.75 183.74,-183.75c101.56,0 183.75,82.18 183.75,183.75zM411.78,495.3c0,-64.48 -52.45,-116.93 -116.93,-116.93c-64.48,0 -116.93,52.45 -116.93,116.93c0,64.48 52.45,116.93 116.93,116.93c64.48,0 116.93,-52.45 116.93,-116.93zM846.08,495.3c0,-64.48 -52.45,-116.93 -116.93,-116.93c-64.48,0 -116.93,52.45 -116.93,116.93c0,64.48 52.45,116.93 116.93,116.93c64.48,0 116.93,-52.45 116.93,-116.93z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

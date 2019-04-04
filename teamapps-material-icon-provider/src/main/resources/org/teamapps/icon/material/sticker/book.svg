@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>book icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-c6grNwgv">
+			<path d="M127.19,60.37h840.33v963.63h-840.33z"/>
+		</clipPath>
+		<filter id="filter-fxIddqy3" x="-9%" y="-8%" width="157%" height="140%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-c6grNwgv)">
+			<path d="M839.17,244.74v534.52c0,69.82 -56.88,126.73 -126.72,126.73h-400.9c-69.84,0 -126.72,-56.9 -126.72,-126.73v-534.52c0,-69.82 56.88,-126.73 126.72,-126.73h400.9c69.84,0 126.72,56.9 126.72,126.73z" fill="#000000" filter="url(#filter-fxIddqy3)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M839.17,244.74v534.52c0,69.82 -56.88,126.73 -126.72,126.73h-400.9c-69.84,0 -126.72,-56.9 -126.72,-126.73v-534.52c0,-69.82 56.88,-126.73 126.72,-126.73h400.9c69.84,0 126.72,56.9 126.72,126.73z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M779.26,244.74v534.52c0,36.75 -30.07,66.82 -66.81,66.82h-400.9c-36.75,0 -66.81,-30.08 -66.81,-66.82v-534.52c0,-36.75 30.07,-66.82 66.81,-66.82h400.9c36.75,0 66.81,30.08 66.81,66.82zM311.55,512l83.52,-50.11l83.51,50.11v-267.26h-167.04z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

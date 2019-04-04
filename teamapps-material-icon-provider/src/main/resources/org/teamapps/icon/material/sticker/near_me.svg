@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>near_me icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-ZWEi9F11" x="-8%" y="-8%" width="147%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M560.77,872.58h-32.74c-24.76,0 -46.97,-15.23 -55.89,-38.33l-78.66,-203.79l-203.81,-78.96c-23.06,-8.94 -38.26,-31.13 -38.26,-55.86v-32.74c0,-24.15 14.5,-45.94 36.79,-55.26l601.34,-251.56c22.43,-9.38 48.3,-4.28 65.49,12.91c17.19,17.19 22.28,43.07 12.88,65.49l-251.9,601.34c-9.33,22.27 -31.11,36.76 -55.25,36.76z" fill="#000000" filter="url(#filter-ZWEi9F11)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M560.77,872.58h-32.74c-24.76,0 -46.97,-15.23 -55.89,-38.33l-78.66,-203.79l-203.81,-78.96c-23.06,-8.94 -38.26,-31.13 -38.26,-55.86v-32.74c0,-24.15 14.5,-45.94 36.79,-55.26l601.34,-251.56c22.43,-9.38 48.3,-4.28 65.49,12.91c17.19,17.19 22.28,43.07 12.88,65.49l-251.9,601.34c-9.33,22.27 -31.11,36.76 -55.25,36.76z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M560.77,812.67h-32.74l-88.2,-228.51l-228.51,-88.53v-32.74l601.34,-251.56z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

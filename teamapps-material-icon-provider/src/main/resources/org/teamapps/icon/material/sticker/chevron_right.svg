@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>chevron_right icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-W9kwUynY" x="-16%" y="-12%" width="243%" height="185%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M687.99,554.36l-200.45,200.45c-23.39,23.39 -61.32,23.39 -84.72,0l-47.11,-47.11c-23.38,-23.38 -23.4,-61.27 -0.05,-84.67l110.79,-111.03l-110.79,-111.03c-23.35,-23.4 -23.33,-61.29 0.05,-84.67l47.11,-47.11c23.39,-23.39 61.32,-23.39 84.72,0l200.45,200.45c23.39,23.39 23.39,61.32 0,84.72z" fill="#000000" filter="url(#filter-W9kwUynY)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M687.99,554.36l-200.45,200.45c-23.39,23.39 -61.32,23.39 -84.72,0l-47.11,-47.11c-23.38,-23.38 -23.4,-61.27 -0.05,-84.67l110.79,-111.03l-110.79,-111.03c-23.35,-23.4 -23.33,-61.29 0.05,-84.67l47.11,-47.11c23.39,-23.39 61.32,-23.39 84.72,0l200.45,200.45c23.39,23.39 23.39,61.32 0,84.72z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M645.63,512l-200.45,200.45l-47.11,-47.11l153.01,-153.34l-153.01,-153.34l47.11,-47.11z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

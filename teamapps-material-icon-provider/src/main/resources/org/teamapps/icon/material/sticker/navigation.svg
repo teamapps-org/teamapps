@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>navigation icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-ogzwaV7y" x="-10%" y="-8%" width="164%" height="141%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M804.92,831.31l-23.72,23.72c-17.49,17.49 -43.94,22.43 -66.57,12.44l-202.63,-89.53l-202.63,89.53c-22.63,10 -49.07,5.06 -66.57,-12.44l-23.72,-23.72c-17.08,-17.08 -22.23,-42.74 -13.07,-65.09l250.56,-611.04c9.22,-22.49 31.12,-37.18 55.43,-37.18c24.31,0 46.2,14.69 55.43,37.18l250.56,611.04c9.16,22.35 4.01,48.01 -13.07,65.09z" fill="#000000" filter="url(#filter-ogzwaV7y)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M804.92,831.31l-23.72,23.72c-17.49,17.49 -43.94,22.43 -66.57,12.44l-202.63,-89.53l-202.63,89.53c-22.63,10 -49.07,5.06 -66.57,-12.44l-23.72,-23.72c-17.08,-17.08 -22.23,-42.74 -13.07,-65.09l250.56,-611.04c9.22,-22.49 31.12,-37.18 55.43,-37.18c24.31,0 46.2,14.69 55.43,37.18l250.56,611.04c9.16,22.35 4.01,48.01 -13.07,65.09z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M762.56,788.95l-23.72,23.72l-226.84,-100.22l-226.84,100.22l-23.72,-23.72l250.56,-611.04z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

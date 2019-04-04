@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>play_arrow icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-kpzwLi8k" x="-12%" y="-10%" width="204%" height="169%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M778.02,562.54l-367.49,233.86c-18.45,11.74 -41.82,12.49 -60.99,1.97c-19.17,-10.52 -31.08,-30.65 -31.08,-52.51v-467.72c0,-21.86 11.91,-41.99 31.08,-52.51c19.17,-10.52 42.54,-9.76 60.99,1.97l367.49,233.86c17.28,11 27.74,30.06 27.74,50.54c0,20.48 -10.46,39.54 -27.74,50.54z" fill="#000000" filter="url(#filter-kpzwLi8k)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M778.02,562.54l-367.49,233.86c-18.45,11.74 -41.82,12.49 -60.99,1.97c-19.17,-10.52 -31.08,-30.65 -31.08,-52.51v-467.72c0,-21.86 11.91,-41.99 31.08,-52.51c19.17,-10.52 42.54,-9.76 60.99,1.97l367.49,233.86c17.28,11 27.74,30.06 27.74,50.54c0,20.48 -10.46,39.54 -27.74,50.54z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M745.86,512l-367.49,233.86v-467.72z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

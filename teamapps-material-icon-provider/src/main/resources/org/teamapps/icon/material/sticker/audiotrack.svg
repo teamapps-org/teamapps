@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>audiotrack icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-0AaQW8Y9" x="-11%" y="-8%" width="180%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M805.76,211.33v100.22c0,33.08 -26.82,59.9 -59.9,59.9h-73.73v307.58c0,8 -1.58,15.64 -4.44,22.63c-18.38,97.02 -102.98,170.91 -205.8,170.91c-116.27,0 -210.24,-93.97 -210.24,-210.24c0,-112.99 88.74,-204.92 200.45,-210.02v-240.99c0,-33.08 26.82,-59.9 59.9,-59.9h233.86c33.08,0 59.9,26.82 59.9,59.9z" fill="#000000" filter="url(#filter-0AaQW8Y9)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M805.76,211.33v100.22c0,33.08 -26.82,59.9 -59.9,59.9h-73.73v307.58c0,8 -1.58,15.64 -4.44,22.63c-18.38,97.02 -102.98,170.91 -205.8,170.91c-116.27,0 -210.24,-93.97 -210.24,-210.24c0,-112.99 88.74,-204.92 200.45,-210.02v-240.99c0,-33.08 26.82,-59.9 59.9,-59.9h233.86c33.08,0 59.9,26.82 59.9,59.9z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M745.86,211.33v100.22h-133.63v367.49h-1.67c-8.35,75.17 -71.5,133.63 -148.67,133.63c-83.19,0 -150.34,-67.15 -150.34,-150.34c0,-83.19 67.15,-150.34 150.34,-150.34c17.7,0 34.41,3.68 50.11,9.36v-310.03z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

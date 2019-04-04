@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>zoom_in icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-CllkQGza" x="-9%" y="-9%" width="149%" height="149%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M837.99,788.22l-49.78,49.78c-23.38,23.38 -61.27,23.4 -84.67,0.04l-158.55,-158.23c-35.48,16.51 -75,25.73 -116.52,25.73c-153.02,0 -277.05,-124.05 -277.05,-277.06c0,-153.02 124.04,-277.05 277.05,-277.05c153.01,0 277.06,124.03 277.06,277.05c0,41.52 -9.22,81.03 -25.73,116.52l158.23,158.55c23.35,23.4 23.33,61.3 -0.04,84.67z" fill="#000000" filter="url(#filter-CllkQGza)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M837.99,788.22l-49.78,49.78c-23.38,23.38 -61.27,23.4 -84.67,0.04l-158.55,-158.23c-35.48,16.51 -75,25.73 -116.52,25.73c-153.02,0 -277.05,-124.05 -277.05,-277.06c0,-153.02 124.04,-277.05 277.05,-277.05c153.01,0 277.06,124.03 277.06,277.05c0,41.52 -9.22,81.03 -25.73,116.52l158.23,158.55c23.35,23.4 23.33,61.3 -0.04,84.67z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M795.63,745.86l-49.78,49.78l-167.05,-166.71v-26.39l-9.02,-9.36c-38.09,32.74 -87.53,52.45 -141.32,52.45c-119.93,0 -217.15,-97.23 -217.15,-217.16c0,-119.93 97.22,-217.15 217.15,-217.15c119.93,0 217.16,97.22 217.16,217.15c0,53.78 -19.72,103.23 -52.45,141.32l9.36,9.02h26.39zM578.81,428.48c0,-83.19 -67.15,-150.34 -150.34,-150.34c-83.19,0 -150.34,67.15 -150.34,150.34c0,83.19 67.15,150.34 150.34,150.34c83.19,0 150.34,-67.15 150.34,-150.34zM512,445.19h-66.81v66.81h-33.41v-66.81h-66.81v-33.41h66.81v-66.81h33.41v66.81h66.81z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

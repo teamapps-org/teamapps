@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>home icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-bUxPFXNm">
+			<path d="M60.37,967.52v-873.74h963.63v873.74z"/>
+		</clipPath>
+		<filter id="filter-2cAi2gBZ" x="-8%" y="-9%" width="140%" height="150%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-bUxPFXNm)">
+			<path d="M218.24,779.26v-207.36h-40.32c-24.8,0 -47.04,-15.29 -55.93,-38.44c-8.89,-23.16 -2.58,-49.4 15.85,-65.99l334.08,-300.67c22.78,-20.5 57.37,-20.5 80.15,0l334.08,300.67c18.44,16.59 24.74,42.83 15.85,65.99c-8.89,23.16 -31.12,38.44 -55.93,38.44h-40.32v207.36c0,33.08 -26.82,59.9 -59.9,59.9h-167.05c-33.08,0 -59.9,-26.82 -59.9,-59.9v-140.54h-13.82v140.54c0,33.08 -26.82,59.9 -59.9,59.9h-167.05c-33.08,0 -59.9,-26.82 -59.9,-59.9z" fill="#000000" filter="url(#filter-2cAi2gBZ)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M218.24,779.26v-207.36h-40.32c-24.8,0 -47.04,-15.29 -55.93,-38.44c-8.89,-23.16 -2.58,-49.4 15.85,-65.99l334.08,-300.67c22.78,-20.5 57.37,-20.5 80.15,0l334.08,300.67c18.44,16.59 24.74,42.83 15.85,65.99c-8.89,23.16 -31.12,38.44 -55.93,38.44h-40.32v207.36c0,33.08 -26.82,59.9 -59.9,59.9h-167.05c-33.08,0 -59.9,-26.82 -59.9,-59.9v-140.54h-13.82v140.54c0,33.08 -26.82,59.9 -59.9,59.9h-167.05c-33.08,0 -59.9,-26.82 -59.9,-59.9z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M278.14,779.26v-267.26h-100.22l334.08,-300.67l334.08,300.67h-100.22v267.26h-167.05v-200.45h-133.63v200.45z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

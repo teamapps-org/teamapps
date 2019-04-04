@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>create icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-ELXFXlzF" x="-8%" y="-8%" width="147%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M748.46,485.54l-369.49,369.49c-11.23,11.23 -26.47,17.55 -42.36,17.55h-125.28c-33.08,0 -59.9,-26.82 -59.9,-59.9v-125.28c0,-15.89 6.31,-31.12 17.55,-42.36l369.49,-369.49c6.39,-6.39 13.86,-11.03 21.82,-13.93c2.9,-7.96 7.54,-15.43 13.93,-21.82l61.14,-61.14c36.42,-36.42 95.4,-36.42 131.82,0l78.17,78.17c36.42,36.42 36.42,95.4 0,131.82l-61.14,61.14c-6.39,6.39 -13.86,11.03 -21.82,13.93c-2.9,7.96 -7.54,15.43 -13.93,21.82z" fill="#000000" filter="url(#filter-ELXFXlzF)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M748.46,485.54l-369.49,369.49c-11.23,11.23 -26.47,17.55 -42.36,17.55h-125.28c-33.08,0 -59.9,-26.82 -59.9,-59.9v-125.28c0,-15.89 6.31,-31.12 17.55,-42.36l369.49,-369.49c6.39,-6.39 13.86,-11.03 21.82,-13.93c2.9,-7.96 7.54,-15.43 13.93,-21.82l61.14,-61.14c36.42,-36.42 95.4,-36.42 131.82,0l78.17,78.17c36.42,36.42 36.42,95.4 0,131.82l-61.14,61.14c-6.39,6.39 -13.86,11.03 -21.82,13.93c-2.9,7.96 -7.54,15.43 -13.93,21.82z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M580.82,317.9l125.28,125.28l-369.49,369.49h-125.28v-125.28zM741.85,407.43l-125.28,-125.28l61.14,-61.14c13.03,-13.03 34.08,-13.03 47.11,0l78.17,78.17c13.03,13.03 13.03,34.08 0,47.11z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

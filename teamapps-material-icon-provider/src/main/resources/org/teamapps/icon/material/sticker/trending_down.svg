@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>trending_down icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-CVRCtVLB">
+			<path d="M60.37,900.71v-706.7h963.63v706.7z"/>
+		</clipPath>
+		<filter id="filter-rpnLULkC" x="-8%" y="-12%" width="140%" height="185%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-CVRCtVLB)">
+			<path d="M603.27,670.09l34.14,-34.15l-78.31,-78.31l-91.28,91.28c-23.41,23.41 -61.36,23.39 -84.75,-0.03l-247.55,-247.89c-23.37,-23.4 -23.35,-61.31 0.03,-84.69l47.11,-47.11c23.39,-23.39 61.32,-23.39 84.72,0l158.09,158.09l91.28,-91.28c23.38,-23.38 61.28,-23.4 84.68,-0.03l168.11,167.85l34.18,-34.18c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34v200.45c0,33.08 -26.82,59.9 -59.9,59.9h-200.45c-24.23,0 -46.07,-14.59 -55.34,-36.98c-9.27,-22.38 -4.15,-48.15 12.98,-65.28z" fill="#000000" filter="url(#filter-rpnLULkC)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M603.27,670.09l34.14,-34.15l-78.31,-78.31l-91.28,91.28c-23.41,23.41 -61.36,23.39 -84.75,-0.03l-247.55,-247.89c-23.37,-23.4 -23.35,-61.31 0.03,-84.69l47.11,-47.11c23.39,-23.39 61.32,-23.39 84.72,0l158.09,158.09l91.28,-91.28c23.38,-23.38 61.28,-23.4 84.68,-0.03l168.11,167.85l34.18,-34.18c17.13,-17.13 42.9,-22.26 65.28,-12.99c22.38,9.27 36.98,31.12 36.98,55.34v200.45c0,33.08 -26.82,59.9 -59.9,59.9h-200.45c-24.23,0 -46.07,-14.59 -55.34,-36.98c-9.27,-22.38 -4.15,-48.15 12.98,-65.28z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M645.63,712.45l76.5,-76.51l-163.03,-163.03l-133.63,133.63l-247.55,-247.89l47.11,-47.11l200.45,200.45l133.63,-133.63l210.47,210.14l76.51,-76.51v200.45z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

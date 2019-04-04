@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>format_underlined icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<filter id="filter-nNgnaJ7h" x="-10%" y="-8%" width="169%" height="147%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<path d="M251.65,478.59v-267.26c0,-33.08 26.82,-59.9 59.9,-59.9h83.52c33.08,0 59.9,26.82 59.9,59.9v267.26c0,31.4 25.63,57.03 57.02,57.03c31.39,0 57.02,-25.63 57.02,-57.03v-267.26c0,-33.08 26.82,-59.9 59.9,-59.9h83.52c33.08,0 59.9,26.82 59.9,59.9v267.26c0,84.57 -40.43,159.79 -103,207.37h76.51c33.08,0 59.9,26.82 59.9,59.9v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-467.72c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h76.51c-62.57,-47.57 -103,-122.79 -103,-207.37z" fill="#000000" filter="url(#filter-nNgnaJ7h)"/>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M251.65,478.59v-267.26c0,-33.08 26.82,-59.9 59.9,-59.9h83.52c33.08,0 59.9,26.82 59.9,59.9v267.26c0,31.4 25.63,57.03 57.02,57.03c31.39,0 57.02,-25.63 57.02,-57.03v-267.26c0,-33.08 26.82,-59.9 59.9,-59.9h83.52c33.08,0 59.9,26.82 59.9,59.9v267.26c0,84.57 -40.43,159.79 -103,207.37h76.51c33.08,0 59.9,26.82 59.9,59.9v66.81c0,33.08 -26.82,59.9 -59.9,59.9h-467.72c-33.08,0 -59.9,-26.82 -59.9,-59.9v-66.81c0,-33.08 26.82,-59.9 59.9,-59.9h76.51c-62.57,-47.57 -103,-122.79 -103,-207.37z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M311.55,478.59v-267.26h83.52v267.26c0,64.48 52.45,116.93 116.93,116.93c64.48,0 116.93,-52.45 116.93,-116.93v-267.26h83.52v267.26c0,110.58 -89.86,200.45 -200.45,200.45c-110.58,0 -200.45,-89.86 -200.45,-200.45zM745.86,745.86v66.81h-467.72v-66.81z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>

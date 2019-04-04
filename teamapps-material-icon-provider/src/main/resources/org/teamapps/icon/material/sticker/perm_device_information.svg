@@ -1,0 +1,34 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,1024,1024">
+	<!-- Color names: teamapps-color-1, teamapps-effect-color-1 -->
+	<desc>perm_device_information icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>
+	<defs>
+		<clipPath id="clip-xNj9kN6i">
+			<path d="M160.59,26.97h773.53v997.03h-773.53z"/>
+		</clipPath>
+		<filter id="filter-FFRJKTr1" x="-10%" y="-7%" width="169%" height="132%" color-interpolation-filters="sRGB">
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.17 0" in="SourceGraphic"/>
+			<feOffset dx="14.14" dy="14.14"/>
+			<feGaussianBlur stdDeviation="11" result="blur0"/>
+			<feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" in="SourceGraphic"/>
+			<feOffset dx="21.21" dy="21.21"/>
+			<feGaussianBlur stdDeviation="20" result="blur1"/>
+			<feMerge>
+				<feMergeNode in="blur0"/>
+				<feMergeNode in="blur1"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g fill="none" fill-rule="nonzero" style="mix-blend-mode: normal">
+		<g clip-path="url(#clip-xNj9kN6i)">
+			<path d="M805.76,211.33v601.34c0,69.84 -56.9,126.72 -126.73,126.72h-334.07c-69.82,0 -126.73,-56.88 -126.73,-126.72v-601.34c0,-69.84 56.9,-126.72 126.73,-126.72l334.13,0.33c69.41,0.03 126.67,56.18 126.67,126.39z" fill="#000000" filter="url(#filter-FFRJKTr1)"/>
+		</g>
+		<g color="#ffffff" class="teamapps-effect-color-1">
+			<path d="M805.76,211.33v601.34c0,69.84 -56.9,126.72 -126.73,126.72h-334.07c-69.82,0 -126.73,-56.88 -126.73,-126.72v-601.34c0,-69.84 56.9,-126.72 126.73,-126.72l334.13,0.33c69.41,0.03 126.67,56.18 126.67,126.39z" fill="currentColor"/>
+		</g>
+		<g>
+			<g color="#1565c0" class="teamapps-color-1">
+				<path d="M745.86,211.33v601.34c0,36.75 -30.08,66.81 -66.82,66.81h-334.07c-36.75,0 -66.82,-30.07 -66.82,-66.81v-601.34c0,-36.75 30.08,-66.81 66.82,-66.81l334.07,0.33c36.75,0 66.82,29.74 66.82,66.48zM679.04,278.14h-334.07v467.72h334.07zM545.41,679.04h-66.82v-200.45h66.82zM545.41,411.78h-66.82v-66.81h66.82z" fill="currentColor"/>
+			</g>
+		</g>
+	</g>
+</svg>
