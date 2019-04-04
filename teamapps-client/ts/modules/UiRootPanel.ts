@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,6 +35,8 @@ import * as log from "loglevel";
 import {ElementUiComponentAdapter} from "./micro-components/ElementUiComponentAdapter";
 import {UiGenericErrorMessageOption} from "../generated/UiGenericErrorMessageOption";
 import {TeamAppsEvent, TeamAppsEventListener} from "./util/TeamAppsEvent";
+import {UiColorConfig} from "../generated/UiColorConfig";
+import {createUiColorCssString} from "./util/CssFormatUtil";
 
 require("moment-jdateformatparser");
 
@@ -63,6 +65,10 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	private $backgroundStyle: JQuery;
 	private $imagePreloadDiv: JQuery;
 
+	private backgroundImage: string;
+	private blurredBackgroundImage: string;
+	private backgroundColor: string;
+
 	static __initialize() {
 		$(window).resize((e) => {
 			this.ALL_ROOT_PANELS.forEach(rootPanel => {
@@ -75,7 +81,7 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	constructor(config: UiRootPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		UiRootPanel.ALL_ROOT_PANELS_BY_ID[config.id] = this;
-		
+
 		this.$root = $(`<div data-background-container-id="${config.id}" class="UiRootPanel teamapps-backgroundImage">
               <div class="image-preload-div"></div>
               <style data-style-type="backgroundTransitionStyle"></style>
@@ -189,7 +195,7 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		if (!blurredImage) {
 			blurredImage = image;
 		}
-		
+
 		(new Image()).src = image; // preload
 		(new Image()).src = blurredImage; // preload
 
@@ -197,32 +203,48 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	}
 
 	public static setBackgroundImage(id: string, animationDuration: number) {
-		let registeredImage = this.BACKGROUND_IMAGES_BY_ID[id];
-		if (!registeredImage) {
-			this.LOGGER.warn(`Background image with id ${id} does not exist!`);
-			return;
+		let backgroundImage: string = null;
+		let blurredBackgroundImage: string = null;
+		if (id != null) {
+			let registeredImage = this.BACKGROUND_IMAGES_BY_ID[id];
+			if (!registeredImage) {
+				this.LOGGER.warn(`Background image with id ${id} does not exist!`);
+				return;
+			}
+			backgroundImage = registeredImage.image;
+			blurredBackgroundImage = registeredImage.blurredImage;
 		}
 		this.ALL_ROOT_PANELS.forEach(uiRootPanel => {
-			uiRootPanel._setBackgroundImage(registeredImage.image, registeredImage.blurredImage, animationDuration);
+			uiRootPanel.backgroundImage = backgroundImage;
+			uiRootPanel.blurredBackgroundImage = blurredBackgroundImage;
+			uiRootPanel.updateBackground(animationDuration);
+		});
+	}
+
+	public static setBackgroundColor(backgroundColor: UiColorConfig, animationDuration: number) {
+		this.ALL_ROOT_PANELS.forEach(uiRootPanel => {
+			uiRootPanel.backgroundColor = backgroundColor && createUiColorCssString(backgroundColor);
+			uiRootPanel.updateBackground(animationDuration);
 		})
 	}
 
-	private _setBackgroundImage(image: string, blurredImage: string, animationDuration: number) {
+	private updateBackground(animationDuration: number) {
 		this.$backgroundTransitionStyle.text(`
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-backgroundImage,
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-blurredBackgroundImage {
-                    transition: background-image ${animationDuration}ms ease-in-out;
+                    transition: background-image ${animationDuration}ms ease-in-out, background-color ${animationDuration}ms ease-in-out;
                 }
             `);
 		this.$root[0].clientWidth; // ensure the css is applied!
 		this.$backgroundStyle.text(`
 				/*[data-background-container-id='${this.getId()}']*/.teamapps-backgroundImage,
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-backgroundImage {
-                    background-image: ${image ? `url(${image})` : 'none'};
+                    background-color: ${this.backgroundColor || ''};
+                    background-image: ${this.backgroundImage ? `url(${this.backgroundImage})` : 'none'};
                 }
                 /*[data-background-container-id='${this.getId()}']*/.teamapps-blurredBackgroundImage,
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-blurredBackgroundImage {
-                    background-image: ${blurredImage ? `url(${blurredImage})` : 'none'};
+                    background-image: ${this.blurredBackgroundImage ? `url(${this.blurredBackgroundImage})` : 'none'};
                 }
             `);
 	}

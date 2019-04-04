@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.session;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiEntranceAnimation;
 import org.teamapps.dto.UiExitAnimation;
@@ -26,6 +27,7 @@ import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.api.IconTheme;
+import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.notification.Notification;
 import org.teamapps.ux.component.notification.NotificationPosition;
@@ -162,6 +164,10 @@ public interface SessionContext {
 
 	default void setBackgroundImage(String id, int animationDuration) {
 		queueCommand(new UiRootPanel.SetBackgroundImageCommand(id, animationDuration));
+	}
+
+	default void setBackgroundColor(Color color, int animationDuration) {
+		queueCommand(new UiRootPanel.SetBackgroundColorCommand(UiUtil.createUiColor(color), animationDuration));
 	}
 
 	default void exitFullScreen() {

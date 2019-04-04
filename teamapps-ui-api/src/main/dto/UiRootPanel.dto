@@ -46,6 +46,7 @@ class UiRootPanel extends UiComponent {
     static command downloadFile(String fileUrl, String downloadFileName);
 	static command registerBackgroundImage(String id, String image, String blurredImage); // downloads the image without displaying it.
 	static command setBackgroundImage(String id, int animationDuration = 1000); // cross-fading to some pre-registered background image
+	static command setBackgroundColor(UiColor color, int animationDuration = 1000);
 	static command exitFullScreen();
 	static command showNotification(UiNotification notification);
 	static command showDialogMessage(String icon, String title, String message, List<UiGenericErrorMessageOption> options);

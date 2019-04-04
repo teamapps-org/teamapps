@@ -25,7 +25,7 @@ import org.teamapps.dto.UiColor;
 public final class UiUtil {
 
 	public static UiColor createUiColor(Color color) {
-		return new UiColor(color.getRed(), color.getGreen(), color.getBlue()).setAlpha(color.getAlpha());
+		return color != null ? new UiColor(color.getRed(), color.getGreen(), color.getBlue()).setAlpha(color.getAlpha()) : null;
 	}
 
 }
