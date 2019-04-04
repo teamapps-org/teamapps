@@ -19,6 +19,7 @@
  */
 package org.teamapps.webcontroller;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
@@ -27,20 +28,54 @@ import java.util.function.Function;
 
 public class SimpleWebController implements WebController {
 
+    public final static String BACKGROUND_DEFAULT = "default";
+
     private final Function<SessionContext, Component> componentSupplier;
+    private boolean showBackgroundImage;
+    private Color defaultBackgroundColor;
+
+    public static WebController createDefaultController(Function<SessionContext, Component> componentSupplier) {
+        return createDefaultController(componentSupplier, Color.WHITE, false);
+    }
+
+    public static WebController createDefaultController(Function<SessionContext, Component> componentSupplier, Color defaultBackgroundColor) {
+        return createDefaultController(componentSupplier, defaultBackgroundColor, false);
+    }
+
+    public static WebController createDefaultController(Function<SessionContext, Component> componentSupplier, Color defaultBackgroundColor, boolean showBackgroundImage) {
+        SimpleWebController webController = new SimpleWebController(componentSupplier);
+        webController.setDefaultBackgroundColor(defaultBackgroundColor);
+        webController.setShowBackgroundImage(showBackgroundImage);
+        return webController;
+    }
 
     public SimpleWebController(Function<SessionContext, Component> componentSupplier) {
         this.componentSupplier = componentSupplier;
     }
 
+    public void setShowBackgroundImage(boolean showBackgroundImage) {
+        this.showBackgroundImage = showBackgroundImage;
+    }
+
+    public void setDefaultBackgroundColor(Color defaultBackgroundColor) {
+        this.defaultBackgroundColor = defaultBackgroundColor;
+    }
+
     @Override
     public void onSessionStart(SessionContext context) {
-        String defaultBackground = "/resources/backgrounds/default-bl.jpg";
-        context.registerBackgroundImage("default", defaultBackground, defaultBackground);
+        if (showBackgroundImage) {
+            String defaultBackground = "/resources/backgrounds/default-bl.jpg";
+            context.registerBackgroundImage(BACKGROUND_DEFAULT, defaultBackground, defaultBackground);
+        }
 
         RootPanel rootPanel = new RootPanel();
         context.addRootComponent(null, rootPanel);
         rootPanel.setContent(componentSupplier.apply(context));
-        context.setBackgroundImage("default", 0);
+        if (defaultBackgroundColor != null) {
+            context.setBackgroundColor(defaultBackgroundColor, 0);
+        }
+        if (showBackgroundImage) {
+            context.setBackgroundImage(BACKGROUND_DEFAULT, 0);
+        }
     }
 }
