@@ -101,7 +101,7 @@ Temporary Items
 ### Teamapps custom ignore
 server-data/
 tmp/
-LICENSE.txt
+*/LICENSE.txt
 
 
 ### JavaScript stuff
