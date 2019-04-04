@@ -23,14 +23,12 @@ import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiImageField;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.ImageSizing;
-import org.teamapps.ux.component.format.Shadow;
 
 public class ImageField extends AbstractField<String> {
 
 	private int width; // 0 = the width will be determined by the component's content and context
 	private int height; // 0 = the height will be determined by the component's content and context
 	private Border border;
-	private Shadow shadow;
 	private ImageSizing imageSizing = ImageSizing.CONTAIN;
 
 	public ImageField() {
@@ -44,7 +42,6 @@ public class ImageField extends AbstractField<String> {
 		uiImageField.setWidth(width);
 		uiImageField.setHeight(height);
 		uiImageField.setBorder(border != null ? border.createUiBorder() : null);
-		uiImageField.setShadow(shadow != null ? shadow.createUiShadow() : null);
 		uiImageField.setImageSizing(imageSizing.toUiImageSizing());
 		return uiImageField;
 	}
@@ -81,16 +78,6 @@ public class ImageField extends AbstractField<String> {
 	public ImageField setBorder(Border border) {
 		this.border = border;
 		queueCommandIfRendered(() -> new UiImageField.SetBorderCommand(getId(), border != null ? border.createUiBorder() : null));
-		return this;
-	}
-
-	public Shadow getShadow() {
-		return shadow;
-	}
-
-	public ImageField setShadow(Shadow shadow) {
-		this.shadow = shadow;
-		queueCommandIfRendered(() -> new UiImageField.SetShadowCommand(getId(), shadow != null ? shadow.createUiShadow() : null));
 		return this;
 	}
 

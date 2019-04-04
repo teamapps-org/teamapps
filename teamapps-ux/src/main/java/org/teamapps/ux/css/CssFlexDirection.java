@@ -23,7 +23,7 @@ import org.teamapps.dto.UiCssFlexDirection;
 
 public enum CssFlexDirection {
 
-	ROW, ROW_REVERSE, COLUMN, COLUMN_REVERSE, INITIAL, INHERIT;
+	ROW, ROW_REVERSE, COLUMN, COLUMN_REVERSE;
 
 	public UiCssFlexDirection toUiCssFlexDirection() {
 		return UiCssFlexDirection.valueOf(this.name());

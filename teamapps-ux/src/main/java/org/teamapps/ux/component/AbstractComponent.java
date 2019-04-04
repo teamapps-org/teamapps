@@ -26,6 +26,9 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiComponentReference;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.Event;
+import org.teamapps.ux.component.absolutelayout.Length;
+import org.teamapps.ux.component.format.Shadow;
+import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
@@ -160,6 +163,36 @@ public abstract class AbstractComponent implements Component {
 		if (rendered) {
 			sessionContext.queueCommand(commandSupplier.get());
 		}
+	}
+
+	@Override
+	public void setMinWidth(Length minWidth) {
+		setCssStyle("min-width", minWidth.toCssString());
+	}
+
+	@Override
+	public void setMaxWidth(Length maxWidth) {
+		setCssStyle("max-width", maxWidth.toCssString());
+	}
+
+	@Override
+	public void setMinHeight(Length minHeight) {
+		setCssStyle("min-height", minHeight.toCssString());
+	}
+
+	@Override
+	public void setMaxHeight(Length maxHeight) {
+		setCssStyle("max-height", maxHeight.toCssString());
+	}
+
+	@Override
+	public void setMargin(Spacing margin) {
+		setCssStyle("margin", margin.toCssString());
+	}
+
+	@Override
+	public void setShadow(Shadow shadow) {
+		setCssStyle("box-shadow", shadow.toCssString());
 	}
 
 	@Override

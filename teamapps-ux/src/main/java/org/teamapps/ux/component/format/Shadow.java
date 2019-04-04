@@ -70,4 +70,8 @@ public class Shadow {
 				.setOffsetY(offsetY)
 				.setSpread(spread);
 	}
+
+	public String toCssString() {
+		return offsetX + "px " + offsetY + "px " + blur + "px " + spread + "px " + color.toHtmlColorString();
+	}
 }
