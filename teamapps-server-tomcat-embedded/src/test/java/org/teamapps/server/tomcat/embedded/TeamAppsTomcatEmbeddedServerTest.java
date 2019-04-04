@@ -20,7 +20,7 @@
 package org.teamapps.server.tomcat.embedded;
 
 import com.google.common.io.Files;
-import org.teamapps.icon.material.MaterialIcons;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.webcontroller.WebController;
 import org.teamapps.ux.session.SessionContext;
 
@@ -29,7 +29,7 @@ public class TeamAppsTomcatEmbeddedServerTest {
 	public static void main(String[] args) throws Exception {
 
 		WebController controller = (SessionContext context) -> {
-			context.showNotification(MaterialIcons.MESSAGE, "Hello World");
+			context.showNotification(MaterialIcon.MESSAGE, "Hello World");
 		};
 
 		new TeamAppsTomcatEmbeddedServer(controller, Files.createTempDir()).start(8081);

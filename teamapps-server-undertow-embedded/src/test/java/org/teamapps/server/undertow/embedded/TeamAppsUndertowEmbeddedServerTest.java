@@ -20,14 +20,14 @@
 package org.teamapps.server.undertow.embedded;
 
 import com.google.common.io.Files;
-import org.teamapps.icon.material.MaterialIcons;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 public class TeamAppsUndertowEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
-		WebController controller = (SessionContext context) -> context.showNotification(MaterialIcons.MESSAGE, "Hello World");
+		WebController controller = (SessionContext context) -> context.showNotification(MaterialIcon.MESSAGE, "Hello World");
 		new TeamAppsUndertowEmbeddedServer(controller, Files.createTempDir()).start(8081, "127.0.0.2");
 	}
 

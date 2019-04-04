@@ -21,7 +21,7 @@ package org.teamapps.icon.material;
 
 import org.teamapps.icons.api.SimpleIcon;
 
-public enum MaterialIcons implements SimpleIcon {
+public enum MaterialIcon implements SimpleIcon {
 
     ROTATION_3D("3d_rotation"),
     AC_UNIT("ac_unit"),
@@ -959,7 +959,7 @@ public enum MaterialIcons implements SimpleIcon {
 
     private String iconName;
 
-    MaterialIcons(String iconName) {
+    MaterialIcon(String iconName) {
         this.iconName = iconName;
     }
 
