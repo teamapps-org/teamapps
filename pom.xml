@@ -5,7 +5,31 @@
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.5-SNAPSHOT</version>
+    <version>0.9.5</version>
+
+    <name>TeamApps</name>
+    <description>A Java web application framework</description>
+    <url>https://github.com/teamapps-org/teamapps</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Matthias Bernstein</name>
+            <email>matthias.bernstein@teamapps.org</email>
+            <id>matthias-bernstein</id>
+        </developer>
+        <developer>
+            <name>Yann Massard</name>
+            <email>yann.massard@teamapps.org</email>
+            <id>yamass</id>
+        </developer>
+    </developers>
 
     <modules>
         <module>teamapps-common</module>
@@ -344,6 +368,20 @@
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>false</autoReleaseAfterClose>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
