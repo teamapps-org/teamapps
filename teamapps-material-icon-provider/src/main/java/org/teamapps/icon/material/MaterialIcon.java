@@ -19,7 +19,9 @@
  */
 package org.teamapps.icon.material;
 
+import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.api.SimpleIcon;
+import org.teamapps.icons.api.StyledIcon;
 
 public enum MaterialIcon implements SimpleIcon {
 
@@ -971,5 +973,9 @@ public enum MaterialIcon implements SimpleIcon {
     @Override
     public String getIconLibraryId() {
         return MaterialIconProvider.LIBRARY_ID;
+    }
+
+    public Icon withStyle(AbstractMaterialIconStyle style) {
+        return new StyledIcon(getIconLibraryId(), style.getStyleId(), getIconName());
     }
 }
