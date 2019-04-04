@@ -37,7 +37,8 @@ public class SystemIconProvider {
 	private CachingIconProvider cachingIconProvider;
 	private ResizingIconProvider resizingIconProvider = new ResizingIconProvider();
 	private StylingIconProvider stylingIconProvider = new StylingIconProvider();
-	private ComposingIconProvider composingIconProvider = new ComposingIconProvider();
+	private CompositeIconProvider compositeIconProvider = new CompositeIconProvider();
+	private CompositeSvgProvider compositeSvgProvider = new CompositeSvgProvider();
 
 	public SystemIconProvider() {
 		cachingIconProvider = new CachingIconProvider();
@@ -60,9 +61,9 @@ public class SystemIconProvider {
 
 	public byte[] getIconBytes(int size, boolean isSVG, String qualifiedIconId) {
 		try {
-			boolean composed = StyledComposedIcon.isComposedIcon(qualifiedIconId);
+			boolean composed = StyledCompositeIcon.isComposedIcon(qualifiedIconId);
 			if (composed) {
-				return getComposedIcon(size, qualifiedIconId);
+				return getComposedIcon(size, qualifiedIconId, isSVG);
 			} else {
 				return getSingleIcon(size, qualifiedIconId);
 			}
@@ -166,12 +167,30 @@ public class SystemIconProvider {
 		return 0;
 	}
 
-	private byte[] getComposedIcon(int size, String qualifiedIconId) {
+	private byte[] getComposedSvgIcon(int size, String qualifiedIconId) {
 		byte[] cachedIcon = cachingIconProvider.getCachedIcon(size, qualifiedIconId);
 		if (cachedIcon != null) {
 			return cachedIcon;
 		}
-		StyledComposedIcon composedIcon = StyledComposedIcon.parse(qualifiedIconId);
+		StyledCompositeIcon composedIcon = StyledCompositeIcon.parse(qualifiedIconId);
+		if (composedIcon == null) {
+			return null;
+		}
+
+
+		byte[] iconBytes = null;
+
+		cachingIconProvider.puIconInCache(size, qualifiedIconId, iconBytes);
+
+		return iconBytes;
+	}
+
+	private byte[] getComposedIcon(int size, String qualifiedIconId, boolean isSVG) {
+		byte[] cachedIcon = cachingIconProvider.getCachedIcon(size, qualifiedIconId);
+		if (cachedIcon != null) {
+			return cachedIcon;
+		}
+		StyledCompositeIcon composedIcon = StyledCompositeIcon.parse(qualifiedIconId);
 		if (composedIcon == null) {
 			return null;
 		}
@@ -182,7 +201,12 @@ public class SystemIconProvider {
 		byte[] topLeft = getSingleIcon(size / 2, composedIcon.getTopLeftIcon());
 		byte[] topRight = getSingleIcon(size / 2, composedIcon.getTopRightIcon());
 
-		byte[] iconBytes = composingIconProvider.createComposedIcon(size, baseIcon, bottomRight, bottomLeft, topLeft, topRight);
+		byte[] iconBytes = null;
+		if (isSVG) {
+			iconBytes = compositeSvgProvider.createComposedIcon(size, baseIcon, bottomRight, bottomLeft, topLeft, topRight);
+		} else {
+			iconBytes = compositeIconProvider.createComposedIcon(size, baseIcon, bottomRight, bottomLeft, topLeft, topRight);
+		}
 
 		cachingIconProvider.puIconInCache(size, qualifiedIconId, iconBytes);
 

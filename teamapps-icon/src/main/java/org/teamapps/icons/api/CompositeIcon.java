@@ -19,7 +19,7 @@
  */
 package org.teamapps.icons.api;
 
-public class ComposedIcon implements Icon {
+public class CompositeIcon implements Icon {
 
 	public static final String COMPOSED_ICON_PREFIX = "x-multi-icon.";
 	public static final String SUB_ICON_MARKER = ".x-sub-";
@@ -34,24 +34,24 @@ public class ComposedIcon implements Icon {
 	private	Icon topLeftIcon;
 	private	Icon topRightIcon;
 
-	public static ComposedIcon of(Icon baseIcon, Icon bottomRightIcon) {
-		return new ComposedIcon(baseIcon, bottomRightIcon);
+	public static CompositeIcon of(Icon baseIcon, Icon bottomRightIcon) {
+		return new CompositeIcon(baseIcon, bottomRightIcon);
 	}
 
-	public static ComposedIcon of(Icon baseIcon, Icon bottomRightIcon, Icon bottomLeftIcon, Icon topLeftIcon, Icon topRightIcon) {
-		return new ComposedIcon(baseIcon, bottomRightIcon, bottomLeftIcon, topLeftIcon, topRightIcon);
+	public static CompositeIcon of(Icon baseIcon, Icon bottomRightIcon, Icon bottomLeftIcon, Icon topLeftIcon, Icon topRightIcon) {
+		return new CompositeIcon(baseIcon, bottomRightIcon, bottomLeftIcon, topLeftIcon, topRightIcon);
 	}
 
-	public ComposedIcon(Icon baseIcon) {
+	public CompositeIcon(Icon baseIcon) {
 		this.baseIcon = baseIcon;
 	}
 
-	public ComposedIcon(Icon baseIcon, Icon bottomRightIcon) {
+	public CompositeIcon(Icon baseIcon, Icon bottomRightIcon) {
 		this.baseIcon = baseIcon;
 		this.bottomRightIcon = bottomRightIcon;
 	}
 
-	public ComposedIcon(Icon baseIcon, Icon bottomRightIcon, Icon bottomLeftIcon, Icon topLeftIcon, Icon topRightIcon) {
+	public CompositeIcon(Icon baseIcon, Icon bottomRightIcon, Icon bottomLeftIcon, Icon topLeftIcon, Icon topRightIcon) {
 		this.baseIcon = baseIcon;
 		this.bottomRightIcon = bottomRightIcon;
 		this.bottomLeftIcon = bottomLeftIcon;

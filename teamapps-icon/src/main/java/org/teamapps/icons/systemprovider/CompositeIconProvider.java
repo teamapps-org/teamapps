@@ -27,7 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class ComposingIconProvider {
+public class CompositeIconProvider {
 
 	public byte[] createComposedIcon(int size, byte[] baseIcon, byte[] bottomRight, byte[] bottomLeft, byte[] topLeft, byte[] topRight) {
 		try {

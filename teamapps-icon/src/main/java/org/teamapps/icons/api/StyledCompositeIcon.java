@@ -19,9 +19,9 @@
  */
 package org.teamapps.icons.api;
 
-import static org.teamapps.icons.api.ComposedIcon.*;
+import static org.teamapps.icons.api.CompositeIcon.*;
 
-public class StyledComposedIcon implements Icon {
+public class StyledCompositeIcon implements Icon {
 
 	private StyledIcon baseIcon;
 	private	StyledIcon bottomRightIcon;
@@ -36,24 +36,24 @@ public class StyledComposedIcon implements Icon {
 		return false;
 	}
 
-	public static StyledComposedIcon parse(String icon) {
+	public static StyledCompositeIcon parse(String icon) {
 		if (icon == null) {
 			return null;
 		}
 		if (!icon.startsWith(COMPOSED_ICON_PREFIX)) {
 			StyledIcon baseIcon = StyledIcon.parseIcon(icon);
-			return new StyledComposedIcon(baseIcon);
+			return new StyledCompositeIcon(baseIcon);
 		}
 		icon = icon.substring(COMPOSED_ICON_PREFIX.length());
 
 		int pos = icon.indexOf(SUB_ICON_MARKER);
 		if (pos < 0) {
 			StyledIcon baseIcon = StyledIcon.parseIcon(icon);
-			return new StyledComposedIcon(baseIcon);
+			return new StyledCompositeIcon(baseIcon);
 		}
 		String baseIconId = icon.substring(0, pos);
 		StyledIcon baseIcon = StyledIcon.parseIcon(baseIconId);
-		StyledComposedIcon composedIcon = new StyledComposedIcon(baseIcon);
+		StyledCompositeIcon composedIcon = new StyledCompositeIcon(baseIcon);
 		while (pos >= 0) {
 			int index = Integer.parseInt(icon.substring(pos + SUB_ICON_MARKER.length(), pos + SUB_ICON_MARKER.length() + 1));
 			int subIconStartPos = pos + SUB_ICON_MARKER.length() + 2;
@@ -87,11 +87,11 @@ public class StyledComposedIcon implements Icon {
 		}
 	}
 
-	public StyledComposedIcon(StyledIcon baseIcon) {
+	public StyledCompositeIcon(StyledIcon baseIcon) {
 		this.baseIcon = baseIcon;
 	}
 
-	public StyledComposedIcon(StyledIcon baseIcon, StyledIcon bottomRightIcon, StyledIcon bottomLeftIcon, StyledIcon topLeftIcon, StyledIcon topRightIcon) {
+	public StyledCompositeIcon(StyledIcon baseIcon, StyledIcon bottomRightIcon, StyledIcon bottomLeftIcon, StyledIcon topLeftIcon, StyledIcon topRightIcon) {
 		this.baseIcon = baseIcon;
 		this.bottomRightIcon = bottomRightIcon;
 		this.bottomLeftIcon = bottomLeftIcon;
