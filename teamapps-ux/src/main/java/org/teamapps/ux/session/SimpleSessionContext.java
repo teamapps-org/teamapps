@@ -296,6 +296,9 @@ public class SimpleSessionContext implements LockableSessionContext {
 					CurrentSessionContext.pushContext(this);
 					try {
 						runnable.run();
+					} catch (Exception e) {
+						LOGGER.error("Exception while executing runnable! Context: " + sessionId.toString(), e);
+						throw e;
 					} finally {
 						CurrentSessionContext.popContext();
 					}
