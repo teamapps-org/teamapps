@@ -462,10 +462,10 @@
     </profiles>
 
     <scm>
-        <url>https://example-domain.org/teamapps/teamapps.org</url>
-        <connection>scm:git:git@example-domain.org:teamapps/teamapps.org.git</connection>
-        <developerConnection>scm:git:git@gexample-domain.org:teamapps/teamapps.org.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <url>https://github.com/teamapps-org/teamapps</url>
+        <connection>git@github.com:teamapps-org/teamapps.git</connection>
+        <developerConnection>git@github.com:teamapps-org/teamapps.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
 </project>
