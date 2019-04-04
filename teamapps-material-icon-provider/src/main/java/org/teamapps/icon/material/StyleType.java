@@ -23,6 +23,7 @@ public enum StyleType {
 
     PLAIN("plain"),
     PLAIN_SHADOW("shadow"),
+    STICKER("sticker"),
     OUTLINE("outline"),
     OUTLINE_FILLED("outlinefilled"),
     GRADIENT("gradient"),
