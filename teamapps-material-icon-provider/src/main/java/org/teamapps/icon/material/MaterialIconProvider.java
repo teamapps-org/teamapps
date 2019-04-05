@@ -34,9 +34,6 @@ public class MaterialIconProvider implements SvgIconProvider<IconStyle> {
     public static final String LIBRARY_ID = "material";
 
 
-
-
-
     private Map<String, AbstractMaterialIconStyle> styleById = new HashMap<>();
     private Map<String, String> svgByStyleAndName = new HashMap<>();
 

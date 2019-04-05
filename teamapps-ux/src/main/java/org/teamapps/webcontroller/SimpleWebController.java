@@ -20,10 +20,13 @@
 package org.teamapps.webcontroller;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class SimpleWebController implements WebController {
@@ -34,15 +37,17 @@ public class SimpleWebController implements WebController {
     private boolean showBackgroundImage;
     private Color defaultBackgroundColor;
 
-    public static WebController createDefaultController(Function<SessionContext, Component> componentSupplier) {
+    private List<IconProvider> additionalIconProvider = new ArrayList<>();
+
+    public static SimpleWebController createDefaultController(Function<SessionContext, Component> componentSupplier) {
         return createDefaultController(componentSupplier, Color.WHITE, false);
     }
 
-    public static WebController createDefaultController(Function<SessionContext, Component> componentSupplier, Color defaultBackgroundColor) {
+    public static SimpleWebController createDefaultController(Function<SessionContext, Component> componentSupplier, Color defaultBackgroundColor) {
         return createDefaultController(componentSupplier, defaultBackgroundColor, false);
     }
 
-    public static WebController createDefaultController(Function<SessionContext, Component> componentSupplier, Color defaultBackgroundColor, boolean showBackgroundImage) {
+    public static SimpleWebController createDefaultController(Function<SessionContext, Component> componentSupplier, Color defaultBackgroundColor, boolean showBackgroundImage) {
         SimpleWebController webController = new SimpleWebController(componentSupplier);
         webController.setDefaultBackgroundColor(defaultBackgroundColor);
         webController.setShowBackgroundImage(showBackgroundImage);
@@ -59,6 +64,15 @@ public class SimpleWebController implements WebController {
 
     public void setDefaultBackgroundColor(Color defaultBackgroundColor) {
         this.defaultBackgroundColor = defaultBackgroundColor;
+    }
+
+    public void addAdditionalIconProvider(IconProvider iconProvider) {
+        additionalIconProvider.add(iconProvider);
+    }
+
+    @Override
+    public List<IconProvider> getAdditionalIconProvider() {
+        return additionalIconProvider;
     }
 
     @Override

@@ -31,6 +31,7 @@ import org.teamapps.ux.session.StylingTheme;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public interface WebController {
@@ -52,6 +53,10 @@ public interface WebController {
 
 	default IconProvider getIconProvider() {
 		return new MaterialIconProvider();
+	}
+
+	default List<IconProvider> getAdditionalIconProvider() {
+		return null;
 	}
 
 	default void destroy() {
