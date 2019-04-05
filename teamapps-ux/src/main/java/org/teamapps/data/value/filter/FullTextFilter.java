@@ -19,7 +19,7 @@
  */
 package org.teamapps.data.value.filter;
 
-import me.xdrop.fuzzywuzzy.FuzzySearch;
+import org.apache.commons.lang3.NotImplementedException;
 import org.teamapps.data.value.DataRecord;
 
 import java.util.List;
@@ -118,12 +118,13 @@ public class FullTextFilter implements Filter {
 	}
 
 	private boolean matchFuzzy(String val1, String val2) {
-		int ratio = FuzzySearch.ratio(val1, val2);
-		if (ratio > 50) {
-			return true;
-		} else {
-			return false;
-		}
+		// int ratio = FuzzySearch.ratio(val1, val2);
+		// if (ratio > 50) {
+		// 	return true;
+		// } else {
+		// 	return false;
+		// }
+		throw new NotImplementedException("matchFuzzy");
 	}
 
 	private boolean isWildcardSearch(String value) {

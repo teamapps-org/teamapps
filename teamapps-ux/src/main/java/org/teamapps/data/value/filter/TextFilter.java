@@ -19,7 +19,7 @@
  */
 package org.teamapps.data.value.filter;
 
-import me.xdrop.fuzzywuzzy.FuzzySearch;
+import org.apache.commons.lang3.NotImplementedException;
 import org.teamapps.data.value.DataRecord;
 
 import java.util.Objects;
@@ -68,19 +68,21 @@ public class TextFilter extends AbstractFilter {
 			case UNEQUAL_WILDCARD:
 				return !matchValue.matches(createMatchingRegex(value));
 			case FUZZY:
-				int ratio = FuzzySearch.ratio(matchValue, value);
-				if (ratio > 80) {
-					return true;
-				} else {
-					return false;
-				}
+				throw new NotImplementedException(Comparator.FUZZY.name());
+				// int ratio = FuzzySearch.ratio(matchValue, value);
+				// if (ratio > 80) {
+				// 	return true;
+				// } else {
+				// 	return false;
+				// }
 			case UNEQUAL_FUZZY:
-				int ratio2 = FuzzySearch.ratio(matchValue, value);
-				if (ratio2 < 80) {
-					return true;
-				} else {
-					return false;
-				}
+				throw new NotImplementedException(Comparator.UNEQUAL_FUZZY.name());
+				// int ratio2 = FuzzySearch.ratio(matchValue, value);
+				// if (ratio2 < 80) {
+				// 	return true;
+				// } else {
+				// 	return false;
+				// }
 		}
 		return false;
 	}
