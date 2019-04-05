@@ -24,7 +24,9 @@ import org.teamapps.dto.UiMultiLineTextField;
 
 public class MultiLineTextField extends TextField {
 
+	@Deprecated
 	private int minHeight = 100;
+	@Deprecated
 	private int maxHeight;
 
 	public MultiLineTextField() {
@@ -52,24 +54,29 @@ public class MultiLineTextField extends TextField {
 		}
 	}
 
+	@Deprecated
 	public int getMinHeight() {
 		return minHeight;
 	}
 
+	@Deprecated
 	public void setMinHeight(int minHeight) {
 		this.minHeight = minHeight;
 		queueCommandIfRendered(() -> new UiMultiLineTextField.SetMinHeightCommand(getId(), minHeight));
 	}
 
+	@Deprecated
 	public int getMaxHeight() {
 		return maxHeight;
 	}
 
+	@Deprecated
 	public void setMaxHeight(int maxHeight) {
 		this.maxHeight = maxHeight;
 		queueCommandIfRendered(() -> new UiMultiLineTextField.SetMaxHeightCommand(getId(), maxHeight));
 	}
 
+	@Deprecated
 	public void setFixedHeight(int height) {
 		this.minHeight = height;
 		this.maxHeight = height;
