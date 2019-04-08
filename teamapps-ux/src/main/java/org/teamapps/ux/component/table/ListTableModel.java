@@ -38,12 +38,12 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 		this.list.addAll(list);
 	}
 
-	public void updateList(List<RECORD> list) {
-		this.list = list;
+	public void setList(List<RECORD> list) {
+		this.list = new ArrayList<>(list);
 		onAllDataChanged.fire(null);
 	}
 
-	public void addEntry(RECORD record) {
+	public void addRecord(RECORD record) {
 		list.add(record);
 		onRecordAdded.fire(record);
 	}
@@ -70,6 +70,10 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 					.limit(length)
 					.collect(Collectors.toList());
 		}
+	}
+
+	public List<RECORD> getAllRecords() {
+		return new ArrayList<>(list);
 	}
 
 	@Override
