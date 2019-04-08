@@ -50,17 +50,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-/**
- *
- */
 public class TeamAppsUxClientGate implements UiSessionListener {
 
 	private final WebController webController;
@@ -105,13 +98,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		}
 		CommandDispatcher commandDispatcher = new CommandDispatcherImpl(commandExecutor, sessionId, sessionRecorder);
 
-//		GeoIpInfo geoIpInfo = GeoIPService.getInstance().getGeoIpInfo(uiClientInfo.getIp());
-//		ClientGeoIpInfo clientGeoIpInfo = new ClientGeoIpInfo(geoIpInfo.getCountryIso(),
-//				geoIpInfo.getCountry(),
-//				geoIpInfo.getCity(),
-//				geoIpInfo.getLatitude(),
-//				geoIpInfo.getLongitude());
-
 		ClientInfo clientInfo = new ClientInfo(
 				uiClientInfo.getIp(),
 				null /*clientGeoIpInfo*/,
@@ -142,34 +128,23 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 	}
 
 
-//	private ClientSystemInfo parseUserAgent(String userAgentString) {
-//		try {
-//			Capabilities capabilities = userAgentParser.get().parse(userAgentString);
-//			clientSystemInfo.setBrowser(capabilities.getBrowser());
-//			clientSystemInfo.setBrowserMajorVersion(capabilities.getBrowserMajorVersion());
-//			clientSystemInfo.setBrowserType(capabilities.getBrowserType());
-//			clientSystemInfo.setDeviceType(capabilities.getDeviceType());
-//			clientSystemInfo.setPlatform(capabilities.getPlatform());
-//			clientSystemInfo.setPlatformVersion(capabilities.getPlatformVersion());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-
-//	}
 	public Collection<ServletRegistration> getServletRegistrations() {
 		ArrayList<ServletRegistration> registrations = new ArrayList<>();
-		registrations.add(new ServletRegistration(new ResourceProviderServlet(createSystemIconResourceProvider(webController.getIconProvider())), "/icons/*"));
+		registrations.add(new ServletRegistration(new ResourceProviderServlet(createSystemIconResourceProvider(webController.getIconProvider(), webController.getAdditionalIconProvider())), "/icons/*"));
 		registrations.add(new ServletRegistration(new ResourceProviderServlet(new SessionResourceProvider(sessionContextById::get)), ClientSessionResourceProvider.BASE_PATH + "*"));
 		registrations.addAll(webController.getServletRegistrations(uxServerContext));
 		return registrations;
 	}
 
 	@NotNull
-	private SystemIconResourceProvider createSystemIconResourceProvider(IconProvider iconProvider) {
+	private SystemIconResourceProvider createSystemIconResourceProvider(IconProvider iconProvider, List<IconProvider> customIconProvider)  {
 		try {
 			File tempDir = File.createTempFile("temp", "temp").getParentFile();
 			SystemIconResourceProvider systemIconProvider = new SystemIconResourceProvider(tempDir);
 			systemIconProvider.registerStandardIconProvider(iconProvider);
+			if (customIconProvider != null) {
+				customIconProvider.forEach(provider -> systemIconProvider.registerCustomIconProvider(provider));
+			}
 			return systemIconProvider;
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
