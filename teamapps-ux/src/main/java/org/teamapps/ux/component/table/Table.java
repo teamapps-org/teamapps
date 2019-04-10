@@ -22,8 +22,11 @@ package org.teamapps.ux.component.table;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
+import org.teamapps.data.extract.BeanPropertyInjector;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyInjector;
 import org.teamapps.data.value.SortDirection;
 import org.teamapps.data.value.Sorting;
 import org.teamapps.dto.UiComponent;
@@ -41,7 +44,6 @@ import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
-import org.teamapps.common.format.Color;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +70,8 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	public final Event<ColumnSizeChangeEventData> onColumnSizeChange = new Event<>();
 
 	private TableModel<RECORD> model = new ListTableModel<>(Collections.emptyList());
-	private PropertyExtractor<RECORD> propertyExtractor;
+	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
 	private final ClientRecordCache<RECORD, UiTableClientRecord> clientRecordCache;
 
 	private int pageSize = 50;
@@ -135,7 +138,6 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	public Table(List<TableColumn> columns) {
 		super();
-		this.propertyExtractor = new BeanPropertyExtractor<>();
 		columns.forEach(this::addColumn);
 
 		clientRecordCache = new ClientRecordCache<>(this::createUiTableClientRecord);
@@ -1026,6 +1028,11 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		transientChangesByRecordAndPropertyName.clear();
 	}
 
+	public void applyCellValuesToRecord(RECORD record) {
+		Map<String, Object> changedCellValues = getChangedCellValues(record);
+		propertyInjector.setValues(record, changedCellValues);
+	}
+
 	public void revertChanges() {
 		refreshData(true, false, true);
 	}
@@ -1040,6 +1047,14 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
 		this.propertyExtractor = propertyExtractor;
+	}
+
+	public PropertyInjector<RECORD> getPropertyInjector() {
+		return propertyInjector;
+	}
+
+	public void setPropertyInjector(PropertyInjector<RECORD> propertyInjector) {
+		this.propertyInjector = propertyInjector;
 	}
 
 	public void setMaxCacheCapacity(int maxCapacity) {
