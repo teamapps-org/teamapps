@@ -52,13 +52,13 @@ public interface View {
 
     void setSize(ViewSize viewSize);
 
-    void addLocalButtonGroup(ToolbarButtonGroup buttonGroup);
+    ToolbarButtonGroup addLocalButtonGroup(ToolbarButtonGroup buttonGroup);
 
     void removeLocalButtonGroup(ToolbarButtonGroup buttonGroup);
 
     List<ToolbarButtonGroup> getLocalButtonGroups();
 
-    void addWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup);
+    ToolbarButtonGroup addWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup);
 
     void removeWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup);
 

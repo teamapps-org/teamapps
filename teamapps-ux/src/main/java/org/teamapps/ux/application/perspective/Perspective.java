@@ -49,7 +49,7 @@ public interface Perspective {
         }
     }
 
-    void addView(View view);
+    View addView(View view);
 
     void removeView(View view);
 
@@ -59,7 +59,7 @@ public interface Perspective {
 
     List<View> getVisibleAndLayoutReferencedViews();
 
-    void addWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup);
+    ToolbarButtonGroup addWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup);
 
     void removeWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup);
 

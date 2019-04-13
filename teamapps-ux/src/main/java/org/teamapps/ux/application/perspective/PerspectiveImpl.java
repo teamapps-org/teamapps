@@ -84,9 +84,10 @@ public class PerspectiveImpl implements Perspective{
     }
 
     @Override
-    public void addWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup) {
+    public ToolbarButtonGroup addWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup) {
         workspaceToolbarButtonGroups.add(buttonGroup);
         changeHandlers.forEach(changeHandler -> changeHandler.handlePerspectiveToolbarButtonGroupAdded(this, buttonGroup));
+        return buttonGroup;
     }
 
     @Override
@@ -101,7 +102,7 @@ public class PerspectiveImpl implements Perspective{
     }
 
     @Override
-    public void addView(View view) {
+    public View addView(View view) {
         views.add(view);
         Perspective perspective = this;
         view.addViewChangeHandler(new ViewChangeHandler() {
@@ -136,6 +137,7 @@ public class PerspectiveImpl implements Perspective{
             }
         });
         changeHandlers.forEach(changeHandler -> changeHandler.handleViewAdded(this, view));
+        return view;
     }
 
     @Override

@@ -86,7 +86,7 @@ public class ResponsiveApplicationImpl implements ResponsiveApplication {
     }
 
     @Override
-    public void addPerspective(Perspective perspective) {
+    public Perspective addPerspective(Perspective perspective) {
         ResponsiveApplication application = this;
         perspectives.add(perspective);
         perspective.addPerspectiveChangeHandler(new PerspectiveChangeHandler() {
@@ -155,6 +155,7 @@ public class ResponsiveApplicationImpl implements ResponsiveApplication {
             }
 
         });
+        return perspective;
     }
 
     private void checkViewChange(View view, boolean show) {
@@ -210,9 +211,10 @@ public class ResponsiveApplicationImpl implements ResponsiveApplication {
     }
 
     @Override
-    public void addApplicationButtonGroup(ToolbarButtonGroup buttonGroup) {
+    public ToolbarButtonGroup addApplicationButtonGroup(ToolbarButtonGroup buttonGroup) {
         workspaceToolbarButtonGroups.add(buttonGroup);
         changeHandlers.forEach(changeHandler -> changeHandler.handleApplicationToolbarButtonGroupAdded(this, buttonGroup));
+        return buttonGroup;
     }
 
     @Override
