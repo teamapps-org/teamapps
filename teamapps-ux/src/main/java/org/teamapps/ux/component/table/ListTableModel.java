@@ -22,6 +22,7 @@ package org.teamapps.ux.component.table;
 import org.teamapps.data.value.Sorting;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -39,6 +40,9 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 	}
 
 	public void setList(List<RECORD> list) {
+		if (list == null) {
+			list = Collections.emptyList();
+		}
 		this.list = new ArrayList<>(list);
 		onAllDataChanged.fire(null);
 	}
