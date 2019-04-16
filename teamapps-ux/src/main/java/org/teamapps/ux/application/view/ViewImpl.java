@@ -96,9 +96,10 @@ public class ViewImpl implements View {
     }
 
     @Override
-    public void addLocalButtonGroup(ToolbarButtonGroup buttonGroup) {
+    public ToolbarButtonGroup addLocalButtonGroup(ToolbarButtonGroup buttonGroup) {
         checkToolbar();
         toolbar.addButtonGroup(buttonGroup);
+        return buttonGroup;
     }
 
     @Override
@@ -119,9 +120,10 @@ public class ViewImpl implements View {
     }
 
     @Override
-    public void addWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup) {
+    public ToolbarButtonGroup addWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup) {
         workspaceToolbarButtonGroups.add(buttonGroup);
         changeHandlers.forEach(changeHandler -> changeHandler.handleWorkspaceButtonGroupAdded(buttonGroup));
+        return buttonGroup;
     }
 
     @Override

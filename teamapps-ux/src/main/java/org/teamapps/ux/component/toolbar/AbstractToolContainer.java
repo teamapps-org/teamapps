@@ -94,10 +94,11 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 		return toolbarButtonGroups.isEmpty();
 	}
 
-	public void addButtonGroup(ToolbarButtonGroup buttonGroup) {
+	public ToolbarButtonGroup addButtonGroup(ToolbarButtonGroup buttonGroup) {
 		toolbarButtonGroups.add(buttonGroup);
 		buttonGroup.setToolContainer(this);
 		queueCommandIfRendered(() -> new UiToolbar.AddButtonGroupCommand(getId(), buttonGroup.createUiToolbarButtonGroup()));
+		return buttonGroup;
 	}
 
 	public void removeAllToolbarButtonGroups() {

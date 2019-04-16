@@ -57,7 +57,7 @@ public interface ResponsiveApplication extends Application {
 
 	List<Perspective> getPerspectives();
 
-	void addPerspective(Perspective perspective);
+	Perspective addPerspective(Perspective perspective);
 
 	void showPerspective(Perspective perspective);
 
@@ -65,7 +65,7 @@ public interface ResponsiveApplication extends Application {
 
 	List<View> getActiveViews();
 
-	void addApplicationButtonGroup(ToolbarButtonGroup buttonGroup);
+	ToolbarButtonGroup addApplicationButtonGroup(ToolbarButtonGroup buttonGroup);
 
 	void removeApplicationButtonGroup(ToolbarButtonGroup buttonGroup);
 

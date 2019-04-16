@@ -38,7 +38,7 @@ public class TableColumn {
 	private String title;
 	private AbstractField field;
 	private int minWidth;
-	private int defaultWidth = 100;
+	private int defaultWidth;
 	private int maxWidth;
 	private boolean hidden;
 	private boolean sortable = true;
@@ -48,15 +48,15 @@ public class TableColumn {
 	private List<FieldMessage> messages = new ArrayList<>();
 
 	public TableColumn(String propertyName, AbstractField field) {
-		this(propertyName, null, null, field, 0, 100, 0);
+		this(propertyName, null, null, field, 0, 150, 0);
 	}
 
 	public TableColumn(String propertyName, String title, AbstractField field) {
-		this(propertyName, null, title, field, 0, 100, 0);
+		this(propertyName, null, title, field, 0, 150, 0);
 	}
 
 	public TableColumn(String propertyName, Icon icon, String title, AbstractField field) {
-		this(propertyName, icon, title, field, 0, 100, 0);
+		this(propertyName, icon, title, field, 0, 150, 0);
 	}
 
 	public TableColumn(String propertyName, Icon icon, String title, AbstractField field, int defaultWidth) {

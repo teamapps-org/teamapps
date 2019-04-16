@@ -20,6 +20,8 @@
 package org.teamapps.webcontroller;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.icons.api.IconTheme;
+import org.teamapps.icons.api.IconThemeImpl;
 import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.rootpanel.RootPanel;
@@ -39,18 +41,11 @@ public class SimpleWebController implements WebController {
 
     private List<IconProvider> additionalIconProvider = new ArrayList<>();
 
+    private IconProvider defaultIconProvider;
+    private IconTheme defaultIconTheme;
+
     public static SimpleWebController createDefaultController(Function<SessionContext, Component> componentSupplier) {
-        return createDefaultController(componentSupplier, Color.WHITE, false);
-    }
-
-    public static SimpleWebController createDefaultController(Function<SessionContext, Component> componentSupplier, Color defaultBackgroundColor) {
-        return createDefaultController(componentSupplier, defaultBackgroundColor, false);
-    }
-
-    public static SimpleWebController createDefaultController(Function<SessionContext, Component> componentSupplier, Color defaultBackgroundColor, boolean showBackgroundImage) {
         SimpleWebController webController = new SimpleWebController(componentSupplier);
-        webController.setDefaultBackgroundColor(defaultBackgroundColor);
-        webController.setShowBackgroundImage(showBackgroundImage);
         return webController;
     }
 
@@ -68,6 +63,35 @@ public class SimpleWebController implements WebController {
 
     public void addAdditionalIconProvider(IconProvider iconProvider) {
         additionalIconProvider.add(iconProvider);
+    }
+
+    public void setDefaultIconProvider(IconProvider defaultIconProvider) {
+        this.defaultIconProvider = defaultIconProvider;
+    }
+
+    public void setDefaultIconTheme(IconTheme defaultIconTheme) {
+        this.defaultIconTheme = defaultIconTheme;
+    }
+
+    @Override
+    public IconTheme getDefaultIconTheme(boolean isMobile) {
+        if (defaultIconTheme != null) {
+            return defaultIconTheme;
+        } else if (defaultIconProvider != null) {
+            return new IconThemeImpl(isMobile ? defaultIconProvider.getDefaultMobileStyle() : defaultIconProvider.getDefaultDesktopStyle()
+                    , defaultIconProvider.getDefaultSubIconStyle());
+        } else {
+            return WebController.super.getDefaultIconTheme(isMobile);
+        }
+    }
+
+    @Override
+    public IconProvider getIconProvider() {
+        if (defaultIconProvider != null) {
+            return defaultIconProvider;
+        } else {
+            return WebController.super.getIconProvider();
+        }
     }
 
     @Override

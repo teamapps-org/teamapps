@@ -23,8 +23,8 @@ import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.Label;
 import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
-import org.teamapps.ux.component.grid.layout.GridColumn;
 import org.teamapps.ux.component.form.layoutpolicy.FormSectionFieldPlacement;
+import org.teamapps.ux.component.grid.layout.GridColumn;
 import org.teamapps.ux.component.grid.layout.GridRow;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
@@ -55,6 +55,13 @@ public class ResponsiveFormLayout  {
 		responsiveFormSection.addField(sectionField);
 		responsiveForm.addLayoutField(propertyName, field);
 		return sectionField;
+	}
+
+	public ResponsiveFormField addField(String propertyName, AbstractField field, int column, int colSpan) {
+		int row = getSection().getLastNonEmptyRow();
+		ResponsiveFormField responsiveFormField = addField(row, column, propertyName, field);
+		responsiveFormField.setColSpan(colSpan);
+		return responsiveFormField;
 	}
 
 	public ResponsiveFormField addLabelField(String propertyName, AbstractField field) {
