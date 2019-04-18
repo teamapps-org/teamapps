@@ -52,6 +52,11 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 		onRecordAdded.fire(record);
 	}
 
+	public void addRecords(List<RECORD> records) {
+		list.addAll(records);
+		onAllDataChanged.fire(null);
+	}
+
 	@Override
 	public int getCount() {
 		if (filter == null) {
