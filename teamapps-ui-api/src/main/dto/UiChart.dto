@@ -18,21 +18,16 @@
  * =========================LICENSE_END==================================
  */
 class AbstractUiChart extends UiComponent {
-
-}
-
-class UiLineChart extends AbstractUiChart {
 	UiChartMargin margin = new UiChartMargin(); // not pixels! this defines the space available for tick and axis labels
-	boolean useInteractiveGuideline = true;
 	int animationDuration = 200;
 	boolean showLegend = true;
 
 	UiChartAxisConfig xAxisConfig = new UiChartAxisConfig(); // if null, no axis details are drawn
 	UiChartAxisConfig yAxisConfig = new UiChartAxisConfig(); // if null, no axis details are drawn
 
-	List<UiLineChartData> data;
+	command uploadChartImage(UiImageType imageType);
 
-	command setData(List<UiLineChartData> data, boolean clear);
+	event chartImageUploaded(String fileItemUuId, int sizeInBytes, UiImageType imageType);
 }
 
 class UiChartAxisConfig {
@@ -41,6 +36,7 @@ class UiChartAxisConfig {
 	int axisLabelDistance = 0;
 	boolean showMaxMin = true;
 	String tickFormat; // see https://github.com/d3/d3-axis/blob/master/README.md#axis_tickFormat
+	String[] distinctValues; //e.g. "January, February, March, ..."
 }
 
 class UiChartMargin {
@@ -50,13 +46,71 @@ class UiChartMargin {
 	int right = 30;
 }
 
-class UiLineChartData {
-//    UiLineChartDataPoint[] values; //values - represents the array of {x,y} data points
-//    String key =  'Sine Wave', //key  - the name of the series.
-//    String color =  '#ff7f0e'  //color - optional: choose your own line color.
+
+class UiBasicChart extends AbstractUiChart {
+	boolean useInteractiveGuideline = true;
+
+	boolean stacked = false;
+
+	List<UiBasicChartSeries> data;
+	command setData(List<UiBasicChartSeries> data, boolean clear);
 }
 
-class UiLineChartDataPoint {
-	double x;
-	double y;
+class UiBasicChartSeries {
+    required UiBasicChartSeriesType seriesType;
+    AbstractUiChartData[] values; //values - represents the array of {x,y} data points
+    String key; //key  - the name of the series.
+    UiColor color;  //color - optional: choose your own line color.
+    UiColor secondaryColor; //e.g. for area
+    UiLineChartCurveType curveType;
+    boolean showDataLabels; //data labels to be displayed for each point of data in the series
+    String dashStyle; //e.g. "3, 3"
+    boolean shadow; //whether to apply a drop shadow to the series
+
 }
+
+enum UiBasicChartSeriesType {
+    LINE,
+    AREA,
+    BAR,
+    SPLINE
+}
+
+class UiPieChart extends AbstractUiChart {
+	boolean useInteractiveGuideline = true;
+
+    //...
+}
+
+class UiHeatMapChart extends AbstractUiChart {
+	boolean useInteractiveGuideline = true;
+
+    //...
+}
+
+
+class AbstractUiChartData {
+
+}
+
+class UiChartYDataPoint extends AbstractUiChartData {
+	required double y;
+}
+
+class UiChartXYDataPoint extends AbstractUiChartData {
+	required double x;
+	required double y;
+}
+
+class UiChartNamedDataPoint extends AbstractUiChartData {
+	required double y;
+	required String name;
+	UiColor color; //optional color
+}
+
+
+enum UiImageType {
+    PNG,
+    JPEG
+}
+
