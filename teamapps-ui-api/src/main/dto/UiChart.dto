@@ -17,100 +17,123 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+
 class AbstractUiChart extends UiComponent {
-	UiChartMargin margin = new UiChartMargin(); // not pixels! this defines the space available for tick and axis labels
-	int animationDuration = 200;
-	boolean showLegend = true;
-
-	UiChartAxisConfig xAxisConfig = new UiChartAxisConfig(); // if null, no axis details are drawn
-	UiChartAxisConfig yAxisConfig = new UiChartAxisConfig(); // if null, no axis details are drawn
-
-	command uploadChartImage(UiImageType imageType);
-
-	event chartImageUploaded(String fileItemUuId, int sizeInBytes, UiImageType imageType);
-}
-
-class UiChartAxisConfig {
-	boolean drawAxisLine = true;
-	String axisLabel = null;
-	int axisLabelDistance = 0;
-	boolean showMaxMin = true;
-	String tickFormat; // see https://github.com/d3/d3-axis/blob/master/README.md#axis_tickFormat
-	String[] distinctValues; //e.g. "January, February, March, ..."
-}
-
-class UiChartMargin {
-	int top = 30;
-	int left = 62;
-	int bottom = 62;
-	int right = 30;
-}
-
-
-class UiBasicChart extends AbstractUiChart {
-	boolean useInteractiveGuideline = true;
-
-	boolean stacked = false;
-
-	List<UiBasicChartSeries> data;
-	command setData(List<UiBasicChartSeries> data, boolean clear);
-}
-
-class UiBasicChartSeries {
-    required UiBasicChartSeriesType seriesType;
-    AbstractUiChartData[] values; //values - represents the array of {x,y} data points
-    String key; //key  - the name of the series.
-    UiColor color;  //color - optional: choose your own line color.
-    UiColor secondaryColor; //e.g. for area
-    UiLineChartCurveType curveType;
-    boolean showDataLabels; //data labels to be displayed for each point of data in the series
-    String dashStyle; //e.g. "3, 3"
-    boolean shadow; //whether to apply a drop shadow to the series
-
-}
-
-enum UiBasicChartSeriesType {
-    LINE,
-    AREA,
-    BAR,
-    SPLINE
+	int initialAnimationDuration = 200;
+	UiChartLegendStyle legendStyle = UiChartLegendStyle.INLINE;
 }
 
 class UiPieChart extends AbstractUiChart {
-	boolean useInteractiveGuideline = true;
+	UiDataPointWeighting dataPointWeighting = UiDataPointWeighting.RELATIVE;
+	UiChartDataPoint3D rotation3D = new UiChartDataPoint3D(0, 0, 0);
+	double depth3D = 0;
 
-    //...
+	List<UiChartNamedDataPoint> dataPoints;
+
+	command setDataPoints(List<UiChartNamedDataPoint> dataPoints, int animationDuration);
+
+	event dataPointClicked();
 }
 
-class UiHeatMapChart extends AbstractUiChart {
-	boolean useInteractiveGuideline = true;
-
-    //...
+enum UiDataPointWeighting {
+	RELATIVE, // data points will sum up to 100% regardless of their absolute values
+	ABSOLUTE  // use absolute values, which should sum up to less than 1
 }
 
-
-class AbstractUiChartData {
-
+enum UiChartLegendStyle {
+	NONE,
+	INLINE,
+	SEPARATE_TOP,
+	SEPARATE_LEFT,
+	SEPARATE_BOTTOM,
+	SEPARATE_RIGHT
 }
 
-class UiChartYDataPoint extends AbstractUiChartData {
+class UiChartNamedDataPoint {
+	required String name;
 	required double y;
+	UiColor color;
 }
 
-class UiChartXYDataPoint extends AbstractUiChartData {
+class UiChartDataPoint2D {
 	required double x;
 	required double y;
 }
 
-class UiChartNamedDataPoint extends AbstractUiChartData {
+class UiChartDataPoint3D {
+	required double x;
 	required double y;
-	required String name;
-	UiColor color; //optional color
+	required double z;
 }
 
 
-enum UiImageType {
-    PNG,
-    JPEG
-}
+//class AbstractUiChart extends UiComponent {
+//	UiSpacing margin = new UiSpacing().setTop(30).setRight(30).setBottom(62).setLeft(62); // not pixels! this defines the space available for tick and axis labels
+//	int animationDuration = 200;
+//	boolean showLegend = true;
+//
+//	UiChartAxisConfig xAxisConfig = new UiChartAxisConfig(); // if null, no axis details are drawn
+//	UiChartAxisConfig yAxisConfig = new UiChartAxisConfig(); // if null, no axis details are drawn
+//
+//	command uploadChartImage(UiImageType imageType);
+//
+//	event chartImageUploaded(String fileItemUuId, int sizeInBytes, UiImageType imageType);
+//}
+//
+//class UiChartAxisConfig {
+//	boolean drawAxisLine = true;
+//	String axisLabel = null;
+//	int axisLabelDistance = 0;
+//	boolean showMaxMin = true;
+//	String tickFormat; // see https://github.com/d3/d3-axis/blob/master/README.md#axis_tickFormat
+//	String[] distinctValues; //e.g. "January, February, March, ..."
+//}
+//
+//class UiBasicChart extends AbstractUiChart {
+//	boolean useInteractiveGuideline = true;
+//
+//	boolean stacked = false;
+//
+//	List<UiBasicChartSeries> data;
+//	command setData(List<UiBasicChartSeries> data, boolean clear);
+//}
+//
+//class UiBasicChartSeries {
+//    required UiBasicChartSeriesType seriesType;
+//    AbstractUiChartData[] values; //values - represents the array of {x,y} data points
+//    String key; //key  - the name of the series.
+//    UiColor color;  //color - optional: choose your own line color.
+//    UiColor secondaryColor; //e.g. for area
+//    UiLineChartCurveType curveType;
+//    boolean showDataLabels; //data labels to be displayed for each point of data in the series
+//    String dashStyle; //e.g. "3, 3"
+//    boolean shadow; //whether to apply a drop shadow to the series
+//
+//}
+//
+//enum UiBasicChartSeriesType {
+//    LINE,
+//    AREA,
+//    BAR,
+//    SPLINE
+//}
+//
+//class UiPieChart extends AbstractUiChart {
+//	boolean useInteractiveGuideline = true;
+//
+//    //...
+//}
+//
+//class UiHeatMapChart extends AbstractUiChart {
+//	boolean useInteractiveGuideline = true;
+//
+//    //...
+//}
+//
+//
+//
+//enum UiImageType {
+//    PNG,
+//    JPEG
+//}
 
