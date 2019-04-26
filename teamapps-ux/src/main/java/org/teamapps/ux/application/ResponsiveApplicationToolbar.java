@@ -136,6 +136,11 @@ public class ResponsiveApplicationToolbar implements ApplicationChangeHandler {
     }
 
     @Override
+    public void handleViewTabTitleChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String title) {
+
+    }
+
+    @Override
     public void handleViewLayoutPositionChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String position) {
 
     }

@@ -43,6 +43,8 @@ public interface PerspectiveChangeHandler {
 
     void handleViewSizeChange(Perspective perspective, View view, ViewSize viewSize);
 
+    void handleViewTabTitleChange(Perspective perspective, View view, String title);
+
     void handleViewLayoutPositionChange(Perspective perspective, View view, String position);
 
     void handleViewWorkspaceToolbarButtonGroupAdded(Perspective perspective, View view, ToolbarButtonGroup buttonGroup);

@@ -140,6 +140,11 @@ public class ResponsiveApplicationImpl implements ResponsiveApplication {
             }
 
             @Override
+            public void handleViewTabTitleChange(Perspective perspective, View view, String title) {
+                changeHandlers.forEach(changeHandler -> changeHandler.handleViewTabTitleChange(application, isActivePerspective(perspective), perspective, view, title));
+            }
+
+            @Override
             public void handleViewLayoutPositionChange(Perspective perspective, View view, String position) {
                 changeHandlers.forEach(changeHandler -> changeHandler.handleViewLayoutPositionChange(application, isActivePerspective(perspective), perspective, view, position));
             }

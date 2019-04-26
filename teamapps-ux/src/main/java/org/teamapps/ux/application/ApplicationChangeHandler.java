@@ -55,6 +55,8 @@ public interface ApplicationChangeHandler {
 
     void handleViewSizeChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, ViewSize viewSize);
 
+    void handleViewTabTitleChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String title);
+
     void handleViewLayoutPositionChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String position);
 
     void handleViewWorkspaceToolbarButtonGroupAdded(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, ToolbarButtonGroup buttonGroup);

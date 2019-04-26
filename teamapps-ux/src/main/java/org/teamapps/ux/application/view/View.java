@@ -74,7 +74,13 @@ public interface View {
 
     String getLayoutPosition();
 
+    void setTitle(String title);
 
+    String getTitle();
+
+    void setTabTitle(String title);
+
+    String getTabTitle();
 
 
 }

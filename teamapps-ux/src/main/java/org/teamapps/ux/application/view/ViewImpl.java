@@ -34,7 +34,7 @@ public class ViewImpl implements View {
     private boolean visible = true;
     private String layoutPosition;
     private ViewSize viewSize;
-
+    private String tabTitle;
 
     private Panel panel = new Panel();
     private Toolbar toolbar;
@@ -161,5 +161,26 @@ public class ViewImpl implements View {
     @Override
     public String getLayoutPosition() {
         return layoutPosition;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        panel.setTitle(title);
+    }
+
+    @Override
+    public String getTitle() {
+        return panel.getTitle();
+    }
+
+    @Override
+    public void setTabTitle(String title) {
+        this.tabTitle = title;
+        changeHandlers.forEach(changeHandler -> changeHandler.handleViewTabTitleChange(title));
+    }
+
+    @Override
+    public String getTabTitle() {
+        return tabTitle;
     }
 }
