@@ -28,8 +28,16 @@ import java.util.List;
 
 public interface View {
 
+    static View createView() {
+        return new ViewImpl();
+    }
+
     static View createView(String layoutPosition) {
         return new ViewImpl(layoutPosition);
+    }
+
+    static View createView(Icon icon, String title, Component component) {
+        return new ViewImpl(icon, title, component);
     }
 
     static View createView(String layoutPosition, Icon icon, String title, Component component) {

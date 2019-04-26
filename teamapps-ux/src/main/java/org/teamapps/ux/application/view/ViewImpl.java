@@ -41,8 +41,15 @@ public class ViewImpl implements View {
     private List<ToolbarButtonGroup> workspaceToolbarButtonGroups = new ArrayList<>();
     private List<ViewChangeHandler> changeHandlers = new ArrayList<>();
 
+    public ViewImpl() {
+    }
+
     public ViewImpl(String layoutPosition) {
         this.layoutPosition = layoutPosition;
+    }
+
+    public ViewImpl(Icon icon, String title, Component component) {
+        this(null, icon, title, component);
     }
 
     public ViewImpl(String layoutPosition, Icon icon, String title, Component component) {

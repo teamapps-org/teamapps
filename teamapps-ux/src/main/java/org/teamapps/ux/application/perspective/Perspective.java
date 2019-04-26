@@ -21,6 +21,7 @@ package org.teamapps.ux.application.perspective;
 
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.layout.ExtendedLayout;
+import org.teamapps.ux.application.view.ViewSize;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 
@@ -51,6 +52,11 @@ public interface Perspective {
 
     View addView(View view);
 
+    default void addView(View view, String position) {
+        addView(view);
+        view.setLayoutPosition(position);
+    }
+
     void removeView(View view);
 
     List<View> getViews();
@@ -64,5 +70,17 @@ public interface Perspective {
     void removeWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup);
 
     List<ToolbarButtonGroup> getWorkspaceButtonGroups();
+
+    default void setFocusedView(View view) {
+        view.focus();
+    }
+
+    default void setViewPosition(View view, String position) {
+        view.setLayoutPosition(position);
+    }
+
+    default void setViewSize(View view, ViewSize viewSize) {
+        view.setSize(viewSize);
+    }
 
 }
