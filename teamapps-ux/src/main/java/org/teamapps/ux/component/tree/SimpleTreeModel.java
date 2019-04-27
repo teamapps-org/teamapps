@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTreeNode<PAYLOAD>> {
 
 	private final List<BaseTemplateTreeNode<PAYLOAD>> nodes;
+	private int maxResultNodes = Integer.MAX_VALUE;
 
 	public SimpleTreeModel() {
 		nodes = new ArrayList<>();
@@ -89,11 +90,20 @@ public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTree
 		onAllNodesChanged.fire(Collections.emptyList());
 	}
 
+	public int getMaxResultNodes() {
+		return maxResultNodes;
+	}
+
+	public void setMaxResultNodes(int maxResultNodes) {
+		this.maxResultNodes = maxResultNodes;
+	}
+
 	@Override
 	public List<BaseTemplateTreeNode<PAYLOAD>> getRecords(String query) {
 		if (StringUtils.isEmpty(query)) {
 			return this.nodes.stream()
 					.filter(new EagerNodesFilter())
+					.limit(maxResultNodes)
 					.collect(Collectors.toList());
 		} else {
 			List<BaseTemplateTreeNode<PAYLOAD>> filteredTree = this.nodes.stream()
