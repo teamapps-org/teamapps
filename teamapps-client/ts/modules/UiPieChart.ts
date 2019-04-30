@@ -33,10 +33,12 @@ import { UiChartNamedDataPointConfig } from "../generated/UiChartNamedDataPointC
 import * as d3 from "d3"
 import { EventFactory } from "../generated/EventFactory";
 import { UiColorConfig } from '../generated/UiColorConfig';
+import { UiDataPointWeighting } from '../generated/UiDataPointWeighting';
 
 export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieChartCommandHandler, UiPieChartEventSource {
 
 	readonly onDataPointClicked: TeamAppsEvent<UiPieChart_DataPointClickedEvent>;
+
 	chart: any;
 	config: UiPieChartConfig;
 
@@ -54,14 +56,16 @@ export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieCh
 		this.chart = Chart()
 			.container(htmlDivElement)
 			.data(this.config)
+			.onDataPointClicked((name: string) => {
+				this.onDataPointClicked.fire(EventFactory.createUiPieChart_DataPointClickedEvent(this.getId(), name));
+			})
 			.render();
 	}
 	getMainDomElement(): JQuery<HTMLElement> {
+
 		//this.onDataPointClicked.fire(EventFactory.createUiPieChart_DataPointClickedEvent(this.getId(), "asdlfj"))
 		return $(this.chart.container());
 	}
-
-	
 
 	onResize(): void {
 
@@ -100,7 +104,8 @@ function Chart() {
 		container: 'body',
 		defaultTextFill: '#2C3E50',
 		defaultFont: 'Helvetica',
-		data: null
+		data: null,
+		onDataPointClicked: (name: string) => { }
 	};
 
 	//InnerFunctions which will update visuals
@@ -136,22 +141,48 @@ function Chart() {
 		// ------------------ OVERRIDES & CONVERSATION ------------------
 
 
-		const rx = calc.chartWidth/2;
+		const rx = calc.chartWidth / 2;
 		const ry = attrs.data.rotation3D;
 		const h = attrs.data.height3D;
 		const ir = attrs.data.innerRadiusProportion;
 		const rotation = attrs.data.rotationClockwise;
 
-		const convertedData: { label: string, color: string, value: number }[] = attrs.data.dataPoints.map(point => {
+		const convertedData: { label: string, color: string, value: number, type: string }[] = attrs.data.dataPoints.map(point => {
 			const label = point.name;
 			const color = colorToRGBAString(point.color);
 			const value = point.y;
 			return {
 				label: label,
 				color: color,
-				value: value
+				value: value,
+				type: 'main'
 			}
 		});
+
+		// Check the weighting
+		if (attrs.data.dataPointWeighting == UiDataPointWeighting.ABSOLUTE) {
+
+			// Check if all values are  positive
+			let everyValueIsPositive = convertedData.every(d => d.value >= 0);
+
+			if (everyValueIsPositive) {
+
+				//Check if sum of them is not more than 1
+				const sum = d3.sum(convertedData, d => d.value);
+
+				if (sum < 1) {
+					// Attach dummy data element, which will be transparent
+					convertedData.push({
+						label: 'dummy',
+						type: 'dummy',
+						color: 'rgba(1,0,0,0)',
+						value: 1 - sum
+					})
+				}
+
+			}
+
+		}
 
 		// Generate data, which contains info about pie angles
 		const pieData = layouts.pie(convertedData)
@@ -188,7 +219,20 @@ function Chart() {
 		// Smoothly handle data updating
 		updateData = function () { };
 
+
+
 		// -------------- EVENT HANDLERS ----------------
+		function onSliceClick(d: any) {
+			attrs.onDataPointClicked(d.data.label);
+		}
+
+		function onSliceMouseEnter(d: any) {
+
+		}
+
+		function onSliceMouseLeave(d: any) {
+
+		}
 
 		//#########################################  UTIL FUNCS ##################################
 
@@ -341,6 +385,9 @@ function Chart() {
 			if (d.startAngle > Math.PI * 2 && d.endAngle < Math.PI * 3) {
 				return "";
 			}
+			if (d.startAngle >= Math.PI * 2 && d.endAngle >= Math.PI * 2 && d.endAngle <= Math.PI * 3) {
+				return "";
+			}
 
 			// Reassign startAngle  and endAngle based on their positions
 			if (d.startAngle <= Math.PI && d.endAngle > Math.PI * 2) {
@@ -408,7 +455,6 @@ function Chart() {
 		}
 
 
-
 		function draw(
 			data: any,
 			rx: number/*radius x*/,
@@ -435,7 +481,11 @@ function Chart() {
 					this._current = d;
 				})
 				.classed('slice-sort', true)
+				.attr('pointer-events', '')
 				.style("stroke", function (d: any) { return d3.hsl(d.data.color).darker(0.7).toString() })
+				.on('click', onSliceClick)
+				.on('mouseenter', onSliceMouseEnter)
+				.on('mouseleave', onSliceMouseLeave)
 
 			// Create corner slice surface paths
 			const cornerSliceSurfaceElements = slices
@@ -448,6 +498,9 @@ function Chart() {
 				})
 				.classed('slice-sort', true)
 				.style("stroke", function (d: any) { return d3.hsl(d.data.color).darker(0.7).toString() })
+				.on('click', onSliceClick)
+				.on('mouseenter', onSliceMouseEnter)
+				.on('mouseleave', onSliceMouseLeave)
 
 			// Creating inner slice custom paths
 			slices
@@ -460,6 +513,9 @@ function Chart() {
 				})
 				.classed('slice-sort', true)
 				.style("stroke", function (d: any) { return d3.hsl(d.data.color).darker(2).toString() })
+				.on('click', onSliceClick)
+				.on('mouseenter', onSliceMouseEnter)
+				.on('mouseleave', onSliceMouseLeave)
 
 			//Sort left corner paths
 			cornerSliceElements.sort(function (a: any, b: any) {
@@ -492,6 +548,9 @@ function Chart() {
 					//@ts-ignore
 					this._current = d;
 				})
+				.on('click', onSliceClick)
+				.on('mouseenter', onSliceMouseEnter)
+				.on('mouseleave', onSliceMouseLeave)
 
 			// Draw top slices
 			slices
@@ -503,6 +562,9 @@ function Chart() {
 					//@ts-ignore
 					this._current = d;
 				})
+				.on('click', onSliceClick)
+				.on('mouseenter', onSliceMouseEnter)
+				.on('mouseleave', onSliceMouseLeave)
 		}
 
 		d3.select(window).on('resize.' + attrs.id, function () {
@@ -512,7 +574,9 @@ function Chart() {
 		});
 	};
 
+
 	//----------- PROTOTYPE FUNCTIONS  ----------------------
+
 	d3.selection.prototype.patternify = function (params: PatternifyParameter) {
 		var container = this;
 		var selector = params.selector;
@@ -593,4 +657,5 @@ export interface PieChartAttributes {
 	container: any,
 	defaultTextFill: string,
 	defaultFont: string,
+	onDataPointClicked: (name: string) => void
 }
