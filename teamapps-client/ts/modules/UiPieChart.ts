@@ -76,7 +76,105 @@ export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieCh
 		// Update chart dimensions
 		this.chart.svgWidth(newWidth)
 			.svgHeight(newHeight - 5)
+			.data(this.getNewData())
 			.render()
+
+
+	}
+	getNewData() {
+		const config = {
+			dataPoints: [
+				{
+					name: "Basic",
+					y: 0.210 * Math.random(),
+					color: {
+						red: 232,
+						green: 190,
+						blue: 0,
+						alpha: 1
+					}
+				},
+				{
+					name: "Plus",
+					y: 0.210 * Math.random(),
+					color: {
+						red: 241,
+						green: 129,
+						blue: 0,
+						alpha: 1
+					}
+				},
+				{
+					name: "Lite",
+					y: 0.210 * Math.random(),
+					color: {
+						red: 0,
+						green: 125,
+						blue: 131,
+						alpha: 1
+					},
+				},
+				{
+					name: "Elite",
+					y: 0.210 * Math.random(),
+					color: {
+						red: 148,
+						green: 4,
+						blue: 139,
+						alpha: 1
+					}
+				},
+				{
+					name: "Delux",
+					y: 0.210 * Math.random(),
+					color: {
+						red: 152,
+						green: 0,
+						blue: 30,
+						alpha: 1
+					}
+				},
+			],
+			id: "Test",
+			dataPointWeighting: UiDataPointWeighting.ABSOLUTE,
+			height3D: 36,
+			rotation3D: 30,
+			rotationClockwise: 180,
+			innerRadiusProportion: 0.1
+
+		}
+
+		// if (Math.random() > 0.5) {
+		// 	config.dataPoints.push(
+		// 		{
+		// 			name: "Random1",
+		// 			y: 0.210 * Math.random(),
+		// 			color: {
+		// 				red: 152,
+		// 				green: 190,
+		// 				blue: 40,
+		// 				alpha: 1
+		// 			}
+		// 		},
+		// 	)
+		// }
+
+		// if (Math.random() > 0.5) {
+		// 	config.dataPoints.push(
+		// 		{
+		// 			name: "Random2",
+		// 			y: 0.210 * Math.random(),
+		// 			color: {
+		// 				red: 152,
+		// 				green: 190,
+		// 				blue: 20,
+		// 				alpha: 1
+		// 			}
+		// 		},
+		// 	)
+		// }
+		return config;
+
 	}
 
 	setDataPoints(dataPoints: UiChartNamedDataPointConfig[], animationDuration: number): void {
@@ -105,6 +203,8 @@ function Chart() {
 		defaultTextFill: '#2C3E50',
 		defaultFont: 'Helvetica',
 		data: null,
+		duration: 750,
+		firstRun: true,
 		onDataPointClicked: (name: string) => { }
 	};
 
@@ -113,6 +213,7 @@ function Chart() {
 
 	//Main chart object
 	var main: any = function () {
+		attrs.marginBottom = 5 + attrs.data.height3D;
 		// Drawing containers
 		var container: any = d3.select(attrs.container);
 		// var containerRect = container.node().getBoundingClientRect();
@@ -134,6 +235,7 @@ function Chart() {
 		calc.centerX = calc.chartWidth / 2;
 		calc.centerY = calc.chartHeight / 2;
 
+
 		// -----------------  LAYOUTS  ----------------
 		const layouts: { pie?: any } = {};
 		layouts.pie = d3.pie().sort(null).value((d: any) => d.value);
@@ -141,8 +243,8 @@ function Chart() {
 		// ------------------ OVERRIDES & CONVERSATION ------------------
 
 
-		const rx = calc.chartWidth / 2;
-		const ry = attrs.data.rotation3D;
+		const rx = Math.min(calc.chartWidth, calc.chartHeight * 90 / attrs.data.rotation3D) / 2;
+		const ry = attrs.data.rotation3D / 90 * rx;
 		const h = attrs.data.height3D;
 		const ir = attrs.data.innerRadiusProportion;
 		const rotation = attrs.data.rotationClockwise;
@@ -158,6 +260,7 @@ function Chart() {
 				type: 'main'
 			}
 		});
+
 
 		// Check the weighting
 		if (attrs.data.dataPointWeighting == UiDataPointWeighting.ABSOLUTE) {
@@ -183,6 +286,8 @@ function Chart() {
 			}
 
 		}
+		// Storing sum of elements
+		calc.sum = d3.sum(convertedData, d => d.value);
 
 		// Generate data, which contains info about pie angles
 		const pieData = layouts.pie(convertedData)
@@ -217,7 +322,10 @@ function Chart() {
 		draw(pieData, rx, ry, h, ir);
 
 		// Smoothly handle data updating
-		updateData = function () { };
+		updateData = function (transitionTime) {
+
+
+		};
 
 
 
@@ -233,8 +341,131 @@ function Chart() {
 		function onSliceMouseLeave(d: any) {
 
 		}
+		console.log('drawing')
 
 		//#########################################  UTIL FUNCS ##################################
+
+		// Put element sorting logic in sorElements function
+		function sortElements() {
+
+			//Sort left corner paths
+			attrs.cornerSliceElements.sort(function (a: any, b: any) {
+				const angleA = a.endAngle;
+				const angleB = b.endAngle;
+				return Math.sin(angleA) <= Math.sin(angleB) ? -1 : 1;
+			})
+
+			// Sort right corner paths
+			attrs.cornerSliceSurfaceElements.sort(function (a: any, b: any) {
+				const angleA = a.startAngle;
+				const angleB = b.startAngle;
+				return Math.sin(angleA) <= Math.sin(angleB) ? -1 : 1;
+			})
+
+			// Sort left and right corners and inner paths, based on their angle locations
+			attrs.slices.selectAll('.slice-sort')
+				.sort(function (a: any, b: any) {
+					const first: any = attrs.slices.selectAll('.slice-sort').filter((d: any) => d == a).node();
+					const second: any = attrs.slices.selectAll('.slice-sort').filter((d: any) => d == b).node();
+					return first.getBoundingClientRect().top < second.getBoundingClientRect().top ? -1 : 1
+				})
+		}
+
+		//Corner shape transitions
+		function arcTweenCorner(a: any) {
+			if (!this._current) {
+				this._current = Object.assign({}, a, {
+					startAngle: 0,
+					endAngle: 0
+				})
+			}
+			var i = d3.interpolate(this._current, a);
+			this._current = i(0);
+			return function (t: any) {
+				return pieCorner(i(t), rx + 0.5, ry + 0.5, h, ir);
+				sortElements();
+			};
+		}
+
+		//Corner surface shape transitions
+		function arcTweenCornerSurface(a: any) {
+			if (!this._current) {
+				this._current = Object.assign({}, a, {
+					startAngle: 0,
+					endAngle: 0
+				})
+			}
+			var i = d3.interpolate(this._current, a);
+			this._current = i(0);
+			return function (t: any) {
+				return pieCornerSurface(i(t), rx + 0.5, ry + 0.5, h, ir);
+				sortElements();
+			};
+		}
+
+		//Inner shape transitions
+		function arcTweenInner(a: any) {
+			if (!this._current) {
+				this._current = Object.assign({}, a, {
+					startAngle: 0,
+					endAngle: 0
+				})
+			}
+			var i = d3.interpolate(this._current, a);
+			this._current = i(0);
+			return function (t: any) {
+				return pieInner(i(t), rx + 0.5, ry + 0.5, h, ir);
+				sortElements();
+			};
+		}
+
+		//Top shape transitions
+		function arcTweenTop(a: any) {
+			if (!this._current) {
+				this._current = Object.assign({}, a, {
+					startAngle: 0,
+					endAngle: 0
+				})
+			}
+			var i = d3.interpolate(this._current, a);
+			this._current = i(0);
+			return function (t: any) {
+				return pieTop(i(t), rx, ry, ir);
+			};
+		}
+
+		//Outer shape transitions
+		function arcTweenOuter(a: any) {
+			if (!this._current) {
+				this._current = Object.assign({}, a, {
+					startAngle: 0,
+					endAngle: 0
+				})
+			}
+			var i = d3.interpolate(this._current, a);
+			this._current = i(0);
+			return function (t: any) { return pieOuter(i(t), rx - .5, ry - .5, h, ir); };
+		}
+
+
+		//Text  transitions
+		function textTweenTransform(a: any) {
+			if (!this._current) {
+				this._current = Object.assign({}, a, {
+					startAngle: 0,
+					endAngle: 0
+				})
+			}
+			var i = d3.interpolate(this._current, a);
+			this._current = i(0);
+			return function (t: any) {
+				const d = i(t);
+				const centerAngle = ((d.startAngle + d.endAngle) / 2) % (Math.PI * 2);
+				const x = rx * 0.8 * Math.cos(centerAngle);
+				const y = ry * 0.8 * Math.sin(centerAngle);
+				return `translate(${x},${y}) `
+			};
+		}
 
 		// This function converts RGBA color object to js compatible rgba string color
 		function colorToRGBAString(color: UiColorConfig) {
@@ -465,10 +696,23 @@ function Chart() {
 			// Placeholder data
 			const _data = data;
 
-			// Create Slices
+			// Create Slices and shape containers
 			var slices = centerPoint
 				.patternify({ tag: 'g', selector: 'slices' })
 
+			// Store reference for func access
+			attrs.slices = slices;
+
+			const outerSliceWrapper = centerPoint
+				.patternify({ tag: 'g', selector: 'outerSliceWrapper' })
+
+			const topSliceWrapper = centerPoint
+				.patternify({ tag: 'g', selector: 'topSliceWrapper' })
+
+			if (!attrs.firstRun) {
+				// Sort some elements by their positions
+				sortElements();
+			}
 			// Create corner slice paths
 			const cornerSliceElements = slices
 				.patternify({ tag: 'path', selector: 'cornerSlices', data: _data.map((d: any) => Object.assign({}, d)) })
@@ -476,10 +720,7 @@ function Chart() {
 					return d3.hsl(d.data.color).darker(0.7).toString();
 				})
 				.attr("d", function (d: any) { return pieCorner(d, rx - .5, ry - .5, h, ir); })
-				.each(function (d: any) {
-					// @ts-ignore
-					this._current = d;
-				})
+
 				.classed('slice-sort', true)
 				.attr('pointer-events', '')
 				.style("stroke", function (d: any) { return d3.hsl(d.data.color).darker(0.7).toString() })
@@ -487,84 +728,122 @@ function Chart() {
 				.on('mouseenter', onSliceMouseEnter)
 				.on('mouseleave', onSliceMouseLeave)
 
+			// Store reference for function access
+			attrs.cornerSliceElements = cornerSliceElements;
+
+			// Transition corner elements
+			cornerSliceElements
+				.transition()
+				.duration(attrs.duration)
+				.attrTween("d", arcTweenCorner)
+				.on('end', function (d: any) {
+					this._current = d;
+					sortElements();
+				})
+
 			// Create corner slice surface paths
 			const cornerSliceSurfaceElements = slices
 				.patternify({ tag: 'path', selector: 'cornerSlicesSurface', data: _data.map((d: any) => Object.assign({}, d)) })
 				.style("fill", function (d: any) { return d3.hsl(d.data.color).darker(0.7).toString() })
 				.attr("d", function (d: any) { return pieCornerSurface(d, rx - .5, ry - .5, h, ir); })
-				.each(function (d: any) {
-					//@ts-ignore
-					this._current = d;
-				})
 				.classed('slice-sort', true)
 				.style("stroke", function (d: any) { return d3.hsl(d.data.color).darker(0.7).toString() })
 				.on('click', onSliceClick)
 				.on('mouseenter', onSliceMouseEnter)
 				.on('mouseleave', onSliceMouseLeave)
 
+			// Store reference for function access
+			attrs.cornerSliceSurfaceElements = cornerSliceSurfaceElements;
+
+			// Transition corner Surface elements
+			cornerSliceSurfaceElements
+				.transition()
+				.duration(attrs.duration)
+				.attrTween("d", arcTweenCornerSurface)
+				.on('end', function (d: any) {
+					this._current = d;
+					sortElements();
+				})
+
 			// Creating inner slice custom paths
-			slices
+			const pieInners = slices
 				.patternify({ tag: 'path', selector: 'innerSlice', data: _data.map((d: any) => Object.assign({}, d)) })
 				.style("fill", function (d: any) { return d3.hsl(d.data.color).darker(2).toString() })
 				.attr("d", function (d: any) { return pieInner(d, rx + 0.5, ry + 0.5, h, ir); })
-				.each(function (d: any) {
-					//@ts-ignore
-					this._current = d;
-				})
 				.classed('slice-sort', true)
 				.style("stroke", function (d: any) { return d3.hsl(d.data.color).darker(2).toString() })
 				.on('click', onSliceClick)
 				.on('mouseenter', onSliceMouseEnter)
 				.on('mouseleave', onSliceMouseLeave)
 
-			//Sort left corner paths
-			cornerSliceElements.sort(function (a: any, b: any) {
-				const angleA = a.endAngle;
-				const angleB = b.endAngle;
-				return Math.sin(angleA) <= Math.sin(angleB) ? -1 : 1;
-			})
-
-			// Sort right corner paths
-			cornerSliceSurfaceElements.sort(function (a: any, b: any) {
-				const angleA = a.startAngle;
-				const angleB = b.startAngle;
-				return Math.sin(angleA) <= Math.sin(angleB) ? -1 : 1;
-			})
-
-			// Sort left and right corners and inner paths, based on their angle locations
-			slices.selectAll('.slice-sort')
-				.sort(function (a: any, b: any) {
-					const first: any = slices.selectAll('.slice-sort').filter((d: any) => d == a).node();
-					const second: any = slices.selectAll('.slice-sort').filter((d: any) => d == b).node();
-					return first.getBoundingClientRect().top < second.getBoundingClientRect().top ? -1 : 1
+			// Transition  inner  elements
+			pieInners
+				.transition()
+				.duration(attrs.duration)
+				.attrTween("d", arcTweenInner)
+				.on('end', function (d: any) {
+					this._current = d;
+					sortElements();
 				})
 
 			// Draw outer slices
-			slices
-				.patternify({ tag: 'path', selector: 'outerSlice', data: _data.map((d: any) => Object.assign({}, d)) })
-				.style("fill", function (d: any) { return d3.hsl(d.data.color).darker(0.7).toString() })
-				.attr("d", function (d: any) { return pieOuter(d, rx - .5, ry - .5, h, ir); })
-				.each(function (d: any) {
-					//@ts-ignore
-					this._current = d;
+			const outerSlices = outerSliceWrapper
+				.patternify({
+					tag: 'path', selector: 'outerSlice', data: _data
 				})
+				.style("fill", function (d: any) { return d3.hsl(d.data.color).darker(0.7).toString() })
 				.on('click', onSliceClick)
 				.on('mouseenter', onSliceMouseEnter)
 				.on('mouseleave', onSliceMouseLeave)
 
-			// Draw top slices
-			slices
-				.patternify({ tag: 'path', selector: 'topSlice', data: _data.map((d: any) => Object.assign({}, d)) })
-				.style("fill", function (d: any) { return d.data.color; })
-				.style("stroke", function (d: any) { return d.data.color; })
-				.attr("d", function (d: any) { return pieTop(d, rx, ry, ir); })
-				.each(function (d: any) {
-					//@ts-ignore
+			// Transition  outer   elements
+			outerSlices.transition()
+				.duration(attrs.duration)
+				.attrTween("d", arcTweenOuter)
+				.on('end', function (d: any) {
 					this._current = d;
 				})
+
+
+			// Draw top slices
+			const topSlices = topSliceWrapper
+				.patternify({
+					tag: 'path', selector: 'topSlice', data: _data
+				})
+				.style("fill", function (d: any) { return d.data.color; })
+				.style("stroke", function (d: any) { return d.data.color; })
+				//	.attr("d", function (d: any) { return pieTop(d, rx, ry, ir); })
 				.on('click', onSliceClick)
 				.on('mouseenter', onSliceMouseEnter)
 				.on('mouseleave', onSliceMouseLeave)
+
+			// Transition  top  elements
+			topSlices.transition()
+				.duration(attrs.duration)
+				.attrTween("d", arcTweenTop)
+				.on('end', function (d: any) {
+					this._current = d;
+				})
+
+			// Draw Texts
+			const slicesTexts = topSliceWrapper
+				.patternify({ tag: 'text', selector: 'pie-labels', data: _data.map((d: any) => Object.assign({}, d)) })
+				.attr('text-anchor', 'middle')
+				.attr('font-size', 10)
+				.attr('transform', (d: any) => {
+					const centerAngle = ((d.startAngle + d.endAngle) / 2) % (Math.PI * 2);
+					const x = rx * 0.8 * Math.cos(centerAngle);
+					const y = ry * 0.8 * Math.sin(centerAngle);
+					return `translate(${x},${y}) `
+				})
+				.text((d: any) => d.data.label + ' (' + Math.round(d.value / calc.sum * 100) + '%)')
+				.attr('opacity', (d: any) => d.data.type == "dummy" ? -1 : 1)
+
+			// Transition  text  elements
+			slicesTexts.transition()
+				.duration(750)
+				.attrTween("transform", textTweenTransform)
+
 		}
 
 		d3.select(window).on('resize.' + attrs.id, function () {
@@ -572,6 +851,9 @@ function Chart() {
 			if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
 			main();
 		});
+
+		// Store state, whether app was first run or not
+		attrs.firstRun = false;
 	};
 
 
