@@ -54,7 +54,8 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
             return;
         }
 
-        WorkSpaceLayoutView layoutView = new WorkSpaceLayoutView(workSpaceLayout, view.getPanel(), view.getPanel().getTitle(), true, false);
+        String tabTitle = view.getTabTitle() != null ? view.getTabTitle() : view.getPanel().getTitle();
+        WorkSpaceLayoutView layoutView = new WorkSpaceLayoutView(workSpaceLayout, view.getPanel(), tabTitle, true, false);
         viewGroup.addView(layoutView);
 
         if (viewGroup != null && viewGroup.getPanelState() != ViewGroupPanelState.NORMAL) {
@@ -180,6 +181,14 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    public void handleViewTabTitleChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String title) {
+        if (isActivePerspective) {
+            WorkSpaceLayoutView layoutView = workSpaceLayout.getViewByPanel(view.getPanel());
+            layoutView.setTabTitle(title);
         }
     }
 

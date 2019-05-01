@@ -122,6 +122,11 @@ public class PerspectiveImpl implements Perspective{
             }
 
             @Override
+            public void handleViewTabTitleChange(String title) {
+                changeHandlers.forEach(changeHandler -> changeHandler.handleViewTabTitleChange(perspective, view, title));
+            }
+
+            @Override
             public void handleLayoutPositionChange(String position) {
                 changeHandlers.forEach(changeHandler -> changeHandler.handleViewLayoutPositionChange(perspective, view, position));
             }

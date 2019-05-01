@@ -29,6 +29,8 @@ public interface ViewChangeHandler {
 
     void handleViewSizeChange(ViewSize viewSize);
 
+    void handleViewTabTitleChange(String title);
+
     void handleLayoutPositionChange(String position);
 
     void handleWorkspaceButtonGroupAdded(ToolbarButtonGroup buttonGroup);

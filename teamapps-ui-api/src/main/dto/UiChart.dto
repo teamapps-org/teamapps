@@ -24,7 +24,7 @@ class AbstractUiChart extends UiComponent {
 }
 
 class UiPieChart extends AbstractUiChart {
-UiDataPointWeighting dataPointWeighting = UiDataPointWeighting.RELATIVE;
+	UiDataPointWeighting dataPointWeighting = UiDataPointWeighting.RELATIVE;
 	float rotation3D = 0; // degrees from 0 to 90
 	float height3D = 0;
 	float rotationClockwise = 0; // 0 - 360

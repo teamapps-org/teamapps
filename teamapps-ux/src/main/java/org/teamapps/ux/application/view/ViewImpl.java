@@ -34,15 +34,22 @@ public class ViewImpl implements View {
     private boolean visible = true;
     private String layoutPosition;
     private ViewSize viewSize;
-
+    private String tabTitle;
 
     private Panel panel = new Panel();
     private Toolbar toolbar;
     private List<ToolbarButtonGroup> workspaceToolbarButtonGroups = new ArrayList<>();
     private List<ViewChangeHandler> changeHandlers = new ArrayList<>();
 
+    public ViewImpl() {
+    }
+
     public ViewImpl(String layoutPosition) {
         this.layoutPosition = layoutPosition;
+    }
+
+    public ViewImpl(Icon icon, String title, Component component) {
+        this(null, icon, title, component);
     }
 
     public ViewImpl(String layoutPosition, Icon icon, String title, Component component) {
@@ -161,5 +168,26 @@ public class ViewImpl implements View {
     @Override
     public String getLayoutPosition() {
         return layoutPosition;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        panel.setTitle(title);
+    }
+
+    @Override
+    public String getTitle() {
+        return panel.getTitle();
+    }
+
+    @Override
+    public void setTabTitle(String title) {
+        this.tabTitle = title;
+        changeHandlers.forEach(changeHandler -> changeHandler.handleViewTabTitleChange(title));
+    }
+
+    @Override
+    public String getTabTitle() {
+        return tabTitle;
     }
 }
