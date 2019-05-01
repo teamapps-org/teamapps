@@ -24,15 +24,16 @@ class AbstractUiChart extends UiComponent {
 }
 
 class UiPieChart extends AbstractUiChart {
-	UiDataPointWeighting dataPointWeighting = UiDataPointWeighting.RELATIVE;
-	UiChartDataPoint3D rotation3D = new UiChartDataPoint3D(0, 0, 0);
-	double depth3D = 0;
+UiDataPointWeighting dataPointWeighting = UiDataPointWeighting.RELATIVE;
+	float rotation3D = 0; // degrees from 0 to 90
+	float height3D = 0;
+	float rotationClockwise = 0; // 0 - 360
+	float innerRadiusProportion = 0; // 0 - 1
 
 	List<UiChartNamedDataPoint> dataPoints;
 
 	command setDataPoints(List<UiChartNamedDataPoint> dataPoints, int animationDuration);
-
-	event dataPointClicked();
+	event dataPointClicked(String dataPointName);
 }
 
 enum UiDataPointWeighting {

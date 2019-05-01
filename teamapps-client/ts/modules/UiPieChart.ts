@@ -37,10 +37,11 @@ import { UiDataPointWeighting } from '../generated/UiDataPointWeighting';
 
 export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieChartCommandHandler, UiPieChartEventSource {
 
-	readonly onDataPointClicked: TeamAppsEvent<UiPieChart_DataPointClickedEvent>;
+	readonly onDataPointClicked: TeamAppsEvent<UiPieChart_DataPointClickedEvent> = new TeamAppsEvent(this);
 
 	chart: any;
 	config: UiPieChartConfig;
+
 
 
 	constructor(config: UiPieChartConfig, context: TeamAppsUiContext) {
@@ -73,111 +74,22 @@ export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieCh
 		let newWidth = this.getWidth()
 		let newHeight = this.getHeight()
 
+		
+
 		// Update chart dimensions
 		this.chart.svgWidth(newWidth)
 			.svgHeight(newHeight - 5)
-			.data(this.getNewData())
 			.render()
 
-
 	}
-	getNewData() {
-		const config = {
-			dataPoints: [
-				{
-					name: "Basic",
-					y: 0.210 * Math.random(),
-					color: {
-						red: 232,
-						green: 190,
-						blue: 0,
-						alpha: 1
-					}
-				},
-				{
-					name: "Plus",
-					y: 0.210 * Math.random(),
-					color: {
-						red: 241,
-						green: 129,
-						blue: 0,
-						alpha: 1
-					}
-				},
-				{
-					name: "Lite",
-					y: 0.210 * Math.random(),
-					color: {
-						red: 0,
-						green: 125,
-						blue: 131,
-						alpha: 1
-					},
-				},
-				{
-					name: "Elite",
-					y: 0.210 * Math.random(),
-					color: {
-						red: 148,
-						green: 4,
-						blue: 139,
-						alpha: 1
-					}
-				},
-				{
-					name: "Delux",
-					y: 0.210 * Math.random(),
-					color: {
-						red: 152,
-						green: 0,
-						blue: 30,
-						alpha: 1
-					}
-				},
-			],
-			id: "Test",
-			dataPointWeighting: UiDataPointWeighting.ABSOLUTE,
-			height3D: 36,
-			rotation3D: 30,
-			rotationClockwise: 180,
-			innerRadiusProportion: 0.1
 
-		}
-
-		// if (Math.random() > 0.5) {
-		// 	config.dataPoints.push(
-		// 		{
-		// 			name: "Random1",
-		// 			y: 0.210 * Math.random(),
-		// 			color: {
-		// 				red: 152,
-		// 				green: 190,
-		// 				blue: 40,
-		// 				alpha: 1
-		// 			}
-		// 		},
-		// 	)
-		// }
-
-		// if (Math.random() > 0.5) {
-		// 	config.dataPoints.push(
-		// 		{
-		// 			name: "Random2",
-		// 			y: 0.210 * Math.random(),
-		// 			color: {
-		// 				red: 152,
-		// 				green: 190,
-		// 				blue: 20,
-		// 				alpha: 1
-		// 			}
-		// 		},
-		// 	)
-		// }
-		return config;
-
-	}
 
 	setDataPoints(dataPoints: UiChartNamedDataPointConfig[], animationDuration: number): void {
+		this.config.dataPoints = dataPoints;
+		this.chart
+			.data(this.config)
+			.duration(animationDuration)
+			.render()
 	}
 }
 
@@ -341,34 +253,12 @@ function Chart() {
 		function onSliceMouseLeave(d: any) {
 
 		}
-		console.log('drawing')
+
 
 		//#########################################  UTIL FUNCS ##################################
 
 		// Put element sorting logic in sorElements function
 		function sortElements() {
-
-			//Sort left corner paths
-			attrs.cornerSliceElements.sort(function (a: any, b: any) {
-				const angleA = a.endAngle;
-				const angleB = b.endAngle;
-				return Math.sin(angleA) <= Math.sin(angleB) ? -1 : 1;
-			})
-
-			// Sort right corner paths
-			attrs.cornerSliceSurfaceElements.sort(function (a: any, b: any) {
-				const angleA = a.startAngle;
-				const angleB = b.startAngle;
-				return Math.sin(angleA) <= Math.sin(angleB) ? -1 : 1;
-			})
-
-			// Sort left and right corners and inner paths, based on their angle locations
-			attrs.slices.selectAll('.slice-sort')
-				.sort(function (a: any, b: any) {
-					const first: any = attrs.slices.selectAll('.slice-sort').filter((d: any) => d == a).node();
-					const second: any = attrs.slices.selectAll('.slice-sort').filter((d: any) => d == b).node();
-					return first.getBoundingClientRect().top < second.getBoundingClientRect().top ? -1 : 1
-				})
 		}
 
 		//Corner shape transitions
@@ -383,7 +273,6 @@ function Chart() {
 			this._current = i(0);
 			return function (t: any) {
 				return pieCorner(i(t), rx + 0.5, ry + 0.5, h, ir);
-				sortElements();
 			};
 		}
 
@@ -399,7 +288,6 @@ function Chart() {
 			this._current = i(0);
 			return function (t: any) {
 				return pieCornerSurface(i(t), rx + 0.5, ry + 0.5, h, ir);
-				sortElements();
 			};
 		}
 
@@ -415,7 +303,6 @@ function Chart() {
 			this._current = i(0);
 			return function (t: any) {
 				return pieInner(i(t), rx + 0.5, ry + 0.5, h, ir);
-				sortElements();
 			};
 		}
 
@@ -580,6 +467,11 @@ function Chart() {
 				startAngle = d.startAngle
 			}
 
+			if (d.startAngle >= Math.PI && d.startAngle <= Math.PI * 2 &&
+				d.endAngle >= Math.PI * 2 && d.endAngle <= Math.PI * 3) {
+				startAngle = 0;
+				endAngle = d.endAngle % (Math.PI * 2)
+			}
 			// Calculating shape key points
 			var sx = rx * Math.cos(startAngle),
 				sy = ry * Math.sin(startAngle),
@@ -709,10 +601,28 @@ function Chart() {
 			const topSliceWrapper = centerPoint
 				.patternify({ tag: 'g', selector: 'topSliceWrapper' })
 
-			if (!attrs.firstRun) {
-				// Sort some elements by their positions
-				sortElements();
-			}
+
+			// Creating inner slice custom paths
+			const pieInners = slices
+				.patternify({ tag: 'path', selector: 'innerSlice', data: _data })
+				.style("fill", function (d: any) { return d3.hsl(d.data.color).darker(2).toString() })
+				.attr("d", function (d: any) { return pieInner(d, rx + 0.5, ry + 0.5, h, ir); })
+				.classed('slice-sort', true)
+				.on('click', onSliceClick)
+				.on('mouseenter', onSliceMouseEnter)
+				.on('mouseleave', onSliceMouseLeave)
+
+			// Transition  inner  elements
+			pieInners
+				.transition()
+				.duration(attrs.duration)
+				.attrTween("d", arcTweenInner)
+				.on('end', function (d: any) {
+					//sortElements();
+					this._current = d;
+				})
+
+
 			// Create corner slice paths
 			const cornerSliceElements = slices
 				.patternify({ tag: 'path', selector: 'cornerSlices', data: _data.map((d: any) => Object.assign({}, d)) })
@@ -727,6 +637,12 @@ function Chart() {
 				.on('click', onSliceClick)
 				.on('mouseenter', onSliceMouseEnter)
 				.on('mouseleave', onSliceMouseLeave)
+				.attr('opacity', (d: any, i: number, arr: any[]) => {
+					if (arr.length - 2 == i) {
+						return 1;
+					}
+					return 0;
+				})
 
 			// Store reference for function access
 			attrs.cornerSliceElements = cornerSliceElements;
@@ -738,7 +654,6 @@ function Chart() {
 				.attrTween("d", arcTweenCorner)
 				.on('end', function (d: any) {
 					this._current = d;
-					sortElements();
 				})
 
 			// Create corner slice surface paths
@@ -752,6 +667,13 @@ function Chart() {
 				.on('mouseenter', onSliceMouseEnter)
 				.on('mouseleave', onSliceMouseLeave)
 
+				.attr('opacity', (d: any, i: number, arr: any[]) => {
+					if (0 == i) {
+						return 1;
+					}
+					return 0;
+				})
+
 			// Store reference for function access
 			attrs.cornerSliceSurfaceElements = cornerSliceSurfaceElements;
 
@@ -762,29 +684,9 @@ function Chart() {
 				.attrTween("d", arcTweenCornerSurface)
 				.on('end', function (d: any) {
 					this._current = d;
-					sortElements();
 				})
 
-			// Creating inner slice custom paths
-			const pieInners = slices
-				.patternify({ tag: 'path', selector: 'innerSlice', data: _data.map((d: any) => Object.assign({}, d)) })
-				.style("fill", function (d: any) { return d3.hsl(d.data.color).darker(2).toString() })
-				.attr("d", function (d: any) { return pieInner(d, rx + 0.5, ry + 0.5, h, ir); })
-				.classed('slice-sort', true)
-				.style("stroke", function (d: any) { return d3.hsl(d.data.color).darker(2).toString() })
-				.on('click', onSliceClick)
-				.on('mouseenter', onSliceMouseEnter)
-				.on('mouseleave', onSliceMouseLeave)
 
-			// Transition  inner  elements
-			pieInners
-				.transition()
-				.duration(attrs.duration)
-				.attrTween("d", arcTweenInner)
-				.on('end', function (d: any) {
-					this._current = d;
-					sortElements();
-				})
 
 			// Draw outer slices
 			const outerSlices = outerSliceWrapper
@@ -841,7 +743,7 @@ function Chart() {
 
 			// Transition  text  elements
 			slicesTexts.transition()
-				.duration(750)
+				.duration(attrs.duration)
 				.attrTween("transform", textTweenTransform)
 
 		}
