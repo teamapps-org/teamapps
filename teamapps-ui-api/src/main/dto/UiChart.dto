@@ -33,8 +33,7 @@ class UiPieChart extends AbstractUiChart {
 	List<UiChartNamedDataPoint> dataPoints;
 
 	command setDataPoints(List<UiChartNamedDataPoint> dataPoints, int animationDuration);
-
-	event dataPointClicked();
+	event dataPointClicked(String dataPointName);
 }
 
 enum UiDataPointWeighting {
