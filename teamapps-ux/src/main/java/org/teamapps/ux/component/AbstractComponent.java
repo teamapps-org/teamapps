@@ -117,7 +117,12 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
-	protected abstract void doDestroy();
+	/**
+	 * Override this method to release resources whenever this component gets destroyed
+	 */
+	protected void doDestroy() {
+		// do nothing
+	}
 
 	@Override
 	public final void render() {

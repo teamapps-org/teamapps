@@ -34,6 +34,7 @@ import * as d3 from "d3"
 import { EventFactory } from "../generated/EventFactory";
 import { UiColorConfig } from '../generated/UiColorConfig';
 import { UiDataPointWeighting } from '../generated/UiDataPointWeighting';
+import {UiChartLegendStyle} from "../generated/UiChartLegendStyle";
 
 export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieChartCommandHandler, UiPieChartEventSource {
 
@@ -63,8 +64,6 @@ export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieCh
 			.render();
 	}
 	getMainDomElement(): JQuery<HTMLElement> {
-
-		//this.onDataPointClicked.fire(EventFactory.createUiPieChart_DataPointClickedEvent(this.getId(), "asdlfj"))
 		return $(this.chart.container());
 	}
 
@@ -89,7 +88,49 @@ export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieCh
 		this.chart
 			.data(this.config)
 			.duration(animationDuration)
-			.render()
+			.render();
+	}
+
+	setDataPointWeighting(dataPointWeighting: UiDataPointWeighting): void {
+		this.config.dataPointWeighting = dataPointWeighting;
+		this.chart.data(this.config)
+			.duration(this.config.initialAnimationDuration)
+			.render();
+	}
+
+	setHeight3D(height3D: number): void {
+		this.config.height3D = height3D;
+		this.chart.data(this.config)
+			.duration(this.config.initialAnimationDuration)
+			.render();
+	}
+
+	setInnerRadiusProportion(innerRadiusProportion: number): void {
+		this.config.innerRadiusProportion = innerRadiusProportion;
+		this.chart.data(this.config)
+			.duration(this.config.initialAnimationDuration)
+			.render();
+	}
+
+	setLegendStyle(legendStyle: UiChartLegendStyle): void {
+		this.config.legendStyle = legendStyle;
+		this.chart.data(this.config)
+			.duration(this.config.initialAnimationDuration)
+			.render();
+	}
+
+	setRotation3D(rotation3D: number): void {
+		this.config.rotation3D = rotation3D;
+		this.chart.data(this.config)
+			.duration(this.config.initialAnimationDuration)
+			.render();
+	}
+
+	setRotationClockwise(rotationClockwise: number): void {
+		this.config.rotationClockwise = rotationClockwise;
+		this.chart.data(this.config)
+			.duration(this.config.initialAnimationDuration)
+			.render();
 	}
 }
 
