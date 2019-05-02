@@ -1,0 +1,50 @@
+class UiTreeGraph extends UiComponent {
+    required List<UiTreeGraphNode> nodes;
+
+    command setZoomFactor(float zoomFactor); // > 0
+    command addNode(UiTreeGraphNode node);
+    command removeNode(String nodeId);
+    command setExpanded(String nodeId, boolean expanded);
+    
+    event handleNodeClick(String nodeId);
+
+}
+
+class UiTreeGraphNode {
+    required String nodeId;
+    String parentNodeId;
+    required int width;
+    required int height;
+    UiColor backgroundColor = new UiColor(255, 255, 255); // rgba
+    UiColor borderColor = new UiColor(100, 100, 100); // rgba
+    float borderWidth = 1;
+    float borderRadius = 0;
+
+    UiTreeGraphNodeImage nodeImage;
+    UiTreeGraphNodeIcon nodeIcon;
+
+    UiTemplate template;     // will get embedded using foreignObject
+    UiClientRecord record;   // will get embedded using foreignObject
+
+    UiColor connectorLineColor = new UiColor(100, 100, 100); // line to parent node
+    int connectorLineWidth;
+    String dashArray;
+    boolean expanded;
+}
+
+class UiTreeGraphNodeImage {
+    required String url;
+    required int width;
+    required int height;
+    int centerTopDistance; //top distance of image center from top-left corner of node, e.g. -10 and height 30 means image will be 25 pixels above the top line of the node
+    int centerLeftDistance; //left distance of image center from top-left corner of node
+    enum { ORIGINAL, ROUNDED, CIRCLE } cornerShape = CornerShape.ROUNDED;
+    boolean shadow = false;
+    float borderWidth = 0;
+    UiColor borderColor = new UiColor(100, 100, 100);
+}
+
+class UiTreeGraphNodeIcon {
+    required String icon;
+    required int size; //width = height
+}
