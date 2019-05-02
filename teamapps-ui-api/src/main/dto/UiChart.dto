@@ -19,8 +19,10 @@
  */
 
 class AbstractUiChart extends UiComponent {
-	int initialAnimationDuration = 200;
+	long initialAnimationDuration = 200;
 	UiChartLegendStyle legendStyle = UiChartLegendStyle.INLINE;
+
+	command setLegendStyle(UiChartLegendStyle legendStyle);
 }
 
 class UiPieChart extends AbstractUiChart {
@@ -32,7 +34,13 @@ class UiPieChart extends AbstractUiChart {
 
 	List<UiChartNamedDataPoint> dataPoints;
 
-	command setDataPoints(List<UiChartNamedDataPoint> dataPoints, int animationDuration);
+	command setDataPointWeighting(UiDataPointWeighting dataPointWeighting);
+	command setRotation3D(float rotation3D);
+	command setHeight3D(float height3D);
+	command setRotationClockwise(float rotationClockwise);
+	command setInnerRadiusProportion(float innerRadiusProportion);
+	command setDataPoints(List<UiChartNamedDataPoint> dataPoints, long animationDuration);
+
 	event dataPointClicked(String dataPointName);
 }
 
