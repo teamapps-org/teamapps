@@ -37,11 +37,13 @@
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-icon</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-common</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
