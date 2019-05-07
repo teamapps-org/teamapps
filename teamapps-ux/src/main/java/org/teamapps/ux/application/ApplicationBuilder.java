@@ -37,6 +37,25 @@ public interface ApplicationBuilder {
 		};
 	}
 
+	static ApplicationBuilder create(Supplier<Application> applicationSupplier, ApplicationInfo applicationInfo, Supplier<Boolean> accessDecider) {
+		return new ApplicationBuilder() {
+			@Override
+			public ApplicationInfo getApplicationInfo() {
+				return applicationInfo;
+			}
+
+			@Override
+			public Application createApplication(ApplicationDesktop applicationDesktop) {
+				return applicationSupplier.get();
+			}
+
+			@Override
+			public boolean isApplicationAccessible() {
+				return accessDecider.get();
+			}
+		};
+	}
+
 	default boolean isApplicationAccessible() {
 		return true;
 	}
