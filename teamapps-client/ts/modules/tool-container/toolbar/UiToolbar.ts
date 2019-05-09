@@ -155,11 +155,11 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public addButtonGroup(groupConfig: UiToolbarButtonGroupConfig) {
-		let changesFromEmptyToNonEmpty = this.empty && groupConfig != null;
 		const existingButtonGroup = this.buttonGroupsById.getValue(groupConfig.groupId);
 		if (existingButtonGroup) {
 			this.removeButtonGroup(groupConfig.groupId);
 		}
+		let emptyStateChanges = this.empty && groupConfig != null;
 
 		const buttonGroup = new UiToolbarButtonGroup(groupConfig, this, this._context);
 		buttonGroup.onButtonClicked.addListener(e => {
@@ -190,7 +190,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 		}
 		this.updateButtonOverflow();
 
-		if (changesFromEmptyToNonEmpty) {
+		if (emptyStateChanges) {
 			this.onEmptyStateChanged.fire(false);
 		}
 	}
