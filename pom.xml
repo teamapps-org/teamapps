@@ -350,7 +350,7 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <tagNameFormat>teamapps-@{version}</tagNameFormat>
                     <releaseProfiles>javadoc-jar,sources-jar,license-handling</releaseProfiles>
-                    <pushChanges>false</pushChanges>
+                    <pushChanges>true</pushChanges>
                 </configuration>
             </plugin>
             <plugin>
