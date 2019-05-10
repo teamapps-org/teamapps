@@ -327,7 +327,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		}
 	}
 
-	public setTabContent(tabId: string, content: UiComponent<UiComponentConfig>) {
+	public setTabContent(tabId: string, content: UiComponent<UiComponentConfig>, fireLazyLoadEventIfNeeded = false) {
 		const tab = this.getTabById(tabId);
 		const $tabContentContainer = tab.$contentContainer;
 		if (tab.contentComponent) {
@@ -346,7 +346,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		if (this.selectedTab && this.selectedTab.config.tabId === tabId) {
 			if (tab.contentComponent) {
 				tab.contentComponent.attachedToDom = this.attachedToDom;
-			} else if (tab.config.lazyLoading) {
+			} else if (tab.config.lazyLoading && fireLazyLoadEventIfNeeded) {
 				this.onTabNeedsRefresh.fire(EventFactory.createUiTabPanel_TabNeedsRefreshEvent(this.getId(), tabId));
 			}
 		}
@@ -387,7 +387,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		} else {
 			this.leftTabs.push(tab);
 		}
-		this.setTabContent(tabConfig.tabId, tabConfig.content);
+		this.setTabContent(tabConfig.tabId, tabConfig.content, true);
 		if (select || this.getAllTabs().length === 1) {
 			this.selectTab(tabConfig.tabId, false);
 		}

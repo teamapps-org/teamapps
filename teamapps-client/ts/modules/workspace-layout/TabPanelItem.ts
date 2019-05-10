@@ -165,7 +165,7 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 	}
 
 	public updateTab(viewName: string, component: UiComponent<UiComponentConfig>) {
-		this.component.setTabContent(viewName, component);
+		this.component.setTabContent(viewName, component, true);
 		this.updateWindowToolButtons();
 	}
 
