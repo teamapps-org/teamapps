@@ -38,6 +38,7 @@ public class ClientInfo {
 	private final String userAgent;
 	private final String clientUrl;
 	private final Map<String, Object> clientParameters;
+	private ClientUserAgent userAgentData;
 
 	public ClientInfo(String ip, ClientGeoIpInfo geoIpInfo, int screenWidth, int screenHeight, int viewPortWidth, int viewPortHeight,
 	                  String preferredLanguageIso, boolean highDensityScreen, String timeZone, int timeZoneOffsetMinutes, List<String> clientTokens, String userAgent,
@@ -120,5 +121,13 @@ public class ClientInfo {
 
 	public Map<String, Object> getClientParameters() {
 		return clientParameters;
+	}
+
+	public ClientUserAgent getUserAgentData() {
+		return userAgentData;
+	}
+
+	public void setUserAgentData(ClientUserAgent userAgentData) {
+		this.userAgentData = userAgentData;
 	}
 }
