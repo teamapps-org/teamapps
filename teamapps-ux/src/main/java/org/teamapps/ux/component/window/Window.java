@@ -50,9 +50,16 @@ public class Window extends Panel {
 	}
 
 	public Window(Icon icon, String title, int width, int height, Component content) {
+		this(icon, title, content, width, height, false, false, false);
+	}
+
+	public Window(Icon icon, String title, Component content, int width, int height, boolean closeable, boolean closeOnEscape, boolean closeOnClickOutside) {
 		super(icon, title, content);
 		this.width = width;
 		this.height = height;
+		this.closeable = closeable;
+		this.closeOnEscape = closeOnEscape;
+		this.closeOnClickOutside = closeOnClickOutside;
 	}
 
 	@Override
