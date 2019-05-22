@@ -58,6 +58,10 @@ public class Dialogue extends Window {
 		return dialogue.onResult;
 	}
 
+	public static Dialogue createOkCancel(Icon icon, String title) {
+		return createOkCancel(icon, title, title);
+	}
+
 	public static Dialogue createOkCancel(Icon icon, String title, String text) {
 		Dialogue dialogue = new Dialogue();
 		dialogue.setValues(icon, title, text);
@@ -65,6 +69,10 @@ public class Dialogue extends Window {
 		dialogue.setTitle(title);
 		dialogue.setModal(true);
 		return dialogue;
+	}
+
+	public static Event<Boolean> showOk(Icon icon, String title) {
+		return showOk(icon, title, title);
 	}
 
 	public static Event<Boolean> showOk(Icon icon, String title, String text) {
