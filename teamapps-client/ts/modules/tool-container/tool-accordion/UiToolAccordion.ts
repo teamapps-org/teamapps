@@ -19,7 +19,6 @@
  */
 import * as $ from "jquery";
 import * as log from "loglevel";
-import {UiTextCellTemplateConfig} from "../../../generated/UiTextCellTemplateConfig";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGroupConfig";
@@ -37,6 +36,7 @@ import {createUiColorCssString} from "../../util/CssFormatUtil";
 import {UiComponent} from "../../UiComponent";
 import {UiItemView} from "../../UiItemView";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
+import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
 
 interface Button {
 	config: UiToolbarButtonConfig;
@@ -262,7 +262,7 @@ class UiButtonGroup {
 			config: buttonConfig,
 			$buttonWrapper: $buttonWrapper,
 			$button: $button,
-			optimizedWidth: AbstractUiToolContainer.optimizeButtonWidth($buttonWrapper, $button, (buttonConfig.template as UiTextCellTemplateConfig).maxHeight || UiToolAccordion.DEFAULT_TOOLBAR_MAX_HEIGHT),
+			optimizedWidth: AbstractUiToolContainer.optimizeButtonWidth($buttonWrapper, $button, (buttonConfig.template as UiGridTemplateConfig).maxHeight || UiToolAccordion.DEFAULT_TOOLBAR_MAX_HEIGHT),
 			visible: buttonConfig.visible,
 			$dropDownCaret: $buttonWrapper.find(".toolbar-button-caret"),
 			hasDropDown: buttonConfig.hasDropDown,

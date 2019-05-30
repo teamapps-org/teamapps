@@ -22,13 +22,13 @@ import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {UiToolbar} from "./UiToolbar";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
-import {UiTextCellTemplateConfig} from "../../../generated/UiTextCellTemplateConfig";
 import {enterFullScreen, exitFullScreen, isFullScreen} from "../../Common";
 import {createUiDropDownButtonClickInfoConfig, UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
 import {UiComponent} from "../../UiComponent";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiItemView} from "../../UiItemView";
 import * as $ from "jquery";
+import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
 
 export class UiToolbarButton {
 
@@ -54,7 +54,7 @@ export class UiToolbarButton {
 		let renderer = context.templateRegistry.createTemplateRenderer(config.template);
 		this.$button = $(renderer.render(config.recordData)).prependTo(this.$buttonWrapper);
 		this.$dropDownCaret = this.$buttonWrapper.find(".toolbar-button-caret");
-		this.optimizedWidth = AbstractUiToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiTextCellTemplateConfig).maxHeight || UiToolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);
+		this.optimizedWidth = AbstractUiToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplateConfig).maxHeight || UiToolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);
 		this.setVisible(config.visible);
 		this.setHasDropDown(config.hasDropDown);
 		this.setDropDownComponent(config.dropDownComponent);
