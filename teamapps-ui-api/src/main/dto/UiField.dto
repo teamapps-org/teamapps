@@ -250,6 +250,52 @@ enum UiFileFieldDisplayType {
 	LIST, FLOATING
 }
 
+class UiSimpleFileField extends UiField {
+	String browseButtonIcon;
+	String browseButtonCaption = "Select";
+	String uploadUrl = "/upload"; // May point anywhere.
+	long maxBytesPerFile = 5000000;
+	String fileTooLargeMessage = "File too large!";
+	String uploadErrorMessage = "Error while transmitting file...";
+	int maxFiles = 0; // the max number of files to be uploaded in total for this field
+	UiFileFieldDisplayType displayMode = UiFileFieldDisplayType.LIST;
+
+	List<UiFileItem> fileItems;
+
+	event uploadInitiatedByUser(String uuid, String fileName, String mimeType, long sizeInBytes);
+    event uploadTooLarge(String fileItemUuid);
+	event uploadStarted(String fileItemUuid);
+	event uploadCanceled(String fileItemUuid);
+	event uploadFailed(String fileItemUuid);
+	event uploadSuccessful(String fileItemUuid, String uploadedFileUuid);
+	event fileItemClicked(String fileItemUuid);
+	event fileItemRemoved(String fileItemUuid);
+
+	command addFileItem(UiFileItem item);
+	command updateFileItem(UiFileItem item);
+	command removeFileItem(String itemUuid);
+
+	command setBrowseButtonIcon(String browseButtonIcon);
+	command setBrowseButtonCaption(String browseButtonCaption);
+	command setUploadUrl(String uploadUrl);
+	command setMaxBytesPerFile(long maxBytesPerFile);
+	command setFileTooLargeMessage(String fileTooLargeMessage);
+	command setUploadErrorMessage(String uploadErrorMessage);
+	command setMaxFiles(int maxFiles);
+	command setDisplayMode(UiFileFieldDisplayType displayType);
+}
+
+@TypeScriptFactory
+class UiFileItem {
+	String uuid;
+	String icon;
+	String thumbnail;
+	String fileName;
+	String description;
+	long size;
+	String linkUrl; // If not null, the click triggers a new tab/window to open with the url. If null, nothing happens on click, except the fileItemClicked event being triggered.
+}
+
 class UiCheckBox extends UiField {
 	String caption; // displayed on the right side of the checkbox
 	UiColor backgroundColor = new UiColor(255, 255, 255);

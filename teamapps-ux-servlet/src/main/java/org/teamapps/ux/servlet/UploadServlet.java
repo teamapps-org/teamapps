@@ -59,6 +59,11 @@ public class UploadServlet extends HttpServlet {
 	}
 
 	@Override
+	protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+	}
+
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Collection<Part> parts = request.getParts();
 		ArrayList<String> uuids = new ArrayList<>();
@@ -84,6 +89,7 @@ public class UploadServlet extends HttpServlet {
 		}
 
 		response.setStatus(200);
+		response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
 		response.setContentType("application/json");
 		response.getWriter().println("[" + uuids.stream()
 				.map(uuid -> "\"" + uuid + "\"")
