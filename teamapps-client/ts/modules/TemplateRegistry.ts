@@ -23,9 +23,7 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiGridTemplateConfig} from "../generated/UiGridTemplateConfig";
 import {createGridTemplateRenderer} from "./util/UiGridTemplates";
-import {createTextCellTemplateRenderer} from "./util/UiTextCellTemplates";
 import {UiTemplateReferenceConfig} from "../generated/UiTemplateReferenceConfig";
-import {UiTextCellTemplateConfig} from "../generated/UiTextCellTemplateConfig";
 import {wrapWithDefaultTagWrapper} from "trivial-components";
 import {Renderer} from "./Common";
 
@@ -77,8 +75,6 @@ export class TemplateRegistry {
 	public createTemplateRenderer(template: UiTemplateConfig, idPropertyName?: string): Renderer {
 		if (isTemplateReference(template)) {
 			return this.getTemplateRendererByName(template.templateId);
-		} else if (isTextCellTemplate(template)) {
-			return createTextCellTemplateRenderer(template, this.context, idPropertyName);
 		} else if (isGridTemplate(template)) {
 			return createGridTemplateRenderer(template as UiGridTemplateConfig, this.context, idPropertyName);
 		}
@@ -107,10 +103,6 @@ export class TemplateRegistry {
 
 export function isTemplateReference(template: UiTemplateConfig): template is UiTemplateReferenceConfig {
 	return template._type === "UiTemplateReference";
-}
-
-export function isTextCellTemplate(template: any): template is UiTextCellTemplateConfig {
-	return template._type === 'UiTextCellTemplate';
 }
 
 export function isGridTemplate(template: UiTemplateConfig): template is UiGridTemplateConfig {

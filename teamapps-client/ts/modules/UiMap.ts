@@ -212,49 +212,49 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 					maxZoom: 18,
 					id: 'mapbox.streets',
 					accessToken: mapBoxAccessToken
-				});
+				} as any);
 				break;
 			case UiMapType.MAP_BOX_STREETS_BASIC:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.streets-basic',
 					accessToken: mapBoxAccessToken
-				});
+				} as any);
 				break;
 			case UiMapType.MAP_BOX_STREETS_SATELLITE:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.streets-satellite',
 					accessToken: mapBoxAccessToken
-				});
+				} as any);
 				break;
 			case UiMapType.MAP_BOX_SATELLITE:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.satellite',
 					accessToken: mapBoxAccessToken
-				});
+				} as any);
 				break;
 			case UiMapType.MAP_BOX_RUN_BIKE_HIKE:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.run-bike-hike',
 					accessToken: mapBoxAccessToken
-				});
+				} as any);
 				break;
 			case UiMapType.MAP_BOX_OUTDOORS:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.outdoors',
 					accessToken: mapBoxAccessToken
-				});
+				} as any);
 				break;
 			case UiMapType.MAP_BOX_EMERALD:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.emerald',
 					accessToken: mapBoxAccessToken
-				});
+				} as any);
 				break;
 			case UiMapType.MAP_QUEST_OSM:
 				layer = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {
@@ -276,7 +276,7 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 					format: 'jpg',
 					time: '',
 					tilematrixset: 'GoogleMapsCompatible_Level'
-				});
+				} as any);
 				break;
 			case UiMapType.OSM_TOPO_MAP:
 				layer = L.tileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {

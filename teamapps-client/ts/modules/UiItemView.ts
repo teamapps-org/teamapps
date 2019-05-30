@@ -28,11 +28,10 @@ import {UiItemView_ItemClickedEvent, UiItemViewCommandHandler, UiItemViewConfig,
 import {UiItemViewFloatStyle} from "../generated/UiItemViewFloatStyle";
 import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {isGridTemplate, isTextCellTemplate} from "./TemplateRegistry";
+import {isGridTemplate} from "./TemplateRegistry";
 import {UiItemJustification} from "../generated/UiItemJustification";
 import {UiItemViewItemBackgroundMode} from "../generated/UiItemViewItemBackgroundMode";
 import * as log from "loglevel";
-import {UiTextCellTemplateElementConfig} from "../generated/UiTextCellTemplateElementConfig";
 import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClientRecordConfig";
 import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
 
@@ -240,11 +239,7 @@ class ItemGroup {
 		}
 
 		let relevantFieldNames: string[];
-		if (isTextCellTemplate(this.itemRenderer.template)) {
-			relevantFieldNames = this.itemRenderer.template.textElements.map((e: UiTextCellTemplateElementConfig) => {
-				return e.propertyName;
-			});
-		} else if (isGridTemplate(this.itemRenderer.template)) {
+		if (isGridTemplate(this.itemRenderer.template)) {
 			relevantFieldNames = this.itemRenderer.template.elements
 				.filter(e => e._type === "UiTextElement")
 				.map(e => e.dataKey);
