@@ -19,7 +19,7 @@
     "build": "cross-env webpack -p --config build/webpack.prod.conf.js --mode production"
   },
   "devDependencies": {
-    "autoprefixer": "latest",
+    "autoprefixer": "^9.5.1",
     "awesome-typescript-loader": "^5.0.0",
     "bower": "1.x",
     "clean-webpack-plugin": "^0.1.19",
@@ -35,7 +35,7 @@
     "less": "3.9.0",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.0",
-    "multipipe": "latest",
+    "multipipe": "^3.0.1",
     "node-notifier": "^5.2.1",
     "optimize-css-assets-webpack-plugin": "^4.0.1",
     "ora": "^2.0.0",

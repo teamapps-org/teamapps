@@ -108,6 +108,7 @@ export {UiNumberField} from "./formfield/UiNumberField";
 export {UiImageField} from "./formfield/UiImageField";
 export {UiLabel} from "./formfield/UiLabel";
 export {UiFileField} from "./formfield/UiFileField";
+export {UiSimpleFileField} from "./formfield/UiSimpleFileField";
 export {UiMultiLineTextField} from "./formfield/UiMultiLineTextField";
 export {UiPasswordField} from "./formfield/UiPasswordField";
 export {UiTagComboBox} from "./formfield/UiTagComboBox";
