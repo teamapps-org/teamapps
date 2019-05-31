@@ -17,12 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiField} from "./UiField";
 import {UiMultiLineTextFieldConfig, UiMultiLineTextFieldCommandHandler, UiMultiLineTextFieldEventSource} from "../../generated/UiMultiLineTextFieldConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {Constants, escapeHtml, hasVerticalScrollBar} from "../Common";
+import {Constants, escapeHtml, hasVerticalScrollBar, parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
@@ -36,23 +35,23 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, 250);
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, 250);
 
-	private $wrapper: JQuery;
-	private $field: JQuery;
-	private $clearButton: JQuery;
+	private $wrapper: HTMLElement;
+	private $field: HTMLTextAreaElement;
+	private $clearButton: HTMLElement;
 	private showClearButton: boolean;
 	private minHeight: number;
 	private maxHeight: number;
 
 
 	protected initialize(config: UiMultiLineTextFieldConfig, context: TeamAppsUiContext) {
-		this.$wrapper = $(`<div class="UiMultiLineTextField teamapps-input-wrapper field-border field-border-glow field-background">
+		this.$wrapper = parseHtml(`<div class="UiMultiLineTextField teamapps-input-wrapper field-border field-border-glow field-background">
 	<textarea></textarea>
-	<div class="clear-button tr-remove-button"/>  
+	<div class="clear-button tr-remove-button"></div>  
 </div>`);
-		this.$field = this.$wrapper.find("textarea");
-		this.$clearButton = this.$wrapper.find('.clear-button');
-		this.$clearButton.click(() => {
-			this.$field.val("");
+		this.$field = this.$wrapper.querySelector(":scope textarea");
+		this.$clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
+		this.$clearButton.addEventListener('click',() => {
+			this.$field.value = "";
 			this.fireTextInput();
 			this.commit();
 			this.updateClearButton();
@@ -62,21 +61,21 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		this.setMaxCharacters(config.maxCharacters);
 		this.setShowClearButton(config.showClearButton);
 
-		this.$field.on('focus', (e) => {
+		this.$field.addEventListener('focus', (e) => {
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 			}
 		});
-		this.$field.on('blur', (e) => {
+		this.$field.addEventListener('blur', (e) => {
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
 		});
-		this.$field.on("input", () => {
+		this.$field.addEventListener("input", () => {
 			this.fireTextInput();
 			this.updateClearButton();
 		});
-		this.$field.on("keydown", (e) => {
+		this.$field.addEventListener("keydown", (e) => {
 			if (e.keyCode === keyCodes.escape) {
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
@@ -91,12 +90,12 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		this.setMinHeight(config.minHeight);
 		this.setMaxHeight(config.maxHeight);
 
-		this.$field.on('input', () => this.updateTextareaHeight());
+		this.$field.addEventListener('input', () => this.updateTextareaHeight());
 		this.updateTextareaHeight();
 	}
 
 	private fireTextInput() {
-		this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.$field.val().toString()));
+		this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.$field.value));
 	}
 
 	isValidData(v: string): boolean {
@@ -105,12 +104,16 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 
 	@executeWhenAttached(true)
 	private updateTextareaHeight() {
-		this.$field[0].style.height = '0px';
-		this.$field[0].style.height = (Math.max(this.minHeight - 2, Math.min(this.$field[0].scrollHeight, this.maxHeight - 2))) + 'px';
+		this.$field.style.height = '0px';
+		this.$field.style.height = (Math.max(this.minHeight - 2, Math.min(this.$field.scrollHeight, this.maxHeight - 2))) + 'px';
 	}
 
 	setMaxCharacters(maxCharacters: number): void {
-		this.$field.attr('maxlength', maxCharacters || "");
+		if (maxCharacters) {
+			this.$field.maxLength = maxCharacters;
+		} else {
+			this.$field.removeAttribute("maxLength");
+		}
 	}
 
 	setShowClearButton(showClearButton: boolean): void {
@@ -120,31 +123,31 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 
 	@executeWhenAttached()
 	private updateClearButton() {
-		this.$wrapper.toggleClass("clearable", !!(this.showClearButton && this.$field.val()));
-		this.$clearButton.css("right", hasVerticalScrollBar(this.$field[0]) ? Constants.SCROLLBAR_WIDTH + "px" : 0);
+		this.$wrapper.classList.toggle("clearable", !!(this.showClearButton && this.$field.value));
+		this.$clearButton.style.right = hasVerticalScrollBar(this.$field) ? Constants.SCROLLBAR_WIDTH + "px" : "0";
 	}
 
 	setEmptyText(emptyText: string): void {
-		this.$field.attr("placeholder", emptyText || "");
+		this.$field.placeholder = emptyText || '';
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return this.$field;
 	}
 
 	protected displayCommittedValue(): void {
 		let value = this.getCommittedValue();
-		this.$field.val(value || "");
+		this.$field.value = value || "";
 		this.updateClearButton();
 		this.updateTextareaHeight();
 	}
 
 	public getTransientValue(): string {
-		return this.$field.val().toString();
+		return this.$field.value;
 	}
 
 	focus(): void {
@@ -156,7 +159,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		let transientValueString = (transientValue && transientValue) || '';
 		this.setCommittedValue(transientValueString + s);
 		if (scrollToBottom) {
-			this.$wrapper.scrollTop(10000000);
+			this.$wrapper.scrollTop = 10000000;
 		}
 	}
 
@@ -178,13 +181,13 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 
 	public setMinHeight(minHeight: number) {
 		this.minHeight = minHeight;
-		this.$wrapper.css("min-height", minHeight ? minHeight + "px" : "");
+		this.$wrapper.style.minHeight = minHeight ? minHeight + "px" : "";
 		this.updateTextareaHeight();
 	}
 
 	public setMaxHeight(maxHeight: number) {
 		this.maxHeight = maxHeight || Number.MAX_SAFE_INTEGER;
-		this.$wrapper.css("max-height", maxHeight ? maxHeight + "px" : "");
+		this.$wrapper.style.maxHeight = maxHeight ? maxHeight + "px" : "";
 		this.updateTextareaHeight();
 	}
 }

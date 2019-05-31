@@ -17,12 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiField} from "./UiField";
 import {UiFileFieldDisplayType} from "../../generated/UiFileFieldDisplayType";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {generateUUID, humanReadableFileSize, Renderer} from "../Common";
+import {generateUUID, humanReadableFileSize, parseHtml, prependChild, removeClassesByFunction, Renderer} from "../Common";
 import {
 	UiFileField_FileItemClickedEvent,
 	UiFileField_FileItemRemoveButtonClickedEvent,
@@ -59,10 +58,10 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	public readonly onUploadSuccessful: TeamAppsEvent<UiFileField_UploadSuccessfulEvent> = new TeamAppsEvent(this);
 	public readonly onUploadTooLarge: TeamAppsEvent<UiFileField_UploadTooLargeEvent> = new TeamAppsEvent(this);
 
-	private $wrapper: JQuery;
-	private $uploadButton: JQuery;
-	private $fileInput: JQuery;
-	private $uploadButtonTemplate: JQuery;
+	private $wrapper: HTMLElement;
+	private $uploadButton: HTMLElement;
+	private $fileInput: HTMLInputElement;
+	private $uploadButtonTemplate: HTMLElement;
 	private fileItems: UploadItem[];
 	private itemRenderer: Renderer;
 
@@ -72,56 +71,55 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	private uploadButtonData: any;
 	private uploadButtonTemplate: UiTemplateConfig;
 	private uploadUrl: string;
-	private $fileList: JQuery;
+	private $fileList: HTMLElement;
 
 	protected initialize(config: UiFileFieldConfig, context: TeamAppsUiContext) {
 		this.fileItems = [];
 		let uuid = "ui-file-field" + generateUUID();
-		this.$wrapper = $(`<div class="UiFileField drop-zone" id="${uuid}">
+		this.$wrapper = parseHtml(`<div class="UiFileField drop-zone" id="${uuid}">
         <div class="list"></div>
         <div class="upload-button-wrapper field-border field-border-glow field-background" tabindex="0">
             <div class="upload-button-template"></div>
-            <input class="file-input" type="file" multiple tabindex="-1">
+            <input class="file-input" type="file" multiple tabindex="-1"></input>
         </div>
 </div>`);
 
-		this.$wrapper
-			.on("dragover", (e) => {
-				this.$wrapper.addClass("drop-zone-active");
-				// preventDefault() is important as it indicates that the drop is possible!!! see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Drag_operations#droptargets
-				e.preventDefault();
-			})
-			.on("dragleave", (e) => {
-				this.$wrapper.removeClass("drop-zone-active");
-				e.preventDefault();
-			})
-			.on("dragend", (e) => {
-				this.$wrapper.removeClass("drop-zone-active");
-				e.preventDefault();
-			});
-		this.$wrapper[0].ondrop = (e) => { // I don't know why I cannot just register this the same way as the other handlers...
+		this.$wrapper.addEventListener("dragover", (e) => {
+			this.$wrapper.classList.add("drop-zone-active");
+			// preventDefault() is important as it indicates that the drop is possible!!! see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Drag_operations#droptargets
+			e.preventDefault();
+		});
+		this.$wrapper.addEventListener("dragleave", (e) => {
+			this.$wrapper.classList.remove("drop-zone-active");
+			e.preventDefault();
+		});
+		this.$wrapper.addEventListener("dragend", (e) => {
+			this.$wrapper.classList.remove("drop-zone-active");
+			e.preventDefault();
+		});
+		this.$wrapper.ondrop = (e) => { // I don't know why I cannot just register this the same way as the other handlers...
 			e.stopPropagation();
 			e.preventDefault();
-			this.$wrapper.removeClass("drop-zone-active");
+			this.$wrapper.classList.remove("drop-zone-active");
 			const files = e.dataTransfer.files;
 			this.handleFiles(files);
 		};
 
-		this.$uploadButtonTemplate = this.$wrapper.find('.upload-button-template');
-		this.$uploadButton = this.$wrapper.find('.upload-button-wrapper')
-			.keydown(e => {
-				if (e.keyCode === keyCodes.enter || e.keyCode === keyCodes.space) {
-					this.$fileInput.click();
-					return false; // no scrolling when space is pressed!
-				}
-			});
-		this.$fileInput = this.$wrapper.find('.file-input');
-		this.$fileInput.change(() => {
-			const files = (<HTMLInputElement> this.$fileInput[0]).files;
+		this.$uploadButtonTemplate = this.$wrapper.querySelector<HTMLElement>(':scope.upload-button-template');
+		this.$uploadButton = this.$wrapper.querySelector<HTMLElement>(':scope.upload-button-wrapper');
+		this.$uploadButton.addEventListener('keydown', e => {
+			if (e.keyCode === keyCodes.enter || e.keyCode === keyCodes.space) {
+				this.$fileInput.click();
+				return false; // no scrolling when space is pressed!
+			}
+		});
+		this.$fileInput = this.$wrapper.querySelector<HTMLInputElement>(':scope.file-input');
+		this.$fileInput.addEventListener('change', () => {
+			const files = (<HTMLInputElement>this.$fileInput).files;
 			this.handleFiles(files);
 		});
 
-		this.$fileList = this.$wrapper.find('.list');
+		this.$fileList = this.$wrapper.querySelector<HTMLElement>(':scope .list');
 
 		this.setItemTemplate(config.itemTemplate);
 		this.setMaxBytesPerFile(config.maxBytesPerFile);
@@ -144,8 +142,8 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 
 	setDisplayType(displayType: UiFileFieldDisplayType): void {
 		this.displayType = displayType;
-		this.$wrapper.toggleClass("float-style-vertical-list", displayType === UiFileFieldDisplayType.LIST);
-		this.$wrapper.toggleClass("float-style-horizontal", displayType === UiFileFieldDisplayType.FLOATING);
+		this.$wrapper.classList.toggle("float-style-vertical-list", displayType === UiFileFieldDisplayType.LIST);
+		this.$wrapper.classList.toggle("float-style-horizontal", displayType === UiFileFieldDisplayType.FLOATING);
 	}
 
 	setMaxFiles(maxFiles: number): void {
@@ -158,19 +156,22 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	}
 
 	public setShowEntriesAsButtonsOnHover(showEntriesAsButtonsOnHover: boolean): void {
-		this.$wrapper.toggleClass("show-entries-as-buttons-on-hover", showEntriesAsButtonsOnHover);
+		this.$wrapper.classList.toggle("show-entries-as-buttons-on-hover", showEntriesAsButtonsOnHover);
 	}
 
 	public setUploadButtonData(uploadButtonData: any): void {
 		this.uploadButtonData = uploadButtonData;
-		this.$uploadButtonTemplate[0].innerHTML = '';
-		this.$uploadButtonTemplate.append($(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData)));
+		this.$uploadButtonTemplate.innerHTML = '';
+		this.$uploadButtonTemplate.appendChild(parseHtml(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData)));
 	}
 
 	public setUploadButtonTemplate(uploadButtonTemplate: UiTemplateConfig): void {
 		this.uploadButtonTemplate = uploadButtonTemplate;
-		this.$uploadButtonTemplate[0].innerHTML = '';
-		this.$uploadButtonTemplate.append($(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData)));
+		this.$uploadButtonTemplate.innerHTML = '';
+		const uploadButtonContent = parseHtml(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData));
+		if (uploadButtonContent) {
+			this.$uploadButtonTemplate.appendChild(uploadButtonContent);
+		}
 	}
 
 	public setUploadUrl(uploadUrl: string): void {
@@ -187,7 +188,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 		for (let i = 0; i < numberOfFilesToAdd; i++) {
 			const file = files[i];
 			let fileItem = this.createFileItem();
-			fileItem.getMainDomElement().appendTo(this.$fileList);
+			this.$fileList.appendChild(fileItem.getMainDomElement());
 			this.fileItems.push(fileItem);
 			fileItem.upload(file);
 			this.onUploadStarted.fire(EventFactory.createUiFileField_UploadStartedEvent(this.getId(), fileItem.uuid, file.name, file.type, file.size, this.numberOfUploadingFileItems));
@@ -206,18 +207,18 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	}
 
 	private resetFileInput() {
-		this.$fileInput.val('').replaceWith(this.$fileInput = this.$fileInput.clone(true));
+		this.$fileInput.value = '';
 	}
 
 	private updateVisibilities() {
-		this.$uploadButton.toggle(this.isEditable() && this.numberOfNonErrorFileItems < this.maxFiles);
+		this.$uploadButton.classList.toggle("hidden", !(this.isEditable() && this.numberOfNonErrorFileItems < this.maxFiles));
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return this.$uploadButton;
 	}
 
@@ -238,7 +239,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 			uiValue.slice().reverse().forEach(record => {
 				let fileItem = this.createFileItem();
 				fileItem.data = record;
-				fileItem.getMainDomElement().prependTo(this.$fileList);
+				prependChild(this.$fileList, fileItem.getMainDomElement());
 				this.fileItems.push(fileItem);
 			});
 		}
@@ -260,7 +261,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	}
 
 	private removeFileItem(itemToBeRemoved: UploadItem) {
-		itemToBeRemoved.getMainDomElement().detach();
+		itemToBeRemoved.getMainDomElement().remove();
 		this.fileItems = this.fileItems.filter(item => item !== itemToBeRemoved);
 	}
 
@@ -349,18 +350,18 @@ class UploadItem {
 	public readonly onUploadSuccessful: TeamAppsEvent<UiFileField_UploadSuccessfulEvent> = new TeamAppsEvent(this);
 	public readonly onUploadTooLarge: TeamAppsEvent<UiFileField_UploadTooLargeEvent> = new TeamAppsEvent(this);
 
-	private $main: JQuery;
+	private $main: HTMLElement;
 
 	private _data: UiIdentifiableClientRecordConfig;
 	private _state: FileItemState | null;
-	private $fileInfo: JQuery;
-	private $progressIndicator: JQuery;
-	private $deleteButton: JQuery;
-	private $fileSize: JQuery;
-	private $fileName: JQuery;
+	private $fileInfo: HTMLElement;
+	private $progressIndicator: HTMLElement;
+	private $deleteButton: HTMLElement;
+	private $fileSize: HTMLElement;
+	private $fileName: HTMLElement;
 	public readonly uuid: string = generateUUID();
 	private progressIndicator: ProgressIndicator;
-	private $templateWrapper: JQuery;
+	private $templateWrapper: HTMLElement;
 
 	private uploadingFile: File;
 	private uploader: FileUploader;
@@ -374,23 +375,23 @@ class UploadItem {
 		private renderer: Renderer,
 		private componentId: string
 	) {
-		this.$main = $(`<div class="file-item">
+		this.$main = parseHtml(`<div class="file-item">
 			<div class="progress-indicator"></div>
 			<div class="file-info">
 				<div class="file-name"></div>
 				<div class="file-size"></div>
 			</div>
 			<div class="template-wrapper"></div>
-			<img class="delete-button img img-16" alt="delete" tabindex="0" src="${StaticIcons.CLOSE}"/>
+			<img class="delete-button img img-16" alt="delete" tabindex="0" src="${StaticIcons.CLOSE}"></img>
 		</div>`);
-		this.$fileInfo = this.$main.find(".file-info");
-		this.$fileName = this.$main.find(".file-name");
-		this.$fileSize = this.$main.find(".file-size");
-		this.$templateWrapper = this.$main.find(".template-wrapper");
-		this.$progressIndicator = this.$main.find(".progress-indicator");
-		this.$deleteButton = this.$main.find(".delete-button");
-		this.$main.click((e) => {
-			if (e.target === this.$deleteButton[0]) {
+		this.$fileInfo = this.$main.querySelector<HTMLElement>(":scope .file-info");
+		this.$fileName = this.$main.querySelector<HTMLElement>(":scope .file-name");
+		this.$fileSize = this.$main.querySelector<HTMLElement>(":scope .file-size");
+		this.$templateWrapper = this.$main.querySelector<HTMLElement>(":scope .template-wrapper");
+		this.$progressIndicator = this.$main.querySelector<HTMLElement>(":scope .progress-indicator");
+		this.$deleteButton = this.$main.querySelector<HTMLElement>(":scope .delete-button");
+		this.$main.addEventListener('click', (e) => {
+			if (e.target === this.$deleteButton) {
 				if (this.uploader) {
 					this.uploader.abort();
 					this.onUploadCanceled.fire(EventFactory.createUiFileField_UploadCanceledEvent(this.componentId, this.uuid, this.uploadingFile.name, this.uploadingFile.type, this.uploadingFile.size, null));
@@ -404,8 +405,8 @@ class UploadItem {
 
 	public upload(file: File) {
 		this.uploadingFile = file;
-		this.$fileName.text(file.name);
-		this.$fileSize.text(humanReadableFileSize(file.size, true));
+		this.$fileName.textContent = file.name;
+		this.$fileSize.textContent = humanReadableFileSize(file.size, true);
 
 		this.progressIndicator = this.renderAsCircle ? new ProgressCircle(0, {
 			circleRadius: 16, circleStrokeWidth: 2
@@ -437,7 +438,7 @@ class UploadItem {
 
 	public set data(data: UiIdentifiableClientRecordConfig) {
 		this._data = data;
-		this.$templateWrapper.html(this.renderer.render(data.values));
+		this.$templateWrapper.innerHTML = this.renderer.render(data.values);
 		this.setState(FileItemState.DISPLAYING);
 	}
 
@@ -452,10 +453,8 @@ class UploadItem {
 
 	private setState(state: FileItemState) {
 		this._state = state;
-		this.$main.removeClass(function (index, classNames) {
-			return (classNames.match(/(^|\s)state-\S+/g) || []).join(' ');
-		});
-		this.$main.addClass("state-" + state);
+		removeClassesByFunction(this.$main.classList, className => className.startsWith("state-"));
+		this.$main.classList.add("state-" + state);
 	}
 
 	public get state() {

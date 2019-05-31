@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiField} from "./UiField";
 import {UiColorPickerConfig, UiColorPickerEventSource} from "../../generated/UiColorPickerConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
@@ -28,17 +27,18 @@ import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";
 import {createUiColorCssString} from "../util/CssFormatUtil";
 import {executeWhenAttached} from "../util/ExecuteWhenAttached";
 import {keyCodes} from "trivial-components";
+import {parseHtml} from "../Common";
 
 export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> implements UiColorPickerEventSource {
-	private $main: JQuery;
+	private $main: HTMLElement;
 	private pickr: Pickr;
 	private doNotCommit: boolean;
 
 	protected initialize(config: UiColorPickerConfig, context: TeamAppsUiContext) {
-		this.$main = $(`<div class="UiColorPicker" tabindex="-1"><div class="pickr"></div></div>`);
+		this.$main = parseHtml(`<div class="UiColorPicker" tabindex="-1"><div class="pickr"></div></div>`);
 		this.doNotCommit = true;
 		this.pickr = createPickr({
-			el: this.$main.find('.pickr')[0],
+			el: this.$main.querySelector<HTMLElement>(':scope .pickr'),
 			parent: document.body,
 			position: "middle",
 
@@ -79,13 +79,13 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 		});
 		this.doNotCommit = false;
 
-		this.$main.on("keydown", (e) => {
+		this.$main.addEventListener("keydown", (e) => {
 			if (e.keyCode === keyCodes.enter || e.keyCode === keyCodes.space) {
 				this.pickr.show();
 			}
 		});
 
-		this.$main.find(".pcr-button").addClass("field-border field-border-glow");
+		this.$main.querySelector<HTMLElement>(":scope .pcr-button").classList.add("field-border", "field-border-glow");
 	}
 
 	isValidData(v: UiColorConfig): boolean {
@@ -116,11 +116,11 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 		return this._config.defaultColor;
 	}
 
-	getFocusableElement(): JQuery {
+	getFocusableElement(): HTMLElement {
 		return this.$main;
 	}
 
-	getMainInnerDomElement(): JQuery {
+	getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
 

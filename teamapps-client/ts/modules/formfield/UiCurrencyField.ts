@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {DEFAULT_RENDERING_FUNCTIONS, defaultListQueryFunctionFactory, keyCodes, QueryFunction, TrivialUnitBox} from "trivial-components";
 
 import {createUiCurrencyValueConfig, UiCurrencyValueConfig} from "../../generated/UiCurrencyValueConfig";
@@ -26,7 +25,7 @@ import {UiCurrencyFieldConfig, UiCurrencyFieldCommandHandler, UiCurrencyFieldEve
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {CURRENCIES, Currency} from "../util/currencies";
-import {formatDecimalNumber} from "../Common";
+import {formatDecimalNumber, parseHtml, selectElementContents} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
@@ -39,7 +38,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, 250);
 
 	private trivialUnitBox: TrivialUnitBox<Currency>;
-	private $originalInput: JQuery;
+	private $originalInput: HTMLElement;
 
 	private currencyCodeList: string[];
 	private showCurrencySymbol: boolean;
@@ -48,7 +47,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	private queryFunction: QueryFunction<Currency>;
 
 	protected initialize(config: UiCurrencyFieldConfig, context: TeamAppsUiContext) {
-		this.$originalInput = $('<input type="text" autocomplete="off">');
+		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
 
 		this.trivialUnitBox = new TrivialUnitBox<Currency>(this.$originalInput, {
 			idFunction: entry => entry.code,
@@ -68,12 +67,12 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 					return `<div class="tr-template-currency-single-line-short">${entry.code}</div>`;
 				}
 			},
-			selectedEntry: $.extend({}, CURRENCIES[this.defaultCurrencyCode]),
+			selectedEntry: {...CURRENCIES[this.defaultCurrencyCode]},
 			queryOnNonNumberCharacters: config.alphaKeysQueryForCurrency,
 			editingMode: this.convertToTrivialComponentsEditingMode(config.editingMode),
 			queryFunction: (queryString, callback) => this.queryFunction(queryString, callback)
 		});
-		$(this.trivialUnitBox.getMainDomElement()).addClass("UiCurrencyField");
+		this.trivialUnitBox.getMainDomElement().classList.add("UiCurrencyField");
 		this.trivialUnitBox.onChange.addListener((value: {
 			unit: string,
 			unitEntry: any,
@@ -86,7 +85,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 			if (e.keyCode !== keyCodes.enter
 				&& e.keyCode !== keyCodes.tab
 				&& !keyCodes.isModifierKey(e)) {
-				this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), $(this.trivialUnitBox.getEditor()).val().toString()));
+				this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), (this.trivialUnitBox.getEditor() as HTMLInputElement).value));
 			} else 	if (e.keyCode === keyCodes.escape) {
 				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
 			} else if (e.keyCode === keyCodes.enter) {
@@ -98,11 +97,11 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		this.setCurrencyCodeList(config.currencyCodeList || Object.keys(CURRENCIES));
 		this.setShowCurrencySymbol(config.showCurrencySymbol);
 
-		$(this.trivialUnitBox.getMainDomElement()).addClass("field-border field-border-glow field-background");
-		$(this.trivialUnitBox.getMainDomElement()).find(".tr-editor").addClass("field-background");
-		$(this.trivialUnitBox.getMainDomElement()).find(".tr-unitbox-selected-entry-and-trigger-wrapper").addClass("field-border");
-		this.trivialUnitBox.onFocus.addListener(() => this.getMainDomElement().addClass("focus"));
-		this.trivialUnitBox.onBlur.addListener(() => this.getMainDomElement().removeClass("focus"));
+		this.trivialUnitBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
+		this.trivialUnitBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
+		this.trivialUnitBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-unitbox-selected-entry-and-trigger-wrapper").classList.add("field-border");
+		this.trivialUnitBox.onFocus.addListener(() => this.getMainDomElement()[0].classList.add("focus"));
+		this.trivialUnitBox.onBlur.addListener(() => this.getMainDomElement()[0].classList.remove("focus"));
 	}
 
 	isValidData(v: UiCurrencyValueConfig): boolean {
@@ -113,16 +112,16 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		return editingMode === UiFieldEditingMode.READONLY ? 'readonly' : editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable';
 	}
 
-	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialUnitBox.getMainDomElement() as any);
+	public getMainInnerDomElement(): HTMLElement {
+		return this.trivialUnitBox.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): JQuery {
-		return $(this.trivialUnitBox.getMainDomElement() as any).find(".tr-editor");
+	public getFocusableElement(): HTMLElement {
+		return this.trivialUnitBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor");
 	}
 
 	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().is('.focus');
+		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	protected displayCommittedValue(): void {
@@ -138,12 +137,12 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 
 	focus(): void {
 		this.trivialUnitBox.focus();
-		this.getFocusableElement().select();
+		selectElementContents(this.getFocusableElement());
 	}
 
 	doDestroy(): void {
 		this.trivialUnitBox.destroy();
-		this.$originalInput.detach();
+		this.$originalInput.remove();
 	}
 
 	getTransientValue(): UiCurrencyValueConfig {
@@ -151,9 +150,8 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainDomElement()
-			.removeClass(Object.values(UiField.editingModeCssClasses).join(" "))
-			.addClass(UiField.editingModeCssClasses[editingMode]);
+		this.getMainDomElement()[0].classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainDomElement()[0].classList.add(UiField.editingModeCssClasses[editingMode]);
 		this.trivialUnitBox.setEditingMode(this.convertToTrivialComponentsEditingMode(editingMode));
 	}
 

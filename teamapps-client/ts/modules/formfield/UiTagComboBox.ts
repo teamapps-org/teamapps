@@ -17,8 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
-import {defaultTreeQueryFunctionFactory, keyCodes, ResultCallback, trivialMatch, TrivialTagComboBox, TrivialTreeBox, wrapWithDefaultTagWrapper} from "trivial-components";
+import {defaultTreeQueryFunctionFactory, ResultCallback, trivialMatch, TrivialTagComboBox, TrivialTreeBox, wrapWithDefaultTagWrapper} from "trivial-components";
 
 import {UiTagComboBox_WrappingMode, UiTagComboBoxConfig, UiTagComboBoxCommandHandler, UiTagComboBoxEventSource} from "../../generated/UiTagComboBoxConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
@@ -32,7 +31,7 @@ import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiComboBoxTreeRecordConfig} from "../../generated/UiComboBoxTreeRecordConfig";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {isFreeTextEntry, UiComboBox} from "./UiComboBox";
-import {buildObjectTree, NodeWithChildren, Renderer} from "../Common";
+import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "../Common";
 import {EventFactory} from "../../generated/EventFactory";
 
 export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRecordConfig[]> implements UiTagComboBoxEventSource, UiTagComboBoxCommandHandler {
@@ -40,7 +39,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent(this, 250);
 	public readonly onLazyChildDataRequested: TeamAppsEvent<UiComboBox_LazyChildDataRequestedEvent> = new TeamAppsEvent(this);
 
-	private $originalInput: JQuery;
+	private $originalInput: HTMLElement;
 	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>;
 	private templateRenderers: { [name: string]: Renderer };
 	private lastResultCallback: Function;
@@ -48,7 +47,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	private freeTextIdEntryCounter = -1;
 
 	protected initialize(config: UiTagComboBoxConfig, context: TeamAppsUiContext) {
-		this.$originalInput = $('<input type="text" autocomplete="off">');
+		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
 
 		this.templateRenderers = config.templates != null ? context.templateRegistry.createTemplateRenderers(config.templates) : {};
 
@@ -114,24 +113,23 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 				return !violatesDistinctSetting && !violatesMaxEntriesSetting && !violatesFreeTextSetting;
 			}
 		});
-		$(this.trivialTagComboBox.getMainDomElement())
-			.addClass("UiTagComboBox")
-			.toggleClass("wrapping-mode-single-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_LINE)
-			.toggleClass("wrapping-mode-single-tag-per-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_TAG_PER_LINE);
+		this.trivialTagComboBox.getMainDomElement().classList.add("UiTagComboBox");
+		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_LINE);
+		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-tag-per-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_TAG_PER_LINE);
 		this.trivialTagComboBox.onSelectedEntryChanged.addListener(() => this.commit());
-		$(this.trivialTagComboBox.getEditor()).on("keydown", (e) => {
-			if (e.keyCode === keyCodes.escape) {
+		this.trivialTagComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
-			} else if (e.keyCode === keyCodes.enter) {
+			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
 			}
 		});
 
-		$(this.trivialTagComboBox.getMainDomElement()).addClass("field-border field-border-glow field-background");
-		$(this.trivialTagComboBox.getMainDomElement()).find(".tr-editor").addClass("field-background");
-		$(this.trivialTagComboBox.getMainDomElement()).find(".tr-trigger").addClass("field-border");
-		this.trivialTagComboBox.onFocus.addListener(() => this.getMainDomElement().addClass("focus"));
-		this.trivialTagComboBox.onBlur.addListener(() => this.getMainDomElement().removeClass("focus"));
+		this.trivialTagComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
+		this.trivialTagComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
+		this.trivialTagComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
+		this.trivialTagComboBox.onFocus.addListener(() => this.getMainDomElement()[0].classList.add("focus"));
+		this.trivialTagComboBox.onBlur.addListener(() => this.getMainDomElement()[0].classList.remove("focus"));
 	}
 
 	private renderRecord(record: NodeWithChildren<UiComboBoxTreeRecordConfig>, dropdown: boolean): string {
@@ -165,12 +163,12 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		(this.trivialTagComboBox.getDropDownComponent() as TrivialTreeBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>).updateChildren(parentId as any, objectTree);
 	}
 
-	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialTagComboBox.getMainDomElement() as any);
+	public getMainInnerDomElement(): HTMLElement {
+		return this.trivialTagComboBox.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): JQuery {
-		return $(this.trivialTagComboBox.getMainDomElement() as any);
+	public getFocusableElement(): HTMLElement {
+		return this.trivialTagComboBox.getMainDomElement() as HTMLElement;
 	}
 
 	protected displayCommittedValue(): void {
@@ -191,13 +189,12 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	}
 
 	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().is('.focus');
+		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainDomElement()
-			.removeClass(Object.values(UiField.editingModeCssClasses).join(" "))
-			.addClass(UiField.editingModeCssClasses[editingMode]);
+		this.getMainDomElement()[0].classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainDomElement()[0].classList.add(UiField.editingModeCssClasses[editingMode]);
 		if (editingMode === UiFieldEditingMode.READONLY) {
 			this.trivialTagComboBox.setEditingMode("readonly");
 		} else if (editingMode === UiFieldEditingMode.DISABLED) {
@@ -228,7 +225,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 
 	doDestroy(): void {
 		this.trivialTagComboBox.destroy();
-		this.$originalInput.detach();
+		this.$originalInput.remove();
 	}
 
 

@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import * as noUiSlider from "nouislider";
 import {UiField} from "./UiField";
 import {UiSliderConfig, UiSliderCommandHandler, UiSliderEventSource} from "../../generated/UiSliderConfig";
@@ -25,7 +24,7 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiColorConfig} from "../../generated/UiColorConfig";
-import {generateUUID, humanReadableFileSize} from "../Common";
+import {generateUUID, humanReadableFileSize, parseHtml} from "../Common";
 import {createUiColorCssString} from "../util/CssFormatUtil";
 
 const wNumb: (options: wNumb.Options) => wNumb.Instance = require('wnumb');
@@ -34,9 +33,9 @@ const wNumb: (options: wNumb.Options) => wNumb.Instance = require('wnumb');
 export class UiSlider extends UiField<UiSliderConfig, number> implements UiSliderEventSource, UiSliderCommandHandler {
 
 	private uuid: string;
-	private $main: JQuery;
-	private $style: JQuery;
-	private $slider: JQuery;
+	private $main: HTMLElement;
+	private $style: HTMLElement;
+	private $slider: HTMLInputElement;
 	private slider: noUiSlider.noUiSlider;
 
 	private min: number | undefined;
@@ -49,12 +48,12 @@ export class UiSlider extends UiField<UiSliderConfig, number> implements UiSlide
 
 	protected initialize(config: UiSliderConfig, context: TeamAppsUiContext) {
 		this.uuid = generateUUID();
-		this.$main = $(`<div class="UiSlider" data-uuid="${this.uuid}">
+		this.$main = parseHtml(`<div class="UiSlider" data-uuid="${this.uuid}">
 	<style></style>
 	<div class="slider"></div>
 </div>`);
-		this.$style = this.$main.find('style');
-		this.$slider = this.$main.find('.slider');
+		this.$style = this.$main.querySelector<HTMLElement>(':scope style');
+		this.$slider = this.$main.querySelector<HTMLInputElement>(':scope .slider');
 
 		this.min = config.min;
 		this.max = config.max;
@@ -64,12 +63,12 @@ export class UiSlider extends UiField<UiSliderConfig, number> implements UiSlide
 		this.tooltipPostfix = config.tooltipPostfix;
 		this.humanReadableFileSize = config.humanReadableFileSize;
 
-		noUiSlider.create(this.$slider[0], this.createNoUiSliderOptions());
-		this.slider = (this.$slider[0] as any).noUiSlider;
+		noUiSlider.create(this.$slider, this.createNoUiSliderOptions());
+		this.slider = (this.$slider as any).noUiSlider;
 		this.slider.on('set', () => this.commit());
 
-		const $handle = this.$slider.find('.noUi-handle');
-		$handle.on('keydown', (e) => {
+		const $handle = this.$slider.querySelector<HTMLElement>(':scope .noUi-handle');
+		$handle.addEventListener('keydown', (e) => {
 			const value = Number(this.slider.get());
 			if (e.which === 37) {
 				this.slider.set(value - this.step);
@@ -114,11 +113,11 @@ export class UiSlider extends UiField<UiSliderConfig, number> implements UiSlide
 		return this._config.min;
 	}
 
-	getFocusableElement(): JQuery {
-		return this.$slider.find('.noUi-handle').first();
+	getFocusableElement(): HTMLElement {
+		return this.$slider.querySelector<HTMLElement>(':scope .noUi-handle');
 	}
 
-	getMainInnerDomElement(): JQuery {
+	getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -128,9 +127,9 @@ export class UiSlider extends UiField<UiSliderConfig, number> implements UiSlide
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
 		if (editingMode === UiFieldEditingMode.DISABLED || editingMode === UiFieldEditingMode.READONLY) {
-			this.$slider.prop('disabled', true);
+			this.$slider.disabled = true;
 		} else if (editingMode === UiFieldEditingMode.EDITABLE || editingMode === UiFieldEditingMode.EDITABLE_IF_FOCUSED) {
-			this.$slider.prop('disabled', false);
+			this.$slider.disabled = false;
 		}
 	}
 
@@ -139,11 +138,9 @@ export class UiSlider extends UiField<UiSliderConfig, number> implements UiSlide
 	}
 
 	public setSelectionColor(selectionColor: UiColorConfig) {
-		this.$style.html(`
-			[data-uuid="${this.uuid}"] .noUi-connect {
-				background-color: ${createUiColorCssString(selectionColor)};
-			}
-		`)
+		this.$style.innerHTML = `[data-uuid="${this.uuid}"] .noUi-connect {
+			background-color: ${createUiColorCssString(selectionColor)};
+		}`;
 	}
 
 	setDisplayedDecimals(displayedDecimals: number): void {

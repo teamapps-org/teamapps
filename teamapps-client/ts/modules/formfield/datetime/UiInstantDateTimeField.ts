@@ -34,7 +34,7 @@ export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDat
 
 	protected initialize(config: UiInstantDateTimeFieldConfig, context: TeamAppsUiContext) {
 		super.initialize(config, context);
-		this.getMainInnerDomElement().addClass("UiDateTimeField");
+		this.getMainInnerDomElement().classList.add("UiDateTimeField");
 		this.timeZoneId = config.timeZoneId;
 	}
 

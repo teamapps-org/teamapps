@@ -17,11 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiField, ValueChangeEventData} from "./UiField";
 import * as log from "loglevel";
-import Logger = log.Logger;
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {keyCodes} from "trivial-components";
 import {UiCompositeSubFieldConfig} from "../../generated/UiCompositeSubFieldConfig";
@@ -31,11 +29,13 @@ import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiColumnDefinitionConfig} from "../../generated/UiColumnDefinitionConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TableDataProviderItem} from "../table/TableDataProvider";
+import Logger = log.Logger;
+import {closestAncestor, parseHtml} from "../Common";
 
 export type SubField = {
 	config: UiCompositeSubFieldConfig,
 	field: UiField,
-	$cell: JQuery,
+	$cell: HTMLElement,
 	visible?: boolean
 };
 
@@ -52,7 +52,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		new TeamAppsEvent<ValueChangeEventData & { fieldName: string, originalEmitter: UiField }>(this);
 
 	private subFields: SubField[];
-	private $wrapper: JQuery;
+	private $wrapper: HTMLElement;
 
 	protected initialize(config: UiCompositeFieldConfig, context: TeamAppsUiContext) {
 		this.logger.debug('initializing');
@@ -75,12 +75,12 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		});
 		UiCompositeField.validateNumberOfRowHeights(config);
 
-		$wrapper.on("keydown", (e) => {
-			if (e.which == keyCodes.tab) {
+		$wrapper.addEventListener("keydown", (e: KeyboardEvent) => {
+			if (e.key == "Tab") {
 				let nextFocusableField = this.getNextFocusableField(e.shiftKey ? -1 : 1);
 				if (nextFocusableField != null) {
 					nextFocusableField.focus();
-					this.logger.trace("navigated to " + nextFocusableField.getMainInnerDomElement()[0]);
+					this.logger.trace("navigated to " + nextFocusableField.getMainInnerDomElement());
 					return false;
 				} else {
 					this.logger.trace("not navigated");
@@ -153,11 +153,11 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		return `[${sf.config.tabIndex}-${sf.config.row}-${sf.config.col}]`;
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return this.$wrapper; // TODO!!
 	}
 
@@ -185,7 +185,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 				visibleFieldsByCell[coordinates] = subField;
 			});
 		let visibleSubFields = Object.keys(visibleFieldsByCell).map(key => visibleFieldsByCell[key]);
-		subFields.forEach(subField => subField.$cell.toggleClass("hidden", visibleSubFields.indexOf(subField) === -1));
+		subFields.forEach(subField => subField.$cell.classList.toggle("hidden", visibleSubFields.indexOf(subField) === -1));
 	}
 
 	private static updateDeclaredSubfieldVisibilities(subFieldSkeletons: SubField[], value: any) {
@@ -205,9 +205,9 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 
 	focus(): void {
 		if (window.event instanceof MouseEvent) {
-			let $cell = $(window.event.target).closest(".subfield-wrapper");
-			if ($cell.length > 0) {
-				let subField = this.getSubFieldByFieldName($cell.attr("data-field-propertyname"));
+			let $cell = closestAncestor(window.event.target as HTMLElement, ".subfield-wrapper");
+			if ($cell != null) {
+				let subField = this.getSubFieldByFieldName($cell.getAttribute("data-fieldname"));
 				if (subField) {
 					subField.field.focus();
 					return;
@@ -240,7 +240,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 	}
 
 	doDestroy(): void {
-		this.$wrapper.detach();
+		this.$wrapper.remove();
 	}
 
 	public getReadOnlyHtml(value: any, availableWidth: number): string {
@@ -257,21 +257,21 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 				};
 			}
 		});
-		$wrapper.addClass("static-readonly-UiCompositeField");
-		return $("<div></div>").append($wrapper.clone()).html();
+		$wrapper.classList.add("static-readonly-UiCompositeField");
+		return $wrapper.outerHTML;
 	}
 
 	private static createDomStructure(config: UiCompositeFieldConfig) {
-		const $wrapper = $(`<div class="UiCompositeField" style="padding: ${config.padding}px"><div class="padding-wrapper"></div></div>`);
-		const $paddingWrapper = $wrapper.find(".padding-wrapper");
-		$paddingWrapper.css("height", config.rowHeights.reduce((sum, height) => sum + height, 0) + "px");
+		const $wrapper = parseHtml(`<div class="UiCompositeField" style="padding: ${config.padding}px"><div class="padding-wrapper"></div></div>`);
+		const $paddingWrapper = $wrapper.querySelector<HTMLElement>(":scope .padding-wrapper");
+		$paddingWrapper.style.height = config.rowHeights.reduce((sum, height) => sum + height, 0) + "px";
 		let subFieldSkeletons: SubField[] = [];
 		config.subFields.forEach(subFieldConfig => {
 			const uiField: UiField = subFieldConfig.field;
-			let $cell = $(`<div class="subfield-wrapper" data-field-propertyname="${subFieldConfig.propertyName}" data-row="${subFieldConfig.row}" data-col="${subFieldConfig.col}" data-rowspan="${subFieldConfig.rowSpan}" data-colspan="${subFieldConfig.colSpan}"/>`);
-			$cell.appendTo($paddingWrapper);
+			let $cell = parseHtml(`<div class="subfield-wrapper" data-field-propertyname="${subFieldConfig.propertyName}" data-row="${subFieldConfig.row}" data-col="${subFieldConfig.col}" data-rowspan="${subFieldConfig.rowSpan}" data-colspan="${subFieldConfig.colSpan}"></div>`);
+			$paddingWrapper.appendChild($cell);
 			if (config.drawFieldBorders) {
-				$cell.addClass("bordered");
+				$cell.classList.add("bordered");
 			}
 			subFieldSkeletons.push({
 				config: subFieldConfig,
@@ -283,7 +283,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 	}
 
 	public onResize(): void {
-		UiCompositeField.applyLayout(this.subFields, this._config.columnDefinitions, this._config.rowHeights, this._config.horizontalCellSpacing, this._config.verticalCellSpacing, this.getMainInnerDomElement().outerWidth() - this._config.padding);
+		UiCompositeField.applyLayout(this.subFields, this._config.columnDefinitions, this._config.rowHeights, this._config.horizontalCellSpacing, this._config.verticalCellSpacing, this.getMainInnerDomElement().offsetWidth - this._config.padding);
 	}
 
 	private static applyLayout(subFieldSkeletons: SubField[], columnDefinitions: UiColumnDefinitionConfig[], rowHeights: number[], horizontalCellSpacing: number, verticalCellSpacing: number, availableWidth: number) {
@@ -317,7 +317,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		subFieldSkeletons.forEach(subFieldSkeleton => {
 			let endCol = subFieldSkeleton.config.col + subFieldSkeleton.config.colSpan - 1;
 			let endRow = subFieldSkeleton.config.row + subFieldSkeleton.config.rowSpan - 1;
-			subFieldSkeleton.$cell.css({
+			Object.assign(subFieldSkeleton.$cell.style, {
 				left: cellLeftEdges[subFieldSkeleton.config.col],
 				top: cellTopEdges[subFieldSkeleton.config.row],
 				width: cellRightEdges[endCol] - cellLeftEdges[subFieldSkeleton.config.col],

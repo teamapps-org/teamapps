@@ -17,23 +17,22 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiDisplayFieldConfig, UiDisplayFieldCommandHandler, UiDisplayFieldEventSource} from "../../generated/UiDisplayFieldConfig";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {escapeHtml, removeTags} from "../Common";
+import {escapeHtml, parseHtml, removeTags} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 
 
 export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implements UiDisplayFieldEventSource, UiDisplayFieldCommandHandler {
 
-	private _$field: JQuery;
+	private _$field: HTMLElement;
 	private showHtml: boolean;
 	private removeStyleTags: boolean;
 
 	protected initialize(config: UiDisplayFieldConfig, context: TeamAppsUiContext) {
-		this._$field = $(`<div class="UiDisplayField">`);
+		this._$field = parseHtml(`<div class="UiDisplayField">`);
 
 		this.setShowBorder(config.showBorder);
 		this.setShowHtml(config.showHtml);
@@ -45,7 +44,7 @@ export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implem
 	}
 
 	setShowBorder(showBorder: boolean): void {
-		this._$field.toggleClass("border", showBorder);
+		this._$field.classList.toggle("border", showBorder);
 	}
 
 	setShowHtml(showHtml: boolean): void {
@@ -58,11 +57,11 @@ export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implem
 		this.displayCommittedValue();
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this._$field;
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return null;
 	}
 
@@ -71,12 +70,12 @@ export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implem
 		if (uiValue) {
 			if (this.showHtml) {
 				const displayedValue = this.removeStyleTags ? removeTags(uiValue, "style") : uiValue;
-				this._$field.html(displayedValue);
+				this._$field.innerHTML = displayedValue;
 			} else {
-				this._$field.text(uiValue);
+				this._$field.textContent = uiValue || "";
 			}
 		} else {
-			this._$field[0].innerHTML = '';
+			this._$field.innerHTML = '';
 		}
 	}
 

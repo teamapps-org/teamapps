@@ -24,7 +24,6 @@ import {UiDropDown} from "../micro-components/UiDropDown";
 import {UiComponent} from "../UiComponent";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {UiButton_DropDownOpenedEvent, UiButtonCommandHandler, UiButtonConfig, UiButtonEventSource} from "../../generated/UiButtonConfig";
-import * as $ from "jquery";
 import {keyCodes} from "trivial-components";
 import {UiField} from "./UiField";
 import {UiColorConfig} from "../../generated/UiColorConfig";
@@ -36,6 +35,7 @@ import {bind} from "../util/Bind";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {getHighestSeverity} from "../micro-components/FieldMessagesPopper";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
+import {parseHtml} from "../Common";
 
 export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonEventSource, UiButtonCommandHandler {
 
@@ -44,7 +44,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 	private template: UiTemplateConfig;
 	private templateRecord: any;
 
-	private _$button: JQuery;
+	private _$button: HTMLElement;
 
 	private _dropDown: UiDropDown; // lazy-init!
 	private dropDownComponent: UiComponent;
@@ -56,34 +56,34 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 		this.template = config.template;
 		this.templateRecord = config.templateRecord;
 
-		this._$button = $(this.getReadOnlyHtml(this.templateRecord, -1));
+		this._$button = parseHtml(this.getReadOnlyHtml(this.templateRecord, -1));
 
 		this.minDropDownWidth = config.minDropDownWidth;
 		this.minDropDownHeight = config.minDropDownHeight;
 		this.openDropDownIfNotSet = config.openDropDownIfNotSet;
-		this.getMainInnerDomElement()
-			.on("mousedown keydown", (e) => {
-				if (e.type === "mousedown" || e.which === keyCodes.enter || e.which === keyCodes.space) {
-					if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
-						if (!this.dropDown.isOpen) {
-							const width = this.getMainInnerDomElement()[0].offsetWidth;
-							this.dropDown.open({$reference: this.getMainInnerDomElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
-							this.onDropDownOpened.fire(EventFactory.createUiButton_DropDownOpenedEvent(this.getId()));
-							this.getMainInnerDomElement().addClass("open");
-						} else {
-							this.dropDown.close(); // not needed for clicks, but for keydown!
-						}
+		['mousedown', 'keydown'].forEach((eventName) => this.getMainInnerDomElement().addEventListener(eventName, (e: Event) => {
+			if (e.type === "mousedown" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
+				if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
+					if (!this.dropDown.isOpen) {
+						const width = this.getMainInnerDomElement().offsetWidth;
+						this.dropDown.open({$reference: this.getMainInnerDomElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
+						this.onDropDownOpened.fire(EventFactory.createUiButton_DropDownOpenedEvent(this.getId()));
+						this.getMainInnerDomElement().classList.add("open");
+					} else {
+						this.dropDown.close(); // not needed for clicks, but for keydown!
 					}
 				}
-			})
-			// It is necessary to commit only after a full "click", since fields commit on blur. E.g. a UiTextField should blur-commit first, before the button click-commits. This would not work with "mousedown".
-			.on("click keypress", (e) => {
-				if (e.type === "click" || e.which === keyCodes.enter || e.which === keyCodes.space) {
-					if (this.getEditingMode() === UiFieldEditingMode.EDITABLE || this.getEditingMode() === UiFieldEditingMode.EDITABLE_IF_FOCUSED) {
-						this.commit(true);
-					}
+			}
+		}));
+
+		// It is necessary to commit only after a full "click", since fields commit on blur. E.g. a UiTextField should blur-commit first, before the button click-commits. This would not work with "mousedown".
+		["click", "keypress"].forEach(eventName => this.getMainInnerDomElement().addEventListener(eventName, (e) => {
+			if (e.type === "click" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
+				if (this.getEditingMode() === UiFieldEditingMode.EDITABLE || this.getEditingMode() === UiFieldEditingMode.EDITABLE_IF_FOCUSED) {
+					this.commit(true);
 				}
-			});
+			}
+		}));
 		this.setDropDownComponent(config.dropDownComponent);
 	}
 
@@ -118,8 +118,8 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 		// lazy-init!
 		if (this._dropDown == null) {
 			this._dropDown = new UiDropDown();
-			this._dropDown.getMainDomElement().addClass("UiButton-dropdown");
-			this._dropDown.onClose.addListener(eventObject => this.getMainInnerDomElement().removeClass("open"))
+			this._dropDown.getMainDomElement()[0].classList.add("UiButton-dropdown");
+			this._dropDown.onClose.addListener(eventObject => this.getMainInnerDomElement().classList.remove("open"))
 		}
 		return this._dropDown;
 	}
@@ -128,7 +128,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 		this.openDropDownIfNotSet = openDropDownIfNotSet;
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this._$button;
 	}
 
@@ -140,7 +140,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 	setTemplateRecord(data: any): void {
 		this.templateRecord = data;
 		let innerHtml = this.renderContent();
-		this._$button[0].innerHTML = innerHtml;
+		this._$button.innerHTML = innerHtml;
 	}
 
 	private renderContent(): string {
@@ -151,7 +151,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 		super.setFieldMessages(fieldMessageConfigs);
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return this._$button;
 	}
 

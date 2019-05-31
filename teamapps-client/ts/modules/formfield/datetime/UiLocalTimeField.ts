@@ -30,7 +30,7 @@ export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig
 
 	protected initialize(config: UiLocalTimeFieldConfig, context: TeamAppsUiContext) {
 		super.initialize(config, context);
-		this.getMainInnerDomElement().addClass("UiLocalTimeField");
+		this.getMainInnerDomElement().classList.add("UiLocalTimeField");
 	}
 
 	isValidData(v: LocalTime): boolean {

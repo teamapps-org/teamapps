@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiField} from "./UiField";
@@ -28,15 +27,16 @@ import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {createUiBorderCssObject, createUiColorCssString} from "../util/CssFormatUtil";
 import {UiColorConfig} from "../../generated/UiColorConfig";
 import {UiBorderConfig} from "../../generated/UiBorderConfig";
+import {parseHtml} from "../Common";
 
 
 export class UiComponentField extends UiField<UiComponentFieldConfig, void> implements UiComponentFieldEventSource, UiComponentFieldCommandHandler {
 
 	private component: UiComponent<UiComponentConfig>;
-	private $componentWrapper: JQuery;
+	private $componentWrapper: HTMLElement;
 
 	protected initialize(config: UiComponentFieldConfig, context: TeamAppsUiContext) {
-		this.$componentWrapper = $('<div class="UiComponentField"/>');
+		this.$componentWrapper = parseHtml('<div class="UiComponentField"></div>');
 		this.setBackgroundColor(config.backgroundColor);
 		this.setBorder(config.border);
 		this.setSize(config.width, config.height);
@@ -48,25 +48,23 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 	}
 
 	setBackgroundColor(backgroundColor: UiColorConfig): void {
-		this.$componentWrapper.css({
-			"background-color": backgroundColor ? createUiColorCssString(backgroundColor) : ''
-		});
+		this.$componentWrapper.style.backgroundColor = backgroundColor ? createUiColorCssString(backgroundColor) : '';
 	}
 
 	setBorder(border: UiBorderConfig): void {
-		this.$componentWrapper.css(createUiBorderCssObject(border));
+		Object.assign(this.$componentWrapper.style, createUiBorderCssObject(border));
 	}
 
 	setComponent(component: UiComponent): void {
 		if (this.component != null) {
-			this.component.getMainDomElement().detach();
+			this.component.getMainDomElement().remove();
 		}
 		this.component = component;
 		this.component.getMainDomElement().appendTo(this.$componentWrapper);
 	}
 
 	setSize(width: number, height: number): void {
-		this.$componentWrapper.css({
+		Object.assign(this.$componentWrapper.style, {
 			height: height ? `${height}px` : '',
 			width: width ? `${width}px` : ''
 		});
@@ -76,11 +74,11 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 		this.component.attachedToDom = true;
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return null;
 	}
 
@@ -93,7 +91,7 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 	}
 
 	doDestroy(): void {
-		this.$componentWrapper.detach();
+		this.$componentWrapper.remove();
 	}
 
 	getTransientValue(): void {

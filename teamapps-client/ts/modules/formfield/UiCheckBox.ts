@@ -17,12 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiCheckBoxCommandHandler, UiCheckBoxConfig, UiCheckBoxEventSource} from "../../generated/UiCheckBoxConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {generateUUID} from "../Common";
+import {generateUUID, parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiColorConfig} from "../../generated/UiColorConfig";
 import {createUiColorCssString} from "../util/CssFormatUtil";
@@ -34,10 +33,10 @@ import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 
 export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements UiCheckBoxEventSource, UiCheckBoxCommandHandler {
 
-	private $main: JQuery;
-	private $check: JQuery;
-	private $label: JQuery;
-	private $style: JQuery;
+	private $main: HTMLElement;
+	private $check: HTMLElement;
+	private $label: HTMLElement;
+	private $style: HTMLElement;
 
 	private backgroundColor: UiColorConfig;
 	private checkColor: UiColorConfig;
@@ -45,30 +44,30 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 
 	protected initialize(config: UiCheckBoxConfig, context: TeamAppsUiContext) {
 		const uuid = "cb-" + generateUUID();
-		this.$main = $(`<div class="UiCheckBox" data-teamapps-id="${config.id}">
+		this.$main = parseHtml(`<div class="UiCheckBox" data-teamapps-id="${config.id}">
 				<style></style>
                 <div class="checkbox-check field-border field-border-glow field-background" tabindex="0"></div>
                 <div class="checkbox-label"></div>
             </div>`);
-		this.$check = this.$main.find(".checkbox-check");
-		this.$label = this.$main.find(".checkbox-label");
-		this.$style = this.$main.find("style");
+		this.$check = this.$main.querySelector<HTMLElement>(":scope .checkbox-check");
+		this.$label = this.$main.querySelector<HTMLElement>(":scope .checkbox-label");
+		this.$style = this.$main.querySelector<HTMLElement>(":scope style");
 
 		this.setCaption(config.caption);
 		this.setBackgroundColor(config.backgroundColor);
 		this.setCheckColor(config.checkColor);
 		this.setBorderColor(config.borderColor);
 
-		this.$main.mousedown(() => {
+		this.$main.addEventListener("mousedown", () => {
 			setTimeout(() => this.focus());
 		});
-		this.$main.click(() => {
+		this.$main.addEventListener('click',() => {
 			if (this.getEditingMode() === UiFieldEditingMode.DISABLED || this.getEditingMode() === UiFieldEditingMode.READONLY) {
 				return;
 			}
 			this.toggleCommittedValue();
 		});
-		this.$check.on("keydown", (e) => {
+		this.$check.addEventListener("keydown", (e) => {
 			if (e.keyCode === keyCodes.space) {
 				this.toggleCommittedValue();
 				e.preventDefault(); // no scroll-down!
@@ -85,12 +84,12 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 		this.commit(true);
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
 
 	setCaption(caption: string): void {
-		this.$label.text(caption);
+		this.$label.textContent = caption || '';
 	}
 
 	setBackgroundColor(backgroundColor: UiColorConfig): void {
@@ -116,23 +115,23 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 	private updateStyles() {
 		const highestMessageSeverity = getHighestSeverity(this.getFieldMessages());
 		if (highestMessageSeverity > UiFieldMessageSeverity.INFO) {
-			this.$style.text(''); // styles are defined by message severity styles
+			this.$style.textContent = ''; // styles are defined by message severity styles
 		} else {
-			this.$style.text(`[data-teamapps-id=${this._config.id}] > .checkbox-check {
+			this.$style.textContent = `[data-teamapps-id=${this._config.id}] > .checkbox-check {
 			background-color: ${createUiColorCssString(this.backgroundColor)};
 			color: ${createUiColorCssString(this.checkColor)};
 			border: 1px solid ${createUiColorCssString(this.borderColor)};  
-		}`);
+		}`;
 		}
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return this.$check;
 	}
 
 	protected displayCommittedValue(): void {
 		let v = this.getCommittedValue();
-		this.$check.text(v ? "\ue013" : "");
+		this.$check.textContent = v ? "\ue013" : "";
 	}
 
 	focus(): void {
@@ -140,7 +139,7 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 	}
 
 	doDestroy(): void {
-		this.$main.detach();
+		this.$main.remove();
 	}
 
 	getTransientValue(): boolean {
@@ -149,11 +148,11 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
 		if (editingMode === UiFieldEditingMode.DISABLED || editingMode === UiFieldEditingMode.READONLY) {
-			this.$main.addClass("disabled");
-			this.$check.attr("tabindex", "");
+			this.$main.classList.add("disabled");
+			this.$check.removeAttribute("tabIndex");
 		} else {
-			this.$main.removeClass("disabled");
-			this.$check.attr("tabindex", "0");
+			this.$main.classList.remove("disabled");
+			this.$check.tabIndex = 0;
 		}
 	}
 

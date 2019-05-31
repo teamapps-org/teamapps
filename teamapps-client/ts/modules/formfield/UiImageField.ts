@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiField} from "./UiField";
 import {UiImageFieldConfig, UiImageFieldCommandHandler, UiImageFieldEventSource} from "../../generated/UiImageFieldConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
@@ -27,20 +26,21 @@ import {UiBorderConfig} from "../../generated/UiBorderConfig";
 import {UiShadowConfig} from "../../generated/UiShadowConfig";
 import {UiImageSizing} from "../../generated/UiImageSizing";
 import {createImageSizingCssObject, createUiBorderCssObject, createUiShadowCssObject, cssObjectToString} from "../util/CssFormatUtil";
+import {parseHtml} from "../Common";
 
 export class UiImageField extends UiField<UiImageFieldConfig, string> implements UiImageFieldEventSource, UiImageFieldCommandHandler {
 
-	private _$field: JQuery;
+	private _$field: HTMLElement;
 
 	protected initialize(config: UiImageFieldConfig, context: TeamAppsUiContext) {
-		this._$field = $(`<div class="UiImageField">`);
+		this._$field = parseHtml(`<div class="UiImageField">`);
 
 		this.setSize(config.width, config.height);
 		this.setBorder(config.border);
 		this.setShadow(config.shadow);
 		this.setImageSizing(config.imageSizing);
 
-		this._$field.click((e) => {
+		this._$field.addEventListener('click',(e) => {
 			this.commit(true);
 		});
 	}
@@ -50,39 +50,39 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 	}
 
 	setSize(width: number, height: number): void {
-		this._$field.css({
+		Object.assign(this._$field.style, {
 			width: `${width}px`,
 			height: `${height}px`,
-		})
+		});
 	}
 
 	setBorder(border: UiBorderConfig): void {
-		this._$field.css(createUiBorderCssObject(border));
+		Object.assign(this._$field.style, createUiBorderCssObject(border));
 	}
 
 	setShadow(shadow: UiShadowConfig): void {
-		this._$field.css(createUiShadowCssObject(shadow));
+		Object.assign(this._$field.style, createUiShadowCssObject(shadow));
 	}
 
 	setImageSizing(imageSizing: UiImageSizing): void {
-		this._$field.css(createImageSizingCssObject(imageSizing));
+		Object.assign(this._$field.style, createImageSizingCssObject(imageSizing));
 	}
 
 	getDefaultValue(): string {
 		return null;
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this._$field;
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return null;
 	}
 
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
-		this._$field.css("background-image", uiValue ? `url(${uiValue})` : 'none');
+		this._$field.style.backgroundImage = uiValue ? `url(${uiValue})` : 'none';
 	}
 
 	focus(): void {
