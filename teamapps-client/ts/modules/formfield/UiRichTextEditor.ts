@@ -17,10 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiCompositeFieldConfig} from "../../generated/UiCompositeFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {
@@ -56,7 +54,7 @@ import {UiSpinner} from "../micro-components/UiSpinner";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {EventFactory} from "../../generated/EventFactory";
-import {removeTags} from "../Common";
+import {parseHtml, removeTags} from "../Common";
 
 
 export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> implements UiRichTextEditorEventSource, UiRichTextEditorCommandHandler {
@@ -115,22 +113,22 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	};
 
 
-	private $main: JQuery;
-	private $toolbarContainer: JQuery;
+	private $main: HTMLElement;
+	private $toolbarContainer: HTMLElement;
 	private editor: Editor;
 	private mceReadyExecutor: DeferredExecutor;
 	private uuid: string;
 	private imageUploadSuccessCallbacksByUuid: { [fileUuid: string]: (location: string) => void } = {};
-	private $fileField: JQuery;
+	private $fileField: HTMLInputElement;
 	private buttonGroupWidths: number[];
 	private _hasFocus: boolean;
 	private toolbarVisibilityMode: UiToolbarVisibilityMode;
 	private maxImageFileSizeInBytes: number;
 	private uploadUrl: string;
 	private runningImageUploadsCount: number = 0;
-	private $spinnerWrapper: JQuery;
+	private $spinnerWrapper: HTMLElement;
 	private destroying: boolean;
-	private $readonlyView: JQuery;
+	private $readonlyView: HTMLElement;
 	private initializationStarted: boolean;
 
 	protected initialize(config: UiRichTextEditorConfig, context: TeamAppsUiContext) {
@@ -140,20 +138,20 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 
 		this.mceReadyExecutor = new DeferredExecutor();
 		this.uuid = "c-" + generateUUID();
-		this.$main = $(`<div class="UiRichTextEditor teamapps-input-wrapper field-border field-border-glow" id="${this.uuid}">
+		this.$main = parseHtml(`<div class="UiRichTextEditor teamapps-input-wrapper field-border field-border-glow" id="${this.uuid}">
 			<div class="toolbar-container"></div>
 			<div class="inline-editor field-background"></div>
 			<input type="file" class="file-upload-button">
 			<div class="spinner-wrapper hidden"></div>
 			<div class="readonly-view"></div>
 		</div>`);
-		this.$toolbarContainer = this.$main.find('.toolbar-container');
-		this.$spinnerWrapper = this.$main.find('.spinner-wrapper');
-		this.$readonlyView = this.$main.find('.readonly-view');
+		this.$toolbarContainer = this.$main.querySelector<HTMLElement>(':scope .toolbar-container');
+		this.$spinnerWrapper = this.$main.querySelector<HTMLElement>(':scope .spinner-wrapper');
+		this.$readonlyView = this.$main.querySelector<HTMLElement>(':scope .readonly-view');
 		new UiSpinner().getMainDomElement().appendTo(this.$spinnerWrapper);
-		this.$fileField = this.$main.find('.file-upload-button');
-		this.$fileField.on("change", (e) => {
-			let files = (<HTMLInputElement> this.$fileField[0]).files;
+		this.$fileField = this.$main.querySelector(':scope .file-upload-button');
+		this.$fileField.addEventListener("change", (e) => {
+			let files = (<HTMLInputElement> this.$fileField).files;
 			for (let i = 0; i < files.length; i++) {
 				let file = files.item(i);
 				if (file.size > this.maxImageFileSizeInBytes) {
@@ -166,7 +164,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 						this.editor.uploadImages(() => undefined);
 					};
 					fileReader.readAsDataURL(files.item(0));
-					this.$fileField.val('');
+					this.$fileField.value ='';
 				}
 			}
 		});
@@ -300,7 +298,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 
 					editor.addMenuItem('bullist', {text: 'Bullet list', icon: 'bullist', cmd: 'InsertUnorderedList'});
 					editor.addMenuItem('numlist', {text: 'Numbered list', icon: 'numlist', cmd: 'InsertOrderedList'});
-					editor.addMenuItem('insertimage', {icon: 'image', text: 'Insert image', onclick: () => this.$fileField[0].click()});
+					editor.addMenuItem('insertimage', {icon: 'image', text: 'Insert image', onclick: () => this.$fileField.click()});
 					editor.addButton('overflowbutton', {
 						type: 'MenuButton',
 						image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABeUlEQVRYhe2TsWoUQRzGf//dWbYysZW7vIDBOq1NiK2+QcRU6RI4mNtbWLi7DRzoC0iSXkFfQZLq7NRHiBZ2Aatjb/ZvMx66mW1tMj9YmP3mm28+ZhiIRCKRyH1H/gzKsnzinHsN7KnqjYi8qev6IrRoNBo9MMacAS+89GG9XtvFYvEr5B+Pxy9V9UREdoBlmqan0+n0G0DiA4fOuWtgH9gSkV3g3Fp7GAo0xrwHjoFH/jvOsuxd3+bAuc/cAvadc1dFUQw2BYwxr4DtwPrTrlCW5S5w0NVV9Zm19nFAPwnkPlTVo00BYCfUXkSGXa1pmkHI6/135vyx92Yn/mfZk/m5KyRJ8gVoAt4G+BrQg9lt2y43BbIsuwCuO57bNE3vXEFd1z8B25EVsH7uH3zGbUe+yvP8Ev56BVVVmdVqdZgkyZ6qfheRt/P5/EeoPcBkMnnqnHvuN/k4m80+9XmLohio6pGIDNu2XeZ5fllV1brPH4lEIpHIf+U3FW15e2UaPR8AAAAASUVORK5CYII=',
@@ -323,7 +321,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 							(editor as any).menuItems['searchreplace']
 						]
 					});
-					editor.addButton('insertimage', {icon: 'image', tooltip: 'Insert image', onclick: () => this.$fileField[0].click()});
+					editor.addButton('insertimage', {icon: 'image', tooltip: 'Insert image', onclick: () => this.$fileField.click()});
 					this.editor.fire("focus"); // triggers the initial rendering of the toolbar
 					this.editor.fire("blur"); // make the editor NOT being rendered as focused
 					this.updateToolbarOverflow(); // the toolbar got visible only now...
@@ -348,13 +346,13 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					});
 					editor.on('focus', (e) => {
 						this._hasFocus = true;
-						this.getMainDomElement().addClass('focus');
+						this.getMainDomElement()[0].classList.add('focus');
 						this.updateToolbarVisibility();
 						this.onFocused.fire(null);
 					});
 					editor.on('blur', (e) => {
 						this._hasFocus = false;
-						this.getMainDomElement().removeClass('focus');
+						this.getMainDomElement()[0].classList.remove('focus');
 						if (this.mayFireChangeEvents()) {
 							this.commit();
 						}
@@ -383,7 +381,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 								this.updateSpinnerVisibility();
 								this.onImageUploadFailed.fire(EventFactory.createUiRichTextEditor_ImageUploadFailedEvent(this.getId(), blobInfo.filename(), blobInfo.blob().type, blobInfo.blob().size, this.runningImageUploadsCount));
 								this.editor.undoManager.transact(() => {
-									this.$main.find(`[src='${blobInfo.blobUri()}']`).detach();
+									this.$main.querySelector<HTMLElement>(`:scope [src='${blobInfo.blobUri()}']`).remove();
 								});
 								failure(null);
 							}
@@ -426,7 +424,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	}
 
 	private updateSpinnerVisibility() {
-		this.$spinnerWrapper.toggleClass("hidden", this.runningImageUploadsCount === 0);
+		this.$spinnerWrapper.classList.toggle("hidden", this.runningImageUploadsCount === 0);
 	}
 
 	setUploadedImageUrl(fileUuid: string, url: string): void {
@@ -437,12 +435,12 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		}
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
 
-	public getFocusableElement(): JQuery {
-		return this.editor != null ? $(this.editor.getBody()) : null;
+	public getFocusableElement(): HTMLElement {
+		return this.editor != null ? this.editor.getBody() : null;
 	}
 
 	protected displayCommittedValue(): void {
@@ -453,7 +451,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 				this.editor.undoManager.clear();
 			});
 		} else {
-			this.$readonlyView.html(value);
+			this.$readonlyView.innerHTML = value || '';
 		}
 	}
 
@@ -481,7 +479,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 
 	private updateToolbarOverflow() {
 		if (!this.buttonGroupWidths) {
-			let buttonGroupWidths = this.$toolbarContainer.find(".mce-btn-group:not(:last-child)").toArray()
+			let buttonGroupWidths = Array.from(this.$toolbarContainer.querySelectorAll<HTMLElement>(":scope .mce-btn-group:not(:last-child)"))
 				.map(e => e.offsetWidth);
 			if (buttonGroupWidths.reduce((sum, groupWidth) => sum + groupWidth, 0) === 0) { // toolbar apparently not visible
 				return;
@@ -490,12 +488,12 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			}
 		}
 
-		let availableWidth = this.$toolbarContainer[0].offsetWidth - 50 /*overflowbutton*/;
-		let $groupButtons = this.$toolbarContainer.find(".mce-btn-group:not(:last-child)");
+		let availableWidth = this.$toolbarContainer.offsetWidth - 50 /*overflowbutton*/;
+		let $groupButtons = Array.from(this.$toolbarContainer.querySelectorAll<HTMLElement>(":scope .mce-btn-group:not(:last-child)"));
 		let consumedWidth = 0;
 		this.buttonGroupWidths.forEach((groupWidth, index) => {
 			consumedWidth = consumedWidth + groupWidth;
-			$($groupButtons.get(index)).toggleClass('hidden', consumedWidth > availableWidth);
+			$groupButtons[index].classList.toggle('hidden', consumedWidth > availableWidth);
 		});
 	}
 
@@ -504,10 +502,10 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		if (this.isEditable()) {
 			this.initTinyMce();
 		} else if (wasEditable && !this.isEditable()) {
-			this.$readonlyView.html(removeTags(this.getCommittedValue(), "style"));
+			this.$readonlyView.innerHTML = removeTags(this.getCommittedValue(), "style");
 		}
 		UiField.defaultOnEditingModeChangedImpl(this);
-		this.$main.toggleClass("editable-if-focused", editingMode === UiFieldEditingMode.EDITABLE_IF_FOCUSED);
+		this.$main.classList.toggle("editable-if-focused", editingMode === UiFieldEditingMode.EDITABLE_IF_FOCUSED);
 		this.updateToolbarVisibility();
 	}
 
@@ -523,7 +521,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	private updateToolbarVisibility() {
 		const toolbarVisible =
 			(this.isEditable() && (this.toolbarVisibilityMode === UiToolbarVisibilityMode.VISIBLE || (this.toolbarVisibilityMode === UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED && this._hasFocus)));
-		this.$toolbarContainer.toggleClass('hidden', !toolbarVisible);
+		this.$toolbarContainer.classList.toggle('hidden', !toolbarVisible);
 		this.updateToolbarOverflow();
 	}
 
@@ -552,16 +550,16 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	}
 
 	public setMinHeight(minHeight: number) {
-		this.$main.css("min-height", minHeight ? minHeight + "px" : "");
+		this.$main.style.minHeight = minHeight ? minHeight + "px" : "";
 	}
 
 	public setMaxHeight(maxHeight: number) {
-		this.$main.css("max-height", maxHeight ? maxHeight + "px" : "");
+		this.$main.style.maxHeight = maxHeight ? maxHeight + "px" : "";
 	}
 
 	append(s: string, scrollToBottom: boolean): void {
 		// this.mceReadyExecutor.invokeWhenReady(() => {
-		// 	this.editor.append(s);
+		// 	this.editor.appendChild(s);
 		// 	this.editor.
 		// });
 	}

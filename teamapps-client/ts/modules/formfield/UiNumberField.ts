@@ -17,12 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiNumberFieldConfig, UiNumberFieldCommandHandler, UiNumberFieldEventSource} from "../../generated/UiNumberFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {Constants, formatNumber} from "../Common";
+import {Constants, formatNumber, parseHtml} from "../Common";
 import {keyCodes} from "trivial-components";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
@@ -36,13 +35,13 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, 250);
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, 250);
 
-	private $wrapper: JQuery;
-	private $clearableFieldWrapper: JQuery;
-	private $field: JQuery;
+	private $wrapper: HTMLElement;
+	private $clearableFieldWrapper: HTMLElement;
+	private $field: HTMLInputElement;
 	private precision: number;
 	private showClearButton: boolean;
-	private $slider: JQuery;
-	private $sliderHandle: JQuery;
+	private $slider: HTMLElement;
+	private $sliderHandle: HTMLElement;
 
 	private minValue: number;
 	private maxValue: number;
@@ -51,24 +50,24 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	private commitOnSliderChange: boolean;
 
 	protected initialize(config: UiNumberFieldConfig, context: TeamAppsUiContext) {
-		this.$wrapper = $(`<div class="UiNumberField form-control field-border field-border-glow field-background">
+		this.$wrapper = parseHtml(`<div class="UiNumberField form-control field-border field-border-glow field-background">
 	<div class="clearable-field-wrapper">
-		<input autocomplete="off" type="text"/>
-		<div class="clear-button tr-remove-button"/> 
+		<input autocomplete="off" type="text"></input>
+		<div class="clear-button tr-remove-button"></div> 
 	</div>             
     <div class="slider field-readonly-invisible field-border-visibility">
 		<div class="slider-track field-border"></div>
 		<div class="slider-handle field-border field-border-glow"></div>			
 	</div>         
 </div>`);
-		this.$clearableFieldWrapper = this.$wrapper.find(".clearable-field-wrapper");
-		this.$field = this.$wrapper.find("input");
-		this.$slider = this.$wrapper.find(".slider");
-		const $sliderTrack = this.$wrapper.find(".slider-track");
-		this.$sliderHandle = this.$wrapper.find(".slider-handle");
-		let $clearButton = this.$wrapper.find('.clear-button');
-		$clearButton.click(() => {
-			this.$field.val("");
+		this.$clearableFieldWrapper = this.$wrapper.querySelector<HTMLElement>(":scope .clearable-field-wrapper");
+		this.$field = this.$wrapper.querySelector(":scope input");
+		this.$slider = this.$wrapper.querySelector<HTMLElement>(":scope .slider");
+		const $sliderTrack = this.$wrapper.querySelector<HTMLElement>(":scope .slider-track");
+		this.$sliderHandle = this.$wrapper.querySelector<HTMLElement>(":scope .slider-handle");
+		let $clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
+		$clearButton.addEventListener('click',() => {
+			this.$field.value = "";
 			this.fireTextInput();
 			this.commit();
 			this.updateClearButton();
@@ -80,26 +79,26 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		this.setShowClearButton(config.showClearButton);
 		this.setCommitOnSliderChange(config.commitOnSliderChange);
 
-		this.$field.keyup(() => {
+		this.$field.addEventListener("keyup", () => {
 			this.setSliderPositionByValue(this.getTransientValue());
 		});
 
-		this.$field.focus(() => {
+		this.$field.addEventListener("focus", () => {
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 				this.$field.select();
 			}
 		});
-		this.$field.blur((e) => {
+		this.$field.addEventListener("blur", (e) => {
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
 		});
-		this.$field.on("input", () => {
+		this.$field.addEventListener("input", () => {
 			this.fireTextInput();
 			this.updateClearButton();
 		});
-		this.$field.keydown((e) => {
+		this.$field.addEventListener("keydown", (e) => {
 			if (e.keyCode === keyCodes.escape) {
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
@@ -119,13 +118,13 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 			}
 		});
 
-		this.$wrapper.click((e) => {
-			if (e.target !== this.$field[0]) {
+		this.$wrapper.addEventListener('click',(e) => {
+			if (e.target !== this.$field) {
 				this.focus();
 			}
 		});
 
-		this.$sliderHandle.on(`${Constants.POINTER_EVENTS.start}`, (e: any) => {
+		this.$sliderHandle.addEventListener(`${Constants.POINTER_EVENTS.start}`, (e: PointerEvent & TouchEvent) => {
 			const isSpecialMouseButton = e.button != null && e.button !== 0;
 			if (isSpecialMouseButton || this.getEditingMode() === UiFieldEditingMode.DISABLED) {
 				return;
@@ -134,25 +133,25 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 				this.focus();
 			}
 			e.preventDefault(); // do not lose the focus!
-			let pointerSliderHandleOffset = (e.originalEvent.clientX || e.originalEvent.touches[0].clientX) - this.$sliderHandle[0].getBoundingClientRect().left;
+			let pointerSliderHandleOffset = (e.clientX || e.touches[0].clientX) - this.$sliderHandle.getBoundingClientRect().left;
 			let moveHandler = (e: any) => {
-				let sliderClientX = this.$slider[0].getBoundingClientRect().left;
+				let sliderClientX = this.$slider.getBoundingClientRect().left;
 				let aPrioriNewSliderPositionX = (e.originalEvent.clientX || e.originalEvent.touches[0].clientX) - pointerSliderHandleOffset - sliderClientX;
 				let [minSliderX, maxSliderX] = this.getSliderMinMaxPositionX();
 				const aPrioriNewValue = this.minValue + ((aPrioriNewSliderPositionX / (maxSliderX - minSliderX)) * (this.maxValue - this.minValue));
 				let newValue = this.coerceToSteppedValue(aPrioriNewValue);
 				this.setSliderPositionByValue(newValue);
-				this.$field.val(this.formatNumber(newValue));
+				this.$field.value = this.formatNumber(newValue);
 				if (!this._context.config.optimizedForTouch) {
 					this.$field.select();
 				}
 				this.ensureDecimalInput();
 				this.updateClearButton();
 			};
-			$(document).on(`${Constants.POINTER_EVENTS.move}`, moveHandler);
+			document.addEventListener(`${Constants.POINTER_EVENTS.move}`, moveHandler);
 			let endHandler = () => {
-				$(document).off(`${Constants.POINTER_EVENTS.move}`, moveHandler);
-				$(document).off(`${Constants.POINTER_EVENTS.end}`, endHandler);
+				document.removeEventListener(`${Constants.POINTER_EVENTS.move}`, moveHandler);
+				document.removeEventListener(`${Constants.POINTER_EVENTS.end}`, endHandler);
 				if (!this._context.config.optimizedForTouch) {
 					this.focus();
 				}
@@ -160,7 +159,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 					this.commit();
 				}
 			};
-			$(document).on(`${Constants.POINTER_EVENTS.end}`, endHandler);
+			document.addEventListener(`${Constants.POINTER_EVENTS.end}`, endHandler);
 		});
 
 		this.setMinValue(config.minValue);
@@ -170,7 +169,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	private fireTextInput() {
-		this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.$field.val().toString()));
+		this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.$field.value));
 	}
 
 	commit(forceEvenIfNotChanged?: boolean): boolean {
@@ -180,7 +179,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	private setEditorValue(value: number) {
-		this.$field.val(this.formatNumber(value));
+		this.$field.value = this.formatNumber(value);
 	}
 
 	private setSliderPositionByValue(newValue: number) {
@@ -190,11 +189,11 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		let [minSliderX, maxSliderX] = this.getSliderMinMaxPositionX();
 		let newHandleX = minSliderX + (maxSliderX - minSliderX) * ((newValue - this.minValue) / (this.maxValue - this.minValue));
 		newHandleX = Math.max(minSliderX, Math.min(newHandleX, maxSliderX));
-		this.$sliderHandle.css("left", `${newHandleX}px`);
+		this.$sliderHandle.style.left = `${newHandleX}px`;
 	}
 
 	private getSliderMinMaxPositionX() {
-		return [1, this.$slider[0].offsetWidth - 1 - this.$sliderHandle[0].offsetWidth];
+		return [1, this.$slider.offsetWidth - 1 - this.$sliderHandle.offsetWidth];
 	}
 
 	private coerceToSteppedValue(aPrioriNewValue: number) {
@@ -220,18 +219,18 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	private ensureDecimalInput() {
-		const cursorPosition = (<HTMLInputElement>this.$field[0]).selectionEnd;
-		const oldValue = this.$field.val().toString();
+		const cursorPosition = (<HTMLInputElement>this.$field).selectionEnd;
+		const oldValue = this.$field.value;
 
 		let newValue = this.convertInputToDecimalValue(oldValue);
 
 		if (oldValue !== this.formatNumber(newValue)) {
 			this.setEditorValue(newValue);
 
-			const newCursorPosition = Math.min(this.$field.val().toString().length, cursorPosition);
+			const newCursorPosition = Math.min(this.$field.value.length, cursorPosition);
 
 			try {
-				(<HTMLInputElement>this.$field[0]).setSelectionRange(newCursorPosition, newCursorPosition);
+				(<HTMLInputElement>this.$field).setSelectionRange(newCursorPosition, newCursorPosition);
 			} catch (e) {
 				// IE throws an error when invoking setSelectionRange before the element is rendered...
 			}
@@ -256,17 +255,17 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		return parseFloat(newValue);
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return this.$field;
 	}
 
 	protected displayCommittedValue(): void {
 		let value = this.getCommittedValue();
-		this.$field.val(value != null ? this.formatNumber(value) : "");
+		this.$field.value = value != null ? this.formatNumber(value) : "";
 		this.updateClearButton();
 		this.setSliderPositionByValue(value);
 	}
@@ -276,10 +275,10 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	public getTransientValue(): number {
-		if (this.$field.val() === "") {
+		if (!this.$field.value) {
 			return null;
 		} else {
-			let value = this.convertInputToDecimalValue(this.$field.val().toString());
+			let value = this.convertInputToDecimalValue(this.$field.value);
 			if (value > this.maxValue) {
 				value = this.maxValue;
 			} else if (value < this.minValue) {
@@ -317,7 +316,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	setEmptyText(emptyText: string): void {
-		this.$field.attr('placeholder', emptyText || '');
+		this.$field.placeholder = emptyText || '';
 	}
 
 	setShowClearButton(showClearButton: boolean): void {
@@ -326,7 +325,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	private updateClearButton() {
-		this.$clearableFieldWrapper.toggleClass("clearable", !!(this.showClearButton && this.getTransientValue()));
+		this.$clearableFieldWrapper.classList.toggle("clearable", !!(this.showClearButton && this.getTransientValue()));
 	}
 
 	public valuesChanged(v1: number, v2: number): boolean {
@@ -345,9 +344,9 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 
 	setSliderMode(sliderMode: UiNumberFieldSliderMode): void {
 		this.sliderMode = sliderMode;
-		this.$wrapper.toggleClass("slider-mode-disabled", sliderMode === UiNumberFieldSliderMode.DISABLED);
-		this.$wrapper.toggleClass("slider-mode-visible", sliderMode === UiNumberFieldSliderMode.VISIBLE);
-		this.$wrapper.toggleClass("slider-mode-visible-if-focused", sliderMode === UiNumberFieldSliderMode.VISIBLE_IF_FOCUSED);
+		this.$wrapper.classList.toggle("slider-mode-disabled", sliderMode === UiNumberFieldSliderMode.DISABLED);
+		this.$wrapper.classList.toggle("slider-mode-visible", sliderMode === UiNumberFieldSliderMode.VISIBLE);
+		this.$wrapper.classList.toggle("slider-mode-visible-if-focused", sliderMode === UiNumberFieldSliderMode.VISIBLE_IF_FOCUSED);
 	}
 
 	setSliderStep(sliderStep: number): void {

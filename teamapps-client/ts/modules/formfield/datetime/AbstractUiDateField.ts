@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import * as Mustache from "mustache";
 import {keyCodes, ResultCallback, TrivialComboBox, TrivialDateSuggestionEngine} from "trivial-components";
 import * as moment from "moment-timezone";
@@ -29,7 +28,7 @@ import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../../generated/UiSpecialKey";
 import {AbstractUiDateFieldConfig, AbstractUiDateFieldCommandHandler, AbstractUiDateFieldEventSource} from "../../../generated/AbstractUiDateFieldConfig";
 import Moment = moment.Moment;
-import {convertJavaDateTimeFormatToMomentDateTimeFormat} from "../../Common";
+import {convertJavaDateTimeFormatToMomentDateTimeFormat, parseHtml} from "../../Common";
 import {EventFactory} from "../../../generated/EventFactory";
 
 interface DateSuggestion {
@@ -54,9 +53,9 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
     <svg viewBox="0 0 540 540" width="22" height="22" class="calendar-icon">
         <defs>
             <linearGradient id="Gradient1" x1="0" x2="0" y1="0" y2="1">
-                <stop class="calendar-symbol-ring-gradient-stop1" offset="0%"/>
-                <stop class="calendar-symbol-ring-gradient-stop2" offset="50%"/>
-                <stop class="calendar-symbol-ring-gradient-stop3" offset="100%"/>
+                <stop class="calendar-symbol-ring-gradient-stop1" offset="0%"></stop>
+                <stop class="calendar-symbol-ring-gradient-stop2" offset="50%"></stop>
+                <stop class="calendar-symbol-ring-gradient-stop3" offset="100%"></stop>
             </linearGradient>
         </defs>        
         <g id="layer1">
@@ -72,7 +71,7 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
     <div class="content-wrapper tr-editor-area">{{displayString}}</div>
 </div>`;
 
-	private $originalInput: JQuery;
+	private $originalInput: HTMLElement;
 	protected trivialComboBox: TrivialComboBox<DateComboBoxEntry>;
 	private dateSuggestionEngine: TrivialDateSuggestionEngine;
 
@@ -80,7 +79,7 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 	private dateFormat: string;
 
 	protected initialize(config: AbstractUiDateFieldConfig, context: TeamAppsUiContext) {
-		this.$originalInput = $('<input type="text" autocomplete="off">');
+		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
 
 		this.favorPastDates = config.favorPastDates;
 		this.dateFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.dateFormat);
@@ -111,21 +110,21 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			showClearButton: config.showClearButton
 		});
-		$(this.trivialComboBox.getMainDomElement()).addClass("AbstractUiDateField");
+		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiDateField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
-		$(this.trivialComboBox.getEditor()).on("keydown", (e) => {
-			if (e.keyCode === keyCodes.escape) {
+		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
-			} else if (e.keyCode === keyCodes.enter) {
+			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
 			}
 		});
 
-		$(this.trivialComboBox.getMainDomElement()).addClass("field-border field-border-glow field-background");
-		$(this.trivialComboBox.getMainDomElement()).find(".tr-editor").addClass("field-background");
-		$(this.trivialComboBox.getMainDomElement()).find(".tr-trigger").addClass("field-border");
-		this.trivialComboBox.onFocus.addListener(() => this.getMainDomElement().addClass("focus"));
-		this.trivialComboBox.onBlur.addListener(() => this.getMainDomElement().removeClass("focus"));
+		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
+		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
+		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
+		this.trivialComboBox.onFocus.addListener(() => this.getMainDomElement()[0].classList.add("focus"));
+		this.trivialComboBox.onBlur.addListener(() => this.getMainDomElement()[0].classList.remove("focus"));
 	}
 
 	private updateDateSuggestionEngine() {
@@ -135,12 +134,12 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 		});
 	}
 
-	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement() as any);
+	public getMainInnerDomElement(): HTMLElement {
+		return this.trivialComboBox.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement() as any).find(".tr-editor");
+	public getFocusableElement(): HTMLElement {
+		return this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor");
 	}
 
 	protected getDateFormat() {
@@ -173,13 +172,12 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 	}
 
 	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().is('.focus');
+		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainDomElement()
-			.removeClass(Object.values(UiField.editingModeCssClasses).join(" "))
-			.addClass(UiField.editingModeCssClasses[editingMode]);
+		this.getMainDomElement()[0].classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainDomElement()[0].classList.add(UiField.editingModeCssClasses[editingMode]);
 		if (editingMode === UiFieldEditingMode.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
 		} else if (editingMode === UiFieldEditingMode.DISABLED) {
@@ -191,7 +189,7 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 
 	doDestroy(): void {
 		this.trivialComboBox.destroy();
-		this.$originalInput.detach();
+		this.$originalInput.remove();
 	}
 
 	getDefaultValue(): V {

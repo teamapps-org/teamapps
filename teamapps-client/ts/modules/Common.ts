@@ -911,3 +911,15 @@ export async function createImageThumbnailUrl(file: File): Promise<string> {
 		return Promise.reject("Not a known image file type.");
 	}
 }
+
+export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: (className: string) => boolean) {
+	let matches: string[] = [];
+	classList.forEach(function (className) {
+		if (deleteDecider(className)) {
+			matches.push(className);
+		}
+	});
+	matches.forEach(function (value) {
+		classList.remove(value);
+	});
+}

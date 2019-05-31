@@ -17,12 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiCompositeFieldConfig} from "../../generated/UiCompositeFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {escapeHtml} from "../Common";
+import {escapeHtml, parseHtml} from "../Common";
 import {UiTextFieldConfig, UiTextFieldCommandHandler, UiTextFieldEventSource} from "../../generated/UiTextFieldConfig";
 import {keyCodes} from "trivial-components";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
@@ -36,19 +34,19 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, 250);
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, 250);
 
-	private $wrapper: JQuery;
-	protected $field: JQuery;
+	private $wrapper: HTMLElement;
+	protected $field: HTMLInputElement;
 	private showClearButton: boolean;
 
 	protected initialize(config: C, context: TeamAppsUiContext) {
-		this.$wrapper = $(`<div class="UiTextField field-border field-border-glow field-background clearable-field-wrapper form-control">
-    <input autocomplete="off" type="text"/>
-    <div class="clear-button tr-remove-button"/>  
+		this.$wrapper = parseHtml(`<div class="UiTextField field-border field-border-glow field-background clearable-field-wrapper form-control">
+    <input autocomplete="off" type="text"></input>
+    <div class="clear-button tr-remove-button"></div>  
 </div>`);
-		this.$field = this.$wrapper.find("input");
-		let $clearButton = this.$wrapper.find('.clear-button');
-		$clearButton.click(() => {
-			this.$field.val("");
+		this.$field = this.$wrapper.querySelector(":scope input");
+		let $clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
+		$clearButton.addEventListener('click',() => {
+			this.$field.value = "";
 			this.fireTextInput();
 			this.commit();
 			this.updateClearButton();
@@ -58,22 +56,22 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 		this.setMaxCharacters(config.maxCharacters);
 		this.setShowClearButton(config.showClearButton);
 
-		this.$field.on("focus", () => {
+		this.$field.addEventListener("focus", () => {
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 				this.$field.select();
 			}
 		});
-		this.$field.on("blur", () => {
+		this.$field.addEventListener("blur", () => {
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
 			}
 		});
-		this.$field.on("input", () => {
+		this.$field.addEventListener("input", () => {
 			this.fireTextInput();
 			this.updateClearButton();
 		});
-		this.$field.keydown((e) => {
+		this.$field.addEventListener("keydown", (e) => {
 			if (e.keyCode === keyCodes.escape) {
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
@@ -85,15 +83,15 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 			}
 		});
 
-		this.$wrapper.click((e) => {
-			if (e.target !== this.$field[0]) {
+		this.$wrapper.addEventListener('click',(e) => {
+			if (e.target !== this.$field) {
 				this.focus();
 			}
 		});
 	}
 
 	private fireTextInput() {
-		this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.$field.val().toString()));
+		this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.$field.value));
 	}
 
 	isValidData(v: string): boolean {
@@ -101,7 +99,11 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 	}
 
 	setMaxCharacters(maxCharacters: number): void {
-		this.$field.attr('maxlength', maxCharacters || "");
+		if (maxCharacters) {
+			this.$field.maxLength = maxCharacters;
+		} else {
+			this.$field.removeAttribute("maxLength");
+		}
 	}
 
 	setShowClearButton(showClearButton: boolean): void {
@@ -110,29 +112,29 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 	}
 
 	private updateClearButton() {
-		this.$wrapper.toggleClass("clearable", !!(this.showClearButton && this.$field.val()));
+		this.$wrapper.classList.toggle("clearable", !!(this.showClearButton && this.$field.value));
 	}
 
 	setEmptyText(emptyText: string): void {
-		this.$field.attr("placeholder", emptyText || "");
+		this.$field.placeholder = emptyText || '';
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return this.$field;
 	}
 
 	protected displayCommittedValue(): void {
 		let value = this.getCommittedValue();
-		this.$field.val(value || "");
+		this.$field.value = value || "";
 		this.updateClearButton();
 	}
 
 	public getTransientValue(): string {
-		return this.$field.val().toString();
+		return this.$field.value;
 	}
 
 	focus(): void {

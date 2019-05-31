@@ -563,17 +563,16 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 	private prepareEditorField(columnPropertyName: string, uiField: UiField) {
 		uiField.getMainDomElement().appendTo(this.$editorFieldTempContainer);
 		if (uiField.getFocusableElement()) {
-			uiField.getFocusableElement().on("keydown.nav", (e) => {
-				if (e.keyCode === keyCodes.left_arrow
-					|| e.keyCode === keyCodes.right_arrow
-					|| e.keyCode === keyCodes.up_arrow
-					|| e.keyCode === keyCodes.down_arrow) {
+			uiField.getFocusableElement().addEventListener("keydown", (e) => {
+				if (e.key === "ArrowLeft"
+					|| e.key === "ArrowRight"
+					|| e.key === "ArrowUp"
+					|| e.key === "ArrowDown") {
 					e.stopPropagation();
 				}
 			});
-			uiField.getFocusableElement()
-				.focus(() => uiField.getMainDomElement().css("z-index", 1000))
-				.blur(() => uiField.getMainDomElement().css("z-index", 0));
+			uiField.getFocusableElement().addEventListener("focus", () => uiField.getMainDomElement().css("z-index", 1000));
+			uiField.getFocusableElement().addEventListener("blur", () => uiField.getMainDomElement().css("z-index", 0));
 		}
 		uiField.onValueChanged.addListener((eventData: ValueChangeEventData) => this.handleFieldValueChanged(columnPropertyName, eventData.value));
 		uiField.onVisibilityChanged.addListener(visible => this.setSlickGridColumns(this.getVisibleColumns()));

@@ -35,15 +35,15 @@ import {StaticIcons} from "./util/StaticIcons";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {EventFactory} from "../generated/EventFactory";
-import {maximizeComponent} from "./Common";
+import {maximizeComponent, outerWidthIncludingMargins, parseHtml} from "./Common";
 
 interface HeaderField {
 	config: UiPanelHeaderFieldConfig;
 	field: UiField;
-	$wrapper: JQuery;
-	$iconAndFieldWrapper: JQuery;
-	$fieldWrapper: JQuery;
-	$icon: JQuery;
+	$wrapper: HTMLElement;
+	$iconAndFieldWrapper: HTMLElement;
+	$fieldWrapper: HTMLElement;
+	$icon: HTMLElement;
 	minimizedWidth?: number;
 	minExpandedWidthWithIcon?: number;
 	minExpandedWidth?: number;
@@ -64,18 +64,17 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		UiWindowButtonType.CLOSE
 	];
 
-	private $panel: JQuery;
-	private $heading: JQuery;
-	private $parentDomElement: JQuery; // When maximizing, this component is taken out of the DOM. When minimizing, it has to be reattached to this parent element.
-	private $toolbarContainer: JQuery;
-	private $bodyContainer: JQuery;
-	private $leftComponentWrapper: JQuery;
-	private $headingSpacer: JQuery;
-	private $rightComponentWrapper: JQuery;
-	private $buttonContainer: JQuery;
-	private $windowButtonContainer: JQuery;
-	private $icon: JQuery;
-	private $title: JQuery;
+	private $panel: HTMLElement;
+	private $heading: HTMLElement;
+	private $toolbarContainer: HTMLElement;
+	private $bodyContainer: HTMLElement;
+	private $leftComponentWrapper: HTMLElement;
+	private $headingSpacer: HTMLElement;
+	private $rightComponentWrapper: HTMLElement;
+	private $buttonContainer: HTMLElement;
+	private $windowButtonContainer: HTMLElement;
+	private $icon: HTMLElement;
+	private $title: HTMLElement;
 
 	private contentComponent: UiComponent<UiComponentConfig>;
 	private leftHeaderField: HeaderField;
@@ -94,15 +93,15 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 
 	constructor(config: UiPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = $(`<div id="${config.id}" class="UiPanel panel teamapps-blurredBackgroundImage">
+		this.$panel = parseHtml(`<div id="${config.id}" class="UiPanel panel teamapps-blurredBackgroundImage">
                 <div class="panel-heading">
-                    <div class="panel-icon"/>
-                    <div class="panel-title"/>
-                    <div class="panel-component-wrapper panel-left-component-wrapper"/>
-                    <div class="panel-heading-spacer"/>
-                    <div class="panel-component-wrapper panel-right-component-wrapper"/>
-                    <div class="panel-heading-buttons"/>
-                    <div class="panel-heading-window-buttons hidden"/>
+                    <div class="panel-icon"></div>
+                    <div class="panel-title"></div>
+                    <div class="panel-component-wrapper panel-left-component-wrapper"></div>
+                    <div class="panel-heading-spacer"></div>
+                    <div class="panel-component-wrapper panel-right-component-wrapper"></div>
+                    <div class="panel-heading-buttons"></div>
+                    <div class="panel-heading-window-buttons hidden"></div>
                 </div>
                 <div class="toolbar-container"></div>
                 <div class="panel-body">
@@ -110,16 +109,16 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
                 </div>
             </div>`);
 
-		this.$toolbarContainer = this.$panel.find('.toolbar-container');
-		this.$bodyContainer = this.$panel.find('.body-container');
-		this.$heading = this.$panel.find('>.panel-heading');
-		this.$icon = this.$heading.find('>.panel-icon');
-		this.$title = this.$heading.find('>.panel-title');
-		this.$leftComponentWrapper = this.$heading.find('>.panel-left-component-wrapper');
-		this.$headingSpacer = this.$heading.find('>.panel-heading-spacer');
-		this.$rightComponentWrapper = this.$heading.find('>.panel-right-component-wrapper');
-		this.$buttonContainer = this.$heading.find('>.panel-heading-buttons');
-		this.$windowButtonContainer = this.$heading.find('>.panel-heading-window-buttons');
+		this.$toolbarContainer = this.$panel.querySelector(':scope .toolbar-container');
+		this.$bodyContainer = this.$panel.querySelector(':scope .body-container');
+		this.$heading = this.$panel.querySelector(':scope >.panel-heading');
+		this.$icon = this.$heading.querySelector(':scope >.panel-icon');
+		this.$title = this.$heading.querySelector(':scope >.panel-title');
+		this.$leftComponentWrapper = this.$heading.querySelector(':scope >.panel-left-component-wrapper');
+		this.$headingSpacer = this.$heading.querySelector(':scope >.panel-heading-spacer');
+		this.$rightComponentWrapper = this.$heading.querySelector(':scope >.panel-right-component-wrapper');
+		this.$buttonContainer = this.$heading.querySelector(':scope >.panel-heading-buttons');
+		this.$windowButtonContainer = this.$heading.querySelector(':scope >.panel-heading-window-buttons');
 
 		this.alwaysShowHeaderFieldIcons = config.alwaysShowHeaderFieldIcons;
 		this.setIcon(config.icon);
@@ -129,11 +128,11 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.setToolButtons(config.toolButtons);
 
 		if (config.hideTitleBar) {
-			this.$heading.addClass('hidden');
-			this.$panel.addClass("empty-heading");
+			this.$heading.classList.add('hidden');
+			this.$panel.classList.add("empty-heading");
 		} else {
-			this.$heading.removeClass('hidden');
-			this.$panel.removeClass("empty-heading");
+			this.$heading.classList.remove('hidden');
+			this.$panel.classList.remove("empty-heading");
 		}
 
 		this.setToolbar(config.toolbar);
@@ -182,12 +181,12 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 	}
 
 	public setDraggable(draggable: boolean) {
-		this.$heading.prop("draggable", draggable);
+		this.$heading.draggable = draggable;
 	}
 
 	public setToolButtons(toolButtons: UiToolButton[]) {
 		this.toolButtons = [];
-		this.$buttonContainer[0].innerHTML = '';
+		this.$buttonContainer.innerHTML = '';
 		toolButtons && toolButtons.forEach(toolButton => {
 			toolButton.getMainDomElement().appendTo(this.$buttonContainer);
 			toolButton.attachedToDom = this.attachedToDom;
@@ -198,7 +197,7 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 
 	public setWindowButtons(buttonTypes: UiWindowButtonType[]): void {
 		this.windowButtons = [];
-		this.$windowButtonContainer[0].innerHTML = '';
+		this.$windowButtonContainer.innerHTML = '';
 		if (buttonTypes && buttonTypes.length > 0) {
 			buttonTypes.forEach(toolButton => {
 				this.addWindowButton(toolButton);
@@ -212,19 +211,19 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		if (this.windowButtons.filter(tb => tb === toolButtonType).length > 0){
 			this.removeWindowButton(toolButtonType);
 		}
-		this.$windowButtonContainer.removeClass("hidden");
+		this.$windowButtonContainer.classList.remove("hidden");
 		this.windowButtons.push(toolButtonType);
 		const button = this.defaultToolButtons[toolButtonType];
-		if (this.$windowButtonContainer[0].children.length === 0) {
+		if (this.$windowButtonContainer.children.length === 0) {
 			button.getMainDomElement().prependTo(this.$windowButtonContainer);
 		} else {
 			let index = this.windowButtons
 				.sort((a, b) =>this.orderedDefaultToolButtonTypes.indexOf(a) - this.orderedDefaultToolButtonTypes.indexOf(b))
 				.indexOf(toolButtonType);
-			if (index >= this.$windowButtonContainer[0].childNodes.length) {
+			if (index >= this.$windowButtonContainer.childNodes.length) {
 				button.getMainDomElement().appendTo(this.$windowButtonContainer);
 			} else {
-				button.getMainDomElement().insertBefore(this.$windowButtonContainer[0].children[index]);
+				button.getMainDomElement().insertBefore(this.$windowButtonContainer.children[index]);
 			}
 		}
 		this.relayoutHeader();
@@ -234,7 +233,7 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.defaultToolButtons[uiToolButton].getMainDomElement().detach();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {
-			this.$windowButtonContainer.addClass("hidden");
+			this.$windowButtonContainer.classList.add("hidden");
 		}
 	}
 
@@ -243,14 +242,14 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 	}
 
 	public getMainDomElement(): JQuery {
-		return this.$panel;
+		return $(this.$panel);
 	}
 
 	public setContent(content: UiComponent) {
 		if (content == this.contentComponent) {
 			return;
 		}
-		this.$bodyContainer[0].innerHTML = '';
+		this.$bodyContainer.innerHTML = '';
 		this.contentComponent = content;
 		if (content != null) {
 			this.contentComponent.getMainDomElement().appendTo(this.$bodyContainer);
@@ -269,15 +268,15 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 	private calculateFieldWrapperSizes() {
 		this.headerFields.forEach(headerField => {
 			if (!headerField.minimizedWidth || !headerField.minExpandedWidth || !headerField.minExpandedWidthWithIcon) {
-				headerField.$fieldWrapper.css("transition", "none");
+				headerField.$fieldWrapper.style.transition = "none";
 				this.setMinimizedFields(headerField);
-				this.$heading.addClass("has-minimized-header-component");
-				headerField.minimizedWidth = headerField.$iconAndFieldWrapper.outerWidth(true);
+				this.$heading.classList.add("has-minimized-header-component");
+				headerField.minimizedWidth = outerWidthIncludingMargins(headerField.$iconAndFieldWrapper);
 				this.setMinimizedFields();
-				headerField.minExpandedWidthWithIcon = headerField.$iconAndFieldWrapper.outerWidth(true) - headerField.$fieldWrapper[0].offsetWidth + headerField.config.minWidth;
-				this.$heading.removeClass("has-minimized-header-component");
-				headerField.minExpandedWidth = headerField.$iconAndFieldWrapper.outerWidth(true) - headerField.$fieldWrapper[0].offsetWidth + headerField.config.minWidth;
-				headerField.$fieldWrapper.css("transition", "");
+				headerField.minExpandedWidthWithIcon = outerWidthIncludingMargins(headerField.$iconAndFieldWrapper) - headerField.$fieldWrapper.offsetWidth + headerField.config.minWidth;
+				this.$heading.classList.remove("has-minimized-header-component");
+				headerField.minExpandedWidth = outerWidthIncludingMargins(headerField.$iconAndFieldWrapper) - headerField.$fieldWrapper.offsetWidth + headerField.config.minWidth;
+				headerField.$fieldWrapper.style.transition = "";
 			}
 		});
 	}
@@ -288,8 +287,8 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 
 	private setMinimizedFields(...minimizedHeaderFields: HeaderField[]) {
 		this.headerFields.forEach(headerField => {
-			headerField.$wrapper.toggleClass("minimized", minimizedHeaderFields.indexOf(headerField) != -1);
-			headerField.$wrapper.toggleClass("display-icon", minimizedHeaderFields.length > 0 || this.alwaysShowHeaderFieldIcons);
+			headerField.$wrapper.classList.toggle("minimized", minimizedHeaderFields.indexOf(headerField) != -1);
+			headerField.$wrapper.classList.toggle("display-icon", minimizedHeaderFields.length > 0 || this.alwaysShowHeaderFieldIcons);
 		});
 	}
 
@@ -305,27 +304,27 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.relayoutHeader();
 	}
 
-	private setHeaderField(headerFieldConfig: UiPanelHeaderFieldConfig, $componentWrapper: JQuery, isLeft: boolean): HeaderField {
+	private setHeaderField(headerFieldConfig: UiPanelHeaderFieldConfig, $componentWrapper: HTMLElement, isLeft: boolean): HeaderField {
 		if (isLeft && this.leftHeaderField) {
-			this.leftHeaderField.$iconAndFieldWrapper.detach();
+			this.leftHeaderField.$iconAndFieldWrapper.remove();
 		} else if (!isLeft && this.rightHeaderField) {
-			this.rightHeaderField.$iconAndFieldWrapper.detach();
+			this.rightHeaderField.$iconAndFieldWrapper.remove();
 		}
 
-		$componentWrapper[0].innerHTML = '';
-		$componentWrapper.hide();
+		$componentWrapper.innerHTML = '';
+		$componentWrapper.classList.add('hidden');
 		if (headerFieldConfig) {
 			let iconPath = this._context.getIconPath(headerFieldConfig.icon, 16);
-			let $iconAndFieldWrapper = $(`<div class="icon-and-field-wrapper">
+			let $iconAndFieldWrapper = parseHtml(`<div class="icon-and-field-wrapper">
                     <div class="icon img img-16" style="background-image: ${iconPath ? 'url(' + iconPath + ')' : 'none'}"></div>
                     <div class="field-wrapper"></div>
                 </div>`);
-			let $icon = $iconAndFieldWrapper.find('>.icon');
-			$icon.click(() => {
+			let $icon = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope>.icon');
+			$icon.addEventListener('click', () => {
 				this.leftComponentFirstMinimized = !isLeft;
 				this.relayoutHeader();
 			});
-			let $fieldWrapper = $iconAndFieldWrapper.find('>.field-wrapper');
+			let $fieldWrapper = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope>.field-wrapper');
 			const field = (headerFieldConfig.field as UiField);
 			field.getMainDomElement().appendTo($fieldWrapper);
 			field.onVisibilityChanged.addListener(visible => {
@@ -339,7 +338,8 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 				$icon: $icon,
 				$fieldWrapper
 			};
-			$componentWrapper.append($iconAndFieldWrapper).show();
+			$componentWrapper.appendChild($iconAndFieldWrapper);
+			$componentWrapper.classList.remove('hidden');
 			return headerField;
 		} else {
 			return null;
@@ -361,18 +361,18 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 	public setIcon(icon: string) {
 		this.icon = icon;
 		if (icon) {
-			this.$icon[0].innerHTML = '';
-			this.$icon.append('<div class="img img-16" style="background-image: url(' + this._context.getIconPath(icon, 16) + ')"/>');
+			this.$icon.innerHTML = '';
+			this.$icon.appendChild(parseHtml(`<div class="img img-16" style="background-image: url(${this._context.getIconPath(icon, 16)})"></div>`));
 		}
-		this.$icon.toggle(icon != null);
+		this.$icon.classList.toggle('hidden', icon == null);
 		this.relayoutHeader();
 	}
 
 	public setTitle(title: string) {
 		this.title = title;
-		this.$title.text(title);
+		this.$title.textContent = title;
 		this.recalculateTitleNaturalWidth();
-		this.$title.toggle(!!title);
+		this.$title.classList.toggle('hidden', !title);
 		this.relayoutHeader();
 	}
 
@@ -380,21 +380,17 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		if (!this.title) {
 			this.titleNaturalWidth = 0;
 		} else {
-			this.$title.css({
-				position: "absolute",
-				display: "inline-block"
-			}); // TODO
-			this.titleNaturalWidth = this.$title[0].offsetWidth;
-			this.$title.css({
-				position: "",
-				display: ""
-			});
+			this.$title.style.position = "absolute";
+			this.$title.style.display = "inline-block";
+			this.titleNaturalWidth = this.$title.offsetWidth;
+			this.$title.style.position = null;
+			this.$title.style.display = null;
 		}
 	};
 
 	public setToolbar(toolbar: UiToolbar) {
 		if (this.toolbar != null) {
-			this.toolbar.getMainDomElement().detach();
+			this.toolbar.getMainDomElement().remove();
 		}
 		this.toolbar = toolbar;
 		if (toolbar) {
@@ -409,7 +405,7 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 	}
 
 	private updateToolbarVisibility() {
-		this.$toolbarContainer.toggleClass('hidden', this.toolbar == null || this.toolbar.empty);
+		this.$toolbarContainer.classList.toggle('hidden', this.toolbar == null || this.toolbar.empty);
 	}
 
 	public focusField(fieldName: string) {
@@ -427,15 +423,16 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 
 	@executeWhenAttached(true)
 	private relayoutHeader() {
-		let availableHeaderContentWidth = this.$heading[0].offsetWidth - parseInt(this.$heading.css("padding-left")) - parseInt(this.$heading.css("padding-right"));
+		const computedHeadingStyle = getComputedStyle(this.$heading);
+		let availableHeaderContentWidth = this.$heading.offsetWidth - parseInt(computedHeadingStyle.paddingLeft) - parseInt(computedHeadingStyle.paddingRight);
 		if (this.title && this.titleNaturalWidth == 0) this.recalculateTitleNaturalWidth();
 		if (this.headerFields.some(headerField => !headerField.minimizedWidth)) this.calculateFieldWrapperSizes();
 
 		let titleWidth = Math.floor(this.title ? this.titleNaturalWidth : 0);
-		let iconWidth = (this.icon ? this.$icon[0].offsetWidth + parseInt(this.$icon.css("margin-right")) : 0);
-		let minSpacerWidth = parseInt(this.$headingSpacer.css("flex-basis"));
-		let buttonContainerWidth = this.$buttonContainer[0].offsetWidth;
-		let windowButtonContainerWidth = this.$windowButtonContainer[0].offsetWidth;
+		let iconWidth = (this.icon ? this.$icon.offsetWidth + parseInt(getComputedStyle(this.$icon).marginRight) : 0);
+		let minSpacerWidth = parseInt(getComputedStyle(this.$headingSpacer).flexBasis);
+		let buttonContainerWidth = this.$buttonContainer.offsetWidth;
+		let windowButtonContainerWidth = this.$windowButtonContainer.offsetWidth;
 
 		let minAllExpandedWidth =
 			// 1 // the width of the title may be no integer
@@ -464,8 +461,9 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 			let minWidthNeededWithHiddenHeaderAndOneMinimizedField = minFirstMinimizedWidth - titleWidth;
 
 			if (availableHeaderContentWidth >= minAllExpandedWidth) {
-				this.$title.removeClass("hidden").css("width", "");
-				this.$heading.removeClass("has-minimized-header-component");
+				this.$title.classList.remove("hidden");
+				this.$title.style.width = null;
+				this.$heading.classList.remove("has-minimized-header-component");
 				let availableAdditionalSpace = availableHeaderContentWidth - minAllExpandedWidth;
 
 				let minMaxFieldWidthDeltaSum = this.headerFields
@@ -480,72 +478,60 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 						headerField.config.minWidth + availableAdditionalSpace * ((headerField.config.maxWidth - headerField.config.minWidth) / minMaxFieldWidthDeltaSum),
 						headerField.config.maxWidth
 					);
-					headerField.$fieldWrapper.css({
-						width: newFieldWidth,
-					});
+					headerField.$fieldWrapper.style.width = newFieldWidth + "px";
 				});
 			} else if (availableHeaderContentWidth >= minFirstMinimizedWidth) {
-				this.$title.removeClass("hidden").css("width", "");
-				this.$heading.addClass("has-minimized-header-component");
+				this.$title.classList.remove("hidden");
+				this.$title.style.width = null;
+				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
 				let availableAdditionalSpace = availableHeaderContentWidth - minFirstMinimizedWidth;
 				let newMaximizedFieldWidth = Math.min(alwaysMaximizedField.config.minWidth + availableAdditionalSpace, alwaysMaximizedField.config.maxWidth);
-				alwaysMaximizedField.$fieldWrapper.css({
-					width: newMaximizedFieldWidth,
-				});
+				alwaysMaximizedField.$fieldWrapper.style.width = newMaximizedFieldWidth + "px";
 			} else if (availableHeaderContentWidth >= minWidthNeededWithHiddenHeaderAndOneMinimizedField + 30 /* less does not make sense for title */) {
-				this.$title.removeClass("hidden");
-				this.$heading.addClass("has-minimized-header-component");
+				this.$title.classList.remove("hidden");
+				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
-				alwaysMaximizedField.$fieldWrapper.css({
-					width: alwaysMaximizedField.config.minWidth,
-				});
-				this.$title.outerWidth(this.titleNaturalWidth - (minFirstMinimizedWidth - availableHeaderContentWidth));
+				alwaysMaximizedField.$fieldWrapper.style.width = alwaysMaximizedField.config.minWidth + "px";
+				this.$title.style.width = (this.titleNaturalWidth - (minFirstMinimizedWidth - availableHeaderContentWidth)) + "px";
 			} else {
-				this.$title.addClass("hidden");
-				this.$heading.addClass("has-minimized-header-component");
+				this.$title.classList.add("hidden");
+				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
 				const width = alwaysMaximizedField.config.minWidth + (availableHeaderContentWidth - minWidthNeededWithHiddenHeaderAndOneMinimizedField);
 				console.log(alwaysMaximizedField.config.minWidth, (availableHeaderContentWidth - minWidthNeededWithHiddenHeaderAndOneMinimizedField), width);
-				alwaysMaximizedField.$fieldWrapper.css({
-					width: width
-				});
+				alwaysMaximizedField.$fieldWrapper.style.width = width + "px";
 			}
 		} else if (this.numberOfVisibleHeaderFields() == 1) {
-			this.$heading.removeClass("has-minimized-header-component");
+			this.$heading.classList.remove("has-minimized-header-component");
 			let headerField = this.leftHeaderField || this.rightHeaderField;
 			this.setMinimizedFields();
 
 			if (availableHeaderContentWidth >= minAllExpandedWidth) {
-				this.$title.removeClass("hidden").css("width", "");
+				this.$title.classList.remove("hidden");
+				this.$title.style.width = null;
 				let availableAdditionalSpace = availableHeaderContentWidth - minAllExpandedWidth;
 				this.headerFields.forEach(headerField => {
 					let newFieldWidth = Math.min(
 						headerField.config.minWidth + availableAdditionalSpace,
 						headerField.config.maxWidth
 					);
-					headerField.$fieldWrapper.css({
-						width: newFieldWidth,
-					});
+					headerField.$fieldWrapper.style.width = newFieldWidth + "px";
 				});
 			} else if (availableHeaderContentWidth >= minAllExpandedWidth - this.titleNaturalWidth + 30 /* less does not make sense for title */) {
-				this.$title.removeClass("hidden");
-				headerField.$fieldWrapper.css({
-					width: headerField.config.minWidth,
-				});
-				this.$title.outerWidth(this.titleNaturalWidth - (minAllExpandedWidth - availableHeaderContentWidth));
+				this.$title.classList.remove("hidden");
+				headerField.$fieldWrapper.style.width = headerField.config.minWidth + "px";
+				this.$title.style.width = (this.titleNaturalWidth - (minAllExpandedWidth - availableHeaderContentWidth)) + "px";
 			} else {
-				this.$title.addClass("hidden");
+				this.$title.classList.add("hidden");
 				let widthLessThanNeeded = availableHeaderContentWidth - minAllExpandedWidth + this.titleNaturalWidth;
-				headerField.$fieldWrapper.css({
-					width: headerField.config.minWidth + widthLessThanNeeded,
-				});
+				headerField.$fieldWrapper.style.width = (headerField.config.minWidth + widthLessThanNeeded) + "px";
 			}
 		} else {
-			this.$heading.removeClass("has-minimized-header-component");
-			this.$title.removeClass("hidden");
+			this.$heading.classList.remove("has-minimized-header-component");
+			this.$title.classList.remove("hidden");
 			let availableAdditionalSpace = availableHeaderContentWidth - minAllExpandedWidth;
-			this.$title.outerWidth(this.titleNaturalWidth + availableAdditionalSpace);
+			this.$title.style.width = (this.titleNaturalWidth + availableAdditionalSpace) + "px";
 		}
 	};
 
@@ -554,7 +540,7 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 	}
 
 	public destroy(): void {
-		this.$panel.detach(); // may be currently attached to document.body (maximized)
+		this.$panel.remove(); // may be currently attached to document.body (maximized)
 	}
 
 	public static isDraggablePanelHeadingElement(target: HTMLElement): boolean {

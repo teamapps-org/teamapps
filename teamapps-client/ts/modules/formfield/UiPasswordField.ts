@@ -34,7 +34,7 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 		this.salt = config.salt;
 		this.sendValueAsMd5 = config.sendValueAsMd5;
 		super.initialize(config, context);
-		this.$field.attr("type", "password");
+		this.$field.type = "password";
 	}
 
 	setSalt(salt: string): void {
@@ -46,7 +46,7 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 	}
 
 	getTransientValue(): string {
-		return this.calculateValueString(this.$field.val());
+		return this.calculateValueString(this.$field.value);
 	}
 
 	private calculateValueString(value: any) {

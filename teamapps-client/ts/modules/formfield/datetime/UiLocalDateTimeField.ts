@@ -34,7 +34,7 @@ export class UiLocalDateTimeField extends AbstractUiDateTimeField<UiLocalDateTim
 
 	protected initialize(config: UiLocalDateTimeFieldConfig, context: TeamAppsUiContext) {
 		super.initialize(config, context);
-		this.getMainInnerDomElement().addClass("UiDateTimeField");
+		this.getMainInnerDomElement().classList.add("UiDateTimeField");
 	}
 
 	isValidData(v: LocalDateTime): boolean {

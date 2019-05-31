@@ -95,19 +95,19 @@ export function createUiBorderCssObject(borderConfig: UiBorderConfig): CssProper
 	} else {
 		let css: CssPropertyObject = {};
 		if (borderConfig.top) {
-			css['border-top'] = createUiLineCssString(borderConfig.top);
+			css['borderTop'] = createUiLineCssString(borderConfig.top);
 		}
 		if (borderConfig.left) {
-			css['border-left'] = createUiLineCssString(borderConfig.left);
+			css['borderLeft'] = createUiLineCssString(borderConfig.left);
 		}
 		if (borderConfig.bottom) {
-			css['border-bottom'] = createUiLineCssString(borderConfig.bottom);
+			css['borderBottom'] = createUiLineCssString(borderConfig.bottom);
 		}
 		if (borderConfig.right) {
-			css['border-right'] = createUiLineCssString(borderConfig.right);
+			css['borderRight'] = createUiLineCssString(borderConfig.right);
 		}
 		if (borderConfig.borderRadius) {
-			css['border-radius'] = borderConfig.borderRadius + 'px';
+			css['borderRadius'] = borderConfig.borderRadius + 'px';
 		}
 		return css;
 	}
@@ -127,7 +127,7 @@ export function createUiShadowCssObject(shadowConfig: UiShadowConfig): CssProper
 		return {};
 	} else {
 		return {
-			"box-shadow": `${shadowConfig.offsetX || 0}px ${shadowConfig.offsetY || 0}px ${shadowConfig.blur}px ${shadowConfig.spread || 0}px ${createUiColorCssString(shadowConfig.color)}`
+			"boxShadow": `${shadowConfig.offsetX || 0}px ${shadowConfig.offsetY || 0}px ${shadowConfig.blur}px ${shadowConfig.spread || 0}px ${createUiColorCssString(shadowConfig.color)}`
 		}
 	}
 }
@@ -151,7 +151,7 @@ export function createImageSizingCssObject(imageSizing: UiImageSizing): CssPrope
 			backgroundSize = "cover";
 		}
 		return {
-			"background-size": backgroundSize
+			"backgroundSize": backgroundSize
 		}
 	}
 }

@@ -18,7 +18,6 @@
  * =========================LICENSE_END==================================
  */
 import * as Mustache from "mustache";
-import * as $ from "jquery";
 import * as moment from "moment-timezone";
 
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
@@ -29,7 +28,7 @@ import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingFiel
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../../generated/UiSpecialKey";
 import {AbstractUiTimeFieldConfig, AbstractUiTimeFieldCommandHandler, AbstractUiTimeFieldEventSource} from "../../../generated/AbstractUiTimeFieldConfig";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat} from "../../Common";
+import {convertJavaDateTimeFormatToMomentDateTimeFormat, parseHtml} from "../../Common";
 import {EventFactory} from "../../../generated/EventFactory";
 
 export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiTimeFieldEventSource, AbstractUiTimeFieldCommandHandler {
@@ -39,21 +38,21 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 
 	public static comboBoxTemplate = '<div class="tr-template-icon-single-line">' +
 		'<svg class="clock-icon night-{{isNight}}" viewBox="0 0 110 110" width="22" height="22"> ' +
-		'<circle class="clockcircle" cx="55" cy="55" r="45"/>' +
+		'<circle class="clockcircle" cx="55" cy="55" r="45"></circle>' +
 		'<g class="hands">' +
-		' <line class="hourhand" x1="55" y1="55" x2="55" y2="35" transform="rotate({{hourAngle}},55,55)"/> ' +
-		' <line class="minutehand" x1="55" y1="55" x2="55" y2="22" transform="rotate({{minuteAngle}},55,55)"/>' +
+		' <line class="hourhand" x1="55" y1="55" x2="55" y2="35" transform="rotate({{hourAngle}},55,55)"></line> ' +
+		' <line class="minutehand" x1="55" y1="55" x2="55" y2="22" transform="rotate({{minuteAngle}},55,55)"></line>' +
 		'</g> ' +
 		'</svg>' +
 		'  <div class="content-wrapper tr-editor-area">{{displayString}}</div>' +
 		'</div>';
 
-	private $originalInput: JQuery;
+	private $originalInput: HTMLElement;
 	protected trivialComboBox: TrivialComboBox<any>;
 	private timeFormat: string;
 
 	protected initialize(config: AbstractUiTimeFieldConfig, context: TeamAppsUiContext) {
-		this.$originalInput = $('<input type="text" autocomplete="off">');
+		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
 
 		this.timeFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.timeFormat);
 
@@ -79,29 +78,29 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 			entryRenderingFunction: (entry) => Mustache.render(AbstractUiTimeField.comboBoxTemplate, entry || {hourAngle: 0, minuteAngle: 0}),
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable'
 		});
-		$(this.trivialComboBox.getMainDomElement()).addClass("AbstractUiTimeField");
+		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiTimeField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
-		$(this.trivialComboBox.getEditor()).on("keydown", (e) => {
-			if (e.keyCode === keyCodes.escape) {
+		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
-			} else if (e.keyCode === keyCodes.enter) {
+			} else if (e.key === "Enter") {
 				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
 			}
 		});
 
-		$(this.trivialComboBox.getMainDomElement()).addClass("field-border field-border-glow field-background");
-		$(this.trivialComboBox.getMainDomElement()).find(".tr-editor").addClass("field-background");
-		$(this.trivialComboBox.getMainDomElement()).find(".tr-trigger").addClass("field-border");
-		this.trivialComboBox.onFocus.addListener(() => this.getMainDomElement().addClass("focus"));
-		this.trivialComboBox.onBlur.addListener(() => this.getMainDomElement().removeClass("focus"));
+		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
+		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
+		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
+		this.trivialComboBox.onFocus.addListener(() => this.getMainDomElement()[0].classList.add("focus"));
+		this.trivialComboBox.onBlur.addListener(() => this.getMainDomElement()[0].classList.remove("focus"));
 	}
 
-	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement() as any);
+	public getMainInnerDomElement(): HTMLElement {
+		return this.trivialComboBox.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement() as any);
+	public getFocusableElement(): HTMLElement {
+		return this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor");
 	}
 
 	protected getTimeFormat() {
@@ -114,7 +113,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 	}
 
 	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().is('.focus');
+		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	private static intRange(fromInclusive: number, toInclusive: number) {
@@ -158,9 +157,8 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainInnerDomElement()
-			.removeClass(Object.values(UiField.editingModeCssClasses).join(" "))
-			.addClass(UiField.editingModeCssClasses[editingMode]);
+		this.getMainInnerDomElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainInnerDomElement().classList.add(UiField.editingModeCssClasses[editingMode]);
 		if (editingMode === UiFieldEditingMode.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
 		} else if (editingMode === UiFieldEditingMode.DISABLED) {
@@ -172,7 +170,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 
 	doDestroy(): void {
 		this.trivialComboBox.destroy();
-		this.$originalInput.detach();
+		this.$originalInput.remove();
 	}
 
 	getDefaultValue(): V {

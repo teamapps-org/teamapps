@@ -30,6 +30,7 @@ import {UiFieldMessagePosition} from "../../generated/UiFieldMessagePosition";
 import {UiFieldMessageVisibilityMode} from "../../generated/UiFieldMessageVisibilityMode";
 import Popper from "popper.js";
 import {bind} from "../util/Bind";
+import {parseHtml, prependChild} from "../Common";
 import Logger = log.Logger;
 
 
@@ -39,7 +40,7 @@ export interface ValueChangeEventData {
 
 interface FieldMessage {
 	message: UiFieldMessageConfig,
-	$message: JQuery
+	$message: HTMLElement
 }
 
 export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> extends UiComponent<C> implements UiFieldCommandHandler, UiFieldEventSource {
@@ -61,15 +62,15 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	private committedValue: V;
 
 	private editingMode: UiFieldEditingMode;
-	private $fieldWrapper: JQuery;
+	private $fieldWrapper: HTMLElement;
 
 	private _messageTooltip: {
 		popper: Popper,
-		$popperElement: JQuery,
-		$messageContainer: JQuery
+		$popperElement: HTMLElement,
+		$messageContainer: HTMLElement
 	};
-	private $messagesContainerAbove: JQuery;
-	private $messagesContainerBelow: JQuery;
+	private $messagesContainerAbove: HTMLElement;
+	private $messagesContainerBelow: HTMLElement;
 	private fieldMessages: FieldMessage[] = [];
 	private hovering: boolean;
 
@@ -77,21 +78,21 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	            _context: TeamAppsUiContext) {
 		super(_config, _context);
 		this.initialize(_config, _context);
-		this.$messagesContainerAbove = $(`<div class="messages messages-above"></div>`);
-		this.$messagesContainerBelow = $(`<div class="messages messages-below"></div>`);
-		this.$fieldWrapper = $(`<div class="UiField"></div>`)
-			.append(this.$messagesContainerAbove)
-			.append(this.getMainInnerDomElement())
-			.append(this.$messagesContainerBelow);
+		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
+		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
+		this.$fieldWrapper = parseHtml(`<div class="UiField"></div>`);
+		this.$fieldWrapper.appendChild(this.$messagesContainerAbove);
+		this.$fieldWrapper.appendChild(this.getMainInnerDomElement());
+		this.$fieldWrapper.appendChild(this.$messagesContainerBelow);
 		this.setEditingMode(_config.editingMode);
 		this.setCommittedValue(_config.value);
 		this.onValueChanged.addListener(() => this.onUserManipulation.fire(null));
-		this.getFocusableElement() && this.getFocusableElement().on("focus", () => {
-			this.getMainDomElement().addClass("focus");
+		this.getFocusableElement() && this.getFocusableElement().addEventListener("focus", () => {
+			this.getMainDomElement()[0].classList.add("focus");
 			this.onFocused.fire(null);
 		});
-		this.getFocusableElement() && this.getFocusableElement().on("blur", () => {
-			this.getMainDomElement().removeClass("focus");
+		this.getFocusableElement() && this.getFocusableElement().addEventListener("blur", () => {
+			this.getMainDomElement()[0].classList.remove("focus");
 			this.onBlurred.fire(null);
 		});
 
@@ -114,21 +115,21 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			|| highestVisibilityByPosition[position] === UiFieldMessageVisibilityMode.ON_HOVER_OR_FOCUS && this.hovering
 			|| this.hasFocus();
 		if (messagesVisible(UiFieldMessagePosition.ABOVE)) {
-			this.$messagesContainerAbove.removeClass("hidden");
+			this.$messagesContainerAbove.classList.remove("hidden");
 		} else {
-			this.$messagesContainerAbove.addClass("hidden");
+			this.$messagesContainerAbove.classList.add("hidden");
 		}
 		if (messagesVisible(UiFieldMessagePosition.BELOW)) {
-			this.$messagesContainerBelow.removeClass("hidden");
+			this.$messagesContainerBelow.classList.remove("hidden");
 		} else {
-			this.$messagesContainerBelow.addClass("hidden");
+			this.$messagesContainerBelow.classList.add("hidden");
 		}
 		if (this._messageTooltip != null) {
 			if (messagesVisible(UiFieldMessagePosition.POPOVER)) {
-				this._messageTooltip.$popperElement.removeClass("hidden");
+				this._messageTooltip.$popperElement.classList.remove("hidden");
 				this._messageTooltip.popper.update();
 			} else {
-				this._messageTooltip.$popperElement.addClass("hidden");
+				this._messageTooltip.$popperElement.classList.add("hidden");
 			}
 		}
 	}
@@ -152,16 +153,16 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	}
 
 	public getMainDomElement(): JQuery {
-		return this.$fieldWrapper;
+		return $(this.$fieldWrapper);
 	}
 
-	abstract getMainInnerDomElement(): JQuery;
+	abstract getMainInnerDomElement(): HTMLElement;
 
-	abstract getFocusableElement(): JQuery;
+	abstract getFocusableElement(): HTMLElement;
 
 	public hasFocus() {
 		let focusableElement = this.getFocusableElement();
-		return focusableElement && focusableElement.is(":focus");
+		return focusableElement && focusableElement.matches(":focus");
 	}
 
 	public focus(): void {
@@ -173,7 +174,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		super.destroy();
 		if (this._messageTooltip) {
 			this._messageTooltip.popper.destroy();
-			this._messageTooltip.$popperElement.detach();
+			this._messageTooltip.$popperElement.remove();
 			this.onResized.removeListener(this.updatePopperPosition)
 		}
 		this.doDestroy();
@@ -247,31 +248,30 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	}
 
 	public static defaultOnEditingModeChangedImpl(field: UiField<UiFieldConfig, any>) {
-		field.getMainDomElement()
-			.removeClass(Object.values(UiField.editingModeCssClasses).join(" "))
-			.addClass(UiField.editingModeCssClasses[field.getEditingMode()]);
+		field.getMainDomElement()[0].classList.remove(...Object.values(UiField.editingModeCssClasses));
+		field.getMainDomElement()[0].classList.add(UiField.editingModeCssClasses[field.getEditingMode()]);
 
 		let $focusable = field.getFocusableElement();
 		if ($focusable) {
 			switch (field.getEditingMode()) {
 				case UiFieldEditingMode.EDITABLE:
-					$focusable.prop("readonly", false);
-					$focusable.prop("disabled", false);
-					$focusable.attr("tabindex", "0");
+					$focusable.removeAttribute("readonly");
+					$focusable.removeAttribute("disabled");
+					$focusable.setAttribute("tabindex", "0");
 					break;
 				case UiFieldEditingMode.EDITABLE_IF_FOCUSED:
-					$focusable.prop("readonly", false);
-					$focusable.prop("disabled", false);
-					$focusable.attr("tabindex", "0");
+					$focusable.removeAttribute("readonly");
+					$focusable.removeAttribute("disabled");
+					$focusable.setAttribute("tabindex", "0");
 					break;
 				case UiFieldEditingMode.DISABLED:
-					$focusable.prop("readonly", false);
-					$focusable.prop("disabled", true);
+					$focusable.removeAttribute("readonly");
+					$focusable.setAttribute("disabled", "disabled");
 					break;
 				case UiFieldEditingMode.READONLY:
-					$focusable.prop("readonly", true);
-					$focusable.prop("disabled", false);
-					$focusable.attr("tabindex", "-1");
+					$focusable.setAttribute("readonly", "readonly");
+					$focusable.removeAttribute("disabled");
+					$focusable.setAttribute("tabindex", "-1");
 					break;
 				default:
 					log.getLogger("UiField").error("unknown editing mode! " + field.getEditingMode());
@@ -292,12 +292,12 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			fieldMessageConfigs = [];
 		}
 
-		this.getMainDomElement().removeClass("message-info message-success message-warning message-error");
-		this.$messagesContainerAbove[0].innerHTML = '';
-		this.$messagesContainerBelow[0].innerHTML = '';
+		this.getMainDomElement()[0].classList.remove("message-info", "message-success", "message-warning", "message-error");
+		this.$messagesContainerAbove.innerHTML = '';
+		this.$messagesContainerBelow.innerHTML = '';
 		if (this._messageTooltip != null) {
-			this._messageTooltip.$messageContainer[0].innerHTML = '';
-			this._messageTooltip.$popperElement.removeClass(`tooltip-info tooltip-success tooltip-warning tooltip-error`);
+			this._messageTooltip.$messageContainer.innerHTML = '';
+			this._messageTooltip.$popperElement.classList.remove(`tooltip-info tooltip-success tooltip-warning tooltip-error`);
 		}
 
 		this.fieldMessages = fieldMessageConfigs
@@ -311,7 +311,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			return messages.reduce((highestSeverity, message) => message.message.severity > highestSeverity ? message.message.severity : highestSeverity, UiFieldMessageSeverity.INFO);
 		};
 		if (this.fieldMessages && this.fieldMessages.length > 0) {
-			this.getMainDomElement().addClass("message-" + UiFieldMessageSeverity[getHighestSeverity(this.fieldMessages)].toLowerCase());
+			this.getMainDomElement()[0].classList.add("message-" + UiFieldMessageSeverity[getHighestSeverity(this.fieldMessages)].toLowerCase());
 		}
 
 		let fieldMessagesByPosition: { [position in UiFieldMessagePosition]: FieldMessage[] } = {
@@ -320,18 +320,18 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			[UiFieldMessagePosition.POPOVER]: this.fieldMessages.filter(m => m.message.position == UiFieldMessagePosition.POPOVER)
 		};
 
-		fieldMessagesByPosition[UiFieldMessagePosition.ABOVE].forEach(message => this.getMessagesContainer(message.message.position).prepend(message.$message));
-		fieldMessagesByPosition[UiFieldMessagePosition.BELOW].forEach(message => this.getMessagesContainer(message.message.position).append(message.$message));
+		fieldMessagesByPosition[UiFieldMessagePosition.ABOVE].forEach(message => prependChild(this.getMessagesContainer(message.message.position), message.$message));
+		fieldMessagesByPosition[UiFieldMessagePosition.BELOW].forEach(message => this.getMessagesContainer(message.message.position).appendChild(message.$message));
 		if (fieldMessagesByPosition[UiFieldMessagePosition.POPOVER].length > 0) {
 			const highestPopoverSeverity = getHighestSeverity(fieldMessagesByPosition[UiFieldMessagePosition.POPOVER]);
-			this.messageTooltip.$popperElement.addClass(`tooltip-${UiFieldMessageSeverity[highestPopoverSeverity].toLowerCase()}`);
+			this.messageTooltip.$popperElement.classList.add(`tooltip-${UiFieldMessageSeverity[highestPopoverSeverity].toLowerCase()}`);
 			fieldMessagesByPosition[UiFieldMessagePosition.POPOVER].forEach(message => {
-				this.messageTooltip.$messageContainer.append(message.$message);
+				this.messageTooltip.$messageContainer.appendChild(message.$message);
 			});
-			this.messageTooltip.$popperElement.removeClass("empty");
+			this.messageTooltip.$popperElement.classList.remove("empty");
 			this.messageTooltip.popper.update();
 		} else if (this._messageTooltip != null) {
-			this.messageTooltip.$popperElement.addClass("empty");
+			this.messageTooltip.$popperElement.classList.add("empty");
 		}
 
 		this.updateFieldMessageVisibilities();
@@ -341,15 +341,15 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		const severityCssClass = `field-message-${UiFieldMessageSeverity[message.severity].toLowerCase()}`;
 		const positionCssClass = `position-${UiFieldMessagePosition[message.position].toLowerCase()}`;
 		const visibilityCssClass = `visibility-${UiFieldMessageVisibilityMode[message.visibilityMode].toLowerCase()}`;
-		return $(`<div class="field-message ${severityCssClass} ${positionCssClass} ${visibilityCssClass}">${message.message}</div>`);
+		return parseHtml(`<div class="field-message ${severityCssClass} ${positionCssClass} ${visibilityCssClass}">${message.message}</div>`);
 	}
 
 	private get messageTooltip() {
 		if (this._messageTooltip == null) {
-			let $popperElement = $(`<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>`)
-				.appendTo(document.body);
-			let $messageContainer = $popperElement.find(".tooltip-inner");
-			let popper = new Popper(this.getMainInnerDomElement()[0], $popperElement[0], {
+			let $popperElement = parseHtml(`<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>`);
+			document.body.appendChild($popperElement);
+			let $messageContainer = $popperElement.querySelector<HTMLElement>(":scope .tooltip-inner");
+			let popper = new Popper(this.getMainInnerDomElement(), $popperElement, {
 				placement: 'right',
 				modifiers: {
 					flip: {
@@ -363,9 +363,9 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			this.onResized.addListener(this.updatePopperPosition);
 			this.onAttachedToDomChanged.addListener(attached => {
 				if (attached) {
-					this._messageTooltip.$popperElement.appendTo(document.body);
+					document.body.appendChild(this._messageTooltip.$popperElement);
 				} else {
-					this._messageTooltip.$popperElement.detach();
+					this._messageTooltip.$popperElement.remove();
 				}
 			});
 			this._messageTooltip = {

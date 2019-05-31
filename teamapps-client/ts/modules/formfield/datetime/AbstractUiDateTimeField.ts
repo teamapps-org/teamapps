@@ -17,25 +17,22 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {TrivialDateTimeField} from "trivial-components";
-import * as moment from "moment-timezone";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {AbstractUiDateTimeFieldConfig, AbstractUiDateTimeFieldCommandHandler, AbstractUiDateTimeFieldEventSource} from "../../../generated/AbstractUiDateTimeFieldConfig";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat} from "../../Common";
+import {convertJavaDateTimeFormatToMomentDateTimeFormat, parseHtml} from "../../Common";
 
 export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiDateTimeFieldEventSource, AbstractUiDateTimeFieldCommandHandler {
 
-	private $originalInput: JQuery;
+	private $originalInput: HTMLElement;
 	protected trivialDateTimeField: TrivialDateTimeField;
 	private dateFormat: string;
 	private timeFormat: string;
 
 	protected initialize(config: AbstractUiDateTimeFieldConfig, context: TeamAppsUiContext) {
-		this.$originalInput = $('<input type="text" autocomplete="off">');
+		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
 
 		this.dateFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.dateFormat);
 		this.timeFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.timeFormat);
@@ -47,13 +44,14 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			favorPastDates: config.favorPastDates
 		});
-		$(this.trivialDateTimeField.getMainDomElement()).addClass("AbstractUiDateTimeField");
+		this.trivialDateTimeField.getMainDomElement().classList.add("AbstractUiDateTimeField");
 		this.trivialDateTimeField.onChange.addListener(() => this.commit());
 
-		$(this.trivialDateTimeField.getMainDomElement()).addClass("field-border field-border-glow field-background");
-		$(this.trivialDateTimeField.getMainDomElement()).find(".tr-date-editor, .tr-time-editor").addClass("field-background");
-		$(this.trivialDateTimeField.getMainDomElement()).find(".tr-trigger").addClass("field-border");
-		$(this.trivialDateTimeField.getMainDomElement()).find(".tr-date-editor, .tr-time-editor").on("focus blur", e => this.getMainDomElement().toggleClass("focus", e.type === "focus"));
+		this.trivialDateTimeField.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
+		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-date-editor, .tr-time-editor").classList.add("field-background");
+		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
+		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-date-editor, .tr-time-editor")
+			.addEventListener("focus blur", e => this.getMainDomElement()[0].classList.toggle("focus", e.type === "focus"));
 	}
 
 	protected getDateFormat() {
@@ -64,12 +62,12 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 		return this.timeFormat || this._context.config.timeFormat;
 	}
 
-	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialDateTimeField.getMainDomElement() as any);
+	public getMainInnerDomElement(): HTMLElement {
+		return this.trivialDateTimeField.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): JQuery {
-		return $(this.trivialDateTimeField.getMainDomElement() as any).find('.tr-editor');
+	public getFocusableElement(): HTMLElement {
+		return this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(':scope .tr-editor');
 	}
 
 	focus(): void {
@@ -77,13 +75,12 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 	}
 
 	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().is('.focus');
+		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainDomElement()
-			.removeClass(Object.values(UiField.editingModeCssClasses).join(" "))
-			.addClass(UiField.editingModeCssClasses[editingMode]);
+		this.getMainDomElement()[0].classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainDomElement()[0].classList.add(UiField.editingModeCssClasses[editingMode]);
 		if (editingMode === UiFieldEditingMode.READONLY) {
 			// this.trivialDateTimeField.setEditingMode("readonly");
 		} else if (editingMode === UiFieldEditingMode.DISABLED) {
@@ -95,7 +92,7 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 
 	doDestroy(): void {
 		this.trivialDateTimeField.destroy();
-		this.$originalInput.detach();
+		this.$originalInput.remove();
 	}
 
 	getDefaultValue(): V {

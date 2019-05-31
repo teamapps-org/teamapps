@@ -32,7 +32,7 @@ export class UiInstantDateField extends AbstractUiDateField<UiInstantDateFieldCo
 
 	protected initialize(config: UiInstantDateFieldConfig, context: TeamAppsUiContext) {
 		super.initialize(config, context);
-		this.getMainInnerDomElement().addClass("UiInstantDateField");
+		this.getMainInnerDomElement().classList.add("UiInstantDateField");
 		this.timeZoneId = config.timeZoneId;
 	}
 

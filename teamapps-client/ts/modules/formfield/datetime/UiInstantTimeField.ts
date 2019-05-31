@@ -33,7 +33,7 @@ export class UiInstantTimeField extends AbstractUiTimeField<UiInstantTimeFieldCo
 	protected initialize(config: UiInstantTimeFieldConfig, context: TeamAppsUiContext) {
 		super.initialize(config, context);
 		this.timeZoneId = config.timeZoneId;
-		this.getMainInnerDomElement().addClass("UiInstantTimeField");
+		this.getMainInnerDomElement().classList.add("UiInstantTimeField");
 	}
 
 	isValidData(v: number): boolean {

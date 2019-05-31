@@ -41,14 +41,14 @@ import * as log from "loglevel";
 import {UiFormSectionFieldPlacementConfig} from "../generated/UiFormSectionFieldPlacementConfig";
 import {UiFormSectionPlacementConfig} from "../generated/UiFormSectionPlacementConfig";
 import {UiFormSectionFloatingFieldsPlacementConfig} from "../generated/UiFormSectionFloatingFieldsPlacementConfig";
-import {generateUUID} from "./Common";
+import {generateUUID, parseHtml} from "./Common";
 import {bind} from "./util/Bind";
 
 export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridFormCommandHandler, UiGridFormEventSource {
 
 	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent>(this);
 
-	private $mainDiv: any;
+	private $mainDiv: HTMLElement;
 
 	private sections: UiFormSection[];
 
@@ -60,7 +60,7 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 
 	constructor(config: UiGridFormConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$mainDiv = $(`<div class="UiGridForm" data-teamapps-id="${config.id}">
+		this.$mainDiv = parseHtml(`<div class="UiGridForm" data-teamapps-id="${config.id}">
 </div>`);
 
 		config.fields.forEach(fieldConfig => this.addField(fieldConfig));
@@ -72,7 +72,7 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 	}
 
 	public getMainDomElement(): JQuery {
-		return this.$mainDiv;
+		return $(this.$mainDiv);
 	}
 
 	@executeWhenAttached(true)
@@ -98,14 +98,14 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 
 	@executeWhenAttached(true)
 	private applyLayoutPolicy(layoutPolicy: UiFormLayoutPolicyConfig) {
-		this.uiFields.forEach(uiField => uiField.getMainDomElement().detach());
+		this.uiFields.forEach(uiField => uiField.getMainDomElement().remove());
 		this.sections && this.sections.forEach(section => {
 			section.destroy();
-			section.getMainDomElement().detach();
+			section.getMainDomElement().remove();
 		});
 		this.sections = layoutPolicy.sections.map(sectionConfig => {
 			const section = new UiFormSection(sectionConfig, this._context, this.sectionCollapseOverrides[sectionConfig.id]);
-			section.getMainDomElement().appendTo(this.$mainDiv);
+			this.$mainDiv.appendChild(section.getMainDomElement());
 			section.placeFields();
 			section.onCollapsedStateChanged.addListener((collapsed) => {
 				this.onSectionCollapsedStateChanged.fire(EventFactory.createUiGridForm_SectionCollapsedStateChangedEvent(this.getId(), sectionConfig.id, collapsed));
@@ -139,7 +139,7 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 
 	// This hack is needed because css grid does not fill the whole height of a section when as it grows (flex). This is because the height of the (flex) section is dynamic, and not a static value.
 	private ensureFillRemainingHeight() {
-		let scrollContainer = this.$mainDiv[0];
+		let scrollContainer = this.$mainDiv;
 		while (scrollContainer.scrollTop === 0 && scrollContainer.parentElement != null) {
 			scrollContainer = scrollContainer.parentElement;
 		}
@@ -167,12 +167,12 @@ class UiFormSection {
 	private uiFields: UiField[] = [];
 
 	private uuid: string;
-	private $div: JQuery;
-	private $placementStyles: JQuery;
-	private $header: JQuery;
-	private $headerTemplateContainer: JQuery;
-	private $body: JQuery;
-	private $expander: JQuery;
+	private $div: HTMLElement;
+	private $placementStyles: HTMLElement;
+	private $header: HTMLElement;
+	private $headerTemplateContainer: HTMLElement;
+	private $body: HTMLElement;
+	private $expander: HTMLElement;
 	private collapsed: boolean;
 
 	constructor(public config: UiFormSectionConfig, context: TeamAppsUiContext, collapsedOverride: boolean) {
@@ -197,35 +197,35 @@ class UiFormSection {
 		const gridGapCss = 'grid-gap:' + config.gridGap + 'px;';
 
 
-		this.$div = $(`<div data-id="${config.id}" data-section-uuid="${this.uuid}" class="UiFormSection ${headerLineClass} ${hasHeaderTemplateClass} ${hasHeaderDataClass} ${collapsibleClass} ${hiddenClass} ${fillRemainingHeightClass}" style="${marginCss}${borderCss}${shadowCss}${backgroundColorCss}">
+		this.$div = parseHtml(`<div data-id="${config.id}" data-section-uuid="${this.uuid}" class="UiFormSection ${headerLineClass} ${hasHeaderTemplateClass} ${hasHeaderDataClass} ${collapsibleClass} ${hiddenClass} ${fillRemainingHeightClass}" style="${marginCss}${borderCss}${shadowCss}${backgroundColorCss}">
 	<style></style>
     <div class="header">
         <div class="expand-button">
-            <div class="teamapps-expander ${this.collapsed ? '' : 'expanded'} ${config.collapsible ? '' : 'hidden'}"/>
+            <div class="teamapps-expander ${this.collapsed ? '' : 'expanded'} ${config.collapsible ? '' : 'hidden'}"></div>
             <div class="header-template-container">
             </div>
         </div>
-        <div class="header-line"/>
+        <div class="header-line"></div>
     </div>
     <div class="body" style="${paddingCss} ${gridTemplateColumnsCss} ${gridTemplateRowsCss} ${gridGapCss}">
 
 	</div>
 </div>`);
-		this.$placementStyles = this.$div.find("style");
-		this.$header = this.$div.find("> .header");
-		this.$headerTemplateContainer = this.$header.find(".header-template-container");
+		this.$placementStyles = this.$div.querySelector<HTMLElement>(":scope style");
+		this.$header = this.$div.querySelector<HTMLElement>(":scope > .header");
+		this.$headerTemplateContainer = this.$header.querySelector<HTMLElement>(":scope .header-template-container");
 		if (config.headerTemplate && config.headerData) {
-			$(context.templateRegistry.createTemplateRenderer(config.headerTemplate).render(config.headerData)).appendTo(this.$headerTemplateContainer);
+			this.$headerTemplateContainer.appendChild(parseHtml(context.templateRegistry.createTemplateRenderer(config.headerTemplate).render(config.headerData)));
 		}
 
-		this.$expander = this.$div.find(".teamapps-expander");
-		this.$div.find('.expand-button').click(() => {
+		this.$expander = this.$div.querySelector<HTMLElement>(":scope .teamapps-expander");
+		this.$div.querySelector<HTMLElement>(':scope .expand-button').addEventListener('click',() => {
 			if (config.collapsible) {
 				this.setCollapsed(!this.collapsed);
 			}
 		});
 
-		this.$body = this.$div.find(".body");
+		this.$body = this.$div.querySelector<HTMLElement>(":scope .body");
 
 		this.setCollapsed(collapsedOverride != null ? collapsedOverride : (config.collapsible && config.collapsed), false);
 	}
@@ -260,7 +260,7 @@ class UiFormSection {
 					.appendTo(this.$body);
 				uiField.attachedToDom = true;
 			} else if (this.isUiFormSectionFloatingFieldsPlacement(placement)) {
-				let $container = $(`<div class="UiFormSectionFloatingFieldsPlacement" data-placement-id="${placementId}"></div>`);
+				let $container = parseHtml(`<div class="UiFormSectionFloatingFieldsPlacement" data-placement-id="${placementId}"></div>`);
 				allCssRules[placementId] = {
 					...createSectionPlacementStyles(placement),
 					"flex-wrap": placement.wrap ? "wrap" : "nowrap"
@@ -282,18 +282,18 @@ class UiFormSection {
 						.appendTo($container);
 					uiField.attachedToDom = true
 				});
-				$container.appendTo(this.$body);
+				this.$body.appendChild($container);
 			}
 		});
 
-		this.$placementStyles.text(this.createPlacementStylesCssString(allCssRules));
+		this.$placementStyles.textContent = this.createPlacementStylesCssString(allCssRules);
 		this.updateGroupVisibility();
 	}
 
 	@bind
 	private updateGroupVisibility() {
 		let hasVisibleFields = this.uiFields.filter(uiField => uiField.isVisible()).length > 0;
-		this.$div.toggleClass("hidden", !hasVisibleFields && this.config.hideWhenNoVisibleFields);
+		this.$div.classList.toggle("hidden", !hasVisibleFields && this.config.hideWhenNoVisibleFields);
 	}
 
 	public destroy() {
@@ -318,29 +318,30 @@ class UiFormSection {
 		return placement._type === "UiFormSectionFloatingFieldsPlacement";
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$div;
 	}
 
 	updateBodyHeightToFillRemainingHeight() {
-		this.$body[0].style.position = "absolute";
-		this.$body[0].style.minHeight = (this.$div.innerHeight() - this.$header[0].offsetHeight) + "px";
-		this.$body[0].style.position = "";
+		this.$body.style.position = "absolute";
+		this.$body.style.minHeight = (this.$div.offsetHeight - this.$header.offsetHeight) + "px";
+		this.$body.style.position = "";
 	}
 
 	setCollapsed(collapsed: boolean, animate = true): void {
 		this.collapsed = collapsed;
 		this.onCollapsedStateChanged.fire(this.collapsed);
-		this.$expander.toggleClass("expanded", !this.collapsed);
-		this.$div.toggleClass("collapsed", this.collapsed);
+		this.$expander.classList.toggle("expanded", !this.collapsed);
+		this.$div.classList.toggle("collapsed", this.collapsed);
 		if (animate) {
 			if (!this.collapsed) {
-				this.$body.slideDown(200);
+				this.$body.classList.remove('hidden');
+				$(this.$body).slideDown(200);
 			} else {
-				this.$body.slideUp(200);
+				$(this.$body).slideUp(200);
 			}
 		} else {
-			this.$body.toggle(!collapsed);
+			this.$body.classList.toggle('hidden', collapsed);
 		}
 		if (!collapsed) {
 			this.uiFields.forEach(field => field.reLayout())

@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiLabel_ClickedEvent, UiLabelConfig, UiLabelCommandHandler, UiLabelEventSource} from "../../generated/UiLabelConfig";
@@ -25,20 +24,23 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {EventFactory} from "../../generated/EventFactory";
+import {parseHtml, prependChild} from "../Common";
 
 export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEventSource, UiLabelCommandHandler {
 	public readonly onClicked: TeamAppsEvent<UiLabel_ClickedEvent> = new TeamAppsEvent<UiLabel_ClickedEvent>(this);
 
-	private $main: JQuery;
-	private $caption: JQuery;
+	private $main: HTMLElement;
+	private $icon: HTMLElement;
+	private $caption: HTMLElement;
 	private targetField: UiField;
 	private targetFieldVisibilityChangeHandler: (visible: boolean) => void;
 
 	protected initialize(config: UiLabelConfig, context: TeamAppsUiContext): void {
-		this.$main = $(`<div class="UiLabel"><span class="caption">${config.caption}</span></div>`);
-		this.$caption = this.$main.find(".caption");
+		this.$main = parseHtml(`<div class="UiLabel"><div class="icon img img-16 hidden"></div><span class="caption">${config.caption}</span></div>`);
+		this.$icon = this.$main.querySelector<HTMLElement>(":scope .icon");
+		this.$caption = this.$main.querySelector<HTMLElement>(":scope .caption");
 		this.setIcon(config.icon);
-		this.$main.click(() => {
+		this.$main.addEventListener('click',() => {
 			this.onClicked.fire(EventFactory.createUiLabel_ClickedEvent(this.getId()));
 			if (this.targetField != null) {
 				this.targetField.focus();
@@ -64,22 +66,19 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 	}
 
 	setCaption(caption: string): void {
-		this.$caption.text(caption);
+		this.$caption.textContent = caption || '';
 	}
 
 	setIcon(icon: string): void {
-		this.$main.find(".icon").detach();
-		if (icon) {
-			let iconPath = this._context.getIconPath(icon, 16);
-			this.$main.prepend(`<div class="icon img img-16" style="background-image: url(${iconPath})"></div>`)
-		}
+		this.$icon.classList.toggle("hidden", !icon);
+		this.$icon.style.backgroundImage = icon ? `url(${this._context.getIconPath(icon, 16)})` : null;
 	}
 
-	public getMainInnerDomElement(): JQuery {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
 
-	public getFocusableElement(): JQuery {
+	public getFocusableElement(): HTMLElement {
 		return null;
 	}
 
@@ -92,7 +91,7 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 	}
 
 	protected displayCommittedValue(): void {
-		this.$caption.text(this.getCommittedValue() || this._config.caption || "");
+		this.$caption.textContent = this.getCommittedValue() || this._config.caption || "";
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
