@@ -114,11 +114,11 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	}
 
 	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialUnitBox.getMainDomElement());
+		return $(this.trivialUnitBox.getMainDomElement() as any);
 	}
 
 	public getFocusableElement(): JQuery {
-		return $(this.trivialUnitBox.getMainDomElement()).find(".tr-editor");
+		return $(this.trivialUnitBox.getMainDomElement() as any).find(".tr-editor");
 	}
 
 	public hasFocus(): boolean {

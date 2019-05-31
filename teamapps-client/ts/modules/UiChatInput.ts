@@ -41,7 +41,6 @@ import * as log from "loglevel";
 import {EventFactory} from "../generated/EventFactory";
 import {createUiNewChatMessageConfig} from "../generated/UiNewChatMessageConfig";
 import {createUiChatNewFileConfig} from "../generated/UiChatNewFileConfig";
-import Mouse = JQuery.Mouse;
 
 export class UiChatInput extends UiComponent<UiChatInputConfig> implements UiChatInputCommandHandler, UiChatInputEventSource {
 

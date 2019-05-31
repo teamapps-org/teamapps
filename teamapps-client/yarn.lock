@@ -234,15 +234,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/jquery@*":
+"@types/jquery@*", "@types/jquery@^3.3.29":
   version "3.3.29"
   resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.29.tgz#680a2219ce3c9250483722fccf5570d1e2d08abd"
   dependencies:
     "@types/sizzle" "*"
-
-"@types/jquery@3.3.2":
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.2.tgz#8700226bdde24b6f98e3a60126dbaab3b2a3ab41"
 
 "@types/jqueryui@1.x":
   version "1.12.7"
@@ -293,6 +289,10 @@
 "@types/node@*":
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.0.tgz#d11813b9c0ff8aaca29f04cbc12817f4c7d656e5"
+
+"@types/node@^12.0.4":
+  version "12.0.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.4.tgz#46832183115c904410c275e34cf9403992999c32"
 
 "@types/nouislider@^9.0.4":
   version "9.0.5"
@@ -5456,9 +5456,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@2.9.2:
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
+typescript@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.1.tgz#ba72a6a600b2158139c5dd8850f700e231464202"
 
 uglify-es@^3.3.4:
   version "3.3.9"

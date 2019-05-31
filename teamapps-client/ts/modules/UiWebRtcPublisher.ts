@@ -234,7 +234,7 @@ export class UiWebRtcPublisher extends UiComponent<UiWebRtcPublisherConfig> impl
 			this.publishingPeerConnection = new RTCPeerConnection(UiWebRtcPublisher.PEER_CONNECTION_CONFIG);
 			this.publishingPeerConnection.onicecandidate = this.gotIceCandidate.bind(this);
 			this.publishingPeerConnection.oniceconnectionstatechange = this.onPublishingIceConnectionStateChange.bind(this);
-			this.publishingPeerConnection.addStream(this.multiStreamsMixer.getMixedStream());
+			(this.publishingPeerConnection as any).addStream(this.multiStreamsMixer.getMixedStream());
 			this.publishingPeerConnection.createOffer()
 				.then(sdpDescriptionInit => {
 					const enhancingData: SdpDescriptorEnhancingData = {

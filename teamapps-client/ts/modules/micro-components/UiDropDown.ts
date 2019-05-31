@@ -45,7 +45,7 @@ export class UiDropDown extends AbstractDropDown<OpenConfig> {
 		this.$dropDown.css("width", options.width + "px");
 		this.$dropDown.appendTo(document.body);
 		this.$dropDown.addClass('open');
-		positionDropDown($(this.currentOpenConfig.$reference), this.$dropDown, this.currentOpenConfig);
+		positionDropDown($(this.currentOpenConfig.$reference as any), this.$dropDown, this.currentOpenConfig);
 	}
 
 	protected doClose(): void {

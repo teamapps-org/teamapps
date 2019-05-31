@@ -200,11 +200,11 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 			.on("click contextmenu", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
 				me.onItemClicked.fire(EventFactory.createUiInfiniteItemView_ItemClickedEvent(me.getId(), recordId, e.button === 2, false));
-			} as JQuery.EventHandler<any>)
+			})
 			.on("dblclick", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
 				me.onItemClicked.fire(EventFactory.createUiInfiniteItemView_ItemClickedEvent(me.getId(), recordId, e.button === 2, true));
-			} as JQuery.EventHandler<any>);
+			});
 
 		this.setHorizontalItemMargin(config.horizontalItemMargin);
 	}

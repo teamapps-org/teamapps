@@ -65,11 +65,11 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 	}
 
 	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialDateTimeField.getMainDomElement());
+		return $(this.trivialDateTimeField.getMainDomElement() as any);
 	}
 
 	public getFocusableElement(): JQuery {
-		return $(this.trivialDateTimeField.getMainDomElement()).find('.tr-editor');
+		return $(this.trivialDateTimeField.getMainDomElement() as any).find('.tr-editor');
 	}
 
 	focus(): void {

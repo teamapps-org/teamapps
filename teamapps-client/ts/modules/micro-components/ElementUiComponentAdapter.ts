@@ -28,7 +28,7 @@ export class ElementUiComponentAdapter extends UiComponent<UiComponentConfig> {
 	}
 
 	getMainDomElement(): JQuery {
-		return $(this.element);
+		return $(this.element as any);
 	}
 
 	destroy(): void {
