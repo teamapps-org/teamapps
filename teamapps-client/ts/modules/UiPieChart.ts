@@ -59,7 +59,7 @@ export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieCh
 	}
 
 	getMainDomElement(): JQuery<HTMLElement> {
-		return $(this.chart.container());
+		return $(this.chart.container() as any);
 	}
 
 	onResize(): void {

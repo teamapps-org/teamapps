@@ -426,7 +426,7 @@ export function enterFullScreen(component: UiComponent<UiComponentConfig> | JQue
 	if (component instanceof UiComponent) {
 		element = component.getMainDomElement()[0];
 	} else {
-		element = $(component)[0];
+		element = $(component)[0] as Element;
 	}
 	$(element).addClass("fullscreen");
 	if (element.requestFullscreen) {
@@ -435,8 +435,8 @@ export function enterFullScreen(component: UiComponent<UiComponentConfig> | JQue
 		(element as any).msRequestFullscreen();
 	} else if ((element as any).mozRequestFullScreen) {
 		(element as any).mozRequestFullScreen();
-	} else if (element.webkitRequestFullscreen) {
-		element.webkitRequestFullscreen();
+	} else if ((element as any).webkitRequestFullscreen) {
+		(element as any).webkitRequestFullscreen();
 	}
 }
 
@@ -546,7 +546,7 @@ export function manipulateWithoutTransitions($element: JQuery, action: Function,
 }
 
 export function focusNextByTabIndex(navigatableElements: string | HTMLElement[] | JQuery, navDirection: -1 | 1): boolean {
-	let selectables: HTMLElement[] = $(navigatableElements).toArray().sort((e1: HTMLElement, e2: HTMLElement) => e2.tabIndex - e1.tabIndex);
+	let selectables: HTMLElement[] = $(navigatableElements as any).toArray().sort((e1: HTMLElement, e2: HTMLElement) => e2.tabIndex - e1.tabIndex);
 	let current = document.activeElement;
 	let currentIndex = selectables.indexOf(current as HTMLElement);
 	log.getLogger("Common").trace("selectables: " + selectables.length + "; current: " + currentIndex);
@@ -897,7 +897,7 @@ export function isDescendantOf(child: Element, potentialAncestor: Element, inclu
 
 export async function createImageThumbnailUrl(file: File): Promise<string> {
 	if (["image/bmp", "image/gif", "image/heic", "image/heic-sequence", "image/heif", "image/heif-sequence", "image/ief", "image/jls", "image/jp2", "image/jpeg", "image/jpm", "image/jpx", "image/ktx", "image/png", "image/sgi", "image/svg+xml", "image/tiff", "image/webp", "image/wmf"].includes(file.type)) {
-		return new Promise<string>((resolve, reject) => {
+		return new Promise<string|ArrayBuffer>((resolve, reject) => {
 			var reader = new FileReader();
 			reader.onloadend = function () {
 				resolve(reader.result);
@@ -906,7 +906,7 @@ export async function createImageThumbnailUrl(file: File): Promise<string> {
 				reject("Error while reading file.");
 			};
 			reader.readAsDataURL(file);
-		});
+		}) as Promise<string>;
 	} else {
 		return Promise.reject("Not a known image file type.");
 	}

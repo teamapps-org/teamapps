@@ -97,11 +97,11 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 	}
 
 	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement());
+		return $(this.trivialComboBox.getMainDomElement() as any);
 	}
 
 	public getFocusableElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement());
+		return $(this.trivialComboBox.getMainDomElement() as any);
 	}
 
 	protected getTimeFormat() {

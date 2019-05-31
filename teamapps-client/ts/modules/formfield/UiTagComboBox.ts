@@ -166,11 +166,11 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	}
 
 	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialTagComboBox.getMainDomElement());
+		return $(this.trivialTagComboBox.getMainDomElement() as any);
 	}
 
 	public getFocusableElement(): JQuery {
-		return $(this.trivialTagComboBox.getMainDomElement());
+		return $(this.trivialTagComboBox.getMainDomElement() as any);
 	}
 
 	protected displayCommittedValue(): void {

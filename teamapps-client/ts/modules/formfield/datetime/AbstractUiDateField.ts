@@ -136,11 +136,11 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 	}
 
 	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement());
+		return $(this.trivialComboBox.getMainDomElement() as any);
 	}
 
 	public getFocusableElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement()).find(".tr-editor");
+		return $(this.trivialComboBox.getMainDomElement() as any).find(".tr-editor");
 	}
 
 	protected getDateFormat() {

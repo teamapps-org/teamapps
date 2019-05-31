@@ -305,7 +305,7 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	}
 
 	public static buildRootPanel(containerElementId: string, uiRootPanel: UiRootPanel, context?: TeamAppsUiContext): void {
-		const $container = $(containerElementId ? "#" + containerElementId : document.body);
+		const $container = $(containerElementId ? "#" + containerElementId : document.body as any);
 		uiRootPanel.getMainDomElement().appendTo($container);
 		uiRootPanel.attachedToDom = true;
 	}

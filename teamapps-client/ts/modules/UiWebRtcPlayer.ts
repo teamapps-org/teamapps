@@ -102,7 +102,7 @@ export class UiWebRtcPlayer extends UiComponent<UiWebRtcPlayerConfig> implements
 			this.peerConnection = new RTCPeerConnection(UiWebRtcPlayer.PEER_CONNECTION_CONFIG);
 			this.peerConnection.onicecandidate = this.gotIceCandidate.bind(this);
 			this.peerConnection.oniceconnectionstatechange = this.onPlayingIceConnectionStateChange.bind(this);
-			this.peerConnection.onaddstream = this.gotRemoteStream.bind(this);
+			(this.peerConnection as any).onaddstream = this.gotRemoteStream.bind(this);
 			(this.peerConnection as any).ontrack = this.gotRemoteTrack.bind(this);
 			this.logger.debug("wsURL: " + this.settings.signalingUrl);
 			this.sendPlayGetOffer(this.settings.wowzaApplicationName, this.settings.streamName);

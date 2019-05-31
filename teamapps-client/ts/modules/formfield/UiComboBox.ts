@@ -179,11 +179,11 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 
 	public getMainInnerDomElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement());
+		return $(this.trivialComboBox.getMainDomElement() as any);
 	}
 
 	public getFocusableElement(): JQuery {
-		return $(this.trivialComboBox.getMainDomElement());
+		return $(this.trivialComboBox.getMainDomElement() as any);
 	}
 
 	protected displayCommittedValue(): void {
