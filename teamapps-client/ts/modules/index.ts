@@ -120,6 +120,7 @@ export {UiColorPicker} from "./formfield/UiColorPicker";
 export {UiToolButton} from "./micro-components/UiToolButton";
 
 export {UiPieChart} from "./UiPieChart";
+export {UiTreeGraph} from "./UiTreeGraph";
 
 // export {UiTestHarness} from "./UiTestHarness";
 
