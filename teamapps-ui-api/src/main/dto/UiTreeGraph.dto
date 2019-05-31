@@ -1,18 +1,22 @@
 class UiTreeGraph extends UiComponent {
     required List<UiTreeGraphNode> nodes;
 
+	UiColor backgroundColor = new UiColor(0, 0, 0).setAlpha(0);
+    float zoomFactor = 1;
+
     command setZoomFactor(float zoomFactor); // > 0
+    command setNodes(List<UiTreeGraphNode> nodes);
     command addNode(UiTreeGraphNode node);
     command removeNode(String nodeId);
-    command setExpanded(String nodeId, boolean expanded);
+    command setNodeExpanded(String nodeId, boolean expanded);
     
-    event handleNodeClick(String nodeId);
-
+    event nodeClicked(String nodeId);
+    event nodeExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 
 class UiTreeGraphNode {
-    required String nodeId;
-    String parentNodeId;
+    required String id;
+    String parentId;
     required int width;
     required int height;
     UiColor backgroundColor = new UiColor(255, 255, 255); // rgba
@@ -20,8 +24,8 @@ class UiTreeGraphNode {
     float borderWidth = 1;
     float borderRadius = 0;
 
-    UiTreeGraphNodeImage nodeImage;
-    UiTreeGraphNodeIcon nodeIcon;
+    UiTreeGraphNodeImage image;
+    UiTreeGraphNodeIcon icon;
 
     UiTemplate template;     // will get embedded using foreignObject
     UiClientRecord record;   // will get embedded using foreignObject
