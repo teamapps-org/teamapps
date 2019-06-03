@@ -45,7 +45,7 @@ export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDat
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
-			let newMoment: Moment = moment.tz(uiValue, this.getTimeZoneId());
+			let newMoment = moment.tz(uiValue, "UTC").tz(this.getTimeZoneId());
 			this.trivialDateTimeField.setValue(newMoment as any);
 		} else {
 			this.trivialDateTimeField.setValue(null);
@@ -73,7 +73,7 @@ export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDat
 
 	public getReadOnlyHtml(value: number, availableWidth: number): string {
 		if (value != null) {
-			let mom = moment.tz(value, this.timeZoneId || this._context.config.timeZoneId);
+			let mom = moment.tz(value, "UTC").tz(this.getTimeZoneId());
 			return `<div class="static-readonly-UiDateTimeField">`
 				+ Mustache.render(UiInstantDateField.comboBoxTemplate, UiInstantDateField.createDateComboBoxEntryFromMoment(mom, this._config.dateFormat || this._context.config.dateFormat))
 				+ Mustache.render(AbstractUiTimeField.comboBoxTemplate, AbstractUiTimeField.createTimeComboBoxEntryFromMoment(mom, this._config.timeFormat || this._context.config.timeFormat))
