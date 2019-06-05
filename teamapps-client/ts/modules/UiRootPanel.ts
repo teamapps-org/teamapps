@@ -26,7 +26,7 @@ import {UiWindowConfig} from "../generated/UiWindowConfig";
 import {UiNotificationConfig} from "../generated/UiNotificationConfig";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, insertAtIndex, parseHtml, showNotification} from "./Common";
+import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, parseHtml, showNotification} from "./Common";
 import {UiRootPanelCommandHandler, UiRootPanelConfig} from "../generated/UiRootPanelConfig";
 import {UiComponentRevealAnimation} from "../generated/UiComponentRevealAnimation";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -70,7 +70,7 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	private backgroundColor: string;
 
 	static __initialize() {
-		$(window).resize((e) => {
+		window.addEventListener("resize", (e) => {
 			this.ALL_ROOT_PANELS.forEach(rootPanel => {
 				rootPanel.reLayout();
 			});

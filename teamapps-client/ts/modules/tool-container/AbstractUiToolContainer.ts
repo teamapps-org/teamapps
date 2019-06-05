@@ -34,7 +34,7 @@ export abstract class AbstractUiToolContainer<C extends AbstractUiToolContainerC
 	protected static $sizeTestingContainer: HTMLElement;
 
 	public static initialize() {
-		$(() => { // wait until there IS a document.body
+		window.addEventListener("load", () => { // wait until there IS a document.body
 			this.$sizeTestingContainer = parseHtml('<div class="AbstractUiToolContainer-size-testing-container">');
 			document.body.appendChild(this.$sizeTestingContainer);
 		});

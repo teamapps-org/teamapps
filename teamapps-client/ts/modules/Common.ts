@@ -521,15 +521,15 @@ export function manipulateWithoutTransitions($element: HTMLElement, action: Func
 	}
 }
 
-export function focusNextByTabIndex(navigatableElements: string | HTMLElement[] | HTMLElement, navDirection: -1 | 1): boolean {
-	let selectables: HTMLElement[] = $(navigatableElements as any).toArray().sort((e1: HTMLElement, e2: HTMLElement) => e2.tabIndex - e1.tabIndex);
+export function focusNextByTabIndex(navigatableElements: HTMLElement[], navDirection: -1 | 1): boolean {
+	navigatableElements.sort((e1: HTMLElement, e2: HTMLElement) => e2.tabIndex - e1.tabIndex);
 	let current = document.activeElement;
-	let currentIndex = selectables.indexOf(current as HTMLElement);
-	log.getLogger("Common").trace("selectables: " + selectables.length + "; current: " + currentIndex);
+	let currentIndex = navigatableElements.indexOf(current as HTMLElement);
+	log.getLogger("Common").trace("selectables: " + navigatableElements.length + "; current: " + currentIndex);
 	let newIndex = currentIndex + navDirection;
-	if (newIndex > 0 && newIndex < selectables.length) {
-		logger.trace(selectables[newIndex]);
-		selectables[newIndex].focus();
+	if (newIndex > 0 && newIndex < navigatableElements.length) {
+		logger.trace(navigatableElements[newIndex]);
+		navigatableElements[newIndex].focus();
 		return true;
 	} else {
 		return false;
@@ -681,19 +681,19 @@ export function enableScrollViaDragAndDrop($scrollContainer: HTMLElement) {
 		startEvent.preventDefault();
 		let initialScrollLeft = $scrollContainer.scrollLeft;
 		let initialScrollTop = $scrollContainer.scrollTop;
-		const moveEvent = 'mousemove';
-		const endEvent = 'mouseup';
-		$(document).on(moveEvent, (e) => {
+		let dragHandler = (e: PointerEvent) => {
 			let diffX = e.pageX - startEvent.pageX;
 			let diffY = e.pageY - startEvent.pageY;
 			$scrollContainer.scrollLeft = initialScrollLeft - diffX;
 			$scrollContainer.scrollTop = initialScrollTop - diffY;
-		});
-		$(document).on(endEvent, (event) => {
-			$(document).unbind(moveEvent);
-			$(document).unbind(endEvent);
+		};
+		let dropHandler = (e: PointerEvent) => {
+			document.removeEventListener('pointermove', dragHandler);
+			document.removeEventListener('pointerup', dropHandler);
 			$scrollContainer.style.cursor = "";
-		});
+		};
+		document.addEventListener('pointermove', dragHandler);
+		document.addEventListener('pointerup', dropHandler);
 	}
 
 	$scrollContainer.addEventListener("mousedown", (e) => mousedownHandler(e));
@@ -724,19 +724,21 @@ export function convertJavaDateTimeFormatToMomentDateTimeFormat(javaFormat: stri
 	}
 }
 
-export function insertAtIndex($parent: HTMLElement | Element, $child: HTMLElement | Element | string, index: number) {
-	let effectiveIndex = Math.min($($parent).children().length, index);
+export function insertAtIndex($parent: Element, $child: Element, index: number) {
+	let effectiveIndex = Math.min($parent.childElementCount, index);
 	if (effectiveIndex === 0) {
-		$($parent).prepend($child);
+		$parent.prepend($child);
+	} else if (effectiveIndex === $parent.childElementCount) {
+		$parent.insertAdjacentElement('beforeend', $child);
 	} else {
-		$($parent).find(`>:nth-child(${effectiveIndex})`).after($child);
+		$parent.children[effectiveIndex].insertAdjacentElement('beforebegin', $child);
 	}
 }
 
 export function maximizeComponent(component: UiComponent, maximizeAnimationCallback?: () => void) {
 	const $parentDomElement = component.getMainDomElement().parentElement;
-	const scrollTop = $(document).scrollTop();
-	const scrollLeft = $(document).scrollLeft();
+	const scrollTop = window.scrollY;
+	const scrollLeft = window.scrollX;
 	const offset = component.getMainDomElement().getBoundingClientRect();
 
 	const changingCssProperties: (keyof CSSStyleDeclaration)[] = ["position", "top", "left", "width", "height", "zIndex"];
@@ -762,10 +764,10 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 	$(component.getMainDomElement()).animate({
 		top: "5px",
 		left: "5px",
-		width: ($(window).width() - 10),
-		height: ($(window).height() - 10)
+		width: (window.innerWidth - 10),
+		height: (window.innerHeight - 10)
 	}, 100, 'swing', () => {
-		$(component.getMainDomElement()).css({
+		css(component.getMainDomElement(), {
 			width: "calc(100% - 10px)",
 			height: "calc(100% - 10px)"
 		});
