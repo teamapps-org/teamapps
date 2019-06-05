@@ -36,6 +36,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 				'**',
 				'!/',
 				'!/index.html',
+				'!/test-harness.html',
 				"!/css/*",
 				"!/favicon/*",
 				"!/fonts/*",

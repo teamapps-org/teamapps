@@ -122,7 +122,7 @@ export {UiToolButton} from "./micro-components/UiToolButton";
 export {UiPieChart} from "./UiPieChart";
 export {UiTreeGraph} from "./UiTreeGraph";
 
-// export {UiTestHarness} from "./UiTestHarness";
+export {UiTestHarness} from "./UiTestHarness";
 
 // export {typescriptDeclarationFixConstant as AbstractUiChartConfig} from "./../generated/AbstractUiChartConfig";
 
