@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {Player, polyfill, util} from "../../custom-declarations/shaka-player";
 require("shaka-player");
 import {UiSpinner} from "../micro-components/UiSpinner";
@@ -30,11 +30,11 @@ export class UiMpegDashPlayer extends UiComponent<UiMpegDashPlayerConfig> implem
 
 	private browserSupported = Player.isBrowserSupported();
 
-	private $main: JQuery;
+	private $main: HTMLElement;
 	private $videoContainer: any;
 	private $notSupportedMessage: any;
 	private shouldBePlayingUnlessUserPressedPause: boolean;
-	private $spinnerContainer: JQuery;
+	private $spinnerContainer: HTMLElement;
 	private resetTimer: number = null;
 	private player: Player;
 	private url: string;
@@ -52,16 +52,16 @@ export class UiMpegDashPlayer extends UiComponent<UiMpegDashPlayerConfig> implem
     </div>
 </div>			
 `);
-		this.$spinnerContainer = this.$main.find('.spinner-container');
+		this.$spinnerContainer = this.$main.querySelector<HTMLElement>(':scope .spinner-container');
 		this.$spinnerContainer.append(new UiSpinner().getMainDomElement());
-		this.$notSupportedMessage = this.$main.find('.not-supported-message');
-		this.$videoContainer = this.$main.find('.video-container');
+		this.$notSupportedMessage = this.$main.querySelector<HTMLElement>(':scope .not-supported-message');
+		this.$videoContainer = this.$main.querySelector<HTMLElement>(':scope .video-container');
 
-		let video = this.$main.find('video')[0] as HTMLVideoElement;
+		let video = this.$main.querySelector<HTMLElement>(':scope video')[0] as HTMLVideoElement;
 		video.addEventListener('playing', () => this.onPlaying());
 
-		this.$notSupportedMessage.toggleClass('hidden', this.browserSupported);
-		this.$videoContainer.toggleClass('hidden', !this.browserSupported);
+		this.$notSupportedMessage.classList.toggle('hidden', this.browserSupported);
+		this.$videoContainer.classList.toggle('hidden', !this.browserSupported);
 		if (this.browserSupported) {
 			this.player = new Player(video);
 			this.player.addEventListener('error', (e) => this.onError((e as any).detail));
@@ -102,17 +102,17 @@ export class UiMpegDashPlayer extends UiComponent<UiMpegDashPlayerConfig> implem
 	private onPlaying() {
 		clearTimeout(this.resetTimer);
 		this.resetTimer = null;
-		this.$spinnerContainer.toggleClass("hidden", true);
+		this.$spinnerContainer.classList.toggle("hidden", true);
 	}
 
 	private onError(e: util.Error) {
 		this.logger.warn('Error while playing video: code', e.code, 'object', JSON.stringify(e));
-		this.$spinnerContainer.toggleClass("hidden", !this.shouldBePlayingUnlessUserPressedPause);
+		this.$spinnerContainer.classList.toggle("hidden", !this.shouldBePlayingUnlessUserPressedPause);
 		clearTimeout(this.resetTimer);
 		this.resetTimer = window.setTimeout(() => this.retryPlaying(), 5000);
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 

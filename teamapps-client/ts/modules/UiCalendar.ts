@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import * as moment from "moment";
 import * as momentTimeZone from "moment-timezone";
 import * as FullCalendar from 'fullcalendar';
@@ -46,7 +46,7 @@ import {createUiColorCssString} from "./util/CssFormatUtil";
 import Default from "fullcalendar/Calendar";
 import {MultiMonthView} from "./util/FullCalendarMultiMonthView";
 import * as jstz from "jstz";
-import {Renderer} from "./Common";
+import {parseHtml, Renderer} from "./Common";
 import {UiCalendarEventClientRecordConfig} from "../generated/UiCalendarEventClientRecordConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 
@@ -81,7 +81,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 	public readonly onViewChanged: TeamAppsEvent<UiCalendar_ViewChangedEvent> = new TeamAppsEvent<UiCalendar_ViewChangedEvent>(this);
 	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent<UiCalendar_DataNeededEvent>(this);
 
-	private $main: JQuery;
+	private $main: HTMLElement;
 	private $fullCalendar: JQuery;
 	private eventSource: UiCalendarFullCalendarEventSource;
 	private templateRenderers: { [name: string]: Renderer };
@@ -89,8 +89,10 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 	constructor(config: UiCalendarConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = $('<div class="UiCalendar" id="' + config.id + '">');
-		this.$fullCalendar = $('<div>').appendTo(this.$main);
+		this.$main = parseHtml('<div class="UiCalendar" id="' + config.id + '">');
+		let $fullCalendarElement = parseHtml('<div></div>');
+		this.$main.appendChild($fullCalendarElement);
+		this.$fullCalendar = $($fullCalendarElement);
 		this.eventSource = new UiCalendarFullCalendarEventSource(context, config.id);
 		this.eventSource.onViewChanged.addListener(eventObject => this.onViewChanged.fire(eventObject));
 		this.eventSource.onDataNeeded.addListener(eventObject => this.onDataNeeded.fire(eventObject));
@@ -166,7 +168,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 			slotEventOverlap: false,
 			slotLabelFormat: "hh:mm",
 			viewRender: (view, element) => {
-				this.$main.toggleClass("table-border", config.tableBorder);
+				this.$main.classList.toggle("table-border", config.tableBorder);
 
 				this.$fullCalendar.find(".fc-bg td.fc-week-number.fc-widget-content").addClass('teamapps-blurredBackgroundImage');
 				this.$fullCalendar.find(".fc-head td.fc-widget-header").addClass('teamapps-blurredBackgroundImage');
@@ -178,14 +180,14 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 		};
 		this.$fullCalendar.fullCalendar(options);
 
-		this.$main.append(`<style>
+		this.$main.append(parseHtml(`<style>
                 #${config.id} .fc-head td.fc-widget-header>.fc-row.fc-widget-header {
                     background-color: ${createUiColorCssString(config.tableHeaderBackgroundColor)};
                 }
                 #${config.id} .fc-bgevent-skeleton td.fc-week-number {
                     background-color: ${createUiColorCssString(config.tableHeaderBackgroundColor)};
                 }
-            </style>`);
+            </style>`));
 	}
 
 	private renderEventObject(record: EventObject): string {
@@ -267,7 +269,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 		this.$fullCalendar.fullCalendar('option', 'height', this.getHeight());
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 

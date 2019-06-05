@@ -19,11 +19,11 @@
  */
 ///<reference types="youtube"/>
 
-import * as $ from "jquery";
+
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
 import {UiComponent} from "../UiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {generateUUID} from "../Common";
+import {generateUUID, parseHtml} from "../Common";
 import {UiYoutubePlayerConfig} from "../../generated/UiYoutubePlayerConfig";
 
 export class UiYoutubePlayer extends UiComponent<UiYoutubePlayerConfig> implements LiveStreamPlayer {
@@ -32,8 +32,8 @@ export class UiYoutubePlayer extends UiComponent<UiYoutubePlayerConfig> implemen
 	private static commandsToInvokeWhenScripLoaded: Function[] = [];
 
 	private playing: boolean = false;
-	private $wrapper: JQuery;
-	private $player: JQuery;
+	private $wrapper: HTMLElement;
+	private $player: HTMLElement;
 	private player: YT.Player;
 	private playerReady: boolean;
 	private commandsToInvokeWhenPlayerReady: Function[] = [];
@@ -56,10 +56,11 @@ export class UiYoutubePlayer extends UiComponent<UiYoutubePlayerConfig> implemen
 
 	constructor(config: UiYoutubePlayerConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$wrapper = $("<div>");
+		this.$wrapper = parseHtml("<div>");
 		let elementUuid = generateUUID();
 		// 1. The <iframe> (and video player) will replace this <div> tag.
-		this.$player = $(`<div id="${elementUuid}">`).appendTo(this.$wrapper);
+		this.$player = parseHtml(`<div id="${elementUuid}">`);
+		this.$wrapper.appendChild(this.$player);
 
 		if (!UiYoutubePlayer.scriptTagAdded) {
 			// 2. This code loads the IFrame Player API code asynchronously.
@@ -127,7 +128,7 @@ export class UiYoutubePlayer extends UiComponent<UiYoutubePlayerConfig> implemen
 		}
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
 

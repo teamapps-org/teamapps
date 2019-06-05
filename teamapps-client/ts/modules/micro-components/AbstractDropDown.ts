@@ -20,15 +20,15 @@
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiComponent} from "../UiComponent";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, positionDropDown} from "../Common";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, parseHtml, positionDropDown} from "../Common";
 import {UiSpinner} from "./UiSpinner";
 
 export abstract class AbstractDropDown<OPEN_CONFIG> {
 	public onClose: TeamAppsEvent<void> = new TeamAppsEvent(this);
 	public onComponentRemoved: TeamAppsEvent<UiComponent> = new TeamAppsEvent(this);
 
-	protected $dropDown: JQuery;
-	protected $contentContainer: JQuery;
+	protected $dropDown: HTMLElement;
+	protected $contentContainer: HTMLElement;
 	protected clickOutsideHandle: ClickOutsideHandle;
 	protected spinner = new UiSpinner({fixedSize: "25%"});
 	protected currentOpenConfig: OPEN_CONFIG;
@@ -36,10 +36,10 @@ export abstract class AbstractDropDown<OPEN_CONFIG> {
 	private _contentComponent: UiComponent<UiComponentConfig>;
 
 	constructor(content?: UiComponent<UiComponentConfig>) {
-		this.$dropDown = $(`<div class="DropDown teamapps-blurredBackgroundImage">
-                <div class="background-color-div">
+		this.$dropDown = parseHtml(`<div class="DropDown teamapps-blurredBackgroundImage">
+                <div class="background-color-div"></div>
               </div>`);
-		this.$contentContainer = this.$dropDown.find('.background-color-div');
+		this.$contentContainer = this.$dropDown.querySelector<HTMLElement>(':scope .background-color-div');
 
 		if (content) {
 			this.setContentComponent(content);
@@ -47,7 +47,7 @@ export abstract class AbstractDropDown<OPEN_CONFIG> {
 	}
 
 	setContentComponent(component: UiComponent<UiComponentConfig>) {
-		this.$contentContainer[0].innerHTML = '';
+		this.$contentContainer.innerHTML = '';
 		if (this._contentComponent && this.onComponentRemoved) {
 			this.onComponentRemoved.fire(this._contentComponent);
 		}
@@ -71,8 +71,8 @@ export abstract class AbstractDropDown<OPEN_CONFIG> {
 		this.currentOpenConfig = config;
 
 		if (this._contentComponent == null) {
-			this.$contentContainer[0].innerHTML = '';
-			this.$contentContainer.append(this.spinner.getMainDomElement());
+			this.$contentContainer.innerHTML = '';
+			this.$contentContainer.appendChild(this.spinner.getMainDomElement());
 		}
 
 		if (!this._isOpen) {
@@ -111,11 +111,11 @@ export abstract class AbstractDropDown<OPEN_CONFIG> {
 		return this._isOpen;
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$dropDown;
 	}
 
-	public getScrollContainer(): JQuery {
+	public getScrollContainer(): HTMLElement {
 		return this.$contentContainer;
 	}
 

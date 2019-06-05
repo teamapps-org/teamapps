@@ -112,7 +112,7 @@ export class UiWorkSpaceLayout extends UiComponent<UiWorkSpaceLayoutConfig> impl
 			handleLocalLayoutChangedByUser: (windowId: string) => this.handleLocalLayoutChangedByUser(windowId)
 		});
 
-		this.localViewContainer.setToolbar(config.toolbar);
+		this.localViewContainer.setToolbar(config.toolbar as UiToolbar);
 
 		this.viewContainersByWindowId[this.windowId] = this.localViewContainer;
 	}
@@ -412,7 +412,7 @@ export class UiWorkSpaceLayout extends UiComponent<UiWorkSpaceLayoutConfig> impl
 		return this.localViewContainer.getLayoutDescriptor();
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.localViewContainer.getMainDomElement();
 	}
 

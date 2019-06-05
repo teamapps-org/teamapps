@@ -17,20 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiTemplateTestContainerConfig} from "../generated/UiTemplateTestContainerConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {parseHtml} from "./Common";
 
 
 export class UiTemplateTestContainer extends UiComponent<UiTemplateTestContainerConfig> {
 
-	private $panel: JQuery;
+	private $panel: HTMLElement;
 
 	constructor(config: UiTemplateTestContainerConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = $(`<div class="UiTemplateTestContainer" id="' + config.id + '">
+		this.$panel = parseHtml(`<div class="UiTemplateTestContainer" id="' + config.id + '">
 	<div class="description">${config.description}</div>
 	<div class="template-wrapper" style="min-width: ${config.minContainerWidth ? config.minContainerWidth + "px" : "none"}; max-width: ${config.maxContainerWidth ? config.maxContainerWidth + "px" : "none"}; min-height: ${config.minContainerHeight ? config.minContainerHeight + "px" : "none"}; max-height: ${config.maxContainerHeight ? config.maxContainerHeight + "px" : "none"};">
 		${context.templateRegistry.createTemplateRenderer(config.template).render(config.data)}
@@ -39,7 +40,7 @@ export class UiTemplateTestContainer extends UiComponent<UiTemplateTestContainer
 	}
 
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$panel;
 	}
 

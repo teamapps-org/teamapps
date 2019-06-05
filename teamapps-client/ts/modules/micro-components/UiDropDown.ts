@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "../UiComponent";
 import {positionDropDown} from "../Common";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {AbstractDropDown} from "./AbstractDropDown";
 
 interface OpenConfig {
-	$reference: JQuery | Element,
+	$reference: HTMLElement | Element,
 	width?: number,
 	viewPortPadding?: number,
 	minHeight?: number
@@ -33,23 +33,24 @@ interface OpenConfig {
 export class UiDropDown extends AbstractDropDown<OpenConfig> {
 	constructor(content?: UiComponent<UiComponentConfig>) {
 		super(content);
-		this.getMainDomElement().addClass("UiDropDown");
+		this.getMainDomElement().classList.add("UiDropDown");
 	}
 
 	doOpen(options: OpenConfig) {
 		options.width = options.width || 250;
 		options.viewPortPadding = options.viewPortPadding || 5;
 		options.minHeight = options.minHeight || 0;
-		// this.$contentContainer.css("height", minHeight + "px");
-		this.$contentContainer.find(">*").css("min-height", options.minHeight + "px");
-		this.$dropDown.css("width", options.width + "px");
-		this.$dropDown.appendTo(document.body);
-		this.$dropDown.addClass('open');
-		positionDropDown($(this.currentOpenConfig.$reference as any), this.$dropDown, this.currentOpenConfig);
+		// this.$contentContainer.style.height = minHeight + "px";
+		this.$contentContainer.querySelector<HTMLElement>(":scope >*")
+			.style.minHeight = options.minHeight + "px";
+		this.$dropDown.style.width = options.width + "px";
+		document.body.appendChild(this.$dropDown);
+		this.$dropDown.classList.add('open');
+		positionDropDown(this.currentOpenConfig.$reference, this.$dropDown, this.currentOpenConfig);
 	}
 
 	protected doClose(): void {
-		this.$dropDown.removeClass('open');
-		this.$dropDown.detach();
+		this.$dropDown.classList.remove('open');
+		this.$dropDown.remove();
 	}
 }

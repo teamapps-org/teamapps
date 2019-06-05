@@ -17,12 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiItemViewItemGroupConfig} from "../generated/UiItemViewItemGroupConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {DEFAULT_TEMPLATES, TrivialTreeBox, trivialMatch} from "trivial-components";
 import {UiComponent} from "./UiComponent";
-import {generateUUID, Renderer} from "./Common";
+import {generateUUID, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiItemView_ItemClickedEvent, UiItemViewCommandHandler, UiItemViewConfig, UiItemViewEventSource} from "../generated/UiItemViewConfig";
 import {UiItemViewFloatStyle} from "../generated/UiItemViewFloatStyle";
@@ -53,7 +53,7 @@ export class UiItemView extends UiComponent<UiItemViewConfig> implements UiItemV
 
 	public readonly onItemClicked: TeamAppsEvent<UiItemView_ItemClickedEvent> = new TeamAppsEvent<UiItemView_ItemClickedEvent>(this);
 
-	private $itemView: JQuery;
+	private $itemView: HTMLElement;
 	private groupHeaderTemplateRenderer: Renderer;
 	private groupsByGroupId: { [index: string]: ItemGroup } = {};
 	private filterString: string = "";
@@ -61,12 +61,12 @@ export class UiItemView extends UiComponent<UiItemViewConfig> implements UiItemV
 	constructor(config: UiItemViewConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$itemView = $('<div class="UiItemView"></div>');
-		this.$itemView.css("padding", config.verticalPadding + "px " + config.horizontalPadding + "px");
+		this.$itemView = parseHtml('<div class="UiItemView"></div>');
+		this.$itemView.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";
 		if (config.groupHeaderTemplate) {
 			this.groupHeaderTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.groupHeaderTemplate, null);
 		}
-		this.$itemView.addClass("background-mode-" + UiItemViewItemBackgroundMode[config.itemBackgroundMode].toLowerCase());
+		this.$itemView.classList.add("background-mode-" + UiItemViewItemBackgroundMode[config.itemBackgroundMode].toLowerCase());
 
 		config.itemGroups.forEach(group => {
 			this.addItemGroup(group);
@@ -75,7 +75,7 @@ export class UiItemView extends UiComponent<UiItemViewConfig> implements UiItemV
 		this.setFilter(config.filter);
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$itemView;
 	}
 
@@ -85,14 +85,14 @@ export class UiItemView extends UiComponent<UiItemViewConfig> implements UiItemV
 		}
 		const itemGroup = this.createItemGroup(itemGroupConfig);
 		this.groupsByGroupId[itemGroupConfig.id] = itemGroup;
-		itemGroup.getMainDomElement().appendTo(this.$itemView);
+		this.$itemView.appendChild(itemGroup.getMainDomElement());
 		return itemGroup;
 	}
 
 	private createItemGroup(itemGroupConfig: UiItemViewItemGroupConfig) {
 		const itemGroup = new ItemGroup(this, this._context, itemGroupConfig, this.groupHeaderTemplateRenderer);
 		itemGroup.onItemClicked.addListener(item => this.onItemClicked.fire(EventFactory.createUiItemView_ItemClickedEvent(this._config.id, itemGroupConfig.id, item.id)));
-		itemGroup.getMainDomElement().css("padding-bottom", this._config.groupSpacing + "px");
+		itemGroup.getMainDomElement().style.paddingBottom = this._config.groupSpacing + "px";
 		itemGroup.setFilter(this.filterString);
 		return itemGroup;
 	}
@@ -105,13 +105,13 @@ export class UiItemView extends UiComponent<UiItemViewConfig> implements UiItemV
 		}
 		const newGroup = this.createItemGroup(itemGroupConfig);
 		this.groupsByGroupId[itemGroupConfig.id] = newGroup;
-		newGroup.getMainDomElement().insertAfter(oldGroup.getMainDomElement());
-		oldGroup.getMainDomElement().detach();
+		oldGroup.getMainDomElement().parentElement.insertBefore(newGroup.getMainDomElement(), oldGroup.getMainDomElement());
+		oldGroup.getMainDomElement().remove();
 	}
 
 	public removeItemGroup(groupId: string): void {
 		const itemGroup = this.groupsByGroupId[groupId];
-		itemGroup.getMainDomElement().detach();
+		itemGroup.getMainDomElement().remove();
 		delete this.groupsByGroupId[groupId];
 	}
 
@@ -154,7 +154,7 @@ export class UiItemView extends UiComponent<UiItemViewConfig> implements UiItemV
 }
 
 class ItemGroup {
-	private $itemGroup: JQuery;
+	private $itemGroup: HTMLElement;
 	private items: UiIdentifiableClientRecordConfig[];
 	private trivialTreeBox: TrivialTreeBox<UiIdentifiableClientRecordConfig>;
 	private itemRenderer: Renderer;
@@ -168,7 +168,7 @@ class ItemGroup {
 		this.items = config.items;
 
 		const groupHtmlId = `item-group-${generateUUID()}`;
-		this.$itemGroup = $('<div class="item-group" id="' + groupHtmlId + '">');
+		this.$itemGroup = parseHtml('<div class="item-group" id="' + groupHtmlId + '">');
 
 		let buttonWidthCssValue;
 		if (config.buttonWidth < 0) {
@@ -181,7 +181,7 @@ class ItemGroup {
 			buttonWidthCssValue = config.buttonWidth + 'px';
 		}
 
-		this.$itemGroup.append(`<style>
+		this.$itemGroup.append(parseHtml(`<style>
             #${groupHtmlId} .tr-tree-entryTree {
                justify-content: ${itemCssStringsJustification[config.itemJustification]};
             }
@@ -189,23 +189,23 @@ class ItemGroup {
                margin: ${config.verticalItemMargin}px ${config.horizontalItemMargin}px;
                width: ${buttonWidthCssValue};
             }
-            </style>`);
-		const $itemGroupHeader = $('<div class="item-group-header">').appendTo(this.$itemGroup);
+            </style>`));
+		const $itemGroupHeader = parseHtml('<div class="item-group-header">');
+		this.$itemGroup.appendChild($itemGroupHeader);
 
 		if (!config.headerVisible) {
-			$itemGroupHeader.addClass("hidden");
+			$itemGroupHeader.classList.add("hidden");
 		}
 		if (groupHeaderTemplateRenderer && config.headerData) {
-			$itemGroupHeader.append(groupHeaderTemplateRenderer.render(config.headerData.values));
+			$itemGroupHeader.append(parseHtml(groupHeaderTemplateRenderer.render(config.headerData.values)));
 		}
 
-		const $itemContainer = $('<div class="item-container">').appendTo(this.$itemGroup);
+		const $itemContainer = parseHtml('<div class="item-container">');
+		this.$itemGroup.appendChild($itemContainer);
 
-		$itemContainer.addClass(UiItemViewFloatStyle[config.floatStyle]);
+		$itemContainer.classList.add(UiItemViewFloatStyle[config.floatStyle]);
 
-		$itemContainer.css({
-			"padding": config.verticalPadding + "px " + config.horizontalPadding + "px"
-		});
+		$itemContainer.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";
 
 		this.itemRenderer = context.templateRegistry.createTemplateRenderer(config.itemTemplate);
 		this.trivialTreeBox = new TrivialTreeBox<UiIdentifiableClientRecordConfig>($itemContainer, {
@@ -230,7 +230,7 @@ class ItemGroup {
 		if (matchingElements.length < 100) {
 			this.trivialTreeBox.highlightTextMatches(this.filterString);
 		}
-		this.$itemGroup.toggle(matchingElements.length > 0);
+		this.$itemGroup.classList.toggle("hidden", matchingElements.length === 0);
 	}
 
 	private filterItems(queryString: string) {

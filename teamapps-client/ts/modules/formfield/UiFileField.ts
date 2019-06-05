@@ -105,15 +105,15 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 			this.handleFiles(files);
 		};
 
-		this.$uploadButtonTemplate = this.$wrapper.querySelector<HTMLElement>(':scope.upload-button-template');
-		this.$uploadButton = this.$wrapper.querySelector<HTMLElement>(':scope.upload-button-wrapper');
+		this.$uploadButtonTemplate = this.$wrapper.querySelector<HTMLElement>(':scope .upload-button-template');
+		this.$uploadButton = this.$wrapper.querySelector<HTMLElement>(':scope .upload-button-wrapper');
 		this.$uploadButton.addEventListener('keydown', e => {
 			if (e.keyCode === keyCodes.enter || e.keyCode === keyCodes.space) {
 				this.$fileInput.click();
 				return false; // no scrolling when space is pressed!
 			}
 		});
-		this.$fileInput = this.$wrapper.querySelector<HTMLInputElement>(':scope.file-input');
+		this.$fileInput = this.$wrapper.querySelector<HTMLInputElement>(':scope .file-input');
 		this.$fileInput.addEventListener('change', () => {
 			const files = (<HTMLInputElement>this.$fileInput).files;
 			this.handleFiles(files);
@@ -162,15 +162,16 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	public setUploadButtonData(uploadButtonData: any): void {
 		this.uploadButtonData = uploadButtonData;
 		this.$uploadButtonTemplate.innerHTML = '';
-		this.$uploadButtonTemplate.appendChild(parseHtml(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData)));
+		if (this.uploadButtonTemplate && this.uploadButtonData) {
+			this.$uploadButtonTemplate.appendChild(parseHtml(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData)));
+		}
 	}
 
 	public setUploadButtonTemplate(uploadButtonTemplate: UiTemplateConfig): void {
 		this.uploadButtonTemplate = uploadButtonTemplate;
 		this.$uploadButtonTemplate.innerHTML = '';
-		const uploadButtonContent = parseHtml(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData));
-		if (uploadButtonContent) {
-			this.$uploadButtonTemplate.appendChild(uploadButtonContent);
+		if (this.uploadButtonTemplate && this.uploadButtonData) {
+			this.$uploadButtonTemplate.appendChild(parseHtml(this._context.templateRegistry.createTemplateRenderer(this.uploadButtonTemplate).render(this.uploadButtonData)));
 		}
 	}
 
@@ -411,7 +412,7 @@ class UploadItem {
 		this.progressIndicator = this.renderAsCircle ? new ProgressCircle(0, {
 			circleRadius: 16, circleStrokeWidth: 2
 		}) : new ProgressBar(0, {});
-		this.progressIndicator.getMainDomElement().appendTo(this.$progressIndicator);
+		this.$progressIndicator.appendChild(this.progressIndicator.getMainDomElement());
 
 		if (file.size > this.maxBytes) {
 			this.progressIndicator.setErrorMessage(this.fileTooLargeMessage);

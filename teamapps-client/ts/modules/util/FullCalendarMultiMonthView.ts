@@ -21,7 +21,7 @@ import * as moment from "moment-timezone";
 import {EventObjectInput} from "fullcalendar/src/types/input-types";
 import * as log from "loglevel";
 import {View} from "fullcalendar";
-import {adjustIfColorTooBright, generateUUID} from "../Common";
+import {adjustIfColorTooBright, generateUUID, parseHtml, parseSvg} from "../Common";
 import * as d3 from "d3";
 import {Selection} from "d3-selection";
 import Moment = moment.Moment;
@@ -76,7 +76,7 @@ export class MultiMonthView extends View {
 	private height: number;
 
 	private weekNumbersVisible: false; // display week numbers along the side?
-	private $contentElement: JQuery;
+	private $contentElement: HTMLElement;
 	private uuid: string;
 	private _svg: Selection<SVGElement, undefined, HTMLElement, any>;
 
@@ -110,10 +110,10 @@ export class MultiMonthView extends View {
 	public render() {
 		if (this.$contentElement == null) {
 			this.uuid = "year-" + generateUUID();
-			this.$contentElement = $(`<div class="fc-multi-month-content" id="${this.uuid}">`);
-			this.$contentElement.append('<svg class="svg">');
+			this.$contentElement = parseHtml(`<div class="fc-multi-month-content" id="${this.uuid}">`);
+			this.$contentElement.append(parseSvg('<svg class="svg">'));
 			this.el
-				.addClass('fc-multi-month-view')
+				.classList.add('fc-multi-month-view')
 				.append(this.$contentElement);
 			this._svg = d3.select<SVGElement, undefined>("#" + this.uuid + " svg");
 		}

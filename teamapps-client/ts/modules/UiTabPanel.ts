@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
@@ -42,18 +42,18 @@ import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {EventFactory} from "../generated/EventFactory";
 import {UiTabPanelTabStyle} from "../generated/UiTabPanelTabStyle";
-import {insertAtIndex, maximizeComponent} from "./Common";
+import {insertAtIndex, insertBefore, maximizeComponent, parseHtml, prependChild} from "./Common";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
 import {StaticIcons} from "./util/StaticIcons";
 
 
 interface Tab {
 	config: UiTabConfig;
-	$button: JQuery;
-	$wrapper: JQuery;
-	$dropDownTabButton: JQuery;
-	$toolbarContainer: JQuery;
-	$contentContainer: JQuery;
+	$button: HTMLElement;
+	$wrapper: HTMLElement;
+	$dropDownTabButton: HTMLElement;
+	$toolbarContainer: HTMLElement;
+	$contentContainer: HTMLElement;
 	toolbar: UiToolbar;
 	contentComponent: UiComponent<UiComponentConfig>;
 	buttonWidth?: number;
@@ -81,19 +81,19 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		UiWindowButtonType.CLOSE
 	];
 
-	private $tabPanel: JQuery;
-	private $leftButtonsWrapper: JQuery;
-	private $rightButtonsWrapper: JQuery;
-	private $dropDownButton: JQuery;
-	private $dropDown: JQuery;
-	private $dropButtonContainerLeft: JQuery;
-	private $dropButtonContainerRight: JQuery;
-	private $toolTabButton: JQuery;
-	private $toolButtonContainer: JQuery;
-	private $windowButtonContainer: JQuery;
-	private $contentWrapper: JQuery;
-	private $tabBar: JQuery;
-	private $tabsContainer: JQuery;
+	private $tabPanel: HTMLElement;
+	private $leftButtonsWrapper: HTMLElement;
+	private $rightButtonsWrapper: HTMLElement;
+	private $dropDownButton: HTMLElement;
+	private $dropDown: HTMLElement;
+	private $dropButtonContainerLeft: HTMLElement;
+	private $dropButtonContainerRight: HTMLElement;
+	private $toolTabButton: HTMLElement;
+	private $toolButtonContainer: HTMLElement;
+	private $windowButtonContainer: HTMLElement;
+	private $contentWrapper: HTMLElement;
+	private $tabBar: HTMLElement;
+	private $tabsContainer: HTMLElement;
 
 	private leftTabs: Tab[] = [];
 	private rightTabs: Tab[] = [];
@@ -109,7 +109,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 	constructor(config: UiTabPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$tabPanel = $(`<div id="${config.id}" class="UiTabPanel">
+		this.$tabPanel = parseHtml(`<div id="${config.id}" class="UiTabPanel">
     <div class="tab-panel-header teamapps-blurredBackgroundImage">
         <div class="background-color-div">
 	        <div class="tab-button-container left"></div>
@@ -130,18 +130,18 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
         <div class="tabpanel-content-wrapper"></div>
     </div>
 </div>`);
-		this.$tabBar = this.$tabPanel.find('>.tab-panel-header');
-		this.$tabsContainer = this.$tabBar.find('>.background-color-div');
-		this.$leftButtonsWrapper = this.$tabsContainer.find('>.tab-button-container.left');
-		this.$rightButtonsWrapper = this.$tabsContainer.find('>.tab-button-container.right');
-		this.$toolTabButton = this.$tabsContainer.find('>.tool-tab-button');
-		this.$toolButtonContainer = this.$toolTabButton.find('>.tool-button-container');
-		this.$windowButtonContainer = this.$toolTabButton.find('>.window-button-container');
-		this.$dropDownButton = this.$tabsContainer.find('>.dropdown-button');
-		this.$dropDown = this.$tabsContainer.find('>.tab-panel-dropdown');
-		this.$dropButtonContainerLeft = this.$dropDown.find('>.dropdown-button-container.left');
-		this.$dropButtonContainerRight = this.$dropDown.find('>.dropdown-button-container.right');
-		this.$contentWrapper = this.$tabPanel.find('.tabpanel-content-wrapper');
+		this.$tabBar = this.$tabPanel.querySelector<HTMLElement>(':scope >.tab-panel-header');
+		this.$tabsContainer = this.$tabBar.querySelector<HTMLElement>(':scope >.background-color-div');
+		this.$leftButtonsWrapper = this.$tabsContainer.querySelector<HTMLElement>(':scope >.tab-button-container.left');
+		this.$rightButtonsWrapper = this.$tabsContainer.querySelector<HTMLElement>(':scope >.tab-button-container.right');
+		this.$toolTabButton = this.$tabsContainer.querySelector<HTMLElement>(':scope >.tool-tab-button');
+		this.$toolButtonContainer = this.$toolTabButton.querySelector<HTMLElement>(':scope >.tool-button-container');
+		this.$windowButtonContainer = this.$toolTabButton.querySelector<HTMLElement>(':scope >.window-button-container');
+		this.$dropDownButton = this.$tabsContainer.querySelector<HTMLElement>(':scope >.dropdown-button');
+		this.$dropDown = this.$tabsContainer.querySelector<HTMLElement>(':scope >.tab-panel-dropdown');
+		this.$dropButtonContainerLeft = this.$dropDown.querySelector<HTMLElement>(':scope >.dropdown-button-container.left');
+		this.$dropButtonContainerRight = this.$dropDown.querySelector<HTMLElement>(':scope >.dropdown-button-container.right');
+		this.$contentWrapper = this.$tabPanel.querySelector<HTMLElement>(':scope .tabpanel-content-wrapper');
 
 		this.setHideTabBarIfSingleTab(!!config.hideTabBarIfSingleTab);
 		this.setTabStyle(config.tabStyle);
@@ -155,23 +155,24 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 			this.selectFirstVisibleTab();
 		}
 
-		this.$dropDownButton.click(() => {
-			if (this.$dropDown.is(':visible')) {
-				this.$dropDown.addClass("hidden");
+		this.$dropDownButton.addEventListener("click", () => {
+			if ($(this.$dropDown).is(':visible')) {
+				this.$dropDown.classList.add("hidden");
 			} else {
-				this.$dropDown.removeClass("hidden");
-				this.$dropDown.position({
+				this.$dropDown.classList.remove("hidden");
+				$(this.$dropDown).position({
 					my: "right top",
 					at: "right bottom",
 					of: this.$dropDownButton
 				});
 			}
-		}).blur(() => {
-			this.$dropDown.addClass("hidden");
+		});
+		this.$dropDownButton.addEventListener("blur", () => {
+			this.$dropDown.classList.add("hidden");
 		});
 
 		if (config.toolButtons != null) {
-			this.setToolButtons(config.toolButtons);
+			this.setToolButtons(config.toolButtons as UiToolButton[]);
 		}
 		this.toolButtonDropDown = new UiDropDown();
 
@@ -220,30 +221,29 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		return this.leftTabs.concat(this.rightTabs);
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$tabPanel;
 	}
 
 	private _createTab(tabConfig: UiTabConfig, index: number = Number.MAX_SAFE_INTEGER): Tab {
 		const $tabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
 		const $dropDownTabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
-		$tabButton.add($dropDownTabButton).mousedown(() => {
-			this.selectTab(tabConfig.tabId, true);
-		});
+		$tabButton.addEventListener("mousedown", () => this.selectTab(tabConfig.tabId, true));
+		$dropDownTabButton.addEventListener("mousedown", () => this.selectTab(tabConfig.tabId, true));
 
-		const $tabContent = $(`<div class="tab-content-wrapper" data-tab-name="${tabConfig.tabId}">
-                        <div class="tab-toolbar-container"/>
-                        <div class="tab-component-container"/>
-                    </div>`)
-			.appendTo(this.$contentWrapper);
+		const $tabContent = parseHtml(`<div class="tab-content-wrapper" data-tab-name="${tabConfig.tabId}">
+                        <div class="tab-toolbar-container"></div>
+                        <div class="tab-component-container"></div>
+                    </div>`);
+		this.$contentWrapper.appendChild($tabContent);
 
 		let tab: Tab = {
 			config: tabConfig,
 			$button: $tabButton,
 			$dropDownTabButton: $dropDownTabButton,
 			$wrapper: $tabContent,
-			$toolbarContainer: $tabContent.find(".tab-toolbar-container"),
-			$contentContainer: $tabContent.find(".tab-component-container"),
+			$toolbarContainer: $tabContent.querySelector<HTMLElement>(":scope .tab-toolbar-container"),
+			$contentContainer: $tabContent.querySelector<HTMLElement>(":scope .tab-component-container"),
 			toolbar: null,
 			contentComponent: null,
 			visible: tabConfig.visible
@@ -251,7 +251,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		this.putTabButtonsToIndex(tab, index);
 
 		if (tabConfig.toolbar) {
-			this.setTabToolbarInternal(tab, tabConfig.toolbar);
+			this.setTabToolbarInternal(tab, tabConfig.toolbar as UiToolbar);
 		}
 
 		return tab;
@@ -268,19 +268,19 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 	}
 
 	private createTabButton(tabId: string, iconName: string, caption: string, closeable: boolean) {
-		const $tabButton = $(`<div class="tab-button" data-tab-name="${tabId}" draggable="true">
-                     ${iconName ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url(${this._context.getIconPath(iconName, 16)});"/></div>` : ''}
-                     <div class="tab-button-caption">${caption}</div>
-                     <div class="tab-button-filler"/>
+		const $tabButton = parseHtml(`<div class="tab-button" data-tab-name="${tabId}" draggable="true">
+                     ${iconName ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url(${this._context.getIconPath(iconName, 16)});"></div></div>` : ''}
+                     <div class="tab-button-caption">${caption}</div>                                                                                                                          	
+                     <div class="tab-button-filler"></div>
                 </div>`);
 
 		if (closeable) {
 			const closeIconPath = "/resources/window-close-grey.png";
 			let closeButtonHtml = `<div class="tab-button-close-button">
-                        <div class="img ${this._context.config.optimizedForTouch ? 'img-16' : 'img-12'}" style="background-image: url(${closeIconPath});"/>
+                        <div class="img ${this._context.config.optimizedForTouch ? 'img-16' : 'img-12'}" style="background-image: url(${closeIconPath});"></div>
                     </div>`;
-			const $closeButton1 = $(closeButtonHtml).appendTo($tabButton);
-			$closeButton1.mousedown(() => {
+			const $closeButton1 = $tabButton.appendChild(parseHtml(closeButtonHtml));
+			$closeButton1.addEventListener("mousedown", () => {
 				this.removeTab(tabId);
 				this.onTabClosed.fire(EventFactory.createUiTabPanel_TabClosedEvent(this._config.id, tabId));
 			});
@@ -295,16 +295,13 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 			return;
 		}
 		this.selectedTab = tab;
-		this.$leftButtonsWrapper
-			.add(this.$rightButtonsWrapper)
-			.add(this.$dropButtonContainerLeft)
-			.add(this.$dropButtonContainerRight)
-			.find('>.tab-button').removeClass('selected');
-		tab.$button.addClass('selected');
-		tab.$dropDownTabButton.addClass('selected');
+		[this.$leftButtonsWrapper, this.$rightButtonsWrapper, this.$dropButtonContainerLeft, this.$dropButtonContainerRight]
+			.forEach(el => el.querySelectorAll<HTMLElement>(':scope >.tab-button').forEach(el => el.classList.remove('selected')));
+		tab.$button.classList.add('selected');
+		tab.$dropDownTabButton.classList.add('selected');
 
-		this.$contentWrapper.find('>.tab-content-wrapper').removeClass('selected');
-		tab.$wrapper.addClass('selected');
+		this.$contentWrapper.querySelectorAll<HTMLElement>(':scope >.tab-content-wrapper').forEach(el => el.classList.remove('selected'));
+		tab.$wrapper.classList.add('selected');
 		if (sendSelectionEvent) {
 			this.onTabSelected.fire(EventFactory.createUiTabPanel_TabSelectedEvent(this.getId(), tabId));
 		}
@@ -332,12 +329,12 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		const $tabContentContainer = tab.$contentContainer;
 		if (tab.contentComponent) {
 			isEmptyable(tab.contentComponent) && tab.contentComponent.onEmptyStateChanged.removeListener(this.onChildEmptyStateChanged.bind(this));
-			$tabContentContainer[0].innerHTML = '';
+			$tabContentContainer.innerHTML = '';
 		}
 		tab.contentComponent = content;
 		if (tab.contentComponent) {
 			isEmptyable(tab.contentComponent) && tab.contentComponent.onEmptyStateChanged.addListener(this.onChildEmptyStateChanged.bind(this));
-			content.getMainDomElement().appendTo($tabContentContainer);
+			$tabContentContainer.appendChild(content.getMainDomElement());
 		}
 
 		this.onChildEmptyStateChanged();
@@ -356,10 +353,10 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 
 	setTabConfiguration(tabId: string, icon: string, caption: string, closeable: boolean, visible: boolean, rightSide: boolean): void {
 		let tab = this.getTabById(tabId);
-		tab.$button[0].innerHTML = '';
-		tab.$button.append(this.createTabButton(tabId, icon, caption, closeable).find(">*"));
-		tab.$dropDownTabButton[0].innerHTML = '';
-		tab.$dropDownTabButton.append(this.createTabButton(tabId, icon, caption, closeable).find(">*"));
+		tab.$button.innerHTML = '';
+		tab.$button.append(this.createTabButton(tabId, icon, caption, closeable).querySelector<HTMLElement>(":scope >*"));
+		tab.$dropDownTabButton.innerHTML = '';
+		tab.$dropDownTabButton.append(this.createTabButton(tabId, icon, caption, closeable).querySelector<HTMLElement>(":scope >*"));
 		if (rightSide && !tab.config.rightSide) {
 			this.$rightButtonsWrapper.append(tab.$button);
 			this.$dropButtonContainerRight.append(tab.$dropDownTabButton);
@@ -387,7 +384,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		} else {
 			this.leftTabs.push(tab);
 		}
-		this.setTabContent(tabConfig.tabId, tabConfig.content, true);
+		this.setTabContent(tabConfig.tabId, tabConfig.content as UiComponent, true);
 		if (select || this.getAllTabs().length === 1) {
 			this.selectTab(tabConfig.tabId, false);
 		}
@@ -423,7 +420,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 
 	private setTabToolbarInternal(tab: Tab, toolbar: UiToolbar) {
 		if (tab.toolbar != null) {
-			tab.toolbar.getMainDomElement().detach();
+			tab.toolbar.getMainDomElement().remove();
 		}
 		tab.toolbar = toolbar;
 		if (toolbar) {
@@ -440,9 +437,9 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		if (!tab) return;
 
 		tab.contentComponent != null && isEmptyable(tab.contentComponent) && tab.contentComponent.onEmptyStateChanged.removeListener(this.onChildEmptyStateChanged.bind(this));
-		tab.$button.detach();
-		tab.$dropDownTabButton.detach();
-		tab.$wrapper.detach();
+		tab.$button.remove();
+		tab.$dropDownTabButton.remove();
+		tab.$wrapper.remove();
 
 		this.leftTabs = this.leftTabs.filter(tab => tab.config.tabId !== tabId);
 		this.rightTabs = this.rightTabs.filter(tab => tab.config.tabId !== tabId);
@@ -492,10 +489,10 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 	}
 
 	private updateTabBarVisibility(): boolean {
-		let wasHidden = this.$tabBar.is('.hidden');
+		let wasHidden = this.$tabBar.classList.contains('hidden');
 		let isHidden = this.hideTabBarIfSingleTab && this.getVisibleTabs().length <= 1;
-		this.$tabBar.toggleClass("hidden", isHidden);
-		this.$tabBar[0].offsetHeight; // trigger reflow!
+		this.$tabBar.classList.toggle("hidden", isHidden);
+		this.$tabBar.offsetHeight; // trigger reflow!
 		return wasHidden != isHidden;
 	}
 
@@ -525,11 +522,11 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 	}
 
 	public setToolButtons(toolButtons: UiToolButton[]) {
-		this.$toolButtonContainer[0].innerHTML = '';
-		this.$toolButtonContainer.toggleClass("hidden", !toolButtons || toolButtons.length === 0);
+		this.$toolButtonContainer.innerHTML = '';
+		this.$toolButtonContainer.classList.toggle("hidden", !toolButtons || toolButtons.length === 0);
 		this.toolButtons = {};
 		toolButtons.forEach(toolButton => {
-			toolButton.getMainDomElement().appendTo(this.$toolButtonContainer);
+			this.$toolButtonContainer.appendChild(toolButton.getMainDomElement());
 			toolButton.attachedToDom = this.attachedToDom;
 			this.toolButtons[toolButton.getId()] = toolButton;
 		});
@@ -542,7 +539,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 
 	public setWindowButtons(buttonTypes:UiWindowButtonType[]):void{
 		this.windowButtons = [];
-		this.$windowButtonContainer[0].innerHTML = '';
+		this.$windowButtonContainer.innerHTML = '';
 		if (buttonTypes && buttonTypes.length > 0) {
 			buttonTypes.forEach(toolButton => {
 				this.addWindowButton(toolButton);
@@ -556,42 +553,42 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		if (this.windowButtons.filter(tb => tb === toolButtonType).length > 0){
 			this.removeWindowButton(toolButtonType);
 		}
-		this.$windowButtonContainer.removeClass("hidden");
+		this.$windowButtonContainer.classList.remove("hidden");
 		this.windowButtons.push(toolButtonType);
 		const button = this.defaultToolButtons[toolButtonType];
-		if (this.$windowButtonContainer[0].children.length === 0) {
-			button.getMainDomElement().prependTo(this.$windowButtonContainer);
+		if (this.$windowButtonContainer.children.length === 0) {
+			prependChild(this.$windowButtonContainer, button.getMainDomElement());
 		} else {
 			let index = this.windowButtons
 				.sort((a, b) =>this.orderedDefaultToolButtonTypes.indexOf(a) - this.orderedDefaultToolButtonTypes.indexOf(b))
 				.indexOf(toolButtonType);
-			if (index >= this.$windowButtonContainer[0].childNodes.length) {
-				button.getMainDomElement().appendTo(this.$windowButtonContainer);
+			if (index >= this.$windowButtonContainer.childNodes.length) {
+				this.$windowButtonContainer.appendChild(button.getMainDomElement());
 			} else {
-				button.getMainDomElement().insertBefore(this.$windowButtonContainer[0].children[index]);
+				insertBefore(button.getMainDomElement(), this.$windowButtonContainer.children[index]);
 			}
 		}
 		this.relayoutButtons();
 	}
 
 	public removeWindowButton(uiToolButton: UiWindowButtonType) {
-		this.defaultToolButtons[uiToolButton].getMainDomElement().detach();
+		this.defaultToolButtons[uiToolButton].getMainDomElement().remove();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {
-			this.$windowButtonContainer.addClass("hidden");
+			this.$windowButtonContainer.classList.add("hidden");
 		}
 	}
 
 	public setTabStyle(tabStyle: UiTabPanelTabStyle) {
-		this.$tabPanel.removeClass('tab-style-ears tab-style-blocks')
-			.addClass(tabStyle === UiTabPanelTabStyle.EARS ? 'tab-style-ears' : 'tab-style-blocks');
-		this.$tabBar.toggleClass("teamapps-blurredBackgroundImage", tabStyle === UiTabPanelTabStyle.BLOCKS);
+		this.$tabPanel.classList.remove('tab-style-ears', 'tab-style-blocks');
+		this.$tabPanel.classList.add(tabStyle === UiTabPanelTabStyle.EARS ? 'tab-style-ears' : 'tab-style-blocks');
+		this.$tabBar.classList.toggle("teamapps-blurredBackgroundImage", tabStyle === UiTabPanelTabStyle.BLOCKS);
 		this.reLayout(true);
 	}
 
 	@executeWhenAttached(true)
 	public onResize(): void {
-		if (!this.attachedToDom || this.getMainDomElement()[0].offsetWidth <= 0) return;
+		if (!this.attachedToDom || this.getMainDomElement().offsetWidth <= 0) return;
 		if (this.selectedTab) {
 			this.selectedTab.toolbar && this.selectedTab.toolbar.reLayout();
 			this.selectedTab.contentComponent && this.selectedTab.contentComponent.reLayout();
@@ -601,32 +598,33 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 
 	@executeWhenAttached(true)
 	private relayoutButtons() {
-		if (this.$tabBar.is('.hidden')) {
+		if (this.$tabBar.classList.contains('hidden')) {
 			return;
 		}
-		let availableWidth = this.$tabsContainer.width() - this.$dropDownButton[0].offsetWidth - this.$toolTabButton[0].offsetWidth;
+		let availableWidth = $(this.$tabsContainer).width() - this.$dropDownButton.offsetWidth - this.$toolTabButton.offsetWidth;
 		let sumOfButtonWidths = 0;
 		this.getAllTabs().forEach(tab => {
 			let tabFilled = !this.tabIsDeFactoEmpty(tab);
 
 			if (tabFilled) {
 				if (!tab.buttonWidth) {
-					tab.buttonWidth = tab.$button[0].offsetWidth
+					tab.buttonWidth = tab.$button.offsetWidth
 				}
 				sumOfButtonWidths += tab.buttonWidth;
 
 				if (sumOfButtonWidths < availableWidth) {
-					tab.$button.removeClass("hidden");
-					tab.$dropDownTabButton.addClass("hidden");
+					tab.$button.classList.remove("hidden");
+					tab.$dropDownTabButton.classList.add("hidden");
 				} else {
-					tab.$button.addClass("hidden");
-					tab.$dropDownTabButton.removeClass("hidden");
+					tab.$button.classList.add("hidden");
+					tab.$dropDownTabButton.classList.remove("hidden");
 				}
 			} else {
-				tab.$button.add(tab.$dropDownTabButton).toggleClass("hidden", true);
+				tab.$button.classList.add("hidden");
+				tab.$dropDownTabButton.classList.add("hidden");
 			}
 		});
-		this.$dropDownButton.toggleClass("hidden", sumOfButtonWidths <= availableWidth);
+		this.$dropDownButton.classList.toggle("hidden", sumOfButtonWidths <= availableWidth);
 	}
 
 	public destroy(): void {

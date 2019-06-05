@@ -30,6 +30,7 @@ import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutView
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {isSplitPanelDescriptor, isTabPanelDescriptor} from "./UiWorkSpaceLayout";
 import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
+import {UiComponent} from "../UiComponent";
 
 export class LayoutDescriptorApplyer {
 
@@ -44,7 +45,7 @@ export class LayoutDescriptorApplyer {
 	private clientItemStash: { [itemId: string]: ItemTreeItem } = {};
 
 	constructor(
-		private $rootItemContainer: JQuery,
+		private $rootItemContainer: HTMLElement,
 		private viewGroupFactory: (config: UiWorkSpaceLayoutViewGroupItemConfig, parent: SplitPaneItem) => TabPanelItem,
 		private setViewGroupPanelStateFunction: (viewGroupItem: TabPanelItem, panelState: UiViewGroupPanelState) => void,
 		private context: TeamAppsUiContext
@@ -107,7 +108,7 @@ export class LayoutDescriptorApplyer {
 			let correspondingDescriptorItem = this.descriptorItemById[clientSideItem.id];
 			if (correspondingDescriptorItem != null) {
 				this.clientItemStash[clientSideItem.id] = clientSideItem;
-				clientSideItem.component.getMainDomElement().detach();
+				clientSideItem.component.getMainDomElement().remove();
 				this.cleanupUnknownClientItems(clientSideItem, correspondingDescriptorItem, null);
 			} else {
 				// not referenced in the descriptor! however, descendants might well be referenced in the descriptor!
@@ -128,7 +129,7 @@ export class LayoutDescriptorApplyer {
 				}
 			} else {
 				// this is the root item!
-				clientSideItem.component.getMainDomElement().detach();
+				clientSideItem.component.getMainDomElement().remove();
 			}
 		}
 	}
@@ -139,7 +140,7 @@ export class LayoutDescriptorApplyer {
 		viewsNotFoundInDescriptorItem.forEach((tab: View) => {
 			let viewIsReferencedAnywhereInRootDescriptor = this.descriptorViewNames.indexOf(tab.viewName) !== -1;
 			if (viewIsReferencedAnywhereInRootDescriptor) {
-				tab.component.getMainDomElement().detach();
+				tab.component.getMainDomElement().remove();
 				viewGroup.removeTab(tab);
 			} else {
 				// will not be used anymore in any way! just remove and destroy
@@ -216,7 +217,7 @@ export class LayoutDescriptorApplyer {
 			} else {
 				let newViewConfig = newViewConfigs.filter(view => view.viewName === viewName)[0];
 				if (newViewConfig != null) {
-					let view = new View(newViewConfig.viewName, newViewConfig.tabIcon, newViewConfig.tabCaption, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component);
+					let view = new View(newViewConfig.viewName, newViewConfig.tabIcon, newViewConfig.tabCaption, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component as UiComponent);
 					tabPanelItem.addTab(view, selected);
 				} else {
 					LayoutDescriptorApplyer.logger.error("View item references non-existing view: " + viewName);

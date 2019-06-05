@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiToolbarConfig} from "../generated/UiToolbarConfig";
 import {UiSplitPaneConfig} from "../generated/UiSplitPaneConfig";
@@ -26,26 +26,30 @@ import {UiComponent} from "./UiComponent";
 import {UiApplicationLayoutConfig} from "../generated/UiApplicationLayoutConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {parseHtml} from "./Common";
 
 export class UiApplicationLayout extends UiComponent<UiApplicationLayoutConfig> {
-	private $mainDiv: JQuery;
+	private $mainDiv: HTMLElement;
 	private _toolbar: UiToolbar;
 	private _rootSplitPane: UiSplitPane;
 
-	private _$toolbarContainer: JQuery;
-	private _$contentContainer: JQuery;
+	private _$toolbarContainer: HTMLElement;
+	private _$contentContainer: HTMLElement;
 
 	constructor(config: UiApplicationLayoutConfig,
 	            context: TeamAppsUiContext) {
 		super(config, context);
-		this.$mainDiv = $('<div id="' + config.id + '" class="UiApplicationLayout"></div>');
+		this.$mainDiv = parseHtml('<div id="' + config.id + '" class="UiApplicationLayout"></div>');
 
-		this._$toolbarContainer = $('<div class="UiApplicationLayout_toolbarContainer"></div>').appendTo(this.$mainDiv);
-		this.setToolbar(config.toolbar);
+		this._$toolbarContainer = parseHtml('<div class="UiApplicationLayout_toolbarContainer"></div>');
+		this.$mainDiv.appendChild(this._$toolbarContainer);
+		this.setToolbar(config.toolbar as UiToolbar);
 
-		var $contentContainerWrapper = $('<div class="UiApplicationLayout_contentContainerWrapper"></div>').appendTo(this.$mainDiv);
-		this._$contentContainer = $('<div class="UiApplicationLayout_contentContainer"></div>').appendTo($contentContainerWrapper);
-		this.setRootSplitPane(config.rootSplitPane);
+		var $contentContainerWrapper = parseHtml('<div class="UiApplicationLayout_contentContainerWrapper"></div>');
+		this.$mainDiv.appendChild($contentContainerWrapper);
+		this._$contentContainer = parseHtml('<div class="UiApplicationLayout_contentContainer"></div>');
+		$contentContainerWrapper.appendChild(this._$contentContainer);
+		this.setRootSplitPane(config.rootSplitPane as UiSplitPane);
 	}
 
 	public onResize(): void {
@@ -55,29 +59,29 @@ export class UiApplicationLayout extends UiComponent<UiApplicationLayoutConfig> 
 
 	public setToolbar(toolbar: UiToolbar): void {
 		if (this._toolbar) {
-			this._$toolbarContainer[0].innerHTML = '';
+			this._$toolbarContainer.innerHTML = '';
 		}
 		this._toolbar = toolbar;
-		this._$toolbarContainer.toggleClass('hidden', !toolbar);
+		this._$toolbarContainer.classList.toggle('hidden', !toolbar);
 		if (toolbar) {
-			this._toolbar.getMainDomElement().appendTo(this._$toolbarContainer);
+			this._$toolbarContainer.appendChild(this._toolbar.getMainDomElement());
 			this._toolbar.attachedToDom = this.attachedToDom;
 		}
 	}
 
 	public setRootSplitPane(splitPane: UiSplitPane): void {
 		if (this._rootSplitPane) {
-			this._$contentContainer[0].innerHTML = '';
+			this._$contentContainer.innerHTML = '';
 			this._rootSplitPane = null;
 		}
 		if (splitPane) {
 			this._rootSplitPane = splitPane;
-			this._rootSplitPane.getMainDomElement().appendTo(this._$contentContainer);
+			this._$contentContainer.appendChild(this._rootSplitPane.getMainDomElement());
 			this._rootSplitPane.attachedToDom = this.attachedToDom;
 		}
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$mainDiv;
 	}
 

@@ -88,11 +88,11 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		this.setCommittedValue(_config.value);
 		this.onValueChanged.addListener(() => this.onUserManipulation.fire(null));
 		this.getFocusableElement() && this.getFocusableElement().addEventListener("focus", () => {
-			this.getMainDomElement()[0].classList.add("focus");
+			this.getMainDomElement().classList.add("focus");
 			this.onFocused.fire(null);
 		});
 		this.getFocusableElement() && this.getFocusableElement().addEventListener("blur", () => {
-			this.getMainDomElement()[0].classList.remove("focus");
+			this.getMainDomElement().classList.remove("focus");
 			this.onBlurred.fire(null);
 		});
 
@@ -103,10 +103,10 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			this.updateFieldMessageVisibilities();
 		});
 
-		this.getMainDomElement().on("mouseenter mouseleave", e => {
+		["mouseenter", "mouseleave"].forEach(eventName => this.getMainInnerDomElement().addEventListener(eventName, (e) => {
 			this.hovering = e.type === 'mouseenter';
 			this.updateFieldMessageVisibilities();
-		});
+		}));
 	}
 
 	private updateFieldMessageVisibilities() {
@@ -152,8 +152,8 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		return this._config._type;
 	}
 
-	public getMainDomElement(): JQuery {
-		return $(this.$fieldWrapper);
+	public getMainDomElement(): HTMLElement {
+		return this.$fieldWrapper;
 	}
 
 	abstract getMainInnerDomElement(): HTMLElement;
@@ -248,8 +248,8 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	}
 
 	public static defaultOnEditingModeChangedImpl(field: UiField<UiFieldConfig, any>) {
-		field.getMainDomElement()[0].classList.remove(...Object.values(UiField.editingModeCssClasses));
-		field.getMainDomElement()[0].classList.add(UiField.editingModeCssClasses[field.getEditingMode()]);
+		field.getMainDomElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		field.getMainDomElement().classList.add(UiField.editingModeCssClasses[field.getEditingMode()]);
 
 		let $focusable = field.getFocusableElement();
 		if ($focusable) {
@@ -292,7 +292,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			fieldMessageConfigs = [];
 		}
 
-		this.getMainDomElement()[0].classList.remove("message-info", "message-success", "message-warning", "message-error");
+		this.getMainDomElement().classList.remove("message-info", "message-success", "message-warning", "message-error");
 		this.$messagesContainerAbove.innerHTML = '';
 		this.$messagesContainerBelow.innerHTML = '';
 		if (this._messageTooltip != null) {
@@ -311,7 +311,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			return messages.reduce((highestSeverity, message) => message.message.severity > highestSeverity ? message.message.severity : highestSeverity, UiFieldMessageSeverity.INFO);
 		};
 		if (this.fieldMessages && this.fieldMessages.length > 0) {
-			this.getMainDomElement()[0].classList.add("message-" + UiFieldMessageSeverity[getHighestSeverity(this.fieldMessages)].toLowerCase());
+			this.getMainDomElement().classList.add("message-" + UiFieldMessageSeverity[getHighestSeverity(this.fieldMessages)].toLowerCase());
 		}
 
 		let fieldMessagesByPosition: { [position in UiFieldMessagePosition]: FieldMessage[] } = {

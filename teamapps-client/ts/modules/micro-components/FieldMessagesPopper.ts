@@ -22,20 +22,24 @@ import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {UiFieldMessagePosition} from "../../generated/UiFieldMessagePosition";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiFieldMessageVisibilityMode} from "../../generated/UiFieldMessageVisibilityMode";
+import {parseHtml} from "../Common";
 
 export class FieldMessagesPopper {
 
 	private referenceElement: Element;
 	private popper: Popper;
-	private $popperElement: JQuery;
-	private $messagesContainer: JQuery;
+	private $popperElement: HTMLElement;
+	private $messagesContainer: HTMLElement;
 
 	constructor(referenceElement?: Element | null) {
 		this.referenceElement = referenceElement;
-		this.$popperElement = $(`<div class="tooltip ${referenceElement != null ? "" : "hidden"}" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>`)
-			.appendTo(document.body);
-		this.$messagesContainer = this.$popperElement.find(".tooltip-inner");
-		this.popper = new Popper(referenceElement || document.body, this.$popperElement[0], {
+		this.$popperElement = parseHtml(`<div class="tooltip ${referenceElement != null ? "" : "hidden"}" role="tooltip">
+			<div class="tooltip-arrow"></div>
+			<div class="tooltip-inner"></div>
+		</div>`);
+		document.body.appendChild(this.$popperElement);
+		this.$messagesContainer = this.$popperElement.querySelector<HTMLElement>(":scope .tooltip-inner");
+		this.popper = new Popper(referenceElement || document.body, this.$popperElement, {
 			placement: 'right',
 			modifiers: {
 				flip: {
@@ -49,19 +53,18 @@ export class FieldMessagesPopper {
 	}
 
 	public setMessages(messages: UiFieldMessageConfig[] = []) {
-		this.$messagesContainer[0].innerHTML = '';
+		this.$messagesContainer.innerHTML = '';
 		if (messages.length > 0) {
 			const highestSeverity = getHighestSeverity(messages);
-			this.$popperElement
-				.removeClass(`tooltip-info tooltip-success tooltip-warning tooltip-error`)
-				.addClass(`tooltip-${UiFieldMessageSeverity[highestSeverity].toLowerCase()}`);
+			this.$popperElement.classList.remove(`tooltip-info tooltip-success tooltip-warning tooltip-error`);
+			this.$popperElement.classList.add(`tooltip-${UiFieldMessageSeverity[highestSeverity].toLowerCase()}`);
 			messages.forEach(message => {
 				this.$messagesContainer.append(createMessageElement(message));
 			});
-			this.$popperElement.removeClass("empty");
+			this.$popperElement.classList.remove("empty");
 			this.popper.update();
 		} else {
-			this.$popperElement.addClass("empty");
+			this.$popperElement.classList.add("empty");
 		}
 		this.popper.update();
 	}
@@ -76,13 +79,13 @@ export class FieldMessagesPopper {
 	}
 
 	public setVisible(visible: boolean) {
-		this.$popperElement.toggleClass("hidden", !visible);
+		this.$popperElement.classList.toggle("hidden", !visible);
 		this.popper.update();
 	}
 
 	public destroy() {
 		this.popper.destroy();
-		this.$popperElement.detach();
+		this.$popperElement.remove();
 	}
 }
 
@@ -97,5 +100,5 @@ export function createMessageElement(message: UiFieldMessageConfig) {
 	const severityCssClass = `field-message-${UiFieldMessageSeverity[message.severity].toLowerCase()}`;
 	const positionCssClass = `position-${UiFieldMessagePosition[message.position].toLowerCase()}`;
 	const visibilityCssClass = `visibility-${UiFieldMessageVisibilityMode[message.visibilityMode].toLowerCase()}`;
-	return $(`<div class="field-message ${severityCssClass} ${positionCssClass} ${visibilityCssClass}">${message.message}</div>`);
+	return parseHtml(`<div class="field-message ${severityCssClass} ${positionCssClass} ${visibilityCssClass}">${message.message}</div>`);
 }

@@ -30,7 +30,7 @@ import {
 import {UiFormSectionPlacementConfig} from "../../generated/UiFormSectionPlacementConfig";
 import {UiGridPlacementConfig} from "../../generated/UiGridPlacementConfig";
 import {UiComponent} from "../UiComponent";
-import {flattenArray, generateUUID} from "../Common";
+import {flattenArray, generateUUID, parseHtml} from "../Common";
 import {UiComponentGridPlacementConfig} from "../../generated/UiComponentGridPlacementConfig";
 import {UiFloatingComponentGridPlacementConfig} from "../../generated/UiFloatingComponentGridPlacementConfig";
 
@@ -41,17 +41,18 @@ export class UiGridLayout {
 	constructor(private config: UiGridLayoutConfig) {
 	}
 
-	public applyTo($container: JQuery) {
-		$container.attr("data-grid-layout-uuid", this.uuid);
+	public applyTo($container: HTMLElement) {
+		$container.setAttribute("data-grid-layout-uuid", this.uuid);
 
 		const containerCssObject = this.createContainerStyles();
 		const cssPropertyObjectByPlacementId = this.placeComponents($container);
 		
-		let $stylesContainer: JQuery = $container.find("> style[data-grid-layout-placement-styles]");
-		if ($stylesContainer.length === 0) {
-			$stylesContainer = $("<style data-grid-layout-placement-styles></style>").appendTo($container);
+		let $stylesContainer: HTMLElement = $container.querySelector<HTMLElement>(":scope > style[data-grid-layout-placement-styles]");
+		if ($stylesContainer == null) {
+			$stylesContainer = parseHtml("<style data-grid-layout-placement-styles></style>");
+			$container.appendChild($stylesContainer);
 		}
-		$stylesContainer.text(this.createStylesCssString(containerCssObject, cssPropertyObjectByPlacementId));
+		$stylesContainer.innerText = this.createStylesCssString(containerCssObject, cssPropertyObjectByPlacementId);
 	}
 
 	private createContainerStyles() {
@@ -69,29 +70,28 @@ export class UiGridLayout {
 		};
 	}
 
-	private placeComponents($container: JQuery) {
+	private placeComponents($container: HTMLElement) {
 		const cssRules: { [componentNameOrWrapperId: string]: CssPropertyObject } = {};
 
 		this.config.componentPlacements.forEach(placement => {
 			const placementId = generateUUID();
 			if (this.isSimplePlacement(placement)) {
-				const component: UiComponent = placement.component;
+				const component = placement.component as UiComponent;
 				cssRules[placementId] = {
 					...this.createPlacementStyles(placement),
 					"min-height": placement.minHeight ? `${placement.minHeight}px` : '',
 					"max-height": placement.maxHeight ? `${placement.maxHeight}px` : ''
 				};
-				component.getMainDomElement()
-					.attr("data-placement-uuid", placementId)
-					.appendTo($container);
+				component.getMainDomElement().setAttribute("data-placement-uuid", placementId);
+				$container.appendChild(component.getMainDomElement());
 			} else if (this.isFloatingPlacement(placement)) {
-				let $floatingContainer = $(`<div data-placement-uuid="${placementId}"></div>`);
+				let $floatingContainer = parseHtml(`<div data-placement-uuid="${placementId}"></div>`);
 				cssRules[placementId] = {
 					...this.createPlacementStyles(placement),
 					"flex-wrap": placement.wrap ? "wrap" : "nowrap"
 				};
 				placement.components.forEach(floatingComponent => {
-					const uiComponent: UiComponent = floatingComponent.component;
+					const uiComponent = floatingComponent.component as UiComponent;
 					cssRules[uiComponent.getId()] = {
 						"min-width": floatingComponent.minWidth ? `${floatingComponent.minWidth}px` : '',
 						"max-width": floatingComponent.maxWidth ? `${floatingComponent.maxWidth}px` : '',
@@ -99,11 +99,10 @@ export class UiGridLayout {
 						"max-height": floatingComponent.maxHeight ? `${floatingComponent.maxHeight}px` : '',
 						"margin": `${placement.verticalSpacing / 2}px ${placement.horizontalSpacing / 2}px`
 					};
-					uiComponent.getMainDomElement()
-						.attr("data-placement-uuid", placementId)
-						.appendTo($floatingContainer);
+					uiComponent.getMainDomElement().setAttribute("data-placement-uuid", placementId);
+					$floatingContainer.appendChild(uiComponent.getMainDomElement());
 				});
-				$floatingContainer.appendTo($container);
+				$container.appendChild($floatingContainer);
 			}
 		});
 
@@ -147,9 +146,9 @@ export class UiGridLayout {
 	public getAllComponents(): UiComponent[] {
 		return flattenArray(this.config.componentPlacements.map(p => {
 			if (this.isSimplePlacement(p)) {
-				return p.component;
+				return p.component as UiComponent;
 			} else if (this.isFloatingPlacement(p)) {
-				return p.components.map(c => c.component);
+				return p.components.map(c => c.component as UiComponent);
 			}
 		}));
 	}

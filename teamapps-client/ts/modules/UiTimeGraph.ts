@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -34,7 +34,7 @@ import {Area, Line} from "d3-shape";
 import {Axis} from "d3-axis";
 import {Interval, IntervalManager} from "./util/IntervalManager";
 import {UiTimeGraphDataPointConfig} from "../generated/UiTimeGraphDataPointConfig";
-import {generateUUID} from "./Common";
+import {generateUUID, parseHtml} from "./Common";
 import {
 	UiTimeGraph_DataNeededEvent,
 	UiTimeGraph_IntervalSelectedEvent,
@@ -86,7 +86,7 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 
 	private seriesById: { [id: string]: Series } = {};
 
-	private $main: JQuery;
+	private $main: HTMLElement;
 
 	private $svg: d3.Selection<SVGElement, {}, null, undefined>;
 	private $rootG: SVGGSelection;
@@ -131,12 +131,12 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 		this.zoomLevels = config.zoomLevels;
 		this.maxPixelsBetweenDataPoints = config.maxPixelsBetweenDataPoints;
 
-		this.$main = $('<div class="UiTimeGraph" id="' + this.getId() + '">');
+		this.$main = parseHtml('<div class="UiTimeGraph" id="' + this.getId() + '">');
 
 		this.scaleX = d3.scaleTime()
 			.range([0, this.drawableWidth]);
 
-		this.$svg = d3.select(this.$main[0])
+		this.$svg = d3.select(this.$main)
 			.append<SVGElement>("svg");
 		this.$rootG = this.$svg
 			.append<SVGGElement>("g");
@@ -487,7 +487,7 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 		// nothing to do!
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 

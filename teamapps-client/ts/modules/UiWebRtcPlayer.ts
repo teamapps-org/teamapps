@@ -17,12 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiWebRtcPlayerCommandHandler, UiWebRtcPlayerConfig} from "../generated/UiWebRtcPlayerConfig";
 import {UiSpinner} from "./micro-components/UiSpinner";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {applyDisplayMode} from "./Common";
+import {applyDisplayMode, parseHtml} from "./Common";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiWebRtcPlayingSettingsConfig} from "../generated/UiWebRtcPlayingSettingsConfig";
@@ -35,10 +35,10 @@ export class UiWebRtcPlayer extends UiComponent<UiWebRtcPlayerConfig> implements
 
 	private static readonly PEER_CONNECTION_CONFIG: any = {'iceServers': []};
 
-	private $main: JQuery;
-	private $videoContainer: JQuery;
-	private $audioActivityDisplayContainer: JQuery;
-	private $spinnerContainer: JQuery;
+	private $main: HTMLElement;
+	private $videoContainer: HTMLElement;
+	private $audioActivityDisplayContainer: HTMLElement;
+	private $spinnerContainer: HTMLElement;
 
 	private remoteVideo: HTMLVideoElement;
 	private peerConnection: RTCPeerConnection = null;
@@ -51,21 +51,21 @@ export class UiWebRtcPlayer extends UiComponent<UiWebRtcPlayerConfig> implements
 	constructor(config: UiWebRtcPlayerConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = $(`
+		this.$main = parseHtml(`
 <div class="UiWebRtcPlayer">
   <div class="video-container">
     <video autoplay></video>
 	<div class="spinner-container hidden"></div>	
   </div> 
 </div>`);
-		this.remoteVideo = <HTMLVideoElement> this.$main.find('video')[0];
+		this.remoteVideo = this.$main.querySelector<HTMLElement>(':scope video') as HTMLVideoElement;
 		this.remoteVideo.addEventListener("abort", () => { // this event will be triggered when stopPlaying() is invoked.
 			this.remoteVideo.load(); // show poster again. We cannot do this directly in stopPlaying()...
 		});
 		this.remoteVideo.onloadedmetadata = this.onResize.bind(this);
-		this.$videoContainer = this.$main.find('.video-container');
-		this.$audioActivityDisplayContainer = this.$main.find('.audio-activity-display-container');
-		this.$spinnerContainer = this.$main.find('.spinner-container');
+		this.$videoContainer = this.$main.querySelector<HTMLElement>(':scope .video-container');
+		this.$audioActivityDisplayContainer = this.$main.querySelector<HTMLElement>(':scope .audio-activity-display-container');
+		this.$spinnerContainer = this.$main.querySelector<HTMLElement>(':scope .spinner-container');
 		this.$spinnerContainer.append(new UiSpinner().getMainDomElement());
 
 		this.setBackgroundImageUrl(config.backgroundImageUrl);
@@ -207,7 +207,7 @@ export class UiWebRtcPlayer extends UiComponent<UiWebRtcPlayerConfig> implements
 	private updateUi() {
 		const nonLoadingIceStates: WebRtcState[] = ['connected', 'completed', 'closed'];
 		let loading: boolean = (this.signalingWsConnection != null || nonLoadingIceStates.indexOf(this.iceConnectionState) === -1);
-		this.$spinnerContainer.toggleClass("hidden", !loading);
+		this.$spinnerContainer.classList.toggle("hidden", !loading);
 	}
 
 	private gotDescriptionForPlaying(description: RTCSessionDescription) {
@@ -263,7 +263,7 @@ export class UiWebRtcPlayer extends UiComponent<UiWebRtcPlayerConfig> implements
 	destroy(): void {
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 

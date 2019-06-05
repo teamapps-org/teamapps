@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiToolbarCommandHandler, UiToolbarConfig, UiToolbarEventSource} from "../../../generated/UiToolbarConfig";
 import {UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGroupConfig";
@@ -36,6 +36,7 @@ import {UiColorConfig} from "../../../generated/UiColorConfig";
 import {createUiColorCssString} from "../../util/CssFormatUtil";
 import {UiToolbarButton} from "./UiToolbarButton";
 import {UiToolbarButtonGroup} from "./UiToolbarButtonGroup";
+import {insertBefore, outerWidthIncludingMargins, parseHtml} from "../../Common";
 
 interface FQButtonId {
 	groupId: string,
@@ -56,36 +57,37 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 
 	private buttonGroupsById: OrderedDictionary<UiToolbarButtonGroup> = new OrderedDictionary<UiToolbarButtonGroup>();
 
-	private _$toolbar: JQuery;
-	private _$backgroundColorDiv: JQuery;
-	private _$innerContainer: JQuery;
-	private $toolbarFiller: JQuery;
-	private _$logo: JQuery;
+	private _$toolbar: HTMLElement;
+	private _$backgroundColorDiv: HTMLElement;
+	private _$innerContainer: HTMLElement;
+	private $toolbarFiller: HTMLElement;
+	private _$logo: HTMLElement;
 	private overflowDropDown: UiDropDown;
 	private overflowToolAccordion: UiToolAccordion;
-	private $overflowDropDownButton: JQuery;
+	private $overflowDropDownButton: HTMLElement;
 	private totalWidthOfOverflowButtons: number;
 
 	constructor(config: UiToolbarConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this._$toolbar = $(`<div class="UiToolbar teamapps-blurredBackgroundImage" id="${config.id}"></div>`);
-		this._$backgroundColorDiv = $('<div class="background-color-div"></div>')
-			.appendTo(this._$toolbar);
-		this._$innerContainer = $('<div class="inner-container">')
-			.appendTo(this._$backgroundColorDiv);
+		this._$toolbar = parseHtml(`<div class="UiToolbar teamapps-blurredBackgroundImage" id="${config.id}"></div>`);
+		this._$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
+		this._$toolbar.appendChild(this._$backgroundColorDiv);
+		this._$innerContainer = parseHtml('<div class="inner-container">');
+		this._$backgroundColorDiv.appendChild(this._$innerContainer);
 
-		this.$toolbarFiller = $('<div class="toolbar-filler">').appendTo(this._$innerContainer);
+		this.$toolbarFiller = parseHtml('<div class="toolbar-filler">');
+		this._$innerContainer.appendChild(this.$toolbarFiller);
 
 		if (config.logoImage) {
 			this.setLogoImage(config.logoImage);
 		}
 
-		this.$overflowDropDownButton = $('<div class="overflow-dropdown-button toolbar-button-wrapper"><div class="caret"></div></div>');
-		this.$overflowDropDownButton.appendTo(this._$innerContainer);
+		this.$overflowDropDownButton = parseHtml('<div class="overflow-dropdown-button toolbar-button-wrapper"><div class="caret"></div></div>');
+		this._$innerContainer.appendChild(this.$overflowDropDownButton);
 		this.overflowDropDown = new UiDropDown();
 		this.overflowToolAccordion = this.createDropDownAccordion();
 		this.overflowDropDown.setContentComponent(this.overflowToolAccordion);
-		this.$overflowDropDownButton.mousedown(() => {
+		this.$overflowDropDownButton.addEventListener("mousedown", () => {
 			if (!this.overflowDropDown.isOpen) {
 				this.overflowDropDown.open({$reference: this.$overflowDropDownButton, width: Math.min(400, this.totalWidthOfOverflowButtons * 1.2)});
 				this.overflowToolAccordion.attachedToDom = true; // obviously...
@@ -114,18 +116,18 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this._$toolbar;
 	}
 
 	public setLogoImage(logoImage: string) {
 		if (this._$logo) {
-			this._$logo.detach();
+			this._$logo.remove();
 			this._$logo = null;
 		}
 		if (logoImage) {
-			this._$logo = $(`<div class="logo" style="background-image: url(${logoImage});">`)
-				.appendTo(this._$innerContainer);
+			this._$logo = parseHtml(`<div class="logo" style="background-image: url(${logoImage});"></div>`);
+			this._$innerContainer.appendChild(this._$logo)
 		}
 	}
 
@@ -180,9 +182,9 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 		}
 
 		if (allButtonGroups[otherGroupIndex]) {
-			buttonGroup.getMainDomElement().insertBefore(allButtonGroups[otherGroupIndex].getMainDomElement());
+			insertBefore(buttonGroup.getMainDomElement(), allButtonGroups[otherGroupIndex].getMainDomElement())
 		} else {
-			buttonGroup.getMainDomElement().insertBefore(this.$toolbarFiller);
+			insertBefore(buttonGroup.getMainDomElement(), this.$toolbarFiller)
 		}
 
 		if (this.overflowToolAccordion) {
@@ -202,7 +204,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 
 		if (buttonGroup) {
 			this.buttonGroupsById.remove(groupId);
-			buttonGroup.getMainDomElement().detach();
+			buttonGroup.getMainDomElement().remove();
 		}
 
 		if (this.overflowToolAccordion) {
@@ -241,14 +243,15 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 
 	private updateButtonOverflow() {
 		if (!this.attachedToDom) return;
-		let availableWidth = this._$innerContainer[0].offsetWidth;
-		this._$innerContainer.addClass("overflow-measurement-mode");
+		let availableWidth = this._$innerContainer.offsetWidth;
+		this._$innerContainer.classList.add("overflow-measurement-mode");
 		let logoWidth = 0;
 		if (this._$logo) {
-			this._$logo.removeClass("hidden");
-			logoWidth = this._$logo.outerWidth(true);
+			this._$logo.classList.remove("hidden");
+			logoWidth = outerWidthIncludingMargins(this._$logo);
 		}
-		let overflowDropDownButtonWidth = this.$overflowDropDownButton.removeClass("hidden").outerWidth(true);
+		this.$overflowDropDownButton.classList.remove("hidden")
+		let overflowDropDownButtonWidth = outerWidthIncludingMargins(this.$overflowDropDownButton);
 		let consumedWidth = Math.max(logoWidth, overflowDropDownButtonWidth);
 		let hasOverflowingButton = false;
 		this.totalWidthOfOverflowButtons = 0;
@@ -256,25 +259,25 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 			let buttonVisibilityInfo = group.calculateButtonVisibilities(availableWidth - consumedWidth);
 			this.totalWidthOfOverflowButtons += buttonVisibilityInfo.nonFittingButtons.reduce((sum, b) => sum + b.button.optimizedWidth, 0);
 			buttonVisibilityInfo.fittingButtons.forEach(b => {
-				b.button.getMainDomElement().removeClass("moved-to-overflow-dropdown");
+				b.button.getMainDomElement().classList.remove("moved-to-overflow-dropdown");
 				this.overflowToolAccordion.setButtonVisible(group.getId(), b.buttonId, false);
 			});
 			buttonVisibilityInfo.nonFittingButtons.forEach(b => {
-				b.button.getMainDomElement().addClass("moved-to-overflow-dropdown");
+				b.button.getMainDomElement().classList.add("moved-to-overflow-dropdown");
 				this.overflowToolAccordion.setButtonVisible(group.getId(), b.buttonId, true);
 				this.overflowToolAccordion.setDropDownComponent(b.groupId, b.buttonId, b.button.getDropDownComponent()); // move to overflow accordion
 			});
 			buttonVisibilityInfo.hiddenButtons.forEach(b => {
 				this.overflowToolAccordion.setButtonVisible(group.getId(), b.buttonId, false);
 			});
-			consumedWidth += group.isVisible() ? group.getMainDomElement()[0].offsetWidth : 0;
+			consumedWidth += group.isVisible() ? group.getMainDomElement().offsetWidth : 0;
 			hasOverflowingButton = hasOverflowingButton || buttonVisibilityInfo.nonFittingButtons.length > 0;
 		}
-		this.$overflowDropDownButton.toggleClass("hidden", !hasOverflowingButton);
+		this.$overflowDropDownButton.classList.toggle("hidden", !hasOverflowingButton);
 		if (this._$logo) {
-			this._$logo.toggleClass("hidden", hasOverflowingButton);
+			this._$logo.classList.toggle("hidden", hasOverflowingButton);
 		}
-		this._$innerContainer.removeClass("overflow-measurement-mode");
+		this._$innerContainer.classList.remove("overflow-measurement-mode");
 	}
 
 	public get empty() {

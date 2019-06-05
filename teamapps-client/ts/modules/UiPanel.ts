@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiPanelHeaderFieldConfig} from "../generated/UiPanelHeaderFieldConfig";
 import {UiField} from "./formfield/UiField";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
@@ -35,7 +35,7 @@ import {StaticIcons} from "./util/StaticIcons";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {EventFactory} from "../generated/EventFactory";
-import {maximizeComponent, outerWidthIncludingMargins, parseHtml} from "./Common";
+import {insertBefore, maximizeComponent, outerWidthIncludingMargins, parseHtml, prependChild} from "./Common";
 
 interface HeaderField {
 	config: UiPanelHeaderFieldConfig;
@@ -125,7 +125,7 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.setTitle(config.title);
 		this.setLeftHeaderField(config.leftHeaderField);
 		this.setRightHeaderField(config.rightHeaderField);
-		this.setToolButtons(config.toolButtons);
+		this.setToolButtons(config.toolButtons as UiToolButton[]);
 
 		if (config.hideTitleBar) {
 			this.$heading.classList.add('hidden');
@@ -135,9 +135,9 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 			this.$panel.classList.remove("empty-heading");
 		}
 
-		this.setToolbar(config.toolbar);
+		this.setToolbar(config.toolbar as UiToolbar);
 		if (config.content) {
-			this.setContent(config.content);
+			this.setContent(config.content as UiComponent);
 		}
 		this.leftComponentFirstMinimized = this._config.headerComponentMinimizationPolicy == UiPanel_HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
 
@@ -188,7 +188,7 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.toolButtons = [];
 		this.$buttonContainer.innerHTML = '';
 		toolButtons && toolButtons.forEach(toolButton => {
-			toolButton.getMainDomElement().appendTo(this.$buttonContainer);
+			this.$buttonContainer.appendChild(toolButton.getMainDomElement());
 			toolButton.attachedToDom = this.attachedToDom;
 			this.toolButtons.push(toolButton);
 		});
@@ -215,22 +215,22 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.windowButtons.push(toolButtonType);
 		const button = this.defaultToolButtons[toolButtonType];
 		if (this.$windowButtonContainer.children.length === 0) {
-			button.getMainDomElement().prependTo(this.$windowButtonContainer);
+			prependChild(this.$windowButtonContainer, button.getMainDomElement());
 		} else {
 			let index = this.windowButtons
 				.sort((a, b) =>this.orderedDefaultToolButtonTypes.indexOf(a) - this.orderedDefaultToolButtonTypes.indexOf(b))
 				.indexOf(toolButtonType);
 			if (index >= this.$windowButtonContainer.childNodes.length) {
-				button.getMainDomElement().appendTo(this.$windowButtonContainer);
+				this.$windowButtonContainer.appendChild(button.getMainDomElement());
 			} else {
-				button.getMainDomElement().insertBefore(this.$windowButtonContainer.children[index]);
+				insertBefore(button.getMainDomElement(), this.$windowButtonContainer.children[index]);
 			}
 		}
 		this.relayoutHeader();
 	}
 
 	public removeWindowButton(uiToolButton: UiWindowButtonType) {
-		this.defaultToolButtons[uiToolButton].getMainDomElement().detach();
+		this.defaultToolButtons[uiToolButton].getMainDomElement().remove();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {
 			this.$windowButtonContainer.classList.add("hidden");
@@ -241,8 +241,8 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		return this.defaultToolButtons[buttonType];
 	}
 
-	public getMainDomElement(): JQuery {
-		return $(this.$panel);
+	public getMainDomElement(): HTMLElement {
+		return this.$panel;
 	}
 
 	public setContent(content: UiComponent) {
@@ -252,7 +252,7 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.$bodyContainer.innerHTML = '';
 		this.contentComponent = content;
 		if (content != null) {
-			this.contentComponent.getMainDomElement().appendTo(this.$bodyContainer);
+			this.$bodyContainer.appendChild(this.contentComponent.getMainDomElement());
 			this.contentComponent.attachedToDom = this.attachedToDom;
 		}
 	}
@@ -319,14 +319,14 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
                     <div class="icon img img-16" style="background-image: ${iconPath ? 'url(' + iconPath + ')' : 'none'}"></div>
                     <div class="field-wrapper"></div>
                 </div>`);
-			let $icon = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope>.icon');
+			let $icon = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope >.icon');
 			$icon.addEventListener('click', () => {
 				this.leftComponentFirstMinimized = !isLeft;
 				this.relayoutHeader();
 			});
-			let $fieldWrapper = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope>.field-wrapper');
+			let $fieldWrapper = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope >.field-wrapper');
 			const field = (headerFieldConfig.field as UiField);
-			field.getMainDomElement().appendTo($fieldWrapper);
+			$fieldWrapper.appendChild(field.getMainDomElement());
 			field.onVisibilityChanged.addListener(visible => {
 				this.relayoutHeader();
 			});
@@ -345,18 +345,6 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 			return null;
 		}
 	};
-
-	public setFieldValue(fieldName: string, value: any): void {
-		const field = this.getHeaderFieldByName(fieldName);
-		if (field) {
-			field.field.setCommittedValue(value);
-		}
-	}
-
-	private getHeaderFieldByName(fieldName: string): HeaderField {
-		return this.headerFields
-			.filter(field => field != null && field.config.field.fieldName === fieldName)[0];
-	}
 
 	public setIcon(icon: string) {
 		this.icon = icon;
@@ -394,26 +382,22 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		}
 		this.toolbar = toolbar;
 		if (toolbar) {
-			this.toolbar.getMainDomElement().appendTo(this.$toolbarContainer);
+			this.$toolbarContainer.appendChild(this.toolbar.getMainDomElement());
 			this.toolbar.onEmptyStateChanged.addListener(() => this.updateToolbarVisibility())
 		}
 		this.updateToolbarVisibility();
 	}
 
 	public setStretchContent(stretch: boolean): void {
-		this.getMainDomElement().get(0).classList.toggle("stretch-content", stretch);
+		this.getMainDomElement().classList.toggle("stretch-content", stretch);
 	}
 
 	private updateToolbarVisibility() {
 		this.$toolbarContainer.classList.toggle('hidden', this.toolbar == null || this.toolbar.empty);
 	}
 
-	public focusField(fieldName: string) {
-		this.getHeaderFieldByName(fieldName).field.focus();
-	}
-
 	onResize(): void {
-		if (!this.attachedToDom || this.getMainDomElement()[0].offsetWidth <= 0) return;
+		if (!this.attachedToDom || this.getMainDomElement().offsetWidth <= 0) return;
 		this.relayoutHeader();
 		this.toolbar && this.toolbar.reLayout();
 		this.contentComponent && this.contentComponent.reLayout();

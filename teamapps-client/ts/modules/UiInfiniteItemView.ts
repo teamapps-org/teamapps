@@ -17,10 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {Constants, generateUUID, Renderer} from "./Common";
+import {Constants, generateUUID, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenAttached} from "./util/ExecuteWhenAttached";
 import {TableDataProviderItem} from "./table/TableDataProvider";
@@ -160,8 +160,8 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 	public readonly onDataRequest: TeamAppsEvent<UiInfiniteItemView_DataRequestEvent> = new TeamAppsEvent<UiInfiniteItemView_DataRequestEvent>(this);
 	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent>(this);
 
-	private $mainDomElement: JQuery;
-	private $grid: JQuery;
+	private $mainDomElement: HTMLElement;
+	private $grid: HTMLElement;
 	private grid: Slick.Grid<any>;
 	private dataProvider: UiInfiniteItemViewDataProvider;
 	private itemTemplateRenderer: Renderer;
@@ -174,10 +174,10 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 	constructor(config: UiInfiniteItemViewConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.uuid = generateUUID();
-		this.$mainDomElement = $(`<div id="${config.id}" class="UiInfiniteItemView grid-${this.uuid}">
+		this.$mainDomElement = parseHtml(`<div id="${config.id}" class="UiInfiniteItemView grid-${this.uuid}">
                 <div class="slickgrid"></div>
             </div>`);
-		this.$grid = this.$mainDomElement.find(".slickgrid");
+		this.$grid = this.$mainDomElement.querySelector<HTMLElement>(":scope .slickgrid");
 		this.setItemTemplate(config.itemTemplate);
 		this.itemWidth = config.itemWidth;
 		this.horizontalItemMargin = config.horizontalItemMargin;
@@ -196,7 +196,7 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 		this.createGrid();
 
 		let me = this;
-		(this.getMainDomElement() as JQuery)
+		$(this.getMainDomElement())
 			.on("click contextmenu", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
 				me.onItemClicked.fire(EventFactory.createUiInfiniteItemView_ItemClickedEvent(me.getId(), recordId, e.button === 2, false));
@@ -244,7 +244,7 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 			enableAddRow: false
 		};
 
-		this.dataProvider.setAvailableWidth(this.$mainDomElement[0].offsetWidth - Constants.SCROLLBAR_WIDTH);
+		this.dataProvider.setAvailableWidth(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
 
 		this.grid = new Slick.Grid(this.$grid, this.dataProvider, columns, options);
 
@@ -304,8 +304,8 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 
 	@executeWhenAttached(true)
 	public onResize(): void {
-		this.logger.debug(this.$mainDomElement[0].offsetWidth - Constants.SCROLLBAR_WIDTH);
-		this.dataProvider.setAvailableWidth(this.$mainDomElement[0].offsetWidth - Constants.SCROLLBAR_WIDTH);
+		this.logger.debug(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
+		this.dataProvider.setAvailableWidth(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
 		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels());
 		this.grid.invalidateAllRows();
 		this.grid.resizeCanvas();
@@ -317,12 +317,12 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 		// nothing to do...
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$mainDomElement;
 	}
 
 	private updateStyles() {
-		this.getMainDomElement().append(`<style>
+		this.getMainDomElement().append(parseHtml(`<style>
             .grid-${this.uuid} .line-wrapper {
                  align-items: ${itemCssStringsAlignItems[this.verticalItemAlignment]};
                  justify-content: ${itemCssStringsJustification[this.itemJustification]};
@@ -330,7 +330,7 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
             .grid-${this.uuid} .item-wrapper {
                margin: 0 ${this.horizontalItemMargin}px;
             }
-            </style>`);
+            </style>`));
 	}
 
 	@executeWhenAttached(true)

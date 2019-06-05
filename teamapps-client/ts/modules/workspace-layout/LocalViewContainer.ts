@@ -24,10 +24,10 @@ import {UiPanel} from "../UiPanel";
 import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {UiWorkSpaceLayout, UiWorkspaceLayoutDndDataTransfer} from "./UiWorkSpaceLayout";
-import * as $ from "jquery";
+
 import {UiSplitDirection} from "../../generated/UiSplitDirection";
 import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
-import {generateUUID, getMicrosoftBrowserVersion} from "../Common";
+import {css, generateUUID, getMicrosoftBrowserVersion, parseHtml} from "../Common";
 import {bind} from "../util/Bind";
 import {UiComponent} from "../UiComponent";
 import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
@@ -54,18 +54,18 @@ export class LocalViewContainer implements ViewContainer {
 	private itemTree = new ItemTree();
 	private _toolbar: UiToolbar;
 
-	private $mainDiv: JQuery;
-	private $toolbarContainer: JQuery;
-	private $contentContainer: JQuery;
-	private $dndActiveRectangle: JQuery;
-	private $dndImage: JQuery;
+	private $mainDiv: HTMLElement;
+	private $toolbarContainer: HTMLElement;
+	private $contentContainer: HTMLElement;
+	private $dndActiveRectangle: HTMLElement;
+	private $dndImage: HTMLElement;
 	private lastDndEventType: string;
 	private _attachedToDom: boolean = false;
 
-	private $maximizationContainerWrapper: JQuery;
-	private $maximizationContainer: JQuery;
-	private $normalContainerOfMaximizedTabPanel: JQuery;
-	private $minimizedViewsBar: JQuery;
+	private $maximizationContainerWrapper: HTMLElement;
+	private $maximizationContainer: HTMLElement;
+	private $normalContainerOfMaximizedTabPanel: HTMLElement;
+	private $minimizedViewsBar: HTMLElement;
 	private viewEventsSuppressed: boolean;
 
 	constructor(private workSpaceLayout: UiWorkSpaceLayout,
@@ -74,7 +74,7 @@ export class LocalViewContainer implements ViewContainer {
 	            initialLayout: UiWorkSpaceLayoutItemConfig,
 	            private context: TeamAppsUiContext,
 	            private listener: ViewContainerListener) {
-		this.$mainDiv = $(`<div data-id="${this.workSpaceLayoutId}" class="UiWorkSpaceLayout">
+		this.$mainDiv = parseHtml(`<div data-id="${this.workSpaceLayoutId}" class="UiWorkSpaceLayout">
     <div class="toolbar-container"></div>
     <div class="content-container-wrapper">
 	    <div class="content-container"></div>
@@ -84,14 +84,15 @@ export class LocalViewContainer implements ViewContainer {
 	<div class="minimized-tabpanel-bar"></div>
 </div>`);
 
-		this.$toolbarContainer = this.$mainDiv.find('.toolbar-container');
-		this.$contentContainer = this.$mainDiv.find('.content-container');
-		this.$dndActiveRectangle = this.$mainDiv.find('.dnd-target-rectangle');
-		this.$dndImage = this.$mainDiv.find('.dnd-drag-image');
-		this.$minimizedViewsBar = this.$mainDiv.find('.minimized-tabpanel-bar');
+		this.$toolbarContainer = this.$mainDiv.querySelector<HTMLElement>(':scope .toolbar-container');
+		this.$contentContainer = this.$mainDiv.querySelector<HTMLElement>(':scope .content-container');
+		this.$dndActiveRectangle = this.$mainDiv.querySelector<HTMLElement>(':scope .dnd-target-rectangle');
+		this.$dndImage = this.$mainDiv.querySelector<HTMLElement>(':scope .dnd-drag-image');
+		this.$minimizedViewsBar = this.$mainDiv.querySelector<HTMLElement>(':scope .minimized-tabpanel-bar');
 
-		this.$maximizationContainerWrapper = $(`<div class="UiWorkSpaceLayout-maximization-container-wrapper"><div class="UiWorkSpaceLayout-maximization-container"></div></div>`).appendTo(document.body);
-		this.$maximizationContainer = this.$maximizationContainerWrapper.find('.UiWorkSpaceLayout-maximization-container');
+		this.$maximizationContainerWrapper = parseHtml(`<div class="UiWorkSpaceLayout-maximization-container-wrapper"><div class="UiWorkSpaceLayout-maximization-container"></div></div>`);
+		document.body.appendChild(this.$maximizationContainerWrapper);
+		this.$maximizationContainer = this.$maximizationContainerWrapper.querySelector<HTMLElement>(':scope .UiWorkSpaceLayout-maximization-container');
 
 		if (initialLayout) {
 			this.redefineLayout(initialLayout, viewConfigs);
@@ -104,7 +105,7 @@ export class LocalViewContainer implements ViewContainer {
 
 		let srcTabPanel = null;
 
-		this.$mainDiv[0].addEventListener('dragstart', (e) => {
+		this.$mainDiv.addEventListener('dragstart', (e) => {
 			this.lastDndEventType = 'dragstart';
 
 			let target = e.target as HTMLElement;
@@ -117,11 +118,11 @@ export class LocalViewContainer implements ViewContainer {
 					let view = this.itemTree.getViewByName(viewName);
 					srcTabPanel = matchingTabPanel;
 					try {
-						let $tabButton = matchingTabPanel.component.getMainDomElement().find(`.tab-button[data-tab-name=${viewName}]`)[0];
+						let $tabButton = matchingTabPanel.component.getMainDomElement().querySelector<HTMLElement>(`:scope .tab-button[data-tab-name=${viewName}]`);
 						if ($tabButton) {
-							this.$dndImage[0].innerHTML = $tabButton.outerHTML;
-							this.$dndImage.find('.tab-button').removeClass('hidden');
-							e.dataTransfer.setDragImage(this.$dndImage[0], 0, 0);
+							this.$dndImage.innerHTML = $tabButton.outerHTML;
+							this.$dndImage.querySelector<HTMLElement>(':scope .tab-button').classList.remove('hidden');
+							e.dataTransfer.setDragImage(this.$dndImage, 0, 0);
 						}
 					} catch (e) {
 						// microsoft browsers do not support this...
@@ -142,10 +143,10 @@ export class LocalViewContainer implements ViewContainer {
 				}
 			}
 		});
-		this.$mainDiv[0].addEventListener('dragenter', (e) => {
+		this.$mainDiv.addEventListener('dragenter', (e) => {
 			this.lastDndEventType = 'dragenter';
 		});
-		this.$mainDiv[0].addEventListener('dragover', (e) => {
+		this.$mainDiv.addEventListener('dragover', (e) => {
 			this.lastDndEventType = 'dragover';
 
 			if (e.dataTransfer != null && e.dataTransfer.types != null && !e.dataTransfer.types.includes(LocalViewContainer.DND_MIME_TYPE)) {
@@ -156,86 +157,86 @@ export class LocalViewContainer implements ViewContainer {
 
 			if (dropPosition) {
 				e.dataTransfer.dropEffect = 'move';
-				this.$dndActiveRectangle.show();
+				this.$dndActiveRectangle.classList.remove("hidden");
 
 				if (dropPosition.tabPanel) {
-					let $tabPanelContentWrapper = dropPosition.tabPanel.component.getMainDomElement().find('.tabpanel-content-wrapper');
-					let tabPanelContentRect = $tabPanelContentWrapper[0].getBoundingClientRect();
+					let $tabPanelContentWrapper = dropPosition.tabPanel.component.getMainDomElement().querySelector<HTMLElement>(':scope .tabpanel-content-wrapper');
+					let tabPanelContentRect = $tabPanelContentWrapper.getBoundingClientRect();
 
 					if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {
-						this.$dndActiveRectangle.position({
+						$(this.$dndActiveRectangle).position({
 							my: "left top",
 							at: "left top",
 							of: $tabPanelContentWrapper
 						});
-						this.$dndActiveRectangle.css({width: tabPanelContentRect.width, height: tabPanelContentRect.height});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width, height: tabPanelContentRect.height});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.LEFT) {
-						this.$dndActiveRectangle.position({
+						$(this.$dndActiveRectangle).position({
 							my: "left top",
 							at: "left top",
 							of: $tabPanelContentWrapper
 						});
-						this.$dndActiveRectangle.css({width: tabPanelContentRect.width / 2, height: tabPanelContentRect.height});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width / 2, height: tabPanelContentRect.height});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.RIGHT) {
-						this.$dndActiveRectangle.position({
+						$(this.$dndActiveRectangle).position({
 							my: "right top",
 							at: "right top",
 							of: $tabPanelContentWrapper
 						});
-						this.$dndActiveRectangle.css({width: tabPanelContentRect.width / 2, height: tabPanelContentRect.height});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width / 2, height: tabPanelContentRect.height});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.TOP) {
-						this.$dndActiveRectangle.position({
+						$(this.$dndActiveRectangle).position({
 							my: "left top",
 							at: "left top",
 							of: $tabPanelContentWrapper
 						});
-						this.$dndActiveRectangle.css({width: tabPanelContentRect.width, height: tabPanelContentRect.height / 2});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width, height: tabPanelContentRect.height / 2});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.BOTTOM) {
-						this.$dndActiveRectangle.position({
+						$(this.$dndActiveRectangle).position({
 							my: "left bottom",
 							at: "left bottom",
 							of: $tabPanelContentWrapper
 						});
-						this.$dndActiveRectangle.css({width: tabPanelContentRect.width, height: tabPanelContentRect.height / 2});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width, height: tabPanelContentRect.height / 2});
 					}
 				} else {
 					let $workSpaceLayout = this.$contentContainer;
-					let workSpaceLayoutRect = $workSpaceLayout[0].getBoundingClientRect();
+					let workSpaceLayoutRect = $workSpaceLayout.getBoundingClientRect();
 
 					if (dropPosition.relativeDropPosition === RelativeDropPosition.LEFT) {
-						this.$dndActiveRectangle.position({
+						$(this.$dndActiveRectangle).position({
 							my: "left top",
 							at: "left top",
 							of: $workSpaceLayout
 						});
-						this.$dndActiveRectangle.css({width: workSpaceLayoutRect.width / 3, height: workSpaceLayoutRect.height});
+						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width / 3, height: workSpaceLayoutRect.height});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.RIGHT) {
-						this.$dndActiveRectangle.position({
+						$(this.$dndActiveRectangle).position({
 							my: "right top",
 							at: "right top",
 							of: $workSpaceLayout
 						});
-						this.$dndActiveRectangle.css({width: workSpaceLayoutRect.width / 3, height: workSpaceLayoutRect.height});
+						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width / 3, height: workSpaceLayoutRect.height});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.TOP) {
-						this.$dndActiveRectangle.position({
+						$(this.$dndActiveRectangle).position({
 							my: "left top",
 							at: "left top",
 							of: $workSpaceLayout
 						});
-						this.$dndActiveRectangle.css({width: workSpaceLayoutRect.width, height: workSpaceLayoutRect.height / 3});
+						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width, height: workSpaceLayoutRect.height / 3});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.BOTTOM) {
-						this.$dndActiveRectangle.position({
+						$(this.$dndActiveRectangle).position({
 							my: "left bottom",
 							at: "left bottom",
 							of: $workSpaceLayout
 						});
-						this.$dndActiveRectangle.css({width: workSpaceLayoutRect.width, height: workSpaceLayoutRect.height / 3});
+						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width, height: workSpaceLayoutRect.height / 3});
 					}
 				}
 
 
 			} else {
-				this.$dndActiveRectangle.hide();
+				this.$dndActiveRectangle.classList.add("hidden");
 			}
 
 			if (e.preventDefault) {
@@ -243,12 +244,12 @@ export class LocalViewContainer implements ViewContainer {
 			}
 			return false;
 		});
-		this.$mainDiv[0].addEventListener('dragleave', (e) => {
+		this.$mainDiv.addEventListener('dragleave', (e) => {
 			this.lastDndEventType = 'dragleave';
-			this.$dndActiveRectangle.hide();
+			this.$dndActiveRectangle.classList.add("hidden");
 		});
-		this.$mainDiv[0].addEventListener('drop', (e) => {
-			this.$dndActiveRectangle.hide();
+		this.$mainDiv.addEventListener('drop', (e) => {
+			this.$dndActiveRectangle.classList.add("hidden");
 
 			let dropPosition = this.determineDropPosition(e);
 			let dataTransferString = e.dataTransfer.getData(LocalViewContainer.DND_MIME_TYPE);
@@ -288,8 +289,8 @@ export class LocalViewContainer implements ViewContainer {
 				return false;
 			}
 		}, false);
-		this.$mainDiv[0].addEventListener('dragend', (e: DragEvent) => {
-			this.$dndActiveRectangle.hide();
+		this.$mainDiv.addEventListener('dragend', (e: DragEvent) => {
+			this.$dndActiveRectangle.classList.add("hidden");
 			const dropEffect = e.dataTransfer.dropEffect;
 			const target = e.target as HTMLElement;
 			const viewName = this.getViewNameForDragTarget(target);
@@ -312,11 +313,11 @@ export class LocalViewContainer implements ViewContainer {
 
 	public setToolbar(toolbar: UiToolbar): void {
 		if (this._toolbar) {
-			this.$toolbarContainer[0].innerHTML = '';
+			this.$toolbarContainer.innerHTML = '';
 		}
 		this._toolbar = toolbar;
 		if (toolbar) {
-			this._toolbar.getMainDomElement().appendTo(this.$toolbarContainer);
+			this.$toolbarContainer.appendChild(this._toolbar.getMainDomElement());
 			this._toolbar.attachedToDom = this.attachedToDom;
 			this._toolbar.onEmptyStateChanged.addListener(() => this.updateToolbarVisibility());
 		}
@@ -324,7 +325,7 @@ export class LocalViewContainer implements ViewContainer {
 	}
 
 	private updateToolbarVisibility() {
-		this.$toolbarContainer.toggleClass('hidden', this._toolbar == null || this._toolbar.empty);
+		this.$toolbarContainer.classList.toggle('hidden', this._toolbar == null || this._toolbar.empty);
 		if (this._toolbar) {
 			this._toolbar.reLayout();
 		}
@@ -379,7 +380,7 @@ export class LocalViewContainer implements ViewContainer {
 	}
 
 	private determineDropPosition(e: MouseEvent): { tabPanel?: TabPanelItem, relativeDropPosition: RelativeDropPosition } {
-		let workSpaceLayoutRect = this.$contentContainer[0].getBoundingClientRect();
+		let workSpaceLayoutRect = this.$contentContainer.getBoundingClientRect();
 
 		if (e.pageY - workSpaceLayoutRect.top < 12) {
 			return {relativeDropPosition: RelativeDropPosition.TOP};
@@ -395,8 +396,8 @@ export class LocalViewContainer implements ViewContainer {
 
 		if (matchingTabPanel != null) {
 			let view = matchingTabPanel.tabs[0];
-			let tabPanelContentWrapper = matchingTabPanel.component.getMainDomElement().find('.tabpanel-content-wrapper');
-			let tabPanelContentRect = tabPanelContentWrapper[0].getBoundingClientRect();
+			let tabPanelContentWrapper = matchingTabPanel.component.getMainDomElement().querySelector<HTMLElement>(':scope .tabpanel-content-wrapper');
+			let tabPanelContentRect = tabPanelContentWrapper.getBoundingClientRect();
 			const relativeEventX = (e.pageX - tabPanelContentRect.left) / tabPanelContentRect.width;
 			const relativeEventY = (e.pageY - tabPanelContentRect.top) / tabPanelContentRect.height;
 
@@ -421,8 +422,8 @@ export class LocalViewContainer implements ViewContainer {
 	private findParentTabPanel(target: HTMLElement): TabPanelItem {
 		let allTabPanelItems = this.itemTree.getAllTabPanelItems();
 		let matchingTabPanel: TabPanelItem;
-		while (target != null && target != this.$mainDiv[0]) {
-			matchingTabPanel = allTabPanelItems.filter(item => item.component.getMainDomElement()[0] === target)[0];
+		while (target != null && target != this.$mainDiv) {
+			matchingTabPanel = allTabPanelItems.filter(item => item.component.getMainDomElement() === target)[0];
 			if (matchingTabPanel) {
 				break;
 			} else {
@@ -437,7 +438,7 @@ export class LocalViewContainer implements ViewContainer {
 			this.itemTree.rootItem.component.onEmptyStateChanged.removeListener(this.onRootItemEmptyStateChanged);
 		}
 		this.itemTree.rootItem = item;
-		item.component.getMainDomElement().appendTo(this.$contentContainer);
+		this.$contentContainer.appendChild(item.component.getMainDomElement());
 		item.component.attachedToDom = this.attachedToDom;
 		if (isEmptyable(item.component)) {
 			item.component.onEmptyStateChanged.addListener(this.onRootItemEmptyStateChanged);
@@ -447,7 +448,7 @@ export class LocalViewContainer implements ViewContainer {
 
 	@bind
 	private onRootItemEmptyStateChanged(empty: boolean) {
-		this.$contentContainer.toggleClass("hidden", empty)
+		this.$contentContainer.classList.toggle("hidden", empty)
 	}
 
 	@bind
@@ -481,7 +482,7 @@ export class LocalViewContainer implements ViewContainer {
 	}
 
 	private createView(newViewConfig: UiWorkSpaceLayoutViewConfig) {
-		return new View(newViewConfig.viewName, newViewConfig.tabIcon, newViewConfig.tabCaption, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component);
+		return new View(newViewConfig.viewName, newViewConfig.tabIcon, newViewConfig.tabCaption, newViewConfig.tabCloseable, newViewConfig.lazyLoading, newViewConfig.visible, newViewConfig.component as UiComponent);
 	}
 
 	addViewToTopLevel(newViewConfig: UiWorkSpaceLayoutViewConfig, windowId: string, relativePosition: UiRelativeWorkSpaceViewPosition, sizePolicy: UiSplitSizePolicy, referenceChildSize: number): void {
@@ -521,13 +522,13 @@ export class LocalViewContainer implements ViewContainer {
 			newTabPanelItem.addTab(view, true);
 
 			if (existingTabPanelIsPosition === 'FIRST') {
-				oldParent.component.firstChildComponent.getMainDomElement().detach();
+				oldParent.component.firstChildComponent.getMainDomElement().remove();
 				oldParent.firstChild = newSplitPaneItem;
 			} else if (existingTabPanelIsPosition === 'LAST') {
-				oldParent.component.lastChildComponent.getMainDomElement().detach();
+				oldParent.component.lastChildComponent.getMainDomElement().remove();
 				oldParent.lastChild = newSplitPaneItem;
 			} else { // siblingTabPanelItem is root!
-				siblingTabPanelItem.component.getMainDomElement().detach();
+				siblingTabPanelItem.component.getMainDomElement().remove();
 				this.setRootItem(newSplitPaneItem);
 			}
 
@@ -543,7 +544,7 @@ export class LocalViewContainer implements ViewContainer {
 				let isVerticalSplit = [UiRelativeWorkSpaceViewPosition.LEFT, UiRelativeWorkSpaceViewPosition.RIGHT].indexOf(relativePosition) !== -1;
 				let splitPaneItem = new SplitPaneItem(generateUUID(), null, isVerticalSplit ? UiSplitDirection.VERTICAL : UiSplitDirection.HORIZONTAL, sizePolicy, referenceChildSize, this.context);
 				let oldRootItem = this.itemTree.rootItem;
-				oldRootItem.component.getMainDomElement().detach();
+				oldRootItem.component.getMainDomElement().remove();
 				this.setRootItem(splitPaneItem);
 
 				let newTabPanelItem = this.createTabPanelItem({id: generateUUID(), viewNames: []}, splitPaneItem);
@@ -588,11 +589,11 @@ export class LocalViewContainer implements ViewContainer {
 			let siblingItem: ItemTreeItem<UiComponent<UiComponentConfig>>;
 			if (tabPanelItemIsFirstChild) {
 				siblingItem = parentSplitPaneItem.lastChild;
-				siblingItem.component.getMainDomElement().detach();
+				siblingItem.component.getMainDomElement().remove();
 				parentSplitPaneItem.lastChild = null;
 			} else {
 				siblingItem = parentSplitPaneItem.firstChild;
-				siblingItem.component.getMainDomElement().detach();
+				siblingItem.component.getMainDomElement().remove();
 				parentSplitPaneItem.firstChild = null;
 			}
 			let grandParentSplitPaneItem = parentSplitPaneItem.parent;
@@ -605,7 +606,7 @@ export class LocalViewContainer implements ViewContainer {
 				}
 			} else {
 				parentSplitPaneItem.component.destroy();
-				parentSplitPaneItem.component.getMainDomElement().detach();
+				parentSplitPaneItem.component.getMainDomElement().remove();
 				this.setRootItem(siblingItem);
 				siblingItem.parent = null;
 			}
@@ -621,7 +622,7 @@ export class LocalViewContainer implements ViewContainer {
 		if (viewName === newSiblingName && view.parent.tabs.length <= 1) {
 			return; // would not have any effect anyway
 		}
-		view.component.getMainDomElement().detach();
+		view.component.getMainDomElement().remove();
 		this.removeView(viewName, false);
 		this.addViewItemToNewPosition(view, newSiblingName, relativePosition, sizePolicy, referenceChildSize);
 	}
@@ -631,7 +632,7 @@ export class LocalViewContainer implements ViewContainer {
 		if (viewName === newSiblingName) {
 			return; // would not have any effect anyway
 		}
-		view.component.getMainDomElement().detach();
+		view.component.getMainDomElement().remove();
 		this.removeView(viewName, false);
 		this.itemTree.getViewByName(newSiblingName).parent.addTab(view, true);
 		this.itemTree.updateIndex();
@@ -707,9 +708,10 @@ export class LocalViewContainer implements ViewContainer {
 
 	private maximizeTabPanel(tabPanelItem: TabPanelItem) {
 		const $element = tabPanelItem.component.getMainDomElement();
-		this.$normalContainerOfMaximizedTabPanel = $element.parent();
-		this.$maximizationContainerWrapper.addClass("show");
-		this.$maximizationContainer.append($element).addClass("animated zoomIn");
+		this.$normalContainerOfMaximizedTabPanel = $element.parentElement;
+		this.$maximizationContainerWrapper.classList.add("show");
+		this.$maximizationContainer.append($element);
+		this.$maximizationContainer.classList.add("animated zoomIn");
 		tabPanelItem.component.reLayout();
 		tabPanelItem.state = UiViewGroupPanelState.MAXIMIZED;
 	}
@@ -717,13 +719,14 @@ export class LocalViewContainer implements ViewContainer {
 	private restoreTabPanel(tabPanelItem: TabPanelItem) {
 		if (tabPanelItem.state === UiViewGroupPanelState.MAXIMIZED) {
 			const $element = tabPanelItem.component.getMainDomElement();
-			this.$maximizationContainerWrapper.removeClass("show");
-			this.$maximizationContainer.append($element).removeClass("animated zoomIn");
-			$element.appendTo(this.$normalContainerOfMaximizedTabPanel);
+			this.$maximizationContainerWrapper.classList.remove("show");
+			this.$maximizationContainer.append($element);
+			this.$maximizationContainer.classList.remove("animated zoomIn");
+			this.$normalContainerOfMaximizedTabPanel.appendChild($element);
 			tabPanelItem.state = UiViewGroupPanelState.NORMAL;
 			tabPanelItem.component.reLayout();
 		} else if (tabPanelItem.state === UiViewGroupPanelState.MINIMIZED) {
-			tabPanelItem.$minimizedTrayButton.detach();
+			tabPanelItem.$minimizedTrayButton.remove();
 			tabPanelItem.state = UiViewGroupPanelState.NORMAL;
 			tabPanelItem.component.reLayout();
 		}
@@ -747,15 +750,15 @@ export class LocalViewContainer implements ViewContainer {
 	}
 
 	reLayout() {
-		this.$contentContainer.css("overflow", "hidden"); // enforce container size (from flex layout) over children sizes!
+		this.$contentContainer.style.overflow = "hidden"; // enforce container size (from flex layout) over children sizes!
 		this._toolbar && this._toolbar.reLayout();
 		this.itemTree.rootItem && this.itemTree.rootItem.component.reLayout();
-		this.$contentContainer.css("overflow", "visible");
+		this.$contentContainer.style.overflow = "visible";
 	}
 
 	destroy() {
 		if (this.itemTree.rootItem.component) this.itemTree.rootItem.component.destroy();
-		this.$maximizationContainerWrapper.detach();
+		this.$maximizationContainerWrapper.remove();
 	}
 
 	getMainDomElement() {

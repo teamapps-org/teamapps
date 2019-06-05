@@ -25,5 +25,5 @@ export interface ProgressIndicator {
 
 	setErrorMessage(message: string | null): void;
 
-	getMainDomElement(): JQuery;
+	getMainDomElement(): HTMLElement;
 }

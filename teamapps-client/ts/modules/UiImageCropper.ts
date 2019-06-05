@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {applyDisplayMode} from "./Common";
+import {applyDisplayMode, css, parseHtml} from "./Common";
 import {executeWhenAttached} from "./util/ExecuteWhenAttached";
 import {UiImageCropper_SelectionChangedEvent, UiImageCropperCommandHandler, UiImageCropperConfig, UiImageCropperEventSource} from "../generated/UiImageCropperConfig";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
@@ -35,8 +35,8 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 
 	public readonly onSelectionChanged: TeamAppsEvent<UiImageCropper_SelectionChangedEvent> = new TeamAppsEvent<UiImageCropper_SelectionChangedEvent>(this);
 
-	private $element: JQuery;
-	private $selectionFrame: JQuery;
+	private $element: HTMLElement;
+	private $selectionFrame: HTMLElement;
 	private htmlImageElement: HTMLImageElement;
 
 	private selection: UiImageCropperSelectionConfig;
@@ -47,19 +47,20 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 	            context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$element = $(`<div data-id="' + config.id + '" class="UiImageCropper">
-    <img/>
-    <div class="cropping-frame" tabindex="-1"/>
+		this.$element = parseHtml(`<div data-id="' + config.id + '" class="UiImageCropper">
+    <img></img>
+    <div class="cropping-frame" tabindex="-1"></div>
 </div>`);
-		this.htmlImageElement = this.$element.find("img")[0] as HTMLImageElement;
+		this.htmlImageElement = this.$element.querySelector<HTMLElement>(":scope img") as HTMLImageElement;
 		this.htmlImageElement.onload = () => {
 			this.imageNaturalWidth = this.htmlImageElement.naturalWidth;
 			this.imageNaturalHeight = this.htmlImageElement.naturalHeight;
-			applyDisplayMode(this.getMainDomElement(), $(this.htmlImageElement), UiPageDisplayMode.FIT_SIZE);
+			applyDisplayMode(this.getMainDomElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE);
 			this.resetSelectionFrame(config.aspectRatio);
 		};
-		// this.$element.css("background-image", `url(${config.imageUrl})`);
-		this.$selectionFrame = this.$element.find(".cropping-frame")
+		// this.$element.style.backgroundImage = `url(${config.imageUrl}`);
+		this.$selectionFrame = this.$element.querySelector<HTMLElement>(":scope .cropping-frame");
+		$(this.$selectionFrame)
 			.resizable({
 				handles: 'n, e, s, w, ne, se, nw, sw',
 				aspectRatio: 1,
@@ -99,10 +100,10 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 	private handleDragEnd() {
 		let correctionFactor = this.calculateCoordinateCorrectionFactor();
 		this.selection = createUiImageCropperSelectionConfig(
-			(this.$selectionFrame[0].offsetLeft - this.htmlImageElement.offsetLeft) * correctionFactor,
-			(this.$selectionFrame[0].offsetTop - this.htmlImageElement.offsetTop) * correctionFactor,
-			this.$selectionFrame[0].offsetWidth * correctionFactor,
-			this.$selectionFrame[0].offsetHeight * correctionFactor
+			(this.$selectionFrame.offsetLeft - this.htmlImageElement.offsetLeft) * correctionFactor,
+			(this.$selectionFrame.offsetTop - this.htmlImageElement.offsetTop) * correctionFactor,
+			this.$selectionFrame.offsetWidth * correctionFactor,
+			this.$selectionFrame.offsetHeight * correctionFactor
 		);
 		this.logger.debug("selection: ", this.selection);
 		this.onSelectionChanged.fire(EventFactory.createUiImageCropper_SelectionChangedEvent(this.getId(), this.selection));
@@ -117,7 +118,7 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 	}
 
 	setAspectRatio(aspectRatio: number): void {
-		this.$selectionFrame.resizable("option", "aspectRatio", aspectRatio);
+		$(this.$selectionFrame).resizable("option", "aspectRatio", aspectRatio);
 		this.resetSelectionFrame(aspectRatio);
 	}
 
@@ -127,13 +128,13 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 	}
 
 	setSelectionMode(selectionMode: UiImageCropperSelectionMode): void {
-		this.$selectionFrame[0].className = this.$selectionFrame[0].className.replace(/mode-\w+/, '');
-		this.$selectionFrame.addClass(`mode-${UiImageCropperSelectionMode[selectionMode].toLowerCase()}`)
+		this.$selectionFrame.className = this.$selectionFrame.className.replace(/mode-\w+/, '');
+		this.$selectionFrame.classList.add(`mode-${UiImageCropperSelectionMode[selectionMode].toLowerCase()}`)
 	}
 
 	@executeWhenAttached(true)
 	public onResize(): void {
-		applyDisplayMode(this.getMainDomElement(), $(this.htmlImageElement), UiPageDisplayMode.FIT_SIZE, {
+		applyDisplayMode(this.getMainDomElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE, {
 			innerPreferedDimensions: {
 				width: this.imageNaturalWidth,
 				height: this.imageNaturalHeight
@@ -152,16 +153,16 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 			let width = this.selection.width / correctionFactor;
 			let height = this.selection.height / correctionFactor;
 
-			this.$selectionFrame.css({
-				left: left + (this.htmlImageElement.offsetLeft - this.getMainDomElement()[0].offsetLeft),
-				top: top + (this.htmlImageElement.offsetTop - this.getMainDomElement()[0].offsetTop),
+			css(this.$selectionFrame, {
+				left: left + (this.htmlImageElement.offsetLeft - this.getMainDomElement().offsetLeft),
+				top: top + (this.htmlImageElement.offsetTop - this.getMainDomElement().offsetTop),
 				width,
 				height
 			});
 		}
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$element;
 	}
 

@@ -21,12 +21,13 @@ import {UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGrou
 import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiToolbarButton} from "./UiToolbarButton";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import * as $ from "jquery";
+
 import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
 import {UiComponent} from "../../UiComponent";
 import {ButtonVisibilities, UiToolbar} from "./UiToolbar";
 import {UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "../../Common";
 
 export class UiToolbarButtonGroup {
 	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: UiDropDownButtonClickInfoConfig}> = new TeamAppsEvent(this);
@@ -34,17 +35,17 @@ export class UiToolbarButtonGroup {
 
 	private config: UiToolbarButtonGroupConfig;
 	private visible: boolean = true;
-	private $buttonGroupWrapper: JQuery;
-	private $buttonGroup: JQuery;
+	private $buttonGroupWrapper: HTMLElement;
+	private $buttonGroup: HTMLElement;
 	private buttons: OrderedDictionary<UiToolbarButton>;
-	private $separator: JQuery;
+	private $separator: HTMLElement;
 	private buttonsShiftedToOverflowDropDown: UiToolbarButton[] = [];
 
 	constructor(buttonGroupConfig: UiToolbarButtonGroupConfig, private toolbar: UiToolbar, private context: TeamAppsUiContext) {
-		const $buttonGroupWrapper = $('<div class="button-group-wrapper"/>');
+		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
-		const $buttonGroup = $(`<div class="toolbar-button-group" id="${this.toolbarId}_${buttonGroupConfig.groupId}">`)
-			.appendTo($buttonGroupWrapper);
+		const $buttonGroup = parseHtml(`<div class="toolbar-button-group" id="${this.toolbarId}_${buttonGroupConfig.groupId}"></div>`);
+		$buttonGroupWrapper.appendChild($buttonGroup);
 
 		this.config = buttonGroupConfig;
 		this.$buttonGroupWrapper = $buttonGroupWrapper;
@@ -59,7 +60,7 @@ export class UiToolbarButtonGroup {
 		}
 
 		if (buttonGroupConfig.showGroupSeparator) {
-			this.$separator = $('<div class="toolbar-group-separator">');
+			this.$separator = parseHtml('<div class="toolbar-group-separator">');
 			$buttonGroupWrapper.append(this.$separator);
 		}
 
@@ -110,14 +111,14 @@ export class UiToolbarButtonGroup {
 		const neighborButton = this.buttons.getValue(neighborButtonId);
 		if (neighborButton) {
 			if (beforeNeighbor) {
-				button.getMainDomElement().insertBefore(neighborButton.getMainDomElement());
+				insertBefore(button.getMainDomElement(), neighborButton.getMainDomElement());
 				this.buttons.insertBeforeValue(buttonConfig.buttonId, button, neighborButton);
 			} else {
-				button.getMainDomElement().insertAfter(neighborButton.getMainDomElement());
+				insertAfter(button.getMainDomElement(), neighborButton.getMainDomElement());
 				this.buttons.insertAfterValue(buttonConfig.buttonId, button, neighborButton);
 			}
 		} else {
-			button.getMainDomElement().appendTo(this.$buttonGroup);
+			this.$buttonGroup.appendChild(button.getMainDomElement());
 			this.buttons.push(buttonConfig.buttonId, button);
 		}
 
@@ -129,7 +130,7 @@ export class UiToolbarButtonGroup {
 
 		if (button) {
 			this.buttons.remove(buttonId);
-			button.getMainDomElement().detach();
+			button.getMainDomElement().remove();
 		}
 
 		// TODO destroy dropdown
@@ -150,7 +151,7 @@ export class UiToolbarButtonGroup {
 		let hasVisibleButton = this.buttons.values.some(button => {
 			return button.isVisible() && this.buttonsShiftedToOverflowDropDown.indexOf(button) === -1;
 		});
-		this.$buttonGroupWrapper.toggleClass("pseudo-hidden", !(this.visible && hasVisibleButton));
+		this.$buttonGroupWrapper.classList.toggle("pseudo-hidden", !(this.visible && hasVisibleButton));
 	}
 
 	public calculateButtonVisibilities(availableWidth: number): ButtonVisibilities {
@@ -159,7 +160,7 @@ export class UiToolbarButtonGroup {
 			nonFittingButtons: [],
 			hiddenButtons: []
 		};
-		let usedWidth = this.$separator ? this.$separator.outerWidth(true) : 0;
+		let usedWidth = this.$separator ? outerWidthIncludingMargins(this.$separator) : 0;
 		this.buttons.values.forEach((button) => {
 			if (this.visible && button.isVisible()) {
 				if (usedWidth + button.optimizedWidth <= availableWidth) {
@@ -179,7 +180,7 @@ export class UiToolbarButtonGroup {
 		return info;
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$buttonGroupWrapper;
 	}
 

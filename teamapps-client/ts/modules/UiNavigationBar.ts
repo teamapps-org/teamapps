@@ -17,12 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiNavigationBarButtonConfig} from "../generated/UiNavigationBarButtonConfig";
 import {UiComponent} from "./UiComponent";
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, Renderer} from "./Common";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, outerWidthIncludingMargins, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
 	UiNavigationBar_ButtonClickedEvent,
@@ -38,7 +38,7 @@ import {UiColorConfig} from "../generated/UiColorConfig";
 
 interface Button {
 	data: any;
-	$button: JQuery;
+	$button: HTMLElement;
 }
 
 export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implements UiNavigationBarCommandHandler, UiNavigationBarEventSource {
@@ -46,12 +46,12 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 	public readonly onButtonClicked: TeamAppsEvent<UiNavigationBar_ButtonClickedEvent> = new TeamAppsEvent(this);
 	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent(this);
 
-	private $bar: JQuery;
-	private $buttonsWrapper: JQuery;
+	private $bar: HTMLElement;
+	private $buttonsWrapper: HTMLElement;
 	private buttons: { [id: string]: Button } = {};
 	private buttonTemplateRenderer: Renderer;
-	private $fanOutContainerWrapper: JQuery;
-	private $fanOutContainer: JQuery;
+	private $fanOutContainerWrapper: HTMLElement;
+	private $fanOutContainer: HTMLElement;
 	private fanOutComponents: UiComponent[] = [];
 	private currentFanOutComponent: UiComponent<UiComponentConfig>;
 	private fanoutClickOutsideHandle: ClickOutsideHandle;
@@ -61,19 +61,19 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 
 		this.buttonTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.buttonTemplate, null);
 
-		this.$bar = $(`<div class="UiNavigationBar">
+		this.$bar = parseHtml(`<div class="UiNavigationBar">
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
-                    <div class="fan-out-container"/>
+                    <div class="fan-out-container"></div>
                 </div>
-                <div class="buttons-wrapper"/>
+                <div class="buttons-wrapper"></div>
             </div>`);
-		this.$buttonsWrapper = this.$bar.find(">.buttons-wrapper");
-		this.$fanOutContainerWrapper = this.$bar.find(">.fan-out-container-wrapper");
-		this.$fanOutContainer = this.$fanOutContainerWrapper.find(">.fan-out-container");
+		this.$buttonsWrapper = this.$bar.querySelector<HTMLElement>(":scope >.buttons-wrapper");
+		this.$fanOutContainerWrapper = this.$bar.querySelector<HTMLElement>(":scope >.fan-out-container-wrapper");
+		this.$fanOutContainer = this.$fanOutContainerWrapper.querySelector<HTMLElement>(":scope >.fan-out-container");
 		this.setBackgroundColor(config.backgroundColor);
 		this.setBorderColor(config.borderColor);
 		if (config.fanOutComponents) {
-			config.fanOutComponents.forEach(c => this.addFanOutComponent(c));
+			config.fanOutComponents.forEach(c => this.addFanOutComponent(c as UiComponent));
 		}
 
 		config.buttons.forEach(button => this.addButton(button));
@@ -82,14 +82,14 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 	}
 
 	public setBackgroundColor(color: UiColorConfig) {
-		this.$buttonsWrapper.css("background-color", createUiColorCssString(color));
+		this.$buttonsWrapper.style.backgroundColor = createUiColorCssString(color);
 	}
 
 	public setBorderColor(color: UiColorConfig) {
-		this.$bar.css("border-color", createUiColorCssString(color));
+		this.$bar.style.borderColor = createUiColorCssString(color);
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$bar;
 	}
 
@@ -98,16 +98,16 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 	}
 
 	setButtons(buttons: UiNavigationBarButtonConfig[]): void {
-		this.$buttonsWrapper[0].innerHTML = '';
+		this.$buttonsWrapper.innerHTML = '';
 		this.buttons = {};
 		buttons.forEach(button => this.addButton(button));
 	}
 
 	private addButton(button: UiNavigationBarButtonConfig) {
-		let $button = $(`<div class="nav-button-wrapper"><div class="nav-button-inner-wrapper"></div></div>`);
-		let $innerWrapper = $button.find(".nav-button-inner-wrapper");
+		let $button = parseHtml(`<div class="nav-button-wrapper"><div class="nav-button-inner-wrapper"></div></div>`);
+		let $innerWrapper = $button.querySelector<HTMLElement>(":scope .nav-button-inner-wrapper");
 		$innerWrapper.append(this.buttonTemplateRenderer.render(button.data));
-		$button.click(() => {
+		$button.addEventListener("click", () => {
 			this.onButtonClicked.fire(EventFactory.createUiNavigationBar_ButtonClickedEvent(this.getId(), button.id, this.currentFanOutComponent && this.currentFanOutComponent.getId()));
 		});
 		this.buttons[button.id] = {
@@ -121,19 +121,20 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 	public setButtonVisible(buttonId: string, visible: boolean) {
 		let button = this.buttons[buttonId];
 		if (button) {
-			button.$button.toggleClass("hidden", !visible);
+			button.$button.classList.toggle("hidden", !visible);
 		}
 	}
 
 	public addFanOutComponent(fanOutComponent: UiComponent) {
 		if (this.fanOutComponents.indexOf(fanOutComponent) === -1) {
-			fanOutComponent.getMainDomElement().addClass("pseudo-hidden").appendTo(this.$fanOutContainer);
+			fanOutComponent.getMainDomElement().classList.add("pseudo-hidden");
+			this.$fanOutContainer.appendChild(fanOutComponent.getMainDomElement());
 			this.fanOutComponents.push(fanOutComponent);
 		}
 	};
 
 	public removeFanOutComponent(fanOutComponent: UiComponent) {
-		fanOutComponent.getMainDomElement().detach();
+		fanOutComponent.getMainDomElement().remove();
 		this.fanOutComponents = this.fanOutComponents.filter(c => c !== fanOutComponent);
 	};
 
@@ -141,14 +142,14 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 		this.addFanOutComponent(fanOutComponent);
 		const showFanout = () => {
 			this.currentFanOutComponent = fanOutComponent;
-			this.fanOutComponents.forEach(c => c.getMainDomElement().addClass("pseudo-hidden"));
-			this.currentFanOutComponent.getMainDomElement().removeClass("pseudo-hidden");
+			this.fanOutComponents.forEach(c => c.getMainDomElement().classList.add("pseudo-hidden"));
+			this.currentFanOutComponent.getMainDomElement().classList.remove("pseudo-hidden");
 			this.currentFanOutComponent.attachedToDom = true;
-			this.$fanOutContainerWrapper.addClass("open");
-			this.$fanOutContainerWrapper.css("bottom", this.$bar.outerHeight(true) + "px");
-			this.$fanOutContainerWrapper.slideDown(200);
+			this.$fanOutContainerWrapper.classList.add("open");
+			this.$fanOutContainerWrapper.style.bottom = outerHeightIncludingMargins(this.$bar) + "px";
+			$(this.$fanOutContainerWrapper).slideDown(200);
 			this.onResize();
-			this.fanoutClickOutsideHandle = doOnceOnClickOutsideElement(this.getMainDomElement().add(this.$fanOutContainerWrapper), e => {
+			this.fanoutClickOutsideHandle = doOnceOnClickOutsideElement([this.getMainDomElement(), this.$fanOutContainerWrapper], e => {
 				this.hideFanOutComponent();
 				this.onFanoutClosedDueToClickOutsideFanout.fire(EventFactory.createUiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent(this.getId()));
 			});
@@ -162,33 +163,35 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 	}
 
 	public hideFanOutComponent() {
-		this.$fanOutContainerWrapper.removeClass("open");
-		this.$fanOutContainerWrapper.slideUp(200);
+		this.$fanOutContainerWrapper.classList.remove("open");
+		$(this.$fanOutContainerWrapper).slideUp(200);
 		this.currentFanOutComponent = null;
 		this.fanoutClickOutsideHandle.cancel();
 	}
 
 	public onResize(): void {
-		if (this.$fanOutContainerWrapper.is(".open")) {
+		if (this.$fanOutContainerWrapper.classList.contains("open")) {
 			let $clippingParent = this.findNearestParentWithHiddenVerticalOverflow(this.$fanOutContainerWrapper);
-			let maxFanOutHeight = this.$bar.offset().top - $clippingParent.offset().top;
+			
+			let maxFanOutHeight = this.$bar.offsetTop - $clippingParent.offsetTop;
 			if (maxFanOutHeight <= 0) {
 				this.logger.warn("Fanout height is 0 due to clipping parent component...");
 			}
-			this.$fanOutContainerWrapper.css("max-height", maxFanOutHeight + "px")[0].offsetHeight;
+			this.$fanOutContainerWrapper.style.maxHeight = maxFanOutHeight + "px";
+			this.$fanOutContainerWrapper.offsetHeight; // reflow
 			this.currentFanOutComponent && this.currentFanOutComponent.reLayout();
 		}
 	}
 
-	private findNearestParentWithHiddenVerticalOverflow(child: JQuery): JQuery {
-		let el = child[0];
+	private findNearestParentWithHiddenVerticalOverflow(child: HTMLElement): HTMLElement {
+		let el = child;
 		while (el != null) {
 			el = el.parentElement;
-			if ($(el).css("overflow-y") !== "visible") {
+			if (getComputedStyle(el).overflowY !== "visible") {
 				break;
 			}
 		}
-		return $(el);
+		return el;
 	}
 
 	public destroy(): void {

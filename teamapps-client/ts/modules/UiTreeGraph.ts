@@ -30,6 +30,7 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
+import {parseHtml} from "./Common";
 
 export class UiTreeGraph extends UiComponent<UiTreeGraphConfig> implements UiTreeGraphCommandHandler, UiTreeGraphEventSource {
 
@@ -37,14 +38,14 @@ export class UiTreeGraph extends UiComponent<UiTreeGraphConfig> implements UiTre
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private chart: TreeChart;
-	private $main: JQuery<HTMLElement>;
+	private $main: HTMLElement;
 
 	constructor(config: UiTreeGraphConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = $(`<div class="UiTreeGraph">`);
+		this.$main = parseHtml(`<div class="UiTreeGraph">`);
 		this.chart = new TreeChart(context)
-			.container(this.$main[0])
+			.container(this.$main)
 			.data(this._config.nodes)
 			.onNodeClick((nodeId: string) => {
 				this.onNodeClicked.fire(EventFactory.createUiTreeGraph_NodeClickedEvent(this.getId(), nodeId));
@@ -79,7 +80,7 @@ export class UiTreeGraph extends UiComponent<UiTreeGraphConfig> implements UiTre
 		this.chart.setZoomFactor(zoomFactor);
 	}
 
-	getMainDomElement(): JQuery<HTMLElement> {
+	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 

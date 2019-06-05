@@ -17,13 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {keyCodes} from "trivial-components";
 import {UiCachedImageConfig} from "../generated/UiCachedImageConfig";
-import {applyDisplayMode, enableScrollViaDragAndDrop} from "./Common";
+import {applyDisplayMode, enableScrollViaDragAndDrop, parseHtml} from "./Common";
 import {UiImageDisplay_ImageDisplayedEvent, UiImageDisplay_ImagesRequestEvent, UiImageDisplayCommandHandler, UiImageDisplayConfig, UiImageDisplayEventSource} from "../generated/UiImageDisplayConfig";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {EventFactory} from "../generated/EventFactory";
@@ -32,7 +32,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 interface UiCachedImage {
 	id: string;
 	imageUrl: string;
-	$img: JQuery;
+	$img: HTMLElement;
 	naturalWidth?: number;
 	naturalHeight?: number;
 }
@@ -48,12 +48,12 @@ export class UiImageDisplay extends UiComponent<UiImageDisplayConfig> implements
     <path d="M5120 9600c-2474,0 -4480,-2006 -4480,-4480 0,-2474 2006,-4480 4480,-4480 2474,0 4480,2006 4480,4480 0,2474 -2006,4480 -4480,4480zm-3840 -4480c0,2121 1719,3840 3840,3840 2121,0 3840,-1719 3840,-3840 0,-2121 -1719,-3840 -3840,-3840 -2121,0 -3840,1719 -3840,3840z"
           style="fill:#ffffff"/>`;
 
-	private $componentWrapper: JQuery;
-	private $imageContainerWrapper: JQuery;
-	private $imageContainer: JQuery;
-	private $imageCacheContainer: JQuery;
-	private $backwardButton: JQuery;
-	private $forwardButton: JQuery;
+	private $componentWrapper: HTMLElement;
+	private $imageContainerWrapper: HTMLElement;
+	private $imageContainer: HTMLElement;
+	private $imageCacheContainer: HTMLElement;
+	private $backwardButton: HTMLElement;
+	private $forwardButton: HTMLElement;
 
 	private cachedImages: UiCachedImage[] = [];
 	private totalNumberOfRecords: number;
@@ -64,17 +64,17 @@ export class UiImageDisplay extends UiComponent<UiImageDisplayConfig> implements
 	constructor(config: UiImageDisplayConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$componentWrapper = $(
+		this.$componentWrapper = parseHtml(
 			`<div id=${config.id}" class="UiImageDisplay" tabindex="-1">
-                  <div class="toolbar-container"/>
+                  <div class="toolbar-container"></div>
                   <div class="image-container-wrapper">
-                    <div class="image-container"/>
+                    <div class="image-container"></div>
                   </div>
                   <div class="handle backward-handle">${this.forwardImageSvg}</div>
                   <div class="handle forward-handle">${this.forwardImageSvg}</div>
-                  <div class="image-cache-container"/>
+                  <div class="image-cache-container"></div>
                 </div>`);
-		this.$componentWrapper.keydown((e) => {
+		this.$componentWrapper.addEventListener("keydown", (e) => {
 			if (e.keyCode == keyCodes.left_arrow
 				|| e.keyCode == keyCodes.up_arrow) {
 				this.jumpToNextImage(-1);
@@ -84,18 +84,20 @@ export class UiImageDisplay extends UiComponent<UiImageDisplayConfig> implements
 				this.jumpToNextImage(1);
 			}
 		});
-		this.$componentWrapper.mousedown((e: any) => {
+		this.$componentWrapper.addEventListener("mousedown", (e: any) => {
 			this.$componentWrapper.focus();
 		});
 
-		this.$imageContainerWrapper = this.$componentWrapper.find('.image-container-wrapper');
-		this.$imageContainerWrapper.css("background-color", config.backgroundColor);
+		this.$imageContainerWrapper = this.$componentWrapper.querySelector<HTMLElement>(':scope .image-container-wrapper');
+		this.$imageContainerWrapper.style.backgroundColor = config.backgroundColor;
 		enableScrollViaDragAndDrop(this.$imageContainerWrapper);
-		this.$imageContainer = this.$componentWrapper.find('.image-container');
-		this.$imageContainer.css("padding", config.padding);
-		this.$imageCacheContainer = this.$componentWrapper.find('.image-cache-container');
-		this.$backwardButton = this.$componentWrapper.find('.backward-handle').click(() => this.jumpToNextImage(-1));
-		this.$forwardButton = this.$componentWrapper.find('.forward-handle').click(() => this.jumpToNextImage(1));
+		this.$imageContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .image-container');
+		this.$imageContainer.style.padding = config.padding + "px";
+		this.$imageCacheContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .image-cache-container');
+		this.$backwardButton = this.$componentWrapper.querySelector<HTMLElement>(':scope .backward-handle');
+		this.$backwardButton.addEventListener("click", () => this.jumpToNextImage(-1));
+		this.$forwardButton = this.$componentWrapper.querySelector<HTMLElement>(':scope .forward-handle');
+		this.$forwardButton.addEventListener("click", () => this.jumpToNextImage(1));
 
 		this.zoomFactor = config.zoomFactor;
 		this.displayMode = config.displayMode;
@@ -106,7 +108,7 @@ export class UiImageDisplay extends UiComponent<UiImageDisplayConfig> implements
 		}
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 
@@ -126,7 +128,7 @@ export class UiImageDisplay extends UiComponent<UiImageDisplayConfig> implements
 			let uiCachedImage: UiCachedImage = {
 				id: imageConfig.id,
 				imageUrl: imageConfig.imageUrl,
-				$img: $(img),
+				$img: img,
 				naturalWidth: 0,
 				naturalHeight: 0
 			};
@@ -155,11 +157,11 @@ export class UiImageDisplay extends UiComponent<UiImageDisplayConfig> implements
 	private showImageByIndex(imageIndex: number) {
 		if (this.cachedImages[imageIndex]) {
 			this.currentImageIndex = imageIndex;
-			this.$imageContainer[0].innerHTML = '';
+			this.$imageContainer.innerHTML = '';
 			this.$imageContainer.append(this.cachedImages[imageIndex].$img);
 			this.updateImageSizes();
-			this.$backwardButton.toggleClass("hidden", imageIndex <= 0);
-			this.$forwardButton.toggleClass("hidden", imageIndex >= this.totalNumberOfRecords - 1);
+			this.$backwardButton.classList.toggle("hidden", imageIndex <= 0);
+			this.$forwardButton.classList.toggle("hidden", imageIndex >= this.totalNumberOfRecords - 1);
 		}
 	};
 

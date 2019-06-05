@@ -17,31 +17,32 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiVerticalLayoutCommandHandler, UiVerticalLayoutConfig} from "../generated/UiVerticalLayoutConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {parseHtml} from "./Common";
 
 
 export class UiVerticalLayout extends UiComponent<UiVerticalLayoutConfig> implements UiVerticalLayoutCommandHandler {
-	private $verticalLayout: JQuery;
+	private $verticalLayout: HTMLElement;
 	private children: UiComponent<UiComponentConfig>[] = [];
 
 	constructor(config: UiVerticalLayoutConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$verticalLayout = $('<div id="' + config.id + '" class="UiVerticalLayout"></div>');
+		this.$verticalLayout = parseHtml('<div id="' + config.id + '" class="UiVerticalLayout"></div>');
 
 		if (config.components) {
 			for (let i = 0; i < config.components.length; i++) {
-				this.addComponent(config.components[i]);
+				this.addComponent(config.components[i] as UiComponent);
 			}
 		}
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$verticalLayout;
 	}
 
@@ -57,8 +58,9 @@ export class UiVerticalLayout extends UiComponent<UiVerticalLayoutConfig> implem
 	}
 
 	public addComponent(childComponent: UiComponent) {
-		const $childWrapper = $('<div class="vertical-layout-child-wrapper" style="' + (this._config.fixedChildHeight ? 'height:' + this._config.fixedChildHeight + 'px' : '') + '">').appendTo(this.$verticalLayout);
-		childComponent.getMainDomElement().appendTo($childWrapper);
+		const $childWrapper = parseHtml('<div class="vertical-layout-child-wrapper" style="' + (this._config.fixedChildHeight ? 'height:' + this._config.fixedChildHeight + 'px' : '') + '">');
+		this.$verticalLayout.appendChild($childWrapper);
+		$childWrapper.appendChild(childComponent.getMainDomElement());
 		this.children.push(childComponent);
 		childComponent.attachedToDom = this.attachedToDom;
 	}
@@ -66,7 +68,7 @@ export class UiVerticalLayout extends UiComponent<UiVerticalLayoutConfig> implem
 	public removeComponent(childComponent: UiComponent) {
 		this.children = this.children.filter(c => c !== childComponent);
 		let $childWrapper = childComponent.getMainDomElement().closest(".vertical-layout-child-wrapper");
-		$childWrapper.detach();
+		$childWrapper.remove();
 	}
 }
 

@@ -17,18 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
+import {parseHtml} from "../Common";
 
 export class UiSpinner {
-	private $mainDomElement: JQuery;
+	private $mainDomElement: HTMLElement;
 
 	constructor(options?: { fixedSize?: number | string }) {
 		options = options || {};
-		this.$mainDomElement = $(`<div class="UiSpinner"><div class="teamapps-spinner"></div></div>`);
+		this.$mainDomElement = parseHtml(`<div class="UiSpinner"><div class="teamapps-spinner"></div></div>`);
 		let fixedSizeCssValue: string = options.fixedSize == null ? "100%" : typeof options.fixedSize === "number" ? options.fixedSize + "px" :  options.fixedSize;
-		const $spinner = this.$mainDomElement.find(".teamapps-spinner");
-		$spinner.css("width", fixedSizeCssValue);
-		$spinner.css("height", fixedSizeCssValue);
+		const $spinner = this.$mainDomElement.querySelector<HTMLElement>(":scope .teamapps-spinner");
+		$spinner.style.width = fixedSizeCssValue;
+		$spinner.style.height = fixedSizeCssValue;
 	}
 
 	public getMainDomElement() {

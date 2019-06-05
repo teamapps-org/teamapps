@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
 import "bootstrap-notify";
 import * as log from "loglevel";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
@@ -27,7 +26,7 @@ import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {UiNotification_Position} from "../generated/UiNotificationConfig";
-import {createUiColorCssString} from "./util/CssFormatUtil";
+import {createImageSizingCssObject, createUiColorCssString} from "./util/CssFormatUtil";
 import {UiColorConfig} from "../generated/UiColorConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {UiTextMatchingMode} from "../generated/UiTextMatchingMode";
@@ -118,18 +117,10 @@ export class Constants {
 		[UiExitAnimation.BOUNCE_OUT_UP]: "bounceOutUp"
 	};
 
-	public static POINTER_EVENTS = window.navigator.pointerEnabled ? {
+	public static POINTER_EVENTS = {
 		start: 'pointerdown',
 		move: 'pointermove',
 		end: 'pointerup'
-	} : window.navigator.msPointerEnabled ? {
-		start: 'MSPointerDown',
-		move: 'MSPointerMove',
-		end: 'MSPointerUp'
-	} : {
-		start: 'mousedown touchstart',
-		move: 'mousemove touchmove',
-		end: 'mouseup touchend'
 	};
 
 	static get SCROLLBAR_WIDTH() {
@@ -140,12 +131,12 @@ export class Constants {
 	}
 
 	private static calculateScrollbarWidth() {
-		const $div = $(`<div id="ASDF" style="width: 100px; height: 100px; position: absolute; top: -10000px">`)
-			.appendTo(document.body);
-		const widthNoScroll = $div[0].clientWidth;
-		$div.css("overflow-y", "scroll");
-		const widthWithScroll = $div[0].clientWidth;
-		$div.detach();
+		const $div = parseHtml(`<div id="ASDF" style="width: 100px; height: 100px; position: absolute; top: -10000px">`)
+		document.body.appendChild($div);
+		const widthNoScroll = $div.clientWidth;
+		$div.style.overflowY = "scroll";
+		const widthWithScroll = $div.clientWidth;
+		$div.remove();
 		return widthNoScroll - widthWithScroll;
 	}
 }
@@ -175,10 +166,11 @@ export interface ClickOutsideHandle {
 	cancel: () => void
 }
 
-export function doOnceOnClickOutsideElement(elements: JQuery, handler: (e?: JQueryMouseEventObject) => any, useCapture = false): ClickOutsideHandle {
+export function doOnceOnClickOutsideElement(elements: Element | NodeList | Element[], handler: (e?: JQueryMouseEventObject) => any, useCapture = false): ClickOutsideHandle {
 	const eventType = "mousedown";
+	const elementsAsArray = elements instanceof Element ? [elements] : Array.from(elements);
 	let handlerWrapper = (e: JQueryMouseEventObject) => {
-		if (!elements.toArray().some((element) => e.target === element || $(e.target).parents().toArray().indexOf(element) !== -1)) {
+		if (closestAncestorMatching(e.target, ancestor => (elementsAsArray.indexOf(ancestor) !== -1), true) == null) {
 			handler(e);
 			removeMouseDownListener();
 		}
@@ -319,7 +311,7 @@ export function formatDecimalNumber(integerNumber: number, precision: number, de
 	return (integerNumber < 0 ? '-' : '') + formattedIntegerPart + decimalSeparator + fractionalPart;
 }
 
-export function applyDisplayMode($outer: JQuery, $inner: JQuery, displayMode: UiPageDisplayMode | any, options?: {
+export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displayMode: UiPageDisplayMode | any, options?: {
 	innerPreferedDimensions?: { // inferred for img
 		width: number,
 		height: number,
@@ -330,27 +322,25 @@ export function applyDisplayMode($outer: JQuery, $inner: JQuery, displayMode: Ui
 }) {
 	options = $.extend({}, options); // copy the options as we are potentially making changes to the object...
 	if (options.innerPreferedDimensions == null || !options.innerPreferedDimensions.width || !options.innerPreferedDimensions.height) {
-		if ($inner[0] instanceof HTMLImageElement) {
-			let imgElement = <HTMLImageElement> $($inner)[0];
+		if ($inner instanceof HTMLImageElement) {
+			let imgElement = <HTMLImageElement>$($inner)[0];
 			options.innerPreferedDimensions = {
 				width: imgElement.naturalWidth,
 				height: imgElement.naturalHeight
 			}
 		} else {
-			$inner.css({
-				width: "100%",
-				height: "100%"
-			});
+			$inner.style.width = "100%";
+			$inner.style.height = "100%";
 			return;
 		}
 	}
 	options.zoomFactor = options.zoomFactor || 1;
 	if (options.padding == null) {
-		options.padding = parseInt($outer.css("padding-left")) || 0;
+		options.padding = parseInt($outer.style.paddingLeft) || 0;
 	}
 
-	let availableWidth = $outer.width() - 2 * options.padding;
-	let availableHeight = $outer.height() - 2 * options.padding;
+	let availableWidth = $outer.offsetWidth - 2 * options.padding;
+	let availableHeight = $outer.offsetHeight - 2 * options.padding;
 	let viewPortAspectRatio = availableWidth / availableHeight;
 	let imageAspectRatio = options.innerPreferedDimensions.width / options.innerPreferedDimensions.height;
 
@@ -365,10 +355,8 @@ export function applyDisplayMode($outer: JQuery, $inner: JQuery, displayMode: Ui
 			// NOTE: Chrome still shows scrollbars sometimes. https://bugs.chromium.org/p/chromium/issues/detail?id=240772&can=2&start=0&num=100&q=&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified&groupby=&sort=
 			width = Math.min(width, availableWidth - Constants.SCROLLBAR_WIDTH);
 		}
-		$inner.css({
-			width: width + "px",
-			height: "auto"
-		});
+		$inner.style.width = width + "px";
+		$inner.style.height = "auto";
 	} else if (displayMode === UiPageDisplayMode.FIT_HEIGHT) {
 		let height = Math.floor(availableHeight * options.zoomFactor);
 		if (options.considerScrollbars && options.zoomFactor <= 1 && height * imageAspectRatio > availableWidth) {
@@ -376,41 +364,29 @@ export function applyDisplayMode($outer: JQuery, $inner: JQuery, displayMode: Ui
 			// NOTE: Chrome still shows scrollbars sometimes. https://bugs.chromium.org/p/chromium/issues/detail?id=240772&can=2&start=0&num=100&q=&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified&groupby=&sort=
 			height = Math.min(height, availableHeight - Constants.SCROLLBAR_WIDTH);
 		}
-		$inner.css({
-			width: "auto",
-			height: height + "px"
-		});
+		$inner.style.width = "auto";
+		$inner.style.height = height + "px";
 	} else if (displayMode === UiPageDisplayMode.FIT_SIZE) {
 		if (imageAspectRatio > viewPortAspectRatio) {
 			let width = Math.floor(availableWidth * options.zoomFactor);
-			$inner.css({
-				width: width + "px",
-				height: imageAspectRatio ? width / imageAspectRatio : "auto"
-			});
+			$inner.style.width = width + "px";
+			$inner.style.height = imageAspectRatio ? (width / imageAspectRatio) + "px" : "auto";
 		} else {
 			let height = Math.floor(availableHeight * options.zoomFactor);
-			$inner.css({
-				width: imageAspectRatio ? height * imageAspectRatio : "auto",
-				height: height + "px"
-			});
+			$inner.style.width = imageAspectRatio ? (height * imageAspectRatio) + "px" : "auto";
+			$inner.style.height = height + "px";
 		}
 	} else if (displayMode === UiPageDisplayMode.COVER) {
 		if (imageAspectRatio < viewPortAspectRatio) {
-			$inner.css({
-				width: Math.floor(availableWidth * options.zoomFactor) + "px",
-				height: "auto"
-			});
+			$inner.style.width = Math.floor(availableWidth * options.zoomFactor) + "px";
+			$inner.style.height = "auto";
 		} else {
-			$inner.css({
-				width: "auto",
-				height: Math.floor(availableHeight * options.zoomFactor) + "px"
-			});
+			$inner.style.width = "auto";
+			$inner.style.height = Math.floor(availableHeight * options.zoomFactor) + "px";
 		}
 	} else { // ORIGINAL_SIZE
-		$inner.css({
-			width: (options.innerPreferedDimensions.width * options.zoomFactor) + "px",
-			height: "auto"
-		});
+		$inner.style.width = (options.innerPreferedDimensions.width * options.zoomFactor) + "px";
+		$inner.style.height = "auto";
 	}
 }
 
@@ -421,14 +397,14 @@ document.addEventListener("webkitfullscreenchange", fullScreenChangeHandler);
 document.addEventListener("mozfullscreenchange", fullScreenChangeHandler);
 document.addEventListener("MSFullscreenChange", fullScreenChangeHandler);
 
-export function enterFullScreen(component: UiComponent<UiComponentConfig> | JQuery | Element) {
+export function enterFullScreen(component: UiComponent<UiComponentConfig> | HTMLElement | Element) {
 	let element: Element;
 	if (component instanceof UiComponent) {
-		element = component.getMainDomElement()[0];
+		element = component.getMainDomElement();
 	} else {
 		element = $(component)[0] as Element;
 	}
-	$(element).addClass("fullscreen");
+	element.classList.add("fullscreen");
 	if (element.requestFullscreen) {
 		element.requestFullscreen();
 	} else if ((element as any).msRequestFullscreen) {
@@ -442,7 +418,7 @@ export function enterFullScreen(component: UiComponent<UiComponentConfig> | JQue
 
 function fullScreenChangeHandler(e: Event) {
 	if (!getFullScreenElement()) {
-		$(e.target).removeClass("fullscreen");
+		(e.target as Element).classList.remove("fullscreen");
 	}
 }
 
@@ -505,47 +481,47 @@ export function adjustIfColorTooBright(c: string, maxLuma256: number = 210) {
 	}
 }
 
-export function positionDropDown($button: JQuery, $dropDown: JQuery, {
+export function positionDropDown($button: Element, $dropDown: HTMLElement, {
 	viewPortPadding = 10,
 	minHeightBeforeFlipping = 200
 }) {
-	$dropDown.removeClass("pseudo-hidden");
+	$dropDown.classList.remove("pseudo-hidden");
 
-	let maxHeight = window.innerHeight - ($button.offset().top + $button.outerHeight()) - viewPortPadding;
-	let maxFlippedHeight = $button.offset().top - viewPortPadding;
+	let boundingClientRect = $button.getBoundingClientRect();
+	let maxHeight = window.innerHeight - (boundingClientRect.top + boundingClientRect.height) - viewPortPadding;
+	let maxFlippedHeight = boundingClientRect.top - viewPortPadding;
 	let flip = maxHeight < minHeightBeforeFlipping && maxFlippedHeight > maxHeight;
 
-	(<any>$dropDown).position({
+	$($dropDown).position({
 		my: "left " + (flip ? "bottom" : "top"),
 		at: "left " + (flip ? "top" : "bottom"),
 		of: $button,
 		collision: "fit none"
 	});
-	$dropDown.find('> .background-color-div, > .background-color-div > *').css({
-		"max-height": (flip ? maxFlippedHeight : maxHeight) + "px"
-	});
-	if ($dropDown[0].offsetWidth > window.innerWidth - 2 * viewPortPadding) {
-		$dropDown.css("width", "auto");
-		$dropDown.css("left", viewPortPadding + "px");
-		$dropDown.css("right", viewPortPadding + "px");
-	} else if ($dropDown[0].offsetLeft + $dropDown[0].offsetWidth > window.innerWidth - viewPortPadding) {
-		$dropDown.css("left", "auto");
-		$dropDown.css("right", viewPortPadding + "px");
+	$dropDown.querySelector<HTMLElement>(':scope > .background-color-div').style.maxHeight = (flip ? maxFlippedHeight : maxHeight) + "px";
+	$dropDown.querySelector<HTMLElement>(':scope > .background-color-div > *').style.maxHeight = (flip ? maxFlippedHeight : maxHeight) + "px";
+	if ($dropDown.offsetWidth > window.innerWidth - 2 * viewPortPadding) {
+		$dropDown.style.width = "auto";
+		$dropDown.style.left = viewPortPadding + "px";
+		$dropDown.style.right = viewPortPadding + "px";
+	} else if ($dropDown.offsetLeft + $dropDown.offsetWidth > window.innerWidth - viewPortPadding) {
+		$dropDown.style.left = "auto";
+		$dropDown.style.right = viewPortPadding + "px";
 	}
 }
 
-export function manipulateWithoutTransitions($element: JQuery, action: Function, transitionEnabled = false) {
+export function manipulateWithoutTransitions($element: HTMLElement, action: Function, transitionEnabled = false) {
 	if (!transitionEnabled) {
-		$element.addClass('notransition');
+		$element.classList.add('notransition');
 	}
 	action();
 	if (!transitionEnabled) {
-		$element[0].offsetHeight; // Trigger a reflow, flushing the CSS changes
-		$element.removeClass('notransition');
+		$element.offsetHeight; // Trigger a reflow, flushing the CSS changes
+		$element.classList.remove('notransition');
 	}
 }
 
-export function focusNextByTabIndex(navigatableElements: string | HTMLElement[] | JQuery, navDirection: -1 | 1): boolean {
+export function focusNextByTabIndex(navigatableElements: string | HTMLElement[] | HTMLElement, navDirection: -1 | 1): boolean {
 	let selectables: HTMLElement[] = $(navigatableElements as any).toArray().sort((e1: HTMLElement, e2: HTMLElement) => e2.tabIndex - e1.tabIndex);
 	let current = document.activeElement;
 	let currentIndex = selectables.indexOf(current as HTMLElement);
@@ -699,28 +675,28 @@ export function getIconPath(context: TeamAppsUiContext, iconName: string, iconSi
 	return context.config.iconPath + '/' + iconSize + '/' + iconName;
 }
 
-export function enableScrollViaDragAndDrop($scrollContainer: JQuery) {
+export function enableScrollViaDragAndDrop($scrollContainer: HTMLElement) {
 	function mousedownHandler(startEvent: MouseEvent) {
-		$scrollContainer.css("cursor", "move");
+		$scrollContainer.style.cursor = "move";
 		startEvent.preventDefault();
-		let initialScrollLeft = $scrollContainer.scrollLeft();
-		let initialScrollTop = $scrollContainer.scrollTop();
+		let initialScrollLeft = $scrollContainer.scrollLeft;
+		let initialScrollTop = $scrollContainer.scrollTop;
 		const moveEvent = 'mousemove';
 		const endEvent = 'mouseup';
 		$(document).on(moveEvent, (e) => {
 			let diffX = e.pageX - startEvent.pageX;
 			let diffY = e.pageY - startEvent.pageY;
-			$scrollContainer.scrollLeft(initialScrollLeft - diffX);
-			$scrollContainer.scrollTop(initialScrollTop - diffY);
+			$scrollContainer.scrollLeft = initialScrollLeft - diffX;
+			$scrollContainer.scrollTop = initialScrollTop - diffY;
 		});
 		$(document).on(endEvent, (event) => {
 			$(document).unbind(moveEvent);
 			$(document).unbind(endEvent);
-			$scrollContainer.css("cursor", "");
+			$scrollContainer.style.cursor = "";
 		});
 	}
 
-	$scrollContainer[0].addEventListener("mousedown", (e) => mousedownHandler(e));
+	$scrollContainer.addEventListener("mousedown", (e) => mousedownHandler(e));
 }
 
 export function arraysEqual(a: any[], b: any[]) {
@@ -748,7 +724,7 @@ export function convertJavaDateTimeFormatToMomentDateTimeFormat(javaFormat: stri
 	}
 }
 
-export function insertAtIndex($parent: JQuery | Element, $child: JQuery | Element | string, index: number) {
+export function insertAtIndex($parent: HTMLElement | Element, $child: HTMLElement | Element | string, index: number) {
 	let effectiveIndex = Math.min($($parent).children().length, index);
 	if (effectiveIndex === 0) {
 		$($parent).prepend($child);
@@ -758,13 +734,13 @@ export function insertAtIndex($parent: JQuery | Element, $child: JQuery | Elemen
 }
 
 export function maximizeComponent(component: UiComponent, maximizeAnimationCallback?: () => void) {
-	const $parentDomElement = component.getMainDomElement().parent();
+	const $parentDomElement = component.getMainDomElement().parentElement;
 	const scrollTop = $(document).scrollTop();
 	const scrollLeft = $(document).scrollLeft();
-	const offset = component.getMainDomElement().offset();
+	const offset = component.getMainDomElement().getBoundingClientRect();
 
 	const changingCssProperties: (keyof CSSStyleDeclaration)[] = ["position", "top", "left", "width", "height", "zIndex"];
-	const style = component.getMainDomElement()[0].style as CSSStyleDeclaration;
+	const style = component.getMainDomElement().style as CSSStyleDeclaration;
 	const originalCssValues = changingCssProperties.reduce((properties, cssPropertyName) => {
 		properties[cssPropertyName] = style[cssPropertyName];
 		return properties;
@@ -773,24 +749,23 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 	const animationStartCssValues = {
 		top: (offset.top - scrollTop) + "px",
 		left: (offset.left - scrollLeft) + "px",
-		width: component.getMainDomElement().width(),
-		height: component.getMainDomElement().height(),
+		width: offset.width,
+		height: offset.height,
 	};
-	component.getMainDomElement().css({
+	Object.assign(component.getMainDomElement(), {
 		position: 'fixed',
-		"z-index": 1000000,
+		zIndex: 1000000,
 		...animationStartCssValues
-	}).appendTo(
-		$('body')
-	).addClass(
-		"teamapps-component-maximized"
-	).animate({
+	});
+	document.body.appendChild(component.getMainDomElement());
+	component.getMainDomElement().classList.add("teamapps-component-maximized");
+	$(component.getMainDomElement()).animate({
 		top: "5px",
 		left: "5px",
 		width: ($(window).width() - 10),
 		height: ($(window).height() - 10)
 	}, 100, 'swing', () => {
-		component.getMainDomElement().css({
+		$(component.getMainDomElement()).css({
 			width: "calc(100% - 10px)",
 			height: "calc(100% - 10px)"
 		});
@@ -798,10 +773,10 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 	});
 
 	let restore = (restoreAnimationCallback?: () => void) => {
-		component.getMainDomElement().animate(animationStartCssValues, 100, 'swing', () => {
-			component.getMainDomElement().css(originalCssValues);
-			component.getMainDomElement().removeClass("teamapps-component-maximized");
-			component.getMainDomElement().appendTo($parentDomElement);
+		$(component.getMainDomElement()).animate(animationStartCssValues, 100, 'swing', () => {
+			Object.assign(component.getMainDomElement(), originalCssValues);
+			component.getMainDomElement().classList.remove("teamapps-component-maximized");
+			$parentDomElement.appendChild(component.getMainDomElement());
 			restoreAnimationCallback && restoreAnimationCallback();
 		});
 	};
@@ -852,9 +827,33 @@ export function selectElementContents(domElement: Node, start?: number, end?: nu
 }
 
 export function parseHtml<E extends HTMLElement>(htmlString: string): E {
-	const node: E = new DOMParser().parseFromString(htmlString, 'text/html').querySelector('body > *');
-	node.remove(); // detach from DOMParser <body>!
-	return node;
+	// let tagStartCount = (htmlString.match(/<\w+/g) || []).length;
+	// let tagEndCount = (htmlString.match(/<\//g) || []).length;
+	// if (tagStartCount > 1 && tagStartCount !== tagEndCount) {
+	// 	throw new Error("HTML strings need to have explicit closing tags! " + htmlString);
+	// }
+	// const node: E = new DOMParser().parseFromString(htmlString, 'text/html').querySelector('html > * > *');
+	// node.remove(); // detach from DOMParser <body>!
+	// return node;
+
+	// let tmpl = document.createElement('template');
+	// tmpl.innerHTML = htmlString;
+	// return tmpl.content.cloneNode(true).firstChild as E;
+
+	return $(htmlString)[0] as E;
+}
+
+export function parseSvg<E extends HTMLElement>(htmlString: string): E {
+	// let tagStartCount = (htmlString.match(/<\w+/g) || []).length;
+	// let tagEndCount = (htmlString.match(/<\//g) || []).length;
+	// if (tagStartCount !== tagEndCount) {
+	// 	throw "SVG strings need to have explicit closing tags! " + htmlString;
+	// }
+	// const node: E = new DOMParser().parseFromString(htmlString, 'application/xml').getRootNode() as E;
+	// node.remove(); // detach from DOMParser <body>!
+	// return node;
+
+	return $(htmlString)[0] as E;
 }
 
 export function prependChild(parent: Element, child: Element) {
@@ -865,6 +864,14 @@ export function prependChild(parent: Element, child: Element) {
 	}
 }
 
+export function insertBefore(newNode: Element, referenceNode: Element) {
+	referenceNode.parentNode.insertBefore(newNode, referenceNode);
+}
+
+export function insertAfter(newNode: Element, referenceNode: Element) {
+	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
 export function outerWidthIncludingMargins(el: HTMLElement) {
 	var width = el.offsetWidth;
 	var style = getComputedStyle(el);
@@ -872,10 +879,28 @@ export function outerWidthIncludingMargins(el: HTMLElement) {
 	return width;
 }
 
+export function outerHeightIncludingMargins(el: HTMLElement) {
+	var height = el.offsetHeight;
+	var style = getComputedStyle(el);
+	height += parseInt(style.marginTop) + parseInt(style.marginBottom);
+	return height;
+}
+
 export function closestAncestor(el: HTMLElement, selector: string, includeSelf = false) {
 	let currentNode: HTMLElement = (includeSelf ? el : el.parentNode) as HTMLElement;
 	while (currentNode) {
 		if (currentNode.matches(selector)) {
+			return currentNode;
+		}
+		currentNode = currentNode.parentNode as HTMLElement;
+	}
+	return null;
+}
+
+export function closestAncestorMatching(el: Element, predicate: (ancestor: Element) => boolean, includeSelf = false) {
+	let currentNode: Element = (includeSelf ? el : el.parentNode) as Element;
+	while (currentNode) {
+		if (predicate(currentNode)) {
 			return currentNode;
 		}
 		currentNode = currentNode.parentNode as HTMLElement;
@@ -897,7 +922,7 @@ export function isDescendantOf(child: Element, potentialAncestor: Element, inclu
 
 export async function createImageThumbnailUrl(file: File): Promise<string> {
 	if (["image/bmp", "image/gif", "image/heic", "image/heic-sequence", "image/heif", "image/heif-sequence", "image/ief", "image/jls", "image/jp2", "image/jpeg", "image/jpm", "image/jpx", "image/ktx", "image/png", "image/sgi", "image/svg+xml", "image/tiff", "image/webp", "image/wmf"].includes(file.type)) {
-		return new Promise<string|ArrayBuffer>((resolve, reject) => {
+		return new Promise<string | ArrayBuffer>((resolve, reject) => {
 			var reader = new FileReader();
 			reader.onloadend = function () {
 				resolve(reader.result);
@@ -922,4 +947,39 @@ export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: 
 	matches.forEach(function (value) {
 		classList.remove(value);
 	});
+}
+
+export function animateCSS(el: Element, animationName: "bounce" | "flash" | "pulse" | "rubberBand" | "shake" | "headShake" | "swing" | "tada"
+	| "wobble" | "jello" | "bounceIn" | "bounceInDown" | "bounceInLeft" | "bounceInRight" | "bounceInUp" | "bounceOut" | "bounceOutDown"
+	| "bounceOutLeft" | "bounceOutRight" | "bounceOutUp" | "fadeIn" | "fadeInDown" | "fadeInDownBig" | "fadeInLeft" | "fadeInLeftBig" | "fadeInRight"
+	| "fadeInRightBig" | "fadeInUp" | "fadeInUpBig" | "fadeOut" | "fadeOutDown" | "fadeOutDownBig" | "fadeOutLeft" | "fadeOutLeftBig" | "fadeOutRight"
+	| "fadeOutRightBig" | "fadeOutUp" | "fadeOutUpBig" | "flipInX" | "flipInY" | "flipOutX" | "flipOutY" | "lightSpeedIn" | "lightSpeedOut" | "rotateIn"
+	| "rotateInDownLeft" | "rotateInDownRight" | "rotateInUpLeft" | "rotateInUpRight" | "rotateOut" | "rotateOutDownLeft" | "rotateOutDownRight"
+	| "rotateOutUpLeft" | "rotateOutUpRight" | "hinge" | "jackInTheBox" | "rollIn" | "rollOut" | "zoomIn" | "zoomInDown" | "zoomInLeft" | "zoomInRight"
+	| "zoomInUp" | "zoomOut" | "zoomOutDown" | "zoomOutLeft" | "zoomOutRight" | "zoomOutUp" | "slideInDown" | "slideInLeft" | "slideInRight" | "slideInUp"
+	| "slideOutDown" | "slideOutLeft" | "slideOutRight" | "slideOutUp" | "heartBeat", callback?: () => any) {
+	el.classList.add('animated', animationName);
+
+	function handleAnimationEnd() {
+		el.classList.remove('animated', animationName);
+		el.removeEventListener('animationend', handleAnimationEnd);
+
+		if (typeof callback === 'function') {
+			callback();
+		}
+	}
+
+	el.addEventListener('animationend', handleAnimationEnd);
+}
+
+export function fadeOut(el: Element) {
+	animateCSS(el, "fadeOut", () => el.classList.add("hidden"));
+}
+
+export function fadeIn(el: Element) {
+	animateCSS(el, "fadeIn", () => el.classList.remove("hidden"));
+}
+
+export function css(el: HTMLElement, values: object) {
+	Object.assign(el.style, values);
 }

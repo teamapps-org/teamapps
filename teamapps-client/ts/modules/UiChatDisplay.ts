@@ -45,7 +45,7 @@ export class UiChatDisplay extends UiComponent<UiChatDisplayConfig> implements U
 	<div class="messages"></div>
 </div>`);
 		this.$loadingIndicatorWrapper = this.$main.querySelector(":scope .loading-indicator-wrapper");
-		this.$loadingIndicatorWrapper.appendChild(new UiSpinner({fixedSize: 20}).getMainDomElement()[0]);
+		this.$loadingIndicatorWrapper.appendChild(new UiSpinner({fixedSize: 20}).getMainDomElement());
 		this.$messages = this.$main.querySelector(":scope .messages");
 		this.$main.addEventListener("scroll", () => {
 			if (this.$main.scrollTop == 0 && !this.gotFirstMessage) {
@@ -68,8 +68,8 @@ export class UiChatDisplay extends UiComponent<UiChatDisplayConfig> implements U
 		}
 	}
 
-	getMainDomElement(): JQuery {
-		return $(this.$main);
+	getMainDomElement(): HTMLElement {
+		return this.$main;
 	}
 
 	addChatMessages(chatMessages: UiChatMessageConfig[], prepend: boolean, includesFirstMessage: boolean): void {
@@ -130,7 +130,7 @@ class UiChatMessage {
 
 	constructor(private config: UiChatMessageConfig, private context: TeamAppsUiContext) {
 		this.$main = parseHtml(`<div class="message">
-	<img class="user-image" src="${config.userImageUrl}"> </img>
+	<img class="user-image" src="${config.userImageUrl}">
 	<div class="user-nickname">${config.userNickname}</div>
 	<div class="text">${removeDangerousTags(config.text)}</div>
 	<div class="photos"></div>
@@ -141,7 +141,7 @@ class UiChatMessage {
 
 		if (config.photos != null) {
 			config.photos.forEach(photo => {
-				this.$photos.appendChild(parseHtml(`<img class="photo" src="${photo.imageUrl}"> </img>`))
+				this.$photos.appendChild(parseHtml(`<img class="photo" src="${photo.imageUrl}">`))
 			});
 		}
 		if (config.files != null) {

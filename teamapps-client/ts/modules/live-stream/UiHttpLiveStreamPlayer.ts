@@ -17,42 +17,43 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
 import {UiSpinner} from "../micro-components/UiSpinner";
 import {UiComponent} from "../UiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiHttpLiveStreamPlayerConfig} from "../../generated/UiHttpLiveStreamPlayerConfig";
+import {parseHtml} from "../Common";
 
 export class UiHttpLiveStreamPlayer extends UiComponent<UiHttpLiveStreamPlayerConfig> implements LiveStreamPlayer {
-	private $main: JQuery;
+	private $main: HTMLElement;
 	private $videoContainer: any;
 	private $notSupportedMessage: any;
 	private video: HTMLVideoElement;
 	private url: string;
 	private shouldBePlayingUnlessUserPressedPause: boolean;
-	private $spinnerContainer: JQuery;
+	private $spinnerContainer: HTMLElement;
 	private resetTimer: number = null;
 
 	constructor(config: UiHttpLiveStreamPlayerConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = $(`
+		this.$main = parseHtml(`
 <div class="HttpLiveStreamPlayer">
     <div class="not-supported-message">
         HTML5 or HLS are not supported in this browser.
     </div>
     <div class="video-container">
     	<div class="spinner-container hidden"></div>	
-        <video x-webkit-airplay="allow" autoplay controls/>
+        <video x-webkit-airplay="allow" autoplay controls></video>
     </div>
 </div>			
 `);
-		this.$spinnerContainer = this.$main.find('.spinner-container');
+		this.$spinnerContainer = this.$main.querySelector<HTMLElement>(':scope .spinner-container');
 		this.$spinnerContainer.append(new UiSpinner().getMainDomElement());
-		this.$notSupportedMessage = this.$main.find('.not-supported-message');
-		this.$videoContainer = this.$main.find('.video-container');
+		this.$notSupportedMessage = this.$main.querySelector<HTMLElement>(':scope .not-supported-message');
+		this.$videoContainer = this.$main.querySelector<HTMLElement>(':scope .video-container');
 
-		this.video = this.$main.find('video')[0] as HTMLVideoElement;
+		this.video = this.$main.querySelector<HTMLElement>(':scope video') as HTMLVideoElement;
 		this.video.addEventListener("error", this.failed.bind(this));
 		this.video.addEventListener("load", () => this.video.play());
 		['loadedmetadata', 'loadstart', 'loadeddata', 'playing', 'stalled', 'suspend', 'waiting', 'canplay', 'canplaythrough'].forEach(eventName => {
@@ -63,8 +64,8 @@ export class UiHttpLiveStreamPlayer extends UiComponent<UiHttpLiveStreamPlayerCo
 		});
 
 		let supported = this.isHlsSupported();
-		this.$notSupportedMessage.toggleClass('hidden', supported);
-		this.$videoContainer.toggleClass('hidden', !supported);
+		this.$notSupportedMessage.classList.toggle('hidden', supported);
+		this.$videoContainer.classList.toggle('hidden', !supported);
 	}
 
 	public isHlsSupported() {
@@ -117,7 +118,7 @@ export class UiHttpLiveStreamPlayer extends UiComponent<UiHttpLiveStreamPlayerCo
 		} else if (this.resetTimer == null) {
 			this.resetTimer = window.setTimeout(() => this.retryPlaying(), 15000);
 		}
-		this.$spinnerContainer.toggleClass("hidden", !this.shouldBePlayingUnlessUserPressedPause || playingOrReady);
+		this.$spinnerContainer.classList.toggle("hidden", !this.shouldBePlayingUnlessUserPressedPause || playingOrReady);
 	}
 
 	private isActuallyReadyToPlay() {
@@ -147,7 +148,7 @@ export class UiHttpLiveStreamPlayer extends UiComponent<UiHttpLiveStreamPlayerCo
 		this.resetTimer = window.setTimeout(() => this.retryPlaying(), 5000);
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 

@@ -39,8 +39,8 @@ export class UiIFrame extends UiComponent<UiIFrameConfig> implements UiIFrameCom
 		// });
 	}
 
-	public getMainDomElement(): JQuery {
-		return $(this.$iframe);
+	public getMainDomElement(): HTMLElement {
+		return this.$iframe;
 	}
 
 

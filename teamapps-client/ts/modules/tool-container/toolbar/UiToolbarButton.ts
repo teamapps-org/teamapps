@@ -22,12 +22,12 @@ import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {UiToolbar} from "./UiToolbar";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
-import {enterFullScreen, exitFullScreen, isFullScreen} from "../../Common";
+import {enterFullScreen, exitFullScreen, isFullScreen, parseHtml, prependChild} from "../../Common";
 import {createUiDropDownButtonClickInfoConfig, UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
 import {UiComponent} from "../../UiComponent";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiItemView} from "../../UiItemView";
-import * as $ from "jquery";
+
 import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
 
 export class UiToolbarButton {
@@ -35,9 +35,9 @@ export class UiToolbarButton {
 	public readonly onClicked: TeamAppsEvent<UiDropDownButtonClickInfoConfig> = new TeamAppsEvent(this);
 	public readonly onDropDownItemClicked: TeamAppsEvent<{groupId: string, itemId: number}> = new TeamAppsEvent(this);
 
-	private $buttonWrapper: JQuery;
-	private $button: JQuery;
-	private $dropDownCaret: JQuery;
+	private $buttonWrapper: HTMLElement;
+	private $button: HTMLElement;
+	private $dropDownCaret: HTMLElement;
 	public optimizedWidth: number;
 	private visible: boolean;
 
@@ -46,20 +46,21 @@ export class UiToolbarButton {
 	private dropDownComponent: UiComponent;
 
 	constructor(public config: UiToolbarButtonConfig, private context: TeamAppsUiContext) {
-		this.$buttonWrapper = $(`<div class="toolbar-button-wrapper" data-buttonId="${config.buttonId}">
+		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper" data-buttonId="${config.buttonId}">
 	<div class="toolbar-button-caret ${config.hasDropDown ? '' : 'hidden'}">
 	  <div class="caret"></div>
 	</div>
 </div>`);
 		let renderer = context.templateRegistry.createTemplateRenderer(config.template);
-		this.$button = $(renderer.render(config.recordData)).prependTo(this.$buttonWrapper);
-		this.$dropDownCaret = this.$buttonWrapper.find(".toolbar-button-caret");
+		this.$button = parseHtml(renderer.render(config.recordData));
+		prependChild(this.$buttonWrapper, this.$button);
+		this.$dropDownCaret = this.$buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret");
 		this.optimizedWidth = AbstractUiToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplateConfig).maxHeight || UiToolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);
 		this.setVisible(config.visible);
 		this.setHasDropDown(config.hasDropDown);
-		this.setDropDownComponent(config.dropDownComponent);
+		this.setDropDownComponent(config.dropDownComponent as UiComponent);
 
-		this.$buttonWrapper.on("mousedown", (e) => {
+		this.$buttonWrapper.addEventListener("mousedown", (e) => {
 			if (this.config.togglesFullScreenOnComponent) {
 				if (isFullScreen()) {
 					exitFullScreen();
@@ -112,7 +113,7 @@ export class UiToolbarButton {
 
 	setVisible(visible: boolean) {
 		this.visible = visible;
-		this.getMainDomElement().toggleClass("hidden", !visible);
+		this.getMainDomElement().classList.toggle("hidden", !visible);
 	}
 
 	isVisible(): boolean {
@@ -121,7 +122,7 @@ export class UiToolbarButton {
 
 	public setHasDropDown(hasDropDown: boolean) {
 		this.hasDropDown = hasDropDown;
-		this.$dropDownCaret.toggleClass("hidden", !hasDropDown);
+		this.$dropDownCaret.classList.toggle("hidden", !hasDropDown);
 	}
 
 	get id() {

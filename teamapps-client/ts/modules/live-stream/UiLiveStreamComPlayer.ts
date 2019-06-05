@@ -17,32 +17,32 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
 import {UiComponent} from "../UiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiLiveStreamComPlayerConfig} from "../../generated/UiLiveStreamComPlayerConfig";
+import {parseHtml} from "../Common";
 
 export class UiLiveStreamComPlayer extends UiComponent<UiLiveStreamComPlayerConfig> implements LiveStreamPlayer {
 
 	private playing: boolean = false;
-	private $wrapper: JQuery;
+	private $wrapper: HTMLElement;
 	private player: Element;
 
 	constructor(config: UiLiveStreamComPlayerConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$wrapper = $('<div class="livestreamcom-player-wrapper">');
+		this.$wrapper = parseHtml('<div class="livestreamcom-player-wrapper">');
 	}
 
 	play(url: string, streamName?: string) {
 		this.playing = true;
-		this.player = $(`<iframe style="width:100%;height:100%" src="${url}" frameborder="0" scrolling="no"></iframe>`)
-			.appendTo(this.$wrapper)
-			[0];
+		this.player = parseHtml(`<iframe style="width:100%;height:100%" src="${url}" frameborder="0" scrolling="no"></iframe>`);
+		this.$wrapper.appendChild(this.player);
 	}
 
 	stop() {
-		this.$wrapper[0].innerHTML = '';
+		this.$wrapper.innerHTML = '';
 		this.playing = false;
 	}
 
@@ -54,7 +54,7 @@ export class UiLiveStreamComPlayer extends UiComponent<UiLiveStreamComPlayerConf
 		this.logger.warn("LiveStreamComPlayer: setVolume() not supported on livestream.com iframe player...")
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
 

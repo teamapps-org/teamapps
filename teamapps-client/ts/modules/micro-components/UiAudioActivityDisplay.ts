@@ -17,25 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {Util} from "leaflet";
+import {css, parseHtml} from "../Common";
 
 export class UiAudioActivityDisplay {
-	private $main: JQuery;
-	private $activityDisplay: JQuery;
-	private $levelDiv: JQuery;
+	private $main: HTMLElement;
+	private $activityDisplay: HTMLElement;
+	private $levelDiv: HTMLElement;
 	private mediaStreamSource: MediaStreamAudioSourceNode;
 	private audioContext: AudioContext;
 
 
 	constructor() {
-		this.$main = $(`
+		this.$main = parseHtml(`
 <div class="UiAudioActivityDisplay">
 	<div class="level-div hidden"></div>
-</div>
-            `);
+</div>`);
 		this.$activityDisplay = this.$main;
-		this.$levelDiv = this.$main.find('.level-div');
+		this.$levelDiv = this.$main.querySelector<HTMLElement>(':scope .level-div');
 
 	}
 
@@ -61,15 +61,15 @@ export class UiAudioActivityDisplay {
 			this.analyserNode.getByteFrequencyData(array);
 			const average = UiAudioActivityDisplay.getAverageVolume(array);
 			let averageRatio = average / 255;
-			let videoHeight = this.$activityDisplay[0].offsetHeight;
-			this.$levelDiv.css({
+			let videoHeight = this.$activityDisplay.offsetHeight;
+			css(this.$levelDiv, {
 				height: (videoHeight * averageRatio) + "px",
-				"background-position": "0 " + (-videoHeight * (1 - averageRatio) + "px"),
-				"background-size": 100 + "px " + videoHeight + "px"
+				backgroundPosition: "0 " + (-videoHeight * (1 - averageRatio) + "px"),
+				backgroundSize: 100 + "px " + videoHeight + "px"
 			});
 		}, 200);
 
-		this.$levelDiv.removeClass("hidden");
+		this.$levelDiv.classList.remove("hidden");
 	}
 
 	/**
@@ -90,7 +90,7 @@ export class UiAudioActivityDisplay {
 		this.audioContext && this.audioContext.close()
 			.catch(reason => console.log(reason));
 		this.mediaStreamSource && this.mediaStreamSource.disconnect();
-		this.$levelDiv.addClass("hidden");
+		this.$levelDiv.classList.add("hidden");
 	}
 
 	private static getAverageVolume(sampleVolumes: Uint8Array) {

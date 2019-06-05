@@ -19,9 +19,9 @@
  */
 ///<reference types="leaflet.heat"/>
 
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
-import {Renderer} from "./Common";
+import {parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
 import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
@@ -55,13 +55,13 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 	private heatMapLayer: any;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
 
-	private $map: JQuery;
+	private $map: HTMLElement;
 	private polyLinesById: {[lineId: string]: Polyline} = {};
 	private markersByClientId: { [id: number]: Marker } = {};
 
 	constructor(config: UiMapConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$map = $('<div class="UiMap">');
+		this.$map = parseHtml('<div class="UiMap">');
 		this.id = this.getId();
 		this.createLeafletMap();
 		Object.keys(config.markerTemplates).forEach(templateName => this.registerTemplate(templateName, config.markerTemplates[templateName]));
@@ -71,13 +71,13 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		config.markers.forEach(m => this.addMarker(m));
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$map;
 	}
 
 	@executeWhenAttached()
 	private createLeafletMap(): void {
-        this.leaflet = L.map(this.$map[0], {
+        this.leaflet = L.map(this.$map, {
 			zoomControl: false,
 	        attributionControl: false
 		});
