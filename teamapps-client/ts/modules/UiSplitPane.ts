@@ -115,7 +115,6 @@ export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Empty
 	}
 
 	private mousedownHandler(event: MouseEvent) {
-		//let blurredBackgroundImageContainers = $('.teamapps-blurredBackgroundImage').classList.remove('teamapps-blurredBackgroundImage');
 		event.preventDefault();
 		const isTouchEvent = event.type.match(/^touch/),
 			moveEvent = isTouchEvent ? 'touchmove' : 'mousemove',
