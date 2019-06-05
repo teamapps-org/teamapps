@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {ProgressIndicator} from "./ProgressIndicator";
-import {generateUUID} from "../Common";
+import {generateUUID, parseHtml, parseSvg} from "../Common";
 
 export class ProgressCircle implements ProgressIndicator {
-	private $mainDomElement: JQuery;
-	private $circle: JQuery;
-	private $caption: JQuery;
+	private $mainDomElement: HTMLElement;
+	private $circle: HTMLElement;
+	private $caption: HTMLElement;
 	private circleRadius: any;
 	private svgCircleRadius: number;
 	private caption: string | undefined;
@@ -48,11 +48,11 @@ export class ProgressCircle implements ProgressIndicator {
 		let svgCircleRadius = 50 - svgCircleStrokeWidth / 2;
 		let textSize = 0.25 * circleRadius + 24;
 		this.svgCircleRadius = svgCircleRadius;
-		this.$mainDomElement = $(`
+		this.$mainDomElement = parseSvg(`
                 <svg id="c-${uuid}" class="ProgressCircle" width="${size}" height="${size}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                  <g>
-                  <circle class="countdown-circle-background" r="${this.svgCircleRadius}" cy="50" cx="50" stroke-width="${svgCircleStrokeWidth}" stroke="#dddddd" fill="none"/>
-                  <circle class="countdown-circle" r="${this.svgCircleRadius}" cy="50" cx="50" stroke-width="${svgCircleStrokeWidth}" stroke="#0f74bd" stroke-dashoffset="0" stroke-dasharray="${this.calculateStrokeOffset(0)} ${this.calculateStrokeOffset(0)}" fill="none"/>
+                  <circle class="countdown-circle-background" r="${this.svgCircleRadius}" cy="50" cx="50" stroke-width="${svgCircleStrokeWidth}" stroke="#dddddd" fill="none"></circle>
+                  <circle class="countdown-circle" r="${this.svgCircleRadius}" cy="50" cx="50" stroke-width="${svgCircleStrokeWidth}" stroke="#0f74bd" stroke-dashoffset="0" stroke-dasharray="${this.calculateStrokeOffset(0)} ${this.calculateStrokeOffset(0)}" fill="none"></circle>
                   <text class="countdown-circle-text" x="50" y="${50 + textSize / 3}" font-size="${textSize}" text-anchor="middle"></text>
                  </g>
                  <style>
@@ -63,8 +63,8 @@ export class ProgressCircle implements ProgressIndicator {
                 </svg>
             `);
 
-		this.$circle = this.$mainDomElement.find(".countdown-circle");
-		this.$caption = this.$mainDomElement.find(".countdown-circle-text");
+		this.$circle = this.$mainDomElement.querySelector<HTMLElement>(":scope .countdown-circle");
+		this.$caption = this.$mainDomElement.querySelector<HTMLElement>(":scope .countdown-circle-text");
 
 		this.setProgress(initialProgress)
 	}
@@ -74,18 +74,18 @@ export class ProgressCircle implements ProgressIndicator {
 	 * @param caption
 	 */
 	public setProgress(progress: number) {
-		this.$circle.css('stroke-dashoffset', this.calculateStrokeOffset(progress));
+		this.$circle.style.strokeDashoffset = "" + this.calculateStrokeOffset(progress);
 		let percentString = Math.ceil(progress * 100) + "%";
-		this.$caption.text(percentString);
+		this.$caption.innerText = percentString;
 	}
 
 	setErrorMessage(message: string | null): void {
-		this.$mainDomElement.toggleClass('error', !!message);
+		this.$mainDomElement.classList.toggle('error', !!message);
 		if (message != null) {
-			this.$caption.text('!');
-			this.$mainDomElement.webuiPopover({trigger: 'hover', content: message, closeable: true});
+			this.$caption.innerText = '!';
+			$(this.$mainDomElement).webuiPopover({trigger: 'hover', content: message, closeable: true});
 		} else {
-			this.$caption.text(this.caption);
+			this.$caption.innerText = this.caption;
 		}
 	}
 

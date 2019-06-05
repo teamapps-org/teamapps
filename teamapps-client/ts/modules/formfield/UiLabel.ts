@@ -47,7 +47,7 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 			}
 		});
 		this.targetFieldVisibilityChangeHandler = (visible: boolean) => this.setVisible(visible);
-		this.setTargetField(config.targetField);
+		this.setTargetField(config.targetField as UiField);
 	}
 
 	public setTargetField(targetField: UiField) {

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 ///<reference path="../custom-declarations/mediaelement.d.ts"/>
-import * as $ from "jquery";
+
 import "mediaelement/full";
 
 
@@ -37,14 +37,15 @@ import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiMediaPreloadMode} from "../generated/UiMediaPreloadMode";
+import {parseHtml} from "./Common";
 
 export class UiVideoPlayer extends UiComponent<UiVideoPlayerConfig> implements UiVideoPlayerCommandHandler, UiVideoPlayerEventSource {
 
 	public readonly onPlayerProgress: TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent>(this);
 	public readonly onErrorLoading: TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent> = new TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent>(this);
 
-	private $componentWrapper: JQuery;
-	private $video: JQuery;
+	private $componentWrapper: HTMLElement;
+	private $video: HTMLElement;
 	private mediaPlayer: any;
 	private contentReady: boolean = false;
 	private jumpToPositionWhenReady: number = 0;
@@ -57,16 +58,16 @@ export class UiVideoPlayer extends UiComponent<UiVideoPlayerConfig> implements U
 		super(config, context);
 
 		const posterImageSizeCssClass = `poster-${UiVideoPlayer_PosterImageSize[config.posterImageSize].toLowerCase()}`;
-		this.$componentWrapper = $(
+		this.$componentWrapper = parseHtml(
 			`<div id="${config.id}" class="UiVideoPlayer ${posterImageSizeCssClass} ${config.url == null ? "not-playable" : ""}">
                     <video src="${config.url || ""}" width="100%" height="100%" poster="${config.posterImageUrl || ''}" preload="${config.preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : config.preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}" ${config.autoplay ? "autoplay" : ""}></video>
                 </div>`);
-		this.$componentWrapper.toggleClass("hide-controls", !config.showControls);
-		this.$video = this.$componentWrapper.find("video");
+		this.$componentWrapper.classList.toggle("hide-controls", !config.showControls);
+		this.$video = this.$componentWrapper.querySelector<HTMLElement>(":scope video");
 
 		// TODO this is the point where the element was inserted to the DOM
 
-		this.mediaPlayer = new mejs.MediaElementPlayer(this.$componentWrapper.find('video')[0], {
+		this.mediaPlayer = new mejs.MediaElementPlayer(this.$componentWrapper.querySelector<HTMLElement>(':scope video'), {
 			enablePluginDebug: false,
 			plugins: ['fasterslower'],
 			type: '',
@@ -97,14 +98,14 @@ export class UiVideoPlayer extends UiComponent<UiVideoPlayerConfig> implements U
 			}
 		});
 
-		this.$componentWrapper.add(this.$componentWrapper.find('.mejs__container'))
-			.css('background-color', createUiColorCssString(config.backgroundColor));
+		this.$componentWrapper.style.backgroundColor = createUiColorCssString(config.backgroundColor);
+		this.$componentWrapper.querySelector<HTMLElement>(':scope .mejs__container').style.backgroundColor = createUiColorCssString(config.backgroundColor);
 
 		this.setPreloadMode(config.preloadMode);
 		this.setAutoplay(config.autoplay);
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 
@@ -165,20 +166,20 @@ export class UiVideoPlayer extends UiComponent<UiVideoPlayerConfig> implements U
 			if (this.contentReady) {
 				this.mediaPlayer.play();
 			}
-			this.$video.attr("autoplay", "autoplay")
+			this.$video.setAttribute("autoplay", "autoplay")
 		} else {
-			this.$video.removeAttr("autoplay");
+			this.$video.removeAttribute("autoplay");
 		}
 	}
 
 	setPreloadMode(preloadMode: UiMediaPreloadMode): void {
-		this.$video.attr("preload", `${preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}`);
+		this.$video.setAttribute("preload", `${preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}`);
 	}
 
 	setUrl(url: string): void {
-		this.getMainDomElement().find(".mejs__overlay-error").parent().hide();
-		this.getMainDomElement().find(".mejs__poster").show();
-		this.getMainDomElement().find(".mejs__overlay-play").css("display", "flex");
+		this.getMainDomElement().querySelector<HTMLElement>(":scope .mejs__overlay-error").parentElement.classList.add("hidden");
+		this.getMainDomElement().querySelector<HTMLElement>(":scope .mejs__poster").classList.remove("hidden");
+		this.getMainDomElement().querySelector<HTMLElement>(":scope .mejs__overlay-play").style.display = "flex";
 		this.mediaPlayer.pause();
 		this.contentReady = false;
 		if (url == null) {
@@ -186,7 +187,7 @@ export class UiVideoPlayer extends UiComponent<UiVideoPlayerConfig> implements U
 		} else {
 			this.mediaPlayer.setSrc(url);
 		}
-		this.$componentWrapper.toggleClass("not-playable", url == null);
+		this.$componentWrapper.classList.toggle("not-playable", url == null);
 	}
 }
 

@@ -123,8 +123,8 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialComboBox.onFocus.addListener(() => this.getMainDomElement()[0].classList.add("focus"));
-		this.trivialComboBox.onBlur.addListener(() => this.getMainDomElement()[0].classList.remove("focus"));
+		this.trivialComboBox.onFocus.addListener(() => this.getMainDomElement().classList.add("focus"));
+		this.trivialComboBox.onBlur.addListener(() => this.getMainDomElement().classList.remove("focus"));
 	}
 
 	private updateDateSuggestionEngine() {
@@ -176,8 +176,8 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainDomElement()[0].classList.remove(...Object.values(UiField.editingModeCssClasses));
-		this.getMainDomElement()[0].classList.add(UiField.editingModeCssClasses[editingMode]);
+		this.getMainDomElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainDomElement().classList.add(UiField.editingModeCssClasses[editingMode]);
 		if (editingMode === UiFieldEditingMode.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
 		} else if (editingMode === UiFieldEditingMode.DISABLED) {

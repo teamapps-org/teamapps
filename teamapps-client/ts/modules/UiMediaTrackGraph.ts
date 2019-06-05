@@ -19,7 +19,7 @@
  */
 ///<reference path="../custom-declarations/d3v3.d.ts"/>
 
-import * as $ from "jquery";
+
 import * as d3 from "d3v3";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
@@ -27,6 +27,7 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiMediaTrackGraph_HandleTimeSelectionEvent, UiMediaTrackGraphCommandHandler, UiMediaTrackGraphConfig, UiMediaTrackGraphEventSource} from "../generated/UiMediaTrackGraphConfig";
 import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {parseHtml} from "./Common";
 
 interface DataPoint {
 	date: Date,
@@ -47,7 +48,7 @@ export class UiMediaTrackGraph extends UiComponent<UiMediaTrackGraphConfig> impl
 
 	private static MARGINS = {top: 5, right: 5, bottom: 15, left: 5};
 
-	private $graph: JQuery;
+	private $graph: HTMLElement;
 	private brush: any;
 	private brushExtent: any;
 	private x: d3.time.Scale<number, number>;
@@ -70,7 +71,7 @@ export class UiMediaTrackGraph extends UiComponent<UiMediaTrackGraphConfig> impl
 
 	constructor(config: UiMediaTrackGraphConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$graph = $('<div class="UiMediaTrackGraph" id="' + this.getId() + '">');
+		this.$graph = parseHtml('<div class="UiMediaTrackGraph" id="' + this.getId() + '">');
 
 		this.trackCount = config.trackCount;
 		var data: DataPoint[] = [];
@@ -93,7 +94,7 @@ export class UiMediaTrackGraph extends UiComponent<UiMediaTrackGraphConfig> impl
 		this.reLayout();
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$graph;
 	}
 
@@ -358,7 +359,7 @@ export class UiMediaTrackGraph extends UiComponent<UiMediaTrackGraphConfig> impl
 		let end: number = 0;
 		if (this.brush.empty( )) {
 			if ((d3.event as d3.BaseEvent).sourceEvent) {
-				start = end = this.x.invert(((d3.event as d3.BaseEvent).sourceEvent as MouseEvent).pageX - UiMediaTrackGraph.MARGINS.left - this.getMainDomElement().offset().left).getTime();
+				start = end = this.x.invert(((d3.event as d3.BaseEvent).sourceEvent as MouseEvent).pageX - UiMediaTrackGraph.MARGINS.left - (this.getMainDomElement().getBoundingClientRect().left + document.body.scrollLeft)).getTime();
 			}
 		} else {
 			start = (<Date><any>this.brush.extent()[0]).getTime();
@@ -376,8 +377,8 @@ export class UiMediaTrackGraph extends UiComponent<UiMediaTrackGraphConfig> impl
 	}
 
 	public onResize(): void {
-		var width = this.$graph.width();
-		var height = this.$graph.height();
+		var width = $(this.$graph).width();
+		var height = $(this.$graph).height();
 
 		if (width > 0 && height > 0 && this.data) {
 			this.createBrush(width, height, this.data, this.markerData, this.trackCount);

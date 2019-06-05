@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiToolButton_ClickedEvent, UiToolButton_DropDownOpenedEvent, UiToolButtonCommandHandler, UiToolButtonConfig, UiToolButtonEventSource} from "../../generated/UiToolButtonConfig";
 import {UiComponent} from "../UiComponent";
@@ -29,13 +29,14 @@ import {UiItemView} from "../UiItemView";
 import {bind} from "../util/Bind";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiCalendar} from "../UiCalendar";
+import {parseHtml} from "../Common";
 
 export class UiToolButton extends UiComponent<UiToolButtonConfig> implements UiToolButtonEventSource, UiToolButtonCommandHandler {
 
 	public readonly onClicked: TeamAppsEvent<UiToolButton_ClickedEvent> = new TeamAppsEvent(this);
 	public readonly onDropDownOpened: TeamAppsEvent<UiToolButton_DropDownOpenedEvent> = new TeamAppsEvent(this);
 
-	private $button: JQuery;
+	private $button: HTMLElement;
 
 	private _dropDown: UiDropDown; // lazy-init!
 	private dropDownComponent: UiComponent;
@@ -50,35 +51,35 @@ export class UiToolButton extends UiComponent<UiToolButtonConfig> implements UiT
 		this.minDropDownHeight = config.minDropDownHeight;
 		this.openDropDownIfNotSet = config.openDropDownIfNotSet;
 
-		this.$button = $(`<div class="UiToolButton img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url(${context.getIconPath(config.icon, 12)});"></div>`)
-			.on('click', () => {
+		this.$button = parseHtml(`<div class="UiToolButton img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url(${context.getIconPath(config.icon, 12)});"></div>`);
+		this.$button.addEventListener('click', () => {
 				if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
 					if (!this.dropDown.isOpen) {
-						const width = this.getMainDomElement()[0].offsetWidth;
+						const width = this.getMainDomElement().offsetWidth;
 						console.log(width);
 						this.dropDown.open({$reference: this.getMainDomElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
 						this.onDropDownOpened.fire(EventFactory.createUiToolButton_DropDownOpenedEvent(this.getId()));
-						this.getMainDomElement().addClass("open");
+						this.getMainDomElement().classList.add("open");
 					} else {
 						this.dropDown.close(); // not needed for clicks, but for keydown!
 					}
 				}
 				this.onClicked.fire(EventFactory.createUiToolButton_ClickedEvent(this.getId()));
 			});
-		this.setDropDownComponent(config.dropDownComponent);
+		this.setDropDownComponent(config.dropDownComponent as UiComponent);
 	}
 
 	private get dropDown(): UiDropDown {
 		// lazy-init!
 		if (this._dropDown == null) {
 			this._dropDown = new UiDropDown();
-			this._dropDown.getMainDomElement().addClass("UiButton-dropdown");
-			this._dropDown.onClose.addListener(eventObject => this.getMainDomElement().removeClass("open"))
+			this._dropDown.getMainDomElement().classList.add("UiButton-dropdown");
+			this._dropDown.onClose.addListener(eventObject => this.getMainDomElement().classList.remove("open"))
 		}
 		return this._dropDown;
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$button;
 	}
 
@@ -118,7 +119,7 @@ export class UiToolButton extends UiComponent<UiToolButtonConfig> implements UiT
 	}
 
 	setIcon(icon: string): void {
-		this.$button.css("background-image", `url(${this._context.getIconPath(icon, 12)})`)
+		this.$button.style.backgroundImage = `url(${this._context.getIconPath(icon, 12)})`;
 	}
 
 	setPopoverText(popoverText: string): void {

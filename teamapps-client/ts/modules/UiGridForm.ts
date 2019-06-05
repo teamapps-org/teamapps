@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiGridForm_SectionCollapsedStateChangedEvent, UiGridFormCommandHandler, UiGridFormConfig, UiGridFormEventSource} from "../generated/UiGridFormConfig";
 import {UiFormLayoutPolicyConfig} from "../generated/UiFormLayoutPolicyConfig";
 import {UiField} from "./formfield/UiField";
@@ -63,7 +63,7 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 		this.$mainDiv = parseHtml(`<div class="UiGridForm" data-teamapps-id="${config.id}">
 </div>`);
 
-		config.fields.forEach(fieldConfig => this.addField(fieldConfig));
+		config.fields.forEach(f => this.addField(f as UiField));
 		this.updateLayoutPolicies(config.layoutPolicies);
 	}
 
@@ -71,8 +71,8 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 		this.uiFields.push(uiField);
 	}
 
-	public getMainDomElement(): JQuery {
-		return $(this.$mainDiv);
+	public getMainDomElement(): HTMLElement {
+		return this.$mainDiv;
 	}
 
 	@executeWhenAttached(true)
@@ -202,8 +202,7 @@ class UiFormSection {
     <div class="header">
         <div class="expand-button">
             <div class="teamapps-expander ${this.collapsed ? '' : 'expanded'} ${config.collapsible ? '' : 'hidden'}"></div>
-            <div class="header-template-container">
-            </div>
+            <div class="header-template-container"></div>
         </div>
         <div class="header-line"></div>
     </div>
@@ -247,7 +246,7 @@ class UiFormSection {
 		this.config.fieldPlacements.forEach(placement => {
 			const placementId = generateUUID(true);
 			if (this.isUiFormSectionFieldPlacement(placement)) {
-				const uiField = placement.field;
+				const uiField = placement.field as UiField;
 				uiField.onVisibilityChanged.addListener(this.updateGroupVisibility);
 				this.uiFields.push(uiField);
 				allCssRules[placementId] = {
@@ -255,9 +254,8 @@ class UiFormSection {
 					"min-height": placement.minHeight ? `${placement.minHeight}px` : '',
 					"max-height": placement.maxHeight ? `${placement.maxHeight}px` : ''
 				};
-				uiField.getMainDomElement()
-					.attr("data-placement-id", placementId)
-					.appendTo(this.$body);
+				uiField.getMainDomElement().setAttribute("data-placement-id", placementId);
+				this.$body.appendChild(uiField.getMainDomElement());
 				uiField.attachedToDom = true;
 			} else if (this.isUiFormSectionFloatingFieldsPlacement(placement)) {
 				let $container = parseHtml(`<div class="UiFormSectionFloatingFieldsPlacement" data-placement-id="${placementId}"></div>`);
@@ -266,7 +264,7 @@ class UiFormSection {
 					"flex-wrap": placement.wrap ? "wrap" : "nowrap"
 				};
 				placement.floatingFields.forEach(floatingField => {
-					const uiField = floatingField.field;
+					const uiField = floatingField.field as UiField;
 					uiField.onVisibilityChanged.addListener(this.updateGroupVisibility);
 					this.uiFields.push(uiField);
 					const floatingFieldPlacementId = generateUUID(true);
@@ -277,10 +275,9 @@ class UiFormSection {
 						"max-height": floatingField.maxHeight ? `${floatingField.maxHeight}px` : '',
 						"margin": `${placement.verticalSpacing / 2}px ${placement.horizontalSpacing / 2}px`
 					};
-					uiField.getMainDomElement()
-						.attr("data-placement-id", floatingFieldPlacementId)
-						.appendTo($container);
-					uiField.attachedToDom = true
+					uiField.getMainDomElement().setAttribute("data-placement-id", floatingFieldPlacementId);
+					$container.appendChild(uiField.getMainDomElement());
+					uiField.attachedToDom = true;
 				});
 				this.$body.appendChild($container);
 			}

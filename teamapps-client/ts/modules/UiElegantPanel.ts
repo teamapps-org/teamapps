@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
@@ -25,16 +25,17 @@ import {UiElegantPanelCommandHandler, UiElegantPanelConfig} from "../generated/U
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiSpacingCssString} from "./util/CssFormatUtil";
 import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
+import {parseHtml} from "./Common";
 
 export class UiElegantPanel extends UiComponent<UiElegantPanelConfig> implements UiElegantPanelCommandHandler {
 
-	private $element: JQuery;
-	private $contentContainer: JQuery;
+	private $element: HTMLElement;
+	private $contentContainer: HTMLElement;
 	private contentComponent: UiComponent<UiComponentConfig>;
 
 	constructor(config: UiElegantPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$element = $(`<div id="${config.id}" class="UiElegantPanel">
+		this.$element = parseHtml(`<div id="${config.id}" class="UiElegantPanel">
                 <div class="flex-container">
                     <div class="background-image-div teamapps-blurredBackgroundImage">
                         <div class="background-color-div">
@@ -44,26 +45,26 @@ export class UiElegantPanel extends UiComponent<UiElegantPanelConfig> implements
                 </div>
             </div>`);
 
-		let $backgroundColorDiv = this.$element.find('.background-color-div');
-		this.$contentContainer = this.$element.find('.content-container');
+		let $backgroundColorDiv = this.$element.querySelector<HTMLElement>(':scope .background-color-div');
+		this.$contentContainer = this.$element.querySelector<HTMLElement>(':scope .content-container');
 
 		if (config.bodyBackgroundColor) {
-			$backgroundColorDiv.css("background-color", config.bodyBackgroundColor);
+			$backgroundColorDiv.style.backgroundColor = config.bodyBackgroundColor;
 		}
 		if (config.content) {
-			this.setContent(config.content);
+			this.setContent(config.content as UiComponent);
 		}
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$element;
 	}
 
 	public setContent(content: UiComponent) {
-		this.$contentContainer[0].innerHTML = '';
+		this.$contentContainer.innerHTML = '';
 		this.contentComponent = content;
 		if (content) {
-			this.contentComponent.getMainDomElement().appendTo(this.$contentContainer);
+			this.$contentContainer.appendChild(this.contentComponent.getMainDomElement());
 			this.contentComponent.attachedToDom = this.attachedToDom;
 		}
 	}
@@ -74,7 +75,7 @@ export class UiElegantPanel extends UiComponent<UiElegantPanelConfig> implements
 	}
 
 	onResize(): void {
-		if (!this.attachedToDom || this.getMainDomElement()[0].offsetWidth <= 0) return;
+		if (!this.attachedToDom || this.getMainDomElement().offsetWidth <= 0) return;
 		this.contentComponent && this.contentComponent.reLayout();
 	}
 

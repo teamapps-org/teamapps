@@ -50,8 +50,8 @@ export class UiAbsoluteLayout extends UiComponent<UiAbsoluteLayoutConfig> implem
 		this.update(config.components, 0, UiAnimationEasing.EASE);
 	}
 
-	getMainDomElement(): JQuery {
-		return $(this.$main);
+	getMainDomElement(): HTMLElement {
+		return this.$main;
 	}
 
 	private transitionEndEventListener = (e: Event) => {
@@ -68,7 +68,7 @@ export class UiAbsoluteLayout extends UiComponent<UiAbsoluteLayoutConfig> implem
 		components
 			.map(c => c.component)
 			.forEach((c: UiComponent) => {
-				const mainDomElementElement = c.getMainDomElement()[0];
+				const mainDomElementElement = c.getMainDomElement();
 				mainDomElementElement.removeEventListener("transitionend", this.transitionEndEventListener);
 				this.$main.appendChild(mainDomElementElement);
 				c.attachedToDom = this.attachedToDom;
@@ -81,8 +81,8 @@ export class UiAbsoluteLayout extends UiComponent<UiAbsoluteLayoutConfig> implem
 }`;
 		components.forEach(c => {
 			const component = c.component as UiComponent;
-			component.getMainDomElement()[0].addEventListener('transitionend', this.transitionEndEventListener);
-			component.getMainDomElement().attr("data-absolute-positioning-id", component.getId());
+			component.getMainDomElement().addEventListener('transitionend', this.transitionEndEventListener);
+			component.getMainDomElement().setAttribute("data-absolute-positioning-id", component.getId());
 			styles += `[data-teamapps-id=${this.getId()}] > [data-absolute-positioning-id=${component.getId()}] {
 	top: ${c.position.topCss != null ? c.position.topCss : "initial"};
 	right: ${c.position.rightCss != null ? c.position.rightCss : "initial"};

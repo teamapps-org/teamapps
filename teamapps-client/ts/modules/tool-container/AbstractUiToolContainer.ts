@@ -17,24 +17,26 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "../UiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {AbstractUiToolContainerConfig} from "../../generated/AbstractUiToolContainerConfig";
+import {parseHtml} from "../Common";
 
 
 interface Button {
-	$buttonWrapper: JQuery;
-	$button: JQuery;
+	$buttonWrapper: HTMLElement;
+	$button: HTMLElement;
 }
 
 export abstract class AbstractUiToolContainer<C extends AbstractUiToolContainerConfig> extends UiComponent<C> {
 
-	protected static $sizeTestingContainer: JQuery;
+	protected static $sizeTestingContainer: HTMLElement;
 
 	public static initialize() {
 		$(() => { // wait until there IS a document.body
-			this.$sizeTestingContainer = $('<div class="AbstractUiToolContainer-size-testing-container">').appendTo(document.body);
+			this.$sizeTestingContainer = parseHtml('<div class="AbstractUiToolContainer-size-testing-container">');
+			document.body.appendChild(this.$sizeTestingContainer);
 		});
 	}
 
@@ -42,26 +44,26 @@ export abstract class AbstractUiToolContainer<C extends AbstractUiToolContainerC
 		super(config, context);
 	}
 
-	public static optimizeButtonWidth($buttonWrapper: JQuery, $button: JQuery, maxHeight: number): number {
-		$buttonWrapper.appendTo(this.$sizeTestingContainer);
-		const $templateDiv = $button.find('>.custom-entry-template');
+	public static optimizeButtonWidth($buttonWrapper: HTMLElement, $button: HTMLElement, maxHeight: number): number {
+		this.$sizeTestingContainer.appendChild($buttonWrapper);
+		const $templateDiv = $button.querySelector<HTMLElement>(':scope >.custom-entry-template');
 		let optimizedWidth;
-		if ($templateDiv.length > 0) {
-			const oldHeightAttribute = $templateDiv[0].style.height; // read the style attribute of the templateDiv! (not the computed css!)
-			// var oldMaxHeightAttribute = $button[0].style.maxHeight; // read the style attribute of the templateDiv! (not the computed css!)
-			$templateDiv[0].style.height = null;
-			$button[0].style.maxHeight = null;
+		if ($templateDiv != null) {
+			const oldHeightAttribute = $templateDiv.style.height; // read the style attribute of the templateDiv! (not the computed css!)
+			// var oldMaxHeightAttribute = $button.style.maxHeight; // read the style attribute of the templateDiv! (not the computed css!)
+			$templateDiv.style.height = null;
+			$button.style.maxHeight = null;
 
 			let width = 120; // don't write novels inside of buttons...
-			$button.width(width);
+			$button.style.width = width + "px";
 
-			let $directButtonChildren = $button.find('>*');
-			let linesWithChildren: { lineElement: HTMLElement, textElements: HTMLElement[] }[] = $button.find(".line")
-				.toArray().map(lineElement => {
-					let textElements = $(lineElement).find('>.text-element');
+			let $directButtonChildren = Array.from($button.querySelectorAll<HTMLElement>(':scope >*'));
+			let linesWithChildren: { lineElement: HTMLElement, textElements: HTMLElement[] }[] = Array.from($button.querySelectorAll<HTMLElement>(":scope .line"))
+				.map(lineElement => {
+					let textElements = lineElement.querySelectorAll<HTMLElement>(':scope >.text-element'); // TODO these css classes are no more used!!!
 					return {
 						lineElement: lineElement,
-						textElements: textElements.toArray()
+						textElements: Array.from(textElements)
 					}
 				});
 
@@ -70,30 +72,30 @@ export abstract class AbstractUiToolContainer<C extends AbstractUiToolContainerC
 			let jumpDirection;
 			while (jumpSize > 2) {
 				jumpSize = Math.ceil(jumpSize / 2);
-				const buttonRight = $button[0].getBoundingClientRect().right;
-				const childOverflow = $directButtonChildren.filter((index, childElement) => {
+				const buttonRight = $button.getBoundingClientRect().right;
+				const childOverflow = $directButtonChildren.filter(childElement => {
 					return childElement.getBoundingClientRect().right > buttonRight
 				}).length > 0;
 				let hasTextCellElementOverflow = linesWithChildren.some(lineWithChildren => {
 					return lineWithChildren.textElements.some(textElement => textElement.offsetWidth > lineWithChildren.lineElement.offsetWidth)
 				});
-				jumpDirection = (hasTextCellElementOverflow || $button[0].offsetHeight > maxHeight || $button[0].offsetWidth > width || childOverflow) ? 1 : -1;
+				jumpDirection = (hasTextCellElementOverflow || $button.offsetHeight > maxHeight || $button.offsetWidth > width || childOverflow) ? 1 : -1;
 				width = width + (jumpSize * jumpDirection);
-				$button.width(width);
+				$button.style.width = width + "px";
 			}
-			if ($button[0].offsetHeight > maxHeight || $button[0].offsetWidth > width) {
+			if ($button.offsetHeight > maxHeight || $button.offsetWidth > width) {
 				width += 2;
 			}
-			$button.width(width);
-			$button.attr("optimized-width", width);
-			optimizedWidth = $buttonWrapper[0].offsetWidth;
+			$button.style.width = width + "px";
+			$button.setAttribute("optimized-width", "" + width);
+			optimizedWidth = $buttonWrapper.offsetWidth;
 
-			$templateDiv[0].style.height = oldHeightAttribute;
-			// $button[0].style.maxHeight = oldMaxHeightAttribute;
+			$templateDiv.style.height = oldHeightAttribute;
+			// $button.style.maxHeight = oldMaxHeightAttribute;
 		} else {
-			optimizedWidth = $buttonWrapper[0].offsetWidth;
+			optimizedWidth = $buttonWrapper.offsetWidth;
 		}
-		$buttonWrapper.detach();
+		$buttonWrapper.remove();
 		return optimizedWidth;
 	}
 

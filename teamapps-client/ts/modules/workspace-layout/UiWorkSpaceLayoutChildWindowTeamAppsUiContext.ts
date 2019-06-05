@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import * as log from "loglevel";
 import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./UiWorkSpaceLayout";
 import {UiRootPanel} from "../UiRootPanel";
@@ -51,7 +51,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 	constructor() {
 		this.isHighDensityScreen = ((window.matchMedia && (window.matchMedia('only screen and (min-resolution: 124dpi), only screen and (min-resolution: 1.3dppx), only screen and (min-resolution: 48.8dpcm)').matches || window.matchMedia('only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 2.6/2), only screen and (min--moz-device-pixel-ratio: 1.3), only screen and (min-device-pixel-ratio: 1.3)').matches)) || (window.devicePixelRatio && window.devicePixelRatio > 1.3));
 		if (this.isHighDensityScreen) {
-			$(document.body).addClass('high-density-screen');
+			document.body.classList.add('high-density-screen');
 		}
 		window.onmessage = (e) => {
 			if (e.origin !== location.origin || e.ports.length === 0) {
@@ -73,7 +73,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 					UiRootPanel.setConfig(messageObject.uiConfiguration, this);
 					UiRootPanel.registerTemplates(messageObject.registeredTemplates, this);
 					// TODO set background image!
-					rootPanel.getMainDomElement().appendTo(document.body);
+					document.body.appendChild(rootPanel.getMainDomElement());
 					rootPanel.attachedToDom = true;
 					this.workSpaceLayout = new UiWorkSpaceLayout({
 						_type: "UiWorkSpaceLayout",
@@ -158,7 +158,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 	}
 
 	destroyComponent(component: UiComponent): void {
-		component.getMainDomElement().detach();
+		component.getMainDomElement().remove();
 		component.destroy();
 		delete this.components[component.getId()];
 	}

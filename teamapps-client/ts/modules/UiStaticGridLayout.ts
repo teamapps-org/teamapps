@@ -24,20 +24,21 @@ import {UiGridLayout} from "./micro-components/UiGridLayout";
 import {UiGridLayoutConfig} from "../generated/UiGridLayoutConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiResponsiveGridLayout} from "./UiResponsiveGridLayout";
+import {parseHtml} from "./Common";
 
 export class UiStaticGridLayout extends UiComponent<UiStaticGridLayoutConfig> implements UiStaticGridLayoutCommandHandler{
 
-	private $main: JQuery;
+	private $main: HTMLElement;
 	private layout: UiGridLayout;
 
 	constructor(config: UiStaticGridLayoutConfig,
 	            context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = $(`<div class="UiStaticGridLayout"></div>`);
+		this.$main = parseHtml(`<div class="UiStaticGridLayout"></div>`);
 		this.updateLayout(config.descriptor);
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 

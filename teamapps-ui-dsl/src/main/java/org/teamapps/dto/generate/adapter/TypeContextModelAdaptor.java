@@ -207,7 +207,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if (isUiComponentId(typeContext)) {
 			return "string";
 		} else if (isReference(typeContext)) {
-			return "any";
+			return "unknown";
 		} else if (IMPLICITELY_REFERENCEABLE_CLASSES.contains(typeContext.getText())) {
 			return typeContext.getText();
 		} else if (isTypeScriptConfigSuffixed(typeContext)) {

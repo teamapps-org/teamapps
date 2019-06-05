@@ -141,14 +141,14 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		this.$main = parseHtml(`<div class="UiRichTextEditor teamapps-input-wrapper field-border field-border-glow" id="${this.uuid}">
 			<div class="toolbar-container"></div>
 			<div class="inline-editor field-background"></div>
-			<input type="file" class="file-upload-button">
+			<input type="file" class="file-upload-button"></input>
 			<div class="spinner-wrapper hidden"></div>
 			<div class="readonly-view"></div>
 		</div>`);
 		this.$toolbarContainer = this.$main.querySelector<HTMLElement>(':scope .toolbar-container');
 		this.$spinnerWrapper = this.$main.querySelector<HTMLElement>(':scope .spinner-wrapper');
 		this.$readonlyView = this.$main.querySelector<HTMLElement>(':scope .readonly-view');
-		new UiSpinner().getMainDomElement().appendTo(this.$spinnerWrapper);
+		this.$spinnerWrapper.appendChild(new UiSpinner().getMainDomElement());
 		this.$fileField = this.$main.querySelector(':scope .file-upload-button');
 		this.$fileField.addEventListener("change", (e) => {
 			let files = (<HTMLInputElement> this.$fileField).files;
@@ -346,13 +346,13 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					});
 					editor.on('focus', (e) => {
 						this._hasFocus = true;
-						this.getMainDomElement()[0].classList.add('focus');
+						this.getMainDomElement().classList.add('focus');
 						this.updateToolbarVisibility();
 						this.onFocused.fire(null);
 					});
 					editor.on('blur', (e) => {
 						this._hasFocus = false;
-						this.getMainDomElement()[0].classList.remove('focus');
+						this.getMainDomElement().classList.remove('focus');
 						if (this.mayFireChangeEvents()) {
 							this.commit();
 						}

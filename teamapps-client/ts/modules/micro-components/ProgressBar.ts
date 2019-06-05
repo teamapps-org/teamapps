@@ -17,21 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {ProgressIndicator} from "./ProgressIndicator";
-import {generateUUID} from "../Common";
+import {generateUUID, parseHtml} from "../Common";
 
 export class ProgressBar implements ProgressIndicator {
-	private $mainDomElement: JQuery;
-	private $progressBar: JQuery;
-	private $errorMessageBar: JQuery;
+	private $mainDomElement: HTMLElement;
+	private $progressBar: HTMLElement;
+	private $errorMessageBar: HTMLElement;
 
 	constructor(initialProgress: number, {
 		height = 18,
 		transitionTime = 700
 	}) {
 		let uuid = generateUUID();
-		this.$mainDomElement = $(`<div id="c-${uuid}" class="ProgressBar progress">
+		this.$mainDomElement = parseHtml(`<div id="c-${uuid}" class="ProgressBar progress">
                  <div class="progress-bar active" role="progressbar" style="width: 0"></div>
                  <div class="error-message-bar hidden"></div>
                  <style>
@@ -42,8 +42,8 @@ export class ProgressBar implements ProgressIndicator {
                    } 
                  </style>
                 </div>`);
-		this.$progressBar = this.$mainDomElement.find('.progress-bar').first();
-		this.$errorMessageBar = this.$mainDomElement.find('.error-message-bar');
+		this.$progressBar = this.$mainDomElement.querySelector<HTMLElement>(':scope .progress-bar');
+		this.$errorMessageBar = this.$mainDomElement.querySelector<HTMLElement>(':scope .error-message-bar');
 
 		this.setProgress(initialProgress)
 	}
@@ -54,13 +54,14 @@ export class ProgressBar implements ProgressIndicator {
 	 */
 	public setProgress(progress: number) {
 		let percentString = Math.ceil(progress * 100) + "%";
-		this.$progressBar.width(percentString).text(percentString);
+		this.$progressBar.style.width = percentString;
+		this.$progressBar.innerText = percentString;
 	}
 
 	setErrorMessage(message: string | null): void {
-		this.$progressBar.toggleClass('hidden', !!message);
-		this.$errorMessageBar.toggleClass('hidden', !message);
-		this.$errorMessageBar.text(message);
+		this.$progressBar.classList.toggle('hidden', !!message);
+		this.$errorMessageBar.classList.toggle('hidden', !message);
+		this.$errorMessageBar.innerText = message;
 	}
 
 	public getMainDomElement() {

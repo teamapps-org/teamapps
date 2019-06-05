@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiAudioActivityDisplay} from "./micro-components/UiAudioActivityDisplay";
 import {UiWebRtcPublisher_PublishingFailedEvent, UiWebRtcPublisherCommandHandler, UiWebRtcPublisherConfig, UiWebRtcPublisherEventSource} from "../generated/UiWebRtcPublisherConfig";
 import {UiSpinner} from "./micro-components/UiSpinner";
@@ -50,11 +50,11 @@ export class UiWebRtcPublisher extends UiComponent<UiWebRtcPublisherConfig> impl
 
 	public readonly onPublishingFailed: TeamAppsEvent<UiWebRtcPublisher_PublishingFailedEvent> = new TeamAppsEvent(this);
 
-	private $main: JQuery;
-	private $videoContainer: JQuery;
+	private $main: HTMLElement;
+	private $videoContainer: HTMLElement;
 	private video: HTMLVideoElement;
-	private $audioActivityDisplayContainer: JQuery;
-	private $spinnerContainer: JQuery;
+	private $audioActivityDisplayContainer: HTMLElement;
+	private $spinnerContainer: HTMLElement;
 
 	private publishingSettings: UiWebRtcPublishingSettingsConfig;
 	private publishingSignalingWsConnection: WebSocket = null;
@@ -69,7 +69,7 @@ export class UiWebRtcPublisher extends UiComponent<UiWebRtcPublisherConfig> impl
 	constructor(config: UiWebRtcPublisherConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = $(`
+		this.$main = parseHtml(`
 <div class="UiWebRtcPublisher">
   <div class="video-container">
     <video autoplay></video>
@@ -78,16 +78,16 @@ export class UiWebRtcPublisher extends UiComponent<UiWebRtcPublisherConfig> impl
 	<div class="spinner-container hidden"></div>	
   </div> 
 </div>`);
-		this.video = <HTMLVideoElement> this.$main.find('video')[0];
+		this.video = <HTMLVideoElement> this.$main.querySelector<HTMLElement>(':scope video');
 		this.video.addEventListener("abort", () => { // this event will be triggered when stopPlaying() is invoked.
 			this.video.load(); // show poster again. We cannot do this directly in stopPlaying()...
 		});
 		this.video.onloadedmetadata = this.onResize.bind(this);
-		this.$videoContainer = this.$main.find('.video-container');
-		this.$audioActivityDisplayContainer = this.$main.find('.audio-activity-display-container');
+		this.$videoContainer = this.$main.querySelector<HTMLElement>(':scope .video-container');
+		this.$audioActivityDisplayContainer = this.$main.querySelector<HTMLElement>(':scope .audio-activity-display-container');
 		this.audioActivityDisplay = new UiAudioActivityDisplay();
 		this.$audioActivityDisplayContainer.append(this.audioActivityDisplay.getMainDomElement());
-		this.$spinnerContainer = this.$main.find('.spinner-container');
+		this.$spinnerContainer = this.$main.querySelector<HTMLElement>(':scope .spinner-container');
 		this.$spinnerContainer.append(new UiSpinner().getMainDomElement());
 
 		if (config.publishingSettings != null) {
@@ -134,7 +134,7 @@ export class UiWebRtcPublisher extends UiComponent<UiWebRtcPublisherConfig> impl
 		if (this.multiStreamsMixer) {
 			this.multiStreamsMixer.getInputMediaStreams().forEach(inputStream => inputStream.getAudioTracks().forEach(track => track.enabled = !this.microphoneMuted));
 		}
-		this.audioActivityDisplay.getMainDomElement()[0].classList.toggle("hidden", microphoneMuted);
+		this.audioActivityDisplay.getMainDomElement().classList.toggle("hidden", microphoneMuted);
 	}
 
 	private async getMediaStreamMixer(publishingSettings: UiWebRtcPublishingMediaSettingsConfig) {
@@ -349,8 +349,8 @@ export class UiWebRtcPublisher extends UiComponent<UiWebRtcPublisherConfig> impl
 		const nonLoadingIceStates: WebRtcState[] = ['connected', 'completed', 'closed'];
 		let loading: boolean = this.publishingSignalingWsConnection != null || nonLoadingIceStates.indexOf(this.publishingIceConnectionState) === -1;
 
-		this.$spinnerContainer.toggleClass("hidden", !loading);
-		this.$audioActivityDisplayContainer.toggleClass("hidden", this.publishingIceConnectionState !== "completed");
+		this.$spinnerContainer.classList.toggle("hidden", !loading);
+		this.$audioActivityDisplayContainer.classList.toggle("hidden", this.publishingIceConnectionState !== "completed");
 	}
 
 	private addAudio(sdpStr: string, audioLine: string) {
@@ -627,7 +627,7 @@ export class UiWebRtcPublisher extends UiComponent<UiWebRtcPublisherConfig> impl
 		this.unPublish();
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 

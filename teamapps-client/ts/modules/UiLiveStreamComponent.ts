@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import * as $ from "jquery";
+
 import {UiWaitingVideoInfoConfig} from "../generated/UiWaitingVideoInfoConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiHttpLiveStreamPlayer} from "./live-stream/UiHttpLiveStreamPlayer";
@@ -26,7 +26,7 @@ import {UiYoutubePlayer} from "./live-stream/UiYoutubePlayer";
 import {UiLiveStreamComPlayer} from "./live-stream/UiLiveStreamComPlayer";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {applyDisplayMode, generateUUID} from "./Common";
+import {animateCSS, applyDisplayMode, css, fadeIn, fadeOut, generateUUID, parseHtml} from "./Common";
 import {LiveStreamPlayer} from "./live-stream/LiveStreamPlayer";
 import {
 	UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent,
@@ -44,26 +44,26 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 	public readonly onResultOfRequestInputDeviceAccess: TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent> = new TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent>(this);
 	public readonly onResultOfRequestInputDeviceInfo: TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent> = new TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent>(this);
 
-	private $componentWrapper: JQuery;
+	private $componentWrapper: HTMLElement;
 
-	private $backgroundImageContainer: JQuery;
-	private $backgroundImage: JQuery;
+	private $backgroundImageContainer: HTMLElement;
+	private $backgroundImage: HTMLElement;
 
-	private $waitingVideoContainer: JQuery;
+	private $waitingVideoContainer: HTMLElement;
 	private waitingVideoPlayer: HTMLVideoElement;
 	private waitingVideoInfos: UiWaitingVideoInfoConfig[];
 	private currentWaitingVideoIndex: number;
 
-	private $liveStreamPlayerContainer: JQuery;
+	private $liveStreamPlayerContainer: HTMLElement;
 	private hlsPlayer: UiHttpLiveStreamPlayer;
 	private liveStreamComPlayer: UiLiveStreamComPlayer;
 	private youtubePlayer: UiYoutubePlayer;
 
-	private $imageOverlayContainer: JQuery;
-	private $imageOverlay: JQuery;
+	private $imageOverlayContainer: HTMLElement;
+	private $imageOverlay: HTMLElement;
 	private imageOverlayDisplayMode: UiPageDisplayMode;
 
-	private $infoTextContainer: JQuery;
+	private $infoTextContainer: HTMLElement;
 
 	private volume: number;
 
@@ -73,30 +73,30 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 
 		this.volume = config.volume;
 
-		this.$componentWrapper = $(
+		this.$componentWrapper = parseHtml(
 			`<div id=${config.id}" class="UiLiveStreamComponent" tabindex="-1">
-                    <div class="background-image-container" style="display: none"><img class="background-image"/></div>
-                    <div class="livestream-player-container"></div>
-                    <div class="waiting-video-container" style="display: none"><video class="waiting-video-player"></div>
-                    <div class="image-overlay-container" style="display: none"><img class="image-overlay"/></div>
-                    <div class="info-text-container" style="display: none"></div>
+                    <div class="background-image-container hidden"><img class="background-image"></img></div>
+                    <div class="livestream-player-container hidden"></div>
+                    <div class="waiting-video-container hidden"><video class="waiting-video-player"></video></div>
+                    <div class="image-overlay-container hidden"><img class="image-overlay"></img></div>
+                    <div class="info-text-container hidden"></div>
                 </div>`);
 
-		this.$backgroundImageContainer = this.$componentWrapper.find('.background-image-container');
-		this.$backgroundImage = this.$backgroundImageContainer.find('img');
-		this.$liveStreamPlayerContainer = this.$componentWrapper.find('.livestream-player-container');
-		this.$waitingVideoContainer = this.$componentWrapper.find('.waiting-video-container');
-		this.waitingVideoPlayer = <HTMLVideoElement>this.$waitingVideoContainer.find('video')[0];
-		this.$imageOverlayContainer = this.$componentWrapper.find('.image-overlay-container');
-		this.$imageOverlay = this.$imageOverlayContainer.find('img');
-		this.$infoTextContainer = this.$componentWrapper.find('.info-text-container');
+		this.$backgroundImageContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .background-image-container');
+		this.$backgroundImage = this.$backgroundImageContainer.querySelector<HTMLElement>(':scope img');
+		this.$liveStreamPlayerContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .livestream-player-container');
+		this.$waitingVideoContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .waiting-video-container');
+		this.waitingVideoPlayer = <HTMLVideoElement>this.$waitingVideoContainer.querySelector<HTMLElement>(':scope video');
+		this.$imageOverlayContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .image-overlay-container');
+		this.$imageOverlay = this.$imageOverlayContainer.querySelector<HTMLElement>(':scope img');
+		this.$infoTextContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .info-text-container');
 
-		this.$backgroundImage.on("load", () => this.reLayout());
-		this.$imageOverlay.on("load", () => this.reLayout());
+		this.$backgroundImage.addEventListener("load", () => this.reLayout());
+		this.$imageOverlay.addEventListener("load", () => this.reLayout());
 
 		if (config.backgroundImage) {
-			this.$backgroundImage.attr("src", config.backgroundImage);
-			this.$backgroundImageContainer.show();
+			this.$backgroundImage.setAttribute("src", config.backgroundImage);
+			this.$backgroundImageContainer.classList.remove("hidden");
 		}
 
 		this.waitingVideoPlayer.addEventListener('ended', (e) => {
@@ -105,7 +105,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 		});
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 
@@ -115,17 +115,17 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 	}
 
 	public onResize(): void {
-		if (this.$backgroundImage.is(":visible")) {
+		if ($(this.$backgroundImage).is(":visible")) {
 			applyDisplayMode(this.$backgroundImageContainer, this.$backgroundImage, this._config.backgroundImageDisplayMode);
-			this.$backgroundImage.position({
+			$(this.$backgroundImage).position({
 				my: "center",
 				at: "center",
 				of: this.$backgroundImageContainer
 			});
 		}
-		if (this.$imageOverlayContainer.is(":visible")) {
+		if ($(this.$imageOverlayContainer).is(":visible")) {
 			applyDisplayMode(this.$imageOverlayContainer, this.$imageOverlay, this.imageOverlayDisplayMode);
-			this.$imageOverlay.position({
+			$(this.$imageOverlay).position({
 				my: "center",
 				at: "center",
 				of: this.$imageOverlayContainer
@@ -141,7 +141,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 			this.stopLiveStream();
 		}
 		this.waitingVideoInfos = waitingVideoInfoConfig;
-		this.$waitingVideoContainer.show();
+		this.$waitingVideoContainer.classList.remove("hidden");
 		this.currentWaitingVideoIndex = 0;
 		let offset = Math.ceil(offsetSeconds);
 
@@ -163,7 +163,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 	}
 
 	private playWaitingVideo(videoUrl: string, offsetSeconds: number) {
-		this.$backgroundImageContainer.fadeOut(1000);
+		fadeOut(this.$backgroundImageContainer);
 		this.waitingVideoPlayer.volume = this.volume;
 		this.waitingVideoPlayer.style.opacity = "1";
 		this.waitingVideoPlayer.src = videoUrl;
@@ -176,17 +176,17 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 
 	public stopWaitingVideos() {
 		if (this._config.backgroundImage) {
-			this.$backgroundImageContainer.fadeIn(1000);
+			fadeIn(this.$backgroundImageContainer);
 		}
 		$(this.waitingVideoPlayer).animate({volume: 0, opacity: 0}, 1000, 'swing', () => {
 			this.waitingVideoPlayer.pause();
-			this.$waitingVideoContainer.hide();
+			this.$waitingVideoContainer.classList.add("hidden");
 		});
 	}
 
 	public startHttpLiveStream(url: string) {
 		this.stopLiveStream(); // stop all other live streams!
-		this.$backgroundImageContainer.fadeOut(1000);
+		fadeOut(this.$backgroundImageContainer);
 
 		if (!this.hlsPlayer) {
 			this.hlsPlayer = new UiHttpLiveStreamPlayer({
@@ -203,7 +203,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 
 	public startLiveStreamComLiveStream(url: string) {
 		this.stopLiveStream(); // stop all other live streams!
-		this.$backgroundImageContainer.fadeOut(1000);
+		fadeOut(this.$backgroundImageContainer);
 
 		if (!this.liveStreamComPlayer) {
 			this.liveStreamComPlayer = new UiLiveStreamComPlayer({
@@ -212,7 +212,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 			}, this._context);
 			this.$liveStreamPlayerContainer.append(this.liveStreamComPlayer.getMainDomElement())
 		}
-		this.liveStreamComPlayer.getMainDomElement().show();
+		this.liveStreamComPlayer.getMainDomElement().classList.remove("hidden");
 		this.liveStreamComPlayer.setVolume(this.volume);
 		this.liveStreamComPlayer.play(url);
 
@@ -222,7 +222,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 	// TESTING: components.liveStreamPlayer.startYouTubeLiveStream("https://www.youtube.com/v/K474y2EpHN4")
 	public startYouTubeLiveStream(url: string) {
 		this.stopLiveStream(); // stop all other live streams!
-		this.$backgroundImageContainer.fadeOut(1000);
+		fadeOut(this.$backgroundImageContainer);
 
 		if (!this.youtubePlayer) {
 			this.youtubePlayer = new UiYoutubePlayer({
@@ -232,7 +232,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 			this.$liveStreamPlayerContainer.append(this.youtubePlayer.getMainDomElement());
 		}
 
-		this.youtubePlayer.getMainDomElement().show();
+		this.youtubePlayer.getMainDomElement().classList.remove("hidden");
 		this.youtubePlayer.setVolume(this.volume);
 		this.youtubePlayer.play(url);
 
@@ -243,7 +243,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 		this.doWithAllPlayers(p => {
 			p.stop();
 		});
-		this.$backgroundImageContainer.fadeIn(1000);
+		fadeIn(this.$backgroundImageContainer);
 		this.reLayout();
 
 		this.updatePlayerSizesAndPositions();
@@ -251,23 +251,22 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 
 	public displayImageOverlay(imageUrl: string, displayMode: UiPageDisplayMode, useVideoAreaAsFrame: Boolean) {
 		this.imageOverlayDisplayMode = displayMode;
-		this.$imageOverlay.attr("src", imageUrl);
-		this.$imageOverlayContainer.show();
+		this.$imageOverlay.setAttribute("src", imageUrl);
+		this.$imageOverlayContainer.classList.remove("hidden");
 		this.reLayout();
 	}
 
 	public removeImageOverlay() {
-		this.$imageOverlayContainer.hide();
+		this.$imageOverlayContainer.classList.add("hidden");
 	}
 
 	public displayInfoTextOverlay(text: string) {
-		this.$infoTextContainer
-			.text(text)
-			.fadeIn(1000);
+		this.$infoTextContainer.textContent = text;
+		fadeIn(this.$infoTextContainer);
 	}
 
 	public removeInfoTextOverlay() {
-		this.$infoTextContainer.fadeOut(1000);
+		fadeOut(this.$infoTextContainer);
 	}
 
 	startCustomEmbeddedLiveStreamPlayer(playerEmbedHtml: string, embedContainerId: string): void {
@@ -296,7 +295,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 		this.doWithAllPlayers(p => {
 			if (p.isPlaying()) {
 				// full size
-				p.getMainDomElement().css({
+				css(p.getMainDomElement(), {
 					top: "0px",
 					left: "0px",
 					width: "100%",
@@ -304,7 +303,7 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 				});
 			} else {
 				// hide
-				p.getMainDomElement().css({
+				css(p.getMainDomElement(), {
 					top: "0px",
 					left: "-100000px",
 					right: "500px",

@@ -58,15 +58,15 @@ export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieCh
 			.render();
 	}
 
-	getMainDomElement(): JQuery<HTMLElement> {
-		return $(this.chart.container() as any);
+	getMainDomElement(): HTMLElement {
+		return this.chart.container() as HTMLElement;
 	}
 
 	onResize(): void {
 
 		// Get our dimensions
-		let newWidth = this.getWidth()
-		let newHeight = this.getHeight()
+		let newWidth = this.getWidth();
+		let newHeight = this.getHeight();
 
 
 		// Update chart dimensions

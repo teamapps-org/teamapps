@@ -19,17 +19,18 @@
  */
 ///<reference path="../custom-declarations/d3v3.d.ts"/>
 
-import * as $ from "jquery";
+
 import * as d3 from "d3v3";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiNetworkGraphConfig} from "../generated/UiNetworkGraphConfig";
 import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {parseHtml} from "./Common";
 
 export class UiNetworkGraph extends UiComponent<UiNetworkGraphConfig> {
 
-	private $graph: JQuery;
+	private $graph: HTMLElement;
 	private svg: any;
 	private svgContainer: any;
 	private rect: any;
@@ -43,10 +44,10 @@ export class UiNetworkGraph extends UiComponent<UiNetworkGraphConfig> {
 
 	constructor(config: UiNetworkGraphConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$graph = $('<div class="UiNetworkGraph" id="' + this.getId() + '">');
+		this.$graph = parseHtml('<div class="UiNetworkGraph" id="' + this.getId() + '">');
 
-		var width = this.$graph.width();
-		var height = this.$graph.height();
+		var width = $(this.$graph).width();
+		var height = $(this.$graph).height();
 
 		this.logger.debug("width:" + width + ", height:" + height);
 		if (width < 100) {
@@ -59,7 +60,7 @@ export class UiNetworkGraph extends UiComponent<UiNetworkGraphConfig> {
 		this.createGraph(width, height, config.gravity, config.images, config.nodes, config.links);
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$graph;
 	}
 
@@ -131,7 +132,7 @@ export class UiNetworkGraph extends UiComponent<UiNetworkGraphConfig> {
 		//    .call(zoom);
 
 		this.logger.debug("Add svg:" + "#" + this.getId() + ":" + d3.select("#" + this.getId()));
-		this.svgContainer = d3.select(this.getMainDomElement()[0]).append("svg")
+		this.svgContainer = d3.select(this.getMainDomElement()).append("svg")
 			.attr("width", width)
 			.attr("height", height);
 		this.svg = this.svgContainer
@@ -389,8 +390,8 @@ export class UiNetworkGraph extends UiComponent<UiNetworkGraphConfig> {
 	}
 
 	public onResize(): void {
-		var width = this.$graph.width();
-		var height = this.$graph.height();
+		var width = $(this.$graph).width();
+		var height = $(this.$graph).height();
 
 		this.logger.debug("resize w:" + width + ", h:" + height);
 

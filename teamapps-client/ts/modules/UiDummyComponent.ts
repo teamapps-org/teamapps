@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import * as moment from "moment-timezone";
 
 import Moment = moment.Moment;
@@ -27,6 +27,7 @@ import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {parseHtml} from "./Common";
 
 export class UiDummyComponent extends UiComponent<UiDummyComponentConfig> implements UiDummyComponentCommandHandler, UiDummyComponentEventSource {
 
@@ -34,7 +35,7 @@ export class UiDummyComponent extends UiComponent<UiDummyComponentConfig> implem
 
 	private static allDummies: UiDummyComponent[] = [];
 
-	private $panel: JQuery;
+	private $panel: HTMLElement;
 	private lastResize: Moment;
 	private resizeCount: number = 0;
 	private destroyed: boolean = false;
@@ -46,13 +47,13 @@ export class UiDummyComponent extends UiComponent<UiDummyComponentConfig> implem
 
 	constructor(config: UiDummyComponentConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = $('<div class="UiDummyComponent" id="' + config.id + '"></div>');
-		this.$panel.click(() => {
+		this.$panel = parseHtml('<div class="UiDummyComponent" id="' + config.id + '"></div>');
+		this.$panel.addEventListener("click", () => {
 			this.clickCount++;
 			this.onClicked.fire(EventFactory.createUiDummyComponent_ClickedEvent(this.getId(), this.clickCount));
 			this.updateContent();
 		});
-		this.$panel[0].addEventListener('click', () => {
+		this.$panel.addEventListener('click', () => {
 			this.jsClickCount++;
 			this.updateContent();
 		});
@@ -62,7 +63,7 @@ export class UiDummyComponent extends UiComponent<UiDummyComponentConfig> implem
 	}
 
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$panel;
 	}
 
@@ -86,16 +87,7 @@ resizeCount: ${this.resizeCount}<br>
 lastResize: ${this.lastResize ? this.lastResize.format('HH:mm:ss.SSS') : '-'}<br>
 size: ${this.getWidth()} x ${this.getHeight()}<br> 
 destroyed: <span class="${this.destroyed ? 'text-danger blink text-bold' : ''}">${this.destroyed}</span><br>
-wasDetached: <span class="${this.wasDetached ? 'text-danger blink text-bold' : ''}">${this.wasDetached}</span>
 `;
-	}
-
-	get wasDetached() {
-		if (this.hasBeenAttachedToDom) {
-			return !($ as any)._data(this.$panel[0], "events") || !($ as any)._data(this.$panel[0], "events").click;
-		} else {
-			return false;
-		}
 	}
 
 	public onResize(): void {
@@ -108,7 +100,7 @@ wasDetached: <span class="${this.wasDetached ? 'text-danger blink text-bold' : '
 		this.hasBeenAttachedToDom = true;
 		this.updateContent();
 		document.body.addEventListener("DOMNodeRemoved", (e: Event) => {
-			let selfOrParent: Node = this.getMainDomElement()[0];
+			let selfOrParent: Node = this.getMainDomElement();
 			while (selfOrParent != null) {
 				if (selfOrParent === e.target) {
 					setTimeout(() => this.updateContent());
@@ -120,7 +112,7 @@ wasDetached: <span class="${this.wasDetached ? 'text-danger blink text-bold' : '
 	}
 
 	private updateContent() {
-		this.$panel[0].innerHTML = this.generateText();
+		this.$panel.innerHTML = this.generateText();
 	}
 
 	setText(text: string): void {

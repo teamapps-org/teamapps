@@ -40,7 +40,7 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 		this.setBackgroundColor(config.backgroundColor);
 		this.setBorder(config.border);
 		this.setSize(config.width, config.height);
-		this.setComponent(config.component);
+		this.setComponent(config.component as UiComponent);
 	}
 
 	isValidData(v: void): boolean {
@@ -60,7 +60,7 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 			this.component.getMainDomElement().remove();
 		}
 		this.component = component;
-		this.component.getMainDomElement().appendTo(this.$componentWrapper);
+		this.$componentWrapper.appendChild(this.component.getMainDomElement());
 	}
 
 	setSize(width: number, height: number): void {

@@ -19,7 +19,7 @@
  */
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {createImageThumbnailUrl, parseHtml} from "./Common";
+import {createImageThumbnailUrl, fadeOut, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {
 	UiChatInput_FileItemClickedEvent,
@@ -66,7 +66,7 @@ export class UiChatInput extends UiComponent<UiChatInputConfig> implements UiCha
 	<textarea class="text-input"></textarea>
 	<div class="button attachment-button glyphicon glyphicon-paperclip glyphicon-button glyphicon-button-md"></div>
 	<div class="button send-button glyphicon glyphicon-send glyphicon-button glyphicon-button-md"></div>
-	<input class="file-input" type="file" multiple tabindex="-1">
+	<input class="file-input" type="file" multiple tabindex="-1"></input>
 </div>`);
 		this.$uploadItems = this.$main.querySelector(":scope .upload-items");
 		this.$textInput = this.$main.querySelector(":scope .text-input");
@@ -127,8 +127,8 @@ export class UiChatInput extends UiComponent<UiChatInputConfig> implements UiCha
 		this.updateSendability();
 	}
 
-	getMainDomElement(): JQuery {
-		return $(this.$main);
+	getMainDomElement(): HTMLElement {
+		return this.$main;
 	}
 
 	private upload(files: FileList) {
@@ -187,7 +187,7 @@ class FileUploadItem {
 			.catch(reason => FileUploadItem.LOGGER.debug(`Could not create thumbnail for file ${file}. Reason: ${reason}.`));
 		const progressBar = new ProgressBar(0, {});
 
-		this.$main.appendChild(progressBar.getMainDomElement()[0]);
+		this.$main.appendChild(progressBar.getMainDomElement());
 
 		const uploader = new FileUploader();
 		uploader.onProgress.addListener(progress => progressBar.setProgress(progress));
@@ -200,7 +200,7 @@ class FileUploadItem {
 			this.state = UploadState.SUCCESS;
 			this.uploadedFileUuid = uuid;
 			this.onComplete.fire(null);
-			progressBar.getMainDomElement().fadeOut();
+			fadeOut(progressBar.getMainDomElement());
 		});
 		uploader.upload(file, uploadUrl)
 	}

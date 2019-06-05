@@ -22,13 +22,13 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiTabPanel} from "../UiTabPanel";
-import * as $ from "jquery";
+
 import {UiTabPanelTabStyle} from "../../generated/UiTabPanelTabStyle";
 import {ItemTreeItem} from "./ItemTree";
 import {UiComponent} from "../UiComponent";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
-import {generateUUID} from "../Common";
+import {generateUUID, parseHtml} from "../Common";
 import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
 import {UiWindowButtonType} from "../../generated/UiWindowButtonType";
 
@@ -62,7 +62,7 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 		return this._tabs.map(tab => tab.view);
 	}
 
-	$minimizedTrayButton: JQuery = $(`<div class="minimized-tabpanel-button"></div>`);
+	$minimizedTrayButton: HTMLElement = parseHtml(`<div class="minimized-tabpanel-button"></div>`);
 
 	public readonly onTabSelected: TeamAppsEvent<{ tabPanelItemId: string, tabId: string }> = new TeamAppsEvent(this);
 	public readonly onTabNeedsRefresh: TeamAppsEvent<{ tabId: string }> = new TeamAppsEvent(this);
@@ -207,11 +207,11 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 
 	private updateMinimizedButton() {
 		let iconSize = this.context.config.optimizedForTouch ? 16 : 12;
-		this.$minimizedTrayButton[0].innerHTML = '';
+		this.$minimizedTrayButton.innerHTML = '';
 		// noinspection CssUnknownTarget
-		this.$minimizedTrayButton.append(`<div class="tab-icon img img-${iconSize}" style="background-image: url('/resources/window-restore-grey.png')"></div>`);
-		this._tabs.forEach(tab => this.$minimizedTrayButton.append(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${this.context.getIconPath(tab.view.tabIcon, iconSize)}')"></div>`));
-		this.$minimizedTrayButton.click(() => this.onPanelStateChangeTriggered.fire(UiViewGroupPanelState.NORMAL));
+		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('/resources/window-restore-grey.png')"></div>`));
+		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${this.context.getIconPath(tab.view.tabIcon, iconSize)}')"></div>`)));
+		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(UiViewGroupPanelState.NORMAL));
 	}
 
 	get state(): UiViewGroupPanelState {

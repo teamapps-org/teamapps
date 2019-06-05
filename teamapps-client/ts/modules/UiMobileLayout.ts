@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiToolbarConfig} from "../generated/UiToolbarConfig";
@@ -28,18 +28,19 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiMobileLayoutCommandHandler, UiMobileLayoutConfig} from "../generated/UiMobileLayoutConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiMobileLayoutAnimation} from "../generated/UiMobileLayoutAnimation";
+import {parseHtml} from "./Common";
 
 class View {
 	component: UiComponent<UiComponentConfig>;
-	$container: JQuery;
+	$container: HTMLElement;
 }
 
 export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements UiMobileLayoutCommandHandler {
 
-	private $mainDiv: JQuery;
-	private $toolbarContainer: JQuery;
-	private $contentContainerWrapper: JQuery;
-	private $navBarContainer: JQuery;
+	private $mainDiv: HTMLElement;
+	private $toolbarContainer: HTMLElement;
+	private $contentContainerWrapper: HTMLElement;
+	private $navBarContainer: HTMLElement;
 
 	private toolbar: UiToolbar;
 	private navBar: UiNavigationBar;
@@ -48,21 +49,21 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 
 	constructor(config: UiMobileLayoutConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$mainDiv = $(`<div id="${config.id}" class="UiMobileLayout">
+		this.$mainDiv = parseHtml(`<div id="${config.id}" class="UiMobileLayout">
                              <div class="toolbar-container"></div>
                              <div class="content-container-wrapper"></div>
                              <div class="navigation-bar-container"></div>
             </div>`);
 
-		this.$toolbarContainer = this.$mainDiv.find('>.toolbar-container');
-		this.$contentContainerWrapper = this.$mainDiv.find('>.content-container-wrapper');
-		this.$navBarContainer = this.$mainDiv.find('>.navigation-bar-container');
+		this.$toolbarContainer = this.$mainDiv.querySelector<HTMLElement>(':scope >.toolbar-container');
+		this.$contentContainerWrapper = this.$mainDiv.querySelector<HTMLElement>(':scope >.content-container-wrapper');
+		this.$navBarContainer = this.$mainDiv.querySelector<HTMLElement>(':scope >.navigation-bar-container');
 
-		this.setToolbar(config.toolbar);
-		this.setNavigationBar(config.navigationBar);
+		this.setToolbar(config.toolbar as UiToolbar);
+		this.setNavigationBar(config.navigationBar as UiNavigationBar);
 
 		if (config.views) {
-			config.views.forEach(v => this.addView(v));
+			config.views.forEach(v => this.addView(v as UiComponent));
 		}
 
 		if (config.initialViewId) {
@@ -71,9 +72,9 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 	}
 
 	public addView(viewComponent: UiComponent) {
-		var $container = $(`<div class="content-container">`);
+		var $container = parseHtml(`<div class="content-container">`);
 		this.$contentContainerWrapper.append($container);
-		viewComponent.getMainDomElement().appendTo($container);
+		$container.appendChild(viewComponent.getMainDomElement());
 		this.views[viewComponent.getId()] = {
 			component: viewComponent,
 			$container: $container
@@ -84,7 +85,7 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 
 	public removeView(viewId: string) {
 		let view = this.views[viewId];
-		view.$container.detach();
+		view.$container.remove();
 		delete this.views[viewId];
 	}
 
@@ -104,8 +105,8 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 		} else if (animationType == UiMobileLayoutAnimation.BACKWARD) {
 			this.doViewTransition(newView, "backward-offsite", "forward-offsite");
 		} else {
-			newView.$container.addClass("active");
-			this.currentView && this.currentView.$container.removeClass("active");
+			newView.$container.classList.add("active");
+			this.currentView && this.currentView.$container.classList.remove("active");
 		}
 
 		newView.component.attachedToDom = true;
@@ -115,15 +116,17 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 	}
 
 	private doViewTransition(newView: View, inwardStyle: string, outwardStyle: string) {
-		newView.$container.addClass(inwardStyle + " active")[0].offsetWidth;
-		this.$mainDiv.addClass("transitions")[0].offsetWidth;
-		this.currentView && this.currentView.$container.addClass(outwardStyle);
-		newView.$container.removeClass(inwardStyle);
+		newView.$container.classList.add(inwardStyle + " active");
+		newView.$container.offsetWidth;
+		this.$mainDiv.classList.add("transitions");
+		this.$mainDiv.offsetWidth;
+		this.currentView && this.currentView.$container.classList.add(outwardStyle);
+		newView.$container.classList.remove(inwardStyle);
 
 		let currentViewLocalVar = this.currentView;
 		setTimeout(() => {
-			currentViewLocalVar && currentViewLocalVar.$container.removeClass("active " + outwardStyle);
-			this.$mainDiv.removeClass("transitions");
+			currentViewLocalVar && currentViewLocalVar.$container.classList.remove("active " + outwardStyle);
+			this.$mainDiv.classList.remove("transitions");
 		}, 500);
 	};
 
@@ -134,39 +137,40 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 	}
 
 	private resizeChildren() {
-		let dimensionCss = this.$contentContainerWrapper.css(["width", "height"]);
+		let computedStyle = getComputedStyle(this.$contentContainerWrapper);
 		Object.keys(this.views).forEach(viewId => {
 			let view = this.views[viewId];
-			view.$container.css(dimensionCss);
+			view.$container.style.width = computedStyle.width;
+			view.$container.style.height = computedStyle.height;
 			view.component.reLayout();
 		});
 	}
 
 	public setToolbar(toolbar: UiToolbar): void {
 		if (this.toolbar) {
-			this.$toolbarContainer[0].innerHTML = '';
+			this.$toolbarContainer.innerHTML = '';
 		}
 		this.toolbar = toolbar;
-		this.$toolbarContainer.toggleClass('hidden', !toolbar);
+		this.$toolbarContainer.classList.toggle('hidden', !toolbar);
 		if (toolbar) {
-			this.toolbar.getMainDomElement().appendTo(this.$toolbarContainer);
+			this.$toolbarContainer.appendChild(this.toolbar.getMainDomElement());
 			this.toolbar.attachedToDom = this.attachedToDom;
 		}
 	}
 
 	public setNavigationBar(navBar: UiNavigationBar) {
 		if (this.navBar) {
-			this.$navBarContainer[0].innerHTML = '';
+			this.$navBarContainer.innerHTML = '';
 		}
 		this.navBar = navBar;
-		this.$navBarContainer.toggleClass('hidden', !navBar);
+		this.$navBarContainer.classList.toggle('hidden', !navBar);
 		if (navBar) {
-			this.navBar.getMainDomElement().appendTo(this.$navBarContainer);
+			this.$navBarContainer.appendChild(this.navBar.getMainDomElement());
 			this.navBar.attachedToDom = this.attachedToDom;
 		}
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$mainDiv;
 	}
 

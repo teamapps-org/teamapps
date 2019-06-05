@@ -17,18 +17,18 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "../UiComponent";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 
 export class ElementUiComponentAdapter extends UiComponent<UiComponentConfig> {
 
-	constructor(private element: Element|JQuery) {
+	constructor(private element: HTMLElement) {
 		super({_type: "ElementUiComponentAdapter", id: ""}, null);
 	}
 
-	getMainDomElement(): JQuery {
-		return $(this.element as any);
+	getMainDomElement(): HTMLElement {
+		return this.element;
 	}
 
 	destroy(): void {

@@ -17,44 +17,45 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiPageViewBlock_Alignment, UiPageViewBlockConfig} from "../generated/UiPageViewBlockConfig";
 import {UiMessagePageViewBlockConfig} from "../generated/UiMessagePageViewBlockConfig";
-import {parseHtml, removeDangerousTags} from "./Common";
+import {insertAfter, insertBefore, parseHtml, removeDangerousTags} from "./Common";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiCitationPageViewBlockConfig} from "../generated/UiCitationPageViewBlockConfig";
 import {UiComponentPageViewBlockConfig} from "../generated/UiComponentPageViewBlockConfig";
 import {UiPageViewConfig} from "../generated/UiPageViewConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiPageViewBlockCreatorImageAlignment} from "../generated/UiPageViewBlockCreatorImageAlignment";
+import {executeWhenAttached} from "./util/ExecuteWhenAttached";
 // require("bootstrap/js/transition");
 // require("bootstrap/js/carousel");
 
 
 interface Row {
-	$row: JQuery;
-	$headerContainer: JQuery;
-	$leftColumn: JQuery;
-	$rightColumn: JQuery;
+	$row: HTMLElement;
+	$headerContainer: HTMLElement;
+	$leftColumn: HTMLElement;
+	$rightColumn: HTMLElement;
 	blocks: Block[];
 }
 
 interface Block {
-	$blockWrapper: JQuery;
-	$blockContentContainer: JQuery;
+	$blockWrapper: HTMLElement;
+	$blockContentContainer: HTMLElement;
 	block: BlockComponent<UiPageViewBlockConfig>;
 }
 
 export class UiPageView extends UiComponent<UiPageViewConfig> {
 
-	private $component: JQuery;
+	private $component: HTMLElement;
 	private rows: Row[] = [];
 
 	constructor(config: UiPageViewConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$component = $(`<div class="UiPageView"></div>`);
+		this.$component = parseHtml(`<div class="UiPageView"></div>`);
 
 		if (config.blocks) {
 			for (var i = 0; i < config.blocks.length; i++) {
@@ -63,10 +64,11 @@ export class UiPageView extends UiComponent<UiPageViewConfig> {
 		}
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$component;
 	}
 
+	@executeWhenAttached()
 	public addBlock(blockConfig: UiPageViewBlockConfig, before: boolean, otherBlockId?: string) {
 		let row;
 		if (this.rows.length == 0) {
@@ -85,30 +87,33 @@ export class UiPageView extends UiComponent<UiPageViewConfig> {
 			// TODO
 		}
 
-		let $blockWrapper = $(`<div class="block-wrapper teamapps-blurredBackgroundImage">
+		let $blockWrapper = parseHtml(`<div class="block-wrapper teamapps-blurredBackgroundImage">
     <div class="background-color-div"></div>
 </div>`);
-		let $blockContentContainer = $blockWrapper.find('.background-color-div');
+		let $blockContentContainer = $blockWrapper.querySelector<HTMLElement>(':scope .background-color-div');
 		let block = new (blockTypes[blockConfig._type as keyof typeof blockTypes] as any)(blockConfig, this._context) as BlockComponent<UiPageViewBlockConfig>;
-		block.getMainDomElement().appendTo($blockContentContainer);
+		$blockContentContainer.appendChild(block.getMainDomElement());
 		row.blocks.push({$blockWrapper, $blockContentContainer, block});
 
 		// TODO prepend vs append vs insert...
 		if (blockConfig.alignment === UiPageViewBlock_Alignment.FULL) {
-			row.$headerContainer.append($blockWrapper);
+			row.$headerContainer.appendChild($blockWrapper);
 		} else if (blockConfig.alignment === UiPageViewBlock_Alignment.LEFT) {
-			row.$leftColumn.append($blockWrapper);
+			row.$leftColumn.appendChild($blockWrapper);
 		} else if (blockConfig.alignment === UiPageViewBlock_Alignment.RIGHT) {
-			row.$rightColumn.append($blockWrapper);
+			row.$rightColumn.appendChild($blockWrapper);
 		}
 		block.attachedToDom = this.attachedToDom;
 	}
 
 	private addRow(before: boolean, otherRowIndex?: number): Row {
-		let $row = $('<div class="block-section row">');
-		let $headerContainer = $('<div class="header-container col-md-12">').appendTo($row);
-		let $leftColumn = $('<div class="left-column col-md-8">').appendTo($row);
-		let $rightColumn = $('<div class="right-column col-md-4">').appendTo($row);
+		let $row = parseHtml('<div class="block-section row">');
+		let $headerContainer = parseHtml('<div class="header-container col-md-12">');
+		$row.appendChild($headerContainer);
+		let $leftColumn = parseHtml('<div class="left-column col-md-8">');
+		$row.appendChild($leftColumn);
+		let $rightColumn = parseHtml('<div class="right-column col-md-4">');
+		$row.appendChild($rightColumn);
 		let row: Row = {
 			$row: $row,
 			$leftColumn: $leftColumn,
@@ -122,13 +127,13 @@ export class UiPageView extends UiComponent<UiPageViewConfig> {
 			this.$component.prepend($row);
 		} else if (!before && otherRowIndex == null) {
 			this.rows.push(row);
-			this.$component.append($row);
+			this.$component.appendChild($row);
 		} else if (before && otherRowIndex != null) {
 			this.rows.splice(otherRowIndex, 0, row);
-			$row.insertBefore(this.rows[otherRowIndex].$row);
+			insertBefore($row, this.rows[otherRowIndex].$row)
 		} else if (!before && otherRowIndex != null) {
 			this.rows.splice(otherRowIndex + 1, 0, row);
-			$row.insertAfter(this.rows[otherRowIndex].$row);
+			insertAfter($row, this.rows[otherRowIndex].$row)
 		}
 
 		return row;
@@ -159,7 +164,7 @@ abstract class BlockComponent<C extends UiPageViewBlockConfig> {
 		return this.config.alignment;
 	}
 
-	abstract getMainDomElement(): JQuery;
+	abstract getMainDomElement(): HTMLElement;
 
 	abstract set attachedToDom(attached: boolean);
 
@@ -173,7 +178,7 @@ abstract class BlockComponent<C extends UiPageViewBlockConfig> {
 }
 
 class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig> {
-	private $contentWrapper: JQuery;
+	private $contentWrapper: HTMLElement;
 	private $slider: HTMLElement;
 	private $images: HTMLImageElement[] = [];
 	private _attachedToDom: boolean;
@@ -181,24 +186,24 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 	constructor(config: UiMessagePageViewBlockConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$contentWrapper = $(`<div class="UiMessagePageViewBlock"></div>`);
+		this.$contentWrapper = parseHtml(`<div class="UiMessagePageViewBlock"></div>`);
 		if (config.creatorImageUrl) {
-			this.$contentWrapper.append(`<div class="creator-image-wrapper align-${UiPageViewBlockCreatorImageAlignment[config.creatorImageAlignment].toLowerCase()}">
-	${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"><img>` : ''}
-</div>`)
+			this.$contentWrapper.appendChild(parseHtml(`<div class="creator-image-wrapper align-${UiPageViewBlockCreatorImageAlignment[config.creatorImageAlignment].toLowerCase()}">
+	${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"></img>` : ''}
+</div>`))
 		}
 		if (config.headLine) {
-			this.$contentWrapper.append(`<div class="headline">${removeDangerousTags(config.headLine)}</div>`);
+			this.$contentWrapper.appendChild($(`<div class="headline">${removeDangerousTags(config.headLine)}</div>`)[0]);
 		}
 		if (config.text) {
-			this.$contentWrapper.append(`<div class="text">${removeDangerousTags(config.text)}</div>`);
+			this.$contentWrapper.appendChild($(`<div class="text">${removeDangerousTags(config.text)}</div>`)[0]);
 		}
 		if (this.config.imageUrls && this.config.imageUrls.length === 1) {
-			this.$contentWrapper.append(`<div class="image"><img src="${this.config.imageUrls[0]}"></div>`);
+			this.$contentWrapper.appendChild(parseHtml(`<div class="image"><img src="${this.config.imageUrls[0]}"></div>`));
 		}
 		if (config.imageUrls && config.imageUrls.length > 0) {
 			this.$slider = parseHtml(`<div class="slider"></div>`);
-			this.$contentWrapper.append(this.$slider);
+			this.$contentWrapper.appendChild(this.$slider);
 
 			if (this.config.imageUrls && this.config.imageUrls.length > 1) {
 
@@ -260,7 +265,7 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 		}
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$contentWrapper;
 	}
 
@@ -276,26 +281,26 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 
 class UiCitationPageViewBlock extends BlockComponent<UiCitationPageViewBlockConfig> {
 
-	private $component: JQuery;
+	private $component: HTMLElement;
 
 	constructor(config: UiCitationPageViewBlockConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$component = $(`<div class="UiCitationPageViewBlock">
+		this.$component = parseHtml(`<div class="UiCitationPageViewBlock">
     <div class="creator-image-wrapper align-${UiPageViewBlockCreatorImageAlignment[config.creatorImageAlignment].toLowerCase()}">
-		${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"><img>` : ''}
+		${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"></img>` : ''}
     </div>
     <div class="content-wrapper">
 
     </div>
 </div>`);
-		let $contentWrapper = this.$component.find('.content-wrapper');
-		$contentWrapper.append(`<div class="citation">${removeDangerousTags(config.citation)}</div>`);
-		$contentWrapper.append(`<div class="author">${removeDangerousTags(config.author)}</div>`);
+		let $contentWrapper = this.$component.querySelector<HTMLElement>(':scope .content-wrapper');
+		$contentWrapper.appendChild($(`<div class="citation">${removeDangerousTags(config.citation)}</div>`)[0]);
+		$contentWrapper.appendChild($(`<div class="author">${removeDangerousTags(config.author)}</div>`)[0]);
 	}
 
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$component;
 	}
 
@@ -310,27 +315,27 @@ class UiCitationPageViewBlock extends BlockComponent<UiCitationPageViewBlockConf
 
 class UiComponentPageViewBlock extends BlockComponent<UiComponentPageViewBlockConfig> {
 
-	private $div: JQuery;
+	private $div: HTMLElement;
 	private component: UiComponent<UiComponentConfig>;
-	private $componentWrapper: JQuery;
+	private $componentWrapper: HTMLElement;
 
 	constructor(config: UiComponentPageViewBlockConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$div = $(`<div class="UiComponentPageViewBlock" style="height:${config.height}px">
-                <div class="component-wrapper">
+		this.$div = parseHtml(`<div class="UiComponentPageViewBlock" style="height:${config.height}px">
+                <div class="component-wrapper"></div>
             </div>`);
-		this.$componentWrapper = this.$div.find('.component-wrapper');
+		this.$componentWrapper = this.$div.querySelector<HTMLElement>(':scope .component-wrapper');
 
 		if (config.title) {
-			this.$div.prepend(`<div class="title">${removeDangerousTags(config.title)}</div>`);
+			this.$div.prepend($(`<div class="title">${removeDangerousTags(config.title)}</div>`)[0]);
 		}
 
-		this.component = config.component;
-		this.component.getMainDomElement().appendTo(this.$componentWrapper);
+		this.component = config.component as UiComponent;
+		this.$componentWrapper.appendChild(this.component.getMainDomElement());
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$div;
 	}
 

@@ -63,8 +63,8 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 		let wasAttachedToDom = this._attachedToDom;
 		this._attachedToDom = attachedToDom;
 		if (attachedToDom && !wasAttachedToDom) {
-			this.width = this.getMainDomElement()[0].offsetWidth;
-			this.height = this.getMainDomElement()[0].offsetHeight;
+			this.width = this.getMainDomElement().offsetWidth;
+			this.height = this.getMainDomElement().offsetHeight;
 			this.onAttachedToDom();
 			this.onAttachedToDomChanged.fire(attachedToDom);
 			this.reLayout();
@@ -76,8 +76,8 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 	 */
 	public reLayout(force?: boolean): void {
 		if (this.attachedToDom) {
-			let availableWidth = this.getMainDomElement()[0].offsetWidth;
-			let availableHeight = this.getMainDomElement()[0].offsetHeight;
+			let availableWidth = this.getMainDomElement().offsetWidth;
+			let availableHeight = this.getMainDomElement().offsetHeight;
 			if (this.firstReLayout || force || availableWidth !== this.width || availableHeight !== this.height) {
 				this.logger.trace("resize: " + this.getId());
 				this.firstReLayout = false;
@@ -110,7 +110,9 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 	 * @return The main DOM element of this component.
 	 * This method is used by the main TeamApps UI mechanism to get the element and attach it to the DOM.
 	 */
-	public abstract getMainDomElement(): JQuery;
+	public getMainDomElement(): HTMLElement {
+		return this.getMainDomElement();
+	}
 
 	/**
 	 * Override this method to execute code that cannot be executed before the field is attached to the DOM.
@@ -146,7 +148,7 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 	public setVisible(visible: boolean = true /*undefined == true!!*/, fireEvent = true) {
 		this.visible = visible;
 		if (this.getMainDomElement() != null) { // might not have been rendered yet, if setVisible is already called in the constructor/initializer
-			this.getMainDomElement().toggleClass("invisible-component", !visible);
+			this.getMainDomElement().classList.toggle("invisible-component", !visible);
 		}
 		if (fireEvent) {
 			this.onVisibilityChanged.fire(visible);
@@ -157,9 +159,9 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 	public setStyle(selector:string, style: {[property: string]: string}) {
 		let targetElement: HTMLElement[];
 		if (!selector) {
-			targetElement = [this.getMainDomElement()[0]];
+			targetElement = [this.getMainDomElement()];
 		} else {
-			targetElement = Array.from((this.getMainDomElement()[0] as HTMLElement).querySelectorAll(":scope " + selector));
+			targetElement = Array.from((this.getMainDomElement() as HTMLElement).querySelectorAll(":scope " + selector));
 		}
 		if (targetElement.length === 0) {
 			this.logger.error("Cannot set style on non-existing element. Selector: " + selector);

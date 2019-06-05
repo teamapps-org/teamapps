@@ -136,7 +136,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 			let pointerSliderHandleOffset = (e.clientX || e.touches[0].clientX) - this.$sliderHandle.getBoundingClientRect().left;
 			let moveHandler = (e: any) => {
 				let sliderClientX = this.$slider.getBoundingClientRect().left;
-				let aPrioriNewSliderPositionX = (e.originalEvent.clientX || e.originalEvent.touches[0].clientX) - pointerSliderHandleOffset - sliderClientX;
+				let aPrioriNewSliderPositionX = (e.clientX || e.touches[0].clientX) - pointerSliderHandleOffset - sliderClientX;
 				let [minSliderX, maxSliderX] = this.getSliderMinMaxPositionX();
 				const aPrioriNewValue = this.minValue + ((aPrioriNewSliderPositionX / (maxSliderX - minSliderX)) * (this.maxValue - this.minValue));
 				let newValue = this.coerceToSteppedValue(aPrioriNewValue);

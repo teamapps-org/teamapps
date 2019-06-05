@@ -81,7 +81,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
     <div class="upload-button field-border" tabindex="0">
     	<div class="icon img img-16" style="background-image: url(${context.getIconPath(config.browseButtonIcon, 16)});"></div>
     	<div class="caption">${config.browseButtonCaption}</div>
-    	<input class="file-input" type="file" multiple tabindex="-1">
+    	<input class="file-input" type="file" multiple tabindex="-1"></input>
     </div>
 </div>`);
 
@@ -109,20 +109,20 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 			this.handleFiles(files);
 		};
 
-		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope.upload-button');
+		this.$uploadButton = this.$main.querySelector<HTMLElement>(':scope .upload-button');
 		["click", "keypress"].forEach(eventName => this.$uploadButton.addEventListener(eventName, (e: any) => {
 			if (e.button == 0 || e.keyCode === keyCodes.enter || e.keyCode === keyCodes.space) {
 				this.$fileInput.click();
 				return false; // no scrolling when space is pressed!
 			}
 		}));
-		this.$fileInput = this.$main.querySelector<HTMLInputElement>(':scope.file-input');
+		this.$fileInput = this.$main.querySelector<HTMLInputElement>(':scope .file-input');
 		this.$fileInput.addEventListener('change',() => {
 			const files = (<HTMLInputElement>this.$fileInput).files;
 			this.handleFiles(files);
 		});
 
-		this.$fileList = this.$main.querySelector<HTMLElement>(':scope.file-list');
+		this.$fileList = this.$main.querySelector<HTMLElement>(':scope .file-list');
 		this.$fileList.addEventListener('click', e => {
 			if (this.getTransientValue().length == 0) {
 				this.$fileInput.click();
@@ -200,11 +200,11 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 	}
 
 	setBrowseButtonCaption(browseButtonCaption: string): void {
-		this.$uploadButton.querySelector<HTMLElement>(":scope.caption").textContent = browseButtonCaption;
+		this.$uploadButton.querySelector<HTMLElement>(":scope .caption").textContent = browseButtonCaption;
 	}
 
 	setBrowseButtonIcon(browseButtonIcon: string): void {
-		this.$uploadButton.querySelector<HTMLElement>(":scope.icon")
+		this.$uploadButton.querySelector<HTMLElement>(":scope .icon")
 			.style.backgroundImage = this._context.getIconPath(browseButtonIcon, 16);
 	}
 
@@ -354,12 +354,12 @@ class UiFileItem {
 			<div class="file-description"></div>
 			<div class="file-size"></div>
 		</a>`);
-		this.$fileIcon = this.$main.querySelector<HTMLElement>(":scope.file-icon");
-		this.$fileName = this.$main.querySelector<HTMLElement>(":scope.file-name");
-		this.$fileDescription = this.$main.querySelector<HTMLElement>(":scope.file-description");
-		this.$fileSize = this.$main.querySelector<HTMLElement>(":scope.file-size");
-		this.$progressIndicator = this.$main.querySelector<HTMLElement>(":scope.progress-indicator");
-		this.$deleteButton = this.$main.querySelector<HTMLElement>(":scope.delete-button");
+		this.$fileIcon = this.$main.querySelector<HTMLElement>(":scope .file-icon");
+		this.$fileName = this.$main.querySelector<HTMLElement>(":scope .file-name");
+		this.$fileDescription = this.$main.querySelector<HTMLElement>(":scope .file-description");
+		this.$fileSize = this.$main.querySelector<HTMLElement>(":scope .file-size");
+		this.$progressIndicator = this.$main.querySelector<HTMLElement>(":scope .progress-indicator");
+		this.$deleteButton = this.$main.querySelector<HTMLElement>(":scope .delete-button");
 		this.$main.addEventListener('click', (e) => {
 			if (e.target === this.$deleteButton) {
 				if (this.uploader) {
@@ -384,7 +384,7 @@ class UiFileItem {
 		this.update(this.config);
 
 		this.progressIndicator = UiFileItem.createProgressIndicator(this.displayMode);
-		this.progressIndicator.getMainDomElement().appendTo(this.$progressIndicator);
+		this.$progressIndicator.appendChild(this.progressIndicator.getMainDomElement());
 
 		if (file.size > this.maxBytes) {
 			this.progressIndicator.setErrorMessage(this.fileTooLargeMessage);
@@ -420,7 +420,7 @@ class UiFileItem {
 		if (this.progressIndicator != null) {
 			this.progressIndicator.getMainDomElement().remove();
 			this.progressIndicator = UiFileItem.createProgressIndicator(displayMode);
-			this.progressIndicator.getMainDomElement().appendTo(this.$progressIndicator);
+			this.$progressIndicator.appendChild(this.progressIndicator.getMainDomElement());
 		}
 		this.$fileName.classList.toggle("line-clamp-2", displayMode == UiFileFieldDisplayType.FLOATING);
 		this.$fileIcon.classList.toggle("img-48", displayMode == UiFileFieldDisplayType.FLOATING);

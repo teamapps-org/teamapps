@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiGaugeCommandHandler, UiGaugeConfig} from "../generated/UiGaugeConfig";
 import {UiGaugeOptionsConfig} from "../generated/UiGaugeOptionsConfig";
 import {UiComponent} from "./UiComponent";
@@ -26,15 +26,16 @@ import {executeWhenAttached} from "./util/ExecuteWhenAttached";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {LinearGauge, RadialGauge} from "canvas-gauges";
 import {debouncedMethod, DebounceMode} from "./util/debounce";
+import {parseHtml} from "./Common";
 
 export class UiGauge extends UiComponent<UiGaugeConfig> implements UiGaugeCommandHandler {
-	private $main: JQuery;
+	private $main: HTMLElement;
 	private gauge: LinearGauge;
 	private value: number;
 
 	constructor(config: UiGaugeConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = $(`<div class="UiGauge" data-teamapps-id="${this.getId()}"><canvas></canvas></div>`);
+		this.$main = parseHtml(`<div class="UiGauge" data-teamapps-id="${this.getId()}"><canvas></canvas></div>`);
 		this.value = config.options.value;
 		this.createGauge();
 	}
@@ -43,7 +44,7 @@ export class UiGauge extends UiComponent<UiGaugeConfig> implements UiGaugeComman
 	private createGauge() {
 		if (this.getWidth() > 0 && this.getHeight() > 0) {
 			let options = this.createOptions(this._config.options);
-			options.renderTo = this.$main.find("canvas")[0];
+			options.renderTo = this.$main.querySelector<HTMLElement>(":scope canvas");
 			if (this._config.options.linearGauge) {
 				this.gauge = new LinearGauge(options);
 			} else {
@@ -56,7 +57,7 @@ export class UiGauge extends UiComponent<UiGaugeConfig> implements UiGaugeComman
 	destroy(): void {
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 

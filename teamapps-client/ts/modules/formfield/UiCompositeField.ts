@@ -59,11 +59,11 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		this.subFields = [];
 		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(config);
 		subFieldSkeletons.forEach(subFieldSkeleton => {
-			const field = subFieldSkeleton.config.field;
-			field.getMainDomElement().appendTo(subFieldSkeleton.$cell);
+			const field = subFieldSkeleton.config.field as UiField;
+			subFieldSkeleton.$cell.appendChild(field.getMainDomElement());
 			field.onValueChanged.addListener((eventObject: ValueChangeEventData ) => {
 				this.onSubFieldValueChanged.fire({
-					fieldName: subFieldSkeleton.config.field.fieldName,
+					fieldName: "TODO!",
 					originalEmitter: field,
 					...eventObject
 				});
@@ -167,7 +167,8 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 			if (committedValue == null) {
 				subField.field.setCommittedValue(null);
 			} else {
-				subField.field.setCommittedValue(committedValue[subField.config.field.fieldName]);
+				let fieldName = "TODO!"; //(subField.config.field as UiField).fieldName;
+				subField.field.setCommittedValue(committedValue[fieldName]);
 			}
 		});
 		UiCompositeField.updateDeclaredSubfieldVisibilities(this.subFields, committedValue);
@@ -180,7 +181,9 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 			.forEach(subField => {
 				let coordinates = subField.config.row + ',' + subField.config.col;
 				if (visibleFieldsByCell[coordinates] != null) {
-					UiCompositeField.logger.warn(`Two or more sub-fields are visible in the same cell in UiCompositeField! Showing the last one only. Conflicting fieldNames: ${visibleFieldsByCell[coordinates].config.field.fieldName}, ${subField.config.field.fieldName}`);
+					let fieldName = "TODO!"; // visibleFieldsByCell[coordinates].config.field.fieldName;
+					let otherFieldName = "TODO!"; //subField.config.field.fieldName;
+					UiCompositeField.logger.warn(`Two or more sub-fields are visible in the same cell in UiCompositeField! Showing the last one only. Conflicting fieldNames: ${fieldName}, ${otherFieldName}`);
 				}
 				visibleFieldsByCell[coordinates] = subField;
 			});
@@ -224,7 +227,9 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 	}
 
 	private getSubFieldByFieldName(fieldName: string): SubField {
-		return this.subFields.filter(sf => sf.config.field.fieldName === fieldName)[0];
+		console.error("TODO");
+		return null;
+		// return this.subFields.filter(sf => sf.config.field.fieldName === fieldName)[0];
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
@@ -267,7 +272,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		$paddingWrapper.style.height = config.rowHeights.reduce((sum, height) => sum + height, 0) + "px";
 		let subFieldSkeletons: SubField[] = [];
 		config.subFields.forEach(subFieldConfig => {
-			const uiField: UiField = subFieldConfig.field;
+			const uiField: UiField = subFieldConfig.field as UiField;
 			let $cell = parseHtml(`<div class="subfield-wrapper" data-field-propertyname="${subFieldConfig.propertyName}" data-row="${subFieldConfig.row}" data-col="${subFieldConfig.col}" data-rowspan="${subFieldConfig.rowSpan}" data-colspan="${subFieldConfig.colSpan}"></div>`);
 			$paddingWrapper.appendChild($cell);
 			if (config.drawFieldBorders) {
@@ -375,7 +380,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		if (typeof value === "boolean") {
 			let affectedSubFields = this.subFields
 				.filter(subField => subField.config.visibilityPropertyName === fieldName);
-			this.logger.debug("This value change affects the visibilities of the following fields: " + affectedSubFields.map(f => f.config.field.fieldName).join(', '));
+			this.logger.debug("This value change affects the visibilities of the following fields: " + affectedSubFields.map(f => "TODO!" /*f.config.field.fieldName*/).join(', '));
 			affectedSubFields
 				.forEach(subField => subField.visible = value);
 			UiCompositeField.updateSubFieldVisibilities(this.subFields);

@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComboBox} from "./formfield/UiComboBox";
 
 import {UiTree_NodeSelectedEvent, UiTree_RequestTreeDataEvent, UiTree_TextInputEvent, UiTreeCommandHandler, UiTreeConfig, UiTreeEventSource} from "../generated/UiTreeConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {defaultTreeQueryFunctionFactory, ResultCallback, trivialMatch, TrivialTree} from "trivial-components";
 import {UiComponent} from "./UiComponent";
-import {buildObjectTree, buildTreeEntryHierarchy, matchingModesMapping, NodeWithChildren, Renderer} from "./Common";
+import {buildObjectTree, buildTreeEntryHierarchy, matchingModesMapping, NodeWithChildren, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -39,7 +39,7 @@ export class UiTree extends UiComponent<UiTreeConfig> implements UiTreeCommandHa
 	public readonly onNodeSelected: TeamAppsEvent<UiTree_NodeSelectedEvent> = new TeamAppsEvent(this);
 	public readonly onRequestTreeData: TeamAppsEvent<UiTree_RequestTreeDataEvent> = new TeamAppsEvent(this);
 
-	private $panel: JQuery;
+	private $panel: HTMLElement;
 	private trivialTree: TrivialTree<UiTreeRecordConfig>;
 	private lastResultCallback: (result: NodeWithChildren<UiTreeRecordConfig>[]) => void;
 	private nodes: UiTreeRecordConfig[];
@@ -48,8 +48,9 @@ export class UiTree extends UiComponent<UiTreeConfig> implements UiTreeCommandHa
 
 	constructor(config: UiTreeConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = $('<div class="UiTree" data-teamapps-id="${config.id}">');
-		const $input = $('<input autocomplete="off">').appendTo(this.$panel);
+		this.$panel = parseHtml('<div class="UiTree" data-teamapps-id="${config.id}">');
+		const $input = parseHtml('<input autocomplete="off"></input>');
+		this.$panel.appendChild($input);
 
 		this.templateRenderers = context.templateRegistry.createTemplateRenderers(config.templates);
 
@@ -106,7 +107,7 @@ export class UiTree extends UiComponent<UiTreeConfig> implements UiTreeCommandHa
 		}
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$panel;
 	}
 

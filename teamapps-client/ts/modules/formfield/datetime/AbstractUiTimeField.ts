@@ -91,8 +91,8 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialComboBox.onFocus.addListener(() => this.getMainDomElement()[0].classList.add("focus"));
-		this.trivialComboBox.onBlur.addListener(() => this.getMainDomElement()[0].classList.remove("focus"));
+		this.trivialComboBox.onFocus.addListener(() => this.getMainDomElement().classList.add("focus"));
+		this.trivialComboBox.onBlur.addListener(() => this.getMainDomElement().classList.remove("focus"));
 	}
 
 	public getMainInnerDomElement(): HTMLElement {

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import * as moment from "moment-timezone";
-import * as $ from "jquery";
+
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiWindow, UiWindowListener} from "./UiWindow";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
@@ -26,7 +26,7 @@ import {UiWindowConfig} from "../generated/UiWindowConfig";
 import {UiNotificationConfig} from "../generated/UiNotificationConfig";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, exitFullScreen, insertAtIndex, showNotification} from "./Common";
+import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, insertAtIndex, parseHtml, showNotification} from "./Common";
 import {UiRootPanelCommandHandler, UiRootPanelConfig} from "../generated/UiRootPanelConfig";
 import {UiComponentRevealAnimation} from "../generated/UiComponentRevealAnimation";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -42,7 +42,7 @@ require("moment-jdateformatparser");
 
 
 interface ChildComponent {
-	$wrapper: JQuery,
+	$wrapper: HTMLElement,
 	component: UiComponent<UiComponentConfig>
 }
 
@@ -58,12 +58,12 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	} = {};
 	private static WINDOWS_BY_ID: { [windowId: string]: UiWindow } = {};
 
-	private $root: JQuery;
+	private $root: HTMLElement;
 	private childComponentsById: {[id: string]: ChildComponent} = {};
 	private visibleChildComponent: ChildComponent;
-	private $backgroundTransitionStyle: JQuery;
-	private $backgroundStyle: JQuery;
-	private $imagePreloadDiv: JQuery;
+	private $backgroundTransitionStyle: HTMLElement;
+	private $backgroundStyle: HTMLElement;
+	private $imagePreloadDiv: HTMLElement;
 
 	private backgroundImage: string;
 	private blurredBackgroundImage: string;
@@ -82,32 +82,32 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		super(config, context);
 		UiRootPanel.ALL_ROOT_PANELS_BY_ID[config.id] = this;
 
-		this.$root = $(`<div data-background-container-id="${config.id}" class="UiRootPanel teamapps-backgroundImage">
+		this.$root = parseHtml(`<div data-background-container-id="${config.id}" class="UiRootPanel teamapps-backgroundImage">
               <div class="image-preload-div"></div>
               <style data-style-type="backgroundTransitionStyle"></style>
               <style data-style-type="backgroundStyle"></style>
               <style></style>
 		</div>`);
-		this.$imagePreloadDiv = this.$root.find(".image-preload-div");
-		this.$backgroundTransitionStyle = this.$root.find("[data-style-type='backgroundTransitionStyle']");
-		this.$backgroundStyle = this.$root.find("[data-style-type='backgroundStyle']");
+		this.$imagePreloadDiv = this.$root.querySelector<HTMLElement>(":scope .image-preload-div");
+		this.$backgroundTransitionStyle = this.$root.querySelector<HTMLElement>(":scope [data-style-type='backgroundTransitionStyle']");
+		this.$backgroundStyle = this.$root.querySelector<HTMLElement>(":scope [data-style-type='backgroundStyle']");
 
 		if (config.childComponents != null && config.childComponents.length > 0) {
-			config.childComponents.forEach(c => this.addChildComponent(c, false));
-			this.setVisibleChildComponent(config.visibleChildComponentId || config.childComponents[0].id, null, 0);
+			config.childComponents.forEach(c => this.addChildComponent(c as UiComponent, false));
+			this.setVisibleChildComponent(config.visibleChildComponentId || (config.childComponents[0] as UiComponent).getId(), null, 0);
 		}
 
 		this.setOptimizedForTouch(context.config.optimizedForTouch);
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$root;
 	}
 
 	public addChildComponent(component: UiComponent, show: boolean) {
-		let $childComponentContainer = $(`<div class="child-component-wrapper ${show ? 'active' : ''}">`)
-			.appendTo(this.$root);
-		component.getMainDomElement().appendTo($childComponentContainer);
+		let $childComponentContainer = parseHtml(`<div class="child-component-wrapper ${show ? 'active' : ''}">`)
+		this.$root.appendChild($childComponentContainer);
+		$childComponentContainer.appendChild(component.getMainDomElement());
 		this.childComponentsById[component.getId()] = {
 			component: component,
 			$wrapper: $childComponentContainer
@@ -121,13 +121,13 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	public setVisibleChildComponent(childComponentId: string, animation: UiComponentRevealAnimation | null, animationDuration: number): void {
 		if (childComponentId == null) {
 			this.visibleChildComponent = null;
-			this.childComponents.forEach(c => c.$wrapper.removeClass('active'));
+			this.childComponents.forEach(c => c.$wrapper.classList.remove('active'));
 		} else {
 			let childComponent = this.childComponentsById[childComponentId];
 			if (childComponent) {
 				this.visibleChildComponent = childComponent;
-				this.childComponents.forEach(c => c.$wrapper.removeClass('active'));
-				childComponent.$wrapper.addClass('active');
+				this.childComponents.forEach(c => c.$wrapper.classList.remove('active'));
+				childComponent.$wrapper.classList.add('active');
 				this.visibleChildComponent.component.reLayout();
 			}
 		}
@@ -137,7 +137,7 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		let childComponent = this.childComponentsById[childComponentId];
 		delete this.childComponentsById[childComponentId];
 		if (childComponent) {
-			childComponent.$wrapper.detach();
+			childComponent.$wrapper.remove();
 		}
 	}
 
@@ -229,14 +229,14 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	}
 
 	private updateBackground(animationDuration: number) {
-		this.$backgroundTransitionStyle.text(`
+		this.$backgroundTransitionStyle.textContent = `
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-backgroundImage,
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-blurredBackgroundImage {
                     transition: background-image ${animationDuration}ms ease-in-out, background-color ${animationDuration}ms ease-in-out;
                 }
-            `);
-		this.$root[0].clientWidth; // ensure the css is applied!
-		this.$backgroundStyle.text(`
+            `;
+		this.$root.clientWidth; // ensure the css is applied!
+		this.$backgroundStyle.textContent = `
 				/*[data-background-container-id='${this.getId()}']*/.teamapps-backgroundImage,
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-backgroundImage {
                     background-color: ${this.backgroundColor || ''};
@@ -246,21 +246,21 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-blurredBackgroundImage {
                     background-image: ${this.blurredBackgroundImage ? `url(${this.blurredBackgroundImage})` : 'none'};
                 }
-            `);
+            `;
 	}
 
 	public static showWindow(uiWindow: UiWindow, animationDuration = 1000, context?: TeamAppsUiContext) {
 		this.ALL_ROOT_PANELS.forEach(rootPanel => {
 			rootPanel.childComponents.forEach(childComponent => {
-				rootPanel.visibleChildComponent.$wrapper.css({
+				css(rootPanel.visibleChildComponent.$wrapper, {
 					transition: `opacity ${animationDuration}ms, filter ${animationDuration}ms`
 				});
 			});
 
 		});
 
-		uiWindow.getMainDomElement().appendTo(document.body);
-		uiWindow.getMainDomElement().attr("data-background-container-id", this.ALL_ROOT_PANELS[0].getId());
+		document.body.appendChild(uiWindow.getMainDomElement());
+		uiWindow.getMainDomElement().setAttribute("data-background-container-id", this.ALL_ROOT_PANELS[0].getId());
 		uiWindow.attachedToDom = true;
 		uiWindow.setListener({
 			onWindowClosed: (window, animationDuration) => this.closeWindow(window.getId(), animationDuration)
@@ -269,13 +269,13 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		uiWindow.show(animationDuration);
 
 		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			rootPanel.getMainDomElement().toggleClass("modal-window-mode", uiWindow.isModal());
+			rootPanel.getMainDomElement().classList.toggle("modal-window-mode", uiWindow.isModal());
 		});
 	}
 
 	public static closeWindow(windowId: string, animationDuration: number) {
 		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			rootPanel.getMainDomElement().removeClass('modal-window-mode');
+			rootPanel.getMainDomElement().classList.remove('modal-window-mode');
 		});
 
 		let uiWindow = this.WINDOWS_BY_ID[windowId];
@@ -283,7 +283,7 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		delete this.WINDOWS_BY_ID[windowId];
 
 		setTimeout(() => {
-			uiWindow.getMainDomElement().detach();
+			uiWindow.getMainDomElement().remove();
 		}, animationDuration);
 	};
 
@@ -305,8 +305,8 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	}
 
 	public static buildRootPanel(containerElementId: string, uiRootPanel: UiRootPanel, context?: TeamAppsUiContext): void {
-		const $container = $(containerElementId ? "#" + containerElementId : document.body as any);
-		uiRootPanel.getMainDomElement().appendTo($container);
+		const $container = containerElementId ? document.querySelector("#" + containerElementId) : document.body;
+		$container.appendChild(uiRootPanel.getMainDomElement());
 		uiRootPanel.attachedToDom = true;
 	}
 
@@ -392,7 +392,7 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 			modal: true,
 			content: null
 		}, context);
-		let $contentElement = $(`<div class="UiGenericErrorMessage">
+		let $contentElement = parseHtml(`<div class="UiGenericErrorMessage">
 	<div class="icon img img-48" style="background-image: url(/resources/window-close-grey.png)"></div>
 	<div class="message">${message}</div>
 	<div class="option-buttons">
@@ -400,17 +400,17 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	</div>
 </div>`);
 		uiWindow.setContent(new ElementUiComponentAdapter($contentElement));
-		$contentElement.find('.ok').on('click', () => {
+		$contentElement.querySelector<HTMLElement>(':scope .ok').addEventListener('click', () => {
 			uiWindow.close(500);
 		});
-		$contentElement.find('.reload').on('click', () => {
+		$contentElement.querySelector<HTMLElement>(':scope .reload').addEventListener('click', () => {
 			window.location.reload(true);
 		});
 		UiRootPanel.showWindow(uiWindow, 500);
 	}
 
 	setOptimizedForTouch(optimizedForTouch: boolean) {
-		this.$root.toggleClass("optimized-for-touch", optimizedForTouch);
+		this.$root.classList.toggle("optimized-for-touch", optimizedForTouch);
 		document.body.classList.toggle("optimized-for-touch", optimizedForTouch); // needed for popups and maximized panels... TODO either only use this or change implementation
 	}
 }

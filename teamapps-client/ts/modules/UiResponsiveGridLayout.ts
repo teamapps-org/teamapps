@@ -23,11 +23,12 @@ import {UiGridLayout} from "./micro-components/UiGridLayout";
 import {UiResponsiveGridLayoutCommandHandler, UiResponsiveGridLayoutConfig} from "../generated/UiResponsiveGridLayoutConfig";
 import {UiResponsiveGridLayoutPolicyConfig} from "../generated/UiResponsiveGridLayoutPolicyConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {parseHtml} from "./Common";
 
 export class UiResponsiveGridLayout extends UiComponent<UiResponsiveGridLayoutConfig> implements UiResponsiveGridLayoutCommandHandler {
 
-	private $main: JQuery;
-	private $gridLayout: JQuery;
+	private $main: HTMLElement;
+	private $gridLayout: HTMLElement;
 
 	private layoutsFromSmallToLargeMinApplicableWidth: { minApplicableWidth: number, layout: UiGridLayout }[];
 	private currentLayout: UiGridLayout;
@@ -35,15 +36,15 @@ export class UiResponsiveGridLayout extends UiComponent<UiResponsiveGridLayoutCo
 	constructor(config: UiResponsiveGridLayoutConfig,
 	            context: TeamAppsUiContext) {
 		super(config, context);
-		this.$main = $(`<div class="UiResponsiveGridLayout">
+		this.$main = parseHtml(`<div class="UiResponsiveGridLayout">
 	<div class="UiGridLayout"></div>
 </div>`);
-		this.$gridLayout = this.$main.find(">.UiGridLayout");
+		this.$gridLayout = this.$main.querySelector<HTMLElement>(":scope >.UiGridLayout");
 		this.setFillHeight(config.fillHeight);
 		this.updateLayoutPolicies(config.layoutPolicies);
 	}
 
-	getMainDomElement(): JQuery {
+	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -87,7 +88,7 @@ export class UiResponsiveGridLayout extends UiComponent<UiResponsiveGridLayoutCo
 	}
 
 	public setFillHeight(fillHeight: boolean) {
-		this.$main.toggleClass("fill-height", !!fillHeight);
+		this.$main.classList.toggle("fill-height", !!fillHeight);
 	}
 
 

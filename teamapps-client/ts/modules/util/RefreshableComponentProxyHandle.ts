@@ -63,14 +63,14 @@ export class RefreshableComponentProxyHandle<T extends UiComponent> {
 			}
 		});
 
-		let parentElement: HTMLElement = oldComponent.getMainDomElement()[0].parentElement;
-		const elementIndex = this.getElementIndex(oldComponent.getMainDomElement()[0]);
+		let parentElement: HTMLElement = oldComponent.getMainDomElement().parentElement;
+		const elementIndex = this.getElementIndex(oldComponent.getMainDomElement());
 		if (parentElement != null) {
 			insertAtIndex(parentElement, newComponent.getMainDomElement(), elementIndex);
 			newComponent.attachedToDom = true;
 		}
 
-		oldComponent.getMainDomElement().detach();
+		oldComponent.getMainDomElement().remove();
 		oldComponent.destroy();
 		this._component = newComponent;
 	}

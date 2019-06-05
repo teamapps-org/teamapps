@@ -84,7 +84,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 				}
 			}
 		}));
-		this.setDropDownComponent(config.dropDownComponent);
+		this.setDropDownComponent(config.dropDownComponent as UiComponent);
 	}
 
 	setDropDownSize(minDropDownWidth: number, minDropDownHeight: number): void {
@@ -118,7 +118,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 		// lazy-init!
 		if (this._dropDown == null) {
 			this._dropDown = new UiDropDown();
-			this._dropDown.getMainDomElement()[0].classList.add("UiButton-dropdown");
+			this._dropDown.getMainDomElement().classList.add("UiButton-dropdown");
 			this._dropDown.onClose.addListener(eventObject => this.getMainInnerDomElement().classList.remove("open"))
 		}
 		return this._dropDown;

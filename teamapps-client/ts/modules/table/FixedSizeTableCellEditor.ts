@@ -20,6 +20,7 @@
 import {AbstractTableEditor} from "./AbstractTableEditor";
 import {UiField} from "../formfield/UiField";
 import {UiIdentifiableClientRecordConfig} from "../../generated/UiIdentifiableClientRecordConfig";
+import {css} from "../Common";
 
 
 export class FixedSizeTableCellEditor extends AbstractTableEditor {
@@ -56,17 +57,17 @@ export class FixedSizeTableCellEditor extends AbstractTableEditor {
 		const preferredHeight = 200;
 
 		let $uiField = uiField.getMainDomElement();
-		$uiField.css({
+		css($uiField, {
 			width: Math.max(editorOptions.position.width, Math.min(preferredWidth, editorOptions.gridPosition.width)),
 			height: Math.max(editorOptions.position.height, Math.min(preferredHeight, editorOptions.gridPosition.height)),
 			left:Math.min(-1, availableSpaceRight - preferredWidth) + "px",
 			top:Math.min(-1, availableSpaceBottom - preferredHeight) + "px",
-			"min-width": "unset",
-			"min-height": "unset",
-			"max-width": "unset",
-			"max-height": "unset"
+			minWidth: "unset",
+			minHeight: "unset",
+			maxWidth: "unset",
+			maxHeight: "unset"
 		});
-		$uiField.appendTo(this.container);
+		this.container.appendChild($uiField);
 		uiField.attachedToDom = true;
 	}
 

@@ -17,35 +17,34 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiDocumentViewerCommandHandler, UiDocumentViewerConfig} from "../generated/UiDocumentViewerConfig";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
-import {bind} from "./util/Bind";
-import {enableScrollViaDragAndDrop, generateUUID} from "./Common";
+import {css, enableScrollViaDragAndDrop, generateUUID, parseHtml} from "./Common";
 import {UiBorderConfig} from "../generated/UiBorderConfig";
 import {createUiBorderCssString, createUiShadowCssString} from "./util/CssFormatUtil";
 import {UiShadowConfig} from "../generated/UiShadowConfig";
 
 interface Page {
-	$img: JQuery;
+	$img: HTMLElement;
 	naturalWidth?: number;
 	naturalHeight?: number;
 }
 
-export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implements UiDocumentViewerCommandHandler{
+export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implements UiDocumentViewerCommandHandler {
 
-	private $componentWrapper: JQuery;
-	private $pagesContainerWrapper: JQuery;
-	private $pagesContainer: JQuery;
+	private $componentWrapper: HTMLElement;
+	private $pagesContainerWrapper: HTMLElement;
+	private $pagesContainer: HTMLElement;
 	private zoomFactor: number;
 	private displayMode: UiPageDisplayMode;
 	private pages: Page[] = [];
 
 	private uuidClass: string;
-	private $styleTag: JQuery;
+	private $styleTag: HTMLElement;
 	private pageBorder: UiBorderConfig;
 	private pageSpacing: number;
 	private pageShadow: UiShadowConfig;
@@ -55,7 +54,7 @@ export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implem
 
 		this.uuidClass = `UiDocumentViewer-${generateUUID()}`;
 
-		this.$componentWrapper = $(`<div id="${config.id}" class="UiDocumentViewer ${this.uuidClass}">  
+		this.$componentWrapper = parseHtml(`<div id="${config.id}" class="UiDocumentViewer ${this.uuidClass}">  
 		    <style></style>
 			<div class="toolbar-container"></div>  
 			<div class="pages-container-wrapper">
@@ -63,9 +62,9 @@ export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implem
 		    </div>
 	    </div>`);
 
-		this.$pagesContainerWrapper = this.$componentWrapper.find(".pages-container-wrapper");
-		this.$styleTag = this.$componentWrapper.find("style");
-		this.$pagesContainer = this.$componentWrapper.find('.pages-container');
+		this.$pagesContainerWrapper = this.$componentWrapper.querySelector<HTMLElement>(":scope .pages-container-wrapper");
+		this.$styleTag = this.$componentWrapper.querySelector<HTMLElement>(":scope style");
+		this.$pagesContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .pages-container');
 		enableScrollViaDragAndDrop(this.$pagesContainerWrapper);
 
 		this.zoomFactor = config.zoomFactor;
@@ -82,11 +81,11 @@ export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implem
 	}
 
 	public setPageUrls(pageUrls: string[]) {
-		this.$pagesContainer[0].innerHTML = '';
+		this.$pagesContainer.innerHTML = '';
 		pageUrls.forEach((pageUrl) => {
 			const img = new Image();
 			let page: Page = {
-				$img: $(img),
+				$img: img,
 				naturalWidth: 0,
 				naturalHeight: 0
 			};
@@ -118,50 +117,50 @@ export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implem
 	}
 
 	private updateImageSizes() {
-		let viewPortWidth = this.$pagesContainerWrapper.width() - 2 * this._config.padding;
-		let viewPortHeight = this.$pagesContainerWrapper.height() - 2 * this._config.padding;
+		let viewPortWidth = $(this.$pagesContainerWrapper).width() - 2 * this._config.padding;
+		let viewPortHeight = $(this.$pagesContainerWrapper).height() - 2 * this._config.padding;
 		let viewPortAspectRatio = viewPortWidth / viewPortHeight;
 
 		this.pages.forEach((p) => {
 			let imageAspectRatio = p.naturalWidth / p.naturalHeight;
 			this.logger.trace("image: " + p.naturalWidth + "/" + p.naturalHeight + " = " + imageAspectRatio);
-			this.logger.trace("viewport: " + this.$pagesContainerWrapper.innerWidth() + "/" + this.$pagesContainer.innerHeight() + " = " + viewPortAspectRatio);
+			this.logger.trace("viewport: " + viewPortWidth + "/" + viewPortHeight + " = " + viewPortAspectRatio);
 			if (this.displayMode === UiPageDisplayMode.FIT_WIDTH) {
-				p.$img.css({
+				css(p.$img, {
 					width: Math.floor(viewPortWidth * this.zoomFactor) + "px",
 					height: "auto"
 				});
 			} else if (this.displayMode === UiPageDisplayMode.FIT_HEIGHT) {
-				p.$img.css({
+				css(p.$img, {
 					width: "auto",
 					height: Math.floor(viewPortHeight * this.zoomFactor) + "px"
 				});
 			} else if (this.displayMode === UiPageDisplayMode.FIT_SIZE) {
 				if (imageAspectRatio > viewPortAspectRatio) {
-					p.$img.css({
+					css(p.$img, {
 						width: Math.floor(viewPortWidth * this.zoomFactor) + "px",
 						height: "auto"
 					});
 				} else {
-					p.$img.css({
+					css(p.$img, {
 						width: "auto",
 						height: Math.floor(viewPortHeight * this.zoomFactor) + "px"
 					});
 				}
 			} else if (this.displayMode === UiPageDisplayMode.COVER) {
 				if (imageAspectRatio < viewPortAspectRatio) {
-					p.$img.css({
+					css(p.$img, {
 						width: Math.floor(viewPortWidth * this.zoomFactor) + "px",
 						height: "auto"
 					});
 				} else {
-					p.$img.css({
+					css(p.$img, {
 						width: "auto",
 						height: Math.floor(viewPortHeight * this.zoomFactor) + "px"
 					});
 				}
 			} else {
-				p.$img.css({
+				css(p.$img, {
 					width: (p.naturalWidth * this.zoomFactor) + "px",
 					height: "auto"
 				});
@@ -173,7 +172,7 @@ export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implem
 		this.updateImageSizes();
 	}
 
-	public getMainDomElement(): JQuery {
+	public getMainDomElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 
@@ -187,7 +186,7 @@ export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implem
 	}
 
 	setPaddding(padding: number): void {
-		this.$pagesContainer.css("padding", padding);
+		this.$pagesContainer.style.padding = padding + "px";
 	}
 
 	setPageSpacing(pageSpacing: number): void {
@@ -201,15 +200,15 @@ export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implem
 	}
 
 	private updateStyles() {
-		this.$styleTag[0].innerHTML = '';
-		this.$styleTag.text(`
+		this.$styleTag.innerHTML = '';
+		this.$styleTag.innerText = `
 		.${this.uuidClass} .page {
             ${createUiBorderCssString(this.pageBorder)}
             ${createUiShadowCssString(this.pageShadow)}
         }
         .${this.uuidClass} .page:not(:last-child) {
             margin-bottom: ${this.pageSpacing}px !important;
-        }`);
+        }`;
 	}
 }
 

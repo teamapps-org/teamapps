@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as $ from "jquery";
+
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -39,7 +39,7 @@ export class UiFlexContainer extends UiComponent<UiFlexContainerConfig> implemen
 		this.$main.style.alignItems = this.convertToCssValueString(UiCssAlignItems[config.alignItems]);
 		this.$main.style.justifyContent = this.convertToCssValueString(UiCssJustifyContent[config.justifyContent]);
 
-		config.components.forEach(c =>this.addComponent(c));
+		config.components.forEach(c =>this.addComponent(c as UiComponent));
 	}
 
 	private convertToCssValueString(enumValueName: string) {
@@ -54,17 +54,17 @@ export class UiFlexContainer extends UiComponent<UiFlexContainerConfig> implemen
 		this.components.forEach(c => c.reLayout());
 	}
 
-	getMainDomElement(): JQuery {
-		return $(this.$main);
+	getMainDomElement(): HTMLElement {
+		return this.$main;
 	}
 
 	addComponent(component: UiComponent): void {
 		this.components.push(component);
-		this.$main.appendChild(component.getMainDomElement()[0]);
+		this.$main.appendChild(component.getMainDomElement());
 	}
 
 	removeComponent(component: UiComponent): void {
-		this.$main.removeChild(component.getMainDomElement()[0]);
+		this.$main.removeChild(component.getMainDomElement());
 		this.components = this.components.filter(c => c !== component);
 	}
 
