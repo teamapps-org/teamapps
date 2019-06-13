@@ -61,7 +61,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 
 	private committedValue: V;
 
-	private editingMode: UiFieldEditingMode;
+	private editingMode: UiFieldEditingMode = UiFieldEditingMode.EDITABLE;
 	private $fieldWrapper: HTMLElement;
 
 	private _messageTooltip: {
@@ -188,7 +188,12 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 
 	abstract getTransientValue(): V;
 
-	abstract getDefaultValue(): V; // the value to be set if no other value has been set.
+	/**
+	 * the value to be set if no other value has been set.
+	 */
+	public getDefaultValue(): V {
+		return null;
+	}
 
 	protected abstract displayCommittedValue(): void;
 
@@ -231,7 +236,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		return changed;
 	}
 
-	public setEditingMode(editingMode: UiFieldEditingMode): void {
+	public setEditingMode(editingMode: UiFieldEditingMode = UiFieldEditingMode.EDITABLE): void {
 		const oldEditingMode = this.editingMode;
 		this.editingMode = editingMode;
 		this.onEditingModeChanged(editingMode, oldEditingMode);

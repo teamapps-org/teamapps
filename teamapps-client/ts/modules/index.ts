@@ -19,6 +19,8 @@
  */
 import "@less/teamapps";
 
+import 'typeface-roboto';
+
 (window as any).jQuery = (window as any).$ = require("jquery"); // needs to be global for fullcalendar (at least)
 require("jquery-ui/ui/version.js");
 require("jquery-ui/ui/position.js");
@@ -121,6 +123,8 @@ export {UiToolButton} from "./micro-components/UiToolButton";
 
 export {UiPieChart} from "./UiPieChart";
 export {UiTreeGraph} from "./UiTreeGraph";
+
+export {UiReactTestComponent} from "./UiReactTestComponent";
 
 export {UiTestHarness} from "./UiTestHarness";
 

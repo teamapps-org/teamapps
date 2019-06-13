@@ -55,7 +55,7 @@ export const cssVerticalAlignmentByUiVerticalAlignment = {
 };
 
 export function createUiColorCssString(uiColor: UiColorConfig) {
-	return uiColor != null ? `rgba(${uiColor.red},${uiColor.green},${uiColor.blue},${uiColor.alpha})` : '';
+	return uiColor != null ? `rgba(${uiColor.red || 0},${uiColor.green || 0},${uiColor.blue || 0},${uiColor.alpha || 1})` : '';
 }
 
 export function createUiColorCssObject(cssProperty: string, uiColor: UiColorConfig) {
@@ -63,7 +63,7 @@ export function createUiColorCssObject(cssProperty: string, uiColor: UiColorConf
 		return {};
 	} else {
 		return {
-			[cssProperty]: `rgba(${uiColor.red},${uiColor.green},${uiColor.blue},${uiColor.alpha})`
+			[cssProperty]: createUiColorCssString(uiColor)
 		}
 	}
 }

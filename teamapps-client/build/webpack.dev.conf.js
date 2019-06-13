@@ -66,6 +66,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 			template: 'index.html',
 			inject: true,
 			appServerUrl: config.appServerUrl
+		}),
+		new HtmlWebpackPlugin({
+			filename: 'test-harness.html',
+			template: 'test-harness.html',
+			inject: true,
+			appServerUrl: config.appServerUrl
 		})
 	]
 });
