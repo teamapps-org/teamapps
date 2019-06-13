@@ -17,35 +17,20 @@
 import "@less/components/UiReactTestComponent.less";
 
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import Switch, {SwitchProps} from "@material-ui/core/Switch";
-import {UiField} from "./formfield/UiField";
 import {UiSwitchCommandHandler, UiSwitchConfig, UiSwitchEventSource} from "../generated/UiSwitchConfig";
-import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import createStyles from "@material-ui/core/styles/createStyles";
+import {AbstractUiReactField} from "./AbstractUiReactField";
 
-export class UiSwitch extends UiField<UiSwitchConfig, boolean> implements UiSwitchCommandHandler, UiSwitchEventSource {
-
-	private $main: HTMLElement;
-
-	private v: { value: boolean } = {value: this.getDefaultValue()};
+export class UiSwitch extends AbstractUiReactField<UiSwitchConfig, boolean> implements UiSwitchCommandHandler, UiSwitchEventSource {
 
 	private CustomStyledSwitch: React.ComponentType<SwitchProps>;
 
-	constructor(config: UiSwitchConfig, context: TeamAppsUiContext) {
-		super(config, context);
-	}
-
 	protected initialize(config: UiSwitchConfig, context: TeamAppsUiContext): void {
-		this.v = {value: config.value || false};
-		let htmlDivElement = document.createElement('div');
-		htmlDivElement.classList.add('UiSwitch');
-		this.$main = htmlDivElement;
-
 		this.CustomStyledSwitch = withStyles(createStyles({
 			switchBase: {
 				color: createUiColorCssString(this._config.uncheckedButtonColor),
@@ -62,51 +47,26 @@ export class UiSwitch extends UiField<UiSwitchConfig, boolean> implements UiSwit
 			checked: {},
 			track: {}
 		}))(Switch);
-
-		this.render();
+		super.initialize(config, context);
 	}
 
-	private render() {
-		return ReactDOM.render(
-			<this.CustomStyledSwitch
-				checked={this.v.value}
-				onChange={(event, value) => {
-					this.v.value = value;
-					this.commit();
-					this.render();
-				}}
-			/>,
-			this.$main
-		);
+	protected render() {
+		return <this.CustomStyledSwitch
+			checked={this.transientValue}
+			onChange={(event, value) => {
+				this.transientValue = value;
+				this.commit();
+				this.updateDom();
+			}}
+		/>
 	}
 
 	getDefaultValue(): boolean {
 		return false;
 	}
 
-	protected displayCommittedValue(): void {
-		this.v.value = this.getCommittedValue();
-		this.render();
-	}
-
-	getFocusableElement(): HTMLElement {
-		return this.getMainInnerDomElement();
-	}
-
-	getMainInnerDomElement(): HTMLElement {
-		return this.$main;
-	}
-
-	getTransientValue(): boolean {
-		return this.v.value;
-	}
-
 	isValidData(v: boolean): boolean {
 		return v === true || v == false;
-	}
-
-	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
-		this.render();
 	}
 
 	valuesChanged(v1: boolean, v2: boolean): boolean {
@@ -115,4 +75,4 @@ export class UiSwitch extends UiField<UiSwitchConfig, boolean> implements UiSwit
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiReactTestComponent", UiSwitch);
+TeamAppsUiComponentRegistry.registerComponentClass("UiSwitch", UiSwitch);

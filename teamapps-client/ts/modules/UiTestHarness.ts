@@ -7,13 +7,14 @@ import {UiRadioGroup} from "./UiRadioGroup";
 import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {UiSwitch} from "./UiSwitch";
 import {createUiColorConfig} from "../generated/UiColorConfig";
+import {AbstractUiReactComponent} from "./AbstractUiReactComponent";
 
 
 export class UiTestHarness {
 
 	constructor() {
 		// let component = this.createRadioGroup();
-		let component = this.createSwitch();
+		let component = this.createRadioGroup();
 
 		(window as any).c = component;
 		document.body.appendChild(component.getMainDomElement());
@@ -55,6 +56,7 @@ export class UiTestHarness {
 		component.onValueChanged.addListener(eventObject => console.log("Value changed: " + eventObject.value));
 		return component;
 	}
+
 }
 
 class TestTeamAppsUiContext implements TeamAppsUiContext, IconPathProvider {
