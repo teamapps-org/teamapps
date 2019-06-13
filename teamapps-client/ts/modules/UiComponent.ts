@@ -110,9 +110,7 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 	 * @return The main DOM element of this component.
 	 * This method is used by the main TeamApps UI mechanism to get the element and attach it to the DOM.
 	 */
-	public getMainDomElement(): HTMLElement {
-		return this.getMainDomElement();
-	}
+	public abstract getMainDomElement(): HTMLElement;
 
 	/**
 	 * Override this method to execute code that cannot be executed before the field is attached to the DOM.
