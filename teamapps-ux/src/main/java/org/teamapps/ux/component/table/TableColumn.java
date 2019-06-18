@@ -40,7 +40,7 @@ public class TableColumn {
 	private int minWidth;
 	private int defaultWidth;
 	private int maxWidth;
-	private boolean hidden;
+	private boolean visible = true;
 	private boolean sortable = true;
 	private boolean resizeable = true;
 	boolean hiddenIfOnlyEmptyCellsVisible = false;
@@ -82,6 +82,7 @@ public class TableColumn {
 		uiTableColumn.setMaxWidth(maxWidth);
 		uiTableColumn.setSortable(sortable);
 		uiTableColumn.setResizeable(resizeable);
+		uiTableColumn.setVisible(visible);
 		uiTableColumn.setHiddenIfOnlyEmptyCellsVisible(hiddenIfOnlyEmptyCellsVisible);
 		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createUiFieldMessage()).collect(Collectors.toList()));
 		return uiTableColumn;
@@ -166,12 +167,15 @@ public class TableColumn {
 		return this;
 	}
 
-	public boolean isHidden() {
-		return hidden;
+	public boolean isVisible() {
+		return visible;
 	}
 
-	public TableColumn setHidden(boolean hidden) {
-		this.hidden = hidden;
+	public TableColumn setVisible(boolean visible) {
+		this.visible = visible;
+		if (table != null) {
+			table.updateColumnVisibility(this);
+		}
 		return this;
 	}
 

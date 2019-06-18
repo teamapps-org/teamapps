@@ -87,7 +87,8 @@ interface Column extends Slick.Column<any> {
 	unselectable?: boolean,
 	hiddenIfOnlyEmptyCellsVisible: boolean,
 	messages?: UiFieldMessageConfig[],
-	uiConfig?: UiTableColumnConfig
+	uiConfig?: UiTableColumnConfig,
+	visible: boolean
 }
 
 const backgroundColorCssClassesByMessageSeverity = {
@@ -193,7 +194,8 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 				unselectable: true,
 				sortable: false,
 				focusable: false,
-				hiddenIfOnlyEmptyCellsVisible: false
+				hiddenIfOnlyEmptyCellsVisible: false,
+				visible: true
 			});
 		}
 
@@ -539,7 +541,8 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 			resizable: columnConfig.resizeable,
 			hiddenIfOnlyEmptyCellsVisible: columnConfig.hiddenIfOnlyEmptyCellsVisible,
 			messages: columnConfig.messages,
-			uiConfig: columnConfig
+			uiConfig: columnConfig,
+			visible: columnConfig.visible
 		};
 
 		slickColumnConfig.headerCssClass = this.getColumnCssClass(slickColumnConfig);
@@ -799,7 +802,11 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 	}
 
 	private getVisibleColumns() {
-		return this.allColumns.filter(column => !column.uiField || column.uiField.isVisible());
+		return this.allColumns.filter((column) => {
+			let isSpecialColumn = !column.uiField;
+			let fieldIsVisible = column.uiField.isVisible();
+			return column.visible && (isSpecialColumn || fieldIsVisible);
+		});
 	}
 
 	private getColumnById(id: string) {
@@ -982,6 +989,13 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 			.filter(c => columnNames.indexOf(c.id) === -1);
 		this.allColumns = slickColumnConfigs as Column[];
 		this.dataProvider.clear();
+		this.setSlickGridColumns(this.getVisibleColumns());
+	}
+
+	@executeWhenAttached()
+	setColumnVisibility(propertyName: string, visible: boolean): void {
+		const column = this.getColumnById(propertyName);
+		column.visible = visible;
 		this.setSlickGridColumns(this.getVisibleColumns());
 	}
 
