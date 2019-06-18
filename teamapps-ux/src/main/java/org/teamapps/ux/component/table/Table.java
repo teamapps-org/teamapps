@@ -428,7 +428,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), clientRecordCache.getUiRecordIds(getSelectedRecords()), scrollToRecord));
 	}
 
-	/*package-private*/ void updateColumnMessages(TableColumn tableColumn) {
+	protected void updateColumnMessages(TableColumn tableColumn) {
 		queueCommandIfRendered(() -> new UiTable.SetColumnMessagesCommand(getId(), tableColumn.getPropertyName(), tableColumn.getMessages().stream()
 				.map(message -> message.createUiFieldMessage())
 				.collect(Collectors.toList())));
@@ -462,6 +462,11 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 							.collect(Collectors.toList())
 			));
 		}
+	}
+
+
+	protected void updateColumnVisibility(TableColumn tableColumn) {
+		queueCommandIfRendered(() -> new UiTable.SetColumnVisibilityCommand(getId(), tableColumn.getPropertyName(), tableColumn.isVisible()));
 	}
 
 	// TODO #focus propagation
@@ -1069,4 +1074,5 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		return selectedRecords != null ? selectedRecords : selectedRecord != null ? Collections.singletonList(selectedRecord) : Collections.emptyList(); // TODO completely rewrite this!!! (multiple
 		// selected records should be standard!)
 	}
+
 }
