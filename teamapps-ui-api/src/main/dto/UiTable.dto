@@ -31,6 +31,7 @@ class UiTableColumn {
 	int maxWidth;
 	boolean sortable = true;
 	boolean resizeable = true;
+	boolean visible = true;
 	boolean hiddenIfOnlyEmptyCellsVisible = false;
 	List<UiFieldMessage> messages;
 }
@@ -86,6 +87,7 @@ class UiTable extends UiComponent {
     command setColumnMessages(String columnPropertyName, List<UiFieldMessage> messages);
     command addColumns(List<UiTableColumn> column, int index);
     command removeColumns(List<String> columnName);
+    command setColumnVisibility(String columnPropertyName, boolean visible);
 
 	event cellEditingStarted(int recordId, String columnPropertyName, Object currentValue);
 	event cellEditingStopped(int recordId, String columnPropertyName);
