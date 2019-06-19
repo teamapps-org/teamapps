@@ -107,7 +107,6 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 	private $brush: SVGGSelection<number>;
 	private $graphClipContainer: Selection<SVGGElement, {}, HTMLElement, undefined>;
 	private xSelection: UiLongIntervalConfig;
-	private $yZeroLine: Selection<SVGLineElement, {}, HTMLElement, undefined>;
 	private zoomLevels: UiTimeChartZoomLevelConfig[];
 	private $yAxisContainer: Selection<SVGGElement, {}, HTMLElement, undefined>;
 
@@ -188,9 +187,6 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 			.classed("graph-clipping-container", true)
 			.attr("clip-path", `url(#${clipPathId})`);
 
-		this.$yZeroLine = this.$graphClipContainer.append<SVGLineElement>("line")
-			.classed("y-zero-line", true);
-
 		this.zoom = d3.zoom()
 			.scaleExtent([1, this.calculateMaxZoomFactor()])
 			.on("zoom", () => {
@@ -257,14 +253,6 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 			s.$yAxis.attr("transform", `translate(${-left},0)`);
 			left += s.getYScaleWidth();
 		});
-
-		// TODO still needed? if yes, move to series!
-		// this.$yZeroLine
-		// 	.attr("x1", 0)
-		// 	.attr("y1", this.scaleY(0))
-		// 	.attr("x2", this.getWidth())
-		// 	.attr("y2", this.scaleY(0))
-		// 	.attr("visibility", this.scaleY.domain()[0] === 0 ? "hidden" : "visible");
 
 		let transformedScaleX = this.getTransformedScaleX();
 
@@ -563,6 +551,7 @@ class Series {
 	private yScaleType: UiScaleType;
 	scaleY: ScaleContinuousNumeric<number, number>;
 	private yScaleZoomMode: any;
+	private $yZeroLine: Selection<SVGLineElement, {}, HTMLElement, undefined>;
 
 	constructor(
 		private timeGraph: UiTimeGraph,
