@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.timegraph.partitioning;
 
-import org.teamapps.event.Event;
 import org.teamapps.ux.component.timegraph.Interval;
 
 import java.util.Arrays;
@@ -28,9 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class StaticRawTimedDataModel implements RawTimedDataModel {
-
-	public final Event<Void> onDataChanged = new Event<>();
+public class StaticRawTimedDataModel extends AbstractRawTimedDataModel {
 
 	private Map<String, long[]> eventTimestampsByLineId = new HashMap<>();
 	private Interval staticDomainX;
@@ -43,11 +40,6 @@ public class StaticRawTimedDataModel implements RawTimedDataModel {
 	public void setEventTimestampsForLineId(String lineId, long[] eventTimestamps) {
 		eventTimestampsByLineId.put(lineId, eventTimestamps);
 		onDataChanged.fire(null);
-	}
-
-	@Override
-	public Event<Void> onDataChanged() {
-		return onDataChanged;
 	}
 
 	@Override
@@ -72,5 +64,9 @@ public class StaticRawTimedDataModel implements RawTimedDataModel {
 					.max().orElse(1);
 			return new Interval(min, max);
 		}
+	}
+
+	public void setStaticDomainX(Interval staticDomainX) {
+		this.staticDomainX = staticDomainX;
 	}
 }
