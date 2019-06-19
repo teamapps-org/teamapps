@@ -127,8 +127,13 @@ public class TimeGraph extends AbstractComponent {
 				}
 
 				@Override
-				public void handleYAxisColorChanged(LineChartLine lineChartLine, Color yAxisColor) {
-					reRenderIfRendered(); // TODO
+				public void handleAxisColorChanged(LineChartLine lineChartLine, Color yAxisColor) {
+					queueCommandIfRendered(() -> new UiTimeGraph.SetLineFormatCommand(getId(), line.getId(), lineChartLine.createUiLineChartLineFormat()));
+				}
+
+				@Override
+				public void handleYZeroLineVisibleChanged(LineChartLine lineChartLine, boolean yZeroLineVisible) {
+					queueCommandIfRendered(() -> new UiTimeGraph.SetLineFormatCommand(getId(), line.getId(), lineChartLine.createUiLineChartLineFormat()));
 				}
 			});
 		});

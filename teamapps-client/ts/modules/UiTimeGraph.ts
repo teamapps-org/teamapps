@@ -113,7 +113,7 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 
 	private lastDrawableWidth: number = 0;
 
-	private get drawableWidth() {
+	get drawableWidth() {
 		return this.getWidth() - this.marginLeft - this.margin.right
 	}
 
@@ -202,7 +202,7 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 
 		Object.keys(config.lineFormats).forEach(seriesId => {
 			let lineFormat = config.lineFormats[seriesId];
-			this.createAndAddSeries(seriesId, lineFormat);
+			this.seriesById[seriesId] = this.createAndAddSeries(seriesId, lineFormat);
 		});
 
 		this.initZoomLevelIntervalManagers();
@@ -223,7 +223,7 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 		let series = new Series(this, seriesId, lineFormat, this.$graphClipContainer, this.zoomLevels.length, this.dropShadowFilterId);
 		series.scaleY.range([this.drawableHeight, 0]);
 		this.$yAxisContainer.node().appendChild(series.$yAxis.node());
-		this.seriesById[seriesId] = series;
+		return series;
 	}
 
 	getZoomBoundsX() {
@@ -510,7 +510,7 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 			if (existingSeries) {
 				existingSeries.setLineFormat(lineFormat);
 			} else {
-				this.createAndAddSeries(lineId, lineFormat);
+				this.seriesById[lineId] = this.createAndAddSeries(lineId, lineFormat);
 			}
 		});
 		Object.keys(this.seriesById).forEach(lineId => {
@@ -522,7 +522,15 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 		this.reLayout(true);
 	}
 
-
+	setLineFormat(lineId: string, lineFormat: UiLineChartLineFormatConfig): void {
+		let series = this.seriesById[lineId];
+		if (series) {
+			series.setLineFormat(lineFormat);
+		} else {
+			series = this.seriesById[lineId] = this.createAndAddSeries(lineId, lineFormat);
+		}
+		series.updateYAxisTickFormat(this.getHeight());
+	}
 }
 
 var CurveTypeToCurveFactory = {
@@ -568,7 +576,6 @@ class Series {
 		this.yScaleType = lineFormat.yScaleType;
 		this.yScaleZoomMode = lineFormat.yScaleZoomMode;
 		this.$yAxis = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement);
-		this.$yAxis.style("color", createUiColorCssString(this.lineFormat.yAxisColor));
 		this.updateYScaleType();
 		this.yAxis = d3.axisLeft(this.scaleY);
 
@@ -576,6 +583,7 @@ class Series {
 		this.$main = $container
 			.append<SVGGElement>("g")
 			.attr("data-series-id", `${this.timeGraph.getId()}-${id}`);
+		this.initLinesAndColorScale();
 		this.initDomNodes();
 	}
 
@@ -590,23 +598,29 @@ class Series {
 		return this.scaleY;
 	}
 
-	private initDomNodes() {
+	private initLinesAndColorScale() {
 		this.area = d3.area<DataPoint>()
 			.curve(CurveTypeToCurveFactory[this.lineFormat.graphType]);
+		this.line = d3.line<DataPoint>()
+			.curve(CurveTypeToCurveFactory[this.lineFormat.graphType]);
+		this.colorScale = d3.scaleLinear<string, string>()
+			.range([createUiColorCssString(this.lineFormat.lineColorScaleMin), createUiColorCssString(this.lineFormat.lineColorScaleMax)]);
+	}
+
+	private initDomNodes() {
 		this.$area = this.$main.append<SVGPathElement>("path")
 			.classed("area", true)
 			.attr("fill", `url(#area-gradient-${this.timeGraph.getId()}-${this.id})`);
-		this.line = d3.line<DataPoint>()
-			.curve(CurveTypeToCurveFactory[this.lineFormat.graphType]);
 		this.$line = this.$main.append<SVGPathElement>("path")
 			.classed("line", true)
 			.attr("stroke", `url(#line-gradient-${this.timeGraph.getId()}-${this.id})`);
+		this.$yZeroLine = this.$main.append<SVGLineElement>("line")
+			.classed("y-zero-line", true);
+
 		// .style("filter", `url("#${this.dropShadowFilterId}")`);
 		this.$dots = this.$main.append<SVGGElement>("g")
 			.classed("dots", true);
 
-		this.colorScale = d3.scaleLinear<string, string>()
-			.range([createUiColorCssString(this.lineFormat.lineColorScaleMin), createUiColorCssString(this.lineFormat.lineColorScaleMax)]);
 		this.$defs = this.$main.append<SVGDefsElement>("defs")
 			.html(`<linearGradient class="line-gradient" id="line-gradient-${this.timeGraph.getId()}-${this.id}" x1="0" x2="0" y1="0" y2="100" gradientUnits="userSpaceOnUse">
 	        <stop stop-color="${createUiColorCssString(this.lineFormat.lineColorScaleMax)}" offset="0" />
@@ -739,12 +753,22 @@ class Series {
 				querySelector.setAttribute("visibility", 'visible');
 			}
 		}
+
+		this.$yAxis.style("color", createUiColorCssString(this.lineFormat.axisColor));
+
+		this.$yZeroLine
+			.attr("x1", 0)
+			.attr("y1", this.scaleY(0))
+			.attr("x2", this.timeGraph.drawableWidth)
+			.attr("y2", this.scaleY(0))
+			.attr("stroke", createUiColorCssString(this.lineFormat.axisColor))
+			.attr("visibility", (this.lineFormat.yZeroLineVisible && this.scaleY.domain()[0] !== 0) ? "visible" : "hidden");
 	}
 
 	setLineFormat(lineFormat: UiLineChartLineFormatConfig) {
+		this.initLinesAndColorScale();
 		this.lineFormat = lineFormat;
-		this.$main.html("");
-		this.initDomNodes();
+		this.draw();
 	}
 
 	handleXBoundsChange() {
@@ -793,7 +817,9 @@ class Series {
 
 	setIntervalY(intervalY: UiLongIntervalConfig) {
 		this.intervalY = intervalY;
-		this.handleXBoundsChange()
+		if (this.scaleY.domain()[0] !== this.intervalY.min || this.scaleY.domain()[1] !== this.intervalY.max) {
+			this.animatedZoomYScale();
+		}
 	}
 
 	public getYScaleWidth(): number {

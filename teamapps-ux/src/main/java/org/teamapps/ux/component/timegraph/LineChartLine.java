@@ -39,7 +39,7 @@ public class LineChartLine {
 
 	private LineChartCurveType graphType = LineChartCurveType.MONOTONE;
 	private float dataDotRadius = 2;
-	private Color yAxisColor = Color.BLACK;
+	private Color axisColor = Color.BLACK;
 	private Color lineColorScaleMin = new Color(73, 128, 192);
 	private Color lineColorScaleMax = new Color(73, 128, 192);
 	private Color areaColorScaleMin = new Color(255, 255, 255, 0);
@@ -48,6 +48,7 @@ public class LineChartLine {
 	private Interval intervalY;
 	private ScaleType yScaleType = ScaleType.LINEAR;
 	private LineChartYScaleZoomMode yScaleZoomMode = LineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
+	private boolean yZeroLineVisible = false;
 
 
 	public LineChartLine(String id) {
@@ -80,10 +81,11 @@ public class LineChartLine {
 		definition.setLineColorScaleMax(lineColorScaleMax != null ? createUiColor(lineColorScaleMax) : null);
 		definition.setAreaColorScaleMin(areaColorScaleMin != null ? createUiColor(areaColorScaleMin) : null);
 		definition.setAreaColorScaleMax(areaColorScaleMax != null ? createUiColor(areaColorScaleMax) : null);
-		definition.setYAxisColor(yAxisColor != null ? createUiColor(yAxisColor) : null);
+		definition.setAxisColor(axisColor != null ? createUiColor(axisColor) : null);
 		definition.setIntervalY(intervalY != null ? intervalY.createUiLongInterval() : new UiLongInterval(0, 1000));
 		definition.setYScaleType(yScaleType.toUiScaleType());
 		definition.setYScaleZoomMode(yScaleZoomMode.toUiLineChartYScaleZoomMode());
+		definition.setYZeroLineVisible(yZeroLineVisible);
 
 		return definition;
 	}
@@ -205,13 +207,25 @@ public class LineChartLine {
 	}
 
 	public Color getYAxisColor() {
-		return yAxisColor;
+		return axisColor;
 	}
 
-	public LineChartLine setYAxisColor(Color yAxisColor) {
-		this.yAxisColor = yAxisColor;
+	public LineChartLine setAxisColor(Color axisColor) {
+		this.axisColor = axisColor;
 		if (this.changeListener != null) {
-			changeListener.handleYAxisColorChanged(this, yAxisColor);
+			changeListener.handleAxisColorChanged(this, axisColor);
+		}
+		return this;
+	}
+
+	public boolean isYZeroLineVisible() {
+		return yZeroLineVisible;
+	}
+
+	public LineChartLine setYZeroLineVisible(boolean yZeroLineVisible) {
+		this.yZeroLineVisible = yZeroLineVisible;
+		if (this.changeListener != null) {
+			changeListener.handleYZeroLineVisibleChanged(this, yZeroLineVisible);
 		}
 		return this;
 	}

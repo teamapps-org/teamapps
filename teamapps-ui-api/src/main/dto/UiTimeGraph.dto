@@ -34,7 +34,8 @@ class UiTimeGraph extends UiComponent {
 	command setMouseScrollZoomPanMode(UiLineChartMouseScrollZoomPanMode mouseScrollZoomPanMode);
 	command setSelectedInterval(UiLongInterval intervalX);
 	command setLineFormats(Dictionary<UiLineChartLineFormat> lineFormats);
-	
+
+	command setLineFormat(String lineId, UiLineChartLineFormat lineFormat);
 	command setIntervalY(String lineId, UiLongInterval intervalY);
 	command setYScaleType(String lineId, UiScaleType yScaleType);
 	command setYScaleZoomMode(String lineId, UiLineChartYScaleZoomMode yScaleZoomMode);
@@ -67,7 +68,8 @@ class UiLineChartLineFormat {
     UiColor lineColorScaleMax = new UiColor(73, 128, 192);
     UiColor areaColorScaleMin = new UiColor(255, 255, 255).setAlpha(0f);
     UiColor areaColorScaleMax = new UiColor(255, 255, 255).setAlpha(0f);
-    UiColor yAxisColor = new UiColor(0, 0, 0);
+    UiColor axisColor = new UiColor(0, 0, 0);
+    boolean yZeroLineVisible;
 
     UiScaleType yScaleType = UiScaleType.LINEAR;
     UiLongInterval intervalY;
