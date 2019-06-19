@@ -1,5 +1,9 @@
 grammar TeamAppsDto;
 
+@header {
+package org.teamapps.dto;
+}
+
 classCollection : typeDeclaration*;
 
 typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;

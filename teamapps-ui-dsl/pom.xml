@@ -91,6 +91,9 @@
                         <goals>
                             <goal>antlr4</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirectory>${basedir}/src/main/antlr</sourceDirectory>
+                        </configuration>
                     </execution>
                 </executions>
                 <dependencies>
