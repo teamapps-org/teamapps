@@ -34,11 +34,13 @@ public interface LineChartLineListener {
 
 	void handleAreaColorScaleMaxChanged(LineChartLine lineChartLine, Color areaColorScaleMax);
 
-	void handleYAxisColorChanged(LineChartLine lineChartLine, Color yAxisColor);
+	void handleAxisColorChanged(LineChartLine lineChartLine, Color yAxisColor);
 
 	void handleIntervalYChanged(LineChartLine lineChartLine, Interval intervalY);
 
 	void handleYScaleTypeChanged(LineChartLine lineChartLine, ScaleType yScaleType);
 
 	void handleYScaleZoomModeChanged(LineChartLine lineChartLine, LineChartYScaleZoomMode yScaleZoomMode);
+
+	void handleYZeroLineVisibleChanged(LineChartLine lineChartLine, boolean yZeroLineVisible);
 }
