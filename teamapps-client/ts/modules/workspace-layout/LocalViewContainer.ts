@@ -711,7 +711,7 @@ export class LocalViewContainer implements ViewContainer {
 		this.$normalContainerOfMaximizedTabPanel = $element.parentElement;
 		this.$maximizationContainerWrapper.classList.add("show");
 		this.$maximizationContainer.append($element);
-		this.$maximizationContainer.classList.add("animated zoomIn");
+		this.$maximizationContainer.classList.add("animated", "zoomIn");
 		tabPanelItem.component.reLayout();
 		tabPanelItem.state = UiViewGroupPanelState.MAXIMIZED;
 	}
@@ -721,7 +721,7 @@ export class LocalViewContainer implements ViewContainer {
 			const $element = tabPanelItem.component.getMainDomElement();
 			this.$maximizationContainerWrapper.classList.remove("show");
 			this.$maximizationContainer.append($element);
-			this.$maximizationContainer.classList.remove("animated zoomIn");
+			this.$maximizationContainer.classList.remove("animated", "zoomIn");
 			this.$normalContainerOfMaximizedTabPanel.appendChild($element);
 			tabPanelItem.state = UiViewGroupPanelState.NORMAL;
 			tabPanelItem.component.reLayout();
