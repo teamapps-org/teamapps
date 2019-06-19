@@ -127,7 +127,7 @@ export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Empty
 		let dropHandler = (event: Event) => {
 			document.removeEventListener(moveEvent, dragHandler);
 			document.removeEventListener(endEvent, dropHandler);
-			this._$divider.classList.remove('dragged touch');
+			this._$divider.classList.remove('dragged', 'touch');
 
 			let referenceChildSize;
 			if (this.sizePolicy === UiSplitSizePolicy.RELATIVE) {
