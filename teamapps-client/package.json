@@ -11,12 +11,12 @@
     "test": "test"
   },
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --mode development --host 0.0.0.0",
+    "dev": "webpack-dev-server --inline --progress --config js-build/webpack.dev.conf.js --mode development --host 0.0.0.0",
     "worker": "webpack --config ts/worker/webpack.conf.js --mode production",
     "start": "yarn run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "yarn run unit",
-    "build": "cross-env webpack -p --config build/webpack.prod.conf.js --mode production"
+    "build": "cross-env webpack -p --config js-build/webpack.prod.conf.js --mode production"
   },
   "devDependencies": {
     "autoprefixer": "^9.5.1",
