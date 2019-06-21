@@ -26,7 +26,7 @@ import {UiYoutubePlayer} from "./live-stream/UiYoutubePlayer";
 import {UiLiveStreamComPlayer} from "./live-stream/UiLiveStreamComPlayer";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {animateCSS, applyDisplayMode, css, fadeIn, fadeOut, generateUUID, parseHtml} from "./Common";
+import {applyDisplayMode, css, fadeIn, fadeOut, generateUUID, parseHtml} from "./Common";
 import {LiveStreamPlayer} from "./live-stream/LiveStreamPlayer";
 import {
 	UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent,

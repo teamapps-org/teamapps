@@ -135,8 +135,6 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		return (VALUE) value;
 	}
 
-	protected abstract void doDestroy();
-
 	public List<FieldMessage> getFieldMessages() {
 		return fieldMessages;
 	}

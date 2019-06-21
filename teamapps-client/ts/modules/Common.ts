@@ -390,6 +390,42 @@ export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displ
 	}
 }
 
+export function boundSelection(selection: { left: number, top: number, width: number, height: number }, bounds: {width: number, height: number}, aspectRatio?: number) {
+	let newSelection = {
+		left: selection.left,
+		top: selection.top,
+		width: selection.width,
+		height: selection.height
+	};
+	if (newSelection.width > bounds.width) {
+		newSelection.width = bounds.width;
+	}
+	if (newSelection.height > bounds.height) {
+		newSelection.height = bounds.height;
+	}
+	if (aspectRatio > 0) {
+		if (newSelection.width / newSelection.height > aspectRatio) {
+			newSelection.width = newSelection.height * aspectRatio;
+		} else {
+			newSelection.height = newSelection.width / aspectRatio;
+		}
+	}
+	if (newSelection.left < 0) {
+		newSelection.left = 0;
+	}
+	if (newSelection.left + newSelection.width > bounds.width) {
+		newSelection.left = bounds.width - newSelection.width;
+	}
+	if (newSelection.top < 0) {
+		newSelection.top = 0;
+	}
+	if (newSelection.top + newSelection.height > bounds.height) {
+		newSelection.top = bounds.height - newSelection.height;
+	}
+	return newSelection;
+}
+
+
 // ===== FULLSCREEN HANDLING ===== (maybe extract this to own file...)
 
 document.addEventListener("fullscreenchange", fullScreenChangeHandler);
@@ -951,7 +987,7 @@ export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: 
 	});
 }
 
-export function animateCSS(el: Element, animationName: "bounce" | "flash" | "pulse" | "rubberBand" | "shake" | "headShake" | "swing" | "tada"
+export function animateCSS(el: HTMLElement, animationName: "bounce" | "flash" | "pulse" | "rubberBand" | "shake" | "headShake" | "swing" | "tada"
 	| "wobble" | "jello" | "bounceIn" | "bounceInDown" | "bounceInLeft" | "bounceInRight" | "bounceInUp" | "bounceOut" | "bounceOutDown"
 	| "bounceOutLeft" | "bounceOutRight" | "bounceOutUp" | "fadeIn" | "fadeInDown" | "fadeInDownBig" | "fadeInLeft" | "fadeInLeftBig" | "fadeInRight"
 	| "fadeInRightBig" | "fadeInUp" | "fadeInUpBig" | "fadeOut" | "fadeOutDown" | "fadeOutDownBig" | "fadeOutLeft" | "fadeOutLeftBig" | "fadeOutRight"
@@ -959,12 +995,16 @@ export function animateCSS(el: Element, animationName: "bounce" | "flash" | "pul
 	| "rotateInDownLeft" | "rotateInDownRight" | "rotateInUpLeft" | "rotateInUpRight" | "rotateOut" | "rotateOutDownLeft" | "rotateOutDownRight"
 	| "rotateOutUpLeft" | "rotateOutUpRight" | "hinge" | "jackInTheBox" | "rollIn" | "rollOut" | "zoomIn" | "zoomInDown" | "zoomInLeft" | "zoomInRight"
 	| "zoomInUp" | "zoomOut" | "zoomOutDown" | "zoomOutLeft" | "zoomOutRight" | "zoomOutUp" | "slideInDown" | "slideInLeft" | "slideInRight" | "slideInUp"
-	| "slideOutDown" | "slideOutLeft" | "slideOutRight" | "slideOutUp" | "heartBeat", callback?: () => any) {
+	| "slideOutDown" | "slideOutLeft" | "slideOutRight" | "slideOutUp" | "heartBeat", animationDuration: number = 300, callback?: () => any) {
+
+	let oldAnimationDurationValue = el.style.animationDuration;
+	el.style.animationDuration = animationDuration + "ms";
 	el.classList.add('animated', animationName);
 
 	function handleAnimationEnd() {
 		el.classList.remove('animated', animationName);
 		el.removeEventListener('animationend', handleAnimationEnd);
+		el.style.animationDuration = oldAnimationDurationValue;
 
 		if (typeof callback === 'function') {
 			callback();
@@ -974,12 +1014,13 @@ export function animateCSS(el: Element, animationName: "bounce" | "flash" | "pul
 	el.addEventListener('animationend', handleAnimationEnd);
 }
 
-export function fadeOut(el: Element) {
-	animateCSS(el, "fadeOut", () => el.classList.add("hidden"));
+export function fadeOut(el: HTMLElement) {
+	animateCSS(el, "fadeOut", 300, () => el.classList.add("hidden"));
 }
 
-export function fadeIn(el: Element) {
-	animateCSS(el, "fadeIn", () => el.classList.remove("hidden"));
+export function fadeIn(el: HTMLElement) {
+	el.classList.remove("hidden");
+	animateCSS(el, "fadeIn");
 }
 
 export function css(el: HTMLElement, values: object) {

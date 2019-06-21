@@ -43,6 +43,7 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 			this.setVisible(_config.visible, false);
 			if (_config.stylesBySelector != null) { // might be null when used via JavaScript API!
 				Object.keys(_config.stylesBySelector).forEach(selector => this.setStyle(selector, _config.stylesBySelector[selector]));
+				this.reLayout();
 			}
 		}, 0);
 	}

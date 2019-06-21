@@ -24,13 +24,11 @@ public class UploadFailedEventData {
 	private final String fileName;
 	private final String mimeType;
 	private final long sizeInBytes;
-	private final int incompleteUploadsCount;
 
-	public UploadFailedEventData(String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount) {
+	public UploadFailedEventData(String fileName, String mimeType, long sizeInBytes) {
 		this.fileName = fileName;
 		this.mimeType = mimeType;
 		this.sizeInBytes = sizeInBytes;
-		this.incompleteUploadsCount = incompleteUploadsCount;
 	}
 
 	public String getFileName() {
@@ -45,7 +43,4 @@ public class UploadFailedEventData {
 		return sizeInBytes;
 	}
 
-	public int getIncompleteUploadsCount() {
-		return incompleteUploadsCount;
-	}
 }

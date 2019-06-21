@@ -8,13 +8,15 @@ import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {UiSwitch} from "./UiSwitch";
 import {createUiColorConfig} from "../generated/UiColorConfig";
 import {AbstractUiReactComponent} from "./AbstractUiReactComponent";
+import {UiPictureChooser} from "./formfield/file/UiPictureChooser";
 
 
 export class UiTestHarness {
 
 	constructor() {
 		// let component = this.createRadioGroup();
-		let component = this.createRadioGroup();
+		// let component = this.createRadioGroup();
+		let component = this.createUiPictureChooser();
 
 		(window as any).c = component;
 		document.body.appendChild(component.getMainDomElement());
@@ -57,6 +59,15 @@ export class UiTestHarness {
 		return component;
 	}
 
+	private createUiPictureChooser() {
+		let uiPictureChooser = new UiPictureChooser({
+			id: "asdf",
+			value: null,
+			uploadUrl: "/upload"
+		}, new TestTeamAppsUiContext());
+		uiPictureChooser.onValueChanged.addListener(eventObject => console.log("Value changed: " + eventObject.value));
+		return uiPictureChooser;
+	}
 }
 
 class TestTeamAppsUiContext implements TeamAppsUiContext, IconPathProvider {

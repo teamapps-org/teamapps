@@ -40,6 +40,7 @@ import org.teamapps.ux.resource.Resource;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -113,9 +114,49 @@ public interface SessionContext {
 		return createResourceLink(inputStreamSupplier, length, null);
 	}
 
-	String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName);
+	default String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName) {
+		return createResourceLink(inputStreamSupplier, length, resourceName, null);
+	}
 
-	String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName, String uniqueIdentifier);
+	default String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName, String uniqueIdentifier) {
+		return createResourceLink(new Resource() {
+			@Override
+			public InputStream getInputStream() {
+				return inputStreamSupplier.get();
+			}
+
+			@Override
+			public long getLength() {
+				return length;
+			}
+
+			@Override
+			public Date getLastModified() {
+				return new Date();
+			}
+
+			@Override
+			public Date getExpires() {
+				return new Date(System.currentTimeMillis() + 600000000L);
+			}
+
+			@Override
+			public String getName() {
+				return resourceName;
+			}
+
+			@Override
+			public String getMimeType() {
+				return null;
+			}
+		}, uniqueIdentifier);
+	}
+
+	default String createResourceLink(Resource resource) {
+		return createResourceLink(resource, null);
+	}
+
+	String createResourceLink(Resource resource, String uniqueIdentifier);
 
 	Resource getBinaryResource(int resourceId);
 
