@@ -24,12 +24,9 @@ import org.teamapps.ux.resource.Resource;
 import org.teamapps.uisession.QualifiedUiSessionId;
 
 import java.io.File;
-import java.io.InputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 public class ClientSessionResourceProvider {
 
@@ -64,45 +61,14 @@ public class ClientSessionResourceProvider {
 		return fileLink;
 	}
 
-	public String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName, String uniqueIdentifier) {
-		if (inputStreamSupplier == null) {
+	public String createResourceLink(Resource resource, String uniqueIdentifier) {
+		if (resource == null) {
 			return null;
 		}
 		if (uniqueIdentifier != null && resourceLinkByUniqueIdentifier.containsKey(uniqueIdentifier)) {
 			return resourceLinkByUniqueIdentifier.get(uniqueIdentifier);
 		}
 
-		Resource resource =new Resource() {
-			@Override
-			public InputStream getInputStream() {
-				return inputStreamSupplier.get();
-			}
-
-			@Override
-			public long getLength() {
-				return length;
-			}
-
-			@Override
-			public Date getLastModified() {
-				return new Date();
-			}
-
-			@Override
-			public Date getExpires() {
-				return new Date(System.currentTimeMillis() + 600000000L);
-			}
-
-			@Override
-			public String getName() {
-				return resourceName;
-			}
-
-			@Override
-			public String getMimeType() {
-				return null;
-			}
-		};
 		int id = createId();
 		binaryResourceById.put(id, resource);
 		String resourceLink = createLink(id);

@@ -50,7 +50,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	public final Event<UploadStartedEventData> onUploadStarted = new Event<>();
 	public final Event<UploadCanceledEventData> onUploadCanceled = new Event<>();
 	public final Event<UploadFailedEventData> onUploadFailed = new Event<>();
-	public final Event<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = new Event<>();
+	public final Event<UploadedFile> onUploadSuccessful = new Event<>();
 	public final Event<RECORD> onFileItemClicked = new Event<>();
 	public final Event<RECORD> onFileItemRemoved = new Event<>();
 
@@ -134,20 +134,20 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 			}
 			case UI_FILE_FIELD_UPLOAD_STARTED: {
 				UiFileField.UploadStartedEvent uploadStartedEvent = (UiFileField.UploadStartedEvent) event;
-				this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(),
-						uploadStartedEvent.getIncompleteUploadsCount()));
+				this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes()
+				));
 				break;
 			}
 			case UI_FILE_FIELD_UPLOAD_CANCELED: {
 				UiFileField.UploadCanceledEvent canceledEvent = (UiFileField.UploadCanceledEvent) event;
-				this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes(),
-						canceledEvent.getIncompleteUploadsCount()));
+				this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()
+				));
 				break;
 			}
 			case UI_FILE_FIELD_UPLOAD_FAILED: {
 				UiFileField.UploadFailedEvent failedEvent = (UiFileField.UploadFailedEvent) event;
-				this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes(),
-						failedEvent.getIncompleteUploadsCount()));
+				this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()
+				));
 				break;
 			}
 			case UI_FILE_FIELD_UPLOAD_SUCCESSFUL: {
@@ -169,7 +169,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 				} else {
 					cacheResponse.commit();
 				}
-				onUploadSuccessful.fire(new UploadSuccessfulEventData<>(uploadedFile, record));
+				onUploadSuccessful.fire(uploadedFile);
 				break;
 			}
 			case UI_FILE_FIELD_FILE_ITEM_CLICKED: {

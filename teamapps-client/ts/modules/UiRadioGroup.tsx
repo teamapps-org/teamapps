@@ -17,8 +17,6 @@
 import "@less/components/UiReactTestComponent.less";
 
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
 import {Radio} from "@material-ui/core";

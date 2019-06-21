@@ -263,7 +263,7 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		uiWindow.getMainDomElement().setAttribute("data-background-container-id", this.ALL_ROOT_PANELS[0].getId());
 		uiWindow.attachedToDom = true;
 		uiWindow.setListener({
-			onWindowClosed: (window, animationDuration) => this.closeWindow(window.getId(), animationDuration)
+			onWindowClosed: (window, animationDuration) => this.removeWindow(window.getId(), animationDuration)
 		});
 		this.WINDOWS_BY_ID[uiWindow.getId()] = uiWindow;
 		uiWindow.show(animationDuration);
@@ -273,13 +273,12 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		});
 	}
 
-	public static closeWindow(windowId: string, animationDuration: number) {
+	public static removeWindow(windowId: string, animationDuration: number) {
 		this.ALL_ROOT_PANELS.forEach(rootPanel => {
 			rootPanel.getMainDomElement().classList.remove('modal-window-mode');
 		});
 
 		let uiWindow = this.WINDOWS_BY_ID[windowId];
-		uiWindow.hide(animationDuration);
 		delete this.WINDOWS_BY_ID[windowId];
 
 		setTimeout(() => {

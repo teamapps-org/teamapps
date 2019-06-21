@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "./UiField";
-import {UiFileFieldDisplayType} from "../../generated/UiFileFieldDisplayType";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {generateUUID, humanReadableFileSize, parseHtml, prependChild, removeClassesByFunction, Renderer} from "../Common";
+import {UiField} from "../UiField";
+import {UiFileFieldDisplayType} from "../../../generated/UiFileFieldDisplayType";
+import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
+import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {generateUUID, humanReadableFileSize, parseHtml, prependChild, removeClassesByFunction, Renderer} from "../../Common";
 import {
 	UiFileField_FileItemClickedEvent,
 	UiFileField_FileItemRemoveButtonClickedEvent,
@@ -33,20 +33,20 @@ import {
 	UiFileFieldCommandHandler,
 	UiFileFieldConfig,
 	UiFileFieldEventSource
-} from "../../generated/UiFileFieldConfig";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
-import {StaticIcons} from "../util/StaticIcons";
-import {ProgressIndicator} from "../micro-components/ProgressIndicator";
-import {ProgressCircle} from "../micro-components/ProgressCircle";
-import {ProgressBar} from "../micro-components/ProgressBar";
+} from "../../../generated/UiFileFieldConfig";
+import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {UiTemplateConfig} from "../../../generated/UiTemplateConfig";
+import {StaticIcons} from "../../util/StaticIcons";
+import {ProgressIndicator} from "../../micro-components/ProgressIndicator";
+import {ProgressCircle} from "../../micro-components/ProgressCircle";
+import {ProgressBar} from "../../micro-components/ProgressBar";
 import * as log from "loglevel";
 import {Logger} from "loglevel";
 import {keyCodes} from "trivial-components";
-import {EventFactory} from "../../generated/EventFactory";
-import {UiIdentifiableClientRecordConfig} from "../../generated/UiIdentifiableClientRecordConfig";
-import {FileUploader} from "../util/FileUploader";
+import {EventFactory} from "../../../generated/EventFactory";
+import {UiIdentifiableClientRecordConfig} from "../../../generated/UiIdentifiableClientRecordConfig";
+import {FileUploader} from "../../util/FileUploader";
 
 export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClientRecordConfig[]> implements UiFileFieldEventSource, UiFileFieldCommandHandler {
 

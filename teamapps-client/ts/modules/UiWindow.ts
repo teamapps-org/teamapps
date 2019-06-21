@@ -33,7 +33,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiPanel_WindowButtonClickedEvent} from "../generated/UiPanelConfig";
 import {EventFactory} from "../generated/EventFactory";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
-import {css, parseHtml} from "./Common";
+import {animateCSS, css, parseHtml} from "./Common";
 
 export interface UiWindowListener {
 	onWindowClosed: (window: UiWindow, animationDuration: number) => void;
@@ -59,7 +59,7 @@ export class UiWindow extends UiComponent<UiWindowConfig> implements UiWindowCom
 	constructor(config: UiWindowConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiWindow offscreen">
+		this.$main = parseHtml(`<div class="UiWindow">
 	<div class="panel-wrapper"></div>
 </div>`);
 		this.$panelWrapper = this.$main.querySelector<HTMLElement>(":scope >.panel-wrapper");
@@ -71,7 +71,9 @@ export class UiWindow extends UiComponent<UiWindowConfig> implements UiWindowCom
 			this.panel.addWindowButton(UiWindowButtonType.CLOSE);
 		}
 		this.panel.getWindowButton(UiWindowButtonType.CLOSE).onClicked.addListener(() => this.close(500));
-		this.panel.onWindowButtonClicked.addListener(eventObject => this.onWindowButtonClicked.fire(EventFactory.createUiPanel_WindowButtonClickedEvent(this.getId(), eventObject.windowButton)));
+		this.panel.onWindowButtonClicked.addListener(eventObject => {
+			return this.onWindowButtonClicked.fire(EventFactory.createUiPanel_WindowButtonClickedEvent(this.getId(), eventObject.windowButton));
+		});
 
 		this.setSize(config.width, config.height);
 		this.setModal(config.modal);
@@ -86,9 +88,11 @@ export class UiWindow extends UiComponent<UiWindowConfig> implements UiWindowCom
 	}
 
 	public show(animationDuration: number) {
-		this.$main.style.transition = `opacity ${animationDuration}ms`;
-		this.$panelWrapper.style.transition = `box-shadow ${animationDuration}ms, transform ${animationDuration}ms`;
-		this.$main.classList.remove("offscreen");
+		this.$main.classList.remove("hidden");
+		this.$main.classList.add("open");
+		animateCSS(this.$panelWrapper, "zoomIn", 500, () => {
+			this.reLayout(true);
+		});
 
 		this.escapeKeyListener = (e) => {
 			if (this.closeOnEscape && e.keyCode === keyCodes.escape) {
@@ -103,14 +107,6 @@ export class UiWindow extends UiComponent<UiWindowConfig> implements UiWindowCom
 			}
 		};
 		this.$main.addEventListener("click", this.clickOutsideListener)
-	}
-
-	public hide(animationDuration: number) {
-		this.$main.style.transition =  `opacity ${animationDuration}ms`;
-		this.$panelWrapper.style.transition = `box-shadow ${animationDuration}ms, transform ${animationDuration}ms`;
-		this.$main.classList.add("offscreen");
-		this.$main.style.pointerEvents = "none";
-		this.removeCloseEventListeners();
 	}
 
 	private removeCloseEventListeners() {
@@ -131,7 +127,12 @@ export class UiWindow extends UiComponent<UiWindowConfig> implements UiWindowCom
 	}
 
 	public close(animationDuration: number) {
-		this.listener.onWindowClosed(this, animationDuration);
+		this.$main.classList.remove("open");
+		animateCSS(this.$panelWrapper, "zoomOut", animationDuration, () => {
+			this.$main.classList.add("hidden");
+			this.listener.onWindowClosed(this, animationDuration);
+		});
+		this.removeCloseEventListeners();
 	}
 
 	public setContent(content: UiComponent) {

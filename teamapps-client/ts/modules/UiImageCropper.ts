@@ -21,7 +21,7 @@
 import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {applyDisplayMode, css, parseHtml} from "./Common";
+import {applyDisplayMode, boundSelection, css, parseHtml} from "./Common";
 import {executeWhenAttached} from "./util/ExecuteWhenAttached";
 import {UiImageCropper_SelectionChangedEvent, UiImageCropperCommandHandler, UiImageCropperConfig, UiImageCropperEventSource} from "../generated/UiImageCropperConfig";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
@@ -57,13 +57,14 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 			this.imageNaturalHeight = this.htmlImageElement.naturalHeight;
 			applyDisplayMode(this.getMainDomElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE);
 			this.resetSelectionFrame(config.aspectRatio);
+			this.updateCroppingFramePosition();
 		};
 		// this.$element.style.backgroundImage = `url(${config.imageUrl}`);
 		this.$selectionFrame = this.$element.querySelector<HTMLElement>(":scope .cropping-frame");
 		$(this.$selectionFrame)
 			.resizable({
 				handles: 'n, e, s, w, ne, se, nw, sw',
-				aspectRatio: 1,
+				aspectRatio: config.aspectRatio,
 				containment: $(this.htmlImageElement),
 				stop: this.handleDragEnd.bind(this)
 			})
@@ -91,7 +92,8 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 
 			this.selection.left = 0.5 * (this.imageNaturalWidth - this.selection.width);
 			this.selection.top = 0.5 * (this.imageNaturalHeight - this.selection.height);
-
+			
+			this.selection = this.boundSelection();
 			this.updateCroppingFramePosition();
 			this.onSelectionChanged.fire(EventFactory.createUiImageCropper_SelectionChangedEvent(this.getId(), this.selection));
 		}
@@ -106,10 +108,20 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 			this.$selectionFrame.offsetHeight * correctionFactor
 		);
 		this.logger.debug("selection: ", this.selection);
+		this.selection = this.boundSelection();
+		this.updateCroppingFramePosition();
 		this.onSelectionChanged.fire(EventFactory.createUiImageCropper_SelectionChangedEvent(this.getId(), this.selection));
 	}
 
+	private boundSelection() {
+		return {
+			...boundSelection(this.selection, {width: this.imageNaturalWidth, height: this.imageNaturalHeight}, this._config.aspectRatio),
+			_type: "UiImageCropperSelection"
+		};
+	}
+
 	private calculateCoordinateCorrectionFactor() {
+		console.log(`${this.imageNaturalWidth} / ${this.getWidth()}, ${this.imageNaturalHeight} / ${this.getHeight()}`);
 		return Math.max(this.imageNaturalWidth / this.getWidth(), this.imageNaturalHeight / this.getHeight());
 	}
 
@@ -118,6 +130,7 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 	}
 
 	setAspectRatio(aspectRatio: number): void {
+		this._config.aspectRatio = aspectRatio;
 		$(this.$selectionFrame).resizable("option", "aspectRatio", aspectRatio);
 		this.resetSelectionFrame(aspectRatio);
 	}
@@ -154,10 +167,10 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 			let height = this.selection.height / correctionFactor;
 
 			css(this.$selectionFrame, {
-				left: left + (this.htmlImageElement.offsetLeft - this.getMainDomElement().offsetLeft),
-				top: top + (this.htmlImageElement.offsetTop - this.getMainDomElement().offsetTop),
-				width,
-				height
+				left: left + (this.htmlImageElement.offsetLeft - this.getMainDomElement().offsetLeft) + "px",
+				top: top + (this.htmlImageElement.offsetTop - this.getMainDomElement().offsetTop) + "px",
+				width: width + "px",
+				height: height + "px"
 			});
 		}
 	}

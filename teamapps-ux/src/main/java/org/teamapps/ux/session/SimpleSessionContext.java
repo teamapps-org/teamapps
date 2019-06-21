@@ -27,12 +27,12 @@ import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.server.UxServerContext;
+import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.ux.caption.MultiResourceBundle;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
-import org.teamapps.uisession.QualifiedUiSessionId;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +51,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SimpleSessionContext implements LockableSessionContext {
@@ -207,13 +206,8 @@ public class SimpleSessionContext implements LockableSessionContext {
 	}
 
 	@Override
-	public String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName) {
-		return createResourceLink(inputStreamSupplier, length, resourceName, null);
-	}
-
-	@Override
-	public String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName, String uniqueIdentifier) {
-		return sessionResourceProvider.createResourceLink(inputStreamSupplier, length, resourceName, uniqueIdentifier);
+	public String createResourceLink(Resource resource, String uniqueIdentifier) {
+		return sessionResourceProvider.createResourceLink(resource, uniqueIdentifier);
 	}
 
 	@Override

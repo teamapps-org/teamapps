@@ -76,16 +76,16 @@ export class ProgressCircle implements ProgressIndicator {
 	public setProgress(progress: number) {
 		this.$circle.style.strokeDashoffset = "" + this.calculateStrokeOffset(progress);
 		let percentString = Math.ceil(progress * 100) + "%";
-		this.$caption.innerText = percentString;
+		this.$caption.textContent = percentString;
 	}
 
 	setErrorMessage(message: string | null): void {
 		this.$mainDomElement.classList.toggle('error', !!message);
 		if (message != null) {
-			this.$caption.innerText = '!';
+			this.$caption.textContent = '!';
 			$(this.$mainDomElement).webuiPopover({trigger: 'hover', content: message, closeable: true});
 		} else {
-			this.$caption.innerText = this.caption;
+			this.$caption.textContent = this.caption;
 		}
 	}
 
