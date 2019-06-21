@@ -70,7 +70,7 @@ export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> im
     <div class="picture-wrapper">
     	<div class="picture hidden"></div>
 		<div class="progress-wrapper hidden"></div>
-		<input class="file-input" type="file" multiple tabindex="-1"></input>
+		<input class="file-input" type="file" multiple tabindex="-1" accept="image/png,image/jpeg,image/bmp,image/gif"></input>
 		<div class="button upload-button icon img img-16" style="background-image: url(${context.getIconPath(config.browseButtonIcon, 24)});"></div>
 		<div class="button delete-button icon img img-16" style="background-image: url(${context.getIconPath(config.deleteButtonIcon, 24)});"></div>
 	</div>
