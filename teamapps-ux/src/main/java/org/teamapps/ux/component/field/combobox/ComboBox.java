@@ -63,7 +63,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD>
 
 	@Override
 	public UiField createUiComponent() {
-		UiComboBox comboBox = new UiComboBox(getId());
+		UiComboBox comboBox = new UiComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		return comboBox;
 	}

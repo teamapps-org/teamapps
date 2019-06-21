@@ -40,7 +40,7 @@ public class DisplayField extends AbstractField<String> {
 
 	@Override
 	public UiField createUiComponent() {
-		UiDisplayField uiDisplayField = new UiDisplayField(getId());
+		UiDisplayField uiDisplayField = new UiDisplayField();
 		mapAbstractFieldAttributesToUiField(uiDisplayField);
 		uiDisplayField.setShowBorder(showBorder);
 		uiDisplayField.setShowHtml(showHtml);

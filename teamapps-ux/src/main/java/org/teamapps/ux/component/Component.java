@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,8 @@ public interface Component {
 
 	boolean isRendered();
 
-	void handleUiEvent(UiEvent event);
+	default void handleUiEvent(UiEvent event) {
+	}
 
 	boolean isDestroyed();
 
@@ -62,14 +63,19 @@ public interface Component {
 	// ===== CSS =====
 
 	void setMinWidth(Length minWidth);
+
 	void setMaxWidth(Length maxWidth);
+
 	void setMinHeight(Length minHeight);
+
 	void setMaxHeight(Length maxHeight);
+
 	void setMargin(Spacing margin);
+
 	void setShadow(Shadow shadow);
 
 	void setCssStyle(String selector, String propertyName, String value);
-	
+
 	default void setCssStyle(String propertyName, String value) {
 		setCssStyle(null, propertyName, value);
 	}

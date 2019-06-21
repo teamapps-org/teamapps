@@ -140,7 +140,7 @@ public class TabPanel extends AbstractComponent implements Container {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiTabPanel uiTabPanel = new UiTabPanel(getId());
+		UiTabPanel uiTabPanel = new UiTabPanel();
 		mapAbstractUiComponentProperties(uiTabPanel);
 		List<UiTab> uiTabs = tabs.stream()
 				.map(tab -> tab != null ? tab.createUiTab() : null)

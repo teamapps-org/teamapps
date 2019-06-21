@@ -49,7 +49,7 @@ public class DocumentViewer extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiDocumentViewer documentViewer = new UiDocumentViewer(getId());
+		UiDocumentViewer documentViewer = new UiDocumentViewer();
 		mapAbstractUiComponentProperties(documentViewer);
 		documentViewer.setPageUrls(pageUrls);
 		documentViewer.setDisplayMode(displayMode.toUiPageDisplayMode());

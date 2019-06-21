@@ -51,7 +51,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	@Override
 	public UiField createUiComponent() {
-		UiCurrencyField field = new UiCurrencyField(getId());
+		UiCurrencyField field = new UiCurrencyField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setDefaultCurrencyCode(defaultCurrency != null ? defaultCurrency.isoCode : null);
 		field.setCurrencyCodeList(currencyList != null ? currencyList.stream()

@@ -68,7 +68,7 @@ public class ToolButton extends AbstractComponent {
 	@Override
 	public UiComponent createUiComponent() {
 		String icon = getSessionContext().resolveIcon(this.icon);
-		UiToolButton uiToolButton = new UiToolButton(getId(), icon, popoverText);
+		UiToolButton uiToolButton = new UiToolButton(icon, popoverText);
 		mapAbstractUiComponentProperties(uiToolButton);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
 		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent.createUiComponentReference() : null);

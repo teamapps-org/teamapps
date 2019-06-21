@@ -37,7 +37,7 @@ public class Gauge extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiGauge uiGauge = new UiGauge(getId(), options);
+		UiGauge uiGauge = new UiGauge(options);
 		mapAbstractUiComponentProperties(uiGauge);
 		return uiGauge;
 	}

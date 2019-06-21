@@ -40,7 +40,7 @@ public class ResponsiveGridLayout extends AbstractComponent implements Container
 	@Override
 	public UiComponent createUiComponent() {
 		List<UiResponsiveGridLayoutPolicy> layoutPolicies = createUiLayoutPolicies();
-		UiResponsiveGridLayout uiResponsiveGridLayout = new UiResponsiveGridLayout(getId(), layoutPolicies);
+		UiResponsiveGridLayout uiResponsiveGridLayout = new UiResponsiveGridLayout(layoutPolicies);
 		mapAbstractUiComponentProperties(uiResponsiveGridLayout);
 		return uiResponsiveGridLayout;
 	}

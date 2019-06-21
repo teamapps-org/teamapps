@@ -40,7 +40,7 @@ public class FlexContainer extends AbstractComponent {
 
 	@Override
 	public UiFlexContainer createUiComponent() {
-		UiFlexContainer uiFlexContainer = new UiFlexContainer(getId());
+		UiFlexContainer uiFlexContainer = new UiFlexContainer();
 		mapAbstractUiComponentProperties(uiFlexContainer);
 		uiFlexContainer.setComponents(components.stream()
 				.map(c -> c.createUiComponentReference())
@@ -98,8 +98,4 @@ public class FlexContainer extends AbstractComponent {
 		reRenderIfRendered(); // TODO
 	}
 
-	@Override
-	protected void doDestroy() {
-
-	}
 }

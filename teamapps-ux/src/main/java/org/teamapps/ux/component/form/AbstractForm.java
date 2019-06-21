@@ -91,7 +91,7 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 				.map(field -> field != null ? field.createUiComponentReference() : null)
 				.collect(Collectors.toList());
 		List<UiFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();
-		UiGridForm uiForm = new UiGridForm(getId(), "-----------TODO-remove!------------", uiFields, uiLayoutPolicies);
+		UiGridForm uiForm = new UiGridForm("-----------TODO-remove!------------", uiFields, uiLayoutPolicies);
 		mapAbstractUiComponentProperties(uiForm);
 		return uiForm;
 	}

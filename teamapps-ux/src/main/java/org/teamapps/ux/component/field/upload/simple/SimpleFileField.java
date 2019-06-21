@@ -95,7 +95,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiSimpleFileField field = new UiSimpleFileField(getId());
+		UiSimpleFileField field = new UiSimpleFileField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setBrowseButtonIcon(getSessionContext().resolveIcon(browseButtonIcon));
 		field.setBrowseButtonCaption(browseButtonCaption);

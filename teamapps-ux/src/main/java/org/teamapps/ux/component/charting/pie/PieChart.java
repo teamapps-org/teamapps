@@ -38,7 +38,7 @@ public class PieChart extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiPieChart uiPieChart = new UiPieChart(getId());
+		UiPieChart uiPieChart = new UiPieChart();
 		uiPieChart.setDataPointWeighting(dataPointWeighting.toUiDataPointWeighting());
 		uiPieChart.setRotation3D(rotation3D);
 		uiPieChart.setHeight3D(height3D);

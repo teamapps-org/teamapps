@@ -64,7 +64,7 @@ public class Window extends Panel {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiWindow window = new UiWindow(getId());
+		UiWindow window = new UiWindow();
 		mapUiPanelProperties(window);
 		window.setModal(modal);
 		window.setWidth(width);

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 class UiComponent {
-	@Referenceable required String id;
+	@Referenceable String id;
 	boolean visible = true;
 	Dictionary<Dictionary<String>> stylesBySelector;
 

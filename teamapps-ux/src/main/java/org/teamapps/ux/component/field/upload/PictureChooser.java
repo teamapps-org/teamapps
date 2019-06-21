@@ -129,7 +129,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	@Override
 	public UiField createUiComponent() {
-		UiPictureChooser uiField = new UiPictureChooser(getId());
+		UiPictureChooser uiField = new UiPictureChooser();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setUploadUrl(uploadUrl);
 		uiField.setMaxFileSize(maxFileSize);

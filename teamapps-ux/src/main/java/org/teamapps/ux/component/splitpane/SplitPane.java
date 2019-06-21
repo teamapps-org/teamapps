@@ -71,7 +71,7 @@ public class SplitPane extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiSplitPane uiSplitPane = new UiSplitPane(getId(), splitDirection.toUiSplitDirection(), sizePolicy.toUiSplitSizePolicy());
+		UiSplitPane uiSplitPane = new UiSplitPane(splitDirection.toUiSplitDirection(), sizePolicy.toUiSplitSizePolicy());
 		mapAbstractUiComponentProperties(uiSplitPane);
 		uiSplitPane.setReferenceChildSize(referenceChildSize);
 		if (firstChild != null) {

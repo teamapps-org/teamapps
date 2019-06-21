@@ -161,7 +161,6 @@ public class TimeGraph extends AbstractComponent {
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).createUiLongInterval();
 
 		UiTimeGraph uiTimeGraph = new UiTimeGraph(
-				getId(),
 				uiIntervalX,
 				uiZoomLevels,
 				maxPixelsBetweenDataPoints,

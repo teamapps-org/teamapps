@@ -43,7 +43,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	@Override
 	public UiField createUiComponent() {
-		UiCheckBox uiCheckBox = new UiCheckBox(getId());
+		UiCheckBox uiCheckBox = new UiCheckBox();
 		mapAbstractFieldAttributesToUiField(uiCheckBox);
 		uiCheckBox.setCaption(caption);
 		uiCheckBox.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);

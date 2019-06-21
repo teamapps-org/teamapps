@@ -69,7 +69,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	@Override
 	public UiField createUiComponent() {
-		UiTextField uiField = new UiTextField(getId());
+		UiTextField uiField = new UiTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(maxCharacters);
 		uiField.setShowClearButton(showClearButton);

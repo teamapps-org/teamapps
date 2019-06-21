@@ -45,7 +45,7 @@ public class Label extends AbstractField<String> {
 
 	@Override
 	public UiField createUiComponent() {
-		UiLabel uiLabel = new UiLabel(getId(), caption);
+		UiLabel uiLabel = new UiLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));
 		uiLabel.setTargetField(targetField != null ? targetField.createUiComponentReference() : null);

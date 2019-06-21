@@ -158,7 +158,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiCalendar uiCalendar = new UiCalendar(getId());
+		UiCalendar uiCalendar = new UiCalendar();
 		mapAbstractUiComponentProperties(uiCalendar);
 		uiCalendar.setActiveViewMode(activeViewMode.toUiCalendarViewMode());
 		uiCalendar.setDisplayedDate(displayedDate.atStartOfDay(getClientZoneId()).toInstant().toEpochMilli());

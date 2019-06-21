@@ -37,7 +37,7 @@ public class MediaTrackGraph extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiMediaTrackGraph uiMediaTrackGraph = new UiMediaTrackGraph(getId());
+		UiMediaTrackGraph uiMediaTrackGraph = new UiMediaTrackGraph();
 		mapAbstractUiComponentProperties(uiMediaTrackGraph);
 		uiMediaTrackGraph.setTrackCount(data.getTrackCount());
 		uiMediaTrackGraph.setTrackData(data.getTrackData());

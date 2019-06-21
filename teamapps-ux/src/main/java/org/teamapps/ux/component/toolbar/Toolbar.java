@@ -39,7 +39,7 @@ public class Toolbar extends AbstractToolContainer {
 				.sorted()
 				.map(group -> group.createUiToolbarButtonGroup())
 				.collect(Collectors.toList());
-		UiToolbar uiToolbar = new UiToolbar(getId(), uiButtonGroups);
+		UiToolbar uiToolbar = new UiToolbar(uiButtonGroups);
 		mapAbstractUiComponentProperties(uiToolbar);
 		uiToolbar.setLogoImage(logoImageUrl);
 		return uiToolbar;

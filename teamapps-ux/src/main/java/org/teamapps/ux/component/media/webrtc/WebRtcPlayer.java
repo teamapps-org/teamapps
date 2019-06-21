@@ -40,7 +40,7 @@ public class WebRtcPlayer extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiWebRtcPlayer ui = new UiWebRtcPlayer(getId());
+		UiWebRtcPlayer ui = new UiWebRtcPlayer();
 		mapAbstractUiComponentProperties(ui);
 		ui.setPlayingSettings(playingSettings != null ? playingSettings.createUiWebRtcPlayingSettings() : null);
 		ui.setBackgroundImageUrl(backgroundImageUrl);

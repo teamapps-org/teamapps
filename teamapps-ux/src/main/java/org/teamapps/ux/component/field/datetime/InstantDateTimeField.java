@@ -34,7 +34,7 @@ public class InstantDateTimeField extends AbstractDateTimeField<InstantDateTimeF
 
 	@Override
 	public UiField createUiComponent() {
-		UiInstantDateTimeField uiField = new UiInstantDateTimeField(getId());
+		UiInstantDateTimeField uiField = new UiInstantDateTimeField();
 		mapAbstractDateTimeFieldUiValues(uiField);
 		uiField.setTimeZoneId(timeZoneId);
 		return uiField;

@@ -33,7 +33,7 @@ public class LocalTimeField extends AbstractTimeField<LocalTimeField, LocalTime>
 
 	@Override
 	public UiField createUiComponent() {
-		UiLocalTimeField uiTimeField = new UiLocalTimeField(getId());
+		UiLocalTimeField uiTimeField = new UiLocalTimeField();
 		mapAbstractTimeFieldUiValues(uiTimeField);
 		return uiTimeField;
 	}

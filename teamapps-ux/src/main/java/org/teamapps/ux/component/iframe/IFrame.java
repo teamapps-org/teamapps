@@ -38,7 +38,7 @@ public class IFrame extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiIFrame uiIFrame = new UiIFrame(getId()).setUrl(url);
+		UiIFrame uiIFrame = new UiIFrame().setUrl(url);
 		mapAbstractUiComponentProperties(uiIFrame);
 		return uiIFrame;
 	}

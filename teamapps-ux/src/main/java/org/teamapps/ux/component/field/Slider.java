@@ -42,7 +42,7 @@ public class Slider extends AbstractField<Number> {
 
 	@Override
 	public UiField createUiComponent() {
-		UiSlider uiSlider = new UiSlider(getId());
+		UiSlider uiSlider = new UiSlider();
 		mapAbstractFieldAttributesToUiField(uiSlider);
 		uiSlider.setMin(min);
 		uiSlider.setMax(max);

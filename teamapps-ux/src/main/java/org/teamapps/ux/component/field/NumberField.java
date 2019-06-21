@@ -46,7 +46,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	@Override
 	public UiField createUiComponent() {
-		UiNumberField field = new UiNumberField(getId());
+		UiNumberField field = new UiNumberField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setPrecision(precision);
 		field.setEmptyText(emptyText);

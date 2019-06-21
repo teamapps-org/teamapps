@@ -38,7 +38,7 @@ public class ColorPicker extends AbstractField<Color> {
 
 	@Override
 	public UiField createUiComponent() {
-		UiColorPicker uiColorPicker = new UiColorPicker(getId());
+		UiColorPicker uiColorPicker = new UiColorPicker();
 		mapAbstractFieldAttributesToUiField(uiColorPicker);
 		uiColorPicker.setDefaultColor(defaultColor != null ? createUiColor(defaultColor) : null);
 		uiColorPicker.setSaveButtonCaption(saveButtonCaption);

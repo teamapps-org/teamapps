@@ -199,7 +199,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiItemView uiItemView = new UiItemView(getId());
+		UiItemView uiItemView = new UiItemView();
 		mapAbstractUiComponentProperties(uiItemView);
 		uiItemView.setGroupHeaderTemplate(groupHeaderTemplate != null ? groupHeaderTemplate.createUiTemplate() : null);
 		uiItemView.setItemGroups(this.itemGroups.stream()

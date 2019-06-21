@@ -37,7 +37,7 @@ public class ImageField extends AbstractField<String> {
 
 	@Override
 	public UiField createUiComponent() {
-		UiImageField uiImageField = new UiImageField(getId());
+		UiImageField uiImageField = new UiImageField();
 		mapAbstractFieldAttributesToUiField(uiImageField);
 		uiImageField.setWidth(width);
 		uiImageField.setHeight(height);

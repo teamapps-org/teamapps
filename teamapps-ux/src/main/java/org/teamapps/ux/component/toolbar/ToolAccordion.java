@@ -37,7 +37,7 @@ public class ToolAccordion extends AbstractToolContainer {
 				.sorted()
 				.map(group -> group.createUiToolbarButtonGroup())
 				.collect(Collectors.toList());
-		UiToolAccordion uiToolAccordion = new UiToolAccordion(getId(), uiButtonGroups);
+		UiToolAccordion uiToolAccordion = new UiToolAccordion(uiButtonGroups);
 		mapAbstractUiComponentProperties(uiToolAccordion);
 		return uiToolAccordion;
 	}
