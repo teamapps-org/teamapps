@@ -20,7 +20,6 @@
 
 import {UiGridForm_SectionCollapsedStateChangedEvent, UiGridFormCommandHandler, UiGridFormConfig, UiGridFormEventSource} from "../generated/UiGridFormConfig";
 import {UiFormLayoutPolicyConfig} from "../generated/UiFormLayoutPolicyConfig";
-import {UiField} from "./formfield/UiField";
 import {UiFormSectionConfig} from "../generated/UiFormSectionConfig";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -54,7 +53,7 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 
 	private layoutPoliciesFromLargeToSmall: UiFormLayoutPolicyConfig[];
 	private activeLayoutPolicyIndex: number;
-	private uiFields: UiField[] = [];
+	private uiFields: UiComponent[] = [];
 	private fillRemainingHeightCheckerInterval: number;
 	private sectionCollapseOverrides: { [sectionId: string]: boolean };
 
@@ -63,11 +62,11 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 		this.$mainDiv = parseHtml(`<div class="UiGridForm" data-teamapps-id="${config.id}">
 </div>`);
 
-		config.fields.forEach(f => this.addField(f as UiField));
+		config.fields.forEach(f => this.addField(f as UiComponent));
 		this.updateLayoutPolicies(config.layoutPolicies);
 	}
 
-	private addField(uiField: UiField) {
+	private addField(uiField: UiComponent) {
 		this.uiFields.push(uiField);
 	}
 
@@ -152,7 +151,7 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 		window.clearInterval(this.fillRemainingHeightCheckerInterval);
 	}
 
-	addOrReplaceField(field: UiField): void {
+	addOrReplaceField(field: UiComponent): void {
 		this.addField(field);
 		this.applyLayoutPolicy(this.layoutPoliciesFromLargeToSmall[this.determineLayoutPolicyIndexToApply()]);
 	}
@@ -164,7 +163,7 @@ class UiFormSection {
 	private static readonly LOGGER = log.getLogger("UiFormSection");
 	public readonly onCollapsedStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>(this);
 
-	private uiFields: UiField[] = [];
+	private uiFields: UiComponent[] = [];
 
 	private uuid: string;
 	private $div: HTMLElement;
@@ -246,7 +245,7 @@ class UiFormSection {
 		this.config.fieldPlacements.forEach(placement => {
 			const placementId = generateUUID(true);
 			if (this.isUiFormSectionFieldPlacement(placement)) {
-				const uiField = placement.field as UiField;
+				const uiField = placement.field as UiComponent;
 				uiField.onVisibilityChanged.addListener(this.updateGroupVisibility);
 				this.uiFields.push(uiField);
 				allCssRules[placementId] = {
@@ -264,7 +263,7 @@ class UiFormSection {
 					"flex-wrap": placement.wrap ? "wrap" : "nowrap"
 				};
 				placement.floatingFields.forEach(floatingField => {
-					const uiField = floatingField.field as UiField;
+					const uiField = floatingField.field as UiComponent;
 					uiField.onVisibilityChanged.addListener(this.updateGroupVisibility);
 					this.uiFields.push(uiField);
 					const floatingFieldPlacementId = generateUUID(true);

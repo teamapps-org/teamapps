@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,6 @@ package org.teamapps.ux.component.form;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
 import org.teamapps.dto.UiComponent;
@@ -31,14 +30,13 @@ import org.teamapps.dto.UiFormLayoutPolicy;
 import org.teamapps.dto.UiGridForm;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> extends AbstractComponent implements Container {
@@ -48,10 +46,11 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 	public final Event<FieldChangeEventData> onFieldValueChanged = new Event<>();
 
 	private LogicalForm<RECORD> logicalForm = new LogicalForm<>();
+	private List<Component> children = new ArrayList<>();
 
 
 	public void clearAllFields() {
-		getFields().stream().forEach(field -> field.setValue(null));
+		getFields().forEach(field -> field.setValue(null));
 	}
 
 	/**
@@ -70,18 +69,18 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 	}
 
 	protected void addField(String propertyName, AbstractField field) {
-		field.setParent(this);
+		addComponent(field);
 		logicalForm.addField(propertyName, field);
 		field.onValueChanged.addListener(value -> {
 			onFieldValueChanged.fire(new FieldChangeEventData(propertyName, field, value));
 		});
-		queueCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(getId(), field.createUiComponentReference()));
 	}
 
-	// TODO #focus
-//	@Override
-//	public void handleFieldFocused(AbstractField field) {
-//	}
+	protected void addComponent(Component component) {
+		children.add(component);
+		component.setParent(this);
+		queueCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(getId(), component.createUiComponentReference()));
+	}
 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
 
@@ -91,7 +90,7 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 				.map(field -> field != null ? field.createUiComponentReference() : null)
 				.collect(Collectors.toList());
 		List<UiFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();
-		UiGridForm uiForm = new UiGridForm("-----------TODO-remove!------------", uiFields, uiLayoutPolicies);
+		UiGridForm uiForm = new UiGridForm(uiFields, uiLayoutPolicies);
 		mapAbstractUiComponentProperties(uiForm);
 		return uiForm;
 	}
@@ -172,6 +171,9 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		return (AbstractField<V>) logicalForm.getFields().get(propertyName);
 	}
 
+	public List<Component> getAllChildren() {
+		return children;
+	}
 
 	public void setSectionCollapsed(String sectionId, boolean collapsed) {
 		queueCommandIfRendered(() -> new UiGridForm.SetSectionCollapsedCommand(getId(), sectionId, collapsed));

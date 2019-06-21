@@ -19,16 +19,16 @@
  */
 package org.teamapps.ux.component.form;
 
-import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.ux.component.grid.layout.GridColumn;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.form.layoutpolicy.FormSectionFieldPlacement;
-import org.teamapps.ux.component.grid.layout.GridRow;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
+import org.teamapps.ux.component.grid.layout.GridColumn;
+import org.teamapps.ux.component.grid.layout.GridRow;
 
 public class ResponsiveFormField {
 	private final ResponsiveFormSection responsiveFormSection;
-	private final AbstractField field;
+	private final Component field;
 	//FormSectionFloatingFieldsPlacement floatingFieldsPlacement;
 	private final int row;
 	private final int column;
@@ -41,7 +41,7 @@ public class ResponsiveFormField {
 	private VerticalElementAlignment verticalAlignment = VerticalElementAlignment.CENTER;
 	private HorizontalElementAlignment horizontalAlignment = HorizontalElementAlignment.LEFT;
 
-	protected ResponsiveFormField(ResponsiveFormSection responsiveFormSection, AbstractField field, int row, int column, FormSectionFieldPlacement fieldPlacementTemplate) {
+	protected ResponsiveFormField(ResponsiveFormSection responsiveFormSection, Component field, int row, int column, FormSectionFieldPlacement fieldPlacementTemplate) {
 		this.responsiveFormSection = responsiveFormSection;
 		this.field = field;
 		this.row = row;
@@ -60,7 +60,7 @@ public class ResponsiveFormField {
 
 
 	protected FormSectionFieldPlacement createFormSectionPlacement() {
-		FormSectionFieldPlacement placement = new FormSectionFieldPlacement<>(field, row, column);
+		FormSectionFieldPlacement placement = new FormSectionFieldPlacement(field, row, column);
 		placement.setRowSpan(rowSpan);
 		placement.setColSpan(colSpan);
 		placement.setMinWidth(minWidth);
@@ -84,7 +84,7 @@ public class ResponsiveFormField {
 		return responsiveFormSection;
 	}
 
-	public AbstractField getField() {
+	public Component getField() {
 		return field;
 	}
 
