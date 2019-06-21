@@ -38,7 +38,7 @@ public class PageView extends AbstractComponent {
 
 	@Override
 	public UiPageView createUiComponent() {
-		UiPageView uiPageView = new UiPageView(getId());
+		UiPageView uiPageView = new UiPageView();
 		mapAbstractUiComponentProperties(uiPageView);
 		uiPageView.setBlocks(blocks.stream()
 				.map(block -> block.createUiBlock())

@@ -41,7 +41,7 @@ public class DummyComponent extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiDummyComponent dummyComponent = new UiDummyComponent(getId());
+		UiDummyComponent dummyComponent = new UiDummyComponent();
 		mapAbstractUiComponentProperties(dummyComponent);
 		dummyComponent.setText(text);
 		return dummyComponent;

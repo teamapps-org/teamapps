@@ -81,7 +81,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Contain
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiResponsiveGridLayout uiResponsiveGridLayout = new UiResponsiveGridLayout(getId(), createUiLayoutPolicies());
+		UiResponsiveGridLayout uiResponsiveGridLayout = new UiResponsiveGridLayout(createUiLayoutPolicies());
 		mapAbstractUiComponentProperties(uiResponsiveGridLayout);
 		uiResponsiveGridLayout.setFillHeight(this.fillHeight);
 		return uiResponsiveGridLayout;

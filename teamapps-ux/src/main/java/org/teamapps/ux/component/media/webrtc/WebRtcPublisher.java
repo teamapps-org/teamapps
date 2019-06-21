@@ -36,7 +36,7 @@ public class WebRtcPublisher extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiWebRtcPublisher ui = new UiWebRtcPublisher(getId());
+		UiWebRtcPublisher ui = new UiWebRtcPublisher();
 		mapAbstractUiComponentProperties(ui);
 		ui.setPublishingSettings(publishingSettings != null ? publishingSettings.createUWebRtcPublishingSettings() : null);
 		ui.setMicrophoneMuted(microphoneMuted);

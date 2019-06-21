@@ -108,7 +108,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 		List<UiWorkSpaceLayoutView> uiViews = getMainRootItem().getAllViews().stream()
 				.map(WorkSpaceLayoutView::createUiView)
 				.collect(Collectors.toList());
-		UiWorkSpaceLayout uiLayout = new UiWorkSpaceLayout(getId(), uiViews, uiInitialLayout, childWindowPageTitle);
+		UiWorkSpaceLayout uiLayout = new UiWorkSpaceLayout(uiViews, uiInitialLayout, childWindowPageTitle);
 		mapAbstractUiComponentProperties(uiLayout);
 		if (toolbar != null) {
 			uiLayout.setToolbar(toolbar.createUiComponentReference());

@@ -57,7 +57,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiNavigationBar uiNavigationBar = new UiNavigationBar(getId(), buttonTemplate.createUiTemplate());
+		UiNavigationBar uiNavigationBar = new UiNavigationBar(buttonTemplate.createUiTemplate());
 		mapAbstractUiComponentProperties(uiNavigationBar);
 		uiNavigationBar.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);
 		uiNavigationBar.setBorderColor(borderColor != null ? createUiColor(borderColor) : null);

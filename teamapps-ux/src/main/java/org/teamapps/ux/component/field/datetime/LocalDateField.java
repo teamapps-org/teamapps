@@ -33,7 +33,7 @@ public class LocalDateField extends AbstractDateField<LocalDateField, LocalDate>
 
 	@Override
 	public UiField createUiComponent() {
-		UiLocalDateField dateField = new UiLocalDateField(getId());
+		UiLocalDateField dateField = new UiLocalDateField();
 		mapAbstractDateFieldUiValues(dateField);
 		return dateField;
 	}

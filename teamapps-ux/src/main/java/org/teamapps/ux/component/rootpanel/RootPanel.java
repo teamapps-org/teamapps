@@ -44,7 +44,7 @@ public class RootPanel extends AbstractComponent implements Container {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiRootPanel uiRootPanel = new UiRootPanel(getId());
+		UiRootPanel uiRootPanel = new UiRootPanel();
 		mapAbstractUiComponentProperties(uiRootPanel);
 		if (content != null) {
 			uiRootPanel.setVisibleChildComponentId(content.getId());

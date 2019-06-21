@@ -37,7 +37,7 @@ public class ChatInput extends AbstractComponent {
 
 	@Override
 	public UiChatInput createUiComponent() {
-		UiChatInput uiChatInput = new UiChatInput(getId(), getSessionContext().resolveIcon(MaterialIcon.ATTACHMENT));
+		UiChatInput uiChatInput = new UiChatInput(getSessionContext().resolveIcon(MaterialIcon.ATTACHMENT));
 		mapAbstractUiComponentProperties(uiChatInput);
 		uiChatInput.setMaxBytesPerUpload(maxBytesPerUpload);
 		uiChatInput.setUploadUrl(uploadUrl);

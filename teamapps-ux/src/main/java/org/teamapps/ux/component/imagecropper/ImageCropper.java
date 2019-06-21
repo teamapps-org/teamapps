@@ -40,7 +40,7 @@ public class ImageCropper extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiImageCropper uiImageCropper = new UiImageCropper(getId(), imageUrl, selectionMode.toUiImageCropperSelectionMode(), aspectRatio);
+		UiImageCropper uiImageCropper = new UiImageCropper(imageUrl, selectionMode.toUiImageCropperSelectionMode(), aspectRatio);
 		mapAbstractUiComponentProperties(uiImageCropper);
 		return uiImageCropper;
 	}

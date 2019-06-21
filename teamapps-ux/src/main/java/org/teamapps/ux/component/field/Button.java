@@ -75,7 +75,7 @@ public class Button<RECORD> extends AbstractField<Boolean> {
 	@Override
 	public UiField createUiComponent() {
 		Object uiRecord = createUiRecord();
-		UiButton button = new UiButton(getId(), getTemplate().createUiTemplate(), uiRecord);
+		UiButton button = new UiButton(getTemplate().createUiTemplate(), uiRecord);
 		mapAbstractFieldAttributesToUiField(button);
 		button.setDropDownComponent(Component.createUiComponentReference(dropDownComponent));
 		button.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);

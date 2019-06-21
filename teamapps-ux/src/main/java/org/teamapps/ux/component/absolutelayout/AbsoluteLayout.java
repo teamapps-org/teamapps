@@ -83,7 +83,7 @@ public class AbsoluteLayout extends AbstractComponent {
 
 	@Override
 	public UiAbsoluteLayout createUiComponent() {
-		UiAbsoluteLayout uiAbsoluteLayout = new UiAbsoluteLayout(getId());
+		UiAbsoluteLayout uiAbsoluteLayout = new UiAbsoluteLayout();
 		mapAbstractUiComponentProperties(uiAbsoluteLayout);
 		uiAbsoluteLayout.setComponents(createUiAbsolutePositionedComponents());
 		return uiAbsoluteLayout;

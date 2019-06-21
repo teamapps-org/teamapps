@@ -86,7 +86,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiInfiniteItemView uiComponent = new UiInfiniteItemView(getId(), itemTemplate.createUiTemplate(), rowHeight);
+		UiInfiniteItemView uiComponent = new UiInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
 		mapAbstractUiComponentProperties(uiComponent);
 		int recordCount = model.getCount();
 		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(model.getRecords(0, Math.min(recordCount, numberOfInitialRecords)));

@@ -60,7 +60,7 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiMap uiMap = new UiMap(getId(), new HashMap<>());
+		UiMap uiMap = new UiMap(new HashMap<>());
 		mapAbstractUiComponentProperties(uiMap);
 		uiMap.setMapType(mapType.toUiMapType());
 		uiMap.setZoomLevel(zoomLevel);

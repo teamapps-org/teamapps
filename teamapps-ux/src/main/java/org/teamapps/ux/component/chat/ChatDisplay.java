@@ -62,7 +62,7 @@ public class ChatDisplay extends AbstractComponent {
 
 	@Override
 	public UiChatDisplay createUiComponent() {
-		UiChatDisplay uiChatDisplay = new UiChatDisplay(getId());
+		UiChatDisplay uiChatDisplay = new UiChatDisplay();
 		mapAbstractUiComponentProperties(uiChatDisplay);
 		ChatMessageBatch modelResponse = model.getLastChatMessages(messagesFetchSize);
 		uiChatDisplay.setMessages(createUiChatMessages(modelResponse.getMessages()));

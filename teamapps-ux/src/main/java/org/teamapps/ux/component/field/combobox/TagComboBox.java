@@ -75,7 +75,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 
 	@Override
 	public UiField createUiComponent() {
-		UiTagComboBox comboBox = new UiTagComboBox(getId());
+		UiTagComboBox comboBox = new UiTagComboBox();
 		mapCommonUiComboBoxProperties(comboBox);
 		comboBox.setMaxEntries(maxEntries);
 		comboBox.setWrappingMode(this.wrappingMode.toUiWrappingMode());

@@ -33,7 +33,7 @@ public class PasswordField extends TextField {
 
 	@Override
 	public UiField createUiComponent() {
-		UiPasswordField uiField = new UiPasswordField(getId());
+		UiPasswordField uiField = new UiPasswordField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
 		uiField.setShowClearButton(isShowClearButton());

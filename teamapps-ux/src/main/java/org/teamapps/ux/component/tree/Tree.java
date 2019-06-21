@@ -174,7 +174,7 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiTree uiTree = new UiTree(getId());
+		UiTree uiTree = new UiTree();
 		mapAbstractUiComponentProperties(uiTree);
 		List<RECORD> records = model.getRecords(null);
 		if (records != null) {

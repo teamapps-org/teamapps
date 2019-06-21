@@ -42,7 +42,7 @@ public class ComponentField extends AbstractField<Void> {
 
 	@Override
 	public UiField createUiComponent() {
-		UiComponentField uiField = new UiComponentField(getId());
+		UiComponentField uiField = new UiComponentField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setComponent(Component.createUiComponentReference(component));
 		uiField.setWidth(width);

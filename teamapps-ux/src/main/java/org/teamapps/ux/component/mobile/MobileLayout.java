@@ -47,7 +47,7 @@ public class MobileLayout extends AbstractComponent implements Container {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiMobileLayout uiMobileLayout = new UiMobileLayout(getId());
+		UiMobileLayout uiMobileLayout = new UiMobileLayout();
 		mapAbstractUiComponentProperties(uiMobileLayout);
 		if (activeComponent != null) {
 			uiMobileLayout.setInitialViewId(activeComponent.getId());

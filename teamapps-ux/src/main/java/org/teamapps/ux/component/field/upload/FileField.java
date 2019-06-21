@@ -81,7 +81,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	@Override
 	public UiField createUiComponent() {
 		Map uploadButtonData = uploadButtonPropertyExtractor.getValues(this.uploadButtonData, uploadButtonTemplate.getDataKeys());
-		UiFileField uiField = new UiFileField(getId(), fileItemTemplate.createUiTemplate(), uploadButtonTemplate.createUiTemplate(), uploadButtonData);
+		UiFileField uiField = new UiFileField(fileItemTemplate.createUiTemplate(), uploadButtonTemplate.createUiTemplate(), uploadButtonData);
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxBytesPerFile(maxBytesPerFile);
 		uiField.setUploadUrl(uploadUrl);

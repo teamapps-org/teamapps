@@ -141,7 +141,7 @@ public class Panel extends AbstractComponent implements Container {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiPanel uiPanel = new UiPanel(getId());
+		UiPanel uiPanel = new UiPanel();
 		mapUiPanelProperties(uiPanel);
 		return uiPanel;
 	}

@@ -35,7 +35,7 @@ public class MultiLineTextField extends TextField {
 
 	@Override
 	public UiField createUiComponent() {
-		UiMultiLineTextField uiField = new UiMultiLineTextField(getId());
+		UiMultiLineTextField uiField = new UiMultiLineTextField();
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
 		uiField.setShowClearButton(isShowClearButton());

@@ -223,7 +223,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		List<UiTableColumn> columns = this.columns.stream()
 				.map(tableColumn -> tableColumn.createUiTableColumn())
 				.collect(Collectors.toList());
-		UiTable uiTable = new UiTable(getId(), columns);
+		UiTable uiTable = new UiTable(columns);
 		mapAbstractUiComponentProperties(uiTable);
 		uiTable.setSelectionFrame(selectionFrame != null ? selectionFrame.createUiSelectionFrame() : null);
 		uiTable.setDisplayAsList(displayAsList);

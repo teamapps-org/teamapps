@@ -21,6 +21,7 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import * as log from "loglevel";
 import {UiComponentCommandHandler, UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
+import {generateUUID} from "./Common";
 
 export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfig> implements UiComponentCommandHandler {
 
@@ -39,6 +40,9 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 
 	constructor(protected _config: C,
 	            protected _context: TeamAppsUiContext) {
+		if (_config.id == null) {
+			_config.id = generateUUID();
+		}
 		setTimeout(() => {
 			this.setVisible(_config.visible, false);
 			if (_config.stylesBySelector != null) { // might be null when used via JavaScript API!

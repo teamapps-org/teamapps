@@ -9,14 +9,27 @@ import {UiSwitch} from "./UiSwitch";
 import {createUiColorConfig} from "../generated/UiColorConfig";
 import {AbstractUiReactComponent} from "./AbstractUiReactComponent";
 import {UiPictureChooser} from "./formfield/file/UiPictureChooser";
+import {UiFieldGroup} from "./formfield/UiFieldGroup";
+import {UiTextField} from "./formfield/UiTextField";
+import {UiButton} from "./formfield/UiButton";
 
 
 export class UiTestHarness {
 
 	constructor() {
+		let context = new TestTeamAppsUiContext();
+
 		// let component = this.createRadioGroup();
 		// let component = this.createRadioGroup();
-		let component = this.createUiPictureChooser();
+		// let component = this.createUiPictureChooser();
+
+		let component = new UiFieldGroup({
+			id: "asdf",
+			fields: [
+				new UiTextField({stylesBySelector: {"": {flex: "1 1 auto"}}}, context),
+				new UiButton({template: null, templateRecord: null}, context)
+			]
+		}, context);
 
 		(window as any).c = component;
 		document.body.appendChild(component.getMainDomElement());

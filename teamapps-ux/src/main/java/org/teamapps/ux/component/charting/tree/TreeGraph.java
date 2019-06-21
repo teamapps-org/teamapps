@@ -31,7 +31,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiTreeGraph ui = new UiTreeGraph(getId(), createUiNodes(nodes));
+		UiTreeGraph ui = new UiTreeGraph(createUiNodes(nodes));
 		ui.setZoomFactor(zoomFactor);
 		return ui;
 	}

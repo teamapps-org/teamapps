@@ -64,6 +64,7 @@ public abstract class AbstractComponent implements Component {
 	}
 
 	protected void mapAbstractUiComponentProperties(UiComponent uiComponent) {
+		uiComponent.setId(id);
 		uiComponent.setVisible(visible);
 		uiComponent.setStylesBySelector((Map) stylesBySelector);
 	}
