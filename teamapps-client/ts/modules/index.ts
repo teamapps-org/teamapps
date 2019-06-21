@@ -119,6 +119,7 @@ export {UiTextField} from "./formfield/UiTextField";
 export {UiRichTextEditor} from "./formfield/UiRichTextEditor";
 export {UiSlider} from "./formfield/UiSlider";
 export {UiColorPicker} from "./formfield/UiColorPicker";
+export {UiFieldGroup} from "./formfield/UiFieldGroup";
 
 export {UiToolButton} from "./micro-components/UiToolButton";
 
