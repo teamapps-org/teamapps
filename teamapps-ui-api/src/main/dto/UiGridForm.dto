@@ -18,14 +18,12 @@
  * =========================LICENSE_END==================================
  */
 class UiGridForm extends UiComponent {
-	required String recordTypeId;
-
-	required List<UiField*> fields;
+	required List<UiComponent*> fields;
 	required List<UiFormLayoutPolicy> layoutPolicies;
 
 	command updateLayoutPolicies(List<UiFormLayoutPolicy> layoutPolicies);
 	command setSectionCollapsed(String sectionId, boolean collapsed);
-	command addOrReplaceField(UiField* field);
+	command addOrReplaceField(UiComponent* field);
 
 	event sectionCollapsedStateChanged(String sectionId, boolean collapsed);
 }
@@ -60,7 +58,7 @@ interface UiFormSectionPlacement extends UiGridPlacement {
 }
 
 class UiFormSectionFieldPlacement implements UiFormSectionPlacement {
-	required UiField* field;
+	required UiComponent* field;
 }
 
 class UiFormSectionFloatingFieldsPlacement implements UiFormSectionPlacement {
@@ -72,7 +70,7 @@ class UiFormSectionFloatingFieldsPlacement implements UiFormSectionPlacement {
 }
 
 class UiFormSectionFloatingField {
-	required UiField* field;
+	required UiComponent* field;
 	int minWidth;
 	int maxWidth;
 	int minHeight;

@@ -19,8 +19,7 @@
  */
 package org.teamapps.ux.component.form;
 
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyInjector;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
 
@@ -66,6 +65,11 @@ public class ResponsiveForm<RECORD> extends AbstractForm<ResponsiveForm, RECORD>
 		}
 	}
 
+	protected void addLayoutComponent(Component field) {
+		if (!getAllChildren().contains(field)) {
+			addComponent(field);
+		}
+	}
 
 	@Override
 	public List<FormLayoutPolicy> getLayoutPolicies() {

@@ -20,6 +20,7 @@
 package org.teamapps.ux.component.form;
 
 import org.teamapps.icons.api.Icon;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.Label;
 import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
@@ -134,6 +135,84 @@ public class ResponsiveFormLayout  {
 			labelField = addField(row, column, labelPropertyName, label);
 		}
 		ResponsiveFormField responsiveFormField = addField(row, column + 1, propertyName, field);
+		return new LabelAndField(labelField, responsiveFormField);
+	}	
+	
+	public ResponsiveFormField addComponent(int row, int column, Component field) {
+		ResponsiveFormSection responsiveFormSection = getSection();
+		FormSectionFieldPlacement fieldPlacementTemplate = configurationTemplate.createFieldPlacementTemplate(column);
+		ResponsiveFormField sectionField = new ResponsiveFormField(responsiveFormSection, field, row, column, fieldPlacementTemplate);
+		responsiveFormSection.addField(sectionField);
+		responsiveForm.addLayoutComponent( field);
+		return sectionField;
+	}
+
+	public ResponsiveFormField addComponent(Component field, int column, int colSpan) {
+		int row = getSection().getLastNonEmptyRow();
+		ResponsiveFormField responsiveFormField = addComponent(row, column, field);
+		responsiveFormField.setColSpan(colSpan);
+		return responsiveFormField;
+	}
+
+	public ResponsiveFormField addLabelComponent(Component field) {
+		return addLabelComponent(field, 0);
+	}
+
+	public ResponsiveFormField addLabelComponent(Component field, int columOffset) {
+		int row = getSection().getLastNonEmptyRow() + 1;
+		int column = getSection().getLastNonEmptyColumnInRow(row) + columOffset + 1;
+		return addComponent(row, column, field);
+	}
+
+	public LabelAndField addLabelAndComponent(Component field) {
+		return addLabelAndComponent(null, null, UUID.randomUUID().toString(), field, true, 0);
+	}
+
+	public LabelAndField addLabelAndComponent(String propertyName, Component field) {
+		return addLabelAndComponent(null, null, propertyName, field, true, 0);
+	}
+
+	public LabelAndField addLabelAndComponent(Component field, boolean newRow) {
+		return addLabelAndComponent(null, null, UUID.randomUUID().toString(), field, newRow, 0);
+	}
+
+	public LabelAndField addLabelAndComponent(String propertyName, Component field, boolean newRow) {
+		return addLabelAndComponent(null, null, propertyName, field, newRow, 0);
+	}
+
+	public LabelAndField addLabelAndComponent(Icon icon, String caption, String propertyName, Component field) {
+		return addLabelAndComponent(icon, caption, propertyName, field, true, 0);
+	}
+
+	public LabelAndField addLabelAndComponent(Icon icon, String caption, Component field) {
+		return addLabelAndComponent(icon, caption, UUID.randomUUID().toString(), field, true, 0);
+	}
+
+	public LabelAndField addLabelAndComponent(Icon icon, String caption, String propertyName, Component field, boolean newRow) {
+		return addLabelAndComponent(icon, caption, propertyName, field, newRow, 0);
+	}
+
+	public LabelAndField addLabelAndComponent(Icon icon, String caption, Component field, boolean newRow) {
+		return addLabelAndComponent(icon, caption, UUID.randomUUID().toString(), field, newRow, 0);
+	}
+
+	public LabelAndField addLabelAndComponent(Icon icon, String caption, String propertyName, Component field, boolean newRow, int columnOffset) {
+		Label label = null;
+		if (icon != null || caption != null) {
+			label = new Label(caption, icon);
+		}
+		int row = getSection().getLastNonEmptyRow();
+		int column = columnOffset;
+		if (newRow) {
+			row++;
+		} else {
+			column = getSection().getLastNonEmptyColumnInRow(row) + columnOffset + 1;
+		}
+		ResponsiveFormField labelField = null;
+		if (label != null) {
+			labelField = addComponent(row, column, label);
+		}
+		ResponsiveFormField responsiveFormField = addComponent(row, column + 1, field);
 		return new LabelAndField(labelField, responsiveFormField);
 	}
 

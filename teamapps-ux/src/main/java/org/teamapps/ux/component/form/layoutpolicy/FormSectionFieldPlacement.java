@@ -21,13 +21,13 @@ package org.teamapps.ux.component.form.layoutpolicy;
 
 import org.teamapps.dto.UiFormSectionFieldPlacement;
 import org.teamapps.dto.UiFormSectionPlacement;
-import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 
-public class FormSectionFieldPlacement<FIELD extends AbstractField> implements FormSectionPlacement {
+public class FormSectionFieldPlacement implements FormSectionPlacement {
 
-	private FIELD field;
+	private Component field;
 	private int row;
 	private int column;
 	private int rowSpan = 1;
@@ -43,14 +43,14 @@ public class FormSectionFieldPlacement<FIELD extends AbstractField> implements F
 
 	}
 
-	public FormSectionFieldPlacement(FIELD field, int row, int column) {
+	public FormSectionFieldPlacement(Component field, int row, int column) {
 		this.field = field;
 		this.row = row;
 		this.column = column;
 	}
 
 	public FormSectionFieldPlacement createCopy() {
-		FormSectionFieldPlacement placement = new FormSectionFieldPlacement<>(field, row, column);
+		FormSectionFieldPlacement placement = new FormSectionFieldPlacement(field, row, column);
 		placement.setColumn(column);
 		placement.setRow(row);
 		placement.setRowSpan(rowSpan);
