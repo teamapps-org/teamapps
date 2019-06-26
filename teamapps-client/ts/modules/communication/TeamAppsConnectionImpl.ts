@@ -17,24 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TeamAppsConnection, TeamAppsConnectionListener} from "../shared/TeamAppsConnection";
+import {TeamAppsConnection, TeamAppsConnectionListener} from "./TeamAppsConnection";
 import {ReconnectingCompressingWebSocketConnection} from "./ReconnectingWebSocketConnection";
-import {UiClientInfoConfig} from "../generated/UiClientInfoConfig";
-import {INITConfig} from "../generated/INITConfig";
-import {INIT_NOK_Reason, INIT_NOKConfig} from "../generated/INIT_NOKConfig";
-import {REINIT_NOK_Reason, REINIT_NOKConfig} from "../generated/REINIT_NOKConfig";
-import {REINITConfig} from "../generated/REINITConfig";
-import {CMD_REQUESTConfig} from "../generated/CMD_REQUESTConfig";
-import {INIT_OKConfig} from "../generated/INIT_OKConfig";
-import {REINIT_OKConfig} from "../generated/REINIT_OKConfig";
-import {MULTI_CMDConfig} from "../generated/MULTI_CMDConfig";
-import {EVENTConfig} from "../generated/EVENTConfig";
-import {SERVER_ERROR_Reason, SERVER_ERRORConfig} from "../generated/SERVER_ERRORConfig";
+import {UiClientInfoConfig} from "../../generated/UiClientInfoConfig";
+import {INITConfig} from "../../generated/INITConfig";
+import {INIT_NOK_Reason, INIT_NOKConfig} from "../../generated/INIT_NOKConfig";
+import {REINIT_NOK_Reason, REINIT_NOKConfig} from "../../generated/REINIT_NOKConfig";
+import {REINITConfig} from "../../generated/REINITConfig";
+import {CMD_REQUESTConfig} from "../../generated/CMD_REQUESTConfig";
+import {INIT_OKConfig} from "../../generated/INIT_OKConfig";
+import {REINIT_OKConfig} from "../../generated/REINIT_OKConfig";
+import {MULTI_CMDConfig} from "../../generated/MULTI_CMDConfig";
+import {EVENTConfig} from "../../generated/EVENTConfig";
+import {SERVER_ERROR_Reason, SERVER_ERRORConfig} from "../../generated/SERVER_ERRORConfig";
 import {CMD} from "./CMD";
-import {logException} from "../modules/Common";
-import {AbstractClientPayloadMessageConfig} from "../generated/AbstractClientPayloadMessageConfig";
-import {UiEvent} from "../generated/UiEvent";
-import {CMD_RESULTConfig} from "../generated/CMD_RESULTConfig";
+import {logException} from "../Common";
+import {AbstractClientPayloadMessageConfig} from "../../generated/AbstractClientPayloadMessageConfig";
+import {UiEvent} from "../../generated/UiEvent";
+import {CMD_RESULTConfig} from "../../generated/CMD_RESULTConfig";
 
 
 enum TeamAppsProtocolStatus {
