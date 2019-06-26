@@ -16,7 +16,8 @@
     "start": "yarn run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "yarn run unit",
-    "build": "cross-env webpack -p --config js-build/webpack.prod.conf.js --mode production"
+    "build": "cross-env webpack -p --config js-build/webpack.prod.conf.js --mode production",
+    "stats": "cross-env webpack -p --config js-build/webpack.prod.conf.js --mode production --json > dist/stats.json"
   },
   "devDependencies": {
     "autoprefixer": "^9.5.1",
@@ -55,6 +56,10 @@
     "worker-loader": "2.0.0"
   },
   "dependencies": {
+    "@fullcalendar/core": "^4.2.0",
+    "@fullcalendar/daygrid": "^4.2.0",
+    "@fullcalendar/interaction": "^4.2.0",
+    "@fullcalendar/timegrid": "^4.2.0",
     "@material-ui/core": "^4.0.2",
     "@material-ui/icons": "^4.0.1",
     "@types/bootstrap-notify": "^3.1.33",
@@ -89,7 +94,6 @@
     "d3": "5.x",
     "d3v3": "npm:d3@3.x",
     "exports-loader": "^0.7.0",
-    "fullcalendar": "^3.9.0",
     "jquery": "3.x",
     "jquery-ui": "^1.12.1",
     "json-stable-stringify": "^1.0.1",

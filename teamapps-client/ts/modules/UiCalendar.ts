@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,11 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import * as moment from "moment";
-import * as momentTimeZone from "moment-timezone";
-import * as FullCalendar from 'fullcalendar';
 import * as log from "loglevel";
-import {EventObjectInput, EventSourceExtendedInput, EventSourceFunction, OptionsInput} from "fullcalendar/src/types/input-types";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {
 	UiCalendar_DataNeededEvent,
@@ -34,7 +30,6 @@ import {
 	UiCalendarConfig,
 	UiCalendarEventSource
 } from "../generated/UiCalendarConfig";
-import View from "fullcalendar/View";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiCalendarViewMode} from "../generated/UiCalendarViewMode";
@@ -43,31 +38,29 @@ import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {Interval, IntervalManager} from "./util/IntervalManager";
 import {createUiColorCssString} from "./util/CssFormatUtil";
-import Default from "fullcalendar/Calendar";
-import {MultiMonthView} from "./util/FullCalendarMultiMonthView";
-import * as jstz from "jstz";
 import {parseHtml, Renderer} from "./Common";
 import {UiCalendarEventClientRecordConfig} from "../generated/UiCalendarEventClientRecordConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 
-(window as any).FullCalendar = FullCalendar; // needed for dynamically reloading locales
-($.fullCalendar as any).views.multiMonth = MultiMonthView;
-($.fullCalendar as any).views.year = MultiMonthView;
-($.fullCalendar as any).views.year = {
-	type: 'multiMonth',
-	duration: {months: 12}
-};
-
-import Moment = moment.Moment;
+import {Calendar} from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import {EventInput, EventRenderingChoice} from "@fullcalendar/core/structs/event";
+import {EventSourceError, ExtendedEventSourceInput} from "@fullcalendar/core/structs/event-source";
+import {bind} from "./util/Bind";
+import {View} from "@fullcalendar/core/View";
+import EventApi from "@fullcalendar/core/api/EventApi";
+import {Duration} from "@fullcalendar/core/datelib/duration";
 
 const VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: string } = {
 	[UiCalendarViewMode.YEAR]: "year",
-	[UiCalendarViewMode.MONTH]: "month",
-	[UiCalendarViewMode.WEEK]: "agendaWeek",
-	[UiCalendarViewMode.DAY]: "agendaDay"
+	[UiCalendarViewMode.MONTH]: "dayGridMonth",
+	[UiCalendarViewMode.WEEK]: "timeGridWeek",
+	[UiCalendarViewMode.DAY]: "timeGridDay"
 };
-const RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: string } = {
-	[UiCalendarEventRenderingStyle.DEFAULT]: undefined,
+const RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: EventRenderingChoice } = {
+	[UiCalendarEventRenderingStyle.DEFAULT]: '',
 	// [UiCalendarEventRenderingStyle.HIGHLIGHTED]: 'highlighted',
 	[UiCalendarEventRenderingStyle.BACKGROUND]: 'background',
 	[UiCalendarEventRenderingStyle.INVERSE_BACKGROUND]: 'inverse-background',
@@ -82,38 +75,36 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent<UiCalendar_DataNeededEvent>(this);
 
 	private $main: HTMLElement;
-	private $fullCalendar: JQuery;
 	private eventSource: UiCalendarFullCalendarEventSource;
 	private templateRenderers: { [name: string]: Renderer };
+	private calendar: Calendar;
 
 	constructor(config: UiCalendarConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml('<div class="UiCalendar" id="' + config.id + '">');
-		let $fullCalendarElement = parseHtml('<div></div>');
-		this.$main.appendChild($fullCalendarElement);
-		this.$fullCalendar = $($fullCalendarElement);
-		this.eventSource = new UiCalendarFullCalendarEventSource(context, config.id);
-		this.eventSource.onViewChanged.addListener(eventObject => this.onViewChanged.fire(eventObject));
-		this.eventSource.onDataNeeded.addListener(eventObject => this.onDataNeeded.fire(eventObject));
-		config.initialData && this.eventSource.addEvents(0, Number.MAX_SAFE_INTEGER, config.initialData.map(e => this.convertToFullCalendarEvent(e)));
+		this.$main = parseHtml(`<div class="UiCalendar" id="${config.id}">
+	<div class="calendar"></div>
+</div>`);
+		let $fullCalendarElement: HTMLElement = this.$main.querySelector(':scope > .calendar');
+
 		this.templateRenderers = context.templateRegistry.createTemplateRenderers(config.templates);
 
-		let viewModeNames = ["year", "month", "agendaWeek", "agendaDay"];
-		let options: OptionsInput & { lang?: string } = {
-			lang: context.config.isoLanguage,
-			header: config.showHeader ? {
-				left: 'prevYear,prev,next,nextYear today newEvent',
-				center: 'title',
-				right: viewModeNames.join(",")
-			} : false,
-			defaultView: VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[config.activeViewMode],
+		this.eventSource = new UiCalendarFullCalendarEventSource(context, config.id, () => this.calendar);
+		config.initialData && this.eventSource.addEvents(0, Number.MAX_SAFE_INTEGER, config.initialData.map(e => convertToFullCalendarEvent(e)));
+		this.eventSource.onDataNeeded.addListener((eventObject: UiCalendar_DataNeededEvent) => {
+			setTimeout(() => this.onDataNeeded.fire(eventObject)); // needed because we might still be inside the constructor and no one will be registered to this...
+		});
+		this.calendar = new Calendar($fullCalendarElement, {
+			plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
+			header: false,
+			// defaultView: VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[config.activeViewMode],
+			defaultView: "timeGridWeek",
 			defaultDate: config.displayedDate,
 			weekNumbers: config.showWeekNumbers,
 			businessHours: {
 				start: config.businessHoursStart + ':00',
 				end: config.businessHoursEnd + ':00',
-				dow: config.workingDays
+				daysOfWeek: config.workingDays
 			},
 			firstDay: config.firstDayOfWeek != null ? config.firstDayOfWeek : context.config.firstDayOfWeek, // 1 = monday
 			fixedWeekCount: true,
@@ -121,64 +112,121 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 			eventBorderColor: createUiColorCssString(config.defaultBorderColor),
 			eventTextColor: "#000",
 			handleWindowResize: false, // we handle this ourselves!
-			eventSources: [this.eventSource],
 			lazyFetching: false, // no intelligent fetching from fullcalendar. We handle all that!
 			selectable: true,
 			unselectAuto: false,
-			timezone: context.config.timeZoneId || jstz.determine().name(),
-			eventRender: (event: EventObject, $event: JQuery) => {
-				if (event.templateId != null && event.rendering == null || event.rendering == "default") {
-					const $contentWrapper = $event.find('.fc-content');
-					$contentWrapper[0].innerHTML = '';
-					$contentWrapper.append(this.renderEventObject(event));
-					$($event).on('click dblclick', (e) => {
-						this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, event.id as number, e.type === 'dblclick'));
+			timeZone: context.config.timeZoneId || 'local',
+			height: 600,
+			slotEventOverlap: false,
+			locale: context.config.isoLanguage,
+			views: {
+				timeGrid: {
+					slotLabelFormat: {
+						hour: '2-digit',
+						minute: '2-digit'
+					}
+				},
+				day: {
+					columnHeaderFormat: { weekday: 'long', month: 'numeric', day: 'numeric' }
+				}
+			},
+			eventSources: [this.eventSource],
+			datesRender: (arg: {
+				view: View;
+				el: HTMLElement
+			}) => {
+				this.onViewChanged.fire(EventFactory.createUiCalendar_ViewChangedEvent(
+					this.getId(),
+					parseInt(Object.keys(VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING).filter((enumValue: any) => VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[enumValue] === arg.view.type)[0]),
+					+arg.view.currentStart,
+					+arg.view.currentEnd,
+					+arg.view.activeStart,
+					+arg.view.activeEnd
+				));
+
+				this.$main.classList.toggle("table-border", config.tableBorder);
+				// this.$main.querySelectorAll(":scope .fc-bg td.fc-week-number.fc-widget-content").forEach($e => $e.classList.add('teamapps-blurredBackgroundImage'));
+				// this.$main.querySelectorAll(":scope .fc-head td.fc-widget-header").forEach($e => $e.classList.add('teamapps-blurredBackgroundImage'));
+				// if (view.type.toLowerCase().indexOf('agenda') !== -1 && moment().isAfter(view.intervalStart) && moment().isBefore(view.intervalEnd)) {
+				// 	element.find(".fc-day-header.fc-" + ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][moment().day()]).addClass("fc-today");
+				// }
+			},
+			eventRender: (arg: {
+				isMirror: boolean;
+				isStart: boolean;
+				isEnd: boolean;
+				event: EventApi;
+				el: HTMLElement;
+				view: View;
+			}) => {
+				if (arg.event.extendedProps.templateId != null && !arg.event.rendering) {
+					const $contentWrapper = arg.el.querySelector(':scope .fc-content');
+					$contentWrapper.innerHTML = '';
+					$contentWrapper.appendChild(parseHtml(this.renderEventObject(arg.event)));
+					arg.el.addEventListener('click', (e) => {
+						this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), false));
+					});
+					arg.el.addEventListener('dblclick', (e) => {
+						this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), true));
 					});
 				}
 			},
-			dayClick: (() => {
+			dateClick: (() => {
 				let lastClickTimeStamp = 0;
-				let lastClickClickedDate: Moment;
-				return (date: moment.Moment, jsEvent: MouseEvent, view: View, resourceObj?: any) => {
-					let isDoubleClick = lastClickClickedDate != null && lastClickClickedDate.valueOf() == date.valueOf() && jsEvent.timeStamp - lastClickTimeStamp < 600;
+				let lastClickClickedDate: Date;
+				return (arg: {
+					date: Date;
+					dateStr: string;
+					allDay: boolean;
+					resource?: any;
+					dayEl: HTMLElement;
+					jsEvent: MouseEvent;
+					view: View;
+				}) => {
+					console.log(arg.jsEvent.type);
+					let isDoubleClick = lastClickClickedDate != null && lastClickClickedDate.valueOf() == arg.date.valueOf() && arg.jsEvent.timeStamp - lastClickTimeStamp < 600;
 					if (isDoubleClick) {
 						lastClickTimeStamp = 0;
 						lastClickClickedDate = null;
-						this.onDayClicked.fire(EventFactory.createUiCalendar_DayClickedEvent(config.id, date.valueOf(), true));
+						this.onDayClicked.fire(EventFactory.createUiCalendar_DayClickedEvent(config.id, arg.date.valueOf(), true));
 					} else {
-						lastClickTimeStamp = jsEvent.timeStamp;
-						lastClickClickedDate = date;
-						this.onDayClicked.fire(EventFactory.createUiCalendar_DayClickedEvent(config.id, date.valueOf(), false));
+						lastClickTimeStamp = arg.jsEvent.timeStamp;
+						lastClickClickedDate = arg.date;
+						this.onDayClicked.fire(EventFactory.createUiCalendar_DayClickedEvent(config.id, arg.date.valueOf(), false));
 					}
 				};
 			})(),
-			eventResize: (event: EventObject, delta: moment.Duration, revertFunc: Function, jsEvent: Event, ui: any, view: View) => {
-				const masterEvent = this.eventSource.getEvent(event.id);
-				masterEvent.start = event.start;
-				masterEvent.end = event.end;
-				this.onEventMoved.fire(EventFactory.createUiCalendar_EventMovedEvent(config.id, event.id as number, moment(event.start).valueOf(), moment(event.end).valueOf()));
+			eventResize: (arg: {
+				el: HTMLElement;
+				startDelta: Duration;
+				endDelta: Duration;
+				prevEvent: EventApi;
+				event: EventApi;
+				revert: () => void;
+				jsEvent: Event;
+				view: View;
+			}) => {
+				const masterEvent = this.eventSource.getEvent(arg.event.id);
+				masterEvent.start = arg.event.start;
+				masterEvent.end = arg.event.end;
+				this.onEventMoved.fire(EventFactory.createUiCalendar_EventMovedEvent(config.id, parseInt(arg.event.id), arg.event.start.valueOf(), arg.event.end.valueOf()));
 			},
-			eventDrop: (event: EventObject, delta, revertFunc) => {
-				const masterEvent = this.eventSource.getEvent(event.id);
-				masterEvent.start = event.start;
-				masterEvent.end = event.end;
-				this.onEventMoved.fire(EventFactory.createUiCalendar_EventMovedEvent(config.id, event.id as number, moment(event.start).valueOf(), moment(event.end).valueOf()));
+			eventDrop: (arg: {
+				el: HTMLElement;
+				event: EventApi;
+				oldEvent: EventApi;
+				delta: Duration;
+				revert: () => void;
+				jsEvent: Event;
+				view: View;
+			}) => {
+				const masterEvent = this.eventSource.getEvent(arg.event.id);
+				masterEvent.start = arg.event.start;
+				masterEvent.end = arg.event.end;
+				this.onEventMoved.fire(EventFactory.createUiCalendar_EventMovedEvent(config.id, parseInt(arg.event.id), arg.event.start.valueOf(), arg.event.end.valueOf()));
 			},
-			height: 600,
-			slotEventOverlap: false,
-			slotLabelFormat: "hh:mm",
-			viewRender: (view, element) => {
-				this.$main.classList.toggle("table-border", config.tableBorder);
-
-				this.$fullCalendar.find(".fc-bg td.fc-week-number.fc-widget-content").addClass('teamapps-blurredBackgroundImage');
-				this.$fullCalendar.find(".fc-head td.fc-widget-header").addClass('teamapps-blurredBackgroundImage');
-
-				if (view.type.toLowerCase().indexOf('agenda') !== -1 && moment().isAfter(view.intervalStart) && moment().isBefore(view.intervalEnd)) {
-					element.find(".fc-day-header.fc-" + ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][moment().day()]).addClass("fc-today");
-				}
-			}
-		};
-		this.$fullCalendar.fullCalendar(options);
+		});
+		this.calendar.render();
 
 		this.$main.append(parseHtml(`<style>
                 #${config.id} .fc-head td.fc-widget-header>.fc-row.fc-widget-header {
@@ -190,11 +238,11 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
             </style>`));
 	}
 
-	private renderEventObject(record: EventObject): string {
-		const templateId = record.templateId;
+	private renderEventObject(record: EventApi): string {
+		const templateId = record.extendedProps.templateId;
 		if (templateId != null && this.templateRenderers[templateId] != null) {
 			const renderer = this.templateRenderers[templateId];
-			return renderer.render(record.data);
+			return renderer.render(record.extendedProps.data);
 		} else {
 			return `<div class="no-template"></div>`;
 		}
@@ -208,65 +256,48 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 		this.reLayout();
 	}
 
-	private convertToFullCalendarEvent(event: UiCalendarEventClientRecordConfig): EventObject {
-
-		let backgroundColor = event.backgroundColor;
-		let backgroundColorCssString = typeof backgroundColor === 'string' ? backgroundColor
-			: backgroundColor != null ? createUiColorCssString(backgroundColor) : null;
-
-		let borderColor = event.borderColor;
-		let borderColorCssString = typeof borderColor === 'string' ? borderColor
-			: borderColor != null ? createUiColorCssString(borderColor) : null;
-
-		return {
-			id: event.id,
-			start: moment(event.start),
-			end: moment(event.end),
-			title: event.asString,
-			rendering: RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING[event.rendering],
-			editable: event.allowDragOperations,
-			templateId: event.templateId,
-			allDay: event.allDay,
-			backgroundColor: backgroundColorCssString,
-			borderColor: borderColorCssString,
-			data: event.values
-		};
-	}
-
 	public setViewMode(viewMode: UiCalendarViewMode) {
-		this.$fullCalendar.fullCalendar('changeView' as any /* not in declarations...*/, VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[viewMode]);
+		this.calendar.changeView(VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[viewMode]);
 	}
 
 	public setDisplayedDate(date: number) {
-		this.logger.debug("setDisplayedDate: " + moment(date).toString());
-		this.$fullCalendar.fullCalendar('gotoDate', date);
+		this.calendar.gotoDate(new Date(date));
 	}
 
 	public addEvent(theEvent: any) {
-		this.eventSource.addEvent(this.convertToFullCalendarEvent(theEvent));
-		this.$fullCalendar.fullCalendar('refetchEvents');
+		this.eventSource.addEvent(convertToFullCalendarEvent(theEvent));
+		this.refreshEventsDisplay();
 	}
 
 	public removeEvent(eventId: any) {
 		this.eventSource.removeEvent(eventId);
-		this.$fullCalendar.fullCalendar('refetchEvents');
+		this.refreshEventsDisplay();
 	}
 
 	public setCalendarData(events: UiCalendarEventClientRecordConfig[]) {
 		this.eventSource.removeAllEvents();
-		this.eventSource.addEvents(0, Number.MAX_SAFE_INTEGER, events.map(e => this.convertToFullCalendarEvent(e)));
-		this.$fullCalendar.fullCalendar('refetchEvents');
+		this.eventSource.addEvents(0, Number.MAX_SAFE_INTEGER, events.map(e => convertToFullCalendarEvent(e)));
+		this.refreshEventsDisplay();
 	}
 
 	public clearCalendar() {
 		this.logger.debug(`clearCalendar()`);
 		this.eventSource.removeAllEvents();
-		this.$fullCalendar.fullCalendar('refetchEvents');
+		this.refreshEventsDisplay();
+	}
+
+	private refreshEventsDisplay() {
+		this.eventSource.setQueriesDisabled(true);
+		try {
+			this.calendar.refetchEvents();
+		} finally {
+			this.eventSource.setQueriesDisabled(false);
+		}
 	}
 
 	onResize(): void {
-		this.$fullCalendar.fullCalendar('render');
-		this.$fullCalendar.fullCalendar('option', 'height', this.getHeight());
+		// this.$fullCalendar.fullCalendar('render');
+		this.calendar.setOption('height', this.getHeight());
 	}
 
 	public getMainDomElement(): HTMLElement {
@@ -278,13 +309,8 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 	}
 }
 
-interface EventObject extends EventObjectInput {
-	templateId: string;
-	data: any;
-}
-
 export /* for testing ... */
-class UiCalendarFullCalendarEventSource implements EventSourceExtendedInput {
+class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 
 	public readonly onViewChanged: TeamAppsEvent<UiCalendar_ViewChangedEvent> = new TeamAppsEvent<UiCalendar_ViewChangedEvent>(this);
 	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent<UiCalendar_DataNeededEvent>(this);
@@ -292,84 +318,55 @@ class UiCalendarFullCalendarEventSource implements EventSourceExtendedInput {
 	private logger = log.getLogger((<any>UiCalendarFullCalendarEventSource.prototype).name || this.constructor.toString().match(/\w+/g)[1]);
 	private intervalManager: IntervalManager = new IntervalManager();
 	private cachedEvents: any[] = [];
-	public events: EventSourceFunction;
+	private queriesDisabled: boolean;
 
-	constructor(private teamappsUiContext: TeamAppsUiContext, private componentId: string) {
-		this.events = this.createEventsFunction();
+	constructor(private teamappsUiContext: TeamAppsUiContext, private componentId: string, private fullCalendarAccessor: () => Calendar) {
 	}
 
-	private createEventsFunction() {
-		let me = this;
-		// FullCalendar messes around with "this" because it uses the method as a plain function...
-		return function (this: Default, start: Moment, end: Moment, timezone: boolean | string, callback: ((events: EventObject[]) => void)): void {
+	@bind
+	public events(query: { start: Date; end: Date; timeZone: string; }, successCallback: (events: EventInput[]) => void, failureCallback: (error: EventSourceError) => void) {
+		// let uncoveredIntervals = this.intervalManager.getUncoveredIntervals(new Interval(<number>query.start.valueOf(), <number>query.end.valueOf()));
+		//
+		// let queryStart: number;
+		// let queryEnd: number;
+		// if (uncoveredIntervals.length > 0) {
+		// 	queryStart = Math.min.apply(Math, uncoveredIntervals.map(i => i.start));
+		// 	queryEnd = Math.max.apply(Math, uncoveredIntervals.map(i => i.end));
+		// } else {
+		// 	queryStart = 0;
+		// 	queryEnd = 0;
+		// }
+		// if (queryStart !== queryEnd) {
+		// this.logger.debug("DataNeededEvent: " + query.start.toUTCString() + " - " + query.start.toUTCString());
+		// this.onDataNeeded.fire(EventFactory.createUiCalendar_DataNeededEvent(this.componentId, queryStart, queryEnd));
+		// }
 
-			start = me.removeTimeZoneOffsetFromAmbiguouslyTimedMoment(start, timezone);
-			end = me.removeTimeZoneOffsetFromAmbiguouslyTimedMoment(end, timezone);
+		if (!this.queriesDisabled) {
+			this.onDataNeeded.fire(EventFactory.createUiCalendar_DataNeededEvent(this.componentId, +query.start, +query.end));
+		}
 
-			let newInterval: Interval = new Interval(<number>start.valueOf(), <number>end.valueOf());
-
-			if (!me.teamappsUiContext.executingCommand) {
-				setTimeout(() => {
-					me.onViewChanged.fire(EventFactory.createUiCalendar_ViewChangedEvent(
-						me.componentId,
-						parseInt(Object.keys(VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING).filter((enumValue: any) => VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[enumValue] === view.type)[0]),
-						view.intervalStart.valueOf(),
-						view.intervalEnd.valueOf(),
-						view.start.valueOf(),
-						view.end.valueOf()
-					));
-				});
+		let displayedInterval = new Interval(+query.start, +query.end);
+		this.logger.debug(`displayed: ${displayedInterval}`);
+		let events = this.cachedEvents.filter(event => {
+			let eventInterval = new Interval(+event.start, +event.end);
+			let matches = IntervalManager.intervalsOverlap(displayedInterval, eventInterval);
+			if (matches) {
+				this.logger.debug(`matching: ${eventInterval}`);
 			}
-
-			let uncoveredIntervals = me.intervalManager.getUncoveredIntervals(newInterval);
-
-			let queryStart: number;
-			let queryEnd: number;
-			if (uncoveredIntervals.length > 0) {
-				queryStart = Math.min.apply(Math, uncoveredIntervals.map(i => i.start));
-				queryEnd = Math.max.apply(Math, uncoveredIntervals.map(i => i.end));
-			} else {
-				queryStart = 0;
-				queryEnd = 0;
-			}
-			let view = this.getView();
-
-			if (queryStart !== queryEnd) {
-				me.logger.debug("DataNeededEvent: " + moment(queryStart).toString() + " - " + moment(queryEnd).toString());
-				setTimeout(() => {
-					me.onDataNeeded.fire(EventFactory.createUiCalendar_DataNeededEvent(me.componentId, queryStart, queryEnd));
-				});
-			}
-
-			let displayedInterval = new Interval(+start, +end);
-			me.logger.debug(`displayed: ${displayedInterval}`);
-			let events = me.cachedEvents.filter(event => {
-				let eventInterval = new Interval(+event.start, +event.end);
-				let matches = IntervalManager.intervalsOverlap(displayedInterval, eventInterval);
-				if (matches) {
-					me.logger.debug(`matching: ${eventInterval}`);
-				}
-				return matches;
-			});
-			me.logger.debug(`Returning ${events.length} events`);
-			callback(events);
-		};
+			return matches;
+		});
+		this.logger.debug(`Returning ${events.length} events`);
+		successCallback(events);
 	}
 
-	// see https://fullcalendar.io/docs/moment
-	private removeTimeZoneOffsetFromAmbiguouslyTimedMoment(start: Moment, timezone: boolean | string): Moment {
-		let x = momentTimeZone(start.valueOf()).tz(timezone.toString());
-		return moment(x.add(-x.utcOffset(), "minutes").valueOf());
-	}
-
-	public addEvents(start: number, end: number, newEvents: EventObject[]) {
+	public addEvents(start: number, end: number, newEvents: EventInput[]) {
 		newEvents.forEach(e => {
 			if (e.end < start || e.start > end) {
-				this.logger.error(`Event ${e.id} (${moment(e.start).toString()}-${moment(e.end).toString()}) is outside of specified start/end range (${moment(start).toString()}-${moment(end).toString()})! This will very probably lead to inconsistent client-side behaviour!`)
+				this.logger.error(`Event ${e.id} (${e.start}-${e.end}) is outside of specified start/end range (${new Date(start).toUTCString()}-${new Date(end).toUTCString()})! This will very probably lead to inconsistent client-side behaviour!`)
 			}
 			if (e.end.valueOf() <= e.start.valueOf()) {
 				this.logger.warn(`Event ${e.id} has zero or negative duration! Changing to one millisecond!`);
-				e.end = moment((e.start as Moment).valueOf() + 1);
+				e.end = new Date(+(e.start) + 1);
 			}
 		});
 		this.cachedEvents = this.cachedEvents.filter(e => {
@@ -380,7 +377,7 @@ class UiCalendarFullCalendarEventSource implements EventSourceExtendedInput {
 		this.intervalManager.addInterval(new Interval(start, end));
 	}
 
-	public addEvent(newEvent: EventObject) {
+	public addEvent(newEvent: EventInput) {
 		this.logger.debug("Adding 1 event");
 		this.addEvents(null, null, [newEvent]);
 	}
@@ -401,6 +398,38 @@ class UiCalendarFullCalendarEventSource implements EventSourceExtendedInput {
 		this.cachedEvents = [];
 		this.intervalManager = new IntervalManager();
 	}
+
+	setQueriesDisabled(queriesDisabled: boolean) {
+		this.queriesDisabled = queriesDisabled;
+	}
+}
+
+function convertToFullCalendarEvent(event: UiCalendarEventClientRecordConfig): EventInput {
+	let backgroundColor = event.backgroundColor;
+	let backgroundColorCssString = typeof backgroundColor === 'string' ? backgroundColor
+		: backgroundColor != null ? createUiColorCssString(backgroundColor) : null;
+
+	let borderColor = event.borderColor;
+	let borderColorCssString = typeof borderColor === 'string' ? borderColor
+		: borderColor != null ? createUiColorCssString(borderColor) : null;
+
+	return {
+		id: "" + event.id,
+		start: new Date(event.start),
+		end: new Date(event.end),
+		title: event.asString,
+		rendering: RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING[event.rendering],
+		editable: event.allowDragOperations,
+		startEditable: event.allowDragOperations,
+		durationEditable: event.allowDragOperations,
+		allDay: event.allDay,
+		backgroundColor: backgroundColorCssString,
+		borderColor: borderColorCssString,
+		extendedProps: {
+			templateId: event.templateId,
+			data: event.values
+		}
+	};
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiCalendar", UiCalendar);

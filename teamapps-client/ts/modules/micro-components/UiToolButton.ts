@@ -22,13 +22,11 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiToolButton_ClickedEvent, UiToolButton_DropDownOpenedEvent, UiToolButtonCommandHandler, UiToolButtonConfig, UiToolButtonEventSource} from "../../generated/UiToolButtonConfig";
 import {UiComponent} from "../UiComponent";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {EventFactory} from "../../generated/EventFactory";
 import {UiDropDown} from "./UiDropDown";
 import {UiItemView} from "../UiItemView";
 import {bind} from "../util/Bind";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiCalendar} from "../UiCalendar";
 import {parseHtml} from "../Common";
 
 export class UiToolButton extends UiComponent<UiToolButtonConfig> implements UiToolButtonEventSource, UiToolButtonCommandHandler {
