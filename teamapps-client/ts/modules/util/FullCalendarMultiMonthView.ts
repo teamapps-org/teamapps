@@ -17,23 +17,21 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as moment from "moment-timezone";
-import {EventObjectInput} from "fullcalendar/src/types/input-types";
 import * as log from "loglevel";
-import {View} from "fullcalendar";
-import {adjustIfColorTooBright, generateUUID, parseHtml, parseSvg} from "../Common";
+import {generateUUID, parseHtml, parseSvg} from "../Common";
 import * as d3 from "d3";
 import {Selection} from "d3-selection";
-import Moment = moment.Moment;
+import {addDays, createFormatter, createPlugin, DateFormatter, EventStore, View} from "@fullcalendar/core";
+import {EventApi} from "@fullcalendar/core/api/EventApi";
 import Logger = log.Logger;
 
 class Segment {
 	constructor(
-		public start: Moment,
-		public end: Moment,
+		public start: Date,
+		public end: Date,
 		public isStart: boolean,
 		public isEnd: boolean,
-		public event: EventObjectInput
+		public event: EventApi
 	) {
 	}
 
@@ -50,26 +48,26 @@ type DayOccupationColorAmount = {
 };
 
 type Range = {
-	start: Moment,
-	end: Moment
+	start: Date,
+	end: Date
 }
 
 const logger: Logger = log.getLogger("MyYearView");
 
-interface Month {
-	intervalStart: Moment,
-	intervalEnd: Moment,
-	start: Moment,
-	end: Moment,
-	intervalUnit: "month"
+interface DisplayedMonth {
+	intervalStart: Date,
+	intervalEnd: Date,
+	displayedStart: Date,
+	displayedEnd: Date,
+	displayedWeeks: DisplayedWeek[]
 }
+
 type DisplayedWeek = [DisplayedDay, DisplayedDay, DisplayedDay, DisplayedDay, DisplayedDay, DisplayedDay, DisplayedDay];
 type DisplayedDay = {
-	day: Moment,
+	day: Date,
 	foreignMonth: boolean
 };
 
-// TODO
 export class MultiMonthView extends View {
 
 	private width: number;
@@ -90,94 +88,70 @@ export class MultiMonthView extends View {
 	private weekLineHeight = 11.5;
 
 	private maxOccupationTime = 8; //hours
-	private events: EventObjectInput[] = [];
+	private events: EventApi[] = null;
 
-	private weekDayShortNames = this.getWeekDayShortNames();
+	private weekDayShortNames = this.initWeekDayShortNames();
 
 	// called once when the view is instantiated, when the user switches to the view.
 	// initialize member variables or do other setup tasks.
 	public initialize() {
+		this.uuid = "year-" + generateUUID();
+		this.$contentElement = parseHtml(`<div class="fc-multi-month-content" id="${this.uuid}">`);
+		let svgElement: SVGElement = parseSvg('<svg class="svg">');
+		this.$contentElement.append(svgElement);
+		this.el.classList.add('fc-multi-month-view');
+		this.el.appendChild(this.$contentElement);
+		this._svg = d3.select<SVGElement, undefined>(svgElement);
 	}
 
-	// called when another view is selected (and thereby this one is removed from the DOM)
-	public removeElement() {
-		super.removeElement();
-		this.$contentElement = null; // make sure everything gets rebuilt!
-	}
-
-	// responsible for displaying the skeleton of the view within the already-defined
-	// this.el, a jQuery element.
-	public render() {
-		if (this.$contentElement == null) {
-			this.uuid = "year-" + generateUUID();
-			this.$contentElement = parseHtml(`<div class="fc-multi-month-content" id="${this.uuid}">`);
-			this.$contentElement.append(parseSvg('<svg class="svg">'));
-			this.el
-				.classList.add('fc-multi-month-view')
-				.append(this.$contentElement);
-			this._svg = d3.select<SVGElement, undefined>("#" + this.uuid + " svg");
-		}
-	}
-
-	public updateSize(totalHeight: number, isAuto: boolean, isResize: boolean) {
-		super.updateSize(totalHeight, isAuto, isResize);
-		const newWidth = this.el[0].offsetWidth;
-		if (totalHeight !== this.height || newWidth !== this.width) {
+	public updateSize(isResize: boolean, viewHeight: number, isAuto: boolean) {
+		super.updateSize(isResize, viewHeight, isAuto);
+		const newWidth = this.el.offsetWidth;
+		if (viewHeight !== this.height || newWidth !== this.width) {
 			this.width = newWidth;
-			this.height = totalHeight;
-			this._svg
-				.style("height", this.height + "px")
-				.style("width", this.width + "px");
+			this.height = viewHeight;
+			this.el.style.height = viewHeight + "px";
 			this.updateMonthDisplays();
 		}
 	}
 
 	// reponsible for rendering the given Event Objects
-	public renderEvents(events: EventObjectInput[]) {
-		this.events = events;
+	public renderEvents(eventStore: EventStore) {
+		this.events = this.context.calendar.getEvents();
 		this.updateMonthDisplays();
 	}
 
-	public destroyEvents() {
-		// responsible for undoing everything in renderEvents
-	}
-
-	// Renders a visual indication of a selection
-	public renderSelection(range: { start: Moment, end: Moment }) {
-		logger.trace("renderSelection");
-	}
-
-	// responsible for undoing everything in renderSelection
-	public destroySelection() {
-		logger.trace("destroySelection");
-	}
-
-	private getMonthRangesToBeDisplayed(): Month[] {
-		const numberOfMonths = this.intervalEnd.diff(this.intervalStart, "month");
-		const firstMonth = this.intervalStart.clone().startOf("month").stripTime();
-		const monthRanges: Month[] = [];
+	private getMonthRangesToBeDisplayed(): DisplayedMonth[] {
+		const numberOfMonths = (this.currentEnd.getFullYear() * 12 + this.currentEnd.getMonth()) - (this.currentStart.getFullYear() * 12 + this.currentStart.getMonth());
+		console.log("number of months: " + numberOfMonths);
+		const firstMonth = this.dateEnv.startOfMonth(this.currentStart);
+		const displayedMonths: DisplayedMonth[] = [];
 		for (let i = 0; i < numberOfMonths; i++) {
-			const monthRange: any = {};
-			monthRange.intervalStart = firstMonth.clone().add(i, "month");
-			monthRange.intervalEnd = firstMonth.clone().add(i + 1, "month");
-			monthRange.start = monthRange.intervalStart.clone().startOf("week");
-			monthRange.end = monthRange.intervalEnd.clone().startOf("week").add(1, "week");
-			monthRange.intervalUnit = "month";
-			monthRanges.push(monthRange);
+			let intervalStart = this.dateEnv.addMonths(firstMonth, i);
+			let intervalEnd = this.dateEnv.addMonths(firstMonth, i + 1);
+			const monthRange: DisplayedMonth = {
+				intervalStart,
+				intervalEnd,
+				displayedStart: this.dateEnv.startOfWeek(intervalStart),
+				displayedEnd: addDays(this.dateEnv.startOfWeek(intervalEnd), 7),
+				displayedWeeks: this.getDisplayedWeeks(intervalStart)
+			};
+			displayedMonths.push(monthRange);
 		}
-		return monthRanges;
+		return displayedMonths;
 	}
 
-	private getDisplayedWeeks(monthRange: Month): DisplayedWeek[] {
+	private getDisplayedWeeks(intervalStart: Date): DisplayedWeek[] {
 		let weeks: DisplayedWeek[] = [];
-		let month = monthRange.intervalStart.month();
+		let month = intervalStart.getMonth();
+		let displayedStart = this.dateEnv.startOfWeek(intervalStart);
 		for (let i = 0; i < 6; i++) {
 			let week = [];
 			for (let j = 0; j < 7; j++) {
-				let day = monthRange.start.clone().add(i * 7 + j, "day");
+				let day = addDays(displayedStart, i * 7 + j);
 				week.push({
 					day: day,
-					foreignMonth: day.month() !== month
+					foreignMonth: day.getMonth() !== month
 				});
 			}
 			weeks.push(week as DisplayedWeek);
@@ -192,39 +166,24 @@ export class MultiMonthView extends View {
 		} else if (bestNumberOfColumns > 6) {
 			bestNumberOfColumns = 6;
 		}
-
-		let bestNumberOfRows = Math.ceil(this.height / 270);
-		if (bestNumberOfRows === 5) {
-			bestNumberOfRows = 4;
-		} else if (bestNumberOfRows > 6) {
-			bestNumberOfRows = 6;
-		}
-
-		if (bestNumberOfColumns <= 2) {
-			return bestNumberOfColumns; // scroll vertically and do not care for vertical space
-		} else {
-			return bestNumberOfColumns > bestNumberOfRows ? bestNumberOfColumns : 12 / bestNumberOfRows;
-		}
-	}
-
-	// Renders the view into `this.el`, which should already be assigned
-	public renderDates() {
-		// this.updateMonthDisplays();
+		return bestNumberOfColumns;
 	}
 
 	/**
 	 * @deprecated use this.weekDayShortNames instead of calculating this all the time
 	 * @returns {any[]}
 	 */
-	private getWeekDayShortNames(): string[] {
+	private initWeekDayShortNames(): string[] {
+		let formatter = createFormatter({weekday: 'narrow'});
 		let names = [];
 		for (let i = 0; i < 7; i++) {
-			names.push(moment.weekdaysMin()[(this.options.firstDay + i) % 7].substring(0, 1));
+			let date = addDays(new Date(), i);
+			names[date.getDay()] = this.dateEnv.format(date, formatter);
 		}
 		return names;
 	}
 
-	private calculateDayOccupationColorsFromEvents(events: EventObjectInput[]) {
+	private calculateDayOccupationColorsFromEvents(events: EventApi[]) {
 		let segments = this.eventsToSegments(events);
 		let segmentsByDay = this.groupSegmentsByDay(segments);
 
@@ -236,8 +195,10 @@ export class MultiMonthView extends View {
 		return dayOccupationColors;
 	}
 
+	private monthNameFormatter: DateFormatter = createFormatter({month: 'long'});
+
 	private updateMonthDisplays() {
-		if (!this.width || !this.height) {
+		if (!this.width || !this.height || this.events == null) {
 			return;
 		}
 
@@ -247,16 +208,22 @@ export class MultiMonthView extends View {
 
 		let numberOfCols = this.getMonthsPerRow();
 		let numberOfRows = monthRanges.length / numberOfCols;
-		let viewBoxWidth = 2 * this.padding + numberOfCols * this.monthWidth + (numberOfCols - 1) * this.spacing;
+
+		let neededDrawAreaWidth = 2 * this.padding + numberOfCols * this.monthWidth + (numberOfCols - 1) * this.spacing;
+		let availableDrawAreaWidth = this.width / 2;
+		let viewBoxWidth = availableDrawAreaWidth > neededDrawAreaWidth ? availableDrawAreaWidth : neededDrawAreaWidth;
+		let availableDrawAreaHeight = (this.height / this.width) * viewBoxWidth;
+		let neededDrawAreaHeight = 2 * this.padding + numberOfRows * this.monthHeight + (numberOfRows - 1) * this.spacing + 10 /*some additional space at the bottom...*/;
 		let viewBoxHeight = Math.max(
-			(this.height / this.width) * viewBoxWidth,
-			2 * this.padding + numberOfRows * this.monthHeight + (numberOfRows - 1) * this.spacing
+			availableDrawAreaHeight,
+			neededDrawAreaHeight
 		);
-		this._svg.attr("viewBox", `0 0 ${viewBoxWidth} ${viewBoxHeight}`);
-		this._svg.style("height", Math.max(this.height, ((this.width / viewBoxWidth) * viewBoxHeight)) + "px");
-		let calculateMonthPositionTransform = (monthRange: Month, monthIndex: number) => {
-			let x = this.padding + (monthIndex % this.getMonthsPerRow()) * (this.monthWidth + this.spacing);
-			let y = this.padding + Math.floor(monthIndex / this.getMonthsPerRow()) * (this.monthHeight + this.spacing);
+		console.log(`Math.min(0, -(${availableDrawAreaHeight} - ${viewBoxHeight}) / 2)`);
+		this._svg.attr("viewBox", `${-(viewBoxWidth - neededDrawAreaWidth) / 2} ${Math.min(0, -(availableDrawAreaHeight - neededDrawAreaHeight) / 2)} ${viewBoxWidth} ${viewBoxHeight}`);
+		this._svg.style("height", Math.max(((this.width / viewBoxWidth) * viewBoxHeight)) + "px");
+		let calculateMonthPositionTransform = (monthRange: DisplayedMonth, monthIndex: number) => {
+			let x = this.padding + (monthIndex % numberOfCols) * (this.monthWidth + this.spacing);
+			let y = this.padding + Math.floor(monthIndex / numberOfCols) * (this.monthHeight + this.spacing);
 			return `translate(${x},${y})`;
 		};
 
@@ -271,7 +238,7 @@ export class MultiMonthView extends View {
 		_monthEnter
 			.append("text")
 			.classed("UiCalendar-month-name", true)
-			.text(monthRange => monthRange.intervalStart.format("MMMM"))
+			.text(monthRange => this.dateEnv.format(monthRange.intervalStart, this.monthNameFormatter))
 			.attr("x", 0)
 			.attr("y", 10);
 		_month.merge(_monthEnter)
@@ -291,14 +258,14 @@ export class MultiMonthView extends View {
 
 		let _week = _month.merge(_monthEnter)
 			.selectAll("g.UiCalendar-week")
-			.data((monthRange) => this.getDisplayedWeeks(monthRange));
+			.data((monthRange) => monthRange.displayedWeeks);
 		let _weekEnter = _week.enter()
 			.append("g")
 			.classed("UiCalendar-week", true)
 			.attr("transform", (week, i) => `translate(0, ${this.firstWeekLineOffset + i * this.weekLineHeight})`);
 		_week.exit()
 			.remove();
-		
+
 		let _weekNumber = _week.merge(_weekEnter)
 			.selectAll("text.UiCalendar-week-number")
 			.data(week => [week[Math.floor(week.length / 2)]]);
@@ -307,7 +274,7 @@ export class MultiMonthView extends View {
 			.classed("UiCalendar-week-number", true)
 			.attr("x", 6);
 		_weekNumber.merge(_weekNumberEnter)
-			.text(day => day.day.isoWeek());
+			.text(day => this.dateEnv.computeWeekNumber(day.day));
 
 		let _day = _week.merge(_weekEnter)
 			.selectAll("g.UiCalendar-day")
@@ -318,19 +285,27 @@ export class MultiMonthView extends View {
 			.append("g")
 			.classed("UiCalendar-day", true)
 			.attr("transform", (day, dayIndex) => `translate(${this.firstDayOffsetX + (dayIndex % 7) * this.dayColumnWidth}, 0)`)
+			.on("click", (d) => this.context.options.dateClick && this.context.options.dateClick({
+				date: d.day,
+				dateStr: null,
+				allDay: true,
+				dayEl: null,
+				jsEvent: d3.event,
+				view: this
+			}))
 			.call((g) => {
-				g.append("text")
-					.classed("day-number", true);
 				g.append("circle")
 					.classed("day-occupation-background-circle", true);
+				g.append("text")
+					.classed("day-number", true);
 			});
 		_day.merge(_dayEnter)
 			.call((g) => {
-				g.select("text.day-number")
-					.text((d) => d.day.date());
 				g.select(".day-occupation-background-circle")
 					.attr("r", occupationRadius)
 					.attr("cy", occupationCircleCenterOffset);
+				g.select("text.day-number")
+					.text((d) => d.day.getUTCDate());
 			})
 			.classed("free", day => {
 				let dayOccupationColorsForDay = dayOccupationColors[this.getDayString(day.day)];
@@ -339,7 +314,10 @@ export class MultiMonthView extends View {
 			.classed("other-month", (day: DisplayedDay, dayIndex: number) => {
 				return day.foreignMonth;
 			})
-			.classed("weekend", (day: DisplayedDay, dayIndex: number) => day.day.isoWeekday() > 5);
+			.classed("today", d => {
+				return !d.foreignMonth && d.day.getFullYear() === new Date().getFullYear() && d.day.getMonth() === new Date().getMonth() && d.day.getDate() === new Date().getDate()
+			})
+			.classed("weekend", (day: DisplayedDay, dayIndex: number) => this.context.options.businessHours.daysOfWeek.indexOf(day.day.getDay()) == -1);
 		_day.exit()
 			.remove();
 
@@ -356,7 +334,14 @@ export class MultiMonthView extends View {
 			})
 			.attr("data-duration-in-hours", (occupation, i, j) => (occupation.duration / 3600000))
 			.style("stroke", occupationColor => {
-				return adjustIfColorTooBright(occupationColor.color, 210)
+				let hslColor = d3.hsl(occupationColor.color);
+				if (hslColor.l > 0.45) {
+					hslColor.l = 0.45;
+				}
+				if (hslColor.s < 0.6) {
+					hslColor.s = 0.6;
+				}
+				return hslColor.toString();
 			});
 		_dayOccupation.exit().remove();
 	}
@@ -373,7 +358,7 @@ export class MultiMonthView extends View {
 
 	/* Events
 	 ------------------------------------------------------------------------------------------------------------------*/
-	private eventsToSegments(events: EventObjectInput[]): Segment[] {
+	private eventsToSegments(events: EventApi[]): Segment[] {
 		let segments: Segment[] = [];
 		for (let i = 0; i < events.length; i++) {
 			let event = events[i];
@@ -382,25 +367,24 @@ export class MultiMonthView extends View {
 		return segments;
 	}
 
-	private eventToSegments(event: EventObjectInput): Segment[] {
-		if ((event.start as Moment).day() === (event.end as Moment).day()
-			&& (event.end as Moment).valueOf() - (event.start as Moment).valueOf() < 86400000 /*day*/) {
-			// return [{
-			// 	start: event.start as Moment,
-			// 	end: event.end as Moment,
-			// 	isStart: true,
-			// 	isEnd: true,
-			// 	event: event
-			// }];
-			return [new Segment(event.start as Moment, event.end as Moment, true, true, event)];
+	private eventToSegments(event: EventApi): Segment[] {
+		if (event.end == null) {
+			let startDate = this.dateEnv.startOf(event.start, "day");
+			startDate.setHours(8);
+			let endDate = this.dateEnv.startOf(event.start, "day");
+			endDate.setHours(16);
+			return [new Segment(startDate, endDate, true, true, event)];
+		} else if (event.start.getDay() === event.end.getDay()
+			&& (event.end as Date).valueOf() - (event.start as Date).valueOf() < 86400000 /*day*/) {
+			return [new Segment(event.start as Date, event.end as Date, true, true, event)];
 		} else {
 			let segments: Segment[] = [];
-			let segStart = event.start as Moment;
-			let segEnd = event.start as Moment;
-			while (segEnd.valueOf() < (event.end as Moment).valueOf()) {
+			let segStart = event.start as Date;
+			let segEnd = event.start as Date;
+			while (segEnd.valueOf() < (event.end as Date).valueOf()) {
 				segStart = segEnd;
-				segEnd = moment.min(event.end as Moment, segStart.clone().startOf("day").add(1, "day"));
-				segments.push(new Segment(segStart, segEnd, segStart.isSame(event.start as Moment), segEnd.isSame(event.end as Moment), event));
+				segEnd = +event.end < +addDays(segStart, 1) ? event.end : addDays(segStart, 1);
+				segments.push(new Segment(segStart, segEnd, +segStart === +event.start, +segEnd === +event.end, event));
 			}
 			return segments;
 		}
@@ -426,7 +410,7 @@ export class MultiMonthView extends View {
 			if (!durationByBackgroundColor[segment.event.backgroundColor]) {
 				durationByBackgroundColor[segment.event.backgroundColor] = 0;
 			}
-			durationByBackgroundColor[segment.event.backgroundColor] += segment.end.valueOf() - (segment.start as Moment).valueOf();
+			durationByBackgroundColor[segment.event.backgroundColor] += segment.end.valueOf() - (segment.start as Date).valueOf();
 		}
 
 		let sortedColorDurations: DayOccupationColorAmount[] = Object.keys(durationByBackgroundColor).map(color => {
@@ -456,11 +440,28 @@ export class MultiMonthView extends View {
 		return sortedColorDurations;
 	}
 
-	// this is way(!!) faster thang moment.format("YYYY-MM-DD")
-	private getDayString(moment: Moment) {
-		return `${moment.year()}-${moment.month()}-${moment.date()}`;
+	// this is faster formatting!
+	private getDayString(d: Date) {
+		return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 	}
 
 }
+
+export var multiMonthViewPlugin = createPlugin({
+	views: {
+		multiMonth: {
+			class: MultiMonthView,
+			duration: {
+				months: 12
+			}
+		},
+		year: {
+			type: 'multiMonth',
+			duration: {
+				years: 1
+			}
+		}
+	}
+});
 
 

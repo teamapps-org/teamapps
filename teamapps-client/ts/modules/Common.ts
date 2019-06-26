@@ -26,7 +26,7 @@ import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {UiNotification_Position} from "../generated/UiNotificationConfig";
-import {createImageSizingCssObject, createUiColorCssString} from "./util/CssFormatUtil";
+import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiColorConfig} from "../generated/UiColorConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {UiTextMatchingMode} from "../generated/UiTextMatchingMode";
@@ -483,40 +483,6 @@ export function exitFullScreen() {
 		}
 	}
 }
-
-export function hexColorStringToRgb(hexColorString: string) {
-	const rgb = parseInt(hexColorString.substring(1), 16);   // convert rrggbb to decimal
-	let r;
-	let g;
-	let b;
-	if (hexColorString.length === 7) {
-		r = (rgb >> 16) & 0xff;  // extract red
-		g = (rgb >> 8) & 0xff;  // extract green
-		b = (rgb >> 0) & 0xff;  // extract blue
-	} else {
-		r = (((rgb >> 8) & 0xf) << 4) + ((rgb >> 8) & 0xf);  // extract red
-		g = (((rgb >> 4) & 0xf) << 4) + ((rgb >> 4) & 0xf);  // extract green
-		b = ((rgb & 0xf) << 4) + (rgb & 0xf);  // extract blue
-		logger.trace(`rgb: ${r} ${g} ${b}`);
-	}
-	return {r, g, b};
-}
-
-export function adjustIfColorTooBright(c: string, maxLuma256: number = 210) {
-	if (c.indexOf('#') !== 0 || (c.length !== 4 && c.length !== 7)) {
-		return c; // do not normalize. performance is more important than supporting any kind of color coding.
-	}
-	const rgb = hexColorStringToRgb(c);
-	const luma = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b; // per ITU-R BT.709
-	logger.trace("luma: " + luma);
-	if (luma > maxLuma256) {
-		let adjustionFactor = (maxLuma256 / luma);
-		return `rgb(${Math.floor(rgb.r * adjustionFactor)}, ${Math.floor(rgb.g * adjustionFactor)}, ${Math.floor(rgb.b * adjustionFactor)})`;
-	} else {
-		return c;
-	}
-}
-
 export function positionDropDown($button: Element, $dropDown: HTMLElement, {
 	viewPortPadding = 10,
 	minHeightBeforeFlipping = 200
@@ -881,7 +847,7 @@ export function parseHtml<E extends HTMLElement>(htmlString: string): E {
 	return $(htmlString)[0] as E;
 }
 
-export function parseSvg<E extends HTMLElement>(htmlString: string): E {
+export function parseSvg<E extends Element>(htmlString: string): E {
 	// let tagStartCount = (htmlString.match(/<\w+/g) || []).length;
 	// let tagEndCount = (htmlString.match(/<\//g) || []).length;
 	// if (tagStartCount !== tagEndCount) {
@@ -891,7 +857,7 @@ export function parseSvg<E extends HTMLElement>(htmlString: string): E {
 	// node.remove(); // detach from DOMParser <body>!
 	// return node;
 
-	return $(htmlString)[0] as E;
+	return $(htmlString)[0] as unknown as E;
 }
 
 export function prependChild(parent: Element, child: Element) {

@@ -52,6 +52,7 @@ import {bind} from "./util/Bind";
 import {View} from "@fullcalendar/core/View";
 import EventApi from "@fullcalendar/core/api/EventApi";
 import {Duration} from "@fullcalendar/core/datelib/duration";
+import {MultiMonthView, multiMonthViewPlugin} from "./util/FullCalendarMultiMonthView";
 
 const VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: string } = {
 	[UiCalendarViewMode.YEAR]: "year",
@@ -95,10 +96,10 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 			setTimeout(() => this.onDataNeeded.fire(eventObject)); // needed because we might still be inside the constructor and no one will be registered to this...
 		});
 		this.calendar = new Calendar($fullCalendarElement, {
-			plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
+			plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, multiMonthViewPlugin],
 			header: false,
 			// defaultView: VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[config.activeViewMode],
-			defaultView: "timeGridWeek",
+			defaultView: "year",
 			defaultDate: config.displayedDate,
 			weekNumbers: config.showWeekNumbers,
 			businessHours: {
