@@ -19,8 +19,6 @@
  */
 "use strict";
 
-
-import {WebWorkerTeamAppsConnection} from "./WebWorkerTeamAppsConnection";
 import {generateUUID, getIconPath, logException} from "./Common";
 import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
@@ -32,17 +30,17 @@ import {UiRootPanel} from "./UiRootPanel";
 import {EventRegistrator} from "../generated/EventRegistrator";
 import {UiCommand} from '../generated/UiCommand';
 import {CommandExecutor} from "../generated/CommandExecutor";
-import {TeamAppsConnection, TeamAppsConnectionListener} from "../shared/TeamAppsConnection";
+import {TeamAppsConnection, TeamAppsConnectionListener} from "./communication/TeamAppsConnection";
 import * as log from "loglevel";
 import * as jstz from "jstz";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TemplateRegistry} from "./TemplateRegistry";
-import {createUiClientInfoConfig, UiClientInfoConfig} from "../generated/UiClientInfoConfig";
+import {createUiClientInfoConfig} from "../generated/UiClientInfoConfig";
 import {UiGenericErrorMessageOption} from "../generated/UiGenericErrorMessageOption";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {bind} from "./util/Bind";
 import {RefreshableComponentProxyHandle} from "./util/RefreshableComponentProxyHandle";
-import {TeamAppsConnectionImpl} from "../shared/TeamAppsConnectionImpl";
+import {TeamAppsConnectionImpl} from "./communication/TeamAppsConnectionImpl";
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 

@@ -46,7 +46,7 @@ require("slick-carousel");
 
 export {DefaultTeamAppsUiContext} from "./DefaultTeamAppsUiContext";
 export {UiWorkSpaceLayoutChildWindowTeamAppsUiContext} from "./workspace-layout/UiWorkSpaceLayoutChildWindowTeamAppsUiContext";
-export {TeamAppsConnectionImpl} from "../shared/TeamAppsConnectionImpl";
+export {TeamAppsConnectionImpl} from "./communication/TeamAppsConnectionImpl";
 
 export {UiApplicationLayout} from "./UiApplicationLayout";
 export {UiCalendar} from "./UiCalendar";
@@ -84,7 +84,6 @@ export {UiWebRtcPlayer} from "./UiWebRtcPlayer";
 export {UiWindow} from "./UiWindow";                        
 export {UiWorkSpaceLayout} from "./workspace-layout/UiWorkSpaceLayout";
 export {UiIFrame} from "./UiIFrame";
-export {WebWorkerTeamAppsConnection} from "./WebWorkerTeamAppsConnection";
 export {UiFlexContainer} from "./UiFlexContainer";
 export {UiChatDisplay} from "./UiChatDisplay";
 export {UiChatInput} from "./UiChatInput";

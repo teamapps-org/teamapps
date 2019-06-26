@@ -17,21 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiCommand} from "../generated/UiCommand";
-import {INIT_NOK_Reason} from "../generated/INIT_NOKConfig";
-import {REINIT_NOK_Reason} from "../generated/REINIT_NOKConfig";
-import {SERVER_ERROR_Reason} from "../generated/SERVER_ERRORConfig";
-import {UiEvent} from "../generated/UiEvent";
+import {UiCommand} from "../../generated/UiCommand";
 
-export const typescriptDeclarationFixConstant = 1;
-
-export interface TeamAppsConnection {
-	sendEvent(event: UiEvent): void;
-}
-
-export interface TeamAppsConnectionListener {
-	onConnectionInitialized(): void;
-	onConnectionErrorOrBroken(reason: INIT_NOK_Reason | REINIT_NOK_Reason | SERVER_ERROR_Reason, message?: string): void;
-	executeCommand(uiCommand: UiCommand): Promise<any>;
-	executeCommands(uiCommands: UiCommand[]): Promise<any>[];
+export interface CMD {
+	id: number
+	c: UiCommand, // uiCommand
+	r: boolean    // awaitsResult
 }

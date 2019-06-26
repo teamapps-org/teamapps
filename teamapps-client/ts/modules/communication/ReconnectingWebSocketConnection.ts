@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractServerMessageConfig} from "../generated/AbstractServerMessageConfig";
-import {AbstractClientMessageConfig} from "../generated/AbstractClientMessageConfig";
+import {AbstractServerMessageConfig} from "../../generated/AbstractServerMessageConfig";
+import {AbstractClientMessageConfig} from "../../generated/AbstractClientMessageConfig";
 import * as log from "loglevel";
 import * as stringify from "json-stable-stringify";
 import {Inflate, Deflate} from "pako";
