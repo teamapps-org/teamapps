@@ -148,7 +148,7 @@ module.exports = function (stageConfig) {
 					to: path.posix.join(stageConfig.assetsSubDirectory, 'runtime-resources/moment-locales')
 				},
 				{
-					from: resolve('node_modules/fullcalendar/dist/locale'),
+					from: resolve('node_modules/@fullcalendar/core/locales'),
 					to: path.posix.join(stageConfig.assetsSubDirectory, '/runtime-resources/fullcalendar-locales')
 				},
 				{

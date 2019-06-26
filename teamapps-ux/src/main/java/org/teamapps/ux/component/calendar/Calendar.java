@@ -231,9 +231,6 @@ public class Calendar<RECORD> extends AbstractComponent {
 				UiCalendar.ViewChangedEvent viewChangedEvent = (UiCalendar.ViewChangedEvent) event;
 				this.displayedDate = epochMilliToUserLocalDate(viewChangedEvent);
 				this.activeViewMode = CalendarViewMode.valueOf(viewChangedEvent.getViewMode().name());
-				Instant queryStart = Instant.ofEpochMilli(viewChangedEvent.getDisplayedIntervalStart());
-				Instant queryEnd = Instant.ofEpochMilli(viewChangedEvent.getDisplayedIntervalEnd());
-				sendCalendarData(queryStart, queryEnd);
 				onViewChanged.fire(new ViewChangedEventData(
 						getClientZoneId(),
 						activeViewMode,
@@ -244,6 +241,12 @@ public class Calendar<RECORD> extends AbstractComponent {
 				));
 				break;
 			}
+			case UI_CALENDAR_DATA_NEEDED: {
+				UiCalendar.DataNeededEvent dataNeededEvent = (UiCalendar.DataNeededEvent) event;
+				Instant queryStart = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalStart());
+				Instant queryEnd = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalEnd());
+				queryAndSendCalendarData(queryStart, queryEnd);
+			}
 		}
 	}
 
@@ -251,7 +254,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 		return Instant.ofEpochMilli(viewChangedEvent.getMainIntervalStart()).atZone(getSessionContext().getTimeZone()).toLocalDate();
 	}
 
-	private void sendCalendarData(Instant queryStart, Instant queryEnd) {
+	private void queryAndSendCalendarData(Instant queryStart, Instant queryEnd) {
 		List<CalendarEvent<RECORD>> calendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
 		if (isRendered()) {
@@ -322,7 +325,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 	public void refreshEvents() {
 		Instant queryStart = activeViewMode.getDisplayStart(displayedDate, firstDayOfWeek).atStartOfDay(getClientZoneId()).toInstant();
 		Instant queryEnd = activeViewMode.getDisplayEnd(displayedDate, firstDayOfWeek).atStartOfDay(getClientZoneId()).toInstant();
-		sendCalendarData(queryStart, queryEnd);
+		queryAndSendCalendarData(queryStart, queryEnd);
 	}
 
 	public CalendarModel getModel() {
