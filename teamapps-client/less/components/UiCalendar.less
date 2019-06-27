@@ -17,11 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-//.fc-view-container *,
-//.fc-view-container *:before,
-//.fc-view-container *:after {
-//  -webkit-box-sizing: border-box;
-//}
+@calendar-font-weight: 200;
 
 .UiCalendar {
 
@@ -89,6 +85,12 @@
     background-color: transparent;
   }
 
+  .fc-day-header a,
+  .fc-week-number a,
+  .fc-day-number {
+    color: @text-color;
+  }
+
   th,
   td,
   thead,
@@ -112,17 +114,6 @@
   .fc-row.fc-widget-header {
     font-size: 15px;
     position: relative;
-
-    &:after {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      content: ' ';
-      background-color: transparent;
-      top: 0;
-      left: 0;
-      //box-shadow: 0 -3px 10px 3px rgba(0, 0, 0, .4);
-    }
   }
 
   .fc-agenda-view .fc-week-number,
@@ -130,31 +121,11 @@
     border-right-width: 2px !important;
   }
 
-  .fc-week-number {
-    font-weight: bold;
-  }
-
-  .fc-bg td.fc-week-number.fc-widget-content {
-    //position: relative;
-    //&:after {
-    //  position: absolute;
-    //  width: 100%;
-    //  height: ~"calc(100% + 1px)";
-    //  content: ' ';
-    //  background-color: transparent;
-    //  top: -1px;
-    //  left: 0;
-    //  //box-shadow: -3px 0 10px 3px rgba(0, 0, 0, .3);
-    //}
-    //&:before {
-    //  position: absolute;
-    //  width: 100%;
-    //  height: 100%;
-    //  content: ' ';
-    //  background-color: rgba(255, 255, 255, .9); // overwritten by javascript!
-    //  top: 0;
-    //  left: 0;
-    //}
+  .fc-week-number,
+  .fc-day-number,
+  .fc-widget-header,
+  .fc-axis {
+    font-weight: @calendar-font-weight;
   }
 
   .fc-head .fc-widget-header {
@@ -190,11 +161,6 @@
     float: none !important;
   }
 
-  .fc-day-number.fc-today {
-    font-weight: bold;
-    padding-right: 5px;
-  }
-
   .fc-multi-month-view {
     overflow: auto;
 
@@ -225,9 +191,41 @@
       clip-path: polygon(0 0, 100% 0, calc(100% - 4px) 25%, 100% 50%, calc(100% - 4px) 75%, 100% 100%, 0 100%, 4px 75%, 0% 50%, 4px 25%);
     }
   }
+
+  .fc-time-grid {
+    .fc-not-end {
+      clip-path: polygon(0 0, 0 100%, 16.6% calc(100% - 4px), 33.3% 100%, 50% calc(100% - 4px), 66.6% 100% , 83.3% calc(100% - 4px), 100% 100%, 100% 0);
+    }
+
+    .fc-not-start {
+      clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0, 83.3% 4px, 66.6% 0, 50% 4px, 33.3% 0, 16.6% 4px);
+    }
+
+    .fc-not-start.fc-not-end {
+      clip-path: polygon(0 0, 0 100%, 16.6% calc(100% - 4px), 33.3% 100%, 50% calc(100% - 4px), 66.6% 100% , 83.3% calc(100% - 4px), 100% 100%, 100% 0, 83.3% 4px, 66.6% 0, 50% 4px, 33.3% 0, 16.6% 4px);
+    }
+  }
+
+  .fc-h-event.fc-allow-mouse-resize .fc-resizer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    &:after {
+      content: 'ǁ';
+      display: block;
+      position: relative;
+      left: -2px;
+    }
+  }
+
+  .fc-h-event.all-day {
+    border-left-width: 3px;
+    padding-left: 0;
+  }
 }
 
 .fc-multi-month-view {
+  cursor: default;
 
   .UiCalendar-day,
   .UiCalendar-day-name,
@@ -244,7 +242,12 @@
   .UiCalendar-week-number {
     text-anchor: end;
     fill: #999;
-    font-weight: 100;
+    font-weight: @calendar-font-weight;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+      text-decoration-color: #999;
+    }
   }
 
   .UiCalendar-month-frame {
@@ -254,30 +257,43 @@
 
   .UiCalendar-month-name {
     fill: @text-color;
-    font-weight: 200;
+    font-weight: @calendar-font-weight;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+      text-decoration-color: @text-color;
+    }
   }
 
   .UiCalendar-day {
-    cursor: pointer;
 
     &.weekend {
       fill: #888;
+    }
+
+    .day-number {
+      fill: @text-color;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+        text-decoration-color: @text-color;
+      }
     }
 
     .day-occupation-background-circle,
     .day-occupation {
       fill: none;
       stroke: #ebebeb;
-      stroke-width: .7;
+      stroke-width: 1;
     }
 
     .day-occupation {
-      stroke-width: .7;
+      stroke-width: 1;
     }
 
     &.other-month {
       fill: #ddd;
-      font-weight: 200;
+      font-weight: @calendar-font-weight;
 
       .day-occupation-background-circle,
       .day-occupation {

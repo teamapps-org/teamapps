@@ -240,7 +240,8 @@ export class MultiMonthView extends View {
 			.classed("UiCalendar-month-name", true)
 			.text(monthRange => this.dateEnv.format(monthRange.intervalStart, this.monthNameFormatter))
 			.attr("x", 0)
-			.attr("y", 10);
+			.attr("y", 10)
+			.on("click", (monthRange) => this.context.options.navLinkMonthClick && this.context.options.navLinkMonthClick(monthRange.intervalStart, d3.event));
 		_month.merge(_monthEnter)
 			.transition()
 			.attr("transform", calculateMonthPositionTransform);
@@ -272,7 +273,8 @@ export class MultiMonthView extends View {
 		let _weekNumberEnter = _weekNumber.enter()
 			.append("text")
 			.classed("UiCalendar-week-number", true)
-			.attr("x", 6);
+			.attr("x", 6)
+			.on("click", (d) => this.context.options.navLinkWeekClick && this.context.options.navLinkWeekClick(d.day, d3.event));
 		_weekNumber.merge(_weekNumberEnter)
 			.text(day => this.dateEnv.computeWeekNumber(day.day));
 
@@ -285,14 +287,7 @@ export class MultiMonthView extends View {
 			.append("g")
 			.classed("UiCalendar-day", true)
 			.attr("transform", (day, dayIndex) => `translate(${this.firstDayOffsetX + (dayIndex % 7) * this.dayColumnWidth}, 0)`)
-			.on("click", (d) => this.context.options.dateClick && this.context.options.dateClick({
-				date: d.day,
-				dateStr: null,
-				allDay: true,
-				dayEl: null,
-				jsEvent: d3.event,
-				view: this
-			}))
+			.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day, d3.event))
 			.call((g) => {
 				g.append("circle")
 					.classed("day-occupation-background-circle", true);
@@ -338,8 +333,8 @@ export class MultiMonthView extends View {
 				if (hslColor.l > 0.45) {
 					hslColor.l = 0.45;
 				}
-				if (hslColor.s < 0.6) {
-					hslColor.s = 0.6;
+				if (hslColor.s < 0.5) {
+					hslColor.s = 0.5;
 				}
 				return hslColor.toString();
 			});
