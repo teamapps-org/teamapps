@@ -46,6 +46,7 @@ import {addDays, Calendar, listenBySelector} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import momentTimeZone from '@fullcalendar/moment-timezone';
 import {EventInput, EventRenderingChoice} from "@fullcalendar/core/structs/event";
 import {EventSourceError, ExtendedEventSourceInput} from "@fullcalendar/core/structs/event-source";
 import {bind} from "./util/Bind";
@@ -95,12 +96,8 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 		this.templateRenderers = context.templateRegistry.createTemplateRenderers(config.templates);
 
 		this.eventSource = new UiCalendarFullCalendarEventSource(context, config.id, () => this.calendar);
-		config.initialData && this.eventSource.addEvents(0, Number.MAX_SAFE_INTEGER, config.initialData.map(e => convertToFullCalendarEvent(e)));
-		this.eventSource.onDataNeeded.addListener((eventObject: UiCalendar_DataNeededEvent) => {
-			setTimeout(() => this.onDataNeeded.fire(eventObject)); // needed because we might still be inside the constructor and no one will be registered to this...
-		});
 		this.calendar = new Calendar($fullCalendarElement, {
-			plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, multiMonthViewPlugin],
+			plugins: [momentTimeZone, interactionPlugin, dayGridPlugin, timeGridPlugin, multiMonthViewPlugin],
 			header: false,
 			defaultView: VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[config.activeViewMode],
 			defaultDate: config.displayedDate,
@@ -119,7 +116,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 			lazyFetching: false, // no intelligent fetching from fullcalendar. We handle all that!
 			selectable: true,
 			unselectAuto: false,
-			timeZone: context.config.timeZoneId || 'local',
+			timeZone: config.timeZoneId || context.config.timeZoneId || 'local',
 			height: 600,
 			slotEventOverlap: false,
 			locale: context.config.isoLanguage,
@@ -165,7 +162,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 			}) => {
 				if (arg.event.extendedProps.templateId != null && !arg.event.rendering) {
 					const $contentWrapper = arg.el.querySelector(':scope .fc-content');
-					$contentWrapper.innerHTML = '';
+					// $contentWrapper.innerHTML = '';
 					$contentWrapper.appendChild(parseHtml(this.renderEventObject(arg.event)));
 					arg.el.addEventListener('click', (e) => {
 						this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), false));
@@ -252,6 +249,15 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 				}
 			}
 		} as OptionsInputBase);
+
+		if (config.initialData) {
+			this.eventSource.addEvents(0, Number.MAX_SAFE_INTEGER, config.initialData.map(e => this.convertToFullCalendarEvent(e)));
+			this.calendar.refetchEvents();
+		}
+		this.eventSource.onDataNeeded.addListener((eventObject: UiCalendar_DataNeededEvent) => {
+			setTimeout(() => this.onDataNeeded.fire(eventObject)); // setTimeout needed because we might still be inside the constructor and no one will be registered to this...
+		});
+
 		this.calendar.render();
 
 		this.$main.append(parseHtml(`<style>
@@ -291,7 +297,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 	}
 
 	public addEvent(theEvent: any) {
-		this.eventSource.addEvent(convertToFullCalendarEvent(theEvent));
+		this.eventSource.addEvent(this.convertToFullCalendarEvent(theEvent));
 		this.refreshEventsDisplay();
 	}
 
@@ -302,7 +308,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 
 	public setCalendarData(events: UiCalendarEventClientRecordConfig[]) {
 		this.eventSource.removeAllEvents();
-		this.eventSource.addEvents(0, Number.MAX_SAFE_INTEGER, events.map(e => convertToFullCalendarEvent(e)));
+		this.eventSource.addEvents(0, Number.MAX_SAFE_INTEGER, events.map(e => this.convertToFullCalendarEvent(e)));
 		this.refreshEventsDisplay();
 	}
 
@@ -332,6 +338,38 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 
 	public destroy(): void {
 		// nothing to do
+	}
+
+	public convertToFullCalendarEvent(event: UiCalendarEventClientRecordConfig): EventInput {
+		let backgroundColor = event.backgroundColor;
+		let backgroundColorCssString = typeof backgroundColor === 'string' ? backgroundColor
+			: backgroundColor != null ? createUiColorCssString(backgroundColor) : null;
+
+		let borderColor = event.borderColor;
+		let borderColorCssString = typeof borderColor === 'string' ? borderColor
+			: borderColor != null ? createUiColorCssString(borderColor) : null;
+
+		return {
+			id: "" + event.id,
+			start: new Date(event.start),
+			end: new Date(event.end),
+			title: event.asString,
+			rendering: RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING[event.rendering],
+			editable: event.allowDragOperations,
+			startEditable: event.allowDragOperations,
+			durationEditable: event.allowDragOperations,
+			allDay: event.allDay,
+			backgroundColor: backgroundColorCssString,
+			borderColor: borderColorCssString,
+			extendedProps: {
+				templateId: event.templateId,
+				data: event.values
+			}
+		};
+	}
+
+	setTimeZoneId(timeZoneId: string): void {
+		this.calendar.setOption("timeZone", timeZoneId);
 	}
 
 }
@@ -431,34 +469,5 @@ class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 	}
 }
 
-function convertToFullCalendarEvent(event: UiCalendarEventClientRecordConfig): EventInput {
-	let backgroundColor = event.backgroundColor;
-	let backgroundColorCssString = typeof backgroundColor === 'string' ? backgroundColor
-		: backgroundColor != null ? createUiColorCssString(backgroundColor) : null;
-
-	let borderColor = event.borderColor;
-	let borderColorCssString = typeof borderColor === 'string' ? borderColor
-		: borderColor != null ? createUiColorCssString(borderColor) : null;
-
-	console.log(event.allowDragOperations);
-
-	return {
-		id: "" + event.id,
-		start: new Date(event.start),
-		end: new Date(event.end),
-		title: event.asString,
-		rendering: RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING[event.rendering],
-		editable: event.allowDragOperations,
-		startEditable: event.allowDragOperations,
-		durationEditable: event.allowDragOperations,
-		allDay: event.allDay,
-		backgroundColor: backgroundColorCssString,
-		borderColor: borderColorCssString,
-		extendedProps: {
-			templateId: event.templateId,
-			data: event.values
-		}
-	};
-}
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiCalendar", UiCalendar);

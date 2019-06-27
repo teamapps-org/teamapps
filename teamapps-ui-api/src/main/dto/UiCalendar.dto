@@ -48,6 +48,8 @@ class UiCalendar extends UiComponent {
 
     boolean navigateOnHeaderClicks = true;
 
+    String timeZoneId = "UTC";
+
 	command setViewMode(UiCalendarViewMode viewMode);
 	command setDisplayedDate(long date);
 	command addEvent(UiCalendarEventClientRecord theEvent); // an existing event with the same id gets removed before the new one is added
@@ -55,6 +57,7 @@ class UiCalendar extends UiComponent {
 	command setCalendarData(List<UiCalendarEventClientRecord> events);
 	command clearCalendar();
 	command registerTemplate(String id, UiTemplate template);
+	command setTimeZoneId(String timeZoneId);
 
 	event eventClicked(int eventId, boolean isDoubleClick);
 	event eventMoved(int eventId, long newStart, long newEnd); // fired when an event gets moved or resized

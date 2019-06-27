@@ -22,6 +22,7 @@ package org.teamapps.ux.component.calendar;
 import org.teamapps.common.format.Color;
 
 import java.time.Instant;
+import java.time.ZoneOffset;
 
 public class CalendarEvent<RECORD> {
 
@@ -71,6 +72,20 @@ public class CalendarEvent<RECORD> {
 
 	public CalendarEvent(long start, long end, String title) {
 		this(start, end, title, false, null);
+	}
+
+	@Override
+	public String toString() {
+		return "CalendarEvent{" +
+				"start=" + start + " (" + Instant.ofEpochMilli(start).atZone(ZoneOffset.UTC).toString() + ")" +
+				", end=" + Instant.ofEpochMilli(end).atZone(ZoneOffset.UTC).toString() +
+				", allDay=" + allDay +
+				", allowDragOperations=" + allowDragOperations +
+				", backgroundColor=" + backgroundColor +
+				", borderColor=" + borderColor +
+				", rendering=" + rendering +
+				", record=" + record +
+				'}';
 	}
 
 	public Instant getStart() {
