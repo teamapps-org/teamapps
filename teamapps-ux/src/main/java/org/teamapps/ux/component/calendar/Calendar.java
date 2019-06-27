@@ -21,6 +21,7 @@ package org.teamapps.ux.component.calendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiCalendar;
@@ -36,7 +37,6 @@ import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
@@ -63,6 +63,9 @@ public class Calendar<RECORD> extends AbstractComponent {
 	public final Event<EventMovedEventData<RECORD>> onEventMoved = new Event<>();
 	public final Event<DayClickedEventData> onDayClicked = new Event<>();
 	public final Event<ViewChangedEventData> onViewChanged = new Event<>();
+	public final Event<LocalDate> onMonthHeaderClicked = new Event<>();
+	public final Event<WeeHeaderClickedEventData> onWeekHeaderClicked = new Event<>();
+	public final Event<LocalDate> onDayHeaderClicked = new Event<>();
 
 	private CalendarModel<RECORD> model;
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
@@ -89,6 +92,8 @@ public class Calendar<RECORD> extends AbstractComponent {
 
 	private Color defaultBackgroundColor = new Color(154, 204, 228);
 	private Color defaultBorderColor = new Color(154, 204, 228);
+
+	protected boolean navigateOnHeaderClicks = true;
 
 	private EventListener<Void> onCalendarDataChangedListener = (aVoid) -> {
 		refreshEvents();
@@ -170,6 +175,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 		uiCalendar.setFirstDayOfWeek(firstDayOfWeek != null ? UiWeekDay.valueOf(firstDayOfWeek.name()) : null);
 		uiCalendar.setWorkingDays(workingDays.stream().map(workingDay -> UiWeekDay.valueOf(workingDay.name())).collect(Collectors.toList()));
 		uiCalendar.setTableHeaderBackgroundColor(tableHeaderBackgroundColor != null ? createUiColor(tableHeaderBackgroundColor) : null);
+		uiCalendar.setNavigateOnHeaderClicks(navigateOnHeaderClicks);
 
 		Instant queryStart = activeViewMode.getDisplayStart(displayedDate, firstDayOfWeek).atStartOfDay(getClientZoneId()).toInstant();
 		Instant queryEnd = activeViewMode.getDisplayEnd(displayedDate, firstDayOfWeek).atStartOfDay(getClientZoneId()).toInstant();
@@ -246,6 +252,25 @@ public class Calendar<RECORD> extends AbstractComponent {
 				Instant queryStart = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalStart());
 				Instant queryEnd = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalEnd());
 				queryAndSendCalendarData(queryStart, queryEnd);
+				break;
+			}
+			case UI_CALENDAR_MONTH_HEADER_CLICKED: {
+				UiCalendar.MonthHeaderClickedEvent clickEvent = (UiCalendar.MonthHeaderClickedEvent) event;
+				LocalDate startOfMonth = Instant.ofEpochMilli(clickEvent.getMonthStartDate()).atZone(getClientZoneId()).toLocalDate();
+				onMonthHeaderClicked.fire(startOfMonth);
+				break;
+			}
+			case UI_CALENDAR_WEEK_HEADER_CLICKED: {
+				UiCalendar.WeekHeaderClickedEvent clickEvent = (UiCalendar.WeekHeaderClickedEvent) event;
+				LocalDate startOfWeek = Instant.ofEpochMilli(clickEvent.getWeekStartDate()).atZone(getClientZoneId()).toLocalDate();
+				onWeekHeaderClicked.fire(new WeeHeaderClickedEventData(getClientZoneId(), clickEvent.getYear(), clickEvent.getWeek(), startOfWeek));
+				break;
+			}
+			case UI_CALENDAR_DAY_HEADER_CLICKED: {
+				UiCalendar.DayHeaderClickedEvent clickEvent = (UiCalendar.DayHeaderClickedEvent) event;
+				LocalDate date = Instant.ofEpochMilli(clickEvent.getDate()).atZone(getClientZoneId()).toLocalDate();
+				onDayHeaderClicked.fire(date);
+				break;
 			}
 		}
 	}

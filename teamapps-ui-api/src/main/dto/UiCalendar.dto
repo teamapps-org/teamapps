@@ -46,6 +46,8 @@ class UiCalendar extends UiComponent {
     UiColor defaultBackgroundColor = new UiColor(154, 204, 228);
     UiColor defaultBorderColor = new UiColor(154, 204, 228);
 
+    boolean navigateOnHeaderClicks = true;
+
 	command setViewMode(UiCalendarViewMode viewMode);
 	command setDisplayedDate(long date);
 	command addEvent(UiCalendarEventClientRecord theEvent); // an existing event with the same id gets removed before the new one is added
@@ -57,6 +59,9 @@ class UiCalendar extends UiComponent {
 	event eventClicked(int eventId, boolean isDoubleClick);
 	event eventMoved(int eventId, long newStart, long newEnd); // fired when an event gets moved or resized
 	event dayClicked(long date, boolean isDoubleClick);
+	event dayHeaderClicked(long date);
+	event weekHeaderClicked(int year, int week, long weekStartDate);
+	event monthHeaderClicked(int year, int month, long monthStartDate);
 	event viewChanged(
 		UiCalendarViewMode viewMode,
 		long mainIntervalStart, long mainIntervalEnd, // the interval the calendar currently formally represents. (e.g. 1. January 2016 0:00 to 1 February 2016 0:00)

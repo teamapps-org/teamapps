@@ -22,10 +22,10 @@ import * as log from "loglevel";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {
 	UiCalendar_DataNeededEvent,
-	UiCalendar_DayClickedEvent,
+	UiCalendar_DayClickedEvent, UiCalendar_DayHeaderClickedEvent,
 	UiCalendar_EventClickedEvent,
-	UiCalendar_EventMovedEvent,
-	UiCalendar_ViewChangedEvent,
+	UiCalendar_EventMovedEvent, UiCalendar_MonthHeaderClickedEvent,
+	UiCalendar_ViewChangedEvent, UiCalendar_WeekHeaderClickedEvent,
 	UiCalendarCommandHandler,
 	UiCalendarConfig,
 	UiCalendarEventSource
@@ -42,7 +42,7 @@ import {parseHtml, Renderer} from "./Common";
 import {UiCalendarEventClientRecordConfig} from "../generated/UiCalendarEventClientRecordConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 
-import {Calendar} from '@fullcalendar/core';
+import {addDays, Calendar, listenBySelector} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -53,6 +53,7 @@ import {View} from "@fullcalendar/core/View";
 import EventApi from "@fullcalendar/core/api/EventApi";
 import {Duration} from "@fullcalendar/core/datelib/duration";
 import {MultiMonthView, multiMonthViewPlugin} from "./util/FullCalendarMultiMonthView";
+import {OptionsInputBase} from "@fullcalendar/core/types/input-types";
 
 const VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: string } = {
 	[UiCalendarViewMode.YEAR]: "year",
@@ -74,6 +75,9 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 	public readonly onDayClicked: TeamAppsEvent<UiCalendar_DayClickedEvent> = new TeamAppsEvent<UiCalendar_DayClickedEvent>(this);
 	public readonly onViewChanged: TeamAppsEvent<UiCalendar_ViewChangedEvent> = new TeamAppsEvent<UiCalendar_ViewChangedEvent>(this);
 	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent<UiCalendar_DataNeededEvent>(this);
+	public readonly onDayHeaderClicked: TeamAppsEvent<UiCalendar_DayHeaderClickedEvent> = new TeamAppsEvent<UiCalendar_DayHeaderClickedEvent>(this);
+	public readonly onWeekHeaderClicked: TeamAppsEvent<UiCalendar_WeekHeaderClickedEvent> = new TeamAppsEvent<UiCalendar_WeekHeaderClickedEvent>(this);
+	public readonly onMonthHeaderClicked: TeamAppsEvent<UiCalendar_MonthHeaderClickedEvent> = new TeamAppsEvent<UiCalendar_MonthHeaderClickedEvent>(this);
 
 	private $main: HTMLElement;
 	private eventSource: UiCalendarFullCalendarEventSource;
@@ -98,8 +102,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 		this.calendar = new Calendar($fullCalendarElement, {
 			plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, multiMonthViewPlugin],
 			header: false,
-			// defaultView: VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[config.activeViewMode],
-			defaultView: "year",
+			defaultView: VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[config.activeViewMode],
 			defaultDate: config.displayedDate,
 			weekNumbers: config.showWeekNumbers,
 			businessHours: {
@@ -171,6 +174,9 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 						this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), true));
 					});
 				}
+				if (arg.event.allDay) {
+					arg.el.classList.add("all-day");
+				}
 			},
 			dateClick: (() => {
 				let lastClickTimeStamp = 0;
@@ -226,7 +232,26 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 				masterEvent.end = arg.event.end;
 				this.onEventMoved.fire(EventFactory.createUiCalendar_EventMovedEvent(config.id, parseInt(arg.event.id), arg.event.start.valueOf(), arg.event.end.valueOf()));
 			},
-		});
+			navLinks: true,
+			navLinkDayClick: (date, jsEvent) => {
+				this.onDayHeaderClicked.fire(EventFactory.createUiCalendar_DayHeaderClickedEvent(this.getId(), date.valueOf()));
+				if (this._config.navigateOnHeaderClicks) {
+					this.calendar.changeView("timeGridDay", date);
+				}
+			},
+			navLinkWeekClick: (weekStart, jsEvent) => {
+				this.onWeekHeaderClicked.fire(EventFactory.createUiCalendar_WeekHeaderClickedEvent(this.getId(), addDays(weekStart, 6).getFullYear(), this.calendar.dateEnv.computeWeekNumber(weekStart), weekStart.valueOf()));
+				if (this._config.navigateOnHeaderClicks) {
+					this.calendar.changeView("timeGridWeek", weekStart);
+				}
+			},
+			navLinkMonthClick: (monthStart: Date, jsEvent: Event) => {
+				this.onMonthHeaderClicked.fire(EventFactory.createUiCalendar_MonthHeaderClickedEvent(this.getId(), monthStart.getFullYear(), monthStart.getMonth(), monthStart.valueOf()));
+				if (this._config.navigateOnHeaderClicks) {
+					this.calendar.changeView("dayGridMonth", monthStart);
+				}
+			}
+		} as OptionsInputBase);
 		this.calendar.render();
 
 		this.$main.append(parseHtml(`<style>
@@ -308,6 +333,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 	public destroy(): void {
 		// nothing to do
 	}
+
 }
 
 export /* for testing ... */
@@ -413,6 +439,8 @@ function convertToFullCalendarEvent(event: UiCalendarEventClientRecordConfig): E
 	let borderColor = event.borderColor;
 	let borderColorCssString = typeof borderColor === 'string' ? borderColor
 		: borderColor != null ? createUiColorCssString(borderColor) : null;
+
+	console.log(event.allowDragOperations);
 
 	return {
 		id: "" + event.id,
