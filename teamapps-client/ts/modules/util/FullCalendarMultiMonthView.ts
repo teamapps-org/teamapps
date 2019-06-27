@@ -22,17 +22,20 @@ import {generateUUID, parseHtml, parseSvg} from "../Common";
 import * as d3 from "d3";
 import {Selection} from "d3-selection";
 import {addDays, createFormatter, createPlugin, DateFormatter, EventStore, View} from "@fullcalendar/core";
+import {toMoment} from "@fullcalendar/moment";
 import {EventApi} from "@fullcalendar/core/api/EventApi";
-import Logger = log.Logger;
+import * as moment from "moment-timezone";
+import {Moment} from "moment-timezone";
 
 class Segment {
 	constructor(
-		public start: Date,
-		public end: Date,
+		public start: Moment,
+		public end: Moment,
 		public isStart: boolean,
 		public isEnd: boolean,
 		public event: EventApi
 	) {
+		console.log(`${start.toString()} - ${end.toString()}`)
 	}
 
 	public toString(): string {
@@ -47,24 +50,17 @@ type DayOccupationColorAmount = {
 	endAngle: number
 };
 
-type Range = {
-	start: Date,
-	end: Date
-}
-
-const logger: Logger = log.getLogger("MyYearView");
-
 interface DisplayedMonth {
-	intervalStart: Date,
-	intervalEnd: Date,
-	displayedStart: Date,
-	displayedEnd: Date,
+	intervalStart: Moment,
+	intervalEnd: Moment,
+	displayedStart: Moment,
+	displayedEnd: Moment,
 	displayedWeeks: DisplayedWeek[]
 }
 
 type DisplayedWeek = [DisplayedDay, DisplayedDay, DisplayedDay, DisplayedDay, DisplayedDay, DisplayedDay, DisplayedDay];
 type DisplayedDay = {
-	day: Date,
+	day: Moment,
 	foreignMonth: boolean
 };
 
@@ -122,18 +118,19 @@ export class MultiMonthView extends View {
 	}
 
 	private getMonthRangesToBeDisplayed(): DisplayedMonth[] {
-		const numberOfMonths = (this.currentEnd.getFullYear() * 12 + this.currentEnd.getMonth()) - (this.currentStart.getFullYear() * 12 + this.currentStart.getMonth());
+		let startMoment = toMoment(this.currentStart, this.calendar);
+		let endMoment = toMoment(this.currentEnd, this.calendar);
+		const numberOfMonths = endMoment.diff(startMoment, 'month');
 		console.log("number of months: " + numberOfMonths);
-		const firstMonth = this.dateEnv.startOfMonth(this.currentStart);
 		const displayedMonths: DisplayedMonth[] = [];
 		for (let i = 0; i < numberOfMonths; i++) {
-			let intervalStart = this.dateEnv.addMonths(firstMonth, i);
-			let intervalEnd = this.dateEnv.addMonths(firstMonth, i + 1);
+			let intervalStart = startMoment.clone().add(i, 'month');
+			let intervalEnd = startMoment.clone().add(i + 1, 'month');
 			const monthRange: DisplayedMonth = {
 				intervalStart,
 				intervalEnd,
-				displayedStart: this.dateEnv.startOfWeek(intervalStart),
-				displayedEnd: addDays(this.dateEnv.startOfWeek(intervalEnd), 7),
+				displayedStart: this.startOfWeek(startMoment),
+				displayedEnd: this.startOfWeek(intervalEnd).add(7, "day"),
 				displayedWeeks: this.getDisplayedWeeks(intervalStart)
 			};
 			displayedMonths.push(monthRange);
@@ -141,17 +138,26 @@ export class MultiMonthView extends View {
 		return displayedMonths;
 	}
 
-	private getDisplayedWeeks(intervalStart: Date): DisplayedWeek[] {
+	private startOfWeek(m: Moment) {
+		let copy = m.clone();
+		let firstDay = this.calendar.opt("firstDay") || 0;
+		while(copy.day() !== firstDay) {
+			copy.add(-1, 'day');
+		}
+		return copy;
+	}
+
+	private getDisplayedWeeks(intervalStart: Moment): DisplayedWeek[] {
 		let weeks: DisplayedWeek[] = [];
-		let month = intervalStart.getMonth();
-		let displayedStart = this.dateEnv.startOfWeek(intervalStart);
+		let month = intervalStart.month();
+		let displayedStart = this.startOfWeek(intervalStart);
 		for (let i = 0; i < 6; i++) {
 			let week = [];
 			for (let j = 0; j < 7; j++) {
-				let day = addDays(displayedStart, i * 7 + j);
+				let day = displayedStart.clone().add(i * 7 + j, 'day');
 				week.push({
 					day: day,
-					foreignMonth: day.getMonth() !== month
+					foreignMonth: day.month() !== month
 				});
 			}
 			weeks.push(week as DisplayedWeek);
@@ -169,10 +175,6 @@ export class MultiMonthView extends View {
 		return bestNumberOfColumns;
 	}
 
-	/**
-	 * @deprecated use this.weekDayShortNames instead of calculating this all the time
-	 * @returns {any[]}
-	 */
 	private initWeekDayShortNames(): string[] {
 		let formatter = createFormatter({weekday: 'narrow'});
 		let names = [];
@@ -238,10 +240,10 @@ export class MultiMonthView extends View {
 		_monthEnter
 			.append("text")
 			.classed("UiCalendar-month-name", true)
-			.text(monthRange => this.dateEnv.format(monthRange.intervalStart, this.monthNameFormatter))
+			.text(monthRange => this.dateEnv.format(strippedUtcLikeDate(monthRange.intervalStart), this.monthNameFormatter))
 			.attr("x", 0)
 			.attr("y", 10)
-			.on("click", (monthRange) => this.context.options.navLinkMonthClick && this.context.options.navLinkMonthClick(monthRange.intervalStart, d3.event));
+			.on("click", (monthRange) => this.context.options.navLinkMonthClick && this.context.options.navLinkMonthClick(monthRange.intervalStart.toDate(), d3.event));
 		_month.merge(_monthEnter)
 			.transition()
 			.attr("transform", calculateMonthPositionTransform);
@@ -274,9 +276,9 @@ export class MultiMonthView extends View {
 			.append("text")
 			.classed("UiCalendar-week-number", true)
 			.attr("x", 6)
-			.on("click", (d) => this.context.options.navLinkWeekClick && this.context.options.navLinkWeekClick(d.day, d3.event));
+			.on("click", (d) => this.context.options.navLinkWeekClick && this.context.options.navLinkWeekClick(d.day.toDate(), d3.event));
 		_weekNumber.merge(_weekNumberEnter)
-			.text(day => this.dateEnv.computeWeekNumber(day.day));
+			.text(day => this.dateEnv.computeWeekNumber(day.day.toDate()));
 
 		let _day = _week.merge(_weekEnter)
 			.selectAll("g.UiCalendar-day")
@@ -287,7 +289,7 @@ export class MultiMonthView extends View {
 			.append("g")
 			.classed("UiCalendar-day", true)
 			.attr("transform", (day, dayIndex) => `translate(${this.firstDayOffsetX + (dayIndex % 7) * this.dayColumnWidth}, 0)`)
-			.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day, d3.event))
+			.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day.toDate(), d3.event))
 			.call((g) => {
 				g.append("circle")
 					.classed("day-occupation-background-circle", true);
@@ -300,7 +302,7 @@ export class MultiMonthView extends View {
 					.attr("r", occupationRadius)
 					.attr("cy", occupationCircleCenterOffset);
 				g.select("text.day-number")
-					.text((d) => d.day.getUTCDate());
+					.text((d) => d.day.date());
 			})
 			.classed("free", day => {
 				let dayOccupationColorsForDay = dayOccupationColors[this.getDayString(day.day)];
@@ -310,9 +312,9 @@ export class MultiMonthView extends View {
 				return day.foreignMonth;
 			})
 			.classed("today", d => {
-				return !d.foreignMonth && d.day.getFullYear() === new Date().getFullYear() && d.day.getMonth() === new Date().getMonth() && d.day.getDate() === new Date().getDate()
+				return !d.foreignMonth && moment().isSame(d.day, 'day')
 			})
-			.classed("weekend", (day: DisplayedDay, dayIndex: number) => this.context.options.businessHours.daysOfWeek.indexOf(day.day.getDay()) == -1);
+			.classed("weekend", (day: DisplayedDay, dayIndex: number) => this.context.options.businessHours.daysOfWeek.indexOf(day.day.day()) == -1);
 		_day.exit()
 			.remove();
 
@@ -363,23 +365,22 @@ export class MultiMonthView extends View {
 	}
 
 	private eventToSegments(event: EventApi): Segment[] {
+		let startMoment = toMoment(event.start, this.calendar);
+		let endMoment = event.end != null ? toMoment(event.end, this.calendar) : null;
 		if (event.end == null) {
-			let startDate = this.dateEnv.startOf(event.start, "day");
-			startDate.setHours(8);
-			let endDate = this.dateEnv.startOf(event.start, "day");
-			endDate.setHours(16);
-			return [new Segment(startDate, endDate, true, true, event)];
-		} else if (event.start.getDay() === event.end.getDay()
-			&& (event.end as Date).valueOf() - (event.start as Date).valueOf() < 86400000 /*day*/) {
-			return [new Segment(event.start as Date, event.end as Date, true, true, event)];
+			let start = startMoment.clone().startOf("day").hour(8);
+			let end = startMoment.clone().startOf("day").hour(16);
+			return [new Segment(moment(start), moment(end), true, true, event)];
+		} else if (startMoment.day() === endMoment.day() && endMoment.valueOf() - startMoment.valueOf() < 86400000 /*day*/) {
+			return [new Segment(startMoment, endMoment, true, true, event)];
 		} else {
 			let segments: Segment[] = [];
-			let segStart = event.start as Date;
-			let segEnd = event.start as Date;
-			while (segEnd.valueOf() < (event.end as Date).valueOf()) {
+			let segStart = startMoment;
+			let segEnd = startMoment;
+			while (segEnd.valueOf() < endMoment.valueOf()) {
 				segStart = segEnd;
-				segEnd = +event.end < +addDays(segStart, 1) ? event.end : addDays(segStart, 1);
-				segments.push(new Segment(segStart, segEnd, +segStart === +event.start, +segEnd === +event.end, event));
+				segEnd = moment.min(endMoment, segStart.clone().startOf("day").add(1, "day"));
+				segments.push(new Segment(segStart.clone(), segEnd.clone(), +segStart === +event.start, +segEnd === +event.end, event));
 			}
 			return segments;
 		}
@@ -389,7 +390,7 @@ export class MultiMonthView extends View {
 		let segmentsByDay: { [dayString: string]: Segment[] } = {};
 		for (let i = 0; i < segments.length; i++) {
 			let segment = segments[i];
-			let dayString = this.getDayString(segment.start);
+			let dayString = this.getDayString(moment(segment.start));
 			if (!segmentsByDay[dayString]) {
 				segmentsByDay[dayString] = [];
 			}
@@ -405,7 +406,7 @@ export class MultiMonthView extends View {
 			if (!durationByBackgroundColor[segment.event.backgroundColor]) {
 				durationByBackgroundColor[segment.event.backgroundColor] = 0;
 			}
-			durationByBackgroundColor[segment.event.backgroundColor] += segment.end.valueOf() - (segment.start as Date).valueOf();
+			durationByBackgroundColor[segment.event.backgroundColor] += segment.end.valueOf() - segment.start.valueOf();
 		}
 
 		let sortedColorDurations: DayOccupationColorAmount[] = Object.keys(durationByBackgroundColor).map(color => {
@@ -436,10 +437,14 @@ export class MultiMonthView extends View {
 	}
 
 	// this is faster formatting!
-	private getDayString(d: Date) {
-		return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+	private getDayString(d: Moment) {
+		return `${d.year()}-${d.month()}-${d.date()}`;
 	}
 
+}
+
+function strippedUtcLikeDate(m: Moment) {
+	return moment(m).utc().add(m.utcOffset(), 'm').toDate();
 }
 
 export var multiMonthViewPlugin = createPlugin({

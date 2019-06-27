@@ -38,6 +38,14 @@
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-4.2.0.tgz#312e83f575aed67c33aec69884664d436aaedef2"
 
+"@fullcalendar/moment-timezone@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/moment-timezone/-/moment-timezone-4.2.0.tgz#e133ae52e2a60872ffb50d70852d22da08eb9732"
+
+"@fullcalendar/moment@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/moment/-/moment-4.2.0.tgz#5c3a90d05c36678b7aff812ba0de75639ea8217f"
+
 "@fullcalendar/timegrid@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-4.2.0.tgz#e2372ba108f5da8e38c915366c2101b4365ff409"

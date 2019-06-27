@@ -93,6 +93,8 @@ public class Calendar<RECORD> extends AbstractComponent {
 	private Color defaultBackgroundColor = new Color(154, 204, 228);
 	private Color defaultBorderColor = new Color(154, 204, 228);
 
+	private ZoneId timeZone = getSessionContext().getTimeZone();
+
 	protected boolean navigateOnHeaderClicks = true;
 
 	private EventListener<Void> onCalendarDataChangedListener = (aVoid) -> {
@@ -166,7 +168,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 		UiCalendar uiCalendar = new UiCalendar();
 		mapAbstractUiComponentProperties(uiCalendar);
 		uiCalendar.setActiveViewMode(activeViewMode.toUiCalendarViewMode());
-		uiCalendar.setDisplayedDate(displayedDate.atStartOfDay(getClientZoneId()).toInstant().toEpochMilli());
+		uiCalendar.setDisplayedDate(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli());
 		uiCalendar.setShowHeader(showHeader);
 		uiCalendar.setTableBorder(tableBorder);
 		uiCalendar.setShowWeekNumbers(showWeekNumbers);
@@ -176,9 +178,10 @@ public class Calendar<RECORD> extends AbstractComponent {
 		uiCalendar.setWorkingDays(workingDays.stream().map(workingDay -> UiWeekDay.valueOf(workingDay.name())).collect(Collectors.toList()));
 		uiCalendar.setTableHeaderBackgroundColor(tableHeaderBackgroundColor != null ? createUiColor(tableHeaderBackgroundColor) : null);
 		uiCalendar.setNavigateOnHeaderClicks(navigateOnHeaderClicks);
+		uiCalendar.setTimeZoneId(timeZone.getId());
 
-		Instant queryStart = activeViewMode.getDisplayStart(displayedDate, firstDayOfWeek).atStartOfDay(getClientZoneId()).toInstant();
-		Instant queryEnd = activeViewMode.getDisplayEnd(displayedDate, firstDayOfWeek).atStartOfDay(getClientZoneId()).toInstant();
+		Instant queryStart = activeViewMode.getDisplayStart(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
+		Instant queryEnd = activeViewMode.getDisplayEnd(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
 		List<CalendarEvent<RECORD>> initialCalendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(initialCalendarEvents);
 		cacheResponse.commit();
@@ -230,15 +233,15 @@ public class Calendar<RECORD> extends AbstractComponent {
 			}
 			case UI_CALENDAR_DAY_CLICKED: {
 				UiCalendar.DayClickedEvent dayClickedEvent = (UiCalendar.DayClickedEvent) event;
-				onDayClicked.fire(new DayClickedEventData(getClientZoneId(), Instant.ofEpochMilli(dayClickedEvent.getDate()), dayClickedEvent.getIsDoubleClick()));
+				onDayClicked.fire(new DayClickedEventData(timeZone, Instant.ofEpochMilli(dayClickedEvent.getDate()), dayClickedEvent.getIsDoubleClick()));
 				break;
 			}
 			case UI_CALENDAR_VIEW_CHANGED: {
 				UiCalendar.ViewChangedEvent viewChangedEvent = (UiCalendar.ViewChangedEvent) event;
-				this.displayedDate = epochMilliToUserLocalDate(viewChangedEvent);
+				this.displayedDate = Instant.ofEpochMilli(viewChangedEvent.getMainIntervalStart()).atZone(timeZone).toLocalDate();
 				this.activeViewMode = CalendarViewMode.valueOf(viewChangedEvent.getViewMode().name());
 				onViewChanged.fire(new ViewChangedEventData(
-						getClientZoneId(),
+						timeZone,
 						activeViewMode,
 						Instant.ofEpochMilli(viewChangedEvent.getMainIntervalStart()),
 						Instant.ofEpochMilli(viewChangedEvent.getMainIntervalEnd()),
@@ -256,27 +259,23 @@ public class Calendar<RECORD> extends AbstractComponent {
 			}
 			case UI_CALENDAR_MONTH_HEADER_CLICKED: {
 				UiCalendar.MonthHeaderClickedEvent clickEvent = (UiCalendar.MonthHeaderClickedEvent) event;
-				LocalDate startOfMonth = Instant.ofEpochMilli(clickEvent.getMonthStartDate()).atZone(getClientZoneId()).toLocalDate();
+				LocalDate startOfMonth = Instant.ofEpochMilli(clickEvent.getMonthStartDate()).atZone(timeZone).toLocalDate();
 				onMonthHeaderClicked.fire(startOfMonth);
 				break;
 			}
 			case UI_CALENDAR_WEEK_HEADER_CLICKED: {
 				UiCalendar.WeekHeaderClickedEvent clickEvent = (UiCalendar.WeekHeaderClickedEvent) event;
-				LocalDate startOfWeek = Instant.ofEpochMilli(clickEvent.getWeekStartDate()).atZone(getClientZoneId()).toLocalDate();
-				onWeekHeaderClicked.fire(new WeeHeaderClickedEventData(getClientZoneId(), clickEvent.getYear(), clickEvent.getWeek(), startOfWeek));
+				LocalDate startOfWeek = Instant.ofEpochMilli(clickEvent.getWeekStartDate()).atZone(timeZone).toLocalDate();
+				onWeekHeaderClicked.fire(new WeeHeaderClickedEventData(timeZone, clickEvent.getYear(), clickEvent.getWeek(), startOfWeek));
 				break;
 			}
 			case UI_CALENDAR_DAY_HEADER_CLICKED: {
 				UiCalendar.DayHeaderClickedEvent clickEvent = (UiCalendar.DayHeaderClickedEvent) event;
-				LocalDate date = Instant.ofEpochMilli(clickEvent.getDate()).atZone(getClientZoneId()).toLocalDate();
+				LocalDate date = Instant.ofEpochMilli(clickEvent.getDate()).atZone(timeZone).toLocalDate();
 				onDayHeaderClicked.fire(date);
 				break;
 			}
 		}
-	}
-
-	private LocalDate epochMilliToUserLocalDate(UiCalendar.ViewChangedEvent viewChangedEvent) {
-		return Instant.ofEpochMilli(viewChangedEvent.getMainIntervalStart()).atZone(getSessionContext().getTimeZone()).toLocalDate();
 	}
 
 	private void queryAndSendCalendarData(Instant queryStart, Instant queryEnd) {
@@ -343,13 +342,9 @@ public class Calendar<RECORD> extends AbstractComponent {
 		return group;
 	}
 
-	private ZoneId getClientZoneId() {
-		return ZoneId.of(getSessionContext().getClientInfo().getTimeZone());
-	}
-
 	public void refreshEvents() {
-		Instant queryStart = activeViewMode.getDisplayStart(displayedDate, firstDayOfWeek).atStartOfDay(getClientZoneId()).toInstant();
-		Instant queryEnd = activeViewMode.getDisplayEnd(displayedDate, firstDayOfWeek).atStartOfDay(getClientZoneId()).toInstant();
+		Instant queryStart = activeViewMode.getDisplayStart(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
+		Instant queryEnd = activeViewMode.getDisplayEnd(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
 		queryAndSendCalendarData(queryStart, queryEnd);
 	}
 
@@ -373,7 +368,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 
 	public void setDisplayedDate(LocalDate displayedDate) {
 		this.displayedDate = displayedDate;
-		queueCommandIfRendered(() -> new UiCalendar.SetDisplayedDateCommand(getId(), displayedDate.atStartOfDay(getClientZoneId()).toInstant().toEpochMilli()));
+		queueCommandIfRendered(() -> new UiCalendar.SetDisplayedDateCommand(getId(), displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
 	}
 
 	public boolean isShowHeader() {
@@ -503,4 +498,14 @@ public class Calendar<RECORD> extends AbstractComponent {
 	public void setMonthViewTemplateDecider(TemplateDecider<CalendarEvent<RECORD>> monthViewTemplateDecider) {
 		this.monthViewTemplateDecider = monthViewTemplateDecider;
 	}
+
+	public ZoneId getTimeZone() {
+		return timeZone;
+	}
+
+	public void setTimeZone(ZoneId timeZone) {
+		this.timeZone = timeZone;
+		queueCommandIfRendered(() -> new UiCalendar.SetTimeZoneIdCommand(getId(), timeZone.getId()));
+	}
+
 }
