@@ -113,7 +113,7 @@
     "mustache": "^2.3.0",
     "nouislider": "^11.1.0",
     "pickr-widget": "0.3.1",
-    "popper.js": "^1.14.4",
+    "popper.js": "^1.15.0",
     "quill": "1.x",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

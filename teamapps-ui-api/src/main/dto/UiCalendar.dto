@@ -47,6 +47,8 @@ class UiCalendar extends UiComponent {
     UiColor defaultBorderColor = new UiColor(154, 204, 228);
 
     boolean navigateOnHeaderClicks = true;
+    int minYearViewMonthTileWidth = 175;
+    int maxYearViewMonthTileWidth = 0;
 
     String timeZoneId = "UTC";
 

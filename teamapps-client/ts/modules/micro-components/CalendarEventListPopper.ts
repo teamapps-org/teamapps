@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import Popper from "popper.js";
+import Popper, {PopperOptions} from "popper.js";
 import {animateCSS, parseHtml} from "../Common";
 import {EventApi} from "@fullcalendar/core";
 import {TemplateRegistry} from "../TemplateRegistry";
@@ -35,7 +35,7 @@ export class CalendarEventListPopper {
 	constructor(referenceElement?: Element | null) {
 		this.referenceElement = referenceElement;
 		this.$popperElement = parseHtml(`<div class="CalendarEventListPopper ta-tooltip calendar-event-list-popper ${referenceElement != null ? "" : "hidden"}" role="tooltip">
-			<div class="ta-tooltip-arrow"></div>
+			<div class="ta-tooltip-arrow" x-arrow></div>
 			<div class="ta-tooltip-inner">
 				<div class="all-day-events"></div>
 				<div class="normal-events"></div>
@@ -48,13 +48,13 @@ export class CalendarEventListPopper {
 			placement: 'top',
 			modifiers: {
 				flip: {
-					behavior: ['right', 'left', 'bottom']
+					behavior: ['top', 'right', 'left', 'bottom']
 				},
 				preventOverflow: {
 					boundariesElement: document.body,
 				}
 			},
-		});
+		} as PopperOptions);
 
 		this.$popperElement.addEventListener("pointerenter", ev => this.setVisible(false, false));
 	}
@@ -98,7 +98,7 @@ export class CalendarEventListPopper {
 			if (animate) {
 				this.visibilityTimeout = window.setTimeout(() => {
 					this.$popperElement.classList.add("hidden");
-				}, 300);
+				}, 200);
 			} else {
 				this.$popperElement.classList.add("hidden");
 			}

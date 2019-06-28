@@ -34,7 +34,7 @@ export class FieldMessagesPopper {
 	constructor(referenceElement?: Element | null) {
 		this.referenceElement = referenceElement;
 		this.$popperElement = parseHtml(`<div class="ta-tooltip ${referenceElement != null ? "" : "hidden"}" role="tooltip">
-			<div class="ta-tooltip-arrow"></div>
+			<div class="ta-tooltip-arrow" x-arrow></div>
 			<div class="ta-tooltip-inner"></div>
 		</div>`);
 		document.body.appendChild(this.$popperElement);

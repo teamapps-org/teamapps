@@ -72,21 +72,21 @@ export class MultiMonthView extends View {
 	private uuid: string;
 	private _svg: Selection<SVGElement, undefined, HTMLElement, any>;
 
-	private padding = 15;
-	private spacing = 15;
-	private monthWidth = 93;
-	private monthHeight = 90;
-	private firstDayOffsetX = 17;
-	private dayColumnWidth = 12;
-	private firstWeekLineOffset = 37;
-	private weekLineHeight = 11.5;
+	private readonly padding = 15;
+	private readonly spacing = 15;
+	private readonly monthWidth = 93;
+	private readonly monthHeight = 90;
+	private readonly firstDayOffsetX = 17;
+	private readonly dayColumnWidth = 12;
+	private readonly firstWeekLineOffset = 37;
+	private readonly weekLineHeight = 11.5;
 
 	private maxOccupationTime = 8; //hours
 	private events: EventApi[] = null;
 
 	private weekDayShortNames = this.initWeekDayShortNames();
 
-	private eventsPopper = new CalendarEventListPopper();
+	private eventsPopper: CalendarEventListPopper;
 	private timeFormatter: DateFormatter = createFormatter({hour: 'numeric', minute: '2-digit'});
 
 	// called once when the view is instantiated, when the user switches to the view.
@@ -99,6 +99,12 @@ export class MultiMonthView extends View {
 		this.el.classList.add('fc-multi-month-view');
 		this.el.appendChild(this.$contentElement);
 		this._svg = d3.select<SVGElement, undefined>(svgElement);
+		this.eventsPopper = new CalendarEventListPopper();
+	}
+
+	destroy(): void {
+		super.destroy();
+		this.eventsPopper.destroy();
 	}
 
 	public updateSize(isResize: boolean, viewHeight: number, isAuto: boolean) {
@@ -208,24 +214,33 @@ export class MultiMonthView extends View {
 
 		const monthRanges = this.getMonthRangesToBeDisplayed();
 
-		let numberOfCols = this.getMonthsPerRow();
-		let numberOfRows = monthRanges.length / numberOfCols;
+		let bestTileCoverageInfo = this.getBestTileCoverageInfo(monthRanges.length);
 
-		let neededDrawAreaWidth = 2 * this.padding + numberOfCols * this.monthWidth + (numberOfCols - 1) * this.spacing;
-		let availableDrawAreaWidth = this.width / 2;
-		let viewBoxWidth = availableDrawAreaWidth > neededDrawAreaWidth ? availableDrawAreaWidth : neededDrawAreaWidth;
-		let availableDrawAreaHeight = (this.height / this.width) * viewBoxWidth;
-		let neededDrawAreaHeight = 2 * this.padding + numberOfRows * this.monthHeight + (numberOfRows - 1) * this.spacing + 10 /*some additional space at the bottom...*/;
-		let viewBoxHeight = Math.max(
-			availableDrawAreaHeight,
-			neededDrawAreaHeight
-		);
-		console.log(`Math.min(0, -(${availableDrawAreaHeight} - ${viewBoxHeight}) / 2)`);
-		this._svg.attr("viewBox", `${-(viewBoxWidth - neededDrawAreaWidth) / 2} ${Math.min(0, -(availableDrawAreaHeight - neededDrawAreaHeight) / 2)} ${viewBoxWidth} ${viewBoxHeight}`);
-		this._svg.style("height", Math.max(((this.width / viewBoxWidth) * viewBoxHeight)) + "px");
+		let viewBoxWidth: number;
+		let viewBoxHeight: number;
+		let viewBoxOffsetX: number;
+		let viewBoxOffsetY: number;
+		var monthTileWidth = bestTileCoverageInfo.monthTileWidth;
+		if (!bestTileCoverageInfo.needsScroll && this.opt("maxMonthTileWidth") && monthTileWidth > this.opt("maxMonthTileWidth")) {
+			viewBoxWidth = bestTileCoverageInfo.preferredDrawAreaWidth * (monthTileWidth / this.opt("maxMonthTileWidth"));
+			viewBoxHeight = bestTileCoverageInfo.preferredDrawAreaHeight * (monthTileWidth / this.opt("maxMonthTileWidth"));
+			viewBoxOffsetX = (bestTileCoverageInfo.preferredDrawAreaWidth - viewBoxWidth) / 2;
+			viewBoxOffsetY = (bestTileCoverageInfo.preferredDrawAreaHeight - viewBoxHeight) / 2;
+		} else {
+			viewBoxWidth = bestTileCoverageInfo.preferredDrawAreaWidth;
+			viewBoxHeight = bestTileCoverageInfo.preferredDrawAreaHeight;
+			viewBoxOffsetX = 0;
+			viewBoxOffsetY = 0;
+		}
+		this._svg.attr("viewBox", `${viewBoxOffsetX} ${viewBoxOffsetY} ${viewBoxWidth} ${viewBoxHeight}`);
+		var svgHeight = Math.max(this.height, bestTileCoverageInfo.needsScroll ? bestTileCoverageInfo.height : bestTileCoverageInfo.height);
+		this._svg.style("height", svgHeight + "px");
+
 		let calculateMonthPositionTransform = (monthRange: DisplayedMonth, monthIndex: number) => {
-			let x = this.padding + (monthIndex % numberOfCols) * (this.monthWidth + this.spacing);
-			let y = this.padding + Math.floor(monthIndex / numberOfCols) * (this.monthHeight + this.spacing);
+			var colIndex = monthIndex % bestTileCoverageInfo.numberOfCols;
+			var rowIndex = Math.floor(monthIndex / bestTileCoverageInfo.numberOfCols);
+			let x = this.padding + colIndex * (this.monthWidth + this.spacing);
+			let y = this.padding + rowIndex * (this.monthHeight + this.spacing) - 4;
 			return `translate(${x},${y})`;
 		};
 
@@ -296,43 +311,8 @@ export class MultiMonthView extends View {
 					.classed("day-number", true)
 					.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day.toDate(), d3.event))
 					.on("pointerenter", (d, i, el) => {
-						let dayStart = d.day;
-						let dayEnd = dayStart.clone().add(1, 'day');
-						console.log(dayStart.toString(), dayEnd.toString());
-						let events = this.events.filter(e => {
-							let eventStart = toMoment(e.start, this.calendar);
-							let eventEnd = e.end != null ? toMoment(e.end, this.calendar) : eventStart.clone().add(1, 'second');
-							return +eventEnd > +dayStart && +eventStart < +(dayEnd);
-						});
-
-						let allDayEvents = events.filter(e => e.allDay);
-						let normalEvents = events.filter(e => !e.allDay);
-
-						if (events.length > 0) {
-							let allDayEventsHtml = '';
-							allDayEvents.forEach(event => {
-								 allDayEventsHtml += `<div class="fc-event all-day" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
-									<span class="fc-title">${event.title}</span>            	
-								</div>`;
-							});
-							this.eventsPopper.$allDayEventsContainer.innerHTML = allDayEventsHtml;
-							this.eventsPopper.$allDayEventsContainer.classList.toggle("hidden", allDayEvents.length === 0);
-
-							let normalEventsHtml = '';
-							normalEvents.forEach(event => {
-								normalEventsHtml += `<div class="fc-event" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
-									<span class="fc-time">${event.formatRange({hour: 'numeric', minute: 'numeric'})}</span>
-									<span class="fc-title">${event.title}</span>  
-								</div>`;
-							});
-							this.eventsPopper.$normalEventsContainer.innerHTML = normalEventsHtml;
-							this.eventsPopper.$normalEventsContainer.classList.toggle("hidden", normalEvents.length === 0);
-
-							this.eventsPopper.setReferenceElement(el[i]);
-							this.eventsPopper.setVisible(true);
-						} else {
-							this.eventsPopper.setVisible(false);
-						}
+						let events = this.getEventsForDay(d);
+						this.updatePopper(events, el[i]);
 					})
 					.on("pointerleave", () => {
 						this.eventsPopper.setVisible(false);
@@ -383,6 +363,107 @@ export class MultiMonthView extends View {
 				return hslColor.toString();
 			});
 		_dayOccupation.exit().remove();
+	}
+
+	private getBestTileCoverageInfo(numberOfMonths: number) {
+		const possibleNumberOfColumns = [1, 2, 3, 4, 6, 12];
+		let areaCoverageInfos: { preferredDrawAreaHeight: number; fittingWidth: number; fittingHeight: number; numberOfCols: number; widthCorrectionFactor: number; heightCorrectionFactor: number; numberOfRows: number; fittingCorrectionFactor: number; preferredDrawAreaWidth: number; fittingMonthTileWidth: number, scrollingWidth: number, scrollingHeight: number, scrollingMonthTileWidth: number }[] = [];
+		for (let i = 0; i < possibleNumberOfColumns.length; i++) {
+			const numberOfCols = possibleNumberOfColumns[i];
+			const numberOfRows = Math.ceil(numberOfMonths / numberOfCols);
+			const preferredDrawAreaWidth = 2 * this.padding + numberOfCols * this.monthWidth + (numberOfCols - 1) * this.spacing;
+			const preferredDrawAreaHeight = 2 * this.padding + numberOfRows * this.monthHeight + (numberOfRows - 1) * this.spacing;
+
+			const widthCorrectionFactor = this.width / preferredDrawAreaWidth;
+			const heightCorrectionFactor = this.height / preferredDrawAreaHeight;
+			const fittingCorrectionFactor = Math.min(widthCorrectionFactor, heightCorrectionFactor);
+
+			const fittingWidth = fittingCorrectionFactor * preferredDrawAreaWidth;
+			const fittingHeight = fittingCorrectionFactor * preferredDrawAreaHeight;
+			const fittingMonthTileWidth = fittingCorrectionFactor * this.monthWidth;
+
+			const scrollingWidth = widthCorrectionFactor * preferredDrawAreaWidth;
+			const scrollingHeight = widthCorrectionFactor * preferredDrawAreaHeight;
+			const scrollingMonthTileWidth = widthCorrectionFactor * this.monthWidth;
+
+			areaCoverageInfos.push({
+				numberOfCols,
+				numberOfRows,
+				preferredDrawAreaWidth,
+				preferredDrawAreaHeight,
+				widthCorrectionFactor,
+				heightCorrectionFactor,
+				fittingCorrectionFactor,
+				fittingWidth,
+				fittingHeight,
+				fittingMonthTileWidth,
+				scrollingWidth,
+				scrollingHeight,
+				scrollingMonthTileWidth
+			});
+		}
+
+		let bestCoverageInfo = areaCoverageInfos.slice()
+			.sort((a, b) => b.fittingMonthTileWidth - a.fittingMonthTileWidth)[0];
+		const needsScroll = bestCoverageInfo.fittingMonthTileWidth < this.opt("minMonthTileWidth");
+		if (needsScroll) {
+			bestCoverageInfo = areaCoverageInfos.slice()
+				.filter(info => info.scrollingMonthTileWidth > this.opt("minMonthTileWidth"))
+				.sort((a, b) => a.scrollingHeight - b.scrollingHeight)[0];
+		}
+		if (bestCoverageInfo == null) {
+			bestCoverageInfo = areaCoverageInfos[0]; // fall back to one column
+		}
+
+		return {
+			preferredDrawAreaWidth: bestCoverageInfo.preferredDrawAreaWidth,
+			preferredDrawAreaHeight: bestCoverageInfo.preferredDrawAreaHeight,
+			monthTileWidth: needsScroll ? bestCoverageInfo.scrollingMonthTileWidth : bestCoverageInfo.fittingMonthTileWidth,
+			height: needsScroll ? bestCoverageInfo.scrollingHeight : bestCoverageInfo.fittingHeight,
+			numberOfCols: bestCoverageInfo.numberOfCols,
+			needsScroll: needsScroll
+		};
+	}
+
+	private getEventsForDay(d: DisplayedDay) {
+		let dayStart = d.day;
+		let dayEnd = dayStart.clone().add(1, 'day');
+		return this.events.filter(e => {
+			let eventStart = toMoment(e.start, this.calendar);
+			let eventEnd = e.end != null ? toMoment(e.end, this.calendar) : eventStart.clone().add(1, 'second');
+			return +eventEnd > +dayStart && +eventStart < +(dayEnd);
+		});
+	}
+
+	private updatePopper(events: EventApi[], dayElement: Element) {
+		let allDayEvents = events.filter(e => e.allDay);
+		let normalEvents = events.filter(e => !e.allDay);
+
+		if (events.length > 0) {
+			let allDayEventsHtml = '';
+			allDayEvents.forEach(event => {
+				allDayEventsHtml += `<div class="fc-event all-day" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
+									<span class="fc-title">${event.title}</span>            	
+								</div>`;
+			});
+			this.eventsPopper.$allDayEventsContainer.innerHTML = allDayEventsHtml;
+			this.eventsPopper.$allDayEventsContainer.classList.toggle("hidden", allDayEvents.length === 0);
+
+			let normalEventsHtml = '';
+			normalEvents.forEach(event => {
+				normalEventsHtml += `<div class="fc-event" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
+									<span class="fc-time">${event.formatRange({hour: 'numeric', minute: 'numeric'})}</span>
+									<span class="fc-title">${event.title}</span>  
+								</div>`;
+			});
+			this.eventsPopper.$normalEventsContainer.innerHTML = normalEventsHtml;
+			this.eventsPopper.$normalEventsContainer.classList.toggle("hidden", normalEvents.length === 0);
+
+			this.eventsPopper.setReferenceElement(dayElement);
+			this.eventsPopper.setVisible(true);
+		} else {
+			this.eventsPopper.setVisible(false);
+		}
 	}
 
 	private describeArc(centerX: number, centerY: number, radius: number, startAngle: number, endAngle: number) {
@@ -495,7 +576,9 @@ export var multiMonthViewPlugin = createPlugin({
 			class: MultiMonthView,
 			duration: {
 				months: 12
-			}
+			},
+			minMonthTileWidth: 175,
+			maxMonthTileWidth: 0
 		},
 		year: {
 			type: 'multiMonth',

@@ -93,6 +93,9 @@ public class Calendar<RECORD> extends AbstractComponent {
 	private Color defaultBackgroundColor = new Color(154, 204, 228);
 	private Color defaultBorderColor = new Color(154, 204, 228);
 
+	private int minYearViewMonthTileWidth = 175;
+	private int maxYearViewMonthTileWidth = 0;
+
 	private ZoneId timeZone = getSessionContext().getTimeZone();
 
 	protected boolean navigateOnHeaderClicks = true;
@@ -179,6 +182,8 @@ public class Calendar<RECORD> extends AbstractComponent {
 		uiCalendar.setTableHeaderBackgroundColor(tableHeaderBackgroundColor != null ? createUiColor(tableHeaderBackgroundColor) : null);
 		uiCalendar.setNavigateOnHeaderClicks(navigateOnHeaderClicks);
 		uiCalendar.setTimeZoneId(timeZone.getId());
+		uiCalendar.setMinYearViewMonthTileWidth(minYearViewMonthTileWidth);
+		uiCalendar.setMaxYearViewMonthTileWidth(maxYearViewMonthTileWidth);
 
 		Instant queryStart = activeViewMode.getDisplayStart(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
 		Instant queryEnd = activeViewMode.getDisplayEnd(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
@@ -508,4 +513,21 @@ public class Calendar<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiCalendar.SetTimeZoneIdCommand(getId(), timeZone.getId()));
 	}
 
+	public int getMinYearViewMonthTileWidth() {
+		return minYearViewMonthTileWidth;
+	}
+
+	public void setMinYearViewMonthTileWidth(int minYearViewMonthTileWidth) {
+		this.minYearViewMonthTileWidth = minYearViewMonthTileWidth;
+		reRenderIfRendered();
+	}
+
+	public int getMaxYearViewMonthTileWidth() {
+		return maxYearViewMonthTileWidth;
+	}
+
+	public void setMaxYearViewMonthTileWidth(int maxYearViewMonthTileWidth) {
+		this.maxYearViewMonthTileWidth = maxYearViewMonthTileWidth;
+		reRenderIfRendered();
+	}
 }
