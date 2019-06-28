@@ -22,7 +22,7 @@ import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {UiFieldMessagePosition} from "../../generated/UiFieldMessagePosition";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiFieldMessageVisibilityMode} from "../../generated/UiFieldMessageVisibilityMode";
-import {parseHtml} from "../Common";
+import {animateCSS, parseHtml} from "../Common";
 
 export class FieldMessagesPopper {
 
@@ -33,12 +33,12 @@ export class FieldMessagesPopper {
 
 	constructor(referenceElement?: Element | null) {
 		this.referenceElement = referenceElement;
-		this.$popperElement = parseHtml(`<div class="tooltip ${referenceElement != null ? "" : "hidden"}" role="tooltip">
-			<div class="tooltip-arrow"></div>
-			<div class="tooltip-inner"></div>
+		this.$popperElement = parseHtml(`<div class="ta-tooltip ${referenceElement != null ? "" : "hidden"}" role="tooltip">
+			<div class="ta-tooltip-arrow"></div>
+			<div class="ta-tooltip-inner"></div>
 		</div>`);
 		document.body.appendChild(this.$popperElement);
-		this.$messagesContainer = this.$popperElement.querySelector<HTMLElement>(":scope .tooltip-inner");
+		this.$messagesContainer = this.$popperElement.querySelector<HTMLElement>(":scope .ta-tooltip-inner");
 		this.popper = new Popper(referenceElement || document.body, this.$popperElement, {
 			placement: 'right',
 			modifiers: {
@@ -56,8 +56,8 @@ export class FieldMessagesPopper {
 		this.$messagesContainer.innerHTML = '';
 		if (messages.length > 0) {
 			const highestSeverity = getHighestSeverity(messages);
-			this.$popperElement.classList.remove(`tooltip-info tooltip-success tooltip-warning tooltip-error`);
-			this.$popperElement.classList.add(`tooltip-${UiFieldMessageSeverity[highestSeverity].toLowerCase()}`);
+			this.$popperElement.classList.remove('ta-tooltip-info', 'ta-tooltip-success',  'ta-tooltip-warning', 'ta-tooltip-error');
+			this.$popperElement.classList.add(`ta-tooltip-${UiFieldMessageSeverity[highestSeverity].toLowerCase()}`);
 			messages.forEach(message => {
 				this.$messagesContainer.append(createMessageElement(message));
 			});

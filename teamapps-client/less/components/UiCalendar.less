@@ -146,10 +146,6 @@
     background-color: transparent;
   }
 
-  .fc-event {
-    border-radius: 0px;
-  }
-
   .fc-today {
     //box-shadow: inset 0 0 0 2px orange;
     //border-width: 0 0 0 1px;
@@ -217,11 +213,20 @@
       left: -2px;
     }
   }
+}
 
-  .fc-h-event.all-day {
-    border-left-width: 3px;
-    padding-left: 0;
+.fc-event {
+  border-radius: 0;
+  padding: 3px 4px;
+
+  .fc-time {
+    font-weight: 600;
   }
+}
+
+.fc-event.all-day {
+  border-left-width: 3px;
+  padding-left: 2px;
 }
 
 .fc-multi-month-view {
