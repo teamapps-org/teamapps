@@ -129,6 +129,10 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 				},
 				day: {
 					columnHeaderFormat: { weekday: 'long', month: 'numeric', day: 'numeric' }
+				},
+				year: {
+					minMonthTileWidth: config.minYearViewMonthTileWidth,
+					maxMonthTileWidth: config.maxYearViewMonthTileWidth
 				}
 			},
 			eventSources: [this.eventSource],
@@ -337,7 +341,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 	}
 
 	public destroy(): void {
-		// nothing to do
+		this.calendar && this.calendar.destroy();
 	}
 
 	public convertToFullCalendarEvent(event: UiCalendarEventClientRecordConfig): EventInput {

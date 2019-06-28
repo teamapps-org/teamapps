@@ -4415,7 +4415,7 @@ place-to@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/place-to/-/place-to-0.1.2.tgz#9d16f14a3d82d35c78e92d877adcb4a80aab693e"
 
-popper.js@^1.0.2, popper.js@^1.14.1, popper.js@^1.14.4:
+popper.js@^1.0.2, popper.js@^1.14.1, popper.js@^1.15.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
 
