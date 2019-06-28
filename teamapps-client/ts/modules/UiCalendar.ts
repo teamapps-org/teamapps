@@ -361,6 +361,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 			allDay: event.allDay,
 			backgroundColor: backgroundColorCssString,
 			borderColor: borderColorCssString,
+			textColor: "#000",
 			extendedProps: {
 				templateId: event.templateId,
 				data: event.values

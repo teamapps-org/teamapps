@@ -17,15 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as log from "loglevel";
 import {generateUUID, parseHtml, parseSvg} from "../Common";
 import * as d3 from "d3";
 import {Selection} from "d3-selection";
-import {addDays, createFormatter, createPlugin, DateFormatter, EventStore, View} from "@fullcalendar/core";
+import {addDays, createFormatter, createPlugin, DateFormatter, EventApi, EventStore, View} from "@fullcalendar/core";
 import {toMoment} from "@fullcalendar/moment";
-import {EventApi} from "@fullcalendar/core/api/EventApi";
 import * as moment from "moment-timezone";
 import {Moment} from "moment-timezone";
+import {CalendarEventListPopper} from "../micro-components/CalendarEventListPopper";
 
 class Segment {
 	constructor(
@@ -35,7 +34,6 @@ class Segment {
 		public isEnd: boolean,
 		public event: EventApi
 	) {
-		console.log(`${start.toString()} - ${end.toString()}`)
 	}
 
 	public toString(): string {
@@ -88,6 +86,9 @@ export class MultiMonthView extends View {
 
 	private weekDayShortNames = this.initWeekDayShortNames();
 
+	private eventsPopper = new CalendarEventListPopper();
+	private timeFormatter: DateFormatter = createFormatter({hour: 'numeric', minute: '2-digit'});
+
 	// called once when the view is instantiated, when the user switches to the view.
 	// initialize member variables or do other setup tasks.
 	public initialize() {
@@ -121,7 +122,6 @@ export class MultiMonthView extends View {
 		let startMoment = toMoment(this.currentStart, this.calendar);
 		let endMoment = toMoment(this.currentEnd, this.calendar);
 		const numberOfMonths = endMoment.diff(startMoment, 'month');
-		console.log("number of months: " + numberOfMonths);
 		const displayedMonths: DisplayedMonth[] = [];
 		for (let i = 0; i < numberOfMonths; i++) {
 			let intervalStart = startMoment.clone().add(i, 'month');
@@ -141,7 +141,7 @@ export class MultiMonthView extends View {
 	private startOfWeek(m: Moment) {
 		let copy = m.clone();
 		let firstDay = this.calendar.opt("firstDay") || 0;
-		while(copy.day() !== firstDay) {
+		while (copy.day() !== firstDay) {
 			copy.add(-1, 'day');
 		}
 		return copy;
@@ -289,12 +289,54 @@ export class MultiMonthView extends View {
 			.append("g")
 			.classed("UiCalendar-day", true)
 			.attr("transform", (day, dayIndex) => `translate(${this.firstDayOffsetX + (dayIndex % 7) * this.dayColumnWidth}, 0)`)
-			.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day.toDate(), d3.event))
 			.call((g) => {
 				g.append("circle")
 					.classed("day-occupation-background-circle", true);
 				g.append("text")
-					.classed("day-number", true);
+					.classed("day-number", true)
+					.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day.toDate(), d3.event))
+					.on("pointerenter", (d, i, el) => {
+						let dayStart = d.day;
+						let dayEnd = dayStart.clone().add(1, 'day');
+						console.log(dayStart.toString(), dayEnd.toString());
+						let events = this.events.filter(e => {
+							let eventStart = toMoment(e.start, this.calendar);
+							let eventEnd = e.end != null ? toMoment(e.end, this.calendar) : eventStart.clone().add(1, 'second');
+							return +eventEnd > +dayStart && +eventStart < +(dayEnd);
+						});
+
+						let allDayEvents = events.filter(e => e.allDay);
+						let normalEvents = events.filter(e => !e.allDay);
+
+						if (events.length > 0) {
+							let allDayEventsHtml = '';
+							allDayEvents.forEach(event => {
+								 allDayEventsHtml += `<div class="fc-event all-day" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
+									<span class="fc-title">${event.title}</span>            	
+								</div>`;
+							});
+							this.eventsPopper.$allDayEventsContainer.innerHTML = allDayEventsHtml;
+							this.eventsPopper.$allDayEventsContainer.classList.toggle("hidden", allDayEvents.length === 0);
+
+							let normalEventsHtml = '';
+							normalEvents.forEach(event => {
+								normalEventsHtml += `<div class="fc-event" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
+									<span class="fc-time">${event.formatRange({hour: 'numeric', minute: 'numeric'})}</span>
+									<span class="fc-title">${event.title}</span>  
+								</div>`;
+							});
+							this.eventsPopper.$normalEventsContainer.innerHTML = normalEventsHtml;
+							this.eventsPopper.$normalEventsContainer.classList.toggle("hidden", normalEvents.length === 0);
+
+							this.eventsPopper.setReferenceElement(el[i]);
+							this.eventsPopper.setVisible(true);
+						} else {
+							this.eventsPopper.setVisible(false);
+						}
+					})
+					.on("pointerleave", () => {
+						this.eventsPopper.setVisible(false);
+					});
 			});
 		_day.merge(_dayEnter)
 			.call((g) => {
