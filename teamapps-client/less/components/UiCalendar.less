@@ -271,6 +271,7 @@
   }
 
   .UiCalendar-day {
+    cursor: pointer;
 
     &.weekend {
       fill: #888;
@@ -278,16 +279,16 @@
 
     .day-number {
       fill: @text-color;
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
-        text-decoration-color: @text-color;
-      }
+    }
+
+    &:hover .day-number {
+      text-decoration: underline;
+      text-decoration-color: @text-color;
     }
 
     .day-occupation-background-circle,
     .day-occupation {
-      fill: none;
+      fill: transparent; // not none, since we need the pointer events!
       stroke: #ebebeb;
       stroke-width: 1;
     }
