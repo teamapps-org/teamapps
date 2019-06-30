@@ -308,16 +308,9 @@ export class MultiMonthView extends View {
 				g.append("circle")
 					.classed("day-occupation-background-circle", true);
 				g.append("text")
-					.classed("day-number", true)
-					.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day.toDate(), d3.event))
-					.on("pointerenter", (d, i, el) => {
-						let events = this.getEventsForDay(d);
-						this.updatePopper(events, el[i]);
-					})
-					.on("pointerleave", () => {
-						this.eventsPopper.setVisible(false);
-					});
+					.classed("day-number", true);
 			});
+		_dayEnter.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day.toDate(), d3.event));
 		_day.merge(_dayEnter)
 			.call((g) => {
 				g.select(".day-occupation-background-circle")
@@ -339,6 +332,31 @@ export class MultiMonthView extends View {
 			.classed("weekend", (day: DisplayedDay, dayIndex: number) => this.context.options.businessHours.daysOfWeek.indexOf(day.day.day()) == -1);
 		_day.exit()
 			.remove();
+
+		_dayEnter.on("pointerenter", (d, i, nodes) => {
+			d3.select(nodes[i])
+				.selectAll("path.day-occupation")
+				.transition()
+				.ease(d3.easeQuad)
+				.duration(200)
+				.style("stroke-width", "2px")
+				.attr("d", (occupation: DayOccupationColorAmount, i, groups) => {
+					return this.describeArc(0, occupationCircleCenterOffset, occupationRadius * 1.1, occupation.startAngle, occupation.endAngle);
+				});
+			let events = this.getEventsForDay(d);
+			this.updatePopper(events, nodes[i].querySelector(".day-occupation-background-circle"));
+		}).on("pointerleave", (d, i, nodes) => {
+			d3.select(nodes[i])
+				.selectAll("path.day-occupation")
+				.transition()
+				.ease(d3.easeQuad)
+				.duration(200)
+				.style("stroke-width", "1px")
+				.attr("d", (occupation: DayOccupationColorAmount, i, groups) => {
+					return this.describeArc(0, occupationCircleCenterOffset, occupationRadius, occupation.startAngle, occupation.endAngle);
+				});
+			this.eventsPopper.setVisible(false);
+		});
 
 		let _dayOccupation = _day.merge(_dayEnter).selectAll("path.day-occupation")
 			.data(day => {
@@ -362,6 +380,7 @@ export class MultiMonthView extends View {
 				}
 				return hslColor.toString();
 			});
+
 		_dayOccupation.exit().remove();
 	}
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import Popper, {PopperOptions} from "popper.js";
+import Popper, {Data, PopperOptions} from "popper.js";
 import {animateCSS, parseHtml} from "../Common";
 import {EventApi} from "@fullcalendar/core";
 import {TemplateRegistry} from "../TemplateRegistry";
@@ -52,8 +52,12 @@ export class CalendarEventListPopper {
 				},
 				preventOverflow: {
 					boundariesElement: document.body,
+				},
+				offset: {
+					enabled: true,
+					offset: "0px, 3px"
 				}
-			},
+			}
 		} as PopperOptions);
 
 		this.$popperElement.addEventListener("pointerenter", ev => this.setVisible(false, false));
