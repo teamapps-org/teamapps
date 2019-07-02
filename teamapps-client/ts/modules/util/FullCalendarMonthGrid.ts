@@ -62,7 +62,7 @@ type DisplayedDay = {
 	foreignMonth: boolean
 };
 
-export class MultiMonthView extends View {
+export class MonthGridView extends View {
 
 	private width: number;
 	private height: number;
@@ -93,10 +93,10 @@ export class MultiMonthView extends View {
 	// initialize member variables or do other setup tasks.
 	public initialize() {
 		this.uuid = "year-" + generateUUID();
-		this.$contentElement = parseHtml(`<div class="fc-multi-month-content" id="${this.uuid}">`);
+		this.$contentElement = parseHtml(`<div class="fc-month-grid-content" id="${this.uuid}">`);
 		let svgElement: SVGElement = parseSvg('<svg class="svg">');
 		this.$contentElement.append(svgElement);
-		this.el.classList.add('fc-multi-month-view');
+		this.el.classList.add('fc-month-grid-view');
 		this.el.appendChild(this.$contentElement);
 		this._svg = d3.select<SVGElement, undefined>(svgElement);
 		this.eventsPopper = new CalendarEventListPopper();
@@ -248,16 +248,16 @@ export class MultiMonthView extends View {
 		};
 
 		let _month = this._svg
-			.selectAll("g.UiCalendar-month")
+			.selectAll("g.fc-month-grid-month")
 			.data(monthRanges);
 		let _monthEnter = _month
 			.enter()
 			.append("g")
-			.classed("UiCalendar-month", true)
+			.classed("fc-month-grid-month", true)
 			.attr("transform", calculateMonthPositionTransform);
 		_monthEnter
 			.append("text")
-			.classed("UiCalendar-month-name", true)
+			.classed("fc-month-grid-month-name", true)
 			.text(monthRange => this.dateEnv.format(strippedUtcLikeDate(monthRange.intervalStart), this.monthNameFormatter))
 			.attr("x", 0)
 			.attr("y", 10)
@@ -269,32 +269,32 @@ export class MultiMonthView extends View {
 			.remove();
 		
 		let _dayName = _month.merge(_monthEnter)
-			.selectAll("text.UiCalendar-day-name")
+			.selectAll("text.fc-month-grid-day-name")
 			.data(this.weekDayShortNames);
 		var _dayNameEnter = _dayName
 			.enter()
 			.append("text")
-			.classed("UiCalendar-day-name", true)
+			.classed("fc-month-grid-day-name", true)
 			.text(name => name);
 		_dayName.merge(_dayNameEnter)
 			.attr("transform", (name, i) => `translate(${this.firstDayOffsetX + i * this.dayColumnWidth}, 25) scale(${subTileZoom})`);
 
 		let _week = _month.merge(_monthEnter)
-			.selectAll("g.UiCalendar-week")
+			.selectAll("g.fc-month-grid-week")
 			.data((monthRange) => monthRange.displayedWeeks);
 		let _weekEnter = _week.enter()
 			.append("g")
-			.classed("UiCalendar-week", true)
+			.classed("fc-month-grid-week", true)
 			.attr("transform", (week, i) => `translate(0, ${this.firstWeekLineOffset + i * this.weekLineHeight})`);
 		_week.exit()
 			.remove();
 
 		let _weekNumber = _week.merge(_weekEnter)
-			.selectAll("text.UiCalendar-week-number")
+			.selectAll("text.fc-month-grid-week-number")
 			.data(week => [week[Math.floor(week.length / 2)]]);
 		let _weekNumberEnter = _weekNumber.enter()
 			.append("text")
-			.classed("UiCalendar-week-number", true)
+			.classed("fc-month-grid-week-number", true)
 			.attr("x", 6)
 			.on("click", (d) => this.context.options.navLinkWeekClick && this.context.options.navLinkWeekClick(d.day.toDate(), d3.event));
 		_weekNumber.merge(_weekNumberEnter)
@@ -302,13 +302,13 @@ export class MultiMonthView extends View {
 			.attr("transform", (week, i) => `scale(${subTileZoom})`);
 
 		let _day = _week.merge(_weekEnter)
-			.selectAll("g.UiCalendar-day")
+			.selectAll("g.fc-month-grid-day")
 			.data(week => week);
 		let occupationRadius = (this.weekLineHeight - .5) / 2 - .7;
 		let occupationCircleCenterOffset = -2.5;
 		let _dayEnter = _day.enter()
 			.append("g")
-			.classed("UiCalendar-day", true)
+			.classed("fc-month-grid-day", true)
 			.call((g) => {
 				g.append("circle")
 					.classed("day-occupation-background-circle", true);
@@ -600,10 +600,10 @@ function strippedUtcLikeDate(m: Moment) {
 	return moment(m).utc().add(m.utcOffset(), 'm').toDate();
 }
 
-export var multiMonthViewPlugin = createPlugin({
+export var monthGridViewPlugin = createPlugin({
 	views: {
-		multiMonth: {
-			class: MultiMonthView,
+		monthGrid: {
+			class: MonthGridView,
 			duration: {
 				months: 12
 			},
@@ -611,7 +611,7 @@ export var multiMonthViewPlugin = createPlugin({
 			maxMonthTileWidth: 0
 		},
 		year: {
-			type: 'multiMonth',
+			type: 'monthGrid',
 			duration: {
 				years: 1
 			}
