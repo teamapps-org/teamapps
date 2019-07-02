@@ -53,7 +53,7 @@ import {bind} from "./util/Bind";
 import {View} from "@fullcalendar/core/View";
 import EventApi from "@fullcalendar/core/api/EventApi";
 import {Duration} from "@fullcalendar/core/datelib/duration";
-import {MultiMonthView, multiMonthViewPlugin} from "./util/FullCalendarMultiMonthView";
+import {MonthGridView, monthGridViewPlugin} from "./util/FullCalendarMonthGrid";
 import {OptionsInputBase} from "@fullcalendar/core/types/input-types";
 
 const VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: string } = {
@@ -97,7 +97,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 
 		this.eventSource = new UiCalendarFullCalendarEventSource(context, config.id, () => this.calendar);
 		this.calendar = new Calendar($fullCalendarElement, {
-			plugins: [momentTimeZone, interactionPlugin, dayGridPlugin, timeGridPlugin, multiMonthViewPlugin],
+			plugins: [momentTimeZone, interactionPlugin, dayGridPlugin, timeGridPlugin, monthGridViewPlugin],
 			header: false,
 			defaultView: VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[config.activeViewMode],
 			defaultDate: config.displayedDate,

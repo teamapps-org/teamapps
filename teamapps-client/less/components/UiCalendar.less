@@ -157,15 +157,6 @@
     float: none !important;
   }
 
-  .fc-multi-month-view {
-    overflow: auto;
-
-    svg {
-      width: 100%;
-      display: block;
-    }
-  }
-
   .fc-day-top {
     padding: 2px;
   }
@@ -229,22 +220,28 @@
   padding-left: 2px;
 }
 
-.fc-multi-month-view {
+.fc-month-grid-view {
+  overflow: auto;
   cursor: default;
+  
+  svg {
+    width: 100%;
+    display: block;
+  }
 
-  .UiCalendar-day,
-  .UiCalendar-day-name,
-  .UiCalendar-week-number {
+  .fc-month-grid-day,
+  .fc-month-grid-day-name,
+  .fc-month-grid-week-number {
     font-size: 5pt;
     text-anchor: middle;
     font-weight: 500;
   }
 
-  .UiCalendar-day-name {
+  .fc-month-grid-day-name {
     fill: #999;
   }
 
-  .UiCalendar-week-number {
+  .fc-month-grid-week-number {
     text-anchor: end;
     fill: #999;
     font-weight: @calendar-font-weight;
@@ -255,12 +252,12 @@
     }
   }
 
-  .UiCalendar-month-frame {
+  .fc-month-grid-month-frame {
     fill: none;
     stroke: black;
   }
 
-  .UiCalendar-month-name {
+  .fc-month-grid-month-name {
     fill: @text-color;
     font-weight: @calendar-font-weight;
     cursor: pointer;
@@ -270,7 +267,7 @@
     }
   }
 
-  .UiCalendar-day {
+  .fc-month-grid-day {
     cursor: pointer;
 
     &.weekend {
