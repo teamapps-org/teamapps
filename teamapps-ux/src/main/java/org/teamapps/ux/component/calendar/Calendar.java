@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,6 @@ import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.field.combobox.TemplateDecider;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
@@ -49,6 +48,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,12 +70,10 @@ public class Calendar<RECORD> extends AbstractComponent {
 	private CalendarModel<RECORD> model;
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 
-	ClientRecordCache<CalendarEvent<RECORD>, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
+	private ClientRecordCache<CalendarEvent<RECORD>, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
 
-	private Template dayViewTemplate = null; // null: use default rendering...
-	private TemplateDecider<CalendarEvent<RECORD>> dayViewTemplateDecider = record -> dayViewTemplate;
-	private Template monthViewTemplate = null; // null: use default rendering...
-	private TemplateDecider<CalendarEvent<RECORD>> monthViewTemplateDecider = record -> monthViewTemplate;
+	private CalendarEventTemplateDecider<RECORD> templateDecider = (record, viewMode) -> BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE;
+
 	private int templateIdCounter = 0;
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
 
@@ -98,7 +96,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 
 	private ZoneId timeZone = getSessionContext().getTimeZone();
 
-	protected boolean navigateOnHeaderClicks = true;
+	private boolean navigateOnHeaderClicks = true;
 
 	private EventListener<Void> onCalendarDataChangedListener = (aVoid) -> {
 		refreshEvents();
@@ -115,16 +113,26 @@ public class Calendar<RECORD> extends AbstractComponent {
 	}
 
 	private UiCalendarEventClientRecord createUiCalendarEventClientRecord(CalendarEvent<RECORD> calendarEvent) {
-		Template template = getTemplateForRecord(calendarEvent);
-		Map<String, Object> values = template != null ? propertyExtractor.getValues(calendarEvent.getRecord(), template.getDataKeys()) : Collections.emptyMap();
+		Template timeGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.WEEK);
+		Template dayGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.MONTH);
+		Template monthGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.YEAR);
+
+		HashSet<String> dataKeys = new HashSet<>();
+		dataKeys.addAll(timeGridTemplate.getDataKeys());
+		dataKeys.addAll(dayGridTemplate.getDataKeys());
+		dataKeys.addAll(monthGridTemplate.getDataKeys());
+
+		Map<String, Object> values = propertyExtractor.getValues(calendarEvent.getRecord(), dataKeys);
 		UiCalendarEventClientRecord uiRecord = new UiCalendarEventClientRecord();
 		uiRecord.setValues(values);
 
-		uiRecord.setTemplateId(templateIdsByTemplate.get(template));
+		uiRecord.setTimeGridTemplateId(templateIdsByTemplate.get(timeGridTemplate));
+		uiRecord.setDayGridTemplateId(templateIdsByTemplate.get(dayGridTemplate));
+		uiRecord.setMonthGridTemplateId(templateIdsByTemplate.get(monthGridTemplate));
 
 		uiRecord.setStart(calendarEvent.getStartAsLong());
 		uiRecord.setEnd(calendarEvent.getEndAsLong());
-		uiRecord.setAsString(template == null && calendarEvent.getRecord() != null ? calendarEvent.getRecord().toString() : null);
+		// uiRecord.setAsString(calendarEvent.getRecord() != null ? calendarEvent.getRecord().toString() : null);
 		uiRecord.setAllDay(calendarEvent.isAllDay());
 		uiRecord.setAllowDragOperations(calendarEvent.isAllowDragOperations());
 		uiRecord.setBackgroundColor(calendarEvent.getBackgroundColor() != null ? createUiColor(calendarEvent.getBackgroundColor()) : null);
@@ -134,17 +142,8 @@ public class Calendar<RECORD> extends AbstractComponent {
 		return uiRecord;
 	}
 
-	private Template getTemplateForRecord(CalendarEvent<RECORD> record) {
-		if (this.activeViewMode == CalendarViewMode.YEAR) {
-			return null; // no template for year view!
-		}
-
-		TemplateDecider<CalendarEvent<RECORD>> templateDecider = activeViewMode == CalendarViewMode.MONTH ? monthViewTemplateDecider : dayViewTemplateDecider;
-		Template templateFromDecider = templateDecider.getTemplate(record);
-
-		Template defaultTemplate = activeViewMode == CalendarViewMode.MONTH ? monthViewTemplate : dayViewTemplate;
-
-		Template template = templateFromDecider != null ? templateFromDecider : defaultTemplate;
+	private Template getTemplateForRecord(CalendarEvent<RECORD> record, CalendarViewMode viewMode) {
+		Template template = templateDecider.getTemplate(record, viewMode);
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String id = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, id);
@@ -472,36 +471,28 @@ public class Calendar<RECORD> extends AbstractComponent {
 		this.propertyExtractor = propertyExtractor;
 	}
 
-	public Template getDayViewTemplate() {
-		return dayViewTemplate;
+	public CalendarEventTemplateDecider<RECORD> getTemplateDecider() {
+		return templateDecider;
 	}
 
-	public void setDayViewTemplate(Template dayViewTemplate) {
-		this.dayViewTemplate = dayViewTemplate;
+	public void setTemplateDecider(CalendarEventTemplateDecider<RECORD> templateDecider) {
+		this.templateDecider = templateDecider;
 	}
 
-	public TemplateDecider<CalendarEvent<RECORD>> getDayViewTemplateDecider() {
-		return dayViewTemplateDecider;
-	}
-
-	public void setDayViewTemplateDecider(TemplateDecider<CalendarEvent<RECORD>> dayViewTemplateDecider) {
-		this.dayViewTemplateDecider = dayViewTemplateDecider;
-	}
-
-	public Template getMonthViewTemplate() {
-		return monthViewTemplate;
-	}
-
-	public void setMonthViewTemplate(Template monthViewTemplate) {
-		this.monthViewTemplate = monthViewTemplate;
-	}
-
-	public TemplateDecider<CalendarEvent<RECORD>> getMonthViewTemplateDecider() {
-		return monthViewTemplateDecider;
-	}
-
-	public void setMonthViewTemplateDecider(TemplateDecider<CalendarEvent<RECORD>> monthViewTemplateDecider) {
-		this.monthViewTemplateDecider = monthViewTemplateDecider;
+	public void setTemplates(Template timeGridTemplate, Template dayGridTemplate, Template monthGridTemplate) {
+		this.templateDecider = (record, viewMode) -> {
+			switch (viewMode) {
+				case DAY:
+				case WEEK:
+					return timeGridTemplate;
+				case MONTH:
+					return dayGridTemplate;
+				case YEAR:
+					return monthGridTemplate;
+				default:
+					throw new IllegalArgumentException("Unknown view mode: " + viewMode);
+			}
+		};
 	}
 
 	public ZoneId getTimeZone() {
@@ -529,5 +520,13 @@ public class Calendar<RECORD> extends AbstractComponent {
 	public void setMaxYearViewMonthTileWidth(int maxYearViewMonthTileWidth) {
 		this.maxYearViewMonthTileWidth = maxYearViewMonthTileWidth;
 		reRenderIfRendered();
+	}
+
+	public boolean isNavigateOnHeaderClicks() {
+		return navigateOnHeaderClicks;
+	}
+
+	public void setNavigateOnHeaderClicks(boolean navigateOnHeaderClicks) {
+		this.navigateOnHeaderClicks = navigateOnHeaderClicks;
 	}
 }
