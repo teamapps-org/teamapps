@@ -216,6 +216,9 @@ export class MultiMonthView extends View {
 
 		let bestTileCoverageInfo = this.getBestTileCoverageInfo(monthRanges.length);
 
+		let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - this.opt("minMonthTileWidth")) / (3 * this.opt("minMonthTileWidth")));
+		console.log(subTileZoom);
+
 		let viewBoxWidth: number;
 		let viewBoxHeight: number;
 		let viewBoxOffsetX: number;
@@ -262,17 +265,19 @@ export class MultiMonthView extends View {
 		_month.merge(_monthEnter)
 			.transition()
 			.attr("transform", calculateMonthPositionTransform);
-		_month.merge(_monthEnter)
+		_month.exit()
+			.remove();
+		
+		let _dayName = _month.merge(_monthEnter)
 			.selectAll("text.UiCalendar-day-name")
-			.data(this.weekDayShortNames)
+			.data(this.weekDayShortNames);
+		var _dayNameEnter = _dayName
 			.enter()
 			.append("text")
 			.classed("UiCalendar-day-name", true)
-			.text(name => name)
-			.attr("x", (name, i) => this.firstDayOffsetX + i * this.dayColumnWidth)
-			.attr("y", 25);
-		_month.exit()
-			.remove();
+			.text(name => name);
+		_dayName.merge(_dayNameEnter)
+			.attr("transform", (name, i) => `translate(${this.firstDayOffsetX + i * this.dayColumnWidth}, 25) scale(${subTileZoom})`);
 
 		let _week = _month.merge(_monthEnter)
 			.selectAll("g.UiCalendar-week")
@@ -293,7 +298,8 @@ export class MultiMonthView extends View {
 			.attr("x", 6)
 			.on("click", (d) => this.context.options.navLinkWeekClick && this.context.options.navLinkWeekClick(d.day.toDate(), d3.event));
 		_weekNumber.merge(_weekNumberEnter)
-			.text(day => this.dateEnv.computeWeekNumber(day.day.toDate()));
+			.text(day => this.dateEnv.computeWeekNumber(day.day.toDate()))
+			.attr("transform", (week, i) => `scale(${subTileZoom})`);
 
 		let _day = _week.merge(_weekEnter)
 			.selectAll("g.UiCalendar-day")
@@ -303,7 +309,6 @@ export class MultiMonthView extends View {
 		let _dayEnter = _day.enter()
 			.append("g")
 			.classed("UiCalendar-day", true)
-			.attr("transform", (day, dayIndex) => `translate(${this.firstDayOffsetX + (dayIndex % 7) * this.dayColumnWidth}, 0)`)
 			.call((g) => {
 				g.append("circle")
 					.classed("day-occupation-background-circle", true);
@@ -312,6 +317,7 @@ export class MultiMonthView extends View {
 			});
 		_dayEnter.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day.toDate(), d3.event));
 		_day.merge(_dayEnter)
+			.attr("transform", (day, dayIndex) => `translate(${this.firstDayOffsetX + (dayIndex % 7) * this.dayColumnWidth}, 0) scale(${subTileZoom})`)
 			.call((g) => {
 				g.select(".day-occupation-background-circle")
 					.attr("r", occupationRadius)
@@ -334,14 +340,19 @@ export class MultiMonthView extends View {
 			.remove();
 
 		_dayEnter.on("pointerenter", (d, i, nodes) => {
+			var bestTileCoverageInfo = this.getBestTileCoverageInfo(monthRanges.length);
+			let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - this.opt("minMonthTileWidth")) / (3 * this.opt("minMonthTileWidth")));
+			var strokeWidth = 1.7 / (subTileZoom * subTileZoom);
+			console.log(`${subTileZoom} -> ${strokeWidth}`);
 			d3.select(nodes[i])
 				.selectAll("path.day-occupation")
 				.transition()
 				.ease(d3.easeQuad)
 				.duration(200)
-				.style("stroke-width", "2px")
+				.style("stroke-width", `${strokeWidth}px`)
 				.attr("d", (occupation: DayOccupationColorAmount, i, groups) => {
-					return this.describeArc(0, occupationCircleCenterOffset, occupationRadius * 1.1, occupation.startAngle, occupation.endAngle);
+					var radius = occupationRadius +  (strokeWidth-1)/2;
+					return this.describeArc(0, occupationCircleCenterOffset, radius, occupation.startAngle, occupation.endAngle);
 				});
 			let events = this.getEventsForDay(d);
 			this.updatePopper(events, nodes[i].querySelector(".day-occupation-background-circle"));
@@ -360,7 +371,7 @@ export class MultiMonthView extends View {
 
 		let _dayOccupation = _day.merge(_dayEnter).selectAll("path.day-occupation")
 			.data(day => {
-				return dayOccupationColors[this.getDayString(day.day)] || [];
+				return day.foreignMonth ? [] : dayOccupationColors[this.getDayString(day.day)] || [];
 			});
 		let _dayOccupationEnter = _dayOccupation.enter()
 			.append("path")

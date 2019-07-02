@@ -23,14 +23,19 @@
     padding: 0;
   }
 
-    .all-day-events,
-    .normal-events {
-      padding: 5px;
-    }
+
+  .all-day-events,
+  .normal-events {
+    padding: 5px;
+  }
 
 
   .all-day-events:not(:empty) + .normal-events {
     border-top: 1px solid @input-border;
+  }
+
+  .fc-event {
+    font-size: 1em;
   }
 
   .fc-event:not(:last-child) {

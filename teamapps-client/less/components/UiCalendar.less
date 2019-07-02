@@ -281,11 +281,6 @@
       fill: @text-color;
     }
 
-    &:hover .day-number {
-      text-decoration: underline;
-      text-decoration-color: @text-color;
-    }
-
     .day-occupation-background-circle,
     .day-occupation {
       fill: transparent; // not none, since we need the pointer events!
@@ -297,13 +292,23 @@
       stroke-width: 1;
     }
 
+    &:hover {
+      .day-number {
+        text-decoration: underline;
+        text-decoration-color: @text-color;
+      }
+      .day-occupation-background-circle {
+        background-color: white;
+      }
+    }
+
     &.other-month {
       fill: #ddd;
       font-weight: @calendar-font-weight;
 
       .day-occupation-background-circle,
       .day-occupation {
-        opacity: 0;
+        display: none;
       }
     }
 
@@ -315,7 +320,9 @@
       stroke: transparent;
       stroke-width: 0;
     }
+
   }
 }
+
 
 
