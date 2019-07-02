@@ -22,10 +22,13 @@ import * as log from "loglevel";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {
 	UiCalendar_DataNeededEvent,
-	UiCalendar_DayClickedEvent, UiCalendar_DayHeaderClickedEvent,
+	UiCalendar_DayClickedEvent,
+	UiCalendar_DayHeaderClickedEvent,
 	UiCalendar_EventClickedEvent,
-	UiCalendar_EventMovedEvent, UiCalendar_MonthHeaderClickedEvent,
-	UiCalendar_ViewChangedEvent, UiCalendar_WeekHeaderClickedEvent,
+	UiCalendar_EventMovedEvent,
+	UiCalendar_MonthHeaderClickedEvent,
+	UiCalendar_ViewChangedEvent,
+	UiCalendar_WeekHeaderClickedEvent,
 	UiCalendarCommandHandler,
 	UiCalendarConfig,
 	UiCalendarEventSource
@@ -42,9 +45,9 @@ import {parseHtml, Renderer} from "./Common";
 import {UiCalendarEventClientRecordConfig} from "../generated/UiCalendarEventClientRecordConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 
-import {addDays, Calendar, listenBySelector} from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
+import {addDays, Calendar} from '@fullcalendar/core';
+import dayGridPlugin, {DayGridView} from '@fullcalendar/daygrid';
+import timeGridPlugin, {TimeGridView} from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import momentTimeZone from '@fullcalendar/moment-timezone';
 import {EventInput, EventRenderingChoice} from "@fullcalendar/core/structs/event";
@@ -53,7 +56,7 @@ import {bind} from "./util/Bind";
 import {View} from "@fullcalendar/core/View";
 import EventApi from "@fullcalendar/core/api/EventApi";
 import {Duration} from "@fullcalendar/core/datelib/duration";
-import {MonthGridView, monthGridViewPlugin} from "./util/FullCalendarMonthGrid";
+import {monthGridViewPlugin} from "./util/FullCalendarMonthGrid";
 import {OptionsInputBase} from "@fullcalendar/core/types/input-types";
 
 const VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: string } = {
@@ -128,7 +131,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 					}
 				},
 				day: {
-					columnHeaderFormat: { weekday: 'long', month: 'numeric', day: 'numeric' }
+					columnHeaderFormat: {weekday: 'long', month: 'numeric', day: 'numeric'}
 				},
 				year: {
 					minMonthTileWidth: config.minYearViewMonthTileWidth,
@@ -164,10 +167,17 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 				el: HTMLElement;
 				view: View;
 			}) => {
-				if (arg.event.extendedProps.templateId != null && !arg.event.rendering) {
-					const $contentWrapper = arg.el.querySelector(':scope .fc-content');
-					// $contentWrapper.innerHTML = '';
-					$contentWrapper.appendChild(parseHtml(this.renderEventObject(arg.event)));
+				let templateId = arg.view instanceof TimeGridView ? arg.event.extendedProps.timeGridTemplateId
+					: arg.view instanceof DayGridView ? arg.event.extendedProps.dayGridTemplateId
+						: arg.event.extendedProps.monthGridTemplateId;
+
+				if (templateId != null && !arg.event.rendering) {
+					// const $contentWrapper = arg.el.querySelector(':scope .fc-content');
+					if (this.templateRenderers[templateId] != null) {
+						const renderer = this.templateRenderers[templateId];
+						// arg.el.appendChild(parseHtml());
+						arg.el.innerHTML = renderer.render(arg.event.extendedProps.data);
+					}
 					arg.el.addEventListener('click', (e) => {
 						this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), false));
 					});
@@ -274,16 +284,6 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
             </style>`));
 	}
 
-	private renderEventObject(record: EventApi): string {
-		const templateId = record.extendedProps.templateId;
-		if (templateId != null && this.templateRenderers[templateId] != null) {
-			const renderer = this.templateRenderers[templateId];
-			return renderer.render(record.extendedProps.data);
-		} else {
-			return `<div class="no-template"></div>`;
-		}
-	}
-
 	registerTemplate(id: string, template: UiTemplateConfig): void {
 		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
@@ -367,7 +367,9 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 			borderColor: borderColorCssString,
 			textColor: "#000",
 			extendedProps: {
-				templateId: event.templateId,
+				timeGridTemplateId: event.timeGridTemplateId,
+				dayGridTemplateId: event.dayGridTemplateId,
+				monthGridTemplateId: event.monthGridTemplateId,
 				data: event.values
 			}
 		};

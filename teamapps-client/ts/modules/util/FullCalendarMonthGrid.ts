@@ -217,7 +217,6 @@ export class MonthGridView extends View {
 		let bestTileCoverageInfo = this.getBestTileCoverageInfo(monthRanges.length);
 
 		let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - this.opt("minMonthTileWidth")) / (3 * this.opt("minMonthTileWidth")));
-		console.log(subTileZoom);
 
 		let viewBoxWidth: number;
 		let viewBoxHeight: number;
@@ -267,7 +266,7 @@ export class MonthGridView extends View {
 			.attr("transform", calculateMonthPositionTransform);
 		_month.exit()
 			.remove();
-		
+
 		let _dayName = _month.merge(_monthEnter)
 			.selectAll("text.fc-month-grid-day-name")
 			.data(this.weekDayShortNames);
@@ -343,7 +342,6 @@ export class MonthGridView extends View {
 			var bestTileCoverageInfo = this.getBestTileCoverageInfo(monthRanges.length);
 			let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - this.opt("minMonthTileWidth")) / (3 * this.opt("minMonthTileWidth")));
 			var strokeWidth = 1.7 / (subTileZoom * subTileZoom);
-			console.log(`${subTileZoom} -> ${strokeWidth}`);
 			d3.select(nodes[i])
 				.selectAll("path.day-occupation")
 				.transition()
@@ -351,11 +349,11 @@ export class MonthGridView extends View {
 				.duration(200)
 				.style("stroke-width", `${strokeWidth}px`)
 				.attr("d", (occupation: DayOccupationColorAmount, i, groups) => {
-					var radius = occupationRadius +  (strokeWidth-1)/2;
+					var radius = occupationRadius + (strokeWidth - 1) / 2;
 					return this.describeArc(0, occupationCircleCenterOffset, radius, occupation.startAngle, occupation.endAngle);
 				});
 			let events = this.getEventsForDay(d);
-			this.updatePopper(events, nodes[i].querySelector(".day-occupation-background-circle"));
+			this.updatePopper(d.day, events, nodes[i].querySelector(".day-occupation-background-circle"));
 		}).on("pointerleave", (d, i, nodes) => {
 			d3.select(nodes[i])
 				.selectAll("path.day-occupation")
@@ -465,34 +463,46 @@ export class MonthGridView extends View {
 		});
 	}
 
-	private updatePopper(events: EventApi[], dayElement: Element) {
+	private updatePopper(day: Moment, events: EventApi[], dayElement: Element) {
 		let allDayEvents = events.filter(e => e.allDay);
 		let normalEvents = events.filter(e => !e.allDay);
 
 		if (events.length > 0) {
-			let allDayEventsHtml = '';
-			allDayEvents.forEach(event => {
-				allDayEventsHtml += `<div class="fc-event all-day" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
-									<span class="fc-title">${event.title}</span>            	
-								</div>`;
-			});
-			this.eventsPopper.$allDayEventsContainer.innerHTML = allDayEventsHtml;
-			this.eventsPopper.$allDayEventsContainer.classList.toggle("hidden", allDayEvents.length === 0);
-
-			let normalEventsHtml = '';
-			normalEvents.forEach(event => {
-				normalEventsHtml += `<div class="fc-event" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
-									<span class="fc-time">${event.formatRange({hour: 'numeric', minute: 'numeric'})}</span>
-									<span class="fc-title">${event.title}</span>  
-								</div>`;
-			});
-			this.eventsPopper.$normalEventsContainer.innerHTML = normalEventsHtml;
-			this.eventsPopper.$normalEventsContainer.classList.toggle("hidden", normalEvents.length === 0);
-
+			this.renderPopperEvents(day, allDayEvents, true);
+			this.renderPopperEvents(day, normalEvents, false);
 			this.eventsPopper.setReferenceElement(dayElement);
 			this.eventsPopper.setVisible(true);
 		} else {
 			this.eventsPopper.setVisible(false);
+		}
+	}
+
+	private renderPopperEvents(day: Moment, events: EventApi[], allDay: boolean) {
+		const cssClass = allDay ? 'all-day': '' ;
+		let allDayEventsHtml = '';
+		events.forEach(event => {
+			allDayEventsHtml += `<div class="fc-event ${cssClass}" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
+									<span class="fc-time ${allDay ? 'hidden' : ''}">${event.formatRange({hour: 'numeric', minute: 'numeric'})}</span>
+									<span class="fc-title">${event.title}</span>            	
+								</div>`;
+		});
+		let $container = allDay ? this.eventsPopper.$allDayEventsContainer: this.eventsPopper.$normalEventsContainer;
+		$container.innerHTML = allDayEventsHtml;
+		$container.classList.toggle("hidden", events.length === 0);
+
+		let eventRender: (arg: { isMirror: boolean, isStart: boolean, isEnd: boolean, event: EventApi, el: HTMLElement, view: View }) => void = this.opt("eventRender");
+		if (eventRender != null) {
+			$container.querySelectorAll(':scope .fc-event').forEach((el, i) => {
+				let event = events[i];
+				eventRender({
+					event: event,
+					isMirror: false,
+					isStart: day.isSame(event.start, 'day'),
+					isEnd: day.isSame(event.end, 'day'),
+					el: el as HTMLElement,
+					view: this
+				})
+			});
 		}
 	}
 

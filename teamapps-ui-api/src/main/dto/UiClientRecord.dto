@@ -41,7 +41,10 @@ class UiComboBoxTreeRecord extends UiTreeRecord {
 }
 
 class UiCalendarEventClientRecord extends UiIdentifiableClientRecord {
-    String templateId; // null == use asString
+    String timeGridTemplateId;   // null = use default
+    String dayGridTemplateId;    // null = use default
+    String monthGridTemplateId;  // null = use default
+
 	long start;
     long end;
     boolean allDay;
