@@ -21,8 +21,8 @@ package org.teamapps.ux.component.calendar;
 
 import org.teamapps.ux.component.template.Template;
 
-public interface CalendarEventTemplateDecider<RECORD> {
+public interface CalendarEventTemplateDecider<CEVENT extends CalendarEvent> {
 
-	Template getTemplate(CalendarEvent<RECORD> record, CalendarViewMode viewMode);
+	Template getTemplate(CEVENT calendarEvent, CalendarViewMode viewMode);
 
 }

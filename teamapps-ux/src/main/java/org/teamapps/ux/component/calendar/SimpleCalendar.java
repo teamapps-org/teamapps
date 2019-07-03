@@ -1,10 +1,8 @@
 package org.teamapps.ux.component.calendar;
 
-import org.teamapps.ux.component.template.BaseTemplateRecord;
-
 import java.util.List;
 
-public class SimpleCalendar<PAYLOAD> extends Calendar<BaseTemplateRecord<PAYLOAD>> {
+public class SimpleCalendar<PAYLOAD> extends Calendar<SimpleCalendarEvent<PAYLOAD>> {
 
 	public SimpleCalendar() {
 		super(new SimpleCalendarModel<PAYLOAD>());

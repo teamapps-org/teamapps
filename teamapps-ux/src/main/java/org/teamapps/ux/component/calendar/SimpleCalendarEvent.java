@@ -1,74 +1,75 @@
 package org.teamapps.ux.component.calendar;
 
 import org.teamapps.icons.api.Icon;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
+import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.ux.session.SessionContext;
 
 import java.time.Instant;
 
-public class SimpleCalendarEvent<PAYLOAD> extends CalendarEvent<BaseTemplateRecord<PAYLOAD>> {
+public class SimpleCalendarEvent<PAYLOAD> extends AbstractCalendarEvent {
 
-	public SimpleCalendarEvent(Instant start, Instant end, BaseTemplateRecord<PAYLOAD> record) {
-		super(start, end, record);
+	private Icon icon;
+	private String image;
+	private String caption;
+	private String badge;
+
+	private PAYLOAD payload;
+
+	public SimpleCalendarEvent(Instant start, Instant end, Icon icon, String caption) {
+		super(start, end);
+		this.icon = icon;
+		this.caption = caption;
 	}
 
-	public SimpleCalendarEvent(long start, long end, BaseTemplateRecord<PAYLOAD> record) {
-		super(start, end, record);
-	}
-
-	public static <PAYLOAD> SimpleCalendarEvent<PAYLOAD> create(Instant start, Instant end, Icon icon, String  caption, String description) {
-		BaseTemplateRecord<PAYLOAD> record = new BaseTemplateRecord<PAYLOAD>(icon, caption, description);
-		return new SimpleCalendarEvent<>(start, end, record);
-	}
-	public static <PAYLOAD> SimpleCalendarEvent<PAYLOAD> create(long start, long end, Icon icon, String caption, String description) {
-		BaseTemplateRecord<PAYLOAD> record = new BaseTemplateRecord<>(icon, caption, description);
-		return new SimpleCalendarEvent<>(start, end, record);
+	public SimpleCalendarEvent(long start, long end, Icon icon, String caption) {
+		super(start, end);
+		this.icon = icon;
+		this.caption = caption;
 	}
 
 	public Icon getIcon() {
-		return getRecord().getIcon();
+		return icon;
 	}
 
-	public BaseTemplateRecord<PAYLOAD> setIcon(Icon icon) {
-		return getRecord().setIcon(icon);
+	public void setIcon(Icon icon) {
+		this.icon = icon;
 	}
 
 	public String getImage() {
-		return getRecord().getImage();
+		return image;
 	}
 
-	public BaseTemplateRecord<PAYLOAD> setImage(String image) {
-		return getRecord().setImage(image);
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public String getCaption() {
-		return getRecord().getCaption();
+		return caption;
 	}
 
-	public BaseTemplateRecord<PAYLOAD> setCaption(String caption) {
-		return getRecord().setCaption(caption);
+	public void setCaption(String caption) {
+		this.caption = caption;
 	}
 
 	public String getDescription() {
-		return getRecord().getDescription();
-	}
-
-	public BaseTemplateRecord<PAYLOAD> setDescription(String description) {
-		return getRecord().setDescription(description);
+		SessionContext sessionContext = CurrentSessionContext.get();
+		return getStartInstant().atZone(sessionContext.getTimeZone()).format(sessionContext.getConfiguration().getTimeFormatter())
+				+ "\u2009-\u2009" + getEndInstant().atZone(sessionContext.getTimeZone()).format(sessionContext.getConfiguration().getTimeFormatter());
 	}
 
 	public String getBadge() {
-		return getRecord().getBadge();
+		return badge;
 	}
 
-	public BaseTemplateRecord<PAYLOAD> setBadge(String badge) {
-		return getRecord().setBadge(badge);
+	public void setBadge(String badge) {
+		this.badge = badge;
 	}
 
 	public PAYLOAD getPayload() {
-		return getRecord().getPayload();
+		return payload;
 	}
 
-	public BaseTemplateRecord<PAYLOAD> setPayload(PAYLOAD payload) {
-		return getRecord().setPayload(payload);
+	public void setPayload(PAYLOAD payload) {
+		this.payload = payload;
 	}
 }

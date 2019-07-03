@@ -21,19 +21,19 @@ package org.teamapps.ux.component.calendar;
 
 import java.time.Instant;
 
-public class EventMovedEventData<RECORD> {
+public class EventMovedEventData<CEVENT> {
 
-	private final CalendarEvent<RECORD> event;
+	private final CEVENT event;
 	private final Instant newStart;
 	private final Instant newEnd;
 
-	public EventMovedEventData(CalendarEvent<RECORD> event, Instant newStart, Instant newEnd) {
+	public EventMovedEventData(CEVENT event, Instant newStart, Instant newEnd) {
 		this.event = event;
 		this.newStart = newStart;
 		this.newEnd = newEnd;
 	}
 
-	public CalendarEvent<RECORD> getEvent() {
+	public CEVENT getEvent() {
 		return event;
 	}
 

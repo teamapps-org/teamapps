@@ -203,8 +203,8 @@
 
 .fc-event {
   border-radius: 0;
-  //padding: 3px 4px;
   overflow: hidden;
+  font-size: 1em;
 
   .fc-time {
     font-weight: 600;
@@ -305,15 +305,15 @@
       }
     }
 
-    &.today .day-occupation-background-circle {
-      fill: rgb(255, 232, 84);
-    }
-
     &.free .day-occupation-background-circle {
       stroke: transparent;
-      stroke-width: 0;
     }
 
+    &.today .day-occupation-background-circle {
+      fill: lighten(@brand-warning, 20%);
+      stroke-width: 1;
+      stroke: lighten(@brand-warning, 20%);
+    }
   }
 }
 

@@ -24,10 +24,10 @@ import org.teamapps.event.Event;
 import java.time.Instant;
 import java.util.List;
 
-public interface CalendarModel<RECORD> {
+public interface CalendarModel<CEVENT extends CalendarEvent> {
 
-	Event<Void> getOnCalendarDataChanged();
+	Event<Void> onCalendarDataChanged();
 
-	List<CalendarEvent<RECORD>> getEventsForInterval(Instant start, Instant end);
+	List<CEVENT> getEventsForInterval(Instant start, Instant end);
 
 }

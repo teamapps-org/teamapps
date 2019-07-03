@@ -19,17 +19,17 @@
  */
 package org.teamapps.ux.component.calendar;
 
-public class EventClickedEventData<RECORD> {
+public class EventClickedEventData<CEVENT extends CalendarEvent> {
 
-	private final CalendarEvent<RECORD> event;
+	private final CEVENT event;
 	private final boolean isDoubleClick;
 
-	public EventClickedEventData(CalendarEvent<RECORD> event, boolean isDoubleClick) {
+	public EventClickedEventData(CEVENT event, boolean isDoubleClick) {
 		this.event = event;
 		this.isDoubleClick = isDoubleClick;
 	}
 
-	public CalendarEvent<RECORD> getEvent() {
+	public CEVENT getEvent() {
 		return event;
 	}
 

@@ -57,24 +57,24 @@ import java.util.stream.Collectors;
 
 import static org.teamapps.util.UiUtil.createUiColor;
 
-public class Calendar<RECORD> extends AbstractComponent {
+public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(Calendar.class);
 
-	public final Event<EventClickedEventData<RECORD>> onEventClicked = new Event<>();
-	public final Event<EventMovedEventData<RECORD>> onEventMoved = new Event<>();
+	public final Event<EventClickedEventData<CEVENT>> onEventClicked = new Event<>();
+	public final Event<EventMovedEventData<CEVENT>> onEventMoved = new Event<>();
 	public final Event<DayClickedEventData> onDayClicked = new Event<>();
 	public final Event<ViewChangedEventData> onViewChanged = new Event<>();
 	public final Event<LocalDate> onMonthHeaderClicked = new Event<>();
 	public final Event<WeeHeaderClickedEventData> onWeekHeaderClicked = new Event<>();
 	public final Event<LocalDate> onDayHeaderClicked = new Event<>();
 
-	private CalendarModel<RECORD> model;
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+	private CalendarModel<CEVENT> model;
+	private PropertyExtractor<CEVENT> propertyExtractor = new BeanPropertyExtractor<>();
 
-	private ClientRecordCache<CalendarEvent<RECORD>, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
+	private ClientRecordCache<CEVENT, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
 
-	private CalendarEventTemplateDecider<RECORD> templateDecider = createStaticTemplateDecider(
+	private CalendarEventTemplateDecider<CEVENT> templateDecider = createStaticTemplateDecider(
 			BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
 			BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
 			BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES
@@ -112,13 +112,13 @@ public class Calendar<RECORD> extends AbstractComponent {
 		this(null);
 	}
 
-	public Calendar(CalendarModel<RECORD> model) {
+	public Calendar(CalendarModel<CEVENT> model) {
 		if (model != null) {
 			setModel(model);
 		}
 	}
 
-	private UiCalendarEventClientRecord createUiCalendarEventClientRecord(CalendarEvent<RECORD> calendarEvent) {
+	private UiCalendarEventClientRecord createUiCalendarEventClientRecord(CEVENT calendarEvent) {
 		Template timeGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.WEEK);
 		Template dayGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.MONTH);
 		Template monthGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.YEAR);
@@ -128,7 +128,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 		dataKeys.addAll(dayGridTemplate.getDataKeys());
 		dataKeys.addAll(monthGridTemplate.getDataKeys());
 
-		Map<String, Object> values = propertyExtractor.getValues(calendarEvent.getRecord(), dataKeys);
+		Map<String, Object> values = propertyExtractor.getValues(calendarEvent, dataKeys);
 		UiCalendarEventClientRecord uiRecord = new UiCalendarEventClientRecord();
 		uiRecord.setValues(values);
 
@@ -136,8 +136,8 @@ public class Calendar<RECORD> extends AbstractComponent {
 		uiRecord.setDayGridTemplateId(templateIdsByTemplate.get(dayGridTemplate));
 		uiRecord.setMonthGridTemplateId(templateIdsByTemplate.get(monthGridTemplate));
 
-		uiRecord.setStart(calendarEvent.getStartAsLong());
-		uiRecord.setEnd(calendarEvent.getEndAsLong());
+		uiRecord.setStart(calendarEvent.getStart());
+		uiRecord.setEnd(calendarEvent.getEnd());
 		// uiRecord.setAsString(calendarEvent.getRecord() != null ? calendarEvent.getRecord().toString() : null);
 		uiRecord.setAllDay(calendarEvent.isAllDay());
 		uiRecord.setAllowDragOperations(calendarEvent.isAllowDragOperations());
@@ -148,7 +148,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 		return uiRecord;
 	}
 
-	private Template getTemplateForRecord(CalendarEvent<RECORD> record, CalendarViewMode viewMode) {
+	private Template getTemplateForRecord(CEVENT record, CalendarViewMode viewMode) {
 		Template template = templateDecider.getTemplate(record, viewMode);
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String id = "" + templateIdCounter++;
@@ -158,19 +158,19 @@ public class Calendar<RECORD> extends AbstractComponent {
 		return template;
 	}
 
-	public void setModel(CalendarModel<RECORD> model) {
+	public void setModel(CalendarModel<CEVENT> model) {
 		if (this.model != null) {
 			unregisterModelEventListeners();
 		}
 		this.model = model;
 		if (model != null) {
-			model.getOnCalendarDataChanged().addListener(onCalendarDataChangedListener);
+			model.onCalendarDataChanged().addListener(onCalendarDataChangedListener);
 		}
 		refreshEvents();
 	}
 
 	private void unregisterModelEventListeners() {
-		this.model.getOnCalendarDataChanged().removeListener(onCalendarDataChangedListener);
+		this.model.onCalendarDataChanged().removeListener(onCalendarDataChangedListener);
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 
 		Instant queryStart = activeViewMode.getDisplayStart(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
 		Instant queryEnd = activeViewMode.getDisplayEnd(displayedDate, firstDayOfWeek).atStartOfDay(timeZone).toInstant();
-		List<CalendarEvent<RECORD>> initialCalendarEvents = query(queryStart, queryEnd);
+		List<CEVENT> initialCalendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(initialCalendarEvents);
 		cacheResponse.commit();
 		uiCalendar.setInitialData(cacheResponse.getResult());
@@ -212,8 +212,8 @@ public class Calendar<RECORD> extends AbstractComponent {
 		}
 	}
 
-	private List<CalendarEvent<RECORD>> query(Instant queryStart, Instant queryEnd) {
-		List<CalendarEvent<RECORD>> events;
+	private List<CEVENT> query(Instant queryStart, Instant queryEnd) {
+		List<CEVENT> events;
 		if (model != null) {
 			events = model.getEventsForInterval(queryStart, queryEnd);
 			LOGGER.debug("Query: " + queryStart + " - " + queryEnd + " --> events:" + events.size());
@@ -228,7 +228,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 		switch (event.getUiEventType()) {
 			case UI_CALENDAR_EVENT_CLICKED: {
 				UiCalendar.EventClickedEvent clickEvent = (UiCalendar.EventClickedEvent) event;
-				CalendarEvent<RECORD> calendarEvent = recordCache.getRecordByClientId(clickEvent.getEventId());
+				CEVENT calendarEvent = recordCache.getRecordByClientId(clickEvent.getEventId());
 				if (calendarEvent != null) {
 					onEventClicked.fire(new EventClickedEventData<>(calendarEvent, clickEvent.getIsDoubleClick()));
 				}
@@ -236,7 +236,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 			}
 			case UI_CALENDAR_EVENT_MOVED: {
 				UiCalendar.EventMovedEvent eventMovedEvent = (UiCalendar.EventMovedEvent) event;
-				CalendarEvent<RECORD> calendarEvent = recordCache.getRecordByClientId(eventMovedEvent.getEventId());
+				CEVENT calendarEvent = recordCache.getRecordByClientId(eventMovedEvent.getEventId());
 				if (calendarEvent != null) {
 					onEventMoved.fire(new EventMovedEventData<>(calendarEvent, Instant.ofEpochMilli(eventMovedEvent.getNewStart()), Instant.ofEpochMilli(eventMovedEvent.getNewEnd())));
 				}
@@ -291,7 +291,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 	}
 
 	private void queryAndSendCalendarData(Instant queryStart, Instant queryEnd) {
-		List<CalendarEvent<RECORD>> calendarEvents = query(queryStart, queryEnd);
+		List<CEVENT> calendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
 		if (isRendered()) {
 			getSessionContext().queueCommand(new UiCalendar.SetCalendarDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
@@ -471,19 +471,19 @@ public class Calendar<RECORD> extends AbstractComponent {
 		this.defaultBorderColor = defaultBorderColor;
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
+	public PropertyExtractor<CEVENT> getPropertyExtractor() {
 		return propertyExtractor;
 	}
 
-	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
+	public void setPropertyExtractor(PropertyExtractor<CEVENT> propertyExtractor) {
 		this.propertyExtractor = propertyExtractor;
 	}
 
-	public CalendarEventTemplateDecider<RECORD> getTemplateDecider() {
+	public CalendarEventTemplateDecider<CEVENT> getTemplateDecider() {
 		return templateDecider;
 	}
 
-	public void setTemplateDecider(CalendarEventTemplateDecider<RECORD> templateDecider) {
+	public void setTemplateDecider(CalendarEventTemplateDecider<CEVENT> templateDecider) {
 		this.templateDecider = templateDecider;
 	}
 
@@ -492,7 +492,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 	}
 
 	@NotNull
-	private CalendarEventTemplateDecider<RECORD> createStaticTemplateDecider(Template timeGridTemplate, Template dayGridTemplate, Template monthGridTemplate) {
+	private CalendarEventTemplateDecider<CEVENT> createStaticTemplateDecider(Template timeGridTemplate, Template dayGridTemplate, Template monthGridTemplate) {
 		return (record, viewMode) -> {
 			switch (viewMode) {
 				case DAY:
