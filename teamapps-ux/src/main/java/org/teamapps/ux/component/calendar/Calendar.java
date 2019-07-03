@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.calendar;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
@@ -41,6 +42,7 @@ import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.ux.session.CurrentSessionContext;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -72,7 +74,11 @@ public class Calendar<RECORD> extends AbstractComponent {
 
 	private ClientRecordCache<CalendarEvent<RECORD>, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
 
-	private CalendarEventTemplateDecider<RECORD> templateDecider = (record, viewMode) -> BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE;
+	private CalendarEventTemplateDecider<RECORD> templateDecider = createStaticTemplateDecider(
+			BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
+			BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
+			BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES
+	);
 
 	private int templateIdCounter = 0;
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
@@ -84,7 +90,7 @@ public class Calendar<RECORD> extends AbstractComponent {
 	private boolean showWeekNumbers = true;
 	private int businessHoursStart = 8;
 	private int businessHoursEnd = 17;
-	private DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY; // TODO get from session settings!
+	private DayOfWeek firstDayOfWeek = CurrentSessionContext.get().getConfiguration().getFirstDayOfWeek();
 	private List<DayOfWeek> workingDays = java.util.Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
 	private Color tableHeaderBackgroundColor;
 
@@ -157,7 +163,9 @@ public class Calendar<RECORD> extends AbstractComponent {
 			unregisterModelEventListeners();
 		}
 		this.model = model;
-		model.getOnCalendarDataChanged().addListener(onCalendarDataChangedListener);
+		if (model != null) {
+			model.getOnCalendarDataChanged().addListener(onCalendarDataChangedListener);
+		}
 		refreshEvents();
 	}
 
@@ -480,7 +488,12 @@ public class Calendar<RECORD> extends AbstractComponent {
 	}
 
 	public void setTemplates(Template timeGridTemplate, Template dayGridTemplate, Template monthGridTemplate) {
-		this.templateDecider = (record, viewMode) -> {
+		this.templateDecider = createStaticTemplateDecider(timeGridTemplate, dayGridTemplate, monthGridTemplate);
+	}
+
+	@NotNull
+	private CalendarEventTemplateDecider<RECORD> createStaticTemplateDecider(Template timeGridTemplate, Template dayGridTemplate, Template monthGridTemplate) {
+		return (record, viewMode) -> {
 			switch (viewMode) {
 				case DAY:
 				case WEEK:

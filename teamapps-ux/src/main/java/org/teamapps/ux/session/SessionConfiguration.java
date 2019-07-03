@@ -26,6 +26,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.ZoneId;
 import java.util.Locale;
 
@@ -35,7 +36,7 @@ public class SessionConfiguration {
 	private ZoneId timeZone = ZoneId.of("Europe/Berlin");
 	private String dateFormat = "yyyy-MM-dd";
 	private String timeFormat = "HH:mm";
-	private UiWeekDay firstDayOfWeek = UiWeekDay.MONDAY;
+	private DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
 	private String decimalSeparator = ".";
 	private String thousandsSeparator = "";
 
@@ -74,7 +75,7 @@ public class SessionConfiguration {
 		config.setTimeZoneId(timeZone.getId());
 		config.setDateFormat(dateFormat);
 		config.setTimeFormat(timeFormat);
-		config.setFirstDayOfWeek(firstDayOfWeek);
+		config.setFirstDayOfWeek(UiWeekDay.valueOf(firstDayOfWeek.name()));
 		config.setDecimalSeparator(decimalSeparator);
 		config.setThousandsSeparator(thousandsSeparator);
 		config.setOptimizedForTouch(optimizedForTouch);
@@ -115,11 +116,11 @@ public class SessionConfiguration {
 		this.timeFormat = timeFormat;
 	}
 
-	public UiWeekDay getFirstDayOfWeek() {
+	public DayOfWeek getFirstDayOfWeek() {
 		return firstDayOfWeek;
 	}
 
-	public void setFirstDayOfWeek(UiWeekDay firstDayOfWeek) {
+	public void setFirstDayOfWeek(DayOfWeek firstDayOfWeek) {
 		this.firstDayOfWeek = firstDayOfWeek;
 	}
 
