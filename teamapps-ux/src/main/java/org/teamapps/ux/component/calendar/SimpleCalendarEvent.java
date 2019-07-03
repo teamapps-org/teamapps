@@ -43,6 +43,10 @@ public class SimpleCalendarEvent<PAYLOAD> extends AbstractCalendarEvent {
 		this.image = image;
 	}
 
+	public String getTitle() {
+		return caption;
+	}
+
 	public String getCaption() {
 		return caption;
 	}

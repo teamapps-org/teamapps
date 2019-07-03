@@ -74,11 +74,12 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private ClientRecordCache<CEVENT, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
 
-	private CalendarEventTemplateDecider<CEVENT> templateDecider = createStaticTemplateDecider(
-			BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
-			BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
-			BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES
-	);
+	private CalendarEventTemplateDecider<CEVENT> templateDecider = (calendarEvent, viewMode) -> null;
+	// 		createStaticTemplateDecider(
+	// 		BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
+	// 		BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
+	// 		BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES
+	// );
 
 	private int templateIdCounter = 0;
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
@@ -124,9 +125,15 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		Template monthGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.YEAR);
 
 		HashSet<String> dataKeys = new HashSet<>();
-		dataKeys.addAll(timeGridTemplate.getDataKeys());
-		dataKeys.addAll(dayGridTemplate.getDataKeys());
-		dataKeys.addAll(monthGridTemplate.getDataKeys());
+		if (timeGridTemplate != null) {
+			dataKeys.addAll(timeGridTemplate.getDataKeys());
+		}
+		if (dayGridTemplate != null) {
+			dataKeys.addAll(dayGridTemplate.getDataKeys());
+		}
+		if (monthGridTemplate != null) {
+			dataKeys.addAll(monthGridTemplate.getDataKeys());
+		}
 
 		Map<String, Object> values = propertyExtractor.getValues(calendarEvent, dataKeys);
 		UiCalendarEventClientRecord uiRecord = new UiCalendarEventClientRecord();
@@ -135,6 +142,9 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		uiRecord.setTimeGridTemplateId(templateIdsByTemplate.get(timeGridTemplate));
 		uiRecord.setDayGridTemplateId(templateIdsByTemplate.get(dayGridTemplate));
 		uiRecord.setMonthGridTemplateId(templateIdsByTemplate.get(monthGridTemplate));
+
+		uiRecord.setIcon(getSessionContext().resolveIcon(calendarEvent.getIcon()));
+		uiRecord.setTitle(calendarEvent.getTitle());
 
 		uiRecord.setStart(calendarEvent.getStart());
 		uiRecord.setEnd(calendarEvent.getEnd());
