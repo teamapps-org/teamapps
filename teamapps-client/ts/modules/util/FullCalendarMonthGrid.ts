@@ -482,8 +482,10 @@ export class MonthGridView extends View {
 		let allDayEventsHtml = '';
 		events.forEach(event => {
 			allDayEventsHtml += `<div class="fc-event ${cssClass}" style="background-color:${event.backgroundColor};border-color:${event.borderColor};color:${event.textColor}">
-									<span class="fc-time ${allDay ? 'hidden' : ''}">${event.formatRange({hour: 'numeric', minute: 'numeric'})}</span>
-									<span class="fc-title">${event.title}</span>            	
+									<div class="fc-content">
+										<span class="fc-time ${allDay ? 'hidden' : ''}">${event.formatRange({hour: 'numeric', minute: 'numeric'})}</span>
+										<span class="fc-title">${event.title}</span>            	
+									</div>
 								</div>`;
 		});
 		let $container = allDay ? this.eventsPopper.$allDayEventsContainer: this.eventsPopper.$normalEventsContainer;

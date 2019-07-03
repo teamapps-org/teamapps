@@ -41,7 +41,7 @@ import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {Interval, IntervalManager} from "./util/IntervalManager";
 import {createUiColorCssString} from "./util/CssFormatUtil";
-import {parseHtml, Renderer} from "./Common";
+import {parseHtml, prependChild, Renderer} from "./Common";
 import {UiCalendarEventClientRecordConfig} from "../generated/UiCalendarEventClientRecordConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 
@@ -178,16 +178,20 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 						// arg.el.appendChild(parseHtml());
 						arg.el.innerHTML = renderer.render(arg.event.extendedProps.data);
 					}
-					arg.el.addEventListener('click', (e) => {
-						this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), false));
-					});
-					arg.el.addEventListener('dblclick', (e) => {
-						this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), true));
-					});
+				} else {
+					let $fcContent = arg.el.querySelector(':scope .fc-content');
+					prependChild($fcContent, parseHtml(`<div class="fc-icon img img-16" style="background-image:url(${this._context.getIconPath(arg.event.extendedProps.icon, 16)})">`));
 				}
 				if (arg.event.allDay) {
 					arg.el.classList.add("all-day");
 				}
+
+				arg.el.addEventListener('click', (e) => {
+					this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), false));
+				});
+				arg.el.addEventListener('dblclick', (e) => {
+					this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), true));
+				});
 			},
 			dateClick: (() => {
 				let lastClickTimeStamp = 0;
@@ -357,7 +361,7 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 			id: "" + event.id,
 			start: new Date(event.start),
 			end: new Date(event.end),
-			title: event.asString,
+			title: event.title,
 			rendering: RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING[event.rendering],
 			editable: event.allowDragOperations,
 			startEditable: event.allowDragOperations,
@@ -370,7 +374,8 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 				timeGridTemplateId: event.timeGridTemplateId,
 				dayGridTemplateId: event.dayGridTemplateId,
 				monthGridTemplateId: event.monthGridTemplateId,
-				data: event.values
+				data: event.values,
+				icon: event.icon
 			}
 		};
 	}

@@ -49,6 +49,10 @@ class UiCalendarEventClientRecord extends UiIdentifiableClientRecord {
     long end;
     boolean allDay;
     boolean allowDragOperations;
+
+    String icon;
+    String title;
+
     UiColor backgroundColor;
     UiColor borderColor;
     UiCalendarEventRenderingStyle rendering;
