@@ -381,11 +381,11 @@ export class MonthGridView extends View {
 			.attr("data-duration-in-hours", (occupation, i, j) => (occupation.duration / 3600000))
 			.style("stroke", occupationColor => {
 				let hslColor = d3.hsl(occupationColor.color);
-				if (hslColor.l > 0.45) {
-					hslColor.l = 0.45;
+				if (hslColor.l > 0.55) {
+					hslColor.l = 0.55;
 				}
-				if (hslColor.s < 0.5) {
-					hslColor.s = 0.5;
+				if (hslColor.s < 0.4) {
+					hslColor.s = 0.4;
 				}
 				return hslColor.toString();
 			});

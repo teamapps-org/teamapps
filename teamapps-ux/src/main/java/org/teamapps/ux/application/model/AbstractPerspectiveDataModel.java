@@ -22,6 +22,7 @@ package org.teamapps.ux.application.model;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.data.value.Sorting;
 import org.teamapps.ux.component.calendar.AbstractCalendarModel;
+import org.teamapps.ux.component.calendar.AbstractCalendarEvent;
 import org.teamapps.ux.component.calendar.CalendarEvent;
 import org.teamapps.ux.component.calendar.CalendarModel;
 import org.teamapps.ux.component.infiniteitemview.AbstractInfiniteItemViewModel;
@@ -48,8 +49,8 @@ public abstract class AbstractPerspectiveDataModel<RECORD> implements Perspectiv
 	private final PropertyProvider<RECORD> propertyProvider;
 	private AbstractTableModel<RECORD> tableModel;
 	private AbstractInfiniteItemViewModel<RECORD> infiniteItemViewModel;
-	private AbstractCalendarModel<RECORD> calendarModel;
-	private Function<RECORD, CalendarEvent<RECORD>> calendarEventProvider;
+	private CalendarModel<CalendarEvent> calendarModel;
+	private Function<RECORD, AbstractCalendarEvent> calendarEventProvider;
 	private TimeGraphModel timeGraphModel;
 	private TreeModel<RECORD> treeModel;
 
@@ -89,7 +90,7 @@ public abstract class AbstractPerspectiveDataModel<RECORD> implements Perspectiv
 
 		calendarModel = new AbstractCalendarModel<>() {
 			@Override
-			public List<CalendarEvent<RECORD>> getEventsForInterval(Instant start, Instant end) {
+			public List<CalendarEvent> getEventsForInterval(Instant start, Instant end) {
 				if (calendarEventProvider == null) {
 					return Collections.emptyList();
 				}
@@ -122,7 +123,7 @@ public abstract class AbstractPerspectiveDataModel<RECORD> implements Perspectiv
 	protected void handleDataUpdated() {
 		tableModel.onAllDataChanged.fire(null);
 		infiniteItemViewModel.onAllDataChanged.fire(null);
-		calendarModel.onCalendarDataChanged.fire(null);
+		calendarModel.onCalendarDataChanged().fire(null);
 		timeGraphModel.onDataChanged().fire(null);
 		//todo: tree expects the list of nodes
 		treeModel.onAllNodesChanged().fire(null);
@@ -194,7 +195,7 @@ public abstract class AbstractPerspectiveDataModel<RECORD> implements Perspectiv
 		return treeModel;
 	}
 
-	public AbstractCalendarModel<RECORD> getCalendarModel() {
+	public CalendarModel<CalendarEvent> getCalendarModel() {
 		return calendarModel;
 	}
 
@@ -222,7 +223,7 @@ public abstract class AbstractPerspectiveDataModel<RECORD> implements Perspectiv
 	}
 
 	@Override
-	public CalendarModel<RECORD> getCalendarModel(Function<RECORD, CalendarEvent<RECORD>> eventProvider, String calendarFieldName) {
+	public CalendarModel<CalendarEvent> getCalendarModel(Function<RECORD, AbstractCalendarEvent> eventProvider, String calendarFieldName) {
 		if (eventProvider != null) {
 			this.calendarEventProvider = eventProvider;
 		}

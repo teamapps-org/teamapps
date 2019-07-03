@@ -1,13 +1,11 @@
 package org.teamapps.ux.component.calendar;
 
-import org.teamapps.ux.component.template.BaseTemplateRecord;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SimpleCalendarModel<PAYLOAD> extends AbstractCalendarModel<BaseTemplateRecord<PAYLOAD>> {
+public class SimpleCalendarModel<PAYLOAD> extends AbstractCalendarModel<SimpleCalendarEvent<PAYLOAD>> {
 
 	private List<SimpleCalendarEvent<PAYLOAD>> events;
 
@@ -20,9 +18,9 @@ public class SimpleCalendarModel<PAYLOAD> extends AbstractCalendarModel<BaseTemp
 	}
 
 	@Override
-	public List<CalendarEvent<BaseTemplateRecord<PAYLOAD>>> getEventsForInterval(Instant start, Instant end) {
+	public List<SimpleCalendarEvent<PAYLOAD>> getEventsForInterval(Instant start, Instant end) {
 		return events.stream()
-				.filter(event -> event.getEndAsLong() >= start.toEpochMilli() && event.getStartAsLong() < end.toEpochMilli())
+				.filter(event -> event.getEnd() >= start.toEpochMilli() && event.getStart() < end.toEpochMilli())
 				.collect(Collectors.toList());
 	}
 

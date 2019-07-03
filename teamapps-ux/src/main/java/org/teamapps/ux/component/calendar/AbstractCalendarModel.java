@@ -21,12 +21,12 @@ package org.teamapps.ux.component.calendar;
 
 import org.teamapps.event.Event;
 
-public abstract class AbstractCalendarModel<RECORD> implements CalendarModel<RECORD> {
+public abstract class AbstractCalendarModel<CEVENT extends CalendarEvent> implements CalendarModel<CEVENT> {
 
 	public Event<Void> onCalendarDataChanged = new Event<>();
 
 	@Override
-	public Event<Void> getOnCalendarDataChanged() {
+	public Event<Void> onCalendarDataChanged() {
 		return onCalendarDataChanged;
 	}
 	

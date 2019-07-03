@@ -28,6 +28,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class SessionConfiguration {
@@ -43,6 +44,10 @@ public class SessionConfiguration {
 	private boolean optimizedForTouch = false;
 	private String iconPath = "icons";
 	private StylingTheme theme = StylingTheme.DEFAULT;
+
+	private DateTimeFormatter dateFormatter;
+	private DateTimeFormatter timeFormatter;
+	private DateTimeFormatter dateTimeFormatter;
 
 	public static SessionConfiguration createDefault() {
 		return new SessionConfiguration();
@@ -106,6 +111,8 @@ public class SessionConfiguration {
 
 	public void setDateFormat(String dateFormat) {
 		this.dateFormat = dateFormat;
+		this.dateFormatter = null;
+		this.dateTimeFormatter = null;
 	}
 
 	public String getTimeFormat() {
@@ -114,6 +121,8 @@ public class SessionConfiguration {
 
 	public void setTimeFormat(String timeFormat) {
 		this.timeFormat = timeFormat;
+		this.timeFormatter = null;
+		this.dateTimeFormatter = null;
 	}
 
 	public DayOfWeek getFirstDayOfWeek() {
@@ -162,5 +171,26 @@ public class SessionConfiguration {
 
 	public void setTheme(StylingTheme theme) {
 		this.theme = theme;
+	}
+
+	public DateTimeFormatter getDateFormatter() {
+		if (dateFormatter == null) {
+			dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
+		}
+		return dateFormatter;
+	}
+
+	public DateTimeFormatter getTimeFormatter() {
+		if (timeFormatter == null) {
+			timeFormatter = DateTimeFormatter.ofPattern(timeFormat);
+		}
+		return timeFormatter;
+	}
+
+	public DateTimeFormatter getDateTimeFormatter() {
+		if (dateTimeFormatter == null) {
+			dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat + " " + timeFormat);
+		}
+		return dateTimeFormatter;
 	}
 }

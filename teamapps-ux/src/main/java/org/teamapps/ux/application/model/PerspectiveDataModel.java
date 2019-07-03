@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.application.model;
 
+import org.teamapps.ux.component.calendar.AbstractCalendarEvent;
 import org.teamapps.ux.component.calendar.CalendarEvent;
 import org.teamapps.ux.component.calendar.CalendarModel;
 import org.teamapps.ux.component.infiniteitemview.InfiniteItemViewModel;
@@ -41,7 +42,7 @@ public interface PerspectiveDataModel<ENTITY> {
 
 	TreeNodeInfoExtractor<ENTITY> getTreeNodeParentExtractor(String parentPropertyName);
 
-	CalendarModel<ENTITY> getCalendarModel(Function<ENTITY, CalendarEvent<ENTITY>> eventProvider, String calendarFieldName);
+	CalendarModel<CalendarEvent> getCalendarModel(Function<ENTITY, AbstractCalendarEvent> eventProvider, String calendarFieldName);
 
 
 }
