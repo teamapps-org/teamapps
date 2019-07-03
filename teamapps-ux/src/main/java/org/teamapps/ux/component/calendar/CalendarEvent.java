@@ -36,42 +36,16 @@ public class CalendarEvent<RECORD> {
 
 	private RECORD record;
 
-	public CalendarEvent(Instant start, Instant end, String title, boolean allDay, RECORD record) {
+	public CalendarEvent(Instant start, Instant end, RECORD record) {
 		this.start = start.toEpochMilli();
 		this.end = end.toEpochMilli();
-		this.allDay = allDay;
 		this.record = record;
 	}
 
-	public CalendarEvent(Instant start, Instant end, String title, boolean allDay) {
-		this(start, end, title, allDay, null);
-	}
-
-	public CalendarEvent(Instant start, Instant end, String title, RECORD record) {
-		this(start, end, title, false, record);
-	}
-
-	public CalendarEvent(Instant start, Instant end, String title) {
-		this(start, end, title, false, null);
-	}
-
-	public CalendarEvent(long start, long end, String title, boolean allDay, RECORD record) {
+	public CalendarEvent(long start, long end, RECORD record) {
 		this.start = start;
 		this.end = end;
-		this.allDay = allDay;
 		this.record = record;
-	}
-
-	public CalendarEvent(long start, long end, String title, boolean allDay) {
-		this(start, end, title, allDay, null);
-	}
-
-	public CalendarEvent(long start, long end, String title, RECORD record) {
-		this(start, end, title, false, record);
-	}
-
-	public CalendarEvent(long start, long end, String title) {
-		this(start, end, title, false, null);
 	}
 
 	@Override
@@ -96,12 +70,14 @@ public class CalendarEvent<RECORD> {
 		return start;
 	}
 
-	public void setStart(long start) {
+	public CalendarEvent<RECORD> setStart(long start) {
 		this.start = start;
+		return this;
 	}
 
-	public void setStart(Instant start) {
+	public CalendarEvent<RECORD> setStart(Instant start) {
 		this.start = start.toEpochMilli();
+		return this;
 	}
 
 	public Instant getEnd() {
@@ -112,56 +88,62 @@ public class CalendarEvent<RECORD> {
 		return end;
 	}
 
-	public void setEnd(long end) {
+	public CalendarEvent<RECORD> setEnd(long end) {
 		this.end = end;
+		return this;
 	}
 
 	public boolean isAllDay() {
 		return allDay;
 	}
 
-	public void setAllDay(boolean allDay) {
+	public CalendarEvent<RECORD> setAllDay(boolean allDay) {
 		this.allDay = allDay;
+		return this;
 	}
 
 	public boolean isAllowDragOperations() {
 		return allowDragOperations;
 	}
 
-	public void setAllowDragOperations(boolean allowDragOperations) {
+	public CalendarEvent<RECORD> setAllowDragOperations(boolean allowDragOperations) {
 		this.allowDragOperations = allowDragOperations;
+		return this;
 	}
 
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
 
-	public void setBackgroundColor(Color backgroundColor) {
+	public CalendarEvent<RECORD> setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
+		return this;
 	}
 
 	public Color getBorderColor() {
 		return borderColor;
 	}
 
-	public void setBorderColor(Color borderColor) {
+	public CalendarEvent<RECORD> setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
+		return this;
 	}
 
 	public CalendarEventRenderingStyle getRendering() {
 		return rendering;
 	}
 
-	public void setRendering(CalendarEventRenderingStyle rendering) {
+	public CalendarEvent<RECORD> setRendering(CalendarEventRenderingStyle rendering) {
 		this.rendering = rendering;
+		return this;
 	}
 
 	public RECORD getRecord() {
 		return record;
 	}
 
-	public void setRecord(RECORD record) {
-
+	public CalendarEvent<RECORD> setRecord(RECORD record) {
 		this.record = record;
+		return this;
 	}
 }
