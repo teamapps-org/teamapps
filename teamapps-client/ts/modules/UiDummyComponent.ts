@@ -19,15 +19,13 @@
  */
 
 import * as moment from "moment-timezone";
-
-import Moment = moment.Moment;
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiDummyComponent_ClickedEvent, UiDummyComponentCommandHandler, UiDummyComponentConfig, UiDummyComponentEventSource} from "../generated/UiDummyComponentConfig";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
+import Moment = moment.Moment;
 
 export class UiDummyComponent extends UiComponent<UiDummyComponentConfig> implements UiDummyComponentCommandHandler, UiDummyComponentEventSource {
 
@@ -50,7 +48,9 @@ export class UiDummyComponent extends UiComponent<UiDummyComponentConfig> implem
 		this.$panel = parseHtml('<div class="UiDummyComponent" id="' + config.id + '"></div>');
 		this.$panel.addEventListener("click", () => {
 			this.clickCount++;
-			this.onClicked.fire(EventFactory.createUiDummyComponent_ClickedEvent(this.getId(), this.clickCount));
+			this.onClicked.fire({
+				clickCount: this.clickCount
+			});
 			this.updateContent();
 		});
 		this.$panel.addEventListener('click', () => {

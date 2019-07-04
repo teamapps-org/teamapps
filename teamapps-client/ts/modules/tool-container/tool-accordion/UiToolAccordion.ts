@@ -30,9 +30,6 @@ import {enterFullScreen, exitFullScreen, insertAfter, isFullScreen, parseHtml, p
 import {UiToolAccordionCommandHandler, UiToolAccordionConfig, UiToolAccordionEventSource} from "../../../generated/UiToolAccordionConfig";
 import {AbstractUiToolContainer_ToolbarButtonClickEvent, AbstractUiToolContainer_ToolbarDropDownItemClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {EventFactory} from "../../../generated/EventFactory";
-import {UiColorConfig} from "../../../generated/UiColorConfig";
-import {createUiColorCssString} from "../../util/CssFormatUtil";
 import {UiComponent} from "../../UiComponent";
 import {UiItemView} from "../../UiItemView";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
@@ -236,7 +233,11 @@ class UiButtonGroup {
 				}
 			}
 
-			this.toolAccordion.onToolbarButtonClick.fire(EventFactory.createAbstractUiToolContainer_ToolbarButtonClickEvent(this.toolAccordionId, this.config.groupId, button.config.buttonId, dropdownClickInfo));
+			this.toolAccordion.onToolbarButtonClick.fire({
+				groupId: this.config.groupId,
+				buttonId: button.config.buttonId,
+				dropDownClickInfo: dropdownClickInfo
+			});
 		});
 		this.getMainDomElement().addEventListener("focusout", (e) => {
 			if ((e.target as HTMLElement).classList.contains("toolbar-button-wrapper")) {
@@ -352,7 +353,12 @@ class UiButtonGroup {
 		if (component != null) {
 			if (component instanceof UiItemView) {
 				component.onItemClicked.addListener(eventObject => {
-					this.toolAccordion.onToolbarDropDownItemClick.fire(EventFactory.createAbstractUiToolContainer_ToolbarDropDownItemClickEvent(this.toolAccordionId, this.config.groupId, button.config.buttonId, eventObject.groupId, eventObject.itemId));
+					this.toolAccordion.onToolbarDropDownItemClick.fire({
+						groupId: this.config.groupId,
+						buttonId: button.config.buttonId,
+						dropDownGroupId: eventObject.groupId,
+						dropDownItemId: eventObject.itemId
+					});
 				});
 			}
 			if (button.$dropDown != null) {

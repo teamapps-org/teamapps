@@ -38,7 +38,6 @@ import {FileUploader} from "./util/FileUploader";
 import {ProgressBar} from "./micro-components/ProgressBar";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import * as log from "loglevel";
-import {EventFactory} from "../generated/EventFactory";
 import {createUiNewChatMessageConfig} from "../generated/UiNewChatMessageConfig";
 import {createUiChatNewFileConfig} from "../generated/UiChatNewFileConfig";
 
@@ -115,12 +114,14 @@ export class UiChatInput extends UiComponent<UiChatInputConfig> implements UiCha
 	}
 
 	private send() {
-		this.onMessageSent.fire(EventFactory.createUiChatInput_MessageSentEvent(this.getId(), createUiNewChatMessageConfig({
-			text: this.$textInput.value,
-			uploadedFiles: this.uploadItems
-				.filter(item => item.state === UploadState.SUCCESS)
-				.map(item => createUiChatNewFileConfig({uploadedFileUuid: item.uploadedFileUuid, fileName: item.file.name}))
-		})));
+		this.onMessageSent.fire({
+			message: createUiNewChatMessageConfig({
+				text: this.$textInput.value,
+				uploadedFiles: this.uploadItems
+					.filter(item => item.state === UploadState.SUCCESS)
+					.map(item => createUiChatNewFileConfig({uploadedFileUuid: item.uploadedFileUuid, fileName: item.file.name}))
+			})
+		});
 		this.$uploadItems.innerHTML = "";
 		this.uploadItems = [];
 		this.$textInput.value = "";

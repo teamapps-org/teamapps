@@ -121,7 +121,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		} else {
 			this.components[component.getId()].component = component;
 		}
-		EventRegistrator.registerForEvents(component, component.getTeamAppsType(), this.fireEvent);
+		EventRegistrator.registerForEvents(component, component.getTeamAppsType(), this.fireEvent, {componentId: component.getId()});
 	}
 
 	public createAndRegisterComponent(config: UiComponentConfig) {

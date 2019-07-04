@@ -26,7 +26,6 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiChartNamedDataPointConfig} from "../generated/UiChartNamedDataPointConfig";
 import * as d3 from "d3"
-import {EventFactory} from "../generated/EventFactory";
 import {UiColorConfig} from '../generated/UiColorConfig';
 import {UiDataPointWeighting} from '../generated/UiDataPointWeighting';
 import {UiChartLegendStyle} from "../generated/UiChartLegendStyle";
@@ -53,7 +52,9 @@ export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieCh
 			.container(htmlDivElement)
 			.data(this.config)
 			.onDataPointClicked((name: string) => {
-				this.onDataPointClicked.fire(EventFactory.createUiPieChart_DataPointClickedEvent(this.getId(), name));
+				this.onDataPointClicked.fire({
+					dataPointName: name
+				});
 			})
 			.render();
 	}

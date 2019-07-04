@@ -30,11 +30,9 @@ import {executeWhenAttached} from "./util/ExecuteWhenAttached";
 import {UiPanel_HeaderComponentMinimizationPolicy, UiPanel_WindowButtonClickedEvent, UiPanelCommandHandler, UiPanelConfig, UiPanelEventSource,} from "../generated/UiPanelConfig";
 import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {createUiColorCssString} from "./util/CssFormatUtil";
 import {StaticIcons} from "./util/StaticIcons";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {EventFactory} from "../generated/EventFactory";
 import {insertBefore, maximizeComponent, outerWidthIncludingMargins, parseHtml, prependChild} from "./Common";
 
 interface HeaderField {
@@ -152,7 +150,9 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		});
 		this.orderedDefaultToolButtonTypes.forEach(windowButtonType => {
 			this.defaultToolButtons[windowButtonType].onClicked.addListener(() => {
-				this.onWindowButtonClicked.fire(EventFactory.createUiPanel_WindowButtonClickedEvent(this.getId(), windowButtonType));
+				this.onWindowButtonClicked.fire({
+					windowButton: windowButtonType
+				});
 			});
 		});
 		this.setWindowButtons(config.windowButtons);

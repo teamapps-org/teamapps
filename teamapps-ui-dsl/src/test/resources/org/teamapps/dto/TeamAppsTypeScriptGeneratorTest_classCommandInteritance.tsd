@@ -29,6 +29,5 @@ export interface CEventSource extends BEventSource, AEventSource {
 }
 
 export interface C_Z3Event extends UiEvent {
-	_type: "C.z3";
 }
 

@@ -25,7 +25,6 @@ import {applyDisplayMode, boundSelection, css, parseHtml} from "./Common";
 import {executeWhenAttached} from "./util/ExecuteWhenAttached";
 import {UiImageCropper_SelectionChangedEvent, UiImageCropperCommandHandler, UiImageCropperConfig, UiImageCropperEventSource} from "../generated/UiImageCropperConfig";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiImageCropperSelectionConfig, UiImageCropperSelectionConfig} from "../generated/UiImageCropperSelectionConfig";
 import {UiImageCropperSelectionMode} from "../generated/UiImageCropperSelectionMode";
@@ -95,7 +94,9 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 			
 			this.selection = this.boundSelection();
 			this.updateCroppingFramePosition();
-			this.onSelectionChanged.fire(EventFactory.createUiImageCropper_SelectionChangedEvent(this.getId(), this.selection));
+			this.onSelectionChanged.fire({
+				selection: this.selection
+			});
 		}
 	}
 
@@ -110,7 +111,9 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 		this.logger.debug("selection: ", this.selection);
 		this.selection = this.boundSelection();
 		this.updateCroppingFramePosition();
-		this.onSelectionChanged.fire(EventFactory.createUiImageCropper_SelectionChangedEvent(this.getId(), this.selection));
+		this.onSelectionChanged.fire({
+			selection: this.selection
+		});
 	}
 
 	private boundSelection() {

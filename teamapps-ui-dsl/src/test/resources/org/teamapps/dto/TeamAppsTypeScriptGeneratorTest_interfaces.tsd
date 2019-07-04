@@ -24,7 +24,6 @@ export interface AEventSource {
 }
 
 export interface A_YEvent extends UiEvent {
-	_type: "A.y";
 	y: string
 }
 

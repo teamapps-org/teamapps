@@ -90,8 +90,6 @@ public class TeamAppsTypeScriptGenerator {
         generateCommandExecutor(model.getCommandDeclarations(), new FileWriter(new File(parentDir, "CommandExecutor.ts")));
         generateEventRegistrator(model.getAllClassesAndInterfacesWithEvents(), new FileWriter(new File(parentDir, "EventRegistrator.ts")));
 
-        generateEventFactory(model.getAllClassesAndInterfacesWithEvents(), model.findAllClassesInterfacesAndEnumsReferencedByEvents(), new FileWriter(new File(parentDir, "EventFactory.ts")));
-        generateSubEventFactory(model.getAllClassesAndInterfacesWithSubEvents(), model.findAllClassesInterfacesAndEnumsReferencedBySubEvents(), new FileWriter(new File(parentDir, "SubEventFactory.ts")));
         generateEventBaseDefinition(model.getEventDeclarations(), new FileWriter(new File(parentDir, "UiEvent.ts")));
 
 //	    generateSubCommandBaseDefinition(new FileWriter(new File(parentDir, "UiSubCommand.ts")));
@@ -147,24 +145,6 @@ public class TeamAppsTypeScriptGenerator {
                 .add("name", "SubCommandExecutor")
                 .add("nonStaticCommands", commandDeclarationContexts)
                 .add("staticCommands", Collections.emptyList());
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
-    public void generateEventFactory(List<ParserRuleContext> allClassesAndInterfacesWithEvents, List<ParserRuleContext> allClassesInterfacesAndEnumsReferencedByEvents, Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("eventFactory")
-                .add("allClassesAndInterfacesWithEvents", allClassesAndInterfacesWithEvents)
-                .add("allClassesInterfacesAndEnumsReferencedByEvents", allClassesInterfacesAndEnumsReferencedByEvents);
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
-    public void generateSubEventFactory(List<ParserRuleContext> allClassesAndInterfacesWithSubEvents, List<ParserRuleContext> allClassesInterfacesAndEnumsReferencedBySubEvents, Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("subEventFactory")
-                .add("allClassesAndInterfacesWithSubEvents", allClassesAndInterfacesWithSubEvents)
-                .add("allClassesInterfacesAndEnumsReferencedBySubEvents", allClassesInterfacesAndEnumsReferencedBySubEvents);
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();

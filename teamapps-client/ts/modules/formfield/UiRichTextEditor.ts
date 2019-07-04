@@ -26,8 +26,8 @@ import {
 	UiRichTextEditor_ImageUploadStartedEvent,
 	UiRichTextEditor_ImageUploadSuccessfulEvent,
 	UiRichTextEditor_ImageUploadTooLargeEvent,
-	UiRichTextEditorConfig,
 	UiRichTextEditorCommandHandler,
+	UiRichTextEditorConfig,
 	UiRichTextEditorEventSource
 } from "../../generated/UiRichTextEditorConfig";
 import * as tinymce from 'tinymce';
@@ -53,7 +53,6 @@ import {UiToolbarVisibilityMode} from "../../generated/UiToolbarVisibilityMode";
 import {UiSpinner} from "../micro-components/UiSpinner";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
-import {EventFactory} from "../../generated/EventFactory";
 import {parseHtml, removeTags} from "../Common";
 
 
@@ -155,7 +154,11 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			for (let i = 0; i < files.length; i++) {
 				let file = files.item(i);
 				if (file.size > this.maxImageFileSizeInBytes) {
-					this.onImageUploadTooLarge.fire(EventFactory.createUiRichTextEditor_ImageUploadTooLargeEvent(this.getId(), file.name, file.type, file.size));
+					this.onImageUploadTooLarge.fire({
+						fileName: file.name,
+						mimeType: file.type,
+						sizeInBytes: file.size
+					});
 				} else {
 					let fileReader = new FileReader();
 					fileReader.onload = (e) => {
@@ -336,9 +339,13 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					});
 					editor.on('keydown', (e) => {
 						if (e.keyCode === keyCodes.escape) {
-							this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
+							this.onSpecialKeyPressed.fire({
+								key: UiSpecialKey.ESCAPE
+							});
 						} else if (e.keyCode === keyCodes.enter) {
-							this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
+							this.onSpecialKeyPressed.fire({
+								key: UiSpecialKey.ENTER
+							});
 						}
 					});
 					editor.on('undo redo', (e) => {
@@ -363,7 +370,12 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 				images_upload_handler: (blobInfo: { base64: () => string, blob: () => Blob, blobUri: () => string, filename: () => string, id: () => string, name: () => string, uri: () => string }, success, failure) => {
 					this.runningImageUploadsCount++;
 					this.updateSpinnerVisibility();
-					this.onImageUploadStarted.fire(EventFactory.createUiRichTextEditor_ImageUploadStartedEvent(this.getId(), blobInfo.filename(), blobInfo.blob().type, blobInfo.blob().size, this.runningImageUploadsCount));
+					this.onImageUploadStarted.fire({
+						fileName: blobInfo.filename(),
+						mimeType: blobInfo.blob().type,
+						sizeInBytes: blobInfo.blob().size,
+						incompleteUploadsCount: this.runningImageUploadsCount
+					});
 
 					let upload = (isFirstUpload: boolean) => {
 						let xhr: XMLHttpRequest;
@@ -379,7 +391,12 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 							} else {
 								this.runningImageUploadsCount--;
 								this.updateSpinnerVisibility();
-								this.onImageUploadFailed.fire(EventFactory.createUiRichTextEditor_ImageUploadFailedEvent(this.getId(), blobInfo.filename(), blobInfo.blob().type, blobInfo.blob().size, this.runningImageUploadsCount));
+								this.onImageUploadFailed.fire({
+									name: blobInfo.filename(),
+									mimeType: blobInfo.blob().type,
+									sizeInBytes: blobInfo.blob().size,
+									incompleteUploadsCount: this.runningImageUploadsCount
+								});
 								this.editor.undoManager.transact(() => {
 									this.$main.querySelector<HTMLElement>(`:scope [src='${blobInfo.blobUri()}']`).remove();
 								});
@@ -395,7 +412,13 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 								this.imageUploadSuccessCallbacksByUuid[fileUuid] = success;
 								this.runningImageUploadsCount--;
 								this.updateSpinnerVisibility();
-								this.onImageUploadSuccessful.fire(EventFactory.createUiRichTextEditor_ImageUploadSuccessfulEvent(this.getId(), fileUuid, blobInfo.filename(), blobInfo.blob().type, blobInfo.blob().size, this.runningImageUploadsCount));
+								this.onImageUploadSuccessful.fire({
+									fileUuid: fileUuid,
+									name: blobInfo.filename(),
+									mimeType: blobInfo.blob().type,
+									sizeInBytes: blobInfo.blob().size,
+									incompleteUploadsCount: this.runningImageUploadsCount
+								});
 							}
 						};
 						xhr.onerror = () => {
@@ -419,7 +442,9 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 
 	private fireTextInputEvent() {
 		if (this.mayFireChangeEvents()) {
-			this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.getTransientValue()));
+			this.onTextInput.fire({
+				enteredString: this.getTransientValue()
+			});
 		}
 	}
 

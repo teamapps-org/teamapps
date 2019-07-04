@@ -34,7 +34,6 @@ import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
 import {createUiWorkSpaceLayoutSplitItemConfig} from "../../generated/UiWorkSpaceLayoutSplitItemConfig";
 import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
 import {createUiWorkSpaceLayoutViewGroupItemConfig, UiWorkSpaceLayoutViewGroupItemConfig} from "../../generated/UiWorkSpaceLayoutViewGroupItemConfig";
-import {EventFactory} from "../../generated/EventFactory";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
@@ -461,7 +460,9 @@ export class LocalViewContainer implements ViewContainer {
 			if (tabPanelItem.tabs.length === 0) {
 				this.setViewGroupPanelState2(tabPanelItem, UiViewGroupPanelState.NORMAL, false);
 			}
-			this.workSpaceLayout.onViewClosed.fire(EventFactory.createUiWorkSpaceLayout_ViewClosedEvent(this.workSpaceLayoutId, tabId));
+			this.workSpaceLayout.onViewClosed.fire({
+				viewName: tabId
+			});
 		});
 		return tabPanelItem;
 	}
@@ -470,14 +471,20 @@ export class LocalViewContainer implements ViewContainer {
 	private tabSelected(eventObject: { tabPanelItemId: string, tabId: string }, tabPanelItem: TabPanelItem) {
 		let otherViewNames = tabPanelItem.tabs.map(tab => tab.viewName).filter(otherViewName => otherViewName !== eventObject.tabId);
 		if (!this.viewEventsSuppressed) {
-			this.workSpaceLayout.onViewSelected.fire(EventFactory.createUiWorkSpaceLayout_ViewSelectedEvent(this.workSpaceLayoutId, eventObject.tabPanelItemId, eventObject.tabId, otherViewNames));
+			this.workSpaceLayout.onViewSelected.fire({
+				viewGroupId: eventObject.tabPanelItemId,
+				viewName: eventObject.tabId,
+				siblingViewNames: otherViewNames
+			});
 		}
 	}
 
 	@bind
 	private tabNeedsRefresh(eventObject: { tabId: string }) {
 		if (!this.viewEventsSuppressed) {
-			this.workSpaceLayout.onViewNeedsRefresh.fire(EventFactory.createUiWorkSpaceLayout_ViewNeedsRefreshEvent(this.workSpaceLayoutId, eventObject.tabId));
+			this.workSpaceLayout.onViewNeedsRefresh.fire({
+				viewName: eventObject.tabId
+			});
 		}
 	}
 
@@ -794,7 +801,9 @@ export class LocalViewContainer implements ViewContainer {
 				if (selectedTabId != null) { // might be completely empty!
 					let selectedView: View = tabPanelItem.tabs.filter(tab => tab.viewName === selectedTabId)[0];
 					if (selectedView.component == null && selectedView.lazyLoading) {
-						this.workSpaceLayout.onViewNeedsRefresh.fire(EventFactory.createUiWorkSpaceLayout_ViewNeedsRefreshEvent(this.workSpaceLayoutId, selectedTabId));
+						this.workSpaceLayout.onViewNeedsRefresh.fire({
+							viewName: selectedTabId
+						});
 					}
 				}
 			});

@@ -25,7 +25,6 @@ import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiMediaTrackGraph_HandleTimeSelectionEvent, UiMediaTrackGraphCommandHandler, UiMediaTrackGraphConfig, UiMediaTrackGraphEventSource} from "../generated/UiMediaTrackGraphConfig";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
@@ -365,7 +364,10 @@ export class UiMediaTrackGraph extends UiComponent<UiMediaTrackGraphConfig> impl
 			start = (<Date><any>this.brush.extent()[0]).getTime();
 			end = (<Date><any>this.brush.extent()[1]).getTime();
 		}
-		this.onHandleTimeSelection.fire(EventFactory.createUiMediaTrackGraph_HandleTimeSelectionEvent(this.getId(), start, end));
+		this.onHandleTimeSelection.fire({
+			start: start,
+			end: end
+		});
 	}
 
 	public setCursorPosition(time: number) {

@@ -19,12 +19,11 @@
  */
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {UiLabel_ClickedEvent, UiLabelConfig, UiLabelCommandHandler, UiLabelEventSource} from "../../generated/UiLabelConfig";
+import {UiLabel_ClickedEvent, UiLabelCommandHandler, UiLabelConfig, UiLabelEventSource} from "../../generated/UiLabelConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {EventFactory} from "../../generated/EventFactory";
-import {parseHtml, prependChild} from "../Common";
+import {parseHtml} from "../Common";
 
 export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEventSource, UiLabelCommandHandler {
 	public readonly onClicked: TeamAppsEvent<UiLabel_ClickedEvent> = new TeamAppsEvent<UiLabel_ClickedEvent>(this);
@@ -41,7 +40,7 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 		this.$caption = this.$main.querySelector<HTMLElement>(":scope .caption");
 		this.setIcon(config.icon);
 		this.$main.addEventListener('click',() => {
-			this.onClicked.fire(EventFactory.createUiLabel_ClickedEvent(this.getId()));
+			this.onClicked.fire({});
 			if (this.targetField != null) {
 				this.targetField.focus();
 			}

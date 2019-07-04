@@ -35,7 +35,6 @@ import {
 import {FileUploader} from "../../util/FileUploader";
 import {ProgressIndicator} from "../../micro-components/ProgressIndicator";
 import {ProgressCircle} from "../../micro-components/ProgressCircle";
-import {EventFactory} from "../../../generated/EventFactory";
 
 /**
  * @author Yann Massard (yamass@gmail.com)
@@ -215,28 +214,49 @@ export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> im
 	private handleFiles(files: FileList) {
 		const file = files[0];
 
-		this.onUploadInitiatedByUser.fire(EventFactory.createUiPictureChooser_UploadInitiatedByUserEvent(this.getId(), file.name, file.type, file.size));
+		this.onUploadInitiatedByUser.fire({
+			fileName: file.name,
+			mimeType: file.type,
+			sizeInBytes: file.size
+		});
 
 		this.$progressWrapper.classList.remove("hidden");
 
 		if (file.size > this.maxFileSize) {
-			this.onUploadTooLarge.fire(EventFactory.createUiPictureChooser_UploadTooLargeEvent(this.getId(), file.name, file.type, file.size));
+			this.onUploadTooLarge.fire({
+				fileName: file.name,
+				mimeType: file.type,
+				sizeInBytes: file.size
+			});
 			this.progressIndicator.setErrorMessage(formatString(this.fileTooLargeMessage, humanReadableFileSize(this.maxFileSize)));
 			return;
 		}
 
-		this.onUploadStarted.fire(EventFactory.createUiPictureChooser_UploadStartedEvent(this.getId(), file.name, file.type, file.size));
+		this.onUploadStarted.fire({
+			fileName: file.name,
+			mimeType: file.type,
+			sizeInBytes: file.size
+		});
 
 		this.uploader = new FileUploader();
 		this.uploader.upload(file, this.uploadUrl);
 		this.uploader.onProgress.addListener(progress => this.progressIndicator.setProgress(progress));
 		this.uploader.onSuccess.addListener(fileUuid => {
-			this.onUploadSuccessful.fire(EventFactory.createUiPictureChooser_UploadSuccessfulEvent(this.getId(), file.name, file.type, file.size, fileUuid));
+			this.onUploadSuccessful.fire({
+				fileName: file.name,
+				mimeType: file.type,
+				sizeInBytes: file.size,
+				uploadedFileUuid: fileUuid
+			});
 			this.$progressWrapper.classList.add("hidden");
 		});
 		this.uploader.onError.addListener(() => {
 			this.progressIndicator.setErrorMessage(this.uploadErrorMessage);
-			this.onUploadFailed.fire(EventFactory.createUiPictureChooser_UploadFailedEvent(this.getId(), file.name, file.type, file.size));
+			this.onUploadFailed.fire({
+				fileName: file.name,
+				mimeType: file.type,
+				sizeInBytes: file.size
+			});
 		});
 		this.uploader.onComplete.addListener(() => {
 			this.uploader = null;

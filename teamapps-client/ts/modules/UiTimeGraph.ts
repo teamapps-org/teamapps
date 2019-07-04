@@ -44,7 +44,6 @@ import {
 	UiTimeGraphEventSource
 } from "../generated/UiTimeGraphConfig";
 import {createUiLongIntervalConfig, UiLongIntervalConfig} from "../generated/UiLongIntervalConfig";
-import {EventFactory} from "../generated/EventFactory";
 import {BrushBehavior} from "d3-brush";
 import {UiLineChartCurveType} from "../generated/UiLineChartCurveType";
 import {UiLineChartLineFormatConfig} from "../generated/UiLineChartLineFormatConfig";
@@ -273,7 +272,10 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 				if (uncoveredInterval.start == null || isNaN(uncoveredInterval.start) || uncoveredInterval.end == null || isNaN(uncoveredInterval.end)) {
 					this.logger.error("Uncovered interval is corrupt. Will not retrieve data!");
 				} else {
-					this.onDataNeeded.fire(EventFactory.createUiTimeGraph_DataNeededEvent(this.getId(), zoomLevel, createUiLongIntervalConfig(uncoveredInterval.start, uncoveredInterval.end)));
+					this.onDataNeeded.fire({
+						zoomLevelIndex: zoomLevel,
+						neededIntervalX: createUiLongIntervalConfig(uncoveredInterval.start, uncoveredInterval.end)
+					});
 					this.zoomLevelIntervalManagers[zoomLevel].addInterval(new Interval(uncoveredInterval.start, uncoveredInterval.end));
 				}
 			}
@@ -332,10 +334,14 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 		let brushSelection = d3.brushSelection(this.$brush.node());
 		if (brushSelection != null) {
 			this.xSelection = createUiLongIntervalConfig(+transformedScaleX.invert(brushSelection[0] as number), +transformedScaleX.invert(brushSelection[1] as number));
-			this.onIntervalSelected.fire(EventFactory.createUiTimeGraph_IntervalSelectedEvent(this.getId(), this.xSelection));
+			this.onIntervalSelected.fire({
+				intervalX: this.xSelection
+			});
 		} else {
 			this.xSelection = null;
-			this.onIntervalSelected.fire(EventFactory.createUiTimeGraph_IntervalSelectedEvent(this.getId(), null));
+			this.onIntervalSelected.fire({
+				intervalX: null
+			});
 		}
 	}
 
@@ -451,7 +457,10 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 		let transformedScaleX = this.getTransformedScaleX();
 		let domain = transformedScaleX.domain();
 		let currentZoomLevel = this.getCurrentZoomLevel();
-		this.onZoomed.fire(EventFactory.createUiTimeGraph_ZoomedEvent(this.getId(), createUiLongIntervalConfig(+domain[0], +domain[1]), currentZoomLevel));
+		this.onZoomed.fire({
+			intervalX: createUiLongIntervalConfig(+domain[0], +domain[1]),
+			zoomLevelIndex: currentZoomLevel
+		});
 	}
 
 	@executeWhenAttached()

@@ -34,7 +34,6 @@ import {
 	cssVerticalAlignmentByUiVerticalAlignment
 } from "./util/CssFormatUtil";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import * as log from "loglevel";
 import {UiFormSectionFieldPlacementConfig} from "../generated/UiFormSectionFieldPlacementConfig";
@@ -107,7 +106,10 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 			this.$mainDiv.appendChild(section.getMainDomElement());
 			section.placeFields();
 			section.onCollapsedStateChanged.addListener((collapsed) => {
-				this.onSectionCollapsedStateChanged.fire(EventFactory.createUiGridForm_SectionCollapsedStateChangedEvent(this.getId(), sectionConfig.id, collapsed));
+				this.onSectionCollapsedStateChanged.fire({
+					sectionId: sectionConfig.id,
+					collapsed: collapsed
+				});
 				this.sectionCollapseOverrides[sectionConfig.id] = collapsed;
 			});
 			return section;

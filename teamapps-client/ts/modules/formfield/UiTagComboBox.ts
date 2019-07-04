@@ -19,7 +19,7 @@
  */
 import {defaultTreeQueryFunctionFactory, ResultCallback, trivialMatch, TrivialTagComboBox, TrivialTreeBox, wrapWithDefaultTagWrapper} from "trivial-components";
 
-import {UiTagComboBox_WrappingMode, UiTagComboBoxConfig, UiTagComboBoxCommandHandler, UiTagComboBoxEventSource} from "../../generated/UiTagComboBoxConfig";
+import {UiTagComboBox_WrappingMode, UiTagComboBoxCommandHandler, UiTagComboBoxConfig, UiTagComboBoxEventSource} from "../../generated/UiTagComboBoxConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
@@ -32,7 +32,6 @@ import {UiComboBoxTreeRecordConfig} from "../../generated/UiComboBoxTreeRecordCo
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {isFreeTextEntry, UiComboBox} from "./UiComboBox";
 import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "../Common";
-import {EventFactory} from "../../generated/EventFactory";
 
 export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRecordConfig[]> implements UiTagComboBoxEventSource, UiTagComboBoxCommandHandler {
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent(this, 250);
@@ -65,7 +64,9 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		}
 		let queryFunction = (queryString: string, resultCallback: ResultCallback<NodeWithChildren<UiComboBoxTreeRecordConfig>>) => {
 			this.lastResultCallback = resultCallback;
-			this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), queryString));
+			this.onTextInput.fire({
+				enteredString: queryString
+			});
 			if (localQueryFunction != null) {
 				localQueryFunction(queryString, resultCallback);
 			}
@@ -88,7 +89,9 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 			showTrigger: config.showDropDownButton,
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			lazyChildrenQueryFunction: (node: NodeWithChildren<UiComboBoxTreeRecordConfig>) => {
-				this.onLazyChildDataRequested.fire(EventFactory.createUiComboBox_LazyChildDataRequestedEvent(this.getId(), node.id));
+				this.onLazyChildDataRequested.fire({
+					parentId: node.id
+				});
 			},
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
@@ -119,9 +122,13 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		this.trivialTagComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialTagComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ESCAPE
+				});
 			} else if (e.key === "Enter") {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ENTER
+				});
 			}
 		});
 

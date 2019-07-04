@@ -22,7 +22,6 @@ import {arraysEqual, generateUUID, parseHtml} from "../../Common";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {keyCodes} from "trivial-components";
-import {EventFactory} from "../../../generated/EventFactory";
 import {createUiFileItemConfig, UiFileItemConfig} from "../../../generated/UiFileItemConfig";
 import {
 	UiSimpleFileField_FileItemClickedEvent,
@@ -261,11 +260,18 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 		for (let i = 0; i < numberOfFilesToAdd; i++) {
 			const file = files[i];
 			let fileItem = this.createUploadFileItem();
-			this.onUploadInitiatedByUser.fire(EventFactory.createUiSimpleFileField_UploadInitiatedByUserEvent(this.getId(), fileItem.uuid, file.name, file.type, file.size));
+			this.onUploadInitiatedByUser.fire({
+				uuid: fileItem.uuid,
+				fileName: file.name,
+				mimeType: file.type,
+				sizeInBytes: file.size
+			});
 			this.$fileList.appendChild(fileItem.getMainDomElement());
 			this.fileItems[fileItem.uuid] = fileItem;
 			fileItem.upload(file);
-			this.onUploadStarted.fire(EventFactory.createUiSimpleFileField_UploadStartedEvent(this.getId(), fileItem.uuid));
+			this.onUploadStarted.fire({
+				fileItemUuid: fileItem.uuid
+			});
 		}
 
 		this.updateVisibilities();
@@ -278,28 +284,41 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 			uuid: generateUUID()
 		}, FileItemState.INITIATING, this._context);
 		fileItem.onClick.addListener(() => {
-			this.onFileItemClicked.fire(EventFactory.createUiSimpleFileField_FileItemClickedEvent(this.getId(), fileItem.uuid));
+			this.onFileItemClicked.fire({
+				fileItemUuid: fileItem.uuid
+			});
 		});
 		fileItem.onDeleteButtonClick.addListener(() => {
-			this.onFileItemRemoved.fire(EventFactory.createUiSimpleFileField_FileItemRemovedEvent(this.getId(), fileItem.uuid));
+			this.onFileItemRemoved.fire({
+				fileItemUuid: fileItem.uuid
+			});
 			this.removeFileItem(fileItem.uuid);
 			this.updateVisibilities();
 			this.commit();
 		});
 		fileItem.onUploadTooLarge.addListener(() => {
-			this.onUploadTooLarge.fire(EventFactory.createUiSimpleFileField_UploadTooLargeEvent(this.getId(), fileItem.uuid));
+			this.onUploadTooLarge.fire({
+				fileItemUuid: fileItem.uuid
+			});
 			this.updateVisibilities();
 		});
 		fileItem.onUploadSuccessful.addListener(uploadedFileUuid => {
-			this.onUploadSuccessful.fire(EventFactory.createUiSimpleFileField_UploadSuccessfulEvent(this.getId(), fileItem.uuid, uploadedFileUuid));
+			this.onUploadSuccessful.fire({
+				fileItemUuid: fileItem.uuid,
+				uploadedFileUuid: uploadedFileUuid
+			});
 			this.updateVisibilities();
 		});
 		fileItem.onUploadCanceled.addListener(() => {
-			this.onUploadCanceled.fire(EventFactory.createUiSimpleFileField_UploadCanceledEvent(this.getId(), fileItem.uuid));
+			this.onUploadCanceled.fire({
+				fileItemUuid: fileItem.uuid
+			});
 			this.updateVisibilities();
 		});
 		fileItem.onUploadFailed.addListener(() => {
-			this.onUploadFailed.fire(EventFactory.createUiSimpleFileField_UploadFailedEvent(this.getId(), fileItem.uuid));
+			this.onUploadFailed.fire({
+				fileItemUuid: fileItem.uuid
+			});
 			this.updateVisibilities();
 		});
 		return fileItem;

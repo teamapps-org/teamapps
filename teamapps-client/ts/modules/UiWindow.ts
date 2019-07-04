@@ -31,7 +31,6 @@ import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiToolButton} from "./micro-components/UiToolButton";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiPanel_WindowButtonClickedEvent} from "../generated/UiPanelConfig";
-import {EventFactory} from "../generated/EventFactory";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
 import {animateCSS, css, parseHtml} from "./Common";
 
@@ -72,7 +71,9 @@ export class UiWindow extends UiComponent<UiWindowConfig> implements UiWindowCom
 		}
 		this.panel.getWindowButton(UiWindowButtonType.CLOSE).onClicked.addListener(() => this.close(500));
 		this.panel.onWindowButtonClicked.addListener(eventObject => {
-			return this.onWindowButtonClicked.fire(EventFactory.createUiPanel_WindowButtonClickedEvent(this.getId(), eventObject.windowButton));
+			return this.onWindowButtonClicked.fire({
+				windowButton: eventObject.windowButton
+			});
 		});
 
 		this.setSize(config.width, config.height);

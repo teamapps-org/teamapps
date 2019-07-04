@@ -19,7 +19,7 @@
  */
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiNumberFieldConfig, UiNumberFieldCommandHandler, UiNumberFieldEventSource} from "../../generated/UiNumberFieldConfig";
+import {UiNumberFieldCommandHandler, UiNumberFieldConfig, UiNumberFieldEventSource} from "../../generated/UiNumberFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {Constants, formatNumber, parseHtml} from "../Common";
 import {keyCodes} from "trivial-components";
@@ -28,7 +28,6 @@ import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingFiel
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiNumberFieldSliderMode} from "../../generated/UiNumberFieldSliderMode";
-import {EventFactory} from "../../generated/EventFactory";
 
 export class UiNumberField extends UiField<UiNumberFieldConfig, number> implements UiNumberFieldEventSource, UiNumberFieldCommandHandler {
 
@@ -103,7 +102,9 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
 				this.$field.select();
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ESCAPE
+				});
 			} else if (e.keyCode === keyCodes.up_arrow || e.keyCode == keyCodes.down_arrow) {
 				if (this.getTransientValue() != null) {
 					e.preventDefault(); // no jumping cursor to start or end
@@ -114,7 +115,9 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 				}
 			} else if (e.keyCode === keyCodes.enter) {
 				this.commit();
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ENTER
+				});
 			}
 		});
 
@@ -169,7 +172,9 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	private fireTextInput() {
-		this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.$field.value));
+		this.onTextInput.fire({
+			enteredString: this.$field.value
+		});
 	}
 
 	commit(forceEvenIfNotChanged?: boolean): boolean {

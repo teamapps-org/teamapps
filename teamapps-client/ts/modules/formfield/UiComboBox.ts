@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {defaultTreeQueryFunctionFactory, keyCodes, ResultCallback, TrivialComboBox, trivialMatch, TrivialTreeBox} from "trivial-components";
+import {defaultTreeQueryFunctionFactory, ResultCallback, TrivialComboBox, trivialMatch, TrivialTreeBox} from "trivial-components";
 
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiTextMatchingMode} from "../../generated/UiTextMatchingMode";
@@ -31,7 +31,6 @@ import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiComboBoxTreeRecordConfig} from "../../generated/UiComboBoxTreeRecordConfig";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "../Common";
-import {EventFactory} from "../../generated/EventFactory";
 
 export function isFreeTextEntry(o: UiComboBoxTreeRecordConfig): boolean {
 	return o != null && o.id < 0;
@@ -68,7 +67,9 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		}
 		let queryFunction = (queryString: string, resultCallback: ResultCallback<NodeWithChildren<UiComboBoxTreeRecordConfig>>) => {
 			this.lastResultCallback = resultCallback;
-			this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), queryString));
+			this.onTextInput.fire({
+				enteredString: queryString
+			});
 			if (localQueryFunction != null) {
 				localQueryFunction(queryString, resultCallback);
 			}
@@ -94,7 +95,9 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			showTrigger: config.showDropDownButton,
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			lazyChildrenQueryFunction: (node: NodeWithChildren<UiComboBoxTreeRecordConfig>) => {
-				this.onLazyChildDataRequested.fire(EventFactory.createUiComboBox_LazyChildDataRequestedEvent(this.getId(), node.id));
+				this.onLazyChildDataRequested.fire({
+					parentId: node.id
+				});
 			},
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
@@ -119,9 +122,13 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ESCAPE
+				});
 			} else if (e.key === "Enter") {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ENTER
+				});
 			}
 		});
 

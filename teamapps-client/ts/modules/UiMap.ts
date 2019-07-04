@@ -36,7 +36,6 @@ import {executeWhenAttached} from "./util/ExecuteWhenAttached";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {isGridTemplate} from "./TemplateRegistry";
 import {isUiGlyphIconElement, isUiIconElement, isUiImageElement} from "./util/UiGridTemplates";
-import {EventFactory} from "../generated/EventFactory";
 import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecordConfig";
 import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
 import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
@@ -89,15 +88,22 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		this.leaflet.setView(center, this._config.zoomLevel);
 		this.setMapType(this._config.mapType);
 		this.leaflet.on('click', (event) => {
-			this.onMapClicked.fire(EventFactory.createUiMap_MapClickedEvent(this.getId(), createUiMapLocationConfig((event as any).latlng.lat, (event as any).latlng.lng)));
+			this.onMapClicked.fire({
+				location: createUiMapLocationConfig((event as any).latlng.lat, (event as any).latlng.lng)
+			});
 		});
 		this.leaflet.on('zoomend', (event) => {
-			this.onZoomLevelChanged.fire(EventFactory.createUiMap_ZoomLevelChangedEvent(this.getId(), this.leaflet.getZoom()));
+			this.onZoomLevelChanged.fire({
+				zoomLevel: this.leaflet.getZoom()
+			});
 		});
 		this.leaflet.on('moveend', (event) => {
 			const location = this.leaflet.getCenter();
 			const bounds = this.leaflet.getBounds();
-			this.onLocationChanged.fire(EventFactory.createUiMap_LocationChangedEvent(this.getId(), createUiMapLocationConfig(location.lat, location.lng), createUiMapAreaConfig(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())));
+			this.onLocationChanged.fire({
+				center: createUiMapLocationConfig(location.lat, location.lng),
+				displayedArea: createUiMapAreaConfig(bounds.getNorth(), bounds.getSouth(), bounds.getWest(), bounds.getEast())
+			});
 		});
 	}
 
@@ -185,7 +191,9 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 			icon: divIcon
 		});
 		marker.bindPopup(markerConfig.asString);
-		marker.on("click", event1 => this.onMarkerClicked.fire(EventFactory.createUiMap_MarkerClickedEvent(this.getId(), markerConfig.id)));
+		marker.on("click", event1 => this.onMarkerClicked.fire({
+			markerId: markerConfig.id
+		}));
 		this.markersByClientId[markerConfig.id] = marker;
 		return marker;
 	};

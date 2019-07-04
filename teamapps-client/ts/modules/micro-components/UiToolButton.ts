@@ -22,7 +22,6 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiToolButton_ClickedEvent, UiToolButton_DropDownOpenedEvent, UiToolButtonCommandHandler, UiToolButtonConfig, UiToolButtonEventSource} from "../../generated/UiToolButtonConfig";
 import {UiComponent} from "../UiComponent";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {EventFactory} from "../../generated/EventFactory";
 import {UiDropDown} from "./UiDropDown";
 import {UiItemView} from "../UiItemView";
 import {bind} from "../util/Bind";
@@ -56,13 +55,13 @@ export class UiToolButton extends UiComponent<UiToolButtonConfig> implements UiT
 						const width = this.getMainDomElement().offsetWidth;
 						console.log(width);
 						this.dropDown.open({$reference: this.getMainDomElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
-						this.onDropDownOpened.fire(EventFactory.createUiToolButton_DropDownOpenedEvent(this.getId()));
+						this.onDropDownOpened.fire({});
 						this.getMainDomElement().classList.add("open");
 					} else {
 						this.dropDown.close(); // not needed for clicks, but for keydown!
 					}
 				}
-				this.onClicked.fire(EventFactory.createUiToolButton_ClickedEvent(this.getId()));
+				this.onClicked.fire({});
 			});
 		this.setDropDownComponent(config.dropDownComponent as UiComponent);
 	}
