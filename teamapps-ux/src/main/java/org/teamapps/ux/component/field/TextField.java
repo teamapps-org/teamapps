@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.apache.commons.lang3.StringUtils;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiTextField;
@@ -81,6 +82,11 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
 		defaultHandleTextInputEvent(event);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return StringUtils.isBlank(getValue());
 	}
 
 	@Override

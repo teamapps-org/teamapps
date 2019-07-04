@@ -22,7 +22,7 @@ package org.teamapps.ux.application.validation;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.FieldMessage.Position;
 import org.teamapps.ux.component.field.FieldMessage.Severity;
-import org.teamapps.ux.component.field.FieldMessage.VisibilityMode;
+import org.teamapps.ux.component.field.FieldMessage.Visibility;
 
 public class ValidationMessage  {
 
@@ -51,9 +51,9 @@ public class ValidationMessage  {
         this.fieldMessage = new FieldMessage(severity, message);
     }
 
-    public ValidationMessage(String propertyName, Position position, VisibilityMode visibilityMode, Severity severity, String message) {
+    public ValidationMessage(String propertyName, Position position, Visibility visibility, Severity severity, String message) {
         this.propertyName = propertyName;
-        this.fieldMessage = new FieldMessage(position, visibilityMode, severity, message);
+        this.fieldMessage = new FieldMessage(position, visibility, severity, message);
     }
 
     public String getPropertyName() {
