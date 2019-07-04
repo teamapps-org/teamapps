@@ -29,7 +29,7 @@ public class FieldMessage {
 	private final Severity severity;
 	private final String message;
 	private final Position position;
-	private final VisibilityMode visibilityMode;
+	private final Visibility visibility;
 
 	public enum Severity {
 		INFO,
@@ -52,7 +52,7 @@ public class FieldMessage {
 		}
 	}
 
-	public enum VisibilityMode {
+	public enum Visibility {
 		ALWAYS_VISIBLE,
 		ON_FOCUS,
 		ON_HOVER_OR_FOCUS;
@@ -63,26 +63,31 @@ public class FieldMessage {
 	}
 
 	public FieldMessage(Severity severity, String message) {
-		this(Position.BELOW, VisibilityMode.ON_FOCUS, severity, message);
+		this(null, null, severity, message);
 	}
 
-	public FieldMessage(Position position, VisibilityMode visibilityMode, Severity severity, String message) {
+	public FieldMessage(Position position, Visibility visibility, Severity severity, String message) {
 		this.position = position;
-		this.visibilityMode = visibilityMode;
+		this.visibility = visibility;
 		this.severity = severity;
 		this.message = message;
 	}
 
-	public UiFieldMessage createUiFieldMessage() {
-		return new UiFieldMessage(severity.toUiFieldMessageSeverity(), message, position.toUiFieldMessagePosition(), visibilityMode.toUiFieldMessageVisibilityMode());
+	public UiFieldMessage createUiFieldMessage(Position defaultPosition, Visibility defaultVisibility) {
+		return new UiFieldMessage(
+				severity.toUiFieldMessageSeverity(),
+				message,
+				position != null ? position.toUiFieldMessagePosition(): defaultPosition.toUiFieldMessagePosition(),
+				visibility != null ? visibility.toUiFieldMessageVisibilityMode() : defaultVisibility.toUiFieldMessageVisibilityMode()
+		);
 	}
 
 	public Position getPosition() {
 		return position;
 	}
 
-	public VisibilityMode getVisibilityMode() {
-		return visibilityMode;
+	public Visibility getVisibility() {
+		return visibility;
 	}
 
 	public Severity getSeverity() {
@@ -99,7 +104,7 @@ public class FieldMessage {
 				"severity=" + severity +
 				", message='" + message + '\'' +
 				", position=" + position +
-				", visibilityMode=" + visibilityMode +
+				", visibilityMode=" + visibility +
 				'}';
 	}
 }

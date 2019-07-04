@@ -84,7 +84,7 @@ public class TableColumn {
 		uiTableColumn.setResizeable(resizeable);
 		uiTableColumn.setVisible(visible);
 		uiTableColumn.setHiddenIfOnlyEmptyCellsVisible(hiddenIfOnlyEmptyCellsVisible);
-		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createUiFieldMessage()).collect(Collectors.toList()));
+		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS)).collect(Collectors.toList()));
 		return uiTableColumn;
 	}
 

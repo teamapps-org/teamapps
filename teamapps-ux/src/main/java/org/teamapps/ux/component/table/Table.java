@@ -282,7 +282,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				}
 				List<FieldMessage> messages = new ArrayList<>(cellMessages);
 				messages.addAll(columnMessages);
-				activeEditorField.setFieldMessages(messages);
+				activeEditorField.setCustomFieldMessages(messages);
 				this.onCellEditingStarted.fire(new CellEditingStartedEvent<>(clientRecordCache.getRecordByClientId(editingStartedEvent.getRecordId()), column, cellValue));
 				break;
 			}
@@ -430,7 +430,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	protected void updateColumnMessages(TableColumn tableColumn) {
 		queueCommandIfRendered(() -> new UiTable.SetColumnMessagesCommand(getId(), tableColumn.getPropertyName(), tableColumn.getMessages().stream()
-				.map(message -> message.createUiFieldMessage())
+				.map(message -> message.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
 				.collect(Collectors.toList())));
 	}
 
@@ -458,7 +458,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 					uiRecordId,
 					propertyName,
 					cellMessages.stream()
-							.map(m -> m.createUiFieldMessage())
+							.map(m -> m.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
 							.collect(Collectors.toList())
 			));
 		}
@@ -716,7 +716,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				.collect(Collectors.toMap(
 						entry -> entry.getKey(),
 						entry -> entry.getValue().stream()
-								.map(fieldMessage -> fieldMessage.createUiFieldMessage())
+								.map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
 								.collect(Collectors.toList())
 				));
 	}
