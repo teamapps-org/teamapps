@@ -24,17 +24,11 @@ import {UiDropDown} from "../micro-components/UiDropDown";
 import {UiComponent} from "../UiComponent";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {UiButton_DropDownOpenedEvent, UiButtonCommandHandler, UiButtonConfig, UiButtonEventSource} from "../../generated/UiButtonConfig";
-import {keyCodes} from "trivial-components";
 import {UiField} from "./UiField";
-import {UiColorConfig} from "../../generated/UiColorConfig";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {EventFactory} from "../../generated/EventFactory";
 import {bind} from "../util/Bind";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
-import {getHighestSeverity} from "../micro-components/FieldMessagesPopper";
-import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {parseHtml} from "../Common";
 
 export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonEventSource, UiButtonCommandHandler {
@@ -67,7 +61,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 					if (!this.dropDown.isOpen) {
 						const width = this.getMainInnerDomElement().offsetWidth;
 						this.dropDown.open({$reference: this.getMainInnerDomElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
-						this.onDropDownOpened.fire(EventFactory.createUiButton_DropDownOpenedEvent(this.getId()));
+						this.onDropDownOpened.fire({});
 						this.getMainInnerDomElement().classList.add("open");
 					} else {
 						this.dropDown.close(); // not needed for clicks, but for keydown!

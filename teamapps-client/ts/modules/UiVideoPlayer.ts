@@ -33,7 +33,6 @@ import {
 	UiVideoPlayerConfig,
 	UiVideoPlayerEventSource
 } from "../generated/UiVideoPlayerConfig";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiMediaPreloadMode} from "../generated/UiMediaPreloadMode";
@@ -78,14 +77,18 @@ export class UiVideoPlayer extends UiComponent<UiVideoPlayerConfig> implements U
 				this.onContentReady();
 
 				mediaElement.addEventListener('play', (e) => {
-					this.onPlayerProgress.fire(EventFactory.createUiVideoPlayer_PlayerProgressEvent(config.id, 0));
+					this.onPlayerProgress.fire({
+						positionInSeconds: 0
+					});
 				}, false);
 
 				let lastPlayTime = 0;
 				mediaElement.addEventListener('timeupdate', (e) => {
 					let currentPlayTime = mediaElement.currentTime;
 					if (lastPlayTime < currentPlayTime && lastPlayTime % config.sendPlayerProgressEventsEachXSeconds > currentPlayTime % config.sendPlayerProgressEventsEachXSeconds) {
-						this.onPlayerProgress.fire(EventFactory.createUiVideoPlayer_PlayerProgressEvent(config.id, Math.floor(currentPlayTime)));
+						this.onPlayerProgress.fire({
+							positionInSeconds: Math.floor(currentPlayTime)
+						});
 					}
 					lastPlayTime = currentPlayTime;
 				}, false);
@@ -93,7 +96,7 @@ export class UiVideoPlayer extends UiComponent<UiVideoPlayerConfig> implements U
 			error: () => {
 				if (!this.destroyed) {
 					console.log();
-					this.onErrorLoading.fire(EventFactory.createUiVideoPlayer_ErrorLoadingEvent(config.id))
+					this.onErrorLoading.fire({})
 				}
 			}
 		});

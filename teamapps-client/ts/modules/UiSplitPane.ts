@@ -28,7 +28,6 @@ import {capitalizeFirstLetter, css, parseHtml} from "./Common";
 import {UiSplitPane_SplitResizedEvent, UiSplitPaneCommandHandler, UiSplitPaneConfig, UiSplitPaneEventSource} from "../generated/UiSplitPaneConfig";
 import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
 import {UiSplitDirection} from "../generated/UiSplitDirection";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
 export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Emptyable, UiSplitPaneCommandHandler, UiSplitPaneEventSource {
@@ -137,7 +136,9 @@ export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Empty
 			} else {
 				referenceChildSize = this._$lastChildContainer[this._offsetSizeAttribute];
 			}
-			this.onSplitResized.fire(EventFactory.createUiSplitPane_SplitResizedEvent(this._config.id, referenceChildSize));
+			this.onSplitResized.fire({
+				referenceChildSize: referenceChildSize
+			});
 			this.onResize();
 
 			//blurredBackgroundImageContainers.classList.add('teamapps-blurredBackgroundImage');

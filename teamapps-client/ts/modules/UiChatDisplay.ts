@@ -24,7 +24,6 @@ import {UiChatMessageConfig} from "../generated/UiChatMessageConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiChatDisplay_PreviousMessagesRequestedEvent, UiChatDisplayCommandHandler, UiChatDisplayConfig, UiChatDisplayEventSource} from "../generated/UiChatDisplayConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {EventFactory} from "../generated/EventFactory";
 import {UiSpinner} from "./micro-components/UiSpinner";
 
 export class UiChatDisplay extends UiComponent<UiChatDisplayConfig> implements UiChatDisplayCommandHandler, UiChatDisplayEventSource {
@@ -63,7 +62,9 @@ export class UiChatDisplay extends UiComponent<UiChatDisplayConfig> implements U
 	private requestPreviousMessages() {
 		if (!this.requestingPreviousMessages) {
 			this.requestingPreviousMessages = true;
-			this.onPreviousMessagesRequested.fire(EventFactory.createUiChatDisplay_PreviousMessagesRequestedEvent(this.getId(), this.getEarliestChatMessageId()));
+			this.onPreviousMessagesRequested.fire({
+				earliestKnownMessageId: this.getEarliestChatMessageId()
+			});
 			this.$loadingIndicatorWrapper.classList.remove('hidden');
 		}
 	}

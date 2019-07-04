@@ -21,15 +21,14 @@ import * as Mustache from "mustache";
 import * as moment from "moment-timezone";
 
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
-import {keyCodes, TrivialComboBox, TrivialTimeSuggestionEngine} from "trivial-components";
+import {TrivialComboBox, TrivialTimeSuggestionEngine} from "trivial-components";
 import {UiField} from "./../UiField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../../generated/UiSpecialKey";
-import {AbstractUiTimeFieldConfig, AbstractUiTimeFieldCommandHandler, AbstractUiTimeFieldEventSource} from "../../../generated/AbstractUiTimeFieldConfig";
+import {AbstractUiTimeFieldCommandHandler, AbstractUiTimeFieldConfig, AbstractUiTimeFieldEventSource} from "../../../generated/AbstractUiTimeFieldConfig";
 import {convertJavaDateTimeFormatToMomentDateTimeFormat, parseHtml} from "../../Common";
-import {EventFactory} from "../../../generated/EventFactory";
 
 export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiTimeFieldEventSource, AbstractUiTimeFieldCommandHandler {
 
@@ -59,7 +58,9 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		let timeSuggestionEngine = new TrivialTimeSuggestionEngine();
 		this.trivialComboBox = new TrivialComboBox<any>(this.$originalInput, {
 			queryFunction: (searchString: string, resultCallback: Function) => {
-				this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), searchString));
+				this.onTextInput.fire({
+					enteredString: searchString
+				});
 
 				let comboBoxEntries = timeSuggestionEngine.generateSuggestions(searchString)
 					.map(s => AbstractUiTimeField.createTimeComboBoxEntry(s.hour, s.minute, this.getTimeFormat()));
@@ -82,9 +83,13 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ESCAPE
+				});
 			} else if (e.key === "Enter") {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ENTER
+				});
 			}
 		});
 

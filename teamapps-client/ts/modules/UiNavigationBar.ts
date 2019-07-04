@@ -22,7 +22,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiNavigationBarButtonConfig} from "../generated/UiNavigationBarButtonConfig";
 import {UiComponent} from "./UiComponent";
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, outerWidthIncludingMargins, parseHtml, Renderer} from "./Common";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
 	UiNavigationBar_ButtonClickedEvent,
@@ -31,7 +31,6 @@ import {
 	UiNavigationBarConfig,
 	UiNavigationBarEventSource
 } from "../generated/UiNavigationBarConfig";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiColorConfig} from "../generated/UiColorConfig";
@@ -108,7 +107,10 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 		let $innerWrapper = $button.querySelector<HTMLElement>(":scope .nav-button-inner-wrapper");
 		$innerWrapper.append(this.buttonTemplateRenderer.render(button.data));
 		$button.addEventListener("click", () => {
-			this.onButtonClicked.fire(EventFactory.createUiNavigationBar_ButtonClickedEvent(this.getId(), button.id, this.currentFanOutComponent && this.currentFanOutComponent.getId()));
+			this.onButtonClicked.fire({
+				buttonId: button.id,
+				visibleFanOutComponentId: this.currentFanOutComponent && this.currentFanOutComponent.getId()
+			});
 		});
 		this.buttons[button.id] = {
 			data: button.data,
@@ -151,7 +153,7 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 			this.onResize();
 			this.fanoutClickOutsideHandle = doOnceOnClickOutsideElement([this.getMainDomElement(), this.$fanOutContainerWrapper], e => {
 				this.hideFanOutComponent();
-				this.onFanoutClosedDueToClickOutsideFanout.fire(EventFactory.createUiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent(this.getId()));
+				this.onFanoutClosedDueToClickOutsideFanout.fire({});
 			});
 		};
 		if (this.currentFanOutComponent) {

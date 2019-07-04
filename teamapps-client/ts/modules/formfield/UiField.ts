@@ -22,7 +22,6 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiField_ValueChangedEvent, UiFieldCommandHandler, UiFieldConfig, UiFieldEventSource} from "../../generated/UiFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {EventFactory} from "../../generated/EventFactory";
 import {UiComponent} from "../UiComponent";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
@@ -219,7 +218,9 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 
 	private fireCommittedChangeEvent(): void {
 		this.logger.trace("firing committed change event: " + JSON.stringify(this.committedValue));
-		this.onValueChanged.fire(EventFactory.createUiField_ValueChangedEvent(this.getId(), this.convertValueForSendingToServer(this.committedValue)));
+		this.onValueChanged.fire({
+			value: this.convertValueForSendingToServer(this.committedValue)
+		});
 	}
 
 	protected convertValueForSendingToServer(value: V): any {

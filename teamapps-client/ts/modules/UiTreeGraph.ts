@@ -27,7 +27,6 @@ import {UiTreeGraph_NodeClickedEvent, UiTreeGraph_NodeExpandedOrCollapsedEvent, 
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiTreeGraphNodeConfig} from "../generated/UiTreeGraphNodeConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
 import {parseHtml} from "./Common";
@@ -48,10 +47,15 @@ export class UiTreeGraph extends UiComponent<UiTreeGraphConfig> implements UiTre
 			.container(this.$main)
 			.data(this._config.nodes)
 			.onNodeClick((nodeId: string) => {
-				this.onNodeClicked.fire(EventFactory.createUiTreeGraph_NodeClickedEvent(this.getId(), nodeId));
+				this.onNodeClicked.fire({
+					nodeId: nodeId
+				});
 			})
 			.onNodeExpandedOrCollapsed((nodeId: string, expanded: boolean) => {
-				this.onNodeExpandedOrCollapsed.fire(EventFactory.createUiTreeGraph_NodeExpandedOrCollapsedEvent(this.getId(), nodeId, expanded));
+				this.onNodeExpandedOrCollapsed.fire({
+					nodeId: nodeId,
+					expanded: expanded
+				});
 			})
 			.render();
 	}

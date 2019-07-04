@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import * as Mustache from "mustache";
-import {keyCodes, ResultCallback, TrivialComboBox, TrivialDateSuggestionEngine} from "trivial-components";
+import {ResultCallback, TrivialComboBox, TrivialDateSuggestionEngine} from "trivial-components";
 import * as moment from "moment-timezone";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";
@@ -26,10 +26,9 @@ import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../../generated/UiSpecialKey";
-import {AbstractUiDateFieldConfig, AbstractUiDateFieldCommandHandler, AbstractUiDateFieldEventSource} from "../../../generated/AbstractUiDateFieldConfig";
-import Moment = moment.Moment;
+import {AbstractUiDateFieldCommandHandler, AbstractUiDateFieldConfig, AbstractUiDateFieldEventSource} from "../../../generated/AbstractUiDateFieldConfig";
 import {convertJavaDateTimeFormatToMomentDateTimeFormat, parseHtml} from "../../Common";
-import {EventFactory} from "../../../generated/EventFactory";
+import Moment = moment.Moment;
 
 interface DateSuggestion {
 	moment: Moment;
@@ -87,7 +86,9 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 		this.updateDateSuggestionEngine();
 		this.trivialComboBox = new TrivialComboBox<DateComboBoxEntry>(this.$originalInput, {
 			queryFunction: (searchString: string, resultCallback: ResultCallback<DateComboBoxEntry>) => {
-				this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), searchString));
+				this.onTextInput.fire({
+					enteredString: searchString
+				});
 				let comboBoxEntries = this.dateSuggestionEngine.generateSuggestions(searchString, moment() as any)
 					.map(s => AbstractUiDateField.createDateComboBoxEntryFromMoment(s.moment as any, this.getDateFormat()));
 				resultCallback(comboBoxEntries);
@@ -114,9 +115,13 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ESCAPE
+				});
 			} else if (e.key === "Enter") {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ENTER
+				});
 			}
 		});
 

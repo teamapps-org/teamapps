@@ -40,7 +40,6 @@ import {
 } from "../generated/UiTabPanelConfig";
 import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {EventFactory} from "../generated/EventFactory";
 import {UiTabPanelTabStyle} from "../generated/UiTabPanelTabStyle";
 import {insertAtIndex, insertBefore, maximizeComponent, parseHtml, prependChild} from "./Common";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
@@ -185,7 +184,9 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		});
 		this.orderedDefaultToolButtonTypes.forEach(windowButtonType => {
 			this.defaultToolButtons[windowButtonType].onClicked.addListener(() => {
-				this.onWindowButtonClicked.fire(EventFactory.createUiTabPanel_WindowButtonClickedEvent(this.getId(), windowButtonType));
+				this.onWindowButtonClicked.fire({
+					windowButton: windowButtonType
+				});
 			});
 		});
 		this.setWindowButtons(config.windowButtons);
@@ -282,7 +283,9 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 			const $closeButton1 = $tabButton.appendChild(parseHtml(closeButtonHtml));
 			$closeButton1.addEventListener("mousedown", () => {
 				this.removeTab(tabId);
-				this.onTabClosed.fire(EventFactory.createUiTabPanel_TabClosedEvent(this._config.id, tabId));
+				this.onTabClosed.fire({
+					tabId: tabId
+				});
 			});
 		}
 		return $tabButton;
@@ -303,10 +306,14 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		this.$contentWrapper.querySelectorAll<HTMLElement>(':scope >.tab-content-wrapper').forEach(el => el.classList.remove('selected'));
 		tab.$wrapper.classList.add('selected');
 		if (sendSelectionEvent) {
-			this.onTabSelected.fire(EventFactory.createUiTabPanel_TabSelectedEvent(this.getId(), tabId));
+			this.onTabSelected.fire({
+				tabId: tabId
+			});
 		}
 		if (this.selectedTab.contentComponent == null) {
-			this.onTabNeedsRefresh.fire(EventFactory.createUiTabPanel_TabNeedsRefreshEvent(this.getId(), tabId));
+			this.onTabNeedsRefresh.fire({
+				tabId: tabId
+			});
 		}
 		if (tab.toolbar) {
 			if (!tab.toolbar.attachedToDom) {
@@ -344,7 +351,9 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 			if (tab.contentComponent) {
 				tab.contentComponent.attachedToDom = this.attachedToDom;
 			} else if (tab.config.lazyLoading && fireLazyLoadEventIfNeeded) {
-				this.onTabNeedsRefresh.fire(EventFactory.createUiTabPanel_TabNeedsRefreshEvent(this.getId(), tabId));
+				this.onTabNeedsRefresh.fire({
+					tabId: tabId
+				});
 			}
 		}
 
@@ -462,7 +471,9 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 			this.selectTab(this.getVisibleTabs()[0].config.tabId, true); // was !this._context.executingCommand
 		} else if (this.selectedTab != null) {
 			this.selectedTab = null;
-			this.onTabSelected.fire(EventFactory.createUiTabPanel_TabSelectedEvent(this.getId(), null));
+			this.onTabSelected.fire({
+				tabId: null
+			});
 		}
 	}
 

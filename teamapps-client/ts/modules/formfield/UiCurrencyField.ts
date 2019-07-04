@@ -21,7 +21,7 @@ import {DEFAULT_RENDERING_FUNCTIONS, defaultListQueryFunctionFactory, keyCodes, 
 
 import {createUiCurrencyValueConfig, UiCurrencyValueConfig} from "../../generated/UiCurrencyValueConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiCurrencyFieldConfig, UiCurrencyFieldCommandHandler, UiCurrencyFieldEventSource} from "../../generated/UiCurrencyFieldConfig";
+import {UiCurrencyFieldCommandHandler, UiCurrencyFieldConfig, UiCurrencyFieldEventSource} from "../../generated/UiCurrencyFieldConfig";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {CURRENCIES, Currency} from "../util/currencies";
@@ -30,7 +30,6 @@ import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
-import {EventFactory} from "../../generated/EventFactory";
 
 export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyValueConfig> implements UiCurrencyFieldEventSource, UiCurrencyFieldCommandHandler {
 
@@ -85,11 +84,17 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 			if (e.keyCode !== keyCodes.enter
 				&& e.keyCode !== keyCodes.tab
 				&& !keyCodes.isModifierKey(e)) {
-				this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), (this.trivialUnitBox.getEditor() as HTMLInputElement).value));
+				this.onTextInput.fire({
+					enteredString: (this.trivialUnitBox.getEditor() as HTMLInputElement).value
+				});
 			} else 	if (e.keyCode === keyCodes.escape) {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ESCAPE
+				});
 			} else if (e.keyCode === keyCodes.enter) {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ENTER
+				});
 			}
 		});
 

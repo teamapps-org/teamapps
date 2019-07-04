@@ -31,7 +31,6 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiWebRtcPublishingSettingsConfig} from "../generated/UiWebRtcPublishingSettingsConfig";
 import {checkChromeExtensionAvailable, getScreenConstraints, isChrome} from "./util/ScreenCapturing";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {EventFactory} from "../generated/EventFactory";
 import {UiWebRtcPublishingErrorReason} from "../generated/UiWebRtcPublishingErrorReason";
 import {MediaStreamWithMixiSizingInfo, MultiStreamsMixer} from "./util/MultiStreamsMixer";
 import {UiWebRtcPublishingMediaSettingsConfig} from "../generated/UiWebRtcPublishingMediaSettingsConfig";
@@ -124,7 +123,9 @@ export class UiWebRtcPublisher extends UiComponent<UiWebRtcPublisherConfig> impl
 				if (reason !== UiWebRtcPublishingErrorReason.CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED) {
 					reason = UiWebRtcPublishingErrorReason.OTHER;
 				}
-				this.onPublishingFailed.fire(EventFactory.createUiWebRtcPublisher_PublishingFailedEvent(this.getId(), reason));
+				this.onPublishingFailed.fire({
+					reason: reason
+				});
 				console.error("Could not create screen sharing MediaStream. Reason:", UiWebRtcPublishingErrorReason[reason]);
 			});
 	}

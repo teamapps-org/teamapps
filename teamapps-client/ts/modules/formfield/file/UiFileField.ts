@@ -44,7 +44,6 @@ import {ProgressBar} from "../../micro-components/ProgressBar";
 import * as log from "loglevel";
 import {Logger} from "loglevel";
 import {keyCodes} from "trivial-components";
-import {EventFactory} from "../../../generated/EventFactory";
 import {UiIdentifiableClientRecordConfig} from "../../../generated/UiIdentifiableClientRecordConfig";
 import {FileUploader} from "../../util/FileUploader";
 
@@ -192,7 +191,13 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 			this.$fileList.appendChild(fileItem.getMainDomElement());
 			this.fileItems.push(fileItem);
 			fileItem.upload(file);
-			this.onUploadStarted.fire(EventFactory.createUiFileField_UploadStartedEvent(this.getId(), fileItem.uuid, file.name, file.type, file.size, this.numberOfUploadingFileItems));
+			this.onUploadStarted.fire({
+				fileItemUuid: fileItem.uuid,
+				fileName: file.name,
+				mimeType: file.type,
+				sizeInBytes: file.size,
+				incompleteUploadsCount: this.numberOfUploadingFileItems
+			});
 		}
 
 		this.updateVisibilities();
@@ -269,13 +274,17 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	private createFileItem() {
 		let fileItem = new UploadItem(this.displayType === UiFileFieldDisplayType.FLOATING, this.maxBytesPerFile, this._config.fileTooLargeMessage, this._config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.getId());
 		fileItem.onClick.addListener((eventObject, emitter) => {
-			this.onFileItemClicked.fire(EventFactory.createUiFileField_FileItemClickedEvent(this.getId(), (emitter as UploadItem).data.id));
+			this.onFileItemClicked.fire({
+				clientId: (emitter as UploadItem).data.id
+			});
 		});
 		fileItem.onDeleteButtonClick.addListener((eventObject, emitter) => {
 			let fileItem = emitter as UploadItem;
 			let data = (fileItem).data;
 			if (data) {
-				this.onFileItemRemoveButtonClicked.fire(EventFactory.createUiFileField_FileItemRemoveButtonClickedEvent(this.getId(), data.id));
+				this.onFileItemRemoveButtonClicked.fire({
+					clientId: data.id
+				});
 			}
 			this.removeFileItem(fileItem);
 			this.updateVisibilities();
@@ -284,7 +293,6 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 			}
 		});
 		fileItem.onUploadTooLarge.addListener(subEvent => {
-			subEvent.incompleteUploadsCount = this.numberOfUploadingFileItems;
 			this.onUploadTooLarge.fire(subEvent);
 			this.updateVisibilities();
 		});
@@ -395,7 +403,13 @@ class UploadItem {
 			if (e.target === this.$deleteButton) {
 				if (this.uploader) {
 					this.uploader.abort();
-					this.onUploadCanceled.fire(EventFactory.createUiFileField_UploadCanceledEvent(this.componentId, this.uuid, this.uploadingFile.name, this.uploadingFile.type, this.uploadingFile.size, null));
+					this.onUploadCanceled.fire({
+						fileItemUuid: this.uuid,
+						fileName: this.uploadingFile.name,
+						mimeType: this.uploadingFile.type,
+						sizeInBytes: this.uploadingFile.size,
+						incompleteUploadsCount: null
+					});
 				}
 				this.onDeleteButtonClick.fire(null);
 			} else {
@@ -417,7 +431,12 @@ class UploadItem {
 		if (file.size > this.maxBytes) {
 			this.progressIndicator.setErrorMessage(this.fileTooLargeMessage);
 			this.setState(FileItemState.ERROR);
-			this.onUploadTooLarge.fire(EventFactory.createUiFileField_UploadTooLargeEvent(this.componentId, this.uuid, file.name, file.type, file.size));
+			this.onUploadTooLarge.fire({
+				fileItemUuid: this.uuid,
+				fileName: file.name,
+				mimeType: file.type,
+				sizeInBytes: file.size
+			});
 		} else {
 			this.setState(FileItemState.UPLOADING);
 
@@ -426,12 +445,25 @@ class UploadItem {
 			this.uploader.onProgress.addListener(progress => this.progressIndicator.setProgress(progress));
 			this.uploader.onSuccess.addListener(fileUuid => {
 				this.setState(FileItemState.SUCCESS);
-				this.onUploadSuccessful.fire(EventFactory.createUiFileField_UploadSuccessfulEvent(this.componentId, this.uuid, fileUuid, file.name, file.type, file.size, null));
+				this.onUploadSuccessful.fire({
+					fileItemUuid: this.uuid,
+					uploadedFileUuid: fileUuid,
+					fileName: file.name,
+					mimeType: file.type,
+					sizeInBytes: file.size,
+					incompleteUploadsCount: null
+				});
 			});
 			this.uploader.onError.addListener(() => {
 				this.setState(FileItemState.ERROR);
 				this.progressIndicator.setErrorMessage(this.uploadErrorMessage);
-				this.onUploadFailed.fire(EventFactory.createUiFileField_UploadFailedEvent(this.componentId, this.uuid, file.name, file.type, file.size, null));
+				this.onUploadFailed.fire({
+					fileItemUuid: this.uuid,
+					fileName: file.name,
+					mimeType: file.type,
+					sizeInBytes: file.size,
+					incompleteUploadsCount: null
+				});
 			});
 			this.uploader.onComplete.addListener(() => this.uploader = null)
 		}

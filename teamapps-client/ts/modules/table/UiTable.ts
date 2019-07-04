@@ -48,7 +48,6 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenAttached} from "../util/ExecuteWhenAttached";
 import {arraysEqual, css, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml} from "../Common";
 import {UiSortDirection} from "../../generated/UiSortDirection";
-import {EventFactory} from "../../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiGenericTableCellEditor} from "./UiGenericTableCellEditor";
 import {FixedSizeTableCellEditor} from "./FixedSizeTableCellEditor";
@@ -148,10 +147,12 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this.dataProvider = new TableDataProvider(config.tableData, (fromIndex: number, length: number) => {
 			const viewPort = this._grid.getViewport();
 			const currentlyDisplayedRecordIds = this.getCurrentlyDisplayedRecordIds();
-			this.onDisplayedRangeChanged.fire(EventFactory.createUiTable_DisplayedRangeChangedEvent(
-				config.id, viewPort.top, viewPort.bottom - viewPort.top, currentlyDisplayedRecordIds,
-				createUiTableDataRequestConfig(fromIndex, length, this._sortField, this._sortDirection)
-			));
+			this.onDisplayedRangeChanged.fire({
+				startIndex: viewPort.top,
+				length: viewPort.bottom - viewPort.top,
+				displayedRecordIds: currentlyDisplayedRecordIds,
+				dataRequest: createUiTableDataRequestConfig(fromIndex, length, this._sortField, this._sortDirection)
+			});
 		});
 		if (config.totalNumberOfRecords > this.dataProvider.getLength()) {
 			this.dataProvider.setTotalNumberOfRootNodes(config.totalNumberOfRecords);
@@ -266,7 +267,10 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this._grid.onSort.subscribe((e, args: Slick.OnSortEventArgs<Slick.SlickData>) => {
 			this._sortField = args.sortCol.id;
 			this._sortDirection = args.sortAsc ? UiSortDirection.ASC : UiSortDirection.DESC;
-			this.onSortingChanged.fire(EventFactory.createUiTable_SortingChangedEvent(config.id, this._sortField, args.sortAsc ? UiSortDirection.ASC : UiSortDirection.DESC));
+			this.onSortingChanged.fire({
+				sortField: this._sortField,
+				sortDirection: args.sortAsc ? UiSortDirection.ASC : UiSortDirection.DESC
+			});
 		});
 		this._grid.onSelectedRowsChanged.subscribe((eventData, args) => {
 			if (args.rows.some((row) => !this.dataProvider.getItem(row))) {
@@ -276,19 +280,17 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 				&& JSON.stringify(this.lastSelectedRowIds) !== JSON.stringify(args.rows)) {
 				this.lastSelectedRowIds = args.rows;
 				if (args.rows.length === 1) {
-					this.onRowSelected.fire(EventFactory.createUiTable_RowSelectedEvent(
-						config.id,
-						this.dataProvider.getItem(args.rows[0]).id,
-						false, // see click handlers on canvas element...
-						false // see click handlers on canvas element...
-					));
+					this.onRowSelected.fire({
+						recordId: this.dataProvider.getItem(args.rows[0]).id,
+						isRightMouseButton: false,
+						isDoubleClick: false
+					});
 				} else if (args.rows.length > 1) {
-					this.onMultipleRowsSelected.fire(EventFactory.createUiTable_MultipleRowsSelectedEvent(
-						config.id,
-						args.rows.map((selectionIndex) => {
+					this.onMultipleRowsSelected.fire({
+						recordIds: args.rows.map((selectionIndex) => {
 							return this.dataProvider.getItem(selectionIndex).id;
 						})
-					));
+					});
 				}
 			}
 			this.updateSelectionFramePosition(true);
@@ -336,7 +338,11 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 			let id = data.item && data.item.id;
 			let fieldName = this._grid.getColumns()[data.cell].field;
 			if (id != null && fieldName != null) {
-				this.onCellEditingStarted.fire(EventFactory.createUiTable_CellEditingStartedEvent(this.getId(), id, fieldName, data.item.values[fieldName]));
+				this.onCellEditingStarted.fire({
+					recordId: id,
+					columnPropertyName: fieldName,
+					currentValue: data.item.values[fieldName]
+				});
 			}
 		});
 		this._grid.onBeforeCellEditorDestroy.subscribe((e, data: Slick.OnBeforeCellEditorDestroyEventArgs<any>) => {
@@ -345,30 +351,31 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 				let id = dataItem.id;
 				let fieldName = this._grid.getColumns()[this._grid.getActiveCell().cell].field;
 				if (id != null && fieldName != null) {
-					this.onCellEditingStopped.fire(EventFactory.createUiTable_CellEditingStoppedEvent(this.getId(), id, fieldName));
+					this.onCellEditingStopped.fire({
+						recordId: id,
+						columnPropertyName: fieldName
+					});
 				}
 			}
 		});
 		$(this._grid.getCanvasNode()).dblclick((e) => {
 			let cell = this._grid.getCellFromEvent(<any>e);
 			if (cell != null) {
-				this.onRowSelected.fire(EventFactory.createUiTable_RowSelectedEvent(
-					config.id,
-					this.dataProvider.getItem(cell.row).id,
-					false,
-					true
-				));
+				this.onRowSelected.fire({
+					recordId: this.dataProvider.getItem(cell.row).id,
+					isRightMouseButton: false,
+					isDoubleClick: true
+				});
 			}
 		});
 
 		$(this._grid.getCanvasNode()).on("contextmenu", (e) => {
 			let cell = this._grid.getCellFromEvent(<any>e);
-			this.onRowSelected.fire(EventFactory.createUiTable_RowSelectedEvent(
-				config.id,
-				this.dataProvider.getItem(cell.row).id,
-				true,
-				false
-			));
+			this.onRowSelected.fire({
+				recordId: this.dataProvider.getItem(cell.row).id,
+				isRightMouseButton: true,
+				isDoubleClick: false
+			});
 		});
 
 		if (config.selectionFrame) {
@@ -438,7 +445,12 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 	@throttledMethod(500) // debounce/throttle scrolling without data requests only!!! (otherwise the tableDataProvider will mark rows as requested but the actual request will not get to the server)
 	private fireDisplayedRangeChanged(config: UiTableConfig) {
 		const viewport = this._grid.getViewport();
-		this.onDisplayedRangeChanged.fire(EventFactory.createUiTable_DisplayedRangeChangedEvent(config.id, viewport.top, viewport.bottom - viewport.top, this.getCurrentlyDisplayedRecordIds(), null));
+		this.onDisplayedRangeChanged.fire({
+			startIndex: viewport.top,
+			length: viewport.bottom - viewport.top,
+			displayedRecordIds: this.getCurrentlyDisplayedRecordIds(),
+			dataRequest: null
+		});
 	}
 
 	@nonRecursive
@@ -914,7 +926,9 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 	}
 
 	private requestLazyChildren(recordId: any) {
-		this.onRequestNestedData.fire(EventFactory.createUiTable_RequestNestedDataEvent(this.getId(), recordId));
+		this.onRequestNestedData.fire({
+			recordId: recordId
+		});
 	}
 
 	private getActiveCellValue() {

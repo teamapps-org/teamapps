@@ -18,15 +18,12 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComboBox} from "./formfield/UiComboBox";
-
 import {UiTree_NodeSelectedEvent, UiTree_RequestTreeDataEvent, UiTree_TextInputEvent, UiTreeCommandHandler, UiTreeConfig, UiTreeEventSource} from "../generated/UiTreeConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {defaultTreeQueryFunctionFactory, ResultCallback, trivialMatch, TrivialTree} from "trivial-components";
+import {ResultCallback, TrivialTree} from "trivial-components";
 import {UiComponent} from "./UiComponent";
-import {buildObjectTree, buildTreeEntryHierarchy, matchingModesMapping, NodeWithChildren, parseHtml, Renderer} from "./Common";
+import {buildObjectTree, matchingModesMapping, NodeWithChildren, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeRecordConfig} from "../generated/UiTreeRecordConfig";
 import {UiComboBoxTreeRecordConfig} from "../generated/UiComboBoxTreeRecordConfig";
@@ -59,7 +56,9 @@ export class UiTree extends UiComponent<UiTreeConfig> implements UiTreeCommandHa
 		let localQueryFunction: Function;
 		let queryFunction = (queryString: string, resultCallback: ResultCallback<NodeWithChildren<UiTreeRecordConfig>>) => {
 			this.lastResultCallback = resultCallback;
-			this.onTextInput.fire(EventFactory.createUiTree_TextInputEvent(this.getId(), queryString));
+			this.onTextInput.fire({
+				text: queryString
+			});
 			if (localQueryFunction != null) {
 				localQueryFunction(queryString, resultCallback);
 			}
@@ -74,7 +73,9 @@ export class UiTree extends UiComponent<UiTreeConfig> implements UiTreeCommandHa
 			searchBarMode: 'show-if-filled',
 			lazyChildrenFlag: 'lazyChildren',
 			lazyChildrenQueryFunction: (node, resultCallback) => {
-				this.onRequestTreeData.fire(EventFactory.createUiTree_RequestTreeDataEvent(config.id, node && node.id))
+				this.onRequestTreeData.fire({
+					parentNodeId: node && node.id
+				})
 			},
 			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			queryFunction: queryFunction,
@@ -90,7 +91,9 @@ export class UiTree extends UiComponent<UiTreeConfig> implements UiTreeCommandHa
 			}
 		});
 		this.trivialTree.onSelectedEntryChanged.addListener((entry) => {
-			this.onNodeSelected.fire(EventFactory.createUiTree_NodeSelectedEvent(config.id, entry.id));
+			this.onNodeSelected.fire({
+				nodeId: entry.id
+			});
 		});
 
 		if (config.selectedNodeId != null) {

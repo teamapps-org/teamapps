@@ -29,11 +29,8 @@ import {UiDropDown} from "../../micro-components/UiDropDown";
 import {UiComponent} from "../../UiComponent";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {AbstractUiToolContainer_ToolbarButtonClickEvent, AbstractUiToolContainer_ToolbarDropDownItemClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
-import {EventFactory} from "../../../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {Emptyable} from "../../util/Emptyable";
-import {UiColorConfig} from "../../../generated/UiColorConfig";
-import {createUiColorCssString} from "../../util/CssFormatUtil";
 import {UiToolbarButton} from "./UiToolbarButton";
 import {UiToolbarButtonGroup} from "./UiToolbarButtonGroup";
 import {insertBefore, outerWidthIncludingMargins, parseHtml} from "../../Common";
@@ -110,7 +107,11 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 			if (!eventObject.dropDownClickInfo) { //
 				this.overflowDropDown.close();
 			}
-			this.onToolbarButtonClick.fire(EventFactory.createAbstractUiToolContainer_ToolbarButtonClickEvent(this.getId(), eventObject.groupId, eventObject.buttonId, eventObject.dropDownClickInfo));
+			this.onToolbarButtonClick.fire({
+				groupId: eventObject.groupId,
+				buttonId: eventObject.buttonId,
+				dropDownClickInfo: eventObject.dropDownClickInfo
+			});
 		});
 		return toolAccordion;
 	}
@@ -165,10 +166,19 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 
 		const buttonGroup = new UiToolbarButtonGroup(groupConfig, this, this._context);
 		buttonGroup.onButtonClicked.addListener(e => {
-			return this.onToolbarButtonClick.fire(EventFactory.createAbstractUiToolContainer_ToolbarButtonClickEvent(this.getId(), groupConfig.groupId, e.buttonId, e.dropDownButtonClickInfo));
+			return this.onToolbarButtonClick.fire({
+				groupId: groupConfig.groupId,
+				buttonId: e.buttonId,
+				dropDownClickInfo: e.dropDownButtonClickInfo
+			});
 		});
 		buttonGroup.onDropDownItemClicked.addListener(e => {
-			return this.onToolbarDropDownItemClick.fire(EventFactory.createAbstractUiToolContainer_ToolbarDropDownItemClickEvent(this.getId(), groupConfig.groupId, e.buttonId, e.groupId, e.buttonId));
+			return this.onToolbarDropDownItemClick.fire({
+				groupId: groupConfig.groupId,
+				buttonId: e.buttonId,
+				dropDownGroupId: e.groupId,
+				dropDownItemId: e.buttonId
+			});
 		});
 		this.buttonGroupsById.push(groupConfig.groupId, buttonGroup);
 

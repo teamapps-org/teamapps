@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiConfigurationConfig} from "../../generated/UiConfigurationConfig";
 import {
@@ -25,19 +24,19 @@ import {
 	UiWorkSpaceLayout_ChildWindowCreationFailedEvent,
 	UiWorkSpaceLayout_LayoutChangedEvent,
 	UiWorkSpaceLayout_ViewClosedEvent,
-	UiWorkSpaceLayout_ViewDraggedToNewWindowEvent, UiWorkSpaceLayout_ViewGroupPanelStateChangedEvent,
+	UiWorkSpaceLayout_ViewDraggedToNewWindowEvent,
+	UiWorkSpaceLayout_ViewGroupPanelStateChangedEvent,
 	UiWorkSpaceLayout_ViewNeedsRefreshEvent,
 	UiWorkSpaceLayout_ViewSelectedEvent,
 	UiWorkSpaceLayoutCommandHandler,
-	UiWorkSpaceLayoutConfig, UiWorkSpaceLayoutEventSource
+	UiWorkSpaceLayoutConfig,
+	UiWorkSpaceLayoutEventSource
 } from "../../generated/UiWorkSpaceLayoutConfig";
-import {UiToolbarConfig} from "../../generated/UiToolbarConfig";
 import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
 import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
 import {UiComponent} from "../UiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
 import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
-import {EventFactory} from "../../generated/EventFactory";
 import {UiRelativeWorkSpaceViewPosition} from "../../generated/UiRelativeWorkSpaceViewPosition";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {ViewInfo} from "./ViewInfo";
@@ -129,10 +128,16 @@ export class UiWorkSpaceLayout extends UiComponent<UiWorkSpaceLayoutConfig> impl
 					handleInitialized: async (windowId: string, initialViewInfo: ViewInfo) => {
 						await this.moveViewToTopLevel(initialViewInfo.viewName, childWindowId, null, null, null);
 						const layout = await this.getCurrentLayout();
-						this.onViewDraggedToNewWindow.fire(EventFactory.createUiWorkSpaceLayout_ViewDraggedToNewWindowEvent(this.getId(), windowId, initialViewInfo.viewName, layout));
+						this.onViewDraggedToNewWindow.fire({
+							windowId: windowId,
+							viewName: initialViewInfo.viewName,
+							layoutsByWindowId: layout
+						});
 					},
 					handleClosed: (childWindowViewContainer: ChildWindowViewContainer) => {
-						this.onChildWindowClosed.fire(EventFactory.createUiWorkSpaceLayout_ChildWindowClosedEvent(this.getId(), childWindowId));
+						this.onChildWindowClosed.fire({
+							windowId: childWindowId
+						});
 						delete this.viewContainersByWindowId[childWindowViewContainer.windowId];
 					},
 					handleUiEvent: (uiEvent) => {
@@ -153,7 +158,9 @@ export class UiWorkSpaceLayout extends UiComponent<UiWorkSpaceLayoutConfig> impl
 
 	private handleChildWindowCreationFailed(viewName: string) {
 		if (this.isRootWindow) {
-			this.onChildWindowCreationFailed.fire(EventFactory.createUiWorkSpaceLayout_ChildWindowCreationFailedEvent(this.getId(), viewName))
+			this.onChildWindowCreationFailed.fire({
+				viewName: viewName
+			})
 		} else {
 			this.rootWindowMessagePort.postMessage({
 				_type: 'CHILD_WINDOW_CREATION_FAILED',
@@ -294,7 +301,9 @@ export class UiWorkSpaceLayout extends UiComponent<UiWorkSpaceLayoutConfig> impl
 	}
 
 	private async fireLayoutChanged() {
-		this.onLayoutChanged.fire(EventFactory.createUiWorkSpaceLayout_LayoutChangedEvent(this.getId(), await this.getCurrentLayout()));
+		this.onLayoutChanged.fire({
+			layoutsByWindowId: await this.getCurrentLayout()
+		});
 	}
 
 	private async getViewContainerByViewName(viewName: string): Promise<ViewContainer> {
@@ -425,7 +434,10 @@ export class UiWorkSpaceLayout extends UiComponent<UiWorkSpaceLayoutConfig> impl
 	}
 
 	fireViewGroupPanelStateChanged(viewGroupId: string, panelState: UiViewGroupPanelState) {
-		this.onViewGroupPanelStateChanged.fire(EventFactory.createUiWorkSpaceLayout_ViewGroupPanelStateChangedEvent(this.getId(), viewGroupId, panelState));
+		this.onViewGroupPanelStateChanged.fire({
+			viewGroupId: viewGroupId,
+			panelState: panelState
+		});
 	}
 }
 

@@ -26,7 +26,6 @@ import {UiCachedImageConfig} from "../generated/UiCachedImageConfig";
 import {applyDisplayMode, enableScrollViaDragAndDrop, parseHtml} from "./Common";
 import {UiImageDisplay_ImageDisplayedEvent, UiImageDisplay_ImagesRequestEvent, UiImageDisplayCommandHandler, UiImageDisplayConfig, UiImageDisplayEventSource} from "../generated/UiImageDisplayConfig";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
 interface UiCachedImage {
@@ -114,9 +113,14 @@ export class UiImageDisplay extends UiComponent<UiImageDisplayConfig> implements
 
 	private jumpToNextImage(direction: number) {
 		this.showImageByIndex(this.currentImageIndex + direction);
-		this.onImageDisplayed.fire(EventFactory.createUiImageDisplay_ImageDisplayedEvent(this._config.id, this.cachedImages[this.currentImageIndex].id));
+		this.onImageDisplayed.fire({
+			imageId: this.cachedImages[this.currentImageIndex].id
+		});
 		if (this.cachedImages.length - this.currentImageIndex - 1 < this._config.cacheSize) {
-			this.onImagesRequest.fire(EventFactory.createUiImageDisplay_ImagesRequestEvent(this._config.id, this.cachedImages.length, Math.min(this.totalNumberOfRecords - this.cachedImages.length, this._config.cacheSize)));
+			this.onImagesRequest.fire({
+				startIndex: this.cachedImages.length,
+				length: Math.min(this.totalNumberOfRecords - this.cachedImages.length, this._config.cacheSize)
+			});
 		}
 	};
 

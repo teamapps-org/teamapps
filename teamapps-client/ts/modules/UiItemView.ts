@@ -20,13 +20,12 @@
 
 import {UiItemViewItemGroupConfig} from "../generated/UiItemViewItemGroupConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {DEFAULT_TEMPLATES, TrivialTreeBox, trivialMatch} from "trivial-components";
+import {DEFAULT_TEMPLATES, trivialMatch, TrivialTreeBox} from "trivial-components";
 import {UiComponent} from "./UiComponent";
 import {generateUUID, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiItemView_ItemClickedEvent, UiItemViewCommandHandler, UiItemViewConfig, UiItemViewEventSource} from "../generated/UiItemViewConfig";
 import {UiItemViewFloatStyle} from "../generated/UiItemViewFloatStyle";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {isGridTemplate} from "./TemplateRegistry";
 import {UiItemJustification} from "../generated/UiItemJustification";
@@ -91,7 +90,10 @@ export class UiItemView extends UiComponent<UiItemViewConfig> implements UiItemV
 
 	private createItemGroup(itemGroupConfig: UiItemViewItemGroupConfig) {
 		const itemGroup = new ItemGroup(this, this._context, itemGroupConfig, this.groupHeaderTemplateRenderer);
-		itemGroup.onItemClicked.addListener(item => this.onItemClicked.fire(EventFactory.createUiItemView_ItemClickedEvent(this._config.id, itemGroupConfig.id, item.id)));
+		itemGroup.onItemClicked.addListener(item => this.onItemClicked.fire({
+			groupId: itemGroupConfig.id,
+			itemId: item.id
+		}));
 		itemGroup.getMainDomElement().style.paddingBottom = this._config.groupSpacing + "px";
 		itemGroup.setFilter(this.filterString);
 		return itemGroup;

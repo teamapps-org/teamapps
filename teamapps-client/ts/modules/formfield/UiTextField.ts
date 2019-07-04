@@ -21,13 +21,12 @@ import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {escapeHtml, parseHtml} from "../Common";
-import {UiTextFieldConfig, UiTextFieldCommandHandler, UiTextFieldEventSource} from "../../generated/UiTextFieldConfig";
+import {UiTextFieldCommandHandler, UiTextFieldConfig, UiTextFieldEventSource} from "../../generated/UiTextFieldConfig";
 import {keyCodes} from "trivial-components";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
-import {EventFactory} from "../../generated/EventFactory";
 
 export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends UiField<C, string> implements UiTextFieldEventSource, UiTextFieldCommandHandler {
 
@@ -76,10 +75,14 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
 				this.$field.select();
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ESCAPE
+				});
 			} else if (e.keyCode === keyCodes.enter) {
 				this.commit();
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ENTER
+				});
 			}
 		});
 
@@ -91,7 +94,9 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 	}
 
 	private fireTextInput() {
-		this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.$field.value));
+		this.onTextInput.fire({
+			enteredString: this.$field.value
+		});
 	}
 
 	isValidData(v: string): boolean {

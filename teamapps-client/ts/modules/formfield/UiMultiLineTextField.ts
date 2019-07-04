@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {UiField} from "./UiField";
-import {UiMultiLineTextFieldConfig, UiMultiLineTextFieldCommandHandler, UiMultiLineTextFieldEventSource} from "../../generated/UiMultiLineTextFieldConfig";
+import {UiMultiLineTextFieldCommandHandler, UiMultiLineTextFieldConfig, UiMultiLineTextFieldEventSource} from "../../generated/UiMultiLineTextFieldConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {Constants, escapeHtml, hasVerticalScrollBar, parseHtml} from "../Common";
@@ -28,7 +28,6 @@ import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingFiel
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {keyCodes} from "trivial-components";
 import {executeWhenAttached} from "../util/ExecuteWhenAttached";
-import {EventFactory} from "../../generated/EventFactory";
 
 export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, string> implements UiMultiLineTextFieldEventSource, UiMultiLineTextFieldCommandHandler {
 
@@ -79,9 +78,13 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 			if (e.keyCode === keyCodes.escape) {
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ESCAPE));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ESCAPE
+				});
 			} else if (e.keyCode === keyCodes.enter) {
-				this.onSpecialKeyPressed.fire(EventFactory.createUiTextInputHandlingField_SpecialKeyPressedEvent(this.getId(), UiSpecialKey.ENTER));
+				this.onSpecialKeyPressed.fire({
+					key: UiSpecialKey.ENTER
+				});
 			}
 		});
 
@@ -95,7 +98,9 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	}
 
 	private fireTextInput() {
-		this.onTextInput.fire(EventFactory.createUiTextInputHandlingField_TextInputEvent(this.getId(), this.$field.value));
+		this.onTextInput.fire({
+			enteredString: this.$field.value
+		});
 	}
 
 	isValidData(v: string): boolean {

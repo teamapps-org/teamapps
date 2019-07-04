@@ -37,7 +37,6 @@ import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiCalendarViewMode} from "../generated/UiCalendarViewMode";
 import {UiCalendarEventRenderingStyle} from "../generated/UiCalendarEventRenderingStyle";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {Interval, IntervalManager} from "./util/IntervalManager";
 import {createUiColorCssString} from "./util/CssFormatUtil";
@@ -143,14 +142,13 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 				view: View;
 				el: HTMLElement
 			}) => {
-				this.onViewChanged.fire(EventFactory.createUiCalendar_ViewChangedEvent(
-					this.getId(),
-					parseInt(Object.keys(VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING).filter((enumValue: any) => VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[enumValue] === arg.view.type)[0]),
-					+arg.view.currentStart,
-					+arg.view.currentEnd,
-					+arg.view.activeStart,
-					+arg.view.activeEnd
-				));
+				this.onViewChanged.fire({
+					viewMode: parseInt(Object.keys(VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING).filter((enumValue: any) => VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[enumValue] === arg.view.type)[0]),
+					mainIntervalStart: +arg.view.currentStart,
+					mainIntervalEnd: +arg.view.currentEnd,
+					displayedIntervalStart: +arg.view.activeStart,
+					displayedIntervalEnd: +arg.view.activeEnd
+				});
 
 				this.$main.classList.toggle("table-border", config.tableBorder);
 				// this.$main.querySelectorAll(":scope .fc-bg td.fc-week-number.fc-widget-content").forEach($e => $e.classList.add('teamapps-blurredBackgroundImage'));
@@ -187,10 +185,16 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 				}
 
 				arg.el.addEventListener('click', (e) => {
-					this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), false));
+					this.onEventClicked.fire({
+						eventId: parseInt(arg.event.id),
+						isDoubleClick: false
+					});
 				});
 				arg.el.addEventListener('dblclick', (e) => {
-					this.onEventClicked.fire(EventFactory.createUiCalendar_EventClickedEvent(config.id, parseInt(arg.event.id), true));
+					this.onEventClicked.fire({
+						eventId: parseInt(arg.event.id),
+						isDoubleClick: true
+					});
 				});
 			},
 			dateClick: (() => {
@@ -210,11 +214,17 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 					if (isDoubleClick) {
 						lastClickTimeStamp = 0;
 						lastClickClickedDate = null;
-						this.onDayClicked.fire(EventFactory.createUiCalendar_DayClickedEvent(config.id, arg.date.valueOf(), true));
+						this.onDayClicked.fire({
+							date: arg.date.valueOf(),
+							isDoubleClick: true
+						});
 					} else {
 						lastClickTimeStamp = arg.jsEvent.timeStamp;
 						lastClickClickedDate = arg.date;
-						this.onDayClicked.fire(EventFactory.createUiCalendar_DayClickedEvent(config.id, arg.date.valueOf(), false));
+						this.onDayClicked.fire({
+							date: arg.date.valueOf(),
+							isDoubleClick: false
+						});
 					}
 				};
 			})(),
@@ -231,7 +241,11 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 				const masterEvent = this.eventSource.getEvent(arg.event.id);
 				masterEvent.start = arg.event.start;
 				masterEvent.end = arg.event.end;
-				this.onEventMoved.fire(EventFactory.createUiCalendar_EventMovedEvent(config.id, parseInt(arg.event.id), arg.event.start.valueOf(), arg.event.end.valueOf()));
+				this.onEventMoved.fire({
+					eventId: parseInt(arg.event.id),
+					newStart: arg.event.start.valueOf(),
+					newEnd: arg.event.end.valueOf()
+				});
 			},
 			eventDrop: (arg: {
 				el: HTMLElement;
@@ -245,23 +259,37 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 				const masterEvent = this.eventSource.getEvent(arg.event.id);
 				masterEvent.start = arg.event.start;
 				masterEvent.end = arg.event.end;
-				this.onEventMoved.fire(EventFactory.createUiCalendar_EventMovedEvent(config.id, parseInt(arg.event.id), arg.event.start.valueOf(), arg.event.end.valueOf()));
+				this.onEventMoved.fire({
+					eventId: parseInt(arg.event.id),
+					newStart: arg.event.start.valueOf(),
+					newEnd: arg.event.end.valueOf()
+				});
 			},
 			navLinks: true,
 			navLinkDayClick: (date, jsEvent) => {
-				this.onDayHeaderClicked.fire(EventFactory.createUiCalendar_DayHeaderClickedEvent(this.getId(), date.valueOf()));
+				this.onDayHeaderClicked.fire({
+					date: date.valueOf()
+				});
 				if (this._config.navigateOnHeaderClicks) {
 					this.calendar.changeView("timeGridDay", date);
 				}
 			},
 			navLinkWeekClick: (weekStart, jsEvent) => {
-				this.onWeekHeaderClicked.fire(EventFactory.createUiCalendar_WeekHeaderClickedEvent(this.getId(), addDays(weekStart, 6).getFullYear(), this.calendar.dateEnv.computeWeekNumber(weekStart), weekStart.valueOf()));
+				this.onWeekHeaderClicked.fire({
+					year: addDays(weekStart, 6).getFullYear(),
+					week: this.calendar.dateEnv.computeWeekNumber(weekStart),
+					weekStartDate: weekStart.valueOf()
+				});
 				if (this._config.navigateOnHeaderClicks) {
 					this.calendar.changeView("timeGridWeek", weekStart);
 				}
 			},
 			navLinkMonthClick: (monthStart: Date, jsEvent: Event) => {
-				this.onMonthHeaderClicked.fire(EventFactory.createUiCalendar_MonthHeaderClickedEvent(this.getId(), monthStart.getFullYear(), monthStart.getMonth(), monthStart.valueOf()));
+				this.onMonthHeaderClicked.fire({
+					year: monthStart.getFullYear(),
+					month: monthStart.getMonth(),
+					monthStartDate: monthStart.valueOf()
+				});
 				if (this._config.navigateOnHeaderClicks) {
 					this.calendar.changeView("dayGridMonth", monthStart);
 				}
@@ -419,7 +447,10 @@ class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 		// }
 
 		if (!this.queriesDisabled) {
-			this.onDataNeeded.fire(EventFactory.createUiCalendar_DataNeededEvent(this.componentId, +query.start, +query.end));
+			this.onDataNeeded.fire({
+				requestIntervalStart: +query.start,
+				requestIntervalEnd: +query.end
+			});
 		}
 
 		let displayedInterval = new Interval(+query.start, +query.end);

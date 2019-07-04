@@ -106,7 +106,6 @@ on<evt.Identifier.text; format="cap">: TeamAppsEvent\<<evt.typeScriptInterfaceNa
 
 eventInterface(evt, eventKind) ::= <<
 export interface <evt.typeScriptInterfaceName> extends <eventKind> {
-	_type: "<evt._type>";
 	<evt.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
@@ -243,7 +242,7 @@ import {UiEvent} from "./UiEvent";
 import {TeamAppsEventListener} from "../modules/util/TeamAppsEvent";
 
 export class EventRegistrator {
-	public static registerForEvents(eventSource: any, type: string, eventHandler: TeamAppsEventListener\<UiEvent>) {
+	public static registerForEvents(eventSource: any, type: string, eventHandler: TeamAppsEventListener\<UiEvent>, additionalEventProperties: object) {
 		switch (type) {
 			<classesAndInterfacesWithEvents:eventRegistrations(); separator="\n">
 		}
@@ -278,51 +277,6 @@ eventRegistration(evt) ::= <<
 	 eventSource.on<evt.Identifier.text; format="cap"> && eventSource.on<evt.Identifier.text; format="cap">.addListener(eventHandler);
 >>
 
-eventFactory(allClassesAndInterfacesWithEvents, allClassesInterfacesAndEnumsReferencedByEvents) ::= <<
-<typeScriptFilePrelude()>
-
-<! import {UiSubEvent\} from "./UiSubEvent"; !>
-<allClassesAndInterfacesWithEvents:{c|<c.eventDeclaration:{e|import {<e.typeScriptInterfaceName>\} from "./<c.Identifier>Config"}; separator="\n">}; separator="\n">
-<allClassesInterfacesAndEnumsReferencedByEvents:{rc|import {<rc.typeScriptIdentifier>\} from "./<rc.declaringTypeScriptFileBaseName>";}; separator="\n">
-
-export class EventFactory {
-
-	<allClassesAndInterfacesWithEvents:{c|<c.eventDeclaration:eventFactoryMethod()>}; separator="\n">
-
-}
->>
-
-eventFactoryMethod(event) ::= <<
-    public static create<event.typeScriptInterfaceName>(componentId:string<if(event.formalParameterWithDefault)>, <endif><event.formalParameterWithDefault:{p|<p.Identifier>: <p.type.typeScriptType>}; separator=", ">): <event.typeScriptInterfaceName> {
-        return {
-            _type: "<event._type>",
-            componentId: componentId,
-            <event.formalParameterWithDefault:{p|<p.Identifier>: <p.Identifier>}; separator=",\n">
-        };
-    }
->>
-
-subEventFactory(allClassesAndInterfacesWithSubEvents, allClassesInterfacesAndEnumsReferencedBySubEvents) ::= <<
-<typeScriptFilePrelude()>
-
-<allClassesAndInterfacesWithSubEvents:{c|<c.subEventDeclaration:{e|import {<e.typeScriptInterfaceName>\} from "./<c.Identifier>Config"}; separator="\n">}; separator="\n">
-<allClassesInterfacesAndEnumsReferencedBySubEvents:{rc|import {<rc.typeScriptIdentifier>\} from "./<rc.declaringTypeScriptFileBaseName>";}; separator="\n">
-
-export class SubEventFactory {
-
-	<allClassesAndInterfacesWithSubEvents:{c|<c.subEventDeclaration:subEventFactoryMethod()>}; separator="\n">
-
-}
->>
-subEventFactoryMethod(subEvent) ::= <<
-    public static create<subEvent.typeScriptInterfaceName>(<subEvent.formalParameterWithDefault:{p|<p.Identifier>: <p.type.typeScriptType>}; separator=", ">): <subEvent.typeScriptInterfaceName> {
-        return {
-            _type: "<subEvent._type>",
-            <subEvent.formalParameterWithDefault:{p|<p.Identifier>: <p.Identifier>}; separator=",\n">
-        };
-    }
->>
-
 uiCommandBaseDefinition() ::= <<
 <typeScriptFilePrelude()>
 export interface UiCommand {
@@ -335,9 +289,7 @@ export interface UiCommand {
 uiEventBaseDefinition(eventDeclarations) ::= <<
 <typeScriptFilePrelude()>
 export interface UiEvent {
-	_type: <eventDeclarations:{event|"<event._type>"}; separator="\n\t\t\t| ">;
-	componentId: string;
-	[key: string]: any;
+	//[key: string]: any;
 }
 >>
 

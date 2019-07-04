@@ -31,13 +31,11 @@ import {
 	UiInfiniteItemViewConfig,
 	UiInfiniteItemViewEventSource
 } from "../generated/UiInfiniteItemViewConfig";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {itemCssStringsAlignItems, itemCssStringsJustification} from "./UiItemView";
 import {UiItemJustification} from "../generated/UiItemJustification";
 import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClientRecordConfig";
-import {UiVerticalElementAlignment} from "../generated/UiVerticalElementAlignment";
 import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
 
 ///<reference types="slickgrid"/>
@@ -184,11 +182,10 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 		this.itemJustification = config.itemJustification;
 		this.verticalItemAlignment = config.verticalItemAlignment;
 		this.dataProvider = new UiInfiniteItemViewDataProvider(config.data || [], 10 /*cannot know item width until component width is known*/, (fromIndex, length) => {
-			this.onDataRequest.fire(EventFactory.createUiInfiniteItemView_DataRequestEvent(
-				config.id,
-				fromIndex,
-				length
-			));
+			this.onDataRequest.fire({
+				startIndex: fromIndex,
+				length: length
+			});
 		});
 		if (config.totalNumberOfRecords) {
 			this.dataProvider.setTotalNumberOfRecords(config.totalNumberOfRecords);
@@ -199,11 +196,19 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 		$(this.getMainDomElement())
 			.on("click contextmenu", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
-				me.onItemClicked.fire(EventFactory.createUiInfiniteItemView_ItemClickedEvent(me.getId(), recordId, e.button === 2, false));
+				me.onItemClicked.fire({
+					recordId: recordId,
+					isRightMouseButton: e.button === 2,
+					isDoubleClick: false
+				});
 			})
 			.on("dblclick", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
-				me.onItemClicked.fire(EventFactory.createUiInfiniteItemView_ItemClickedEvent(me.getId(), recordId, e.button === 2, true));
+				me.onItemClicked.fire({
+					recordId: recordId,
+					isRightMouseButton: e.button === 2,
+					isDoubleClick: true
+				});
 			});
 
 		this.setHorizontalItemMargin(config.horizontalItemMargin);

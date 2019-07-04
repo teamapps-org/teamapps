@@ -24,7 +24,6 @@ import * as d3 from "d3v3";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiNetworkGraphConfig} from "../generated/UiNetworkGraphConfig";
-import {EventFactory} from "../generated/EventFactory";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
@@ -344,7 +343,9 @@ export class UiNetworkGraph extends UiComponent<UiNetworkGraphConfig> {
 		this.node.on('click', function () {
 			let d = (d3.select(this).node() as any).__data__;
 			var id = d.nodeId;
-			this._context.fireEvent(EventFactory.createUiNetworkGraph_HandleNodeClickEvent(me.getId(), id));
+			this._context.fireEvent({
+				nodeId: id
+			});
 
 			var evt = d3.event;
 			if (evt != null) {

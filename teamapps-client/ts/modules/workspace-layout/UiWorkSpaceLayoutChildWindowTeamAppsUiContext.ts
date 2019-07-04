@@ -147,7 +147,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 
 	registerComponent(component: UiComponent<UiComponentConfig>): void {
 		this.components[component.getId()] = component;
-		EventRegistrator.registerForEvents(component, component.getTeamAppsType(), (eventObject: UiEvent) => this.fireEvent(eventObject));
+		EventRegistrator.registerForEvents(component, component.getTeamAppsType(), (eventObject: UiEvent) => this.fireEvent(eventObject), {id: component.getId()});
 
 		if (component.getId() !== this.workSpaceLayout.getId()) {
 			this.parentWindowMessagePort.postMessage({
