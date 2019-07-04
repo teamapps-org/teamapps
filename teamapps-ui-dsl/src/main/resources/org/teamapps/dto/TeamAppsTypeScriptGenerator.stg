@@ -274,7 +274,7 @@ public static registerFor<c.Identifier>SubEvents(eventSource: any, eventHandler:
 >>
 
 eventRegistration(evt) ::= <<
-	 eventSource.on<evt.Identifier.text; format="cap"> && eventSource.on<evt.Identifier.text; format="cap">.addListener(eventHandler);
+	 eventSource.on<evt.Identifier.text; format="cap"> && eventSource.on<evt.Identifier.text; format="cap">.addListener((eventObject: any) => eventHandler({...eventObject, _type: "<evt._type>", ...additionalEventProperties}));
 >>
 
 uiCommandBaseDefinition() ::= <<
