@@ -80,7 +80,7 @@
     position: absolute;
     border: 4px solid rgba(255, 255, 255, .8);
     pointer-events: none;
-    z-index: 100000;
+    z-index: @zindex-modal - 1;
     background-color: fade(@component-active-bg, 20%);
     &:before {
       content: " ";
