@@ -1,8 +1,6 @@
 package org.teamapps.ux.component.calendar;
 
 import org.teamapps.icons.api.Icon;
-import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.SessionContext;
 
 import java.time.Instant;
 
@@ -53,12 +51,6 @@ public class SimpleCalendarEvent<PAYLOAD> extends AbstractCalendarEvent {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
-	}
-
-	public String getDescription() {
-		SessionContext sessionContext = CurrentSessionContext.get();
-		return getStartInstant().atZone(sessionContext.getTimeZone()).format(sessionContext.getConfiguration().getTimeFormatter())
-				+ "\u2009-\u2009" + getEndInstant().atZone(sessionContext.getTimeZone()).format(sessionContext.getConfiguration().getTimeFormatter());
 	}
 
 	public String getBadge() {
