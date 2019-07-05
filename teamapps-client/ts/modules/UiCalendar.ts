@@ -25,7 +25,7 @@ import {
 	UiCalendar_DayClickedEvent,
 	UiCalendar_DayHeaderClickedEvent,
 	UiCalendar_EventClickedEvent,
-	UiCalendar_EventMovedEvent,
+	UiCalendar_EventMovedEvent, UiCalendar_IntervalSelectedEvent,
 	UiCalendar_MonthHeaderClickedEvent,
 	UiCalendar_ViewChangedEvent,
 	UiCalendar_WeekHeaderClickedEvent,
@@ -73,14 +73,15 @@ const RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: EventRen
 
 export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalendarCommandHandler, UiCalendarEventSource {
 
-	public readonly onEventClicked: TeamAppsEvent<UiCalendar_EventClickedEvent> = new TeamAppsEvent<UiCalendar_EventClickedEvent>(this);
-	public readonly onEventMoved: TeamAppsEvent<UiCalendar_EventMovedEvent> = new TeamAppsEvent<UiCalendar_EventMovedEvent>(this);
-	public readonly onDayClicked: TeamAppsEvent<UiCalendar_DayClickedEvent> = new TeamAppsEvent<UiCalendar_DayClickedEvent>(this);
-	public readonly onViewChanged: TeamAppsEvent<UiCalendar_ViewChangedEvent> = new TeamAppsEvent<UiCalendar_ViewChangedEvent>(this);
-	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent<UiCalendar_DataNeededEvent>(this);
-	public readonly onDayHeaderClicked: TeamAppsEvent<UiCalendar_DayHeaderClickedEvent> = new TeamAppsEvent<UiCalendar_DayHeaderClickedEvent>(this);
-	public readonly onWeekHeaderClicked: TeamAppsEvent<UiCalendar_WeekHeaderClickedEvent> = new TeamAppsEvent<UiCalendar_WeekHeaderClickedEvent>(this);
-	public readonly onMonthHeaderClicked: TeamAppsEvent<UiCalendar_MonthHeaderClickedEvent> = new TeamAppsEvent<UiCalendar_MonthHeaderClickedEvent>(this);
+	public readonly onEventClicked: TeamAppsEvent<UiCalendar_EventClickedEvent> = new TeamAppsEvent(this);
+	public readonly onEventMoved: TeamAppsEvent<UiCalendar_EventMovedEvent> = new TeamAppsEvent(this);
+	public readonly onDayClicked: TeamAppsEvent<UiCalendar_DayClickedEvent> = new TeamAppsEvent(this);
+	public readonly onIntervalSelected: TeamAppsEvent<UiCalendar_IntervalSelectedEvent> = new TeamAppsEvent(this);
+	public readonly onViewChanged: TeamAppsEvent<UiCalendar_ViewChangedEvent> = new TeamAppsEvent(this);
+	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent(this);
+	public readonly onDayHeaderClicked: TeamAppsEvent<UiCalendar_DayHeaderClickedEvent> = new TeamAppsEvent(this);
+	public readonly onWeekHeaderClicked: TeamAppsEvent<UiCalendar_WeekHeaderClickedEvent> = new TeamAppsEvent(this);
+	public readonly onMonthHeaderClicked: TeamAppsEvent<UiCalendar_MonthHeaderClickedEvent> = new TeamAppsEvent(this);
 
 	private $main: HTMLElement;
 	private eventSource: UiCalendarFullCalendarEventSource;
@@ -169,15 +170,15 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 					: arg.view instanceof DayGridView ? arg.event.extendedProps.dayGridTemplateId
 						: arg.event.extendedProps.monthGridTemplateId;
 
+				let $fcContent = arg.el.querySelector(':scope .fc-content');
 				if (templateId != null && !arg.event.rendering) {
-					// const $contentWrapper = arg.el.querySelector(':scope .fc-content');
 					if (this.templateRenderers[templateId] != null) {
+						arg.el.classList.add('template-content');
 						const renderer = this.templateRenderers[templateId];
 						// arg.el.appendChild(parseHtml());
-						arg.el.innerHTML = renderer.render(arg.event.extendedProps.data);
+						$fcContent.innerHTML = renderer.render(arg.event.extendedProps.data);
 					}
 				} else {
-					let $fcContent = arg.el.querySelector(':scope .fc-content');
 					prependChild($fcContent, parseHtml(`<div class="fc-icon img img-16" style="background-image:url(${this._context.getIconPath(arg.event.extendedProps.icon, 16)})">`));
 				}
 				if (arg.event.allDay) {
@@ -228,6 +229,9 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 					}
 				};
 			})(),
+			select: (selectionInfo) => {
+				this.onIntervalSelected.fire({start: selectionInfo.start.valueOf(), end: selectionInfo.end.valueOf(), allDay: selectionInfo.allDay})
+			},
 			eventResize: (arg: {
 				el: HTMLElement;
 				startDelta: Duration;

@@ -64,6 +64,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	public final Event<EventClickedEventData<CEVENT>> onEventClicked = new Event<>();
 	public final Event<EventMovedEventData<CEVENT>> onEventMoved = new Event<>();
 	public final Event<DayClickedEventData> onDayClicked = new Event<>();
+	public final Event<IntervalSelectedEventData> onIntervalSelected = new Event<>();
 	public final Event<ViewChangedEventData> onViewChanged = new Event<>();
 	public final Event<LocalDate> onMonthHeaderClicked = new Event<>();
 	public final Event<WeeHeaderClickedEventData> onWeekHeaderClicked = new Event<>();
@@ -74,12 +75,12 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private ClientRecordCache<CEVENT, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
 
-	private CalendarEventTemplateDecider<CEVENT> templateDecider = (calendarEvent, viewMode) -> null;
-	// 		createStaticTemplateDecider(
-	// 		BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
-	// 		BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
-	// 		BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES
-	// );
+	private CalendarEventTemplateDecider<CEVENT> templateDecider = //(calendarEvent, viewMode) -> null;
+			createStaticTemplateDecider(
+					BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES,
+					BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE,
+					BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES
+			);
 
 	private int templateIdCounter = 0;
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
@@ -256,6 +257,12 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 			case UI_CALENDAR_DAY_CLICKED: {
 				UiCalendar.DayClickedEvent dayClickedEvent = (UiCalendar.DayClickedEvent) event;
 				onDayClicked.fire(new DayClickedEventData(timeZone, Instant.ofEpochMilli(dayClickedEvent.getDate()), dayClickedEvent.getIsDoubleClick()));
+				break;
+			}
+			case UI_CALENDAR_INTERVAL_SELECTED: {
+				UiCalendar.IntervalSelectedEvent selectionEvent = (UiCalendar.IntervalSelectedEvent) event;
+				onIntervalSelected.fire(new IntervalSelectedEventData(timeZone, Instant.ofEpochMilli(selectionEvent.getStart()), Instant.ofEpochMilli(selectionEvent.getEnd()),
+						selectionEvent.getAllDay()));
 				break;
 			}
 			case UI_CALENDAR_VIEW_CHANGED: {
