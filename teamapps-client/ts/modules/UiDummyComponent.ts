@@ -39,7 +39,6 @@ export class UiDummyComponent extends UiComponent<UiDummyComponentConfig> implem
 	private destroyed: boolean = false;
 	private clickCount: number = 0;
 	private jsClickCount: number = 0;
-	private hasBeenAttachedToDom: boolean = false;
 	private commandCount: number = 0;
 	private text: string = "";
 
@@ -81,8 +80,6 @@ text: <span>${this.text}</span><br>
 clickCount: <span>${this.clickCount}</span><br>
 jsClickCount: <span>${this.jsClickCount}</span><br>
 commandCount: <span>${this.commandCount}</span><br>
-attached: <span class="${this.attachedToDom ? '' : 'text-danger blink text-bold'}">${this.attachedToDom}</span><br>
-hasBeenAttached: ${this.hasBeenAttachedToDom}<br>
 resizeCount: ${this.resizeCount}<br>
 lastResize: ${this.lastResize ? this.lastResize.format('HH:mm:ss.SSS') : '-'}<br>
 size: ${this.getWidth()} x ${this.getHeight()}<br> 
@@ -94,21 +91,6 @@ destroyed: <span class="${this.destroyed ? 'text-danger blink text-bold' : ''}">
 		this.lastResize = moment();
 		this.resizeCount++;
 		this.updateContent();
-	}
-
-	protected onAttachedToDom(): void {
-		this.hasBeenAttachedToDom = true;
-		this.updateContent();
-		document.body.addEventListener("DOMNodeRemoved", (e: Event) => {
-			let selfOrParent: Node = this.getMainDomElement();
-			while (selfOrParent != null) {
-				if (selfOrParent === e.target) {
-					setTimeout(() => this.updateContent());
-					break;
-				}
-				selfOrParent = selfOrParent.parentNode;
-			}
-		});
 	}
 
 	private updateContent() {

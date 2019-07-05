@@ -45,13 +45,6 @@ export class UiFieldGroup extends UiComponent<UiFieldGroupConfig> implements UiF
 		fields.forEach(f => {
 			this.$main.appendChild(f.getMainDomElement())
 		});
-		fields.forEach(f => {
-			f.attachedToDom = this.attachedToDom;
-		})
-	}
-
-	protected onAttachedToDom(): void {
-		this.fields.forEach(f => f.attachedToDom = this.attachedToDom);
 	}
 
 	destroy() {

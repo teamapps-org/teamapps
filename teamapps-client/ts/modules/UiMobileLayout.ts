@@ -80,7 +80,6 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 			$container: $container
 		};
 		this.resizeChildren();
-		viewComponent.attachedToDom = this.attachedToDom;
 	}
 
 	public removeView(viewId: string) {
@@ -108,8 +107,6 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 			newView.$container.classList.add("active");
 			this.currentView && this.currentView.$container.classList.remove("active");
 		}
-
-		newView.component.attachedToDom = true;
 
 		this.currentView = newView;
 	}
@@ -150,7 +147,6 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 		this.$toolbarContainer.classList.toggle('hidden', !toolbar);
 		if (toolbar) {
 			this.$toolbarContainer.appendChild(this.toolbar.getMainDomElement());
-			this.toolbar.attachedToDom = this.attachedToDom;
 		}
 	}
 
@@ -162,18 +158,11 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 		this.$navBarContainer.classList.toggle('hidden', !navBar);
 		if (navBar) {
 			this.$navBarContainer.appendChild(this.navBar.getMainDomElement());
-			this.navBar.attachedToDom = this.attachedToDom;
 		}
 	}
 
 	public getMainDomElement(): HTMLElement {
 		return this.$mainDiv;
-	}
-
-	protected onAttachedToDom() {
-		if (this.toolbar) this.toolbar.attachedToDom = true;
-		if (this.navBar) this.navBar.attachedToDom = true;
-		if (this.currentView) this.currentView.component.attachedToDom = true;
 	}
 
 	public destroy(): void {

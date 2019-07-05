@@ -106,16 +106,16 @@ export class UiVideoPlayer extends UiComponent<UiVideoPlayerConfig> implements U
 
 		this.setPreloadMode(config.preloadMode);
 		this.setAutoplay(config.autoplay);
+
+		this.displayedDeferredExecutor.invokeWhenReady(() => {
+			if (this.autoplay) {
+				this.play();
+			}
+		});
 	}
 
 	public getMainDomElement(): HTMLElement {
 		return this.$componentWrapper;
-	}
-
-	protected onAttachedToDom(): void {
-		if (this.autoplay) {
-			this.play();
-		}
 	}
 
 	private onContentReady() {

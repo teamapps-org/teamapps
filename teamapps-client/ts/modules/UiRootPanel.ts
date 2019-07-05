@@ -103,7 +103,6 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 			component: component,
 			$wrapper: $childComponentContainer
 		};
-		component.attachedToDom = this.attachedToDom;
 		if (show) {
 			this.setVisibleChildComponent(component.getId(), null, 0);
 		}
@@ -251,7 +250,6 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 
 		document.body.appendChild(uiWindow.getMainDomElement());
 		uiWindow.getMainDomElement().setAttribute("data-background-container-id", this.ALL_ROOT_PANELS[0].getId());
-		uiWindow.attachedToDom = true;
 		uiWindow.setListener({
 			onWindowClosed: (window, animationDuration) => this.removeWindow(window.getId(), animationDuration)
 		});
@@ -276,10 +274,6 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		}, animationDuration);
 	};
 
-	protected onAttachedToDom() {
-		this.childComponents.forEach(c => c.component.attachedToDom = true);
-	}
-
 	public destroy(): void {
 		delete UiRootPanel.ALL_ROOT_PANELS_BY_ID[this.getId()];
 		if (Object.keys(UiRootPanel.ALL_ROOT_PANELS_BY_ID).length === 0) {
@@ -290,7 +284,6 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	public static buildRootPanel(containerElementId: string, uiRootPanel: UiRootPanel, context?: TeamAppsUiContext): void {
 		const $container = containerElementId ? document.querySelector("#" + containerElementId) : document.body;
 		$container.appendChild(uiRootPanel.getMainDomElement());
-		uiRootPanel.attachedToDom = true;
 	}
 
 	public static setThemeClassName(theme: string) {

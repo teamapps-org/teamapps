@@ -367,8 +367,8 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 				},
 			});
 			this.onResized.addListener(this.updatePopperPosition);
-			this.onAttachedToDomChanged.addListener(attached => {
-				if (attached) {
+			this.deFactoVisibilityChanged.addListener(visible => {
+				if (visible) {
 					document.body.appendChild(this._messageTooltip.$popperElement);
 				} else {
 					this._messageTooltip.$popperElement.remove();

@@ -21,7 +21,7 @@
 import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {executeWhenAttached} from "./util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import * as d3 from "d3";
 import {BaseType, NamespaceLocalObject} from "d3";
@@ -238,7 +238,7 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 		}
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	private redraw() {
 		if (this.getWidth() === 0 || this.getHeight() === 0) {
 			return;
@@ -462,10 +462,10 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 		});
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	setYScaleType(lineId: string, yScaleType: UiScaleType): void {
 		this.seriesById[lineId].setYScaleType(yScaleType);
-		this.reLayout(true);
+		this.onResize();
 	}
 
 	setSelectedInterval(intervalX: UiLongIntervalConfig): void {
@@ -515,7 +515,7 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 				delete this.seriesById[lineId];
 			}
 		});
-		this.reLayout(true);
+		this.onResize();
 	}
 
 	setLineFormat(lineId: string, lineFormat: UiLineChartLineFormatConfig): void {

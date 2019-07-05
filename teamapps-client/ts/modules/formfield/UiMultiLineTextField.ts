@@ -27,7 +27,7 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {keyCodes} from "trivial-components";
-import {executeWhenAttached} from "../util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
 export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, string> implements UiMultiLineTextFieldEventSource, UiMultiLineTextFieldCommandHandler {
 
@@ -107,7 +107,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		return v == null || typeof v === "string";
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	private updateTextareaHeight() {
 		this.$field.style.height = '0px';
 		this.$field.style.height = (Math.max(this.minHeight - 2, Math.min(this.$field.scrollHeight, this.maxHeight - 2))) + 'px';
@@ -126,7 +126,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		this.updateClearButton();
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	private updateClearButton() {
 		this.$wrapper.classList.toggle("clearable", !!(this.showClearButton && this.$field.value));
 		this.$clearButton.style.right = hasVerticalScrollBar(this.$field) ? Constants.SCROLLBAR_WIDTH + "px" : "0";

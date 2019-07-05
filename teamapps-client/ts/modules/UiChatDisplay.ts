@@ -25,6 +25,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiChatDisplay_PreviousMessagesRequestedEvent, UiChatDisplayCommandHandler, UiChatDisplayConfig, UiChatDisplayEventSource} from "../generated/UiChatDisplayConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiSpinner} from "./micro-components/UiSpinner";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 
 export class UiChatDisplay extends UiComponent<UiChatDisplayConfig> implements UiChatDisplayCommandHandler, UiChatDisplayEventSource {
 
@@ -106,15 +107,12 @@ export class UiChatDisplay extends UiComponent<UiChatDisplayConfig> implements U
 		this.addChatMessages(chatMessages, true, includesFirstMessage);
 	}
 
+	@executeWhenFirstDisplayed(true)
 	private scrollToBottom() {
 		this.$main.scroll({
 			top: 100000000,
 			behavior: 'smooth'
 		});
-	}
-
-	protected onAttachedToDom(): void {
-		this.scrollToBottom();
 	}
 
 	private getEarliestChatMessageId() {

@@ -67,7 +67,6 @@ export class RefreshableComponentProxyHandle<T extends UiComponent> {
 		const elementIndex = this.getElementIndex(oldComponent.getMainDomElement());
 		if (parentElement != null) {
 			insertAtIndex(parentElement, newComponent.getMainDomElement(), elementIndex);
-			newComponent.attachedToDom = true;
 		}
 
 		oldComponent.getMainDomElement().remove();

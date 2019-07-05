@@ -74,7 +74,6 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 					UiRootPanel.registerTemplates(messageObject.registeredTemplates, this);
 					// TODO set background image!
 					document.body.appendChild(rootPanel.getMainDomElement());
-					rootPanel.attachedToDom = true;
 					this.workSpaceLayout = new UiWorkSpaceLayout({
 						_type: "UiWorkSpaceLayout",
 						id: messageObject.workspaceLayoutId,

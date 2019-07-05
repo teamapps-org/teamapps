@@ -87,7 +87,6 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 		this.$overflowDropDownButton.addEventListener("mousedown", () => {
 			if (!this.overflowDropDown.isOpen) {
 				this.overflowDropDown.open({$reference: this.$overflowDropDownButton, width: Math.min(400, this.totalWidthOfOverflowButtons * 1.2)});
-				this.overflowToolAccordion.attachedToDom = true; // obviously...
 				this.updateButtonOverflow();
 			}
 		});
@@ -252,7 +251,6 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	private updateButtonOverflow() {
-		if (!this.attachedToDom) return;
 		let availableWidth = this._$innerContainer.offsetWidth;
 		this._$innerContainer.classList.add("overflow-measurement-mode");
 		let logoWidth = 0;

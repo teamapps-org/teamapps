@@ -19,38 +19,35 @@
  */
 import {DeferredExecutor} from "./DeferredExecutor";
 
-export function executeWhenAttached(onlyOnce?: boolean) {
+export function executeWhenFirstDisplayed(onlyOnce?: boolean) {
 	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-
-		modifyOnAttachedToDomIfNotYetDone(target);
-
 		let oldMethod = descriptor.value;
 		descriptor.value = function () {
-			if (!this.__deferredExecutor) {
-				this.__deferredExecutor = new DeferredExecutor();
-				this.__deferredExecutor.ready = this.attachedToDom;
+			if (!this.displayedDeferredExecutor) {
+				console.error("Could not find displayedDeferredExecutor!!");
 			}
 			if (onlyOnce) {
-				this.__deferredExecutor.invokeOnceWhenReady(oldMethod, this, arguments);
+				this.displayedDeferredExecutor.invokeOnceWhenReady(oldMethod, this, arguments);
 			} else {
-				this.__deferredExecutor.invokeWhenReady(oldMethod, this, arguments);
+				this.displayedDeferredExecutor.invokeWhenReady(oldMethod, this, arguments);
 			}
 		};
 	};
 }
 
-function modifyOnAttachedToDomIfNotYetDone(proto: any) {
-	if (!proto.__executeWhenAttachedSupport) {
-		let oldMethod = proto.onAttachedToDom;
-		proto.onAttachedToDom = function () {
-			if (!this.__deferredExecutor) {
-				this.__deferredExecutor = new DeferredExecutor();
+export function executeDeferredExecutorReady(deferredExecutorGetter: () => DeferredExecutor, onlyOnce?: boolean) {
+	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+		let oldMethod = descriptor.value;
+		descriptor.value = function () {
+			let deferredExecutor = deferredExecutorGetter();
+			if (onlyOnce) {
+				this.deferredExecutor.invokeOnceWhenReady(oldMethod, this, arguments);
+			} else {
+				this.deferredExecutor.invokeWhenReady(oldMethod, this, arguments);
 			}
-			oldMethod.apply(this, arguments);
-			this.__deferredExecutor.ready = true;
 		};
-		proto.__executeWhenAttachedSupport = true;
-	}
+	};
 }
+
 
 

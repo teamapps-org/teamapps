@@ -22,7 +22,7 @@ import {UiGaugeCommandHandler, UiGaugeConfig} from "../generated/UiGaugeConfig";
 import {UiGaugeOptionsConfig} from "../generated/UiGaugeOptionsConfig";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {executeWhenAttached} from "./util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {LinearGauge, RadialGauge} from "canvas-gauges";
 import {debouncedMethod, DebounceMode} from "./util/debounce";
@@ -40,7 +40,7 @@ export class UiGauge extends UiComponent<UiGaugeConfig> implements UiGaugeComman
 		this.createGauge();
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	private createGauge() {
 		if (this.getWidth() > 0 && this.getHeight() > 0) {
 			let options = this.createOptions(this._config.options);

@@ -46,10 +46,6 @@ export class UiFlexContainer extends UiComponent<UiFlexContainerConfig> implemen
 		return enumValueName.toLowerCase().replace("_", "-");
 	}
 
-	protected onAttachedToDom(): void {
-		this.components.forEach(c => c.attachedToDom = true);
-	}
-
 	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}

@@ -22,7 +22,7 @@ import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {applyDisplayMode, boundSelection, css, parseHtml} from "./Common";
-import {executeWhenAttached} from "./util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {UiImageCropper_SelectionChangedEvent, UiImageCropperCommandHandler, UiImageCropperConfig, UiImageCropperEventSource} from "../generated/UiImageCropperConfig";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -148,7 +148,7 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 		this.$selectionFrame.classList.add(`mode-${UiImageCropperSelectionMode[selectionMode].toLowerCase()}`)
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
 		applyDisplayMode(this.getMainDomElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE, {
 			innerPreferedDimensions: {
@@ -159,7 +159,7 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 		this.updateCroppingFramePosition();
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	private updateCroppingFramePosition() {
 		if (this.selection != null) {
 			let correctionFactor = this.calculateCoordinateCorrectionFactor();

@@ -84,10 +84,6 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 		return new UiButtonGroup(buttonGroupConfig, this, this._context, AbstractUiToolContainer.$sizeTestingContainer);
 	}
 
-	protected onAttachedToDom() {
-		this.buttonGroupsById.values.forEach(buttonGroup => buttonGroup.onAttachedToDom());
-	}
-
 	public setButtonHasDropDown(groupId: string, buttonId: string, hasDropDown: boolean): void {
 		this.buttonGroupsById.getValue(groupId).setButtonHasDropDown(buttonId, hasDropDown);
 	}
@@ -176,7 +172,6 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 class UiButtonGroup {
 	private static logger = log.getLogger("UiToolAccordion.UiButtonGroup");
 
-	private attachedToDom: boolean = false;
 	private config: UiToolbarButtonGroupConfig;
 	private visible: boolean = true;
 	private $buttonGroupWrapper: HTMLElement;
@@ -429,9 +424,9 @@ class UiButtonGroup {
 		this.updateRows();
 	}
 
-	private updateRows() {
+	public updateRows() {
 		let availableWidth = this.$buttonGroupWrapper.offsetWidth;
-		if (!this.attachedToDom || !availableWidth) {
+		if (availableWidth == 0) {
 			return;
 		}
 
@@ -486,14 +481,6 @@ class UiButtonGroup {
 
 	public getMainDomElement(): HTMLElement {
 		return this.$buttonGroupWrapper;
-	}
-
-	public onAttachedToDom() {
-		this.attachedToDom = true;
-		this.buttons.forEach(b => {
-			b.dropDownComponent && (b.dropDownComponent.attachedToDom = true);
-		});
-		this.updateRows();
 	}
 
 	public onResize(): void {

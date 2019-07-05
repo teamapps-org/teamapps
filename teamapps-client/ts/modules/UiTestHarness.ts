@@ -33,7 +33,6 @@ export class UiTestHarness {
 
 		(window as any).c = component;
 		document.body.appendChild(component.getMainDomElement());
-		component.attachedToDom = true;
 	}
 
 	private createRadioGroup() {

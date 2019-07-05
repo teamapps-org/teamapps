@@ -45,7 +45,7 @@ import {debouncedMethod} from "../util/debounce";
 import {UiComponent} from "../UiComponent";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {executeWhenAttached} from "../util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {arraysEqual, css, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml} from "../Common";
 import {UiSortDirection} from "../../generated/UiSortDirection";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
@@ -161,13 +161,19 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this.createSlickGrid(config, $table);
 
 		this.dropDown = new UiDropDown();
+
+		this.displayedDeferredExecutor.invokeWhenReady(() => {
+			if (this._grid != null) {
+				this._grid.scrollRowToTop(0); // the scroll position gets lost when the table gets detached, so it is necessary to inform it that it should display the top of the table
+			}
+		});
 	}
 
 	private isRowExpanded(item: UiHierarchicalClientRecordConfig): boolean {
 		return item.expanded;
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	private createSlickGrid(config: UiTableConfig, $table: HTMLElement) {
 		this.allColumns = this._createColumns();
 
@@ -505,13 +511,6 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		return this.$component;
 	}
 
-	protected onAttachedToDom() {
-		//this._grid.updateCanvasWidth(true);
-		if (this._grid != null) {
-			this._grid.scrollRowToTop(0); // the scroll position gets lost when the table gets detached, so it is necessary to inform it that it should display the top of the table
-		}
-	}
-
 	private _createColumns(): Column[] {
 		const columns: Column[] = [];
 		for (let i = 0; i < this._config.columns.length; i++) {
@@ -653,7 +652,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		return "message-" + UiFieldMessageSeverity[severity].toLowerCase();
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public clearTable() {
 		this.dataProvider.clear();
 		this._grid.setData(this.dataProvider, true);
@@ -661,7 +660,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this._grid.setSelectedRows([]);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public addData(startIndex: number,
 	               data: UiTableClientRecordConfig[],
 	               totalNumberOfRecords: number,
@@ -708,7 +707,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		}
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	removeData(ids: number[]): void {
 		let deletedItemRowNumbers = Object.values(this.dataProvider.findVisibleRowIndexesByIds(ids));
 		deletedItemRowNumbers.sort();
@@ -741,7 +740,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this.rerenderAllRows();
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public setChildrenData(recordId: any, data: any[]) {
 		let tableData = data;
 		this.dataProvider.setChildrenData(recordId, tableData);
@@ -750,7 +749,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this.rerenderAllRows();
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public setCellValue(recordId: any, fieldName: string, data: any) {
 		const node = this.dataProvider.getNodeById(recordId);
 		if (node) {
@@ -759,7 +758,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this.rerenderRecordRow(recordId);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public updateRecord(record: UiTableClientRecordConfig) {
 		this.dataProvider.updateNode(record);
 		this.rerenderRecordRow(record.id);
@@ -824,13 +823,13 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		return this.allColumns.filter(column => column.id === id)[0];
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public markTableField(recordId: any, fieldName: string, mark: boolean) {
 		this.dataProvider.setCellMarked(recordId, fieldName, mark);
 		this.rerenderRecordRow(recordId);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public clearAllFieldMarkings() {
 		this.dataProvider.clearAllFieldMarkings();
 		for (let i = 0; i < this.dataProvider.getLength(); i++) {
@@ -839,7 +838,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this._grid.render();
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public setRecordBold(recordId: any, bold: boolean) {
 		let rowIndex = this.dataProvider.findVisibleRowIndexById(recordId);
 		if (rowIndex == null) {
@@ -851,7 +850,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this._grid.render();
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public selectRows(recordIds: number[], scrollToFirstRecord: boolean /*TODO*/) {
 		const rowIndexes = Object.values(this.dataProvider.findVisibleRowIndexesByIds(recordIds));
 
@@ -876,7 +875,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		}
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public focusCell(recordId: any, columnPropertyName: string) {
 		const rowIndex = this.dataProvider.findVisibleRowIndexById(recordId);
 		if (rowIndex != null) {
@@ -895,7 +894,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		}
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	@debouncedMethod(300)
 	public onResize(): void {
 		this._grid.resizeCanvas();
@@ -980,7 +979,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		}
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	addColumns(columnConfigs: UiTableColumnConfig[], index: number): void {
 		const slickColumnConfigs = this._grid.getColumns();
 		const newSlickColumnConfigs = columnConfigs.map(columnConfig => this.createSlickColumnConfig(columnConfig));
@@ -996,7 +995,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this._grid.setColumns(columns);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	removeColumns(columnNames: string[]): void {
 		const slickColumnConfigs = this._grid.getColumns()
 			.filter(c => columnNames.indexOf(c.id) === -1);
@@ -1005,7 +1004,7 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		this.setSlickGridColumns(this.getVisibleColumns());
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	setColumnVisibility(propertyName: string, visible: boolean): void {
 		const column = this.getColumnById(propertyName);
 		column.visible = visible;

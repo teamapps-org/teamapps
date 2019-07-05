@@ -33,7 +33,7 @@ import {
 import * as tinymce from 'tinymce';
 import {Editor, Settings} from 'tinymce';
 import 'tinymce/themes/modern/theme';
-import {executeWhenAttached} from "../util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {DeferredExecutor} from "../util/DeferredExecutor";
 import {generateUUID, keyCodes} from "trivial-components";
 // Any plugins you want to use has to be imported
@@ -177,7 +177,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		this.setMaxHeight(config.maxHeight);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	private initTinyMce() {
 		if (this.isEditable() && !this.initializationStarted) {
 			this.initializationStarted = true;
@@ -497,7 +497,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	}
 
 	@debouncedMethod(700, DebounceMode.BOTH)
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	onResize(): void {
 		this.updateToolbarOverflow();
 	}

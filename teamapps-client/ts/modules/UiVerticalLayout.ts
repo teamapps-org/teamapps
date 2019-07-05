@@ -46,10 +46,6 @@ export class UiVerticalLayout extends UiComponent<UiVerticalLayoutConfig> implem
 		return this.$verticalLayout;
 	}
 
-	protected onAttachedToDom() {
-		this.children.forEach(c => c.attachedToDom = true);
-	}
-
 	public destroy(): void {
 	}
 
@@ -58,7 +54,6 @@ export class UiVerticalLayout extends UiComponent<UiVerticalLayoutConfig> implem
 		this.$verticalLayout.appendChild($childWrapper);
 		$childWrapper.appendChild(childComponent.getMainDomElement());
 		this.children.push(childComponent);
-		childComponent.attachedToDom = this.attachedToDom;
 	}
 
 	public removeComponent(childComponent: UiComponent) {

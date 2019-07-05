@@ -71,7 +71,6 @@ export class UiAbsoluteLayout extends UiComponent<UiAbsoluteLayoutConfig> implem
 				const mainDomElementElement = c.getMainDomElement();
 				mainDomElementElement.removeEventListener("transitionend", this.transitionEndEventListener);
 				this.$main.appendChild(mainDomElementElement);
-				c.attachedToDom = this.attachedToDom;
 			});
 
 		this.$main.offsetWidth; // trigger reflow
@@ -95,10 +94,6 @@ export class UiAbsoluteLayout extends UiComponent<UiAbsoluteLayoutConfig> implem
 		});
 
 		this.$style.innerText = styles;
-	}
-
-	protected onAttachedToDom(): void {
-		this.components.forEach(c => (c.component as UiComponent).attachedToDom = true);
 	}
 
 }

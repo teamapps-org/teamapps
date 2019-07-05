@@ -72,7 +72,6 @@ export {UiSplitPane} from "./UiSplitPane";
 export {UiItemView} from "./UiItemView";
 export {UiTable} from "./table/UiTable";
 export {UiTabPanel} from "./UiTabPanel";
-export {UiTemplateTestContainer} from "./UiTemplateTestContainer";
 export {UiTimeGraph} from "./UiTimeGraph";
 export {UiToolAccordion} from "./tool-container/tool-accordion/UiToolAccordion";
 export {UiToolbar} from "./tool-container/toolbar/UiToolbar";

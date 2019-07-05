@@ -421,10 +421,6 @@ export class UiWorkSpaceLayout extends UiComponent<UiWorkSpaceLayoutConfig> impl
 		return this.localViewContainer.getMainDomElement();
 	}
 
-	protected onAttachedToDom() {
-		this.localViewContainer.attachedToDom = true;
-	}
-
 	public destroy(): void {
 		this.localViewContainer.destroy();
 	}

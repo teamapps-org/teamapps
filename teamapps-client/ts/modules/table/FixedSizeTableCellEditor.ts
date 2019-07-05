@@ -68,12 +68,10 @@ export class FixedSizeTableCellEditor extends AbstractTableEditor {
 			maxHeight: "unset"
 		});
 		this.container.appendChild($uiField);
-		uiField.attachedToDom = true;
 	}
 
 	public destroy() {
 		this.destroyCallback();
-		this.uiField.attachedToDom = false;
 	};
 
 	public focus() {
