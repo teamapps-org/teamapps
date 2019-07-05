@@ -50,12 +50,12 @@
   .fc-month-grid-day {
     cursor: pointer;
 
-    &.weekend {
-      fill: #888;
-    }
-
     .day-number {
       fill: @text-color;
+    }
+
+    &.weekend .day-number {
+      fill: #888;
     }
 
     .day-occupation-background-circle,

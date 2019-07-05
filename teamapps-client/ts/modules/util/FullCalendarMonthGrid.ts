@@ -157,7 +157,6 @@ export class MonthGridView extends View {
 		while (copy.day() !== firstDay) {
 			copy.add(-1, 'day');
 		}
-		console.log(m.toString(), this.opt("firstDay"), copy.toString());
 		return copy;
 	}
 
@@ -196,7 +195,6 @@ export class MonthGridView extends View {
 			let date = addDays(new Date(), i);
 			names[date.getDay()] = this.dateEnv.format(date, formatter);
 		}
-		console.log(names);
 		return names;
 	}
 
