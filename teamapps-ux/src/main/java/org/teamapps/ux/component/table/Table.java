@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,8 +66,8 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	public final Event<List<RECORD>> onMultipleRowsSelected = new Event<>();
 	public final Event<SortingChangedEventData> onSortingChanged = new Event<>();
 	public final Event<TableDataRequestEventData> onTableDataRequest = new Event<>();
-	public final Event<FieldOrderChangeEventData> onFieldOrderChange = new Event<>();
-	public final Event<ColumnSizeChangeEventData> onColumnSizeChange = new Event<>();
+	public final Event<FieldOrderChangeEventData<RECORD>> onFieldOrderChange = new Event<>();
+	public final Event<ColumnSizeChangeEventData<RECORD>> onColumnSizeChange = new Event<>();
 
 	private TableModel<RECORD> model = new ListTableModel<>(Collections.emptyList());
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
@@ -82,7 +82,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	private Map<RECORD, Map<String, List<FieldMessage>>> cellMessages = new HashMap<>();
 	private Map<RECORD, Set<String>> markedCells = new HashMap<>();
 
-	private List<TableColumn> columns = new ArrayList<>();
+	private List<TableColumn<RECORD>> columns = new ArrayList<>();
 
 	private boolean displayAsList; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection
 	private boolean forceFitWidth; //if true, force the widths of all columns to fit into the available space of the list
@@ -136,7 +136,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		this(new ArrayList<>());
 	}
 
-	public Table(List<TableColumn> columns) {
+	public Table(List<TableColumn<RECORD>> columns) {
 		super();
 		columns.forEach(this::addColumn);
 
@@ -164,19 +164,19 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		this.columns.forEach(c -> c.getField().destroy());
 	}
 
-	public void addColumn(TableColumn column) {
+	public void addColumn(TableColumn<RECORD> column) {
 		addColumn(column, columns.size());
 	}
 
-	public void addColumn(TableColumn column, int index) {
+	public void addColumn(TableColumn<RECORD> column, int index) {
 		addColumns(Collections.singletonList(column), index);
 	}
 
-	public void addColumns(List<TableColumn> newColumns, int index) {
+	public void addColumns(List<TableColumn<RECORD>> newColumns, int index) {
 		this.columns.addAll(index, newColumns);
 		newColumns.forEach(column -> {
 			column.setTable(this);
-			AbstractField field = column.getField();
+			AbstractField<?> field = column.getField();
 			field.setParent(this);
 			field.onValueChanged.addListener(value -> {
 				transientChangesByRecordAndPropertyName
@@ -202,11 +202,11 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				.ifPresent(this::removeColumn);
 	}
 
-	public void removeColumn(TableColumn column) {
+	public void removeColumn(TableColumn<RECORD> column) {
 		this.removeColumns(Collections.singletonList(column));
 	}
 
-	public void removeColumns(List<TableColumn> obsoleteColumns) {
+	public void removeColumns(List<TableColumn<RECORD>> obsoleteColumns) {
 		this.columns.removeAll(obsoleteColumns);
 		if (isRendered()) {
 			getSessionContext().queueCommand(
@@ -271,8 +271,8 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				UiTable.CellEditingStartedEvent editingStartedEvent = (UiTable.CellEditingStartedEvent) event;
 				RECORD record = clientRecordCache.getRecordByClientId(editingStartedEvent.getRecordId());
 				this.activeEditorCell = new TableCellCoordinates<>(record, editingStartedEvent.getColumnPropertyName());
-				TableColumn column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
-				Object cellValue = getCellValue(record, editingStartedEvent.getColumnPropertyName());
+				TableColumn<RECORD> column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
+				Object cellValue = getCellValue(record, column);
 				AbstractField activeEditorField = getActiveEditorField();
 				activeEditorField.setValue(cellValue);
 				List<FieldMessage> cellMessages = getCellMessages(record, editingStartedEvent.getColumnPropertyName());
@@ -289,7 +289,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 			case UI_TABLE_CELL_EDITING_STOPPED: {
 				this.activeEditorCell = null;
 				UiTable.CellEditingStoppedEvent editingStoppedEvent = (UiTable.CellEditingStoppedEvent) event;
-				TableColumn column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
+				TableColumn<RECORD> column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
 				this.onCellEditingStopped.fire(new CellEditingStoppedEvent<>(clientRecordCache.getRecordByClientId(editingStoppedEvent.getRecordId()), column));
 				break;
 			}
@@ -334,35 +334,37 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				break;
 			case UI_TABLE_FIELD_ORDER_CHANGE: {
 				UiTable.FieldOrderChangeEvent fieldOrderChangeEvent = (UiTable.FieldOrderChangeEvent) event;
-				TableColumn column = getColumnByPropertyName(fieldOrderChangeEvent.getColumnPropertyName());
+				TableColumn<RECORD> column = getColumnByPropertyName(fieldOrderChangeEvent.getColumnPropertyName());
 				onFieldOrderChange.fire(new FieldOrderChangeEventData(column, fieldOrderChangeEvent.getPosition()));
 				break;
 			}
 			case UI_TABLE_COLUMN_SIZE_CHANGE: {
 				UiTable.ColumnSizeChangeEvent columnSizeChangeEvent = (UiTable.ColumnSizeChangeEvent) event;
-				TableColumn column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
+				TableColumn<RECORD> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
 				onColumnSizeChange.fire(new ColumnSizeChangeEventData(column, columnSizeChangeEvent.getSize()));
 				break;
 			}
 		}
 	}
 
-	private Object getCellValue(RECORD record, String columnPropertyName) {
+	private Object getCellValue(RECORD record, TableColumn<RECORD> column) {
 		Map<String, Object> changesForRecord = transientChangesByRecordAndPropertyName.getOrDefault(record, Collections.emptyMap());
-		boolean changed = changesForRecord.containsKey(columnPropertyName);
+		boolean changed = changesForRecord.containsKey(column.getPropertyName());
 		Object cellValue;
 		if (changed) { // associated value might be null!!
-			cellValue = changesForRecord.get(columnPropertyName);
+			cellValue = changesForRecord.get(column.getPropertyName());
 		} else {
-			cellValue = propertyExtractor.getValue(record, columnPropertyName);
+			cellValue = extractRecordProperty(record, column);
 		}
 		return cellValue;
 	}
 
-	public List<String> getColumnNames() {
-		return columns.stream()
-				.map(tableColumn -> tableColumn.getPropertyName())
-				.collect(Collectors.toList());
+	private Object extractRecordProperty(RECORD record, TableColumn<RECORD> column) {
+		if (column.getValueExtractor() != null) {
+			return column.getValueExtractor().extract(record);
+		} else {
+			return propertyExtractor.getValue(record, column.getPropertyName());
+		}
 	}
 
 	public TableCellCoordinates<RECORD> getActiveEditorCell() {
@@ -428,7 +430,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), clientRecordCache.getUiRecordIds(getSelectedRecords()), scrollToRecord));
 	}
 
-	protected void updateColumnMessages(TableColumn tableColumn) {
+	protected void updateColumnMessages(TableColumn<RECORD> tableColumn) {
 		queueCommandIfRendered(() -> new UiTable.SetColumnMessagesCommand(getId(), tableColumn.getPropertyName(), tableColumn.getMessages().stream()
 				.map(message -> message.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
 				.collect(Collectors.toList())));
@@ -465,7 +467,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	}
 
 
-	protected void updateColumnVisibility(TableColumn tableColumn) {
+	protected void updateColumnVisibility(TableColumn<RECORD> tableColumn) {
 		queueCommandIfRendered(() -> new UiTable.SetColumnVisibilityCommand(getId(), tableColumn.getPropertyName(), tableColumn.isVisible()));
 	}
 
@@ -724,8 +726,8 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	private UiTableClientRecord createUiTableClientRecord(RECORD record) {
 		UiTableClientRecord clientRecord = new UiTableClientRecord();
 		Map<String, Object> uiValues = new HashMap<>();
-		for (TableColumn column : columns) {
-			Object uxValue = propertyExtractor.getValue(record, column.getPropertyName());
+		for (TableColumn<RECORD> column : columns) {
+			Object uxValue = extractRecordProperty(record, column);
 			uiValues.put(column.getPropertyName(), column.getField().convertUxValueToUiValue(uxValue));
 		}
 		clientRecord.setValues(uiValues);
@@ -735,7 +737,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		return clientRecord;
 	}
 
-	public List<TableColumn> getColumns() {
+	public List<TableColumn<RECORD>> getColumns() {
 		return columns;
 	}
 
@@ -1001,7 +1003,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		this.pageSize = pageSize;
 	}
 
-	public TableColumn getColumnByPropertyName(String propertyName) {
+	public TableColumn<RECORD> getColumnByPropertyName(String propertyName) {
 		return columns.stream()
 				.filter(column -> column.getPropertyName().equals(propertyName))
 				.findFirst().orElse(null);
@@ -1023,8 +1025,9 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		return transientChangesByRecordAndPropertyName.getOrDefault(record, Collections.emptyMap());
 	}
 
-	public Map<String, Object> getAllCellValues(RECORD record) {
-		Map<String, Object> values = propertyExtractor.getValues(record, columns.stream().map(c -> c.getPropertyName()).collect(Collectors.toList()));
+	public Map<String, Object> getAllCellValuesForRecord(RECORD record) {
+		Map<String, Object> values = columns.stream()
+				.collect(Collectors.toMap(TableColumn::getPropertyName, c -> extractRecordProperty(record, c)));
 		values.putAll(transientChangesByRecordAndPropertyName.getOrDefault(record, Collections.emptyMap()));
 		return values;
 	}

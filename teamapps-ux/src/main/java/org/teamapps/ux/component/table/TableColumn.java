@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.table;
 
+import org.teamapps.data.extract.ValueExtractor;
 import org.teamapps.dto.UiTableColumn;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.field.AbstractField;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TableColumn {
+public class TableColumn<RECORD> {
 	private Table table;
 
 	private final String propertyName;
@@ -43,7 +44,8 @@ public class TableColumn {
 	private boolean visible = true;
 	private boolean sortable = true;
 	private boolean resizeable = true;
-	boolean hiddenIfOnlyEmptyCellsVisible = false;
+	private boolean hiddenIfOnlyEmptyCellsVisible = false;
+	private ValueExtractor<RECORD> valueExtractor;
 
 	private List<FieldMessage> messages = new ArrayList<>();
 
@@ -117,7 +119,7 @@ public class TableColumn {
 		return icon;
 	}
 
-	public TableColumn setIcon(Icon icon) {
+	public TableColumn<RECORD>setIcon(Icon icon) {
 		this.icon = icon;
 		return this;
 	}
@@ -126,7 +128,7 @@ public class TableColumn {
 		return title;
 	}
 
-	public TableColumn setTitle(String title) {
+	public TableColumn<RECORD>setTitle(String title) {
 		this.title = title;
 		return this;
 	}
@@ -135,7 +137,7 @@ public class TableColumn {
 		return field;
 	}
 
-	public TableColumn setField(AbstractField field) {
+	public TableColumn<RECORD>setField(AbstractField field) {
 		this.field = field;
 		return this;
 	}
@@ -144,7 +146,7 @@ public class TableColumn {
 		return minWidth;
 	}
 
-	public TableColumn setMinWidth(int minWidth) {
+	public TableColumn<RECORD>setMinWidth(int minWidth) {
 		this.minWidth = minWidth;
 		return this;
 	}
@@ -153,7 +155,7 @@ public class TableColumn {
 		return defaultWidth;
 	}
 
-	public TableColumn setDefaultWidth(int defaultWidth) {
+	public TableColumn<RECORD>setDefaultWidth(int defaultWidth) {
 		this.defaultWidth = defaultWidth;
 		return this;
 	}
@@ -162,7 +164,7 @@ public class TableColumn {
 		return maxWidth;
 	}
 
-	public TableColumn setMaxWidth(int maxWidth) {
+	public TableColumn<RECORD>setMaxWidth(int maxWidth) {
 		this.maxWidth = maxWidth;
 		return this;
 	}
@@ -171,7 +173,7 @@ public class TableColumn {
 		return visible;
 	}
 
-	public TableColumn setVisible(boolean visible) {
+	public TableColumn<RECORD>setVisible(boolean visible) {
 		this.visible = visible;
 		if (table != null) {
 			table.updateColumnVisibility(this);
@@ -183,7 +185,7 @@ public class TableColumn {
 		return sortable;
 	}
 
-	public TableColumn setSortable(boolean sortable) {
+	public TableColumn<RECORD>setSortable(boolean sortable) {
 		this.sortable = sortable;
 		return this;
 	}
@@ -192,7 +194,7 @@ public class TableColumn {
 		return resizeable;
 	}
 
-	public TableColumn setResizeable(boolean resizeable) {
+	public TableColumn<RECORD>setResizeable(boolean resizeable) {
 		this.resizeable = resizeable;
 		return this;
 	}
@@ -201,7 +203,7 @@ public class TableColumn {
 		return hiddenIfOnlyEmptyCellsVisible;
 	}
 
-	public TableColumn setHiddenIfOnlyEmptyCellsVisible(boolean hiddenIfOnlyEmptyCellsVisible) {
+	public TableColumn<RECORD>setHiddenIfOnlyEmptyCellsVisible(boolean hiddenIfOnlyEmptyCellsVisible) {
 		this.hiddenIfOnlyEmptyCellsVisible = hiddenIfOnlyEmptyCellsVisible;
 		return this;
 	}
@@ -212,5 +214,14 @@ public class TableColumn {
 
 	public String getPropertyName() {
 		return propertyName;
+	}
+
+	public ValueExtractor<RECORD> getValueExtractor() {
+		return valueExtractor;
+	}
+
+	public TableColumn<RECORD> setValueExtractor(ValueExtractor<RECORD> valueExtractor) {
+		this.valueExtractor = valueExtractor;
+		return this;
 	}
 }
