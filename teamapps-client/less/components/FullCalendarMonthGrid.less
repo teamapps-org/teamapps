@@ -1,0 +1,103 @@
+.fc-month-grid-view {
+  overflow: auto;
+  cursor: default;
+
+  svg {
+    width: 100%;
+    display: block;
+  }
+
+  .fc-month-grid-day,
+  .fc-month-grid-day-name,
+  .fc-month-grid-week-number,
+  .day-number {
+    font-size: 5pt;
+    text-anchor: middle;
+    alignment-baseline: hanging;
+    font-weight: 500;
+  }
+
+  .fc-month-grid-day-name {
+    fill: #999;
+  }
+
+  .fc-month-grid-week-number {
+    text-anchor: end;
+    fill: #999;
+    font-weight: @calendar-font-weight;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+      text-decoration-color: #999;
+    }
+  }
+
+  .fc-month-grid-month-frame {
+    fill: none;
+    stroke: black;
+  }
+
+  .fc-month-grid-month-name {
+    fill: @text-color;
+    font-weight: @calendar-font-weight;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+      text-decoration-color: @text-color;
+    }
+  }
+
+  .fc-month-grid-day {
+    cursor: pointer;
+
+    &.weekend {
+      fill: #888;
+    }
+
+    .day-number {
+      fill: @text-color;
+    }
+
+    .day-occupation-background-circle,
+    .day-occupation {
+      fill: transparent; // not none, since we need the pointer events!
+      stroke: #ebebeb;
+      stroke-width: 1;
+    }
+
+    .day-occupation {
+      stroke-width: 1;
+    }
+
+    &:hover {
+      .day-number {
+        text-decoration: underline;
+        text-decoration-color: @text-color;
+      }
+      .day-occupation-background-circle {
+        background-color: white;
+      }
+    }
+
+    &.other-month {
+      .day-number {
+        font-weight: 200;
+      }
+
+      .day-occupation-background-circle,
+      .day-occupation {
+        display: none;
+      }
+    }
+
+    &.free .day-occupation-background-circle {
+      stroke: transparent;
+    }
+
+    &.today .day-occupation-background-circle {
+      fill: lighten(@brand-warning, 20%);
+      stroke-width: 1;
+      stroke: lighten(@brand-warning, 20%);
+    }
+  }
+}
