@@ -101,9 +101,6 @@ export class UiAbsoluteLayout extends UiComponent<UiAbsoluteLayoutConfig> implem
 		this.components.forEach(c => (c.component as UiComponent).attachedToDom = true);
 	}
 
-	onResize(): void {
-		this.components.forEach(c => (c.component as UiComponent).reLayout());
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiAbsoluteLayout", UiAbsoluteLayout);

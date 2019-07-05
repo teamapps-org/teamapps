@@ -50,10 +50,6 @@ export class UiVerticalLayout extends UiComponent<UiVerticalLayoutConfig> implem
 		this.children.forEach(c => c.attachedToDom = true);
 	}
 
-	public onResize(): void {
-		this.children.forEach(c => c.reLayout());
-	}
-
 	public destroy(): void {
 	}
 

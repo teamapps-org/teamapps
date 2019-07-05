@@ -343,10 +343,6 @@ class UiComponentPageViewBlock extends BlockComponent<UiComponentPageViewBlockCo
 		this.component.attachedToDom = attachedToDom;
 	}
 
-	public reLayout(): void {
-		this.component.reLayout();
-	}
-
 	public destroy(): void {
 	}
 }

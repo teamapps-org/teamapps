@@ -191,7 +191,6 @@ export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Empty
 		this._updatePositions();
 
 		this.firstChildComponent && (this.firstChildComponent.attachedToDom = this.attachedToDom);
-		this.lastChildComponent && this.lastChildComponent.reLayout();
 
 		this.updateEmptyState();
 	}
@@ -211,7 +210,6 @@ export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Empty
 		this._updatePositions();
 
 		this.lastChildComponent && (this.lastChildComponent.attachedToDom = this.attachedToDom);
-		this.lastChildComponent && this.lastChildComponent.reLayout();
 
 		this.updateEmptyState();
 	}
@@ -309,11 +307,6 @@ export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Empty
 
 	get empty() {
 		return this.isFirstEmpty() && this.isLastEmtpy();
-	}
-
-	public onResize(): void {
-		this._firstChildComponent && this._firstChildComponent.reLayout();
-		this._lastChildComponent && this._lastChildComponent.reLayout();
 	}
 
 	public setSize(referenceChildSize: number, sizePolicy: UiSplitSizePolicy) {

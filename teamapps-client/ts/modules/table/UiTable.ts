@@ -510,7 +510,6 @@ export class UiTable extends UiComponent<UiTableConfig> implements UiTableComman
 		if (this._grid != null) {
 			this._grid.scrollRowToTop(0); // the scroll position gets lost when the table gets detached, so it is necessary to inform it that it should display the top of the table
 		}
-		this.reLayout();
 	}
 
 	private _createColumns(): Column[] {

@@ -210,10 +210,6 @@ export class UiWindow extends UiComponent<UiWindowConfig> implements UiWindowCom
 		this.panel.setStretchContent(stretch);
 	}
 
-	public onResize(): void {
-		this.panel.reLayout();
-	}
-
 	public destroy(): void {
 		this.removeCloseEventListeners();
 	}

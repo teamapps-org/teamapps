@@ -87,7 +87,7 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 	private toolButtons: UiToolButton[] = [];
 	private windowButtons: UiWindowButtonType[];
 	private dropDown: UiDropDown;
-	private restoreFunction: (animationCallback: () => void) => void;
+	private restoreFunction: (animationCallback?: () => void) => void;
 
 	constructor(config: UiPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -169,13 +169,13 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 
 	public maximize(): void {
 		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
-		this.restoreFunction = maximizeComponent(this, () => this.reLayout(true));
+		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
 		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
 		if (this.restoreFunction != null) {
-			this.restoreFunction(() => this.reLayout(true));
+			this.restoreFunction();
 		}
 		this.restoreFunction = null;
 	}
@@ -261,7 +261,6 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.toolButtons.forEach(toolButton => toolButton.attachedToDom = true);
 		if (this.toolbar) this.toolbar.attachedToDom = true;
 		if (this.contentComponent) this.contentComponent.attachedToDom = true;
-		this.reLayout();
 	}
 
 	@executeWhenAttached(true)
@@ -399,10 +398,6 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 	onResize(): void {
 		if (!this.attachedToDom || this.getMainDomElement().offsetWidth <= 0) return;
 		this.relayoutHeader();
-		this.toolbar && this.toolbar.reLayout();
-		this.contentComponent && this.contentComponent.reLayout();
-		this.leftHeaderField && this.leftHeaderField.field.reLayout();
-		this.rightHeaderField && this.rightHeaderField.field.reLayout();
 	}
 
 	@executeWhenAttached(true)

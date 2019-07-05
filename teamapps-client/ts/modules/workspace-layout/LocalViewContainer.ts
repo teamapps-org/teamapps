@@ -325,9 +325,6 @@ export class LocalViewContainer implements ViewContainer {
 
 	private updateToolbarVisibility() {
 		this.$toolbarContainer.classList.toggle('hidden', this._toolbar == null || this._toolbar.empty);
-		if (this._toolbar) {
-			this._toolbar.reLayout();
-		}
 	}
 
 	public getViewInfo(viewName: string) {
@@ -710,7 +707,6 @@ export class LocalViewContainer implements ViewContainer {
 		}
 		tabPanelItem.state = UiViewGroupPanelState.MINIMIZED;
 		this.$minimizedViewsBar.append(tabPanelItem.$minimizedTrayButton);
-		this.reLayout();
 	}
 
 	private maximizeTabPanel(tabPanelItem: TabPanelItem) {
@@ -719,7 +715,6 @@ export class LocalViewContainer implements ViewContainer {
 		this.$maximizationContainerWrapper.classList.add("show");
 		this.$maximizationContainer.append($element);
 		this.$maximizationContainer.classList.add("animated", "zoomIn");
-		tabPanelItem.component.reLayout();
 		tabPanelItem.state = UiViewGroupPanelState.MAXIMIZED;
 	}
 
@@ -731,11 +726,9 @@ export class LocalViewContainer implements ViewContainer {
 			this.$maximizationContainer.classList.remove("animated", "zoomIn");
 			this.$normalContainerOfMaximizedTabPanel.appendChild($element);
 			tabPanelItem.state = UiViewGroupPanelState.NORMAL;
-			tabPanelItem.component.reLayout();
 		} else if (tabPanelItem.state === UiViewGroupPanelState.MINIMIZED) {
 			tabPanelItem.$minimizedTrayButton.remove();
 			tabPanelItem.state = UiViewGroupPanelState.NORMAL;
-			tabPanelItem.component.reLayout();
 		}
 	}
 
@@ -754,13 +747,6 @@ export class LocalViewContainer implements ViewContainer {
 	private onAttachedToDom() {
 		if (this._toolbar) this._toolbar.attachedToDom = true;
 		if (this.itemTree.rootItem.component) this.itemTree.rootItem.component.attachedToDom = true;
-	}
-
-	reLayout() {
-		this.$contentContainer.style.overflow = "hidden"; // enforce container size (from flex layout) over children sizes!
-		this._toolbar && this._toolbar.reLayout();
-		this.itemTree.rootItem && this.itemTree.rootItem.component.reLayout();
-		this.$contentContainer.style.overflow = "visible";
 	}
 
 	destroy() {

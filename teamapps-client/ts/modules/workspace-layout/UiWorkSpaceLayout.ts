@@ -393,10 +393,6 @@ export class UiWorkSpaceLayout extends UiComponent<UiWorkSpaceLayoutConfig> impl
 		};
 	}
 
-	public onResize(): void {
-		this.localViewContainer.reLayout();
-	}
-
 	public setToolbar(toolbar: UiToolbar): void {
 		this.localViewContainer.setToolbar(toolbar);
 	}

@@ -57,12 +57,10 @@ export class UiResponsiveGridLayout extends UiComponent<UiResponsiveGridLayoutCo
 			}
 		});
 		this.updateLayout();
-		this.resizeChildren();
 	}
 
 	onResize(): void {
 		this.updateLayout();
-		this.resizeChildren();
 	}
 
 	private updateLayout() {
@@ -72,10 +70,6 @@ export class UiResponsiveGridLayout extends UiComponent<UiResponsiveGridLayoutCo
 			this.currentLayout.getAllComponents().forEach(c => c.attachedToDom = this.attachedToDom);
 			layout.applyTo(this.$gridLayout);
 		}
-	}
-
-	private resizeChildren() {
-		this.currentLayout.getAllComponents().forEach(c => c.reLayout());
 	}
 
 	private getApplicableLayout(): UiGridLayout {

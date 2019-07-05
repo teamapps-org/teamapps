@@ -103,7 +103,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 	private toolButtonDropDown: UiDropDown;
 	private windowButtons: UiWindowButtonType[];
 
-	private restoreFunction: (animationCallback: () => void) => void;
+	private restoreFunction: (animationCallback?: () => void) => void;
 
 	constructor(config: UiTabPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -202,13 +202,13 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 
 	public maximize(): void {
 		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.RESTORE);
-		this.restoreFunction = maximizeComponent(this, () => this.reLayout(true));
+		this.restoreFunction = maximizeComponent(this);
 	}
 
 	public restore(): void {
 		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].setIcon(StaticIcons.MAXIMIZE);
 		if (this.restoreFunction != null) {
-			this.restoreFunction(() => this.reLayout(true));
+			this.restoreFunction();
 		}
 		this.restoreFunction = null;
 	}
@@ -318,15 +318,11 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		if (tab.toolbar) {
 			if (!tab.toolbar.attachedToDom) {
 				tab.toolbar.attachedToDom = this.attachedToDom;
-			} else {
-				tab.toolbar.reLayout();
 			}
 		}
 		if (tab.contentComponent) {
 			if (!tab.contentComponent.attachedToDom) {
 				tab.contentComponent.attachedToDom = this.attachedToDom;
-			} else {
-				tab.contentComponent.reLayout();
 			}
 		}
 	}
@@ -399,7 +395,6 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		}
 		let tabBarVisibilityChanged = this.updateTabBarVisibility();
 		if (tabBarVisibilityChanged) {
-			this.reLayout(true);
 		} else {
 			this.relayoutButtons();
 		}
@@ -417,7 +412,6 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 			if (tab.toolbar) tab.toolbar.attachedToDom = true;
 			if (tab.contentComponent) tab.contentComponent.attachedToDom = true;
 		});
-		this.reLayout();
 	}
 
 	public setTabToolbar(tabId: string, toolbar: UiToolbar) {
@@ -459,7 +453,6 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 
 		let tabBarVisibilityChanged = this.updateTabBarVisibility();
 		if (tabBarVisibilityChanged) {
-			this.reLayout(true);
 		} else {
 			this.relayoutButtons();
 		}
@@ -600,10 +593,6 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 	@executeWhenAttached(true)
 	public onResize(): void {
 		if (!this.attachedToDom || this.getMainDomElement().offsetWidth <= 0) return;
-		if (this.selectedTab) {
-			this.selectedTab.toolbar && this.selectedTab.toolbar.reLayout();
-			this.selectedTab.contentComponent && this.selectedTab.contentComponent.reLayout();
-		}
 		this.relayoutButtons();
 	}
 

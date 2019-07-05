@@ -110,7 +110,6 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 		}
 
 		newView.component.attachedToDom = true;
-		newView.component.reLayout();
 
 		this.currentView = newView;
 	}
@@ -131,9 +130,7 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 	};
 
 	public onResize(): void {
-		this.toolbar && this.toolbar.reLayout();
 		this.resizeChildren();
-		this.navBar && this.navBar.reLayout(true);
 	}
 
 	private resizeChildren() {
@@ -142,7 +139,6 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 			let view = this.views[viewId];
 			view.$container.style.width = computedStyle.width;
 			view.$container.style.height = computedStyle.height;
-			view.component.reLayout();
 		});
 	}
 

@@ -54,10 +54,6 @@ export class UiFieldGroup extends UiComponent<UiFieldGroupConfig> implements UiF
 		this.fields.forEach(f => f.attachedToDom = this.attachedToDom);
 	}
 
-	onResize(): void {
-		this.fields.forEach(f => f.reLayout());
-	}
-
 	destroy() {
 		this.fields.forEach(f => f.destroy());
 	}

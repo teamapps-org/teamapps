@@ -108,9 +108,6 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 		return false;
 	}
 
-	onResize(): void {
-		this.component && this.component.reLayout(true);
-	}
 }
 
 TeamAppsUiComponentRegistry.registerFieldClass("UiComponentField", UiComponentField);

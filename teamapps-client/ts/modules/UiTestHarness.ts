@@ -34,9 +34,6 @@ export class UiTestHarness {
 		(window as any).c = component;
 		document.body.appendChild(component.getMainDomElement());
 		component.attachedToDom = true;
-		window.addEventListener("resize", () => {
-			component.reLayout();
-		});
 	}
 
 	private createRadioGroup() {

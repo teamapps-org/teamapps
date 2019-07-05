@@ -50,10 +50,6 @@ export class UiFlexContainer extends UiComponent<UiFlexContainerConfig> implemen
 		this.components.forEach(c => c.attachedToDom = true);
 	}
 
-	onResize(): void {
-		this.components.forEach(c => c.reLayout());
-	}
-
 	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}

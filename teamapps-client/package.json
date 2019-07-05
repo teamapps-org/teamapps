@@ -119,6 +119,7 @@
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
     "redux": "^4.0.1",
+    "resize-observer-polyfill": "^1.5.1",
     "shaka-player": "2.x",
     "slick-carousel": "^1.8.1",
     "slickgrid": "https://github.com/yamass/SlickGrid.git#d8ed005670faae0635ec5abad2f5ed20bf454812",
