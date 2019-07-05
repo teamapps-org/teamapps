@@ -64,6 +64,7 @@ class UiCalendar extends UiComponent {
 	event eventClicked(int eventId, boolean isDoubleClick);
 	event eventMoved(int eventId, long newStart, long newEnd); // fired when an event gets moved or resized
 	event dayClicked(long date, boolean isDoubleClick);
+	event intervalSelected(long start, long end, boolean allDay);
 	event dayHeaderClicked(long date);
 	event weekHeaderClicked(int year, int week, long weekStartDate);
 	event monthHeaderClicked(int year, int month, long monthStartDate);
