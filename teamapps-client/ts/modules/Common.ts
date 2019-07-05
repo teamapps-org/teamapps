@@ -757,8 +757,6 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 		height: offset.height,
 	};
 	Object.assign(component.getMainDomElement().style, {
-		position: 'fixed',
-		zIndex: 1000000,
 		...animationStartCssValues
 	});
 	document.body.appendChild(component.getMainDomElement());
