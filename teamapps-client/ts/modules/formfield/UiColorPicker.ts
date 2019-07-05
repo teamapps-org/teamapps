@@ -25,7 +25,7 @@ import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {createUiColorConfig, UiColorConfig} from "../../generated/UiColorConfig";
 import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";
 import {createUiColorCssString} from "../util/CssFormatUtil";
-import {executeWhenAttached} from "../util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {keyCodes} from "trivial-components";
 import {parseHtml} from "../Common";
 
@@ -96,7 +96,7 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 		return super.commit(forceEvenIfNotChanged);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	protected displayCommittedValue(): void {
 		let committedValue = this.getCommittedValue();
 		if (committedValue != null && committedValue.alpha === 1) { // TODO https://github.com/Simonwep/pickr/issues/19

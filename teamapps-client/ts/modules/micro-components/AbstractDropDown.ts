@@ -86,10 +86,6 @@ export abstract class AbstractDropDown<OPEN_CONFIG> {
 				}
 			});
 		}
-
-		if (this._contentComponent != null) {
-			this._contentComponent.attachedToDom = true;
-		}
 	}
 
 	protected abstract doOpen(config: OPEN_CONFIG): void;

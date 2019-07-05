@@ -67,7 +67,6 @@ export class UiResponsiveGridLayout extends UiComponent<UiResponsiveGridLayoutCo
 		const layout = this.getApplicableLayout();
 		if (this.currentLayout !== layout) {
 			this.currentLayout = layout;
-			this.currentLayout.getAllComponents().forEach(c => c.attachedToDom = this.attachedToDom);
 			layout.applyTo(this.$gridLayout);
 		}
 	}
@@ -85,10 +84,6 @@ export class UiResponsiveGridLayout extends UiComponent<UiResponsiveGridLayoutCo
 		this.$main.classList.toggle("fill-height", !!fillHeight);
 	}
 
-
-	protected onAttachedToDom(): void {
-		this.currentLayout.getAllComponents().forEach(c => c.attachedToDom = true);
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiResponsiveGridLayout", UiResponsiveGridLayout);

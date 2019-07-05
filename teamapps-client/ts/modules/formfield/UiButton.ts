@@ -96,7 +96,6 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 				this.dropDownComponent.onItemClicked.addListener(this.closeDropDown);
 			}
 			this.dropDown.setContentComponent(this.dropDownComponent);
-			this.dropDownComponent.attachedToDom = true;
 		} else {
 			this.dropDownComponent = null;
 			this.dropDown.setContentComponent(null);

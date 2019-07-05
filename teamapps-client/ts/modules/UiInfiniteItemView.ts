@@ -22,7 +22,7 @@ import {UiComponent} from "./UiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {Constants, generateUUID, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {executeWhenAttached} from "./util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TableDataProviderItem} from "./table/TableDataProvider";
 import {
 	UiInfiniteItemView_DataRequestEvent,
@@ -214,7 +214,7 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 		this.setHorizontalItemMargin(config.horizontalItemMargin);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	private createGrid() {
 		let cellFormatter = (row: number, cell: number, value: any, columnDef: Slick.Column<TableDataProviderItem>, dataContext: any[]) => {
 			for (var i = 0; i < dataContext.length; i++) {
@@ -273,7 +273,7 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 		}
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public addData(startIndex: number,
 	               data: any[],
 	               totalNumberOfRecords: number,
@@ -299,7 +299,7 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 		this.grid.resizeCanvas();
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	removeData(ids: number[]): void {
 		this.dataProvider.removeData(ids);
 		this.grid.invalidateAllRows();
@@ -307,7 +307,7 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 		this.dataProvider.ensureData(this.grid.getViewport().top, this.grid.getViewport().bottom);
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
 		this.logger.debug(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
 		this.dataProvider.setAvailableWidth(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
@@ -338,7 +338,7 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
             </style>`));
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	setHorizontalItemMargin(horizontalItemMargin: number): void {
 		this.horizontalItemMargin = horizontalItemMargin;
 		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels());
@@ -363,7 +363,7 @@ export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> im
 		}
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	setItemWidth(itemWidth: number): void {
 		this.itemWidth = itemWidth;
 		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels());

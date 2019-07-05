@@ -23,7 +23,7 @@ import {UiFormLayoutPolicyConfig} from "../generated/UiFormLayoutPolicyConfig";
 import {UiFormSectionConfig} from "../generated/UiFormSectionConfig";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {executeWhenAttached} from "./util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
 	createCssGridRowOrColumnString,
 	createUiBorderCssString,
@@ -63,6 +63,14 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 
 		config.fields.forEach(f => this.addField(f as UiComponent));
 		this.updateLayoutPolicies(config.layoutPolicies);
+
+		this.displayedDeferredExecutor.invokeWhenReady(() => {
+			if (this.fillRemainingHeightCheckerInterval == null) {
+				this.fillRemainingHeightCheckerInterval = window.setInterval(() => {
+					this.ensureFillRemainingHeight();
+				}, 30000); // chose high delay here, since it makes the scrollbar appear for a few seconds on macos
+			}
+		})
 	}
 
 	private addField(uiField: UiComponent) {
@@ -73,7 +81,7 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 		return this.$mainDiv;
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
 		const newLayoutPolicyIndex = this.determineLayoutPolicyIndexToApply();
 		if (newLayoutPolicyIndex !== this.activeLayoutPolicyIndex) {
@@ -93,7 +101,7 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 		return policyIndex;
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	private applyLayoutPolicy(layoutPolicy: UiFormLayoutPolicyConfig) {
 		this.uiFields.forEach(uiField => uiField.getMainDomElement().remove());
 		this.sections && this.sections.forEach(section => {
@@ -120,21 +128,13 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 		this.sections.filter(s => s.config.id === sectionId).forEach(s => s.setCollapsed(collapsed));
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	public updateLayoutPolicies(layoutPolicies: UiFormLayoutPolicyConfig[]): void {
 		this.sectionCollapseOverrides = {};
 		this.layoutPoliciesFromLargeToSmall = layoutPolicies.sort((a, b) => b.minWidth - a.minWidth);
 		this.activeLayoutPolicyIndex = this.determineLayoutPolicyIndexToApply();
 		let layoutPolicyToApply = this.layoutPoliciesFromLargeToSmall[this.activeLayoutPolicyIndex];
 		this.applyLayoutPolicy(layoutPolicyToApply);
-	}
-
-	protected onAttachedToDom(): void {
-		if (this.fillRemainingHeightCheckerInterval == null) {
-			this.fillRemainingHeightCheckerInterval = window.setInterval(() => {
-				this.ensureFillRemainingHeight();
-			}, 30000); // chose high delay here, since it makes the scrollbar appear for a few seconds on macos
-		}
 	}
 
 	// This hack is needed because css grid does not fill the whole height of a section when as it grows (flex). This is because the height of the (flex) section is dynamic, and not a static value.
@@ -177,7 +177,7 @@ class UiFormSection {
 
 	constructor(public config: UiFormSectionConfig, context: TeamAppsUiContext, collapsedOverride: boolean) {
 		this.uuid = generateUUID();
-		
+
 		const headerLineClass = config.drawHeaderLine ? 'draw-header-line' : '';
 		const hasHeaderTemplateClass = config.headerTemplate ? 'has-header-template' : '';
 		const hasHeaderDataClass = config.headerData ? 'has-header-data' : '';
@@ -218,7 +218,7 @@ class UiFormSection {
 		}
 
 		this.$expander = this.$div.querySelector<HTMLElement>(":scope .teamapps-expander");
-		this.$div.querySelector<HTMLElement>(':scope .expand-button').addEventListener('click',() => {
+		this.$div.querySelector<HTMLElement>(':scope .expand-button').addEventListener('click', () => {
 			if (config.collapsible) {
 				this.setCollapsed(!this.collapsed);
 			}
@@ -256,7 +256,6 @@ class UiFormSection {
 				};
 				uiField.getMainDomElement().setAttribute("data-placement-id", placementId);
 				this.$body.appendChild(uiField.getMainDomElement());
-				uiField.attachedToDom = true;
 			} else if (this.isUiFormSectionFloatingFieldsPlacement(placement)) {
 				let $container = parseHtml(`<div class="UiFormSectionFloatingFieldsPlacement" data-placement-id="${placementId}"></div>`);
 				allCssRules[placementId] = {
@@ -277,7 +276,6 @@ class UiFormSection {
 					};
 					uiField.getMainDomElement().setAttribute("data-placement-id", floatingFieldPlacementId);
 					$container.appendChild(uiField.getMainDomElement());
-					uiField.attachedToDom = true;
 				});
 				this.$body.appendChild($container);
 			}

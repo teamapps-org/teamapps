@@ -32,7 +32,7 @@ import * as L from "leaflet";
 import {LatLngExpression, Marker, Polyline} from "leaflet";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {executeWhenAttached} from "./util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {isGridTemplate} from "./TemplateRegistry";
 import {isUiGlyphIconElement, isUiIconElement, isUiImageElement} from "./util/UiGridTemplates";
@@ -74,7 +74,7 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		return this.$map;
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	private createLeafletMap(): void {
         this.leaflet = L.map(this.$map, {
 			zoomControl: false,
@@ -107,7 +107,7 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		});
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public addPolyline(lineId: string, polylineConfig: UiMapPolylineConfig): void {
 		let polyPath = new Array(polylineConfig.path.length);
 		for (let i = 0; i < polylineConfig.path.length; i++) {
@@ -129,7 +129,7 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		return [loc.latitude, loc.longitude];
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public addPolylinePoints(lineId: string, points: UiMapLocationConfig[]): void {
 		let polyline = this.polyLinesById[lineId];
 		if (polyline == null) {
@@ -139,7 +139,7 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		points.forEach(p => polyline.addLatLng(this.convertToLatLng(p)));
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public removePolyline(lineId: string): void {
 		let polyline = this.polyLinesById[lineId];
 		if (polyline == null) {
@@ -149,12 +149,12 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		this.leaflet.removeLayer(polyline);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public addMarker(markerConfig: UiMapMarkerClientRecordConfig): void {
 		this.createMarker(markerConfig).addTo(this.leaflet);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	removeMarker(id: number): void {
 		const marker = this.markersByClientId[id];
 		if (marker != null) {
@@ -198,7 +198,7 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		return marker;
 	};
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public setZoomLevel(zoomLevel: number): void {
 		this.leaflet.setZoom(zoomLevel);
 	}
@@ -308,12 +308,12 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		this.leaflet.addLayer(this.tileLayer);
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public setLocation(location: UiMapLocationConfig): void {
 		this.leaflet.setView(new L.LatLng(location.latitude, location.longitude), this.leaflet.getZoom());
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
 		if (this.clusterLayer) {
 			this.leaflet.removeLayer(this.clusterLayer);
@@ -328,7 +328,7 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		}
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public setHeatMap(data: UiHeatMapDataConfig): void {
 		if (this.heatMapLayer) {
 			this.leaflet.removeLayer(this.heatMapLayer);
@@ -360,8 +360,6 @@ export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandl
 		// nothing to do
 	}
 
-	protected onAttachedToDom(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMap", UiMap);

@@ -29,7 +29,7 @@ import {UiComponentPageViewBlockConfig} from "../generated/UiComponentPageViewBl
 import {UiPageViewConfig} from "../generated/UiPageViewConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiPageViewBlockCreatorImageAlignment} from "../generated/UiPageViewBlockCreatorImageAlignment";
-import {executeWhenAttached} from "./util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 // require("bootstrap/js/transition");
 // require("bootstrap/js/carousel");
 
@@ -68,7 +68,7 @@ export class UiPageView extends UiComponent<UiPageViewConfig> {
 		return this.$component;
 	}
 
-	@executeWhenAttached()
+	@executeWhenFirstDisplayed()
 	public addBlock(blockConfig: UiPageViewBlockConfig, before: boolean, otherBlockId?: string) {
 		let row;
 		if (this.rows.length == 0) {
@@ -103,7 +103,6 @@ export class UiPageView extends UiComponent<UiPageViewConfig> {
 		} else if (blockConfig.alignment === UiPageViewBlock_Alignment.RIGHT) {
 			row.$rightColumn.appendChild($blockWrapper);
 		}
-		block.attachedToDom = this.attachedToDom;
 	}
 
 	private addRow(before: boolean, otherRowIndex?: number): Row {
@@ -151,9 +150,6 @@ export class UiPageView extends UiComponent<UiPageViewConfig> {
 		});
 	}
 
-	protected onAttachedToDom(): void {
-		this.rows.forEach(row => row.blocks.forEach(block => block.block.attachedToDom = true));
-	}
 }
 
 abstract class BlockComponent<C extends UiPageViewBlockConfig> {
@@ -165,8 +161,6 @@ abstract class BlockComponent<C extends UiPageViewBlockConfig> {
 	}
 
 	abstract getMainDomElement(): HTMLElement;
-
-	abstract set attachedToDom(attached: boolean);
 
 	public reLayout() {
 		// default implementation
@@ -181,7 +175,6 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 	private $contentWrapper: HTMLElement;
 	private $slider: HTMLElement;
 	private $images: HTMLImageElement[] = [];
-	private _attachedToDom: boolean;
 
 	constructor(config: UiMessagePageViewBlockConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -236,42 +229,35 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 	}
 
 	reLayout() {
-		if (this._attachedToDom) {
-			const minMaxDimensions = this.$images.reduce((minMaxDimensions, $img) => {
-				if ($img.naturalWidth > 0 && $img.naturalHeight > 0) {
-					minMaxDimensions.maxWidth = Math.max(minMaxDimensions.maxWidth, $img.naturalWidth);
-					minMaxDimensions.maxHeight = Math.max(minMaxDimensions.maxHeight, $img.naturalHeight);
-					minMaxDimensions.minWidth = Math.min(minMaxDimensions.minWidth, $img.naturalWidth);
-					minMaxDimensions.minHeight = Math.min(minMaxDimensions.minHeight, $img.naturalHeight);
-				}
-				return minMaxDimensions;
-			}, {minWidth: 10000000, minHeight: 1000000, maxWidth: 0, maxHeight: 0});
-			const applicableWidth = this.$slider.offsetWidth - (this.$slider.offsetWidth * .2);
-			let maxHeight = this.$images.reduce((maxHeight, $img) => {
-				if ($img.naturalWidth > 0 && $img.naturalHeight > 0) {
-					return Math.max(maxHeight, applicableWidth * $img.naturalHeight / $img.naturalWidth);
-				} else {
-					return maxHeight;
-				}
-			}, 0);
-			maxHeight = Math.min(300, maxHeight);
-			this.$images.forEach($img => {
-				if ($img.naturalWidth > 0 && $img.naturalHeight > 0) {
-					const aspectRatio = $img.naturalWidth / $img.naturalHeight;
-					$img.style.height = maxHeight + "px";
-					$img.style.width = (maxHeight * aspectRatio) + "px";
-				}
-			});
-		}
+		const minMaxDimensions = this.$images.reduce((minMaxDimensions, $img) => {
+			if ($img.naturalWidth > 0 && $img.naturalHeight > 0) {
+				minMaxDimensions.maxWidth = Math.max(minMaxDimensions.maxWidth, $img.naturalWidth);
+				minMaxDimensions.maxHeight = Math.max(minMaxDimensions.maxHeight, $img.naturalHeight);
+				minMaxDimensions.minWidth = Math.min(minMaxDimensions.minWidth, $img.naturalWidth);
+				minMaxDimensions.minHeight = Math.min(minMaxDimensions.minHeight, $img.naturalHeight);
+			}
+			return minMaxDimensions;
+		}, {minWidth: 10000000, minHeight: 1000000, maxWidth: 0, maxHeight: 0});
+		const applicableWidth = this.$slider.offsetWidth - (this.$slider.offsetWidth * .2);
+		let maxHeight = this.$images.reduce((maxHeight, $img) => {
+			if ($img.naturalWidth > 0 && $img.naturalHeight > 0) {
+				return Math.max(maxHeight, applicableWidth * $img.naturalHeight / $img.naturalWidth);
+			} else {
+				return maxHeight;
+			}
+		}, 0);
+		maxHeight = Math.min(300, maxHeight);
+		this.$images.forEach($img => {
+			if ($img.naturalWidth > 0 && $img.naturalHeight > 0) {
+				const aspectRatio = $img.naturalWidth / $img.naturalHeight;
+				$img.style.height = maxHeight + "px";
+				$img.style.width = (maxHeight * aspectRatio) + "px";
+			}
+		});
 	}
 
 	public getMainDomElement(): HTMLElement {
 		return this.$contentWrapper;
-	}
-
-	public set attachedToDom(attachedToDom: boolean) {
-		this._attachedToDom = attachedToDom;
-		this.reLayout();
 	}
 
 	public destroy(): void {
@@ -337,10 +323,6 @@ class UiComponentPageViewBlock extends BlockComponent<UiComponentPageViewBlockCo
 
 	public getMainDomElement(): HTMLElement {
 		return this.$div;
-	}
-
-	public set attachedToDom(attachedToDom: boolean) {
-		this.component.attachedToDom = attachedToDom;
 	}
 
 	public destroy(): void {

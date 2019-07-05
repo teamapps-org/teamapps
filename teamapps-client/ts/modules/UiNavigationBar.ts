@@ -90,10 +90,6 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 		return this.$bar;
 	}
 
-	protected onAttachedToDom() {
-		// do nothing.
-	}
-
 	setButtons(buttons: UiNavigationBarButtonConfig[]): void {
 		this.$buttonsWrapper.innerHTML = '';
 		this.buttons = {};
@@ -144,7 +140,6 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 			this.currentFanOutComponent = fanOutComponent;
 			this.fanOutComponents.forEach(c => c.getMainDomElement().classList.add("pseudo-hidden"));
 			this.currentFanOutComponent.getMainDomElement().classList.remove("pseudo-hidden");
-			this.currentFanOutComponent.attachedToDom = true;
 			this.$fanOutContainerWrapper.classList.add("open");
 			this.$fanOutContainerWrapper.style.bottom = outerHeightIncludingMargins(this.$bar) + "px";
 			$(this.$fanOutContainerWrapper).slideDown(200);

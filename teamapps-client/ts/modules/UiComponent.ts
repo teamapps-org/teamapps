@@ -24,37 +24,42 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {generateUUID} from "./Common";
 import ResizeObserver from 'resize-observer-polyfill';
 import {debounce, DebounceMode} from "./util/debounce";
+import {DeferredExecutor} from "./util/DeferredExecutor";
 
 export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfig> implements UiComponentCommandHandler {
 
 	protected readonly logger: log.Logger = log.getLogger((<any>(this.constructor)).name || this.constructor.toString().match(/\w+/g)[1]);
 
 	public readonly onVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent(this);
+	public readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent(this);
 	public readonly onResized: TeamAppsEvent<{width: number; height: number}> = new TeamAppsEvent(this);
-	public readonly onAttachedToDomChanged: TeamAppsEvent<boolean> = new TeamAppsEvent(this);
 
-	private _attachedToDom = false;
 	private width: number = 0;
 	private height: number = 0;
-	private firstReLayout = true;
 
 	private visible = true;
+
+	public displayedDeferredExecutor = new DeferredExecutor();
 
 	constructor(protected _config: C,
 	            protected _context: TeamAppsUiContext) {
 		if (_config.id == null) {
 			_config.id = generateUUID();
 		}
+
+		// do this with timeout since the main dom element does not yet exist when executing this (subclass constructor gets called after this)
 		setTimeout(() => {
 			this.setVisible(_config.visible, false);
 			if (_config.stylesBySelector != null) { // might be null when used via JavaScript API!
 				Object.keys(_config.stylesBySelector).forEach(selector => this.setStyle(selector, _config.stylesBySelector[selector]));
 			}
 
-			let debouncedRelayout = debounce(() => this.reLayout(), 300, DebounceMode.BOTH);
+			let debouncedRelayout = debounce((entry: ResizeObserverEntry) => {
+				this.reLayout(entry.contentRect.width, entry.contentRect.height);
+			}, 300, DebounceMode.BOTH);
 			const resizeObserver = new ResizeObserver(entries => {
 				for (let entry of entries) {
-					debouncedRelayout();
+					debouncedRelayout(entry);
 				}
 			});
 			resizeObserver.observe(this.getMainDomElement());
@@ -69,37 +74,17 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 		return this._config._type;
 	}
 
-	get attachedToDom() {
-		return this._attachedToDom;
-	}
-
-	set attachedToDom(attachedToDom) {
-		let wasAttachedToDom = this._attachedToDom;
-		this._attachedToDom = attachedToDom;
-		if (attachedToDom && !wasAttachedToDom) {
-			this.width = this.getMainDomElement().offsetWidth;
-			this.height = this.getMainDomElement().offsetHeight;
-			this.onAttachedToDom();
-			this.onAttachedToDomChanged.fire(attachedToDom);
+	protected reLayout(width: number, height: number): void {
+		let hasSize = width > 0 || height > 0;
+		this.displayedDeferredExecutor.ready = hasSize;
+		if (hasSize) {
+			this.logger.trace("resize: " + this.getId());
+			this.width = width;
+			this.height = height;
+			this.onResized.fire({width: this.width, height: this.height});
+			this.onResize();
 		}
-	}
-
-	/**
-	 * This method should get called from a container component when the available size for a child changes.
-	 */
-	public reLayout(force?: boolean): void {
-		if (this.attachedToDom) {
-			let availableWidth = this.getMainDomElement().offsetWidth;
-			let availableHeight = this.getMainDomElement().offsetHeight;
-			if (this.firstReLayout || force || availableWidth !== this.width || availableHeight !== this.height) {
-				this.logger.trace("resize: " + this.getId());
-				this.firstReLayout = false;
-				this.width = availableWidth;
-				this.height = availableHeight;
-				this.onResized.fire({width: this.width, height: this.height});
-				this.onResize();
-			}
-		}
+		this.deFactoVisibilityChanged.fireIfChanged(hasSize);
 	}
 
 	/**
@@ -121,28 +106,8 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 
 	/**
 	 * @return The main DOM element of this component.
-	 * This method is used by the main TeamApps UI mechanism to get the element and attach it to the DOM.
 	 */
 	public abstract getMainDomElement(): HTMLElement;
-
-	/**
-	 * Override this method to execute code that cannot be executed before the field is attached to the DOM.
-	 *
-	 * Example 1:
-	 *   An HTML/Flash video player with autoplay = true will not be able to play until it is attached to the DOM.
-	 *   So the code for starting the video will need to be executed in this (overwritten) method.
-	 * Example 2:
-	 *   UiTable uses slickgrid. slickgrid can only initialize correctly when attached to the DOM.
-	 *
-	 * Components containing other components should set attachedToDom on their child components.
-	 * This will in turn invoke this method on the children, so the call propagates recursively.
-	 *
-	 * Example:
-	 *   A component with child components will call "child.attachedToDom = true" on its children.
-	 */
-	protected onAttachedToDom(): void {
-		// do nothing (default implementation)
-	}
 
 	public getWidth(): number {
 		return this.width;

@@ -59,7 +59,6 @@ export class LocalViewContainer implements ViewContainer {
 	private $dndActiveRectangle: HTMLElement;
 	private $dndImage: HTMLElement;
 	private lastDndEventType: string;
-	private _attachedToDom: boolean = false;
 
 	private $maximizationContainerWrapper: HTMLElement;
 	private $maximizationContainer: HTMLElement;
@@ -317,7 +316,6 @@ export class LocalViewContainer implements ViewContainer {
 		this._toolbar = toolbar;
 		if (toolbar) {
 			this.$toolbarContainer.appendChild(this._toolbar.getMainDomElement());
-			this._toolbar.attachedToDom = this.attachedToDom;
 			this._toolbar.onEmptyStateChanged.addListener(() => this.updateToolbarVisibility());
 		}
 		this.updateToolbarVisibility();
@@ -435,7 +433,6 @@ export class LocalViewContainer implements ViewContainer {
 		}
 		this.itemTree.rootItem = item;
 		this.$contentContainer.appendChild(item.component.getMainDomElement());
-		item.component.attachedToDom = this.attachedToDom;
 		if (isEmptyable(item.component)) {
 			item.component.onEmptyStateChanged.addListener(this.onRootItemEmptyStateChanged);
 			this.onRootItemEmptyStateChanged(item.component.empty);
@@ -560,9 +557,6 @@ export class LocalViewContainer implements ViewContainer {
 				splitPaneItem.lastChild = newItemWillBeFirstChild ? oldRootItem : newTabPanelItem;
 			}
 		}
-		if (view.component) {
-			view.component.attachedToDom = this._attachedToDom;
-		}
 		this.itemTree.updateIndex();
 	}
 
@@ -645,9 +639,6 @@ export class LocalViewContainer implements ViewContainer {
 	public refreshViewComponent(viewName: string, component: UiComponent) {
 		let view = this.itemTree.getViewByName(viewName);
 		view.component = component;
-		if (view.component) {
-			view.component.attachedToDom = this._attachedToDom;
-		}
 	}
 
 	refreshViewAttributes(viewName: string, tabIcon: string, tabCaption: string, tabCloseable: boolean, visible: boolean): void {
@@ -730,23 +721,6 @@ export class LocalViewContainer implements ViewContainer {
 			tabPanelItem.$minimizedTrayButton.remove();
 			tabPanelItem.state = UiViewGroupPanelState.NORMAL;
 		}
-	}
-
-	public set attachedToDom(attachedToDom: boolean) {
-		let wasAttachedToDom = this._attachedToDom;
-		this._attachedToDom = attachedToDom;
-		if (attachedToDom && !wasAttachedToDom) {
-			this.onAttachedToDom();
-		}
-	}
-
-	public get attachedToDom() {
-		return this._attachedToDom;
-	}
-
-	private onAttachedToDom() {
-		if (this._toolbar) this._toolbar.attachedToDom = true;
-		if (this.itemTree.rootItem.component) this.itemTree.rootItem.component.attachedToDom = true;
 	}
 
 	destroy() {

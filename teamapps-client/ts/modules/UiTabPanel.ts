@@ -28,7 +28,7 @@ import {UiToolButton} from "./micro-components/UiToolButton";
 import {UiComponent} from "./UiComponent";
 import {UiDropDown} from "./micro-components/UiDropDown";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {executeWhenAttached} from "./util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
 	UiTabPanel_TabClosedEvent,
 	UiTabPanel_TabNeedsRefreshEvent,
@@ -315,16 +315,6 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 				tabId: tabId
 			});
 		}
-		if (tab.toolbar) {
-			if (!tab.toolbar.attachedToDom) {
-				tab.toolbar.attachedToDom = this.attachedToDom;
-			}
-		}
-		if (tab.contentComponent) {
-			if (!tab.contentComponent.attachedToDom) {
-				tab.contentComponent.attachedToDom = this.attachedToDom;
-			}
-		}
 	}
 
 	public setTabContent(tabId: string, content: UiComponent<UiComponentConfig>, fireLazyLoadEventIfNeeded = false) {
@@ -344,9 +334,7 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 
 		// after (!!) the parent has been informed about the empty state change, we should think about setting attached (and resizing!!!)
 		if (this.selectedTab && this.selectedTab.config.tabId === tabId) {
-			if (tab.contentComponent) {
-				tab.contentComponent.attachedToDom = this.attachedToDom;
-			} else if (tab.config.lazyLoading && fireLazyLoadEventIfNeeded) {
+			if (!tab.contentComponent && tab.config.lazyLoading && fireLazyLoadEventIfNeeded) {
 				this.onTabNeedsRefresh.fire({
 					tabId: tabId
 				});
@@ -406,14 +394,6 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		this.putTabButtonsToIndex(tab, index);
 	}
 
-	protected onAttachedToDom() {
-		Object.values(this.toolButtons).forEach(b => b.attachedToDom = true);
-		this.getAllTabs().forEach(tab => {
-			if (tab.toolbar) tab.toolbar.attachedToDom = true;
-			if (tab.contentComponent) tab.contentComponent.attachedToDom = true;
-		});
-	}
-
 	public setTabToolbar(tabId: string, toolbar: UiToolbar) {
 		let tab = this.getTabById(tabId);
 		if (tab) {
@@ -428,9 +408,6 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		tab.toolbar = toolbar;
 		if (toolbar) {
 			tab.$toolbarContainer.append(toolbar.getMainDomElement());
-		}
-		if (this.selectedTab && this.selectedTab.config.tabId === tab.config.tabId && tab.toolbar) {
-			tab.toolbar.attachedToDom = this.attachedToDom;
 		}
 	}
 
@@ -531,7 +508,6 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		this.toolButtons = {};
 		toolButtons.forEach(toolButton => {
 			this.$toolButtonContainer.appendChild(toolButton.getMainDomElement());
-			toolButton.attachedToDom = this.attachedToDom;
 			this.toolButtons[toolButton.getId()] = toolButton;
 		});
 		this.relayoutButtons();
@@ -587,16 +563,15 @@ export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPa
 		this.$tabPanel.classList.remove('tab-style-ears', 'tab-style-blocks');
 		this.$tabPanel.classList.add(tabStyle === UiTabPanelTabStyle.EARS ? 'tab-style-ears' : 'tab-style-blocks');
 		this.$tabBar.classList.toggle("teamapps-blurredBackgroundImage", tabStyle === UiTabPanelTabStyle.BLOCKS);
-		this.reLayout(true);
+		this.onResize();
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
-		if (!this.attachedToDom || this.getMainDomElement().offsetWidth <= 0) return;
 		this.relayoutButtons();
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	private relayoutButtons() {
 		if (this.$tabBar.classList.contains('hidden')) {
 			return;

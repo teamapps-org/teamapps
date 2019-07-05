@@ -84,16 +84,10 @@ export class UiWindow extends UiComponent<UiWindowConfig> implements UiWindowCom
 		this.setCloseOnClickOutside(config.closeOnClickOutside);
 	}
 
-	protected onAttachedToDom() {
-		if (this.panel) this.panel.attachedToDom = true;
-	}
-
 	public show(animationDuration: number) {
 		this.$main.classList.remove("hidden");
 		this.$main.classList.add("open");
-		animateCSS(this.$panelWrapper, "zoomIn", 500, () => {
-			this.reLayout(true);
-		});
+		animateCSS(this.$panelWrapper, "zoomIn", 500);
 
 		this.escapeKeyListener = (e) => {
 			if (this.closeOnEscape && e.keyCode === keyCodes.escape) {

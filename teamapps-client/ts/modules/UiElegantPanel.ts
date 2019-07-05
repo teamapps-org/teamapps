@@ -65,20 +65,9 @@ export class UiElegantPanel extends UiComponent<UiElegantPanelConfig> implements
 		this.contentComponent = content;
 		if (content) {
 			this.$contentContainer.appendChild(this.contentComponent.getMainDomElement());
-			this.contentComponent.attachedToDom = this.attachedToDom;
 		}
 	}
 
-	protected onAttachedToDom() {
-		if (this.contentComponent) this.contentComponent.attachedToDom = true;
-	}
-
-	onResize(): void {
-		if (!this.attachedToDom || this.getMainDomElement().offsetWidth <= 0) return;
-	}
-
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiElegantPanel", UiElegantPanel);

@@ -108,11 +108,6 @@ export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Empty
 		return this._$splitPane;
 	}
 
-	protected onAttachedToDom() {
-		if (this.firstChildComponent) this.firstChildComponent.attachedToDom = true;
-		if (this.lastChildComponent) this.lastChildComponent.attachedToDom = true;
-	}
-
 	private mousedownHandler(event: MouseEvent) {
 		event.preventDefault();
 		const isTouchEvent = event.type.match(/^touch/),
@@ -182,15 +177,12 @@ export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Empty
 		this._firstChildComponent = firstChild;
 		if (firstChild) {
 			this._$firstChildContainer.appendChild(firstChild.getMainDomElement());
-			firstChild.attachedToDom = this.attachedToDom;
 			if (this._firstChildComponent && isEmptyable(this._firstChildComponent)) {
 				this._firstChildComponent.onEmptyStateChanged.addListener(this.onChildEmptyStateChanged);
 			}
 		}
 		this._updateChildContainerClasses();
 		this._updatePositions();
-
-		this.firstChildComponent && (this.firstChildComponent.attachedToDom = this.attachedToDom);
 
 		this.updateEmptyState();
 	}
@@ -201,15 +193,12 @@ export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Empty
 		this._lastChildComponent = lastChild;
 		if (lastChild) {
 			this._$lastChildContainer.appendChild(lastChild.getMainDomElement());
-			lastChild.attachedToDom = this.attachedToDom;
 			if (this._lastChildComponent && isEmptyable(this._lastChildComponent)) {
 				this._lastChildComponent.onEmptyStateChanged.addListener(this.onChildEmptyStateChanged);
 			}
 		}
 		this._updateChildContainerClasses();
 		this._updatePositions();
-
-		this.lastChildComponent && (this.lastChildComponent.attachedToDom = this.attachedToDom);
 
 		this.updateEmptyState();
 	}

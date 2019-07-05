@@ -26,7 +26,7 @@ import {UiToolButton} from "./micro-components/UiToolButton";
 import {UiComponent} from "./UiComponent";
 import {UiDropDown} from "./micro-components/UiDropDown";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {executeWhenAttached} from "./util/ExecuteWhenAttached";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {UiPanel_HeaderComponentMinimizationPolicy, UiPanel_WindowButtonClickedEvent, UiPanelCommandHandler, UiPanelConfig, UiPanelEventSource,} from "../generated/UiPanelConfig";
 import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -189,7 +189,6 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.$buttonContainer.innerHTML = '';
 		toolButtons && toolButtons.forEach(toolButton => {
 			this.$buttonContainer.appendChild(toolButton.getMainDomElement());
-			toolButton.attachedToDom = this.attachedToDom;
 			this.toolButtons.push(toolButton);
 		});
 		this.relayoutHeader();
@@ -253,17 +252,10 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 		this.contentComponent = content;
 		if (content != null) {
 			this.$bodyContainer.appendChild(this.contentComponent.getMainDomElement());
-			this.contentComponent.attachedToDom = this.attachedToDom;
 		}
 	}
 
-	protected onAttachedToDom() {
-		this.toolButtons.forEach(toolButton => toolButton.attachedToDom = true);
-		if (this.toolbar) this.toolbar.attachedToDom = true;
-		if (this.contentComponent) this.contentComponent.attachedToDom = true;
-	}
-
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	private calculateFieldWrapperSizes() {
 		this.headerFields.forEach(headerField => {
 			if (!headerField.minimizedWidth || !headerField.minExpandedWidth || !headerField.minExpandedWidthWithIcon) {
@@ -396,11 +388,10 @@ export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelComman
 	}
 
 	onResize(): void {
-		if (!this.attachedToDom || this.getMainDomElement().offsetWidth <= 0) return;
 		this.relayoutHeader();
 	}
 
-	@executeWhenAttached(true)
+	@executeWhenFirstDisplayed(true)
 	private relayoutHeader() {
 		const computedHeadingStyle = getComputedStyle(this.$heading);
 		let availableHeaderContentWidth = this.$heading.offsetWidth - parseInt(computedHeadingStyle.paddingLeft) - parseInt(computedHeadingStyle.paddingRight);

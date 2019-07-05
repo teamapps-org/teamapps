@@ -60,7 +60,6 @@ export class UiApplicationLayout extends UiComponent<UiApplicationLayoutConfig> 
 		this._$toolbarContainer.classList.toggle('hidden', !toolbar);
 		if (toolbar) {
 			this._$toolbarContainer.appendChild(this._toolbar.getMainDomElement());
-			this._toolbar.attachedToDom = this.attachedToDom;
 		}
 	}
 
@@ -72,7 +71,6 @@ export class UiApplicationLayout extends UiComponent<UiApplicationLayoutConfig> 
 		if (splitPane) {
 			this._rootSplitPane = splitPane;
 			this._$contentContainer.appendChild(this._rootSplitPane.getMainDomElement());
-			this._rootSplitPane.attachedToDom = this.attachedToDom;
 		}
 	}
 
@@ -80,11 +78,6 @@ export class UiApplicationLayout extends UiComponent<UiApplicationLayoutConfig> 
 		return this.$mainDiv;
 	}
 
-
-	protected onAttachedToDom() {
-		if (this._toolbar) this._toolbar.attachedToDom = true;
-		if (this._rootSplitPane) this._rootSplitPane.attachedToDom = true;
-	}
 
 	public destroy(): void {
 	}

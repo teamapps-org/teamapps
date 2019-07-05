@@ -91,8 +91,8 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 		this.$imageOverlay = this.$imageOverlayContainer.querySelector<HTMLElement>(':scope img');
 		this.$infoTextContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .info-text-container');
 
-		this.$backgroundImage.addEventListener("load", () => this.reLayout(true));
-		this.$imageOverlay.addEventListener("load", () => this.reLayout(true));
+		this.$backgroundImage.addEventListener("load", () => this.onResize());
+		this.$imageOverlay.addEventListener("load", () => this.onResize());
 
 		if (config.backgroundImage) {
 			this.$backgroundImage.setAttribute("src", config.backgroundImage);
@@ -110,6 +110,11 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 	}
 
 	public onResize(): void {
+		this.applyDisplayModes();
+		this.updatePlayerSizesAndPositions();
+	}
+
+	private applyDisplayModes() {
 		if ($(this.$backgroundImage).is(":visible")) {
 			applyDisplayMode(this.$backgroundImageContainer, this.$backgroundImage, this._config.backgroundImageDisplayMode);
 			$(this.$backgroundImage).position({
@@ -126,10 +131,9 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 				of: this.$imageOverlayContainer
 			});
 		}
-		this.updatePlayerSizesAndPositions();
 	}
 
-	// TESTING: components.liveStreamPlayer.showWaitingVideos([{url:'Bird-HD.mp4', durationInSeconds: 10}, {url:'Leaf-SD.mp4', durationInSeconds: 25}], 20)
+// TESTING: components.liveStreamPlayer.showWaitingVideos([{url:'Bird-HD.mp4', durationInSeconds: 10}, {url:'Leaf-SD.mp4', durationInSeconds: 25}], 20)
 	// components.liveStreamPlayer.stopWaitingVideos()
 	public showWaitingVideos(waitingVideoInfoConfig: UiWaitingVideoInfoConfig[], offsetSeconds: number, stopLiveStream: Boolean) {
 		if (stopLiveStream) {

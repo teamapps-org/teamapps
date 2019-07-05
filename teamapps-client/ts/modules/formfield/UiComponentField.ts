@@ -70,10 +70,6 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 		});
 	}
 
-	protected onAttachedToDom(): void {
-		this.component.attachedToDom = true;
-	}
-
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
