@@ -76,8 +76,6 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 		}
 
 		config.buttons.forEach(button => this.addButton(button));
-
-		this.reLayout();
 	}
 
 	public setBackgroundColor(color: UiColorConfig) {
@@ -181,7 +179,6 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 			}
 			this.$fanOutContainerWrapper.style.maxHeight = maxFanOutHeight + "px";
 			this.$fanOutContainerWrapper.offsetHeight; // reflow
-			this.currentFanOutComponent && this.currentFanOutComponent.reLayout();
 		}
 	}
 

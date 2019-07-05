@@ -63,10 +63,6 @@ export class UiNetworkGraph extends UiComponent<UiNetworkGraphConfig> {
 		return this.$graph;
 	}
 
-	protected onAttachedToDom(): void {
-		this.reLayout();
-	}
-
 	public createGraph(width: any, height: any, gravity: any, images: any, nodesData: any, linksData: any) {
 		let me = this;
 

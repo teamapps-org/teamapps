@@ -91,8 +91,8 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 		this.$imageOverlay = this.$imageOverlayContainer.querySelector<HTMLElement>(':scope img');
 		this.$infoTextContainer = this.$componentWrapper.querySelector<HTMLElement>(':scope .info-text-container');
 
-		this.$backgroundImage.addEventListener("load", () => this.reLayout());
-		this.$imageOverlay.addEventListener("load", () => this.reLayout());
+		this.$backgroundImage.addEventListener("load", () => this.reLayout(true));
+		this.$imageOverlay.addEventListener("load", () => this.reLayout(true));
 
 		if (config.backgroundImage) {
 			this.$backgroundImage.setAttribute("src", config.backgroundImage);
@@ -107,11 +107,6 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 
 	public getMainDomElement(): HTMLElement {
 		return this.$componentWrapper;
-	}
-
-
-	protected onAttachedToDom(): void {
-		this.reLayout();
 	}
 
 	public onResize(): void {
@@ -244,8 +239,6 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 			p.stop();
 		});
 		fadeIn(this.$backgroundImageContainer);
-		this.reLayout();
-
 		this.updatePlayerSizesAndPositions();
 	}
 
@@ -253,7 +246,6 @@ export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConf
 		this.imageOverlayDisplayMode = displayMode;
 		this.$imageOverlay.setAttribute("src", imageUrl);
 		this.$imageOverlayContainer.classList.remove("hidden");
-		this.reLayout();
 	}
 
 	public removeImageOverlay() {

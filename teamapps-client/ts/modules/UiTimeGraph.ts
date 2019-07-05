@@ -419,7 +419,6 @@ export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTim
 
 	setIntervalX(intervalX: UiLongIntervalConfig): void {
 		this.intervalX = intervalX;
-		this.reLayout(false);
 		this.updateZoomExtents();
 		this.scaleX.domain([this.intervalX.min, this.intervalX.max]);
 	}

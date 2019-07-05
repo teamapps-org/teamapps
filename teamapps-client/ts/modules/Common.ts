@@ -743,7 +743,7 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 	const scrollLeft = window.scrollX;
 	const offset = component.getMainDomElement().getBoundingClientRect();
 
-	const changingCssProperties: (keyof CSSStyleDeclaration)[] = ["position", "top", "left", "width", "height", "zIndex"];
+	const changingCssProperties: ["position", "top", "left", "width", "height", "zIndex"] = ["position", "top", "left", "width", "height", "zIndex"];
 	const style = component.getMainDomElement().style as CSSStyleDeclaration;
 	const originalCssValues = changingCssProperties.reduce((properties, cssPropertyName) => {
 		properties[cssPropertyName] = style[cssPropertyName];
@@ -756,7 +756,7 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 		width: offset.width,
 		height: offset.height,
 	};
-	Object.assign(component.getMainDomElement(), {
+	Object.assign(component.getMainDomElement().style, {
 		position: 'fixed',
 		zIndex: 1000000,
 		...animationStartCssValues
@@ -778,7 +778,7 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 
 	let restore = (restoreAnimationCallback?: () => void) => {
 		$(component.getMainDomElement()).animate(animationStartCssValues, 100, 'swing', () => {
-			Object.assign(component.getMainDomElement(), originalCssValues);
+			Object.assign(component.getMainDomElement().style, originalCssValues);
 			component.getMainDomElement().classList.remove("teamapps-component-maximized");
 			$parentDomElement.appendChild(component.getMainDomElement());
 			restoreAnimationCallback && restoreAnimationCallback();

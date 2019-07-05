@@ -324,10 +324,6 @@ export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalen
 		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
-	protected onAttachedToDom() {
-		this.reLayout();
-	}
-
 	public setViewMode(viewMode: UiCalendarViewMode) {
 		this.calendar.changeView(VIEW_MODE_2_FULL_CALENDAR_CONFIG_STRING[viewMode]);
 	}

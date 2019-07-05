@@ -86,7 +86,6 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 
 	protected onAttachedToDom() {
 		this.buttonGroupsById.values.forEach(buttonGroup => buttonGroup.onAttachedToDom());
-		this.reLayout();
 	}
 
 	public setButtonHasDropDown(groupId: string, buttonId: string, hasDropDown: boolean): void {

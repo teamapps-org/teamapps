@@ -47,10 +47,6 @@ export class UiStaticGridLayout extends UiComponent<UiStaticGridLayoutConfig> im
 		this.layout.applyTo(this.$main);
 	}
 
-	onResize(): void {
-		this.layout.getAllComponents().forEach(c => c.reLayout());
-	}
-
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiStaticGridLayout", UiStaticGridLayout);

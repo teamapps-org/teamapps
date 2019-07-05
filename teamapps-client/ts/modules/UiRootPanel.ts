@@ -69,15 +69,6 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	private blurredBackgroundImage: string;
 	private backgroundColor: string;
 
-	static __initialize() {
-		window.addEventListener("resize", (e) => {
-			this.ALL_ROOT_PANELS.forEach(rootPanel => {
-				rootPanel.reLayout();
-			});
-			Object.keys(this.WINDOWS_BY_ID).map(id => this.WINDOWS_BY_ID[id]).forEach(window => window.reLayout());
-		});
-	}
-
 	constructor(config: UiRootPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		UiRootPanel.ALL_ROOT_PANELS_BY_ID[config.id] = this;
@@ -128,7 +119,6 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 				this.visibleChildComponent = childComponent;
 				this.childComponents.forEach(c => c.$wrapper.classList.remove('active'));
 				childComponent.$wrapper.classList.add('active');
-				this.visibleChildComponent.component.reLayout();
 			}
 		}
 	}
@@ -286,12 +276,6 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		}, animationDuration);
 	};
 
-	onResize() {
-		if (this.visibleChildComponent) {
-			this.visibleChildComponent.component.reLayout();
-		}
-	}
-
 	protected onAttachedToDom() {
 		this.childComponents.forEach(c => c.component.attachedToDom = true);
 	}
@@ -413,7 +397,5 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		document.body.classList.toggle("optimized-for-touch", optimizedForTouch); // needed for popups and maximized panels... TODO either only use this or change implementation
 	}
 }
-
-UiRootPanel.__initialize();
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiRootPanel", UiRootPanel);

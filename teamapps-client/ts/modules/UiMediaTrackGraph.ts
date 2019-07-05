@@ -89,10 +89,6 @@ export class UiMediaTrackGraph extends UiComponent<UiMediaTrackGraphConfig> impl
 		//this.createAudioPlayer();
 	}
 
-	protected onAttachedToDom() {
-		this.reLayout();
-	}
-
 	public getMainDomElement(): HTMLElement {
 		return this.$graph;
 	}

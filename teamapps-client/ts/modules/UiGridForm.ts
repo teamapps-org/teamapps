@@ -80,7 +80,6 @@ export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridF
 			this.activeLayoutPolicyIndex = newLayoutPolicyIndex;
 			this.applyLayoutPolicy(this.layoutPoliciesFromLargeToSmall[newLayoutPolicyIndex]);
 		}
-		this.uiFields.forEach(field => field.reLayout());
 		this.ensureFillRemainingHeight();
 	}
 
@@ -340,9 +339,6 @@ class UiFormSection {
 			}
 		} else {
 			this.$body.classList.toggle('hidden', collapsed);
-		}
-		if (!collapsed) {
-			this.uiFields.forEach(field => field.reLayout())
 		}
 	}
 }

@@ -22,6 +22,8 @@ import * as log from "loglevel";
 import {UiComponentCommandHandler, UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {generateUUID} from "./Common";
+import ResizeObserver from 'resize-observer-polyfill';
+import {debounce, DebounceMode} from "./util/debounce";
 
 export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfig> implements UiComponentCommandHandler {
 
@@ -47,8 +49,15 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 			this.setVisible(_config.visible, false);
 			if (_config.stylesBySelector != null) { // might be null when used via JavaScript API!
 				Object.keys(_config.stylesBySelector).forEach(selector => this.setStyle(selector, _config.stylesBySelector[selector]));
-				this.reLayout();
 			}
+
+			let debouncedRelayout = debounce(() => this.reLayout(), 300, DebounceMode.BOTH);
+			const resizeObserver = new ResizeObserver(entries => {
+				for (let entry of entries) {
+					debouncedRelayout();
+				}
+			});
+			resizeObserver.observe(this.getMainDomElement());
 		}, 0);
 	}
 
@@ -72,7 +81,6 @@ export abstract class UiComponent<C extends UiComponentConfig = UiComponentConfi
 			this.height = this.getMainDomElement().offsetHeight;
 			this.onAttachedToDom();
 			this.onAttachedToDomChanged.fire(attachedToDom);
-			this.reLayout();
 		}
 	}
 

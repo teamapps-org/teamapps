@@ -71,12 +71,10 @@ export class UiElegantPanel extends UiComponent<UiElegantPanelConfig> implements
 
 	protected onAttachedToDom() {
 		if (this.contentComponent) this.contentComponent.attachedToDom = true;
-		this.reLayout();
 	}
 
 	onResize(): void {
 		if (!this.attachedToDom || this.getMainDomElement().offsetWidth <= 0) return;
-		this.contentComponent && this.contentComponent.reLayout();
 	}
 
 	public destroy(): void {

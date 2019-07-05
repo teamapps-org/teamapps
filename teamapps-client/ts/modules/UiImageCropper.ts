@@ -182,10 +182,6 @@ export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements
 		return this.$element;
 	}
 
-	protected onAttachedToDom() {
-		this.reLayout();
-	}
-
 	public destroy(): void {
 	}
 }

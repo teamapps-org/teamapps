@@ -52,11 +52,6 @@ export class UiApplicationLayout extends UiComponent<UiApplicationLayoutConfig> 
 		this.setRootSplitPane(config.rootSplitPane as UiSplitPane);
 	}
 
-	public onResize(): void {
-		this._toolbar && this._toolbar.reLayout();
-		this._rootSplitPane && this._rootSplitPane.reLayout();
-	}
-
 	public setToolbar(toolbar: UiToolbar): void {
 		if (this._toolbar) {
 			this._$toolbarContainer.innerHTML = '';
