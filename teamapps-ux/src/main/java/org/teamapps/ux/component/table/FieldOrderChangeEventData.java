@@ -21,16 +21,16 @@ package org.teamapps.ux.component.table;
 
 import org.teamapps.ux.component.field.AbstractField;
 
-public class FieldOrderChangeEventData {
-	private final TableColumn column;
+public class FieldOrderChangeEventData<RECORD> {
+	private final TableColumn<RECORD> column;
 	private final int position;
 
-	public FieldOrderChangeEventData(TableColumn column, int position) {
+	public FieldOrderChangeEventData(TableColumn<RECORD> column, int position) {
 		this.column = column;
 		this.position = position;
 	}
 
-	public TableColumn getColumn() {
+	public TableColumn<RECORD> getColumn() {
 		return column;
 	}
 

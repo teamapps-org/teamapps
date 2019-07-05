@@ -24,9 +24,9 @@ import org.teamapps.ux.component.field.AbstractField;
 public class CellEditingStoppedEvent<RECORD> {
 
 	private final RECORD record;
-	private final TableColumn column;
+	private final TableColumn<RECORD> column;
 
-	public CellEditingStoppedEvent(RECORD record, TableColumn column) {
+	public CellEditingStoppedEvent(RECORD record, TableColumn<RECORD> column) {
 		this.record = record;
 		this.column = column;
 	}
@@ -35,7 +35,7 @@ public class CellEditingStoppedEvent<RECORD> {
 		return record;
 	}
 
-	public TableColumn getColumn() {
+	public TableColumn<RECORD> getColumn() {
 		return column;
 	}
 
