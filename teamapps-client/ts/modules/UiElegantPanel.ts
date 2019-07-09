@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiElegantPanelCommandHandler, UiElegantPanelConfig} from "../generated/UiElegantPanelConfig";
@@ -26,8 +26,9 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiSpacingCssString} from "./util/CssFormatUtil";
 import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
 import {parseHtml} from "./Common";
+import {UiComponent} from "./UiComponent";
 
-export class UiElegantPanel extends UiComponent<UiElegantPanelConfig> implements UiElegantPanelCommandHandler {
+export class UiElegantPanel extends AbstractUiComponent<UiElegantPanelConfig> implements UiElegantPanelCommandHandler {
 
 	private $element: HTMLElement;
 	private $contentContainer: HTMLElement;

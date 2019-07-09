@@ -23,7 +23,7 @@ import {UiField} from "./formfield/UiField";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiToolButton} from "./micro-components/UiToolButton";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiDropDown} from "./micro-components/UiDropDown";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
@@ -34,6 +34,7 @@ import {StaticIcons} from "./util/StaticIcons";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {insertBefore, maximizeComponent, outerWidthIncludingMargins, parseHtml, prependChild} from "./Common";
+import {UiComponent} from "./UiComponent";
 
 interface HeaderField {
 	config: UiPanelHeaderFieldConfig;
@@ -47,7 +48,7 @@ interface HeaderField {
 	minExpandedWidth?: number;
 }
 
-export class UiPanel extends UiComponent<UiPanelConfig> implements UiPanelCommandHandler, UiPanelEventSource {
+export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPanelCommandHandler, UiPanelEventSource {
 
 	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent(this);
 

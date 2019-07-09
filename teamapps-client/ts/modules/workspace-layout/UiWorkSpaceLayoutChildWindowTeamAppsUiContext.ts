@@ -23,7 +23,6 @@ import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./U
 import {UiRootPanel} from "../UiRootPanel";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
-import {UiComponent} from "../UiComponent";
 import {getIconPath, logException} from "../Common";
 import {UiConfigurationConfig} from "../../generated/UiConfigurationConfig";
 import {UiEvent} from "../../generated/UiEvent";
@@ -32,6 +31,7 @@ import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TemplateRegistry} from "../TemplateRegistry";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiCommand} from "../../generated/UiCommand";
+import {UiComponent} from "../UiComponent";
 
 export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUiContext, TeamAppsUiContextInternalApi {
 
@@ -82,8 +82,8 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 						toolbar: null,
 						childWindowPageTitle: messageObject.childWindowPageTitle,
 					}, this, messageObject.windowId, this.parentWindowMessagePort);
-					this.registerComponent(this.workSpaceLayout);
-					rootPanel.addChildComponent(this.workSpaceLayout, true);
+					this.registerComponent(this.workSpaceLayout, messageObject.workspaceLayoutId, "UiWorkSpaceLayout");
+					rootPanel.setContent(this.workSpaceLayout);
 				} else if (messageObject._type === "COMMAND") {
 					const commandMethodName = messageObject.methodName as string;
 					if (messageObject.componentId) {
@@ -144,29 +144,34 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 		})
 	}
 
-	registerComponent(component: UiComponent<UiComponentConfig>): void {
-		this.components[component.getId()] = component;
-		EventRegistrator.registerForEvents(component, component.getTeamAppsType(), (eventObject: UiEvent) => this.fireEvent(eventObject), {id: component.getId()});
+	registerComponent(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void {
+		this.components[id] = component;
+		EventRegistrator.registerForEvents(component, teamappsType, (eventObject: UiEvent) => this.fireEvent(eventObject), {id: id});
 
-		if (component.getId() !== this.workSpaceLayout.getId()) {
+		if (id !== this.workSpaceLayout.getId()) {
 			this.parentWindowMessagePort.postMessage({
 				_type: "REGISTER_COMPONENT",
-				componentId: component.getId()
+				componentId: id,
+				teamappsType: teamappsType
 			});
 		}
 	}
 
-	destroyComponent(component: UiComponent): void {
-		component.getMainDomElement().remove();
-		component.destroy();
-		delete this.components[component.getId()];
+	destroyComponent(id: string): void {
+		let c = this.components[id];
+		if (c == null) {
+			UiWorkSpaceLayoutChildWindowTeamAppsUiContext.logger.error("Could not find component to destroy: " + id)
+		}
+		c.getMainDomElement().remove();
+		c.destroy();
+		delete this.components[id];
 	}
 
 	public createAndRegisterComponent(config: UiComponentConfig) {
 		let component: UiComponent<UiComponentConfig>;
 		if ((TeamAppsUiComponentRegistry.getComponentClassForName(config._type))) {
 			component = new (TeamAppsUiComponentRegistry.getComponentClassForName(config._type))(config, this);
-			this.registerComponent(component);
+			this.registerComponent(component, config.id, config._type);
 			return component;
 		} else {
 			UiWorkSpaceLayoutChildWindowTeamAppsUiContext.logger.error("Unknown component type: " + config._type);

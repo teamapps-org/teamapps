@@ -20,12 +20,12 @@
 
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
 import {UiSpinner} from "../micro-components/UiSpinner";
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiHttpLiveStreamPlayerConfig} from "../../generated/UiHttpLiveStreamPlayerConfig";
 import {parseHtml} from "../Common";
 
-export class UiHttpLiveStreamPlayer extends UiComponent<UiHttpLiveStreamPlayerConfig> implements LiveStreamPlayer {
+export class UiHttpLiveStreamPlayer extends AbstractUiComponent<UiHttpLiveStreamPlayerConfig> implements LiveStreamPlayer {
 	private $main: HTMLElement;
 	private $videoContainer: any;
 	private $notSupportedMessage: any;

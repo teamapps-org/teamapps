@@ -19,9 +19,9 @@
  */
 import {insertAtIndex} from "../Common";
 import {TeamAppsEvent} from "./TeamAppsEvent";
-import {UiComponent} from "../UiComponent";
 import {SimpleObjectProxy} from "./SimpleObjectProxy";
 import * as log from "loglevel";
+import {UiComponent} from "../UiComponent";
 
 const logger = log.getLogger("RefreshableComponentProxyHandle");
 

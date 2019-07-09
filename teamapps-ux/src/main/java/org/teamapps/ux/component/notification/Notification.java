@@ -19,13 +19,13 @@
  */
 package org.teamapps.ux.component.notification;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.dto.UiEntranceAnimation;
-import org.teamapps.dto.UiExitAnimation;
 import org.teamapps.dto.UiNotification;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.common.format.Color;
+import org.teamapps.ux.component.animation.EntranceAnimation;
+import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
@@ -42,8 +42,8 @@ public class Notification<RECORD> {
 	private int displayTimeInMillis = 3000;
 	private boolean dismissable = true;
 	private boolean showProgressBar = true;
-	private UiEntranceAnimation entranceAnimation = UiEntranceAnimation.FADE_IN;
-	private UiExitAnimation exitAnimation = UiExitAnimation.FADE_OUT;
+	private EntranceAnimation entranceAnimation = EntranceAnimation.FADE_IN;
+	private ExitAnimation exitAnimation = ExitAnimation.FADE_OUT;
 
 	/**
 	 * Used to display a simple message (text only).
@@ -80,8 +80,8 @@ public class Notification<RECORD> {
 		uiNotification.setDisplayTimeInMillis(displayTimeInMillis);
 		uiNotification.setDismissable(dismissable);
 		uiNotification.setShowProgressBar(showProgressBar);
-		uiNotification.setEntranceAnimation(entranceAnimation);
-		uiNotification.setExitAnimation(exitAnimation);
+		uiNotification.setEntranceAnimation(entranceAnimation != null ? entranceAnimation.toUiEntranceAnimation() : null);
+		uiNotification.setExitAnimation(exitAnimation != null ? exitAnimation.toUiExitAnimation() : null);
 		return uiNotification;
 	}
 
@@ -148,20 +148,20 @@ public class Notification<RECORD> {
 		return this;
 	}
 
-	public UiEntranceAnimation getEntranceAnimation() {
+	public EntranceAnimation getEntranceAnimation() {
 		return entranceAnimation;
 	}
 
-	public Notification setEntranceAnimation(UiEntranceAnimation entranceAnimation) {
+	public Notification setEntranceAnimation(EntranceAnimation entranceAnimation) {
 		this.entranceAnimation = entranceAnimation;
 		return this;
 	}
 
-	public UiExitAnimation getExitAnimation() {
+	public ExitAnimation getExitAnimation() {
 		return exitAnimation;
 	}
 
-	public Notification setExitAnimation(UiExitAnimation exitAnimation) {
+	public Notification setExitAnimation(ExitAnimation exitAnimation) {
 		this.exitAnimation = exitAnimation;
 		return this;
 	}

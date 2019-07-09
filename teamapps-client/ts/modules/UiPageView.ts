@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiPageViewBlock_Alignment, UiPageViewBlockConfig} from "../generated/UiPageViewBlockConfig";
 import {UiMessagePageViewBlockConfig} from "../generated/UiMessagePageViewBlockConfig";
@@ -30,6 +30,7 @@ import {UiPageViewConfig} from "../generated/UiPageViewConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiPageViewBlockCreatorImageAlignment} from "../generated/UiPageViewBlockCreatorImageAlignment";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {UiComponent} from "./UiComponent";
 // require("bootstrap/js/transition");
 // require("bootstrap/js/carousel");
 
@@ -48,7 +49,7 @@ interface Block {
 	block: BlockComponent<UiPageViewBlockConfig>;
 }
 
-export class UiPageView extends UiComponent<UiPageViewConfig> {
+export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
 
 	private $component: HTMLElement;
 	private rows: Row[] = [];

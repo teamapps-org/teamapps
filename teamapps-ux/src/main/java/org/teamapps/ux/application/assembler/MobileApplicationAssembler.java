@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,15 +20,16 @@
 package org.teamapps.ux.application.assembler;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.application.*;
+import org.teamapps.ux.application.ResponsiveApplication;
+import org.teamapps.ux.application.ResponsiveApplicationToolbar;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.view.ViewSize;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.animation.PageTransition;
 import org.teamapps.ux.component.itemview.SimpleItemGroup;
 import org.teamapps.ux.component.itemview.SimpleItemView;
 import org.teamapps.ux.component.mobile.MobileLayout;
-import org.teamapps.ux.component.mobile.MobileLayoutAnimation;
 import org.teamapps.ux.component.mobile.NavigationBar;
 import org.teamapps.ux.component.mobile.NavigationBarButton;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
@@ -41,282 +42,279 @@ import java.util.List;
 
 public class MobileApplicationAssembler implements ApplicationAssembler {
 
-    private final NavigationBarButton<BaseTemplateRecord> applicationLauncherButton;
-    private final NavigationBarButton<BaseTemplateRecord> applicationTreeButton;
-    private final NavigationBarButton<BaseTemplateRecord> applicationViewsButton;
-    private final NavigationBarButton<BaseTemplateRecord> applicationToolbarButton;
-    private final NavigationBarButton<BaseTemplateRecord> applicationBackButton;
+	private static final int PAGE_TRANSITION_ANIMATION_DURATION = 300;
 
-    private MobileLayout mobileLayout;
-    private NavigationBar<BaseTemplateRecord> navigationBar;
-    private SimpleItemView<Void> viewsItemView;
-    private AbstractToolContainer mainToolbar;
+	private final NavigationBarButton<BaseTemplateRecord> applicationLauncherButton;
+	private final NavigationBarButton<BaseTemplateRecord> applicationTreeButton;
+	private final NavigationBarButton<BaseTemplateRecord> applicationViewsButton;
+	private final NavigationBarButton<BaseTemplateRecord> applicationToolbarButton;
+	private final NavigationBarButton<BaseTemplateRecord> applicationBackButton;
 
-
-    private View applicationLauncher;
-    private View appTree;
-    private List<View> applicationViews = new ArrayList<>();
-    private List<View> perspectiveViews = new ArrayList<>();
-    private List<View> viewHistory = new ArrayList<>();
-    private View activeView;
+	private MobileLayout mobileLayout;
+	private NavigationBar<BaseTemplateRecord> navigationBar;
+	private SimpleItemView<Void> viewsItemView;
+	private AbstractToolContainer mainToolbar;
 
 
-    public MobileApplicationAssembler() {
-        this.mobileLayout = new MobileLayout();
-        this.navigationBar = new NavigationBar<>();
-        this.viewsItemView = new SimpleItemView<>();
-
-        navigationBar.preloadFanOutComponent(viewsItemView);
-        mobileLayout.setNavigationBar(navigationBar);
-
-        applicationLauncherButton = NavigationBarButton.create(MaterialIcon.VIEW_MODULE);
-        applicationTreeButton = NavigationBarButton.create(MaterialIcon.TOC);
-        applicationViewsButton = NavigationBarButton.create(MaterialIcon.VIEW_CAROUSEL);
-        applicationToolbarButton = NavigationBarButton.create(MaterialIcon.SUBTITLES);
-        applicationBackButton = NavigationBarButton.create(MaterialIcon.NAVIGATE_BEFORE);
+	private View applicationLauncher;
+	private View appTree;
+	private List<View> applicationViews = new ArrayList<>();
+	private List<View> perspectiveViews = new ArrayList<>();
+	private List<View> viewHistory = new ArrayList<>();
+	private View activeView;
 
 
-        applicationLauncherButton.setVisible(false);
-        applicationTreeButton.setVisible(false);
+	public MobileApplicationAssembler() {
+		this.mobileLayout = new MobileLayout();
+		this.navigationBar = new NavigationBar<>();
+		this.viewsItemView = new SimpleItemView<>();
 
-        navigationBar.addButton(applicationLauncherButton);
-        navigationBar.addButton(applicationTreeButton);
-        navigationBar.addButton(applicationViewsButton);
-        navigationBar.addButton(applicationToolbarButton);
-        navigationBar.addButton(applicationBackButton);
+		navigationBar.preloadFanOutComponent(viewsItemView);
+		mobileLayout.setNavigationBar(navigationBar);
 
-        applicationLauncherButton.onClick.addListener(aVoid -> {
-            navigationBar.hideFanOutComponent();
-            mobileLayout.showView(applicationLauncher.getPanel(), MobileLayoutAnimation.BACKWARD);
-            activeView = applicationLauncher;
-        });
-
-        applicationTreeButton.onClick.addListener(aVoid -> {
-            navigationBar.hideFanOutComponent();
-            MobileLayoutAnimation animation = MobileLayoutAnimation.BACKWARD;
-            if (activeView.equals(applicationLauncher)) {
-                animation = MobileLayoutAnimation.FORWARD;
-            }
-            mobileLayout.showView(appTree.getPanel(), animation);
-            activeView = appTree;
-        });
-
-        applicationViewsButton.onClick.addListener(aVoid -> {
-            navigationBar.showOrHideFanoutComponent(viewsItemView);
-        });
-
-        applicationToolbarButton.onClick.addListener(aVoid -> {
-            navigationBar.showOrHideFanoutComponent(mainToolbar);
-        });
-
-        applicationBackButton.onClick.addListener(aVoid -> {
-            navigationBar.hideFanOutComponent();
-            goBack();
-        });
-
-        viewsItemView.onItemClicked.addListener(data -> {
-            //ScopeComponent component = data.getItem().getPayload();
-            //component.refreshPanelToolbar();
-            //displayComponent(component, MobileLayoutAnimation.FORWARD);
-            navigationBar.hideFanOutComponent();
-        });
-    }
-
-    public void setApplicationLauncher(View applicationLauncher) {
-        if (applicationLauncher == null) {
-            if (this.applicationLauncher != null) {
-                mobileLayout.removeView(applicationLauncher.getPanel());
-            }
-            applicationLauncherButton.setVisible(false);
-        } else {
-            mobileLayout.preloadView(applicationLauncher.getPanel());
-            applicationLauncherButton.setVisible(true);
-        }
-        this.applicationLauncher = applicationLauncher;
-    }
-
-    public void setApplicationTree(View appTree) {
-        //view should be part of application views - this is just the explicit setting
-        this.appTree = appTree;
-        this.applicationTreeButton.setVisible(true);
-    }
-
-    public void showView(View view) {
-        if (activeView != null) {
-            //todo check when to add to history
-            //viewHistory.add(view);
-        }
-        activeView = view;
-        mobileLayout.showView(view.getPanel(), MobileLayoutAnimation.FORWARD);
-    }
-
-    public void showInitialView() {
-        View view = null;
-        if (!applicationViews.isEmpty()) {
-            view = applicationViews.get(0);
-        } else if (!perspectiveViews.isEmpty()){
-            view = perspectiveViews.get(0);
-        }
-        if (view != null) {
-            mobileLayout.showView(view.getPanel(), MobileLayoutAnimation.FORWARD);
-            activeView = view;
-        }
-    }
+		applicationLauncherButton = NavigationBarButton.create(MaterialIcon.VIEW_MODULE);
+		applicationTreeButton = NavigationBarButton.create(MaterialIcon.TOC);
+		applicationViewsButton = NavigationBarButton.create(MaterialIcon.VIEW_CAROUSEL);
+		applicationToolbarButton = NavigationBarButton.create(MaterialIcon.SUBTITLES);
+		applicationBackButton = NavigationBarButton.create(MaterialIcon.NAVIGATE_BEFORE);
 
 
-    public void goBack() {
-        View view = null;
-        for (int i = 0; i < perspectiveViews.size(); i++) {
-            if (perspectiveViews.get(i).equals(activeView)) {
-                if (i > 0) {
-                    view = perspectiveViews.get(i - 1);
-                } else if (!applicationViews.isEmpty()) {
-                    view = applicationViews.get(applicationViews.size() - 1);
-                }
-                break;
-            }
-        }
+		applicationLauncherButton.setVisible(false);
+		applicationTreeButton.setVisible(false);
 
-        if (view == null) {
-            for (int i = 0; i < applicationViews.size(); i++) {
-                if (applicationViews.get(i).equals(activeView)) {
-                    if (i > 0) {
-                        view = applicationViews.get(i - 1);
-                    } else {
-                        view = applicationLauncher;
-                    }
-                    break;
-                }
-            }
-        }
+		navigationBar.addButton(applicationLauncherButton);
+		navigationBar.addButton(applicationTreeButton);
+		navigationBar.addButton(applicationViewsButton);
+		navigationBar.addButton(applicationToolbarButton);
+		navigationBar.addButton(applicationBackButton);
 
-        if (view != null) {
-            activeView = view;
-            mobileLayout.showView(activeView.getPanel(), MobileLayoutAnimation.BACKWARD);
-        }
-    }
+		applicationLauncherButton.onClick.addListener(aVoid -> {
+			navigationBar.hideFanOutComponent();
+			mobileLayout.setContent(applicationLauncher.getPanel(), PageTransition.MOVE_TO_RIGHT_VS_MOVE_FROM_LEFT, PAGE_TRANSITION_ANIMATION_DURATION);
+			activeView = applicationLauncher;
+		});
 
-    public void goForward() {
-        //todo...
-    }
+		applicationTreeButton.onClick.addListener(aVoid -> {
+			navigationBar.hideFanOutComponent();
+			PageTransition animation = PageTransition.MOVE_TO_RIGHT_VS_MOVE_FROM_LEFT;
+			if (activeView.equals(applicationLauncher)) {
+				animation = PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT;
+			}
+			mobileLayout.setContent(appTree.getPanel(), animation, PAGE_TRANSITION_ANIMATION_DURATION);
+			activeView = appTree;
+		});
+
+		applicationViewsButton.onClick.addListener(aVoid -> {
+			navigationBar.showOrHideFanoutComponent(viewsItemView);
+		});
+
+		applicationToolbarButton.onClick.addListener(aVoid -> {
+			navigationBar.showOrHideFanoutComponent(mainToolbar);
+		});
+
+		applicationBackButton.onClick.addListener(aVoid -> {
+			navigationBar.hideFanOutComponent();
+			goBack();
+		});
+
+		viewsItemView.onItemClicked.addListener(data -> {
+			//ScopeComponent component = data.getItem().getPayload();
+			//component.refreshPanelToolbar();
+			//displayComponent(component, MobileLayoutAnimation.FORWARD);
+			navigationBar.hideFanOutComponent();
+		});
+	}
+
+	public void setApplicationLauncher(View applicationLauncher) {
+		if (applicationLauncher == null) {
+			applicationLauncherButton.setVisible(false);
+		} else {
+			mobileLayout.preloadView(applicationLauncher.getPanel());
+			applicationLauncherButton.setVisible(true);
+		}
+		this.applicationLauncher = applicationLauncher;
+	}
+
+	public void setApplicationTree(View appTree) {
+		//view should be part of application views - this is just the explicit setting
+		this.appTree = appTree;
+		this.applicationTreeButton.setVisible(true);
+	}
+
+	public void showView(View view) {
+		if (activeView != null) {
+			//todo check when to add to history
+			//viewHistory.add(view);
+		}
+		activeView = view;
+		mobileLayout.setContent(view.getPanel(), PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT, PAGE_TRANSITION_ANIMATION_DURATION);
+	}
+
+	public void showInitialView() {
+		View view = null;
+		if (!applicationViews.isEmpty()) {
+			view = applicationViews.get(0);
+		} else if (!perspectiveViews.isEmpty()) {
+			view = perspectiveViews.get(0);
+		}
+		if (view != null) {
+			mobileLayout.setContent(view.getPanel(), PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT, PAGE_TRANSITION_ANIMATION_DURATION);
+			activeView = view;
+		}
+	}
 
 
+	public void goBack() {
+		View view = null;
+		for (int i = 0; i < perspectiveViews.size(); i++) {
+			if (perspectiveViews.get(i).equals(activeView)) {
+				if (i > 0) {
+					view = perspectiveViews.get(i - 1);
+				} else if (!applicationViews.isEmpty()) {
+					view = applicationViews.get(applicationViews.size() - 1);
+				}
+				break;
+			}
+		}
 
-    @Override
-    public Component createApplication(ResponsiveApplication application) {
-        return mobileLayout;
-    }
+		if (view == null) {
+			for (int i = 0; i < applicationViews.size(); i++) {
+				if (applicationViews.get(i).equals(activeView)) {
+					if (i > 0) {
+						view = applicationViews.get(i - 1);
+					} else {
+						view = applicationLauncher;
+					}
+					break;
+				}
+			}
+		}
 
-    @Override
-    public void setWorkSpaceToolbar(ResponsiveApplicationToolbar toolbar) {
-        mainToolbar = toolbar.getToolbar();
-        mainToolbar.onButtonClick.addListener(event -> {
-            if (event.getDropDownButtonClickInfo() != null && !event.getDropDownButtonClickInfo().isOpening()) {
-                navigationBar.hideFanOutComponent();
-            }
-        });
-        navigationBar.preloadFanOutComponent(mainToolbar);
-    }
+		if (view != null) {
+			activeView = view;
+			mobileLayout.setContent(activeView.getPanel(), PageTransition.MOVE_TO_RIGHT_VS_MOVE_FROM_LEFT, PAGE_TRANSITION_ANIMATION_DURATION);
+		}
+	}
 
-    @Override
-    public void handleApplicationViewAdded(ResponsiveApplication application, View view) {
-        applicationViews.add(view);
-        if (view.getComponent() instanceof Tree) {
-            setApplicationTree(view);
-        }
-    }
+	public void goForward() {
+		//todo...
+	}
 
-    @Override
-    public void handleApplicationViewRemoved(ResponsiveApplication application, View view) {
-        applicationViews.remove(view);
-    }
 
-    @Override
-    public void handlePerspectiveChange(ResponsiveApplication application, Perspective perspective, Perspective previousPerspective, List<View> activeViews, List<View> addedViews, List<View> removedViews) {
-        removedViews.forEach(view -> mobileLayout.removeView(view.getPanel()));
-        addedViews.forEach(view -> mobileLayout.preloadView(view.getPanel()));
-        perspectiveViews = activeViews;
+	@Override
+	public Component createApplication(ResponsiveApplication application) {
+		return mobileLayout;
+	}
 
-        viewsItemView.removeAllGroups();
-        if (applicationLauncher != null) {
-            SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_MODULE, "Launcher");
-            group.addItem(applicationLauncher.getPanel().getIcon(), applicationLauncher.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
-                showView(applicationLauncher);
-            });
-        }
+	@Override
+	public void setWorkSpaceToolbar(ResponsiveApplicationToolbar toolbar) {
+		mainToolbar = toolbar.getToolbar();
+		mainToolbar.onButtonClick.addListener(event -> {
+			if (event.getDropDownButtonClickInfo() != null && !event.getDropDownButtonClickInfo().isOpening()) {
+				navigationBar.hideFanOutComponent();
+			}
+		});
+		navigationBar.preloadFanOutComponent(mainToolbar);
+	}
 
-        if (!applicationViews.isEmpty()) {
-            SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.TOC, "Application views");
-            applicationViews.forEach(view -> {
-                group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
-                    showView(view);
-                });
-            });
-        }
+	@Override
+	public void handleApplicationViewAdded(ResponsiveApplication application, View view) {
+		applicationViews.add(view);
+		if (view.getComponent() instanceof Tree) {
+			setApplicationTree(view);
+		}
+	}
 
-        if (!perspectiveViews.isEmpty()) {
-            SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_CAROUSEL, "Perspective views");
-            perspectiveViews.forEach(view -> {
-                group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
-                    showView(view);
-                });
-            });
-        }
+	@Override
+	public void handleApplicationViewRemoved(ResponsiveApplication application, View view) {
+		applicationViews.remove(view);
+	}
 
-        if (!perspectiveViews.isEmpty()) {
-            View view = perspectiveViews.get(0);
-            activeView = view;
-            mobileLayout.showView(view.getPanel(), MobileLayoutAnimation.FORWARD);
-        }
-    }
+	@Override
+	public void handlePerspectiveChange(ResponsiveApplication application, Perspective perspective, Perspective previousPerspective, List<View> activeViews, List<View> addedViews,
+                                        List<View> removedViews) {
+		addedViews.forEach(view -> mobileLayout.preloadView(view.getPanel()));
+		perspectiveViews = activeViews;
 
-    @Override
-    public void handleLayoutChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, LayoutItemDefinition layout) {
+		viewsItemView.removeAllGroups();
+		if (applicationLauncher != null) {
+			SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_MODULE, "Launcher");
+			group.addItem(applicationLauncher.getPanel().getIcon(), applicationLauncher.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
+				showView(applicationLauncher);
+			});
+		}
 
-    }
+		if (!applicationViews.isEmpty()) {
+			SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.TOC, "Application views");
+			applicationViews.forEach(view -> {
+				group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
+					showView(view);
+				});
+			});
+		}
 
-    @Override
-    public void handleViewAdded(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view) {
-        if (isActivePerspective) {
-            mobileLayout.preloadView(view.getPanel());
-            perspectiveViews.add(view);
-        }
-    }
+		if (!perspectiveViews.isEmpty()) {
+			SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_CAROUSEL, "Perspective views");
+			perspectiveViews.forEach(view -> {
+				group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
+					showView(view);
+				});
+			});
+		}
 
-    @Override
-    public void handleViewRemoved(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view) {
-        if (isActivePerspective) {
-            mobileLayout.removeView(view.getPanel());
-            perspectiveViews.remove(view);
-        }
-    }
+		if (!perspectiveViews.isEmpty()) {
+			View view = perspectiveViews.get(0);
+			activeView = view;
+			mobileLayout.setContent(view.getPanel(), PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT, PAGE_TRANSITION_ANIMATION_DURATION);
+		}
+	}
 
-    @Override
-    public void handleViewVisibilityChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, boolean visible) {
-        if (isActivePerspective) {
+	@Override
+	public void handleLayoutChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, LayoutItemDefinition layout) {
 
-        }
-    }
+	}
 
-    @Override
-    public void handleViewFocusRequest(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, boolean ensureVisible) {
-        if (isActivePerspective) {
-            showView(view);
-        }
-    }
+	@Override
+	public void handleViewAdded(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view) {
+		if (isActivePerspective) {
+			mobileLayout.preloadView(view.getPanel());
+			perspectiveViews.add(view);
+		}
+	}
 
-    @Override
-    public void handleViewSizeChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, ViewSize viewSize) {
+	@Override
+	public void handleViewRemoved(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view) {
+		if (isActivePerspective) {
+			perspectiveViews.remove(view);
+		}
+	}
 
-    }
+	@Override
+	public void handleViewVisibilityChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, boolean visible) {
+		if (isActivePerspective) {
 
-    @Override
-    public void handleViewTabTitleChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String title) {
+		}
+	}
 
-    }
+	@Override
+	public void handleViewFocusRequest(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, boolean ensureVisible) {
+		if (isActivePerspective) {
+			showView(view);
+		}
+	}
 
-    @Override
-    public void handleViewLayoutPositionChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String position) {
+	@Override
+	public void handleViewSizeChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, ViewSize viewSize) {
 
-    }
+	}
+
+	@Override
+	public void handleViewTabTitleChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String title) {
+
+	}
+
+	@Override
+	public void handleViewLayoutPositionChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String position) {
+
+	}
 }

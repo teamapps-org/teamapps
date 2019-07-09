@@ -18,15 +18,16 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiVerticalLayoutCommandHandler, UiVerticalLayoutConfig} from "../generated/UiVerticalLayoutConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
+import {UiComponent} from "./UiComponent";
 
 
-export class UiVerticalLayout extends UiComponent<UiVerticalLayoutConfig> implements UiVerticalLayoutCommandHandler {
+export class UiVerticalLayout extends AbstractUiComponent<UiVerticalLayoutConfig> implements UiVerticalLayoutCommandHandler {
 	private $verticalLayout: HTMLElement;
 	private children: UiComponent<UiComponentConfig>[] = [];
 

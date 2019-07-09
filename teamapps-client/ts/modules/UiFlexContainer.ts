@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
@@ -26,8 +26,9 @@ import {UiFlexContainerCommandHandler, UiFlexContainerConfig} from "../generated
 import {UiCssFlexDirection} from "../generated/UiCssFlexDirection";
 import {UiCssAlignItems} from "../generated/UiCssAlignItems";
 import {UiCssJustifyContent} from "../generated/UiCssJustifyContent";
+import {UiComponent} from "./UiComponent";
 
-export class UiFlexContainer extends UiComponent<UiFlexContainerConfig> implements UiFlexContainerCommandHandler {
+export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> implements UiFlexContainerCommandHandler {
 
 	private $main: HTMLDivElement;
 	private components: UiComponent[] = [];

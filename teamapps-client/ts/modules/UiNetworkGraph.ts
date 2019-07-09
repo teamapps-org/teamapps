@@ -21,13 +21,13 @@
 
 
 import * as d3 from "d3v3";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiNetworkGraphConfig} from "../generated/UiNetworkGraphConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
-export class UiNetworkGraph extends UiComponent<UiNetworkGraphConfig> {
+export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> {
 
 	private $graph: HTMLElement;
 	private svg: any;

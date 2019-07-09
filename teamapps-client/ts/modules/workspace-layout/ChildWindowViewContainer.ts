@@ -20,7 +20,6 @@
 import * as log from "loglevel";
 import {UiRelativeWorkSpaceViewPosition} from "../../generated/UiRelativeWorkSpaceViewPosition";
 import {DeferredExecutor} from "../util/DeferredExecutor";
-import {UiToolbarConfig} from "../../generated/UiToolbarConfig";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
 import {ViewInfo} from "./ViewInfo";
@@ -28,11 +27,11 @@ import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./U
 import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
 import {generateUUID} from "../Common";
 import {ViewContainer, ViewContainerListener} from "./ViewContainer";
-import {UiComponent} from "../UiComponent";
 import {UiEvent} from "../../generated/UiEvent";
 import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
+import {UiComponent} from "../UiComponent";
 
 export interface ChildWindowViewContainerListener extends ViewContainerListener {
 	handleInitialized(windowId: string, initialViewInfo: ViewInfo): void;
@@ -118,6 +117,7 @@ export class ChildWindowViewContainer implements ViewContainer {
 			this.listener.handleLocalLayoutChangedByUser(e.data.windowId);
 		} else if (e.data._type === 'REGISTER_COMPONENT') {
 			const componentId = e.data.componentId;
+			const teamappsType = e.data.teamappsType;
 			(this.context as TeamAppsUiContextInternalApi).registerComponent(new Proxy({}, {
 				get: (target, property, receiver) => {
 					if (property === 'getId') {
@@ -129,7 +129,7 @@ export class ChildWindowViewContainer implements ViewContainer {
 						}
 					}
 				}
-			}) as UiComponent<UiComponentConfig>);
+			}) as UiComponent<UiComponentConfig>, componentId, teamappsType);
 		} else if (e.data._type === 'EVENT') {
 			this.listener.handleUiEvent(e.data.eventObject);
 		} else if (e.data._type === 'CHILD_WINDOW_CREATED') {

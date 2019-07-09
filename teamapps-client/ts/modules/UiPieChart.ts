@@ -19,7 +19,7 @@
 
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiPieChart_DataPointClickedEvent, UiPieChartCommandHandler, UiPieChartConfig, UiPieChartEventSource} from "../generated/UiPieChartConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -30,7 +30,7 @@ import {UiColorConfig} from '../generated/UiColorConfig';
 import {UiDataPointWeighting} from '../generated/UiDataPointWeighting';
 import {UiChartLegendStyle} from "../generated/UiChartLegendStyle";
 
-export class UiPieChart extends UiComponent<UiPieChartConfig> implements UiPieChartCommandHandler, UiPieChartEventSource {
+export class UiPieChart extends AbstractUiComponent<UiPieChartConfig> implements UiPieChartCommandHandler, UiPieChartEventSource {
 
 	readonly onDataPointClicked: TeamAppsEvent<UiPieChart_DataPointClickedEvent> = new TeamAppsEvent(this);
 

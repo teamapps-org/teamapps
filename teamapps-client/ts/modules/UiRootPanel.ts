@@ -20,33 +20,26 @@
 import * as moment from "moment-timezone";
 
 import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {UiWindow, UiWindowListener} from "./UiWindow";
+import {UiWindow} from "./UiWindow";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
-import {UiWindowConfig} from "../generated/UiWindowConfig";
 import {UiNotificationConfig} from "../generated/UiNotificationConfig";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, parseHtml, showNotification} from "./Common";
+import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, pageTransition, parseHtml, showNotification} from "./Common";
 import {UiRootPanelCommandHandler, UiRootPanelConfig} from "../generated/UiRootPanelConfig";
-import {UiComponentRevealAnimation} from "../generated/UiComponentRevealAnimation";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import * as log from "loglevel";
 import {ElementUiComponentAdapter} from "./micro-components/ElementUiComponentAdapter";
 import {UiGenericErrorMessageOption} from "../generated/UiGenericErrorMessageOption";
-import {TeamAppsEvent, TeamAppsEventListener} from "./util/TeamAppsEvent";
 import {UiColorConfig} from "../generated/UiColorConfig";
 import {createUiColorCssString} from "./util/CssFormatUtil";
+import {UiComponent} from "./UiComponent";
+import {UiPageTransition} from "../generated/UiPageTransition";
 
 require("moment-jdateformatparser");
 
-
-interface ChildComponent {
-	$wrapper: HTMLElement,
-	component: UiComponent<UiComponentConfig>
-}
-
-export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRootPanelCommandHandler {
+export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implements UiRootPanelCommandHandler {
 
 	private static LOGGER: log.Logger = log.getLogger("UiRootPanel");
 	private static ALL_ROOT_PANELS_BY_ID: { [id: string]: UiRootPanel } = {};
@@ -59,8 +52,8 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 	private static WINDOWS_BY_ID: { [windowId: string]: UiWindow } = {};
 
 	private $root: HTMLElement;
-	private childComponentsById: {[id: string]: ChildComponent} = {};
-	private visibleChildComponent: ChildComponent;
+	private content: UiComponent;
+	private $contentWrapper: HTMLElement;
 	private $backgroundTransitionStyle: HTMLElement;
 	private $backgroundStyle: HTMLElement;
 	private $imagePreloadDiv: HTMLElement;
@@ -83,10 +76,7 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		this.$backgroundTransitionStyle = this.$root.querySelector<HTMLElement>(":scope [data-style-type='backgroundTransitionStyle']");
 		this.$backgroundStyle = this.$root.querySelector<HTMLElement>(":scope [data-style-type='backgroundStyle']");
 
-		if (config.childComponents != null && config.childComponents.length > 0) {
-			config.childComponents.forEach(c => this.addChildComponent(c as UiComponent, false));
-			this.setVisibleChildComponent(config.visibleChildComponentId || (config.childComponents[0] as UiComponent).getId(), null, 0);
-		}
+		this.setContent(config.content as UiComponent);
 
 		this.setOptimizedForTouch(context.config.optimizedForTouch);
 	}
@@ -95,51 +85,37 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 		return this.$root;
 	}
 
-	public addChildComponent(component: UiComponent, show: boolean) {
-		let $childComponentContainer = parseHtml(`<div class="child-component-wrapper ${show ? 'active' : ''}">`)
-		this.$root.appendChild($childComponentContainer);
-		$childComponentContainer.appendChild(component.getMainDomElement());
-		this.childComponentsById[component.getId()] = {
-			component: component,
-			$wrapper: $childComponentContainer
-		};
-		if (show) {
-			this.setVisibleChildComponent(component.getId(), null, 0);
+	public setContent(content: UiComponent, transition: UiPageTransition | null = null, animationDuration: number = 0): void {
+		if (content == this.content) {
+			return;
 		}
-	}
 
-	public setVisibleChildComponent(childComponentId: string, animation: UiComponentRevealAnimation | null, animationDuration: number): void {
-		if (childComponentId == null) {
-			this.visibleChildComponent = null;
-			this.childComponents.forEach(c => c.$wrapper.classList.remove('active'));
+		let oldContent = this.content;
+		let $oldContentWrapper = this.$contentWrapper;
+
+		this.content = content;
+
+		this.$contentWrapper = parseHtml(`<div class="child-component-wrapper">`);
+		if (content != null) {
+			this.$contentWrapper.appendChild(content.getMainDomElement());
+		}
+		this.$root.appendChild(this.$contentWrapper);
+
+		if (transition != null && animationDuration > 0) {
+			pageTransition($oldContentWrapper, this.$contentWrapper, transition, animationDuration, () => {
+				$oldContentWrapper && $oldContentWrapper.remove();
+			});
 		} else {
-			let childComponent = this.childComponentsById[childComponentId];
-			if (childComponent) {
-				this.visibleChildComponent = childComponent;
-				this.childComponents.forEach(c => c.$wrapper.classList.remove('active'));
-				childComponent.$wrapper.classList.add('active');
-			}
+			$oldContentWrapper && $oldContentWrapper.remove();
 		}
-	}
-
-	public removeChildComponent(childComponentId: string): void {
-		let childComponent = this.childComponentsById[childComponentId];
-		delete this.childComponentsById[childComponentId];
-		if (childComponent) {
-			childComponent.$wrapper.remove();
-		}
-	}
-
-	private get childComponents() {
-		return Object.keys(this.childComponentsById).map(id => this.childComponentsById[id]);
 	}
 
 	public static createComponent(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
 		context.createAndRegisterComponent(config);
 	}
 
-	public static destroyComponent(component: UiComponent, context: TeamAppsUiContextInternalApi) {
-		context.destroyComponent(component);
+	public static destroyComponent(componentId: string, context: TeamAppsUiContextInternalApi) {
+		context.destroyComponent(componentId);
 	}
 
 	public static refreshComponent(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
@@ -240,12 +216,11 @@ export class UiRootPanel extends UiComponent<UiRootPanelConfig> implements UiRoo
 
 	public static showWindow(uiWindow: UiWindow, animationDuration = 1000, context?: TeamAppsUiContext) {
 		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			rootPanel.childComponents.forEach(childComponent => {
-				css(rootPanel.visibleChildComponent.$wrapper, {
+			if (rootPanel.$contentWrapper) {
+				css(rootPanel.$contentWrapper, {
 					transition: `opacity ${animationDuration}ms, filter ${animationDuration}ms`
 				});
-			});
-
+			}
 		});
 
 		document.body.appendChild(uiWindow.getMainDomElement());

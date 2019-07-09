@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiDocumentViewerCommandHandler, UiDocumentViewerConfig} from "../generated/UiDocumentViewerConfig";
@@ -34,7 +34,7 @@ interface Page {
 	naturalHeight?: number;
 }
 
-export class UiDocumentViewer extends UiComponent<UiDocumentViewerConfig> implements UiDocumentViewerCommandHandler {
+export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig> implements UiDocumentViewerCommandHandler {
 
 	private $componentWrapper: HTMLElement;
 	private $pagesContainerWrapper: HTMLElement;

@@ -22,13 +22,13 @@ import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiToolbarConfig} from "../generated/UiToolbarConfig";
 import {UiSplitPaneConfig} from "../generated/UiSplitPaneConfig";
 import {UiSplitPane} from "./UiSplitPane";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiApplicationLayoutConfig} from "../generated/UiApplicationLayoutConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 
-export class UiApplicationLayout extends UiComponent<UiApplicationLayoutConfig> {
+export class UiApplicationLayout extends AbstractUiComponent<UiApplicationLayoutConfig> {
 	private $mainDiv: HTMLElement;
 	private _toolbar: UiToolbar;
 	private _rootSplitPane: UiSplitPane;

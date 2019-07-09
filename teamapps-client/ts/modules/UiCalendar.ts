@@ -33,7 +33,7 @@ import {
 	UiCalendarConfig,
 	UiCalendarEventSource
 } from "../generated/UiCalendarConfig";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiCalendarViewMode} from "../generated/UiCalendarViewMode";
 import {UiCalendarEventRenderingStyle} from "../generated/UiCalendarEventRenderingStyle";
@@ -71,7 +71,7 @@ const RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: EventRen
 	[UiCalendarEventRenderingStyle.INVERSE_BACKGROUND]: 'inverse-background',
 };
 
-export class UiCalendar extends UiComponent<UiCalendarConfig> implements UiCalendarCommandHandler, UiCalendarEventSource {
+export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements UiCalendarCommandHandler, UiCalendarEventSource {
 
 	public readonly onEventClicked: TeamAppsEvent<UiCalendar_EventClickedEvent> = new TeamAppsEvent(this);
 	public readonly onEventMoved: TeamAppsEvent<UiCalendar_EventMovedEvent> = new TeamAppsEvent(this);

@@ -34,7 +34,7 @@ import {
 } from "../../generated/UiWorkSpaceLayoutConfig";
 import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
 import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
 import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
 import {UiRelativeWorkSpaceViewPosition} from "../../generated/UiRelativeWorkSpaceViewPosition";
@@ -50,6 +50,7 @@ import {UiWorkSpaceLayoutSplitItemConfig} from "../../generated/UiWorkSpaceLayou
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
 import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
+import {UiComponent} from "../UiComponent";
 
 export type UiWorkspaceLayoutSubWindowProtocol_INIT_OK = {
 	_type: 'INIT_OK',
@@ -76,7 +77,7 @@ export type UiWorkspaceLayoutDndDataTransfer = {
 	visible: boolean
 }
 
-export class UiWorkSpaceLayout extends UiComponent<UiWorkSpaceLayoutConfig> implements UiWorkSpaceLayoutCommandHandler, UiWorkSpaceLayoutEventSource {
+export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig> implements UiWorkSpaceLayoutCommandHandler, UiWorkSpaceLayoutEventSource {
 
 	public readonly onLayoutChanged: TeamAppsEvent<UiWorkSpaceLayout_LayoutChangedEvent> = new TeamAppsEvent(this);
 	public readonly onViewDraggedToNewWindow: TeamAppsEvent<UiWorkSpaceLayout_ViewDraggedToNewWindowEvent> = new TeamAppsEvent(this);

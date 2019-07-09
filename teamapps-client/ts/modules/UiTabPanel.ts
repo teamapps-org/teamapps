@@ -25,7 +25,7 @@ import {UiTabConfig} from "../generated/UiTabConfig";
 import {bind} from "./util/Bind";
 import {Emptyable, isEmptyable} from "./util/Emptyable";
 import {UiToolButton} from "./micro-components/UiToolButton";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiDropDown} from "./micro-components/UiDropDown";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
@@ -44,6 +44,7 @@ import {UiTabPanelTabStyle} from "../generated/UiTabPanelTabStyle";
 import {insertAtIndex, insertBefore, maximizeComponent, parseHtml, prependChild} from "./Common";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
 import {StaticIcons} from "./util/StaticIcons";
+import {UiComponent} from "./UiComponent";
 
 
 interface Tab {
@@ -59,7 +60,7 @@ interface Tab {
 	visible: boolean;
 }
 
-export class UiTabPanel extends UiComponent<UiTabPanelConfig> implements UiTabPanelCommandHandler, UiTabPanelEventSource, Emptyable {
+export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements UiTabPanelCommandHandler, UiTabPanelEventSource, Emptyable {
 
 	public readonly onTabSelected: TeamAppsEvent<UiTabPanel_TabSelectedEvent> = new TeamAppsEvent<UiTabPanel_TabSelectedEvent>(this);
 

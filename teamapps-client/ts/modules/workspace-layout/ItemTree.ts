@@ -19,10 +19,10 @@
  */
 import * as log from "loglevel";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
-import {UiComponent} from "../UiComponent";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
 import {TabPanelItem} from "./TabPanelItem";
+import {UiComponent} from "../UiComponent";
 
 
 export interface ItemTreeItem<C extends UiComponent<UiComponentConfig> = UiComponent<UiComponentConfig>> {

@@ -42,7 +42,7 @@ import {DEFAULT_TEMPLATES} from "trivial-components";
 import {UiTableColumnConfig} from "../../generated/UiTableColumnConfig";
 import {UiCompositeFieldTableCellEditor} from "./UiCompositeFieldTableCellEditor";
 import {debouncedMethod} from "../util/debounce";
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
@@ -99,7 +99,7 @@ const backgroundColorCssClassesByMessageSeverity = {
 
 type FieldsByName = { [fieldName: string]: UiField };
 
-export class UiTable extends UiComponent<UiTableConfig> implements UiTableCommandHandler, UiTableEventSource {
+export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTableCommandHandler, UiTableEventSource {
 
 	public readonly onCellEditingStarted: TeamAppsEvent<UiTable_CellEditingStartedEvent> = new TeamAppsEvent(this);
 	public readonly onCellEditingStopped: TeamAppsEvent<UiTable_CellEditingStoppedEvent> = new TeamAppsEvent(this);

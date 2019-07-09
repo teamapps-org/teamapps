@@ -21,13 +21,13 @@
 import * as moment from "moment-timezone";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiDummyComponent_ClickedEvent, UiDummyComponentCommandHandler, UiDummyComponentConfig, UiDummyComponentEventSource} from "../generated/UiDummyComponentConfig";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 import Moment = moment.Moment;
 
-export class UiDummyComponent extends UiComponent<UiDummyComponentConfig> implements UiDummyComponentCommandHandler, UiDummyComponentEventSource {
+export class UiDummyComponent extends AbstractUiComponent<UiDummyComponentConfig> implements UiDummyComponentCommandHandler, UiDummyComponentEventSource {
 
 	public readonly onClicked: TeamAppsEvent<UiDummyComponent_ClickedEvent> = new TeamAppsEvent<UiDummyComponent_ClickedEvent>(this);
 

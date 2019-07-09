@@ -19,12 +19,12 @@
  */
 
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiLiveStreamComPlayerConfig} from "../../generated/UiLiveStreamComPlayerConfig";
 import {parseHtml} from "../Common";
 
-export class UiLiveStreamComPlayer extends UiComponent<UiLiveStreamComPlayerConfig> implements LiveStreamPlayer {
+export class UiLiveStreamComPlayer extends AbstractUiComponent<UiLiveStreamComPlayerConfig> implements LiveStreamPlayer {
 
 	private playing: boolean = false;
 	private $wrapper: HTMLElement;

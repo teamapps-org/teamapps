@@ -18,24 +18,18 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
-import {UiToolbarConfig} from "../generated/UiToolbarConfig";
 import {UiNavigationBar} from "./UiNavigationBar";
-import {UiNavigationBarConfig} from "../generated/UiNavigationBarConfig";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiMobileLayoutCommandHandler, UiMobileLayoutConfig} from "../generated/UiMobileLayoutConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiMobileLayoutAnimation} from "../generated/UiMobileLayoutAnimation";
-import {parseHtml} from "./Common";
+import {pageTransition, pageTransitionAnimationPairs, parseHtml} from "./Common";
+import {UiComponent} from "./UiComponent";
+import {UiPageTransition} from "../generated/UiPageTransition";
 
-class View {
-	component: UiComponent<UiComponentConfig>;
-	$container: HTMLElement;
-}
 
-export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements UiMobileLayoutCommandHandler {
+export class UiMobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> implements UiMobileLayoutCommandHandler {
 
 	private $mainDiv: HTMLElement;
 	private $toolbarContainer: HTMLElement;
@@ -44,8 +38,9 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 
 	private toolbar: UiToolbar;
 	private navBar: UiNavigationBar;
-	private views: { [id: string]: View } = {};
-	private currentView: View;
+
+	private content: UiComponent;
+	private $contentContainer: HTMLElement;
 
 	constructor(config: UiMobileLayoutConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -62,81 +57,34 @@ export class UiMobileLayout extends UiComponent<UiMobileLayoutConfig> implements
 		this.setToolbar(config.toolbar as UiToolbar);
 		this.setNavigationBar(config.navigationBar as UiNavigationBar);
 
-		if (config.views) {
-			config.views.forEach(v => this.addView(v as UiComponent));
-		}
-
-		if (config.initialViewId) {
-			this.showView(config.initialViewId, null);
+		if (config.initialView) {
+			this.showView(config.initialView as UiComponent, null);
 		}
 	}
 
-	public addView(viewComponent: UiComponent) {
-		var $container = parseHtml(`<div class="content-container">`);
-		this.$contentContainerWrapper.append($container);
-		$container.appendChild(viewComponent.getMainDomElement());
-		this.views[viewComponent.getId()] = {
-			component: viewComponent,
-			$container: $container
-		};
-		this.resizeChildren();
-	}
-
-	public removeView(viewId: string) {
-		let view = this.views[viewId];
-		view.$container.remove();
-		delete this.views[viewId];
-	}
-
-	public showView(viewId: string, animationType: UiMobileLayoutAnimation) {
-		var newView = this.views[viewId];
-
-		if (newView == null) {
-			this.logger.warn("View with id " + viewId + " not registered!");
-			return;
-		}
-		if (newView === this.currentView) {
+	public showView(view: UiComponent, transition: UiPageTransition = null, animationDuration = 0) {
+		if (view === this.content) {
 			return;
 		}
 
-		if (animationType == UiMobileLayoutAnimation.FORWARD) {
-			this.doViewTransition(newView, "forward-offsite", "backward-offsite");
-		} else if (animationType == UiMobileLayoutAnimation.BACKWARD) {
-			this.doViewTransition(newView, "backward-offsite", "forward-offsite");
+		let oldContent = this.content;
+		let $oldContentContainer = this.$contentContainer;
+
+		this.content = view;
+
+		this.$contentContainer = parseHtml(`<div class="content-container"></div>`);
+		if (view != null) {
+			this.$contentContainer.appendChild(view.getMainDomElement());
+		}
+		this.$contentContainerWrapper.appendChild(this.$contentContainer);
+
+		if (transition != null && animationDuration > 0) {
+			pageTransition($oldContentContainer, this.$contentContainer, transition, animationDuration, () => {
+				$oldContentContainer && $oldContentContainer.remove();
+			});
 		} else {
-			newView.$container.classList.add("active");
-			this.currentView && this.currentView.$container.classList.remove("active");
+			$oldContentContainer && $oldContentContainer.remove();
 		}
-
-		this.currentView = newView;
-	}
-
-	private doViewTransition(newView: View, inwardStyle: string, outwardStyle: string) {
-		newView.$container.classList.add(inwardStyle + " active");
-		newView.$container.offsetWidth;
-		this.$mainDiv.classList.add("transitions");
-		this.$mainDiv.offsetWidth;
-		this.currentView && this.currentView.$container.classList.add(outwardStyle);
-		newView.$container.classList.remove(inwardStyle);
-
-		let currentViewLocalVar = this.currentView;
-		setTimeout(() => {
-			currentViewLocalVar && currentViewLocalVar.$container.classList.remove("active " + outwardStyle);
-			this.$mainDiv.classList.remove("transitions");
-		}, 500);
-	};
-
-	public onResize(): void {
-		this.resizeChildren();
-	}
-
-	private resizeChildren() {
-		let computedStyle = getComputedStyle(this.$contentContainerWrapper);
-		Object.keys(this.views).forEach(viewId => {
-			let view = this.views[viewId];
-			view.$container.style.width = computedStyle.width;
-			view.$container.style.height = computedStyle.height;
-		});
 	}
 
 	public setToolbar(toolbar: UiToolbar): void {

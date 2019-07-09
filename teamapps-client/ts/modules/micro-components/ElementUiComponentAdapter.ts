@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 
-export class ElementUiComponentAdapter extends UiComponent<UiComponentConfig> {
+export class ElementUiComponentAdapter extends AbstractUiComponent<UiComponentConfig> {
 
 	constructor(private element: HTMLElement) {
 		super({_type: "ElementUiComponentAdapter", id: ""}, null);

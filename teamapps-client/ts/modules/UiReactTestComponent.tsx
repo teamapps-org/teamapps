@@ -18,7 +18,7 @@ import "@less/components/UiReactTestComponent.less";
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiReactTestComponentConfig} from "../generated/UiReactTestComponentConfig";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -29,7 +29,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 
 
-export class UiReactTestComponent extends UiComponent<UiReactTestComponentConfig> {
+export class UiReactTestComponent extends AbstractUiComponent<UiReactTestComponentConfig> {
 
 	private $main: HTMLElement;
 

@@ -21,7 +21,7 @@
 import {UiTree_NodeSelectedEvent, UiTree_RequestTreeDataEvent, UiTree_TextInputEvent, UiTreeCommandHandler, UiTreeConfig, UiTreeEventSource} from "../generated/UiTreeConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {ResultCallback, TrivialTree} from "trivial-components";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {buildObjectTree, matchingModesMapping, NodeWithChildren, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -30,7 +30,7 @@ import {UiComboBoxTreeRecordConfig} from "../generated/UiComboBoxTreeRecordConfi
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 
 
-export class UiTree extends UiComponent<UiTreeConfig> implements UiTreeCommandHandler, UiTreeEventSource {
+export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeCommandHandler, UiTreeEventSource {
 
 	public readonly onTextInput: TeamAppsEvent<UiTree_TextInputEvent> = new TeamAppsEvent(this, 250);
 	public readonly onNodeSelected: TeamAppsEvent<UiTree_NodeSelectedEvent> = new TeamAppsEvent(this);

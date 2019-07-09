@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiStaticGridLayoutCommandHandler, UiStaticGridLayoutConfig} from "../generated/UiStaticGridLayoutConfig";
 import {UiGridLayout} from "./micro-components/UiGridLayout";
@@ -26,7 +26,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiResponsiveGridLayout} from "./UiResponsiveGridLayout";
 import {parseHtml} from "./Common";
 
-export class UiStaticGridLayout extends UiComponent<UiStaticGridLayoutConfig> implements UiStaticGridLayoutCommandHandler{
+export class UiStaticGridLayout extends AbstractUiComponent<UiStaticGridLayoutConfig> implements UiStaticGridLayoutCommandHandler{
 
 	private $main: HTMLElement;
 	private layout: UiGridLayout;

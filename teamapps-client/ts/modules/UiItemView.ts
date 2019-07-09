@@ -21,7 +21,7 @@
 import {UiItemViewItemGroupConfig} from "../generated/UiItemViewItemGroupConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {DEFAULT_TEMPLATES, trivialMatch, TrivialTreeBox} from "trivial-components";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {generateUUID, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiItemView_ItemClickedEvent, UiItemViewCommandHandler, UiItemViewConfig, UiItemViewEventSource} from "../generated/UiItemViewConfig";
@@ -48,7 +48,7 @@ export var itemCssStringsAlignItems = {
 	[UiVerticalItemAlignment.STRETCH]: "stretch"
 };
 
-export class UiItemView extends UiComponent<UiItemViewConfig> implements UiItemViewCommandHandler, UiItemViewEventSource {
+export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements UiItemViewCommandHandler, UiItemViewEventSource {
 
 	public readonly onItemClicked: TeamAppsEvent<UiItemView_ItemClickedEvent> = new TeamAppsEvent<UiItemView_ItemClickedEvent>(this);
 

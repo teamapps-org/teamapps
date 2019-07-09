@@ -21,7 +21,7 @@
 import {UiAudioActivityDisplay} from "./micro-components/UiAudioActivityDisplay";
 import {UiWebRtcPublisher_PublishingFailedEvent, UiWebRtcPublisherCommandHandler, UiWebRtcPublisherConfig, UiWebRtcPublisherEventSource} from "../generated/UiWebRtcPublisherConfig";
 import {UiSpinner} from "./micro-components/UiSpinner";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {UiAudioCodec} from "../generated/UiAudioCodec";
@@ -43,7 +43,7 @@ interface SdpDescriptorEnhancingData {
 	videoFrameRate: number
 }
 
-export class UiWebRtcPublisher extends UiComponent<UiWebRtcPublisherConfig> implements UiWebRtcPublisherCommandHandler, UiWebRtcPublisherEventSource {
+export class UiWebRtcPublisher extends AbstractUiComponent<UiWebRtcPublisherConfig> implements UiWebRtcPublisherCommandHandler, UiWebRtcPublisherEventSource {
 
 	private static readonly PEER_CONNECTION_CONFIG: any = {'iceServers': []};
 

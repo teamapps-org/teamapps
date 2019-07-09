@@ -18,13 +18,13 @@
  * =========================LICENSE_END==================================
  */
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {UiFieldGroupCommandHandler, UiFieldGroupConfig} from "../../generated/UiFieldGroupConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {parseHtml} from "../Common";
 import {UiField} from "./UiField";
 
-export class UiFieldGroup extends UiComponent<UiFieldGroupConfig> implements UiFieldGroupCommandHandler {
+export class UiFieldGroup extends AbstractUiComponent<UiFieldGroupConfig> implements UiFieldGroupCommandHandler {
 
 	private $main: HTMLElement;
 	private fields: UiField[];

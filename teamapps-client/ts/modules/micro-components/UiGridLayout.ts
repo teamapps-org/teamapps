@@ -29,10 +29,11 @@ import {
 } from "../util/CssFormatUtil";
 import {UiFormSectionPlacementConfig} from "../../generated/UiFormSectionPlacementConfig";
 import {UiGridPlacementConfig} from "../../generated/UiGridPlacementConfig";
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {flattenArray, generateUUID, parseHtml} from "../Common";
 import {UiComponentGridPlacementConfig} from "../../generated/UiComponentGridPlacementConfig";
 import {UiFloatingComponentGridPlacementConfig} from "../../generated/UiFloatingComponentGridPlacementConfig";
+import {UiComponent} from "../UiComponent";
 
 export class UiGridLayout {
 
@@ -91,7 +92,7 @@ export class UiGridLayout {
 					"flex-wrap": placement.wrap ? "wrap" : "nowrap"
 				};
 				placement.components.forEach(floatingComponent => {
-					const uiComponent = floatingComponent.component as UiComponent;
+					const uiComponent = floatingComponent.component as AbstractUiComponent;
 					cssRules[uiComponent.getId()] = {
 						"min-width": floatingComponent.minWidth ? `${floatingComponent.minWidth}px` : '',
 						"max-width": floatingComponent.maxWidth ? `${floatingComponent.maxWidth}px` : '',

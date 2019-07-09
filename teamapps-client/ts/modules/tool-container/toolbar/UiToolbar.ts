@@ -26,7 +26,6 @@ import {UiToolAccordion} from "../tool-accordion/UiToolAccordion";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiDropDown} from "../../micro-components/UiDropDown";
-import {UiComponent} from "../../UiComponent";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {AbstractUiToolContainer_ToolbarButtonClickEvent, AbstractUiToolContainer_ToolbarDropDownItemClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
@@ -34,6 +33,7 @@ import {Emptyable} from "../../util/Emptyable";
 import {UiToolbarButton} from "./UiToolbarButton";
 import {UiToolbarButtonGroup} from "./UiToolbarButtonGroup";
 import {insertBefore, outerWidthIncludingMargins, parseHtml} from "../../Common";
+import {UiComponent} from "../../UiComponent";
 
 interface FQButtonId {
 	groupId: string,

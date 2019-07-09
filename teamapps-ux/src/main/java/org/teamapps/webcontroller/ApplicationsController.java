@@ -24,7 +24,7 @@ import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.application.*;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.animation.Animation;
+import org.teamapps.ux.component.animation.PageTransition;
 import org.teamapps.ux.component.field.TextField;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.itemview.ItemGroup;
@@ -148,7 +148,7 @@ public class ApplicationsController implements ApplicationDesktop {
 			String applicationName = (String) item.getValue(PROPERTY_ID);
 			if (applicationName.equals(CMD_LOGOUT)) {
 				loginWindow.getPasswordField().setValue(null);
-				rootPanel.setContent(loginWindow.getElegantPanel(), Animation.FADE_ZOOM_GROW, 300);
+				rootPanel.setContent(loginWindow.getElegantPanel(), PageTransition.MOVE_TO_BOTTOM_VS_SCALE_UP, 0);
 			} else {
 				loadApplication(applicationName, validBuilderMap, applicationsListingPanel, tabsByApplicationItemId, tabPanel, rootPanel);
 			}
@@ -185,7 +185,7 @@ public class ApplicationsController implements ApplicationDesktop {
 			logoutTab.setRightSide(true);
 			logoutTab.onSelected.addListener(aVoid -> {
 				context.setBackgroundImage("login", 1000);
-				rootPanel.setContent(loginWindow.getElegantPanel(), Animation.FADE_ZOOM_GROW, 300);
+				rootPanel.setContent(loginWindow.getElegantPanel(), PageTransition.MOVE_TO_BOTTOM_VS_SCALE_UP, 300);
 			});
 			tabPanel.addTab(logoutTab);
 			rootPanel.setContent(tabPanel);

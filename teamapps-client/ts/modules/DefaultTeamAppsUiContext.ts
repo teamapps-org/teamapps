@@ -23,7 +23,6 @@ import {generateUUID, getIconPath, logException} from "./Common";
 import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {UiWeekDay} from "../generated/UiWeekDay";
-import {UiComponent} from "./UiComponent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiEvent} from "../generated/UiEvent";
 import {UiRootPanel} from "./UiRootPanel";
@@ -41,6 +40,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {bind} from "./util/Bind";
 import {RefreshableComponentProxyHandle} from "./util/RefreshableComponentProxyHandle";
 import {TeamAppsConnectionImpl} from "./communication/TeamAppsConnectionImpl";
+import {UiComponent} from "./UiComponent";
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 
@@ -114,32 +114,36 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		this.connection.sendEvent(eventObject);
 	}
 
-	public registerComponent(component: UiComponent<UiComponentConfig>): void {
-		DefaultTeamAppsUiContext.logger.debug("registering component: ", component.getId());
-		if (this.components[component.getId()] == null) {
-			this.components[component.getId()] = new RefreshableComponentProxyHandle(component);
+	public registerComponent(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void {
+		DefaultTeamAppsUiContext.logger.debug("registering component: ", id);
+		if (this.components[id] == null) {
+			this.components[id] = new RefreshableComponentProxyHandle(component);
 		} else {
-			this.components[component.getId()].component = component;
+			this.components[id].component = component;
 		}
-		EventRegistrator.registerForEvents(component, component.getTeamAppsType(), this.fireEvent, {componentId: component.getId()});
+		EventRegistrator.registerForEvents(component, teamappsType, this.fireEvent, {componentId: id});
 	}
 
 	public createAndRegisterComponent(config: UiComponentConfig) {
-		let component: UiComponent<UiComponentConfig>;
 		if (TeamAppsUiComponentRegistry.getComponentClassForName(config._type)) {
-			component = new (TeamAppsUiComponentRegistry.getComponentClassForName(config._type))(config, this);
-			this.registerComponent(component);
-			return this.getComponentById(component.getId()); // return the proxied component!!!
+		let component = new (TeamAppsUiComponentRegistry.getComponentClassForName(config._type))(config, this);
+			this.registerComponent(component, config.id, config._type);
+			return this.getComponentById(config.id); // return the proxied component!!!
 		} else {
 			DefaultTeamAppsUiContext.logger.error("Unknown component type: " + config._type);
 			return;
 		}
 	}
 
-	destroyComponent(component: UiComponent): void {
-		component.getMainDomElement().remove();
-		component.destroy();
-		delete this.components[component.getId()];
+	destroyComponent(componentId: string): void {
+		let component = this.components[componentId].component;
+		if (component != null) {
+			component.getMainDomElement().remove();
+			component.destroy();
+			delete this.components[componentId];
+		} else {
+			DefaultTeamAppsUiContext.logger.warn("Could not find component to destroy: " + componentId);
+		}
 	}
 
 	refreshComponent(config: UiComponentConfig): void {

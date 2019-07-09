@@ -21,7 +21,7 @@
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiNavigationBarButtonConfig} from "../generated/UiNavigationBarButtonConfig";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {ClickOutsideHandle, doOnceOnClickOutsideElement, outerHeightIncludingMargins, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
@@ -34,13 +34,15 @@ import {
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiColorConfig} from "../generated/UiColorConfig";
+import {UiComponent} from "./UiComponent";
+import {parse} from "@fullcalendar/core/datelib/parsing";
 
 interface Button {
 	data: any;
 	$button: HTMLElement;
 }
 
-export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implements UiNavigationBarCommandHandler, UiNavigationBarEventSource {
+export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> implements UiNavigationBarCommandHandler, UiNavigationBarEventSource {
 
 	public readonly onButtonClicked: TeamAppsEvent<UiNavigationBar_ButtonClickedEvent> = new TeamAppsEvent(this);
 	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent(this);
@@ -99,11 +101,11 @@ export class UiNavigationBar extends UiComponent<UiNavigationBarConfig> implemen
 	private addButton(button: UiNavigationBarButtonConfig) {
 		let $button = parseHtml(`<div class="nav-button-wrapper"><div class="nav-button-inner-wrapper"></div></div>`);
 		let $innerWrapper = $button.querySelector<HTMLElement>(":scope .nav-button-inner-wrapper");
-		$innerWrapper.append(this.buttonTemplateRenderer.render(button.data));
+		$innerWrapper.appendChild(parseHtml(this.buttonTemplateRenderer.render(button.data)));
 		$button.addEventListener("click", () => {
 			this.onButtonClicked.fire({
 				buttonId: button.id,
-				visibleFanOutComponentId: this.currentFanOutComponent && this.currentFanOutComponent.getId()
+				visibleFanOutComponentId: this.currentFanOutComponent && (this.currentFanOutComponent as AbstractUiComponent).getId()
 			});
 		});
 		this.buttons[button.id] = {
