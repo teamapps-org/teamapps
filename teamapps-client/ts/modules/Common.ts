@@ -1056,11 +1056,11 @@ export var pageTransitionAnimationPairs = {
 	},
 	'scaleDownVsScaleUpDown': {
 		outClass: ['pt-page-scaleDown'],
-		inClass: ['pt-page-scaleUpDown', 'pt-page-delay300']
+		inClass: ['pt-page-scaleUpDown']
 	},
 	'scaleDownUpVsScaleUp': {
 		outClass: ['pt-page-scaleDownUp'],
-		inClass: ['pt-page-scaleUp', 'pt-page-delay300']
+		inClass: ['pt-page-scaleUp']
 	},
 	'moveToLeftVsScaleUp': {
 		outClass: ['pt-page-moveToLeft', 'pt-page-ontop'],
@@ -1080,39 +1080,39 @@ export var pageTransitionAnimationPairs = {
 	},
 	'scaleDownCenterVsScaleUpCenter': {
 		outClass: ['pt-page-scaleDownCenter'],
-		inClass: ['pt-page-scaleUpCenter', 'pt-page-delay400']
+		inClass: ['pt-page-scaleUpCenter']
 	},
 	'rotateRightSideFirstVsMoveFromRight': {
 		outClass: ['pt-page-rotateRightSideFirst'],
-		inClass: ['pt-page-moveFromRight', 'pt-page-delay200', 'pt-page-ontop']
+		inClass: ['pt-page-moveFromRight', 'pt-page-ontop']
 	},
 	'rotateLeftSideFirstVsMoveFromLeft': {
 		outClass: ['pt-page-rotateLeftSideFirst'],
-		inClass: ['pt-page-moveFromLeft', 'pt-page-delay200', 'pt-page-ontop']
+		inClass: ['pt-page-moveFromLeft', 'pt-page-ontop']
 	},
 	'rotateTopSideFirstVsMoveFromTop': {
 		outClass: ['pt-page-rotateTopSideFirst'],
-		inClass: ['pt-page-moveFromTop', 'pt-page-delay200', 'pt-page-ontop']
+		inClass: ['pt-page-moveFromTop', 'pt-page-ontop']
 	},
 	'rotateBottomSideFirstVsMoveFromBottom': {
 		outClass: ['pt-page-rotateBottomSideFirst'],
-		inClass: ['pt-page-moveFromBottom', 'pt-page-delay200', 'pt-page-ontop']
+		inClass: ['pt-page-moveFromBottom', 'pt-page-ontop']
 	},
 	'flipOutRightVsFlipInLeft': {
 		outClass: ['pt-page-flipOutRight'],
-		inClass: ['pt-page-flipInLeft', 'pt-page-delay500']
+		inClass: ['pt-page-flipInLeft']
 	},
 	'flipOutLeftVsFlipInRight': {
 		outClass: ['pt-page-flipOutLeft'],
-		inClass: ['pt-page-flipInRight', 'pt-page-delay500']
+		inClass: ['pt-page-flipInRight']
 	},
 	'flipOutTopVsFlipInBottom': {
 		outClass: ['pt-page-flipOutTop'],
-		inClass: ['pt-page-flipInBottom', 'pt-page-delay500']
+		inClass: ['pt-page-flipInBottom']
 	},
 	'flipOutBottomVsFlipInTop': {
 		outClass: ['pt-page-flipOutBottom'],
-		inClass: ['pt-page-flipInTop', 'pt-page-delay500']
+		inClass: ['pt-page-flipInTop']
 	},
 	'rotateFallVsScaleUp': {
 		outClass: ['pt-page-rotateFall', 'pt-page-ontop'],
@@ -1120,7 +1120,7 @@ export var pageTransitionAnimationPairs = {
 	},
 	'rotateOutNewspaperVsRotateInNewspaper': {
 		outClass: ['pt-page-rotateOutNewspaper'],
-		inClass: ['pt-page-rotateInNewspaper', 'pt-page-delay500']
+		inClass: ['pt-page-rotateInNewspaper']
 	},
 	'rotatePushLeftVsMoveFromRight': {
 		outClass: ['pt-page-rotatePushLeft'],
@@ -1140,19 +1140,19 @@ export var pageTransitionAnimationPairs = {
 	},
 	'rotatePushLeftVsRotatePullRight': {
 		outClass: ['pt-page-rotatePushLeft'],
-		inClass: ['pt-page-rotatePullRight', 'pt-page-delay180']
+		inClass: ['pt-page-rotatePullRight']
 	},
 	'rotatePushRightVsRotatePullLeft': {
 		outClass: ['pt-page-rotatePushRight'],
-		inClass: ['pt-page-rotatePullLeft', 'pt-page-delay180']
+		inClass: ['pt-page-rotatePullLeft']
 	},
 	'rotatePushTopVsRotatePullBottom': {
 		outClass: ['pt-page-rotatePushTop'],
-		inClass: ['pt-page-rotatePullBottom', 'pt-page-delay180']
+		inClass: ['pt-page-rotatePullBottom']
 	},
 	'rotatePushBottomVsRotatePullTop': {
 		outClass: ['pt-page-rotatePushBottom'],
-		inClass: ['pt-page-rotatePullTop', 'pt-page-delay180']
+		inClass: ['pt-page-rotatePullTop']
 	},
 	'rotateFoldLeftVsMoveFromRightFade': {
 		outClass: ['pt-page-rotateFoldLeft'],
@@ -1236,7 +1236,7 @@ export var pageTransitionAnimationPairs = {
 	},
 	'rotateSidesOutVsRotateSidesIn': {
 		outClass: ['pt-page-rotateSidesOut'],
-		inClass: ['pt-page-rotateSidesIn', 'pt-page-delay200']
+		inClass: ['pt-page-rotateSidesIn']
 	},
 	'rotateSlideOutVsRotateSlideIn': {
 		outClass: ['pt-page-rotateSlideOut'],
@@ -1246,12 +1246,14 @@ export var pageTransitionAnimationPairs = {
 
 export function animatePageTransition(outEl: HTMLElement, inEl: HTMLElement, animationName: keyof typeof pageTransitionAnimationPairs, animationDuration: number = 300, callback?: () => any) {
 	let animationCallbackCount = 0;
+
 	function invokeCallbackIfBothReturned() {
 		animationCallbackCount++;
 		if (animationCallbackCount == 2) {
 			callback();
 		}
 	}
+
 	if (outEl != null) {
 		animate(outEl, pageTransitionAnimationPairs[animationName].outClass, animationDuration, invokeCallbackIfBothReturned);
 	} else {
