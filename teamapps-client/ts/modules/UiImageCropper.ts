@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {applyDisplayMode, boundSelection, css, parseHtml} from "./Common";
@@ -30,7 +30,7 @@ import {createUiImageCropperSelectionConfig, UiImageCropperSelectionConfig} from
 import {UiImageCropperSelectionMode} from "../generated/UiImageCropperSelectionMode";
 
 
-export class UiImageCropper extends UiComponent<UiImageCropperConfig> implements UiImageCropperCommandHandler, UiImageCropperEventSource {
+export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> implements UiImageCropperCommandHandler, UiImageCropperEventSource {
 
 	public readonly onSelectionChanged: TeamAppsEvent<UiImageCropper_SelectionChangedEvent> = new TeamAppsEvent<UiImageCropper_SelectionChangedEvent>(this);
 

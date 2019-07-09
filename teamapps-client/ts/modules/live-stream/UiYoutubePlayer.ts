@@ -21,12 +21,12 @@
 
 
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {generateUUID, parseHtml} from "../Common";
 import {UiYoutubePlayerConfig} from "../../generated/UiYoutubePlayerConfig";
 
-export class UiYoutubePlayer extends UiComponent<UiYoutubePlayerConfig> implements LiveStreamPlayer {
+export class UiYoutubePlayer extends AbstractUiComponent<UiYoutubePlayerConfig> implements LiveStreamPlayer {
 	private static scriptTagAdded: boolean = false;
 	private static scriptLoaded: boolean = false;
 	private static commandsToInvokeWhenScripLoaded: Function[] = [];

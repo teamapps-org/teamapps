@@ -30,10 +30,10 @@ import {enterFullScreen, exitFullScreen, insertAfter, isFullScreen, parseHtml, p
 import {UiToolAccordionCommandHandler, UiToolAccordionConfig, UiToolAccordionEventSource} from "../../../generated/UiToolAccordionConfig";
 import {AbstractUiToolContainer_ToolbarButtonClickEvent, AbstractUiToolContainer_ToolbarDropDownItemClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {UiComponent} from "../../UiComponent";
 import {UiItemView} from "../../UiItemView";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
+import {UiComponent} from "../../UiComponent";
 
 interface Button {
 	config: UiToolbarButtonConfig;

@@ -22,7 +22,7 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiField_ValueChangedEvent, UiFieldCommandHandler, UiFieldConfig, UiFieldEventSource} from "../../generated/UiFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiFieldMessagePosition} from "../../generated/UiFieldMessagePosition";
@@ -42,7 +42,7 @@ interface FieldMessage {
 	$message: HTMLElement
 }
 
-export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> extends UiComponent<C> implements UiFieldCommandHandler, UiFieldEventSource {
+export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> extends AbstractUiComponent<C> implements UiFieldCommandHandler, UiFieldEventSource {
 
 	public readonly onValueChanged: TeamAppsEvent<UiField_ValueChangedEvent> = new TeamAppsEvent<UiField_ValueChangedEvent>(this);
 	public readonly onFocused: TeamAppsEvent<void> = new TeamAppsEvent<void>(this);

@@ -22,7 +22,7 @@
 import * as d3 from "d3";
 import {BaseType, Selection, ZoomBehavior} from "d3";
 import {UiColorConfig} from '../generated/UiColorConfig';
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiTreeGraph_NodeClickedEvent, UiTreeGraph_NodeExpandedOrCollapsedEvent, UiTreeGraphCommandHandler, UiTreeGraphConfig, UiTreeGraphEventSource} from "../generated/UiTreeGraphConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiTreeGraphNodeConfig} from "../generated/UiTreeGraphNodeConfig";
@@ -31,7 +31,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
 import {parseHtml} from "./Common";
 
-export class UiTreeGraph extends UiComponent<UiTreeGraphConfig> implements UiTreeGraphCommandHandler, UiTreeGraphEventSource {
+export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implements UiTreeGraphCommandHandler, UiTreeGraphEventSource {
 
 	public readonly onNodeClicked: TeamAppsEvent<UiTreeGraph_NodeClickedEvent> = new TeamAppsEvent(this);
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);

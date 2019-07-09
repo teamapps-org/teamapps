@@ -20,12 +20,12 @@
 import {UiPanel} from "../UiPanel";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {bind} from "../util/Bind";
-import {UiComponent} from "../UiComponent";
 import {TabPanelItem} from "./TabPanelItem";
 import {ViewInfo} from "./ViewInfo";
 import {UiWindowButtonType} from "../../generated/UiWindowButtonType";
 import {UiPanel_WindowButtonClickedEvent} from "../../generated/UiPanelConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiComponent} from "../UiComponent";
 
 export class View implements ViewInfo {
 

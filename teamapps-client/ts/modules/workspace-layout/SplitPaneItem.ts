@@ -23,8 +23,8 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiSplitDirection} from "../../generated/UiSplitDirection";
 import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
 import {ItemTreeItem} from "./ItemTree";
-import {UiComponent} from "../UiComponent";
 import {generateUUID} from "../Common";
+import {UiComponent} from "../UiComponent";
 
 export class SplitPaneItem implements ItemTreeItem<UiSplitPane> {
 	id: string;

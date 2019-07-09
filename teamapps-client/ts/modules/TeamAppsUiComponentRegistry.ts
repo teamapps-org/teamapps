@@ -18,11 +18,12 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiField} from "./formfield/UiField";
 import {UiFieldConfig} from "../generated/UiFieldConfig";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {UiComponent} from "./UiComponent";
 
 type ComponentClass<T extends UiComponent<UiComponentConfig>> = { new (config: UiComponentConfig, context: TeamAppsUiContext): T };
 type FieldClass<T extends UiField> = { new (config: UiFieldConfig, context: TeamAppsUiContext): T };
@@ -34,7 +35,7 @@ export class TeamAppsUiComponentRegistry {
 	private static componentClasses: { [componentName: string]: ComponentClass<UiComponent<UiComponentConfig>> } = {};
 	private static fieldClasses: { [fieldName: string]: FieldClass<UiField> } = {};
 
-	public static registerComponentClass<F extends UiComponent<UiComponentConfig>>(componentName: string, componentClass: ComponentClass<F>): void {
+	public static registerComponentClass<F extends AbstractUiComponent<UiComponentConfig>>(componentName: string, componentClass: ComponentClass<F>): void {
 		this.componentClasses[componentName] = componentClass;
 	}
 

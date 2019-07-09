@@ -1,17 +1,16 @@
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {TemplateRegistry} from "./TemplateRegistry";
-import {UiComponent} from "./UiComponent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {IconPathProvider, TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiRadioGroup} from "./UiRadioGroup";
 import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {UiSwitch} from "./UiSwitch";
 import {createUiColorConfig} from "../generated/UiColorConfig";
-import {AbstractUiReactComponent} from "./AbstractUiReactComponent";
 import {UiPictureChooser} from "./formfield/file/UiPictureChooser";
 import {UiFieldGroup} from "./formfield/UiFieldGroup";
 import {UiTextField} from "./formfield/UiTextField";
 import {UiButton} from "./formfield/UiButton";
+import {UiComponent} from "./UiComponent";
 
 
 export class UiTestHarness {

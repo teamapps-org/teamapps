@@ -20,7 +20,7 @@
 
 import {UiPanel} from "./UiPanel";
 import {UiPanelHeaderFieldConfig} from "../generated/UiPanelHeaderFieldConfig";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "../generated/UiWindowConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -33,12 +33,13 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiPanel_WindowButtonClickedEvent} from "../generated/UiPanelConfig";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
 import {animateCSS, css, parseHtml} from "./Common";
+import {UiComponent} from "./UiComponent";
 
 export interface UiWindowListener {
 	onWindowClosed: (window: UiWindow, animationDuration: number) => void;
 }
 
-export class UiWindow extends UiComponent<UiWindowConfig> implements UiWindowCommandHandler, UiWindowEventSource {
+export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiWindowCommandHandler, UiWindowEventSource {
 
 	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent(this);
 

@@ -21,12 +21,12 @@
 import {Player, polyfill, util} from "../../custom-declarations/shaka-player";
 require("shaka-player");
 import {UiSpinner} from "../micro-components/UiSpinner";
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {LiveStreamPlayer} from "./LiveStreamPlayer";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiMpegDashPlayerConfig} from "../../generated/UiMpegDashPlayerConfig";
 
-export class UiMpegDashPlayer extends UiComponent<UiMpegDashPlayerConfig> implements LiveStreamPlayer {
+export class UiMpegDashPlayer extends AbstractUiComponent<UiMpegDashPlayerConfig> implements LiveStreamPlayer {
 
 	private browserSupported = Player.isBrowserSupported();
 

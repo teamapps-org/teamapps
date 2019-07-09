@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {createImageThumbnailUrl, fadeOut, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -41,7 +41,7 @@ import * as log from "loglevel";
 import {createUiNewChatMessageConfig} from "../generated/UiNewChatMessageConfig";
 import {createUiChatNewFileConfig} from "../generated/UiChatNewFileConfig";
 
-export class UiChatInput extends UiComponent<UiChatInputConfig> implements UiChatInputCommandHandler, UiChatInputEventSource {
+export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implements UiChatInputCommandHandler, UiChatInputEventSource {
 
 	onFileItemClicked: TeamAppsEvent<UiChatInput_FileItemClickedEvent> = new TeamAppsEvent(this);
 	onFileItemRemoved: TeamAppsEvent<UiChatInput_FileItemRemovedEvent> = new TeamAppsEvent(this);

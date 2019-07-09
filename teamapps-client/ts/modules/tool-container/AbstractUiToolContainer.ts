@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "../UiComponent";
+import {AbstractUiComponent} from "../AbstractUiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {AbstractUiToolContainerConfig} from "../../generated/AbstractUiToolContainerConfig";
 import {parseHtml} from "../Common";
@@ -29,7 +29,7 @@ interface Button {
 	$button: HTMLElement;
 }
 
-export abstract class AbstractUiToolContainer<C extends AbstractUiToolContainerConfig> extends UiComponent<C> {
+export abstract class AbstractUiToolContainer<C extends AbstractUiToolContainerConfig> extends AbstractUiComponent<C> {
 
 	protected static $sizeTestingContainer: HTMLElement;
 

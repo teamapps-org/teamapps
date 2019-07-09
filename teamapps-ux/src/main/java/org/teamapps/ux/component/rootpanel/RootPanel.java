@@ -20,41 +20,22 @@
 package org.teamapps.ux.component.rootpanel;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiComponentReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.Container;
-import org.teamapps.ux.component.animation.Animation;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.teamapps.ux.component.animation.PageTransition;
 
 public class RootPanel extends AbstractComponent implements Container {
 
 	private Component content;
-	private List<Component> components = new ArrayList<>();
-
-	@Override
-	protected void doDestroy() {
-		this.components.forEach(Component::destroy);
-	}
 
 	@Override
 	public UiComponent createUiComponent() {
 		UiRootPanel uiRootPanel = new UiRootPanel();
 		mapAbstractUiComponentProperties(uiRootPanel);
-		if (content != null) {
-			uiRootPanel.setVisibleChildComponentId(content.getId());
-		}
-		if (!components.isEmpty()) {
-			List<UiComponentReference> uiComponents = components.stream()
-					.map(component -> component.createUiComponentReference())
-					.collect(Collectors.toList());
-			uiRootPanel.setChildComponents(uiComponents);
-		}
+		uiRootPanel.setContent(content != null ? content.createUiComponentReference(): null);
 		return uiRootPanel;
 	}
 
@@ -63,49 +44,24 @@ public class RootPanel extends AbstractComponent implements Container {
 		// no ui events for this component
 	}
 
-	// TODO #componentRef still needed after component reference implementation??
 	public void preloadContent(Component component) {
-		if (!components.contains(component)) {
-			this.components.add(component);
-			component.setParent(this);
-			queueCommandIfRendered(() -> new UiRootPanel.AddChildComponentCommand(getId(), component.createUiComponentReference(), false));
-		}
+		component.render();
 	}
 
 	public void setContent(Component component) {
-		setContent(component, Animation.NONE, 0);
+		setContent(component, null, 0);
 	}
 
-	public void setContent(Component component, Animation animation, long animationDuration) {
+	public void setContent(Component component, PageTransition animation, long animationDuration) {
 		if (component != null) {
 			preloadContent(component);
 		}
 		content = component;
-		queueCommandIfRendered(() -> new UiRootPanel.SetVisibleChildComponentCommand(getId(), component != null ? component.getId() : null, animation.toUiComponentRevealAnimation(), animationDuration));
-	}
-
-	public void removeComponent(Component component) {
-		components.remove(component);
-		if (content == component) {
-			setContent(components.isEmpty() ? null : components.get(0));
-		}
-		queueCommandIfRendered(() -> new UiRootPanel.RemoveChildComponentCommand(getId(), component.getId()));
-	}
-
-	public void removeAllComponents() {
-		components.stream().forEach(component -> {
-			queueCommandIfRendered(() -> new UiRootPanel.RemoveChildComponentCommand(getId(), component.getId()));
-		});
-		components.clear();
-		setContent(null);
+		queueCommandIfRendered(() -> new UiRootPanel.SetContentCommand(getId(), component != null ? component.createUiComponentReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
 	}
 
 	public Component getContent() {
 		return content;
-	}
-
-	public List<Component> getComponents() {
-		return components;
 	}
 
 	@Override

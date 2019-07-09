@@ -25,12 +25,12 @@ import {UiTabPanel} from "../UiTabPanel";
 
 import {UiTabPanelTabStyle} from "../../generated/UiTabPanelTabStyle";
 import {ItemTreeItem} from "./ItemTree";
-import {UiComponent} from "../UiComponent";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {generateUUID, parseHtml} from "../Common";
 import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
 import {UiWindowButtonType} from "../../generated/UiWindowButtonType";
+import {UiComponent} from "../UiComponent";
 
 class MinimizableTabPanel extends UiTabPanel {
 

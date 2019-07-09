@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {Constants, generateUUID, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -153,7 +153,7 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 	}
 }
 
-export class UiInfiniteItemView extends UiComponent<UiInfiniteItemViewConfig> implements UiInfiniteItemViewCommandHandler, UiInfiniteItemViewEventSource {
+export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewConfig> implements UiInfiniteItemViewCommandHandler, UiInfiniteItemViewEventSource {
 
 	public readonly onDataRequest: TeamAppsEvent<UiInfiniteItemView_DataRequestEvent> = new TeamAppsEvent<UiInfiniteItemView_DataRequestEvent>(this);
 	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent>(this);

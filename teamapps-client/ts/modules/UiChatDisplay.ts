@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {parseHtml, prependChild, removeDangerousTags} from "./Common";
 import {UiChatMessageConfig} from "../generated/UiChatMessageConfig";
@@ -27,7 +27,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiSpinner} from "./micro-components/UiSpinner";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 
-export class UiChatDisplay extends UiComponent<UiChatDisplayConfig> implements UiChatDisplayCommandHandler, UiChatDisplayEventSource {
+export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> implements UiChatDisplayCommandHandler, UiChatDisplayEventSource {
 
 	public readonly onPreviousMessagesRequested: TeamAppsEvent<UiChatDisplay_PreviousMessagesRequestedEvent> = new TeamAppsEvent(this);
 

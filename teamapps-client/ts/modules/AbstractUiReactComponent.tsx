@@ -27,13 +27,13 @@ import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import createStyles from "@material-ui/core/styles/createStyles";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiSwitch} from "./UiSwitch";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {ReactComponentLike} from "prop-types";
 import {ReactElement, ReactInstance} from "react";
 
-export abstract class AbstractUiReactComponent<C extends UiComponentConfig = UiComponentConfig> extends UiComponent<C> {
+export abstract class AbstractUiReactComponent<C extends UiComponentConfig = UiComponentConfig> extends AbstractUiComponent<C> {
 
 	private $main: HTMLElement;
 

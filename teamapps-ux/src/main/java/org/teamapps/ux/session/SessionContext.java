@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,14 +21,14 @@ package org.teamapps.ux.session;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiCommand;
-import org.teamapps.dto.UiEntranceAnimation;
-import org.teamapps.dto.UiExitAnimation;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.animation.EntranceAnimation;
+import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.notification.Notification;
 import org.teamapps.ux.component.notification.NotificationPosition;
 import org.teamapps.ux.component.rootpanel.RootPanel;
@@ -62,7 +62,7 @@ public interface SessionContext {
 	Event<Void> onDestroyed();
 
 	<T> void queueCommand(UiCommand<T> command);
-	
+
 	<T> void queueCommand(UiCommand<T> command, Consumer<T> resultCallback);
 
 	void flushCommands();
@@ -171,6 +171,7 @@ public interface SessionContext {
 	/**
 	 * Runs the specified runnable with this SessionContext set as CurrentSessionContext.
 	 * Flushes the queued commands after execution.
+	 *
 	 * @param runnable the code to be executed.
 	 */
 	void runWithContext(Runnable runnable);
@@ -238,8 +239,8 @@ public interface SessionContext {
 	default void showNotification(Icon icon, String caption) {
 		Notification notification = Notification.createWithIconAndCaption(icon, caption);
 		notification.setPosition(NotificationPosition.TOP_RIGHT);
-		notification.setEntranceAnimation(UiEntranceAnimation.SLIDE_IN_UP);
-		notification.setExitAnimation(UiExitAnimation.SLIDE_OUT_UP);
+		notification.setEntranceAnimation(EntranceAnimation.SLIDE_IN_UP);
+		notification.setExitAnimation(ExitAnimation.SLIDE_OUT_UP);
 		notification.setDismissable(true);
 		notification.setShowProgressBar(false);
 		notification.setDisplayTimeInMillis(5000);
@@ -249,8 +250,8 @@ public interface SessionContext {
 	default void showNotification(Icon icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
 		Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
 		notification.setPosition(NotificationPosition.TOP_RIGHT);
-		notification.setEntranceAnimation(UiEntranceAnimation.SLIDE_IN_LEFT);
-		notification.setExitAnimation(UiExitAnimation.FADE_OUT_UP);
+		notification.setEntranceAnimation(EntranceAnimation.SLIDE_IN_LEFT);
+		notification.setExitAnimation(ExitAnimation.FADE_OUT_UP);
 		notification.setDismissable(dismissable);
 		notification.setDisplayTimeInMillis(displayTimeInMillis);
 		notification.setShowProgressBar(showProgress);

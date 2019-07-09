@@ -21,7 +21,6 @@ import {UiItemView} from "../UiItemView";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiDropDown} from "../micro-components/UiDropDown";
-import {UiComponent} from "../UiComponent";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {UiButton_DropDownOpenedEvent, UiButtonCommandHandler, UiButtonConfig, UiButtonEventSource} from "../../generated/UiButtonConfig";
 import {UiField} from "./UiField";
@@ -30,6 +29,7 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {bind} from "../util/Bind";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {parseHtml} from "../Common";
+import {UiComponent} from "../UiComponent";
 
 export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonEventSource, UiButtonCommandHandler {
 

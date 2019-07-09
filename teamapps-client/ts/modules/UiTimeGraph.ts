@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
@@ -70,7 +70,7 @@ function fakeZeroIfLogScale(y: number, scaleType: UiScaleType) {
 
 const yTickFormat = d3.format("-,.2s");
 
-export class UiTimeGraph extends UiComponent<UiTimeGraphConfig> implements UiTimeGraphCommandHandler, UiTimeGraphEventSource {
+export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implements UiTimeGraphCommandHandler, UiTimeGraphEventSource {
 
 	public readonly onDataNeeded: TeamAppsEvent<UiTimeGraph_DataNeededEvent> = new TeamAppsEvent<UiTimeGraph_DataNeededEvent>(this);
 	public readonly onIntervalSelected: TeamAppsEvent<UiTimeGraph_IntervalSelectedEvent> = new TeamAppsEvent<UiTimeGraph_IntervalSelectedEvent>(this);

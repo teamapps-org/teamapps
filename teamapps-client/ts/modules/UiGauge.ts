@@ -20,7 +20,7 @@
 
 import {UiGaugeCommandHandler, UiGaugeConfig} from "../generated/UiGaugeConfig";
 import {UiGaugeOptionsConfig} from "../generated/UiGaugeOptionsConfig";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -28,7 +28,7 @@ import {LinearGauge, RadialGauge} from "canvas-gauges";
 import {debouncedMethod, DebounceMode} from "./util/debounce";
 import {parseHtml} from "./Common";
 
-export class UiGauge extends UiComponent<UiGaugeConfig> implements UiGaugeCommandHandler {
+export class UiGauge extends AbstractUiComponent<UiGaugeConfig> implements UiGaugeCommandHandler {
 	private $main: HTMLElement;
 	private gauge: LinearGauge;
 	private value: number;

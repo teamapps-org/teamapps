@@ -20,7 +20,6 @@
 import "bootstrap-notify";
 import * as log from "loglevel";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {UiComponent} from "./UiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
@@ -31,6 +30,8 @@ import {UiColorConfig} from "../generated/UiColorConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {UiTextMatchingMode} from "../generated/UiTextMatchingMode";
 import * as moment from "moment-timezone";
+import {UiComponent} from "./UiComponent";
+import {UiPageTransition} from "../generated/UiPageTransition";
 
 export type RenderingFunction = (data: any) => string;
 
@@ -390,7 +391,7 @@ export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displ
 	}
 }
 
-export function boundSelection(selection: { left: number, top: number, width: number, height: number }, bounds: {width: number, height: number}, aspectRatio?: number) {
+export function boundSelection(selection: { left: number, top: number, width: number, height: number }, bounds: { width: number, height: number }, aspectRatio?: number) {
 	let newSelection = {
 		left: selection.left,
 		top: selection.top,
@@ -433,13 +434,8 @@ document.addEventListener("webkitfullscreenchange", fullScreenChangeHandler);
 document.addEventListener("mozfullscreenchange", fullScreenChangeHandler);
 document.addEventListener("MSFullscreenChange", fullScreenChangeHandler);
 
-export function enterFullScreen(component: UiComponent<UiComponentConfig> | HTMLElement | Element) {
-	let element: Element;
-	if (component instanceof UiComponent) {
-		element = component.getMainDomElement();
-	} else {
-		element = $(component)[0] as Element;
-	}
+export function enterFullScreen(component: UiComponent<UiComponentConfig>) {
+	let element: Element = component.getMainDomElement();
 	element.classList.add("fullscreen");
 	if (element.requestFullscreen) {
 		element.requestFullscreen();
@@ -483,6 +479,7 @@ export function exitFullScreen() {
 		}
 	}
 }
+
 export function positionDropDown($button: Element, $dropDown: HTMLElement, {
 	viewPortPadding = 10,
 	minHeightBeforeFlipping = 200
@@ -951,22 +948,13 @@ export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: 
 	});
 }
 
-export function animateCSS(el: HTMLElement, animationName: "bounce" | "flash" | "pulse" | "rubberBand" | "shake" | "headShake" | "swing" | "tada"
-	| "wobble" | "jello" | "bounceIn" | "bounceInDown" | "bounceInLeft" | "bounceInRight" | "bounceInUp" | "bounceOut" | "bounceOutDown"
-	| "bounceOutLeft" | "bounceOutRight" | "bounceOutUp" | "fadeIn" | "fadeInDown" | "fadeInDownBig" | "fadeInLeft" | "fadeInLeftBig" | "fadeInRight"
-	| "fadeInRightBig" | "fadeInUp" | "fadeInUpBig" | "fadeOut" | "fadeOutDown" | "fadeOutDownBig" | "fadeOutLeft" | "fadeOutLeftBig" | "fadeOutRight"
-	| "fadeOutRightBig" | "fadeOutUp" | "fadeOutUpBig" | "flipInX" | "flipInY" | "flipOutX" | "flipOutY" | "lightSpeedIn" | "lightSpeedOut" | "rotateIn"
-	| "rotateInDownLeft" | "rotateInDownRight" | "rotateInUpLeft" | "rotateInUpRight" | "rotateOut" | "rotateOutDownLeft" | "rotateOutDownRight"
-	| "rotateOutUpLeft" | "rotateOutUpRight" | "hinge" | "jackInTheBox" | "rollIn" | "rollOut" | "zoomIn" | "zoomInDown" | "zoomInLeft" | "zoomInRight"
-	| "zoomInUp" | "zoomOut" | "zoomOutDown" | "zoomOutLeft" | "zoomOutRight" | "zoomOutUp" | "slideInDown" | "slideInLeft" | "slideInRight" | "slideInUp"
-	| "slideOutDown" | "slideOutLeft" | "slideOutRight" | "slideOutUp" | "heartBeat", animationDuration: number = 300, callback?: () => any) {
-
+function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {
 	let oldAnimationDurationValue = el.style.animationDuration;
 	el.style.animationDuration = animationDuration + "ms";
-	el.classList.add('animated', animationName);
+	el.classList.add('animated', ...animationClassNames);
 
 	function handleAnimationEnd() {
-		el.classList.remove('animated', animationName);
+		el.classList.remove('animated', ...animationClassNames);
 		el.removeEventListener('animationend', handleAnimationEnd);
 		el.style.animationDuration = oldAnimationDurationValue;
 
@@ -978,6 +966,20 @@ export function animateCSS(el: HTMLElement, animationName: "bounce" | "flash" | 
 	el.addEventListener('animationend', handleAnimationEnd);
 }
 
+export function animateCSS(el: HTMLElement, animationName: "bounce" | "flash" | "pulse" | "rubberBand" | "shake" | "headShake" | "swing" | "tada"
+	| "wobble" | "jello" | "bounceIn" | "bounceInDown" | "bounceInLeft" | "bounceInRight" | "bounceInUp" | "bounceOut" | "bounceOutDown"
+	| "bounceOutLeft" | "bounceOutRight" | "bounceOutUp" | "fadeIn" | "fadeInDown" | "fadeInDownBig" | "fadeInLeft" | "fadeInLeftBig" | "fadeInRight"
+	| "fadeInRightBig" | "fadeInUp" | "fadeInUpBig" | "fadeOut" | "fadeOutDown" | "fadeOutDownBig" | "fadeOutLeft" | "fadeOutLeftBig" | "fadeOutRight"
+	| "fadeOutRightBig" | "fadeOutUp" | "fadeOutUpBig" | "flipInX" | "flipInY" | "flipOutX" | "flipOutY" | "lightSpeedIn" | "lightSpeedOut" | "rotateIn"
+	| "rotateInDownLeft" | "rotateInDownRight" | "rotateInUpLeft" | "rotateInUpRight" | "rotateOut" | "rotateOutDownLeft" | "rotateOutDownRight"
+	| "rotateOutUpLeft" | "rotateOutUpRight" | "hinge" | "jackInTheBox" | "rollIn" | "rollOut" | "zoomIn" | "zoomInDown" | "zoomInLeft" | "zoomInRight"
+	| "zoomInUp" | "zoomOut" | "zoomOutDown" | "zoomOutLeft" | "zoomOutRight" | "zoomOutUp" | "slideInDown" | "slideInLeft" | "slideInRight" | "slideInUp"
+	| "slideOutDown" | "slideOutLeft" | "slideOutRight" | "slideOutUp" | "heartBeat", animationDuration: number = 300, callback?: () => any) {
+
+	animate(el, [animationName], animationDuration, callback)
+}
+
+
 export function fadeOut(el: HTMLElement) {
 	animateCSS(el, "fadeOut", 300, () => el.classList.add("hidden"));
 }
@@ -985,6 +987,286 @@ export function fadeOut(el: HTMLElement) {
 export function fadeIn(el: HTMLElement) {
 	el.classList.remove("hidden");
 	animateCSS(el, "fadeIn");
+}
+
+export var pageTransitionAnimationPairs = {
+	'moveToLeftVsMoveFromRight': {
+		outClass: ['pt-page-moveToLeft'],
+		inClass: ['pt-page-moveFromRight']
+	},
+	'moveToRightVsMoveFromLeft': {
+		outClass: ['pt-page-moveToRight'],
+		inClass: ['pt-page-moveFromLeft']
+	},
+	'moveToTopVsMoveFromBottom': {
+		outClass: ['pt-page-moveToTop'],
+		inClass: ['pt-page-moveFromBottom']
+	},
+	'moveToBottomVsMoveFromTop': {
+		outClass: ['pt-page-moveToBottom'],
+		inClass: ['pt-page-moveFromTop']
+	},
+	'fadeVsMoveFromRight': {
+		outClass: ['pt-page-fade'],
+		inClass: ['pt-page-moveFromRight', 'pt-page-ontop']
+	},
+	'fadeVsMoveFromLeft': {
+		outClass: ['pt-page-fade'],
+		inClass: ['pt-page-moveFromLeft', 'pt-page-ontop']
+	},
+	'fadeVsMoveFromBottom': {
+		outClass: ['pt-page-fade'],
+		inClass: ['pt-page-moveFromBottom', 'pt-page-ontop']
+	},
+	'fadeVsMoveFromTop': {
+		outClass: ['pt-page-fade'],
+		inClass: ['pt-page-moveFromTop', 'pt-page-ontop']
+	},
+	'moveToLeftFadeVsMoveFromRightFade': {
+		outClass: ['pt-page-moveToLeftFade'],
+		inClass: ['pt-page-moveFromRightFade']
+	},
+	'moveToRightFadeVsMoveFromLeftFade': {
+		outClass: ['pt-page-moveToRightFade'],
+		inClass: ['pt-page-moveFromLeftFade']
+	},
+	'moveToTopFadeVsMoveFromBottomFade': {
+		outClass: ['pt-page-moveToTopFade'],
+		inClass: ['pt-page-moveFromBottomFade']
+	},
+	'moveToBottomFadeVsMoveFromTopFade': {
+		outClass: ['pt-page-moveToBottomFade'],
+		inClass: ['pt-page-moveFromTopFade']
+	},
+	'scaleDownVsMoveFromRight': {
+		outClass: ['pt-page-scaleDown'],
+		inClass: ['pt-page-moveFromRight', 'pt-page-ontop']
+	},
+	'scaleDownVsMoveFromLeft': {
+		outClass: ['pt-page-scaleDown'],
+		inClass: ['pt-page-moveFromLeft', 'pt-page-ontop']
+	},
+	'scaleDownVsMoveFromBottom': {
+		outClass: ['pt-page-scaleDown'],
+		inClass: ['pt-page-moveFromBottom', 'pt-page-ontop']
+	},
+	'scaleDownVsMoveFromTop': {
+		outClass: ['pt-page-scaleDown'],
+		inClass: ['pt-page-moveFromTop', 'pt-page-ontop']
+	},
+	'scaleDownVsScaleUpDown': {
+		outClass: ['pt-page-scaleDown'],
+		inClass: ['pt-page-scaleUpDown', 'pt-page-delay300']
+	},
+	'scaleDownUpVsScaleUp': {
+		outClass: ['pt-page-scaleDownUp'],
+		inClass: ['pt-page-scaleUp', 'pt-page-delay300']
+	},
+	'moveToLeftVsScaleUp': {
+		outClass: ['pt-page-moveToLeft', 'pt-page-ontop'],
+		inClass: ['pt-page-scaleUp']
+	},
+	'moveToRightVsScaleUp': {
+		outClass: ['pt-page-moveToRight', 'pt-page-ontop'],
+		inClass: ['pt-page-scaleUp']
+	},
+	'moveToTopVsScaleUp': {
+		outClass: ['pt-page-moveToTop', 'pt-page-ontop'],
+		inClass: ['pt-page-scaleUp']
+	},
+	'moveToBottomVsScaleUp': {
+		outClass: ['pt-page-moveToBottom', 'pt-page-ontop'],
+		inClass: ['pt-page-scaleUp']
+	},
+	'scaleDownCenterVsScaleUpCenter': {
+		outClass: ['pt-page-scaleDownCenter'],
+		inClass: ['pt-page-scaleUpCenter', 'pt-page-delay400']
+	},
+	'rotateRightSideFirstVsMoveFromRight': {
+		outClass: ['pt-page-rotateRightSideFirst'],
+		inClass: ['pt-page-moveFromRight', 'pt-page-delay200', 'pt-page-ontop']
+	},
+	'rotateLeftSideFirstVsMoveFromLeft': {
+		outClass: ['pt-page-rotateLeftSideFirst'],
+		inClass: ['pt-page-moveFromLeft', 'pt-page-delay200', 'pt-page-ontop']
+	},
+	'rotateTopSideFirstVsMoveFromTop': {
+		outClass: ['pt-page-rotateTopSideFirst'],
+		inClass: ['pt-page-moveFromTop', 'pt-page-delay200', 'pt-page-ontop']
+	},
+	'rotateBottomSideFirstVsMoveFromBottom': {
+		outClass: ['pt-page-rotateBottomSideFirst'],
+		inClass: ['pt-page-moveFromBottom', 'pt-page-delay200', 'pt-page-ontop']
+	},
+	'flipOutRightVsFlipInLeft': {
+		outClass: ['pt-page-flipOutRight'],
+		inClass: ['pt-page-flipInLeft', 'pt-page-delay500']
+	},
+	'flipOutLeftVsFlipInRight': {
+		outClass: ['pt-page-flipOutLeft'],
+		inClass: ['pt-page-flipInRight', 'pt-page-delay500']
+	},
+	'flipOutTopVsFlipInBottom': {
+		outClass: ['pt-page-flipOutTop'],
+		inClass: ['pt-page-flipInBottom', 'pt-page-delay500']
+	},
+	'flipOutBottomVsFlipInTop': {
+		outClass: ['pt-page-flipOutBottom'],
+		inClass: ['pt-page-flipInTop', 'pt-page-delay500']
+	},
+	'rotateFallVsScaleUp': {
+		outClass: ['pt-page-rotateFall', 'pt-page-ontop'],
+		inClass: ['pt-page-scaleUp']
+	},
+	'rotateOutNewspaperVsRotateInNewspaper': {
+		outClass: ['pt-page-rotateOutNewspaper'],
+		inClass: ['pt-page-rotateInNewspaper', 'pt-page-delay500']
+	},
+	'rotatePushLeftVsMoveFromRight': {
+		outClass: ['pt-page-rotatePushLeft'],
+		inClass: ['pt-page-moveFromRight']
+	},
+	'rotatePushRightVsMoveFromLeft': {
+		outClass: ['pt-page-rotatePushRight'],
+		inClass: ['pt-page-moveFromLeft']
+	},
+	'rotatePushTopVsMoveFromBottom': {
+		outClass: ['pt-page-rotatePushTop'],
+		inClass: ['pt-page-moveFromBottom']
+	},
+	'rotatePushBottomVsMoveFromTop': {
+		outClass: ['pt-page-rotatePushBottom'],
+		inClass: ['pt-page-moveFromTop']
+	},
+	'rotatePushLeftVsRotatePullRight': {
+		outClass: ['pt-page-rotatePushLeft'],
+		inClass: ['pt-page-rotatePullRight', 'pt-page-delay180']
+	},
+	'rotatePushRightVsRotatePullLeft': {
+		outClass: ['pt-page-rotatePushRight'],
+		inClass: ['pt-page-rotatePullLeft', 'pt-page-delay180']
+	},
+	'rotatePushTopVsRotatePullBottom': {
+		outClass: ['pt-page-rotatePushTop'],
+		inClass: ['pt-page-rotatePullBottom', 'pt-page-delay180']
+	},
+	'rotatePushBottomVsRotatePullTop': {
+		outClass: ['pt-page-rotatePushBottom'],
+		inClass: ['pt-page-rotatePullTop', 'pt-page-delay180']
+	},
+	'rotateFoldLeftVsMoveFromRightFade': {
+		outClass: ['pt-page-rotateFoldLeft'],
+		inClass: ['pt-page-moveFromRightFade']
+	},
+	'rotateFoldRightVsMoveFromLeftFade': {
+		outClass: ['pt-page-rotateFoldRight'],
+		inClass: ['pt-page-moveFromLeftFade']
+	},
+	'rotateFoldTopVsMoveFromBottomFade': {
+		outClass: ['pt-page-rotateFoldTop'],
+		inClass: ['pt-page-moveFromBottomFade']
+	},
+	'rotateFoldBottomVsMoveFromTopFade': {
+		outClass: ['pt-page-rotateFoldBottom'],
+		inClass: ['pt-page-moveFromTopFade']
+	},
+	'moveToRightFadeVsRotateUnfoldLeft': {
+		outClass: ['pt-page-moveToRightFade'],
+		inClass: ['pt-page-rotateUnfoldLeft']
+	},
+	'moveToLeftFadeVsRotateUnfoldRight': {
+		outClass: ['pt-page-moveToLeftFade'],
+		inClass: ['pt-page-rotateUnfoldRight']
+	},
+	'moveToBottomFadeVsRotateUnfoldTop': {
+		outClass: ['pt-page-moveToBottomFade'],
+		inClass: ['pt-page-rotateUnfoldTop']
+	},
+	'moveToTopFadeVsRotateUnfoldBottom': {
+		outClass: ['pt-page-moveToTopFade'],
+		inClass: ['pt-page-rotateUnfoldBottom']
+	},
+	'rotateRoomLeftOutVsRotateRoomLeftIn': {
+		outClass: ['pt-page-rotateRoomLeftOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateRoomLeftIn']
+	},
+	'rotateRoomRightOutVsRotateRoomRightIn': {
+		outClass: ['pt-page-rotateRoomRightOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateRoomRightIn']
+	},
+	'rotateRoomTopOutVsRotateRoomTopIn': {
+		outClass: ['pt-page-rotateRoomTopOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateRoomTopIn']
+	},
+	'rotateRoomBottomOutVsRotateRoomBottomIn': {
+		outClass: ['pt-page-rotateRoomBottomOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateRoomBottomIn']
+	},
+	'rotateCubeLeftOutVsRotateCubeLeftIn': {
+		outClass: ['pt-page-rotateCubeLeftOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateCubeLeftIn']
+	},
+	'rotateCubeRightOutVsRotateCubeRightIn': {
+		outClass: ['pt-page-rotateCubeRightOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateCubeRightIn']
+	},
+	'rotateCubeTopOutVsRotateCubeTopIn': {
+		outClass: ['pt-page-rotateCubeTopOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateCubeTopIn']
+	},
+	'rotateCubeBottomOutVsRotateCubeBottomIn': {
+		outClass: ['pt-page-rotateCubeBottomOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateCubeBottomIn']
+	},
+	'rotateCarouselLeftOutVsRotateCarouselLeftIn': {
+		outClass: ['pt-page-rotateCarouselLeftOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateCarouselLeftIn']
+	},
+	'rotateCarouselRightOutVsRotateCarouselRightIn': {
+		outClass: ['pt-page-rotateCarouselRightOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateCarouselRightIn']
+	},
+	'rotateCarouselTopOutVsRotateCarouselTopIn': {
+		outClass: ['pt-page-rotateCarouselTopOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateCarouselTopIn']
+	},
+	'rotateCarouselBottomOutVsRotateCarouselBottomIn': {
+		outClass: ['pt-page-rotateCarouselBottomOut', 'pt-page-ontop'],
+		inClass: ['pt-page-rotateCarouselBottomIn']
+	},
+	'rotateSidesOutVsRotateSidesIn': {
+		outClass: ['pt-page-rotateSidesOut'],
+		inClass: ['pt-page-rotateSidesIn', 'pt-page-delay200']
+	},
+	'rotateSlideOutVsRotateSlideIn': {
+		outClass: ['pt-page-rotateSlideOut'],
+		inClass: ['pt-page-rotateSlideIn']
+	},
+};
+
+export function animatePageTransition(outEl: HTMLElement, inEl: HTMLElement, animationName: keyof typeof pageTransitionAnimationPairs, animationDuration: number = 300, callback?: () => any) {
+	let animationCallbackCount = 0;
+	function invokeCallbackIfBothReturned() {
+		animationCallbackCount++;
+		if (animationCallbackCount == 2) {
+			callback();
+		}
+	}
+	if (outEl != null) {
+		animate(outEl, pageTransitionAnimationPairs[animationName].outClass, animationDuration, invokeCallbackIfBothReturned);
+	} else {
+		animationCallbackCount++;
+	}
+	if (inEl != null) {
+		animate(inEl, pageTransitionAnimationPairs[animationName].inClass, animationDuration, invokeCallbackIfBothReturned);
+	} else {
+		animationCallbackCount++;
+	}
+}
+
+export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransition: UiPageTransition, animationDuration: number = 300, callback?: () => any) {
+	let s = UiPageTransition[pageTransition].toLowerCase().replace(/_{1,1}([a-z])/g, (g0, g1) => g1.toUpperCase()) as keyof typeof pageTransitionAnimationPairs;
+	animatePageTransition(outEl, inEl, s, animationDuration, callback);
 }
 
 export function css(el: HTMLElement, values: object) {

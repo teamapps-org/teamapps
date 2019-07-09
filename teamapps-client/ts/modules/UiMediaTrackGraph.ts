@@ -21,7 +21,7 @@
 
 
 import * as d3 from "d3v3";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiMediaTrackGraph_HandleTimeSelectionEvent, UiMediaTrackGraphCommandHandler, UiMediaTrackGraphConfig, UiMediaTrackGraphEventSource} from "../generated/UiMediaTrackGraphConfig";
@@ -41,7 +41,7 @@ interface Marker {
 	bg: string
 }
 
-export class UiMediaTrackGraph extends UiComponent<UiMediaTrackGraphConfig> implements UiMediaTrackGraphCommandHandler, UiMediaTrackGraphEventSource {
+export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConfig> implements UiMediaTrackGraphCommandHandler, UiMediaTrackGraphEventSource {
 
 	public readonly onHandleTimeSelection: TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent> = new TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent>(this);
 

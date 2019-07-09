@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "../UiComponent";
 import {positionDropDown} from "../Common";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {AbstractDropDown} from "./AbstractDropDown";
+import {UiComponent} from "../UiComponent";
 
 interface OpenConfig {
 	$reference: HTMLElement | Element,

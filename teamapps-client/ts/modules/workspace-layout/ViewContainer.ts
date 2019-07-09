@@ -19,7 +19,6 @@
  */
 import {UiRelativeWorkSpaceViewPosition} from "../../generated/UiRelativeWorkSpaceViewPosition";
 import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
 import {ViewInfo} from "./ViewInfo";
 import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";

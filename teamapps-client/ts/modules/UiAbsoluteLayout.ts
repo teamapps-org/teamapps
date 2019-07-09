@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiAbsoluteLayoutCommandHandler, UiAbsoluteLayoutConfig} from "../generated/UiAbsoluteLayoutConfig";
 import {UiAbsolutePositionedComponentConfig} from "../generated/UiAbsolutePositionedComponentConfig";
@@ -25,6 +25,7 @@ import {UiAnimationEasing} from "../generated/UiAnimationEasing";
 import {parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {bind} from "./util/Bind";
+import {UiComponent} from "./UiComponent";
 
 const animationEasingCssValues = {
 	[UiAnimationEasing.EASE]: "ease",
@@ -36,7 +37,7 @@ const animationEasingCssValues = {
 	[UiAnimationEasing.STEP_END]: "step-end"
 };
 
-export class UiAbsoluteLayout extends UiComponent<UiAbsoluteLayoutConfig> implements UiAbsoluteLayoutCommandHandler {
+export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig> implements UiAbsoluteLayoutCommandHandler {
 	private $main: HTMLElement;
 	private $style: HTMLStyleElement;
 	private components: UiAbsolutePositionedComponentConfig[];
@@ -79,7 +80,7 @@ export class UiAbsoluteLayout extends UiComponent<UiAbsoluteLayoutConfig> implem
 	transition: top ${animationDuration}ms ${animationEasingCssValues[easing]}, right ${animationDuration}ms ${animationEasingCssValues[easing]}, bottom ${animationDuration}ms ${animationEasingCssValues[easing]}, left ${animationDuration}ms ${animationEasingCssValues[easing]}, width ${animationDuration}ms ${animationEasingCssValues[easing]}, height ${animationDuration}ms ${animationEasingCssValues[easing]};
 }`;
 		components.forEach(c => {
-			const component = c.component as UiComponent;
+			const component = c.component as AbstractUiComponent;
 			component.getMainDomElement().addEventListener('transitionend', this.transitionEndEventListener);
 			component.getMainDomElement().setAttribute("data-absolute-positioning-id", component.getId());
 			styles += `[data-teamapps-id=${this.getId()}] > [data-absolute-positioning-id=${component.getId()}] {

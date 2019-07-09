@@ -24,11 +24,11 @@ import {UiToolbar} from "./UiToolbar";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
 import {enterFullScreen, exitFullScreen, isFullScreen, parseHtml, prependChild} from "../../Common";
 import {createUiDropDownButtonClickInfoConfig, UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
-import {UiComponent} from "../../UiComponent";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiItemView} from "../../UiItemView";
 
 import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
+import {UiComponent} from "../../UiComponent";
 
 export class UiToolbarButton {
 

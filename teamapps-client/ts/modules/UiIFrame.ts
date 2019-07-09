@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiIFrameCommandHandler, UiIFrameConfig} from "../generated/UiIFrameConfig";
 import {parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
-export class UiIFrame extends UiComponent<UiIFrameConfig> implements UiIFrameCommandHandler {
+export class UiIFrame extends AbstractUiComponent<UiIFrameConfig> implements UiIFrameCommandHandler {
 
 	private $iframe: HTMLIFrameElement;
 

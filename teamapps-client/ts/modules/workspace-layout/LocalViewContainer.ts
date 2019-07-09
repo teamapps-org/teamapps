@@ -29,7 +29,6 @@ import {UiSplitDirection} from "../../generated/UiSplitDirection";
 import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
 import {css, generateUUID, getMicrosoftBrowserVersion, parseHtml} from "../Common";
 import {bind} from "../util/Bind";
-import {UiComponent} from "../UiComponent";
 import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
 import {createUiWorkSpaceLayoutSplitItemConfig} from "../../generated/UiWorkSpaceLayoutSplitItemConfig";
 import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
@@ -44,6 +43,7 @@ import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
 import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
+import {UiComponent} from "../UiComponent";
 
 export class LocalViewContainer implements ViewContainer {
 

@@ -18,15 +18,12 @@
  * =========================LICENSE_END==================================
  */
 class UiRootPanel extends UiComponent {
-	List<UiComponent*> childComponents;
-	String visibleChildComponentId;
+	UiComponent* content;
 
-	command addChildComponent(UiComponent* childComponent, boolean show); // TODO #componentRef No more necessary... Preloading by instantiation :-)
-	command setVisibleChildComponent(String childComponentId, UiComponentRevealAnimation animation, long animationDuration); // TODO #componentRef replace childComponentId with UiComponentReference...
-    command removeChildComponent(String childComponentId); // TODO #componentRef No more necessary...
+	command setContent(UiComponent* content, UiPageTransition transition, long animationDuration);
 
 	static command createComponent(UiComponent component);
-	static command destroyComponent(UiComponent* component);
+	static command destroyComponent(String id);
 	static command refreshComponent(UiComponent component);
 
 	static command setConfig(UiConfiguration config);

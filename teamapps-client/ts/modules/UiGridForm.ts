@@ -21,7 +21,7 @@
 import {UiGridForm_SectionCollapsedStateChangedEvent, UiGridFormCommandHandler, UiGridFormConfig, UiGridFormEventSource} from "../generated/UiGridFormConfig";
 import {UiFormLayoutPolicyConfig} from "../generated/UiFormLayoutPolicyConfig";
 import {UiFormSectionConfig} from "../generated/UiFormSectionConfig";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
@@ -41,8 +41,9 @@ import {UiFormSectionPlacementConfig} from "../generated/UiFormSectionPlacementC
 import {UiFormSectionFloatingFieldsPlacementConfig} from "../generated/UiFormSectionFloatingFieldsPlacementConfig";
 import {generateUUID, parseHtml} from "./Common";
 import {bind} from "./util/Bind";
+import {UiComponent} from "./UiComponent";
 
-export class UiGridForm extends UiComponent<UiGridFormConfig> implements UiGridFormCommandHandler, UiGridFormEventSource {
+export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements UiGridFormCommandHandler, UiGridFormEventSource {
 
 	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent>(this);
 

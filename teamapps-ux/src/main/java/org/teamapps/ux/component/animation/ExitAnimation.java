@@ -1,0 +1,43 @@
+package org.teamapps.ux.component.animation;
+
+import org.teamapps.dto.UiExitAnimation;
+
+public enum ExitAnimation {
+	LIGHTSPEED_OUT,
+	ROLL_OUT,
+	HINGE,
+	ZOOM_OUT,
+	ZOOM_OUT_DOWN,
+	ZOOM_OUT_LEFT,
+	ZOOM_OUT_RIGHT,
+	ZOOM_OUT_UP,
+	SLIDE_OUT_UP,
+	SLIDE_OUT_DOWN,
+	SLIDE_OUT_LEFT,
+	SLIDE_OUT_RIGHT,
+	ROTATE_OUT,
+	ROTATE_OUT_DOWNLEFT,
+	ROTATE_OUT_DOWNRIGHT,
+	ROTATE_OUT_UPLEFT,
+	ROTATE_OUT_UPRIGHT,
+	FLIP_OUT_X,
+	FLIP_OUT_Y,
+	FADE_OUT,
+	FADE_OUT_DOWN,
+	FADE_OUT_DOWNBIG,
+	FADE_OUT_LEFT,
+	FADE_OUT_LEFTBIG,
+	FADE_OUT_RIGHT,
+	FADE_OUT_RIGHTBIG,
+	FADE_OUT_UP,
+	FADE_OUT_UPBIG,
+	BOUNCE_OUT,
+	BOUNCE_OUT_DOWN,
+	BOUNCE_OUT_LEFT,
+	BOUNCE_OUT_RIGHT,
+	BOUNCE_OUT_UP;
+
+	public UiExitAnimation toUiExitAnimation() {
+		return UiExitAnimation.valueOf(name());
+	}
+}

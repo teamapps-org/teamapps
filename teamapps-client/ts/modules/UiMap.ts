@@ -20,7 +20,7 @@
 ///<reference types="leaflet.heat"/>
 
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
@@ -40,7 +40,7 @@ import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecor
 import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
 import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
 
-export class UiMap extends UiComponent<UiMapConfig> implements UiMapCommandHandler, UiMapEventSource {
+export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapCommandHandler, UiMapEventSource {
 
 	public onZoomLevelChanged: TeamAppsEvent<UiMap_ZoomLevelChangedEvent> = new TeamAppsEvent(this);
 	public onLocationChanged: TeamAppsEvent<UiMap_LocationChangedEvent> = new TeamAppsEvent(this);

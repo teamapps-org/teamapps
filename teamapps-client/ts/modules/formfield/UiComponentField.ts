@@ -20,14 +20,14 @@
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiField} from "./UiField";
-import {UiComponent} from "../UiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {UiComponentFieldConfig, UiComponentFieldCommandHandler, UiComponentFieldEventSource} from "../../generated/UiComponentFieldConfig";
+import {UiComponentFieldCommandHandler, UiComponentFieldConfig, UiComponentFieldEventSource} from "../../generated/UiComponentFieldConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {createUiBorderCssObject, createUiColorCssString} from "../util/CssFormatUtil";
 import {UiColorConfig} from "../../generated/UiColorConfig";
 import {UiBorderConfig} from "../../generated/UiBorderConfig";
 import {parseHtml} from "../Common";
+import {UiComponent} from "../UiComponent";
 
 
 export class UiComponentField extends UiField<UiComponentFieldConfig, void> implements UiComponentFieldEventSource, UiComponentFieldCommandHandler {

@@ -24,7 +24,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiHttpLiveStreamPlayer} from "./live-stream/UiHttpLiveStreamPlayer";
 import {UiYoutubePlayer} from "./live-stream/UiYoutubePlayer";
 import {UiLiveStreamComPlayer} from "./live-stream/UiLiveStreamComPlayer";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {applyDisplayMode, css, fadeIn, fadeOut, generateUUID, parseHtml} from "./Common";
 import {LiveStreamPlayer} from "./live-stream/LiveStreamPlayer";
@@ -39,7 +39,7 @@ import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 
 
-export class UiLiveStreamComponent extends UiComponent<UiLiveStreamComponentConfig> implements UiLiveStreamComponentCommandHandler, UiLiveStreamComponentEventSource {
+export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamComponentConfig> implements UiLiveStreamComponentCommandHandler, UiLiveStreamComponentEventSource {
 
 	public readonly onResultOfRequestInputDeviceAccess: TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent> = new TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceAccessEvent>(this);
 	public readonly onResultOfRequestInputDeviceInfo: TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent> = new TeamAppsEvent<UiLiveStreamComponent_ResultOfRequestInputDeviceInfoEvent>(this);

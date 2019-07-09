@@ -145,7 +145,7 @@ public abstract class AbstractComponent implements Component {
 	@Override
 	public final void unrender() {
 		sessionContext.unregisterComponent(this);
-		sessionContext.queueCommand(new UiRootPanel.DestroyComponentCommand(createUiComponentReference()));
+		sessionContext.queueCommand(new UiRootPanel.DestroyComponentCommand(getId()));
 	}
 
 	abstract public UiComponent createUiComponent();

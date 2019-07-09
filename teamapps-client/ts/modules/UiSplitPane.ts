@@ -22,15 +22,16 @@ import {bind} from "./util/Bind";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {Emptyable, isEmptyable} from "./util/Emptyable";
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {capitalizeFirstLetter, css, parseHtml} from "./Common";
 import {UiSplitPane_SplitResizedEvent, UiSplitPaneCommandHandler, UiSplitPaneConfig, UiSplitPaneEventSource} from "../generated/UiSplitPaneConfig";
 import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
 import {UiSplitDirection} from "../generated/UiSplitDirection";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {UiComponent} from "./UiComponent";
 
-export class UiSplitPane extends UiComponent<UiSplitPaneConfig> implements Emptyable, UiSplitPaneCommandHandler, UiSplitPaneEventSource {
+export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements Emptyable, UiSplitPaneCommandHandler, UiSplitPaneEventSource {
 	public readonly onSplitResized: TeamAppsEvent<UiSplitPane_SplitResizedEvent> = new TeamAppsEvent<UiSplitPane_SplitResizedEvent>(this);
 
 	private _firstChildComponent: UiComponent<UiComponentConfig>;

@@ -18,15 +18,12 @@
  * =========================LICENSE_END==================================
  */
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
-import {UiComponent} from "./UiComponent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiEvent} from "../generated/UiEvent";
-import {UiTemplateConfig} from "../generated/UiTemplateConfig";
-import {Renderer} from "./Common";
 import {TemplateRegistry} from "./TemplateRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiRootPanelConfig} from "../generated/UiRootPanelConfig";
 import {UiCommand} from "../generated/UiCommand";
+import {UiComponent} from "./UiComponent";
 
 export const typescriptDeclarationFixConstant = 1;
 
@@ -47,9 +44,9 @@ export interface TeamAppsUiContext extends IconPathProvider {
 // TeamAppsUiContext implementations should implement this too. See usages.
 export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext{
 	readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand>;
-	registerComponent(component: UiComponent<UiComponentConfig>): void;
+	registerComponent(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void;
 	createAndRegisterComponent(config: UiComponentConfig): UiComponent<UiComponentConfig>;
-	destroyComponent(component: UiComponent): void;
+	destroyComponent(componentId: string): void;
 	refreshComponent(config: UiComponentConfig): void;
 	fireEvent(eventObject: UiEvent): void;
 }

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiComponent} from "./UiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {keyCodes} from "trivial-components";
@@ -36,7 +36,7 @@ interface UiCachedImage {
 	naturalHeight?: number;
 }
 
-export class UiImageDisplay extends UiComponent<UiImageDisplayConfig> implements UiImageDisplayCommandHandler, UiImageDisplayEventSource {
+export class UiImageDisplay extends AbstractUiComponent<UiImageDisplayConfig> implements UiImageDisplayCommandHandler, UiImageDisplayEventSource {
 
 	public readonly onImagesRequest: TeamAppsEvent<UiImageDisplay_ImagesRequestEvent> = new TeamAppsEvent<UiImageDisplay_ImagesRequestEvent>(this);
 	public readonly onImageDisplayed: TeamAppsEvent<UiImageDisplay_ImageDisplayedEvent> = new TeamAppsEvent<UiImageDisplay_ImageDisplayedEvent>(this);

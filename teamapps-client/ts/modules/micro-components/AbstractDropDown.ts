@@ -18,10 +18,10 @@
  * =========================LICENSE_END==================================
  */
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiComponent} from "../UiComponent";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
-import {ClickOutsideHandle, doOnceOnClickOutsideElement, parseHtml, positionDropDown} from "../Common";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, parseHtml} from "../Common";
 import {UiSpinner} from "./UiSpinner";
+import {UiComponent} from "../UiComponent";
 
 export abstract class AbstractDropDown<OPEN_CONFIG> {
 	public onClose: TeamAppsEvent<void> = new TeamAppsEvent(this);

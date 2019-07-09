@@ -23,11 +23,11 @@ import {UiToolbarButton} from "./UiToolbarButton";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 
 import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
-import {UiComponent} from "../../UiComponent";
 import {ButtonVisibilities, UiToolbar} from "./UiToolbar";
 import {UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "../../Common";
+import {UiComponent} from "../../UiComponent";
 
 export class UiToolbarButtonGroup {
 	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: UiDropDownButtonClickInfoConfig}> = new TeamAppsEvent(this);
