@@ -78,6 +78,7 @@ export class MonthGridView extends View {
 	private readonly weekLineHeight = 11.5;
 	private readonly spacingX = 15;
 	private readonly spacingY = 6;
+	private readonly textHangOffset = 4.8;
 
 	private get monthWidth() {
 		return (this.opt("weekNumbers") ? 8 : 7) * this.dayColumnWidth;
@@ -296,7 +297,7 @@ export class MonthGridView extends View {
 			.classed("fc-month-grid-day-name", true)
 			.text(name => name);
 		_dayName.merge(_dayNameEnter)
-			.attr("transform", (name, i) => `translate(${(i + (this.opt("weekNumbers") ? 1 : 0) + 0.5 /*center!*/) * this.dayColumnWidth}, ${this.monthNameHeight}) scale(${subTileZoom})`);
+			.attr("transform", (name, i) => `translate(${(i + (this.opt("weekNumbers") ? 1 : 0) + 0.5 /*center!*/) * this.dayColumnWidth}, ${this.monthNameHeight + this.textHangOffset}) scale(${subTileZoom})`);
 
 		let _week = _month.merge(_monthEnter)
 			.selectAll("g.fc-month-grid-week")
@@ -315,6 +316,7 @@ export class MonthGridView extends View {
 			.append("text")
 			.classed("fc-month-grid-week-number", true)
 			.attr("x", 6)
+			.attr("y", this.textHangOffset)
 			.on("click", (d) => this.context.options.navLinkWeekClick && this.context.options.navLinkWeekClick(d.day.toDate(), d3.event));
 		_weekNumber.merge(_weekNumberEnter)
 			.text(day => this.dateEnv.computeWeekNumber(day.day.toDate()))
@@ -342,7 +344,8 @@ export class MonthGridView extends View {
 					.attr("r", occupationRadius)
 					.attr("cy", occupationCircleCenterOffset);
 				g.select("text.day-number")
-					.text((d) => d.day.date());
+					.text((d) => d.day.date())
+					.attr("y", () => this.textHangOffset);
 			})
 			.classed("free", day => {
 				let dayOccupationColorsForDay = dayOccupationColors[this.getDayString(day.day)];
