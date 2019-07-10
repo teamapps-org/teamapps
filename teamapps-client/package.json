@@ -17,7 +17,8 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "yarn run unit",
     "build": "cross-env webpack -p --config js-build/webpack.prod.conf.js --mode production",
-    "stats": "cross-env webpack -p --config js-build/webpack.prod.conf.js --mode production --json > dist/stats.json"
+    "stats": "cross-env webpack -p --config js-build/webpack.prod.conf.js --mode production --json > stats.json",
+    "report": "cross-env npm_config_report=true webpack -p --config js-build/webpack.prod.conf.js --mode production"
   },
   "devDependencies": {
     "autoprefixer": "^9.5.1",
@@ -44,12 +45,14 @@
     "raw-loader": "^0.5.1",
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.20.2",
+    "ts-loader": "^6.0.4",
     "tslint": "5.x",
     "tslint-loader": "^3.5.3",
     "typescript": "^3.5.1",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "url-loader": "^1.0.1",
     "webpack": "^4.22.0",
+    "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9",
     "webpack-merge": "^4.1.4",

@@ -25,8 +25,8 @@ import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiComponent} from "./UiComponent";
 
-type ComponentClass<T extends UiComponent<UiComponentConfig>> = { new (config: UiComponentConfig, context: TeamAppsUiContext): T };
-type FieldClass<T extends UiField> = { new (config: UiFieldConfig, context: TeamAppsUiContext): T };
+type ComponentClass<T extends UiComponent<UiComponentConfig>> = { new(config: UiComponentConfig, context: TeamAppsUiContext): T };
+type FieldClass<T extends UiField> = { new(config: UiFieldConfig, context: TeamAppsUiContext): T };
 
 export class TeamAppsUiComponentRegistry {
 
@@ -63,4 +63,6 @@ export class TeamAppsUiComponentRegistry {
 
 }
 
-(window as any).TeamAppsUiComponentRegistry = TeamAppsUiComponentRegistry;
+if (!(window as any).TeamAppsUiComponentRegistry) {
+	(window as any).TeamAppsUiComponentRegistry = TeamAppsUiComponentRegistry;
+}

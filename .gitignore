@@ -112,6 +112,7 @@ teamapps-client/npm-debug.log
 teamapps-client/ts/**/*.js
 teamapps-client/ts/generated/
 teamapps-client/dist/
+teamapps-client/stats.json
 
 ### MicrosoftOffice template
 *.tmp

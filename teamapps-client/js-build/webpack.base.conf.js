@@ -12,10 +12,11 @@ module.exports = function (stageConfig) {
 	return {
 		context: path.resolve(__dirname, '../'),
 		entry: {
-			main: resolve('/ts/modules/index.ts')
+			teamapps: resolve('/ts/modules/index.ts'),
+			UiRichTextEditor: resolve('/ts/modules/formfield/UiRichTextEditor.ts')
 		},
 		output: {
-			library: "teamapps",
+			library: "[name]",
 			libraryTarget: "umd",
 			umdNamedDefine: true
 		},
@@ -35,10 +36,7 @@ module.exports = function (stageConfig) {
 			rules: [
 				{
 					test: /\.tsx?$/,
-					loader: "awesome-typescript-loader",
-					options: {
-						configFileName: './ts/modules/tsconfig.json'
-					}
+					loader: require.resolve('ts-loader')
 				},
 				{
 					test: /\.less$/,
@@ -111,6 +109,12 @@ module.exports = function (stageConfig) {
 					enforce: "pre"
 				}
 			]
+		},
+
+		optimization: {
+			splitChunks: {
+				chunks: 'all'
+			}
 		},
 
 		node: {

@@ -11,7 +11,6 @@
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "moduleResolution": "node",
-    "noEmit": true,
     "declaration": true,
     "declarationDir": "../../dist/tsd"
   },
