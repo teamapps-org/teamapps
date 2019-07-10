@@ -80,7 +80,7 @@ export {UiVerticalLayout} from "./UiVerticalLayout";
 export {UiVideoPlayer} from "./UiVideoPlayer";
 export {UiWebRtcPublisher} from "./UiWebRtcPublisher";
 export {UiWebRtcPlayer} from "./UiWebRtcPlayer";
-export {UiWindow} from "./UiWindow";                        
+export {UiWindow} from "./UiWindow";
 export {UiWorkSpaceLayout} from "./workspace-layout/UiWorkSpaceLayout";
 export {UiIFrame} from "./UiIFrame";
 export {UiFlexContainer} from "./UiFlexContainer";

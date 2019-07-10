@@ -48,7 +48,7 @@ import {addDays, Calendar} from '@fullcalendar/core';
 import dayGridPlugin, {DayGridView} from '@fullcalendar/daygrid';
 import timeGridPlugin, {TimeGridView} from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import momentTimeZone from '@fullcalendar/moment-timezone';
+import momentTimeZone from './util/fullcalendar-moment-timezone';
 import {EventInput, EventRenderingChoice} from "@fullcalendar/core/structs/event";
 import {EventSourceError, ExtendedEventSourceInput} from "@fullcalendar/core/structs/event-source";
 import {bind} from "./util/Bind";
