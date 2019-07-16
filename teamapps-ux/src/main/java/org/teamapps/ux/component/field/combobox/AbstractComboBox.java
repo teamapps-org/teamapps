@@ -36,6 +36,8 @@ import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.ux.component.field.TextMatchingMode;
 import org.teamapps.ux.component.node.TreeNode;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.component.tree.TreeNodeInfo;
+import org.teamapps.ux.component.tree.TreeNodeInfoExtractor;
 import org.teamapps.ux.model.BaseTreeModel;
 
 import java.util.ArrayList;
@@ -82,6 +84,14 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
 	protected Function<String, RECORD> freeTextRecordFactory = null;
+	
+	private TreeNodeInfoExtractor<RECORD> treeNodeInfoExtractor = record -> {
+		if (record instanceof TreeNode) {
+			return (TreeNode) record;
+		} else {
+			return null;
+		}
+	};
 
 	private AbstractComboBox(List<RECORD> staticData, BaseTreeModel<RECORD> model) {
 		super();
@@ -185,17 +195,19 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		uiTreeRecord.setDropDownTemplateId(templateIdsByTemplate.get(dropdownTemplate));
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
-		if (record instanceof org.teamapps.ux.component.node.TreeNode) {
-			uiTreeRecord.setExpanded(((TreeNode) record).isExpanded());
-			uiTreeRecord.setLazyChildren(((TreeNode) record).isLazyChildren());
+		TreeNodeInfo treeNodeInfo = treeNodeInfoExtractor.getTreeNodeInfo(record);
+		if (treeNodeInfo != null) {
+			uiTreeRecord.setExpanded(treeNodeInfo.isExpanded());
+			uiTreeRecord.setLazyChildren(treeNodeInfo.isLazyChildren());
 		}
 
 		return uiTreeRecord;
 	}
 
 	protected void addParentLinkToUiRecord(RECORD record, UiComboBoxTreeRecord uiTreeRecord, Map<RECORD, UiComboBoxTreeRecord> othersCurrentlyBeingAddedToCache) {
-		if (record instanceof TreeNode) {
-			RECORD parent = (RECORD) ((TreeNode) record).getParent();
+		TreeNodeInfo treeNodeInfo = treeNodeInfoExtractor.getTreeNodeInfo(record);
+		if (treeNodeInfo != null) {
+			RECORD parent = (RECORD) treeNodeInfo.getParent();
 			if (parent != null) {
 				UiComboBoxTreeRecord uiParentFromOthers = othersCurrentlyBeingAddedToCache.get(parent);
 				if (uiParentFromOthers != null) {
@@ -453,6 +465,14 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 	@Override
 	public Event<SpecialKey> onSpecialKeyPressed() {
 		return this.onSpecialKeyPressed;
+	}
+
+	public TreeNodeInfoExtractor<RECORD> getTreeNodeInfoExtractor() {
+		return treeNodeInfoExtractor;
+	}
+
+	public void setTreeNodeInfoExtractor(TreeNodeInfoExtractor<RECORD> treeNodeInfoExtractor) {
+		this.treeNodeInfoExtractor = treeNodeInfoExtractor;
 	}
 
 }
