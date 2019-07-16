@@ -39,7 +39,7 @@ public class LineChartLine {
 
 	private LineChartCurveType graphType = LineChartCurveType.MONOTONE;
 	private float dataDotRadius = 2;
-	private Color axisColor = Color.BLACK;
+	private Color yAxisColor = Color.BLACK;
 	private Color lineColorScaleMin = new Color(73, 128, 192);
 	private Color lineColorScaleMax = new Color(73, 128, 192);
 	private Color areaColorScaleMin = new Color(255, 255, 255, 0);
@@ -81,7 +81,7 @@ public class LineChartLine {
 		definition.setLineColorScaleMax(lineColorScaleMax != null ? createUiColor(lineColorScaleMax) : null);
 		definition.setAreaColorScaleMin(areaColorScaleMin != null ? createUiColor(areaColorScaleMin) : null);
 		definition.setAreaColorScaleMax(areaColorScaleMax != null ? createUiColor(areaColorScaleMax) : null);
-		definition.setAxisColor(axisColor != null ? createUiColor(axisColor) : null);
+		definition.setAxisColor(yAxisColor != null ? createUiColor(yAxisColor) : null);
 		definition.setIntervalY(intervalY != null ? intervalY.createUiLongInterval() : new UiLongInterval(0, 1000));
 		definition.setYScaleType(yScaleType.toUiScaleType());
 		definition.setYScaleZoomMode(yScaleZoomMode.toUiLineChartYScaleZoomMode());
@@ -207,13 +207,13 @@ public class LineChartLine {
 	}
 
 	public Color getYAxisColor() {
-		return axisColor;
+		return yAxisColor;
 	}
 
-	public LineChartLine setAxisColor(Color axisColor) {
-		this.axisColor = axisColor;
+	public LineChartLine setYAxisColor(Color yAxisColor) {
+		this.yAxisColor = yAxisColor;
 		if (this.changeListener != null) {
-			changeListener.handleAxisColorChanged(this, axisColor);
+			changeListener.handleAxisColorChanged(this, yAxisColor);
 		}
 		return this;
 	}

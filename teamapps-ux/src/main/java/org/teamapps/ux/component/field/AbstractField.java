@@ -54,8 +54,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	private boolean visible = true;
 
 	private final Set<FieldValidator<VALUE>> validators = new HashSet<>();
-	// null key for custom field messages (not bound to a validator)
-	private final Map<FieldValidator<VALUE>, List<FieldMessage>> fieldMessagesByValidator = new HashMap<>();
+	private final Map<FieldValidator<VALUE>, List<FieldMessage>> fieldMessagesByValidator = new HashMap<>(); // null key for custom field messages (not bound to a validator)
 	private FieldMessage.Position defaultMessagePosition = FieldMessage.Position.BELOW;
 	private FieldMessage.Visibility defaultMessageVisibility = FieldMessage.Visibility.ALWAYS_VISIBLE;
 
