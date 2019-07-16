@@ -1,0 +1,60 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+import {Renderer, RenderingFunction} from "../Common";
+import {
+	createCssGridRowOrColumnString,
+	createImageSizingCssObject,
+	createTextAlignmentCssString,
+	createUiBorderCssString,
+	createUiColorCssString,
+	createUiFontStyleCssString,
+	createUiShadowCssString,
+	createUiSpacingCssString,
+	cssHorizontalAlignmentByUiVerticalAlignment,
+	cssObjectToString,
+	cssVerticalAlignmentByUiVerticalAlignment
+} from "./CssFormatUtil";
+import {IconPathProvider} from "../TeamAppsUiContext";
+import * as log from "loglevel";
+import {UiTextElementConfig} from "../../generated/UiTextElementConfig";
+import {UiBadgeElementConfig} from "../../generated/UiBadgeElementConfig";
+import {UiFloatingElementConfig} from "../../generated/UiFloatingElementConfig";
+import {UiImageElementConfig} from "../../generated/UiImageElementConfig";
+import {UiIconElementConfig} from "../../generated/UiIconElementConfig";
+import {UiGlyphIconElementConfig} from "../../generated/UiGlyphIconElementConfig";
+import {AbstractUiTemplateElementConfig} from "../../generated/AbstractUiTemplateElementConfig";
+import {UiGridTemplateConfig} from "../../generated/UiGridTemplateConfig";
+import {UiHtmlTemplateConfig} from "../../generated/UiHtmlTemplateConfig";
+
+export function createHtmlTemplateRenderer(template: UiHtmlTemplateConfig, iconPathProvider: IconPathProvider, idPropertyName: string): Renderer {
+	return {
+		render: (data: any) => {
+			if (data == null) {
+				return '';
+			} else {
+				let html = template.html.replace(/\{\{(\w+)\}\}/g, (substring, propertyName) => {
+					return data[propertyName] || "";
+				});
+				return html;
+			}
+		},
+		template
+	};
+}
