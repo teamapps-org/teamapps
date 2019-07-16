@@ -348,15 +348,15 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	setTabConfiguration(tabId: string, icon: string, caption: string, closeable: boolean, visible: boolean, rightSide: boolean): void {
 		let tab = this.getTabById(tabId);
 		tab.$button.innerHTML = '';
-		tab.$button.append(this.createTabButton(tabId, icon, caption, closeable).querySelector<HTMLElement>(":scope >*"));
+		tab.$button.append(...Array.from(this.createTabButton(tabId, icon, caption, closeable).querySelectorAll<HTMLElement>(":scope >*")));
 		tab.$dropDownTabButton.innerHTML = '';
-		tab.$dropDownTabButton.append(this.createTabButton(tabId, icon, caption, closeable).querySelector<HTMLElement>(":scope >*"));
+		tab.$dropDownTabButton.append(...Array.from(this.createTabButton(tabId, icon, caption, closeable).querySelectorAll<HTMLElement>(":scope >*")));
 		if (rightSide && !tab.config.rightSide) {
-			this.$rightButtonsWrapper.append(tab.$button);
-			this.$dropButtonContainerRight.append(tab.$dropDownTabButton);
+			this.$rightButtonsWrapper.appendChild(tab.$button);
+			this.$dropButtonContainerRight.appendChild(tab.$dropDownTabButton);
 		} else if (!rightSide && tab.config.rightSide) {
-			this.$leftButtonsWrapper.append(tab.$button);
-			this.$dropButtonContainerLeft.append(tab.$dropDownTabButton);
+			this.$leftButtonsWrapper.appendChild(tab.$button);
+			this.$dropButtonContainerLeft.appendChild(tab.$dropDownTabButton);
 		}
 		tab.config.tabId = tabId;
 		tab.config.icon = icon;
