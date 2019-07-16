@@ -26,6 +26,8 @@ import {createGridTemplateRenderer} from "./util/UiGridTemplates";
 import {UiTemplateReferenceConfig} from "../generated/UiTemplateReferenceConfig";
 import {wrapWithDefaultTagWrapper} from "trivial-components";
 import {Renderer} from "./Common";
+import {createHtmlTemplateRenderer} from "./util/UiHtmlTemplates";
+import {UiHtmlTemplateConfig} from "../generated/UiHtmlTemplateConfig";
 
 export class TemplateRegistry {
 
@@ -76,7 +78,9 @@ export class TemplateRegistry {
 		if (isTemplateReference(template)) {
 			return this.getTemplateRendererByName(template.templateId);
 		} else if (isGridTemplate(template)) {
-			return createGridTemplateRenderer(template as UiGridTemplateConfig, this.context, idPropertyName);
+			return createGridTemplateRenderer(template, this.context, idPropertyName);
+		} else if (isHtmlTemplate(template)) {
+			return createHtmlTemplateRenderer(template, this.context, idPropertyName);
 		}
 	}
 
@@ -107,4 +111,8 @@ export function isTemplateReference(template: UiTemplateConfig): template is UiT
 
 export function isGridTemplate(template: UiTemplateConfig): template is UiGridTemplateConfig {
 	return template._type === "UiGridTemplate";
+}
+
+export function isHtmlTemplate(template: UiTemplateConfig): template is UiHtmlTemplateConfig {
+	return template._type === "UiHtmlTemplate";
 }
