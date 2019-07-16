@@ -367,6 +367,12 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		}
 	}
 
+	public List<String> getColumnPropertyNames() {
+		return columns.stream()
+				.map(TableColumn::getPropertyName)
+				.collect(Collectors.toList());
+	}
+
 	public TableCellCoordinates<RECORD> getActiveEditorCell() {
 		return activeEditorCell;
 	}

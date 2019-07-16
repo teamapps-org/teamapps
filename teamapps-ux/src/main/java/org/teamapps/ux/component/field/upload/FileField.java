@@ -182,6 +182,11 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		return getValue() == null || getValue().isEmpty();
+	}
+
+	@Override
 	protected void applyValueFromUi(Object value) {
 		List<RECORD> oldValue = new ArrayList<>(getValue() != null ? getValue() : Collections.emptyList());
 		super.applyValueFromUi(value);
