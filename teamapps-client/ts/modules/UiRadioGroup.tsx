@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import "@less/components/UiReactTestComponent.less";
-
 import * as React from "react";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 

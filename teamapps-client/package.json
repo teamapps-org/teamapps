@@ -112,7 +112,7 @@
     "moment-timezone": "^0.5.26",
     "mustache": "^3.0.1",
     "nouislider": "^14.0.2",
-    "pickr-widget": "0.3.6",
+    "pickr-widget": "0.3.1",
     "popper.js": "^1.15.0",
     "quill": "1.x",
     "react": "^16.8.6",
