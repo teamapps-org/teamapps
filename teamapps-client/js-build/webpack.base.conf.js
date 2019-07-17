@@ -51,7 +51,7 @@ module.exports = function (stageConfig) {
 							loader: 'postcss-loader',
 							options: {
 								sourceMap: true,
-								plugins: () => [require('autoprefixer')({browsers: ['> 1%']})],
+								plugins: () => [require('autoprefixer')],
 							}
 						}, {
 							loader: "less-loader",
@@ -74,7 +74,7 @@ module.exports = function (stageConfig) {
 							loader: 'postcss-loader',
 							options: {
 								sourceMap: true,
-								plugins: () => [require('autoprefixer')({browsers: ['> 1%']})],
+								plugins: () => [require('autoprefixer')],
 							}
 						}
 					]
