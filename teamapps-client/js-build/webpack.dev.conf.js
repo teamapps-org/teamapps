@@ -13,7 +13,7 @@ const PORT = process.env.PORT && Number(process.env.PORT);
 
 const devWebpackConfig = merge(baseWebpackConfig, {
 	// cheap-module-eval-source-map is faster for development
-	devtool: config.devtool,
+	devtool: 'cheap-module-source-map', // TODO change back to cheap-module-eval-source-map!!! https://github.com/webpack-contrib/mini-css-extract-plugin/issues/29
 	output: {
 		filename: path.posix.join(config.assetsSubDirectory, 'js/[name].js'),
 		publicPath: config.assetsPublicPath
