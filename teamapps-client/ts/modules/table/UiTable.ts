@@ -423,18 +423,20 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			if (item == null) {
 				return;
 			}
-			const fieldName = (this._grid.getColumns()[cell.cell] as Column).id;
+			const columnId = (this._grid.getColumns()[cell.cell] as Column).id;
 
-			const cellMessages = (item.messages && item.messages[fieldName] || []);
-			const columnMessages = this.getColumnById(fieldName).messages;
-			const cellHasMessages = cellMessages.length > 0 || columnMessages.length > 0;
-			const isEditorCell = this._grid.getCellEditor() != null && this._grid.getActiveCell().row === cell.row && this._grid.getActiveCell().cell === cell.cell;
-			if (!isEditorCell && cellHasMessages) {
-				this.fieldMessagePopper.setReferenceElement(this._grid.getCellNode(cell.row, cell.cell));
-				this.fieldMessagePopper.setMessages([...cellMessages, ...columnMessages]);
-				this.fieldMessagePopper.setVisible(true);
-			} else {
-				this.fieldMessagePopper.setVisible(false);
+			if (!this.isSpecialColumn(this.getColumnById(columnId))) {
+				const cellMessages = (item.messages && item.messages[columnId] || []);
+				const columnMessages = this.getColumnById(columnId).messages;
+				const cellHasMessages = cellMessages.length > 0 || columnMessages.length > 0;
+				const isEditorCell = this._grid.getCellEditor() != null && this._grid.getActiveCell().row === cell.row && this._grid.getActiveCell().cell === cell.cell;
+				if (!isEditorCell && cellHasMessages) {
+					this.fieldMessagePopper.setReferenceElement(this._grid.getCellNode(cell.row, cell.cell));
+					this.fieldMessagePopper.setMessages([...cellMessages, ...columnMessages]);
+					this.fieldMessagePopper.setVisible(true);
+				} else {
+					this.fieldMessagePopper.setVisible(false);
+				}
 			}
 		});
 		this._grid.onMouseLeave.subscribe((e, args) => {
@@ -813,10 +815,12 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private getVisibleColumns() {
 		return this.allColumns.filter((column) => {
-			let isSpecialColumn = !column.uiField;
-			let fieldIsVisible = column.uiField.isVisible();
-			return column.visible && (isSpecialColumn || fieldIsVisible);
+			return this.isSpecialColumn(column) || (column.visible && column.uiField.isVisible());
 		});
+	}
+
+	private isSpecialColumn(column: Column) {
+		return !column.uiField;
 	}
 
 	private getColumnById(id: string) {
