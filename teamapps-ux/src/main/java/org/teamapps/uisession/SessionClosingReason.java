@@ -20,7 +20,7 @@
 package org.teamapps.uisession;
 
 public enum SessionClosingReason {
-	TERMINATED_BY_CLIENT, // by the client
+	TERMINATED_BY_CLIENT,
 	TIMED_OUT,
 	HTTP_SESSION_CLOSED,
 	COMMANDS_OVERFLOW

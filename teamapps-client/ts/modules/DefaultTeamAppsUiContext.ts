@@ -103,6 +103,12 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		if (this.isHighDensityScreen) {
 			document.body.classList.add('high-density-screen');
 		}
+
+		window.addEventListener('unload', () => {
+			if (!navigator.sendBeacon) return;
+			var status = navigator.sendBeacon("/leave", this.sessionId);
+			console.log(`Beacon returned: ${status}`);
+		})
 	}
 
 	public get executingCommand() {
