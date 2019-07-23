@@ -189,6 +189,9 @@ export class UiTableRowSelectionModel {
 		}
 
 		if (this.grid.canCellBeActive(cell.row, cell.cell)) {
+			if (this.grid.getEditorLock().isActive(null)) {
+				this.grid.getEditorLock().commitCurrentEdit()
+			}
 			this.grid.setActiveCell(cell.row, cell.cell)
 		}
 		var tempRanges = this.rowsToRanges(selection);
