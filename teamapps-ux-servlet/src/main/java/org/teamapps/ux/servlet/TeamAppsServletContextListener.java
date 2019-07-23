@@ -70,9 +70,12 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 
 		context.addFilter("teamapps-download-header-filter", new DownloadHttpHeaderFilter()).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "*");
 
-		Dynamic reg = context.addServlet("teamapps-upload-servlet", new UploadServlet((file, uuid) -> teamAppsUxClientGate.handleFileUpload(file, uuid)));
-		reg.addMapping("/upload/*");
-		reg.setMultipartConfig(new MultipartConfigElement(null, -1L, -1L, 1000_000));
+		Dynamic uploadServletRegistration = context.addServlet("teamapps-upload-servlet", new UploadServlet((file, uuid) -> teamAppsUxClientGate.handleFileUpload(file, uuid)));
+		uploadServletRegistration.addMapping("/upload/*");
+		uploadServletRegistration.setMultipartConfig(new MultipartConfigElement(null, -1L, -1L, 1000_000));
+
+		Dynamic leaveBeaconServletRegistration = context.addServlet("teamapps-leave", new LeaveBeaconServlet(uiSessionManager));
+		leaveBeaconServletRegistration.addMapping("/leave/*");
 
 		context.addListener(new ServletRequestListener());
 		context.addListener(uiSessionManager);
