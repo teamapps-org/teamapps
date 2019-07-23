@@ -333,19 +333,19 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		exitFullScreen();
 	}
 
-	public static showGenericErrorMessage(title: string, message: string, options: UiGenericErrorMessageOption[], context: TeamAppsUiContext): void {
+	public static showGenericErrorMessage(title: string, message: string, showErrorIcon: boolean, options: UiGenericErrorMessageOption[], context: TeamAppsUiContext): void {
 		let uiWindow = new UiWindow({
 			id: null,
 			title: title,
-			width: 330,
-			height: 150,
+			width: 370,
+			height: 200,
 			modalBackgroundDimmingColor: {red: 0, green: 0, blue: 0, alpha: .5},
 			modal: true,
 			content: null
 		}, context);
 		let $contentElement = parseHtml(`<div class="UiGenericErrorMessage">
-	<div class="icon img img-48" style="background-image: url(/resources/window-close-grey.png)"></div>
-	<div class="message">${message}</div>
+	<div class="icon img img-48" style="background-image: url(/resources/window-close-grey.png); display: ${showErrorIcon ? 'block': 'none'}"></div>
+	<div class="message" style="text-align: justify;">${message}</div>
 	<div class="option-buttons">
 		${options.map(o => `<div class="btn btn-default ${UiGenericErrorMessageOption[o].toLowerCase()}">${UiGenericErrorMessageOption[o]}</div>`).join("")}
 	</div>
