@@ -41,6 +41,7 @@ import {bind} from "./util/Bind";
 import {RefreshableComponentProxyHandle} from "./util/RefreshableComponentProxyHandle";
 import {TeamAppsConnectionImpl} from "./communication/TeamAppsConnectionImpl";
 import {UiComponent} from "./UiComponent";
+import {SERVER_ERROR_Reason} from "../generated/SERVER_ERRORConfig";
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 
@@ -90,8 +91,13 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			onConnectionErrorOrBroken: (reason, message) => {
 				DefaultTeamAppsUiContext.logger.error("Connection broken.");
 				sessionStorage.clear();
-				UiRootPanel.showGenericErrorMessage("Server-side Error", "A server error has occurred! You might experience unexpected behavior until you reload this web page.",
-					[UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
+				if (reason == SERVER_ERROR_Reason.SESSION_NOT_FOUND) {
+					UiRootPanel.showGenericErrorMessage("Session Timeout", "<p>Your session has timed out.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+						false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
+				} else {
+					UiRootPanel.showGenericErrorMessage("Server-Side Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+						true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
+				}
 			},
 			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand),
 			executeCommands: (uiCommands: UiCommand[]) => this.executeCommands(uiCommands)
