@@ -91,6 +91,7 @@ class UiTable extends UiComponent {
 
 	event cellEditingStarted(int recordId, String columnPropertyName, Object currentValue);
 	event cellEditingStopped(int recordId, String columnPropertyName);
+	event cellValueChanged(int recordId, String columnPropertyName, Object value);
 	event rowSelected(int recordId, boolean isRightMouseButton /* TODO */, boolean isDoubleClick /* TODO */); // TODO what if the user selects more than one row?
 	event multipleRowsSelected(List<Integer> recordIds); // send this event if the user selects more than one row. In this case, do not send rowSelected
 	event sortingChanged(String sortField, UiSortDirection sortDirection); // sent when the user clicks on a sortable header column

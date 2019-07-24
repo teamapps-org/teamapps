@@ -25,7 +25,7 @@
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {
 	UiTable_CellEditingStartedEvent,
-	UiTable_CellEditingStoppedEvent,
+	UiTable_CellEditingStoppedEvent, UiTable_CellValueChangedEvent,
 	UiTable_ColumnSizeChangeEvent,
 	UiTable_DisplayedRangeChangedEvent,
 	UiTable_FieldOrderChangeEvent,
@@ -64,7 +64,6 @@ import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
 import {UiTableRowSelectionModel} from "./UiTableRowSelectionModel";
 import EventData = Slick.EventData;
-import OnHeaderRowCellRenderedEventArgs = Slick.OnHeaderRowCellRenderedEventArgs;
 
 interface Column extends Slick.Column<any> {
 	id: string;
@@ -103,6 +102,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	public readonly onCellEditingStarted: TeamAppsEvent<UiTable_CellEditingStartedEvent> = new TeamAppsEvent(this);
 	public readonly onCellEditingStopped: TeamAppsEvent<UiTable_CellEditingStoppedEvent> = new TeamAppsEvent(this);
+	public readonly onCellValueChanged: TeamAppsEvent<UiTable_CellValueChangedEvent> = new TeamAppsEvent(this);
 	public readonly onRowSelected: TeamAppsEvent<UiTable_RowSelectedEvent> = new TeamAppsEvent(this);
 	public readonly onMultipleRowsSelected: TeamAppsEvent<UiTable_MultipleRowsSelectedEvent> = new TeamAppsEvent<UiTable_MultipleRowsSelectedEvent>(this);
 	public readonly onSortingChanged: TeamAppsEvent<UiTable_SortingChangedEvent> = new TeamAppsEvent(this);
@@ -217,10 +217,10 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			multiSelect: config.allowMultiRowSelection,
 			enableTextSelectionOnCells: false, // see also CSS style user-select: none
 			editable: config.editable,
-			editCommandHandler: (item: TableDataProviderItem, column: Column, editCommand: any) => {
-				column.uiField.commit();
-				editCommand.execute();
-			},
+			// editCommandHandler: (item: TableDataProviderItem, column: Column, editCommand: any) => {
+			// 	column.uiField.commit();
+			// 	editCommand.execute();
+			// },
 			showHeaderRow: config.showHeaderRow,
 			headerRowHeight: config.headerRowHeight,
 			createFooterRow: true,
@@ -301,7 +301,12 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			}
 			this.updateSelectionFramePosition(true);
 		});
-		this._grid.onCellChange.subscribe((eventData: EventData, data) => {
+		this._grid.onCellChange.subscribe((eventData: EventData, args: Slick.OnCellChangeEventArgs<TableDataProviderItem>) => {
+
+			// The problem with this approach is we do not get the intermediate committed change events!
+			// let columnPropertyName = this.getVisibleColumns()[args.cell].id;
+			// this.onCellValueChanged.fire({recordId: args.item.id, columnPropertyName: columnPropertyName, value: args.item.values[columnPropertyName]});
+
 			this.updateSelectionFramePosition(true);
 		});
 		this._grid.onClick.subscribe((e: MouseEvent, args: Slick.OnClickEventArgs<TableDataProviderItem>) => {
@@ -486,7 +491,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	private configureOuterFields(fieldsByColumnId: { [columnName: string]: UiField }, header: boolean) {
-		let renderedEvent: Slick.Event<OnHeaderRowCellRenderedEventArgs<any>> = header ? this._grid.onHeaderRowCellRendered : (this._grid as any).onFooterRowCellRendered;
+		let renderedEvent: Slick.Event<Slick.OnHeaderRowCellRenderedEventArgs<any>> = header ? this._grid.onHeaderRowCellRendered : (this._grid as any).onFooterRowCellRendered;
 		renderedEvent.subscribe((e, args) => {
 			$(args.node)[0].innerHTML = '';
 			const columnName = args.column.id;
@@ -669,7 +674,9 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	               sortField: string,
 	               sortDirection: UiSortDirection,
 	               clearTableCache: boolean) {
+		let editorCoordinates: { recordId: any; fieldName: any };
 		if (clearTableCache) {
+			editorCoordinates = this._grid.getCellEditor() != null ? {recordId: this.getActiveCellRecordId(), fieldName: this.getActiveCellFieldName()} : null;
 			this.dataProvider.clear();
 			this._grid.setSelectedRows([]);
 		}
@@ -707,10 +714,16 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		if (clearTableCache) {
 			this.ensureDataForCurrentViewPort();
 		}
+		if (editorCoordinates != null) {
+			this.editCellIfAvailable(editorCoordinates.recordId, editorCoordinates.fieldName);
+		}
 	}
 
 	@executeWhenFirstDisplayed()
 	removeData(ids: number[]): void {
+		let editorCoordinates: { recordId: any; fieldName: any };
+			editorCoordinates = this._grid.getCellEditor() != null ? {recordId: this.getActiveCellRecordId(), fieldName: this.getActiveCellFieldName()} : null;
+
 		let deletedItemRowNumbers = Object.values(this.dataProvider.findVisibleRowIndexesByIds(ids));
 		deletedItemRowNumbers.sort();
 
@@ -730,6 +743,10 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this._grid.setSelectedRows(newSelectedRows);
 
 		this.rerenderAllRows();
+
+		if (editorCoordinates != null) {
+			this.editCellIfAvailable(editorCoordinates.recordId, editorCoordinates.fieldName);
+		}
 	}
 
 	insertRows(index: number, data: UiTableClientRecordConfig[]): void {
@@ -910,6 +927,11 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	private handleFieldValueChanged(fieldName: string, value: any): void {
 		// console.log("changed: " + fieldName + ": " + value);
 		// TODO check if this has updated a boolean field and update composite fields accordingly (field visibilities)
+
+		let currentlyEditingThisColumn = !!this._grid.getCellEditor() && this.getActiveCellFieldName() === fieldName;
+		if (currentlyEditingThisColumn) {
+			this.onCellValueChanged.fire({recordId: this.getActiveCellRecordId(), columnPropertyName: fieldName, value: value})
+		}
 	}
 
 	private getCompositeFieldColumnForSubFieldName(columnPropertyName: string): number {
@@ -976,7 +998,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				css(this.$selectionFrame, {
 					top: $cell.offsetTop - this.$component.offsetTop - selectionFrame.borderWidth,
 					left: selectionFrame.fullRow ? -selectionFrame.borderWidth : parseInt(computedStyle.left) - selectionFrame.borderWidth - this._grid.getViewport().leftPx,
-					width: selectionFrame.fullRow ? $($cell.parentElement).width() + 2 * selectionFrame.borderWidth + 1 :  $($cell.parentElement).width() - parseInt(computedStyle.left) - parseInt(computedStyle.right) + 2 * selectionFrame.borderWidth - 1,
+					width: selectionFrame.fullRow ? $($cell.parentElement).width() + 2 * selectionFrame.borderWidth + 1 : $($cell.parentElement).width() - parseInt(computedStyle.left) - parseInt(computedStyle.right) + 2 * selectionFrame.borderWidth - 1,
 					height: $cell.offsetHeight + 2 * selectionFrame.borderWidth - this._config.rowBorderWidth
 				});
 			}, animate);

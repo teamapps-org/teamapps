@@ -78,6 +78,8 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	private RECORD selectedRecord;
 	private final List<RECORD> selectedRecords = new ArrayList<>();
+	private TableCellCoordinates<RECORD> activeEditorCell;
+
 	private Map<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new HashMap<>();
 	private Map<RECORD, Map<String, List<FieldMessage>>> cellMessages = new HashMap<>();
 	private Map<RECORD, Set<String>> markedCells = new HashMap<>();
@@ -126,8 +128,6 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	private EventListener<RECORD> onRecordUpdatedListener = this::onRecordUpdated;
 
 	private List<Integer> viewportDisplayedRecordClientIds;
-
-	private TableCellCoordinates<RECORD> activeEditorCell;
 
 	private List<RECORD> topNonModelRecords = new ArrayList<>();
 	private List<RECORD> bottomNonModelRecords = new ArrayList<>();
@@ -178,12 +178,6 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 			column.setTable(this);
 			AbstractField<?> field = column.getField();
 			field.setParent(this);
-			field.onValueChanged.addListener(value -> {
-				transientChangesByRecordAndPropertyName
-						.computeIfAbsent(selectedRecord, idValue -> new HashMap<>())
-						.put(column.getPropertyName(), value);
-				onCellValueChanged.fire(new FieldValueChangedEventData<>(selectedRecord, column, value));
-			});
 		});
 		if (isRendered()) {
 			getSessionContext().queueCommand(
@@ -271,6 +265,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				UiTable.CellEditingStartedEvent editingStartedEvent = (UiTable.CellEditingStartedEvent) event;
 				RECORD record = clientRecordCache.getRecordByClientId(editingStartedEvent.getRecordId());
 				this.activeEditorCell = new TableCellCoordinates<>(record, editingStartedEvent.getColumnPropertyName());
+				this.selectedRecord = activeEditorCell.getRecord();
 				TableColumn<RECORD> column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
 				Object cellValue = getCellValue(record, column);
 				AbstractField activeEditorField = getActiveEditorField();
@@ -291,6 +286,17 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				UiTable.CellEditingStoppedEvent editingStoppedEvent = (UiTable.CellEditingStoppedEvent) event;
 				TableColumn<RECORD> column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
 				this.onCellEditingStopped.fire(new CellEditingStoppedEvent<>(clientRecordCache.getRecordByClientId(editingStoppedEvent.getRecordId()), column));
+				break;
+			}
+			case UI_TABLE_CELL_VALUE_CHANGED: {
+				UiTable.CellValueChangedEvent changeEvent = (UiTable.CellValueChangedEvent) event;
+				TableColumn<RECORD> column = this.getColumnByPropertyName(changeEvent.getColumnPropertyName());
+				RECORD record = clientRecordCache.getRecordByClientId(changeEvent.getRecordId());
+				Object value = column.getField().convertUiValueToUxValue(changeEvent.getValue());
+				transientChangesByRecordAndPropertyName
+						.computeIfAbsent(record, idValue -> new HashMap<>())
+						.put(column.getPropertyName(), value);
+				onCellValueChanged.fire(new FieldValueChangedEventData<>(record, column, value));
 				break;
 			}
 			case UI_TABLE_MULTIPLE_ROWS_SELECTED:
@@ -612,7 +618,8 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		if (!resetEditingState && activeEditorCell != null) {
 			Integer editingClientRecordId = clientRecordCache.getUiRecordIdOrNull(activeEditorCell.getRecord());
 			if (editingClientRecordId != null) {
-				queueCommandIfRendered(() -> new UiTable.EditCellIfAvailableCommand(getId(), editingClientRecordId, activeEditorCell.getPropertyName()));
+				// TODO DO NOT DO THIS!! This must be done on the client side!!!! (client sends events for active cell vs server sends command to edit cell --> server will not know the currently edited cell. Solution: reuse ids to enable client to do this!
+				// queueCommandIfRendered(() -> new UiTable.EditCellIfAvailableCommand(getId(), editingClientRecordId, activeEditorCell.getPropertyName()));
 			}
 		}
 	}

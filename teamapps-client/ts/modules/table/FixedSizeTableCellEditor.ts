@@ -90,7 +90,7 @@ export class FixedSizeTableCellEditor extends AbstractTableEditor {
 
 	public applyValue(item: UiIdentifiableClientRecordConfig, state: any /*TODO*/) {
 		this.uiField.commit();
-		item.values[this.column.field] = state;
+		item.values[this.column.field] = this.uiField.getCommittedValue();
 	};
 
 	public isValueChanged() {
