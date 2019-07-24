@@ -76,7 +76,7 @@ export class LocalViewContainer implements ViewContainer {
     <div class="toolbar-container"></div>
     <div class="content-container-wrapper">
 	    <div class="content-container"></div>
-		<div class="dnd-target-rectangle"></div>
+		<div class="dnd-target-rectangle hidden"></div>
 		<div class="dnd-drag-image"></div>
 	</div>
 	<div class="minimized-tabpanel-bar"></div>
@@ -167,35 +167,35 @@ export class LocalViewContainer implements ViewContainer {
 							at: "left top",
 							of: $tabPanelContentWrapper
 						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width, height: tabPanelContentRect.height});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width + "px", height: tabPanelContentRect.height + "px"});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.LEFT) {
 						$(this.$dndActiveRectangle).position({
 							my: "left top",
 							at: "left top",
 							of: $tabPanelContentWrapper
 						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width / 2, height: tabPanelContentRect.height});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width / 2 + "px", height: tabPanelContentRect.height + "px"});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.RIGHT) {
 						$(this.$dndActiveRectangle).position({
 							my: "right top",
 							at: "right top",
 							of: $tabPanelContentWrapper
 						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width / 2, height: tabPanelContentRect.height});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width / 2 + "px", height: tabPanelContentRect.height + "px"});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.TOP) {
 						$(this.$dndActiveRectangle).position({
 							my: "left top",
 							at: "left top",
 							of: $tabPanelContentWrapper
 						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width, height: tabPanelContentRect.height / 2});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width + "px", height: tabPanelContentRect.height / 2 + "px"});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.BOTTOM) {
 						$(this.$dndActiveRectangle).position({
 							my: "left bottom",
 							at: "left bottom",
 							of: $tabPanelContentWrapper
 						});
-						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width, height: tabPanelContentRect.height / 2});
+						css(this.$dndActiveRectangle, {width: tabPanelContentRect.width + "px", height: tabPanelContentRect.height / 2 + "px"});
 					}
 				} else {
 					let $workSpaceLayout = this.$contentContainer;
@@ -207,28 +207,28 @@ export class LocalViewContainer implements ViewContainer {
 							at: "left top",
 							of: $workSpaceLayout
 						});
-						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width / 3, height: workSpaceLayoutRect.height});
+						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width / 3 + "px", height: workSpaceLayoutRect.height + "px"});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.RIGHT) {
 						$(this.$dndActiveRectangle).position({
 							my: "right top",
 							at: "right top",
 							of: $workSpaceLayout
 						});
-						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width / 3, height: workSpaceLayoutRect.height});
+						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width / 3 + "px", height: workSpaceLayoutRect.height + "px"});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.TOP) {
 						$(this.$dndActiveRectangle).position({
 							my: "left top",
 							at: "left top",
 							of: $workSpaceLayout
 						});
-						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width, height: workSpaceLayoutRect.height / 3});
+						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width + "px", height: workSpaceLayoutRect.height / 3 + "px"});
 					} else if (dropPosition.relativeDropPosition === RelativeDropPosition.BOTTOM) {
 						$(this.$dndActiveRectangle).position({
 							my: "left bottom",
 							at: "left bottom",
 							of: $workSpaceLayout
 						});
-						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width, height: workSpaceLayoutRect.height / 3});
+						css(this.$dndActiveRectangle, {width: workSpaceLayoutRect.width + "px", height: workSpaceLayoutRect.height / 3 + "px"});
 					}
 				}
 
@@ -295,7 +295,7 @@ export class LocalViewContainer implements ViewContainer {
 			const dropSuccessful = dropEffect === 'move';
 			let droppedOutsideWorkSpaceLayout = this.lastDndEventType === 'dragleave';
 			if (droppedOutsideWorkSpaceLayout && !dropSuccessful) {
-				this.createSubWindow(viewName);
+				// this.createSubWindow(viewName); TODO I had to comment this out since when canceling drag and drop using escape, there is not way to tell whether it was a drop outside the window or a canceled drop...
 			} else if (droppedOutsideWorkSpaceLayout && dropSuccessful) {
 				// The other window will request a view refresh. This component will intercept it and register the windowDelegate...
 			} else {

@@ -92,7 +92,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 				DefaultTeamAppsUiContext.logger.error("Connection broken.");
 				sessionStorage.clear();
 				if (reason == SERVER_ERROR_Reason.SESSION_NOT_FOUND) {
-					UiRootPanel.showGenericErrorMessage("Session Timeout", "<p>Your session has timed out.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+					UiRootPanel.showGenericErrorMessage("Session Expired", "<p>Your session has expired.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
 						false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
 				} else {
 					UiRootPanel.showGenericErrorMessage("Server-Side Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
