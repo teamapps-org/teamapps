@@ -57,7 +57,7 @@
         border-bottom: none;
         height: 100%;
 
-        > * {
+        > .UiField {
           .cellEditor();
         }
       }
@@ -73,10 +73,6 @@
       padding: 0;
       user-select: text;
       overflow: visible; // needed for validation borders to be displayed correctly; see anti-overflow-wrapper
-
-      > .UiField > :not(.messages) {
-        height: 100%;
-      }
 
       > .validation-class-wrapper {
         width: 100%;
@@ -155,7 +151,7 @@
       }
 
       &.editable {
-        > * {
+        > .UiField {
           .cellEditor();
         }
         > .tr-combobox {
@@ -345,5 +341,9 @@
     min-width: unset;
     min-height: unset;
     border-radius: 0;
+  }
+
+  > :not(.messages) {
+    height: 100%;
   }
 }
