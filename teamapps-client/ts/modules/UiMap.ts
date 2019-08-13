@@ -204,9 +204,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	}
 
 	public setMapType(mapType: UiMapType): void {
-		const osmAttr = '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
-		const mqTilesAttr = 'Tiles &copy; <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" />';
-		const mapBoxAccessToken = 'pk.eyJ1Ijoiam9obi1zbWl0aCIsImEiOiJjaWp3eWhjZDYwbm96djJtNW0zanRrazE2In0.Hi3S9kQ3RNJUuG-PFmMmYw';
+		const mapBoxAccessToken = this._config.accessToken;
 		let layer;
 		let removeLayer = true;
 		switch (mapType) {

@@ -19,6 +19,8 @@
  */
 class UiMap extends UiComponent {
 	required Dictionary<UiTemplate> markerTemplates;
+	String accessToken;
+
 	UiMapType mapType = UiMapType.MAP_BOX_STREETS;
 	int zoomLevel = 5;
 	UiMapLocation mapPosition;
