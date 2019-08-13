@@ -49,6 +49,7 @@ public class MapView<RECORD> extends AbstractComponent {
 	public final Event<Marker<RECORD>> onMarkerClicked = new Event<>();
 
 	private MapType mapType = MapType.MAP_BOX_STREETS_SATELLITE;
+	private String accessToken = null;
 	private int zoomLevel = 5;
 	private Location location = new Location(0, 0);
 	private Map<String, Polyline> polylinesByClientId = new HashMap<>();
@@ -58,11 +59,19 @@ public class MapView<RECORD> extends AbstractComponent {
 	private ClientTemplateCache<Marker<RECORD>> templateCache = new ClientTemplateCache<>(this::registerTemplate);
 	private PropertyExtractor<RECORD> markerPropertyExtractor = new BeanPropertyExtractor<>();
 
+	public MapView(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	public MapView() {
+	}
+
 	@Override
 	public UiComponent createUiComponent() {
 		UiMap uiMap = new UiMap(new HashMap<>());
 		mapAbstractUiComponentProperties(uiMap);
 		uiMap.setMapType(mapType.toUiMapType());
+		uiMap.setAccessToken(accessToken);
 		uiMap.setZoomLevel(zoomLevel);
 		Map<String, UiMapPolyline> uiPolylines = new HashMap<>();
 		polylinesByClientId.forEach((id, polyline) -> uiPolylines.put(id, polyline.createUiMapPolyline()));
