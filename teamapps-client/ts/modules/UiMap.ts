@@ -248,6 +248,13 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 					accessToken: mapBoxAccessToken
 				} as any);
 				break;
+			case UiMapType.MAP_BOX_DARK:
+				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+					maxZoom: 18,
+					id: 'mapbox.dark',
+					accessToken: mapBoxAccessToken
+				} as any);
+				break;
 			case UiMapType.MAP_BOX_OUTDOORS:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
