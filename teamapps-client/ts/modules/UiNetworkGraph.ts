@@ -21,27 +21,37 @@
 
 
 import * as d3 from "d3";
-import {Simulation} from "d3";
+import {Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiNetworkGraph_NodeClickedEvent, UiNetworkGraphCommandHandler, UiNetworkGraphConfig, UiNetworkGraphEventSource} from "../generated/UiNetworkGraphConfig";
+import {
+	UiNetworkGraph_NodeClickedEvent,
+	UiNetworkGraph_NodeExpandedOrCollapsedEvent,
+	UiNetworkGraphCommandHandler,
+	UiNetworkGraphConfig,
+	UiNetworkGraphEventSource
+} from "../generated/UiNetworkGraphConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
-import {UiNetworkNodeConfig} from "../generated/UiNetworkNodeConfig";
+import {UiNetworkNode_ExpandState, UiNetworkNodeConfig} from "../generated/UiNetworkNodeConfig";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
+import {patternify} from "./UiTreeGraph";
+import {createUiColorCssString} from "./util/CssFormatUtil";
+import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
 
-export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> implements UiNetworkGraphCommandHandler, UiNetworkGraphEventSource{
+export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> implements UiNetworkGraphCommandHandler, UiNetworkGraphEventSource {
 
 	public readonly onNodeClicked: TeamAppsEvent<UiNetworkGraph_NodeClickedEvent> = new TeamAppsEvent(this);
+	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiNetworkGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private $graph: HTMLElement;
 	private svg: any;
 	private svgContainer: any;
 	private rect: any;
 	private container: any;
-	private node: any;
-	private link: any;
+	private nodeEnter: any;
+	private linkEnter: any;
 	private simulation: Simulation<UiNetworkNodeConfig & any, undefined>;
 	private zoom: any;
 	private linkedByIndex: any = {};
@@ -60,13 +70,22 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 	@executeWhenFirstDisplayed()
 	public createGraph(gravity: any, images: any, nodesData: any, linksData: any) {
-		let me = this;
-
 		this.simulation = d3.forceSimulation<UiNetworkNodeConfig & any>()
-			.force("charge", d3.forceManyBody().distanceMax(1000))
+			.force("charge", d3.forceManyBody())
 			.nodes(nodesData)
-			.force("link", d3.forceLink(linksData).id(d => (d as UiNetworkNodeConfig).id))
-			.force("center", d3.forceCenter(this.getWidth() / 2, this.getWidth() / 2));
+			.force("link", d3.forceLink(linksData)
+				.id(d => (d as UiNetworkNodeConfig).id)
+				.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
+					let number1 = Math.max(link.source.width, link.source.height);
+					let number2 = Math.max(link.target.width, link.target.height);
+					let number = (number1 + number2) * 0.75;
+					console.log(number1, number2, number);
+					return number;
+				}))
+			.force("center", d3.forceCenter(this.getWidth() / 2, this.getWidth() / 2))
+			.force("collide", d3.forceCollide((a: UiNetworkNodeConfig & any) => {
+				return Math.sqrt(a.width * a.width + a.height * a.height) * .6;
+			}));
 
 		if (this.svgContainer) {
 			this.logger.debug("remove svg-container");
@@ -86,7 +105,8 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr("height", this.getHeight());
 		this.svg = this.svgContainer
 			.append("g")
-			.call(this.zoom);
+			.call(this.zoom)
+			.on("dblclick.zoom", null); // disable doubleclick zoom!
 
 		this.rect = this.svg.append("rect")
 			.attr("width", this.getWidth())
@@ -94,8 +114,10 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.style("fill", "none")
 			.style("pointer-events", "all");
 
-		this.container = this.svg.append("g").attr("transform", "translate(500,500)scale(.1,.1)");
+		this.container = this.svg.append("g");
 
+		console.log(this.getWidth());
+		this.zoom.translateBy(this.svg, this.getWidth()/2, this.getHeight()/2);
 
 		var defs = this.svg.append("defs").attr("id", "imgdefs");
 		for (let i = 0; i < images.length; i++) {
@@ -116,11 +138,12 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		}
 
 
-		this.link = this.container.append("g")
+		this.linkEnter = this.container.append("g")
 			.attr("class", "links")
 			.selectAll(".link")
 			.data(linksData)
-			.enter().append("path")
+			.enter()
+			.append("path")
 			.attr("class", "link")
 			.style("stroke-width", (d: any) => {
 				if (d.width && d.width > 0) {
@@ -131,238 +154,25 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			})
 			.style("stroke", (d: any) => {
 				if (d.color) {
-					return d.color;
+					return createUiColorCssString(d.color);
 				} else {
 					return "#555";
 				}
 			});
 
-		this.node = this.container.append("g")
-			.attr("class", "nodes")
-			.selectAll(".node")
-			.data(nodesData)
-			.enter().append("g")
-			.attr("class", "node")
-			.attr("cx", (d: any) => {
-				return d.x;
-			})
-			.attr("cy", (d: any) => {
-				return d.y;
-			})
-			.call(d3.drag()
-				.on("start", (d: any, i: number, nodes: Element[]) => {
-					console.log("start");
-					if (!d3.event.active) {
-						this.simulation.alphaTarget(0.3).restart();
-					}
-					d3.select(nodes[i]).raise();
-
-					d.fx = d.x;
-					d.fy = d.y;
-
-					this.container.attr("cursor", "grabbing");
-				})
-				.on("drag", (d: any, i: number, nodes: Element[]) => {
-					console.log("drag");
-					d.fx = d3.event.x;
-					d.fy = d3.event.y;
-				})
-				.on("end", (d: any) => {
-					console.log("end");
-					if (!d3.event.active) {
-						this.simulation.alphaTarget(0);
-					}
-					if (!d.fixed) {
-						d.fx = null;
-						d.fy = null;
-					}
-					this.container.attr("cursor", "grab")
-				})
-			);
-
-		var circle = this.node.append("circle")
-			.attr("r", (d: any) => {
-				return d.size * 1;
-			})
-			.style("stroke-width", (d: any) => {
-				if (d.border) {
-					return d.border;
-				} else {
-					return 0;
-				}
-			})
-			.style("stroke", (d: any) => {
-				if (d.borderColor) {
-					return d.borderColor;
-				} else {
-					return "none";
-				}
-			});
-
-		//this.svg.append("rect")
-		//    .attr("x", 10)
-		//    .attr("y", 10)
-		//    .attr("width", 50)
-		//    .attr("height", 25)
-		//    .on("click", (d,i) => {
-		//        if (this.force.gravity() < 0.3) {
-		//            this.force.gravity(0.3).resume();
-		//        } else {
-		//            this.force.gravity(0.05).resume();
-		//        }
-		//    });
-
-		this.node.append("text")
-			.attr("x", (d: any) => {
-				return d.size + 4;
-			})
-			.text((d: any) => {
-				return d.caption
-			});
-
-
 		this.simulation.on("tick", () => {
-			console.log("tick");
-			this.link.attr("d", (d: any) => {
+			this.linkEnter.attr("d", (d: any) => {
 				var dx = d.target.x - d.source.x,
 					dy = d.target.y - d.source.y,
 					dr = Math.sqrt(dx * dx + dy * dy);
 				return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
 			});
 
-			// this.node
-			// 	.attr("cx", (d: any) => d.x)
-			// 	.attr("cy", (d: any) => d.y);
-			this.node.attr("transform", (d: any) => {
-				return "translate(" + d.x + "," + d.y + ")";
-			});
+			this.renderNodes(this.container, nodesData)
 		});
 
+		this.renderNodes(this.container, nodesData);
 
-		this.simulation.on("end", () => {
-			console.log("end");
-			this.link.attr("d", (d: any) => {
-				var dx = d.target.x - d.source.x,
-					dy = d.target.y - d.source.y,
-					dr = Math.sqrt(dx * dx + dy * dy);
-				return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
-			});
-		});
-
-		linksData.forEach((d: any) => {
-			this.linkedByIndex[d.source.index + "," + d.target.index] = 1;
-		});
-
-
-		this.node.on("mouseenter", function (d: any) {
-
-			me.node.classed("node-active", function (o: any) {
-				let thisOpacity = me.isConnected(d, o) ? true : false;
-				this.setAttribute('fill-opacity', thisOpacity);
-				return thisOpacity;
-			});
-
-			me.link.classed("link-active", (o: any) => {
-				return o.source === d || o.target === d ? true : false;
-			});
-
-			d3.select(this).classed("node-active", true);
-			d3.select(this).select("circle").transition()
-				.duration(500)
-				.attr("r", d.size * 1.5);
-
-			d3.select(this).select("text").transition().duration(500)
-				.attr("x", (d: UiNetworkNodeConfig) => {
-					return d.size * 1.5 + 4;
-				})
-				.style("font-size", "20px")
-				.style("stroke", "red");
-
-			d = (d3.select(this).node() as any).__data__;
-
-			me.link.transition().duration(250).style("opacity", function (o: any) {
-				return d.index == o.source.index || d.index == o.target.index ? 1 : 0.3;
-			});
-			me.node.transition().duration(750).style("opacity", function (o: any) {
-				return me.isConnected(d, o) ? 1 : 0.2;
-			});
-
-		});
-
-		this.node.on("mouseleave", function (d: any) {
-			me.node.classed("node-active", false);
-			me.link.classed("link-active", false);
-			d3.select(this).select("circle").transition()
-				.duration(750)
-				.attr("r", d.size * 1);
-
-			d3.select(this).select("text").transition().duration(750)
-				.attr("x", (d: UiNetworkNodeConfig) => d.size + 4)
-				.style("font-size", "10px")
-				.style("stroke", "black");
-
-
-			me.link.transition().duration(1000).style("opacity", 1);
-			me.node.transition().duration(500).style("opacity", 1);
-
-		});
-
-		this.node.on('click', (d: any, i: number, nodes: Element[]) => {
-			var id = d.nodeId;
-			this.onNodeClicked.fire({
-				nodeId: id
-			});
-
-			var evt = d3.event;
-			if (evt != null) {
-				if ((evt as MouseEvent).shiftKey) {
-					this.connectedNodes();
-				} else if ((evt as MouseEvent).ctrlKey) {
-
-				} else {
-					this.logger.debug(id);
-				}
-			}
-
-			d.fixed = !d.fixed;
-			if (d.fixed) {
-				d.fx = d.x;
-				d.fy = d.y;
-			} else {
-				d.fx = null;
-				d.fy = null;
-			}
-		});
-
-	}
-
-
-	private connectedNodes() {
-		if (this.toggle == 0) {
-			let d = (d3.select(this as any).node() as any).__data__;
-			this.node.style("opacity", function (o: any) {
-				return this.isConnected(d, o) ? 1 : 0.1;
-			});
-			this.link.style("opacity", function (o: any) {
-				return d.index == o.source.index || d.index == o.target.index ? 1 : 0.1;
-			});
-			this.toggle = 1;
-		} else {
-			this.node.style("opacity", 1);
-			this.link.style("opacity", 1);
-			this.toggle = 0;
-		}
-	}
-
-	private isConnected(a: any, b: any) {
-		if (a.index == b.index) return true;
-		return this.linkedByIndex[a.index + "," + b.index] || this.linkedByIndex[b.index + "," + a.index];
-	}
-
-	private dottype(d: any) {
-		d.x = +d.x;
-		d.y = +d.y;
-		return d;
 	}
 
 	public onResize(): void {
@@ -401,6 +211,215 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 	public destroy(): void {
 		// nothing to do
+	}
+
+
+	private renderNodes(container: any, nodesData: any[]): void {
+		const nodesSelection = container.selectAll('g.node')
+			.data(nodesData, ({
+				                  id
+			                  }: UiNetworkNodeConfig) => id);
+
+		// Enter any new nodes at the parent's previous position.
+		const nodeEnter = nodesSelection.enter().append('g')
+			.attr('class', 'node')
+			.attr('cursor', 'pointer')
+			.on('mousedown', (d: UiNetworkNodeConfig) => {
+				console.log("click");
+				if (d3.event.srcElement.classList.contains('node-button-circle')) {
+					return;
+				}
+				this.onNodeClicked.fire({nodeId: d.id});
+			});
+		// Add background rectangle for the nodes
+		patternify(nodeEnter, {
+			tag: 'rect',
+			selector: 'node-rect',
+			data: (d: UiNetworkNodeConfig) => [d]
+		});
+
+		nodeEnter.call(d3.drag()
+			.on("start", (d: any, i: number, nodes: Element[]) => {
+				if (!d3.event.active) {
+					this.simulation.alphaTarget(0.3).restart();
+				}
+				d3.select(nodes[i]).raise();
+
+				d.fx = d.x;
+				d.fy = d.y;
+
+				this.container.attr("cursor", "grabbing");
+			})
+			.on("drag", (d: any, i: number, nodes: Element[]) => {
+				d.fx = d3.event.x;
+				d.fy = d3.event.y;
+			})
+			.on("end", (d: any) => {
+				if (!d3.event.active) {
+					this.simulation.alphaTarget(0);
+				}
+				// if (!d.fixed) {
+				// 	d.fx = null;
+				// 	d.fy = null;
+				// }
+				this.container.attr("cursor", "grab")
+			})
+		);
+
+
+		// Add node icon image inside node
+		patternify(nodeEnter, {
+			tag: 'image',
+			selector: 'node-icon-image',
+			data: (d: UiNetworkNodeConfig) => d.icon ? [d] : []
+		})
+			.attr('width', (data: UiNetworkNodeConfig) => data.icon.size)
+			.attr('height', (data: UiNetworkNodeConfig) => data.icon.size)
+			.attr("xlink:href", (data: UiNetworkNodeConfig) => this._context.getIconPath(data.icon.icon, data.icon.size))
+			.attr('x', (data: UiNetworkNodeConfig) => -data.width / 2 - data.icon.size / 2)
+			.attr('y', (data: UiNetworkNodeConfig) => -data.height / 2 - data.icon.size / 2);
+
+		// Defined node images wrapper group
+		const imageGroups = patternify(nodeEnter, {
+			tag: 'g',
+			selector: 'node-image-group',
+			data: (d: UiNetworkNodeConfig) => [d]
+		});
+
+		// Add background rectangle for node image
+		patternify(imageGroups, {
+			tag: 'rect',
+			selector: 'node-image-rect',
+			data: (d: UiNetworkNodeConfig) => [d]
+		});
+
+		// Node update styles
+		const nodeUpdate = nodeEnter.merge(nodesSelection)
+			.style('font', '12px sans-serif')
+			.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
+
+
+		// Add foreignObject element inside rectangle
+		const foreignObject = patternify(nodeUpdate, {
+			tag: 'foreignObject',
+			selector: 'node-foreign-object',
+			data: (d: UiNetworkNodeConfig) => [d]
+		});
+
+		let foreignObjectInner = foreignObject.selectAll('.node-foreign-object-div')
+			.data((d: UiNetworkNodeConfig) => [d], d => (d as UiNetworkNodeConfig).id);
+		foreignObjectInner
+			.enter()
+			.append('xhtml:div')
+			.classed('node-foreign-object-div', true)
+			.html((d: UiNetworkNodeConfig) => this._context.templateRegistry.createTemplateRenderer(d.template).render(d.record.values));
+		foreignObjectInner.exit().remove();
+
+		this.restyleForeignObjectElements();
+
+		// Add Node button circle's group (expand-collapse button)
+		const nodeButtonGroups = patternify(nodeEnter, {
+			tag: 'g',
+			selector: 'node-button-g',
+			data: (d: UiNetworkNodeConfig) => [d]
+		})
+			.on('mousedown', (d: UiNetworkNodeConfig) => {
+				if (d.expandState == UiNetworkNode_ExpandState.EXPANDED) {
+					d.expandState = UiNetworkNode_ExpandState.COLLAPSED;
+				} else {
+					d.expandState = UiNetworkNode_ExpandState.EXPANDED;
+				}
+				this.onNodeExpandedOrCollapsed.fire({nodeId: d.id, expanded: d.expandState == UiNetworkNode_ExpandState.EXPANDED});
+			});
+
+		// Add expand collapse button circle
+		patternify(nodeButtonGroups, {
+			tag: 'circle',
+			selector: 'node-button-circle',
+			data: (d: UiNetworkNodeConfig) => [d]
+		});
+
+		// Move images to desired positions
+		nodeUpdate.selectAll('.node-image-group')
+			.attr('transform', (d: UiNetworkNodeConfig) => {
+				if (d.image) {
+					let x = -d.image.width / 2 - d.width / 2;
+					let y = -d.image.height / 2 - d.height / 2;
+					return `translate(${x},${y})`
+				} else {
+					return null;
+				}
+			});
+
+		// Style node image rectangles
+		nodeUpdate.select('.node-image-rect')
+			.attr('fill', (d: UiNetworkNodeConfig) => `url(#${d.id})`)
+			.attr('width', (d: UiNetworkNodeConfig) => d.image && d.image.width)
+			.attr('height', (d: UiNetworkNodeConfig) => d.image && d.image.height)
+			.attr('stroke', (d: UiNetworkNodeConfig) => d.image && createUiColorCssString(d.image.borderColor))
+			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.image && d.image.borderWidth)
+			.attr('rx', (d: UiNetworkNodeConfig) => d.image && (d.image.cornerShape == UiTreeGraphNodeImage_CornerShape.CIRCLE ? Math.max(d.image.width, d.image.height)
+				: d.image.cornerShape == UiTreeGraphNodeImage_CornerShape.ROUNDED ? Math.min(d.image.width, d.image.height) / 10
+					: 0))
+			.attr('y', (d: UiNetworkNodeConfig) => d.image && d.image.centerTopDistance)
+			.attr('x', (d: UiNetworkNodeConfig) => d.image && d.image.centerLeftDistance)
+		// .attr('filter', (d: UiNetworkNodeConfig) => d.image && d.image.shadowId);
+
+		// Style node rectangles
+		nodeUpdate.select('.node-rect')
+			.attr('width', (d: UiNetworkNodeConfig) => d.width)
+			.attr('height', (d: UiNetworkNodeConfig) => d.height)
+			.attr('x', (d: UiNetworkNodeConfig) => -d.width / 2)
+			.attr('y', (d: UiNetworkNodeConfig) => -d.height / 2)
+			.attr('rx', (d: UiNetworkNodeConfig) => d.borderRadius || 0)
+			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
+			.attr('cursor', 'pointer')
+			.attr('stroke', ({borderColor}: UiNetworkNodeConfig) => createUiColorCssString(borderColor))
+			.style("fill", ({backgroundColor}: UiNetworkNodeConfig) => createUiColorCssString(backgroundColor));
+
+		// Move node button group to the desired position
+		nodeUpdate.select('.node-button-g')
+			.attr('transform', (d: UiNetworkNodeConfig) => `translate(0,${d.height / 2})`)
+			.attr('display', (data: UiNetworkNodeConfig) => data.expandState === UiNetworkNode_ExpandState.NOT_EXPANDABLE ? 'none' : 'inherit');
+
+		// Restyle node button circle
+		nodeUpdate.select('.node-button-circle')
+			.attr('r', 10)
+			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
+			.attr('fill', "white")
+			.attr('stroke', ({
+				                 borderColor
+			                 }: UiNetworkNodeConfig) => borderColor);
+
+		// Remove any exiting nodes after transition
+		const nodeExitTransition = nodesSelection.exit()
+			.remove();
+	}
+
+
+	restyleForeignObjectElements() {
+		this.container.selectAll('.node-foreign-object')
+			.attr('width', ({
+				                width
+			                }: UiNetworkNodeConfig) => width)
+			.attr('height', ({
+				                 height
+			                 }: UiNetworkNodeConfig) => height)
+			.attr('x', ({
+				            width
+			            }: UiNetworkNodeConfig) => -width / 2)
+			.attr('y', ({
+				            height
+			            }: UiNetworkNodeConfig) => -height / 2);
+		this.container.selectAll('.node-foreign-object-div')
+			.style('width', ({
+				                 width
+			                 }: UiNetworkNodeConfig) => `${width}px`)
+			.style('height', ({
+				                  height
+			                  }: UiNetworkNodeConfig) => `${height}px`)
+			.select('*')
+			.style('display', 'inline-grid')
 	}
 }
 

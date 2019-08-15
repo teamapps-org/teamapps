@@ -76,11 +76,11 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 
 	protected reLayout(width: number, height: number): void {
 		let hasSize = width > 0 || height > 0;
+		this.width = width;
+		this.height = height;
 		this.displayedDeferredExecutor.ready = hasSize;
 		if (hasSize) {
 			this.logger.trace("resize: " + this.getId());
-			this.width = width;
-			this.height = height;
 			this.onResized.fire({width: this.width, height: this.height});
 			this.onResize();
 		}

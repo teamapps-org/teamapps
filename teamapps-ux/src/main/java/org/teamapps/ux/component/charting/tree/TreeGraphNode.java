@@ -1,6 +1,8 @@
 package org.teamapps.ux.component.charting.tree;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.ux.component.charting.common.GraphNodeIcon;
+import org.teamapps.ux.component.charting.common.GraphNodeImage;
 import org.teamapps.ux.component.template.Template;
 
 import java.util.UUID;
@@ -14,10 +16,10 @@ public class TreeGraphNode<RECORD> {
 	private Color backgroundColor = new Color(255, 255, 255);
 	private Color borderColor = new Color(100, 100, 100);
 	private float borderWidth = 1;
-	private float borderRadius = 0;
+	private float borderRadius = 3;
 
-	private TreeGraphNodeImage image;
-	private TreeGraphNodeIcon icon;
+	private GraphNodeImage image;
+	private GraphNodeIcon icon;
 
 	private Template template;
 	private RECORD record;
@@ -93,20 +95,20 @@ public class TreeGraphNode<RECORD> {
 		return this;
 	}
 
-	public TreeGraphNodeImage getImage() {
+	public GraphNodeImage getImage() {
 		return image;
 	}
 
-	public TreeGraphNode<RECORD> setImage(TreeGraphNodeImage image) {
+	public TreeGraphNode<RECORD> setImage(GraphNodeImage image) {
 		this.image = image;
 		return this;
 	}
 
-	public TreeGraphNodeIcon getIcon() {
+	public GraphNodeIcon getIcon() {
 		return icon;
 	}
 
-	public TreeGraphNode<RECORD> setIcon(TreeGraphNodeIcon icon) {
+	public TreeGraphNode<RECORD> setIcon(GraphNodeIcon icon) {
 		this.icon = icon;
 		return this;
 	}

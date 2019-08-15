@@ -1,9 +1,8 @@
 package org.teamapps.ux.component.charting.forcelayout;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiNetworkNode;
-import org.teamapps.ux.component.charting.tree.TreeGraphNodeIcon;
-import org.teamapps.ux.component.charting.tree.TreeGraphNodeImage;
+import org.teamapps.ux.component.charting.common.GraphNodeIcon;
+import org.teamapps.ux.component.charting.common.GraphNodeImage;
 import org.teamapps.ux.component.template.Template;
 
 import java.util.UUID;
@@ -18,22 +17,19 @@ public class ForceLayoutNode<RECORD> {
 	private Color backgroundColor = new Color(255, 255, 255);
 	private Color borderColor = new Color(100, 100, 100);
 	private float borderWidth = 1;
-	private float borderRadius = 0;
+	private float borderRadius = 3;
 
-	private TreeGraphNodeImage image;
-	private TreeGraphNodeIcon icon;
+	private GraphNodeImage image;
+	private GraphNodeIcon icon;
 
 	private Template template;
 
-	public ForceLayoutNode(RECORD record) {
-		this.record = record;
-	}
+	private ExpandedState expandedState = ExpandedState.NOT_EXPANDABLE;
 
-	public UiNetworkNode toUiNetworkNode() {
-		UiNetworkNode ui = new UiNetworkNode(id, record.toString() /* TODO #force */, null, width /* TODO #force */);
-		ui.setBorder(borderWidth)     ;
-		ui.setBorderColor(borderColor.toHtmlColorString());
-		return ui;
+	public ForceLayoutNode(RECORD record, int width, int height) {
+		this.record = record;
+		this.width = width;
+		this.height = height;
 	}
 
 	protected String getId() {
@@ -94,20 +90,20 @@ public class ForceLayoutNode<RECORD> {
 		return this;
 	}
 
-	public TreeGraphNodeImage getImage() {
+	public GraphNodeImage getImage() {
 		return image;
 	}
 
-	public ForceLayoutNode<RECORD> setImage(TreeGraphNodeImage image) {
+	public ForceLayoutNode<RECORD> setImage(GraphNodeImage image) {
 		this.image = image;
 		return this;
 	}
 
-	public TreeGraphNodeIcon getIcon() {
+	public GraphNodeIcon getIcon() {
 		return icon;
 	}
 
-	public ForceLayoutNode<RECORD> setIcon(TreeGraphNodeIcon icon) {
+	public ForceLayoutNode<RECORD> setIcon(GraphNodeIcon icon) {
 		this.icon = icon;
 		return this;
 	}
@@ -125,4 +121,11 @@ public class ForceLayoutNode<RECORD> {
 		return record;
 	}
 
+	public ExpandedState getExpandedState() {
+		return expandedState;
+	}
+
+	public void setExpandedState(ExpandedState expandedState) {
+		this.expandedState = expandedState;
+	}
 }
