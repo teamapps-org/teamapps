@@ -1,10 +1,10 @@
-package org.teamapps.ux.component.charting.tree;
+package org.teamapps.ux.component.charting.common;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiTreeGraphNodeImage;
 import org.teamapps.util.UiUtil;
 
-public class TreeGraphNodeImage {
+public class GraphNodeImage {
 
 	public enum CornerShape {
 		ORIGINAL, ROUNDED, CIRCLE;
@@ -24,7 +24,7 @@ public class TreeGraphNodeImage {
 	private float borderWidth = 0;
 	private Color borderColor = new Color(100, 100, 100);
 
-	public TreeGraphNodeImage(String url, int width, int height) {
+	public GraphNodeImage(String url, int width, int height) {
 		this.url = url;
 		this.width = width;
 		this.height = height;
@@ -45,7 +45,7 @@ public class TreeGraphNodeImage {
 		return url;
 	}
 
-	public TreeGraphNodeImage setUrl(String url) {
+	public GraphNodeImage setUrl(String url) {
 		this.url = url;
 		return this;
 	}
@@ -54,7 +54,7 @@ public class TreeGraphNodeImage {
 		return width;
 	}
 
-	public TreeGraphNodeImage setWidth(int width) {
+	public GraphNodeImage setWidth(int width) {
 		this.width = width;
 		return this;
 	}
@@ -63,7 +63,7 @@ public class TreeGraphNodeImage {
 		return height;
 	}
 
-	public TreeGraphNodeImage setHeight(int height) {
+	public GraphNodeImage setHeight(int height) {
 		this.height = height;
 		return this;
 	}
@@ -72,7 +72,7 @@ public class TreeGraphNodeImage {
 		return centerTopDistance;
 	}
 
-	public TreeGraphNodeImage setCenterTopDistance(int centerTopDistance) {
+	public GraphNodeImage setCenterTopDistance(int centerTopDistance) {
 		this.centerTopDistance = centerTopDistance;
 		return this;
 	}
@@ -81,7 +81,7 @@ public class TreeGraphNodeImage {
 		return centerLeftDistance;
 	}
 
-	public TreeGraphNodeImage setCenterLeftDistance(int centerLeftDistance) {
+	public GraphNodeImage setCenterLeftDistance(int centerLeftDistance) {
 		this.centerLeftDistance = centerLeftDistance;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class TreeGraphNodeImage {
 		return cornerShape;
 	}
 
-	public TreeGraphNodeImage setCornerShape(CornerShape cornerShape) {
+	public GraphNodeImage setCornerShape(CornerShape cornerShape) {
 		this.cornerShape = cornerShape;
 		return this;
 	}
@@ -99,7 +99,7 @@ public class TreeGraphNodeImage {
 		return shadow;
 	}
 
-	public TreeGraphNodeImage setShadow(boolean shadow) {
+	public GraphNodeImage setShadow(boolean shadow) {
 		this.shadow = shadow;
 		return this;
 	}
@@ -108,7 +108,7 @@ public class TreeGraphNodeImage {
 		return borderWidth;
 	}
 
-	public TreeGraphNodeImage setBorderWidth(float borderWidth) {
+	public GraphNodeImage setBorderWidth(float borderWidth) {
 		this.borderWidth = borderWidth;
 		return this;
 	}
@@ -117,7 +117,7 @@ public class TreeGraphNodeImage {
 		return borderColor;
 	}
 
-	public TreeGraphNodeImage setBorderColor(Color borderColor) {
+	public GraphNodeImage setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
 		return this;
 	}

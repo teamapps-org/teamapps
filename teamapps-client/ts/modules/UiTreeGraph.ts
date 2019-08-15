@@ -103,40 +103,75 @@ interface TreeChart {
 	getChartState: () => TreeChartAttributes;
 
 	svgWidth(): number;
+
 	svgWidth(svgWidth: number): TreeChart;
+
 	svgHeight(): number;
+
 	svgHeight(marginTop: number): TreeChart;
+
 	marginTop(): number;
+
 	marginTop(marginTop: number): TreeChart;
+
 	marginBottom(): number;
+
 	marginBottom(marginBottom: number): TreeChart;
+
 	marginRight(): number;
+
 	marginRight(marginRight: number): TreeChart;
+
 	marginLeft(): number;
+
 	marginLeft(marginLeft: number): TreeChart;
+
 	container(): string | HTMLElement;
+
 	container(container: string | HTMLElement): TreeChart;
+
 	defaultTextFill(): string;
+
 	defaultTextFill(defaultTextFill: string): TreeChart;
+
 	nodeTextFill(): string;
+
 	nodeTextFill(nodeTextFill: string): TreeChart;
+
 	defaultFont(): string;
+
 	defaultFont(defaultFont: string): TreeChart;
+
 	backgroundColor(): string;
+
 	backgroundColor(backgroundColor: string): TreeChart;
+
 	data(): UiTreeGraphNodeConfig[];
+
 	data(data: UiTreeGraphNodeConfig[]): TreeChart;
+
 	depth(): number;
+
 	depth(depth: number): TreeChart;
+
 	duration(): number;
+
 	duration(duration: number): TreeChart;
+
 	strokeWidth(): number;
+
 	strokeWidth(strokeWidth: number): TreeChart;
+
 	initialZoom(): number;
+
 	initialZoom(initialZoom: number): TreeChart;
+
 	onNodeClick(): (nodeId: string) => void;
+
 	onNodeClick(onNodeClick: (nodeId: string) => void): TreeChart;
+
 	onNodeExpandedOrCollapsed(): (nodeId: string, expanded: boolean) => void;
+
 	onNodeExpandedOrCollapsed(onNodeExpandedOrCollapsed: (nodeId: string, expanded: boolean) => void): TreeChart;
 }
 
@@ -409,9 +444,9 @@ class TreeChart {
 		//Add svg
 
 		const svg = patternify<SVGElement, void, Element, void>(container, {
-				tag: 'svg',
-				selector: 'svg-chart-container'
-			})
+			tag: 'svg',
+			selector: 'svg-chart-container'
+		})
 			.attr('width', attrs.svgWidth)
 			.attr('height', attrs.svgHeight)
 			.attr('font-family', attrs.defaultFont)
@@ -422,10 +457,10 @@ class TreeChart {
 
 		//Add container g element
 		this.chart = patternify<SVGGElement, void, SVGElement, void>(svg, {
-				tag: 'g',
-				selector: 'chart'
-			})
-			// .attr('transform', `translate(${calc.chartLeftMargin},${calc.chartTopMargin}) scale(${d3.zoomTransform(svg.node()).k})`);
+			tag: 'g',
+			selector: 'chart'
+		})
+		// .attr('transform', `translate(${calc.chartLeftMargin},${calc.chartTopMargin}) scale(${d3.zoomTransform(svg.node()).k})`);
 
 		// Add one more container g element, for better positioning controls
 		attrs.centerG = patternify(this.chart, {
@@ -809,31 +844,26 @@ class TreeChart {
 			.attr('class', 'node')
 			.attr("transform", () => `translate(${x0},${y0})`)
 			.attr('cursor', 'pointer')
-			.on('click', ({
-				              data
-			              }: HierarchyNode) => {
+			.on('click', (d: HierarchyNode) => {
 				if (d3.event.srcElement.classList.contains('node-button-circle')) {
 					return;
 				}
-				attrs.onNodeClick(data.id);
+				attrs.onNodeClick(d.data.id);
 			});
 
 		// Add background rectangle for the nodes
 		patternify(nodeEnter, {
-				tag: 'rect',
-				selector: 'node-rect',
-				data: (d: HierarchyNode) => [d]
-			})
-			.style("fill", ({
-				                _children
-			                }: HierarchyNode) => _children ? "lightsteelblue" : "#fff")
+			tag: 'rect',
+			selector: 'node-rect',
+			data: (d: HierarchyNode) => [d]
+		});
 
 		// Add node icon image inside node
 		patternify(nodeEnter, {
-				tag: 'image',
-				selector: 'node-icon-image',
-				data: (d: HierarchyNode) => d.data.icon ? [d] : []
-			})
+			tag: 'image',
+			selector: 'node-icon-image',
+			data: (d: HierarchyNode) => d.data.icon ? [d] : []
+		})
 			.attr('width', ({
 				                data
 			                }: HierarchyNode) => data.icon.size)
@@ -860,10 +890,10 @@ class TreeChart {
 
 		// Add background rectangle for node image
 		patternify(imageGroups, {
-				tag: 'rect',
-				selector: 'node-image-rect',
-				data: (d: HierarchyNode) => [d]
-			})
+			tag: 'rect',
+			selector: 'node-image-rect',
+			data: (d: HierarchyNode) => [d]
+		})
 
 		// Node update styles
 		const nodeUpdate = nodeEnter.merge(nodesSelection)
@@ -872,10 +902,10 @@ class TreeChart {
 
 		// Add foreignObject element inside rectangle
 		const fo = patternify(nodeUpdate, {
-				tag: 'foreignObject',
-				selector: 'node-foreign-object',
-				data: (d: HierarchyNode) => [d]
-			})
+			tag: 'foreignObject',
+			selector: 'node-foreign-object',
+			data: (d: HierarchyNode) => [d]
+		})
 
 
 		// Add foreign object
@@ -890,29 +920,29 @@ class TreeChart {
 
 		// Add Node button circle's group (expand-collapse button)
 		const nodeButtonGroups = patternify(nodeEnter, {
-				tag: 'g',
-				selector: 'node-button-g',
-				data: (d: HierarchyNode) => [d]
+			tag: 'g',
+			selector: 'node-button-g',
+			data: (d: HierarchyNode) => [d]
+		})
+			.on('mousedown', (d: HierarchyNode) => {
+				let expanding = !d.children;
+				this.onButtonClick(d);
+				attrs.onNodeExpandedOrCollapsed(d.data.id, expanding);
 			})
-        .on('mousedown', (d: HierarchyNode) => {
-	        let expanding = !d.children;
-        	this.onButtonClick(d);
-	        attrs.onNodeExpandedOrCollapsed(d.data.id, expanding);
-        })
 
 		// Add expand collapse button circle
 		patternify(nodeButtonGroups, {
-				tag: 'circle',
-				selector: 'node-button-circle',
-				data: (d: HierarchyNode) => [d]
-			})
+			tag: 'circle',
+			selector: 'node-button-circle',
+			data: (d: HierarchyNode) => [d]
+		})
 
 		// Add button text
 		patternify(nodeButtonGroups, {
-				tag: 'text',
-				selector: 'node-button-text',
-				data: (d: HierarchyNode) => [d]
-			})
+			tag: 'text',
+			selector: 'node-button-text',
+			data: (d: HierarchyNode) => [d]
+		})
 			.attr('pointer-events', 'none')
 
 		// Transition to the proper position for the node
@@ -1353,19 +1383,15 @@ export function patternify<E extends BaseType, ED, P extends BaseType = null, PD
 	var data = params.data || [selector];
 
 	// Pattern in action
-	var selection = container.selectAll<E, ED>('.' + selector).data(data, (d: any, i: number) => {
-		if (typeof d === 'object') {
-			if (d.id) {
+	var selection = container.selectAll<E, ED>('.' + selector)
+		.data(data, (d: any, i: number) => {
+			if (typeof d === 'object' && d.id) {
 				return d.id;
 			}
-		}
-		return i;
-	}) as Selection<E, ED, P, PD>;
+			return i;
+		}) as Selection<E, ED, P, PD>;
 	selection.exit().remove();
 	selection = selection.enter().append<E>(elementTag).merge(selection);
 	selection.attr('class', selector);
 	return selection;
 }
-
-
-module.exports = TreeChart;

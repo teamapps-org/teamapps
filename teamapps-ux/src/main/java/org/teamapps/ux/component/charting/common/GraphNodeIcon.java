@@ -1,15 +1,15 @@
-package org.teamapps.ux.component.charting.tree;
+package org.teamapps.ux.component.charting.common;
 
 import org.teamapps.dto.UiTreeGraphNodeIcon;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.session.CurrentSessionContext;
 
-public class TreeGraphNodeIcon {
+public class GraphNodeIcon {
 
 	private final Icon icon;
 	private final int size;
 
-	public TreeGraphNodeIcon(Icon icon, int size) {
+	public GraphNodeIcon(Icon icon, int size) {
 		this.icon = icon;
 		this.size = size;
 	}
