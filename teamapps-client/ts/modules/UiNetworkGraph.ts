@@ -21,7 +21,7 @@
 
 
 import * as d3 from "d3";
-import {Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
+import {Simulation, SimulationLinkDatum} from "d3";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
@@ -46,10 +46,11 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiNetworkGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private $graph: HTMLElement;
-	private svg: any;
-	private svgContainer: any;
+	private svg: d3.Selection<SVGGElement, any, null, undefined>;
+	private svgContainer: d3.Selection<SVGElement, any, null, undefined>;
 	private rect: any;
-	private container: any;
+	private container: d3.Selection<SVGGElement, any, null, undefined>;
+	private linksContainer: d3.Selection<SVGGElement, any, null, undefined>;
 	private nodeEnter: any;
 	private linkEnter: any;
 	private simulation: Simulation<UiNetworkNodeConfig & any, undefined>;
@@ -99,10 +100,8 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				this.container.attr("transform", d3.event.transform);
 			});
 
-		this.logger.debug("Add svg:" + "#" + this.getId() + ":" + d3.select("#" + this.getId()));
-		this.svgContainer = d3.select(this.getMainDomElement()).append("svg")
-			.attr("width", this.getWidth())
-			.attr("height", this.getHeight());
+		this.svgContainer = d3.select(this.getMainDomElement())
+			.append("svg");
 		this.svg = this.svgContainer
 			.append("g")
 			.call(this.zoom)
@@ -117,7 +116,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		this.container = this.svg.append("g");
 
 		console.log(this.getWidth());
-		this.zoom.translateBy(this.svg, this.getWidth()/2, this.getHeight()/2);
+		this.zoom.translateBy(this.svg, this.getWidth() / 2, this.getHeight() / 2);
 
 		var defs = this.svg.append("defs").attr("id", "imgdefs");
 		for (let i = 0; i < images.length; i++) {
@@ -138,55 +137,18 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		}
 
 
-		this.linkEnter = this.container.append("g")
+		this.linksContainer = this.container.append("g")
 			.attr("class", "links")
-			.selectAll(".link")
-			.data(linksData)
-			.enter()
-			.append("path")
-			.attr("class", "link")
-			.style("stroke-width", (d: any) => {
-				if (d.width && d.width > 0) {
-					return d.width;
-				} else {
-					return 1.5;
-				}
-			})
-			.style("stroke", (d: any) => {
-				if (d.color) {
-					return createUiColorCssString(d.color);
-				} else {
-					return "#555";
-				}
-			});
+			.attr("stroke", "#999");
 
 		this.simulation.on("tick", () => {
-			this.linkEnter.attr("d", (d: any) => {
-				var dx = d.target.x - d.source.x,
-					dy = d.target.y - d.source.y,
-					dr = Math.sqrt(dx * dx + dy * dy);
-				return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
-			});
-
-			this.renderNodes(this.container, nodesData)
+			this.renderLinks(linksData);
+			this.renderNodes(nodesData);
 		});
-
-		this.renderNodes(this.container, nodesData);
-
 	}
 
 	public onResize(): void {
-		var width = $(this.$graph).width();
-		var height = $(this.$graph).height();
-
-		this.logger.debug("resize w:" + width + ", h:" + height);
-
-		this.svgContainer.attr('width', width).attr('height', height);
-		this.rect.attr('width', width).attr('height', height);
-		this.container.attr('width', width).attr('height', height);
-		// if (this.force) {
-		// 	this.force.size([width, height]).resume();
-		// }
+		this.rect.attr('width', this.getWidth()).attr('height', this.getHeight());
 	}
 
 	public setZoomFactor(zoomFactor: number): void {
@@ -213,9 +175,22 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		// nothing to do
 	}
 
+	private renderLinks(linksData: any[]) {
+		const link = this.linksContainer.selectAll("line")
+			.data(linksData)
+			.join(
+				enter => enter.append("line"),
+				update => update
+					.attr("x1", (d: any) => d.source.x)
+					.attr("y1", (d: any) => d.source.y)
+					.attr("x2", (d: any) => d.target.x)
+					.attr("y2", (d: any) => d.target.y)
+			);
+	}
 
-	private renderNodes(container: any, nodesData: any[]): void {
-		const nodesSelection = container.selectAll('g.node')
+
+	private renderNodes(nodesData: any[]): void {
+		const nodesSelection: d3.Selection<SVGGElement, any, SVGGElement, any> = this.container.selectAll<SVGGElement, any>('g.node')
 			.data(nodesData, ({
 				                  id
 			                  }: UiNetworkNodeConfig) => id);
@@ -387,9 +362,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr('r', 10)
 			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
 			.attr('fill', "white")
-			.attr('stroke', ({
-				                 borderColor
-			                 }: UiNetworkNodeConfig) => borderColor);
+			.attr('stroke', (d: UiNetworkNodeConfig) => createUiColorCssString(d.borderColor));
 
 		// Remove any exiting nodes after transition
 		const nodeExitTransition = nodesSelection.exit()
