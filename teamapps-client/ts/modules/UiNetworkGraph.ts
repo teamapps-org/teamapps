@@ -39,6 +39,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {patternify} from "./UiTreeGraph";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
+import {UiNetworkLinkConfig} from "../generated/UiNetworkLinkConfig";
 
 export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> implements UiNetworkGraphCommandHandler, UiNetworkGraphEventSource {
 
@@ -51,18 +52,21 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	private rect: any;
 	private container: d3.Selection<SVGGElement, any, null, undefined>;
 	private linksContainer: d3.Selection<SVGGElement, any, null, undefined>;
-	private nodeEnter: any;
-	private linkEnter: any;
 	private simulation: Simulation<UiNetworkNodeConfig & any, undefined>;
 	private zoom: any;
-	private linkedByIndex: any = {};
-	private toggle = 0;
+
+	private nodes: UiNetworkNodeConfig & any;
+	private links: UiNetworkLinkConfig & any;
+
 
 	constructor(config: UiNetworkGraphConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$graph = parseHtml('<div class="UiNetworkGraph" id="' + this.getId() + '">');
 
-		this.createGraph(config.gravity, config.images, config.nodes, config.links);
+		this.links = config.links;
+		this.nodes = config.nodes;
+
+		this.createGraph(config.gravity, config.images);
 	}
 
 	public getMainDomElement(): HTMLElement {
@@ -70,23 +74,25 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	}
 
 	@executeWhenFirstDisplayed()
-	public createGraph(gravity: any, images: any, nodesData: any, linksData: any) {
+	public createGraph(gravity: any, images: any) {
 		this.simulation = d3.forceSimulation<UiNetworkNodeConfig & any>()
 			.force("charge", d3.forceManyBody())
-			.nodes(nodesData)
-			.force("link", d3.forceLink(linksData)
+			.nodes(this.nodes)
+			.force("link", d3.forceLink(this.links)
 				.id(d => (d as UiNetworkNodeConfig).id)
 				.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
-					let number1 = Math.max(link.source.width, link.source.height);
-					let number2 = Math.max(link.target.width, link.target.height);
-					let number = (number1 + number2) * 0.75;
-					console.log(number1, number2, number);
-					return number;
+					return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * 0.75;
 				}))
 			.force("center", d3.forceCenter(this.getWidth() / 2, this.getWidth() / 2))
 			.force("collide", d3.forceCollide((a: UiNetworkNodeConfig & any) => {
 				return Math.sqrt(a.width * a.width + a.height * a.height) * .6;
-			}));
+			}))
+			.stop();
+
+		for (var i = 0, n = Math.ceil(Math.log(this.simulation.alphaMin()) / Math.log(1 - this.simulation.alphaDecay())); i < n; ++i) {
+			console.log(Math.ceil(Math.log(this.simulation.alphaMin()) / Math.log(1 - this.simulation.alphaDecay())));
+			this.simulation.tick();
+		}
 
 		if (this.svgContainer) {
 			this.logger.debug("remove svg-container");
@@ -115,7 +121,6 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 		this.container = this.svg.append("g");
 
-		console.log(this.getWidth());
 		this.zoom.translateBy(this.svg, this.getWidth() / 2, this.getHeight() / 2);
 
 		var defs = this.svg.append("defs").attr("id", "imgdefs");
@@ -142,9 +147,12 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr("stroke", "#999");
 
 		this.simulation.on("tick", () => {
-			this.renderLinks(linksData);
-			this.renderNodes(nodesData);
+			this.renderLinks();
+			this.renderNodes();
 		});
+
+		this.renderLinks();
+		this.renderNodes();
 	}
 
 	public onResize(): void {
@@ -175,11 +183,15 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		// nothing to do
 	}
 
-	private renderLinks(linksData: any[]) {
+	private renderLinks() {
 		const link = this.linksContainer.selectAll("line")
-			.data(linksData)
+			.data(this.links)
 			.join(
-				enter => enter.append("line"),
+				enter => enter.append("line")
+					.attr("x1", (d: any) => d.source.x)
+					.attr("y1", (d: any) => d.source.y)
+					.attr("x2", (d: any) => d.target.x)
+					.attr("y2", (d: any) => d.target.y),
 				update => update
 					.attr("x1", (d: any) => d.source.x)
 					.attr("y1", (d: any) => d.source.y)
@@ -189,9 +201,9 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	}
 
 
-	private renderNodes(nodesData: any[]): void {
+	private renderNodes(): void {
 		const nodesSelection: d3.Selection<SVGGElement, any, SVGGElement, any> = this.container.selectAll<SVGGElement, any>('g.node')
-			.data(nodesData, ({
+			.data(this.nodes, ({
 				                  id
 			                  }: UiNetworkNodeConfig) => id);
 
@@ -200,7 +212,6 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr('class', 'node')
 			.attr('cursor', 'pointer')
 			.on('mousedown', (d: UiNetworkNodeConfig) => {
-				console.log("click");
 				if (d3.event.srcElement.classList.contains('node-button-circle')) {
 					return;
 				}
@@ -215,9 +226,9 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 		nodeEnter.call(d3.drag()
 			.on("start", (d: any, i: number, nodes: Element[]) => {
-				if (!d3.event.active) {
-					this.simulation.alphaTarget(0.3).restart();
-				}
+				// if (!d3.event.active) {
+				// 	this.simulation.alphaTarget(0.3).restart();
+				// }
 				d3.select(nodes[i]).raise();
 
 				d.fx = d.x;
@@ -226,16 +237,14 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				this.container.attr("cursor", "grabbing");
 			})
 			.on("drag", (d: any, i: number, nodes: Element[]) => {
-				d.fx = d3.event.x;
-				d.fy = d3.event.y;
+				d.fx = d.x = d3.event.x;
+				d.fy = d.y = d3.event.y;
+				this.renderLinks();
+				this.renderNodes();
 			})
 			.on("end", (d: any) => {
-				if (!d3.event.active) {
-					this.simulation.alphaTarget(0);
-				}
-				// if (!d.fixed) {
-				// 	d.fx = null;
-				// 	d.fy = null;
+				// if (!d3.event.active) {
+				// 	this.simulation.alphaTarget(0);
 				// }
 				this.container.attr("cursor", "grab")
 			})
@@ -271,7 +280,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		// Node update styles
 		const nodeUpdate = nodeEnter.merge(nodesSelection)
 			.style('font', '12px sans-serif')
-			.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
+			.attr("transform", (d: any) => `translate(${d.fx != null ? d.fx : d.x},${d.fy != null ? d.fy : d.y})`);
 
 
 		// Add foreignObject element inside rectangle
