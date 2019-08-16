@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.application;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.ux.application.assembler.DesktopApplicationAssembler;
 import org.teamapps.ux.application.assembler.MobileApplicationAssembler;
 import org.teamapps.ux.application.perspective.Perspective;
@@ -71,4 +72,5 @@ public interface ResponsiveApplication extends Application {
 
 	List<ToolbarButtonGroup> getWorkspaceButtonGroups();
 
+	void setToolbarBackgroundColor(Color backgroundColor);
 }
