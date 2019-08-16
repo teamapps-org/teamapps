@@ -57,8 +57,3 @@ class UiCalendarEventClientRecord extends UiIdentifiableClientRecord {
     UiColor borderColor;
     UiCalendarEventRenderingStyle rendering;
 }
-
-class UiMapMarkerClientRecord extends UiIdentifiableClientRecord {
-	UiMapLocation location;
-    String templateId; // null == use asString
-}

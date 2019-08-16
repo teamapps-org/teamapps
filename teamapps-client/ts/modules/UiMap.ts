@@ -184,6 +184,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		let divIcon = L.divIcon({
 			html: renderer.render(markerConfig.values),
 			className: "custom-div-icon",
+			iconAnchor: [markerConfig.offsetPixelsX, markerConfig.offsetPixelsY],
 			popupAnchor: [(iconWidth / 2) - 6, -5]
 		} as L.DivIconOptions);
 		let marker = L.marker(new L.LatLng(markerConfig.location.latitude, markerConfig.location.longitude), {

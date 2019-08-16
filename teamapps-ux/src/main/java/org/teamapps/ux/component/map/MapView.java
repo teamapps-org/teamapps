@@ -101,6 +101,8 @@ public class MapView<RECORD> extends AbstractComponent {
 		} else {
 			clientRecord.setAsString("" + marker.getData());
 		}
+		clientRecord.setOffsetPixelsX(marker.getOffsetPixelsX());
+		clientRecord.setOffsetPixelsY(marker.getOffsetPixelsY());
 		return clientRecord;
 	}
 

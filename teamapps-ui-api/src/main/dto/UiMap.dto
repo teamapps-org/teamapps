@@ -80,6 +80,13 @@ class UiMapPolyline {
 	UiShapeProperties shapeProperties;
 }
 
+class UiMapMarkerClientRecord extends UiIdentifiableClientRecord {
+	UiMapLocation location;
+    String templateId; // null == use asString
+    int offsetPixelsX;
+    int offsetPixelsY;
+}
+
 class UiMapMarkerCluster {
 	required List<UiMapMarkerClientRecord> markers;
 }
