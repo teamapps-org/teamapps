@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.application;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.ux.application.assembler.ApplicationAssembler;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.perspective.PerspectiveChangeHandler;
@@ -231,6 +232,11 @@ public class ResponsiveApplicationImpl implements ResponsiveApplication {
     @Override
     public List<ToolbarButtonGroup> getWorkspaceButtonGroups() {
         return workspaceToolbarButtonGroups;
+    }
+
+    @Override
+    public void setToolbarBackgroundColor(Color backgroundColor) {
+        responsiveApplicationToolbar.getToolbar().setBackgroundColor(backgroundColor);
     }
 
     @Override
