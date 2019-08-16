@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,7 @@ package org.teamapps.ux.component.map;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.dto.UiComboBox;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiMap;
@@ -30,7 +31,6 @@ import org.teamapps.dto.UiMapPolyline;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
-import org.teamapps.ux.cache.ClientTemplateCache;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
 import org.teamapps.ux.component.template.Template;
@@ -56,7 +56,12 @@ public class MapView<RECORD> extends AbstractComponent {
 	private List<Marker<RECORD>> markers = new ArrayList<>();
 
 	private final ClientRecordCache<Marker<RECORD>, UiMapMarkerClientRecord> recordCache = new ClientRecordCache<>(this::createUiRecord);
-	private ClientTemplateCache<Marker<RECORD>> templateCache = new ClientTemplateCache<>(this::registerTemplate);
+
+	private Template defaultTemplate;
+	private TemplateDecider<Marker<RECORD>> templateDecider = m -> defaultTemplate;
+	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
+	private int templateIdCounter = 0;
+
 	private PropertyExtractor<RECORD> markerPropertyExtractor = new BeanPropertyExtractor<>();
 
 	public MapView(String accessToken) {
@@ -68,7 +73,8 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiMap uiMap = new UiMap(new HashMap<>());
+		UiMap uiMap = new UiMap(templateIdsByTemplate.entrySet().stream()
+				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 		mapAbstractUiComponentProperties(uiMap);
 		uiMap.setMapType(mapType.toUiMapType());
 		uiMap.setAccessToken(accessToken);
@@ -88,18 +94,14 @@ public class MapView<RECORD> extends AbstractComponent {
 	private UiMapMarkerClientRecord createUiRecord(Marker<RECORD> marker) {
 		UiMapMarkerClientRecord clientRecord = new UiMapMarkerClientRecord();
 		clientRecord.setLocation(marker.getLocation().createUiLocation());
-		ClientTemplateCache.TemplateWithClientId templateWithClientId = templateCache.getTemplateIdForRecord(marker);
-		if (templateWithClientId.getTemplate() != null) {
-			clientRecord.setTemplateId("" + templateWithClientId.getClientId());
-			clientRecord.setValues(markerPropertyExtractor.getValues(marker.getData(), templateWithClientId.getTemplate().getDataKeys()));
+		Template template = getTemplateForRecord(marker, templateDecider);
+		if (template != null) {
+			clientRecord.setTemplateId(templateIdsByTemplate.get(template));
+			clientRecord.setValues(markerPropertyExtractor.getValues(marker.getData(), template.getDataKeys()));
 		} else {
 			clientRecord.setAsString("" + marker.getData());
 		}
 		return clientRecord;
-	}
-
-	private void registerTemplate(int id, Template template) {
-		queueCommandIfRendered(() -> new UiMap.RegisterTemplateCommand(getId(), "" + id, template.createUiTemplate()));
 	}
 
 	@Override
@@ -146,6 +148,16 @@ public class MapView<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiMap.RemovePolylineCommand(getId(), polyline.getClientId()));
 	}
 
+	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {
+		Template template = templateDecider.getTemplate(record);
+		if (template != null && !templateIdsByTemplate.containsKey(template)) {
+			String uuid = "" + templateIdCounter++;
+			this.templateIdsByTemplate.put(template, uuid);
+			queueCommandIfRendered(() -> new UiComboBox.RegisterTemplateCommand(getId(), uuid, template.createUiTemplate()));
+		}
+		return template;
+	}
+
 	public MapType getMapType() {
 		return mapType;
 	}
@@ -190,7 +202,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		CacheManipulationHandle<UiMapMarkerClientRecord> cacheResponse = recordCache.addRecord(marker);
 		if (isRendered()) {
 			getSessionContext().queueCommand(new UiMap.AddMarkerCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
-		}   else {
+		} else {
 			cacheResponse.commit();
 		}
 	}
@@ -207,12 +219,20 @@ public class MapView<RECORD> extends AbstractComponent {
 		}
 	}
 
+	public Template getDefaultTemplate() {
+		return defaultTemplate;
+	}
+
 	public void setDefaultMarkerTemplate(Template defaultTemplate) {
-		templateCache.setDefaultTemplate(defaultTemplate);
+		this.defaultTemplate = defaultTemplate;
+	}
+
+	public TemplateDecider<Marker<RECORD>> getTemplateDecider() {
+		return templateDecider;
 	}
 
 	public void setMarkerTemplateDecider(TemplateDecider<Marker<RECORD>> templateDecider) {
-		templateCache.setTemplateDecider(templateDecider);
+		this.templateDecider = templateDecider;
 	}
 
 	public PropertyExtractor<RECORD> getMarkerPropertyExtractor() {
