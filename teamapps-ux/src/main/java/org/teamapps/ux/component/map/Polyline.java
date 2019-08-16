@@ -31,10 +31,10 @@ public class Polyline {
 
 	private final String clientId = UUID.randomUUID().toString();
 	private final ShapeProperties properties;
-	private final ArrayList<Location> locations;
+	private final List<Location> locations;
 	private PolylineListener listener;
 
-	public Polyline(ShapeProperties properties, ArrayList<Location> locations) {
+	public Polyline(ShapeProperties properties, List<Location> locations) {
 		this.properties = properties;
 		this.locations = locations;
 	}
@@ -65,7 +65,7 @@ public class Polyline {
 		return properties;
 	}
 
-	public ArrayList<Location> getLocations() {
+	public List<Location> getLocations() {
 		return locations;
 	}
 
