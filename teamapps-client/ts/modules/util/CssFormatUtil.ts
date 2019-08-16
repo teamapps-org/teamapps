@@ -95,19 +95,19 @@ export function createUiBorderCssObject(borderConfig: UiBorderConfig): CssProper
 	} else {
 		let css: CssPropertyObject = {};
 		if (borderConfig.top) {
-			css['borderTop'] = createUiLineCssString(borderConfig.top);
+			css['border-top'] = createUiLineCssString(borderConfig.top);
 		}
 		if (borderConfig.left) {
-			css['borderLeft'] = createUiLineCssString(borderConfig.left);
+			css['border-left'] = createUiLineCssString(borderConfig.left);
 		}
 		if (borderConfig.bottom) {
-			css['borderBottom'] = createUiLineCssString(borderConfig.bottom);
+			css['border-bottom'] = createUiLineCssString(borderConfig.bottom);
 		}
 		if (borderConfig.right) {
-			css['borderRight'] = createUiLineCssString(borderConfig.right);
+			css['border-right'] = createUiLineCssString(borderConfig.right);
 		}
 		if (borderConfig.borderRadius) {
-			css['borderRadius'] = borderConfig.borderRadius + 'px';
+			css['border-radius'] = borderConfig.borderRadius + 'px';
 		}
 		return css;
 	}
