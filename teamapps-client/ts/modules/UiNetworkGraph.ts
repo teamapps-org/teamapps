@@ -184,28 +184,24 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	}
 
 	private renderLinks() {
-		const link = this.linksContainer.selectAll("line")
+		this.linksContainer.selectAll("line")
 			.data(this.links)
-			.join(
-				enter => enter.append("line")
-					.attr("x1", (d: any) => d.source.x)
-					.attr("y1", (d: any) => d.source.y)
-					.attr("x2", (d: any) => d.target.x)
-					.attr("y2", (d: any) => d.target.y),
-				update => update
-					.attr("x1", (d: any) => d.source.x)
-					.attr("y1", (d: any) => d.source.y)
-					.attr("x2", (d: any) => d.target.x)
-					.attr("y2", (d: any) => d.target.y)
-			);
+			.join("line")
+			.attr("x1", (d: any) => d.source.x)
+			.attr("y1", (d: any) => d.source.y)
+			.attr("x2", (d: any) => d.target.x)
+			.attr("y2", (d: any) => d.target.y)
+			.attr("stroke-width", (d: UiNetworkLinkConfig) => d.lineWidth || 2)
+			.attr('stroke', (d: UiNetworkLinkConfig) => createUiColorCssString(d.lineColor))
+			.attr('stroke-dasharray', (d: UiNetworkLinkConfig) => d.lineDashArray ? d.lineDashArray : null)
 	}
 
 
 	private renderNodes(): void {
 		const nodesSelection: d3.Selection<SVGGElement, any, SVGGElement, any> = this.container.selectAll<SVGGElement, any>('g.node')
 			.data(this.nodes, ({
-				                  id
-			                  }: UiNetworkNodeConfig) => id);
+				                   id
+			                   }: UiNetworkNodeConfig) => id);
 
 		// Enter any new nodes at the parent's previous position.
 		const nodeEnter = nodesSelection.enter().append('g')

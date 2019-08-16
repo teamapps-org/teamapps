@@ -59,9 +59,9 @@ class UiNetworkNode {
 class UiNetworkLink {
 	required String source;
 	required String target;
-	float width = 1.5f;
-	int distance = 30;
-	String color = "#333";
+	UiColor lineColor = new UiColor(127, 127, 127);
+	float lineWidth = 1.5f;
+	String lineDashArray;
 }
 
 class UiNetworkImage {

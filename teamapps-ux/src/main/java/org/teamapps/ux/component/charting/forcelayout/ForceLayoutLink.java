@@ -2,15 +2,16 @@ package org.teamapps.ux.component.charting.forcelayout;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiNetworkLink;
+import org.teamapps.util.UiUtil;
 
 public class ForceLayoutLink {
 
 	private final ForceLayoutNode source;
 	private final ForceLayoutNode target;
 
-	private float width = 1.5f;
-	private int distance = 30;
-	private Color color = Color.BLACK;
+	private float lineWidth = 1f;
+	private Color lineColor = Color.MATERIAL_GREY_500;
+	private String lineDashArray;
 
 	public ForceLayoutLink(ForceLayoutNode source, ForceLayoutNode target) {
 		this.source = source;
@@ -19,9 +20,9 @@ public class ForceLayoutLink {
 
 	public UiNetworkLink toUiNetworkLink() {
 		UiNetworkLink ui = new UiNetworkLink(source.getId(), target.getId());
-		ui.setWidth(width);
-		ui.setDistance(distance);
-		ui.setColor(color.toHtmlColorString());
+		ui.setLineWidth(lineWidth);
+		ui.setLineColor(UiUtil.createUiColor(lineColor));
+		ui.setLineDashArray(lineDashArray);
 		return ui;
 	}
 
@@ -33,27 +34,27 @@ public class ForceLayoutLink {
 		return target;
 	}
 
-	public float getWidth() {
-		return width;
+	public float getLineWidth() {
+		return lineWidth;
 	}
 
-	public void setWidth(float width) {
-		this.width = width;
+	public void setLineWidth(float lineWidth) {
+		this.lineWidth = lineWidth;
 	}
 
-	public int getDistance() {
-		return distance;
+	public Color getLineColor() {
+		return lineColor;
 	}
 
-	public void setDistance(int distance) {
-		this.distance = distance;
+	public void setLineColor(Color lineColor) {
+		this.lineColor = lineColor;
 	}
 
-	public Color getColor() {
-		return color;
+	public String getLineDashArray() {
+		return lineDashArray;
 	}
 
-	public void setColor(Color color) {
-		this.color = color;
+	public void setLineDashArray(String lineDashArray) {
+		this.lineDashArray = lineDashArray;
 	}
 }
