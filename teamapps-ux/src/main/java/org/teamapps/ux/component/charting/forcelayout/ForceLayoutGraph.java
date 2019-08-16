@@ -26,6 +26,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	private final List<ForceLayoutNode<RECORD>> nodes;
 	private final List<ForceLayoutLink> links;
 
+	private int initialAnimationDuration = 1000;
 	// private float gravity = 0.1f;
 	// private float theta = 0.3f;
 	// private float alpha = 0.1f;
@@ -53,6 +54,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 				.map(l -> l.toUiNetworkLink())
 				.collect(Collectors.toList());
 		UiNetworkGraph ui = new UiNetworkGraph(nodes, links, Collections.emptyList());
+		ui.setInitialAnimationDuration(initialAnimationDuration);
 		mapAbstractUiComponentProperties(ui);
 		return ui;
 	}
@@ -99,5 +101,11 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		}
 	}
 
+	public int getInitialAnimationDuration() {
+		return initialAnimationDuration;
+	}
 
+	public void setInitialAnimationDuration(int initialAnimationDuration) {
+		this.initialAnimationDuration = initialAnimationDuration;
+	}
 }

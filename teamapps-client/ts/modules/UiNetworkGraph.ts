@@ -88,9 +88,12 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			}))
 			.stop();
 
-		for (var i = 0, n = Math.ceil(Math.log(this.simulation.alphaMin()) / Math.log(1 - this.simulation.alphaDecay())); i < n; ++i) {
-			this.simulation.tick();
-		}
+		this.simulation.on("tick", () => {
+			this.updateLinks();
+			this.updateNodes();
+		});
+
+		this.calculateFinalNodePositions();
 
 		if (this.svg) {
 			this.logger.debug("remove svg-container");
@@ -140,15 +143,22 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr("class", "links")
 			.attr("stroke", "#999");
 
-		this.simulation.on("tick", () => {
-			this.renderLinks();
-			this.renderNodes();
-		});
+		// set zoom to center before animating...
+		this.svg.call(
+			this.zoom.transform,
+			d3.zoomIdentity.scale(1).translate(this.getWidth()/2, this.getHeight()/2)
+		);
 
-		this.renderLinks();
-		this.renderNodes();
+		this.updateLinks(this._config.initialAnimationDuration);
+		this.updateNodes(this._config.initialAnimationDuration);
+		this.zoomAllNodesIntoView(this._config.initialAnimationDuration);
+	}
 
-		this.zoomAllNodesIntoView(1000);
+	private calculateFinalNodePositions() {
+		let iterations = Math.ceil(Math.log(this.simulation.alphaMin()) / Math.log(1 - this.simulation.alphaDecay()));
+		for (var i = 0, n = iterations; i < n; ++i) {
+			this.simulation.tick();
+		}
 	}
 
 	public zoomAllNodesIntoView(animationDuration: number) {
@@ -156,7 +166,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			let leftBound = node.x - node.width / 2;
 			let rightBound = node.x + node.width / 2;
 			let topBound = node.y - node.height / 2;
-			let bottomBound = node.y + node.height / 2;
+			let bottomBound = node.y + 10 + node.height / 2;
 			if (leftBound < globalBounds.minX) {
 				globalBounds.minX = leftBound;
 			}
@@ -235,21 +245,23 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		// nothing to do
 	}
 
-	private renderLinks() {
+	private updateLinks(animationDuration: number = 0) {
 		this.linksContainer.selectAll("line")
 			.data(this.links)
 			.join("line")
+			.attr("stroke-width", (d: UiNetworkLinkConfig) => d.lineWidth || 2)
+			.attr('stroke', (d: UiNetworkLinkConfig) => createUiColorCssString(d.lineColor))
+			.attr('stroke-dasharray', (d: UiNetworkLinkConfig) => d.lineDashArray ? d.lineDashArray : null)
+			.transition()
+			.duration(animationDuration)
 			.attr("x1", (d: any) => d.source.x)
 			.attr("y1", (d: any) => d.source.y)
 			.attr("x2", (d: any) => d.target.x)
 			.attr("y2", (d: any) => d.target.y)
-			.attr("stroke-width", (d: UiNetworkLinkConfig) => d.lineWidth || 2)
-			.attr('stroke', (d: UiNetworkLinkConfig) => createUiColorCssString(d.lineColor))
-			.attr('stroke-dasharray', (d: UiNetworkLinkConfig) => d.lineDashArray ? d.lineDashArray : null)
 	}
 
 
-	private renderNodes(): void {
+	private updateNodes(animationDuration: number = 0): void {
 		const nodesSelection: d3.Selection<SVGGElement, any, SVGGElement, any> = this.container.selectAll<SVGGElement, any>('g.node')
 			.data(this.nodes, ({
 				                   id
@@ -287,8 +299,8 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.on("drag", (d: any, i: number, nodes: Element[]) => {
 				d.fx = d.x = d3.event.x;
 				d.fy = d.y = d3.event.y;
-				this.renderLinks();
-				this.renderNodes();
+				this.updateLinks();
+				this.updateNodes();
 			})
 			.on("end", (d: any) => {
 				// if (!d3.event.active) {
@@ -327,7 +339,10 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 		// Node update styles
 		const nodeUpdate = nodeEnter.merge(nodesSelection)
-			.style('font', '12px sans-serif')
+			.style('font', '12px sans-serif');
+		nodeUpdate
+			.transition()
+			.duration(animationDuration)
 			.attr("transform", (d: any) => `translate(${d.fx != null ? d.fx : d.x},${d.fy != null ? d.fy : d.y})`);
 
 
