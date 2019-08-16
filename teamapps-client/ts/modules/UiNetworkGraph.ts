@@ -47,9 +47,8 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiNetworkGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private $graph: HTMLElement;
-	private svgContainer: d3.Selection<SVGElement, any, null, undefined>;
-	private svg: d3.Selection<SVGGElement, any, null, undefined>;
-	private rect: any;
+	private svg: d3.Selection<SVGElement, any, null, undefined>;
+	private pointerEventsRect: d3.Selection<SVGRectElement, any, null, undefined>;
 	private container: d3.Selection<SVGGElement, any, null, undefined>;
 	private linksContainer: d3.Selection<SVGGElement, any, null, undefined>;
 	private simulation: Simulation<UiNetworkNodeConfig & any, undefined>;
@@ -93,9 +92,9 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			this.simulation.tick();
 		}
 
-		if (this.svgContainer) {
+		if (this.svg) {
 			this.logger.debug("remove svg-container");
-			this.svgContainer.remove();
+			this.svg.remove();
 		}
 
 		this.zoom = d3.zoom()
@@ -105,14 +104,12 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				this.container.attr("transform", d3.event.transform);
 			});
 
-		this.svgContainer = d3.select(this.getMainDomElement())
-			.append("svg");
-		this.svg = this.svgContainer
-			.append("g")
+		this.svg = d3.select(this.getMainDomElement())
+			.append("svg")
 			.call(this.zoom)
-			.on("dblclick.zoom", null); // disable doubleclick zoom!
+			.on("dblclick.zoom", null); // disable doubleclick zoom!;
 
-		this.rect = this.svg.append("rect")
+		this.pointerEventsRect = this.svg.append("rect")
 			.attr("width", this.getWidth())
 			.attr("height", this.getHeight())
 			.style("fill", "none")
@@ -211,7 +208,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	}
 
 	public onResize(): void {
-		this.rect.attr('width', this.getWidth()).attr('height', this.getHeight());
+		this.pointerEventsRect.attr('width', this.getWidth()).attr('height', this.getHeight());
 	}
 
 	public setZoomFactor(zoomFactor: number): void {
