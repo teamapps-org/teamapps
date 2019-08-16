@@ -16,17 +16,18 @@ import org.teamapps.ux.component.AbstractComponent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
 	public final Event<ForceLayoutNode> onNodeClicked = new Event<>();
-	public final Event<NodeExpandedOrCollapsedEvent> onNodeExpandedOrCollapsed = new Event<>();
+	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
 
 	private final List<ForceLayoutNode<RECORD>> nodes;
 	private final List<ForceLayoutLink> links;
 
-	private int initialAnimationDuration = 1000;
+	private int animationDuration = 1000;
 	// private float gravity = 0.1f;
 	// private float theta = 0.3f;
 	// private float alpha = 0.1f;
@@ -47,16 +48,26 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		List<UiNetworkNode> nodes = this.nodes.stream()
-				.map(n -> createUiNode(n))
-				.collect(Collectors.toList());
-		List<UiNetworkLink> links = this.links.stream()
-				.map(l -> l.toUiNetworkLink())
-				.collect(Collectors.toList());
+		List<UiNetworkNode> nodes = createUiNodes(this.nodes);
+		List<UiNetworkLink> links = createUiLinks(this.links);
 		UiNetworkGraph ui = new UiNetworkGraph(nodes, links, Collections.emptyList());
-		ui.setInitialAnimationDuration(initialAnimationDuration);
+		ui.setAnimationDuration(animationDuration);
 		mapAbstractUiComponentProperties(ui);
 		return ui;
+	}
+
+	@NotNull
+	private List<UiNetworkNode> createUiNodes(List<ForceLayoutNode<RECORD>> nodes) {
+		return nodes.stream()
+				.map(n -> createUiNode(n))
+				.collect(Collectors.toList());
+	}
+
+	@NotNull
+	private List<UiNetworkLink> createUiLinks(List<ForceLayoutLink> links) {
+		return links.stream()
+				.map(l -> l.toUiNetworkLink())
+				.collect(Collectors.toList());
 	}
 
 	@NotNull
@@ -101,11 +112,43 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		}
 	}
 
-	public int getInitialAnimationDuration() {
-		return initialAnimationDuration;
+	public int getAnimationDuration() {
+		return animationDuration;
 	}
-	public void setInitialAnimationDuration(int initialAnimationDuration) {
-		this.initialAnimationDuration = initialAnimationDuration;
+
+	public void setAnimationDuration(int animationDuration) {
+		this.animationDuration = animationDuration;
+	}
+
+	public void addNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink> links) {
+		this.nodes.addAll(nodes);
+		this.links.addAll(links);
+		queueCommandIfRendered(() -> new UiNetworkGraph.AddNodesAndLinksCommand(getId(), createUiNodes(nodes), createUiLinks(links)));
+	}
+
+	public void removeNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes) {
+		List<ForceLayoutLink> linksToRemove = links.stream()
+				.filter(l -> nodes.contains(l.getSource()) || nodes.contains(l.getTarget()))
+				.collect(Collectors.toList());
+		System.out.println(linksToRemove);
+		removeNodesAndLinks(nodes, linksToRemove);
+	}
+
+	public void removeNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink> links) {
+		this.nodes.removeAll(nodes);
+		this.links.removeAll(links);
+		List<String> nodeIds = nodes.stream().map(n -> n.getId()).collect(Collectors.toList());
+		Map<String, List<String>> linksBySourceNodeId = links.stream()
+				.collect(Collectors.groupingBy(l -> l.getSource().getId(), Collectors.mapping(l -> l.getTarget().getId(), Collectors.toList())));
+		queueCommandIfRendered(() -> new UiNetworkGraph.RemoveNodesAndLinksCommand(getId(), nodeIds, linksBySourceNodeId));
+	}
+
+	public List<ForceLayoutNode<RECORD>> getNodes() {
+		return Collections.unmodifiableList(nodes);
+	}
+
+	public List<ForceLayoutLink> getLinks() {
+		return Collections.unmodifiableList(links);
 	}
 
 	public PropertyExtractor<RECORD> getPropertyExtractor() {

@@ -21,7 +21,7 @@
 
 
 import * as d3 from "d3";
-import {Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
+import {ForceLink, Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
@@ -51,8 +51,10 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	private pointerEventsRect: d3.Selection<SVGRectElement, any, null, undefined>;
 	private container: d3.Selection<SVGGElement, any, null, undefined>;
 	private linksContainer: d3.Selection<SVGGElement, any, null, undefined>;
-	private simulation: Simulation<UiNetworkNodeConfig & any, undefined>;
 	private zoom: ZoomBehavior<Element, unknown>;
+
+	private simulation: Simulation<UiNetworkNodeConfig & any, undefined>;
+	private linkForce: ForceLink<UiNetworkNodeConfig & any, UiNetworkLinkConfig & any>;
 
 	private nodes: (UiNetworkNodeConfig & any)[];
 	private links: (UiNetworkLinkConfig & any)[];
@@ -74,14 +76,15 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 	@executeWhenFirstDisplayed()
 	public createGraph(gravity: any, images: any) {
+		this.linkForce = d3.forceLink(this.links)
+			.id(d => (d as UiNetworkNodeConfig).id)
+			.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
+				return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * 0.75;
+			});
 		this.simulation = d3.forceSimulation<UiNetworkNodeConfig & any>()
-			.force("charge", d3.forceManyBody())
 			.nodes(this.nodes)
-			.force("link", d3.forceLink(this.links)
-				.id(d => (d as UiNetworkNodeConfig).id)
-				.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
-					return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * 0.75;
-				}))
+			.force("charge", d3.forceManyBody())
+			.force("link", this.linkForce)
 			.force("center", d3.forceCenter(this.getWidth() / 2, this.getWidth() / 2))
 			.force("collide", d3.forceCollide((a: UiNetworkNodeConfig & any) => {
 				return Math.sqrt(a.width * a.width + a.height * a.height) * .6;
@@ -89,6 +92,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.stop();
 
 		this.simulation.on("tick", () => {
+			console.log("tick")
 			this.updateLinks();
 			this.updateNodes();
 		});
@@ -149,9 +153,9 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			d3.zoomIdentity.scale(1).translate(this.getWidth()/2, this.getHeight()/2)
 		);
 
-		this.updateLinks(this._config.initialAnimationDuration);
-		this.updateNodes(this._config.initialAnimationDuration);
-		this.zoomAllNodesIntoView(this._config.initialAnimationDuration);
+		this.updateLinks(this._config.animationDuration);
+		this.updateNodes(this._config.animationDuration);
+		this.zoomAllNodesIntoView(this._config.animationDuration);
 	}
 
 	private calculateFinalNodePositions() {
@@ -377,6 +381,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 					d.expandState = UiNetworkNode_ExpandState.EXPANDED;
 				}
 				this.onNodeExpandedOrCollapsed.fire({nodeId: d.id, expanded: d.expandState == UiNetworkNode_ExpandState.EXPANDED});
+				this.updateNodes();
 			});
 
 		// Add expand collapse button circle
@@ -385,6 +390,28 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			selector: 'node-button-circle',
 			data: (d: UiNetworkNodeConfig) => [d]
 		});
+		// Restyle node button circle
+		nodeUpdate.select('.node-button-circle')
+			.attr('r', 10)
+			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
+			.attr('fill', "white")
+			.attr('stroke', (d: UiNetworkNodeConfig) => createUiColorCssString(d.borderColor));
+
+		// Add button text
+		patternify(nodeButtonGroups, {
+			tag: 'text',
+			selector: 'node-button-text',
+			data: (d: UiNetworkNodeConfig) => [d]
+		})
+			.attr('pointer-events', 'none')
+		// Restyle button texts
+		nodeUpdate.select('.node-button-text')
+			.attr('text-anchor', 'middle')
+			.attr('alignment-baseline', 'middle')
+			.attr('stroke', 'none')
+			.attr('fill', 'black')
+			.attr('font-size', 22)
+			.text((d: UiNetworkNodeConfig) => d.expandState === UiNetworkNode_ExpandState.EXPANDED ? '–' : '+');
 
 		// Move images to desired positions
 		nodeUpdate.selectAll('.node-image-group')
@@ -429,13 +456,6 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr('transform', (d: UiNetworkNodeConfig) => `translate(0,${d.height / 2})`)
 			.attr('display', (data: UiNetworkNodeConfig) => data.expandState === UiNetworkNode_ExpandState.NOT_EXPANDABLE ? 'none' : 'inherit');
 
-		// Restyle node button circle
-		nodeUpdate.select('.node-button-circle')
-			.attr('r', 10)
-			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
-			.attr('fill', "white")
-			.attr('stroke', (d: UiNetworkNodeConfig) => createUiColorCssString(d.borderColor));
-
 		// Remove any exiting nodes after transition
 		const nodeExitTransition = nodesSelection.exit()
 			.remove();
@@ -465,6 +485,74 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			                  }: UiNetworkNodeConfig) => `${height}px`)
 			.select('*')
 			.style('display', 'inline-grid')
+	}
+
+	public addNodesAndLinks(newNodes: UiNetworkNodeConfig[], newLinks: UiNetworkLinkConfig[]): void {
+		this.nodes.push(...newNodes);
+		this.links.push(...newLinks);
+
+		this.placeNewNodesNearExistingParentsOnes(newLinks, newNodes);
+
+		this.simulation.nodes(this.nodes);
+		this.linkForce.links(this.links);
+		this.simulation.alphaTarget(0.3).restart()
+			.stop();
+		this.calculateFinalNodePositions();
+		this.updateNodes(this._config.animationDuration);
+		this.updateLinks(this._config.animationDuration);
+	}
+
+	private placeNewNodesNearExistingParentsOnes(newLinks: UiNetworkLinkConfig[], newNodes: UiNetworkNodeConfig[]) {
+		let changed: boolean;
+		do {
+			changed = false;
+			newLinks = newLinks.filter((l) => {
+				let newSourceNode = newNodes.filter(n => n.id === l.source)[0];
+				let newTargetNode = newNodes.filter(n => n.id === l.target)[0];
+				if (newSourceNode != null && newTargetNode == null) {
+					let existingTargetNode = this.nodes.filter(n => n.id === l.target)[0];
+					if (existingTargetNode != null) {
+						(newSourceNode as any).x = (existingTargetNode as any).x;
+						(newSourceNode as any).y = (existingTargetNode as any).y;
+					}
+					newNodes = newNodes.filter(n => n !== newSourceNode);
+					changed = true;
+					return false;
+				} else if (newSourceNode == null && newTargetNode != null) {
+					let existingSourceNode = this.nodes.filter(n => n.id === l.source)[0];
+					if (existingSourceNode != null) {
+						(newTargetNode as any).x = (existingSourceNode as any).x;
+						(newTargetNode as any).y = (existingSourceNode as any).y;
+					}
+					newNodes = newNodes.filter(n => n !== newTargetNode);
+					changed = true;
+					return false;
+				}
+				return true;
+			});
+		} while (changed);
+	}
+
+	public removeNodesAndLinks(nodeIds: string[], linksBySourceNodeId: {[name: string]: string[]}): void {
+		const nodeIdsSet = new Set(nodeIds);
+		this.nodes = this.nodes.filter(n => {
+			return !nodeIdsSet.has(n.id);
+		});
+		this.links = this.links.filter(l => {
+			let targetIdsToDelete = linksBySourceNodeId[l.source && l.source.id];
+			if (targetIdsToDelete == null) {
+				return true;
+			}
+			return !targetIdsToDelete.filter(targetId => (l.target && l.target.id) === targetId)[0]
+		});
+
+		this.simulation.nodes(this.nodes);
+		this.linkForce.links(this.links);
+		this.simulation.alphaTarget(0.3).restart()
+			.stop();
+		this.calculateFinalNodePositions();
+		this.updateNodes(this._config.animationDuration);
+		this.updateLinks(this._config.animationDuration);
 	}
 }
 
