@@ -87,7 +87,7 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	private UiMapMarkerClientRecord createUiRecord(Marker<RECORD> marker) {
 		UiMapMarkerClientRecord clientRecord = new UiMapMarkerClientRecord();
-		clientRecord.setLocation(location.createUiLocation());
+		clientRecord.setLocation(marker.getLocation().createUiLocation());
 		ClientTemplateCache.TemplateWithClientId templateWithClientId = templateCache.getTemplateIdForRecord(marker);
 		if (templateWithClientId.getTemplate() != null) {
 			clientRecord.setTemplateId("" + templateWithClientId.getClientId());
