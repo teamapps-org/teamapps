@@ -21,7 +21,7 @@
 
 
 import * as d3 from "d3";
-import {Simulation, SimulationLinkDatum} from "d3";
+import {Simulation, SimulationLinkDatum, ZoomBehavior} from "d3";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
@@ -47,16 +47,16 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiNetworkGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private $graph: HTMLElement;
-	private svg: d3.Selection<SVGGElement, any, null, undefined>;
 	private svgContainer: d3.Selection<SVGElement, any, null, undefined>;
+	private svg: d3.Selection<SVGGElement, any, null, undefined>;
 	private rect: any;
 	private container: d3.Selection<SVGGElement, any, null, undefined>;
 	private linksContainer: d3.Selection<SVGGElement, any, null, undefined>;
 	private simulation: Simulation<UiNetworkNodeConfig & any, undefined>;
-	private zoom: any;
+	private zoom: ZoomBehavior<Element, unknown>;
 
-	private nodes: UiNetworkNodeConfig & any;
-	private links: UiNetworkLinkConfig & any;
+	private nodes: (UiNetworkNodeConfig & any)[];
+	private links: (UiNetworkLinkConfig & any)[];
 
 
 	constructor(config: UiNetworkGraphConfig, context: TeamAppsUiContext) {
@@ -90,7 +90,6 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.stop();
 
 		for (var i = 0, n = Math.ceil(Math.log(this.simulation.alphaMin()) / Math.log(1 - this.simulation.alphaDecay())); i < n; ++i) {
-			console.log(Math.ceil(Math.log(this.simulation.alphaMin()) / Math.log(1 - this.simulation.alphaDecay())));
 			this.simulation.tick();
 		}
 
@@ -101,7 +100,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 		this.zoom = d3.zoom()
 			.extent([[0, 0], [this.getWidth(), this.getHeight()]])
-			.scaleExtent([.1, 8])
+			.scaleExtent([.01, 8])
 			.on("zoom", () => {
 				this.container.attr("transform", d3.event.transform);
 			});
@@ -120,8 +119,6 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.style("pointer-events", "all");
 
 		this.container = this.svg.append("g");
-
-		this.zoom.translateBy(this.svg, this.getWidth() / 2, this.getHeight() / 2);
 
 		var defs = this.svg.append("defs").attr("id", "imgdefs");
 		for (let i = 0; i < images.length; i++) {
@@ -153,6 +150,64 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 		this.renderLinks();
 		this.renderNodes();
+
+		this.zoomAllNodesIntoView(1000);
+	}
+
+	public zoomAllNodesIntoView(animationDuration: number) {
+		let bounds = this.nodes.reduce((globalBounds, node) => {
+			let leftBound = node.x - node.width / 2;
+			let rightBound = node.x + node.width / 2;
+			let topBound = node.y - node.height / 2;
+			let bottomBound = node.y + node.height / 2;
+			if (leftBound < globalBounds.minX) {
+				globalBounds.minX = leftBound;
+			}
+			if (rightBound > globalBounds.maxX) {
+				globalBounds.maxX = rightBound;
+			}
+			if (topBound < globalBounds.minY) {
+				globalBounds.minY = topBound;
+			}
+			if (bottomBound > globalBounds.maxY) {
+				globalBounds.maxY = bottomBound;
+			}
+			return globalBounds;
+		}, {
+			minX: 0,
+			maxX: 0,
+			minY: 0,
+			maxY: 0,
+			get width() {
+				return this.maxX - this.minX;
+			},
+			get height() {
+				return this.maxY - this.minY;
+			},
+			get centerX() {
+				return (this.maxX + this.minX) / 2
+			},
+			get centerY() {
+				return (this.maxY + this.minY) / 2
+			}
+		});
+		// console.log(bounds.minX, bounds.maxX, bounds.minY, bounds.maxY, bounds.centerX, bounds.centerY);
+		const k = Math.min(this.getWidth() / bounds.width, this.getHeight() / bounds.height);
+
+		let translateX: number;
+		let translateY: number;
+		if (bounds.width / bounds.height > this.getWidth() / this.getHeight()) {
+			translateX = -bounds.minX;
+			translateY = (this.getHeight() / 2) / k - bounds.centerY;
+		} else {
+			translateX = (this.getWidth() / 2) / k - bounds.centerX;
+			translateY = -bounds.minY;
+		}
+		// console.log(translateX, translateY);
+		this.svg.transition().duration(animationDuration).call(
+			this.zoom.transform,
+			d3.zoomIdentity.scale(k).translate(translateX, translateY)
+		);
 	}
 
 	public onResize(): void {
@@ -160,7 +215,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	}
 
 	public setZoomFactor(zoomFactor: number): void {
-		this.zoom.scale(zoomFactor);
+		this.zoom.scaleTo(this.svg, zoomFactor);
 		this.logger.debug(zoomFactor);
 	}
 
@@ -342,7 +397,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				: d.image.cornerShape == UiTreeGraphNodeImage_CornerShape.ROUNDED ? Math.min(d.image.width, d.image.height) / 10
 					: 0))
 			.attr('y', (d: UiNetworkNodeConfig) => d.image && d.image.centerTopDistance)
-			.attr('x', (d: UiNetworkNodeConfig) => d.image && d.image.centerLeftDistance)
+			.attr('x', (d: UiNetworkNodeConfig) => d.image && d.image.centerLeftDistance);
 		// .attr('filter', (d: UiNetworkNodeConfig) => d.image && d.image.shadowId);
 
 		// Style node rectangles
