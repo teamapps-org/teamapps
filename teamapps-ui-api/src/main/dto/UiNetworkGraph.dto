@@ -27,6 +27,7 @@ class UiNetworkGraph extends UiComponent{
 	int charge = -300;
 	int distance = 30;
 	String highlightColor;
+	int initialAnimationDuration = 1000;
 
 	command setZoomFactor(float zoomFactor);
 	command setGravity(float gravity);
