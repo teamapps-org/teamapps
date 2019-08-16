@@ -394,7 +394,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		nodeUpdate.select('.node-button-circle')
 			.attr('r', 10)
 			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
-			.attr('fill', "white")
+			.attr('fill', (d: UiNetworkNodeConfig) => createUiColorCssString(d.backgroundColor))
 			.attr('stroke', (d: UiNetworkNodeConfig) => createUiColorCssString(d.borderColor));
 
 		// Add button text
@@ -412,6 +412,11 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr('fill', 'black')
 			.attr('font-size', 22)
 			.text((d: UiNetworkNodeConfig) => d.expandState === UiNetworkNode_ExpandState.EXPANDED ? '–' : '+');
+
+		// Move node button group to the desired position
+		nodeUpdate.select('.node-button-g')
+			.attr('transform', (d: UiNetworkNodeConfig) => `translate(0,${d.height / 2})`)
+			.attr('display', (data: UiNetworkNodeConfig) => data.expandState === UiNetworkNode_ExpandState.NOT_EXPANDABLE ? 'none' : 'inherit');
 
 		// Move images to desired positions
 		nodeUpdate.selectAll('.node-image-group')
@@ -450,11 +455,6 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr('cursor', 'pointer')
 			.attr('stroke', ({borderColor}: UiNetworkNodeConfig) => createUiColorCssString(borderColor))
 			.style("fill", ({backgroundColor}: UiNetworkNodeConfig) => createUiColorCssString(backgroundColor));
-
-		// Move node button group to the desired position
-		nodeUpdate.select('.node-button-g')
-			.attr('transform', (d: UiNetworkNodeConfig) => `translate(0,${d.height / 2})`)
-			.attr('display', (data: UiNetworkNodeConfig) => data.expandState === UiNetworkNode_ExpandState.NOT_EXPANDABLE ? 'none' : 'inherit');
 
 		// Remove any exiting nodes after transition
 		const nodeExitTransition = nodesSelection.exit()
