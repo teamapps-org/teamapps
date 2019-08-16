@@ -104,8 +104,14 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	public int getInitialAnimationDuration() {
 		return initialAnimationDuration;
 	}
-
 	public void setInitialAnimationDuration(int initialAnimationDuration) {
 		this.initialAnimationDuration = initialAnimationDuration;
+	}
+
+	public PropertyExtractor<RECORD> getPropertyExtractor() {
+		return propertyExtractor;
+	}
+	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
+		this.propertyExtractor = propertyExtractor;
 	}
 }
