@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,11 +33,7 @@ import org.teamapps.ux.component.format.SizingPolicy;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.format.TextAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
-import org.teamapps.ux.component.template.gridtemplate.BadgeElement;
-import org.teamapps.ux.component.template.gridtemplate.GridTemplate;
-import org.teamapps.ux.component.template.gridtemplate.IconElement;
-import org.teamapps.ux.component.template.gridtemplate.ImageElement;
-import org.teamapps.ux.component.template.gridtemplate.TextElement;
+import org.teamapps.ux.component.template.gridtemplate.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +82,13 @@ public enum BaseTemplate implements Template {
 	public static final String PROPERTY_CAPTION = "caption";
 	public static final String PROPERTY_DESCRIPTION = "description";
 	public static final String PROPERTY_BADGE = "badge";
+
+	public static final String PROPERTY_CAPTION_ICON = "captionIcon";
+	public static final String PROPERTY_RIGHT_ICON = "rightIcon";
+	public static final String PROPERTY_SUB_TEXT1 = "setText1";
+	public static final String PROPERTY_SUB_TEXT2 = "setText2";
+	public static final String PROPERTY_SUB_ICON1 = "subIcon1";
+	public static final String PROPERTY_SUB_ICON2 = "subIcon2";
 
 	public static Map<String, Template> createTemplateMap(BaseTemplate... templates) {
 		Map<String, Template> templateMap = new HashMap<>();
@@ -229,6 +232,91 @@ public enum BaseTemplate implements Template {
 						.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
 						.setHorizontalAlignment(HorizontalElementAlignment.RIGHT)
 						.setMargin(new Spacing(0, 0, 0, 3)));
+	}
+
+	public static GridTemplate createTemplate(int minWidth, int maxWidth, int minHeight, int maxHeight, Spacing padding, int gridGap, boolean horizontalCenterAlignment,
+	                                          int mainIconSize, boolean mainIconAlignTop, Color mainImageBorderColor,
+	                                          int captionIconSize, float captionSize, Color captionColor, boolean wrapCaption,
+	                                          float badgeSize, Color badgeTextColor, Color badgeBackgroundColor, int rightIconSize,
+	                                          int subIcon1Size, float subText1Size, Color subText1Color, int subIcon2Size, float subText2Size, Color subText2Color,
+	                                          float descriptionTextSize, Color descriptionTextColor) {
+		VerticalElementAlignment mainIconVerticalAlignment = mainIconAlignTop ? VerticalElementAlignment.TOP : VerticalElementAlignment.CENTER;
+
+		HorizontalElementAlignment horizontalElementAlignment = horizontalCenterAlignment ? HorizontalElementAlignment.CENTER : HorizontalElementAlignment.LEFT;
+		HorizontalElementAlignment horizontalElementAlignment2 = horizontalCenterAlignment ? HorizontalElementAlignment.CENTER : HorizontalElementAlignment.RIGHT;
+
+		return new GridTemplate(minWidth, maxWidth, minHeight, maxHeight, padding, gridGap)
+				.addColumn(SizingPolicy.AUTO) // margin defined by badge, so no margin when no badge
+				.addColumn(SizingPolicy.FRACTION)
+				.addColumn(SizingPolicy.AUTO) // margin defined by badge, so no margin when no badge
+				.addRow(SizeType.AUTO, 0, 0, 1, 0)
+				.addRow(SizeType.AUTO, 0, 0, 1, 0)
+				.addRow(SizeType.AUTO, 0, 0, 1, 1)
+
+				.addElement(new IconElement(PROPERTY_ICON, 0, 0, mainIconSize)
+						.setRowSpan(3)
+						.setVerticalAlignment(mainIconVerticalAlignment)
+						.setMargin(new Spacing(0, 3, 0, 0)))
+				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, mainIconSize, mainIconSize)
+						.setRowSpan(3)
+						.setBorder(new Border(new Line(mainImageBorderColor, LineType.SOLID, 0.5f)).setBorderRadius(300))
+						.setShadow(Shadow.withSize(0.5f))
+						.setVerticalAlignment(mainIconVerticalAlignment)
+						.setMargin(new Spacing(0, 3, 0, 0)))
+
+				.addElement(new FloatingElement(0, 1)
+						.addElement(new IconElement(PROPERTY_CAPTION_ICON, captionIconSize)
+								.setMargin(new Spacing(0, 2, 0, 0)))
+						.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
+								.setWrapLines(wrapCaption)
+								.setFontStyle(captionSize, captionColor)
+								.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
+								.setHorizontalAlignment(horizontalElementAlignment))
+						.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
+						.setHorizontalAlignment(horizontalElementAlignment)
+				)
+				.addElement(new FloatingElement(0, 2)
+						.addElement(new BadgeElement(PROPERTY_BADGE)
+								.setFontStyle(new FontStyle(badgeSize, badgeTextColor).setBackgroundColor(badgeBackgroundColor))
+								.setWrapLines(true)
+								.setHorizontalAlignment(horizontalElementAlignment2)
+								.setMargin(new Spacing(0, 1, 0, 3))
+						)
+						.addElement(new IconElement(PROPERTY_RIGHT_ICON, rightIconSize)
+								.setMargin(new Spacing(0, 1, 0, 3)))
+
+						.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
+						.setHorizontalAlignment(horizontalElementAlignment2)
+				)
+
+				.addElement(new FloatingElement(1, 1)
+						.addElement(new IconElement(PROPERTY_SUB_ICON1, subIcon1Size)
+								.setMargin(new Spacing(0, 2, 0, 0)))
+						.addElement(new TextElement(PROPERTY_SUB_TEXT1)
+								.setWrapLines(wrapCaption)
+								.setFontStyle(subText1Size, subText1Color)
+								.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
+								.setHorizontalAlignment(horizontalElementAlignment))
+						.addElement(new IconElement(PROPERTY_SUB_ICON2, subIcon2Size)
+								.setMargin(new Spacing(0, 2, 0, 0)))
+						.addElement(new TextElement(PROPERTY_SUB_TEXT2)
+								.setWrapLines(wrapCaption)
+								.setFontStyle(subText2Size, subText2Color)
+								.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
+								.setHorizontalAlignment(horizontalElementAlignment))
+
+						.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
+						.setHorizontalAlignment(horizontalElementAlignment)
+						.setColSpan(2)
+				)
+
+				.addElement(new TextElement(PROPERTY_DESCRIPTION, 2, 1)
+						.setColSpan(2)
+						.setWrapLines(true)
+						.setFontStyle(descriptionTextSize, descriptionTextColor)
+						.setVerticalAlignment(VerticalElementAlignment.TOP)
+						.setHorizontalAlignment(horizontalElementAlignment))
+				;
 	}
 
 	public static Template createTreeSingleLineNodeTemplate(int iconSize, VerticalElementAlignment verticalIconAlignment, int maxHeight) {
