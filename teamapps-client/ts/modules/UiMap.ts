@@ -26,7 +26,15 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
 import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
 import {UiHeatMapDataConfig} from "../generated/UiHeatMapDataConfig";
-import {UiMap_LocationChangedEvent, UiMap_MapClickedEvent, UiMap_MarkerClickedEvent, UiMap_ZoomLevelChangedEvent, UiMapCommandHandler, UiMapConfig, UiMapEventSource} from "../generated/UiMapConfig";
+import {
+	UiMap_LocationChangedEvent,
+	UiMap_MapClickedEvent,
+	UiMap_MarkerClickedEvent,
+	UiMap_ZoomLevelChangedEvent,
+	UiMapCommandHandler,
+	UiMapConfig,
+	UiMapEventSource
+} from "../generated/UiMapConfig";
 import {UiMapType} from "../generated/UiMapType";
 import * as L from "leaflet";
 import {LatLngExpression, Marker, Polyline} from "leaflet";
@@ -205,7 +213,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	}
 
 	public setMapType(mapType: UiMapType): void {
-		const mapBoxAccessToken = this._config.accessToken;
+		const token = this._config.accessToken;
 		let layer;
 		let removeLayer = true;
 		switch (mapType) {
@@ -218,56 +226,56 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.streets',
-					accessToken: mapBoxAccessToken
+					accessToken: token
 				} as any);
 				break;
 			case UiMapType.MAP_BOX_STREETS_BASIC:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.streets-basic',
-					accessToken: mapBoxAccessToken
+					accessToken: token
 				} as any);
 				break;
 			case UiMapType.MAP_BOX_STREETS_SATELLITE:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.streets-satellite',
-					accessToken: mapBoxAccessToken
+					accessToken: token
 				} as any);
 				break;
 			case UiMapType.MAP_BOX_SATELLITE:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.satellite',
-					accessToken: mapBoxAccessToken
+					accessToken: token
 				} as any);
 				break;
 			case UiMapType.MAP_BOX_RUN_BIKE_HIKE:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.run-bike-hike',
-					accessToken: mapBoxAccessToken
+					accessToken: token
 				} as any);
 				break;
 			case UiMapType.MAP_BOX_DARK:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.dark',
-					accessToken: mapBoxAccessToken
+					accessToken: token
 				} as any);
 				break;
 			case UiMapType.MAP_BOX_OUTDOORS:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.outdoors',
-					accessToken: mapBoxAccessToken
+					accessToken: token
 				} as any);
 				break;
 			case UiMapType.MAP_BOX_EMERALD:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
 					id: 'mapbox.emerald',
-					accessToken: mapBoxAccessToken
+					accessToken: token
 				} as any);
 				break;
 			case UiMapType.MAP_QUEST_OSM:
@@ -305,6 +313,31 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 					opacity: 0.5
 				});
 				removeLayer = false;
+				break;
+
+			case UiMapType.THUNDERFOREST_DARK:
+				layer = L.tileLayer('https://{s}.tile.thunderforest.com/{id}/{z}/{x}/{y}.png?apikey={accessToken}', {
+					//attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+					maxZoom: 22,
+					id: 'transport-dark',
+					accessToken: token
+				} as any);
+				break;
+			case UiMapType.THUNDERFOREST_TRANSPORT:
+				layer = L.tileLayer('https://{s}.tile.thunderforest.com/{id}/{z}/{x}/{y}.png?apikey={accessToken}', {
+					//attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+					maxZoom: 22,
+					id: 'transport',
+					accessToken: token
+				} as any);
+				break;
+
+			case UiMapType.WIKIMEDIA:
+				layer = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {
+					//attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
+					minZoom: 1,
+					maxZoom: 19,
+				} as any);
 				break;
 		}
 		if (removeLayer && this.tileLayer) {
