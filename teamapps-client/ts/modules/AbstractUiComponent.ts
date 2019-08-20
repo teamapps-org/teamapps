@@ -25,8 +25,9 @@ import {generateUUID} from "./Common";
 import ResizeObserver from 'resize-observer-polyfill';
 import {debounce, DebounceMode} from "./util/debounce";
 import {DeferredExecutor} from "./util/DeferredExecutor";
+import {UiComponent} from "./UiComponent";
 
-export abstract class AbstractUiComponent<C extends UiComponentConfig = UiComponentConfig> implements AbstractUiComponent<C> {
+export abstract class AbstractUiComponent<C extends UiComponentConfig = UiComponentConfig> implements UiComponent<C> {
 
 	protected readonly logger: log.Logger = log.getLogger((<any>(this.constructor)).name || this.constructor.toString().match(/\w+/g)[1]);
 
@@ -56,6 +57,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 
 			let debouncedRelayout = debounce((entry: ResizeObserverEntry) => {
 				this.reLayout(entry.contentRect.width, entry.contentRect.height);
+				// this.reLayout(this.getMainDomElement().offsetWidth, this.getMainDomElement().offsetHeight);
 			}, 300, DebounceMode.BOTH);
 			const resizeObserver = new ResizeObserver(entries => {
 				for (let entry of entries) {
@@ -76,6 +78,12 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 
 	protected reLayout(width: number, height: number): void {
 		let hasSize = width > 0 || height > 0;
+		if (this.width === width && this.height === height) {
+			console.log(this._config.id + "ignoring since unchanged");
+			return;
+		} else {
+			console.log(this._config.id, this.width, width, this.height, height);
+		}
 		this.width = width;
 		this.height = height;
 		this.displayedDeferredExecutor.ready = hasSize;

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.toolbar;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiToolbarButton;
 import org.teamapps.dto.UiToolbarButtonGroup;
@@ -33,7 +34,7 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 
 	private AbstractToolContainer toolContainer;
 	private String clientId = UUID.randomUUID().toString();
-	
+
 	private final List<ToolbarButton> buttons = new ArrayList<>();
 	private ToolbarButtonGroupPosition position;
 
@@ -144,6 +145,12 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 	/*package-private*/ void handleButtonVisibilityChange(String buttonClientId, boolean visible) {
 		if (this.toolContainer != null) {
 			this.toolContainer.handleButtonVisibilityChange(this.clientId, buttonClientId, visible);
+		}
+	}
+
+	public void handleColorChange(String buttonClientId, Color backgroundColor, Color hoverBackgroundColor) {
+		if (this.toolContainer != null) {
+			this.toolContainer.handleButtonColorChange(this.clientId, buttonClientId, backgroundColor, hoverBackgroundColor);
 		}
 	}
 

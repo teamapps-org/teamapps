@@ -26,27 +26,15 @@ import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
 import {createUiDropDownButtonClickInfoConfig, UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
 import {DEFAULT_TEMPLATES} from "trivial-components";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {enterFullScreen, exitFullScreen, insertAfter, isFullScreen, parseHtml, prependChild} from "../../Common";
+import {doOnceOnClickOutsideElement, insertAfter, parseHtml} from "../../Common";
 import {UiToolAccordionCommandHandler, UiToolAccordionConfig, UiToolAccordionEventSource} from "../../../generated/UiToolAccordionConfig";
 import {AbstractUiToolContainer_ToolbarButtonClickEvent, AbstractUiToolContainer_ToolbarDropDownItemClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {UiItemView} from "../../UiItemView";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
-import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
 import {UiComponent} from "../../UiComponent";
-
-interface Button {
-	config: UiToolbarButtonConfig;
-	visible: boolean;
-	$buttonWrapper: HTMLElement;
-	$button: HTMLElement;
-	optimizedWidth?: number;
-	hasDropDown: boolean;
-	$dropDownCaret: HTMLElement;
-	$dropDown?: HTMLElement;
-	$dropDownSourceButtonIndicator?: HTMLElement;
-	dropDownComponent?: UiComponent;
-}
+import {UiColorConfig} from "../../../generated/UiColorConfig";
+import {UiToolAccordionButton} from "./UiToolAccordionButton";
 
 export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConfig> implements UiToolAccordionCommandHandler, UiToolAccordionEventSource {
 
@@ -95,6 +83,10 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 	public setButtonVisible(groupId: string, buttonId: string, visible: boolean) {
 		this.buttonGroupsById.getValue(groupId).setButtonVisible(buttonId, visible);
 		this.refreshEnforcedButtonWidth();
+	}
+
+	setButtonColors(groupId: string, buttonId: string, backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig): void {
+		this.buttonGroupsById.getValue(groupId).setButtonColors(buttonId, backgroundColor, hoverBackgroundColor);
 	}
 
 	public setButtonGroupVisible(groupId: string, visible: boolean) {
@@ -164,9 +156,6 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 		this.buttonGroupsById.values.forEach(group => group.onResize());
 	}
 
-	public destroy(): void {
-		// TODO ?
-	}
 }
 
 class UiButtonGroup {
@@ -176,8 +165,8 @@ class UiButtonGroup {
 	private visible: boolean = true;
 	private $buttonGroupWrapper: HTMLElement;
 	private $buttonGroup: HTMLElement;
-	private buttonsById: { [index: string]: Button } = {};
-	private buttons: Button[] = [];
+	private buttonsById: { [index: string]: UiToolAccordionButton } = {};
+	private buttons: UiToolAccordionButton[] = [];
 	private $buttonRows: HTMLElement[] = [];
 	private enforcedButtonWidth: number = 1;
 
@@ -196,20 +185,20 @@ class UiButtonGroup {
 		}
 
 		this.setVisible(buttonGroupConfig.visible);
+	}
 
-		$(this.getMainDomElement()).on("click", ".toolbar-button-wrapper", (e) => {
-			let button = this.buttonsById[e.currentTarget.getAttribute("data-buttonId")];
-			if (button.config.togglesFullScreenOnComponent) {
-				if (isFullScreen()) {
-					exitFullScreen();
-				} else {
-					enterFullScreen(this.context.getComponentById(button.config.togglesFullScreenOnComponent));
-				}
-			}
-			if (button.config.openNewTabWithUrl) {
-				window.open(button.config.openNewTabWithUrl, '_blank');
-			}
+	private get toolAccordionId() {
+		return this.toolAccordion.getId();
+	}
 
+	public get position() {
+		return this.config.position;
+	}
+
+	private createButton(buttonConfig: UiToolbarButtonConfig): UiToolAccordionButton {
+		let button = new UiToolAccordionButton(buttonConfig, this.context);
+
+		button.onClick.addListener(eventObject => {
 			let dropdownClickInfo: UiDropDownButtonClickInfoConfig = null;
 			if (button.hasDropDown) {
 				if (button.$dropDown == null) {
@@ -222,6 +211,7 @@ class UiButtonGroup {
 						button.$dropDown.appendChild(button.dropDownComponent.getMainDomElement());
 					}
 					this.showDropDown(button);
+					doOnceOnClickOutsideElement(button.getMainDomElement(), e => $(button.$dropDown).slideUp(200))
 				} else {
 					$(button.$dropDown).slideUp(200);
 				}
@@ -229,53 +219,15 @@ class UiButtonGroup {
 
 			this.toolAccordion.onToolbarButtonClick.fire({
 				groupId: this.config.groupId,
-				buttonId: button.config.buttonId,
+				buttonId: button.id,
 				dropDownClickInfo: dropdownClickInfo
 			});
-		});
-		this.getMainDomElement().addEventListener("focusout", (e) => {
-			if ((e.target as HTMLElement).classList.contains("toolbar-button-wrapper")) {
-				let button = this.buttonsById[(e.target as HTMLElement).getAttribute("data-buttonId")];
-				button.$dropDown && $(button.$dropDown).slideUp(200);
-			}
-		});
-	}
-
-	private get toolAccordionId() {
-		return this.toolAccordion.getId();
-	}
-
-	public get position() {
-		return this.config.position;
-	}
-
-	private createButton(buttonConfig: UiToolbarButtonConfig): Button {
-		const $buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper" data-buttonId="${buttonConfig.buttonId}" tabindex="0">
-	<div class="toolbar-button-caret ${buttonConfig.hasDropDown ? '' : 'hidden'}">
-	  <div class="caret"></div>
-	</div>
-</div>`);
-        let renderer = this.context.templateRegistry.createTemplateRenderer(buttonConfig.template);
-		const $button = parseHtml(renderer.render(buttonConfig.recordData));
-		prependChild($buttonWrapper, $button);
-
-		const button: Button = {
-			config: buttonConfig,
-			$buttonWrapper: $buttonWrapper,
-			$button: $button,
-			optimizedWidth: AbstractUiToolContainer.optimizeButtonWidth($buttonWrapper, $button, (buttonConfig.template as UiGridTemplateConfig).maxHeight || UiToolAccordion.DEFAULT_TOOLBAR_MAX_HEIGHT),
-			visible: buttonConfig.visible,
-			$dropDownCaret: $buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret"),
-			hasDropDown: buttonConfig.hasDropDown,
-			dropDownComponent: buttonConfig.dropDownComponent as UiComponent
-		};
-
-		$buttonWrapper.classList.toggle("hidden", !buttonConfig.visible);
+		})
 
 		return button;
 	}
 
-	private createDropDown(button: Button) {
+	private createDropDown(button: UiToolAccordionButton) {
 		button.$dropDown = parseHtml(`<div class="tool-accordion-dropdown"></div>`);
 		button.$dropDownSourceButtonIndicator = parseHtml(`<div class="source-button-indicator">`);
 		button.$dropDown.appendChild(button.$dropDownSourceButtonIndicator);
@@ -289,20 +241,19 @@ class UiButtonGroup {
 		return button.$dropDown;
 	}
 
-	private showDropDown(button: Button) {
-		let $row = this.$buttonRows.filter($row => $.contains($row, button.$buttonWrapper))[0];
+	private showDropDown(button: UiToolAccordionButton) {
 		UiButtonGroup.logger.debug(button.$dropDown.offsetHeight);
 		const me = this;
 		button.$dropDown.style.display = "none";
-		insertAfter(button.$dropDown, $row);
+		this.insertDropdownUnderButtonRow(button);
 
 		$(button.$dropDown).slideDown({
 			duration: 200,
 			progress: (animation, progress: number, remainingMs: number) => {
-				let buttonHeight = button.$buttonWrapper.offsetHeight;
+				let buttonHeight = button.getMainDomElement().offsetHeight;
 				let dropDownHeight = button.$dropDown.offsetHeight;
 				let totalInterestingPartHeight = buttonHeight + dropDownHeight;
-				let buttonY = button.$buttonWrapper.getBoundingClientRect().top - me.getMainDomElement().closest('.UiToolAccordion').getBoundingClientRect().top;
+				let buttonY = button.getMainDomElement().getBoundingClientRect().top - me.getMainDomElement().closest('.UiToolAccordion').getBoundingClientRect().top;
 				let $scrollContainer = $(me.getMainDomElement()).scrollParent();
 				let scrollY = $scrollContainer.scrollTop();
 				let viewPortHeight = $scrollContainer[0].offsetHeight;
@@ -320,8 +271,13 @@ class UiButtonGroup {
 		$(button.$dropDownSourceButtonIndicator).position({
 			my: "center bottom",
 			at: "center bottom",
-			of: button.$buttonWrapper
+			of: button.getMainDomElement()
 		});
+	}
+
+	private insertDropdownUnderButtonRow(button: UiToolAccordionButton) {
+		let $row = this.$buttonRows.filter($row => $.contains($row, button.getMainDomElement()))[0];
+		insertAfter(button.$dropDown, $row);
 	}
 
 	public setDropDownComponent(buttonId: string, component: UiComponent) {
@@ -333,11 +289,10 @@ class UiButtonGroup {
 		const button = this.buttonsById[buttonId];
 		if (button != null) {
 			button.hasDropDown = hasDropDown;
-			button.$dropDownCaret.classList.toggle("hidden", !hasDropDown);
 		}
 	}
 
-	private setButtonDropDownComponent(button: Button, component: UiComponent) {
+	private setButtonDropDownComponent(button: UiToolAccordionButton, component: UiComponent) {
 		if (button.dropDownComponent != null) {
 			button.dropDownComponent.getMainDomElement().remove();
 		}
@@ -349,7 +304,7 @@ class UiButtonGroup {
 				component.onItemClicked.addListener(eventObject => {
 					this.toolAccordion.onToolbarDropDownItemClick.fire({
 						groupId: this.config.groupId,
-						buttonId: button.config.buttonId,
+						buttonId: button.id,
 						dropDownGroupId: eventObject.groupId,
 						dropDownItemId: eventObject.itemId
 					});
@@ -378,7 +333,6 @@ class UiButtonGroup {
 	public setButtonVisible(buttonId: string, visible: boolean) {
 		const button = this.buttonsById[buttonId];
 		if (button) {
-			button.$buttonWrapper.classList.toggle("hidden", !visible);
 			button.visible = visible;
 			this.updateVisibility();
 			this.updateRows();
@@ -416,8 +370,8 @@ class UiButtonGroup {
 
 		if (button) {
 			delete this.buttonsById[buttonId];
-			this.buttons = this.buttons.filter(b => b.config.buttonId !== buttonId);
-			button.$buttonWrapper.remove();
+			this.buttons = this.buttons.filter(b => b.id !== buttonId);
+			button.getMainDomElement().remove();
 		}
 
 		this.updateVisibility();
@@ -446,8 +400,8 @@ class UiButtonGroup {
 			if (button.visible) {
 				let rowIndex = Math.floor(visibleButtonsCount / buttonsPerRow);
 				let $row = this.$buttonRows[rowIndex] || (this.$buttonRows[rowIndex] = parseHtml(`<div class="button-row">`));
-				button.$buttonWrapper.style.flexBasis = this.enforcedButtonWidth + "px";
-				$row.appendChild(button.$buttonWrapper);
+				button.getMainDomElement().style.flexBasis = this.enforcedButtonWidth + "px";
+				$row.appendChild(button.getMainDomElement());
 				visibleButtonsCount++;
 			}
 		}
@@ -485,6 +439,15 @@ class UiButtonGroup {
 
 	public onResize(): void {
 		this.updateRows();
+		this.buttons.forEach(b => {
+			if (b.$dropDown) {
+				this.insertDropdownUnderButtonRow(b);
+			}
+		})
+	}
+
+	setButtonColors(buttonId: string, backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig) {
+		this.buttons.filter(b => b.id === buttonId)[0].setColors(backgroundColor, hoverBackgroundColor);
 	}
 }
 

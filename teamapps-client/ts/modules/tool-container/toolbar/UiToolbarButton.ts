@@ -22,13 +22,15 @@ import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {UiToolbar} from "./UiToolbar";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
-import {enterFullScreen, exitFullScreen, isFullScreen, parseHtml, prependChild} from "../../Common";
+import {enterFullScreen, exitFullScreen, generateUUID, isFullScreen, parseHtml, prependChild} from "../../Common";
 import {createUiDropDownButtonClickInfoConfig, UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiItemView} from "../../UiItemView";
 
 import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
 import {UiComponent} from "../../UiComponent";
+import {createUiBorderCssString, createUiColorCssString, createUiShadowCssString} from "../../util/CssFormatUtil";
+import {UiColorConfig} from "../../../generated/UiColorConfig";
 
 export class UiToolbarButton {
 
@@ -45,17 +47,23 @@ export class UiToolbarButton {
 	private dropDown: UiDropDown;
 	private dropDownComponent: UiComponent;
 
+	private uuidClass: string = `UiToolbarButton-${generateUUID()}`;
+	private $styleTag: HTMLStyleElement;
+
 	constructor(public config: UiToolbarButtonConfig, private context: TeamAppsUiContext) {
-		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper" data-buttonId="${config.buttonId}">
+		this.$buttonWrapper = parseHtml(`<div class="toolbar-button-wrapper ${this.uuidClass}" data-buttonId="${config.buttonId}">
 	<div class="toolbar-button-caret ${config.hasDropDown ? '' : 'hidden'}">
 	  <div class="caret"></div>
 	</div>
+	<style></style>
 </div>`);
 		let renderer = context.templateRegistry.createTemplateRenderer(config.template);
 		this.$button = parseHtml(renderer.render(config.recordData));
 		prependChild(this.$buttonWrapper, this.$button);
 		this.$dropDownCaret = this.$buttonWrapper.querySelector<HTMLElement>(":scope .toolbar-button-caret");
 		this.optimizedWidth = AbstractUiToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplateConfig).maxHeight || UiToolbar.DEFAULT_TOOLBAR_MAX_HEIGHT);
+		this.$styleTag = this.$buttonWrapper.querySelector(":scope style");
+		this.updateStyles();
 		this.setVisible(config.visible);
 		this.setHasDropDown(config.hasDropDown);
 		this.setDropDownComponent(config.dropDownComponent as UiComponent);
@@ -127,5 +135,22 @@ export class UiToolbarButton {
 
 	get id() {
 		return this.config.buttonId;
+	}
+
+	setColors(backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig) {
+		this.config.backgroundColor = backgroundColor;
+		this.config.hoverBackgroundColor = hoverBackgroundColor;
+		this.updateStyles();
+	}
+
+	private updateStyles() {
+		this.$styleTag.innerHTML = '';
+		this.$styleTag.innerText = `
+		.${this.uuidClass} {
+			background-color: ${createUiColorCssString(this.config.backgroundColor)} !important;            
+        }
+		.${this.uuidClass}:hover {
+			background-color: ${createUiColorCssString(this.config.hoverBackgroundColor)} !important;            
+        }`;
 	}
 }
