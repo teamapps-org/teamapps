@@ -23,10 +23,14 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiComponentReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.splitpane.SplitDirection;
 import org.teamapps.ux.component.splitpane.SplitPane;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
+import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.component.template.BaseTemplateRecord;
+import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 
 import java.util.Arrays;
@@ -56,9 +60,13 @@ public class MediaPlayer extends AbstractComponent {
 	}
 
 	public List<ToolbarButton> createToolbarControls() {
-		ToolbarButton play = ToolbarButton.createLarge(MaterialIcon.PLAY_ARROW, "Play", null);
-		ToolbarButton pause = ToolbarButton.createLarge(MaterialIcon.PAUSE, "Pause", null);
-		ToolbarButton stop = ToolbarButton.createLarge(MaterialIcon.STOP, "Stop", null);
+		return createToolbarControls(BaseTemplate.TOOLBAR_BUTTON, MaterialIcon.PLAY_ARROW, MaterialIcon.PAUSE, MaterialIcon.STOP);
+	}
+
+	public List<ToolbarButton> createToolbarControls(Template template, Icon playIcon, Icon pauseIcon, Icon stopIcon) {
+		ToolbarButton play = new ToolbarButton(template, new BaseTemplateRecord(playIcon, "Play", null));
+		ToolbarButton pause = new ToolbarButton(template, new BaseTemplateRecord(pauseIcon, "Pause", null));
+		ToolbarButton stop = new ToolbarButton(template, new BaseTemplateRecord(stopIcon, "Stop", null));
 		pause.setVisible(false);
 
 		play.onClick.addListener(toolbarButtonClickEvent -> {
