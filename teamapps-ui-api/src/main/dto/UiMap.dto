@@ -26,6 +26,7 @@ class UiMap extends UiComponent {
 	UiMapLocation mapPosition;
 	Dictionary<UiMapPolyline> polylines;
 	List<UiMapMarkerClientRecord> markers;
+	UiMapMarkerCluster markerCluster;
 
 	command registerTemplate(String id, UiTemplate template);
 	command addMarker(UiMapMarkerClientRecord marker);
@@ -58,7 +59,10 @@ enum UiMapType {
 	MAP_QUEST_OSM, MAP_QUEST_SATELLITE,
 	OSM_TOPO_MAP,
 	NASA_EARTH_AT_NIGHT,
-	INFO_WEATHER_TEMPERATURE
+	INFO_WEATHER_TEMPERATURE,
+	THUNDERFOREST_DARK,
+	THUNDERFOREST_TRANSPORT,
+	WIKIMEDIA
 }
 
 @TypeScriptFactory
