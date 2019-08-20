@@ -19,11 +19,13 @@
  */
 package org.teamapps.ux.component.toolbar;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiToolbar;
 import org.teamapps.dto.UiToolbarButton;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
+import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
@@ -55,6 +57,9 @@ public class ToolbarButton {
 	private int droDownPanelWidth;
 
 	private boolean visible = true;
+
+	private Color backgroundColor;
+	private Color hoverBackgroundColor;
 
 	public ToolbarButton(Object record) {
 		this(null, record, null, null, null, 0);
@@ -120,21 +125,21 @@ public class ToolbarButton {
 	}
 
 	public UiToolbarButton createUiToolbarButton() {
-		UiToolbarButton uiToolbarButton;
-
 		Template template = getAppliedTemplate();
 		Map<String, Object> values = getAppliedPropertyExtractor().getValues(record, template.getDataKeys());
 
-		UiToolbarButton button = new UiToolbarButton(clientId, template.createUiTemplate(), values);
+		UiToolbarButton ui = new UiToolbarButton(clientId, template.createUiTemplate(), values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {
-			button.setDropDownComponent(dropDownComponentSupplier.get().createUiComponentReference());
+			ui.setDropDownComponent(dropDownComponentSupplier.get().createUiComponentReference());
 		}
-		button.setHasDropDown(this.dropDownComponentSupplier != null);
-		button.setDropDownPanelWidth(droDownPanelWidth > 0 ? droDownPanelWidth : 450);
-		button.setVisible(visible);
-		button.setOpenNewTabWithUrl(openNewTabWithUrl);
-		button.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.getId() : null);
-		return button;
+		ui.setHasDropDown(this.dropDownComponentSupplier != null);
+		ui.setDropDownPanelWidth(droDownPanelWidth > 0 ? droDownPanelWidth : 450);
+		ui.setVisible(visible);
+		ui.setOpenNewTabWithUrl(openNewTabWithUrl);
+		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.getId() : null);
+		ui.setBackgroundColor(UiUtil.createUiColor(backgroundColor));
+		ui.setHoverBackgroundColor(UiUtil.createUiColor(hoverBackgroundColor));
+		return ui;
 	}
 
 	public ToolbarButton setVisible(boolean visible) {
@@ -249,5 +254,27 @@ public class ToolbarButton {
 
 	public void setDropDownComponentSupplier(Supplier<Component> dropDownComponentSupplier) {
 		this.dropDownComponentSupplier = dropDownComponentSupplier;
+	}
+
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+		if (toolbarButtonGroup != null){
+			toolbarButtonGroup.handleColorChange(this.clientId, backgroundColor, hoverBackgroundColor);
+		}
+	}
+
+	public Color getHoverColor() {
+		return hoverBackgroundColor;
+	}
+
+	public void setHoverBackgroundColor(Color hoverBackgroundColor) {
+		this.hoverBackgroundColor = hoverBackgroundColor;
+		if (toolbarButtonGroup != null){
+			toolbarButtonGroup.handleColorChange(this.clientId, backgroundColor, hoverBackgroundColor);
+		}
 	}
 }

@@ -26,6 +26,7 @@ import org.teamapps.dto.UiDropDownButtonClickInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiToolbar;
 import org.teamapps.event.Event;
+import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.common.format.Color;
@@ -112,19 +113,23 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiToolbar.RemoveButtonGroupCommand(getId(), group.getClientId()));
 	}
 
-	/*package-private*/ void handleGroupVisibilityChange(String groupId, boolean visible) {
+	protected void handleGroupVisibilityChange(String groupId, boolean visible) {
 		queueCommandIfRendered(() -> new UiToolbar.SetButtonGroupVisibleCommand(this.getId(), groupId, visible));
 	}
 
-	/*package-private*/ void handleButtonVisibilityChange(String groupClientId, String buttonClientId, boolean visible) {
+	protected void handleButtonVisibilityChange(String groupClientId, String buttonClientId, boolean visible) {
 		queueCommandIfRendered(() -> new UiToolbar.SetButtonVisibleCommand(this.getId(), groupClientId, buttonClientId, visible));
 	}
 
-	/*package-private*/ void handleAddButton(ToolbarButtonGroup group, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor) {
+	protected void handleButtonColorChange(String groupClientId, String buttonClientId, Color backgroundColor, Color hoverBackgroundColor) {
+		queueCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(this.getId(), groupClientId, buttonClientId, UiUtil.createUiColor(backgroundColor), UiUtil.createUiColor(hoverBackgroundColor)));
+	}
+
+	protected void handleAddButton(ToolbarButtonGroup group, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor) {
 		queueCommandIfRendered(() -> new UiToolbar.AddButtonCommand(getId(), group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor));
 	}
 
-	/*package-private*/ void handleButtonRemoved(ToolbarButtonGroup group, ToolbarButton button) {
+	protected void handleButtonRemoved(ToolbarButtonGroup group, ToolbarButton button) {
 		queueCommandIfRendered(() -> new UiToolbar.RemoveButtonCommand(getId(), group.getClientId(), button.getClientId()));
 	}
 

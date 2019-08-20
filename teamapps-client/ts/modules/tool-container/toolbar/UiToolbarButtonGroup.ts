@@ -28,6 +28,7 @@ import {UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButt
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "../../Common";
 import {UiComponent} from "../../UiComponent";
+import {UiColorConfig} from "../../../generated/UiColorConfig";
 
 export class UiToolbarButtonGroup {
 	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: UiDropDownButtonClickInfoConfig}> = new TeamAppsEvent(this);
@@ -152,6 +153,10 @@ export class UiToolbarButtonGroup {
 			return button.isVisible() && this.buttonsShiftedToOverflowDropDown.indexOf(button) === -1;
 		});
 		this.$buttonGroupWrapper.classList.toggle("pseudo-hidden", !(this.visible && hasVisibleButton));
+	}
+
+	setButtonColors(buttonId: string, backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig) {
+		this.buttons.getValue(buttonId).setColors(backgroundColor, hoverBackgroundColor);
 	}
 
 	public calculateButtonVisibilities(availableWidth: number): ButtonVisibilities {
