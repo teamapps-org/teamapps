@@ -76,6 +76,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 			this.addPolyline(lineId, config.polylines[lineId]);
 		});
 		config.markers.forEach(m => this.addMarker(m));
+		this.setMapMarkerCluster(config.markerCluster);
 	}
 
 	public getMainDomElement(): HTMLElement {

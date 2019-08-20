@@ -19,15 +19,10 @@
  */
 package org.teamapps.ux.component.map;
 
+import org.jetbrains.annotations.NotNull;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.dto.UiComboBox;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiMap;
-import org.teamapps.dto.UiMapArea;
-import org.teamapps.dto.UiMapMarkerClientRecord;
-import org.teamapps.dto.UiMapPolyline;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -54,6 +49,7 @@ public class MapView<RECORD> extends AbstractComponent {
 	private Location location = new Location(0, 0);
 	private Map<String, Polyline> polylinesByClientId = new HashMap<>();
 	private List<Marker<RECORD>> markers = new ArrayList<>();
+	private List<Marker<RECORD>> clusterMarkers = new ArrayList<>();
 
 	private final ClientRecordCache<Marker<RECORD>, UiMapMarkerClientRecord> recordCache = new ClientRecordCache<>(this::createUiRecord);
 
@@ -84,6 +80,9 @@ public class MapView<RECORD> extends AbstractComponent {
 		uiMap.setPolylines(uiPolylines);
 		if (location != null) {
 			uiMap.setMapPosition(location.createUiLocation());
+		}
+		if (clusterMarkers != null && !clusterMarkers.isEmpty()) {
+			uiMap.setMarkerCluster(createMarkerCluster(clusterMarkers));
 		}
 		CacheManipulationHandle<List<UiMapMarkerClientRecord>> cacheResponse = recordCache.replaceRecords(markers);
 		uiMap.setMarkers(cacheResponse.getResult());
@@ -148,6 +147,18 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	public void removePolyline(Polyline polyline) {
 		queueCommandIfRendered(() -> new UiMap.RemovePolylineCommand(getId(), polyline.getClientId()));
+	}
+
+	public void setMarkerCluster(List<Marker<RECORD>> markers) {
+		clusterMarkers = markers;
+		UiMapMarkerCluster cluster = createMarkerCluster(markers);
+		queueCommandIfRendered(() -> new UiMap.SetMapMarkerClusterCommand(getId(), cluster));
+	}
+
+	private UiMapMarkerCluster createMarkerCluster(List<Marker<RECORD>> markers) {
+		List<UiMapMarkerClientRecord> uiMarkers = new ArrayList<>();
+		markers.forEach(marker -> uiMarkers.add(createUiRecord(marker)));
+		return new UiMapMarkerCluster(uiMarkers);
 	}
 
 	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {
