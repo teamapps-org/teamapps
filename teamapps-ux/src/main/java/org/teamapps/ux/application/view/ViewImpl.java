@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.application.view;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.panel.Panel;
@@ -189,5 +190,11 @@ public class ViewImpl implements View {
     @Override
     public String getTabTitle() {
         return tabTitle;
+    }
+
+    @Override
+    public void setLocalToolbarBackgroundColor(Color color) {
+        checkToolbar();
+        toolbar.setBackgroundColor(color);
     }
 }
