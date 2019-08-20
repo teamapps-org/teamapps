@@ -194,32 +194,37 @@ public class ToolbarButton {
 		return visible;
 	}
 
-	public void setToolbarButtonGroup(ToolbarButtonGroup toolbarButtonGroup) {
+	public ToolbarButton setToolbarButtonGroup(ToolbarButtonGroup toolbarButtonGroup) {
 		this.toolbarButtonGroup = toolbarButtonGroup;
+		return this;
 	}
 
-	public void setDroDownPanelWidth(int droDownPanelWidth) {
+	public ToolbarButton setDroDownPanelWidth(int droDownPanelWidth) {
 		this.droDownPanelWidth = droDownPanelWidth;
+		return this;
 	}
 
-	public void setDropDownComponent(Component dropDownComponent) {
+	public ToolbarButton setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponentSupplier = () -> dropDownComponent;
+		return this;
 	}
 
 	public boolean isEagerDropDownRendering() {
 		return eagerDropDownRendering;
 	}
 
-	public void setEagerDropDownRendering(boolean eagerDropDownRendering) {
+	public ToolbarButton setEagerDropDownRendering(boolean eagerDropDownRendering) {
 		this.eagerDropDownRendering = eagerDropDownRendering;
+		return this;
 	}
 
 	public Template getTemplate() {
 		return template;
 	}
 
-	public void setTemplate(Template template) {
+	public ToolbarButton setTemplate(Template template) {
 		this.template = template;
+		return this;
 	}
 
 	public Template getAppliedTemplate() {
@@ -236,8 +241,9 @@ public class ToolbarButton {
 		return propertyExtractor;
 	}
 
-	public void setPropertyExtractor(PropertyExtractor propertyExtractor) {
+	public ToolbarButton setPropertyExtractor(PropertyExtractor propertyExtractor) {
 		this.propertyExtractor = propertyExtractor;
+		return this;
 	}
 
 	public PropertyExtractor getAppliedPropertyExtractor() {
@@ -252,29 +258,32 @@ public class ToolbarButton {
 		return this.dropDownComponentSupplier != null ? this.dropDownComponentSupplier.get() : null;
 	}
 
-	public void setDropDownComponentSupplier(Supplier<Component> dropDownComponentSupplier) {
+	public ToolbarButton setDropDownComponentSupplier(Supplier<Component> dropDownComponentSupplier) {
 		this.dropDownComponentSupplier = dropDownComponentSupplier;
+		return this;
 	}
 
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
 
-	public void setBackgroundColor(Color backgroundColor) {
+	public ToolbarButton setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 		if (toolbarButtonGroup != null){
 			toolbarButtonGroup.handleColorChange(this.clientId, backgroundColor, hoverBackgroundColor);
 		}
+		return this;
 	}
 
 	public Color getHoverColor() {
 		return hoverBackgroundColor;
 	}
 
-	public void setHoverBackgroundColor(Color hoverBackgroundColor) {
+	public ToolbarButton setHoverBackgroundColor(Color hoverBackgroundColor) {
 		this.hoverBackgroundColor = hoverBackgroundColor;
 		if (toolbarButtonGroup != null){
 			toolbarButtonGroup.handleColorChange(this.clientId, backgroundColor, hoverBackgroundColor);
 		}
+		return this;
 	}
 }
