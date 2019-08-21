@@ -47,6 +47,9 @@ class UiRootPanel extends UiComponent {
 	static command exitFullScreen();
 	static command showNotification(UiNotification notification);
 	static command showDialogMessage(String icon, String title, String message, List<UiGenericErrorMessageOption> options);
+
+	static command showPopup(UiPopup* popup);
+	static command showPopupAtCurrentMousePosition(UiPopup* popup);
 }
 
 enum UiGenericErrorMessageOption {

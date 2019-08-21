@@ -29,6 +29,7 @@ import org.teamapps.icons.api.IconTheme;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.ux.caption.MultiResourceBundle;
+import org.teamapps.ux.component.popup.Popup;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
@@ -324,6 +325,16 @@ public class SimpleSessionContext implements LockableSessionContext {
 		this.sessionConfiguration = config;
 		updateMessageBundle();
 		queueCommand(new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
+	}
+
+	@Override
+	public void showPopupAtCurrentMousePosition(Popup popup) {
+		queueCommand(new UiRootPanel.ShowPopupAtCurrentMousePositionCommand(popup.createUiComponentReference()));
+	}
+
+	@Override
+	public void showPopup(Popup popup) {
+		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiComponentReference()));
 	}
 
 	public static class UTF8Control extends ResourceBundle.Control {

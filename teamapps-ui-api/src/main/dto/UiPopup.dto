@@ -1,0 +1,19 @@
+class UiPopup extends UiComponent {
+	UiComponent* contentComponent;
+	int width; // 0 = full width, -1 = auto
+	int height; // 0 = full height, -1 = auto
+	int x; 
+	int y; 
+    UiColor backgroundColor;
+	boolean modal = false;
+	UiColor dimmingColor = new UiColor(0, 0, 0).setAlpha(.2f);
+    boolean closeOnEscape; // close if the user presses escape
+    boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
+
+	command setBackgroundColor(UiColor backgroundColor);
+	command setDimmingColor(UiColor backgroundColor);
+	command setPosition(int x, int y);
+	command setDimensions(int width, int height);
+
+	command close();
+}

@@ -25,7 +25,7 @@ import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {UiNotificationConfig} from "../generated/UiNotificationConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, pageTransition, parseHtml, showNotification} from "./Common";
+import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml, showNotification} from "./Common";
 import {UiRootPanelCommandHandler, UiRootPanelConfig} from "../generated/UiRootPanelConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
@@ -36,6 +36,7 @@ import {UiColorConfig} from "../generated/UiColorConfig";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiComponent} from "./UiComponent";
 import {UiPageTransition} from "../generated/UiPageTransition";
+import {UiPopup} from "./UiPopup";
 
 require("moment-jdateformatparser");
 
@@ -344,7 +345,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 			content: null
 		}, context);
 		let $contentElement = parseHtml(`<div class="UiGenericErrorMessage">
-	<div class="icon img img-48" style="background-image: url(/resources/window-close-grey.png); display: ${showErrorIcon ? 'block': 'none'}"></div>
+	<div class="icon img img-48" style="background-image: url(/resources/window-close-grey.png); display: ${showErrorIcon ? 'block' : 'none'}"></div>
 	<div class="message" style="text-align: justify;">${message}</div>
 	<div class="option-buttons">
 		${options.map(o => `<div class="btn btn-default ${UiGenericErrorMessageOption[o].toLowerCase()}">${UiGenericErrorMessageOption[o]}</div>`).join("")}
@@ -363,6 +364,15 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	setOptimizedForTouch(optimizedForTouch: boolean) {
 		this.$root.classList.toggle("optimized-for-touch", optimizedForTouch);
 		document.body.classList.toggle("optimized-for-touch", optimizedForTouch); // needed for popups and maximized panels... TODO either only use this or change implementation
+	}
+
+	public static showPopupAtCurrentMousePosition(popup: UiPopup) {
+		popup.setPosition(... getLastPointerCoordinates());
+		document.body.appendChild(popup.getMainDomElement());
+	}
+
+	public static showPopup(popup: UiPopup) {
+		document.body.appendChild(popup.getMainDomElement());
 	}
 }
 

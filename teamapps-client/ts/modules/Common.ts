@@ -40,8 +40,6 @@ export type Renderer = {
 	template: UiTemplateConfig
 };
 
-export type ImageRenderer = (imageIdentifier: string) => string;
-
 const logger = log.getLogger("Commmon");
 
 export class Constants {
@@ -1273,4 +1271,10 @@ export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransi
 
 export function css(el: HTMLElement, values: object) {
 	Object.assign(el.style, values);
+}
+
+let lastPointerCoordinates: [number, number] = [0, 0];
+document.body.addEventListener("pointermove", ev => lastPointerCoordinates = [ev.clientX, ev.clientY], {capture: true});
+export function getLastPointerCoordinates() {
+	return lastPointerCoordinates;
 }
