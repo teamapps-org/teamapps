@@ -29,6 +29,25 @@
 .theme-dark {
   color: @dark-theme-text-color;
 
+  html {
+    scrollbar-face-color: #555555;
+    scrollbar-base-color: #555555;
+    scrollbar-3dlight-color: #555555;
+    scrollbar-highlight-color: #555555;
+    scrollbar-track-color: #000;
+    scrollbar-arrow-color: #000;
+    scrollbar-shadow-color: #555555;
+    scrollbar-dark-shadow-color: #555555;
+  }
+
+  ::-webkit-scrollbar { width: 8px; height: 3px;}
+  ::-webkit-scrollbar-button {  background-color: #555555; }
+  ::-webkit-scrollbar-track {  background-color: #555555;}
+  ::-webkit-scrollbar-track-piece { background-color: #000;}
+  ::-webkit-scrollbar-thumb { height: 50px; background-color: #555; border-radius: 3px;}
+  ::-webkit-scrollbar-corner { background-color: #555555;}
+  ::-webkit-resizer { background-color: #555;}
+
   .UiToolbar {
     > .background-color-div {
       background-color: @dark-theme-background-color-transparent;
@@ -178,6 +197,79 @@
     }
     &.disabled {
       color: fadeout(@dark-theme-text-color, 70%);
+    }
+  }
+
+
+  .UiMediaTrackGraph {
+    .area {
+      fill: rgb(96, 185, 255);
+      fill-opacity:0.20;
+      clip-path: url(#clip);
+    }
+
+    .area2 {
+      fill: rgb(92, 170, 252);
+      fill-opacity:0.30;
+      clip-path: url(#clip);
+    }
+
+    .line {
+      stroke: rgb(87, 177, 243);
+      stroke-width: 0.9;
+      stroke-opacity:1.0;
+      fill: none;
+      //filter: url(#drop-shadow);
+      clip-path: url(#clip);
+    }
+
+    .line2 {
+      stroke: rgb(77, 129, 210);
+      stroke-width: 0.9;
+      stroke-opacity:1.0;
+      fill: none;
+      clip-path: url(#clip);
+    }
+
+    .marker {
+      stroke: rgb(139, 116, 31);
+      stroke-width: 0.3;
+      stroke-opacity:1.0;
+      fill: rgb(139, 116, 31);
+      fill-opacity:0.50;
+      clip-path: url(#clip);
+    }
+
+    .cursor {
+      stroke: rgb(255, 201, 0);
+      stroke-width: 1.7;
+      stroke-opacity:1.0;
+      fill: none;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #f7f6f9;
+      shape-rendering: crispEdges;
+    }
+
+    .brush {
+      stroke: #ff9f5a;
+      stroke-width: 1.0;
+      stroke-opacity: 1;
+      stroke-dasharray: 3, 1;
+      fill: #ffed0c;
+      fill-opacity: .3;
+      shape-rendering: crispEdges;
+      pointer-events: all;
+    }
+
+
+    rect.pane {
+      cursor: move;
+      fill: none;
+      pointer-events: all;
     }
   }
 }
