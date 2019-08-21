@@ -20,15 +20,19 @@
 
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiFloatingComponentCommandHandler, UiFloatingComponentConfig} from "../generated/UiFloatingComponentConfig";
+import {UiFloatingComponent_ExpandedOrCollapsedEvent, UiFloatingComponentCommandHandler, UiFloatingComponentConfig, UiFloatingComponentEventSource} from "../generated/UiFloatingComponentConfig";
 import {UiComponent} from "./UiComponent";
 import ResizeObserver from 'resize-observer-polyfill';
 import {parseHtml, prependChild, removeClassesByFunction} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiFloatingComponentPosition} from "../generated/UiFloatingComponentPosition";
+import {TeamAppsEvent} from "./util/TeamAppsEvent";
 
-export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponentConfig> implements UiFloatingComponentCommandHandler {
+export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponentConfig> implements UiFloatingComponentCommandHandler, UiFloatingComponentEventSource {
+
+	public readonly onExpandedOrCollapsed: TeamAppsEvent<UiFloatingComponent_ExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
+
 	private containerComponent: UiComponent;
 	private contentComponent: UiComponent;
 	private $main: HTMLElement;
@@ -46,6 +50,7 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 		this.expanderLatch = parseHtml(`<div class="expander-latch"></div>`);
 		this.expanderLatch.addEventListener("click", evt => {
 			this.setExpanded(!this._config.expanded);
+			this.onExpandedOrCollapsed.fire({expanded: this._config.expanded});
 		});
 		this.$main.appendChild(this.expanderLatch);
 

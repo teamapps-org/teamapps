@@ -18,6 +18,8 @@ class UiFloatingComponent extends UiComponent {
 	command setDimensions(int width, int height);
 	command setMargins(int marginX, int marginY);
 
+	event expandedOrCollapsed(boolean expanded);
+
 }
 
 enum UiFloatingComponentPosition {
