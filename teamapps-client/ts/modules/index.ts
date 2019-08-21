@@ -87,6 +87,7 @@ export {UiFlexContainer} from "./UiFlexContainer";
 export {UiChatDisplay} from "./UiChatDisplay";
 export {UiChatInput} from "./UiChatInput";
 export {UiAbsoluteLayout} from "./UiAbsoluteLayout";
+export {UiFloatingComponent} from "./UiFloatingComponent";
 
 export {UiGauge} from "./UiGauge";
 
