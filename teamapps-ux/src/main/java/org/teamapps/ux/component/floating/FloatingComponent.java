@@ -21,6 +21,7 @@ public class FloatingComponent extends AbstractComponent {
 	private int marginY;
 	private FloatingPosition position;
 	private Color backgroundColor = Color.TRANSPARENT;
+	private Color expanderHandleColor = Color.WHITE;
 
 	private boolean collapsible;
 	private boolean expanded;
@@ -43,6 +44,7 @@ public class FloatingComponent extends AbstractComponent {
 		ui.setMarginY(marginY);
 		ui.setPosition(position.toUiPosition());
 		ui.setBackgroundColor(UiUtil.createUiColor(backgroundColor));
+		ui.setExpanderHandleColor(UiUtil.createUiColor(expanderHandleColor));
 		ui.setCollapsible(collapsible);
 		ui.setExpanded(expanded);
 		return ui;
@@ -100,6 +102,15 @@ public class FloatingComponent extends AbstractComponent {
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 		queueCommandIfRendered(() -> new UiFloatingComponent.SetBackgroundColorCommand(getId(), UiUtil.createUiColor(backgroundColor)));
+	}
+
+	public Color getExpanderHandleColor() {
+		return expanderHandleColor;
+	}
+
+	public void setExpanderHandleColor(Color expanderHandleColor) {
+		this.expanderHandleColor = expanderHandleColor;
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpanderHandleColorCommand(getId(), UiUtil.createUiColor(expanderHandleColor)));
 	}
 
 	public boolean isCollapsible() {
