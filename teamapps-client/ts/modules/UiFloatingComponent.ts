@@ -38,7 +38,7 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 	private contentComponent: UiComponent;
 	private $main: HTMLElement;
 
-	private expanderLatch: HTMLElement;
+	private $expanderHandle: HTMLElement;
 
 	constructor(config: UiFloatingComponentConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -48,16 +48,17 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 		this.$main = parseHtml(`<div class="UiFloatingComponent"></div>`);
 
 		this.$main.appendChild(this.contentComponent.getMainDomElement());
-		this.expanderLatch = parseHtml(`<div class="expander-latch"></div>`);
-		this.expanderLatch.addEventListener("click", evt => {
+		this.$expanderHandle = parseHtml(`<div class="expander-handle"></div>`);
+		this.$expanderHandle.addEventListener("click", evt => {
 			this.setExpanded(!this._config.expanded);
 			this.onExpandedOrCollapsed.fire({expanded: this._config.expanded});
 		});
-		this.$main.appendChild(this.expanderLatch);
+		this.$main.appendChild(this.$expanderHandle);
 
 		prependChild(this.containerComponent.getMainDomElement(), this.getMainDomElement());
 
 		this.setBackgroundColor(config.backgroundColor);
+		this.setExpanderHandleColor(config.expanderHandleColor);
 
 		const resizeObserver = new ResizeObserver(entries => {
 			for (let entry of entries) {
@@ -82,8 +83,8 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 	}
 
 	private updateFloatingPosition() {
-		removeClassesByFunction(this.expanderLatch.classList, className => className.startsWith("position-"));
-		this.expanderLatch.classList.add("position-" + UiFloatingComponentPosition[this._config.position].toLowerCase().replace('_', '-'));
+		removeClassesByFunction(this.$expanderHandle.classList, className => className.startsWith("position-"));
+		this.$expanderHandle.classList.add("position-" + UiFloatingComponentPosition[this._config.position].toLowerCase().replace('_', '-'));
 
 		let containerWidth = this.containerComponent.getMainDomElement().offsetWidth;
 		let containerHeight = this.containerComponent.getMainDomElement().offsetHeight;
@@ -172,6 +173,10 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 
 	setBackgroundColor(backgroundColor: UiColorConfig) {
 		this.getMainDomElement().style.backgroundColor = createUiColorCssString(backgroundColor);
+	}
+
+	setExpanderHandleColor(expanderHandleColor: UiColorConfig) {
+		this.$expanderHandle.style.backgroundColor = createUiColorCssString(expanderHandleColor);
 	}
 }
 
