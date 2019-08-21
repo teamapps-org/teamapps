@@ -258,7 +258,6 @@ export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConf
 		}
 
 		this.cursor = this.markerGroup.append("line")
-			.style("stroke", "black")
 			.attr("x1", this.x(new Date(1000 * 0)))
 			.attr("x2", this.x(new Date(1000 * 0)))
 			.attr("y1", y(0))
