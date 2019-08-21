@@ -31,6 +31,7 @@ import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.notification.Notification;
 import org.teamapps.ux.component.notification.NotificationPosition;
+import org.teamapps.ux.component.popup.Popup;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
@@ -259,4 +260,6 @@ public interface SessionContext {
 	}
 
 
+	void showPopupAtCurrentMousePosition(Popup popup);
+	void showPopup(Popup popup);
 }
