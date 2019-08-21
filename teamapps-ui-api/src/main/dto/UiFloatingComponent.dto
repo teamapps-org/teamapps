@@ -17,6 +17,7 @@ class UiFloatingComponent extends UiComponent {
 	command setPosition(UiFloatingComponentPosition position);
 	command setDimensions(int width, int height);
 	command setMargins(int marginX, int marginY);
+	command setBackgroundColor(UiColor backgroundColor);
 
 	event expandedOrCollapsed(boolean expanded);
 
