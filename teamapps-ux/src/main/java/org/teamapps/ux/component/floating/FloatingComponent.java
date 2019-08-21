@@ -2,12 +2,16 @@ package org.teamapps.ux.component.floating;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFloatingComponent;
+import org.teamapps.event.Event;
 import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 
 public class FloatingComponent extends AbstractComponent {
+
+	public final Event<Boolean> onExpandedOrCollapsed = new Event<>();
 
 	private final Component containerComponent;
 	private final Component contentComponent;
@@ -111,7 +115,16 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpandedCommand(getId(), expanded));
 	}
 
-
+	@Override
+	public void handleUiEvent(UiEvent event) {
+		switch (event.getUiEventType()) {
+			case UI_FLOATING_COMPONENT_EXPANDED_OR_COLLAPSED: {
+				onExpandedOrCollapsed.fire(((UiFloatingComponent.ExpandedOrCollapsedEvent) event).getExpanded());
+				break;
+			}
+		}
+	}
 }
