@@ -49,6 +49,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		}
 
 		// do this with timeout since the main dom element does not yet exist when executing this (subclass constructor gets called after this)
+		// TODO this introduces A LOT of race conditions! e.g. the resize observer might or might not fire the initial size
 		setTimeout(() => {
 			this.setVisible(_config.visible, false);
 			if (_config.stylesBySelector != null) { // might be null when used via JavaScript API!
@@ -65,6 +66,8 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 				}
 			});
 			resizeObserver.observe(this.getMainDomElement());
+
+			this.reLayout(this.getMainDomElement().offsetWidth, this.getMainDomElement().offsetHeight); // TODO remove when no more "setTimeout()"!
 		}, 0);
 	}
 
@@ -79,10 +82,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 	protected reLayout(width: number, height: number): void {
 		let hasSize = width > 0 || height > 0;
 		if (this.width === width && this.height === height) {
-			console.log(this._config.id + "ignoring since unchanged");
 			return;
-		} else {
-			console.log(this._config.id, this.width, width, this.height, height);
 		}
 		this.width = width;
 		this.height = height;

@@ -1,0 +1,25 @@
+class UiFloatingComponent extends UiComponent {
+
+	UiComponent* containerComponent;
+	UiComponent* contentComponent;
+	int width; // 0 = full width, -1 = auto
+	int height; // 0 = full height, -1 = auto
+	int marginX;
+	int marginY;
+	UiFloatingComponentPosition position;
+
+    UiColor backgroundColor;
+
+    boolean collapsible = true;
+    boolean expanded = true;
+
+	command setExpanded(boolean expanded);
+	command setPosition(UiFloatingComponentPosition position);
+	command setDimensions(int width, int height);
+	command setMargins(int marginX, int marginY);
+
+}
+
+enum UiFloatingComponentPosition {
+	TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+}
