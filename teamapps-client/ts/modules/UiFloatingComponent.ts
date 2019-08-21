@@ -28,6 +28,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiFloatingComponentPosition} from "../generated/UiFloatingComponentPosition";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
+import {UiColorConfig} from "../generated/UiColorConfig";
 
 export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponentConfig> implements UiFloatingComponentCommandHandler, UiFloatingComponentEventSource {
 
@@ -56,7 +57,7 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 
 		prependChild(this.containerComponent.getMainDomElement(), this.getMainDomElement());
 
-		this.getMainDomElement().style.backgroundColor = createUiColorCssString(config.backgroundColor);
+		this.setBackgroundColor(config.backgroundColor);
 
 		const resizeObserver = new ResizeObserver(entries => {
 			for (let entry of entries) {
@@ -169,6 +170,9 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 		this.updateFloatingPosition();
 	}
 
+	setBackgroundColor(backgroundColor: UiColorConfig) {
+		this.getMainDomElement().style.backgroundColor = createUiColorCssString(backgroundColor);
+	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiFloatingComponent", UiFloatingComponent);

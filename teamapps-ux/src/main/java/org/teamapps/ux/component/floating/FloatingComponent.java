@@ -99,6 +99,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetBackgroundColorCommand(getId(), UiUtil.createUiColor(backgroundColor)));
 	}
 
 	public boolean isCollapsible() {
