@@ -19,23 +19,19 @@
  */
 package org.teamapps.ux.component.timegraph;
 
-import org.teamapps.dto.UiLineChartLineFormat;
-import org.teamapps.dto.UiLongInterval;
 import org.teamapps.common.format.Color;
+import org.teamapps.dto.UiLineChartLine;
+import org.teamapps.dto.UiLongInterval;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.teamapps.util.UiUtil.createUiColor;
 
-public class LineChartLine {
-
-	private static Color[] LINE_BASE_COLORS = new Color[]{Color.MATERIAL_BLUE_500, Color.MATERIAL_TEAL_500, Color.MATERIAL_RED_500, Color.MATERIAL_DEEP_PURPLE_500, Color.MATERIAL_GREEN_500,
-			Color.MATERIAL_GREY_500};
-
-	public static Color getBaseColor(int index) {
-		return LINE_BASE_COLORS[index % LINE_BASE_COLORS.length];
-	}
+public class LineChartLine implements LineChartDataDisplay {
 
 	private final String id;
-	private LineChartLineListener changeListener;
+	private LineChartDataDisplayChangeListener changeListener;
 
 	private LineChartCurveType graphType = LineChartCurveType.MONOTONE;
 	private float dataDotRadius = 2;
@@ -73,25 +69,33 @@ public class LineChartLine {
 		this.areaColorScaleMax = areaColorScaleMax;
 	}
 
-	public UiLineChartLineFormat createUiLineChartLineFormat() {
-		UiLineChartLineFormat definition = new UiLineChartLineFormat();
-		definition.setGraphType(graphType.toUiLineChartCurveType());
-		definition.setDataDotRadius(dataDotRadius);
-		definition.setLineColorScaleMin(lineColorScaleMin != null ? createUiColor(lineColorScaleMin) : null);
-		definition.setLineColorScaleMax(lineColorScaleMax != null ? createUiColor(lineColorScaleMax) : null);
-		definition.setAreaColorScaleMin(areaColorScaleMin != null ? createUiColor(areaColorScaleMin) : null);
-		definition.setAreaColorScaleMax(areaColorScaleMax != null ? createUiColor(areaColorScaleMax) : null);
-		definition.setAxisColor(yAxisColor != null ? createUiColor(yAxisColor) : null);
-		definition.setIntervalY(intervalY != null ? intervalY.createUiLongInterval() : new UiLongInterval(0, 1000));
-		definition.setYScaleType(yScaleType.toUiScaleType());
-		definition.setYScaleZoomMode(yScaleZoomMode.toUiLineChartYScaleZoomMode());
-		definition.setYZeroLineVisible(yZeroLineVisible);
+	@Override
+	public UiLineChartLine createUiFormat() {
+		UiLineChartLine ui = new UiLineChartLine();
+		mapAbstractLineChartDataDisplayProperties(ui);
+		
+		ui.setGraphType(graphType.toUiLineChartCurveType());
+		ui.setDataDotRadius(dataDotRadius);
+		ui.setLineColorScaleMin(lineColorScaleMin != null ? createUiColor(lineColorScaleMin) : null);
+		ui.setLineColorScaleMax(lineColorScaleMax != null ? createUiColor(lineColorScaleMax) : null);
+		ui.setAreaColorScaleMin(areaColorScaleMin != null ? createUiColor(areaColorScaleMin) : null);
+		ui.setAreaColorScaleMax(areaColorScaleMax != null ? createUiColor(areaColorScaleMax) : null);
+		ui.setAxisColor(yAxisColor != null ? createUiColor(yAxisColor) : null);
+		ui.setIntervalY(intervalY != null ? intervalY.createUiLongInterval() : new UiLongInterval(0, 1000));
+		ui.setYScaleType(yScaleType.toUiScaleType());
+		ui.setYScaleZoomMode(yScaleZoomMode.toUiLineChartYScaleZoomMode());
+		ui.setYZeroLineVisible(yZeroLineVisible);
 
-		return definition;
+		return ui;
 	}
 
 	public String getId() {
 		return id;
+	}
+
+	@Override
+	public List<String> getDataSourceIds() {
+		return Collections.singletonList(id);
 	}
 
 	public LineChartCurveType getGraphType() {
@@ -101,7 +105,7 @@ public class LineChartLine {
 	public LineChartLine setGraphType(LineChartCurveType graphType) {
 		this.graphType = graphType;
 		if (this.changeListener != null) {
-			changeListener.handleGraphTypeChanged(this, graphType);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
@@ -113,7 +117,7 @@ public class LineChartLine {
 	public LineChartLine setDataDotRadius(float dataDotRadius) {
 		this.dataDotRadius = dataDotRadius;
 		if (this.changeListener != null) {
-			changeListener.handleDataDotRadiusChanged(this, dataDotRadius);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
@@ -125,7 +129,7 @@ public class LineChartLine {
 	public LineChartLine setLineColorScaleMin(Color lineColorScaleMin) {
 		this.lineColorScaleMin = lineColorScaleMin;
 		if (this.changeListener != null) {
-			changeListener.handleLineColorScaleMinChanged(this, lineColorScaleMin);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
@@ -137,7 +141,7 @@ public class LineChartLine {
 	public LineChartLine setLineColorScaleMax(Color lineColorScaleMax) {
 		this.lineColorScaleMax = lineColorScaleMax;
 		if (this.changeListener != null) {
-			changeListener.handleLineColorScaleMaxChanged(this, lineColorScaleMax);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
@@ -149,7 +153,7 @@ public class LineChartLine {
 	public LineChartLine setAreaColorScaleMin(Color areaColorScaleMin) {
 		this.areaColorScaleMin = areaColorScaleMin;
 		if (this.changeListener != null) {
-			changeListener.handleAreaColorScaleMinChanged(this, areaColorScaleMin);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
@@ -161,7 +165,7 @@ public class LineChartLine {
 	public LineChartLine setAreaColorScaleMax(Color areaColorScaleMax) {
 		this.areaColorScaleMax = areaColorScaleMax;
 		if (this.changeListener != null) {
-			changeListener.handleAreaColorScaleMaxChanged(this, areaColorScaleMax);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
@@ -173,7 +177,7 @@ public class LineChartLine {
 	public LineChartLine setIntervalY(Interval intervalY) {
 		this.intervalY = intervalY;
 		if (this.changeListener != null) {
-			changeListener.handleIntervalYChanged(this, intervalY);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
@@ -185,7 +189,7 @@ public class LineChartLine {
 	public LineChartLine setYScaleType(ScaleType yScaleType) {
 		this.yScaleType = yScaleType;
 		if (this.changeListener != null) {
-			changeListener.handleYScaleTypeChanged(this, yScaleType);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
@@ -197,12 +201,13 @@ public class LineChartLine {
 	public LineChartLine setYScaleZoomMode(LineChartYScaleZoomMode yScaleZoomMode) {
 		this.yScaleZoomMode = yScaleZoomMode;
 		if (this.changeListener != null) {
-			changeListener.handleYScaleZoomModeChanged(this, yScaleZoomMode);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
 
-	void setChangeListener(LineChartLineListener listener) {
+	@Override
+	public void setChangeListener(LineChartDataDisplayChangeListener listener) {
 		this.changeListener = listener;
 	}
 
@@ -213,7 +218,7 @@ public class LineChartLine {
 	public LineChartLine setYAxisColor(Color yAxisColor) {
 		this.yAxisColor = yAxisColor;
 		if (this.changeListener != null) {
-			changeListener.handleAxisColorChanged(this, yAxisColor);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
@@ -225,7 +230,7 @@ public class LineChartLine {
 	public LineChartLine setYZeroLineVisible(boolean yZeroLineVisible) {
 		this.yZeroLineVisible = yZeroLineVisible;
 		if (this.changeListener != null) {
-			changeListener.handleYZeroLineVisibleChanged(this, yZeroLineVisible);
+			changeListener.handleChange(this);
 		}
 		return this;
 	}
