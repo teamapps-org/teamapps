@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface LineChartDataDisplay {
 
+	/**
+	 * @deprecated only for internal use!
+	 */
+	@Deprecated
 	String getId();
 
 	List<String> getDataSourceIds();

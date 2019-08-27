@@ -4,15 +4,14 @@ import * as d3 from "d3";
 import {Axis, ScaleContinuousNumeric, ScaleLinear} from "d3";
 import {yTickFormat} from "./UiTimeGraph";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
-import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
 import {UiScaleType} from "../../generated/UiScaleType";
 import {UiLineChartLineConfig} from "../../generated/UiLineChartLineConfig";
 import {createUiColorCssString} from "../util/CssFormatUtil";
 import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
+import {TimeGraphDataStore} from "./TimeGraphDataStore";
 
 export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartLineConfig> {
-	private zoomLevelData: UiTimeGraphDataPointConfig[][] = [];
 	private line: Line<DataPoint>;
 	private $line: Selection<SVGPathElement, {}, HTMLElement, undefined>;
 	private area: Area<DataPoint>;
@@ -21,7 +20,6 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 	private $defs: Selection<SVGDefsElement, {}, HTMLElement, undefined>;
 	private colorScale: ScaleLinear<string, string>;
 	private $main: Selection<SVGGElement, {}, HTMLElement, undefined>;
-	private numberOfZoomLevels: number;
 
 	public $yAxis: SVGGSelection;
 	private yAxis: Axis<number | { valueOf(): number }>;
@@ -32,17 +30,15 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 	constructor(
 		timeGraphId: string,
 		config: UiLineChartLineConfig,
-		$container: SVGGSelection, // TODO do appending outside!! https://stackoverflow.com/a/19951169/524913
-		numberOfZoomLevels: number,
+		$container: SVGGSelection, // TODO append outside!! https://stackoverflow.com/a/19951169/524913
 		private dropShadowFilterId: string,
+		dataStore: TimeGraphDataStore
 	) {
-		super(config, timeGraphId);
+		super(config, timeGraphId, dataStore);
 		this.$yAxis = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement);
 		this.yAxis = d3.axisLeft(null);
 		this.updateYScaleType();
-		this.yAxis = d3.axisLeft(this.scaleY); // TODO remove
 
-		this.resetData(numberOfZoomLevels);
 		this.$main = $container
 			.append<SVGGElement>("g")
 			.attr("data-series-id", `${this.timeGraphId}-${this.config.id}`);
@@ -51,12 +47,14 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 	}
 
 	updateYScaleType(): void {
-		if (this.scaleY != null) return; // TODO remove!!!!
-
+		const oldScaleY = this.scaleY;
 		if (this.config.yScaleType === UiScaleType.LOG10) {
 			this.scaleY = d3.scaleLog();
 		} else {
 			this.scaleY = d3.scaleLinear();
+		}
+		if (oldScaleY != null) {
+			this.scaleY.range(oldScaleY.range());
 		}
 		let domainMin = fakeZeroIfLogScale(this.config.intervalY.min, this.config.yScaleType);
 		this.scaleY.domain([domainMin, this.config.intervalY.max]);
@@ -93,78 +91,6 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 	    </linearGradient>`);
 	}
 
-	public resetData(numberOfZoomLevels: number): any {
-		this.numberOfZoomLevels = numberOfZoomLevels;
-		this.zoomLevelData = [];
-		for (let i = 0; i < this.numberOfZoomLevels; i++) {
-			this.zoomLevelData[i] = [];
-		}
-	}
-
-	public getDisplayedData(zoomLevel: number, xStart: number, xEnd: number): DataPoint[] {
-		let i = 0;
-		for (; i < this.zoomLevelData[zoomLevel].length; i++) {
-			if (this.zoomLevelData[zoomLevel][i].x > xStart) {
-				break;
-			}
-		}
-		let startIndex = i === 0 ? 0 : i - 1;
-		for (; i < this.zoomLevelData[zoomLevel].length; i++) {
-			if (this.zoomLevelData[zoomLevel][i].x >= xEnd) {
-				break;
-			}
-		}
-		let endIndex = i === this.zoomLevelData[zoomLevel].length ? i : i + 1;
-
-
-		let data = this.zoomLevelData[zoomLevel].slice(startIndex, endIndex);
-		// if (data.length > 200) {
-		// 	data.forEach(d => (d as any).date = new Date(d.x).toString());
-		// 	console.log(`zoomLevel: ${zoomLevel}; interval: ${new Date(xStart).toString()}-${new Date(xEnd).toString()}; layer: ${this.zoomLevelData[zoomLevel].length}; returned: ${data.length}`, data);
-		// }
-		return data;
-	}
-
-	public getDisplayedDataYBounds(): [number, number] {
-		let minY = Number.MAX_VALUE;
-		let maxY = Number.MIN_VALUE;
-		const zoomBoundsX = [+(this.scaleX.domain()[0]), +(this.scaleX.domain()[1])];
-		let displayedData = this.getDisplayedData(this.zoomLevelIndex, zoomBoundsX[0], zoomBoundsX[1]);
-		displayedData.forEach(d => {
-			if (d.y < minY) {
-				minY = d.y;
-			}
-			if (d.y > maxY) {
-				maxY = d.y;
-			}
-		});
-		if (minY === Number.MAX_VALUE && maxY === Number.MIN_VALUE) {
-			minY = 0;
-			maxY = 1;
-		}
-		return [minY, maxY];
-	}
-
-	public addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: UiTimeGraphDataPointConfig[]) {
-		let zoomLevelData = this.zoomLevelData[zoomLevel];
-		let minOverlappingIndex: number = null;
-		let maxOverlappingIndex: number = null;
-		for (let i = 0; i < zoomLevelData.length; i++) {
-			if (zoomLevelData[i].x >= intervalX.min && zoomLevelData[i].x <= intervalX.max) {
-				if (minOverlappingIndex == null) {
-					minOverlappingIndex = i;
-				}
-				maxOverlappingIndex = i;
-			}
-		}
-		if (minOverlappingIndex != null && maxOverlappingIndex != null) {
-			zoomLevelData.splice(minOverlappingIndex, maxOverlappingIndex - minOverlappingIndex + 1, ...data);
-		} else {
-			this.zoomLevelData[zoomLevel] = zoomLevelData.concat(data);
-		}
-		this.zoomLevelData[zoomLevel].sort((a, b) => a.x - b.x);
-	}
-
 	public doRedraw() {
 		this.updateYAxisTickFormat();
 
@@ -190,7 +116,7 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 		this.$defs.select(".area-gradient")
 			.attr("y2", this.scaleY.range()[0]);
 
-		let data = this.getDisplayedData(this.zoomLevelIndex, +(this.scaleX.domain()[0]), +(this.scaleX.domain()[1]));
+		let data = this.getDisplayedData()[this.config.dataSourceIds[0]];
 		this.line
 			.x(d => this.scaleX(d.x))
 			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));

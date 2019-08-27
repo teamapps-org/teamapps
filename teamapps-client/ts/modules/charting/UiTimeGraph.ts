@@ -24,13 +24,11 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import * as d3 from "d3";
-import {BaseType, NamespaceLocalObject, Series} from "d3";
+import {BaseType} from "d3";
 import {Selection} from "d3-selection";
-import {ScaleContinuousNumeric, ScaleLinear, ScaleTime} from "d3-scale";
-import {UiScaleType} from "../../generated/UiScaleType";
+import {ScaleTime} from "d3-scale";
 import {bind} from "../util/Bind";
 import {ZoomBehavior, ZoomedElementBaseType} from "d3-zoom";
-import {Area, Line} from "d3-shape";
 import {Axis} from "d3-axis";
 import {Interval, IntervalManager} from "../util/IntervalManager";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
@@ -45,16 +43,13 @@ import {
 } from "../../generated/UiTimeGraphConfig";
 import {createUiLongIntervalConfig, UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
 import {BrushBehavior} from "d3-brush";
-import {UiLineChartCurveType} from "../../generated/UiLineChartCurveType";
 import {UiLineChartLineConfig} from "../../generated/UiLineChartLineConfig";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 import {debouncedMethod, DebounceMode} from "../util/debounce";
-import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMode";
 import {UiLineChartMouseScrollZoomPanMode} from "../../generated/UiLineChartMouseScrollZoomPanMode";
 import {UiTimeChartZoomLevelConfig} from "../../generated/UiTimeChartZoomLevelConfig";
-import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
 import {UiLineChartLine} from "./UiLineChartLine";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
+import {TimeGraphDataStore} from "./TimeGraphDataStore";
 
 type SVGGSelection<DATUM = {}> = Selection<SVGGElement, DATUM, HTMLElement, undefined>;
 
@@ -100,6 +95,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	private $yAxisContainer: Selection<SVGGElement, {}, HTMLElement, undefined>;
 
 	private lastDrawableWidth: number = 0;
+
+	private dataStore: TimeGraphDataStore = new TimeGraphDataStore();
 
 	get drawableWidth() {
 		return this.getWidth() - this.marginLeft - this.margin.right
@@ -206,7 +203,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	private createSeries(lineFormat: UiLineChartLineConfig) {
 		let display: AbstractUiLineChartDataDisplay;
 		if (lineFormat._type === 'UiLineChartLine') {
-			display = new UiLineChartLine(this._config.id, lineFormat, this.$graphClipContainer, this.zoomLevels.length, this.dropShadowFilterId);
+			display = new UiLineChartLine(this._config.id, lineFormat, this.$graphClipContainer, this.dropShadowFilterId, this.dataStore);
 		} else if (lineFormat._type === 'UiLineChartBand') {
 			// TODO display = new UiLineChartBand(this, seriesId, lineFormat, this.$graphClipContainer, this.zoomLevels.length, this.dropShadowFilterId)
 		}
@@ -388,17 +385,14 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 	addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [seriesId: string]: UiTimeGraphDataPointConfig[] }): void {
 		this.zoomLevelIntervalManagers[zoomLevel].addInterval(new Interval(intervalX.min, intervalX.max));
-		Object.keys(data).forEach(seriesId => {
-			let seriesData = data[seriesId];
-			this.seriesById[seriesId] && this.seriesById[seriesId].addData(zoomLevel, intervalX, seriesData);
-		});
+		this.dataStore.addData(zoomLevel, intervalX, data);
 		this.redraw();
 	}
 
 	resetAllData(newZoomLevels: UiTimeChartZoomLevelConfig[]): void {
 		this.zoomLevels = newZoomLevels;
 		this.initZoomLevelIntervalManagers();
-		this.getAllSeries().forEach(d => d.resetData(newZoomLevels.length));
+		this.dataStore.reset();
 		this.redraw();
 	}
 
@@ -406,7 +400,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	replaceAllData(newZoomLevels: UiTimeChartZoomLevelConfig[], zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [seriesId: string]: UiTimeGraphDataPointConfig[] }): void {
 		this.zoomLevels = newZoomLevels;
 		this.initZoomLevelIntervalManagers();
-		this.getAllSeries().forEach(d => d.resetData(newZoomLevels.length));
+		this.dataStore.reset();
 		this.addData(zoomLevel, intervalX, data);
 	}
 
