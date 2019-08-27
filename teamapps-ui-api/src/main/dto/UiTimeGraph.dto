@@ -22,7 +22,7 @@ class UiTimeGraph extends UiComponent {
 	required UiLongInterval intervalX;
 	required List<UiTimeChartZoomLevel> zoomLevels;
 	required int maxPixelsBetweenDataPoints;  // ... before switching to higher zoom level
-	required Dictionary<UiLineChartLineFormat> lineFormats;
+	required List<AbstractUiLineChartDataDisplay> lines;
 	UiScaleType yScaleType = UiScaleType.LINEAR;
 	UiLineChartMouseScrollZoomPanMode mouseScrollZoomPanMode = UiLineChartMouseScrollZoomPanMode.ENABLED;
 
@@ -33,12 +33,9 @@ class UiTimeGraph extends UiComponent {
 	command replaceAllData(List<UiTimeChartZoomLevel> newZoomLevels, int zoomLevel, UiLongInterval intervalX, Dictionary<List<UiTimeGraphDataPoint>> data); // acts similar to resetAllData() + addData(), but without the extra round trip of a client request for the new data
 	command setMouseScrollZoomPanMode(UiLineChartMouseScrollZoomPanMode mouseScrollZoomPanMode);
 	command setSelectedInterval(UiLongInterval intervalX);
-	command setLineFormats(Dictionary<UiLineChartLineFormat> lineFormats);
 
-	command setLineFormat(String lineId, UiLineChartLineFormat lineFormat);
-	command setIntervalY(String lineId, UiLongInterval intervalY);
-	command setYScaleType(String lineId, UiScaleType yScaleType);
-	command setYScaleZoomMode(String lineId, UiLineChartYScaleZoomMode yScaleZoomMode);
+	command setLines(List<AbstractUiLineChartDataDisplay> lines);
+	command setLine(String lineId, AbstractUiLineChartDataDisplay line);
 
 	event dataNeeded(int zoomLevelIndex, UiLongInterval neededIntervalX);
 	event zoomed(UiLongInterval intervalX, int zoomLevelIndex);
@@ -61,7 +58,16 @@ class UiTimeChartZoomLevel {
 	required long approximateMillisecondsPerDataPoint;
 }
 
-class UiLineChartLineFormat {
+abstract class AbstractUiLineChartDataDisplay {
+	String id;
+	List<String> dataSourceIds;
+	
+	UiScaleType yScaleType = UiScaleType.LINEAR;
+	UiLongInterval intervalY;
+	UiLineChartYScaleZoomMode yScaleZoomMode = UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
+}
+
+class UiLineChartLine extends AbstractUiLineChartDataDisplay {
 	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
     float dataDotRadius;
     UiColor lineColorScaleMin = new UiColor(73, 128, 192);
@@ -71,9 +77,15 @@ class UiLineChartLineFormat {
     UiColor axisColor = new UiColor(0, 0, 0);
     boolean yZeroLineVisible;
 
-    UiScaleType yScaleType = UiScaleType.LINEAR;
-    UiLongInterval intervalY;
-	UiLineChartYScaleZoomMode yScaleZoomMode = UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
+}
+
+class UiLineChartBand extends AbstractUiLineChartDataDisplay {
+	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
+    float dataDotRadius;
+    UiColor lineColor = new UiColor(73, 128, 192);
+    UiColor areaColor = new UiColor(255, 255, 255).setAlpha(0f);
+    UiColor axisColor = new UiColor(0, 0, 0);
+    boolean yZeroLineVisible;
 }
 
 class UiTimeGraphSeriesData {
