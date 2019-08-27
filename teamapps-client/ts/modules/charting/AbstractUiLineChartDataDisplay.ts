@@ -1,15 +1,15 @@
 import {ScaleContinuousNumeric, ScaleTime} from "d3-scale";
 import {fakeZeroIfLogScale, SVGGSelection} from "./Charting";
-import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
-import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
 import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMode";
 import * as d3 from "d3";
 import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
+import {TimeGraphDataStore} from "./TimeGraphDataStore";
 
 export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineChartDataDisplayConfig = AbstractUiLineChartDataDisplayConfig> {
 	constructor(
 		protected config: C,
-		protected timeGraphId: string
+		protected timeGraphId: string,
+		protected dataStore: TimeGraphDataStore
 	) {
 
 	}
@@ -74,17 +74,44 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 
 	protected abstract doRedraw(): void;
 
-	public abstract addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: UiTimeGraphDataPointConfig[]): void;
-
-
-	public abstract getDisplayedDataYBounds(): [number, number];
-
-	public abstract resetData(numberOfZoomLevels: number): any;
-
 	public setConfig(config: C) {
 		this.config = config;
 	}
 
+	protected getDisplayedData() {
+		const zoomBoundsX = [+(this.scaleX.domain()[0]), +(this.scaleX.domain()[1])];
+		return this.dataStore.getData(this.config.dataSourceIds, this.zoomLevelIndex, zoomBoundsX[0], zoomBoundsX[1]);
+	}
+
 
 	public abstract destroy(): void;
+
+	public getDisplayedDataYBounds(): [number, number] {
+		return this.config.dataSourceIds.map(dataSourceId => {
+			let displayedData = this.getDisplayedData()[dataSourceId];
+			let minY = Number.POSITIVE_INFINITY;
+			let maxY = Number.NEGATIVE_INFINITY;
+			displayedData.forEach(d => {
+				if (d.y < minY) {
+					minY = d.y;
+				}
+				if (d.y > maxY) {
+					maxY = d.y;
+				}
+			});
+			if (minY === Number.POSITIVE_INFINITY && maxY === Number.NEGATIVE_INFINITY) {
+				minY = 0;
+				maxY = 1;
+			}
+			return [minY, maxY];
+		}).reduce((previousValue, currentValue) => {
+			if (currentValue[0] < previousValue[0]) {
+				previousValue[0] = currentValue[0];
+			}
+			if (currentValue[1] > previousValue[1]) {
+				previousValue[1] = currentValue[1];
+			}
+			return currentValue;
+		}, [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) as [number, number];
+	}
 }

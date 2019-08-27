@@ -20,28 +20,24 @@
 package org.teamapps.ux.component.timegraph;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiLineChartLine;
+import org.teamapps.dto.UiLineChartBand;
 import org.teamapps.dto.UiLongInterval;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import static org.teamapps.util.UiUtil.createUiColor;
 
-public class LineChartLine implements LineChartDataDisplay {
+public class LineChartBand implements LineChartDataDisplay {
 
-	private final String id = UUID.randomUUID().toString();
-	private final String dataSourceId;
+	private final String id;
 	private LineChartDataDisplayChangeListener changeListener;
 
 	private LineChartCurveType graphType = LineChartCurveType.MONOTONE;
 	private float dataDotRadius = 2;
 	private Color yAxisColor = Color.BLACK;
-	private Color lineColorScaleMin = new Color(73, 128, 192);
-	private Color lineColorScaleMax = new Color(73, 128, 192);
-	private Color areaColorScaleMin = new Color(255, 255, 255, 0);
-	private Color areaColorScaleMax = new Color(255, 255, 255, 0);
+	private Color lineColor = new Color(73, 128, 192);
+	private Color areaColor = new Color(255, 255, 255, 0);
 
 	private Interval intervalY;
 	private ScaleType yScaleType = ScaleType.LINEAR;
@@ -49,39 +45,34 @@ public class LineChartLine implements LineChartDataDisplay {
 	private boolean yZeroLineVisible = false;
 
 
-	public LineChartLine(String dataSourceId) {
-		this.dataSourceId = dataSourceId;
+	public LineChartBand(String id) {
+		this.id = id;
 	}
 
-	public LineChartLine(String dataSourceId, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
-		this(dataSourceId, graphType, dataDotRadius, lineColor, lineColor, null, null);
+	public LineChartBand(String id, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
+		this(id, graphType, dataDotRadius, lineColor, lineColor, null, null);
 	}
 
-	public LineChartLine(String dataSourceId, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
-		this(dataSourceId, graphType, dataDotRadius, lineColor, lineColor, Color.withAlpha(areaColor, 0.0f), areaColor);
+	public LineChartBand(String id, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
+		this(id, graphType, dataDotRadius, lineColor, lineColor, Color.withAlpha(areaColor, 0.0f), areaColor);
 	}
 
-	public LineChartLine(String dataSourceId, LineChartCurveType graphType, float dataDotRadius, Color lineColorScaleMin, Color lineColorScaleMax, Color areaColorScaleMin, Color areaColorScaleMax) {
-		this.dataSourceId = dataSourceId;
+	public LineChartBand(String id, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color lineColorScaleMax, Color areaColor, Color areaColorScaleMax) {
+		this.id = id;
 		this.graphType = graphType;
 		this.dataDotRadius = dataDotRadius;
-		this.lineColorScaleMin = lineColorScaleMin;
-		this.lineColorScaleMax = lineColorScaleMax;
-		this.areaColorScaleMin = areaColorScaleMin;
-		this.areaColorScaleMax = areaColorScaleMax;
+		this.lineColor = lineColor;
+		this.areaColor = areaColor;
 	}
 
-	@Override
-	public UiLineChartLine createUiFormat() {
-		UiLineChartLine ui = new UiLineChartLine();
+	public UiLineChartBand createUiFormat() {
+		UiLineChartBand ui = new UiLineChartBand();
 		mapAbstractLineChartDataDisplayProperties(ui);
-		
+
 		ui.setGraphType(graphType.toUiLineChartCurveType());
 		ui.setDataDotRadius(dataDotRadius);
-		ui.setLineColorScaleMin(lineColorScaleMin != null ? createUiColor(lineColorScaleMin) : null);
-		ui.setLineColorScaleMax(lineColorScaleMax != null ? createUiColor(lineColorScaleMax) : null);
-		ui.setAreaColorScaleMin(areaColorScaleMin != null ? createUiColor(areaColorScaleMin) : null);
-		ui.setAreaColorScaleMax(areaColorScaleMax != null ? createUiColor(areaColorScaleMax) : null);
+		ui.setLineColor(lineColor != null ? createUiColor(lineColor) : null);
+		ui.setAreaColor(areaColor != null ? createUiColor(areaColor) : null);
 		ui.setAxisColor(yAxisColor != null ? createUiColor(yAxisColor) : null);
 		ui.setIntervalY(intervalY != null ? intervalY.createUiLongInterval() : new UiLongInterval(0, 1000));
 		ui.setYScaleType(yScaleType.toUiScaleType());
@@ -97,14 +88,19 @@ public class LineChartLine implements LineChartDataDisplay {
 
 	@Override
 	public List<String> getDataSourceIds() {
-		return Collections.singletonList(dataSourceId);
+		return Collections.singletonList(id);
+	}
+
+	@Override
+	public void setChangeListener(LineChartDataDisplayChangeListener listener) {
+		this.changeListener = listener;
 	}
 
 	public LineChartCurveType getGraphType() {
 		return graphType;
 	}
 
-	public LineChartLine setGraphType(LineChartCurveType graphType) {
+	public LineChartBand setGraphType(LineChartCurveType graphType) {
 		this.graphType = graphType;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
@@ -116,7 +112,7 @@ public class LineChartLine implements LineChartDataDisplay {
 		return dataDotRadius;
 	}
 
-	public LineChartLine setDataDotRadius(float dataDotRadius) {
+	public LineChartBand setDataDotRadius(float dataDotRadius) {
 		this.dataDotRadius = dataDotRadius;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
@@ -124,48 +120,24 @@ public class LineChartLine implements LineChartDataDisplay {
 		return this;
 	}
 
-	public Color getLineColorScaleMin() {
-		return lineColorScaleMin;
+	public Color getLineColor() {
+		return lineColor;
 	}
 
-	public LineChartLine setLineColorScaleMin(Color lineColorScaleMin) {
-		this.lineColorScaleMin = lineColorScaleMin;
+	public LineChartBand setLineColor(Color lineColor) {
+		this.lineColor = lineColor;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
 		}
 		return this;
 	}
 
-	public Color getLineColorScaleMax() {
-		return lineColorScaleMax;
+	public Color getAreaColor() {
+		return areaColor;
 	}
 
-	public LineChartLine setLineColorScaleMax(Color lineColorScaleMax) {
-		this.lineColorScaleMax = lineColorScaleMax;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
-		return this;
-	}
-
-	public Color getAreaColorScaleMin() {
-		return areaColorScaleMin;
-	}
-
-	public LineChartLine setAreaColorScaleMin(Color areaColorScaleMin) {
-		this.areaColorScaleMin = areaColorScaleMin;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
-		return this;
-	}
-
-	public Color getAreaColorScaleMax() {
-		return areaColorScaleMax;
-	}
-
-	public LineChartLine setAreaColorScaleMax(Color areaColorScaleMax) {
-		this.areaColorScaleMax = areaColorScaleMax;
+	public LineChartBand setAreaColor(Color areaColor) {
+		this.areaColor = areaColor;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
 		}
@@ -176,7 +148,7 @@ public class LineChartLine implements LineChartDataDisplay {
 		return intervalY;
 	}
 
-	public LineChartLine setIntervalY(Interval intervalY) {
+	public LineChartBand setIntervalY(Interval intervalY) {
 		this.intervalY = intervalY;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
@@ -188,7 +160,7 @@ public class LineChartLine implements LineChartDataDisplay {
 		return yScaleType;
 	}
 
-	public LineChartLine setYScaleType(ScaleType yScaleType) {
+	public LineChartBand setYScaleType(ScaleType yScaleType) {
 		this.yScaleType = yScaleType;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
@@ -200,7 +172,7 @@ public class LineChartLine implements LineChartDataDisplay {
 		return yScaleZoomMode;
 	}
 
-	public LineChartLine setYScaleZoomMode(LineChartYScaleZoomMode yScaleZoomMode) {
+	public LineChartBand setYScaleZoomMode(LineChartYScaleZoomMode yScaleZoomMode) {
 		this.yScaleZoomMode = yScaleZoomMode;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
@@ -208,16 +180,11 @@ public class LineChartLine implements LineChartDataDisplay {
 		return this;
 	}
 
-	@Override
-	public void setChangeListener(LineChartDataDisplayChangeListener listener) {
-		this.changeListener = listener;
-	}
-
 	public Color getYAxisColor() {
 		return yAxisColor;
 	}
 
-	public LineChartLine setYAxisColor(Color yAxisColor) {
+	public LineChartBand setYAxisColor(Color yAxisColor) {
 		this.yAxisColor = yAxisColor;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
@@ -229,7 +196,7 @@ public class LineChartLine implements LineChartDataDisplay {
 		return yZeroLineVisible;
 	}
 
-	public LineChartLine setYZeroLineVisible(boolean yZeroLineVisible) {
+	public LineChartBand setYZeroLineVisible(boolean yZeroLineVisible) {
 		this.yZeroLineVisible = yZeroLineVisible;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
