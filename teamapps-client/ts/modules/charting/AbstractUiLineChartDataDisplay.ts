@@ -188,14 +188,14 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 				maxY = 1;
 			}
 			return [minY, maxY];
-		}).reduce((previousValue, currentValue) => {
-			if (currentValue[0] < previousValue[0]) {
-				previousValue[0] = currentValue[0];
+		}).reduce((globalMinMax, currentMinMax) => {
+			if (currentMinMax[0] < globalMinMax[0]) {
+				globalMinMax[0] = currentMinMax[0];
 			}
-			if (currentValue[1] > previousValue[1]) {
-				previousValue[1] = currentValue[1];
+			if (currentMinMax[1] > globalMinMax[1]) {
+				globalMinMax[1] = currentMinMax[1];
 			}
-			return currentValue;
+			return globalMinMax;
 		}, [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) as [number, number];
 	}
 }

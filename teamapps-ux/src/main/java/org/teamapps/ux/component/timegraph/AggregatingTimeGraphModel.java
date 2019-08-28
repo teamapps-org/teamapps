@@ -125,14 +125,21 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 				.findFirst().orElse(zoomLevels.get(0));
 		LineChartDataPoints dataPoints = this.dataPointsByDataSeriesId.get(dataSeriesId);
 
-		return getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByDataSeriesId.getOrDefault(dataSeriesId, defaultAggregationPolicy));
+		return getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByDataSeriesId.getOrDefault(dataSeriesId, defaultAggregationPolicy), timeZone, addDataPointBeforeAndAfterQueryResult);
 	}
 
 	@NotNull
-	private LineChartDataPoints getAggregateDataPoints(LineChartDataPoints dataPoints, TimePartitionUnit zoomLevel, Interval interval, AggregationPolicy aggregationPolicy) {
+	public static LineChartDataPoints getAggregateDataPoints(
+			LineChartDataPoints dataPoints,
+			TimePartitionUnit zoomLevel,
+			Interval interval,
+			AggregationPolicy aggregationPolicy,
+			ZoneId timeZone,
+			boolean addDataPointBeforeAndAfterQueryResult
+	) {
 		DoubleList resultX = new DoubleArrayList(100);
 		DoubleList resultY = new DoubleArrayList(100);
-		long currentPartitionStartMilli = getPartitionStart(interval.getMin(), zoomLevel).toInstant().toEpochMilli();
+		long currentPartitionStartMilli = getPartitionStart(interval.getMin(), zoomLevel, timeZone).toInstant().toEpochMilli();
 		if (addDataPointBeforeAndAfterQueryResult) {
 			currentPartitionStartMilli = zoomLevel.decrement(ZonedDateTime.ofInstant(Instant.ofEpochMilli(currentPartitionStartMilli), timeZone)).toInstant().toEpochMilli();
 		}
@@ -172,12 +179,12 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 			}
 
 			currentPartitionStartMilli = nextPartitionStartMilli;
-			nextPartitionStartMilli = zoomLevel.increment(getPartitionStart(nextPartitionStartMilli, zoomLevel)).toInstant().toEpochMilli();
+			nextPartitionStartMilli = zoomLevel.increment(getPartitionStart(nextPartitionStartMilli, zoomLevel, timeZone)).toInstant().toEpochMilli();
 		} while (currentPartitionStartMilli <= interval.getMax() + (addDataPointBeforeAndAfterQueryResult ? zoomLevel.getAverageMilliseconds() : 0));
 		return new DoubleArrayLineChartDataPoints(resultX.toDoubleArray(), resultY.toDoubleArray());
 	}
 
-	private ZonedDateTime getPartitionStart(long timestampMillis, TimePartitionUnit partitionUnit) {
+	private static ZonedDateTime getPartitionStart(long timestampMillis, TimePartitionUnit partitionUnit, ZoneId timeZone) {
 		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestampMillis), timeZone);
 		return partitionUnit.getPartition(zonedDateTime);
 	}
