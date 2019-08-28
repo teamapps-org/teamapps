@@ -65,7 +65,7 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 			TimePartitionUnit.MILLISECOND_2,
 			TimePartitionUnit.MILLISECOND
 	);
-	private Map<String, List<LineChartDataPoint>> dataPointsByLineId = new HashMap<>();
+	private Map<String, LineChartDataPoints> dataPointsByLineId = new HashMap<>();
 
 	public enum AggregationPolicy {
 		FIRST_VALUE, MIN, AVERAGE, MAX
@@ -73,6 +73,8 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 
 	private Map<String, AggregationPolicy> aggregationPolicyByLineId = new HashMap<>();
 	private AggregationPolicy defaultAggregationPolicy = AggregationPolicy.FIRST_VALUE;
+
+	private boolean addDataPointBeforeAndAfterQueryResult = true;
 
 	public AggregatingTimeGraphModel(ZoneId timeZone) {
 		this.timeZone = timeZone;
@@ -88,13 +90,13 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 		onDataChanged.fire(null);
 	}
 
-	public void setDataPointsByLineId(Map<String, List<LineChartDataPoint>> dataPointsByLineId) {
+	public void setDataPointsByLineId(Map<String, LineChartDataPoints> dataPointsByLineId) {
 		this.dataPointsByLineId.clear();
 		this.dataPointsByLineId.putAll(dataPointsByLineId);
 		onDataChanged.fire(null);
 	}
 
-	public void setDataPoints(String lineId, List<LineChartDataPoint> dataPoints) {
+	public void setDataPoints(String lineId, LineChartDataPoints dataPoints) {
 		this.dataPointsByLineId.put(lineId, dataPoints);
 		onDataChanged.fire(null);
 	}
@@ -120,38 +122,41 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 		TimePartitionUnit zoomLevel = zoomLevels.stream()
 				.filter(unit -> unit.getAverageMilliseconds() == partitionUnit.getApproximateMillisecondsPerDataPoint())
 				.findFirst().orElse(zoomLevels.get(0));
-		List<LineChartDataPoint> dataPoints = this.dataPointsByLineId.get(lineId);
+		LineChartDataPoints dataPoints = this.dataPointsByLineId.get(lineId);
 
 		List<LineChartDataPoint> aggregateDataPoints = getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByLineId.getOrDefault(lineId, defaultAggregationPolicy));
 		return aggregateDataPoints;
 	}
 
 	@NotNull
-	private List<LineChartDataPoint> getAggregateDataPoints(List<LineChartDataPoint> dataPoints, TimePartitionUnit zoomLevel, Interval interval, AggregationPolicy aggregationPolicy) {
+	private List<LineChartDataPoint> getAggregateDataPoints(LineChartDataPoints dataPoints, TimePartitionUnit zoomLevel, Interval interval, AggregationPolicy aggregationPolicy) {
 		ArrayList<LineChartDataPoint> result = new ArrayList<>();
-		long currentPartitionStartMilli = zoomLevel.decrement(getPartitionStart(interval.getMin(), zoomLevel)).toInstant().toEpochMilli(); // add one dataPoint to the left
+		long currentPartitionStartMilli = getPartitionStart(interval.getMin(), zoomLevel).toInstant().toEpochMilli(); 
+		if (addDataPointBeforeAndAfterQueryResult) {
+			currentPartitionStartMilli = zoomLevel.decrement(ZonedDateTime.ofInstant(Instant.ofEpochMilli(currentPartitionStartMilli), timeZone)).toInstant().toEpochMilli();
+		}
 		long nextPartitionStartMilli = zoomLevel.increment(ZonedDateTime.ofInstant(Instant.ofEpochMilli(currentPartitionStartMilli), timeZone)).toInstant().toEpochMilli();
 		int i = 0;
 		do {
 			Double aggregateValue = null;
 			int count = 0;
 			for (; i < dataPoints.size(); i++) {
-				LineChartDataPoint dataPoint = dataPoints.get(i);
-				long tsMilli = (long) dataPoint.getX();
+				long tsMilli = (long) dataPoints.getX(i);
 				if (tsMilli >= nextPartitionStartMilli) {
 					break;
 				}
 				if (tsMilli >= currentPartitionStartMilli) {
 					count++;
+					double y = dataPoints.getY(i);
 					if (aggregationPolicy == AggregationPolicy.FIRST_VALUE) {
-						aggregateValue = aggregateValue == null ? dataPoint.getY() : aggregateValue;
+						aggregateValue = aggregateValue == null ? y : aggregateValue;
 						break;
 					} else if (aggregationPolicy == AggregationPolicy.MAX) {
-						aggregateValue = aggregateValue == null || aggregateValue < dataPoint.getY() ? dataPoint.getY() : aggregateValue;
+						aggregateValue = aggregateValue == null || aggregateValue < y ? y : aggregateValue;
 					} else if (aggregationPolicy == AggregationPolicy.MIN) {
-						aggregateValue = aggregateValue == null || aggregateValue > dataPoint.getY() ? dataPoint.getY() : aggregateValue;
+						aggregateValue = aggregateValue == null || aggregateValue > y ? y : aggregateValue;
 					} else if (aggregationPolicy == AggregationPolicy.AVERAGE) {
-						aggregateValue = aggregateValue == null ? dataPoint.getY() : aggregateValue + dataPoint.getY();
+						aggregateValue = aggregateValue == null ? y : aggregateValue + y;
 					}
 				}
 			}
@@ -166,7 +171,7 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 
 			currentPartitionStartMilli = nextPartitionStartMilli;
 			nextPartitionStartMilli = zoomLevel.increment(getPartitionStart(nextPartitionStartMilli, zoomLevel)).toInstant().toEpochMilli();
-		} while (currentPartitionStartMilli <= interval.getMax() + zoomLevel.getAverageMilliseconds()); // add one more dataPoint to the right!
+		} while (currentPartitionStartMilli <= interval.getMax() + (addDataPointBeforeAndAfterQueryResult ? zoomLevel.getAverageMilliseconds() : 0));
 		return result;
 	}
 
@@ -183,14 +188,21 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 	@Override
 	public Interval getDomainX(Collection<String> lineIds) {
 		long minX = dataPointsByLineId.values().stream()
-				.flatMap(lineChartDataPoints -> lineChartDataPoints.stream())
-				.mapToLong(lineChartDataPoint -> (long) lineChartDataPoint.getX())
+				.flatMapToDouble(LineChartDataPoints::streamX)
+				.mapToLong(x -> (long) x)
 				.min().orElse(0);
 		long maxX = dataPointsByLineId.values().stream()
-				.flatMap(lineChartDataPoints -> lineChartDataPoints.stream())
-				.mapToLong(lineChartDataPoint -> (long) lineChartDataPoint.getX())
+				.flatMapToDouble(LineChartDataPoints::streamX)
+				.mapToLong(x -> (long) x)
 				.max().orElse(1);
 		return new Interval(minX, maxX);
 	}
 
+	public boolean isAddDataPointBeforeAndAfterQueryResult() {
+		return addDataPointBeforeAndAfterQueryResult;
+	}
+
+	public void setAddDataPointBeforeAndAfterQueryResult(boolean addDataPointBeforeAndAfterQueryResult) {
+		this.addDataPointBeforeAndAfterQueryResult = addDataPointBeforeAndAfterQueryResult;
+	}
 }

@@ -16,7 +16,7 @@ public class AggregatingTimeGraphModelTest {
 	@Before
 	public void setUp() throws Exception {
 		model = new AggregatingTimeGraphModel(ZoneOffset.UTC);
-		model.setDataPoints("line1", Arrays.asList(
+		model.setDataPoints("line1", new ListLineChartDataPoints(Arrays.asList(
 				new LineChartDataPoint(100, 1),
 				new LineChartDataPoint(200, 11),
 				new LineChartDataPoint(300, 2),
@@ -24,7 +24,8 @@ public class AggregatingTimeGraphModelTest {
 				new LineChartDataPoint(500, 13),
 				new LineChartDataPoint(600, 12),
 				new LineChartDataPoint(700, 3)
-		));
+		)));
+		model.setAddDataPointBeforeAndAfterQueryResult(false); // for testing
 	}
 
 	@Test
@@ -93,5 +94,19 @@ public class AggregatingTimeGraphModelTest {
 
 		dataPoints = model.getDataPoints("line1", TimePartitionUnit.MILLISECOND_200, new Interval(500, 600));
 		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(400, 6.5), new LineChartDataPoint(600, 7.5));
+	}
+
+	@Test
+	public void testAddDataPointBeforeAndAfterQueryResult() throws Exception {
+		model.setAggregationPolicy("line1", AggregatingTimeGraphModel.AggregationPolicy.FIRST_VALUE);
+		model.setAddDataPointBeforeAndAfterQueryResult(true);
+
+		List<LineChartDataPoint> dataPoints = dataPoints = model.getDataPoints("line1", TimePartitionUnit.MILLISECOND_200, new Interval(400, 550));
+		Assertions.assertThat(dataPoints).containsExactly(
+				new LineChartDataPoint(200, 11),
+				new LineChartDataPoint(400, 0),
+				new LineChartDataPoint(600, 12)
+		);
+
 	}
 }
