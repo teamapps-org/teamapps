@@ -17,13 +17,8 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 	private area: Area<DataPoint>;
 	private $area: Selection<SVGPathElement, {}, HTMLElement, undefined>;
 	private $dots: d3.Selection<SVGGElement, {}, HTMLElement, undefined>;
-	private $defs: Selection<SVGDefsElement, {}, HTMLElement, undefined>;
 	private $main: Selection<SVGGElement, {}, HTMLElement, undefined>;
 
-	public $yAxis: SVGGSelection;
-	private yAxis: Axis<number | { valueOf(): number }>;
-
-	scaleY: ScaleContinuousNumeric<number, number>;
 	private $yZeroLine: Selection<SVGLineElement, {}, HTMLElement, undefined>;
 
 	constructor(
@@ -34,30 +29,12 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 		dataStore: TimeGraphDataStore
 	) {
 		super(config, timeGraphId, dataStore);
-		this.$yAxis = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement);
-		this.yAxis = d3.axisLeft(null);
-		this.updateYScaleType();
 
 		this.$main = $container
 			.append<SVGGElement>("g")
 			.attr("data-series-id", `${this.timeGraphId}-${this.config.id}`);
 		this.initLinesAndColorScale();
 		this.initDomNodes();
-	}
-
-	updateYScaleType(): void {
-		const oldScaleY = this.scaleY;
-		if (this.config.yScaleType === UiScaleType.LOG10) {
-			this.scaleY = d3.scaleLog();
-		} else {
-			this.scaleY = d3.scaleLinear();
-		}
-		if (oldScaleY != null) {
-			this.scaleY.range(oldScaleY.range());
-		}
-		let domainMin = fakeZeroIfLogScale(this.config.intervalY.min, this.config.yScaleType);
-		this.scaleY.domain([domainMin, this.config.intervalY.max]);
-		this.yAxis.scale(this.scaleY);
 	}
 
 	private initLinesAndColorScale() {
@@ -82,11 +59,6 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 	}
 
 	public doRedraw() {
-		this.updateYAxisTickFormat();
-
-		// console.log("scaleX", this.scaleX.domain(), this.scaleX.range());
-		// console.log("scaleY", this.scaleY.domain(), this.scaleY.range());
-
 		let lineData = this.getDisplayedData()[this.config.middleLineDataSeriesId];
 		this.line
 			.x(d => this.scaleX(d.x))
@@ -114,82 +86,25 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 			.attr("r", this.config.dataDotRadius);
 		$dotsDataSelection.exit().remove();
 
-
-		this.$yAxis.call(this.yAxis);
-		
-		let $ticks = this.$yAxis.node().querySelectorAll('.tick');
-		for (let i = 0; i < $ticks.length; i++) {
-			let $text: SVGTextElement = $ticks[i].querySelector("text");
-			let querySelector: any = $ticks[i].querySelector('line');
-			if ($text.innerHTML === '') {
-				querySelector.setAttribute("visibility", 'hidden');
-			} else {
-				querySelector.setAttribute("visibility", 'visible');
-			}
-		}
-
-		this.$yAxis.style("color", createUiColorCssString(this.config.axisColor));
-
 		this.$yZeroLine
 			.attr("x1", 0)
 			.attr("y1", this.scaleY(0))
 			.attr("x2", this.scaleX.range()[1])
 			.attr("y2", this.scaleY(0))
-			.attr("stroke", createUiColorCssString(this.config.axisColor))
+			.attr("stroke", createUiColorCssString(this.config.yAxisColor))
 			.attr("visibility", (this.config.yZeroLineVisible && this.scaleY.domain()[0] !== 0) ? "visible" : "hidden");
 	}
 
 	setConfig(lineFormat: UiLineChartBandConfig) {
 		super.setConfig(lineFormat);
-		this.updateYScaleType();
 		this.initLinesAndColorScale();
 		this.redraw();
-		this.updateYAxisTickFormat();
 	}
 
 	public get yScaleWidth(): number {
 		return (this.config.intervalY.max > 10000 || this.config.intervalY.min < 10) ? 37
 			: (this.config.intervalY.max > 100) ? 30
 				: 25;
-	}
-
-	public updateYAxisTickFormat() {
-		let availableHeight = Math.abs(this.scaleY.range()[1] - this.scaleY.range()[0]);
-		let minY = this.scaleY.domain()[0];
-		let maxY = this.scaleY.domain()[1];
-		let delta = maxY - minY;
-		let numberOfYTickGroups = Math.log10(delta) + 1;
-		let heightPerYTickGroup = availableHeight / numberOfYTickGroups;
-
-		if (this.config.yScaleType === UiScaleType.LOG10) {
-			this.yAxis.tickFormat((value: number, i: number) => {
-				if (value < 1) {
-					return "";
-				} else {
-					if (heightPerYTickGroup >= 150) {
-						return yTickFormat(value);
-					} else if (heightPerYTickGroup >= 80) {
-						let firstDigitOfValue = Number(("" + value)[0]);
-						return firstDigitOfValue <= 5 ? yTickFormat(value) : "";
-					} else if (heightPerYTickGroup >= 30) {
-						let firstDigitOfValue = Number(("" + value)[0]);
-						return firstDigitOfValue === 1 || firstDigitOfValue === 5 ? yTickFormat(value) : "";
-					} else {
-						let firstDigitOfValue = Number(("" + value)[0]);
-						return firstDigitOfValue === 1 ? yTickFormat(value) : "";
-					}
-				}
-			});
-		} else {
-			this.yAxis.tickFormat((domainValue: number) => {
-				if (delta < 2) {
-					return d3.format("-,.4r")(domainValue)
-				} else {
-					return yTickFormat(domainValue)
-				}
-			})
-				.ticks(availableHeight / 20);
-		}
 	}
 
 	protected getDataSeriesIds(): string[] {
