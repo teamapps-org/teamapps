@@ -113,7 +113,7 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 			.attr("stop-color", d => d)
 			.attr("offset", (datum, index) => index);
 
-		let data = this.getDisplayedData()[this.config.dataSourceId];
+		let data = this.getDisplayedData()[this.config.dataSeriesId];
 		this.line
 			.x(d => this.scaleX(d.x))
 			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
@@ -215,8 +215,8 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 		}
 	}
 
-	protected getDataSourceIds(): string[] {
-		return [this.config.dataSourceId];
+	protected getDataSeriesIds(): string[] {
+		return [this.config.dataSeriesId];
 	}
 
 	public destroy() {

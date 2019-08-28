@@ -31,8 +31,8 @@ public interface TimeGraphModel {
 
 	List<? extends TimeGraphZoomLevel> getZoomLevels();
 
-	Map<String, LineChartDataPoints> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX);
+	Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX);
 
-	Interval getDomainX(Collection<String> lineIds);
+	Interval getDomainX(Collection<String> dataSeriesId);
 	
 }

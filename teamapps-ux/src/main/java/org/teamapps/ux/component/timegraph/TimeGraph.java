@@ -67,12 +67,12 @@ public class TimeGraph extends AbstractComponent {
 		setModel(model);
 	}
 
-	public void addLine(String lineId, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
-		addLine(new LineChartLine(lineId, graphType, dataDotRadius, lineColor, null));
+	public void addLine(String dataSeriesId, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
+		addLine(new LineChartLine(dataSeriesId, graphType, dataDotRadius, lineColor, null));
 	}
 
-	public void addLine(String lineId, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
-		addLine(new LineChartLine(lineId, graphType, dataDotRadius, lineColor, areaColor));
+	public void addLine(String dataSeriesId, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
+		addLine(new LineChartLine(dataSeriesId, graphType, dataDotRadius, lineColor, areaColor));
 	}
 
 	public void addLine(LineChartDataDisplay lineFormat) {
@@ -104,7 +104,7 @@ public class TimeGraph extends AbstractComponent {
 
 	public List<String> getLineDataIds() {
 		return lines.stream()
-				.flatMap(lineChartDataDisplay -> lineChartDataDisplay.getDataSourceIds().stream())
+				.flatMap(lineChartDataDisplay -> lineChartDataDisplay.getDataSeriesIds().stream())
 				.distinct()
 				.collect(Collectors.toList());
 	}
@@ -168,12 +168,12 @@ public class TimeGraph extends AbstractComponent {
 
 	private Map<String, List<UiTimeGraphDataPoint>> convertToUiData(Map<String, LineChartDataPoints> data) {
 		Map<String, List<UiTimeGraphDataPoint>> uiData = new HashMap<>();
-		data.forEach((lineId, dataPoints) -> {
+		data.forEach((dataSeriesId, dataPoints) -> {
 			List<UiTimeGraphDataPoint> uiList = new ArrayList<>();
 			for (int i = 0; i < dataPoints.size(); i++) {
 				uiList.add(new UiTimeGraphDataPoint(dataPoints.getX(i), dataPoints.getY(i)));
 			}
-			uiData.put(lineId, uiList);
+			uiData.put(dataSeriesId, uiList);
 		});
 		return uiData;
 	}

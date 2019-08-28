@@ -36,10 +36,10 @@ public abstract class AbstractRawTimedDataModel implements RawTimedDataModel {
 	}
 
 	@Override
-	public Map<String, long[]> getRawEventTimes(Collection<String> lineIds, Interval neededIntervalX) {
-		return lineIds.stream()
-				.collect(Collectors.toMap(lineId -> lineId, lineId -> getRawEventTimes(lineId, neededIntervalX)));
+	public Map<String, long[]> getRawEventTimes(Collection<String> dataSeriesIds, Interval neededIntervalX) {
+		return dataSeriesIds.stream()
+				.collect(Collectors.toMap(dataSeriesId -> dataSeriesId, dataSeriesId -> getRawEventTimes(dataSeriesId, neededIntervalX)));
 	}
 
-	protected abstract long[] getRawEventTimes(String lineId, Interval neededIntervalX);
+	protected abstract long[] getRawEventTimes(String dataSeriesId, Interval neededIntervalX);
 }

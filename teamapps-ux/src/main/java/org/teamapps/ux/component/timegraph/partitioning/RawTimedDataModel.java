@@ -29,8 +29,8 @@ public interface RawTimedDataModel {
 
 	Event<Void> onDataChanged();
 	
-	Map<String, long[]> getRawEventTimes(Collection<String> lineIds, Interval neededIntervalX);
+	Map<String, long[]> getRawEventTimes(Collection<String> dataSeriesIds, Interval neededIntervalX);
 
-	Interval getDomainX(Collection<String> lineIds);
+	Interval getDomainX(Collection<String> dataSeriesId);
 
 }

@@ -38,15 +38,15 @@ public class StaticPartitioningTimeGraphModel extends PartitioningTimeGraphModel
 		return new StaticPartitioningTimeGraphModel(zoneId, new StaticRawTimedDataModel());
 	}
 
-	public void setEventTimestampsByLineId(Map<String, long[]> eventTimestampsByLineId) {
-		delegateModel.setEventTimestampsByLineId(eventTimestampsByLineId);
+	public void setEventTimestampsByDataSeriesId(Map<String, long[]> eventTimestampsByDataSeriesIds) {
+		delegateModel.setEventTimestampsByDataSeriesId(eventTimestampsByDataSeriesIds);
 	}
 
-	public void setEventTimestampsForLineId(String lineId, long[] eventTimestamps) {
-		delegateModel.setEventTimestampsForLineId(lineId, eventTimestamps);
+	public void setEventTimestampsForDataSeriesId(String dataSeriesId, long[] eventTimestamps) {
+		delegateModel.setEventTimestampsForDataSeriesIds(dataSeriesId, eventTimestamps);
 	}
 
-	public Map<String, long[]> getRawEventTimes(Collection<String> lineIds, Interval neededIntervalX) {
-		return delegateModel.getRawEventTimes(lineIds, neededIntervalX);
+	public Map<String, long[]> getRawEventTimes(Collection<String> dataSeriesIds, Interval neededIntervalX) {
+		return delegateModel.getRawEventTimes(dataSeriesIds, neededIntervalX);
 	}
 }

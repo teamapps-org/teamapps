@@ -69,7 +69,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	private intervalX: UiLongIntervalConfig;
 	private maxPixelsBetweenDataPoints: number;
 
-	private seriesById: { [id: string]: AbstractUiLineChartDataDisplay } = {};
+	private linesById: { [id: string]: AbstractUiLineChartDataDisplay } = {};
 
 	private $main: HTMLElement;
 
@@ -184,7 +184,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.setMouseScrollZoomPanMode(config.mouseScrollZoomPanMode);
 
 		config.lines.forEach(line => {
-			this.seriesById[line.id] = this.createSeries(line);
+			this.linesById[line.id] = this.createSeries(line);
 		});
 
 		this.initZoomLevelIntervalManagers();
@@ -381,7 +381,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	}
 
 	private getAllSeries() {
-		return Object.keys(this.seriesById).map(id => this.seriesById[id]);
+		return Object.keys(this.linesById).map(id => this.linesById[id]);
 	}
 
 	addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [seriesId: string]: UiTimeGraphDataPointConfig[] }): void {
@@ -475,29 +475,29 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 	setLines(lineConfigs: UiLineChartLineConfig[]): void {
 		lineConfigs.forEach(lineConfig => {
-			let existingSeries = this.seriesById[lineConfig.id];
+			let existingSeries = this.linesById[lineConfig.id];
 			if (existingSeries) {
 				existingSeries.setConfig(lineConfig);
 			} else {
-				this.seriesById[lineConfig.id] = this.createSeries(lineConfig);
+				this.linesById[lineConfig.id] = this.createSeries(lineConfig);
 			}
 		});
 		let lineConfigsById = lineConfigs.reduce((previousValue, currentValue) => (previousValue[currentValue.id] = previousValue) && previousValue, {} as {[id: string]: UiLineChartLineConfig});
-		Object.keys(this.seriesById).forEach(lineId => {
+		Object.keys(this.linesById).forEach(lineId => {
 			if (!lineConfigsById[lineId]) {
-				this.seriesById[lineId].destroy();
-				delete this.seriesById[lineId];
+				this.linesById[lineId].destroy();
+				delete this.linesById[lineId];
 			}
 		});
 		this.onResize();
 	}
 
 	setLine(lineId: string, lineFormat: UiLineChartLineConfig): void {
-		let series = this.seriesById[lineId];
+		let series = this.linesById[lineId];
 		if (series) {
 			series.setConfig(lineFormat);
 		} else {
-			this.seriesById[lineId] = this.createSeries(lineFormat);
+			this.linesById[lineId] = this.createSeries(lineFormat);
 		}
 	}
 }

@@ -92,25 +92,25 @@ public class PartitioningTimeGraphModel implements TimeGraphModel {
 	}
 
 	@Override
-	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX) {
+	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX) {
 		TimePartitionUnit partitionUnit = zoomLevelPartitionUnits.stream()
 				.filter(partitioningUnit -> partitioningUnit.getAverageMilliseconds() == zoomLevel.getApproximateMillisecondsPerDataPoint())
 				.findFirst().orElse(null);
-		Map<String, LineChartDataPoints> dataPointsByLineId = new HashMap<>();
-		delegateModel.getRawEventTimes(lineIds, neededIntervalX).forEach((lineId, eventTimestamps) -> {
-			if (lineIds.contains(lineId)) {
+		Map<String, LineChartDataPoints> dataPointsByDataSeriesId = new HashMap<>();
+		delegateModel.getRawEventTimes(dataSeriesIds, neededIntervalX).forEach((dataSeriesId, eventTimestamps) -> {
+			if (dataSeriesIds.contains(dataSeriesId)) {
 				ListLineChartDataPoints dataPoints = new ListLineChartDataPoints(TimedDataPartitioner.partition(neededIntervalX.getMin(), neededIntervalX.getMax(), eventTimestamps, timeZone, partitionUnit, true)
 						.stream()
 						.map(p -> new LineChartDataPoint(p.getTimestamp(), p.getCount()))
 						.collect(Collectors.toList()));
-				dataPointsByLineId.put(lineId, dataPoints);
+				dataPointsByDataSeriesId.put(dataSeriesId, dataPoints);
 			}
 		});
-		return dataPointsByLineId;
+		return dataPointsByDataSeriesId;
 	}
 
 	@Override
-	public Interval getDomainX(Collection<String> lineIds) {
-		return delegateModel.getDomainX(lineIds);
+	public Interval getDomainX(Collection<String> dataSeriesId) {
+		return delegateModel.getDomainX(dataSeriesId);
 	}
 }

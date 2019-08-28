@@ -12,7 +12,7 @@ public interface LineChartDataDisplay {
 	@Deprecated
 	String getId();
 
-	List<String> getDataSourceIds();
+	List<String> getDataSeriesIds();
 
 	AbstractUiLineChartDataDisplay createUiFormat();
 

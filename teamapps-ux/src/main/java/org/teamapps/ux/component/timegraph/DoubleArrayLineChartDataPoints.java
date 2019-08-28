@@ -1,11 +1,11 @@
 package org.teamapps.ux.component.timegraph;
 
-public class PrimitiveArrayLineChartDataPoints implements LineChartDataPoints {
+public class DoubleArrayLineChartDataPoints implements LineChartDataPoints {
 
 	private double[] x;
 	private double[] y;
 
-	public PrimitiveArrayLineChartDataPoints(double[] x, double[] y) {
+	public DoubleArrayLineChartDataPoints(double[] x, double[] y) {
 		if (x.length != y.length) {
 			throw new IllegalArgumentException("Arrays must have the same length!");
 		}
