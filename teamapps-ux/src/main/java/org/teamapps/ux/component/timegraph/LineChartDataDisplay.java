@@ -20,7 +20,6 @@ public interface LineChartDataDisplay {
 
 	default void mapAbstractLineChartDataDisplayProperties(AbstractUiLineChartDataDisplay ui) {
 		ui.setId(getId());
-		ui.setDataSourceIds(getDataSourceIds());
 	}
 
 }

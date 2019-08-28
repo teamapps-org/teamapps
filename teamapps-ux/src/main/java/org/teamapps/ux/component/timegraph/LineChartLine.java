@@ -75,7 +75,9 @@ public class LineChartLine implements LineChartDataDisplay {
 	public UiLineChartLine createUiFormat() {
 		UiLineChartLine ui = new UiLineChartLine();
 		mapAbstractLineChartDataDisplayProperties(ui);
-		
+
+		ui.setDataSourceId(dataSourceId);
+
 		ui.setGraphType(graphType.toUiLineChartCurveType());
 		ui.setDataDotRadius(dataDotRadius);
 		ui.setLineColorScaleMin(lineColorScaleMin != null ? createUiColor(lineColorScaleMin) : null);

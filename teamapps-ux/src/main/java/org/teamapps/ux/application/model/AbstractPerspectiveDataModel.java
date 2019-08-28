@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,8 +21,8 @@ package org.teamapps.ux.application.model;
 
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.data.value.Sorting;
-import org.teamapps.ux.component.calendar.AbstractCalendarModel;
 import org.teamapps.ux.component.calendar.AbstractCalendarEvent;
+import org.teamapps.ux.component.calendar.AbstractCalendarModel;
 import org.teamapps.ux.component.calendar.CalendarEvent;
 import org.teamapps.ux.component.calendar.CalendarModel;
 import org.teamapps.ux.component.infiniteitemview.AbstractInfiniteItemViewModel;
@@ -40,7 +40,10 @@ import org.teamapps.ux.model.TreeModel;
 import org.teamapps.ux.session.CurrentSessionContext;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -84,7 +87,7 @@ public abstract class AbstractPerspectiveDataModel<RECORD> implements Perspectiv
 
 			@Override
 			public List<RECORD> getRecords(int startIndex, int length) {
-				return getEntities(startIndex, length, null, null,null);
+				return getEntities(startIndex, length, null, null, null);
 			}
 		};
 
@@ -101,8 +104,8 @@ public abstract class AbstractPerspectiveDataModel<RECORD> implements Perspectiv
 
 		timeGraphModel = new PartitioningTimeGraphModel(CurrentSessionContext.get().getTimeZone(), new AbstractRawTimedDataModel() {
 			@Override
-			public Map<String, long[]> getRawEventTimes(Collection<String> lineIds, Interval neededIntervalX) {
-				return getTimeGraphData(lineIds, neededIntervalX);
+			public long[] getRawEventTimes(String lineId, Interval neededIntervalX) {
+				return getTimeGraphData(lineId, neededIntervalX);
 			}
 
 			@Override
@@ -129,29 +132,24 @@ public abstract class AbstractPerspectiveDataModel<RECORD> implements Perspectiv
 		treeModel.onAllNodesChanged().fire(null);
 	}
 
-	private Map<String, long[]> getTimeGraphData(Collection<String> lineIds, Interval interval) {
+	private long[] getTimeGraphData(String lineId, Interval interval) {
 		long startTime = interval.getMin();
 		long endTime = interval.getMax();
 
-		Map<String, long[]> timeStampsByLineId = new HashMap<>();
 		List<RECORD> entities = getEntities(0, Integer.MAX_VALUE, null, null, null);
-		for (String lineId : lineIds) {
-			long[] timeStamps = new long[entities.size()];
-			for (int i = 0; i < entities.size(); i++) {
-				Instant instant = propertyProvider.getInstantValue(entities.get(i), lineId);
-				if (instant != null) {
-					long time = instant.toEpochMilli();
-					if (startTime <= time && endTime >= time) {
-						timeStamps[i] = time;
-					}
+		long[] timeStamps = new long[entities.size()];
+		for (int i = 0; i < entities.size(); i++) {
+			Instant instant = propertyProvider.getInstantValue(entities.get(i), lineId);
+			if (instant != null) {
+				long time = instant.toEpochMilli();
+				if (startTime <= time && endTime >= time) {
+					timeStamps[i] = time;
 				}
 			}
-			long[] filteredTimestamps = Arrays.stream(timeStamps)
-					.filter(value -> value > 0)
-					.toArray();
-			timeStampsByLineId.put(lineId, filteredTimestamps);
 		}
-		return timeStampsByLineId;
+		return Arrays.stream(timeStamps)
+				.filter(value -> value > 0)
+				.toArray();
 	}
 
 	private Interval getTimeGraphDomain(Collection<String> lineIds) {
