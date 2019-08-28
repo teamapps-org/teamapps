@@ -22,6 +22,8 @@ package org.teamapps.ux.component.timegraph.partitioning;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.timegraph.Interval;
 import org.teamapps.ux.component.timegraph.LineChartDataPoint;
+import org.teamapps.ux.component.timegraph.LineChartDataPoints;
+import org.teamapps.ux.component.timegraph.ListLineChartDataPoints;
 import org.teamapps.ux.component.timegraph.TimeGraphModel;
 import org.teamapps.ux.component.timegraph.TimeGraphZoomLevel;
 
@@ -90,17 +92,17 @@ public class PartitioningTimeGraphModel implements TimeGraphModel {
 	}
 
 	@Override
-	public Map<String, List<LineChartDataPoint>> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX) {
+	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX) {
 		TimePartitionUnit partitionUnit = zoomLevelPartitionUnits.stream()
 				.filter(partitioningUnit -> partitioningUnit.getAverageMilliseconds() == zoomLevel.getApproximateMillisecondsPerDataPoint())
 				.findFirst().orElse(null);
-		Map<String, List<LineChartDataPoint>> dataPointsByLineId = new HashMap<>();
+		Map<String, LineChartDataPoints> dataPointsByLineId = new HashMap<>();
 		delegateModel.getRawEventTimes(lineIds, neededIntervalX).forEach((lineId, eventTimestamps) -> {
 			if (lineIds.contains(lineId)) {
-				List<LineChartDataPoint> dataPoints = TimedDataPartitioner.partition(neededIntervalX.getMin(), neededIntervalX.getMax(), eventTimestamps, timeZone, partitionUnit, true)
+				ListLineChartDataPoints dataPoints = new ListLineChartDataPoints(TimedDataPartitioner.partition(neededIntervalX.getMin(), neededIntervalX.getMax(), eventTimestamps, timeZone, partitionUnit, true)
 						.stream()
 						.map(p -> new LineChartDataPoint(p.getTimestamp(), p.getCount()))
-						.collect(Collectors.toList());
+						.collect(Collectors.toList()));
 				dataPointsByLineId.put(lineId, dataPoints);
 			}
 		});

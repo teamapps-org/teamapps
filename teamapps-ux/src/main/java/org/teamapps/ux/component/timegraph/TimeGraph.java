@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -146,7 +146,7 @@ public class TimeGraph extends AbstractComponent {
 				UiTimeGraph.DataNeededEvent dataNeededEvent = (UiTimeGraph.DataNeededEvent) event;
 				Interval interval = new Interval(dataNeededEvent.getNeededIntervalX().getMin(), dataNeededEvent.getNeededIntervalX().getMax());
 				TimeGraphZoomLevel zoomLevel = model.getZoomLevels().get(dataNeededEvent.getZoomLevelIndex());
-				Map<String, List<LineChartDataPoint>> data = model.getDataPoints(getLineDataIds(), zoomLevel, interval);
+				Map<String, LineChartDataPoints> data = model.getDataPoints(getLineDataIds(), zoomLevel, interval);
 				queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), dataNeededEvent.getZoomLevelIndex(), dataNeededEvent.getNeededIntervalX(), convertToUiData(data)));
 				break;
 			}
@@ -166,11 +166,15 @@ public class TimeGraph extends AbstractComponent {
 		}
 	}
 
-	private Map<String, List<UiTimeGraphDataPoint>> convertToUiData(Map<String, List<LineChartDataPoint>> data) {
+	private Map<String, List<UiTimeGraphDataPoint>> convertToUiData(Map<String, LineChartDataPoints> data) {
 		Map<String, List<UiTimeGraphDataPoint>> uiData = new HashMap<>();
-		data.forEach((lineId, dataPoints) -> uiData.put(lineId, dataPoints.stream()
-				.map(dataPoint -> new UiTimeGraphDataPoint(dataPoint.getX(), dataPoint.getY()))
-				.collect(Collectors.toList())));
+		data.forEach((lineId, dataPoints) -> {
+			List<UiTimeGraphDataPoint> uiList = new ArrayList<>();
+			for (int i = 0; i < dataPoints.size(); i++) {
+				uiList.add(new UiTimeGraphDataPoint(dataPoints.getX(i), dataPoints.getY(i)));
+			}
+			uiData.put(lineId, uiList);
+		});
 		return uiData;
 	}
 
