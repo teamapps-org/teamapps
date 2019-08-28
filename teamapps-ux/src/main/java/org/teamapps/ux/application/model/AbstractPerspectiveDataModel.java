@@ -104,13 +104,13 @@ public abstract class AbstractPerspectiveDataModel<RECORD> implements Perspectiv
 
 		timeGraphModel = new PartitioningTimeGraphModel(CurrentSessionContext.get().getTimeZone(), new AbstractRawTimedDataModel() {
 			@Override
-			public long[] getRawEventTimes(String lineId, Interval neededIntervalX) {
-				return getTimeGraphData(lineId, neededIntervalX);
+			public long[] getRawEventTimes(String dataSeriesId, Interval neededIntervalX) {
+				return getTimeGraphData(dataSeriesId, neededIntervalX);
 			}
 
 			@Override
-			public Interval getDomainX(Collection<String> lineIds) {
-				return getTimeGraphDomain(lineIds);
+			public Interval getDomainX(Collection<String> dataSeriesId) {
+				return getTimeGraphDomain(dataSeriesId);
 			}
 		});
 

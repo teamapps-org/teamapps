@@ -80,16 +80,16 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 
 	protected getDisplayedData() {
 		const zoomBoundsX = [+(this.scaleX.domain()[0]), +(this.scaleX.domain()[1])];
-		return this.dataStore.getData(this.getDataSourceIds(), this.zoomLevelIndex, zoomBoundsX[0], zoomBoundsX[1]);
+		return this.dataStore.getData(this.getDataSeriesIds(), this.zoomLevelIndex, zoomBoundsX[0], zoomBoundsX[1]);
 	}
 
-	protected abstract getDataSourceIds(): string[];
+	protected abstract getDataSeriesIds(): string[];
 
 	public abstract destroy(): void;
 
 	public getDisplayedDataYBounds(): [number, number] {
-		return this.getDataSourceIds().map(dataSourceId => {
-			let displayedData = this.getDisplayedData()[dataSourceId];
+		return this.getDataSeriesIds().map(dataSeriesId => {
+			let displayedData = this.getDisplayedData()[dataSeriesId];
 			let minY = Number.POSITIVE_INFINITY;
 			let maxY = Number.NEGATIVE_INFINITY;
 			displayedData.forEach(d => {

@@ -28,35 +28,35 @@ import java.util.Map;
 
 public class StaticRawTimedDataModel extends AbstractRawTimedDataModel {
 
-	private Map<String, long[]> eventTimestampsByLineId = new HashMap<>();
+	private Map<String, long[]> eventTimestampsByDataSeriesId = new HashMap<>();
 	private Interval staticDomainX;
 
-	public void setEventTimestampsByLineId(Map<String, long[]> eventTimestampsByLineId) {
-		this.eventTimestampsByLineId = new HashMap<>(eventTimestampsByLineId);
+	public void setEventTimestampsByDataSeriesId(Map<String, long[]> eventTimestampsByDataSeriesId) {
+		this.eventTimestampsByDataSeriesId = new HashMap<>(eventTimestampsByDataSeriesId);
 		onDataChanged.fire(null);
 	}
 
-	public void setEventTimestampsForLineId(String lineId, long[] eventTimestamps) {
-		eventTimestampsByLineId.put(lineId, eventTimestamps);
+	public void setEventTimestampsForDataSeriesIds(String dataSeriesId, long[] eventTimestamps) {
+		eventTimestampsByDataSeriesId.put(dataSeriesId, eventTimestamps);
 		onDataChanged.fire(null);
 	}
 
 	@Override
-	protected long[] getRawEventTimes(String lineId, Interval neededIntervalX) {
-		return eventTimestampsByLineId.get(lineId);
+	protected long[] getRawEventTimes(String dataSeriesId, Interval neededIntervalX) {
+		return eventTimestampsByDataSeriesId.get(dataSeriesId);
 	}
 
 	@Override
-	public Interval getDomainX(Collection<String> lineIds) {
+	public Interval getDomainX(Collection<String> dataSeriesId) {
 		if (staticDomainX != null) {
 			return staticDomainX;
 		} else {
-			long min = eventTimestampsByLineId.entrySet().stream()
-					.filter(e -> lineIds.contains(e.getKey()))
+			long min = eventTimestampsByDataSeriesId.entrySet().stream()
+					.filter(e -> dataSeriesId.contains(e.getKey()))
 					.flatMapToLong(e -> Arrays.stream(e.getValue()))
 					.min().orElse(0);
-			long max = eventTimestampsByLineId.entrySet().stream()
-					.filter(e -> lineIds.contains(e.getKey()))
+			long max = eventTimestampsByDataSeriesId.entrySet().stream()
+					.filter(e -> dataSeriesId.contains(e.getKey()))
 					.flatMapToLong(e -> Arrays.stream(e.getValue()))
 					.max().orElse(1);
 			return new Interval(min, max);

@@ -35,11 +35,11 @@ public abstract class AbstractTimeGraphModel implements TimeGraphModel {
 	}
 
 	@Override
-	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX) {
-		return lineIds.stream()
-				.collect(Collectors.toMap(lineId -> lineId, lineId -> getDataPoints(lineId, zoomLevel, neededIntervalX)));
+	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX) {
+		return dataSeriesIds.stream()
+				.collect(Collectors.toMap(dataSeriesId -> dataSeriesId, dataSeriesId -> getDataPoints(dataSeriesId, zoomLevel, neededIntervalX)));
 	}
 
-	protected abstract LineChartDataPoints getDataPoints(String lineId, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX);
+	protected abstract LineChartDataPoints getDataPoints(String dataSeriesId, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX);
 
 }

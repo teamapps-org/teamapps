@@ -33,9 +33,9 @@ public class LineChartBand implements LineChartDataDisplay {
 
 	private final String id = UUID.randomUUID().toString();
 
-	private String upperBoundDataSourceId;
-	private String middleLineDataSourceId;
-	private String lowerBoundDataSourceId;
+	private String upperBoundDataSeriesId;
+	private String middleLineDataSeriesId;
+	private String lowerBoundDataSeriesId;
 
 	private LineChartDataDisplayChangeListener changeListener;
 
@@ -51,18 +51,18 @@ public class LineChartBand implements LineChartDataDisplay {
 	private boolean yZeroLineVisible = false;
 
 
-	public LineChartBand(String upperBoundDataSourceId, String middleLineDataSourceId, String lowerBoundDataSourceId) {
-		this(upperBoundDataSourceId, middleLineDataSourceId, lowerBoundDataSourceId, LineChartCurveType.MONOTONE, 2, new Color(73, 128, 192));
+	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId) {
+		this(upperBoundDataSeriesId, middleLineDataSeriesId, lowerBoundDataSeriesId, LineChartCurveType.MONOTONE, 2, new Color(73, 128, 192));
 	}
 
-	public LineChartBand(String upperBoundDataSourceId, String middleLineDataSourceId, String lowerBoundDataSourceId, LineChartCurveType curveType, float dataDotRadius, Color lineColor) {
-		this(upperBoundDataSourceId, middleLineDataSourceId, lowerBoundDataSourceId, curveType, dataDotRadius, lineColor, null);
+	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId, LineChartCurveType curveType, float dataDotRadius, Color lineColor) {
+		this(upperBoundDataSeriesId, middleLineDataSeriesId, lowerBoundDataSeriesId, curveType, dataDotRadius, lineColor, null);
 	}
 
-	public LineChartBand(String upperBoundDataSourceId, String middleLineDataSourceId, String lowerBoundDataSourceId, LineChartCurveType curveType, float dataDotRadius, Color lineColor, Color areaColor) {
-		this.upperBoundDataSourceId = upperBoundDataSourceId;
-		this.middleLineDataSourceId = middleLineDataSourceId;
-		this.lowerBoundDataSourceId = lowerBoundDataSourceId;
+	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId, LineChartCurveType curveType, float dataDotRadius, Color lineColor, Color areaColor) {
+		this.upperBoundDataSeriesId = upperBoundDataSeriesId;
+		this.middleLineDataSeriesId = middleLineDataSeriesId;
+		this.lowerBoundDataSeriesId = lowerBoundDataSeriesId;
 		this.curveType = curveType;
 		this.dataDotRadius = dataDotRadius;
 		this.lineColor = lineColor;
@@ -73,9 +73,9 @@ public class LineChartBand implements LineChartDataDisplay {
 		UiLineChartBand ui = new UiLineChartBand();
 		mapAbstractLineChartDataDisplayProperties(ui);
 
-		ui.setUpperBoundDataSourceId(upperBoundDataSourceId);
-		ui.setMiddleLineDataSourceId(middleLineDataSourceId);
-		ui.setLowerBoundDataSourceId(lowerBoundDataSourceId);
+		ui.setUpperBoundDataSeriesId(upperBoundDataSeriesId);
+		ui.setMiddleLineDataSeriesId(middleLineDataSeriesId);
+		ui.setLowerBoundDataSeriesId(lowerBoundDataSeriesId);
 
 		ui.setGraphType(curveType.toUiLineChartCurveType());
 		ui.setDataDotRadius(dataDotRadius);
@@ -95,8 +95,8 @@ public class LineChartBand implements LineChartDataDisplay {
 	}
 
 	@Override
-	public List<String> getDataSourceIds() {
-		return Arrays.asList(upperBoundDataSourceId, middleLineDataSourceId, lowerBoundDataSourceId);
+	public List<String> getDataSeriesIds() {
+		return Arrays.asList(upperBoundDataSeriesId, middleLineDataSeriesId, lowerBoundDataSeriesId);
 	}
 
 	@Override

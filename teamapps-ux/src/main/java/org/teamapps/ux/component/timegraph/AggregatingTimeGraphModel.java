@@ -66,13 +66,13 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 			TimePartitionUnit.MILLISECOND_2,
 			TimePartitionUnit.MILLISECOND
 	);
-	private Map<String, LineChartDataPoints> dataPointsByLineId = new HashMap<>();
+	private Map<String, LineChartDataPoints> dataPointsByDataSeriesId = new HashMap<>();
 
 	public enum AggregationPolicy {
 		FIRST_VALUE, MIN, AVERAGE, MAX
 	}
 
-	private Map<String, AggregationPolicy> aggregationPolicyByLineId = new HashMap<>();
+	private Map<String, AggregationPolicy> aggregationPolicyByDataSeriesId = new HashMap<>();
 	private AggregationPolicy defaultAggregationPolicy = AggregationPolicy.FIRST_VALUE;
 
 	private boolean addDataPointBeforeAndAfterQueryResult = true;
@@ -91,25 +91,25 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 		onDataChanged.fire(null);
 	}
 
-	public void setDataPointsByLineId(Map<String, LineChartDataPoints> dataPointsByLineId) {
-		this.dataPointsByLineId.clear();
-		this.dataPointsByLineId.putAll(dataPointsByLineId);
+	public void setDataPointsByDataSeriesId(Map<String, LineChartDataPoints> dataPointsByDataSeriesId) {
+		this.dataPointsByDataSeriesId.clear();
+		this.dataPointsByDataSeriesId.putAll(dataPointsByDataSeriesId);
 		onDataChanged.fire(null);
 	}
 
-	public void setDataPoints(String lineId, LineChartDataPoints dataPoints) {
-		this.dataPointsByLineId.put(lineId, dataPoints);
+	public void setDataPoints(String dataSeriesId, LineChartDataPoints dataPoints) {
+		this.dataPointsByDataSeriesId.put(dataSeriesId, dataPoints);
 		onDataChanged.fire(null);
 	}
 
-	public void setAggregationPolicyByLineId(Map<String, AggregationPolicy> aggregationPolicyByLineId) {
-		this.aggregationPolicyByLineId.clear();
-		this.aggregationPolicyByLineId.putAll(aggregationPolicyByLineId);
+	public void setAggregationPolicyByDataSeriesId(Map<String, AggregationPolicy> aggregationPolicyByDataSeriesId) {
+		this.aggregationPolicyByDataSeriesId.clear();
+		this.aggregationPolicyByDataSeriesId.putAll(aggregationPolicyByDataSeriesId);
 		onDataChanged.fire(null);
 	}
 
-	public void setAggregationPolicy(String lineId, AggregationPolicy aggregationPolicy) {
-		this.aggregationPolicyByLineId.put(lineId, aggregationPolicy);
+	public void setAggregationPolicy(String dataSeriesId, AggregationPolicy aggregationPolicy) {
+		this.aggregationPolicyByDataSeriesId.put(dataSeriesId, aggregationPolicy);
 		onDataChanged.fire(null);
 	}
 
@@ -119,13 +119,13 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 	}
 
 	@NotNull
-	protected LineChartDataPoints getDataPoints(String lineId, TimeGraphZoomLevel partitionUnit, Interval interval) {
+	protected LineChartDataPoints getDataPoints(String dataSeriesId, TimeGraphZoomLevel partitionUnit, Interval interval) {
 		TimePartitionUnit zoomLevel = zoomLevels.stream()
 				.filter(unit -> unit.getAverageMilliseconds() == partitionUnit.getApproximateMillisecondsPerDataPoint())
 				.findFirst().orElse(zoomLevels.get(0));
-		LineChartDataPoints dataPoints = this.dataPointsByLineId.get(lineId);
+		LineChartDataPoints dataPoints = this.dataPointsByDataSeriesId.get(dataSeriesId);
 
-		return getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByLineId.getOrDefault(lineId, defaultAggregationPolicy));
+		return getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByDataSeriesId.getOrDefault(dataSeriesId, defaultAggregationPolicy));
 	}
 
 	@NotNull
@@ -174,7 +174,7 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 			currentPartitionStartMilli = nextPartitionStartMilli;
 			nextPartitionStartMilli = zoomLevel.increment(getPartitionStart(nextPartitionStartMilli, zoomLevel)).toInstant().toEpochMilli();
 		} while (currentPartitionStartMilli <= interval.getMax() + (addDataPointBeforeAndAfterQueryResult ? zoomLevel.getAverageMilliseconds() : 0));
-		return new PrimitiveArrayLineChartDataPoints(resultX.toDoubleArray(), resultY.toDoubleArray());
+		return new DoubleArrayLineChartDataPoints(resultX.toDoubleArray(), resultY.toDoubleArray());
 	}
 
 	private ZonedDateTime getPartitionStart(long timestampMillis, TimePartitionUnit partitionUnit) {
@@ -188,12 +188,12 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 	}
 
 	@Override
-	public Interval getDomainX(Collection<String> lineIds) {
-		long minX = dataPointsByLineId.values().stream()
+	public Interval getDomainX(Collection<String> dataSeriesId) {
+		long minX = dataPointsByDataSeriesId.values().stream()
 				.flatMapToDouble(LineChartDataPoints::streamX)
 				.mapToLong(x -> (long) x)
 				.min().orElse(0);
-		long maxX = dataPointsByLineId.values().stream()
+		long maxX = dataPointsByDataSeriesId.values().stream()
 				.flatMapToDouble(LineChartDataPoints::streamX)
 				.mapToLong(x -> (long) x)
 				.max().orElse(1);

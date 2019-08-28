@@ -32,7 +32,8 @@ import static org.teamapps.util.UiUtil.createUiColor;
 public class LineChartLine implements LineChartDataDisplay {
 
 	private final String id = UUID.randomUUID().toString();
-	private final String dataSourceId;
+
+	private final String dataSeriesId;
 	private LineChartDataDisplayChangeListener changeListener;
 
 	private LineChartCurveType graphType = LineChartCurveType.MONOTONE;
@@ -49,20 +50,20 @@ public class LineChartLine implements LineChartDataDisplay {
 	private boolean yZeroLineVisible = false;
 
 
-	public LineChartLine(String dataSourceId) {
-		this.dataSourceId = dataSourceId;
+	public LineChartLine(String dataSeriesId) {
+		this.dataSeriesId = dataSeriesId;
 	}
 
-	public LineChartLine(String dataSourceId, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
-		this(dataSourceId, graphType, dataDotRadius, lineColor, lineColor, null, null);
+	public LineChartLine(String dataSeriesId, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
+		this(dataSeriesId, graphType, dataDotRadius, lineColor, lineColor, null, null);
 	}
 
-	public LineChartLine(String dataSourceId, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
-		this(dataSourceId, graphType, dataDotRadius, lineColor, lineColor, Color.withAlpha(areaColor, 0.0f), areaColor);
+	public LineChartLine(String dataSeriesId, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
+		this(dataSeriesId, graphType, dataDotRadius, lineColor, lineColor, Color.withAlpha(areaColor, 0.0f), areaColor);
 	}
 
-	public LineChartLine(String dataSourceId, LineChartCurveType graphType, float dataDotRadius, Color lineColorScaleMin, Color lineColorScaleMax, Color areaColorScaleMin, Color areaColorScaleMax) {
-		this.dataSourceId = dataSourceId;
+	public LineChartLine(String dataSeriesId, LineChartCurveType graphType, float dataDotRadius, Color lineColorScaleMin, Color lineColorScaleMax, Color areaColorScaleMin, Color areaColorScaleMax) {
+		this.dataSeriesId = dataSeriesId;
 		this.graphType = graphType;
 		this.dataDotRadius = dataDotRadius;
 		this.lineColorScaleMin = lineColorScaleMin;
@@ -76,7 +77,7 @@ public class LineChartLine implements LineChartDataDisplay {
 		UiLineChartLine ui = new UiLineChartLine();
 		mapAbstractLineChartDataDisplayProperties(ui);
 
-		ui.setDataSourceId(dataSourceId);
+		ui.setDataSeriesId(dataSeriesId);
 
 		ui.setGraphType(graphType.toUiLineChartCurveType());
 		ui.setDataDotRadius(dataDotRadius);
@@ -98,8 +99,8 @@ public class LineChartLine implements LineChartDataDisplay {
 	}
 
 	@Override
-	public List<String> getDataSourceIds() {
-		return Collections.singletonList(dataSourceId);
+	public List<String> getDataSeriesIds() {
+		return Collections.singletonList(dataSeriesId);
 	}
 
 	public LineChartCurveType getGraphType() {

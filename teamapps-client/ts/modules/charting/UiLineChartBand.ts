@@ -87,7 +87,7 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 		// console.log("scaleX", this.scaleX.domain(), this.scaleX.range());
 		// console.log("scaleY", this.scaleY.domain(), this.scaleY.range());
 
-		let lineData = this.getDisplayedData()[this.config.middleLineDataSourceId];
+		let lineData = this.getDisplayedData()[this.config.middleLineDataSeriesId];
 		this.line
 			.x(d => this.scaleX(d.x))
 			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
@@ -95,8 +95,8 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 			.attr("d", this.line(lineData))
 			.attr("stroke", createUiColorCssString(this.config.lineColor));
 
-		let areaDataMax = this.getDisplayedData()[this.config.upperBoundDataSourceId];
-		let areaDataMin = this.getDisplayedData()[this.config.lowerBoundDataSourceId];
+		let areaDataMax = this.getDisplayedData()[this.config.upperBoundDataSeriesId];
+		let areaDataMin = this.getDisplayedData()[this.config.lowerBoundDataSeriesId];
 		this.area
 			.x(d => this.scaleX(d.x))
 			.y0((d, index) => this.scaleY(fakeZeroIfLogScale(areaDataMin[index].y, this.config.yScaleType))) // TODO make sure these are in sync (no missing points) or fallback to line value??
@@ -192,8 +192,8 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 		}
 	}
 
-	protected getDataSourceIds(): string[] {
-		return [this.config.lowerBoundDataSourceId, this.config.middleLineDataSourceId, this.config.upperBoundDataSourceId];
+	protected getDataSeriesIds(): string[] {
+		return [this.config.lowerBoundDataSeriesId, this.config.middleLineDataSeriesId, this.config.upperBoundDataSeriesId];
 	}
 
 	public destroy() {
