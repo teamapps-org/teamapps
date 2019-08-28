@@ -4,22 +4,30 @@ import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMo
 import * as d3 from "d3";
 import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
+import {createUiColorCssString} from "../util/CssFormatUtil";
+import {NamespaceLocalObject} from "d3";
+import {Axis} from "d3";
+import {UiScaleType} from "../../generated/UiScaleType";
+import {yTickFormat} from "./UiTimeGraph";
 
 export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineChartDataDisplayConfig = AbstractUiLineChartDataDisplayConfig> {
+
+	public scaleY: ScaleContinuousNumeric<number, number>;
+	public $yAxis: SVGGSelection;
+	private yAxis: Axis<number | { valueOf(): number }>;
+
 	constructor(
 		protected config: C,
 		protected timeGraphId: string,
 		protected dataStore: TimeGraphDataStore
 	) {
-
+		this.$yAxis = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement);
+		this.yAxis = d3.axisLeft(null);
+		this.updateYScale();
 	}
 
 	protected zoomLevelIndex: number;
 	protected scaleX: ScaleTime<number, number>;
-
-	abstract get scaleY(): ScaleContinuousNumeric<number, number>
-
-	abstract get $yAxis(): SVGGSelection;
 
 	abstract get yScaleWidth(): number;
 
@@ -64,18 +72,93 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 					let intervalInterpolator = d3.interpolateArray(this.scaleY.domain().map(date => +date), [minY, maxY]);
 					return (t: number) => {
 						this.scaleY.domain(intervalInterpolator(t));
+						this.redrawYAxis();
 						this.doRedraw();
 					}
 				});
 		} else {
-			this.doRedraw()
+			this.redrawYAxis();
+			this.doRedraw();
 		}
+	}
+
+	updateYScale(): void {
+		const oldScaleY = this.scaleY;
+		if (this.config.yScaleType === UiScaleType.LOG10) {
+			this.scaleY = d3.scaleLog();
+		} else {
+			this.scaleY = d3.scaleLinear();
+		}
+		if (oldScaleY != null) {
+			this.scaleY.range(oldScaleY.range());
+		}
+		let domainMin = fakeZeroIfLogScale(this.config.intervalY.min, this.config.yScaleType);
+		this.scaleY.domain([domainMin, this.config.intervalY.max]);
+		this.yAxis.scale(this.scaleY);
 	}
 
 	protected abstract doRedraw(): void;
 
+	public updateYAxisTickFormat() {
+		let availableHeight = Math.abs(this.scaleY.range()[1] - this.scaleY.range()[0]);
+		let minY = this.scaleY.domain()[0];
+		let maxY = this.scaleY.domain()[1];
+		let delta = maxY - minY;
+		let numberOfYTickGroups = Math.log10(delta) + 1;
+		let heightPerYTickGroup = availableHeight / numberOfYTickGroups;
+
+		if (this.config.yScaleType === UiScaleType.LOG10) {
+			this.yAxis.tickFormat((value: number, i: number) => {
+				if (value < 1) {
+					return "";
+				} else {
+					if (heightPerYTickGroup >= 150) {
+						return yTickFormat(value);
+					} else if (heightPerYTickGroup >= 80) {
+						let firstDigitOfValue = Number(("" + value)[0]);
+						return firstDigitOfValue <= 5 ? yTickFormat(value) : "";
+					} else if (heightPerYTickGroup >= 30) {
+						let firstDigitOfValue = Number(("" + value)[0]);
+						return firstDigitOfValue === 1 || firstDigitOfValue === 5 ? yTickFormat(value) : "";
+					} else {
+						let firstDigitOfValue = Number(("" + value)[0]);
+						return firstDigitOfValue === 1 ? yTickFormat(value) : "";
+					}
+				}
+			});
+		} else {
+			this.yAxis.tickFormat((domainValue: number) => {
+				if (delta < 2) {
+					return d3.format("-,.4r")(domainValue)
+				} else {
+					return yTickFormat(domainValue)
+				}
+			})
+				.ticks(availableHeight / 20);
+		}
+	}
+
+	private redrawYAxis() {
+		this.updateYAxisTickFormat();
+		this.$yAxis.call(this.yAxis);
+
+		let $ticks = this.$yAxis.node().querySelectorAll('.tick');
+		for (let i = 0; i < $ticks.length; i++) {
+			let $text: SVGTextElement = $ticks[i].querySelector("text");
+			let querySelector: any = $ticks[i].querySelector('line');
+			if ($text.innerHTML === '') {
+				querySelector.setAttribute("visibility", 'hidden');
+			} else {
+				querySelector.setAttribute("visibility", 'visible');
+			}
+		}
+
+		this.$yAxis.style("color", createUiColorCssString(this.config.yAxisColor));
+	}
+
 	public setConfig(config: C) {
 		this.config = config;
+		this.updateYScale();
 	}
 
 	protected getDisplayedData() {

@@ -43,7 +43,7 @@ public class TimeGraph extends AbstractComponent {
 
 	public final Event<ZoomEventData> onZoomed = new Event<>();
 	public final Event<Interval> onIntervalSelected = new Event<>();
-	private final List<LineChartDataDisplay> lines = new ArrayList<>();
+	private final List<AbstractLineChartDataDisplay> lines = new ArrayList<>();
 
 	private int maxPixelsBetweenDataPoints = 50; // ... before switching to higher zoom level
 	private TimeGraphModel model;
@@ -75,16 +75,16 @@ public class TimeGraph extends AbstractComponent {
 		addLine(new LineChartLine(dataSeriesId, graphType, dataDotRadius, lineColor, areaColor));
 	}
 
-	public void addLine(LineChartDataDisplay lineFormat) {
+	public void addLine(AbstractLineChartDataDisplay lineFormat) {
 		this.addDataDisplay(lineFormat);
 	}
 
-	public void addDataDisplay(LineChartDataDisplay lineFormat) {
+	public void addDataDisplay(AbstractLineChartDataDisplay lineFormat) {
 		lines.add(lineFormat);
 		setLines(new ArrayList<>(this.lines));
 	}
 
-	public void setLines(List<? extends LineChartDataDisplay> lineFormats) {
+	public void setLines(List<? extends AbstractLineChartDataDisplay> lineFormats) {
 		lines.clear();
 		lineFormats.forEach(line -> {
 			lines.add(line);
@@ -96,9 +96,9 @@ public class TimeGraph extends AbstractComponent {
 		refresh();
 	}
 
-	private List<AbstractUiLineChartDataDisplay> toUiLineFormats(List<? extends LineChartDataDisplay> lineFormats) {
+	private List<AbstractUiLineChartDataDisplay> toUiLineFormats(List<? extends AbstractLineChartDataDisplay> lineFormats) {
 		return lineFormats.stream()
-				.map(LineChartDataDisplay::createUiFormat)
+				.map(AbstractLineChartDataDisplay::createUiFormat)
 				.collect(Collectors.toList());
 	}
 

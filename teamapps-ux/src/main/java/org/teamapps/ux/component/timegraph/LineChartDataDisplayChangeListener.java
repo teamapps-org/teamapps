@@ -20,5 +20,5 @@
 package org.teamapps.ux.component.timegraph;
 
 public interface LineChartDataDisplayChangeListener {
-	void handleChange(LineChartDataDisplay display);
+	void handleChange(AbstractLineChartDataDisplay display);
 }
