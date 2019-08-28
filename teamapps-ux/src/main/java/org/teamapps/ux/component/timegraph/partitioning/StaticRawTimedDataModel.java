@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class StaticRawTimedDataModel extends AbstractRawTimedDataModel {
 
@@ -43,10 +42,8 @@ public class StaticRawTimedDataModel extends AbstractRawTimedDataModel {
 	}
 
 	@Override
-	public Map<String, long[]> getRawEventTimes(Collection<String> lineIds, Interval neededIntervalX) {
-		return eventTimestampsByLineId.entrySet().stream()
-				.filter(e -> lineIds.contains(e.getKey()))
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+	protected long[] getRawEventTimes(String lineId, Interval neededIntervalX) {
+		return eventTimestampsByLineId.get(lineId);
 	}
 
 	@Override

@@ -20,6 +20,11 @@
 package org.teamapps.ux.component.timegraph.partitioning;
 
 import org.teamapps.event.Event;
+import org.teamapps.ux.component.timegraph.Interval;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class AbstractRawTimedDataModel implements RawTimedDataModel {
 
@@ -30,4 +35,11 @@ public abstract class AbstractRawTimedDataModel implements RawTimedDataModel {
 		return onDataChanged;
 	}
 
+	@Override
+	public Map<String, long[]> getRawEventTimes(Collection<String> lineIds, Interval neededIntervalX) {
+		return lineIds.stream()
+				.collect(Collectors.toMap(lineId -> lineId, lineId -> getRawEventTimes(lineId, neededIntervalX)));
+	}
+
+	protected abstract long[] getRawEventTimes(String lineId, Interval neededIntervalX);
 }

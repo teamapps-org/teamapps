@@ -24,15 +24,23 @@ import org.teamapps.event.Event;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public interface TimeGraphModel {
+public abstract class AbstractTimeGraphModel implements TimeGraphModel {
 
-	Event<Void> onDataChanged();
+	public final Event<Void> onDataChanged = new Event<>();
 
-	List<? extends TimeGraphZoomLevel> getZoomLevels();
+	@Override
+	public Event<Void> onDataChanged() {
+		return onDataChanged;
+	}
 
-	Map<String, List<LineChartDataPoint>> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX);
+	@Override
+	public Map<String, List<LineChartDataPoint>> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX) {
+		return lineIds.stream()
+				.collect(Collectors.toMap(lineId -> lineId, lineId -> getDataPoints(lineId, zoomLevel, neededIntervalX)));
+	}
 
-	Interval getDomainX(Collection<String> lineIds);
-	
+	protected abstract List<LineChartDataPoint> getDataPoints(String lineId, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX);
+
 }

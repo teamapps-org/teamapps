@@ -19,12 +19,14 @@
  */
 package org.teamapps.ux.component.timegraph.partitioning;
 
+import org.teamapps.ux.component.timegraph.TimeGraphZoomLevel;
+
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-public enum TimePartitionUnit {
+public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	MILLISECOND(1) {
 		@Override
 		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
@@ -590,4 +592,9 @@ public enum TimePartitionUnit {
 	public abstract ZonedDateTime increment(ZonedDateTime zonedDateTime);
 
 	public abstract ZonedDateTime decrement(ZonedDateTime zonedDateTime);
+
+	@Override
+	public long getApproximateMillisecondsPerDataPoint() {
+		return averageMilliseconds;
+	}
 }

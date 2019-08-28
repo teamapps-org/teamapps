@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,21 +23,27 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiLineChartBand;
 import org.teamapps.dto.UiLongInterval;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.teamapps.util.UiUtil.createUiColor;
 
 public class LineChartBand implements LineChartDataDisplay {
 
-	private final String id;
+	private final String id = UUID.randomUUID().toString();
+
+	private String upperBoundDataSourceId;
+	private String middleLineDataSourceId;
+	private String lowerBoundDataSourceId;
+
 	private LineChartDataDisplayChangeListener changeListener;
 
-	private LineChartCurveType graphType = LineChartCurveType.MONOTONE;
-	private float dataDotRadius = 2;
+	private LineChartCurveType curveType;
+	private float dataDotRadius;
 	private Color yAxisColor = Color.BLACK;
-	private Color lineColor = new Color(73, 128, 192);
-	private Color areaColor = new Color(255, 255, 255, 0);
+	private Color lineColor;
+	private Color areaColor;
 
 	private Interval intervalY;
 	private ScaleType yScaleType = ScaleType.LINEAR;
@@ -45,21 +51,19 @@ public class LineChartBand implements LineChartDataDisplay {
 	private boolean yZeroLineVisible = false;
 
 
-	public LineChartBand(String id) {
-		this.id = id;
+	public LineChartBand(String upperBoundDataSourceId, String middleLineDataSourceId, String lowerBoundDataSourceId) {
+		this(upperBoundDataSourceId, middleLineDataSourceId, lowerBoundDataSourceId, LineChartCurveType.MONOTONE, 2, new Color(73, 128, 192));
 	}
 
-	public LineChartBand(String id, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
-		this(id, graphType, dataDotRadius, lineColor, lineColor, null, null);
+	public LineChartBand(String upperBoundDataSourceId, String middleLineDataSourceId, String lowerBoundDataSourceId, LineChartCurveType curveType, float dataDotRadius, Color lineColor) {
+		this(upperBoundDataSourceId, middleLineDataSourceId, lowerBoundDataSourceId, curveType, dataDotRadius, lineColor, null);
 	}
 
-	public LineChartBand(String id, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
-		this(id, graphType, dataDotRadius, lineColor, lineColor, Color.withAlpha(areaColor, 0.0f), areaColor);
-	}
-
-	public LineChartBand(String id, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color lineColorScaleMax, Color areaColor, Color areaColorScaleMax) {
-		this.id = id;
-		this.graphType = graphType;
+	public LineChartBand(String upperBoundDataSourceId, String middleLineDataSourceId, String lowerBoundDataSourceId, LineChartCurveType curveType, float dataDotRadius, Color lineColor, Color areaColor) {
+		this.upperBoundDataSourceId = upperBoundDataSourceId;
+		this.middleLineDataSourceId = middleLineDataSourceId;
+		this.lowerBoundDataSourceId = lowerBoundDataSourceId;
+		this.curveType = curveType;
 		this.dataDotRadius = dataDotRadius;
 		this.lineColor = lineColor;
 		this.areaColor = areaColor;
@@ -69,7 +73,11 @@ public class LineChartBand implements LineChartDataDisplay {
 		UiLineChartBand ui = new UiLineChartBand();
 		mapAbstractLineChartDataDisplayProperties(ui);
 
-		ui.setGraphType(graphType.toUiLineChartCurveType());
+		ui.setUpperBoundDataSourceId(upperBoundDataSourceId);
+		ui.setMiddleLineDataSourceId(middleLineDataSourceId);
+		ui.setLowerBoundDataSourceId(lowerBoundDataSourceId);
+
+		ui.setGraphType(curveType.toUiLineChartCurveType());
 		ui.setDataDotRadius(dataDotRadius);
 		ui.setLineColor(lineColor != null ? createUiColor(lineColor) : null);
 		ui.setAreaColor(areaColor != null ? createUiColor(areaColor) : null);
@@ -88,7 +96,7 @@ public class LineChartBand implements LineChartDataDisplay {
 
 	@Override
 	public List<String> getDataSourceIds() {
-		return Collections.singletonList(id);
+		return Arrays.asList(upperBoundDataSourceId, middleLineDataSourceId, lowerBoundDataSourceId);
 	}
 
 	@Override
@@ -96,12 +104,12 @@ public class LineChartBand implements LineChartDataDisplay {
 		this.changeListener = listener;
 	}
 
-	public LineChartCurveType getGraphType() {
-		return graphType;
+	public LineChartCurveType getCurveType() {
+		return curveType;
 	}
 
-	public LineChartBand setGraphType(LineChartCurveType graphType) {
-		this.graphType = graphType;
+	public LineChartBand setCurveType(LineChartCurveType curveType) {
+		this.curveType = curveType;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
 		}

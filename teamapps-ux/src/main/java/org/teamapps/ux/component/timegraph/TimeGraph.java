@@ -105,6 +105,7 @@ public class TimeGraph extends AbstractComponent {
 	public List<String> getLineDataIds() {
 		return lines.stream()
 				.flatMap(lineChartDataDisplay -> lineChartDataDisplay.getDataSourceIds().stream())
+				.distinct()
 				.collect(Collectors.toList());
 	}
 

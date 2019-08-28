@@ -85,10 +85,8 @@ public class PartitioningTimeGraphModel implements TimeGraphModel {
 	}
 
 	@Override
-	public List<TimeGraphZoomLevel> getZoomLevels() {
-		return zoomLevelPartitionUnits.stream()
-				.map(unit -> new TimeGraphZoomLevel(unit.getAverageMilliseconds()))
-				.collect(Collectors.toList());
+	public List<? extends TimeGraphZoomLevel> getZoomLevels() {
+		return zoomLevelPartitionUnits;
 	}
 
 	@Override

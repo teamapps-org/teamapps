@@ -50,6 +50,7 @@ import {UiTimeChartZoomLevelConfig} from "../../generated/UiTimeChartZoomLevelCo
 import {UiLineChartLine} from "./UiLineChartLine";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
+import {UiLineChartBand} from "./UiLineChartBand";
 
 type SVGGSelection<DATUM = {}> = Selection<SVGGElement, DATUM, HTMLElement, undefined>;
 
@@ -205,7 +206,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		if (lineFormat._type === 'UiLineChartLine') {
 			display = new UiLineChartLine(this._config.id, lineFormat, this.$graphClipContainer, this.dropShadowFilterId, this.dataStore);
 		} else if (lineFormat._type === 'UiLineChartBand') {
-			// TODO display = new UiLineChartBand(this, seriesId, lineFormat, this.$graphClipContainer, this.zoomLevels.length, this.dropShadowFilterId)
+			display = new UiLineChartBand(this._config.id, lineFormat, this.$graphClipContainer, this.dropShadowFilterId, this.dataStore);
 		}
 		display.scaleY.range([this.drawableHeight, 0]);
 		this.$yAxisContainer.node().appendChild(display.$yAxis.node());
