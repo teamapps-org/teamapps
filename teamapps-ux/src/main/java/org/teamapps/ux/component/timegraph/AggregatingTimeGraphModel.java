@@ -19,13 +19,14 @@
  */
 package org.teamapps.ux.component.timegraph;
 
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
 import org.jetbrains.annotations.NotNull;
 import org.teamapps.ux.component.timegraph.partitioning.TimePartitionUnit;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -118,20 +119,20 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 	}
 
 	@NotNull
-	protected List<LineChartDataPoint> getDataPoints(String lineId, TimeGraphZoomLevel partitionUnit, Interval interval) {
+	protected LineChartDataPoints getDataPoints(String lineId, TimeGraphZoomLevel partitionUnit, Interval interval) {
 		TimePartitionUnit zoomLevel = zoomLevels.stream()
 				.filter(unit -> unit.getAverageMilliseconds() == partitionUnit.getApproximateMillisecondsPerDataPoint())
 				.findFirst().orElse(zoomLevels.get(0));
 		LineChartDataPoints dataPoints = this.dataPointsByLineId.get(lineId);
 
-		List<LineChartDataPoint> aggregateDataPoints = getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByLineId.getOrDefault(lineId, defaultAggregationPolicy));
-		return aggregateDataPoints;
+		return getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByLineId.getOrDefault(lineId, defaultAggregationPolicy));
 	}
 
 	@NotNull
-	private List<LineChartDataPoint> getAggregateDataPoints(LineChartDataPoints dataPoints, TimePartitionUnit zoomLevel, Interval interval, AggregationPolicy aggregationPolicy) {
-		ArrayList<LineChartDataPoint> result = new ArrayList<>();
-		long currentPartitionStartMilli = getPartitionStart(interval.getMin(), zoomLevel).toInstant().toEpochMilli(); 
+	private LineChartDataPoints getAggregateDataPoints(LineChartDataPoints dataPoints, TimePartitionUnit zoomLevel, Interval interval, AggregationPolicy aggregationPolicy) {
+		DoubleList resultX = new DoubleArrayList(100);
+		DoubleList resultY = new DoubleArrayList(100);
+		long currentPartitionStartMilli = getPartitionStart(interval.getMin(), zoomLevel).toInstant().toEpochMilli();
 		if (addDataPointBeforeAndAfterQueryResult) {
 			currentPartitionStartMilli = zoomLevel.decrement(ZonedDateTime.ofInstant(Instant.ofEpochMilli(currentPartitionStartMilli), timeZone)).toInstant().toEpochMilli();
 		}
@@ -161,18 +162,19 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 				}
 			}
 
-			if (count > 0) {
+			if (count > 0 && aggregateValue != null /*double-checking for no reason except preventing compiler warnings*/) {
+				resultX.add(currentPartitionStartMilli);
 				if (aggregationPolicy == AggregationPolicy.AVERAGE) {
-					result.add(new LineChartDataPoint(currentPartitionStartMilli, aggregateValue / count));
+					resultY.add(aggregateValue / count);
 				} else {
-					result.add(new LineChartDataPoint(currentPartitionStartMilli, aggregateValue));
+					resultY.add((double) aggregateValue);
 				}
 			}
 
 			currentPartitionStartMilli = nextPartitionStartMilli;
 			nextPartitionStartMilli = zoomLevel.increment(getPartitionStart(nextPartitionStartMilli, zoomLevel)).toInstant().toEpochMilli();
 		} while (currentPartitionStartMilli <= interval.getMax() + (addDataPointBeforeAndAfterQueryResult ? zoomLevel.getAverageMilliseconds() : 0));
-		return result;
+		return new PrimitiveArrayLineChartDataPoints(resultX.toDoubleArray(), resultY.toDoubleArray());
 	}
 
 	private ZonedDateTime getPartitionStart(long timestampMillis, TimePartitionUnit partitionUnit) {
