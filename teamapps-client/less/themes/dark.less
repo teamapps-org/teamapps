@@ -128,6 +128,18 @@
     .field-background {
       background-color: @dark-theme-field-background;
     }
+
+    &.readonly .field-background,
+    &.editable-if-focused:not(.focus):not(:hover) .field-background {
+      background: transparent;
+    }
+
+    &.readonly .field-border,
+    &.readonly .field-border-visibility,
+    &.editable-if-focused:not(.focus):not(:hover) .field-border,
+    &.editable-if-focused:not(.focus):not(:hover) .field-border-visibility {
+      border-color: transparent;
+    }
   }
 
   .UiField,
