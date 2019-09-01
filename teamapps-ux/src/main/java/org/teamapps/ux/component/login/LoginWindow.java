@@ -21,13 +21,10 @@ package org.teamapps.ux.component.login;
 
 import org.teamapps.event.Event;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.field.Button;
-import org.teamapps.ux.component.field.DisplayField;
-import org.teamapps.ux.component.field.PasswordField;
-import org.teamapps.ux.component.field.SpecialKey;
-import org.teamapps.ux.component.field.TextField;
+import org.teamapps.ux.component.field.*;
 import org.teamapps.ux.component.form.ResponsiveForm;
 import org.teamapps.ux.component.form.ResponsiveFormConfigurationTemplate;
+import org.teamapps.ux.component.form.ResponsiveFormField;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
@@ -56,6 +53,8 @@ public class LoginWindow {
 
 	private Window window;
 	private ElegantPanel elegantPanel;
+	private final Label pwdLabel;
+	private final Label loginLabel;
 
 	public LoginWindow() {
 		loginButton = new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(MaterialIcon.CHECK, "Ok"));
@@ -76,10 +75,11 @@ public class LoginWindow {
 		layout.addSection().setDrawHeaderLine(false).setPadding(new Spacing(30, 25)).setCollapsible(false);
 		layout.addLabelField(headerField).setColSpan(2);
 		layout.addLabelField(errorField).setColSpan(2);
-		ResponsiveFormLayout.LabelAndField labelAndField = layout.addLabelAndField(MaterialIcon.PERSON, sessionContext.getLocalized("ux.loginWindow.login"), loginField, true);
+		ResponsiveFormLayout.LabelAndField labelAndField = layout.addLabelAndField(null, sessionContext.getLocalized("ux.loginWindow.login"), loginField, true);
 		labelAndField.label.getColumnDefinition().setWidthPolicy(SizingPolicy.AUTO);
 		labelAndField.field.getColumnDefinition().setWidthPolicy(SizingPolicy.FRACTION);
-		layout.addLabelAndField(MaterialIcon.VPN_KEY, sessionContext.getLocalized("ux.loginWindow.password"), passwordField, true);
+		loginLabel = (Label) labelAndField.label.getField();
+		pwdLabel = (Label) layout.addLabelAndField(null, sessionContext.getLocalized("ux.loginWindow.password"), passwordField, true).label.getField();
 		layout.addLabelField(loginButton, 1).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setMinWidth(100).getRowDefinition().setTopPadding(10);
 
 		loginButton.onValueChanged.addListener(value -> login());
@@ -169,6 +169,14 @@ public class LoginWindow {
 
 	public PasswordField getPasswordField() {
 		return passwordField;
+	}
+
+	public Label getPwdLabel() {
+		return pwdLabel;
+	}
+
+	public Label getLoginLabel() {
+		return loginLabel;
 	}
 
 	public Button getLoginButton() {
