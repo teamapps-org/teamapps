@@ -22,9 +22,13 @@ package org.teamapps.ux.application;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.view.ViewSize;
+import org.teamapps.ux.component.toolbar.AbstractToolContainer;
+import org.teamapps.ux.component.toolbar.ToolAccordion;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.ux.session.SessionContext;
 
 import java.util.HashSet;
 import java.util.List;
@@ -32,12 +36,18 @@ import java.util.Set;
 
 public class ResponsiveApplicationToolbar implements ApplicationChangeHandler {
 
-    private Toolbar toolbar = new Toolbar();
+    private AbstractToolContainer toolbar;
 
     public ResponsiveApplicationToolbar() {
+        SessionContext context = CurrentSessionContext.get();
+        if (context.getClientInfo().isMobileDevice()) {
+            toolbar = new ToolAccordion();
+        } else {
+            toolbar = new Toolbar();
+        }
     }
 
-    public Toolbar getToolbar() {
+    public AbstractToolContainer getToolbar() {
         return toolbar;
     }
 

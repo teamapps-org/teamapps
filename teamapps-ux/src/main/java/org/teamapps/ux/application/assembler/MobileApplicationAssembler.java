@@ -20,6 +20,7 @@
 package org.teamapps.ux.application.assembler;
 
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.ResponsiveApplicationToolbar;
 import org.teamapps.ux.application.perspective.Perspective;
@@ -63,8 +64,15 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	private List<View> viewHistory = new ArrayList<>();
 	private View activeView;
 
-
 	public MobileApplicationAssembler() {
+		this(MaterialIcon.VIEW_MODULE,
+				MaterialIcon.TOC,
+				MaterialIcon.VIEW_CAROUSEL,
+				MaterialIcon.SUBTITLES,
+				MaterialIcon.NAVIGATE_BEFORE);
+	}
+
+	public MobileApplicationAssembler(Icon launcherIcon, Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon) {
 		this.mobileLayout = new MobileLayout();
 		this.navigationBar = new NavigationBar<>();
 		this.viewsItemView = new SimpleItemView<>();
@@ -72,11 +80,11 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		navigationBar.preloadFanOutComponent(viewsItemView);
 		mobileLayout.setNavigationBar(navigationBar);
 
-		applicationLauncherButton = NavigationBarButton.create(MaterialIcon.VIEW_MODULE);
-		applicationTreeButton = NavigationBarButton.create(MaterialIcon.TOC);
-		applicationViewsButton = NavigationBarButton.create(MaterialIcon.VIEW_CAROUSEL);
-		applicationToolbarButton = NavigationBarButton.create(MaterialIcon.SUBTITLES);
-		applicationBackButton = NavigationBarButton.create(MaterialIcon.NAVIGATE_BEFORE);
+		applicationLauncherButton = NavigationBarButton.create(launcherIcon);
+		applicationTreeButton = NavigationBarButton.create(treeIcon);
+		applicationViewsButton = NavigationBarButton.create(viewsIcon);
+		applicationToolbarButton = NavigationBarButton.create(toolbarIcon);
+		applicationBackButton = NavigationBarButton.create(backIcon);
 
 
 		applicationLauncherButton.setVisible(false);
