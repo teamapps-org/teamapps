@@ -26,6 +26,7 @@ import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.view.ViewSize;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.ViewGroupPanelState;
 import org.teamapps.ux.component.workspacelayout.WorkSpaceLayout;
 import org.teamapps.ux.component.workspacelayout.WorkSpaceLayoutView;
@@ -87,7 +88,7 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
     @Override
     public void setWorkSpaceToolbar(ResponsiveApplicationToolbar responsiveApplicationToolbar) {
         this.responsiveApplicationToolbar = responsiveApplicationToolbar;
-        workSpaceLayout.setToolbar(responsiveApplicationToolbar.getToolbar());
+        workSpaceLayout.setToolbar((Toolbar) responsiveApplicationToolbar.getToolbar());
     }
 
     @Override

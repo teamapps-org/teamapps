@@ -45,7 +45,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 
 	private Template buttonTemplate = BaseTemplate.NAVIGATION_BAR_ICON_ONLY;
 	private List<NavigationBarButton<RECORD>> buttons = new ArrayList<>();
-	private Color backgroundColor = new Color(255, 255, 255, 0.84f);
+	private Color backgroundColor;
 	private Color borderColor;
 	private List<Component> fanOutComponents = new ArrayList<>();
 	private Component activeFanOutComponent;
