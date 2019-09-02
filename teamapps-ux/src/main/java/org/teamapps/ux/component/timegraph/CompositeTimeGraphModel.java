@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CompositeTimeGraphModel implements TimeGraphModel {
@@ -63,6 +64,7 @@ public class CompositeTimeGraphModel implements TimeGraphModel {
 	public Interval getDomainX(Collection<String> lineIds) {
 		return delegates.stream()
 				.map(delegate -> delegate.getDomainX(lineIds))
+				.filter(Objects::nonNull)
 				.reduce((Interval interval1, Interval interval2) -> new Interval(Math.min(interval1.getMin(), interval2.getMin()), Math.max(interval1.getMax(), interval2.getMax())))
 				.orElseGet(() -> new Interval(0, 1));
 	}
