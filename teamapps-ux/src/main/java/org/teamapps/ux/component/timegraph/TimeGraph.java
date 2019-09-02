@@ -114,6 +114,9 @@ public class TimeGraph extends AbstractComponent {
 		List<UiTimeChartZoomLevel> uiZoomLevels = createUiZoomlevels();
 
 		Interval domainX = model.getDomainX(getLineDataIds());
+		if (domainX == null) {
+			domainX = new Interval(0, 1);
+		}
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).createUiLongInterval();
 
 		UiTimeGraph uiTimeGraph = new UiTimeGraph(
