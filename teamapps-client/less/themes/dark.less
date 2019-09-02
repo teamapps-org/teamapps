@@ -68,6 +68,30 @@
     }
   }
 
+  .UiNavigationBar {
+    background-color: @dark-theme-background-color-transparent;
+    border-top: 1px solid @dark-theme-border-color;
+    .buttons-wrapper {
+      background-color: @dark-theme-background-color-transparent;
+      > .nav-button-wrapper {
+        &:hover {
+          background-color: fadeout(@dark-theme-background-color-transparent, 5%);
+        }
+        &:active {
+          background-color: @dark-theme-background-color-transparent;
+        }
+      }
+    }
+
+    .fan-out-container-wrapper {
+      box-shadow: 0px -5px 20px -3px rgba(0, 0, 0, 0.3);
+      .fan-out-container {
+        background-color: @dark-theme-background-color-transparent;
+      }
+    }
+  }
+
+
   .UiPanel {
     .panel-heading {
       border-bottom-color: @dark-theme-border-color;
