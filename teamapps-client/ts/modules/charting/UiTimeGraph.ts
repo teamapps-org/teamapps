@@ -148,6 +148,26 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.$xAxis.call(panZoom);
 		this.xAxis = d3.axisBottom(this.scaleX);
 
+		const hourFormat = this._context.config.timeFormat.indexOf('H') !== -1 || this._context.config.timeFormat.indexOf('k') !== -1 ? 'H' : 'I';
+		var formatMillisecond = d3.timeFormat(".%L"),
+			formatSecond = d3.timeFormat(":%S"),
+			formatMinute = d3.timeFormat(`%${hourFormat}:%M`),
+			formatHour = d3.timeFormat(`%${hourFormat}:00`),
+			formatDay = d3.timeFormat("%a %d"),
+			formatWeek = d3.timeFormat("%b %d"),
+			formatMonth = d3.timeFormat("%B"),
+			formatYear = d3.timeFormat("%Y");
+		function multiFormat(date: Date) {
+			return (d3.timeSecond(date) < date ? formatMillisecond
+				: d3.timeMinute(date) < date ? formatSecond
+					: d3.timeHour(date) < date ? formatMinute
+						: d3.timeDay(date) < date ? formatHour
+							: d3.timeMonth(date) < date ? (d3.timeWeek(date) < date ? formatDay : formatWeek)
+								: d3.timeYear(date) < date ? formatMonth
+									: formatYear)(date);
+		}
+		this.xAxis.tickFormat(multiFormat);
+
 		this.$yAxisContainer = this.$rootG.append<SVGGElement>("g")
 			.classed("y-axis-container", true);
 		this.dropShadowFilterId = `${UiTimeGraph.DROP_SHADOW_ID}-${this.getId()}`;
