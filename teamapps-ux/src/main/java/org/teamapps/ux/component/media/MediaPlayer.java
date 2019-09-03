@@ -70,22 +70,22 @@ public class MediaPlayer extends AbstractComponent {
 		pause.setVisible(false);
 
 		play.onClick.addListener(toolbarButtonClickEvent -> {
+			videoPlayer.play();
 			play.setVisible(false);
 			pause.setVisible(true);
-			videoPlayer.play();
 		});
 
 		pause.onClick.addListener(toolbarButtonClickEvent -> {
+			videoPlayer.pause();
 			play.setVisible(true);
 			pause.setVisible(false);
-			videoPlayer.pause();
 		});
 
 		stop.onClick.addListener(toolbarButtonClickEvent -> {
-			play.setVisible(true);
-			pause.setVisible(false);
 			videoPlayer.pause();
 			videoPlayer.setPosition(0);
+			play.setVisible(true);
+			pause.setVisible(false);
 		});
 
 		return Arrays.asList(play, pause, stop);
