@@ -39,6 +39,7 @@ class UiMap extends UiComponent {
 	command setLocation(UiMapLocation location);
 	command setMapType(UiMapType mapType);
 	command setHeatMap(UiHeatMapData data);
+	command fitBounds(UiMapLocation southWest, UiMapLocation northEast);
 
 	event zoomLevelChanged(int zoomLevel);
 	event locationChanged(UiMapLocation center, UiMapArea displayedArea);
