@@ -351,7 +351,11 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 
 	@executeWhenFirstDisplayed()
 	public setLocation(location: UiMapLocationConfig): void {
-		this.leaflet.setView(new L.LatLng(location.latitude, location.longitude), this.leaflet.getZoom());
+		this.leaflet.setView(this.createLeafletLatLng(location), this.leaflet.getZoom());
+	}
+
+	private createLeafletLatLng(location: UiMapLocationConfig) {
+		return new L.LatLng(location.latitude, location.longitude);
 	}
 
 	@executeWhenFirstDisplayed()
@@ -391,6 +395,10 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 
 	registerTemplate(id: string, template: UiTemplateConfig): void {
 		this.markerTemplateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
+	}
+
+	fitBounds(southWest: UiMapLocationConfig, northEast: UiMapLocationConfig): void {
+		this.leaflet.fitBounds(L.latLngBounds(this.createLeafletLatLng(southWest), this.createLeafletLatLng(northEast)))
 	}
 
 	public onResize(): void {

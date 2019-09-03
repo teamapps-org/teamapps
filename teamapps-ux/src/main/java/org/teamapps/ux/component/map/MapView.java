@@ -19,10 +19,16 @@
  */
 package org.teamapps.ux.component.map;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.dto.*;
+import org.teamapps.dto.UiComboBox;
+import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiMap;
+import org.teamapps.dto.UiMapArea;
+import org.teamapps.dto.UiMapMarkerClientRecord;
+import org.teamapps.dto.UiMapMarkerCluster;
+import org.teamapps.dto.UiMapPolyline;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -230,6 +236,11 @@ public class MapView<RECORD> extends AbstractComponent {
 				cacheResponse.commit();
 			}
 		}
+	}
+
+	public void fitBounds(Location southWest, Location northEast) {
+		this.location = new Location((southWest.getLatitude() + northEast.getLatitude()) / 2, (southWest.getLongitude() + northEast.getLongitude()) / 2);
+		queueCommandIfRendered(() -> new UiMap.FitBoundsCommand(this.getId(), southWest.createUiLocation(), northEast.createUiLocation()));
 	}
 
 	public Template getDefaultTemplate() {
