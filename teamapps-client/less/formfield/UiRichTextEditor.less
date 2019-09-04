@@ -42,7 +42,7 @@
       width: 100% !important;
       height: auto !important;
       box-shadow: none;
-      border-color: @input-border-hover;
+      //border-color: @input-border-hover;
       border-width: 0 0 1px 0 !important;
       transition: border-color @default-color-transition-time;
 
@@ -111,10 +111,10 @@
     alert {
       display: block;
 
-      padding: ((@line-height-computed - 1) / 2);
+      padding: var(--ta-half-line-height-computed);
       border: 1px solid transparent;
       border-radius: @alert-border-radius;
-      margin-bottom: (@line-height-computed / 2);
+      margin-bottom: var(--ta-half-line-height-computed);
 
       > *:last-child {
         margin-bottom: 0;

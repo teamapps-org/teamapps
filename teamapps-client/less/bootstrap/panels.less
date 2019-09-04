@@ -1,0 +1,75 @@
+// stylelint-disable selector-max-type, selector-max-compound-selectors, selector-max-combinators, no-duplicate-selectors
+
+//
+// Panels
+// --------------------------------------------------
+
+
+// Base class
+.panel {
+  margin-bottom: @line-height-computed;
+  background-color: @panel-bg;
+  border-radius: @panel-border-radius;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+
+  border-color: @panel-default-border;
+
+  > .panel-heading {
+    padding: @panel-heading-padding;
+    border-bottom: 1px solid @panel-default-border;
+    border-top-left-radius: calc(var(--ta-border-radius-base) - 1px);
+    border-top-right-radius: calc(var(--ta-border-radius-base) - 1px);
+
+    > .dropdown .dropdown-toggle {
+      color: inherit;
+    }
+
+    color: @panel-default-text;
+    background-color: @panel-default-heading-bg;
+
+    + .panel-collapse > .panel-body {
+      border-top-color: @panel-default-border;
+    }
+    .badge {
+      color: @panel-default-heading-bg;
+      background-color: @panel-default-text;
+    }
+  }
+  & > .panel-footer {
+    + .panel-collapse > .panel-body {
+      border-bottom-color: @panel-default-border;
+    }
+  }
+}
+
+// Panel contents
+.panel-body {
+  padding: @panel-body-padding;
+  &:extend(.clearfix all);
+}
+
+
+// Within heading, strip any `h*` tag of its default margins for spacing.
+.panel-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: inherit;
+
+  > a,
+  > small,
+  > .small,
+  > small > a,
+  > .small > a {
+    color: inherit;
+  }
+}
+
+// Optional footer (stays gray in every modifier class)
+.panel-footer {
+  padding: @panel-footer-padding;
+  background-color: @panel-footer-bg;
+  border-top: 1px solid @panel-inner-border;
+  border-bottom-left-radius: calc(var(--ta-border-radius-base) - 1px);
+  border-bottom-right-radius: calc(var(--ta-border-radius-base) - 1px);
+}
+

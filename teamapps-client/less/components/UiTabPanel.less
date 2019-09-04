@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 @UiTabPanelButtonHeight: 23px;
-@UiTabPanelMobileHeight: @input-height-large - 2px;
+@UiTabPanelMobileHeight: calc(@input-height-large - 2px);
 
 .UiTabPanel {
 
@@ -36,7 +36,7 @@
       display: flex;
       align-items: stretch;
       height: 100%;
-      border-bottom: 1px solid @table-border-color;
+      border-bottom: 1px solid var(--ta-inner-border-color);
 
       .UiRootPanel > & {
         padding: 0 7px;
