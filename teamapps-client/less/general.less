@@ -44,13 +44,6 @@ body, .full-height {
   text-overflow: ellipsis;
 }
 
-table {
-  th {
-    background-color: @table-bg-hover;
-    border-bottom-width: 1px !important;
-  }
-}
-
 a.disabled {
   .text-muted();
   &:hover {
@@ -293,4 +286,15 @@ input {
   display: flex;
   padding-left: 4px;
   align-items: center;
+}
+
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: @caret-width-base dashed;
+  border-right: @caret-width-base solid transparent;
+  border-left: @caret-width-base solid transparent;
 }

@@ -35,7 +35,7 @@
     min-height: 32px;
     display: flex;
     align-items: center;
-    border-bottom-color: @table-border-color;
+    border-bottom-color: var(--ta-inner-border-color);
     padding: 0 1px 0 8px;
     background-color: rgba(255, 255, 255, .72);
 
@@ -160,7 +160,7 @@
       border-bottom: 1px solid rgba(0, 0, 0, .07);
       background-color: rgba(0, 0, 0, .05);
       border-top-right-radius: @panel-border-radius;
-      border-bottom-left-radius: @panel-border-radius + 2px;
+      border-bottom-left-radius: calc(@panel-border-radius + 2px);
 
       &:empty {
         display: none;

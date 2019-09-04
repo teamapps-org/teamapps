@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,19 +17,225 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-//@import "third-party-fixes/bootstrap-variables";
+
+@ta-color-primary:         #337ab7;
+@ta-color-success:         #5cb85c;
+@ta-color-info:            #5bc0de;
+@ta-color-warning:         #f0ad4e;
+@ta-color-danger:          #d9534f;
+
+@ta-text-color: #333;
+@ta-text-color-inverted: white;
+
+@ta-state-primary-text:             @ta-text-color-inverted;
+@ta-state-primary-text-emphasis:    darken(@ta-text-color-inverted, 10%);
+@ta-state-primary-bg:               @ta-color-primary;
+@ta-state-primary-border:           darken(spin(@ta-text-color-inverted, -10), 5%);
+
+@ta-state-success-text:             #3c763d;
+@ta-state-success-text-emphasis:    darken(#3c763d, 10%);
+@ta-state-success-bg:               #dff0d8;
+@ta-state-success-border:           darken(spin(@ta-state-success-bg, -10), 5%);
+
+@ta-state-info-text:                #31708f;
+@ta-state-info-text-emphasis:       darken(#31708f, 10%);
+@ta-state-info-bg:                  #d9edf7;
+@ta-state-info-border:              darken(spin(@ta-state-info-bg, -10), 7%);
+
+@ta-state-warning-text:             #8a6d3b;
+@ta-state-warning-text-emphasis:    darken(#8a6d3b, 10%);
+@ta-state-warning-bg:               #fcf8e3;
+@ta-state-warning-border:           darken(spin(@ta-state-warning-bg, -10), 20%);
+
+@ta-state-danger-text:              #a94442;
+@ta-state-danger-text-emphasis:     darken(#a94442, 10%);
+@ta-state-danger-bg:                #f2dede;
+@ta-state-danger-border:            darken(spin(@ta-state-danger-bg, -10), 5%);
+
+:root {
+  --ta-color-primary:         @ta-color-primary;
+  --ta-color-success:         @ta-color-success;
+  --ta-color-info:            @ta-color-info;
+  --ta-color-warning:         @ta-color-warning;
+  --ta-color-danger:          @ta-color-danger;
+
+  --ta-state-primary-text:             @ta-state-primary-text;
+  --ta-state-primary-text-emphasis:    @ta-state-primary-text-emphasis;
+  --ta-state-primary-bg:               @ta-state-primary-bg;
+  --ta-state-primary-border:           @ta-state-primary-border;
+
+  --ta-state-success-text:             @ta-state-success-text;
+  --ta-state-success-text-emphasis:    @ta-state-success-text-emphasis;
+  --ta-state-success-bg:               @ta-state-success-bg;
+  --ta-state-success-border:           @ta-state-success-border;
+
+  --ta-state-info-text:                @ta-state-info-text;
+  --ta-state-info-text-emphasis:       @ta-state-info-text-emphasis;
+  --ta-state-info-bg:                  @ta-state-info-bg;
+  --ta-state-info-border:              @ta-state-info-border;
+
+  --ta-state-warning-text:             @ta-state-warning-text;
+  --ta-state-warning-text-emphasis:    @ta-state-warning-text-emphasis;
+  --ta-state-warning-bg:               @ta-state-warning-bg;
+  --ta-state-warning-border:           @ta-state-warning-border;
+
+  --ta-state-danger-text:              @ta-state-danger-text;
+  --ta-state-danger-text-emphasis:     @ta-state-danger-text-emphasis;
+  --ta-state-danger-bg:                @ta-state-danger-bg;
+  --ta-state-danger-border:            @ta-state-danger-border;
+
+  --ta-text-color: @ta-text-color;
+  --ta-text-color-faded: fadeout(@ta-text-color, 30%);
+  --ta-text-color-inverted: @ta-text-color-inverted;
+  --ta-bg-color: #fff;
+  --ta-bg-color-disabled: #eee;
+  --ta-border-color: #ccc;
+  --ta-inner-border-color: rgba(0, 0, 0, 0.09);
+
+  --ta-hover-color: rgba(0, 0, 0, 0.05);
+  
+  --ta-link-color: @ta-color-primary;
+  --ta-link-color-faded: fade@ta-color-primary;
+  --ta-link-hover-color: darken(@ta-color-primary, 15%);
+  --ta-link-hover-decoration: underline;
+
+  --ta-font-family-sans-serif:  /*"Roboto",*/ "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ta-font-family-serif:       Georgia, "Times New Roman", Times, serif;
+  --ta-font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
+  --ta-font-family-base:        var(--ta-font-family-sans-serif);
+
+  --ta-font-size-base:          13px;
+  --ta-font-size-large:         1.25em;
+  --ta-font-size-small:         0.85em;
+
+  --ta-font-size-h1:            2.55em;
+  --ta-font-size-h2:            2.15em;
+  --ta-font-size-h3:            1.7em;
+  --ta-font-size-h4:            1.25em;
+  --ta-font-size-h5:            1em;
+  --ta-font-size-h6:            0.85em;
+
+  --ta-headings-font-family:    inherit;
+  --ta-headings-font-weight:    500;
+  --ta-headings-line-height:    1.1;
+  --ta-headings-color:          inherit;
+
+  --ta-line-height: 1.428571429;
+  --ta-line-height-computed: calc(var(--ta-line-height) * var(--ta-font-size-base));
+  --ta-half-line-height-computed: calc(var(--ta-line-height-computed) / 2);
+
+
+
+
+  --ta-padding-base-vertical:     4px;
+  --ta-padding-base-horizontal:   5px;
+
+  --ta-padding-large-vertical:    6px;
+  --ta-padding-large-horizontal:  8px;
+
+  --ta-padding-small-vertical:    5px;
+  --ta-padding-small-horizontal:  10px;
+
+  --ta-padding-xs-vertical:       1px;
+  --ta-padding-xs-horizontal:     5px;
+
+  --ta-line-height-large:         1.5;
+  --ta-line-height-small:         1.3333333;
+
+  --ta-border-radius-base:        3px;
+  --ta-border-radius-large:       6px;
+  --ta-border-radius-small:       3px;
+
+  //** Global color for active items (e.g., navs or dropdowns).
+  --ta-component-active-color:    #fff;
+  //** Global background color for active items (e.g., navs or dropdowns).
+  --ta-component-active-bg:       @ta-color-primary;
+
+  //** Width of the `border` for generating carets that indicator dropdowns.
+  --ta-caret-width-base:          4px;
+  //** Carets increase slightly in size for larger components.
+  --ta-caret-width-large:         5px;
+
+
+
+
+
+  //== Buttons
+  //
+  //## For each of Bootstrap's buttons, define text, background and border color.
+
+  --ta-btn-font-weight:                normal;
+
+  --ta-btn-default-color:              var(--ta-text-color);
+  --ta-btn-default-bg:                 var(--ta-bg-color);
+  --ta-btn-default-border:             #ccc;
+
+  --ta-btn-primary-color:              var(--ta-text-color-inverted);
+  --ta-btn-primary-bg:                 var(--ta-color-primary);
+  --ta-btn-primary-border:             var(--ta-state-primary-border);
+
+  --ta-btn-success-color:              var(--ta-text-color-inverted);
+  --ta-btn-success-bg:                 var(--ta-color-success);
+  --ta-btn-success-border:             var(--ta-state-success-border);
+
+  --ta-btn-info-color:                 var(--ta-text-color-inverted);
+  --ta-btn-info-bg:                    var(--ta-color-info);
+  --ta-btn-info-border:                var(--ta-state-info-border);
+
+  --ta-btn-warning-color:              var(--ta-text-color-inverted);
+  --ta-btn-warning-bg:                 var(--ta-color-warning);
+  --ta-btn-warning-border:             var(--ta-state-warning-border);
+
+  --ta-btn-danger-color:               var(--ta-text-color-inverted);
+  --ta-btn-danger-bg:                  var(--ta-color-danger);
+  --ta-btn-danger-border:              var(--ta-state-danger-border);
+
+  // Allows for customizing button radius independently from global border radius
+  --ta-btn-border-radius-base:         var(--ta-border-radius-base);
+  --ta-btn-border-radius-large:        var(--ta-border-radius-large);
+  --ta-btn-border-radius-small:        var(--ta-border-radius-small);
+
+
+  //== Forms
+  //
+  //##
+
+  --ta-input-bg:                       var(--ta-bg-color);
+  --ta-input-bg-disabled:              var(--ta-bg-color-disabled);
+  --ta-input-color:                    var(--ta-text-color);
+  --ta-input-border:                   var(--ta-border-color);
+
+  --ta-input-border-radius:            var(--ta-border-radius-base);
+  --ta-input-border-radius-large:      var(--ta-border-radius-large);
+  --ta-input-border-radius-small:      var(--ta-border-radius-small);
+
+  --ta-input-border-focus:             #66afe9;
+
+  --ta-input-color-placeholder:        #999;
+
+  //** Default `.form-control` height
+  --ta-input-height-base:              calc(var(--ta-line-height-computed) + var(--ta-padding-base-vertical) * 2 + 2px);
+  //** Large `.form-control` height
+  --ta-input-height-large:             calc(var(--ta-font-size-large) * var(--ta-line-height-large) + var(--ta-padding-large-vertical) * 2 + 2px);
+  //** Small `.form-control` height
+  --ta-input-height-small:             calc(var(--ta-font-size-small) * var(--ta-line-height-small) + var(--ta-padding-small-vertical) * 2 + 2px);
+
+  //** `.form-group` margin
+  --ta-form-group-margin-bottom:       15px;
+
+  //** Background color for textual input addons
+  --ta-input-group-addon-bg:           #ccc;
+  //** Border color for textual input addons
+  --ta-input-group-addon-border-color: var(--ta-input-border);
+
+  --ta-cursor-disabled:                not-allowed;
+
+}
 
 @default-color-transition-time: .3s;
-
 @teamapps-hover-color: rgba(0, 0, 0, 0.05);
 @teamapps-active-color: rgba(0, 0, 0, 0.1);
-
-@input-border-hover: fadeout(@input-border, 30%, relative);
-
 @flying-box-shadow: 0 3px 8px -1px rgba(0, 0, 0, .4);
-
 @default-input-width: 180px;
-
 @maximized-shadow-color: rgba(0, 0, 0, .4);
-
 @direct-transparency-alpha: 0.82; // TODO search for 0.72 and replace
