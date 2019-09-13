@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.icons.provider.IconProvider;
-import org.teamapps.server.CommandDispatcherImpl;
+import org.teamapps.server.CommandDispatcher;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.SessionRecorder;
 import org.teamapps.server.SessionResourceProvider;
@@ -36,9 +36,7 @@ import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.ClientSessionResourceProvider;
-import org.teamapps.ux.session.CommandDispatcher;
 import org.teamapps.ux.session.SessionContext;
-import org.teamapps.ux.session.SimpleSessionContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.SessionClosingReason;
 import org.teamapps.uisession.UiCommandExecutor;
@@ -96,7 +94,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				e.printStackTrace();
 			}
 		}
-		CommandDispatcher commandDispatcher = new CommandDispatcherImpl(commandExecutor, sessionId, sessionRecorder);
+		CommandDispatcher commandDispatcher = new CommandDispatcher(commandExecutor, sessionId, sessionRecorder);
 
 		ClientInfo clientInfo = new ClientInfo(
 				uiClientInfo.getIp(),
@@ -115,7 +113,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				uiClientInfo.getClientParameters());
 //		clientInfo.setClientSystemInfo(parseUserAgent(clientInfo.getUserAgent()));
 
-		SessionContext context = new SimpleSessionContext(sessionId, clientInfo, commandDispatcher, uxServerContext,
+		SessionContext context = new SessionContext(sessionId, clientInfo, commandDispatcher, uxServerContext,
 				webController.getDefaultIconTheme(clientInfo.isMobileDevice()), objectMapper);
 		sessionContextById.put(sessionId, context);
 

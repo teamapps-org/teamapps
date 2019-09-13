@@ -24,7 +24,6 @@ import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.field.*;
 import org.teamapps.ux.component.form.ResponsiveForm;
 import org.teamapps.ux.component.form.ResponsiveFormConfigurationTemplate;
-import org.teamapps.ux.component.form.ResponsiveFormField;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;

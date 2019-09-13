@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.caption;
+package org.teamapps.ux.i18n;
 
 import java.util.ArrayList;
 import java.util.Collections;

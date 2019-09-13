@@ -118,6 +118,11 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
+	@Override
+	public Event<Void> onDestroyed() {
+		return onDestroyed;
+	}
+
 	/**
 	 * Override this method to release resources whenever this component gets destroyed
 	 */

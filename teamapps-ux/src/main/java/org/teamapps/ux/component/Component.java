@@ -21,12 +21,15 @@ package org.teamapps.ux.component;
 
 import org.teamapps.dto.UiComponentReference;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.event.Event;
 import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.component.format.Shadow;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.session.SessionContext;
 
 public interface Component {
+
+	Event<Void> onDestroyed();
 
 	/**
 	 * Used internally for setting the component's container. May only be invoked by the new container!!

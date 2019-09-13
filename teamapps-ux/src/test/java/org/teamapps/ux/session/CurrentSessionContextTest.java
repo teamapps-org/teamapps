@@ -27,8 +27,8 @@ public class CurrentSessionContextTest {
 
 	@Test
 	public void test() throws Exception {
-		SimpleSessionContext c1 = UxTestUtil.createDummySessionContext();
-		SimpleSessionContext c2 = UxTestUtil.createDummySessionContext();
+		SessionContext c1 = UxTestUtil.createDummySessionContext();
+		SessionContext c2 = UxTestUtil.createDummySessionContext();
 
 		Assert.assertNull(CurrentSessionContext.getOrNull());
 		CurrentSessionContext.pushContext(c1);
