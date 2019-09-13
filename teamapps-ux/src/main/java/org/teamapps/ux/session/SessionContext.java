@@ -37,6 +37,8 @@ import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.resource.Resource;
+import org.teamapps.ux.task.ObservableProgress;
+import org.teamapps.ux.task.ProgressReportingRunnable;
 
 import java.io.File;
 import java.io.InputStream;
@@ -45,6 +47,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -262,4 +265,8 @@ public interface SessionContext {
 
 	void showPopupAtCurrentMousePosition(Popup popup);
 	void showPopup(Popup popup);
+
+	ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, ProgressReportingRunnable runnable);
+
+	ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, ProgressReportingRunnable runnable, Executor executor);
 }

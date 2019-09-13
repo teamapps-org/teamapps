@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.Event;
+import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
@@ -34,6 +35,9 @@ import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
+import org.teamapps.ux.task.ObservableProgress;
+import org.teamapps.ux.task.Progress;
+import org.teamapps.ux.task.ProgressReportingRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +52,8 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
@@ -162,7 +168,7 @@ public class SimpleSessionContext implements LockableSessionContext {
 	@Override
 	public <RESULT> void queueCommand(UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
 		if (CurrentSessionContext.get() != this) {
-			String errorMessage = "Trying to queue a command for foreign SessionContext (CurrentSessionContext.get() != this)."
+			String errorMessage = "Trying to queue a command for foreign/null SessionContext (CurrentSessionContext.get() != this)."
 					+ " Please use SessionContext.runWithContext(Runnable). NOTE: The command will not get queued!";
 			LOGGER.error(errorMessage);
 			throw new IllegalStateException(errorMessage);
@@ -282,6 +288,7 @@ public class SimpleSessionContext implements LockableSessionContext {
 			runnable.run();
 		} else {
 			if (CurrentSessionContext.getOrNull() != null) {
+				// unlock the previously locked sessionContext (WITHOUT POPPING IT!)
 				CurrentSessionContext.getOrNull().unlock();
 			}
 			try {
@@ -308,6 +315,7 @@ public class SimpleSessionContext implements LockableSessionContext {
 				}
 			} finally {
 				if (CurrentSessionContext.getOrNull() != null) {
+					// relock the previously locked sessionContext
 					CurrentSessionContext.getOrNull().lock(Long.MAX_VALUE); // we WANT to wait here.
 				}
 			}
@@ -335,6 +343,33 @@ public class SimpleSessionContext implements LockableSessionContext {
 	@Override
 	public void showPopup(Popup popup) {
 		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiComponentReference()));
+	}
+
+	@Override
+	public ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, ProgressReportingRunnable runnable) {
+		return executeBackgroundTask(icon, taskName, cancelable, runnable, ForkJoinPool.commonPool());
+	}
+
+	@Override
+	public ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, ProgressReportingRunnable runnable, Executor executor) {
+		Progress progress = new Progress(icon, taskName, cancelable);
+		executor.execute(() -> {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			progress.start();
+			try {
+				runnable.run(progress);
+			} catch (Exception e) {
+				LOGGER.error("Error in background task", e);
+				progress.markFailed(this.getLocalized("dict.error"), e);
+				return;
+			}
+			progress.markCompleted();
+		});
+		return progress;
 	}
 
 	public static class UTF8Control extends ResourceBundle.Control {

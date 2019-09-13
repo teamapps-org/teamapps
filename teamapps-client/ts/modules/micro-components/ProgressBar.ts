@@ -21,7 +21,7 @@
 import {ProgressIndicator} from "./ProgressIndicator";
 import {generateUUID, parseHtml} from "../Common";
 
-export class ProgressBar implements ProgressIndicator {
+export class  ProgressBar implements ProgressIndicator {
 	private $mainDomElement: HTMLElement;
 	private $progressBar: HTMLElement;
 	private $errorMessageBar: HTMLElement;
@@ -35,6 +35,10 @@ export class ProgressBar implements ProgressIndicator {
                  <div class="progress-bar active" role="progressbar" style="width: 0"></div>
                  <div class="error-message-bar hidden"></div>
                  <style>
+                   #c-${uuid} {
+                     height: ${height}px;
+                   }
+                   
                    #c-${uuid} .progress-bar,
                    #c-${uuid} .error-message-bar{        
                      transition: width ${transitionTime}ms linear;
