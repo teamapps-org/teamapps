@@ -47,6 +47,10 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 		onAllDataChanged.fire(null);
 	}
 
+	public List<RECORD> getList() {
+		return Collections.unmodifiableList(list);
+	}
+
 	public void addRecord(RECORD record) {
 		list.add(record);
 		onRecordAdded.fire(record);

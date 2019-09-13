@@ -1,0 +1,195 @@
+.UiProgressDisplay {
+
+  --stripes-size: 10px;
+
+  border: 1px solid @input-border;
+  border-radius: @border-radius-base;
+
+  .title {
+    display: flex;
+    padding: 4px 5px 2px 5px;
+    border-bottom: 1px solid @input-border;
+
+    .icon {
+      margin-right: 5px;
+    }
+  }
+
+  .content {
+    padding: 4px 5px;
+    display: grid;
+    grid-template-areas: "status cancel" "progress cancel";
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr auto;
+    min-height: 26px;
+
+    .status-string {
+      grid-area: status;
+      font-size: 90%;
+    }
+
+    .progress-bar-wrapper {
+      grid-area: progress;
+      display: flex;
+      align-items: center;
+
+      .progress {
+        flex: 1 1 auto;
+
+        &, .progress-bar {
+          transition: width .4s, background-color .5s !important;
+        }
+      }
+    }
+
+    .cancel-button {
+      grid-area: cancel;
+      background-image: url(/resources/window-close-grey.png);
+      align-self: center;
+      margin-left: 5px;
+    }
+  }
+
+  &:not(.cancelable) .cancel-button {
+    display: none;
+  }
+
+  &.status-not-yet-started,
+  &.status-running,
+  &.status-cancellation-requested,
+  &.status-failed {
+    .progress {
+      background-image: linear-gradient(45deg, #00000055 25%, transparent 25%, transparent 50%, #00000055 50%, #00000055 75%, transparent 75%, transparent);
+      background-size: var(--stripes-size) var(--stripes-size);
+      background-repeat: repeat;
+    }
+  }
+
+  &.status-not-yet-started {
+    .progress {
+      animation: UiProgressDisplay-stripes 4s linear infinite;
+    }
+  }
+  &.status-running,
+  &.status-cancellation-requested {
+    .progress {
+      animation: UiProgressDisplay-stripes 1s linear infinite;
+    }
+  }
+
+  &.status-not-yet-started {
+    .progress-bar {
+      display: none;
+    }
+  }
+
+  &.unknown-progress {
+    .progress-bar {
+      width: 30% !important;
+      position: relative;
+      animation: UiProgressDisplay-left-right 1.5s ease-in-out alternate infinite;
+    }
+  }
+
+  @keyframes UiProgressDisplay-left-right {
+    0% {
+      left: 0;
+    }
+    100% {
+      left: 70%;
+    }
+  }
+
+  &.status-cancellation-requested {
+    //.progress {
+    //  background-color: @state-warning-border;
+    //}
+    //
+    //.progress-bar {
+    //  background-color: @brand-warning;
+    //}
+
+    .content {
+      opacity: .5;
+      filter: grayscale(100%);
+    }
+
+    //.cancel-button {
+    //  opacity: .3;
+    //}
+  }
+
+  &.status-canceled {
+    //.progress {
+    //  background-color: @state-warning-border;
+    //}
+    //
+    //.progress-bar {
+    //  background-color: @brand-warning;
+    //}
+
+    .content {
+      opacity: .5;
+      filter: grayscale(100%);
+    }
+
+    .progress-bar {
+      display: none;
+    }
+
+    .cancel-button {
+      display: none
+    }
+  }
+
+  &.status-complete {
+    //&, .title {
+    //  border-color: @state-success-text;
+    //}
+    .progress {
+      background-color: @state-success-bg;
+    }
+
+    .progress-bar {
+      width: 100% !important;
+      background-color: @brand-success;
+      animation: none;
+    }
+
+    .cancel-button {
+      display: none
+    }
+  }
+
+  &.status-failed {
+    //&, .title {
+    //  border-color: @state-danger-text;
+    //}
+
+    .progress {
+      background-color: lighten(@brand-danger, 15%);
+    }
+
+    .progress-bar {
+      background-color: @brand-danger;
+    }
+
+    .cancel-button {
+      display: none
+    }
+
+    &.unknown-progress .progress-bar {
+      left: 35%;
+      animation: none;
+    }
+  }
+
+  @keyframes UiProgressDisplay-stripes {
+    from {
+      background-position: calc(var(--stripes-size) * 2) 0;
+    }
+    to {
+      background-position: 0 0;
+    }
+  }
+}

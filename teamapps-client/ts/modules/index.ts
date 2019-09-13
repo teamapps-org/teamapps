@@ -89,6 +89,7 @@ export {UiChatInput} from "./UiChatInput";
 export {UiAbsoluteLayout} from "./UiAbsoluteLayout";
 export {UiFloatingComponent} from "./UiFloatingComponent";
 export {UiPopup} from "./UiPopup";
+export {UiProgressDisplay} from "./UiProgressDisplay";
 
 export {UiGauge} from "./UiGauge";
 
