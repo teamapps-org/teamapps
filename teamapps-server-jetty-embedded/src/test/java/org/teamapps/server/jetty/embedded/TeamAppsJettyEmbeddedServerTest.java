@@ -21,8 +21,8 @@ package org.teamapps.server.jetty.embedded;
 
 import com.google.common.io.Files;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.webcontroller.WebController;
 import org.teamapps.ux.session.SessionContext;
+import org.teamapps.webcontroller.WebController;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
