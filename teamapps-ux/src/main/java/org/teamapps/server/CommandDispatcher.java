@@ -25,7 +25,6 @@ import org.teamapps.dto.UiCommand;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.UiCommandExecutor;
 import org.teamapps.uisession.UiCommandWithResultCallback;
-import org.teamapps.ux.session.CommandDispatcher;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,9 +32,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class CommandDispatcherImpl implements CommandDispatcher {
+public class CommandDispatcher {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommandDispatcherImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommandDispatcher.class);
 
 	private final UiCommandExecutor commandExecutor;
 	private final QualifiedUiSessionId qualifiedUiSessionId;
@@ -45,13 +44,12 @@ public class CommandDispatcherImpl implements CommandDispatcher {
 
 	private SessionRecorder sessionRecorder;
 
-	public CommandDispatcherImpl(UiCommandExecutor commandExecutor, QualifiedUiSessionId qualifiedUiSessionId, SessionRecorder sessionRecorder) {
+	public CommandDispatcher(UiCommandExecutor commandExecutor, QualifiedUiSessionId qualifiedUiSessionId, SessionRecorder sessionRecorder) {
 		this.commandExecutor = commandExecutor;
 		this.qualifiedUiSessionId = qualifiedUiSessionId;
 		this.sessionRecorder = sessionRecorder;
 	}
 
-	@Override
 	public <RESULT> void queueCommand(UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
 		if (!this.closed) {
 			uiCommands.add(new UiCommandWithResultCallback<>(command, resultCallback));
@@ -60,7 +58,6 @@ public class CommandDispatcherImpl implements CommandDispatcher {
 		}
 	}
 
-	@Override
 	public void flushCommands() {
 		if (uiCommands.isEmpty()) {
 			return;
@@ -88,7 +85,6 @@ public class CommandDispatcherImpl implements CommandDispatcher {
 		}
 	}
 
-	@Override
 	public void close() {
 		this.closed = true;
 		uiCommands.clear();

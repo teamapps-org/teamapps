@@ -23,10 +23,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import org.mockito.Mockito;
 import org.teamapps.icons.api.IconTheme;
+import org.teamapps.server.CommandDispatcher;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.CommandDispatcher;
-import org.teamapps.ux.session.SimpleSessionContext;
+import org.teamapps.ux.session.SessionContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 
 import java.util.Collections;
@@ -34,13 +34,13 @@ import java.util.Collections;
 public class UxTestUtil {
 
 	public static void doWithMockedSessionContext(Runnable runnable) {
-		SimpleSessionContext sessionContext = createDummySessionContext();
+		SessionContext sessionContext = createDummySessionContext();
 		sessionContext.runWithContext(runnable);
 	}
 
 	@NotNull
-	public static SimpleSessionContext createDummySessionContext() {
-		return new SimpleSessionContext(
+	public static SessionContext createDummySessionContext() {
+		return new SessionContext(
 				new QualifiedUiSessionId("httpSessionId", "uiSessionId"),
 				new ClientInfo("ip", null, 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap()),
 				Mockito.mock(CommandDispatcher.class),

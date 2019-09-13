@@ -29,7 +29,6 @@ import org.teamapps.ux.component.login.LoginAuthenticator;
 import org.teamapps.ux.component.login.LoginWindow;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
-import org.teamapps.ux.session.SimpleSessionContext;
 import org.teamapps.ux.session.StylingTheme;
 
 import java.util.ArrayList;
@@ -127,7 +126,7 @@ public class SimpleApplicationWebController implements WebController {
 		context.registerBackgroundImage("login", loginBackground, loginBackgroundBlurred);
 		context.registerBackgroundImage("default", defaultBackground, defaultBackground);
 		context.setBackgroundImage("login", 0);
-		((SimpleSessionContext) context).setCustomMessageBundleProvider(messageBundleProvider);
+		((SessionContext) context).setCustomMessageBundleProvider(messageBundleProvider);
 
 		if (!context.getClientInfo().getClientParameters().isEmpty()) {
 			String clientUrl = context.getClientInfo().getClientUrl();
