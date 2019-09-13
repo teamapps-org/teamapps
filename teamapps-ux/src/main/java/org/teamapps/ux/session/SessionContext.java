@@ -320,6 +320,14 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiComponentReference()));
 	}
 
+	public ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, Runnable runnable) {
+		return executeBackgroundTask(icon, taskName, cancelable, (progressMonitor) -> runnable.run(), ForkJoinPool.commonPool());
+	}
+
+	public ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, Runnable runnable, Executor executor) {
+		return executeBackgroundTask(icon, taskName, cancelable, (progressMonitor) -> runnable.run(), executor);
+	}
+
 	public ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, ProgressReportingRunnable runnable) {
 		return executeBackgroundTask(icon, taskName, cancelable, runnable, ForkJoinPool.commonPool());
 	}
