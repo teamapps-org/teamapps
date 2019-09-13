@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,12 +39,9 @@ public class Event<EVENT_DATA> {
 
 	public void addListener(EventListener<EVENT_DATA> listener) {
 		SessionContext currentSessionContext = CurrentSessionContext.getOrNull();
+		listeners.add(new SessionContextAwareEventListener<>(currentSessionContext, listener));
 		if (currentSessionContext != null) {
-			// We want listeners to be executed in the same context as they were registered!
-			listeners.add(eventData -> currentSessionContext.runWithContext(() -> listener.onEvent(eventData)));
 			removeWhenSessionDestroyed(listener, currentSessionContext);
-		} else {
-			listeners.add(listener);
 		}
 	}
 
@@ -66,7 +63,7 @@ public class Event<EVENT_DATA> {
 	}
 
 	public void removeListener(EventListener<EVENT_DATA> listener) {
-		listeners.remove(listener);
+		listeners.remove(new SessionContextAwareEventListener<>(listener));
 	}
 
 	public void fire(EVENT_DATA eventData) {
@@ -86,6 +83,50 @@ public class Event<EVENT_DATA> {
 		Event<T> newEvent = new Event<>();
 		addListener(data -> newEvent.fire(converter.apply(data)));
 		return newEvent;
+	}
+
+	private static class SessionContextAwareEventListener<EVENT_DATA> implements EventListener<EVENT_DATA> {
+
+		private final SessionContext sessionContext;
+		private final EventListener<EVENT_DATA> delegate;
+
+		public SessionContextAwareEventListener(SessionContext sessionContext, EventListener<EVENT_DATA> delegate) {
+			this.sessionContext = sessionContext;
+			this.delegate = delegate;
+		}
+
+		public SessionContextAwareEventListener(EventListener<EVENT_DATA> delegate) {
+			this(null, delegate);
+		}
+
+		@Override
+		public void onEvent(EVENT_DATA eventData) {
+			if (sessionContext != null) {
+				sessionContext.runWithContext(() -> delegate.onEvent(eventData));
+			} else {
+				delegate.onEvent(eventData);
+			}
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+
+			SessionContextAwareEventListener<?> that = (SessionContextAwareEventListener<?>) o;
+
+			return delegate != null ? delegate.equals(that.delegate) : that.delegate == null;
+
+		}
+
+		@Override
+		public int hashCode() {
+			return delegate != null ? delegate.hashCode() : 0;
+		}
 	}
 
 }
