@@ -38,6 +38,7 @@ import {
 import {UiMapType} from "../generated/UiMapType";
 import * as L from "leaflet";
 import "leaflet.markercluster";
+import "leaflet.heat";
 import {LatLngExpression, Marker, Polyline} from "leaflet";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
