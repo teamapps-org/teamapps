@@ -1,20 +1,25 @@
-import {Area, Line} from "d3-shape";
-import {NamespaceLocalObject, Selection} from "d3-selection";
+import {area, Area, CurveFactory, CurveGenerator, curveLinear, line, Line} from "d3-shape";
+import {Selection} from "d3-selection";
 import * as d3 from "d3";
-import {Axis, ScaleContinuousNumeric, ScaleLinear} from "d3";
-import {yTickFormat} from "./UiTimeGraph";
+import {Path} from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
-import {UiScaleType} from "../../generated/UiScaleType";
 import {createUiColorCssString} from "../util/CssFormatUtil";
 import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiLineChartBandConfig} from "../../generated/UiLineChartBandConfig";
+import {path} from "d3-path";
+import {D3Area2} from "./D3Area2";
+import {UiColorConfig} from "../../generated/UiColorConfig";
 
 export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartBandConfig> {
-	private line: Line<DataPoint>;
-	private $line: Selection<SVGPathElement, {}, HTMLElement, undefined>;
-	private area: Area<DataPoint>;
+	private middleLine: Line<DataPoint>;
+	private $middleLine: Selection<SVGPathElement, {}, HTMLElement, undefined>;
+	private lowerLine: Line<DataPoint>;
+	private $lowerLine: Selection<SVGPathElement, {}, HTMLElement, undefined>;
+	private upperLine: Line<DataPoint>;
+	private $upperLine: Selection<SVGPathElement, {}, HTMLElement, undefined>;
+	private area: D3Area2<DataPoint>;
 	private $area: Selection<SVGPathElement, {}, HTMLElement, undefined>;
 	private $dots: d3.Selection<SVGGElement, {}, HTMLElement, undefined>;
 	private $main: Selection<SVGGElement, {}, HTMLElement, undefined>;
@@ -38,18 +43,27 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 	}
 
 	private initLinesAndColorScale() {
-		this.area = d3.area<DataPoint>()
+		this.area = new D3Area2<DataPoint>()
 			.curve(CurveTypeToCurveFactory[this.config.graphType]);
-		this.line = d3.line<DataPoint>()
+		this.middleLine = d3.line<DataPoint>()
 			.curve(CurveTypeToCurveFactory[this.config.graphType]);
+		this.lowerLine = d3.line<DataPoint>()
+			.curve(CurveTypeToCurveFactory[this.config.graphType]);
+		this.upperLine = d3.line<DataPoint>()
+			.curve(CurveTypeToCurveFactory[this.config.graphType]);
+
 	}
 
 	private initDomNodes() {
 		this.$area = this.$main.append<SVGPathElement>("path")
 			.classed("area", true);
-		this.$line = this.$main.append<SVGPathElement>("path")
-			.classed("line", true)
-			.attr("stroke", `url(#line-gradient-${this.timeGraphId}-${this.config.id})`);
+		this.$middleLine = this.$main.append<SVGPathElement>("path")
+			.classed("line", true);
+		this.$lowerLine = this.$main.append<SVGPathElement>("path")
+			.classed("line", true);
+		this.$upperLine = this.$main.append<SVGPathElement>("path")
+			.classed("line", true);
+
 		this.$yZeroLine = this.$main.append<SVGLineElement>("line")
 			.classed("y-zero-line", true);
 
@@ -57,24 +71,47 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 		this.$dots = this.$main.append<SVGGElement>("g")
 			.classed("dots", true);
 	}
+	
+	private isVisibleColor(c: UiColorConfig) {
+		return c != null && c.alpha > 0; 
+	}
 
 	public doRedraw() {
-		let lineData = this.getDisplayedData()[this.config.middleLineDataSeriesId];
-		this.line
+		let lineData = this.isVisibleColor(this.config.middleLineColor) ? this.getDisplayedData()[this.config.middleLineDataSeriesId] : [];
+		let areaDataMin = this.isVisibleColor(this.config.lowerLineColor) ? this.getDisplayedData()[this.config.lowerBoundDataSeriesId] : [];
+		let areaDataMax = this.isVisibleColor(this.config.upperLineColor) ? this.getDisplayedData()[this.config.upperBoundDataSeriesId] : [];
+
+		this.middleLine
 			.x(d => this.scaleX(d.x))
 			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
-		this.$line
-			.attr("d", this.line(lineData))
-			.attr("stroke", createUiColorCssString(this.config.lineColor));
-
-		let areaDataMax = this.getDisplayedData()[this.config.upperBoundDataSeriesId];
-		let areaDataMin = this.getDisplayedData()[this.config.lowerBoundDataSeriesId];
-		this.area
+		this.$middleLine
+			.attr("d", this.middleLine(lineData))
+			.attr("stroke", createUiColorCssString(this.config.middleLineColor));
+		
+		this.lowerLine
 			.x(d => this.scaleX(d.x))
-			.y0((d, index) => this.scaleY(fakeZeroIfLogScale(areaDataMin[index].y, this.config.yScaleType))) // TODO make sure these are in sync (no missing points) or fallback to line value??
-			.y1((d, index) => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
+			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
+		this.$lowerLine
+			.attr("d", this.lowerLine(areaDataMin))
+			.attr("stroke", createUiColorCssString(this.config.lowerLineColor));
+		
+		this.upperLine
+			.x(d => this.scaleX(d.x))
+			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
+		this.$upperLine
+			.attr("d", this.upperLine(areaDataMax))
+			.attr("stroke", createUiColorCssString(this.config.upperLineColor));
+
+
+		this.area
+			.x(d => {
+				return this.scaleX(d.x)
+			})
+			.y((d, index) => {
+				return this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType))
+			});
 		this.$area
-			.attr("d", this.area(areaDataMax))
+			.attr("d", this.area.writePath(areaDataMin, areaDataMax))
 			.attr("fill", createUiColorCssString(this.config.areaColor));
 
 		let $dotsDataSelection = this.$dots.selectAll<SVGCircleElement, UiTimeGraphDataPointConfig>("circle.dot")
@@ -116,3 +153,6 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 		this.$yAxis.remove();
 	}
 }
+
+
+
