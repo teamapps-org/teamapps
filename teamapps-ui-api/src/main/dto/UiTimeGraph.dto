@@ -71,10 +71,10 @@ class UiLineChartLine extends AbstractUiLineChartDataDisplay {
 	String dataSeriesId;
 	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
     float dataDotRadius;
-    UiColor lineColorScaleMin = new UiColor(73, 128, 192);
-    UiColor lineColorScaleMax = new UiColor(73, 128, 192);
-    UiColor areaColorScaleMin = new UiColor(255, 255, 255).setAlpha(0f);
-    UiColor areaColorScaleMax = new UiColor(255, 255, 255).setAlpha(0f);
+    UiColor lineColorScaleMin;
+    UiColor lineColorScaleMax;
+    UiColor areaColorScaleMin;
+    UiColor areaColorScaleMax;
 }
 
 class UiLineChartBand extends AbstractUiLineChartDataDisplay {
@@ -83,8 +83,10 @@ class UiLineChartBand extends AbstractUiLineChartDataDisplay {
 	String lowerBoundDataSeriesId;
 	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
     float dataDotRadius;
-    UiColor lineColor = new UiColor(73, 128, 192);
-    UiColor areaColor = new UiColor(255, 255, 255).setAlpha(0f);
+    UiColor areaColor;
+    UiColor middleLineColor;
+	UiColor lowerLineColor;
+	UiColor upperLineColor;
 }
 
 class UiTimeGraphDataPoint {
