@@ -22,7 +22,7 @@ package org.teamapps.ux.component.timegraph;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiLineChartBand;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,25 +39,29 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 
 	private LineChartCurveType curveType;
 	private float dataDotRadius;
-	private Color yAxisColor = Color.BLACK;
-	private Color lineColor;
+	private Color centerLineColor;
+	private Color lowerLineColor;
+	private Color upperLineColor;
 	private Color areaColor;
 
 	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId) {
 		this(upperBoundDataSeriesId, middleLineDataSeriesId, lowerBoundDataSeriesId, LineChartCurveType.MONOTONE, 2, new Color(73, 128, 192));
 	}
 
-	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId, LineChartCurveType curveType, float dataDotRadius, Color lineColor) {
-		this(upperBoundDataSeriesId, middleLineDataSeriesId, lowerBoundDataSeriesId, curveType, dataDotRadius, lineColor, null);
+	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor) {
+		this(upperBoundDataSeriesId, middleLineDataSeriesId, lowerBoundDataSeriesId, curveType, dataDotRadius, centerLineColor, null);
 	}
 
-	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId, LineChartCurveType curveType, float dataDotRadius, Color lineColor, Color areaColor) {
+	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor,
+	                     Color areaColor) {
 		this.upperBoundDataSeriesId = upperBoundDataSeriesId;
 		this.middleLineDataSeriesId = middleLineDataSeriesId;
 		this.lowerBoundDataSeriesId = lowerBoundDataSeriesId;
 		this.curveType = curveType;
 		this.dataDotRadius = dataDotRadius;
-		this.lineColor = lineColor;
+		this.centerLineColor = centerLineColor;
+		this.lowerLineColor = centerLineColor.withAlpha(centerLineColor.getAlpha() / 4);
+		this.upperLineColor = centerLineColor.withAlpha(centerLineColor.getAlpha() / 4);
 		this.areaColor = areaColor;
 	}
 
@@ -71,7 +75,9 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 
 		ui.setGraphType(curveType.toUiLineChartCurveType());
 		ui.setDataDotRadius(dataDotRadius);
-		ui.setLineColor(lineColor != null ? createUiColor(lineColor) : null);
+		ui.setMiddleLineColor(centerLineColor != null ? createUiColor(centerLineColor) : null);
+		ui.setLowerLineColor(lowerLineColor != null ? createUiColor(lowerLineColor) : null);
+		ui.setUpperLineColor(upperLineColor != null ? createUiColor(upperLineColor) : null);
 		ui.setAreaColor(areaColor != null ? createUiColor(areaColor) : null);
 
 		return ui;
@@ -83,7 +89,17 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 
 	@Override
 	public List<String> getDataSeriesIds() {
-		return Arrays.asList(upperBoundDataSeriesId, middleLineDataSeriesId, lowerBoundDataSeriesId);
+		ArrayList<String> dataSeriesIds = new ArrayList<>();
+		if (upperBoundDataSeriesId != null) {
+			dataSeriesIds.add(upperBoundDataSeriesId);
+		}
+		if (middleLineDataSeriesId != null) {
+			dataSeriesIds.add(middleLineDataSeriesId);
+		}
+		if (lowerBoundDataSeriesId != null) {
+			dataSeriesIds.add(lowerBoundDataSeriesId);
+		}
+		return dataSeriesIds;
 	}
 
 	@Override
@@ -115,12 +131,12 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 		return this;
 	}
 
-	public Color getLineColor() {
-		return lineColor;
+	public Color getCenterLineColor() {
+		return centerLineColor;
 	}
 
-	public LineChartBand setLineColor(Color lineColor) {
-		this.lineColor = lineColor;
+	public LineChartBand setCenterLineColor(Color centerLineColor) {
+		this.centerLineColor = centerLineColor;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
 		}
@@ -139,4 +155,27 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 		return this;
 	}
 
+	public Color getLowerLineColor() {
+		return lowerLineColor;
+	}
+
+	public LineChartBand setLowerLineColor(Color lowerLineColor) {
+		this.lowerLineColor = lowerLineColor;
+		if (this.changeListener != null) {
+			changeListener.handleChange(this);
+		}
+		return this;
+	}
+
+	public Color getUpperLineColor() {
+		return upperLineColor;
+	}
+
+	public LineChartBand setUpperLineColor(Color upperLineColor) {
+		this.upperLineColor = upperLineColor;
+		if (this.changeListener != null) {
+			changeListener.handleChange(this);
+		}
+		return this;
+	}
 }

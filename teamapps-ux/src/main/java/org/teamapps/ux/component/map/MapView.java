@@ -21,14 +21,7 @@ package org.teamapps.ux.component.map;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.dto.UiComboBox;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiMap;
-import org.teamapps.dto.UiMapArea;
-import org.teamapps.dto.UiMapMarkerClientRecord;
-import org.teamapps.dto.UiMapMarkerCluster;
-import org.teamapps.dto.UiMapPolyline;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -165,6 +158,16 @@ public class MapView<RECORD> extends AbstractComponent {
 		List<UiMapMarkerClientRecord> uiMarkers = new ArrayList<>();
 		markers.forEach(marker -> uiMarkers.add(createUiRecord(marker)));
 		return new UiMapMarkerCluster(uiMarkers);
+	}
+
+	public void setHeatMap(List<Location> locations) {
+		List<UiHeatMapDataElement> heatMapElements = locations.stream().map(loc -> new UiHeatMapDataElement((float) loc.getLatitude(), (float) loc.getLongitude(), 1)).collect(Collectors.toList());
+		UiHeatMapData heatMap = new UiHeatMapData(heatMapElements);
+		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(getId(), heatMap));
+	}
+
+	public void setHeatMap(UiHeatMapData heatMap) {
+		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(getId(), heatMap));
 	}
 
 	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {

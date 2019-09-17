@@ -354,7 +354,7 @@ public class Color {
 		int r = (rgba >> 24) & 0xff;
 		int g = (rgba >> 16) & 0xff;
 		int b = (rgba >> 8) & 0xff;
-		int a = rgba & 0xff;
+		float a = (rgba & 0xff) / 255f;
 		return new Color(r, g, b, a);
 	}
 
