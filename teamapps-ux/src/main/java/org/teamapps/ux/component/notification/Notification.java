@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,96 +20,56 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiNotification;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.ux.component.animation.EntranceAnimation;
-import org.teamapps.ux.component.animation.ExitAnimation;
+import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.field.TemplateField;
+import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
-import org.teamapps.ux.component.template.Template;
 
 import static org.teamapps.util.UiUtil.createUiColor;
 
-public class Notification<RECORD> {
+public class Notification extends AbstractComponent {
 
-	private Template template;
-	private RECORD record;
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
-	private NotificationPosition position = NotificationPosition.TOP_RIGHT;
 	private Color backgroundColor = Color.WHITE;
+	private Spacing padding = null;
 	private int displayTimeInMillis = 3000;
-	private boolean dismissable = true;
+	private boolean dismissible = true;
 	private boolean showProgressBar = true;
-	private EntranceAnimation entranceAnimation = EntranceAnimation.FADE_IN;
-	private ExitAnimation exitAnimation = ExitAnimation.FADE_OUT;
 
-	/**
-	 * Used to display a simple message (text only).
-	 * @param message Normally a String, but may be any object (using toString()).
-	 */
-	public Notification(RECORD message) {
-		this.template = null;
-		this.record = message;
+	private Component content;
+
+	public Notification() {
 	}
 
-	public Notification(Template template, RECORD record) {
-		this.template = template;
-		this.record = record;
+	public Notification(Component content) {
+		this.content = content;
 	}
 
 	public static Notification createWithIconAndCaption(Icon icon, String text) {
-		return new Notification<>(BaseTemplate.NOTIFICATION_ICON_CAPTION, new BaseTemplateRecord(icon, text));
+		return createWithIconAndTextAndDescription(icon, text, null);
 	}
 
 	public static Notification createWithIconAndTextAndDescription(Icon icon, String text, String description) {
-		return new Notification<>(BaseTemplate.NOTIFICATION_ICON_CAPTION_DESCRIPTION, new BaseTemplateRecord(icon, text, description));
+		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
+		templateField.setValue(new BaseTemplateRecord<>(icon, text, description));
+		Notification notification = new Notification();
+		notification.setContent(templateField);
+		return notification;
 	}
 
-	public UiNotification createUiNotification() {
-		Object values;
-		if (template != null) {
-			values = propertyExtractor.getValues(record, template.getDataKeys());
-		} else {
-			values = "" + record;
-		}
-		UiNotification uiNotification = new UiNotification(this.template != null ? this.template.createUiTemplate() : null, values);
-		uiNotification.setPosition(position.toUiNotificationPosition());
-		uiNotification.setBackgroundColor(createUiColor(backgroundColor));
-		uiNotification.setDisplayTimeInMillis(displayTimeInMillis);
-		uiNotification.setDismissable(dismissable);
-		uiNotification.setShowProgressBar(showProgressBar);
-		uiNotification.setEntranceAnimation(entranceAnimation != null ? entranceAnimation.toUiEntranceAnimation() : null);
-		uiNotification.setExitAnimation(exitAnimation != null ? exitAnimation.toUiExitAnimation() : null);
-		return uiNotification;
-	}
-
-	public NotificationPosition getPosition() {
-		return position;
-	}
-
-	public Notification setPosition(NotificationPosition position) {
-		this.position = position;
-		return this;
-	}
-
-	public Template getTemplate() {
-		return template;
-	}
-
-	public Notification setTemplate(Template template) {
-		this.template = template;
-		return this;
-	}
-
-	public RECORD getRecord() {
-		return record;
-	}
-
-	public Notification setRecord(RECORD record) {
-		this.record = record;
-		return this;
+	public UiNotification createUiComponent() {
+		UiNotification ui = new UiNotification();
+		mapAbstractUiComponentProperties(ui);
+		ui.setBackgroundColor(createUiColor(backgroundColor));
+		ui.setPadding(padding != null ? padding.createUiSpacing() : null);
+		ui.setDisplayTimeInMillis(displayTimeInMillis);
+		ui.setDismissible(dismissible);
+		ui.setShowProgressBar(showProgressBar);
+		ui.setContent(content != null ? content.createUiComponentReference() : null);
+		return ui;
 	}
 
 	public Color getBackgroundColor() {
@@ -118,6 +78,17 @@ public class Notification<RECORD> {
 
 	public Notification setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
+		return this;
+	}
+
+	public Spacing getPadding() {
+		return padding;
+	}
+
+	public Notification setPadding(Spacing padding) {
+		this.padding = padding;
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
 		return this;
 	}
 
@@ -127,15 +98,17 @@ public class Notification<RECORD> {
 
 	public Notification setDisplayTimeInMillis(int displayTimeInMillis) {
 		this.displayTimeInMillis = displayTimeInMillis;
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
 		return this;
 	}
 
-	public boolean isDismissable() {
-		return dismissable;
+	public boolean isDismissible() {
+		return dismissible;
 	}
 
-	public Notification setDismissable(boolean dismissable) {
-		this.dismissable = dismissable;
+	public Notification setDismissible(boolean dismissible) {
+		this.dismissible = dismissible;
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
 		return this;
 	}
 
@@ -145,24 +118,17 @@ public class Notification<RECORD> {
 
 	public Notification setShowProgressBar(boolean showProgressBar) {
 		this.showProgressBar = showProgressBar;
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
 		return this;
 	}
 
-	public EntranceAnimation getEntranceAnimation() {
-		return entranceAnimation;
+	public Component getContent() {
+		return content;
 	}
 
-	public Notification setEntranceAnimation(EntranceAnimation entranceAnimation) {
-		this.entranceAnimation = entranceAnimation;
-		return this;
-	}
-
-	public ExitAnimation getExitAnimation() {
-		return exitAnimation;
-	}
-
-	public Notification setExitAnimation(ExitAnimation exitAnimation) {
-		this.exitAnimation = exitAnimation;
+	public Notification setContent(Component content) {
+		this.content = content;
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
 		return this;
 	}
 }

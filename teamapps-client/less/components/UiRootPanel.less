@@ -39,32 +39,6 @@
   }
 }
 
-[data-notify="container"] {
-  border-radius: @panel-border-radius;
-  box-shadow: 0 1px 7px rgba(0, 0, 0, .3);
-  padding: 0 !important;
-
-  [data-notify="progressbar"] {
-    margin-bottom: 0;
-    height: 5px;
-    .progress-bar {
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
-      transition: width 1s linear;
-    }
-  }
-
-  [data-notify="dismiss"] {
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    top: 3px !important;
-    right: 3px !important;
-    background-size: contain;
-    background-repeat: no-repeat
-  }
-}
-
 .UiGenericErrorMessage {
   display: grid;
   grid-template-columns: auto 1fr;

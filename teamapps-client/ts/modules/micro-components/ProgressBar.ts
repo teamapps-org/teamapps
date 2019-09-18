@@ -21,7 +21,7 @@
 import {ProgressIndicator} from "./ProgressIndicator";
 import {generateUUID, parseHtml} from "../Common";
 
-export class  ProgressBar implements ProgressIndicator {
+export class ProgressBar implements ProgressIndicator {
 	private $mainDomElement: HTMLElement;
 	private $progressBar: HTMLElement;
 	private $errorMessageBar: HTMLElement;
@@ -32,20 +32,20 @@ export class  ProgressBar implements ProgressIndicator {
 	}) {
 		let uuid = generateUUID();
 		this.$mainDomElement = parseHtml(`<div id="c-${uuid}" class="ProgressBar progress">
-                 <div class="progress-bar active" role="progressbar" style="width: 0"></div>
-                 <div class="error-message-bar hidden"></div>
-                 <style>
-                   #c-${uuid} {
-                     height: ${height}px;
-                   }
-                   
-                   #c-${uuid} .progress-bar,
-                   #c-${uuid} .error-message-bar{        
-                     transition: width ${transitionTime}ms linear;
-                     height: ${height}px;
-                   } 
-                 </style>
-                </div>`);
+	<div class="progress-bar active" role="progressbar" style="width: 0%"></div>
+	<div class="error-message-bar hidden"></div>
+	<style>
+	  #c-${uuid} {
+	    height: ${height}px;
+	  }
+	  
+	  #c-${uuid} .progress-bar,
+	  #c-${uuid} .error-message-bar{        
+	    transition: width ${transitionTime}ms linear;
+	    height: ${height}px;
+	  } 
+	</style>
+</div>`);
 		this.$progressBar = this.$mainDomElement.querySelector<HTMLElement>(':scope .progress-bar');
 		this.$errorMessageBar = this.$mainDomElement.querySelector<HTMLElement>(':scope .error-message-bar');
 
@@ -54,15 +54,12 @@ export class  ProgressBar implements ProgressIndicator {
 
 	/**
 	 * @param progress Between 0 and 1
-	 * @param caption
 	 */
 	public setProgress(progress: number) {
-		let percentString = Math.ceil(progress * 100) + "%";
-		this.$progressBar.style.width = percentString;
-		this.$progressBar.innerText = percentString;
+		this.$progressBar.style.width = Math.ceil(progress * 100) + "%";
 	}
 
-	setErrorMessage(message: string | null): void {
+	public setErrorMessage(message: string | null): void {
 		this.$progressBar.classList.toggle('hidden', !!message);
 		this.$errorMessageBar.classList.toggle('hidden', !message);
 		this.$errorMessageBar.innerText = message;

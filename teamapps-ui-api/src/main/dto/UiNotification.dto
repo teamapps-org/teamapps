@@ -17,15 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-class UiNotification {
-	required UiTemplate template;
-	required Object data;
+enum UiNotificationPosition {
+	TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
+}
+
+class UiNotification extends UiComponent {
 	UiColor backgroundColor;
-	enum {TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT} position = Position.TOP_RIGHT;
+	UiSpacing padding;
+
 	int displayTimeInMillis = 3000; // 0 = display until user closes it actively
-	boolean dismissable = true;
+	boolean dismissible = true;
 	boolean showProgressBar = false;
-	UiEntranceAnimation entranceAnimation = UiEntranceAnimation.FADE_IN;
-	UiExitAnimation exitAnimation = UiExitAnimation.FADE_OUT; // beware that some exit animations do not seem to work with some of the entrance animations (example: ROLL_IN and HINGE)
+
+	UiComponent* content;
+	int contentHeight = 0; // <= 0: auto
+
+	command close();
+	command update(UiNotification config);
+
+	event closed(boolean byUser);
 }
 
