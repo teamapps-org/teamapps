@@ -30,7 +30,6 @@ import {UiShadowConfig} from "../../generated/UiShadowConfig";
 import {UiSpacingConfig} from "../../generated/UiSpacingConfig";
 import {UiSizingPolicyConfig} from "../../generated/UiSizingPolicyConfig";
 import {UiImageSizing} from "../../generated/UiImageSizing";
-import {image} from "d3-fetch";
 
 export type CssPropertyObject = { [cssProperty: string]: string };
 
@@ -156,12 +155,16 @@ export function createImageSizingCssObject(imageSizing: UiImageSizing): CssPrope
 	}
 }
 
+export function createUiSpacingValueCssString(spacingConfig: UiSpacingConfig) {
+	return spacingConfig != null ? `${spacingConfig.top}px ${spacingConfig.right}px ${spacingConfig.bottom}px ${spacingConfig.left}px` : null;
+}
+
 export function createUiSpacingCssObject(cssProperty: string, spacingConfig: UiSpacingConfig) {
 	if (spacingConfig == null) {
 		return {};
 	} else {
 		return {
-			[cssProperty]: `${spacingConfig.top}px ${spacingConfig.right}px ${spacingConfig.bottom}px ${spacingConfig.left}px;`
+			[cssProperty]: createUiSpacingValueCssString(spacingConfig)
 		};
 	}
 }

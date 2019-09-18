@@ -25,7 +25,7 @@ import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {UiNotificationConfig} from "../generated/UiNotificationConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml, showNotification} from "./Common";
+import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml} from "./Common";
 import {UiRootPanelCommandHandler, UiRootPanelConfig} from "../generated/UiRootPanelConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
@@ -37,6 +37,10 @@ import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiComponent} from "./UiComponent";
 import {UiPageTransition} from "../generated/UiPageTransition";
 import {UiPopup} from "./UiPopup";
+import {showNotification, UiNotification} from "./UiNotification";
+import {UiNotificationPosition} from "../generated/UiNotificationPosition";
+import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
+import {UiExitAnimation} from "../generated/UiExitAnimation";
 
 require("moment-jdateformatparser");
 
@@ -271,8 +275,8 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		}
 	}
 
-	public static showNotification(notification: UiNotificationConfig, context: TeamAppsUiContext) {
-		showNotification(context.templateRegistry.createTemplateRenderer(notification.template).render(notification.data), notification);
+	public static showNotification(notification: UiNotification, position: UiNotificationPosition, entranceAnimation: UiEntranceAnimation, exitAnimation: UiExitAnimation, context: TeamAppsUiContext) {
+		showNotification(notification, position, entranceAnimation, exitAnimation);
 	}
 
 	public static downloadFile(fileUrl: string, fileName: string) {

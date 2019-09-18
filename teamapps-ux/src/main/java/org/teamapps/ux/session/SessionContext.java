@@ -474,30 +474,25 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.ClearClientTokensCommand());
 	}
 
-	public void showNotification(Notification notification) {
-		queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiNotification()));
+	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
+		queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiComponentReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
+				exitAnimation.toUiExitAnimation()));
 	}
 
 	public void showNotification(Icon icon, String caption) {
 		Notification notification = Notification.createWithIconAndCaption(icon, caption);
-		notification.setPosition(NotificationPosition.TOP_RIGHT);
-		notification.setEntranceAnimation(EntranceAnimation.SLIDE_IN_UP);
-		notification.setExitAnimation(ExitAnimation.SLIDE_OUT_UP);
-		notification.setDismissable(true);
+		notification.setDismissible(true);
 		notification.setShowProgressBar(false);
 		notification.setDisplayTimeInMillis(5000);
-		showNotification(notification);
+		showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
 	}
 
 	public void showNotification(Icon icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
 		Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
-		notification.setPosition(NotificationPosition.TOP_RIGHT);
-		notification.setEntranceAnimation(EntranceAnimation.SLIDE_IN_LEFT);
-		notification.setExitAnimation(ExitAnimation.FADE_OUT_UP);
-		notification.setDismissable(dismissable);
+		notification.setDismissible(dismissable);
 		notification.setDisplayTimeInMillis(displayTimeInMillis);
 		notification.setShowProgressBar(showProgress);
-		showNotification(notification);
+		showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
 	}
 
 }
