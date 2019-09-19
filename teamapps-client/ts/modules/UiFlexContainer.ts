@@ -40,7 +40,7 @@ export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> 
 		this.$main.style.alignItems = this.convertToCssValueString(UiCssAlignItems[config.alignItems]);
 		this.$main.style.justifyContent = this.convertToCssValueString(UiCssJustifyContent[config.justifyContent]);
 
-		config.components.forEach(c =>this.addComponent(c as UiComponent));
+		config.components.forEach(c => this.addComponent(c as UiComponent));
 	}
 
 	private convertToCssValueString(enumValueName: string) {
@@ -57,7 +57,11 @@ export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> 
 	}
 
 	removeComponent(component: UiComponent): void {
-		this.$main.removeChild(component.getMainDomElement());
+		try {
+			this.$main.removeChild(component.getMainDomElement());
+		} catch (e) {
+			// ignore if this is actually not a child...
+		}
 		this.components = this.components.filter(c => c !== component);
 	}
 

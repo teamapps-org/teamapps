@@ -21,19 +21,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  .teamapps-spinner {
-    -webkit-transform: translateZ(0);
-    -ms-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-animation: UiSpinner-animation 1.1s infinite linear;
-    animation: UiSpinner-animation 1.1s infinite linear;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-left-color: @brand-primary;
-    border-top-color: @brand-primary;
-  }
 }
+
+.teamapps-spinner {
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: UiSpinner-animation 1.1s infinite linear;
+  animation: UiSpinner-animation 1.1s infinite linear;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-left-color: @brand-primary;
+  border-top-color: @brand-primary;
+}
+
 @-webkit-keyframes UiSpinner-animation {
   0% {
     -webkit-transform: rotate(0deg);

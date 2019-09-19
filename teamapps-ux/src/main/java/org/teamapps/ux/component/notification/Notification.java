@@ -20,7 +20,9 @@
 package org.teamapps.ux.component.notification;
 
 import org.teamapps.common.format.Color;
+import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiNotification;
+import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -32,6 +34,10 @@ import org.teamapps.ux.component.template.BaseTemplateRecord;
 import static org.teamapps.util.UiUtil.createUiColor;
 
 public class Notification extends AbstractComponent {
+	public final Event<Void> onOpened = new Event<>();
+	public final Event<Boolean> onClosed = new Event<>();
+
+	private boolean showing;
 
 	private Color backgroundColor = Color.WHITE;
 	private Spacing padding = null;
@@ -70,6 +76,26 @@ public class Notification extends AbstractComponent {
 		ui.setShowProgressBar(showProgressBar);
 		ui.setContent(content != null ? content.createUiComponentReference() : null);
 		return ui;
+	}
+
+	@Override
+	public void handleUiEvent(UiEvent event) {
+		switch (event.getUiEventType()) {
+			case UI_NOTIFICATION_OPENED: {
+				this.showing = true;
+				onOpened.fire(null);
+				break;
+			}
+			case UI_NOTIFICATION_CLOSED: {
+				this.showing = false;
+				onClosed.fire(((UiNotification.ClosedEvent) event).getByUser());
+				break;
+			}
+		}
+	}
+
+	public void close() {
+		queueCommandIfRendered(() -> new UiNotification.CloseCommand(getId()));
 	}
 
 	public Color getBackgroundColor() {
@@ -130,5 +156,9 @@ public class Notification extends AbstractComponent {
 		this.content = content;
 		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
 		return this;
+	}
+
+	public boolean isShowing() {
+		return showing;
 	}
 }

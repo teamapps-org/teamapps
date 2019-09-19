@@ -9,7 +9,6 @@ enum UiProgressStatus {
 }
 
 class UiProgressDisplay extends UiComponent {
-
 	String icon;
 	String taskName;
 	String statusMessage;
@@ -21,5 +20,14 @@ class UiProgressDisplay extends UiComponent {
 
     event clicked();
     event cancelButtonClicked();
+}
 
+
+class UiMultiProgressDisplay extends UiComponent {
+	int runningCount;
+	List<String> statusMessages;
+
+	command update(UiMultiProgressDisplay config);
+
+	event clicked();
 }

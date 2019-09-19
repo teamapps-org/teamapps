@@ -90,6 +90,7 @@ export {UiAbsoluteLayout} from "./UiAbsoluteLayout";
 export {UiFloatingComponent} from "./UiFloatingComponent";
 export {UiPopup} from "./UiPopup";
 export {UiProgressDisplay} from "./UiProgressDisplay";
+export {UiMultiProgressDisplay} from "./UiMultiProgressDisplay";
 export {UiNotification} from "./UiNotification";
 
 export {UiGauge} from "./UiGauge";
