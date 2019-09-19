@@ -41,7 +41,7 @@ export class UiProgressDisplay extends AbstractUiComponent<UiProgressDisplayConf
 	private $main: HTMLElement;
 	private $icon: HTMLElement;
 	private $taskName: HTMLElement;
-	private $statusString: HTMLElement;
+	private $statusMessage: HTMLElement;
 	private $progress: HTMLElement;
 	private $cancelButton: HTMLElement;
 	private progressBar: ProgressBar;
@@ -63,7 +63,7 @@ export class UiProgressDisplay extends AbstractUiComponent<UiProgressDisplayConf
 
 		this.$icon = this.$main.querySelector<HTMLElement>(":scope .icon");
 		this.$taskName = this.$main.querySelector<HTMLElement>(":scope .task-name");
-		this.$statusString = this.$main.querySelector<HTMLElement>(":scope .status-string");
+		this.$statusMessage = this.$main.querySelector<HTMLElement>(":scope .status-string");
 		this.$progress = this.$main.querySelector<HTMLElement>(":scope .progress-bar-wrapper");
 		this.progressBar = new ProgressBar(0, {height: 4, transitionTime: 400});
 		this.$progress.appendChild(this.progressBar.getMainDomElement());
@@ -81,7 +81,7 @@ export class UiProgressDisplay extends AbstractUiComponent<UiProgressDisplayConf
 	update(config: UiProgressDisplayConfig): void {
 		this.$icon.style.backgroundImage = `url(${this._context.getIconPath(config.icon, 16)})`;
 		this.$taskName.textContent = config.taskName;
-		this.$statusString.textContent = config.statusString;
+		this.$statusMessage.textContent = config.statusMessage;
 		this.progressBar.setProgress(config.progress);
 
 		this.$main.classList.toggle("unknown-progress", config.progress < 0);

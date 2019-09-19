@@ -5,15 +5,30 @@ package org.teamapps.ux.task;
  */
 public interface ProgressMonitor {
 
-    void start();
+	void start();
 
-    void setProgress(double progress);
-    void setStatusString(String statusString);
+	void setStatusMessage(String statusMessage);
 
-    void markCanceled();
-    void markCompleted();
-    void markFailed(String message, Exception e);
+	void setProgress(double progress);
 
-    boolean isCancellationRequested();
-    
+	void setProgress(double progress, String statusMessage);
+
+	void markCanceled();
+
+	void markCanceled(String statusMessage);
+
+	void markCompleted();
+
+	void markCompleted(String statusMessage);
+
+	void markFailed();
+
+	void markFailed(String message);
+
+	void setCancelable(boolean cancelable);
+
+	boolean isCancelable();
+
+	boolean isCancellationRequested();
+
 }

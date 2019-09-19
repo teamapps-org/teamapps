@@ -7,8 +7,8 @@ import org.teamapps.event.EventListener;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.task.ObservableProgress;
+import org.teamapps.ux.task.ProgressChangeEventData;
 import org.teamapps.ux.task.ProgressStatus;
-import org.teamapps.ux.task.TaskFailureInfo;
 
 /**
  * This component displays progress information.
@@ -23,31 +23,32 @@ public class ProgressDisplay extends AbstractComponent {
 
 	private Icon icon;
 	private String taskName;
-	private String statusString;
+	private String statusMessage;
 	private double progress;
 	private ProgressStatus status = ProgressStatus.NOT_YET_STARTED;
 	private boolean cancelable;
 
 	private ObservableProgress observedProgress;
-	private final EventListener<Void> observedProgressStartedHandler = v -> {
-		System.out.println("from listener: RUNNING");
-		setStatus(ProgressStatus.RUNNING);
-	};
-	private final EventListener<Double> observedProgressChangedListener = this::setProgress;
-	private final EventListener<String> observedProgressStatusStringChangedListener = this::setStatusString;
-	private final EventListener<Void> observedProgressCompletedListener = x -> setStatus(ProgressStatus.COMPLETE);
-	private final EventListener<Void> observedProgressCancelationRequestedListener = x -> setStatus(ProgressStatus.CANCELLATION_REQUESTED);
-	private final EventListener<Void> observedProgressCanceledListener = x -> setStatus(ProgressStatus.CANCELED);
-	private final EventListener<TaskFailureInfo> observedProgressFailedListener = taskFailureInfo -> {
-		this.statusString = taskFailureInfo.getMessage();
-		this.status = ProgressStatus.FAILED;
+	
+	private final EventListener<ProgressChangeEventData> observedProgressChangeListener = data -> {
+		setStatus(data.getStatus());
+		setStatusMessage(data.getStatusMessage());
+		setProgress(data.getProgress());
+		setCancelable(data.isCancelable());
 		this.updateUi();
 	};
 
 	public ProgressDisplay() {
+		this(null, null, null);
 	}
 
-	public ProgressDisplay(ObservableProgress progress) {
+	public ProgressDisplay(Icon icon, String taskName) {
+		this(icon, taskName, null);
+	}
+
+	public ProgressDisplay(Icon icon, String taskName, ObservableProgress progress) {
+		this.icon = icon;
+		this.taskName = taskName;
 		setObservedProgress(progress);
 	}
 
@@ -57,7 +58,7 @@ public class ProgressDisplay extends AbstractComponent {
 		mapAbstractUiComponentProperties(ui);
 		ui.setIcon(getSessionContext().resolveIcon(icon));
 		ui.setTaskName(taskName);
-		ui.setStatusString(statusString);
+		ui.setStatusMessage(statusMessage);
 		ui.setProgress(progress);
 		ui.setStatus(status.toUiProgressStatus());
 		ui.setCancelable(cancelable);
@@ -91,32 +92,16 @@ public class ProgressDisplay extends AbstractComponent {
 
 	public void setObservedProgress(ObservableProgress observableProgress) {
 		if (this.observedProgress != null) {
-			this.observedProgress.onStarted().removeListener(observedProgressStartedHandler);
-			this.observedProgress.onProgressChanged().removeListener(observedProgressChangedListener);
-			this.observedProgress.onStatusStringChanged().removeListener(observedProgressStatusStringChangedListener);
-			this.observedProgress.onCompleted().removeListener(observedProgressCompletedListener);
-			this.observedProgress.onCancellationRequested().removeListener(observedProgressCancelationRequestedListener);
-			this.observedProgress.onCanceled().removeListener(observedProgressCanceledListener);
-			this.observedProgress.onFailed().removeListener(observedProgressFailedListener);
+			this.observedProgress.onChanged().removeListener(this.observedProgressChangeListener);
 		}
 
 		this.observedProgress = observableProgress;
 
 		if (observableProgress != null) {
-			observableProgress.onStarted().addListener(observedProgressStartedHandler);
-			observableProgress.onProgressChanged().addListener(observedProgressChangedListener);
-			observableProgress.onStatusStringChanged().addListener(observedProgressStatusStringChangedListener);
-			observableProgress.onCompleted().addListener(observedProgressCompletedListener);
-			observableProgress.onCancellationRequested().addListener(observedProgressCancelationRequestedListener);
-			observableProgress.onCanceled().addListener(observedProgressCanceledListener);
-			observableProgress.onFailed().addListener(observedProgressFailedListener);
-
-			this.icon = observableProgress.getIcon();
-			this.taskName = observableProgress.getTaskName();
-			this.statusString = observableProgress.getStatusString();
+			observableProgress.onChanged().addListener(this.observedProgressChangeListener);
+			this.statusMessage = observableProgress.getStatusMessage();
 			this.progress = observableProgress.getProgress();
 			this.status = observableProgress.getStatus();
-			System.out.println("after registration: " + this.status);
 			this.cancelable = observableProgress.isCancelable();
 			this.updateUi();
 		}
@@ -144,12 +129,12 @@ public class ProgressDisplay extends AbstractComponent {
 		updateUi();
 	}
 
-	public String getStatusString() {
-		return statusString;
+	public String getStatusMessage() {
+		return statusMessage;
 	}
 
-	public void setStatusString(String statusString) {
-		this.statusString = statusString;
+	public void setStatusMessage(String statusMessage) {
+		this.statusMessage = statusMessage;
 		updateUi();
 	}
 

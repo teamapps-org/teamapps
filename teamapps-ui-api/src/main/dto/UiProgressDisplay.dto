@@ -12,7 +12,7 @@ class UiProgressDisplay extends UiComponent {
 
 	String icon;
 	String taskName;
-	String statusString;
+	String statusMessage;
 	double progress;
 	UiProgressStatus status;
 	boolean cancelable;

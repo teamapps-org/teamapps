@@ -127,11 +127,13 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 		if (this.progressBar != null) {
 			this.progressBar.setProgress(1);
 		}
-		setTimeout(() => {
-			this.close();
-			this.onClosed.fire({byUser: false});
-			this.onClosedAnyWay.fire();
-		}, this._config.displayTimeInMillis);
+		if (this._config.displayTimeInMillis > 0) {
+			setTimeout(() => {
+				this.close();
+				this.onClosed.fire({byUser: false});
+				this.onClosedAnyWay.fire();
+			}, this._config.displayTimeInMillis);
+		}
 	}
 
 	getMainDomElement(): HTMLElement {
