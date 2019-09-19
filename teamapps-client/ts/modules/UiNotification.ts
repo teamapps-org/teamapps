@@ -1,4 +1,4 @@
-import {UiNotification_ClosedEvent, UiNotificationCommandHandler, UiNotificationConfig, UiNotificationEventSource} from "../generated/UiNotificationConfig";
+import {UiNotification_ClosedEvent, UiNotification_OpenedEvent, UiNotificationCommandHandler, UiNotificationConfig, UiNotificationEventSource} from "../generated/UiNotificationConfig";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiNotificationPosition} from "../generated/UiNotificationPosition";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
@@ -27,57 +27,79 @@ const containersByPosition: {
 	[UiNotificationPosition.BOTTOM_RIGHT]: parseHtml(`<div class="UiNotification-container bottom-right"></div>`)
 };
 
-const notificationWrappersByPosition: {
-	[UiNotificationPosition.TOP_LEFT]: HTMLElement[],
-	[UiNotificationPosition.TOP_CENTER]: HTMLElement[],
-	[UiNotificationPosition.TOP_RIGHT]: HTMLElement[],
-	[UiNotificationPosition.BOTTOM_LEFT]: HTMLElement[],
-	[UiNotificationPosition.BOTTOM_CENTER]: HTMLElement[],
-	[UiNotificationPosition.BOTTOM_RIGHT]: HTMLElement[]
-} = {
-	[UiNotificationPosition.TOP_LEFT]: [],
-	[UiNotificationPosition.TOP_CENTER]: [],
-	[UiNotificationPosition.TOP_RIGHT]: [],
-	[UiNotificationPosition.BOTTOM_LEFT]: [],
-	[UiNotificationPosition.BOTTOM_CENTER]: [],
-	[UiNotificationPosition.BOTTOM_RIGHT]: []
+let notifications: {
+	notification: UiNotification;
+	position: UiNotificationPosition;
+	$wrapper: HTMLElement;
+}[] = [];
+
+function getNotificationsByPosition(position: UiNotificationPosition) {
+	return notifications.filter(n => n.position == position);
+}
+
+let updateContainerVisibilities = function () {
+	[UiNotificationPosition.TOP_LEFT,
+		UiNotificationPosition.TOP_CENTER,
+		UiNotificationPosition.TOP_RIGHT,
+		UiNotificationPosition.BOTTOM_LEFT,
+		UiNotificationPosition.BOTTOM_CENTER,
+		UiNotificationPosition.BOTTOM_RIGHT].forEach(pos => {
+		let hasNotifications = getNotificationsByPosition(pos).length > 0;
+		if (hasNotifications && containersByPosition[pos].parentNode !== document.body) {
+			document.body.appendChild(containersByPosition[pos]);
+		} else if (!hasNotifications) {
+			containersByPosition[pos].remove();
+		}
+	});
 };
 
 export function showNotification(notification: UiNotification, position: UiNotificationPosition, entranceAnimation: UiEntranceAnimation, exitAnimation: UiExitAnimation) {
-	if (notificationWrappersByPosition[position].length == 0) {
-		document.body.appendChild(containersByPosition[position]);
+	let notif = notifications.filter(n => n.notification == notification)[0];
+
+	if (notif == null || notif.position != position) {
+		if (notif == null) {
+			let $wrapper = parseHtml(`<div class="notification-wrapper"></div>`);
+			$wrapper.appendChild(notification.getMainDomElement());
+			notif = {notification, position, $wrapper};
+			notifications.push(notif)
+		} else {
+			notif.position = position;
+		}
+		notif.$wrapper.style.height = null;
+		notif.$wrapper.style.marginBottom = null;
+		notif.$wrapper.style.zIndex = null;
+		containersByPosition[position].appendChild(notif.$wrapper);
+
+		updateContainerVisibilities();
+
+		animateCSS(notification.getMainDomElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[entranceAnimation] as any, 700);
+
+		let closeListener = () => {
+			notification.onClosedAnyWay.removeListener(closeListener);
+			notif.$wrapper.style.height = `${notif.$wrapper.offsetHeight}px`;
+			notif.$wrapper.offsetHeight; // make sure the style above is applied so we get a transition!
+			notif.$wrapper.style.height = "0px";
+			notif.$wrapper.style.marginBottom = "0px";
+			notif.$wrapper.style.zIndex = "0";
+
+			animateCSS(notification.getMainDomElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation] as any, 700, () => {
+				notif.$wrapper.remove();
+				updateContainerVisibilities();
+			});
+
+			notifications = notifications.filter(n => n.notification !== notification);
+		};
+		notification.onClosedAnyWay.addListener(closeListener);
+
+		notification.onOpened.fire({});
 	}
 
-	let $notificationWrapper = parseHtml(`<div class="notification-wrapper"></div>`);
-	$notificationWrapper.appendChild(notification.getMainDomElement());
-	animateCSS(notification.getMainDomElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[entranceAnimation] as any, 700);
-	notificationWrappersByPosition[position].push($notificationWrapper);
-	containersByPosition[position].appendChild($notificationWrapper);
-
-	let closeListener = () => {
-		notification.onClosedAnyWay.removeListener(closeListener);
-		$notificationWrapper.style.height = `${$notificationWrapper.offsetHeight}px`;
-		$notificationWrapper.offsetHeight; // make sure the style above is applied so we get a transition!
-		$notificationWrapper.style.height = "0px";
-		$notificationWrapper.style.marginBottom = "0px";
-		$notificationWrapper.style.zIndex = "0";
-
-		animateCSS(notification.getMainDomElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation] as any, 700, () => {
-			$notificationWrapper.remove();
-			notificationWrappersByPosition[position] = notificationWrappersByPosition[position].filter(w => w != $notificationWrapper);
-
-			if (notificationWrappersByPosition[position].length == 0) {
-				containersByPosition[position].remove();
-			}
-		});
-	};
-	notification.onClosedAnyWay.addListener(closeListener);
-
-	setTimeout(() => notification.startTimeout());
+	setTimeout(() => notification.startCloseTimeout());
 }
 
 export class UiNotification extends AbstractUiComponent<UiNotificationConfig> implements UiNotificationCommandHandler, UiNotificationEventSource {
 
+	public readonly onOpened: TeamAppsEvent<UiNotification_OpenedEvent> = new TeamAppsEvent(this);
 	public readonly onClosed: TeamAppsEvent<UiNotification_ClosedEvent> = new TeamAppsEvent(this);
 	public readonly onClosedAnyWay: TeamAppsEvent<void> = new TeamAppsEvent(this);
 
@@ -96,11 +118,15 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 </div>`);
 		this.$contentContainer = this.$main.querySelector(":scope > .content-container");
 		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container");
-		this.$main.querySelector(":scope > .close-button").addEventListener("mousedown", () => this.close());
+		this.$main.querySelector(":scope > .close-button").addEventListener("mousedown", () => {
+			this.close();
+			this.onClosed.fire({byUser: true});
+		});
 		this.update(config);
 	}
 
 	public update(config: UiNotificationConfig) {
+		this._config = config;
 		this.$main.style.backgroundColor = createUiColorCssString(config.backgroundColor, "transparent");
 		// this.$main.style.borderColor = createUiColorCssString(config.borderColor, "#00000022");
 		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
@@ -123,12 +149,17 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 		}
 	}
 
-	public startTimeout() {
+	private closeTimeout: number;
+
+	public startCloseTimeout() {
 		if (this.progressBar != null) {
-			this.progressBar.setProgress(1);
+			this.progressBar.setProgress(1); // mind the css transition!
+		}
+		if (this.closeTimeout != null) {
+			window.clearTimeout(this.closeTimeout);
 		}
 		if (this._config.displayTimeInMillis > 0) {
-			setTimeout(() => {
+			this.closeTimeout = window.setTimeout(() => {
 				this.close();
 				this.onClosed.fire({byUser: false});
 				this.onClosedAnyWay.fire();

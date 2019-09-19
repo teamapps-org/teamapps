@@ -48,6 +48,19 @@
     overflow: visible;
     margin-bottom: 5px;
     transition: height .7s, margin .7s;
+
+    //&.shrink {
+    //  animation: UiNotification-wrapper-shrink .7s ease-in-out;
+    //}
+  }
+}
+
+@keyframes UiNotification-wrapper-shrink {
+  0% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 0);
   }
 }
 
