@@ -46,9 +46,6 @@ import org.teamapps.ux.i18n.MultiResourceBundle;
 import org.teamapps.ux.i18n.UTF8Control;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
-import org.teamapps.ux.task.ObservableProgress;
-import org.teamapps.ux.task.Progress;
-import org.teamapps.ux.task.ProgressReportingRunnable;
 
 import java.io.File;
 import java.io.InputStream;
@@ -60,8 +57,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
@@ -320,39 +315,6 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiComponentReference()));
 	}
 
-	public ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, Runnable runnable) {
-		return executeBackgroundTask(icon, taskName, cancelable, (progressMonitor) -> runnable.run(), ForkJoinPool.commonPool());
-	}
-
-	public ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, Runnable runnable, Executor executor) {
-		return executeBackgroundTask(icon, taskName, cancelable, (progressMonitor) -> runnable.run(), executor);
-	}
-
-	public ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, ProgressReportingRunnable runnable) {
-		return executeBackgroundTask(icon, taskName, cancelable, runnable, ForkJoinPool.commonPool());
-	}
-
-	public ObservableProgress executeBackgroundTask(Icon icon, String taskName, boolean cancelable, ProgressReportingRunnable runnable, Executor executor) {
-		Progress progress = new Progress(icon, taskName, cancelable);
-		executor.execute(() -> {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			progress.start();
-			try {
-				runnable.run(progress);
-			} catch (Exception e) {
-				LOGGER.error("Error in background task", e);
-				progress.markFailed(this.getLocalized("dict.error"), e);
-				return;
-			}
-			progress.markCompleted();
-		});
-		return progress;
-	}
-
 	public Locale getLanguageLocale() {
 		return getConfiguration().getLanguageLocale();
 	}
@@ -477,6 +439,10 @@ public class SessionContext {
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiComponentReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 				exitAnimation.toUiExitAnimation()));
+	}
+
+	public void showNotification(Notification notification, NotificationPosition position) {
+		showNotification(notification, position, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
 	}
 
 	public void showNotification(Icon icon, String caption) {
