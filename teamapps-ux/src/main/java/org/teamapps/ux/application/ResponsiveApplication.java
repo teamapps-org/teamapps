@@ -26,6 +26,7 @@ import org.teamapps.ux.application.assembler.DesktopApplicationAssembler;
 import org.teamapps.ux.application.assembler.MobileApplicationAssembler;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.session.CurrentSessionContext;
 
@@ -83,4 +84,6 @@ public interface ResponsiveApplication extends Application {
 	List<ToolbarButtonGroup> getWorkspaceButtonGroups();
 
 	void setToolbarBackgroundColor(Color backgroundColor);
+
+	MultiProgressDisplay getMultiProgressDisplay();
 }

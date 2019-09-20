@@ -51,6 +51,8 @@ import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
 import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
 import {UiComponent} from "../UiComponent";
+import {UiProgressDisplay} from "../UiProgressDisplay";
+import {UiMultiProgressDisplay} from "../UiDefaultMultiProgressDisplay";
 
 export type UiWorkspaceLayoutSubWindowProtocol_INIT_OK = {
 	_type: 'INIT_OK',
@@ -110,7 +112,7 @@ export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConf
 			handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),
 			handleViewDroppedFromOtherWindow: (sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition) => this.handleViewDroppedFromOtherWindow(sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition),
 			handleLocalLayoutChangedByUser: (windowId: string) => this.handleLocalLayoutChangedByUser(windowId)
-		});
+		}, config.multiProgressDisplay as UiProgressDisplay);
 
 		this.localViewContainer.setToolbar(config.toolbar as UiToolbar);
 
@@ -431,6 +433,10 @@ export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConf
 			viewGroupId: viewGroupId,
 			panelState: panelState
 		});
+	}
+
+	setMultiProgressDisplay(multiProgressDisplay: UiMultiProgressDisplay): void {
+		this.localViewContainer.setMultiProgressDisplay(multiProgressDisplay);
 	}
 }
 

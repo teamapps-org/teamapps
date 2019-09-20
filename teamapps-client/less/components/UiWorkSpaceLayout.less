@@ -44,33 +44,49 @@
     }
   }
 
-  .minimized-tabpanel-bar {
+  .bottom-bar {
     flex: 0 0 auto;
-    padding: 1px 3px;
-    background: rgba(255, 255, 255, 0.72);
+    align-items: center;
+    justify-content: space-between;
     display: flex;
+    background: rgba(255, 255, 255, 0.72);
     box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
-
-    &:empty {
-      display: none;
-    }
-
-    .minimized-tabpanel-button {
+    
+    .minimized-tabpanel-button-container {
+      padding: 1px 3px;
       display: flex;
-      margin: 2px;
-      padding: 5px;
-      border: 1px solid rgba(0, 0, 0, .2);
-      border-radius: @panel-border-radius;
-      background-color: rgba(255, 255, 255, .7);
-      &:hover {
-        background-color: rgba(255, 255, 255, 1);
-      }
-      .tab-icon {
-        margin: 0 2px;
+
+      &:empty { // hide without removing for flex reasons!
+        overflow: hidden;
+        height: 0;
+        padding: 0;
       }
 
-      .optimized-for-touch & {
-        padding: 7px;
+      .minimized-tabpanel-button {
+        display: flex;
+        margin: 2px;
+        padding: 5px;
+        border: 1px solid rgba(0, 0, 0, .2);
+        border-radius: @panel-border-radius;
+        background-color: rgba(255, 255, 255, .7);
+        &:hover {
+          background-color: rgba(255, 255, 255, 1);
+        }
+        .tab-icon {
+          margin: 0 2px;
+        }
+
+        .optimized-for-touch & {
+          padding: 7px;
+        }
+      }
+    }
+    .progress-container {
+      display: inline-block;
+      padding: 0 8px;
+
+      > *.no-tasks {
+        display: none;
       }
     }
   }

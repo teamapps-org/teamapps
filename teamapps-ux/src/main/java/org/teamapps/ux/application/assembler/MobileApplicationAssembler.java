@@ -33,6 +33,7 @@ import org.teamapps.ux.component.itemview.SimpleItemView;
 import org.teamapps.ux.component.mobile.MobileLayout;
 import org.teamapps.ux.component.mobile.NavigationBar;
 import org.teamapps.ux.component.mobile.NavigationBarButton;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.toolbar.AbstractToolContainer;
 import org.teamapps.ux.component.tree.Tree;
@@ -223,6 +224,11 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 			}
 		});
 		navigationBar.preloadFanOutComponent(mainToolbar);
+	}
+
+	@Override
+	public MultiProgressDisplay getMultiProgressDisplay() {
+		return navigationBar.getMultiProgressDisplay();
 	}
 
 	@Override

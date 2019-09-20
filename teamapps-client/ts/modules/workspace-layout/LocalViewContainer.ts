@@ -44,6 +44,9 @@ import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
 import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
 import {UiComponent} from "../UiComponent";
+import {UiMultiProgressDisplayConfig} from "../../generated/UiMultiProgressDisplayConfig";
+import {UiMultiProgressDisplay} from "../UiDefaultMultiProgressDisplay";
+import {UiProgressDisplay} from "../UiProgressDisplay";
 
 export class LocalViewContainer implements ViewContainer {
 
@@ -64,6 +67,8 @@ export class LocalViewContainer implements ViewContainer {
 	private $maximizationContainer: HTMLElement;
 	private $normalContainerOfMaximizedTabPanel: HTMLElement;
 	private $minimizedViewsBar: HTMLElement;
+	private $progressContainer: HTMLElement;
+	private multiProgressDisplay: UiMultiProgressDisplay;
 	private viewEventsSuppressed: boolean;
 
 	constructor(private workSpaceLayout: UiWorkSpaceLayout,
@@ -71,7 +76,8 @@ export class LocalViewContainer implements ViewContainer {
 	            viewConfigs: UiWorkSpaceLayoutViewConfig[],
 	            initialLayout: UiWorkSpaceLayoutItemConfig,
 	            private context: TeamAppsUiContext,
-	            private listener: ViewContainerListener) {
+	            private listener: ViewContainerListener,
+	            multiProgressDisplay: UiMultiProgressDisplay) {
 		this.$mainDiv = parseHtml(`<div data-id="${this.workSpaceLayoutId}" class="UiWorkSpaceLayout">
     <div class="toolbar-container"></div>
     <div class="content-container-wrapper">
@@ -79,14 +85,20 @@ export class LocalViewContainer implements ViewContainer {
 		<div class="dnd-target-rectangle hidden"></div>
 		<div class="dnd-drag-image"></div>
 	</div>
-	<div class="minimized-tabpanel-bar"></div>
+	<div class="bottom-bar">
+		<div class="minimized-tabpanel-button-container"></div>
+		<div class="progress-container"></div>
+	</div>
 </div>`);
 
 		this.$toolbarContainer = this.$mainDiv.querySelector<HTMLElement>(':scope .toolbar-container');
 		this.$contentContainer = this.$mainDiv.querySelector<HTMLElement>(':scope .content-container');
 		this.$dndActiveRectangle = this.$mainDiv.querySelector<HTMLElement>(':scope .dnd-target-rectangle');
 		this.$dndImage = this.$mainDiv.querySelector<HTMLElement>(':scope .dnd-drag-image');
-		this.$minimizedViewsBar = this.$mainDiv.querySelector<HTMLElement>(':scope .minimized-tabpanel-bar');
+		this.$minimizedViewsBar = this.$mainDiv.querySelector<HTMLElement>(':scope .minimized-tabpanel-button-container');
+		this.$progressContainer = this.$mainDiv.querySelector<HTMLElement>(':scope .progress-container');
+		
+		this.setMultiProgressDisplay(multiProgressDisplay);
 
 		this.$maximizationContainerWrapper = parseHtml(`<div class="UiWorkSpaceLayout-maximization-container-wrapper"><div class="UiWorkSpaceLayout-maximization-container"></div></div>`);
 		document.body.appendChild(this.$maximizationContainerWrapper);
@@ -767,5 +779,11 @@ export class LocalViewContainer implements ViewContainer {
 					}
 				}
 			});
+	}
+
+	setMultiProgressDisplay(multiProgressDisplay: UiMultiProgressDisplay) {
+		this.multiProgressDisplay && this.multiProgressDisplay.getMainDomElement().remove();
+		this.multiProgressDisplay = multiProgressDisplay;
+		multiProgressDisplay && this.$progressContainer.appendChild(multiProgressDisplay.getMainDomElement());
 	}
 }

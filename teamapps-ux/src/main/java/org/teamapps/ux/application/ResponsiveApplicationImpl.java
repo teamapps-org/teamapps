@@ -26,6 +26,7 @@ import org.teamapps.ux.application.perspective.PerspectiveChangeHandler;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.view.ViewSize;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 
@@ -244,5 +245,9 @@ public class ResponsiveApplicationImpl implements ResponsiveApplication {
         return assembler.createApplication(this);
     }
 
+    @Override
+    public MultiProgressDisplay getMultiProgressDisplay() {
+        return assembler.getMultiProgressDisplay();
+    }
 
 }
