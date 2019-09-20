@@ -23,20 +23,24 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {parseHtml} from "./Common";
+import {UiDefaultMultiProgressDisplayCommandHandler, UiDefaultMultiProgressDisplayConfig, UiDefaultMultiProgressDisplayEventSource} from "../generated/UiDefaultMultiProgressDisplayConfig";
 import {UiMultiProgressDisplay_ClickedEvent, UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayConfig, UiMultiProgressDisplayEventSource} from "../generated/UiMultiProgressDisplayConfig";
 
-
-export class UiMultiProgressDisplay extends AbstractUiComponent<UiMultiProgressDisplayConfig> implements UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayEventSource {
-
+export abstract class UiMultiProgressDisplay<C extends UiMultiProgressDisplayConfig = UiMultiProgressDisplayConfig> extends AbstractUiComponent<C> implements UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayEventSource {
 	public readonly onClicked: TeamAppsEvent<UiMultiProgressDisplay_ClickedEvent> = new TeamAppsEvent(this);
+	abstract update(config: C): void;
+}
+
+export class UiDefaultMultiProgressDisplay extends UiMultiProgressDisplay<UiDefaultMultiProgressDisplayConfig> implements UiDefaultMultiProgressDisplayCommandHandler, UiDefaultMultiProgressDisplayEventSource {
+
 	private $main: HTMLElement;
 	private $spinner: HTMLElement;
 	private $runningCount: HTMLElement;
 
-	constructor(config: UiMultiProgressDisplayConfig, context: TeamAppsUiContext) {
+	constructor(config: UiDefaultMultiProgressDisplayConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiMultiProgressDisplay">
+		this.$main = parseHtml(`<div class="UiDefaultMultiProgressDisplay">
 	<div class="spinner teamapps-spinner"></div>					
 	<div class="running-count">0</div>					
 </div>`);
@@ -53,11 +57,12 @@ export class UiMultiProgressDisplay extends AbstractUiComponent<UiMultiProgressD
 		return this.$main;
 	}
 
-	update(config: UiMultiProgressDisplayConfig): void {
+	update(config: UiDefaultMultiProgressDisplayConfig): void {
+		this.$main.classList.toggle("no-tasks", config.runningCount === 0);
 		this.$spinner.classList.toggle('hidden', config.runningCount === 0);
 		this.$runningCount.innerText = "" + config.runningCount;
 	}
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiMultiProgressDisplay", UiMultiProgressDisplay);
+TeamAppsUiComponentRegistry.registerComponentClass("UiDefaultMultiProgressDisplay", UiDefaultMultiProgressDisplay);

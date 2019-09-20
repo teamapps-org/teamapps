@@ -22,12 +22,15 @@ class UiProgressDisplay extends UiComponent {
     event cancelButtonClicked();
 }
 
-
 class UiMultiProgressDisplay extends UiComponent {
 	int runningCount;
 	List<String> statusMessages;
 
-	command update(UiMultiProgressDisplay config);
+	command update(UiDefaultMultiProgressDisplay config);
 
 	event clicked();
+}
+
+class UiDefaultMultiProgressDisplay extends UiMultiProgressDisplay {
+
 }
