@@ -171,6 +171,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	public void removeValidator(FieldValidator<VALUE> validator) {
 		validators.remove(validator);
 		fieldMessagesByValidator.remove(validator);
+		updateFieldMessages();
 	}
 
 	public void validate() {
@@ -184,7 +185,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 				fieldMessagesByValidator.put(validator, messages);
 			}
 			updateFieldMessages();
-		}
+		} 
 	}
 
 	/**
