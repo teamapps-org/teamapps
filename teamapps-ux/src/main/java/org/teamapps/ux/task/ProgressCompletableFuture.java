@@ -79,6 +79,36 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 		return future;
 	}
 
+	public static <U> ProgressCompletableFuture<U> supplyAsync(Supplier<U> supplier) {
+		return supplyAsync(supplier, ASYNC_POOL);
+	}
+
+	public static <U> ProgressCompletableFuture<U> supplyAsync(Supplier<U> supplier, Executor executor) {
+		final ProgressCompletableFuture<U> future = new ProgressCompletableFuture<>();
+		executor.execute(() -> {
+			future.progress.start();
+			try {
+				U result = supplier.get();
+				future.progress.markCompleted(); // will get ignored if the progress is already in a final state
+				future.complete(result);
+			} catch (Exception e) {
+				future.progress.markFailed();
+				future.completeExceptionally(e);
+			}
+		});
+		return future;
+	}
+
+	public static ProgressCompletableFuture<Void> runAsync(Runnable runnable) {
+		return runAsync(runnable, ASYNC_POOL);
+	}
+
+	public static ProgressCompletableFuture<Void> runAsync(Runnable runnable, Executor executor) {
+		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
+		executor.execute(runWrapped(runnable, future));
+		return future;
+	}
+
 
 	// ========== with session context ===========
 
