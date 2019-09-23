@@ -410,6 +410,13 @@
   resolved "https://registry.yarnpkg.com/@types/json-stable-stringify/-/json-stable-stringify-1.0.32.tgz#121f6917c4389db3923640b2e68de5fa64dda88e"
   integrity sha512-q9Q6+eUEGwQkv4Sbst3J4PNgDOvpuVuKj79Hl/qnmBMEIPzB5QoFRUtjcgcg2xNUZyYUGXBk5wYIBKHt0A+Mxw==
 
+"@types/leaflet-draw@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.0.tgz#b742323e8a32cf6ff4d6331d88fc51985866d93f"
+  integrity sha512-jW7g6TBCPPQo4xGy02VLL2ru2bTJEKum6XUqbV49JmyKhMWFsTOoOlt/G1DGlthEuItDT6y0r1K/FqFe0nszgQ==
+  dependencies:
+    "@types/leaflet" "*"
+
 "@types/leaflet.heat@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@types/leaflet.heat/-/leaflet.heat-0.2.0.tgz#f1b964fc0c360a94c4f1d1536a95df7468a458c5"
@@ -4189,6 +4196,11 @@ lcid@^2.0.0:
   integrity sha512-avPEb8P8EGnwXKClwsNUgryVjllcRqtMYa49NTsbQagYuT1DcXnl1915oxWjoyGrXR6zH/Y0Zc96xWsPcoDKeA==
   dependencies:
     invert-kv "^2.0.0"
+
+leaflet-draw@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/leaflet-draw/-/leaflet-draw-1.0.4.tgz#45be92f378ed253e7202fdeda1fcc71885198d46"
+  integrity sha512-rsQ6saQO5ST5Aj6XRFylr5zvarWgzWnrg46zQ1MEOEIHsppdC/8hnN8qMoFvACsPvTioAuysya/TVtog15tyAQ==
 
 leaflet.heat@^0.2.0:
   version "0.2.0"

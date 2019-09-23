@@ -31,6 +31,10 @@ public class Location {
 		this.longitude = longitude;
 	}
 
+	public static Location fromUiMapLocation(UiMapLocation uiMapLocation) {
+		return new Location(uiMapLocation.getLatitude(), uiMapLocation.getLongitude());
+	}
+
 	public double getLatitude() {
 		return latitude;
 	}
