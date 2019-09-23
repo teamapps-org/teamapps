@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,19 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.component.map;
+package org.teamapps.ux.component.map.shape;
 
-import org.teamapps.dto.UiShapeProperties;
 import org.teamapps.common.format.Color;
+import org.teamapps.dto.UiShapeProperties;
 
 public class ShapeProperties {
 
-	private Color strokeColor = Color.BLACK;
-	private float strokeOpacity = 0.8f;
+	private Color strokeColor;
 	private float strokeWeight = 2f;
 	private String strokeDashArray;
-	private Color fillColor = Color.BLUE;
-	private float fillOpacity = 0.4f;
+	private Color fillColor = null;
 
 	public ShapeProperties(Color strokeColor) {
 		this.strokeColor = strokeColor;
@@ -46,12 +44,10 @@ public class ShapeProperties {
 		this.strokeDashArray = strokeDashArray;
 	}
 
-	public ShapeProperties(Color strokeColor, float strokeOpacity, float strokeWeight, Color fillColor, float fillOpacity) {
+	public ShapeProperties(Color strokeColor, float strokeWeight, Color fillColor) {
 		this.strokeColor = strokeColor;
-		this.strokeOpacity = strokeOpacity;
 		this.strokeWeight = strokeWeight;
 		this.fillColor = fillColor;
-		this.fillOpacity = fillOpacity;
 	}
 
 	public Color getStrokeColor() {
@@ -60,14 +56,6 @@ public class ShapeProperties {
 
 	public void setStrokeColor(Color strokeColor) {
 		this.strokeColor = strokeColor;
-	}
-
-	public float getStrokeOpacity() {
-		return strokeOpacity;
-	}
-
-	public void setStrokeOpacity(float strokeOpacity) {
-		this.strokeOpacity = strokeOpacity;
 	}
 
 	public float getStrokeWeight() {
@@ -86,14 +74,6 @@ public class ShapeProperties {
 		this.fillColor = fillColor;
 	}
 
-	public float getFillOpacity() {
-		return fillOpacity;
-	}
-
-	public void setFillOpacity(float fillOpacity) {
-		this.fillOpacity = fillOpacity;
-	}
-
 	public String getStrokeDashArray() {
 		return strokeDashArray;
 	}
@@ -104,10 +84,8 @@ public class ShapeProperties {
 
 	public UiShapeProperties createUiShapeProperties() {
 		UiShapeProperties properties = new UiShapeProperties();
-		properties.setFillColor(fillColor.toHtmlColorString());
-		properties.setFillOpacity(fillOpacity);
-		properties.setStrokeColor(strokeColor.toHtmlColorString());
-		properties.setStrokeOpacity(strokeOpacity);
+		properties.setFillColor(fillColor != null ? fillColor.toHtmlColorString() : null);
+		properties.setStrokeColor(strokeColor != null ? strokeColor.toHtmlColorString() : null);
 		properties.setStrokeWeight(strokeWeight);
 		properties.setStrokeDashArray(strokeDashArray);
 		return properties;
