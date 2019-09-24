@@ -27,6 +27,8 @@ class UiGridTemplate implements UiTemplate {
     int maxHeight = 0;
     UiSpacing padding;
     int gridGap = 0;
+    UiColor backgroundColor;
+    UiBorder border;
 }
 
 abstract class AbstractUiTemplateElement {
