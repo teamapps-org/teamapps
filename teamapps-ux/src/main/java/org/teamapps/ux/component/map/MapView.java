@@ -198,8 +198,16 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
 		clusterMarkers = markers;
-		UiMapMarkerCluster cluster = createMarkerCluster(markers);
+		CacheManipulationHandle<List<UiMapMarkerClientRecord>> cacheManipulationHandle = recordCache.addRecords(markers);
+		cacheManipulationHandle.commit();
+		List<UiMapMarkerClientRecord> result = cacheManipulationHandle.getResult();
+		UiMapMarkerCluster cluster = new UiMapMarkerCluster(result);
 		queueCommandIfRendered(() -> new UiMap.SetMapMarkerClusterCommand(getId(), cluster));
+	}
+
+	public void clearClusterMarkersFromCache(List<Marker<RECORD>> markers) {
+		CacheManipulationHandle<List<Integer>> manipulationHandle = recordCache.removeRecords(markers);
+		manipulationHandle.commit();
 	}
 
 	private UiMapMarkerCluster createMarkerCluster(List<Marker<RECORD>> markers) {
