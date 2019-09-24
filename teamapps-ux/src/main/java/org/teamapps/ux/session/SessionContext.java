@@ -210,7 +210,7 @@ public class SessionContext {
 	public TemplateReference registerTemplate(String id, Template template) {
 		registeredTemplates.put(id, template);
 		queueCommand(new UiRootPanel.RegisterTemplateCommand(id, template.createUiTemplate()));
-		return new TemplateReference(template);
+		return new TemplateReference(template, id);
 	}
 
 	public void registerTemplates(Map<String, Template> templates) {
