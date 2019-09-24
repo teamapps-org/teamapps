@@ -39,7 +39,7 @@ public interface ResponsiveApplication extends Application {
 	}
 
 	static ResponsiveApplication createApplication(View applicationLauncher) {
-		return createApplication(null, MaterialIcon.VIEW_MODULE,
+		return createApplication(applicationLauncher, MaterialIcon.VIEW_MODULE,
 				MaterialIcon.TOC,
 				MaterialIcon.VIEW_CAROUSEL,
 				MaterialIcon.SUBTITLES,

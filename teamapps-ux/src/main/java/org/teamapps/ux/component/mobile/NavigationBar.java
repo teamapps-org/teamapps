@@ -110,9 +110,17 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 	}
 
 	public NavigationBar<RECORD> addButton(NavigationBarButton<RECORD> button) {
+		return addButton(button, false);
+	}
+
+	public NavigationBar<RECORD> addButton(NavigationBarButton<RECORD> button, boolean left) {
 		button.setClientId("" + ++buttonClientIdCounter);
 		button.setContainer(this);
-		buttons.add(button);
+		if (left) {
+			buttons.add(0, button);
+		} else {
+			buttons.add(button);
+		}
 		queueCommandIfRendered(() -> new UiNavigationBar.SetButtonsCommand(getId(), createUiButtons()));
 		return this;
 	}
