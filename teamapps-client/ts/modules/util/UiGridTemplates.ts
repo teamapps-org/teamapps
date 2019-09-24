@@ -202,7 +202,11 @@ export function createGridTemplateRenderer(template: UiGridTemplateConfig, iconP
 	const gridGapCss = 'grid-gap:' + template.gridGap + 'px;';
 	const maxWidthCss = template.maxWidth ? `max-width: ${template.maxWidth}px;` : '';
 	const maxHeightCss = template.maxHeight ? `max-height: ${template.maxHeight}px;` : '';
-	const gridCss = `${gridTemplateColumnsString} ${gridTemplateRowsString} ${paddingCss} ${gridGapCss} ${maxWidthCss} ${maxHeightCss}`;
+	const minWidthCss = template.minWidth ? `min-width: ${template.minWidth}px;` : '';
+	const minHeightCss = template.minHeight ? `min-height: ${template.minHeight}px;` : '';
+	const backgroundColorCss = template.backgroundColor ? (`background-color: ${createUiColorCssString(template.backgroundColor)};`) : '';
+	const borderCss = createUiBorderCssString(template.border);
+	const gridCss = `${gridTemplateColumnsString} ${gridTemplateRowsString} ${paddingCss} ${gridGapCss} ${minWidthCss} ${minHeightCss} ${maxWidthCss} ${maxHeightCss} ${backgroundColorCss} ${borderCss}`;
 
 	return {
 		render: (data: any) => {
