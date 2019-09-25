@@ -43,6 +43,7 @@
         <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
         <module>teamapps-server-tomcat-embedded</module>
+        <module>teamapps-application-management</module>
     </modules>
 
     <properties>
