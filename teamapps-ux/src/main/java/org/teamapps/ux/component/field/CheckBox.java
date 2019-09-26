@@ -34,6 +34,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public CheckBox(String caption) {
 		super();
+		setValue(false);
 		this.caption = caption;
 	}
 

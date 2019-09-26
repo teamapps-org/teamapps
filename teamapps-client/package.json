@@ -12,6 +12,7 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config js-build/webpack.dev.conf.js --mode development --host 0.0.0.0",
+    "dev2": "webpack-dev-server --inline --progress --config js-build/webpack.config.js --mode development --host 0.0.0.0",
     "worker": "webpack --config ts/worker/webpack.conf.js --mode production",
     "start": "yarn run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
@@ -98,6 +99,7 @@
     "jquery": "3.x",
     "jquery-ui": "^1.12.1",
     "json-stable-stringify": "^1.0.1",
+    "jsqr-es6": "^1.2.0-3",
     "jstz": "^2.0.0",
     "leaflet": "^1.5.1",
     "leaflet-draw": "^1.0.4",
