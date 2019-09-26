@@ -1,13 +1,16 @@
 package org.teamapps.app;
 
+import org.jetbrains.annotations.NotNull;
 import org.teamapps.agent.UserAgentParser;
 import org.teamapps.app.background.Background;
-import org.teamapps.geoip.GeoIpInfo;
+import org.teamapps.auth.AuthenticationProvider;
+import org.teamapps.auth.AuthenticationResult;
 import org.teamapps.geoip.GeoIpLookupService;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.UxServerContext;
+import org.teamapps.ux.component.login.LoginWindow;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.resource.ClassPathResourceProvider;
 import org.teamapps.ux.resource.ResourceProviderServlet;
@@ -29,15 +32,16 @@ public class ApplicationWebController<USER> implements WebController {
 	private Theme defaultTheme = new Theme(Background.createDefaultBackground(), false);
 	private ThemeHandler<USER> userThemeHandler;
 
-	private UserAgentParser userAgentParser;
+	private final AuthenticationProvider<USER> authenticationProvider;
+	private UserAgentParser userAgentParser = new UserAgentParser();
 	private GeoIpLookupService geoIpLookupService;
 	private List<ServletRegistration> servletRegistrations = new ArrayList<>();
 	private List<Function<UxServerContext, ServletRegistration>> servletRegistrationFactories = new ArrayList<>();
 	private IconProvider defaultIconProvider;
 	private List<IconProvider> iconProviders;
 
-	public ApplicationWebController() {
-		this.userAgentParser = new UserAgentParser();
+	public ApplicationWebController(AuthenticationProvider<USER> authenticationProvider) {
+		this.authenticationProvider = authenticationProvider;
 	}
 
 	@Override
@@ -56,8 +60,30 @@ public class ApplicationWebController<USER> implements WebController {
 		RootPanel rootPanel = new RootPanel();
 		context.addRootComponent(null, rootPanel);
 
+		LoginWindow loginWindow = new LoginWindow();
+		rootPanel.setContent(loginWindow.getElegantPanel());
+		loginWindow.onLogin.addListener(loginData -> {
+			AuthenticationResult<USER> authenticationResult = authenticationProvider.authenticate(loginData.login, loginData.password);
+			if (authenticationResult.isSuccess()) {
+				USER authenticatedUser = authenticationResult.getAuthenticatedUser();
+				Theme theme = userThemeHandler != null ? userThemeHandler.getUserTheme(authenticatedUser, context.getClientInfo().isMobileDevice(), context) : defaultTheme;
+				updateTheme(theme, context);
+
+			} else {
+				loginWindow.setError();
+			}
+		});
 
 
+	}
+
+	private void updateTheme(Theme theme, SessionContext context) {
+		if (theme.getBackground() != null) {
+			theme.getBackground().registerAndApply(context);
+		}
+		if (theme.isDarkTheme() != loginTheme.isDarkTheme()) {
+			context.setConfiguration(createSessionConfiguration(theme.isDarkTheme(), context));
+		}
 	}
 
 	public void setGeoIpLookupService(String geoIpDatabasePath) throws IOException {
@@ -101,13 +127,18 @@ public class ApplicationWebController<USER> implements WebController {
 
 	@Override
 	public SessionConfiguration createSessionConfiguration(SessionContext context) {
+		return createSessionConfiguration(loginTheme.isDarkTheme(), context);
+	}
+
+	@NotNull
+	private SessionConfiguration createSessionConfiguration(boolean darkTheme, SessionContext context) {
 		boolean optimizedForTouch = false;
 		StylingTheme theme = StylingTheme.DEFAULT;
 		if (context.getClientInfo().isMobileDevice()) {
 			optimizedForTouch = true;
 			theme = StylingTheme.MODERN;
 		}
-		if (loginTheme.isDarkTheme()) {
+		if (darkTheme) {
 			theme = StylingTheme.DARK;
 		}
 
