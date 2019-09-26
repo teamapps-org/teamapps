@@ -25,7 +25,6 @@ import java.util.Map;
 public class ClientInfo {
 
 	private final String ip;
-	private final ClientGeoIpInfo geoIpInfo;
 	private final int screenWidth;
 	private final int screenHeight;
 	private final int viewPortWidth;
@@ -39,12 +38,13 @@ public class ClientInfo {
 	private final String clientUrl;
 	private final Map<String, Object> clientParameters;
 	private ClientUserAgent userAgentData;
+	private ClientGeoIpInfo geoIpInfo;
 
-	public ClientInfo(String ip, ClientGeoIpInfo geoIpInfo, int screenWidth, int screenHeight, int viewPortWidth, int viewPortHeight,
+
+	public ClientInfo(String ip, int screenWidth, int screenHeight, int viewPortWidth, int viewPortHeight,
 	                  String preferredLanguageIso, boolean highDensityScreen, String timeZone, int timeZoneOffsetMinutes, List<String> clientTokens, String userAgent,
 	                  String clientUrl, Map<String, Object> clientParameters) {
 		this.ip = ip;
-		this.geoIpInfo = geoIpInfo;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 		this.viewPortWidth = viewPortWidth;
@@ -129,5 +129,9 @@ public class ClientInfo {
 
 	public void setUserAgentData(ClientUserAgent userAgentData) {
 		this.userAgentData = userAgentData;
+	}
+
+	public void setGeoIpInfo(ClientGeoIpInfo geoIpInfo) {
+		this.geoIpInfo = geoIpInfo;
 	}
 }
