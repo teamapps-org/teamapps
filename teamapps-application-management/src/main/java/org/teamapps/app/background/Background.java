@@ -65,6 +65,11 @@ public class Background {
 		}
 	}
 
+	public void registerAndApply(SessionContext context) {
+		registerBackground( context);
+		applyBackground(context);
+	}
+
 	public void registerBackground(SessionContext context) {
 		if (backgroundImagePath != null) {
 			if (blurred) {
