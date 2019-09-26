@@ -8,8 +8,17 @@ import java.util.Locale;
 
 public class ExistingLocalizationsInfo {
 
+	private final String applicationNamespace;
 	private List<Dictionary> dictionaries = new ArrayList<>();
 	private List<ResourceBundleInfo> resourceBundleInfos = new ArrayList<>();
+
+	public ExistingLocalizationsInfo(String applicationNamespace) {
+		this.applicationNamespace = applicationNamespace;
+	}
+
+	public String getApplicationNamespace() {
+		return applicationNamespace;
+	}
 
 	public void addDictionary(Dictionary dictionary) {
 		dictionaries.add(dictionary);

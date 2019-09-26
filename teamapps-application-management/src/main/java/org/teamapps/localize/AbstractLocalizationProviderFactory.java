@@ -10,7 +10,8 @@ public abstract class AbstractLocalizationProviderFactory implements Localizatio
 	public abstract LocalizationStore getLocalizationStore();
 
 	@Override
-	public synchronized LocalizationProvider createLocalizationProvider(String applicationNamespace, ExistingLocalizationsInfo existingLocalizationsInfo) {
+	public synchronized LocalizationProvider createLocalizationProvider(ExistingLocalizationsInfo existingLocalizationsInfo) {
+		String applicationNamespace = existingLocalizationsInfo.getApplicationNamespace();
 		LocalizationStore handler = getLocalizationStore();
 		handler.startImportingApplicationNamespace(applicationNamespace);
 		existingLocalizationsInfo.getResourceBundleInfos().forEach(resourceBundleInfo -> {
