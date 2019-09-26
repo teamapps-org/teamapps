@@ -4080,6 +4080,11 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+jsqr-es6@^1.2.0-3:
+  version "1.2.0-3"
+  resolved "https://registry.yarnpkg.com/jsqr-es6/-/jsqr-es6-1.2.0-3.tgz#3cf46ffeda578fbd331ea77a52c36edb3bdb8003"
+  integrity sha512-A3j4av6EBnTZUyI2odwhpyqO0fQPepguSRKWEFefyU4yeKqSgfSf0/G8IAsQxS/ErnmQuW67z4hCVm0zKMHepg==
+
 jss-plugin-camel-case@10.0.0-alpha.17:
   version "10.0.0-alpha.17"
   resolved "https://registry.yarnpkg.com/jss-plugin-camel-case/-/jss-plugin-camel-case-10.0.0-alpha.17.tgz#6f7c9d9742e349bb061e53cd9b1c3cb006169a67"

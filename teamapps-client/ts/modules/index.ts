@@ -92,6 +92,7 @@ export {UiPopup} from "./UiPopup";
 export {UiProgressDisplay} from "./UiProgressDisplay";
 export {UiDefaultMultiProgressDisplay} from "./UiDefaultMultiProgressDisplay";
 export {UiNotification} from "./UiNotification";
+export {UiQrCodeScanner} from "./UiQrCodeScanner";
 
 export {UiGauge} from "./UiGauge";
 
