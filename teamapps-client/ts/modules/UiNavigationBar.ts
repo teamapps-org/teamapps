@@ -36,6 +36,7 @@ import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiColorConfig} from "../generated/UiColorConfig";
 import {UiComponent} from "./UiComponent";
 import {parse} from "@fullcalendar/core/datelib/parsing";
+import {UiMultiProgressDisplay} from "./UiDefaultMultiProgressDisplay";
 
 interface Button {
 	data: any;
@@ -48,7 +49,7 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent(this);
 
 	private $bar: HTMLElement;
-	private $buttonsWrapper: HTMLElement;
+	private $buttonsContainer: HTMLElement;
 	private buttons: { [id: string]: Button } = {};
 	private buttonTemplateRenderer: Renderer;
 	private $fanOutContainerWrapper: HTMLElement;
@@ -56,6 +57,8 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 	private fanOutComponents: UiComponent[] = [];
 	private currentFanOutComponent: UiComponent<UiComponentConfig>;
 	private fanoutClickOutsideHandle: ClickOutsideHandle;
+	private multiProgressDisplay: UiMultiProgressDisplay;
+	private $multiProgressDisplayContainer: HTMLElement;
 
 	constructor(config: UiNavigationBarConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -66,22 +69,28 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
                 <div class="fan-out-container-wrapper teamapps-blurredBackgroundImage">
                     <div class="fan-out-container"></div>
                 </div>
-                <div class="buttons-wrapper"></div>
+                <div class="buttons-container">
+                	<div class="progress-container"></div>
+				</div>
             </div>`);
-		this.$buttonsWrapper = this.$bar.querySelector<HTMLElement>(":scope >.buttons-wrapper");
+		this.$buttonsContainer = this.$bar.querySelector<HTMLElement>(":scope >.buttons-container");
+		this.$multiProgressDisplayContainer = this.$buttonsContainer.querySelector<HTMLElement>(":scope > .progress-container");
 		this.$fanOutContainerWrapper = this.$bar.querySelector<HTMLElement>(":scope >.fan-out-container-wrapper");
 		this.$fanOutContainer = this.$fanOutContainerWrapper.querySelector<HTMLElement>(":scope >.fan-out-container");
+
 		this.setBackgroundColor(config.backgroundColor);
 		this.setBorderColor(config.borderColor);
 		if (config.fanOutComponents) {
 			config.fanOutComponents.forEach(c => this.addFanOutComponent(c as UiComponent));
 		}
 
+		this.setMultiProgressDisplay(config.multiProgressDisplay as UiMultiProgressDisplay);
+
 		config.buttons.forEach(button => this.addButton(button));
 	}
 
 	public setBackgroundColor(color: UiColorConfig) {
-		this.$buttonsWrapper.style.backgroundColor = createUiColorCssString(color);
+		this.$buttonsContainer.style.backgroundColor = createUiColorCssString(color);
 	}
 
 	public setBorderColor(color: UiColorConfig) {
@@ -93,7 +102,7 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 	}
 
 	setButtons(buttons: UiNavigationBarButtonConfig[]): void {
-		this.$buttonsWrapper.innerHTML = '';
+		this.$buttonsContainer.innerHTML = '';
 		this.buttons = {};
 		buttons.forEach(button => this.addButton(button));
 	}
@@ -113,7 +122,7 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 			$button: $button
 		};
 		this.setButtonVisible(button.id, button.visible);
-		this.$buttonsWrapper.append($button);
+		this.$buttonsContainer.append($button);
 	}
 
 	public setButtonVisible(buttonId: string, visible: boolean) {
@@ -188,6 +197,12 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 			}
 		}
 		return el;
+	}
+
+	public setMultiProgressDisplay(multiProgressDisplay: UiMultiProgressDisplay): void {
+		this.multiProgressDisplay && this.multiProgressDisplay.getMainDomElement().remove();
+		this.multiProgressDisplay = multiProgressDisplay;
+		multiProgressDisplay && this.$multiProgressDisplayContainer.appendChild(multiProgressDisplay.getMainDomElement());
 	}
 
 	public destroy(): void {

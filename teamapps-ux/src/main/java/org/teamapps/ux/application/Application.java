@@ -23,6 +23,6 @@ import org.teamapps.ux.component.Component;
 
 public interface Application  {
 
-	Component createUi();
+	Component getUi();
 
 }

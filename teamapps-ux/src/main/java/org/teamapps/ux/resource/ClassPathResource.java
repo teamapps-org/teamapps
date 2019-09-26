@@ -43,8 +43,9 @@ public class ClassPathResource implements Resource {
 	@Override
 	public long getLength() {
 		if (length == null) {
-			Resource.super.getLength();
+			return Resource.super.getLength();
+		} else {
+			return length;
 		}
-		return length;
 	}
 }

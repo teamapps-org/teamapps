@@ -29,11 +29,11 @@ import java.util.Deque;
 public class CurrentSessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CurrentSessionContext.class);
-	private static final ThreadLocal<Deque<LockableSessionContext>> CURRENT_CONTEXT = new ThreadLocal<>();
+	private static final ThreadLocal<Deque<SessionContext>> CURRENT_CONTEXT = new ThreadLocal<>();
 
 	@NotNull
 	public static SessionContext get() {
-		LockableSessionContext sessionContext = getContextStack().peekLast();
+		SessionContext sessionContext = getContextStack().peekLast();
 		if (sessionContext == null) {
 			String errorMessage = "CurrentSessionContext is not set but requested! Please use SessionContext.runWithContext(Runnable) to set the context.";
 			IllegalStateException illegalStateException = new IllegalStateException(errorMessage);
@@ -43,12 +43,12 @@ public class CurrentSessionContext {
 		return sessionContext;
 	}
 
-	public static LockableSessionContext getOrNull() {
+	public static SessionContext getOrNull() {
 		return getContextStack().peekLast();
 	}
 
 	/*package-private*/
-	static void pushContext(LockableSessionContext sessionContext) {
+	static void pushContext(SessionContext sessionContext) {
 		getContextStack().addLast(sessionContext);
 	}
 
@@ -57,8 +57,8 @@ public class CurrentSessionContext {
 		getContextStack().removeLast();
 	}
 
-	private static Deque<LockableSessionContext> getContextStack() {
-		Deque<LockableSessionContext> contextStack = CURRENT_CONTEXT.get();
+	private static Deque<SessionContext> getContextStack() {
+		Deque<SessionContext> contextStack = CURRENT_CONTEXT.get();
 		if (contextStack == null) {
 			contextStack = new ArrayDeque<>();
 			CURRENT_CONTEXT.set(contextStack);

@@ -19,7 +19,9 @@
  */
 package org.teamapps.ux.component.template.gridtemplate;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
+import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.SizeType;
 import org.teamapps.ux.component.format.SizingPolicy;
 import org.teamapps.ux.component.format.Spacing;
@@ -31,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.teamapps.util.UiUtil.createUiColor;
+
 public class GridTemplate implements Template {
 
 	private int minWidth = 0;
@@ -39,6 +43,8 @@ public class GridTemplate implements Template {
 	private int maxHeight = 0;
 	private Spacing padding;
 	private int gridGap = 0;
+	private Color backgroundColor;
+	private Border border;
 
 	List<GridColumn> columns = new ArrayList<>();
 	List<GridRow> rows = new ArrayList<>();
@@ -190,6 +196,22 @@ public class GridTemplate implements Template {
 		return this;
 	}
 
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
+
+	public Border getBorder() {
+		return border;
+	}
+
+	public void setBorder(Border border) {
+		this.border = border;
+	}
+
 	@Override
 	public UiTemplate createUiTemplate() {
 		List<UiGridColumn> uiColumns = columns.stream()
@@ -210,6 +232,8 @@ public class GridTemplate implements Template {
 			uiGridTemplate.setPadding(padding.createUiSpacing());
 		}
 		uiGridTemplate.setGridGap(gridGap);
+		uiGridTemplate.setBorder(border != null ? border.createUiBorder() : null);
+		uiGridTemplate.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);
 		return uiGridTemplate;
 	}
 

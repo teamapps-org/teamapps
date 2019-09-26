@@ -3,7 +3,7 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "experimentalDecorators": true,
     "alwaysStrict": true,
     "lib": ["es2017", "dom"],
@@ -18,7 +18,8 @@
     "index.ts",
     "../custom-declarations/jquery.ui.position.d.ts",
     "../custom-declarations/webui-popover.d.ts",
-    "../custom-declarations/pickr-widget.d.ts"
+    "../custom-declarations/pickr-widget.d.ts",
+    "../custom-declarations/worker-loader.d.ts"
 //    "../../node_modules/@types/node/index.d.ts"
   ],
   "exclude": [

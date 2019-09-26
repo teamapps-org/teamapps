@@ -33,8 +33,10 @@ import org.teamapps.ux.component.itemview.SimpleItemView;
 import org.teamapps.ux.component.mobile.MobileLayout;
 import org.teamapps.ux.component.mobile.NavigationBar;
 import org.teamapps.ux.component.mobile.NavigationBarButton;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.toolbar.AbstractToolContainer;
+import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.tree.Tree;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 
@@ -61,7 +63,6 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	private View appTree;
 	private List<View> applicationViews = new ArrayList<>();
 	private List<View> perspectiveViews = new ArrayList<>();
-	private List<View> viewHistory = new ArrayList<>();
 	private View activeView;
 
 	public MobileApplicationAssembler() {
@@ -69,10 +70,11 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 				MaterialIcon.TOC,
 				MaterialIcon.VIEW_CAROUSEL,
 				MaterialIcon.SUBTITLES,
-				MaterialIcon.NAVIGATE_BEFORE);
+				MaterialIcon.NAVIGATE_BEFORE,
+				null);
 	}
 
-	public MobileApplicationAssembler(Icon launcherIcon, Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon) {
+	public MobileApplicationAssembler(Icon launcherIcon, Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
 		this.mobileLayout = new MobileLayout();
 		this.navigationBar = new NavigationBar<>();
 		this.viewsItemView = new SimpleItemView<>();
@@ -84,12 +86,20 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		applicationTreeButton = NavigationBarButton.create(treeIcon);
 		applicationViewsButton = NavigationBarButton.create(viewsIcon);
 		applicationToolbarButton = NavigationBarButton.create(toolbarIcon);
+		applicationToolbarButton.setVisible(false);
 		applicationBackButton = NavigationBarButton.create(backIcon);
 
 
 		applicationLauncherButton.setVisible(false);
 		applicationTreeButton.setVisible(false);
 
+		if (additionalLeftButtons != null) {
+			for (AdditionalNavigationButton leftButton : additionalLeftButtons) {
+				NavigationBarButton<BaseTemplateRecord> button = NavigationBarButton.create(leftButton.getIcon(), leftButton.getCaption());
+				navigationBar.addButton(button);
+				button.onClick.addListener(aVoid -> leftButton.getHandler().run());
+			}
+		}
 		navigationBar.addButton(applicationLauncherButton);
 		navigationBar.addButton(applicationTreeButton);
 		navigationBar.addButton(applicationViewsButton);
@@ -226,6 +236,11 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	}
 
 	@Override
+	public MultiProgressDisplay getMultiProgressDisplay() {
+		return navigationBar.getMultiProgressDisplay();
+	}
+
+	@Override
 	public void handleApplicationViewAdded(ResponsiveApplication application, View view) {
 		applicationViews.add(view);
 		if (view.getComponent() instanceof Tree) {
@@ -324,5 +339,10 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	@Override
 	public void handleViewLayoutPositionChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, String position) {
 
+	}
+
+	@Override
+	public void handleApplicationToolbarButtonGroupAdded(ResponsiveApplication application, ToolbarButtonGroup buttonGroup) {
+		applicationToolbarButton.setVisible(true);
 	}
 }

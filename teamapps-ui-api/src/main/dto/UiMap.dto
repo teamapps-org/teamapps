@@ -24,7 +24,7 @@ class UiMap extends UiComponent {
 	UiMapType mapType = UiMapType.MAP_BOX_STREETS;
 	int zoomLevel = 5;
 	UiMapLocation mapPosition;
-	Dictionary<UiMapPolyline> polylines;
+	Dictionary<AbstractUiMapShape> shapes;
 	List<UiMapMarkerClientRecord> markers;
 	UiMapMarkerCluster markerCluster;
 
@@ -32,9 +32,13 @@ class UiMap extends UiComponent {
 	command addMarker(UiMapMarkerClientRecord marker);
 	command removeMarker(int id);
 	command setMapMarkerCluster(UiMapMarkerCluster cluster);
-	command addPolyline(String lineId, UiMapPolyline polyline);
-	command addPolylinePoints(String lineId, List<UiMapLocation> points);
-	command removePolyline(String lineId);
+
+	command addShape(String shapeId, AbstractUiMapShape shape);
+	command updateShape(String shapeId, AbstractUiMapShape shape);
+	command removeShape(String shapeId);
+	command startDrawingShape(UiMapShapeType shapeType, UiShapeProperties shapeProperties);
+	command stopDrawingShape();
+	
 	command setZoomLevel(int zoom);
 	command setLocation(UiMapLocation location);
 	command setMapType(UiMapType mapType);
@@ -45,6 +49,7 @@ class UiMap extends UiComponent {
 	event locationChanged(UiMapLocation center, UiMapArea displayedArea);
 	event mapClicked(UiMapLocation location);
 	event markerClicked(int markerId);
+	event shapeDrawn(String shapeId, AbstractUiMapShape shape);
 }
 
 enum UiMapType {
@@ -80,11 +85,6 @@ class UiMapArea {
 	required float maxLongitude;
 }
 
-class UiMapPolyline {
-	required List<UiMapLocation> path;
-	UiShapeProperties shapeProperties;
-}
-
 class UiMapMarkerClientRecord extends UiIdentifiableClientRecord {
 	UiMapLocation location;
     String templateId; // null == use asString
@@ -109,11 +109,48 @@ class UiHeatMapDataElement {
 	required int count;
 }
 
+enum UiMapShapeType {
+	CIRCLE,
+//    MARKER, // TODO ux
+    POLYGON,
+    POLYLINE,
+    RECTANGLE;
+}
+
+abstract class AbstractUiMapShape {
+	UiShapeProperties shapeProperties;
+}
+
+@TypeScriptFactory
+class UiMapCircle extends AbstractUiMapShape {
+	UiMapLocation center;
+	int radius; // meters
+}
+
+@TypeScriptFactory
+class UiMapMarker extends AbstractUiMapShape { // TODO ux
+	UiMapLocation location;
+}
+
+@TypeScriptFactory
+class UiMapPolygon extends AbstractUiMapShape {
+	List<UiMapLocation> path;
+}
+
+@TypeScriptFactory
+class UiMapPolyline extends AbstractUiMapShape {
+	List<UiMapLocation> path;
+}
+
+@TypeScriptFactory
+class UiMapRectangle extends AbstractUiMapShape {
+	UiMapLocation l1;
+	UiMapLocation l2;
+}
+
 class UiShapeProperties {
-  String strokeColor = "#0000FF";
-  float strokeOpacity = 0.8f;
-  float strokeWeight = 2f;
+  String strokeColor;
+  float strokeWeight;
   String strokeDashArray;
-  String fillColor = "#0000FF";
-  float fillOpacity = 0.4f;
+  String fillColor;
 }

@@ -23,16 +23,15 @@ import org.teamapps.dto.UiTemplate;
 import org.teamapps.dto.UiTemplateReference;
 
 import java.util.List;
-import java.util.UUID;
 
 public class TemplateReference implements Template {
 
 	private final String templateId;
 	private final Template template;
 
-	public TemplateReference(Template template) {
-		this.templateId = "tpl" + UUID.randomUUID();
+	public TemplateReference(Template template, String templateId) {
 		this.template = template;
+		this.templateId = templateId;
 	}
 
 	public String getTemplateId() {

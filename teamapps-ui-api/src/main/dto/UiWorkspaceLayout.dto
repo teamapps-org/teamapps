@@ -24,6 +24,7 @@ class UiWorkSpaceLayout extends UiComponent {
 	UiToolbar* toolbar;
 	String newWindowBackgroundImage;
 	String newWindowBlurredBackgroundImage;
+	UiMultiProgressDisplay* multiProgressDisplay;
 
 	command setToolbar(UiToolbar* toolbar);
 
@@ -43,6 +44,7 @@ class UiWorkSpaceLayout extends UiComponent {
 	command refreshViewComponent(String viewName, UiComponent* component);
 	command selectView(String viewName);
 	command setViewGroupPanelState(String viewGroupId, UiViewGroupPanelState panelState);
+	command setMultiProgressDisplay(UiMultiProgressDisplay* multiProgressDisplay);
 
     event layoutChanged(Dictionary<UiWorkSpaceLayoutItem> layoutsByWindowId); // root window has id "ROOT_WINDOW" TODO not yet sure if these events should get a little more fine-grained...
     event viewDraggedToNewWindow(String windowId, String viewName, Dictionary<UiWorkSpaceLayoutItem> layoutsByWindowId);

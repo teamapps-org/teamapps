@@ -23,6 +23,7 @@ class UiNavigationBar extends UiComponent {
 	UiColor backgroundColor = new UiColor(255, 255, 255).setAlpha(0.84f);
 	UiColor borderColor;
 	List<UiComponent*> fanOutComponents;
+	UiMultiProgressDisplay* multiProgressDisplay;
 
 	command setButtons(List<UiNavigationBarButton> buttons);
 	command setButtonVisible(String buttonId, boolean visible);
@@ -33,6 +34,7 @@ class UiNavigationBar extends UiComponent {
 	command removeFanOutComponent(UiComponent* fanOutComponent); // TODO #componentRef No more necessary?
 	command showFanOutComponent(UiComponent* fanOutComponent);
 	command hideFanOutComponent();
+	command setMultiProgressDisplay(UiMultiProgressDisplay* multiProgressDisplay);
 
 	event buttonClicked(String buttonId, String visibleFanOutComponentId);
 	event fanoutClosedDueToClickOutsideFanout();

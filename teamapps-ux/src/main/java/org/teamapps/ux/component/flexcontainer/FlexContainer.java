@@ -28,6 +28,7 @@ import org.teamapps.ux.css.CssFlexDirection;
 import org.teamapps.ux.css.CssJustifyContent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,4 +99,7 @@ public class FlexContainer extends AbstractComponent {
 		reRenderIfRendered(); // TODO
 	}
 
+	public List<Component> getComponents() {
+		return Collections.unmodifiableList(components);
+	}
 }

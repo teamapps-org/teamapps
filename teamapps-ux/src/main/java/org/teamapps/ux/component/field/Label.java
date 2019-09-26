@@ -24,6 +24,7 @@ import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiLabel;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
+import org.teamapps.ux.component.Component;
 
 public class Label extends AbstractField<String> {
 
@@ -94,7 +95,7 @@ public class Label extends AbstractField<String> {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
 		this.targetField = targetField;
-		queueCommandIfRendered(() -> new UiLabel.SetTargetFieldCommand(getId(), targetField.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiLabel.SetTargetFieldCommand(getId(), Component.createUiComponentReference(targetField)));
 		return this;
 	}
 }

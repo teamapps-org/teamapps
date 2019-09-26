@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,8 @@ import com.google.common.collect.Streams;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.teamapps.dto.TeamAppsDtoParser;
+import org.teamapps.dto.TeamAppsDtoParser.ClassDeclarationContext;
+import org.teamapps.dto.TeamAppsDtoParser.InterfaceDeclarationContext;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,8 +40,8 @@ import java.util.stream.Stream;
 
 public class TeamAppsDtoModel {
 
-	private final List<TeamAppsDtoParser.ClassDeclarationContext> classDeclarations = new ArrayList<>();
-	private final List<TeamAppsDtoParser.InterfaceDeclarationContext> interfaceDeclarations = new ArrayList<>();
+	private final List<ClassDeclarationContext> classDeclarations = new ArrayList<>();
+	private final List<InterfaceDeclarationContext> interfaceDeclarations = new ArrayList<>();
 	private final List<TeamAppsDtoParser.EnumDeclarationContext> enumDeclarations = new ArrayList<>();
 	private final List<TeamAppsDtoParser.EventDeclarationContext> eventDeclarations;
 	private final List<TeamAppsDtoParser.CommandDeclarationContext> commandDeclarations;
@@ -65,14 +67,14 @@ public class TeamAppsDtoModel {
 		classesAndInterfacesReferencedForSubEvents = extractClassesAndInterfacesReferencedForSubEvents();
 	}
 
-	private List<TeamAppsDtoParser.ClassDeclarationContext> extractClassDeclarations(List<TeamAppsDtoParser.TypeDeclarationContext> types) {
+	private List<ClassDeclarationContext> extractClassDeclarations(List<TeamAppsDtoParser.TypeDeclarationContext> types) {
 		return types.stream()
 				.filter(typeContext -> typeContext.classDeclaration() != null)
 				.map(typeContext -> typeContext.classDeclaration())
 				.collect(Collectors.toList());
 	}
 
-	private List<TeamAppsDtoParser.InterfaceDeclarationContext> extractInterfaceDeclarations(List<TeamAppsDtoParser.TypeDeclarationContext> types) {
+	private List<InterfaceDeclarationContext> extractInterfaceDeclarations(List<TeamAppsDtoParser.TypeDeclarationContext> types) {
 		return types.stream()
 				.filter(typeContext -> typeContext.interfaceDeclaration() != null)
 				.map(typeContext -> typeContext.interfaceDeclaration())
@@ -124,11 +126,11 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.ClassDeclarationContext> getClassDeclarations() {
+	public List<ClassDeclarationContext> getClassDeclarations() {
 		return classDeclarations;
 	}
 
-	public List<TeamAppsDtoParser.InterfaceDeclarationContext> getInterfaceDeclarations() {
+	public List<InterfaceDeclarationContext> getInterfaceDeclarations() {
 		return interfaceDeclarations;
 	}
 
@@ -156,7 +158,7 @@ public class TeamAppsDtoModel {
 		return classesAndInterfacesReferencedForSubEvents;
 	}
 
-	public TeamAppsDtoParser.ClassDeclarationContext findReferencedClass(TeamAppsDtoParser.TypeContext typeContext) {
+	public ClassDeclarationContext findReferencedClass(TeamAppsDtoParser.TypeContext typeContext) {
 		TeamAppsDtoParser.TypeReferenceContext typeReferenceContext = typeContext.typeReference();
 		if (typeReferenceContext == null) {
 			return null;
@@ -176,7 +178,7 @@ public class TeamAppsDtoModel {
 				});
 	}
 
-	public TeamAppsDtoParser.InterfaceDeclarationContext findReferencedInterface(TeamAppsDtoParser.TypeContext typeContext) {
+	public InterfaceDeclarationContext findReferencedInterface(TeamAppsDtoParser.TypeContext typeContext) {
 		TeamAppsDtoParser.TypeReferenceContext typeReferenceContext = typeContext.typeReference();
 		if (typeReferenceContext == null) {
 			return null;
@@ -196,7 +198,7 @@ public class TeamAppsDtoModel {
 				});
 	}
 
-	public TeamAppsDtoParser.ClassDeclarationContext findClassByName(String className, boolean throwExceptionIfNotFound) {
+	public ClassDeclarationContext findClassByName(String className, boolean throwExceptionIfNotFound) {
 		return classDeclarations.stream()
 				.filter(otherClassDeclarationContext -> otherClassDeclarationContext.Identifier().getText().equals(className))
 				.findFirst().orElseGet(() -> {
@@ -236,8 +238,8 @@ public class TeamAppsDtoModel {
 		return null;
 	}
 
-	public List<TeamAppsDtoParser.ClassDeclarationContext> findAllSuperClasses(TeamAppsDtoParser.ClassDeclarationContext clazzContext) {
-		List<TeamAppsDtoParser.ClassDeclarationContext> superClasses = new ArrayList<>();
+	public List<ClassDeclarationContext> findAllSuperClasses(ClassDeclarationContext clazzContext) {
+		List<ClassDeclarationContext> superClasses = new ArrayList<>();
 		clazzContext = findSuperClass(clazzContext);
 		while (clazzContext != null) {
 			superClasses.add(clazzContext);
@@ -246,32 +248,32 @@ public class TeamAppsDtoModel {
 		return superClasses;
 	}
 
-	public List<TeamAppsDtoParser.ClassDeclarationContext> findSelfAndAllSuperClasses(TeamAppsDtoParser.ClassDeclarationContext clazzContext) {
-		List<TeamAppsDtoParser.ClassDeclarationContext> allSuperClasses = findAllSuperClasses(clazzContext);
+	public List<ClassDeclarationContext> findSelfAndAllSuperClasses(ClassDeclarationContext clazzContext) {
+		List<ClassDeclarationContext> allSuperClasses = findAllSuperClasses(clazzContext);
 		allSuperClasses.add(0, clazzContext);
 		return allSuperClasses;
 	}
 
-	public List<TeamAppsDtoParser.ClassDeclarationContext> findAllSubClasses(TeamAppsDtoParser.ClassDeclarationContext clazzContext) {
+	public List<ClassDeclarationContext> findAllSubClasses(ClassDeclarationContext clazzContext) {
 		return classDeclarations.stream()
 				.filter(otherClass -> findAllSuperClasses(otherClass).contains(clazzContext))
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.ClassDeclarationContext> findAllSubClasses(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<ClassDeclarationContext> findAllSubClasses(InterfaceDeclarationContext interfaceContext) {
 		return classDeclarations.stream()
 				.filter(classContext -> findAllImplementedInterfaces(classContext).contains(interfaceContext))
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.InterfaceDeclarationContext> findAllSubInterfaces(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<InterfaceDeclarationContext> findAllSubInterfaces(InterfaceDeclarationContext interfaceContext) {
 		return interfaceDeclarations.stream()
 				.filter(interf -> findSuperInterfaces(interf).contains(interfaceContext))
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.PropertyDeclarationContext> findAllProperties(TeamAppsDtoParser.ClassDeclarationContext clazzContext) {
-		List<TeamAppsDtoParser.ClassDeclarationContext> selfAndAllSuperClasses = findSelfAndAllSuperClasses(clazzContext);
+	public List<TeamAppsDtoParser.PropertyDeclarationContext> findAllProperties(ClassDeclarationContext clazzContext) {
+		List<ClassDeclarationContext> selfAndAllSuperClasses = findSelfAndAllSuperClasses(clazzContext);
 		Collections.reverse(selfAndAllSuperClasses);
 		return Stream.concat(
 				selfAndAllSuperClasses.stream()
@@ -285,7 +287,7 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.PropertyDeclarationContext> findAllProperties(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<TeamAppsDtoParser.PropertyDeclarationContext> findAllProperties(InterfaceDeclarationContext interfaceContext) {
 		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
 				.flatMap(interf -> interf.propertyDeclaration().stream())
 				.filter(distinctByKey(property -> property.Identifier().getText()))
@@ -303,10 +305,10 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public TeamAppsDtoParser.ClassDeclarationContext findSuperClass(TeamAppsDtoParser.ClassDeclarationContext clazzContext) {
+	public ClassDeclarationContext findSuperClass(ClassDeclarationContext clazzContext) {
 		if (clazzContext.superClassDecl() != null) {
 			String superClassName = clazzContext.superClassDecl().Identifier().getText();
-			TeamAppsDtoParser.ClassDeclarationContext superClass = findClassByName(superClassName, true);
+			ClassDeclarationContext superClass = findClassByName(superClassName, true);
 			if (superClass == null) {
 				throw new IllegalArgumentException("Cannot find super class of " + clazzContext.Identifier().getText() + " with name: " + superClassName);
 			}
@@ -316,9 +318,9 @@ public class TeamAppsDtoModel {
 		}
 	}
 
-	public List<TeamAppsDtoParser.InterfaceDeclarationContext> findAllSuperInterfaces(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<InterfaceDeclarationContext> findAllSuperInterfaces(InterfaceDeclarationContext interfaceContext) {
 		if (interfaceContext.superInterfaceDecl() != null) {
-			List<TeamAppsDtoParser.InterfaceDeclarationContext> superInterfaces = findSuperInterfaces(interfaceContext);
+			List<InterfaceDeclarationContext> superInterfaces = findSuperInterfaces(interfaceContext);
 			superInterfaces.addAll(superInterfaces.stream().flatMap(si -> findAllSuperInterfaces(si).stream()).collect(Collectors.toList()));
 			return superInterfaces.stream().distinct().collect(Collectors.toList());
 		} else {
@@ -326,7 +328,7 @@ public class TeamAppsDtoModel {
 		}
 	}
 
-	public List<TeamAppsDtoParser.InterfaceDeclarationContext> findSuperInterfaces(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<InterfaceDeclarationContext> findSuperInterfaces(InterfaceDeclarationContext interfaceContext) {
 		if (interfaceContext.superInterfaceDecl() != null) {
 			return interfaceContext.superInterfaceDecl().classList().Identifier().stream()
 					.map(identifier -> identifier.getText())
@@ -337,7 +339,7 @@ public class TeamAppsDtoModel {
 		}
 	}
 
-	public List<TeamAppsDtoParser.InterfaceDeclarationContext> findAllImplementedInterfaces(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<InterfaceDeclarationContext> findAllImplementedInterfaces(ClassDeclarationContext classContext) {
 		return findSelfAndAllSuperClasses(classContext).stream()
 				.flatMap(clazz -> clazz.implementsDecl() != null ? clazz.implementsDecl().classList().Identifier().stream()
 						.map(identifier -> findInterfaceByName(identifier.getText(), true))
@@ -345,7 +347,7 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.InterfaceDeclarationContext> getDirectlyImplementedInterfaces(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<InterfaceDeclarationContext> getDirectlyImplementedInterfaces(ClassDeclarationContext classContext) {
 		if (classContext.implementsDecl() != null) {
 			return classContext.implementsDecl().classList().Identifier().stream()
 					.map(identifier -> findInterfaceByName(identifier.getText(), true))
@@ -355,7 +357,7 @@ public class TeamAppsDtoModel {
 		}
 	}
 
-	public TeamAppsDtoParser.InterfaceDeclarationContext findInterfaceByName(String name, boolean throwExceptionIfNotFound) {
+	public InterfaceDeclarationContext findInterfaceByName(String name, boolean throwExceptionIfNotFound) {
 		return interfaceDeclarations.stream()
 				.filter(interfaceDeclaration -> interfaceDeclaration.Identifier().getText().equals(name))
 				.findAny().orElseGet(() -> {
@@ -367,13 +369,13 @@ public class TeamAppsDtoModel {
 				});
 	}
 
-	public List<TeamAppsDtoParser.ClassDeclarationContext> findAllImplementingClasses(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<ClassDeclarationContext> findAllImplementingClasses(InterfaceDeclarationContext interfaceContext) {
 		return classDeclarations.stream()
 				.filter(clazz -> findAllImplementedInterfaces(clazz).contains(interfaceContext)).collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.InterfaceDeclarationContext> findAllSuperInterfacesAndSelf(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
-		List<TeamAppsDtoParser.InterfaceDeclarationContext> superInterfacesAndSelf = findAllSuperInterfaces(interfaceContext);
+	public List<InterfaceDeclarationContext> findAllSuperInterfacesAndSelf(InterfaceDeclarationContext interfaceContext) {
+		List<InterfaceDeclarationContext> superInterfacesAndSelf = findAllSuperInterfaces(interfaceContext);
 		superInterfacesAndSelf.add(0, interfaceContext);
 		return superInterfacesAndSelf;
 	}
@@ -401,18 +403,18 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.PropertyDeclarationContext> findPropertiesNotImplementedBySuperClasses(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<TeamAppsDtoParser.PropertyDeclarationContext> findPropertiesNotImplementedBySuperClasses(ClassDeclarationContext classContext) {
 		List<TeamAppsDtoParser.PropertyDeclarationContext> properties = findAllProperties(classContext);
-		TeamAppsDtoParser.ClassDeclarationContext superClass = findSuperClass(classContext);
+		ClassDeclarationContext superClass = findSuperClass(classContext);
 		if (superClass != null) {
 			properties.removeAll(findAllProperties(superClass));
 		}
 		return properties;
 	}
 
-	public List<ParserRuleContext> findSuperClassAndDirectlyImplementedInterfaces(TeamAppsDtoParser.ClassDeclarationContext classContext) {
-		TeamAppsDtoParser.ClassDeclarationContext superClass = findSuperClass(classContext);
-		List<TeamAppsDtoParser.InterfaceDeclarationContext> directlyImplementedInterfaces = getDirectlyImplementedInterfaces(classContext);
+	public List<ParserRuleContext> findSuperClassAndDirectlyImplementedInterfaces(ClassDeclarationContext classContext) {
+		ClassDeclarationContext superClass = findSuperClass(classContext);
+		List<InterfaceDeclarationContext> directlyImplementedInterfaces = getDirectlyImplementedInterfaces(classContext);
 
 		List<ParserRuleContext> result = new ArrayList<>();
 		if (superClass != null) {
@@ -422,7 +424,7 @@ public class TeamAppsDtoModel {
 		return result;
 	}
 
-	public List<TeamAppsDtoParser.CommandDeclarationContext> getAllCommands(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<TeamAppsDtoParser.CommandDeclarationContext> getAllCommands(ClassDeclarationContext classContext) {
 		List<TeamAppsDtoParser.CommandDeclarationContext> commands = Stream.concat(
 				findSelfAndAllSuperClasses(classContext).stream()
 						.flatMap(clazz -> clazz.commandDeclaration().stream()),
@@ -436,14 +438,14 @@ public class TeamAppsDtoModel {
 		return commands;
 	}
 
-	public List<TeamAppsDtoParser.CommandDeclarationContext> getAllCommands(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<TeamAppsDtoParser.CommandDeclarationContext> getAllCommands(InterfaceDeclarationContext interfaceContext) {
 		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
 				.flatMap(interf -> interf.commandDeclaration().stream())
 				.filter(distinctByKey(command -> command.Identifier().getText()))
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.EventDeclarationContext> getAllEvents(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<TeamAppsDtoParser.EventDeclarationContext> getAllEvents(ClassDeclarationContext classContext) {
 		List<TeamAppsDtoParser.EventDeclarationContext> events = Stream.concat(
 				findSelfAndAllSuperClasses(classContext).stream()
 						.flatMap(clazz -> clazz.eventDeclaration().stream()),
@@ -457,14 +459,14 @@ public class TeamAppsDtoModel {
 		return events;
 	}
 
-	public List<TeamAppsDtoParser.EventDeclarationContext> getAllEvents(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<TeamAppsDtoParser.EventDeclarationContext> getAllEvents(InterfaceDeclarationContext interfaceContext) {
 		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
 				.flatMap(interf -> interf.eventDeclaration().stream())
 				.filter(distinctByKey(event -> event.Identifier().getText()))
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.SubCommandDeclarationContext> getAllSubCommands(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<TeamAppsDtoParser.SubCommandDeclarationContext> getAllSubCommands(ClassDeclarationContext classContext) {
 		List<TeamAppsDtoParser.SubCommandDeclarationContext> commands = Stream.concat(
 				findSelfAndAllSuperClasses(classContext).stream()
 						.flatMap(clazz -> clazz.subCommandDeclaration().stream()),
@@ -478,14 +480,14 @@ public class TeamAppsDtoModel {
 		return commands;
 	}
 
-	public List<TeamAppsDtoParser.SubCommandDeclarationContext> getAllSubCommands(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<TeamAppsDtoParser.SubCommandDeclarationContext> getAllSubCommands(InterfaceDeclarationContext interfaceContext) {
 		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
 				.flatMap(interf -> interf.subCommandDeclaration().stream())
 				.filter(distinctByKey(command -> command.Identifier().getText()))
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.SubEventDeclarationContext> getAllSubEvents(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<TeamAppsDtoParser.SubEventDeclarationContext> getAllSubEvents(ClassDeclarationContext classContext) {
 		List<TeamAppsDtoParser.SubEventDeclarationContext> events = Stream.concat(
 				findSelfAndAllSuperClasses(classContext).stream()
 						.flatMap(clazz -> clazz.subEventDeclaration().stream()),
@@ -499,14 +501,14 @@ public class TeamAppsDtoModel {
 		return events;
 	}
 
-	public List<TeamAppsDtoParser.SubEventDeclarationContext> getAllSubEvents(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<TeamAppsDtoParser.SubEventDeclarationContext> getAllSubEvents(InterfaceDeclarationContext interfaceContext) {
 		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
 				.flatMap(interf -> interf.subEventDeclaration().stream())
 				.filter(distinctByKey(event -> event.Identifier().getText()))
 				.collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithCommands(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithCommands(ClassDeclarationContext classContext) {
 		return Stream.concat(
 				Optional.ofNullable(findSuperClass(classContext))
 						.filter(clazz -> !getAllCommands(clazz).isEmpty())
@@ -516,7 +518,7 @@ public class TeamAppsDtoModel {
 		).collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithSubCommands(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithSubCommands(ClassDeclarationContext classContext) {
 		return Stream.concat(
 				Optional.ofNullable(findSuperClass(classContext))
 						.filter(clazz -> !getAllSubCommands(clazz).isEmpty())
@@ -526,7 +528,7 @@ public class TeamAppsDtoModel {
 		).collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithEvents(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithEvents(ClassDeclarationContext classContext) {
 		return Stream.concat(
 				Optional.ofNullable(findSuperClass(classContext))
 						.filter(clazz -> !getAllEvents(clazz).isEmpty())
@@ -536,7 +538,7 @@ public class TeamAppsDtoModel {
 		).collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithSubEvents(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithSubEvents(ClassDeclarationContext classContext) {
 		return Stream.concat(
 				Optional.ofNullable(findSuperClass(classContext))
 						.filter(clazz -> !getAllSubEvents(clazz).isEmpty())
@@ -546,31 +548,31 @@ public class TeamAppsDtoModel {
 		).collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> getSuperInterfacesWithCommands(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<ParserRuleContext> getSuperInterfacesWithCommands(InterfaceDeclarationContext interfaceContext) {
 		return findSuperInterfaces(interfaceContext).stream()
 				.filter(itf -> !getAllCommands(itf).isEmpty())
 				.collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> getSuperInterfacesWithSubCommands(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<ParserRuleContext> getSuperInterfacesWithSubCommands(InterfaceDeclarationContext interfaceContext) {
 		return findSuperInterfaces(interfaceContext).stream()
 				.filter(itf -> !getAllSubCommands(itf).isEmpty())
 				.collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> getSuperInterfacesWithEvents(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<ParserRuleContext> getSuperInterfacesWithEvents(InterfaceDeclarationContext interfaceContext) {
 		return findSuperInterfaces(interfaceContext).stream()
 				.filter(itf -> !getAllEvents(itf).isEmpty())
 				.collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> getSuperInterfacesWithSubEvents(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<ParserRuleContext> getSuperInterfacesWithSubEvents(InterfaceDeclarationContext interfaceContext) {
 		return findSuperInterfaces(interfaceContext).stream()
 				.filter(itf -> !getAllSubEvents(itf).isEmpty())
 				.collect(Collectors.toList());
 	}
 
-	public boolean interfaceOrDescendantHasSubCommandDeclarations(TeamAppsDtoParser.InterfaceDeclarationContext interf) {
+	public boolean interfaceOrDescendantHasSubCommandDeclarations(InterfaceDeclarationContext interf) {
 		boolean hasOwnSubCommands = interf.subCommandDeclaration().size() > 0;
 		if (hasOwnSubCommands) {
 			return true;
@@ -580,7 +582,7 @@ public class TeamAppsDtoModel {
 		}
 	}
 
-	public boolean classOrSubClassHasSubCommandDeclarations(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public boolean classOrSubClassHasSubCommandDeclarations(ClassDeclarationContext classContext) {
 		boolean hasOwnSubCommands = classContext.subCommandDeclaration().size() > 0;
 		if (hasOwnSubCommands) {
 			return true;
@@ -589,7 +591,7 @@ public class TeamAppsDtoModel {
 		}
 	}
 
-	public boolean interfaceOrDescendantHasSubEventDeclarations(TeamAppsDtoParser.InterfaceDeclarationContext interf) {
+	public boolean interfaceOrDescendantHasSubEventDeclarations(InterfaceDeclarationContext interf) {
 		boolean referencedForSubEvents = isDescendantOfClassOrInterfaceReferencedForSubEvents(interf);
 		boolean hasOwnOrInheritedSubEvents = findAllSuperInterfacesAndSelf(interf).stream().anyMatch(i -> !i.subEventDeclaration().isEmpty());
 		return referencedForSubEvents || hasOwnOrInheritedSubEvents;
@@ -607,7 +609,7 @@ public class TeamAppsDtoModel {
 //		}
 	}
 
-	public boolean classOrSubClassHasSubEventDeclarations(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public boolean classOrSubClassHasSubEventDeclarations(ClassDeclarationContext classContext) {
 		boolean referencedForSubEvents = isDescendantOfClassOrInterfaceReferencedForSubEvents(classContext);
 		boolean classHierarchyDeclaresSubEvents = findSelfAndAllSuperClasses(classContext).stream().anyMatch(i -> !i.subEventDeclaration().isEmpty());
 		boolean inheritsSubEventsFromInterfaces = findAllImplementedInterfaces(classContext).stream().anyMatch(i -> !i.subEventDeclaration().isEmpty());
@@ -624,8 +626,8 @@ public class TeamAppsDtoModel {
 //		}
 	}
 
-	public List<TeamAppsDtoParser.SubEventDeclarationContext> findAllSubEventsInHierarchy(TeamAppsDtoParser.ClassDeclarationContext classContext) {
-		List<TeamAppsDtoParser.ClassDeclarationContext> allSubClasses = findAllSubClasses(classContext);
+	public List<TeamAppsDtoParser.SubEventDeclarationContext> findAllSubEventsInHierarchy(ClassDeclarationContext classContext) {
+		List<ClassDeclarationContext> allSubClasses = findAllSubClasses(classContext);
 		allSubClasses.add(classContext);
 		return allSubClasses.stream()
 				.flatMap(c -> getAllSubEvents(c).stream())
@@ -633,8 +635,8 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.SubEventDeclarationContext> findAllSubEventsInHierarchy(TeamAppsDtoParser.InterfaceDeclarationContext classContext) {
-		List<TeamAppsDtoParser.ClassDeclarationContext> allSubClasses = findAllSubClasses(classContext);
+	public List<TeamAppsDtoParser.SubEventDeclarationContext> findAllSubEventsInHierarchy(InterfaceDeclarationContext classContext) {
+		List<ClassDeclarationContext> allSubClasses = findAllSubClasses(classContext);
 		return allSubClasses.stream()
 				.flatMap(c -> getAllSubEvents(c).stream())
 				.filter(distinctByKey(subEvent -> subEvent.Identifier().getText()))
@@ -642,7 +644,7 @@ public class TeamAppsDtoModel {
 	}
 
 	private ParserRuleContext findClassOrInterfaceByName(String referencedClassName) {
-		TeamAppsDtoParser.ClassDeclarationContext clazz = findClassByName(referencedClassName, false);
+		ClassDeclarationContext clazz = findClassByName(referencedClassName, false);
 		if (clazz != null) {
 			return clazz;
 		} else {
@@ -650,34 +652,34 @@ public class TeamAppsDtoModel {
 		}
 	}
 
-	public boolean isDescendantOfClassOrInterfaceReferencedForSubEvents(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public boolean isDescendantOfClassOrInterfaceReferencedForSubEvents(ClassDeclarationContext classContext) {
 		boolean implementsInterfaceReferencedForSubEvent = findAllImplementedInterfaces(classContext).removeAll(classesAndInterfacesReferencedForSubEvents);
 		boolean hasSuperClassReferencedForSubEvents = findSelfAndAllSuperClasses(classContext).removeAll(classesAndInterfacesReferencedForSubEvents);
 		return implementsInterfaceReferencedForSubEvent || hasSuperClassReferencedForSubEvents;
 	}
 
-	public boolean isDescendantOfClassOrInterfaceReferencedForSubEvents(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public boolean isDescendantOfClassOrInterfaceReferencedForSubEvents(InterfaceDeclarationContext interfaceContext) {
 		return findAllSuperInterfacesAndSelf(interfaceContext).removeAll(classesAndInterfacesReferencedForSubEvents);
 	}
 
 	public static ParserRuleContext getDeclaringClassOrInterface(ParserRuleContext element) {
-		if (element instanceof TeamAppsDtoParser.ClassDeclarationContext || element instanceof TeamAppsDtoParser.InterfaceDeclarationContext) {
+		if (element instanceof ClassDeclarationContext || element instanceof InterfaceDeclarationContext) {
 			return element;
 		}
-		TeamAppsDtoParser.ClassDeclarationContext clazz = findAncestorOfType(element, TeamAppsDtoParser.ClassDeclarationContext.class);
+		ClassDeclarationContext clazz = findAncestorOfType(element, ClassDeclarationContext.class);
 		if (clazz != null) {
 			return clazz;
 		} else {
-			return findAncestorOfType(element, TeamAppsDtoParser.InterfaceDeclarationContext.class);
+			return findAncestorOfType(element, InterfaceDeclarationContext.class);
 		}
 	}
 
 	public static String getDeclaringClassOrInterfaceName(ParserRuleContext element) {
 		ParserRuleContext declaringClassOrInterface = getDeclaringClassOrInterface(element);
-		if (declaringClassOrInterface instanceof TeamAppsDtoParser.ClassDeclarationContext) {
-			return ((TeamAppsDtoParser.ClassDeclarationContext) declaringClassOrInterface).Identifier().getText();
-		} else if (declaringClassOrInterface instanceof TeamAppsDtoParser.InterfaceDeclarationContext) {
-			return ((TeamAppsDtoParser.InterfaceDeclarationContext) declaringClassOrInterface).Identifier().getText();
+		if (declaringClassOrInterface instanceof ClassDeclarationContext) {
+			return ((ClassDeclarationContext) declaringClassOrInterface).Identifier().getText();
+		} else if (declaringClassOrInterface instanceof InterfaceDeclarationContext) {
+			return ((InterfaceDeclarationContext) declaringClassOrInterface).Identifier().getText();
 		} else {
 			return null;
 		}
@@ -702,13 +704,17 @@ public class TeamAppsDtoModel {
 	}
 
 	private ParserRuleContext findReferencedClassOrInterface(TeamAppsDtoParser.TypeContext type) {
-		TeamAppsDtoParser.ClassDeclarationContext referencedClass = findReferencedClass(type);
+		ClassDeclarationContext referencedClass = findReferencedClass(type);
 		return referencedClass != null ? referencedClass : findReferencedInterface(type);
 	}
 
-	public List<ParserRuleContext> findAllReferencedClassesAndInterfaces(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<ParserRuleContext> findAllReferencedClassesAndInterfaces(ClassDeclarationContext classContext) {
 		return Stream.of(
 				findSuperClassAndDirectlyImplementedInterfaces(classContext).stream(),
+				findSuperClassAndDirectlyImplementedInterfaces(classContext).stream()
+						.flatMap(c -> c instanceof ClassDeclarationContext
+								? findAllReferencedClassesAndInterfaces(((ClassDeclarationContext) c)).stream()
+								: findAllReferencedClassesAndInterfaces(((InterfaceDeclarationContext) c)).stream()),
 				classContext.propertyDeclaration().stream()
 						.map(p -> findReferencedClassOrInterface(p.type()))
 						.filter(c -> c != classContext),
@@ -735,7 +741,7 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.EnumDeclarationContext> findAllReferencedEnums(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<TeamAppsDtoParser.EnumDeclarationContext> findAllReferencedEnums(ClassDeclarationContext classContext) {
 		return Stream.of(
 				classContext.propertyDeclaration().stream()
 						.map(p -> findReferencedEnum(p.type())),
@@ -757,7 +763,7 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> findAllReferencedClassesAndInterfaces(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<ParserRuleContext> findAllReferencedClassesAndInterfaces(InterfaceDeclarationContext interfaceContext) {
 		return Stream.of(
 				findAllSuperInterfaces(interfaceContext).stream()
 						.map(interfDecl -> (ParserRuleContext) interfDecl),
@@ -787,7 +793,7 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<TeamAppsDtoParser.EnumDeclarationContext> findAllReferencedEnums(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext) {
+	public List<TeamAppsDtoParser.EnumDeclarationContext> findAllReferencedEnums(InterfaceDeclarationContext interfaceContext) {
 		return Stream.of(
 				interfaceContext.propertyDeclaration().stream()
 						.map(p -> findReferencedEnum(p.type())),
@@ -860,7 +866,7 @@ public class TeamAppsDtoModel {
 	}
 
 
-	public List<TeamAppsDtoParser.PropertyDeclarationContext> findAllNotYetImplementedProperties(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public List<TeamAppsDtoParser.PropertyDeclarationContext> findAllNotYetImplementedProperties(ClassDeclarationContext classContext) {
 		return Streams.concat(
 				classContext.propertyDeclaration().stream(),
 				findAllImplementedInterfaces(classContext).stream()
@@ -873,21 +879,21 @@ public class TeamAppsDtoModel {
 		return type.typeReference() != null && type.typeReference().referenceTypeModifier() != null;
 	}
 
-	public boolean isReferenceableClass(TeamAppsDtoParser.ClassDeclarationContext clazz) {
+	public boolean isReferenceableClass(ClassDeclarationContext clazz) {
 		return findSelfNearestAncestorClassWithReferenceableAttribute(clazz) != null;
 	}
 
-	public boolean isReferenceableBaseClass(TeamAppsDtoParser.ClassDeclarationContext clazz) {
+	public boolean isReferenceableBaseClass(ClassDeclarationContext clazz) {
 		return findSelfNearestAncestorClassWithReferenceableAttribute(clazz) == clazz;
 	}
 
-	public TeamAppsDtoParser.ClassDeclarationContext findSelfNearestAncestorClassWithReferenceableAttribute(TeamAppsDtoParser.ClassDeclarationContext clazz) {
+	public ClassDeclarationContext findSelfNearestAncestorClassWithReferenceableAttribute(ClassDeclarationContext clazz) {
 		return findSelfAndAllSuperClasses(clazz).stream()
 				.filter(c -> c.propertyDeclaration().stream().anyMatch(p -> p.referenceableAnnotation() != null))
 				.findFirst().orElse(null);
 	}
 
-	public Object getReferenceableProperties(TeamAppsDtoParser.ClassDeclarationContext classContext) {
+	public Object getReferenceableProperties(ClassDeclarationContext classContext) {
 		return findAllProperties(classContext).stream()
 				.filter(p -> p.referenceableAnnotation() != null)
 				.collect(Collectors.toList());

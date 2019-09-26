@@ -1,0 +1,10 @@
+class UiQrCodeScanner extends UiComponent {
+	boolean scanning;
+	boolean stopsScanningAtFirstResult;
+
+	command startScanning(boolean stopScanningAtFirstResult);
+	command stopScanning();
+	command switchCamera();
+
+	event qrCodeDetected(String code);
+}

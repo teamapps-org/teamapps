@@ -545,3 +545,9 @@ class UiRadioButton {
 	required String value;
 	required String label;
 }
+
+class UiTemplateField extends UiField {
+	UiTemplate template;
+	
+	command update(UiTemplateField config);
+}

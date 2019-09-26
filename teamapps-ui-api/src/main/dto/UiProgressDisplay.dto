@@ -1,0 +1,36 @@
+
+enum UiProgressStatus {
+	NOT_YET_STARTED,
+	RUNNING,
+	CANCELLATION_REQUESTED,
+	CANCELED,
+	COMPLETE,
+	FAILED
+}
+
+class UiProgressDisplay extends UiComponent {
+	String icon;
+	String taskName;
+	String statusMessage;
+	double progress;
+	UiProgressStatus status;
+	boolean cancelable;
+
+    command update(UiProgressDisplay config);
+
+    event clicked();
+    event cancelButtonClicked();
+}
+
+class UiMultiProgressDisplay extends UiComponent {
+	int runningCount;
+	List<String> statusMessages;
+
+	command update(UiDefaultMultiProgressDisplay config);
+
+	event clicked();
+}
+
+class UiDefaultMultiProgressDisplay extends UiMultiProgressDisplay {
+
+}

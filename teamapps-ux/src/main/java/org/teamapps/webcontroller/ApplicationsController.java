@@ -175,7 +175,7 @@ public class ApplicationsController implements ApplicationDesktop {
 			if (settingsBuilder != null) {
 				Tab settingsTab = new Tab(MaterialIcon.MORE_VERT, "Einstellungen", null, true);
 				settingsTab.onSelected.addListener(aVoid -> {
-					settingsTab.setContent(settingsBuilder.createApplication(this).createUi());
+					settingsTab.setContent(settingsBuilder.createApplication(this).getUi());
 				});
 				settingsTab.setRightSide(true);
 				tabPanel.addTab(settingsTab);
@@ -203,7 +203,7 @@ public class ApplicationsController implements ApplicationDesktop {
 			Tab tab = tabsByApplicationItemId.computeIfAbsent(applicationName, name -> {
 				Application application = applicationBuilder.createApplication(this);
 				ApplicationInfo applicationInfo = applicationBuilder.getApplicationInfo();
-				Tab newTab = new Tab(applicationInfo.getIcon(), applicationInfo.getTitle(), application.createUi());
+				Tab newTab = new Tab(applicationInfo.getIcon(), applicationInfo.getTitle(), application.getUi());
 				tabPanel.addTab(newTab, true);
 				applicationNameByTab.put(newTab, applicationName);
 				newTab.onClosed.addListener(aVoid -> applicationNameByTab.remove(newTab));
@@ -213,7 +213,7 @@ public class ApplicationsController implements ApplicationDesktop {
 		} else {
 			Application application = applicationBuilder.createApplication(this);
 			//todo: remove old application!
-			rootPanel.setContent(application.createUi());
+			rootPanel.setContent(application.getUi());
 		}
 		checkThemeAndBackground(applicationName);
 	}
@@ -239,10 +239,10 @@ public class ApplicationsController implements ApplicationDesktop {
 
 	public void showApplication(ApplicationInfo applicationInfo, Application application) {
 		if (!isMobile()) {
-			Tab newTab = new Tab(applicationInfo.getIcon(), applicationInfo.getTitle(), application.createUi());
+			Tab newTab = new Tab(applicationInfo.getIcon(), applicationInfo.getTitle(), application.getUi());
 			tabPanel.addTab(newTab, true);
 		} else {
-			rootPanel.setContent(application.createUi());
+			rootPanel.setContent(application.getUi());
 		}
 	}
 
