@@ -37,7 +37,7 @@ public class SimplePrivilegeProviderFactoryTest {
 	public static SessionContext createDummySessionContext() {
 		return new SessionContext(
 				new QualifiedUiSessionId("httpSessionId", "uiSessionId"),
-				new ClientInfo("ip", null, 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap()),
+				new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap()),
 				Mockito.mock(CommandDispatcher.class),
 				Mockito.mock(UxServerContext.class),
 				Mockito.mock(IconTheme.class),
