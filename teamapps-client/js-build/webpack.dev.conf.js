@@ -12,24 +12,19 @@ const HOST = process.env.HOST;
 const PORT = process.env.PORT && Number(process.env.PORT);
 
 const devWebpackConfig = merge(baseWebpackConfig, {
-	// cheap-module-eval-source-map is faster for development
-	devtool: 'cheap-module-source-map', // TODO change back to cheap-module-eval-source-map!!! https://github.com/webpack-contrib/mini-css-extract-plugin/issues/29
+	devtool: "cheap-module-source-map",
 	output: {
 		filename: path.posix.join(config.assetsSubDirectory, 'js/[name].js'),
 		publicPath: config.assetsPublicPath
 	},
-	// these devServer options should be customized in /config/index.js
 	devServer: {
-		clientLogLevel: 'warning',
-		hot: true,
+		clientLogLevel: "warning",
 		contentBase: false, // since we use CopyWebpackPlugin.
 		compress: true,
 		host: HOST || config.host,
 		port: PORT || config.port,
-		open: config.autoOpenBrowser,
-		overlay: config.errorOverlay
-			? {warnings: false, errors: true}
-			: false,
+		open: false,
+		overlay: {warnings: false, errors: true},
 		publicPath: "/",
 		proxy: [{
 			context: [
@@ -50,17 +45,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 		}],
 		quiet: true, // necessary for FriendlyErrorsPlugin
 		watchOptions: {
-			poll: config.poll,
+			poll: false
 		}
 	},
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env': {NODE_ENV: "'development'"}
 		}),
-		new webpack.HotModuleReplacementPlugin(),
-		new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
-		new webpack.NoEmitOnErrorsPlugin(),
-		// https://github.com/ampedandwired/html-webpack-plugin
 		new HtmlWebpackPlugin({
 			filename: 'index.html',
 			template: 'index.html',
@@ -75,27 +66,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 		})
 	]
 });
-
-const createNotifierCallback = () => {
-	const notifier = require('node-notifier');
-
-	return (severity, errors) => {
-		if (severity !== 'error') {
-			return;
-		}
-
-		const error = errors[0];
-		const filename = error.file && error.file.split('!').pop();
-
-		notifier.notify({
-			title: require('../package.json').name,
-			message: severity + ': ' + error.name,
-			subtitle: filename || '',
-			icon: path.join(__dirname, 'logo.png'),
-			timeout: 3
-		})
-	}
-};
 
 module.exports = new Promise((resolve, reject) => {
 	portfinder.basePort = process.env.PORT || config.port;
@@ -112,10 +82,7 @@ module.exports = new Promise((resolve, reject) => {
 			devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
 				compilationSuccessInfo: {
 					messages: [`Your dev server is running here: http://${devWebpackConfig.devServer.host}:${port} ( proxy for ${config.appServerUrl} )`],
-				},
-				onErrors: config.notifyOnErrors
-					? createNotifierCallback()
-					: undefined
+				}
 			}));
 
 			resolve(devWebpackConfig)

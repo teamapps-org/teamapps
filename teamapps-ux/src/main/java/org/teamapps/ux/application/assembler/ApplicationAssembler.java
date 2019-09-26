@@ -23,6 +23,7 @@ import org.teamapps.ux.application.*;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 
 public interface ApplicationAssembler extends ApplicationChangeHandler {
@@ -30,6 +31,8 @@ public interface ApplicationAssembler extends ApplicationChangeHandler {
     Component createApplication(ResponsiveApplication application);
 
     void setWorkSpaceToolbar(ResponsiveApplicationToolbar toolbar);
+
+    MultiProgressDisplay getMultiProgressDisplay();
 
     @Override
     default void handleApplicationToolbarButtonGroupAdded(ResponsiveApplication application, ToolbarButtonGroup buttonGroup) {
@@ -60,5 +63,4 @@ public interface ApplicationAssembler extends ApplicationChangeHandler {
     default void handleViewWorkspaceToolbarButtonGroupRemoved(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, ToolbarButtonGroup buttonGroup) {
 
     }
-
 }

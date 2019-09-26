@@ -17,16 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import "bootstrap-notify";
 import * as log from "loglevel";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
-import {UiNotification_Position} from "../generated/UiNotificationConfig";
-import {createUiColorCssString} from "./util/CssFormatUtil";
-import {UiColorConfig} from "../generated/UiColorConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {UiTextMatchingMode} from "../generated/UiTextMatchingMode";
 import * as moment from "moment-timezone";
@@ -573,67 +569,6 @@ export function stableSort<T>(arr: T[], cmpFunc: (a: T, b: T) => number) {
 	});
 }
 
-export function showNotification(html: string, config?: {
-	backgroundColor?: UiColorConfig,
-	position?: UiNotification_Position,
-	displayTimeInMillis?: number,
-	dismissable?: boolean,
-	showProgressBar?: boolean,
-	entranceAnimation?: UiEntranceAnimation,
-	exitAnimation?: UiExitAnimation
-}) {
-	config = {
-		backgroundColor: {_type: "UiColor", red: 255, green: 255, blue: 255, alpha: 1},
-		position: UiNotification_Position.TOP_RIGHT,
-		displayTimeInMillis: 3000,
-		dismissable: true,
-		showProgressBar: true,
-		entranceAnimation: UiEntranceAnimation.SLIDE_IN_RIGHT,
-		exitAnimation: UiExitAnimation.SLIDE_OUT_RIGHT,
-		...config
-	};
-
-	let position2placement = {
-		[UiNotification_Position.TOP_LEFT]: {from: 'top', align: 'left'},
-		[UiNotification_Position.TOP_CENTER]: {from: 'top', align: 'center'},
-		[UiNotification_Position.TOP_RIGHT]: {from: 'top', align: 'right'},
-		[UiNotification_Position.BOTTOM_LEFT]: {from: 'bottom', align: 'left'},
-		[UiNotification_Position.BOTTOM_CENTER]: {from: 'bottom', align: 'center'},
-		[UiNotification_Position.BOTTOM_RIGHT]: {from: 'bottom', align: 'right'},
-	};
-
-	$.notify({message: null}, {
-		// settings
-		element: 'body',
-		position: null,
-		allow_dismiss: config.dismissable,
-		newest_on_top: false,
-		showProgressbar: config.showProgressBar,
-		placement: position2placement[config.position],
-		offset: 20,
-		spacing: 10,
-		z_index: 1031,
-		delay: config.displayTimeInMillis,
-		timer: 1000,
-		mouse_over: null,
-		animate: {
-			enter: 'animated ' + Constants.ENTRANCE_ANIMATION_CSS_CLASSES[config.entranceAnimation],
-			exit: 'animated ' + Constants.EXIT_ANIMATION_CSS_CLASSES[config.exitAnimation]
-		},
-		onShow: null,
-		onShown: null,
-		onClose: null,
-		onClosed: null,
-		template: `<div data-notify="container" class="col-xs-11 col-sm-4 col-lg-3" style="background-color: ${createUiColorCssString(config.backgroundColor)}" role="alert">
-    <div data-notify="dismiss" style="background-image: url(/resources/window-close-grey.png)"></div>
-    <div class="content">${html}</div>
-    <div class="progress" data-notify="progressbar">
-		<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-	</div>
-</div>`
-	});
-}
-
 export function getMicrosoftBrowserVersion() {
 	const ua = window.navigator.userAgent;
 	const msie = ua.indexOf('MSIE ');
@@ -949,10 +884,10 @@ export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: 
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {
 	let oldAnimationDurationValue = el.style.animationDuration;
 	el.style.animationDuration = animationDuration + "ms";
-	el.classList.add('animated', ...animationClassNames);
+	el.classList.add(...animationClassNames);
 
 	function handleAnimationEnd() {
-		el.classList.remove('animated', ...animationClassNames);
+		el.classList.remove(...animationClassNames);
 		el.removeEventListener('animationend', handleAnimationEnd);
 		el.style.animationDuration = oldAnimationDurationValue;
 
@@ -974,7 +909,7 @@ export function animateCSS(el: HTMLElement, animationName: "bounce" | "flash" | 
 	| "zoomInUp" | "zoomOut" | "zoomOutDown" | "zoomOutLeft" | "zoomOutRight" | "zoomOutUp" | "slideInDown" | "slideInLeft" | "slideInRight" | "slideInUp"
 	| "slideOutDown" | "slideOutLeft" | "slideOutRight" | "slideOutUp" | "heartBeat", animationDuration: number = 300, callback?: () => any) {
 
-	animate(el, [animationName], animationDuration, callback)
+	animate(el, ['animated', animationName], animationDuration, callback)
 }
 
 

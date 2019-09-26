@@ -89,6 +89,10 @@ export {UiChatInput} from "./UiChatInput";
 export {UiAbsoluteLayout} from "./UiAbsoluteLayout";
 export {UiFloatingComponent} from "./UiFloatingComponent";
 export {UiPopup} from "./UiPopup";
+export {UiProgressDisplay} from "./UiProgressDisplay";
+export {UiDefaultMultiProgressDisplay} from "./UiDefaultMultiProgressDisplay";
+export {UiNotification} from "./UiNotification";
+export {UiQrCodeScanner} from "./UiQrCodeScanner";
 
 export {UiGauge} from "./UiGauge";
 
@@ -120,6 +124,7 @@ export {UiRichTextEditor} from "./formfield/UiRichTextEditor";
 export {UiSlider} from "./formfield/UiSlider";
 export {UiColorPicker} from "./formfield/UiColorPicker";
 export {UiFieldGroup} from "./formfield/UiFieldGroup";
+export {UiTemplateField} from "./formfield/UiTemplateField";
 
 export {UiToolButton} from "./micro-components/UiToolButton";
 

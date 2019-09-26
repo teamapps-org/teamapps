@@ -32,10 +32,12 @@ import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.Container;
-import org.teamapps.ux.component.splitpane.SplitSizePolicy;
-import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
 import org.teamapps.ux.component.panel.Panel;
+import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
+import org.teamapps.ux.component.splitpane.SplitSizePolicy;
 import org.teamapps.ux.component.toolbar.Toolbar;
+import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,6 +61,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 	private Toolbar toolbar;
 	private String newWindowBackgroundImage;
 	private String newWindowBlurredBackgroundImage;
+	private MultiProgressDisplay multiProgressDisplay = new DefaultMultiProgressDisplay();
 
 	private Map<String, WorkSpaceLayoutItem> rootItemsByWindowId = new HashMap<>();
 
@@ -115,6 +118,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 		}
 		uiLayout.setNewWindowBackgroundImage(newWindowBackgroundImage);
 		uiLayout.setNewWindowBlurredBackgroundImage(newWindowBlurredBackgroundImage);
+		uiLayout.setMultiProgressDisplay(Component.createUiComponentReference(multiProgressDisplay));
 		return uiLayout;
 	}
 
@@ -352,5 +356,14 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 				.map(item -> ((WorkSpaceLayoutSplitPane) item))
 				.filter(splitPane -> splitPane.getFirstChild() == child || splitPane.getLastChild() == child)
 				.findFirst().orElse(null);
+	}
+
+	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
+		this.multiProgressDisplay = multiProgressDisplay;
+		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiComponentReference()));
+	}
+
+	public MultiProgressDisplay getMultiProgressDisplay() {
+		   return multiProgressDisplay;
 	}
 }

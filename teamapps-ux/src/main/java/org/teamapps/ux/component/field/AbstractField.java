@@ -171,18 +171,21 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	public void removeValidator(FieldValidator<VALUE> validator) {
 		validators.remove(validator);
 		fieldMessagesByValidator.remove(validator);
+		updateFieldMessages();
 	}
 
 	public void validate() {
-		for (FieldValidator<VALUE> validator : validators) {
-			fieldMessagesByValidator.remove(validator);
-			List<FieldMessage> messages = validator.validate(this, getValue());
-			if (messages == null) {
-				messages = Collections.emptyList();
+		if (validators.size() > 0) {
+			for (FieldValidator<VALUE> validator : validators) {
+				fieldMessagesByValidator.remove(validator);
+				List<FieldMessage> messages = validator.validate(this, getValue());
+				if (messages == null) {
+					messages = Collections.emptyList();
+				}
+				fieldMessagesByValidator.put(validator, messages);
 			}
-			fieldMessagesByValidator.put(validator, messages);
-		}
-		updateFieldMessages();
+			updateFieldMessages();
+		} 
 	}
 
 	/**

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@
 package org.teamapps.ux.component.mobile;
 
 import org.jetbrains.annotations.NotNull;
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiComponentReference;
 import org.teamapps.dto.UiEvent;
@@ -29,7 +30,8 @@ import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.Container;
-import org.teamapps.common.format.Color;
+import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 
@@ -50,6 +52,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 	private List<Component> fanOutComponents = new ArrayList<>();
 	private Component activeFanOutComponent;
 	private int buttonClientIdCounter = 0;
+	private MultiProgressDisplay multiProgressDisplay = new DefaultMultiProgressDisplay();
 
 	public NavigationBar() {
 		super();
@@ -71,6 +74,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 					.collect(Collectors.toList());
 			uiNavigationBar.setFanOutComponents(uiComponents);
 		}
+		uiNavigationBar.setMultiProgressDisplay(multiProgressDisplay.createUiComponentReference());
 		return uiNavigationBar;
 	}
 
@@ -106,9 +110,17 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 	}
 
 	public NavigationBar<RECORD> addButton(NavigationBarButton<RECORD> button) {
+		return addButton(button, false);
+	}
+
+	public NavigationBar<RECORD> addButton(NavigationBarButton<RECORD> button, boolean left) {
 		button.setClientId("" + ++buttonClientIdCounter);
 		button.setContainer(this);
-		buttons.add(button);
+		if (left) {
+			buttons.add(0, button);
+		} else {
+			buttons.add(button);
+		}
 		queueCommandIfRendered(() -> new UiNavigationBar.SetButtonsCommand(getId(), createUiButtons()));
 		return this;
 	}
@@ -202,5 +214,14 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 	@Override
 	public boolean isChildVisible(Component child) {
 		return this.isEffectivelyVisible() && this.activeFanOutComponent == child;
+	}
+
+	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
+		this.multiProgressDisplay = multiProgressDisplay;
+		queueCommandIfRendered(() -> new UiNavigationBar.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiComponentReference()));
+	}
+
+	public MultiProgressDisplay getMultiProgressDisplay() {
+		return multiProgressDisplay;
 	}
 }

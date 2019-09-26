@@ -26,6 +26,7 @@ import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.application.view.ViewSize;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.workspacelayout.ViewGroupPanelState;
 import org.teamapps.ux.component.workspacelayout.WorkSpaceLayout;
@@ -89,6 +90,11 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
     public void setWorkSpaceToolbar(ResponsiveApplicationToolbar responsiveApplicationToolbar) {
         this.responsiveApplicationToolbar = responsiveApplicationToolbar;
         workSpaceLayout.setToolbar((Toolbar) responsiveApplicationToolbar.getToolbar());
+    }
+
+    @Override
+    public MultiProgressDisplay getMultiProgressDisplay() {
+        return workSpaceLayout.getMultiProgressDisplay();
     }
 
     @Override

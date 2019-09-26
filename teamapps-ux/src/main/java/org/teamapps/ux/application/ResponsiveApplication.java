@@ -22,10 +22,12 @@ package org.teamapps.ux.application;
 import org.teamapps.common.format.Color;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
+import org.teamapps.ux.application.assembler.AdditionalNavigationButton;
 import org.teamapps.ux.application.assembler.DesktopApplicationAssembler;
 import org.teamapps.ux.application.assembler.MobileApplicationAssembler;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.session.CurrentSessionContext;
 
@@ -38,7 +40,7 @@ public interface ResponsiveApplication extends Application {
 	}
 
 	static ResponsiveApplication createApplication(View applicationLauncher) {
-		return createApplication(null, MaterialIcon.VIEW_MODULE,
+		return createApplication(applicationLauncher, MaterialIcon.VIEW_MODULE,
 				MaterialIcon.TOC,
 				MaterialIcon.VIEW_CAROUSEL,
 				MaterialIcon.SUBTITLES,
@@ -48,8 +50,18 @@ public interface ResponsiveApplication extends Application {
 	static ResponsiveApplication createApplication(View applicationLauncher, Icon launcherIcon, Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon) {
 		boolean mobileDevice = CurrentSessionContext.get().getClientInfo().isMobileDevice();
 		if (mobileDevice) {
-			MobileApplicationAssembler mobileAssembler = new MobileApplicationAssembler(launcherIcon, treeIcon, viewsIcon, toolbarIcon, backIcon);
+			MobileApplicationAssembler mobileAssembler = new MobileApplicationAssembler(launcherIcon, treeIcon, viewsIcon, toolbarIcon, backIcon, null);
 			mobileAssembler.setApplicationLauncher(applicationLauncher);
+			return new ResponsiveApplicationImpl(mobileAssembler);
+		} else {
+			return new ResponsiveApplicationImpl(new DesktopApplicationAssembler());
+		}
+	}
+
+	static ResponsiveApplication createApplication(Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon, List<AdditionalNavigationButton> additionalLeftButtons) {
+		boolean mobileDevice = CurrentSessionContext.get().getClientInfo().isMobileDevice();
+		if (mobileDevice) {
+			MobileApplicationAssembler mobileAssembler = new MobileApplicationAssembler(null, treeIcon, viewsIcon, toolbarIcon, backIcon, additionalLeftButtons);
 			return new ResponsiveApplicationImpl(mobileAssembler);
 		} else {
 			return new ResponsiveApplicationImpl(new DesktopApplicationAssembler());
@@ -83,4 +95,6 @@ public interface ResponsiveApplication extends Application {
 	List<ToolbarButtonGroup> getWorkspaceButtonGroups();
 
 	void setToolbarBackgroundColor(Color backgroundColor);
+
+	MultiProgressDisplay getMultiProgressDisplay();
 }

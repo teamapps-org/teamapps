@@ -19,8 +19,8 @@
  */
 package org.teamapps.server;
 
-import org.teamapps.ux.session.SessionContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
+import org.teamapps.ux.session.SessionContext;
 
 import java.io.File;
 

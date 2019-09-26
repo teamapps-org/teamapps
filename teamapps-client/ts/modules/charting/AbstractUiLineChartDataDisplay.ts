@@ -171,7 +171,7 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 	public abstract destroy(): void;
 
 	public getDisplayedDataYBounds(): [number, number] {
-		return this.getDataSeriesIds().map(dataSeriesId => {
+		let bounds = this.getDataSeriesIds().map(dataSeriesId => {
 			let displayedData = this.getDisplayedData()[dataSeriesId];
 			let minY = Number.POSITIVE_INFINITY;
 			let maxY = Number.NEGATIVE_INFINITY;
@@ -183,10 +183,6 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 					maxY = d.y;
 				}
 			});
-			if (minY === Number.POSITIVE_INFINITY && maxY === Number.NEGATIVE_INFINITY) {
-				minY = 0;
-				maxY = 1;
-			}
 			return [minY, maxY];
 		}).reduce((globalMinMax, currentMinMax) => {
 			if (currentMinMax[0] < globalMinMax[0]) {
@@ -197,5 +193,10 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 			}
 			return globalMinMax;
 		}, [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) as [number, number];
+		if (bounds[0] === Number.POSITIVE_INFINITY && bounds[1] === Number.NEGATIVE_INFINITY) {
+			bounds[0] = 0;
+			bounds[1] = 1;
+		}
+		return bounds;
 	}
 }
