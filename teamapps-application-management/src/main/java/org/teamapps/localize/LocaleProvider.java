@@ -1,8 +1,8 @@
-package org.teamapps.app;
+package org.teamapps.localize;
 
 import java.util.Locale;
 
-public interface UserLocaleProvider<USER> {
+public interface LocaleProvider<USER> {
 
 	Locale getUserLocale(USER user, Locale userAgentLocale);
 }

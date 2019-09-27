@@ -45,6 +45,7 @@ public class ApplicationWebController implements WebController {
 	public ApplicationWebController(ComponentBuilder componentBuilder, boolean darkTheme, String geoIpDatabasePath) {
 		this.componentBuilder = componentBuilder;
 		this.darkTheme = darkTheme;
+		setGeoIpLookupService(geoIpDatabasePath);
 	}
 
 	@Override
@@ -64,14 +65,16 @@ public class ApplicationWebController implements WebController {
 
 
 	private void setGeoIpLookupService(String geoIpDatabasePath)  {
-		try {
-			if (geoIpDatabasePath == null || !new File(geoIpDatabasePath).exists()) {
-				return;
-			} else {
-				this.geoIpLookupService = new GeoIpLookupService(geoIpDatabasePath);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (geoIpDatabasePath == null || !new File(geoIpDatabasePath).exists()) {
+			return;
+		} else {
+			new Thread(() -> {
+				try {
+					this.geoIpLookupService = new GeoIpLookupService(geoIpDatabasePath);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}).start();
 		}
 	}
 

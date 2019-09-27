@@ -1,6 +1,6 @@
 package org.teamapps.theme;
 
-public interface UserThemeProvider<USER> {
+public interface ThemeProvider<USER> {
 
 	Theme getUserTheme(USER user);
 }
