@@ -91,6 +91,7 @@ public class Background {
 
 	public void applyBackground(SessionContext context) {
 		if (backgroundColor != null) {
+			context.setBackgroundImage(null, 0);
 			context.setBackgroundColor(backgroundColor, animationDuration);
 		} else if (backgroundImagePath != null) {
 			context.setBackgroundImage(uuid, animationDuration);

@@ -1,8 +1,12 @@
-package org.teamapps.app;
+package org.teamapps.theme;
 
 import org.teamapps.app.background.Background;
 
 public class Theme {
+
+	public static Theme create(Background background, boolean darkTheme) {
+		return new Theme(background, darkTheme);
+	}
 
 	private final Background background;
 	private final boolean darkTheme;
