@@ -1,6 +1,8 @@
 package org.teamapps.auth;
 
 import org.teamapps.auth.hash.SecurePasswordHash;
+import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.ux.session.SessionContext;
 
 public interface AuthenticationProvider<USER>  {
 
@@ -13,6 +15,16 @@ public interface AuthenticationProvider<USER>  {
 	}
 
 	AuthenticationResult<USER> authenticate(String login, String password);
+
+	default USER getAuthenticatedUser() {
+		return getAuthenticatedUser(CurrentSessionContext.get());
+	}
+
+	default USER getAuthenticatedUser(SessionContext context) {
+		return getSessionAuthenticatedUserResolver().getUser(context);
+	}
+
+	void addAuthenticationHandler(AuthenticationHandler<USER> authenticationHandler);
 
 	SessionAuthenticatedUserResolver<USER> getSessionAuthenticatedUserResolver();
 }

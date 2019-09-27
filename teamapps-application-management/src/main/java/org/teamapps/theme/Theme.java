@@ -1,6 +1,6 @@
 package org.teamapps.theme;
 
-import org.teamapps.app.background.Background;
+import org.teamapps.theme.background.Background;
 
 public class Theme {
 

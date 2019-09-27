@@ -2,14 +2,17 @@ package org.teamapps.login;
 
 import org.teamapps.app.*;
 import org.teamapps.auth.AuthenticationResult;
+import org.teamapps.localize.LocaleProvider;
+import org.teamapps.localize.TimeZoneProvider;
 import org.teamapps.theme.Theme;
-import org.teamapps.app.background.Background;
+import org.teamapps.theme.background.Background;
 import org.teamapps.auth.AuthenticationProvider;
-import org.teamapps.theme.UserThemeProvider;
+import org.teamapps.theme.ThemeProvider;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.login.LoginWindow;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
+import org.teamapps.ux.session.StylingTheme;
 
 import java.time.ZoneId;
 import java.util.Locale;
@@ -21,9 +24,9 @@ public class LoginHandler<USER> implements ComponentBuilder {
 
 	private Theme loginTheme = Theme.create(Background.createDefaultLoginBackground(), false);
 	private Theme defaultTheme = Theme.create(Background.createDefaultBackground(), false);
-	private UserLocaleProvider<USER> userLocaleProvider;
-	private UserTimeZoneProvider<USER> userTimeZoneProvider;
-	private UserThemeProvider<USER> userThemeProvider;
+	private LocaleProvider<USER> localeProvider;
+	private TimeZoneProvider<USER> timeZoneProvider;
+	private ThemeProvider<USER> themeProvider;
 
 
 	public LoginHandler(AuthenticationProvider<USER> authenticationProvider, ComponentBuilder componentBuilder) {
@@ -38,13 +41,13 @@ public class LoginHandler<USER> implements ComponentBuilder {
 		this.defaultTheme = defaultTheme;
 	}
 
-	public LoginHandler(AuthenticationProvider<USER> authenticationProvider, ComponentBuilder componentBuilder, Theme loginTheme, UserLocaleProvider<USER> userLocaleProvider, UserTimeZoneProvider<USER> userTimeZoneProvider, UserThemeProvider<USER> userThemeProvider) {
+	public LoginHandler(AuthenticationProvider<USER> authenticationProvider, ComponentBuilder componentBuilder, Theme loginTheme, LocaleProvider<USER> localeProvider, TimeZoneProvider<USER> timeZoneProvider, ThemeProvider<USER> themeProvider) {
 		this.authenticationProvider = authenticationProvider;
 		this.componentBuilder = componentBuilder;
 		this.loginTheme = loginTheme;
-		this.userLocaleProvider = userLocaleProvider;
-		this.userTimeZoneProvider = userTimeZoneProvider;
-		this.userThemeProvider = userThemeProvider;
+		this.localeProvider = localeProvider;
+		this.timeZoneProvider = timeZoneProvider;
+		this.themeProvider = themeProvider;
 	}
 
 	@Override
@@ -57,7 +60,7 @@ public class LoginHandler<USER> implements ComponentBuilder {
 			AuthenticationResult<USER> authenticationResult = authenticationProvider.authenticate(loginData.login, loginData.password);
 			if (authenticationResult.isSuccess()) {
 				USER authenticatedUser = authenticationResult.getAuthenticatedUser();
-				Theme theme = userThemeProvider != null ? userThemeProvider.getUserTheme(authenticatedUser) : defaultTheme;
+				Theme theme = themeProvider != null ? themeProvider.getUserTheme(authenticatedUser) : defaultTheme;
 				updateUserConfiguration(authenticatedUser, theme, context);
 				theme.getBackground().registerAndApply(context);
 				updateHandler.updateComponent(componentBuilder.buildComponent(updateHandler));
@@ -68,12 +71,26 @@ public class LoginHandler<USER> implements ComponentBuilder {
 		return loginWindow.getElegantPanel();
 	}
 
+	public void updateUserTheme(Theme theme) {
+		SessionContext context = CurrentSessionContext.get();
+		StylingTheme stylingTheme = context.getConfiguration().getTheme();
+		if ((theme.isDarkTheme() && stylingTheme != StylingTheme.DARK) ||(!theme.isDarkTheme() && stylingTheme == StylingTheme.DARK)) {
+			USER user = getAuthenticatedUser(context);
+			updateUserConfiguration(user, theme, context);
+		}
+		theme.getBackground().registerAndApply(context);
+	}
+
+	public USER getAuthenticatedUser(SessionContext context) {
+		return authenticationProvider.getSessionAuthenticatedUserResolver().getUser(context);
+	}
+
 	private void updateUserConfiguration(USER user, Theme theme, SessionContext context) {
 		Locale userAgentLocale = Locale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso());
 		ZoneId userAgentTimeZone = ZoneId.of(context.getClientInfo().getTimeZone());
 
-		Locale locale = userLocaleProvider != null ? userLocaleProvider.getUserLocale(user, userAgentLocale) : userAgentLocale;
-		ZoneId timeZone = userTimeZoneProvider != null ? userTimeZoneProvider.getUserTimeZone(user, userAgentTimeZone) : userAgentTimeZone;
+		Locale locale = localeProvider != null ? localeProvider.getUserLocale(user, userAgentLocale) : userAgentLocale;
+		ZoneId timeZone = timeZoneProvider != null ? timeZoneProvider.getUserTimeZone(user, userAgentTimeZone) : userAgentTimeZone;
 		ApplicationWebController.updateSessionConfiguration(locale, timeZone, theme, context);
 	}
 
@@ -85,15 +102,15 @@ public class LoginHandler<USER> implements ComponentBuilder {
 		this.defaultTheme = defaultTheme;
 	}
 
-	public void setUserLocaleProvider(UserLocaleProvider<USER> userLocaleProvider) {
-		this.userLocaleProvider = userLocaleProvider;
+	public void setLocaleProvider(LocaleProvider<USER> localeProvider) {
+		this.localeProvider = localeProvider;
 	}
 
-	public void setUserTimeZoneProvider(UserTimeZoneProvider<USER> userTimeZoneProvider) {
-		this.userTimeZoneProvider = userTimeZoneProvider;
+	public void setTimeZoneProvider(TimeZoneProvider<USER> timeZoneProvider) {
+		this.timeZoneProvider = timeZoneProvider;
 	}
 
-	public void setUserThemeProvider(UserThemeProvider<USER> userThemeProvider) {
-		this.userThemeProvider = userThemeProvider;
+	public void setThemeProvider(ThemeProvider<USER> themeProvider) {
+		this.themeProvider = themeProvider;
 	}
 }

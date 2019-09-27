@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.teamapps.app.background;
+package org.teamapps.theme.background;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

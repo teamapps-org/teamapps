@@ -1,4 +1,4 @@
-package org.teamapps.app;
+package org.teamapps.app.multi;
 
 import org.teamapps.icons.api.Icon;
 

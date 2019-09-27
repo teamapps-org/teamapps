@@ -9,15 +9,20 @@ public class UserAgentParser {
     private UserAgentAnalyzer agentAnalyzer;
 
     public UserAgentParser() {
-        agentAnalyzer = UserAgentAnalyzer
-                .newBuilder()
-                .hideMatcherLoadStats()
-                .withCache(5_000)
-                .build();
+        new Thread(() -> {
+            agentAnalyzer = UserAgentAnalyzer
+                    .newBuilder()
+                    .hideMatcherLoadStats()
+                    .withCache(5_000)
+                    .build();
+        }).start();
     }
 
     public ClientUserAgent parseUserAgent(String userAgent) {
         try {
+            if (agentAnalyzer == null) {
+                return null;
+            }
             UserAgent agent = agentAnalyzer.parse(userAgent);
             ClientUserAgent agentInfo = new ClientUserAgent();
             agentInfo.setDeviceClass(agent.getValue("DeviceClass"));
@@ -40,17 +45,4 @@ public class UserAgentParser {
     }
 
 
-    public static void main(String[] args) {
-        UserAgentAnalyzer uaa = UserAgentAnalyzer
-                .newBuilder()
-                .hideMatcherLoadStats()
-                .withCache(25_000)
-                .build();
-
-        String userAgentString = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36";
-        UserAgent agent = uaa.parse(userAgentString);
-        for (String fieldName: agent.getAvailableFieldNamesSorted()) {
-            System.out.println(fieldName + " = " + agent.getValue(fieldName));
-        }
-    }
 }

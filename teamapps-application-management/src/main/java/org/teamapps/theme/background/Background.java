@@ -1,4 +1,4 @@
-package org.teamapps.app.background;
+package org.teamapps.theme.background;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.session.SessionContext;
