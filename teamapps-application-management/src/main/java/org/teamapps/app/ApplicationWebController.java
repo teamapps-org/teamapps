@@ -1,22 +1,19 @@
 package org.teamapps.app;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.agent.UserAgentParser;
-import org.teamapps.app.background.Background;
-import org.teamapps.auth.AuthenticationProvider;
-import org.teamapps.auth.AuthenticationResult;
 import org.teamapps.geoip.GeoIpLookupService;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.UxServerContext;
-import org.teamapps.ux.component.login.LoginWindow;
+import org.teamapps.theme.Theme;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.resource.ClassPathResourceProvider;
 import org.teamapps.ux.resource.ResourceProviderServlet;
 import org.teamapps.ux.session.*;
 import org.teamapps.webcontroller.WebController;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -26,22 +23,28 @@ import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ApplicationWebController<USER> implements WebController {
+public class ApplicationWebController implements WebController {
 
-	private Theme loginTheme = new Theme(Background.createDefaultLoginBackground(), false);
-	private Theme defaultTheme = new Theme(Background.createDefaultBackground(), false);
-	private ThemeHandler<USER> userThemeHandler;
-
-	private final AuthenticationProvider<USER> authenticationProvider;
-	private UserAgentParser userAgentParser = new UserAgentParser();
+	private final ComponentBuilder componentBuilder;
+	private final boolean darkTheme;
 	private GeoIpLookupService geoIpLookupService;
+	private UserAgentParser userAgentParser = new UserAgentParser();
 	private List<ServletRegistration> servletRegistrations = new ArrayList<>();
 	private List<Function<UxServerContext, ServletRegistration>> servletRegistrationFactories = new ArrayList<>();
 	private IconProvider defaultIconProvider;
 	private List<IconProvider> iconProviders;
 
-	public ApplicationWebController(AuthenticationProvider<USER> authenticationProvider) {
-		this.authenticationProvider = authenticationProvider;
+	public ApplicationWebController(ComponentBuilder componentBuilder) {
+		this(componentBuilder, false, null);
+	}
+
+	public ApplicationWebController(ComponentBuilder componentBuilder, boolean darkTheme) {
+		this(componentBuilder, darkTheme, null);
+	}
+
+	public ApplicationWebController(ComponentBuilder componentBuilder, boolean darkTheme, String geoIpDatabasePath) {
+		this.componentBuilder = componentBuilder;
+		this.darkTheme = darkTheme;
 	}
 
 	@Override
@@ -54,52 +57,22 @@ public class ApplicationWebController<USER> implements WebController {
 				context.getClientInfo().setGeoIpInfo(clientGeoIpInfo);
 			}
 		}
-		loginTheme.getBackground().registerBackground(context);
-		defaultTheme.getBackground().registerBackground(context);
-
 		RootPanel rootPanel = new RootPanel();
 		context.addRootComponent(null, rootPanel);
+		rootPanel.setContent(componentBuilder.buildComponent(component -> rootPanel.setContent(component)));
+	}
 
-		LoginWindow loginWindow = new LoginWindow();
-		rootPanel.setContent(loginWindow.getElegantPanel());
-		loginWindow.onLogin.addListener(loginData -> {
-			AuthenticationResult<USER> authenticationResult = authenticationProvider.authenticate(loginData.login, loginData.password);
-			if (authenticationResult.isSuccess()) {
-				USER authenticatedUser = authenticationResult.getAuthenticatedUser();
-				Theme theme = userThemeHandler != null ? userThemeHandler.getUserTheme(authenticatedUser, context.getClientInfo().isMobileDevice(), context) : defaultTheme;
-				updateTheme(theme, context);
 
+	private void setGeoIpLookupService(String geoIpDatabasePath)  {
+		try {
+			if (geoIpDatabasePath == null || !new File(geoIpDatabasePath).exists()) {
+				return;
 			} else {
-				loginWindow.setError();
+				this.geoIpLookupService = new GeoIpLookupService(geoIpDatabasePath);
 			}
-		});
-
-
-	}
-
-	private void updateTheme(Theme theme, SessionContext context) {
-		if (theme.getBackground() != null) {
-			theme.getBackground().registerAndApply(context);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		if (theme.isDarkTheme() != loginTheme.isDarkTheme()) {
-			context.setConfiguration(createSessionConfiguration(theme.isDarkTheme(), context));
-		}
-	}
-
-	public void setGeoIpLookupService(String geoIpDatabasePath) throws IOException {
-		this.geoIpLookupService = new GeoIpLookupService(geoIpDatabasePath);
-	}
-
-	public void setLoginTheme(Theme loginTheme) {
-		this.loginTheme = loginTheme;
-	}
-
-	public void setDefaultTheme(Theme defaultTheme) {
-		this.defaultTheme = defaultTheme;
-	}
-
-	public void setUserThemeHandler(ThemeHandler<USER> userThemeHandler) {
-		this.userThemeHandler = userThemeHandler;
 	}
 
 	public void setDefaultIconProvider(IconProvider defaultIconProvider) {
@@ -127,28 +100,7 @@ public class ApplicationWebController<USER> implements WebController {
 
 	@Override
 	public SessionConfiguration createSessionConfiguration(SessionContext context) {
-		return createSessionConfiguration(loginTheme.isDarkTheme(), context);
-	}
-
-	@NotNull
-	private SessionConfiguration createSessionConfiguration(boolean darkTheme, SessionContext context) {
-		boolean optimizedForTouch = false;
-		StylingTheme theme = StylingTheme.DEFAULT;
-		if (context.getClientInfo().isMobileDevice()) {
-			optimizedForTouch = true;
-			theme = StylingTheme.MODERN;
-		}
-		if (darkTheme) {
-			theme = StylingTheme.DARK;
-		}
-
-		Locale locale = Locale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso());
-		return SessionConfiguration.create(
-				locale,
-				ZoneId.of(context.getClientInfo().getTimeZone()),
-				theme,
-				optimizedForTouch
-		);
+		return createSessionConfiguration(darkTheme, context);
 	}
 
 	@Override
@@ -174,5 +126,44 @@ public class ApplicationWebController<USER> implements WebController {
 
 	public void addServletRegistrationFactory(Function<UxServerContext, ServletRegistration> servletRegistrationFactory) {
 		this.servletRegistrationFactories.add(servletRegistrationFactory);
+	}
+
+	public static SessionConfiguration createSessionConfiguration(boolean darkTheme, SessionContext context) {
+		boolean optimizedForTouch = false;
+		StylingTheme theme = StylingTheme.DEFAULT;
+		if (context.getClientInfo().isMobileDevice()) {
+			optimizedForTouch = true;
+			theme = StylingTheme.MODERN;
+		}
+		if (darkTheme) {
+			theme = StylingTheme.DARK;
+		}
+
+		Locale locale = Locale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso());
+		return SessionConfiguration.create(
+				locale,
+				ZoneId.of(context.getClientInfo().getTimeZone()),
+				theme,
+				optimizedForTouch
+		);
+	}
+
+	public static void updateSessionConfiguration(Locale locale, ZoneId timeZone, Theme theme, SessionContext context) {
+		boolean darkTheme = theme.isDarkTheme();
+		boolean optimizedForTouch = false;
+		StylingTheme stylingTheme = StylingTheme.DEFAULT;
+		if (context.getClientInfo().isMobileDevice()) {
+			optimizedForTouch = true;
+			stylingTheme = StylingTheme.MODERN;
+		}
+		if (darkTheme) {
+			stylingTheme = StylingTheme.DARK;
+		}
+		context.setConfiguration(SessionConfiguration.create(
+				locale,
+				timeZone,
+				stylingTheme,
+				optimizedForTouch
+		));
 	}
 }
