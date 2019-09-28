@@ -17,19 +17,32 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <name>TeamApps Application Management</name>
+    <description>TeamApps UX Application Management</description>
+    <url>https://github.com/teamapps-org/teamapps</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Matthias Bernstein</name>
+            <email>matthias.bernstein@teamapps.org</email>
+            <id>matthias-bernstein</id>
+        </developer>
+        <developer>
+            <name>Yann Massard</name>
+            <email>yann.massard@teamapps.org</email>
+            <id>yamass</id>
+        </developer>
+    </developers>
+
+
     <dependencies>
-
-        <!-- REMOVE !!!-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-        </dependency>
-
-        <!-- REMOVE !!!-->
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-server-jetty-embedded</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.teamapps</groupId>

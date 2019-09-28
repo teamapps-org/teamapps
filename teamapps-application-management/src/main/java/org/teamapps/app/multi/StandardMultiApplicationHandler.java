@@ -117,15 +117,14 @@ public class StandardMultiApplicationHandler<USER> implements MultiApplicationHa
 			}
 		}
 		Tab homeTab = null;
+		Panel panel = new Panel(applicationLauncherIcon, "Applications"); //todo improve
+		TextField applicationsSearchField = new TextField();
+		applicationsSearchField.setShowClearButton(true);
+		applicationsSearchField.setEmptyText("Search...");
+		applicationsSearchField.onTextInput().addListener(applicationLauncher::setFilter);
+		panel.setRightHeaderField(applicationsSearchField);
+		panel.setContent(applicationLauncher);
 		if (tabPanel != null) {
-			Panel panel = new Panel(applicationLauncherIcon, "Applications"); //todo improve
-			TextField applicationsSearchField = new TextField();
-			applicationsSearchField.setShowClearButton(true);
-			applicationsSearchField.setEmptyText("Search...");
-			applicationsSearchField.onTextInput().addListener(applicationLauncher::setFilter);
-			panel.setRightHeaderField(applicationsSearchField);
-			panel.setContent(applicationLauncher);
-
 			homeTab = new Tab(MaterialIcon.APPS, "Home", panel); //todo improve
 			tabPanel.addTab(homeTab, true);
 		}
@@ -186,13 +185,13 @@ public class StandardMultiApplicationHandler<USER> implements MultiApplicationHa
 			itemGroup.setItemTemplate(BaseTemplate.LIST_ITEM_EXTRA_VERY_LARGE_ICON_TWO_LINES);
 			SimpleItem<ApplicationInfo> item = itemGroup.addItem(logoutIcon, "Logout", ""); 	//todo improve
 			item.onClick.addListener(aVoid -> handleLogout(user, updateHandler));
-			return applicationLauncher;
+			return panel;
 		} else {
 			Tab finalHomeTab = homeTab;
 			tabPanel.onTabSelected.addListener(tab -> {
 				ApplicationInfo applicationInfo = applicationInfoByTab.get(tab);
 				if (tab.equals(finalHomeTab)) {
-					//ignore
+					clientConfigProvider.setUserTheme(user, clientConfigProvider.getUserTheme(user));
 				} else if (applicationInfo == null) {
 					handleLogout(user, updateHandler);
 				} else {
