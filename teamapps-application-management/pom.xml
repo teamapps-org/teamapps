@@ -18,6 +18,19 @@
     </properties>
 
     <dependencies>
+
+        <!-- REMOVE !!!-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
+
+        <!-- REMOVE !!!-->
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-server-jetty-embedded</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-ux</artifactId>

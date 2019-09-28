@@ -1,4 +1,4 @@
-package org.teamapps.localize;
+package org.teamapps.config;
 
 import java.time.ZoneId;
 

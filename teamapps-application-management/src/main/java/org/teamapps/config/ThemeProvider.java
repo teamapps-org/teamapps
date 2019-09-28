@@ -1,4 +1,6 @@
-package org.teamapps.theme;
+package org.teamapps.config;
+
+import org.teamapps.theme.Theme;
 
 public interface ThemeProvider<USER> {
 

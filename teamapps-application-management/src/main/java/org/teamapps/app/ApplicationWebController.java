@@ -1,12 +1,12 @@
 package org.teamapps.app;
 
 import org.teamapps.agent.UserAgentParser;
+import org.teamapps.config.ClientConfigProvider;
 import org.teamapps.geoip.GeoIpLookupService;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.UxServerContext;
-import org.teamapps.theme.Theme;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.resource.ClassPathResourceProvider;
 import org.teamapps.ux.resource.ResourceProviderServlet;
@@ -15,11 +15,9 @@ import org.teamapps.webcontroller.WebController;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -103,7 +101,7 @@ public class ApplicationWebController implements WebController {
 
 	@Override
 	public SessionConfiguration createSessionConfiguration(SessionContext context) {
-		return createSessionConfiguration(darkTheme, context);
+		return ClientConfigProvider.createUserAgentSessionConfiguration(darkTheme, context);
 	}
 
 	@Override
@@ -131,42 +129,5 @@ public class ApplicationWebController implements WebController {
 		this.servletRegistrationFactories.add(servletRegistrationFactory);
 	}
 
-	public static SessionConfiguration createSessionConfiguration(boolean darkTheme, SessionContext context) {
-		boolean optimizedForTouch = false;
-		StylingTheme theme = StylingTheme.DEFAULT;
-		if (context.getClientInfo().isMobileDevice()) {
-			optimizedForTouch = true;
-			theme = StylingTheme.MODERN;
-		}
-		if (darkTheme) {
-			theme = StylingTheme.DARK;
-		}
 
-		Locale locale = Locale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso());
-		return SessionConfiguration.create(
-				locale,
-				ZoneId.of(context.getClientInfo().getTimeZone()),
-				theme,
-				optimizedForTouch
-		);
-	}
-
-	public static void updateSessionConfiguration(Locale locale, ZoneId timeZone, Theme theme, SessionContext context) {
-		boolean darkTheme = theme.isDarkTheme();
-		boolean optimizedForTouch = false;
-		StylingTheme stylingTheme = StylingTheme.DEFAULT;
-		if (context.getClientInfo().isMobileDevice()) {
-			optimizedForTouch = true;
-			stylingTheme = StylingTheme.MODERN;
-		}
-		if (darkTheme) {
-			stylingTheme = StylingTheme.DARK;
-		}
-		context.setConfiguration(SessionConfiguration.create(
-				locale,
-				timeZone,
-				stylingTheme,
-				optimizedForTouch
-		));
-	}
 }
