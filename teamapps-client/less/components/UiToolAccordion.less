@@ -23,7 +23,7 @@
   > .background-color-div {
     width: 100%;
     min-height: 100%;
-    background-color: rgba(255, 255, 255, 0.84);
+    background-color: var(--ta-bg-color-semi-transparent);
 
     .button-group-wrapper {
       overflow: hidden; // !!!
@@ -84,11 +84,9 @@
   position: relative;
   outline: none;
 
-  &:hover {
-    background-color: rgba(255, 255, 255, .75);
-  }
+  &:hover,
   &:active {
-    background-color: white;
+    background-color: var(--ta-bg-color);
   }
   > .toolbar-button-caret {
     align-self: center;
@@ -97,13 +95,13 @@
 }
 
 .button-group-wrapper.horizontal:first-child > .toolbar-button-group > .toolbar-button-wrapper:first-child {
-  border-top-left-radius: @border-radius-base;
-  border-bottom-left-radius: @border-radius-base;
+  border-top-left-radius: var(--ta-border-radius-base);
+  border-bottom-left-radius: var(--ta-border-radius-base);
 }
 
 .button-group-wrapper.vertical:last-child > .toolbar-button-group .toolbar-button-wrapper:last-child {
-  border-bottom-left-radius: @border-radius-base;
-  border-bottom-right-radius: @border-radius-base;
+  border-bottom-left-radius: var(--ta-border-radius-base);
+  border-bottom-right-radius: var(--ta-border-radius-base);
 }
 
 .AbstractUiToolContainer-size-testing-container {

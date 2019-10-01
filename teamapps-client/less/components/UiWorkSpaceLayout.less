@@ -49,7 +49,7 @@
     align-items: center;
     justify-content: space-between;
     display: flex;
-    background: rgba(255, 255, 255, 0.72);
+    background: var(--ta-bg-color-semi-transparent);
     box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     
     .minimized-tabpanel-button-container {
@@ -67,10 +67,10 @@
         margin: 2px;
         padding: 5px;
         border: 1px solid rgba(0, 0, 0, .2);
-        border-radius: @panel-border-radius;
-        background-color: rgba(255, 255, 255, .7);
+        border-radius: var(--ta-border-radius-base);
+        background-color: var(--ta-bg-color-semi-transparent);
         &:hover {
-          background-color: rgba(255, 255, 255, 1);
+          background-color: var(--ta-bg-color);
         }
         .tab-icon {
           margin: 0 2px;
@@ -93,9 +93,9 @@
 
   .dnd-target-rectangle {
     position: absolute;
-    border: 4px solid rgba(255, 255, 255, .8);
+    border: 4px solid var(--ta-bg-color-semi-transparent);
     pointer-events: none;
-    z-index: @zindex-modal - 1;
+    z-index: calc(var(--ta-zindex-modal) - 1);
     background-color: var(--ta-color-primary);
     &:before {
       content: " ";
@@ -159,7 +159,7 @@
       display: block;
       width: 150px;
       height: 100px;
-      background-color: rgba(255, 255, 255, 0.72);
+      background-color: var(--ta-bg-color-semi-transparent);
       border-top-right-radius: 5px;
       border-bottom-left-radius: 5px;
       border-bottom-right-radius: 5px;

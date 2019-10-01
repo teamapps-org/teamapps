@@ -5928,9 +5928,10 @@ tough-cookie@~2.4.3:
     psl "^1.1.24"
     punycode "^1.4.1"
 
-trivial-components@^0.3.24:
-  version "0.3.24"
-  resolved "https://registry.yarnpkg.com/trivial-components/-/trivial-components-0.3.24.tgz#689ecd83d49fd2eafe6333d6d98e8d50ddd68ec0"
+trivial-components@^0.3.25:
+  version "0.3.25"
+  resolved "https://registry.yarnpkg.com/trivial-components/-/trivial-components-0.3.25.tgz#14a8273d6f4344002c7b1c4af1f08e9ca38bb9a5"
+  integrity sha512-6zPkaf7eWiEFyvK55Qz4yYY4VjmRom3EWgHdHeQuk8JJfTRdSSm/J5YhdIF7i+SwlPBOQNfYhS/FGHcZa/I8/w==
   dependencies:
     jquery "^3.2.1"
     levenshtein "^1.0.5"

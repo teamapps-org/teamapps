@@ -53,7 +53,7 @@
         overflow: visible;
         border-top: none;
         border-left: none;
-        border-right: 1px solid @input-border;
+        border-right: 1px solid var(--ta-input-border-color);
         border-bottom: none;
         height: 100%;
 
@@ -68,8 +68,8 @@
       align-items: center;
       border-top: none;
       border-left: none;
-      border-bottom: 1px solid @input-border;
-      border-right: 1px solid @input-border;
+      border-bottom: 1px solid var(--ta-input-border-color);
+      border-right: 1px solid var(--ta-input-border-color);
       padding: 0;
       user-select: text;
       overflow: visible; // needed for validation borders to be displayed correctly; see anti-overflow-wrapper
@@ -94,19 +94,19 @@
         }
 
         &.message-info:after {
-          border-color: @state-info-text;
+          border-color: var(--ta-state-info-text);
         }
 
         &.message-success:after {
-          border-color: @state-success-text;
+          border-color: var(--ta-state-success-text);
         }
 
         &.message-warning:after {
-          border-color: @state-warning-border;
+          border-color: var(--ta-state-warning-border);
         }
 
         &.message-error:after {
-          border-color: @state-danger-text;
+          border-color: var(--ta-state-danger-text);
         }
 
         .anti-overflow-wrapper {
@@ -137,8 +137,8 @@
         padding: 0;
         border-top: none;
         border-left: none;
-        border-bottom: 1px solid @input-border;
-        border-right: 1px solid @input-border;
+        border-bottom: 1px solid var(--ta-input-border-color);
+        border-right: 1px solid var(--ta-input-border-color);
       }
       .editor-text {
         width: 100%;
@@ -186,9 +186,9 @@
 
     &.table-mode {
       .slick-cell.active.editable {
-        //box-shadow: -1px -1px 0 0 mix(@input-border-focus, @input-border, 70%);
-        //border-bottom-color: mix(@input-border-focus, @input-border, 70%) !important;
-        //border-right: 1px solid mix(@input-border-focus, @input-border, 70%);
+        //box-shadow: -1px -1px 0 0 mix(@input-border-focus, var(--ta-input-border), 70%);
+        //border-bottom-color: mix(@input-border-focus, var(--ta-input-border), 70%) !important;
+        //border-right: 1px solid mix(@input-border-focus, var(--ta-input-border), 70%);
         z-index: 15;
       }
     }

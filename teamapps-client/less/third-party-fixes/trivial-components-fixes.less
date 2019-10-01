@@ -19,7 +19,7 @@
  */
 @tr-tree-indent: 15px;
 @tr-editor-font-size: 100%;
-@tr-input-min-height: @input-height-base;
+@tr-input-min-height: var(--ta-input-height-base);
 
 .tr-tree-expander {
   margin: 0 1px 0 3px !important;
@@ -30,8 +30,8 @@
 }
 
 .tr-input-wrapper {
-  border-radius: @border-radius-base;
-  min-height: @input-height-base;
+  border-radius: var(--ta-border-radius-base);
+  min-height: var(--ta-input-height-base);
 }
 
 .tr-combobox-selected-entry-wrapper {
@@ -46,7 +46,7 @@
 
 .tr-dropdown {
   max-height: 200px;
-  z-index: @zindex-max;
+  z-index: var(--ta-zindex-max);
 }
 
 .tr-datetimefield .tr-editor-wrapper .tr-date-editor,
@@ -59,7 +59,7 @@
 
 .tr-input-wrapper {
   box-shadow: none;
-  transition: border-color @default-color-transition-time, box-shadow @default-color-transition-time;
+  transition: border-color var(--ta-color-transition-time), box-shadow var(--ta-color-transition-time);
 }
 
 .tr-remove-button {

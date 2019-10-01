@@ -17,8 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-@spinner-container-background: rgba(255, 255, 255, .3);
-
 .UiLiveStreamComponent {
   position: relative;
   overflow: hidden;
@@ -74,21 +72,21 @@
     right: 5px;
     min-height: 2em;
 
-    @media (min-width: @screen-sm-min) {
-      font-size: 160%;
-      left: 10px;
-      right: 10px;
-    }
-    @media (min-width: @screen-md-min) {
-      font-size: 200%;
-      left: 20px;
-      right: 20px;
-    }
-    @media (min-width: @screen-lg-min) {
-      font-size: 250%;
-      left: 30px;
-      right: 30px;
-    }
+    //@media (min-width: @screen-sm-min) {
+    //  font-size: 160%;
+    //  left: 10px;
+    //  right: 10px;
+    //}
+    //@media (min-width: @screen-md-min) {
+    //  font-size: 200%;
+    //  left: 20px;
+    //  right: 20px;
+    //}
+    //@media (min-width: @screen-lg-min) {
+    //  font-size: 250%;
+    //  left: 30px;
+    //  right: 30px;
+    //}
   }
 }
 
@@ -105,7 +103,7 @@
       left: 0;
       bottom: 0;
       right: 0;
-      background-color: @spinner-container-background;
+      background-color: var(--ta-bg-dim-overlay);
     }
     video {
       width: 100%;
@@ -128,7 +126,7 @@
       left: 0;
       bottom: 0;
       right: 0;
-      background-color: @spinner-container-background;
+      background-color: var(--ta-bg-dim-overlay);
     }
     video {
       width: 100%;

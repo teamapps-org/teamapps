@@ -2,13 +2,13 @@
 
   --stripes-size: 10px;
 
-  border: 1px solid @input-border;
-  border-radius: @border-radius-base;
+  border: 1px solid var(--ta-input-border-color);
+  border-radius: var(--ta-border-radius-base);
 
   .title {
     display: flex;
     padding: 4px 5px 2px 5px;
-    border-bottom: 1px solid @input-border;
+    border-bottom: 1px solid var(--ta-input-border-color);
 
     .icon {
       margin-right: 5px;
@@ -147,12 +147,12 @@
     //  border-color: @state-success-text;
     //}
     .progress {
-      background-color: @state-success-bg;
+      background-color: var(--ta-state-success-bg);
     }
 
     .progress-bar {
       width: 100% !important;
-      background-color: @brand-success;
+      background-color: var(--ta-state-success-text);
       animation: none;
     }
 
@@ -167,11 +167,11 @@
     //}
 
     .progress {
-      background-color: lighten(@brand-danger, 15%);
+      background-color: var(--ta-state-danger-text);
     }
 
     .progress-bar {
-      background-color: @brand-danger;
+      background-color: var(--ta-state-danger-text-emphasis);
     }
 
     .cancel-button {

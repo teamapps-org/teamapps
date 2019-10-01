@@ -19,10 +19,10 @@
  */
 .UiDropDown {
 	position: absolute;
-	z-index: @zindex-max;
+	z-index: var(--ta-zindex-max);
 	box-shadow: @flying-box-shadow;
-	border: 1px solid @input-border;
-	border-radius: 0 0 @border-radius-base @border-radius-base;
+	border: 1px solid var(--ta-input-border-color);
+	border-radius: 0 0 var(--ta-border-radius-base) var(--ta-border-radius-base);
 
 	&:not(.open) {
 		.pseudo-hidden;
@@ -30,7 +30,7 @@
 
 	> .background-color-div {
 		width: 100%;
-		background-color: rgba(255, 255, 255, 0.84);
+		background-color: var(--ta-bg-color-semi-transparent);
 		overflow: auto;
 		.tr-default-spinner {
 			position: static;

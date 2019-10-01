@@ -23,7 +23,7 @@
   .fc-month-grid-week-number {
     text-anchor: end;
     fill: #999;
-    font-weight: @calendar-font-weight;
+    font-weight: var(--ta-font-weight-light);
     cursor: pointer;
     &:hover {
       text-decoration: underline;
@@ -37,12 +37,12 @@
   }
 
   .fc-month-grid-month-name {
-    fill: @text-color;
-    font-weight: @calendar-font-weight;
+    fill: var(--ta-text-color);
+    font-weight: var(--ta-font-weight-light);
     cursor: pointer;
     &:hover {
       text-decoration: underline;
-      text-decoration-color: @text-color;
+      text-decoration-color: var(--ta-text-color);
     }
   }
 
@@ -50,7 +50,7 @@
     cursor: pointer;
 
     .day-number {
-      fill: @text-color;
+      fill: var(--ta-text-color);
     }
 
     &.weekend .day-number {
@@ -71,7 +71,7 @@
     &:hover {
       .day-number {
         text-decoration: underline;
-        text-decoration-color: @text-color;
+        text-decoration-color: var(--ta-text-color);
       }
       .day-occupation-background-circle {
         background-color: white;

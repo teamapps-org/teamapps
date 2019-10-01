@@ -11,19 +11,21 @@
 .btn {
   display: inline-block;
   margin-bottom: 0; // For input.btn
-  font-weight: @btn-font-weight;
+  font-weight: var(--ta-btn-font-weight);
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   touch-action: manipulation;
   cursor: pointer;
   background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border: 1px solid transparent;
-  padding: @padding-base-vertical @padding-base-horizontal;
-  font-size: @font-size-base;
-  line-height: @line-height-base;
-  border-radius: @btn-border-radius-base;
+  padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+  font-size: var(--ta-font-size-base);
+  line-height: var(--ta-line-height);
+  border-radius: var(--ta-border-radius-base);
   user-select: none;
+
+  background-color: var(--ta-bg-color);
+  border: 1px solid var(--ta-border-color);
 
   &,
   &:active,
@@ -37,7 +39,7 @@
   &:hover,
   &:focus,
   &.focus {
-    color: @btn-default-color;
+    color: var(--ta-bg-color);
     text-decoration: none;
   }
 
@@ -51,7 +53,7 @@
   &.disabled,
   &[disabled],
   fieldset[disabled] & {
-    cursor: @cursor-disabled;
+    cursor: var(--ta-cursor-disabled);
     opacity: .65;
     box-shadow: none;
   }
@@ -61,81 +63,5 @@
     fieldset[disabled] & {
       pointer-events: none; // Future-proof disabling of clicks on `<a>` elements
     }
-  }
-}
-
-
-// Alternate buttons
-// --------------------------------------------------
-
-.btn-default {
-  color: @btn-default-color;
-  background-color: @btn-default-bg;
-  border-color: @btn-default-border;
-
-  &:focus,
-  &.focus {
-    color: @btn-default-color;
-    //background-color: darken(@background, 10%);
-    //border-color: darken(@border, 25%);
-  }
-  &:hover {
-    color: @btn-default-color;
-    //background-color: darken(@background, 10%);
-    //border-color: darken(@border, 12%);
-  }
-  &:active,
-  &.active,
-  .open > .dropdown-toggle& {
-    color: @btn-default-color;
-    //background-color: darken(@background, 10%);
-    background-image: none;
-    //border-color: darken(@border, 12%);
-
-    &:hover,
-    &:focus,
-    &.focus {
-      color: @btn-default-color;
-      //background-color: darken(@background, 17%);
-      //border-color: darken(@border, 25%);
-    }
-  }
-  &.disabled,
-  &[disabled],
-  fieldset[disabled] & {
-    &:hover,
-    &:focus,
-    &.focus {
-      background-color: @btn-default-bg;
-      border-color: @btn-default-border;
-    }
-  }
-
-  .badge {
-    color: @btn-default-bg;
-    background-color: @btn-default-color;
-  }
-}
-
-
-// Block button
-// --------------------------------------------------
-
-.btn-block {
-  display: block;
-  width: 100%;
-}
-
-// Vertically space out multiple block buttons
-.btn-block + .btn-block {
-  margin-top: 5px;
-}
-
-// Specificity overrides
-input[type="submit"],
-input[type="reset"],
-input[type="button"] {
-  &.btn-block {
-    width: 100%;
   }
 }

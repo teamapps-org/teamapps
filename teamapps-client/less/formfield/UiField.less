@@ -22,8 +22,8 @@
 
   & .field-border,
   & .field-border-visibility {
-    border-color: @input-border;
-    transition: border-color @default-color-transition-time;
+    border-color: var(--ta-input-border-color);
+    transition: border-color var(--ta-color-transition-time);
   }
   &.message-success .field-border {
     border-color: @state-success-text;
@@ -63,10 +63,10 @@
   // === background ===
 
   & .field-background {
-    transition: background-color @default-color-transition-time;
+    transition: background-color var(--ta-color-transition-time);
   }
   &.message-success .field-background {
-    background-color: @state-success-bg;
+    background-color: var(--ta-state-success-bg);
   }
   &.message-warning .field-background {
     background-color: @state-warning-bg;
@@ -76,7 +76,7 @@
   }
 
   &.disabled .field-background {
-    background-color: @input-bg-disabled;
+    background-color: var(--ta-input-bg-disabled);
   }
   &.readonly .field-background,
   &.editable-if-focused:not(.focus):not(:hover) .field-background {
@@ -92,7 +92,7 @@
   & .field-border,
   & .field-border-glow,
   & .field-background {
-    transition: border-color @default-color-transition-time, box-shadow @default-color-transition-time, background-color @default-color-transition-time;
+    transition: border-color var(--ta-color-transition-time), box-shadow var(--ta-color-transition-time), background-color var(--ta-color-transition-time);
   }
 
   // === SPECIFIC ===
@@ -101,7 +101,7 @@
     .tr-trigger,
     .tr-remove-button,
     .tr-unitbox-selected-entry-and-trigger-wrapper {
-      transition: opacity @default-color-transition-time, background-color @default-color-transition-time;
+      transition: opacity var(--ta-color-transition-time), background-color var(--ta-color-transition-time);
       border-color: transparent !important;
       background-color: transparent;
     }
@@ -123,8 +123,8 @@
   }
 
   .teamapps-input-wrapper {
-    border: 1px solid @input-border;
-    border-radius: @input-border-radius;
+    border: 1px solid var(--ta-input-border-color);
+    border-radius: var(--ta-input-border-radius);
   }
 
 }
@@ -133,16 +133,16 @@
   padding: 0 5px;
 }
 .field-message-info {
-  .text-info;
+  color: var(--ta-state-info-text);
 }
 .field-message-success {
-  .text-success;
+  color: var(--ta-state-success-text);
 }
 .field-message-warning {
-  .text-warning;
+  color: var(--ta-state-warning-text);
 }
 .field-message-error {
-  .text-danger;
+  color: var(--ta-state-danger-text);
 }
 
 .teamapps-form-control-focus(@color: @input-border-focus) {

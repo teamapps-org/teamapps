@@ -32,7 +32,7 @@
     cursor: default;
 
     > .background-color-div {
-      background-color: rgba(255, 255, 255, @direct-transparency-alpha);
+      background-color: var(--ta-bg-color-semi-transparent);
       display: flex;
       align-items: stretch;
       height: 100%;
@@ -111,16 +111,16 @@
 
       .tab-panel-dropdown {
         position: absolute;
-        z-index: @zindex-max;
+        z-index: var(--ta-zindex-max);
         box-shadow: 0 3px 8px -1px rgba(0, 0, 0, .4);
-        border-radius: 0 0 @border-radius-base @border-radius-base;
+        border-radius: 0 0 var(--ta-border-radius-base) var(--ta-border-radius-base);
         .dropdown-button-container {
           display: flex;
           flex-direction: column;
-          background-color: rgba(255, 255, 255, @direct-transparency-alpha);
+          background-color: var(--ta-bg-color-semi-transparent);
 
           > .tab-button.selected {
-            background-color: @teamapps-hover-color;
+            background-color: var(--ta-hover-color);
 
             &:after {
               position: absolute;
@@ -142,7 +142,7 @@
           }
 
           &:last-child {
-            border-radius: 0 0 @border-radius-base @border-radius-base;
+            border-radius: 0 0 var(--ta-border-radius-base) var(--ta-border-radius-base);
           }
         }
       }
@@ -197,7 +197,7 @@
   > .tab-panel-header {
 
     .tab-button-container .tab-button.selected {
-      background-color: @teamapps-hover-color;
+      background-color: var(--ta-hover-color);
 
       &:after {
         position: absolute;
@@ -219,10 +219,10 @@
       > .dropdown-button:not(.tool-tab-button) {
         transition: background-color .2s;
         &:hover {
-          background-color: @teamapps-hover-color;
+          background-color: var(--ta-hover-color);
         }
         &:active {
-          background-color: @teamapps-active-color;
+          background-color: var(--ta-active-color);
         }
       }
     }
@@ -272,7 +272,7 @@
 
       &.selected {
         border-left-color: rgba(0, 0, 0, .2);
-        background-color: rgba(255, 255, 255, @direct-transparency-alpha);
+        background-color: var(--ta-bg-color-semi-transparent);
       }
 
       &:last-child {
@@ -308,7 +308,7 @@
   }
 
   &.teamapps-component-maximized .background-color-div {
-    background-color: @maximized-shadow-color !important;
+    background-color: var(--ta-bg-dim-overlay) !important;
   }
 
 }

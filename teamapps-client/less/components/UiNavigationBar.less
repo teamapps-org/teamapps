@@ -23,7 +23,7 @@
   user-select: none;
 
   background-color: white;
-  border-top: 1px solid @btn-default-border;
+  border-top: 1px solid var(--ta-btn-default-border);
 
   position: relative;
 
@@ -68,7 +68,7 @@
     width: 100%;
     position: absolute;
     box-shadow: 0px -5px 20px -3px rgba(0, 0, 0, 0.3);
-    z-index: @zindex-max;
+    z-index: var(--ta-zindex-max);
     display:none;
 
     .open {
@@ -76,7 +76,7 @@
     }
 
     .fan-out-container {
-      background-color: rgba(255, 255, 255, 0.84);
+      background-color: var(--ta-bg-color-semi-transparent);
     }
   }
 }

@@ -20,7 +20,7 @@
 
 .UiFloatingComponent {
   position: absolute;
-  z-index: @zindex-dropdown - 1;
+  z-index: calc(var(--ta-zindex-dropdown) - 1);
 
   transition: left .3s, right .3s;
 
@@ -33,8 +33,8 @@
     width: 12px;
     height: 30px;
     position: absolute;
-    background-color: @panel-bg;
-    border: 1px solid @input-border;
+    background-color: var(--ta-bg-color);
+    border: 1px solid var(--ta-input-border-color);
 
     &.position-top-left,
     &.position-top-right{

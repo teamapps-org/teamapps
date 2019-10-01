@@ -19,7 +19,7 @@
  */
 .UiRichTextEditor {
   min-width: @default-input-width;
-  background-color: @input-bg;
+  background-color: var(--ta-input-bg);
 
   display: flex;
   flex-direction: column;
@@ -31,11 +31,11 @@
     height: auto !important;
     flex: 0 0 auto;
 
-    border-top-left-radius: @input-border-radius;
-    border-top-right-radius: @input-border-radius;
+    border-top-left-radius: var(--ta-input-border-radius);
+    border-top-right-radius: var(--ta-input-border-radius);
     overflow: hidden;
     
-    transition: opacity @default-color-transition-time;
+    transition: opacity var(--ta-color-transition-time);
 
     > .mce-panel {
       display: block !important;
@@ -44,7 +44,7 @@
       box-shadow: none;
       //border-color: @input-border-hover;
       border-width: 0 0 1px 0 !important;
-      transition: border-color @default-color-transition-time;
+      transition: border-color var(--ta-color-transition-time);
 
       > .mce-container-body {
         width: 100% !important;
@@ -54,7 +54,7 @@
           position: static;
           width: 100% !important;
           height: auto !important;
-          border-radius: @input-border-radius;
+          border-radius: var(--ta-input-border-radius);
 
           > .mce-container-body {
             height: auto !important;
@@ -73,7 +73,7 @@
                 > .mce-btn-group {
                   padding: 0;
                   margin: 0;
-                  transition: border-color @default-color-transition-time;
+                  transition: border-color var(--ta-color-transition-time);
 
                   &:last-child {
                     flex: 1 1 auto;
@@ -89,7 +89,7 @@
                     border: none;
 
                     &:hover {
-                      background-color: @teamapps-hover-color;
+                      background-color: var(--ta-hover-color);
                     }
                   }
                 }
@@ -112,15 +112,16 @@
       display: block;
 
       padding: var(--ta-half-line-height-computed);
-      border: 1px solid transparent;
-      border-radius: @alert-border-radius;
+      border: 1px solid var(--ta-state-info-border);
+      color: var(--ta-state-info-text);
+      background-color: var(--ta-state-info-bg);
+      border-radius: var(--ta-border-radius-large);
       margin-bottom: var(--ta-half-line-height-computed);
 
       > *:last-child {
         margin-bottom: 0;
       }
 
-      .alert-variant(@alert-info-bg; @alert-info-border; @alert-info-text);
     }
 
     blockquote {
@@ -148,7 +149,7 @@
   &.editable-if-focused:not(:hover):not(.focus) .toolbar-container {
     opacity: .5;
     box-shadow: 0 0 1px 0 rgba(0, 0, 0, .5);
-    border-radius: @input-border-radius;
+    border-radius: var(--ta-input-border-radius);
 
     > .mce-panel {
       border-color: transparent;
