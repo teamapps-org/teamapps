@@ -19,7 +19,7 @@
  */
 .UiToolbar {
   border: none;
-  border-radius: @panel-border-radius;
+  border-radius: var(--ta-border-radius-base);
 
   box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
   overflow: visible; // !!!needed for dropdowns!!!
@@ -29,9 +29,9 @@
   > .background-color-div {
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.84);
+    background-color: var(--ta-bg-color-semi-transparent);
     overflow: visible; // !!!needed for dropdowns!!!
-    border-radius: @panel-border-radius;
+    border-radius: var(--ta-border-radius-base);
 
     > .inner-container {
       overflow: visible;
@@ -50,8 +50,8 @@
           margin: 0 3px;
         }
         &:first-child > .toolbar-button-group > .toolbar-button-wrapper:first-child {
-          border-top-left-radius: @border-radius-base;
-          border-bottom-left-radius: @border-radius-base;
+          border-top-left-radius: var(--ta-border-radius-base);
+          border-bottom-left-radius: var(--ta-border-radius-base);
         }
 
         .toolbar-button-wrapper.moved-to-overflow-dropdown {
@@ -102,11 +102,11 @@
   outline: none;
 
   &:hover {
-    background-color: rgba(255, 255, 255, .75);
+    background-color: var(--ta-bg-color);
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, .15);
   }
   &:active {
-    background-color: white;
+    background-color: var(--ta-bg-color);
   }
   > .toolbar-button-caret {
     align-self: center;
@@ -116,15 +116,15 @@
 
 .UiToolbar-dropdown {
   position: absolute;
-  z-index: @zindex-max;
+  z-index: var(--ta-zindex-max);
   box-shadow: 0 3px 8px -1px rgba(0, 0, 0, .4);
-  border-radius: 0 0 @border-radius-base @border-radius-base;
+  border-radius: 0 0 var(--ta-border-radius-base) var(--ta-border-radius-base);
 
   > .background-color-div {
     width: 100%;
     height: 100%;
     background-color: rgba(255, 255, 255, 1); // TODO 0.84);
-    border-radius: 0 0 @border-radius-base @border-radius-base;
+    border-radius: 0 0 var(--ta-border-radius-base) var(--ta-border-radius-base);
     overflow: auto;
     .tr-default-spinner {
       position: static;

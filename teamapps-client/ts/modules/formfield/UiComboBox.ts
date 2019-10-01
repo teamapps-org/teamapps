@@ -100,7 +100,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 				});
 			},
 			lazyChildrenFlag: entry => entry.lazyChildren,
-			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
+			spinnerTemplate: `<div class="teamapps-spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			textHighlightingEntryLimit: config.textHighlightingEntryLimit,
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
 			showClearButton: config.showClearButton,

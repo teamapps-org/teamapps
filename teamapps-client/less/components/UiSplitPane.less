@@ -17,8 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-@UiSplitPane-divider-width: @grid-gutter-width;
-@UiSplitPane-divider-width-touch: 16px;
+@UiSplitPane-divider-touch-handle-width-optimized-for-touch: 16px;
 
 .splitpane {
   position: relative;
@@ -69,10 +68,10 @@
       z-index: 2;
       //background: transparent;
       box-shadow: none;
-      transition: box-shadow @default-color-transition-time, background-color @default-color-transition-time;
+      transition: box-shadow var(--ta-color-transition-time), background-color var(--ta-color-transition-time);
 
       &:hover, &.dragged {
-        background-color: rgba(255, 255, 255, 0.6);
+        background-color: var(--ta-bg-color-semi-transparent);
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, .3);
       }
     }
@@ -85,24 +84,24 @@
   > .splitpane-component-wrapper {
     &:first-child {
       > .splitpane-component {
-        bottom: @grid-gutter-width / 2;
+        bottom: calc(var(--ta-panel-gap-width) / 2);
       }
     }
     &:last-child {
       > .splitpane-component {
-        top: @grid-gutter-width / 2;
+        top: calc(var(--ta-panel-gap-width) / 2);
       }
     }
   }
 
   > .splitpane-divider-wrapper > .splitpane-divider {
     width: 100%;
-    height: @UiSplitPane-divider-width;
-    top: -@UiSplitPane-divider-width/2;
+    height: var(--ta-panel-gap-width);
+    top: calc(var(--ta-panel-gap-width) / -2);
     cursor: ns-resize;
     .optimized-for-touch & {
-      height: @UiSplitPane-divider-width-touch;
-      top: -@UiSplitPane-divider-width-touch/2;
+      height: @UiSplitPane-divider-touch-handle-width-optimized-for-touch;
+      top: -@UiSplitPane-divider-touch-handle-width-optimized-for-touch/2;
     }
   }
 }
@@ -113,24 +112,24 @@
   > .splitpane-component-wrapper {
     &:first-child {
       > .splitpane-component {
-        right: @grid-gutter-width / 2;
+        right: calc(var(--ta-panel-gap-width) / 2);
       }
     }
     &:last-child {
       > .splitpane-component {
-        left: @grid-gutter-width / 2;
+        left: calc(var(--ta-panel-gap-width) / 2);
       }
     }
   }
 
   > .splitpane-divider-wrapper > .splitpane-divider {
-    width: @UiSplitPane-divider-width;
+    width: var(--ta-panel-gap-width);
     height: 100%;
-    left: -@UiSplitPane-divider-width/2;
+    left: calc(var(--ta-panel-gap-width) / -2);
     cursor: ew-resize;
     .optimized-for-touch & {
-      width: @UiSplitPane-divider-width-touch;
-      left: -@UiSplitPane-divider-width-touch/2;
+      width: @UiSplitPane-divider-touch-handle-width-optimized-for-touch;
+      left: -@UiSplitPane-divider-touch-handle-width-optimized-for-touch/2;
     }
   }
 }

@@ -87,13 +87,18 @@
   --ta-text-color: @ta-text-color;
   --ta-text-color-faded: fadeout(@ta-text-color, 30%);
   --ta-text-color-inverted: @ta-text-color-inverted;
+  --ta-text-color-disabled: @ta-text-color-inverted;
   --ta-bg-color: #fff;
+  --ta-bg-color-semi-transparent: rgba(255, 255, 255, 0.8);
   --ta-bg-color-disabled: #eee;
+  --ta-bg-dim-overlay: rgba(0, 0, 0, .35);
   --ta-border-color: #ccc;
+  --ta-border-color-disabled: #ccc;
   --ta-inner-border-color: rgba(0, 0, 0, 0.09);
 
   --ta-hover-color: rgba(0, 0, 0, 0.05);
-  
+  --ta-active-color: rgba(0, 0, 0, 0.1);
+
   --ta-link-color: @ta-color-primary;
   --ta-link-color-faded: fade@ta-color-primary;
   --ta-link-hover-color: darken(@ta-color-primary, 15%);
@@ -107,6 +112,10 @@
   --ta-font-size-base:          13px;
   --ta-font-size-large:         1.25em;
   --ta-font-size-small:         0.85em;
+
+  --ta-font-weight-normal:      400;
+  --ta-font-weight-bold:        700;
+  --ta-font-weight-light:        200;
 
   --ta-font-size-h1:            2.55em;
   --ta-font-size-h2:            2.15em;
@@ -123,9 +132,6 @@
   --ta-line-height: 1.428571429;
   --ta-line-height-computed: calc(var(--ta-line-height) * var(--ta-font-size-base));
   --ta-half-line-height-computed: calc(var(--ta-line-height-computed) / 2);
-
-
-
 
   --ta-padding-base-vertical:     4px;
   --ta-padding-base-horizontal:   5px;
@@ -164,36 +170,9 @@
   //
   //## For each of Bootstrap's buttons, define text, background and border color.
 
-  --ta-btn-font-weight:                normal;
-
-  --ta-btn-default-color:              var(--ta-text-color);
-  --ta-btn-default-bg:                 var(--ta-bg-color);
-  --ta-btn-default-border:             #ccc;
-
-  --ta-btn-primary-color:              var(--ta-text-color-inverted);
-  --ta-btn-primary-bg:                 var(--ta-color-primary);
-  --ta-btn-primary-border:             var(--ta-state-primary-border);
-
-  --ta-btn-success-color:              var(--ta-text-color-inverted);
-  --ta-btn-success-bg:                 var(--ta-color-success);
-  --ta-btn-success-border:             var(--ta-state-success-border);
-
-  --ta-btn-info-color:                 var(--ta-text-color-inverted);
-  --ta-btn-info-bg:                    var(--ta-color-info);
-  --ta-btn-info-border:                var(--ta-state-info-border);
-
-  --ta-btn-warning-color:              var(--ta-text-color-inverted);
-  --ta-btn-warning-bg:                 var(--ta-color-warning);
-  --ta-btn-warning-border:             var(--ta-state-warning-border);
-
-  --ta-btn-danger-color:               var(--ta-text-color-inverted);
-  --ta-btn-danger-bg:                  var(--ta-color-danger);
-  --ta-btn-danger-border:              var(--ta-state-danger-border);
-
-  // Allows for customizing button radius independently from global border radius
+  --ta-btn-font-weight:                var(--ta-font-weight-normal);
+  --ta-btn-default-border:             var(--ta-border-color);
   --ta-btn-border-radius-base:         var(--ta-border-radius-base);
-  --ta-btn-border-radius-large:        var(--ta-border-radius-large);
-  --ta-btn-border-radius-small:        var(--ta-border-radius-small);
 
 
   //== Forms
@@ -203,7 +182,7 @@
   --ta-input-bg:                       var(--ta-bg-color);
   --ta-input-bg-disabled:              var(--ta-bg-color-disabled);
   --ta-input-color:                    var(--ta-text-color);
-  --ta-input-border:                   var(--ta-border-color);
+  --ta-input-border-color:             var(--ta-border-color);
 
   --ta-input-border-radius:            var(--ta-border-radius-base);
   --ta-input-border-radius-large:      var(--ta-border-radius-large);
@@ -226,16 +205,24 @@
   //** Background color for textual input addons
   --ta-input-group-addon-bg:           #ccc;
   //** Border color for textual input addons
-  --ta-input-group-addon-border-color: var(--ta-input-border);
+  --ta-input-group-addon-border-color: var(--ta-input-border-color);
 
   --ta-cursor-disabled:                not-allowed;
 
+  --ta-zindex-dropdown:          1000;
+  --ta-zindex-modal:             1050;
+  --ta-zindex-max:               1000000;
+
+  --ta-panel-gap-width:     6px;
+
+  --ta-color-transition-time: .3s;
+
+
+
 }
 
-@default-color-transition-time: .3s;
-@teamapps-hover-color: rgba(0, 0, 0, 0.05);
-@teamapps-active-color: rgba(0, 0, 0, 0.1);
 @flying-box-shadow: 0 3px 8px -1px rgba(0, 0, 0, .4);
 @default-input-width: 180px;
-@maximized-shadow-color: rgba(0, 0, 0, .4);
 @direct-transparency-alpha: 0.82; // TODO search for 0.72 and replace
+
+

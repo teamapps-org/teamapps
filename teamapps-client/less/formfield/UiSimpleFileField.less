@@ -62,7 +62,7 @@
       display: grid;
       grid-gap: 5px;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      padding: @padding-base-horizontal;
+      padding: var(--ta-padding-base-horizontal);
 
       .file-item {
         display: flex;
@@ -70,7 +70,7 @@
         align-items: center;
         text-align: center;
         text-decoration: none;
-        color: @text-color;
+        color: var(--ta-text-color);
 
         .delete-button-wrapper {
           position: relative;
@@ -128,10 +128,10 @@
         grid-template-columns: auto 1fr auto auto;
         padding: 2px 5px;
         text-decoration: none;
-        color: @text-color;
+        color: var(--ta-text-color);
 
         &:hover {
-          background-color: @teamapps-hover-color;
+          background-color: var(--ta-hover-color);
         }
 
         .progress-indicator {
@@ -195,10 +195,10 @@
 
   .upload-button {
     background-color: @btn-default-bg;
-    border-top: 1px solid @input-border;
+    border-top: 1px solid var(--ta-input-border-color);
     display: flex;
     justify-content: center;
-    padding: @padding-base-vertical @padding-base-horizontal;
+    padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
     outline: none;
 
     input {

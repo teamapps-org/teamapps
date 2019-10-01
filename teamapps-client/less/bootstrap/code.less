@@ -8,25 +8,25 @@ code,
 kbd,
 pre,
 samp {
-  font-family: @font-family-monospace;
+  font-family: var(--ta-font-family-monospace);
 }
 
 // Inline code
 code {
   padding: 2px 4px;
   font-size: 90%;
-  color: @code-color;
-  background-color: @code-bg;
-  border-radius: @border-radius-base;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: var(--ta-border-radius-base);
 }
 
 // User input typically entered via keyboard
 kbd {
   padding: 2px 4px;
   font-size: 90%;
-  color: @kbd-color;
-  background-color: @kbd-bg;
-  border-radius: @border-radius-small;
+  color: var(--ta-text-color-inverted);
+  background-color: var(--ta-text-color);
+  border-radius: var(--ta-border-radius-small);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);
 
   kbd {
@@ -43,13 +43,13 @@ pre {
   padding: var(--ta-half-line-height-computed);
   margin: 0 0 var(--ta-half-line-height-computed);
   font-size: 0.93em;
-  line-height: @line-height-base;
+  line-height: var(--ta-line-height);
   color: @pre-color;
   word-break: break-all;
   word-wrap: break-word;
-  background-color: @pre-bg;
-  border: 1px solid @pre-border-color;
-  border-radius: @border-radius-base;
+  background-color: var(--ta-bg-color-disabled);
+  border: 1px solid var(--ta-border-color-disabled);
+  border-radius: var(--ta-border-radius-base);
 
   // Account for some code outputs that place code tags in pre tags
   code {
@@ -60,10 +60,4 @@ pre {
     background-color: transparent;
     border-radius: 0;
   }
-}
-
-// Enable scrollable blocks of code
-.pre-scrollable {
-  max-height: @pre-scrollable-max-height;
-  overflow-y: scroll;
 }

@@ -21,18 +21,18 @@
   min-width: @default-input-width;
   position: relative;
   padding: 0;
-  background-color: @input-bg;
+  background-color: var(--ta-input-bg);
   overflow: auto;
 
   &.disabled {
-    background-color: @input-bg-disabled;
+    background-color: var(--ta-input-bg-disabled);
   }
 
   textarea {
     width: 100%;
     height: 100%;
     border: none;
-    padding: @padding-base-vertical @padding-base-horizontal;
+    padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
     display: block;
     background: transparent;
     resize: none;
@@ -41,9 +41,9 @@
 
   .clear-button {
     position: absolute;
-    top: @padding-base-vertical;
-    margin-right: @padding-base-horizontal; // additional to the calculated "right" (via javascript, because of scroll bars)
-    background-color: @input-bg;
+    top: var(--ta-padding-base-vertical);
+    margin-right: var(--ta-padding-base-horizontal); // additional to the calculated "right" (via javascript, because of scroll bars)
+    background-color: var(--ta-input-bg);
     opacity: 0;
   }
 
@@ -70,6 +70,6 @@
 }
 
 .static-readonly-UiMultiLineTextField {
-  padding: @padding-base-vertical @padding-base-horizontal;
+  padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
   white-space: normal;
 }

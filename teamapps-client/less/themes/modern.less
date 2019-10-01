@@ -55,17 +55,17 @@
       }
     }
     &.splitpane-horizontal > .splitpane-divider-wrapper > .splitpane-divider {
-      height: @UiSplitPane-divider-width + 1px;
+      height: calc(var(--ta-panel-gap-width) + 1px);
       .optimized-for-touch & {
-        height: @UiSplitPane-divider-width-touch + 1px;
-        top: -@UiSplitPane-divider-width-touch/2;
+        height: @UiSplitPane-divider-touch-handle-width-optimized-for-touch + 1px;
+        top: -@UiSplitPane-divider-touch-handle-width-optimized-for-touch/2;
       }
     }
     &.splitpane-vertical > .splitpane-divider-wrapper > .splitpane-divider {
-      width: @UiSplitPane-divider-width + 1px;
+      width: calc(var(--ta-panel-gap-width) + 1px);
       .optimized-for-touch & {
-        width: @UiSplitPane-divider-width-touch + 1px;
-        left: -@UiSplitPane-divider-width-touch/2;
+        width: @UiSplitPane-divider-touch-handle-width-optimized-for-touch + 1px;
+        left: -@UiSplitPane-divider-touch-handle-width-optimized-for-touch/2;
       }
     }
   }

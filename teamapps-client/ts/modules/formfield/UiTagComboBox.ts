@@ -94,7 +94,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 				});
 			},
 			lazyChildrenFlag: entry => entry.lazyChildren,
-			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
+			spinnerTemplate: `<div class="teamapps-spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			textHighlightingEntryLimit: config.textHighlightingEntryLimit,
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
 			autoCompleteFunction: (editorText, entry) => {
@@ -135,7 +135,9 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		this.trivialTagComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialTagComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialTagComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialTagComboBox.onFocus.addListener(() => this.getMainDomElement().classList.add("focus"));
+		this.trivialTagComboBox.onFocus.addListener(() => {
+			return this.getMainDomElement().classList.add("focus");
+		});
 		this.trivialTagComboBox.onBlur.addListener(() => this.getMainDomElement().classList.remove("focus"));
 	}
 

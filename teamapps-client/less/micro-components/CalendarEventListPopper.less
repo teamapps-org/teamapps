@@ -19,7 +19,7 @@
  */
 .CalendarEventListPopper {
 
-  z-index: @zindex-max;
+  z-index: var(--ta-zindex-max);
 
   .ta-tooltip-inner {
     padding: 0;
@@ -33,7 +33,7 @@
 
 
   .all-day-events:not(:empty) + .normal-events {
-    border-top: 1px solid @input-border;
+    border-top: 1px solid var(--ta-input-border-color);
   }
 
   .fc-event:not(:last-child) {

@@ -17,8 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-@calendar-font-weight: 200;
-
 .UiCalendar {
 
   overflow: hidden;
@@ -88,7 +86,7 @@
   .fc-day-header a,
   .fc-week-number a,
   .fc-day-number {
-    color: @text-color;
+    color: var(--ta-text-color);
   }
 
   th,
@@ -120,7 +118,7 @@
   .fc-day-number,
   .fc-widget-header,
   .fc-axis {
-    font-weight: @calendar-font-weight;
+    font-weight: var(--ta-font-weight-light);
   }
 
   .fc-head .fc-widget-header {

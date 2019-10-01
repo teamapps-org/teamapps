@@ -2,15 +2,15 @@
 .form-control {
   display: block;
   width: 100%;
-  height: @input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
-  padding: @padding-base-vertical @padding-base-horizontal;
-  font-size: @font-size-base;
-  line-height: @line-height-base;
-  color: @input-color;
-  background-color: @input-bg;
+  height: var(--ta-input-height-base); // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+  padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+  font-size: var(--ta-font-size-base);
+  line-height: var(--ta-line-height);
+  color: var(--ta-input-color);
+  background-color: var(--ta-input-bg);
   background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border: 1px solid @input-border;
-  border-radius: @input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
+  border: 1px solid var(--ta-input-border-color);
+  border-radius: var(--ta-input-border-radius); // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 
@@ -28,13 +28,13 @@
   &[disabled],
   &[readonly],
   fieldset[disabled] & {
-    background-color: @input-bg-disabled;
+    background-color: var(--ta-input-bg-disabled);
     opacity: 1; // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655
   }
 
   &[disabled],
   fieldset[disabled] & {
-    cursor: @cursor-disabled;
+    cursor: var(--ta-cursor-disabled);
   }
 
   // Reset height for `textarea`s

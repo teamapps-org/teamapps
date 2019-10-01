@@ -77,7 +77,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 					parentNodeId: node && node.id
 				})
 			},
-			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
+			spinnerTemplate: `<div class="teamapps-spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			queryFunction: queryFunction,
 			showExpanders: config.showExpanders,
 			expandOnSelection: config.openOnSelection,

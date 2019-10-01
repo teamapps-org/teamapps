@@ -22,14 +22,14 @@
 .ta-tooltip {
   position: absolute;
   background-color: #fff;
-  color: @text-color;
+  color: var(--ta-text-color);
   min-width: 150px;
   max-width: ~"calc(100% - 20px)";
-  border-radius: @border-radius-base;
+  border-radius: var(--ta-border-radius-base);
   box-shadow: @flying-box-shadow;
   padding: 0;
   text-align: left;
-  border: 1px solid @input-border;
+  border: 1px solid var(--ta-input-border-color);
 
   &.empty {
     display: none;
@@ -41,20 +41,20 @@
   width: 2 * @arrow-size;
   height: 2 * @arrow-size;
   position: absolute;
-  border: 1px solid @input-border;
+  border: 1px solid var(--ta-input-border-color);
   transform: rotate(45deg);
   background-color: white;
 }
 
 .ta-tooltip-inner {
-  padding: @padding-base-vertical @padding-base-horizontal;
-  border-radius: @border-radius-base;
+  padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
+  border-radius: var(--ta-border-radius-base);
   background-color: white;
 }
 
 .ta-tooltip.ta-tooltip-info,
 .ta-tooltip.ta-tooltip-info .ta-tooltip-arrow {
-  border-color: @input-border;
+  border-color: var(--ta-input-border-color);
   &, .ta-tooltip-inner {
     background-color: white;
   }

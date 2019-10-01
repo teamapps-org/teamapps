@@ -142,8 +142,6 @@
 //
 //## For each of Bootstrap's buttons, define text, background and border color.
 
-@btn-font-weight:                var(--ta-btn-font-weight);
-
 @btn-default-color:              var(--ta-btn-default-color);
 @btn-default-bg:                 var(--ta-btn-default-bg);
 @btn-default-border:             var(--ta-btn-default-border);
@@ -166,7 +164,7 @@
 //** Text color for `<input>`s
 @input-color:                    var(--ta-input-color);
 //** `<input>` border color
-@input-border:                   var(--ta-input-border);
+@input-border:                   var(--ta-input-border-color);
 
 // TODO: Rename `@input-border-radius` to `@input-border-radius-base` in v4
 //** Default `.form-control` border radius
@@ -244,14 +242,9 @@
 //
 // Note: These variables are not generated into the Customizer.
 
-@zindex-navbar:            1000;
-@zindex-dropdown:          1000;
-@zindex-popover:           1060;
-@zindex-tooltip:           1070;
-@zindex-navbar-fixed:      1030;
-@zindex-modal-background:  1040;
-@zindex-modal:             1050;
-@zindex-max: 1000000;
+@zindex-dropdown:          var(--ta-zindex-dropdown);
+@zindex-modal:             var(--ta-zindex-modal);
+@zindex-max:               var(--ta-zindex-max);
 
 
 //== Media queries breakpoints
@@ -354,7 +347,6 @@
 //## Define alert colors, border radius, and padding.
 
 @alert-padding:               15px;
-@alert-border-radius:         @border-radius-base;
 @alert-link-font-weight:      bold;
 
 @alert-success-bg:            @state-success-bg;
@@ -383,7 +375,7 @@
 //** Progress bar text color
 @progress-bar-color:          #fff;
 //** Variable for setting rounded corners on progress bar.
-@progress-border-radius:      @border-radius-base;
+@progress-border-radius:      var(--ta-border-radius-base);
 
 //** Default progress bar color
 @progress-bar-bg:             @brand-primary;
@@ -405,7 +397,7 @@
 @panel-body-padding:          8px;
 @panel-heading-padding:       4px 8px;
 @panel-footer-padding:        @panel-heading-padding;
-@panel-border-radius:         @border-radius-base;
+@panel-border-radius:         var(--ta-border-radius-base);
 
 //** Border color for elements within panels
 @panel-inner-border:          #ddd;
@@ -463,12 +455,6 @@
 //
 //##
 
-@code-color:                  #c7254e;
-@code-bg:                     #f9f2f4;
-
-@kbd-color:                   #fff;
-@kbd-bg:                      var(--ta-text-color);
-
 @pre-bg:                      #f5f5f5;
 @pre-color:                   @gray-dark;
 @pre-border-color:            #e0e0e0;
@@ -490,7 +476,7 @@
 //** Blockquote small color
 @blockquote-small-color:      @gray-light;
 //** Blockquote font size
-@blockquote-font-size:        @font-size-base;
+@blockquote-font-size:        var(--ta-font-size-base);
 //** Blockquote border color
 @blockquote-border-color:     @gray-lighter;
 //** Horizontal line color.
