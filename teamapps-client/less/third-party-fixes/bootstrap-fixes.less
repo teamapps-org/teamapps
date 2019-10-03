@@ -17,15 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-.carousel-control {
-  background: none !important;
-}
-
 .form-control {
   width: initial; // width and height are controlled by the field container's css
   box-shadow: none;
   &.focus {
-    border-color: @input-border-focus;
+    border-color: var(--ta-input-border-focus);
     outline: 0;
     box-shadow: 0 0 8px rgba(102, 175, 233, 0.6);
   }
@@ -38,10 +34,6 @@
   &[disabled] {
     cursor: default;
   }
-}
-
-.close {
-  outline: none;
 }
 
 .btn > .caret {

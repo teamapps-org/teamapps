@@ -26,7 +26,7 @@
   min-width: 150px;
   max-width: ~"calc(100% - 20px)";
   border-radius: var(--ta-border-radius-base);
-  box-shadow: @flying-box-shadow;
+  box-shadow: var(--ta-box-shadow-large);
   padding: 0;
   text-align: left;
   border: 1px solid var(--ta-input-border-color);
@@ -62,7 +62,7 @@
 
 .ta-tooltip.ta-tooltip-success,
 .ta-tooltip.ta-tooltip-success .ta-tooltip-arrow {
-  border-color: @state-success-text;
+  border-color: var(--ta-state-success-border);
   &, .ta-tooltip-inner {
     //background-color: @state-success-bg;
     background-color: white;
@@ -71,7 +71,7 @@
 
 .ta-tooltip.ta-tooltip-warning,
 .ta-tooltip.ta-tooltip-warning .ta-tooltip-arrow {
-  border-color: @state-warning-border;
+  border-color: var(--ta-state-warning-border);
   &, .ta-tooltip-inner {
     //background-color: @state-warning-bg;
     background-color: white;
@@ -80,7 +80,7 @@
 
 .ta-tooltip.ta-tooltip-error,
 .ta-tooltip.ta-tooltip-error .ta-tooltip-arrow {
-  border-color: @state-danger-text;
+  border-color: var(--ta-state-danger-border);
   &, .ta-tooltip-inner {
     //background-color: @state-danger-bg;
     background-color: white;
