@@ -26,26 +26,26 @@
     transition: border-color var(--ta-color-transition-time);
   }
   &.message-success .field-border {
-    border-color: @state-success-text;
+    border-color: var(--ta-state-success-border);
   }
   &.message-warning .field-border {
-    border-color: @state-warning-border;
+    border-color: var(--ta-state-warning-border);
   }
   &.message-error .field-border {
-    border-color: @state-danger-text;
+    border-color: var(--ta-state-danger-border);
   }
 
   &.focus .field-border-glow {
     .teamapps-form-control-focus();
   }
   &.focus.message-success .field-border-glow {
-    .teamapps-form-control-focus(@state-success-text);
+    .teamapps-form-control-focus(var(--ta-state-success-border));
   }
   &.focus.message-warning .field-border-glow {
-    .teamapps-form-control-focus(@state-warning-border);
+    .teamapps-form-control-focus(var(--ta-state-warning-border));
   }
   &.focus.message-error .field-border-glow {
-    .teamapps-form-control-focus(@state-danger-text);
+    .teamapps-form-control-focus(var(--ta-state-danger-border));
   }
 
   &.readonly .field-border,
@@ -69,10 +69,10 @@
     background-color: var(--ta-state-success-bg);
   }
   &.message-warning .field-background {
-    background-color: @state-warning-bg;
+    background-color: var(--ta-state-warning-bg);
   }
   &.message-error .field-background {
-    background-color: @state-danger-bg;
+    background-color: var(--ta-state-danger-bg);
   }
 
   &.disabled .field-background {
@@ -145,7 +145,7 @@
   color: var(--ta-state-danger-text);
 }
 
-.teamapps-form-control-focus(@color: @input-border-focus) {
+.teamapps-form-control-focus(@color: var(--ta-input-border-focus)) {
   border-color: @color;
   outline: 0;
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px @color;

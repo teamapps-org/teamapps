@@ -55,18 +55,10 @@
       }
     }
     &.splitpane-horizontal > .splitpane-divider-wrapper > .splitpane-divider {
-      height: calc(var(--ta-panel-gap-width) + 1px);
-      .optimized-for-touch & {
-        height: @UiSplitPane-divider-touch-handle-width-optimized-for-touch + 1px;
-        top: -@UiSplitPane-divider-touch-handle-width-optimized-for-touch/2;
-      }
+      height: calc(var(--ta-resize-bar-size) + 1px);
     }
     &.splitpane-vertical > .splitpane-divider-wrapper > .splitpane-divider {
-      width: calc(var(--ta-panel-gap-width) + 1px);
-      .optimized-for-touch & {
-        width: @UiSplitPane-divider-touch-handle-width-optimized-for-touch + 1px;
-        left: -@UiSplitPane-divider-touch-handle-width-optimized-for-touch/2;
-      }
+      width: calc(var(--ta-resize-bar-size) + 1px);
     }
   }
 

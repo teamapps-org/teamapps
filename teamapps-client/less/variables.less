@@ -18,6 +18,10 @@
  * =========================LICENSE_END==================================
  */
 
+@icon-font-path:          "../../node_modules/bootstrap/fonts/";
+@icon-font-name:          "glyphicons-halflings-regular";
+@icon-font-svg-id:        "glyphicons_halflingsregular";
+
 @ta-color-primary:         #337ab7;
 @ta-color-success:         #5cb85c;
 @ta-color-info:            #5bc0de;
@@ -90,6 +94,7 @@
   --ta-text-color-disabled: @ta-text-color-inverted;
   --ta-bg-color: #fff;
   --ta-bg-color-semi-transparent: rgba(255, 255, 255, 0.8);
+  --ta-bg-color-solid: #eee;
   --ta-bg-color-disabled: #eee;
   --ta-bg-dim-overlay: rgba(0, 0, 0, .35);
   --ta-border-color: #ccc;
@@ -98,11 +103,14 @@
 
   --ta-hover-color: rgba(0, 0, 0, 0.05);
   --ta-active-color: rgba(0, 0, 0, 0.1);
+  --ta-selection-color: #99c9ff;
 
   --ta-link-color: @ta-color-primary;
   --ta-link-color-faded: fade@ta-color-primary;
   --ta-link-hover-color: darken(@ta-color-primary, 15%);
   --ta-link-hover-decoration: underline;
+
+  --ta-pre-color: #333;
 
   --ta-font-family-sans-serif:  /*"Roboto",*/ "Helvetica Neue", Helvetica, Arial, sans-serif;
   --ta-font-family-serif:       Georgia, "Times New Roman", Times, serif;
@@ -172,6 +180,7 @@
 
   --ta-btn-font-weight:                var(--ta-font-weight-normal);
   --ta-btn-default-border:             var(--ta-border-color);
+  --ta-btn-default-bg:                 var(--ta-bg-color);
   --ta-btn-border-radius-base:         var(--ta-border-radius-base);
 
 
@@ -213,16 +222,21 @@
   --ta-zindex-modal:             1050;
   --ta-zindex-max:               1000000;
 
-  --ta-panel-gap-width:     6px;
+  --ta-panel-gap:     6px;
 
   --ta-color-transition-time: .3s;
 
+  --ta-resize-square-handle-size: 10px;
+  --ta-resize-bar-size: var(--ta-panel-gap);
 
+  --ta-tab-button-height: 23px;
 
+  --ta-default-input-width: 180px;
+
+  --ta-box-shadown-color: rgba(0, 0, 0, .3);
+  --ta-box-shadow-small: 0 1px 2px var(--ta-box-shadown-color);
+  --ta-box-shadow-base: 0 1px 4px var(--ta-box-shadown-color);
+  --ta-box-shadow-large: 0 3px 8px -1px var(--ta-box-shadown-color);
 }
-
-@flying-box-shadow: 0 3px 8px -1px rgba(0, 0, 0, .4);
-@default-input-width: 180px;
-@direct-transparency-alpha: 0.82; // TODO search for 0.72 and replace
 
 

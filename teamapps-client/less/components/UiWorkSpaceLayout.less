@@ -25,13 +25,13 @@
 
   > .toolbar-container {
     flex: 0 0 auto;
-    margin: @grid-gutter-width @grid-gutter-width 0 @grid-gutter-width;
+    margin: var(--ta-panel-gap) var(--ta-panel-gap) 0 var(--ta-panel-gap);
   }
 
   > .content-container-wrapper {
     flex: 1 1 1px;
     position: relative;
-    margin: @grid-gutter-width;
+    margin: var(--ta-panel-gap);
     display: flex;
     flex-direction: column;
     .content-container {
@@ -132,7 +132,7 @@
       border-left: 1px solid;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
-      border-top-color: @brand-warning;
+      border-top-color: var(--ta-color-warning);
       border-left-color: rgba(0, 0, 0, .2);
       background-color: rgba(255, 255, 255, 0.72);
       border-bottom: 1px solid rgba(0, 0, 0, .05);
@@ -170,7 +170,7 @@
 .UiWorkSpaceLayout-maximization-container-wrapper {
   position: absolute;
   top: -100000px;
-  padding: @grid-gutter-width;
+  padding: var();
   background-color: transparent;
   transition: background-color .4s;
 

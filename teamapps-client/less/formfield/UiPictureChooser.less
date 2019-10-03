@@ -21,7 +21,7 @@
 .UiPictureChooser {
   padding: 0;
   display: inline-block;
-  border-radius: @border-radius-large;
+  border-radius: var(--ta-border-radius-large);
   height: auto !important;
 
   .picture-wrapper {
@@ -67,7 +67,7 @@
   }
 
   .progress-wrapper {
-    padding: @padding-small-vertical @padding-small-horizontal;
+    padding: var(--ta-padding-small-vertical) var(--ta-padding-base-horizontal);
     > * {
       margin: auto;
     }

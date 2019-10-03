@@ -64,11 +64,11 @@
 
   .ui-resizable-n,
   .ui-resizable-s {
-    left: ~"calc(50% - " @teamapps-handle-size / 2 ~")";
+    left: calc(50% - var(--ta-resize-square-handle-size) / 2);
   }
   .ui-resizable-e,
   .ui-resizable-w {
-    top: ~"calc(50% - " @teamapps-handle-size / 2 ~")";
+    top: calc(50% - var(--ta-resize-square-handle-size) / 2);
   }
 
   .ui-resizable-se {
