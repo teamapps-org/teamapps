@@ -1,6 +1,5 @@
 package org.teamapps.ux.component.charting.forcelayout;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiClientRecord;
@@ -56,21 +55,18 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		return ui;
 	}
 
-	@NotNull
 	private List<UiNetworkNode> createUiNodes(List<ForceLayoutNode<RECORD>> nodes) {
 		return nodes.stream()
 				.map(n -> createUiNode(n))
 				.collect(Collectors.toList());
 	}
 
-	@NotNull
 	private List<UiNetworkLink> createUiLinks(List<ForceLayoutLink> links) {
 		return links.stream()
 				.map(l -> l.toUiNetworkLink())
 				.collect(Collectors.toList());
 	}
 
-	@NotNull
 	private UiNetworkNode createUiNode(ForceLayoutNode<RECORD> node) {
 		UiNetworkNode uiNode = new UiNetworkNode(node.getId(), node.getWidth(), node.getHeight());
 		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? UiUtil.createUiColor(node.getBackgroundColor()) : null);

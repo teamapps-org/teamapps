@@ -20,8 +20,6 @@
 package org.teamapps.ux.css;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,7 +68,6 @@ public class CssStyles implements Map<String, String> {
 		return properties.get(propertyName);
 	}
 
-	@Nullable
 	@Override
 	public String put(String propertyName, String value) {
 		return properties.put(kebabToCamelCase(propertyName), value);
@@ -82,7 +79,7 @@ public class CssStyles implements Map<String, String> {
 	}
 
 	@Override
-	public void putAll(@NotNull Map<? extends String, ? extends String> m) {
+	public void putAll(Map<? extends String, ? extends String> m) {
 		properties.putAll(m);
 	}
 
@@ -91,19 +88,16 @@ public class CssStyles implements Map<String, String> {
 		properties.clear();
 	}
 
-	@NotNull
 	@Override
 	public Set<String> keySet() {
 		return properties.keySet();
 	}
 
-	@NotNull
 	@Override
 	public Collection<String> values() {
 		return properties.values();
 	}
 
-	@NotNull
 	@Override
 	public Set<Entry<String, String>> entrySet() {
 		return properties.entrySet();
