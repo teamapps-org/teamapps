@@ -1,6 +1,5 @@
 package org.teamapps.ux.component.charting.pie;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.dto.UiChartNamedDataPoint;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
@@ -62,7 +61,6 @@ public class PieChart extends AbstractComponent {
 		}
 	}
 
-	@NotNull
 	private List<UiChartNamedDataPoint> createUiDataPoints() {
 		return dataPoints != null ? dataPoints.stream()
 				.map(ChartNamedDataPoint::createUiChartNamedDataPoint)

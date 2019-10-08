@@ -20,7 +20,6 @@
 package org.teamapps.ux.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.icons.provider.IconProvider;
@@ -29,18 +28,18 @@ import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.SessionRecorder;
 import org.teamapps.server.SessionResourceProvider;
 import org.teamapps.server.UxServerContext;
-import org.teamapps.webcontroller.WebController;
-import org.teamapps.ux.resource.ResourceProviderServlet;
-import org.teamapps.ux.resource.SystemIconResourceProvider;
-import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.ClientSessionResourceProvider;
-import org.teamapps.ux.session.SessionContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.SessionClosingReason;
 import org.teamapps.uisession.UiCommandExecutor;
 import org.teamapps.uisession.UiSessionListener;
+import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.resource.ResourceProviderServlet;
+import org.teamapps.ux.resource.SystemIconResourceProvider;
+import org.teamapps.ux.session.ClientInfo;
+import org.teamapps.ux.session.ClientSessionResourceProvider;
+import org.teamapps.ux.session.SessionContext;
+import org.teamapps.webcontroller.WebController;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -48,7 +47,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -134,7 +138,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		return registrations;
 	}
 
-	@NotNull
 	private SystemIconResourceProvider createSystemIconResourceProvider(IconProvider iconProvider, List<IconProvider> customIconProvider)  {
 		try {
 			File tempDir = File.createTempFile("temp", "temp").getParentFile();

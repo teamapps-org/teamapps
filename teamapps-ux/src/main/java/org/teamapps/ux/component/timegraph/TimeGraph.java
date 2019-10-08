@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.timegraph;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.AbstractUiLineChartDataDisplay;
 import org.teamapps.dto.UiComponent;
@@ -130,7 +129,6 @@ public class TimeGraph extends AbstractComponent {
 		return uiTimeGraph;
 	}
 
-	@NotNull
 	private List<UiTimeChartZoomLevel> createUiZoomlevels() {
 		return this.model.getZoomLevels().stream()
 				.map(TimeGraphZoomLevel::createUiTimeChartZoomLevel)
