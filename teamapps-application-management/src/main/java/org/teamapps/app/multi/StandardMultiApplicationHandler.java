@@ -5,6 +5,7 @@ import org.teamapps.app.ComponentUpdateHandler;
 import org.teamapps.auth.AuthenticationProvider;
 import org.teamapps.auth.LoginHandler;
 import org.teamapps.auth.SessionAuthenticatedUserResolver;
+import org.teamapps.common.format.Color;
 import org.teamapps.config.ClientConfigProvider;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
@@ -126,8 +127,15 @@ public class StandardMultiApplicationHandler<USER> implements MultiApplicationHa
 		applicationsSearchField.onTextInput().addListener(applicationLauncher::setFilter);
 		panel.setRightHeaderField(applicationsSearchField);
 		panel.setContent(applicationLauncher);
+
 		if (tabPanel != null) {
-			homeTab = new Tab(applicationLauncherIcon, captions.getHome(), panel);
+			Panel framePanel = new Panel();
+			framePanel.setHideTitleBar(true);
+			framePanel.setPadding(5);
+			framePanel.setContent(panel);
+			framePanel.setBodyBackgroundColor(Color.WHITE.withAlpha(0.001f));
+			panel.setBodyBackgroundColor(Color.WHITE.withAlpha(0.7f));
+			homeTab = new Tab(applicationLauncherIcon, captions.getHome(), framePanel);
 			tabPanel.addTab(homeTab, true);
 		}
 
