@@ -30,7 +30,7 @@ public class ApplicationWebController implements WebController {
 	private List<ServletRegistration> servletRegistrations = new ArrayList<>();
 	private List<Function<UxServerContext, ServletRegistration>> servletRegistrationFactories = new ArrayList<>();
 	private IconProvider defaultIconProvider;
-	private List<IconProvider> iconProviders;
+	private List<IconProvider> iconProviders = new ArrayList<>();
 
 	public ApplicationWebController(ComponentBuilder componentBuilder) {
 		this(componentBuilder, false, null);
