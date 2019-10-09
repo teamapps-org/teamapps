@@ -9,7 +9,6 @@ import org.teamapps.config.ClientConfigProvider;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.theme.Theme;
-import org.teamapps.ux.application.ApplicationInfo;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.itemview.SimpleItem;
@@ -23,6 +22,7 @@ import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class StandardMultiApplicationHandler<USER> implements MultiApplicationHandler<USER> {
@@ -32,6 +32,7 @@ public class StandardMultiApplicationHandler<USER> implements MultiApplicationHa
 	private final List<ComponentBuilder> componentBuilders;
 	private final List<LogoutHandler<USER>> logoutHandlers;
 	private ComponentBuilder loggedOutComponentBuilder;
+	private Function<USER, ApplicationHandlerCaptions> userApplicationCaptionsFunction = user -> new ApplicationHandlerCaptions();
 
 	private ClientConfigProvider<USER> clientConfigProvider;
 
@@ -102,6 +103,7 @@ public class StandardMultiApplicationHandler<USER> implements MultiApplicationHa
 
 	private Component createApplication(ComponentUpdateHandler updateHandler, TabPanel tabPanel, boolean launcherPanelOnly) {
 		USER user = sessionAuthenticatedUserResolver.getUser();
+		ApplicationHandlerCaptions captions = userApplicationCaptionsFunction.apply(user);
 		List<Map.Entry<ApplicationGroup, List<ApplicationInfo>>> sortedApplicationGroups = getSortedUserApplicationGroups(user);
 		SessionContext context = CurrentSessionContext.get();
 		Map<ComponentBuilder, Tab> tabByComponentBuilder = new HashMap<>();
@@ -117,15 +119,15 @@ public class StandardMultiApplicationHandler<USER> implements MultiApplicationHa
 			}
 		}
 		Tab homeTab = null;
-		Panel panel = new Panel(applicationLauncherIcon, "Applications"); //todo improve
+		Panel panel = new Panel(applicationLauncherIcon, captions.getApplications());
 		TextField applicationsSearchField = new TextField();
 		applicationsSearchField.setShowClearButton(true);
-		applicationsSearchField.setEmptyText("Search...");
+		applicationsSearchField.setEmptyText(captions.getSearch() + "...");
 		applicationsSearchField.onTextInput().addListener(applicationLauncher::setFilter);
 		panel.setRightHeaderField(applicationsSearchField);
 		panel.setContent(applicationLauncher);
 		if (tabPanel != null) {
-			homeTab = new Tab(MaterialIcon.APPS, "Home", panel); //todo improve
+			homeTab = new Tab(applicationLauncherIcon, captions.getHome(), panel);
 			tabPanel.addTab(homeTab, true);
 		}
 
@@ -180,10 +182,10 @@ public class StandardMultiApplicationHandler<USER> implements MultiApplicationHa
 
 
 		if (tabPanel == null) {
-			SimpleItemGroup<ApplicationInfo> itemGroup = new SimpleItemGroup<>(logoutIcon, "Logout");	//todo improve
+			SimpleItemGroup<ApplicationInfo> itemGroup = new SimpleItemGroup<>(logoutIcon, captions.getLogout());
 			itemGroup.setButtonWidth(0.97f);
 			itemGroup.setItemTemplate(BaseTemplate.LIST_ITEM_EXTRA_VERY_LARGE_ICON_TWO_LINES);
-			SimpleItem<ApplicationInfo> item = itemGroup.addItem(logoutIcon, "Logout", ""); 	//todo improve
+			SimpleItem<ApplicationInfo> item = itemGroup.addItem(logoutIcon, captions.getLogout(), "");
 			item.onClick.addListener(aVoid -> handleLogout(user, updateHandler));
 			return panel;
 		} else {
@@ -209,7 +211,7 @@ public class StandardMultiApplicationHandler<USER> implements MultiApplicationHa
 				tabByComponentBuilder.remove(applicationInfo.getComponentBuilder());
 			});
 
-			Tab tab = new Tab(logoutIcon, "Logout", null).setRightSide(true).setLazyLoading(true); //todo improve
+			Tab tab = new Tab(logoutIcon, captions.getLogout(), null).setRightSide(true).setLazyLoading(true);
 			tabPanel.addTab(tab);
 			return null;
 		}
@@ -237,6 +239,10 @@ public class StandardMultiApplicationHandler<USER> implements MultiApplicationHa
 
 	public void setLogoutIcon(Icon logoutIcon) {
 		this.logoutIcon = logoutIcon;
+	}
+
+	public void setUserApplicationCaptionsFunction(Function<USER, ApplicationHandlerCaptions> userApplicationCaptionsFunction) {
+		this.userApplicationCaptionsFunction = userApplicationCaptionsFunction;
 	}
 
 	static class ApplicationInfo {

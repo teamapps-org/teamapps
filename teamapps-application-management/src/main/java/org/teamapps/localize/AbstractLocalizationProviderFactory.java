@@ -39,7 +39,7 @@ public abstract class AbstractLocalizationProviderFactory implements Localizatio
 		return new StandardLocalizationProvider(applicationNamespace, handler);
 	}
 
-	private String createLookupKey(String prefix, String key) {
+	public static String createLookupKey(String prefix, String key) {
 		return prefix + "." + key;
 	}
 
