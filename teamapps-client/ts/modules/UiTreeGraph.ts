@@ -745,6 +745,14 @@ class TreeChart {
 					.attr('opacity', 0)
 			);
 
+		nodesSelection.transition()
+			.attr('opacity', 0)
+			.duration(attrs.duration)
+			.attr("transform", d => {
+				return `translate(${d.x},${d.y})`;
+			})
+			.attr('opacity', 1)
+
 
 		// Style node rectangles
 		nodesSelection.selectAll('.node-rect')
@@ -788,131 +796,82 @@ class TreeChart {
 				let y = -d.imageHeight / 2;
 				return `translate(${x},${y})`
 			});
-		
-		// Add background rectangle for node image
-		patternify(imageGroups, {
-			tag: 'rect',
-			selector: 'node-image-rect',
-			data: (d: TreeNode) => [d]
-		})
 
+		nodesSelection.selectAll('rect.node-image-rect')
+			.data(d => [d])
+			.join(enter => enter
+				.append("rect")
+				.classed("node-image-rect", true)
+			)
+			.attr('fill', d => `url(#${d.id})`)
+			.attr('width', d => d.imageWidth)
+			.attr('height', d => d.imageHeight)
+			.attr('stroke', d => d.imageBorderColor)
+			.attr('stroke-width', d => d.imageBorderWidth)
+			.attr('rx', d => d.imageRx)
+			.attr('y', d => d.imageCenterTopDistance)
+			.attr('x', d => d.imageCenterLeftDistance)
+			.attr('filter', d => d.dropShadowId);
 
 		// Add foreignObject element inside rectangle
-		const fo = patternify(nodesSelection, {
-			tag: 'foreignObject',
-			selector: 'node-foreign-object',
-			data: (d: TreeNode) => [d]
-		})
+		const fo = nodesSelection.selectAll('foreignObject.node-foreign-object')
+			.data(d => [d])
+			.join(enter => enter
+				.append("foreignObject")
+				.classed("node-foreign-object", true)
+			);
 
-
-		// Add foreign object
-		patternify(fo, {
-			tag: 'xhtml:div',
-			selector: 'node-foreign-object-div',
-			data: (d: TreeNode) => [d]
-		})
+		fo.selectAll('.node-foreign-object-div')
+			.data(d => [d])
+			.join(enter => enter
+				.append("xhtml:div")
+				.classed("node-foreign-object-div", true)
+			)
 
 		this.restyleForeignObjectElements();
 
 		// Add Node button circle's group (expand-collapse button)
-		const nodeButtonGroups = patternify(nodesSelection, {
-			tag: 'g',
-			selector: 'node-button-g',
-			data: (d: TreeNode) => [d]
-		})
-			.on('mousedown', (d: TreeNode) => {
-				let expanding = !d.children;
-				this.onButtonClick(d);
-				attrs.onNodeExpandedOrCollapsed(d.data.id, expanding);
-			})
-
-		// Add expand collapse button circle
-		patternify(nodeButtonGroups, {
-			tag: 'circle',
-			selector: 'node-button-circle',
-			data: (d: TreeNode) => [d]
-		})
-
-		// Add button text
-		patternify(nodeButtonGroups, {
-			tag: 'text',
-			selector: 'node-button-text',
-			data: (d: TreeNode) => [d]
-		})
-			.attr('pointer-events', 'none');
-
-		// Transition to the proper position for the node
-		nodesSelection.transition()
-			.attr('opacity', 0)
-			.duration(attrs.duration)
-			.attr("transform", d => {
-				return `translate(${d.x},${d.y})`;
-			})
-			.attr('opacity', 1)
-
-		// Style node image rectangles
-		nodesSelection.select('.node-image-rect')
-			.attr('fill', d => `url(#${d.id})`)
-			.attr('width', d => d.imageWidth)
-			.attr('height', ({
-				                 imageHeight
-			                 }: TreeNode) => imageHeight)
-			.attr('stroke', ({
-				                 imageBorderColor
-			                 }: TreeNode) => imageBorderColor)
-			.attr('stroke-width', ({
-				                       imageBorderWidth
-			                       }: TreeNode) => imageBorderWidth)
-			.attr('rx', ({
-				             imageRx
-			             }: TreeNode) => imageRx)
-			.attr('y', ({
-				            imageCenterTopDistance
-			            }: TreeNode) => imageCenterTopDistance)
-			.attr('x', ({
-				            imageCenterLeftDistance
-			            }: TreeNode) => imageCenterLeftDistance)
-			.attr('filter', ({
-				                 dropShadowId
-			                 }: TreeNode) => dropShadowId)
-
-
-		// Move node button group to the desired position
-		nodesSelection.select('.node-button-g')
+		const nodeButtonGroups = nodesSelection.selectAll('g.node-button-g')
+			.data(d => [d])
+			.join(enter => enter
+				.append("g")
+				.classed("node-button-g", true)
+				.on('mousedown', (d: TreeNode) => {
+					let expanding = !d.children;
+					this.onButtonClick(d);
+					attrs.onNodeExpandedOrCollapsed(d.data.id, expanding);
+				})
+			)
 			.attr('transform', d => `translate(${d.data.width / 2},${d.data.height})`)
 			.attr('display', d => {
 				return d.hasChildren ? "inherit" : "none";
 			});
 
-		// Restyle node button circle
-		nodesSelection.select('.node-button-circle')
+		// Add expand collapse button circle
+		nodeButtonGroups.selectAll('circle.node-button-circle')
+			.data(d => [d])
+			.join(enter => enter
+				.append("circle")
+				.classed("node-button-circle", true)
+			)
 			.attr('r', 10)
-			.attr('stroke-width', ({
-				                       data
-			                       }: TreeNode) => data.borderWidth || attrs.strokeWidth)
+			.attr('stroke-width', d => d.data.borderWidth || attrs.strokeWidth)
 			.attr('fill', "white")
-			.attr('stroke', ({
-				                 borderColor
-			                 }: TreeNode) => borderColor)
+			.attr('stroke', d => d.borderColor)
 
-		// Restyle button texts
-		nodesSelection.select('.node-button-text')
+		// Add button text
+		nodeButtonGroups.selectAll('text.node-button-text')
+			.data(d => [d])
+			.join(enter => enter
+				.append("text")
+				.classed("node-button-text", true)
+			)
 			.attr('text-anchor', 'middle')
 			.attr('alignment-baseline', 'middle')
 			.attr('fill', attrs.defaultTextFill)
-			.attr('font-size', ({
-				                    children
-			                    }: TreeNode) => {
-				if (children) return 30;
-				return 20;
-			})
-			.text(({
-				       children
-			       }: TreeNode) => {
-				if (children) return '-';
-				return '+';
-			})
-			.attr('y', this.isEdge() ? 10 : 0)
+			.attr('font-size', d => d.children ? 30 : 20)
+			.text(d => d.children ? '-' : '+')
+			.attr('y', this.isEdge() ? 10 : 0);
 	}
 
 	private getParentExpanderPosition(d: TreeNode) {
@@ -922,8 +881,7 @@ class TreeChart {
 		return {x: d.parent.x + d.parent.data.width / 2, y: d.parent.y + d.parent.data.height};
 	}
 
-// This function detects whether current browser is edge
-	isEdge() {
+	private isEdge() {
 		return window.navigator.userAgent.includes("Edge");
 	}
 
