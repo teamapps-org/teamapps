@@ -21,6 +21,7 @@ import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.session.CurrentSessionContext;
 
+import java.io.File;
 import java.util.UUID;
 
 public class FileItem {
@@ -38,6 +39,7 @@ public class FileItem {
 	private String description;
 	private long size;
 	private String linkUrl;
+	private File file;
 
 	public FileItem(String fileName, String description, long size) {
 		this.uuid = UUID.randomUUID().toString();
@@ -106,6 +108,14 @@ public class FileItem {
 	public void setLinkUrl(String linkUrl) {
 		this.linkUrl = linkUrl;
 		updateClientSideDisplay();
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 
 	private void updateClientSideDisplay() {

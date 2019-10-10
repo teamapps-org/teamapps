@@ -168,6 +168,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 					File uploadedFile = getSessionContext().getUploadedFileByUuid(successEvent.getUploadedFileUuid());
 					if (uploadedFile != null) {
 						fileItem.setLinkUrl(getSessionContext().createFileLink(uploadedFile));
+						fileItem.setFile(uploadedFile);
 					}
 					onUploadSuccessful.fire(fileItem);
 					onValueChanged.fire(getValue());
