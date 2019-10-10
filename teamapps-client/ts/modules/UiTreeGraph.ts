@@ -175,11 +175,12 @@ interface TreeChart {
 	onNodeExpandedOrCollapsed(onNodeExpandedOrCollapsed: (nodeId: string, expanded: boolean) => void): TreeChart;
 }
 
-interface HierarchyNode extends HierarchyPointNode<UiTreeGraphNodeConfig> {
+interface TreeNode extends HierarchyPointNode<UiTreeGraphNodeConfig> {
 	id: 'string',
+	parentId: 'string' | null,
 	data: UiTreeGraphNodeConfig,
-	_children: HierarchyNode[],
 	children: this[],
+	hasChildren: boolean,
 	descendants: () => this[],
 	parent: this | null,
 	x: number,
@@ -225,6 +226,7 @@ export interface TreeChartAttributes {
 
 	id: string,
 	data?: UiTreeGraphNodeConfig[],
+	root: TreeNode,
 	svgWidth?: number,
 	svgHeight?: number,
 	marginTop?: number,
@@ -242,7 +244,7 @@ export interface TreeChartAttributes {
 	onNodeClick?: (name: string) => void,
 	onNodeExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
 	layouts: Layouts,
-	verticalGap: number
+	verticalGap: number,
 }
 
 export interface PatternifyParameter {
@@ -275,15 +277,15 @@ class TreeChart {
 			defaultFont: 'Helvetica',
 			backgroundColor: 'transparent',
 			data: null,
-			duration: 4000,
+			duration: 400,
 			strokeWidth: 3,
 			dropShadowId: null,
 			initialZoom: 1,
 			layouts: null,
 			verticalGap: 40,
-			onNodeClick: () => undefined,
-			onNodeExpandedOrCollapsed: () => undefined,
-		};
+			onNodeClick: (): void => undefined,
+			onNodeExpandedOrCollapsed: (): void => undefined,
+		} as any;
 
 		this.getChartState = () => attrs;
 
@@ -300,34 +302,6 @@ class TreeChart {
 		});
 	}
 
-	// This method retrieves passed node's children ID's (including node)
-	private getNodeChildrenIds({
-		                           data,
-		                           children,
-		                           _children
-	                           }: HierarchyNode, nodeIdsStore: string[]) {
-
-		// Store current node ID
-		nodeIdsStore.push(data.id);
-
-		// Loop over children and recursively store descendants id (expanded nodes)
-		if (children) {
-			children.forEach(d => {
-				this.getNodeChildrenIds(d, nodeIdsStore)
-			})
-		}
-
-		// Loop over _children and recursively store descendants id (collapsed nodes)
-		if (_children) {
-			_children.forEach(d => {
-				this.getNodeChildrenIds(d, nodeIdsStore)
-			})
-		}
-
-		// Return result
-		return nodeIdsStore;
-	}
-
 	// This method can be invoked via chart.setZoomFactor API, it zooms to particulat scale
 	setZoomFactor(zoomLevel: number) {
 		const attrs = this.getChartState();
@@ -338,7 +312,6 @@ class TreeChart {
 
 	render() {
 		//InnerFunctions which will update visuals
-
 		const attrs = this.getChartState();
 		const thisObjRef = this;
 
@@ -392,39 +365,6 @@ class TreeChart {
 
 		// Get zooming function
 		this.behaviors.zoom = d3.zoom<SVGElement, void>().on("zoom", () => this.zoomed())
-
-		//****************** ROOT node work ************************
-
-		// Convert flat data to hierarchical
-		attrs.root = d3.stratify()
-			.id(({
-				     id
-			     }) => id)
-			.parentId(({
-				           parentId
-			           }) => parentId)
-			(attrs.data)
-
-		/** Get all nodes as array (with extended parent & children properties set)
-		 This way we can access any node's parent directly using node.parent - pretty cool, huh?
-		 */
-		attrs.allNodes = attrs.layouts.treemap(attrs.root).descendants()
-
-		// Assign direct children and total subordinate children's cound
-		attrs.allNodes.forEach((d: HierarchyNode) => {
-			Object.assign(d.data, {
-				directSubordinates: d.children ? d.children.length : 0,
-				totalSubordinates: d.descendants().length - 1
-			})
-		})
-
-		this.collapse(attrs.root);
-		this.expandSomeNodes(attrs.root);
-
-		// Collapse all children at first
-		// attrs.root.children && attrs.root.children.forEach((d: HierarchyNode) => this.collapse(d));
-		// Then expand some nodes, which have `expanded` property set
-		// attrs.root.children && attrs.root.children.forEach((d: HierarchyNode) => this.expandSomeNodes(d));
 
 		// *************************  DRAWING **************************
 		//Add svg
@@ -577,37 +517,9 @@ class TreeChart {
 	}
 
 
-	// This function can be invoked via chart.addNode API, and it adds node in tree at runtime
-	addNode(obj: UiTreeGraphNodeConfig) {
-		const attrs = this.getChartState();
-		attrs.data.push(obj);
-
-		// Update state of nodes and redraw graph
-		this.updateNodesState();
-		return this;
-	}
-
-	// This function can be invoked via chart.removeNode API, and it removes node from tree at runtime
-	removeNode(nodeId: string) {
-		const attrs = this.getChartState();
-		const node = attrs.allNodes.filter(({data}: HierarchyNode) => data.id == nodeId)[0];
-
-		// Remove all node children
-		if (node) {
-			// Retrieve all children nodes ids (including current node itself)
-			const nodeChildrenIds = this.getNodeChildrenIds(node, []);
-
-			// Filter out retrieved nodes and reassign data
-			attrs.data = attrs.data.filter(d => !nodeChildrenIds.includes(d.id))
-
-			const updateNodesState = this.updateNodesState.bind(this);
-			// Update state of nodes and redraw graph
-			updateNodesState();
-		}
-	}
-
 	// This function basically redraws visible graph, based on nodes state
 	update() {
+		this.updateNodesState();
 
 		const attrs = this.getChartState();
 		const calc = attrs.calc;
@@ -634,7 +546,7 @@ class TreeChart {
 		const nodes = treeData.descendants()
 			.map((d) => {
 				// If at least one property is already set, then we don't want to reset other properties
-				if ((d as any).width) return d as HierarchyNode;
+				if ((d as any).width) return d as TreeNode;
 
 				// Declare properties with deffault values
 				let imageWidth = 100;
@@ -701,7 +613,7 @@ class TreeChart {
 					imageCenterTopDistance,
 					imageCenterLeftDistance,
 					dropShadowId
-				}) as HierarchyNode;
+				}) as TreeNode;
 			});
 
 		// Get all links
@@ -713,7 +625,7 @@ class TreeChart {
 		const patternsSelection = attrs.defs.selectAll('.pattern')
 			.data(nodes, ({
 				              id
-			              }: HierarchyNode) => id);
+			              }: TreeNode) => id);
 
 		// Define patterns enter selection
 		const patternEnterSelection = patternsSelection.enter().append('pattern')
@@ -726,29 +638,29 @@ class TreeChart {
 			.attr('width', 1)
 			.attr('id', ({
 				             id
-			             }: HierarchyNode) => id)
+			             }: TreeNode) => id)
 
 		// Add images to patterns
 		const patternImages = patternify(patterns, {
 			tag: 'image',
 			selector: 'pattern-image',
-			data: (d: HierarchyNode) => [d]
+			data: (d: TreeNode) => [d]
 		})
 			.attr('x', 0)
 			.attr('y', 0)
 			.attr('height', ({
 				                 imageWidth
-			                 }: HierarchyNode) => imageWidth)
+			                 }: TreeNode) => imageWidth)
 			.attr('width', ({
 				                imageHeight
-			                }: HierarchyNode) => imageHeight)
+			                }: TreeNode) => imageHeight)
 			.attr('xlink:href', ({
 				                     data
-			                     }: HierarchyNode) => data.image && data.image.url)
+			                     }: TreeNode) => data.image && data.image.url)
 			.attr('viewbox', ({
 				                  imageWidth,
 				                  imageHeight
-			                  }: HierarchyNode) => `0 0 ${imageWidth * 2} ${imageHeight}`)
+			                  }: TreeNode) => `0 0 ${imageWidth * 2} ${imageHeight}`)
 			.attr('preserveAspectRatio', 'xMidYMin slice')
 
 		// Remove patterns exit selection after animation
@@ -757,13 +669,13 @@ class TreeChart {
 		// --------------------------  LINKS ----------------------
 		// Get links selection
 		const linkSelection = this.chart.selectAll('path.link')
-			.data(links, (d: HierarchyNode) => d.id);
+			.data(links, (d: TreeNode) => d.id);
 
 		// NOTE: cannot use join() here! Enter any new links at the parent's previous position.
 		const linkEnter = linkSelection.enter()
 			.insert('path', "g")
 			.attr("class", "link")
-			.attr('d', (d: HierarchyNode) => {
+			.attr('d', (d: TreeNode) => {
 				let transitionOrigin = this.getParentExpanderPosition(d);
 				return this.diagonal(transitionOrigin, transitionOrigin);
 			});
@@ -796,7 +708,7 @@ class TreeChart {
 		// Remove any  links which is exiting after animation
 		const linkExit = linkSelection.exit().transition()
 			.duration(attrs.duration)
-			.attr('d', (d: HierarchyNode) => {
+			.attr('d', (d: TreeNode) => {
 				let transitionOrigin = this.getParentExpanderPosition(d);
 				return this.diagonal(transitionOrigin, transitionOrigin);
 			})
@@ -826,44 +738,44 @@ class TreeChart {
 		patternify(nodeEnter, {
 			tag: 'rect',
 			selector: 'node-rect',
-			data: (d: HierarchyNode) => [d]
+			data: (d: TreeNode) => [d]
 		});
 
 		// Add node icon image inside node
 		patternify(nodeEnter, {
 			tag: 'image',
 			selector: 'node-icon-image',
-			data: (d: HierarchyNode) => d.data.icon ? [d] : []
+			data: (d: TreeNode) => d.data.icon ? [d] : []
 		})
 			.attr('width', ({
 				                data
-			                }: HierarchyNode) => data.icon.size)
+			                }: TreeNode) => data.icon.size)
 			.attr('height', ({
 				                 data
-			                 }: HierarchyNode) => data.icon.size)
+			                 }: TreeNode) => data.icon.size)
 			.attr("xlink:href", ({
 				                     data
-			                     }: HierarchyNode) => this.context.getIconPath(data.icon.icon, data.icon.size))
+			                     }: TreeNode) => this.context.getIconPath(data.icon.icon, data.icon.size))
 			.attr('x', ({
 				            width, data
-			            }: HierarchyNode) => -data.icon.size / 2)
+			            }: TreeNode) => -data.icon.size / 2)
 			.attr('y', ({
 				            height,
 				            data
-			            }: HierarchyNode) => -data.icon.size / 2)
+			            }: TreeNode) => -data.icon.size / 2)
 
 		// Defined node images wrapper group
 		const imageGroups = patternify(nodeEnter, {
 			tag: 'g',
 			selector: 'node-image-group',
-			data: (d: HierarchyNode) => [d]
+			data: (d: TreeNode) => [d]
 		})
 
 		// Add background rectangle for node image
 		patternify(imageGroups, {
 			tag: 'rect',
 			selector: 'node-image-rect',
-			data: (d: HierarchyNode) => [d]
+			data: (d: TreeNode) => [d]
 		})
 
 		// Node update styles
@@ -875,7 +787,7 @@ class TreeChart {
 		const fo = patternify(nodeUpdate, {
 			tag: 'foreignObject',
 			selector: 'node-foreign-object',
-			data: (d: HierarchyNode) => [d]
+			data: (d: TreeNode) => [d]
 		})
 
 
@@ -883,7 +795,7 @@ class TreeChart {
 		patternify(fo, {
 			tag: 'xhtml:div',
 			selector: 'node-foreign-object-div',
-			data: (d: HierarchyNode) => [d]
+			data: (d: TreeNode) => [d]
 		})
 
 		this.restyleForeignObjectElements();
@@ -893,9 +805,9 @@ class TreeChart {
 		const nodeButtonGroups = patternify(nodeEnter, {
 			tag: 'g',
 			selector: 'node-button-g',
-			data: (d: HierarchyNode) => [d]
+			data: (d: TreeNode) => [d]
 		})
-			.on('mousedown', (d: HierarchyNode) => {
+			.on('mousedown', (d: TreeNode) => {
 				let expanding = !d.children;
 				this.onButtonClick(d);
 				attrs.onNodeExpandedOrCollapsed(d.data.id, expanding);
@@ -905,14 +817,14 @@ class TreeChart {
 		patternify(nodeButtonGroups, {
 			tag: 'circle',
 			selector: 'node-button-circle',
-			data: (d: HierarchyNode) => [d]
+			data: (d: TreeNode) => [d]
 		})
 
 		// Add button text
 		patternify(nodeButtonGroups, {
 			tag: 'text',
 			selector: 'node-button-text',
-			data: (d: HierarchyNode) => [d]
+			data: (d: TreeNode) => [d]
 		})
 			.attr('pointer-events', 'none')
 
@@ -928,7 +840,7 @@ class TreeChart {
 
 		// Move images to desired positions
 		nodeUpdate.selectAll('.node-image-group')
-			.attr('transform', (d: HierarchyNode) => {
+			.attr('transform', (d: TreeNode) => {
 				let x = -d.imageWidth / 2;
 				let y = -d.imageHeight / 2;
 				return `translate(${x},${y})`
@@ -940,58 +852,55 @@ class TreeChart {
 			.attr('width', d => d.imageWidth)
 			.attr('height', ({
 				                 imageHeight
-			                 }: HierarchyNode) => imageHeight)
+			                 }: TreeNode) => imageHeight)
 			.attr('stroke', ({
 				                 imageBorderColor
-			                 }: HierarchyNode) => imageBorderColor)
+			                 }: TreeNode) => imageBorderColor)
 			.attr('stroke-width', ({
 				                       imageBorderWidth
-			                       }: HierarchyNode) => imageBorderWidth)
+			                       }: TreeNode) => imageBorderWidth)
 			.attr('rx', ({
 				             imageRx
-			             }: HierarchyNode) => imageRx)
+			             }: TreeNode) => imageRx)
 			.attr('y', ({
 				            imageCenterTopDistance
-			            }: HierarchyNode) => imageCenterTopDistance)
+			            }: TreeNode) => imageCenterTopDistance)
 			.attr('x', ({
 				            imageCenterLeftDistance
-			            }: HierarchyNode) => imageCenterLeftDistance)
+			            }: TreeNode) => imageCenterLeftDistance)
 			.attr('filter', ({
 				                 dropShadowId
-			                 }: HierarchyNode) => dropShadowId)
+			                 }: TreeNode) => dropShadowId)
 
 		// Style node rectangles
 		nodeUpdate.select('.node-rect')
 			.attr('width', ({
 				                data
-			                }: HierarchyNode) => data.width)
+			                }: TreeNode) => data.width)
 			.attr('height', ({
 				                 data
-			                 }: HierarchyNode) => data.height)
+			                 }: TreeNode) => data.height)
 			.attr('x', 0)
 			.attr('y', 0)
 			.attr('rx', ({
 				             data
-			             }: HierarchyNode) => data.borderRadius || 0)
+			             }: TreeNode) => data.borderRadius || 0)
 			.attr('stroke-width', ({
 				                       data
-			                       }: HierarchyNode) => data.borderWidth || attrs.strokeWidth)
+			                       }: TreeNode) => data.borderWidth || attrs.strokeWidth)
 			.attr('cursor', 'pointer')
 			.attr('stroke', ({
 				                 borderColor
-			                 }: HierarchyNode) => borderColor)
+			                 }: TreeNode) => borderColor)
 			.style("fill", ({
 				                backgroundColor
-			                }: HierarchyNode) => backgroundColor)
+			                }: TreeNode) => backgroundColor)
 
 		// Move node button group to the desired position
 		nodeUpdate.select('.node-button-g')
 			.attr('transform', d => `translate(${d.data.width / 2},${d.data.height})`)
 			.attr('display', d => {
-				if (d.children || d._children) {
-					return "inherit";
-				}
-				return "none";
+				return d.hasChildren ? "inherit" : "none";
 			});
 
 		// Restyle node button circle
@@ -999,11 +908,11 @@ class TreeChart {
 			.attr('r', 10)
 			.attr('stroke-width', ({
 				                       data
-			                       }: HierarchyNode) => data.borderWidth || attrs.strokeWidth)
+			                       }: TreeNode) => data.borderWidth || attrs.strokeWidth)
 			.attr('fill', "white")
 			.attr('stroke', ({
 				                 borderColor
-			                 }: HierarchyNode) => borderColor)
+			                 }: TreeNode) => borderColor)
 
 		// Restyle button texts
 		nodeUpdate.select('.node-button-text')
@@ -1012,13 +921,13 @@ class TreeChart {
 			.attr('fill', attrs.defaultTextFill)
 			.attr('font-size', ({
 				                    children
-			                    }: HierarchyNode) => {
+			                    }: TreeNode) => {
 				if (children) return 30;
 				return 20;
 			})
 			.text(({
 				       children
-			       }: HierarchyNode) => {
+			       }: TreeNode) => {
 				if (children) return '-';
 				return '+';
 			})
@@ -1029,7 +938,7 @@ class TreeChart {
 			.attr('opacity', 1)
 			.transition()
 			.duration(attrs.duration)
-			.attr("transform", (d: HierarchyNode) => {
+			.attr("transform", (d: TreeNode) => {
 				let transitionTarget = this.getParentExpanderPosition(d);
 				return `translate(${transitionTarget.x - d.data.width / 2},${transitionTarget.y})`;
 			})
@@ -1047,7 +956,7 @@ class TreeChart {
 			.attr('height', 10);
 	}
 
-	private getParentExpanderPosition(d: HierarchyNode) {
+	private getParentExpanderPosition(d: TreeNode) {
 		if (d.parent == null) {
 			return {x: d.width / 2, y: 0};
 		}
@@ -1086,207 +995,82 @@ class TreeChart {
 		let w = Math.abs(ex - x) - r * 2;
 
 		// Build the path
-		const path = `
+		return `
            M ${x} ${y}
            L ${x} ${y + h * yrvs}
            C  ${x} ${y + h * yrvs + r * yrvs} ${x} ${y + h * yrvs + r * yrvs} ${x + r * xrvs} ${y + h * yrvs + r * yrvs}
            L ${x + w * xrvs + r * xrvs} ${y + h * yrvs + r * yrvs}
            C ${ex}  ${y + h * yrvs + r * yrvs} ${ex}  ${y + h * yrvs + r * yrvs} ${ex} ${ey - h * yrvs}
            L ${ex} ${ey}
-         `
-		// Return result
-		return path;
+         `;
 	}
 
 	restyleForeignObjectElements() {
 		const attrs = this.getChartState();
 
 		attrs.svg.selectAll('.node-foreign-object')
-			.attr('width', ({
-				                width
-			                }: HierarchyNode) => width)
-			.attr('height', ({
-				                 height
-			                 }: HierarchyNode) => height);
+			.attr('width', (n: TreeNode) => n.width)
+			.attr('height', (n: TreeNode) => n.height);
 		attrs.svg.selectAll('.node-foreign-object-div')
-			.style('width', ({
-				                 width
-			                 }: HierarchyNode) => `${width}px`)
-			.style('height', ({
-				                  height
-			                  }: HierarchyNode) => `${height}px`)
-			.html(({
-				       data
-			       }: HierarchyNode) => this.context.templateRegistry.createTemplateRenderer(data.template).render(data.record.values))
+			.style('width', (n: TreeNode) => `${n.width}px`)
+			.style('height', (n: TreeNode) => `${n.height}px`)
+			.html((n: TreeNode) => this.context.templateRegistry.createTemplateRenderer(n.data.template).render(n.data.record.values))
 			.select('*')
 			.style('display', 'inline-grid')
 	}
 
 	// Toggle children on click.
-	onButtonClick(d: HierarchyNode) {
-
-		// If childrens are expanded
-		if (d.children) {
-
-			//Collapse them
-			d._children = d.children;
-			d.children = null;
-
-			// Set descendants expanded property to false
-			this.setExpansionFlagToChildren(d, false);
-		} else {
-
-			// Expand children
-			d.children = d._children;
-			d._children = null;
-
-			// Set each children as expanded
-			d.children.forEach(({
-				                    data
-			                    }: HierarchyNode) => data.expanded = true)
-		}
-
-		// Redraw Graph
+	onButtonClick(d: TreeNode) {
+		d.data.expanded = !d.data.expanded;
 		this.update();
 	}
-
-	// This function changes `expanded` property to descendants
-	setExpansionFlagToChildren({
-		                           data,
-		                           children,
-		                           _children
-	                           }: HierarchyNode, flag: boolean) {
-
-		// Set flag to the current property
-		data.expanded = flag;
-
-		// Loop over and recursively update expanded children's descendants
-		if (children) {
-			children.forEach(d => {
-				this.setExpansionFlagToChildren(d, flag)
-			})
-		}
-
-		// Loop over and recursively update collapsed children's descendants
-		if (_children) {
-			_children.forEach(d => {
-				this.setExpansionFlagToChildren(d, flag)
-			})
-		}
-	}
-
-	// This function can be invoked via chart.setExpanded API, it expands or collapses particular node
-	setExpanded(id: string, expandedFlag: boolean) {
-		const attrs = this.getChartState();
-		// Retrieve node by node Id
-		const node = attrs.allNodes.filter(({
-			                                    data
-		                                    }: HierarchyNode) => data.id == id)[0]
-
-		// If node exists, set expansion flag
-		if (node) node.data.expanded = expandedFlag;
-
-		// First expand all nodes
-		attrs.root.children.forEach((d: HierarchyNode) => this.expand(d));
-
-		// Then collapse all nodes
-		attrs.root.children.forEach((d: HierarchyNode) => this.collapse(d));
-
-		// Then expand only the nodes, which were previously expanded, or have an expand flag set
-		attrs.root.children.forEach((d: HierarchyNode) => this.expandSomeNodes(d));
-
-		// Redraw graph
-		this.update();
-	}
-
-	// Method which only expands nodes, which have property set "expanded=true"
-	expandSomeNodes(d: HierarchyNode) {
-
-		// If node has expanded property set
-		if (d.data.expanded) {
-
-			// Retrieve node's parent
-			let parent = d.parent;
-
-			// While we can go up
-			while (parent) {
-
-				// Expand all current parent's children
-				if (parent._children) {
-					parent.children = parent._children;
-				}
-
-				// Replace current parent holding object
-				parent = parent.parent;
-			}
-		}
-
-		// Recursivelly do the same for collapsed nodes
-		if (d._children) {
-			d._children.forEach((ch: HierarchyNode) => this.expandSomeNodes(ch));
-		}
-
-		// Recursivelly do the same for expanded nodes
-		if (d.children) {
-			d.children.forEach((ch: HierarchyNode) => this.expandSomeNodes(ch));
-		}
-	}
-
 
 	// This function updates nodes state and redraws graph, usually after data change
 	updateNodesState() {
 		const attrs = this.getChartState();
+
+		let visibleNodeRecords = this.getVisibleNodeRecords(attrs.data);
+
 		// Store new root by converting flat data to hierarchy
-		attrs.root = d3.stratify()
-			.id(({
-				     id
-			     }) => id)
-			.parentId(({
-				           parentId
-			           }) => parentId)
-			(attrs.data)
+		attrs.root = d3.stratify<UiTreeGraphNodeConfig>()
+			.id((d: UiTreeGraphNodeConfig) => d.id)
+			.parentId((d: UiTreeGraphNodeConfig) => d.parentId)
+			(visibleNodeRecords) as TreeNode;
 
-		// Store all nodes in flat format (although, now we can browse parent, see depth e.t.c. )
-		attrs.allNodes = attrs.layouts.treemap(attrs.root).descendants()
-
-		// Store direct and total descendants count
-		attrs.allNodes.forEach((d: HierarchyNode) => {
-			Object.assign(d.data, {
-				directSubordinates: d.children ? d.children.length : 0,
-				totalSubordinates: d.descendants().length - 1
-			})
-		})
-
-		// Expand all nodes first
-		attrs.root.children.forEach(this.expand);
-
-		// Then collapse them all
-		attrs.root.children.forEach((d: HierarchyNode) => this.collapse(d));
-
-		// Then only expand nodes, which have expanded proprty set to true
-		attrs.root.children.forEach((ch: HierarchyNode) => this.expandSomeNodes(ch));
-
-		// Redraw Graphs
-		this.update()
+		let recordsByParentId = getById(attrs.data.filter(r => r.id !== attrs.root.id), n => n.parentId);
+		attrs.root.eachBefore(n => {
+			n.hasChildren = recordsByParentId[n.id] != null || (n.data as any).hasLazyChildren;
+		});
 	}
 
+	private getVisibleNodeRecords(records: UiTreeGraphNodeConfig[]) {
+		const recordsById = getById(records);
+		const rootNodeRecords = records.filter(r => recordsById[r.parentId] == null);
 
-	// Function which collapses passed node and it's descendants
-	collapse(d: HierarchyNode) {
-		if (d.children) {
-			d._children = d.children;
-			d._children.forEach(ch => this.collapse(ch));
-			d.children = null;
-		}
-	}
-
-	// Function which expands passed node and it's descendants
-	expand(d: HierarchyNode) {
-		if (d._children) {
-			d.children = d._children;
-			d.children.forEach(ch => this.expand(ch));
-			d._children = null;
-		}
+		const visibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = getById(rootNodeRecords);
+		const invisibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = {};
+		let remainingRecords: UiTreeGraphNodeConfig[] = records.filter(r => visibleNodeRecordsById[r.id] == null);
+		do {
+			remainingRecords = remainingRecords.filter(r => {
+				let visibleParent = visibleNodeRecordsById[r.parentId];
+				let invisibleParent = invisibleNodeRecordsById[r.parentId];
+				if (visibleParent != null) {
+					if (visibleParent.expanded) {
+						visibleNodeRecordsById[r.id] = r;
+						return false;
+					} else {
+						invisibleNodeRecordsById[r.id] = r;
+						return false;
+					}
+				} else if (invisibleParent != null) {
+					invisibleNodeRecordsById[r.id] = r;
+					return false;
+				} else {
+					return true; // we don't know yet for this node...
+				}
+			});
+		} while (remainingRecords.length > 0);
+		return Object.values(visibleNodeRecordsById);
 	}
 
 	// Zoom handler function
@@ -1310,6 +1094,13 @@ class TreeChart {
 
 	}
 
+}
+
+function getById<R>(recs: R[], idExtractor: (r: R) => string = r => (r as any).id) {
+	return recs.reduce((recordsById, record) => {
+		recordsById[idExtractor(record)] = record;
+		return recordsById;
+	}, {} as { [id: string]: R })
 }
 
 export function patternify<E extends BaseType, ED, P extends BaseType = null, PD = null>(container: Selection<P, PD, any, any>, params: PatternifyParameter) {
