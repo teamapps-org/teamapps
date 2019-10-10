@@ -538,7 +538,6 @@ class TreeChart {
 			layerYByDepth[i] = layerYByDepth[i - 1] + layerHeightByDepth[i - 1] + attrs.verticalGap;
 		}
 		treeData.eachBefore(d => {
-			console.log(layerYByDepth[d.depth]);
 			return d.y = layerYByDepth[d.depth];
 		});
 
@@ -718,59 +717,78 @@ class TreeChart {
 		// Get nodes selection
 		const nodesSelection = this.chart.selectAll('g.node')
 			.data(nodes, d => (d as any).id)
+			.join(
+				enter => enter
+					.append('g')
+					.attr('class', 'node')
+					.attr("transform", d => {
+						let transitionOrigin = this.getParentExpanderPosition(d);
+						return `translate(${transitionOrigin.x - d.data.width / 2},${transitionOrigin.y})`;
+					})
+					.on('click', d => {
+						if (d3.event.srcElement.classList.contains('node-button-circle')) {
+							return;
+						}
+						attrs.onNodeClick(d.data.id);
+					}),
+				update => update,
+				exit => exit.attr('opacity', 1)
+					.transition()
+					.duration(attrs.duration)
+					.attr("transform", (d: TreeNode) => {
+						let transitionTarget = this.getParentExpanderPosition(d);
+						return `translate(${transitionTarget.x - d.data.width / 2},${transitionTarget.y})`;
+					})
+					.on('end', function () {
+						d3.select(this).remove();
+					})
+					.attr('opacity', 0)
+			);
 
-		// Enter any new nodes at the parent's previous position.
-		const nodeEnter = nodesSelection.enter().append('g')
-			.attr('class', 'node')
-			.attr("transform", d => {
-				let transitionOrigin = this.getParentExpanderPosition(d);
-				return `translate(${transitionOrigin.x - d.data.width / 2},${transitionOrigin.y})`;
-			})
+
+		// Style node rectangles
+		nodesSelection.selectAll('.node-rect')
+			.data(d => [d])
+			.join(enter => enter
+				.append('rect')
+				.classed("node-rect", true)
+			)
+			.attr('width', d => d.data.width)
+			.attr('height', d => d.data.height)
+			.attr('x', 0)
+			.attr('y', 0)
+			.attr('rx', d => d.data.borderRadius || 0)
+			.attr('stroke-width', d => d.data.borderWidth || attrs.strokeWidth)
 			.attr('cursor', 'pointer')
-			.on('click', d => {
-				if (d3.event.srcElement.classList.contains('node-button-circle')) {
-					return;
-				}
-				attrs.onNodeClick(d.data.id);
-			});
-
-		// Add background rectangle for the nodes
-		patternify(nodeEnter, {
-			tag: 'rect',
-			selector: 'node-rect',
-			data: (d: TreeNode) => [d]
-		});
+			.attr('stroke', d => d.borderColor)
+			.style("fill", d => d.backgroundColor);
 
 		// Add node icon image inside node
-		patternify(nodeEnter, {
-			tag: 'image',
-			selector: 'node-icon-image',
-			data: (d: TreeNode) => d.data.icon ? [d] : []
-		})
-			.attr('width', ({
-				                data
-			                }: TreeNode) => data.icon.size)
-			.attr('height', ({
-				                 data
-			                 }: TreeNode) => data.icon.size)
-			.attr("xlink:href", ({
-				                     data
-			                     }: TreeNode) => this.context.getIconPath(data.icon.icon, data.icon.size))
-			.attr('x', ({
-				            width, data
-			            }: TreeNode) => -data.icon.size / 2)
-			.attr('y', ({
-				            height,
-				            data
-			            }: TreeNode) => -data.icon.size / 2)
+		nodesSelection.selectAll('image.node-icon-image')
+			.data(d => d.data.icon ? [d] : [])
+			.join(enter => enter
+				.append('image')
+				.classed('node-icon-image', true)
+			)
+			.attr('width', d => d.data.icon.size)
+			.attr('height', d => d.data.icon.size)
+			.attr("xlink:href", d => this.context.getIconPath(d.data.icon.icon, d.data.icon.size))
+			.attr('x', d => -d.data.icon.size / 2)
+			.attr('y', d => -d.data.icon.size / 2);
 
 		// Defined node images wrapper group
-		const imageGroups = patternify(nodeEnter, {
-			tag: 'g',
-			selector: 'node-image-group',
-			data: (d: TreeNode) => [d]
-		})
-
+		const imageGroups = nodesSelection.selectAll('g.node-image-group')
+			.data(d => [d])
+			.join(enter => enter
+				.append("g")
+				.classed("node-image-group", true)
+			)
+			.attr('transform', (d: TreeNode) => {
+				let x = -d.imageWidth / 2;
+				let y = -d.imageHeight / 2;
+				return `translate(${x},${y})`
+			});
+		
 		// Add background rectangle for node image
 		patternify(imageGroups, {
 			tag: 'rect',
@@ -778,13 +796,9 @@ class TreeChart {
 			data: (d: TreeNode) => [d]
 		})
 
-		// Node update styles
-		const nodeUpdate = nodeEnter.merge(nodesSelection as any)
-			.style('font', '12px sans-serif');
-
 
 		// Add foreignObject element inside rectangle
-		const fo = patternify(nodeUpdate, {
+		const fo = patternify(nodesSelection, {
 			tag: 'foreignObject',
 			selector: 'node-foreign-object',
 			data: (d: TreeNode) => [d]
@@ -800,9 +814,8 @@ class TreeChart {
 
 		this.restyleForeignObjectElements();
 
-
 		// Add Node button circle's group (expand-collapse button)
-		const nodeButtonGroups = patternify(nodeEnter, {
+		const nodeButtonGroups = patternify(nodesSelection, {
 			tag: 'g',
 			selector: 'node-button-g',
 			data: (d: TreeNode) => [d]
@@ -826,28 +839,19 @@ class TreeChart {
 			selector: 'node-button-text',
 			data: (d: TreeNode) => [d]
 		})
-			.attr('pointer-events', 'none')
+			.attr('pointer-events', 'none');
 
 		// Transition to the proper position for the node
-		nodeUpdate.transition()
+		nodesSelection.transition()
 			.attr('opacity', 0)
 			.duration(attrs.duration)
 			.attr("transform", d => {
-				console.log(d.y);
 				return `translate(${d.x},${d.y})`;
 			})
 			.attr('opacity', 1)
 
-		// Move images to desired positions
-		nodeUpdate.selectAll('.node-image-group')
-			.attr('transform', (d: TreeNode) => {
-				let x = -d.imageWidth / 2;
-				let y = -d.imageHeight / 2;
-				return `translate(${x},${y})`
-			});
-
 		// Style node image rectangles
-		nodeUpdate.select('.node-image-rect')
+		nodesSelection.select('.node-image-rect')
 			.attr('fill', d => `url(#${d.id})`)
 			.attr('width', d => d.imageWidth)
 			.attr('height', ({
@@ -872,39 +876,16 @@ class TreeChart {
 				                 dropShadowId
 			                 }: TreeNode) => dropShadowId)
 
-		// Style node rectangles
-		nodeUpdate.select('.node-rect')
-			.attr('width', ({
-				                data
-			                }: TreeNode) => data.width)
-			.attr('height', ({
-				                 data
-			                 }: TreeNode) => data.height)
-			.attr('x', 0)
-			.attr('y', 0)
-			.attr('rx', ({
-				             data
-			             }: TreeNode) => data.borderRadius || 0)
-			.attr('stroke-width', ({
-				                       data
-			                       }: TreeNode) => data.borderWidth || attrs.strokeWidth)
-			.attr('cursor', 'pointer')
-			.attr('stroke', ({
-				                 borderColor
-			                 }: TreeNode) => borderColor)
-			.style("fill", ({
-				                backgroundColor
-			                }: TreeNode) => backgroundColor)
 
 		// Move node button group to the desired position
-		nodeUpdate.select('.node-button-g')
+		nodesSelection.select('.node-button-g')
 			.attr('transform', d => `translate(${d.data.width / 2},${d.data.height})`)
 			.attr('display', d => {
 				return d.hasChildren ? "inherit" : "none";
 			});
 
 		// Restyle node button circle
-		nodeUpdate.select('.node-button-circle')
+		nodesSelection.select('.node-button-circle')
 			.attr('r', 10)
 			.attr('stroke-width', ({
 				                       data
@@ -915,7 +896,7 @@ class TreeChart {
 			                 }: TreeNode) => borderColor)
 
 		// Restyle button texts
-		nodeUpdate.select('.node-button-text')
+		nodesSelection.select('.node-button-text')
 			.attr('text-anchor', 'middle')
 			.attr('alignment-baseline', 'middle')
 			.attr('fill', attrs.defaultTextFill)
@@ -932,28 +913,6 @@ class TreeChart {
 				return '+';
 			})
 			.attr('y', this.isEdge() ? 10 : 0)
-
-		// Remove any exiting nodes after transition
-		const nodeExitTransition = nodesSelection.exit()
-			.attr('opacity', 1)
-			.transition()
-			.duration(attrs.duration)
-			.attr("transform", (d: TreeNode) => {
-				let transitionTarget = this.getParentExpanderPosition(d);
-				return `translate(${transitionTarget.x - d.data.width / 2},${transitionTarget.y})`;
-			})
-			.on('end', function () {
-				d3.select(this).remove();
-			})
-			.attr('opacity', 0);
-
-		// On exit reduce the node rects size to 0
-		nodeExitTransition.selectAll('.node-rect');
-
-		// On exit reduce the node image rects size to 0
-		nodeExitTransition.selectAll('.node-image-rect')
-			.attr('width', 10)
-			.attr('height', 10);
 	}
 
 	private getParentExpanderPosition(d: TreeNode) {

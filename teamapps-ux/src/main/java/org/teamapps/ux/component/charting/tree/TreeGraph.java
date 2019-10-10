@@ -3,6 +3,7 @@ package org.teamapps.ux.component.charting.tree;
 import org.jetbrains.annotations.NotNull;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.dto.UiBaseTreeGraphNode;
 import org.teamapps.dto.UiClientRecord;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
@@ -11,6 +12,7 @@ import org.teamapps.dto.UiTreeGraphNode;
 import org.teamapps.event.Event;
 import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.template.Template;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +41,28 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	private List<UiTreeGraphNode> createUiNodes(List<TreeGraphNode<RECORD>> nodes) {
 		return nodes.stream()
-				.map(node -> createUiNode(node))
+				.map(this::createUiNode)
 				.collect(Collectors.toList());
 	}
 
 	@NotNull
 	private UiTreeGraphNode createUiNode(TreeGraphNode<RECORD> node) {
 		UiTreeGraphNode uiNode = new UiTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
+		mapBaseTreeGraphNodeAttributes(node, uiNode);
 		uiNode.setParentId(node.getParent() != null ? node.getParent().getId() : null);
+		uiNode.setExpanded(node.isExpanded());
+		uiNode.setHasLazyChildren(node.isHasLazyChildren());
+		uiNode.setSideListNodes(node.getSideListNodes() != null ? node.getSideListNodes().stream().map(this::createBaseUiNode).collect(Collectors.toList()) : null);
+		return uiNode;
+	}
+
+	private UiBaseTreeGraphNode createBaseUiNode(BaseTreeGraphNode<RECORD> node) {
+		UiBaseTreeGraphNode uiNode = new UiBaseTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
+		mapBaseTreeGraphNodeAttributes(node, uiNode);
+		return uiNode;
+	}
+
+	private void mapBaseTreeGraphNodeAttributes(BaseTreeGraphNode<RECORD> node, UiBaseTreeGraphNode uiNode) {
 		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? UiUtil.createUiColor(node.getBackgroundColor()) : null);
 		uiNode.setBorderColor(node.getBorderColor() != null ? UiUtil.createUiColor(node.getBorderColor()) : null);
 		uiNode.setBorderWidth(node.getBorderWidth());
@@ -54,17 +70,15 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		uiNode.setImage(node.getImage() != null ? node.getImage().createUiTreeGraphNodeImage() : null);
 		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createUiTreeGraphNodeIcon() : null);
 		uiNode.setTemplate(node.getTemplate() != null ? node.getTemplate().createUiTemplate() : null);
-		uiNode.setRecord(node.getRecord() != null ? createUiRecord(node) : null);
+		uiNode.setRecord(node.getRecord() != null ? createUiRecord(node.getRecord(), node.getTemplate()) : null);
 		uiNode.setConnectorLineColor(node.getConnectorLineColor() != null ? UiUtil.createUiColor(node.getConnectorLineColor()) : null);
 		uiNode.setConnectorLineWidth(node.getConnectorLineWidth());
 		uiNode.setDashArray(node.getDashArray());
-		uiNode.setExpanded(node.isExpanded());
-		return uiNode;
 	}
 
-	private UiClientRecord createUiRecord(TreeGraphNode<RECORD> node) {
+	private UiClientRecord createUiRecord(RECORD record, Template template) {
 		UiClientRecord uiClientRecord = new UiClientRecord();
-		uiClientRecord.setValues(propertyExtractor.getValues(node.getRecord(), node.getTemplate().getDataKeys()));
+		uiClientRecord.setValues(propertyExtractor.getValues(record, template.getDataKeys()));
 		return uiClientRecord;
 	}
 
