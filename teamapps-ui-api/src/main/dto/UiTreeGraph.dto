@@ -14,9 +14,8 @@ class UiTreeGraph extends UiComponent {
     event nodeExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 
-class UiTreeGraphNode {
-    required String id;
-    String parentId;
+class UiBaseTreeGraphNode {
+	required String id;
     required int width;
     required int height;
     UiColor backgroundColor = new UiColor(255, 255, 255); // rgba
@@ -33,7 +32,15 @@ class UiTreeGraphNode {
     UiColor connectorLineColor = new UiColor(100, 100, 100); // line to parent node
     int connectorLineWidth;
     String dashArray;
+}
+
+class UiTreeGraphNode extends UiBaseTreeGraphNode{
+    String parentId;
+
     boolean expanded;
+    boolean hasLazyChildren = false;
+
+    List<UiBaseTreeGraphNode> sideListNodes;
 }
 
 class UiTreeGraphNodeImage {
