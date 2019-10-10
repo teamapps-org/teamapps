@@ -68,7 +68,7 @@
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
     "@types/canvas-gauges": "^2.1.1",
-    "@types/d3": "5.x",
+    "@types/d3": "^5.7.2",
     "@types/jquery": "^3.3.30",
     "@types/jqueryui": "1.x",
     "@types/json-stable-stringify": "^1.0.32",
