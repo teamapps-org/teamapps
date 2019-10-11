@@ -70,11 +70,11 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 			.onNodeClick((nodeId: string) => {
 				this.onNodeClicked.fire({nodeId: nodeId});
 			})
-			.onNodeExpandedOrCollapsed((nodeId: string, expanded: boolean) => {
-				this.onNodeExpandedOrCollapsed.fire({nodeId: nodeId, expanded: expanded});
+			.onNodeExpandedOrCollapsed((nodeId: string, expanded: boolean, lazyLoad: boolean) => {
+				this.onNodeExpandedOrCollapsed.fire({nodeId, expanded, lazyLoad});
 			})
 			.onSideListExpandedOrCollapsed((nodeId: string, expanded: boolean) => {
-				this.onSideListExpandedOrCollapsed.fire({nodeId: nodeId, expanded: expanded});
+				this.onSideListExpandedOrCollapsed.fire({nodeId, expanded});
 			});
 		this.chart.render();
 	}
@@ -203,9 +203,9 @@ interface TreeChart {
 
 	onNodeClick(onNodeClick: (nodeId: string) => void): TreeChart;
 
-	onNodeExpandedOrCollapsed(): (nodeId: string, expanded: boolean) => void;
+	onNodeExpandedOrCollapsed(): (nodeId: string, expanded: boolean, lazyLoad: boolean) => void;
 
-	onNodeExpandedOrCollapsed(onNodeExpandedOrCollapsed: (nodeId: string, expanded: boolean) => void): TreeChart;
+	onNodeExpandedOrCollapsed(onNodeExpandedOrCollapsed: (nodeId: string, expanded: boolean, lazyLoad: boolean) => void): TreeChart;
 
 	onSideListExpandedOrCollapsed(): (nodeId: string, expanded: boolean) => void;
 
@@ -252,7 +252,7 @@ export interface TreeChartAttributes {
 	dropShadowId: string,
 	initialZoom: number,
 	onNodeClick?: (name: string) => void,
-	onNodeExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
+	onNodeExpandedOrCollapsed?: (nodeId: string, expanded: boolean, lazyLoad: boolean) => void,
 	onSideListExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
 	verticalGap: number,
 	sideListIndent: number,
@@ -631,7 +631,7 @@ class TreeChart {
 				.classed("node-button-g", true)
 				.on('mousedown', (d: TreeNode) => {
 					this.onExpanderClicked(d);
-					attrs.onNodeExpandedOrCollapsed(d.data.id, !d.children);
+					attrs.onNodeExpandedOrCollapsed(d.data.id, d.data.expanded, d.data.expanded && d.data.hasLazyChildren && attrs.data.filter(d => d.parentId === d.id).length == 0);
 				})
 			)
 			.attr('transform', d => `translate(${d.data.width / 2},${d.data.height})`)
