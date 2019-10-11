@@ -80,9 +80,15 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 	}
 
 	@executeWhenFirstDisplayed(true)
-	private moveToRootNode() {
+	public moveToRootNode() {
 		this.onResize();
 		this.chart.moveToRootNode(400);
+	}
+
+	@executeWhenFirstDisplayed(true)
+	public moveToNode(nodeId: string) {
+		this.onResize();
+		this.chart.moveToNode(nodeId);
 	}
 
 	setNodes(nodes: UiTreeGraphNodeConfig[]): void {

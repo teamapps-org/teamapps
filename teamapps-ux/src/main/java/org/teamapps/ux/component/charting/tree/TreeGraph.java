@@ -150,4 +150,12 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		this.compact = compact;
 		queueCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(getId(), createUiComponent()));
 	}
+
+	public void moveToRootNode() {
+		queueCommandIfRendered(() -> new UiTreeGraph.MoveToRootNodeCommand(getId()));
+	}
+
+	public void moveToNode(TreeGraphNode<RECORD> node) {
+		queueCommandIfRendered(() -> new UiTreeGraph.MoveToNodeCommand(getId(), node.getId()));
+	}
 }
