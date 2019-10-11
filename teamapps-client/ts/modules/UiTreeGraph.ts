@@ -23,7 +23,14 @@ import * as d3 from "d3";
 import {BaseType, HierarchyNode, HierarchyPointLink, HierarchyPointNode, Selection, ZoomBehavior} from "d3";
 import {UiColorConfig} from '../generated/UiColorConfig';
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {UiTreeGraph_NodeClickedEvent, UiTreeGraph_NodeExpandedOrCollapsedEvent, UiTreeGraphCommandHandler, UiTreeGraphConfig, UiTreeGraphEventSource} from "../generated/UiTreeGraphConfig";
+import {
+	UiTreeGraph_NodeClickedEvent,
+	UiTreeGraph_NodeExpandedOrCollapsedEvent,
+	UiTreeGraph_SideListExpandedOrCollapsedEvent,
+	UiTreeGraphCommandHandler,
+	UiTreeGraphConfig,
+	UiTreeGraphEventSource
+} from "../generated/UiTreeGraphConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiTreeGraphNodeConfig} from "../generated/UiTreeGraphNodeConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -38,6 +45,7 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 
 	public readonly onNodeClicked: TeamAppsEvent<UiTreeGraph_NodeClickedEvent> = new TeamAppsEvent(this);
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
+	public readonly onSideListExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_SideListExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private chart: TreeChart;
 	private $main: HTMLElement;
@@ -60,15 +68,13 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 			.data(config.nodes)
 			.compact(config.compact)
 			.onNodeClick((nodeId: string) => {
-				this.onNodeClicked.fire({
-					nodeId: nodeId
-				});
+				this.onNodeClicked.fire({nodeId: nodeId});
 			})
 			.onNodeExpandedOrCollapsed((nodeId: string, expanded: boolean) => {
-				this.onNodeExpandedOrCollapsed.fire({
-					nodeId: nodeId,
-					expanded: expanded
-				});
+				this.onNodeExpandedOrCollapsed.fire({nodeId: nodeId, expanded: expanded});
+			})
+			.onSideListExpandedOrCollapsed((nodeId: string, expanded: boolean) => {
+				this.onSideListExpandedOrCollapsed.fire({nodeId: nodeId, expanded: expanded});
 			});
 		this.chart.render();
 	}
@@ -194,6 +200,10 @@ interface TreeChart {
 	onNodeExpandedOrCollapsed(): (nodeId: string, expanded: boolean) => void;
 
 	onNodeExpandedOrCollapsed(onNodeExpandedOrCollapsed: (nodeId: string, expanded: boolean) => void): TreeChart;
+
+	onSideListExpandedOrCollapsed(): (nodeId: string, expanded: boolean) => void;
+
+	onSideListExpandedOrCollapsed(onSideListExpandedOrCollapsed: (nodeId: string, expanded: boolean) => void): TreeChart;
 }
 
 interface TreeNode extends HierarchyPointNode<UiTreeGraphNodeConfig> {
@@ -615,7 +625,7 @@ class TreeChart {
 				.classed("node-button-g", true)
 				.on('mousedown', (d: TreeNode) => {
 					this.onExpanderClicked(d);
-					attrs.onNodeExpandedOrCollapsed(d.data.id, !!d.children);
+					attrs.onNodeExpandedOrCollapsed(d.data.id, !d.children);
 				})
 			)
 			.attr('transform', d => `translate(${d.data.width / 2},${d.data.height})`)

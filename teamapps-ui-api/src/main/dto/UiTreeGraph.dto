@@ -15,6 +15,7 @@ class UiTreeGraph extends UiComponent {
     
     event nodeClicked(String nodeId);
     event nodeExpandedOrCollapsed(String nodeId, boolean expanded);
+    event sideListExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 
 class UiBaseTreeGraphNode {
