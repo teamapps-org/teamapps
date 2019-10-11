@@ -12,7 +12,10 @@ class UiTreeGraph extends UiComponent {
     command addNode(UiTreeGraphNode node);
     command removeNode(String nodeId);
     command setNodeExpanded(String nodeId, boolean expanded);
-    
+
+    command moveToRootNode();
+    command moveToNode(String nodeId);
+
     event nodeClicked(String nodeId);
     event nodeExpandedOrCollapsed(String nodeId, boolean expanded);
     event sideListExpandedOrCollapsed(String nodeId, boolean expanded);
