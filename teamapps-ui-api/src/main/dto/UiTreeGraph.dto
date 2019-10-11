@@ -41,6 +41,7 @@ class UiTreeGraphNode extends UiBaseTreeGraphNode{
     boolean hasLazyChildren = false;
 
     List<UiBaseTreeGraphNode> sideListNodes;
+    boolean sideListExpanded;
 }
 
 class UiTreeGraphNodeImage {
