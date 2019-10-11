@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public final Event<TreeGraphNode<RECORD>> onNodeClicked = new Event<>();
-	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
+	public final Event<ExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
+	public final Event<ExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = new Event<>();
 
 	private float zoomFactor;
 	private List<TreeGraphNode<RECORD>> nodes = new ArrayList<>();
@@ -54,6 +55,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		uiNode.setExpanded(node.isExpanded());
 		uiNode.setHasLazyChildren(node.isHasLazyChildren());
 		uiNode.setSideListNodes(node.getSideListNodes() != null ? node.getSideListNodes().stream().map(this::createBaseUiNode).collect(Collectors.toList()) : null);
+		uiNode.setSideListExpanded(node.isSideListExpanded());
 		return uiNode;
 	}
 
@@ -107,20 +109,36 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_TREE_GRAPH_NODE_CLICKED:
+			case UI_TREE_GRAPH_NODE_CLICKED: {
 				UiTreeGraph.NodeClickedEvent clickEvent = (UiTreeGraph.NodeClickedEvent) event;
 				this.nodes.stream()
 						.filter(node -> node.getId().equals(clickEvent.getNodeId()))
 						.findFirst()
 						.ifPresent(onNodeClicked::fire);
 				break;
-			case UI_TREE_GRAPH_NODE_EXPANDED_OR_COLLAPSED:
+			}
+			case UI_TREE_GRAPH_NODE_EXPANDED_OR_COLLAPSED: {
 				UiTreeGraph.NodeExpandedOrCollapsedEvent e = (UiTreeGraph.NodeExpandedOrCollapsedEvent) event;
 				this.nodes.stream()
 						.filter(node -> node.getId().equals(e.getNodeId()))
 						.findFirst()
-						.ifPresent(node -> onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded())));
+						.ifPresent(node -> {
+							node.setExpanded(e.getExpanded());
+							onNodeExpandedOrCollapsed.fire(new ExpandedOrCollapsedEvent<>(node, e.getExpanded()));
+						});
 				break;
+			}
+			case UI_TREE_GRAPH_SIDE_LIST_EXPANDED_OR_COLLAPSED: {
+				UiTreeGraph.SideListExpandedOrCollapsedEvent e = (UiTreeGraph.SideListExpandedOrCollapsedEvent) event;
+				this.nodes.stream()
+						.filter(node -> node.getId().equals(e.getNodeId()))
+						.findFirst()
+						.ifPresent(node -> {
+							node.setSideListExpanded(e.getExpanded());
+							onSideListExpandedOrCollapsed.fire(new ExpandedOrCollapsedEvent<>(node, e.getExpanded()));
+						});
+				break;
+			}
 		}
 	}
 

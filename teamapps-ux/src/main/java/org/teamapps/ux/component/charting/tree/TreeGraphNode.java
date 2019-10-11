@@ -8,6 +8,7 @@ public class TreeGraphNode<RECORD> extends BaseTreeGraphNode<RECORD> {
 	private boolean expanded;
 	private boolean hasLazyChildren = false;
 	private List<BaseTreeGraphNode<RECORD>> sideListNodes;
+	private boolean sideListExpanded;
 
 	public TreeGraphNode<RECORD> getParent() {
 		return parent;
@@ -42,6 +43,15 @@ public class TreeGraphNode<RECORD> extends BaseTreeGraphNode<RECORD> {
 
 	public TreeGraphNode<RECORD> setSideListNodes(List<BaseTreeGraphNode<RECORD>> sideListNodes) {
 		this.sideListNodes = sideListNodes;
+		return this;
+	}
+
+	public boolean isSideListExpanded() {
+		return sideListExpanded;
+	}
+
+	public TreeGraphNode<RECORD> setSideListExpanded(boolean sideListExpanded) {
+		this.sideListExpanded = sideListExpanded;
 		return this;
 	}
 }
