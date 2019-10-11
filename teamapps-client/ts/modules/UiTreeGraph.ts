@@ -20,7 +20,7 @@
  */
 
 import * as d3 from "d3";
-import {BaseType, HierarchyPointNode, Selection, TreeLayout, ZoomBehavior} from "d3";
+import {BaseType, HierarchyPointLink, HierarchyPointNode, Selection, TreeLayout, ZoomBehavior} from "d3";
 import {UiColorConfig} from '../generated/UiColorConfig';
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiTreeGraph_NodeClickedEvent, UiTreeGraph_NodeExpandedOrCollapsedEvent, UiTreeGraphCommandHandler, UiTreeGraphConfig, UiTreeGraphEventSource} from "../generated/UiTreeGraphConfig";
@@ -30,6 +30,7 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
 import {parseHtml} from "./Common";
+import {createUiColorCssString} from "./util/CssFormatUtil";
 
 export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implements UiTreeGraphCommandHandler, UiTreeGraphEventSource {
 
@@ -176,49 +177,21 @@ interface TreeChart {
 }
 
 interface TreeNode extends HierarchyPointNode<UiTreeGraphNodeConfig> {
-	id: 'string',
-	parentId: 'string' | null,
-	data: UiTreeGraphNodeConfig,
-	children: this[],
-	hasChildren: boolean,
-	descendants: () => this[],
-	parent: this | null,
-	x: number,
-	y: number,
-	imageWidth: number,
-	imageHeight: number,
-	imageBorderColor: string,
-	imageBorderWidth: number,
-	borderColor: string,
-	backgroundColor: string,
-	imageRx: number,
-	width: number,
-	height: number,
-	imageCenterTopDistance: number,
-	imageCenterLeftDistance: number,
-	dropShadowId: string,
+	hasChildren?: boolean,
+	sideListNodes: TreeNodeLike[]
+}
 
+interface TreeNodeLike {
+	data: UiTreeGraphNodeConfig,
+	id?: string,
+	hasChildren?: boolean,
+	parent?: TreeNode | null,
+	x: number,
+	y: number
 }
 
 export interface Layouts {
 	treemap: TreeLayout<UiTreeGraphNodeConfig>
-}
-
-export interface NodeImage {
-	url: string;
-	width: number;
-	height: number;
-	centerTopDistance: number; //top distance of image center from top-left corner of node, e.g. -10 and height 30 means image will be 25 pixels above the top line of the node
-	centerLeftDistance: number; //left distance of image center from top-left corner of node
-	cornerShape: string; //enum { ORIGINAL, ROUNDED, CIRCLE }
-	shadow: boolean;
-	borderWidth: number;
-	borderColor: UiColorConfig
-}
-
-export interface NodeIcon {
-	icon: string;
-	size: number;
 }
 
 export interface TreeChartAttributes {
@@ -243,8 +216,10 @@ export interface TreeChartAttributes {
 	initialZoom: number,
 	onNodeClick?: (name: string) => void,
 	onNodeExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
+	onSideListExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
 	layouts: Layouts,
 	verticalGap: number,
+	defs: Selection<BaseType, unknown, SVGElement, void>
 }
 
 export interface PatternifyParameter {
@@ -282,9 +257,13 @@ class TreeChart {
 			dropShadowId: null,
 			initialZoom: 1,
 			layouts: null,
-			verticalGap: 40,
-			onNodeClick: (): void => undefined,
-			onNodeExpandedOrCollapsed: (): void => undefined,
+			verticalGap: 36,
+			onNodeClick: (): void => {
+			},
+			onNodeExpandedOrCollapsed: () => {
+			},
+			onSideListExpandedOrCollapsed: () => {
+			}
 		} as any;
 
 		this.getChartState = () => attrs;
@@ -313,7 +292,6 @@ class TreeChart {
 	render() {
 		//InnerFunctions which will update visuals
 		const attrs = this.getChartState();
-		const thisObjRef = this;
 
 		//Drawing containers
 		const container: Selection<Element, void, null, void> = d3.select(attrs.container);
@@ -361,10 +339,10 @@ class TreeChart {
 		// ******************* BEHAVIORS . **********************
 		this.behaviors = {
 			zoom: null
-		}
+		};
 
 		// Get zooming function
-		this.behaviors.zoom = d3.zoom<SVGElement, void>().on("zoom", () => this.zoomed())
+		this.behaviors.zoom = d3.zoom<SVGElement, void>().on("zoom", () => this.zoomed());
 
 		// *************************  DRAWING **************************
 		//Add svg
@@ -377,7 +355,6 @@ class TreeChart {
 			.attr('height', attrs.svgHeight)
 			.attr('font-family', attrs.defaultFont)
 			.call(this.behaviors.zoom)
-			.attr('cursor', 'move')
 			.style('background-color', attrs.backgroundColor);
 		attrs.svg = svg;
 
@@ -385,7 +362,7 @@ class TreeChart {
 		this.chart = patternify<SVGGElement, void, SVGElement, void>(svg, {
 			tag: 'g',
 			selector: 'chart'
-		})
+		});
 		// .attr('transform', `translate(${calc.chartLeftMargin},${calc.chartTopMargin}) scale(${d3.zoomTransform(svg.node()).k})`);
 
 		attrs.chart = this.chart;
@@ -434,7 +411,7 @@ class TreeChart {
 			.attr("dx", 4.28)
 			.attr("dy", 4.48)
 			.attr("x", 8)
-			.attr("y", 8)
+			.attr("y", 8);
 
 		// Add fe-flood element for shadows - we can control shadow color and opacity with this element
 		patternify(filter, {
@@ -467,17 +444,17 @@ class TreeChart {
 			tag: 'feMergeNode',
 			selector: 'feMergeNode-blur'
 		})
-			.attr('in', 'offsetBlur')
+			.attr('in', 'offsetBlur');
 
 		// Add another feMergeNode element for shadows
 		patternify(feMerge, {
 			tag: 'feMergeNode',
 			selector: 'feMergeNode-graphic'
 		})
-			.attr('in', 'SourceGraphic')
+			.attr('in', 'SourceGraphic');
 
 		// Display tree contenrs
-		this.update()
+		this.update();
 
 
 		//#########################################  UTIL FUNCS ##################################
@@ -526,9 +503,30 @@ class TreeChart {
 
 		//  Assigns the x and y position for the nodes
 		const treeData = attrs.layouts.treemap(attrs.root);
-		const layerHeightByDepth = treeData.descendants().reduce((heightsByDepth: number[], d) => {
-			if (heightsByDepth[d.depth] == null || heightsByDepth[d.depth] < d.data.height) {
-				heightsByDepth[d.depth] = d.data.height;
+
+		treeData.each((d: TreeNode) => {
+			if (d.data.sideListNodes != null && d.data.sideListNodes.length > 0 && d.data.sideListExpanded) {
+				let currentY = 0;
+				d.sideListNodes = d.data.sideListNodes.map(r => {
+					const treeNodeLike = {
+						data: r,
+						id: r.id,
+						x: 30,
+						y: currentY + attrs.verticalGap
+					};
+					currentY += r.height + attrs.verticalGap;
+					return treeNodeLike;
+				});
+			}
+		});
+
+		const layerHeightByDepth = treeData.descendants().reduce((heightsByDepth: number[], d: TreeNode) => {
+			let nodeHeight = d.data.height;
+			if (d.data.sideListNodes != null && d.data.sideListNodes.length > 0 && d.data.sideListExpanded) {
+				nodeHeight += d.data.sideListNodes.reduce((sum, node) => sum + node.height + this.getChartState().verticalGap, 0);
+			}
+			if (heightsByDepth[d.depth] == null || heightsByDepth[d.depth] < nodeHeight) {
+				heightsByDepth[d.depth] = nodeHeight;
 			}
 			return heightsByDepth;
 		}, []);
@@ -544,179 +542,165 @@ class TreeChart {
 		// Get tree nodes and links and attach some properties
 		const nodes = treeData.descendants()
 			.map((d) => {
-				// If at least one property is already set, then we don't want to reset other properties
-				if ((d as any).width) return d as TreeNode;
-
-				// Declare properties with deffault values
-				let imageWidth = 100;
-				let imageHeight = 100;
-				let imageBorderColor = 'steelblue';
-				let imageBorderWidth = 0;
-				let imageRx = 0;
-				let imageCenterTopDistance = 0;
-				let imageCenterLeftDistance = 0;
-				let borderColor = 'steelblue';
-				let backgroundColor = 'steelblue';
-				let width = d.data.width;
-				let height = d.data.height;
-				let dropShadowId = `none`;
-
-				// Override default values based on data
-				if (d.data.image && d.data.image.shadow) {
-					dropShadowId = `url(#${attrs.dropShadowId})`
-				}
-				if (d.data.image && d.data.image.width) {
-					imageWidth = d.data.image.width
-				}
-				if (d.data.image && d.data.image.height) {
-					imageHeight = d.data.image.height
-				}
-				if (d.data.image && d.data.image.borderColor) {
-					imageBorderColor = this.rgbaObjToColor(d.data.image.borderColor)
-				}
-				if (d.data.image && d.data.image.borderWidth) {
-					imageBorderWidth = d.data.image.borderWidth
-				}
-				if (d.data.image && d.data.image.centerTopDistance) {
-					imageCenterTopDistance = d.data.image.centerTopDistance
-				}
-				if (d.data.image && d.data.image.centerLeftDistance) {
-					imageCenterLeftDistance = d.data.image.centerLeftDistance
-				}
-				if (d.data.borderColor) {
-					borderColor = this.rgbaObjToColor(d.data.borderColor);
-				}
-				if (d.data.backgroundColor) {
-					backgroundColor = this.rgbaObjToColor(d.data.backgroundColor);
-				}
-				if (d.data.image &&
-					d.data.image.cornerShape == UiTreeGraphNodeImage_CornerShape.CIRCLE) {
-					imageRx = Math.max(imageWidth, imageHeight);
-				}
-				if (d.data.image &&
-					d.data.image.cornerShape == UiTreeGraphNodeImage_CornerShape.ROUNDED) {
-					imageRx = Math.min(imageWidth, imageHeight) / 10;
-				}
-
 				// Extend node object with calculated properties
-				return Object.assign(d, {
-					imageWidth,
-					imageHeight,
-					imageBorderColor,
-					imageBorderWidth,
-					borderColor,
-					backgroundColor,
-					imageRx,
-					width,
-					height,
-					imageCenterTopDistance,
-					imageCenterLeftDistance,
-					dropShadowId
-				}) as TreeNode;
+				return Object.assign(d, {}) as TreeNode;
 			});
-
-		// Get all links
-		const links = treeData.descendants().slice(1);
 
 		// ------------------- FILTERS ---------------------
 
-		// Add patterns for each node (it's needed for rounded image implementation)
-		const patternsSelection = attrs.defs.selectAll('.pattern')
-			.data(nodes, ({
-				              id
-			              }: TreeNode) => id);
+		this.drawLinks(this.chart, attrs.root.links());
+		const nodesSelection = this.drawNodes(this.chart, () => nodes);
 
-		// Define patterns enter selection
-		const patternEnterSelection = patternsSelection.enter().append('pattern')
-
-		// Patters update selection
-		const patterns = patternEnterSelection
-			.merge(patternsSelection)
-			.attr('class', 'pattern')
-			.attr('height', 1)
-			.attr('width', 1)
-			.attr('id', ({
-				             id
-			             }: TreeNode) => id)
-
-		// Add images to patterns
-		const patternImages = patternify(patterns, {
-			tag: 'image',
-			selector: 'pattern-image',
-			data: (d: TreeNode) => [d]
-		})
-			.attr('x', 0)
-			.attr('y', 0)
-			.attr('height', ({
-				                 imageWidth
-			                 }: TreeNode) => imageWidth)
-			.attr('width', ({
-				                imageHeight
-			                }: TreeNode) => imageHeight)
-			.attr('xlink:href', ({
-				                     data
-			                     }: TreeNode) => data.image && data.image.url)
-			.attr('viewbox', ({
-				                  imageWidth,
-				                  imageHeight
-			                  }: TreeNode) => `0 0 ${imageWidth * 2} ${imageHeight}`)
-			.attr('preserveAspectRatio', 'xMidYMin slice')
-
-		// Remove patterns exit selection after animation
-		patternsSelection.exit().transition().duration(attrs.duration).remove();
-
-		// --------------------------  LINKS ----------------------
-		// Get links selection
-		const linkSelection = this.chart.selectAll('path.link')
-			.data(links, (d: TreeNode) => d.id);
-
-		// NOTE: cannot use join() here! Enter any new links at the parent's previous position.
-		const linkEnter = linkSelection.enter()
-			.insert('path', "g")
-			.attr("class", "link")
-			.attr('d', (d: TreeNode) => {
-				let transitionOrigin = this.getParentExpanderPosition(d);
-				return this.diagonal(transitionOrigin, transitionOrigin);
-			});
-
-		// Get links update selection
-		const linkUpdate = linkEnter.merge(linkSelection as any);
-
-		// Styling links
-		linkUpdate
+		let sideListG = nodesSelection.selectAll<SVGGElement, any>(':scope > g.side-list-g')
+			.data(d => [d])
+			.join(enter => enter
+				.append('g')
+				.classed('side-list-g', true)
+			)
+			.attr('transform', d => `translate(${d.data.width * 4 / 5},${d.data.height})`);
+		const sideListLinkSelection = sideListG.selectAll(':scope > .side-list-line')
+			.data((d: TreeNode) => {
+				return (d.data.sideListExpanded && d.sideListNodes) || [];
+			})
+			.join(
+				enter => enter
+					.insert('path', "path")
+					.attr("class", "side-list-line")
+					.attr('d', d => this.hookLine({x: 0, y: 0}, {x: 0, y: 0})),
+				update => update,
+				exit => exit.transition()
+					.duration(attrs.duration)
+					.attr('d', d => this.hookLine({x: 0, y: 0}, {x: 0, y: 0}))
+					.remove()
+			)
 			.attr("fill", "none")
 			.attr("stroke-width", d => d.data.connectorLineWidth || 2)
-			.attr('stroke', d => {
-				if (d.data.connectorLineColor) {
-					return this.rgbaObjToColor(d.data.connectorLineColor);
-				}
-				return 'green';
-			})
-			.attr('stroke-dasharray', d => {
-				if (d.data.dashArray) {
-					return d.data.dashArray;
-				}
-				return '';
-			})
-
-		// Transition back to the parent element position
-		linkUpdate.transition()
+			.attr('stroke', d => d.data.connectorLineColor ? this.rgbaObjToColor(d.data.connectorLineColor) : 'white')
+			.attr('stroke-dasharray', d => d.data.dashArray ? d.data.dashArray : '')
+			.transition()
 			.duration(attrs.duration)
-			.attr('d', d => this.diagonal({x: d.x + d.data.width / 2, y: d.y}, {x: d.parent.x + d.parent.data.width / 2, y: d.parent.y + d.parent.data.height}));
+			.attr('d', (d, i, groups) => {
+				return this.hookLine({x: 0, y: 0}, {x: d.x, y: d.y + d.data.height / 2})
+			});
+		this.drawNodes(sideListG, (d: TreeNode) => d.sideListNodes || []);
 
-		// Remove any  links which is exiting after animation
-		const linkExit = linkSelection.exit().transition()
-			.duration(attrs.duration)
-			.attr('d', (d: TreeNode) => {
-				let transitionOrigin = this.getParentExpanderPosition(d);
-				return this.diagonal(transitionOrigin, transitionOrigin);
-			})
-			.remove();
+		// Add Node button circle's group (expand-collapse button)
+		const childrenExpanderButtonG = nodesSelection.selectAll(':scope > g.node-button-g')
+			.data(d => [d])
+			.join(enter => enter
+				.append("g")
+				.classed("node-button-g", true)
+				.on('mousedown', (d: TreeNode) => {
+					this.onExpanderClicked(d);
+					attrs.onNodeExpandedOrCollapsed(d.data.id, !!d.children);
+				})
+			)
+			.attr('transform', d => `translate(${d.data.width / 2},${d.data.height})`)
+			.attr('display', d => {
+				return d.hasChildren ? "inherit" : "none";
+			});
+
+		// Add expand collapse button circle
+		childrenExpanderButtonG.selectAll(':scope > circle.node-button-circle')
+			.data(d => [d])
+			.join(enter => enter
+				.append("circle")
+				.classed("node-button-circle", true)
+			)
+			.attr('r', 10)
+			.attr('stroke-width', d => d.data.borderWidth || attrs.strokeWidth)
+			.attr('fill', "white")
+			.attr('stroke', d => createUiColorCssString(d.data.borderColor));
+
+		// Add button text
+		childrenExpanderButtonG.selectAll(':scope > text.node-button-text')
+			.data(d => [d])
+			.join(enter => enter
+				.append("text")
+				.classed("node-button-text", true)
+			)
+			.attr('text-anchor', 'middle')
+			.attr('alignment-baseline', 'middle')
+			.attr('fill', attrs.defaultTextFill)
+			.attr('font-size', d => d.data.expanded ? 30 : 20)
+			.text(d => d.data.expanded ? '-' : '+')
+			.attr('y', this.isEdge() ? 10 : 0);
+
+		// Add Node button circle's group (expand-collapse button)
+		const sideListExpanderG = nodesSelection.selectAll(':scope > g.node-side-list-expander-g')
+			.data(d => [d])
+			.join(enter => enter
+				.append("g")
+				.classed("node-side-list-expander-g", true)
+				.on('mousedown', (d: TreeNode) => {
+					this.onSideListExpanderClicked(d);
+					attrs.onSideListExpandedOrCollapsed(d.data.id, d.data.sideListExpanded);
+				})
+			)
+			.attr('transform', d => `translate(${d.data.width * 4 / 5},${d.data.height})`)
+			.attr('display', d => d.data.sideListNodes && d.data.sideListNodes.length > 0 ? "inherit" : "none");
+
+		// Add expand collapse button circle
+		sideListExpanderG.selectAll(':scope > circle.node-button-circle')
+			.data(d => [d])
+			.join(enter => enter
+				.append("circle")
+				.classed("node-button-circle", true)
+			)
+			.attr('r', 10)
+			.attr('stroke-width', d => d.data.borderWidth || attrs.strokeWidth)
+			.attr('fill', "white")
+			.attr('stroke', d => createUiColorCssString(d.data.borderColor));
+
+		// Add button text
+		sideListExpanderG.selectAll(':scope > text.node-button-text')
+			.data(d => [d])
+			.join(enter => enter
+				.append("text")
+				.classed("node-button-text", true)
+			)
+			.attr('text-anchor', 'middle')
+			.attr('alignment-baseline', 'middle')
+			.attr('fill', attrs.defaultTextFill)
+			.attr('font-size', d => d.data.sideListExpanded ? 30 : 20)
+			.text(d => d.data.sideListExpanded ? '-' : '+')
+			.attr('y', this.isEdge() ? 10 : 0);
+	}
+
+	private drawNodes(parentSelection: Selection<SVGElement, any, any, any>, dataFunction: (d:any) => TreeNodeLike[]) {
+		const attrs = this.getChartState();
+		
+		// // Add patterns for each node (it's needed for rounded image implementation)
+		// const patternsSelection = attrs.defs.selectAll('.pattern')
+		// 	.data(nodes.filter(n => n.data.image != null), (d: TreeNode) => d.id)
+		// 	.join(enter => enter.append('pattern'))
+		// 	.attr('class', 'pattern')
+		// 	.attr('height', 1)
+		// 	.attr('width', 1)
+		// 	.attr('id', d => d.id);
+		//
+		//
+		// // Add images to patterns
+		// const patternImages = patternify(patternsSelection, {
+		// 	tag: 'image',
+		// 	selector: 'pattern-image',
+		// 	data: (d: TreeNode) => [d].filter(d => d.data.image != null)
+		// })
+		// 	.attr('x', 0)
+		// 	.attr('y', 0)
+		// 	.attr('height', (d: TreeNode) => d.data.image.width)
+		// 	.attr('width', (d: TreeNode) => d.data.image.height)
+		// 	.attr('xlink:href', (d: TreeNode) => d.data.image && d.data.image.url)
+		// 	.attr('viewbox', (d: TreeNode) => `0 0 ${d.data.image.width * 2} ${d.data.image.height}`)
+		// 	.attr('preserveAspectRatio', 'xMidYMin slice');
+		//
+		// // Remove patterns exit selection after animation
+		// patternsSelection.exit().transition().duration(attrs.duration).remove();
 
 		// --------------------------  NODES ----------------------
 		// Get nodes selection
-		const nodesSelection = this.chart.selectAll('g.node')
-			.data(nodes, d => (d as any).id)
+		const nodesSelection = parentSelection.selectAll(':scope > .node')
+			.data(dataFunction, d => (d as any).id)
 			.join(
 				enter => enter
 					.append('g')
@@ -743,6 +727,7 @@ class TreeChart {
 						d3.select(this).remove();
 					})
 					.attr('opacity', 0)
+					.remove()
 			);
 
 		nodesSelection.transition()
@@ -751,11 +736,11 @@ class TreeChart {
 			.attr("transform", d => {
 				return `translate(${d.x},${d.y})`;
 			})
-			.attr('opacity', 1)
+			.attr('opacity', 1);
 
 
 		// Style node rectangles
-		nodesSelection.selectAll('.node-rect')
+		nodesSelection.selectAll(':scope > .node-rect')
 			.data(d => [d])
 			.join(enter => enter
 				.append('rect')
@@ -766,13 +751,12 @@ class TreeChart {
 			.attr('x', 0)
 			.attr('y', 0)
 			.attr('rx', d => d.data.borderRadius || 0)
-			.attr('stroke-width', d => d.data.borderWidth || attrs.strokeWidth)
-			.attr('cursor', 'pointer')
-			.attr('stroke', d => d.borderColor)
-			.style("fill", d => d.backgroundColor);
+			.attr('stroke-width', d => d.data.borderWidth)
+			.attr('stroke', d => createUiColorCssString(d.data.borderColor))
+			.style("fill", d => createUiColorCssString(d.data.backgroundColor));
 
 		// Add node icon image inside node
-		nodesSelection.selectAll('image.node-icon-image')
+		nodesSelection.selectAll(':scope > image.node-icon-image')
 			.data(d => d.data.icon ? [d] : [])
 			.join(enter => enter
 				.append('image')
@@ -785,100 +769,92 @@ class TreeChart {
 			.attr('y', d => -d.data.icon.size / 2);
 
 		// Defined node images wrapper group
-		const imageGroups = nodesSelection.selectAll('g.node-image-group')
-			.data(d => [d])
+		const imageGroups = nodesSelection.selectAll(':scope > g.node-image-group')
+			.data(d => [d].filter(d => d.data.image != null))
 			.join(enter => enter
 				.append("g")
 				.classed("node-image-group", true)
 			)
 			.attr('transform', (d: TreeNode) => {
-				let x = -d.imageWidth / 2;
-				let y = -d.imageHeight / 2;
+				let x = -d.data.image.width / 2;
+				let y = -d.data.image.height / 2;
 				return `translate(${x},${y})`
 			});
 
-		nodesSelection.selectAll('rect.node-image-rect')
-			.data(d => [d])
+		imageGroups.selectAll(':scope > rect.node-image-rect')
+			.data(d => [d].filter(d => d.data.image != null))
 			.join(enter => enter
 				.append("rect")
 				.classed("node-image-rect", true)
 			)
 			.attr('fill', d => `url(#${d.id})`)
-			.attr('width', d => d.imageWidth)
-			.attr('height', d => d.imageHeight)
-			.attr('stroke', d => d.imageBorderColor)
-			.attr('stroke-width', d => d.imageBorderWidth)
-			.attr('rx', d => d.imageRx)
-			.attr('y', d => d.imageCenterTopDistance)
-			.attr('x', d => d.imageCenterLeftDistance)
-			.attr('filter', d => d.dropShadowId);
+			.attr('width', d => d.data.image.width)
+			.attr('height', d => d.data.image.height)
+			.attr('stroke', d => createUiColorCssString(d.data.image.borderColor))
+			.attr('stroke-width', d => d.data.image.borderWidth)
+			.attr('rx', d => d.data.image.cornerShape == UiTreeGraphNodeImage_CornerShape.CIRCLE ? Math.max(d.data.image.width, d.data.image.height)
+				: d.data.image.cornerShape == UiTreeGraphNodeImage_CornerShape.ROUNDED ? Math.min(d.data.image.width, d.data.image.height) / 10
+					: 0)
+			.attr('y', d => d.data.image.centerTopDistance)
+			.attr('x', d => d.data.image.centerLeftDistance)
+			.attr('filter', d => d.data.image.shadow ? `url(#${attrs.dropShadowId})` : 'none');
 
 		// Add foreignObject element inside rectangle
-		const fo = nodesSelection.selectAll('foreignObject.node-foreign-object')
+		const fo = nodesSelection.selectAll(':scope > foreignObject.node-foreign-object')
 			.data(d => [d])
 			.join(enter => enter
 				.append("foreignObject")
 				.classed("node-foreign-object", true)
 			);
 
-		fo.selectAll('.node-foreign-object-div')
+		fo.selectAll(':scope > .node-foreign-object-div')
 			.data(d => [d])
 			.join(enter => enter
 				.append("xhtml:div")
 				.classed("node-foreign-object-div", true)
-			)
+			);
 
 		this.restyleForeignObjectElements();
-
-		// Add Node button circle's group (expand-collapse button)
-		const nodeButtonGroups = nodesSelection.selectAll('g.node-button-g')
-			.data(d => [d])
-			.join(enter => enter
-				.append("g")
-				.classed("node-button-g", true)
-				.on('mousedown', (d: TreeNode) => {
-					let expanding = !d.children;
-					this.onButtonClick(d);
-					attrs.onNodeExpandedOrCollapsed(d.data.id, expanding);
-				})
-			)
-			.attr('transform', d => `translate(${d.data.width / 2},${d.data.height})`)
-			.attr('display', d => {
-				return d.hasChildren ? "inherit" : "none";
-			});
-
-		// Add expand collapse button circle
-		nodeButtonGroups.selectAll('circle.node-button-circle')
-			.data(d => [d])
-			.join(enter => enter
-				.append("circle")
-				.classed("node-button-circle", true)
-			)
-			.attr('r', 10)
-			.attr('stroke-width', d => d.data.borderWidth || attrs.strokeWidth)
-			.attr('fill', "white")
-			.attr('stroke', d => d.borderColor)
-
-		// Add button text
-		nodeButtonGroups.selectAll('text.node-button-text')
-			.data(d => [d])
-			.join(enter => enter
-				.append("text")
-				.classed("node-button-text", true)
-			)
-			.attr('text-anchor', 'middle')
-			.attr('alignment-baseline', 'middle')
-			.attr('fill', attrs.defaultTextFill)
-			.attr('font-size', d => d.children ? 30 : 20)
-			.text(d => d.children ? '-' : '+')
-			.attr('y', this.isEdge() ? 10 : 0);
+		return nodesSelection;
 	}
 
-	private getParentExpanderPosition(d: TreeNode) {
+	private getParentExpanderPosition(d: TreeNodeLike) {
 		if (d.parent == null) {
-			return {x: d.width / 2, y: 0};
+			return {x: d.data.width / 2, y: 0};
 		}
 		return {x: d.parent.x + d.parent.data.width / 2, y: d.parent.y + d.parent.data.height};
+	}
+
+	private drawLinks(parentSelection: Selection<SVGElement, any, any, any>, links: HierarchyPointLink<UiTreeGraphNodeConfig>[]) {
+		const attrs = this.getChartState();
+		// --------------------------  LINKS ----------------------
+		// Get links selection
+		const linkSelection = parentSelection.selectAll(':scope > path.link')
+			.data(links, (d: HierarchyPointLink<UiTreeGraphNodeConfig>) => d.target.id)
+			.join(
+				enter => enter
+					.insert('path', "g")
+					.attr("class", "link")
+					.attr('d', (d: HierarchyPointLink<UiTreeGraphNodeConfig>) => {
+						let transitionOrigin = this.getParentExpanderPosition(d.target as TreeNode);
+						return this.diagonalLine(transitionOrigin, transitionOrigin);
+					}),
+				update => update,
+				exit => exit.transition()
+					.duration(attrs.duration)
+					.attr('d', (d: HierarchyPointLink<UiTreeGraphNodeConfig>) => {
+						let transitionOrigin = this.getParentExpanderPosition(d.target as TreeNode);
+						return this.diagonalLine(transitionOrigin, transitionOrigin);
+					})
+					.remove()
+			)
+			.attr("fill", "none")
+			.attr("stroke-width", d => d.target.data.connectorLineWidth || 2)
+			.attr('stroke', d => d.target.data.connectorLineColor ? this.rgbaObjToColor(d.target.data.connectorLineColor) : 'white')
+			.attr('stroke-dasharray', d => d.target.data.dashArray ? d.target.data.dashArray : '')
+			.transition()
+			.duration(attrs.duration)
+			.attr('d', d => this.diagonalLine({x: d.source.x + d.source.data.width / 2, y: d.source.y + d.source.data.height}, {x: d.target.x + d.target.data.width / 2, y: d.target.y}));
 	}
 
 	private isEdge() {
@@ -897,28 +873,45 @@ class TreeChart {
 		return `rgba(${red},${green},${blue},${alpha})`;
 	}
 
-	diagonal(s: { x: number, y: number }, t: { x: number, y: number }) {
+	diagonalLine(s: { x: number, y: number }, t: { x: number, y: number }) {
 		// Calculate some variables based on source and target (s,t) coordinates
-		const x = s.x;
-		const y = s.y;
-		const ex = t.x;
-		const ey = t.y;
-		let xrvs = ex - x < 0 ? -1 : 1;
-		let yrvs = ey - y < 0 ? -1 : 1;
-		let rdef = 35;
-		let rInitial = Math.abs(ex - x) / 2 < rdef ? Math.abs(ex - x) / 2 : rdef;
-		let r = Math.abs(ey - y) / 2 < rInitial ? Math.abs(ey - y) / 2 : rInitial;
-		let h = Math.abs(ey - y) / 2 - r;
-		let w = Math.abs(ex - x) - r * 2;
+		let deltaX = t.x - s.x;
+		let directionX = deltaX < 0 ? -1 : 1;
+		let deltaY = t.y - s.y;
+		let directionY = deltaY < 0 ? -1 : 1;
+		let defaultRadius = this.getChartState().verticalGap / 3;
+		let r = Math.min(Math.abs(deltaX) / 2, Math.abs(deltaY) / 2, defaultRadius);
+		let h = Math.abs(deltaY) - r - this.getChartState().verticalGap / 2;
+		let w = Math.abs(deltaX) - r * 2;
 
 		// Build the path
 		return `
-           M ${x} ${y}
-           L ${x} ${y + h * yrvs}
-           C  ${x} ${y + h * yrvs + r * yrvs} ${x} ${y + h * yrvs + r * yrvs} ${x + r * xrvs} ${y + h * yrvs + r * yrvs}
-           L ${x + w * xrvs + r * xrvs} ${y + h * yrvs + r * yrvs}
-           C ${ex}  ${y + h * yrvs + r * yrvs} ${ex}  ${y + h * yrvs + r * yrvs} ${ex} ${ey - h * yrvs}
-           L ${ex} ${ey}
+           M ${(s.x)} ${(s.y)}
+           L ${(s.x)} ${s.y + h * directionY}
+           C  ${(s.x)} ${s.y + h * directionY + r * directionY} ${(s.x)} ${s.y + h * directionY + r * directionY} ${s.x + r * directionX} ${s.y + h * directionY + r * directionY}
+           L ${s.x + w * directionX + r * directionX} ${s.y + h * directionY + r * directionY}
+           C ${(t.x)}  ${s.y + h * directionY + r * directionY} ${(t.x)}  ${s.y + h * directionY + r * directionY} ${(t.x)} ${t.y - (this.getChartState().verticalGap / 2 - r) * directionY}
+           L ${(t.x)} ${(t.y)}
+         `;
+	}
+
+	hookLine(s: { x: number, y: number }, t: { x: number, y: number }) {
+		// Calculate some variables based on source and target (s,t) coordinates
+		let deltaX = t.x - s.x;
+		let directionX = deltaX < 0 ? -1 : 1;
+		let deltaY = t.y - s.y;
+		let directionY = deltaY < 0 ? -1 : 1;
+		let defaultRadius = 35;
+		let r = Math.min(Math.abs(deltaX), Math.abs(deltaY), defaultRadius);
+		let h = Math.abs(deltaY) - r;
+		let w = Math.abs(deltaX) - r;
+
+		// Build the path
+		return `
+           M ${(s.x)} ${(s.y)}
+           L ${(s.x)} ${s.y + h * directionY}
+           C  ${(s.x)} ${s.y + h * directionY + r * directionY} ${(s.x)} ${s.y + h * directionY + r * directionY} ${s.x + r * directionX} ${s.y + h * directionY + r * directionY}
+           L ${(t.x)} ${(t.y)}
          `;
 	}
 
@@ -926,19 +919,24 @@ class TreeChart {
 		const attrs = this.getChartState();
 
 		attrs.svg.selectAll('.node-foreign-object')
-			.attr('width', (n: TreeNode) => n.width)
-			.attr('height', (n: TreeNode) => n.height);
+			.attr('width', (n: TreeNode) => n.data.width)
+			.attr('height', (n: TreeNode) => n.data.height);
 		attrs.svg.selectAll('.node-foreign-object-div')
-			.style('width', (n: TreeNode) => `${n.width}px`)
-			.style('height', (n: TreeNode) => `${n.height}px`)
+			.style('width', (n: TreeNode) => `${n.data.width}px`)
+			.style('height', (n: TreeNode) => `${n.data.height}px`)
 			.html((n: TreeNode) => this.context.templateRegistry.createTemplateRenderer(n.data.template).render(n.data.record.values))
 			.select('*')
 			.style('display', 'inline-grid')
 	}
 
 	// Toggle children on click.
-	onButtonClick(d: TreeNode) {
+	onExpanderClicked(d: TreeNode) {
 		d.data.expanded = !d.data.expanded;
+		this.update();
+	}
+
+	private onSideListExpanderClicked(d: TreeNode) {
+		d.data.sideListExpanded = !d.data.sideListExpanded;
 		this.update();
 	}
 
@@ -1010,7 +1008,6 @@ class TreeChart {
 		}
 
 	}
-
 }
 
 function getById<R>(recs: R[], idExtractor: (r: R) => string = r => (r as any).id) {
@@ -1026,7 +1023,7 @@ export function patternify<E extends BaseType, ED, P extends BaseType = null, PD
 	var data = params.data || [selector];
 
 	// Pattern in action
-	var selection = container.selectAll<E, ED>('.' + selector)
+	var selection = container.selectAll<E, ED>(':scope > .' + selector)
 		.data(data, (d: any, i: number) => {
 			if (typeof d === 'object' && d.id) {
 				return d.id;
