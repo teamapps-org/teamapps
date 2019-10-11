@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public final Event<TreeGraphNode<RECORD>> onNodeClicked = new Event<>();
-	public final Event<ExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
-	public final Event<ExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = new Event<>();
+	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
+	public final Event<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = new Event<>();
 
 	private float zoomFactor;
 	private List<TreeGraphNode<RECORD>> nodes = new ArrayList<>();
@@ -101,6 +101,11 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiTreeGraph.AddNodeCommand(getId(), createUiNode(node)));
 	}
 
+	public void addNodes(List<TreeGraphNode<RECORD>> node) {
+		this.nodes.addAll(node);
+		update();
+	}
+
 	public void removeNode(TreeGraphNode<RECORD> node) {
 		this.nodes.remove(node);
 		queueCommandIfRendered(() -> new UiTreeGraph.RemoveNodeCommand(getId(), node.getId()));
@@ -124,7 +129,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 						.findFirst()
 						.ifPresent(node -> {
 							node.setExpanded(e.getExpanded());
-							onNodeExpandedOrCollapsed.fire(new ExpandedOrCollapsedEvent<>(node, e.getExpanded()));
+							onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
 						});
 				break;
 			}
@@ -135,7 +140,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 						.findFirst()
 						.ifPresent(node -> {
 							node.setSideListExpanded(e.getExpanded());
-							onSideListExpandedOrCollapsed.fire(new ExpandedOrCollapsedEvent<>(node, e.getExpanded()));
+							onSideListExpandedOrCollapsed.fire(new SideListExpandedOrCollapsedEvent<>(node, e.getExpanded()));
 						});
 				break;
 			}
@@ -148,6 +153,10 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public void setCompact(boolean compact) {
 		this.compact = compact;
+		update();
+	}
+
+	private void update() {
 		queueCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(getId(), createUiComponent()));
 	}
 
