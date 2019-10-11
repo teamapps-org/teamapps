@@ -19,7 +19,8 @@
     "../custom-declarations/jquery.ui.position.d.ts",
     "../custom-declarations/webui-popover.d.ts",
     "../custom-declarations/pickr-widget.d.ts",
-    "../custom-declarations/worker-loader.d.ts"
+    "../custom-declarations/worker-loader.d.ts",
+    "../custom-declarations/d3-flextree.d.ts"
 //    "../../node_modules/@types/node/index.d.ts"
   ],
   "exclude": [
