@@ -2079,6 +2079,13 @@ d3-fetch@1:
   dependencies:
     d3-dsv "1"
 
+d3-flextree@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/d3-flextree/-/d3-flextree-2.1.1.tgz#0e6b8b89b0602b073db2f488b5b8030ce318dde9"
+  integrity sha512-P0SK6bRm0PT5ZZON8Lh/aOcFfr4rO53kaYCXCgwBCvsHJcYjtOb8fNrgmpOmCMCgfrT9EczXzD8wqEO8mlkBrA==
+  dependencies:
+    d3-hierarchy "^1.1.5"
+
 d3-force@1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/d3-force/-/d3-force-1.2.1.tgz#fd29a5d1ff181c9e7f0669e4bd72bdb0e914ec0b"
@@ -2101,7 +2108,7 @@ d3-geo@1:
   dependencies:
     d3-array "1"
 
-d3-hierarchy@1:
+d3-hierarchy@1, d3-hierarchy@^1.1.5:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/d3-hierarchy/-/d3-hierarchy-1.1.8.tgz#7a6317bd3ed24e324641b6f1e76e978836b008cc"
   integrity sha512-L+GHMSZNwTpiq4rt9GEsNcpLa4M96lXMR8M/nMG9p5hBE0jy6C+3hWtyZMenPQdwla249iJy7Nx0uKt3n+u9+w==

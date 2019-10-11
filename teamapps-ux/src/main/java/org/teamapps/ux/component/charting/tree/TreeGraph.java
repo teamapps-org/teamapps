@@ -5,7 +5,6 @@ import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiBaseTreeGraphNode;
 import org.teamapps.dto.UiClientRecord;
-import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiTreeGraph;
 import org.teamapps.dto.UiTreeGraphNode;
@@ -25,6 +24,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	private float zoomFactor;
 	private List<TreeGraphNode<RECORD>> nodes = new ArrayList<>();
+	private boolean compact = false;
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 
 	public TreeGraph() {
@@ -32,10 +32,11 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponent createUiComponent() {
+	public UiTreeGraph createUiComponent() {
 		UiTreeGraph ui = new UiTreeGraph(createUiNodes(nodes));
 		mapAbstractUiComponentProperties(ui);
 		ui.setZoomFactor(zoomFactor);
+		ui.setCompact(compact);
 		return ui;
 	}
 
@@ -121,5 +122,14 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 						.ifPresent(node -> onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded())));
 				break;
 		}
+	}
+
+	public boolean isCompact() {
+		return compact;
+	}
+
+	public void setCompact(boolean compact) {
+		this.compact = compact;
+		queueCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(getId(), createUiComponent()));
 	}
 }

@@ -3,6 +3,9 @@ class UiTreeGraph extends UiComponent {
 
 	UiColor backgroundColor = new UiColor(0, 0, 0).setAlpha(0);
     float zoomFactor = 1;
+    boolean compact;
+
+    command update(UiTreeGraph config);
 
     command setZoomFactor(float zoomFactor); // > 0
     command setNodes(List<UiTreeGraphNode> nodes);
