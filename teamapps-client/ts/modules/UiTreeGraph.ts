@@ -46,8 +46,8 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 
 	public readonly onNodeClicked: TeamAppsEvent<UiTreeGraph_NodeClickedEvent> = new TeamAppsEvent(this);
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
-	public readonly onSideListExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_SideListExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 	public readonly onParentExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_ParentExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
+	public readonly onSideListExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_SideListExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private chart: TreeChart;
 	private $main: HTMLElement;
@@ -75,11 +75,11 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 			.onNodeExpandedOrCollapsed((nodeId: string, expanded: boolean, lazyLoad: boolean) => {
 				this.onNodeExpandedOrCollapsed.fire({nodeId, expanded, lazyLoad});
 			})
+			.onParentExpandedOrCollapsed((nodeId: string, expanded: boolean, lazyLoad: boolean) => {
+				this.onParentExpandedOrCollapsed.fire({nodeId, expanded, lazyLoad});
+			})
 			.onSideListExpandedOrCollapsed((nodeId: string, expanded: boolean) => {
 				this.onSideListExpandedOrCollapsed.fire({nodeId, expanded});
-			})
-			.onParentExpandedOrCollapsed((nodeId: string, expanded: boolean) => {
-				this.onParentExpandedOrCollapsed.fire({nodeId, expanded});
 			});
 		this.chart.render();
 	}
@@ -113,6 +113,16 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 
 	setNodeExpanded(nodeId: string, expanded: boolean): void {
 		this.chart.data().filter(n => n.id === nodeId)[0].expanded = expanded;
+		this.chart.render();
+	}
+
+	updateNode(node: UiTreeGraphNodeConfig): void {
+		let index = this.chart.data().findIndex(n => n.id === node.id);
+		if (index !== -1) {
+			this.chart.data()[index] = node;
+		} else {
+			this.chart.data().push(node);
+		}
 		this.chart.render();
 	}
 
@@ -212,11 +222,14 @@ interface TreeChart {
 
 	onNodeExpandedOrCollapsed(onNodeExpandedOrCollapsed: (nodeId: string, expanded: boolean, lazyLoad: boolean) => void): TreeChart;
 
+	onParentExpandedOrCollapsed(): (nodeId: string, expanded: boolean, lazyLoad: boolean) => void;
+
+	onParentExpandedOrCollapsed(onParentExpandedOrCollapsed: (nodeId: string, expanded: boolean, lazyLoad: boolean) => void): TreeChart;
+
 	onSideListExpandedOrCollapsed(): (nodeId: string, expanded: boolean) => void;
 
 	onSideListExpandedOrCollapsed(onSideListExpandedOrCollapsed: (nodeId: string, expanded: boolean) => void): TreeChart;
 
-	onParentExpandedOrCollapsed(onParentExpandedOrCollapsed: (nodeId: string, expanded: boolean) => void): TreeChart;
 }
 
 interface TreeNode extends HierarchyPointNode<UiTreeGraphNodeConfig> {
@@ -260,8 +273,8 @@ export interface TreeChartAttributes {
 	initialZoom: number,
 	onNodeClick?: (name: string) => void,
 	onNodeExpandedOrCollapsed?: (nodeId: string, expanded: boolean, lazyLoad: boolean) => void,
+	onParentExpandedOrCollapsed?: (nodeId: string, expanded: boolean, lazyLoad: boolean) => void,
 	onSideListExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
-	onParentExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
 	verticalGap: number,
 	sideListIndent: number,
 	sideListVerticalGap: number,
@@ -269,7 +282,6 @@ export interface TreeChartAttributes {
 	horizontalGroupGap: number,
 	defs: Selection<BaseType, unknown, SVGElement, void>,
 	compact: boolean,
-	visibilityPropagationRoot: UiTreeGraphNodeConfig; // can only bubble upward, unless explicitly set by the developer
 }
 
 export interface PatternifyParameter {
@@ -308,14 +320,13 @@ class TreeChart {
 			horizontalGap: 20,
 			horizontalGroupGap: 36,
 			compact: false,
-			visibilityPropagationRoot: null,
 			onNodeClick: (): void => {
 			},
 			onNodeExpandedOrCollapsed: () => {
 			},
-			onSideListExpandedOrCollapsed: () => {
-			},
 			onParentExpandedOrCollapsed: () => {
+			},
+			onSideListExpandedOrCollapsed: () => {
 			}
 		} as any;
 
@@ -666,15 +677,13 @@ class TreeChart {
 			nodesSelection,
 			'lazy-parent-expander-g',
 			(d: TreeNodeLike) => {
-				return d.data.parentId != null && d.data.parentCollapsible;
+				return d.data.parentExpandable;
 			},
 			(d: TreeNodeLike) => ({x: d.data.width / 2, y: 0}),
 			(d: TreeNodeLike) => d.parent != null,
 			(d: TreeNode) => {
 				d.data.parentExpanded = !d.data.parentExpanded;
-				attrs.visibilityPropagationRoot = d.data;
-				console.log(`Now ${attrs.visibilityPropagationRoot.record.values.caption} has parentExpanded ${d.data.parentExpanded}`);
-				attrs.onParentExpandedOrCollapsed(d.data.id, d.data.expanded && d.data.hasLazyChildren && attrs.data.filter(c => c.parentId === d.id).length == 0);
+				attrs.onParentExpandedOrCollapsed(d.data.id, d.data.parentExpanded, attrs.data.filter(c => c.id === d.data.parentId).length == 0);
 				this.update();
 			}
 		);
@@ -1016,30 +1025,28 @@ class TreeChart {
 
 	// Toggle children on click.
 	private getVisibleNodeRecords(records: UiTreeGraphNodeConfig[]) {
-		let attrs = this.getChartState();
-		console.log("starting at " + (attrs.visibilityPropagationRoot && attrs.visibilityPropagationRoot.record.values.caption));
-		attrs.visibilityPropagationRoot = attrs.visibilityPropagationRoot || attrs.data[0];
 		const recordsById = getById(records);
 
-		const visibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = {[attrs.visibilityPropagationRoot.id]: attrs.visibilityPropagationRoot};
-
-		// propagate upwards to visible root
-		let parent = attrs.visibilityPropagationRoot;
-		do {
-			parent = parent.parentId != null && parent.parentExpanded ? recordsById[parent.parentId] : null;
-			if (parent != null) {
-				visibleNodeRecordsById[parent.id] = parent;
-				attrs.visibilityPropagationRoot = parent;
+		function depth(r: UiTreeGraphNodeConfig) {
+			let depth = 0;
+			while (r.parentId != null && recordsById[r.parentId] != null) {
+				depth++;
+				r = recordsById[r.parentId];
 			}
-		} while (parent != null);
+			return depth;
+		}
 
+		// find the lowest root (without parent node or with parentExpanded == false)
+		const visibleRoot = records
+			.filter(r => r.parentId == null || recordsById[r.parentId] == null || r.parentExpanded == false)
+			.sort((r1, r2) => depth(r2) - depth(r1))
+			[0];
 
-		console.log(attrs.visibilityPropagationRoot.record.values.caption);
-
+		const visibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = {[visibleRoot.id]: visibleRoot};
 		const invisibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = {};
 
 		// everything above the visible root is invisible (by definition)
-		let invisibleParent = attrs.visibilityPropagationRoot; // only for initialization. the visible root remains visible
+		let invisibleParent = visibleRoot; // only for initialization. the visible root remains visible
 		do {
 			invisibleParent = invisibleParent.parentId != null ? recordsById[invisibleParent.parentId] : null;
 			if (invisibleParent != null) {
@@ -1049,13 +1056,16 @@ class TreeChart {
 
 		// propagate visibility/invisibility knowledge downwards
 		let remainingRecords: UiTreeGraphNodeConfig[] = records.filter(r => visibleNodeRecordsById[r.id] == null && invisibleNodeRecordsById[r.id] == null);
+		let visibleNodesChanged: boolean;
 		do {
+			visibleNodesChanged  = false;
 			remainingRecords = remainingRecords.filter(r => {
 				let visibleParent = visibleNodeRecordsById[r.parentId];
 				let invisibleParent = invisibleNodeRecordsById[r.parentId];
 				if (visibleParent != null) {
 					if (visibleParent.expanded) {
 						visibleNodeRecordsById[r.id] = r;
+						visibleNodesChanged = true;
 						return false;
 					} else {
 						invisibleNodeRecordsById[r.id] = r;
@@ -1068,7 +1078,7 @@ class TreeChart {
 					return true; // we don't know yet for this node...
 				}
 			});
-		} while (remainingRecords.length > 0);
+		} while (visibleNodesChanged);
 		return visibleNodeRecordsById;
 	}
 

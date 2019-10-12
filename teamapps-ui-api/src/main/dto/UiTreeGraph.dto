@@ -12,14 +12,15 @@ class UiTreeGraph extends UiComponent {
     command addNode(UiTreeGraphNode node);
     command removeNode(String nodeId);
     command setNodeExpanded(String nodeId, boolean expanded);
+    command updateNode(UiTreeGraphNode node);
 
     command moveToRootNode();
     command moveToNode(String nodeId);
 
     event nodeClicked(String nodeId);
     event nodeExpandedOrCollapsed(String nodeId, boolean expanded, boolean lazyLoad);
+    event parentExpandedOrCollapsed(String nodeId, boolean expanded, boolean lazyLoad);
     event sideListExpandedOrCollapsed(String nodeId, boolean expanded);
-    event parentExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 
 class UiBaseTreeGraphNode {
@@ -44,7 +45,7 @@ class UiBaseTreeGraphNode {
 
 class UiTreeGraphNode extends UiBaseTreeGraphNode{
     String parentId;
-    boolean parentCollapsible = false;
+    boolean parentExpandable = false;
     boolean parentExpanded = true;
 
     boolean expanded;
