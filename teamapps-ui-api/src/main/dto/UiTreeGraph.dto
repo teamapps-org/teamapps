@@ -1,5 +1,5 @@
 class UiTreeGraph extends UiComponent {
-    required List<UiTreeGraphNode> nodes;
+    List<UiTreeGraphNode> nodes;
 
 	UiColor backgroundColor = new UiColor(0, 0, 0).setAlpha(0);
     float zoomFactor = 1;
@@ -19,6 +19,7 @@ class UiTreeGraph extends UiComponent {
     event nodeClicked(String nodeId);
     event nodeExpandedOrCollapsed(String nodeId, boolean expanded, boolean lazyLoad);
     event sideListExpandedOrCollapsed(String nodeId, boolean expanded);
+    event parentExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 
 class UiBaseTreeGraphNode {
@@ -43,6 +44,7 @@ class UiBaseTreeGraphNode {
 
 class UiTreeGraphNode extends UiBaseTreeGraphNode{
     String parentId;
+    boolean parentCollapsible = false;
 
     boolean expanded;
     boolean hasLazyChildren = false;
