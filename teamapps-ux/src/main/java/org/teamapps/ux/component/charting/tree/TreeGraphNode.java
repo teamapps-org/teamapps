@@ -5,10 +5,10 @@ import java.util.List;
 public class TreeGraphNode<RECORD> extends BaseTreeGraphNode<RECORD> {
 
 	private TreeGraphNode<RECORD> parent;
-	private boolean parentCollapsible = false;
+	private boolean parentExpandable = false;
 	private boolean parentExpanded = true;
 
-	private boolean expanded;
+	private boolean expanded = true;
 	private boolean hasLazyChildren = false;
 
 	private List<BaseTreeGraphNode<RECORD>> sideListNodes;
@@ -59,12 +59,12 @@ public class TreeGraphNode<RECORD> extends BaseTreeGraphNode<RECORD> {
 		return this;
 	}
 
-	public boolean isParentCollapsible() {
-		return parentCollapsible;
+	public boolean isParentExpandable() {
+		return parentExpandable;
 	}
 
-	public void setParentCollapsible(boolean parentCollapsible) {
-		this.parentCollapsible = parentCollapsible;
+	public void setParentExpandable(boolean parentExpandable) {
+		this.parentExpandable = parentExpandable;
 	}
 
 	public boolean isParentExpanded() {

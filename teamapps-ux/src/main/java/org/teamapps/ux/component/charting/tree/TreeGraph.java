@@ -16,6 +16,7 @@ import org.teamapps.ux.component.template.Template;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,16 +25,13 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public final Event<TreeGraphNode<RECORD>> onNodeClicked = new Event<>();
 	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
+	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onParentExpandedOrCollapsed = new Event<>();
 	public final Event<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = new Event<>();
 
 	private float zoomFactor;
-	private List<TreeGraphNode<RECORD>> nodes = new ArrayList<>();
+	private LinkedHashMap<String, TreeGraphNode<RECORD>> nodesById = new LinkedHashMap<>();
+	// private List<TreeGraphNode<RECORD>> nodes = new ArrayList<>();
 
-	/**
-	 * The visibility propagation root is the node that is guaranteed to be visible. It is always the root of the visible tree.
-	 * If parent nodes are added to the tree, the tree must make sure the visibilityPropagationRoot becomes the new visible root by bubbling up as long as n.parentCollapsed is false.
-	 */
-	private TreeGraphNode<RECORD> visibilityPropagationRoot; // can only bubble upward, unless explicitly set by the developer
 	private boolean compact = false;
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 
@@ -44,13 +42,13 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	public UiTreeGraph createUiComponent() {
 		UiTreeGraph ui = new UiTreeGraph();
 		mapAbstractUiComponentProperties(ui);
-		ui.setNodes(createUiNodes(nodes));
+		ui.setNodes(createUiNodes(nodesById.values()));
 		ui.setZoomFactor(zoomFactor);
 		ui.setCompact(compact);
 		return ui;
 	}
 
-	private List<UiTreeGraphNode> createUiNodes(List<TreeGraphNode<RECORD>> nodes) {
+	private List<UiTreeGraphNode> createUiNodes(Collection<TreeGraphNode<RECORD>> nodes) {
 		return nodes.stream()
 				.map(this::createUiNode)
 				.collect(Collectors.toList());
@@ -61,7 +59,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		UiTreeGraphNode uiNode = new UiTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
 		mapBaseTreeGraphNodeAttributes(node, uiNode);
 		uiNode.setParentId(node.getParent() != null ? node.getParent().getId() : null);
-		uiNode.setParentCollapsible(node.isParentCollapsible());
+		uiNode.setParentExpandable(node.isParentExpandable());
 		uiNode.setParentExpanded(node.isParentExpanded());
 		uiNode.setExpanded(node.isExpanded());
 		uiNode.setHasLazyChildren(node.isHasLazyChildren());
@@ -102,63 +100,67 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	public void setNodes(List<TreeGraphNode<RECORD>> nodes) {
-		this.nodes.clear();
-		this.nodes.addAll(nodes);
-		setVisibilityPropagationRoot(this.nodes.size() > 0 ? nodes.get(0) : null);
+		this.nodesById.clear();
+		nodes.forEach(n -> nodesById.put(n.getId(), n));
 		queueCommandIfRendered(() -> new UiTreeGraph.SetNodesCommand(getId(), createUiNodes(nodes)));
 	}
 
 	public void addNode(TreeGraphNode<RECORD> node) {
-		this.nodes.add(node);
-		updateVisibilityPropagation();
+		nodesById.put(node.getId(), node);
 		queueCommandIfRendered(() -> new UiTreeGraph.AddNodeCommand(getId(), createUiNode(node)));
 	}
 
-	public void addNodes(List<TreeGraphNode<RECORD>> node) {
-		this.nodes.addAll(node);
-		updateVisibilityPropagation();
+	public void addNodes(List<TreeGraphNode<RECORD>> nodes) {
+		nodes.forEach(n -> nodesById.put(n.getId(), n));
 		update();
 	}
 
 	public void removeNode(TreeGraphNode<RECORD> node) {
-		this.nodes.remove(node);
-		if (visibilityPropagationRoot == node) {
-			setVisibilityPropagationRoot(nodes.size() > 0 ? nodes.get(0) : null);
-		}
+		this.nodesById.remove(node.getId());
 		queueCommandIfRendered(() -> new UiTreeGraph.RemoveNodeCommand(getId(), node.getId()));
+	}
+
+	public void updateNode(TreeGraphNode<RECORD> node) {
+		nodesById.put(node.getId(), node);
+		queueCommandIfRendered(() -> new UiTreeGraph.UpdateNodeCommand(getId(), createUiNode(node)));
 	}
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
 			case UI_TREE_GRAPH_NODE_CLICKED: {
-				UiTreeGraph.NodeClickedEvent clickEvent = (UiTreeGraph.NodeClickedEvent) event;
-				this.nodes.stream()
-						.filter(node -> node.getId().equals(clickEvent.getNodeId()))
-						.findFirst()
-						.ifPresent(onNodeClicked::fire);
+				UiTreeGraph.NodeClickedEvent e = (UiTreeGraph.NodeClickedEvent) event;
+				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+				if (node != null) {
+					onNodeClicked.fire(node);
+				}
 				break;
 			}
 			case UI_TREE_GRAPH_NODE_EXPANDED_OR_COLLAPSED: {
 				UiTreeGraph.NodeExpandedOrCollapsedEvent e = (UiTreeGraph.NodeExpandedOrCollapsedEvent) event;
-				this.nodes.stream()
-						.filter(node -> node.getId().equals(e.getNodeId()))
-						.findFirst()
-						.ifPresent(node -> {
-							node.setExpanded(e.getExpanded());
-							onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
-						});
+				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+				if (node != null) {
+					node.setExpanded(e.getExpanded());
+					onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
+				}
+				break;
+			}
+			case UI_TREE_GRAPH_PARENT_EXPANDED_OR_COLLAPSED: {
+				UiTreeGraph.ParentExpandedOrCollapsedEvent e = (UiTreeGraph.ParentExpandedOrCollapsedEvent) event;
+				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+				if (node != null) {
+					node.setSideListExpanded(e.getExpanded());
+					onParentExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
+				}
 				break;
 			}
 			case UI_TREE_GRAPH_SIDE_LIST_EXPANDED_OR_COLLAPSED: {
 				UiTreeGraph.SideListExpandedOrCollapsedEvent e = (UiTreeGraph.SideListExpandedOrCollapsedEvent) event;
-				this.nodes.stream()
-						.filter(node -> node.getId().equals(e.getNodeId()))
-						.findFirst()
-						.ifPresent(node -> {
-							node.setSideListExpanded(e.getExpanded());
-							onSideListExpandedOrCollapsed.fire(new SideListExpandedOrCollapsedEvent<>(node, e.getExpanded()));
-						});
+				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+				if (node != null) {
+					node.setParentExpanded(e.getExpanded());
+					onSideListExpandedOrCollapsed.fire(new SideListExpandedOrCollapsedEvent<>(node, e.getExpanded()));
+				}
 				break;
 			}
 		}
@@ -185,33 +187,6 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiTreeGraph.MoveToNodeCommand(getId(), node.getId()));
 	}
 
-	public void setVisibilityPropagationRoot(TreeGraphNode<RECORD> centralNode) {
-		this.visibilityPropagationRoot = centralNode;
-		updateVisibilityPropagation();
-	}
-
-	private void updateVisibilityPropagation() {
-		this.bubbleUpVisibilityPropagationRoot();
-		this.propagateParentVisibility();
-	}
-
-	private void bubbleUpVisibilityPropagationRoot() {
-		if (visibilityPropagationRoot == null) {
-			return;
-		}
-		while (visibilityPropagationRoot.getParent() != null && visibilityPropagationRoot.isParentExpanded()) {
-			visibilityPropagationRoot.getParent().setExpanded(true); // the former visibility propagation root must stay visible!
-			visibilityPropagationRoot = visibilityPropagationRoot.getParent();
-		}
-	}
-
-	private void propagateParentVisibility() {
-		if (visibilityPropagationRoot == null) {
-			return;
-		}
-		getAllDescendants(visibilityPropagationRoot, false).forEach(d -> d.setParentExpanded(true));
-	}
-
 	private Collection<TreeGraphNode<RECORD>> getAllDescendants(TreeGraphNode<RECORD> node, boolean includeSelf) {
 		// O(h^2) where h is the height of the tree.
 		// So the worst case performance is O(n * n/2) for a totally linear tree.
@@ -222,7 +197,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		descendants.add(node);
 		Set<TreeGraphNode<RECORD>> nonDescendants = new HashSet<>(getAncestors(node, false)); // common case optimization!
 
-		List<TreeGraphNode<RECORD>> untaggedNodes = new ArrayList<>(nodes);
+		List<TreeGraphNode<RECORD>> untaggedNodes = new ArrayList<>(nodesById.values());
 		untaggedNodes.remove(node);
 
 		boolean[] descendantsChanged = new boolean[1];
