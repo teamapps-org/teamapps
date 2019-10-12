@@ -25,7 +25,7 @@ import {UiColorConfig} from '../generated/UiColorConfig';
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {
 	UiTreeGraph_NodeClickedEvent,
-	UiTreeGraph_NodeExpandedOrCollapsedEvent,
+	UiTreeGraph_NodeExpandedOrCollapsedEvent, UiTreeGraph_ParentExpandedOrCollapsedEvent,
 	UiTreeGraph_SideListExpandedOrCollapsedEvent,
 	UiTreeGraphCommandHandler,
 	UiTreeGraphConfig,
@@ -46,6 +46,7 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 	public readonly onNodeClicked: TeamAppsEvent<UiTreeGraph_NodeClickedEvent> = new TeamAppsEvent(this);
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 	public readonly onSideListExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_SideListExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
+	public readonly onParentExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_ParentExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private chart: TreeChart;
 	private $main: HTMLElement;
@@ -75,6 +76,9 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 			})
 			.onSideListExpandedOrCollapsed((nodeId: string, expanded: boolean) => {
 				this.onSideListExpandedOrCollapsed.fire({nodeId, expanded});
+			})
+			.onParentExpandedOrCollapsed((nodeId: string, expanded: boolean) => {
+				this.onParentExpandedOrCollapsed.fire({nodeId, expanded});
 			});
 		this.chart.render();
 	}
@@ -210,6 +214,8 @@ interface TreeChart {
 	onSideListExpandedOrCollapsed(): (nodeId: string, expanded: boolean) => void;
 
 	onSideListExpandedOrCollapsed(onSideListExpandedOrCollapsed: (nodeId: string, expanded: boolean) => void): TreeChart;
+
+	onParentExpandedOrCollapsed(onParentExpandedOrCollapsed: (nodeId: string, expanded: boolean) => void): TreeChart;
 }
 
 interface TreeNode extends HierarchyPointNode<UiTreeGraphNodeConfig> {
@@ -254,6 +260,7 @@ export interface TreeChartAttributes {
 	onNodeClick?: (name: string) => void,
 	onNodeExpandedOrCollapsed?: (nodeId: string, expanded: boolean, lazyLoad: boolean) => void,
 	onSideListExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
+	onParentExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
 	verticalGap: number,
 	sideListIndent: number,
 	sideListVerticalGap: number,
@@ -304,6 +311,8 @@ class TreeChart {
 			onNodeExpandedOrCollapsed: () => {
 			},
 			onSideListExpandedOrCollapsed: () => {
+			},
+			onParentExpandedOrCollapsed: () => {
 			}
 		} as any;
 
@@ -552,7 +561,7 @@ class TreeChart {
 			.nodeSize(node => {
 				let width = node.data.width;
 				if (node.data.sideListExpanded && node.data.sideListNodes && node.data.sideListNodes.length > 0) {
-					width = width * 4 / 5 + attrs.sideListIndent + this.calculateSideListSize(node).width;
+					width = width * 4 / 5 + attrs.sideListIndent + this.calculateSideListSize(node).width * 2;
 				}
 				return [width, attrs.compact ? this.calculateNodeSize(node).height : layerHeightByDepth[node.depth]];
 			})
@@ -623,20 +632,66 @@ class TreeChart {
 			});
 		this.drawNodes(sideListG, (d: TreeNode) => d.sideListNodes || []);
 
-		// Add Node button circle's group (expand-collapse button)
-		const childrenExpanderButtonG = nodesSelection.selectAll(':scope > g.node-button-g')
-			.data(d => [d])
+		this.drawExpanderButton(
+			nodesSelection,
+			'node-button-g',
+			(d: TreeNodeLike) => d.hasChildren,
+			d => ({x: d.data.width / 2, y: d.data.height}),
+			(d: TreeNodeLike) => d.data.expanded,
+			(d: TreeNode) => {
+				d.data.expanded = !d.data.expanded;
+				this.update();
+				attrs.onNodeExpandedOrCollapsed(d.data.id, d.data.expanded, d.data.expanded && d.data.hasLazyChildren && attrs.data.filter(c => c.parentId === d.id).length == 0);
+			}
+		);
+
+		this.drawExpanderButton(
+			nodesSelection,
+			'node-side-list-expander-g',
+			(d: TreeNodeLike) => d.data.sideListNodes && d.data.sideListNodes.length > 0,
+			(d: TreeNodeLike) => ({x: d.data.width * 4 / 5, y: d.data.height}),
+			(d: TreeNodeLike) => d.data.sideListExpanded,
+			(d: TreeNode) => {
+				d.data.sideListExpanded = !d.data.sideListExpanded;
+				this.update();
+				attrs.onSideListExpandedOrCollapsed(d.data.id, d.data.sideListExpanded);
+			}
+		);
+
+		this.drawExpanderButton(
+			nodesSelection,
+			'lazy-parent-expander-g',
+			(d: TreeNodeLike) => {
+				return d.data.parentId != null && d.data.parentCollapsible;
+			},
+			(d: TreeNodeLike) => ({x: d.data.width / 2, y: 0}),
+			(d: TreeNodeLike) => d.parent != null,
+			(d: TreeNode) => {
+				attrs.onParentExpandedOrCollapsed(d.data.id, d.data.expanded && d.data.hasLazyChildren && attrs.data.filter(c => c.parentId === d.id).length == 0);
+			}
+		);
+	}
+
+	drawExpanderButton(
+		parentSelection: Selection<SVGElement, TreeNodeLike, any, any>,
+		cssClassName: string,
+		visible: (d: TreeNodeLike) => boolean,
+		position: (d: TreeNodeLike) => { x: number; y: any },
+		expanded: (d: TreeNodeLike) => boolean,
+		onMouseDown: (d: TreeNode) => void
+	) {
+		const attrs = this.getChartState();
+// Add Node button circle's group (expand-collapse button)
+		const childrenExpanderButtonG = parentSelection.selectAll(':scope > g.' + cssClassName)
+			.data(d => visible(d) ? [d] : [])
 			.join(enter => enter
 				.append("g")
-				.classed("node-button-g", true)
-				.on('mousedown', (d: TreeNode) => {
-					this.onExpanderClicked(d);
-					attrs.onNodeExpandedOrCollapsed(d.data.id, d.data.expanded, d.data.expanded && d.data.hasLazyChildren && attrs.data.filter(d => d.parentId === d.id).length == 0);
-				})
+				.classed(cssClassName, true)
+				.on('mousedown', onMouseDown)
 			)
-			.attr('transform', d => `translate(${d.data.width / 2},${d.data.height})`)
-			.attr('display', d => {
-				return d.hasChildren ? "inherit" : "none";
+			.attr('transform', d => {
+				let pos = position(d);
+				return `translate(${pos.x},${pos.y})`;
 			});
 
 		// Add expand collapse button circle
@@ -651,7 +706,7 @@ class TreeChart {
 			.attr('fill', "white")
 			.attr('stroke', d => createUiColorCssString(d.data.borderColor));
 
-		// Add button text
+// Add button text
 		childrenExpanderButtonG.selectAll(':scope > text.node-button-text')
 			.data(d => [d])
 			.join(enter => enter
@@ -661,49 +716,11 @@ class TreeChart {
 			.attr('text-anchor', 'middle')
 			.attr('alignment-baseline', 'middle')
 			.attr('fill', attrs.defaultTextFill)
-			.attr('font-size', d => d.data.expanded ? 30 : 20)
-			.text(d => d.data.expanded ? '-' : '+')
+			.attr('font-size', d => expanded(d) ? 30 : 20)
+			.text(d => expanded(d) ? '-' : '+')
 			.attr('y', this.isEdge() ? 10 : 0);
 
-		// Add Node button circle's group (expand-collapse button)
-		const sideListExpanderG = nodesSelection.selectAll(':scope > g.node-side-list-expander-g')
-			.data(d => [d])
-			.join(enter => enter
-				.append("g")
-				.classed("node-side-list-expander-g", true)
-				.on('mousedown', (d: TreeNode) => {
-					this.onSideListExpanderClicked(d);
-					attrs.onSideListExpandedOrCollapsed(d.data.id, d.data.sideListExpanded);
-				})
-			)
-			.attr('transform', d => `translate(${d.data.width * 4 / 5},${d.data.height})`)
-			.attr('display', d => d.data.sideListNodes && d.data.sideListNodes.length > 0 ? "inherit" : "none");
-
-		// Add expand collapse button circle
-		sideListExpanderG.selectAll(':scope > circle.node-button-circle')
-			.data(d => [d])
-			.join(enter => enter
-				.append("circle")
-				.classed("node-button-circle", true)
-			)
-			.attr('r', 10)
-			.attr('stroke-width', d => d.data.borderWidth || attrs.strokeWidth)
-			.attr('fill', "white")
-			.attr('stroke', d => createUiColorCssString(d.data.borderColor));
-
-		// Add button text
-		sideListExpanderG.selectAll(':scope > text.node-button-text')
-			.data(d => [d])
-			.join(enter => enter
-				.append("text")
-				.classed("node-button-text", true)
-			)
-			.attr('text-anchor', 'middle')
-			.attr('alignment-baseline', 'middle')
-			.attr('fill', attrs.defaultTextFill)
-			.attr('font-size', d => d.data.sideListExpanded ? 30 : 20)
-			.text(d => d.data.sideListExpanded ? '-' : '+')
-			.attr('y', this.isEdge() ? 10 : 0);
+		return childrenExpanderButtonG;
 	}
 
 	calculateNodeSize(d: HierarchyNode<UiTreeGraphNodeConfig>) {
@@ -730,36 +747,36 @@ class TreeChart {
 	private drawNodes(parentSelection: Selection<SVGElement, any, any, any>, dataFunction: (d: any) => TreeNodeLike[]) {
 		const attrs = this.getChartState();
 
-		// // Add patterns for each node (it's needed for rounded image implementation)
-		// const patternsSelection = attrs.defs.selectAll('.pattern')
-		// 	.data(nodes.filter(n => n.data.image != null), (d: TreeNode) => d.id)
-		// 	.join(enter => enter.append('pattern'))
-		// 	.attr('class', 'pattern')
-		// 	.attr('height', 1)
-		// 	.attr('width', 1)
-		// 	.attr('id', d => d.id);
-		//
-		//
-		// // Add images to patterns
-		// const patternImages = patternify(patternsSelection, {
-		// 	tag: 'image',
-		// 	selector: 'pattern-image',
-		// 	data: (d: TreeNode) => [d].filter(d => d.data.image != null)
-		// })
-		// 	.attr('x', 0)
-		// 	.attr('y', 0)
-		// 	.attr('height', (d: TreeNode) => d.data.image.width)
-		// 	.attr('width', (d: TreeNode) => d.data.image.height)
-		// 	.attr('xlink:href', (d: TreeNode) => d.data.image && d.data.image.url)
-		// 	.attr('viewbox', (d: TreeNode) => `0 0 ${d.data.image.width * 2} ${d.data.image.height}`)
-		// 	.attr('preserveAspectRatio', 'xMidYMin slice');
-		//
-		// // Remove patterns exit selection after animation
-		// patternsSelection.exit().transition().duration(attrs.duration).remove();
+		// Add patterns for each node (it's needed for rounded image implementation)
+		const patternsSelection = attrs.defs.selectAll('.pattern')
+			.data(attrs.root.descendants().filter(n => n.data.image != null), (d: TreeNode) => d.id)
+			.join(enter => enter.append('pattern'))
+			.attr('class', 'pattern')
+			.attr('height', 1)
+			.attr('width', 1)
+			.attr('id', d => d.id);
+
+
+		// Add images to patterns
+		const patternImages = patternify(patternsSelection, {
+			tag: 'image',
+			selector: 'pattern-image',
+			data: (d: TreeNode) => [d].filter(d => d.data.image != null)
+		})
+			.attr('x', 0)
+			.attr('y', 0)
+			.attr('height', (d: TreeNode) => d.data.image.width)
+			.attr('width', (d: TreeNode) => d.data.image.height)
+			.attr('xlink:href', (d: TreeNode) => d.data.image && d.data.image.url)
+			.attr('viewbox', (d: TreeNode) => `0 0 ${d.data.image.width * 2} ${d.data.image.height}`)
+			.attr('preserveAspectRatio', 'xMidYMin slice');
+
+		// Remove patterns exit selection after animation
+		patternsSelection.exit().transition().duration(attrs.duration).remove();
 
 		// --------------------------  NODES ----------------------
 		// Get nodes selection
-		const nodesSelection = parentSelection.selectAll(':scope > .node')
+		const nodesSelection = parentSelection.selectAll<SVGGElement, TreeNodeLike>(':scope > .node')
 			.data(dataFunction, d => (d as any).id)
 			.join(
 				enter => enter
@@ -990,16 +1007,6 @@ class TreeChart {
 	}
 
 	// Toggle children on click.
-	onExpanderClicked(d: TreeNode) {
-		d.data.expanded = !d.data.expanded;
-		this.update();
-	}
-
-	private onSideListExpanderClicked(d: TreeNode) {
-		d.data.sideListExpanded = !d.data.sideListExpanded;
-		this.update();
-	}
-
 	private getVisibleNodeRecords(records: UiTreeGraphNodeConfig[]) {
 		const recordsById = getById(records);
 		const rootNodeRecords = records.filter(r => recordsById[r.parentId] == null);

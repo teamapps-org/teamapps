@@ -14,7 +14,10 @@ import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.Template;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TreeGraph<RECORD> extends AbstractComponent {
@@ -25,17 +28,23 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	private float zoomFactor;
 	private List<TreeGraphNode<RECORD>> nodes = new ArrayList<>();
+
+	/**
+	 * The visibility propagation root is the node that is guaranteed to be visible. It is always the root of the visible tree.
+	 * If parent nodes are added to the tree, the tree must make sure the visibilityPropagationRoot becomes the new visible root by bubbling up as long as n.parentCollapsed is false.
+	 */
+	private TreeGraphNode<RECORD> visibilityPropagationRoot; // can only bubble upward, unless explicitly set by the developer
 	private boolean compact = false;
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 
 	public TreeGraph() {
-
 	}
 
 	@Override
 	public UiTreeGraph createUiComponent() {
-		UiTreeGraph ui = new UiTreeGraph(createUiNodes(nodes));
+		UiTreeGraph ui = new UiTreeGraph();
 		mapAbstractUiComponentProperties(ui);
+		ui.setNodes(createUiNodes(nodes));
 		ui.setZoomFactor(zoomFactor);
 		ui.setCompact(compact);
 		return ui;
@@ -52,6 +61,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		UiTreeGraphNode uiNode = new UiTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
 		mapBaseTreeGraphNodeAttributes(node, uiNode);
 		uiNode.setParentId(node.getParent() != null ? node.getParent().getId() : null);
+		uiNode.setParentCollapsible(node.isParentCollapsible());
 		uiNode.setExpanded(node.isExpanded());
 		uiNode.setHasLazyChildren(node.isHasLazyChildren());
 		uiNode.setSideListNodes(node.getSideListNodes() != null ? node.getSideListNodes().stream().map(this::createBaseUiNode).collect(Collectors.toList()) : null);
@@ -93,21 +103,27 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	public void setNodes(List<TreeGraphNode<RECORD>> nodes) {
 		this.nodes.clear();
 		this.nodes.addAll(nodes);
+		setVisibilityPropagationRoot(this.nodes.size() > 0 ? nodes.get(0) : null);
 		queueCommandIfRendered(() -> new UiTreeGraph.SetNodesCommand(getId(), createUiNodes(nodes)));
 	}
 
 	public void addNode(TreeGraphNode<RECORD> node) {
 		this.nodes.add(node);
+		updateVisibilityPropagation();
 		queueCommandIfRendered(() -> new UiTreeGraph.AddNodeCommand(getId(), createUiNode(node)));
 	}
 
 	public void addNodes(List<TreeGraphNode<RECORD>> node) {
 		this.nodes.addAll(node);
+		updateVisibilityPropagation();
 		update();
 	}
 
 	public void removeNode(TreeGraphNode<RECORD> node) {
 		this.nodes.remove(node);
+		if (visibilityPropagationRoot == node) {
+			setVisibilityPropagationRoot(nodes.size() > 0 ? nodes.get(0) : null);
+		}
 		queueCommandIfRendered(() -> new UiTreeGraph.RemoveNodeCommand(getId(), node.getId()));
 	}
 
@@ -167,4 +183,133 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	public void moveToNode(TreeGraphNode<RECORD> node) {
 		queueCommandIfRendered(() -> new UiTreeGraph.MoveToNodeCommand(getId(), node.getId()));
 	}
+
+	public void setVisibilityPropagationRoot(TreeGraphNode<RECORD> centralNode) {
+		this.visibilityPropagationRoot = centralNode;
+		updateVisibilityPropagation();
+	}
+
+	private void updateVisibilityPropagation() {
+		this.bubbleUpVisibilityPropagationRoot();
+		this.propagateParentVisibility();
+	}
+
+	private void bubbleUpVisibilityPropagationRoot() {
+		if (visibilityPropagationRoot == null) {
+			return;
+		}
+		while (visibilityPropagationRoot.getParent() != null && visibilityPropagationRoot.isParentExpanded()) {
+			visibilityPropagationRoot.getParent().setExpanded(true); // the former visibility propagation root must stay visible!
+			visibilityPropagationRoot = visibilityPropagationRoot.getParent();
+		}
+	}
+
+	private void propagateParentVisibility() {
+		if (visibilityPropagationRoot == null) {
+			return;
+		}
+		getAllDescendants(visibilityPropagationRoot, false).forEach(d -> d.setParentExpanded(true));
+	}
+
+	private Collection<TreeGraphNode<RECORD>> getAllDescendants(TreeGraphNode<RECORD> node, boolean includeSelf) {
+		// O(h^2) where h is the height of the tree.
+		// So the worst case performance is O(n * n/2) for a totally linear tree.
+		// Average case: O(n * log(n))
+		// If used for a root node (see usages!!): O(n) due to optimization!
+
+		Set<TreeGraphNode<RECORD>> descendants = new HashSet<>();
+		descendants.add(node);
+		Set<TreeGraphNode<RECORD>> nonDescendants = new HashSet<>(getAncestors(node, false)); // common case optimization!
+
+		List<TreeGraphNode<RECORD>> untaggedNodes = new ArrayList<>(nodes);
+		untaggedNodes.remove(node);
+
+		boolean[] descendantsChanged = new boolean[1];
+		boolean[] nonDescendantsChanged = new boolean[1];
+		do {
+			descendantsChanged[0] = false;
+			nonDescendantsChanged[0] = false;
+			untaggedNodes = untaggedNodes.stream()
+					.filter(n -> {
+						if (descendants.contains(n.getParent())) {
+							descendants.add(n);
+							descendantsChanged[0] = true;
+							return false;
+						} else if (nonDescendants.contains(n.getParent())) {
+							nonDescendants.add(n);
+							nonDescendantsChanged[0] = true;
+							return false;
+						} else {
+							return true;
+						}
+					})
+					.collect(Collectors.toList());
+		} while (descendantsChanged[0] && nonDescendantsChanged[0]);
+
+		descendants.addAll(untaggedNodes); // if nonDescendantsChanged[0] == false, all remaining nodes must be descendants!
+
+		if (!includeSelf) {
+			descendants.remove(node);
+		}
+
+		return descendants;
+	}
+
+	private List<TreeGraphNode<RECORD>> getAncestors(TreeGraphNode<RECORD> node, boolean includeSelf) {
+		ArrayList<TreeGraphNode<RECORD>> ancestors = new ArrayList<>();
+		if (includeSelf) {
+			ancestors.add(node);
+		}
+		while (node.getParent() != null) {
+			node = node.getParent();
+			ancestors.add(node);
+		}
+		return ancestors;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
