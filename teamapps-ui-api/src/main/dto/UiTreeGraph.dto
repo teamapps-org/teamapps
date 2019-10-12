@@ -5,6 +5,12 @@ class UiTreeGraph extends UiComponent {
     float zoomFactor = 1;
     boolean compact;
 
+    int verticalLayerGap;
+    int sideListIndent;
+    int sideListVerticalGap;
+    int horizontalSiblingGap;
+    int horizontalNonSignlingGap;
+
     command update(UiTreeGraph config);
 
     command setZoomFactor(float zoomFactor); // > 0
