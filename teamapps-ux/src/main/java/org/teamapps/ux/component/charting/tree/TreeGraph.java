@@ -62,6 +62,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		mapBaseTreeGraphNodeAttributes(node, uiNode);
 		uiNode.setParentId(node.getParent() != null ? node.getParent().getId() : null);
 		uiNode.setParentCollapsible(node.isParentCollapsible());
+		uiNode.setParentExpanded(node.isParentExpanded());
 		uiNode.setExpanded(node.isExpanded());
 		uiNode.setHasLazyChildren(node.isHasLazyChildren());
 		uiNode.setSideListNodes(node.getSideListNodes() != null ? node.getSideListNodes().stream().map(this::createBaseUiNode).collect(Collectors.toList()) : null);

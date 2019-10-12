@@ -45,6 +45,7 @@ class UiBaseTreeGraphNode {
 class UiTreeGraphNode extends UiBaseTreeGraphNode{
     String parentId;
     boolean parentCollapsible = false;
+    boolean parentExpanded = true;
 
     boolean expanded;
     boolean hasLazyChildren = false;
