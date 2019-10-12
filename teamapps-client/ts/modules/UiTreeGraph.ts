@@ -25,7 +25,8 @@ import {UiColorConfig} from '../generated/UiColorConfig';
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {
 	UiTreeGraph_NodeClickedEvent,
-	UiTreeGraph_NodeExpandedOrCollapsedEvent, UiTreeGraph_ParentExpandedOrCollapsedEvent,
+	UiTreeGraph_NodeExpandedOrCollapsedEvent,
+	UiTreeGraph_ParentExpandedOrCollapsedEvent,
 	UiTreeGraph_SideListExpandedOrCollapsedEvent,
 	UiTreeGraphCommandHandler,
 	UiTreeGraphConfig,
@@ -267,7 +268,8 @@ export interface TreeChartAttributes {
 	horizontalGap: number,
 	horizontalGroupGap: number,
 	defs: Selection<BaseType, unknown, SVGElement, void>,
-	compact: boolean
+	compact: boolean,
+	visibilityPropagationRoot: UiTreeGraphNodeConfig; // can only bubble upward, unless explicitly set by the developer
 }
 
 export interface PatternifyParameter {
@@ -306,6 +308,7 @@ class TreeChart {
 			horizontalGap: 20,
 			horizontalGroupGap: 36,
 			compact: false,
+			visibilityPropagationRoot: null,
 			onNodeClick: (): void => {
 			},
 			onNodeExpandedOrCollapsed: () => {
@@ -531,12 +534,13 @@ class TreeChart {
 		const attrs = this.getChartState();
 
 		let visibleNodeRecords = this.getVisibleNodeRecords(attrs.data);
+		let visibleNodeRecordsInOrder = attrs.data.filter(r => visibleNodeRecords[r.id] != null);
 
 		// Store new root by converting flat data to hierarchy
 		let hierarchy = d3.stratify<UiTreeGraphNodeConfig>()
 			.id((d: UiTreeGraphNodeConfig) => d.id)
-			.parentId((d: UiTreeGraphNodeConfig) => d.parentId)
-			(visibleNodeRecords) as TreeNode;
+			.parentId((d: UiTreeGraphNodeConfig) => visibleNodeRecords[d.parentId] != null ? d.parentId : null)
+			(visibleNodeRecordsInOrder) as TreeNode;
 		attrs.root = hierarchy;
 
 		let recordsByParentId = getById(attrs.data.filter(r => r.id !== attrs.root.id), n => n.parentId);
@@ -640,8 +644,8 @@ class TreeChart {
 			(d: TreeNodeLike) => d.data.expanded,
 			(d: TreeNode) => {
 				d.data.expanded = !d.data.expanded;
-				this.update();
 				attrs.onNodeExpandedOrCollapsed(d.data.id, d.data.expanded, d.data.expanded && d.data.hasLazyChildren && attrs.data.filter(c => c.parentId === d.id).length == 0);
+				this.update();
 			}
 		);
 
@@ -653,8 +657,8 @@ class TreeChart {
 			(d: TreeNodeLike) => d.data.sideListExpanded,
 			(d: TreeNode) => {
 				d.data.sideListExpanded = !d.data.sideListExpanded;
-				this.update();
 				attrs.onSideListExpandedOrCollapsed(d.data.id, d.data.sideListExpanded);
+				this.update();
 			}
 		);
 
@@ -667,7 +671,11 @@ class TreeChart {
 			(d: TreeNodeLike) => ({x: d.data.width / 2, y: 0}),
 			(d: TreeNodeLike) => d.parent != null,
 			(d: TreeNode) => {
+				d.data.parentExpanded = !d.data.parentExpanded;
+				attrs.visibilityPropagationRoot = d.data;
+				console.log(`Now ${attrs.visibilityPropagationRoot.record.values.caption} has parentExpanded ${d.data.parentExpanded}`);
 				attrs.onParentExpandedOrCollapsed(d.data.id, d.data.expanded && d.data.hasLazyChildren && attrs.data.filter(c => c.parentId === d.id).length == 0);
+				this.update();
 			}
 		);
 	}
@@ -1008,12 +1016,39 @@ class TreeChart {
 
 	// Toggle children on click.
 	private getVisibleNodeRecords(records: UiTreeGraphNodeConfig[]) {
+		let attrs = this.getChartState();
+		console.log("starting at " + (attrs.visibilityPropagationRoot && attrs.visibilityPropagationRoot.record.values.caption));
+		attrs.visibilityPropagationRoot = attrs.visibilityPropagationRoot || attrs.data[0];
 		const recordsById = getById(records);
-		const rootNodeRecords = records.filter(r => recordsById[r.parentId] == null);
 
-		const visibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = getById(rootNodeRecords);
+		const visibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = {[attrs.visibilityPropagationRoot.id]: attrs.visibilityPropagationRoot};
+
+		// propagate upwards to visible root
+		let parent = attrs.visibilityPropagationRoot;
+		do {
+			parent = parent.parentId != null && parent.parentExpanded ? recordsById[parent.parentId] : null;
+			if (parent != null) {
+				visibleNodeRecordsById[parent.id] = parent;
+				attrs.visibilityPropagationRoot = parent;
+			}
+		} while (parent != null);
+
+
+		console.log(attrs.visibilityPropagationRoot.record.values.caption);
+
 		const invisibleNodeRecordsById: { [id: string]: UiTreeGraphNodeConfig } = {};
-		let remainingRecords: UiTreeGraphNodeConfig[] = records.filter(r => visibleNodeRecordsById[r.id] == null);
+
+		// everything above the visible root is invisible (by definition)
+		let invisibleParent = attrs.visibilityPropagationRoot; // only for initialization. the visible root remains visible
+		do {
+			invisibleParent = invisibleParent.parentId != null ? recordsById[invisibleParent.parentId] : null;
+			if (invisibleParent != null) {
+				invisibleNodeRecordsById[invisibleParent.id] = invisibleParent;
+			}
+		} while (invisibleParent != null);
+
+		// propagate visibility/invisibility knowledge downwards
+		let remainingRecords: UiTreeGraphNodeConfig[] = records.filter(r => visibleNodeRecordsById[r.id] == null && invisibleNodeRecordsById[r.id] == null);
 		do {
 			remainingRecords = remainingRecords.filter(r => {
 				let visibleParent = visibleNodeRecordsById[r.parentId];
@@ -1034,7 +1069,50 @@ class TreeChart {
 				}
 			});
 		} while (remainingRecords.length > 0);
-		return Object.values(visibleNodeRecordsById);
+		return visibleNodeRecordsById;
+	}
+
+	private getAllDescendants(node: UiTreeGraphNodeConfig, includeSelf: boolean) {
+		// O(h^2) where h is the height of the tree.
+		// So the worst case performance is O(n * n/2) for a totally linear tree.
+		// Average case: O(n * log(n))
+		// If used for a root node (see usages!!): O(n) due to optimization!
+
+		const descendantsById: { [id: string]: UiTreeGraphNodeConfig } = {};
+		descendantsById[node.id] = node;
+		const nonDescendantsById: { [id: string]: UiTreeGraphNodeConfig } = {}; // common case optimization!
+
+		let untaggedNodes = this.getChartState().data.filter(n => n.id != node.id);
+
+		let descendantsChanged: boolean;
+		let nonDescendantsChanged: boolean;
+		do {
+			descendantsChanged = false;
+			nonDescendantsChanged = false;
+			untaggedNodes = untaggedNodes.filter(n => {
+				if (descendantsById[n.parentId] != null) {
+					descendantsById[n.id] = n;
+					descendantsChanged = true;
+					return false;
+				} else if (nonDescendantsById[n.parentId] != null) {
+					nonDescendantsById[n.id] = n;
+					nonDescendantsChanged = true;
+					return false;
+				} else {
+					return true;
+				}
+			});
+		} while (descendantsChanged && nonDescendantsChanged);
+
+		for (let untaggedNode of untaggedNodes) {
+			descendantsById[untaggedNode.id] = untaggedNode; // if nonDescendantsChanged[0] == false, all remaining nodes must be descendants!
+		}
+
+		if (!includeSelf) {
+			delete descendantsById[node.id];
+		}
+
+		return descendantsById;
 	}
 
 	// Zoom handler function
