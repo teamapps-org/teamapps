@@ -149,7 +149,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 				UiTreeGraph.ParentExpandedOrCollapsedEvent e = (UiTreeGraph.ParentExpandedOrCollapsedEvent) event;
 				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
 				if (node != null) {
-					node.setSideListExpanded(e.getExpanded());
+					node.setParentExpanded(e.getExpanded());
 					onParentExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
 				}
 				break;
@@ -158,7 +158,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 				UiTreeGraph.SideListExpandedOrCollapsedEvent e = (UiTreeGraph.SideListExpandedOrCollapsedEvent) event;
 				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
 				if (node != null) {
-					node.setParentExpanded(e.getExpanded());
+					node.setSideListExpanded(e.getExpanded());
 					onSideListExpandedOrCollapsed.fire(new SideListExpandedOrCollapsedEvent<>(node, e.getExpanded()));
 				}
 				break;
