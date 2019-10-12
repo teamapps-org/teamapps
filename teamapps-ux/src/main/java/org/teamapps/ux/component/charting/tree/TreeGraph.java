@@ -29,10 +29,14 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	public final Event<SideListExpandedOrCollapsedEvent<RECORD>> onSideListExpandedOrCollapsed = new Event<>();
 
 	private float zoomFactor;
-	private LinkedHashMap<String, TreeGraphNode<RECORD>> nodesById = new LinkedHashMap<>();
-	// private List<TreeGraphNode<RECORD>> nodes = new ArrayList<>();
-
 	private boolean compact = false;
+	private int verticalLayerGap = 36;
+	private int horizontalSiblingGap = 20;
+	private int horizontalNonSignlingGap = 36;
+	private int sideListIndent = 20;
+	private int sideListVerticalGap = 20;
+
+	private LinkedHashMap<String, TreeGraphNode<RECORD>> nodesById = new LinkedHashMap<>();
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 
 	public TreeGraph() {
@@ -45,6 +49,11 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		ui.setNodes(createUiNodes(nodesById.values()));
 		ui.setZoomFactor(zoomFactor);
 		ui.setCompact(compact);
+		ui.setVerticalLayerGap(verticalLayerGap);
+		ui.setSideListIndent(sideListIndent);
+		ui.setSideListVerticalGap(sideListVerticalGap);
+		ui.setHorizontalSiblingGap(horizontalSiblingGap);
+		ui.setHorizontalNonSignlingGap(horizontalNonSignlingGap);
 		return ui;
 	}
 
@@ -241,6 +250,51 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 			ancestors.add(node);
 		}
 		return ancestors;
+	}
+
+	public int getVerticalLayerGap() {
+		return verticalLayerGap;
+	}
+
+	public void setVerticalLayerGap(int verticalLayerGap) {
+		this.verticalLayerGap = verticalLayerGap;
+		this.update();
+	}
+
+	public int getSideListIndent() {
+		return sideListIndent;
+	}
+
+	public void setSideListIndent(int sideListIndent) {
+		this.sideListIndent = sideListIndent;
+		this.update();
+	}
+
+	public int getSideListVerticalGap() {
+		return sideListVerticalGap;
+	}
+
+	public void setSideListVerticalGap(int sideListVerticalGap) {
+		this.sideListVerticalGap = sideListVerticalGap;
+		this.update();
+	}
+
+	public int getHorizontalSiblingGap() {
+		return horizontalSiblingGap;
+	}
+
+	public void setHorizontalSiblingGap(int horizontalSiblingGap) {
+		this.horizontalSiblingGap = horizontalSiblingGap;
+		this.update();
+	}
+
+	public int getHorizontalNonSignlingGap() {
+		return horizontalNonSignlingGap;
+	}
+
+	public void setHorizontalNonSignlingGap(int horizontalNonSignlingGap) {
+		this.horizontalNonSignlingGap = horizontalNonSignlingGap;
+		this.update();
 	}
 }
 

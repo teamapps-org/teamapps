@@ -69,6 +69,11 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 			.initialZoom(config.zoomFactor)
 			.data(config.nodes)
 			.compact(config.compact)
+			.verticalLayerGap(config.verticalLayerGap)
+			.horizontalSiblingGap(config.horizontalSiblingGap)
+			.horizontalNonSignlingGap(config.horizontalNonSignlingGap)
+			.sideListIndent(config.sideListIndent)
+			.sideListVerticalGap(config.sideListVerticalGap)
 			.onNodeClick((nodeId: string) => {
 				this.onNodeClicked.fire({nodeId: nodeId});
 			})
@@ -214,6 +219,26 @@ interface TreeChart {
 
 	compact(compact: boolean): this;
 
+	verticalLayerGap(): number,
+
+	verticalLayerGap(verticalLayerGap: number): this,
+
+	horizontalSiblingGap(): number,
+
+	horizontalSiblingGap(horizontalSiblingGap: number): this,
+
+	horizontalNonSignlingGap(): number,
+
+	horizontalNonSignlingGap(horizontalNonSignlingGap: number): this,
+
+	sideListIndent(): number,
+
+	sideListIndent(sideListIndent: number): this,
+
+	sideListVerticalGap(): number,
+
+	sideListVerticalGap(sideListVerticalGap: number): this,
+
 	onNodeClick(): (nodeId: string) => void;
 
 	onNodeClick(onNodeClick: (nodeId: string) => void): TreeChart;
@@ -275,11 +300,11 @@ export interface TreeChartAttributes {
 	onNodeExpandedOrCollapsed?: (nodeId: string, expanded: boolean, lazyLoad: boolean) => void,
 	onParentExpandedOrCollapsed?: (nodeId: string, expanded: boolean, lazyLoad: boolean) => void,
 	onSideListExpandedOrCollapsed?: (nodeId: string, expanded: boolean) => void,
-	verticalGap: number,
+	verticalLayerGap: number,
+	horizontalSiblingGap: number,
+	horizontalNonSignlingGap: number,
 	sideListIndent: number,
 	sideListVerticalGap: number,
-	horizontalGap: number,
-	horizontalGroupGap: number,
 	defs: Selection<BaseType, unknown, SVGElement, void>,
 	compact: boolean,
 }
@@ -314,11 +339,11 @@ class TreeChart {
 			strokeWidth: 3,
 			dropShadowId: null,
 			initialZoom: 1,
-			verticalGap: 36,
+			verticalLayerGap: 36,
+			horizontalSiblingGap: 20,
+			horizontalNonSignlingGap: 36,
 			sideListIndent: 20,
 			sideListVerticalGap: 20,
-			horizontalGap: 20,
-			horizontalGroupGap: 36,
 			compact: false,
 			onNodeClick: (): void => {
 			},
@@ -576,16 +601,17 @@ class TreeChart {
 			.nodeSize(node => {
 				let width = node.data.width;
 				if (node.data.sideListExpanded && node.data.sideListNodes && node.data.sideListNodes.length > 0) {
-					width = width * 4 / 5 + attrs.sideListIndent + this.calculateSideListSize(node).width * 2;
+					let sideListOverlapping = attrs.sideListIndent + this.calculateSideListSize(node).width - (1/5) * width;
+					width = width + Math.max(0, sideListOverlapping * 2);
 				}
 				return [width, attrs.compact ? this.calculateNodeSize(node).height : layerHeightByDepth[node.depth]];
 			})
 			.spacing((node1, node2) => {
 				// Calculates only the horizontal spacing! The layout algorithm only honors the node's height for vertical spacing!
 				if (node1.depth !== node2.depth || node1.path(node2).length > 3) {
-					return attrs.horizontalGroupGap;
+					return attrs.horizontalNonSignlingGap;
 				} else { // siblings
-					return attrs.horizontalGap;
+					return attrs.horizontalSiblingGap;
 				}
 			});
 		const treeData = treeLayout(attrs.root);
@@ -749,7 +775,7 @@ class TreeChart {
 			nodeWidth = nodeWidth * (4 / 5) + sideListSize.width;
 			nodeHeight += sideListSize.height;
 		}
-		nodeHeight += attrs.verticalGap;
+		nodeHeight += attrs.verticalLayerGap;
 		return {width: nodeWidth, height: nodeHeight};
 	}
 
@@ -973,9 +999,9 @@ class TreeChart {
 		let directionX = deltaX < 0 ? -1 : 1;
 		let deltaY = t.y - s.y;
 		let directionY = deltaY < 0 ? -1 : 1;
-		let defaultRadius = this.getChartState().verticalGap / 3;
+		let defaultRadius = this.getChartState().verticalLayerGap / 3;
 		let r = Math.min(Math.abs(deltaX) / 2, Math.abs(deltaY) / 2, defaultRadius);
-		let h = Math.abs(deltaY) - r - this.getChartState().verticalGap / 2;
+		let h = Math.abs(deltaY) - r - this.getChartState().verticalLayerGap / 2;
 		let w = Math.abs(deltaX) - r * 2;
 
 		// Build the path
@@ -984,7 +1010,7 @@ class TreeChart {
            L ${(s.x)} ${s.y + h * directionY}
            C  ${(s.x)} ${s.y + h * directionY + r * directionY} ${(s.x)} ${s.y + h * directionY + r * directionY} ${s.x + r * directionX} ${s.y + h * directionY + r * directionY}
            L ${s.x + w * directionX + r * directionX} ${s.y + h * directionY + r * directionY}
-           C ${(t.x)}  ${s.y + h * directionY + r * directionY} ${(t.x)}  ${s.y + h * directionY + r * directionY} ${(t.x)} ${t.y - (this.getChartState().verticalGap / 2 - r) * directionY}
+           C ${(t.x)}  ${s.y + h * directionY + r * directionY} ${(t.x)}  ${s.y + h * directionY + r * directionY} ${(t.x)} ${t.y - (this.getChartState().verticalLayerGap / 2 - r) * directionY}
            L ${(t.x)} ${(t.y)}
          `;
 	}
@@ -1058,7 +1084,7 @@ class TreeChart {
 		let remainingRecords: UiTreeGraphNodeConfig[] = records.filter(r => visibleNodeRecordsById[r.id] == null && invisibleNodeRecordsById[r.id] == null);
 		let visibleNodesChanged: boolean;
 		do {
-			visibleNodesChanged  = false;
+			visibleNodesChanged = false;
 			remainingRecords = remainingRecords.filter(r => {
 				let visibleParent = visibleNodeRecordsById[r.parentId];
 				let invisibleParent = invisibleNodeRecordsById[r.parentId];
@@ -1168,7 +1194,7 @@ class TreeChart {
 
 		attrs.svg.transition().duration(animationDuration).call(
 			this.zoomBehavior.transform,
-			d3.zoomIdentity.scale(zoomTransform.k).translate(-node.x - nodeSize.width / 2 + attrs.svgWidth / (2 * zoomTransform.k), -node.y + (attrs.verticalGap))
+			d3.zoomIdentity.scale(zoomTransform.k).translate(-node.x - nodeSize.width / 2 + attrs.svgWidth / (2 * zoomTransform.k), -node.y + (attrs.verticalLayerGap))
 		);
 	}
 
