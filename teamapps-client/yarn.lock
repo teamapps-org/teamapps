@@ -2571,6 +2571,11 @@ electron-to-chromium@^1.3.191:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.193.tgz#de9b89959288070bffb14557daf8cf9f75b2caf8"
   integrity sha512-WX01CG1UoPtTUFaKKwMn+u8nJ63loP6hNxePWtk1pN8ibWMyX1q6TiWPsz1ABBKXezvmaIdtP+0BwzjC1wyCaw==
 
+element-qsa-scope@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/element-qsa-scope/-/element-qsa-scope-1.1.0.tgz#6e1146a3aa796cd385846d39365578db358b647b"
+  integrity sha512-oBBTdmleT5eJ0r5/3/tVg0NcWv95ut4Oxj5Oh/IkZ3kc0UACF8psJU8Rocd4aXDgtoE5WD5/rqYOXvjOE1DxIg==
+
 elliptic@^6.0.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.0.tgz#2b8ed4c891b7de3200e14412a5b8248c7af505ca"
