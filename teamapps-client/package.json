@@ -96,6 +96,7 @@
     "d3": "^5.9.7",
     "d3-flextree": "^2.1.1",
     "d3v3": "npm:d3@3.x",
+    "element-qsa-scope": "^1.1.0",
     "exports-loader": "^0.7.0",
     "jquery": "3.x",
     "jquery-ui": "^1.12.1",
