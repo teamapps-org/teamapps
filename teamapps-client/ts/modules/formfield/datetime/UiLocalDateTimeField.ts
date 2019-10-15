@@ -62,7 +62,6 @@ export class UiLocalDateTimeField extends AbstractUiDateTimeField<UiLocalDateTim
 
 	public getReadOnlyHtml(value: LocalDateTime, availableWidth: number): string {
 		if (value != null) {
-			// console.log(value[0], value[1], value[2]);
 			return `<div class="static-readonly-UiDateTimeField">`
 				+ Mustache.render(UiInstantDateField.comboBoxTemplate, UiInstantDateField.createDateComboBoxEntryFromLocalValues(value[0], value[1], value[2], this._config.dateFormat || this._context.config.dateFormat))
 				+ Mustache.render(AbstractUiTimeField.comboBoxTemplate, AbstractUiTimeField.createTimeComboBoxEntry(value[3], value[4], this._config.timeFormat || this._context.config.timeFormat))

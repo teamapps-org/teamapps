@@ -25,8 +25,6 @@ SOFTWARE.
 
 import jsQR from 'jsqr-es6';
 
-console.log("WORKER");
-
 let inversionAttempts: "dontInvert" | "onlyInvert" | "attemptBoth" | "invertFirst" = 'dontInvert';
 let grayscaleWeights = {
 	// weights for quick luma integer approximation (https://en.wikipedia.org/wiki/YUV#Full_swing_for_BT.601)

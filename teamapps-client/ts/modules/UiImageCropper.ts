@@ -124,7 +124,6 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 	}
 
 	private calculateCoordinateCorrectionFactor() {
-		console.log(`${this.imageNaturalWidth} / ${this.getWidth()}, ${this.imageNaturalHeight} / ${this.getHeight()}`);
 		return Math.max(this.imageNaturalWidth / this.getWidth(), this.imageNaturalHeight / this.getHeight());
 	}
 
