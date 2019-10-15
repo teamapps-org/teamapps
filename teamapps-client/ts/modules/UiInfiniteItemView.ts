@@ -142,11 +142,9 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 			previousValue[currentValue] = currentValue;
 			return previousValue;
 		}, {});
-		console.log(idsAsMap);
 		for (let i = 0; i < this.data.length; i++) {
 			const currentRecord = this.data[i];
 			if (currentRecord != null && idsAsMap[currentRecord.id] != null) {
-				console.log("Removing " + currentRecord.id);
 				this.data[i] = undefined;
 			}
 		}

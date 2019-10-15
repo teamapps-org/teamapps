@@ -54,7 +54,6 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 				if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
 					if (!this.dropDown.isOpen) {
 						const width = this.getMainDomElement().offsetWidth;
-						console.log(width);
 						this.dropDown.open({$reference: this.getMainDomElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
 						this.onDropDownOpened.fire({});
 						this.getMainDomElement().classList.add("open");

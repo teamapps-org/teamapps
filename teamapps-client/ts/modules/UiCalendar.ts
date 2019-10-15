@@ -210,7 +210,6 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 					jsEvent: MouseEvent;
 					view: View;
 				}) => {
-					console.log(arg.jsEvent.type);
 					let isDoubleClick = lastClickClickedDate != null && lastClickClickedDate.valueOf() == arg.date.valueOf() && arg.jsEvent.timeStamp - lastClickTimeStamp < 600;
 					if (isDoubleClick) {
 						lastClickTimeStamp = 0;

@@ -95,7 +95,6 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 			},
 			error: () => {
 				if (!this.destroyed) {
-					console.log();
 					this.onErrorLoading.fire({})
 				}
 			}
