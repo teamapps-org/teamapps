@@ -89,6 +89,10 @@ class UiLineChartBand extends AbstractUiLineChartDataDisplay {
 	UiColor upperLineColor;
 }
 
+class UiLineChartDataDisplayGroup extends AbstractUiLineChartDataDisplay {
+	List<AbstractUiLineChartDataDisplay> dataDisplays;
+}
+
 class UiTimeGraphDataPoint {
 	required double x;
 	required double y;

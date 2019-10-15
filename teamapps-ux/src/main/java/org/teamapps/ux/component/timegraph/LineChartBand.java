@@ -24,14 +24,10 @@ import org.teamapps.dto.UiLineChartBand;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.teamapps.util.UiUtil.createUiColor;
 
 public class LineChartBand extends AbstractLineChartDataDisplay {
-
-	private final String id = UUID.randomUUID().toString();
-	private LineChartDataDisplayChangeListener changeListener;
 
 	private String upperBoundDataSeriesId;
 	private String middleLineDataSeriesId;
@@ -83,10 +79,6 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 		return ui;
 	}
 
-	public String getId() {
-		return id;
-	}
-
 	@Override
 	public List<String> getDataSeriesIds() {
 		ArrayList<String> dataSeriesIds = new ArrayList<>();
@@ -100,11 +92,6 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 			dataSeriesIds.add(lowerBoundDataSeriesId);
 		}
 		return dataSeriesIds;
-	}
-
-	@Override
-	public void setChangeListener(LineChartDataDisplayChangeListener listener) {
-		this.changeListener = listener;
 	}
 
 	public LineChartCurveType getCurveType() {
