@@ -1,10 +1,8 @@
 import {Area, Line} from "d3-shape";
-import {NamespaceLocalObject, Selection} from "d3-selection";
+import {Selection} from "d3-selection";
 import * as d3 from "d3";
-import {Axis, ScaleContinuousNumeric, ScaleLinear} from "d3";
-import {yTickFormat} from "./UiTimeGraph";
+import {ScaleLinear} from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
-import {UiScaleType} from "../../generated/UiScaleType";
 import {UiLineChartLineConfig} from "../../generated/UiLineChartLineConfig";
 import {createUiColorCssString} from "../util/CssFormatUtil";
 import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGGSelection} from "./Charting";
@@ -131,7 +129,7 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 				: 25;
 	}
 
-	protected getDataSeriesIds(): string[] {
+	public getDataSeriesIds(): string[] {
 		return [this.config.dataSeriesId];
 	}
 

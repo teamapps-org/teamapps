@@ -63,7 +63,9 @@ public abstract class AbstractLineChartDataDisplay  {
 		return this;
 	}
 
-	abstract public void setChangeListener(LineChartDataDisplayChangeListener listener);
+	public void setChangeListener(LineChartDataDisplayChangeListener listener) {
+		this.changeListener = listener;
+	}
 
 	protected void mapAbstractLineChartDataDisplayProperties(AbstractUiLineChartDataDisplay ui) {
 		ui.setId(id);
