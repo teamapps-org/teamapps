@@ -72,13 +72,20 @@
   .UiMessagePageViewBlock {
     padding: @padding-base-vertical @padding-base-horizontal;
 
+    .tool-buttons {
+      float: right;
+      line-height: 0;
+    }
+
     .top-record {
       margin: @padding-base-vertical @padding-base-horizontal;
       &.align-left {
         float: left;
+        clear: left;
       }
       &.align-right {
         float: right;
+        clear: right;
       }
       &.align-center {
         display: flex;
@@ -134,29 +141,47 @@
   }
 
   .UiCitationPageViewBlock {
-    display: flex;
-    align-items: center;
-    padding: 10px;
+    padding: @padding-base-vertical @padding-base-horizontal;
+    
+    .tool-buttons {
+      float: right;
+      line-height: 0;
+    }
 
-    .content-wrapper {
-      flex-grow: 1;
-      margin: 0 10px;
-      .citation {
-        margin-top: 1.5em;
-        margin-bottom: .5em;
-        text-align: center;
-        font-size: 150%;
-      }
+    .flex-container {
+      display: flex;
+      align-items: center;
 
-      .author {
-        font-size: 130%;
-        font-style: italic;
-        text-align: right;
+      .content-wrapper {
+        flex-grow: 1;
+        margin: 0 10px;
+        .citation {
+          margin-top: 1.5em;
+          margin-bottom: .5em;
+          text-align: center;
+          font-size: 150%;
+        }
+
+        .author {
+          font-size: 130%;
+          font-style: italic;
+          text-align: right;
+        }
       }
     }
   }
 
   .UiComponentPageViewBlock {
+    .tool-buttons {
+      display: flex;
+      justify-content: flex-end;
+      line-height: 0;
+
+      &:not(:empty) {
+        padding: @padding-base-vertical @padding-base-horizontal;
+      }
+    }
+
     .title {
       font-size: 125%;
       font-weight: 500;

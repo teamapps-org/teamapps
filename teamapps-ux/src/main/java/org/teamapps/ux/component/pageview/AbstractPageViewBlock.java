@@ -71,4 +71,12 @@ public abstract class AbstractPageViewBlock {
 		this.toolButtons = toolButtons;
 		return this;
 	}
+
+	public void addToolButton(ToolButton toolButton) {
+		this.toolButtons.add(toolButton);
+	}
+
+	public void removeToolButton(ToolButton toolButton) {
+		this.toolButtons.remove(toolButton);
+	}
 }
