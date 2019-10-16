@@ -98,6 +98,7 @@
     "d3v3": "npm:d3@3.x",
     "element-qsa-scope": "^1.1.0",
     "exports-loader": "^0.7.0",
+    "image-layout": "^0.4.1",
     "jquery": "3.x",
     "jquery-ui": "^1.12.1",
     "json-stable-stringify": "^1.0.1",
