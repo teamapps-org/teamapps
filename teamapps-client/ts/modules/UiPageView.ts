@@ -32,6 +32,7 @@ import {UiPageViewBlockCreatorImageAlignment} from "../generated/UiPageViewBlock
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {UiComponent} from "./UiComponent";
 import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
+import {UiToolButton} from "./micro-components/UiToolButton";
 // require("bootstrap/js/transition");
 // require("bootstrap/js/carousel");
 
@@ -47,7 +48,7 @@ interface Row {
 interface Block {
 	$blockWrapper: HTMLElement;
 	$blockContentContainer: HTMLElement;
-	block: BlockComponent<UiPageViewBlockConfig>;
+	block: AbstractBlockComponent<UiPageViewBlockConfig>;
 }
 
 export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
@@ -93,7 +94,7 @@ export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
     <div class="background-color-div"></div>
 </div>`);
 		let $blockContentContainer = $blockWrapper.querySelector<HTMLElement>(':scope .background-color-div');
-		let block = new (blockTypes[blockConfig._type as keyof typeof blockTypes] as any)(blockConfig, this._context) as BlockComponent<UiPageViewBlockConfig>;
+		let block = new (blockTypes[blockConfig._type as keyof typeof blockTypes] as any)(blockConfig, this._context) as AbstractBlockComponent<UiPageViewBlockConfig>;
 		$blockContentContainer.appendChild(block.getMainDomElement());
 		row.blocks.push({$blockWrapper, $blockContentContainer, block});
 
@@ -154,7 +155,7 @@ export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
 
 }
 
-abstract class BlockComponent<C extends UiPageViewBlockConfig> {
+abstract class AbstractBlockComponent<C extends UiPageViewBlockConfig> {
 	constructor(protected config: C, protected context: TeamAppsUiContext) {
 	}
 
@@ -173,8 +174,9 @@ abstract class BlockComponent<C extends UiPageViewBlockConfig> {
 	}
 }
 
-class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig> {
+class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlockConfig> {
 	private $main: HTMLElement;
+	private $toolButtons: Element;
 	private $topRecord: HTMLElement;
 	private $htmlContainer: HTMLElement;
 	private $images: HTMLElement;
@@ -182,14 +184,21 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 	constructor(config: UiMessagePageViewBlockConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiMessagePageViewBlock">
+		this.$main = parseHtml(`<div class="pageview-block UiMessagePageViewBlock">
+	<div class="tool-buttons"></div>
 	<div class="top-record"></div>
 	<div class="html"></div>
 	<div class="images"></div>
 </div>`);
+		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 		this.$topRecord = this.$main.querySelector(":scope .top-record");
 		this.$htmlContainer = this.$main.querySelector(":scope .html");
 		this.$images = this.$main.querySelector(":scope .images");
+
+		this.$toolButtons.innerHTML = '';
+		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
+			this.$toolButtons.appendChild(tb.getMainDomElement());
+		});
 
 		removeClassesByFunction(this.$topRecord.classList, className => className.startsWith("align-"));
 		this.$topRecord.classList.add("align-" + UiHorizontalElementAlignment[config.topRecordAlignment].toLocaleLowerCase());
@@ -199,28 +208,28 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 		this.$htmlContainer.innerHTML = config.html != null ? removeDangerousTags(config.html) : "";
 
 		if (config.imageUrls) {
-				$(this.$images).slick({
-					dots: true,
-					infinite: true,
-					speed: 300,
-					slidesToShow: 1,
-					centerMode: true,
-					variableWidth: true,
-					draggable: true,
-				});
+			$(this.$images).slick({
+				dots: true,
+				infinite: true,
+				speed: 300,
+				slidesToShow: 1,
+				centerMode: true,
+				variableWidth: true,
+				draggable: true,
+			});
 
-				for (var i = 0; i < this.config.imageUrls.length; i++) {
-					const $sliderItem = document.createElement("div");
-					$sliderItem.classList.add("slider-item");
-					const $image = new Image();
-					$sliderItem.appendChild($image);
-					$image.classList.add("slider-item-img");
-					$image.onload = () => {
-						$(this.$images).slick('slickAdd', $sliderItem);
-						this.reLayout();
-					};
-					$image.src = this.config.imageUrls[i];
-				}
+			for (var i = 0; i < this.config.imageUrls.length; i++) {
+				const $sliderItem = document.createElement("div");
+				$sliderItem.classList.add("slider-item");
+				const $image = new Image();
+				$sliderItem.appendChild($image);
+				$image.classList.add("slider-item-img");
+				$image.onload = () => {
+					$(this.$images).slick('slickAdd', $sliderItem);
+					this.reLayout();
+				};
+				$image.src = this.config.imageUrls[i];
+			}
 		}
 	}
 
@@ -236,29 +245,38 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 	}
 }
 
-class UiCitationPageViewBlock extends BlockComponent<UiCitationPageViewBlockConfig> {
+class UiCitationPageViewBlock extends AbstractBlockComponent<UiCitationPageViewBlockConfig> {
 
-	private $component: HTMLElement;
+	private $main: HTMLElement;
+	private $toolButtons: Element;
 
 	constructor(config: UiCitationPageViewBlockConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$component = parseHtml(`<div class="UiCitationPageViewBlock">
-    <div class="creator-image-wrapper align-${UiPageViewBlockCreatorImageAlignment[config.creatorImageAlignment].toLowerCase()}">
-		${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"></img>` : ''}
-    </div>
-    <div class="content-wrapper">
-
-    </div>
+		this.$main = parseHtml(`<div class="pageview-block UiCitationPageViewBlock">
+    <div class="tool-buttons"></div>
+    <div class="flex-container">
+	    <div class="creator-image-wrapper align-${UiPageViewBlockCreatorImageAlignment[config.creatorImageAlignment].toLowerCase()}">
+			${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"></img>` : ''}
+	    </div>
+	    <div class="content-wrapper"></div>
+	</div>
 </div>`);
-		let $contentWrapper = this.$component.querySelector<HTMLElement>(':scope .content-wrapper');
+		let $contentWrapper = this.$main.querySelector<HTMLElement>(':scope .content-wrapper');
 		$contentWrapper.appendChild($(`<div class="citation">${removeDangerousTags(config.citation)}</div>`)[0]);
 		$contentWrapper.appendChild($(`<div class="author">${removeDangerousTags(config.author)}</div>`)[0]);
+
+		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
+		this.$toolButtons.innerHTML = '';
+		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
+			this.$toolButtons.appendChild(tb.getMainDomElement());
+		});
+
 	}
 
 
 	public getMainDomElement(): HTMLElement {
-		return this.$component;
+		return this.$main;
 	}
 
 	public set attachedToDom(attachedToDom: boolean) {
@@ -270,22 +288,30 @@ class UiCitationPageViewBlock extends BlockComponent<UiCitationPageViewBlockConf
 	}
 }
 
-class UiComponentPageViewBlock extends BlockComponent<UiComponentPageViewBlockConfig> {
+class UiComponentPageViewBlock extends AbstractBlockComponent<UiComponentPageViewBlockConfig> {
 
-	private $div: HTMLElement;
+	private $main: HTMLElement;
 	private component: UiComponent<UiComponentConfig>;
 	private $componentWrapper: HTMLElement;
+	private $toolButtons: Element;
 
 	constructor(config: UiComponentPageViewBlockConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$div = parseHtml(`<div class="UiComponentPageViewBlock" style="height:${config.height}px">
+		this.$main = parseHtml(`<div class="pageview-block UiComponentPageViewBlock" style="height:${config.height}px">
+	<div class="tool-buttons"></div>
                 <div class="component-wrapper"></div>
             </div>`);
-		this.$componentWrapper = this.$div.querySelector<HTMLElement>(':scope .component-wrapper');
+		this.$componentWrapper = this.$main.querySelector<HTMLElement>(':scope .component-wrapper');
+		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 
+		this.$toolButtons.innerHTML = '';
+		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
+			this.$toolButtons.appendChild(tb.getMainDomElement());
+		});
+		
 		if (config.title) {
-			this.$div.prepend($(`<div class="title">${removeDangerousTags(config.title)}</div>`)[0]);
+			this.$main.prepend($(`<div class="title">${removeDangerousTags(config.title)}</div>`)[0]);
 		}
 
 		this.component = config.component as UiComponent;
@@ -293,7 +319,7 @@ class UiComponentPageViewBlock extends BlockComponent<UiComponentPageViewBlockCo
 	}
 
 	public getMainDomElement(): HTMLElement {
-		return this.$div;
+		return this.$main;
 	}
 
 	public destroy(): void {
