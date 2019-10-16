@@ -31,10 +31,10 @@ class UiPageViewBlock {
 }
 
 class UiMessagePageViewBlock extends UiPageViewBlock {
-	String creatorImageUrl;
-	UiPageViewBlockCreatorImageAlignment creatorImageAlignment = UiPageViewBlockCreatorImageAlignment.LEFT;
-	String headLine;
-	String text; // rich text!
+	UiTemplate topTemplate;
+	UiClientRecord topRecord;
+	UiHorizontalElementAlignment topRecordAlignment;
+	String html;
 	List<String> imageUrls;
 }
 

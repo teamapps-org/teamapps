@@ -19,71 +19,91 @@
  */
 package org.teamapps.ux.component.pageview;
 
+import org.teamapps.data.extract.BeanPropertyExtractor;
+import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.dto.UiClientRecord;
 import org.teamapps.dto.UiMessagePageViewBlock;
+import org.teamapps.ux.component.format.HorizontalElementAlignment;
+import org.teamapps.ux.component.template.Template;
 
 import java.util.List;
 
-public class MessagePageViewBlock extends AbstractPageViewBlock {
+public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
 
-	private String creatorImageUrl;
-	private CreatorImageAlignment creatorImageAlignment = CreatorImageAlignment.LEFT;
-	private String headLine;
-	private String richText;
+	private Template topTemplate;
+	private RECORD topRecord;
+	private PropertyExtractor<RECORD> topRecordPropertyExtractor = new BeanPropertyExtractor<>();
+	private HorizontalElementAlignment topRecordAlignment = HorizontalElementAlignment.LEFT;
+	private String html;
 	private List<String> imageUrls;
+
+	public MessagePageViewBlock(Template topTemplate, RECORD topRecord) {
+		this.topTemplate = topTemplate;
+		this.topRecord = topRecord;
+	}
+
+	public MessagePageViewBlock(PageViewBlockAlignment alignment, Template topTemplate, RECORD topRecord) {
+		super(alignment);
+		this.topTemplate = topTemplate;
+		this.topRecord = topRecord;
+	}
 
 	public UiMessagePageViewBlock createUiBlock() {
 		UiMessagePageViewBlock uiBlock = new UiMessagePageViewBlock();
 		mapAbstractPageViewBlockAttributes(uiBlock);
-		uiBlock.setCreatorImageUrl(creatorImageUrl);
-		uiBlock.setCreatorImageAlignment(creatorImageAlignment.toUiImageAligment());
-		uiBlock.setHeadLine(headLine);
-		uiBlock.setText(richText);
+		uiBlock.setTopTemplate(topTemplate.createUiTemplate());
+		uiBlock.setTopRecord(new UiClientRecord().setValues(topRecordPropertyExtractor.getValues(topRecord, topTemplate.getDataKeys())));
+		uiBlock.setTopRecordAlignment(topRecordAlignment.toUiHorizontalElementAlignment());
+		uiBlock.setHtml(html);
 		uiBlock.setImageUrls(imageUrls);
 		return uiBlock;
 	}
 
-	public String getCreatorImageUrl() {
-		return creatorImageUrl;
+	public Template getTopTemplate() {
+		return topTemplate;
 	}
 
-	public MessagePageViewBlock setCreatorImageUrl(String creatorImageUrl) {
-		this.creatorImageUrl = creatorImageUrl;
-		return this;
+	public void setTopTemplate(Template topTemplate) {
+		this.topTemplate = topTemplate;
 	}
 
-	public CreatorImageAlignment getCreatorImageAlignment() {
-		return creatorImageAlignment;
+	public RECORD getTopRecord() {
+		return topRecord;
 	}
 
-	public MessagePageViewBlock setCreatorImageAlignment(CreatorImageAlignment creatorImageAlignment) {
-		this.creatorImageAlignment = creatorImageAlignment;
-		return this;
+	public void setTopRecord(RECORD topRecord) {
+		this.topRecord = topRecord;
 	}
 
-	public String getHeadLine() {
-		return headLine;
+	public PropertyExtractor<RECORD> getTopRecordPropertyExtractor() {
+		return topRecordPropertyExtractor;
 	}
 
-	public MessagePageViewBlock setHeadLine(String headLine) {
-		this.headLine = headLine;
-		return this;
+	public void setTopRecordPropertyExtractor(PropertyExtractor<RECORD> topRecordPropertyExtractor) {
+		this.topRecordPropertyExtractor = topRecordPropertyExtractor;
 	}
 
-	public String getRichText() {
-		return richText;
+	public HorizontalElementAlignment getTopRecordAlignment() {
+		return topRecordAlignment;
 	}
 
-	public MessagePageViewBlock setRichText(String richText) {
-		this.richText = richText;
-		return this;
+	public void setTopRecordAlignment(HorizontalElementAlignment topRecordAlignment) {
+		this.topRecordAlignment = topRecordAlignment;
+	}
+
+	public String getHtml() {
+		return html;
+	}
+
+	public void setHtml(String html) {
+		this.html = html;
 	}
 
 	public List<String> getImageUrls() {
 		return imageUrls;
 	}
 
-	public MessagePageViewBlock setImageUrls(List<String> imageUrls) {
+	public void setImageUrls(List<String> imageUrls) {
 		this.imageUrls = imageUrls;
-		return this;
 	}
 }

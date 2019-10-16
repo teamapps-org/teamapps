@@ -70,31 +70,31 @@
   }
 
   .UiMessagePageViewBlock {
-    padding: 10px;
+    padding: @padding-base-vertical @padding-base-horizontal;
 
-    .headline {
-      font-size: 200%;
-      margin: 8px 0;
-    }
-
-    .text:not(:last-child) {
-      margin-bottom: .7em;
-    }
-
-    .image {
-      > img {
-        max-width: 100%;
-        border-radius: 3px;
-        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .5);
+    .top-record {
+      margin: @padding-base-vertical @padding-base-horizontal;
+      &.align-left {
+        float: left;
+      }
+      &.align-right {
+        float: right;
+      }
+      &.align-center {
+        display: flex;
+        justify-content: center;
+      }
+      &.align-stretch {
+        // default behavior
       }
     }
 
     .slider-item {
-      //max-height: 400px;
-      //width: auto;
-      //height: auto;
-      //width: 400px;
-      //height: 300px;
+      height: 200px;
+      padding: 0 5px;
+      img {
+        height: 100%;
+      }
     }
 
     .slider-item-img {
@@ -114,7 +114,7 @@
         text-shadow: 0 0 2px rgba(0, 0, 0, .35);
         opacity: 0;
         transition: opacity .2s;
-        
+
         &.slick-prev {
           left: 20px;
         }
@@ -128,26 +128,6 @@
           &:hover {
             opacity: 1;
           }
-        }
-      }
-    }
-
-    .carousel {
-      .carousel-inner {
-        border-radius: 3px;
-        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .5);
-        img {
-          border-radius: 3px;
-        }
-      }
-
-      .carousel-indicators {
-        bottom: 0;
-        li {
-          margin: 2px;
-        }
-        li.active {
-          margin: 1px;
         }
       }
     }
