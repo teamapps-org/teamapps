@@ -32,7 +32,7 @@ public class Label extends AbstractField<String> {
 
 	private String caption;
 	private Icon icon;
-	private AbstractField<?> targetField;
+	private Component targetComponent;
 
 	public Label(String caption) {
 		super();
@@ -49,7 +49,7 @@ public class Label extends AbstractField<String> {
 		UiLabel uiLabel = new UiLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));
-		uiLabel.setTargetField(targetField != null ? targetField.createUiComponentReference() : null);
+		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createUiComponentReference() : null);
 		return uiLabel;
 	}
 
@@ -86,16 +86,16 @@ public class Label extends AbstractField<String> {
 		queueCommandIfRendered(() -> new UiLabel.SetIconCommand(getId(), getSessionContext().resolveIcon(icon)));
 	}
 
-	public AbstractField<?> getTargetField() {
-		return targetField;
+	public Component getTargetComponent() {
+		return targetComponent;
 	}
 
-	public Label setTargetField(AbstractField<?> targetField) {
-		if (targetField == this) {
+	public Label setTargetComponent(Component targetComponent) {
+		if (targetComponent == this) {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
-		this.targetField = targetField;
-		queueCommandIfRendered(() -> new UiLabel.SetTargetFieldCommand(getId(), Component.createUiComponentReference(targetField)));
+		this.targetComponent = targetComponent;
+		queueCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(getId(), Component.createUiComponentReference(targetComponent)));
 		return this;
 	}
 }
