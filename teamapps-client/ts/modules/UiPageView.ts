@@ -35,6 +35,7 @@ import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlig
 import {UiToolButton} from "./micro-components/UiToolButton";
 // require("bootstrap/js/transition");
 // require("bootstrap/js/carousel");
+import {fixed_partition} from "image-layout";
 
 
 interface Row {
@@ -180,6 +181,13 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlo
 	private $topRecord: HTMLElement;
 	private $htmlContainer: HTMLElement;
 	private $images: HTMLElement;
+	private images: {
+		$img: HTMLImageElement,
+		width: number,
+		height: number
+	}[] = [];
+
+	private readonly minIdealImageHeight = 250;
 
 	constructor(config: UiMessagePageViewBlockConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -208,32 +216,42 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlo
 		this.$htmlContainer.innerHTML = config.html != null ? removeDangerousTags(config.html) : "";
 
 		if (config.imageUrls) {
-			$(this.$images).slick({
-				dots: true,
-				infinite: true,
-				speed: 300,
-				slidesToShow: 1,
-				centerMode: true,
-				variableWidth: true,
-				draggable: true,
-			});
-
 			for (var i = 0; i < this.config.imageUrls.length; i++) {
-				const $sliderItem = document.createElement("div");
-				$sliderItem.classList.add("slider-item");
 				const $image = new Image();
-				$sliderItem.appendChild($image);
-				$image.classList.add("slider-item-img");
-				$image.onload = () => {
-					$(this.$images).slick('slickAdd', $sliderItem);
+				let image = {
+					width: this.minIdealImageHeight,
+					height: this.minIdealImageHeight,
+					$img: $image
+				};
+				this.images.push(image);
+				$image.classList.add("image");
+				$image.onload = (event: Event) => {
+					image.width = (event.target as HTMLImageElement).naturalWidth;
+					image.height = (event.target as HTMLImageElement).naturalHeight;
 					this.reLayout();
 				};
 				$image.src = this.config.imageUrls[i];
+				this.$images.appendChild($image);
 			}
 		}
+
 	}
 
 	reLayout() {
+		let availableWidth = this.$images.clientWidth;
+		let layout = fixed_partition(this.images, {
+			containerWidth: availableWidth,
+			idealElementHeight: Math.max(this.minIdealImageHeight, availableWidth / 3),
+			align: 'center',
+			spacing: 10
+		});
+		for (let i = 0; i < this.images.length; i++) {
+			this.images[i].$img.style.left = layout.positions[i].x + "px";
+			this.images[i].$img.style.top = layout.positions[i].y + "px";
+			this.images[i].$img.style.width = layout.positions[i].width + "px";
+			this.images[i].$img.style.height = layout.positions[i].height + "px";
+		}
+		this.$images.style.height = layout.height + "px";
 	}
 
 	public getMainDomElement(): HTMLElement {
@@ -243,6 +261,7 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlo
 	public destroy(): void {
 		// nothing to do
 	}
+
 }
 
 class UiCitationPageViewBlock extends AbstractBlockComponent<UiCitationPageViewBlockConfig> {

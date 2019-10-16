@@ -41,7 +41,6 @@
   }
 
   .block-wrapper {
-    overflow-x: hidden;
     border: none;
     border-radius: @border-radius-base;
     box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
@@ -96,46 +95,11 @@
       }
     }
 
-    .slider-item {
-      height: 200px;
-      padding: 0 5px;
-      img {
-        height: 100%;
-      }
-    }
+    .images {
+      position: relative;
 
-    .slider-item-img {
-      pointer-events: none;
-    }
-
-    .slick-slider {
-      .slick-dots {
-        bottom: 0;
-        li button:before {
-          color: white;
-          text-shadow: 0 0 2px black;
-        }
-      }
-      .slick-arrow {
-        z-index: 1;
-        text-shadow: 0 0 2px rgba(0, 0, 0, .35);
-        opacity: 0;
-        transition: opacity .2s;
-
-        &.slick-prev {
-          left: 20px;
-        }
-        &.slick-next {
-          right: 20px;
-        }
-      }
-      &:hover {
-        .slick-arrow {
-          opacity: .5;
-          &:hover {
-            opacity: 1;
-          }
-        }
+      .image {
+        position: absolute;
       }
     }
   }
