@@ -3,6 +3,7 @@ package org.teamapps.localize;
 import org.teamapps.localize.store.LocalizationStore;
 
 import java.util.Locale;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 public abstract class AbstractLocalizationProviderFactory implements LocalizationProviderFactory {
@@ -17,12 +18,26 @@ public abstract class AbstractLocalizationProviderFactory implements Localizatio
 		existingLocalizationsInfo.getResourceBundleInfos().forEach(resourceBundleInfo -> {
 			for (Locale translation : resourceBundleInfo.getTranslations()) {
 				ResourceBundle bundle = resourceBundleInfo.getResourceBundleByLocaleFunction().apply(translation);
-				for (String key : bundle.keySet()) {
-					String value = bundle.getString(key);
-					if (checkNotEmpty(applicationNamespace, translation.getLanguage(), key, value)) {
-						handler.addExistingLocalizationEntry(applicationNamespace, translation.getLanguage(), createLookupKey(applicationNamespace, key), value);
+				if (bundle instanceof PropertyResourceBundle) {
+					PropertyResourceBundle propertyResourceBundle = (PropertyResourceBundle) bundle;
+					for (String key : bundle.keySet()) {
+						Object result = propertyResourceBundle.handleGetObject(key);
+						if (result != null) {
+							String value = bundle.getString(key);
+							if (checkNotEmpty(applicationNamespace, translation.getLanguage(), key, value)) {
+								handler.addExistingLocalizationEntry(applicationNamespace, translation.getLanguage(), createLookupKey(applicationNamespace, key), value);
+							}
+						}
+					}
+				} else {
+					for (String key : bundle.keySet()) {
+						String value = bundle.getString(key);
+						if (checkNotEmpty(applicationNamespace, translation.getLanguage(), key, value)) {
+							handler.addExistingLocalizationEntry(applicationNamespace, translation.getLanguage(), createLookupKey(applicationNamespace, key), value);
+						}
 					}
 				}
+
 			}
 		});
 		existingLocalizationsInfo.getDictionaries().forEach(dictionary -> {
