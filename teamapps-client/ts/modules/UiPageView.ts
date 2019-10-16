@@ -22,7 +22,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiPageViewBlock_Alignment, UiPageViewBlockConfig} from "../generated/UiPageViewBlockConfig";
 import {UiMessagePageViewBlockConfig} from "../generated/UiMessagePageViewBlockConfig";
-import {insertAfter, insertBefore, parseHtml, removeDangerousTags} from "./Common";
+import {insertAfter, insertBefore, parseHtml, removeClassesByFunction, removeDangerousTags} from "./Common";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiCitationPageViewBlockConfig} from "../generated/UiCitationPageViewBlockConfig";
 import {UiComponentPageViewBlockConfig} from "../generated/UiComponentPageViewBlockConfig";
@@ -31,6 +31,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiPageViewBlockCreatorImageAlignment} from "../generated/UiPageViewBlockCreatorImageAlignment";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {UiComponent} from "./UiComponent";
+import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
 // require("bootstrap/js/transition");
 // require("bootstrap/js/carousel");
 
@@ -173,35 +174,32 @@ abstract class BlockComponent<C extends UiPageViewBlockConfig> {
 }
 
 class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig> {
-	private $contentWrapper: HTMLElement;
-	private $slider: HTMLElement;
-	private $images: HTMLImageElement[] = [];
+	private $main: HTMLElement;
+	private $topRecord: HTMLElement;
+	private $htmlContainer: HTMLElement;
+	private $images: HTMLElement;
 
 	constructor(config: UiMessagePageViewBlockConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$contentWrapper = parseHtml(`<div class="UiMessagePageViewBlock"></div>`);
-		if (config.creatorImageUrl) {
-			this.$contentWrapper.appendChild(parseHtml(`<div class="creator-image-wrapper align-${UiPageViewBlockCreatorImageAlignment[config.creatorImageAlignment].toLowerCase()}">
-	${config.creatorImageUrl ? `<img class="creator-image" src="${config.creatorImageUrl}"></img>` : ''}
-</div>`))
-		}
-		if (config.headLine) {
-			this.$contentWrapper.appendChild($(`<div class="headline">${removeDangerousTags(config.headLine)}</div>`)[0]);
-		}
-		if (config.text) {
-			this.$contentWrapper.appendChild($(`<div class="text">${removeDangerousTags(config.text)}</div>`)[0]);
-		}
-		if (this.config.imageUrls && this.config.imageUrls.length === 1) {
-			this.$contentWrapper.appendChild(parseHtml(`<div class="image"><img src="${this.config.imageUrls[0]}"></div>`));
-		}
-		if (config.imageUrls && config.imageUrls.length > 0) {
-			this.$slider = parseHtml(`<div class="slider"></div>`);
-			this.$contentWrapper.appendChild(this.$slider);
+		this.$main = parseHtml(`<div class="UiMessagePageViewBlock">
+	<div class="top-record"></div>
+	<div class="html"></div>
+	<div class="images"></div>
+</div>`);
+		this.$topRecord = this.$main.querySelector(":scope .top-record");
+		this.$htmlContainer = this.$main.querySelector(":scope .html");
+		this.$images = this.$main.querySelector(":scope .images");
 
-			if (this.config.imageUrls && this.config.imageUrls.length > 1) {
+		removeClassesByFunction(this.$topRecord.classList, className => className.startsWith("align-"));
+		this.$topRecord.classList.add("align-" + UiHorizontalElementAlignment[config.topRecordAlignment].toLocaleLowerCase());
+		let topTemplateRenderer = context.templateRegistry.createTemplateRenderer(config.topTemplate);
+		this.$topRecord.innerHTML = config.topRecord != null ? topTemplateRenderer.render(config.topRecord.values) : "";
 
-				$(this.$slider).slick({
+		this.$htmlContainer.innerHTML = config.html != null ? removeDangerousTags(config.html) : "";
+
+		if (config.imageUrls) {
+				$(this.$images).slick({
 					dots: true,
 					infinite: true,
 					speed: 300,
@@ -209,7 +207,6 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 					centerMode: true,
 					variableWidth: true,
 					draggable: true,
-
 				});
 
 				for (var i = 0; i < this.config.imageUrls.length; i++) {
@@ -219,46 +216,19 @@ class UiMessagePageViewBlock extends BlockComponent<UiMessagePageViewBlockConfig
 					$sliderItem.appendChild($image);
 					$image.classList.add("slider-item-img");
 					$image.onload = () => {
-						$(this.$slider).slick('slickAdd', $sliderItem);
+						$(this.$images).slick('slickAdd', $sliderItem);
 						this.reLayout();
 					};
 					$image.src = this.config.imageUrls[i];
-					this.$images.push($image);
 				}
-			}
 		}
 	}
 
 	reLayout() {
-		const minMaxDimensions = this.$images.reduce((minMaxDimensions, $img) => {
-			if ($img.naturalWidth > 0 && $img.naturalHeight > 0) {
-				minMaxDimensions.maxWidth = Math.max(minMaxDimensions.maxWidth, $img.naturalWidth);
-				minMaxDimensions.maxHeight = Math.max(minMaxDimensions.maxHeight, $img.naturalHeight);
-				minMaxDimensions.minWidth = Math.min(minMaxDimensions.minWidth, $img.naturalWidth);
-				minMaxDimensions.minHeight = Math.min(minMaxDimensions.minHeight, $img.naturalHeight);
-			}
-			return minMaxDimensions;
-		}, {minWidth: 10000000, minHeight: 1000000, maxWidth: 0, maxHeight: 0});
-		const applicableWidth = this.$slider.offsetWidth - (this.$slider.offsetWidth * .2);
-		let maxHeight = this.$images.reduce((maxHeight, $img) => {
-			if ($img.naturalWidth > 0 && $img.naturalHeight > 0) {
-				return Math.max(maxHeight, applicableWidth * $img.naturalHeight / $img.naturalWidth);
-			} else {
-				return maxHeight;
-			}
-		}, 0);
-		maxHeight = Math.min(300, maxHeight);
-		this.$images.forEach($img => {
-			if ($img.naturalWidth > 0 && $img.naturalHeight > 0) {
-				const aspectRatio = $img.naturalWidth / $img.naturalHeight;
-				$img.style.height = maxHeight + "px";
-				$img.style.width = (maxHeight * aspectRatio) + "px";
-			}
-		});
 	}
 
 	public getMainDomElement(): HTMLElement {
-		return this.$contentWrapper;
+		return this.$main;
 	}
 
 	public destroy(): void {
