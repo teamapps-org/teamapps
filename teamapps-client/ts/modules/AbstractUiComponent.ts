@@ -49,9 +49,10 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		}
 
 		// do this with timeout since the main dom element does not yet exist when executing this (subclass constructor gets called after this)
-		// TODO this introduces A LOT of race conditions! e.g. the resize observer might or might not fire the initial size
+		// TODO #timeout this introduces A LOT of race conditions! e.g. the resize observer might or might not fire the initial size
+		this.visible = _config.visible; // TODO #timeout !!
 		setTimeout(() => {
-			this.setVisible(_config.visible, false);
+			this.getMainDomElement().classList.toggle("invisible-component", _config.visible == null ? false : !_config.visible); // TODO #timeout !!
 			if (_config.stylesBySelector != null) { // might be null when used via JavaScript API!
 				Object.keys(_config.stylesBySelector).forEach(selector => this.setStyle(selector, _config.stylesBySelector[selector]));
 			}
