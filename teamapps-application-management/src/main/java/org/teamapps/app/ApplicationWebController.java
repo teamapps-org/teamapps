@@ -31,6 +31,7 @@ public class ApplicationWebController implements WebController {
 	private List<Function<UxServerContext, ServletRegistration>> servletRegistrationFactories = new ArrayList<>();
 	private IconProvider defaultIconProvider;
 	private List<IconProvider> iconProviders = new ArrayList<>();
+	private List<SessionStartHandler> sessionStartHandlers = new ArrayList<>();
 
 	public ApplicationWebController(ComponentBuilder componentBuilder) {
 		this(componentBuilder, false, null);
@@ -56,6 +57,8 @@ public class ApplicationWebController implements WebController {
 				context.getClientInfo().setGeoIpInfo(clientGeoIpInfo);
 			}
 		}
+		sessionStartHandlers.forEach(handler -> handler.handleSessionStarted(context));
+
 		RootPanel rootPanel = new RootPanel();
 		context.addRootComponent(null, rootPanel);
 		rootPanel.setContent(componentBuilder.buildComponent(component -> rootPanel.setContent(component)));
@@ -80,8 +83,14 @@ public class ApplicationWebController implements WebController {
 		this.defaultIconProvider = defaultIconProvider;
 	}
 
+
+
 	public void addIconProvider(IconProvider iconProvider) {
 		iconProviders.add(iconProvider);
+	}
+
+	public void addSessionStartHandler(SessionStartHandler sessionStartHandler) {
+		sessionStartHandlers.add(sessionStartHandler);
 	}
 
 	@Override
