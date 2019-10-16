@@ -59,7 +59,9 @@ public class DeepLTranslation implements TranslationService {
             joiner.add(URLEncoder.encode("text", StandardCharsets.UTF_8) + "=" + URLEncoder.encode(text, StandardCharsets.UTF_8));
             joiner.add(URLEncoder.encode("source_lang", StandardCharsets.UTF_8) + "=" + URLEncoder.encode(sourceLanguage, StandardCharsets.UTF_8));
             joiner.add(URLEncoder.encode("target_lang", StandardCharsets.UTF_8) + "=" + URLEncoder.encode(targetLanguage, StandardCharsets.UTF_8));
-            joiner.add(URLEncoder.encode("split_sentences", StandardCharsets.UTF_8) + "=0");
+            //joiner.add(URLEncoder.encode("split_sentences", StandardCharsets.UTF_8) + "=0");
+            joiner.add(URLEncoder.encode("split_sentences", StandardCharsets.UTF_8) + "=nonewlines");
+            joiner.add(URLEncoder.encode("tag_handling", StandardCharsets.UTF_8) + "=xml");
 
 
             byte[] out = joiner.toString().getBytes(StandardCharsets.UTF_8);
