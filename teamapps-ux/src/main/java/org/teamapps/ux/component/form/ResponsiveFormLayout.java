@@ -121,7 +121,7 @@ public class ResponsiveFormLayout  {
 		if (icon != null || caption != null) {
 			labelPropertyName = propertyName + LABEL_NAME_SUFFIX;
 			label = new Label(caption, icon);
-			label.setTargetField(field);
+			label.setTargetComponent(field);
 		}
 		int row = getSection().getLastNonEmptyRow();
 		int column = columnOffset;
