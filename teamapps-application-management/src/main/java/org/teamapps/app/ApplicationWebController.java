@@ -32,6 +32,8 @@ public class ApplicationWebController implements WebController {
 	private IconProvider defaultIconProvider;
 	private List<IconProvider> iconProviders = new ArrayList<>();
 	private List<SessionStartHandler> sessionStartHandlers = new ArrayList<>();
+	private IconTheme defaultIconTheme;
+	private IconTheme defaultMobileIconTheme;
 
 	public ApplicationWebController(ComponentBuilder componentBuilder) {
 		this(componentBuilder, false, null);
@@ -93,9 +95,21 @@ public class ApplicationWebController implements WebController {
 		sessionStartHandlers.add(sessionStartHandler);
 	}
 
+	public void setDefaultIconTheme(IconTheme defaultIconTheme) {
+		this.defaultIconTheme = defaultIconTheme;
+	}
+
+	public void setDefaultMobileIconTheme(IconTheme defaultMobileIconTheme) {
+		this.defaultMobileIconTheme = defaultMobileIconTheme;
+	}
+
 	@Override
 	public IconTheme getDefaultIconTheme(boolean isMobile) {
-		return WebController.super.getDefaultIconTheme(isMobile);
+		if (isMobile) {
+			return defaultMobileIconTheme != null ? defaultMobileIconTheme : WebController.super.getDefaultIconTheme(true);
+		} else {
+			return defaultIconTheme != null ? defaultIconTheme : WebController.super.getDefaultIconTheme(false);
+		}
 	}
 
 	@Override
