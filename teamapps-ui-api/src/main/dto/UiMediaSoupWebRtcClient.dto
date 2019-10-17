@@ -1,0 +1,64 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2019 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+class UiMediaSoupWebRtcClient extends UiComponent {
+	command publish(UiMediaSoupPublishingParameters parameters);
+	command playback(UiMediaSoupPlaybackParamaters parameters);
+}
+
+class UiMediaSoupPublishingParameters {
+	String serverUrl;
+	String uid;
+	String token;
+	UiAudioTrackConstraints audioConstraints;
+	UiVideoTrackConstraints videoConstraints;
+	long minBitrate;
+	long maxBitrate;
+}
+
+class UiMediaSoupPlaybackParamaters {
+	String serverUrl;
+	String uid;
+	boolean audio;
+	boolean video;
+	long minBitrate;
+	long maxBitrate;
+}
+
+class UiAudioTrackConstraints {
+    int channelCount = 1;
+    boolean autoGainControl = true;
+    boolean echoCancellation = true;
+    boolean noiseSuppression = true;
+}
+
+class UiVideoTrackConstraints {
+    Double aspectRatio;
+	Integer width;
+	Integer height;
+    UiVideoFacingMode facingMode = UiVideoFacingMode.USER;
+    double frameRate = 20;
+}
+
+enum UiVideoFacingMode {
+	USER, // The video source is facing toward the user; this includes, for example, the front-facing camera on a smartphone.
+	ENVIRONMENT, // The video source is facing away from the user, thereby viewing their environment. This is the back camera on a smartphone.
+	LEFT, // The video source is facing toward the user but to their left, such as a camera aimed toward the user but over their left shoulder.
+	RIGHT; // The video source is facing toward the user but to their right, such as a camera aimed toward the user but over their right shoulder.
+}

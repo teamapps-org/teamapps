@@ -105,6 +105,14 @@ public class SessionContext {
 		updateMessageBundle();
 	}
 
+	public static SessionContext current() {
+		return CurrentSessionContext.get();
+	}
+
+	public static SessionContext currentOrNull() {
+		return CurrentSessionContext.getOrNull();
+	}
+
 	public void setCustomMessageBundleProvider(Function<Locale, ResourceBundle> provider) {
 		this.customMessageBundleProvider = provider;
 		updateMessageBundle();
