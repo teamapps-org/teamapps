@@ -17,6 +17,12 @@ public class ApplicationGroup implements Comparable<ApplicationGroup> {
 		this.title = title;
 	}
 
+	public ApplicationGroup(Icon icon, String title, int displayRow) {
+		this.icon = icon;
+		this.title = title;
+		this.displayRow = displayRow;
+	}
+
 	public Icon getIcon() {
 		return icon;
 	}
@@ -36,5 +42,19 @@ public class ApplicationGroup implements Comparable<ApplicationGroup> {
 	@Override
 	public int compareTo(ApplicationGroup o) {
 		return Integer.compare(displayRow, o.getDisplayRow());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ApplicationGroup that = (ApplicationGroup) o;
+		return getDisplayRow() == that.getDisplayRow() &&
+				Objects.equals(getTitle(), that.getTitle());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getTitle(), getDisplayRow());
 	}
 }
