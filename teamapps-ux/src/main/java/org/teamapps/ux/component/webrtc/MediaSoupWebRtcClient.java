@@ -5,16 +5,27 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiMediaSoupPlaybackParamaters;
 import org.teamapps.dto.UiMediaSoupPublishingParameters;
 import org.teamapps.dto.UiMediaSoupWebRtcClient;
+import org.teamapps.dto.UiObject;
 import org.teamapps.ux.component.AbstractComponent;
 
 public class MediaSoupWebRtcClient extends AbstractComponent {
 
 	private String serverUrl;
 
+	private UiObject lastPublishOrPlaybackParams;
+
+	public MediaSoupWebRtcClient() {
+	}
+
+	public MediaSoupWebRtcClient(String serverUrl) {
+		this.serverUrl = serverUrl;
+	}
+
 	@Override
 	public UiComponent createUiComponent() {
 		UiMediaSoupWebRtcClient ui = new UiMediaSoupWebRtcClient();
 		mapAbstractUiComponentProperties(ui);
+		ui.setInitialPlaybackOrPublishParams(lastPublishOrPlaybackParams);
 		return ui;
 	}
 
@@ -23,17 +34,20 @@ public class MediaSoupWebRtcClient extends AbstractComponent {
 
 	}
 
-	public void publish(String uid, String token, AudioTrackConstraints audioConstraints, VideoTrackConstraints videoConstraints, long minBitrate, long maxBitrate) {
+	public void publish(String uid, String token, AudioTrackConstraints audioConstraints, VideoTrackConstraints videoConstraints, long maxBitrate) {
 		UiMediaSoupPublishingParameters params = new UiMediaSoupPublishingParameters();
 		params.setServerUrl(serverUrl);
 		params.setUid(uid);
 		params.setToken(token);
 		params.setAudioConstraints(audioConstraints != null ? audioConstraints.createUiAudioTrackConstraints() : null);
 		params.setVideoConstraints(videoConstraints != null ? videoConstraints.createUiVideoTrackConstraints() : null);
-		params.setMinBitrate(minBitrate);
 		params.setMaxBitrate(maxBitrate);
 
-		queueCommandIfRendered(() -> new UiMediaSoupWebRtcClient.PublishCommand(getId(), params));
+		if (this.isRendered()) {
+			queueCommandIfRendered(() -> new UiMediaSoupWebRtcClient.PublishCommand(getId(), params));
+		} else {
+			lastPublishOrPlaybackParams = params;
+		}
 	}
 
 	public void play(String uid, boolean audio, boolean video, long minBitrate, long maxBitrate) {
@@ -45,7 +59,19 @@ public class MediaSoupWebRtcClient extends AbstractComponent {
 		params.setMinBitrate(minBitrate);
 		params.setMaxBitrate(maxBitrate);
 
-		queueCommandIfRendered(() -> new UiMediaSoupWebRtcClient.PlaybackCommand(getId(), params));
+		if (this.isRendered()) {
+			queueCommandIfRendered(() -> new UiMediaSoupWebRtcClient.PlaybackCommand(getId(), params));
+		} else {
+			lastPublishOrPlaybackParams = params;
+		}
+	}
+
+	public void stop() {
+		if (this.isRendered()) {
+			queueCommandIfRendered(() -> new UiMediaSoupWebRtcClient.StopCommand(getId()));
+		} else {
+			lastPublishOrPlaybackParams = null;
+		}
 	}
 
 	public String getServerUrl() {

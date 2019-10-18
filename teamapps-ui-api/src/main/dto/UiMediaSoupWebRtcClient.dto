@@ -18,8 +18,21 @@
  * =========================LICENSE_END==================================
  */
 class UiMediaSoupWebRtcClient extends UiComponent {
+	Object initialPlaybackOrPublishParams;
+
 	command publish(UiMediaSoupPublishingParameters parameters);
 	command playback(UiMediaSoupPlaybackParamaters parameters);
+	command stop();
+
+	// TODO set playback profile...
+
+	event onPlaybackProfileChanged(UiMulticastPlaybackProfile profile);
+}
+
+enum UiMulticastPlaybackProfile {
+	HIGH,
+	MEDIUM,
+	LOW
 }
 
 class UiMediaSoupPublishingParameters {

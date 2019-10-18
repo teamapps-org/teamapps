@@ -86,7 +86,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		applicationTreeButton = NavigationBarButton.create(treeIcon);
 		applicationViewsButton = NavigationBarButton.create(viewsIcon);
 		applicationToolbarButton = NavigationBarButton.create(toolbarIcon);
-		applicationToolbarButton.setVisible(false);
+		// TODO make toolbar button invisible when no application toolbar
 		applicationBackButton = NavigationBarButton.create(backIcon);
 
 

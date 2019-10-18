@@ -23,6 +23,7 @@ export declare class Conference {
     private setupRoom;
     private startSendStream;
     private startListenStream;
+    private stopPublish;
     protected __setVideoSource(videoContainer: HTMLMediaElement | null, streamFlow?: MediaStream): void;
     protected __whenStreamIsActive(getStream: Function, callback: Function): boolean;
     protected __hookup(capturing: Capturing): void;
@@ -30,6 +31,8 @@ export declare class Conference {
     protected __connectProducer(type: string, track: MediaStreamTrack | undefined): void;
     protected __startStream(peer: any): MediaStream;
     protected __makeAutoAdjustProfile(videoConsumer: any): Function;
-    publish(): Promise<unknown>;
-    play(): Promise<unknown>;
+    setPreferredQuality(qualityProfile: string): void;
+    publish(): Promise<string>;
+    play(): Promise<string>;
+    stop(): Promise<string>;
 }

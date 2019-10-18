@@ -23,39 +23,63 @@ import {UiChatInputConfig} from "../../generated/UiChatInputConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {parseHtml} from "../Common";
-import {UiMediaSoupWebRtcClientCommandHandler, UiMediaSoupWebRtcClientConfig} from "../../generated/UiMediaSoupWebRtcClientConfig";
+import {
+	UiMediaSoupWebRtcClient_OnPlaybackProfileChangedEvent,
+	UiMediaSoupWebRtcClientCommandHandler,
+	UiMediaSoupWebRtcClientConfig,
+	UiMediaSoupWebRtcClientEventSource
+} from "../../generated/UiMediaSoupWebRtcClientConfig";
 import {Conference} from "./conference";
 import {UiMediaSoupPlaybackParamatersConfig} from "../../generated/UiMediaSoupPlaybackParamatersConfig";
 import {UiMediaSoupPublishingParametersConfig} from "../../generated/UiMediaSoupPublishingParametersConfig";
 import {UiVideoTrackConstraintsConfig} from "../../generated/UiVideoTrackConstraintsConfig";
-import {UiVideoFacingMode} from "../../generated/UiVideoFacingMode";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiMulticastPlaybackProfile} from "../../generated/UiMulticastPlaybackProfile";
+import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 
-export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebRtcClientConfig> implements UiMediaSoupWebRtcClientCommandHandler /*UiMediaSoupWebRtcClientEventSource*/ {
+export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebRtcClientConfig> implements UiMediaSoupWebRtcClientCommandHandler, UiMediaSoupWebRtcClientEventSource {
+
+	public readonly onOnPlaybackProfileChanged: TeamAppsEvent<UiMediaSoupWebRtcClient_OnPlaybackProfileChangedEvent>;
+
 	private $main: HTMLDivElement;
 	private conference: Conference;
 	private $video: HTMLMediaElement;
+	private $profileDisplay: HTMLMediaElement;
 
-	constructor(config: UiChatInputConfig, context: TeamAppsUiContext) {
+	constructor(config: UiMediaSoupWebRtcClientConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="UiMediaSoupWebRtcClient">
 	<video></video>
+	<div class="profile">.</div>
 </div>`);
 		this.$video = this.$main.querySelector<HTMLMediaElement>(":scope video");
+		this.$profileDisplay = this.$main.querySelector<HTMLMediaElement>(":scope .profile");
+
+		if (config.initialPlaybackOrPublishParams != null) {
+			if (config.initialPlaybackOrPublishParams._type === 'UiMediaSoupPlaybackParamaters') {
+				this.playback(config.initialPlaybackOrPublishParams);
+			} else if (config.initialPlaybackOrPublishParams._type === 'UiMediaSoupPublishingParameters') {
+				this.publish(config.initialPlaybackOrPublishParams);
+			}
+		}
 	}
 
 	getMainDomElement(): HTMLElement {
 		return this.$main;
 	}
 
+	@executeWhenFirstDisplayed(true)
 	publish(parameters: UiMediaSoupPublishingParametersConfig): void {
 		if (this.conference != null) {
-			// this.conference.destroy();
-			// TODO cleanup the conference instance
-			alert("conference is already instantiated!");
-			return;
+			this.stop();
 		}
 
+		let constraints = {
+			audio: parameters.audioConstraints,
+			video: UiMediaSoupWebRtcClient.createVideoConstraints(parameters.videoConstraints)
+		};
+		console.log(constraints);
 		this.conference = new Conference({
 			uid: parameters.uid,
 			token: parameters.token,
@@ -63,26 +87,25 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 				serverUrl: parameters.serverUrl,
 				minBitrate: parameters.minBitrate,
 				maxBitrate: parameters.maxBitrate,
-				constraints: {
-					audio: parameters.audioConstraints,
-					video: UiMediaSoupWebRtcClient.createVideoConstraints(parameters.videoConstraints)
-				},
+				constraints: constraints,
 
 				localVideo: this.$video,
 				errorAutoPlayCallback: () => {
-					window.alert("no autoplay")
+					console.error("no autoplay on publisher??");
 				},
+				onProfileChange: (profile: string) => {
+					console.error("profile changed on publisher?? " + profile);
+				}
 			}
 		});
 		this.conference.publish();
 	}
 
+	@executeWhenFirstDisplayed(true)
 	playback(parameters: UiMediaSoupPlaybackParamatersConfig): void {
+		console.log(parameters);
 		if (this.conference != null) {
-			// this.conference.destroy();
-			// TODO cleanup the conference instance
-			alert("conference is already instantiated!");
-			return;
+			this.stop();
 		}
 
 		this.conference = new Conference({
@@ -95,23 +118,36 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 				minBitrate: 100,
 				maxBitrate: 10000000,
 				constraints: null, // not needed for publishing
-				
+
 				localVideo: this.$video,
 				errorAutoPlayCallback: () => {
-					window.alert("no autoplay")
+					console.error("no autoplay");
 				},
+				onProfileChange: (profile: string) => {
+					console.log("profile" + profile);
+					this.$profileDisplay.innerText = profile;
+					this.onOnPlaybackProfileChanged.fire({profile: UiMulticastPlaybackProfile[profile.toUpperCase() as any] as any});
+				}
 			},
 		});
 		this.conference.play();
+	}
+
+	@executeWhenFirstDisplayed()
+	stop() {
+		if (this.conference != null) {
+			this.conference.stop()
+		}
 	}
 
 
 	private static createVideoConstraints(videoConstraints: UiVideoTrackConstraintsConfig): MediaTrackConstraints {
 		return {
 			...videoConstraints,
-			facingMode: UiVideoFacingMode[videoConstraints.facingMode].toLocaleLowerCase(),
+			facingMode: null // TODO UiVideoFacingMode[videoConstraints.facingMode].toLocaleLowerCase() ==> make nullable!!!!
 		};
 	}
+
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMediaSoupWebRtcClient", UiMediaSoupWebRtcClient);
