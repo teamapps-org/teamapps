@@ -229,7 +229,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		});
 
 		document.body.appendChild(uiWindow.getMainDomElement());
-		uiWindow.getMainDomElement().setAttribute("data-background-container-id", this.ALL_ROOT_PANELS[0].getId());
+		uiWindow.getMainDomElement().setAttribute("data-background-container-id", this.ALL_ROOT_PANELS[0] && this.ALL_ROOT_PANELS[0].getId());
 		uiWindow.setListener({
 			onWindowClosed: (window, animationDuration) => this.removeWindow(window.getId(), animationDuration)
 		});

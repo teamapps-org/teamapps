@@ -24,9 +24,11 @@ export interface Params {
     video?: boolean;
     minBitrate?: number | null;
     maxBitrate?: number | null;
+    qualityChangerSelector?: string;
     localVideo: string | HTMLMediaElement;
     constraints: MediaStreamConstraints;
     errorAutoPlayCallback: Function;
+    onProfileChange: Function;
     serverUrl?: string;
 }
 export interface SocketResponse {

@@ -73,6 +73,13 @@ public class Event<EVENT_DATA> {
 		}
 	}
 
+	public void fire() {
+		this.lastEventData = null;
+		for (EventListener<EVENT_DATA> listener : listeners) {
+			listener.onEvent(null);
+		}
+	}
+
 	public void fireIfChanged(EVENT_DATA eventData) {
 		if (!Objects.equals(lastEventData, eventData)) {
 			fire(eventData);

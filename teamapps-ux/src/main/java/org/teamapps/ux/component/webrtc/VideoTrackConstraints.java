@@ -1,14 +1,13 @@
 package org.teamapps.ux.component.webrtc;
 
-import org.teamapps.dto.UiVideoFacingMode;
 import org.teamapps.dto.UiVideoTrackConstraints;
 
 public class VideoTrackConstraints {
 
 	private int width = 800;
 	private int height = 600;
-	private UiVideoFacingMode facingMode = UiVideoFacingMode.USER;
-	private double frameRate = 20;
+	private VideoFacingMode facingMode = VideoFacingMode.USER;
+	private int frameRate = 20;
 
 	public VideoTrackConstraints() {
 	}
@@ -18,7 +17,7 @@ public class VideoTrackConstraints {
 		this.height = height;
 	}
 
-	public VideoTrackConstraints(int width, int height, UiVideoFacingMode facingMode, double frameRate) {
+	public VideoTrackConstraints(int width, int height, VideoFacingMode facingMode, int frameRate) {
 		this.width = width;
 		this.height = height;
 		this.facingMode = facingMode;
@@ -29,7 +28,7 @@ public class VideoTrackConstraints {
 		UiVideoTrackConstraints ui = new UiVideoTrackConstraints();
 		ui.setHeight(height);
 		ui.setWidth(width);
-		ui.setFacingMode(facingMode);
+		ui.setFacingMode(facingMode.toUiVideoFacingMode());
 		ui.setFrameRate(frameRate);
 		return ui;
 	}
@@ -50,19 +49,19 @@ public class VideoTrackConstraints {
 		this.height = height;
 	}
 
-	public UiVideoFacingMode getFacingMode() {
+	public VideoFacingMode getFacingMode() {
 		return facingMode;
 	}
 
-	public void setFacingMode(UiVideoFacingMode facingMode) {
+	public void setFacingMode(VideoFacingMode facingMode) {
 		this.facingMode = facingMode;
 	}
 
-	public double getFrameRate() {
+	public int getFrameRate() {
 		return frameRate;
 	}
 
-	public void setFrameRate(double frameRate) {
+	public void setFrameRate(int frameRate) {
 		this.frameRate = frameRate;
 	}
 }
