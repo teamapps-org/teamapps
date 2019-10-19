@@ -34,7 +34,8 @@ public class FileResource implements Resource {
 
 	private static final Map<String, String> MIMETYPES_BY_FILE_EXTENSION;
 
-	private File file;
+	private final File file;
+	private final String name;
 
 	static {
 		try {
@@ -45,7 +46,12 @@ public class FileResource implements Resource {
 	}
 
 	public FileResource(File file) {
+		this(file, file.getName());
+	}
+
+	public FileResource(File file, String name) {
 		this.file = file;
+		this.name = name;
 	}
 
 	@Override
@@ -75,7 +81,7 @@ public class FileResource implements Resource {
 
 	@Override
 	public String getName() {
-		return file.getName();
+		return name;
 	}
 
 	@Override
@@ -88,10 +94,10 @@ public class FileResource implements Resource {
 	}
 
 	private String getFileType() {
-		int pos = file.getName().lastIndexOf('.');
-		if (pos <= 0 || pos >= file.getName().length() - 1) {
+		int pos = name.lastIndexOf('.');
+		if (pos <= 0 || pos >= name.length() - 1) {
 			return null;
 		}
-		return file.getName().substring(pos + 1).toLowerCase();
+		return name.substring(pos + 1).toLowerCase();
 	}
 }
