@@ -150,7 +150,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
 		applyDisplayMode(this.getMainDomElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE, {
-			innerPreferedDimensions: {
+			innerPreferredDimensions: {
 				width: this.imageNaturalWidth,
 				height: this.imageNaturalHeight
 			}

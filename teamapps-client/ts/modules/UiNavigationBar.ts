@@ -35,7 +35,6 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiColorConfig} from "../generated/UiColorConfig";
 import {UiComponent} from "./UiComponent";
-import {parse} from "@fullcalendar/core/datelib/parsing";
 import {UiMultiProgressDisplay} from "./UiDefaultMultiProgressDisplay";
 
 interface Button {

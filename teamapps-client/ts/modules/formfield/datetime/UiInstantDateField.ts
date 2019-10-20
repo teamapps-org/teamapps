@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as Mustache from "mustache";
-import * as moment from "moment-timezone";
+import Mustache from "mustache";
+import moment from "moment-timezone";
 import {UiInstantDateFieldConfig, UiInstantDateFieldCommandHandler, UiInstantDateFieldEventSource} from "../../../generated/UiInstantDateFieldConfig";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";

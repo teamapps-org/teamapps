@@ -20,13 +20,28 @@
 class UiMediaSoupWebRtcClient extends UiComponent {
 	Object initialPlaybackOrPublishParams;
 
+	Float displayAreaAspectRatio = 4/3f;  // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
+
+	boolean activityLineVisible;
+	UiColor activityInactiveColor;
+	UiColor activityActiveColor;
+	boolean active;
+
+	String icon;
+	String caption;
+	String noVideoImageUrl;
+
+	command update(UiMediaSoupWebRtcClient config);
+	command setActive(boolean active);
+
 	command publish(UiMediaSoupPublishingParameters parameters);
 	command playback(UiMediaSoupPlaybackParamaters parameters);
 	command stop();
 
 	// TODO set playback profile...
 
-	event onPlaybackProfileChanged(UiMulticastPlaybackProfile profile);
+	event playbackProfileChanged(UiMulticastPlaybackProfile profile);
+	event activityChanged(boolean active);
 }
 
 enum UiMulticastPlaybackProfile {
