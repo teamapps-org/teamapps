@@ -124,7 +124,6 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 	}
 
 	private calculateCoordinateCorrectionFactor() {
-		console.log(`${this.imageNaturalWidth} / ${this.getWidth()}, ${this.imageNaturalHeight} / ${this.getHeight()}`);
 		return Math.max(this.imageNaturalWidth / this.getWidth(), this.imageNaturalHeight / this.getHeight());
 	}
 
@@ -151,7 +150,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
 		applyDisplayMode(this.getMainDomElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE, {
-			innerPreferedDimensions: {
+			innerPreferredDimensions: {
 				width: this.imageNaturalWidth,
 				height: this.imageNaturalHeight
 			}

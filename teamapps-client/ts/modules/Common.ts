@@ -25,7 +25,7 @@ import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {UiTextMatchingMode} from "../generated/UiTextMatchingMode";
-import * as moment from "moment-timezone";
+import moment from "moment-timezone";
 import {UiComponent} from "./UiComponent";
 import {UiPageTransition} from "../generated/UiPageTransition";
 
@@ -307,19 +307,19 @@ export function formatDecimalNumber(integerNumber: number, precision: number, de
 }
 
 export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displayMode: UiPageDisplayMode | any, options?: {
-	innerPreferedDimensions?: { // inferred for img
+	innerPreferredDimensions?: { // only needed for ORIGINAL_SIZE!
 		width: number,
 		height: number,
-	}
+	},
 	zoomFactor?: number,
 	padding?: number,
-	considerScrollbars?: Boolean
+	considerScrollbars?: boolean
 }) {
 	options = $.extend({}, options); // copy the options as we are potentially making changes to the object...
-	if (options.innerPreferedDimensions == null || !options.innerPreferedDimensions.width || !options.innerPreferedDimensions.height) {
-		if ($inner instanceof HTMLImageElement) {
+	if (options.innerPreferredDimensions == null || !options.innerPreferredDimensions.width || !options.innerPreferredDimensions.height) {
+		if ($inner instanceof HTMLImageElement && $inner.naturalHeight > 0) {
 			let imgElement = <HTMLImageElement>$($inner)[0];
-			options.innerPreferedDimensions = {
+			options.innerPreferredDimensions = {
 				width: imgElement.naturalWidth,
 				height: imgElement.naturalHeight
 			}
@@ -329,61 +329,67 @@ export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displ
 			return;
 		}
 	}
-	options.zoomFactor = options.zoomFactor || 1;
 	if (options.padding == null) {
 		options.padding = parseInt($outer.style.paddingLeft) || 0;
 	}
-
 	let availableWidth = $outer.offsetWidth - 2 * options.padding;
 	let availableHeight = $outer.offsetHeight - 2 * options.padding;
-	let viewPortAspectRatio = availableWidth / availableHeight;
-	let imageAspectRatio = options.innerPreferedDimensions.width / options.innerPreferedDimensions.height;
 
-	logger.trace(`outer dimensions: ${availableWidth}x${availableHeight}`);
-	logger.trace(`inner dimensions: ${options.innerPreferedDimensions.width}x${options.innerPreferedDimensions.height}`);
+	let size = calculateDisplayModeInnerSize({width: availableWidth, height: availableHeight}, options.innerPreferredDimensions, displayMode, options.zoomFactor, options.considerScrollbars);
+	$inner.style.width = size.width + "px";
+	$inner.style.height = size.height + "px";
+}
+
+export function calculateDisplayModeInnerSize(containerDimensions: { width: number, height: number },
+                                              innerPreferredDimensions: { width: number, height: number },
+                                              displayMode: UiPageDisplayMode | any,
+                                              zoomFactor: number = 1,
+                                              considerScrollbars = false
+): { width: number, height: number } {
+	let viewPortAspectRatio = containerDimensions.width / containerDimensions.height;
+	let imageAspectRatio = innerPreferredDimensions.width / innerPreferredDimensions.height;
+
+	logger.trace(`outer dimensions: ${containerDimensions.width}x${containerDimensions.height}`);
+	logger.trace(`inner dimensions: ${innerPreferredDimensions.width}x${innerPreferredDimensions.height}`);
 	logger.trace(`displayMode: ${UiPageDisplayMode[displayMode]}`);
 
 	if (displayMode === UiPageDisplayMode.FIT_WIDTH) {
-		let width = Math.floor(availableWidth * options.zoomFactor);
-		if (options.considerScrollbars && options.zoomFactor <= 1 && Math.ceil(width / imageAspectRatio) > availableHeight) {
+		let width = Math.floor(containerDimensions.width * zoomFactor);
+		if (considerScrollbars && zoomFactor <= 1 && Math.ceil(width / imageAspectRatio) > containerDimensions.height) {
 			// There will be a vertical scroll bar, so make sure the width will not result in a horizontal scrollbar, too
 			// NOTE: Chrome still shows scrollbars sometimes. https://bugs.chromium.org/p/chromium/issues/detail?id=240772&can=2&start=0&num=100&q=&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified&groupby=&sort=
-			width = Math.min(width, availableWidth - Constants.SCROLLBAR_WIDTH);
+			width = Math.min(width, containerDimensions.width - Constants.SCROLLBAR_WIDTH);
 		}
-		$inner.style.width = width + "px";
-		$inner.style.height = "auto";
+		return {width: width, height: width / imageAspectRatio};
 	} else if (displayMode === UiPageDisplayMode.FIT_HEIGHT) {
-		let height = Math.floor(availableHeight * options.zoomFactor);
-		if (options.considerScrollbars && options.zoomFactor <= 1 && height * imageAspectRatio > availableWidth) {
+		let height = Math.floor(containerDimensions.height * zoomFactor);
+		if (considerScrollbars && zoomFactor <= 1 && height * imageAspectRatio > containerDimensions.width) {
 			// There will be a horizontal scroll bar, so make sure the width will not result in a vertical scrollbar, too
 			// NOTE: Chrome still shows scrollbars sometimes. https://bugs.chromium.org/p/chromium/issues/detail?id=240772&can=2&start=0&num=100&q=&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified&groupby=&sort=
-			height = Math.min(height, availableHeight - Constants.SCROLLBAR_WIDTH);
+			height = Math.min(height, containerDimensions.height - Constants.SCROLLBAR_WIDTH);
 		}
-		$inner.style.width = "auto";
-		$inner.style.height = height + "px";
+		return {width: height * imageAspectRatio, height: height};
 	} else if (displayMode === UiPageDisplayMode.FIT_SIZE) {
 		if (imageAspectRatio > viewPortAspectRatio) {
-			let width = Math.floor(availableWidth * options.zoomFactor);
-			$inner.style.width = width + "px";
-			$inner.style.height = imageAspectRatio ? (width / imageAspectRatio) + "px" : "auto";
+			let width = Math.floor(containerDimensions.width * zoomFactor);
+			return {width: width, height: width / imageAspectRatio};
 		} else {
-			let height = Math.floor(availableHeight * options.zoomFactor);
-			$inner.style.width = imageAspectRatio ? (height * imageAspectRatio) + "px" : "auto";
-			$inner.style.height = height + "px";
+			let height = Math.floor(containerDimensions.height * zoomFactor);
+			return {width: height * imageAspectRatio, height: height};
 		}
 	} else if (displayMode === UiPageDisplayMode.COVER) {
 		if (imageAspectRatio < viewPortAspectRatio) {
-			$inner.style.width = Math.floor(availableWidth * options.zoomFactor) + "px";
-			$inner.style.height = "auto";
+			let width = Math.floor(containerDimensions.width * zoomFactor);
+			return {width: width, height: width / imageAspectRatio};
 		} else {
-			$inner.style.width = "auto";
-			$inner.style.height = Math.floor(availableHeight * options.zoomFactor) + "px";
+			let height = Math.floor(containerDimensions.height * zoomFactor);
+			return {width: height * imageAspectRatio, height: height};
 		}
 	} else { // ORIGINAL_SIZE
-		$inner.style.width = (options.innerPreferedDimensions.width * options.zoomFactor) + "px";
-		$inner.style.height = "auto";
+		let width = innerPreferredDimensions.width * zoomFactor;
+		return {width: width, height: width / imageAspectRatio};
 	}
-}
+};
 
 export function boundSelection(selection: { left: number, top: number, width: number, height: number }, bounds: { width: number, height: number }, aspectRatio?: number) {
 	let newSelection = {
@@ -1210,6 +1216,7 @@ export function css(el: HTMLElement, values: object) {
 
 let lastPointerCoordinates: [number, number] = [0, 0];
 document.body.addEventListener("pointermove", ev => lastPointerCoordinates = [ev.clientX, ev.clientY], {capture: true});
+
 export function getLastPointerCoordinates() {
 	return lastPointerCoordinates;
 }

@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as Mustache from "mustache";
+import Mustache from "mustache";
 import {UiLocalDateFieldConfig, UiLocalDateFieldCommandHandler, UiLocalDateFieldEventSource} from "../../../generated/UiLocalDateFieldConfig";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";

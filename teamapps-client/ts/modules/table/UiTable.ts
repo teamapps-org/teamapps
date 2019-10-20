@@ -925,7 +925,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	private handleFieldValueChanged(fieldName: string, value: any): void {
-		// console.log("changed: " + fieldName + ": " + value);
 		// TODO check if this has updated a boolean field and update composite fields accordingly (field visibilities)
 
 		let currentlyEditingThisColumn = !!this._grid.getCellEditor() && this.getActiveCellFieldName() === fieldName;

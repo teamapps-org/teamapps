@@ -1,5 +1,7 @@
 package org.teamapps.localize;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.localize.store.FileLocalizationStore;
 import org.teamapps.localize.store.LocalizationStore;
 import org.teamapps.localize.translation.MachineTranslation;
@@ -12,6 +14,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class MachineTranslationLocalizationProviderFactory extends AbstractLocalizationProviderFactory {
+
+	private final static Logger LOGGER = LoggerFactory.getLogger(MachineTranslationLocalizationProviderFactory.class);
 
 	private final static List<String> preferredTranslationLanguages = Arrays.asList(new String[]{"en", "de", "fr", "es", "pt", "nl", "it", "pl", "ru"});
 
@@ -50,10 +54,12 @@ public class MachineTranslationLocalizationProviderFactory extends AbstractLocal
 
 
 	public void machineTranslateAllMissingEntries() {
+		LOGGER.info("Start translating entries");
+		int countTranslations = 0;
 		List<String> usedLanguages = localizationStore.getAllUsedLanguages();
 		List<String> keys = localizationStore.getAllUsedStoreKeys();
 		for (String requiredLanguage : requiredLanguages) {
-			if (!machineTranslationService.canTranslate(requiredLanguage,requiredLanguage)) {
+			if (!machineTranslationService.canTranslate(requiredLanguage, requiredLanguage)) {
 				continue;
 			}
 			for (String key : keys) {
@@ -80,6 +86,7 @@ public class MachineTranslationLocalizationProviderFactory extends AbstractLocal
 					}
 					if (sourceText != null && sourceLanguage != null) {
 						String translation = machineTranslationService.translate(sourceText, sourceLanguage, requiredLanguage);
+						countTranslations++;
 						translation = firstUpperIfSourceUpper(sourceText, translation);
 						localizationStore.addTranslationResult(requiredLanguage, key, translation);
 					}
@@ -87,6 +94,7 @@ public class MachineTranslationLocalizationProviderFactory extends AbstractLocal
 			}
 		}
 		localizationStore.finishStoreUpdates();
+		LOGGER.info("Translated entries: " + countTranslations + ", characters:" + machineTranslationService.getTranslatedCharacters());
 	}
 
 	private String firstUpperIfSourceUpper(String source, String text) {

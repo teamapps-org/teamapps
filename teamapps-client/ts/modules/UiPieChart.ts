@@ -534,7 +534,6 @@ class Chart {
 					return 0;
 				}
 				if (0 == i) {
-					console.log(d)
 					return 1;
 				}
 				return 0;

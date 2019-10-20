@@ -39,25 +39,7 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 	}
 
 	public redraw() {
-		let minY: number, maxY: number;
-		if (this.config.yScaleZoomMode === UiLineChartYScaleZoomMode.DYNAMIC) {
-			let displayedDataYBounds = this.getDisplayedDataYBounds();
-			let delta = displayedDataYBounds[1] - displayedDataYBounds[0];
-			minY = displayedDataYBounds[0] - delta * .05;
-			maxY = displayedDataYBounds[1] + delta * .05;
-		} else if (this.config.yScaleZoomMode === UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO) {
-			[minY, maxY] = this.getDisplayedDataYBounds();
-			if (minY > 0) {
-				minY = 0;
-			}
-			if (maxY < 0) {
-				maxY = 0;
-			}
-		} else {
-			minY = this.config.intervalY.min;
-			maxY = this.config.intervalY.max;
-		}
-		minY = fakeZeroIfLogScale(minY, this.config.yScaleType);
+		let {minY, maxY} = this.getYAxisRange();
 
 		if (minY !== this.scaleY.domain()[0] || maxY !== this.scaleY.domain()[1]) {
 			if (Math.abs(this.scaleY.domain()[0]) > 1e15 || Math.abs(this.scaleY.domain()[1]) > 1e15) { // see https://github.com/d3/d3-interpolate/pull/63
@@ -77,12 +59,35 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 					}
 				});
 		} else {
-			this.redrawYAxis();
+			this.redrawYAxis(); 
 			this.doRedraw();
 		}
 	}
 
-	updateYScale(): void {
+	private getYAxisRange() {
+		let minY: number, maxY: number;
+		if (this.config.yScaleZoomMode === UiLineChartYScaleZoomMode.DYNAMIC) {
+			let displayedDataYBounds = this.getDisplayedDataYBounds();
+			let delta = displayedDataYBounds[1] - displayedDataYBounds[0];
+			minY = displayedDataYBounds[0] - delta * .05;
+			maxY = displayedDataYBounds[1] + delta * .05;
+		} else if (this.config.yScaleZoomMode === UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO) {
+			[minY, maxY] = this.getDisplayedDataYBounds();
+			if (minY > 0) {
+				minY = 0;
+			}
+			if (maxY < 0) {
+				maxY = 0;
+			}
+		} else {
+			minY = this.config.intervalY.min;
+			maxY = this.config.intervalY.max;
+		}
+		minY = fakeZeroIfLogScale(minY, this.config.yScaleType);
+		return {minY, maxY};
+	}
+
+	private updateYScale(): void {
 		const oldScaleY = this.scaleY;
 		if (this.config.yScaleType === UiScaleType.LOG10) {
 			this.scaleY = d3.scaleLog();
@@ -92,9 +97,15 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 		if (oldScaleY != null) {
 			this.scaleY.range(oldScaleY.range());
 		}
+
 		let domainMin = fakeZeroIfLogScale(this.config.intervalY.min, this.config.yScaleType);
-		this.scaleY.domain([domainMin, this.config.intervalY.max]);
+		this.scaleY.domain([domainMin, this.config.intervalY.max]); // acutally not necessary here TODO remove! this is irritating!
+
 		this.yAxis.scale(this.scaleY);
+	}
+
+	setScaleYRange(range: [number, number]) {
+		this.scaleY.range(range);
 	}
 
 	protected abstract doRedraw(): void;
@@ -166,7 +177,7 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 		return this.dataStore.getData(this.getDataSeriesIds(), this.zoomLevelIndex, zoomBoundsX[0], zoomBoundsX[1]);
 	}
 
-	protected abstract getDataSeriesIds(): string[];
+	public abstract getDataSeriesIds(): string[];
 
 	public abstract destroy(): void;
 
@@ -198,5 +209,9 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 			bounds[1] = 1;
 		}
 		return bounds;
+	}
+
+	getConfig() {
+		return this.config;
 	}
 }

@@ -31,6 +31,7 @@ import org.teamapps.ux.component.flexcontainer.HorizontalLayout;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.imagecropper.ImageCropper;
 import org.teamapps.ux.component.imagecropper.ImageCropperSelection;
+import org.teamapps.ux.component.imagecropper.ImageCropperSelectionMode;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.css.CssJustifyContent;
@@ -89,6 +90,7 @@ public class PictureChooser extends AbstractField<Resource> {
 		verticalLayout.addComponentAutoSize(horizontalLayout);
 		imageCropperWindow = new Window(MaterialIcon.IMAGE, getSessionContext().getLocalized("ux.pictureChooser.cropImageWindowTitle"), 600, 400, verticalLayout);
 		imageCropperWindow.setCloseable(true);
+		imageCropperWindow.setMaximizable(true);
 		imageCropperWindow.setModal(true);
 		imageCropperWindow.setCloseOnEscape(true);
 
@@ -183,6 +185,10 @@ public class PictureChooser extends AbstractField<Resource> {
 				break;
 			}
 		}
+	}
+
+	public void setImageCropperSelectionMode(ImageCropperSelectionMode selectionMode) {
+		imageCropper.setSelectionMode(selectionMode);
 	}
 
 	private void showImageCropperWindow() {

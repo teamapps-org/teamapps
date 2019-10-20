@@ -470,7 +470,6 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 				this.$heading.classList.add("has-minimized-header-component");
 				this.setMinimizedFields(firstFieldToGetMinified);
 				const width = alwaysMaximizedField.config.minWidth + (availableHeaderContentWidth - minWidthNeededWithHiddenHeaderAndOneMinimizedField);
-				console.log(alwaysMaximizedField.config.minWidth, (availableHeaderContentWidth - minWidthNeededWithHiddenHeaderAndOneMinimizedField), width);
 				alwaysMaximizedField.$fieldWrapper.style.width = width + "px";
 			}
 		} else if (this.numberOfVisibleHeaderFields() == 1) {

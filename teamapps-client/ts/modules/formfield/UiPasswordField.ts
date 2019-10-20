@@ -18,11 +18,10 @@
  * =========================LICENSE_END==================================
  */
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import * as md5 from "md5";
-import {UiPasswordFieldConfig, UiPasswordFieldCommandHandler, UiPasswordFieldEventSource} from "../../generated/UiPasswordFieldConfig";
+import md5 from "md5";
+import {UiPasswordFieldCommandHandler, UiPasswordFieldConfig, UiPasswordFieldEventSource} from "../../generated/UiPasswordFieldConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiTextField} from "./UiTextField";
-import {escapeHtml} from "../Common";
 
 
 export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implements UiPasswordFieldEventSource, UiPasswordFieldCommandHandler {

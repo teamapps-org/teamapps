@@ -3,7 +3,7 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "commonjs",
-    "target": "es6",
+    "target": "es5",
     "experimentalDecorators": true,
     "alwaysStrict": true,
     "lib": ["es2017", "dom"],
@@ -12,14 +12,18 @@
     "importHelpers": true,
     "moduleResolution": "node",
     "declaration": true,
-    "declarationDir": "../../dist/tsd"
+    "declarationDir": "../../dist/tsd",
+    "esModuleInterop": true
   },
   "files": [
     "index.ts",
     "../custom-declarations/jquery.ui.position.d.ts",
     "../custom-declarations/webui-popover.d.ts",
     "../custom-declarations/pickr-widget.d.ts",
-    "../custom-declarations/worker-loader.d.ts"
+    "../custom-declarations/worker-loader.d.ts",
+    "../custom-declarations/d3-flextree.d.ts",
+    "../custom-declarations/image-layout.d.ts",
+    "../custom-declarations/voice-activity-detection.d.ts"
 //    "../../node_modules/@types/node/index.d.ts"
   ],
   "exclude": [

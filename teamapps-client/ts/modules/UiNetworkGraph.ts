@@ -92,7 +92,6 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.stop();
 
 		this.simulation.on("tick", () => {
-			console.log("tick")
 			this.updateLinks();
 			this.updateNodes();
 		});

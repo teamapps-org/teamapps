@@ -51,6 +51,8 @@ import {UiLineChartLine} from "./UiLineChartLine";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiLineChartBand} from "./UiLineChartBand";
+import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
+import {UiLineChartDataDisplayGroup} from "./UiLineChartDataDisplayGroup";
 
 type SVGGSelection<DATUM = {}> = Selection<SVGGElement, DATUM, HTMLElement, undefined>;
 
@@ -222,14 +224,21 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	}
 
 	private createSeries(lineFormat: UiLineChartLineConfig) {
+		let display = UiTimeGraph.createDataDisplay(this._config.id, lineFormat, this.$graphClipContainer, this.dropShadowFilterId, this.dataStore);
+		display.setScaleYRange([this.drawableHeight, 0]);
+		this.$yAxisContainer.node().appendChild(display.$yAxis.node());
+		return display;
+	}
+
+	public static createDataDisplay(timeGraphId: string, lineFormat: AbstractUiLineChartDataDisplayConfig, $graphClipContainer: Selection<SVGGElement, {}, HTMLElement, undefined>, dropShadowFilterId: string, dataStore: TimeGraphDataStore) {
 		let display: AbstractUiLineChartDataDisplay;
 		if (lineFormat._type === 'UiLineChartLine') {
-			display = new UiLineChartLine(this._config.id, lineFormat, this.$graphClipContainer, this.dropShadowFilterId, this.dataStore);
+			display = new UiLineChartLine(timeGraphId, lineFormat, $graphClipContainer, dropShadowFilterId, dataStore);
 		} else if (lineFormat._type === 'UiLineChartBand') {
-			display = new UiLineChartBand(this._config.id, lineFormat, this.$graphClipContainer, this.dropShadowFilterId, this.dataStore);
+			display = new UiLineChartBand(timeGraphId, lineFormat, $graphClipContainer, dropShadowFilterId, dataStore);
+		} else if (lineFormat._type === 'UiLineChartDataDisplayGroup') {
+			display = new UiLineChartDataDisplayGroup(timeGraphId, lineFormat, $graphClipContainer, dropShadowFilterId, dataStore);
 		}
-		display.scaleY.range([this.drawableHeight, 0]);
-		this.$yAxisContainer.node().appendChild(display.$yAxis.node());
 		return display;
 	}
 
@@ -373,7 +382,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			}
 		}
 
-		this.getAllSeries().forEach(s => s.scaleY.range([this.drawableHeight, 0]));
+		this.getAllSeries().forEach(s => s.setScaleYRange([this.drawableHeight, 0]));
 		this.updateZoomExtents();
 
 		this.$xAxis.attr("transform", "translate(0," + this.drawableHeight + ")");
