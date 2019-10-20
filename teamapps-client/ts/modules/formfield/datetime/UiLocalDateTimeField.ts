@@ -17,8 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as Mustache from "mustache";
-import * as moment from "moment-timezone";
+import Mustache from "mustache";
+import moment from "moment-timezone";
 import {UiInstantDateField} from "./UiInstantDateField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
@@ -62,7 +62,6 @@ export class UiLocalDateTimeField extends AbstractUiDateTimeField<UiLocalDateTim
 
 	public getReadOnlyHtml(value: LocalDateTime, availableWidth: number): string {
 		if (value != null) {
-			// console.log(value[0], value[1], value[2]);
 			return `<div class="static-readonly-UiDateTimeField">`
 				+ Mustache.render(UiInstantDateField.comboBoxTemplate, UiInstantDateField.createDateComboBoxEntryFromLocalValues(value[0], value[1], value[2], this._config.dateFormat || this._context.config.dateFormat))
 				+ Mustache.render(AbstractUiTimeField.comboBoxTemplate, AbstractUiTimeField.createTimeComboBoxEntry(value[3], value[4], this._config.timeFormat || this._context.config.timeFormat))

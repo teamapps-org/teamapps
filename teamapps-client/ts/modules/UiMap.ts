@@ -170,11 +170,11 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapMarkerConfig({location: toUiLocation(marker.getLatLng())})});
 			} else if (type === 'polygon') {
 				let polygon = layer as Polygon;
-				let path = (polygon.getLatLngs() as any[]).map(ll => toUiLocation(ll));
+				let path = flattenArray(polygon.getLatLngs()).map(ll => toUiLocation(ll));
 				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapPolygonConfig({path})});
 			} else if (type === 'polyline') {
 				let polyline = layer as Polyline;
-				let path = (polyline.getLatLngs() as any[]).map(ll => toUiLocation(ll));
+				let path = flattenArray(polyline.getLatLngs()).map(ll => toUiLocation(ll));
 				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapPolylineConfig({path})});
 			} else if (type === 'rectangle') {
 				let rectangle = layer as Rectangle;
@@ -543,6 +543,18 @@ function createPathOptions(shapePropertiesConfig: UiShapePropertiesConfig): Path
 
 function toUiLocation(latlng: L.LatLng) {
 	return createUiMapLocationConfig(latlng.lat, latlng.lng);
+}
+
+function flattenArray<T>(arr: T[]|T[][]|T[][][]): T[] {
+	return (arr as any[]).reduce((acc, cur) => {
+		if (Array.isArray(cur)) {
+			acc.push.apply(acc, flattenArray(cur));
+		} else {
+			acc.push(cur);
+		}
+
+		return acc;
+	}, []);
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMap", UiMap);

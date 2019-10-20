@@ -21,6 +21,8 @@ import "@less/teamapps";
 
 import 'typeface-roboto';
 
+require("element-qsa-scope");
+
 (window as any).jQuery = (window as any).$ = require("jquery"); // needs to be global for fullcalendar (at least)
 require("jquery-ui/ui/version.js");
 require("jquery-ui/ui/position.js");
@@ -93,6 +95,7 @@ export {UiProgressDisplay} from "./UiProgressDisplay";
 export {UiDefaultMultiProgressDisplay} from "./UiDefaultMultiProgressDisplay";
 export {UiNotification} from "./UiNotification";
 export {UiQrCodeScanner} from "./UiQrCodeScanner";
+export {UiMediaSoupWebRtcClient} from "./webrtc/UiMediaSoupWebRtcClient";
 
 export {UiGauge} from "./UiGauge";
 

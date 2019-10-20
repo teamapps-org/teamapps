@@ -18,12 +18,12 @@ public class StandardLocalizationProvider implements LocalizationProvider {
 
 	@Override
 	public String getLocalized(Locale locale, String key) {
-		return localizationStore.getLocalization(locale.getLanguage(), prefix, key);
+		return localizationStore.getLocalization(locale.getLanguage(), AbstractLocalizationProviderFactory.createLookupKey(prefix, key));
 	}
 
 	@Override
 	public String getLocalized(Locale locale, String key, Object... parameters) {
-		return localizationStore.getLocalization(locale.getLanguage(), prefix, key, parameters);
+		return localizationStore.getLocalization(locale.getLanguage(), AbstractLocalizationProviderFactory.createLookupKey(prefix, key), parameters);
 	}
 
 	@Override

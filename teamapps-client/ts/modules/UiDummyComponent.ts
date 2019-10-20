@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import * as moment from "moment-timezone";
+import moment from "moment-timezone";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiDummyComponent_ClickedEvent, UiDummyComponentCommandHandler, UiDummyComponentConfig, UiDummyComponentEventSource} from "../generated/UiDummyComponentConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";

@@ -617,7 +617,7 @@ export class UiWebRtcPublisher extends AbstractUiComponent<UiWebRtcPublisherConf
 
 	public onResize(): void {
 		applyDisplayMode(this.$main, this.$videoContainer, UiPageDisplayMode.FIT_SIZE, {
-			innerPreferedDimensions: {
+			innerPreferredDimensions: {
 				width: this.video.videoWidth,
 				height: this.video.videoHeight
 			}

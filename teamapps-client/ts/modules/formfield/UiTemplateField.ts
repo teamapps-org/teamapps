@@ -24,7 +24,7 @@ export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientReco
 	}
 
 	protected displayCommittedValue(): void {
-		this.$main.innerHTML = this.templateRenderer.render(this.getCommittedValue().values);
+		this.$main.innerHTML = this.templateRenderer.render(this.getCommittedValue() && this.getCommittedValue().values);
 	}
 
 	getFocusableElement(): HTMLElement {
@@ -46,7 +46,11 @@ export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientReco
 	valuesChanged(v1: UiClientRecordConfig, v2: UiClientRecordConfig): boolean {
 		return false;
 	}
-	
+
+
+	getReadOnlyHtml(value: UiClientRecordConfig, availableWidth: number): string {
+		return `<div class="static-readonly-UiTemplateField">${value && this.templateRenderer.render(value)}</div>`;
+	}
 }
 
 TeamAppsUiComponentRegistry.registerFieldClass("UiTemplateField", UiTemplateField);

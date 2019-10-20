@@ -19,7 +19,7 @@
  */
 import * as Mustache from "mustache";
 import {ResultCallback, TrivialComboBox, TrivialDateSuggestionEngine} from "trivial-components";
-import * as moment from "moment-timezone";
+import moment from "moment-timezone";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";

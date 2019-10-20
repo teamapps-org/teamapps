@@ -1,22 +1,36 @@
 class UiTreeGraph extends UiComponent {
-    required List<UiTreeGraphNode> nodes;
+    List<UiTreeGraphNode> nodes;
 
 	UiColor backgroundColor = new UiColor(0, 0, 0).setAlpha(0);
     float zoomFactor = 1;
+    boolean compact;
+
+    int verticalLayerGap;
+    int sideListIndent;
+    int sideListVerticalGap;
+    int horizontalSiblingGap;
+    int horizontalNonSignlingGap;
+
+    command update(UiTreeGraph config);
 
     command setZoomFactor(float zoomFactor); // > 0
     command setNodes(List<UiTreeGraphNode> nodes);
     command addNode(UiTreeGraphNode node);
     command removeNode(String nodeId);
     command setNodeExpanded(String nodeId, boolean expanded);
-    
+    command updateNode(UiTreeGraphNode node);
+
+    command moveToRootNode();
+    command moveToNode(String nodeId);
+
     event nodeClicked(String nodeId);
-    event nodeExpandedOrCollapsed(String nodeId, boolean expanded);
+    event nodeExpandedOrCollapsed(String nodeId, boolean expanded, boolean lazyLoad);
+    event parentExpandedOrCollapsed(String nodeId, boolean expanded, boolean lazyLoad);
+    event sideListExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 
-class UiTreeGraphNode {
-    required String id;
-    String parentId;
+class UiBaseTreeGraphNode {
+	required String id;
     required int width;
     required int height;
     UiColor backgroundColor = new UiColor(255, 255, 255); // rgba
@@ -33,7 +47,18 @@ class UiTreeGraphNode {
     UiColor connectorLineColor = new UiColor(100, 100, 100); // line to parent node
     int connectorLineWidth;
     String dashArray;
+}
+
+class UiTreeGraphNode extends UiBaseTreeGraphNode{
+    String parentId;
+    boolean parentExpandable = false;
+    boolean parentExpanded = true;
+
     boolean expanded;
+    boolean hasLazyChildren = false;
+
+    List<UiBaseTreeGraphNode> sideListNodes;
+    boolean sideListExpanded;
 }
 
 class UiTreeGraphNodeImage {

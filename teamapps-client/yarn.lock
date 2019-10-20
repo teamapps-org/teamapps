@@ -285,7 +285,7 @@
     "@types/d3-interpolate" "*"
     "@types/d3-selection" "*"
 
-"@types/d3@5.x":
+"@types/d3@^5.7.2":
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/@types/d3/-/d3-5.7.2.tgz#52235eb71a1d3ca171d6dca52a58f5ccbe0254cc"
   dependencies:
@@ -681,6 +681,13 @@ alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
 
+analyser-frequency-average@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/analyser-frequency-average/-/analyser-frequency-average-1.0.0.tgz#2e5363d02f2167bdb61d1ed0424403715b719a86"
+  integrity sha1-LlNj0C8hZ722HR7QQkQDcVtxmoY=
+  dependencies:
+    audio-frequency-to-index "^2.0.0"
+
 animate.css@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-3.7.2.tgz#e73e0d50e92cb1cfef1597d9b38a9481020e08ea"
@@ -831,6 +838,13 @@ asynckit@^0.4.0:
 atob@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
+
+audio-frequency-to-index@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/audio-frequency-to-index/-/audio-frequency-to-index-2.0.0.tgz#4c4bca9f3bfec38c773aa6b5604c117adc982d45"
+  integrity sha1-TEvKnzv+w4x3Oqa1YEwRetyYLUU=
+  dependencies:
+    clamp "^1.0.1"
 
 autoprefixer@^9.6.1:
   version "9.6.1"
@@ -1232,6 +1246,11 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
+
+clamp@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/clamp/-/clamp-1.0.1.tgz#66a0e64011816e37196828fdc8c8c147312c8634"
+  integrity sha1-ZqDmQBGBbjcZaCj9yMjBRzEshjQ=
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -1793,6 +1812,13 @@ d3-fetch@1:
   dependencies:
     d3-dsv "1"
 
+d3-flextree@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/d3-flextree/-/d3-flextree-2.1.1.tgz#0e6b8b89b0602b073db2f488b5b8030ce318dde9"
+  integrity sha512-P0SK6bRm0PT5ZZON8Lh/aOcFfr4rO53kaYCXCgwBCvsHJcYjtOb8fNrgmpOmCMCgfrT9EczXzD8wqEO8mlkBrA==
+  dependencies:
+    d3-hierarchy "^1.1.5"
+
 d3-force@1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/d3-force/-/d3-force-1.2.1.tgz#fd29a5d1ff181c9e7f0669e4bd72bdb0e914ec0b"
@@ -1812,7 +1838,7 @@ d3-geo@1:
   dependencies:
     d3-array "1"
 
-d3-hierarchy@1:
+d3-hierarchy@1, d3-hierarchy@^1.1.5:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/d3-hierarchy/-/d3-hierarchy-1.1.8.tgz#7a6317bd3ed24e324641b6f1e76e978836b008cc"
 
@@ -2208,6 +2234,11 @@ ejs@^2.6.1:
 electron-to-chromium@^1.3.191:
   version "1.3.193"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.193.tgz#de9b89959288070bffb14557daf8cf9f75b2caf8"
+
+element-qsa-scope@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/element-qsa-scope/-/element-qsa-scope-1.1.0.tgz#6e1146a3aa796cd385846d39365578db358b647b"
+  integrity sha512-oBBTdmleT5eJ0r5/3/tVg0NcWv95ut4Oxj5Oh/IkZ3kc0UACF8psJU8Rocd4aXDgtoE5WD5/rqYOXvjOE1DxIg==
 
 elliptic@^6.0.0:
   version "6.5.0"
@@ -3093,6 +3124,11 @@ ignore-walk@^3.0.1:
 ignore@^3.3.5:
   version "3.3.10"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.10.tgz#0a97fb876986e8081c631160f8f9f389157f0043"
+
+image-layout@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/image-layout/-/image-layout-0.4.1.tgz#e240437d226ad0d9b9d844fa1846f61992b1a18a"
+  integrity sha1-4kBDfSJq0Nm52ET6GEb2GZKxoYo=
 
 image-size@~0.5.0:
   version "0.5.5"
@@ -6181,6 +6217,13 @@ verror@1.10.0:
 vm-browserify@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
+
+voice-activity-detection@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/voice-activity-detection/-/voice-activity-detection-0.0.5.tgz#af827a724313af443f9d072cefef36ac20bbe506"
+  integrity sha512-Ezq+k0cICI67XR/R9KvTRhJ7/u6U0Zk9I+8VNs3hHTAvB6cA3glCa+cHgCRWSW/SV6cRrufSQsV1YxpNtsQb1g==
+  dependencies:
+    analyser-frequency-average "^1.0.0"
 
 warning@^4.0.1:
   version "4.0.3"

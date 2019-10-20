@@ -42,7 +42,6 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 
 		this._config.stopsScanningAtFirstResult = stopScanningAtFirstResult;
 		this.qrScanner = new QrScanner(this.$video, (result: string) => {
-			console.log("Code: " + result);
 			this.onQrCodeDetected.fire({code: result});
 			if (this._config.stopsScanningAtFirstResult) {
 				this.stopScanning();
@@ -50,20 +49,13 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 		});
 		let availableCameras = await this.getAvailableCameras();
 		if (availableCameras.length > 0) {
-			availableCameras.forEach(c => console.log(c.deviceId));
-			console.log("--");
 			let deviceId = availableCameras[this.selectedCameraIndex % availableCameras.length].deviceId;
-			console.log(this.selectedCameraIndex);
-			console.log(this.selectedCameraIndex % availableCameras.length);
-			console.log(deviceId);
-			console.log("----------");
 			this.qrScanner.start(deviceId);
 		}
 	}
 
 	stopScanning(): void {
 		if (this.qrScanner != null) {
-			console.log("STOPPING");
 			this.qrScanner.stop();
 			this.qrScanner.destroy();
 		}

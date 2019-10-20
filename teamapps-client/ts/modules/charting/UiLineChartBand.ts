@@ -1,14 +1,12 @@
-import {area, Area, CurveFactory, CurveGenerator, curveLinear, line, Line} from "d3-shape";
+import {Line} from "d3-shape";
 import {Selection} from "d3-selection";
 import * as d3 from "d3";
-import {Path} from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
 import {createUiColorCssString} from "../util/CssFormatUtil";
 import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiLineChartBandConfig} from "../../generated/UiLineChartBandConfig";
-import {path} from "d3-path";
 import {D3Area2} from "./D3Area2";
 import {UiColorConfig} from "../../generated/UiColorConfig";
 
@@ -144,7 +142,7 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 				: 25;
 	}
 
-	protected getDataSeriesIds(): string[] {
+	public getDataSeriesIds(): string[] {
 		return [this.config.lowerBoundDataSeriesId, this.config.middleLineDataSeriesId, this.config.upperBoundDataSeriesId];
 	}
 

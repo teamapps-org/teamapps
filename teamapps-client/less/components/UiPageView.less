@@ -41,7 +41,6 @@
   }
 
   .block-wrapper {
-    overflow-x: hidden;
     border: none;
     border-radius: var(--ta-border-radius-base);
     box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
@@ -70,113 +69,83 @@
   }
 
   .UiMessagePageViewBlock {
-    padding: 10px;
+    padding: @padding-base-vertical @padding-base-horizontal;
 
-    .headline {
-      font-size: 200%;
-      margin: 8px 0;
+    .tool-buttons {
+      float: right;
+      line-height: 0;
     }
 
-    .text:not(:last-child) {
-      margin-bottom: .7em;
-    }
-
-    .image {
-      > img {
-        max-width: 100%;
-        border-radius: 3px;
-        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .5);
+    .top-record {
+      margin: @padding-base-vertical @padding-base-horizontal;
+      &.align-left {
+        float: left;
+        clear: left;
+      }
+      &.align-right {
+        float: right;
+        clear: right;
+      }
+      &.align-center {
+        display: flex;
+        justify-content: center;
+      }
+      &.align-stretch {
+        // default behavior
       }
     }
 
-    .slider-item {
-      //max-height: 400px;
-      //width: auto;
-      //height: auto;
-      //width: 400px;
-      //height: 300px;
-    }
+    .images {
+      position: relative;
 
-    .slider-item-img {
-      pointer-events: none;
-    }
-
-    .slick-slider {
-      .slick-dots {
-        bottom: 0;
-        li button:before {
-          color: white;
-          text-shadow: 0 0 2px black;
-        }
-      }
-      .slick-arrow {
-        z-index: 1;
-        text-shadow: 0 0 2px rgba(0, 0, 0, .35);
-        opacity: 0;
-        transition: opacity .2s;
-        
-        &.slick-prev {
-          left: 20px;
-        }
-        &.slick-next {
-          right: 20px;
-        }
-      }
-      &:hover {
-        .slick-arrow {
-          opacity: .5;
-          &:hover {
-            opacity: 1;
-          }
-        }
-      }
-    }
-
-    .carousel {
-      .carousel-inner {
-        border-radius: 3px;
-        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .5);
-        img {
-          border-radius: 3px;
-        }
-      }
-
-      .carousel-indicators {
-        bottom: 0;
-        li {
-          margin: 2px;
-        }
-        li.active {
-          margin: 1px;
-        }
+      .image {
+        position: absolute;
       }
     }
   }
 
   .UiCitationPageViewBlock {
-    display: flex;
-    align-items: center;
-    padding: 10px;
+    padding: @padding-base-vertical @padding-base-horizontal;
+    
+    .tool-buttons {
+      float: right;
+      line-height: 0;
+    }
 
-    .content-wrapper {
-      flex-grow: 1;
-      margin: 0 10px;
-      .citation {
-        margin-top: 1.5em;
-        margin-bottom: .5em;
-        text-align: center;
-        font-size: 150%;
-      }
+    .flex-container {
+      display: flex;
+      align-items: center;
 
-      .author {
-        font-size: 130%;
-        font-style: italic;
-        text-align: right;
+      .content-wrapper {
+        flex-grow: 1;
+        margin: 0 10px;
+        .citation {
+          margin-top: 1.5em;
+          margin-bottom: .5em;
+          text-align: center;
+          font-size: 150%;
+        }
+
+        .author {
+          font-size: 130%;
+          font-style: italic;
+          text-align: right;
+        }
       }
     }
   }
 
   .UiComponentPageViewBlock {
+    .tool-buttons {
+      display: flex;
+      justify-content: flex-end;
+      line-height: 0;
+
+      &:not(:empty) {
+        padding: @padding-base-vertical @padding-base-horizontal;
+      }
+    }
+
     .title {
       font-size: 125%;
       font-weight: 500;

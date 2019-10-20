@@ -102,7 +102,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 
 		ClientInfo clientInfo = new ClientInfo(
 				uiClientInfo.getIp(),
-				null /*clientGeoIpInfo*/,
 				uiClientInfo.getScreenWidth(),
 				uiClientInfo.getScreenHeight(),
 				uiClientInfo.getViewPortWidth(),
@@ -115,7 +114,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				uiClientInfo.getUserAgentString(),
 				uiClientInfo.getClientUrl(),
 				uiClientInfo.getClientParameters());
-//		clientInfo.setClientSystemInfo(parseUserAgent(clientInfo.getUserAgent()));
 
 		SessionContext context = new SessionContext(sessionId, clientInfo, commandDispatcher, uxServerContext,
 				webController.getDefaultIconTheme(clientInfo.isMobileDevice()), objectMapper);

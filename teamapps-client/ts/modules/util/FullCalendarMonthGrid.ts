@@ -22,7 +22,7 @@ import * as d3 from "d3";
 import {Selection} from "d3-selection";
 import {addDays, createFormatter, createPlugin, DateFormatter, EventApi, EventStore, View} from "@fullcalendar/core";
 import {toMoment} from "@fullcalendar/moment";
-import * as moment from "moment-timezone";
+import moment from "moment-timezone";
 import {Moment} from "moment-timezone";
 import {CalendarEventListPopper} from "../micro-components/CalendarEventListPopper";
 

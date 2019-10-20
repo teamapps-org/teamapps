@@ -253,7 +253,7 @@ export class UiWebRtcPlayer extends AbstractUiComponent<UiWebRtcPlayerConfig> im
 
 	public onResize(): void {
 		applyDisplayMode(this.$main, this.$videoContainer, UiPageDisplayMode.FIT_SIZE, {
-			innerPreferedDimensions: {
+			innerPreferredDimensions: {
 				width: this.remoteVideo.videoWidth,
 				height: this.remoteVideo.videoHeight
 			}

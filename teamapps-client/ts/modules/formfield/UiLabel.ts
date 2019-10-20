@@ -24,6 +24,7 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {parseHtml} from "../Common";
+import {UiComponent} from "../UiComponent";
 
 export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEventSource, UiLabelCommandHandler {
 	public readonly onClicked: TeamAppsEvent<UiLabel_ClickedEvent> = new TeamAppsEvent<UiLabel_ClickedEvent>(this);
@@ -31,7 +32,7 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 	private $main: HTMLElement;
 	private $icon: HTMLElement;
 	private $caption: HTMLElement;
-	private targetField: UiField;
+	private targetComponent: UiComponent;
 	private targetFieldVisibilityChangeHandler: (visible: boolean) => void;
 
 	protected initialize(config: UiLabelConfig, context: TeamAppsUiContext): void {
@@ -41,19 +42,21 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 		this.setIcon(config.icon);
 		this.$main.addEventListener('click',() => {
 			this.onClicked.fire({});
-			if (this.targetField != null) {
-				this.targetField.focus();
+			if (this.targetComponent != null) {
+				if (this.targetComponent instanceof UiField) {
+					this.targetComponent.focus();
+				}
 			}
 		});
 		this.targetFieldVisibilityChangeHandler = (visible: boolean) => this.setVisible(visible);
-		this.setTargetField(config.targetField as UiField);
+		this.setTargetComponent(config.targetComponent as UiComponent);
 	}
 
-	public setTargetField(targetField: UiField) {
-		if (this.targetField != null) {
-			this.targetField.onVisibilityChanged.removeListener(this.targetFieldVisibilityChangeHandler)
+	public setTargetComponent(targetField: UiComponent) {
+		if (this.targetComponent != null) {
+			this.targetComponent.onVisibilityChanged.removeListener(this.targetFieldVisibilityChangeHandler)
 		}
-		this.targetField = targetField;
+		this.targetComponent = targetField;
 		if (targetField != null) {
 			this.setVisible(targetField.isVisible());
 			targetField.onVisibilityChanged.addListener(this.targetFieldVisibilityChangeHandler);

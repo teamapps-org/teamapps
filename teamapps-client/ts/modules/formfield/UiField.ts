@@ -286,7 +286,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	}
 
 	public getReadOnlyHtml(value: V, availableWidth: number): string {
-		return "";
+		return "TODO: Override getReadOnlyHtml()";
 	}
 
 	getFieldMessages() {
