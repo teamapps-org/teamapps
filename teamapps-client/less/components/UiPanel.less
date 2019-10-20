@@ -82,15 +82,15 @@
         flex: 0 0 auto; // derived from subcomponents
         align-items: center;
         background-color: rgba(255, 255, 255, .5);
-        border-radius: var(--ta-border-radius-base);
+        border-radius: var(--ta-border-radius);
         > .icon {
           align-self: stretch;
           height: auto;
           padding: 0 15px;
           border: 1px solid transparent;
           border-right-width: 0;
-          border-top-left-radius: var(--ta-border-radius-base);
-          border-bottom-left-radius: var(--ta-border-radius-base);
+          border-top-left-radius: var(--ta-border-radius);
+          border-bottom-left-radius: var(--ta-border-radius);
           .optimized-for-touch & {
             padding: 0 20px;
           }
@@ -125,8 +125,8 @@
         > .icon-and-field-wrapper {
           > .icon {
             border-right-width: 1px;
-            border-top-right-radius: var(--ta-border-radius-base);
-            border-bottom-right-radius: var(--ta-border-radius-base);
+            border-top-right-radius: var(--ta-border-radius);
+            border-bottom-right-radius: var(--ta-border-radius);
           }
           > .field-wrapper {
             flex: 0 0 0px !important;
@@ -159,8 +159,8 @@
       border-left: 1px solid rgba(0, 0, 0, .1);
       border-bottom: 1px solid rgba(0, 0, 0, .07);
       background-color: rgba(0, 0, 0, .05);
-      border-top-right-radius: var(--ta-border-radius-base);
-      border-bottom-left-radius: calc(var(--ta-border-radius-base) + 2px);
+      border-top-right-radius: var(--ta-border-radius);
+      border-bottom-left-radius: calc(var(--ta-border-radius) + 2px);
 
       &:empty {
         display: none;
@@ -184,8 +184,8 @@
       .flex-filler();
       overflow-y: auto;
       overflow-x: hidden;
-      border-bottom-left-radius: var(--ta-border-radius-base);
-      border-bottom-right-radius: var(--ta-border-radius-base);
+      border-bottom-left-radius: var(--ta-border-radius);
+      border-bottom-right-radius: var(--ta-border-radius);
     }
   }
 

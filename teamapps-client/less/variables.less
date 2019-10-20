@@ -25,7 +25,7 @@
 @ta-color-primary:         #337ab7;
 @ta-color-success:         #5cb85c;
 @ta-color-info:            #5bc0de;
-@ta-color-warning:         #f0ad4e;
+@ta-color-warning:         orange;
 @ta-color-danger:          #d9534f;
 
 @ta-text-color: #333;
@@ -107,7 +107,6 @@
   --ta-selection-color: #99c9ff;
 
   --ta-link-color: @ta-color-primary;
-  --ta-link-color-faded: fade@ta-color-primary;
   --ta-link-hover-color: darken(@ta-color-primary, 15%);
   --ta-link-hover-decoration: underline;
 
@@ -118,8 +117,7 @@
   --ta-font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
   --ta-font-family-base:        var(--ta-font-family-sans-serif);
 
-  --ta-font-size-base:          13px;
-  --ta-font-size-large:         1.25em;
+  --ta-font-size:               13px;
   --ta-font-size-small:         0.85em;
 
   --ta-font-weight-normal:      400;
@@ -139,99 +137,53 @@
   --ta-headings-color:          inherit;
 
   --ta-line-height: 1.428571429;
-  --ta-line-height-computed: calc(var(--ta-line-height) * var(--ta-font-size-base));
+  --ta-line-height-computed: calc(var(--ta-line-height) * var(--ta-font-size));
   --ta-half-line-height-computed: calc(var(--ta-line-height-computed) / 2);
 
   --ta-padding-base-vertical:     4px;
   --ta-padding-base-horizontal:   5px;
 
-  --ta-padding-large-vertical:    6px;
-  --ta-padding-large-horizontal:  8px;
-
-  --ta-padding-small-vertical:    5px;
-
-  --ta-line-height-large:         1.5;
-  --ta-line-height-small:         1.3333333;
-
-  --ta-border-radius-base:        3px;
-  --ta-border-radius-large:       6px;
+  --ta-border-radius:        3px;
   --ta-border-radius-small:       3px;
 
-  //** Global color for active items (e.g., navs or dropdowns).
-  --ta-component-active-color:    #fff;
-  //** Global background color for active items (e.g., navs or dropdowns).
-  --ta-component-active-bg:       @ta-color-primary;
-
-  //** Width of the `border` for generating carets that indicator dropdowns.
-  --ta-caret-width-base:          4px;
-  //** Carets increase slightly in size for larger components.
-  --ta-caret-width-large:         5px;
-
-
-
-
+  --ta-caret-size:          4px;
 
   //== Buttons
-  //
-  //## For each of Bootstrap's buttons, define text, background and border color.
-
   --ta-btn-font-weight:                var(--ta-font-weight-normal);
   --ta-btn-default-border:             var(--ta-border-color);
   --ta-btn-default-bg:                 var(--ta-bg-color);
-  --ta-btn-border-radius-base:         var(--ta-border-radius-base);
+  --ta-btn-border-radius-base:         var(--ta-border-radius);
 
 
   //== Forms
-  //
-  //##
-
   --ta-input-bg:                       var(--ta-bg-color);
   --ta-input-bg-disabled:              var(--ta-bg-color-disabled);
-  --ta-input-color:                    var(--ta-text-color);
   --ta-input-border-color:             var(--ta-border-color);
-
-  --ta-input-border-radius:            var(--ta-border-radius-base);
-
+  --ta-input-border-radius:            var(--ta-border-radius);
   --ta-input-border-focus:             #66afe9;
-
+  --ta-input-height:                   calc(var(--ta-line-height-computed) + var(--ta-padding-base-vertical) * 2 + 2px);
+  --ta-input-default-width:            180px;
+  --ta-input-color:                    var(--ta-text-color);
   --ta-input-color-placeholder:        #999;
 
-  //** Default `.form-control` height
-  --ta-input-height-base:              calc(var(--ta-line-height-computed) + var(--ta-padding-base-vertical) * 2 + 2px);
-  //** Large `.form-control` height
-  --ta-input-height-large:             calc(var(--ta-font-size-large) * var(--ta-line-height-large) + var(--ta-padding-large-vertical) * 2 + 2px);
-  //** Small `.form-control` height
-  --ta-input-height-small:             calc(var(--ta-font-size-small) * var(--ta-line-height-small) + var(--ta-padding-small-vertical) * 2 + 2px);
 
-  //** `.form-group` margin
-  --ta-form-group-margin-bottom:       15px;
-
-  //** Background color for textual input addons
-  --ta-input-group-addon-bg:           #ccc;
-  //** Border color for textual input addons
-  --ta-input-group-addon-border-color: var(--ta-input-border-color);
-
+  //== Misc.
   --ta-cursor-disabled:                not-allowed;
+
+  --ta-panel-gap:     6px;
+  --ta-tab-button-height: 23px;
+  --ta-resize-bar-size: var(--ta-panel-gap);
+  --ta-resize-square-handle-size: 10px;
+
+  --ta-box-shadown-color: rgba(0, 0, 0, .3);
+  --ta-box-shadow-base: 0 1px 4px var(--ta-box-shadown-color);
+  --ta-box-shadow-large: 0 3px 8px -1px var(--ta-box-shadown-color);
+
+  --ta-color-transition-time: .3s;
 
   --ta-zindex-dropdown:          1000;
   --ta-zindex-modal:             1050;
   --ta-zindex-max:               1000000;
-
-  --ta-panel-gap:     6px;
-
-  --ta-color-transition-time: .3s;
-
-  --ta-resize-square-handle-size: 10px;
-  --ta-resize-bar-size: var(--ta-panel-gap);
-
-  --ta-tab-button-height: 23px;
-
-  --ta-default-input-width: 180px;
-
-  --ta-box-shadown-color: rgba(0, 0, 0, .3);
-  --ta-box-shadow-small: 0 1px 2px var(--ta-box-shadown-color);
-  --ta-box-shadow-base: 0 1px 4px var(--ta-box-shadown-color);
-  --ta-box-shadow-large: 0 3px 8px -1px var(--ta-box-shadown-color);
 }
 
 
