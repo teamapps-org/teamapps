@@ -792,6 +792,13 @@ alphanum-sort@^1.0.0:
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
+analyser-frequency-average@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/analyser-frequency-average/-/analyser-frequency-average-1.0.0.tgz#2e5363d02f2167bdb61d1ed0424403715b719a86"
+  integrity sha1-LlNj0C8hZ722HR7QQkQDcVtxmoY=
+  dependencies:
+    audio-frequency-to-index "^2.0.0"
+
 animate.css@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-3.7.2.tgz#e73e0d50e92cb1cfef1597d9b38a9481020e08ea"
@@ -974,6 +981,13 @@ atob@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
+
+audio-frequency-to-index@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/audio-frequency-to-index/-/audio-frequency-to-index-2.0.0.tgz#4c4bca9f3bfec38c773aa6b5604c117adc982d45"
+  integrity sha1-TEvKnzv+w4x3Oqa1YEwRetyYLUU=
+  dependencies:
+    clamp "^1.0.1"
 
 autoprefixer@^9.6.1:
   version "9.6.1"
@@ -1433,6 +1447,11 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
+
+clamp@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/clamp/-/clamp-1.0.1.tgz#66a0e64011816e37196828fdc8c8c147312c8634"
+  integrity sha1-ZqDmQBGBbjcZaCj9yMjBRzEshjQ=
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -7198,6 +7217,13 @@ vm-browserify@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
   integrity sha512-iq+S7vZJE60yejDYM0ek6zg308+UZsdtPExWP9VZoCFCz1zkJoXFnAX7aZfd/ZwrkidzdUZL0C/ryW+JwAiIGw==
+
+voice-activity-detection@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/voice-activity-detection/-/voice-activity-detection-0.0.5.tgz#af827a724313af443f9d072cefef36ac20bbe506"
+  integrity sha512-Ezq+k0cICI67XR/R9KvTRhJ7/u6U0Zk9I+8VNs3hHTAvB6cA3glCa+cHgCRWSW/SV6cRrufSQsV1YxpNtsQb1g==
+  dependencies:
+    analyser-frequency-average "^1.0.0"
 
 warning@^4.0.1:
   version "4.0.3"

@@ -19,8 +19,8 @@
  */
 import {AbstractServerMessageConfig} from "../../generated/AbstractServerMessageConfig";
 import {AbstractClientMessageConfig} from "../../generated/AbstractClientMessageConfig";
-import * as log from "loglevel";
-import * as stringify from "json-stable-stringify";
+import log from "loglevel";
+import stringify from "json-stable-stringify";
 import {Inflate, Deflate} from "pako";
 
 export interface ReconnectingCompressingWebSocketConnectionListener {

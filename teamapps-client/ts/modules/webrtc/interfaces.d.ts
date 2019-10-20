@@ -11,8 +11,6 @@ export interface JSONData {
 }
 export interface Capturing {
     stream: MediaStream;
-    audio: undefined | boolean | MediaTrackConstraints;
-    video: undefined | boolean | MediaTrackConstraints;
 }
 export interface Ps {
     ws: any;
@@ -26,7 +24,7 @@ export interface Params {
     maxBitrate?: number | null;
     qualityChangerSelector?: string;
     localVideo: string | HTMLMediaElement;
-    constraints: MediaStreamConstraints;
+    getUserMedia: () => Promise<MediaStream>;
     errorAutoPlayCallback: Function;
     onProfileChange: Function;
     serverUrl?: string;

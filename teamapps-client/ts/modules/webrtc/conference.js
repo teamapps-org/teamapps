@@ -26732,10 +26732,10 @@ var Conference = /** @class */ (function () {
         this.server_url = (data.params && data.params.serverUrl) || (window.location.protocol + '//' + window.location.hostname + (window.location.port ? (':' + window.location.port) : ''));
         this.uid = data.uid;
         this.token = data.token;
-        this.params = __assign({ minBitrate: null, maxBitrate: null, localVideo: '#video', qualityChangerSelector: '', constraints: {
+        this.params = __assign({ minBitrate: null, maxBitrate: null, localVideo: '#video', qualityChangerSelector: '', getUserMedia: function () { return window.navigator.mediaDevices.getUserMedia({
                 audio: true,
                 video: true
-            }, errorAutoPlayCallback: function (video, error) {
+            }); }, errorAutoPlayCallback: function (video, error) {
                 console.error('Playback error');
                 console.error(video, error);
             }, onProfileChange: function () {
@@ -26769,13 +26769,11 @@ var Conference = /** @class */ (function () {
     Conference.prototype.captureDevice = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            window.navigator.mediaDevices.getUserMedia(_this.params.constraints)
+            _this.params.getUserMedia()
                 .then(function (stream) {
                 _this.__setVideoSource(_this.videoContainer);
                 var capturing = {
-                    stream: stream,
-                    audio: _this.params.constraints.audio,
-                    video: _this.params.constraints.video,
+                    stream: stream
                 };
                 _this.__hookup(capturing);
                 resolve('Device captured');
@@ -26902,7 +26900,6 @@ var Conference = /** @class */ (function () {
         }, function () {
             if (videoContainer) {
                 console.log('Adding active stream');
-                videoContainer.style.background = 'black';
                 videoContainer.srcObject = streamFlow || _this._sendStream;
                 videoContainer.play().then(function (r) { return console.log('Playing'); });
             }
@@ -26946,7 +26943,7 @@ var Conference = /** @class */ (function () {
     ;
     Conference.prototype.__hookup = function (capturing) {
         var vTrack = capturing.stream.getVideoTracks();
-        if (capturing.video && vTrack.length > 0) {
+        if (vTrack.length > 0) {
             for (var _i = 0, _a = this._sendStream.getVideoTracks(); _i < _a.length; _i++) {
                 var track = _a[_i];
                 track.stop();
@@ -26954,7 +26951,7 @@ var Conference = /** @class */ (function () {
             this._sendStream.addTrack(vTrack[0]);
         }
         var aTrack = capturing.stream.getAudioTracks();
-        if (capturing.audio && aTrack.length > 0) {
+        if (aTrack.length > 0) {
             for (var _b = 0, _c = this._sendStream.getAudioTracks(); _b < _c.length; _b++) {
                 var track = _c[_b];
                 track.stop();

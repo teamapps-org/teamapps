@@ -17,17 +17,11 @@
 import "@less/components/UiReactTestComponent.less";
 
 import * as React from "react";
+import {ReactElement} from "react";
 import * as ReactDOM from "react-dom";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import Switch, {SwitchProps} from "@material-ui/core/Switch";
 import {UiField} from "./formfield/UiField";
-import {UiSwitchCommandHandler, UiSwitchConfig, UiSwitchEventSource} from "../generated/UiSwitchConfig";
 import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
-import withStyles from "@material-ui/core/styles/withStyles";
-import {createUiColorCssString} from "./util/CssFormatUtil";
-import createStyles from "@material-ui/core/styles/createStyles";
-import {ReactElement} from "react";
 import {UiFieldConfig} from "../generated/UiFieldConfig";
 
 export abstract class AbstractUiReactField<C extends UiFieldConfig = UiFieldConfig, V = any> extends UiField<C, V> {

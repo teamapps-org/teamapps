@@ -17,16 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as Mustache from "mustache";
-import * as moment from "moment-timezone";
+import Mustache from "mustache";
+import moment from "moment-timezone";
 import {UiInstantDateField} from "./UiInstantDateField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {AbstractUiTimeField} from "./AbstractUiTimeField";
 import {AbstractUiDateTimeField} from "./AbstractUiDateTimeField";
-import {UiInstantDateTimeFieldConfig, UiInstantDateTimeFieldCommandHandler, UiInstantDateTimeFieldEventSource} from "../../../generated/UiInstantDateTimeFieldConfig";
-import Moment = moment.Moment;
-import {convertJavaDateTimeFormatToMomentDateTimeFormat} from "../../Common";
+import {UiInstantDateTimeFieldCommandHandler, UiInstantDateTimeFieldConfig, UiInstantDateTimeFieldEventSource} from "../../../generated/UiInstantDateTimeFieldConfig";
 
 export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDateTimeFieldConfig, number> implements UiInstantDateTimeFieldEventSource, UiInstantDateTimeFieldCommandHandler {
 
