@@ -50,36 +50,6 @@
             height: 100%;
           }
         }
-
-        // TODO add these kind of options to UiItemView instead of hard-coding it to UiElegantPanel
-        .custom-entry-template-wrapper {
-          transform: scale(1);
-          transition: transform .4s !important;
-          background: none !important;
-          border: none !important;
-          box-shadow: none !important;
-
-          .image-template {
-            transition: box-shadow .4s !important;
-          }
-          .text-element {
-            transition: color .4s, text-shadow .4s !important;
-          }
-
-          &:hover {
-            transform: scale(1.2);
-
-            .image-template {
-              box-shadow: inset 0 0 0 2px #EEE !important;
-            }
-
-            .text-element {
-              color: #EEE;
-              text-shadow: 1px 1px 5px rgba(0, 0, 0, .3), -1px -1px 0 rgba(0, 0, 0, .3), 1px -1px 0 rgba(0, 0, 0, .3), -1px 1px 0 rgba(0, 0, 0, .3), 1px 1px 0 rgba(0, 0, 0, .3);
-            }
-          }
-        }
-
       }
     }
   }

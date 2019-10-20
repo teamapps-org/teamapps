@@ -42,7 +42,7 @@
 
   .block-wrapper {
     border: none;
-    border-radius: var(--ta-border-radius-base);
+    border-radius: var(--ta-border-radius);
     box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     margin-bottom: var(--ta-panel-gap);
 
@@ -69,7 +69,7 @@
   }
 
   .UiMessagePageViewBlock {
-    padding: @padding-base-vertical @padding-base-horizontal;
+    padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
 
     .tool-buttons {
       float: right;
@@ -77,7 +77,7 @@
     }
 
     .top-record {
-      margin: @padding-base-vertical @padding-base-horizontal;
+      margin: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
       &.align-left {
         float: left;
         clear: left;
@@ -105,7 +105,7 @@
   }
 
   .UiCitationPageViewBlock {
-    padding: @padding-base-vertical @padding-base-horizontal;
+    padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
     
     .tool-buttons {
       float: right;
@@ -142,7 +142,7 @@
       line-height: 0;
 
       &:not(:empty) {
-        padding: @padding-base-vertical @padding-base-horizontal;
+        padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
       }
     }
 

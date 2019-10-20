@@ -22,7 +22,7 @@
   flex-direction: column;
   justify-content: center;
   
-  min-width: var(--ta-default-input-width);
+  min-width: var(--ta-input-default-width);
   padding: 0;
   overflow: hidden;
   height: initial;
@@ -33,9 +33,7 @@
 
     input {
       text-align: right;
-    }
-    .optimized-for-touch & input {
-      height: calc(var(--ta-input-height-large) - 2px);
+      height: calc(var(--ta-input-height) - 2px);
     }
   }
 

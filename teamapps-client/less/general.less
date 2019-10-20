@@ -23,7 +23,7 @@ html {
   height: 100%;
   overflow: hidden;
   //background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIElEQVQYV2NkYGDgYcAEX9CFGIeIQix+wfQgyDODXSEAFqcFR3lM5YsAAAAASUVORK5CYII=) repeat;
-  font-size: var(--ta-font-size-base); // needed for rem font size!
+  font-size: var(--ta-font-size); // needed for rem font size!
 }
 
 body, .full-height {
@@ -241,16 +241,6 @@ input {
   transition: none !important;
 }
 
-.optimized-for-touch {
-  .tr-input-wrapper,
-  .form-control,
-  .UiDisplayField,
-  .UiMultiLineTextField,
-  .UiRichTextEditor {
-    min-height: var(--ta-input-height-large);
-  }
-}
-
 .teamapps-expander {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAMklEQVQYV2NkIAIwIqn5D2Uji4GF0AWwKsTQxcDAgKEQmyKQDSgKyTKJoJuI9h3WUAMAntIHCtDLLc8AAAAASUVORK5CYII=);
   background-position: center;
@@ -287,7 +277,7 @@ input {
   height: 0;
   margin-left: 2px;
   vertical-align: middle;
-  border-top: var(--ta-caret-width-base) dashed;
-  border-right: var(--ta-caret-width-base) solid transparent;
-  border-left: var(--ta-caret-width-base) solid transparent;
+  border-top: var(--ta-caret-size) dashed;
+  border-right: var(--ta-caret-size) solid transparent;
+  border-left: var(--ta-caret-size) solid transparent;
 }

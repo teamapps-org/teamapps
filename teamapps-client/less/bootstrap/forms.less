@@ -2,9 +2,9 @@
 .form-control {
   display: block;
   width: 100%;
-  height: var(--ta-input-height-base); // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+  height: var(--ta-input-height); // Make inputs at least the height of their button counterpart (base line-height + padding + border)
   padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
-  font-size: var(--ta-font-size-base);
+  font-size: var(--ta-font-size);
   line-height: var(--ta-line-height);
   color: var(--ta-input-color);
   background-color: var(--ta-input-bg);
@@ -12,7 +12,7 @@
   border: 1px solid var(--ta-input-border-color);
   border-radius: var(--ta-input-border-radius); // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out var(--ta-color-transition-time), box-shadow ease-in-out var(--ta-color-transition-time);
 
   // Unstyle the caret on `<select>`s in IE10+.
   &::-ms-expand {
