@@ -37,7 +37,7 @@ import {
 	UiMapEventSource
 } from "../generated/UiMapConfig";
 import {UiMapType} from "../generated/UiMapType";
-import * as L from "leaflet";
+import L from "leaflet";
 import {Circle, LatLngBounds, LatLngExpression, Layer, Marker, PathOptions, Polygon, Polyline, Rectangle} from "leaflet";
 import "leaflet.markercluster";
 import "leaflet.heat";
