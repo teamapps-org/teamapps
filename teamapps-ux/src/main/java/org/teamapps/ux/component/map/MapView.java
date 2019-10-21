@@ -192,8 +192,8 @@ public class MapView<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiMap.AddShapeCommand(getId(), shape.getClientId(), shape.createUiMapShape()));
 	}
 
-	public void removeShape(MapPolyline mapPolyline) {
-		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), mapPolyline.getClientId()));
+	public void removeShape(AbstractMapShape shape) {
+		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientId()));
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
