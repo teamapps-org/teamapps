@@ -400,7 +400,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 		this._grid.onScroll.subscribe((eventData) => {
 			this.updateSelectionFramePosition();
-			this.fireDisplayedRangeChanged(config);
+			this.fireDisplayedRangeChanged();
 		});
 		this._grid.onViewportChanged.subscribe((eventData) => {
 			this.toggleColumnsThatAreHiddenWhenTheyContainNoVisibleNonEmptyCells();
@@ -456,7 +456,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	@throttledMethod(500) // debounce/throttle scrolling without data requests only!!! (otherwise the tableDataProvider will mark rows as requested but the actual request will not get to the server)
-	private fireDisplayedRangeChanged(config: UiTableConfig) {
+	private fireDisplayedRangeChanged() {
 		const viewport = this._grid.getViewport();
 		this.onDisplayedRangeChanged.fire({
 			startIndex: viewport.top,
@@ -1032,8 +1032,10 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	@executeWhenFirstDisplayed()
 	setColumnVisibility(propertyName: string, visible: boolean): void {
 		const column = this.getColumnById(propertyName);
-		column.visible = visible;
-		this.setSlickGridColumns(this.getVisibleColumns());
+		if (column.visible !== visible) {
+			column.visible = visible;
+			this.setSlickGridColumns(this.getVisibleColumns());
+		}
 	}
 
 	cancelEditingCell(recordId: number, propertyName: string): void {
