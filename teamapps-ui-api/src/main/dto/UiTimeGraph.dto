@@ -37,6 +37,8 @@ class UiTimeGraph extends UiComponent {
 	command setLines(List<AbstractUiLineChartDataDisplay> lines);
 	command setLine(String lineId, AbstractUiLineChartDataDisplay line);
 
+	command zoomTo(UiLongInterval intervalX);
+
 	event dataNeeded(int zoomLevelIndex, UiLongInterval neededIntervalX);
 	event zoomed(UiLongInterval intervalX, int zoomLevelIndex);
 	event intervalSelected(UiLongInterval intervalX);

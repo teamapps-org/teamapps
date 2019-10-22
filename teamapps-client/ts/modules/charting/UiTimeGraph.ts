@@ -223,6 +223,23 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.resetAllData(this.zoomLevels);
 	}
 
+	zoomTo(intervalX: UiLongIntervalConfig): void {
+		if (intervalX.min < this.intervalX.min) {
+			intervalX.min = this.intervalX.min;
+		}
+		if (intervalX.min > this.intervalX.max) {
+			intervalX.min = this.intervalX.max - 1;
+		}
+		if (intervalX.max < this.intervalX.min) {
+			intervalX.max = this.intervalX.min + 1;
+		}
+		if (intervalX.max > this.intervalX.max) {
+			intervalX.max = this.intervalX.max;
+		}
+		let k = (this.intervalX.max - this.intervalX.min) / (intervalX.max - intervalX.min);
+		this.zoom.transform(this.$graphClipContainer, d3.zoomIdentity.scale(k).translate(-this.scaleX(intervalX.min), 0));
+	}
+
 	private createSeries(lineFormat: UiLineChartLineConfig) {
 		let display = UiTimeGraph.createDataDisplay(this._config.id, lineFormat, this.$graphClipContainer, this.dropShadowFilterId, this.dataStore);
 		display.setScaleYRange([this.drawableHeight, 0]);
@@ -240,11 +257,6 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			display = new UiLineChartDataDisplayGroup(timeGraphId, lineFormat, $graphClipContainer, dropShadowFilterId, dataStore);
 		}
 		return display;
-	}
-
-	getZoomBoundsX() {
-		let transformedScaleX = this.getTransformedScaleX();
-		return [+transformedScaleX.domain()[0], +transformedScaleX.domain()[1]];
 	}
 
 	getTransformedScaleX(): ScaleTime<number, number> {
