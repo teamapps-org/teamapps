@@ -230,7 +230,7 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 	}
 
 	private static createVideoConstraints(videoConstraints: UiVideoTrackConstraintsConfig): MediaTrackConstraints {
-		return {
+		return videoConstraints && {
 			...videoConstraints,
 			facingMode: null // TODO UiVideoFacingMode[videoConstraints.facingMode].toLocaleLowerCase() ==> make nullable!!!!
 		};
