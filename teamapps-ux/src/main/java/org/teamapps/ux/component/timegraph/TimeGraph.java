@@ -195,6 +195,10 @@ public class TimeGraph extends AbstractComponent {
 		}
 	}
 
+	public void zoomTo(long minX, long maxX) {
+		queueCommandIfRendered(() -> new UiTimeGraph.ZoomToCommand(getId(), new UiLongInterval(minX, maxX)));
+	}
+
 	public int getMaxPixelsBetweenDataPoints() {
 		return maxPixelsBetweenDataPoints;
 	}
