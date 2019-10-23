@@ -48,7 +48,7 @@ export class MultiStreamsMixer {
 	private audioContext: AudioContext & { createMediaStreamDestination(): MediaStreamAudioDestinationNode };
 	private audioDestination: MediaStreamAudioDestinationNode;
 
-	constructor(inputMediaStreams: MediaStreamWithMixiSizingInfo[], frameRate: number) {
+	constructor(inputMediaStreams: MediaStreamWithMixiSizingInfo[], frameRate: number = 10) {
 		this.frameInterval = 1000 / frameRate;
 		this.inputMediaStreams = inputMediaStreams;
 		this.canvas = document.createElement('canvas');

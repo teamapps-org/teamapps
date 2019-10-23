@@ -15,6 +15,7 @@ public class MediaSoupWebRtcClient extends AbstractComponent {
 
 	public final Event<MulticastPlaybackProfile> onPlaybackProfileChanged = new Event<>();
 	public final Event<Boolean> onActivityChanged = new Event<>();
+	public final Event<Void> onClicked = new Event<>();
 
 	private String serverUrl;
 
@@ -64,6 +65,11 @@ public class MediaSoupWebRtcClient extends AbstractComponent {
 			case UI_MEDIA_SOUP_WEB_RTC_CLIENT_ACTIVITY_CHANGED: {
 				UiMediaSoupWebRtcClient.ActivityChangedEvent e = (UiMediaSoupWebRtcClient.ActivityChangedEvent) event;
 				this.onActivityChanged.fire(e.getActive());
+				break;
+			}
+			case UI_MEDIA_SOUP_WEB_RTC_CLIENT_CLICKED: {
+				UiMediaSoupWebRtcClient.ClickedEvent e = (UiMediaSoupWebRtcClient.ClickedEvent) event;
+				this.onClicked.fire();
 				break;
 			}
 		}
