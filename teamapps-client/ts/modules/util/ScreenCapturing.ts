@@ -31,11 +31,13 @@ window.addEventListener('message', function (event) {
 
 	// extension notified his presence
 	if (event.data === 'screen-sharing-extension-loaded') {
+		console.log("screen-sharing-extension-loaded", event.data);
 		chromeMediaSource = 'desktop';
 	}
 
 	// extension shared temp sourceId
 	if (event.data.sourceId && screenCallback) {
+		console.log("sourceId!!", event.data);
 		sourceId = event.data.sourceId;
 		screenCallback(event.data.sourceId, event.data.canRequestAudioTrack === true);
 	}
@@ -97,7 +99,7 @@ export const isFirefox = typeof (window as any).InstallTrigger !== 'undefined';
 export const isOpera = !!(window as any).opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 export const isChrome = !!(window as any).chrome && !isOpera;
 
-export function getChromeExtensionStatus(callback: Function, extensionid = 'ajhifddimkapgcifgcodmmfdlknahffk') {
+export function getChromeExtensionStatus(callback: Function, extensionid:string /* 'ajhifddimkapgcifgcodmmfdlknahffk' */) {
 	if (!isChrome) return callback('not-chrome');
 
 	const image = document.createElement('img');
@@ -116,12 +118,8 @@ export function getChromeExtensionStatus(callback: Function, extensionid = 'ajhi
 	};
 }
 
-export async function getScreenConstraintsWithAudio() {
-	return getScreenConstraints(true);
-}
-
 // this function explains how to use above methods/objects
-export async function getScreenConstraints(captureSourceIdWithAudio: boolean = false): Promise<object> {
+export async function getScreenConstraints(options: {captureSourceIdWithAudio?: boolean, maxWidth?: number, maxHeight?: number} = {}): Promise<object> {
 	if (isFirefox) {
 		return {
 			mozMediaSource: 'window',
@@ -129,22 +127,17 @@ export async function getScreenConstraints(captureSourceIdWithAudio: boolean = f
 		};
 	}
 
-	// this statement defines getUserMedia constraints
-	// that will be used to capture content of screen
 	const screenConstraints: any = {
 		mandatory: {
 			chromeMediaSource: chromeMediaSource,
-			maxWidth: screen.width > 1920 ? screen.width : 1920,
-			maxHeight: screen.height > 1080 ? screen.height : 1080
+			maxWidth: options.maxWidth,
+			maxHeight: options.maxHeight
 		},
 		optional: []
 	};
 
-	// this statement verifies chrome extension availability
-	// if installed and available then it will invoke extension API
-	// otherwise it will fallback to command-line based screen capturing API
 	if (chromeMediaSource === 'desktop') {
-		if (captureSourceIdWithAudio) {
+		if (options.captureSourceIdWithAudio) {
 			const sourceIdWithAudio = await getSourceIdWithAudio();
 			screenConstraints.mandatory.chromeMediaSourceId = sourceIdWithAudio.sourceId;
 			if (sourceIdWithAudio.canRequestAudioTrack) {

@@ -99,110 +99,110 @@ export class UiWebRtcPublisher extends AbstractUiComponent<UiWebRtcPublisherConf
 	}
 
 	public publish(settings: UiWebRtcPublishingSettingsConfig) {
-		this.unPublish();
-
-		this.publishingSettings = settings;
-
-		this.getMediaStreamMixer(settings.mediaSettings)
-			.then((multiStreamsMixer: MultiStreamsMixer) => {
-				this.multiStreamsMixer = multiStreamsMixer;
-				this.setMicrophoneMuted(this.microphoneMuted);
-				if (this.multiStreamsMixer.getMixedStream().getTracks().some(f => f.kind === "audio")) {
-					this.audioActivityDisplay.bindToStream(this.multiStreamsMixer.getMixedStream());
-				}
-				this.video.muted = true;
-				try {
-					this.video.srcObject = multiStreamsMixer.getMixedStream();
-				} catch (error) {
-					this.video.src = window.URL.createObjectURL(multiStreamsMixer);
-				}
-
-				this.reconnectForPublishing();
-			})
-			.catch((reason: any) => {
-				if (reason !== UiWebRtcPublishingErrorReason.CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED) {
-					reason = UiWebRtcPublishingErrorReason.OTHER;
-				}
-				this.onPublishingFailed.fire({
-					reason: reason
-				});
-				console.error("Could not create screen sharing MediaStream. Reason:", UiWebRtcPublishingErrorReason[reason]);
-			});
+		// this.unPublish();
+		//
+		// this.publishingSettings = settings;
+		//
+		// this.getMediaStreamMixer(settings.mediaSettings)
+		// 	.then((multiStreamsMixer: MultiStreamsMixer) => {
+		// 		this.multiStreamsMixer = multiStreamsMixer;
+		// 		this.setMicrophoneMuted(this.microphoneMuted);
+		// 		if (this.multiStreamsMixer.getMixedStream().getTracks().some(f => f.kind === "audio")) {
+		// 			this.audioActivityDisplay.bindToStream(this.multiStreamsMixer.getMixedStream());
+		// 		}
+		// 		this.video.muted = true;
+		// 		try {
+		// 			this.video.srcObject = multiStreamsMixer.getMixedStream();
+		// 		} catch (error) {
+		// 			this.video.src = window.URL.createObjectURL(multiStreamsMixer);
+		// 		}
+		//
+		// 		this.reconnectForPublishing();
+		// 	})
+		// 	.catch((reason: any) => {
+		// 		if (reason !== UiWebRtcPublishingErrorReason.CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED) {
+		// 			reason = UiWebRtcPublishingErrorReason.OTHER;
+		// 		}
+		// 		this.onPublishingFailed.fire({
+		// 			reason: reason
+		// 		});
+		// 		console.error("Could not create screen sharing MediaStream. Reason:", UiWebRtcPublishingErrorReason[reason]);
+		// 	});
 	}
 
 	setMicrophoneMuted(microphoneMuted: boolean): void {
-		this.microphoneMuted = microphoneMuted;
-		if (this.multiStreamsMixer) {
-			this.multiStreamsMixer.getInputMediaStreams().forEach(inputStream => inputStream.getAudioTracks().forEach(track => track.enabled = !this.microphoneMuted));
-		}
-		this.audioActivityDisplay.getMainDomElement().classList.toggle("hidden", microphoneMuted);
+		// this.microphoneMuted = microphoneMuted;
+		// if (this.multiStreamsMixer) {
+		// 	this.multiStreamsMixer.getInputMediaStreams().forEach(inputStream => inputStream.getAudioTracks().forEach(track => track.enabled = !this.microphoneMuted));
+		// }
+		// this.audioActivityDisplay.getMainDomElement().classList.toggle("hidden", microphoneMuted);
 	}
 
 	private async getMediaStreamMixer(publishingSettings: UiWebRtcPublishingMediaSettingsConfig) {
-
-		let screenStream: MediaStream = null;
-		let camMicStream: MediaStream = null;
-
-		if (publishingSettings.screen) {
-			const chromeExtensionInstalled = await checkChromeExtensionAvailable();
-			this.logger.info("Chrome extension available: " + chromeExtensionInstalled);
-			const canProbablyPublishScreen = !isChrome || chromeExtensionInstalled;
-			if (canProbablyPublishScreen) {
-				const screenConstraints = await getScreenConstraints();
-				try {
-					screenStream = await navigator.mediaDevices.getUserMedia({video: screenConstraints});
-				} catch (e) {
-					throw UiWebRtcPublishingErrorReason.CANNOT_GET_SCREEN_MEDIA_STREAM;
-				}
-			} else {
-				throw UiWebRtcPublishingErrorReason.CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED;
-			}
-		}
-
-		if (publishingSettings.video || publishingSettings.audio) {
-			let constraints = {
-				video: publishingSettings.video ? {
-					width: publishingSettings.videoWidth,
-					height: publishingSettings.videoHeight
-				} : false,
-				audio: publishingSettings.audio
-			};
-			camMicStream = await navigator.mediaDevices.getUserMedia(constraints);
-			// setTimeout(() => {
-			// 	normalStream.getTracks().forEach(t => t.stop())
-			// }, 5000)
-		}
-
-		if (screenStream != null && camMicStream != null) {
-			const screenStreamDimensions = await UiWebRtcPublisher.determineVideoSize(screenStream);
-			const screenStreamWithSizingInfo = screenStream as MediaStreamWithMixiSizingInfo;
-			screenStreamWithSizingInfo.fullcanvas = true;
-			screenStreamWithSizingInfo.width = screenStreamDimensions.width;
-			screenStreamWithSizingInfo.height = screenStreamDimensions.height;
-
-			if (camMicStream.getTracks().some(t => t.kind === "video")) {
-				const screenStreamShortDimension = Math.min(screenStreamDimensions.width, screenStreamDimensions.height);
-				const cameraAspectRatio = camMicStream.getTracks().filter(t => t.kind === "video")[0].getSettings().aspectRatio;
-				const pictureInPictureHeight = Math.round((25 / 100) * screenStreamShortDimension);
-				const pictureInPictureWidth = Math.round(pictureInPictureHeight * cameraAspectRatio);
-
-				const camMicStreamWithSizingInfo = camMicStream as MediaStreamWithMixiSizingInfo;
-				camMicStreamWithSizingInfo.width = pictureInPictureWidth;
-				camMicStreamWithSizingInfo.height = pictureInPictureHeight;
-				camMicStreamWithSizingInfo.left = screenStreamDimensions.width - pictureInPictureWidth;
-				camMicStreamWithSizingInfo.top = 0; // screenStreamDimensions.height - pictureInPictureHeight;
-			}
-
-			let multiStreamsMixer = new MultiStreamsMixer([screenStreamWithSizingInfo, camMicStream]);
-			multiStreamsMixer.frameInterval = 1000 / screenStream.getTracks()[0].getSettings().frameRate;
-			return multiStreamsMixer;
-		} else if (camMicStream != null) {
-			return new MultiStreamsMixer([camMicStream]);
-		} else if (screenStream != null) {
-			let multiStreamsMixer = new MultiStreamsMixer([screenStream]);
-			multiStreamsMixer.frameInterval = 1000 / screenStream.getTracks()[0].getSettings().frameRate;
-			return multiStreamsMixer;
-		}
+		//
+		// let screenStream: MediaStream = null;
+		// let camMicStream: MediaStream = null;
+		//
+		// if (publishingSettings.screen) {
+		// 	const chromeExtensionInstalled = await checkChromeExtensionAvailable();
+		// 	this.logger.info("Chrome extension available: " + chromeExtensionInstalled);
+		// 	const canProbablyPublishScreen = !isChrome || chromeExtensionInstalled;
+		// 	if (canProbablyPublishScreen) {
+		// 		const screenConstraints = await getScreenConstraints();
+		// 		try {
+		// 			screenStream = await navigator.mediaDevices.getUserMedia({video: screenConstraints});
+		// 		} catch (e) {
+		// 			throw UiWebRtcPublishingErrorReason.CANNOT_GET_SCREEN_MEDIA_STREAM;
+		// 		}
+		// 	} else {
+		// 		throw UiWebRtcPublishingErrorReason.CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED;
+		// 	}
+		// }
+		//
+		// if (publishingSettings.video || publishingSettings.audio) {
+		// 	let constraints = {
+		// 		video: publishingSettings.video ? {
+		// 			width: publishingSettings.videoWidth,
+		// 			height: publishingSettings.videoHeight
+		// 		} : false,
+		// 		audio: publishingSettings.audio
+		// 	};
+		// 	camMicStream = await navigator.mediaDevices.getUserMedia(constraints);
+		// 	// setTimeout(() => {
+		// 	// 	normalStream.getTracks().forEach(t => t.stop())
+		// 	// }, 5000)
+		// }
+		//
+		// if (screenStream != null && camMicStream != null) {
+		// 	const screenStreamDimensions = await UiWebRtcPublisher.determineVideoSize(screenStream);
+		// 	const screenStreamWithSizingInfo = screenStream as MediaStreamWithMixiSizingInfo;
+		// 	screenStreamWithSizingInfo.fullcanvas = true;
+		// 	screenStreamWithSizingInfo.width = screenStreamDimensions.width;
+		// 	screenStreamWithSizingInfo.height = screenStreamDimensions.height;
+		//
+		// 	if (camMicStream.getTracks().some(t => t.kind === "video")) {
+		// 		const screenStreamShortDimension = Math.min(screenStreamDimensions.width, screenStreamDimensions.height);
+		// 		const cameraAspectRatio = camMicStream.getTracks().filter(t => t.kind === "video")[0].getSettings().aspectRatio;
+		// 		const pictureInPictureHeight = Math.round((25 / 100) * screenStreamShortDimension);
+		// 		const pictureInPictureWidth = Math.round(pictureInPictureHeight * cameraAspectRatio);
+		//
+		// 		const camMicStreamWithSizingInfo = camMicStream as MediaStreamWithMixiSizingInfo;
+		// 		camMicStreamWithSizingInfo.width = pictureInPictureWidth;
+		// 		camMicStreamWithSizingInfo.height = pictureInPictureHeight;
+		// 		camMicStreamWithSizingInfo.left = screenStreamDimensions.width - pictureInPictureWidth;
+		// 		camMicStreamWithSizingInfo.top = 0; // screenStreamDimensions.height - pictureInPictureHeight;
+		// 	}
+		//
+		// 	let multiStreamsMixer = new MultiStreamsMixer([screenStreamWithSizingInfo, camMicStream]);
+		// 	multiStreamsMixer.frameInterval = 1000 / screenStream.getTracks()[0].getSettings().frameRate;
+		// 	return multiStreamsMixer;
+		// } else if (camMicStream != null) {
+		// 	return new MultiStreamsMixer([camMicStream]);
+		// } else if (screenStream != null) {
+		// 	let multiStreamsMixer = new MultiStreamsMixer([screenStream]);
+		// 	multiStreamsMixer.frameInterval = 1000 / screenStream.getTracks()[0].getSettings().frameRate;
+		// 	return multiStreamsMixer;
+		// }
 
 	}
 

@@ -17,28 +17,39 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+import {parseHtml} from "../Common";
+
 type MediaStreamAudioDestinationNode = AudioNode & { stream: MediaStream };
-export type MediaStreamWithMixiSizingInfo = MediaStream & { fullcanvas?: boolean, width?: number, height?: number, left?: number, top?: number };
-type EnhancedVideoElement = HTMLVideoElement & { mixSizingInfo?: any };
+export type MixSizingInfo = {
+	fullcanvas?: boolean,
+	width?: number,
+	height?: number,
+	left?: number,
+	top?: number,
+	onRender?: (context: CanvasRenderingContext2D, video: HTMLVideoElement, mixSizingInfo: MixSizingInfo, x: number, y: number, width: number, height: number) => void
+};
+export type MediaStreamWithMixiSizingInfo = {
+	mediaStream: MediaStream,
+	mixSizingInfo: MixSizingInfo
+};
+export type MediaStreamWithMixiSizingInfoAndVideo = MediaStreamWithMixiSizingInfo & { video?: HTMLVideoElement };
 
 export class MultiStreamsMixer {
 
-	private inputMediaStreams: MediaStreamWithMixiSizingInfo[];
+	private inputMediaStreams: MediaStreamWithMixiSizingInfoAndVideo[];
 	private outputMediaStream: MediaStream;
 
-	private videos: EnhancedVideoElement[] = [];
 	private canvas: HTMLCanvasElement & { stream?: MediaStream };
 	private context: CanvasRenderingContext2D;
 
-	public frameInterval = 10;
+	private frameInterval: number;
 	private isStopDrawingFrames = false;
 
-	// use gain node to prevent echo
-	public useGainNode = true;
 	private audioContext: AudioContext & { createMediaStreamDestination(): MediaStreamAudioDestinationNode };
 	private audioDestination: MediaStreamAudioDestinationNode;
 
-	constructor(inputMediaStreams: MediaStreamWithMixiSizingInfo[]) {
+	constructor(inputMediaStreams: MediaStreamWithMixiSizingInfo[], frameRate: number) {
+		this.frameInterval = 1000 / frameRate;
 		this.inputMediaStreams = inputMediaStreams;
 		this.canvas = document.createElement('canvas');
 		this.context = this.canvas.getContext('2d');
@@ -46,42 +57,51 @@ export class MultiStreamsMixer {
 		(document.body || document.documentElement).appendChild(this.canvas);
 	}
 
-	private static setSrcObject(stream: MediaStream, element: HTMLMediaElement) {
-		if ('srcObject' in element) {
-			element.srcObject = stream;
-		} else if ('mozSrcObject' in element) {
-			(element as any).mozSrcObject = stream;
-		} else if ('createObjectURL' in URL) {
-			(element as any).src = URL.createObjectURL(stream);
-		} else {
-			alert('createObjectURL/srcObject both are not supported.');
+	public async getMixedStream() {
+		if (this.outputMediaStream == null) {
+			if (this.inputMediaStreams.length > 1) {
+				const mixedVideoStream = await this.getMixedVideoStream();
+				const mixedAudioStream = this.getMixedAudioStream();
+				if (mixedAudioStream) {
+					mixedAudioStream.getTracks().filter((t) => {
+						return t.kind === 'audio';
+					}).forEach((track) => {
+						mixedVideoStream.addTrack(track);
+					});
+				}
+				this.drawVideosToCanvas();
+
+				this.outputMediaStream = mixedVideoStream;
+			} else {
+				this.outputMediaStream = this.inputMediaStreams[0].mediaStream;
+			}
 		}
+		return this.outputMediaStream;
 	}
+
+	public getInputMediaStreams() {
+		return this.inputMediaStreams;
+	}
+
+	public close() {
+		this.inputMediaStreams.forEach(ms => ms.mediaStream.getTracks().forEach(t => t.stop()));
+		this.canvas.remove();
+	};
 
 	private drawVideosToCanvas() {
 		if (this.isStopDrawingFrames) {
 			return;
 		}
 
-		let fullcanvasVideo: EnhancedVideoElement = null;
-		const remaining: EnhancedVideoElement[] = [];
-		this.videos.forEach((video: EnhancedVideoElement) => {
-			if (!video.mixSizingInfo) {
-				video.mixSizingInfo = {};
-			}
-			if (video.mixSizingInfo.fullcanvas) {
-				fullcanvasVideo = video;
-			} else {
-				remaining.push(video);
-			}
-		});
+		let fullcanvasVideo = this.inputMediaStreams.filter(ims => ims.mixSizingInfo.fullcanvas)[0];
+		let remainingVideos = this.inputMediaStreams.filter(ims => ims !== fullcanvasVideo);
 
 		if (fullcanvasVideo) {
 			this.canvas.width = fullcanvasVideo.mixSizingInfo.width;
 			this.canvas.height = fullcanvasVideo.mixSizingInfo.height;
-		} else if (remaining.length) {
-			const videosLength = this.videos.length;
-			this.canvas.width = videosLength > 1 ? remaining[0].width * 2 : remaining[0].width;
+		} else if (remainingVideos.length) {
+			const videosLength = this.inputMediaStreams.filter(ims => ims.video != null).length;
+			this.canvas.width = videosLength > 1 ? remainingVideos[0].mixSizingInfo.width * 2 : remainingVideos[0].mixSizingInfo.width;
 
 			let height = 1;
 			if (videosLength === 3 || videosLength === 4) {
@@ -96,24 +116,24 @@ export class MultiStreamsMixer {
 			if (videosLength === 9 || videosLength === 10) {
 				height = 5;
 			}
-			this.canvas.height = remaining[0].height * height;
+			this.canvas.height = remainingVideos[0].mixSizingInfo.height * height;
 		} else {
 			this.canvas.width = 360;
 			this.canvas.height = 240;
 		}
 
-		if (fullcanvasVideo && fullcanvasVideo instanceof HTMLVideoElement) {
-			this.drawImage(fullcanvasVideo);
+		if (fullcanvasVideo && fullcanvasVideo.video instanceof HTMLVideoElement) {
+			this.drawImage(fullcanvasVideo.video, fullcanvasVideo.mixSizingInfo);
 		}
 
-		remaining.forEach((video, idx) => {
-			this.drawImage(video, idx);
+		remainingVideos.forEach((video) => {
+			this.drawImage(video.video, video.mixSizingInfo);
 		});
 
 		setTimeout(() => this.drawVideosToCanvas(), this.frameInterval);
 	}
 
-	private drawImage(video: EnhancedVideoElement, idx = 0) {
+	private drawImage(video: HTMLVideoElement, mixSizingInfo: MixSizingInfo) {
 		if (this.isStopDrawingFrames) {
 			return;
 		}
@@ -123,96 +143,32 @@ export class MultiStreamsMixer {
 		let width = video.width;
 		let height = video.height;
 
-		if (idx === 1) {
-			x = video.width;
+
+		if (mixSizingInfo.left != null) {
+			x = mixSizingInfo.left;
 		}
 
-		if (idx === 2) {
-			y = video.height;
+		if (mixSizingInfo.top != null) {
+			y = mixSizingInfo.top;
 		}
 
-		if (idx === 3) {
-			x = video.width;
-			y = video.height;
+		if (mixSizingInfo.width != null) {
+			width = mixSizingInfo.width;
 		}
 
-		if (idx === 4) {
-			y = video.height * 2;
-		}
-
-		if (idx === 5) {
-			x = video.width;
-			y = video.height * 2;
-		}
-
-		if (idx === 6) {
-			y = video.height * 3;
-		}
-
-		if (idx === 7) {
-			x = video.width;
-			y = video.height * 3;
-		}
-
-		if (typeof video.mixSizingInfo.left !== 'undefined') {
-			x = video.mixSizingInfo.left;
-		}
-
-		if (typeof video.mixSizingInfo.top !== 'undefined') {
-			y = video.mixSizingInfo.top;
-		}
-
-		if (typeof video.mixSizingInfo.width !== 'undefined') {
-			width = video.mixSizingInfo.width;
-		}
-
-		if (typeof video.mixSizingInfo.height !== 'undefined') {
-			height = video.mixSizingInfo.height;
+		if (mixSizingInfo.height != null) {
+			height = mixSizingInfo.height;
 		}
 
 		this.context.drawImage(video, x, y, width, height);
 
-		if (typeof video.mixSizingInfo.onRender === 'function') {
-			video.mixSizingInfo.onRender(this.context, x, y, width, height, idx);
+		if (typeof mixSizingInfo.onRender === 'function') {
+			mixSizingInfo.onRender(this.context, video, mixSizingInfo, x, y, width, height);
 		}
 	}
 
-	public getMixedStream() {
-		if (this.outputMediaStream == null) {
-			if (this.inputMediaStreams.length > 1) {
-				const mixedVideoStream = this.getMixedVideoStream();
-				const mixedAudioStream = this.getMixedAudioStream();
-				if (mixedAudioStream) {
-					mixedAudioStream.getTracks().filter((t) => {
-						return t.kind === 'audio';
-					}).forEach((track) => {
-						mixedVideoStream.addTrack(track);
-					});
-				}
-
-				let fullcanvas;
-				this.inputMediaStreams.forEach((stream) => {
-					if (stream.fullcanvas) {
-						fullcanvas = true;
-					}
-				});
-
-				this.drawVideosToCanvas();
-
-				this.outputMediaStream = mixedVideoStream;
-			} else {
-				this.outputMediaStream = this.inputMediaStreams[0];
-			}
-		}
-		return this.outputMediaStream;
-	}
-
-	public getInputMediaStreams() {
-		return this.inputMediaStreams;
-	}
-
-	private getMixedVideoStream() {
-		this.resetVideoStreams();
+	private async getMixedVideoStream() {
+		await this.resetVideoStreams();
 
 		const videoStream = new MediaStream();
 
@@ -231,17 +187,10 @@ export class MultiStreamsMixer {
 	private getMixedAudioStream(): MediaStream {
 		this.audioContext = new ((window as any).AudioContext || (window as any).webkitAudioContext || (window as any).mozAudioContext)();
 
-		let gainNode: GainNode;
-		if (this.useGainNode === true) {
-			gainNode = this.audioContext.createGain();
-			gainNode.connect(this.audioContext.destination);
-			gainNode.gain.value = 0; // don't hear self
-		}
-
 		const audioSources: MediaStreamAudioSourceNode[] = [];
 		let audioTracksLength = 0;
 		this.inputMediaStreams.forEach((stream) => {
-			if (!stream.getTracks().filter((t) => {
+			if (!stream.mediaStream.getTracks().filter((t) => {
 				return t.kind === 'audio';
 			}).length) {
 				return;
@@ -249,11 +198,7 @@ export class MultiStreamsMixer {
 
 			audioTracksLength++;
 
-			const audioSource: MediaStreamAudioSourceNode = this.audioContext.createMediaStreamSource(stream);
-
-			if (this.useGainNode === true) {
-				audioSource.connect(gainNode);
-			}
+			const audioSource: MediaStreamAudioSourceNode = this.audioContext.createMediaStreamSource(stream.mediaStream);
 
 			audioSources.push(audioSource);
 		});
@@ -269,47 +214,54 @@ export class MultiStreamsMixer {
 		return this.audioDestination.stream;
 	}
 
-	private createVideo(stream: MediaStreamWithMixiSizingInfo): EnhancedVideoElement {
+	private static async createVideo(stream: MediaStreamWithMixiSizingInfoAndVideo): Promise<HTMLVideoElement> {
 		const video = document.createElement('video');
-
-		MultiStreamsMixer.setSrcObject(stream, video);
-
+		video.srcObject = stream.mediaStream;
 		video.muted = true;
 		video.volume = 0;
-
-		video.width = stream.width;
-		video.height = stream.height;
-
 		video.play();
+
+		if (stream.mixSizingInfo.width != null && stream.mixSizingInfo.height != null) {
+			video.width = stream.mixSizingInfo.width;
+			video.height = stream.mixSizingInfo.height;
+		} else {
+			let size = await determineVideoSize(stream.mediaStream);
+			video.width = size.width;
+			video.height = size.height;
+		}
 
 		return video;
 	}
 
-	public close() {
-		this.inputMediaStreams.forEach(ms => ms.getTracks().forEach(t => t.stop()));
-		this.canvas.remove();
-	};
-
-
-	public resetVideoStreams(streams: MediaStream[] = this.inputMediaStreams) {
-		this.videos = [];
-		if (streams && !Array.isArray(streams)) {
-			streams = [streams];
-		}
-		streams = streams || this.inputMediaStreams;
-
-		// via: @adrian-ber
-		streams.forEach((stream) => {
-			if (!stream.getTracks().filter((t) => {
-				return t.kind === 'video';
-			}).length) {
-				return;
+	private async resetVideoStreams() {
+		for (let stream of this.inputMediaStreams) {
+			stream.video = null;
+			if (stream.mediaStream.getVideoTracks().length == 0) {
+				continue;
 			}
 
-			const video = this.createVideo(stream);
-			video.mixSizingInfo = stream;
-			this.videos.push(video);
-		});
+			stream.video = await MultiStreamsMixer.createVideo(stream);
+		}
 	}
 
+}
+
+export async function determineVideoSize(mediaStream: MediaStream, timeout = 1000): Promise<{ width: number, height: number }> {
+	if (mediaStream.getVideoTracks().length == 0) {
+		return {width: 0, height: 0};
+	}
+	return new Promise((resolve, reject) => {
+		var video: HTMLVideoElement = parseHtml('<video class="pseudo-hidden"></video>');
+		document.body.appendChild(video);
+		video.srcObject = mediaStream;
+		video.muted = true;
+		video.onloadedmetadata = (e) => {
+			resolve({width: video.videoWidth, height: video.videoHeight});
+			video.remove();
+		};
+		setTimeout(() => {
+			reject();
+			video.remove();
+		}, timeout);
+	});
 }
