@@ -39,6 +39,11 @@ import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {createUiColorCssString} from "../util/CssFormatUtil";
 import vad, {VoiceActivityDetectionHandle} from "voice-activity-detection";
 import {UiPageDisplayMode} from "../../generated/UiPageDisplayMode";
+import {UiAudioTrackConstraintsConfig} from "../../generated/UiAudioTrackConstraintsConfig";
+import {checkChromeExtensionAvailable, getScreenConstraints, isChrome} from "../util/ScreenCapturing";
+import {UiWebRtcPublishingErrorReason} from "../../generated/UiWebRtcPublishingErrorReason";
+import {determineVideoSize, MixSizingInfo, MultiStreamsMixer} from "../util/MultiStreamsMixer";
+import {UiScreenSharingConstraintsConfig} from "../../generated/UiScreenSharingConstraintsConfig";
 
 export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebRtcClientConfig> implements UiMediaSoupWebRtcClientCommandHandler, UiMediaSoupWebRtcClientEventSource {
 	public readonly onPlaybackProfileChanged: TeamAppsEvent<UiMediaSoupWebRtcClient_PlaybackProfileChangedEvent> = new TeamAppsEvent(this);
@@ -51,6 +56,7 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 	private $icon: HTMLImageElement;
 	private $caption: HTMLElement;
 	private voiceActivityDetectionHandle: VoiceActivityDetectionHandle;
+	private multiStreamMixer: MultiStreamsMixer;
 
 	constructor(config: UiMediaSoupWebRtcClientConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -97,11 +103,6 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 			this.stop();
 		}
 
-		let constraints = {
-			audio: parameters.audioConstraints,
-			video: UiMediaSoupWebRtcClient.createVideoConstraints(parameters.videoConstraints)
-		};
-		console.log(constraints);
 		this.conference = new Conference({
 			uid: parameters.uid,
 			token: parameters.token,
@@ -109,11 +110,14 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 				serverUrl: parameters.serverUrl,
 				minBitrate: parameters.minBitrate,
 				maxBitrate: parameters.maxBitrate,
-				getUserMedia: () => {
+				getUserMedia: async () => {
 					this.voiceActivityDetectionHandle && this.voiceActivityDetectionHandle.destroy();
-					let streamFuture = window.navigator.mediaDevices.getUserMedia(constraints);
-					streamFuture.then(stream => {
-						this.voiceActivityDetectionHandle = vad(new AudioContext(), stream, {
+					this.multiStreamMixer = await this.getUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints);
+
+					let mixedStream = await this.multiStreamMixer.getMixedStream();
+
+					if (mixedStream.getAudioTracks().length > 0) {
+						this.voiceActivityDetectionHandle = vad(new AudioContext(), mixedStream, {
 							onVoiceStart: () => {
 								this.onActivityChanged.fire({active: true});
 							},
@@ -121,11 +125,9 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 								this.onActivityChanged.fire({active: false});
 							}
 						});
-						if (stream.getVideoTracks().length > 0) {
-							this.$video.classList.add("mirrored");
-						}
-					});
-					return streamFuture
+					}
+
+					return mixedStream;
 				},
 				localVideo: this.$video,
 				errorAutoPlayCallback: () => {
@@ -137,6 +139,70 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 			}
 		});
 		this.conference.publish();
+	}
+
+	private async getUserMedia(audioConstraints?: UiAudioTrackConstraintsConfig, videoConstraints?: UiVideoTrackConstraintsConfig, screenSharingConstraints?: UiScreenSharingConstraintsConfig) {
+		let camMicStream: MediaStream;
+		let screenStream: MediaStream;
+
+		if (audioConstraints || videoConstraints) {
+			let gumConstraints: MediaStreamConstraints = {
+				audio: audioConstraints,
+				video: UiMediaSoupWebRtcClient.createVideoConstraints(videoConstraints)
+			};
+			console.log(gumConstraints);
+			camMicStream = await window.navigator.mediaDevices.getUserMedia(gumConstraints);
+		}
+
+		if (screenSharingConstraints != null) {
+			const canProbablyPublishScreen = !isChrome || await checkChromeExtensionAvailable();
+			if (canProbablyPublishScreen) {
+				const screenConstraints = await getScreenConstraints({maxWidth: screenSharingConstraints.maxWidth, maxHeight: screenSharingConstraints.maxHeight});
+				try {
+					screenStream = await navigator.mediaDevices.getUserMedia({video: screenConstraints});
+				} catch (e) {
+					console.error("CANNOT_GET_SCREEN_MEDIA_STREAM");
+					throw UiWebRtcPublishingErrorReason.CANNOT_GET_SCREEN_MEDIA_STREAM;
+				}
+			} else {
+				console.error("CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED");
+				throw UiWebRtcPublishingErrorReason.CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED;
+			}
+		}
+
+		if (camMicStream != null && screenStream != null) {
+			const screenStreamDimensions = await determineVideoSize(screenStream);
+
+			let camMicStreamSizingInfo: MixSizingInfo = {};
+			if (camMicStream.getVideoTracks().length > 0) {
+				const screenStreamShortDimension = Math.min(screenStreamDimensions.width, screenStreamDimensions.height);
+				const cameraAspectRatio = camMicStream.getTracks().filter(t => t.kind === "video")[0].getSettings().aspectRatio;
+				const pictureInPictureHeight = Math.round((25 / 100) * screenStreamShortDimension);
+				const pictureInPictureWidth = Math.round(pictureInPictureHeight * cameraAspectRatio);
+
+				camMicStreamSizingInfo = {
+					width: pictureInPictureWidth,
+					height: pictureInPictureHeight,
+					left: screenStreamDimensions.width - pictureInPictureWidth,
+					top: 0
+				};
+			}
+			return new MultiStreamsMixer([
+					{
+						mediaStream: screenStream,
+						mixSizingInfo: {
+							...screenStreamDimensions, fullcanvas: true
+						}
+					},
+					{mediaStream: camMicStream, mixSizingInfo: camMicStreamSizingInfo}
+				],
+				videoConstraints.frameRate || 10
+			);
+		} else if (camMicStream != null) {
+			return new MultiStreamsMixer([{mediaStream: camMicStream, mixSizingInfo: {}}], videoConstraints.frameRate);
+		} else if (screenStream != null) {
+			return new MultiStreamsMixer([{mediaStream: screenStream, mixSizingInfo: {}}], 10);
+		}
 	}
 
 	@executeWhenFirstDisplayed(true)
@@ -175,8 +241,11 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 	@executeWhenFirstDisplayed()
 	stop() {
 		if (this.conference != null) {
-			this.conference.stop()
+			this.conference.stop();
 			this.$video.classList.remove("mirrored");
+		}
+		if (this.multiStreamMixer != null) {
+			this.multiStreamMixer.close();
 		}
 	}
 

@@ -42,6 +42,9 @@ class UiMediaSoupWebRtcClient extends UiComponent {
 
 	event playbackProfileChanged(UiMulticastPlaybackProfile profile);
 	event activityChanged(boolean active);
+
+	static command hasWebCam() returns boolean;
+	static command isChromeExtensionInstalled() returns boolean;
 }
 
 enum UiMulticastPlaybackProfile {
@@ -54,10 +57,14 @@ class UiMediaSoupPublishingParameters {
 	String serverUrl;
 	String uid;
 	String token;
+
 	UiAudioTrackConstraints audioConstraints;
 	UiVideoTrackConstraints videoConstraints;
+	UiScreenSharingConstraints screenSharingConstraints;
+
 	long minBitrate;
 	long maxBitrate;
+
 }
 
 class UiMediaSoupPlaybackParamaters {
@@ -82,6 +89,11 @@ class UiVideoTrackConstraints {
 	Integer height;
     UiVideoFacingMode facingMode = UiVideoFacingMode.USER;
     double frameRate = 20;
+}
+
+class UiScreenSharingConstraints {
+	Integer maxWidth;
+	Integer maxHeight;
 }
 
 enum UiVideoFacingMode {
