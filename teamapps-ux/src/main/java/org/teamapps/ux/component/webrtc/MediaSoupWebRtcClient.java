@@ -11,6 +11,9 @@ import org.teamapps.icons.api.Icon;
 import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class MediaSoupWebRtcClient extends AbstractComponent {
 
 	public final Event<MulticastPlaybackProfile> onPlaybackProfileChanged = new Event<>();
@@ -59,6 +62,15 @@ public class MediaSoupWebRtcClient extends AbstractComponent {
 		switch (event.getUiEventType()) {
 			case UI_MEDIA_SOUP_WEB_RTC_CLIENT_PLAYBACK_PROFILE_CHANGED: {
 				UiMediaSoupWebRtcClient.PlaybackProfileChangedEvent e = (UiMediaSoupWebRtcClient.PlaybackProfileChangedEvent) event;
+				if (e.getProfile() == null) {
+					return;
+				}
+				MulticastPlaybackProfile profile = Arrays.stream(MulticastPlaybackProfile.values())
+						.filter(p -> Objects.equals(p.name(), e.getProfile().name()))
+						.findFirst().orElse(null);
+				if (profile == null) {
+					return;
+				}
 				this.onPlaybackProfileChanged.fire(MulticastPlaybackProfile.valueOf(e.getProfile().name()));
 				break;
 			}
