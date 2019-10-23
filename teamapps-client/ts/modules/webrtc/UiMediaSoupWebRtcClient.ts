@@ -61,7 +61,7 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 		<img class="icon"></img>
 	</div>
 	<div class="caption"></div>
-	<div class="profile">.</div>
+	<div class="profile hidden">.</div>
 </div>`);
 		this.$video = this.$main.querySelector<HTMLMediaElement>(":scope video");
 		this.$profileDisplay = this.$main.querySelector(":scope .profile");
@@ -121,6 +121,9 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 								this.onActivityChanged.fire({active: false});
 							}
 						});
+						if (stream.getVideoTracks().length > 0) {
+							this.$video.classList.add("mirrored");
+						}
 					});
 					return streamFuture
 				},
@@ -165,12 +168,15 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 			},
 		});
 		this.conference.play();
+
+		this.$video.classList.remove("mirrored");
 	}
 
 	@executeWhenFirstDisplayed()
 	stop() {
 		if (this.conference != null) {
 			this.conference.stop()
+			this.$video.classList.remove("mirrored");
 		}
 	}
 

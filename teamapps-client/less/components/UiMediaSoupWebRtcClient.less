@@ -22,6 +22,7 @@
   --activity-bar-color-active: #d40000;
 
   --activity-bar-color: var(--activity-bar-color-inactive);
+
   &.active {
     --activity-bar-color: var(--activity-bar-color-active);
   }
@@ -48,7 +49,11 @@
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
-      transition: width 200ms, height 200ms;
+      transition: width 200ms, height 200ms, transform 200ms;
+
+      &.mirrored {
+        transform: rotateY(180deg);
+      }
     }
 
     &:after { // activity bar
