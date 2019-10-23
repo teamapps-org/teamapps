@@ -93,8 +93,8 @@ export class MultiStreamsMixer {
 			return;
 		}
 
-		let fullcanvasVideo = this.inputMediaStreams.filter(ims => ims.mixSizingInfo.fullcanvas)[0];
-		let remainingVideos = this.inputMediaStreams.filter(ims => ims !== fullcanvasVideo);
+		let fullcanvasVideo = this.inputMediaStreams.filter(ims => ims.mixSizingInfo.fullcanvas && ims.mediaStream.getVideoTracks().length > 0)[0];
+		let remainingVideos = this.inputMediaStreams.filter(ims => ims !== fullcanvasVideo && ims.mediaStream.getVideoTracks().length > 0);
 
 		if (fullcanvasVideo) {
 			this.canvas.width = fullcanvasVideo.mixSizingInfo.width;
