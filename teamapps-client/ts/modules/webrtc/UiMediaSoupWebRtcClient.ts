@@ -23,7 +23,7 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {calculateDisplayModeInnerSize, parseHtml} from "../Common";
 import {
-	UiMediaSoupWebRtcClient_ActivityChangedEvent,
+	UiMediaSoupWebRtcClient_ActivityChangedEvent, UiMediaSoupWebRtcClient_ClickedEvent,
 	UiMediaSoupWebRtcClient_PlaybackProfileChangedEvent,
 	UiMediaSoupWebRtcClientCommandHandler,
 	UiMediaSoupWebRtcClientConfig,
@@ -48,6 +48,7 @@ import {UiScreenSharingConstraintsConfig} from "../../generated/UiScreenSharingC
 export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebRtcClientConfig> implements UiMediaSoupWebRtcClientCommandHandler, UiMediaSoupWebRtcClientEventSource {
 	public readonly onPlaybackProfileChanged: TeamAppsEvent<UiMediaSoupWebRtcClient_PlaybackProfileChangedEvent> = new TeamAppsEvent(this);
 	public readonly onActivityChanged: TeamAppsEvent<UiMediaSoupWebRtcClient_ActivityChangedEvent> = new TeamAppsEvent(this);
+	public readonly onClicked: TeamAppsEvent<UiMediaSoupWebRtcClient_ClickedEvent> = new TeamAppsEvent(this);
 
 	private $main: HTMLDivElement;
 	private conference: Conference;
@@ -74,6 +75,7 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 		this.$icon = this.$main.querySelector(":scope .icon");
 		this.$caption = this.$main.querySelector(":scope .caption");
 
+		this.$main.addEventListener("click", () => this.onClicked.fire({}));
 		this.$video.addEventListener("play", ev => this.update(this._config));
 		this.$video.addEventListener("playing", ev => this.update(this._config));
 		this.$video.addEventListener("stalled", ev => this.update(this._config));
@@ -196,12 +198,12 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 					},
 					{mediaStream: camMicStream, mixSizingInfo: camMicStreamSizingInfo}
 				],
-				videoConstraints.frameRate || 10
+				(videoConstraints && videoConstraints.frameRate) || 10
 			);
 		} else if (camMicStream != null) {
-			return new MultiStreamsMixer([{mediaStream: camMicStream, mixSizingInfo: {}}], videoConstraints.frameRate);
+			return new MultiStreamsMixer([{mediaStream: camMicStream, mixSizingInfo: {}}]);
 		} else if (screenStream != null) {
-			return new MultiStreamsMixer([{mediaStream: screenStream, mixSizingInfo: {}}], 10);
+			return new MultiStreamsMixer([{mediaStream: screenStream, mixSizingInfo: {}}]);
 		}
 	}
 

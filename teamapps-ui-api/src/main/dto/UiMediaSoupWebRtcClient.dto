@@ -42,6 +42,7 @@ class UiMediaSoupWebRtcClient extends UiComponent {
 
 	event playbackProfileChanged(UiMulticastPlaybackProfile profile);
 	event activityChanged(boolean active);
+	event clicked();
 
 	static command hasWebCam() returns boolean;
 	static command isChromeExtensionInstalled() returns boolean;
