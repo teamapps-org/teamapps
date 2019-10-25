@@ -78,8 +78,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public void setVisible(boolean visible) {
-		this.visible = visible;
-		queueCommandIfRendered(() -> new UiField.SetVisibleCommand(getId(), visible));
+		super.setVisible(visible);
 		onVisibilityChanged.fire(visible);
 	}
 

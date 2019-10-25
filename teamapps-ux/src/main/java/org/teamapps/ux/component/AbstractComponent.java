@@ -91,8 +91,11 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public void setVisible(boolean visible) {
+		boolean changed = visible != this.visible;
 		this.visible = visible;
-		queueCommandIfRendered(() -> new UiComponent.SetVisibleCommand(getId(), visible));
+		if (changed) {
+			queueCommandIfRendered(() -> new UiComponent.SetVisibleCommand(getId(), visible));
+		}
 	}
 
 	@Override
