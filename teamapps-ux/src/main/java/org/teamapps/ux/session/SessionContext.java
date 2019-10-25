@@ -166,6 +166,7 @@ public class SessionContext {
 	public void destroy() {
 		isValid = false;
 		commandDispatcher.close();
+		sessionExecutor.closeForKey(this);
 		runWithContext(() -> {
 			onDestroyed.fire(null);
 		});
