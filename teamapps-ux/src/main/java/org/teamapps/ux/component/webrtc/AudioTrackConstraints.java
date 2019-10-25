@@ -65,4 +65,36 @@ public class AudioTrackConstraints {
 	public void setNoiseSuppression(boolean noiseSuppression) {
 		this.noiseSuppression = noiseSuppression;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		AudioTrackConstraints that = (AudioTrackConstraints) o;
+
+		if (channelCount != that.channelCount) {
+			return false;
+		}
+		if (autoGainControl != that.autoGainControl) {
+			return false;
+		}
+		if (echoCancellation != that.echoCancellation) {
+			return false;
+		}
+		return noiseSuppression == that.noiseSuppression;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = channelCount;
+		result = 31 * result + (autoGainControl ? 1 : 0);
+		result = 31 * result + (echoCancellation ? 1 : 0);
+		result = 31 * result + (noiseSuppression ? 1 : 0);
+		return result;
+	}
 }

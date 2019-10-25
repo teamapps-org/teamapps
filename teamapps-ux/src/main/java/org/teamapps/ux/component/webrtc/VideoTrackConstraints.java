@@ -64,4 +64,36 @@ public class VideoTrackConstraints {
 	public void setFrameRate(int frameRate) {
 		this.frameRate = frameRate;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		VideoTrackConstraints that = (VideoTrackConstraints) o;
+
+		if (width != that.width) {
+			return false;
+		}
+		if (height != that.height) {
+			return false;
+		}
+		if (frameRate != that.frameRate) {
+			return false;
+		}
+		return facingMode == that.facingMode;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = width;
+		result = 31 * result + height;
+		result = 31 * result + (facingMode != null ? facingMode.hashCode() : 0);
+		result = 31 * result + frameRate;
+		return result;
+	}
 }
