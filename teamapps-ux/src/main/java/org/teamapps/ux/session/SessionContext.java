@@ -31,6 +31,8 @@ import org.teamapps.icons.api.IconTheme;
 import org.teamapps.server.CommandDispatcher;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
+import org.teamapps.util.MultiKeySequentialExecutor;
+import org.teamapps.util.NamedThreadFactory;
 import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.EntranceAnimation;
@@ -57,8 +59,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -67,12 +70,16 @@ import java.util.stream.Collectors;
 public class SessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
-	private static final int LOCK_TIMEOUT = 60_000;
+	private static final MultiKeySequentialExecutor<SessionContext> sessionExecutor = new MultiKeySequentialExecutor<>(new ThreadPoolExecutor(
+			Runtime.getRuntime().availableProcessors() / 2 + 1,
+			Runtime.getRuntime().availableProcessors() * 2,
+			60, TimeUnit.SECONDS,
+			new LinkedBlockingQueue<>(),
+			new NamedThreadFactory("teamapps-session-executor", true)
+	));
 	private static final Function<Locale, ResourceBundle> DEFAULT_RESOURCE_BUNDLE_PROVIDER = locale -> ResourceBundle.getBundle("org.teamapps.ux.i18n.DefaultCaptions", locale, new UTF8Control());
 
 	private final Event<Void> onDestroyed = new Event<>();
-
-	private final ReentrantLock lock = new ReentrantLock();
 
 	private boolean isValid = true;
 	private long lastClientEventTimeStamp;
@@ -231,77 +238,20 @@ public class SessionContext {
 		return registeredTemplates.get(id);
 	}
 
-	private void lock(long timeoutMillis) {
-		try {
-			boolean locked = lock.tryLock(timeoutMillis, TimeUnit.MILLISECONDS);
-			if (!locked) {
-				String errorMessage = "Could not acquire lock for SessionContext " + sessionId + " after " + timeoutMillis + "ms.";
-				LOGGER.error(errorMessage);
-				throw new IllegalStateException(errorMessage);
-			}
-		} catch (InterruptedException e) {
-			String errorMessage = "Could not acquire lock for SessionContext " + sessionId + ". Thread was interrupted while waiting for the lock!";
-			LOGGER.error(errorMessage);
-			throw new IllegalStateException(errorMessage);
-		}
-	}
-
-	private void unlock() {
-		lock.unlock();
-	}
-
-	/**
-	 * Does the following:
-	 * <ol>
-	 * <li>Releases the current SessionContext (A) lock (if present)</li>
-	 * <li>Acquires the lock for this SessionContext (B)</li>
-	 * <li>Sets this SessionContext (B) as the current context (CurrentSessionContext).</li>
-	 * <li>Executes the specified Runnable.</li>
-	 * <li>Sets back the last SessionContext (A) as current context.</li>
-	 * <li>Releases the lock for this SessionContext (B)</li>
-	 * <li>Reacquires the lock for the last (A)</li>
-	 * </ol>
-	 *
-	 * @param runnable the code to be executed.
-	 */
 	public void runWithContext(Runnable runnable) {
 		if (CurrentSessionContext.getOrNull() == this) {
-			// Fast lane! This context is already bound to this thread. Just execute the runnable.
+			// Fast lane! This thread is already bound to this context. Just execute the runnable.
 			runnable.run();
 		} else {
-			if (CurrentSessionContext.getOrNull() != null) {
-				// unlock the previously locked sessionContext (WITHOUT POPPING IT!)
-				CurrentSessionContext.getOrNull().unlock();
-			}
-			try {
-				long startTime = System.currentTimeMillis();
-				lock(LOCK_TIMEOUT);
+			sessionExecutor.submit(this, () -> {
+				CurrentSessionContext.set(this);
 				try {
-					CurrentSessionContext.pushContext(this);
-					try {
-						runnable.run();
-					} catch (Exception e) {
-						LOGGER.error("Exception while executing runnable! Context: " + sessionId.toString(), e);
-						throw e;
-					} finally {
-						CurrentSessionContext.popContext();
-					}
+					runnable.run();
 				} finally {
-					unlock();
-					long endTime = System.currentTimeMillis();
-					if (endTime - startTime > LOCK_TIMEOUT) {
-						String message = "The execution within the session context {} took dangerously long (longer than the session's lock timeout). This might have caused other threads to fail "
-								+ "acquiring the session's lock. Stacktrace follows:";
-						LOGGER.warn(message, sessionId, new RuntimeException(message));
-					}
+					CurrentSessionContext.unset();
 				}
-			} finally {
-				if (CurrentSessionContext.getOrNull() != null) {
-					// relock the previously locked sessionContext
-					CurrentSessionContext.getOrNull().lock(Long.MAX_VALUE); // we WANT to wait here.
-				}
-			}
-			this.flushCommands();
+				this.flushCommands();
+			});
 		}
 	}
 
