@@ -23,17 +23,14 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 public class CurrentSessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CurrentSessionContext.class);
-	private static final ThreadLocal<Deque<SessionContext>> CURRENT_CONTEXT = new ThreadLocal<>();
+	private static final ThreadLocal<SessionContext> CURRENT_CONTEXT = new ThreadLocal<>();
 
 	@NotNull
 	public static SessionContext get() {
-		SessionContext sessionContext = getContextStack().peekLast();
+		SessionContext sessionContext = CURRENT_CONTEXT.get();
 		if (sessionContext == null) {
 			String errorMessage = "CurrentSessionContext is not set but requested! Please use SessionContext.runWithContext(Runnable) to set the context.";
 			IllegalStateException illegalStateException = new IllegalStateException(errorMessage);
@@ -44,25 +41,17 @@ public class CurrentSessionContext {
 	}
 
 	public static SessionContext getOrNull() {
-		return getContextStack().peekLast();
+		return CURRENT_CONTEXT.get();
 	}
 
 	/*package-private*/
-	static void pushContext(SessionContext sessionContext) {
-		getContextStack().addLast(sessionContext);
+	static void set(SessionContext sessionContext) {
+		CURRENT_CONTEXT.set(sessionContext);
 	}
 
 	/*package-private*/
-	static void popContext() {
-		getContextStack().removeLast();
+	static void unset() {
+		CURRENT_CONTEXT.remove();
 	}
 
-	private static Deque<SessionContext> getContextStack() {
-		Deque<SessionContext> contextStack = CURRENT_CONTEXT.get();
-		if (contextStack == null) {
-			contextStack = new ArrayDeque<>();
-			CURRENT_CONTEXT.set(contextStack);
-		}
-		return contextStack;
-	}
 }
