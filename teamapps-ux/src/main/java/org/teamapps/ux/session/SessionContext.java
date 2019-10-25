@@ -166,10 +166,8 @@ public class SessionContext {
 	public void destroy() {
 		isValid = false;
 		commandDispatcher.close();
+		onDestroyed.fire(null);
 		sessionExecutor.closeForKey(this);
-		runWithContext(() -> {
-			onDestroyed.fire(null);
-		});
 	}
 
 	public Event<Void> onDestroyed() {
@@ -249,7 +247,7 @@ public class SessionContext {
 				try {
 					runnable.run();
 				} finally {
-					CurrentSessionContext.unset();
+					CurrentSessionContext.unset(); 
 				}
 				this.flushCommands();
 			});
