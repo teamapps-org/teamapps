@@ -286,7 +286,7 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		}
 
 		if (!perspectiveViews.isEmpty()) {
-			View view = perspectiveViews.get(0);
+			View view = perspective.getFocusedView() != null ? perspective.getFocusedView() : perspectiveViews.get(0);
 			activeView = view;
 			mobileLayout.setContent(view.getPanel(), PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT, PAGE_TRANSITION_ANIMATION_DURATION);
 		}
