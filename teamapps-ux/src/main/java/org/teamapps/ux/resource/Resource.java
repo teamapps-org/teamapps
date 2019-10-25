@@ -19,8 +19,9 @@
  */
 package org.teamapps.ux.resource;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
 import java.util.Date;
 
 public interface Resource {
@@ -64,6 +65,20 @@ public interface Resource {
 	 */
 	default boolean isAttachment() {
 		return false;
+	}
+
+	default File getAsFile() {
+		try {
+			String name = getName() != null ? getName() : ".bin";
+			File tempFile = File.createTempFile("temp", name);
+			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(tempFile));
+			IOUtils.copyLarge(getInputStream(), bos);
+			bos.close();
+			return tempFile;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
