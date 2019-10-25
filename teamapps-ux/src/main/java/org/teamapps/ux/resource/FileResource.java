@@ -100,4 +100,13 @@ public class FileResource implements Resource {
 		}
 		return name.substring(pos + 1).toLowerCase();
 	}
+
+	public File getFile() {
+		return file;
+	}
+
+	@Override
+	public File getAsFile() {
+		return file;
+	}
 }
