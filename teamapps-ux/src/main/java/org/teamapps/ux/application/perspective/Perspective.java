@@ -75,6 +75,8 @@ public interface Perspective {
         view.focus();
     }
 
+    View getFocusedView();
+
     default void setViewPosition(View view, String position) {
         view.setLayoutPosition(position);
     }
