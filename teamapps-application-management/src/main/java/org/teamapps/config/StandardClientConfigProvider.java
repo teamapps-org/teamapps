@@ -84,6 +84,10 @@ public class StandardClientConfigProvider<USER> implements ClientConfigProvider<
 		));
 	}
 
+	public void setDefaultTheme(Theme defaultTheme) {
+		this.defaultTheme = defaultTheme;
+	}
+
 	@Override
 	public Locale getUserLocale(USER user, Locale userAgentLocale) {
 		return localeProvider != null ? localeProvider.getUserLocale(user, userAgentLocale) : userAgentLocale;
