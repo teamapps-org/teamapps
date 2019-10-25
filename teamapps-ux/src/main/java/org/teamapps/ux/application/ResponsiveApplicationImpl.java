@@ -185,6 +185,9 @@ public class ResponsiveApplicationImpl extends AbstractApplication implements Re
 
 	@Override
 	public void showPerspective(Perspective perspective) {
+		if (!perspectives.contains(perspective)) {
+			addPerspective(perspective);
+		}
 		List<View> previousViews = activeViews;
 		activeViews = perspective.getVisibleAndLayoutReferencedViews();
 
