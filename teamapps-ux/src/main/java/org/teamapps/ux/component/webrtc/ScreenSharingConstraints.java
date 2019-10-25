@@ -22,4 +22,27 @@ public class ScreenSharingConstraints {
 		return ui;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		ScreenSharingConstraints that = (ScreenSharingConstraints) o;
+
+		if (maxWidth != that.maxWidth) {
+			return false;
+		}
+		return maxHeight == that.maxHeight;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = maxWidth;
+		result = 31 * result + maxHeight;
+		return result;
+	}
 }
