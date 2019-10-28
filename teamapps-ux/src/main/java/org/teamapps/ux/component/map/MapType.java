@@ -23,6 +23,8 @@ import org.teamapps.dto.UiMapType;
 
 public enum MapType {
 	INTERNAL,
+	INTERNAL_DARK,
+	INTERNAL_DARK_HIGH_RES,
 	MAP_BOX_STREETS,
 	MAP_BOX_STREETS_BASIC,
 	MAP_BOX_STREETS_SATELLITE,
