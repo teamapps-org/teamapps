@@ -19,6 +19,7 @@
  */
 .UiInfiniteItemView {
   user-select: none;
+  overflow: hidden; // infiniteItemViews never know their size. slickgrid depends on size information via JavaScript. Make sure the container element can shrink while slickgrid is still fixed size (before javascript call, which itself depends on the size of the container element)
 
   > .slickgrid {
     height: 100%;
