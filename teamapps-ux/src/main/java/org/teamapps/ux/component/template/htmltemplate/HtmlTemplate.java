@@ -10,12 +10,16 @@ import java.util.stream.Collectors;
 
 public class HtmlTemplate implements Template {
 
-	private static Pattern placeHolderRegex = Pattern.compile("\\{\\{(\\w+)\\}\\}");
+	private static final Pattern PLACE_HOLDER_REGEX = Pattern.compile("\\{\\{(\\w+)\\}\\}");
 
-	private String html;
+	private final String html;
+	private final List<String> dataKey;
 
 	public HtmlTemplate(String htmlTemplateString) {
 		this.html = htmlTemplateString;
+		this.dataKey = PLACE_HOLDER_REGEX.matcher(html).results()
+				.map(matchResult -> matchResult.group(1))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -25,9 +29,7 @@ public class HtmlTemplate implements Template {
 
 	@Override
 	public List<String> getDataKeys() {
-		return placeHolderRegex.matcher(html).results()
-				.map(matchResult -> matchResult.group(1))
-				.collect(Collectors.toList());
+		return dataKey;
 	}
 	
 }
