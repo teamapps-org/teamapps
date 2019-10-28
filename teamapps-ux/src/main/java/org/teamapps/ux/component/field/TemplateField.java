@@ -3,10 +3,14 @@ package org.teamapps.ux.component.field;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiClientRecord;
+import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiTemplateField;
+import org.teamapps.event.Event;
 import org.teamapps.ux.component.template.Template;
 
 public class TemplateField<RECORD> extends AbstractField<RECORD> {
+
+	public final Event<Void> onClicked = new Event<>();
 
 	private Template template;
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
@@ -18,6 +22,15 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 	public TemplateField(Template template, RECORD value) {
 		this.template = template;
 		this.setValue(value);
+	}
+
+	@Override
+	public void handleUiEvent(UiEvent event) {
+		super.handleUiEvent(event);
+		switch (event.getUiEventType()) {
+			case UI_TEMPLATE_FIELD_CLICKED:
+				onClicked.fire();
+		}
 	}
 
 	@Override
