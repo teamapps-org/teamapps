@@ -1,12 +1,16 @@
 import {UiField} from "./UiField";
 import {UiClientRecordConfig} from "../../generated/UiClientRecordConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiTemplateFieldConfig} from "../../generated/UiTemplateFieldConfig";
+import {UiTemplateField_ClickedEvent, UiTemplateFieldCommandHandler, UiTemplateFieldConfig, UiTemplateFieldEventSource} from "../../generated/UiTemplateFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {parseHtml, Renderer} from "../Common";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientRecordConfig> {
+export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientRecordConfig> implements UiTemplateFieldCommandHandler, UiTemplateFieldEventSource {
+
+    public readonly onClicked: TeamAppsEvent<UiTemplateField_ClickedEvent> = new TeamAppsEvent(this);
+
 	private $main: HTMLElement;
 	private templateRenderer: Renderer;
 
@@ -15,8 +19,14 @@ export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientReco
 	}
 
 	protected initialize(config: UiTemplateFieldConfig, context: TeamAppsUiContext): void {
-		this.$main = parseHtml(`<div class="UiTemplateField"></div>`)
-		this.templateRenderer = context.templateRegistry.createTemplateRenderer(config.template);
+		this.$main = parseHtml(`<div class="UiTemplateField"></div>`);
+		this.$main.addEventListener("click", ev => this.onClicked.fire({}));
+		this.update(config);
+	}
+
+	update(config: UiTemplateFieldConfig): void {
+		this.templateRenderer = this._context.templateRegistry.createTemplateRenderer(config.template);
+		this.displayCommittedValue();
 	}
 
 	getMainInnerDomElement(): HTMLElement {
