@@ -318,6 +318,16 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 					maxZoom: 9,
 				});
 				break;
+			case UiMapType.INTERNAL_DARK:
+				layer = L.tileLayer('http://localhost/styles/dark-matter/{z}/{x}/{y}.png', {
+					maxZoom: 20,
+				});
+				break;
+			case UiMapType.INTERNAL_DARK_HIGH_RES:
+				layer = L.tileLayer('http://localhost/styles/dark-matter/{z}/{x}/{y}@2x.png', {
+					maxZoom: 20,
+				});
+				break;
 			case UiMapType.MAP_BOX_STREETS:
 				layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 					maxZoom: 18,
