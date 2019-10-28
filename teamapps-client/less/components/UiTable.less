@@ -20,7 +20,10 @@
 .UiTable {
   position: relative;
   //user-select: none;
-  overflow: hidden; // needed for preventing the selection frame to cause an additional scrollbar
+
+  // infiniteItemViews never know their size. slickgrid depends on size information via JavaScript. Make sure the container element can shrink while slickgrid is still fixed size (before javascript call, which itself depends on the size of the container element).
+  // Also needed for preventing the selection frame to cause an additional scrollbar.
+  overflow: hidden;
 
   .slick-table {
     height: 100%;
