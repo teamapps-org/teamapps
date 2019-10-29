@@ -49,7 +49,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class TeamAppsUxClientGate implements UiSessionListener {
@@ -115,12 +117,19 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				webController.getDefaultIconTheme(clientInfo.isMobileDevice()), objectMapper);
 		sessionContextById.put(sessionId, context);
 
-		context.runWithContext(() -> {
+		CompletableFuture<Void> future = context.runWithContext(() -> {
 			context.setConfiguration(webController.createSessionConfiguration(context));
 			context.registerTemplates(Arrays.stream(BaseTemplate.values())
 					.collect(Collectors.toMap(Enum::name, BaseTemplate::getTemplate)));
 			webController.onSessionStart(context);
 		});
+
+		try {
+			// TODO make non-blocking when exception handling (and thereby session invalidation) is changed
+			future.get();
+		} catch (InterruptedException|ExecutionException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
@@ -162,12 +171,19 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 	public void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
 		SessionContext sessionContext = sessionContextById.get(sessionId);
 		if (sessionContext != null) {
-			sessionContext.runWithContext(() -> {
+			CompletableFuture<Void> future = sessionContext.runWithContext(() -> {
 				sessionContext.setLastClientEventTimestamp(System.currentTimeMillis());
 				String uiComponentId = event.getComponentId();
 				Component component = sessionContext.getComponent(uiComponentId);
 				component.handleUiEvent(event);
 			});
+
+			try {
+				// TODO make non-blocking when exception handling (and thereby session invalidation) is changed
+				future.get();
+			} catch (InterruptedException|ExecutionException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -237,17 +238,18 @@ public class SessionContext {
 		return registeredTemplates.get(id);
 	}
 
-	public void runWithContext(Runnable runnable) {
+	public CompletableFuture<Void> runWithContext(Runnable runnable) {
 		if (CurrentSessionContext.getOrNull() == this) {
 			// Fast lane! This thread is already bound to this context. Just execute the runnable.
 			runnable.run();
+			return CompletableFuture.completedFuture(null);
 		} else {
-			sessionExecutor.submit(this, () -> {
+			return sessionExecutor.submit(this, () -> {
 				CurrentSessionContext.set(this);
 				try {
 					runnable.run();
 				} finally {
-					CurrentSessionContext.unset(); 
+					CurrentSessionContext.unset();
 				}
 				this.flushCommands();
 			});
@@ -394,28 +396,36 @@ public class SessionContext {
 	}
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
-		queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiComponentReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
-				exitAnimation.toUiExitAnimation()));
+		runWithContext(() -> {
+			queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiComponentReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
+					exitAnimation.toUiExitAnimation()));
+		});
 	}
 
 	public void showNotification(Notification notification, NotificationPosition position) {
-		showNotification(notification, position, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		runWithContext(() -> {
+			showNotification(notification, position, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		});
 	}
 
 	public void showNotification(Icon icon, String caption) {
-		Notification notification = Notification.createWithIconAndCaption(icon, caption);
-		notification.setDismissible(true);
-		notification.setShowProgressBar(false);
-		notification.setDisplayTimeInMillis(5000);
-		showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		runWithContext(() -> {
+			Notification notification = Notification.createWithIconAndCaption(icon, caption);
+			notification.setDismissible(true);
+			notification.setShowProgressBar(false);
+			notification.setDisplayTimeInMillis(5000);
+			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		});
 	}
 
 	public void showNotification(Icon icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
-		Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
-		notification.setDismissible(dismissable);
-		notification.setDisplayTimeInMillis(displayTimeInMillis);
-		notification.setShowProgressBar(showProgress);
-		showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		runWithContext(() -> {
+			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
+			notification.setDismissible(dismissable);
+			notification.setDisplayTimeInMillis(displayTimeInMillis);
+			notification.setShowProgressBar(showProgress);
+			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		});
 	}
 
 }
