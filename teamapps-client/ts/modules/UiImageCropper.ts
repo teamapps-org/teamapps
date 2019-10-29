@@ -54,7 +54,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 		this.htmlImageElement.onload = () => {
 			this.imageNaturalWidth = this.htmlImageElement.naturalWidth;
 			this.imageNaturalHeight = this.htmlImageElement.naturalHeight;
-			applyDisplayMode(this.getMainDomElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE);
+			applyDisplayMode(this.getMainElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE);
 			this.resetSelectionFrame(config.aspectRatio);
 			this.updateCroppingFramePosition();
 		};
@@ -149,7 +149,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 
 	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
-		applyDisplayMode(this.getMainDomElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE, {
+		applyDisplayMode(this.getMainElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE, {
 			innerPreferredDimensions: {
 				width: this.imageNaturalWidth,
 				height: this.imageNaturalHeight
@@ -169,15 +169,15 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 			let height = this.selection.height / correctionFactor;
 
 			css(this.$selectionFrame, {
-				left: left + (this.htmlImageElement.offsetLeft - this.getMainDomElement().offsetLeft) + "px",
-				top: top + (this.htmlImageElement.offsetTop - this.getMainDomElement().offsetTop) + "px",
+				left: left + (this.htmlImageElement.offsetLeft - this.getMainElement().offsetLeft) + "px",
+				top: top + (this.htmlImageElement.offsetTop - this.getMainElement().offsetTop) + "px",
 				width: width + "px",
 				height: height + "px"
 			});
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$element;
 	}
 

@@ -223,7 +223,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		return this.leftTabs.concat(this.rightTabs);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$tabPanel;
 	}
 
@@ -328,7 +328,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		tab.contentComponent = content;
 		if (tab.contentComponent) {
 			isEmptyable(tab.contentComponent) && tab.contentComponent.onEmptyStateChanged.addListener(this.onChildEmptyStateChanged.bind(this));
-			$tabContentContainer.appendChild(content.getMainDomElement());
+			$tabContentContainer.appendChild(content.getMainElement());
 		}
 
 		this.onChildEmptyStateChanged();
@@ -404,11 +404,11 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 
 	private setTabToolbarInternal(tab: Tab, toolbar: UiToolbar) {
 		if (tab.toolbar != null) {
-			tab.toolbar.getMainDomElement().remove();
+			tab.toolbar.getMainElement().remove();
 		}
 		tab.toolbar = toolbar;
 		if (toolbar) {
-			tab.$toolbarContainer.append(toolbar.getMainDomElement());
+			tab.$toolbarContainer.append(toolbar.getMainElement());
 		}
 	}
 
@@ -508,7 +508,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		this.$toolButtonContainer.classList.toggle("hidden", !toolButtons || toolButtons.length === 0);
 		this.toolButtons = {};
 		toolButtons.forEach(toolButton => {
-			this.$toolButtonContainer.appendChild(toolButton.getMainDomElement());
+			this.$toolButtonContainer.appendChild(toolButton.getMainElement());
 			this.toolButtons[toolButton.getId()] = toolButton;
 		});
 		this.relayoutButtons();
@@ -538,22 +538,22 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		this.windowButtons.push(toolButtonType);
 		const button = this.defaultToolButtons[toolButtonType];
 		if (this.$windowButtonContainer.children.length === 0) {
-			prependChild(this.$windowButtonContainer, button.getMainDomElement());
+			prependChild(this.$windowButtonContainer, button.getMainElement());
 		} else {
 			let index = this.windowButtons
 				.sort((a, b) =>this.orderedDefaultToolButtonTypes.indexOf(a) - this.orderedDefaultToolButtonTypes.indexOf(b))
 				.indexOf(toolButtonType);
 			if (index >= this.$windowButtonContainer.childNodes.length) {
-				this.$windowButtonContainer.appendChild(button.getMainDomElement());
+				this.$windowButtonContainer.appendChild(button.getMainElement());
 			} else {
-				insertBefore(button.getMainDomElement(), this.$windowButtonContainer.children[index]);
+				insertBefore(button.getMainElement(), this.$windowButtonContainer.children[index]);
 			}
 		}
 		this.relayoutButtons();
 	}
 
 	public removeWindowButton(uiToolButton: UiWindowButtonType) {
-		this.defaultToolButtons[uiToolButton].getMainDomElement().remove();
+		this.defaultToolButtons[uiToolButton].getMainElement().remove();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {
 			this.$windowButtonContainer.classList.add("hidden");

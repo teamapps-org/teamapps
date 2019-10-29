@@ -38,7 +38,7 @@ export class UiStaticGridLayout extends AbstractUiComponent<UiStaticGridLayoutCo
 		this.updateLayout(config.descriptor);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

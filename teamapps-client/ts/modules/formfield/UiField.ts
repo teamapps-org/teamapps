@@ -87,11 +87,11 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		this.setCommittedValue(_config.value);
 		this.onValueChanged.addListener(() => this.onUserManipulation.fire(null));
 		this.getFocusableElement() && this.getFocusableElement().addEventListener("focus", () => {
-			this.getMainDomElement().classList.add("focus");
+			this.getMainElement().classList.add("focus");
 			this.onFocused.fire(null);
 		});
 		this.getFocusableElement() && this.getFocusableElement().addEventListener("blur", () => {
-			this.getMainDomElement().classList.remove("focus");
+			this.getMainElement().classList.remove("focus");
 			this.onBlurred.fire(null);
 		});
 
@@ -151,7 +151,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		return this._config._type;
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$fieldWrapper;
 	}
 
@@ -254,8 +254,8 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	}
 
 	public static defaultOnEditingModeChangedImpl(field: UiField<UiFieldConfig, any>) {
-		field.getMainDomElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
-		field.getMainDomElement().classList.add(UiField.editingModeCssClasses[field.getEditingMode()]);
+		field.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		field.getMainElement().classList.add(UiField.editingModeCssClasses[field.getEditingMode()]);
 
 		let $focusable = field.getFocusableElement();
 		if ($focusable) {
@@ -298,7 +298,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			fieldMessageConfigs = [];
 		}
 
-		this.getMainDomElement().classList.remove("message-info", "message-success", "message-warning", "message-error");
+		this.getMainElement().classList.remove("message-info", "message-success", "message-warning", "message-error");
 		this.$messagesContainerAbove.innerHTML = '';
 		this.$messagesContainerBelow.innerHTML = '';
 		if (this._messageTooltip != null) {
@@ -317,7 +317,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			return messages.reduce((highestSeverity, message) => message.message.severity > highestSeverity ? message.message.severity : highestSeverity, UiFieldMessageSeverity.INFO);
 		};
 		if (this.fieldMessages && this.fieldMessages.length > 0) {
-			this.getMainDomElement().classList.add("message-" + UiFieldMessageSeverity[getHighestSeverity(this.fieldMessages)].toLowerCase());
+			this.getMainElement().classList.add("message-" + UiFieldMessageSeverity[getHighestSeverity(this.fieldMessages)].toLowerCase());
 		}
 
 		let fieldMessagesByPosition: { [position in UiFieldMessagePosition]: FieldMessage[] } = {

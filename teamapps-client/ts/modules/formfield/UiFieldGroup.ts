@@ -35,7 +35,7 @@ export class UiFieldGroup extends AbstractUiComponent<UiFieldGroupConfig> implem
 		this.setFields(config.fields as UiField[]);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -43,7 +43,7 @@ export class UiFieldGroup extends AbstractUiComponent<UiFieldGroupConfig> implem
 		this.fields = fields;
 		this.$main.innerHTML = '';
 		fields.forEach(f => {
-			this.$main.appendChild(f.getMainDomElement())
+			this.$main.appendChild(f.getMainElement())
 		});
 	}
 

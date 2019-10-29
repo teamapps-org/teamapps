@@ -86,7 +86,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		this.setOptimizedForTouch(context.config.optimizedForTouch);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$root;
 	}
 
@@ -102,7 +102,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 		this.$contentWrapper = parseHtml(`<div class="child-component-wrapper">`);
 		if (content != null) {
-			this.$contentWrapper.appendChild(content.getMainDomElement());
+			this.$contentWrapper.appendChild(content.getMainElement());
 		}
 		this.$root.appendChild(this.$contentWrapper);
 
@@ -228,8 +228,8 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 			}
 		});
 
-		document.body.appendChild(uiWindow.getMainDomElement());
-		uiWindow.getMainDomElement().setAttribute("data-background-container-id", this.ALL_ROOT_PANELS[0] && this.ALL_ROOT_PANELS[0].getId());
+		document.body.appendChild(uiWindow.getMainElement());
+		uiWindow.getMainElement().setAttribute("data-background-container-id", this.ALL_ROOT_PANELS[0] && this.ALL_ROOT_PANELS[0].getId());
 		uiWindow.setListener({
 			onWindowClosed: (window, animationDuration) => this.removeWindow(window.getId(), animationDuration)
 		});
@@ -237,20 +237,20 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		uiWindow.show(animationDuration);
 
 		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			rootPanel.getMainDomElement().classList.toggle("modal-window-mode", uiWindow.isModal());
+			rootPanel.getMainElement().classList.toggle("modal-window-mode", uiWindow.isModal());
 		});
 	}
 
 	public static removeWindow(windowId: string, animationDuration: number) {
 		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			rootPanel.getMainDomElement().classList.remove('modal-window-mode');
+			rootPanel.getMainElement().classList.remove('modal-window-mode');
 		});
 
 		let uiWindow = this.WINDOWS_BY_ID[windowId];
 		delete this.WINDOWS_BY_ID[windowId];
 
 		setTimeout(() => {
-			uiWindow.getMainDomElement().remove();
+			uiWindow.getMainElement().remove();
 		}, animationDuration);
 	};
 
@@ -263,7 +263,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 	public static buildRootPanel(containerElementId: string, uiRootPanel: UiRootPanel, context?: TeamAppsUiContext): void {
 		const $container = containerElementId ? document.querySelector("#" + containerElementId) : document.body;
-		$container.appendChild(uiRootPanel.getMainDomElement());
+		$container.appendChild(uiRootPanel.getMainElement());
 	}
 
 	public static setThemeClassName(theme: string) {
@@ -372,11 +372,11 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 	public static showPopupAtCurrentMousePosition(popup: UiPopup) {
 		popup.setPosition(... getLastPointerCoordinates());
-		document.body.appendChild(popup.getMainDomElement());
+		document.body.appendChild(popup.getMainElement());
 	}
 
 	public static showPopup(popup: UiPopup) {
-		document.body.appendChild(popup.getMainDomElement());
+		document.body.appendChild(popup.getMainElement());
 	}
 }
 

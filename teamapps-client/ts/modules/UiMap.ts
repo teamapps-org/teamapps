@@ -116,7 +116,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		this.setMapMarkerCluster(config.markerCluster);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$map;
 	}
 

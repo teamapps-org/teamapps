@@ -68,7 +68,7 @@ export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$component;
 	}
 
@@ -205,7 +205,7 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlo
 
 		this.$toolButtons.innerHTML = '';
 		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
-			this.$toolButtons.appendChild(tb.getMainDomElement());
+			this.$toolButtons.appendChild(tb.getMainElement());
 		});
 
 		removeClassesByFunction(this.$topRecord.classList, className => className.startsWith("align-"));
@@ -288,7 +288,7 @@ class UiCitationPageViewBlock extends AbstractBlockComponent<UiCitationPageViewB
 		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 		this.$toolButtons.innerHTML = '';
 		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
-			this.$toolButtons.appendChild(tb.getMainDomElement());
+			this.$toolButtons.appendChild(tb.getMainElement());
 		});
 
 	}
@@ -326,7 +326,7 @@ class UiComponentPageViewBlock extends AbstractBlockComponent<UiComponentPageVie
 
 		this.$toolButtons.innerHTML = '';
 		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
-			this.$toolButtons.appendChild(tb.getMainDomElement());
+			this.$toolButtons.appendChild(tb.getMainElement());
 		});
 		
 		if (config.title) {
@@ -334,7 +334,7 @@ class UiComponentPageViewBlock extends AbstractBlockComponent<UiComponentPageVie
 		}
 
 		this.component = config.component as UiComponent;
-		this.$componentWrapper.appendChild(this.component.getMainDomElement());
+		this.$componentWrapper.appendChild(this.component.getMainElement());
 	}
 
 	public getMainDomElement(): HTMLElement {

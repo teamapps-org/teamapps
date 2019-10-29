@@ -59,7 +59,7 @@ export function showNotification(notification: UiNotification, position: UiNotif
 	if (notif == null || notif.position != position) {
 		if (notif == null) {
 			let $wrapper = parseHtml(`<div class="notification-wrapper"></div>`);
-			$wrapper.appendChild(notification.getMainDomElement());
+			$wrapper.appendChild(notification.getMainElement());
 			notif = {notification, position, $wrapper};
 			notifications.push(notif)
 		} else {
@@ -72,7 +72,7 @@ export function showNotification(notification: UiNotification, position: UiNotif
 
 		updateContainerVisibilities();
 
-		animateCSS(notification.getMainDomElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[entranceAnimation] as any, 700);
+		animateCSS(notification.getMainElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[entranceAnimation] as any, 700);
 
 		let closeListener = () => {
 			notification.onClosedAnyWay.removeListener(closeListener);
@@ -82,7 +82,7 @@ export function showNotification(notification: UiNotification, position: UiNotif
 			notif.$wrapper.style.marginBottom = "0px";
 			notif.$wrapper.style.zIndex = "0";
 
-			animateCSS(notification.getMainDomElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation] as any, 700, () => {
+			animateCSS(notification.getMainElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation] as any, 700, () => {
 				notif.$wrapper.remove();
 				updateContainerVisibilities();
 			});
@@ -141,10 +141,10 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 			this.progressBar = null;
 		}
 
-		if (this.$contentContainer.firstChild !== (config.content && (config.content as UiComponent).getMainDomElement())) {
+		if (this.$contentContainer.firstChild !== (config.content && (config.content as UiComponent).getMainElement())) {
 			this.$contentContainer.innerHTML = '';
 			if (config.content != null) {
-				this.$contentContainer.appendChild((config.content as UiComponent).getMainDomElement());
+				this.$contentContainer.appendChild((config.content as UiComponent).getMainElement());
 			}
 		}
 	}
@@ -167,7 +167,7 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 		}
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

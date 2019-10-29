@@ -39,7 +39,7 @@ export class UiIFrame extends AbstractUiComponent<UiIFrameConfig> implements UiI
 		// });
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$iframe;
 	}
 

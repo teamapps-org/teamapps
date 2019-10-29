@@ -57,7 +57,7 @@ export class UiGauge extends AbstractUiComponent<UiGaugeConfig> implements UiGau
 	destroy(): void {
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

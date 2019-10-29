@@ -367,7 +367,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 		this.calendar.setOption('height', this.getHeight());
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

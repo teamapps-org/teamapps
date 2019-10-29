@@ -172,7 +172,7 @@ export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig
 		this.updateImageSizes();
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 

@@ -420,7 +420,7 @@ export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConf
 		return this.localViewContainer.getLayoutDescriptor();
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.localViewContainer.getMainDomElement();
 	}
 

@@ -57,7 +57,7 @@ export class UiElegantPanel extends AbstractUiComponent<UiElegantPanelConfig> im
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$element;
 	}
 
@@ -65,7 +65,7 @@ export class UiElegantPanel extends AbstractUiComponent<UiElegantPanelConfig> im
 		this.$contentContainer.innerHTML = '';
 		this.contentComponent = content;
 		if (content) {
-			this.$contentContainer.appendChild(this.contentComponent.getMainDomElement());
+			this.$contentContainer.appendChild(this.contentComponent.getMainElement());
 		}
 	}
 

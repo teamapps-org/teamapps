@@ -47,18 +47,18 @@ export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> 
 		return enumValueName.toLowerCase().replace("_", "-");
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
 	addComponent(component: UiComponent): void {
 		this.components.push(component);
-		this.$main.appendChild(component.getMainDomElement());
+		this.$main.appendChild(component.getMainElement());
 	}
 
 	removeComponent(component: UiComponent): void {
 		try {
-			this.$main.removeChild(component.getMainDomElement());
+			this.$main.removeChild(component.getMainElement());
 		} catch (e) {
 			// ignore if this is actually not a child...
 		}

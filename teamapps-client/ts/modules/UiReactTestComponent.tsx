@@ -53,7 +53,7 @@ export class UiReactTestComponent extends AbstractUiComponent<UiReactTestCompone
 	destroy(): void {
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

@@ -60,7 +60,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(config);
 		subFieldSkeletons.forEach(subFieldSkeleton => {
 			const field = subFieldSkeleton.config.field as UiField;
-			subFieldSkeleton.$cell.appendChild(field.getMainDomElement());
+			subFieldSkeleton.$cell.appendChild(field.getMainElement());
 			field.onValueChanged.addListener((eventObject: ValueChangeEventData ) => {
 				this.onSubFieldValueChanged.fire({
 					fieldName: "TODO!",

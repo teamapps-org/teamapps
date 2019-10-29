@@ -30,7 +30,7 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 		}
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

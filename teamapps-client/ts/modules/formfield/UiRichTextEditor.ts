@@ -353,13 +353,13 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					});
 					editor.on('focus', (e) => {
 						this._hasFocus = true;
-						this.getMainDomElement().classList.add('focus');
+						this.getMainElement().classList.add('focus');
 						this.updateToolbarVisibility();
 						this.onFocused.fire(null);
 					});
 					editor.on('blur', (e) => {
 						this._hasFocus = false;
-						this.getMainDomElement().classList.remove('focus');
+						this.getMainElement().classList.remove('focus');
 						if (this.mayFireChangeEvents()) {
 							this.commit();
 						}

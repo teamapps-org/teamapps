@@ -110,7 +110,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$panel;
 	}
 

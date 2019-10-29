@@ -128,7 +128,7 @@ export class UiYoutubePlayer extends AbstractUiComponent<UiYoutubePlayerConfig> 
 		}
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$wrapper;
 	}
 

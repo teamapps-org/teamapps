@@ -59,7 +59,7 @@ export class UiApplicationLayout extends AbstractUiComponent<UiApplicationLayout
 		this._toolbar = toolbar;
 		this._$toolbarContainer.classList.toggle('hidden', !toolbar);
 		if (toolbar) {
-			this._$toolbarContainer.appendChild(this._toolbar.getMainDomElement());
+			this._$toolbarContainer.appendChild(this._toolbar.getMainElement());
 		}
 	}
 
@@ -70,11 +70,11 @@ export class UiApplicationLayout extends AbstractUiComponent<UiApplicationLayout
 		}
 		if (splitPane) {
 			this._rootSplitPane = splitPane;
-			this._$contentContainer.appendChild(this._rootSplitPane.getMainDomElement());
+			this._$contentContainer.appendChild(this._rootSplitPane.getMainElement());
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$mainDiv;
 	}
 

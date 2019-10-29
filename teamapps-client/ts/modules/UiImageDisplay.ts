@@ -107,7 +107,7 @@ export class UiImageDisplay extends AbstractUiComponent<UiImageDisplayConfig> im
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 

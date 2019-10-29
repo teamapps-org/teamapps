@@ -78,7 +78,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 		this.uiFields.push(uiField);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$mainDiv;
 	}
 
@@ -104,7 +104,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 
 	@executeWhenFirstDisplayed(true)
 	private applyLayoutPolicy(layoutPolicy: UiFormLayoutPolicyConfig) {
-		this.uiFields.forEach(uiField => uiField.getMainDomElement().remove());
+		this.uiFields.forEach(uiField => uiField.getMainElement().remove());
 		this.sections && this.sections.forEach(section => {
 			section.destroy();
 			section.getMainDomElement().remove();
@@ -255,8 +255,8 @@ class UiFormSection {
 					"min-height": placement.minHeight ? `${placement.minHeight}px` : '',
 					"max-height": placement.maxHeight ? `${placement.maxHeight}px` : ''
 				};
-				uiField.getMainDomElement().setAttribute("data-placement-id", placementId);
-				this.$body.appendChild(uiField.getMainDomElement());
+				uiField.getMainElement().setAttribute("data-placement-id", placementId);
+				this.$body.appendChild(uiField.getMainElement());
 			} else if (this.isUiFormSectionFloatingFieldsPlacement(placement)) {
 				let $container = parseHtml(`<div class="UiFormSectionFloatingFieldsPlacement" data-placement-id="${placementId}"></div>`);
 				allCssRules[placementId] = {
@@ -275,8 +275,8 @@ class UiFormSection {
 						"max-height": floatingField.maxHeight ? `${floatingField.maxHeight}px` : '',
 						"margin": `${placement.verticalSpacing / 2}px ${placement.horizontalSpacing / 2}px`
 					};
-					uiField.getMainDomElement().setAttribute("data-placement-id", floatingFieldPlacementId);
-					$container.appendChild(uiField.getMainDomElement());
+					uiField.getMainElement().setAttribute("data-placement-id", floatingFieldPlacementId);
+					$container.appendChild(uiField.getMainElement());
 				});
 				this.$body.appendChild($container);
 			}

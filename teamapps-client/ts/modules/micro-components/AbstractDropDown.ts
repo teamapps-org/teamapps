@@ -55,7 +55,7 @@ export abstract class AbstractDropDown<OPEN_CONFIG> {
 		this._contentComponent = component;
 
 		if (component != null) {
-			this.$contentContainer.append(component.getMainDomElement())
+			this.$contentContainer.append(component.getMainElement())
 		}
 
 		if (this._isOpen) {

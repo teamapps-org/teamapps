@@ -435,7 +435,7 @@ document.addEventListener("mozfullscreenchange", fullScreenChangeHandler);
 document.addEventListener("MSFullscreenChange", fullScreenChangeHandler);
 
 export function enterFullScreen(component: UiComponent<UiComponentConfig>) {
-	let element: Element = component.getMainDomElement();
+	let element: Element = component.getMainElement();
 	element.classList.add("fullscreen");
 	if (element.requestFullscreen) {
 		element.requestFullscreen();
@@ -674,13 +674,13 @@ export function insertAtIndex($parent: Element, $child: Element, index: number) 
 }
 
 export function maximizeComponent(component: UiComponent, maximizeAnimationCallback?: () => void) {
-	const $parentDomElement = component.getMainDomElement().parentElement;
+	const $parentDomElement = component.getMainElement().parentElement;
 	const scrollTop = window.scrollY;
 	const scrollLeft = window.scrollX;
-	const offset = component.getMainDomElement().getBoundingClientRect();
+	const offset = component.getMainElement().getBoundingClientRect();
 
 	const changingCssProperties: ["position", "top", "left", "width", "height", "zIndex"] = ["position", "top", "left", "width", "height", "zIndex"];
-	const style = component.getMainDomElement().style as CSSStyleDeclaration;
+	const style = component.getMainElement().style as CSSStyleDeclaration;
 	const originalCssValues = changingCssProperties.reduce((properties, cssPropertyName) => {
 		properties[cssPropertyName] = style[cssPropertyName];
 		return properties;
@@ -692,18 +692,18 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 		width: offset.width,
 		height: offset.height,
 	};
-	Object.assign(component.getMainDomElement().style, {
+	Object.assign(component.getMainElement().style, {
 		...animationStartCssValues
 	});
-	document.body.appendChild(component.getMainDomElement());
-	component.getMainDomElement().classList.add("teamapps-component-maximized");
-	$(component.getMainDomElement()).animate({
+	document.body.appendChild(component.getMainElement());
+	component.getMainElement().classList.add("teamapps-component-maximized");
+	$(component.getMainElement()).animate({
 		top: "5px",
 		left: "5px",
 		width: (window.innerWidth - 10),
 		height: (window.innerHeight - 10)
 	}, 100, 'swing', () => {
-		css(component.getMainDomElement(), {
+		css(component.getMainElement(), {
 			width: "calc(100% - 10px)",
 			height: "calc(100% - 10px)"
 		});
@@ -711,10 +711,10 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 	});
 
 	let restore = (restoreAnimationCallback?: () => void) => {
-		$(component.getMainDomElement()).animate(animationStartCssValues, 100, 'swing', () => {
-			Object.assign(component.getMainDomElement().style, originalCssValues);
-			component.getMainDomElement().classList.remove("teamapps-component-maximized");
-			$parentDomElement.appendChild(component.getMainDomElement());
+		$(component.getMainElement()).animate(animationStartCssValues, 100, 'swing', () => {
+			Object.assign(component.getMainElement().style, originalCssValues);
+			component.getMainElement().classList.remove("teamapps-component-maximized");
+			$parentDomElement.appendChild(component.getMainElement());
 			restoreAnimationCallback && restoreAnimationCallback();
 		});
 	};

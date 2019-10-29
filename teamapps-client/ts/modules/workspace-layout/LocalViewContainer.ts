@@ -128,7 +128,7 @@ export class LocalViewContainer implements ViewContainer {
 					let view = this.itemTree.getViewByName(viewName);
 					srcTabPanel = matchingTabPanel;
 					try {
-						let $tabButton = matchingTabPanel.component.getMainDomElement().querySelector<HTMLElement>(`:scope .tab-button[data-tab-name=${viewName}]`);
+						let $tabButton = matchingTabPanel.component.getMainElement().querySelector<HTMLElement>(`:scope .tab-button[data-tab-name=${viewName}]`);
 						if ($tabButton) {
 							this.$dndImage.innerHTML = $tabButton.outerHTML;
 							this.$dndImage.querySelector<HTMLElement>(':scope .tab-button').classList.remove('hidden');
@@ -170,7 +170,7 @@ export class LocalViewContainer implements ViewContainer {
 				this.$dndActiveRectangle.classList.remove("hidden");
 
 				if (dropPosition.tabPanel) {
-					let $tabPanelContentWrapper = dropPosition.tabPanel.component.getMainDomElement().querySelector<HTMLElement>(':scope .tabpanel-content-wrapper');
+					let $tabPanelContentWrapper = dropPosition.tabPanel.component.getMainElement().querySelector<HTMLElement>(':scope .tabpanel-content-wrapper');
 					let tabPanelContentRect = $tabPanelContentWrapper.getBoundingClientRect();
 
 					if (dropPosition.relativeDropPosition === RelativeDropPosition.TAB) {
@@ -327,7 +327,7 @@ export class LocalViewContainer implements ViewContainer {
 		}
 		this._toolbar = toolbar;
 		if (toolbar) {
-			this.$toolbarContainer.appendChild(this._toolbar.getMainDomElement());
+			this.$toolbarContainer.appendChild(this._toolbar.getMainElement());
 			this._toolbar.onEmptyStateChanged.addListener(() => this.updateToolbarVisibility());
 		}
 		this.updateToolbarVisibility();
@@ -402,7 +402,7 @@ export class LocalViewContainer implements ViewContainer {
 
 		if (matchingTabPanel != null) {
 			let view = matchingTabPanel.tabs[0];
-			let tabPanelContentWrapper = matchingTabPanel.component.getMainDomElement().querySelector<HTMLElement>(':scope .tabpanel-content-wrapper');
+			let tabPanelContentWrapper = matchingTabPanel.component.getMainElement().querySelector<HTMLElement>(':scope .tabpanel-content-wrapper');
 			let tabPanelContentRect = tabPanelContentWrapper.getBoundingClientRect();
 			const relativeEventX = (e.pageX - tabPanelContentRect.left) / tabPanelContentRect.width;
 			const relativeEventY = (e.pageY - tabPanelContentRect.top) / tabPanelContentRect.height;
@@ -429,7 +429,7 @@ export class LocalViewContainer implements ViewContainer {
 		let allTabPanelItems = this.itemTree.getAllTabPanelItems();
 		let matchingTabPanel: TabPanelItem;
 		while (target != null && target != this.$mainDiv) {
-			matchingTabPanel = allTabPanelItems.filter(item => item.component.getMainDomElement() === target)[0];
+			matchingTabPanel = allTabPanelItems.filter(item => item.component.getMainElement() === target)[0];
 			if (matchingTabPanel) {
 				break;
 			} else {
@@ -444,7 +444,7 @@ export class LocalViewContainer implements ViewContainer {
 			this.itemTree.rootItem.component.onEmptyStateChanged.removeListener(this.onRootItemEmptyStateChanged);
 		}
 		this.itemTree.rootItem = item;
-		this.$contentContainer.appendChild(item.component.getMainDomElement());
+		this.$contentContainer.appendChild(item.component.getMainElement());
 		if (isEmptyable(item.component)) {
 			item.component.onEmptyStateChanged.addListener(this.onRootItemEmptyStateChanged);
 			this.onRootItemEmptyStateChanged(item.component.empty);
@@ -535,13 +535,13 @@ export class LocalViewContainer implements ViewContainer {
 			newTabPanelItem.addTab(view, true);
 
 			if (existingTabPanelIsPosition === 'FIRST') {
-				oldParent.component.firstChildComponent.getMainDomElement().remove();
+				oldParent.component.firstChildComponent.getMainElement().remove();
 				oldParent.firstChild = newSplitPaneItem;
 			} else if (existingTabPanelIsPosition === 'LAST') {
-				oldParent.component.lastChildComponent.getMainDomElement().remove();
+				oldParent.component.lastChildComponent.getMainElement().remove();
 				oldParent.lastChild = newSplitPaneItem;
 			} else { // siblingTabPanelItem is root!
-				siblingTabPanelItem.component.getMainDomElement().remove();
+				siblingTabPanelItem.component.getMainElement().remove();
 				this.setRootItem(newSplitPaneItem);
 			}
 
@@ -557,7 +557,7 @@ export class LocalViewContainer implements ViewContainer {
 				let isVerticalSplit = [UiRelativeWorkSpaceViewPosition.LEFT, UiRelativeWorkSpaceViewPosition.RIGHT].indexOf(relativePosition) !== -1;
 				let splitPaneItem = new SplitPaneItem(generateUUID(), null, isVerticalSplit ? UiSplitDirection.VERTICAL : UiSplitDirection.HORIZONTAL, sizePolicy, referenceChildSize, this.context);
 				let oldRootItem = this.itemTree.rootItem;
-				oldRootItem.component.getMainDomElement().remove();
+				oldRootItem.component.getMainElement().remove();
 				this.setRootItem(splitPaneItem);
 
 				let newTabPanelItem = this.createTabPanelItem({id: generateUUID(), viewNames: []}, splitPaneItem);
@@ -599,11 +599,11 @@ export class LocalViewContainer implements ViewContainer {
 			let siblingItem: ItemTreeItem<UiComponent<UiComponentConfig>>;
 			if (tabPanelItemIsFirstChild) {
 				siblingItem = parentSplitPaneItem.lastChild;
-				siblingItem.component.getMainDomElement().remove();
+				siblingItem.component.getMainElement().remove();
 				parentSplitPaneItem.lastChild = null;
 			} else {
 				siblingItem = parentSplitPaneItem.firstChild;
-				siblingItem.component.getMainDomElement().remove();
+				siblingItem.component.getMainElement().remove();
 				parentSplitPaneItem.firstChild = null;
 			}
 			let grandParentSplitPaneItem = parentSplitPaneItem.parent;
@@ -616,7 +616,7 @@ export class LocalViewContainer implements ViewContainer {
 				}
 			} else {
 				parentSplitPaneItem.component.destroy();
-				parentSplitPaneItem.component.getMainDomElement().remove();
+				parentSplitPaneItem.component.getMainElement().remove();
 				this.setRootItem(siblingItem);
 				siblingItem.parent = null;
 			}
@@ -632,7 +632,7 @@ export class LocalViewContainer implements ViewContainer {
 		if (viewName === newSiblingName && view.parent.tabs.length <= 1) {
 			return; // would not have any effect anyway
 		}
-		view.component.getMainDomElement().remove();
+		view.component.getMainElement().remove();
 		this.removeView(viewName, false);
 		this.addViewItemToNewPosition(view, newSiblingName, relativePosition, sizePolicy, referenceChildSize);
 	}
@@ -642,7 +642,7 @@ export class LocalViewContainer implements ViewContainer {
 		if (viewName === newSiblingName) {
 			return; // would not have any effect anyway
 		}
-		view.component.getMainDomElement().remove();
+		view.component.getMainElement().remove();
 		this.removeView(viewName, false);
 		this.itemTree.getViewByName(newSiblingName).parent.addTab(view, true);
 		this.itemTree.updateIndex();
@@ -713,7 +713,7 @@ export class LocalViewContainer implements ViewContainer {
 	}
 
 	private maximizeTabPanel(tabPanelItem: TabPanelItem) {
-		const $element = tabPanelItem.component.getMainDomElement();
+		const $element = tabPanelItem.component.getMainElement();
 		this.$normalContainerOfMaximizedTabPanel = $element.parentElement;
 		this.$maximizationContainerWrapper.classList.add("show");
 		this.$maximizationContainer.append($element);
@@ -723,7 +723,7 @@ export class LocalViewContainer implements ViewContainer {
 
 	private restoreTabPanel(tabPanelItem: TabPanelItem) {
 		if (tabPanelItem.state === UiViewGroupPanelState.MAXIMIZED) {
-			const $element = tabPanelItem.component.getMainDomElement();
+			const $element = tabPanelItem.component.getMainElement();
 			this.$maximizationContainerWrapper.classList.remove("show");
 			this.$maximizationContainer.append($element);
 			this.$maximizationContainer.classList.remove("animated", "zoomIn");
@@ -782,8 +782,8 @@ export class LocalViewContainer implements ViewContainer {
 	}
 
 	setMultiProgressDisplay(multiProgressDisplay: UiMultiProgressDisplay) {
-		this.multiProgressDisplay && this.multiProgressDisplay.getMainDomElement().remove();
+		this.multiProgressDisplay && this.multiProgressDisplay.getMainElement().remove();
 		this.multiProgressDisplay = multiProgressDisplay;
-		multiProgressDisplay && this.$progressContainer.appendChild(multiProgressDisplay.getMainDomElement());
+		multiProgressDisplay && this.$progressContainer.appendChild(multiProgressDisplay.getMainElement());
 	}
 }

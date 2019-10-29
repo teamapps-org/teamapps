@@ -70,7 +70,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		this.createGraph(config.gravity, config.images);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$graph;
 	}
 
@@ -110,7 +110,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				this.container.attr("transform", d3.event.transform);
 			});
 
-		this.svg = d3.select(this.getMainDomElement())
+		this.svg = d3.select(this.getMainElement())
 			.append("svg")
 			.call(this.zoom)
 			.on("dblclick.zoom", null); // disable doubleclick zoom!;
