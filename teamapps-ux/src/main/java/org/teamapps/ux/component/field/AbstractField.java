@@ -51,7 +51,6 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	public final Event<Boolean> onVisibilityChanged = new Event<>();
 
 	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
-	private boolean visible = true;
 
 	private final Set<FieldValidator<VALUE>> validators = new HashSet<>();
 	private final Map<FieldValidator<VALUE>, List<FieldMessage>> fieldMessagesByValidator = new HashMap<>(); // null key for custom field messages (not bound to a validator)
@@ -73,10 +72,6 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiField.SetEditingModeCommand(getId(), editingMode.toUiFieldEditingMode()));
 	}
 
-	public boolean isVisible() {
-		return visible;
-	}
-
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		onVisibilityChanged.fire(visible);
@@ -90,7 +85,6 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		mapAbstractUiComponentProperties(uiField);
 		uiField.setValue(convertUxValueToUiValue(this.value.read()));
 		uiField.setEditingMode(editingMode.toUiFieldEditingMode());
-		uiField.setVisible(this.visible);
 		uiField.setFieldMessages(getFieldMessages().stream()
 				.map(message -> message.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
 				.collect(Collectors.toList()));
@@ -173,7 +167,8 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		updateFieldMessages();
 	}
 
-	public void validate() {
+	public List<FieldMessage> validate() {
+		List<FieldMessage> allValidatorMessages = new ArrayList<>();
 		if (validators.size() > 0) {
 			for (FieldValidator<VALUE> validator : validators) {
 				fieldMessagesByValidator.remove(validator);
@@ -182,9 +177,11 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 					messages = Collections.emptyList();
 				}
 				fieldMessagesByValidator.put(validator, messages);
+				allValidatorMessages.addAll(messages);
 			}
 			updateFieldMessages();
-		} 
+		}
+		return allValidatorMessages;
 	}
 
 	/**
