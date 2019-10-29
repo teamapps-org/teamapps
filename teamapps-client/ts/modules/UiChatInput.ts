@@ -128,7 +128,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		this.updateSendability();
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

@@ -28,7 +28,7 @@ export interface UiComponent<C extends UiComponentConfig = UiComponentConfig> ex
 	/**
 	 * @return The main DOM element of this component.
 	 */
-	getMainDomElement(): HTMLElement;
+	getMainElement(): HTMLElement;
 
 
 	destroy(): void;

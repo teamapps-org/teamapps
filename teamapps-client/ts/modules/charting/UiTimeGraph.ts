@@ -500,7 +500,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		// nothing to do!
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

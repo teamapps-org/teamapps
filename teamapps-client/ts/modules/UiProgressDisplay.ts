@@ -74,7 +74,7 @@ export class UiProgressDisplay extends AbstractUiComponent<UiProgressDisplayConf
 		this.update(config);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

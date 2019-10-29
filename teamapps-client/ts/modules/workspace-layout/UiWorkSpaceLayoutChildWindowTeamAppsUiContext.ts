@@ -73,7 +73,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 					UiRootPanel.setConfig(messageObject.uiConfiguration, this);
 					UiRootPanel.registerTemplates(messageObject.registeredTemplates, this);
 					// TODO set background image!
-					document.body.appendChild(rootPanel.getMainDomElement());
+					document.body.appendChild(rootPanel.getMainElement());
 					this.workSpaceLayout = new UiWorkSpaceLayout({
 						_type: "UiWorkSpaceLayout",
 						id: messageObject.workspaceLayoutId,
@@ -162,7 +162,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 		if (c == null) {
 			UiWorkSpaceLayoutChildWindowTeamAppsUiContext.logger.error("Could not find component to destroy: " + id)
 		}
-		c.getMainDomElement().remove();
+		c.getMainElement().remove();
 		c.destroy();
 		delete this.components[id];
 	}

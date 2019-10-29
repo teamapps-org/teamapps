@@ -24,5 +24,5 @@ export interface LiveStreamPlayer {
 	stop(): void;
 	isPlaying(): boolean;
 	setVolume(volume: number): void;
-	getMainDomElement(): HTMLElement;
+	getMainElement(): HTMLElement;
 }

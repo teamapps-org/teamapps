@@ -74,7 +74,7 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 		this.setFilter(config.filter);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$itemView;
 	}
 

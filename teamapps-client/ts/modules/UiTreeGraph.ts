@@ -135,7 +135,7 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 		this.chart.setZoomFactor(zoomFactor);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

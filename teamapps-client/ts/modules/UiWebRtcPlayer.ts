@@ -263,7 +263,7 @@ export class UiWebRtcPlayer extends AbstractUiComponent<UiWebRtcPlayerConfig> im
 	destroy(): void {
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

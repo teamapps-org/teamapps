@@ -135,8 +135,8 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		this.trivialTagComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialTagComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialTagComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialTagComboBox.onFocus.addListener(() => this.getMainDomElement().classList.add("focus"));
-		this.trivialTagComboBox.onBlur.addListener(() => this.getMainDomElement().classList.remove("focus"));
+		this.trivialTagComboBox.onFocus.addListener(() => this.getMainElement().classList.add("focus"));
+		this.trivialTagComboBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
 	}
 
 	private renderRecord(record: NodeWithChildren<UiComboBoxTreeRecordConfig>, dropdown: boolean): string {
@@ -200,8 +200,8 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainDomElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
-		this.getMainDomElement().classList.add(UiField.editingModeCssClasses[editingMode]);
+		this.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainElement().classList.add(UiField.editingModeCssClasses[editingMode]);
 		if (editingMode === UiFieldEditingMode.READONLY) {
 			this.trivialTagComboBox.setEditingMode("readonly");
 		} else if (editingMode === UiFieldEditingMode.DISABLED) {

@@ -44,14 +44,14 @@ export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPop
 		this.$componentWrapper = this.$main.querySelector(":scope .component-wrapper");
 
 		this.contentComponent = config.contentComponent as UiComponent;
-		this.$componentWrapper.appendChild(this.contentComponent.getMainDomElement());
+		this.$componentWrapper.appendChild(this.contentComponent.getMainElement());
 
 		this.setBackgroundColor(config.backgroundColor);
 		this.setDimmingColor(config.dimmingColor);
 		this.setDimensions(config.width, config.height);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -114,7 +114,7 @@ export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPop
 	}
 
 	close(): void {
-		this.getMainDomElement().remove();
+		this.getMainElement().remove();
 	}
 }
 

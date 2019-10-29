@@ -59,7 +59,7 @@ export class UiPieChart extends AbstractUiComponent<UiPieChartConfig> implements
 			.render();
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.chart.container() as HTMLElement;
 	}
 

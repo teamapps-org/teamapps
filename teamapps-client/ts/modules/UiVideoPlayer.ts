@@ -113,7 +113,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 		});
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 
@@ -179,9 +179,9 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	}
 
 	setUrl(url: string): void {
-		this.getMainDomElement().querySelector<HTMLElement>(":scope .mejs__overlay-error").parentElement.classList.add("hidden");
-		this.getMainDomElement().querySelector<HTMLElement>(":scope .mejs__poster").classList.remove("hidden");
-		this.getMainDomElement().querySelector<HTMLElement>(":scope .mejs__overlay-play").style.display = "flex";
+		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__overlay-error").parentElement.classList.add("hidden");
+		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__poster").classList.remove("hidden");
+		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__overlay-play").style.display = "flex";
 		this.mediaPlayer.pause();
 		this.contentReady = false;
 		if (url == null) {

@@ -48,28 +48,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 			_config.id = generateUUID();
 		}
 
-		// do this with timeout since the main dom element does not yet exist when executing this (subclass constructor gets called after this)
-		// TODO #timeout this introduces A LOT of race conditions! e.g. the resize observer might or might not fire the initial size
-		this.visible = _config.visible; // TODO #timeout !!
-		setTimeout(() => {
-			this.getMainDomElement().classList.toggle("invisible-component", _config.visible == null ? false : !_config.visible); // TODO #timeout !!
-			if (_config.stylesBySelector != null) { // might be null when used via JavaScript API!
-				Object.keys(_config.stylesBySelector).forEach(selector => this.setStyle(selector, _config.stylesBySelector[selector]));
-			}
-
-			let debouncedRelayout = debounce((entry: ResizeObserverEntry) => {
-				this.reLayout(entry.contentRect.width, entry.contentRect.height);
-				// this.reLayout(this.getMainDomElement().offsetWidth, this.getMainDomElement().offsetHeight);
-			}, 300, DebounceMode.BOTH);
-			const resizeObserver = new ResizeObserver(entries => {
-				for (let entry of entries) {
-					debouncedRelayout(entry);
-				}
-			});
-			resizeObserver.observe(this.getMainDomElement());
-
-			this.reLayout(this.getMainDomElement().offsetWidth, this.getMainDomElement().offsetHeight); // TODO remove when no more "setTimeout()"!
-		}, 0);
+		this.visible = _config.visible;
 	}
 
 	public getId(): string {
@@ -113,10 +92,37 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		// empty default implementation
 	}
 
+	private firstTimeGetMainElementCalled = true;
 	/**
 	 * @return The main DOM element of this component.
 	 */
-	public abstract getMainDomElement(): HTMLElement;
+	public getMainElement(): HTMLElement {
+		let element = this.doGetMainElement();
+
+		if (this.firstTimeGetMainElementCalled) {
+			this.firstTimeGetMainElementCalled = false;
+
+			element.classList.toggle("invisible-component", this.visible == null ? false : !this.visible);
+			if (this._config.stylesBySelector != null) { // might be null when used via JavaScript API!
+				Object.keys(this._config.stylesBySelector).forEach(selector => this.setStyle(selector, this._config.stylesBySelector[selector]));
+			}
+
+			let debouncedRelayout = debounce((entry: ResizeObserverEntry) => {
+				this.reLayout(entry.contentRect.width, entry.contentRect.height);
+				// this.reLayout(this.getMainDomElement().offsetWidth, this.getMainDomElement().offsetHeight);
+			}, 300, DebounceMode.BOTH);
+			const resizeObserver = new ResizeObserver(entries => {
+				for (let entry of entries) {
+					debouncedRelayout(entry);
+				}
+			});
+			resizeObserver.observe(this.getMainElement());
+		}
+
+		return element;
+	};
+
+	protected abstract doGetMainElement(): HTMLElement;
 
 	public getWidth(): number {
 		return this.width;
@@ -132,8 +138,8 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 
 	public setVisible(visible: boolean = true /*undefined == true!!*/, fireEvent = true) {
 		this.visible = visible;
-		if (this.getMainDomElement() != null) { // might not have been rendered yet, if setVisible is already called in the constructor/initializer
-			this.getMainDomElement().classList.toggle("invisible-component", !visible);
+		if (this.getMainElement() != null) { // might not have been rendered yet, if setVisible is already called in the constructor/initializer
+			this.getMainElement().classList.toggle("invisible-component", !visible);
 		}
 		if (fireEvent) {
 			this.onVisibilityChanged.fire(visible);
@@ -144,9 +150,9 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 	public setStyle(selector:string, style: {[property: string]: string}) {
 		let targetElement: HTMLElement[];
 		if (!selector) {
-			targetElement = [this.getMainDomElement()];
+			targetElement = [this.getMainElement()];
 		} else {
-			targetElement = Array.from((this.getMainDomElement() as HTMLElement).querySelectorAll(":scope " + selector));
+			targetElement = Array.from((this.getMainElement() as HTMLElement).querySelectorAll(":scope " + selector));
 		}
 		if (targetElement.length === 0) {
 			this.logger.error("Cannot set style on non-existing element. Selector: " + selector);

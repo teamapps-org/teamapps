@@ -95,7 +95,7 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 		}
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

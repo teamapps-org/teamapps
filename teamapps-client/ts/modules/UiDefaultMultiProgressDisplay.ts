@@ -53,7 +53,7 @@ export class UiDefaultMultiProgressDisplay extends UiMultiProgressDisplay<UiDefa
 		this.update(config);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

@@ -47,7 +47,7 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 
 		this.$main = parseHtml(`<div class="UiFloatingComponent"></div>`);
 
-		this.$main.appendChild(this.contentComponent.getMainDomElement());
+		this.$main.appendChild(this.contentComponent.getMainElement());
 		this.$expanderHandle = parseHtml(`<div class="expander-handle"></div>`);
 		this.$expanderHandle.addEventListener("click", evt => {
 			this.setExpanded(!this._config.expanded);
@@ -55,7 +55,7 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 		});
 		this.$main.appendChild(this.$expanderHandle);
 
-		prependChild(this.containerComponent.getMainDomElement(), this.getMainDomElement());
+		prependChild(this.containerComponent.getMainElement(), this.getMainElement());
 
 		this.setBackgroundColor(config.backgroundColor);
 		this.setExpanderHandleColor(config.expanderHandleColor);
@@ -65,8 +65,8 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 				this.updateFloatingPosition();
 			}
 		});
-		resizeObserver.observe(this.containerComponent.getMainDomElement());
-		resizeObserver.observe(this.contentComponent.getMainDomElement());
+		resizeObserver.observe(this.containerComponent.getMainElement());
+		resizeObserver.observe(this.contentComponent.getMainElement());
 
 		this.$main.addEventListener("click", ev => ev.stopPropagation());
 		this.$main.addEventListener("pointerdown", ev => ev.stopPropagation());
@@ -86,65 +86,65 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 		removeClassesByFunction(this.$expanderHandle.classList, className => className.startsWith("position-"));
 		this.$expanderHandle.classList.add("position-" + UiFloatingComponentPosition[this._config.position].toLowerCase().replace('_', '-'));
 
-		let containerWidth = this.containerComponent.getMainDomElement().offsetWidth;
-		let containerHeight = this.containerComponent.getMainDomElement().offsetHeight;
+		let containerWidth = this.containerComponent.getMainElement().offsetWidth;
+		let containerHeight = this.containerComponent.getMainElement().offsetHeight;
 
 		// width
 		if (this._config.width === -1) {
-			this.getMainDomElement().style.width = null;
-			this.getMainDomElement().style.maxWidth = (containerWidth - 2 * this._config.marginX) + "px";
+			this.getMainElement().style.width = null;
+			this.getMainElement().style.maxWidth = (containerWidth - 2 * this._config.marginX) + "px";
 		} else if (this._config.width === 0) {
-			this.getMainDomElement().style.width = (containerWidth - 2 * this._config.marginX) + "px";
-			this.getMainDomElement().style.maxWidth = null;
+			this.getMainElement().style.width = (containerWidth - 2 * this._config.marginX) + "px";
+			this.getMainElement().style.maxWidth = null;
 		} else {
-			this.getMainDomElement().style.width = this._config.width + "px";
-			this.getMainDomElement().style.maxWidth = null;
+			this.getMainElement().style.width = this._config.width + "px";
+			this.getMainElement().style.maxWidth = null;
 		}
 
-		let contentWidth = this.contentComponent.getMainDomElement().offsetWidth;
-		let contentHeight = this.contentComponent.getMainDomElement().offsetHeight;
+		let contentWidth = this.contentComponent.getMainElement().offsetWidth;
+		let contentHeight = this.contentComponent.getMainElement().offsetHeight;
 
 		// position X
 		if (this._config.expanded) {
 			if (this._config.position === UiFloatingComponentPosition.TOP_LEFT || this._config.position === UiFloatingComponentPosition.BOTTOM_LEFT) {
-				this.getMainDomElement().style.left = this._config.marginX + "px";
-				this.getMainDomElement().style.right = null;
+				this.getMainElement().style.left = this._config.marginX + "px";
+				this.getMainElement().style.right = null;
 			} else if (this._config.position === UiFloatingComponentPosition.TOP_RIGHT || this._config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
-				this.getMainDomElement().style.left = null;
-				this.getMainDomElement().style.right = this._config.marginX + "px";
+				this.getMainElement().style.left = null;
+				this.getMainElement().style.right = this._config.marginX + "px";
 			}
 		} else {
 			if (this._config.position === UiFloatingComponentPosition.TOP_LEFT || this._config.position === UiFloatingComponentPosition.BOTTOM_LEFT) {
-				this.getMainDomElement().style.left = `-${contentWidth}px`;
-				this.getMainDomElement().style.right = null;
+				this.getMainElement().style.left = `-${contentWidth}px`;
+				this.getMainElement().style.right = null;
 			} else if (this._config.position === UiFloatingComponentPosition.TOP_RIGHT || this._config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
-				this.getMainDomElement().style.left = null;
-				this.getMainDomElement().style.right = `-${contentWidth}px`;
+				this.getMainElement().style.left = null;
+				this.getMainElement().style.right = `-${contentWidth}px`;
 			}
 		}
 
 		// position Y
 		if (this._config.position === UiFloatingComponentPosition.TOP_LEFT || this._config.position === UiFloatingComponentPosition.TOP_RIGHT) {
-			this.getMainDomElement().style.top = this._config.marginY + "px";
-			this.getMainDomElement().style.bottom = null;
+			this.getMainElement().style.top = this._config.marginY + "px";
+			this.getMainElement().style.bottom = null;
 		} else if (this._config.position === UiFloatingComponentPosition.BOTTOM_LEFT || this._config.position === UiFloatingComponentPosition.BOTTOM_RIGHT) {
-			this.getMainDomElement().style.top = null;
-			this.getMainDomElement().style.bottom = this._config.marginY + "px";
+			this.getMainElement().style.top = null;
+			this.getMainElement().style.bottom = this._config.marginY + "px";
 		}
 		// height
 		if (this._config.height === -1) {
-			this.getMainDomElement().style.height = null;
-			this.getMainDomElement().style.maxHeight = (containerHeight - 2 * this._config.marginY) + "px";
+			this.getMainElement().style.height = null;
+			this.getMainElement().style.maxHeight = (containerHeight - 2 * this._config.marginY) + "px";
 		} else if (this._config.height === 0) {
-			this.getMainDomElement().style.height = (containerHeight - 2 * this._config.marginY) + "px";
-			this.getMainDomElement().style.maxHeight = null;
+			this.getMainElement().style.height = (containerHeight - 2 * this._config.marginY) + "px";
+			this.getMainElement().style.maxHeight = null;
 		} else {
-			this.getMainDomElement().style.height = this._config.height + "px";
-			this.getMainDomElement().style.maxHeight = (containerHeight - 2 * this._config.marginY) + "px";
+			this.getMainElement().style.height = this._config.height + "px";
+			this.getMainElement().style.maxHeight = (containerHeight - 2 * this._config.marginY) + "px";
 		}
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -172,7 +172,7 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 	}
 
 	setBackgroundColor(backgroundColor: UiColorConfig) {
-		this.getMainDomElement().style.backgroundColor = createUiColorCssString(backgroundColor);
+		this.getMainElement().style.backgroundColor = createUiColorCssString(backgroundColor);
 	}
 
 	setExpanderHandleColor(expanderHandleColor: UiColorConfig) {

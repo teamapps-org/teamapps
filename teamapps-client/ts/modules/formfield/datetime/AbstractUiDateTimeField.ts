@@ -51,7 +51,7 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-date-editor, .tr-time-editor").classList.add("field-background");
 		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
 		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-date-editor, .tr-time-editor")
-			.addEventListener("focus blur", e => this.getMainDomElement().classList.toggle("focus", e.type === "focus"));
+			.addEventListener("focus blur", e => this.getMainElement().classList.toggle("focus", e.type === "focus"));
 	}
 
 	protected getDateFormat() {
@@ -79,8 +79,8 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainDomElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
-		this.getMainDomElement().classList.add(UiField.editingModeCssClasses[editingMode]);
+		this.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainElement().classList.add(UiField.editingModeCssClasses[editingMode]);
 		if (editingMode === UiFieldEditingMode.READONLY) {
 			// this.trivialDateTimeField.setEditingMode("readonly");
 		} else if (editingMode === UiFieldEditingMode.DISABLED) {

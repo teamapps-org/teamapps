@@ -27,7 +27,7 @@ export class ElementUiComponentAdapter extends AbstractUiComponent<UiComponentCo
 		super({_type: "ElementUiComponentAdapter", id: ""}, null);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.element;
 	}
 

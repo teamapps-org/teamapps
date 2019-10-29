@@ -44,7 +44,7 @@ export class UiResponsiveGridLayout extends AbstractUiComponent<UiResponsiveGrid
 		this.updateLayoutPolicies(config.layoutPolicies);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

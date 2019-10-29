@@ -191,7 +191,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.createGrid();
 
 		let me = this;
-		$(this.getMainDomElement())
+		$(this.getMainElement())
 			.on("click contextmenu", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
 				me.onItemClicked.fire({
@@ -320,12 +320,12 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		// nothing to do...
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$mainDomElement;
 	}
 
 	private updateStyles() {
-		this.getMainDomElement().append(parseHtml(`<style>
+		this.getMainElement().append(parseHtml(`<style>
             .grid-${this.uuid} .line-wrapper {
                  align-items: ${itemCssStringsAlignItems[this.verticalItemAlignment]};
                  justify-content: ${itemCssStringsJustification[this.itemJustification]};

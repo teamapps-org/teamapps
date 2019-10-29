@@ -32,7 +32,7 @@ export class UiGenericTableCellEditor extends AbstractTableEditor {
 		args: Slick.Editors.EditorOptions<any> & { item: any }
 	) {
 		super(args);
-		this.container.appendChild(uiField.getMainDomElement());
+		this.container.appendChild(uiField.getMainElement());
 	}
 
 	public destroy() {

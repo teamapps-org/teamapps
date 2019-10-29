@@ -150,7 +150,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	destroyComponent(componentId: string): void {
 		let component = this.components[componentId].component;
 		if (component != null) {
-			component.getMainDomElement().remove();
+			component.getMainElement().remove();
 			component.destroy();
 			delete this.components[componentId];
 		} else {

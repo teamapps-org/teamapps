@@ -117,7 +117,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this._$toolbar;
 	}
 

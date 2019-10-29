@@ -41,7 +41,7 @@ export abstract class AbstractUiReactComponent<C extends UiComponentConfig = UiC
 
 	protected abstract render(): ReactElement;
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 }

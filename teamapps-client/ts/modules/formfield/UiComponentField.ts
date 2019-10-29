@@ -55,10 +55,10 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 
 	setComponent(component: UiComponent): void {
 		if (this.component != null) {
-			this.component.getMainDomElement().remove();
+			this.component.getMainElement().remove();
 		}
 		this.component = component;
-		this.$componentWrapper.appendChild(this.component.getMainDomElement());
+		this.$componentWrapper.appendChild(this.component.getMainElement());
 	}
 
 	setSize(width: number, height: number): void {

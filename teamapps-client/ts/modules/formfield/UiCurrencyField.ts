@@ -105,8 +105,8 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		this.trivialUnitBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialUnitBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialUnitBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-unitbox-selected-entry-and-trigger-wrapper").classList.add("field-border");
-		this.trivialUnitBox.onFocus.addListener(() => this.getMainDomElement().classList.add("focus"));
-		this.trivialUnitBox.onBlur.addListener(() => this.getMainDomElement().classList.remove("focus"));
+		this.trivialUnitBox.onFocus.addListener(() => this.getMainElement().classList.add("focus"));
+		this.trivialUnitBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
 	}
 
 	isValidData(v: UiCurrencyValueConfig): boolean {
@@ -155,8 +155,8 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainDomElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
-		this.getMainDomElement().classList.add(UiField.editingModeCssClasses[editingMode]);
+		this.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainElement().classList.add(UiField.editingModeCssClasses[editingMode]);
 		this.trivialUnitBox.setEditingMode(this.convertToTrivialComponentsEditingMode(editingMode));
 	}
 

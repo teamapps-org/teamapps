@@ -497,7 +497,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			const columnName = args.column.id;
 			let field = fieldsByColumnId[columnName];
 			if (field) {
-				args.node.appendChild(field.getMainDomElement());
+				args.node.appendChild(field.getMainElement());
 			}
 		});
 	}
@@ -514,7 +514,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		return currentlyDisplayedRecordIds;
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$component;
 	}
 
@@ -533,11 +533,11 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 		let editorFactory;
 		if (uiField instanceof UiCompositeField) {
-			editorFactory = UiCompositeFieldTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainDomElement()));
+			editorFactory = UiCompositeFieldTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		} else if (uiField instanceof UiRichTextEditor || uiField instanceof UiMultiLineTextField) {
-			editorFactory = FixedSizeTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainDomElement()));
+			editorFactory = FixedSizeTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		} else {
-			editorFactory = UiGenericTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainDomElement()));
+			editorFactory = UiGenericTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		}
 
 		const slickColumnConfig: Column = {
@@ -584,7 +584,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	private prepareEditorField(columnPropertyName: string, uiField: UiField) {
-		this.$editorFieldTempContainer.appendChild(uiField.getMainDomElement());
+		this.$editorFieldTempContainer.appendChild(uiField.getMainElement());
 		if (uiField.getFocusableElement()) {
 			uiField.getFocusableElement().addEventListener("keydown", (e) => {
 				if (e.key === "ArrowLeft"
@@ -595,9 +595,9 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				}
 			});
 			uiField.getFocusableElement().addEventListener("focus", () => {
-				uiField.getMainDomElement().style.zIndex = "1000";
+				uiField.getMainElement().style.zIndex = "1000";
 			});
-			uiField.getFocusableElement().addEventListener("blur", () => uiField.getMainDomElement().style.zIndex = "0");
+			uiField.getFocusableElement().addEventListener("blur", () => uiField.getMainElement().style.zIndex = "0");
 		}
 		uiField.onValueChanged.addListener((eventData: ValueChangeEventData) => this.handleFieldValueChanged(columnPropertyName, eventData.value));
 		uiField.onVisibilityChanged.addListener(visible => this.setSlickGridColumns(this.getVisibleColumns()));
@@ -1015,8 +1015,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	private setSlickGridColumns(columns: Column[]) {
-		Object.values(this.headerRowFields).forEach(f => f.getMainDomElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
-		Object.values(this.footerRowFields).forEach(f => f.getMainDomElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
+		Object.values(this.headerRowFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
+		Object.values(this.footerRowFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
 		this._grid.setColumns(columns);
 	}
 

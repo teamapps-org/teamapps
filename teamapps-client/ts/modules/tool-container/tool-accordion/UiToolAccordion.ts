@@ -64,7 +64,7 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 		this.refreshEnforcedButtonWidth();
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$mainDomElement;
 	}
 
@@ -208,7 +208,7 @@ class UiButtonGroup {
 				dropdownClickInfo = createUiDropDownButtonClickInfoConfig(!dropdownVisible, button.dropDownComponent != null);
 				if (!dropdownVisible) {
 					if (button.dropDownComponent != null) {
-						button.$dropDown.appendChild(button.dropDownComponent.getMainDomElement());
+						button.$dropDown.appendChild(button.dropDownComponent.getMainElement());
 					}
 					this.showDropDown(button);
 					doOnceOnClickOutsideElement(button.getMainDomElement(), e => $(button.$dropDown).slideUp(200))
@@ -294,7 +294,7 @@ class UiButtonGroup {
 
 	private setButtonDropDownComponent(button: UiToolAccordionButton, component: UiComponent) {
 		if (button.dropDownComponent != null) {
-			button.dropDownComponent.getMainDomElement().remove();
+			button.dropDownComponent.getMainElement().remove();
 		}
 
 		button.dropDownComponent = component;
@@ -313,7 +313,7 @@ class UiButtonGroup {
 			if (button.$dropDown != null) {
 				button.$dropDown.querySelectorAll<HTMLElement>(":scope :not(.source-button-indicator)").forEach(b => b.remove()); // remove spinner or old component, if present...
 				if ($(button.$dropDown).is(":visible")) {
-					button.$dropDown.appendChild(component.getMainDomElement());
+					button.$dropDown.appendChild(component.getMainElement());
 				}
 			}
 		}

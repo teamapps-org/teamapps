@@ -62,7 +62,7 @@ export class UiDummyComponent extends AbstractUiComponent<UiDummyComponentConfig
 	}
 
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$panel;
 	}
 

@@ -628,7 +628,7 @@ export class UiWebRtcPublisher extends AbstractUiComponent<UiWebRtcPublisherConf
 		this.unPublish();
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

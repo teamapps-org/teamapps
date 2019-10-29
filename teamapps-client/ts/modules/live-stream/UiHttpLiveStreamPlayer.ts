@@ -148,7 +148,7 @@ export class UiHttpLiveStreamPlayer extends AbstractUiComponent<UiHttpLiveStream
 		this.resetTimer = window.setTimeout(() => this.retryPlaying(), 5000);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

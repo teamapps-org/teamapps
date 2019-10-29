@@ -70,7 +70,7 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 		}
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

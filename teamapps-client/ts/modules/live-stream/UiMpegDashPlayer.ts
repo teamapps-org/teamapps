@@ -112,7 +112,7 @@ export class UiMpegDashPlayer extends AbstractUiComponent<UiMpegDashPlayerConfig
 		this.resetTimer = window.setTimeout(() => this.retryPlaying(), 5000);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

@@ -56,7 +56,7 @@ export class FixedSizeTableCellEditor extends AbstractTableEditor {
 		const preferredWidth = 300;
 		const preferredHeight = 200;
 
-		let $uiField = uiField.getMainDomElement();
+		let $uiField = uiField.getMainElement();
 		css($uiField, {
 			width: Math.max(editorOptions.position.width, Math.min(preferredWidth, editorOptions.gridPosition.width)),
 			height: Math.max(editorOptions.position.height, Math.min(preferredHeight, editorOptions.gridPosition.height)),

@@ -65,7 +65,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		this.$panelWrapper = this.$main.querySelector<HTMLElement>(":scope >.panel-wrapper");
 
 		this.panel = new UiPanel(config, context);
-		this.$panelWrapper.appendChild(this.panel.getMainDomElement());
+		this.$panelWrapper.appendChild(this.panel.getMainElement());
 
 		if (config.closeable) {
 			this.panel.addWindowButton(UiWindowButtonType.CLOSE);
@@ -114,7 +114,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
