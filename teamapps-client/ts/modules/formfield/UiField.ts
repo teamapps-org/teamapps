@@ -76,10 +76,10 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	constructor(_config: C,
 	            _context: TeamAppsUiContext) {
 		super(_config, _context);
-		this.initialize(_config, _context);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
 		this.$fieldWrapper = parseHtml(`<div class="UiField"></div>`);
+		this.initialize(_config, _context);
 		this.$fieldWrapper.appendChild(this.$messagesContainerAbove);
 		this.$fieldWrapper.appendChild(this.getMainInnerDomElement());
 		this.$fieldWrapper.appendChild(this.$messagesContainerBelow);
