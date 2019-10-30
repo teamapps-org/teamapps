@@ -3,19 +3,23 @@ package org.teamapps.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class MultiKeySequentialExecutor<K> {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(MultiKeySequentialExecutor.class);
 
-	private Map<K, CompletableFuture<?>> lastFutureByKey = new HashMap<>(); // synchronized on submit method level
+	private Map<K, SequentialExecutor> sequentialExecutors = new ConcurrentHashMap<>(); // synchronized on submit method level
 	private ExecutorService pool;
 
 	public MultiKeySequentialExecutor(int nThreads) {
@@ -26,57 +30,71 @@ public class MultiKeySequentialExecutor<K> {
 		pool = executorService;
 	}
 
-	public synchronized CompletableFuture<Void> submit(K key, Runnable task) {
-		return this.submit(key, () -> {
-			task.run();
-			return null;
-		});
+	public CompletableFuture<Void> submit(K key, Runnable task) {
+		return sequentialExecutors.computeIfAbsent(key, k -> new SequentialExecutor())
+				.submit(task);
 	}
 
-	public synchronized <V> CompletableFuture<V> submit(K key, Supplier<V> task) {
-		CompletableFuture<V> returnedFuture = lastFutureByKey.computeIfAbsent(key, (k) -> CompletableFuture.completedFuture(null))
-				.thenApplyAsync(o -> task.get(), pool);
-		lastFutureByKey.put(key, returnedFuture.exceptionally(throwable -> {
-			LOGGER.error("Error while executing: ", throwable);
-			return null; // do not interrupt the execution chain!!
-		}));
-		return returnedFuture;
+	public <V> CompletableFuture<V> submit(K key, Supplier<V> task) {
+		return sequentialExecutors.computeIfAbsent(key, k -> new SequentialExecutor())
+				.submit(task);
 	}
 
-	public synchronized void closeForKey(K key) {
-		CompletableFuture<?> lastFuture = lastFutureByKey.get(key);
-		if (lastFuture != null) {
-			lastFuture.cancel(false);
-			lastFutureByKey.remove(key);
-		}
+	public void closeForKey(K key) {
+		sequentialExecutors.computeIfAbsent(key, k -> new SequentialExecutor())
+				.close();
 	}
 
 	public SequentialExecutor getExecutorForKey(K key) {
-		return new SequentialExecutor(key);
+		return sequentialExecutors.get(key);
 	}
 
 	public class SequentialExecutor implements Executor {
-		private final K key;
-
-		public SequentialExecutor(K key) {
-			this.key = key;
-		}
+		private CompletableFuture<?> lastFuture = CompletableFuture.completedFuture(null);
+		private AtomicInteger queueSize = new AtomicInteger(0);
 
 		@Override
 		public void execute(Runnable command) {
-			MultiKeySequentialExecutor.this.submit(key, command);
+			submit(command);
 		}
 
-		public CompletableFuture<Void> submit(Runnable runnable) {
-			return MultiKeySequentialExecutor.this.submit(key, runnable);
+		public synchronized CompletableFuture<Void> submit(Runnable runnable) {
+			return this.submit(() -> {
+				runnable.run();
+				return null;
+			});
 		}
 
-		public <V> CompletableFuture<V> submit(Supplier<V> task) {
-			return MultiKeySequentialExecutor.this.submit(key, task);
+		public synchronized <V> CompletableFuture<V> submit(Supplier<V> task) {
+			int queueSize = this.queueSize.incrementAndGet();
+			LOGGER.debug("Queue size: {}", queueSize);
+			if (queueSize > 100) {
+				LOGGER.warn("Queue is very long: {}", queueSize);
+			}
+			long submitTime = System.currentTimeMillis();
+			CompletableFuture<V> returnedFuture = lastFuture.thenApplyAsync(o -> {
+				long executionStartTime = System.currentTimeMillis();
+				long delay = executionStartTime - submitTime;
+				if (delay > 1000) {
+					LOGGER.warn("Execution delay high: {}",  delay);
+				}
+				V result = task.get();
+				long executionTime = System.currentTimeMillis() - executionStartTime;
+				if (executionTime > 1000) {
+					LOGGER.warn("Execution time long: {}", executionTime);
+				}
+				this.queueSize.decrementAndGet();
+				return result;
+			}, pool);
+			lastFuture = returnedFuture.exceptionally(throwable -> {
+				LOGGER.error("Error while executing: ", throwable);
+				return null; // do not interrupt the execution chain!!
+			});
+			return returnedFuture;
 		}
 
-		public void close() {
-			MultiKeySequentialExecutor.this.closeForKey(key);
+		public synchronized void close() {
+			lastFuture.cancel(false);
 		}
 	}
 
