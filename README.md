@@ -82,3 +82,7 @@ The result should look something like this:
 ## License
 
 The TeamApps Framework is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
+
+## Supported By
+
+<a href="https://www.yourkit.com/java/profiler/"><img src="https://www.yourkit.com/images/yklogo.png"></a>
