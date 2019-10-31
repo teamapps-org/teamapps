@@ -134,7 +134,7 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 	}
 
 	setData(startIndex: number, data: any[]) {
-		this.data.splice.apply(this.data, (<any>[startIndex, data.length]).concat(data));
+		this.data.splice.apply(this.data, ([startIndex, data.length] as any[]).concat(data));
 	}
 
 	removeData(ids: number[]) {
@@ -215,14 +215,11 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	@executeWhenFirstDisplayed()
 	private createGrid() {
 		let cellFormatter = (row: number, cell: number, value: any, columnDef: Slick.Column<TableDataProviderItem>, dataContext: any[]) => {
-			for (var i = 0; i < dataContext.length; i++) {
-				if (!dataContext[i]) {
-					return "";
-				}
-			}
 			let html = '<div class="line-wrapper">';
 			for (let record of dataContext) {
-				html += `<div class="item-wrapper" data-id="${record.id}" style="width: ${this.calculateItemWidthInPixels()}px;">${this.itemTemplateRenderer.render(record.values)}</div>`;
+				if (record != null) { // null happens for unknown reasons...
+					html += `<div class="item-wrapper" data-id="${record.id}" style="width: ${this.calculateItemWidthInPixels()}px;">${this.itemTemplateRenderer.render(record.values)}</div>`;
+				}
 			}
 			html += "</div>";
 			return html;
