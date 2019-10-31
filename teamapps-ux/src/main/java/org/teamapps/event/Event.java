@@ -43,12 +43,20 @@ public class Event<EVENT_DATA> {
 		this.source = stackTraceElement.getFileName() + stackTraceElement.getLineNumber();
 	}
 
-
 	public void addListener(EventListener<EVENT_DATA> listener) {
-		SessionContext currentSessionContext = CurrentSessionContext.getOrNull();
-		listeners.add(new SessionContextAwareEventListener<>(currentSessionContext, listener));
-		if (currentSessionContext != null) {
-			removeWhenSessionDestroyed(listener, currentSessionContext);
+		addListener(listener, true);
+	}
+
+	public void addListener(EventListener<EVENT_DATA> listener, boolean bindToSessionContext) {
+		if (bindToSessionContext) {
+			SessionContext currentSessionContext = CurrentSessionContext.getOrNull();
+			listeners.add(new SessionContextAwareEventListener<>(currentSessionContext, listener));
+			if (currentSessionContext != null) {
+				removeWhenSessionDestroyed(listener, currentSessionContext);
+			}
+		} else {
+			// just add the listener. It will get called with whatever context is active at firing time
+			listeners.add(listener);
 		}
 	}
 
