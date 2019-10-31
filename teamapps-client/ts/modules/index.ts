@@ -95,7 +95,8 @@ export {UiProgressDisplay} from "./UiProgressDisplay";
 export {UiDefaultMultiProgressDisplay} from "./UiDefaultMultiProgressDisplay";
 export {UiNotification} from "./UiNotification";
 export {UiQrCodeScanner} from "./UiQrCodeScanner";
-export {UiMediaSoupWebRtcClient} from "./webrtc/UiMediaSoupWebRtcClient";
+export {UiMediaSoupV2WebRtcClient} from "./webrtc/mediasoup-v2/UiMediaSoupV2WebRtcClient";
+export {UiMediaSoupV3WebRtcClient} from "./webrtc/mediasoup-v3/UiMediaSoupV3WebRtcClient";
 
 export {UiGauge} from "./UiGauge";
 
