@@ -42,7 +42,7 @@ public class ObjectSerializer extends JsonSerializer<Object> {
 
 	private final StdTypeResolverBuilder typeResolverBuilder;
 	private final TeamAppsJacksonTypeIdResolver typeIdResolver;
-	private HashMap<Class<?>, TypeSerializer> typeSerializersCache = new HashMap<>();
+	private final Map<Class<?>, TypeSerializer> typeSerializersCache = new ConcurrentHashMap<>();
 	private final Map<Class, BeanDescription> beanDescriptionsCache = new ConcurrentHashMap<>();
 
 	public ObjectSerializer() {
