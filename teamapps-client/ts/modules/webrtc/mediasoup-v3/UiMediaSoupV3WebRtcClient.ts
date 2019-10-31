@@ -18,40 +18,41 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "../AbstractUiComponent";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {calculateDisplayModeInnerSize, parseHtml} from "../Common";
-import {
-	UiMediaSoupWebRtcClient_ActivityChangedEvent, UiMediaSoupWebRtcClient_ClickedEvent,
-	UiMediaSoupWebRtcClient_PlaybackProfileChangedEvent,
-	UiMediaSoupWebRtcClientCommandHandler,
-	UiMediaSoupWebRtcClientConfig,
-	UiMediaSoupWebRtcClientEventSource
-} from "../../generated/UiMediaSoupWebRtcClientConfig";
-import {Conference} from "./conference";
-import {UiMediaSoupPlaybackParamatersConfig} from "../../generated/UiMediaSoupPlaybackParamatersConfig";
-import {UiMediaSoupPublishingParametersConfig} from "../../generated/UiMediaSoupPublishingParametersConfig";
-import {UiVideoTrackConstraintsConfig} from "../../generated/UiVideoTrackConstraintsConfig";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiMulticastPlaybackProfile} from "../../generated/UiMulticastPlaybackProfile";
-import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
-import {createUiColorCssString} from "../util/CssFormatUtil";
+import {AbstractUiComponent} from "../../AbstractUiComponent";
+import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
+import {calculateDisplayModeInnerSize, parseHtml} from "../../Common";
+import {UiMediaSoupPlaybackParamatersConfig} from "../../../generated/UiMediaSoupPlaybackParamatersConfig";
+import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaSoupPublishingParametersConfig";
+import {UiVideoTrackConstraintsConfig} from "../../../generated/UiVideoTrackConstraintsConfig";
+import {TeamAppsEvent} from "../../util/TeamAppsEvent";
+import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
+import {createUiColorCssString} from "../../util/CssFormatUtil";
 import vad, {VoiceActivityDetectionHandle} from "voice-activity-detection";
-import {UiPageDisplayMode} from "../../generated/UiPageDisplayMode";
-import {UiAudioTrackConstraintsConfig} from "../../generated/UiAudioTrackConstraintsConfig";
-import {checkChromeExtensionAvailable, getScreenConstraints, isChrome} from "../util/ScreenCapturing";
-import {UiWebRtcPublishingErrorReason} from "../../generated/UiWebRtcPublishingErrorReason";
-import {determineVideoSize, MixSizingInfo, MultiStreamsMixer} from "../util/MultiStreamsMixer";
-import {UiScreenSharingConstraintsConfig} from "../../generated/UiScreenSharingConstraintsConfig";
+import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
+import {UiAudioTrackConstraintsConfig} from "../../../generated/UiAudioTrackConstraintsConfig";
+import {checkChromeExtensionAvailable, getScreenConstraints, isChrome} from "../../util/ScreenCapturing";
+import {UiWebRtcPublishingErrorReason} from "../../../generated/UiWebRtcPublishingErrorReason";
+import {determineVideoSize, MixSizingInfo, MultiStreamsMixer} from "../../util/MultiStreamsMixer";
+import {UiScreenSharingConstraintsConfig} from "../../../generated/UiScreenSharingConstraintsConfig";
+import {
+	UiMediaSoupV3WebRtcClient_ClickedEvent,
+	UiMediaSoupV3WebRtcClient_VoiceActivityChangedEvent,
+	UiMediaSoupV3WebRtcClientCommandHandler,
+	UiMediaSoupV3WebRtcClientConfig,
+	UiMediaSoupV3WebRtcClientEventSource
+} from "../../../generated/UiMediaSoupV3WebRtcClientConfig";
+import {Sender} from "./sender";
+import {Receiver} from "./receiver";
 
-export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebRtcClientConfig> implements UiMediaSoupWebRtcClientCommandHandler, UiMediaSoupWebRtcClientEventSource {
-	public readonly onPlaybackProfileChanged: TeamAppsEvent<UiMediaSoupWebRtcClient_PlaybackProfileChangedEvent> = new TeamAppsEvent(this);
-	public readonly onActivityChanged: TeamAppsEvent<UiMediaSoupWebRtcClient_ActivityChangedEvent> = new TeamAppsEvent(this);
-	public readonly onClicked: TeamAppsEvent<UiMediaSoupWebRtcClient_ClickedEvent> = new TeamAppsEvent(this);
+export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
+	public readonly onVoiceActivityChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_VoiceActivityChangedEvent> = new TeamAppsEvent(this);
+	public readonly onClicked: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ClickedEvent> = new TeamAppsEvent(this);
+
+	private sender: Sender;
+	private receiver: Receiver;
 
 	private $main: HTMLDivElement;
-	private conference: Conference;
 	private $video: HTMLMediaElement;
 	private $profileDisplay: HTMLElement;
 	private $icon: HTMLImageElement;
@@ -59,10 +60,10 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 	private voiceActivityDetectionHandle: VoiceActivityDetectionHandle;
 	private multiStreamMixer: MultiStreamsMixer;
 
-	constructor(config: UiMediaSoupWebRtcClientConfig, context: TeamAppsUiContext) {
+	constructor(config: UiMediaSoupV3WebRtcClientConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiMediaSoupWebRtcClient">
+		this.$main = parseHtml(`<div class="UiMediaSoupV3WebRtcClient">
 	<div class="video-container">
 		<video class="video" playsinline></video>
 		<img class="icon"></img>
@@ -86,13 +87,6 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 
 		this.update(config);
 
-		if (config.initialPlaybackOrPublishParams != null) {
-			if (config.initialPlaybackOrPublishParams._type === 'UiMediaSoupPlaybackParamaters') {
-				this.playback(config.initialPlaybackOrPublishParams);
-			} else if (config.initialPlaybackOrPublishParams._type === 'UiMediaSoupPublishingParameters') {
-				this.publish(config.initialPlaybackOrPublishParams);
-			}
-		}
 	}
 
 	doGetMainElement(): HTMLElement {
@@ -100,47 +94,38 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 	}
 
 	@executeWhenFirstDisplayed(true)
-	publish(parameters: UiMediaSoupPublishingParametersConfig): void {
-		if (this.conference != null) {
-			this.stop();
-		}
+	async publish(parameters: UiMediaSoupPublishingParametersConfig) {
+		this.stop();
 
-		this.conference = new Conference({
-			uid: parameters.uid,
-			token: parameters.token,
-			params: {
-				serverUrl: parameters.serverUrl,
-				minBitrate: parameters.minBitrate,
-				maxBitrate: parameters.maxBitrate,
-				getUserMedia: async () => {
-					this.voiceActivityDetectionHandle && this.voiceActivityDetectionHandle.destroy();
-					this.multiStreamMixer = await this.getUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints);
-
-					let mixedStream = await this.multiStreamMixer.getMixedStream();
-
-					if (mixedStream.getAudioTracks().length > 0) {
-						this.voiceActivityDetectionHandle = vad(new AudioContext(), mixedStream, {
-							onVoiceStart: () => {
-								this.onActivityChanged.fire({active: true});
-							},
-							onVoiceStop: () => {
-								this.onActivityChanged.fire({active: false});
-							}
-						});
-					}
-
-					return mixedStream;
-				},
-				localVideo: this.$video,
-				errorAutoPlayCallback: () => {
-					console.error("no autoplay on publisher??");
-				},
-				onProfileChange: (profile: string) => {
-					console.error("profile changed on publisher?? " + profile);
-				}
+		this.sender = new Sender(parameters.serverAdress, parameters.serverPort);
+		await this.sender.connect(eventType => {
+			switch (eventType) {
+				case "disconnect":
+					break;
+				case "newVideoProducer":
+					break;
+				case "videoProducerGone":
+					break;
 			}
 		});
-		this.conference.publish();
+		this.sender.publish(parameters.uid, parameters.token, true, parameters.videoConstraints == null, (status, audioStream, videoStream) => {
+			switch (status) {
+				case "connecting":
+					console.log("connecting for publishing");
+					break;
+				case "connected":
+					console.log("connected for publishing");
+					break;
+				case "failed":
+					console.error("failed publish");
+					// TODO handle fail
+					break;
+				case "updateStream":
+					console.log("updateStream");
+					this.$video.srcObject = videoStream;
+					break;
+			}
+		});
 	}
 
 	private async getUserMedia(audioConstraints?: UiAudioTrackConstraintsConfig, videoConstraints?: UiVideoTrackConstraintsConfig, screenSharingConstraints?: UiScreenSharingConstraintsConfig) {
@@ -150,7 +135,7 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 		if (audioConstraints || videoConstraints) {
 			let gumConstraints: MediaStreamConstraints = {
 				audio: audioConstraints,
-				video: UiMediaSoupWebRtcClient.createVideoConstraints(videoConstraints)
+				video: UiMediaSoupV3WebRtcClient.createVideoConstraints(videoConstraints)
 			};
 			console.log(gumConstraints);
 			camMicStream = await window.navigator.mediaDevices.getUserMedia(gumConstraints);
@@ -209,41 +194,21 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 
 	@executeWhenFirstDisplayed(true)
 	playback(parameters: UiMediaSoupPlaybackParamatersConfig): void {
-		console.log(parameters);
-		if (this.conference != null) {
-			this.stop();
-		}
-
-		this.conference = new Conference({
-			uid: parameters.uid,
-			token: null,
-			params: {
-				serverUrl: parameters.serverUrl,
-				audio: parameters.audio,
-				video: parameters.video,
-				minBitrate: 100,
-				maxBitrate: 10000000,
-				getUserMedia: null,
-				localVideo: this.$video,
-				errorAutoPlayCallback: () => {
-					console.error("no autoplay");
-				},
-				onProfileChange: (profile: string) => {
-					console.log("profile" + profile);
-					this.$profileDisplay.innerText = profile;
-					this.onPlaybackProfileChanged.fire({profile: UiMulticastPlaybackProfile[profile.toUpperCase() as any] as any});
-				}
-			},
-		});
-		this.conference.play();
-
-		this.$video.classList.remove("mirrored");
+		this.stop();
 	}
 
 	@executeWhenFirstDisplayed()
 	stop() {
-		if (this.conference != null) {
-			this.conference.stop();
+		if (this.sender != null) {
+			this.sender.disconnect(() => {
+			});
+			this.sender = null;
+			this.$video.classList.remove("mirrored");
+		}
+		if (this.receiver != null) {
+			this.receiver.disconnect(() => {
+			});
+			this.receiver = null;
 			this.$video.classList.remove("mirrored");
 		}
 		if (this.multiStreamMixer != null) {
@@ -251,7 +216,7 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 		}
 	}
 
-	update(config: UiMediaSoupWebRtcClientConfig): void {
+	update(config: UiMediaSoupV3WebRtcClientConfig): void {
 		this._config = config;
 
 		this.$main.classList.toggle("activity-line-visible", config.activityLineVisible);
@@ -315,5 +280,5 @@ export class UiMediaSoupWebRtcClient extends AbstractUiComponent<UiMediaSoupWebR
 
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiMediaSoupWebRtcClient", UiMediaSoupWebRtcClient);
+TeamAppsUiComponentRegistry.registerComponentClass("UiMediaSoupV3WebRtcClient", UiMediaSoupV3WebRtcClient);
 

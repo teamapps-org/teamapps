@@ -23,7 +23,8 @@
     "../custom-declarations/worker-loader.d.ts",
     "../custom-declarations/d3-flextree.d.ts",
     "../custom-declarations/image-layout.d.ts",
-    "../custom-declarations/voice-activity-detection.d.ts"
+    "../custom-declarations/voice-activity-detection.d.ts",
+    "../custom-declarations/mediasoup-v3-client.d.ts"
 //    "../../node_modules/@types/node/index.d.ts"
   ],
   "exclude": [
