@@ -8,6 +8,8 @@ import org.teamapps.dto.UiTemplateField;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.template.Template;
 
+import java.util.Collections;
+
 public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public final Event<Void> onClicked = new Event<>();
@@ -40,6 +42,18 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 		ui.setTemplate(template.createUiTemplate());
 		ui.setValue(createUiRecord(getValue()));
 		return ui;
+	}
+
+	public RECORD convertUiValueToUxValue(Object value) {
+		return getValue();
+	}
+
+	public Object convertUxValueToUiValue(RECORD record) {
+		if (record == null) {
+			return null;
+		} else {
+			return createUiRecord(record);
+		}
 	}
 
 	private UiClientRecord createUiRecord(RECORD record) {

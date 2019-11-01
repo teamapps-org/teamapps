@@ -59,7 +59,7 @@ export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientReco
 
 
 	getReadOnlyHtml(value: UiClientRecordConfig, availableWidth: number): string {
-		return `<div class="static-readonly-UiTemplateField">${value && this.templateRenderer.render(value)}</div>`;
+		return `<div class="static-readonly-UiTemplateField">${value && this.templateRenderer.render(value.values)}</div>`;
 	}
 }
 
