@@ -23,8 +23,23 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.util.Date;
+import java.util.function.Supplier;
 
 public interface Resource {
+
+	static Resource create(Supplier<InputStream> inputStreamSupplier, long length) {
+		return new Resource() {
+			@Override
+			public InputStream getInputStream() {
+				return inputStreamSupplier.get();
+			}
+
+			@Override
+			public long getLength() {
+				return length;
+			}
+		};
+	}
 
 	InputStream getInputStream();
 
