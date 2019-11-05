@@ -4,10 +4,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FileLocalizationStore implements LocalizationStore {
@@ -54,10 +51,10 @@ public class FileLocalizationStore implements LocalizationStore {
 			Map<String, String> translations = entry.getValue();
 			File file = new File(storeDirectory, FILE_PREFIX + language + FILE_SUFFIX);
 			StringBuilder translationLines = new StringBuilder();
-			for (Map.Entry<String, String> localizationEntry : translations.entrySet()) {
+			translations.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).forEach(localizationEntry -> {
 				String translationLine = createTranslationLine(localizationEntry.getKey(), localizationEntry.getValue());
 				translationLines.append(translationLine);
-			}
+			});
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), StandardCharsets.UTF_8));
 			writer.write(translationLines.toString());
 			writer.close();
