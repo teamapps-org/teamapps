@@ -17,7 +17,7 @@ public class MachineTranslationLocalizationProviderFactory extends AbstractLocal
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(MachineTranslationLocalizationProviderFactory.class);
 
-	private final static List<String> preferredTranslationLanguages = Arrays.asList(new String[]{"en", "de", "fr", "es", "pt", "nl", "it", "pl", "ru"});
+	private static List<String> preferredTranslationLanguages = Arrays.asList(new String[]{"en", "de", "fr", "es", "pt", "nl", "it", "pl", "ru"});
 
 	public static MachineTranslationLocalizationProviderFactory create(LocalizationStore localizationStore, String deepLKey, String googleKey, String ... requiredLanguages) {
 		return new MachineTranslationLocalizationProviderFactory(localizationStore, deepLKey, googleKey, Arrays.asList(requiredLanguages));
@@ -109,6 +109,13 @@ public class MachineTranslationLocalizationProviderFactory extends AbstractLocal
 		}
 	}
 
+	public static List<String> getPreferredTranslationLanguages() {
+		return preferredTranslationLanguages;
+	}
+
+	public static void setPreferredTranslationLanguages(List<String> preferredTranslationLanguages) {
+		MachineTranslationLocalizationProviderFactory.preferredTranslationLanguages = preferredTranslationLanguages;
+	}
 
 	@Override
 	public LocalizationStore getLocalizationStore() {
