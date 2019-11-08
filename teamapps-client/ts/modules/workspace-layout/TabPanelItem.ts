@@ -210,7 +210,7 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 		this.$minimizedTrayButton.innerHTML = '';
 		// noinspection CssUnknownTarget
 		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('/resources/window-restore-grey.png')"></div>`));
-		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${this.context.getIconPath(tab.view.tabIcon, iconSize)}')"></div>`)));
+		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${tab.view.tabIcon}')"></div>`)));
 		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(UiViewGroupPanelState.NORMAL));
 	}
 

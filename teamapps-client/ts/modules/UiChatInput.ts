@@ -179,7 +179,7 @@ class FileUploadItem {
 
 	constructor(public file: File, defaultFileIcon: string, uploadUrl: string, context: TeamAppsUiContext) {
 		this.$main = parseHtml(`<div class="upload-item">
-	<div class="icon img img-24" style="background-image: url(${context.getIconPath(defaultFileIcon, 24)})"></div>
+	<div class="icon img img-24" style="background-image: url(${defaultFileIcon})"></div>
 	<div class="name">${file.name}</div>
 </div>`);
 		const $icon = this.$main.querySelector<HTMLElement>(":scope .icon");

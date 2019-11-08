@@ -286,7 +286,7 @@ public class SessionContext {
 		if (icon == null) {
 			return null;
 		}
-		return icon.getQualifiedIconId(getIconTheme());
+		return sessionConfiguration.getIconPath() + "/-1/" + icon.getQualifiedIconId(getIconTheme());
 	}
 
 	public void registerComponent(Component component) {

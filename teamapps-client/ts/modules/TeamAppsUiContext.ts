@@ -27,11 +27,7 @@ import {UiComponent} from "./UiComponent";
 
 export const typescriptDeclarationFixConstant = 1;
 
-export interface IconPathProvider {
-	getIconPath(iconName: string, iconSize: number, ignoreRetina?: boolean): string;
-}
-
-export interface TeamAppsUiContext extends IconPathProvider {
+export interface TeamAppsUiContext {
 	readonly sessionId: string;
 	readonly isHighDensityScreen: boolean;
 	readonly executingCommand: boolean;
@@ -42,11 +38,16 @@ export interface TeamAppsUiContext extends IconPathProvider {
 }
 
 // TeamAppsUiContext implementations should implement this too. See usages.
-export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext{
+export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 	readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand>;
+
 	registerComponent(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void;
+
 	createAndRegisterComponent(config: UiComponentConfig): UiComponent<UiComponentConfig>;
+
 	destroyComponent(componentId: string): void;
+
 	refreshComponent(config: UiComponentConfig): void;
+
 	fireEvent(eventObject: UiEvent): void;
 }

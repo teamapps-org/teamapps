@@ -269,9 +269,9 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		}
 	}
 
-	private createTabButton(tabId: string, iconName: string, caption: string, closeable: boolean) {
+	private createTabButton(tabId: string, icon: string, caption: string, closeable: boolean) {
 		const $tabButton = parseHtml(`<div class="tab-button" data-tab-name="${tabId}" draggable="true">
-                     ${iconName ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url(${this._context.getIconPath(iconName, 16)});"></div></div>` : ''}
+                     ${icon ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url(${icon});"></div></div>` : ''}
                      <div class="tab-button-caption">${caption}</div>                                                                                                                          	
                      <div class="tab-button-filler"></div>
                 </div>`);

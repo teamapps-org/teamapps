@@ -84,7 +84,6 @@ public class SessionConfiguration {
 		config.setDecimalSeparator(decimalSeparator);
 		config.setThousandsSeparator(thousandsSeparator);
 		config.setOptimizedForTouch(optimizedForTouch);
-		config.setIconPath(iconPath);
 		config.setThemeClassName(theme.getCssClass());
 		return config;
 	}

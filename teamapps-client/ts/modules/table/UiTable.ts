@@ -544,7 +544,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			id: columnConfig.propertyName,
 			field: columnConfig.propertyName,
 			uiField: uiField,
-			name: `<div class="column-header-icon img img-16 ${columnConfig.icon == null ? "hidden" : ""}" style="background-image: url(${this._context.getIconPath(columnConfig.icon, 16)})"></div>
+			name: `<div class="column-header-icon img img-16 ${columnConfig.icon == null ? "hidden" : ""}" style="background-image: url(${columnConfig.icon})"></div>
 <div class="column-header-title">${columnConfig.title}</div>`,
 			width: columnConfig.defaultWidth || ((columnConfig.minWidth + columnConfig.maxWidth) / 2) || undefined,
 			minWidth: columnConfig.minWidth || 30,

@@ -19,7 +19,7 @@
  */
 "use strict";
 
-import {generateUUID, getIconPath, logException} from "./Common";
+import {generateUUID, logException} from "./Common";
 import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {UiWeekDay} from "../generated/UiWeekDay";
@@ -55,7 +55,6 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		isoLanguage: "en",
 		themeClassName: null,
 		optimizedForTouch: false,
-		iconPath: "icons",
 		timeZoneId: "Europe/Berlin",
 		firstDayOfWeek: UiWeekDay.MONDAY,
 		dateFormat: "yyyy-MM-dd",
@@ -170,10 +169,6 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		} else {
 			return componentProxyHandle.proxy;
 		}
-	}
-
-	public getIconPath(iconName: string, iconSize: number, ignoreRetina?: boolean): string {
-		return getIconPath(this, iconName, iconSize, ignoreRetina);
 	}
 
 	private executeCommands(uiCommands: UiCommand[]): Promise<any>[] {

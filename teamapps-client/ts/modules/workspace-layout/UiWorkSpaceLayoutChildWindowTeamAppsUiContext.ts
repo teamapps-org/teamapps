@@ -23,7 +23,7 @@ import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./U
 import {UiRootPanel} from "../UiRootPanel";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
-import {getIconPath, logException} from "../Common";
+import {logException} from "../Common";
 import {UiConfigurationConfig} from "../../generated/UiConfigurationConfig";
 import {UiEvent} from "../../generated/UiEvent";
 import {EventRegistrator} from "../../generated/EventRegistrator";
@@ -181,10 +181,6 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 
 	public getComponentById(id: string): UiComponent<UiComponentConfig> {
 		return this.components[id];
-	}
-
-	getIconPath(iconName: string, iconSize: number, ignoreRetina?: boolean): string {
-		return getIconPath(this, iconName, iconSize, ignoreRetina);
 	}
 
 	refreshComponent(config: UiComponentConfig): void {

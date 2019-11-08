@@ -71,7 +71,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 		this.$main = parseHtml(`<div class="UiSimpleFileField drop-zone form-control field-border field-border-glow field-background">
     <div class="file-list"></div>
     <div class="upload-button field-border" tabindex="0">
-    	<div class="icon img img-16" style="background-image: url(${context.getIconPath(config.browseButtonIcon, 16)});"></div>
+    	<div class="icon img img-16" style="background-image: url(${config.browseButtonIcon});"></div>
     	<div class="caption">${config.browseButtonCaption}</div>
     	<input class="file-input" type="file" multiple tabindex="-1"></input>
     </div>
@@ -197,7 +197,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 
 	setBrowseButtonIcon(browseButtonIcon: string): void {
 		this.$uploadButton.querySelector<HTMLElement>(":scope .icon")
-			.style.backgroundImage = this._context.getIconPath(browseButtonIcon, 16);
+			.style.backgroundImage = browseButtonIcon;
 	}
 
 	setDisplayMode(displayMode: UiFileFieldDisplayType): void {

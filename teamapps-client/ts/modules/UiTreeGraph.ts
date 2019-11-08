@@ -886,7 +886,7 @@ class TreeChart {
 			)
 			.attr('width', d => d.data.icon.size)
 			.attr('height', d => d.data.icon.size)
-			.attr("xlink:href", d => this.context.getIconPath(d.data.icon.icon, d.data.icon.size))
+			.attr("xlink:href", d => d.data.icon.icon)
 			.attr('x', d => -d.data.icon.size / 2)
 			.attr('y', d => -d.data.icon.size / 2);
 

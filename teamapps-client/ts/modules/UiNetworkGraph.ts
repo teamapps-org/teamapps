@@ -322,7 +322,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		})
 			.attr('width', (data: UiNetworkNodeConfig) => data.icon.size)
 			.attr('height', (data: UiNetworkNodeConfig) => data.icon.size)
-			.attr("xlink:href", (data: UiNetworkNodeConfig) => this._context.getIconPath(data.icon.icon, data.icon.size))
+			.attr("xlink:href", (data: UiNetworkNodeConfig) => data.icon.icon)
 			.attr('x', (data: UiNetworkNodeConfig) => -data.width / 2 - data.icon.size / 2)
 			.attr('y', (data: UiNetworkNodeConfig) => -data.height / 2 - data.icon.size / 2);
 
