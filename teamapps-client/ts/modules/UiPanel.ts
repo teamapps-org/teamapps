@@ -306,9 +306,8 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		$componentWrapper.innerHTML = '';
 		$componentWrapper.classList.add('hidden');
 		if (headerFieldConfig) {
-			let iconPath = this._context.getIconPath(headerFieldConfig.icon, 16);
 			let $iconAndFieldWrapper = parseHtml(`<div class="icon-and-field-wrapper">
-                    <div class="icon img img-16" style="background-image: ${iconPath ? 'url(' + iconPath + ')' : 'none'}"></div>
+                    <div class="icon img img-16" style="background-image: ${headerFieldConfig.icon ? 'url(' + headerFieldConfig.icon + ')' : 'none'}"></div>
                     <div class="field-wrapper"></div>
                 </div>`);
 			let $icon = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope >.icon');
@@ -342,7 +341,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		this.icon = icon;
 		if (icon) {
 			this.$icon.innerHTML = '';
-			this.$icon.appendChild(parseHtml(`<div class="img img-16" style="background-image: url(${this._context.getIconPath(icon, 16)})"></div>`));
+			this.$icon.appendChild(parseHtml(`<div class="img img-16" style="background-image: url(${icon})"></div>`));
 		}
 		this.$icon.classList.toggle('hidden', icon == null);
 		this.relayoutHeader();

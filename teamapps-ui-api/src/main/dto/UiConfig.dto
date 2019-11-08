@@ -28,7 +28,6 @@ class UiConfiguration {
 
 	String themeClassName = null; // null = default theme, others: "theme-modern", ...
 	boolean optimizedForTouch = false; // @MB #mobile This needs to be set to true if you want touch-friendly ui. I separated this from the naive "inside UiMobileLayout" approach to be able to support touch interaction in normal-style layout (UiSplitPanes etc...)
-	String iconPath = "icons"; //URL to retrieve icons, 16x16 icons are retrieved as path/16/, 32x32 icons path/32/ etc.
 }
 
 

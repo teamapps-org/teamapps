@@ -17,33 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Renderer, RenderingFunction} from "../Common";
-import {
-	createCssGridRowOrColumnString,
-	createImageSizingCssObject,
-	createTextAlignmentCssString,
-	createUiBorderCssString,
-	createUiColorCssString,
-	createUiFontStyleCssString,
-	createUiShadowCssString,
-	createUiSpacingCssString,
-	cssHorizontalAlignmentByUiVerticalAlignment,
-	cssObjectToString,
-	cssVerticalAlignmentByUiVerticalAlignment
-} from "./CssFormatUtil";
-import {IconPathProvider} from "../TeamAppsUiContext";
-import * as log from "loglevel";
-import {UiTextElementConfig} from "../../generated/UiTextElementConfig";
-import {UiBadgeElementConfig} from "../../generated/UiBadgeElementConfig";
-import {UiFloatingElementConfig} from "../../generated/UiFloatingElementConfig";
-import {UiImageElementConfig} from "../../generated/UiImageElementConfig";
-import {UiIconElementConfig} from "../../generated/UiIconElementConfig";
-import {UiGlyphIconElementConfig} from "../../generated/UiGlyphIconElementConfig";
-import {AbstractUiTemplateElementConfig} from "../../generated/AbstractUiTemplateElementConfig";
-import {UiGridTemplateConfig} from "../../generated/UiGridTemplateConfig";
+import {Renderer} from "../Common";
 import {UiHtmlTemplateConfig} from "../../generated/UiHtmlTemplateConfig";
 
-export function createHtmlTemplateRenderer(template: UiHtmlTemplateConfig, iconPathProvider: IconPathProvider, idPropertyName: string): Renderer {
+export function createHtmlTemplateRenderer(template: UiHtmlTemplateConfig, idPropertyName: string): Renderer {
 	return {
 		render: (data: any) => {
 			if (data == null) {

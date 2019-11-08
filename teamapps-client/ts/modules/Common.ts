@@ -597,22 +597,6 @@ export function getMicrosoftBrowserVersion() {
 	return false;
 }
 
-export function getIconPath(context: TeamAppsUiContext, iconName: string, iconSize: number, ignoreRetina?: boolean): string {
-	if (!iconName) {
-		return null;
-	}
-	if (!ignoreRetina) {
-		iconSize = context.isHighDensityScreen ? iconSize * 2 : iconSize;
-	}
-	if (iconSize > 128) { // there are currently no icons larger than 128px
-		iconSize = 128;
-	}
-	if (iconName.indexOf("/") === 0) {
-		return iconName; // hack for static resources instead of icons...
-	}
-	return context.config.iconPath + '/' + iconSize + '/' + iconName;
-}
-
 export function enableScrollViaDragAndDrop($scrollContainer: HTMLElement) {
 	function mousedownHandler(startEvent: MouseEvent) {
 		$scrollContainer.style.cursor = "move";

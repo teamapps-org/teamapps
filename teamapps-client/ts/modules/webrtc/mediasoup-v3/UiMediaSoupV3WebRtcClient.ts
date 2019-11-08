@@ -224,7 +224,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.$main.style.setProperty("--activity-line-inactive-color", createUiColorCssString(config.activityActiveColor));
 
 		this.$icon.classList.toggle("hidden", config.icon == null);
-		this.$icon.src = config.icon != null ? this._context.getIconPath(config.icon, 64) : "#";
+		this.$icon.src = config.icon != null ? config.icon : "#";
 
 		this.$caption.classList.toggle("hidden", config.caption == null);
 		this.$caption.innerText = config.caption;

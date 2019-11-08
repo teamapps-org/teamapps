@@ -1,7 +1,7 @@
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {TemplateRegistry} from "./TemplateRegistry";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {IconPathProvider, TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiRadioGroup} from "./UiRadioGroup";
 import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {UiSwitch} from "./UiSwitch";
@@ -78,7 +78,7 @@ export class UiTestHarness {
 	}
 }
 
-class TestTeamAppsUiContext implements TeamAppsUiContext, IconPathProvider {
+class TestTeamAppsUiContext implements TeamAppsUiContext {
 	readonly sessionId: string = "1234567890";
 	readonly isHighDensityScreen: boolean = false;
 	readonly executingCommand: boolean = false;
@@ -88,8 +88,4 @@ class TestTeamAppsUiContext implements TeamAppsUiContext, IconPathProvider {
 	getComponentById(id: string): UiComponent<UiComponentConfig> {
 		return null;
 	}
-
-	getIconPath(iconName: string, iconSize: number, ignoreRetina?: boolean): string {
-		return null;
-	};
 }

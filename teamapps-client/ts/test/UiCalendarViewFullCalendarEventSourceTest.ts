@@ -26,7 +26,6 @@ describe('UiCalendarFullCalendarEventSource', function () {
             createComponent: null,
             fireEvent: null,
             config: null,
-            getIconPath: null
         };
 
         spyOn(contextSpy, 'fireEvent');

@@ -78,9 +78,9 @@ export class TemplateRegistry {
 		if (isTemplateReference(template)) {
 			return this.getTemplateRendererByName(template.templateId);
 		} else if (isGridTemplate(template)) {
-			return createGridTemplateRenderer(template, this.context, idPropertyName);
+			return createGridTemplateRenderer(template, idPropertyName);
 		} else if (isHtmlTemplate(template)) {
-			return createHtmlTemplateRenderer(template, this.context, idPropertyName);
+			return createHtmlTemplateRenderer(template, idPropertyName);
 		}
 	}
 

@@ -145,7 +145,7 @@ export class UiFileItem {
 		if (config.thumbnail) {
 			this.$fileIcon.style.backgroundImage = `url(${config.thumbnail}`;
 		} else {
-			this.$fileIcon.style.backgroundImage = `url(${this.context.getIconPath(config.icon, 48)})`;
+			this.$fileIcon.style.backgroundImage = `url(${config.icon})`;
 		}
 		this.$fileName.textContent = config.fileName;
 		this.$fileDescription.textContent = config.description;
