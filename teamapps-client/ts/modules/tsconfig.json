@@ -6,7 +6,7 @@
     "target": "es5",
     "experimentalDecorators": true,
     "alwaysStrict": true,
-    "lib": ["es2017", "dom"],
+    "lib": ["es2019", "dom"],
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
