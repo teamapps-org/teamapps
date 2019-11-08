@@ -92,6 +92,7 @@
     "@types/wnumb": "^1.0.28",
     "@types/youtube": "^0.0.38",
     "animate.css": "^3.7.2",
+    "array-flat-polyfill": "^1.0.1",
     "bootstrap": "^3.4.1",
     "canvas-gauges": "^2.1.5",
     "d3": "^5.9.7",

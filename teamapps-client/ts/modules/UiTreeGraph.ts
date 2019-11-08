@@ -791,8 +791,10 @@ class TreeChart {
 		const attrs = this.getChartState();
 
 		// Add patterns for each node (it's needed for rounded image implementation)
+		let allNormalNodes = attrs.root.descendants();
+		let allSideListNodes = attrs.root.descendants().flatMap(n => n.sideListNodes || []);
 		const patternsSelection = attrs.defs.selectAll('.pattern')
-			.data(attrs.root.descendants().filter(n => n.data.image != null), (d: TreeNode) => d.id)
+			.data([...allNormalNodes, ...allSideListNodes].filter(n => n.data.image != null), (d: TreeNode) => d.id)
 			.join(enter => enter.append('pattern'))
 			.attr('class', 'pattern')
 			.attr('height', 1)
