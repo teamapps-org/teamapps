@@ -93,7 +93,7 @@ public abstract class AbstractComponent implements Component {
 	public void setVisible(boolean visible) {
 		boolean changed = visible != this.visible;
 		if (!changed) {
-			LOGGER.warn("Visibility did not change. Still " + visible);
+			LOGGER.info("Visibility did not change. Still " + visible);
 		}
 		this.visible = visible;
 		if (changed) {
