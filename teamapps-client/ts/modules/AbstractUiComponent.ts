@@ -107,16 +107,23 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 				Object.keys(this._config.stylesBySelector).forEach(selector => this.setStyle(selector, this._config.stylesBySelector[selector]));
 			}
 
-			let debouncedRelayout = debounce((entry: ResizeObserverEntry) => {
-				this.reLayout(entry.contentRect.width, entry.contentRect.height);
-				// this.reLayout(this.getMainDomElement().offsetWidth, this.getMainDomElement().offsetHeight);
-			}, 300, DebounceMode.BOTH);
+			let relayoutCalled = false;
+			let debouncedRelayout: (size?: {width: number, height: number}) => void = debounce((size?: {width: number, height: number}) => {
+				relayoutCalled = true;
+				this.reLayout(size.width, size.height);
+			}, 200, DebounceMode.BOTH);
 			const resizeObserver = new ResizeObserver(entries => {
 				for (let entry of entries) {
-					debouncedRelayout(entry);
+					debouncedRelayout({width: entry.contentRect.width, height: entry.contentRect.height});
 				}
 			});
-			resizeObserver.observe(this.getMainElement());
+			resizeObserver.observe(element);
+			setTimeout(() => {
+				// It seems like the resize observer does not always get called when the element gets attached
+				if (!relayoutCalled) {
+					debouncedRelayout({width: element.offsetWidth, height: element.offsetHeight});
+				}
+			}, 300); // TODO remove when problems with missing resizeObserver calls are solved...
 		}
 
 		return element;
