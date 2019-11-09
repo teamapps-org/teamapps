@@ -22,6 +22,7 @@ package org.teamapps.ux.component.infiniteitemview;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListInfiniteItemViewModel<RECORD> extends AbstractInfiniteItemViewModel<RECORD> {
 	private List<RECORD> records;
@@ -51,12 +52,6 @@ public class ListInfiniteItemViewModel<RECORD> extends AbstractInfiniteItemViewM
 
 	@Override
 	public List<RECORD> getRecords(int startIndex, int length) {
-		if (startIndex >= records.size()) {
-			return Collections.emptyList();
-		}
-		if (startIndex + length > records.size()) {
-			length = records.size() - startIndex;
-		}
-		return records.subList(startIndex, startIndex + length);
+		return records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
 	}
 }
