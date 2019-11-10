@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.grid.bootstrap;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
@@ -63,7 +62,6 @@ public class BootstrapishPlacement {
 
 	// =======
 
-	@NotNull
 	private BootstrapishSizing getOrCreateSizing(BootstrapishBreakpoint breakpoint) {
 		BootstrapishSizing sizing = sizings.computeIfAbsent(breakpoint, responsiveBreakpoint -> new BootstrapishSizing(breakpoint));
 

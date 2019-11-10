@@ -20,7 +20,6 @@
 package org.teamapps.ux.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.icons.provider.IconProvider;
@@ -141,7 +140,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		return registrations;
 	}
 
-	@NotNull
 	private SystemIconResourceProvider createSystemIconResourceProvider(IconProvider iconProvider, List<IconProvider> customIconProvider)  {
 		try {
 			File tempDir = File.createTempFile("temp", "temp").getParentFile();

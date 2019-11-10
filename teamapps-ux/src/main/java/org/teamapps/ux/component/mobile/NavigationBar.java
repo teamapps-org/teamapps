@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.mobile;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiComponentReference;
@@ -78,7 +77,6 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 		return uiNavigationBar;
 	}
 
-	@NotNull
 	private List<UiNavigationBarButton> createUiButtons() {
 		return buttons.stream()
 				.map(navigationBarButton -> navigationBarButton.createUiNavigationBarButton())

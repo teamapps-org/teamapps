@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.node;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
 
 import java.util.ArrayList;
@@ -68,7 +67,6 @@ public interface TreeNode extends TreeNodeInfo {
 		return false;
 	}
 
-	@NotNull
 	static List<TreeNode> getPathToNode(TreeNode node) {
 		List<TreeNode> path = new ArrayList<>();
 		TreeNode selfOrAncestor = node;

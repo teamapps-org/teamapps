@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.cache;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiIdentifiableClientRecord;
@@ -235,7 +234,6 @@ public class ClientRecordCache<RECORD, UIRECORD extends UiIdentifiableClientReco
 		return removedRecords;
 	}
 
-	@NotNull
 	private LinkedHashMap<RECORD, UIRECORD> createUiRecords(List<RECORD> newRecords) {
 		LinkedHashMap<RECORD, UIRECORD> uiRecordsByRecord = newRecords.stream()
 				.collect(StreamUtil.toLinkedHashMap(record -> record, record -> createUiRecord(record)));

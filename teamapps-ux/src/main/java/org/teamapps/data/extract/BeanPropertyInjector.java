@@ -19,7 +19,6 @@
  */
 package org.teamapps.data.extract;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.util.ReflectionUtil;
@@ -54,7 +53,6 @@ public class BeanPropertyInjector<RECORD> implements PropertyInjector<RECORD> {
 		}
 	}
 
-	@NotNull
 	private ValueInjector<RECORD, ?> createValueInjector(ClassAndPropertyName classAndPropertyName) {
 		Method setter = ReflectionUtil.findSetter(classAndPropertyName.clazz, classAndPropertyName.propertyName);
 		return (record, value) -> {

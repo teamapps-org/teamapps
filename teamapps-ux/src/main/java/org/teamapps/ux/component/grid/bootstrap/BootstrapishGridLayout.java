@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.grid.bootstrap;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiComponentGridPlacement;
 import org.teamapps.dto.UiEvent;
@@ -87,7 +86,6 @@ public class BootstrapishGridLayout extends AbstractComponent implements Contain
 		return uiResponsiveGridLayout;
 	}
 
-	@NotNull
 	private List<UiResponsiveGridLayoutPolicy> createUiLayoutPolicies() {
 		// find out which responsive breakpoints are actually being used
 		Set<BootstrapishBreakpoint> usedResponsiveBreakpoints = rows.stream()
@@ -116,7 +114,6 @@ public class BootstrapishGridLayout extends AbstractComponent implements Contain
 				.collect(Collectors.toList());
 	}
 
-	@NotNull
 	private List<UiGridPlacement> createUiGridPlacements(BootstrapishBreakpoint breakpoint) {
 		List<UiGridPlacement> uiPlacements = new ArrayList<>();
 		int uiRowIndex = 0;
