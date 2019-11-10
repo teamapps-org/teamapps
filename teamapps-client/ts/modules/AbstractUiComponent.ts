@@ -102,6 +102,10 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		if (this.firstTimeGetMainElementCalled) {
 			this.firstTimeGetMainElementCalled = false;
 
+			if (this._config.debuggingId != null) {
+				element.setAttribute("data-teamapps-debugging-id", this._config.debuggingId);
+			}
+
 			element.classList.toggle("invisible-component", this.visible == null ? false : !this.visible);
 			if (this._config.stylesBySelector != null) { // might be null when used via JavaScript API!
 				Object.keys(this._config.stylesBySelector).forEach(selector => this.setStyle(selector, this._config.stylesBySelector[selector]));

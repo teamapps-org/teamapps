@@ -48,6 +48,7 @@ public abstract class AbstractComponent implements Component {
 
 //	public final Event<Boolean> onEffectiveVisibilityChanged = new Event<>();
 
+	private String debuggingId = "";
 	private String id;
 	private SessionContext sessionContext;
 	private boolean rendered;
@@ -65,6 +66,7 @@ public abstract class AbstractComponent implements Component {
 
 	protected void mapAbstractUiComponentProperties(UiComponent uiComponent) {
 		uiComponent.setId(id);
+		uiComponent.setDebuggingId(debuggingId);
 		uiComponent.setVisible(visible);
 		uiComponent.setStylesBySelector((Map) stylesBySelector);
 	}
@@ -92,9 +94,6 @@ public abstract class AbstractComponent implements Component {
 	@Override
 	public void setVisible(boolean visible) {
 		boolean changed = visible != this.visible;
-		if (!changed) {
-			LOGGER.info("Visibility did not change. Still " + visible);
-		}
 		this.visible = visible;
 		if (changed) {
 			queueCommandIfRendered(() -> new UiComponent.SetVisibleCommand(getId(), visible));
@@ -247,5 +246,13 @@ public abstract class AbstractComponent implements Component {
 	@Override
 	public String toString() {
 		return id;
+	}
+
+	public String getDebuggingId() {
+		return debuggingId;
+	}
+
+	public void setDebuggingId(String debuggingId) {
+		this.debuggingId = debuggingId;
 	}
 }
