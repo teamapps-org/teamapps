@@ -28,6 +28,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Event<EVENT_DATA> {
@@ -35,7 +36,7 @@ public class Event<EVENT_DATA> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Event.class);
 	private final String source; // for debugging
 
-	private List<EventListener<EVENT_DATA>> listeners = new CopyOnWriteArrayList<>();
+	private List<Consumer<EVENT_DATA>> listeners = new CopyOnWriteArrayList<>();
 	private EVENT_DATA lastEventData;
 
 	public Event() {
@@ -43,11 +44,11 @@ public class Event<EVENT_DATA> {
 		this.source = stackTraceElement.getFileName() + stackTraceElement.getLineNumber();
 	}
 
-	public void addListener(EventListener<EVENT_DATA> listener) {
+	public void addListener(Consumer<EVENT_DATA> listener) {
 		addListener(listener, true);
 	}
 
-	public void addListener(EventListener<EVENT_DATA> listener, boolean bindToSessionContext) {
+	public void addListener(Consumer<EVENT_DATA> listener, boolean bindToSessionContext) {
 		if (bindToSessionContext) {
 			SessionContext currentSessionContext = CurrentSessionContext.getOrNull();
 			listeners.add(new SessionContextAwareEventListener<>(currentSessionContext, listener));
@@ -60,16 +61,24 @@ public class Event<EVENT_DATA> {
 		}
 	}
 
+	public void addListener(Runnable listener) {
+		addListener(eventData -> listener.run(), true);
+	}
+
+	public void addListener(Runnable listener, boolean bindToSessionContext) {
+		addListener(eventData -> listener.run(), bindToSessionContext);
+	}
+
 	/**
 	 * When the session gets destroyed, remove this listener (preventing memory-leaks and degrading performance due to stale listeners).
 	 */
-	private void removeWhenSessionDestroyed(EventListener<EVENT_DATA> listener, SessionContext currentSessionContext) {
+	private void removeWhenSessionDestroyed(Consumer<EVENT_DATA> listener, SessionContext currentSessionContext) {
 		if (this != currentSessionContext.onDestroyed()) { // prevent infinite recursion!
 			// use a weak reference here, so the fact that this is registered to the sessionContext's destroyed event
 			// does not mean it has to survive (not being garbage collected) as long as the session context.
-			WeakReference<EventListener<EVENT_DATA>> listenerWeakReference = new WeakReference<>(listener);
+			WeakReference<Consumer<EVENT_DATA>> listenerWeakReference = new WeakReference<>(listener);
 			currentSessionContext.onDestroyed().listeners.add(aVoid -> {
-				EventListener<EVENT_DATA> l = listenerWeakReference.get();
+				Consumer<EVENT_DATA> l = listenerWeakReference.get();
 				if (l != null) {
 					removeListener(l);
 				}
@@ -77,14 +86,14 @@ public class Event<EVENT_DATA> {
 		}
 	}
 
-	public void removeListener(EventListener<EVENT_DATA> listener) {
+	public void removeListener(Consumer<EVENT_DATA> listener) {
 		listeners.remove(new SessionContextAwareEventListener<>(listener));
 	}
 
 	public void fire(EVENT_DATA eventData) {
 		this.lastEventData = eventData;
-		for (EventListener<EVENT_DATA> listener : listeners) {
-			listener.onEvent(eventData);
+		for (Consumer<EVENT_DATA> listener : listeners) {
+			listener.accept(eventData);
 		}
 	}
 
@@ -104,26 +113,26 @@ public class Event<EVENT_DATA> {
 		return newEvent;
 	}
 
-	private static class SessionContextAwareEventListener<EVENT_DATA> implements EventListener<EVENT_DATA> {
+	private static class SessionContextAwareEventListener<EVENT_DATA> implements Consumer<EVENT_DATA> {
 
 		private final SessionContext sessionContext;
-		private final EventListener<EVENT_DATA> delegate;
+		private final Consumer<EVENT_DATA> delegate;
 
-		public SessionContextAwareEventListener(SessionContext sessionContext, EventListener<EVENT_DATA> delegate) {
+		public SessionContextAwareEventListener(SessionContext sessionContext, Consumer<EVENT_DATA> delegate) {
 			this.sessionContext = sessionContext;
 			this.delegate = delegate;
 		}
 
-		public SessionContextAwareEventListener(EventListener<EVENT_DATA> delegate) {
+		public SessionContextAwareEventListener(Consumer<EVENT_DATA> delegate) {
 			this(null, delegate);
 		}
 
 		@Override
-		public void onEvent(EVENT_DATA eventData) {
+		public void accept(EVENT_DATA eventData) {
 			if (sessionContext != null) {
-				sessionContext.runWithContext(() -> delegate.onEvent(eventData));
+				sessionContext.runWithContext(() -> delegate.accept(eventData));
 			} else {
-				delegate.onEvent(eventData);
+				delegate.accept(eventData);
 			}
 		}
 

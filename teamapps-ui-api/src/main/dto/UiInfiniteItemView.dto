@@ -27,6 +27,7 @@ class UiInfiniteItemView extends UiComponent {
 	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
 	UiItemJustification itemJustification = UiItemJustification.LEFT;
 	UiVerticalItemAlignment verticalItemAlignment = UiVerticalItemAlignment.STRETCH;
+	boolean contextMenuEnabled = false;
 
 	command addData(int startIndex, List<UiIdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
 	command removeData(List<Integer> ids);
@@ -35,7 +36,10 @@ class UiInfiniteItemView extends UiComponent {
     command setHorizontalItemMargin(int horizontalItemMargin);
     command setItemJustification(UiItemJustification itemJustification);
     command setVerticalItemAlignment(UiVerticalItemAlignment verticalItemAlignment);
+    command setContextMenuContent(int requestId, UiComponent* component);
+    command closeContextMenu(int requestId);
 
 	event dataRequest(int startIndex, int length); //sent when the virtual view port gets outside of the buffered data
 	event itemClicked(int recordId, boolean isRightMouseButton, boolean isDoubleClick);
+	event contextMenuRequested(int requestId, int recordId);
 }

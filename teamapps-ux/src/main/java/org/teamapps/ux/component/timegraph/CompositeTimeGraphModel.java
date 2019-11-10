@@ -23,7 +23,7 @@ public class CompositeTimeGraphModel implements TimeGraphModel {
 
 	public CompositeTimeGraphModel(TimeGraphModel... delegates) {
 		this.delegates = Arrays.asList(delegates);
-		this.delegates.forEach(delegate -> delegate.onDataChanged().addListener(onDataChanged::fire));
+		this.delegates.forEach(delegate -> delegate.onDataChanged().addListener((Runnable) onDataChanged::fire));
 	}
 
 	@Override

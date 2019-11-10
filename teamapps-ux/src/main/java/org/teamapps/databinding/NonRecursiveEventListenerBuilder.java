@@ -19,14 +19,12 @@
  */
 package org.teamapps.databinding;
 
-import org.teamapps.event.EventListener;
-
 import java.util.function.Consumer;
 
 public class NonRecursiveEventListenerBuilder {
 	private final ThreadLocal<Boolean> processing = new ThreadLocal<>();
 
-	public <EVENT_DATA> EventListener<EVENT_DATA> create(Consumer<EVENT_DATA> handler) {
+	public <EVENT_DATA> Consumer<EVENT_DATA> create(Consumer<EVENT_DATA> handler) {
 		return (eventData) -> {
 			if (!isAlreadyProcessing()) {
 				processing.set(true);

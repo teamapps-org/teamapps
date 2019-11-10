@@ -36,7 +36,6 @@ import org.teamapps.dto.UiTableClientRecord;
 import org.teamapps.dto.UiTableColumn;
 import org.teamapps.dto.UiTableDataRequest;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
@@ -52,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Table<RECORD> extends AbstractComponent implements Container {
@@ -121,10 +121,10 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	// ----- listeners -----
 
 	// needs to be a field for reference equality (sad but true, java method references are only syntactic sugar for lambdas)
-	private EventListener<Void> onAllDataChangedListener = this::onAllDataChanged;
-	private EventListener<RECORD> onRecordAddedListener = this::onRecordAdded;
-	private EventListener<RECORD> onRecordDeletedListener = this::onRecordDeleted;
-	private EventListener<RECORD> onRecordUpdatedListener = this::onRecordUpdated;
+	private Consumer<Void> onAllDataChangedListener = this::onAllDataChanged;
+	private Consumer<RECORD> onRecordAddedListener = this::onRecordAdded;
+	private Consumer<RECORD> onRecordDeletedListener = this::onRecordDeleted;
+	private Consumer<RECORD> onRecordUpdatedListener = this::onRecordUpdated;
 
 	private List<Integer> viewportDisplayedRecordClientIds;
 

@@ -29,7 +29,6 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiTree;
 import org.teamapps.dto.UiTreeRecord;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
@@ -44,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -80,13 +80,13 @@ public class Tree<RECORD> extends AbstractComponent {
 		}
 	};
 
-	private final EventListener<List<RECORD>> modelAllNodesChangedListener = (dataRecords) -> {
+	private final Consumer<List<RECORD>> modelAllNodesChangedListener = (dataRecords) -> {
 		if (isRendered()) {
 			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(dataRecords);
 			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
 		}
 	};
-	private final EventListener<TreeModelChangedEventData<RECORD>> modelChangedListener = (changedEventData) -> {
+	private final Consumer<TreeModelChangedEventData<RECORD>> modelChangedListener = (changedEventData) -> {
 		List<RECORD> nodesRemoved = changedEventData.getNodesRemoved();
 		List<RECORD> nodesAdded = changedEventData.getNodesAddedOrUpdated();
 		if (isRendered()) {

@@ -31,7 +31,6 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiWeekDay;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -52,6 +51,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.teamapps.util.UiUtil.createUiColor;
@@ -105,7 +105,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private boolean navigateOnHeaderClicks = true;
 
-	private EventListener<Void> onCalendarDataChangedListener = (aVoid) -> {
+	private Consumer<Void> onCalendarDataChangedListener = (aVoid) -> {
 		refreshEvents();
 	};
 

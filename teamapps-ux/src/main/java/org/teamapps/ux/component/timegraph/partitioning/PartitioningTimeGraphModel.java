@@ -73,7 +73,7 @@ public class PartitioningTimeGraphModel implements TimeGraphModel {
 	public PartitioningTimeGraphModel(ZoneId timeZone, RawTimedDataModel delegateModel) {
 		this.timeZone = timeZone;
 		this.delegateModel = delegateModel;
-		this.delegateModel.onDataChanged().addListener(onDataChanged::fire);
+		this.delegateModel.onDataChanged().addListener((Runnable) onDataChanged::fire);
 	}
 
 	public void setZoomLevelPartitionUnits(List<TimePartitionUnit> zoomLevelPartitionUnits) {

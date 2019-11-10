@@ -28,13 +28,13 @@ import org.teamapps.dto.UiTimeChartZoomLevel;
 import org.teamapps.dto.UiTimeGraph;
 import org.teamapps.dto.UiTimeGraphDataPoint;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class TimeGraph extends AbstractComponent {
@@ -49,7 +49,7 @@ public class TimeGraph extends AbstractComponent {
 	private Interval selectedInterval;
 
 	// needs to be a field for reference equality (sad but true, java method references are only syntactic sugar for lambdas)
-	private final EventListener<Void> onTimeGraphDataChangedListener = this::onTimeGraphDataChanged;
+	private final Consumer<Void> onTimeGraphDataChangedListener = this::onTimeGraphDataChanged;
 
 	public TimeGraph(TimeGraphModel model) {
 		super();
