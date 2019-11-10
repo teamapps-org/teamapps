@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,10 +26,10 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiInfiniteItemView;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.itemview.ItemViewItemJustification;
 import org.teamapps.ux.component.itemview.ItemViewVerticalItemAlignment;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -37,6 +37,8 @@ import org.teamapps.ux.component.template.Template;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class InfiniteItemView<RECORD> extends AbstractComponent {
 
@@ -55,10 +57,13 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
 	private final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
 
-	private EventListener<Void> modelOnAllDataChangedListener = aVoid -> this.resetClientSideData();
-	private EventListener<RECORD> modelOnRecordAddedListener = record -> this.resetClientSideData();
-	private EventListener<RECORD> modelOnRecordChangedListener = record -> this.resetClientSideData();
-	private EventListener<RECORD> modelOnRecordDeletedListener = record -> this.resetClientSideData();
+	private Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.resetClientSideData();
+	private Consumer<RECORD> modelOnRecordAddedListener = record -> this.resetClientSideData();
+	private Consumer<RECORD> modelOnRecordChangedListener = record -> this.resetClientSideData();
+	private Consumer<RECORD> modelOnRecordDeletedListener = record -> this.resetClientSideData();
+
+	private Function<RECORD, Component> contextMenuProvider = null;
+	private int lastSeenContextMenuRequestId;
 
 	public InfiniteItemView(Template itemTemplate, float itemWidth, int rowHeight) {
 		this.itemTemplate = itemTemplate;
@@ -87,37 +92,56 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiInfiniteItemView uiComponent = new UiInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
-		mapAbstractUiComponentProperties(uiComponent);
+		UiInfiniteItemView ui = new UiInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
+		mapAbstractUiComponentProperties(ui);
 		int recordCount = model.getCount();
 		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(model.getRecords(0, Math.min(recordCount, numberOfInitialRecords)));
 		cacheResponse.commit();
-		uiComponent.setData(cacheResponse.getResult());
-		uiComponent.setTotalNumberOfRecords(recordCount);
-		uiComponent.setItemWidth(itemWidth);
-		uiComponent.setHorizontalItemMargin(horizontalItemMargin);
-		uiComponent.setItemJustification(itemJustification.toUiItemJustification());
-		uiComponent.setVerticalItemAlignment(verticalItemAlignment.toUiItemJustification());
-		uiComponent.setAutoHeight(autoHeight);
-		return uiComponent;
+		ui.setData(cacheResponse.getResult());
+		ui.setTotalNumberOfRecords(recordCount);
+		ui.setItemWidth(itemWidth);
+		ui.setHorizontalItemMargin(horizontalItemMargin);
+		ui.setItemJustification(itemJustification.toUiItemJustification());
+		ui.setVerticalItemAlignment(verticalItemAlignment.toUiItemJustification());
+		ui.setAutoHeight(autoHeight);
+		ui.setContextMenuEnabled(contextMenuProvider != null);
+		return ui;
 	}
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_INFINITE_ITEM_VIEW_DATA_REQUEST:
+			case UI_INFINITE_ITEM_VIEW_DATA_REQUEST: {
 				UiInfiniteItemView.DataRequestEvent dataRequestEvent = (UiInfiniteItemView.DataRequestEvent) event;
 				int startIndex = dataRequestEvent.getStartIndex();
 				int length = dataRequestEvent.getLength();
 				sendRecords(startIndex, length, false);
 				break;
-			case UI_INFINITE_ITEM_VIEW_ITEM_CLICKED:
+			}
+			case UI_INFINITE_ITEM_VIEW_ITEM_CLICKED: {
 				UiInfiniteItemView.ItemClickedEvent itemClickedEvent = (UiInfiniteItemView.ItemClickedEvent) event;
 				RECORD record = itemCache.getRecordByClientId(itemClickedEvent.getRecordId());
 				if (record != null) {
-					onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick()));
+					onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick(), itemClickedEvent.getIsRightMouseButton()));
 				}
 				break;
+			}
+			case UI_INFINITE_ITEM_VIEW_CONTEXT_MENU_REQUESTED: {
+				UiInfiniteItemView.ContextMenuRequestedEvent e = (UiInfiniteItemView.ContextMenuRequestedEvent) event;
+				lastSeenContextMenuRequestId = e.getRequestId();
+				RECORD record = itemCache.getRecordByClientId(e.getRecordId());
+				if (record != null && contextMenuProvider != null) {
+					Component contextMenuContent = contextMenuProvider.apply(record);
+					if (contextMenuContent != null) {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiComponentReference()));
+					} else {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
+					}
+				} else {
+					closeContextMenu();
+				}
+				break;
+			}
 		}
 	}
 
@@ -252,6 +276,18 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public void setMaxCacheCapacity(int maxCapacity) {
 		itemCache.setMaxCapacity(maxCapacity);
+	}
+
+	public Function<RECORD, Component> getContextMenuProvider() {
+		return contextMenuProvider;
+	}
+
+	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
+		this.contextMenuProvider = contextMenuProvider;
+	}
+
+	public void closeContextMenu() {
+		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
 	@Override

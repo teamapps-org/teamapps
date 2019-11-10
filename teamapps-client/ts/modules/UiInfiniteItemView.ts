@@ -26,7 +26,7 @@ import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TableDataProviderItem} from "./table/TableDataProvider";
 import {
 	UiInfiniteItemView_DataRequestEvent,
-	UiInfiniteItemView_ItemClickedEvent,
+	UiInfiniteItemView_ItemClickedEvent, UiInfiniteItemView_ContextMenuRequestedEvent,
 	UiInfiniteItemViewCommandHandler,
 	UiInfiniteItemViewConfig,
 	UiInfiniteItemViewEventSource
@@ -37,6 +37,8 @@ import {itemCssStringsAlignItems, itemCssStringsJustification} from "./UiItemVie
 import {UiItemJustification} from "../generated/UiItemJustification";
 import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClientRecordConfig";
 import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
+import {ContextMenu} from "./micro-components/ContextMenu";
+import {UiComponent} from "./UiComponent";
 
 ///<reference types="slickgrid"/>
 
@@ -160,6 +162,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 
 	public readonly onDataRequest: TeamAppsEvent<UiInfiniteItemView_DataRequestEvent> = new TeamAppsEvent<UiInfiniteItemView_DataRequestEvent>(this);
 	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent>(this);
+	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView_ContextMenuRequestedEvent> = new TeamAppsEvent<UiInfiniteItemView_ContextMenuRequestedEvent>(this);
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;
@@ -171,6 +174,9 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	private itemWidth: number;
 	private itemJustification: UiItemJustification;
 	private verticalItemAlignment: UiVerticalItemAlignment;
+	private contextMenu: ContextMenu;
+
+	private currentContextMenuRequestId = 0;
 
 	constructor(config: UiInfiniteItemViewConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -195,6 +201,8 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		}
 		this.createGrid();
 
+		this.contextMenu = new ContextMenu();
+
 		let me = this;
 		$(this.getMainElement())
 			.on("click contextmenu", ".item-wrapper", function (e: JQueryMouseEventObject) {
@@ -204,6 +212,12 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 					isRightMouseButton: e.button === 2,
 					isDoubleClick: false
 				});
+				if (e.button == 2 && !isNaN(recordId)) {
+					e.preventDefault();
+					me.contextMenu.setContent(null);
+					me.contextMenu.open(e.pageX, e.pageY);
+					me.onContextMenuRequested.fire({recordId: recordId, requestId: ++this.currentContextMenuRequestId})
+				}
 			})
 			.on("dblclick", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
@@ -388,6 +402,19 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	setItemJustification(itemJustification: UiItemJustification): void {
 		this.itemJustification = itemJustification;
 		this.updateStyles();
+	}
+
+	setContextMenuContent(requestId: number, component: UiComponent): void {
+		if (requestId == this.currentContextMenuRequestId) {
+			this.contextMenu.setContent(component);
+		}
+	}
+
+	closeContextMenu(requestId: number): void {
+		if (requestId == this.currentContextMenuRequestId) {
+			this.contextMenu.setContent(null);
+			this.contextMenu.close();
+		}
 	}
 
 }

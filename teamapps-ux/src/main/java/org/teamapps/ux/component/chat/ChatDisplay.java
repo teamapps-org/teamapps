@@ -24,11 +24,11 @@ import org.teamapps.dto.UiChatFile;
 import org.teamapps.dto.UiChatMessage;
 import org.teamapps.dto.UiChatPhoto;
 import org.teamapps.dto.UiEvent;
-import org.teamapps.event.EventListener;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.resource.Resource;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -37,10 +37,10 @@ public class ChatDisplay extends AbstractComponent {
 	private final ChatDisplayModel model;
 	private int messagesFetchSize = 20;
 
-	private final EventListener<ChatMessageBatch> modelAddMessagesAddedListener = chatMessages -> {
+	private final Consumer<ChatMessageBatch> modelAddMessagesAddedListener = chatMessages -> {
 		queueCommandIfRendered(() -> new UiChatDisplay.AddChatMessagesCommand(getId(), createUiChatMessages(chatMessages.getMessages()), false, chatMessages.isIncludesFirstMessage()));
 	};
-	private final EventListener<Void> modelAllDataChangedListener = aVoid -> {
+	private final Consumer<Void> modelAllDataChangedListener = aVoid -> {
 		ChatMessageBatch messageBatch = this.getModel().getLastChatMessages(this.messagesFetchSize);
 		queueCommandIfRendered(() -> new UiChatDisplay.ReplaceChatMessagesCommand(getId(), createUiChatMessages(messageBatch.getMessages()), messageBatch.isIncludesFirstMessage()));
 	};

@@ -3,12 +3,13 @@ package org.teamapps.ux.component.progress;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiProgressDisplay;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.task.ObservableProgress;
 import org.teamapps.ux.task.ProgressChangeEventData;
 import org.teamapps.ux.task.ProgressStatus;
+
+import java.util.function.Consumer;
 
 /**
  * This component displays progress information.
@@ -30,7 +31,7 @@ public class ProgressDisplay extends AbstractComponent {
 
 	private ObservableProgress observedProgress;
 	
-	private final EventListener<ProgressChangeEventData> observedProgressChangeListener = data -> {
+	private final Consumer<ProgressChangeEventData> observedProgressChangeListener = data -> {
 		setStatus(data.getStatus());
 		setStatusMessage(data.getStatusMessage());
 		setProgress(data.getProgress());

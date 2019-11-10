@@ -23,10 +23,12 @@ public class ItemClickedEventData<RECORD> {
 
 	private final RECORD record;
 	private final boolean isDoubleClick;
+	private final boolean isRightClick;
 
-	public ItemClickedEventData(RECORD record, boolean isDoubleClick) {
+	public ItemClickedEventData(RECORD record, boolean isDoubleClick, boolean isRightClick) {
 		this.record = record;
 		this.isDoubleClick = isDoubleClick;
+		this.isRightClick = isRightClick;
 	}
 
 	public RECORD getRecord() {
@@ -36,5 +38,8 @@ public class ItemClickedEventData<RECORD> {
 	public boolean isDoubleClick() {
 		return isDoubleClick;
 	}
-	
+
+	public boolean isRightClick() {
+		return isRightClick;
+	}
 }
