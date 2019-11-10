@@ -19,6 +19,7 @@
  */
 class UiComponent {
 	@Referenceable String id;
+	String debuggingId;
 	boolean visible = true;
 	Dictionary<Dictionary<String>> stylesBySelector;
 
