@@ -24,6 +24,7 @@ class UiInfiniteItemView extends UiComponent {
 	List<UiIdentifiableClientRecord> data;
 	int totalNumberOfRecords = 0;
 	int horizontalItemMargin = 0;
+	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
 	UiItemJustification itemJustification = UiItemJustification.LEFT;
 	UiVerticalItemAlignment verticalItemAlignment = UiVerticalItemAlignment.STRETCH;
 
