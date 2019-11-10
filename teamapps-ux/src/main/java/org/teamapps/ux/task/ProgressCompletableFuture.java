@@ -1,6 +1,5 @@
 package org.teamapps.ux.task;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.ux.task.function.ProgressReportingBiConsumer;
@@ -177,7 +176,6 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 		return future;
 	}
 
-	@NotNull
 	private <U> Function<T, Object> applyWrapped(Function<? super T, ? extends U> fn, ProgressCompletableFuture<U> future) {
 		return t -> {
 			future.progress.start();

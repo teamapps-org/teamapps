@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.calendar;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
@@ -508,7 +507,6 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		this.templateDecider = createStaticTemplateDecider(timeGridTemplate, dayGridTemplate, monthGridTemplate);
 	}
 
-	@NotNull
 	private CalendarEventTemplateDecider<CEVENT> createStaticTemplateDecider(Template timeGridTemplate, Template dayGridTemplate, Template monthGridTemplate) {
 		return (record, viewMode) -> {
 			switch (viewMode) {

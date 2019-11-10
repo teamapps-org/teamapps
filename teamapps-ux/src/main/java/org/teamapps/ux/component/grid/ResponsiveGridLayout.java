@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.grid;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiResponsiveGridLayout;
@@ -45,7 +44,6 @@ public class ResponsiveGridLayout extends AbstractComponent implements Container
 		return uiResponsiveGridLayout;
 	}
 
-	@NotNull
 	private List<UiResponsiveGridLayoutPolicy> createUiLayoutPolicies() {
 		return layoutDefinitionsByMinWidth.entrySet().stream()
 					.map(entry -> new UiResponsiveGridLayoutPolicy(entry.getKey(), entry.getValue().createUiGridLayout()))

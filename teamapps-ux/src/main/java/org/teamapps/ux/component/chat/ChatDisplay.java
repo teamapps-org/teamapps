@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.chat;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.dto.UiChatDisplay;
 import org.teamapps.dto.UiChatFile;
 import org.teamapps.dto.UiChatMessage;
@@ -80,7 +79,6 @@ public class ChatDisplay extends AbstractComponent {
 		}
 	}
 
-	@NotNull
 	private List<UiChatMessage> createUiChatMessages(List<ChatMessage> chatMessages) {
 		return chatMessages.stream()
 				.map(message -> createUiChatMessage(message))

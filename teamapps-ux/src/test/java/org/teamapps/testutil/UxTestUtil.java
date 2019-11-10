@@ -20,7 +20,6 @@
 package org.teamapps.testutil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
 import org.mockito.Mockito;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.server.CommandDispatcher;
@@ -38,7 +37,6 @@ public class UxTestUtil {
 		sessionContext.runWithContext(runnable);
 	}
 
-	@NotNull
 	public static SessionContext createDummySessionContext() {
 		return new SessionContext(
 				new QualifiedUiSessionId("httpSessionId", "uiSessionId"),

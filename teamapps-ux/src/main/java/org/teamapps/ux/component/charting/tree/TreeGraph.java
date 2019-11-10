@@ -1,6 +1,5 @@
 package org.teamapps.ux.component.charting.tree;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiBaseTreeGraphNode;
@@ -63,7 +62,6 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 				.collect(Collectors.toList());
 	}
 
-	@NotNull
 	private UiTreeGraphNode createUiNode(TreeGraphNode<RECORD> node) {
 		UiTreeGraphNode uiNode = new UiTreeGraphNode(node.getId(), node.getWidth(), node.getHeight());
 		mapBaseTreeGraphNodeAttributes(node, uiNode);

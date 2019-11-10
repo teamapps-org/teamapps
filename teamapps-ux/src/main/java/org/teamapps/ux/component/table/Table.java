@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.table;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
@@ -725,7 +724,6 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		}
 	}
 
-	@NotNull
 	private Map<String, List<UiFieldMessage>> createUiFieldMessagesForRecord(Map<String, List<FieldMessage>> recordFieldMessages) {
 		return recordFieldMessages.entrySet().stream()
 				.collect(Collectors.toMap(

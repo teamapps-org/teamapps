@@ -1,6 +1,5 @@
 package org.teamapps.ux.component.field;
 
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.dto.UiComponentReference;
 import org.teamapps.dto.UiFieldGroup;
 import org.teamapps.ux.component.AbstractComponent;
@@ -23,7 +22,6 @@ public class FieldGroup extends AbstractComponent {
 		return uiFieldGroup;
 	}
 
-	@NotNull
 	private List<UiComponentReference> createUiFieldReferences() {
 		return fields.stream()
 				.map(c -> c.createUiComponentReference())

@@ -21,7 +21,6 @@ package org.teamapps.ux.component.timegraph;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
-import org.jetbrains.annotations.NotNull;
 import org.teamapps.ux.component.timegraph.partitioning.TimePartitionUnit;
 
 import java.time.Instant;
@@ -118,7 +117,6 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 		onDataChanged.fire(null);
 	}
 
-	@NotNull
 	protected LineChartDataPoints getDataPoints(String dataSeriesId, TimeGraphZoomLevel partitionUnit, Interval interval) {
 		TimePartitionUnit zoomLevel = zoomLevels.stream()
 				.filter(unit -> unit.getAverageMilliseconds() == partitionUnit.getApproximateMillisecondsPerDataPoint())
@@ -128,7 +126,6 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 		return getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByDataSeriesId.getOrDefault(dataSeriesId, defaultAggregationPolicy), timeZone, addDataPointBeforeAndAfterQueryResult);
 	}
 
-	@NotNull
 	public static LineChartDataPoints getAggregateDataPoints(
 			LineChartDataPoints dataPoints,
 			TimePartitionUnit zoomLevel,

@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.session;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,6 @@ public class CurrentSessionContext {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CurrentSessionContext.class);
 	private static final ThreadLocal<SessionContext> CURRENT_CONTEXT = new ThreadLocal<>();
 
-	@NotNull
 	public static SessionContext get() {
 		SessionContext sessionContext = CURRENT_CONTEXT.get();
 		if (sessionContext == null) {
