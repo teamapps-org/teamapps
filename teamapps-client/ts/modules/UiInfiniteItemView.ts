@@ -46,6 +46,8 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 	private static ROW_LOOKAHAED = 20;
 	private timerId: number = null;
 
+	private totalNumberOfRecords = 0;
+
 	constructor(private data: UiIdentifiableClientRecordConfig[], private itemWidthIncludingMargin: number, private dataRequestCallback: (from: number, length: number) => void) {
 	}
 
@@ -53,11 +55,14 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 	 * This method is called by SlickGrid.
 	 */
 	public getLength(): number {
-		return Math.ceil(this.data.length / this.getItemsPerRow());
+		return Math.ceil(this.totalNumberOfRecords / this.getItemsPerRow());
 	}
 
-	public setTotalNumberOfRecords(totalNumberOfRecords: number): number {
-		return this.data.length = totalNumberOfRecords;
+	public setTotalNumberOfRecords(totalNumberOfRecords: number) {
+		if (this.data.length > totalNumberOfRecords) {
+			this.data.length = totalNumberOfRecords;
+		}
+		this.totalNumberOfRecords = totalNumberOfRecords;
 	}
 
 	/**
@@ -251,6 +256,8 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.grid.onViewportChanged.subscribe((e, args) => {
 			this.dataProvider.ensureData(this.grid.getViewport().top, this.grid.getViewport().bottom);
 		});
+
+		this.updateAutoHeight();
 	}
 
 	private calculateItemWidthInPixels() {
@@ -284,6 +291,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		if (totalNumberOfRecords != this.dataProvider.getLength()) {
 			this.dataProvider.setTotalNumberOfRecords(totalNumberOfRecords);
 			this.grid.updateRowCount();
+			this.updateAutoHeight();
 		}
 
 		this.grid.render();
@@ -292,6 +300,14 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		// this._$loadingIndicator.fadeOut();
 
 		this.grid.resizeCanvas();
+	}
+
+	private updateAutoHeight() {
+		if (this._config.autoHeight) {
+			let computedStyle = getComputedStyle(this.$mainDomElement);
+			this.$grid.style.height = Math.min(parseFloat(computedStyle.maxHeight) || Number.MAX_SAFE_INTEGER, this.dataProvider.getLength() * this._config.rowHeight
+				+ parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom)) + "px";
+		}
 	}
 
 	@executeWhenFirstDisplayed()

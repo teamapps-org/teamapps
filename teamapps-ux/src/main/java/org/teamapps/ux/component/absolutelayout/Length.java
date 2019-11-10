@@ -24,6 +24,14 @@ public class Length {
 	private final float size;
 	private final SizeUnit unit;
 
+	public static Length ofPixels(int pixels) {
+		return new Length(pixels, SizeUnit.PIXEL);
+	}
+
+	public static Length ofPercent(int percent) {
+		return new Length(percent, SizeUnit.PERCENT);
+	}
+
 	public Length(float size) {
 		this(size, SizeUnit.PIXEL);
 	}

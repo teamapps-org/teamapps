@@ -47,6 +47,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private float itemWidth;
 	private int rowHeight;
 	private int horizontalItemMargin = 0;
+	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
 	private ItemViewItemJustification itemJustification = ItemViewItemJustification.LEFT;
 	private ItemViewVerticalItemAlignment verticalItemAlignment = ItemViewVerticalItemAlignment.STRETCH;
 
@@ -97,6 +98,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		uiComponent.setHorizontalItemMargin(horizontalItemMargin);
 		uiComponent.setItemJustification(itemJustification.toUiItemJustification());
 		uiComponent.setVerticalItemAlignment(verticalItemAlignment.toUiItemJustification());
+		uiComponent.setAutoHeight(autoHeight);
 		return uiComponent;
 	}
 
@@ -117,6 +119,14 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 				}
 				break;
 		}
+	}
+
+	public boolean isAutoHeight() {
+		return autoHeight;
+	}
+
+	public void setAutoHeight(boolean autoHeight) {
+		this.autoHeight = autoHeight;
 	}
 
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
