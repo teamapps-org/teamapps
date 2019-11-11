@@ -125,7 +125,11 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
 					this.log("Error reported by server: " + SERVER_ERROR_Reason[message.reason] + ": " + message.message);
 					commandHandler.onConnectionErrorOrBroken(message.reason, message.message);
-					// do NOT close the connection here. The server might handle this gracefully.
+					if (message.reason == SERVER_ERROR_Reason.SESSION_NOT_FOUND) {
+						this.connection.stopReconnecting(); // since the server does not know us anymore...
+					} else {
+						// do NOT close the connection here. The server might handle the error gracefully.
+					}
 				} else {
 					this.log(`ERROR: unknown message type: ${message._type}`)
 				}

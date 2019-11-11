@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  */
 public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionListener {
 
-	private static final long UI_SESSION_TIMEOUT = 15 * 60 * 1000; // TODO make configurable
+	private static final long UI_SESSION_TIMEOUT = 10 * 1000; // TODO #config make configurable
 
 	private ScheduledExecutorService scheduledExecutorService;
 	private final ObjectMapper objectMapper;
@@ -199,10 +199,12 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 	}
 
 	public void closeSession(QualifiedUiSessionId sessionId, SessionClosingReason reason) {
-		if (sessionsById.remove(sessionId.getHttpSessionId(), sessionId.getUiSessionId()) != null) {
-			LOGGER.info("Actively closing session: " + sessionId);
-			uiSessionListener.onUiSessionClosed(sessionId, reason);
+		LOGGER.info("Closing session: " + sessionId + " for reason: " + reason);
+		UiSession removedSession = sessionsById.remove(sessionId.getHttpSessionId(), sessionId.getUiSessionId());
+		if (removedSession == null) {
+			LOGGER.info("Session to be closed not found: " + sessionId);
 		}
+		uiSessionListener.onUiSessionClosed(sessionId, reason);
 	}
 
 	@Override
@@ -212,41 +214,33 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
-		removeAllSessionsForHttpSession(se.getSession().getId());
+		closeAllSessionsForHttpSession(se.getSession().getId());
 	}
 
-	public void removeAllSessionsForHttpSession(String httpSessionId) {
+	public void closeAllSessionsForHttpSession(String httpSessionId) {
 		LOGGER.trace("TeamAppsUiSessionManager.removeAllSessionsForHttpSession");
-		ArrayList<UiSession> removedSessions;
+		ArrayList<UiSession> sessionsToClose;
 		synchronized (sessionsById) {
 			Map<String, UiSession> sessionsToBeClosed = sessionsById.row(httpSessionId);
-			removedSessions = new ArrayList<>(sessionsToBeClosed.values());
+			sessionsToClose = new ArrayList<>(sessionsToBeClosed.values());
 			sessionsToBeClosed.clear();
 		}
-		removedSessions.forEach(session -> {
-			LOGGER.info("Removed session since HTTP session was closed: " + session.sessionId);
-			uiSessionListener.onUiSessionClosed(session.sessionId, SessionClosingReason.HTTP_SESSION_CLOSED);
-		});
+		for (UiSession uiSession : sessionsToClose) {
+			closeSession(uiSession.sessionId, SessionClosingReason.HTTP_SESSION_CLOSED);
+		}
 	}
 
 	public void removeTimedOutSessions(long timeoutMilliSeconds) {
 		long now = System.currentTimeMillis();
-		List<UiSession> removedSessions;
+		List<UiSession> sessionsToRemove;
 		synchronized (sessionsById) {
-			removedSessions = new ArrayList<>();
-			sessionsById.values().removeIf(session -> {
-				boolean isTimedOut = now - session.getTimestampOfLastMessageFromClient() > timeoutMilliSeconds;
-				if (isTimedOut) {
-					LOGGER.debug("UI session timed out after " + timeoutMilliSeconds + " ms: " + session.sessionId);
-					removedSessions.add(session);
-				}
-				return isTimedOut;
-			});
+			sessionsToRemove = sessionsById.values().stream()
+					.filter(session -> now - session.getTimestampOfLastMessageFromClient() > timeoutMilliSeconds)
+					.collect(Collectors.toList());
 		}
-		removedSessions.forEach(session -> {
-			LOGGER.info("Session timeout: " + session.sessionId);
-			uiSessionListener.onUiSessionClosed(session.sessionId, SessionClosingReason.TIMED_OUT);
-		});
+		for (UiSession uiSession : sessionsToRemove) {
+			closeSession(uiSession.sessionId, SessionClosingReason.TIMED_OUT);
+		}
 	}
 
 	public void destroy() {
@@ -293,7 +287,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 		public void sendCommand(UiCommandWithResultCallback commandWithCallback) throws UnconsumedCommandsOverflowException {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Sending command ({}): {}" , sessionId.getUiSessionId().substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
+				LOGGER.debug("Sending command ({}): {}", sessionId.getUiSessionId().substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
 			}
 			CMD cmd = createCMD(commandWithCallback);
 			synchronized (this) {
@@ -306,7 +300,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			if (LOGGER.isDebugEnabled()) {
 				commandsWithCallback.stream()
 						.map(UiCommandWithResultCallback::getUiCommand)
-						.forEach(command -> LOGGER.debug("Sending command ({}): {}" , sessionId.getUiSessionId().substring(0, 8), command.getClass().getSimpleName()));
+						.forEach(command -> LOGGER.debug("Sending command ({}): {}", sessionId.getUiSessionId().substring(0, 8), command.getClass().getSimpleName()));
 			}
 			List<CMD> cmds = commandsWithCallback.stream()
 					.map(commandWithCallback -> createCMD(commandWithCallback))
