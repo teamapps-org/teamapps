@@ -78,7 +78,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			thread.setDaemon(true);
 			return thread;
 		});
-		this.scheduledExecutorService.scheduleAtFixedRate(() -> removeTimedOutSessions(UI_SESSION_TIMEOUT), UI_SESSION_TIMEOUT, UI_SESSION_TIMEOUT, TimeUnit.MILLISECONDS);
+		this.scheduledExecutorService.scheduleAtFixedRate(() -> closeTimedOutSessions(UI_SESSION_TIMEOUT), UI_SESSION_TIMEOUT, UI_SESSION_TIMEOUT, TimeUnit.MILLISECONDS);
 	}
 
 	public void setUiSessionListener(UiSessionListener uiSessionListener) {
@@ -230,15 +230,15 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		}
 	}
 
-	public void removeTimedOutSessions(long timeoutMilliSeconds) {
+	public void closeTimedOutSessions(long timeoutMilliSeconds) {
 		long now = System.currentTimeMillis();
-		List<UiSession> sessionsToRemove;
+		List<UiSession> sessionsToClose;
 		synchronized (sessionsById) {
-			sessionsToRemove = sessionsById.values().stream()
+			sessionsToClose = sessionsById.values().stream()
 					.filter(session -> now - session.getTimestampOfLastMessageFromClient() > timeoutMilliSeconds)
 					.collect(Collectors.toList());
 		}
-		for (UiSession uiSession : sessionsToRemove) {
+		for (UiSession uiSession : sessionsToClose) {
 			closeSession(uiSession.sessionId, SessionClosingReason.TIMED_OUT);
 		}
 	}
