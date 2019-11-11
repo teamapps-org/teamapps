@@ -18,8 +18,41 @@
  * =========================LICENSE_END==================================
  */
 .UiQrCodeScanner {
+  position: relative;
+
   > video {
     width: 100%;
     height: 100%;
   }
+
+  > .crosshair-wrapper {
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > .crosshair {
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 45%;
+      filter: invert(1);
+      opacity: 0;
+      animation: crosshair-fade .8s alternate infinite;
+      background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTMgNXY0aDJWNWg0VjNINWMtMS4xIDAtMiAuOS0yIDJ6bTIgMTBIM3Y0YzAgMS4xLjkgMiAyIDJoNHYtMkg1di00em0xNCA0aC00djJoNGMxLjEgMCAyLS45IDItMnYtNGgtMnY0em0wLTE2aC00djJoNHY0aDJWNWMwLTEuMS0uOS0yLTItMnoiLz48L3N2Zz4=");
+
+      @keyframes crosshair-fade {
+        100% {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
 }
+
+

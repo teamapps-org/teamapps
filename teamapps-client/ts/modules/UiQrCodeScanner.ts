@@ -2,10 +2,11 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiQrCodeScanner_QrCodeDetectedEvent, UiQrCodeScannerCommandHandler, UiQrCodeScannerConfig, UiQrCodeScannerEventSource} from "../generated/UiQrCodeScannerConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {parseHtml} from "./Common";
+import {calculateDisplayModeInnerSize, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {QrScanner} from './qr-code-scanner/qr-scanner';
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 
 export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> implements UiQrCodeScannerCommandHandler, UiQrCodeScannerEventSource {
 
@@ -13,6 +14,7 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 
 	private $main: HTMLElement;
 	private $video: HTMLVideoElement;
+	private $crosshair: HTMLElement;
 	private qrScanner: QrScanner = null;
 
 	private selectedCameraIndex: number = 0;
@@ -21,9 +23,15 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="UiQrCodeScanner">
-<video></video>
+	<video></video>
+	<div class="crosshair-wrapper">
+		<div class="crosshair"></div>
+	</div>
 </div>`);
 		this.$video = this.$main.querySelector(':scope video');
+		this.$crosshair = this.$main.querySelector(':scope .crosshair');
+
+		this.$video.addEventListener("playing", () => this.onResize());
 
 		if (config.scanning) {
 			this.startScanning(config.stopsScanningAtFirstResult);
@@ -70,6 +78,14 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 	private async getAvailableCameras() {
 		return await navigator.mediaDevices.enumerateDevices()
 			.then(devices => devices.filter(device => device.kind === 'videoinput'));
+	}
+
+	onResize(): void {
+		if (this.$video.videoWidth > 0 && this.$video.videoHeight > 0) {
+			let crosshairSize = calculateDisplayModeInnerSize(this.$main.getBoundingClientRect(), {width: this.$video.videoWidth, height: this.$video.videoHeight}, UiPageDisplayMode.FIT_SIZE);
+			this.$crosshair.style.width = crosshairSize.width + "px";
+			this.$crosshair.style.height = crosshairSize.height + "px";
+		}
 	}
 
 
