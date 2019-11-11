@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  */
 public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionListener {
 
-	private static final long UI_SESSION_TIMEOUT = 10 * 1000; // TODO #config make configurable
+	private static final long UI_SESSION_TIMEOUT = 15 * 60 * 1000; // TODO #config make configurable
 
 	private ScheduledExecutorService scheduledExecutorService;
 	private final ObjectMapper objectMapper;
