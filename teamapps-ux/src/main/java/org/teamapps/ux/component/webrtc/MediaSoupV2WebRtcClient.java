@@ -197,8 +197,10 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	}
 
 	public void setActive(boolean active) {
-		this.active = active;
-		queueCommandIfRendered(() -> new UiMediaSoupV2WebRtcClient.SetActiveCommand(getId(), active));
+		if (active != this.active) {
+			this.active = active;
+			queueCommandIfRendered(() -> new UiMediaSoupV2WebRtcClient.SetActiveCommand(getId(), active));
+		}
 	}
 
 	public Icon getIcon() {
@@ -206,8 +208,10 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	}
 
 	public void setIcon(Icon icon) {
-		this.icon = icon;
-		update();
+		if (!Objects.equals(icon, this.icon)) {
+			this.icon = icon;
+			update();
+		}
 	}
 
 	public String getCaption() {
@@ -215,8 +219,10 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	}
 
 	public void setCaption(String caption) {
-		this.caption = caption;
-		update();
+		if (!Objects.equals(caption, this.caption)) {
+			this.caption = caption;
+			update();
+		}
 	}
 
 	public String getNoVideoImageUrl() {
