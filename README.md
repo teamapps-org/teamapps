@@ -85,4 +85,10 @@ The TeamApps Framework is released under version 2.0 of the [Apache License](htt
 
 ## Supported By
 
-<a href="https://www.yourkit.com/java/profiler/"><img src="https://www.yourkit.com/images/yklogo.png"></a>
+<a href="https://www.ej-technologies.com/products/jprofiler/overview.html">JProfiler</a>
+
+<a href="https://www.ej-technologies.com/products/jprofiler/overview.html"><img src="https://www.ej-technologies.com/images/product_banners/jprofiler_large.png"></a>
+
+<a href="https://www.yourkit.com/java/profiler/">YourKit</a>
+  
+<a href="https://www.yourkit.com/java/profiler/"><img src="https://www.yourkit.com/images/yklogo.png"></a> 
