@@ -66,7 +66,7 @@ public class ExtendedLayout {
 
 	public ExtendedLayout() {
 		this(SplitSize.firstFixed(175), SplitSize.firstFixed(250), SplitSize.relative(.5f), SplitSize.firstFixed(250), SplitSize.relative(.5f), SplitSize.firstFixed(150),
-				SplitSize.relative(.5f), SplitSize.relative(.5f), SplitSize.relative(.5f), SplitSize.relative(.5f), SplitSize.relative(.5f));
+				SplitSize.relative(.5f), SplitSize.relative(.5f), SplitSize.lastFixed(250), SplitSize.relative(.5f), SplitSize.relative(.5f));
 	}
 
 	public ExtendedLayout(SplitSize superTopHeight, SplitSize leftWidth, SplitSize leftHeight, SplitSize innerLeftWidth, SplitSize innerLeftHeight,

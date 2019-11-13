@@ -22,6 +22,22 @@ public class ScreenSharingConstraints {
 		return ui;
 	}
 
+	public int getMaxWidth() {
+		return maxWidth;
+	}
+
+	public void setMaxWidth(int maxWidth) {
+		this.maxWidth = maxWidth;
+	}
+
+	public int getMaxHeight() {
+		return maxHeight;
+	}
+
+	public void setMaxHeight(int maxHeight) {
+		this.maxHeight = maxHeight;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
