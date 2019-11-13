@@ -4,6 +4,8 @@ export declare class Conference {
     private readonly uid;
     private readonly token;
     private params;
+    private mixer?;
+    private useMixer;
     private videoContainer;
     private kind;
     private streamActiveTimeout;
@@ -35,4 +37,7 @@ export declare class Conference {
     publish(): Promise<string>;
     play(): Promise<string>;
     stop(): Promise<string>;
+    static isFirefox: boolean;
+    static isOpera: boolean;
+    static isChrome: boolean;
 }

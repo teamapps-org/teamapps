@@ -49,7 +49,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			throw new RuntimeException(e);
 		}
 		this.serverAddress = url.getHost();
-		this.serverPort = url.getPort();
+		this.serverPort = url.getPort() != -1 ? url.getPort() : 443;
 	}
 
 	public MediaSoupV3WebRtcClient(String serverAddress, int serverPort) {

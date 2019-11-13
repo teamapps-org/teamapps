@@ -80,6 +80,18 @@
       max-width: 10%;
       min-width: 16px;
     }
+
+    > .spinner-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, .5);
+    }
   }
 
   .caption {
@@ -93,5 +105,19 @@
     position: absolute;
     left: 0;
     top: 0;
+  }
+
+  &.state-idle, &.state-streaming {
+    .spinner-wrapper {
+      display: none;
+    }
+  }
+  &.state-connecting {
+    .spinner-wrapper {
+      // default display
+    }
+  }
+  &.state-error .video {
+    filter: grayscale(100%) blur(10px) brightness(50%);
   }
 }

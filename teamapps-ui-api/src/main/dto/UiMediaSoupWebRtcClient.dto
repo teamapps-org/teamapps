@@ -31,6 +31,8 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 	String caption;
 	String noVideoImageUrl;
 
+	WebRtcClientSpinnerPolicy spinnerPolicy;
+
 	command update(UiMediaSoupV2WebRtcClient config);
 	command setActive(boolean active);
 
@@ -40,6 +42,10 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 
 	// TODO set playback profile...
 
+	event publishingSucceeded();
+	event publishingFailed();
+	event playbackSucceeded();
+	event playbackFailed();
 	event playbackProfileChanged(UiMulticastPlaybackProfile profile);
 	event voiceActivityChanged(boolean active);
 	event clicked();
@@ -74,6 +80,12 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 
 	static command hasWebCam() returns boolean;
 	static command isChromeExtensionInstalled() returns boolean;
+}
+
+enum WebRtcClientSpinnerPolicy {
+	NEVER,
+	WHILE_CONNECTING,
+	WHEN_NOT_STREAMING
 }
 
 enum UiMulticastPlaybackProfile {
