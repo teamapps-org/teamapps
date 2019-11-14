@@ -35,10 +35,7 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 	protected initialize(config: UiImageFieldConfig, context: TeamAppsUiContext) {
 		this._$field = parseHtml(`<div class="UiImageField">`);
 
-		this.setSize(config.width, config.height);
-		this.setBorder(config.border);
-		this.setShadow(config.shadow);
-		this.setImageSizing(config.imageSizing);
+		this.update(config);
 
 		this._$field.addEventListener('click',(e) => {
 			this.commit(true);
@@ -49,10 +46,10 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 		return v == null || typeof v === "string";
 	}
 
-	setSize(width: number, height: number): void {
+	setSize(width: string, height: string): void {
 		Object.assign(this._$field.style, {
-			width: `${width}px`,
-			height: `${height}px`,
+			width: `${width}`,
+			height: `${height}`,
 		});
 	}
 
@@ -66,6 +63,15 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 
 	setImageSizing(imageSizing: UiImageSizing): void {
 		Object.assign(this._$field.style, createImageSizingCssObject(imageSizing));
+	}
+
+	update(config: UiImageFieldConfig) {
+		this._config = config;
+		this.setSize(config.width, config.height);
+		this.setBorder(config.border);
+		this.setShadow(config.shadow);
+		this.setImageSizing(config.imageSizing);
+		this._$field.style.backgroundColor = config.backgroundColor;
 	}
 
 	getDefaultValue(): string {
