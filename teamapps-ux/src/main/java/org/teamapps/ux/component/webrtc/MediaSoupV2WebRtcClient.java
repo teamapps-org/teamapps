@@ -34,7 +34,7 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	private String caption;
 	private String noVideoImageUrl;
 
-	private Float displayAreaAspectRatio = 4/3f; // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
+	private Float displayAreaAspectRatio; // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
 
 	private UiObject lastPublishOrPlaybackParams;
 
@@ -234,21 +234,14 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 		update();
 	}
 
-	public UiObject getLastPublishOrPlaybackParams() {
-		return lastPublishOrPlaybackParams;
-	}
-
-	public void setLastPublishOrPlaybackParams(UiObject lastPublishOrPlaybackParams) {
-		this.lastPublishOrPlaybackParams = lastPublishOrPlaybackParams;
-		update();
-	}
-
 	public Float getDisplayAreaAspectRatio() {
 		return displayAreaAspectRatio;
 	}
 
 	public void setDisplayAreaAspectRatio(Float displayAreaAspectRatio) {
-		this.displayAreaAspectRatio = displayAreaAspectRatio;
+		if (!Objects.equals(displayAreaAspectRatio, this.displayAreaAspectRatio)) {
+			this.displayAreaAspectRatio = displayAreaAspectRatio;
+		}
 		update();
 	}
 }
