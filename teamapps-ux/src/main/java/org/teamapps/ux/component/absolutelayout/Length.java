@@ -21,6 +21,13 @@ package org.teamapps.ux.component.absolutelayout;
 
 public class Length {
 
+	public static final Length AUTO = new Length(-1) {
+		@Override
+		public String toCssString() {
+			return "auto";
+		}
+	};
+
 	private final float size;
 	private final SizeUnit unit;
 

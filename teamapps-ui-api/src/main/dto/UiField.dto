@@ -134,16 +134,14 @@ class UiLabel extends UiField {
 
 // StringValue
 class UiImageField extends UiField {
-	int width; // 0 = the width will be determined by the component's content and context
-	int height; // 0 = the height will be determined by the component's content and context
+	String width; // css
+	String height; // css
     UiBorder border;
     UiShadow shadow;
 	UiImageSizing imageSizing = UiImageSizing.CONTAIN;
+	String backgroundColor = "transparent";
 
-	command setSize(int width, int height);
-	command setBorder(UiBorder border);
-	command setShadow(UiShadow shadow);
-	command setImageSizing(UiImageSizing imageSizing );
+	command update(UiImageField config);
 }
 
 class UiNumberField extends UiField implements UiTextInputHandlingField {
