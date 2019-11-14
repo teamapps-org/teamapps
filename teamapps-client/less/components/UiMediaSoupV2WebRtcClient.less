@@ -38,6 +38,11 @@
     transition: box-shadow 500ms;
     box-shadow: 0 10px 10px -10px var(--activity-bar-color);
     overflow: hidden;
+    background-color: #eee;
+
+    .image {
+      display: inline-block;
+    }
 
     .video {
       top: 0;
@@ -107,7 +112,12 @@
     top: 0;
   }
 
-  &.state-idle, &.state-streaming {
+  &.state-idle {
+    .spinner-wrapper {
+      display: none;
+    }
+  }
+  &.state-streaming {
     .spinner-wrapper {
       display: none;
     }

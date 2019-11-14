@@ -27309,7 +27309,7 @@ var Conference = /** @class */ (function () {
                             video: this.params.constraints.video || (this.params.additionalConstraints && this.params.additionalConstraints.video),
                         };
                         this.__hookup(capturing);
-                        resolve('Device captured');
+                        resolve(stream);
                         return [3 /*break*/, 15];
                     case 14:
                         error_1 = _a.sent();
@@ -27647,7 +27647,10 @@ var Conference = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             try {
                 _this.request(_this.getPermissionsUrl('publish'), 'GET').then(function (publishData) {
-                    _this.captureDevice().then(function () {
+                    _this.captureDevice().then(function (mediaStream) {
+                        if (_this.params.mediaStreamCapturedCallback != null) {
+                            _this.params.mediaStreamCapturedCallback(mediaStream);
+                        }
                         _this.setupRoom(publishData)
                             .then(function (ps) {
                             _this.ws = ps.ws;

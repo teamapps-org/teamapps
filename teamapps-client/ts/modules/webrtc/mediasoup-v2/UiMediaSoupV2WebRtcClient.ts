@@ -59,6 +59,8 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 
 	private $main: HTMLDivElement;
 	private conference: Conference;
+	private $image: HTMLImageElement;
+	private $videoContainer: HTMLElement;
 	private $video: HTMLVideoElement;
 	private $profileDisplay: HTMLElement;
 	private $icon: HTMLImageElement;
@@ -73,6 +75,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 
 		this.$main = parseHtml(`<div class="UiMediaSoupV2WebRtcClient state-idle">
 	<div class="video-container">
+		<img class="image"></img>
 		<video class="video" playsinline></video>
 		<img class="icon"></img>
 		<div class="spinner-wrapper">
@@ -82,20 +85,55 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 	<div class="caption"></div>
 	<div class="profile hidden">.</div>
 </div>`);
-		this.$video = this.$main.querySelector<HTMLVideoElement>(":scope video");
+		this.$image = this.$main.querySelector(":scope .image");
+		this.$videoContainer = this.$main.querySelector(":scope .video-container");
+		this.$video = this.$main.querySelector<HTMLVideoElement>(":scope .video");
 		this.$profileDisplay = this.$main.querySelector(":scope .profile");
 		this.$icon = this.$main.querySelector(":scope .icon");
 		this.$caption = this.$main.querySelector(":scope .caption");
 		this.$spinner = this.$main.querySelector(":scope .spinner");
 
-		this.$main.addEventListener("click", () => this.onClicked.fire({}));
-		this.$video.addEventListener("play", ev => this.update(this._config));
-		this.$video.addEventListener("playing", ev => this.update(this._config));
-		this.$video.addEventListener("stalled", ev => this.update(this._config));
-		this.$video.addEventListener("waiting", ev => this.update(this._config));
-		this.$video.addEventListener("ended", ev => this.update(this._config));
-		this.$video.addEventListener("suspend", ev => this.update(this._config));
-		this.$video.addEventListener("abort", ev => this.update(this._config));
+		this.$main.addEventListener("click", () => {
+			console.log("click");
+			this.onClicked.fire({})
+		});
+		this.$image.addEventListener("load", () => {
+			console.log("load");
+			this.onResize()
+		});
+		this.$video.addEventListener("play", ev => {
+			console.log("play");
+			this.update(this._config)
+		});
+		this.$video.addEventListener("playing", ev => {
+			console.log("playing");
+			this.update(this._config)
+		});
+		this.$video.addEventListener("stalled", ev => {
+			console.log("stalled");
+			this.update(this._config)
+		});
+		this.$video.addEventListener("waiting", ev => {
+			console.log("waiting");
+			this.update(this._config)
+		});
+		this.$video.addEventListener("ended", ev => {
+			console.log("ended");
+			this.update(this._config)
+		});
+		this.$video.addEventListener("suspend", ev => {
+			console.log("suspend");
+			this.update(this._config)
+		});
+		this.$video.addEventListener("abort", ev => {
+			console.log("abort");
+			this.update(this._config)
+		});
+		this.$video.addEventListener("progress", ev => {
+			console.log("progress");
+			this.updateVideoVisibility();
+			this.onResize()
+		});
 
 		this.update(config);
 
@@ -257,13 +295,23 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		this.$caption.classList.toggle("hidden", config.caption == null);
 		this.$caption.innerText = config.caption;
 
-		if (this.isVideoShown() || config.noVideoImageUrl == null) {
-			this.$video.style.backgroundImage = `none`;
-		} else {
-			this.$video.style.backgroundImage = `url(${config.noVideoImageUrl})`;
+		if (this.$image.src !== config.noVideoImageUrl) { // only do this if actually changed, since the image looses its naturalWidth/naturalHeight for a short (but important!) time!
+			this.$image.src = config.noVideoImageUrl;
 		}
 
+		this.updateVideoVisibility();
+
 		this.onResize();
+	}
+
+	private updateVideoVisibility() {
+		if (this.isVideoShown() || this._config.noVideoImageUrl == null) {
+			this.$image.classList.add('hidden');
+			this.$video.classList.remove('hidden');
+		} else {
+			this.$image.classList.remove('hidden');
+			this.$video.classList.add('hidden');
+		}
 	}
 
 	setActive(active: boolean): void {
@@ -283,20 +331,29 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			return;
 		}
 
+		let displayAreaAspectRatio: number;
 		if (this._config.displayAreaAspectRatio != null) {
-			let videoSize = calculateDisplayModeInnerSize(
-				{width: this.getWidth(), height: availableHeight},
-				{width: 100, height: 100 / this._config.displayAreaAspectRatio},
-				UiPageDisplayMode.FIT_SIZE,
-				1,
-				false
-			);
-			this.$video.style.width = videoSize.width + "px";
-			this.$video.style.height = videoSize.height + "px";
+			displayAreaAspectRatio = this._config.displayAreaAspectRatio;
+		} else if (this.isVideoShown() && this.$video.videoWidth > 0) {
+			displayAreaAspectRatio = this.$video.videoWidth / this.$video.videoHeight;
+		} else if (this.$image.naturalWidth) {
+			displayAreaAspectRatio = this.$image.naturalWidth / this.$image.naturalHeight;
 		} else {
-			this.$video.style.width = "100%";
-			this.$video.style.height = availableHeight + "px";
+			displayAreaAspectRatio = 4 / 3;
 		}
+
+		this.$videoContainer.style.removeProperty("width");
+		let videoSize = calculateDisplayModeInnerSize(
+			{width: this.getWidth(), height: availableHeight},
+			{width: 100, height: 100 / displayAreaAspectRatio},
+			UiPageDisplayMode.FIT_SIZE,
+			1,
+			false
+		);
+		this.$image.style.width = videoSize.width + "px";
+		this.$image.style.height = videoSize.height + "px";
+		this.$video.style.width = videoSize.width + "px";
+		this.$video.style.height = videoSize.height + "px";
 
 		let spinnerSize = Math.min(this.getWidth(), this.getHeight()) / 4;
 		this.$spinner.style.width = spinnerSize + "px";
