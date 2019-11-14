@@ -4,6 +4,8 @@ export declare type MixSizingInfo = {
     height?: number;
     left?: number;
     top?: number;
+    right?: number;
+    bottom?: number;
     onRender?: (context: CanvasRenderingContext2D, video: HTMLVideoElement, mixSizingInfo: MixSizingInfo, x: number, y: number, width: number, height: number) => void;
 };
 export declare type MediaStreamWithMixiSizingInfo = {
