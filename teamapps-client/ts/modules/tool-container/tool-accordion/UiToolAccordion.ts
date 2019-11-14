@@ -54,8 +54,9 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 		this.$mainDomElement = parseHtml(`<div class="UiToolAccordion teamapps-blurredBackgroundImage"></div>`);
 		this.$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this.$mainDomElement.appendChild(this.$backgroundColorDiv);
-		for (let i = 0; i < config.buttonGroups.length; i++) {
-			const buttonGroupConfig = config.buttonGroups[i];
+		let allButtonGroups = [...config.leftButtonGroups, ...config.rightButtonGroups];
+		for (let i = 0; i < allButtonGroups.length; i++) {
+			const buttonGroupConfig = allButtonGroups[i];
 			let buttonGroup = this.createButtonGroup(buttonGroupConfig);
 			this.buttonGroupsById.push(buttonGroupConfig.groupId, buttonGroup);
 			this.$backgroundColorDiv.appendChild(buttonGroup.getMainDomElement());

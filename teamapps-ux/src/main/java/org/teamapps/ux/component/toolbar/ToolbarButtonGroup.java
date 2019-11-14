@@ -37,6 +37,7 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 
 	private final List<ToolbarButton> buttons = new ArrayList<>();
 	private ToolbarButtonGroupPosition position;
+	private boolean rightSide;
 
 	private boolean visible = true;
 	private boolean showGroupSeparator = true;
@@ -176,5 +177,17 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 
 	public PropertyExtractor getAppliedPropertyExtractor() {
 		return propertyExtractor != null ? propertyExtractor : toolContainer.getPropertyExtractor();
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public boolean isRightSide() {
+		return rightSide;
+	}
+
+	public void setRightSide(boolean rightSide) {
+		this.rightSide = rightSide;
 	}
 }

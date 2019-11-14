@@ -18,7 +18,8 @@
  * =========================LICENSE_END==================================
  */
 abstract class AbstractUiToolContainer extends UiComponent {
-	required List<UiToolbarButtonGroup> buttonGroups; // horizontally aligned (no flow)
+	required List<UiToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
+	required List<UiToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)
 	UiColor backgroundColor = new UiColor(255, 255, 255).setAlpha(0.84f);
 
 	command setButtonVisible(String groupId, String buttonId, boolean visible);
@@ -26,13 +27,11 @@ abstract class AbstractUiToolContainer extends UiComponent {
 	command setButtonGroupVisible(String groupId, boolean visible);
 	command addButton(String groupId, UiToolbarButton button, String neighborButtonId, boolean beforeNeighbor); //if neighborButtonId is empty, add at last position
 	command removeButton(String groupId, String buttonId);
-	command addButtonGroup(UiToolbarButtonGroup group);
+	command addButtonGroup(UiToolbarButtonGroup group, boolean rightSide);
 	command removeButtonGroup(String groupId);
 	
 	command setButtonHasDropDown(String groupId, String buttonId, boolean hasDropDown);
 	command setDropDownComponent(String groupId, String buttonId, UiComponent* component);
-	
-	command updateButtonGroups(List<UiToolbarButtonGroup> buttonGroups); // TODO not implemented. really needed?
 
 	event toolbarButtonClick(String groupId, String buttonId, UiDropDownButtonClickInfo dropDownClickInfo); // dropDownInfo is null for non-dropdown buttons!
 	event toolbarDropDownItemClick(String groupId, String buttonId, String dropDownGroupId, Object dropDownItemId);

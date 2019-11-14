@@ -35,11 +35,17 @@ public class Toolbar extends AbstractToolContainer {
 
 	@Override
 	public UiComponent createUiComponent() {
-		List<UiToolbarButtonGroup> uiButtonGroups = toolbarButtonGroups.stream()
+		List<UiToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
+				.filter(group -> !group.isRightSide())
 				.sorted()
 				.map(group -> group.createUiToolbarButtonGroup())
 				.collect(Collectors.toList());
-		UiToolbar uiToolbar = new UiToolbar(uiButtonGroups);
+		List<UiToolbarButtonGroup> rightUiButtonGroups = buttonGroups.stream()
+				.filter(group -> group.isRightSide())
+				.sorted()
+				.map(group -> group.createUiToolbarButtonGroup())
+				.collect(Collectors.toList());
+		UiToolbar uiToolbar = new UiToolbar(leftUiButtonGroups, rightUiButtonGroups);
 		mapAbstractUiComponentProperties(uiToolbar);
 		uiToolbar.setLogoImage(logoImageUrl);
 		return uiToolbar;
