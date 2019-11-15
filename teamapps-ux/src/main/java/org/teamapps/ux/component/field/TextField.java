@@ -33,6 +33,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	private int maxCharacters;
 	private boolean showClearButton;
 	private String emptyText;
+	private boolean autofill = false;
 
 	public TextField() {
 		super();
@@ -68,6 +69,14 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 		return this;
 	}
 
+	public boolean isAutofill() {
+		return autofill;
+	}
+
+	public void setAutofill(boolean autofill) {
+		this.autofill = autofill;
+	}
+
 	@Override
 	public UiField createUiComponent() {
 		UiTextField uiField = new UiTextField();
@@ -75,6 +84,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 		uiField.setMaxCharacters(maxCharacters);
 		uiField.setShowClearButton(showClearButton);
 		uiField.setEmptyText(emptyText);
+		uiField.setAutofill(autofill);
 		return uiField;
 	}
 

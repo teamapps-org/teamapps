@@ -63,6 +63,7 @@ class UiTextField extends UiField implements UiTextInputHandlingField {
 	int maxCharacters; //if > 0, do not allow to enter more than this number of characters
 	boolean showClearButton;
 	String emptyText;
+	boolean autofill = false; // browser feature
 
 	command setMaxCharacters(int maxCharacters);
 	command setShowClearButton(boolean showClearButton);
@@ -72,6 +73,7 @@ class UiTextField extends UiField implements UiTextInputHandlingField {
 class UiPasswordField extends UiTextField {
 	boolean sendValueAsMd5;
 	String salt; // if sendValueAsMd5 == true and salt != null, then submit md5(salt + md5(fieldValue))
+	boolean autofill = false;
 
 	command setSendValueAsMd5(boolean sendValueAsMd5);
 	command setSalt(String salt);
