@@ -34,6 +34,9 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 		this.sendValueAsMd5 = config.sendValueAsMd5;
 		super.initialize(config, context);
 		this.$field.type = "password";
+		if (!config.autofill) {
+			this.$field.autocomplete = "new-password";
+		}
 	}
 
 	setSalt(salt: string): void {

@@ -61,7 +61,9 @@ public class LoginWindow {
 		headerField = new DisplayField(false, true);
 		errorField = new DisplayField(false, true);
 		loginField = new TextField();
+		loginField.setAutofill(true);
 		passwordField = new PasswordField();
+		passwordField.setAutofill(true);
 
 		headerField.setValue("<span style='font-size:150%'>Login</span>");
 		errorField.setValue("<span style='font-size:120%;color:#961900'>&nbsp;</span>");
