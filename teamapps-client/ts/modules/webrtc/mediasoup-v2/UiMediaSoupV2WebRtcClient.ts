@@ -142,6 +142,11 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			this.updateVideoVisibility();
 			this.onResize()
 		});
+		this.$video.addEventListener("timeupdate", ev => {
+			console.log("timeupdate");
+			this.updateVideoVisibility();
+			this.onResize()
+		});
 
 		this.update(config);
 
@@ -164,6 +169,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			this.stop();
 		}
 		this.setStateCssClass("connecting");
+		this.$video.muted = true;
 
 		try {
 			let {sourceStreams, targetStream} = await this.retrieveUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints);
@@ -329,8 +335,8 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		if (this.conference != null) {
 			this.stop();
 		}
-
 		this.setStateCssClass("connecting");
+		this.$video.muted = false;
 
 		this.conference = new Conference({
 			uid: parameters.uid,
@@ -378,6 +384,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			this.multiStreamMixer.close();
 		}
 		this.setStateCssClass("idle");
+		this.$video.srcObject = null; // make sure this happens even if the conference library fails doing it!
 	}
 
 	update(config: UiMediaSoupV2WebRtcClientConfig): void {
