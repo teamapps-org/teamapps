@@ -209,7 +209,8 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
-		// nothing to do...
+		// TODO #http-timeout
+		se.getSession().setMaxInactiveInterval(24 * 3600);
 	}
 
 	@Override
