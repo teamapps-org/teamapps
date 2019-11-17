@@ -6,6 +6,7 @@ import org.teamapps.dto.UiMediaSoupPlaybackParamaters;
 import org.teamapps.dto.UiMediaSoupPublishingParameters;
 import org.teamapps.dto.UiMediaSoupV2WebRtcClient;
 import org.teamapps.dto.UiObject;
+import org.teamapps.dto.WebRtcPublishingFailureReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.util.UiUtil;
@@ -14,13 +15,23 @@ import org.teamapps.ux.component.AbstractComponent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MediaSoupV2WebRtcClient extends AbstractComponent {
 
 	public final Event<MulticastPlaybackProfile> onPlaybackProfileChanged = new Event<>();
 	public final Event<Boolean> onVoiceActivityChanged = new Event<>();
 	public final Event<Void> onClicked = new Event<>();
+	public final Event<Void> onPublishingSucceeded = new Event<>();
+	public final Event<PublishedStreamsStatus> onPublishedStreamsStatusChanged = new Event<>();
+	public final Event<WebRtcPublishingFailureReason> onPublishingFailed = new Event<>();
+	public final Event<WebRtcStreamType> onPublishedStreamEnded = new Event<>();
+	public final Event<Void> onPlaybackSucceeded = new Event<>();
+	public final Event<Void> onPlaybackFailed = new Event<>();
 
 	private String serverAddress;
 	private int serverPort;
@@ -30,7 +41,7 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	private Color activityActiveColor;
 	private boolean active;
 
-	private Icon icon;
+	private List<Icon> icons = Collections.emptyList();
 	private String caption;
 	private String noVideoImageUrl;
 
@@ -65,7 +76,7 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 		ui.setActivityLineVisible(activityLineVisible);
 		ui.setActivityInactiveColor(UiUtil.createUiColor(activityInactiveColor));
 		ui.setActivityActiveColor(UiUtil.createUiColor(activityActiveColor));
-		ui.setIcon(getSessionContext().resolveIcon(icon));
+		ui.setIcons(icons.stream().map(icon -> getSessionContext().resolveIcon(icon)).collect(Collectors.toList()));
 		ui.setCaption(caption);
 		ui.setNoVideoImageUrl(noVideoImageUrl);
 		ui.setDisplayAreaAspectRatio(displayAreaAspectRatio);
@@ -99,6 +110,25 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 				this.onClicked.fire();
 				break;
 			}
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHING_SUCCEEDED:
+				this.onPublishingSucceeded.fire();
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHED_STREAMS_STATUS_CHANGED:
+				UiMediaSoupV2WebRtcClient.PublishedStreamsStatusChangedEvent e = (UiMediaSoupV2WebRtcClient.PublishedStreamsStatusChangedEvent) event;
+				this.onPublishedStreamsStatusChanged.fire(new PublishedStreamsStatus(e.getAudio(), e.getVideo()));
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHING_FAILED:
+				this.onPublishingFailed.fire(((UiMediaSoupV2WebRtcClient.PublishingFailedEvent) event).getReason());
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHED_STREAM_ENDED:
+				this.onPublishedStreamEnded.fire(((UiMediaSoupV2WebRtcClient.PublishedStreamEndedEvent) event).getIsDisplay() ? WebRtcStreamType.DISPLAY : WebRtcStreamType.CAM_MIC);
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PLAYBACK_SUCCEEDED:
+				this.onPlaybackSucceeded.fire();
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PLAYBACK_FAILED:
+				this.onPlaybackFailed.fire();
+				break;
 		}
 	}
 
@@ -203,13 +233,16 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 		}
 	}
 
-	public Icon getIcon() {
-		return icon;
+	public List<Icon> getIcons() {
+		return icons;
 	}
 
-	public void setIcon(Icon icon) {
-		if (!Objects.equals(icon, this.icon)) {
-			this.icon = icon;
+	public void setIcons(List<Icon> icons) {
+		if (icons == null) {
+			icons = Collections.emptyList();
+		}
+		if (!Objects.equals(icons, this.icons)) {
+			this.icons = icons;
 			update();
 		}
 	}

@@ -26782,7 +26782,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var MultiStreamsMixer = /** @class */ (function () {
     function MultiStreamsMixer(inputMediaStreams, frameRate) {
         if (frameRate === void 0) { frameRate = 10; }
+        this.closed = false;
         this.isStopDrawingFrames = false;
+        if (inputMediaStreams.length === 0) {
+            throw "inputMediaSreams may not be empty!";
+        }
+        this.closed = false;
         this.frameInterval = 1000 / frameRate;
         this.inputMediaStreams = inputMediaStreams;
         this.canvas = document.createElement('canvas');
@@ -26799,7 +26804,7 @@ var MultiStreamsMixer = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!(this.outputMediaStream == null)) return [3 /*break*/, 2];
-                        if (!(this.inputMediaStreams.length > 0)) return [3 /*break*/, 2];
+                        this.closed = false;
                         return [4 /*yield*/, this.getMixedVideoStream()];
                     case 1:
                         mixedVideoStream_1 = _a.sent();
@@ -26823,8 +26828,15 @@ var MultiStreamsMixer = /** @class */ (function () {
         return this.inputMediaStreams;
     };
     MultiStreamsMixer.prototype.close = function () {
-        this.inputMediaStreams.forEach(function (ms) { return ms.mediaStream.getTracks().forEach(function (t) { return t.stop(); }); });
-        this.canvas.remove();
+        if (this && !this.closed) {
+            this.closed = true;
+            [this.outputMediaStream].concat(this.inputMediaStreams.map(function (ms) { return ms.mediaStream; }))
+                .forEach(function (ms) { return ms && ms.getTracks().forEach(function (t) {
+                t.stop();
+                t.dispatchEvent(new Event("ended"));
+            }); });
+            this.canvas.remove();
+        }
     };
     ;
     MultiStreamsMixer.prototype.drawVideosToCanvas = function () {
@@ -26837,24 +26849,6 @@ var MultiStreamsMixer = /** @class */ (function () {
         if (fullcanvasVideo && this.canvas) {
             this.canvas.width = fullcanvasVideo.mixSizingInfo.width || (fullcanvasVideo.video != null ? fullcanvasVideo.video.videoWidth : 0);
             this.canvas.height = fullcanvasVideo.mixSizingInfo.height || (fullcanvasVideo.video != null ? fullcanvasVideo.video.videoHeight : 0);
-        }
-        else if (remainingVideos.length) {
-            var videosLength = this.inputMediaStreams.filter(function (ims) { return ims.video != null; }).length;
-            this.canvas.width = videosLength > 1 ? (remainingVideos[0].mixSizingInfo.width || 0) * 2 : remainingVideos[0].mixSizingInfo.width || 0;
-            var height = 1;
-            if (videosLength === 3 || videosLength === 4) {
-                height = 2;
-            }
-            if (videosLength === 5 || videosLength === 6) {
-                height = 3;
-            }
-            if (videosLength === 7 || videosLength === 8) {
-                height = 4;
-            }
-            if (videosLength === 9 || videosLength === 10) {
-                height = 5;
-            }
-            this.canvas.height = (remainingVideos[0].mixSizingInfo.height || 0) * height;
         }
         else {
             this.canvas.width = 360;
@@ -27068,10 +27062,12 @@ function determineVideoSize(mediaStream, timeout) {
                     video.muted = true;
                     video.onloadedmetadata = function (e) {
                         resolve({ width: video.videoWidth, height: video.videoHeight });
+                        video.srcObject = null;
                         video.remove();
                     };
                     setTimeout(function () {
                         reject();
+                        video.srcObject = null;
                         video.remove();
                     }, timeout);
                 })];
@@ -27172,7 +27168,7 @@ var mediasoupClient = __importStar(__webpack_require__(/*! mediasoup-client */ "
 var MultiStreamsMixer_1 = __webpack_require__(/*! ./MultiStreamsMixer */ "./src/MultiStreamsMixer.ts");
 var Conference = /** @class */ (function () {
     function Conference(data) {
-        this.useMixer = false;
+        this.live = { audio: false, video: false };
         this.videoContainer = null;
         this.kind = '';
         this.streamActiveTimeout = [];
@@ -27187,10 +27183,7 @@ var Conference = /** @class */ (function () {
         this.server_url = (data.params && data.params.serverUrl) || (window.location.protocol + '//' + window.location.hostname + (window.location.port ? (':' + window.location.port) : ''));
         this.uid = data.uid;
         this.token = data.token;
-        this.params = __assign({ minBitrate: null, maxBitrate: null, mixFrameRate: 10, localVideo: '#video', qualityChangerSelector: '', simulcast: true, constraints: {
-                audio: true,
-                video: true
-            }, errorAutoPlayCallback: function (video, error) {
+        this.params = __assign({ minBitrate: null, maxBitrate: null, mixFrameRate: 10, localVideo: '#video', qualityChangerSelector: '', simulcast: true, errorAutoPlayCallback: function (video, error) {
                 console.error('Playback error');
                 console.error(video, error);
             }, onProfileChange: function () {
@@ -27221,102 +27214,26 @@ var Conference = /** @class */ (function () {
         });
     };
     ;
-    Conference.prototype.captureDevice = function () {
+    Conference.prototype.prepareCapture = function (stream) {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            var mainStream, stream, inputMediaStreams, mainStreamDimensions, additionalStream, additionalStreamSizingInfo, mainStreamShortDimension, cameraAspectRatio, pictureInPictureHeight, pictureInPictureWidth, mixerStream, vts, _i, vts_1, vt, capturing, error_1;
+            var capturing;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 14, , 15]);
-                        mainStream = void 0;
-                        this.useMixer = false;
-                        if (!(this.params.constraints && this.params.constraints.isDisplay)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, window.navigator.mediaDevices.getDisplayMedia(this.params.constraints)];
-                    case 1:
-                        mainStream = _a.sent();
-                        this.useMixer = !!mainStream;
-                        return [3 /*break*/, 4];
-                    case 2: return [4 /*yield*/, window.navigator.mediaDevices.getUserMedia(this.params.constraints)];
-                    case 3:
-                        mainStream = _a.sent();
-                        _a.label = 4;
-                    case 4:
-                        stream = void 0;
-                        if (!(this.useMixer || this.params.additionalConstraints)) return [3 /*break*/, 13];
-                        inputMediaStreams = [];
-                        return [4 /*yield*/, MultiStreamsMixer_1.determineVideoSize(mainStream)];
-                    case 5:
-                        mainStreamDimensions = _a.sent();
-                        inputMediaStreams.push({
-                            mediaStream: mainStream,
-                            mixSizingInfo: {
-                                fullcanvas: true
-                            }
-                        });
-                        if (!this.params.additionalConstraints) return [3 /*break*/, 7];
-                        return [4 /*yield*/, window.navigator.mediaDevices.getUserMedia(this.params.additionalConstraints)];
-                    case 6:
-                        additionalStream = _a.sent();
-                        if (mainStream && additionalStream) {
-                            additionalStreamSizingInfo = {};
-                            if (additionalStream.getVideoTracks().length > 0) {
-                                mainStreamShortDimension = Math.min(mainStreamDimensions.width, mainStreamDimensions.height);
-                                cameraAspectRatio = additionalStream.getTracks().filter(function (t) { return t.kind === "video"; })[0].getSettings().aspectRatio || 4 / 3;
-                                pictureInPictureHeight = Math.round((25 / 100) * mainStreamShortDimension);
-                                pictureInPictureWidth = Math.round(pictureInPictureHeight * cameraAspectRatio);
-                                additionalStreamSizingInfo = {
-                                    width: pictureInPictureWidth,
-                                    height: pictureInPictureHeight,
-                                    right: 0,
-                                    top: 0
-                                };
-                            }
-                            inputMediaStreams.push({ mediaStream: additionalStream, mixSizingInfo: additionalStreamSizingInfo });
-                        }
-                        _a.label = 7;
-                    case 7:
-                        this.mixer = new MultiStreamsMixer_1.MultiStreamsMixer(inputMediaStreams, this.params.mixFrameRate);
-                        return [4 /*yield*/, this.mixer.getMixedStream()];
-                    case 8:
-                        mixerStream = _a.sent();
-                        if (!mixerStream) return [3 /*break*/, 13];
-                        if (!(this.params.constraints.video && this.params.constraints.video !== true)) return [3 /*break*/, 13];
-                        vts = mixerStream.getVideoTracks();
-                        _i = 0, vts_1 = vts;
-                        _a.label = 9;
-                    case 9:
-                        if (!(_i < vts_1.length)) return [3 /*break*/, 12];
-                        vt = vts_1[_i];
-                        return [4 /*yield*/, vt.applyConstraints(this.params.constraints.video)];
-                    case 10:
-                        _a.sent();
-                        _a.label = 11;
-                    case 11:
-                        _i++;
-                        return [3 /*break*/, 9];
-                    case 12:
-                        stream = mixerStream;
-                        _a.label = 13;
-                    case 13:
-                        if (!stream) {
-                            stream = mainStream;
-                        }
-                        this.__setVideoSource(this.videoContainer);
-                        capturing = {
-                            stream: stream,
-                            audio: this.params.constraints.audio || (this.params.additionalConstraints && this.params.additionalConstraints.audio),
-                            video: this.params.constraints.video || (this.params.additionalConstraints && this.params.additionalConstraints.video),
-                        };
-                        this.__hookup(capturing);
-                        resolve(stream);
-                        return [3 /*break*/, 15];
-                    case 14:
-                        error_1 = _a.sent();
-                        reject(error_1);
-                        return [3 /*break*/, 15];
-                    case 15: return [2 /*return*/];
+                try {
+                    this.__setVideoSource(this.videoContainer);
+                    capturing = {
+                        stream: stream,
+                        audio: !!stream.getAudioTracks().length,
+                        video: !!stream.getVideoTracks().length
+                    };
+                    console.log(capturing);
+                    this.__hookup(capturing);
+                    resolve('Capture ready');
                 }
+                catch (error) {
+                    reject(error);
+                }
+                return [2 /*return*/];
             });
         }); });
     };
@@ -27419,11 +27336,9 @@ var Conference = /** @class */ (function () {
                     var tracks = stream instanceof MediaStream ? stream.getTracks() : [];
                     tracks.forEach(function (track) {
                         track.stop();
+                        track.dispatchEvent(new Event("ended"));
                     });
                     _this.videoContainer.srcObject = null;
-                }
-                if (_this.mixer) {
-                    _this.mixer.close();
                 }
                 resolve('Unpublish');
             }
@@ -27487,6 +27402,7 @@ var Conference = /** @class */ (function () {
             for (var _i = 0, _a = this._sendStream.getVideoTracks(); _i < _a.length; _i++) {
                 var track = _a[_i];
                 track.stop();
+                track.dispatchEvent(new Event("ended"));
             }
             this._sendStream.addTrack(vTrack[0]);
         }
@@ -27495,6 +27411,7 @@ var Conference = /** @class */ (function () {
             for (var _b = 0, _c = this._sendStream.getAudioTracks(); _b < _c.length; _b++) {
                 var track = _c[_b];
                 track.stop();
+                track.dispatchEvent(new Event("ended"));
             }
             this._sendStream.addTrack(aTrack[0]);
         }
@@ -27519,6 +27436,7 @@ var Conference = /** @class */ (function () {
     };
     ;
     Conference.prototype.__connectProducer = function (type, track) {
+        var _this = this;
         var _type = type === 'audio' ? 'audio' : 'video';
         if (this.producers[_type]) {
             if (this.room && track && this.lastProduced[_type] === track.id) {
@@ -27535,6 +27453,24 @@ var Conference = /** @class */ (function () {
             var opts = type === 'video' ? { simulcast: this.params.simulcast } : {};
             this.producers[_type] = this.room.createProducer(track, opts);
             this.producers[_type].send(this.transport);
+            if (this.params.onStatusChange) {
+                this.producers[_type].on('stats', function (s) {
+                    for (var i = 0; i < s.length; i++) {
+                        var o = s[i];
+                        if (o.mediaType === 'video' || o.mediaType === 'audio') {
+                            var mediaType = o.mediaType;
+                            var live = o.bitrate > 0;
+                            if (live !== _this.live[mediaType]) {
+                                if (_this.params.onStatusChange) {
+                                    _this.live[mediaType] = live;
+                                    _this.params.onStatusChange(_this.live);
+                                }
+                            }
+                        }
+                    }
+                });
+                this.producers[_type].enableStats(1000);
+            }
         }
     };
     ;
@@ -27641,16 +27577,13 @@ var Conference = /** @class */ (function () {
     Conference.prototype.setPreferredQuality = function (qualityProfile) {
         this._adjustProfile(qualityProfile);
     };
-    Conference.prototype.publish = function () {
+    Conference.prototype.publish = function (stream) {
         var _this = this;
         this.videoContainer = this.params.localVideo instanceof HTMLMediaElement ? this.params.localVideo : document.querySelector(this.params.localVideo);
         return new Promise(function (resolve, reject) {
             try {
                 _this.request(_this.getPermissionsUrl('publish'), 'GET').then(function (publishData) {
-                    _this.captureDevice().then(function (mediaStream) {
-                        if (_this.params.mediaStreamCapturedCallback != null) {
-                            _this.params.mediaStreamCapturedCallback(mediaStream);
-                        }
+                    _this.prepareCapture(stream).then(function () {
                         _this.setupRoom(publishData)
                             .then(function (ps) {
                             _this.ws = ps.ws;
@@ -27739,6 +27672,82 @@ var Conference = /** @class */ (function () {
             }
         });
     };
+    Conference.getUserMedia = function (constraints, isDisplay) {
+        if (isDisplay === void 0) { isDisplay = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!isDisplay) return [3 /*break*/, 2];
+                        return [4 /*yield*/, window.navigator.mediaDevices.getDisplayMedia(constraints)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2: return [4 /*yield*/, window.navigator.mediaDevices.getUserMedia(constraints)];
+                    case 3: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    Conference.mixStreams = function (inputMediaStreams, constraints, frameRate) {
+        if (frameRate === void 0) { frameRate = 10; }
+        return __awaiter(this, void 0, void 0, function () {
+            var active, mixer, mixerStream, _i, inputMediaStreams_1, inputData;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        active = true;
+                        mixer = new MultiStreamsMixer_1.MultiStreamsMixer(inputMediaStreams, frameRate);
+                        return [4 /*yield*/, mixer.getMixedStream()];
+                    case 1:
+                        mixerStream = _a.sent();
+                        // TODO: throws error in Firefox!
+                        // const tracks:MediaStreamTrack[]=mixerStream.getTracks();
+                        // for (let track of tracks) {
+                        //     if (constraints && (track.kind === 'audio' || track.kind === 'video')) {
+                        //         const constraint:boolean|MediaTrackConstraints|undefined=constraints[track.kind];
+                        //         if(constraint && constraint!==true){
+                        //             await track.applyConstraints(constraint)
+                        //         }
+                        //     }
+                        // }
+                        Conference.listenStreamEnded(mixerStream, function () {
+                            if (active) {
+                                console.log('closing mixer');
+                                active = false;
+                                mixer.close();
+                            }
+                        });
+                        for (_i = 0, inputMediaStreams_1 = inputMediaStreams; _i < inputMediaStreams_1.length; _i++) {
+                            inputData = inputMediaStreams_1[_i];
+                            Conference.listenStreamEnded(inputData.mediaStream, function () {
+                                if (active) {
+                                    console.log('closing mixer');
+                                    active = false;
+                                    mixer.close();
+                                }
+                            });
+                        }
+                        return [2 /*return*/, mixerStream];
+                }
+            });
+        });
+    };
+    Conference.testStreamActive = function (stream) {
+        return stream.active && stream.getTracks().filter(function (t) { return t.readyState !== 'ended'; }).length > 0;
+    };
+    Conference.listenStreamEnded = function (stream, listener) {
+        var active = true;
+        var tracks = stream.getTracks();
+        for (var _i = 0, tracks_1 = tracks; _i < tracks_1.length; _i++) {
+            var track = tracks_1[_i];
+            track.addEventListener("ended", function () {
+                if (active && !Conference.testStreamActive(stream)) {
+                    active = false;
+                    listener();
+                }
+            });
+        }
+    };
+    Conference.determineVideoSize = MultiStreamsMixer_1.determineVideoSize;
     Conference.isFirefox = typeof window.InstallTrigger !== 'undefined';
     Conference.isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
     Conference.isChrome = !!window.chrome && !Conference.isOpera;

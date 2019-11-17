@@ -75,15 +75,21 @@
       transition: background-color 500ms;
     }
 
-    > .icon {
-      background-size: cover;
+    > .icons {
       position: absolute;
       bottom: 5px;
       right: 3px;
-      width: 40px;
-      height: auto;
-      max-width: 10%;
-      min-width: 16px;
+      height: 10%;
+      min-height: 16px;
+      max-height: 50px;
+      display: flex;
+      width: 100%; // firefox...
+      justify-content: flex-end;
+
+      > .icon {
+        height: 100%;
+        width: auto;
+      }
     }
 
     > .spinner-wrapper {

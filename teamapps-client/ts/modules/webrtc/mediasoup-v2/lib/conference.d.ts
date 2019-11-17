@@ -1,11 +1,11 @@
 import { ConferenceData, Capturing } from './interfaces';
+import { determineVideoSize, MediaStreamWithMixiSizingInfo } from './MultiStreamsMixer';
 export declare class Conference {
     private readonly server_url;
     private readonly uid;
     private readonly token;
     private params;
-    private mixer?;
-    private useMixer;
+    private live;
     private videoContainer;
     private kind;
     private streamActiveTimeout;
@@ -21,7 +21,7 @@ export declare class Conference {
     constructor(data: ConferenceData);
     private getPermissionsUrl;
     private request;
-    private captureDevice;
+    private prepareCapture;
     private setupRoom;
     private startSendStream;
     private startListenStream;
@@ -34,9 +34,14 @@ export declare class Conference {
     protected __startStream(peer: any): MediaStream;
     protected __makeAutoAdjustProfile(videoConsumer: any): Function;
     setPreferredQuality(qualityProfile: string): void;
-    publish(): Promise<string>;
+    publish(stream: MediaStream): Promise<string>;
     play(): Promise<string>;
     stop(): Promise<string>;
+    static getUserMedia(constraints: MediaStreamConstraints, isDisplay?: boolean): Promise<MediaStream>;
+    static mixStreams(inputMediaStreams: MediaStreamWithMixiSizingInfo[], constraints?: MediaStreamConstraints, frameRate?: number): Promise<MediaStream | undefined>;
+    static testStreamActive(stream: MediaStream): boolean;
+    static listenStreamEnded(stream: MediaStream, listener: () => void): void;
+    static determineVideoSize: typeof determineVideoSize;
     static isFirefox: boolean;
     static isOpera: boolean;
     static isChrome: boolean;
