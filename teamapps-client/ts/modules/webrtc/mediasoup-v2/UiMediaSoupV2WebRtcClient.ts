@@ -44,7 +44,7 @@ import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiMulticastPlaybackProfile} from "../../../generated/UiMulticastPlaybackProfile";
 import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 import {createUiColorCssString} from "../../util/CssFormatUtil";
-import {VoiceActivityDetectionHandle} from "voice-activity-detection";
+import vad, {VoiceActivityDetectionHandle} from "voice-activity-detection";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
 import {MultiStreamsMixer} from "../../util/MultiStreamsMixer";
 import {UiScreenSharingConstraintsConfig} from "../../../generated/UiScreenSharingConstraintsConfig";
@@ -72,7 +72,6 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 	private $profileDisplay: HTMLElement;
 	private $icons: HTMLImageElement;
 	private $caption: HTMLElement;
-	private voiceActivityDetectionHandle: VoiceActivityDetectionHandle;
 	private multiStreamMixer: MultiStreamsMixer;
 
 	private $spinner: HTMLElement;
@@ -175,11 +174,28 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			let {sourceStreams, targetStream} = await this.retrieveUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints);
 			this.currentSourceStreams = sourceStreams;
 			await this.publishMediaStream(targetStream, parameters);
+			this.addVoiceActivityDetection(targetStream);
 		} catch (e) {
 			console.error(e);
 			this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: e.reason});
 			this.stop();
 			this.setStateCssClass("error");
+		}
+	}
+
+	private addVoiceActivityDetection(mediaStream: MediaStream) {
+		if ((window as any).AudioContext && mediaStream.getAudioTracks().length > 0) {
+			let vadHandle = vad(new AudioContext(), mediaStream, {
+				onVoiceStart: () => {
+					this.onVoiceActivityChanged.fire({active: true});
+				},
+				onVoiceStop: () => {
+					this.onVoiceActivityChanged.fire({active: false});
+				}
+			});
+			Conference.listenStreamEnded(mediaStream, () => {
+				vadHandle.destroy();
+			});
 		}
 	}
 
