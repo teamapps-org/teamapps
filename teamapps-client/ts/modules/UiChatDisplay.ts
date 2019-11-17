@@ -26,6 +26,7 @@ import {UiChatDisplay_PreviousMessagesRequestedEvent, UiChatDisplayCommandHandle
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiSpinner} from "./micro-components/UiSpinner";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {Autolinker} from "autolinker";
 
 export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> implements UiChatDisplayCommandHandler, UiChatDisplayEventSource {
 
@@ -123,15 +124,41 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 TeamAppsUiComponentRegistry.registerComponentClass("UiChatDisplay", UiChatDisplay);
 
 class UiChatMessage {
+
+	private static readonly AUTOLINKER = new Autolinker( {
+		urls : {
+			schemeMatches : true,
+			wwwMatches    : true,
+			tldMatches    : true
+		},
+		email       : true,
+		phone       : true,
+		mention     : false,
+		hashtag     : false,
+
+		stripPrefix : false,
+		stripTrailingSlash : false,
+		newWindow   : true,
+
+		truncate : {
+			length   : 70,
+			location : 'smart'
+		},
+
+		className : ''
+	});
+
 	private $main: HTMLElement;
 	private $photos: HTMLElement;
 	private $files: HTMLElement;
 
 	constructor(private config: UiChatMessageConfig, private context: TeamAppsUiContext) {
+		let text = removeDangerousTags(config.text);
+		text = UiChatMessage.AUTOLINKER.link(text);
 		this.$main = parseHtml(`<div class="message">
 	<img class="user-image" src="${config.userImageUrl}">
 	<div class="user-nickname">${config.userNickname}</div>
-	<div class="text">${removeDangerousTags(config.text)}</div>
+	<div class="text">${text}</div>
 	<div class="photos"></div>
 	<div class="files"></div>
 </div>`);
