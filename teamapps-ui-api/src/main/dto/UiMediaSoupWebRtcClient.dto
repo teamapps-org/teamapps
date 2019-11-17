@@ -27,7 +27,7 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 	UiColor activityActiveColor;
 	boolean active;
 
-	String icon;
+	List<String> icons;
 	String caption;
 	String noVideoImageUrl;
 
@@ -43,7 +43,9 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 	// TODO set playback profile...
 
 	event publishingSucceeded();
-	event publishingFailed();
+	event publishingFailed(WebRtcPublishingFailureReason reason, String errorMessage);
+	event publishedStreamEnded(boolean isDisplay); // otherwise cam/mic
+	event publishedStreamsStatusChanged(boolean audio, boolean video);
 	event playbackSucceeded();
 	event playbackFailed();
 	event playbackProfileChanged(UiMulticastPlaybackProfile profile);
@@ -52,6 +54,13 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 
 	static command hasWebCam() returns boolean;
 	static command isChromeExtensionInstalled() returns boolean;
+}
+
+enum WebRtcPublishingFailureReason {
+	CAM_MIC_MEDIA_RETRIEVAL_FAILED,
+	DISPLAY_MEDIA_RETRIEVAL_FAILED,
+	VIDEO_MIXING_FAILED,
+	CONNECTION_ESTABLISHMENT_FAILED
 }
 
 class UiMediaSoupV3WebRtcClient extends UiComponent {

@@ -27,13 +27,14 @@ export interface Params {
     maxBitrate?: number | null;
     qualityChangerSelector?: string;
     localVideo: string | HTMLMediaElement;
-    constraints: MediaStreamConstraintsExtended;
-    additionalConstraints?: MediaStreamConstraints;
     errorAutoPlayCallback: Function;
     onProfileChange: Function;
+    onStatusChange?: (live: {
+        audio: boolean;
+        video: boolean;
+    }) => void;
     serverUrl?: string;
     simulcast: boolean;
-    mediaStreamCapturedCallback?: (mediaStream: MediaStream) => void;
 }
 export interface SocketResponse {
     errorId?: string | number;
@@ -41,7 +42,4 @@ export interface SocketResponse {
 }
 export interface MediaDevicesExtended extends MediaDevices {
     getDisplayMedia: (constraints: MediaStreamConstraints) => Promise<MediaStream>;
-}
-export interface MediaStreamConstraintsExtended extends MediaStreamConstraints {
-    isDisplay?: boolean;
 }

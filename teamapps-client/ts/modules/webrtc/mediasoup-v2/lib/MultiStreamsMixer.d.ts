@@ -16,6 +16,7 @@ export declare type MediaStreamWithMixiSizingInfoAndVideo = MediaStreamWithMixiS
     video?: HTMLVideoElement;
 };
 export declare class MultiStreamsMixer {
+    private closed;
     private inputMediaStreams;
     private outputMediaStream?;
     private canvas;
@@ -25,7 +26,7 @@ export declare class MultiStreamsMixer {
     private audioContext?;
     private audioDestination?;
     constructor(inputMediaStreams: MediaStreamWithMixiSizingInfo[], frameRate?: number);
-    getMixedStream(): Promise<MediaStream | undefined>;
+    getMixedStream(): Promise<MediaStream>;
     getInputMediaStreams(): MediaStreamWithMixiSizingInfoAndVideo[];
     close(): void;
     private drawVideosToCanvas;

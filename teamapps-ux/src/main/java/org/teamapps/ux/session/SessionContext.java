@@ -418,6 +418,16 @@ public class SessionContext {
 		});
 	}
 
+	public void showNotification(Icon icon, String caption, String description) {
+		runWithContext(() -> {
+			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
+			notification.setDismissible(true);
+			notification.setShowProgressBar(false);
+			notification.setDisplayTimeInMillis(5000);
+			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		});
+	}
+
 	public void showNotification(Icon icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
 		runWithContext(() -> {
 			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
