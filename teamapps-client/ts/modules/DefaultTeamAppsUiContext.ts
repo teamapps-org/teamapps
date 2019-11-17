@@ -68,7 +68,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
 
-	constructor(webSocketUrl: string,	clientParameters: {[key: string]: string|number} = {}) {
+	constructor(webSocketUrl: string, clientParameters: {[key: string]: string|number} = {}) {
 		this.sessionId = generateUUID();
 
 		let clientInfo = createUiClientInfoConfig({

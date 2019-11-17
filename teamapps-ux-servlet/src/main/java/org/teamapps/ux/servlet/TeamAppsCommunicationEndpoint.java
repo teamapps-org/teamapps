@@ -115,8 +115,8 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
 
-				// TODO #no-spring implement heartbeat http requests (shame...)
-//				((AbstractSession) httpSession).setLastAccessedTime(System.currentTimeMillis()); // this is jetty-specific code. Change if we want to support another server.
+				// TODO #http-timeout implement heartbeat http requests (shame...)
+				// ((AbstractSession) httpSession).setLastAccessedTime(System.currentTimeMillis()); // this is jetty-specific code. Change if we want to support another server.
 				// tomcat: http://tomcat.apache.org/tomcat-5.5-doc/catalina/docs/api/org/apache/catalina/session/StandardSession.html#access()
 
 				byte[] compressed = new byte[payload.remaining()];
