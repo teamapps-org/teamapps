@@ -20,6 +20,7 @@
 class UiMap extends UiComponent {
 	required Dictionary<UiTemplate> markerTemplates;
 	String accessToken;
+	UiMapConfig mapConfig;
 
 	UiMapType mapType = UiMapType.MAP_BOX_STREETS;
 	int zoomLevel = 5;
@@ -50,6 +51,14 @@ class UiMap extends UiComponent {
 	event mapClicked(UiMapLocation location);
 	event markerClicked(int markerId);
 	event shapeDrawn(String shapeId, AbstractUiMapShape shape);
+}
+
+class UiMapConfig {
+	String urlTemplate;
+	String id = "";
+	int minZoom = 1;
+	int maxZoom = 18;
+	String attribution = "";
 }
 
 enum UiMapType {

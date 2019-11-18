@@ -63,6 +63,7 @@ public class MapView<RECORD> extends AbstractComponent {
 	private TemplateDecider<Marker<RECORD>> templateDecider = m -> defaultTemplate;
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
 	private int templateIdCounter = 0;
+	private UiMapConfig mapConfig;
 
 	private PropertyExtractor<RECORD> markerPropertyExtractor = new BeanPropertyExtractor<>();
 	private AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
@@ -89,6 +90,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		UiMap uiMap = new UiMap(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 		mapAbstractUiComponentProperties(uiMap);
+		uiMap.setMapConfig(mapConfig);
 		uiMap.setMapType(mapType.toUiMapType());
 		uiMap.setAccessToken(accessToken);
 		uiMap.setZoomLevel(zoomLevel);
@@ -184,6 +186,10 @@ public class MapView<RECORD> extends AbstractComponent {
 				break;
 			}
 		}
+	}
+
+	public void setMapConfig(UiMapConfig mapConfig) {
+		this.mapConfig = mapConfig;
 	}
 
 	public void addPolyLine(AbstractMapShape shape) {

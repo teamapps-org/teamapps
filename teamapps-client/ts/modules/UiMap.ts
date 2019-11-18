@@ -58,6 +58,7 @@ import {createUiMapPolygonConfig, UiMapPolygonConfig} from "../generated/UiMapPo
 import {createUiMapRectangleConfig, UiMapRectangleConfig} from "../generated/UiMapRectangleConfig";
 import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
 import {UiShapePropertiesConfig} from "../generated/UiShapePropertiesConfig";
+import {UiMapConfigConfig} from "../generated/UiMapConfigConfig";
 
 function isUiMapCircle(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapCircleConfig {
 	return shapeConfig._type === "UiMapCircle";
@@ -132,7 +133,11 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 			center = [this._config.mapPosition.latitude, this._config.mapPosition.longitude];
 		}
 		this.leaflet.setView(center, this._config.zoomLevel);
-		this.setMapType(this._config.mapType);
+		if (this._config.mapConfig != null) {
+			this.setMapConfig(this._config.mapConfig);
+		} else {
+			this.setMapType(this._config.mapType);
+		}
 		this.leaflet.on('click', (event) => {
 			this.onMapClicked.fire({
 				location: createUiMapLocationConfig((event as any).latlng.lat, (event as any).latlng.lng)
@@ -306,6 +311,21 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	@executeWhenFirstDisplayed()
 	public setZoomLevel(zoomLevel: number): void {
 		this.leaflet.setZoom(zoomLevel);
+	}
+
+	public setMapConfig(mapConfig: UiMapConfigConfig): void {
+		const token = this._config.accessToken;
+		let removeLayer = true;
+		let layer = L.tileLayer(mapConfig.urlTemplate, {
+			minZoom: mapConfig.minZoom,
+			maxZoom: mapConfig.maxZoom,
+			attribution: mapConfig.attribution,
+		});
+		if (removeLayer && this.tileLayer) {
+			this.leaflet.removeLayer(this.tileLayer);
+		}
+		this.tileLayer = layer;
+		this.leaflet.addLayer(this.tileLayer);
 	}
 
 	public setMapType(mapType: UiMapType): void {
