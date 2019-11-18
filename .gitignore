@@ -99,7 +99,7 @@ Temporary Items
 
 
 ### Teamapps custom ignore
-server-data/
+server-data*/
 tmp/
 */LICENSE.txt
 
@@ -123,4 +123,3 @@ teamapps-client/stats.json
 *.~vsd*
 # Excel Backup File
 *.xlk
-
