@@ -15,7 +15,6 @@ export interface Capturing {
     video: undefined | boolean | MediaTrackConstraints;
 }
 export interface Ps {
-    ws: any;
     room: any;
     peers?: any;
 }
@@ -33,6 +32,7 @@ export interface Params {
         audio: boolean;
         video: boolean;
     }) => void;
+    onConnectionChange?: (connected: boolean) => void;
     serverUrl?: string;
     simulcast: boolean;
 }

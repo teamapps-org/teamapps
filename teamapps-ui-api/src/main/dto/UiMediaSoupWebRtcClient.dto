@@ -46,6 +46,7 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 	event publishingFailed(WebRtcPublishingFailureReason reason, String errorMessage);
 	event publishedStreamEnded(boolean isDisplay); // otherwise cam/mic
 	event publishedStreamsStatusChanged(boolean audio, boolean video);
+	event connectionStateChanged(boolean connected);
 	event playbackSucceeded();
 	event playbackFailed();
 	event playbackProfileChanged(UiMulticastPlaybackProfile profile);

@@ -12,7 +12,7 @@ export declare class Conference {
     private _sendStream;
     private _adjustProfile;
     private ms;
-    private ws;
+    private socket;
     private room;
     private peers;
     private transport;
@@ -22,6 +22,7 @@ export declare class Conference {
     private getPermissionsUrl;
     private request;
     private prepareCapture;
+    private setupConnection;
     private setupRoom;
     private startSendStream;
     private startListenStream;
@@ -34,6 +35,7 @@ export declare class Conference {
     protected __startStream(peer: any): MediaStream;
     protected __makeAutoAdjustProfile(videoConsumer: any): Function;
     setPreferredQuality(qualityProfile: string): void;
+    private processRoom;
     publish(stream: MediaStream): Promise<string>;
     play(): Promise<string>;
     stop(): Promise<string>;

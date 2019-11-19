@@ -23,7 +23,7 @@ import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {arraysEqual, calculateDisplayModeInnerSize, parseHtml, removeClassesByFunction} from "../../Common";
 import {
-	UiMediaSoupV2WebRtcClient_ClickedEvent,
+	UiMediaSoupV2WebRtcClient_ClickedEvent, UiMediaSoupV2WebRtcClient_ConnectionStateChangedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackFailedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackProfileChangedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackSucceededEvent,
@@ -58,6 +58,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 	public readonly onPublishingFailed: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PublishingFailedEvent> = new TeamAppsEvent(this);
 	public readonly onPublishedStreamEnded: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PublishedStreamEndedEvent> = new TeamAppsEvent(this);
 	public readonly onPublishedStreamsStatusChanged: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PublishedStreamsStatusChangedEvent> = new TeamAppsEvent(this);
+	public readonly onConnectionStateChanged: TeamAppsEvent<UiMediaSoupV2WebRtcClient_ConnectionStateChangedEvent> = new TeamAppsEvent(this);
 	public readonly onPlaybackSucceeded: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PlaybackSucceededEvent> = new TeamAppsEvent(this);
 	public readonly onPlaybackFailed: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PlaybackFailedEvent> = new TeamAppsEvent(this);
 	public readonly onPlaybackProfileChanged: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PlaybackProfileChangedEvent> = new TeamAppsEvent(this);
@@ -314,6 +315,14 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 							this.onPublishedStreamsStatusChanged.fire(live);
 						}
 					})(),
+					onConnectionChange: connected => {
+						if (connected) {
+							this.setStateCssClass("streaming");
+						} else {
+							this.setStateCssClass("connecting");
+						}
+						this.onConnectionStateChanged.fire({connected});
+					},
 					onProfileChange: (profile: string) => {
 						// not relevant for publisher
 					}
@@ -367,6 +376,14 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 				simulcast: true,
 				errorAutoPlayCallback: () => {
 					console.error("no autoplay");
+				},
+				onConnectionChange: connected => {
+					if (connected) {
+						this.setStateCssClass("streaming");
+					} else {
+						this.setStateCssClass("connecting");
+					}
+					this.onConnectionStateChanged.fire({connected});
 				},
 				onProfileChange: (profile: string) => {
 					console.log("profile" + profile);
