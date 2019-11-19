@@ -46,6 +46,7 @@ export class UiPieChart extends AbstractUiComponent<UiPieChartConfig> implements
 
 	createChart() {
 		let htmlDivElement = document.createElement("div");
+		htmlDivElement.classList.add("UiPieChart");
 
 		//@ts-ignore
 		this.chart = new Chart()
