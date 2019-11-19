@@ -67,6 +67,11 @@ public class FlexContainer extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(getId(), component.createUiComponentReference()));
 	}
 
+	public void removeAllComponents() {
+		this.components.forEach(c -> queueCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(getId(), c.createUiComponentReference())));
+		this.components.clear();
+	}
+
 	@Override
 	public void handleUiEvent(UiEvent event) {
 

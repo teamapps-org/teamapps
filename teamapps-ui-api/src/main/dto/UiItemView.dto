@@ -61,7 +61,7 @@ enum UiItemViewFloatStyle {
 }
 
 enum UiItemJustification {
-	LEFT, RIGHT, CENTER, SPACE_AROUND, SPACE_BETWEEN
+	LEFT, RIGHT, CENTER, SPACE_AROUND, SPACE_BETWEEN, SPACE_EVENLY
 }
 
 enum UiVerticalItemAlignment {

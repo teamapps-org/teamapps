@@ -53,6 +53,7 @@ enum UiCssJustifyContent {
 	CENTER,
 	SPACE_BETWEEN,
 	SPACE_AROUND,
+	SPACE_EVENLY,
 	INITIAL,
 	INHERIT
 }
