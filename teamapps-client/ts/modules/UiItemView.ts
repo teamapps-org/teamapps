@@ -39,7 +39,8 @@ export var itemCssStringsJustification = {
 	[UiItemJustification.RIGHT]: "flex-end",
 	[UiItemJustification.CENTER]: "center",
 	[UiItemJustification.SPACE_AROUND]: "space-around",
-	[UiItemJustification.SPACE_BETWEEN]: "space-between"
+	[UiItemJustification.SPACE_BETWEEN]: "space-between",
+	[UiItemJustification.SPACE_EVENLY]: "space-evenly"
 };
 export var itemCssStringsAlignItems = {
 	[UiVerticalItemAlignment.TOP]: "flex-start",
