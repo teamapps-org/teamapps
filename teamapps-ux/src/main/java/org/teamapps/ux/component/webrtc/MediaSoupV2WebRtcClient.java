@@ -32,6 +32,7 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	public final Event<WebRtcStreamType> onPublishedStreamEnded = new Event<>();
 	public final Event<Void> onPlaybackSucceeded = new Event<>();
 	public final Event<Void> onPlaybackFailed = new Event<>();
+	public final Event<Boolean> onConnectionStateChanged = new Event<>();
 
 	private String serverAddress;
 	private int serverPort;
@@ -128,6 +129,9 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 				break;
 			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PLAYBACK_FAILED:
 				this.onPlaybackFailed.fire();
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_CONNECTION_STATE_CHANGED:
+				this.onConnectionStateChanged.fire(((UiMediaSoupV2WebRtcClient.ConnectionStateChangedEvent) event).getConnected());
 				break;
 		}
 	}

@@ -27174,7 +27174,7 @@ var Conference = /** @class */ (function () {
         this.streamActiveTimeout = [];
         this._sendStream = new MediaStream();
         this._adjustProfile = function () { };
-        this.ws = '';
+        this.socket = '';
         this.room = '';
         this.peers = '';
         this.transport = {};
@@ -27238,6 +27238,43 @@ var Conference = /** @class */ (function () {
         }); });
     };
     ;
+    Conference.prototype.setupConnection = function (data) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.socket = socket_io_client_1.default(data.server.url, { secure: true });
+            _this.socket.on('connect', function () { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    this.processRoom(data).then(resolve).catch(reject);
+                    if (this.params.onConnectionChange) {
+                        this.params.onConnectionChange(true);
+                    }
+                    return [2 /*return*/];
+                });
+            }); });
+            _this.socket.on('MS_NOTIFY', function (response) {
+                if (_this.room) {
+                    _this.room.receiveNotification(response);
+                }
+            });
+            _this.socket.on('disconnect', function (error) {
+                console.log('disconnect', error);
+                if (_this.room) {
+                    _this.room.leave();
+                }
+                _this.live = { audio: false, video: false };
+                if (_this.params.onStatusChange) {
+                    _this.params.onStatusChange(_this.live);
+                }
+                if (_this.params.onConnectionChange) {
+                    _this.params.onConnectionChange(false);
+                }
+                _this.room = '';
+                _this.peers = '';
+                _this.transport = {};
+                _this.lastProduced = {};
+            });
+        });
+    };
     Conference.prototype.setupRoom = function (data) {
         var _this = this;
         return new Promise(function (resolve, reject) {
@@ -27249,55 +27286,46 @@ var Conference = /** @class */ (function () {
             var channel = _this.uid;
             var kind = _this.kind === 'playback' ? 'subscribe' : 'publish';
             var peerName = (kind === 'publish') ? 'publish' : '' + Math.random();
-            var socket = socket_io_client_1.default(data.server.url, { secure: true });
-            socket.on('connect', function () {
-                var socketEmit = function (action, data, callback, errback) {
-                    socket.emit(action, { data: data, channel: channel, kind: kind, maxBitrate: maxBitrate }, function (response) {
-                        if (response.errorId || response.error) {
-                            if (errback) {
-                                errback();
-                            }
+            var socketEmit = function (action, data, callback, errback) {
+                _this.socket.emit(action, { data: data, channel: channel, kind: kind, maxBitrate: maxBitrate }, function (response) {
+                    if (response.errorId || response.error) {
+                        if (errback) {
+                            errback();
                         }
-                        else {
-                            if (callback) {
-                                callback(response);
-                            }
+                    }
+                    else {
+                        if (callback) {
+                            callback(response);
                         }
+                    }
+                });
+            };
+            var turnServers;
+            if (window.navigator && window.navigator.userAgent.match(/\sEdge\//)) {
+                turnServers = data.iceServers.map(function (srv) {
+                    var urls = srv.urls.filter(function (url) {
+                        return !url.match(/^turns:/);
                     });
-                };
-                var turnServers;
-                if (window.navigator && window.navigator.userAgent.match(/\sEdge\//)) {
-                    turnServers = data.iceServers.map(function (srv) {
-                        var urls = srv.urls.filter(function (url) {
-                            return !url.match(/^turns:/);
-                        });
-                        return Object.assign({}, srv, { urls: urls });
-                    });
-                }
-                room = new _this.ms.Room({
-                    requestTimeout: 8000,
-                    turnServers: turnServers || data.iceServers,
+                    return Object.assign({}, srv, { urls: urls });
                 });
-                room.on('request', function (request, callback, errback) {
-                    socketEmit('MS_SEND', request, callback, errback);
-                });
-                room.on('notify', function (notification) {
-                    socketEmit('MS_NOTIFY', notification, function () { }, function () { });
-                });
-                room.join(peerName)
-                    .then(function (peers) {
-                    console.log('Channel', channel, 'joined with peers', peers);
-                    var obj = { ws: socket, room: room, peers: peers };
-                    resolve(obj);
-                })
-                    .catch(reject);
+            }
+            room = new _this.ms.Room({
+                requestTimeout: 8000,
+                turnServers: turnServers || data.iceServers,
             });
-            socket.on('disconnect', function (error) {
-                console.log('disconnect', error);
+            room.on('request', function (request, callback, errback) {
+                socketEmit('MS_SEND', request, callback, errback);
             });
-            socket.on('MS_NOTIFY', function (response) {
-                room.receiveNotification(response);
+            room.on('notify', function (notification) {
+                socketEmit('MS_NOTIFY', notification, function () { }, function () { });
             });
+            room.join(peerName)
+                .then(function (peers) {
+                console.log('Channel', channel, 'joined with peers', peers);
+                var obj = { room: room, peers: peers };
+                resolve(obj);
+            })
+                .catch(reject);
         });
     };
     ;
@@ -27327,24 +27355,23 @@ var Conference = /** @class */ (function () {
     Conference.prototype.stopPublish = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            if (_this.ws) {
+            if (_this.room) {
                 _this.room.leave();
-                _this.ws.close();
-                _this.ws = '';
-                if (_this.videoContainer && _this.videoContainer.srcObject) {
-                    var stream = _this.videoContainer.srcObject;
-                    var tracks = stream instanceof MediaStream ? stream.getTracks() : [];
-                    tracks.forEach(function (track) {
-                        track.stop();
-                        track.dispatchEvent(new Event("ended"));
-                    });
-                    _this.videoContainer.srcObject = null;
-                }
-                resolve('Unpublish');
             }
-            else {
-                reject('Nothing to unpublish');
+            if (_this.socket) {
+                _this.socket.close();
+                _this.socket = '';
             }
+            if (_this.videoContainer && _this.videoContainer.srcObject) {
+                var stream = _this.videoContainer.srcObject;
+                var tracks = stream instanceof MediaStream ? stream.getTracks() : [];
+                tracks.forEach(function (track) {
+                    track.stop();
+                    track.dispatchEvent(new Event("ended"));
+                });
+                _this.videoContainer.srcObject = null;
+            }
+            resolve('Unpublish');
         });
     };
     ;
@@ -27577,6 +27604,52 @@ var Conference = /** @class */ (function () {
     Conference.prototype.setPreferredQuality = function (qualityProfile) {
         this._adjustProfile(qualityProfile);
     };
+    Conference.prototype.processRoom = function (jsonData) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.setupRoom(jsonData)
+                .then(function (ps) {
+                _this.room = ps.room;
+                if (_this.kind === 'playback') {
+                    _this.peers = ps.peers;
+                    _this.transport = ps.room.createTransport('recv');
+                }
+                else {
+                    _this.transport = ps.room.createTransport('send');
+                }
+            })
+                .then(function () {
+                if (_this.kind === 'playback') {
+                    _this.startListenStream();
+                }
+                else {
+                    _this.startSendStream();
+                }
+                if (_this.videoContainer) {
+                    var promise = _this.videoContainer.play();
+                    if (promise !== undefined) {
+                        promise.then(function (_) {
+                            if (_this.kind !== 'playback') {
+                                _this.videoContainer.muted = true;
+                            }
+                        }).catch(function (error) {
+                            _this.params.errorAutoPlayCallback(error);
+                        });
+                    }
+                }
+                resolve('Success');
+            })
+                .catch(function (err) {
+                if (_this.kind === 'playback') {
+                    console.log('Cannot subscribe to channel: ', err);
+                }
+                else {
+                    console.log('Cannot publish to channel: ', err);
+                }
+                reject(err);
+            });
+        });
+    };
     Conference.prototype.publish = function (stream) {
         var _this = this;
         this.videoContainer = this.params.localVideo instanceof HTMLMediaElement ? this.params.localVideo : document.querySelector(this.params.localVideo);
@@ -27584,29 +27657,7 @@ var Conference = /** @class */ (function () {
             try {
                 _this.request(_this.getPermissionsUrl('publish'), 'GET').then(function (publishData) {
                     _this.prepareCapture(stream).then(function () {
-                        _this.setupRoom(publishData)
-                            .then(function (ps) {
-                            _this.ws = ps.ws;
-                            _this.room = ps.room;
-                            _this.transport = ps.room.createTransport('send');
-                        })
-                            .then(function () {
-                            _this.startSendStream();
-                            if (_this.videoContainer) {
-                                var promise = _this.videoContainer.play();
-                                if (promise !== undefined) {
-                                    promise.then(function (_) {
-                                        _this.videoContainer.muted = true;
-                                    }).catch(function (error) {
-                                        _this.params.errorAutoPlayCallback(error);
-                                    });
-                                }
-                            }
-                            resolve('Success');
-                        })
-                            .catch(function (err) {
-                            console.log('Cannot publish to channel: ', err);
-                        });
+                        _this.setupConnection(publishData).then(resolve).catch(reject);
                     }).catch(function (err) {
                         console.log('Cannot publish to channel: ', err);
                         reject(err);
@@ -27626,28 +27677,7 @@ var Conference = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             try {
                 _this.request(_this.getPermissionsUrl('playback'), "GET").then(function (subscribeData) {
-                    _this.setupRoom(subscribeData)
-                        .then(function (ps) {
-                        _this.ws = ps.ws;
-                        _this.room = ps.room;
-                        _this.peers = ps.peers;
-                        _this.transport = ps.room.createTransport('recv');
-                    })
-                        .then(function () {
-                        _this.startListenStream();
-                        if (_this.videoContainer) {
-                            var promise = _this.videoContainer.play();
-                            if (promise !== undefined) {
-                                promise.then(function (_) { }).catch(function (error) {
-                                    _this.params.errorAutoPlayCallback(error);
-                                });
-                            }
-                        }
-                        resolve('Success');
-                    })
-                        .catch(function (err) {
-                        console.log('Cannot subscribe to channel: ', err);
-                    });
+                    _this.setupConnection(subscribeData).then(resolve).catch(reject);
                 }).catch(function (error) {
                     reject(error);
                 });
@@ -27690,25 +27720,38 @@ var Conference = /** @class */ (function () {
     Conference.mixStreams = function (inputMediaStreams, constraints, frameRate) {
         if (frameRate === void 0) { frameRate = 10; }
         return __awaiter(this, void 0, void 0, function () {
-            var active, mixer, mixerStream, _i, inputMediaStreams_1, inputData;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var active, mixer, mixerStream, tracks, _i, tracks_1, track, constraint, e_1, _a, inputMediaStreams_1, inputData;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         active = true;
                         mixer = new MultiStreamsMixer_1.MultiStreamsMixer(inputMediaStreams, frameRate);
                         return [4 /*yield*/, mixer.getMixedStream()];
                     case 1:
-                        mixerStream = _a.sent();
-                        // TODO: throws error in Firefox!
-                        // const tracks:MediaStreamTrack[]=mixerStream.getTracks();
-                        // for (let track of tracks) {
-                        //     if (constraints && (track.kind === 'audio' || track.kind === 'video')) {
-                        //         const constraint:boolean|MediaTrackConstraints|undefined=constraints[track.kind];
-                        //         if(constraint && constraint!==true){
-                        //             await track.applyConstraints(constraint)
-                        //         }
-                        //     }
-                        // }
+                        mixerStream = _b.sent();
+                        tracks = mixerStream.getTracks();
+                        _i = 0, tracks_1 = tracks;
+                        _b.label = 2;
+                    case 2:
+                        if (!(_i < tracks_1.length)) return [3 /*break*/, 7];
+                        track = tracks_1[_i];
+                        if (!(constraints && (track.kind === 'audio' || track.kind === 'video'))) return [3 /*break*/, 6];
+                        constraint = constraints[track.kind];
+                        if (!(constraint && constraint !== true)) return [3 /*break*/, 6];
+                        _b.label = 3;
+                    case 3:
+                        _b.trys.push([3, 5, , 6]);
+                        return [4 /*yield*/, track.applyConstraints(constraint)];
+                    case 4:
+                        _b.sent();
+                        return [3 /*break*/, 6];
+                    case 5:
+                        e_1 = _b.sent();
+                        return [3 /*break*/, 6];
+                    case 6:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 7:
                         Conference.listenStreamEnded(mixerStream, function () {
                             if (active) {
                                 console.log('closing mixer');
@@ -27716,8 +27759,8 @@ var Conference = /** @class */ (function () {
                                 mixer.close();
                             }
                         });
-                        for (_i = 0, inputMediaStreams_1 = inputMediaStreams; _i < inputMediaStreams_1.length; _i++) {
-                            inputData = inputMediaStreams_1[_i];
+                        for (_a = 0, inputMediaStreams_1 = inputMediaStreams; _a < inputMediaStreams_1.length; _a++) {
+                            inputData = inputMediaStreams_1[_a];
                             Conference.listenStreamEnded(inputData.mediaStream, function () {
                                 if (active) {
                                     console.log('closing mixer');
@@ -27737,8 +27780,8 @@ var Conference = /** @class */ (function () {
     Conference.listenStreamEnded = function (stream, listener) {
         var active = true;
         var tracks = stream.getTracks();
-        for (var _i = 0, tracks_1 = tracks; _i < tracks_1.length; _i++) {
-            var track = tracks_1[_i];
+        for (var _i = 0, tracks_2 = tracks; _i < tracks_2.length; _i++) {
+            var track = tracks_2[_i];
             track.addEventListener("ended", function () {
                 if (active && !Conference.testStreamActive(stream)) {
                     active = false;
