@@ -75,8 +75,6 @@ public class FormDialogue extends Window {
 	public Button<?> addOkButton(String caption) {
 		okButton = Button.create(MaterialIcon.CHECK, caption);
 		okButton.onValueChanged.addListener((o) -> {
-			close(250);
-			getSessionContext().flushCommands();
 			onResult.fire(true);
 		});
 
