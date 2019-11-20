@@ -29,12 +29,13 @@ import org.teamapps.ux.session.SessionContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 
 public class UxTestUtil {
 
-	public static void doWithMockedSessionContext(Runnable runnable) {
+	public static CompletableFuture<Void> doWithMockedSessionContext(Runnable runnable) {
 		SessionContext sessionContext = createDummySessionContext();
-		sessionContext.runWithContext(runnable);
+		return sessionContext.runWithContext(runnable);
 	}
 
 	public static SessionContext createDummySessionContext() {

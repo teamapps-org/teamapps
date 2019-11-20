@@ -49,12 +49,10 @@ public class Event<EVENT_DATA> {
 	}
 
 	public void addListener(Consumer<EVENT_DATA> listener, boolean bindToSessionContext) {
-		if (bindToSessionContext) {
-			SessionContext currentSessionContext = CurrentSessionContext.getOrNull();
+		SessionContext currentSessionContext;
+		if (bindToSessionContext && (currentSessionContext = CurrentSessionContext.getOrNull()) != null) {
 			listeners.add(new SessionContextAwareEventListener<>(currentSessionContext, listener));
-			if (currentSessionContext != null) {
-				removeWhenSessionDestroyed(listener, currentSessionContext);
-			}
+			removeWhenSessionDestroyed(listener, currentSessionContext);
 		} else {
 			// just add the listener. It will get called with whatever context is active at firing time
 			listeners.add(listener);
@@ -62,11 +60,19 @@ public class Event<EVENT_DATA> {
 	}
 
 	public void addListener(Runnable listener) {
-		addListener(eventData -> listener.run(), true);
+		addListener(listener, true);
+	}
+
+	List<Consumer<EVENT_DATA>> getListeners() {
+		return listeners;
 	}
 
 	public void addListener(Runnable listener, boolean bindToSessionContext) {
-		addListener(eventData -> listener.run(), bindToSessionContext);
+		addListener(new RunnableWrapper<>(listener), bindToSessionContext);
+	}
+
+	public void removeListener(Runnable listener) {
+		removeListener(new RunnableWrapper<>(listener));
 	}
 
 	/**
@@ -87,6 +93,7 @@ public class Event<EVENT_DATA> {
 	}
 
 	public void removeListener(Consumer<EVENT_DATA> listener) {
+		listeners.remove(listener); // in case it is not bound to a session
 		listeners.remove(new SessionContextAwareEventListener<>(listener));
 	}
 
@@ -154,6 +161,37 @@ public class Event<EVENT_DATA> {
 		@Override
 		public int hashCode() {
 			return delegate != null ? delegate.hashCode() : 0;
+		}
+	}
+
+	private static class RunnableWrapper<T> implements Consumer<T> {
+
+		private Runnable runnable;
+
+		public RunnableWrapper(Runnable runnable) {
+			this.runnable = runnable;
+		}
+
+		@Override
+		public void accept(T eventData) {
+			runnable.run();
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			RunnableWrapper<?> that = (RunnableWrapper<?>) o;
+			return runnable.equals(that.runnable);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(runnable);
 		}
 	}
 
