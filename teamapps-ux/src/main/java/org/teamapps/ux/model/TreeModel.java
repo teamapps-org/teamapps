@@ -25,7 +25,7 @@ import java.util.List;
 
 public interface TreeModel<RECORD> extends BaseTreeModel<RECORD> {
 
-	Event<List<RECORD>> onAllNodesChanged();
+	Event<Void> onAllNodesChanged();
 
 	Event<TreeModelChangedEventData<RECORD>> onChanged();
 
