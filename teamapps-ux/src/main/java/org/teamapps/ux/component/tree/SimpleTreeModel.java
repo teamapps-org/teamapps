@@ -46,7 +46,7 @@ public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTree
 	public void setNodes(List<BaseTemplateTreeNode<PAYLOAD>> nodes) {
 		this.nodes.clear();
 		this.nodes.addAll(nodes);
-		onAllNodesChanged.fire(nodes);
+		onAllNodesChanged.fire();
 	}
 
 	public void addNode(BaseTemplateTreeNode<PAYLOAD> node) {
@@ -87,7 +87,7 @@ public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTree
 
 	public void removeAllNodes() {
 		nodes.clear();
-		onAllNodesChanged.fire(Collections.emptyList());
+		onAllNodesChanged.fire();
 	}
 
 	public int getMaxResultNodes() {

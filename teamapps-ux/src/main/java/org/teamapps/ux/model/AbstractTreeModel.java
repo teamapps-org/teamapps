@@ -25,11 +25,11 @@ import java.util.List;
 
 public abstract class AbstractTreeModel<RECORD> implements TreeModel<RECORD> {
 
-	public final Event<List<RECORD>> onAllNodesChanged = new Event<>();
+	public final Event<Void> onAllNodesChanged = new Event<>();
 	public final Event<TreeModelChangedEventData<RECORD>> onChanged = new Event<>();
 
 	@Override
-	public Event<List<RECORD>> onAllNodesChanged() {
+	public Event<Void> onAllNodesChanged() {
 		return onAllNodesChanged;
 	}
 

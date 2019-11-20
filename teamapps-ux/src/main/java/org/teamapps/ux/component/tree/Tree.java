@@ -80,9 +80,11 @@ public class Tree<RECORD> extends AbstractComponent {
 		}
 	};
 
-	private final Consumer<List<RECORD>> modelAllNodesChangedListener = (dataRecords) -> {
+	private String lastQuery;
+
+	private final Runnable modelAllNodesChangedListener = () -> {
 		if (isRendered()) {
-			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(dataRecords);
+			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(model.getRecords(lastQuery));
 			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
 		}
 	};
@@ -176,7 +178,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	public UiComponent createUiComponent() {
 		UiTree uiTree = new UiTree();
 		mapAbstractUiComponentProperties(uiTree);
-		List<RECORD> records = model.getRecords(null);
+		List<RECORD> records = model.getRecords(lastQuery);
 		if (records != null) {
 			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
 			cacheResponse.commit();
@@ -223,7 +225,8 @@ public class Tree<RECORD> extends AbstractComponent {
 			case UI_TREE_TEXT_INPUT:
 				UiTree.TextInputEvent textInputEvent = (UiTree.TextInputEvent) event;
 				if (model != null) {
-					List<RECORD> records = model.getRecords(textInputEvent.getText());
+					lastQuery = textInputEvent.getText();
+					List<RECORD> records = model.getRecords(lastQuery);
 					CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
 					if (isRendered()) {
 						getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
@@ -259,7 +262,8 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	private void refresh() {
 		if (isRendered()) {
-			List<RECORD> records = model.getRecords(null);
+			lastQuery = null;
+			List<RECORD> records = model.getRecords(lastQuery);
 			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
 			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
 		}
