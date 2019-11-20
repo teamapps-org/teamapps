@@ -45,7 +45,7 @@ import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiMulticastPlaybackProfile} from "../../../generated/UiMulticastPlaybackProfile";
 import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 import {createUiColorCssString} from "../../util/CssFormatUtil";
-import vad, {VoiceActivityDetectionHandle} from "voice-activity-detection";
+import vad from "voice-activity-detection";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
 import {MultiStreamsMixer} from "../../util/MultiStreamsMixer";
 import {UiScreenSharingConstraintsConfig} from "../../../generated/UiScreenSharingConstraintsConfig";
@@ -78,6 +78,18 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 
 	private $spinner: HTMLElement;
 	private currentSourceStreams: MediaStream[];
+
+	private connectionStatus: {
+		status: "idle" | "publish" | "playback" | "error",
+		connected: boolean,
+		audioStatus: boolean,
+		audioBitrate: number // assume sending/receiving from the beginning
+	} = {
+		status: "idle",
+		connected: false,
+		audioStatus: false,
+		audioBitrate: -1
+	};
 
 	constructor(config: UiMediaSoupV2WebRtcClientConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -139,12 +151,12 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			this.update(this._config)
 		});
 		this.$video.addEventListener("progress", ev => {
-			console.log("progress");
+			// console.log("progress");
 			this.updateVideoVisibility();
 			this.onResize()
 		});
 		this.$video.addEventListener("timeupdate", ev => {
-			console.log("timeupdate");
+			// console.log("timeupdate");
 			this.updateVideoVisibility();
 			this.onResize()
 		});
@@ -166,10 +178,13 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 
 	@executeWhenFirstDisplayed(true)
 	async publish(parameters: UiMediaSoupPublishingParametersConfig) {
+		console.log("VERSION 5")
+
 		if (this.conference != null) {
 			this.stop();
 		}
-		this.setStateCssClass("connecting");
+		this.connectionStatus.status = "publish";
+		this.updateStateCssClass();
 		this.$video.muted = true;
 
 		try {
@@ -182,14 +197,15 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			console.error(e);
 			this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: e.reason});
 			this.stop();
-			this.setStateCssClass("error");
+			this.connectionStatus.status = "error";
+			this.updateStateCssClass();
 		}
 	}
 
 	private addVoiceActivityDetection(mediaStream: MediaStream) {
-		if ((window as any).AudioContext && mediaStream.getAudioTracks().length > 0) {
+		if (((window as any).AudioContext || (window as any).webkitAudioContext) && mediaStream.getAudioTracks().length > 0) {
 			console.log("AudioContext detected");
-			let audioContext = new AudioContext();
+			let audioContext = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
 			console.log("AudioContext created");
 			let vadHandle = vad(audioContext, mediaStream, {
 				onVoiceStart: () => {
@@ -215,7 +231,8 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 					if (this.currentSourceStreams.indexOf(micCamStream) != -1) {
 						console.log('camera stream ended');
 						this.onPublishedStreamEnded.fire({isDisplay: false});
-						this.setStateCssClass("error");
+						this.connectionStatus.status = "error";
+						this.updateStateCssClass();
 					}
 				});
 			}
@@ -234,7 +251,8 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 					if (this.currentSourceStreams.indexOf(displayStream) != -1) {
 						console.log('display stream ended');
 						this.onPublishedStreamEnded.fire({isDisplay: true});
-						this.setStateCssClass("error");
+						this.connectionStatus.status = "error";
+						this.updateStateCssClass();
 					}
 				});
 			}
@@ -309,25 +327,27 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 					onStatusChange: (() => {
 						let audioHasBeenActivelyStreaming = false;
 						return (live: { audio: boolean, video: boolean }) => {
-							console.log('onStatusChange', live)
+							console.log('onStatusChange', live);
 							if (!audioHasBeenActivelyStreaming && live.audio) { // !! audio is enough
 								audioHasBeenActivelyStreaming = true;
 								this.onPublishingSucceeded.fire({});
-								this.setStateCssClass("streaming");
 							}
-							if (live.audio == false) {
-								this.setStateCssClass("connecting");
-							}
+							this.connectionStatus.audioStatus = live.audio;
+							this.updateStateCssClass();
 							this.onPublishedStreamsStatusChanged.fire(live);
 						}
 					})(),
 					onConnectionChange: connected => {
-						if (connected) {
-							this.setStateCssClass("streaming");
-						} else {
-							this.setStateCssClass("connecting");
-						}
+						this.connectionStatus.connected = connected;
+						this.updateStateCssClass();
 						this.onConnectionStateChanged.fire({connected});
+					},
+					onBitrate: (mediaType, bitrate) => {
+						if (mediaType === "audio") {
+							console.log("publisher audio bitrate: " + bitrate);
+							this.connectionStatus.audioBitrate = bitrate;
+							this.updateStateCssClass();
+						}
 					},
 					onProfileChange: (profile: string) => {
 						// not relevant for publisher
@@ -355,9 +375,25 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		}
 	}
 
-	private setStateCssClass(state: "idle" | "connecting" | "streaming" | "error") {
+	private updateStateCssClass() {
 		removeClassesByFunction(this.$main.classList, className => className.startsWith("state-"));
-		this.$main.classList.add("state-" + state);
+		if (this.connectionStatus.status === "idle") {
+			this.$main.classList.add("state-idle");
+		} else if (this.connectionStatus.status === "publish") {
+			if (!this.connectionStatus.connected || !this.connectionStatus.audioStatus || this.connectionStatus.audioBitrate == 0) {
+				this.$main.classList.add("state-connecting");
+			} else {
+				this.$main.classList.add("state-streaming");
+			}
+		} else if (this.connectionStatus.status === "playback") {
+			if (!this.connectionStatus.connected || this.connectionStatus.audioBitrate == 0) {
+				this.$main.classList.add("state-connecting");
+			} else {
+				this.$main.classList.add("state-streaming");
+			}
+		} else if (this.connectionStatus.status === "error") {
+			this.$main.classList.add("state-error");
+		}
 	}
 
 	@executeWhenFirstDisplayed(true)
@@ -366,7 +402,8 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		if (this.conference != null) {
 			this.stop();
 		}
-		this.setStateCssClass("connecting");
+		this.connectionStatus.status = "playback";
+		this.updateStateCssClass();
 		this.$video.muted = false;
 
 		this.conference = new Conference({
@@ -384,11 +421,8 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 					console.error("no autoplay");
 				},
 				onConnectionChange: connected => {
-					if (connected) {
-						this.setStateCssClass("streaming");
-					} else {
-						this.setStateCssClass("connecting");
-					}
+					this.connectionStatus.connected = connected;
+					this.updateStateCssClass();
 					this.onConnectionStateChanged.fire({connected});
 				},
 				onProfileChange: (profile: string) => {
@@ -397,10 +431,10 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 					this.onPlaybackProfileChanged.fire({profile: UiMulticastPlaybackProfile[profile.toUpperCase() as any] as any});
 				},
 				onBitrate: (mediaType, bitrate) => {
-					if (mediaType === "audio" && bitrate === 0) {
-						this.setStateCssClass("connecting");
-					} else {
-						this.setStateCssClass("streaming");
+					if (mediaType === "audio") {
+						console.log("subscriber audio bitrate: " + bitrate);
+						this.connectionStatus.audioBitrate = bitrate;
+						this.updateStateCssClass();
 					}
 				}
 			},
@@ -408,11 +442,11 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		this.conference.play()
 			.then(() => {
 				this.onPlaybackSucceeded.fire({});
-				this.setStateCssClass("streaming");
 			})
 			.catch(() => {
 				this.onPlaybackFailed.fire({});
-				this.setStateCssClass("error");
+				this.connectionStatus.status = "error";
+				this.updateStateCssClass();
 			});
 		;
 
@@ -429,8 +463,12 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		if (this.multiStreamMixer != null) {
 			this.multiStreamMixer.close();
 		}
-		this.setStateCssClass("idle");
+		this.updateStateCssClass();
 		this.$video.srcObject = null; // make sure this happens even if the conference library fails doing it!
+
+		this.connectionStatus.status = "idle";
+		this.connectionStatus.audioStatus = false;
+		this.connectionStatus.audioBitrate = -1;
 	}
 
 	update(config: UiMediaSoupV2WebRtcClientConfig): void {
