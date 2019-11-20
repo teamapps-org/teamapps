@@ -23,7 +23,8 @@ import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {arraysEqual, calculateDisplayModeInnerSize, parseHtml, removeClassesByFunction} from "../../Common";
 import {
-	UiMediaSoupV2WebRtcClient_ClickedEvent, UiMediaSoupV2WebRtcClient_ConnectionStateChangedEvent,
+	UiMediaSoupV2WebRtcClient_ClickedEvent,
+	UiMediaSoupV2WebRtcClient_ConnectionStateChangedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackFailedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackProfileChangedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackSucceededEvent,
@@ -84,7 +85,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		this.$main = parseHtml(`<div class="UiMediaSoupV2WebRtcClient state-idle">
 	<div class="video-container">
 		<img class="image"></img>
-		<video class="video" playsinline></video>
+		<video class="video" playsinline muted></video>
 		<div class="icons"></div>
 		<div class="spinner-wrapper">
 			<div class="spinner teamapps-spinner"></div>
@@ -101,10 +102,10 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		this.$caption = this.$main.querySelector(":scope .caption");
 		this.$spinner = this.$main.querySelector(":scope .spinner");
 
-		this.$main.addEventListener("click", () => {
+		[this.$main, this.$caption].forEach($element => $element.addEventListener("click", () => {
 			console.log("click");
 			this.onClicked.fire({})
-		});
+		}));
 		this.$image.addEventListener("load", () => {
 			console.log("load");
 			this.onResize()
@@ -174,6 +175,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		try {
 			let {sourceStreams, targetStream} = await this.retrieveUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints);
 			this.currentSourceStreams = sourceStreams;
+			this.$video.classList.add("mirrored");
 			await this.publishMediaStream(targetStream, parameters);
 			this.addVoiceActivityDetection(targetStream);
 		} catch (e) {
@@ -186,7 +188,10 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 
 	private addVoiceActivityDetection(mediaStream: MediaStream) {
 		if ((window as any).AudioContext && mediaStream.getAudioTracks().length > 0) {
-			let vadHandle = vad(new AudioContext(), mediaStream, {
+			console.log("AudioContext detected");
+			let audioContext = new AudioContext();
+			console.log("AudioContext created");
+			let vadHandle = vad(audioContext, mediaStream, {
 				onVoiceStart: () => {
 					this.onVoiceActivityChanged.fire({active: true});
 				},
@@ -194,6 +199,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 					this.onVoiceActivityChanged.fire({active: false});
 				}
 			});
+			console.log("vad attached");
 			Conference.listenStreamEnded(mediaStream, () => {
 				vadHandle.destroy();
 			});
@@ -389,6 +395,13 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 					console.log("profile" + profile);
 					this.$profileDisplay.innerText = profile;
 					this.onPlaybackProfileChanged.fire({profile: UiMulticastPlaybackProfile[profile.toUpperCase() as any] as any});
+				},
+				onBitrate: (mediaType, bitrate) => {
+					if (mediaType === "audio" && bitrate === 0) {
+						this.setStateCssClass("connecting");
+					} else {
+						this.setStateCssClass("streaming");
+					}
 				}
 			},
 		});

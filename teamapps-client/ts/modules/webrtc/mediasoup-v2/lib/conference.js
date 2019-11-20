@@ -27255,6 +27255,24 @@ var Conference = /** @class */ (function () {
                 if (_this.room) {
                     _this.room.receiveNotification(response);
                 }
+                if ((response.method === "consumerStats" || response.method === "producerStats") && response.stats && response.stats.length > 0) {
+                    var audioStats = response.stats
+                        .filter(function (stat) { return stat.mediaType === "audio" && stat.type === 'inbound-rtp'; });
+                    if (audioStats.length > 0) {
+                        var totalAudioBitrate = audioStats
+                            .map(function (stat) { return stat.bitrate; })
+                            .reduce(function (sum, bitrate) { return sum + bitrate; }, 0);
+                        _this.params.onBitrate && _this.params.onBitrate("audio", totalAudioBitrate);
+                    }
+                    var videoStats = response.stats
+                        .filter(function (stat) { return stat.mediaType === "video" && stat.type === 'inbound-rtp'; });
+                    if (videoStats.length > 0) {
+                        var totalVideoBitrate = videoStats
+                            .map(function (stat) { return stat.bitrate; })
+                            .reduce(function (sum, bitrate) { return sum + bitrate; }, 0);
+                        _this.params.onBitrate && _this.params.onBitrate("video", totalVideoBitrate);
+                    }
+                }
             });
             _this.socket.on('disconnect', function (error) {
                 console.log('disconnect', error);

@@ -33,6 +33,7 @@ export interface Params {
         video: boolean;
     }) => void;
     onConnectionChange?: (connected: boolean) => void;
+    onBitrate?: (mediaType: "audio" | "video", bitrate: number) => void;
     serverUrl?: string;
     simulcast: boolean;
 }
