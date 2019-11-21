@@ -62,7 +62,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiChatInput drop-zone">
 	<div class="upload-items"></div>
-	<textarea class="text-input"></textarea>
+	<textarea class="text-input" maxlength="${config.messageLengthLimit}"></textarea>
 	<div class="button attachment-button glyphicon glyphicon-paperclip glyphicon-button glyphicon-button-md"></div>
 	<div class="button send-button glyphicon glyphicon-send glyphicon-button glyphicon-button-md"></div>
 	<input class="file-input" type="file" multiple tabindex="-1"></input>

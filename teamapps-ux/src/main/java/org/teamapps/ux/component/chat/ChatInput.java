@@ -23,6 +23,7 @@ import org.teamapps.dto.UiChatInput;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.event.Event;
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.List;
@@ -34,13 +35,16 @@ public class ChatInput extends AbstractComponent {
 
 	private long maxBytesPerUpload = 5000000;
 	private String uploadUrl = "/upload";
+	private Icon defaultAttachmentIcon = MaterialIcon.ATTACHMENT;
+	private int messageLengthLimit = 10_000; // 10k characters, < 0 for no limit
 
 	@Override
 	public UiChatInput createUiComponent() {
-		UiChatInput uiChatInput = new UiChatInput(getSessionContext().resolveIcon(MaterialIcon.ATTACHMENT));
+		UiChatInput uiChatInput = new UiChatInput(getSessionContext().resolveIcon(defaultAttachmentIcon));
 		mapAbstractUiComponentProperties(uiChatInput);
 		uiChatInput.setMaxBytesPerUpload(maxBytesPerUpload);
 		uiChatInput.setUploadUrl(uploadUrl);
+		uiChatInput.setMessageLengthLimit(messageLengthLimit);
 		return uiChatInput;
 	}
 
@@ -49,10 +53,14 @@ public class ChatInput extends AbstractComponent {
 		switch (event.getUiEventType()) {
 			case UI_CHAT_INPUT_MESSAGE_SENT:
 				UiChatInput.MessageSentEvent messageSentEvent = (UiChatInput.MessageSentEvent) event;
+				String text = messageSentEvent.getMessage().getText();
+				if (messageLengthLimit > 0 && text.length() > messageLengthLimit) {
+					text = text.substring(0, messageLengthLimit);
+				}
 				List<NewChatMessageData.UploadedFile> uploadedFiles = messageSentEvent.getMessage().getUploadedFiles().stream()
 						.map(uiFile -> new NewChatMessageData.UploadedFile(uiFile.getUploadedFileUuid(), uiFile.getFileName()))
 						.collect(Collectors.toList());
-				NewChatMessageData newChatMessageData = new NewChatMessageData(messageSentEvent.getMessage().getText(), uploadedFiles);
+				NewChatMessageData newChatMessageData = new NewChatMessageData(text, uploadedFiles);
 				onMessageSent.fire(newChatMessageData);
 				break;
 			case UI_CHAT_INPUT_UPLOAD_TOO_LARGE:
@@ -89,5 +97,21 @@ public class ChatInput extends AbstractComponent {
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
 		reRenderIfRendered(); // TODO
+	}
+
+	public Icon getDefaultAttachmentIcon() {
+		return defaultAttachmentIcon;
+	}
+
+	public void setDefaultAttachmentIcon(Icon defaultAttachmentIcon) {
+		this.defaultAttachmentIcon = defaultAttachmentIcon;
+	}
+
+	public int getMessageLengthLimit() {
+		return messageLengthLimit;
+	}
+
+	public void setMessageLengthLimit(int messageLengthLimit) {
+		this.messageLengthLimit = messageLengthLimit;
 	}
 }

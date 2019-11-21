@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class ChatDisplay extends AbstractComponent {
 
 	private final ChatDisplayModel model;
-	private int messagesFetchSize = 20;
+	private int messagesFetchSize = 30;
 
 	private final Consumer<ChatMessageBatch> modelAddMessagesAddedListener = chatMessages -> {
 		queueCommandIfRendered(() -> new UiChatDisplay.AddChatMessagesCommand(getId(), createUiChatMessages(chatMessages.getMessages()), false, chatMessages.isIncludesFirstMessage()));
