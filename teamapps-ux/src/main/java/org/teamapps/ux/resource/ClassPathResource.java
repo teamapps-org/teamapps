@@ -24,10 +24,12 @@ import java.io.InputStream;
 public class ClassPathResource implements Resource {
 
 	private final String resourceName;
+	private final String name;
 	private long length = -1;
 
 	public ClassPathResource(String resourceName) {
 		this.resourceName = resourceName;
+		this.name = resourceName.contains("/") ? resourceName.substring(resourceName.lastIndexOf('/') + 1) : resourceName;
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class ClassPathResource implements Resource {
 
 	@Override
 	public String getName() {
-		return null;
+		return name;
 	}
 
 	@Override
