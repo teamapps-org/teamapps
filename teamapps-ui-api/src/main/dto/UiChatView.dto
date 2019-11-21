@@ -31,6 +31,7 @@ class UiChatInput extends UiComponent {
 	required String defaultFileIcon;
 	long maxBytesPerUpload = 5000000;
 	String uploadUrl = "/upload";
+	int messageLengthLimit = 10000;
 
 	event messageSent(UiNewChatMessage message);
 	event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
