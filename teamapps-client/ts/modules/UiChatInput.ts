@@ -114,6 +114,10 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 	}
 
 	private send() {
+		if (!this.sendable()) {
+			return;
+		}
+		
 		this.onMessageSent.fire({
 			message: createUiNewChatMessageConfig({
 				text: this.$textInput.value,
@@ -155,13 +159,15 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 	}
 
 	private updateSendability() {
+		this.$sendButton.classList.toggle("disabled", !this.sendable());
+	}
+
+	private sendable() {
 		const uploading = this.uploadItems.some(item => item.state === UploadState.IN_PROGRESS);
 		const hasSuccessfulFileUploads = this.uploadItems.filter(item => item.state === UploadState.SUCCESS).length > 0;
 		const hasTextInput = this.$textInput.value.length > 0;
-		const sendable = !uploading && (hasSuccessfulFileUploads || hasTextInput);
-		this.$sendButton.classList.toggle("disabled", !sendable);
+		return !uploading && (hasSuccessfulFileUploads || hasTextInput);
 	}
-
 }
 
 enum UploadState {
