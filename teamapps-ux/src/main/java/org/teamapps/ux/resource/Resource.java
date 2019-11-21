@@ -27,20 +27,6 @@ import java.util.function.Supplier;
 
 public interface Resource {
 
-	static Resource create(Supplier<InputStream> inputStreamSupplier, long length) {
-		return new Resource() {
-			@Override
-			public InputStream getInputStream() {
-				return inputStreamSupplier.get();
-			}
-
-			@Override
-			public long getLength() {
-				return length;
-			}
-		};
-	}
-
 	InputStream getInputStream();
 
 	default long getLength() {
@@ -94,6 +80,12 @@ public interface Resource {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	//=== static ===
+
+	static Resource create(Supplier<InputStream> inputStreamSupplier, long length) {
+		return new InputStreamResource(inputStreamSupplier, length);
 	}
 
 }

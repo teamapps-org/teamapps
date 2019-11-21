@@ -60,6 +60,7 @@ class UiChatPhoto {
 class UiChatFile {
 	String name;
 	String icon;
+	long length;
 	String thumbnailUrl;
 	String downloadUrl;
 }

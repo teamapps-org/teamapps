@@ -26,12 +26,14 @@ public class SimpleChatFile implements ChatFile {
 
 	private final String name;
 	private final Icon icon;
+	private final long size;
 	private final Resource thumbnail;
 	private final Resource download;
 
 	public SimpleChatFile(String name, Icon icon, Resource thumbnail, Resource download) {
 		this.name = name;
 		this.icon = icon;
+		this.size = download.getLength();
 		this.thumbnail = thumbnail;
 		this.download = download;
 	}
@@ -44,6 +46,11 @@ public class SimpleChatFile implements ChatFile {
 	@Override
 	public Icon getIcon() {
 		return icon;
+	}
+
+	@Override
+	public long getLength() {
+		return size;
 	}
 
 	@Override

@@ -19,7 +19,7 @@
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {parseHtml, prependChild, removeDangerousTags} from "./Common";
+import {humanReadableFileSize, parseHtml, prependChild, removeDangerousTags} from "./Common";
 import {UiChatMessageConfig} from "../generated/UiChatMessageConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiChatDisplay_PreviousMessagesRequestedEvent, UiChatDisplayCommandHandler, UiChatDisplayConfig, UiChatDisplayEventSource} from "../generated/UiChatDisplayConfig";
@@ -175,7 +175,7 @@ class UiChatMessage {
 				this.$files.appendChild(parseHtml(`<a class="file" target="_blank" href="${file.downloadUrl}">
 	<div class="file-icon img img-32" style="background-image: url(${file.thumbnailUrl || file.icon})"> </div>
 	<div class="file-name">${file.name}</div>
-	<div class="file-size">23.4 kB</div>
+	<div class="file-size">${humanReadableFileSize(file.length)}</div>
 </a>`))
 			});
 		}

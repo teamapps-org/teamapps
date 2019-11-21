@@ -26,6 +26,7 @@ public interface ChatFile {
 
 	String getName();
 	Icon getIcon();
+	long getLength();
 	Resource getThumbnail();
 	Resource getDownload();
 
