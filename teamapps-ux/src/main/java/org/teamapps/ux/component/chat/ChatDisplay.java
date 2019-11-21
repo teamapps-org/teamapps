@@ -111,6 +111,7 @@ public class ChatDisplay extends AbstractComponent {
 		UiChatFile uiChatFile = new UiChatFile();
 		uiChatFile.setName(file.getName());
 		uiChatFile.setIcon(getSessionContext().resolveIcon(file.getIcon()));
+		uiChatFile.setLength(file.getLength());
 		uiChatFile.setThumbnailUrl(resourceToUrlConverter.apply(file.getThumbnail()));
 		uiChatFile.setDownloadUrl(resourceToUrlConverter.apply(file.getDownload()));
 		return uiChatFile;

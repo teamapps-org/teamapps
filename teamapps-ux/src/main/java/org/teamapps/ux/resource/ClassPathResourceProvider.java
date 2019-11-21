@@ -53,27 +53,5 @@ public class ClassPathResourceProvider implements ResourceProvider {
 		}
 		return basePackage;
 	}
-
-	private class ClassPathResource implements Resource {
-
-		private final String resourceName;
-		private Long cachedSize;
-
-		public ClassPathResource(String resourceName) {
-			this.resourceName = resourceName;
-		}
-
-		@Override
-		public InputStream getInputStream() {
-			return getClass().getResourceAsStream(resourceName);
-		}
-
-		@Override
-		public long getLength() {
-			if (cachedSize == null) {
-				cachedSize = Resource.super.getLength();
-			}
-			return cachedSize;
-		}
-	}
+	
 }

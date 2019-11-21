@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ import java.io.InputStream;
 public class ClassPathResource implements Resource {
 
 	private final String resourceName;
-	private Integer length;
+	private long length = -1;
 
 	public ClassPathResource(String resourceName) {
 		this.resourceName = resourceName;
@@ -42,10 +42,9 @@ public class ClassPathResource implements Resource {
 
 	@Override
 	public long getLength() {
-		if (length == null) {
-			return Resource.super.getLength();
-		} else {
-			return length;
+		if (length < 0) {
+			length = Resource.super.getLength();
 		}
+		return length;
 	}
 }
