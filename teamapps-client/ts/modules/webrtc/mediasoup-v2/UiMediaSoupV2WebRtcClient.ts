@@ -190,7 +190,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		try {
 			let {sourceStreams, targetStream} = await this.retrieveUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints);
 			this.currentSourceStreams = sourceStreams;
-			this.$video.classList.add("mirrored");
+			this.$video.classList.toggle("mirrored", parameters.videoConstraints && !parameters.screenSharingConstraints);
 			await this.publishMediaStream(targetStream, parameters);
 			this.addVoiceActivityDetection(targetStream);
 		} catch (e) {
