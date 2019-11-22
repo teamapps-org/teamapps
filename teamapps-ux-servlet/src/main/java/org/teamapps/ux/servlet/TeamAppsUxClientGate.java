@@ -173,7 +173,9 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				sessionContext.setLastClientEventTimestamp(System.currentTimeMillis());
 				String uiComponentId = event.getComponentId();
 				Component component = sessionContext.getComponent(uiComponentId);
-				component.handleUiEvent(event);
+				if (component != null) {
+					component.handleUiEvent(event);
+				}
 			});
 
 			try {
