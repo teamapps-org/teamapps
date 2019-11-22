@@ -130,6 +130,10 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			console.log("playing");
 			this.update(this._config)
 		});
+		this.$video.addEventListener("pause", ev => {
+			console.log("pause");
+			this.$video.play(); // happens when the video player gets detached under android while switching views
+		});
 		this.$video.addEventListener("stalled", ev => {
 			console.log("stalled");
 			this.update(this._config)
