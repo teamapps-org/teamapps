@@ -41,19 +41,26 @@ public class MachineTranslationLocalizationProviderFactory extends AbstractLocal
 	}
 
 	private final LocalizationStore localizationStore;
-	private final MachineTranslation machineTranslationService;
+	private final String deepLKey;
+	private final String googleKey;
+	private MachineTranslation machineTranslationService;
 	private final List<String> requiredLanguages;
 
 	protected MachineTranslationLocalizationProviderFactory(LocalizationStore localizationStore, String deepLKey, String googleKey, List<String> requiredLanguages) {
 		this.localizationStore = localizationStore;
-		machineTranslationService = new MachineTranslation();
-		machineTranslationService.setDeepLKey(deepLKey);
-		machineTranslationService.setGoogleTranslationKey(googleKey);
+		this.deepLKey = deepLKey;
+		this.googleKey = googleKey;
 		this.requiredLanguages = requiredLanguages;
 	}
 
 
 	public void machineTranslateAllMissingEntries() {
+		if (machineTranslationService == null) {
+			LOGGER.info("Connecting to machine translation services...");
+			machineTranslationService = new MachineTranslation();
+			machineTranslationService.setDeepLKey(deepLKey);
+			machineTranslationService.setGoogleTranslationKey(googleKey);
+		}
 		LOGGER.info("Start translating entries");
 		int countTranslations = 0;
 		List<String> usedLanguages = localizationStore.getAllUsedLanguages();
