@@ -31,7 +31,7 @@ public interface MutableValue<T> {
 		DataBindings.bindOneWay(observableValue, this);
 	}
 
-	static <T> MutableValue<T> from(Consumer<T> setter) {
+	static <T> MutableValue<T> writingTo(Consumer<T> setter) {
 		return DataBindings.createMutableValue(setter);
 	}
 }
