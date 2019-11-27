@@ -32,7 +32,7 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 		this(new Progress());
 	}
 
-	private ProgressCompletableFuture(Progress progress) {
+	public ProgressCompletableFuture(Progress progress) {
 		this.progress = progress;
 	}
 
