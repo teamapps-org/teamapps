@@ -872,6 +872,11 @@ export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: 
 }
 
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {
+	if (!document.body.contains(el)) {
+		console.warn("Cannot animate detached element! Will fire callback directly.");
+		callback();
+		return;
+	}
 	let oldAnimationDurationValue = el.style.animationDuration;
 	el.style.animationDuration = animationDuration + "ms";
 	el.classList.add(...animationClassNames);

@@ -348,15 +348,7 @@ public class SessionContext {
 	}
 
 	public void showWindow(Window window, int animationDuration) {
-		queueCommand(new UiRootPanel.ShowWindowCommand(window.createUiComponentReference(), animationDuration));
-	}
-
-	public void closeWindow(Window window, int animationDuration) {
-		queueCommand(new UiRootPanel.CloseWindowCommand(window.getId(), animationDuration));
-	}
-
-	public void closeWindow(String windowId, int animationDuration) {
-		queueCommand(new UiRootPanel.CloseWindowCommand(windowId, animationDuration));
+		window.show(animationDuration);
 	}
 
 	public void downloadFile(String fileUrl, String downloadFileName) {
