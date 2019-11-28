@@ -43,7 +43,6 @@ import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaS
 import {UiVideoTrackConstraintsConfig} from "../../../generated/UiVideoTrackConstraintsConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiMulticastPlaybackProfile} from "../../../generated/UiMulticastPlaybackProfile";
-import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
 import {createUiColorCssString} from "../../util/CssFormatUtil";
 import vad from "voice-activity-detection";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
@@ -180,7 +179,6 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		return this.$main;
 	}
 
-	@executeWhenFirstDisplayed(true)
 	async publish(parameters: UiMediaSoupPublishingParametersConfig) {
 		console.log("VERSION 5")
 
@@ -400,7 +398,6 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		}
 	}
 
-	@executeWhenFirstDisplayed(true)
 	playback(parameters: UiMediaSoupPlaybackParamatersConfig): void {
 		console.log(parameters);
 		if (this.conference != null) {
@@ -457,7 +454,6 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		this.$video.classList.remove("mirrored");
 	}
 
-	@executeWhenFirstDisplayed()
 	stop() {
 		this.currentSourceStreams = [];
 		if (this.conference != null) {
