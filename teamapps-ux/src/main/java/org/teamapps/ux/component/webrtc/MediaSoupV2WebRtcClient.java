@@ -48,6 +48,8 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 
 	private Float displayAreaAspectRatio; // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
 
+	private float playbackVolume = 1;
+
 	private UiObject lastPublishOrPlaybackParams;
 
 	public MediaSoupV2WebRtcClient() {
@@ -81,6 +83,7 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 		ui.setCaption(caption);
 		ui.setNoVideoImageUrl(noVideoImageUrl);
 		ui.setDisplayAreaAspectRatio(displayAreaAspectRatio);
+		ui.setPlaybackVolume(playbackVolume);
 		return ui;
 	}
 
@@ -267,8 +270,10 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	}
 
 	public void setNoVideoImageUrl(String noVideoImageUrl) {
-		this.noVideoImageUrl = noVideoImageUrl;
-		update();
+		if (!Objects.equals(noVideoImageUrl, this.noVideoImageUrl)) {
+			this.noVideoImageUrl = noVideoImageUrl;
+			update();
+		}
 	}
 
 	public Float getDisplayAreaAspectRatio() {
@@ -278,7 +283,18 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	public void setDisplayAreaAspectRatio(Float displayAreaAspectRatio) {
 		if (!Objects.equals(displayAreaAspectRatio, this.displayAreaAspectRatio)) {
 			this.displayAreaAspectRatio = displayAreaAspectRatio;
+			update();
 		}
-		update();
+	}
+
+	public float getPlaybackVolume() {
+		return playbackVolume;
+	}
+
+	public void setPlaybackVolume(float playbackVolume) {
+		if (playbackVolume != this.playbackVolume) {
+			this.playbackVolume = playbackVolume;
+			update();
+		}
 	}
 }

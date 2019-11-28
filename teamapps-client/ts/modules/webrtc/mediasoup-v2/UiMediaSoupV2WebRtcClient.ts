@@ -497,6 +497,8 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			this.$image.src = config.noVideoImageUrl;
 		}
 
+		this.$video.volume = config.playbackVolume;
+
 		this.updateVideoVisibility();
 
 		this.onResize();
