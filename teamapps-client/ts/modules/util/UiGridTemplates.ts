@@ -128,7 +128,16 @@ function createElementRenderer(element: AbstractUiTemplateElementConfig, additio
 	const horizontalAlignmentCss = `justify-self: ${cssHorizontalAlignmentByUiVerticalAlignment[element.horizontalAlignment]};`;
 	const verticalAlignmentCss = `align-self: ${cssVerticalAlignmentByUiVerticalAlignment[element.verticalAlignment]};`;
 
-	let totalCss = additionalCss + column + row + horizontalAlignmentCss + verticalAlignmentCss;
+	let marginCss: string = "";
+	if (additionalCss.indexOf("margin:") === -1) {
+		let marginTop = (element.margin && element.margin.top || 0);
+		let marginRight = (element.margin && element.margin.right || 0);
+		let marginBottom = (element.margin && element.margin.bottom || 0);
+		let marginLeft = (element.margin && element.margin.left || 0);
+		marginCss = `margin: ${marginTop}px ${marginRight}px ${marginBottom}px ${marginLeft}px;`;
+	}
+
+	let totalCss = marginCss + additionalCss + column + row + horizontalAlignmentCss + verticalAlignmentCss;
 
 	if (isUiTextElement(element)) {
 		return createTextElementRenderer(element, null, totalCss);
