@@ -123,7 +123,8 @@ public class Window extends Panel {
 	}
 
 	public void show(int animationDuration) {
-		getSessionContext().showWindow(this, animationDuration);
+		render();
+		queueCommandIfRendered(() -> new UiWindow.ShowCommand(getId(), animationDuration));
 	}
 
 	public void close() {

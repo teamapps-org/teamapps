@@ -129,7 +129,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 	public static setConfig(config: UiConfigurationConfig, context: TeamAppsUiContext) {
 		let oldConfig = context.config;
-		if (!oldConfig || oldConfig.isoLanguage !== config.isoLanguage) {
+		if ((!oldConfig || oldConfig.isoLanguage !== config.isoLanguage) && config.isoLanguage !== 'en') {
 			$.getScript("runtime-resources/moment-locales/" + config.isoLanguage + ".js");
 			$.getScript("runtime-resources/fullcalendar-locales/" + config.isoLanguage + ".js");
 		}
@@ -142,7 +142,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 			uiRootPanel.setOptimizedForTouch(config.optimizedForTouch);
 		});
 
-		this.LOGGER.warn("TODO Setting configuration on context. This should be implemented using an event instead!");
+		// this.LOGGER.warn("TODO Setting configuration on context. This should be implemented using an event instead!");
 		(context as any).config = config; // TODO change this to firing an event to the context!!!!
 	}
 
@@ -218,41 +218,6 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
                 }
             `;
 	}
-
-	public static showWindow(uiWindow: UiWindow, animationDuration = 1000, context?: TeamAppsUiContext) {
-		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			if (rootPanel.$contentWrapper) {
-				css(rootPanel.$contentWrapper, {
-					transition: `opacity ${animationDuration}ms, filter ${animationDuration}ms`
-				});
-			}
-		});
-
-		document.body.appendChild(uiWindow.getMainElement());
-		uiWindow.getMainElement().setAttribute("data-background-container-id", this.ALL_ROOT_PANELS[0] && this.ALL_ROOT_PANELS[0].getId());
-		uiWindow.setListener({
-			onWindowClosed: (window, animationDuration) => this.removeWindow(window.getId(), animationDuration)
-		});
-		this.WINDOWS_BY_ID[uiWindow.getId()] = uiWindow;
-		uiWindow.show(animationDuration);
-
-		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			rootPanel.getMainElement().classList.toggle("modal-window-mode", uiWindow.isModal());
-		});
-	}
-
-	public static removeWindow(windowId: string, animationDuration: number) {
-		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			rootPanel.getMainElement().classList.remove('modal-window-mode');
-		});
-
-		let uiWindow = this.WINDOWS_BY_ID[windowId];
-		delete this.WINDOWS_BY_ID[windowId];
-
-		setTimeout(() => {
-			uiWindow.getMainElement().remove();
-		}, animationDuration);
-	};
 
 	public destroy(): void {
 		delete UiRootPanel.ALL_ROOT_PANELS_BY_ID[this.getId()];
@@ -362,7 +327,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		$contentElement.querySelector<HTMLElement>(':scope .reload').addEventListener('click', () => {
 			window.location.reload(true);
 		});
-		UiRootPanel.showWindow(uiWindow, 500);
+		uiWindow.show(500);
 	}
 
 	setOptimizedForTouch(optimizedForTouch: boolean) {
