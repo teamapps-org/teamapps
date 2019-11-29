@@ -33,6 +33,8 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 
 	WebRtcClientSpinnerPolicy spinnerPolicy;
 
+	float playbackVolume = 1; // 0-1
+
 	command update(UiMediaSoupV2WebRtcClient config);
 	command setActive(boolean active);
 
