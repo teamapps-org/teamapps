@@ -224,13 +224,13 @@ export class <name> {
 }
 >>
 nonStaticCommandExecutorEntry(command) ::= <<
-    '<command._type>': (targetObject: any, command: any) => {
-		targetObject.<command.Identifier>(<command.formalParameterWithDefault:commandExecutorMethodInvocationParameter(); separator=", ">);
+    '<command._type>': async (targetObject: any, command: any) => {
+		return await targetObject.<command.Identifier>(<command.formalParameterWithDefault:commandExecutorMethodInvocationParameter(); separator=", ">);
 	}
 >>
 staticCommandExecutorEntry(command) ::= <<
-    '<command._type>': (command: any, context: TeamAppsUiContext) => {
-		(TeamAppsUiComponentRegistry.getComponentClassForName("<command.declaringClass.Identifier>") as any).<command.Identifier>(<command.formalParameterWithDefault:commandExecutorMethodInvocationParameter(); separator=", "><if (command.formalParameterWithDefault)>, <endif>context);
+    '<command._type>': async (command: any, context: TeamAppsUiContext) => {
+		return await (TeamAppsUiComponentRegistry.getComponentClassForName("<command.declaringClass.Identifier>") as any).<command.Identifier>(<command.formalParameterWithDefault:commandExecutorMethodInvocationParameter(); separator=", "><if (command.formalParameterWithDefault)>, <endif>context);
 	}
 >>
 commandExecutorMethodInvocationParameter(p) ::= "command.<p.Identifier>"
