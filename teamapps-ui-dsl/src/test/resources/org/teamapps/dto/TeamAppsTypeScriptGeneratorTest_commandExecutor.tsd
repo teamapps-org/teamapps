@@ -11,14 +11,14 @@ import {TeamAppsUiContext} from "../modules/TeamAppsUiContext";
 
 export class CommandExecutor {
 	private commandExecutorsByCommandName: {[commandName: string]: (targetObject: any, command: any) => void} = {
-		    'A.nonStaticCommand': (targetObject: any, command: any) => {
-				targetObject.nonStaticCommand(command.x);
+		    'A.nonStaticCommand': async (targetObject: any, command: any) => {
+				return await targetObject.nonStaticCommand(command.x);
 			}
 	};
 
 	private staticCommandExecutorsByCommandName: {[commandName: string]: (command: any, context: TeamAppsUiContext) => void} = {
-		    'A.staticCommand': (command: any, context: TeamAppsUiContext) => {
-				(TeamAppsUiComponentRegistry.getComponentClassForName("A") as any).staticCommand(command.x, context);
+		    'A.staticCommand': async (command: any, context: TeamAppsUiContext) => {
+				return await (TeamAppsUiComponentRegistry.getComponentClassForName("A") as any).staticCommand(command.x, context);
 			}
 	};
 
