@@ -72,7 +72,7 @@ public class MultiKeySequentialExecutor<K> {
 			}
 			int queueSize = this.queueSize.incrementAndGet();
 			LOGGER.debug("Queue size: {}", queueSize);
-			if (queueSize > 100) {
+			if (queueSize > 500) { // the queue gets quite long when destroying a session, since there are very many listeners to the destroyed event
 				LOGGER.warn("Queue is very long: {}", queueSize);
 			}
 			long submitTime = System.currentTimeMillis();
