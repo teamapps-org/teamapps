@@ -2,8 +2,11 @@ package org.teamapps.ux.component.webrtc;
 
 import org.teamapps.dto.UiVideoTrackConstraints;
 
+import java.util.Objects;
+
 public class VideoTrackConstraints {
 
+	private String deviceId = null;
 	private int width = 800;
 	private int height = 600;
 	private VideoFacingMode facingMode = VideoFacingMode.USER;
@@ -30,6 +33,7 @@ public class VideoTrackConstraints {
 		ui.setWidth(width);
 		ui.setFacingMode(facingMode.toUiVideoFacingMode());
 		ui.setFrameRate(frameRate);
+		ui.setDeviceId(deviceId);
 		return ui;
 	}
 
@@ -65,6 +69,14 @@ public class VideoTrackConstraints {
 		this.frameRate = frameRate;
 	}
 
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -73,27 +85,16 @@ public class VideoTrackConstraints {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-
 		VideoTrackConstraints that = (VideoTrackConstraints) o;
-
-		if (width != that.width) {
-			return false;
-		}
-		if (height != that.height) {
-			return false;
-		}
-		if (frameRate != that.frameRate) {
-			return false;
-		}
-		return facingMode == that.facingMode;
+		return width == that.width &&
+				height == that.height &&
+				frameRate == that.frameRate &&
+				Objects.equals(deviceId, that.deviceId) &&
+				facingMode == that.facingMode;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = width;
-		result = 31 * result + height;
-		result = 31 * result + (facingMode != null ? facingMode.hashCode() : 0);
-		result = 31 * result + frameRate;
-		return result;
+		return Objects.hash(deviceId, width, height, facingMode, frameRate);
 	}
 }

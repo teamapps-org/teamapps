@@ -52,6 +52,8 @@ import {MediaDevicesExtended} from "./lib/interfaces";
 import {MediaStreamWithMixiSizingInfo, MixSizingInfo} from "./lib/MultiStreamsMixer";
 import {UiAudioTrackConstraintsConfig} from "../../../generated/UiAudioTrackConstraintsConfig";
 import {WebRtcPublishingFailureReason} from "../../../generated/WebRtcPublishingFailureReason";
+import {createUiMediaDeviceInfoConfig, UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
+import {UiMediaDeviceKind} from "../../../generated/UiMediaDeviceKind";
 
 export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2WebRtcClientConfig> implements UiMediaSoupV2WebRtcClientCommandHandler, UiMediaSoupV2WebRtcClientEventSource {
 	public readonly onPublishingSucceeded: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PublishingSucceededEvent> = new TeamAppsEvent(this);
@@ -580,6 +582,33 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 
 	public static canPublishScreen() {
 		return (window.navigator.mediaDevices as any).getDisplayMedia != null;
+	}
+
+	public static async enumerateDevices() {
+		const uiMediaDeviceKindByKindString = {
+			'audioinput': UiMediaDeviceKind.AUDIO_INPUT,
+			'videoinput': UiMediaDeviceKind.VIDEO_INPUT,
+			'audiooutput': UiMediaDeviceKind.AUDIO_OUTPUT
+		};
+		try {
+			let stream = await window.navigator.mediaDevices.getUserMedia({audio: true, video: true});
+			stream.getTracks().forEach(t => t.stop()); // close the stream directly!
+		} catch (e) {
+			console.error(e);
+		} finally {
+			try {
+				let devices = await navigator.mediaDevices.enumerateDevices();
+				return devices.map((deviceInfo, i) => createUiMediaDeviceInfoConfig({
+					deviceId: deviceInfo.deviceId,
+					groupId: deviceInfo.groupId,
+					kind: uiMediaDeviceKindByKindString[deviceInfo.kind],
+					label: deviceInfo.label
+				} as UiMediaDeviceInfoConfig))
+					.filter(uiDeviceInfo => uiDeviceInfo.kind != null);
+			} catch (e) {
+				return [];
+			}
+		}
 	}
 
 }

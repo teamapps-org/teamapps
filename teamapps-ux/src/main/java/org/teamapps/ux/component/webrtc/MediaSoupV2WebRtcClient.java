@@ -2,6 +2,7 @@ package org.teamapps.ux.component.webrtc;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiMediaDeviceInfo;
 import org.teamapps.dto.UiMediaSoupPlaybackParamaters;
 import org.teamapps.dto.UiMediaSoupPublishingParameters;
 import org.teamapps.dto.UiMediaSoupV2WebRtcClient;
@@ -11,6 +12,7 @@ import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.session.SessionContext;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class MediaSoupV2WebRtcClient extends AbstractComponent {
@@ -296,5 +299,13 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 			this.playbackVolume = playbackVolume;
 			update();
 		}
+	}
+
+	public static CompletableFuture<List<UiMediaDeviceInfo>> enumerateDevices() {
+		CompletableFuture<List<UiMediaDeviceInfo>> future = new CompletableFuture<>();
+		SessionContext.current().queueCommand(new UiMediaSoupV2WebRtcClient.EnumerateDevicesCommand(), value -> {
+			future.complete(value);
+		});
+		return future;
 	}
 }

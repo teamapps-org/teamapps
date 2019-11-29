@@ -55,8 +55,19 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 	event voiceActivityChanged(boolean active);
 	event clicked();
 
-	static command hasWebCam() returns boolean;
-	static command isChromeExtensionInstalled() returns boolean;
+	static command enumerateDevices() returns List<UiMediaDeviceInfo>;
+}
+
+@TypeScriptFactory
+class UiMediaDeviceInfo {
+	 String deviceId;
+	 String groupId;
+	 UiMediaDeviceKind kind;
+	 String label;
+}
+
+enum UiMediaDeviceKind {
+    AUDIO_INPUT, AUDIO_OUTPUT, VIDEO_INPUT
 }
 
 enum WebRtcPublishingFailureReason {
@@ -132,6 +143,7 @@ class UiMediaSoupPlaybackParamaters {
 }
 
 class UiAudioTrackConstraints {
+	String deviceId;
     int channelCount = 1;
     boolean autoGainControl = true;
     boolean echoCancellation = true;
@@ -139,6 +151,7 @@ class UiAudioTrackConstraints {
 }
 
 class UiVideoTrackConstraints {
+	String deviceId;
     Double aspectRatio;
 	Integer width;
 	Integer height;
