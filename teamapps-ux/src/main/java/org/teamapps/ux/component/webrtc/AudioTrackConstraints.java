@@ -2,8 +2,11 @@ package org.teamapps.ux.component.webrtc;
 
 import org.teamapps.dto.UiAudioTrackConstraints;
 
+import java.util.Objects;
+
 public class AudioTrackConstraints {
 
+	private String deviceId = null;
 	private int channelCount = 1;
 	private boolean autoGainControl = true;
 	private boolean echoCancellation = true;
@@ -31,6 +34,7 @@ public class AudioTrackConstraints {
 		ui.setAutoGainControl(autoGainControl);
 		ui.setEchoCancellation(echoCancellation);
 		ui.setNoiseSuppression(noiseSuppression);
+		ui.setDeviceId(deviceId);
 		return ui;
 	}
 
@@ -66,6 +70,14 @@ public class AudioTrackConstraints {
 		this.noiseSuppression = noiseSuppression;
 	}
 
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -74,27 +86,16 @@ public class AudioTrackConstraints {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-
 		AudioTrackConstraints that = (AudioTrackConstraints) o;
-
-		if (channelCount != that.channelCount) {
-			return false;
-		}
-		if (autoGainControl != that.autoGainControl) {
-			return false;
-		}
-		if (echoCancellation != that.echoCancellation) {
-			return false;
-		}
-		return noiseSuppression == that.noiseSuppression;
+		return channelCount == that.channelCount &&
+				autoGainControl == that.autoGainControl &&
+				echoCancellation == that.echoCancellation &&
+				noiseSuppression == that.noiseSuppression &&
+				Objects.equals(deviceId, that.deviceId);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = channelCount;
-		result = 31 * result + (autoGainControl ? 1 : 0);
-		result = 31 * result + (echoCancellation ? 1 : 0);
-		result = 31 * result + (noiseSuppression ? 1 : 0);
-		return result;
+		return Objects.hash(deviceId, channelCount, autoGainControl, echoCancellation, noiseSuppression);
 	}
 }
