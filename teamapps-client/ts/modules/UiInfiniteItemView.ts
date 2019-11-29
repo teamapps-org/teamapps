@@ -298,16 +298,14 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 			this.dataProvider.clear();
 		}
 
-		this.dataProvider.setData(startIndex, data);
-
-		this.grid.invalidateAllRows();
-
 		if (totalNumberOfRecords != this.dataProvider.getLength()) {
 			this.dataProvider.setTotalNumberOfRecords(totalNumberOfRecords);
 			this.grid.updateRowCount();
 			this.updateAutoHeight();
 		}
 
+		this.dataProvider.setData(startIndex, data);
+		this.grid.invalidateAllRows();
 		this.grid.render();
 
 		// clearTimeout(this.loadingIndicatorFadeInTimer);
