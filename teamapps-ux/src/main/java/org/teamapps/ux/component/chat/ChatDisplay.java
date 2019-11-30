@@ -47,7 +47,7 @@ public class ChatDisplay extends AbstractComponent {
 
 	private Function<Resource, String> resourceToUrlConverter = resource -> {
 		if (resource != null) {
-			return getSessionContext().createResourceLink(() -> resource.getInputStream(), resource.getLength(), resource.getName());
+			return getSessionContext().createResourceLink(resource);
 		} else {
 			return null;
 		}

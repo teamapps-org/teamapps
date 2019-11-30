@@ -301,48 +301,6 @@ public class SessionContext {
 		return componentsById.get(componentId);
 	}
 
-	public String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length) {
-		return createResourceLink(inputStreamSupplier, length, null);
-	}
-
-	public String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName) {
-		return createResourceLink(inputStreamSupplier, length, resourceName, null);
-	}
-
-	public String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName, String uniqueIdentifier) {
-		return createResourceLink(new Resource() {
-			@Override
-			public InputStream getInputStream() {
-				return inputStreamSupplier.get();
-			}
-
-			@Override
-			public long getLength() {
-				return length;
-			}
-
-			@Override
-			public Date getLastModified() {
-				return new Date();
-			}
-
-			@Override
-			public Date getExpires() {
-				return new Date(System.currentTimeMillis() + 600000000L);
-			}
-
-			@Override
-			public String getName() {
-				return resourceName;
-			}
-
-			@Override
-			public String getMimeType() {
-				return null;
-			}
-		}, uniqueIdentifier);
-	}
-
 	public String createResourceLink(Resource resource) {
 		return createResourceLink(resource, null);
 	}
