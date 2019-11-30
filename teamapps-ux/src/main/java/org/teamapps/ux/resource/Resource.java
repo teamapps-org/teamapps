@@ -20,6 +20,8 @@
 package org.teamapps.ux.resource;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Date;
@@ -27,11 +29,16 @@ import java.util.function.Supplier;
 
 public interface Resource {
 
+	Logger LOGGER = LoggerFactory.getLogger(Resource.class);
+
 	InputStream getInputStream();
 
 	default long getLength() {
 		try {
 			InputStream inputStream = getInputStream();
+			if (inputStream == null) {
+				throw new IOException("Cannot get length of null resource: " + toString());
+			}
 			byte[] buf = new byte[4096];
 			int totalLength = 0;
 			int len;
@@ -39,7 +46,8 @@ public interface Resource {
 				totalLength += len;
 			}
 			return totalLength;
-		} catch (IOException e) {
+		} catch (IOException e) { // TODO change this to actually throw the IOException (see below)
+			LOGGER.error("Exception while calculating resource length: " + toString(), e);
 			return 0;
 		}
 	}
@@ -76,7 +84,8 @@ public interface Resource {
 			IOUtils.copyLarge(getInputStream(), bos);
 			bos.close();
 			return tempFile;
-		} catch (IOException e) {
+		} catch (IOException e) { // TODO change this to actually throw the IOException. Returning null is much more dangerous (NPE) than throwing a caught exception!
+			LOGGER.error("Exception while writing resource to file: " + toString(), e);
 			e.printStackTrace();
 		}
 		return null;
