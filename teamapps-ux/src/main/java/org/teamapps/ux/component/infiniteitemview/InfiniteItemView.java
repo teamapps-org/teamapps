@@ -263,7 +263,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private void sendRecords(int startIndex, int length, boolean clear) {
 		if (isRendered()) {
 			int totalCount = model.getCount();
-			List<RECORD> records = model.getRecords(startIndex, Math.min(totalCount - startIndex, length));
+			List<RECORD> records = model.getRecords(startIndex, Math.max(0, Math.min(totalCount - startIndex, length)));
 			CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse;
 			if (clear) {
 				cacheResponse = itemCache.replaceRecords(records);
