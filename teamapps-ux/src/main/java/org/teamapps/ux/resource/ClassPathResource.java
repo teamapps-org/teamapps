@@ -49,4 +49,11 @@ public class ClassPathResource implements Resource {
 		}
 		return length;
 	}
+
+	@Override
+	public String toString() {
+		return "ClassPathResource{" +
+				"resourceName='" + resourceName + '\'' +
+				'}';
+	}
 }
