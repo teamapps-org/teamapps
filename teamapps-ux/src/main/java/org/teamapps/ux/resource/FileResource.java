@@ -109,4 +109,11 @@ public class FileResource implements Resource {
 	public File getAsFile() {
 		return file;
 	}
+
+	@Override
+	public String toString() {
+		return "FileResource{" +
+				"file=" + file +
+				'}';
+	}
 }
