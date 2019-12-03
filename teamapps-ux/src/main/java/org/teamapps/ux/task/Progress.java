@@ -83,7 +83,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	@Override
 	public  void setStatusMessage(String statusMessage) {
 		startIfNotYetStarted();
-		if (status.ordinal() == ProgressStatus.RUNNING.ordinal()) {
+		if (status.ordinal() >= ProgressStatus.RUNNING.ordinal()) {
 			this.statusMessage = statusMessage;
 			fireChangeEvent();
 		}
@@ -101,6 +101,8 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	public  void markCanceled(String statusMessage) {
 		if (status.ordinal() < ProgressStatus.CANCELED.ordinal()) {
 			this.status = ProgressStatus.CANCELED;
+		}
+		if (this.status == ProgressStatus.CANCELED) { // allow for changing the status message even if done!
 			this.statusMessage = statusMessage;
 			fireChangeEvent();
 		}
@@ -118,6 +120,8 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	public  void markCompleted(String statusMessage) {
 		if (status.ordinal() < ProgressStatus.CANCELED.ordinal()) {
 			this.status = ProgressStatus.COMPLETE;
+		}
+		if (this.status == ProgressStatus.COMPLETE) { // allow for changing the status message even if done!
 			this.statusMessage = statusMessage;
 			fireChangeEvent();
 		}
@@ -135,6 +139,8 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	public  void markFailed(String message) {
 		if (status.ordinal() < ProgressStatus.CANCELED.ordinal()) {
 			this.status = ProgressStatus.FAILED;
+		}
+		if (this.status == ProgressStatus.FAILED) { // allow for changing the status message even if done!
 			this.statusMessage = message;
 			fireChangeEvent();
 		}

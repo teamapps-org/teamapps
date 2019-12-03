@@ -40,6 +40,16 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 		return progress;
 	}
 
+	public boolean complete(T value) {
+		progress.markCompleted();
+		return super.complete(value);
+	}
+
+	public boolean completeExceptionally(Throwable ex) {
+		progress.markFailed();
+		return super.completeExceptionally(ex);
+	}
+
 	@Override
 	public <U> ProgressCompletableFuture<U> newIncompleteFuture() {
 		return new ProgressCompletableFuture<>();
