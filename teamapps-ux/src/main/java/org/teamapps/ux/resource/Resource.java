@@ -61,7 +61,7 @@ public interface Resource {
 	}
 
 	default Date getExpires() {
-		return new Date(System.currentTimeMillis() + 604800000L);
+		return new Date(System.currentTimeMillis() + 604800000L); // one week
 	}
 
 	default String getMimeType() {
@@ -91,10 +91,42 @@ public interface Resource {
 		return null;
 	}
 
-	//=== static ===
+	// util
 
-	static Resource create(Supplier<InputStream> inputStreamSupplier, long length) {
-		return new InputStreamResource(inputStreamSupplier, length);
+	default Resource lastModified(Date lastModifiedDate) {
+		return new ResourceWrapper(this) {
+			@Override
+			public Date getLastModified() {
+				return lastModifiedDate;
+			}
+		};
+	}
+
+	default Resource expiring(Date expiryDate) {
+		return new ResourceWrapper(this) {
+			@Override
+			public Date getExpires() {
+				return expiryDate;
+			}
+		};
+	}
+
+	default Resource withMimeType(String mimeType) {
+		return new ResourceWrapper(this) {
+			@Override
+			public String getMimeType() {
+				return mimeType;
+			}
+		};
+	}
+
+	default Resource asAttachment(boolean attachment) {
+		return new ResourceWrapper(this) {
+			@Override
+			public boolean isAttachment() {
+				return attachment;
+			}
+		};
 	}
 
 }
