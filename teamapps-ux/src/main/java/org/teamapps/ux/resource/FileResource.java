@@ -75,11 +75,6 @@ public class FileResource implements Resource {
 	}
 
 	@Override
-	public Date getExpires() {
-		return new Date(System.currentTimeMillis() + 604800000L);
-	}
-
-	@Override
 	public String getName() {
 		return name;
 	}
