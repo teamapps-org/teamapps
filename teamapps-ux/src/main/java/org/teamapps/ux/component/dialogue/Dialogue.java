@@ -100,13 +100,13 @@ public class Dialogue extends Window {
 		comboBox.setTemplate(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES);
 		comboBox.setEditingMode(FieldEditingMode.READONLY);
 		formLayout.addField(0, 0, "data", comboBox).setHorizontalAlignment(HorizontalElementAlignment.CENTER).setColSpan(3);
-		okButton = Button.create(MaterialIcon.CHECK, "OK");
+		okButton = Button.create(MaterialIcon.CHECK, getSessionContext().getLocalized("dict.ok"));
 		okButton.onValueChanged.addListener((o) -> {
 			close(250);
 			getSessionContext().flushCommands();
 			onResult.fire(true);
 		});
-		cancelButton = Button.create(MaterialIcon.CANCEL, "Abbrechen");
+		cancelButton = Button.create(MaterialIcon.CANCEL, getSessionContext().getLocalized("dict.cancel"));
 		cancelButton.onValueChanged.addListener((o) -> {
 			close(250);
 			getSessionContext().flushCommands();
