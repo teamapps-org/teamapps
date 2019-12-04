@@ -251,7 +251,16 @@ public class SessionContext {
 	}
 
 	public CompletableFuture<Void> runWithContext(Runnable runnable) {
-		if (CurrentSessionContext.getOrNull() == this) {
+		return this.runWithContext(runnable, false);
+	}
+
+	/**
+	 * @param runnable
+	 * @param forceEnqueue No synchronous execution! Enqueue this at the end of this SessionContext's work queue.
+	 * @return
+	 */
+	public CompletableFuture<Void> runWithContext(Runnable runnable, boolean forceEnqueue) {
+		if (CurrentSessionContext.getOrNull() == this && !forceEnqueue) {
 			// Fast lane! This thread is already bound to this context. Just execute the runnable.
 			runnable.run();
 			return CompletableFuture.completedFuture(null);
