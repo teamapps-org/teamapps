@@ -21,12 +21,13 @@ package org.teamapps.uisession;
 
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiSessionClosingReason;
 
 public interface UiSessionListener {
 
     void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo);
 	void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo);
 	void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event);
-	void onUiSessionClosed(QualifiedUiSessionId sessionId, SessionClosingReason reason);
+	void onUiSessionClosed(QualifiedUiSessionId sessionId, UiSessionClosingReason reason);
 
 }

@@ -41,7 +41,7 @@ import {bind} from "./util/Bind";
 import {RefreshableComponentProxyHandle} from "./util/RefreshableComponentProxyHandle";
 import {TeamAppsConnectionImpl} from "./communication/TeamAppsConnectionImpl";
 import {UiComponent} from "./UiComponent";
-import {SERVER_ERROR_Reason} from "../generated/SERVER_ERRORConfig";
+import {UiSessionClosingReason} from "../generated/UiSessionClosingReason";
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 
@@ -90,16 +90,18 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			onConnectionErrorOrBroken: (reason, message) => {
 				DefaultTeamAppsUiContext.logger.error("Connection broken.");
 				sessionStorage.clear();
-				if (reason == SERVER_ERROR_Reason.SESSION_NOT_FOUND) {
+				if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT || reason == UiSessionClosingReason.HTTP_SESSION_CLOSED) {
 					UiRootPanel.showGenericErrorMessage("Session Expired", "<p>Your session has expired.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
 						false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
+				} else if (reason == UiSessionClosingReason.TERMINATED_BY_APPLICATION) {
+					UiRootPanel.showGenericErrorMessage("Session Terminated", "<p>Your session has been terminated.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+						true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
 				} else {
-					UiRootPanel.showGenericErrorMessage("Server-Side Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+					UiRootPanel.showGenericErrorMessage("Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
 						true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
 				}
 			},
 			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand),
-			executeCommands: (uiCommands: UiCommand[]) => this.executeCommands(uiCommands)
 		};
 
 		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, connectionListener);
@@ -170,17 +172,6 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			return componentProxyHandle.proxy;
 		}
 	}
-
-	private executeCommands(uiCommands: UiCommand[]): Promise<any>[] {
-		return uiCommands.map(c => {
-			try {
-				return this.executeCommand(c);
-			} catch (error) {
-				logException(error);
-			}
-		});
-	}
-
 	private replaceComponentReferencesWithInstances(o: any) {
 		let replaceOrRecur = (key: number|string) => {
 			const value = o[key];
