@@ -21,10 +21,14 @@ package org.teamapps.ux.component.infiniteitemview;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.value.SortDirection;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiInfiniteItemView;
+import org.teamapps.dto.UiInfiniteItemViewDataRequest;
+import org.teamapps.dto.UiTable;
+import org.teamapps.dto.UiTableDataRequest;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -32,6 +36,7 @@ import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.itemview.ItemViewItemJustification;
 import org.teamapps.ux.component.itemview.ItemViewVerticalItemAlignment;
+import org.teamapps.ux.component.table.TableDataRequestEventData;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 
@@ -65,6 +70,8 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
 
+	private List<Integer> viewportDisplayedRecordClientIds = Collections.emptyList();
+
 	public InfiniteItemView(Template itemTemplate, float itemWidth, int rowHeight) {
 		this.itemTemplate = itemTemplate;
 		this.itemWidth = itemWidth;
@@ -72,6 +79,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 		itemCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
 		itemCache.setMaxCapacity(1000);
+		itemCache.setPurgeDecider((record, clientId) -> !viewportDisplayedRecordClientIds.contains(clientId));
 		itemCache.setPurgeListener(operationHandle -> {
 			if (isRendered()) {
 				List<Integer> removedItemIds = operationHandle.getResult();
@@ -111,13 +119,16 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_INFINITE_ITEM_VIEW_DATA_REQUEST: {
-				UiInfiniteItemView.DataRequestEvent dataRequestEvent = (UiInfiniteItemView.DataRequestEvent) event;
-				int startIndex = dataRequestEvent.getStartIndex();
-				int length = dataRequestEvent.getLength();
-				sendRecords(startIndex, length, false);
+			case UI_INFINITE_ITEM_VIEW_DISPLAYED_RANGE_CHANGED:
+				UiInfiniteItemView.DisplayedRangeChangedEvent rangeChangedEvent = (UiInfiniteItemView.DisplayedRangeChangedEvent) event;
+				viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
+				if (rangeChangedEvent.getDataRequest() != null) {
+					UiInfiniteItemViewDataRequest dataRequest = rangeChangedEvent.getDataRequest();
+					int startIndex = dataRequest.getStartIndex();
+					int length = dataRequest.getLength();
+					this.sendRecords(startIndex, length, false);
+				}
 				break;
-			}
 			case UI_INFINITE_ITEM_VIEW_ITEM_CLICKED: {
 				UiInfiniteItemView.ItemClickedEvent itemClickedEvent = (UiInfiniteItemView.ItemClickedEvent) event;
 				RECORD record = itemCache.getRecordByClientId(itemClickedEvent.getRecordId());

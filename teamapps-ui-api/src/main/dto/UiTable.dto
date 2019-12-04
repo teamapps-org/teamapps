@@ -95,7 +95,7 @@ class UiTable extends UiComponent {
 	event rowSelected(int recordId, boolean isRightMouseButton /* TODO */, boolean isDoubleClick /* TODO */); // TODO what if the user selects more than one row?
 	event multipleRowsSelected(List<Integer> recordIds); // send this event if the user selects more than one row. In this case, do not send rowSelected
 	event sortingChanged(String sortField, UiSortDirection sortDirection); // sent when the user clicks on a sortable header column
-	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, UiTableDataRequest dataRequest); //sent when the virtual view port gets outside of the buffered data, if sortField is not empty require sorting via this field
+	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, UiTableDataRequest dataRequest);
 	event requestNestedData(int recordId);
 
 	event fieldOrderChange(String columnPropertyName, int position); //zero based

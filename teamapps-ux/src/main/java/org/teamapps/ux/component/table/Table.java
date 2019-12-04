@@ -126,7 +126,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	private Consumer<RECORD> onRecordDeletedListener = this::onRecordDeleted;
 	private Consumer<RECORD> onRecordUpdatedListener = this::onRecordUpdated;
 
-	private List<Integer> viewportDisplayedRecordClientIds;
+	private List<Integer> viewportDisplayedRecordClientIds = Collections.emptyList();
 
 	private List<RECORD> topNonModelRecords = new ArrayList<>();
 	private List<RECORD> bottomNonModelRecords = new ArrayList<>();
@@ -141,7 +141,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 		clientRecordCache = new ClientRecordCache<>(this::createUiTableClientRecord);
 		clientRecordCache.setMaxCapacity(200);
-		clientRecordCache.setPurgeDecider((record, clientId) -> viewportDisplayedRecordClientIds == null || !viewportDisplayedRecordClientIds.contains(clientId)); //todo: fix null handling!
+		clientRecordCache.setPurgeDecider((record, clientId) -> !viewportDisplayedRecordClientIds.contains(clientId));
 		clientRecordCache.setPurgeListener(purgedRecordIds -> {
 			if (isRendered()) {
 				getSessionContext().queueCommand(new UiTable.RemoveDataCommand(getId(), purgedRecordIds.getResult()), aVoid -> purgedRecordIds.commit());
