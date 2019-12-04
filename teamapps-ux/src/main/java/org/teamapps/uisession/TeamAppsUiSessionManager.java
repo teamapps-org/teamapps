@@ -182,7 +182,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		if (session != null) {
 			return session.sendCommand(commandWithCallback);
 		} else {
-			LOGGER.info("Cannot send command to non-existing session: " + sessionId);
+			LOGGER.debug("Cannot send command to non-existing session: " + sessionId);
 			return -1;
 		}
 	}
@@ -193,7 +193,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		if (session != null) {
 			return session.getClientBackPressureInfo();
 		} else {
-			LOGGER.info("Cannot send command to non-existing session: " + sessionId);
+			LOGGER.info("Cannot get back pressure info for non-existing session: " + sessionId);
 			return null;
 		}
 	}
