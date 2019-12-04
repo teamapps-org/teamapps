@@ -63,7 +63,7 @@ public class FormDialogue extends Window {
 		formLayout = responsiveForm.addResponsiveFormLayout(450);
 		formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false).setMargin(new Spacing(10)).setGridGap(20);
 		comboBox = new TemplateField<>(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, new BaseTemplateRecord<>(icon, imageUrl, title, text, null));
-		formLayout.addField(0, 0, "header", comboBox).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setColSpan(3);
+		formLayout.addField(0, 0, "header", comboBox).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setColSpan(2);
 		setContent(responsiveForm);
 	}
 

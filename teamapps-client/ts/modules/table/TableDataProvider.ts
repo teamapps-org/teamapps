@@ -39,9 +39,7 @@ export class TableDataProvider {
 	private data: TableDataProviderItem[];
 	private numberOfRootNodes: number;
 
-	constructor(
-		data: UiHierarchicalClientRecordConfig[],
-		private dataRequestCallback: Function) {
+	constructor(data: UiHierarchicalClientRecordConfig[], private dataRequestCallback: Function) {
 		this.data = this.prepareData(data);
 		this.numberOfRootNodes = this.data.filter(item => !item.parentId).length;
 	}

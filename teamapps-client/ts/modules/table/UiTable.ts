@@ -25,7 +25,8 @@
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {
 	UiTable_CellEditingStartedEvent,
-	UiTable_CellEditingStoppedEvent, UiTable_CellValueChangedEvent,
+	UiTable_CellEditingStoppedEvent,
+	UiTable_CellValueChangedEvent,
 	UiTable_ColumnSizeChangeEvent,
 	UiTable_DisplayedRangeChangedEvent,
 	UiTable_FieldOrderChangeEvent,
@@ -58,7 +59,7 @@ import {UiButton, UiCheckBox, UiCompositeField, UiCurrencyField, UiFileField, Ui
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {FieldMessagesPopper, getHighestSeverity} from "../micro-components/FieldMessagesPopper";
 import {nonRecursive} from "../util/nonRecursive";
-import {createUiTableDataRequestConfig} from "../../generated/UiTableDataRequestConfig";
+import {createUiTableDataRequestConfig, UiTableDataRequestConfig} from "../../generated/UiTableDataRequestConfig";
 import {throttledMethod} from "../util/throttle";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
@@ -145,14 +146,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this.$editorFieldTempContainer = this.$component.querySelector<HTMLElement>(":scope .editor-field-temp-container");
 
 		this.dataProvider = new TableDataProvider(config.tableData, (fromIndex: number, length: number) => {
-			const viewPort = this._grid.getViewport();
-			const currentlyDisplayedRecordIds = this.getCurrentlyDisplayedRecordIds();
-			this.onDisplayedRangeChanged.fire({
-				startIndex: viewPort.top,
-				length: viewPort.bottom - viewPort.top,
-				displayedRecordIds: currentlyDisplayedRecordIds,
-				dataRequest: createUiTableDataRequestConfig(fromIndex, length, this._sortField, this._sortDirection)
-			});
+			this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent(createUiTableDataRequestConfig(fromIndex, length, this._sortField, this._sortDirection)));
 		});
 		if (config.totalNumberOfRecords > this.dataProvider.getLength()) {
 			this.dataProvider.setTotalNumberOfRootNodes(config.totalNumberOfRecords);
@@ -400,7 +394,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 		this._grid.onScroll.subscribe((eventData) => {
 			this.updateSelectionFramePosition();
-			this.fireDisplayedRangeChanged();
+			this.throttledFireDisplayedRangeChanged();
 		});
 		this._grid.onViewportChanged.subscribe((eventData) => {
 			this.toggleColumnsThatAreHiddenWhenTheyContainNoVisibleNonEmptyCells();
@@ -456,14 +450,18 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	@throttledMethod(500) // debounce/throttle scrolling without data requests only!!! (otherwise the tableDataProvider will mark rows as requested but the actual request will not get to the server)
-	private fireDisplayedRangeChanged() {
-		const viewport = this._grid.getViewport();
-		this.onDisplayedRangeChanged.fire({
-			startIndex: viewport.top,
-			length: viewport.bottom - viewport.top,
+	private throttledFireDisplayedRangeChanged() {
+		this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent());
+	}
+
+	private createDisplayRangeChangedEvent(dataRequest?: UiTableDataRequestConfig) {
+		const viewPort = this._grid.getViewport();
+		return {
+			startIndex: viewPort.top,
+			length: viewPort.bottom - viewPort.top,
 			displayedRecordIds: this.getCurrentlyDisplayedRecordIds(),
-			dataRequest: null
-		});
+			dataRequest: dataRequest
+		};
 	}
 
 	@nonRecursive

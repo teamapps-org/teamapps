@@ -39,7 +39,13 @@ class UiInfiniteItemView extends UiComponent {
     command setContextMenuContent(int requestId, UiComponent* component);
     command closeContextMenu(int requestId);
 
-	event dataRequest(int startIndex, int length); //sent when the virtual view port gets outside of the buffered data
+	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, UiInfiniteItemViewDataRequest dataRequest);
 	event itemClicked(int recordId, boolean isRightMouseButton, boolean isDoubleClick);
 	event contextMenuRequested(int requestId, int recordId);
+}
+
+@TypeScriptFactory
+class UiInfiniteItemViewDataRequest {
+	required int startIndex;
+	required int length;
 }
