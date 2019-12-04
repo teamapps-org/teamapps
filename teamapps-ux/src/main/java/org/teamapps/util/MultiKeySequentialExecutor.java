@@ -67,7 +67,7 @@ public class MultiKeySequentialExecutor<K> {
 
 		public synchronized <V> CompletableFuture<V> submit(Supplier<V> task) {
 			if (lastFuture.isCancelled()) {
-				LOGGER.info("SequentialExecutor already closed.");
+				LOGGER.debug("SequentialExecutor already closed.");
 				return CompletableFuture.failedFuture(new SequentialExecutorClosedException());
 			}
 			int queueSize = this.queueSize.incrementAndGet();

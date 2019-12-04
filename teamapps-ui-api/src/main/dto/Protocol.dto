@@ -82,10 +82,14 @@ class UiClientInfo {
 abstract class AbstractServerMessage { }
 
 class INIT_OK extends AbstractServerMessage {
+	required int minRequestedCommands = 5;
+	required int maxRequestedCommands = 20;
+	required int sentEventsBufferSize = 500;
+	required long keepaliveInterval = 25000;
 }
 
 class INIT_NOK extends AbstractServerMessage {
-	required enum {SESSION_NOT_FOUND} reason;
+	required UiSessionClosingReason reason;
 }
 
 class REINIT_OK extends AbstractServerMessage {
@@ -93,16 +97,24 @@ class REINIT_OK extends AbstractServerMessage {
 }
 
 class REINIT_NOK extends AbstractServerMessage {
-    required enum {SESSION_NOT_FOUND, COMMAND_ID_NOT_FOUND} reason;
+    required UiSessionClosingReason reason;
 }
 
 class SERVER_ERROR extends AbstractServerMessage {
-    required enum {
-		SESSION_NOT_FOUND,
-		EXCEPTION,
-		CMD_REQUEST_TOO_LARGE // the client is requesting a too high amount of commands
-    } reason;
+    required UiSessionClosingReason reason;
     String message;
+}
+
+enum UiSessionClosingReason {
+	SESSION_NOT_FOUND,    // reacting to unknown client
+	SESSION_TIMEOUT,      // actively sent by server
+	SERVER_SIDE_ERROR,
+	TERMINATED_BY_CLIENT,
+	TERMINATED_BY_APPLICATION,
+	HTTP_SESSION_CLOSED,
+	COMMANDS_OVERFLOW,
+	REINIT_COMMAND_ID_NOT_FOUND,
+	CMD_REQUEST_TOO_LARGE // the client is requesting a too high amount of commands
 }
 
 class MULTI_CMD extends AbstractServerMessage {

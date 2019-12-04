@@ -27,6 +27,7 @@ import org.teamapps.dto.UiComponentReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiMultiLineTextField;
 import org.teamapps.dto.UiObject;
+import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.dto.UiWorkSpaceLayout;
 
 public class SerializationTest {
@@ -41,7 +42,7 @@ public class SerializationTest {
 
 	@Test
 	public void serializeEnums() throws Exception {
-		INIT_NOK init = new INIT_NOK(INIT_NOK.Reason.SESSION_NOT_FOUND);
+		INIT_NOK init = new INIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND);
 		System.out.println(teamAppsObjectMapper.writeValueAsString(init));
 	}
 

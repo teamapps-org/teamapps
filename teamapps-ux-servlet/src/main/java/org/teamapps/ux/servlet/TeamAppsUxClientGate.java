@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,24 +22,23 @@ package org.teamapps.ux.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.icons.provider.IconProvider;
-import org.teamapps.server.CommandDispatcher;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.SessionRecorder;
 import org.teamapps.server.SessionResourceProvider;
 import org.teamapps.server.UxServerContext;
-import org.teamapps.webcontroller.WebController;
-import org.teamapps.ux.resource.ResourceProviderServlet;
-import org.teamapps.ux.resource.SystemIconResourceProvider;
+import org.teamapps.uisession.QualifiedUiSessionId;
+import org.teamapps.uisession.UiCommandExecutor;
+import org.teamapps.uisession.UiSessionListener;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.resource.ResourceProviderServlet;
+import org.teamapps.ux.resource.SystemIconResourceProvider;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.ClientSessionResourceProvider;
 import org.teamapps.ux.session.SessionContext;
-import org.teamapps.uisession.QualifiedUiSessionId;
-import org.teamapps.uisession.SessionClosingReason;
-import org.teamapps.uisession.UiCommandExecutor;
-import org.teamapps.uisession.UiSessionListener;
+import org.teamapps.webcontroller.WebController;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -47,7 +46,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -95,8 +99,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				e.printStackTrace();
 			}
 		}
-		CommandDispatcher commandDispatcher = new CommandDispatcher(commandExecutor, sessionId, sessionRecorder);
-
 		ClientInfo clientInfo = new ClientInfo(
 				uiClientInfo.getIp(),
 				uiClientInfo.getScreenWidth(),
@@ -112,7 +114,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				uiClientInfo.getClientUrl(),
 				uiClientInfo.getClientParameters());
 
-		SessionContext context = new SessionContext(sessionId, clientInfo, commandDispatcher, uxServerContext,
+		SessionContext context = new SessionContext(sessionId, clientInfo, commandExecutor, uxServerContext,
 				webController.getDefaultIconTheme(clientInfo.isMobileDevice()), objectMapper);
 		sessionContextById.put(sessionId, context);
 
@@ -126,7 +128,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		try {
 			// TODO make non-blocking when exception handling (and thereby session invalidation) is changed
 			future.get();
-		} catch (InterruptedException|ExecutionException e) {
+		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -134,13 +136,14 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 
 	public Collection<ServletRegistration> getServletRegistrations() {
 		ArrayList<ServletRegistration> registrations = new ArrayList<>();
-		registrations.add(new ServletRegistration(new ResourceProviderServlet(createSystemIconResourceProvider(webController.getIconProvider(), webController.getAdditionalIconProvider())), "/icons/*"));
+		registrations.add(new ServletRegistration(new ResourceProviderServlet(createSystemIconResourceProvider(webController.getIconProvider(), webController.getAdditionalIconProvider())), "/icons"
+				+ "/*"));
 		registrations.add(new ServletRegistration(new ResourceProviderServlet(new SessionResourceProvider(sessionContextById::get)), ClientSessionResourceProvider.BASE_PATH + "*"));
 		registrations.addAll(webController.getServletRegistrations(uxServerContext));
 		return registrations;
 	}
 
-	private SystemIconResourceProvider createSystemIconResourceProvider(IconProvider iconProvider, List<IconProvider> customIconProvider)  {
+	private SystemIconResourceProvider createSystemIconResourceProvider(IconProvider iconProvider, List<IconProvider> customIconProvider) {
 		try {
 			File tempDir = File.createTempFile("temp", "temp").getParentFile();
 			SystemIconResourceProvider systemIconProvider = new SystemIconResourceProvider(tempDir);
@@ -159,10 +162,10 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 	}
 
 	@Override
-	public void onUiSessionClosed(QualifiedUiSessionId sessionId, SessionClosingReason reason) {
+	public void onUiSessionClosed(QualifiedUiSessionId sessionId, UiSessionClosingReason reason) {
 		SessionContext context = sessionContextById.remove(sessionId);
 		if (context != null) {
-			context.destroy();
+			context.handleSessionDestroyedInternal();
 		}
 	}
 
@@ -176,14 +179,10 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				if (component != null) {
 					component.handleUiEvent(event);
 				}
+			}).exceptionally(e -> {
+				commandExecutor.closeSession(sessionId, UiSessionClosingReason.SERVER_SIDE_ERROR);
+				return null;
 			});
-
-			try {
-				// TODO make non-blocking when exception handling (and thereby session invalidation) is changed
-				future.get();
-			} catch (InterruptedException|ExecutionException e) {
-				throw new RuntimeException(e);
-			}
 		}
 	}
 

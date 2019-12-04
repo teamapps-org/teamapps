@@ -41,12 +41,16 @@ public class CommandBuffer {
 		buffer = new CMD[maxFillableCapacity + 1];
 	}
 
-	public int size() {
+	public int getBufferedCommandsCount() {
 		return head - tail + (head < tail ? buffer.length : 0);
 	}
 
+	public int getUnconsumedCommandsCount() {
+		return head - nextConsumable + (head < nextConsumable ? buffer.length : 0);
+	}
+
 	public void addCommand(CMD command) throws UnconsumedCommandsOverflowException {
-		if (size() == maxFillableCapacity) {
+		if (getBufferedCommandsCount() == maxFillableCapacity) {
 			if (tail == nextConsumable) {
 				throw new UnconsumedCommandsOverflowException("Command buffer overflow. Max capacity: " + maxFillableCapacity);
 			}
@@ -60,7 +64,7 @@ public class CommandBuffer {
 	}
 
 	public CMD consumeCommand() {
-		if (size() > 0 && nextConsumable != head) {
+		if (getBufferedCommandsCount() > 0 && nextConsumable != head) {
 			CMD command = buffer[nextConsumable];
 			nextConsumable = (nextConsumable + 1) % buffer.length;
 			return command;

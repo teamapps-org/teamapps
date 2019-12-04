@@ -32,8 +32,10 @@ import org.teamapps.dto.INIT_OK;
 import org.teamapps.dto.MULTI_CMD;
 import org.teamapps.dto.REINIT_NOK;
 import org.teamapps.dto.REINIT_OK;
+import org.teamapps.dto.SERVER_ERROR;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiSessionClosingReason;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -57,6 +59,12 @@ import java.util.stream.Collectors;
 public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionListener {
 
 	private static final long UI_SESSION_TIMEOUT = 15 * 60 * 1000; // TODO #config make configurable
+	private static final int COMMAND_BUFFER_SIZE = 5_000;
+
+	private static final int CLIENT_MIN_REQUESTED_COMMANDS = 3;
+	private static final int CLIENT_MAX_REQUESTED_COMMANDS = 20;
+	private static final int CLIENT_SENT_EVENTS_BUFFER_SIZE = 500;
+	private static final long CLIENT_KEEPALIVE_INTERVAL = 25000;
 
 	private ScheduledExecutorService scheduledExecutorService;
 	private final ObjectMapper objectMapper;
@@ -114,7 +122,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			if (session != null) {
 				session.handleClientRefresh(maxRequestedCommandId, messageSender);
 			} else {
-				messageSender.sendMessageAsynchronously(new INIT_NOK(INIT_NOK.Reason.SESSION_NOT_FOUND), null);
+				messageSender.sendMessageAsynchronously(new INIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND), null);
 			}
 		} else {
 			session.init(maxRequestedCommandId);
@@ -156,7 +164,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			session.reinit(lastReceivedCommandId, maxRequestedCommandId, messageSender);
 		} else {
 			LOGGER.warn("Could not find teamAppsUiSession for REINIT: " + sessionId);
-			messageSender.sendMessageAsynchronously(new REINIT_NOK(REINIT_NOK.Reason.SESSION_NOT_FOUND), null);
+			messageSender.sendMessageAsynchronously(new REINIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND), null);
 		}
 	}
 
@@ -169,40 +177,35 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		}
 	}
 
-	public void sendCommand(QualifiedUiSessionId sessionId, UiCommandWithResultCallback commandWithCallback) {
+	public int sendCommand(QualifiedUiSessionId sessionId, UiCommandWithResultCallback commandWithCallback) {
 		UiSession session = getSessionById(sessionId);
 		if (session != null) {
-			try {
-				session.sendCommand(commandWithCallback);
-			} catch (UnconsumedCommandsOverflowException e) {
-				LOGGER.error("Too many unconsumed commands!", e);
-				closeSession(sessionId, SessionClosingReason.COMMANDS_OVERFLOW);
-			}
+			return session.sendCommand(commandWithCallback);
 		} else {
-			LOGGER.warn("Cannot send command to non-existing session: " + sessionId);
+			LOGGER.info("Cannot send command to non-existing session: " + sessionId);
+			return -1;
 		}
 	}
 
-	public void sendCommands(QualifiedUiSessionId sessionId, List<UiCommandWithResultCallback> commandsWithCallback) {
+	@Override
+	public ClientBackPressureInfo getClientBackPressureInfo(QualifiedUiSessionId sessionId) {
 		UiSession session = getSessionById(sessionId);
 		if (session != null) {
-			try {
-				ArrayList<UiCommandWithResultCallback> uiCommandsCopy = new ArrayList<>(commandsWithCallback);
-				session.sendCommands(uiCommandsCopy);
-			} catch (UnconsumedCommandsOverflowException e) {
-				LOGGER.error("Too many unconsumed commands!", e);
-				closeSession(sessionId, SessionClosingReason.COMMANDS_OVERFLOW);
-			}
+			return session.getClientBackPressureInfo();
 		} else {
-			LOGGER.warn("Cannot send commands to non-existing session: " + sessionId);
+			LOGGER.info("Cannot send command to non-existing session: " + sessionId);
+			return null;
 		}
 	}
 
-	public void closeSession(QualifiedUiSessionId sessionId, SessionClosingReason reason) {
+	@Override
+	public void closeSession(QualifiedUiSessionId sessionId, UiSessionClosingReason reason) {
 		LOGGER.info("Closing session: " + sessionId + " for reason: " + reason);
 		UiSession removedSession = sessionsById.remove(sessionId.getHttpSessionId(), sessionId.getUiSessionId());
 		if (removedSession == null) {
 			LOGGER.info("Session to be closed not found: " + sessionId);
+		} else {
+			removedSession.close(reason);
 		}
 		uiSessionListener.onUiSessionClosed(sessionId, reason);
 	}
@@ -227,7 +230,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			sessionsToBeClosed.clear();
 		}
 		for (UiSession uiSession : sessionsToClose) {
-			closeSession(uiSession.sessionId, SessionClosingReason.HTTP_SESSION_CLOSED);
+			closeSession(uiSession.sessionId, UiSessionClosingReason.HTTP_SESSION_CLOSED);
 		}
 	}
 
@@ -240,7 +243,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 					.collect(Collectors.toList());
 		}
 		for (UiSession uiSession : sessionsToClose) {
-			closeSession(uiSession.sessionId, SessionClosingReason.TIMED_OUT);
+			closeSession(uiSession.sessionId, UiSessionClosingReason.SESSION_TIMEOUT);
 		}
 	}
 
@@ -249,8 +252,6 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 	}
 
 	private class UiSession {
-
-		private static final int COMMAND_BUFFER_SIZE = 10_000;
 
 		private final QualifiedUiSessionId sessionId;
 		private final UiClientInfo clientInfo;
@@ -267,6 +268,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 		private int maxRequestedCommandId = 0;
 		private int lastSentCommandId;
+		private long requestedCommandsZeroTimestamp = -1;
 
 		private Map<Integer, Consumer> resultCallbacksByCmdId = new ConcurrentHashMap<>();
 
@@ -286,31 +288,31 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			this.messageSender = messageSender;
 		}
 
-		public void sendCommand(UiCommandWithResultCallback commandWithCallback) throws UnconsumedCommandsOverflowException {
+		public int sendCommand(UiCommandWithResultCallback commandWithCallback) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Sending command ({}): {}", sessionId.getUiSessionId().substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
 			}
 			CMD cmd = createCMD(commandWithCallback);
 			synchronized (this) {
-				commandBuffer.addCommand(cmd);
+				try {
+					commandBuffer.addCommand(cmd);
+				} catch (UnconsumedCommandsOverflowException e) {
+					LOGGER.error("Too many unconsumed commands!", e);
+					closeSession(sessionId, UiSessionClosingReason.COMMANDS_OVERFLOW);
+					return -1;
+				}
 				sendAllQueuedCommandsIfPossible();
+				return commandBuffer.getUnconsumedCommandsCount();
 			}
 		}
 
-		public void sendCommands(List<UiCommandWithResultCallback> commandsWithCallback) throws UnconsumedCommandsOverflowException {
-			if (LOGGER.isDebugEnabled()) {
-				commandsWithCallback.stream()
-						.map(UiCommandWithResultCallback::getUiCommand)
-						.forEach(command -> LOGGER.debug("Sending command ({}): {}", sessionId.getUiSessionId().substring(0, 8), command.getClass().getSimpleName()));
-			}
-			List<CMD> cmds = commandsWithCallback.stream()
-					.map(commandWithCallback -> createCMD(commandWithCallback))
-					.collect(Collectors.toList());
+		public ClientBackPressureInfo getClientBackPressureInfo() {
 			synchronized (this) {
-				for (CMD cmd : cmds) {
-					commandBuffer.addCommand(cmd);
-				}
-				sendAllQueuedCommandsIfPossible();
+				return new ClientBackPressureInfo(
+						COMMAND_BUFFER_SIZE, commandBuffer.getUnconsumedCommandsCount(),
+						CLIENT_MIN_REQUESTED_COMMANDS, CLIENT_MAX_REQUESTED_COMMANDS, maxRequestedCommandId - lastSentCommandId,
+						requestedCommandsZeroTimestamp
+				);
 			}
 		}
 
@@ -342,9 +344,15 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				List<CMD> cmdsToSend = new ArrayList<>();
 				synchronized (this) {
 					while (true) {
+						if (!connectionActive) {
+							break;
+						}
 						if (lastSentCommandId >= maxRequestedCommandId) {
 							connectionActive = false;
+							requestedCommandsZeroTimestamp = System.currentTimeMillis();
 							break;
+						} else {
+							requestedCommandsZeroTimestamp = -1;
 						}
 						CMD cmd = commandBuffer.consumeCommand();
 						if (cmd != null) {
@@ -385,7 +393,12 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			}
 			LOGGER.debug("INIT successful: " + sessionId);
 			sessionListener.onUiSessionStarted(sessionId, clientInfo);
-			sendAsyncWithErrorHandler(new INIT_OK());
+			sendAsyncWithErrorHandler(new INIT_OK(
+					CLIENT_MIN_REQUESTED_COMMANDS,
+					CLIENT_MAX_REQUESTED_COMMANDS,
+					CLIENT_SENT_EVENTS_BUFFER_SIZE,
+					CLIENT_KEEPALIVE_INTERVAL
+			));
 		}
 
 		public void handleClientRefresh(int maxRequestedCommandId, MessageSender messageSender) {
@@ -401,7 +414,12 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			}
 			LOGGER.debug("INIT (client refresh) successful: " + sessionId);
 			sessionListener.onUiSessionClientRefresh(sessionId, clientInfo);
-			sendAsyncWithErrorHandler(new INIT_OK());
+			sendAsyncWithErrorHandler(new INIT_OK(
+					CLIENT_MIN_REQUESTED_COMMANDS,
+					CLIENT_MAX_REQUESTED_COMMANDS,
+					CLIENT_SENT_EVENTS_BUFFER_SIZE,
+					CLIENT_KEEPALIVE_INTERVAL
+			));
 		}
 
 		public void handleEvent(int clientMessageId, UiEvent event) {
@@ -448,7 +466,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				reviveConnection();
 			} else {
 				LOGGER.warn("Could not reinit. Command with id " + lastReceivedCommandId + "not found in command buffer.");
-				sendAsyncWithErrorHandler(new REINIT_NOK(REINIT_NOK.Reason.COMMAND_ID_NOT_FOUND));
+				sendAsyncWithErrorHandler(new REINIT_NOK(UiSessionClosingReason.REINIT_COMMAND_ID_NOT_FOUND));
 			}
 		}
 
@@ -464,6 +482,10 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		public void handleKeepAlive() {
 			this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 			this.reviveConnection();
+		}
+
+		public void close(UiSessionClosingReason reason) {
+			sendAsyncWithErrorHandler(new SERVER_ERROR(reason));
 		}
 	}
 

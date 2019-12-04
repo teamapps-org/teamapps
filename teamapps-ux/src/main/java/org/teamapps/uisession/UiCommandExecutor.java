@@ -19,8 +19,20 @@
  */
 package org.teamapps.uisession;
 
-import java.util.List;
+import org.teamapps.dto.UiSessionClosingReason;
 
 public interface UiCommandExecutor {
-	void sendCommands(QualifiedUiSessionId qualifiedUiSessionId, List<UiCommandWithResultCallback> commands);
+	/**
+	 * @param qualifiedUiSessionId
+	 * @param command
+	 * @return the size of the queue of unsent commands
+	 */
+	int sendCommand(QualifiedUiSessionId qualifiedUiSessionId, UiCommandWithResultCallback command);
+
+	/**
+	 * @param qualifiedUiSessionId
+	 */
+	ClientBackPressureInfo getClientBackPressureInfo(QualifiedUiSessionId qualifiedUiSessionId);
+
+	void closeSession(QualifiedUiSessionId qualifiedUiSessionId, UiSessionClosingReason reason);
 }

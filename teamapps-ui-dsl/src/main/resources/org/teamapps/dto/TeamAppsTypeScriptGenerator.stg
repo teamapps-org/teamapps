@@ -214,12 +214,12 @@ export class <name> {
 		this.componentRegistry(reference);
 	}
 
-	public executeCommand(targetObject: any, command: any) {
-		return this.commandExecutorsByCommandName[command._type](targetObject, command);
+	public async executeCommand(targetObject: any, command: any) {
+		return await this.commandExecutorsByCommandName[command._type](targetObject, command);
 	}
 
-	public executeStaticCommand(command: any, context: TeamAppsUiContext) {
-		return this.staticCommandExecutorsByCommandName[command._type](command, context);
+	public async executeStaticCommand(command: any, context: TeamAppsUiContext) {
+		return await this.staticCommandExecutorsByCommandName[command._type](command, context);
 	}
 }
 >>

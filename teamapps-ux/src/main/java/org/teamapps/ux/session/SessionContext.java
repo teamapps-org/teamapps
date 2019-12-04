@@ -25,12 +25,15 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiRootPanel;
+import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.api.IconTheme;
-import org.teamapps.server.CommandDispatcher;
 import org.teamapps.server.UxServerContext;
+import org.teamapps.uisession.ClientBackPressureInfo;
 import org.teamapps.uisession.QualifiedUiSessionId;
+import org.teamapps.uisession.UiCommandExecutor;
+import org.teamapps.uisession.UiCommandWithResultCallback;
 import org.teamapps.util.MultiKeySequentialExecutor;
 import org.teamapps.util.NamedThreadFactory;
 import org.teamapps.util.UiUtil;
@@ -50,10 +53,8 @@ import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
 
 import java.io.File;
-import java.io.InputStream;
 import java.text.MessageFormat;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -65,13 +66,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
-	private static final MultiKeySequentialExecutor<SessionContext> sessionExecutor = new MultiKeySequentialExecutor<>(new ThreadPoolExecutor(
+	private static final MultiKeySequentialExecutor<SessionContext> sessionMultiKeyExecutor = new MultiKeySequentialExecutor<>(new ThreadPoolExecutor(
 			Runtime.getRuntime().availableProcessors() / 2 + 1,
 			Runtime.getRuntime().availableProcessors() * 2,
 			60, TimeUnit.SECONDS,
@@ -80,14 +80,14 @@ public class SessionContext {
 	));
 	private static final Function<Locale, ResourceBundle> DEFAULT_RESOURCE_BUNDLE_PROVIDER = locale -> ResourceBundle.getBundle("org.teamapps.ux.i18n.DefaultCaptions", locale, new UTF8Control());
 
-	private final Event<Void> onDestroyed = new Event<>();
+	public final Event<Void> onDestroyed = new Event<>();
 
 	private boolean isValid = true;
 	private long lastClientEventTimeStamp;
 
 	private final QualifiedUiSessionId sessionId;
 	private final ClientInfo clientInfo;
-	private final CommandDispatcher commandDispatcher;
+	private final UiCommandExecutor commandExecutor;
 	private final UxServerContext serverContext;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
 	private final HashMap<String, Component> componentsById = new HashMap<>();
@@ -100,11 +100,11 @@ public class SessionContext {
 	private Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration = SessionConfiguration.createDefault();
 
-	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, CommandDispatcher commandDispatcher, UxServerContext serverContext, IconTheme iconTheme,
+	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, UiCommandExecutor commandExecutor, UxServerContext serverContext, IconTheme iconTheme,
 	                      ObjectMapper jacksonObjectMapper) {
 		this.sessionId = sessionId;
 		this.clientInfo = clientInfo;
-		this.commandDispatcher = commandDispatcher;
+		this.commandExecutor = commandExecutor;
 		this.serverContext = serverContext;
 		this.iconTheme = iconTheme;
 		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
@@ -165,10 +165,13 @@ public class SessionContext {
 	}
 
 	public void destroy() {
+		commandExecutor.closeSession(sessionId, UiSessionClosingReason.TERMINATED_BY_APPLICATION);
+	}
+
+	public void handleSessionDestroyedInternal() {
 		isValid = false;
-		commandDispatcher.close();
 		onDestroyed.fire(null);
-		sessionExecutor.closeForKey(this);
+		sessionMultiKeyExecutor.closeForKey(this);
 	}
 
 	public Event<Void> onDestroyed() {
@@ -183,7 +186,8 @@ public class SessionContext {
 			throw new IllegalStateException(errorMessage);
 		}
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
-		commandDispatcher.queueCommand(command, wrappedCallback);
+		
+		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> commandExecutor.sendCommand(sessionId, new UiCommandWithResultCallback<>(command, wrappedCallback)));
 	}
 
 	public <RESULT> void queueCommand(UiCommand<RESULT> command) {
@@ -194,8 +198,16 @@ public class SessionContext {
 		return clientInfo;
 	}
 
+	/**
+	 * @deprecated no more needed. commands are sent as early as the client can handle them.
+	 */
+	@Deprecated
 	public void flushCommands() {
-		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(commandDispatcher::flushCommands);
+		// TODO remove methods
+	}
+
+	public ClientBackPressureInfo getClientBackPressureInfo() {
+		return commandExecutor.getClientBackPressureInfo(sessionId);
 	}
 
 	public IconTheme getIconTheme() {
@@ -244,7 +256,7 @@ public class SessionContext {
 			runnable.run();
 			return CompletableFuture.completedFuture(null);
 		} else {
-			return sessionExecutor.submit(this, () -> {
+			return sessionMultiKeyExecutor.submit(this, () -> {
 				CurrentSessionContext.set(this);
 				try {
 					runnable.run();
