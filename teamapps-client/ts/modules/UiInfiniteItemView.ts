@@ -176,8 +176,6 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	private verticalItemAlignment: UiVerticalItemAlignment;
 	private contextMenu: ContextMenu;
 
-	private currentContextMenuRequestId = 0;
-
 	constructor(config: UiInfiniteItemViewConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.uuid = generateUUID();
@@ -209,11 +207,8 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 					isRightMouseButton: e.button === 2,
 					isDoubleClick: false
 				});
-				if (e.button == 2 && !isNaN(recordId)) {
-					e.preventDefault();
-					me.contextMenu.setContent(null);
-					me.contextMenu.open(e.pageX, e.pageY);
-					me.onContextMenuRequested.fire({recordId: recordId, requestId: ++this.currentContextMenuRequestId})
+				if (e.button == 2 && !isNaN(recordId) && me._config.contextMenuEnabled) {
+					me.contextMenu.open(e as unknown as MouseEvent, requestId => me.onContextMenuRequested.fire({recordId: recordId, requestId}));
 				}
 			})
 			.on("dblclick", ".item-wrapper", function (e: JQueryMouseEventObject) {
@@ -437,16 +432,11 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	}
 
 	setContextMenuContent(requestId: number, component: UiComponent): void {
-		if (requestId == this.currentContextMenuRequestId) {
-			this.contextMenu.setContent(component);
-		}
+		this.contextMenu.setContent(component, requestId);
 	}
 
 	closeContextMenu(requestId: number): void {
-		if (requestId == this.currentContextMenuRequestId) {
-			this.contextMenu.setContent(null);
-			this.contextMenu.close();
-		}
+		this.contextMenu.close(requestId);
 	}
 
 }

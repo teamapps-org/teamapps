@@ -32,6 +32,8 @@ export class ContextMenu {
 	private $main: HTMLElement;
 	private $spinner: HTMLElement;
 
+	private currentRequestId = 0;
+
 	constructor() {
 		this.$main = parseHtml(`<div class="ContextMenu empty">
 	<div class="teamapps-spinner"></div>
@@ -41,7 +43,11 @@ export class ContextMenu {
 		this.updateSize();
 	}
 
-	public setContent(content: UiComponent) {
+	public setContent(content: UiComponent, requestId?: number) {
+		if (requestId != null && requestId !== this.currentRequestId) {
+			return;
+		}
+		
 		if (this.content != null) {
 			this.content.getMainElement().remove();
 		}
@@ -54,10 +60,14 @@ export class ContextMenu {
 		}
 	}
 
-	public open(pageX: number, pageY: number) {
+	public open(e: PointerEvent | MouseEvent, contextMenuRequestCallback: (requestId: number) => any) {
+		e.preventDefault();
+		this.setContent(null);
+
 		document.body.appendChild(this.$main);
 		let rect = this.$main.getBoundingClientRect();
 
+		let {pageX, pageY} = e;
 		pageX = Math.min(pageX, window.innerWidth - rect.width - this.viewPortPadding);
 		pageX = Math.max(pageX, this.viewPortPadding);
 		pageY = Math.min(pageY, window.innerHeight - rect.height - this.viewPortPadding);
@@ -67,9 +77,15 @@ export class ContextMenu {
 		this.$main.style.top = pageY + "px";
 
 		doOnceOnClickOutsideElement(this.$main, e => this.close(), false);
+
+		contextMenuRequestCallback(++this.currentRequestId);
 	}
 
-	public close() {
+	public close(requestId?: number) {
+		if (requestId != null && requestId !== this.currentRequestId) {
+			return;
+		}
+		this.setContent(null);
 		this.$main.remove();
 	}
 
@@ -81,7 +97,7 @@ export class ContextMenu {
 
 	private updateSize() {
 		this.$main.style.width = this.width + "px";
-		if (this.height >=0) {
+		if (this.height >= 0) {
 			this.$main.style.height = this.height + "px";
 		} else {
 			this.$main.style.removeProperty("height");
