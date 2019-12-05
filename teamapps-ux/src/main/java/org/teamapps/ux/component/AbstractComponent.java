@@ -156,6 +156,7 @@ public abstract class AbstractComponent implements Component {
 	public final void unrender() {
 		sessionContext.unregisterComponent(this);
 		sessionContext.queueCommand(new UiRootPanel.DestroyComponentCommand(getId()));
+		rendered = false;
 	}
 
 	abstract public UiComponent createUiComponent();
