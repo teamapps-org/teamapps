@@ -28,6 +28,7 @@ import {
 	UiTable_CellEditingStoppedEvent,
 	UiTable_CellValueChangedEvent,
 	UiTable_ColumnSizeChangeEvent,
+	UiTable_ContextMenuRequestedEvent,
 	UiTable_DisplayedRangeChangedEvent,
 	UiTable_FieldOrderChangeEvent,
 	UiTable_MultipleRowsSelectedEvent,
@@ -64,6 +65,8 @@ import {throttledMethod} from "../util/throttle";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
 import {UiTableRowSelectionModel} from "./UiTableRowSelectionModel";
+import {ContextMenu} from "../micro-components/ContextMenu";
+import {UiComponent} from "../UiComponent";
 import EventData = Slick.EventData;
 
 interface Column extends Slick.Column<any> {
@@ -111,6 +114,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	public readonly onFieldOrderChange: TeamAppsEvent<UiTable_FieldOrderChangeEvent> = new TeamAppsEvent(this);
 	public readonly onColumnSizeChange: TeamAppsEvent<UiTable_ColumnSizeChangeEvent> = new TeamAppsEvent(this);
 	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiTable_DisplayedRangeChangedEvent> = new TeamAppsEvent(this);
+	public readonly onContextMenuRequested: TeamAppsEvent<UiTable_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
 
 	private $component: HTMLElement;
 	private _grid: Slick.Grid<any>;
@@ -133,6 +137,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private $editorFieldTempContainer: HTMLElement;
 
+	private contextMenu: ContextMenu;
+
 	constructor(config: UiTableConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$component = parseHtml(`<div class="UiTable" id="${config.id}">
@@ -153,6 +159,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 
 		this.createSlickGrid(config, $table);
+
+		this.contextMenu = new ContextMenu();
 
 		this.dropDown = new UiDropDown();
 
@@ -376,11 +384,17 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 		$(this._grid.getCanvasNode()).on("contextmenu", (e) => {
 			let cell = this._grid.getCellFromEvent(<any>e);
-			this.onRowSelected.fire({
-				recordId: this.dataProvider.getItem(cell.row).id,
-				isRightMouseButton: true,
-				isDoubleClick: false
-			});
+			if (cell != null && this.dataProvider.getItem(cell.row) != null) {
+				let recordId = this.dataProvider.getItem(cell.row).id;
+				this.onRowSelected.fire({
+					recordId: recordId,
+					isRightMouseButton: true,
+					isDoubleClick: false
+				});
+				if (e.button == 2 && !isNaN(recordId) && this._config.contextMenuEnabled) {
+					this.contextMenu.open(e as unknown as MouseEvent, requestId => this.onContextMenuRequested.fire({recordId: recordId, requestId}));
+				}
+			}
 		});
 
 		if (config.selectionFrame) {
@@ -1040,6 +1054,14 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		if (recordId === this.getActiveCellRecordId() && propertyName === this.getActiveCellFieldName()) {
 			this._grid.getEditController().cancelCurrentEdit();
 		}
+	}
+
+	setContextMenuContent(requestId: number, component: UiComponent): void {
+		this.contextMenu.setContent(component, requestId);
+	}
+
+	closeContextMenu(requestId: number): void {
+		this.contextMenu.close(requestId);
 	}
 
 }

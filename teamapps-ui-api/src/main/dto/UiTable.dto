@@ -67,6 +67,8 @@ class UiTable extends UiComponent {
 
 	UiSelectionFrame selectionFrame;
 
+	boolean contextMenuEnabled = false;
+
 	command clearTable();
 	command addData(int startRowIndex, List<UiTableClientRecord> data, int totalNumberOfRecords, String sortField, UiSortDirection sortDirection, boolean clearTableCache);
 	command removeData(List<Integer> ids);
@@ -88,6 +90,8 @@ class UiTable extends UiComponent {
     command addColumns(List<UiTableColumn> column, int index);
     command removeColumns(List<String> columnName);
     command setColumnVisibility(String columnPropertyName, boolean visible);
+	command setContextMenuContent(int requestId, UiComponent* component);
+	command closeContextMenu(int requestId);
 
 	event cellEditingStarted(int recordId, String columnPropertyName, Object currentValue);
 	event cellEditingStopped(int recordId, String columnPropertyName);
@@ -97,6 +101,7 @@ class UiTable extends UiComponent {
 	event sortingChanged(String sortField, UiSortDirection sortDirection); // sent when the user clicks on a sortable header column
 	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, UiTableDataRequest dataRequest);
 	event requestNestedData(int recordId);
+	event contextMenuRequested(int requestId, int recordId);
 
 	event fieldOrderChange(String columnPropertyName, int position); //zero based
 	event columnSizeChange(String columnPropertyName, int size);

@@ -31,6 +31,7 @@ import org.teamapps.data.value.Sorting;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFieldMessage;
+import org.teamapps.dto.UiInfiniteItemView;
 import org.teamapps.dto.UiTable;
 import org.teamapps.dto.UiTableClientRecord;
 import org.teamapps.dto.UiTableColumn;
@@ -39,6 +40,7 @@ import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
@@ -52,6 +54,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Table<RECORD> extends AbstractComponent implements Container {
@@ -130,6 +133,9 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	private List<RECORD> topNonModelRecords = new ArrayList<>();
 	private List<RECORD> bottomNonModelRecords = new ArrayList<>();
+
+	private Function<RECORD, Component> contextMenuProvider = null;
+	private int lastSeenContextMenuRequestId;
 
 	public Table() {
 		this(new ArrayList<>());
@@ -248,6 +254,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		uiTable.setFooterRowHeight(footerRowHeight);
 		uiTable.setFooterRowFields(this.footerRowFields.entrySet().stream()
 				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiComponentReference())));
+		uiTable.setContextMenuEnabled(contextMenuProvider != null);
 		return uiTable;
 	}
 
@@ -347,6 +354,22 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				UiTable.ColumnSizeChangeEvent columnSizeChangeEvent = (UiTable.ColumnSizeChangeEvent) event;
 				TableColumn<RECORD> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
 				onColumnSizeChange.fire(new ColumnSizeChangeEventData(column, columnSizeChangeEvent.getSize()));
+				break;
+			}
+			case UI_TABLE_CONTEXT_MENU_REQUESTED: {
+				UiTable.ContextMenuRequestedEvent e = (UiTable.ContextMenuRequestedEvent) event;
+				lastSeenContextMenuRequestId = e.getRequestId();
+				RECORD record = clientRecordCache.getRecordByClientId(e.getRecordId());
+				if (record != null && contextMenuProvider != null) {
+					Component contextMenuContent = contextMenuProvider.apply(record);
+					if (contextMenuContent != null) {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiComponentReference()));
+					} else {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
+					}
+				} else {
+					closeContextMenu();
+				}
 				break;
 			}
 		}
@@ -1087,6 +1110,18 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	public List<RECORD> getSelectedRecords() {
 		return selectedRecords != null ? selectedRecords : selectedRecord != null ? Collections.singletonList(selectedRecord) : Collections.emptyList(); // TODO completely rewrite this!!! (multiple
 		// selected records should be standard!)
+	}
+
+	public Function<RECORD, Component> getContextMenuProvider() {
+		return contextMenuProvider;
+	}
+
+	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
+		this.contextMenuProvider = contextMenuProvider;
+	}
+
+	public void closeContextMenu() {
+		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
 }
