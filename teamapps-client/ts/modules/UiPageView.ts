@@ -149,6 +149,7 @@ export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.rows.forEach(row => {
 			row.blocks.forEach(block => block.block.destroy());
 		});

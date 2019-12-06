@@ -31,7 +31,4 @@ export class ElementUiComponentAdapter extends AbstractUiComponent<UiComponentCo
 		return this.element;
 	}
 
-	destroy(): void {
-	}
-
 }

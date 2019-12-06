@@ -148,7 +148,8 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 				|| v1.alpha !== v2.alpha);
 	}
 
-	doDestroy(): void {
+	destroy(): void {
+		super.destroy();
 		this.pickr.destroyAndRemove();
 	}
 

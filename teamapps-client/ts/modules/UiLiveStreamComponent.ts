@@ -309,9 +309,6 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 		});
 	}
 
-	public destroy(): void {
-		// nothing to do as far as I know...
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiLiveStreamComponent", UiLiveStreamComponent);

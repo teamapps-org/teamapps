@@ -132,9 +132,6 @@ export class UiYoutubePlayer extends AbstractUiComponent<UiYoutubePlayerConfig> 
 		return this.$wrapper;
 	}
 
-	public destroy(): void {
-		// nothing to do...
-	}
 }
 
 // global function called by the youtube api script...

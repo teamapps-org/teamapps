@@ -326,8 +326,6 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 		this.onEmptyStateChanged.fireIfChanged(this.empty);
 	}
 
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiSplitPane", UiSplitPane);

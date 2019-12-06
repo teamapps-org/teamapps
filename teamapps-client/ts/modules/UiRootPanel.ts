@@ -116,11 +116,12 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	}
 
 	public static createComponent(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
-		context.createAndRegisterComponent(config);
+		let o = context.createClientObject(config);
+		context.registerClientObject(o, config.id, config._type);
 	}
 
 	public static destroyComponent(componentId: string, context: TeamAppsUiContextInternalApi) {
-		context.destroyComponent(componentId);
+		context.destroyClientObject(componentId);
 	}
 
 	public static refreshComponent(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
@@ -220,6 +221,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	}
 
 	public destroy(): void {
+		super.destroy();
 		delete UiRootPanel.ALL_ROOT_PANELS_BY_ID[this.getId()];
 		if (Object.keys(UiRootPanel.ALL_ROOT_PANELS_BY_ID).length === 0) {
 			Object.keys(UiRootPanel.WINDOWS_BY_ID).forEach(windowId => UiRootPanel.WINDOWS_BY_ID[windowId].close(0));

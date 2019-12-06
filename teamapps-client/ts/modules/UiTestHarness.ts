@@ -85,7 +85,7 @@ class TestTeamAppsUiContext implements TeamAppsUiContext {
 	readonly config: UiConfigurationConfig = {};
 	readonly templateRegistry: TemplateRegistry = new TemplateRegistry(this);
 
-	getComponentById(id: string): UiComponent<UiComponentConfig> {
+	getClientObjectById(id: string): UiComponent<UiComponentConfig> {
 		return null;
 	}
 }

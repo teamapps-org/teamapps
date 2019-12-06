@@ -145,7 +145,8 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		selectElementContents(this.getFocusableElement());
 	}
 
-	doDestroy(): void {
+	destroy(): void {
+		super.destroy();
 		this.trivialUnitBox.destroy();
 		this.$originalInput.remove();
 	}

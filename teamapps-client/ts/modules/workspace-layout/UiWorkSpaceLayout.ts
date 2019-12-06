@@ -425,6 +425,7 @@ export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConf
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.localViewContainer.destroy();
 	}
 

@@ -181,8 +181,6 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 		return this.$element;
 	}
 
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiImageCropper", UiImageCropper);

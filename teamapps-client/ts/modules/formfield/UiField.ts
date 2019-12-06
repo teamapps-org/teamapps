@@ -176,12 +176,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			this._messageTooltip.$popperElement.remove();
 			this.onResized.removeListener(this.updatePopperPosition)
 		}
-		this.doDestroy();
 	}
-
-	protected doDestroy() {
-		// default implementation
-	};
 
 	abstract isValidData(v: V): boolean;
 

@@ -90,6 +90,7 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 
 
 	destroy() {
+		super.destroy();
 		this.qrScanner.destroy();
 	}
 }

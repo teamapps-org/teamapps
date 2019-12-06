@@ -25,7 +25,7 @@ import {UiComponent} from "../UiComponent";
 
 const logger = log.getLogger("RefreshableComponentProxyHandle");
 
-export class RefreshableComponentProxyHandle<T extends UiComponent> {
+export class RefreshableComponentProxyHandle<T extends UiComponent = UiComponent> {
 	public proxy: T;
 	private _component: T;
 
@@ -78,4 +78,8 @@ export class RefreshableComponentProxyHandle<T extends UiComponent> {
 		let parentElement = childElement.parentElement;
 		return parentElement != null ? Array.from(parentElement.children).indexOf(childElement) : null;
 	}
+}
+
+export function isRefreshableComponentProxyHandle(o: any): o is RefreshableComponentProxyHandle<any> {
+	return o != null && o.proxy && o.component;
 }

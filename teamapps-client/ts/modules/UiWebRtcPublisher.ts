@@ -625,6 +625,7 @@ export class UiWebRtcPublisher extends AbstractUiComponent<UiWebRtcPublisherConf
 	}
 
 	destroy(): void {
+		super.destroy();
 		this.unPublish();
 	}
 

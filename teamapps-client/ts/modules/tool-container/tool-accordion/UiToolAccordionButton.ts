@@ -51,7 +51,7 @@ export class UiToolAccordionButton {
 				if (isFullScreen()) {
 					exitFullScreen();
 				} else {
-					enterFullScreen(context.getComponentById(this.config.togglesFullScreenOnComponent));
+					enterFullScreen(context.getClientObjectById(this.config.togglesFullScreenOnComponent) as UiComponent);
 				}
 			}
 			if (this.config.openNewTabWithUrl) {

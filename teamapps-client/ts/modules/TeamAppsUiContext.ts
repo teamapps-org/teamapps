@@ -24,6 +24,8 @@ import {TemplateRegistry} from "./TemplateRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiCommand} from "../generated/UiCommand";
 import {UiComponent} from "./UiComponent";
+import {UiClientObject} from "./UiClientObject";
+import {UiClientObjectConfig} from "../generated/UiClientObjectConfig";
 
 export const typescriptDeclarationFixConstant = 1;
 
@@ -34,20 +36,20 @@ export interface TeamAppsUiContext {
 	readonly config: UiConfigurationConfig;
 	readonly templateRegistry: TemplateRegistry;
 
-	getComponentById(id: string): UiComponent<UiComponentConfig>;
+	getClientObjectById(id: string): UiClientObject;
 }
 
 // TeamAppsUiContext implementations should implement this too. See usages.
 export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 	readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand>;
 
-	registerComponent(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void;
+	registerClientObject(component: UiClientObject, id: string, teamappsType: string): void;
 
-	createAndRegisterComponent(config: UiComponentConfig): UiComponent<UiComponentConfig>;
-
-	destroyComponent(componentId: string): void;
+	createClientObject(config: UiClientObjectConfig): UiClientObject;
 
 	refreshComponent(config: UiComponentConfig): void;
+
+	destroyClientObject(componentId: string): void;
 
 	fireEvent(eventObject: UiEvent): void;
 }

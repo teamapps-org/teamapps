@@ -529,10 +529,6 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		this.leaflet.invalidateSize();
 	}
 
-	public destroy(): void {
-		// nothing to do
-	}
-
 	startDrawingShape(shapeType: UiMapShapeType, shapeProperties: UiShapePropertiesConfig): void {
 		let drawFeature: L.Draw.Feature;
 		switch (shapeType) {

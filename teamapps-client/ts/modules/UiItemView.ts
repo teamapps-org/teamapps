@@ -149,6 +149,7 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 	}
 
 	public destroy(): void {
+		super.destroy();
 		Object.keys(this.groupsByGroupId).forEach(groupId => {
 			const group = this.groupsByGroupId[groupId];
 			group.destroy()

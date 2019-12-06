@@ -509,6 +509,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.$panel.remove(); // may be currently attached to document.body (maximized)
 	}
 

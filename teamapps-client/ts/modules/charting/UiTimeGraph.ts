@@ -496,10 +496,6 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.redraw();
 	}
 
-	destroy(): void {
-		// nothing to do!
-	}
-
 	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}

@@ -244,10 +244,6 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		this.logger.debug("charge:" + charge);
 	}
 
-	public destroy(): void {
-		// nothing to do
-	}
-
 	private updateLinks(animationDuration: number = 0) {
 		this.linksContainer.selectAll("line")
 			.data(this.links)

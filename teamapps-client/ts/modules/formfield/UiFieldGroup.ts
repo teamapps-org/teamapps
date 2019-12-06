@@ -48,6 +48,7 @@ export class UiFieldGroup extends AbstractUiComponent<UiFieldGroupConfig> implem
 	}
 
 	destroy() {
+		super.destroy();
 		this.fields.forEach(f => f.destroy());
 	}
 }

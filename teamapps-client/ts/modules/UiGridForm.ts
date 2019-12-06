@@ -150,6 +150,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 	}
 
 	public destroy(): void {
+		super.destroy();
 		window.clearInterval(this.fillRemainingHeightCheckerInterval);
 	}
 

@@ -208,9 +208,6 @@ export class UiImageDisplay extends AbstractUiComponent<UiImageDisplayConfig> im
 		this.updateImageSizes();
 	}
 
-	public destroy(): void {
-		// nothing to do
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiImageDisplay", UiImageDisplay);

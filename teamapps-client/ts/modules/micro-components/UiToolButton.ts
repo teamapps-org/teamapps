@@ -122,9 +122,6 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 		// TODO
 	}
 
-	destroy(): void {
-	}
-
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiToolButton", UiToolButton);

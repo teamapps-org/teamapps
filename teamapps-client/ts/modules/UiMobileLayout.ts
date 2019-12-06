@@ -113,8 +113,6 @@ export class UiMobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> im
 		return this.$mainDiv;
 	}
 
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMobileLayout", UiMobileLayout);
