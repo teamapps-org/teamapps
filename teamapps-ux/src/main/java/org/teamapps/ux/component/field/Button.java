@@ -77,7 +77,7 @@ public class Button<RECORD> extends AbstractField<Boolean> {
 		Object uiRecord = createUiRecord();
 		UiButton button = new UiButton(getTemplate().createUiTemplate(), uiRecord);
 		mapAbstractFieldAttributesToUiField(button);
-		button.setDropDownComponent(Component.createUiComponentReference(dropDownComponent));
+		button.setDropDownComponent(Component.createUiClientObjectReference(dropDownComponent));
 		button.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		button.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		button.setOpenDropDownIfNotSet(this.openDropDownIfNotSet);
@@ -180,7 +180,7 @@ public class Button<RECORD> extends AbstractField<Boolean> {
 
 	public Button<RECORD> setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		queueCommandIfRendered(() -> new UiButton.SetDropDownComponentCommand(getId(), Component.createUiComponentReference(dropDownComponent)));
+		queueCommandIfRendered(() -> new UiButton.SetDropDownComponentCommand(getId(), Component.createUiClientObjectReference(dropDownComponent)));
 		return this;
 	}
 

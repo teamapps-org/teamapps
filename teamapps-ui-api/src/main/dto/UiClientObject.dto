@@ -17,11 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-class UiComponent extends UiClientObject {
-	String debuggingId;
-	boolean visible = true;
-	Dictionary<Dictionary<String>> stylesBySelector;
-
-	command setVisible(boolean visible);
-	command setStyle(String selector, Dictionary<String> styles);
+class UiClientObject {
+	@Referenceable String id;
 }

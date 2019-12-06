@@ -49,7 +49,7 @@ public class Label extends AbstractField<String> {
 		UiLabel uiLabel = new UiLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));
-		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createUiComponentReference() : null);
+		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createUiReference() : null);
 		return uiLabel;
 	}
 
@@ -95,7 +95,7 @@ public class Label extends AbstractField<String> {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
 		this.targetComponent = targetComponent;
-		queueCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(getId(), Component.createUiComponentReference(targetComponent)));
+		queueCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(getId(), Component.createUiClientObjectReference(targetComponent)));
 		return this;
 	}
 }

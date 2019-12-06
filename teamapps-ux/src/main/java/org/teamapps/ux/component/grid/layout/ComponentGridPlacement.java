@@ -39,7 +39,7 @@ public class ComponentGridPlacement extends AbstractGridPlacement {
 
 	@Override
 	public UiComponentGridPlacement createUiGridPlacement() {
-		UiComponentGridPlacement uiPlacement = new UiComponentGridPlacement(component.createUiComponentReference());
+		UiComponentGridPlacement uiPlacement = new UiComponentGridPlacement(component.createUiReference());
 		mapAbstractGridPlacementUiProperties(uiPlacement);
 		return uiPlacement;
 	}

@@ -31,7 +31,7 @@ import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.UiCommandExecutor;
 import org.teamapps.uisession.UiSessionListener;
-import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.resource.ResourceProviderServlet;
 import org.teamapps.ux.resource.SystemIconResourceProvider;
@@ -175,9 +175,9 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 			CompletableFuture<Void> future = sessionContext.runWithContext(() -> {
 				sessionContext.setLastClientEventTimestamp(System.currentTimeMillis());
 				String uiComponentId = event.getComponentId();
-				Component component = sessionContext.getComponent(uiComponentId);
-				if (component != null) {
-					component.handleUiEvent(event);
+				ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
+				if (clientObject != null) {
+					clientObject.handleUiEvent(event);
 				}
 			}).exceptionally(e -> {
 				commandExecutor.closeSession(sessionId, UiSessionClosingReason.SERVER_SIDE_ERROR);

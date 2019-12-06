@@ -249,11 +249,11 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		uiTable.setShowHeaderRow(showHeaderRow);
 		uiTable.setHeaderRowHeight(headerRowHeight);
 		uiTable.setHeaderRowFields(this.headerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiComponentReference())));
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference())));
 		uiTable.setShowFooterRow(showFooterRow);
 		uiTable.setFooterRowHeight(footerRowHeight);
 		uiTable.setFooterRowFields(this.footerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiComponentReference())));
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference())));
 		uiTable.setContextMenuEnabled(contextMenuProvider != null);
 		return uiTable;
 	}
@@ -363,7 +363,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				if (record != null && contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiComponentReference()));
+						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
 						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
 					}

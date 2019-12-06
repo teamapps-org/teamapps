@@ -130,7 +130,7 @@ public class ToolbarButton {
 
 		UiToolbarButton ui = new UiToolbarButton(clientId, template.createUiTemplate(), values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {
-			ui.setDropDownComponent(dropDownComponentSupplier.get().createUiComponentReference());
+			ui.setDropDownComponent(dropDownComponentSupplier.get().createUiReference());
 		}
 		ui.setHasDropDown(this.dropDownComponentSupplier != null);
 		ui.setDropDownPanelWidth(droDownPanelWidth > 0 ? droDownPanelWidth : 450);

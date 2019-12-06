@@ -175,7 +175,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	private replaceComponentReferencesWithInstances(o: any) {
 		let replaceOrRecur = (key: number|string) => {
 			const value = o[key];
-			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("UiComponentReference") !== -1) {
+			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("UiClientObjectReference") !== -1) {
 				const componentById = this.getComponentById(value.id);
 				if (componentById != null) {
 					o[key] = componentById;

@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.teamapps.dto.INIT;
 import org.teamapps.dto.INIT_NOK;
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiMultiLineTextField;
 import org.teamapps.dto.UiObject;
@@ -48,7 +48,7 @@ public class SerializationTest {
 
 	@Test
 	public void serializeCommands() throws Exception {
-		UiWorkSpaceLayout.RefreshViewComponentCommand o = new UiWorkSpaceLayout.RefreshViewComponentCommand("componentId", "viewName", new UiComponentReference("asdf"));
+		UiWorkSpaceLayout.RefreshViewComponentCommand o = new UiWorkSpaceLayout.RefreshViewComponentCommand("componentId", "viewName", new UiClientObjectReference("asdf"));
 		System.out.println(teamAppsObjectMapper.writeValueAsString(o));
 	}
 

@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.toolbar;
 
-import com.google.common.collect.Streams;
 import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
@@ -37,7 +36,6 @@ import org.teamapps.ux.component.template.Template;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public abstract class AbstractToolContainer extends AbstractComponent {
 	public final Event<ToolbarButtonClickEventData> onButtonClick = new Event<>();
@@ -63,7 +61,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 						Component dropdownComponent = button.getDropDownComponent();
 						if (dropdownComponent != null) {
 							getSessionContext().queueCommand(new UiToolbar.SetDropDownComponentCommand(getId(), clickEvent.getGroupId(),
-									((AbstractUiToolContainer.ToolbarButtonClickEvent) event).getButtonId(), dropdownComponent.createUiComponentReference()));
+									((AbstractUiToolContainer.ToolbarButtonClickEvent) event).getButtonId(), dropdownComponent.createUiReference()));
 						}
 					}
 					button.onClick.fire(clickEvent);

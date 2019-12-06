@@ -115,7 +115,7 @@ public class Panel extends AbstractComponent implements Container {
 
 	private void updateToolButtons() {
 		queueCommandIfRendered(() -> new UiPanel.SetToolButtonsCommand(getId(), this.toolButtons.stream()
-				.map(toolButton -> toolButton.createUiComponentReference())
+				.map(toolButton -> toolButton.createUiReference())
 				.collect(Collectors.toList())));
 	}
 
@@ -154,13 +154,13 @@ public class Panel extends AbstractComponent implements Container {
 		uiPanel.setRightHeaderField(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth, rightHeaderFieldMaxWidth));
 		uiPanel.setHeaderComponentMinimizationPolicy(headerComponentMinimizationPolicy.toUiHeaderComponentMinimizationPolicy());
 		uiPanel.setHideTitleBar(hideTitleBar);
-		uiPanel.setToolbar(Component.createUiComponentReference(toolbar));
-		uiPanel.setContent(content != null ? content.createUiComponentReference() : null);
+		uiPanel.setToolbar(Component.createUiClientObjectReference(toolbar));
+		uiPanel.setContent(content != null ? content.createUiReference() : null);
 		uiPanel.setPadding(padding);
 		uiPanel.setWindowButtons(windowButtons.stream()
 				.map(b -> b.toUiWindowButtonType()).collect(Collectors.toList()));
 		uiPanel.setToolButtons(toolButtons.stream()
-				.map(toolButton -> toolButton.createUiComponentReference())
+				.map(toolButton -> toolButton.createUiReference())
 				.collect(Collectors.toList()));
 		uiPanel.setAlwaysShowHeaderFieldIcons(alwaysShowHeaderFieldIcons);
 		uiPanel.setStretchContent(stretchContent);
@@ -170,7 +170,7 @@ public class Panel extends AbstractComponent implements Container {
 		if (field == null) {
 			return null;
 		}
-		UiPanelHeaderField uiPanelHeaderField = new UiPanelHeaderField(field.createUiComponentReference());
+		UiPanelHeaderField uiPanelHeaderField = new UiPanelHeaderField(field.createUiReference());
 		uiPanelHeaderField.setIcon(getSessionContext().resolveIcon(icon));
 		uiPanelHeaderField.setMinWidth(minWidth);
 		uiPanelHeaderField.setMaxWidth(maxWidth);
@@ -215,7 +215,7 @@ public class Panel extends AbstractComponent implements Container {
 		if (content != null) {
 			content.setParent(this);
 		}
-		queueCommandIfRendered(() -> new UiPanel.SetContentCommand(getId(), content != null ? content.createUiComponentReference() : null));
+		queueCommandIfRendered(() -> new UiPanel.SetContentCommand(getId(), content != null ? content.createUiReference() : null));
 	}
 
 	@Override

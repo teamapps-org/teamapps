@@ -112,7 +112,7 @@ public class TabPanel extends AbstractComponent implements Container {
 
 	private void updateToolButtons() {
 		queueCommandIfRendered(() -> new UiTabPanel.SetToolButtonsCommand(getId(), this.toolButtons.stream()
-				.map(toolButton -> toolButton.createUiComponentReference())
+				.map(toolButton -> toolButton.createUiReference())
 				.collect(Collectors.toList())));
 	}
 
@@ -150,7 +150,7 @@ public class TabPanel extends AbstractComponent implements Container {
 		uiTabPanel.setHideTabBarIfSingleTab(hideTabBarIfSingleTab);
 		uiTabPanel.setTabStyle(tabStyle.toUiTabPanelTabStyle());
 		uiTabPanel.setToolButtons(toolButtons.stream()
-				.map(toolButton -> (toolButton.createUiComponentReference()))
+				.map(toolButton -> (toolButton.createUiReference()))
 				.collect(Collectors.toList()));
 		return uiTabPanel;
 	}
@@ -185,7 +185,7 @@ public class TabPanel extends AbstractComponent implements Container {
 			case UI_TAB_PANEL_TAB_NEEDS_REFRESH:
 				UiTabPanel.TabNeedsRefreshEvent tabNeedsRefreshEvent = (UiTabPanel.TabNeedsRefreshEvent) event;
 				Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
-				queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(getId(), tab.getClientId(), Component.createUiComponentReference(tab.getContent())));
+				queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(getId(), tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
 				break;
 			case UI_TAB_PANEL_TAB_CLOSED:
 				UiTabPanel.TabClosedEvent tabClosedEvent = (UiTabPanel.TabClosedEvent) event;
@@ -205,11 +205,11 @@ public class TabPanel extends AbstractComponent implements Container {
 	}
 
 	/*package-private*/ void handleTabToolbarChanged(Tab tab) {
-		queueCommandIfRendered(() -> new UiTabPanel.SetTabToolbarCommand(getId(), tab.getClientId(), Component.createUiComponentReference(tab.getToolbar())));
+		queueCommandIfRendered(() -> new UiTabPanel.SetTabToolbarCommand(getId(), tab.getClientId(), Component.createUiClientObjectReference(tab.getToolbar())));
 	}
 
 	/*package-private*/ void handleTabContentChanged(Tab tab) {
-		queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(getId(), tab.getClientId(), Component.createUiComponentReference(tab.getContent())));
+		queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(getId(), tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
 	}
 
 	/*package-private*/ void handleTabConfigurationChanged(Tab tab) {

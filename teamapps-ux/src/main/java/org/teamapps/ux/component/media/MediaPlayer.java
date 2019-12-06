@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.media;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
@@ -118,8 +118,8 @@ public class MediaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponentReference createUiComponentReference() {
-		return splitPane.createUiComponentReference();
+	public UiClientObjectReference createUiReference() {
+		return splitPane.createUiReference();
 	}
 
 	@Override

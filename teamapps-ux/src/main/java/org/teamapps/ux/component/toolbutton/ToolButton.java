@@ -71,7 +71,7 @@ public class ToolButton extends AbstractComponent {
 		UiToolButton uiToolButton = new UiToolButton(icon, popoverText);
 		mapAbstractUiComponentProperties(uiToolButton);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
-		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent.createUiComponentReference() : null);
+		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent.createUiReference() : null);
 		uiToolButton.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight);
@@ -124,7 +124,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		queueCommandIfRendered(() -> new UiToolButton.SetDropDownComponentCommand(getId(), dropDownComponent != null ? dropDownComponent.createUiComponentReference() : null));
+		queueCommandIfRendered(() -> new UiToolButton.SetDropDownComponentCommand(getId(), dropDownComponent != null ? dropDownComponent.createUiReference() : null));
 	}
 
 	public Integer getMinDropDownWidth() {

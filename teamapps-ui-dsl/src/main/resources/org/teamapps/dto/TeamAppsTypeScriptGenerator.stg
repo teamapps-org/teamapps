@@ -193,7 +193,7 @@ commandExecutor(nonStaticCommands, staticCommands, name) ::= <<
 
 <if (staticCommands)>
 import {UiComponent} from "../modules/UiComponent";
-import {UiComponentReference} from "./UiComponentConfig";
+import {UiClientObjectReference} from "./UiClientObjectConfig";
 import {TeamAppsUiComponentRegistry} from "../modules/TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "../modules/TeamAppsUiContext";
 <endif>
@@ -207,10 +207,10 @@ export class <name> {
 		<staticCommands:staticCommandExecutorEntry(); separator=",\n">
 	};
 
-	constructor(private componentRegistry: (reference: UiComponentReference) => UiComponent) {
+	constructor(private componentRegistry: (reference: UiClientObjectReference) => UiComponent) {
 	}
 
-	private getComponentForReference(reference: UiComponentReference) {
+	private getComponentForReference(reference: UiClientObjectReference) {
 		this.componentRegistry(reference);
 	}
 

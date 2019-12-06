@@ -130,7 +130,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Contain
 					uiRowIndex++;
 					currentColumnIndex = 0;
 				}
-				uiPlacements.add(new UiComponentGridPlacement(placement.getComponent().createUiComponentReference())
+				uiPlacements.add(new UiComponentGridPlacement(placement.getComponent().createUiReference())
 						.setRow(uiRowIndex)
 						.setColumn(currentColumnIndex + sizing.getOffset())
 						.setColSpan(colSpan)

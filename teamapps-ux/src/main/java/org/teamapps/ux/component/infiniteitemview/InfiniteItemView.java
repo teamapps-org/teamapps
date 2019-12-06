@@ -21,14 +21,11 @@ package org.teamapps.ux.component.infiniteitemview;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.value.SortDirection;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiInfiniteItemView;
 import org.teamapps.dto.UiInfiniteItemViewDataRequest;
-import org.teamapps.dto.UiTable;
-import org.teamapps.dto.UiTableDataRequest;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -36,7 +33,6 @@ import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.itemview.ItemViewItemJustification;
 import org.teamapps.ux.component.itemview.ItemViewVerticalItemAlignment;
-import org.teamapps.ux.component.table.TableDataRequestEventData;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 
@@ -144,7 +140,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 				if (record != null && contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiComponentReference()));
+						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
 						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
 					}

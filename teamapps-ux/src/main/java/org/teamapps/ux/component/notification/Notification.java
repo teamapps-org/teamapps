@@ -74,7 +74,7 @@ public class Notification extends AbstractComponent {
 		ui.setDisplayTimeInMillis(displayTimeInMillis);
 		ui.setDismissible(dismissible);
 		ui.setShowProgressBar(showProgressBar);
-		ui.setContent(content != null ? content.createUiComponentReference() : null);
+		ui.setContent(content != null ? content.createUiReference() : null);
 		return ui;
 	}
 

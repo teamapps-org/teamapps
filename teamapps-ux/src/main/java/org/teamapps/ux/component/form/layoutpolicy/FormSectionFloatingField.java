@@ -71,7 +71,7 @@ public class FormSectionFloatingField {
 	}
 
 	public UiFormSectionFloatingField createUiFormSectionFloatingField() {
-		UiFormSectionFloatingField floatingField = new UiFormSectionFloatingField(field.createUiComponentReference());
+		UiFormSectionFloatingField floatingField = new UiFormSectionFloatingField(field.createUiReference());
 		floatingField.setMinWidth(minWidth);
 		floatingField.setMaxWidth(maxWidth);
 		floatingField.setMinHeight(minHeight);

@@ -35,7 +35,7 @@ public class RootPanel extends AbstractComponent implements Container {
 	public UiComponent createUiComponent() {
 		UiRootPanel uiRootPanel = new UiRootPanel();
 		mapAbstractUiComponentProperties(uiRootPanel);
-		uiRootPanel.setContent(content != null ? content.createUiComponentReference(): null);
+		uiRootPanel.setContent(content != null ? content.createUiReference(): null);
 		return uiRootPanel;
 	}
 
@@ -57,7 +57,7 @@ public class RootPanel extends AbstractComponent implements Container {
 			preloadContent(component);
 		}
 		content = component;
-		queueCommandIfRendered(() -> new UiRootPanel.SetContentCommand(getId(), component != null ? component.createUiComponentReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
+		queueCommandIfRendered(() -> new UiRootPanel.SetContentCommand(getId(), component != null ? component.createUiReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
 	}
 
 	public Component getContent() {
