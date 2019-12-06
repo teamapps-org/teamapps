@@ -117,6 +117,7 @@ export class UiMpegDashPlayer extends AbstractUiComponent<UiMpegDashPlayerConfig
 	}
 
 	destroy(): void {
+		super.destroy();
 		this.player && this.player.destroy();
 	}
 }

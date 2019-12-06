@@ -370,10 +370,6 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	}
 
 
-	destroy(): void {
-		// nothing to do...
-	}
-
 	doGetMainElement(): HTMLElement {
 		return this.$mainDomElement;
 	}

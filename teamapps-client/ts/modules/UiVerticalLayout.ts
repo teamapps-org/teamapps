@@ -47,9 +47,6 @@ export class UiVerticalLayout extends AbstractUiComponent<UiVerticalLayoutConfig
 		return this.$verticalLayout;
 	}
 
-	public destroy(): void {
-	}
-
 	public addComponent(childComponent: UiComponent) {
 		const $childWrapper = parseHtml('<div class="vertical-layout-child-wrapper" style="' + (this._config.fixedChildHeight ? 'height:' + this._config.fixedChildHeight + 'px' : '') + '">');
 		this.$verticalLayout.appendChild($childWrapper);

@@ -19,17 +19,10 @@
  */
 import {UiComponentCommandHandler, UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiClientObject} from "./UiClientObject";
+import {UiClientObjectConfig} from "../generated/UiClientObjectConfig";
 
-export interface UiComponent<C extends UiComponentConfig = UiComponentConfig> extends UiClientObject<C>, UiComponentCommandHandler {
+export interface UiClientObject<C extends UiClientObjectConfig = UiClientObjectConfig> {
 
-	/**
-	 * @return The main DOM element of this component.
-	 */
-	getMainElement(): HTMLElement;
-
-	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
-
-	isVisible(): boolean;
+	destroy(): void;
 
 }

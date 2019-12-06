@@ -174,9 +174,6 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 		return false;
 	}
 
-	doDestroy(): void {
-	}
-
 	isValidData(v: boolean): boolean {
 		return true;
 	}

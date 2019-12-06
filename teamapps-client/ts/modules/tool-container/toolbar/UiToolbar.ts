@@ -305,6 +305,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public destroy(): void {
+		super.destroy();
 		// TODO destroy all dropdowns
 	}
 

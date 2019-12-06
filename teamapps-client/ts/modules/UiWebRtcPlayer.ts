@@ -260,9 +260,6 @@ export class UiWebRtcPlayer extends AbstractUiComponent<UiWebRtcPlayerConfig> im
 		});
 	}
 
-	destroy(): void {
-	}
-
 	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}

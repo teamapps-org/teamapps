@@ -89,7 +89,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 	 *   - other resources that are not released just by removing the component's main DOM element
 	 */
 	public destroy() {
-		// empty default implementation
+		this.getMainElement().remove();
 	}
 
 	private firstTimeGetMainElementCalled = true;

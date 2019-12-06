@@ -138,10 +138,6 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 		this.$check.focus();
 	}
 
-	doDestroy(): void {
-		this.$main.remove();
-	}
-
 	getTransientValue(): boolean {
 		return this.getCommittedValue();
 	}

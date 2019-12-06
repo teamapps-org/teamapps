@@ -150,6 +150,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.destroyed = true;
 		try {
 			this.mediaPlayer.pause();

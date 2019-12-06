@@ -67,6 +67,7 @@ export class UiDummyComponent extends AbstractUiComponent<UiDummyComponentConfig
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.destroyed = true;
 		this.updateContent();
 	}

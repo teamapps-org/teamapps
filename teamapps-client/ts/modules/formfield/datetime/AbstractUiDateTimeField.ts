@@ -90,7 +90,8 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 		}
 	}
 
-	doDestroy(): void {
+	destroy(): void {
+		super.destroy();
 		this.trivialDateTimeField.destroy();
 		this.$originalInput.remove();
 	}

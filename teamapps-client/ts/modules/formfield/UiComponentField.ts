@@ -84,10 +84,6 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 		// do nothing
 	}
 
-	doDestroy(): void {
-		this.$componentWrapper.remove();
-	}
-
 	getTransientValue(): void {
 	}
 

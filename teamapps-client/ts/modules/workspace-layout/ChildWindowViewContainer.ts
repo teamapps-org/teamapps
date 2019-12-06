@@ -118,7 +118,7 @@ export class ChildWindowViewContainer implements ViewContainer {
 		} else if (e.data._type === 'REGISTER_COMPONENT') {
 			const componentId = e.data.componentId;
 			const teamappsType = e.data.teamappsType;
-			(this.context as TeamAppsUiContextInternalApi).registerComponent(new Proxy({}, {
+			(this.context as TeamAppsUiContextInternalApi).registerClientObject(new Proxy({}, {
 				get: (target, property, receiver) => {
 					if (property === 'getId') {
 						return () => componentId;

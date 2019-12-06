@@ -152,7 +152,4 @@ export class UiHttpLiveStreamPlayer extends AbstractUiComponent<UiHttpLiveStream
 		return this.$main;
 	}
 
-	destroy(): void {
-		// nothing to do...
-	}
 }

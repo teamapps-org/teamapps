@@ -134,9 +134,6 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
-	public destroy(): void {
-		// nothing to do
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiTree", UiTree);

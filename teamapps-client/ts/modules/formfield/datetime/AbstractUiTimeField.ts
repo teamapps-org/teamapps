@@ -173,7 +173,8 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		}
 	}
 
-	doDestroy(): void {
+	destroy(): void {
+		super.destroy();
 		this.trivialComboBox.destroy();
 		this.$originalInput.remove();
 	}

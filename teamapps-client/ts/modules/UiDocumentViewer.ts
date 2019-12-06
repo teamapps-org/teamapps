@@ -176,10 +176,6 @@ export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig
 		return this.$componentWrapper;
 	}
 
-	public destroy(): void {
-		// nothing to do
-	}
-
 	setPageBorder(pageBorder: UiBorderConfig): void {
 		this.pageBorder = pageBorder;
 		this.updateStyles();

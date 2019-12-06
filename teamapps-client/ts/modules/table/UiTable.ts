@@ -986,6 +986,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.fieldMessagePopper.destroy();
 	}
 

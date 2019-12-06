@@ -78,9 +78,6 @@ export class UiApplicationLayout extends AbstractUiComponent<UiApplicationLayout
 		return this.$mainDiv;
 	}
 
-
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiApplicationLayout", UiApplicationLayout);

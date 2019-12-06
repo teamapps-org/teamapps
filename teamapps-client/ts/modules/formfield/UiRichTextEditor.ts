@@ -484,7 +484,8 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		this.editor && this.editor.focus(false);
 	}
 
-	doDestroy(): void {
+	destroy(): void {
+		super.destroy();
 		this.destroying = true;
 		if (this.editor != null) {
             this.editor.destroy();

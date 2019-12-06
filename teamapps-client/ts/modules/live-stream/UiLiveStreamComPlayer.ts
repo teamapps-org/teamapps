@@ -58,8 +58,4 @@ export class UiLiveStreamComPlayer extends AbstractUiComponent<UiLiveStreamComPl
 		return this.$wrapper;
 	}
 
-
-	public destroy(): void {
-		// nothing to do
-	}
 }

@@ -239,7 +239,8 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		}
 	}
 
-	doDestroy(): void {
+	destroy(): void {
+		super.destroy();
 		this.trivialComboBox.destroy();
 		this.$originalInput.remove();
 	}

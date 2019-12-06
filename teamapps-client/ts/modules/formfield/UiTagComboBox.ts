@@ -230,7 +230,8 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		}
 	}
 
-	doDestroy(): void {
+	destroy(): void {
+		super.destroy();
 		this.trivialTagComboBox.destroy();
 		this.$originalInput.remove();
 	}

@@ -372,6 +372,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.calendar && this.calendar.destroy();
 	}
 

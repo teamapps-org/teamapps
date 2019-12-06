@@ -204,9 +204,6 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 		multiProgressDisplay && this.$multiProgressDisplayContainer.appendChild(multiProgressDisplay.getMainElement());
 	}
 
-	public destroy(): void {
-		// do nothing
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiNavigationBar", UiNavigationBar);

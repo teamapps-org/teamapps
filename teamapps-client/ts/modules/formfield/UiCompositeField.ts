@@ -244,10 +244,6 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		return this.subFields;
 	}
 
-	doDestroy(): void {
-		this.$wrapper.remove();
-	}
-
 	public getReadOnlyHtml(value: any, availableWidth: number): string {
 		UiCompositeField.validateNumberOfRowHeights(this._config);
 		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(this._config);

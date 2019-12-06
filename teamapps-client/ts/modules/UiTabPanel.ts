@@ -603,8 +603,6 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		this.$dropDownButton.classList.toggle("hidden", sumOfButtonWidths <= availableWidth);
 	}
 
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiTabPanel", UiTabPanel);

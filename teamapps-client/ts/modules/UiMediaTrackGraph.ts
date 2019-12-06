@@ -382,9 +382,6 @@ export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConf
 		}
 	}
 
-	public destroy(): void {
-		// nothing to do
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMediaTrackGraph", UiMediaTrackGraph);
