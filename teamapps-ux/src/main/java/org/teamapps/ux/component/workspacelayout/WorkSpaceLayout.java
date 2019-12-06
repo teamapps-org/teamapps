@@ -114,11 +114,11 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 		UiWorkSpaceLayout uiLayout = new UiWorkSpaceLayout(uiViews, uiInitialLayout, childWindowPageTitle);
 		mapAbstractUiComponentProperties(uiLayout);
 		if (toolbar != null) {
-			uiLayout.setToolbar(toolbar.createUiComponentReference());
+			uiLayout.setToolbar(toolbar.createUiReference());
 		}
 		uiLayout.setNewWindowBackgroundImage(newWindowBackgroundImage);
 		uiLayout.setNewWindowBlurredBackgroundImage(newWindowBlurredBackgroundImage);
-		uiLayout.setMultiProgressDisplay(Component.createUiComponentReference(multiProgressDisplay));
+		uiLayout.setMultiProgressDisplay(Component.createUiClientObjectReference(multiProgressDisplay));
 		return uiLayout;
 	}
 
@@ -360,7 +360,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

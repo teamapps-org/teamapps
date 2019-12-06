@@ -48,7 +48,7 @@ public class ElegantPanel extends AbstractComponent {
 		UiElegantPanel uiElegantPanel = new UiElegantPanel();
 		mapAbstractUiComponentProperties(uiElegantPanel);
 		uiElegantPanel.setBodyBackgroundColor(bodyBackgroundColor.toHtmlColorString());
-		uiElegantPanel.setContent(content.createUiComponentReference());
+		uiElegantPanel.setContent(content.createUiReference());
 		uiElegantPanel.setMaxContentWidth(maxContentWidth);
 		uiElegantPanel.setPadding(padding.createUiSpacing());
 		uiElegantPanel.setHorizontalContentAlignment(horizontalContentAlignment.toUiHorizontalElementAlignment());

@@ -1,6 +1,6 @@
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiFieldGroup;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.flexcontainer.FlexSizeUnit;
@@ -22,9 +22,9 @@ public class FieldGroup extends AbstractComponent {
 		return uiFieldGroup;
 	}
 
-	private List<UiComponentReference> createUiFieldReferences() {
+	private List<UiClientObjectReference> createUiFieldReferences() {
 		return fields.stream()
-				.map(c -> c.createUiComponentReference())
+				.map(c -> c.createUiReference())
 				.collect(Collectors.toList());
 	}
 

@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFormLayoutPolicy;
 import org.teamapps.dto.UiGridForm;
@@ -79,15 +79,15 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 	protected void addComponent(Component component) {
 		children.add(component);
 		component.setParent(this);
-		queueCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(getId(), component.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(getId(), component.createUiReference()));
 	}
 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
 
 	@Override
 	public UiComponent createUiComponent() {
-		List<UiComponentReference> uiFields = logicalForm.getFields().values().stream()
-				.map(field -> field != null ? field.createUiComponentReference() : null)
+		List<UiClientObjectReference> uiFields = logicalForm.getFields().values().stream()
+				.map(field -> field != null ? field.createUiReference() : null)
 				.collect(Collectors.toList());
 		List<UiFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();
 		UiGridForm uiForm = new UiGridForm(uiFields, uiLayoutPolicies);

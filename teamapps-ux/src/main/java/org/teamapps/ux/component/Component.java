@@ -19,17 +19,12 @@
  */
 package org.teamapps.ux.component;
 
-import org.teamapps.dto.UiComponentReference;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.event.Event;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.component.format.Shadow;
 import org.teamapps.ux.component.format.Spacing;
-import org.teamapps.ux.session.SessionContext;
 
-public interface Component {
-
-	Event<Void> onDestroyed();
+public interface Component extends ClientObject {
 
 	/**
 	 * Used internally for setting the component's container. May only be invoked by the new container!!
@@ -37,25 +32,6 @@ public interface Component {
 	void setParent(Container container);
 
 	Container getParent();
-
-	String getId();
-
-	SessionContext getSessionContext();
-
-	void render();
-
-	void unrender();
-
-	UiComponentReference createUiComponentReference();
-
-	boolean isRendered();
-
-	default void handleUiEvent(UiEvent event) {
-	}
-
-	boolean isDestroyed();
-
-	void destroy();
 
 	boolean isVisible();
 
@@ -83,16 +59,22 @@ public interface Component {
 		setCssStyle(null, propertyName, value);
 	}
 
+	/**
+	 * Obsolete. Will get deleted soon.
+	 */
+	@Deprecated
+	void destroy();
+
 //	void updateEffectiveVisibility();
 //	Event<Boolean> onEffectiveVisibilityChanged();
 
 	// == static methods ==
 
-	static UiComponentReference createUiComponentReference(Component component) {
+	static UiClientObjectReference createUiClientObjectReference(Component component) {
 		if (component == null) {
 			return null;
 		}
-		return component.createUiComponentReference();
+		return component.createUiReference();
 	}
 
 }

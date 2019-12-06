@@ -77,7 +77,7 @@ public class TableColumn<RECORD> {
 
 	public UiTableColumn createUiTableColumn() {
 		SessionContext context = CurrentSessionContext.get();
-		UiTableColumn uiTableColumn = new UiTableColumn(propertyName, context.resolveIcon(icon), title, field.createUiComponentReference());
+		UiTableColumn uiTableColumn = new UiTableColumn(propertyName, context.resolveIcon(icon), title, field.createUiReference());
 		uiTableColumn.setDefaultWidth(defaultWidth);
 		uiTableColumn.setMinWidth(minWidth);
 		uiTableColumn.setDefaultWidth(defaultWidth);

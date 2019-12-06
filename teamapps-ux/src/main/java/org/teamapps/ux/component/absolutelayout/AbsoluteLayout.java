@@ -68,7 +68,7 @@ public class AbsoluteLayout extends AbstractComponent {
 				.map(entry -> {
 					Component component = entry.getKey();
 					AbsolutePosition position = entry.getValue();
-					return new UiAbsolutePositionedComponent(component.createUiComponentReference(), new UiAbsolutePositioning(
+					return new UiAbsolutePositionedComponent(component.createUiReference(), new UiAbsolutePositioning(
 							position.getTop() != null ? position.getTop().toCssString(): null,
 							position.getRight() != null ? position.getRight().toCssString(): null,
 							position.getBottom() != null ? position.getBottom().toCssString(): null,

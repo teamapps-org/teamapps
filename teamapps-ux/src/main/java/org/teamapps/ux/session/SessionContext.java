@@ -37,7 +37,7 @@ import org.teamapps.uisession.UiCommandWithResultCallback;
 import org.teamapps.util.MultiKeySequentialExecutor;
 import org.teamapps.util.NamedThreadFactory;
 import org.teamapps.util.UiUtil;
-import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.notification.Notification;
@@ -90,7 +90,7 @@ public class SessionContext {
 	private final UiCommandExecutor commandExecutor;
 	private final UxServerContext serverContext;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
-	private final HashMap<String, Component> componentsById = new HashMap<>();
+	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
 	private IconTheme iconTheme;
 	private ClientSessionResourceProvider sessionResourceProvider;
 
@@ -288,11 +288,11 @@ public class SessionContext {
 	}
 
 	public void showPopupAtCurrentMousePosition(Popup popup) {
-		queueCommand(new UiRootPanel.ShowPopupAtCurrentMousePositionCommand(popup.createUiComponentReference()));
+		queueCommand(new UiRootPanel.ShowPopupAtCurrentMousePositionCommand(popup.createUiReference()));
 	}
 
 	public void showPopup(Popup popup) {
-		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiComponentReference()));
+		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiReference()));
 	}
 
 	public Locale getLanguageLocale() {
@@ -310,16 +310,16 @@ public class SessionContext {
 		return sessionConfiguration.getIconPath() + "/-1/" + icon.getQualifiedIconId(getIconTheme());
 	}
 
-	public void registerComponent(Component component) {
-		componentsById.put(component.getId(), component);
+	public void registerClientObject(ClientObject clientObject) {
+		clientObjectsById.put(clientObject.getId(), clientObject);
 	}
 
-	public void unregisterComponent(Component component) {
-		componentsById.remove(component.getId());
+	public void unregisterClientObject(ClientObject clientObject) {
+		clientObjectsById.remove(clientObject.getId());
 	}
 
-	public Component getComponent(String componentId) {
-		return componentsById.get(componentId);
+	public ClientObject getClientObject(String clientObjectId) {
+		return clientObjectsById.get(clientObjectId);
 	}
 
 	public String createResourceLink(Resource resource) {
@@ -351,7 +351,7 @@ public class SessionContext {
 	}
 
 	public void addRootComponent(String containerElementId, RootPanel rootPanel) {
-		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementId, rootPanel.createUiComponentReference()));
+		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementId, rootPanel.createUiReference()));
 	}
 
 	public void addClientToken(String token) {
@@ -368,7 +368,7 @@ public class SessionContext {
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiComponentReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
+			queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});
 	}

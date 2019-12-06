@@ -36,8 +36,8 @@ public class FloatingComponent extends AbstractComponent {
 	public UiComponent createUiComponent() {
 		UiFloatingComponent ui = new UiFloatingComponent();
 		mapAbstractUiComponentProperties(ui);
-		ui.setContainerComponent(containerComponent.createUiComponentReference());
-		ui.setContentComponent(Component.createUiComponentReference(contentComponent));
+		ui.setContainerComponent(containerComponent.createUiReference());
+		ui.setContentComponent(Component.createUiClientObjectReference(contentComponent));
 		ui.setWidth(width);
 		ui.setHeight(height);
 		ui.setMarginX(marginX);

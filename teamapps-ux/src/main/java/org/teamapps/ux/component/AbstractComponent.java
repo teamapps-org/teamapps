@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.absolutelayout.Length;
@@ -76,7 +76,6 @@ public abstract class AbstractComponent implements Component {
 		return id;
 	}
 
-	@Override
 	public SessionContext getSessionContext() {
 		return sessionContext;
 	}
@@ -105,12 +104,14 @@ public abstract class AbstractComponent implements Component {
 		return isRendered() && isVisible() && getParent() != null && getParent().isChildVisible(this);
 	}
 
-	@Override
 	public boolean isDestroyed() {
 		return destroyed;
 	}
 
-	@Override
+	/**
+	 * Obsolete. Will get deleted soon.
+	 */
+	@Deprecated
 	public final void destroy() {
 		if (!destroyed) {
 			if (isRendered()) {
@@ -123,14 +124,18 @@ public abstract class AbstractComponent implements Component {
 		}
 	}
 
-	@Override
+	/**
+	 * Obsolete. Will get deleted soon.
+	 */
+	@Deprecated
 	public Event<Void> onDestroyed() {
 		return onDestroyed;
 	}
 
 	/**
-	 * Override this method to release resources whenever this component gets destroyed
+	 * Do not implement or call. Obsolete. Will get deleted soon.
 	 */
+	@Deprecated
 	protected void doDestroy() {
 		// do nothing
 	}
@@ -145,7 +150,7 @@ public abstract class AbstractComponent implements Component {
 					+ "themselves as \"parent\" of their children.");
 		}
 		LOGGER.debug("render: " + getId());
-		sessionContext.registerComponent(this);
+		sessionContext.registerClientObject(this);
 		UiComponent uiComponent = createUiComponent();
 		sessionContext.queueCommand(new UiRootPanel.CreateComponentCommand(uiComponent));
 		rendered = true; // after queuing creation! otherwise commands might be queued for this component before it creation is queued!
@@ -154,7 +159,7 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public final void unrender() {
-		sessionContext.unregisterComponent(this);
+		sessionContext.unregisterClientObject(this);
 		sessionContext.queueCommand(new UiRootPanel.DestroyComponentCommand(getId()));
 		rendered = false;
 	}
@@ -162,12 +167,12 @@ public abstract class AbstractComponent implements Component {
 	abstract public UiComponent createUiComponent();
 
 	@Override
-	public UiComponentReference createUiComponentReference() {
-		LOGGER.debug("createUiComponentReference: " + getId());
+	public UiClientObjectReference createUiReference() {
+		LOGGER.debug("createUiClientObjectReference: " + getId());
 		if (!isRendered()) {
 			render();
 		}
-		return new UiComponentReference(getId());
+		return new UiClientObjectReference(getId());
 	}
 
 	public void reRenderIfRendered() {

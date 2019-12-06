@@ -44,7 +44,7 @@ public class ComponentField extends AbstractField<Void> {
 	public UiField createUiComponent() {
 		UiComponentField uiField = new UiComponentField();
 		mapAbstractFieldAttributesToUiField(uiField);
-		uiField.setComponent(Component.createUiComponentReference(component));
+		uiField.setComponent(Component.createUiClientObjectReference(component));
 		uiField.setWidth(width);
 		uiField.setHeight(height);
 		uiField.setBorder(border != null ? border.createUiBorder(): null);
@@ -63,7 +63,7 @@ public class ComponentField extends AbstractField<Void> {
 
 	public void setComponent(Component component) {
 		this.component = component;
-		queueCommandIfRendered(() -> new UiComponentField.SetComponentCommand(getId(), Component.createUiComponentReference(component)));
+		queueCommandIfRendered(() -> new UiComponentField.SetComponentCommand(getId(), Component.createUiClientObjectReference(component)));
 	}
 
 	public int getWidth() {

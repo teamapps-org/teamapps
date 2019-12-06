@@ -43,12 +43,12 @@ public class MobileLayout extends AbstractComponent implements Container {
 		UiMobileLayout uiMobileLayout = new UiMobileLayout();
 		mapAbstractUiComponentProperties(uiMobileLayout);
 		if (content != null) {
-			uiMobileLayout.setInitialView(content.createUiComponentReference());
+			uiMobileLayout.setInitialView(content.createUiReference());
 		}
 		if (toolbar != null) {
-			uiMobileLayout.setToolbar(toolbar.createUiComponentReference());
+			uiMobileLayout.setToolbar(toolbar.createUiReference());
 		}
-		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar.createUiComponentReference() : null);
+		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar.createUiReference() : null);
 		return uiMobileLayout;
 	}
 
@@ -72,7 +72,7 @@ public class MobileLayout extends AbstractComponent implements Container {
 	public void setContent(Component component, PageTransition animation, int animationDuration) {
 		content = component;
 		component.setParent(this);
-		queueCommandIfRendered(() -> new UiMobileLayout.ShowViewCommand(getId(), component.createUiComponentReference(), animation != null ? animation.toUiPageTransition() : null,
+		queueCommandIfRendered(() -> new UiMobileLayout.ShowViewCommand(getId(), component.createUiReference(), animation != null ? animation.toUiPageTransition() : null,
 				animationDuration));
 	}
 
@@ -97,7 +97,7 @@ public class MobileLayout extends AbstractComponent implements Container {
 		if (navigationBar != null) {
 			navigationBar.setParent(this);
 		}
-		queueCommandIfRendered(() -> new UiMobileLayout.SetNavigationBarCommand(getId(), navigationBar != null ? navigationBar.createUiComponentReference() : null));
+		queueCommandIfRendered(() -> new UiMobileLayout.SetNavigationBarCommand(getId(), navigationBar != null ? navigationBar.createUiReference() : null));
 	}
 
 	@Override

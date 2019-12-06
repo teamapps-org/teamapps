@@ -28,7 +28,7 @@ public class Popup extends AbstractComponent {
 	public UiComponent createUiComponent() {
 		UiPopup ui = new UiPopup();
 		mapAbstractUiComponentProperties(ui);
-		ui.setContentComponent(contentComponent.createUiComponentReference());
+		ui.setContentComponent(contentComponent.createUiReference());
 		ui.setX(x);
 		ui.setY(y);
 		ui.setWidth(width);
