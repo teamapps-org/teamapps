@@ -24,7 +24,7 @@ import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {arraysEqual, calculateDisplayModeInnerSize, parseHtml, removeClassesByFunction} from "../../Common";
 import {
 	UiMediaSoupV2WebRtcClient_ClickedEvent,
-	UiMediaSoupV2WebRtcClient_ConnectionStateChangedEvent,
+	UiMediaSoupV2WebRtcClient_ConnectionStateChangedEvent, UiMediaSoupV2WebRtcClient_ContextMenuRequestedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackFailedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackProfileChangedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackSucceededEvent,
@@ -54,6 +54,9 @@ import {UiAudioTrackConstraintsConfig} from "../../../generated/UiAudioTrackCons
 import {WebRtcPublishingFailureReason} from "../../../generated/WebRtcPublishingFailureReason";
 import {createUiMediaDeviceInfoConfig, UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
 import {UiMediaDeviceKind} from "../../../generated/UiMediaDeviceKind";
+import {UiInfiniteItemView_ContextMenuRequestedEvent} from "../../../generated/UiInfiniteItemViewConfig";
+import {ContextMenu} from "../../micro-components/ContextMenu";
+import {UiComponent} from "../../UiComponent";
 
 export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2WebRtcClientConfig> implements UiMediaSoupV2WebRtcClientCommandHandler, UiMediaSoupV2WebRtcClientEventSource {
 	public readonly onPublishingSucceeded: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PublishingSucceededEvent> = new TeamAppsEvent(this);
@@ -66,6 +69,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 	public readonly onPlaybackProfileChanged: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PlaybackProfileChangedEvent> = new TeamAppsEvent(this);
 	public readonly onVoiceActivityChanged: TeamAppsEvent<UiMediaSoupV2WebRtcClient_VoiceActivityChangedEvent> = new TeamAppsEvent(this);
 	public readonly onClicked: TeamAppsEvent<UiMediaSoupV2WebRtcClient_ClickedEvent> = new TeamAppsEvent(this);
+	public readonly onContextMenuRequested: TeamAppsEvent<UiMediaSoupV2WebRtcClient_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
 
 	private $main: HTMLDivElement;
 	private conference: Conference;
@@ -92,6 +96,8 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		audioBitrate: -1
 	};
 
+	private contextMenu: ContextMenu;
+
 	constructor(config: UiMediaSoupV2WebRtcClientConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
@@ -115,9 +121,15 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		this.$caption = this.$main.querySelector(":scope .caption");
 		this.$spinner = this.$main.querySelector(":scope .spinner");
 
-		[this.$main, this.$caption].forEach($element => $element.addEventListener("click", () => {
-			console.log("click");
+		this.contextMenu = new ContextMenu();
+
+		[this.$image, this.$caption].forEach($element => $element.addEventListener("click", () => {
 			this.onClicked.fire({})
+		}));
+		[this.$image, this.$caption].forEach($element => $element.addEventListener("contextmenu", (e) => {
+			if (this._config.contextMenuEnabled) {
+				this.contextMenu.open(e, requestId => this.onContextMenuRequested.fire({requestId}))
+			}
 		}));
 		this.$image.addEventListener("load", () => {
 			console.log("load");
@@ -609,6 +621,14 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 				return [];
 			}
 		}
+	}
+
+	setContextMenuContent(requestId: number, component: UiComponent): void {
+		this.contextMenu.setContent(component, requestId);
+	}
+
+	closeContextMenu(requestId: number): void {
+		this.contextMenu.close(requestId);
 	}
 
 }

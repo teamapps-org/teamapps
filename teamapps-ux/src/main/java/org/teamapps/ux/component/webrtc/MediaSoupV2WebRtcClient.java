@@ -2,6 +2,7 @@ package org.teamapps.ux.component.webrtc;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiInfiniteItemView;
 import org.teamapps.dto.UiMediaDeviceInfo;
 import org.teamapps.dto.UiMediaSoupPlaybackParamaters;
 import org.teamapps.dto.UiMediaSoupPublishingParameters;
@@ -12,6 +13,7 @@ import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.session.SessionContext;
 
 import java.net.MalformedURLException;
@@ -22,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class MediaSoupV2WebRtcClient extends AbstractComponent {
@@ -55,6 +59,9 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 
 	private UiObject lastPublishOrPlaybackParams;
 
+	private Supplier<Component> contextMenuProvider = null;
+	private int lastSeenContextMenuRequestId;
+
 	public MediaSoupV2WebRtcClient() {
 	}
 
@@ -87,6 +94,7 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 		ui.setNoVideoImageUrl(noVideoImageUrl);
 		ui.setDisplayAreaAspectRatio(displayAreaAspectRatio);
 		ui.setPlaybackVolume(playbackVolume);
+		ui.setContextMenuEnabled(contextMenuProvider != null);
 		return ui;
 	}
 
@@ -120,10 +128,11 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHING_SUCCEEDED:
 				this.onPublishingSucceeded.fire();
 				break;
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHED_STREAMS_STATUS_CHANGED:
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHED_STREAMS_STATUS_CHANGED: {
 				UiMediaSoupV2WebRtcClient.PublishedStreamsStatusChangedEvent e = (UiMediaSoupV2WebRtcClient.PublishedStreamsStatusChangedEvent) event;
 				this.onPublishedStreamsStatusChanged.fire(new PublishedStreamsStatus(e.getAudio(), e.getVideo()));
 				break;
+			}
 			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHING_FAILED:
 				this.onPublishingFailed.fire(((UiMediaSoupV2WebRtcClient.PublishingFailedEvent) event).getReason());
 				break;
@@ -139,6 +148,21 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_CONNECTION_STATE_CHANGED:
 				this.onConnectionStateChanged.fire(((UiMediaSoupV2WebRtcClient.ConnectionStateChangedEvent) event).getConnected());
 				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_CONTEXT_MENU_REQUESTED: {
+				UiMediaSoupV2WebRtcClient.ContextMenuRequestedEvent e = (UiMediaSoupV2WebRtcClient.ContextMenuRequestedEvent) event;
+				lastSeenContextMenuRequestId = e.getRequestId();
+				if (contextMenuProvider != null) {
+					Component contextMenuContent = contextMenuProvider.get();
+					if (contextMenuContent != null) {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiComponentReference()));
+					} else {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
+					}
+				} else {
+					closeContextMenu();
+				}
+				break;
+			}
 		}
 	}
 
@@ -307,5 +331,17 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 			future.complete(value);
 		});
 		return future;
+	}
+
+	public Supplier<Component> getContextMenuProvider() {
+		return contextMenuProvider;
+	}
+
+	public void setContextMenuProvider(Supplier<Component> contextMenuProvider) {
+		this.contextMenuProvider = contextMenuProvider;
+	}
+
+	public void closeContextMenu() {
+		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 }
