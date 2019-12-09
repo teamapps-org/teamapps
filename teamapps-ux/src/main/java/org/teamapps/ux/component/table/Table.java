@@ -691,27 +691,27 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		}
 
 		if (startIndex < totalTopRecords && endIndex <= totalTopRecords) {
-			return topNonModelRecords.subList(startIndex, endIndex);
+			return topNonModelRecords.stream().skip(startIndex).limit(length).collect(Collectors.toList());
 		} else if (startIndex < totalTopRecords && endIndex <= totalTopRecords + totalModelRecords) {
 			List<RECORD> records = new ArrayList<>();
-			records.addAll(topNonModelRecords.subList(startIndex, totalTopRecords));
-			records.addAll(retrieveRecordsFromModel(0, length - (totalTopRecords - startIndex)));
+			records.addAll(topNonModelRecords.stream().skip(startIndex).limit(totalTopRecords - startIndex).collect(Collectors.toList()));
+			records.addAll(retrieveRecordsFromModel(0, length - records.size()));
 			return records;
 		} else if (startIndex < totalTopRecords && endIndex > totalTopRecords + totalModelRecords) {
 			List<RECORD> records = new ArrayList<>();
-			records.addAll(topNonModelRecords.subList(startIndex, totalTopRecords));
+			records.addAll(topNonModelRecords.stream().skip(startIndex).limit(totalTopRecords - startIndex).collect(Collectors.toList()));
 			records.addAll(retrieveRecordsFromModel(0, totalModelRecords));
-			records.addAll(bottomNonModelRecords.subList(0, length - (totalTopRecords - startIndex) - totalModelRecords));
+			records.addAll(bottomNonModelRecords.stream().skip(0).limit(length - records.size()).collect(Collectors.toList()));
 			return records;
 		} else if (startIndex >= totalTopRecords && startIndex < totalTopRecords + totalModelRecords && endIndex <= totalTopRecords + totalModelRecords) {
 			return retrieveRecordsFromModel(startIndex - topNonModelRecords.size(), length);
 		} else if (startIndex >= totalTopRecords && startIndex < totalTopRecords + totalModelRecords && endIndex > totalTopRecords + totalModelRecords) {
 			List<RECORD> records = new ArrayList<>();
 			records.addAll(retrieveRecordsFromModel(startIndex - topNonModelRecords.size(), endIndex - startIndex - totalTopRecords));
-			records.addAll(bottomNonModelRecords.subList(0, endIndex - totalTopRecords - totalModelRecords));
+			records.addAll(bottomNonModelRecords.stream().skip(0).limit(length - records.size()).collect(Collectors.toList()));
 			return records;
 		} else if (startIndex >= totalTopRecords + totalModelRecords) {
-			return bottomNonModelRecords.subList(startIndex - totalTopRecords - totalModelRecords, endIndex - startIndex);
+			return bottomNonModelRecords.stream().skip(startIndex - totalTopRecords - totalModelRecords).limit(length).collect(Collectors.toList());
 		} else {
 			LOGGER.error("This path should never be reached!");
 			return Collections.emptyList();
@@ -726,7 +726,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 			LOGGER.warn("TableModel did not return the requested amount of data!");
 			return records;
 		} else {
-			LOGGER.warn("TableModel returned to much data. Truncating!");
+			LOGGER.warn("TableModel returned too much data. Truncating!");
 			return new ArrayList<>(records.subList(0, length));
 		}
 	}
