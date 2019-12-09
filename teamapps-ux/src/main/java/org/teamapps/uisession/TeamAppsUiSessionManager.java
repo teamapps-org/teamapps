@@ -58,7 +58,8 @@ import java.util.stream.Collectors;
  */
 public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionListener {
 
-	private static final long UI_SESSION_TIMEOUT = 15 * 60 * 1000; // TODO #config make configurable
+	private static final long UI_SESSION_TIMEOUT = 2 * 60 * 1000; // TODO #config make configurable
+	private static final int HTTP_SESSION_TIMEOUT_SECONDS = 24 * 3600;
 	private static final int COMMAND_BUFFER_SIZE = 5_000;
 
 	private static final int CLIENT_MIN_REQUESTED_COMMANDS = 3;
@@ -213,7 +214,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
 		// TODO #http-timeout
-		se.getSession().setMaxInactiveInterval(24 * 3600);
+		se.getSession().setMaxInactiveInterval(HTTP_SESSION_TIMEOUT_SECONDS);
 	}
 
 	@Override
