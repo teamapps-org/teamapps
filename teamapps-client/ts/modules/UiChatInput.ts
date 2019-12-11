@@ -19,7 +19,7 @@
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {createImageThumbnailUrl, fadeOut, parseHtml} from "./Common";
+import {createImageThumbnailUrl, fadeOut, insertAtCursorPosition, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {
 	UiChatInput_FileItemClickedEvent,
@@ -76,7 +76,11 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		this.$textInput.addEventListener("keyup", () => this.updateSendability());
 		this.$textInput.addEventListener("keydown", (e: MouseEvent) => {
 			if ((e as any).key === 'Enter'){
-				this.send();
+				if (e.shiftKey) {
+					insertAtCursorPosition(this.$textInput, "\n");
+				} else {
+					this.send();
+				}
 				e.preventDefault(); // no new-line character in the text input, please
 			}
 		});
