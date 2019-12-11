@@ -38,7 +38,7 @@ import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClien
 import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
 import {ContextMenu} from "./micro-components/ContextMenu";
 import {UiComponent} from "./UiComponent";
-import {throttledMethod} from "./util/throttle";
+import {loadSensitiveThrottling, throttledMethod} from "./util/throttle";
 import {createUiInfiniteItemViewDataRequestConfig, UiInfiniteItemViewDataRequestConfig} from "../generated/UiInfiniteItemViewDataRequestConfig";
 
 ///<reference types="slickgrid"/>
@@ -329,33 +329,37 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 
 		if (totalNumberOfRecords != this.dataProvider.getLength()) {
 			this.dataProvider.setTotalNumberOfRecords(totalNumberOfRecords);
-			this.grid.updateRowCount();
-			this.updateAutoHeight();
 		}
 
 		this.dataProvider.setData(startIndex, data);
+
+		this.redrawGridContents();
+	}
+
+	@loadSensitiveThrottling(100, 10, 3000)
+	private redrawGridContents() {
+		this.grid.updateRowCount();
+		this.updateAutoHeight();
 		this.grid.invalidateAllRows();
 		this.grid.render();
-
-		// clearTimeout(this.loadingIndicatorFadeInTimer);
-		// this._$loadingIndicator.fadeOut();
-
 		this.grid.resizeCanvas();
 	}
 
 	private updateAutoHeight() {
 		if (this._config.autoHeight) {
 			let computedStyle = getComputedStyle(this.$mainDomElement);
-			this.$grid.style.height = Math.min(parseFloat(computedStyle.maxHeight) || Number.MAX_SAFE_INTEGER, this.dataProvider.getLength() * this._config.rowHeight
+			let newHeight = Math.min(parseFloat(computedStyle.maxHeight) || Number.MAX_SAFE_INTEGER, this.dataProvider.getLength() * this._config.rowHeight
 				+ parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom)) + "px";
+			if (newHeight != this.$grid.style.height) {
+				this.$grid.style.height = newHeight;
+			}
 		}
 	}
 
 	@executeWhenFirstDisplayed()
 	removeData(ids: number[]): void {
 		this.dataProvider.removeData(ids);
-		this.grid.invalidateAllRows();
-		this.grid.resizeCanvas();
+		this.redrawGridContents();
 		this.dataProvider.ensureData(this.grid.getViewport().top, this.grid.getViewport().bottom);
 	}
 
@@ -364,8 +368,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.logger.debug(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
 		this.dataProvider.setAvailableWidth(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
 		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels(true));
-		this.grid.invalidateAllRows();
-		this.grid.resizeCanvas();
+		this.redrawGridContents();
 		this.dataProvider.ensureData(this.grid.getViewport().top, this.grid.getViewport().bottom);
 	}
 
@@ -391,9 +394,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.horizontalItemMargin = horizontalItemMargin;
 		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels(true));
 		if (this.grid) {
-			this.grid.invalidateAllRows();
-			this.grid.updateRowCount();
-			this.grid.render();
+			this.redrawGridContents();
 		}
 		this.updateStyles();
 	}
@@ -406,8 +407,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	setItemTemplate(itemTemplate: UiTemplateConfig): void {
 		this.itemTemplateRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
 		if (this.grid) {
-			this.grid.invalidateAllRows();
-			this.grid.render();
+			this.redrawGridContents();
 		}
 	}
 
@@ -416,9 +416,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.itemWidth = itemWidth;
 		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels(true));
 		if (this.grid) {
-			this.grid.invalidateAllRows();
-			this.grid.updateRowCount();
-			this.grid.render();
+			this.redrawGridContents();
 		}
 	}
 

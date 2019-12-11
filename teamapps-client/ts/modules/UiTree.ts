@@ -28,6 +28,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeRecordConfig} from "../generated/UiTreeRecordConfig";
 import {UiComboBoxTreeRecordConfig} from "../generated/UiComboBoxTreeRecordConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
+import {loadSensitiveThrottling} from "./util/throttle";
 
 
 export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeCommandHandler, UiTreeEventSource {
@@ -114,6 +115,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		return this.$panel;
 	}
 
+	@loadSensitiveThrottling(100, 10, 3000)
 	replaceData(nodes: UiTreeRecordConfig[]): void {
 		this.nodes = nodes;
 		this.trivialTree.updateEntries(buildObjectTree(nodes, "id", "parentId"));
