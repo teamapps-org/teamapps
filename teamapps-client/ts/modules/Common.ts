@@ -1209,3 +1209,15 @@ document.body.addEventListener("pointermove", ev => lastPointerCoordinates = [ev
 export function getLastPointerCoordinates() {
 	return lastPointerCoordinates;
 }
+
+export function insertAtCursorPosition(input: HTMLInputElement | HTMLTextAreaElement, text: string) {
+	if (input.selectionStart != null) {
+		var startPos = input.selectionStart;
+		var endPos = input.selectionEnd;
+		input.value = input.value.substring(0, startPos)
+			+ text
+			+ input.value.substring(endPos, input.value.length);
+	} else {
+		input.value += text;
+	}
+}
