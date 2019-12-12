@@ -42,10 +42,9 @@ import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.session.CurrentSessionContext;
 
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -397,6 +396,40 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	public void setDisplayedDate(LocalDate displayedDate) {
 		this.displayedDate = displayedDate;
 		queueCommandIfRendered(() -> new UiCalendar.SetDisplayedDateCommand(getId(), displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
+	}
+
+	public void setDisplayDateOneUnitPrevious() {
+		switch (getActiveViewMode()) {
+			case YEAR:
+				setDisplayedDate(getDisplayedDate().minusYears(1));
+				break;
+			case MONTH:
+				setDisplayedDate(getDisplayedDate().minusMonths(1));
+				break;
+			case WEEK:
+				setDisplayedDate(getDisplayedDate().minusWeeks(1));
+				break;
+			case DAY:
+				setDisplayedDate(getDisplayedDate().minusDays(1));
+				break;
+		}
+	}
+
+	public void setDisplayDateOneUnitNext() {
+		switch (getActiveViewMode()) {
+			case YEAR:
+				setDisplayedDate(getDisplayedDate().plusYears(1));
+				break;
+			case MONTH:
+				setDisplayedDate(getDisplayedDate().plusMonths(1));
+				break;
+			case WEEK:
+				setDisplayedDate(getDisplayedDate().plusWeeks(1));
+				break;
+			case DAY:
+				setDisplayedDate(getDisplayedDate().plusDays(1));
+				break;
+		}
 	}
 
 	public boolean isShowHeader() {
