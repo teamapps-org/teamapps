@@ -79,7 +79,7 @@ public class MultiKeySequentialExecutor<K> {
 			CompletableFuture<V> returnedFuture = lastFuture.thenApplyAsync(o -> {
 				long executionStartTime = System.currentTimeMillis();
 				long delay = executionStartTime - submitTime;
-				if (delay > 1000) {
+				if (delay > 3000) {
 					LOGGER.warn("Execution delay high: {}",  delay);
 				}
 				V result = task.get();

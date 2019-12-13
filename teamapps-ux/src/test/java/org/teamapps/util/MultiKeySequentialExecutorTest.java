@@ -4,10 +4,16 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 
 public class MultiKeySequentialExecutorTest {
@@ -80,8 +86,53 @@ public class MultiKeySequentialExecutorTest {
 			secondWasExecuted[0] = true;
 		})
 				.get();
-		
+
 		Assert.assertTrue(secondWasExecuted[0]);
+	}
+
+	@Test
+	@Ignore
+	public void performance() throws InterruptedException, ExecutionException {
+		MultiKeySequentialExecutor<Integer> executor = new MultiKeySequentialExecutor<>(20);
+		long now = System.currentTimeMillis();
+		long in5seconds = now + 3000;
+		AtomicBoolean shutdown = new AtomicBoolean(false);
+		AtomicBoolean done = new AtomicBoolean(false);
+
+		Runnable task = () -> {
+			while (System.currentTimeMillis() < in5seconds) {
+
+			}
+			if (done.get()) {
+				System.err.println("AFTER DONE!");
+			}
+		};
+
+		ExecutorService x = Executors.newFixedThreadPool(20);
+		for (int i = 0; i < 1000_000; i++) {
+			x.submit(() -> {
+				executor.submit(ThreadLocalRandom.current().nextInt(0, 10), task);
+				if (shutdown.get()) {
+					System.err.println("After shutdown??");
+				}
+			});
+		}
+		x.shutdown();
+		x.awaitTermination(10_000, TimeUnit.MILLISECONDS);
+		System.out.println("Shutdown = true");
+		shutdown.set(true);
+
+		CompletableFuture[] completionFutures = IntStream.range(0, 10)
+				.mapToObj(i -> executor.submit(i, task))
+				.toArray(CompletableFuture[]::new);
+		CompletableFuture.allOf(completionFutures)
+				.thenRun(() -> {
+					done.set(true);
+					System.err.println("Done after " + (System.currentTimeMillis() - in5seconds) + "ms");
+				})
+				.get();
+
+		Thread.sleep(1000);
 	}
 
 	private void checkIntListContents(IntList executionOrderCheckingList, int rangeMax) {
