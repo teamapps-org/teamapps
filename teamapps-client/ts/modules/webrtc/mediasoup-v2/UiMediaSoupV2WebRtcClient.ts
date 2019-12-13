@@ -123,10 +123,10 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 
 		this.contextMenu = new ContextMenu();
 
-		[this.$image, this.$caption].forEach($element => $element.addEventListener("click", () => {
+		[this.$videoContainer, this.$caption].forEach($element => $element.addEventListener("click", () => {
 			this.onClicked.fire({})
 		}));
-		[this.$image, this.$caption].forEach($element => $element.addEventListener("contextmenu", (e) => {
+		[this.$videoContainer, this.$caption].forEach($element => $element.addEventListener("contextmenu", (e) => {
 			if (this._config.contextMenuEnabled) {
 				this.contextMenu.open(e, requestId => this.onContextMenuRequested.fire({requestId}))
 			}
