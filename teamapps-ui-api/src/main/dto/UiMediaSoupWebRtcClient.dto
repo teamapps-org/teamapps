@@ -28,7 +28,7 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 	String caption;
 	String noVideoImageUrl;
 	WebRtcClientSpinnerPolicy spinnerPolicy;
-	float playbackVolume = 1; // 0-1
+	double playbackVolume = 1; // 0-1
 	boolean contextMenuEnabled = false;
 
 	command update(UiMediaSoupV2WebRtcClient config);
