@@ -59,6 +59,8 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	private MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
 
+	private boolean valueChangedByClient;
+
 	public AbstractField() {
 		getSessionContext().onDestroyed().addListener(aVoid -> this.destroy());
 	}
@@ -91,6 +93,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public void setValue(VALUE value) {
+		valueChangedByClient = false;
 		MultiWriteLockableValue.Lock lock = this.value.writeAndLock(value);
 		Object uiValue = this.convertUxValueToUiValue(value);
 		if (isRendered()) {
@@ -134,6 +137,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 			VALUE transformedValue = convertUiValueToUxValue(value);
 			if (!this.value.isLocked()) {
 				this.value.writeIfNotLocked(transformedValue);
+				valueChangedByClient = true;
 				onValueChanged.fire(transformedValue);
 			}
 		}
@@ -261,5 +265,9 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	public void setDefaultMessageVisibility(FieldMessage.Visibility defaultMessageVisibility) {
 		this.defaultMessageVisibility = defaultMessageVisibility;
+	}
+
+	public boolean isValueChangedByClient() {
+		return valueChangedByClient;
 	}
 }
