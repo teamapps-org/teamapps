@@ -21,6 +21,7 @@ package org.teamapps.databinding;
 
 import org.teamapps.event.Event;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public interface ObservableValue<T> {
@@ -30,6 +31,10 @@ public interface ObservableValue<T> {
 	T get();
 
 	// ------- utility -------
+
+	default boolean valueEquals(T other) {
+		return Objects.equals(get(), other);
+	}
 
 	default void bindWritingTo(MutableValue<T> mutableValue) {
 		DataBindings.bindOneWay(this, mutableValue);
