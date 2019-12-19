@@ -680,6 +680,11 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	}
 
 	private List<RECORD> retrieveRecords(int startIndex, int length) {
+		if (startIndex < 0 || length < 0) {
+			LOGGER.warn("Data coordinates do not make sense: startIndex {}, length {}", startIndex, length);
+			return Collections.emptyList();
+		}
+		
 		int endIndex = startIndex + length;
 		int totalTopRecords = topNonModelRecords.size();
 		int totalModelRecords = model.getCount();
