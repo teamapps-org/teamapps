@@ -27,7 +27,7 @@ public class StandardAuthenticationProvider<USER> implements AuthenticationProvi
 			if (securePasswordHash.verifyPassword(password, passwordHash)) {
 				SessionContext context = CurrentSessionContext.get();
 				USER user = loginResolver.resolveLogin(login);
-				userBySessionMap.put(context, user);
+				addAuthenticatedUser(user, context);
 				authenticationHandlers.forEach(handler -> handler.handleAuthenticatedUser(user, context));
 				return AuthenticationResult.createSuccessResult(user);
 			}
@@ -43,6 +43,10 @@ public class StandardAuthenticationProvider<USER> implements AuthenticationProvi
 	@Override
 	public SessionAuthenticatedUserResolver<USER> getSessionAuthenticatedUserResolver() {
 		return (context) -> userBySessionMap.get(context);
+	}
+
+	protected void addAuthenticatedUser(USER user, SessionContext context) {
+		userBySessionMap.put(context, user);
 	}
 
 
