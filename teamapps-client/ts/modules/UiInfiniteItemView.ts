@@ -41,8 +41,6 @@ import {UiComponent} from "./UiComponent";
 import {loadSensitiveThrottling, throttledMethod} from "./util/throttle";
 import {createUiInfiniteItemViewDataRequestConfig, UiInfiniteItemViewDataRequestConfig} from "../generated/UiInfiniteItemViewDataRequestConfig";
 
-///<reference types="slickgrid"/>
-
 class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiableClientRecordConfig> {
 
 	private availableWidth: number;
@@ -255,7 +253,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 			enableAddRow: false
 		};
 
-		this.dataProvider.setAvailableWidth(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
+		this.dataProvider.setAvailableWidth(this.getAvailableWidth());
 
 		this.grid = new Slick.Grid(this.$grid, this.dataProvider, columns, options);
 
@@ -302,7 +300,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 			this.itemWidth = 0;
 		}
 
-		let availableWidth = this.getWidth() - Constants.SCROLLBAR_WIDTH;
+		let availableWidth = this.getAvailableWidth();
 		if (this.itemWidth === 0) {
 			return availableWidth;
 		} else if (this.itemWidth < 1) {
@@ -365,13 +363,15 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 
 	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
-		this.logger.debug(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
-		this.dataProvider.setAvailableWidth(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
+		this.dataProvider.setAvailableWidth(this.getAvailableWidth());
 		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels(true));
 		this.redrawGridContents();
 		this.dataProvider.ensureData(this.grid.getViewport().top, this.grid.getViewport().bottom);
 	}
 
+	private getAvailableWidth() {
+		return this.getWidth() - Constants.SCROLLBAR_WIDTH;
+	}
 
 	doGetMainElement(): HTMLElement {
 		return this.$mainDomElement;
