@@ -130,6 +130,7 @@ export {UiSlider} from "./formfield/UiSlider";
 export {UiColorPicker} from "./formfield/UiColorPicker";
 export {UiFieldGroup} from "./formfield/UiFieldGroup";
 export {UiTemplateField} from "./formfield/UiTemplateField";
+export {UiLinkButton} from "./UiLinkButton";
 
 export {UiToolButton} from "./micro-components/UiToolButton";
 
