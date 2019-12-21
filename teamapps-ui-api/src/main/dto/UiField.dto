@@ -167,7 +167,7 @@ class UiNumberField extends UiField implements UiTextInputHandlingField {
 }
 
 enum UiNumberFieldSliderMode {
-	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED
+	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED, SLIDER_ONLY
 }
 
 // the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")

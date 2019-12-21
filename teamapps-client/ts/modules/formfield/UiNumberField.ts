@@ -352,6 +352,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		this.$wrapper.classList.toggle("slider-mode-disabled", sliderMode === UiNumberFieldSliderMode.DISABLED);
 		this.$wrapper.classList.toggle("slider-mode-visible", sliderMode === UiNumberFieldSliderMode.VISIBLE);
 		this.$wrapper.classList.toggle("slider-mode-visible-if-focused", sliderMode === UiNumberFieldSliderMode.VISIBLE_IF_FOCUSED);
+		this.$wrapper.classList.toggle("slider-mode-slider-only", sliderMode === UiNumberFieldSliderMode.SLIDER_ONLY);
 	}
 
 	setSliderStep(sliderStep: number): void {

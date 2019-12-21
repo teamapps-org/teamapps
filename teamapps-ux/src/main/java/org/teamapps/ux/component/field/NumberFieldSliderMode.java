@@ -22,7 +22,7 @@ package org.teamapps.ux.component.field;
 import org.teamapps.dto.UiNumberFieldSliderMode;
 
 public enum NumberFieldSliderMode {
-	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED;
+	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED, SLIDER_ONLY;
 
 	public UiNumberFieldSliderMode toUiNumberFieldSliderMode() {
 		return UiNumberFieldSliderMode.valueOf(this.name());
