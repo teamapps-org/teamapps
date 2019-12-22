@@ -28,7 +28,6 @@ public class StandardAuthenticationProvider<USER> implements AuthenticationProvi
 				SessionContext context = CurrentSessionContext.get();
 				USER user = loginResolver.resolveLogin(login);
 				addAuthenticatedUser(user, context);
-				authenticationHandlers.forEach(handler -> handler.handleAuthenticatedUser(user, context));
 				return AuthenticationResult.createSuccessResult(user);
 			}
 		}
@@ -47,6 +46,7 @@ public class StandardAuthenticationProvider<USER> implements AuthenticationProvi
 
 	protected void addAuthenticatedUser(USER user, SessionContext context) {
 		userBySessionMap.put(context, user);
+		authenticationHandlers.forEach(handler -> handler.handleAuthenticatedUser(user, context));
 	}
 
 
