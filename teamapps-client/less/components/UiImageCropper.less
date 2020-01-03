@@ -47,19 +47,12 @@
     }
 
     .ui-resizable-handle {
-      width: 10px;
-      height: 10px;
-      border: 1px solid transparent;
-      transition: background-color 1s, border 1s;
+      width: @teamapps-handle-size;
+      height: @teamapps-handle-size;
+      background-color: rgba(255, 255, 255, .5);
+      border: 1px solid black;
     }
 
-    &:focus .ui-resizable-handle,
-    &:hover .ui-resizable-handle,
-    .ui-resizable-handle:hover,
-    .ui-resizable-handle:active {
-      background-color: rgba(255, 255, 255, .5);
-      border: 1px solid rgba(127, 127, 127, .5);
-    }
   }
 
   .ui-resizable-n,

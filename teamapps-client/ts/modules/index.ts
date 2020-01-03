@@ -27,8 +27,6 @@ import "array-flat-polyfill"; // Polyfill: array.flatmap() ...
 (window as any).jQuery = (window as any).$ = require("jquery"); // needs to be global for fullcalendar (at least)
 require("jquery-ui/ui/version.js");
 require("jquery-ui/ui/position.js");
-require("jquery-ui/ui/widgets/draggable.js");
-require("jquery-ui/ui/widgets/resizable.js");
 
 (window as any).moment = require("moment"); // needs to be a global variable for fullcalendar
 
@@ -140,6 +138,7 @@ export {UiTreeGraph} from "./UiTreeGraph";
 export {UiReactTestComponent} from "./UiReactTestComponent";
 
 export {UiTestHarness} from "./UiTestHarness";
+export {draggable} from "./util/draggable";
 
 // export {typescriptDeclarationFixConstant as AbstractUiChartConfig} from "./../generated/AbstractUiChartConfig";
 
