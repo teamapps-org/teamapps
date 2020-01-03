@@ -24,7 +24,8 @@ import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {arraysEqual, calculateDisplayModeInnerSize, parseHtml, removeClassesByFunction} from "../../Common";
 import {
 	UiMediaSoupV2WebRtcClient_ClickedEvent,
-	UiMediaSoupV2WebRtcClient_ConnectionStateChangedEvent, UiMediaSoupV2WebRtcClient_ContextMenuRequestedEvent,
+	UiMediaSoupV2WebRtcClient_ConnectionStateChangedEvent,
+	UiMediaSoupV2WebRtcClient_ContextMenuRequestedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackFailedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackProfileChangedEvent,
 	UiMediaSoupV2WebRtcClient_PlaybackSucceededEvent,
@@ -54,9 +55,9 @@ import {UiAudioTrackConstraintsConfig} from "../../../generated/UiAudioTrackCons
 import {WebRtcPublishingFailureReason} from "../../../generated/WebRtcPublishingFailureReason";
 import {createUiMediaDeviceInfoConfig, UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
 import {UiMediaDeviceKind} from "../../../generated/UiMediaDeviceKind";
-import {UiInfiniteItemView_ContextMenuRequestedEvent} from "../../../generated/UiInfiniteItemViewConfig";
 import {ContextMenu} from "../../micro-components/ContextMenu";
 import {UiComponent} from "../../UiComponent";
+import {Postponer} from "../../util/postpone";
 
 export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2WebRtcClientConfig> implements UiMediaSoupV2WebRtcClientCommandHandler, UiMediaSoupV2WebRtcClientEventSource {
 	public readonly onPublishingSucceeded: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PublishingSucceededEvent> = new TeamAppsEvent(this);
@@ -193,29 +194,35 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		return this.$main;
 	}
 
+	private publishPostponer = new Postponer();
+
 	async publish(parameters: UiMediaSoupPublishingParametersConfig) {
-		console.log("VERSION 5")
+		return this.publishPostponer.postponeUntil(
+			async () => {
+				if (this.conference != null) {
+					this.stop();
+				}
+				this.connectionStatus.status = "publish";
+				this.updateStateCssClass();
+				this.$video.muted = true;
 
-		if (this.conference != null) {
-			this.stop();
-		}
-		this.connectionStatus.status = "publish";
-		this.updateStateCssClass();
-		this.$video.muted = true;
-
-		try {
-			let {sourceStreams, targetStream} = await this.retrieveUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints);
-			this.currentSourceStreams = sourceStreams;
-			this.$video.classList.toggle("mirrored", parameters.videoConstraints && !parameters.screenSharingConstraints);
-			await this.publishMediaStream(targetStream, parameters);
-			this.addVoiceActivityDetection(targetStream);
-		} catch (e) {
-			console.error(e);
-			this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: e.reason});
-			this.stop();
-			this.connectionStatus.status = "error";
-			this.updateStateCssClass();
-		}
+				try {
+					let {sourceStreams, targetStream} = await this.retrieveUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints);
+					this.currentSourceStreams = sourceStreams;
+					this.$video.classList.toggle("mirrored", parameters.videoConstraints && !parameters.screenSharingConstraints);
+					await this.publishMediaStream(targetStream, parameters);
+					this.addVoiceActivityDetection(targetStream);
+				} catch (e) {
+					console.error(e);
+					this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: e.reason});
+					this.stop();
+					this.connectionStatus.status = "error";
+					this.updateStateCssClass();
+				}
+			},
+			() => this.connectionStatus.status !== "publish"
+				|| (this.connectionStatus.connected && this.connectionStatus.audioStatus && this.connectionStatus.audioBitrate != 0)
+		);
 	}
 
 	private addVoiceActivityDetection(mediaStream: MediaStream) {
@@ -328,7 +335,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 
 	private async publishMediaStream(mediaStream: MediaStream, parameters: UiMediaSoupPublishingParametersConfig) {
 		try {
-			this.conference = new Conference({
+			let conference = new Conference({
 				uid: parameters.uid,
 				token: parameters.token,
 				params: {
@@ -370,6 +377,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 					}
 				}
 			});
+			this.conference = conference;
 			Conference.listenStreamEnded(mediaStream, () => {
 				console.log("targetStream ended. stopping.")
 				this.stop();

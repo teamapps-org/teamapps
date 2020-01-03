@@ -33,9 +33,11 @@ export interface Params {
         video: boolean;
     }) => void;
     onConnectionChange?: (connected: boolean) => void;
+    onRemoteStream?: (stream: MediaStream) => void;
     onBitrate?: (mediaType: "audio" | "video", bitrate: number) => void;
     serverUrl?: string;
     simulcast: boolean;
+    msUrl?: string;
 }
 export interface SocketResponse {
     errorId?: string | number;
