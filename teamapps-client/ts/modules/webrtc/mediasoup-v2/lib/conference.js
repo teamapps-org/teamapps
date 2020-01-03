@@ -27241,9 +27241,12 @@ var Conference = /** @class */ (function () {
     Conference.prototype.setupConnection = function (data) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.socket = socket_io_client_1.default(data.server.url, { secure: true });
+            var msUrl = _this.params.msUrl || data.server.url;
+            console.log('connecting', _this.kind, msUrl);
+            _this.socket = socket_io_client_1.default(msUrl, { secure: true });
             _this.socket.on('connect', function () { return __awaiter(_this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
+                    console.log('connected', this.kind, msUrl);
                     this.processRoom(data).then(resolve).catch(reject);
                     if (this.params.onConnectionChange) {
                         this.params.onConnectionChange(true);
@@ -27275,7 +27278,7 @@ var Conference = /** @class */ (function () {
                 }
             });
             _this.socket.on('disconnect', function (error) {
-                console.log('disconnect', error);
+                console.log('disconnect', _this.kind, msUrl, error);
                 if (_this.room) {
                     _this.room.leave();
                 }
@@ -27442,6 +27445,7 @@ var Conference = /** @class */ (function () {
     };
     ;
     Conference.prototype.__hookup = function (capturing) {
+        var _this = this;
         var vTrack = capturing.stream.getVideoTracks();
         if (capturing.video && vTrack.length > 0) {
             for (var _i = 0, _a = this._sendStream.getVideoTracks(); _i < _a.length; _i++) {
@@ -27460,6 +27464,13 @@ var Conference = /** @class */ (function () {
             }
             this._sendStream.addTrack(aTrack[0]);
         }
+        capturing.stream.addEventListener('addtrack', function (e) {
+            _this._sendStream.addTrack(e.track);
+            console.log('onaddtrack', e.track);
+            _this.__whenStreamIsActive(function () {
+                return _this._sendStream;
+            }, _this.__doConnects.bind(_this));
+        });
     };
     ;
     Conference.prototype.__doConnects = function () {
@@ -27559,6 +27570,7 @@ var Conference = /** @class */ (function () {
             consumer.receive(_this.transport)
                 .then(function (track) {
                 stream.addTrack(track);
+                stream.dispatchEvent(new MediaStreamTrackEvent("addtrack", { track: track }));
                 if (track.kind === 'audio' && !_this.params.audio) {
                     track.enabled = false;
                 }
@@ -27583,6 +27595,9 @@ var Conference = /** @class */ (function () {
         peer.on('newconsumer', addConsumer);
         for (var i = 0; i < peer.consumers.length; i++) {
             addConsumer(peer.consumers[i]);
+        }
+        if (this.params.onRemoteStream) {
+            this.params.onRemoteStream(stream);
         }
         return stream;
     };
