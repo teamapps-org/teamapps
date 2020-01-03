@@ -21,14 +21,16 @@
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {applyDisplayMode, boundSelection, css, parseHtml} from "./Common";
+import {applyDisplayMode, boundSelection, css, Direction, parseHtml} from "./Common";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {UiImageCropper_SelectionChangedEvent, UiImageCropperCommandHandler, UiImageCropperConfig, UiImageCropperEventSource} from "../generated/UiImageCropperConfig";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {createUiImageCropperSelectionConfig, UiImageCropperSelectionConfig} from "../generated/UiImageCropperSelectionConfig";
 import {UiImageCropperSelectionMode} from "../generated/UiImageCropperSelectionMode";
+import {draggable} from "./util/draggable";
 
+type Selection = Omit<UiImageCropperSelectionConfig, '_type'>;
 
 export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> implements UiImageCropperCommandHandler, UiImageCropperEventSource {
 
@@ -38,7 +40,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 	private $selectionFrame: HTMLElement;
 	private htmlImageElement: HTMLImageElement;
 
-	private selection: UiImageCropperSelectionConfig;
+	private selection: Selection;
 	private imageNaturalWidth: number = null;
 	private imageNaturalHeight: number = null;
 
@@ -48,7 +50,12 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 
 		this.$element = parseHtml(`<div data-id="' + config.id + '" class="UiImageCropper">
     <img></img>
-    <div class="cropping-frame" tabindex="-1"></div>
+    <div class="cropping-frame" tabindex="-1">
+    	<div class="ui-resizable-handle ui-resizable-ne" data-direction="ne" data-fixed-at="sw"></div>
+    	<div class="ui-resizable-handle ui-resizable-se" data-direction="se" data-fixed-at="nw"></div>
+    	<div class="ui-resizable-handle ui-resizable-nw" data-direction="nw" data-fixed-at="se"></div>
+    	<div class="ui-resizable-handle ui-resizable-sw" data-direction="sw" data-fixed-at="ne"></div>    
+	</div>
 </div>`);
 		this.htmlImageElement = this.$element.querySelector<HTMLElement>(":scope img") as HTMLImageElement;
 		this.htmlImageElement.onload = () => {
@@ -56,21 +63,85 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 			this.imageNaturalHeight = this.htmlImageElement.naturalHeight;
 			applyDisplayMode(this.getMainElement(), this.htmlImageElement, UiPageDisplayMode.FIT_SIZE);
 			this.resetSelectionFrame(config.aspectRatio);
-			this.updateCroppingFramePosition();
+			this.updateCroppingFramePosition(this.selection);
 		};
 		// this.$element.style.backgroundImage = `url(${config.imageUrl}`);
 		this.$selectionFrame = this.$element.querySelector<HTMLElement>(":scope .cropping-frame");
-		$(this.$selectionFrame)
-			.resizable({
-				handles: 'n, e, s, w, ne, se, nw, sw',
-				aspectRatio: config.aspectRatio,
-				containment: $(this.htmlImageElement),
-				stop: this.handleDragEnd.bind(this)
-			})
-			.draggable({
-				containment: $(this.htmlImageElement),
-				stop: this.handleDragEnd.bind(this)
-			});
+
+		let startBox: any;
+		draggable(this.$selectionFrame, {
+			validDragStartDecider: e => {
+				const specialButton = e.button != null && e.button !== 0;
+				return e.target == this.$selectionFrame && !specialButton;
+			},
+			dragStart: e => {
+				startBox = {
+					x: parseFloat(this.$selectionFrame.style.left),
+					y: parseFloat(this.$selectionFrame.style.top),
+					width: parseFloat(this.$selectionFrame.style.width),
+					height: parseFloat(this.$selectionFrame.style.height),
+					x2() {
+						return this.x + this.width;
+					},
+					y2() {
+						return this.y + this.height;
+					}
+				};
+			},
+			drag: (e, eventData) => {
+				this.$selectionFrame.style.left = (startBox.x + eventData.deltaX) + "px";
+				this.$selectionFrame.style.top = (startBox.y + eventData.deltaY) + "px";
+			},
+			dragEnd: (e, eventData) => {
+				this.handleDragEnd();
+			}
+		});
+
+		let direction: Direction;
+		let fixedAt: Direction;
+		draggable(this.$selectionFrame.querySelectorAll(":scope .ui-resizable-handle"), {
+			dragStart: e => {
+				direction = (e.target as HTMLElement).getAttribute("data-direction") as Direction;
+				fixedAt = (e.target as HTMLElement).getAttribute("data-fixed-at") as Direction;
+				startBox = {
+					x: parseFloat(this.$selectionFrame.style.left),
+					y: parseFloat(this.$selectionFrame.style.top),
+					width: parseFloat(this.$selectionFrame.style.width),
+					height: parseFloat(this.$selectionFrame.style.height),
+					x2() {
+						return this.x + this.width;
+					},
+					y2() {
+						return this.y + this.height;
+					}
+				}
+			},
+			drag: (e, eventData) => {
+				if (direction.indexOf('n') != -1) {
+					this.$selectionFrame.style.top = (startBox.y + eventData.deltaY) + "px";
+					this.$selectionFrame.style.height = (startBox.height - eventData.deltaY) + "px";
+				}
+				if (direction.indexOf('w') != -1) {
+					this.$selectionFrame.style.left = (startBox.x + eventData.deltaX) + "px";
+					this.$selectionFrame.style.width = (startBox.width - eventData.deltaX) + "px";
+				}
+				if (direction.indexOf('s') != -1) {
+					this.$selectionFrame.style.height = (startBox.height + eventData.deltaY) + "px";
+				}
+				if (direction.indexOf('e') != -1) {
+					this.$selectionFrame.style.width = (startBox.width + eventData.deltaX) + "px";
+				}
+				let selection = this.calculateUnconstrainedSelection();
+				selection = this.boundSelection(selection, fixedAt);
+				this.updateCroppingFramePosition(selection);
+			},
+			dragEnd: (e, eventData) => {
+				let selection = this.calculateUnconstrainedSelection();
+				selection = this.boundSelection(selection, fixedAt);
+				this.updateCroppingFramePosition(selection);
+				this.handleDragEnd();
+			}
+		});
 
 		this.setImageUrl(config.imageUrl);
 		this.setSelectionMode(config.selectionMode);
@@ -91,36 +162,39 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 
 			this.selection.left = 0.5 * (this.imageNaturalWidth - this.selection.width);
 			this.selection.top = 0.5 * (this.imageNaturalHeight - this.selection.height);
-			
-			this.selection = this.boundSelection();
-			this.updateCroppingFramePosition();
+
+			this.selection = this.boundSelection(this.selection);
+			this.updateCroppingFramePosition(this.selection);
 			this.onSelectionChanged.fire({
-				selection: this.selection
+				selection: createUiImageCropperSelectionConfig(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
 			});
 		}
 	}
 
 	private handleDragEnd() {
+		let selection = this.calculateUnconstrainedSelection();
+		selection = this.boundSelection(selection);
+		this.updateCroppingFramePosition(selection);
+		this.selection = selection;
+		this.logger.debug("selection: ", this.selection);
+		this.onSelectionChanged.fire({
+			selection: createUiImageCropperSelectionConfig(this.selection.left, this.selection.top, this.selection.width, this.selection.height)
+		});
+	}
+
+	private calculateUnconstrainedSelection() {
 		let correctionFactor = this.calculateCoordinateCorrectionFactor();
-		this.selection = createUiImageCropperSelectionConfig(
+		let selection = createUiImageCropperSelectionConfig(
 			(this.$selectionFrame.offsetLeft - this.htmlImageElement.offsetLeft) * correctionFactor,
 			(this.$selectionFrame.offsetTop - this.htmlImageElement.offsetTop) * correctionFactor,
 			this.$selectionFrame.offsetWidth * correctionFactor,
 			this.$selectionFrame.offsetHeight * correctionFactor
 		);
-		this.logger.debug("selection: ", this.selection);
-		this.selection = this.boundSelection();
-		this.updateCroppingFramePosition();
-		this.onSelectionChanged.fire({
-			selection: this.selection
-		});
+		return selection;
 	}
 
-	private boundSelection() {
-		return {
-			...boundSelection(this.selection, {width: this.imageNaturalWidth, height: this.imageNaturalHeight}, this._config.aspectRatio),
-			_type: "UiImageCropperSelection"
-		};
+	private boundSelection(selection: Selection, fixedAt?: Direction) {
+		return boundSelection(selection, {width: this.imageNaturalWidth, height: this.imageNaturalHeight}, this._config.aspectRatio, fixedAt);
 	}
 
 	private calculateCoordinateCorrectionFactor() {
@@ -133,13 +207,13 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 
 	setAspectRatio(aspectRatio: number): void {
 		this._config.aspectRatio = aspectRatio;
-		$(this.$selectionFrame).resizable("option", "aspectRatio", aspectRatio);
+		// $(this.$selectionFrame).resizable("option", "aspectRatio", aspectRatio);      TODO
 		this.resetSelectionFrame(aspectRatio);
 	}
 
 	setSelection(selection: UiImageCropperSelectionConfig): void {
 		this.selection = selection;
-		this.updateCroppingFramePosition();
+		this.updateCroppingFramePosition(this.selection);
 	}
 
 	setSelectionMode(selectionMode: UiImageCropperSelectionMode): void {
@@ -155,18 +229,18 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 				height: this.imageNaturalHeight
 			}
 		});
-		this.updateCroppingFramePosition();
+		this.updateCroppingFramePosition(this.selection);
 	}
 
 	@executeWhenFirstDisplayed(true)
-	private updateCroppingFramePosition() {
-		if (this.selection != null) {
+	private updateCroppingFramePosition(selection: Selection) {
+		if (selection != null) {
 			let correctionFactor = this.calculateCoordinateCorrectionFactor();
 
-			let left = this.selection.left / correctionFactor;
-			let top = this.selection.top / correctionFactor;
-			let width = this.selection.width / correctionFactor;
-			let height = this.selection.height / correctionFactor;
+			let left = selection.left / correctionFactor;
+			let top = selection.top / correctionFactor;
+			let width = selection.width / correctionFactor;
+			let height = selection.height / correctionFactor;
 
 			css(this.$selectionFrame, {
 				left: left + (this.htmlImageElement.offsetLeft - this.getMainElement().offsetLeft) + "px",

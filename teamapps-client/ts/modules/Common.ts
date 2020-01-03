@@ -19,7 +19,6 @@
  */
 import * as log from "loglevel";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
@@ -391,37 +390,77 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 	}
 };
 
-export function boundSelection(selection: { left: number, top: number, width: number, height: number }, bounds: { width: number, height: number }, aspectRatio?: number) {
-	let newSelection = {
-		left: selection.left,
-		top: selection.top,
-		width: selection.width,
-		height: selection.height
-	};
-	if (newSelection.width > bounds.width) {
-		newSelection.width = bounds.width;
-	}
-	if (newSelection.height > bounds.height) {
-		newSelection.height = bounds.height;
-	}
-	if (aspectRatio > 0) {
-		if (newSelection.width / newSelection.height > aspectRatio) {
-			newSelection.width = newSelection.height * aspectRatio;
-		} else {
-			newSelection.height = newSelection.width / aspectRatio;
+export type Direction = "n" | "e" | "s" | "w" | "ne" | "se" | "nw" | "sw";
+
+export function boundSelection(
+	selection: { left: number, top: number, width: number, height: number },
+	bounds: { width: number, height: number },
+	aspectRatio?: number,
+	fixedAt?: Direction
+) {
+	let newSelection = {...selection};
+
+	if (fixedAt == null) {
+		if (newSelection.width > bounds.width) {
+			newSelection.width = bounds.width;
 		}
-	}
-	if (newSelection.left < 0) {
-		newSelection.left = 0;
-	}
-	if (newSelection.left + newSelection.width > bounds.width) {
-		newSelection.left = bounds.width - newSelection.width;
-	}
-	if (newSelection.top < 0) {
-		newSelection.top = 0;
-	}
-	if (newSelection.top + newSelection.height > bounds.height) {
-		newSelection.top = bounds.height - newSelection.height;
+		if (newSelection.height > bounds.height) {
+			newSelection.height = bounds.height;
+		}
+		if (aspectRatio > 0) {
+			if (newSelection.width / newSelection.height > aspectRatio) {
+				newSelection.width = newSelection.height * aspectRatio;
+			} else {
+				newSelection.height = newSelection.width / aspectRatio;
+			}
+		}
+		if (newSelection.left < 0) {
+			newSelection.left = 0;
+		}
+		if (newSelection.left + newSelection.width > bounds.width) {
+			newSelection.left = bounds.width - newSelection.width;
+		}
+		if (newSelection.top < 0) {
+			newSelection.top = 0;
+		}
+		if (newSelection.top + newSelection.height > bounds.height) {
+			newSelection.top = bounds.height - newSelection.height;
+		}
+	} else {
+		let selectionXCenter = selection.left + selection.width / 2;
+		let selectionYCenter = selection.top + selection.height / 2;
+		let maxWidth =
+			fixedAt == "n" || fixedAt == "s" ? Math.min(Math.min(selectionXCenter, bounds.width - selectionXCenter) * 2, bounds.width) :
+				fixedAt == "e" || fixedAt == "ne" || fixedAt == "se" ? Math.min(selection.left + selection.width, bounds.width) :
+					fixedAt == "w" || fixedAt == "nw" || fixedAt == "sw" ? Math.min(bounds.width - selection.left, bounds.width)
+						: bounds.width;
+		let maxHeight =
+			fixedAt == "e" || fixedAt == "w" ? Math.min(Math.min(selectionYCenter, bounds.height - selectionYCenter) * 2, bounds.height) :
+				fixedAt == "s" || fixedAt == "se" || fixedAt == "sw" ? Math.min(selection.top + selection.height, bounds.height) :
+					fixedAt == "n" || fixedAt == "ne" || fixedAt == "nw" ? Math.min(bounds.height - selection.top, bounds.height)
+						: bounds.height;
+
+		newSelection.width = Math.min(newSelection.width, maxWidth);
+		newSelection.height = Math.min(newSelection.height, maxHeight);
+
+		if (aspectRatio != null) {
+			if (aspectRatio > newSelection.width / newSelection.height) {
+				newSelection.height = newSelection.width / aspectRatio;
+			} else if (aspectRatio < newSelection.width / newSelection.height) {
+				newSelection.width = newSelection.height * aspectRatio;
+			}
+		}
+
+		newSelection.left =
+			fixedAt == "n" || fixedAt == "s" ? selectionXCenter - newSelection.width / 2 :
+				fixedAt == "e" || fixedAt == "ne" || fixedAt == "se" ? selection.left + selection.width - newSelection.width :
+					fixedAt == "w" || fixedAt == "nw" || fixedAt == "sw" ? selection.left
+						: 0;
+		newSelection.top =
+			fixedAt == "e" || fixedAt == "w" ? selectionYCenter - newSelection.height / 2 :
+				fixedAt == "s" || fixedAt == "se" || fixedAt == "sw" ? selection.top + selection.height - newSelection.height :
+					fixedAt == "n" || fixedAt == "ne" || fixedAt == "nw" ? selection.top
+						: 0;
 	}
 	return newSelection;
 }
