@@ -119,6 +119,7 @@ public class FileLocalizationStore implements LocalizationStore {
 	public List<String> getAllUsedStoreKeys() {
 		return translationMap.values().stream()
 				.flatMap(map -> map.keySet().stream())
+				.distinct()
 				.collect(Collectors.toList());
 	}
 
