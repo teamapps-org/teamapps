@@ -294,6 +294,14 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		this.horizontalNonSignlingGap = horizontalNonSignlingGap;
 		this.update();
 	}
+
+	public PropertyExtractor<RECORD> getPropertyExtractor() {
+		return propertyExtractor;
+	}
+
+	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
+		this.propertyExtractor = propertyExtractor;
+	}
 }
 
 
