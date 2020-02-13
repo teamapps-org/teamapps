@@ -14,16 +14,16 @@ public class TeamAppsConfiguration {
 	 * The timeout after which the UX server regards a UI session as obsolete.
 	 * This happens when the client stops sending keepalive messages or events.
 	 * This may be caused by the browser tab being closed or the internet connection being interrupted.
-	 * <p/>
+	 * <p>
 	 * When a UI session times out, the corresponding {@link SessionContext} gets closed
 	 * and removed from the map of known {@link QualifiedUiSessionId}s.
-	 * <p/>
+	 * <p>
 	 * The {@link SessionContext} will also fire its
 	 * {@link SessionContext#onDestroyed onDestroyed} event, which will detach any {@link Event SessionContext-bound event} listeners.
-	 * <p/>
+	 * <p>
 	 * From a user's perspective, the session is expired and the user most likely needs to reload the page (unless the developer
 	 * has implemented an alternative handling on the client side).
-	 * <p/>
+	 * <p>
 	 * NOTE that UI sessions might not be destroyed "punctually". The interval at which the session states are updated is
 	 * the {@link #keepaliveMessageIntervalMillis}.
 	 *
@@ -33,7 +33,7 @@ public class TeamAppsConfiguration {
 
 	/**
 	 * The timeout after which sessions are regarded as "inactive".
-	 * <p/>
+	 * <p>
 	 * While this does not have any direct effects inside the TeamApps framework, the "activity state" can be monitored
 	 * on the application level (see {@link SessionContext#onActivityStateChanged}). For instance, this can be used to mark an application user
 	 * as "away".
@@ -51,9 +51,9 @@ public class TeamAppsConfiguration {
 	 * Will overwrite the servlet container's HTTP session timeout.
 	 * Note that this is important, since the TeamApps client protocol does not rely on HTTP requests but on WebSocket communication
 	 * and the interchange of WebSocket messages will NOT keep the HTTP session alive.
-	 * <p/>
+	 * <p>
 	 * TeamApps does currently not provide a HTTP keep-alive request mechanism, so you might want to set this to a high value.
-	 * <p/>
+	 * <p>
 	 * NOTE that TeamApps will get independent of HTTP sessions. So this configuration will be obsolete very soon.
 	 */
 	private int httpSessionTimeoutSeconds = 24 * 3600;
