@@ -34,6 +34,7 @@ import org.teamapps.uisession.ClientBackPressureInfo;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.UiCommandExecutor;
 import org.teamapps.uisession.UiCommandWithResultCallback;
+import org.teamapps.uisession.UiSessionActivityState;
 import org.teamapps.util.MultiKeySequentialExecutor;
 import org.teamapps.util.NamedThreadFactory;
 import org.teamapps.util.UiUtil;
@@ -80,10 +81,11 @@ public class SessionContext {
 	));
 	private static final Function<Locale, ResourceBundle> DEFAULT_RESOURCE_BUNDLE_PROVIDER = locale -> ResourceBundle.getBundle("org.teamapps.ux.i18n.DefaultCaptions", locale, new UTF8Control());
 
+	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
 	public final Event<Void> onDestroyed = new Event<>();
 
-	private boolean isValid = true;
-	private long lastClientEventTimeStamp;
+	private boolean active = true;
+	private boolean isDestroyed = false;
 
 	private final QualifiedUiSessionId sessionId;
 	private final ClientInfo clientInfo;
@@ -109,7 +111,6 @@ public class SessionContext {
 		this.iconTheme = iconTheme;
 		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(jacksonObjectMapper, this);
-		this.lastClientEventTimeStamp = System.currentTimeMillis();
 		updateMessageBundle();
 	}
 
@@ -152,16 +153,17 @@ public class SessionContext {
 		return value;
 	}
 
-	public long getLastClientEventTimestamp() {
-		return lastClientEventTimeStamp;
+	public boolean isActive() {
+		return active;
 	}
 
-	public void setLastClientEventTimestamp(long timestamp) {
-		lastClientEventTimeStamp = timestamp;
+	public void handleActivityStateChangedInternal(boolean active) {
+		this.active = active;
+		onActivityStateChanged.fire(new UiSessionActivityState(active));
 	}
 
-	public boolean isOpen() {
-		return isValid;
+	public boolean isDestroyed() {
+		return isDestroyed;
 	}
 
 	public void destroy() {
@@ -169,7 +171,7 @@ public class SessionContext {
 	}
 
 	public void handleSessionDestroyedInternal() {
-		isValid = false;
+		isDestroyed = true;
 		onDestroyed.fire(null);
 		sessionMultiKeyExecutor.closeForKey(this);
 	}
@@ -408,5 +410,4 @@ public class SessionContext {
 			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
 		});
 	}
-
 }

@@ -28,6 +28,6 @@ public interface UiSessionListener {
     void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo);
 	void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo);
 	void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event);
+	void onActivityStateChanged(QualifiedUiSessionId sessionId, boolean active);
 	void onUiSessionClosed(QualifiedUiSessionId sessionId, UiSessionClosingReason reason);
-
 }
