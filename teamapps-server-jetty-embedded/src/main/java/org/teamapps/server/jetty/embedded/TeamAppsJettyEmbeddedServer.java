@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.teamapps.client.ClientCodeExtractor;
+import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 import org.teamapps.webcontroller.WebController;
 
@@ -39,10 +40,18 @@ public class TeamAppsJettyEmbeddedServer {
 	private final Server server;
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory) throws ServletException {
-		this(webController, webAppDirectory, 8080);
+		this(webController, webAppDirectory, new TeamAppsConfiguration());
+	}
+
+	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) throws ServletException {
+		this(webController, webAppDirectory, 8080, config);
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, int port) throws ServletException {
+		this(webController, webAppDirectory, port, new TeamAppsConfiguration());
+	}
+
+	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, int port, TeamAppsConfiguration config) throws ServletException {
 		this.webController = webController;
 		this.webAppDirectory = webAppDirectory;
 
@@ -50,8 +59,7 @@ public class TeamAppsJettyEmbeddedServer {
 		WebAppContext webapp = new WebAppContext();
 		webapp.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
 		webapp.setContextPath("/");
-		// webapp.setInitParameter("teamapps.webController.className", "...");
-		webapp.addEventListener(new TeamAppsServletContextListener(webController));
+		webapp.addEventListener(new TeamAppsServletContextListener(config, webController));
 		webapp.setResourceBase(webAppDirectory.getAbsolutePath());
 		server.setHandler(webapp);
 		WebSocketServerContainerInitializer.configureContext(webapp);

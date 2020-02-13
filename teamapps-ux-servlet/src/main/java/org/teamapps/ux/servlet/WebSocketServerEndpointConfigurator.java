@@ -34,7 +34,6 @@ public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Co
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketServerEndpointConfigurator.class);
 
-	public static final String SERVLET_CONTEXT_PROPERTY_NAME = "SERVLET_CONTEXT";
 	public static final String HTTP_SESSION_PROPERTY_NAME = "HTTP_SESSION";
 	public static final String USER_AGENT_PROPERTY_NAME = "USER_AGENT";
 	public static final String LANGUAGE_PROPERTY_NAME = "LANGUAGE";
@@ -60,13 +59,13 @@ public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Co
 				.map(locale -> locale.getLanguage())
 				.orElse(null);
 
+		Object ipFromHttpSession = httpSession != null ? httpSession.getAttribute(CLIENT_IP_PROPERTY_NAME) : null;
 		String proxiedIp = getFirstHeaderOrNull(request, "X-Forwarded-For");
 
-		sec.getUserProperties().put(SERVLET_CONTEXT_PROPERTY_NAME, httpSession.getServletContext());
 		sec.getUserProperties().put(HTTP_SESSION_PROPERTY_NAME, httpSession);
 		sec.getUserProperties().put(USER_AGENT_PROPERTY_NAME, userAgentString);
 		sec.getUserProperties().put(LANGUAGE_PROPERTY_NAME, languageString);
-		sec.getUserProperties().put(CLIENT_IP_PROPERTY_NAME, proxiedIp != null ? proxiedIp : httpSession.getAttribute(CLIENT_IP_PROPERTY_NAME));
+		sec.getUserProperties().put(CLIENT_IP_PROPERTY_NAME, proxiedIp != null ? proxiedIp : ipFromHttpSession);
 	}
 
 	@Override

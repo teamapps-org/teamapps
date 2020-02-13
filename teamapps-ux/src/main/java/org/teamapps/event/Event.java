@@ -31,6 +31,24 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Represents an event that can get fired.
+ * <p/>
+ * Listeners can be added to this event using the various {@link #addListener(Consumer<EVENT_DATA>) addListener(...)} methods.
+ * <p/>
+ * <h2>SessionContext-bound Event Listeners</h2>
+ * Note that if a listener is added while the thread is bound to a {@link SessionContext} <code>A</code> (so while {@link SessionContext#currentOrNull()} is not null),
+ * the event will be bound to this SessionContext (<code>A</code>) by default, i.e.:
+ * <ul>
+ *     <li>When this event fires, the SessionContext-bound listener will get invoked bound to the SessionContext <code>A</code>,
+ *     regardless of the SessionContext (or the lack of it) the event was fired in.</li>
+ *     <li>When the SessionContext <code>A</code> is destroyed (and thereby fires its {@link SessionContext#onDestroyed} event), the listener is automatically detached from this event.</li>
+ * </ul>
+ * You can prevent a listener from being bound to the current SessionContext,
+ * by using one of the {@link #addListener(Consumer<EVENT_DATA>, boolean) addListener(..., boolean bindToSessionContext)} methods.
+ *
+ * @param <EVENT_DATA> The type of data this event fires.
+ */
 public class Event<EVENT_DATA> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Event.class);
