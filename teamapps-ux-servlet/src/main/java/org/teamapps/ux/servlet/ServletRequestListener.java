@@ -21,17 +21,13 @@ package org.teamapps.ux.servlet;
 
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 public class ServletRequestListener implements javax.servlet.ServletRequestListener {
 
 	@Override
 	public void requestInitialized(ServletRequestEvent sre) {
 		HttpServletRequest servletRequest = (HttpServletRequest) sre.getServletRequest();
-		HttpSession httpSession = servletRequest.getSession();
-		if (httpSession != null) {
-			httpSession.setAttribute(WebSocketServerEndpointConfigurator.CLIENT_IP_PROPERTY_NAME, servletRequest.getRemoteAddr());
-		}
+		servletRequest.getSession(true).setAttribute(WebSocketServerEndpointConfigurator.CLIENT_IP_PROPERTY_NAME, servletRequest.getRemoteAddr());
 	}
 
 	@Override
