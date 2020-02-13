@@ -83,9 +83,14 @@ public class SessionContext {
 
 	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
 	public final Event<Void> onDestroyed = new Event<>();
+	/**
+	 * Decorators around all executions inside this SessionContext. These will be invoked when the Thread is already bound to the SessionContext, so SessionContext.current() will
+	 * return this instance.
+	 */
+	public final ExecutionDecoratorStack executionDecorators = new ExecutionDecoratorStack();
 
 	private boolean active = true;
-	private boolean isDestroyed = false;
+	private boolean destroyed = false;
 
 	private final QualifiedUiSessionId sessionId;
 	private final ClientInfo clientInfo;
@@ -163,7 +168,7 @@ public class SessionContext {
 	}
 
 	public boolean isDestroyed() {
-		return isDestroyed;
+		return destroyed;
 	}
 
 	public void destroy() {
@@ -171,7 +176,7 @@ public class SessionContext {
 	}
 
 	public void handleSessionDestroyedInternal() {
-		isDestroyed = true;
+		destroyed = true;
 		onDestroyed.fire(null);
 		sessionMultiKeyExecutor.closeForKey(this);
 	}
@@ -270,12 +275,27 @@ public class SessionContext {
 			return sessionMultiKeyExecutor.submit(this, () -> {
 				CurrentSessionContext.set(this);
 				try {
-					runnable.run();
+					executionDecorators.createWrappedRunnable(runnable).run();
 				} finally {
 					CurrentSessionContext.unset();
 				}
 				this.flushCommands();
 			});
+		}
+	}
+
+	/**
+	 * Adds a decorator that gets invoked whenever a Thread is bound to this SessionContext.
+	 * The decorator will be called right <strong>after</strong> the Thread is bound to this SessionContext, so SessionContext.current() will return this instance.
+	 *
+	 * @param decorator
+	 * @param outer Whether to add this decorator as outermost or innermost execution wrapper.
+	 */
+	public void addExecutionDecorator(ExecutionDecorator decorator, boolean outer) {
+		if (outer) {
+			executionDecorators.addOuterDecorator(decorator);
+		} else {
+			executionDecorators.addInnerDecorator(decorator);
 		}
 	}
 
