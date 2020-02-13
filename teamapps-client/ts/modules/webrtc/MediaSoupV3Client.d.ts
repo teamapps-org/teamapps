@@ -34,10 +34,11 @@ interface MediaSoupV3Client {
 	 * the client will try to re-connect until the playback is re-established or the stop() method got called.
 	 *
 	 * @param streamUuid The UUID of the stream to play back
+	 * @param originServer The URL of the origin server for this stream.
 	 * @param initialTimeoutSeconds The number of seconds to wait until there is a stream with the streamUuid given to the playback() method.
 	 * @param params Additional parameters
 	 */
-	playback(streamUuid: string, initialTimeoutSeconds: number, params: PlaybackParameters): Promise<MediaStream>;
+	playback(streamUuid: string, originServer: string | null, initialTimeoutSeconds: number, params: PlaybackParameters): Promise<MediaStream>;
 
 	/**
 	 * Changes the (playback) bitrateConstraints while playing.
