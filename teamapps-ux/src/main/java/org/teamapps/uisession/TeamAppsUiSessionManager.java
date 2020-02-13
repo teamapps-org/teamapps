@@ -26,6 +26,7 @@ import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.dto.AbstractServerMessage;
 import org.teamapps.dto.INIT_NOK;
 import org.teamapps.dto.INIT_OK;
@@ -58,28 +59,21 @@ import java.util.stream.Collectors;
  */
 public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionListener {
 
-	private static final long UI_SESSION_TIMEOUT = 2 * 60 * 1000; // TODO #config make configurable
-	private static final int HTTP_SESSION_TIMEOUT_SECONDS = 24 * 3600;
-	private static final int COMMAND_BUFFER_SIZE = 5_000;
-
-	private static final int CLIENT_MIN_REQUESTED_COMMANDS = 3;
-	private static final int CLIENT_MAX_REQUESTED_COMMANDS = 20;
-	private static final int CLIENT_SENT_EVENTS_BUFFER_SIZE = 500;
-	private static final long CLIENT_KEEPALIVE_INTERVAL = 25000;
-
-	private ScheduledExecutorService scheduledExecutorService;
-	private final ObjectMapper objectMapper;
-	private UiSessionListener uiSessionListener;
-
 	private final static Logger LOGGER = LoggerFactory.getLogger(TeamAppsUiSessionManager.class);
 
+	private final ScheduledExecutorService scheduledExecutorService;
+	private final ObjectMapper objectMapper;
+	private final TeamAppsConfiguration config;
 	private final Table<String, String, UiSession> sessionsById = Tables.synchronizedTable(HashBasedTable.create());
+	private UiSessionListener uiSessionListener;
 
-	public TeamAppsUiSessionManager(ObjectMapper objectMapper) {
-		this(objectMapper, null);
+
+	public TeamAppsUiSessionManager(TeamAppsConfiguration config, ObjectMapper objectMapper) {
+		this(config, objectMapper, null);
 	}
 
-	public TeamAppsUiSessionManager(ObjectMapper objectMapper, UiSessionListener uiSessionListener) {
+	public TeamAppsUiSessionManager(TeamAppsConfiguration config, ObjectMapper objectMapper, UiSessionListener uiSessionListener) {
+		this.config = config;
 		this.uiSessionListener = uiSessionListener;
 		this.objectMapper = objectMapper;
 		this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -87,7 +81,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			thread.setDaemon(true);
 			return thread;
 		});
-		this.scheduledExecutorService.scheduleAtFixedRate(() -> closeTimedOutSessions(UI_SESSION_TIMEOUT), UI_SESSION_TIMEOUT, UI_SESSION_TIMEOUT, TimeUnit.MILLISECONDS);
+		this.scheduledExecutorService.scheduleAtFixedRate(() -> closeTimedOutSessions(config.getUiSessionTimeoutMillis()), config.getUiSessionTimeoutMillis(), config.getUiSessionTimeoutMillis(), TimeUnit.MILLISECONDS);
 	}
 
 	public void setUiSessionListener(UiSessionListener uiSessionListener) {
@@ -213,8 +207,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
-		// TODO #http-timeout
-		se.getSession().setMaxInactiveInterval(HTTP_SESSION_TIMEOUT_SECONDS);
+		se.getSession().setMaxInactiveInterval(config.getHttpSessionTimeoutSeconds());
 	}
 
 	@Override
@@ -260,7 +253,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 		private MessageSender messageSender;
 
-		private final CommandBuffer commandBuffer = new CommandBuffer(COMMAND_BUFFER_SIZE);
+		private final CommandBuffer commandBuffer = new CommandBuffer(config.getCommandBufferSize());
 		private AtomicInteger commandIdCounter = new AtomicInteger();
 
 		private AtomicLong timestampOfLastMessageFromClient = new AtomicLong();
@@ -310,8 +303,8 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		public ClientBackPressureInfo getClientBackPressureInfo() {
 			synchronized (this) {
 				return new ClientBackPressureInfo(
-						COMMAND_BUFFER_SIZE, commandBuffer.getUnconsumedCommandsCount(),
-						CLIENT_MIN_REQUESTED_COMMANDS, CLIENT_MAX_REQUESTED_COMMANDS, maxRequestedCommandId - lastSentCommandId,
+						config.getCommandBufferSize(), commandBuffer.getUnconsumedCommandsCount(),
+						config.getClientMinRequestedCommands(), config.getClientMaxRequestedCommands(), maxRequestedCommandId - lastSentCommandId,
 						requestedCommandsZeroTimestamp
 				);
 			}
@@ -395,10 +388,10 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			LOGGER.debug("INIT successful: " + sessionId);
 			sessionListener.onUiSessionStarted(sessionId, clientInfo);
 			sendAsyncWithErrorHandler(new INIT_OK(
-					CLIENT_MIN_REQUESTED_COMMANDS,
-					CLIENT_MAX_REQUESTED_COMMANDS,
-					CLIENT_SENT_EVENTS_BUFFER_SIZE,
-					CLIENT_KEEPALIVE_INTERVAL
+					config.getClientMinRequestedCommands(),
+					config.getClientMaxRequestedCommands(),
+					config.getClientEventsBufferSize(),
+					config.getKeepaliveMessageIntervalMillis()
 			));
 		}
 
@@ -416,10 +409,10 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			LOGGER.debug("INIT (client refresh) successful: " + sessionId);
 			sessionListener.onUiSessionClientRefresh(sessionId, clientInfo);
 			sendAsyncWithErrorHandler(new INIT_OK(
-					CLIENT_MIN_REQUESTED_COMMANDS,
-					CLIENT_MAX_REQUESTED_COMMANDS,
-					CLIENT_SENT_EVENTS_BUFFER_SIZE,
-					CLIENT_KEEPALIVE_INTERVAL
+					config.getClientMinRequestedCommands(),
+					config.getClientMaxRequestedCommands(),
+					config.getClientEventsBufferSize(),
+					config.getKeepaliveMessageIntervalMillis()
 			));
 		}
 

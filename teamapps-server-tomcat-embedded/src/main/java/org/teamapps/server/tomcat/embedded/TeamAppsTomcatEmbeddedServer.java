@@ -26,6 +26,7 @@ import org.apache.catalina.servlets.DefaultServlet;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.websocket.server.WsSci;
 import org.teamapps.client.ClientCodeExtractor;
+import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.webcontroller.WebController;
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 
@@ -41,13 +42,19 @@ public class TeamAppsTomcatEmbeddedServer {
 
 	private final WebController webController;
 	private final File webAppDirectory;
+	private TeamAppsConfiguration config;
 	private Tomcat server;
 
 	boolean initialized = false;
 
 	public TeamAppsTomcatEmbeddedServer(WebController webController, File webAppDirectory) {
+		this(webController, webAppDirectory, new TeamAppsConfiguration());
+	}
+	
+	public TeamAppsTomcatEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) {
 		this.webController = webController;
 		this.webAppDirectory = webAppDirectory;
+		this.config = config;
 	}
 
 	public void start(int port) throws Exception {
@@ -56,7 +63,7 @@ public class TeamAppsTomcatEmbeddedServer {
 		server = new Tomcat();
 		server.setPort(port);
 		Context context = server.addContext("", webAppDirectory.getAbsolutePath());
-		TeamAppsServletContextListener listener = new TeamAppsServletContextListener(webController);
+		TeamAppsServletContextListener listener = new TeamAppsServletContextListener(config, webController);
 
 		context.addServletContainerInitializer(new WsSci(), null);
 		context.addServletContainerInitializer((c, servletContext) -> {
