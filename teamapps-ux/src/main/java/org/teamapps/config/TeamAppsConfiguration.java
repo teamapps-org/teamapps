@@ -23,17 +23,29 @@ public class TeamAppsConfiguration {
 	 * <p/>
 	 * From a user's perspective, the session is expired and the user most likely needs to reload the page (unless the developer
 	 * has implemented an alternative handling on the client side).
+	 * <p/>
+	 * NOTE that UI sessions might not be destroyed "punctually". The interval at which the session states are updated is
+	 * the {@link #keepaliveMessageIntervalMillis}.
 	 *
 	 * @see #keepaliveMessageIntervalMillis
 	 */
-	private long uiSessionTimeoutMillis = 2 * 60_000;
+	private long uiSessionTimeoutMillis = 30 * 60_000;
+
+	/**
+	 * The timeout after which sessions are regarded as "inactive".
+	 * <p/>
+	 * While this does not have any direct effects inside the TeamApps framework, the "activity state" can be monitored
+	 * on the application level (see {@link SessionContext#onActivityStateChanged}). For instance, this can be used to mark an application user
+	 * as "away".
+	 */
+	private long uiSessionInactivityTimeoutMillis = 60_000;
 
 	/**
 	 * The interval at which the client sends keep alive messages.
 	 *
 	 * @see #uiSessionTimeoutMillis
 	 */
-	private long keepaliveMessageIntervalMillis = 25000;
+	private long keepaliveMessageIntervalMillis = 25_000;
 
 	/**
 	 * Will overwrite the servlet container's HTTP session timeout.
@@ -49,7 +61,7 @@ public class TeamAppsConfiguration {
 	/**
 	 * The number of UI commands for a client that will be buffered on the server side before the UI session will be closed.
 	 */
-	private int serverCommandBufferSize = 5_000;
+	private int commandBufferSize = 5_000;
 
 	/**
 	 * This is a client back pressure protocol parameter.
@@ -89,6 +101,20 @@ public class TeamAppsConfiguration {
 	}
 
 	/**
+	 * @see #uiSessionInactivityTimeoutMillis
+	 */
+	public long getUiSessionInactivityTimeoutMillis() {
+		return uiSessionInactivityTimeoutMillis;
+	}
+
+	/**
+	 * @see #uiSessionInactivityTimeoutMillis
+	 */
+	public void setUiSessionInactivityTimeoutMillis(long uiSessionInactivityTimeoutMillis) {
+		this.uiSessionInactivityTimeoutMillis = uiSessionInactivityTimeoutMillis;
+	}
+
+	/**
 	 * @see #keepaliveMessageIntervalMillis
 	 */
 	public long getKeepaliveMessageIntervalMillis() {
@@ -117,17 +143,17 @@ public class TeamAppsConfiguration {
 	}
 
 	/**
-	 * @see #serverCommandBufferSize
+	 * @see #commandBufferSize
 	 */
 	public int getCommandBufferSize() {
-		return serverCommandBufferSize;
+		return commandBufferSize;
 	}
 
 	/**
-	 * @see #serverCommandBufferSize
+	 * @see #commandBufferSize
 	 */
-	public void setServerCommandBufferSize(int serverCommandBufferSize) {
-		this.serverCommandBufferSize = serverCommandBufferSize;
+	public void setCommandBufferSize(int commandBufferSize) {
+		this.commandBufferSize = commandBufferSize;
 	}
 
 	/**

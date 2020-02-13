@@ -88,6 +88,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 
 	}
 
+	@Override
 	public void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo) {
 		SessionRecorder sessionRecorder = null;
 		if (userSessionCommandsRecordingPath != null) {
@@ -157,8 +158,17 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		}
 	}
 
+	@Override
 	public void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo) {
 		this.onUiSessionStarted(sessionId, clientInfo);
+	}
+
+	@Override
+	public void onActivityStateChanged(QualifiedUiSessionId sessionId, boolean active) {
+		SessionContext context = sessionContextById.get(sessionId);
+		if (context != null) {
+			context.handleActivityStateChangedInternal(active);
+		}
 	}
 
 	@Override
@@ -169,11 +179,11 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		}
 	}
 
+	@Override
 	public void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
 		SessionContext sessionContext = sessionContextById.get(sessionId);
 		if (sessionContext != null) {
-			CompletableFuture<Void> future = sessionContext.runWithContext(() -> {
-				sessionContext.setLastClientEventTimestamp(System.currentTimeMillis());
+			sessionContext.runWithContext(() -> {
 				String uiComponentId = event.getComponentId();
 				ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
 				if (clientObject != null) {
