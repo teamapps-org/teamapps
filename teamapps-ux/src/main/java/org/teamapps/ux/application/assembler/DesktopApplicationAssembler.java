@@ -60,7 +60,11 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
         WorkSpaceLayoutView layoutView = new WorkSpaceLayoutView(workSpaceLayout, view.getPanel(), tabTitle, true, false);
         viewGroup.addView(layoutView);
 
-        if (viewGroup != null && viewGroup.getPanelState() != ViewGroupPanelState.NORMAL) {
+        if (view.getCustomViewSize() != null) {
+            changeViewSize(layoutView, view.getCustomViewSize());
+        }
+        
+        if (viewGroup.getPanelState() != ViewGroupPanelState.NORMAL) {
             viewGroup.setPanelState(ViewGroupPanelState.NORMAL);
         }
     }
@@ -173,20 +177,24 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
         if (isActivePerspective && viewSize != null) {
             WorkSpaceLayoutView layoutView = workSpaceLayout.getViewByPanel(view.getPanel());
             if (layoutView != null) {
-                if (viewSize.isWidthAvailable()) {
-                    if (viewSize.getRelativeWidth() != null) {
-                        layoutView.setRelativeWidth(viewSize.getRelativeWidth());
-                    } else {
-                        layoutView.setAbsoluteWidth(viewSize.getAbsoluteWidth());
-                    }
-                }
-                if (viewSize.isHeightAvailable()) {
-                    if (viewSize.getRelativeHeight() != null) {
-                        layoutView.setRelativeHeight(viewSize.getRelativeHeight());
-                    } else {
-                        layoutView.setAbsoluteHeight(viewSize.getAbsoluteHeight());
-                    }
-                }
+                changeViewSize(layoutView, viewSize);
+            }
+        }
+    }
+
+    private void changeViewSize(WorkSpaceLayoutView layoutView, ViewSize viewSize) {
+        if (viewSize.isWidthAvailable()) {
+            if (viewSize.getRelativeWidth() != null) {
+                layoutView.setRelativeWidth(viewSize.getRelativeWidth());
+            } else {
+                layoutView.setAbsoluteWidth(viewSize.getAbsoluteWidth());
+            }
+        }
+        if (viewSize.isHeightAvailable()) {
+            if (viewSize.getRelativeHeight() != null) {
+                layoutView.setRelativeHeight(viewSize.getRelativeHeight());
+            } else {
+                layoutView.setAbsoluteHeight(viewSize.getAbsoluteHeight());
             }
         }
     }
