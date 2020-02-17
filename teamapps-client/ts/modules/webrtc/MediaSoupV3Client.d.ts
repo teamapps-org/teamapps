@@ -12,7 +12,8 @@ interface MediaSoupV3Client {
 	 *
 	 * If publishing was successful, the returned promise resolves normally, otherwise it rejects.
 	 *
-	 * If publishing was initially successful but got interrupted (by network problems), the client will try to re-connect until the stream is published again
+	 * If publishing was initially successful but got interrupted (by network problems),
+	 * the client will try to re-connect until the stream is published again
 	 * or the stop() method got called.
 	 *
 	 * @param mediaStream The mediaStream to publish.
@@ -34,11 +35,15 @@ interface MediaSoupV3Client {
 	 * the client will try to re-connect until the playback is re-established or the stop() method got called.
 	 *
 	 * @param streamUuid The UUID of the stream to play back
+	 * @param authToken
 	 * @param originServer The URL of the origin server for this stream.
-	 * @param initialTimeoutSeconds The number of seconds to wait until there is a stream with the streamUuid given to the playback() method.
+	 * @param originAuthToken
+	 * @param initialTimeoutSeconds The number of seconds to wait until there is a stream with the streamUuid.
 	 * @param params Additional parameters
 	 */
-	playback(streamUuid: string, originServer: string | null, initialTimeoutSeconds: number, params: PlaybackParameters): Promise<MediaStream>;
+	playback(streamUuid: string, authToken: string,
+	         originServer: string | null, originAuthToken: string | null,
+	         initialTimeoutSeconds: number, params: PlaybackParameters): Promise<MediaStream>;
 
 	/**
 	 * Changes the (playback) bitrateConstraints while playing.
