@@ -42,10 +42,10 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractField<VALUE> extends AbstractComponent {
 
-	private static final FieldValidator REQUIRED_VALIDATOR = (field, value) -> field.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
-			CurrentSessionContext.get().getLocalized("dict.requiredField"))) : null;
-
 	private static Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
+	
+	private final FieldValidator requiredValidator = (value) -> this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
+			CurrentSessionContext.get().getLocalized("dict.requiredField"))) : null;
 
 	public final Event<VALUE> onValueChanged = new Event<>();
 	public final Event<Boolean> onVisibilityChanged = new Event<>();
@@ -176,7 +176,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		if (validators.size() > 0) {
 			for (FieldValidator<VALUE> validator : validators) {
 				fieldMessagesByValidator.remove(validator);
-				List<FieldMessage> messages = validator.validate(this, getValue());
+				List<FieldMessage> messages = validator.validate(getValue());
 				if (messages == null) {
 					messages = Collections.emptyList();
 				}
@@ -193,14 +193,14 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	 */
 	public void setRequired(boolean required) {
 		if (required) {
-			addValidator(REQUIRED_VALIDATOR);
+			addValidator(requiredValidator);
 		} else {
-			removeValidator(REQUIRED_VALIDATOR);
+			removeValidator(requiredValidator);
 		}
 	}
 
 	public boolean isRequired() {
-		return validators.contains(REQUIRED_VALIDATOR);
+		return validators.contains(requiredValidator);
 	}
 
 	public List<FieldMessage> getFieldMessages() {
