@@ -17,7 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-.UiHtmlView {
-  padding: 0.1px; // prevent margin collapsing (e.g. h1 in content)
-  position: relative;
+class UiHtmlView extends UiComponent {
+	String html;
+
+	Dictionary<UiComponent*> componentsByContainerElementSelector;
+
+	command addComponent(String containerElementSelector, UiComponent* component);
+	command removeComponent(UiComponent* component);
 }
