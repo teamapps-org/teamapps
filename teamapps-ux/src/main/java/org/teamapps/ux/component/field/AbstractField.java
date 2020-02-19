@@ -44,7 +44,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
 	
-	private final FieldValidator requiredValidator = (value) -> this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
+	private final FieldValidator<VALUE> requiredValidator = (value) -> this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
 			CurrentSessionContext.get().getLocalized("dict.requiredField"))) : null;
 
 	public final Event<VALUE> onValueChanged = new Event<>();
