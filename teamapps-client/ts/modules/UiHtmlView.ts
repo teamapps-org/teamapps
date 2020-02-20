@@ -32,7 +32,13 @@ export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiHtmlView">${config.html}</div>`);
 		for (let selector in config.componentsByContainerElementSelector) {
-			this.addComponent(selector, config.componentsByContainerElementSelector[selector]);
+			let components = config.componentsByContainerElementSelector[selector] as UiComponent[];
+			for (let c of components) {
+				this.addComponent(selector, c);
+			}
+		}
+		for (let selector in config.contentHtmlByContainerElementSelector) {
+			this.setContentHtml(selector, config.contentHtmlByContainerElementSelector[selector]);
 		}
 	}
 
@@ -41,7 +47,7 @@ export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements
 	}
 
 	addComponent(containerElementSelector: string, component: unknown): void {
-		let containerElement = this.$main.querySelector(containerElementSelector);
+		let containerElement = this.$main.querySelector(`:scope ${containerElementSelector}`);
 		if (containerElement != null) {
 			containerElement.appendChild((component as UiComponent).getMainElement());
 		} else {
@@ -52,6 +58,18 @@ export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements
 	removeComponent(component: unknown): void {
 		(component as UiComponent).getMainElement().remove();
 	}
+
+	setContentHtml(containerElementSelector: string, html: string): void {
+		let containerElement = this.$main.querySelector(`:scope ${containerElementSelector}`);
+		if (containerElement != null) {
+			containerElement.innerHTML = '';
+			let childNodes = parseHtml(`<div>${html}</div>`).childNodes;
+			childNodes.forEach(cn => containerElement.appendChild(cn))
+		} else {
+			this.logger.error(`Could not set content HTML since selector does not match any element: ${containerElementSelector}`);
+		}
+	}
+
 
 }
 

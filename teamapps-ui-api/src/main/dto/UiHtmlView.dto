@@ -20,8 +20,10 @@
 class UiHtmlView extends UiComponent {
 	String html;
 
-	Dictionary<UiComponent*> componentsByContainerElementSelector;
+	Dictionary<List<UiComponent*>> componentsByContainerElementSelector;
+	Dictionary<String> contentHtmlByContainerElementSelector;
 
 	command addComponent(String containerElementSelector, UiComponent* component);
 	command removeComponent(UiComponent* component);
+	command setContentHtml(String containerElementSelector, String html);
 }
