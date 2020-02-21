@@ -48,9 +48,11 @@ public class ToolbarButton {
 	private Template template; // if null, will fallback to toolbarButtonGroup's template
 	private PropertyExtractor propertyExtractor; // if null, will fallback to toolbarButtonGroup's valueExtractor
 
+	// ===== HACKS =====
 	private String openNewTabWithUrl;
 	private Component togglesFullScreenOnComponent;
-
+	private Component startPlaybackComponent;
+	// ===== END HACKS =====
 
 	private Supplier<Component> dropDownComponentSupplier;
 	private boolean eagerDropDownRendering = false;
@@ -136,7 +138,8 @@ public class ToolbarButton {
 		ui.setDropDownPanelWidth(droDownPanelWidth > 0 ? droDownPanelWidth : 450);
 		ui.setVisible(visible);
 		ui.setOpenNewTabWithUrl(openNewTabWithUrl);
-		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.getId() : null);
+		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.createUiReference() : null);
+		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent.createUiReference() : null);
 		ui.setBackgroundColor(UiUtil.createUiColor(backgroundColor));
 		ui.setHoverBackgroundColor(UiUtil.createUiColor(hoverBackgroundColor));
 		return ui;
@@ -158,6 +161,15 @@ public class ToolbarButton {
 
 	public ToolbarButton setTogglesFullScreenOnComponent(Component togglesFullScreenOnComponent) {
 		this.togglesFullScreenOnComponent = togglesFullScreenOnComponent;
+		return this;
+	}
+
+	public Component getStartPlaybackComponent() {
+		return startPlaybackComponent;
+	}
+
+	public ToolbarButton setStartPlaybackComponent(Component startPlaybackComponent) {
+		this.startPlaybackComponent = startPlaybackComponent;
 		return this;
 	}
 

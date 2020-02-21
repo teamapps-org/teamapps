@@ -73,8 +73,11 @@ export class UiToolbarButton {
 				if (isFullScreen()) {
 					exitFullScreen();
 				} else {
-					enterFullScreen(this.context.getClientObjectById(this.config.togglesFullScreenOnComponent) as UiComponent);
+					enterFullScreen(this.config.togglesFullScreenOnComponent as UiComponent);
 				}
+			}
+			if (this.config.startPlaybackComponent) {
+				(this.config.startPlaybackComponent as any).play();
 			}
 			if (this.config.openNewTabWithUrl) {
 				window.open(this.config.openNewTabWithUrl, '_blank');
