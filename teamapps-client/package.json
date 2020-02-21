@@ -134,7 +134,7 @@
     "slickgrid": "https://github.com/yamass/SlickGrid.git#d8ed005670faae0635ec5abad2f5ed20bf454812",
     "socket.io-client": "^2.3.0",
     "tiny-slider": "^2.8.8",
-    "tinymce": "^4.7.13",
+    "tinymce": "^4.9.7",
     "tinymce-i18n": "^18.5.8",
     "tooltip.js": "^1.3.0",
     "trivial-components": "^0.3.27",
