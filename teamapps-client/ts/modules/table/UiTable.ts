@@ -181,7 +181,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 		if (config.showRowCheckBoxes) {
 			var checkboxSelector = new Slick.CheckboxSelectColumn({
-				cssClass: "justify-center"
 			});
 			this.allColumns.unshift(checkboxSelector.getColumnDefinition() as Column);
 		}
@@ -194,7 +193,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				name: "#",
 				field: "",
 				formatter: RowNumberFormatter,
-				cssClass: "justify-right",
 				headerCssClass: "text-right",
 				width: 35,
 				maxWidth: 75,
@@ -583,11 +581,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private getColumnCssClass(column: Column) {
 		let columnCssClasses: string[] = [];
-		if (column.uiField instanceof UiNumberField || column.uiField instanceof UiCurrencyField) {
-			columnCssClasses.push('justify-right');
-		} else if (column.uiField instanceof UiCheckBox || column.uiField instanceof UiButton) {
-			columnCssClasses.push('justify-center');
-		}
 		const highestSeverity = getHighestSeverity(column.messages, null);
 		if (highestSeverity != null) {
 			columnCssClasses.push(backgroundColorCssClassesByMessageSeverity[highestSeverity]);

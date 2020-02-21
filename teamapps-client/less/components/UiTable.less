@@ -28,20 +28,6 @@
   .slick-table {
     height: 100%;
 
-    .justify-center,
-    .justify-center > .validation-class-wrapper > .anti-overflow-wrapper,
-    .justify-center > .slick-column-name {
-      justify-content: center;
-    }
-    .slick-cell.justify-right,
-    .slick-cell.justify-right > .validation-class-wrapper > .anti-overflow-wrapper {
-      justify-content: flex-end;
-    }
-    .slick-header-column.justify-right,
-    .slick-header-column.justify-right > .slick-column-name {
-      text-align: right;
-    }
-
     .slick-headerrow,
     .slick-footerrow {
       overflow: hidden; //removed since it breaks horizontal scrolling of header/footer row
@@ -119,6 +105,10 @@
           align-items: center;
           padding: 0;
           overflow: hidden;
+        }
+
+        .anti-overflow-wrapper > * {
+          width: 100%;
         }
       }
 
