@@ -65,8 +65,9 @@ class UiToolbarButton {
 	required UiTemplate template;
 	boolean visible = true;
 	required Object recordData;
-	String togglesFullScreenOnComponent; // If this is set, this button makes the specified component enter fullscreen. The button still sends events to the server.
 	String openNewTabWithUrl; // If this is set, when the user clicks this button, the specified URL is navigated to in a new tab. The button still sends events to the server.
+	UiComponent* togglesFullScreenOnComponent; // If this is set, this button makes the specified component will enter fullscreen. The button still sends events to the server.
+	UiComponent* startPlaybackComponent; // If this is set, when the user clicks this button, the play() method of the specified component will be called (if it has such a method).
 	boolean hasDropDown;
 	UiComponent* dropDownComponent;
 	int dropDownPanelWidth = 450;
