@@ -30,8 +30,6 @@ classConfigDefinition(c) ::= <<
 
 import {UiEvent} from "./UiEvent";
 import {UiCommand} from "./UiCommand";
-<! import {UiSubEvent} from "./UiSubEvent";!>
-<! import {UiSubCommand} from "./UiSubCommand";!>
 import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
 <c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">

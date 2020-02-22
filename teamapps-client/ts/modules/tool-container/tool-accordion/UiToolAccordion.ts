@@ -35,6 +35,7 @@ import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiComponent} from "../../UiComponent";
 import {UiColorConfig} from "../../../generated/UiColorConfig";
 import {UiToolAccordionButton} from "./UiToolAccordionButton";
+require("jquery-ui/ui/scroll-parent.js")
 
 export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConfig> implements UiToolAccordionCommandHandler, UiToolAccordionEventSource {
 

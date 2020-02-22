@@ -78,6 +78,6 @@ class UiTemplateTestContainer extends UiComponent {
 *
 ***********************************************************************************************************************/
 
-class UiReactTestComponent extends UiComponent {
-
-}
+//class UiReactTestComponent extends UiComponent {
+//
+//}

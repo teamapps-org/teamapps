@@ -136,8 +136,6 @@ export {UiToolButton} from "./micro-components/UiToolButton";
 export {UiPieChart} from "./UiPieChart";
 export {UiTreeGraph} from "./UiTreeGraph";
 
-export {UiReactTestComponent} from "./UiReactTestComponent";
-
 export {UiTestHarness} from "./UiTestHarness";
 export {draggable} from "./util/draggable";
 

@@ -53,7 +53,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 		if (this.isHighDensityScreen) {
 			document.body.classList.add('high-density-screen');
 		}
-		window.onmessage = (e) => {
+		window.onmessage = (e: MessageEvent) => {
 			if (e.origin !== location.origin || e.ports.length === 0) {
 				return;
 			}
