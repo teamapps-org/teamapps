@@ -53,11 +53,6 @@ public class CheckBox extends AbstractField<Boolean> {
 		return uiCheckBox;
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public String getCaption() {
 		return caption;
 	}

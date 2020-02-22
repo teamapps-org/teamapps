@@ -77,8 +77,4 @@ public abstract class AbstractDateTimeField<FIELD extends AbstractDateTimeField<
 		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetTimeFormatCommand(getId(), timeFormat));
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

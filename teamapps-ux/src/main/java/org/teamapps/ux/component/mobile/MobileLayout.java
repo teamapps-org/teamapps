@@ -53,11 +53,6 @@ public class MobileLayout extends AbstractComponent implements Container {
 	}
 
 	@Override
-	protected void doDestroy() {
-
-	}
-
-	@Override
 	public void handleUiEvent(UiEvent event) {
 	}
 

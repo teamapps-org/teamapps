@@ -214,10 +214,6 @@ public class WorkSpaceLayoutView {
 		this.onRemoved.fire(null);
 	}
 
-	void destroy() {
-		panel.destroy(); // will also destroy the component
-	}
-
 	public WorkSpaceLayoutViewGroup getViewGroup() {
 		return viewGroup;
 	}

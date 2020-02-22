@@ -94,8 +94,4 @@ public class ImageCropper extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiImageCropper.SetSelectionCommand(getId(), selection.createUiImageCropperSelection()));
 	}
 
-	@Override
-	protected void doDestroy() {
-
-	}
 }

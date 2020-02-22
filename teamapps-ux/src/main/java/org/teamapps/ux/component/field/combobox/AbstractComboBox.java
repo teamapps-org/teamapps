@@ -237,11 +237,6 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		return uiTreeRecord.getId() < 0;
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public boolean isAnimate() {
 		return animate;
 	}

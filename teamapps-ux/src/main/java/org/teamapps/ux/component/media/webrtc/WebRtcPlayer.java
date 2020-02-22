@@ -81,8 +81,4 @@ public class WebRtcPlayer extends AbstractComponent {
 
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

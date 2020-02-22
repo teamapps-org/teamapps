@@ -297,8 +297,4 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
-	@Override
-	protected void doDestroy() {
-		unregisterModelListeners();
-	}
 }

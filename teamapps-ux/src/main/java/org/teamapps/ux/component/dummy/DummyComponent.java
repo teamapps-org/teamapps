@@ -52,11 +52,6 @@ public class DummyComponent extends AbstractComponent {
 		onClick.fire(null);
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public String getText() {
 		return text;
 	}

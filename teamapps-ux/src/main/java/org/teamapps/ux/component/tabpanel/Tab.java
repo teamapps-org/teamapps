@@ -183,12 +183,4 @@ public class Tab {
 		return this;
 	}
 
-	public void destroy() {
-		if (this.content != null) {
-			this.content.destroy();
-		}
-		if (this.toolbar != null) {
-			this.toolbar.destroy();
-		}
-	}
 }

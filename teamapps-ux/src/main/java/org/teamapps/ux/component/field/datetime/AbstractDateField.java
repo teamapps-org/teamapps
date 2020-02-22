@@ -44,11 +44,6 @@ public abstract class AbstractDateField<FIELD extends AbstractDateField<FIELD, V
 		defaultHandleTextInputEvent(event);
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	protected void mapAbstractDateFieldUiValues(AbstractUiDateField dateField) {
 		mapAbstractFieldAttributesToUiField(dateField);
 		dateField.setShowDropDownButton(showDropDownButton);

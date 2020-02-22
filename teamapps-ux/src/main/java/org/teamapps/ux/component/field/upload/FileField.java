@@ -196,11 +196,6 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 		}
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public Template getFileItemTemplate() {
 		return fileItemTemplate;
 	}

@@ -64,8 +64,4 @@ public class Gauge extends AbstractComponent {
 		return value;
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

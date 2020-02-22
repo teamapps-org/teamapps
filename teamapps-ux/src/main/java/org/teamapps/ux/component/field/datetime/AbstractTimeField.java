@@ -46,11 +46,6 @@ public abstract class AbstractTimeField<FIELD extends AbstractTimeField, VALUE> 
 		defaultHandleTextInputEvent(event);
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public void mapAbstractTimeFieldUiValues(AbstractUiTimeField uiTimeField) {
 		mapAbstractFieldAttributesToUiField(uiTimeField);
 		uiTimeField.setShowDropDownButton(isShowDropDownButton());

@@ -184,10 +184,4 @@ public class Button<RECORD> extends AbstractField<Boolean> {
 		return this;
 	}
 
-	@Override
-	protected void doDestroy() {
-		if (this.dropDownComponent != null) {
-			this.dropDownComponent.destroy();
-		}
-	}
 }

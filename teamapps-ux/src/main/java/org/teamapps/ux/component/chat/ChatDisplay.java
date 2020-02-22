@@ -117,12 +117,6 @@ public class ChatDisplay extends AbstractComponent {
 		return uiChatFile;
 	}
 
-	@Override
-	protected void doDestroy() {
-		this.model.onMessagesAdded().removeListener(modelAddMessagesAddedListener);
-		this.model.onAllDataChanged().removeListener(modelAllDataChangedListener);
-	}
-
 	public ChatDisplayModel getModel() {
 		return model;
 	}

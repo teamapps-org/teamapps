@@ -152,11 +152,6 @@ public class BootstrapishGridLayout extends AbstractComponent implements Contain
 		// none
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public void setColumns(List<GridColumn> columns) {
 		this.columns.clear();
 		this.columns.addAll(columns);

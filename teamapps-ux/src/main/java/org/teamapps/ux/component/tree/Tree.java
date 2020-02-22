@@ -117,11 +117,6 @@ public class Tree<RECORD> extends AbstractComponent {
 		model.onChanged().removeListener(modelChangedListener);
 	}
 
-	@Override
-	protected void doDestroy() {
-		unregisterMutableTreeModelListeners();
-	}
-
 	protected UiTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
 		if (record == null) {
 			return null;

@@ -65,11 +65,6 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 		defaultHandleTextInputEvent(event);
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public int getPrecision() {
 		return precision;
 	}

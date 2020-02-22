@@ -20,7 +20,6 @@
 package org.teamapps.ux.component.field;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiImageField;
 import org.teamapps.ux.component.absolutelayout.Length;
 import org.teamapps.ux.component.format.Border;
@@ -48,11 +47,6 @@ public class ImageField extends AbstractField<String> {
 		uiImageField.setImageSizing(imageSizing.toUiImageSizing());
 		uiImageField.setBackgroundColor(backgroundColor.toHtmlColorString());
 		return uiImageField;
-	}
-
-	@Override
-	protected void doDestroy() {
-		// nothing to do
 	}
 
 	public Length getWidth() {

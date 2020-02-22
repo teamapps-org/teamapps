@@ -59,12 +59,6 @@ public interface Component extends ClientObject {
 		setCssStyle(null, propertyName, value);
 	}
 
-	/**
-	 * Obsolete. Will get deleted soon.
-	 */
-	@Deprecated
-	void destroy();
-
 //	void updateEffectiveVisibility();
 //	Event<Boolean> onEffectiveVisibilityChanged();
 

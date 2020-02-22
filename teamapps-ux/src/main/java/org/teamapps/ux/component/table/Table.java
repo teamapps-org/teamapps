@@ -161,14 +161,6 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		return new Table<>();
 	}
 
-	@Override
-	protected void doDestroy() {
-		this.unregisterModelEventListeners();
-		this.headerRowFields.values().forEach(AbstractField::destroy);
-		this.footerRowFields.values().forEach(AbstractField::destroy);
-		this.columns.forEach(c -> c.getField().destroy());
-	}
-
 	public void addColumn(TableColumn<RECORD> column) {
 		addColumn(column, columns.size());
 	}

@@ -145,10 +145,4 @@ public class ToolButton extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiToolButton.SetDropDownSizeCommand(getId(), minDropDownWidth, minDropDownHeight));
 	}
 
-	@Override
-	protected void doDestroy() {
-		if (this.dropDownComponent != null) {
-			this.dropDownComponent.destroy();
-		}
-	}
 }

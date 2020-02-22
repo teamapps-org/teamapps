@@ -43,7 +43,6 @@ public abstract class AbstractComponent implements Component {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(AbstractComponent.class);
 
-	public final Event<Void> onDestroyed = new Event<>();
 	public final Event<Void> onRendered = new Event<>();
 
 //	public final Event<Boolean> onEffectiveVisibilityChanged = new Event<>();
@@ -61,7 +60,6 @@ public abstract class AbstractComponent implements Component {
 	public AbstractComponent() {
 		this.sessionContext = CurrentSessionContext.get();
 		id = getClass().getSimpleName() + "-" + UUID.randomUUID().toString();
-		sessionContext.onDestroyed().addListener(aVoid -> this.destroy());
 	}
 
 	protected void mapAbstractUiComponentProperties(UiComponent uiComponent) {
@@ -106,38 +104,6 @@ public abstract class AbstractComponent implements Component {
 
 	public boolean isDestroyed() {
 		return destroyed;
-	}
-
-	/**
-	 * Obsolete. Will get deleted soon.
-	 */
-	@Deprecated
-	public final void destroy() {
-		if (!destroyed) {
-			if (isRendered()) {
-				unrender();
-			}
-			this.destroyed = true;
-			this.doDestroy();
-			this.onDestroyed.fire(null);
-//			onEffectiveVisibilityChanged.fire(true);  //todo #visibility
-		}
-	}
-
-	/**
-	 * Obsolete. Will get deleted soon.
-	 */
-	@Deprecated
-	public Event<Void> onDestroyed() {
-		return onDestroyed;
-	}
-
-	/**
-	 * Do not implement or call. Obsolete. Will get deleted soon.
-	 */
-	@Deprecated
-	protected void doDestroy() {
-		// do nothing
 	}
 
 	@Override

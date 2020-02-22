@@ -127,11 +127,6 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	@Override
-	protected void doDestroy() {
-		unregisterModelListeners();
-	}
-
-	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
 			case UI_TIME_GRAPH_DATA_NEEDED: {
