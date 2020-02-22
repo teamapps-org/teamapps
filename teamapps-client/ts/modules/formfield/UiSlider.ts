@@ -94,7 +94,7 @@ export class UiSlider extends UiField<UiSliderConfig, number> implements UiSlide
 				thousand: this._context.config.thousandsSeparator,
 				mark: this._context.config.decimalSeparator,
 				prefix: this.tooltipPrefix,
-				postfix: this.tooltipPostfix
+				suffix: this.tooltipPostfix
 			}),
 			step: this.step,
 			connect: [true, false],

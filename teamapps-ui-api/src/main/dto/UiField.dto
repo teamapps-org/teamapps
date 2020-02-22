@@ -541,25 +541,6 @@ class UiColorPicker extends UiField {
     String clearButtonCaption = "Clear";
 }
 
-class UiRadioGroup extends UiField {
-	List<UiRadioButton> radioButtons;
-
-	command addButton(UiRadioButton button);
-	command removeButton(String value);
-}
-
-class UiSwitch extends UiField {
-	UiColor uncheckedTrackColor;
-	UiColor uncheckedButtonColor;
-	UiColor checkedTrackColor;
-	UiColor checkedButtonColor;
-}
-
-class UiRadioButton {
-	required String value;
-	required String label;
-}
-
 class UiTemplateField extends UiField {
 	UiTemplate template;
 	
