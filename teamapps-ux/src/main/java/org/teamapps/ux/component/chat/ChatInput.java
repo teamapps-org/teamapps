@@ -76,11 +76,6 @@ public class ChatInput extends AbstractComponent {
 		}
 	}
 
-	@Override
-	protected void doDestroy() {
-
-	}
-
 	public long getMaxBytesPerUpload() {
 		return maxBytesPerUpload;
 	}

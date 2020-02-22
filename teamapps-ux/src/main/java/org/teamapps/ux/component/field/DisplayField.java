@@ -48,11 +48,6 @@ public class DisplayField extends AbstractField<String> {
 		return uiDisplayField;
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public boolean isShowBorder() {
 		return showBorder;
 	}

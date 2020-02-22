@@ -63,11 +63,6 @@ public class Label extends AbstractField<String> {
 		}
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public String getCaption() {
 		return caption;
 	}

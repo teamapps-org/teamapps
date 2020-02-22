@@ -42,9 +42,10 @@ import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.session.CurrentSessionContext;
 
-import java.time.*;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -212,13 +213,6 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 
 		return uiCalendar;
-	}
-
-	@Override
-	protected void doDestroy() {
-		if (model != null) {
-			unregisterModelEventListeners();
-		}
 	}
 
 	private List<CEVENT> query(Instant queryStart, Instant queryEnd) {

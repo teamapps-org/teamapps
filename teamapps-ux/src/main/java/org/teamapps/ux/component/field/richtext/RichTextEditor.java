@@ -105,11 +105,6 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 		}
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public ToolbarVisibilityMode getToolbarVisibilityMode() {
 		return toolbarVisibilityMode;
 	}

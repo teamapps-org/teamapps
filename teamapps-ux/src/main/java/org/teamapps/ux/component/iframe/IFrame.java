@@ -50,11 +50,6 @@ public class IFrame extends AbstractComponent {
 		}
 	}
 
-	@Override
-	protected void doDestroy() {
-
-	}
-
 	public String getUrl() {
 		return url;
 	}

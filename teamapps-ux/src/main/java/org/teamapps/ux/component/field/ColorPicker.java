@@ -56,11 +56,6 @@ public class ColorPicker extends AbstractField<Color> {
 		}
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public Color getDefaultColor() {
 		return defaultColor;
 	}

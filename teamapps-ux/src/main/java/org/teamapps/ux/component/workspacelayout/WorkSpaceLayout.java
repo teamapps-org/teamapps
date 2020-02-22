@@ -123,14 +123,6 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 	}
 
 	@Override
-	protected void doDestroy() {
-		this.rootItemsByWindowId.forEach((s, workSpaceLayoutItem) -> workSpaceLayoutItem.getAllViews().forEach(view -> view.destroy()));
-		if (this.toolbar != null) {
-			this.toolbar.destroy();
-		}
-	}
-
-	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
 			case UI_WORK_SPACE_LAYOUT_LAYOUT_CHANGED: {

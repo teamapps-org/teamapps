@@ -69,12 +69,12 @@ public class MapView<RECORD> extends AbstractComponent {
 	private AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
 		public void handleChanged(AbstractMapShape shape) {
-			queueCommandIfRendered(() -> new UiMap.UpdateShapeCommand(getId(), shape.getClientId(), shape.createUiMapShape()));
+			queueCommandIfRendered(() -> new UiMap.UpdateShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
 		}
 
 		@Override
 		public void handleRemoved(AbstractMapShape shape) {
-			queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientId()));
+			queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
 		}
 	};
 
@@ -179,9 +179,9 @@ public class MapView<RECORD> extends AbstractComponent {
 					default:
 						throw new IllegalArgumentException("Unknown shape type from UI: " + drawnEvent.getShape().getUiObjectType());
 				}
-				shape.setClientId(drawnEvent.getShapeId());
+				shape.setClientIdInternal(drawnEvent.getShapeId());
 				shapesByClientId.put(drawnEvent.getShapeId(), shape);
-				shape.setListener(shapeListener);
+				shape.setListenerInternal(shapeListener);
 				this.onShapeDrawn.fire(shape);
 				break;
 			}
@@ -193,13 +193,13 @@ public class MapView<RECORD> extends AbstractComponent {
 	}
 
 	public void addPolyLine(AbstractMapShape shape) {
-		shape.setListener(shapeListener);
-		shapesByClientId.put(shape.getClientId(), shape);
-		queueCommandIfRendered(() -> new UiMap.AddShapeCommand(getId(), shape.getClientId(), shape.createUiMapShape()));
+		shape.setListenerInternal(shapeListener);
+		shapesByClientId.put(shape.getClientIdInternal(), shape);
+		queueCommandIfRendered(() -> new UiMap.AddShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
 	}
 
 	public void removeShape(AbstractMapShape shape) {
-		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientId()));
+		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
@@ -340,8 +340,4 @@ public class MapView<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiMap.StopDrawingShapeCommand(getId()));
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

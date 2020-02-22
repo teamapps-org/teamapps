@@ -136,11 +136,6 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 		this.setCssStyle("> .background-color-div", "background-color", backgroundColor.toHtmlColorString());
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public List<ToolbarButtonGroup> getToolbarButtonGroups() {
 		ArrayList<ToolbarButtonGroup> groups = new ArrayList<>();
 		groups.addAll(buttonGroups);

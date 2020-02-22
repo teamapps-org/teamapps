@@ -179,8 +179,4 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		queueCommandIfRendered(() -> new UiGridForm.SetSectionCollapsedCommand(getId(), sectionId, collapsed));
 	}
 
-	@Override
-	protected void doDestroy() {
-		this.logicalForm.getFields().forEach((fieldName, field) -> field.destroy());
-	}
 }

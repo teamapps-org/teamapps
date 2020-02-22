@@ -61,10 +61,6 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	private boolean valueChangedByClient;
 
-	public AbstractField() {
-		getSessionContext().onDestroyed().addListener(aVoid -> this.destroy());
-	}
-
 	public FieldEditingMode getEditingMode() {
 		return editingMode;
 	}

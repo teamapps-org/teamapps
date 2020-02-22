@@ -54,27 +54,15 @@ public abstract class AbstractMapShape {
 		listener.handleRemoved(this);
 	}
 
-	/**
-	 * @deprecated For internal use only!!
-	 */
-	@Deprecated
-	public void setListener(MapShapeListener listener) {
+	public void setListenerInternal(MapShapeListener listener) {
 		this.listener = listener;
 	}
 
-	/**
-	 * @deprecated For internal use only!!
-	 */
-	@Deprecated
-	public String getClientId() {
+	public String getClientIdInternal() {
 		return clientId;
 	}
 
-	/**
-	 * @deprecated For internal use only!!
-	 */
-	@Deprecated
-	public void setClientId(String clientId) {
+	public void setClientIdInternal(String clientId) {
 		this.clientId = clientId;
 	}
 

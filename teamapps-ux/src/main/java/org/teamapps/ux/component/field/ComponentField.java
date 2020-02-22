@@ -52,11 +52,6 @@ public class ComponentField extends AbstractField<Void> {
 		return uiField;
 	}
 
-	@Override
-	protected void doDestroy() {
-		this.component.destroy();
-	}
-
 	public Component getComponent() {
 		return component;
 	}

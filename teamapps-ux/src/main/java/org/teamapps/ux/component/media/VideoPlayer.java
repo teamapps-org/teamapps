@@ -160,8 +160,4 @@ public class VideoPlayer extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiVideoPlayer.SetPreloadModeCommand(getId(), preloadMode.toUiPreloadMode()));
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

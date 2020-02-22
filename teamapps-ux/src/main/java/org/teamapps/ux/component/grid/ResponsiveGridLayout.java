@@ -68,8 +68,4 @@ public class ResponsiveGridLayout extends AbstractComponent implements Container
 		// none
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

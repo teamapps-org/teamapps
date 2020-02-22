@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class GeneratorTestUtil {
 
@@ -36,7 +37,7 @@ public class GeneratorTestUtil {
 //		Assertions.assertThat(actual).isEqualToNormalizingWhitespace(expected);
 
 		try {
-			Files.write(actual, new File("src/test/resources/" + expectedResultResourceName), Charset.forName("UTF-8"));
+			Files.asCharSink(new File("src/test/resources/" + expectedResultResourceName), StandardCharsets.UTF_8).write(actual);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

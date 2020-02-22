@@ -32,11 +32,6 @@ public class PageView extends AbstractComponent {
 	private List<AbstractPageViewBlock> blocks = new ArrayList<>();
 
 	@Override
-	protected void doDestroy() {
-		// nothing to do...
-	}
-
-	@Override
 	public UiPageView createUiComponent() {
 		UiPageView uiPageView = new UiPageView();
 		mapAbstractUiComponentProperties(uiPageView);

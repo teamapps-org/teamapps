@@ -82,16 +82,6 @@ public class Panel extends AbstractComponent implements Container {
 		setContent(content);
 	}
 
-	@Override
-	protected void doDestroy() {
-		if (this.content != null) {
-			this.content.destroy();
-		}
-		if (this.toolbar != null) {
-			this.toolbar.destroy();
-		}
-	}
-
 	public void addToolButton(ToolButton toolButton) {
 		this.toolButtons.add(toolButton);
 		toolButton.setParent(this);

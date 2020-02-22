@@ -84,11 +84,6 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 	}
 
 	@Override
-	protected void doDestroy() {
-
-	}
-
-	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
 			case UI_NAVIGATION_BAR_BUTTON_CLICKED:

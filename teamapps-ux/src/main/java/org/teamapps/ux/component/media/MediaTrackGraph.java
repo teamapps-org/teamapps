@@ -71,10 +71,5 @@ public class MediaTrackGraph extends AbstractComponent {
 		}
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 }
 

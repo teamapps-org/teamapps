@@ -233,8 +233,4 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 				.findFirst().orElse(null);
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

@@ -199,11 +199,6 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 		}
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public FileFieldDisplayType getDisplayType() {
 		return displayType;
 	}

@@ -56,12 +56,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-icon</artifactId>
-        </dependency>
-
-
-        <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
         </dependency>

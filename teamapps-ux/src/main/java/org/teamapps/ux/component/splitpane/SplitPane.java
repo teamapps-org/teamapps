@@ -60,16 +60,6 @@ public class SplitPane extends AbstractComponent {
 	}
 
 	@Override
-	protected void doDestroy() {
-		if (this.firstChild != null) {
-			this.firstChild.destroy();
-		}
-		if (this.lastChild != null) {
-			this.lastChild.destroy();
-		}
-	}
-
-	@Override
 	public UiComponent createUiComponent() {
 		UiSplitPane uiSplitPane = new UiSplitPane(splitDirection.toUiSplitDirection(), sizePolicy.toUiSplitSizePolicy());
 		mapAbstractUiComponentProperties(uiSplitPane);

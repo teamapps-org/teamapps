@@ -139,8 +139,4 @@ public class DocumentViewer extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiDocumentViewer.SetPageSpacingCommand(getId(), pageSpacing));
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

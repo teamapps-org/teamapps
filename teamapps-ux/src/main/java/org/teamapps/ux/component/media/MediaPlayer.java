@@ -127,8 +127,4 @@ public class MediaPlayer extends AbstractComponent {
 
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

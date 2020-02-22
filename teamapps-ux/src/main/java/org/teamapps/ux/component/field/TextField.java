@@ -100,11 +100,6 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	}
 
 	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
-	@Override
 	public Event<String> onTextInput() {
 		return onTextInput;
 	}

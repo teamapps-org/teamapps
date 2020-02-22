@@ -73,8 +73,4 @@ public class WebRtcPublisher extends AbstractComponent {
 
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

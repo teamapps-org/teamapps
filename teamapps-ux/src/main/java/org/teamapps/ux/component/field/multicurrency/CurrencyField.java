@@ -112,11 +112,6 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 		}
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public int getPrecision() {
 		return precision;
 	}

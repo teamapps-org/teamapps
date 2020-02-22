@@ -94,11 +94,6 @@ public class AbsoluteLayout extends AbstractComponent {
 		// none
 	}
 
-	@Override
-	protected void doDestroy() {
-		positionsByComponent.keySet().forEach(component -> component.destroy());
-	}
-
 	public AnimationEasing getAnimationEasing() {
 		return animationEasing;
 	}

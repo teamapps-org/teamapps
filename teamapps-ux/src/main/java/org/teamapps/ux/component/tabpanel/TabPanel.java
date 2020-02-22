@@ -155,11 +155,6 @@ public class TabPanel extends AbstractComponent implements Container {
 		return uiTabPanel;
 	}
 
-	@Override
-	protected void doDestroy() {
-		this.tabs.forEach(Tab::destroy);
-	}
-
 	private Tab getTabByClientId(String tabId) {
 		return tabs.stream()
 				.filter(tab -> Objects.equals(tab.getClientId(), tabId))

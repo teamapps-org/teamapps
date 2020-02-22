@@ -56,13 +56,6 @@ public class ElegantPanel extends AbstractComponent {
 	}
 
 	@Override
-	protected void doDestroy() {
-		if (this.content != null) {
-			this.content.destroy();
-		}
-	}
-
-	@Override
 	public void handleUiEvent(UiEvent event) {
 
 	}

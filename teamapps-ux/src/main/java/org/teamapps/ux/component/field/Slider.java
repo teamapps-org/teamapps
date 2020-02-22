@@ -55,11 +55,6 @@ public class Slider extends AbstractField<Number> {
 		return uiSlider;
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public double getMin() {
 		return min;
 	}
