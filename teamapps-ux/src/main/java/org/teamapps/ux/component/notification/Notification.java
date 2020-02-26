@@ -39,7 +39,7 @@ public class Notification extends AbstractComponent {
 
 	private boolean showing;
 
-	private Color backgroundColor = Color.WHITE;
+	private Color backgroundColor = null;
 	private Spacing padding = null;
 	private int displayTimeInMillis = 3000;
 	private boolean dismissible = true;
