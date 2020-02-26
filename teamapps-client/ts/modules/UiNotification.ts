@@ -29,6 +29,7 @@ import {ProgressBar} from "./micro-components/ProgressBar";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 
 const containersByPosition: {
 	[UiNotificationPosition.TOP_LEFT]: HTMLElement,
@@ -146,7 +147,7 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 
 	public update(config: UiNotificationConfig) {
 		this._config = config;
-		this.$main.style.backgroundColor = createUiColorCssString(config.backgroundColor, "transparent");
+		this.$main.style.backgroundColor = createUiColorCssString(config.backgroundColor, null);
 		// this.$main.style.borderColor = createUiColorCssString(config.borderColor, "#00000022");
 		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
 		this.$main.classList.toggle("dismissible", config.dismissible);
@@ -170,6 +171,7 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 
 	private closeTimeout: number;
 
+	@executeWhenFirstDisplayed(true)
 	public startCloseTimeout() {
 		if (this.progressBar != null) {
 			this.progressBar.setProgress(1); // mind the css transition!
