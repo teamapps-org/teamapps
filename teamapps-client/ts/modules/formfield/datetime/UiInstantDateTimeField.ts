@@ -54,11 +54,11 @@ export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDat
 		let value = this.trivialDateTimeField.getValue();
 		if (value) {
 			return moment.tz({
-				year: value.year,
-				month: value.month - 1,
-				day: value.day,
-				hour: value.hour,
-				minute: value.minute
+				year: value.year || 0,
+				month: value.month ? value.month - 1 : 0,
+				day: value.day || 0,
+				hour: value.hour || 0,
+				minute: value.minute || 0
 			}, this.getTimeZoneId()).valueOf();
 		} else {
 			return null;
