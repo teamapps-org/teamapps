@@ -93,6 +93,7 @@ class UiTable extends UiComponent {
 	command setContextMenuContent(int requestId, UiComponent* component);
 	command closeContextMenu(int requestId);
 
+	event cellClicked(int recordId, String columnPropertyName);
 	event cellEditingStarted(int recordId, String columnPropertyName, Object currentValue);
 	event cellEditingStopped(int recordId, String columnPropertyName);
 	event cellValueChanged(int recordId, String columnPropertyName, Object value);

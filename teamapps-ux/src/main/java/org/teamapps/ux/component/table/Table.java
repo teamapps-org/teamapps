@@ -65,6 +65,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	public final Event<CellEditingStoppedEvent<RECORD>> onCellEditingStopped = new Event<>();
 	public final Event<FieldValueChangedEventData<RECORD, Object>> onCellValueChanged = new Event<>();
 	public final Event<RECORD> onRowSelected = new Event<>();
+	public final Event<CellClickedEvent<RECORD>> onCellClicked = new Event<>();
 	public final Event<List<RECORD>> onMultipleRowsSelected = new Event<>();
 	public final Event<SortingChangedEventData> onSortingChanged = new Event<>();
 	public final Event<TableDataRequestEventData> onTableDataRequest = new Event<>();
@@ -253,12 +254,22 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_TABLE_ROW_SELECTED:
+			case UI_TABLE_ROW_SELECTED: {
 				UiTable.RowSelectedEvent rowSelectedEvent = (UiTable.RowSelectedEvent) event;
 				selectedRecord = clientRecordCache.getRecordByClientId(rowSelectedEvent.getRecordId());
 				selectedRecords.clear();
 				this.onRowSelected.fire(selectedRecord);
 				break;
+			}
+			case UI_TABLE_CELL_CLICKED: {
+				UiTable.CellClickedEvent cellClickedEvent = (UiTable.CellClickedEvent) event;
+				RECORD record = clientRecordCache.getRecordByClientId(cellClickedEvent.getRecordId());
+				TableColumn<RECORD> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
+				if (record != null && column != null)  {
+					this.onCellClicked.fire(new CellClickedEvent<>(record, column));
+				}
+				break;
+			}
 			case UI_TABLE_CELL_EDITING_STARTED: {
 				UiTable.CellEditingStartedEvent editingStartedEvent = (UiTable.CellEditingStartedEvent) event;
 				RECORD record = clientRecordCache.getRecordByClientId(editingStartedEvent.getRecordId());

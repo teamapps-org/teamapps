@@ -196,7 +196,7 @@ export class UiTableRowSelectionModel {
 		}
 		var tempRanges = this.rowsToRanges(selection);
 		this.setSelectedRanges(tempRanges);
-		e.stopImmediatePropagation();
+		// e.stopImmediatePropagation();
 
 		return true;
 	}
