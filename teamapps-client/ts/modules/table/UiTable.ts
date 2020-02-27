@@ -24,6 +24,7 @@
 
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {
+	UiTable_CellClickedEvent,
 	UiTable_CellEditingStartedEvent,
 	UiTable_CellEditingStoppedEvent,
 	UiTable_CellValueChangedEvent,
@@ -108,6 +109,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	public readonly onCellEditingStopped: TeamAppsEvent<UiTable_CellEditingStoppedEvent> = new TeamAppsEvent(this);
 	public readonly onCellValueChanged: TeamAppsEvent<UiTable_CellValueChangedEvent> = new TeamAppsEvent(this);
 	public readonly onRowSelected: TeamAppsEvent<UiTable_RowSelectedEvent> = new TeamAppsEvent(this);
+	public readonly onCellClicked: TeamAppsEvent<UiTable_CellClickedEvent> = new TeamAppsEvent(this);
 	public readonly onMultipleRowsSelected: TeamAppsEvent<UiTable_MultipleRowsSelectedEvent> = new TeamAppsEvent<UiTable_MultipleRowsSelectedEvent>(this);
 	public readonly onSortingChanged: TeamAppsEvent<UiTable_SortingChangedEvent> = new TeamAppsEvent(this);
 	public readonly onRequestNestedData: TeamAppsEvent<UiTable_RequestNestedDataEvent> = new TeamAppsEvent(this);
@@ -325,7 +327,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 						this.dataProvider.toggleRowExpanded(args.row);
 						this.rerenderAllRows();
 					}
-					let cellValue: any = item.values[fieldName];
 					let $buttonElement = $(e.target).closest(".UiButton");
 					if (uiField && uiField instanceof UiButton && $buttonElement.length > 0) {
 						this.logger.warn("TODO: handle button click, especially in case of a dropdown...");
@@ -341,6 +342,9 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 							let index = $templateWrapper.parent().index($templateWrapper);
 							this.logger.warn("TODO: handle file field click");
 						}
+					}
+					if (UiField) {
+						this.onCellClicked.fire({columnPropertyName: fieldName, recordId: item.id})
 					}
 				}
 			});
