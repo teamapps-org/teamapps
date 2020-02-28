@@ -145,6 +145,8 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	}
 
 	public onResize(): void {
+		// console.log(this.getWidth(), this.getHeight(), Math.min(this.getHeight(), this.mediaPlayer.height), this.mediaPlayer.width, this.mediaPlayer.height)
+		// this.mediaPlayer.setPlayerSize(this.getWidth(), Math.min(this.getHeight(), this.mediaPlayer.height)); // CAUTION: maybe we will have to handle fullscreen mode
 		this.mediaPlayer.setPlayerSize(this.mediaPlayer.width, this.mediaPlayer.height); // CAUTION: maybe we will have to handle fullscreen mode
 		this.mediaPlayer.setControlsSize();
 	}
@@ -164,7 +166,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	setAutoplay(autoplay: boolean): void {
 		this.autoplay = autoplay;
 		this.playState = "initial";
-		
+
 		if (autoplay) {
 			if (this.contentReady) {
 				this.mediaPlayer.play();
