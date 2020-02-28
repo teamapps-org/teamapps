@@ -20,6 +20,8 @@
 package org.teamapps.ux.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiSessionClosingReason;
@@ -58,6 +60,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class TeamAppsUxClientGate implements UiSessionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsUxClientGate.class);
 
 	private final WebController webController;
 	private final UiCommandExecutor commandExecutor;
@@ -190,6 +194,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 					clientObject.handleUiEvent(event);
 				}
 			}).exceptionally(e -> {
+				LOGGER.error("Exception while handling ui event", e);
 				commandExecutor.closeSession(sessionId, UiSessionClosingReason.SERVER_SIDE_ERROR);
 				return null;
 			});
