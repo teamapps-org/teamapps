@@ -58,10 +58,10 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
 	private final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
 
-	private Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.resetClientSideData();
-	private Consumer<RECORD> modelOnRecordAddedListener = record -> this.resetClientSideData();
-	private Consumer<RECORD> modelOnRecordChangedListener = record -> this.resetClientSideData();
-	private Consumer<RECORD> modelOnRecordDeletedListener = record -> this.resetClientSideData();
+	private Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
+	private Consumer<RECORD> modelOnRecordAddedListener = record -> this.refresh();
+	private Consumer<RECORD> modelOnRecordChangedListener = record -> this.refresh();
+	private Consumer<RECORD> modelOnRecordDeletedListener = record -> this.refresh();
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
@@ -248,7 +248,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	public InfiniteItemView<RECORD> setModel(InfiniteItemViewModel<RECORD> model) {
 		unregisterModelListeners();
 		this.model = model;
-		resetClientSideData();
+		refresh();
 		model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
 		model.onRecordAdded().addListener(this.modelOnRecordAddedListener);
 		model.onRecordChanged().addListener(this.modelOnRecordChangedListener);
@@ -263,7 +263,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		this.model.onRecordDeleted().removeListener(this.modelOnRecordDeletedListener);
 	}
 
-	private void resetClientSideData() {
+	public void refresh() {
 		sendRecords(0, numberOfInitialRecords, true);
 	}
 
