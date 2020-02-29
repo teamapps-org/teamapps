@@ -677,6 +677,15 @@ export function arraysEqual(a: any[], b: any[]) {
 	}
 }
 
+export function deepEquals(x: any, y: any): boolean {
+	if (x != null && y != null && typeof x === 'object' && typeof x === typeof y) {
+		return Object.keys(x).length === Object.keys(y).length &&
+			Object.keys(x).every(key => deepEquals(x[key], y[key]));
+	} else {
+		return x === y;
+	}
+}
+
 export function convertJavaDateTimeFormatToMomentDateTimeFormat(javaFormat: string): string {
 	if (javaFormat == null) {
 		return null;

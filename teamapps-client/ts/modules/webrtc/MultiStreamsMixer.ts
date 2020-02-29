@@ -1,4 +1,3 @@
-
 type MediaStreamAudioDestinationNode = AudioNode & { stream: MediaStream };
 export type MixSizingInfo = {
     fullcanvas?: boolean,
@@ -61,6 +60,18 @@ export class MultiStreamsMixer {
             this.drawVideosToCanvas();
 
             this.outputMediaStream = mixedVideoStream;
+
+            let endListenerAlreadyCalled = false;
+            this.outputMediaStream.getTracks().forEach(track => {
+                track.addEventListener("ended", () => {
+                    let streamAlive = this.outputMediaStream.active && this.outputMediaStream.getTracks().filter(t => t.readyState !== 'ended').length > 0;
+                    if (!endListenerAlreadyCalled && !streamAlive) {
+                        endListenerAlreadyCalled = true;
+                        console.log("Closing MultiStreamsMixer since outputMediaStream has ended.")
+                        this.close();
+                    }
+                });
+            })
         }
         return this.outputMediaStream;
     }

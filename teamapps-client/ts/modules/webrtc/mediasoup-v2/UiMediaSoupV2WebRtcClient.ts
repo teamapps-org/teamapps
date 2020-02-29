@@ -45,12 +45,12 @@ import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiMulticastPlaybackProfile} from "../../../generated/UiMulticastPlaybackProfile";
 import {createUiColorCssString} from "../../util/CssFormatUtil";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
-import {MultiStreamsMixer} from "../../util/MultiStreamsMixer";
 import {WebRtcPublishingFailureReason} from "../../../generated/WebRtcPublishingFailureReason";
 import {ContextMenu} from "../../micro-components/ContextMenu";
 import {UiComponent} from "../../UiComponent";
 import {Postponer} from "../../util/postpone";
-import {addVoiceActivityDetection, retrieveUserMedia} from "../MediaUtil";
+import {addVoiceActivityDetection, enumerateDevices, retrieveUserMedia} from "../MediaUtil";
+import {UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
 
 export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2WebRtcClientConfig> implements UiMediaSoupV2WebRtcClientCommandHandler, UiMediaSoupV2WebRtcClientEventSource {
 	public readonly onPublishingSucceeded: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PublishingSucceededEvent> = new TeamAppsEvent(this);
@@ -73,8 +73,6 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 	private $profileDisplay: HTMLElement;
 	private $icons: HTMLImageElement;
 	private $caption: HTMLElement;
-	private multiStreamMixer: MultiStreamsMixer;
-
 	private $spinner: HTMLElement;
 	private currentSourceStreams: MediaStream[];
 
@@ -368,9 +366,6 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			this.conference.stop();
 			this.$video.classList.remove("mirrored");
 		}
-		if (this.multiStreamMixer != null) {
-			this.multiStreamMixer.close();
-		}
 		this.updateStateCssClass();
 		this.$video.srcObject = null; // make sure this happens even if the conference library fails doing it!
 
@@ -474,6 +469,10 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 
 	closeContextMenu(requestId: number): void {
 		this.contextMenu.close(requestId);
+	}
+
+	public static async enumerateDevices(): Promise<UiMediaDeviceInfoConfig[]> {
+		return enumerateDevices();
 	}
 
 }
