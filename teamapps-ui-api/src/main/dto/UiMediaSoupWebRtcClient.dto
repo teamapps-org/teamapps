@@ -73,8 +73,6 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 
 	command update(UiMediaSoupV3WebRtcClient config);
 	command setActive(boolean active);
-	command publish(UiMediaSoupPublishingParameters parameters);
-	command playback(UiMediaSoupPlaybackParameters parameters);
 	command stop();
 	command setContextMenuContent(int requestId, UiComponent* component);
 	command closeContextMenu(int requestId);

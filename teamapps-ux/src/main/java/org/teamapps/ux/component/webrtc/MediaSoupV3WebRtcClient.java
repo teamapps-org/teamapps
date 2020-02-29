@@ -202,12 +202,9 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void stop() {
-		if (this.isRendered()) {
-			queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.StopCommand(getId()));
-		} else {
-			publishingParameters = null;
-			playbackParameters = null;
-		}
+		publishingParameters = null;
+		playbackParameters = null;
+		update();
 	}
 
 	private void update() {

@@ -1,14 +1,13 @@
 import vad from "voice-activity-detection";
-import {Conference} from "./mediasoup-v2/lib/conference";
 import {UiAudioTrackConstraintsConfig} from "../../generated/UiAudioTrackConstraintsConfig";
 import {UiVideoTrackConstraintsConfig} from "../../generated/UiVideoTrackConstraintsConfig";
 import {UiScreenSharingConstraintsConfig} from "../../generated/UiScreenSharingConstraintsConfig";
 import {WebRtcPublishingFailureReason} from "../../generated/WebRtcPublishingFailureReason";
-import {MediaStreamWithMixiSizingInfo, MixSizingInfo} from "./mediasoup-v2/lib/MultiStreamsMixer";
 import {UiMediaDeviceKind} from "../../generated/UiMediaDeviceKind";
 import {createUiMediaDeviceInfoConfig, UiMediaDeviceInfoConfig} from "../../generated/UiMediaDeviceInfoConfig";
-import {MediaDevicesExtended} from "./mediasoup-v2/lib/interfaces";
-import {UiMediaSoupV2WebRtcClient} from "./mediasoup-v2/UiMediaSoupV2WebRtcClient";
+import {listenStreamEnded, mixStreams} from "./utils";
+import {determineVideoSize, MediaStreamWithMixiSizingInfo} from "./MultiStreamsMixer";
+import {MixSizingInfo} from "./MultiStreamsMixer";
 
 export function addVoiceActivityDetection(mediaStream: MediaStream, onVoiceStart: () => void, onVoiceStop: () => void) {
 	if (((window as any).AudioContext || (window as any).webkitAudioContext) && mediaStream.getAudioTracks().length > 0) {
@@ -17,7 +16,7 @@ export function addVoiceActivityDetection(mediaStream: MediaStream, onVoiceStart
 		console.log("AudioContext created");
 		let vadHandle = vad(audioContext, mediaStream, {onVoiceStart, onVoiceStop});
 		console.log("vad attached");
-		Conference.listenStreamEnded(mediaStream, () => {
+		listenStreamEnded(mediaStream, () => {
 			vadHandle.destroy();
 		});
 	}
@@ -30,7 +29,7 @@ export async function retrieveUserMedia(audioConstraints: UiAudioTrackConstraint
 	try {
 		if (audioConstraints != null || videoConstraints != null) {
 			micCamStream = await window.navigator.mediaDevices.getUserMedia({audio: audioConstraints, video: createVideoConstraints(videoConstraints)}); // rejected if user denies!
-			Conference.listenStreamEnded(micCamStream, () => streamEndedHandler(micCamStream, false));
+			listenStreamEnded(micCamStream, () => streamEndedHandler(micCamStream, false));
 		}
 	} catch (e) {
 		throw {
@@ -43,7 +42,7 @@ export async function retrieveUserMedia(audioConstraints: UiAudioTrackConstraint
 	try {
 		if (screenSharingConstraints != null) {
 			displayStream = await getDisplayStream(screenSharingConstraints); // rejected if user denies!
-			Conference.listenStreamEnded(displayStream, () => streamEndedHandler(displayStream, true));
+			listenStreamEnded(displayStream, () => streamEndedHandler(displayStream, true));
 		}
 	} catch (e) {
 		throw {
@@ -63,7 +62,7 @@ export async function retrieveUserMedia(audioConstraints: UiAudioTrackConstraint
 
 			let cameraMixSizingInfo: MixSizingInfo;
 			if (micCamStream.getVideoTracks().length > 0) {
-				const displayStreamDimensions = await Conference.determineVideoSize(displayStream);
+				const displayStreamDimensions = await determineVideoSize(displayStream);
 				const mainStreamShortDimension = Math.min(displayStreamDimensions.width, displayStreamDimensions.height);
 				const cameraAspectRatio = micCamStream.getTracks().filter(t => t.kind === "video")[0].getSettings().aspectRatio || 4 / 3;
 				const pictureInPictureHeight = Math.round((25 / 100) * mainStreamShortDimension);
@@ -78,7 +77,7 @@ export async function retrieveUserMedia(audioConstraints: UiAudioTrackConstraint
 				cameraMixSizingInfo = {}; // no camera track. audio only. no mix sizing info needed
 			}
 			streamsWithMixSizingInfo.push({mediaStream: micCamStream, mixSizingInfo: cameraMixSizingInfo});
-			targetStream = await Conference.mixStreams(streamsWithMixSizingInfo, createDisplayMediaStreamConstraints(screenSharingConstraints), 10);
+			targetStream = await mixStreams(streamsWithMixSizingInfo, createDisplayMediaStreamConstraints(screenSharingConstraints), 10);
 		} catch (e) {
 			throw {
 				exception: e,
@@ -119,7 +118,7 @@ export function createDisplayMediaStreamConstraints(screenSharingConstraints: Ui
 
 export async function getDisplayStream(screenSharingConstraints: UiScreenSharingConstraintsConfig) {
 	if (canPublishScreen()) {
-		return await (window.navigator.mediaDevices as MediaDevicesExtended).getDisplayMedia(createDisplayMediaStreamConstraints(screenSharingConstraints));
+		return await (window.navigator.mediaDevices as any).getDisplayMedia(createDisplayMediaStreamConstraints(screenSharingConstraints));
 	} else {
 		throw new Error("Cannot share screen! Browser does not provide the corresponding API!");
 	}
