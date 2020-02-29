@@ -19,223 +19,336 @@
  */
 
 import {AbstractUiComponent} from "../../AbstractUiComponent";
-import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {calculateDisplayModeInnerSize, parseHtml} from "../../Common";
-import {UiMediaSoupPlaybackParamatersConfig} from "../../../generated/UiMediaSoupPlaybackParamatersConfig";
-import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaSoupPublishingParametersConfig";
-import {UiVideoTrackConstraintsConfig} from "../../../generated/UiVideoTrackConstraintsConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {executeWhenFirstDisplayed} from "../../util/ExecuteWhenFirstDisplayed";
-import {createUiColorCssString} from "../../util/CssFormatUtil";
-import vad, {VoiceActivityDetectionHandle} from "voice-activity-detection";
-import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
-import {UiAudioTrackConstraintsConfig} from "../../../generated/UiAudioTrackConstraintsConfig";
-import {checkChromeExtensionAvailable, getScreenConstraints, isChrome} from "../../util/ScreenCapturing";
-import {UiWebRtcPublishingErrorReason} from "../../../generated/UiWebRtcPublishingErrorReason";
-import {determineVideoSize, MixSizingInfo, MultiStreamsMixer} from "../../util/MultiStreamsMixer";
-import {UiScreenSharingConstraintsConfig} from "../../../generated/UiScreenSharingConstraintsConfig";
 import {
 	UiMediaSoupV3WebRtcClient_ClickedEvent,
+	UiMediaSoupV3WebRtcClient_ConnectionStateChangedEvent,
+	UiMediaSoupV3WebRtcClient_ContextMenuRequestedEvent,
+	UiMediaSoupV3WebRtcClient_PlaybackFailedEvent,
+	UiMediaSoupV3WebRtcClient_PlaybackProfileChangedEvent,
+	UiMediaSoupV3WebRtcClient_PlaybackSucceededEvent,
+	UiMediaSoupV3WebRtcClient_PublishedStreamEndedEvent,
+	UiMediaSoupV3WebRtcClient_PublishedStreamsStatusChangedEvent,
+	UiMediaSoupV3WebRtcClient_PublishingFailedEvent,
+	UiMediaSoupV3WebRtcClient_PublishingSucceededEvent,
 	UiMediaSoupV3WebRtcClient_VoiceActivityChangedEvent,
 	UiMediaSoupV3WebRtcClientCommandHandler,
 	UiMediaSoupV3WebRtcClientConfig,
 	UiMediaSoupV3WebRtcClientEventSource
 } from "../../../generated/UiMediaSoupV3WebRtcClientConfig";
-import {Sender} from "./sender";
-import {Receiver} from "./receiver";
+import {TeamAppsUiContext} from "../../TeamAppsUiContext";
+import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaSoupPublishingParametersConfig";
+import {arraysEqual, calculateDisplayModeInnerSize, parseHtml, removeClassesByFunction} from "../../Common";
+import {ContextMenu} from "../../micro-components/ContextMenu";
+import {MultiStreamsMixer} from "../../util/MultiStreamsMixer";
+import {addVoiceActivityDetection, retrieveUserMedia} from "../MediaUtil";
+import {createUiColorCssString} from "../../util/CssFormatUtil";
+import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
+import {UiComponent} from "../../UiComponent";
+import {ConferenceApi} from "./lib/front/src/conference-api";
+import {WebRtcPublishingFailureReason} from "../../../generated/WebRtcPublishingFailureReason";
+import {Utils} from "./lib/front/src/utils";
+import {UiMediaSoupPlaybackParametersConfig} from "../../../generated/UiMediaSoupPlaybackParametersConfig";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
+	public readonly onPublishingSucceeded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PublishingSucceededEvent> = new TeamAppsEvent(this);
+	public readonly onPublishingFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PublishingFailedEvent> = new TeamAppsEvent(this);
+	public readonly onPublishedStreamEnded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PublishedStreamEndedEvent> = new TeamAppsEvent(this);
+	public readonly onPublishedStreamsStatusChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PublishedStreamsStatusChangedEvent> = new TeamAppsEvent(this);
+	public readonly onConnectionStateChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ConnectionStateChangedEvent> = new TeamAppsEvent(this);
+	public readonly onPlaybackSucceeded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PlaybackSucceededEvent> = new TeamAppsEvent(this);
+	public readonly onPlaybackFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PlaybackFailedEvent> = new TeamAppsEvent(this);
+	public readonly onPlaybackProfileChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PlaybackProfileChangedEvent> = new TeamAppsEvent(this);
 	public readonly onVoiceActivityChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_VoiceActivityChangedEvent> = new TeamAppsEvent(this);
 	public readonly onClicked: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ClickedEvent> = new TeamAppsEvent(this);
-
-	private sender: Sender;
-	private receiver: Receiver;
+	public readonly onContextMenuRequested: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
 
 	private $main: HTMLDivElement;
-	private $video: HTMLMediaElement;
+	private $image: HTMLImageElement;
+	private $videoContainer: HTMLElement;
+	private $video: HTMLVideoElement;
 	private $profileDisplay: HTMLElement;
-	private $icon: HTMLImageElement;
+	private $icons: HTMLImageElement;
 	private $caption: HTMLElement;
-	private voiceActivityDetectionHandle: VoiceActivityDetectionHandle;
+	private $spinner: HTMLElement;
+	private contextMenu: ContextMenu;
+
 	private multiStreamMixer: MultiStreamsMixer;
+	private currentSourceStreams: MediaStream[];
+	private conferenceApi: ConferenceApi;
+
+	private connectionStatus: {
+		status: "idle" | "publish" | "playback" | "error",
+		// connected: boolean,
+		// audioStatus: boolean,
+		// audioBitrate: number // assume sending/receiving from the beginning
+	} = {
+		status: "idle",
+		// connected: false,          // TODO
+		// audioStatus: false,        // TODO
+		// audioBitrate: -1           // TODO
+	};
+
 
 	constructor(config: UiMediaSoupV3WebRtcClientConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiMediaSoupV3WebRtcClient">
+		this.$main = parseHtml(`<div class="UiMediaSoupV3WebRtcClient state-idle">
 	<div class="video-container">
-		<video class="video" playsinline></video>
-		<img class="icon"></img>
+		<img class="image"></img>
+		<video class="video" playsinline muted></video>
+		<div class="icons"></div>
+		<div class="spinner-wrapper">
+			<div class="spinner teamapps-spinner"></div>
+		</div>
 	</div>
 	<div class="caption"></div>
 	<div class="profile hidden">.</div>
 </div>`);
-		this.$video = this.$main.querySelector<HTMLMediaElement>(":scope video");
+		this.$image = this.$main.querySelector(":scope .image");
+		this.$videoContainer = this.$main.querySelector(":scope .video-container");
+		this.$video = this.$main.querySelector<HTMLVideoElement>(":scope .video");
 		this.$profileDisplay = this.$main.querySelector(":scope .profile");
-		this.$icon = this.$main.querySelector(":scope .icon");
+		this.$icons = this.$main.querySelector(":scope .icons");
 		this.$caption = this.$main.querySelector(":scope .caption");
+		this.$spinner = this.$main.querySelector(":scope .spinner");
 
-		this.$main.addEventListener("click", () => this.onClicked.fire({}));
-		this.$video.addEventListener("play", ev => this.update(this._config));
-		this.$video.addEventListener("playing", ev => this.update(this._config));
-		this.$video.addEventListener("stalled", ev => this.update(this._config));
-		this.$video.addEventListener("waiting", ev => this.update(this._config));
-		this.$video.addEventListener("ended", ev => this.update(this._config));
-		this.$video.addEventListener("suspend", ev => this.update(this._config));
-		this.$video.addEventListener("abort", ev => this.update(this._config));
+		this.contextMenu = new ContextMenu();
+
+		[this.$videoContainer, this.$caption].forEach($element => $element.addEventListener("click", () => {
+			this.onClicked.fire({})
+		}));
+		[this.$videoContainer, this.$caption].forEach($element => $element.addEventListener("contextmenu", (e) => {
+			if (this._config.contextMenuEnabled) {
+				this.contextMenu.open(e, requestId => this.onContextMenuRequested.fire({requestId}))
+			}
+		}));
+		this.$image.addEventListener("load", () => {
+			console.log("load");
+			this.onResize()
+		});
+		this.$video.addEventListener("pause", ev => {
+			console.log("pause");
+			this.$video.play(); // happens when the video player gets detached under android while switching views
+		});
+		this.$video.addEventListener("progress", ev => {
+			this.updateVideoVisibilities();
+			this.onResize()
+		});
+		this.$video.addEventListener("timeupdate", ev => {
+			this.updateVideoVisibilities();
+			this.onResize()
+		});
+		["play", "playing", "stalled", "waiting", "ended", "suspend", "abort"].forEach(eventName => {
+			this.$video.addEventListener(eventName, ev => {
+				console.log(eventName);
+				this.update(this._config)
+			});
+		});
 
 		this.update(config);
-
 	}
 
 	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
-	@executeWhenFirstDisplayed(true)
 	async publish(parameters: UiMediaSoupPublishingParametersConfig) {
-		this.stop();
+		if (this.conferenceApi != null) {
+			this.stop();
+		}
+		this.connectionStatus.status = "publish";
+		this.updateStateCssClass();
+		this.$video.classList.toggle("mirrored", parameters.videoConstraints && !parameters.screenSharingConstraints);
 
-		this.sender = new Sender(parameters.serverAdress, parameters.serverPort);
-		await this.sender.connect(eventType => {
-			switch (eventType) {
-				case "disconnect":
-					break;
-				case "newVideoProducer":
-					break;
-				case "videoProducerGone":
-					break;
+		let targetStream: MediaStream;
+		try {
+			let streams = await retrieveUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints,
+				(endedMediaStream, isDisplay) => {
+					if (this.currentSourceStreams.indexOf(endedMediaStream) != -1) {
+						console.log(`${isDisplay ? "display" : "mic/cam"} stream ended`);
+						this.onPublishedStreamEnded.fire({isDisplay: isDisplay});
+						this.connectionStatus.status = "error";
+						this.updateStateCssClass();
+					}
+				});
+			this.currentSourceStreams = streams.sourceStreams;
+			targetStream = streams.targetStream;
+		} catch (error) {
+			console.error("Error during media retrieval", error);
+			this.onPublishingFailed.fire({reason: error.reason, errorMessage: error.toString()});
+			throw error;
+		}
+
+		try {
+			this.conferenceApi = new ConferenceApi({
+				stream: parameters.uid,
+				token: parameters.token,
+				url: parameters.serverAddress
+			});
+			await this.conferenceApi.publish(targetStream);
+			addVoiceActivityDetection(targetStream, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
+
+			this.$video.muted = true;
+			this.$video.srcObject = targetStream;
+			try {
+				await this.$video.play();
+			} catch (error) {
+				console.log('Could not playback local (publishing) video!', error);
 			}
-		});
-		this.sender.publish(parameters.uid, parameters.token, true, parameters.videoConstraints == null, (status, audioStream, videoStream) => {
-			switch (status) {
-				case "connecting":
-					console.log("connecting for publishing");
-					break;
-				case "connected":
-					console.log("connected for publishing");
-					break;
-				case "failed":
-					console.error("failed publish");
-					// TODO handle fail
-					break;
-				case "updateStream":
-					console.log("updateStream");
-					this.$video.srcObject = videoStream;
-					break;
+
+			this.onPublishingSucceeded.fire({}); // TODO move somewhere better once M2 is done?
+		} catch (e) {
+			console.error('Error while publishing!', e);
+			if (e.statusCode) {
+				console.error("HTTP status code: " + e.statusCode);
 			}
-		});
+			this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: WebRtcPublishingFailureReason.CONNECTION_ESTABLISHMENT_FAILED});
+			this.stop();
+			this.connectionStatus.status = "error";
+			this.updateStateCssClass();
+		}
 	}
 
-	private async getUserMedia(audioConstraints?: UiAudioTrackConstraintsConfig, videoConstraints?: UiVideoTrackConstraintsConfig, screenSharingConstraints?: UiScreenSharingConstraintsConfig) {
-		let camMicStream: MediaStream;
-		let screenStream: MediaStream;
-
-		if (audioConstraints || videoConstraints) {
-			let gumConstraints: MediaStreamConstraints = {
-				audio: audioConstraints,
-				video: UiMediaSoupV3WebRtcClient.createVideoConstraints(videoConstraints)
-			};
-			console.log(gumConstraints);
-			camMicStream = await window.navigator.mediaDevices.getUserMedia(gumConstraints);
+	private updateStateCssClass() {
+		removeClassesByFunction(this.$main.classList, className => className.startsWith("state-"));
+		if (this.connectionStatus.status === "idle") {
+			this.$main.classList.add("state-idle");
+		} else if (this.connectionStatus.status === "publish") {
+			// if (!this.connectionStatus.connected || !this.connectionStatus.audioStatus || this.connectionStatus.audioBitrate == 0) {
+			// 	this.$main.classList.add("state-connecting");
+			// } else {
+			this.$main.classList.add("state-streaming");
+			// }
+		} else if (this.connectionStatus.status === "playback") {
+			// if (!this.connectionStatus.connected || this.connectionStatus.audioBitrate == 0) {
+			// 	this.$main.classList.add("state-connecting");
+			// } else {
+			this.$main.classList.add("state-streaming");
+			// }
+		} else if (this.connectionStatus.status === "error") {
+			this.$main.classList.add("state-error");
 		}
+	}
 
-		if (screenSharingConstraints != null) {
-			const canProbablyPublishScreen = !isChrome || await checkChromeExtensionAvailable();
-			if (canProbablyPublishScreen) {
-				const screenConstraints = await getScreenConstraints({maxWidth: screenSharingConstraints.maxWidth, maxHeight: screenSharingConstraints.maxHeight});
-				try {
-					screenStream = await navigator.mediaDevices.getUserMedia({video: screenConstraints});
-				} catch (e) {
-					console.error("CANNOT_GET_SCREEN_MEDIA_STREAM");
-					throw UiWebRtcPublishingErrorReason.CANNOT_GET_SCREEN_MEDIA_STREAM;
-				}
-			} else {
-				console.error("CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED");
-				throw UiWebRtcPublishingErrorReason.CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED;
+	async playback(parameters: UiMediaSoupPlaybackParametersConfig) {
+		console.log(parameters);
+		if (this.conferenceApi != null) {
+			this.stop();
+		}
+		this.connectionStatus.status = "playback";
+		this.updateStateCssClass();
+
+		const playVideoElement = async () => {
+			this.$video.muted = false;
+			try {
+				await this.$video.play();
+			} catch (error) {
+				console.error('Unmuted autoplay failed!');
+				this.onPlaybackFailed.fire({})
+				this.$video.muted = true;
+				this.$video.play().then(() => {
+					console.log('autoplay successful, but only MUTED! TODO handle this gracefully!');
+				});
 			}
-		}
+		};
 
-		if (camMicStream != null && screenStream != null) {
-			const screenStreamDimensions = await determineVideoSize(screenStream);
-
-			let camMicStreamSizingInfo: MixSizingInfo = {};
-			if (camMicStream.getVideoTracks().length > 0) {
-				const screenStreamShortDimension = Math.min(screenStreamDimensions.width, screenStreamDimensions.height);
-				const cameraAspectRatio = camMicStream.getTracks().filter(t => t.kind === "video")[0].getSettings().aspectRatio;
-				const pictureInPictureHeight = Math.round((25 / 100) * screenStreamShortDimension);
-				const pictureInPictureWidth = Math.round(pictureInPictureHeight * cameraAspectRatio);
-
-				camMicStreamSizingInfo = {
-					width: pictureInPictureWidth,
-					height: pictureInPictureHeight,
-					left: screenStreamDimensions.width - pictureInPictureWidth,
-					top: 0
+		try {
+			this.conferenceApi = new ConferenceApi({
+				stream: parameters.uid,
+				token: parameters.token,
+				url: parameters.serverAddress
+			});
+			const mediaStream = await this.conferenceApi.subscribe();
+			this.$video.srcObject = mediaStream;
+			if (Utils.isSafari) {
+				const onStreamChange = () => {
+					this.$video.srcObject = new MediaStream(mediaStream.getTracks());
+					playVideoElement();
 				};
+				mediaStream.addEventListener('addtrack', onStreamChange);
+				mediaStream.addEventListener('removetrack', onStreamChange);
+			} else if (Utils.isFirefox) {
+				this.$video.addEventListener('pause', playVideoElement)
 			}
-			return new MultiStreamsMixer([
-					{
-						mediaStream: screenStream,
-						mixSizingInfo: {
-							...screenStreamDimensions, fullcanvas: true
-						}
-					},
-					{mediaStream: camMicStream, mixSizingInfo: camMicStreamSizingInfo}
-				],
-				(videoConstraints && videoConstraints.frameRate) || 10
-			);
-		} else if (camMicStream != null) {
-			return new MultiStreamsMixer([{mediaStream: camMicStream, mixSizingInfo: {}}]);
-		} else if (screenStream != null) {
-			return new MultiStreamsMixer([{mediaStream: screenStream, mixSizingInfo: {}}]);
+			playVideoElement();
+			this.onPlaybackSucceeded.fire({});
+		} catch (error) {
+			console.error("Error while starting playback!", error)
+			this.onPlaybackFailed.fire({});
 		}
+
+		this.$video.classList.remove("mirrored");
 	}
 
-	@executeWhenFirstDisplayed(true)
-	playback(parameters: UiMediaSoupPlaybackParamatersConfig): void {
-		this.stop();
-	}
-
-	@executeWhenFirstDisplayed()
 	stop() {
-		if (this.sender != null) {
-			this.sender.disconnect(() => {
-			});
-			this.sender = null;
-			this.$video.classList.remove("mirrored");
-		}
-		if (this.receiver != null) {
-			this.receiver.disconnect(() => {
-			});
-			this.receiver = null;
+		this.currentSourceStreams = [];
+		if (this.conferenceApi != null) {
+			this.conferenceApi.close();
+			this.conferenceApi.close(true);
+			this.conferenceApi = null;
 			this.$video.classList.remove("mirrored");
 		}
 		if (this.multiStreamMixer != null) {
 			this.multiStreamMixer.close();
 		}
+		this.updateStateCssClass();
+		this.$video.srcObject = null; // make sure this happens even if the conference library fails doing it!
+
+		this.connectionStatus.status = "idle";
+		// this.connectionStatus.audioStatus = false; // TODO
+		// this.connectionStatus.audioBitrate = -1;   // TODO
 	}
 
 	update(config: UiMediaSoupV3WebRtcClientConfig): void {
-		this._config = config;
-
 		this.$main.classList.toggle("activity-line-visible", config.activityLineVisible);
 		this.$main.style.setProperty("--activity-line-inactive-color", createUiColorCssString(config.activityInactiveColor));
 		this.$main.style.setProperty("--activity-line-inactive-color", createUiColorCssString(config.activityActiveColor));
 
-		this.$icon.classList.toggle("hidden", config.icon == null);
-		this.$icon.src = config.icon != null ? config.icon : "#";
+		if (!arraysEqual(config.icons, this._config.icons)) {
+			this.$icons.innerHTML = '';
+			config.icons.forEach(iconUrl => {
+				const $img = document.createElement("img");
+				$img.classList.add("icon");
+				$img.src = iconUrl;
+				this.$icons.appendChild($img);
+			});
+		}
 
 		this.$caption.classList.toggle("hidden", config.caption == null);
 		this.$caption.innerText = config.caption;
 
-		if (this.isVideoShown() || config.noVideoImageUrl == null) {
-			this.$video.style.backgroundImage = `none`;
-		} else {
-			this.$video.style.backgroundImage = `url(${config.noVideoImageUrl})`;
+		if (this.$image.src !== config.noVideoImageUrl) { // only do this if actually changed, since the image looses its naturalWidth/naturalHeight for a short (but important!) time!
+			this.$image.src = config.noVideoImageUrl;
 		}
 
+		this.$video.volume = config.playbackVolume;
+
+		if (this._config.playbackParameters != null && config.playbackParameters == null
+			|| this._config.publishingParameters != null && config.publishingParameters == null) {
+			this.stop();
+		}
+		if (this._config.playbackParameters == null && config.playbackParameters != null) { // TODO more sophisticated!!!
+			this.playback(config.playbackParameters);
+		} else if (this._config.publishingParameters == null && config.publishingParameters != null) { // TODO more sophisticated!!!
+			this.publish(config.publishingParameters);
+		}
+
+		this._config = config;
+
+		this.updateVideoVisibilities();
 		this.onResize();
+	}
+
+	private updateVideoVisibilities() {
+		if (this.isVideoShown() || this._config.noVideoImageUrl == null) {
+			this.$image.classList.add('hidden');
+			this.$video.classList.remove('hidden');
+		} else {
+			this.$image.classList.remove('hidden');
+			this.$video.classList.add('hidden');
+		}
 	}
 
 	setActive(active: boolean): void {
@@ -255,27 +368,41 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			return;
 		}
 
+		let displayAreaAspectRatio: number;
 		if (this._config.displayAreaAspectRatio != null) {
-			let videoSize = calculateDisplayModeInnerSize(
-				{width: this.getWidth(), height: availableHeight},
-				{width: 100, height: 100 / this._config.displayAreaAspectRatio},
-				UiPageDisplayMode.FIT_SIZE,
-				1,
-				false
-			);
-			this.$video.style.width = videoSize.width + "px";
-			this.$video.style.height = videoSize.height + "px";
+			displayAreaAspectRatio = this._config.displayAreaAspectRatio;
+		} else if (this.isVideoShown() && this.$video.videoWidth > 0) {
+			displayAreaAspectRatio = this.$video.videoWidth / this.$video.videoHeight;
+		} else if (this.$image.naturalWidth) {
+			displayAreaAspectRatio = this.$image.naturalWidth / this.$image.naturalHeight;
 		} else {
-			this.$video.style.width = "100%";
-			this.$video.style.height = availableHeight + "px";
+			displayAreaAspectRatio = 4 / 3;
 		}
+
+		this.$videoContainer.style.removeProperty("width");
+		let videoSize = calculateDisplayModeInnerSize(
+			{width: this.getWidth(), height: availableHeight},
+			{width: 100, height: 100 / displayAreaAspectRatio},
+			UiPageDisplayMode.FIT_SIZE,
+			1,
+			false
+		);
+		this.$image.style.width = videoSize.width + "px";
+		this.$image.style.height = videoSize.height + "px";
+		this.$video.style.width = videoSize.width + "px";
+		this.$video.style.height = videoSize.height + "px";
+
+		let spinnerSize = Math.min(this.getWidth(), this.getHeight()) / 4;
+		this.$spinner.style.width = spinnerSize + "px";
+		this.$spinner.style.height = spinnerSize + "px";
 	}
 
-	private static createVideoConstraints(videoConstraints: UiVideoTrackConstraintsConfig): MediaTrackConstraints {
-		return videoConstraints && {
-			...videoConstraints,
-			facingMode: null // TODO UiVideoFacingMode[videoConstraints.facingMode].toLocaleLowerCase() ==> make nullable!!!!
-		};
+	setContextMenuContent(requestId: number, component: UiComponent): void {
+		this.contextMenu.setContent(component, requestId);
+	}
+
+	closeContextMenu(requestId: number): void {
+		this.contextMenu.close(requestId);
 	}
 
 }

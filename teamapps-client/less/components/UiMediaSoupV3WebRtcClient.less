@@ -38,6 +38,12 @@
     transition: box-shadow 500ms;
     box-shadow: 0 10px 10px -10px var(--activity-bar-color);
     overflow: hidden;
+    background-color: #eee;
+
+    .image {
+      display: inline-block;
+      object-fit: contain;
+    }
 
     .video {
       top: 0;
@@ -70,15 +76,33 @@
       transition: background-color 500ms;
     }
 
-    > .icon {
-      background-size: cover;
+    > .icons {
       position: absolute;
       bottom: 5px;
       right: 3px;
-      width: 40px;
-      height: auto;
-      max-width: 10%;
-      min-width: 16px;
+      height: 10%;
+      min-height: 16px;
+      max-height: 50px;
+      display: flex;
+      width: 100%; // firefox...
+      justify-content: flex-end;
+
+      > .icon {
+        height: 100%;
+        width: auto;
+      }
+    }
+
+    > .spinner-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, .5);
     }
   }
 
@@ -93,5 +117,24 @@
     position: absolute;
     left: 0;
     top: 0;
+  }
+
+  &.state-idle {
+    .spinner-wrapper {
+      display: none;
+    }
+  }
+  &.state-streaming {
+    .spinner-wrapper {
+      display: none;
+    }
+  }
+  &.state-connecting {
+    .spinner-wrapper {
+      // default display
+    }
+  }
+  &.state-error .video {
+    filter: grayscale(100%) blur(10px) brightness(50%);
   }
 }

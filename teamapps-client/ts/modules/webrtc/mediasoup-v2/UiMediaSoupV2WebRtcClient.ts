@@ -39,25 +39,18 @@ import {
 	UiMediaSoupV2WebRtcClientEventSource
 } from "../../../generated/UiMediaSoupV2WebRtcClientConfig";
 import {Conference} from "./lib/conference";
-import {UiMediaSoupPlaybackParamatersConfig} from "../../../generated/UiMediaSoupPlaybackParamatersConfig";
+import {UiMediaSoupPlaybackParametersConfig} from "../../../generated/UiMediaSoupPlaybackParametersConfig";
 import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaSoupPublishingParametersConfig";
-import {UiVideoTrackConstraintsConfig} from "../../../generated/UiVideoTrackConstraintsConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiMulticastPlaybackProfile} from "../../../generated/UiMulticastPlaybackProfile";
 import {createUiColorCssString} from "../../util/CssFormatUtil";
-import vad from "voice-activity-detection";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
 import {MultiStreamsMixer} from "../../util/MultiStreamsMixer";
-import {UiScreenSharingConstraintsConfig} from "../../../generated/UiScreenSharingConstraintsConfig";
-import {MediaDevicesExtended} from "./lib/interfaces";
-import {MediaStreamWithMixiSizingInfo, MixSizingInfo} from "./lib/MultiStreamsMixer";
-import {UiAudioTrackConstraintsConfig} from "../../../generated/UiAudioTrackConstraintsConfig";
 import {WebRtcPublishingFailureReason} from "../../../generated/WebRtcPublishingFailureReason";
-import {createUiMediaDeviceInfoConfig, UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
-import {UiMediaDeviceKind} from "../../../generated/UiMediaDeviceKind";
 import {ContextMenu} from "../../micro-components/ContextMenu";
 import {UiComponent} from "../../UiComponent";
 import {Postponer} from "../../util/postpone";
+import {addVoiceActivityDetection, retrieveUserMedia} from "../MediaUtil";
 
 export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2WebRtcClientConfig> implements UiMediaSoupV2WebRtcClientCommandHandler, UiMediaSoupV2WebRtcClientEventSource {
 	public readonly onPublishingSucceeded: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PublishingSucceededEvent> = new TeamAppsEvent(this);
@@ -207,11 +200,19 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 				this.$video.muted = true;
 
 				try {
-					let {sourceStreams, targetStream} = await this.retrieveUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints);
+					let {sourceStreams, targetStream} = await retrieveUserMedia(parameters.audioConstraints, parameters.videoConstraints, parameters.screenSharingConstraints,
+						(endedMediaStream, isDisplay) => {
+							if (this.currentSourceStreams.indexOf(endedMediaStream) != -1) {
+								console.log(`${isDisplay ? "display" : "mic/cam"} stream ended`);
+								this.onPublishedStreamEnded.fire({isDisplay: isDisplay});
+								this.connectionStatus.status = "error";
+								this.updateStateCssClass();
+							}
+						});
 					this.currentSourceStreams = sourceStreams;
 					this.$video.classList.toggle("mirrored", parameters.videoConstraints && !parameters.screenSharingConstraints);
 					await this.publishMediaStream(targetStream, parameters);
-					this.addVoiceActivityDetection(targetStream);
+					addVoiceActivityDetection(targetStream, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
 				} catch (e) {
 					console.error(e);
 					this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: e.reason});
@@ -225,121 +226,13 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		);
 	}
 
-	private addVoiceActivityDetection(mediaStream: MediaStream) {
-		if (((window as any).AudioContext || (window as any).webkitAudioContext) && mediaStream.getAudioTracks().length > 0) {
-			console.log("AudioContext detected");
-			let audioContext = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
-			console.log("AudioContext created");
-			let vadHandle = vad(audioContext, mediaStream, {
-				onVoiceStart: () => {
-					this.onVoiceActivityChanged.fire({active: true});
-				},
-				onVoiceStop: () => {
-					this.onVoiceActivityChanged.fire({active: false});
-				}
-			});
-			console.log("vad attached");
-			Conference.listenStreamEnded(mediaStream, () => {
-				vadHandle.destroy();
-			});
-		}
-	}
-
-	private async retrieveUserMedia(audioConstraints: UiAudioTrackConstraintsConfig, videoConstraints: UiVideoTrackConstraintsConfig, screenSharingConstraints: UiScreenSharingConstraintsConfig) {
-		let micCamStream: MediaStream = null;
-		try {
-			if (audioConstraints != null || videoConstraints != null) {
-				micCamStream = await window.navigator.mediaDevices.getUserMedia({audio: audioConstraints, video: UiMediaSoupV2WebRtcClient.createVideoConstraints(videoConstraints)}); // rejected if user denies!
-				Conference.listenStreamEnded(micCamStream, () => {
-					if (this.currentSourceStreams.indexOf(micCamStream) != -1) {
-						console.log('camera stream ended');
-						this.onPublishedStreamEnded.fire({isDisplay: false});
-						this.connectionStatus.status = "error";
-						this.updateStateCssClass();
-					}
-				});
-			}
-		} catch (e) {
-			throw {
-				exception: e,
-				reason: WebRtcPublishingFailureReason.CAM_MIC_MEDIA_RETRIEVAL_FAILED
-			};
-		}
-
-		let displayStream: MediaStream = null;
-		try {
-			if (screenSharingConstraints != null) {
-				displayStream = await this.getDisplayStream(screenSharingConstraints); // rejected if user denies!
-				Conference.listenStreamEnded(displayStream, () => {
-					if (this.currentSourceStreams.indexOf(displayStream) != -1) {
-						console.log('display stream ended');
-						this.onPublishedStreamEnded.fire({isDisplay: true});
-						this.connectionStatus.status = "error";
-						this.updateStateCssClass();
-					}
-				});
-			}
-		} catch (e) {
-			throw {
-				exception: e,
-				reason: WebRtcPublishingFailureReason.DISPLAY_MEDIA_RETRIEVAL_FAILED
-			};
-		}
-
-		let targetStream: MediaStream;
-		if (displayStream != null && micCamStream != null) {
-			try {
-				let streamsWithMixSizingInfo: MediaStreamWithMixiSizingInfo[] = [];
-				streamsWithMixSizingInfo.push({
-					mediaStream: displayStream,
-					mixSizingInfo: {fullcanvas: true}
-				});
-
-				let cameraMixSizingInfo: MixSizingInfo;
-				if (micCamStream.getVideoTracks().length > 0) {
-					const displayStreamDimensions = await Conference.determineVideoSize(displayStream);
-					const mainStreamShortDimension = Math.min(displayStreamDimensions.width, displayStreamDimensions.height);
-					const cameraAspectRatio = micCamStream.getTracks().filter(t => t.kind === "video")[0].getSettings().aspectRatio || 4 / 3;
-					const pictureInPictureHeight = Math.round((25 / 100) * mainStreamShortDimension);
-					const pictureInPictureWidth = Math.round(pictureInPictureHeight * cameraAspectRatio);
-					cameraMixSizingInfo = {
-						width: pictureInPictureWidth,
-						height: pictureInPictureHeight,
-						right: 0,
-						top: 0
-					};
-				} else {
-					cameraMixSizingInfo = {}; // no camera track. audio only. no mix sizing info needed
-				}
-				streamsWithMixSizingInfo.push({mediaStream: micCamStream, mixSizingInfo: cameraMixSizingInfo});
-				targetStream = await Conference.mixStreams(streamsWithMixSizingInfo, UiMediaSoupV2WebRtcClient.createDisplayMediaStreamConstraints(screenSharingConstraints), 10);
-			} catch (e) {
-				throw {
-					exception: e,
-					reason: WebRtcPublishingFailureReason.VIDEO_MIXING_FAILED
-				};
-			}
-		} else {
-			targetStream = micCamStream || displayStream;
-		}
-
-		let sourceStreams: MediaStream[] = [];
-		if (micCamStream != null) {
-			sourceStreams.push(micCamStream);
-		}
-		if (displayStream != null) {
-			sourceStreams.push(displayStream);
-		}
-		return {sourceStreams, targetStream};
-	}
-
 	private async publishMediaStream(mediaStream: MediaStream, parameters: UiMediaSoupPublishingParametersConfig) {
 		try {
 			let conference = new Conference({
 				uid: parameters.uid,
 				token: parameters.token,
 				params: {
-					serverUrl: `https://${parameters.serverAdress}:${parameters.serverPort}`,
+					serverUrl: parameters.serverAddress,
 					minBitrate: parameters.minBitrate,
 					maxBitrate: parameters.maxBitrate,
 					localVideo: this.$video,
@@ -391,13 +284,6 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		}
 	}
 
-	private async getDisplayStream(screenSharingConstraints: UiScreenSharingConstraintsConfig) {
-		if (UiMediaSoupV2WebRtcClient.canPublishScreen()) {
-			return await (window.navigator.mediaDevices as MediaDevicesExtended).getDisplayMedia(UiMediaSoupV2WebRtcClient.createDisplayMediaStreamConstraints(screenSharingConstraints));
-		} else {
-			throw new Error("Cannot share screen! Browser does not provide the corresponding API!");
-		}
-	}
 
 	private updateStateCssClass() {
 		removeClassesByFunction(this.$main.classList, className => className.startsWith("state-"));
@@ -420,7 +306,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		}
 	}
 
-	playback(parameters: UiMediaSoupPlaybackParamatersConfig): void {
+	playback(parameters: UiMediaSoupPlaybackParametersConfig): void {
 		console.log(parameters);
 		if (this.conference != null) {
 			this.stop();
@@ -433,7 +319,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			uid: parameters.uid,
 			token: null,
 			params: {
-				serverUrl: `https://${parameters.serverAdress}:${parameters.serverPort}`,
+				serverUrl: parameters.serverAddress,
 				audio: parameters.audio,
 				video: parameters.video,
 				minBitrate: 100,
@@ -580,55 +466,6 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		let spinnerSize = Math.min(this.getWidth(), this.getHeight()) / 4;
 		this.$spinner.style.width = spinnerSize + "px";
 		this.$spinner.style.height = spinnerSize + "px";
-	}
-
-	private static createVideoConstraints(videoConstraints: UiVideoTrackConstraintsConfig): MediaTrackConstraints {
-		return videoConstraints && {
-			...videoConstraints,
-			facingMode: null // TODO UiVideoFacingMode[videoConstraints.facingMode].toLocaleLowerCase() ==> make nullable!!!!
-		};
-	}
-
-	private static createDisplayMediaStreamConstraints(screenSharingConstraints: UiScreenSharingConstraintsConfig) {
-		return {
-			video: screenSharingConstraints && {
-				frameRate: {max: 5, ideal: 5},
-				width: {max: screenSharingConstraints.maxWidth, ideal: screenSharingConstraints.maxWidth},
-				height: {max: screenSharingConstraints.maxHeight, ideal: screenSharingConstraints.maxHeight}
-			},
-			audio: false, // TODO this might be interesting for sharing the actual computer audio...
-		};
-	}
-
-	public static canPublishScreen() {
-		return (window.navigator.mediaDevices as any).getDisplayMedia != null;
-	}
-
-	public static async enumerateDevices() {
-		const uiMediaDeviceKindByKindString = {
-			'audioinput': UiMediaDeviceKind.AUDIO_INPUT,
-			'videoinput': UiMediaDeviceKind.VIDEO_INPUT,
-			'audiooutput': UiMediaDeviceKind.AUDIO_OUTPUT
-		};
-		try {
-			let stream = await window.navigator.mediaDevices.getUserMedia({audio: true, video: true});
-			stream.getTracks().forEach(t => t.stop()); // close the stream directly!
-		} catch (e) {
-			console.error(e);
-		} finally {
-			try {
-				let devices = await navigator.mediaDevices.enumerateDevices();
-				return devices.map((deviceInfo, i) => createUiMediaDeviceInfoConfig({
-					deviceId: deviceInfo.deviceId,
-					groupId: deviceInfo.groupId,
-					kind: uiMediaDeviceKindByKindString[deviceInfo.kind],
-					label: deviceInfo.label
-				} as UiMediaDeviceInfoConfig))
-					.filter(uiDeviceInfo => uiDeviceInfo.kind != null);
-			} catch (e) {
-				return [];
-			}
-		}
 	}
 
 	setContextMenuContent(requestId: number, component: UiComponent): void {
