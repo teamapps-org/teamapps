@@ -19,89 +19,157 @@
  */
 package org.teamapps.ux.component.webrtc;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiMediaSoupPlaybackParamaters;
+import org.teamapps.dto.UiInfiniteItemView;
+import org.teamapps.dto.UiMediaDeviceInfo;
+import org.teamapps.dto.UiMediaSoupPlaybackParameters;
 import org.teamapps.dto.UiMediaSoupPublishingParameters;
 import org.teamapps.dto.UiMediaSoupV3WebRtcClient;
-import org.teamapps.dto.UiObject;
+import org.teamapps.dto.WebRtcPublishingFailureReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.Component;
+import org.teamapps.ux.session.SessionContext;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	public final Event<MulticastPlaybackProfile> onPlaybackProfileChanged = new Event<>();
 	public final Event<Boolean> onVoiceActivityChanged = new Event<>();
 	public final Event<Void> onClicked = new Event<>();
+	public final Event<Void> onPublishingSucceeded = new Event<>();
+	public final Event<PublishedStreamsStatus> onPublishedStreamsStatusChanged = new Event<>();
+	public final Event<WebRtcPublishingFailureReason> onPublishingFailed = new Event<>();
+	public final Event<WebRtcStreamType> onPublishedStreamEnded = new Event<>();
+	public final Event<Void> onPlaybackSucceeded = new Event<>();
+	public final Event<Void> onPlaybackFailed = new Event<>();
+	public final Event<Boolean> onConnectionStateChanged = new Event<>();
 
 	private String serverAddress;
-	private int serverPort;
 
 	private boolean activityLineVisible;
 	private Color activityInactiveColor;
 	private Color activityActiveColor;
 	private boolean active;
 
-	private Icon icon;
+	private List<Icon> icons = Collections.emptyList();
 	private String caption;
 	private String noVideoImageUrl;
 
-	private Float displayAreaAspectRatio = 4/3f; // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
+	private Float displayAreaAspectRatio; // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
 
-	private UiObject lastPublishOrPlaybackParams;
+	private double playbackVolume = 1;
+
+	private UiMediaSoupPublishingParameters publishingParameters;
+	private UiMediaSoupPlaybackParameters playbackParameters;
+
+	private Supplier<Component> contextMenuProvider = null;
+	private int lastSeenContextMenuRequestId;
 
 	public MediaSoupV3WebRtcClient() {
 	}
 
 	public MediaSoupV3WebRtcClient(String serverUrl) {
-		URL url;
-		try {
-			url = new URL(serverUrl);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		}
-		this.serverAddress = url.getHost();
-		this.serverPort = url.getPort() != -1 ? url.getPort() : 443;
-	}
-
-	public MediaSoupV3WebRtcClient(String serverAddress, int serverPort) {
-		this.serverAddress = serverAddress;
-		this.serverPort = serverPort;
+		this.serverAddress = serverUrl;
 	}
 
 	@Override
 	public UiMediaSoupV3WebRtcClient createUiComponent() {
 		UiMediaSoupV3WebRtcClient ui = new UiMediaSoupV3WebRtcClient();
 		mapAbstractUiComponentProperties(ui);
-		ui.setInitialPlaybackOrPublishParams(lastPublishOrPlaybackParams);
+		ui.setPublishingParameters(publishingParameters);
+		ui.setPlaybackParameters(playbackParameters);
 		ui.setActivityLineVisible(activityLineVisible);
 		ui.setActivityInactiveColor(UiUtil.createUiColor(activityInactiveColor));
 		ui.setActivityActiveColor(UiUtil.createUiColor(activityActiveColor));
-		ui.setIcon(getSessionContext().resolveIcon(icon));
+		ui.setIcons(icons.stream().map(icon -> getSessionContext().resolveIcon(icon)).collect(Collectors.toList()));
 		ui.setCaption(caption);
 		ui.setNoVideoImageUrl(noVideoImageUrl);
 		ui.setDisplayAreaAspectRatio(displayAreaAspectRatio);
+		ui.setPlaybackVolume(playbackVolume);
+		ui.setContextMenuEnabled(contextMenuProvider != null);
 		return ui;
 	}
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_VOICE_ACTIVITY_CHANGED: {
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PLAYBACK_PROFILE_CHANGED: {
+				UiMediaSoupV3WebRtcClient.PlaybackProfileChangedEvent e = (UiMediaSoupV3WebRtcClient.PlaybackProfileChangedEvent) event;
+				if (e.getProfile() == null) {
+					return;
+				}
+				MulticastPlaybackProfile profile = Arrays.stream(MulticastPlaybackProfile.values())
+						.filter(p -> Objects.equals(p.name(), e.getProfile().name()))
+						.findFirst().orElse(null);
+				if (profile == null) {
+					return;
+				}
+				this.onPlaybackProfileChanged.fire(MulticastPlaybackProfile.valueOf(e.getProfile().name()));
+				break;
+			}
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_VOICE_ACTIVITY_CHANGED: {
 				UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent e = (UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent) event;
 				this.onVoiceActivityChanged.fire(e.getActive());
 				break;
 			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_CLICKED: {
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_CLICKED: {
 				UiMediaSoupV3WebRtcClient.ClickedEvent e = (UiMediaSoupV3WebRtcClient.ClickedEvent) event;
 				this.onClicked.fire();
+				break;
+			}
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHING_SUCCEEDED:
+				this.onPublishingSucceeded.fire();
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHED_STREAMS_STATUS_CHANGED: {
+				UiMediaSoupV3WebRtcClient.PublishedStreamsStatusChangedEvent e = (UiMediaSoupV3WebRtcClient.PublishedStreamsStatusChangedEvent) event;
+				this.onPublishedStreamsStatusChanged.fire(new PublishedStreamsStatus(e.getAudio(), e.getVideo()));
+				break;
+			}
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHING_FAILED:
+				this.onPublishingFailed.fire(((UiMediaSoupV3WebRtcClient.PublishingFailedEvent) event).getReason());
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHED_STREAM_ENDED:
+				this.onPublishedStreamEnded.fire(((UiMediaSoupV3WebRtcClient.PublishedStreamEndedEvent) event).getIsDisplay() ? WebRtcStreamType.DISPLAY : WebRtcStreamType.CAM_MIC);
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PLAYBACK_SUCCEEDED:
+				this.onPlaybackSucceeded.fire();
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PLAYBACK_FAILED:
+				this.onPlaybackFailed.fire();
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_CONNECTION_STATE_CHANGED:
+				this.onConnectionStateChanged.fire(((UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent) event).getConnected());
+				break;
+			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_CONTEXT_MENU_REQUESTED: {
+				UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent e = (UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent) event;
+				lastSeenContextMenuRequestId = e.getRequestId();
+				if (contextMenuProvider != null) {
+					Component contextMenuContent = contextMenuProvider.get();
+					if (contextMenuContent != null) {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
+					} else {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
+					}
+				} else {
+					closeContextMenu();
+				}
 				break;
 			}
 		}
@@ -109,49 +177,41 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	public void publish(String uid, String token, AudioTrackConstraints audioConstraints, VideoTrackConstraints videoConstraints, ScreenSharingConstraints screenSharingConstraints, long maxBitrate) {
 		UiMediaSoupPublishingParameters params = new UiMediaSoupPublishingParameters();
-		params.setServerAdress(serverAddress);
-		params.setServerPort(serverPort);
+		params.setServerAddress(serverAddress);
 		params.setUid(uid);
 		params.setToken(token);
 		params.setAudioConstraints(audioConstraints != null ? audioConstraints.createUiAudioTrackConstraints() : null);
 		params.setVideoConstraints(videoConstraints != null ? videoConstraints.createUiVideoTrackConstraints() : null);
 		params.setScreenSharingConstraints(screenSharingConstraints != null ? screenSharingConstraints.createUiScreenSharingConstraints() : null);
 		params.setMaxBitrate(maxBitrate);
-
-		if (this.isRendered()) {
-			queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.PublishCommand(getId(), params));
-		} else {
-			lastPublishOrPlaybackParams = params;
-		}
+		this.publishingParameters = params;
+		update();
 	}
 
-	public void play(String uid, boolean audio, boolean video, long minBitrate, long maxBitrate) {
-		UiMediaSoupPlaybackParamaters params = new UiMediaSoupPlaybackParamaters();
-		params.setServerAdress(serverAddress);
-		params.setServerPort(serverPort);
+	public void play(String uid, String token, boolean audio, boolean video, long minBitrate, long maxBitrate) {
+		UiMediaSoupPlaybackParameters params = new UiMediaSoupPlaybackParameters();
+		params.setServerAddress(serverAddress);
 		params.setUid(uid);
+		params.setToken(token);
 		params.setAudio(audio);
 		params.setVideo(video);
 		params.setMinBitrate(minBitrate);
 		params.setMaxBitrate(maxBitrate);
-
-		if (this.isRendered()) {
-			queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.PlaybackCommand(getId(), params));
-		} else {
-			lastPublishOrPlaybackParams = params;
-		}
+		this.playbackParameters = params;
+		update();
 	}
 
 	public void stop() {
 		if (this.isRendered()) {
 			queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.StopCommand(getId()));
 		} else {
-			lastPublishOrPlaybackParams = null;
+			publishingParameters = null;
+			playbackParameters = null;
 		}
 	}
 
 	private void update() {
-		// TODO
+		queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.UpdateCommand(getId(), createUiComponent()));
 	}
 
 	public String getServerAddress() {
@@ -160,14 +220,6 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	public void setServerAddress(String serverAddress) {
 		this.serverAddress = serverAddress;
-	}
-
-	public int getServerPort() {
-		return serverPort;
-	}
-
-	public void setServerPort(int serverPort) {
-		this.serverPort = serverPort;
 	}
 
 	public boolean isActivityLineVisible() {
@@ -202,17 +254,24 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void setActive(boolean active) {
-		this.active = active;
-		queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.SetActiveCommand(getId(), active));
+		if (active != this.active) {
+			this.active = active;
+			queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.SetActiveCommand(getId(), active));
+		}
 	}
 
-	public Icon getIcon() {
-		return icon;
+	public List<Icon> getIcons() {
+		return icons;
 	}
 
-	public void setIcon(Icon icon) {
-		this.icon = icon;
-		update();
+	public void setIcons(List<Icon> icons) {
+		if (icons == null) {
+			icons = Collections.emptyList();
+		}
+		if (!Objects.equals(icons, this.icons)) {
+			this.icons = icons;
+			update();
+		}
 	}
 
 	public String getCaption() {
@@ -220,8 +279,10 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void setCaption(String caption) {
-		this.caption = caption;
-		update();
+		if (!Objects.equals(caption, this.caption)) {
+			this.caption = caption;
+			update();
+		}
 	}
 
 	public String getNoVideoImageUrl() {
@@ -229,17 +290,10 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void setNoVideoImageUrl(String noVideoImageUrl) {
-		this.noVideoImageUrl = noVideoImageUrl;
-		update();
-	}
-
-	public UiObject getLastPublishOrPlaybackParams() {
-		return lastPublishOrPlaybackParams;
-	}
-
-	public void setLastPublishOrPlaybackParams(UiObject lastPublishOrPlaybackParams) {
-		this.lastPublishOrPlaybackParams = lastPublishOrPlaybackParams;
-		update();
+		if (!Objects.equals(noVideoImageUrl, this.noVideoImageUrl)) {
+			this.noVideoImageUrl = noVideoImageUrl;
+			update();
+		}
 	}
 
 	public Float getDisplayAreaAspectRatio() {
@@ -247,7 +301,63 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void setDisplayAreaAspectRatio(Float displayAreaAspectRatio) {
-		this.displayAreaAspectRatio = displayAreaAspectRatio;
-		update();
+		if (!Objects.equals(displayAreaAspectRatio, this.displayAreaAspectRatio)) {
+			this.displayAreaAspectRatio = displayAreaAspectRatio;
+			update();
+		}
 	}
-}
+
+	public double getPlaybackVolume() {
+		return playbackVolume;
+	}
+
+	public void setPlaybackVolume(double playbackVolume) {
+		if (playbackVolume != this.playbackVolume) {
+			this.playbackVolume = playbackVolume;
+			update();
+		}
+	}
+
+	public static CompletableFuture<List<UiMediaDeviceInfo>> enumerateDevices() {
+		CompletableFuture<List<UiMediaDeviceInfo>> future = new CompletableFuture<>();
+		SessionContext.current().queueCommand(new UiMediaSoupV3WebRtcClient.EnumerateDevicesCommand(), value -> {
+			future.complete(value);
+		});
+		return future;
+	}
+
+	public Supplier<Component> getContextMenuProvider() {
+		return contextMenuProvider;
+	}
+
+	public void setContextMenuProvider(Supplier<Component> contextMenuProvider) {
+		this.contextMenuProvider = contextMenuProvider;
+	}
+
+	public void closeContextMenu() {
+		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
+	}
+
+	public static String generatePublishJwtToken(String streamUuid, String secret, Duration tokenValidityDuration) {
+		return generateJwtToken(streamUuid, secret, tokenValidityDuration, "1" /*PUBLISH*/);
+	}
+
+	public static String generateSubscribeJwtToken(String streamUuid, String secret, Duration tokenValidityDuration) {
+		return generateJwtToken(streamUuid, secret, tokenValidityDuration, "0" /*SUBSCRIBE*/);
+	}
+
+	private static String generateJwtToken(String streamUuid, String secret, Duration tokenValidityDuration, String operation) {
+		if (secret == null) {
+			return "";
+		}
+		try {
+			Algorithm algorithm = Algorithm.HMAC512(secret);
+			return JWT.create()
+					.withClaim("stream", streamUuid)
+					.withClaim("operation", operation)
+					.withExpiresAt(new Date(Instant.now().plus(tokenValidityDuration).toEpochMilli()))
+					.sign(algorithm);
+		} catch (JWTCreationException exception){
+			throw new RuntimeException("Could not create auth token - this should never happen!");
+		}
+	}}
