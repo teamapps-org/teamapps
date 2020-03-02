@@ -1,9 +1,10 @@
 import { WorkerSettings } from 'mediasoup/lib/Worker';
 import { RouterOptions } from 'mediasoup/lib/Router';
-import { ConsumerType } from 'mediasoup/lib/Consumer';
+import { ConsumerLayers, ConsumerType } from 'mediasoup/lib/Consumer';
 import { MediaKind, RtpCapabilities, RtpCodecParameters, RtpParameters } from 'mediasoup/lib/RtpParameters';
 import { DtlsParameters, IceCandidate, IceParameters } from 'mediasoup/lib/WebRtcTransport';
 import { RtpCapabilities as ClientRtpCapabilities } from 'mediasoup-client/lib/RtpParameters';
+import { ProducerCodecOptions } from 'mediasoup-client/lib/Producer';
 export interface MediaSoupSettings {
     worker: WorkerSettings;
     router: RouterOptions;
@@ -35,6 +36,22 @@ export interface MediaSoupSettings {
         stats: number;
         stream: number;
     };
+    iceServers?: IceSever[];
+    simulcast?: Simulcast;
+}
+export interface IceSever {
+    urls: string[];
+    username: string;
+    credential: string;
+}
+export interface Simulcast {
+    encodings?: RTCRtpEncodingParameters[];
+    codecOptions?: ProducerCodecOptions;
+}
+export interface ServerConfigs {
+    routerRtpCapabilities: RtpCapabilities;
+    iceServers?: IceSever[];
+    simulcast?: Simulcast;
 }
 export interface ProduceRequest {
     transportId: string;
@@ -58,7 +75,6 @@ export interface ConsumeResponse {
 export interface ConsumeRequest {
     kind: MediaKind;
     stream: string;
-    wait?: boolean;
     rtpCapabilities: RtpCapabilities | ClientRtpCapabilities;
     transportId: string;
 }
@@ -94,6 +110,9 @@ export interface ProducerData {
 }
 export interface ConsumerData {
     consumerId: string;
+}
+export interface ConsumerPreferredLayers extends ConsumerData {
+    layers: ConsumerLayers;
 }
 export interface TransportData {
     transportId: string;
