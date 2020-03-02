@@ -110,7 +110,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PLAYBACK_PROFILE_CHANGED: {
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PLAYBACK_PROFILE_CHANGED: {
 				UiMediaSoupV3WebRtcClient.PlaybackProfileChangedEvent e = (UiMediaSoupV3WebRtcClient.PlaybackProfileChangedEvent) event;
 				if (e.getProfile() == null) {
 					return;
@@ -124,40 +124,40 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 				this.onPlaybackProfileChanged.fire(MulticastPlaybackProfile.valueOf(e.getProfile().name()));
 				break;
 			}
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_VOICE_ACTIVITY_CHANGED: {
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_VOICE_ACTIVITY_CHANGED: {
 				UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent e = (UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent) event;
 				this.onVoiceActivityChanged.fire(e.getActive());
 				break;
 			}
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_CLICKED: {
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_CLICKED: {
 				UiMediaSoupV3WebRtcClient.ClickedEvent e = (UiMediaSoupV3WebRtcClient.ClickedEvent) event;
 				this.onClicked.fire();
 				break;
 			}
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHING_SUCCEEDED:
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PUBLISHING_SUCCEEDED:
 				this.onPublishingSucceeded.fire();
 				break;
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHED_STREAMS_STATUS_CHANGED: {
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PUBLISHED_STREAMS_STATUS_CHANGED: {
 				UiMediaSoupV3WebRtcClient.PublishedStreamsStatusChangedEvent e = (UiMediaSoupV3WebRtcClient.PublishedStreamsStatusChangedEvent) event;
 				this.onPublishedStreamsStatusChanged.fire(new PublishedStreamsStatus(e.getAudio(), e.getVideo()));
 				break;
 			}
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHING_FAILED:
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PUBLISHING_FAILED:
 				this.onPublishingFailed.fire(((UiMediaSoupV3WebRtcClient.PublishingFailedEvent) event).getReason());
 				break;
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PUBLISHED_STREAM_ENDED:
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PUBLISHED_STREAM_ENDED:
 				this.onPublishedStreamEnded.fire(((UiMediaSoupV3WebRtcClient.PublishedStreamEndedEvent) event).getIsDisplay() ? WebRtcStreamType.DISPLAY : WebRtcStreamType.CAM_MIC);
 				break;
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PLAYBACK_SUCCEEDED:
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PLAYBACK_SUCCEEDED:
 				this.onPlaybackSucceeded.fire();
 				break;
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_PLAYBACK_FAILED:
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PLAYBACK_FAILED:
 				this.onPlaybackFailed.fire();
 				break;
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_CONNECTION_STATE_CHANGED:
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_CONNECTION_STATE_CHANGED:
 				this.onConnectionStateChanged.fire(((UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent) event).getConnected());
 				break;
-			case UI_MEDIA_SOUP_V2_WEB_RTC_CLIENT_CONTEXT_MENU_REQUESTED: {
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_CONTEXT_MENU_REQUESTED: {
 				UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent e = (UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent) event;
 				lastSeenContextMenuRequestId = e.getRequestId();
 				if (contextMenuProvider != null) {

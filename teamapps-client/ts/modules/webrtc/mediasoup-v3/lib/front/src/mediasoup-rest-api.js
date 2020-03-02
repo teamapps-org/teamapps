@@ -62,6 +62,7 @@ var constants_1 = require("../../config/constants");
 var axios_1 = __importDefault(require("axios"));
 var MediasoupRestApi = /** @class */ (function () {
     function MediasoupRestApi(url, token) {
+        this.timeouts = [];
         this.url = url;
         this.token = token;
     }
@@ -82,6 +83,18 @@ var MediasoupRestApi = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PAUSE_CONSUMER, json)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.setPreferredLayers = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.SET_PREFERRED_LAYERS, json)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -191,11 +204,11 @@ var MediasoupRestApi = /** @class */ (function () {
             });
         });
     };
-    MediasoupRestApi.prototype.getRouterRtpCapabilities = function () {
+    MediasoupRestApi.prototype.getServerConfigs = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.GET_ROUTER_RTP_CAPABILITIES)];
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.GET_SERVER_CONFIGS)];
                     case 1: return [2 /*return*/, (_a.sent())];
                 }
             });
@@ -259,10 +272,19 @@ var MediasoupRestApi = /** @class */ (function () {
             });
         });
     };
+    MediasoupRestApi.prototype.clear = function () {
+        while (this.timeouts.length) {
+            var t = this.timeouts.shift();
+            if (t) {
+                clearTimeout(t);
+            }
+        }
+    };
     MediasoupRestApi.prototype.request = function (action, json) {
         if (json === void 0) { json = {}; }
         return __awaiter(this, void 0, void 0, function () {
             var data, e_1;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -279,9 +301,8 @@ var MediasoupRestApi = /** @class */ (function () {
                         return [2 /*return*/, data];
                     case 3:
                         e_1 = _a.sent();
-                        console.log('retrying error', e_1);
-                        if (!(!e_1.statusCode && !constants_1.ERROR[e_1.statusCode])) return [3 /*break*/, 6];
-                        return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 1000); })];
+                        if (!(!e_1.response.status && !constants_1.ERROR[e_1.response.status])) return [3 /*break*/, 6];
+                        return [4 /*yield*/, new Promise(function (resolve) { return _this.timeouts.push(setTimeout(resolve, 1000)); })];
                     case 4:
                         _a.sent();
                         return [4 /*yield*/, this.request(action, json)];
