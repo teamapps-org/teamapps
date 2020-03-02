@@ -75,7 +75,6 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private contextMenu: ContextMenu;
 
 	private currentSourceStreams: MediaStream[];
-	private publishingStream: MediaStream = new MediaStream();
 	private publishConferenceApi: ConferenceApi;
 	private playbackConferenceApi: ConferenceApi;
 
@@ -165,76 +164,64 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		this.$video.classList.toggle("mirrored", publishingParameters?.videoConstraints && !(publishingParameters?.screenSharingConstraints));
 
-		if (baseConfigChanged || (constraintsChanged && !newAudioConstraints && !newVideoConstraints && !newScreenConstraints)) {
+		console.log(baseConfigChanged, audioChanged, videoChanged, screenChanged, constraintsChanged)
+
+		if (baseConfigChanged || constraintsChanged) {
 			this.stopPublishing();
-		}
 
-		if ((baseConfigChanged || constraintsChanged) && (newAudioConstraints || newVideoConstraints || newScreenConstraints)) {
-			let targetStream: MediaStream;
-			try {
-				let streams = await retrieveUserMedia(publishingParameters.audioConstraints, publishingParameters.videoConstraints, publishingParameters.screenSharingConstraints,
-					(endedMediaStream, isDisplay) => {
-						if (this.currentSourceStreams.indexOf(endedMediaStream) != -1) {
-							console.log(`${isDisplay ? "display" : "mic/cam"} stream ended`);
-							this.onPublishedStreamEnded.fire({isDisplay: isDisplay});
-							// this.connectionStatus.status = "error";
-							this.updateStateCssClass();
-						}
-					});
-				this.currentSourceStreams = streams.sourceStreams;
-				targetStream = streams.targetStream;
-			} catch (error) {
-				console.error("Error during media retrieval", error);
-				this.onPublishingFailed.fire({reason: error.reason, errorMessage: error.toString()});
-				throw error;
-			}
-
-			this.removeAndStopAllPublishingTracks();
-			targetStream.getTracks().forEach(t => {
-				this.publishingStream.addTrack(t)
-				this.publishingStream.dispatchEvent(new MediaStreamTrackEvent("addtrack", {track: t}));
-			});
-
-			try {
-				if (this.publishConferenceApi == null) {
-					this.publishConferenceApi = new ConferenceApi({
-						stream: publishingParameters.uid,
-						token: publishingParameters.token,
-						url: publishingParameters.serverAddress
-					});
-					await this.publishConferenceApi.publish(this.publishingStream);
-					this.$video.srcObject = this.publishingStream;
-				}
-
-				addVoiceActivityDetection(targetStream, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
-
-				this.$video.muted = true;
+			if (newAudioConstraints || newVideoConstraints || newScreenConstraints) {
+				let targetStream: MediaStream;
 				try {
-					await this.$video.play();
+					let streams = await retrieveUserMedia(publishingParameters.audioConstraints, publishingParameters.videoConstraints, publishingParameters.screenSharingConstraints,
+						(endedMediaStream, isDisplay) => {
+							if (this.currentSourceStreams.indexOf(endedMediaStream) != -1) {
+								console.log(`${isDisplay ? "display" : "mic/cam"} stream ended`);
+								this.onPublishedStreamEnded.fire({isDisplay: isDisplay});
+								// this.connectionStatus.status = "error";
+								this.updateStateCssClass();
+							}
+						});
+					this.currentSourceStreams = streams.sourceStreams;
+					targetStream = streams.targetStream;
 				} catch (error) {
-					console.log('Could not playback local (publishing) video!', error);
+					console.error("Error during media retrieval", error);
+					this.onPublishingFailed.fire({reason: error.reason, errorMessage: error.toString()});
+					throw error;
 				}
 
-				this.onPublishingSucceeded.fire({}); // TODO move somewhere better once M2 is done?
-			} catch (e) {
-				console.error('Error while publishing!', e);
-				if (e.statusCode) {
-					console.error("HTTP status code: " + e.statusCode);
+				try {
+					if (this.publishConferenceApi == null) {
+						this.publishConferenceApi = new ConferenceApi({
+							stream: publishingParameters.uid,
+							token: publishingParameters.token,
+							url: publishingParameters.serverAddress
+						});
+						await this.publishConferenceApi.publish(targetStream);
+						this.$video.srcObject = targetStream;
+					}
+
+					addVoiceActivityDetection(targetStream, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
+
+					this.$video.muted = true;
+					try {
+						await this.$video.play();
+					} catch (error) {
+						console.log('Could not playback local (publishing) video!', error);
+					}
+
+					this.onPublishingSucceeded.fire({}); // TODO move somewhere better once M2 is done?
+				} catch (e) {
+					console.error('Error while publishing!', e);
+					if (e.statusCode) {
+						console.error("HTTP status code: " + e.statusCode);
+					}
+					this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: WebRtcPublishingFailureReason.CONNECTION_ESTABLISHMENT_FAILED});
+					this.stopPublishing();
+					// this.connectionStatus.status = "error";
+					this.updateStateCssClass();
 				}
-				this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: WebRtcPublishingFailureReason.CONNECTION_ESTABLISHMENT_FAILED});
-				this.stopPublishing();
-				// this.connectionStatus.status = "error";
-				this.updateStateCssClass();
 			}
 		}
-	}
-
-	private removeAndStopAllPublishingTracks() {
-		this.publishingStream.getTracks().forEach(t => {
-			this.publishingStream.removeTrack(t)
-			this.publishingStream.dispatchEvent(new MediaStreamTrackEvent("removetrack", {track: t}));
-			t.stop();
-		});
 	}
 
 	private updateStateCssClass() {
@@ -327,8 +314,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			this.publishConferenceApi = null;
 			this.$video.classList.remove("mirrored");
 		}
-		this.removeAndStopAllPublishingTracks();
 		// this.connectionStatus.status = "idle";
+		this.currentSourceStreams.forEach(s => s.getTracks().forEach(t => t.stop()));
 		this.updateStateCssClass();
 		this.$video.srcObject = null;
 	}
