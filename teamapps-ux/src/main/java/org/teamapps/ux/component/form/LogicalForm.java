@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class LogicalForm<RECORD> {
 
-	private final Map<String, AbstractField> fieldsByPropertyName = new HashMap<>();
+	private final Map<String, AbstractField<?>> fieldsByPropertyName = new HashMap<>();
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
 
@@ -42,23 +42,23 @@ public class LogicalForm<RECORD> {
 		this.propertyInjector = propertyInjector;
 	}
 
-	public LogicalForm(Map<String, AbstractField> fieldsByPropertyName) {
-		fieldsByPropertyName.putAll(fieldsByPropertyName);
+	public LogicalForm(Map<String, AbstractField<?>> fieldsByPropertyName) {
+		this.fieldsByPropertyName.putAll(fieldsByPropertyName);
 	}
 
-	public LogicalForm<RECORD> addField(String propertyName, AbstractField field) {
+	public LogicalForm<RECORD> addField(String propertyName, AbstractField<?> field) {
 		this.fieldsByPropertyName.put(propertyName, field);
 		return this;
 	}
 
-	public LogicalForm<RECORD> removeField(AbstractField field) {
+	public LogicalForm<RECORD> removeField(AbstractField<?> field) {
 		this.fieldsByPropertyName.remove(field);
 		return this;
 	}
 
 	public void applyRecordValuesToFields(RECORD record) {
 		Map<String, Object> values = propertyExtractor.getValues(record, fieldsByPropertyName.keySet());
-		values.forEach((dataKey, value) -> fieldsByPropertyName.get(dataKey).setValue(value));
+		values.forEach((dataKey, value) -> ((AbstractField) fieldsByPropertyName.get(dataKey)).setValue(value));
 	}
 
 	public void applyFieldValuesToRecord(RECORD record) {
@@ -67,7 +67,7 @@ public class LogicalForm<RECORD> {
 		propertyInjector.setValues(record, fieldValues);
 	}
 
-	public Map<String, AbstractField> getFields() {
+	public Map<String, AbstractField<?>> getFields() {
 		return fieldsByPropertyName;
 	}
 
