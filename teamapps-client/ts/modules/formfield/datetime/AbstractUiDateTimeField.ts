@@ -82,11 +82,11 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 		this.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
 		this.getMainElement().classList.add(UiField.editingModeCssClasses[editingMode]);
 		if (editingMode === UiFieldEditingMode.READONLY) {
-			// this.trivialDateTimeField.setEditingMode("readonly");
+			this.trivialDateTimeField.setEditingMode("readonly");
 		} else if (editingMode === UiFieldEditingMode.DISABLED) {
-			// this.trivialDateTimeField.setEditingMode("disabled");
+			this.trivialDateTimeField.setEditingMode("disabled");
 		} else {
-			// this.trivialDateTimeField.setEditingMode("editable");
+			this.trivialDateTimeField.setEditingMode("editable");
 		}
 	}
 
