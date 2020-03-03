@@ -68,7 +68,7 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		return getFieldByPropertyName(fieldName).getValue();
 	}
 
-	protected void addField(String propertyName, AbstractField field) {
+	protected void addField(String propertyName, AbstractField<?> field) {
 		addComponent(field);
 		logicalForm.addField(propertyName, field);
 		field.onValueChanged.addListener(value -> {
@@ -162,7 +162,7 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		return new ArrayList<>(logicalForm.getFields().keySet());
 	}
 
-	public List<AbstractField> getFields() {
+	public List<AbstractField<?>> getFields() {
 		return new ArrayList<>(logicalForm.getFields().values());
 	}
 
