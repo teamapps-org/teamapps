@@ -50,6 +50,7 @@ import {WebRtcPublishingFailureReason} from "../../../generated/WebRtcPublishing
 import {Utils} from "./lib/front/src/utils";
 import {UiMediaSoupPlaybackParametersConfig} from "../../../generated/UiMediaSoupPlaybackParametersConfig";
 import {UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
+import {MediaKind} from "mediasoup-client/lib/RtpParameters";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onPublishingSucceeded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PublishingSucceededEvent> = new TeamAppsEvent(this);
@@ -268,7 +269,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				this.playbackConferenceApi = new ConferenceApi({
 					stream: parameters.uid,
 					token: parameters.token,
-					url: parameters.serverAddress
+					url: parameters.serverAddress,
+					kinds: [...(parameters.audio ? ["audio"] : []), ...(parameters.video ? ["video"] : [])] as MediaKind[]
 				});
 				const mediaStream = await this.playbackConferenceApi.subscribe();
 				this.$video.srcObject = mediaStream;

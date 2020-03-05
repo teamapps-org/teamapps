@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { EventEmitter } from "events";
-import { ConferenceInput } from '../../ms/interfaces';
-import { ConsumerLayers } from 'mediasoup/lib/Consumer';
+import { MediaKind } from 'mediasoup-client/lib/RtpParameters';
+import { ConferenceInput, ConsumerLayers } from './client-interfaces';
 interface IConferenceApi {
     on(event: 'bitRate', listener: ({ bitRate: number, kind: MediaKind }: {
         bitRate: any;
@@ -12,7 +12,7 @@ export declare class ConferenceApi extends EventEmitter implements IConferenceAp
     private readonly api;
     private readonly configs;
     private readonly device;
-    private readonly remoteIds;
+    private readonly connectors;
     private readonly layers;
     private operation;
     private transport;
@@ -25,6 +25,7 @@ export declare class ConferenceApi extends EventEmitter implements IConferenceAp
     startRecording(): Promise<void>;
     stopRecording(): Promise<void>;
     setPreferredLayers(layers: ConsumerLayers): Promise<void>;
+    updateKinds(kinds: MediaKind[]): Promise<void>;
     private init;
     publish(mediaStream: MediaStream): Promise<MediaStream>;
     subscribe(): Promise<MediaStream>;

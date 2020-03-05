@@ -283,7 +283,7 @@ var MediasoupRestApi = /** @class */ (function () {
     MediasoupRestApi.prototype.request = function (action, json) {
         if (json === void 0) { json = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var data, e_1;
+            var data, e_1, timeout_1;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -302,9 +302,15 @@ var MediasoupRestApi = /** @class */ (function () {
                     case 3:
                         e_1 = _a.sent();
                         if (!(!e_1.response.status && !constants_1.ERROR[e_1.response.status])) return [3 /*break*/, 6];
-                        return [4 /*yield*/, new Promise(function (resolve) { return _this.timeouts.push(setTimeout(resolve, 1000)); })];
+                        return [4 /*yield*/, new Promise(function (resolve) {
+                                timeout_1 = setTimeout(resolve, 1000);
+                                _this.timeouts.push(timeout_1);
+                            })];
                     case 4:
                         _a.sent();
+                        if (!this.timeouts.includes(timeout_1)) {
+                            throw e_1;
+                        }
                         return [4 /*yield*/, this.request(action, json)];
                     case 5: return [2 /*return*/, _a.sent()];
                     case 6: throw e_1;

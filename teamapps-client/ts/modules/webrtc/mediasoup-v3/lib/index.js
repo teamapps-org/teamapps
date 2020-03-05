@@ -154,7 +154,7 @@ var ConferenceApi = /** @class */ (function (_super) {
     __extends(ConferenceApi, _super);
     function ConferenceApi(configs) {
         var _this = _super.call(this) || this;
-        _this.remoteIds = new Map();
+        _this.connectors = new Map();
         _this.layers = new Map();
         _this.timeouts = [];
         _this.configs = __assign({ url: location.protocol + "//" + location.host, kinds: ['video', 'audio'], timeout: {
@@ -197,20 +197,56 @@ var ConferenceApi = /** @class */ (function (_super) {
     };
     ConferenceApi.prototype.setPreferredLayers = function (layers) {
         return __awaiter(this, void 0, void 0, function () {
-            var kind, consumerId;
+            var kind, consumer;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!(this.operation === constants_1.API_OPERATION.SUBSCRIBE)) return [3 /*break*/, 2];
                         kind = 'video';
                         this.layers.set(kind, layers);
-                        consumerId = this.remoteIds.get(kind);
-                        if (!consumerId) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.api.setPreferredLayers({ consumerId: consumerId, layers: layers })];
+                        consumer = this.connectors.get(kind);
+                        if (!consumer) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.api.setPreferredLayers({ consumerId: consumer.id, layers: layers })];
                     case 1:
                         _a.sent();
                         _a.label = 2;
                     case 2: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ConferenceApi.prototype.updateKinds = function (kinds) {
+        return __awaiter(this, void 0, void 0, function () {
+            var oldKinds, _i, oldKinds_1, kind, connector, _a, kinds_1, kind;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!(this.operation === constants_1.API_OPERATION.SUBSCRIBE)) return [3 /*break*/, 4];
+                        oldKinds = this.configs.kinds;
+                        this.configs.kinds = kinds;
+                        for (_i = 0, oldKinds_1 = oldKinds; _i < oldKinds_1.length; _i++) {
+                            kind = oldKinds_1[_i];
+                            if (!kinds.includes(kind)) {
+                                connector = this.connectors.get(kind);
+                                if (connector) {
+                                    connector.close();
+                                }
+                            }
+                        }
+                        _a = 0, kinds_1 = kinds;
+                        _b.label = 1;
+                    case 1:
+                        if (!(_a < kinds_1.length)) return [3 /*break*/, 4];
+                        kind = kinds_1[_a];
+                        if (!this.connectors.get(kind)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.subscribeTrack(kind)];
+                    case 2:
+                        _b.sent();
+                        _b.label = 3;
+                    case 3:
+                        _a++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -229,6 +265,10 @@ var ConferenceApi = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.api.getServerConfigs()];
                     case 1:
                         _a = _b.sent(), routerRtpCapabilities = _a.routerRtpCapabilities, iceServers = _a.iceServers, simulcast = _a.simulcast;
+                        if (routerRtpCapabilities.headerExtensions) {
+                            routerRtpCapabilities.headerExtensions = routerRtpCapabilities.headerExtensions.
+                                filter(function (ext) { return ext.uri !== 'urn:3gpp:video-orientation'; });
+                        }
                         return [4 /*yield*/, this.device.load({ routerRtpCapabilities: routerRtpCapabilities })];
                     case 2:
                         _b.sent();
@@ -267,6 +307,17 @@ var ConferenceApi = /** @class */ (function (_super) {
                                         _a.sent();
                                         return [2 /*return*/];
                                 }
+                            });
+                        }); });
+                        mediaStream.addEventListener('removetrack', function (e) { return __awaiter(_this, void 0, void 0, function () {
+                            var consumer;
+                            return __generator(this, function (_a) {
+                                console.log('removetrack', e.track);
+                                consumer = this.connectors.get(e.track.kind);
+                                if (consumer) {
+                                    consumer.close();
+                                }
+                                return [2 /*return*/];
                             });
                         }); });
                         return [2 /*return*/, mediaStream];
@@ -311,8 +362,9 @@ var ConferenceApi = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.consume(this.transport, this.configs.stream, kind)];
                     case 1:
                         consumer = _a.sent();
+                        this.connectors.set(kind, consumer);
                         onClose = function () { return __awaiter(_this, void 0, void 0, function () {
-                            var consumerId, e_1;
+                            var _consumer, e_1;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
@@ -322,7 +374,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                                             this.mediaStream.dispatchEvent(new MediaStreamTrackEvent("removetrack", { track: consumer.track }));
                                         }
                                         if (!(this.transport && !this.transport.closed)) return [3 /*break*/, 6];
-                                        consumerId = this.remoteIds.get(kind);
+                                        _consumer = this.connectors.get(kind);
                                         _a.label = 1;
                                     case 1:
                                         _a.trys.push([1, 3, , 4]);
@@ -334,12 +386,10 @@ var ConferenceApi = /** @class */ (function (_super) {
                                         e_1 = _a.sent();
                                         return [3 /*break*/, 4];
                                     case 4:
-                                        if (!(consumerId && consumer.id === consumerId)) return [3 /*break*/, 6];
-                                        if (consumer.id === consumerId) {
-                                            this.remoteIds.delete(consumer.track.kind);
-                                        }
+                                        if (!(_consumer && consumer.id === _consumer.id)) return [3 /*break*/, 6];
+                                        this.connectors.delete(consumer.track.kind);
                                         if (!this.mediaStream) return [3 /*break*/, 6];
-                                        if (!(consumer.id === consumerId && this.transport)) return [3 /*break*/, 6];
+                                        if (!(this.transport && this.configs.kinds.includes(kind))) return [3 /*break*/, 6];
                                         return [4 /*yield*/, this.subscribeTrack(kind)];
                                     case 5:
                                         _a.sent();
@@ -364,24 +414,24 @@ var ConferenceApi = /** @class */ (function (_super) {
     };
     ConferenceApi.prototype.publishTrack = function (track) {
         return __awaiter(this, void 0, void 0, function () {
-            var params;
+            var params, producer;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!this.configs.kinds.includes(track.kind)) return [3 /*break*/, 2];
                         track.addEventListener('ended', function () { return __awaiter(_this, void 0, void 0, function () {
-                            var producerId, e_2;
+                            var producer, e_2;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        producerId = this.remoteIds.get(track.kind);
-                                        if (!producerId) return [3 /*break*/, 4];
-                                        this.remoteIds.delete(track.kind);
+                                        producer = this.connectors.get(track.kind);
+                                        if (!producer) return [3 /*break*/, 4];
+                                        this.connectors.delete(track.kind);
                                         _a.label = 1;
                                     case 1:
                                         _a.trys.push([1, 3, , 4]);
-                                        return [4 /*yield*/, this.api.closeProducer({ producerId: producerId })];
+                                        return [4 /*yield*/, this.api.closeProducer({ producerId: producer.id })];
                                     case 2:
                                         _a.sent();
                                         return [3 /*break*/, 4];
@@ -403,7 +453,8 @@ var ConferenceApi = /** @class */ (function (_super) {
                         }
                         return [4 /*yield*/, this.transport.produce(params)];
                     case 1:
-                        _a.sent();
+                        producer = _a.sent();
+                        this.connectors.set(track.kind, producer);
                         _a.label = 2;
                     case 2: return [2 /*return*/];
                 }
@@ -424,7 +475,6 @@ var ConferenceApi = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.api.consume({ rtpCapabilities: rtpCapabilities, stream: stream, kind: _kind, transportId: transport.id })];
                     case 2:
                         data = _a.sent();
-                        this.remoteIds.set(_kind, data.id);
                         layers = this.layers.get(_kind);
                         if (!layers) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.api.setPreferredLayers({ consumerId: data.id, layers: layers })];
@@ -595,7 +645,6 @@ var ConferenceApi = /** @class */ (function (_super) {
                                                     })];
                                             case 1:
                                                 data_1 = _b.sent();
-                                                this.remoteIds.set(kind, data_1.id);
                                                 callback(data_1);
                                                 return [3 /*break*/, 3];
                                             case 2:
@@ -977,7 +1026,7 @@ var MediasoupRestApi = /** @class */ (function () {
     MediasoupRestApi.prototype.request = function (action, json) {
         if (json === void 0) { json = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var data, e_1;
+            var data, e_1, timeout_1;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -996,9 +1045,15 @@ var MediasoupRestApi = /** @class */ (function () {
                     case 3:
                         e_1 = _a.sent();
                         if (!(!e_1.response.status && !constants_1.ERROR[e_1.response.status])) return [3 /*break*/, 6];
-                        return [4 /*yield*/, new Promise(function (resolve) { return _this.timeouts.push(setTimeout(resolve, 1000)); })];
+                        return [4 /*yield*/, new Promise(function (resolve) {
+                                timeout_1 = setTimeout(resolve, 1000);
+                                _this.timeouts.push(timeout_1);
+                            })];
                     case 4:
                         _a.sent();
+                        if (!this.timeouts.includes(timeout_1)) {
+                            throw e_1;
+                        }
                         return [4 /*yield*/, this.request(action, json)];
                     case 5: return [2 /*return*/, _a.sent()];
                     case 6: throw e_1;
