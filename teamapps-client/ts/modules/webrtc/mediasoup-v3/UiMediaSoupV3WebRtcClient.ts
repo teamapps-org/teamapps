@@ -249,15 +249,21 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	async updatePlayback(parameters: UiMediaSoupPlaybackParametersConfig) {
 		console.log(parameters);
 
+		const oldParameters = this._config.playbackParameters;
 		const oldStreamUuid = this._config.playbackParameters?.uid ?? null;
 		const oldToken = this._config.playbackParameters?.token ?? null;
 		const oldServerAddress = this._config.playbackParameters?.serverAddress ?? null;
+		const oldAudio = this._config.playbackParameters?.audio ?? false;
+		const oldVideo = this._config.playbackParameters?.video ?? false;
 		const newStreamUuid = parameters?.uid ?? null;
 		const newToken = parameters?.token ?? null;
 		const newServerAddress = parameters?.serverAddress ?? null;
+		const newAudio = parameters?.audio ?? false;
+		const newVideo = parameters?.video ?? false;
 		const baseConfigChanged = oldStreamUuid !== newStreamUuid || oldToken !== newToken || oldServerAddress !== newServerAddress;
+		const audioVideoChanged = (oldAudio != newAudio) || (oldVideo != newVideo);
 
-		if (parameters == null && baseConfigChanged && this.playbackConferenceApi != null) {
+		if (((parameters == null && oldParameters != null) || baseConfigChanged || audioVideoChanged) && this.playbackConferenceApi != null) {
 			this.stopPlayback();
 		}
 
