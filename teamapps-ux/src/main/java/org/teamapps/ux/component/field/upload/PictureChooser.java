@@ -94,7 +94,7 @@ public class PictureChooser extends AbstractField<Resource> {
 		imageCropperWindow.setModal(true);
 		imageCropperWindow.setCloseOnEscape(true);
 
-		okButton.onValueChanged.addListener(aBoolean -> {
+		okButton.onClicked.addListener(() -> {
 			try {
 				ImageCropperSelection selection = imageCropper.getSelection();
 				Resource converted = imageCropperConverter.convert(uploadedFile, selection, this.targetImageWidth, this.targetImageHeight);
@@ -106,7 +106,7 @@ public class PictureChooser extends AbstractField<Resource> {
 			}
 		});
 
-		cancelButton.onValueChanged.addListener(aBoolean -> {
+		cancelButton.onClicked.addListener(() -> {
 			imageCropperWindow.close();
 		});
 

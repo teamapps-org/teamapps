@@ -19,24 +19,25 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiButton;
 import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiField;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
+import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
 
-public class Button<RECORD> extends AbstractField<Boolean> {
+public class Button<RECORD> extends AbstractComponent {
 
+	public final Event<Void> onClicked = new Event<>();
 	public final Event<Void> onDropDownOpened = new Event<>();
 
-	private Template template = BaseTemplate.FORM_BUTTON; // null: toString!
+	private Template template; // null: toString!
 	private RECORD templateRecord;
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 
@@ -73,15 +74,15 @@ public class Button<RECORD> extends AbstractField<Boolean> {
 	}
 
 	@Override
-	public UiField createUiComponent() {
+	public UiButton createUiComponent() {
 		Object uiRecord = createUiRecord();
-		UiButton button = new UiButton(getTemplate().createUiTemplate(), uiRecord);
-		mapAbstractFieldAttributesToUiField(button);
-		button.setDropDownComponent(Component.createUiClientObjectReference(dropDownComponent));
-		button.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
-		button.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
-		button.setOpenDropDownIfNotSet(this.openDropDownIfNotSet);
-		return button;
+		UiButton ui = new UiButton(getTemplate().createUiTemplate(), uiRecord);
+		mapAbstractUiComponentProperties(ui);
+		ui.setDropDownComponent(Component.createUiClientObjectReference(dropDownComponent));
+		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
+		ui.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
+		ui.setOpenDropDownIfNotSet(this.openDropDownIfNotSet);
+		return ui;
 	}
 
 	private Object createUiRecord() {
@@ -98,9 +99,14 @@ public class Button<RECORD> extends AbstractField<Boolean> {
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
 		switch (event.getUiEventType()) {
-			case UI_BUTTON_DROP_DOWN_OPENED:
+			case UI_BUTTON_CLICKED: {
+				this.onClicked.fire();
+				break;
+			}
+			case UI_BUTTON_DROP_DOWN_OPENED: {
 				this.onDropDownOpened.fire(null);
 				break;
+			}
 		}
 	}
 
