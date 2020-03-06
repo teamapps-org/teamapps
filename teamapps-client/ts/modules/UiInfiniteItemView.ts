@@ -334,7 +334,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.redrawGridContents();
 	}
 
-	@loadSensitiveThrottling(100, 10, 3000)
+	@loadSensitiveThrottling(100, 7, 2000)
 	private redrawGridContents() {
 		this.grid.updateRowCount();
 		this.updateAutoHeight();
