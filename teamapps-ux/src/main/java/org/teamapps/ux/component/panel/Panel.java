@@ -70,6 +70,16 @@ public class Panel extends AbstractComponent implements Container {
 	private final List<ToolButton> toolButtons = new ArrayList<>();
 	private final Set<WindowButtonType> windowButtons = new HashSet<>();
 
+	private ObservableValue<Icon> observableIcon;
+	private Consumer<Icon> iconChangeListener = this::setIcon;
+	private ObservableValue<String> observableTitle;
+	private Consumer<String> titleChangeListener = this::setTitle;
+	private ObservableValue<AbstractField<?>> observableLeftHeaderField;
+	private Consumer<AbstractField<?>> leftHeaderFieldChangeListener = this::setLeftHeaderField;
+	private ObservableValue<AbstractField<?>> observableRightHeaderField;
+	private Consumer<AbstractField<?>> rightHeaderFieldChangeListener = this::setRightHeaderField;
+
+
 	public Panel() {
 		this(null, null, null);
 	}
@@ -410,12 +420,6 @@ public class Panel extends AbstractComponent implements Container {
 	}
 
 
-
-	private ObservableValue<Icon> observableIcon;
-	private Consumer<Icon> iconChangeListener = this::setIcon;
-	private ObservableValue<String> observableTitle;
-	private Consumer<String> titleChangeListener = this::setTitle;
-	
 	public void setIcon(ObservableValue<Icon> observableIcon) {
 		if (this.observableIcon != null)  {
 			this.observableIcon.onChanged().removeListener(iconChangeListener);
@@ -435,6 +439,28 @@ public class Panel extends AbstractComponent implements Container {
 		if (this.observableTitle != null) {
 			this.setTitle(observableTitle.get());
 			this.observableTitle.onChanged().addListener(titleChangeListener);
+		}
+	}
+
+	public void setLeftHeaderField(ObservableValue<AbstractField<?>> observableLeftHeaderField) {
+		if (this.observableLeftHeaderField != null)  {
+			this.observableLeftHeaderField.onChanged().removeListener(leftHeaderFieldChangeListener);
+		}
+		this.observableLeftHeaderField = observableLeftHeaderField;
+		if (this.observableLeftHeaderField != null) {
+			this.setLeftHeaderField(observableLeftHeaderField.get());
+			this.observableLeftHeaderField.onChanged().addListener(leftHeaderFieldChangeListener);
+		}
+	}
+
+	public void setRightHeaderField(ObservableValue<AbstractField<?>> observableRightHeaderField) {
+		if (this.observableRightHeaderField != null)  {
+			this.observableRightHeaderField.onChanged().removeListener(rightHeaderFieldChangeListener);
+		}
+		this.observableRightHeaderField = observableRightHeaderField;
+		if (this.observableRightHeaderField != null) {
+			this.setRightHeaderField(observableRightHeaderField.get());
+			this.observableRightHeaderField.onChanged().addListener(rightHeaderFieldChangeListener);
 		}
 	}
 }
