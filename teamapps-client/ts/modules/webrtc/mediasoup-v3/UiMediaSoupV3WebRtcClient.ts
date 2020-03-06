@@ -144,12 +144,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 	async updatePublishing(publishingParameters: UiMediaSoupPublishingParametersConfig) {
 		const oldStreamUuid = this._config.publishingParameters?.uid ?? null;
-		const oldToken = this._config.publishingParameters?.token ?? null;
 		const oldServerAddress = this._config.publishingParameters?.serverAddress ?? null;
 		const newStreamUuid = publishingParameters?.uid ?? null;
-		const newToken = publishingParameters?.token ?? null;
 		const newServerAddress = publishingParameters?.serverAddress ?? null;
-		const baseConfigChanged = oldStreamUuid !== newStreamUuid || oldToken !== newToken || oldServerAddress !== newServerAddress;
+		const baseConfigChanged = oldStreamUuid !== newStreamUuid || oldServerAddress !== newServerAddress;
 
 		const oldAudioConstraints = this._config.publishingParameters?.audioConstraints ?? null;
 		const oldVideoConstraints = this._config.publishingParameters?.videoConstraints ?? null;
@@ -251,16 +249,14 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		const oldParameters = this._config.playbackParameters;
 		const oldStreamUuid = this._config.playbackParameters?.uid ?? null;
-		const oldToken = this._config.playbackParameters?.token ?? null;
 		const oldServerAddress = this._config.playbackParameters?.serverAddress ?? null;
 		const oldAudio = this._config.playbackParameters?.audio ?? false;
 		const oldVideo = this._config.playbackParameters?.video ?? false;
 		const newStreamUuid = parameters?.uid ?? null;
-		const newToken = parameters?.token ?? null;
 		const newServerAddress = parameters?.serverAddress ?? null;
 		const newAudio = parameters?.audio ?? false;
 		const newVideo = parameters?.video ?? false;
-		const baseConfigChanged = oldStreamUuid !== newStreamUuid || oldToken !== newToken || oldServerAddress !== newServerAddress;
+		const baseConfigChanged = oldStreamUuid !== newStreamUuid || oldServerAddress !== newServerAddress;
 		const audioVideoChanged = (oldAudio != newAudio) || (oldVideo != newVideo);
 
 		if (((parameters == null && oldParameters != null) || baseConfigChanged || audioVideoChanged) && this.playbackConferenceApi != null) {
