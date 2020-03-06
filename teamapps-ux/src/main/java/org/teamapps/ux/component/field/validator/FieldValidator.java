@@ -21,10 +21,24 @@ package org.teamapps.ux.component.field.validator;
 
 import org.teamapps.ux.component.field.FieldMessage;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface FieldValidator<VALUE> {
 
 	List<FieldMessage> validate(VALUE value);
+
+	static <VALUE> FieldValidator<VALUE> fromPredicate(Predicate<VALUE> validationPredicate, String errorMessage) {
+		return value -> validationPredicate.test(value) ? Collections.emptyList() : Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR, errorMessage));
+	}
+
+	static <VALUE> FieldValidator<VALUE> fromErrorMessageFunction(Function<VALUE, String> errorMessageOrNullFunction) {
+		return value -> {
+			String errorMessage = errorMessageOrNullFunction.apply(value);
+			return errorMessage == null ? Collections.emptyList() : Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR, errorMessage));
+		};
+	}
 
 }
