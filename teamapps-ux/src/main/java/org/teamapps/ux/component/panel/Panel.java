@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.component.panel;
 
+import org.teamapps.common.format.Color;
+import org.teamapps.databinding.ObservableValue;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiPanel;
@@ -29,7 +31,6 @@ import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
@@ -39,6 +40,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Panel extends AbstractComponent implements Container {
@@ -405,5 +407,34 @@ public class Panel extends AbstractComponent implements Container {
 	public void setStretchContent(boolean stretchContent) {
 		this.stretchContent = stretchContent;
 		queueCommandIfRendered(() -> new UiPanel.SetStretchContentCommand(getId(), stretchContent));
+	}
+
+
+
+	private ObservableValue<Icon> observableIcon;
+	private Consumer<Icon> iconChangeListener = this::setIcon;
+	private ObservableValue<String> observableTitle;
+	private Consumer<String> titleChangeListener = this::setTitle;
+	
+	public void setIcon(ObservableValue<Icon> observableIcon) {
+		if (this.observableIcon != null)  {
+			this.observableIcon.onChanged().removeListener(iconChangeListener);
+		}
+		this.observableIcon = observableIcon;
+		if (this.observableIcon != null) {
+			this.setIcon(observableIcon.get());
+			this.observableIcon.onChanged().addListener(iconChangeListener);
+		}
+	}
+
+	public void setTitle(ObservableValue<String> observableTitle) {
+		if (this.observableTitle != null)  {
+			this.observableTitle.onChanged().removeListener(titleChangeListener);
+		}
+		this.observableTitle = observableTitle;
+		if (this.observableTitle != null) {
+			this.setTitle(observableTitle.get());
+			this.observableTitle.onChanged().addListener(titleChangeListener);
+		}
 	}
 }
