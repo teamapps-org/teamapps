@@ -44,7 +44,13 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
 	
-	private final FieldValidator<VALUE> requiredValidator = (value) -> this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
+	private final FieldValidator<VALUE> requiredValidator = (value) ->
+			this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
+			CurrentSessionContext.get().getLocalized("dict.requiredField"))) : null;
+
+	private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
+			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmpty()) ?
+					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
 			CurrentSessionContext.get().getLocalized("dict.requiredField"))) : null;
 
 	public final Event<VALUE> onValueChanged = new Event<>();
@@ -192,6 +198,14 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 			addValidator(requiredValidator);
 		} else {
 			removeValidator(requiredValidator);
+		}
+	}
+
+	public void setRequiredIfVisibleAndEditable(boolean required) {
+		if (required) {
+			addValidator(requiredIfVisibleAndEditableValidator);
+		} else {
+			removeValidator(requiredIfVisibleAndEditableValidator);
 		}
 	}
 
