@@ -33,6 +33,7 @@ public class ListTable<RECORD> extends Table<RECORD> {
 
 	public ListTable(List<RECORD> records) {
 		model = new ListTableModel<>(records);
+		setModel(model);
 	}
 
 	public void setRecords(List<RECORD> records) {
