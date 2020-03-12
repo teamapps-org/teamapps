@@ -34,11 +34,19 @@ public interface TwoWayBindableValue<T> extends ObservableValue<T>, MutableValue
 
 	// === static ===
 
-	public static <T> TwoWayBindableValue<T> create(Event<T> changeEvent, Supplier<T> supplier, Consumer<T> consumer) {
-		return DataBindings.createTwoWayBindable(changeEvent, supplier, consumer);
+	static <T> TwoWayBindableValue<T> create() {
+		return new TwoWayBindableValueImpl<>();
 	}
 
-	public static <T> TwoWayBindableValue<T> create(Event<T> changeEvent, Consumer<T> consumer) {
-		return DataBindings.createTwoWayBindable(changeEvent, consumer);
+	static <T> TwoWayBindableValue<T> create(T initialValue) {
+		return new TwoWayBindableValueImpl<>(initialValue);
+	}
+
+	static <T> TwoWayBindableValue<T> create(Event<T> changeEvent, Supplier<T> getter, Consumer<T> setter) {
+		return DataBindings.createTwoWayBindable(changeEvent, getter, setter);
+	}
+
+	static <T> TwoWayBindableValue<T> create(Event<T> changeEvent, Consumer<T> setter) {
+		return DataBindings.createTwoWayBindable(changeEvent, setter);
 	}
 }

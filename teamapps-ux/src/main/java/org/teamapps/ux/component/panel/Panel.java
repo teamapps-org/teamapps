@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.component.panel;
 
+import org.teamapps.common.format.Color;
+import org.teamapps.databinding.ObservableValue;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiPanel;
@@ -29,7 +31,6 @@ import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.field.AbstractField;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
@@ -39,6 +40,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Panel extends AbstractComponent implements Container {
@@ -67,6 +69,16 @@ public class Panel extends AbstractComponent implements Container {
 	private int padding = 0;
 	private final List<ToolButton> toolButtons = new ArrayList<>();
 	private final Set<WindowButtonType> windowButtons = new HashSet<>();
+
+	private ObservableValue<Icon> observableIcon;
+	private Consumer<Icon> iconChangeListener = this::setIcon;
+	private ObservableValue<String> observableTitle;
+	private Consumer<String> titleChangeListener = this::setTitle;
+	private ObservableValue<AbstractField<?>> observableLeftHeaderField;
+	private Consumer<AbstractField<?>> leftHeaderFieldChangeListener = this::setLeftHeaderField;
+	private ObservableValue<AbstractField<?>> observableRightHeaderField;
+	private Consumer<AbstractField<?>> rightHeaderFieldChangeListener = this::setRightHeaderField;
+
 
 	public Panel() {
 		this(null, null, null);
@@ -405,5 +417,50 @@ public class Panel extends AbstractComponent implements Container {
 	public void setStretchContent(boolean stretchContent) {
 		this.stretchContent = stretchContent;
 		queueCommandIfRendered(() -> new UiPanel.SetStretchContentCommand(getId(), stretchContent));
+	}
+
+
+	public void setIcon(ObservableValue<Icon> observableIcon) {
+		if (this.observableIcon != null)  {
+			this.observableIcon.onChanged().removeListener(iconChangeListener);
+		}
+		this.observableIcon = observableIcon;
+		if (this.observableIcon != null) {
+			this.setIcon(observableIcon.get());
+			this.observableIcon.onChanged().addListener(iconChangeListener);
+		}
+	}
+
+	public void setTitle(ObservableValue<String> observableTitle) {
+		if (this.observableTitle != null)  {
+			this.observableTitle.onChanged().removeListener(titleChangeListener);
+		}
+		this.observableTitle = observableTitle;
+		if (this.observableTitle != null) {
+			this.setTitle(observableTitle.get());
+			this.observableTitle.onChanged().addListener(titleChangeListener);
+		}
+	}
+
+	public void setLeftHeaderField(ObservableValue<AbstractField<?>> observableLeftHeaderField) {
+		if (this.observableLeftHeaderField != null)  {
+			this.observableLeftHeaderField.onChanged().removeListener(leftHeaderFieldChangeListener);
+		}
+		this.observableLeftHeaderField = observableLeftHeaderField;
+		if (this.observableLeftHeaderField != null) {
+			this.setLeftHeaderField(observableLeftHeaderField.get());
+			this.observableLeftHeaderField.onChanged().addListener(leftHeaderFieldChangeListener);
+		}
+	}
+
+	public void setRightHeaderField(ObservableValue<AbstractField<?>> observableRightHeaderField) {
+		if (this.observableRightHeaderField != null)  {
+			this.observableRightHeaderField.onChanged().removeListener(rightHeaderFieldChangeListener);
+		}
+		this.observableRightHeaderField = observableRightHeaderField;
+		if (this.observableRightHeaderField != null) {
+			this.setRightHeaderField(observableRightHeaderField.get());
+			this.observableRightHeaderField.onChanged().addListener(rightHeaderFieldChangeListener);
+		}
 	}
 }

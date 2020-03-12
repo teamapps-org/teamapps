@@ -397,7 +397,7 @@ class UiInstantDateTimeField extends AbstractUiDateTimeField {
 	command setTimeZoneId(String timeZoneId);
 }
 
-class UiButton extends UiField {
+class UiButton extends UiComponent {
 	required UiTemplate template;
 	required Object templateRecord;
 
@@ -412,6 +412,7 @@ class UiButton extends UiField {
 	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
 	command setDropDownComponent(UiComponent* dropDownComponent);
 
+	event clicked();
 	event dropDownOpened();
 }
 
