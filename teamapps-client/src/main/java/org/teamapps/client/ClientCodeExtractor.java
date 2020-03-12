@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -52,8 +53,8 @@ public class ClientCodeExtractor {
 			return;
 		}
 
-		String artifactChecksum = readResourceAsStringOrNull(TEAMAPPS_CLIENT_CHECKSUM_RESOURCE_NAME);
-		artifactChecksum = artifactChecksum != null ? artifactChecksum.trim() : null;
+		URL checksumResourceUrl = ClientCodeExtractor.class.getResource("/" + TEAMAPPS_CLIENT_CHECKSUM_FILE_NAME);
+		String artifactChecksum = checksumResourceUrl != null ? IOUtils.toString(checksumResourceUrl, StandardCharsets.UTF_8).trim() : null;
 
 		LOGGER.info("Checksum of currently deployed artifact (" + webAppDirectory.getAbsolutePath() + "): " + currentlyDeployedArtifactChecksum);
 		LOGGER.info("Checksum of executed artifact: " + artifactChecksum);

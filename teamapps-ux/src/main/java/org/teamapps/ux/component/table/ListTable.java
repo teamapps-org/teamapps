@@ -19,21 +19,40 @@
  */
 package org.teamapps.ux.component.table;
 
-public class CellClickedEvent<RECORD> {
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
 
-	private final RECORD record;
-	private final TableColumn<RECORD> column;
+public class ListTable<RECORD> extends Table<RECORD> {
 
-	public CellClickedEvent(RECORD record, TableColumn<RECORD> column) {
-		this.record = record;
-		this.column = column;
+	private ListTableModel<RECORD> model;
+
+	public ListTable() {
+		this(Collections.emptyList());
 	}
 
-	public RECORD getRecord() {
-		return record;
+	public ListTable(List<RECORD> records) {
+		model = new ListTableModel<>(records);
+		setModel(model);
 	}
 
-	public TableColumn<RECORD> getColumn() {
-		return column;
+	public void setRecords(List<RECORD> records) {
+		model.setList(records);
+	}
+
+	public List<RECORD> getRecords() {
+		return model.getAllRecords();
+	}
+
+	public void addRecord(RECORD record) {
+		model.addRecord(record);
+	}
+
+	public void addRecords(List<RECORD> records) {
+		model.addRecords(records);
+	}
+
+	public void setFilter(Predicate<RECORD> filter) {
+		model.setFilter(filter);
 	}
 }

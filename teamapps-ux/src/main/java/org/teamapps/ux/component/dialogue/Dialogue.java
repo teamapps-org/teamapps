@@ -101,19 +101,19 @@ public class Dialogue extends Window {
 		comboBox.setEditingMode(FieldEditingMode.READONLY);
 		formLayout.addField(0, 0, "data", comboBox).setHorizontalAlignment(HorizontalElementAlignment.CENTER).setColSpan(3);
 		okButton = Button.create(MaterialIcon.CHECK, getSessionContext().getLocalized("dict.ok"));
-		okButton.onValueChanged.addListener((o) -> {
+		okButton.onClicked.addListener(() -> {
 			close(250);
 			getSessionContext().flushCommands();
 			onResult.fire(true);
 		});
 		cancelButton = Button.create(MaterialIcon.CANCEL, getSessionContext().getLocalized("dict.cancel"));
-		cancelButton.onValueChanged.addListener((o) -> {
+		cancelButton.onClicked.addListener(() -> {
 			close(250);
 			getSessionContext().flushCommands();
 			onResult.fire(false);
 		});
-		formLayout.addField(1, 1, "ok", okButton);
-		formLayout.addField(1, 2, "cancel", cancelButton);
+		formLayout.addComponent(1, 1, okButton);
+		formLayout.addComponent(1, 2, cancelButton);
 	}
 
 	public void setValues(BaseTemplateRecord<?> record) {

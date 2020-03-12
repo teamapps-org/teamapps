@@ -99,7 +99,7 @@ public class FormDialogue extends Window {
 		createButtonRowIfNotExists();
 
 		Button<?> okButton = Button.create(icon, caption);
-		okButton.onValueChanged.addListener((o) -> {
+		okButton.onClicked.addListener(() -> {
 			List<FieldMessage> errorMessages = fields.stream()
 					.flatMap(f -> f.validate().stream())
 					.filter(validationMessag -> validationMessag.getSeverity() == FieldMessage.Severity.ERROR)
@@ -132,7 +132,7 @@ public class FormDialogue extends Window {
 
 		Button<?> cancelButton = Button.create(icon, caption);
 		cancelButton.setCssStyle("margin-left", "10px"); // TODO #css
-		cancelButton.onValueChanged.addListener((o) -> {
+		cancelButton.onClicked.addListener(() -> {
 			close(250);
 			getSessionContext().flushCommands();
 			onResult.fire(false);
