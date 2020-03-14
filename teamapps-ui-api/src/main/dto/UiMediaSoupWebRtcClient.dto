@@ -105,6 +105,8 @@ enum UiMediaDeviceKind {
 }
 
 enum WebRtcPublishingFailureReason {
+	MIC_MEDIA_RETRIEVAL_FAILED,
+	CAM_MEDIA_RETRIEVAL_FAILED,
 	CAM_MIC_MEDIA_RETRIEVAL_FAILED,
 	DISPLAY_MEDIA_RETRIEVAL_FAILED,
 	VIDEO_MIXING_FAILED,
@@ -132,9 +134,9 @@ class UiMediaSoupPublishingParameters {
 	UiVideoTrackConstraints videoConstraints;
 	UiScreenSharingConstraints screenSharingConstraints;
 
+	boolean simulcast;
 	long minBitrate;
 	long maxBitrate;
-
 }
 
 class UiMediaSoupPlaybackParameters {

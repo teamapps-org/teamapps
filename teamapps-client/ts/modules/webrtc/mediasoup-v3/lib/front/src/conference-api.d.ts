@@ -7,6 +7,20 @@ interface IConferenceApi {
         bitRate: any;
         kind: any;
     }) => void): this;
+    on(event: 'connectionstatechange', listener: ({ state: string }: {
+        state: any;
+    }) => void): this;
+    on(event: 'newTransportId', listener: ({ id: string }: {
+        id: any;
+    }) => void): this;
+    on(event: 'newProducerId', listener: ({ id: string, kind: MediaKind }: {
+        id: any;
+        kind: any;
+    }) => void): this;
+    on(event: 'newConsumerId', listener: ({ id: string, kind: MediaKind }: {
+        id: any;
+        kind: any;
+    }) => void): this;
 }
 export declare class ConferenceApi extends EventEmitter implements IConferenceApi {
     private readonly api;
@@ -25,6 +39,9 @@ export declare class ConferenceApi extends EventEmitter implements IConferenceAp
     startRecording(): Promise<void>;
     stopRecording(): Promise<void>;
     setPreferredLayers(layers: ConsumerLayers): Promise<void>;
+    addTrack(track: MediaStreamTrack): Promise<void>;
+    removeTrack(track: MediaStreamTrack): Promise<void>;
+    setMaxPublisherBitrate(bitrate: number): Promise<void>;
     updateKinds(kinds: MediaKind[]): Promise<void>;
     private init;
     publish(mediaStream: MediaStream): Promise<MediaStream>;
@@ -34,6 +51,7 @@ export declare class ConferenceApi extends EventEmitter implements IConferenceAp
     private consume;
     private listenStats;
     close(hard?: boolean): Promise<void>;
+    private closeConnectors;
     private getTransport;
 }
 export {};

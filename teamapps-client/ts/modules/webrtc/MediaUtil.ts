@@ -118,7 +118,7 @@ export function createDisplayMediaStreamConstraints(screenSharingConstraints: Ui
 
 export async function getDisplayStream(screenSharingConstraints: UiScreenSharingConstraintsConfig) {
 	if (canPublishScreen()) {
-		return await (window.navigator.mediaDevices as any).getDisplayMedia(createDisplayMediaStreamConstraints(screenSharingConstraints));
+		return await (window.navigator.mediaDevices as any).getDisplayMedia(createDisplayMediaStreamConstraints(screenSharingConstraints)) as MediaStream;
 	} else {
 		throw new Error("Cannot share screen! Browser does not provide the corresponding API!");
 	}
