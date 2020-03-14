@@ -20,7 +20,7 @@ export class MultiStreamsMixer {
     private inputMediaStreams: MediaStreamWithMixiSizingInfoAndVideo[];
     private outputMediaStream?: MediaStream;
 
-    private canvas: HTMLCanvasElement & { stream?: MediaStream };
+    private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D | null;
 
     private frameInterval: number;
@@ -67,7 +67,7 @@ export class MultiStreamsMixer {
                     let streamAlive = this.outputMediaStream.active && this.outputMediaStream.getTracks().filter(t => t.readyState !== 'ended').length > 0;
                     if (!endListenerAlreadyCalled && !streamAlive) {
                         endListenerAlreadyCalled = true;
-                        console.log("Closing MultiStreamsMixer since outputMediaStream has ended.")
+                        console.log("Closing MultiStreamsMixer since outputMediaStream has ended.");
                         this.close();
                     }
                 });
@@ -128,8 +128,8 @@ export class MultiStreamsMixer {
 
         let x = 0;
         let y = 0;
-        let width = video.width;
-        let height = video.height;
+        let width;
+        let height;
 
         if (mixSizingInfo.width != null) {
             if (mixSizingInfo.width >= 1) {
@@ -203,7 +203,6 @@ export class MultiStreamsMixer {
             videoStream.addTrack(track);
         });
 
-        this.canvas.stream = videoStream;
         return videoStream;
     }
 
@@ -251,7 +250,7 @@ export class MultiStreamsMixer {
         video.srcObject = stream.mediaStream;
         video.muted = true;
         video.volume = 0;
-        video.play();
+        await video.play();
 
         if (stream.mixSizingInfo.width != null && stream.mixSizingInfo.height != null) {
             video.width = stream.mixSizingInfo.width;

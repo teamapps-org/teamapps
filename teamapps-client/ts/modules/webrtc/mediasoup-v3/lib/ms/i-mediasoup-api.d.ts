@@ -1,6 +1,6 @@
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { ACTION } from '../config/constants';
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, StartRecordingRequest, StopRecordingRequest, StreamFileRequest, TransportData } from '../front/src/client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, StartRecordingRequest, StatsInput, StatsOutput, StopRecordingRequest, StreamFileRequest, TransportBitrateData, TransportData } from '../front/src/client-interfaces';
 export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} | void>> {
     [ACTION.RESUME_CONSUMER](json: ConsumerData): Promise<void>;
     [ACTION.PAUSE_CONSUMER](json: ConsumerData): Promise<void>;
@@ -19,4 +19,8 @@ export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} |
     [ACTION.STREAM_FILE](json: StreamFileRequest): Promise<void>;
     [ACTION.START_RECORDING](json: StartRecordingRequest): Promise<void>;
     [ACTION.STOP_RECORDING](json: StopRecordingRequest): Promise<void>;
+    [ACTION.SET_MAX_INCOMING_BITRATE](json: TransportBitrateData): Promise<void>;
+    [ACTION.TRANSPORT_STATS](json: StatsInput): Promise<StatsOutput>;
+    [ACTION.CONSUMERS_STATS](json: StatsInput): Promise<StatsOutput>;
+    [ACTION.PRODUCERS_STATS](json: StatsInput): Promise<StatsOutput>;
 }

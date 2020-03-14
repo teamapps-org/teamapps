@@ -47,8 +47,17 @@ export interface PipeTransportData {
 export interface PipeTransportConnectData extends PipeTransportData {
     transportId: string;
 }
+export interface StatsInput {
+    ids: string[];
+}
+export interface StatsOutput {
+    [x: string]: {};
+}
 export interface TransportData {
     transportId: string;
+}
+export interface TransportBitrateData extends TransportData {
+    bitrate: number;
 }
 export interface IceSever {
     urls: string[];
@@ -88,6 +97,7 @@ export interface ConferenceInput {
     token: string;
     simulcast?: boolean;
     kinds?: MediaKind[];
+    maxIncomingBitrate?: number;
     timeout?: {
         stats: number;
         stream: number;
@@ -96,6 +106,7 @@ export interface ConferenceInput {
 export interface ConferenceConfig extends ConferenceInput {
     url: string;
     kinds: MediaKind[];
+    maxIncomingBitrate: number;
     timeout: {
         stats: number;
         stream: number;
