@@ -175,7 +175,14 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		}
 	}
 
-	public void publish(String uid, String token, AudioTrackConstraints audioConstraints, VideoTrackConstraints videoConstraints, ScreenSharingConstraints screenSharingConstraints, long maxBitrate) {
+	public void publish(String uid,
+	                    String token,
+	                    AudioTrackConstraints audioConstraints,
+	                    VideoTrackConstraints videoConstraints,
+	                    ScreenSharingConstraints screenSharingConstraints,
+	                    long maxBitrate,
+	                    boolean simulcast
+	) {
 		UiMediaSoupPublishingParameters params = new UiMediaSoupPublishingParameters();
 		params.setServerAddress(serverAddress);
 		params.setUid(uid);
@@ -184,6 +191,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		params.setVideoConstraints(videoConstraints != null ? videoConstraints.createUiVideoTrackConstraints() : null);
 		params.setScreenSharingConstraints(screenSharingConstraints != null ? screenSharingConstraints.createUiScreenSharingConstraints() : null);
 		params.setMaxBitrate(maxBitrate);
+		params.setSimulcast(simulcast);
 		this.publishingParameters = params;
 		update();
 	}

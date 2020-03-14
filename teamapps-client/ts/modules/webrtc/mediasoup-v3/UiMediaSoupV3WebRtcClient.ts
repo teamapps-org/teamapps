@@ -310,7 +310,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					this.conferenceClient = new ConferenceApi({
 						stream: newParams.uid,
 						token: newParams.token,
-						url: newParams.serverAddress
+						url: newParams.serverAddress,
+						simulcast: newParams.simulcast
 					});
 					await this.conferenceClient.publish(this.targetStream);
 					this.$video.srcObject = this.targetStream;
@@ -333,6 +334,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		}
 
 		await this.updatePublishedTracks(newParams.audioConstraints, newParams.videoConstraints, newParams.screenSharingConstraints);
+
+		if (this.conferenceClient != null) {
+			this.conferenceClient.setMaxPublisherBitrate(newParams.maxBitrate);
+		}
 
 		this.$video.classList.toggle("mirrored", newParams?.videoConstraints && !(newParams?.screenSharingConstraints));
 	}
@@ -462,7 +467,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						width: pictureInPictureWidth,
 						height: pictureInPictureHeight,
 						right: 0,
-						top: 0
+						top: 0,
+						// flipX: true
 					};
 					streamsWithMixSizingInfo.push({mediaTrack: this.webcamTrack, mixSizingInfo: webcamMixSizingInfo});
 

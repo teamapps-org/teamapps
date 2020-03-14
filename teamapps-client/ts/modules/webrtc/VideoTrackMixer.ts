@@ -6,6 +6,7 @@ export type MixSizingInfo = {
 	top?: number,      // <= 1: percentage
 	right?: number,    // <= 1: percentage
 	bottom?: number,   // <= 1: percentage
+	flipX?: boolean,
 	onRender?: (context: CanvasRenderingContext2D, video: HTMLVideoElement, mixSizingInfo: MixSizingInfo, x: number, y: number, width: number, height: number) => void
 };
 export type TrackWithMixSizingInfo = {
@@ -134,7 +135,14 @@ export class VideoTrackMixer {
 
 
 		if (this.context) {
-			this.context.drawImage(video, x, y, width, height);
+			if (mixSizingInfo.flipX) {
+				this.context.save();
+				this.context.scale(-1, 1);
+				this.context.drawImage(video, -x, y, -width, height);
+				this.context.restore();
+			} else {
+				this.context.drawImage(video, x, y, width, height);
+			}
 
 			if (typeof mixSizingInfo.onRender === 'function') {
 				mixSizingInfo.onRender(this.context, video, mixSizingInfo, x, y, width, height);
