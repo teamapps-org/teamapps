@@ -65,6 +65,7 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 	WebRtcClientSpinnerPolicy spinnerPolicy;
 	double playbackVolume = 1; // 0-1
 	boolean contextMenuEnabled = false;
+	boolean bitrateDisplayEnabled = false;
 	
 	// only one (or none) of the following must be set:
 	UiMediaSoupPublishingParameters publishingParameters;
@@ -77,14 +78,18 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 	command setContextMenuContent(int requestId, UiComponent* component);
 	command closeContextMenu(int requestId);
 
-	event publishingSucceeded();
-	event publishingFailed(WebRtcPublishingFailureReason reason, String errorMessage);
-	event publishedStreamEnded(boolean isDisplay); // otherwise cam/mic
-	event publishedStreamsStatusChanged(boolean audio, boolean video);
+	event sourceMediaTrackRetrievalFailed(UiMediaRetrievalFailureReason reason);
+	event sourceMediaTrackEnded(UiSourceMediaTrackType trackType); // otherwise cam/mic
+
+	event trackPublishingSuccessful(UiPublishedMediaTrackType trackType);
+	event trackPublishingFailed(UiPublishedMediaTrackType trackType, String errorMessage);
+
 	event connectionStateChanged(boolean connected);
-	event playbackSucceeded();
-	event playbackFailed();
-	event playbackProfileChanged(UiMulticastPlaybackProfile profile);
+
+	event subscribingSuccessful();
+	event subscribingFailed(String errorMessage);
+	event subscriptionPlaybackFailed(String errorMessage);
+
 	event voiceActivityChanged(boolean active);
 	event clicked();
 	event contextMenuRequested(int requestId);
@@ -111,6 +116,21 @@ enum WebRtcPublishingFailureReason {
 	DISPLAY_MEDIA_RETRIEVAL_FAILED,
 	VIDEO_MIXING_FAILED,
 	CONNECTION_ESTABLISHMENT_FAILED
+}
+
+enum UiSourceMediaTrackType {
+	CAM, MIC, SCREEN;
+}
+
+enum UiPublishedMediaTrackType {
+	AUDIO, VIDEO;
+}
+
+enum UiMediaRetrievalFailureReason {
+	MIC_MEDIA_RETRIEVAL_FAILED,
+	CAM_MEDIA_RETRIEVAL_FAILED,
+	DISPLAY_MEDIA_RETRIEVAL_FAILED,
+	VIDEO_MIXING_FAILED
 }
 
 enum WebRtcClientSpinnerPolicy {

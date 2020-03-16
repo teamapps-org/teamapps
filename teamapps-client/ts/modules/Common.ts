@@ -125,7 +125,7 @@ export class Constants {
 	}
 
 	private static calculateScrollbarWidth() {
-		const $div = parseHtml(`<div id="ASDF" style="width: 100px; height: 100px; position: absolute; top: -10000px">`)
+		const $div = parseHtml(`<div id="ASDF" style="width: 100px; height: 100px; position: absolute; top: -10000px">`);
 		document.body.appendChild($div);
 		const widthNoScroll = $div.clientWidth;
 		$div.style.overflowY = "scroll";
@@ -388,7 +388,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 		let width = innerPreferredDimensions.width * zoomFactor;
 		return {width: width, height: width / imageAspectRatio};
 	}
-};
+}
 
 export type Direction = "n" | "e" | "s" | "w" | "ne" | "se" | "nw" | "sw";
 
@@ -682,7 +682,8 @@ export function deepEquals(x: any, y: any): boolean {
 		return Object.keys(x).length === Object.keys(y).length &&
 			Object.keys(x).every(key => deepEquals(x[key], y[key]));
 	} else {
-		return x === y;
+		return x === y
+			|| (x == null) == (y == null); // make no difference between undefined and null!
 	}
 }
 

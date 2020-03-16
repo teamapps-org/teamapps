@@ -25,13 +25,13 @@ import {
 	UiMediaSoupV3WebRtcClient_ClickedEvent,
 	UiMediaSoupV3WebRtcClient_ConnectionStateChangedEvent,
 	UiMediaSoupV3WebRtcClient_ContextMenuRequestedEvent,
-	UiMediaSoupV3WebRtcClient_PlaybackFailedEvent,
-	UiMediaSoupV3WebRtcClient_PlaybackProfileChangedEvent,
-	UiMediaSoupV3WebRtcClient_PlaybackSucceededEvent,
-	UiMediaSoupV3WebRtcClient_PublishedStreamEndedEvent,
-	UiMediaSoupV3WebRtcClient_PublishedStreamsStatusChangedEvent,
-	UiMediaSoupV3WebRtcClient_PublishingFailedEvent,
-	UiMediaSoupV3WebRtcClient_PublishingSucceededEvent,
+	UiMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent,
+	UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent,
+	UiMediaSoupV3WebRtcClient_SubscribingFailedEvent,
+	UiMediaSoupV3WebRtcClient_SubscribingSuccessfulEvent,
+	UiMediaSoupV3WebRtcClient_SubscriptionPlaybackFailedEvent,
+	UiMediaSoupV3WebRtcClient_TrackPublishingFailedEvent,
+	UiMediaSoupV3WebRtcClient_TrackPublishingSuccessfulEvent,
 	UiMediaSoupV3WebRtcClient_VoiceActivityChangedEvent,
 	UiMediaSoupV3WebRtcClientCommandHandler,
 	UiMediaSoupV3WebRtcClientConfig,
@@ -56,16 +56,23 @@ import {UiVideoTrackConstraintsConfig} from "../../../generated/UiVideoTrackCons
 import {UiScreenSharingConstraintsConfig} from "../../../generated/UiScreenSharingConstraintsConfig";
 import {MixSizingInfo, TrackWithMixSizingInfo, VideoTrackMixer} from "../VideoTrackMixer";
 import {determineVideoSize} from "../MultiStreamsMixer";
+import {UiMediaRetrievalFailureReason} from "../../../generated/UiMediaRetrievalFailureReason";
+import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType";
+import {UiPublishedMediaTrackType} from "../../../generated/UiPublishedMediaTrackType";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
-	public readonly onPublishingSucceeded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PublishingSucceededEvent> = new TeamAppsEvent(this);
-	public readonly onPublishingFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PublishingFailedEvent> = new TeamAppsEvent(this);
-	public readonly onPublishedStreamEnded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PublishedStreamEndedEvent> = new TeamAppsEvent(this);
-	public readonly onPublishedStreamsStatusChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PublishedStreamsStatusChangedEvent> = new TeamAppsEvent(this);
+	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent(this);
+	public readonly onSourceMediaTrackEnded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent> = new TeamAppsEvent(this);
+
+	public readonly onTrackPublishingSuccessful: TeamAppsEvent<UiMediaSoupV3WebRtcClient_TrackPublishingSuccessfulEvent> = new TeamAppsEvent(this);
+	public readonly onTrackPublishingFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_TrackPublishingFailedEvent> = new TeamAppsEvent(this);
+
+	public readonly onSubscribingSuccessful: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SubscribingSuccessfulEvent> = new TeamAppsEvent(this);
+	public readonly onSubscribingFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SubscribingFailedEvent> = new TeamAppsEvent(this);
+	public readonly onSubscriptionPlaybackFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SubscriptionPlaybackFailedEvent> = new TeamAppsEvent(this);
+
 	public readonly onConnectionStateChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ConnectionStateChangedEvent> = new TeamAppsEvent(this);
-	public readonly onPlaybackSucceeded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PlaybackSucceededEvent> = new TeamAppsEvent(this);
-	public readonly onPlaybackFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PlaybackFailedEvent> = new TeamAppsEvent(this);
-	public readonly onPlaybackProfileChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_PlaybackProfileChangedEvent> = new TeamAppsEvent(this);
+
 	public readonly onVoiceActivityChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_VoiceActivityChangedEvent> = new TeamAppsEvent(this);
 	public readonly onClicked: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ClickedEvent> = new TeamAppsEvent(this);
 	public readonly onContextMenuRequested: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
@@ -75,11 +82,14 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private $videoContainer: HTMLElement;
 	private $video: HTMLVideoElement;
 	private $profileDisplay: HTMLElement;
+	private $bitrateDisplayWrapper: HTMLElement;
+	private $audioBitrateDisplay: HTMLElement;
+	private $videoBitrateDisplay: HTMLElement;
 	private $icons: HTMLImageElement;
 	private $caption: HTMLElement;
 	private $spinner: HTMLElement;
-	private contextMenu: ContextMenu;
 
+	private contextMenu: ContextMenu;
 	private conferenceClient: ConferenceApi;
 	private targetStream: MediaStream;
 
@@ -91,6 +101,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		<img class="image"></img>
 		<video class="video" playsinline muted></video>
 		<div class="icons"></div>
+		<div class="bitrate-display hidden">
+			<div class="bitrate-audio"></div>
+			<div class="bitrate-video"></div>
+		</div>
 		<div class="spinner-wrapper">
 			<div class="spinner teamapps-spinner"></div>
 		</div>
@@ -102,6 +116,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.$videoContainer = this.$main.querySelector(":scope .video-container");
 		this.$video = this.$main.querySelector<HTMLVideoElement>(":scope .video");
 		this.$profileDisplay = this.$main.querySelector(":scope .profile");
+		this.$bitrateDisplayWrapper = this.$main.querySelector(":scope .bitrate-display");
+		this.$audioBitrateDisplay = this.$main.querySelector(":scope .bitrate-audio");
+		this.$videoBitrateDisplay = this.$main.querySelector(":scope .bitrate-video");
 		this.$icons = this.$main.querySelector(":scope .icons");
 		this.$caption = this.$main.querySelector(":scope .caption");
 		this.$spinner = this.$main.querySelector(":scope .spinner");
@@ -184,11 +201,20 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.$video.srcObject = null;
 	}
 
-	async update(config: UiMediaSoupV3WebRtcClientConfig) {
+	private updatePromise:Promise<void> = Promise.resolve();
+	update(config: UiMediaSoupV3WebRtcClientConfig): void {
+		this.updatePromise.finally(() => {
+			this.updatePromise = this.updateInternal(config);
+		});
+	}
+
+	async updateInternal(config: UiMediaSoupV3WebRtcClientConfig) {
 		console.log("update()", config);
 		this.$main.classList.toggle("activity-line-visible", config.activityLineVisible);
 		this.$main.style.setProperty("--activity-line-inactive-color", createUiColorCssString(config.activityInactiveColor));
 		this.$main.style.setProperty("--activity-line-inactive-color", createUiColorCssString(config.activityActiveColor));
+
+		this.$bitrateDisplayWrapper.classList.toggle('hidden', !config.bitrateDisplayEnabled);
 
 		if (!arraysEqual(config.icons, this._config.icons)) {
 			this.$icons.innerHTML = '';
@@ -217,7 +243,6 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	private async updateConferenceClient(config: UiMediaSoupV3WebRtcClientConfig) {
-		console.log("updateConferenceClient()");
 		if (config.publishingParameters != null && config.playbackParameters != null) {
 			console.error("Cannot publish and playback at the same time. Doing nothing!");
 			return;
@@ -237,13 +262,12 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	async updatePlayback(newParams: UiMediaSoupPlaybackParametersConfig) {
-		console.log(`updatePlayback()`, newParams);
-
 		const oldParams = this._config.playbackParameters;
 		const needsReset = oldParams?.serverAddress != newParams?.serverAddress
 			|| oldParams?.uid != newParams?.uid;
 
 		if (needsReset) {
+			console.log("updatePlayback() --> needsReset", newParams);
 			this.stop();
 
 			if (newParams != null) {
@@ -253,7 +277,16 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						token: newParams.token,
 						url: newParams.serverAddress,
 						kinds: [...(newParams.audio ? ["audio"] : []), ...(newParams.video ? ["video"] : [])] as MediaKind[]
-					});
+					})
+						.on('bitRate', ({bitRate, kind}) => {
+							if (kind === 'audio') {
+								this.$audioBitrateDisplay.innerText = bitRate + "kb/s"
+							} else if (kind == "video") {
+								this.$videoBitrateDisplay.innerText = bitRate + "kb/s"
+							}
+						}).on('connectionstatechange', ({state}) => {
+							this.onConnectionStateChanged.fire({connected: state==='connected'})
+						});
 					const mediaStream = await this.conferenceClient.subscribe();
 					this.$video.srcObject = mediaStream;
 
@@ -261,7 +294,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						this.$video.muted = false;
 						this.$video.play().catch(error => {
 							console.error('Unmuted autoplay failed!');
-							this.onPlaybackFailed.fire({});
+							this.onSubscriptionPlaybackFailed.fire(error.toString());
 							this.$video.muted = true;
 							this.$video.play().then(() => {
 								console.log('autoplay successful, but only MUTED! TODO handle this gracefully!');
@@ -279,14 +312,15 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						this.$video.addEventListener('pause', playVideoElement)
 					}
 					playVideoElement();
-					this.onPlaybackSucceeded.fire({});
+					this.onSubscribingSuccessful.fire({});
 				} catch (error) {
 					console.error("Error while starting playback!", error);
-					this.onPlaybackFailed.fire({});
+					this.onSubscribingFailed.fire({errorMessage: error.toString()});
 				}
 			}
 		} else {
 			if (oldParams?.audio !== newParams.audio || oldParams.video !== newParams.video) {
+				console.log("updatePlayback() --> needs updateKinds()", newParams);
 				this.conferenceClient.updateKinds([...(newParams.audio ? ["audio"] : []), ...(newParams.video ? ["video"] : [])] as MediaKind[]);
 			}
 		}
@@ -295,7 +329,6 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	async updatePublishing(newParams: UiMediaSoupPublishingParametersConfig) {
-		console.log("updatePublishing(): ", newParams);
 		let oldParams = this._config.publishingParameters;
 
 		const needsReset = oldParams?.serverAddress != newParams?.serverAddress
@@ -303,6 +336,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			|| oldParams?.simulcast !== newParams?.simulcast;
 
 		if (needsReset) {
+			console.log("updatePublishing() --> needsReset", newParams);
 			this.stop();
 			if (newParams != null) {
 				this.targetStream = new MediaStream();
@@ -312,20 +346,29 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						token: newParams.token,
 						url: newParams.serverAddress,
 						simulcast: newParams.simulcast
-					});
+					})
+						.on('bitRate', ({bitRate, kind}) => {
+							if (kind === 'audio') {
+								this.$audioBitrateDisplay.innerText = bitRate + " kb/s"
+							} else if (kind == "video") {
+								this.$videoBitrateDisplay.innerText = bitRate + " kb/s"
+							}
+						}).on('connectionstatechange', ({state}) => {
+							this.onConnectionStateChanged.fire({connected: state==='connected'})
+						});
 					await this.conferenceClient.publish(this.targetStream);
 					this.$video.srcObject = this.targetStream;
 					this.$video.muted = true;
 					this.$video.play().catch(reason => { // DO NOT await here! It would not complete since adding tracks is later!
 						console.log('Could not playback local (publishing) video!', reason);
 					});
-					this.onPublishingSucceeded.fire({}); // TODO move somewhere better - maybe as a result of a fired event
+					// this.onPublishingSucceeded.fire({}); // TODO move somewhere better - maybe as a result of a fired event
 				} catch (e) {
 					console.error('Error while publishing!', e);
 					if (e.statusCode) {
 						console.error("HTTP status code: " + e.statusCode);
 					}
-					this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: WebRtcPublishingFailureReason.CONNECTION_ESTABLISHMENT_FAILED});
+					// this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: WebRtcPublishingFailureReason.CONNECTION_ESTABLISHMENT_FAILED});
 					this.stop();
 					// this.connectionStatus.status = "error";
 					this.updateStateCssClass();
@@ -335,11 +378,11 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		await this.updatePublishedTracks(newParams.audioConstraints, newParams.videoConstraints, newParams.screenSharingConstraints);
 
-		if (this.conferenceClient != null) {
+		if (this.conferenceClient != null && newParams?.maxBitrate !== oldParams?.maxBitrate) {
 			this.conferenceClient.setMaxPublisherBitrate(newParams.maxBitrate);
 		}
 
-		this.$video.classList.toggle("mirrored", newParams?.videoConstraints && !(newParams?.screenSharingConstraints));
+		this.$video.classList.toggle("mirrored", (newParams?.videoConstraints != null) && (newParams?.screenSharingConstraints == null));
 	}
 
 	private audioTrack: MediaStreamTrack;
@@ -362,6 +405,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		const screenConstraintsChanged = !deepEquals(oldScreenConstraints, newScreenConstraints);
 
 		if (audioConstraintsChanged) {
+			console.log("updatePublishedTracks() --> audioConstraintsChanged", newAudioConstraints);
 			if (this.audioTrack != null) {
 				this.audioTrack.stop();
 				this.audioTrack = null;
@@ -376,19 +420,18 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					}
 					this.audioTrack.addEventListener("ended", () => {
 						if (this.audioTrack != null) { // not intended stopping!
-							/*TODO handle track ended*/
+							this.onSourceMediaTrackEnded.fire({trackType: UiSourceMediaTrackType.MIC});
 						}
 					})
 				} catch (e) {
-					throw {
-						exception: e,
-						reason: WebRtcPublishingFailureReason.MIC_MEDIA_RETRIEVAL_FAILED
-					};
+					console.error("Could not get user media: microphone!", e);
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
 				}
 			}
 		}
 
 		if (webcamConstraintsChanged) {
+			console.log("updatePublishedTracks() --> webcamConstraintsChanged", newWebcamConstraints);
 			if (this.webcamTrack != null) {
 				this.webcamTrack.stop();
 				this.webcamTrack = null;
@@ -404,19 +447,18 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					}
 					this.webcamTrack.addEventListener("ended", () => {
 						if (this.webcamTrack != null) { // not intended stopping!
-							/*TODO handle track ended*/
+							this.onSourceMediaTrackEnded.fire({trackType: UiSourceMediaTrackType.CAM});
 						}
 					})
 				} catch (e) {
-					throw {
-						exception: e,
-						reason: WebRtcPublishingFailureReason.CAM_MEDIA_RETRIEVAL_FAILED
-					};
+					console.error("Could not get user media: camera!", e);
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.CAM_MEDIA_RETRIEVAL_FAILED});
 				}
 			}
 		}
 
 		if (screenConstraintsChanged) {
+			console.log("updatePublishedTracks() --> screenConstraintsChanged", newScreenConstraints);
 			if (this.screenTrack != null) {
 				this.screenTrack.stop();
 				this.screenTrack = null;
@@ -431,14 +473,12 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					}
 					this.screenTrack.addEventListener("ended", () => {
 						if (this.screenTrack != null) { // not intended stopping!
-							/*TODO handle track ended*/
+							this.onSourceMediaTrackEnded.fire({trackType: UiSourceMediaTrackType.SCREEN});
 						}
 					})
 				} catch (e) {
-					throw {
-						exception: e,
-						reason: WebRtcPublishingFailureReason.DISPLAY_MEDIA_RETRIEVAL_FAILED
-					};
+					console.error("Could not get user media: screen!", e);
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.DISPLAY_MEDIA_RETRIEVAL_FAILED});
 				}
 			}
 		}
@@ -474,29 +514,40 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 					this.videoTrackMixer = await new VideoTrackMixer(streamsWithMixSizingInfo, 15);
 				} catch (e) {
-					throw {
-						exception: e,
-						reason: WebRtcPublishingFailureReason.VIDEO_MIXING_FAILED
-					};
+					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.VIDEO_MIXING_FAILED});
 				}
 			}
 		}
 
 		if (this.conferenceClient != null) {
 			if (audioConstraintsChanged) {
-				this.targetStream.getAudioTracks().forEach(t => this.conferenceClient.removeTrack(t));
+				this.targetStream.getAudioTracks().forEach(t => {
+					this.conferenceClient.removeTrack(t);
+				});
 				if (this.audioTrack != null) {
-					await this.conferenceClient.addTrack(this.audioTrack);
+					try {
+						await this.conferenceClient.addTrack(this.audioTrack);
+						this.onTrackPublishingSuccessful.fire({trackType: UiPublishedMediaTrackType.AUDIO});
+					} catch (e) {
+						this.onTrackPublishingFailed.fire({trackType: UiPublishedMediaTrackType.AUDIO, errorMessage: e.toString()})
+					}
 				}
 			}
 			if (webcamConstraintsChanged || screenConstraintsChanged) {
-				this.targetStream.getVideoTracks().forEach(t => this.conferenceClient.removeTrack(t));
-				if (this.videoTrackMixer != null) {
-					await this.conferenceClient.addTrack(this.videoTrackMixer.getMixedTrack());
-				} else if (this.webcamTrack != null) {
-					await this.conferenceClient.addTrack(this.webcamTrack);
-				} else if (this.screenTrack != null) {
-					await this.conferenceClient.addTrack(this.screenTrack);
+				try {
+					this.targetStream.getVideoTracks().forEach(t => {
+						this.conferenceClient.removeTrack(t);
+					});
+					if (this.videoTrackMixer != null) {
+						await this.conferenceClient.addTrack(this.videoTrackMixer.getMixedTrack());
+					} else if (this.webcamTrack != null) {
+						await this.conferenceClient.addTrack(this.webcamTrack);
+					} else if (this.screenTrack != null) {
+						await this.conferenceClient.addTrack(this.screenTrack);
+					}
+					this.onTrackPublishingSuccessful.fire({trackType: UiPublishedMediaTrackType.VIDEO});
+				} catch (e) {
+					this.onTrackPublishingFailed.fire({trackType: UiPublishedMediaTrackType.VIDEO, errorMessage: e.toString()})
 				}
 			}
 		}

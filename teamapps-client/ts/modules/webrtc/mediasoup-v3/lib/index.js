@@ -472,7 +472,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                                 }
                             });
                         }); });
-                        params = { track: track };
+                        params = { track: track, stopTracks: false };
                         if (this.configs.simulcast && kind === 'video' && this.simulcast) {
                             if (this.simulcast.encodings) {
                                 params.encodings = this.simulcast.encodings;
@@ -557,8 +557,13 @@ var ConferenceApi = /** @class */ (function (_super) {
                                             deadTime++;
                                             if (deadTime > 5) {
                                                 try {
-                                                    target.close();
-                                                    target.emit('close');
+                                                    if (lastBytes) {
+                                                        target.close();
+                                                        target.emit('close');
+                                                    }
+                                                    else {
+                                                        _this.restartAll().then(function () { }).catch(function () { });
+                                                    }
                                                 }
                                                 catch (e) {
                                                 }
@@ -665,6 +670,32 @@ var ConferenceApi = /** @class */ (function (_super) {
             });
         });
     };
+    ConferenceApi.prototype.restartAll = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var operation;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        operation = this.operation;
+                        return [4 /*yield*/, this.close(operation === constants_1.API_OPERATION.SUBSCRIBE)];
+                    case 1:
+                        _a.sent();
+                        if (!(operation === constants_1.API_OPERATION.SUBSCRIBE)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.subscribe()];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 3:
+                        if (!(operation === constants_1.API_OPERATION.PUBLISH && this.mediaStream)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.publish(this.mediaStream)];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
     ConferenceApi.prototype.getTransport = function () {
         return __awaiter(this, void 0, void 0, function () {
             var api_1, data;
@@ -745,26 +776,12 @@ var ConferenceApi = /** @class */ (function (_super) {
                                             clearTimeout(this.transportTimeout);
                                         }
                                         this.transportTimeout = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                                            var operation;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
-                                                    case 0:
-                                                        operation = this.operation;
-                                                        return [4 /*yield*/, this.close(operation === constants_1.API_OPERATION.SUBSCRIBE)];
+                                                    case 0: return [4 /*yield*/, this.restartAll()];
                                                     case 1:
                                                         _a.sent();
-                                                        if (!(operation === constants_1.API_OPERATION.SUBSCRIBE)) return [3 /*break*/, 3];
-                                                        return [4 /*yield*/, this.subscribe()];
-                                                    case 2:
-                                                        _a.sent();
-                                                        return [3 /*break*/, 5];
-                                                    case 3:
-                                                        if (!(operation === constants_1.API_OPERATION.PUBLISH && this.mediaStream)) return [3 /*break*/, 5];
-                                                        return [4 /*yield*/, this.publish(this.mediaStream)];
-                                                    case 4:
-                                                        _a.sent();
-                                                        _a.label = 5;
-                                                    case 5: return [2 /*return*/];
+                                                        return [2 /*return*/];
                                                 }
                                             });
                                         }); }, this.configs.timeout.stream);

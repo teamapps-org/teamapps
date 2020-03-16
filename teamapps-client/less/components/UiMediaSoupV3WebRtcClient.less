@@ -76,6 +76,23 @@
       transition: background-color 500ms;
     }
 
+    > .bitrate-display {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 3px;
+      background-color: #00000055;
+      color: #ddd;
+      line-height: 1.5;
+
+      > .bitrate-audio:before {
+        content: 'audio: '
+      }
+      > .bitrate-video:before {
+        content: 'video: '
+      }
+    }
+
     > .icons {
       position: absolute;
       bottom: 5px;
