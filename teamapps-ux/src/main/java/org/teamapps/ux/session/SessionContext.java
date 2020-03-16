@@ -53,6 +53,7 @@ import org.teamapps.ux.i18n.UTF8Control;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.text.MessageFormat;
 import java.time.ZoneId;
@@ -94,6 +95,7 @@ public class SessionContext {
 
 	private final QualifiedUiSessionId sessionId;
 	private final ClientInfo clientInfo;
+	private HttpSession httpSession;
 	private final UiCommandExecutor commandExecutor;
 	private final UxServerContext serverContext;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
@@ -107,9 +109,10 @@ public class SessionContext {
 	private Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration = SessionConfiguration.createDefault();
 
-	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, UiCommandExecutor commandExecutor, UxServerContext serverContext, IconTheme iconTheme,
+	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, HttpSession httpSession, UiCommandExecutor commandExecutor, UxServerContext serverContext, IconTheme iconTheme,
 	                      ObjectMapper jacksonObjectMapper) {
 		this.sessionId = sessionId;
+		this.httpSession = httpSession;
 		this.clientInfo = clientInfo;
 		this.commandExecutor = commandExecutor;
 		this.serverContext = serverContext;
@@ -203,6 +206,10 @@ public class SessionContext {
 
 	public ClientInfo getClientInfo() {
 		return clientInfo;
+	}
+
+	public HttpSession getHttpSession() {
+		return httpSession;
 	}
 
 	/**
