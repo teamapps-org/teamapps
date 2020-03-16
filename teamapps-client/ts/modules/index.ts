@@ -142,3 +142,5 @@ export {draggable} from "./util/draggable";
 
 import * as log from "loglevel";
 (window as any).log = log;
+
+export {VideoTrackMixer} from "./webrtc/VideoTrackMixer"

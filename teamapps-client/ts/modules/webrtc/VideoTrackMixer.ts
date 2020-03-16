@@ -37,11 +37,14 @@ export class VideoTrackMixer {
 		// this.canvas.style.top = '-100000px';       // TODO
 		this.canvas.style.width = '800px';     // TODO
 		this.canvas.style.height = '600px';    // TODO
-		(document.body || document.documentElement).appendChild(this.canvas);
 	}
 
 	public getMixedTrack(): MediaStreamTrack {
+		(window as any).mixers = (window as any).mixers || [];
+		(window as any).mixers.push(this);
+
 		if (this.outputTrack == null) {
+			(document.body || document.documentElement).appendChild(this.canvas);
 			for (let track of this.inputTracks) {
 				track.videoElement = createVideoElement(track.mediaTrack);
 			}
@@ -153,6 +156,11 @@ export class VideoTrackMixer {
 
 	public close() {
 		this.outputTrack.stop();
+		this.outputTrack = null;
+		this.inputTracks.forEach(inputTrack => {
+			// TODO maybe the getUserDisplay() does not support being retrieved twice!
+			inputTrack.videoElement.srcObject = null;
+		});
 		this.canvas.remove();
 		window.clearInterval(this.drawVideoIntervalId);
 	};
@@ -164,9 +172,15 @@ function createVideoElement(videoTrack: MediaStreamTrack) {
 	video.muted = true;
 	video.volume = 0;
 
+	video.addEventListener("pause", ev => {
+		console.log("VideoTrackMixer video: pause");
+		this.$video.play(); // happens when the video player gets detached under android while switching views
+	});
+
 	document.body.appendChild(video);  // TODO
+	video.style.width = "800px";
 
 	video.play()
-		.catch(e => console.log("Error while play() on mixer source video element!", e));
+		.catch(e => console.error("Error while play() on mixer source video element!", e));
 	return video;
 }

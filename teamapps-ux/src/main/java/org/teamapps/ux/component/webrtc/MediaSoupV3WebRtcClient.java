@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +29,6 @@ import org.teamapps.dto.UiMediaDeviceInfo;
 import org.teamapps.dto.UiMediaSoupPlaybackParameters;
 import org.teamapps.dto.UiMediaSoupPublishingParameters;
 import org.teamapps.dto.UiMediaSoupV3WebRtcClient;
-import org.teamapps.dto.WebRtcPublishingFailureReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.util.UiUtil;
@@ -39,7 +38,6 @@ import org.teamapps.ux.session.SessionContext;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -50,16 +48,19 @@ import java.util.stream.Collectors;
 
 public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
-	public final Event<MulticastPlaybackProfile> onPlaybackProfileChanged = new Event<>();
-	public final Event<Boolean> onVoiceActivityChanged = new Event<>();
-	public final Event<Void> onClicked = new Event<>();
-	public final Event<Void> onPublishingSucceeded = new Event<>();
-	public final Event<PublishedStreamsStatus> onPublishedStreamsStatusChanged = new Event<>();
-	public final Event<WebRtcPublishingFailureReason> onPublishingFailed = new Event<>();
+	public final Event<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = new Event<>();
+	public final Event<SourceMediaTrackType> onSourceMediaTrackEnded = new Event<>();
+	public final Event<PublishedMediaTrackType> onTrackPublishingSuccessful = new Event<>();
+	public final Event<TrackPublishingFailedEvent> onTrackPublishingFailed = new Event<>();
+
 	public final Event<WebRtcStreamType> onPublishedStreamEnded = new Event<>();
-	public final Event<Void> onPlaybackSucceeded = new Event<>();
-	public final Event<Void> onPlaybackFailed = new Event<>();
+
+	public final Event<Void> onSubscribingSuccessful = new Event<>();
+	public final Event<String> onSubscribingFailed = new Event<>();
+
 	public final Event<Boolean> onConnectionStateChanged = new Event<>();
+	public final Event<Boolean> onVoiceActivityChanged = new Event<>();
+	public final Event<Void> onClicked = new Event<>();                                             // OK
 
 	private String serverAddress;
 
@@ -82,6 +83,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	private Supplier<Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
 
+	private boolean bitrateDisplayEnabled;
+
 	public MediaSoupV3WebRtcClient() {
 	}
 
@@ -99,6 +102,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		ui.setActivityInactiveColor(UiUtil.createUiColor(activityInactiveColor));
 		ui.setActivityActiveColor(UiUtil.createUiColor(activityActiveColor));
 		ui.setIcons(icons.stream().map(icon -> getSessionContext().resolveIcon(icon)).collect(Collectors.toList()));
+		ui.setBitrateDisplayEnabled(bitrateDisplayEnabled);
 		ui.setCaption(caption);
 		ui.setNoVideoImageUrl(noVideoImageUrl);
 		ui.setDisplayAreaAspectRatio(displayAreaAspectRatio);
@@ -110,20 +114,6 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PLAYBACK_PROFILE_CHANGED: {
-				UiMediaSoupV3WebRtcClient.PlaybackProfileChangedEvent e = (UiMediaSoupV3WebRtcClient.PlaybackProfileChangedEvent) event;
-				if (e.getProfile() == null) {
-					return;
-				}
-				MulticastPlaybackProfile profile = Arrays.stream(MulticastPlaybackProfile.values())
-						.filter(p -> Objects.equals(p.name(), e.getProfile().name()))
-						.findFirst().orElse(null);
-				if (profile == null) {
-					return;
-				}
-				this.onPlaybackProfileChanged.fire(MulticastPlaybackProfile.valueOf(e.getProfile().name()));
-				break;
-			}
 			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_VOICE_ACTIVITY_CHANGED: {
 				UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent e = (UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent) event;
 				this.onVoiceActivityChanged.fire(e.getActive());
@@ -134,26 +124,36 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 				this.onClicked.fire();
 				break;
 			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PUBLISHING_SUCCEEDED:
-				this.onPublishingSucceeded.fire();
-				break;
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PUBLISHED_STREAMS_STATUS_CHANGED: {
-				UiMediaSoupV3WebRtcClient.PublishedStreamsStatusChangedEvent e = (UiMediaSoupV3WebRtcClient.PublishedStreamsStatusChangedEvent) event;
-				this.onPublishedStreamsStatusChanged.fire(new PublishedStreamsStatus(e.getAudio(), e.getVideo()));
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_SOURCE_MEDIA_TRACK_RETRIEVAL_FAILED: {
+				UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent e = (UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent) event;
+				this.onSourceMediaTrackRetrievalFailed.fire(MediaRetrievalFailureReason.valueOf(e.getReason().name()));
 				break;
 			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PUBLISHING_FAILED:
-				this.onPublishingFailed.fire(((UiMediaSoupV3WebRtcClient.PublishingFailedEvent) event).getReason());
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_SOURCE_MEDIA_TRACK_ENDED: {
+				UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent e = (UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent) event;
+				this.onSourceMediaTrackEnded.fire(SourceMediaTrackType.valueOf(e.getTrackType().name()));
 				break;
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PUBLISHED_STREAM_ENDED:
-				this.onPublishedStreamEnded.fire(((UiMediaSoupV3WebRtcClient.PublishedStreamEndedEvent) event).getIsDisplay() ? WebRtcStreamType.DISPLAY : WebRtcStreamType.CAM_MIC);
+			}
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_TRACK_PUBLISHING_SUCCESSFUL: {
+				UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent) event;
+				this.onTrackPublishingSuccessful.fire(PublishedMediaTrackType.valueOf(e.getTrackType().name()));
 				break;
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PLAYBACK_SUCCEEDED:
-				this.onPlaybackSucceeded.fire();
+			}
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_TRACK_PUBLISHING_FAILED: {
+				UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent) event;
+				this.onTrackPublishingFailed.fire(new TrackPublishingFailedEvent(PublishedMediaTrackType.valueOf(e.getTrackType().name()), e.getErrorMessage()));
 				break;
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_PLAYBACK_FAILED:
-				this.onPlaybackFailed.fire();
+			}
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_SUBSCRIBING_SUCCESSFUL: {
+				UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent e = (UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent) event;
+				this.onSubscribingSuccessful.fire();
 				break;
+			}
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_SUBSCRIBING_FAILED: {
+				UiMediaSoupV3WebRtcClient.SubscribingFailedEvent e = (UiMediaSoupV3WebRtcClient.SubscribingFailedEvent) event;
+				this.onSubscribingFailed.fire(e.getErrorMessage());
+				break;
+			}
 			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_CONNECTION_STATE_CHANGED:
 				this.onConnectionStateChanged.fire(((UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent) event).getConnected());
 				break;
@@ -323,6 +323,17 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		}
 	}
 
+	public boolean isBitrateDisplayEnabled() {
+		return bitrateDisplayEnabled;
+	}
+
+	public void setBitrateDisplayEnabled(boolean bitrateDisplayEnabled) {
+		if (bitrateDisplayEnabled != this.bitrateDisplayEnabled) {
+			this.bitrateDisplayEnabled = bitrateDisplayEnabled;
+			update();
+		}
+	}
+
 	public static CompletableFuture<List<UiMediaDeviceInfo>> enumerateDevices() {
 		CompletableFuture<List<UiMediaDeviceInfo>> future = new CompletableFuture<>();
 		SessionContext.current().queueCommand(new UiMediaSoupV3WebRtcClient.EnumerateDevicesCommand(), value -> {
@@ -362,7 +373,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 					.withClaim("operation", operation)
 					.withExpiresAt(new Date(Instant.now().plus(tokenValidityDuration).toEpochMilli()))
 					.sign(algorithm);
-		} catch (JWTCreationException exception){
+		} catch (JWTCreationException exception) {
 			throw new RuntimeException("Could not create auth token - this should never happen!");
 		}
-	}}
+	}
+}

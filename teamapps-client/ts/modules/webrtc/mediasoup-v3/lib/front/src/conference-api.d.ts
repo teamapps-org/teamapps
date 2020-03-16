@@ -52,6 +52,7 @@ export declare class ConferenceApi extends EventEmitter implements IConferenceAp
     private listenStats;
     close(hard?: boolean): Promise<void>;
     private closeConnectors;
+    private restartAll;
     private getTransport;
 }
 export {};
