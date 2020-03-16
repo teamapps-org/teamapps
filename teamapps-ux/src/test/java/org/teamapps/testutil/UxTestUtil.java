@@ -28,6 +28,7 @@ import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
@@ -41,7 +42,7 @@ public class UxTestUtil {
 	public static SessionContext createDummySessionContext() {
 		return new SessionContext(
 				new QualifiedUiSessionId("httpSessionId", "uiSessionId"),
-				new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap()),
+				new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap()), Mockito.mock(HttpSession.class),
 				Mockito.mock(UiCommandExecutor.class),
 				Mockito.mock(UxServerContext.class),
 				Mockito.mock(IconTheme.class),

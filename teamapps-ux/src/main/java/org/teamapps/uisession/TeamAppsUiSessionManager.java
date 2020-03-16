@@ -38,6 +38,7 @@ import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiSessionClosingReason;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.ArrayList;
@@ -100,6 +101,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 	public void initSession(
 			QualifiedUiSessionId sessionId,
 			UiClientInfo clientInfo,
+			HttpSession httpSession,
 			int maxRequestedCommandId,
 			MessageSender messageSender
 	) {
@@ -113,7 +115,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				isRefresh = true;
 				session = getSessionById(sessionId);
 			} else {
-				session = new UiSession(sessionId, clientInfo, System.currentTimeMillis(), uiSessionListener, messageSender);
+				session = new UiSession(sessionId, clientInfo, httpSession, System.currentTimeMillis(), uiSessionListener, messageSender);
 				sessionsById.put(sessionId.getHttpSessionId(), sessionId.getUiSessionId(), session);
 			}
 		}
@@ -272,6 +274,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 		private final QualifiedUiSessionId sessionId;
 		private final UiClientInfo clientInfo;
+		private final HttpSession httpSession;
 		private final UiSessionListener sessionListener;
 
 		private MessageSender messageSender;
@@ -290,9 +293,10 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 		private Map<Integer, Consumer> resultCallbacksByCmdId = new ConcurrentHashMap<>();
 
-		public UiSession(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, long creationTime, UiSessionListener sessionListener, MessageSender messageSender) {
+		public UiSession(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession, long creationTime, UiSessionListener sessionListener, MessageSender messageSender) {
 			this.sessionId = sessionId;
 			this.clientInfo = clientInfo;
+			this.httpSession = httpSession;
 			this.timestampOfLastMessageFromClient.set(creationTime);
 			this.sessionListener = sessionListener;
 			this.messageSender = messageSender;
@@ -410,7 +414,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				this.maxRequestedCommandId = maxRequestedCommandId;
 			}
 			LOGGER.debug("INIT successful: " + sessionId);
-			sessionListener.onUiSessionStarted(sessionId, clientInfo);
+			sessionListener.onUiSessionStarted(sessionId, clientInfo, httpSession);
 			sendAsyncWithErrorHandler(new INIT_OK(
 					config.getClientMinRequestedCommands(),
 					config.getClientMaxRequestedCommands(),
@@ -431,7 +435,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				lastSentCommandId = 0;
 			}
 			LOGGER.debug("INIT (client refresh) successful: " + sessionId);
-			sessionListener.onUiSessionClientRefresh(sessionId, clientInfo);
+			sessionListener.onUiSessionClientRefresh(sessionId, clientInfo, httpSession);
 			sendAsyncWithErrorHandler(new INIT_OK(
 					config.getClientMinRequestedCommands(),
 					config.getClientMaxRequestedCommands(),
