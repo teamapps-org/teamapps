@@ -24,10 +24,7 @@ import org.teamapps.dto.UiMultiLineTextField;
 
 public class MultiLineTextField extends TextField {
 
-	@Deprecated
-	private int minHeight = 100;
-	@Deprecated
-	private int maxHeight;
+	private boolean adjustHeightToContent = false;
 
 	public MultiLineTextField() {
 		super();
@@ -40,8 +37,7 @@ public class MultiLineTextField extends TextField {
 		uiField.setMaxCharacters(getMaxCharacters());
 		uiField.setShowClearButton(isShowClearButton());
 		uiField.setEmptyText(getEmptyText());
-		uiField.setMinHeight(minHeight);
-		uiField.setMaxHeight(maxHeight);
+		uiField.setAdjustHeightToContent(adjustHeightToContent);
 		return uiField;
 	}
 
@@ -54,34 +50,11 @@ public class MultiLineTextField extends TextField {
 		}
 	}
 
-	@Deprecated
-	public int getMinHeight() {
-		return minHeight;
+	public boolean isAdjustHeightToContent() {
+		return adjustHeightToContent;
 	}
 
-	@Deprecated
-	public void setMinHeight(int minHeight) {
-		this.minHeight = minHeight;
-		queueCommandIfRendered(() -> new UiMultiLineTextField.SetMinHeightCommand(getId(), minHeight));
+	public void setAdjustHeightToContent(boolean adjustHeightToContent) {
+		this.adjustHeightToContent = adjustHeightToContent;
 	}
-
-	@Deprecated
-	public int getMaxHeight() {
-		return maxHeight;
-	}
-
-	@Deprecated
-	public void setMaxHeight(int maxHeight) {
-		this.maxHeight = maxHeight;
-		queueCommandIfRendered(() -> new UiMultiLineTextField.SetMaxHeightCommand(getId(), maxHeight));
-	}
-
-	@Deprecated
-	public void setFixedHeight(int height) {
-		this.minHeight = height;
-		this.maxHeight = height;
-		queueCommandIfRendered(() -> new UiMultiLineTextField.SetMinHeightCommand(getId(), height));
-		queueCommandIfRendered(() -> new UiMultiLineTextField.SetMaxHeightCommand(getId(), height));
-	}
-
 }
