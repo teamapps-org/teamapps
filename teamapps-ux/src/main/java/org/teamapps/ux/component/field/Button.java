@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,20 +57,32 @@ public class Button<RECORD> extends AbstractComponent {
 		this(template, templateRecord, null);
 	}
 
+	public static Button<BaseTemplateRecord> create(BaseTemplate template, Icon icon, String caption, Component dropDownComponent) {
+		return new Button<>(template, new BaseTemplateRecord(icon, caption), dropDownComponent);
+	}
+
+	public static Button<BaseTemplateRecord> create(BaseTemplate template, Icon icon, String caption) {
+		return create(template, icon, caption, null);
+	}
+
+	public static Button<BaseTemplateRecord> create(BaseTemplate template, String caption) {
+		return create(template, null, caption, null);
+	}
+
 	public static Button<BaseTemplateRecord> create(Icon icon, String caption, Component dropDownComponent) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(icon, caption), dropDownComponent);
+		return create(BaseTemplate.BUTTON, icon, caption, dropDownComponent);
 	}
 
 	public static Button<BaseTemplateRecord> create(String caption, Component dropDownComponent) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(caption), dropDownComponent);
+		return create(BaseTemplate.BUTTON, null, caption, dropDownComponent);
 	}
 
 	public static Button<BaseTemplateRecord> create(Icon icon, String caption) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(icon, caption));
+		return create(BaseTemplate.BUTTON, icon, caption, null);
 	}
 
 	public static Button<BaseTemplateRecord> create(String caption) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(caption));
+		return create(BaseTemplate.BUTTON, null, caption, null);
 	}
 
 	@Override

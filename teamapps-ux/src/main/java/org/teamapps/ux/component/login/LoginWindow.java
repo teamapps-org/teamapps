@@ -56,7 +56,7 @@ public class LoginWindow {
 	private final Label loginLabel;
 
 	public LoginWindow() {
-		loginButton = new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord<>(MaterialIcon.CHECK, "Ok"));
+		loginButton = new Button<>(BaseTemplate.BUTTON, new BaseTemplateRecord<>(MaterialIcon.CHECK, "Ok"));
 		//loginButton.setColor(Color.LIGHT_GRAY);
 		headerField = new DisplayField(false, true);
 		errorField = new DisplayField(false, true);
