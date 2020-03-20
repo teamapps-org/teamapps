@@ -34,7 +34,7 @@ public class ClassPathResource implements Resource {
 
 	@Override
 	public InputStream getInputStream() {
-		return getClass().getResourceAsStream(resourceName);
+		return ClassLoader.getSystemResourceAsStream(resourceName);
 	}
 
 	@Override
