@@ -69,7 +69,9 @@ public enum BaseTemplate implements Template {
 
 	FORM_SECTION_HEADER(createFormSectionHeaderTemplate()),
 
-	FORM_BUTTON(createFormButtonTemplate()),
+	BUTTON(createFormButtonTemplate(16, 1)),
+	BUTTON_LARGE(createFormButtonTemplate(24, 1.6f)),
+	BUTTON_XLARGE(createFormButtonTemplate(32, 2.2f)),
 
 	NOTIFICATION_ICON_CAPTION(createNotificationTemplateWithIconAndCaption()),
 	NOTIFICATION_ICON_CAPTION_DESCRIPTION(createNotificationTemplateWithIconAndCaptionAndDescription()),
@@ -365,21 +367,22 @@ public enum BaseTemplate implements Template {
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1).setWrapLines(false));
 	}
 
-	public static Template createFormButtonTemplate() {
+	public static Template createFormButtonTemplate(int iconSize, float relativeFontSize) {
 		return new GridTemplate()
-				.setMinWidth(0).setMaxWidth(0)
-				.setMinHeight(20).setMaxHeight(26)
+				.setMinHeight(20)
 				.setGridGap(0)
 				.setPadding(new Spacing(1, 5))
 				.addColumn(SizeType.AUTO, 0, 0, 2, 4)
 				.addColumn(SizingPolicy.AUTO, 0, 2)
 				.addRow(SizeType.AUTO, 0, 0, 3, 3)
-				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 16))
-				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 16, 16)
+				.addElement(new IconElement(PROPERTY_ICON, 0, 0, iconSize))
+				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, iconSize, iconSize)
 						.setBorder(new Border(new Line(Color.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
 						.setShadow(Shadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
-				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1).setWrapLines(false));
+				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
+						.setFontStyle(relativeFontSize)
+						.setWrapLines(false));
 	}
 
 	private static Template createNotificationTemplateWithIconAndCaption() {
