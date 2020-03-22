@@ -20,19 +20,15 @@
 package org.teamapps.webcontroller;
 
 import org.teamapps.icon.material.MaterialIconProvider;
-import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.icons.api.IconTheme;
+import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.UxServerContext;
-import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
-import org.teamapps.ux.session.StylingTheme;
 
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public interface WebController {
 
@@ -63,19 +59,4 @@ public interface WebController {
 		// do nothing by default
 	}
 
-	default SessionConfiguration createSessionConfiguration(SessionContext context) {
-		boolean optimizedForTouch = false;
-		StylingTheme theme = StylingTheme.DEFAULT;
-		if (context.getClientInfo().isMobileDevice()) {
-			optimizedForTouch = true;
-			theme = StylingTheme.MODERN;
-		}
-
-		return SessionConfiguration.create(
-				Locale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso()),
-				ZoneId.of(context.getClientInfo().getTimeZone()),
-				theme,
-				optimizedForTouch
-		);
-	}
 }
