@@ -39,9 +39,7 @@ import org.teamapps.ux.resource.ResourceProviderServlet;
 import org.teamapps.ux.resource.SystemIconResourceProvider;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.ClientSessionResourceProvider;
-import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
-import org.teamapps.ux.session.StylingTheme;
 import org.teamapps.webcontroller.WebController;
 
 import javax.servlet.http.HttpSession;
@@ -51,13 +49,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -129,7 +125,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		sessionContextById.put(sessionId, context);
 
 		CompletableFuture<Void> future = context.runWithContext(() -> {
-			context.setConfiguration(createSessionConfiguration(context.getClientInfo()));
+			context.setConfiguration(webController.createSessionConfiguration(context));
 			context.registerTemplates(Arrays.stream(BaseTemplate.values())
 					.collect(Collectors.toMap(Enum::name, BaseTemplate::getTemplate)));
 			webController.onSessionStart(context);
@@ -141,21 +137,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	static SessionConfiguration createSessionConfiguration(ClientInfo clientInfo) {
-		boolean optimizedForTouch = false;
-		StylingTheme theme = StylingTheme.DEFAULT;
-		if (clientInfo.isMobileDevice()) {
-			optimizedForTouch = true;
-			theme = StylingTheme.MODERN;
-		}
-		return SessionConfiguration.create(
-				Locale.forLanguageTag(clientInfo.getPreferredLanguageIso()),
-				ZoneId.of(clientInfo.getTimeZone()),
-				theme,
-				optimizedForTouch
-		);
 	}
 
 
