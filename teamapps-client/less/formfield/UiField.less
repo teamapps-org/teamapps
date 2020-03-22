@@ -17,21 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-
-.field-border {
-  border-color: @input-border;
-}
-
-.focus .field-border-glow,
-.focus.field-border-glow {
-  .teamapps-form-control-focus();
-}
-
 .UiField {
   // === border ===
 
   & .field-border,
   & .field-border-visibility {
+    border-color: @input-border;
     transition: border-color @default-color-transition-time;
   }
   &.message-success .field-border {
@@ -44,6 +35,9 @@
     border-color: @state-danger-text;
   }
 
+  &.focus .field-border-glow {
+    .teamapps-form-control-focus();
+  }
   &.focus.message-success .field-border-glow {
     .teamapps-form-control-focus(@state-success-text);
   }
