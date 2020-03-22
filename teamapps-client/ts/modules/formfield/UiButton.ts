@@ -23,13 +23,15 @@ import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {UiButton_ClickedEvent, UiButton_DropDownOpenedEvent, UiButtonCommandHandler, UiButtonConfig, UiButtonEventSource} from "../../generated/UiButtonConfig";
+import {UiField} from "./UiField";
+import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {bind} from "../util/Bind";
+import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
-import {AbstractUiComponent} from "../AbstractUiComponent";
 
-export class UiButton extends AbstractUiComponent<UiButtonConfig> implements UiButtonEventSource, UiButtonCommandHandler {
+export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonEventSource, UiButtonCommandHandler {
 
 	public readonly onClicked: TeamAppsEvent<UiButton_ClickedEvent> = new TeamAppsEvent(this);
 	public readonly onDropDownOpened: TeamAppsEvent<UiButton_DropDownOpenedEvent> = new TeamAppsEvent(this);
@@ -45,23 +47,23 @@ export class UiButton extends AbstractUiComponent<UiButtonConfig> implements UiB
 	private minDropDownHeight: number;
 	private openDropDownIfNotSet: boolean;
 
-	constructor(config: UiButtonConfig, context: TeamAppsUiContext) {
-		super(config, context);
-		
-		this.$main = parseHtml(`<div class="UiButton btn field-border field-border-glow" tabindex="0"></div>`);
-		this.setTemplate(config.template, config.templateRecord);
+	protected initialize(config: UiButtonConfig, context: TeamAppsUiContext) {
+		this.template = config.template;
+		this.templateRecord = config.templateRecord;
+
+		this.$main = parseHtml(this.getReadOnlyHtml(this.templateRecord, -1));
 
 		this.minDropDownWidth = config.minDropDownWidth;
 		this.minDropDownHeight = config.minDropDownHeight;
 		this.openDropDownIfNotSet = config.openDropDownIfNotSet;
-		['mousedown', 'keydown'].forEach((eventName) => this.$main.addEventListener(eventName, (e: Event) => {
+		['mousedown', 'keydown'].forEach((eventName) => this.getMainInnerDomElement().addEventListener(eventName, (e: Event) => {
 			if (e.type === "mousedown" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
 				if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
 					if (!this.dropDown.isOpen) {
-						const width = this.$main.offsetWidth;
-						this.dropDown.open({$reference: this.$main, width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
+						const width = this.getMainInnerDomElement().offsetWidth;
+						this.dropDown.open({$reference: this.getMainInnerDomElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
 						this.onDropDownOpened.fire({});
-						this.$main.classList.add("open");
+						this.getMainInnerDomElement().classList.add("open");
 					} else {
 						this.dropDown.close(); // not needed for clicks, but for keydown!
 					}
@@ -70,14 +72,14 @@ export class UiButton extends AbstractUiComponent<UiButtonConfig> implements UiB
 		}));
 
 		// It is necessary to commit only after a full "click", since fields commit on blur. E.g. a UiTextField should blur-commit first, before the button click-commits. This would not work with "mousedown".
-		["click", "keypress"].forEach(eventName => this.$main.addEventListener(eventName, (e) => {
+		["click", "keypress"].forEach(eventName => this.getMainInnerDomElement().addEventListener(eventName, (e) => {
 			if (e.type === "click" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
-				this.onClicked.fire({});
+				if (this.getEditingMode() === UiFieldEditingMode.EDITABLE || this.getEditingMode() === UiFieldEditingMode.EDITABLE_IF_FOCUSED) {
+					this.onClicked.fire({});
+					this.commit(true);
+				}
 			}
 		}));
-
-		this.$main.addEventListener("focus", () => this.$main.classList.add("focus"));
-		this.$main.addEventListener("blur", () => this.$main.classList.remove("focus"));
 		this.setDropDownComponent(config.dropDownComponent as UiComponent);
 	}
 
@@ -112,7 +114,7 @@ export class UiButton extends AbstractUiComponent<UiButtonConfig> implements UiB
 		if (this._dropDown == null) {
 			this._dropDown = new UiDropDown();
 			this._dropDown.getMainDomElement().classList.add("UiButton-dropdown");
-			this._dropDown.onClose.addListener(() => this.$main.classList.remove("open"))
+			this._dropDown.onClose.addListener(eventObject => this.getMainInnerDomElement().classList.remove("open"))
 		}
 		return this._dropDown;
 	}
@@ -121,7 +123,7 @@ export class UiButton extends AbstractUiComponent<UiButtonConfig> implements UiB
 		this.openDropDownIfNotSet = openDropDownIfNotSet;
 	}
 
-	public doGetMainElement(): HTMLElement {
+	public getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -132,8 +134,55 @@ export class UiButton extends AbstractUiComponent<UiButtonConfig> implements UiB
 
 	setTemplateRecord(data: any): void {
 		this.templateRecord = data;
-		this.$main.innerHTML = this.template != null ? this._context.templateRegistry.createTemplateRenderer(this.template).render(this.templateRecord) : this.templateRecord;
+		let innerHtml = this.renderContent();
+		this.$main.innerHTML = innerHtml;
+	}
+
+	private renderContent(): string {
+		return this.template != null ? this._context.templateRegistry.createTemplateRenderer(this.template).render(this.templateRecord) : this.templateRecord;
+	}
+
+	setFieldMessages(fieldMessageConfigs: UiFieldMessageConfig[]): void {
+		super.setFieldMessages(fieldMessageConfigs);
+	}
+
+	public getFocusableElement(): HTMLElement {
+		return this.$main;
+	}
+
+	focus(): void {
+		this.$main.focus();
+	}
+
+	protected displayCommittedValue(): void {
+		// do nothing...
+	}
+
+	getTransientValue(): true {
+		return null;
+	}
+
+	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
+		UiField.defaultOnEditingModeChangedImpl(this);
+	}
+
+	public getReadOnlyHtml(value: void, availableWidth: number): string {
+		return `<div class="UiButton btn field-border field-border-glow field-background">
+			${this.renderContent()}
+        </div>`;
+	}
+
+	public valuesChanged(v1: void, v2: void): boolean {
+		return false;
+	}
+
+	isValidData(v: void): boolean {
+		return true;
+	}
+
+	getDefaultValue(): true {
+		return true;
 	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiButton", UiButton);
+TeamAppsUiComponentRegistry.registerFieldClass("UiButton", UiButton);

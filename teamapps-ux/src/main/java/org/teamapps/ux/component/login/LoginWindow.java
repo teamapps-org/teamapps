@@ -44,9 +44,9 @@ public class LoginWindow {
 	private TextField loginField;
 	private PasswordField passwordField;
 
-	private Button<BaseTemplateRecord<?>> loginButton;
-	private Button<BaseTemplateRecord<?>> registerButton;
-	private Button<BaseTemplateRecord<?>> forgotPasswordButton;
+	private Button<BaseTemplateRecord> loginButton;
+	private Button<BaseTemplateRecord> registerButton;
+	private Button<BaseTemplateRecord> forgotPasswordButton;
 	private DisplayField errorField;
 	private DisplayField headerField;
 
@@ -56,7 +56,7 @@ public class LoginWindow {
 	private final Label loginLabel;
 
 	public LoginWindow() {
-		loginButton = new Button<>(BaseTemplate.BUTTON, new BaseTemplateRecord<>(MaterialIcon.CHECK, "Ok"));
+		loginButton = new Button<>(BaseTemplate.BUTTON, new BaseTemplateRecord(MaterialIcon.CHECK, "Ok"));
 		//loginButton.setColor(Color.LIGHT_GRAY);
 		headerField = new DisplayField(false, true);
 		errorField = new DisplayField(false, true);
@@ -81,9 +81,9 @@ public class LoginWindow {
 		labelAndField.field.getColumnDefinition().setWidthPolicy(SizingPolicy.FRACTION);
 		loginLabel = (Label) labelAndField.label.getField();
 		pwdLabel = (Label) layout.addLabelAndField(null, sessionContext.getLocalized("ux.loginWindow.password"), passwordField, true).label.getField();
-		layout.addLabelComponent(loginButton, 1).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setMinWidth(100).getRowDefinition().setTopPadding(10);
+		layout.addLabelField(loginButton, 1).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setMinWidth(100).getRowDefinition().setTopPadding(10);
 
-		loginButton.onClicked.addListener(this::login);
+		loginButton.onValueChanged.addListener(value -> login());
 		loginField.onSpecialKeyPressed.addListener(specialKey -> {
 			if (specialKey == SpecialKey.ENTER) {
 				login();
