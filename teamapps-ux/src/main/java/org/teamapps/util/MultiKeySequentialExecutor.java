@@ -72,6 +72,7 @@ public class MultiKeySequentialExecutor<K> {
 	public class SequentialExecutor implements Executor {
 		private CompletableFuture<?> lastFuture = CompletableFuture.completedFuture(null);
 		private AtomicInteger queueSize = new AtomicInteger(0);
+		private boolean closed = false;
 
 		@Override
 		public void execute(Runnable command) {
@@ -86,7 +87,7 @@ public class MultiKeySequentialExecutor<K> {
 		}
 
 		public synchronized <V> CompletableFuture<V> submit(Supplier<V> task) {
-			if (lastFuture.isCancelled()) {
+			if (this.closed) {
 				LOGGER.debug("SequentialExecutor already closed.");
 				return CompletableFuture.failedFuture(new SequentialExecutorClosedException());
 			}
@@ -118,7 +119,7 @@ public class MultiKeySequentialExecutor<K> {
 		}
 
 		public synchronized void close() {
-			lastFuture.cancel(false);
+			this.closed = true;
 		}
 
 	}
