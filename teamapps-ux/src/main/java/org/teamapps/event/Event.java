@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -119,6 +119,17 @@ public class Event<EVENT_DATA> {
 		this.lastEventData = eventData;
 		for (Consumer<EVENT_DATA> listener : listeners) {
 			listener.accept(eventData);
+		}
+	}
+
+	public void fireIgnoringExceptions(EVENT_DATA eventData) {
+		this.lastEventData = eventData;
+		for (Consumer<EVENT_DATA> listener : listeners) {
+			try {
+				listener.accept(eventData);
+			} catch (Exception e) {
+				LOGGER.error("Error while calling event handler. Ignoring exception.", e);
+			}
 		}
 	}
 

@@ -180,7 +180,7 @@ public class SessionContext {
 
 	public void handleSessionDestroyedInternal() {
 		destroyed = true;
-		onDestroyed.fire(null);
+		onDestroyed.fireIgnoringExceptions(null);
 		sessionMultiKeyExecutor.closeForKey(this);
 	}
 
