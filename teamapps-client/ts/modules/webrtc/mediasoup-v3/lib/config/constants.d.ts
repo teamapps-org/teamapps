@@ -20,7 +20,9 @@ export declare enum ACTION {
     SET_MAX_INCOMING_BITRATE = "setMaxIncomingBitrate",
     PRODUCERS_STATS = "producersStats",
     CONSUMERS_STATS = "consumersStats",
-    TRANSPORT_STATS = "transportStats"
+    TRANSPORT_STATS = "transportStats",
+    PIPE_TO_REMOTE_PRODUCER = "pipeToRemoteProducer",
+    WORKER_LOAD = "workerLoad"
 }
 export declare enum PATH {
     RECORDINGS = "recordings",

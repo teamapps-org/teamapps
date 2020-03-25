@@ -1,4 +1,4 @@
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, StartRecordingRequest, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData } from './client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, StartRecordingRequest, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData } from './client-interfaces';
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { IMediasoupApi } from '../../ms/i-mediasoup-api';
 export declare class MediasoupRestApi implements IMediasoupApi {
@@ -25,6 +25,8 @@ export declare class MediasoupRestApi implements IMediasoupApi {
     producersStats(json: StatsInput): Promise<StatsOutput>;
     consumersStats(json: StatsInput): Promise<StatsOutput>;
     transportStats(json: StatsInput): Promise<StatsOutput>;
+    workerLoad(): Promise<WorkerLoadData>;
+    pipeToRemoteProducer(json: PipeToRemoteProducerRequest): Promise<void>;
     startRecording(json: StartRecordingRequest): Promise<void>;
     stopRecording(json: StartRecordingRequest): Promise<void>;
     streamFile(json: StreamFileRequest): Promise<void>;

@@ -21,6 +21,8 @@ interface IConferenceApi {
         id: any;
         kind: any;
     }) => void): this;
+    on(event: 'addtrack', listener: (event: MediaStreamTrackEvent) => void): this;
+    on(event: 'removetrack', listener: (event: MediaStreamTrackEvent) => void): this;
 }
 export declare class ConferenceApi extends EventEmitter implements IConferenceApi {
     private readonly api;
