@@ -6,10 +6,9 @@ import {WebRtcPublishingFailureReason} from "../../generated/WebRtcPublishingFai
 import {UiMediaDeviceKind} from "../../generated/UiMediaDeviceKind";
 import {createUiMediaDeviceInfoConfig, UiMediaDeviceInfoConfig} from "../../generated/UiMediaDeviceInfoConfig";
 import {listenStreamEnded, mixStreams} from "./utils";
-import {determineVideoSize, MediaStreamWithMixiSizingInfo} from "./MultiStreamsMixer";
-import {MixSizingInfo} from "./MultiStreamsMixer";
+import {determineVideoSize, MediaStreamWithMixiSizingInfo, MixSizingInfo} from "./MultiStreamsMixer";
 
-export function addVoiceActivityDetection(mediaStream: MediaStream, onVoiceStart: () => void, onVoiceStop: () => void) {
+export function addVoiceActivityDetectionToMediaStream(mediaStream: MediaStream, onVoiceStart: () => void, onVoiceStop: () => void) {
 	if (((window as any).AudioContext || (window as any).webkitAudioContext) && mediaStream.getAudioTracks().length > 0) {
 		console.log("AudioContext detected");
 		let audioContext = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
@@ -18,6 +17,20 @@ export function addVoiceActivityDetection(mediaStream: MediaStream, onVoiceStart
 		console.log("vad attached");
 		listenStreamEnded(mediaStream, () => {
 			vadHandle.destroy();
+		});
+	}
+}
+
+export function addVoiceActivityDetection(audioTrack: MediaStreamTrack, onVoiceStart: () => void, onVoiceStop: () => void) {
+	if ((window as any).AudioContext || (window as any).webkitAudioContext) {
+		console.log("AudioContext detected");
+		let audioContext = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
+		console.log("AudioContext created");
+		let vadHandle = vad(audioContext, new MediaStream([audioTrack]), {onVoiceStart, onVoiceStop});
+		console.log("vad attached");
+		audioTrack.addEventListener("ended", () => {
+			// destroying VAD
+			vadHandle.destroy()
 		});
 	}
 }

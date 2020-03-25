@@ -41,7 +41,7 @@ import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaSoupPublishingParametersConfig";
 import {arraysEqual, calculateDisplayModeInnerSize, deepEquals, parseHtml, removeClassesByFunction} from "../../Common";
 import {ContextMenu} from "../../micro-components/ContextMenu";
-import {createVideoConstraints, enumerateDevices, getDisplayStream} from "../MediaUtil";
+import {addVoiceActivityDetection, addVoiceActivityDetectionToMediaStream, createVideoConstraints, enumerateDevices, getDisplayStream} from "../MediaUtil";
 import {createUiColorCssString} from "../../util/CssFormatUtil";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
 import {UiComponent} from "../../UiComponent";
@@ -422,7 +422,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						if (this.audioTrack != null) { // not intended stopping!
 							this.onSourceMediaTrackEnded.fire({trackType: UiSourceMediaTrackType.MIC});
 						}
-					})
+					});
+					addVoiceActivityDetection(this.audioTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
 				} catch (e) {
 					console.error("Could not get user media: microphone!", e);
 					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});

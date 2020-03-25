@@ -21,6 +21,7 @@ export interface ProduceRequest {
     rtpParameters: RtpParameters;
     paused?: boolean;
     keyFrameRequestDelay?: number;
+    appData?: any;
 }
 export interface ProduceResponse {
     id: string;
@@ -33,11 +34,22 @@ export interface ConsumeResponse {
     type: string;
     producerPaused: boolean;
 }
+export interface ConsumeRequestOriginData {
+    token: string;
+    from: string;
+    to: string;
+}
 export interface ConsumeRequest {
+    origin?: ConsumeRequestOriginData;
     kind: MediaKind;
     stream: string;
     rtpCapabilities: RtpCapabilities;
     transportId: string;
+}
+export interface PipeToRemoteProducerRequest {
+    origin: ConsumeRequestOriginData;
+    kind: MediaKind;
+    stream: string;
 }
 export interface PipeTransportData {
     pipeTransportId: string;
@@ -46,6 +58,9 @@ export interface PipeTransportData {
 }
 export interface PipeTransportConnectData extends PipeTransportData {
     transportId: string;
+}
+export interface WorkerLoadData {
+    currentLoad: number;
 }
 export interface StatsInput {
     ids: string[];
@@ -61,8 +76,8 @@ export interface TransportBitrateData extends TransportData {
 }
 export interface IceSever {
     urls: string[];
-    username: string;
-    credential: string;
+    username?: string;
+    credential?: string;
 }
 export interface Simulcast {
     encodings?: RTCRtpEncodingParameters[];
@@ -72,6 +87,11 @@ export interface ServerConfigs {
     routerRtpCapabilities: RtpCapabilities;
     iceServers?: IceSever[];
     simulcast?: Simulcast;
+    timeout?: {
+        stats: number;
+        transport: number;
+        consumer: number;
+    };
 }
 export interface ConnectTransportRequest extends TransportData {
     transportId: string;
@@ -93,15 +113,12 @@ export interface StreamFileRequest extends StopRecordingRequest {
 }
 export interface ConferenceInput {
     url?: string;
+    originUrl?: string;
     stream: string;
     token: string;
     simulcast?: boolean;
     kinds?: MediaKind[];
     maxIncomingBitrate?: number;
-    timeout?: {
-        stats: number;
-        stream: number;
-    };
 }
 export interface ConferenceConfig extends ConferenceInput {
     url: string;
@@ -109,6 +126,7 @@ export interface ConferenceConfig extends ConferenceInput {
     maxIncomingBitrate: number;
     timeout: {
         stats: number;
-        stream: number;
+        transport: number;
+        consumer: number;
     };
 }

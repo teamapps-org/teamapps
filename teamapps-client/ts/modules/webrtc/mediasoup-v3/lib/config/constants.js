@@ -43,6 +43,8 @@ var ACTION;
     ACTION["PRODUCERS_STATS"] = "producersStats";
     ACTION["CONSUMERS_STATS"] = "consumersStats";
     ACTION["TRANSPORT_STATS"] = "transportStats";
+    ACTION["PIPE_TO_REMOTE_PRODUCER"] = "pipeToRemoteProducer";
+    ACTION["WORKER_LOAD"] = "workerLoad";
 })(ACTION = exports.ACTION || (exports.ACTION = {}));
 var PATH;
 (function (PATH) {

@@ -49,7 +49,7 @@ import {WebRtcPublishingFailureReason} from "../../../generated/WebRtcPublishing
 import {ContextMenu} from "../../micro-components/ContextMenu";
 import {UiComponent} from "../../UiComponent";
 import {Postponer} from "../../util/postpone";
-import {addVoiceActivityDetection, enumerateDevices, retrieveUserMedia} from "../MediaUtil";
+import {addVoiceActivityDetectionToMediaStream, enumerateDevices, retrieveUserMedia} from "../MediaUtil";
 import {UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
 
 export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2WebRtcClientConfig> implements UiMediaSoupV2WebRtcClientCommandHandler, UiMediaSoupV2WebRtcClientEventSource {
@@ -210,7 +210,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 					this.currentSourceStreams = sourceStreams;
 					this.$video.classList.toggle("mirrored", parameters.videoConstraints && !parameters.screenSharingConstraints);
 					await this.publishMediaStream(targetStream, parameters);
-					addVoiceActivityDetection(targetStream, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
+					addVoiceActivityDetectionToMediaStream(targetStream, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
 				} catch (e) {
 					console.error(e);
 					this.onPublishingFailed.fire({errorMessage: e.exception.toString(), reason: e.reason});
@@ -270,7 +270,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 			});
 			this.conference = conference;
 			Conference.listenStreamEnded(mediaStream, () => {
-				console.log("targetStream ended. stopping.")
+				console.log("targetStream ended. stopping.");
 				this.stop();
 			});
 			await this.conference.publish(mediaStream);
@@ -355,7 +355,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 				this.connectionStatus.status = "error";
 				this.updateStateCssClass();
 			});
-		;
+
 
 		this.$video.classList.remove("mirrored");
 	}

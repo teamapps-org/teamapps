@@ -278,6 +278,28 @@ var MediasoupRestApi = /** @class */ (function () {
             });
         });
     };
+    MediasoupRestApi.prototype.workerLoad = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.WORKER_LOAD)];
+                    case 1: return [2 /*return*/, (_a.sent())];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.pipeToRemoteProducer = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PIPE_TO_REMOTE_PRODUCER, json)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     MediasoupRestApi.prototype.startRecording = function (json) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
