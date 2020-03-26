@@ -207,7 +207,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		List<CEVENT> initialCalendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(initialCalendarEvents);
 		cacheResponse.commit();
-		uiCalendar.setInitialData(cacheResponse.getResult());
+		uiCalendar.setInitialData(cacheResponse.getAndClearResult());
 
 		uiCalendar.setTemplates(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
@@ -303,7 +303,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		List<CEVENT> calendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
 		if (isRendered()) {
-			getSessionContext().queueCommand(new UiCalendar.SetCalendarDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+			getSessionContext().queueCommand(new UiCalendar.SetCalendarDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 		} else {
 			cacheResponse.commit();
 		}

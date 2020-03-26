@@ -81,7 +81,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 
 		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(this.items);
 		cacheResponse.commit();
-		itemGroup.setItems(cacheResponse.getResult());
+		itemGroup.setItems(cacheResponse.getAndClearResult());
 		itemGroup.setHeaderVisible(headerVisible);
 		itemGroup.setFloatStyle(floatStyle.toUiItemViewFloatStyle());
 		itemGroup.setButtonWidth(buttonWidth);
@@ -110,7 +110,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		items.add(item);
 		if (container != null) {
 			CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = itemCache.addRecord(item);
-			container.handleAddItem(cacheResponse.getResult(), aVoid -> cacheResponse.commit());
+			container.handleAddItem(cacheResponse.getAndClearResult(), aVoid -> cacheResponse.commit());
 		}
 	}
 
@@ -118,7 +118,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		boolean removed = items.remove(item);
 		if (removed) {
 			CacheManipulationHandle<Integer> cacheResponse = itemCache.removeRecord(item);
-			container.handleRemoveItem(cacheResponse.getResult(), aVoid -> cacheResponse.commit());
+			container.handleRemoveItem(cacheResponse.getAndClearResult(), aVoid -> cacheResponse.commit());
 		}
 	}
 

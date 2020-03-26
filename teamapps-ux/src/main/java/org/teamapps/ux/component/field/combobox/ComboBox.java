@@ -108,7 +108,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD>
 		}
 		CacheManipulationHandle<UiComboBoxTreeRecord> handle = recordCache.addRecord(record);
 		handle.commit(); // directly committing only works because client-side changes are blocked during server-side changes
-		return handle.getResult();
+		return handle.getAndClearResult();
 	}
 
 	public String getFreeText() {
