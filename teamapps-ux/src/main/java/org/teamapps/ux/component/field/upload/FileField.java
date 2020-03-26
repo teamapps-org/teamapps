@@ -109,7 +109,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 		}
 		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = recordCache.replaceRecords(uxValue);
 		cacheResponse.commit(); // this is only valid here, because updates from the ui are blocked during transmission of ux values
-		return cacheResponse.getResult();
+		return cacheResponse.getAndClearResult();
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 				RECORD record = uploadedFileToRecordConverter.convert(uploadedFile);
 				CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
 				if (isRendered()) {
-					getSessionContext().queueCommand(new UiFileField.ReplaceFileItemCommand(getId(), uploadedEvent.getFileItemUuid(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+					getSessionContext().queueCommand(new UiFileField.ReplaceFileItemCommand(getId(), uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 				} else {
 					cacheResponse.commit();
 				}

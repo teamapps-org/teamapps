@@ -151,7 +151,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		clientRecordCache.setPurgeDecider((record, clientId) -> !viewportDisplayedRecordClientIds.contains(clientId));
 		clientRecordCache.setPurgeListener(purgedRecordIds -> {
 			if (isRendered()) {
-				getSessionContext().queueCommand(new UiTable.RemoveDataCommand(getId(), purgedRecordIds.getResult()), aVoid -> purgedRecordIds.commit());
+				getSessionContext().queueCommand(new UiTable.RemoveDataCommand(getId(), purgedRecordIds.getAndClearResult()), aVoid -> purgedRecordIds.commit());
 			} else {
 				purgedRecordIds.commit();
 			}
@@ -230,7 +230,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		List<RECORD> records = retrieveRecords(0, pageSize);
 		CacheManipulationHandle<List<UiTableClientRecord>> cacheResponse = clientRecordCache.replaceRecords(records);
 		cacheResponse.commit();
-		uiTable.setTableData(cacheResponse.getResult());
+		uiTable.setTableData(cacheResponse.getAndClearResult());
 
 		uiTable.setTotalNumberOfRecords(getTotalRecordsCount());
 		uiTable.setSortField(sortField);
@@ -342,7 +342,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				List<RECORD> childRecords = model.getChildRecords(clientRecordCache.getRecordByClientId(nestedDataEvent.getRecordId()), getSorting());
 				CacheManipulationHandle<List<UiTableClientRecord>> cacheResponse = clientRecordCache.addRecords(childRecords);
 				if (isRendered()) {
-					getSessionContext().queueCommand(new UiTable.SetChildrenDataCommand(getId(), nestedDataEvent.getRecordId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+					getSessionContext().queueCommand(new UiTable.SetChildrenDataCommand(getId(), nestedDataEvent.getRecordId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 				} else {
 					cacheResponse.commit();
 				}
@@ -582,7 +582,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		if (isRendered()) {
 			CacheManipulationHandle<Integer> cacheResponse = clientRecordCache.removeRecord(record);
 			getSessionContext().queueCommand(
-					new UiTable.DeleteRowsCommand(getId(), Collections.singletonList(cacheResponse.getResult())),
+					new UiTable.DeleteRowsCommand(getId(), Collections.singletonList(cacheResponse.getAndClearResult())),
 					aVoid -> cacheResponse.commit()
 			);
 		}
@@ -612,7 +612,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	private void updateRecordOnClientSide(RECORD record) {
 		if (isRendered()) {
 			CacheManipulationHandle<UiTableClientRecord> cacheResponse = clientRecordCache.addOrUpdateRecord(record);
-			UiTableClientRecord clientRecord = cacheResponse.getResult();
+			UiTableClientRecord clientRecord = cacheResponse.getAndClearResult();
 			applyTransientChangesToClientRecord(clientRecord);
 			getSessionContext().queueCommand(
 					new UiTable.UpdateRecordCommand(getId(), clientRecord),
@@ -666,10 +666,10 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 			}
 
 			if (!transientChangesByRecordAndPropertyName.isEmpty()) {
-				cacheResponse.getResult().forEach(uiRecord -> applyTransientChangesToClientRecord(uiRecord));
+				cacheResponse.getAndClearResult().forEach(uiRecord -> applyTransientChangesToClientRecord(uiRecord));
 			}
 
-			UiTable.AddDataCommand addDataCommand = new UiTable.AddDataCommand(getId(), startIndex, cacheResponse.getResult(), totalCount, sortField, sortDirection.toUiSortDirection(), clear);
+			UiTable.AddDataCommand addDataCommand = new UiTable.AddDataCommand(getId(), startIndex, cacheResponse.getAndClearResult(), totalCount, sortField, sortDirection.toUiSortDirection(), clear);
 			LOGGER.debug("Sending table data to client: start: " + addDataCommand.getStartRowIndex() + "; length: " + addDataCommand.getData().size());
 			getSessionContext().queueCommand(
 					addDataCommand,

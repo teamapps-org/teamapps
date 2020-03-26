@@ -32,7 +32,9 @@ public class CacheManipulationHandle<R> {
 		this.committingActions = committingActions;
 	}
 
-	public R getResult() {
+	public R getAndClearResult() {
+		R result = this.result;
+		this.result = null;
 		return result;
 	}
 

@@ -78,7 +78,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		itemCache.setPurgeDecider((record, clientId) -> !viewportDisplayedRecordClientIds.contains(clientId));
 		itemCache.setPurgeListener(operationHandle -> {
 			if (isRendered()) {
-				List<Integer> removedItemIds = operationHandle.getResult();
+				List<Integer> removedItemIds = operationHandle.getAndClearResult();
 				getSessionContext().queueCommand(new UiInfiniteItemView.RemoveDataCommand(getId(), removedItemIds), aVoid -> operationHandle.commit());
 			} else {
 				operationHandle.commit();
@@ -101,7 +101,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		int recordCount = model.getCount();
 		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(model.getRecords(0, Math.min(recordCount, numberOfInitialRecords)));
 		cacheResponse.commit();
-		ui.setData(cacheResponse.getResult());
+		ui.setData(cacheResponse.getAndClearResult());
 		ui.setTotalNumberOfRecords(recordCount);
 		ui.setItemWidth(itemWidth);
 		ui.setHorizontalItemMargin(horizontalItemMargin);
@@ -277,7 +277,8 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 			} else {
 				cacheResponse = itemCache.addRecords(records);
 			}
-			getSessionContext().queueCommand(new UiInfiniteItemView.AddDataCommand(getId(), startIndex, cacheResponse.getResult(), totalCount, clear), aVoid -> cacheResponse.commit());
+			getSessionContext().queueCommand(new UiInfiniteItemView.AddDataCommand(getId(), startIndex, cacheResponse.getAndClearResult(), totalCount, clear),
+					aVoid -> cacheResponse.commit());
 		}
 	}
 
