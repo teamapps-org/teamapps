@@ -91,7 +91,7 @@ public class SessionContext {
 	public final ExecutionDecoratorStack executionDecorators = new ExecutionDecoratorStack();
 
 	private boolean active = true;
-	private boolean destroyed = false;
+	private volatile boolean destroyed = false;
 
 	private final QualifiedUiSessionId sessionId;
 	private final ClientInfo clientInfo;
@@ -179,9 +179,11 @@ public class SessionContext {
 	}
 
 	public void handleSessionDestroyedInternal() {
-		destroyed = true;
 		onDestroyed.fireIgnoringExceptions(null);
-		sessionMultiKeyExecutor.closeForKey(this);
+		runWithContext(() -> { // Do in runWithContext() with forceEnqueue=true so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
+			destroyed = true;
+			sessionMultiKeyExecutor.closeForKey(this);
+		}, true);
 	}
 
 	public Event<Void> onDestroyed() {
@@ -274,6 +276,10 @@ public class SessionContext {
 	 * @return
 	 */
 	public CompletableFuture<Void> runWithContext(Runnable runnable, boolean forceEnqueue) {
+		if (destroyed) {
+			LOGGER.info("This SessionContext ({}) is already destroyed. Not sending command.", sessionId);
+			return CompletableFuture.failedFuture(new IllegalStateException("SessionContext destroyed."));
+		}
 		if (CurrentSessionContext.getOrNull() == this && !forceEnqueue) {
 			// Fast lane! This thread is already bound to this context. Just execute the runnable.
 			runnable.run();
