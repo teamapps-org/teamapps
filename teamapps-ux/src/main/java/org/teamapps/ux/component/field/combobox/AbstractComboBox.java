@@ -115,7 +115,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		if (this.staticData != null) {
 			CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(this.staticData);
 			cacheResponse.commit();
-			comboBox.setStaticData(cacheResponse.getResult());
+			comboBox.setStaticData(cacheResponse.getAndClearResult());
 		}
 
 		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
@@ -145,7 +145,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 					List<RECORD> records = model.getRecords(keyStrokeEvent.getEnteredString());
 					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
 					if (isRendered()) {
-						getSessionContext().queueCommand(new UiComboBox.SetDropDownDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+						getSessionContext().queueCommand(new UiComboBox.SetDropDownDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 					} else {
 						cacheResponse.commit();
 					}
@@ -164,7 +164,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 						List<RECORD> childRecords = model.getChildRecords(parentRecord);
 						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
 						if (isRendered()) {
-							getSessionContext().queueCommand(new UiComboBox.SetChildNodesCommand(getId(), lazyChildDataRequestedEvent.getParentId(), cacheResponse.getResult()),
+							getSessionContext().queueCommand(new UiComboBox.SetChildNodesCommand(getId(), lazyChildDataRequestedEvent.getParentId(), cacheResponse.getAndClearResult()),
 									aVoid -> cacheResponse.commit());
 						} else {
 							cacheResponse.commit();

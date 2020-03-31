@@ -57,8 +57,12 @@ public class MultiKeySequentialExecutor<K> {
 	}
 
 	public void closeForKey(K key) {
-		sequentialExecutors.computeIfAbsent(key, k -> new SequentialExecutor())
-				.close();
+		sequentialExecutors.compute(key, (k, sequentialExecutor) -> {
+			if (sequentialExecutor != null) {
+				sequentialExecutor.close();
+			}
+			return null;
+		});
 	}
 
 	public SequentialExecutor getExecutorForKey(K key) {
@@ -68,6 +72,7 @@ public class MultiKeySequentialExecutor<K> {
 	public class SequentialExecutor implements Executor {
 		private CompletableFuture<?> lastFuture = CompletableFuture.completedFuture(null);
 		private AtomicInteger queueSize = new AtomicInteger(0);
+		private boolean closed = false;
 
 		@Override
 		public void execute(Runnable command) {
@@ -82,7 +87,7 @@ public class MultiKeySequentialExecutor<K> {
 		}
 
 		public synchronized <V> CompletableFuture<V> submit(Supplier<V> task) {
-			if (lastFuture.isCancelled()) {
+			if (this.closed) {
 				LOGGER.debug("SequentialExecutor already closed.");
 				return CompletableFuture.failedFuture(new SequentialExecutorClosedException());
 			}
@@ -96,7 +101,7 @@ public class MultiKeySequentialExecutor<K> {
 				long executionStartTime = System.currentTimeMillis();
 				long delay = executionStartTime - submitTime;
 				if (delay > 3000) {
-					LOGGER.warn("Execution delay high: {}",  delay);
+					LOGGER.warn("Execution delay high: {}", delay);
 				}
 				V result = task.get();
 				long executionTime = System.currentTimeMillis() - executionStartTime;
@@ -113,8 +118,9 @@ public class MultiKeySequentialExecutor<K> {
 			return returnedFuture;
 		}
 
-		public synchronized void close() {
-			lastFuture.cancel(false);
+		// private since it does not remove itself from the map!
+		private synchronized void close() {
+			this.closed = true;
 		}
 
 	}

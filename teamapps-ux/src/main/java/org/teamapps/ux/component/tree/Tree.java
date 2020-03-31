@@ -85,7 +85,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	private final Runnable modelAllNodesChangedListener = () -> {
 		if (isRendered()) {
 			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(model.getRecords(lastQuery));
-			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 		}
 	};
 	private final Consumer<TreeModelChangedEventData<RECORD>> modelChangedListener = (changedEventData) -> {
@@ -94,7 +94,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (isRendered()) {
 			CacheManipulationHandle<List<Integer>> cacheRemoveResponse = recordCache.removeRecords(nodesRemoved);
 			CacheManipulationHandle<List<UiTreeRecord>> cacheAddResponse = recordCache.addRecords(nodesAdded);
-			getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), cacheRemoveResponse.getResult(), cacheAddResponse.getResult()), aVoid -> {
+			getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), cacheRemoveResponse.getAndClearResult(), cacheAddResponse.getAndClearResult()), aVoid -> {
 				cacheRemoveResponse.commit();
 				cacheAddResponse.commit();
 			});
@@ -177,7 +177,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (records != null) {
 			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
 			cacheResponse.commit();
-			uiTree.setInitialData(cacheResponse.getResult());
+			uiTree.setInitialData(cacheResponse.getAndClearResult());
 		}
 
 		uiTree.setSelectedNodeId(this.recordCache.getUiRecordIdOrNull(this.selectedNode));
@@ -212,7 +212,7 @@ public class Tree<RECORD> extends AbstractComponent {
 					List<RECORD> children = model.getChildRecords(parentNode);
 					CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.addRecords(children);
 					if (isRendered()) {
-						getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), Collections.emptyList(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+						getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), Collections.emptyList(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 					} else {
 						cacheResponse.commit();
 					}
@@ -225,7 +225,7 @@ public class Tree<RECORD> extends AbstractComponent {
 					List<RECORD> records = model.getRecords(lastQuery);
 					CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
 					if (isRendered()) {
-						getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+						getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 					} else {
 						cacheResponse.commit();
 					}
@@ -261,7 +261,7 @@ public class Tree<RECORD> extends AbstractComponent {
 			lastQuery = null;
 			List<RECORD> records = model.getRecords(lastQuery);
 			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
-			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 		}
 	}
 

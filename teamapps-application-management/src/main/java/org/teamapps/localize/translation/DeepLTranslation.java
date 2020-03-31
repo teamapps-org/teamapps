@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class DeepLTranslation implements TranslationService {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(DeepLTranslation.class);
-    public static final Set<String> SUPPORTED_LANGUAGES = new HashSet<>(Arrays.asList("en", "de", "fr", "es", "pt", "nl", "it", "pl", "ru")) ;
+    public static final Set<String> SUPPORTED_LANGUAGES = new HashSet<>(Arrays.asList("en", "de", "fr", "es", "pt", "nl", "it", "pl", "ru", "ja", "zh")) ;
 
     private String authKey;
     private long translatedCharacters = 0;

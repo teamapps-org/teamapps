@@ -90,6 +90,13 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
         }
     }
 
+    public void setWorkspaceViewVisible(View view, boolean visible) {
+        WorkSpaceLayoutView layoutView = workSpaceLayout.getViewByPanel(view.getPanel());
+        if (layoutView != null) {
+            layoutView.setVisible(visible);
+        }
+    }
+
     @Override
     public void setWorkSpaceToolbar(ResponsiveApplicationToolbar responsiveApplicationToolbar) {
         this.responsiveApplicationToolbar = responsiveApplicationToolbar;
@@ -157,6 +164,8 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
     @Override
     public void handleViewVisibilityChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, boolean visible) {
         if (isActivePerspective) {
+            //todo change visibility or remove view?
+            //setWorkspaceViewVisible(view, visible);
             if (visible) {
                 addView(view);
             } else {

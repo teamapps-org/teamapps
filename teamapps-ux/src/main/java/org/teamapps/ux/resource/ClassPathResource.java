@@ -25,16 +25,31 @@ public class ClassPathResource implements Resource {
 
 	private final String resourceName;
 	private final String name;
+	private final ClassLoader classLoader;
 	private long length = -1;
 
 	public ClassPathResource(String resourceName) {
+		this(resourceName, null);
+	}
+
+	public ClassPathResource(String resourceName, ClassLoader classLoader) {
 		this.resourceName = resourceName;
 		this.name = resourceName.contains("/") ? resourceName.substring(resourceName.lastIndexOf('/') + 1) : resourceName;
+		this.classLoader = classLoader;
 	}
 
 	@Override
 	public InputStream getInputStream() {
-		return getClass().getResourceAsStream(resourceName);
+		InputStream is;
+		if (classLoader != null) {
+			is = classLoader.getResourceAsStream(resourceName);
+		} else {
+			is = getClass().getResourceAsStream(resourceName);
+			if (is == null) {
+				is = ClassLoader.getSystemResourceAsStream(resourceName);
+			}
+		}
+		return is;
 	}
 
 	@Override

@@ -19,20 +19,20 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiButton;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiField;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
+import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
 
-public class Button<RECORD> extends AbstractComponent {
+public class Button<RECORD> extends AbstractField<Void> {
 
 	public final Event<Void> onClicked = new Event<>();
 	public final Event<Void> onDropDownOpened = new Event<>();
@@ -57,27 +57,39 @@ public class Button<RECORD> extends AbstractComponent {
 		this(template, templateRecord, null);
 	}
 
+	public static Button<BaseTemplateRecord> create(BaseTemplate template, Icon icon, String caption, Component dropDownComponent) {
+		return new Button<>(template, new BaseTemplateRecord(icon, caption), dropDownComponent);
+	}
+
+	public static Button<BaseTemplateRecord> create(BaseTemplate template, Icon icon, String caption) {
+		return create(template, icon, caption, null);
+	}
+
+	public static Button<BaseTemplateRecord> create(BaseTemplate template, String caption) {
+		return create(template, null, caption, null);
+	}
+
 	public static Button<BaseTemplateRecord> create(Icon icon, String caption, Component dropDownComponent) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(icon, caption), dropDownComponent);
+		return create(BaseTemplate.BUTTON, icon, caption, dropDownComponent);
 	}
 
 	public static Button<BaseTemplateRecord> create(String caption, Component dropDownComponent) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(caption), dropDownComponent);
+		return create(BaseTemplate.BUTTON, null, caption, dropDownComponent);
 	}
 
 	public static Button<BaseTemplateRecord> create(Icon icon, String caption) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(icon, caption));
+		return create(BaseTemplate.BUTTON, icon, caption, null);
 	}
 
 	public static Button<BaseTemplateRecord> create(String caption) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(caption));
+		return create(BaseTemplate.BUTTON, null, caption, null);
 	}
 
 	@Override
-	public UiButton createUiComponent() {
+	public UiField createUiComponent() {
 		Object uiRecord = createUiRecord();
 		UiButton ui = new UiButton(getTemplate().createUiTemplate(), uiRecord);
-		mapAbstractUiComponentProperties(ui);
+		mapAbstractFieldAttributesToUiField(ui);
 		ui.setDropDownComponent(Component.createUiClientObjectReference(dropDownComponent));
 		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		ui.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);

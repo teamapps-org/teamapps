@@ -104,7 +104,7 @@ public class MapView<RECORD> extends AbstractComponent {
 			uiMap.setMarkerCluster(createMarkerCluster(clusterMarkers));
 		}
 		CacheManipulationHandle<List<UiMapMarkerClientRecord>> cacheResponse = recordCache.replaceRecords(markers);
-		uiMap.setMarkers(cacheResponse.getResult());
+		uiMap.setMarkers(cacheResponse.getAndClearResult());
 		cacheResponse.commit();
 		return uiMap;
 	}
@@ -206,7 +206,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		clusterMarkers = markers;
 		CacheManipulationHandle<List<UiMapMarkerClientRecord>> cacheManipulationHandle = recordCache.addRecords(markers);
 		cacheManipulationHandle.commit();
-		List<UiMapMarkerClientRecord> result = cacheManipulationHandle.getResult();
+		List<UiMapMarkerClientRecord> result = cacheManipulationHandle.getAndClearResult();
 		UiMapMarkerCluster cluster = new UiMapMarkerCluster(result);
 		queueCommandIfRendered(() -> new UiMap.SetMapMarkerClusterCommand(getId(), cluster));
 	}
@@ -285,7 +285,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		this.markers.add(marker);
 		CacheManipulationHandle<UiMapMarkerClientRecord> cacheResponse = recordCache.addRecord(marker);
 		if (isRendered()) {
-			getSessionContext().queueCommand(new UiMap.AddMarkerCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+			getSessionContext().queueCommand(new UiMap.AddMarkerCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 		} else {
 			cacheResponse.commit();
 		}
@@ -296,7 +296,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		if (removed) {
 			CacheManipulationHandle<Integer> cacheResponse = recordCache.removeRecord(marker);
 			if (isRendered()) {
-				getSessionContext().queueCommand(new UiMap.RemoveMarkerCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+				getSessionContext().queueCommand(new UiMap.RemoveMarkerCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 			} else {
 				cacheResponse.commit();
 			}

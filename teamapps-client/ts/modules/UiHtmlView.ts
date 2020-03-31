@@ -63,8 +63,10 @@ export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements
 		let containerElement = this.$main.querySelector(`:scope ${containerElementSelector}`);
 		if (containerElement != null) {
 			containerElement.innerHTML = '';
-			let childNodes = parseHtml(`<div>${html}</div>`).childNodes;
-			childNodes.forEach(cn => containerElement.appendChild(cn))
+			if (html != null) {
+				let childNodes = parseHtml(`<div>${html}</div>`).childNodes;
+				childNodes.forEach(cn => containerElement.appendChild(cn))
+			}
 		} else {
 			this.logger.error(`Could not set content HTML since selector does not match any element: ${containerElementSelector}`);
 		}

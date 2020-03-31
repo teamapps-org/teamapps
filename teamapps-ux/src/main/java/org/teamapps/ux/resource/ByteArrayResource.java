@@ -17,19 +17,33 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.uisession;
+package org.teamapps.ux.resource;
 
-import org.teamapps.dto.UiClientInfo;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiSessionClosingReason;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
-import javax.servlet.http.HttpSession;
+public class ByteArrayResource implements Resource {
 
-public interface UiSessionListener {
+	private final byte[] data;
+	private final String name;
 
-    void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession);
-	void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession);
-	void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event);
-	void onActivityStateChanged(QualifiedUiSessionId sessionId, boolean active);
-	void onUiSessionClosed(QualifiedUiSessionId sessionId, UiSessionClosingReason reason);
+	public ByteArrayResource(byte[] data, String name) {
+		this.data = data;
+		this.name = name;
+	}
+
+	@Override
+	public InputStream getInputStream() {
+		return new ByteArrayInputStream(data);
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public long getLength() {
+		return data.length;
+	}
 }
