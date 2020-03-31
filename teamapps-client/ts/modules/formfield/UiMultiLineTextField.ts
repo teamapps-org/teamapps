@@ -90,9 +90,6 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 
 		this.updateClearButton();
 
-		this.setMinHeight(config.minHeight);
-		this.setMaxHeight(config.maxHeight);
-
 		this.$field.addEventListener('input', () => this.updateTextareaHeight());
 		this.updateTextareaHeight();
 	}
@@ -109,8 +106,10 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 
 	@executeWhenFirstDisplayed(true)
 	private updateTextareaHeight() {
-		this.$field.style.height = '0px';
-		this.$field.style.height = (Math.max(this.minHeight - 2, Math.min(this.$field.scrollHeight, this.maxHeight - 2))) + 'px';
+		if (this._config.adjustHeightToContent) {
+			this.$field.style.height = '0px';
+			this.$field.style.height = (Math.max(this.minHeight - 2, Math.min(this.$field.scrollHeight, this.maxHeight - 2))) + 'px';
+		}
 	}
 
 	setMaxCharacters(maxCharacters: number): void {
@@ -184,17 +183,6 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		return v1 !== v2;
 	}
 
-	public setMinHeight(minHeight: number) {
-		this.minHeight = minHeight;
-		this.$wrapper.style.minHeight = minHeight ? minHeight + "px" : "";
-		this.updateTextareaHeight();
-	}
-
-	public setMaxHeight(maxHeight: number) {
-		this.maxHeight = maxHeight || Number.MAX_SAFE_INTEGER;
-		this.$wrapper.style.maxHeight = maxHeight ? maxHeight + "px" : "";
-		this.updateTextareaHeight();
-	}
 }
 
 TeamAppsUiComponentRegistry.registerFieldClass("UiMultiLineTextField", UiMultiLineTextField);

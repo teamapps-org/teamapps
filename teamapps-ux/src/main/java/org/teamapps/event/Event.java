@@ -122,6 +122,17 @@ public class Event<EVENT_DATA> {
 		}
 	}
 
+	public void fireIgnoringExceptions(EVENT_DATA eventData) {
+		this.lastEventData = eventData;
+		for (Consumer<EVENT_DATA> listener : listeners) {
+			try {
+				listener.accept(eventData);
+			} catch (Exception e) {
+				LOGGER.error("Error while calling event handler. Ignoring exception.", e);
+			}
+		}
+	}
+
 	public void fire() {
 		fire(null);
 	}

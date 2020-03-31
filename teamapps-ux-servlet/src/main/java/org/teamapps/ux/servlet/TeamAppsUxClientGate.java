@@ -42,6 +42,7 @@ import org.teamapps.ux.session.ClientSessionResourceProvider;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
+import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -93,7 +94,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 	}
 
 	@Override
-	public void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo) {
+	public void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession) {
 		SessionRecorder sessionRecorder = null;
 		if (userSessionCommandsRecordingPath != null) {
 			try {
@@ -119,7 +120,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				uiClientInfo.getClientUrl(),
 				uiClientInfo.getClientParameters());
 
-		SessionContext context = new SessionContext(sessionId, clientInfo, commandExecutor, uxServerContext,
+		SessionContext context = new SessionContext(sessionId, clientInfo, httpSession, commandExecutor, uxServerContext,
 				webController.getDefaultIconTheme(clientInfo.isMobileDevice()), objectMapper);
 		sessionContextById.put(sessionId, context);
 
@@ -163,8 +164,8 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 	}
 
 	@Override
-	public void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo) {
-		this.onUiSessionStarted(sessionId, clientInfo);
+	public void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession) {
+		this.onUiSessionStarted(sessionId, clientInfo, httpSession);
 	}
 
 	@Override

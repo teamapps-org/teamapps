@@ -127,7 +127,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 					
 					if (isRendered()) {
 						getSessionContext().queueCommand(
-								new UiTagComboBox.ReplaceFreeTextEntryCommand(getId(), newFreeText, cacheResponse.getResult()),
+								new UiTagComboBox.ReplaceFreeTextEntryCommand(getId(), newFreeText, cacheResponse.getAndClearResult()),
 								aVoid -> {
 									cacheResponse.commit();
 								}
@@ -161,7 +161,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 		}
 		CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(uxValue);
 		cacheResponse.commit();
-		return cacheResponse.getResult();
+		return cacheResponse.getAndClearResult();
 	}
 
 	public int getMaxEntries() {

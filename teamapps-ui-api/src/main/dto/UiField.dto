@@ -80,11 +80,8 @@ class UiPasswordField extends UiTextField {
 }
 
 class UiMultiLineTextField extends UiTextField {
-	int minHeight = 150;
-	int maxHeight = 150;
-
-	command setMinHeight(int minHeight);
-	command setMaxHeight(int maxHeight);
+	boolean adjustHeightToContent = false;
+	
 	command append(String s, boolean scrollToBottom);
 }
 
@@ -397,7 +394,7 @@ class UiInstantDateTimeField extends AbstractUiDateTimeField {
 	command setTimeZoneId(String timeZoneId);
 }
 
-class UiButton extends UiComponent {
+class UiButton extends UiField {
 	required UiTemplate template;
 	required Object templateRecord;
 

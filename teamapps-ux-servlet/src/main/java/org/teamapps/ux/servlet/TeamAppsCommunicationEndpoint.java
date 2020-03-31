@@ -136,6 +136,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 					sessionManager.initSession(
 							qualifiedUiSessionId,
 							init.getClientInfo(),
+							httpSession,
 							init.getMaxRequestedCommandId(),
 							(msg, sendingErrorHandler) -> send(wsSession, msg, null, sendingErrorHandler)
 					);
