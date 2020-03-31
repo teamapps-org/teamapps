@@ -909,15 +909,20 @@ export async function createImageThumbnailUrl(file: File): Promise<string> {
 }
 
 export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: (className: string) => boolean) {
-	let matches: string[] = [];
-	classList.forEach(function (className) {
-		if (deleteDecider(className)) {
-			matches.push(className);
-		}
-	});
+	let matches = findClassesByFunction(classList, deleteDecider);
 	matches.forEach(function (value) {
 		classList.remove(value);
 	});
+}
+
+export function findClassesByFunction(classList: DOMTokenList, matcher: (className: string) => boolean) {
+	let matches: string[] = [];
+	classList.forEach(function (className) {
+		if (matcher(className)) {
+			matches.push(className);
+		}
+	});
+	return matches;
 }
 
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {

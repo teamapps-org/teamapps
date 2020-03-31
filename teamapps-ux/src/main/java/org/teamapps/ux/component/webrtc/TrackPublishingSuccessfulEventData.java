@@ -18,4 +18,11 @@ public class TrackPublishingSuccessfulEventData {
 		return video;
 	}
 
+	@Override
+	public String toString() {
+		return "TrackPublishingSuccessfulEventData{" +
+				"audio=" + audio +
+				", video=" + video +
+				'}';
+	}
 }
