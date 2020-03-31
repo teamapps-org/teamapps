@@ -39,7 +39,7 @@ import {
 } from "../../../generated/UiMediaSoupV3WebRtcClientConfig";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaSoupPublishingParametersConfig";
-import {arraysEqual, calculateDisplayModeInnerSize, deepEquals, parseHtml, removeClassesByFunction} from "../../Common";
+import {arraysEqual, calculateDisplayModeInnerSize, deepEquals, findClassesByFunction, parseHtml} from "../../Common";
 import {ContextMenu} from "../../micro-components/ContextMenu";
 import {addVoiceActivityDetection, createVideoConstraints, enumerateDevices, getDisplayStream} from "../MediaUtil";
 import {createUiColorCssString} from "../../util/CssFormatUtil";
@@ -158,13 +158,11 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			console.log("pause");
 			this.$video.play(); // happens when the video player gets detached under android while switching views
 		});
-		this.$video.addEventListener("progress", ev => {
-			this.updateVideoVisibilities();
-			this.onResize()
-		});
-		this.$video.addEventListener("timeupdate", ev => {
-			this.updateVideoVisibilities();
-			this.onResize()
+		["progress", "timeupdate"].forEach(eventName => {
+			this.$video.addEventListener(eventName, ev => {
+				this.updateVideoVisibility();
+				this.onResize()
+			});
 		});
 		["play", "playing", "stalled", "waiting", "ended", "suspend", "abort"].forEach(eventName => {
 			this.$video.addEventListener(eventName, ev => {
@@ -179,20 +177,23 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		return this.$main;
 	}
 
-	private updateStateCssClass() {
-		removeClassesByFunction(this.$main.classList, className => className.startsWith("state-"));
+	private updateStateCssClasses() {
+		const oldStateClasses = findClassesByFunction(this.$main.classList, className => className.startsWith("state-"));
 
+		const newStateClasses: string[] = [];
 		if (!this.connectionStatus.shouldHaveAudio && !this.connectionStatus.shouldHaveVideo) {
-			this.$main.classList.add("state-idle");
+			newStateClasses.push("state-idle");
 		} else if (this.connectionStatus.rtcPeerConnectionState !== "connected") {
-			this.$main.classList.add("state-connecting");
-		} else if (this.connectionStatus.shouldHaveAudio && this.connectionStatus.audioBitrate === 0) {
-			this.$main.classList.add("state-audio-loading");
-		} else if (this.connectionStatus.shouldHaveVideo && this.connectionStatus.videoBitrate === 0) {
-			this.$main.classList.add("state-video-loading");
+			newStateClasses.push("state-connecting");
+		} else if (this.connectionStatus.shouldHaveAudio && this.connectionStatus.audioBitrate === 0
+			|| this.connectionStatus.shouldHaveVideo && this.connectionStatus.videoBitrate === 0) {
+			newStateClasses.push("state-audio-loading");
 		} else {
-			this.$main.classList.add("state-streaming")
+			newStateClasses.push("state-streaming")
 		}
+
+		oldStateClasses.filter(oldClass => newStateClasses.indexOf(oldClass) === -1).forEach(oldClass => this.$main.classList.remove(oldClass));
+		newStateClasses.filter(newClass => oldStateClasses.indexOf(newClass) === -1).forEach(newClass => this.$main.classList.add(newClass));
 	}
 
 	async stop() {
@@ -209,7 +210,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		}
 		// this.connectionStatus.status = "idle";
 		await this.updatePublishedTracks(null, null, null);
-		this.updateStateCssClass();
+		this.updateStateCssClasses();
 		this.$video.srcObject = null;
 	}
 
@@ -251,7 +252,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		this._config = config;
 
-		this.updateVideoVisibilities();
+		this.updateVideoVisibility();
 		this.onResize();
 	}
 
@@ -270,14 +271,16 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		} else if (config.publishingParameters != null) {
 			await this.updatePublishing(config.publishingParameters);
 		} else {
+			this.connectionStatus.shouldHaveAudio = false;
+			this.connectionStatus.shouldHaveVideo = false;
 			await this.stop();
 		}
 	}
 
 	async updatePlayback(newParams: UiMediaSoupPlaybackParametersConfig) {
-		this.connectionStatus.shouldHaveAudio = newParams.audio != null;
-		this.connectionStatus.shouldHaveVideo = newParams.video != null;
-		this.updateStateCssClass();
+		this.connectionStatus.shouldHaveAudio = newParams.audio;
+		this.connectionStatus.shouldHaveVideo = newParams.video;
+		this.updateStateCssClasses();
 
 		const oldParams = this._config.playbackParameters;
 		const needsReset = oldParams?.serverAddress != newParams?.serverAddress
@@ -300,7 +303,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 					const playVideoElement = async () => {
 						this.$video.muted = false;
-						this.$video.play().catch(error => {
+						await this.$video.play().catch(error => {
 							console.error('Unmuted autoplay failed!');
 							this.onSubscriptionPlaybackFailed.fire(error.toString());
 							this.$video.muted = true;
@@ -319,7 +322,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					} else if (Utils.isFirefox) {
 						this.$video.addEventListener('pause', playVideoElement)
 					}
-					playVideoElement();
+					await playVideoElement();
 					this.onSubscribingSuccessful.fire({});
 				} catch (error) {
 					console.error("Error while starting playback!", error);
@@ -337,7 +340,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	async updatePublishing(newParams: UiMediaSoupPublishingParametersConfig) {
 		this.connectionStatus.shouldHaveAudio = newParams.audioConstraints != null;
 		this.connectionStatus.shouldHaveVideo = newParams.videoConstraints != null;
-		this.updateStateCssClass();
+		this.updateStateCssClasses();
 
 		let oldParams = this._config.publishingParameters;
 
@@ -368,7 +371,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					}
 					this.onTrackPublishingFailed.fire({audio: newParams.audioConstraints != null, video: newParams.videoConstraints != null, errorMessage: e.toString()});
 					await this.stop();
-					this.updateStateCssClass();
+					this.updateStateCssClasses();
 				}
 			}
 		}
@@ -376,11 +379,11 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		await this.updatePublishedTracks(newParams.audioConstraints, newParams.videoConstraints, newParams.screenSharingConstraints);
 
 		if (this.conferenceClient != null && newParams?.maxBitrate !== oldParams?.maxBitrate) {
-			this.conferenceClient.setMaxPublisherBitrate(newParams.maxBitrate);
+			await this.conferenceClient.setMaxPublisherBitrate(newParams.maxBitrate);
 		}
 
 		if (this.targetStream.getTracks().length > 0) {
-			await this.$video.play();
+			this.$video.play(); // do not await - will hang for audio only (don't know why!)
 		}
 		this.$video.classList.toggle("mirrored", (newParams?.videoConstraints != null) && (newParams?.screenSharingConstraints == null));
 	}
@@ -433,7 +436,6 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				this.webcamTrack = null;
 			}
 			if (newWebcamConstraints != null) {
-				console.log("WILL ATTEMPT TO GET VIDEO USER MEDIA!");
 				try {
 					let videoTracks = (await window.navigator.mediaDevices.getUserMedia({audio: false, video: createVideoConstraints(newWebcamConstraints)})) // rejected if user denies!
 						.getVideoTracks();
@@ -554,23 +556,23 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			if (kind === 'audio') {
 				this.$audioBitrateDisplay.innerText = bitRate + "kb/s";
 				this.connectionStatus.audioBitrate = bitRate;
-				this.updateStateCssClass();
+				this.updateStateCssClasses();
 			} else if (kind == "video") {
 				this.$videoBitrateDisplay.innerText = bitRate + "kb/s";
 				this.connectionStatus.videoBitrate = bitRate;
-				this.updateStateCssClass();
+				this.updateStateCssClasses();
 			}
 		});
 		conferenceClient.on('connectionstatechange', (event) => {
 			let state: RTCPeerConnectionState = event.state;
 			this.connectionStatus.rtcPeerConnectionState = state;
-			this.updateStateCssClass();
+			this.updateStateCssClasses();
 			this.onConnectionStateChanged.fire({connected: state === 'connected'});
 		});
 	}
 
 
-	private updateVideoVisibilities() {
+	private updateVideoVisibility() {
 		if (this.isVideoShown() || this._config.noVideoImageUrl == null) {
 			this.$image.classList.add('hidden');
 			this.$video.classList.remove('hidden');

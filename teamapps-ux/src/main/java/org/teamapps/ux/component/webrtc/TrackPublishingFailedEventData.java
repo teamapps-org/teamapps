@@ -23,4 +23,13 @@ public class TrackPublishingFailedEventData {
 	public String getErrorMessage() {
 		return errorMessage;
 	}
+
+	@Override
+	public String toString() {
+		return "TrackPublishingFailedEventData{" +
+				"audio=" + audio +
+				", video=" + video +
+				", errorMessage='" + errorMessage + '\'' +
+				'}';
+	}
 }
