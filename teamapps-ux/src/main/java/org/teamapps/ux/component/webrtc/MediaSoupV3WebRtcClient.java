@@ -50,8 +50,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	public final Event<MediaRetrievalFailureReason> onSourceMediaTrackRetrievalFailed = new Event<>();
 	public final Event<SourceMediaTrackType> onSourceMediaTrackEnded = new Event<>();
-	public final Event<PublishedMediaTrackType> onTrackPublishingSuccessful = new Event<>();
-	public final Event<TrackPublishingFailedEvent> onTrackPublishingFailed = new Event<>();
+	public final Event<TrackPublishingSuccessfulEventData> onTrackPublishingSuccessful = new Event<>();
+	public final Event<TrackPublishingFailedEventData> onTrackPublishingFailed = new Event<>();
 
 	public final Event<WebRtcStreamType> onPublishedStreamEnded = new Event<>();
 
@@ -136,12 +136,12 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			}
 			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_TRACK_PUBLISHING_SUCCESSFUL: {
 				UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent) event;
-				this.onTrackPublishingSuccessful.fire(PublishedMediaTrackType.valueOf(e.getTrackType().name()));
+				this.onTrackPublishingSuccessful.fire(new TrackPublishingSuccessfulEventData(e.getAudio(), e.getVideo()));
 				break;
 			}
 			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_TRACK_PUBLISHING_FAILED: {
 				UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent) event;
-				this.onTrackPublishingFailed.fire(new TrackPublishingFailedEvent(PublishedMediaTrackType.valueOf(e.getTrackType().name()), e.getErrorMessage()));
+				this.onTrackPublishingFailed.fire(new TrackPublishingFailedEventData(e.getAudio(), e.getVideo(), e.getErrorMessage()));
 				break;
 			}
 			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_SUBSCRIBING_SUCCESSFUL: {

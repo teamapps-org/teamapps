@@ -81,8 +81,8 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 	event sourceMediaTrackRetrievalFailed(UiMediaRetrievalFailureReason reason);
 	event sourceMediaTrackEnded(UiSourceMediaTrackType trackType); // otherwise cam/mic
 
-	event trackPublishingSuccessful(UiPublishedMediaTrackType trackType);
-	event trackPublishingFailed(UiPublishedMediaTrackType trackType, String errorMessage);
+	event trackPublishingSuccessful(boolean audio, boolean video);
+	event trackPublishingFailed(boolean audio, boolean video, String errorMessage);
 
 	event connectionStateChanged(boolean connected);
 
@@ -120,10 +120,6 @@ enum WebRtcPublishingFailureReason {
 
 enum UiSourceMediaTrackType {
 	CAM, MIC, SCREEN;
-}
-
-enum UiPublishedMediaTrackType {
-	AUDIO, VIDEO;
 }
 
 enum UiMediaRetrievalFailureReason {

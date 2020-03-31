@@ -136,11 +136,7 @@
     top: 0;
   }
 
-  &.state-idle {
-    .spinner-wrapper {
-      display: none;
-    }
-  }
+  &.state-idle,
   &.state-streaming {
     .spinner-wrapper {
       display: none;
@@ -150,8 +146,5 @@
     .spinner-wrapper {
       // default display
     }
-  }
-  &.state-error .video {
-    filter: grayscale(100%) blur(10px) brightness(50%);
   }
 }
