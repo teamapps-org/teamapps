@@ -543,7 +543,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					} else if (this.screenTrack != null) {
 						await this.conferenceClient.addTrack(this.screenTrack);
 					}
-					this.onTrackPublishingSuccessful.fire({video: true, audio: false});
+					if (this.videoTrackMixer != null || this.webcamTrack != null || this.screenTrack != null) {
+						this.onTrackPublishingSuccessful.fire({video: true, audio: false});
+					}
 				} catch (e) {
 					this.onTrackPublishingFailed.fire({video: true, audio: false, errorMessage: e.toString()})
 				}
