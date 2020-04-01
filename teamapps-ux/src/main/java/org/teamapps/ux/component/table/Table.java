@@ -665,11 +665,12 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				cacheResponse = clientRecordCache.addRecords(records);
 			}
 
+			List<UiTableClientRecord> results = cacheResponse.getAndClearResult();
 			if (!transientChangesByRecordAndPropertyName.isEmpty()) {
-				cacheResponse.getAndClearResult().forEach(uiRecord -> applyTransientChangesToClientRecord(uiRecord));
+				results.forEach(uiRecord -> applyTransientChangesToClientRecord(uiRecord));
 			}
 
-			UiTable.AddDataCommand addDataCommand = new UiTable.AddDataCommand(getId(), startIndex, cacheResponse.getAndClearResult(), totalCount, sortField, sortDirection.toUiSortDirection(), clear);
+			UiTable.AddDataCommand addDataCommand = new UiTable.AddDataCommand(getId(), startIndex, results, totalCount, sortField, sortDirection.toUiSortDirection(), clear);
 			LOGGER.debug("Sending table data to client: start: " + addDataCommand.getStartRowIndex() + "; length: " + addDataCommand.getData().size());
 			getSessionContext().queueCommand(
 					addDataCommand,
