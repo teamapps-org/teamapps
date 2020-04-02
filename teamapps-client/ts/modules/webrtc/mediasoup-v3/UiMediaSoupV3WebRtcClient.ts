@@ -57,6 +57,7 @@ import {MixSizingInfo, TrackWithMixSizingInfo, VideoTrackMixer} from "../VideoTr
 import {determineVideoSize} from "../MultiStreamsMixer";
 import {UiMediaRetrievalFailureReason} from "../../../generated/UiMediaRetrievalFailureReason";
 import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType";
+import {AudioTrackMixPlayer} from "./AudioTrackMixPlayer";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent(this);
@@ -86,6 +87,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private $icons: HTMLImageElement;
 	private $caption: HTMLElement;
 	private $spinner: HTMLElement;
+	private $unmuteButtonWrapper: HTMLElement;
 
 	private contextMenu: ContextMenu;
 	private conferenceClient: ConferenceApi;
@@ -95,6 +97,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private screenTrack: MediaStreamTrack;
 	private videoTrackMixer: VideoTrackMixer;
 	private targetStream: MediaStream;
+
+	private static audioTrackMixPlayer: AudioTrackMixPlayer = new AudioTrackMixPlayer();
 
 	private connectionStatus: {
 		rtcPeerConnectionState: RTCPeerConnectionState | null,
@@ -125,6 +129,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		<div class="spinner-wrapper">
 			<div class="spinner teamapps-spinner"></div>
 		</div>
+		<div class="unmute-button-wrapper" style="z-index: 2; position: absolute; top: 0; left: 0">
+			 <img class="unmute-button" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiIHdpZHRoPSIxMDAwMHB4IiBoZWlnaHQ9IjEwMDAwcHgiPjxwYXRoIGQ9Ik0xNi41IDEyYzAtMS43Ny0xLjAyLTMuMjktMi41LTQuMDN2Mi4yMWwyLjQ1IDIuNDVjLjAzLS4yLjA1LS40MS4wNS0uNjN6bTIuNSAwYzAgLjk0LS4yIDEuODItLjU0IDIuNjRsMS41MSAxLjUxQzIwLjYzIDE0LjkxIDIxIDEzLjUgMjEgMTJjMC00LjI4LTIuOTktNy44Ni03LTguNzd2Mi4wNmMyLjg5Ljg2IDUgMy41NCA1IDYuNzF6TTQuMjcgM0wzIDQuMjcgNy43MyA5SDN2Nmg0bDUgNXYtNi43M2w0LjI1IDQuMjVjLS42Ny41Mi0xLjQyLjkzLTIuMjUgMS4xOHYyLjA2YzEuMzgtLjMxIDIuNjMtLjk1IDMuNjktMS44MUwxOS43MyAyMSAyMSAxOS43M2wtOS05TDQuMjcgM3pNMTIgNEw5LjkxIDYuMDkgMTIgOC4xOFY0eiIvPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4="></img>
+		</div>
 	</div>
 	<div class="caption"></div>
 	<div class="profile hidden">.</div>
@@ -139,6 +146,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.$icons = this.$main.querySelector(":scope .icons");
 		this.$caption = this.$main.querySelector(":scope .caption");
 		this.$spinner = this.$main.querySelector(":scope .spinner");
+		this.$unmuteButtonWrapper = this.$main.querySelector(":scope .unmute-button-wrapper");
 
 		this.contextMenu = new ContextMenu();
 
@@ -156,7 +164,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		});
 		this.$video.addEventListener("pause", ev => {
 			console.log("pause");
-			this.$video.play(); // happens when the video player gets detached under android while switching views
+			setTimeout(() => {
+				this.$video.play(); // happens when the video player gets detached under android while switching views
+			}, 1000);
 		});
 		["progress", "timeupdate"].forEach(eventName => {
 			this.$video.addEventListener(eventName, ev => {
@@ -169,6 +179,14 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				console.log(eventName);
 			});
 		});
+
+		UiMediaSoupV3WebRtcClient.audioTrackMixPlayer.onResumeSuccessful.addListener(() => this.$unmuteButtonWrapper.classList.add("hidden"));
+		this.$main.querySelector(":scope .unmute-button").addEventListener('click', (event) => {
+			event.stopPropagation();
+			UiMediaSoupV3WebRtcClient.audioTrackMixPlayer.tryResume();
+		});
+
+		UiMediaSoupV3WebRtcClient.audioTrackMixPlayer.tryResume();
 
 		this.update(config);
 	}
@@ -194,6 +212,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		oldStateClasses.filter(oldClass => newStateClasses.indexOf(oldClass) === -1).forEach(oldClass => this.$main.classList.remove(oldClass));
 		newStateClasses.filter(newClass => oldStateClasses.indexOf(newClass) === -1).forEach(newClass => this.$main.classList.add(newClass));
+
+		this.$unmuteButtonWrapper.classList.toggle("hidden", !this._config.playbackParameters || UiMediaSoupV3WebRtcClient.audioTrackMixPlayer.getAudioContextState() === "running");
 	}
 
 	async stop() {
@@ -302,30 +322,29 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					this.$video.srcObject = mediaStream;
 
 					const playVideoElement = async () => {
-						this.$video.muted = false;
-						await this.$video.play().catch(error => {
-							console.error('Unmuted autoplay failed!');
-							this.onSubscriptionPlaybackFailed.fire(error.toString());
-							this.$video.muted = true;
-							this.$video.play().then(() => {
-								console.log('autoplay successful, but only MUTED! TODO handle this gracefully!');
-							});
-						});
+						await this.$video.play();
 					};
 					if (Utils.isSafari) {
-						const onStreamChange = () => {
-							this.$video.srcObject = new MediaStream(mediaStream.getTracks());
-							playVideoElement();
-						};
-						mediaStream.addEventListener('addtrack', onStreamChange);
-						mediaStream.addEventListener('removetrack', onStreamChange);
+						["addtrack", "removetrack"].forEach(eventType => {
+							this.conferenceClient.on(eventType, (trackEvent: MediaStreamTrackEvent) => {
+								console.log(eventType);
+								this.$video.srcObject = new MediaStream(mediaStream.getTracks());
+								playVideoElement();
+							});
+						});
 					} else if (Utils.isFirefox) {
-						this.$video.addEventListener('pause', playVideoElement)
+						this.$video.addEventListener('pause', playVideoElement); // pauses video when detaching this element
 					}
+					this.conferenceClient.on('addtrack', (trackEvent: MediaStreamTrackEvent) => {
+						if (trackEvent.track.kind == 'audio') {
+							console.log("Adding audio track to mix.");
+							UiMediaSoupV3WebRtcClient.audioTrackMixPlayer.addAudioTrack(trackEvent.track);
+						}
+					});
 					await playVideoElement();
 					this.onSubscribingSuccessful.fire({});
 				} catch (error) {
-					console.error("Error while starting playback!", error);
+					console.error("Error while starting playback!", error, error.stack);
 					this.onSubscribingFailed.fire({errorMessage: error.toString()});
 				}
 			}
@@ -354,7 +373,6 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			if (newParams != null) {
 				this.targetStream = new MediaStream();
 				this.$video.srcObject = this.targetStream;
-				this.$video.muted = true;
 				try {
 					this.conferenceClient = new ConferenceApi({
 						stream: newParams.uid,
@@ -556,11 +574,12 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private registerStatuslListeners(conferenceClient: ConferenceApi) {
 		conferenceClient.on('bitRate', ({bitRate, kind}) => {
 			if (kind === 'audio') {
-				this.$audioBitrateDisplay.innerText = bitRate + "kb/s";
+				this.$audioBitrateDisplay.innerText = (bitRate / 1000).toFixed(1) + "kb/s";
 				this.connectionStatus.audioBitrate = bitRate;
 				this.updateStateCssClasses();
+				console.log(`audio bitrate: ${bitRate}`);
 			} else if (kind == "video") {
-				this.$videoBitrateDisplay.innerText = bitRate + "kb/s";
+				this.$videoBitrateDisplay.innerText = (bitRate / 1000).toFixed(1) + "kb/s";
 				this.connectionStatus.videoBitrate = bitRate;
 				this.updateStateCssClasses();
 			}
