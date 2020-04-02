@@ -321,19 +321,16 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					const mediaStream = await this.conferenceClient.subscribe();
 					this.$video.srcObject = mediaStream;
 
-					const playVideoElement = async () => {
-						await this.$video.play();
-					};
 					if (Utils.isSafari) {
 						["addtrack", "removetrack"].forEach(eventType => {
 							this.conferenceClient.on(eventType, (trackEvent: MediaStreamTrackEvent) => {
 								console.log(eventType);
 								this.$video.srcObject = new MediaStream(mediaStream.getTracks());
-								playVideoElement();
+								this.$video.play();
 							});
 						});
 					} else if (Utils.isFirefox) {
-						this.$video.addEventListener('pause', playVideoElement); // pauses video when detaching this element
+						this.$video.addEventListener('pause', () => this.$video.play()); // pauses video when detaching this element
 					}
 					this.conferenceClient.on('addtrack', (trackEvent: MediaStreamTrackEvent) => {
 						if (trackEvent.track.kind == 'audio') {
@@ -341,8 +338,17 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 							UiMediaSoupV3WebRtcClient.audioTrackMixPlayer.addAudioTrack(trackEvent.track);
 						}
 					});
-					await playVideoElement();
-					this.onSubscribingSuccessful.fire({});
+					
+					const playPromise = this.$video.play();
+					if (playPromise != null ) {
+						playPromise.then(() => {
+							this.onSubscribingSuccessful.fire({});
+						}).catch((e) => {
+							this.onSubscribingFailed.fire({errorMessage: e.toString()});
+						})
+					} else {
+						this.onSubscribingSuccessful.fire({});
+					}
 				} catch (error) {
 					console.error("Error while starting playback!", error, error.stack);
 					this.onSubscribingFailed.fire({errorMessage: error.toString()});
@@ -441,7 +447,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					});
 					addVoiceActivityDetection(this.audioTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
 				} catch (e) {
-					console.error("Could not get user media: microphone!", e);
+					console.error("Could not get user media: microphone!" + (location.protocol === "http:" ? " Probably due to plain HTTP (no encryption)." : ""), e);
 					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
 				}
 			}
