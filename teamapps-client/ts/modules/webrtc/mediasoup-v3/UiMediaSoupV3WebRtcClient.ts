@@ -321,15 +321,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					const mediaStream = await this.conferenceClient.subscribe();
 					this.$video.srcObject = mediaStream;
 
-					if (Utils.isSafari) {
-						["addtrack", "removetrack"].forEach(eventType => {
-							this.conferenceClient.on(eventType, (trackEvent: MediaStreamTrackEvent) => {
-								console.log(eventType);
-								this.$video.srcObject = new MediaStream(mediaStream.getTracks());
-								this.$video.play();
-							});
-						});
-					} else if (Utils.isFirefox) {
+					this.makeSafariVideoElementObserveMediaStreamTracks(mediaStream);
+					if (Utils.isFirefox) {
 						this.$video.addEventListener('pause', () => this.$video.play()); // pauses video when detaching this element
 					}
 					this.conferenceClient.on('addtrack', (trackEvent: MediaStreamTrackEvent) => {
@@ -338,9 +331,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 							UiMediaSoupV3WebRtcClient.audioTrackMixPlayer.addAudioTrack(trackEvent.track);
 						}
 					});
-					
+
 					const playPromise = this.$video.play();
-					if (playPromise != null ) {
+					if (playPromise != null) {
 						playPromise.then(() => {
 							this.onSubscribingSuccessful.fire({});
 						}).catch((e) => {
@@ -359,6 +352,18 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				console.log("updatePlayback() --> needs updateKinds()", newParams);
 				this.conferenceClient.updateKinds([...(newParams.audio ? ["audio"] : []), ...(newParams.video ? ["video"] : [])] as MediaKind[]);
 			}
+		}
+	}
+
+	private makeSafariVideoElementObserveMediaStreamTracks(mediaStream: MediaStream) {
+		if (Utils.isSafari) {
+			["addtrack", "removetrack"].forEach(eventType => {
+				this.conferenceClient.on(eventType, (trackEvent: MediaStreamTrackEvent) => {
+					console.log(eventType);
+					this.$video.srcObject = new MediaStream(mediaStream.getTracks());
+					this.$video.play();
+				});
+			});
 		}
 	}
 
@@ -388,6 +393,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					});
 					this.registerStatuslListeners(this.conferenceClient);
 					await this.conferenceClient.publish(this.targetStream);
+					this.makeSafariVideoElementObserveMediaStreamTracks(this.targetStream);
 				} catch (e) {
 					console.error('Error while publishing!', e);
 					if (e.statusCode) {
