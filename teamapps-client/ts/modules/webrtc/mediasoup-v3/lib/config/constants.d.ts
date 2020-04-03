@@ -22,7 +22,9 @@ export declare enum ACTION {
     CONSUMERS_STATS = "consumersStats",
     TRANSPORT_STATS = "transportStats",
     PIPE_TO_REMOTE_PRODUCER = "pipeToRemoteProducer",
-    WORKER_LOAD = "workerLoad"
+    PIPE_FROM_REMOTE_PRODUCER = "pipeFromRemoteProducer",
+    WORKER_LOAD = "workerLoad",
+    NUM_WORKERS = "numWorkers"
 }
 export declare enum PATH {
     RECORDINGS = "recordings",
@@ -37,7 +39,8 @@ export declare enum ERROR {
     INVALID_PRODUCER = 531,
     INVALID_CONSUMER = 532,
     INVALID_STREAM = 533,
-    INVALID_OPERATION = 534
+    INVALID_OPERATION = 534,
+    INVALID_WORKER = 535
 }
 export declare enum API_OPERATION {
     SUBSCRIBE = 0,

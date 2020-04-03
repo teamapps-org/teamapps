@@ -61,10 +61,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var constants_1 = require("../../config/constants");
 var axios_1 = __importDefault(require("axios"));
 var MediasoupRestApi = /** @class */ (function () {
-    function MediasoupRestApi(url, token) {
+    function MediasoupRestApi(url, token, log) {
         this.timeouts = [];
         this.url = url;
         this.token = token;
+        this.log = log || console.log;
     }
     MediasoupRestApi.prototype.resumeConsumer = function (json) {
         return __awaiter(this, void 0, void 0, function () {
@@ -288,11 +289,33 @@ var MediasoupRestApi = /** @class */ (function () {
             });
         });
     };
+    MediasoupRestApi.prototype.numWorkers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.NUM_WORKERS)];
+                    case 1: return [2 /*return*/, (_a.sent())];
+                }
+            });
+        });
+    };
     MediasoupRestApi.prototype.pipeToRemoteProducer = function (json) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PIPE_TO_REMOTE_PRODUCER, json)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.pipeFromRemoteProducer = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PIPE_FROM_REMOTE_PRODUCER, json)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -352,7 +375,7 @@ var MediasoupRestApi = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('sent message', action, JSON.stringify(json));
+                        this.log('sent message', action, JSON.stringify(json));
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 8]);
@@ -361,7 +384,7 @@ var MediasoupRestApi = /** @class */ (function () {
                             })];
                     case 2:
                         data = (_a.sent()).data;
-                        console.log('got message', action, JSON.stringify(data));
+                        this.log('got message', action, JSON.stringify(data));
                         return [2 /*return*/, data];
                     case 3:
                         e_1 = _a.sent();

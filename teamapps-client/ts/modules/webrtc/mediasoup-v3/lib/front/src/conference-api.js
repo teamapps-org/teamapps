@@ -59,6 +59,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 /*-
  * ========================LICENSE_START=================================
@@ -83,6 +90,7 @@ var constants_1 = require("../../config/constants");
 var events_1 = require("events");
 var mediasoup_rest_api_1 = require("./mediasoup-rest-api");
 var mediasoup_client_1 = require("mediasoup-client");
+var debug = __importStar(require("debug"));
 var ConferenceApi = /** @class */ (function (_super) {
     __extends(ConferenceApi, _super);
     function ConferenceApi(configs) {
@@ -90,12 +98,13 @@ var ConferenceApi = /** @class */ (function (_super) {
         _this.connectors = new Map();
         _this.layers = new Map();
         _this.timeouts = [];
-        _this.configs = __assign({ url: location.protocol + "//" + location.host, kinds: ['video', 'audio'], maxIncomingBitrate: 0, timeout: {
+        _this.configs = __assign({ url: location.protocol + "//" + location.host + "/0", kinds: ['video', 'audio'], maxIncomingBitrate: 0, timeout: {
                 stats: 1000,
                 transport: 3000,
                 consumer: 5000
             } }, configs);
-        _this.api = new mediasoup_rest_api_1.MediasoupRestApi(_this.configs.url, _this.configs.token);
+        _this.log = debug.debug("conference-api [" + _this.configs.stream + "]:");
+        _this.api = new mediasoup_rest_api_1.MediasoupRestApi(_this.configs.url, _this.configs.token, _this.log);
         _this.device = new mediasoup_client_1.Device();
         return _this;
     }
@@ -160,7 +169,7 @@ var ConferenceApi = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('addTrack', track);
+                        this.log('addTrack', track);
                         if (!(this.operation === constants_1.API_OPERATION.PUBLISH && this.mediaStream)) return [3 /*break*/, 2];
                         this.mediaStream.addTrack(track);
                         this.emit("addtrack", new MediaStreamTrackEvent("addtrack", { track: track }));
@@ -177,10 +186,9 @@ var ConferenceApi = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var consumer;
             return __generator(this, function (_a) {
-                console.log('removeTrack', track);
+                this.log('removeTrack', track);
                 if (this.operation === constants_1.API_OPERATION.PUBLISH && this.mediaStream) {
                     this.mediaStream.removeTrack(track);
-                    console.log('errorAutoPlayCallback OK');
                     this.emit("removetrack", new MediaStreamTrackEvent("removetrack", { track: track }));
                     consumer = this.connectors.get(track.kind);
                     if (consumer) {
@@ -215,7 +223,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                 switch (_b.label) {
                     case 0:
                         if (!(this.operation === constants_1.API_OPERATION.SUBSCRIBE)) return [3 /*break*/, 2];
-                        console.log('updateKinds', kinds);
+                        this.log('updateKinds', kinds);
                         oldKinds = this.configs.kinds;
                         this.configs.kinds = kinds;
                         for (_i = 0, oldKinds_1 = oldKinds; _i < oldKinds_1.length; _i++) {
@@ -446,12 +454,8 @@ var ConferenceApi = /** @class */ (function (_super) {
                     case 1:
                         _a.trys.push([1, 7, , 11]);
                         consumeData = { rtpCapabilities: rtpCapabilities, stream: stream, kind: _kind, transportId: transport.id };
-                        if (this.configs.originUrl && this.configs.url !== this.configs.originUrl) {
-                            consumeData.origin = {
-                                token: this.configs.token,
-                                to: this.configs.url,
-                                from: this.configs.originUrl
-                            };
+                        if (this.configs.origin && this.configs.url !== this.configs.origin.url) {
+                            consumeData.origin = ConferenceApi.originOptions(this.configs.url, this.configs.token, this.configs.origin);
                         }
                         return [4 /*yield*/, this.api.consume(consumeData)];
                     case 2:
@@ -512,7 +516,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                                             deadTime++;
                                             if (deadTime > (_this.configs.timeout.consumer / _this.configs.timeout.stats)) {
                                                 try {
-                                                    console.log('restart by no stats');
+                                                    _this.log('restart by no stats');
                                                     if (lastBytes) {
                                                         target.close();
                                                         target.emit('close');
@@ -751,6 +755,20 @@ var ConferenceApi = /** @class */ (function (_super) {
                 }
             });
         });
+    };
+    ConferenceApi.originOptions = function (url, token, origin) {
+        if (origin.token) {
+            token = origin.token;
+        }
+        var data = {
+            token: token,
+            to: url,
+            from: origin.url
+        };
+        if (origin.origin && origin.origin.url !== origin.url) {
+            data.origin = ConferenceApi.originOptions(origin.url, token, origin.origin);
+        }
+        return data;
     };
     return ConferenceApi;
 }(events_1.EventEmitter));

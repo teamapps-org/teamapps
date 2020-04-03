@@ -34,7 +34,7 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 	command update(UiMediaSoupV2WebRtcClient config);
 	command setActive(boolean active);
 	command publish(UiMediaSoupPublishingParameters parameters);
-	command playback(UiMediaSoupPlaybackParameters parameters);
+	command playback(UiMediaSoupV2PlaybackParameters parameters);
 	command stop();
 	command setContextMenuContent(int requestId, UiComponent* component);
 	command closeContextMenu(int requestId);
@@ -142,8 +142,8 @@ enum UiMulticastPlaybackProfile {
 }
 
 class UiMediaSoupPublishingParameters {
-	String serverAddress;
-	String uid;
+	String url;
+	String streamUuid;
 	String token;
 
 	UiAudioTrackConstraints audioConstraints;
@@ -155,10 +155,27 @@ class UiMediaSoupPublishingParameters {
 	long maxBitrate;
 }
 
-class UiMediaSoupPlaybackParameters {
-	String serverAddress;
-	String uid;
+class UiMediaSoupV2PlaybackParameters {
+	String url;
+	String streamUuid;
 	String token;
+
+	boolean audio;
+	boolean video;
+
+	long minBitrate;
+	long maxBitrate;
+}
+
+class UiMediaSoupServerChain {
+	required String url;
+    required String token;
+    UiMediaSoupServerChain origin;
+}
+
+class UiMediaSoupPlaybackParameters {
+	String streamUuid;
+	UiMediaSoupServerChain serverChain;
 
 	boolean audio;
 	boolean video;

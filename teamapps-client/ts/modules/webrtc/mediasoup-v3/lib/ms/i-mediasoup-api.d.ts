@@ -1,6 +1,6 @@
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { ACTION } from '../config/constants';
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, StartRecordingRequest, StatsInput, StatsOutput, StopRecordingRequest, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData } from '../front/src/client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, StartRecordingRequest, StatsInput, StatsOutput, StopRecordingRequest, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData } from '../front/src/client-interfaces';
 export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} | void>> {
     [ACTION.RESUME_CONSUMER](json: ConsumerData): Promise<void>;
     [ACTION.PAUSE_CONSUMER](json: ConsumerData): Promise<void>;
@@ -24,5 +24,7 @@ export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} |
     [ACTION.CONSUMERS_STATS](json: StatsInput): Promise<StatsOutput>;
     [ACTION.PRODUCERS_STATS](json: StatsInput): Promise<StatsOutput>;
     [ACTION.PIPE_TO_REMOTE_PRODUCER](json: PipeToRemoteProducerRequest): Promise<void>;
+    [ACTION.PIPE_FROM_REMOTE_PRODUCER](json: PipeFromRemoteProducerRequest): Promise<void>;
     [ACTION.WORKER_LOAD](): Promise<WorkerLoadData>;
+    [ACTION.NUM_WORKERS](): Promise<NumWorkersData>;
 }

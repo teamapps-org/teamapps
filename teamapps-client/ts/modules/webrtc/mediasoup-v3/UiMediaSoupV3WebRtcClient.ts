@@ -303,8 +303,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.updateStateCssClasses();
 
 		const oldParams = this._config.playbackParameters;
-		const needsReset = oldParams?.serverAddress != newParams?.serverAddress
-			|| oldParams?.uid != newParams?.uid;
+		const needsReset = !deepEquals(oldParams?.serverChain, newParams?.serverChain)
+			|| oldParams?.streamUuid != newParams?.streamUuid;
 		if (needsReset) {
 			console.log("updatePlayback() --> needsReset", newParams);
 			await this.stop();
@@ -312,9 +312,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			if (newParams != null) {
 				try {
 					this.conferenceClient = new ConferenceApi({
-						stream: newParams.uid,
-						token: newParams.token,
-						url: newParams.serverAddress,
+						stream: newParams.streamUuid,
+						token: newParams.serverChain.token,
+						url: newParams.serverChain.url,
+						origin: newParams.serverChain.origin,
 						kinds: [...(newParams.audio ? ["audio"] : []), ...(newParams.video ? ["video"] : [])] as MediaKind[]
 					});
 					this.registerStatuslListeners(this.conferenceClient);
@@ -374,8 +375,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		let oldParams = this._config.publishingParameters;
 
-		const needsReset = oldParams?.serverAddress != newParams?.serverAddress
-			|| oldParams?.uid != newParams?.uid
+		const needsReset = oldParams?.url != newParams?.url
+			|| oldParams?.streamUuid != newParams?.streamUuid
 			|| oldParams?.simulcast !== newParams?.simulcast;
 
 		if (needsReset) {
@@ -386,9 +387,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				this.$video.srcObject = this.targetStream;
 				try {
 					this.conferenceClient = new ConferenceApi({
-						stream: newParams.uid,
+						stream: newParams.streamUuid,
 						token: newParams.token,
-						url: newParams.serverAddress,
+						url: newParams.url,
 						simulcast: newParams.simulcast
 					});
 					this.registerStatuslListeners(this.conferenceClient);
