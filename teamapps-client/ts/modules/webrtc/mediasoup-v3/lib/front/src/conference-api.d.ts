@@ -30,6 +30,7 @@ export declare class ConferenceApi extends EventEmitter implements IConferenceAp
     private readonly device;
     private readonly connectors;
     private readonly layers;
+    private readonly log;
     private operation;
     private transport;
     private mediaStream?;
@@ -56,5 +57,6 @@ export declare class ConferenceApi extends EventEmitter implements IConferenceAp
     private closeConnectors;
     private restartAll;
     private getTransport;
+    private static originOptions;
 }
 export {};

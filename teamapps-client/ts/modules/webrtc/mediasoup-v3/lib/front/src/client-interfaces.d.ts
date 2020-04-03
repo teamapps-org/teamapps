@@ -38,6 +38,7 @@ export interface ConsumeRequestOriginData {
     token: string;
     from: string;
     to: string;
+    origin?: ConsumeRequestOriginData;
 }
 export interface ConsumeRequest {
     origin?: ConsumeRequestOriginData;
@@ -51,6 +52,11 @@ export interface PipeToRemoteProducerRequest {
     kind: MediaKind;
     stream: string;
 }
+export interface PipeFromRemoteProducerRequest extends ProducerData {
+    kind: MediaKind;
+    stream: string;
+    workerId: number;
+}
 export interface PipeTransportData {
     pipeTransportId: string;
     ip: string;
@@ -61,6 +67,9 @@ export interface PipeTransportConnectData extends PipeTransportData {
 }
 export interface WorkerLoadData {
     currentLoad: number;
+}
+export interface NumWorkersData {
+    num: number;
 }
 export interface StatsInput {
     ids: string[];
@@ -111,9 +120,14 @@ export interface StopRecordingData extends StopRecordingRequest {
 export interface StreamFileRequest extends StopRecordingRequest {
     filePath: string;
 }
+export interface ConferenceInputOrigin {
+    url: string;
+    origin?: ConferenceInputOrigin;
+    token?: string;
+}
 export interface ConferenceInput {
     url?: string;
-    originUrl?: string;
+    origin?: ConferenceInputOrigin;
     stream: string;
     token: string;
     simulcast?: boolean;

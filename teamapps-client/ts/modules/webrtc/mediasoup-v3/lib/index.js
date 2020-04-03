@@ -45,7 +45,9 @@ var ACTION;
     ACTION["CONSUMERS_STATS"] = "consumersStats";
     ACTION["TRANSPORT_STATS"] = "transportStats";
     ACTION["PIPE_TO_REMOTE_PRODUCER"] = "pipeToRemoteProducer";
+    ACTION["PIPE_FROM_REMOTE_PRODUCER"] = "pipeFromRemoteProducer";
     ACTION["WORKER_LOAD"] = "workerLoad";
+    ACTION["NUM_WORKERS"] = "numWorkers";
 })(ACTION = exports.ACTION || (exports.ACTION = {}));
 var PATH;
 (function (PATH) {
@@ -63,6 +65,7 @@ var ERROR;
     ERROR[ERROR["INVALID_CONSUMER"] = 532] = "INVALID_CONSUMER";
     ERROR[ERROR["INVALID_STREAM"] = 533] = "INVALID_STREAM";
     ERROR[ERROR["INVALID_OPERATION"] = 534] = "INVALID_OPERATION";
+    ERROR[ERROR["INVALID_WORKER"] = 535] = "INVALID_WORKER";
 })(ERROR = exports.ERROR || (exports.ERROR = {}));
 var API_OPERATION;
 (function (API_OPERATION) {
@@ -132,6 +135,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 /*-
  * ========================LICENSE_START=================================
@@ -156,6 +166,7 @@ var constants_1 = require("../../config/constants");
 var events_1 = require("events");
 var mediasoup_rest_api_1 = require("./mediasoup-rest-api");
 var mediasoup_client_1 = require("mediasoup-client");
+var debug = __importStar(require("debug"));
 var ConferenceApi = /** @class */ (function (_super) {
     __extends(ConferenceApi, _super);
     function ConferenceApi(configs) {
@@ -163,12 +174,13 @@ var ConferenceApi = /** @class */ (function (_super) {
         _this.connectors = new Map();
         _this.layers = new Map();
         _this.timeouts = [];
-        _this.configs = __assign({ url: location.protocol + "//" + location.host, kinds: ['video', 'audio'], maxIncomingBitrate: 0, timeout: {
+        _this.configs = __assign({ url: location.protocol + "//" + location.host + "/0", kinds: ['video', 'audio'], maxIncomingBitrate: 0, timeout: {
                 stats: 1000,
                 transport: 3000,
                 consumer: 5000
             } }, configs);
-        _this.api = new mediasoup_rest_api_1.MediasoupRestApi(_this.configs.url, _this.configs.token);
+        _this.log = debug.debug("conference-api [" + _this.configs.stream + "]:");
+        _this.api = new mediasoup_rest_api_1.MediasoupRestApi(_this.configs.url, _this.configs.token, _this.log);
         _this.device = new mediasoup_client_1.Device();
         return _this;
     }
@@ -233,7 +245,7 @@ var ConferenceApi = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('addTrack', track);
+                        this.log('addTrack', track);
                         if (!(this.operation === constants_1.API_OPERATION.PUBLISH && this.mediaStream)) return [3 /*break*/, 2];
                         this.mediaStream.addTrack(track);
                         this.emit("addtrack", new MediaStreamTrackEvent("addtrack", { track: track }));
@@ -250,10 +262,9 @@ var ConferenceApi = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var consumer;
             return __generator(this, function (_a) {
-                console.log('removeTrack', track);
+                this.log('removeTrack', track);
                 if (this.operation === constants_1.API_OPERATION.PUBLISH && this.mediaStream) {
                     this.mediaStream.removeTrack(track);
-                    console.log('errorAutoPlayCallback OK');
                     this.emit("removetrack", new MediaStreamTrackEvent("removetrack", { track: track }));
                     consumer = this.connectors.get(track.kind);
                     if (consumer) {
@@ -288,7 +299,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                 switch (_b.label) {
                     case 0:
                         if (!(this.operation === constants_1.API_OPERATION.SUBSCRIBE)) return [3 /*break*/, 2];
-                        console.log('updateKinds', kinds);
+                        this.log('updateKinds', kinds);
                         oldKinds = this.configs.kinds;
                         this.configs.kinds = kinds;
                         for (_i = 0, oldKinds_1 = oldKinds; _i < oldKinds_1.length; _i++) {
@@ -519,12 +530,8 @@ var ConferenceApi = /** @class */ (function (_super) {
                     case 1:
                         _a.trys.push([1, 7, , 11]);
                         consumeData = { rtpCapabilities: rtpCapabilities, stream: stream, kind: _kind, transportId: transport.id };
-                        if (this.configs.originUrl && this.configs.url !== this.configs.originUrl) {
-                            consumeData.origin = {
-                                token: this.configs.token,
-                                to: this.configs.url,
-                                from: this.configs.originUrl
-                            };
+                        if (this.configs.origin && this.configs.url !== this.configs.origin.url) {
+                            consumeData.origin = ConferenceApi.originOptions(this.configs.url, this.configs.token, this.configs.origin);
                         }
                         return [4 /*yield*/, this.api.consume(consumeData)];
                     case 2:
@@ -585,7 +592,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                                             deadTime++;
                                             if (deadTime > (_this.configs.timeout.consumer / _this.configs.timeout.stats)) {
                                                 try {
-                                                    console.log('restart by no stats');
+                                                    _this.log('restart by no stats');
                                                     if (lastBytes) {
                                                         target.close();
                                                         target.emit('close');
@@ -825,12 +832,33 @@ var ConferenceApi = /** @class */ (function (_super) {
             });
         });
     };
+    ConferenceApi.originOptions = function (url, token, origin) {
+        if (origin.token) {
+            token = origin.token;
+        }
+        var data = {
+            token: token,
+            to: url,
+            from: origin.url
+        };
+        if (origin.origin && origin.origin.url !== origin.url) {
+            data.origin = ConferenceApi.originOptions(origin.url, token, origin.origin);
+        }
+        return data;
+    };
     return ConferenceApi;
 }(events_1.EventEmitter));
 exports.ConferenceApi = ConferenceApi;
 
-},{"../../config/constants":1,"./mediasoup-rest-api":4,"events":37,"mediasoup-client":64}],3:[function(require,module,exports){
+},{"../../config/constants":1,"./mediasoup-rest-api":4,"debug":35,"events":37,"mediasoup-client":64}],3:[function(require,module,exports){
 "use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 /*-
  * ========================LICENSE_START=================================
@@ -854,11 +882,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("./utils");
 var conference_api_1 = require("./conference-api");
 var constants_1 = require("../../config/constants");
+var debug = __importStar(require("debug"));
+window.debug = debug;
 window.Utils = utils_1.Utils;
 window.ConferenceApi = conference_api_1.ConferenceApi;
 window.ERROR = constants_1.ERROR;
 
-},{"../../config/constants":1,"./conference-api":2,"./utils":5}],4:[function(require,module,exports){
+},{"../../config/constants":1,"./conference-api":2,"./utils":5,"debug":35}],4:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -922,10 +952,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var constants_1 = require("../../config/constants");
 var axios_1 = __importDefault(require("axios"));
 var MediasoupRestApi = /** @class */ (function () {
-    function MediasoupRestApi(url, token) {
+    function MediasoupRestApi(url, token, log) {
         this.timeouts = [];
         this.url = url;
         this.token = token;
+        this.log = log || console.log;
     }
     MediasoupRestApi.prototype.resumeConsumer = function (json) {
         return __awaiter(this, void 0, void 0, function () {
@@ -1149,11 +1180,33 @@ var MediasoupRestApi = /** @class */ (function () {
             });
         });
     };
+    MediasoupRestApi.prototype.numWorkers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.NUM_WORKERS)];
+                    case 1: return [2 /*return*/, (_a.sent())];
+                }
+            });
+        });
+    };
     MediasoupRestApi.prototype.pipeToRemoteProducer = function (json) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PIPE_TO_REMOTE_PRODUCER, json)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.pipeFromRemoteProducer = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PIPE_FROM_REMOTE_PRODUCER, json)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -1213,7 +1266,7 @@ var MediasoupRestApi = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('sent message', action, JSON.stringify(json));
+                        this.log('sent message', action, JSON.stringify(json));
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 8]);
@@ -1222,7 +1275,7 @@ var MediasoupRestApi = /** @class */ (function () {
                             })];
                     case 2:
                         data = (_a.sent()).data;
-                        console.log('got message', action, JSON.stringify(data));
+                        this.log('got message', action, JSON.stringify(data));
                         return [2 /*return*/, data];
                     case 3:
                         e_1 = _a.sent();

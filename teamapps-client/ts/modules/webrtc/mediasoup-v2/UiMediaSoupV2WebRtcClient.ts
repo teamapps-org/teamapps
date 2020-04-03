@@ -51,6 +51,7 @@ import {UiComponent} from "../../UiComponent";
 import {Postponer} from "../../util/postpone";
 import {addVoiceActivityDetectionToMediaStream, enumerateDevices, retrieveUserMedia} from "../MediaUtil";
 import {UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
+import {UiMediaSoupV2PlaybackParametersConfig} from "../../../generated/UiMediaSoupV2PlaybackParametersConfig";
 
 export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2WebRtcClientConfig> implements UiMediaSoupV2WebRtcClientCommandHandler, UiMediaSoupV2WebRtcClientEventSource {
 	public readonly onPublishingSucceeded: TeamAppsEvent<UiMediaSoupV2WebRtcClient_PublishingSucceededEvent> = new TeamAppsEvent(this);
@@ -227,10 +228,10 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 	private async publishMediaStream(mediaStream: MediaStream, parameters: UiMediaSoupPublishingParametersConfig) {
 		try {
 			let conference = new Conference({
-				uid: parameters.uid,
+				uid: parameters.streamUuid,
 				token: parameters.token,
 				params: {
-					serverUrl: parameters.serverAddress,
+					serverUrl: parameters.url,
 					minBitrate: parameters.minBitrate,
 					maxBitrate: parameters.maxBitrate,
 					localVideo: this.$video,
@@ -304,7 +305,7 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		}
 	}
 
-	playback(parameters: UiMediaSoupPlaybackParametersConfig): void {
+	playback(parameters: UiMediaSoupV2PlaybackParametersConfig): void {
 		console.log(parameters);
 		if (this.conference != null) {
 			this.stop();
@@ -314,10 +315,10 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		this.$video.muted = false;
 
 		this.conference = new Conference({
-			uid: parameters.uid,
+			uid: parameters.streamUuid,
 			token: null,
 			params: {
-				serverUrl: parameters.serverAddress,
+				serverUrl: parameters.url,
 				audio: parameters.audio,
 				video: parameters.video,
 				minBitrate: 100,

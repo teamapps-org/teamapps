@@ -60,9 +60,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	public final Event<Boolean> onConnectionStateChanged = new Event<>();
 	public final Event<Boolean> onVoiceActivityChanged = new Event<>();
-	public final Event<Void> onClicked = new Event<>();                                             // OK
-
-	private String serverAddress;
+	public final Event<Void> onClicked = new Event<>();
 
 	private boolean activityLineVisible;
 	private Color activityInactiveColor;
@@ -86,10 +84,6 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	private boolean bitrateDisplayEnabled;
 
 	public MediaSoupV3WebRtcClient() {
-	}
-
-	public MediaSoupV3WebRtcClient(String serverUrl) {
-		this.serverAddress = serverUrl;
 	}
 
 	@Override
@@ -175,17 +169,16 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		}
 	}
 
-	public void publish(String uid,
-	                    String token,
-	                    AudioTrackConstraints audioConstraints,
-	                    VideoTrackConstraints videoConstraints,
-	                    ScreenSharingConstraints screenSharingConstraints,
-	                    long maxBitrate,
-	                    boolean simulcast
+	public void publish(
+			String streamUuid, String url, String token,
+			AudioTrackConstraints audioConstraints,
+			VideoTrackConstraints videoConstraints,
+			ScreenSharingConstraints screenSharingConstraints,
+			long maxBitrate, boolean simulcast
 	) {
 		UiMediaSoupPublishingParameters params = new UiMediaSoupPublishingParameters();
-		params.setServerAddress(serverAddress);
-		params.setUid(uid);
+		params.setUrl(url);
+		params.setStreamUuid(streamUuid);
 		params.setToken(token);
 		params.setAudioConstraints(audioConstraints != null ? audioConstraints.createUiAudioTrackConstraints() : null);
 		params.setVideoConstraints(videoConstraints != null ? videoConstraints.createUiVideoTrackConstraints() : null);
@@ -196,11 +189,22 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		update();
 	}
 
-	public void play(String uid, String token, boolean audio, boolean video, long minBitrate, long maxBitrate) {
+	public void play(
+			String streamUuid, String url, String token,
+			boolean audio, boolean video,
+			long minBitrate, long maxBitrate
+	) {
+		this.play(streamUuid, new MediaSoupServerChain(url, token), audio, video, minBitrate, maxBitrate);
+	}
+
+	public void play(
+			String streamUuid, MediaSoupServerChain serverChain,
+			boolean audio, boolean video,
+			long minBitrate, long maxBitrate
+	) {
 		UiMediaSoupPlaybackParameters params = new UiMediaSoupPlaybackParameters();
-		params.setServerAddress(serverAddress);
-		params.setUid(uid);
-		params.setToken(token);
+		params.setStreamUuid(streamUuid);
+		params.setServerChain(serverChain.createUiMediaSoupServerChain());
 		params.setAudio(audio);
 		params.setVideo(video);
 		params.setMinBitrate(minBitrate);
@@ -217,14 +221,6 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	private void update() {
 		queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.UpdateCommand(getId(), createUiComponent()));
-	}
-
-	public String getServerAddress() {
-		return serverAddress;
-	}
-
-	public void setServerAddress(String serverAddress) {
-		this.serverAddress = serverAddress;
 	}
 
 	public boolean isActivityLineVisible() {

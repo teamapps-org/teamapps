@@ -44,7 +44,9 @@ var ACTION;
     ACTION["CONSUMERS_STATS"] = "consumersStats";
     ACTION["TRANSPORT_STATS"] = "transportStats";
     ACTION["PIPE_TO_REMOTE_PRODUCER"] = "pipeToRemoteProducer";
+    ACTION["PIPE_FROM_REMOTE_PRODUCER"] = "pipeFromRemoteProducer";
     ACTION["WORKER_LOAD"] = "workerLoad";
+    ACTION["NUM_WORKERS"] = "numWorkers";
 })(ACTION = exports.ACTION || (exports.ACTION = {}));
 var PATH;
 (function (PATH) {
@@ -62,6 +64,7 @@ var ERROR;
     ERROR[ERROR["INVALID_CONSUMER"] = 532] = "INVALID_CONSUMER";
     ERROR[ERROR["INVALID_STREAM"] = 533] = "INVALID_STREAM";
     ERROR[ERROR["INVALID_OPERATION"] = 534] = "INVALID_OPERATION";
+    ERROR[ERROR["INVALID_WORKER"] = 535] = "INVALID_WORKER";
 })(ERROR = exports.ERROR || (exports.ERROR = {}));
 var API_OPERATION;
 (function (API_OPERATION) {
