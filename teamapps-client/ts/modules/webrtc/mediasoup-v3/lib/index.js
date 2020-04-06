@@ -551,7 +551,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                     case 6: return [2 /*return*/, transport.consume(data)];
                     case 7:
                         e_5 = _a.sent();
-                        if (!(e_5.response && e_5.response.status && e_5.response.status === constants_1.ERROR.INVALID_STREAM)) return [3 /*break*/, 9];
+                        if (!(e_5 && e_5.errorId === constants_1.ERROR.INVALID_STREAM)) return [3 /*break*/, 9];
                         return [4 /*yield*/, new Promise(function (resolve) { return _this.timeouts.push(setTimeout(resolve, 1000)); })];
                     case 8:
                         _a.sent();
@@ -1291,7 +1291,7 @@ var MediasoupRestApi = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.request(action, json)];
                     case 5: return [2 /*return*/, _a.sent()];
-                    case 6: throw e_1;
+                    case 6: throw { errorId: e_1.response.status };
                     case 7: return [3 /*break*/, 8];
                     case 8: return [2 /*return*/];
                 }

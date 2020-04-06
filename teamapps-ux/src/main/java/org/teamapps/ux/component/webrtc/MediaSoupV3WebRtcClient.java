@@ -194,17 +194,17 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			boolean audio, boolean video,
 			long minBitrate, long maxBitrate
 	) {
-		this.play(streamUuid, new MediaSoupServerChain(url, token), audio, video, minBitrate, maxBitrate);
+		this.play(streamUuid, Collections.singletonList(new MediaSoupServerUrlAndToken(url, token)), audio, video, minBitrate, maxBitrate);
 	}
 
 	public void play(
-			String streamUuid, MediaSoupServerChain serverChain,
+			String streamUuid, List<MediaSoupServerUrlAndToken> serverChain,
 			boolean audio, boolean video,
 			long minBitrate, long maxBitrate
 	) {
 		UiMediaSoupPlaybackParameters params = new UiMediaSoupPlaybackParameters();
 		params.setStreamUuid(streamUuid);
-		params.setServerChain(serverChain.createUiMediaSoupServerChain());
+		params.setServerChain(serverChain.stream().map(MediaSoupServerUrlAndToken::createUiMediaSoupServerChain).collect(Collectors.toList()));
 		params.setAudio(audio);
 		params.setVideo(video);
 		params.setMinBitrate(minBitrate);
