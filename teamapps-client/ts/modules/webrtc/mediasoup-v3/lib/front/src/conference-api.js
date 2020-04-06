@@ -475,7 +475,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                     case 6: return [2 /*return*/, transport.consume(data)];
                     case 7:
                         e_5 = _a.sent();
-                        if (!(e_5.response && e_5.response.status && e_5.response.status === constants_1.ERROR.INVALID_STREAM)) return [3 /*break*/, 9];
+                        if (!(e_5 && e_5.errorId === constants_1.ERROR.INVALID_STREAM)) return [3 /*break*/, 9];
                         return [4 /*yield*/, new Promise(function (resolve) { return _this.timeouts.push(setTimeout(resolve, 1000)); })];
                     case 8:
                         _a.sent();

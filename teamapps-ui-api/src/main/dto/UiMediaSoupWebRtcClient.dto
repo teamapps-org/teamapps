@@ -167,15 +167,14 @@ class UiMediaSoupV2PlaybackParameters {
 	long maxBitrate;
 }
 
-class UiMediaSoupServerChain {
+class UiMediaServerUrlAndToken {
 	required String url;
     required String token;
-    UiMediaSoupServerChain origin;
 }
 
 class UiMediaSoupPlaybackParameters {
 	String streamUuid;
-	UiMediaSoupServerChain serverChain;
+	List<UiMediaServerUrlAndToken> serverChain;
 
 	boolean audio;
 	boolean video;

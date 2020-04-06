@@ -58,6 +58,7 @@ import {determineVideoSize} from "../MultiStreamsMixer";
 import {UiMediaRetrievalFailureReason} from "../../../generated/UiMediaRetrievalFailureReason";
 import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType";
 import {AudioTrackMixPlayer} from "./AudioTrackMixPlayer";
+import {ConferenceInputOrigin} from "./lib/front/src/client-interfaces";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent(this);
@@ -306,18 +307,21 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		const needsReset = !deepEquals(oldParams?.serverChain, newParams?.serverChain)
 			|| oldParams?.streamUuid != newParams?.streamUuid;
 		if (needsReset) {
-			console.log("updatePlayback() --> needsReset", newParams);
+			console.log("updatePlayback() --> needsReset", newParams, newParams.serverChain.map(c => c.url).join(" -> "));
 			await this.stop();
 
 			if (newParams != null) {
 				try {
-					this.conferenceClient = new ConferenceApi({
+					let conferenceInputOrigin = UiMediaSoupV3WebRtcClient.convertServerListToConferenceInputOrigin(newParams.serverChain);
+					let conferenceApiConfig = {
 						stream: newParams.streamUuid,
-						token: newParams.serverChain.token,
-						url: newParams.serverChain.url,
-						origin: newParams.serverChain.origin,
+						token: conferenceInputOrigin.token,
+						url: conferenceInputOrigin.url,
+						origin: conferenceInputOrigin.origin,
 						kinds: [...(newParams.audio ? ["audio"] : []), ...(newParams.video ? ["video"] : [])] as MediaKind[]
-					});
+					};
+					console.log("ConferenceApi config: ", conferenceApiConfig);
+					this.conferenceClient = new ConferenceApi(conferenceApiConfig);
 					this.registerStatuslListeners(this.conferenceClient);
 					const mediaStream = await this.conferenceClient.subscribe();
 					this.$video.srcObject = mediaStream;
@@ -380,18 +384,20 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			|| oldParams?.simulcast !== newParams?.simulcast;
 
 		if (needsReset) {
-			console.log("updatePublishing() --> needsReset", newParams);
+			console.log("updatePublishing() --> needsReset", newParams, newParams.url);
 			await this.stop();
 			if (newParams != null) {
 				this.targetStream = new MediaStream();
 				this.$video.srcObject = this.targetStream;
 				try {
-					this.conferenceClient = new ConferenceApi({
+					let conferenceApiConfig = {
 						stream: newParams.streamUuid,
 						token: newParams.token,
 						url: newParams.url,
 						simulcast: newParams.simulcast
-					});
+					};
+					console.log("ConferenceApi config: ", conferenceApiConfig);
+					this.conferenceClient = new ConferenceApi(conferenceApiConfig);
 					this.registerStatuslListeners(this.conferenceClient);
 					await this.conferenceClient.publish(this.targetStream);
 					this.makeSafariVideoElementObserveMediaStreamTracks(this.targetStream);
@@ -674,6 +680,18 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		return enumerateDevices();
 	}
 
+	private static convertServerListToConferenceInputOrigin(serverList: { url: string, token: string }[]): ConferenceInputOrigin {
+		let origin: ConferenceInputOrigin = null;
+		for (let i = 0; i <serverList.length; i++) {
+			let urlAndToken = serverList[i];
+			origin = {
+				origin: origin,
+				url: urlAndToken.url,
+				token: urlAndToken.token
+			};
+		}
+		return origin;
+	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMediaSoupV3WebRtcClient", UiMediaSoupV3WebRtcClient);

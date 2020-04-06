@@ -400,7 +400,7 @@ var MediasoupRestApi = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.request(action, json)];
                     case 5: return [2 /*return*/, _a.sent()];
-                    case 6: throw e_1;
+                    case 6: throw { errorId: e_1.response.status };
                     case 7: return [3 /*break*/, 8];
                     case 8: return [2 /*return*/];
                 }
