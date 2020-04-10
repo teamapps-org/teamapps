@@ -46,7 +46,7 @@ public class MediaPlayer extends AbstractComponent {
 
 	public MediaPlayer() {
 		videoPlayer = new VideoPlayer(null);
-		videoPlayer.onVideoPlayerProgress.addListener(position -> {
+		videoPlayer.onProgress.addListener(position -> {
 			if (trackGraph != null) {
 				trackGraph.setCursorPosition(position * 1000);
 			}

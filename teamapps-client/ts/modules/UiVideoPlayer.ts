@@ -26,6 +26,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
+	UiVideoPlayer_EndedEvent,
 	UiVideoPlayer_ErrorLoadingEvent,
 	UiVideoPlayer_PlayerProgressEvent,
 	UiVideoPlayer_PosterImageSize,
@@ -41,6 +42,7 @@ import {parseHtml} from "./Common";
 export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> implements UiVideoPlayerCommandHandler, UiVideoPlayerEventSource {
 
 	public readonly onPlayerProgress: TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent>(this);
+	public readonly onEnded: TeamAppsEvent<UiVideoPlayer_EndedEvent> = new TeamAppsEvent<UiVideoPlayer_EndedEvent>(this);
 	public readonly onErrorLoading: TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent> = new TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent>(this);
 
 	private $componentWrapper: HTMLElement;
@@ -75,13 +77,11 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 			timerRate: 250,
 			success: (mediaElement: HTMLMediaElement) => {
 				this.onContentReady();
-
 				mediaElement.addEventListener('play', (e) => {
 					this.onPlayerProgress.fire({
 						positionInSeconds: 0
 					});
 				}, false);
-
 				let lastPlayTime = 0;
 				mediaElement.addEventListener('timeupdate', (e) => {
 					let currentPlayTime = mediaElement.currentTime;
@@ -92,6 +92,9 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 					}
 					lastPlayTime = currentPlayTime;
 				}, false);
+				mediaElement.addEventListener('ended', (e) => {
+					this.onEnded.fire({});
+				});
 			},
 			error: () => {
 				if (!this.destroyed) {
