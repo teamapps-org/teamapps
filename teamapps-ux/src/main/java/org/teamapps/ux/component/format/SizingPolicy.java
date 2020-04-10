@@ -32,6 +32,10 @@ public class SizingPolicy {
 
 	private final int minAbsoluteSize;
 
+	public static SizingPolicy fixed(float sizeInPixels) {
+		return new SizingPolicy(SizeType.FIXED, sizeInPixels, (int) sizeInPixels);
+	}
+
 	public SizingPolicy(SizeType type, float value, int minAbsoluteSize) {
 		this.type = type;
 		this.value = value;
