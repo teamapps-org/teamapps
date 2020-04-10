@@ -31,7 +31,8 @@ import static org.teamapps.util.UiUtil.createUiColor;
 public class VideoPlayer extends AbstractComponent {
 
 	public final Event<Void> onErrorLoading = new Event<>();
-	public final Event<Integer> onVideoPlayerProgress = new Event<>();
+	public final Event<Integer> onProgress = new Event<>();
+	public final Event<Void> onEnded = new Event<>();
 
 	private String url; //the url of the video
 	private boolean autoplay; // if set...
@@ -66,13 +67,19 @@ public class VideoPlayer extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_VIDEO_PLAYER_ERROR_LOADING:
+			case UI_VIDEO_PLAYER_ERROR_LOADING: {
 				onErrorLoading.fire(null);
 				break;
-			case UI_VIDEO_PLAYER_PLAYER_PROGRESS:
-				UiVideoPlayer.PlayerProgressEvent progressEvent = (UiVideoPlayer.PlayerProgressEvent) event;
-				onVideoPlayerProgress.fire(progressEvent.getPositionInSeconds());
+			}
+			case UI_VIDEO_PLAYER_PLAYER_PROGRESS: {
+				UiVideoPlayer.PlayerProgressEvent e = (UiVideoPlayer.PlayerProgressEvent) event;
+				onProgress.fire(e.getPositionInSeconds());
 				break;
+			}
+			case UI_VIDEO_PLAYER_ENDED: {
+				onEnded.fire();
+				break;
+			}
 		}
 	}
 
