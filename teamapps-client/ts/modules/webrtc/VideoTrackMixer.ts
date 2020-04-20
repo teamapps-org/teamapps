@@ -32,11 +32,11 @@ export class VideoTrackMixer {
 		this.inputTracks = inputMediaStreamTracks;
 		this.canvas = document.createElement('canvas');
 		this.context = this.canvas.getContext('2d');
-		// this.canvas.style.position = 'absolute';   // TODO
-		// this.canvas.style.left = '-100000px';      // TODO
-		// this.canvas.style.top = '-100000px';       // TODO
-		this.canvas.style.width = '800px';     // TODO
-		this.canvas.style.height = '600px';    // TODO
+		this.canvas.style.position = 'absolute';
+		this.canvas.style.left = '-100000px';
+		this.canvas.style.top = '-100000px';
+		this.canvas.style.width = '800px';
+		this.canvas.style.height = '600px';
 	}
 
 	public getMixedTrack(): MediaStreamTrack {
@@ -44,7 +44,7 @@ export class VideoTrackMixer {
 		(window as any).mixers.push(this);
 
 		if (this.outputTrack == null) {
-			(document.body || document.documentElement).appendChild(this.canvas);
+			(document.body || document.documentElement).appendChild(this.canvas); // TODO check whether this actually needs to get attached to the DOM!
 			for (let track of this.inputTracks) {
 				track.videoElement = createVideoElement(track.mediaTrack);
 			}
@@ -177,7 +177,7 @@ function createVideoElement(videoTrack: MediaStreamTrack) {
 		this.$video.play(); // happens when the video player gets detached under android while switching views
 	});
 
-	document.body.appendChild(video);  // TODO
+	// document.body.appendChild(video);
 	video.style.width = "800px";
 
 	video.play()
