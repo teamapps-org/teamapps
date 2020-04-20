@@ -178,11 +178,13 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				this.onResize()
 			});
 		});
-		this.$video.addEventListener("playing", ev => {
-			console.log("playing");
-			this.$unmuteButtonWrapper.classList.add("hidden");
+		["play"].forEach(eventName => {
+			this.$video.addEventListener(eventName, ev => {
+				console.log(eventName);
+				this.$unmuteButtonWrapper.classList.add("hidden");
+			});
 		});
-		["play", "stalled", "waiting", "ended", "suspend", "abort"].forEach(eventName => {
+		["stalled", "waiting", "ended", "suspend", "abort"].forEach(eventName => {
 			this.$video.addEventListener(eventName, ev => {
 				console.log(eventName);
 			});
