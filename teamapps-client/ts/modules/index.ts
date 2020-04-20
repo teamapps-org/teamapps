@@ -60,6 +60,7 @@ export {UiGridForm} from "./UiGridForm";
 export {UiImageCropper} from "./UiImageCropper";
 export {UiImageDisplay} from "./UiImageDisplay";
 export {UiInfiniteItemView} from "./UiInfiniteItemView";
+export {UiInfiniteItemView2} from "./UiInfiniteItemView2";
 export {UiLiveStreamComponent} from "./UiLiveStreamComponent";
 export {UiMap} from "./UiMap";
 export {UiMediaTrackGraph} from "./UiMediaTrackGraph";

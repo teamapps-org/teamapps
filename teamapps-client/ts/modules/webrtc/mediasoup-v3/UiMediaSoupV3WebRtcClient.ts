@@ -233,11 +233,15 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	private updatePromise: Promise<void> = Promise.resolve();
+	private counter = 0;
 
 	update(config: UiMediaSoupV3WebRtcClientConfig): void {
+		let counterValue = ++this.counter;
+		console.log("UPDATE: " + counterValue);
 		this.updatePromise.finally(() => {
 			this.updatePromise = this.updateInternal(config);
-		});
+		})
+			.finally(() => console.log("DONE: " + counterValue));
 	}
 
 	async updateInternal(config: UiMediaSoupV3WebRtcClientConfig) {

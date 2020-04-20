@@ -44,6 +44,30 @@ class UiInfiniteItemView extends UiComponent {
 	event contextMenuRequested(int requestId, int recordId);
 }
 
+class UiInfiniteItemView2 extends UiComponent {
+	required UiTemplate itemTemplate;
+	float itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
+	required int rowHeight;
+	int totalNumberOfRecords = 0;
+	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
+	UiItemJustification itemJustification = UiItemJustification.LEFT;
+	UiVerticalItemAlignment verticalItemAlignment = UiVerticalItemAlignment.STRETCH;
+	boolean contextMenuEnabled = false;
+
+	command addData(int startIndex, List<UiIdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
+	command removeData(List<Integer> ids);
+	command setItemTemplate(UiTemplate itemTemplate);
+    command setItemWidth(float itemWidth);
+    command setItemJustification(UiItemJustification itemJustification);
+    command setVerticalItemAlignment(UiVerticalItemAlignment verticalItemAlignment);
+    command setContextMenuContent(int requestId, UiComponent* component);
+    command closeContextMenu(int requestId);
+
+	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, UiInfiniteItemViewDataRequest dataRequest);
+	event itemClicked(int recordId, boolean isRightMouseButton, boolean isDoubleClick);
+	event contextMenuRequested(int requestId, int recordId);
+}
+
 @TypeScriptFactory
 class UiInfiniteItemViewDataRequest {
 	required int startIndex;
