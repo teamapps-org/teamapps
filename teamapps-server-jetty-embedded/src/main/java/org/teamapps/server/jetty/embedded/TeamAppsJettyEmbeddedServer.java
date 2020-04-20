@@ -75,6 +75,7 @@ public class TeamAppsJettyEmbeddedServer {
 		webapp.setContextPath("/");
 		webapp.addEventListener(new TeamAppsServletContextListener(config, webController));
 		webapp.setResourceBase(webAppDirectory.getAbsolutePath());
+		webapp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
 		server.setHandler(webapp);
 		WebSocketServerContainerInitializer.configureContext(webapp);
 	}

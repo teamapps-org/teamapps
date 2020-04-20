@@ -358,6 +358,10 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		return generateJwtToken(streamUuid, secret, tokenValidityDuration, "0" /*SUBSCRIBE*/);
 	}
 
+	public static String generateRestApiJwtToken(String secret, Duration tokenValidityDuration) {
+		return generateJwtToken("-", secret, tokenValidityDuration, "TODO" /*TODO*/);
+	}
+
 	private static String generateJwtToken(String streamUuid, String secret, Duration tokenValidityDuration, String operation) {
 		if (secret == null) {
 			return "";
