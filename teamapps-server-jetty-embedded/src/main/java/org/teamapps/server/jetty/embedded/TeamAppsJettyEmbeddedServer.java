@@ -35,7 +35,6 @@ import java.nio.file.Files;
 
 public class TeamAppsJettyEmbeddedServer {
 
-	private final WebController webController;
 	private final File webAppDirectory;
 	private final Server server;
 
@@ -52,7 +51,6 @@ public class TeamAppsJettyEmbeddedServer {
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, int port, TeamAppsConfiguration config) throws ServletException {
-		this.webController = webController;
 		this.webAppDirectory = webAppDirectory;
 
 		server = new Server(port);
@@ -61,6 +59,7 @@ public class TeamAppsJettyEmbeddedServer {
 		webapp.setContextPath("/");
 		webapp.addEventListener(new TeamAppsServletContextListener(config, webController));
 		webapp.setResourceBase(webAppDirectory.getAbsolutePath());
+		webapp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
 		server.setHandler(webapp);
 		WebSocketServerContainerInitializer.configureContext(webapp);
 	}
