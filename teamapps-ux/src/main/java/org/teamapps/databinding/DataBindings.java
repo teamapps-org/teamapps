@@ -135,5 +135,6 @@ public final class DataBindings {
 		NonRecursiveEventListenerBuilder nonRecursiveEventListenerBuilder = new NonRecursiveEventListenerBuilder();
 		bindable1.onChanged().addListener(nonRecursiveEventListenerBuilder.create(aVoid -> bindable2.set(bindable1.get())));
 		bindable2.onChanged().addListener(nonRecursiveEventListenerBuilder.create(aVoid -> bindable1.set(bindable2.get())));
+		bindable2.set(bindable1.get());
 	}
 }
