@@ -36,7 +36,7 @@ import java.util.Locale;
 
 public interface WebController {
 
-	void onSessionStart(SessionContext context);
+	void onSessionStart(SessionContext sessionContext);
 
 	default Collection<ServletRegistration> getServletRegistrations(UxServerContext serverContext) {
 		return Collections.emptyList();
