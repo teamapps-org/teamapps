@@ -33,6 +33,10 @@
         </developer>
     </developers>
 
+    <properties>
+        <jetty.version>9.4.28.v20200408</jetty.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -59,8 +63,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <properties>
-        <jetty.version>9.4.22.v20191022</jetty.version>
-    </properties>
-
 </project>
