@@ -46,9 +46,9 @@ import java.security.cert.CertificateException;
 
 public class TeamAppsJettyEmbeddedServer {
 
-	private final WebController webController;
 	private final File webAppDirectory;
 	private final Server server;
+	private WebAppContext webapp;
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory) throws ServletException {
 		this(webController, webAppDirectory, new TeamAppsConfiguration());
@@ -63,28 +63,30 @@ public class TeamAppsJettyEmbeddedServer {
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, int port, TeamAppsConfiguration config) throws ServletException {
-		this.webController = webController;
 		this.webAppDirectory = webAppDirectory;
 
 		server = new Server(port);
-
-		// configureHttps(new File("path/to/keystore.p12"), "changeit");
-
-		WebAppContext webapp = new WebAppContext();
+		webapp = new WebAppContext();
 		webapp.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
 		webapp.setContextPath("/");
 		webapp.addEventListener(new TeamAppsServletContextListener(config, webController));
 		webapp.setResourceBase(webAppDirectory.getAbsolutePath());
 		webapp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
+		// The following will not actually set the secure flag on the cookie if the session is started without encryption.
+		// Use getWebapp().getSessionHandler().getSessionCookieConfig().setSecure(true) if you want to force secure cookies.
+		webapp.getSessionHandler().setSecureRequestOnly(true);
 		server.setHandler(webapp);
 		WebSocketServerContainerInitializer.configureContext(webapp);
 	}
 
-	// TODO integrate
-	private void configureHttps(File keyStoreFile, String keyStorePassword) {
+	public void configureHttpsUsingP12File(int port, File keyStoreFile, String keyStorePassword) {
+		if (server.isStarting() || server.isStarted()) {
+			throw new IllegalStateException("HTTPS must be configured before starting the server!");
+		}
+
 		HttpConfiguration http_config = new HttpConfiguration();
 		http_config.setSecureScheme("https");
-		http_config.setSecurePort(8443);
+		http_config.setSecurePort(port);
 
 		HttpConfiguration https_config = new HttpConfiguration(http_config);
 		https_config.addCustomizer(new SecureRequestCustomizer());
@@ -102,7 +104,6 @@ public class TeamAppsJettyEmbeddedServer {
 			e.printStackTrace();
 		}
 		sslContextFactory.setKeyStorePassword(keyStorePassword);
-
 
 		ServerConnector httpsConnector = new ServerConnector(server,
 				new SslConnectionFactory(sslContextFactory, "http/1.1"),
@@ -125,6 +126,10 @@ public class TeamAppsJettyEmbeddedServer {
 
 	public Server getServer() {
 		return server;
+	}
+
+	public WebAppContext getWebapp() {
+		return webapp;
 	}
 
 	public static void main(String[] args) throws Exception {
