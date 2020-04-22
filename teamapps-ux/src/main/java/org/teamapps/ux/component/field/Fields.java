@@ -22,6 +22,7 @@ package org.teamapps.ux.component.field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class Fields {
 
@@ -30,15 +31,15 @@ public final class Fields {
 	}
 
 	public static boolean validateAll(AbstractField<?>... fields) {
-		List<FieldMessage> errorMessage = Arrays.stream(fields)
-				.flatMap(field -> field.validate().stream())
-				.filter(message -> message.getSeverity() == FieldMessage.Severity.ERROR)
-				.collect(Collectors.toList()); // to List because we want ALL validators to run!
-		return errorMessage.size() == 0;
+		return validateAll(Arrays.stream(fields));
 	}
 
 	public static boolean validateAll(List<AbstractField<?>> fields) {
-		List<FieldMessage> errorMessage = fields.stream()
+		return validateAll(fields.stream());
+	}
+
+	public static boolean validateAll(Stream<AbstractField<?>> stream) {
+		List<FieldMessage> errorMessage = stream
 				.flatMap(field -> field.validate().stream())
 				.filter(message -> message.getSeverity() == FieldMessage.Severity.ERROR)
 				.collect(Collectors.toList()); // to List because we want ALL validators to run!
