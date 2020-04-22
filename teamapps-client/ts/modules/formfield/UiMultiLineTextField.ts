@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,17 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "./UiField";
-import {UiMultiLineTextFieldCommandHandler, UiMultiLineTextFieldConfig, UiMultiLineTextFieldEventSource} from "../../generated/UiMultiLineTextFieldConfig";
+import {keyCodes} from "trivial-components";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
+import {UiMultiLineTextFieldCommandHandler, UiMultiLineTextFieldConfig, UiMultiLineTextFieldEventSource} from "../../generated/UiMultiLineTextFieldConfig";
+import {UiSpecialKey} from "../../generated/UiSpecialKey";
+import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
 import {Constants, escapeHtml, hasVerticalScrollBar, parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
-import {UiSpecialKey} from "../../generated/UiSpecialKey";
-import {keyCodes} from "trivial-components";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiField} from "./UiField";
 
 export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, string> implements UiMultiLineTextFieldEventSource, UiMultiLineTextFieldCommandHandler {
 
@@ -41,15 +41,14 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	private minHeight: number;
 	private maxHeight: number;
 
-
 	protected initialize(config: UiMultiLineTextFieldConfig, context: TeamAppsUiContext) {
 		this.$wrapper = parseHtml(`<div class="UiMultiLineTextField teamapps-input-wrapper field-border field-border-glow field-background">
 	<textarea></textarea>
-	<div class="clear-button tr-remove-button"></div>  
+	<div class="clear-button tr-remove-button"></div>
 </div>`);
 		this.$field = this.$wrapper.querySelector(":scope textarea");
 		this.$clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
-		this.$clearButton.addEventListener('click',() => {
+		this.$clearButton.addEventListener('click', () => {
 			this.$field.value = "";
 			this.fireTextInput();
 			this.commit();
@@ -60,11 +59,11 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		this.setMaxCharacters(config.maxCharacters);
 		this.setShowClearButton(config.showClearButton);
 
-		this.$field.addEventListener('focus', (e) => {
+		this.$field.addEventListener('focus', () => {
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 			}
 		});
-		this.$field.addEventListener('blur', (e) => {
+		this.$field.addEventListener('blur', () => {
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
@@ -100,7 +99,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		});
 	}
 
-	isValidData(v: string): boolean {
+	public isValidData(v: string): boolean {
 		return v == null || typeof v === "string";
 	}
 
@@ -112,7 +111,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		}
 	}
 
-	setMaxCharacters(maxCharacters: number): void {
+	public setMaxCharacters(maxCharacters: number): void {
 		if (maxCharacters) {
 			this.$field.maxLength = maxCharacters;
 		} else {
@@ -120,7 +119,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		}
 	}
 
-	setShowClearButton(showClearButton: boolean): void {
+	public setShowClearButton(showClearButton: boolean): void {
 		this.showClearButton = showClearButton;
 		this.updateClearButton();
 	}
@@ -131,7 +130,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		this.$clearButton.style.right = hasVerticalScrollBar(this.$field) ? Constants.SCROLLBAR_WIDTH + "px" : "0";
 	}
 
-	setEmptyText(emptyText: string): void {
+	public setEmptyText(emptyText: string): void {
 		this.$field.placeholder = emptyText || '';
 	}
 
@@ -144,7 +143,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	}
 
 	protected displayCommittedValue(): void {
-		let value = this.getCommittedValue();
+		const value = this.getCommittedValue();
 		this.$field.value = value || "";
 		this.updateClearButton();
 		this.updateTextareaHeight();
@@ -154,13 +153,13 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		return this.$field.value;
 	}
 
-	focus(): void {
+	public focus(): void {
 		this.$field.focus();
 	}
 
-	append(s: string, scrollToBottom: boolean): void {
-		let transientValue = this.getTransientValue();
-		let transientValueString = (transientValue && transientValue) || '';
+	public append(s: string, scrollToBottom: boolean): void {
+		const transientValue = this.getTransientValue();
+		const transientValueString = (transientValue && transientValue) || '';
 		this.setCommittedValue(transientValueString + s);
 		if (scrollToBottom) {
 			this.$wrapper.scrollTop = 10000000;
@@ -175,7 +174,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		return `<div class="static-readonly-UiMultiLineTextField">${value == null ? "" : escapeHtml(value)}</div>`;
 	}
 
-	getDefaultValue(): string {
+	public getDefaultValue(): string {
 		return "";
 	}
 
