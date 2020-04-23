@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,8 +31,9 @@ import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.itemview.ItemViewItemJustification;
-import org.teamapps.ux.component.itemview.ItemViewVerticalItemAlignment;
+import org.teamapps.ux.component.format.HorizontalElementAlignment;
+import org.teamapps.ux.component.format.VerticalElementAlignment;
+import org.teamapps.ux.component.itemview.ItemViewRowJustification;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 
@@ -48,10 +49,12 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	private int numberOfInitialRecords = 100;
 	private Template itemTemplate;
 	private float itemWidth;
-	private int rowHeight;
-	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
-	private ItemViewItemJustification itemJustification = ItemViewItemJustification.LEFT;
-	private ItemViewVerticalItemAlignment verticalItemAlignment = ItemViewVerticalItemAlignment.STRETCH;
+	private float itemHeight;
+	private float horizontalSpacing;
+	private float verticalSpacing;
+	private HorizontalElementAlignment itemContentHorizontalAlignment = HorizontalElementAlignment.CENTER;
+	private VerticalElementAlignment itemContentVerticalAlignment = VerticalElementAlignment.STRETCH;
+	private ItemViewRowJustification rowHorizontalAlignment = ItemViewRowJustification.LEFT;
 
 	private InfiniteItemViewModel<RECORD> model = new ListInfiniteItemViewModel<>(Collections.emptyList());
 	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
@@ -67,10 +70,10 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 
 	private List<Integer> viewportDisplayedRecordClientIds = Collections.emptyList();
 
-	public InfiniteItemView2(Template itemTemplate, float itemWidth, int rowHeight) {
+	public InfiniteItemView2(Template itemTemplate, float itemWidth, int itemHeight) {
 		this.itemTemplate = itemTemplate;
 		this.itemWidth = itemWidth;
-		this.rowHeight = rowHeight;
+		this.itemHeight = itemHeight;
 
 		itemCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
 		itemCache.setMaxCapacity(1000);
@@ -95,14 +98,17 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiInfiniteItemView2 ui = new UiInfiniteItemView2(itemTemplate.createUiTemplate(), rowHeight);
+		UiInfiniteItemView2 ui = new UiInfiniteItemView2(itemTemplate.createUiTemplate());
 		mapAbstractUiComponentProperties(ui);
 		int recordCount = model.getCount();
 		ui.setTotalNumberOfRecords(recordCount);
 		ui.setItemWidth(itemWidth);
-		ui.setItemJustification(itemJustification.toUiItemJustification());
-		ui.setVerticalItemAlignment(verticalItemAlignment.toUiItemJustification());
-		ui.setAutoHeight(autoHeight);
+		ui.setItemHeight(itemHeight);
+		ui.setHorizontalSpacing(horizontalSpacing);
+		ui.setVerticalSpacing(verticalSpacing);
+		ui.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toUiHorizontalElementAlignment());
+		ui.setItemContentVerticalAlignment(itemContentVerticalAlignment.toUiVerticalElementAlignment());
+		ui.setRowHorizontalAlignment(rowHorizontalAlignment.toUiItemJustification());
 		ui.setContextMenuEnabled(contextMenuProvider != null);
 		return ui;
 	}
@@ -147,14 +153,6 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 		}
 	}
 
-	public boolean isAutoHeight() {
-		return autoHeight;
-	}
-
-	public void setAutoHeight(boolean autoHeight) {
-		this.autoHeight = autoHeight;
-	}
-
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
 		clientRecord.setValues(itemPropertyExtractor.getValues(record, itemTemplate.getDataKeys()));
@@ -190,31 +188,63 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 		return this;
 	}
 
-	public int getRowHeight() {
-		return rowHeight;
+	public float getItemHeight() {
+		return itemHeight;
 	}
 
-	public void setRowHeight(int rowHeight) {
-		this.rowHeight = rowHeight;
-		reRenderIfRendered();
+	public InfiniteItemView2<RECORD> setItemHeight(float itemHeight) {
+		this.itemHeight = itemHeight;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemHeightCommand(getId(), itemHeight));
+		return this;
 	}
 
-	public ItemViewVerticalItemAlignment getVerticalItemAlignment() {
-		return verticalItemAlignment;
+	public float getHorizontalSpacing() {
+		return horizontalSpacing;
 	}
 
-	public void setVerticalItemAlignment(ItemViewVerticalItemAlignment verticalItemAlignment) {
-		this.verticalItemAlignment = verticalItemAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetVerticalItemAlignmentCommand(getId(), verticalItemAlignment.toUiItemJustification()));
+	public InfiniteItemView2<RECORD> setHorizontalSpacing(float horizontalSpacing) {
+		this.horizontalSpacing = horizontalSpacing;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetHorizontalSpacingCommand(getId(), horizontalSpacing));
+		return this;
 	}
 
-	public ItemViewItemJustification getItemJustification() {
-		return itemJustification;
+	public float getVerticalSpacing() {
+		return verticalSpacing;
 	}
 
-	public InfiniteItemView2<RECORD> setItemJustification(ItemViewItemJustification itemJustification) {
-		this.itemJustification = itemJustification;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemJustificationCommand(getId(), itemJustification.toUiItemJustification()));
+	public InfiniteItemView2<RECORD> setVerticalSpacing(float verticalSpacing) {
+		this.verticalSpacing = verticalSpacing;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetVerticalSpacingCommand(getId(), verticalSpacing));
+		return this;
+	}
+
+	public HorizontalElementAlignment getItemContentHorizontalAlignment() {
+		return itemContentHorizontalAlignment;
+	}
+
+	public InfiniteItemView2<RECORD> setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment) {
+		this.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentHorizontalAlignmentCommand(getId(), itemContentHorizontalAlignment.toUiHorizontalElementAlignment()));
+		return this;
+	}
+
+	public VerticalElementAlignment getItemContentVerticalAlignment() {
+		return itemContentVerticalAlignment;
+	}
+
+	public InfiniteItemView2<RECORD> setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment) {
+		this.itemContentVerticalAlignment = itemContentVerticalAlignment;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentVerticalAlignmentCommand(getId(), itemContentVerticalAlignment.toUiVerticalElementAlignment()));
+		return this;
+	}
+
+	public ItemViewRowJustification getRowHorizontalAlignment() {
+		return rowHorizontalAlignment;
+	}
+
+	public InfiniteItemView2<RECORD> setRowHorizontalAlignment(ItemViewRowJustification rowHorizontalAlignment) {
+		this.rowHorizontalAlignment = rowHorizontalAlignment;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetRowHorizontalAlignmentCommand(getId(), rowHorizontalAlignment.toUiItemJustification()));
 		return this;
 	}
 

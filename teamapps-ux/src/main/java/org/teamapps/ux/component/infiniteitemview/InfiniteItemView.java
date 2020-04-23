@@ -31,7 +31,7 @@ import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.itemview.ItemViewItemJustification;
+import org.teamapps.ux.component.itemview.ItemViewRowJustification;
 import org.teamapps.ux.component.itemview.ItemViewVerticalItemAlignment;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
@@ -51,7 +51,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private int rowHeight;
 	private int horizontalItemMargin = 0;
 	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
-	private ItemViewItemJustification itemJustification = ItemViewItemJustification.LEFT;
+	private ItemViewRowJustification itemJustification = ItemViewRowJustification.LEFT;
 	private ItemViewVerticalItemAlignment verticalItemAlignment = ItemViewVerticalItemAlignment.STRETCH;
 
 	private InfiniteItemViewModel<RECORD> model = new ListInfiniteItemViewModel<>(Collections.emptyList());
@@ -223,11 +223,11 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		return this;
 	}
 
-	public ItemViewItemJustification getItemJustification() {
+	public ItemViewRowJustification getItemJustification() {
 		return itemJustification;
 	}
 
-	public InfiniteItemView<RECORD> setItemJustification(ItemViewItemJustification itemJustification) {
+	public InfiniteItemView<RECORD> setItemJustification(ItemViewRowJustification itemJustification) {
 		this.itemJustification = itemJustification;
 		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemJustificationCommand(getId(), itemJustification.toUiItemJustification()));
 		return this;

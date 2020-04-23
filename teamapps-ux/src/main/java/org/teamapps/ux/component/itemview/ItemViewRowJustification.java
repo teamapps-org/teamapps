@@ -21,7 +21,7 @@ package org.teamapps.ux.component.itemview;
 
 import org.teamapps.dto.UiItemJustification;
 
-public enum ItemViewItemJustification {
+public enum ItemViewRowJustification {
 
 	LEFT, RIGHT, CENTER, SPACE_AROUND, SPACE_BETWEEN;
 
