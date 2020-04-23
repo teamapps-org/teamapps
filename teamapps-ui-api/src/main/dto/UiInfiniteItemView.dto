@@ -46,20 +46,33 @@ class UiInfiniteItemView extends UiComponent {
 
 class UiInfiniteItemView2 extends UiComponent {
 	required UiTemplate itemTemplate;
+
 	float itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
-	required int rowHeight;
-	int totalNumberOfRecords = 0;
-	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
-	UiItemJustification itemJustification = UiItemJustification.LEFT;
-	UiVerticalItemAlignment verticalItemAlignment = UiVerticalItemAlignment.STRETCH;
+	float itemHeight = 100;
+	float horizontalSpacing;
+	float verticalSpacing;
+	UiHorizontalElementAlignment itemContentHorizontalAlignment = UiHorizontalElementAlignment.CENTER;
+	UiVerticalElementAlignment itemContentVerticalAlignment = UiVerticalElementAlignment.STRETCH;
+	UiItemJustification rowHorizontalAlignment = UiItemJustification.SPACE_AROUND;
+
+//	boolean autoHeight = false; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
+
 	boolean contextMenuEnabled = false;
+	
+	int totalNumberOfRecords = 0;
 
 	command addData(int startIndex, List<UiIdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
 	command removeData(List<Integer> ids);
 	command setItemTemplate(UiTemplate itemTemplate);
+
     command setItemWidth(float itemWidth);
-    command setItemJustification(UiItemJustification itemJustification);
-    command setVerticalItemAlignment(UiVerticalItemAlignment verticalItemAlignment);
+    command setItemHeight(float itemHeight);
+    command setHorizontalSpacing(float horizontalSpacing);
+    command setVerticalSpacing(float verticalSpacing);
+    command setItemContentHorizontalAlignment(UiHorizontalElementAlignment itemContentHorizontalAlignment);
+    command setItemContentVerticalAlignment(UiVerticalElementAlignment itemContentVerticalAlignment);
+    command setRowHorizontalAlignment(UiItemJustification rowHorizontalAlignment);
+
     command setContextMenuContent(int requestId, UiComponent* component);
     command closeContextMenu(int requestId);
 

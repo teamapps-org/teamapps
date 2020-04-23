@@ -33,7 +33,6 @@ import {
 } from "../generated/UiInfiniteItemView2Config";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
-import {itemCssStringsAlignItems, itemCssStringsJustification} from "./UiItemView";
 import {UiItemJustification} from "../generated/UiItemJustification";
 import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClientRecordConfig";
 import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
@@ -42,6 +41,8 @@ import {UiComponent} from "./UiComponent";
 import {throttledMethod} from "./util/throttle";
 import {createUiInfiniteItemViewDataRequestConfig, UiInfiniteItemViewDataRequestConfig} from "../generated/UiInfiniteItemViewDataRequestConfig";
 import {debounce, debouncedMethod, DebounceMode} from "./util/debounce";
+import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
+import {UiVerticalElementAlignment} from "../generated/UiVerticalElementAlignment";
 
 type RenderedItem = {
 	item: UiIdentifiableClientRecordConfig,
@@ -150,6 +151,18 @@ class UiInfiniteItemView2DataProvider {
 		}
 	}
 }
+export var itemCssStringsJustification = {
+	[UiHorizontalElementAlignment.LEFT]: "flex-start",
+	[UiHorizontalElementAlignment.RIGHT]: "flex-end",
+	[UiHorizontalElementAlignment.CENTER]: "center",
+	[UiHorizontalElementAlignment.STRETCH]: "stretch",
+};
+export var itemCssStringsAlignItems = {
+	[UiVerticalElementAlignment.TOP]: "flex-start",
+	[UiVerticalElementAlignment.CENTER]: "center",
+	[UiVerticalElementAlignment.BOTTOM]: "flex-end",
+	[UiVerticalElementAlignment.STRETCH]: "stretch"
+};
 
 export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2Config> implements UiInfiniteItemView2CommandHandler, UiInfiniteItemView2EventSource {
 
@@ -160,6 +173,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;
+	private $styles: HTMLStyleElement;
 	private dataProvider: UiInfiniteItemView2DataProvider;
 	private itemTemplateRenderer: Renderer;
 	private contextMenu: ContextMenu;
@@ -173,8 +187,11 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		});
 		this.$mainDomElement = parseHtml(`<div id="${config.id}" class="UiInfiniteItemView2 grid-${this._config.id}">
                 <div class="grid"></div>
+                <style></style>
             </div>`);
 		this.$grid = this.$mainDomElement.querySelector<HTMLElement>(":scope .grid");
+		this.$styles = this.$mainDomElement.querySelector<HTMLStyleElement>(":scope style");
+		this.updateStyles();
 		this.setItemTemplate(config.itemTemplate);
 		this.dataProvider.setTotalNumberOfRecords(config.totalNumberOfRecords || 0);
 		this.contextMenu = new ContextMenu();
@@ -231,8 +248,8 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		const itemsPerRow = this.getItemsPerRow();
 		const viewportTop = this.$mainDomElement.scrollTop;
 		const viewportBottom = viewportTop + this.getHeight();
-		const visibleStartRowIndex = Math.floor(viewportTop / this._config.rowHeight);
-		const visibleEndRowIndex = Math.ceil(viewportBottom / this._config.rowHeight); // exclusive
+		const visibleStartRowIndex = Math.floor(viewportTop / this._config.itemHeight);
+		const visibleEndRowIndex = Math.ceil(viewportBottom / this._config.itemHeight); // exclusive
 		let startIndex = Math.max(0, visibleStartRowIndex * itemsPerRow);
 		let endIndex = Math.min(visibleEndRowIndex * itemsPerRow, this.dataProvider.getTotalNumberOfRecords());
 		return [startIndex, endIndex];
@@ -260,13 +277,13 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 			const item = items[i - startIndex];
 			const existingRenderedItem = this.renderedItems[i];
 			const positionX = this._config.itemWidth * (i % this.getItemsPerRow());
-			const positionY = this._config.rowHeight * Math.floor(i / this.getItemsPerRow());
+			const positionY = this._config.itemHeight * Math.floor(i / this.getItemsPerRow());
 			if (item == null) { // item not yet loaded
 				if (existingRenderedItem != null) {
 					existingRenderedItem.$wrapper.remove();
 					this.renderedItems[i] = null;
 				}
-			} else if (existingRenderedItem == null || !deepEquals(existingRenderedItem.item, item)) {
+			} else if (existingRenderedItem == null || !deepEquals(existingRenderedItem.item.values, item.values)) {
 				let $wrapper = existingRenderedItem != null ? existingRenderedItem.$wrapper : document.createElement("div");
 				$wrapper.innerHTML = '';
 				let $element = parseHtml(this.itemTemplateRenderer.render(item.values));
@@ -279,14 +296,14 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 					$wrapper: $wrapper,
 					position: [positionX, positionY]
 				};
-				this.updateItemPosition(this.renderedItems[i], positionX, positionY, itemWidth, this._config.rowHeight);
+				this.updateItemPosition(this.renderedItems[i], positionX, positionY, itemWidth, this._config.itemHeight);
 				if ($lastSeenItemElementWrapper == null) {
 					this.$grid.prepend(this.renderedItems[i].$wrapper);
 				} else {
 					insertAfter(this.renderedItems[i].$wrapper, $lastSeenItemElementWrapper);
 				}
-			} else if (existingRenderedItem != null && !deepEquals([positionX, positionY], existingRenderedItem.position)) {
-				this.updateItemPosition(existingRenderedItem, positionX, positionY, itemWidth, this._config.rowHeight);
+			} else if (!deepEquals([positionX, positionY], existingRenderedItem.position)) {
+				this.updateItemPosition(existingRenderedItem, positionX, positionY, itemWidth, this._config.itemHeight);
 			}
 			$lastSeenItemElementWrapper = this.renderedItems[i]?.$wrapper ?? $lastSeenItemElementWrapper;
 		}
@@ -332,7 +349,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		}
 		this.dataProvider.setTotalNumberOfRecords(totalNumberOfRecords);
 		this.dataProvider.setData(startIndex, data);
-		this.$grid.style.height = this._config.rowHeight * Math.ceil(totalNumberOfRecords / this.getItemsPerRow()) + "px";
+		this.$grid.style.height = this._config.itemHeight * Math.ceil(totalNumberOfRecords / this.getItemsPerRow()) + "px";
 		this.updateRenderedItems();
 	}
 
@@ -370,17 +387,11 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 	}
 
 	private updateStyles() {
-		this.getMainElement().append(parseHtml(`<style>
-            .grid-${this._config.id} .line-wrapper {
-                 align-items: ${itemCssStringsAlignItems[this._config.verticalItemAlignment]};
-                 justify-content: ${itemCssStringsJustification[this._config.itemJustification]};
-            }
-            </style>`));
-	}
-
-	setVerticalItemAlignment(verticalItemAlignment: UiVerticalItemAlignment): void {
-		this.updateStyles();
-		this.updateRenderedItems();
+		this.$styles.textContent = `
+            .grid-${this._config.id} .item-wrapper {
+                 align-items: ${itemCssStringsAlignItems[this._config.itemContentVerticalAlignment]};
+                 justify-content: ${itemCssStringsJustification[this._config.itemContentHorizontalAlignment]};
+            }`;
 	}
 
 	setItemTemplate(itemTemplate: UiTemplateConfig): void {
@@ -389,14 +400,45 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		this.updateRenderedItems();
 	}
 
-	@executeWhenFirstDisplayed(true)
 	setItemWidth(itemWidth: number): void {
 		this._config.itemWidth = itemWidth;
+		this.updateStyles();
 		this.updateRenderedItems();
 	}
 
-	setItemJustification(itemJustification: UiItemJustification): void {
-		this._config.itemJustification = itemJustification;
+	setItemHeight(itemHeight: number): void {
+		this._config.itemHeight = itemHeight;
+		this.updateStyles();
+		this.updateRenderedItems();
+	}
+
+	setHorizontalSpacing(horizontalSpacing: number): void {
+		this._config.horizontalSpacing = horizontalSpacing;
+		this.updateStyles();
+		this.updateRenderedItems();
+	}
+
+	setVerticalSpacing(verticalSpacing: number): void {
+		this.updateStyles();
+		this._config.verticalSpacing = verticalSpacing;
+		this.updateRenderedItems();
+	}
+
+	setItemContentHorizontalAlignment(itemContentHorizontalAlignment: UiHorizontalElementAlignment): void {
+		this._config.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
+		this.updateStyles();
+		this.updateRenderedItems();
+	}
+
+	setItemContentVerticalAlignment(itemContentVerticalAlignment: UiVerticalElementAlignment): void {
+		this._config.itemContentVerticalAlignment = itemContentVerticalAlignment;
+		this.updateStyles();
+		this.updateRenderedItems();
+	}
+
+	setRowHorizontalAlignment(rowHorizontalAlignment: UiItemJustification): void {
+		this._config.rowHorizontalAlignment = rowHorizontalAlignment;
+		this.updateStyles();
 		this.updateRenderedItems();
 	}
 

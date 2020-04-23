@@ -24,8 +24,22 @@
   > .grid {
     position: relative;
     overflow: hidden;
+
     .item-wrapper {
       position: absolute;
+      contain: strict; // !!!
+      display: flex;
+
+      // the following need to be made configurable!
+      padding: 2px;
+
+      border: 1px solid transparent;
+      &:hover {
+        .button-style-item();
+      }
+      &:active {
+        .button-style-item-lowered();
+      }
     }
   }
 }
