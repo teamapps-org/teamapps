@@ -37,6 +37,7 @@ public class ForceLayoutNode<RECORD> {
 	private Color borderColor = new Color(100, 100, 100);
 	private float borderWidth = 1;
 	private float borderRadius = 3;
+	private float distanceFactor = 0.6f;
 
 	private GraphNodeImage image;
 	private GraphNodeIcon icon;
@@ -146,5 +147,13 @@ public class ForceLayoutNode<RECORD> {
 
 	public void setExpandedState(ExpandedState expandedState) {
 		this.expandedState = expandedState;
+	}
+
+	public float getDistanceFactor() {
+		return distanceFactor;
+	}
+
+	public void setDistanceFactor(float distanceFactor) {
+		this.distanceFactor = distanceFactor;
 	}
 }
