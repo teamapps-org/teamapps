@@ -216,7 +216,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		newStateClasses.filter(newClass => oldStateClasses.indexOf(newClass) === -1).forEach(newClass => this.$main.classList.add(newClass));
 	}
 
-	async stop() {
+	private async stop() {
 		console.log("stop()");
 		if (this.conferenceClient != null) {
 			let conferenceClient = this.conferenceClient;
@@ -325,7 +325,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					};
 					console.log("ConferenceApi config: ", conferenceApiConfig);
 					this.conferenceClient = new ConferenceApi(conferenceApiConfig);
-					this.registerStatuslListeners(this.conferenceClient);
+					this.registerStatuslListeners(this.conferenceClient, "playback");
 					const mediaStream = await this.conferenceClient.subscribe();
 					this.$video.muted = false;
 					this.$video.srcObject = mediaStream;
@@ -415,7 +415,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					};
 					console.log("ConferenceApi config: ", conferenceApiConfig);
 					this.conferenceClient = new ConferenceApi(conferenceApiConfig);
-					this.registerStatuslListeners(this.conferenceClient);
+					this.registerStatuslListeners(this.conferenceClient, "publishing");
 					await this.conferenceClient.publish(this.targetStream);
 					this.makeSafariVideoElementObserveMediaStreamTracks(this.targetStream);
 				} catch (e) {
@@ -527,7 +527,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						if (this.screenTrack != null) { // not intended stopping!
 							this.onSourceMediaTrackEnded.fire({trackType: UiSourceMediaTrackType.SCREEN});
 						}
-					})
+					});
 				} catch (e) {
 					console.error("Could not get user media: screen!", e);
 					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.DISPLAY_MEDIA_RETRIEVAL_FAILED});
@@ -541,7 +541,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				this.videoTrackMixer = null;
 			}
 
-			if (this.webcamTrack != null && this.screenTrack != null) {
+			if (this.screenTrack != null) { // Chrome does not do simulcast with screen sharing, so we need the mixer...
 				try {
 					let streamsWithMixSizingInfo: TrackWithMixSizingInfo[] = [];
 					streamsWithMixSizingInfo.push({
@@ -549,20 +549,22 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						mixSizingInfo: {fullCanvas: true}
 					});
 
-					let webcamMixSizingInfo: MixSizingInfo;
-					const displayStreamDimensions = await determineVideoSize(new MediaStream([this.screenTrack]));
-					const mainStreamShortDimension = Math.min(displayStreamDimensions.width, displayStreamDimensions.height);
-					const cameraAspectRatio = this.webcamTrack.getSettings().aspectRatio || 4 / 3;
-					const pictureInPictureHeight = Math.round((25 / 100) * mainStreamShortDimension);
-					const pictureInPictureWidth = Math.round(pictureInPictureHeight * cameraAspectRatio);
-					webcamMixSizingInfo = {
-						width: pictureInPictureWidth,
-						height: pictureInPictureHeight,
-						right: 0,
-						top: 0,
-						// flipX: true
-					};
-					streamsWithMixSizingInfo.push({mediaTrack: this.webcamTrack, mixSizingInfo: webcamMixSizingInfo});
+					if (this.webcamTrack) {
+						let webcamMixSizingInfo: MixSizingInfo;
+						const displayStreamDimensions = await determineVideoSize(new MediaStream([this.screenTrack]));
+						const mainStreamShortDimension = Math.min(displayStreamDimensions.width, displayStreamDimensions.height);
+						const cameraAspectRatio = this.webcamTrack.getSettings().aspectRatio || 4 / 3;
+						const pictureInPictureHeight = Math.round((25 / 100) * mainStreamShortDimension);
+						const pictureInPictureWidth = Math.round(pictureInPictureHeight * cameraAspectRatio);
+						webcamMixSizingInfo = {
+							width: pictureInPictureWidth,
+							height: pictureInPictureHeight,
+							right: 0,
+							top: 0,
+							// flipX: true
+						};
+						streamsWithMixSizingInfo.push({mediaTrack: this.webcamTrack, mixSizingInfo: webcamMixSizingInfo});
+					}
 
 					this.videoTrackMixer = await new VideoTrackMixer(streamsWithMixSizingInfo, 15);
 				} catch (e) {
@@ -591,10 +593,13 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 						this.conferenceClient.removeTrack(t);
 					});
 					if (this.videoTrackMixer != null) {
+						console.log("Adding this.videoTrackMixer.getMixedTrack()");
 						await this.conferenceClient.addTrack(this.videoTrackMixer.getMixedTrack());
 					} else if (this.webcamTrack != null) {
+						console.log("Adding this.webcamTrack");
 						await this.conferenceClient.addTrack(this.webcamTrack);
 					} else if (this.screenTrack != null) {
+						console.log("Adding this.screenTrack");
 						await this.conferenceClient.addTrack(this.screenTrack);
 					}
 					if (this.videoTrackMixer != null || this.webcamTrack != null || this.screenTrack != null) {
@@ -607,17 +612,18 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		}
 	}
 
-	private registerStatuslListeners(conferenceClient: ConferenceApi) {
+	private registerStatuslListeners(conferenceClient: ConferenceApi, logPrefix: string) {
 		conferenceClient.on('bitRate', ({bitRate, kind}) => {
 			if (kind === 'audio') {
 				this.$audioBitrateDisplay.innerText = (bitRate / 1000).toFixed(1) + "kb/s";
 				this.connectionStatus.audioBitrate = bitRate;
 				this.updateStateCssClasses();
-				console.log(`audio bitrate: ${bitRate}`);
+				console.log(`${logPrefix} audio bitrate: ${bitRate}`);
 			} else if (kind == "video") {
 				this.$videoBitrateDisplay.innerText = (bitRate / 1000).toFixed(1) + "kb/s";
 				this.connectionStatus.videoBitrate = bitRate;
 				this.updateStateCssClasses();
+				console.log(`${logPrefix} video bitrate: ${bitRate}`);
 			}
 		});
 		conferenceClient.on('connectionstatechange', (event) => {
