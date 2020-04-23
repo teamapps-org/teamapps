@@ -26,6 +26,7 @@ class UiNetworkGraph extends UiComponent{
 	float alpha = 0.1f;
 	int charge = -300;
 	int distance = 30;
+	int strength = -30;
 	String highlightColor;
 	int animationDuration = 1000;
 
@@ -51,6 +52,8 @@ class UiNetworkNode {
 	UiColor borderColor = new UiColor(100, 100, 100); // rgba
 	float borderWidth = 1;
 	float borderRadius = 0;
+
+	float distanceFactor = 0.6f;
 
 	UiTreeGraphNodeImage image;
 	UiTreeGraphNodeIcon icon;
