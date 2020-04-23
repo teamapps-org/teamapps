@@ -97,6 +97,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		uiNode.setExpandState(node.getExpandedState().toExpandState());
 		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createUiTreeGraphNodeIcon() : null);
 		uiNode.setImage(node.getImage() != null ? node.getImage().createUiTreeGraphNodeImage() : null);
+		uiNode.setDistanceFactor(node.getDistanceFactor());
 		return uiNode;
 	}
 
