@@ -71,25 +71,19 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 	UiMediaSoupPublishingParameters publishingParameters;
     UiMediaSoupPlaybackParameters playbackParameters;
 	
-
 	command update(UiMediaSoupV3WebRtcClient config);
 	command setActive(boolean active);
-	command stop();
 	command setContextMenuContent(int requestId, UiComponent* component);
 	command closeContextMenu(int requestId);
 
 	event sourceMediaTrackRetrievalFailed(UiMediaRetrievalFailureReason reason);
 	event sourceMediaTrackEnded(UiSourceMediaTrackType trackType); // otherwise cam/mic
-
 	event trackPublishingSuccessful(boolean audio, boolean video);
 	event trackPublishingFailed(boolean audio, boolean video, String errorMessage);
-
 	event connectionStateChanged(boolean connected);
-
 	event subscribingSuccessful();
 	event subscribingFailed(String errorMessage);
 	event subscriptionPlaybackFailed(String errorMessage);
-
 	event voiceActivityChanged(boolean active);
 	event clicked();
 	event contextMenuRequested(int requestId);
