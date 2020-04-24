@@ -41,10 +41,11 @@ import {UiComponent} from "./UiComponent";
 import {loadSensitiveThrottling, throttledMethod} from "./util/throttle";
 import {createUiInfiniteItemViewDataRequestConfig, UiInfiniteItemViewDataRequestConfig} from "../generated/UiInfiniteItemViewDataRequestConfig";
 
+const ROW_LOOKAHAED = 10;
+
 class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiableClientRecordConfig> {
 
 	private availableWidth: number;
-	private static ROW_LOOKAHAED = 10;
 	private timerId: number = null;
 
 	private totalNumberOfRecords = 0;
@@ -100,8 +101,8 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 		}
 
 		let itemsPerRow = this.getItemsPerRow();
-		let from = Math.max(firstVisibleRowIndex - UiInfiniteItemViewDataProvider.ROW_LOOKAHAED, 0) * itemsPerRow;
-		let toInclusive = (lastVisibleRowIndex + UiInfiniteItemViewDataProvider.ROW_LOOKAHAED) * itemsPerRow;
+		let from = Math.max(firstVisibleRowIndex - ROW_LOOKAHAED, 0) * itemsPerRow;
+		let toInclusive = (lastVisibleRowIndex + ROW_LOOKAHAED) * itemsPerRow;
 		toInclusive = Math.min(toInclusive, this.totalNumberOfRecords - 1);
 
 		while (this.data[from] !== undefined && from < toInclusive) {
@@ -128,7 +129,7 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 				this.data[i] = null; // null indicates a 'requested but not available yet'
 			}
 
-			let length = toInclusive - from + 1;
+			let length = toInclusive - from;
 			this.dataRequestCallback(from, length);
 		}, 100);
 	}
@@ -138,6 +139,7 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 	}
 
 	setData(startIndex: number, data: any[]) {
+		this.data.length = Math.max(this.data.length, startIndex + data.length);
 		this.data.splice.apply(this.data, ([startIndex, data.length] as any[]).concat(data));
 	}
 
@@ -275,8 +277,8 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	private createDisplayRangeChangedEvent(dataRequest?: UiInfiniteItemViewDataRequestConfig) {
 		const viewPort = this.grid.getViewport();
 		return {
-			startIndex: viewPort.top * this.dataProvider.getItemsPerRow(),
-			length: (viewPort.bottom - viewPort.top) * this.dataProvider.getItemsPerRow(),
+			startIndex: Math.max(0, (viewPort.top - ROW_LOOKAHAED) * this.dataProvider.getItemsPerRow()),
+			length: (viewPort.bottom - viewPort.top + ROW_LOOKAHAED * 2) * this.dataProvider.getItemsPerRow(),
 			displayedRecordIds: this.getCurrentlyDisplayedRecordIds(),
 			dataRequest: dataRequest
 		};
@@ -285,7 +287,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	private getCurrentlyDisplayedRecordIds() {
 		const viewPort = this.grid.getViewport();
 		const currentlyDisplayedRecordIds: any[] = [];
-		for (let i = viewPort.top; i <= viewPort.bottom; i++) {
+		for (let i = Math.max(0, viewPort.top - ROW_LOOKAHAED); i <= viewPort.bottom + ROW_LOOKAHAED; i++) {
 			const row = this.dataProvider.getItem(i);
 			if (row != null) {
 				row.forEach(item => item != null && currentlyDisplayedRecordIds.push(item.id));
