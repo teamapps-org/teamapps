@@ -56,7 +56,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	private InfiniteItemViewModel<RECORD> model = new ListInfiniteItemViewModel<>(Collections.emptyList());
 	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
-	private final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
+	protected final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
 
 	private Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
 	private Consumer<RECORD> modelOnRecordAddedListener = record -> this.refresh();
@@ -66,6 +66,8 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
 
+	private int displayedRangeStart = 0;
+	private int displayedRangeLength = numberOfInitialRecords;
 	private List<Integer> viewportDisplayedRecordClientIds = Collections.emptyList();
 
 	public InfiniteItemView(Template itemTemplate, float itemWidth, int rowHeight) {
@@ -118,6 +120,8 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 			case UI_INFINITE_ITEM_VIEW_DISPLAYED_RANGE_CHANGED:
 				UiInfiniteItemView.DisplayedRangeChangedEvent rangeChangedEvent = (UiInfiniteItemView.DisplayedRangeChangedEvent) event;
 				viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
+				displayedRangeStart = rangeChangedEvent.getStartIndex();
+				displayedRangeLength = rangeChangedEvent.getLength();
 				if (rangeChangedEvent.getDataRequest() != null) {
 					UiInfiniteItemViewDataRequest dataRequest = rangeChangedEvent.getDataRequest();
 					int startIndex = dataRequest.getStartIndex();
@@ -264,10 +268,10 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	public void refresh() {
-		sendRecords(0, numberOfInitialRecords, true);
+		sendRecords(displayedRangeStart, displayedRangeLength, true);
 	}
 
-	private void sendRecords(int startIndex, int length, boolean clear) {
+	protected void sendRecords(int startIndex, int length, boolean clear) {
 		if (isRendered()) {
 			int totalCount = model.getCount();
 			List<RECORD> records = model.getRecords(startIndex, Math.max(0, Math.min(totalCount - startIndex, length)));
