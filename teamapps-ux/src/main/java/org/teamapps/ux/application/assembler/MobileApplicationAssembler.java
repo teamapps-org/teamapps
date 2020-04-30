@@ -136,9 +136,6 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		});
 
 		viewsItemView.onItemClicked.addListener(data -> {
-			//ScopeComponent component = data.getItem().getPayload();
-			//component.refreshPanelToolbar();
-			//displayComponent(component, MobileLayoutAnimation.FORWARD);
 			navigationBar.hideFanOutComponent();
 		});
 	}
@@ -260,26 +257,17 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		perspectiveViews = activeViews;
 
 		viewsItemView.removeAllGroups();
-		if (applicationLauncher != null) {
-			SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_MODULE, "Launcher");
-			group.addItem(applicationLauncher.getPanel().getIcon(), applicationLauncher.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
-				showView(applicationLauncher);
-			});
-		}
-
+		SimpleItemGroup<Void> itemGroup = viewsItemView.addSingleColumnGroup(null, null);
 		if (!applicationViews.isEmpty()) {
-			SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.TOC, "Application views");
 			applicationViews.forEach(view -> {
-				group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
+				itemGroup.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
 					showView(view);
 				});
 			});
 		}
-
 		if (!perspectiveViews.isEmpty()) {
-			SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_CAROUSEL, "Perspective views");
 			perspectiveViews.forEach(view -> {
-				group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
+				itemGroup.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
 					showView(view);
 				});
 			});
