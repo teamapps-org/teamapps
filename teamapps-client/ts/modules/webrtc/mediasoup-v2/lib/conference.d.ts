@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import { ConferenceData, Capturing } from './interfaces';
-import { determineVideoSize, MediaStreamWithMixiSizingInfo } from './MultiStreamsMixer';
+import { determineVideoSize, MediaStreamWithMixiSizingInfo } from '../../MultiStreamsMixer';
 export declare class Conference {
     private readonly server_url;
     private readonly uid;

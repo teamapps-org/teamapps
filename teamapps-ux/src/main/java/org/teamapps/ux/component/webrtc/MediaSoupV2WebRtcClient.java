@@ -23,8 +23,8 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiInfiniteItemView;
 import org.teamapps.dto.UiMediaDeviceInfo;
-import org.teamapps.dto.UiMediaSoupPlaybackParamaters;
 import org.teamapps.dto.UiMediaSoupPublishingParameters;
+import org.teamapps.dto.UiMediaSoupV2PlaybackParameters;
 import org.teamapps.dto.UiMediaSoupV2WebRtcClient;
 import org.teamapps.dto.UiObject;
 import org.teamapps.dto.WebRtcPublishingFailureReason;
@@ -59,7 +59,6 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	public final Event<Boolean> onConnectionStateChanged = new Event<>();
 
 	private String serverAddress;
-	private int serverPort;
 
 	private boolean activityLineVisible;
 	private Color activityInactiveColor;
@@ -90,12 +89,6 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 			throw new RuntimeException(e);
 		}
 		this.serverAddress = url.getHost();
-		this.serverPort = url.getPort() != -1 ? url.getPort() : 443;
-	}
-
-	public MediaSoupV2WebRtcClient(String serverAddress, int serverPort) {
-		this.serverAddress = serverAddress;
-		this.serverPort = serverPort;
 	}
 
 	@Override
@@ -183,11 +176,10 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 		}
 	}
 
-	public void publish(String uid, String token, AudioTrackConstraints audioConstraints, VideoTrackConstraints videoConstraints, ScreenSharingConstraints screenSharingConstraints, long maxBitrate) {
+	public void publish(String streamUuid, String token, AudioTrackConstraints audioConstraints, VideoTrackConstraints videoConstraints, ScreenSharingConstraints screenSharingConstraints, long maxBitrate) {
 		UiMediaSoupPublishingParameters params = new UiMediaSoupPublishingParameters();
-		params.setServerAdress(serverAddress);
-		params.setServerPort(serverPort);
-		params.setUid(uid);
+		params.setUrl(serverAddress);
+		params.setStreamUuid(streamUuid);
 		params.setToken(token);
 		params.setAudioConstraints(audioConstraints != null ? audioConstraints.createUiAudioTrackConstraints() : null);
 		params.setVideoConstraints(videoConstraints != null ? videoConstraints.createUiVideoTrackConstraints() : null);
@@ -201,11 +193,10 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 		}
 	}
 
-	public void play(String uid, boolean audio, boolean video, long minBitrate, long maxBitrate) {
-		UiMediaSoupPlaybackParamaters params = new UiMediaSoupPlaybackParamaters();
-		params.setServerAdress(serverAddress);
-		params.setServerPort(serverPort);
-		params.setUid(uid);
+	public void play(String streamUuid, boolean audio, boolean video, long minBitrate, long maxBitrate) {
+		UiMediaSoupV2PlaybackParameters params = new UiMediaSoupV2PlaybackParameters();
+		params.setUrl(serverAddress);
+		params.setStreamUuid(streamUuid);
 		params.setAudio(audio);
 		params.setVideo(video);
 		params.setMinBitrate(minBitrate);
@@ -236,14 +227,6 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 
 	public void setServerAddress(String serverAddress) {
 		this.serverAddress = serverAddress;
-	}
-
-	public int getServerPort() {
-		return serverPort;
-	}
-
-	public void setServerPort(int serverPort) {
-		this.serverPort = serverPort;
 	}
 
 	public boolean isActivityLineVisible() {

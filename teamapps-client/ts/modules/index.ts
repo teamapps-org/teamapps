@@ -60,6 +60,7 @@ export {UiGridForm} from "./UiGridForm";
 export {UiImageCropper} from "./UiImageCropper";
 export {UiImageDisplay} from "./UiImageDisplay";
 export {UiInfiniteItemView} from "./UiInfiniteItemView";
+export {UiInfiniteItemView2} from "./UiInfiniteItemView2";
 export {UiLiveStreamComponent} from "./UiLiveStreamComponent";
 export {UiMap} from "./UiMap";
 export {UiMediaTrackGraph} from "./UiMediaTrackGraph";
@@ -79,7 +80,6 @@ export {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 export {UiTree} from "./UiTree";
 export {UiVerticalLayout} from "./UiVerticalLayout";
 export {UiVideoPlayer} from "./UiVideoPlayer";
-export {UiWebRtcPublisher} from "./UiWebRtcPublisher";
 export {UiWebRtcPlayer} from "./UiWebRtcPlayer";
 export {UiWindow} from "./UiWindow";
 export {UiWorkSpaceLayout} from "./workspace-layout/UiWorkSpaceLayout";
@@ -143,3 +143,5 @@ export {draggable} from "./util/draggable";
 
 import * as log from "loglevel";
 (window as any).log = log;
+
+export {VideoTrackMixer} from "./webrtc/VideoTrackMixer"

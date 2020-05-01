@@ -43,7 +43,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 
 	private boolean headerVisible = true;
 	private ItemViewFloatStyle floatStyle = ItemViewFloatStyle.HORIZONTAL_FLOAT;
-	private ItemViewItemJustification itemJustification = ItemViewItemJustification.LEFT;
+	private ItemViewRowJustification itemJustification = ItemViewRowJustification.LEFT;
 	private float buttonWidth = -1;
 	private int horizontalPadding = 0;
 	private int verticalPadding = 0;
@@ -228,11 +228,11 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		return this;
 	}
 
-	public ItemViewItemJustification getItemJustification() {
+	public ItemViewRowJustification getItemJustification() {
 		return itemJustification;
 	}
 
-	public ItemGroup setItemJustification(ItemViewItemJustification itemJustification) {
+	public ItemGroup setItemJustification(ItemViewRowJustification itemJustification) {
 		this.itemJustification = itemJustification;
 		requireRefresh();
 		return this;
