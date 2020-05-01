@@ -38,6 +38,12 @@
     transition: box-shadow 500ms;
     box-shadow: 0 10px 10px -10px var(--activity-bar-color);
     overflow: hidden;
+    background-color: #eee;
+
+    .image {
+      display: inline-block;
+      object-fit: contain;
+    }
 
     .video {
       top: 0;
@@ -70,15 +76,75 @@
       transition: background-color 500ms;
     }
 
-    > .icon {
-      background-size: cover;
+    > .bitrate-display {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 3px;
+      background-color: #00000055;
+      color: #ddd;
+      line-height: 1.5;
+
+      > .bitrate-audio:before {
+        content: 'audio: '
+      }
+      > .bitrate-video:before {
+        content: 'video: '
+      }
+    }
+
+    > .icons {
       position: absolute;
       bottom: 5px;
       right: 3px;
-      width: 40px;
-      height: auto;
-      max-width: 10%;
-      min-width: 16px;
+      height: 10%;
+      min-height: 16px;
+      max-height: 50px;
+      display: flex;
+      width: 100%; // firefox...
+      justify-content: flex-end;
+      z-index: 1;
+
+      > .icon {
+        height: 100%;
+        width: auto;
+      }
+    }
+
+    > .spinner-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, .5);
+    }
+
+    .unmute-button-wrapper {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .unmute-button {
+        max-width: 40%;
+        max-height: 40%;
+        filter: drop-shadow(5px 5px 5px #222);
+        transition: max-width .2s, max-height .2s;
+
+        &:hover {
+          max-width: 45%;
+          max-height: 45%;
+        }
+      }
     }
   }
 
@@ -93,5 +159,17 @@
     position: absolute;
     left: 0;
     top: 0;
+  }
+
+  &.state-idle,
+  &.state-streaming {
+    .spinner-wrapper {
+      display: none;
+    }
+  }
+  &.state-connecting {
+    .spinner-wrapper {
+      // default display
+    }
   }
 }

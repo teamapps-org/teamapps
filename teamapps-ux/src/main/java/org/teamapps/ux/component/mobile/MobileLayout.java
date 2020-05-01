@@ -65,10 +65,12 @@ public class MobileLayout extends AbstractComponent implements Container {
 	}
 
 	public void setContent(Component component, PageTransition animation, int animationDuration) {
-		content = component;
-		component.setParent(this);
-		queueCommandIfRendered(() -> new UiMobileLayout.ShowViewCommand(getId(), component.createUiReference(), animation != null ? animation.toUiPageTransition() : null,
-				animationDuration));
+		if (this.content != component) {
+			content = component;
+			component.setParent(this);
+			queueCommandIfRendered(() -> new UiMobileLayout.ShowViewCommand(getId(), component.createUiReference(), animation != null ? animation.toUiPageTransition() : null,
+					animationDuration));
+		}
 	}
 
 	public Toolbar getToolbar() {

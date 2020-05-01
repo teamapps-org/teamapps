@@ -17,11 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.ux.component.itemview;
 
- exports.promise = function(socket: any) {
-  return function request(type: any, data = {}) {
-    return new Promise((resolve) => {
-      socket.emit(type, data, resolve);
-    });
-  }
-};
+import org.teamapps.dto.UiItemJustification;
+
+public enum ItemViewRowJustification {
+
+	LEFT, RIGHT, CENTER, SPACE_AROUND, SPACE_BETWEEN;
+
+	public UiItemJustification toUiItemJustification() {
+		return UiItemJustification.valueOf(this.name());
+	}
+
+}

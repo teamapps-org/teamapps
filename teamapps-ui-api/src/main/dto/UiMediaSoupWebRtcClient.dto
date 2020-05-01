@@ -34,7 +34,7 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 	command update(UiMediaSoupV2WebRtcClient config);
 	command setActive(boolean active);
 	command publish(UiMediaSoupPublishingParameters parameters);
-	command playback(UiMediaSoupPlaybackParamaters parameters);
+	command playback(UiMediaSoupV2PlaybackParameters parameters);
 	command stop();
 	command setContextMenuContent(int requestId, UiComponent* component);
 	command closeContextMenu(int requestId);
@@ -47,6 +47,43 @@ class UiMediaSoupV2WebRtcClient extends UiComponent {
 	event playbackSucceeded();
 	event playbackFailed();
 	event playbackProfileChanged(UiMulticastPlaybackProfile profile);
+	event voiceActivityChanged(boolean active);
+	event clicked();
+	event contextMenuRequested(int requestId);
+
+	static command enumerateDevices() returns List<UiMediaDeviceInfo>;
+}
+
+class UiMediaSoupV3WebRtcClient extends UiComponent {
+	Float displayAreaAspectRatio = 4/3f;  // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
+	boolean activityLineVisible;
+	UiColor activityInactiveColor;
+	UiColor activityActiveColor;
+	List<String> icons;
+	String caption;
+	String noVideoImageUrl;
+	WebRtcClientSpinnerPolicy spinnerPolicy;
+	double playbackVolume = 1; // 0-1
+	boolean contextMenuEnabled = false;
+	boolean bitrateDisplayEnabled = false;
+	
+	// only one (or none) of the following must be set:
+	UiMediaSoupPublishingParameters publishingParameters;
+    UiMediaSoupPlaybackParameters playbackParameters;
+	
+	command update(UiMediaSoupV3WebRtcClient config);
+	command setActive(boolean active);
+	command setContextMenuContent(int requestId, UiComponent* component);
+	command closeContextMenu(int requestId);
+
+	event sourceMediaTrackRetrievalFailed(UiMediaRetrievalFailureReason reason);
+	event sourceMediaTrackEnded(UiSourceMediaTrackType trackType); // otherwise cam/mic
+	event trackPublishingSuccessful(boolean audio, boolean video);
+	event trackPublishingFailed(boolean audio, boolean video, String errorMessage);
+	event connectionStateChanged(boolean connected);
+	event subscribingSuccessful();
+	event subscribingFailed(String errorMessage);
+	event subscriptionPlaybackFailed(String errorMessage);
 	event voiceActivityChanged(boolean active);
 	event clicked();
 	event contextMenuRequested(int requestId);
@@ -67,38 +104,23 @@ enum UiMediaDeviceKind {
 }
 
 enum WebRtcPublishingFailureReason {
+	MIC_MEDIA_RETRIEVAL_FAILED,
+	CAM_MEDIA_RETRIEVAL_FAILED,
 	CAM_MIC_MEDIA_RETRIEVAL_FAILED,
 	DISPLAY_MEDIA_RETRIEVAL_FAILED,
 	VIDEO_MIXING_FAILED,
 	CONNECTION_ESTABLISHMENT_FAILED
 }
 
-class UiMediaSoupV3WebRtcClient extends UiComponent {
+enum UiSourceMediaTrackType {
+	CAM, MIC, SCREEN;
+}
 
-	Object initialPlaybackOrPublishParams;
-
-	Float displayAreaAspectRatio = 4/3f;  // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
-
-	boolean activityLineVisible;
-	UiColor activityInactiveColor;
-	UiColor activityActiveColor;
-	boolean active;
-
-	String icon;
-	String caption;
-	String noVideoImageUrl;
-
-	command setActive(boolean active);
-
-	command publish(UiMediaSoupPublishingParameters parameters);
-	command playback(UiMediaSoupPlaybackParamaters parameters);
-	command stop();
-
-	event voiceActivityChanged(boolean active);
-	event clicked();
-
-	static command hasWebCam() returns boolean;
-	static command isChromeExtensionInstalled() returns boolean;
+enum UiMediaRetrievalFailureReason {
+	MIC_MEDIA_RETRIEVAL_FAILED,
+	CAM_MEDIA_RETRIEVAL_FAILED,
+	DISPLAY_MEDIA_RETRIEVAL_FAILED,
+	VIDEO_MIXING_FAILED
 }
 
 enum WebRtcClientSpinnerPolicy {
@@ -114,26 +136,43 @@ enum UiMulticastPlaybackProfile {
 }
 
 class UiMediaSoupPublishingParameters {
-	String serverAdress;
-	int serverPort;
-	String uid;
+	String url;
+	String streamUuid;
 	String token;
 
 	UiAudioTrackConstraints audioConstraints;
 	UiVideoTrackConstraints videoConstraints;
 	UiScreenSharingConstraints screenSharingConstraints;
 
+	boolean simulcast;
 	long minBitrate;
 	long maxBitrate;
-
 }
 
-class UiMediaSoupPlaybackParamaters {
-	String serverAdress;
-	int serverPort;
-	String uid;
+class UiMediaSoupV2PlaybackParameters {
+	String url;
+	String streamUuid;
+	String token;
+
 	boolean audio;
 	boolean video;
+
+	long minBitrate;
+	long maxBitrate;
+}
+
+class UiMediaServerUrlAndToken {
+	required String url;
+    required String token;
+}
+
+class UiMediaSoupPlaybackParameters {
+	String streamUuid;
+	List<UiMediaServerUrlAndToken> serverChain;
+
+	boolean audio;
+	boolean video;
+
 	long minBitrate;
 	long maxBitrate;
 }

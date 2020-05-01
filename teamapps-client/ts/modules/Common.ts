@@ -125,7 +125,7 @@ export class Constants {
 	}
 
 	private static calculateScrollbarWidth() {
-		const $div = parseHtml(`<div id="ASDF" style="width: 100px; height: 100px; position: absolute; top: -10000px">`)
+		const $div = parseHtml(`<div id="ASDF" style="width: 100px; height: 100px; position: absolute; top: -10000px">`);
 		document.body.appendChild($div);
 		const widthNoScroll = $div.clientWidth;
 		$div.style.overflowY = "scroll";
@@ -388,7 +388,7 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 		let width = innerPreferredDimensions.width * zoomFactor;
 		return {width: width, height: width / imageAspectRatio};
 	}
-};
+}
 
 export type Direction = "n" | "e" | "s" | "w" | "ne" | "se" | "nw" | "sw";
 
@@ -677,6 +677,20 @@ export function arraysEqual(a: any[], b: any[]) {
 	}
 }
 
+export function deepEquals(x: any, y: any): boolean {
+	if (x != null && y != null && typeof x === 'object' && typeof x === typeof y) {
+		if (Array.isArray(x)) {
+			return x.length === y.length && x.every((xi, i) => deepEquals(x[i], y[i]));
+		} else {
+			return Object.keys(x).length === Object.keys(y).length &&
+				Object.keys(x).every(key => deepEquals(x[key], y[key]));
+		}
+	} else {
+		return x === y
+			|| ((x == null) && (y == null)); // make no difference between undefined and null!
+	}
+}
+
 export function convertJavaDateTimeFormatToMomentDateTimeFormat(javaFormat: string): string {
 	if (javaFormat == null) {
 		return null;
@@ -830,7 +844,7 @@ export function insertBefore(newNode: Element, referenceNode: Element) {
 }
 
 export function insertAfter(newNode: Element, referenceNode: Element) {
-	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling /* may be null ==> inserted at end!*/);
 }
 
 export function outerWidthIncludingMargins(el: HTMLElement) {
@@ -899,15 +913,20 @@ export async function createImageThumbnailUrl(file: File): Promise<string> {
 }
 
 export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: (className: string) => boolean) {
-	let matches: string[] = [];
-	classList.forEach(function (className) {
-		if (deleteDecider(className)) {
-			matches.push(className);
-		}
-	});
+	let matches = findClassesByFunction(classList, deleteDecider);
 	matches.forEach(function (value) {
 		classList.remove(value);
 	});
+}
+
+export function findClassesByFunction(classList: DOMTokenList, matcher: (className: string) => boolean) {
+	let matches: string[] = [];
+	classList.forEach(function (className) {
+		if (matcher(className)) {
+			matches.push(className);
+		}
+	});
+	return matches;
 }
 
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {

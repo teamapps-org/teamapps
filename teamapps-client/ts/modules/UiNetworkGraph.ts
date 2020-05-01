@@ -81,13 +81,15 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
 				return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * 0.75;
 			});
+		let force = d3.forceManyBody();
+		force.strength(-30)
 		this.simulation = d3.forceSimulation<UiNetworkNodeConfig & any>()
 			.nodes(this.nodes)
-			.force("charge", d3.forceManyBody())
+			.force("charge", force)
 			.force("link", this.linkForce)
 			.force("center", d3.forceCenter(this.getWidth() / 2, this.getWidth() / 2))
 			.force("collide", d3.forceCollide((a: UiNetworkNodeConfig & any) => {
-				return Math.sqrt(a.width * a.width + a.height * a.height) * .6;
+				return Math.sqrt(a.width * a.width + a.height * a.height) * a.distanceFactor;
 			}))
 			.stop();
 
