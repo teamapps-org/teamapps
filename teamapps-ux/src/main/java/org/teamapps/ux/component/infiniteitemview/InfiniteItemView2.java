@@ -53,7 +53,7 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	private float itemHeight;
 	// private float horizontalSpacing; // TODO
 	// private float verticalSpacing; // TODO
-	private HorizontalElementAlignment itemContentHorizontalAlignment = HorizontalElementAlignment.CENTER;
+	private HorizontalElementAlignment itemContentHorizontalAlignment = HorizontalElementAlignment.STRETCH;
 	private VerticalElementAlignment itemContentVerticalAlignment = VerticalElementAlignment.STRETCH;
 	// private ItemViewRowJustification rowHorizontalAlignment = ItemViewRowJustification.LEFT; // TODO
 

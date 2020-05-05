@@ -20,7 +20,7 @@
 
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {Constants, parseHtml, Renderer} from "./Common";
+import {parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
@@ -171,14 +171,14 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		} else if (this._config.itemWidth < 1) {
 			itemsPerRow = Math.floor(1 / this._config.itemWidth);
 		} else {
-			itemsPerRow = Math.floor(this.getAvailableWidth() / this._config.itemWidth);
+			itemsPerRow = Math.floor(this.$mainDomElement.clientWidth / this._config.itemWidth);
 		}
 		return itemsPerRow;
 	}
 
 	private updateItemPositions() {
 		const itemsPerRow = this.getItemsPerRow();
-		const availableWidth = this.getAvailableWidth();
+		const availableWidth = this.$mainDomElement.clientWidth;
 		const itemWidth = this._config.itemWidth <= 0 ? availableWidth : this._config.itemWidth < 1 ? availableWidth * this._config.itemWidth : this._config.itemWidth;
 		const itemHeight = this._config.itemHeight;
 		for (let i = 0; i < this.renderedIds.length; i++) {
@@ -217,7 +217,6 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 			renderedItem.$wrapper.style.top = positionY + "px";
 			renderedItem.$wrapper.style.width = itemWidth + "px";
 			renderedItem.$wrapper.style.height = itemHeight + "px";
-			renderedItem.$element.querySelector(":scope .name2").textContent = "Pos: " + absoluteIndex; // TODO remove!!!
 			renderedItem.x = positionX;
 			renderedItem.y = positionY;
 			renderedItem.width = itemWidth;
@@ -260,10 +259,6 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		console.log("onResize ", this.getWidth(), this.getHeight());
 		this.updateItemPositions();
 		this.requestDataIfNeededForScrollDebounced();
-	}
-
-	private getAvailableWidth() {
-		return this.getWidth() - Constants.SCROLLBAR_WIDTH;
 	}
 
 	doGetMainElement(): HTMLElement {
