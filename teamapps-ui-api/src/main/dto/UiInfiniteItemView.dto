@@ -54,17 +54,13 @@ class UiInfiniteItemView2 extends UiComponent {
 	UiHorizontalElementAlignment itemContentHorizontalAlignment = UiHorizontalElementAlignment.CENTER;
 	UiVerticalElementAlignment itemContentVerticalAlignment = UiVerticalElementAlignment.STRETCH;
 	UiItemJustification rowHorizontalAlignment = UiItemJustification.SPACE_AROUND;
-
 //	boolean autoHeight = false; // TODO make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
 
 	boolean contextMenuEnabled = false;
 	
-	int totalNumberOfRecords = 0;
+	command setData(int startIndex, List<Integer> recordIds, List<UiIdentifiableClientRecord> newRecords, int totalNumberOfRecords);
 
-	command addData(int startIndex, List<UiIdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
-	command removeData(List<Integer> ids);
 	command setItemTemplate(UiTemplate itemTemplate);
-
     command setItemWidth(float itemWidth);
     command setItemHeight(float itemHeight);
     command setHorizontalSpacing(float horizontalSpacing);
@@ -76,7 +72,7 @@ class UiInfiniteItemView2 extends UiComponent {
     command setContextMenuContent(int requestId, UiComponent* component);
     command closeContextMenu(int requestId);
 
-	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, UiInfiniteItemViewDataRequest dataRequest);
+	event renderedItemRangeChanged(int startIndex, int endIndex /*exclusive!*/);
 	event itemClicked(int recordId, boolean isRightMouseButton, boolean isDoubleClick);
 	event contextMenuRequested(int requestId, int recordId);
 }

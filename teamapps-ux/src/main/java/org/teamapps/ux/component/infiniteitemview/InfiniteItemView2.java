@@ -25,22 +25,23 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiInfiniteItemView2;
-import org.teamapps.dto.UiInfiniteItemViewDataRequest;
 import org.teamapps.event.Event;
-import org.teamapps.ux.cache.CacheManipulationHandle;
-import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
-import org.teamapps.ux.component.itemview.ItemViewRowJustification;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class InfiniteItemView2<RECORD> extends AbstractComponent {
 
@@ -50,42 +51,33 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	private Template itemTemplate;
 	private float itemWidth;
 	private float itemHeight;
-	private float horizontalSpacing;
-	private float verticalSpacing;
+	// private float horizontalSpacing; // TODO
+	// private float verticalSpacing; // TODO
 	private HorizontalElementAlignment itemContentHorizontalAlignment = HorizontalElementAlignment.CENTER;
 	private VerticalElementAlignment itemContentVerticalAlignment = VerticalElementAlignment.STRETCH;
-	private ItemViewRowJustification rowHorizontalAlignment = ItemViewRowJustification.LEFT;
+	// private ItemViewRowJustification rowHorizontalAlignment = ItemViewRowJustification.LEFT; // TODO
 
 	private InfiniteItemViewModel<RECORD> model = new ListInfiniteItemViewModel<>(Collections.emptyList());
 	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
-	private final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
 
-	private Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
-	private Consumer<RECORD> modelOnRecordAddedListener = record -> this.refresh();
-	private Consumer<RECORD> modelOnRecordChangedListener = record -> this.refresh();
-	private Consumer<RECORD> modelOnRecordDeletedListener = record -> this.refresh();
+	private ItemRange renderedRange = ItemRange.startEnd(0, 0);
+	private RenderedRecordsCache<RECORD> renderedRecords = new RenderedRecordsCache<>();
+	private int clientRecordIdCounter = 0;
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
 
-	private List<Integer> viewportDisplayedRecordClientIds = Collections.emptyList();
+	private int cachedModelCount = -1;
+
+	private final Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
+	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordsAddedListener = this::handleModelRecordsAdded;
+	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordsChangedListener = this::handleModelRecordsChanged;
+	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordsDeletedListener = this::handleModelRecordsDeleted;
 
 	public InfiniteItemView2(Template itemTemplate, float itemWidth, int itemHeight) {
 		this.itemTemplate = itemTemplate;
 		this.itemWidth = itemWidth;
 		this.itemHeight = itemHeight;
-
-		itemCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
-		itemCache.setMaxCapacity(1000);
-		itemCache.setPurgeDecider((record, clientId) -> !viewportDisplayedRecordClientIds.contains(clientId));
-		itemCache.setPurgeListener(operationHandle -> {
-			if (isRendered()) {
-				List<Integer> removedItemIds = operationHandle.getAndClearResult();
-				getSessionContext().queueCommand(new UiInfiniteItemView2.RemoveDataCommand(getId(), removedItemIds), aVoid -> operationHandle.commit());
-			} else {
-				operationHandle.commit();
-			}
-		});
 	}
 
 	public InfiniteItemView2(float itemWidth, int itemHeight) {
@@ -100,15 +92,13 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	public UiComponent createUiComponent() {
 		UiInfiniteItemView2 ui = new UiInfiniteItemView2(itemTemplate.createUiTemplate());
 		mapAbstractUiComponentProperties(ui);
-		int recordCount = model.getCount();
-		ui.setTotalNumberOfRecords(recordCount);
 		ui.setItemWidth(itemWidth);
 		ui.setItemHeight(itemHeight);
-		ui.setHorizontalSpacing(horizontalSpacing);
-		ui.setVerticalSpacing(verticalSpacing);
+		// ui.setHorizontalSpacing(horizontalSpacing);
+		// ui.setVerticalSpacing(verticalSpacing);
 		ui.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toUiHorizontalElementAlignment());
 		ui.setItemContentVerticalAlignment(itemContentVerticalAlignment.toUiVerticalElementAlignment());
-		ui.setRowHorizontalAlignment(rowHorizontalAlignment.toUiItemJustification());
+		// ui.setRowHorizontalAlignment(rowHorizontalAlignment.toUiItemJustification());
 		ui.setContextMenuEnabled(contextMenuProvider != null);
 		return ui;
 	}
@@ -116,47 +106,33 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_INFINITE_ITEM_VIEW2_DISPLAYED_RANGE_CHANGED:
-				UiInfiniteItemView2.DisplayedRangeChangedEvent rangeChangedEvent = (UiInfiniteItemView2.DisplayedRangeChangedEvent) event;
-				viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
-				if (rangeChangedEvent.getDataRequest() != null) {
-					UiInfiniteItemViewDataRequest dataRequest = rangeChangedEvent.getDataRequest();
-					int startIndex = dataRequest.getStartIndex();
-					int length = dataRequest.getLength();
-					this.sendRecords(startIndex, length, false);
-				}
+			case UI_INFINITE_ITEM_VIEW2_RENDERED_ITEM_RANGE_CHANGED:
+				UiInfiniteItemView2.RenderedItemRangeChangedEvent d = (UiInfiniteItemView2.RenderedItemRangeChangedEvent) event;
+				handleScrollOrResize(ItemRange.startEnd(d.getStartIndex(), d.getEndIndex()));
 				break;
 			case UI_INFINITE_ITEM_VIEW2_ITEM_CLICKED: {
-				UiInfiniteItemView2.ItemClickedEvent itemClickedEvent = (UiInfiniteItemView2.ItemClickedEvent) event;
-				RECORD record = itemCache.getRecordByClientId(itemClickedEvent.getRecordId());
-				if (record != null) {
-					onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick(), itemClickedEvent.getIsRightMouseButton()));
-				}
+				UiInfiniteItemView2.ItemClickedEvent e = (UiInfiniteItemView2.ItemClickedEvent) event;
+				renderedRecords.getRecord(e.getRecordId()).ifPresent(record -> onItemClicked.fire(new ItemClickedEventData<>(record, e.getIsDoubleClick(), e.getIsRightMouseButton())));
 				break;
 			}
 			case UI_INFINITE_ITEM_VIEW2_CONTEXT_MENU_REQUESTED: {
 				UiInfiniteItemView2.ContextMenuRequestedEvent e = (UiInfiniteItemView2.ContextMenuRequestedEvent) event;
 				lastSeenContextMenuRequestId = e.getRequestId();
-				RECORD record = itemCache.getRecordByClientId(e.getRecordId());
-				if (record != null && contextMenuProvider != null) {
-					Component contextMenuContent = contextMenuProvider.apply(record);
-					if (contextMenuContent != null) {
-						queueCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
-					} else {
-						queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), e.getRequestId()));
-					}
-				} else {
+				if (contextMenuProvider == null) {
 					closeContextMenu();
+				} else {
+					renderedRecords.getRecord(e.getRecordId()).ifPresent(record -> {
+						Component contextMenuContent = contextMenuProvider.apply(record);
+						if (contextMenuContent != null) {
+							queueCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
+						} else {
+							queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), e.getRequestId()));
+						}
+					});
 				}
 				break;
 			}
 		}
-	}
-
-	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
-		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
-		clientRecord.setValues(itemPropertyExtractor.getValues(record, itemTemplate.getDataKeys()));
-		return clientRecord;
 	}
 
 	public int getNumberOfInitialRecords() {
@@ -198,25 +174,25 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 		return this;
 	}
 
-	public float getHorizontalSpacing() {
-		return horizontalSpacing;
-	}
-
-	public InfiniteItemView2<RECORD> setHorizontalSpacing(float horizontalSpacing) {
-		this.horizontalSpacing = horizontalSpacing;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetHorizontalSpacingCommand(getId(), horizontalSpacing));
-		return this;
-	}
-
-	public float getVerticalSpacing() {
-		return verticalSpacing;
-	}
-
-	public InfiniteItemView2<RECORD> setVerticalSpacing(float verticalSpacing) {
-		this.verticalSpacing = verticalSpacing;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetVerticalSpacingCommand(getId(), verticalSpacing));
-		return this;
-	}
+	// public float getHorizontalSpacing() {
+	// 	return horizontalSpacing;
+	// }
+	//
+	// public InfiniteItemView2<RECORD> setHorizontalSpacing(float horizontalSpacing) {
+	// 	this.horizontalSpacing = horizontalSpacing;
+	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetHorizontalSpacingCommand(getId(), horizontalSpacing));
+	// 	return this;
+	// }
+	//
+	// public float getVerticalSpacing() {
+	// 	return verticalSpacing;
+	// }
+	//
+	// public InfiniteItemView2<RECORD> setVerticalSpacing(float verticalSpacing) {
+	// 	this.verticalSpacing = verticalSpacing;
+	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetVerticalSpacingCommand(getId(), verticalSpacing));
+	// 	return this;
+	// }
 
 	public HorizontalElementAlignment getItemContentHorizontalAlignment() {
 		return itemContentHorizontalAlignment;
@@ -238,15 +214,15 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 		return this;
 	}
 
-	public ItemViewRowJustification getRowHorizontalAlignment() {
-		return rowHorizontalAlignment;
-	}
+	// public ItemViewRowJustification getRowHorizontalAlignment() {
+	// 	return rowHorizontalAlignment;
+	// }
 
-	public InfiniteItemView2<RECORD> setRowHorizontalAlignment(ItemViewRowJustification rowHorizontalAlignment) {
-		this.rowHorizontalAlignment = rowHorizontalAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetRowHorizontalAlignmentCommand(getId(), rowHorizontalAlignment.toUiItemJustification()));
-		return this;
-	}
+	// public InfiniteItemView2<RECORD> setRowHorizontalAlignment(ItemViewRowJustification rowHorizontalAlignment) {
+	// 	this.rowHorizontalAlignment = rowHorizontalAlignment;
+	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetRowHorizontalAlignmentCommand(getId(), rowHorizontalAlignment.toUiItemJustification()));
+	// 	return this;
+	// }
 
 	public InfiniteItemViewModel<RECORD> getModel() {
 		return model;
@@ -265,40 +241,175 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 		this.model = model;
 		refresh();
 		model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
-		model.onRecordAdded().addListener(this.modelOnRecordAddedListener);
-		model.onRecordChanged().addListener(this.modelOnRecordChangedListener);
-		model.onRecordDeleted().addListener(this.modelOnRecordDeletedListener);
+		model.onRecordsAdded().addListener(this.modelOnRecordsAddedListener);
+		model.onRecordsChanged().addListener(this.modelOnRecordsChangedListener);
+		model.onRecordsDeleted().addListener(this.modelOnRecordsDeletedListener);
 		return this;
 	}
 
 	private void unregisterModelListeners() {
 		this.model.onAllDataChanged().removeListener(this.modelOnAllDataChangedListener);
-		this.model.onRecordAdded().removeListener(this.modelOnRecordAddedListener);
-		this.model.onRecordChanged().removeListener(this.modelOnRecordChangedListener);
-		this.model.onRecordDeleted().removeListener(this.modelOnRecordDeletedListener);
+		this.model.onRecordsAdded().removeListener(this.modelOnRecordsAddedListener);
+		this.model.onRecordsChanged().removeListener(this.modelOnRecordsChangedListener);
+		this.model.onRecordsDeleted().removeListener(this.modelOnRecordsDeletedListener);
 	}
 
 	public void refresh() {
-		sendRecords(0, numberOfInitialRecords, true);
+		cachedModelCount = -1;
+		sendFullRenderedRange();
 	}
 
-	private void sendRecords(int startIndex, int length, boolean clear) {
-		if (isRendered()) {
-			int totalCount = model.getCount();
-			List<RECORD> records = model.getRecords(startIndex, Math.max(0, Math.min(totalCount - startIndex, length)));
-			CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse;
-			if (clear) {
-				cacheResponse = itemCache.replaceRecords(records);
-			} else {
-				cacheResponse = itemCache.addRecords(records);
+	private void sendFullRenderedRange() {
+		if (!isRendered()) {
+			return;
+		}
+		List<RECORD> records = retrieveRecords(renderedRange.getStart(), renderedRange.getLength());
+		UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(records);
+		renderedRecords = new RenderedRecordsCache<>(uiRecordMappingResult.recordAndClientRecords);
+		updateClientRenderData(uiRecordMappingResult.newUiRecords);
+	}
+
+	private void handleScrollOrResize(ItemRange newRange) {
+		var oldRange = this.renderedRange;
+		this.renderedRange = newRange;
+		System.out.println("new renderedRange: " + newRange);
+		if (newRange.overlaps(oldRange)) {
+			List<UiIdentifiableClientRecord> newUiRecords = new ArrayList<>();
+			if (newRange.getStart() < oldRange.getStart()) {
+				List<RECORD> records = retrieveRecords(newRange.getStart(), oldRange.getStart() - newRange.getStart());
+				UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(records);
+				renderedRecords.insert(0, uiRecordMappingResult.recordAndClientRecords);
+				System.out.println("newRange.start < oldRange.start: " + newRange + " < " + oldRange + " so adding " + uiRecordMappingResult.newUiRecords.size() + " uiRecords");
+				newUiRecords.addAll(uiRecordMappingResult.newUiRecords);
+			} else if (newRange.getStart() > oldRange.getStart()) {
+				renderedRecords.remove(0, newRange.getStart() - oldRange.getStart());
 			}
-			getSessionContext().queueCommand(new UiInfiniteItemView2.AddDataCommand(getId(), startIndex, cacheResponse.getAndClearResult(), totalCount, clear),
-					aVoid -> cacheResponse.commit());
+			if (newRange.getEnd() > oldRange.getEnd()) {
+				List<RECORD> records = retrieveRecords(oldRange.getEnd(), newRange.getEnd() - oldRange.getEnd());
+				UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(records);
+				renderedRecords.insert(renderedRecords.size(), uiRecordMappingResult.recordAndClientRecords);
+				newUiRecords.addAll(uiRecordMappingResult.newUiRecords);
+			} else if (newRange.getEnd() < oldRange.getEnd() && newRange.getEnd() < getModelCount()) {
+				int absoluteDeleteStartIndex = newRange.getEnd();
+				int absoluteDeleteEndIndex = Math.min(oldRange.getEnd(), getModelCount());
+				renderedRecords.remove(renderedRecords.size() - (absoluteDeleteEndIndex - absoluteDeleteStartIndex), renderedRecords.size());
+			}
+			if (!oldRange.equals(newRange) || newUiRecords.size() > 0) {
+				updateClientRenderData(newUiRecords);
+			}
+		} else {
+			System.out.println("no overlap!");
+			sendFullRenderedRange();
+		}
+		System.out.println("renderedRange after scroll update: " + renderedRange + "; renderedRecords.size: " + renderedRecords.size());
+	}
+
+	private void handleModelRecordsAdded(ItemRangeChangeEvent<RECORD> changeEvent) {
+		cachedModelCount += changeEvent.getLength();
+		if (!isRendered()) {
+			return;
+		}
+		if (changeEvent.getStart() < renderedRange.getEnd()) {
+			int newRecordsStartIndex = Math.max(changeEvent.getStart(), renderedRange.getStart());
+			int newRecordsLength = Math.min(changeEvent.getLength(), Math.min(renderedRange.getEnd() - changeEvent.getStart(), renderedRange.getLength()));
+			int listInsertIndex = newRecordsStartIndex - renderedRange.getStart();
+			List<RECORD> newRecords = retrieveRecords(newRecordsStartIndex, newRecordsLength);
+			UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(newRecords);
+			renderedRecords.insert(listInsertIndex, uiRecordMappingResult.recordAndClientRecords);
+
+			if (renderedRange.getLength() < renderedRecords.size()) {
+				renderedRecords.remove(renderedRange.getLength(), renderedRecords.size());
+			}
+
+			updateClientRenderData(uiRecordMappingResult.newUiRecords);
 		}
 	}
 
-	public void setMaxCacheCapacity(int maxCapacity) {
-		itemCache.setMaxCapacity(maxCapacity);
+	private void handleModelRecordsChanged(ItemRangeChangeEvent<RECORD> changeEvent) {
+		if (!isRendered()) {
+			return;
+		}
+		if (changeEvent.getItemRange().overlaps(renderedRange)) {
+			int queryStartIndex = Math.max(changeEvent.getStart(), renderedRange.getStart());
+			int queryEndIndex = Math.min(changeEvent.getEnd(), renderedRange.getEnd());
+			List<RECORD> changedRecords = changeEvent.getRecords()
+					.map(records -> records.subList(queryStartIndex - changeEvent.getStart(), queryEndIndex - changeEvent.getStart()))
+					.orElseGet(() -> retrieveRecords(queryStartIndex, queryEndIndex - queryStartIndex));
+			UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(changedRecords);
+			renderedRecords.remove(queryStartIndex - renderedRange.getStart(), queryEndIndex - renderedRange.getStart());
+			renderedRecords.insert(queryStartIndex - renderedRange.getStart(), uiRecordMappingResult.recordAndClientRecords);
+			updateClientRenderData(uiRecordMappingResult.newUiRecords);
+		}
+	}
+
+	private void handleModelRecordsDeleted(ItemRangeChangeEvent<RECORD> changeEvent) {
+		cachedModelCount -= changeEvent.getLength();
+		if (!isRendered()) {
+			return;
+		}
+		if (changeEvent.getStart() < renderedRange.getEnd()) {
+			int removedRecordsStartIndex = Math.max(changeEvent.getStart(), renderedRange.getStart());
+			int removedRecordsLength = Math.min(changeEvent.getLength(), Math.min(renderedRange.getEnd() - changeEvent.getStart(), renderedRange.getLength()));
+			int removeIndexInsideList = removedRecordsStartIndex - renderedRange.getStart();
+			List<RECORD> newRecords = retrieveRecords(renderedRange.getEnd(), removedRecordsLength);
+			UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(newRecords);
+			renderedRecords.remove(removeIndexInsideList, removeIndexInsideList + removedRecordsLength);
+			renderedRecords.insert(renderedRecords.size(), uiRecordMappingResult.recordAndClientRecords);
+			updateClientRenderData(uiRecordMappingResult.newUiRecords);
+		}
+	}
+
+	private int getModelCount() {
+		if (cachedModelCount < 0) {
+			cachedModelCount = model.getCount();
+		}
+		return cachedModelCount;
+	}
+
+	private List<RECORD> retrieveRecords(int startIndex, int length) {
+		if (startIndex > getModelCount() || length <= 0) {
+			return Collections.emptyList();
+		}
+		int actualStartIndex = Math.max(startIndex, 0);
+		int actualLength = Math.min(getModelCount() - startIndex, length);
+		return model.getRecords(actualStartIndex, actualLength);
+	}
+
+	private void updateClientRenderData(List<UiIdentifiableClientRecord> newUiRecords) {
+		System.out.println(newUiRecords.size());
+		queueCommandIfRendered(() -> {
+			System.out.println("SENDING: renderedRange.start: " + renderedRange.getStart() + "; renderedRecords.size: " + renderedRecords.size() + " Count:" + getModelCount());
+			return new UiInfiniteItemView2.SetDataCommand(
+					getId(),
+					renderedRange.getStart(),
+					renderedRecords.getUiRecordIds(),
+					newUiRecords,
+					getModelCount() // might optimize this too...
+			);
+		});
+	}
+
+
+	private UiRecordMappingResult<RECORD> mapToClientRecords(List<RECORD> newRecords) {
+		List<UiIdentifiableClientRecord> newUiRecords = new ArrayList<>();
+		List<RecordAndClientRecord<RECORD>> recordAndClientRecords = new ArrayList<>();
+		for (RECORD r : newRecords) {
+			UiIdentifiableClientRecord existingUiRecord = renderedRecords.getUiRecord(r);
+			UiIdentifiableClientRecord newUiRecord = createUiIdentifiableClientRecord(r);
+			boolean isNew = existingUiRecord == null || !existingUiRecord.getValues().equals(newUiRecord.getValues());
+			if (isNew) {
+				newUiRecords.add(newUiRecord);
+			}
+			recordAndClientRecords.add(new RecordAndClientRecord<>(r, isNew ? newUiRecord : existingUiRecord));
+		}
+		return new UiRecordMappingResult<>(recordAndClientRecords, newUiRecords);
+	}
+
+	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
+		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
+		clientRecord.setId(++clientRecordIdCounter);
+		clientRecord.setValues(itemPropertyExtractor.getValues(record, itemTemplate.getDataKeys()));
+		return clientRecord;
 	}
 
 	public Function<RECORD, Component> getContextMenuProvider() {
@@ -313,4 +424,72 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
+	private static class RecordAndClientRecord<RECORD> {
+		final RECORD record;
+		final UiIdentifiableClientRecord uiRecord;
+
+		public RecordAndClientRecord(RECORD record, UiIdentifiableClientRecord uiRecord) {
+			this.record = record;
+			this.uiRecord = uiRecord;
+		}
+	}
+
+	private static class RenderedRecordsCache<RECORD> {
+		private final Map<RECORD, UiIdentifiableClientRecord> uiRecordsByRecord = new HashMap<>();
+		private final List<RecordAndClientRecord<RECORD>> recordPairs = new ArrayList<>();
+
+		public RenderedRecordsCache() {
+		}
+
+		public RenderedRecordsCache(List<RecordAndClientRecord<RECORD>> recordPairs) {
+			insert(0, recordPairs);
+		}
+
+		UiIdentifiableClientRecord getUiRecord(RECORD record) {
+			return uiRecordsByRecord.get(record);
+		}
+
+		Optional<RECORD> getRecord(int uiRecordId) {
+			// no fast implementation needed! only called on user click
+			return recordPairs.stream()
+					.filter(rr -> rr.uiRecord.getId() == uiRecordId)
+					.map(rr -> rr.record)
+					.findFirst();
+		}
+
+		List<Integer> getUiRecordIds() {
+			return recordPairs.stream()
+					.map(rr -> rr.uiRecord.getId())
+					.collect(Collectors.toList());
+		}
+
+		void insert(int listInsertIndex, List<RecordAndClientRecord<RECORD>> newClientRecordPairs) {
+			recordPairs.addAll(listInsertIndex, newClientRecordPairs);
+			for (RecordAndClientRecord<RECORD> rr : newClientRecordPairs) {
+				uiRecordsByRecord.put(rr.record, rr.uiRecord);
+			}
+		}
+
+		void remove(int startIndex, int endIndex) {
+			List<RecordAndClientRecord<RECORD>> recordsToBeRemoved = recordPairs.subList(startIndex, endIndex);
+			for (RecordAndClientRecord<RECORD> rr : recordsToBeRemoved) {
+				uiRecordsByRecord.remove(rr.record);
+			}
+			recordsToBeRemoved.clear();
+		}
+
+		int size() {
+			return recordPairs.size();
+		}
+	}
+
+	private static class UiRecordMappingResult<RECORD> {
+		List<RecordAndClientRecord<RECORD>> recordAndClientRecords;
+		List<UiIdentifiableClientRecord> newUiRecords;
+
+		public UiRecordMappingResult(List<RecordAndClientRecord<RECORD>> recordAndClientRecords, List<UiIdentifiableClientRecord> newUiRecords) {
+			this.recordAndClientRecords = recordAndClientRecords;
+			this.newUiRecords = newUiRecords;
+		}
+	}
 }

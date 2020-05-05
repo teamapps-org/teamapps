@@ -58,10 +58,10 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
 	protected final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
 
-	private Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
-	private Consumer<RECORD> modelOnRecordAddedListener = record -> this.refresh();
-	private Consumer<RECORD> modelOnRecordChangedListener = record -> this.refresh();
-	private Consumer<RECORD> modelOnRecordDeletedListener = record -> this.refresh();
+	private final Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
+	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordAddedListener = x -> this.refresh();
+	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordChangedListener = x -> this.refresh();
+	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordDeletedListener = x -> this.refresh();
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
@@ -254,17 +254,17 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		this.model = model;
 		refresh();
 		model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
-		model.onRecordAdded().addListener(this.modelOnRecordAddedListener);
-		model.onRecordChanged().addListener(this.modelOnRecordChangedListener);
-		model.onRecordDeleted().addListener(this.modelOnRecordDeletedListener);
+		model.onRecordsAdded().addListener(this.modelOnRecordAddedListener);
+		model.onRecordsChanged().addListener(this.modelOnRecordChangedListener);
+		model.onRecordsDeleted().addListener(this.modelOnRecordDeletedListener);
 		return this;
 	}
 
 	private void unregisterModelListeners() {
 		this.model.onAllDataChanged().removeListener(this.modelOnAllDataChangedListener);
-		this.model.onRecordAdded().removeListener(this.modelOnRecordAddedListener);
-		this.model.onRecordChanged().removeListener(this.modelOnRecordChangedListener);
-		this.model.onRecordDeleted().removeListener(this.modelOnRecordDeletedListener);
+		this.model.onRecordsAdded().removeListener(this.modelOnRecordAddedListener);
+		this.model.onRecordsChanged().removeListener(this.modelOnRecordChangedListener);
+		this.model.onRecordsDeleted().removeListener(this.modelOnRecordDeletedListener);
 	}
 
 	public void refresh() {
