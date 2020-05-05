@@ -48,6 +48,12 @@ var ACTION;
     ACTION["PIPE_FROM_REMOTE_PRODUCER"] = "pipeFromRemoteProducer";
     ACTION["WORKER_LOAD"] = "workerLoad";
     ACTION["NUM_WORKERS"] = "numWorkers";
+    ACTION["RECORDED_STREAMS"] = "recordedStreams";
+    ACTION["STREAM_RECORDINGS"] = "streamRecordings";
+    ACTION["DELETE_STREAM_RECORDINGS"] = "deleteStreamRecordings";
+    ACTION["DELETE_RECORDING"] = "deleteRecording";
+    ACTION["PUSH_TO_SERVER_INPUTS"] = "pushToServerInputs";
+    ACTION["PULL_FROM_SERVER_INPUTS"] = "pullFromServerInputs";
 })(ACTION = exports.ACTION || (exports.ACTION = {}));
 var PATH;
 (function (PATH) {
@@ -184,36 +190,6 @@ var ConferenceApi = /** @class */ (function (_super) {
         _this.device = new mediasoup_client_1.Device();
         return _this;
     }
-    ConferenceApi.prototype.startRecording = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, stream, kinds;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = this.configs, stream = _a.stream, kinds = _a.kinds;
-                        return [4 /*yield*/, this.api.startRecording({ wait: true, stream: stream, kinds: kinds })];
-                    case 1:
-                        _b.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    ConferenceApi.prototype.stopRecording = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var stream;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        stream = this.configs.stream;
-                        return [4 /*yield*/, this.api.stopRecording({ wait: true, stream: stream })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
     ConferenceApi.prototype.setPreferredLayers = function (layers) {
         return __awaiter(this, void 0, void 0, function () {
             var kind, consumer, e_1;
@@ -497,7 +473,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                                 }
                             });
                         }); });
-                        params = { track: track, stopTracks: false };
+                        params = { track: track, stopTracks: !!this.configs.stopTracks };
                         if (this.configs.simulcast && kind === 'video' && this.simulcast) {
                             if (this.simulcast.encodings) {
                                 params.encodings = this.simulcast.encodings;
@@ -551,13 +527,18 @@ var ConferenceApi = /** @class */ (function (_super) {
                     case 6: return [2 /*return*/, transport.consume(data)];
                     case 7:
                         e_5 = _a.sent();
-                        if (!(e_5 && e_5.errorId === constants_1.ERROR.INVALID_STREAM)) return [3 /*break*/, 9];
+                        if (!e_5) return [3 /*break*/, 10];
+                        if (!(e_5.errorId === constants_1.ERROR.INVALID_STREAM)) return [3 /*break*/, 9];
                         return [4 /*yield*/, new Promise(function (resolve) { return _this.timeouts.push(setTimeout(resolve, 1000)); })];
                     case 8:
                         _a.sent();
                         return [2 /*return*/, this.consume(transport, stream, _kind)];
-                    case 9: throw e_5;
-                    case 10: return [3 /*break*/, 11];
+                    case 9:
+                        if (e_5.errorId === constants_1.ERROR.INVALID_TRANSPORT) {
+                            this.restartAll().then(function () { }).catch(function () { });
+                        }
+                        _a.label = 10;
+                    case 10: throw e_5;
                     case 11: return [2 /*return*/];
                 }
             });
@@ -662,7 +643,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                         this.emit('connectionstatechange', { state: 'disconnected' });
                         _a.label = 5;
                     case 5:
-                        if (hard && this.mediaStream) {
+                        if (hard && this.mediaStream && this.configs.stopTracks) {
                             this.mediaStream.getTracks().forEach(function (track) {
                                 track.stop();
                             });
@@ -883,12 +864,14 @@ var utils_1 = require("./utils");
 var conference_api_1 = require("./conference-api");
 var constants_1 = require("../../config/constants");
 var debug = __importStar(require("debug"));
+var mediasoup_rest_api_1 = require("./mediasoup-rest-api");
 window.debug = debug;
 window.Utils = utils_1.Utils;
 window.ConferenceApi = conference_api_1.ConferenceApi;
 window.ERROR = constants_1.ERROR;
+window.MediasoupRestApi = mediasoup_rest_api_1.MediasoupRestApi;
 
-},{"../../config/constants":1,"./conference-api":2,"./utils":5,"debug":35}],4:[function(require,module,exports){
+},{"../../config/constants":1,"./conference-api":2,"./mediasoup-rest-api":4,"./utils":5,"debug":35}],4:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -1246,6 +1229,70 @@ var MediasoupRestApi = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.recordedStreams = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.RECORDED_STREAMS)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.streamRecordings = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.STREAM_RECORDINGS, json)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.deleteStreamRecordings = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.DELETE_STREAM_RECORDINGS, json)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.deleteRecording = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.DELETE_RECORDING, json)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.pushToServerInputs = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PUSH_TO_SERVER_INPUTS, json)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.pullFromServerInputs = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PULL_FROM_SERVER_INPUTS, json)];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -3766,9 +3813,9 @@ module.exports = setup;
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var objectCreate = Object.create || objectCreatePolyfill;
-var objectKeys = Object.keys || objectKeysPolyfill;
-var bind = Function.prototype.bind || functionBindPolyfill;
+var objectCreate = Object.create || objectCreatePolyfill
+var objectKeys = Object.keys || objectKeysPolyfill
+var bind = Function.prototype.bind || functionBindPolyfill
 
 function EventEmitter() {
   if (!this._events || !Object.prototype.hasOwnProperty.call(this, '_events')) {
@@ -12743,7 +12790,7 @@ function defaultClearTimeout () {
     } catch (e) {
         cachedClearTimeout = defaultClearTimeout;
     }
-} ());
+} ())
 function runTimeout(fun) {
     if (cachedSetTimeout === setTimeout) {
         //normal enviroments in sane situations
@@ -12880,7 +12927,7 @@ process.emit = noop;
 process.prependListener = noop;
 process.prependOnceListener = noop;
 
-process.listeners = function (name) { return [] };
+process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');

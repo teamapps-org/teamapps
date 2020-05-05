@@ -47,6 +47,12 @@ var ACTION;
     ACTION["PIPE_FROM_REMOTE_PRODUCER"] = "pipeFromRemoteProducer";
     ACTION["WORKER_LOAD"] = "workerLoad";
     ACTION["NUM_WORKERS"] = "numWorkers";
+    ACTION["RECORDED_STREAMS"] = "recordedStreams";
+    ACTION["STREAM_RECORDINGS"] = "streamRecordings";
+    ACTION["DELETE_STREAM_RECORDINGS"] = "deleteStreamRecordings";
+    ACTION["DELETE_RECORDING"] = "deleteRecording";
+    ACTION["PUSH_TO_SERVER_INPUTS"] = "pushToServerInputs";
+    ACTION["PULL_FROM_SERVER_INPUTS"] = "pullFromServerInputs";
 })(ACTION = exports.ACTION || (exports.ACTION = {}));
 var PATH;
 (function (PATH) {

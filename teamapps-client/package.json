@@ -110,7 +110,6 @@
     "loglevel": "1.6.3",
     "md5": "^2.2.1",
     "mediaelement": "^4.2.10",
-    "mediasoup": "^3.4.12",
     "mediasoup-client": "^3.3.17",
     "minimatch": "^3.0.4",
     "moment": "^2.21.0",

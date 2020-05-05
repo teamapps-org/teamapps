@@ -108,36 +108,6 @@ var ConferenceApi = /** @class */ (function (_super) {
         _this.device = new mediasoup_client_1.Device();
         return _this;
     }
-    ConferenceApi.prototype.startRecording = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, stream, kinds;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = this.configs, stream = _a.stream, kinds = _a.kinds;
-                        return [4 /*yield*/, this.api.startRecording({ wait: true, stream: stream, kinds: kinds })];
-                    case 1:
-                        _b.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    ConferenceApi.prototype.stopRecording = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var stream;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        stream = this.configs.stream;
-                        return [4 /*yield*/, this.api.stopRecording({ wait: true, stream: stream })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
     ConferenceApi.prototype.setPreferredLayers = function (layers) {
         return __awaiter(this, void 0, void 0, function () {
             var kind, consumer, e_1;
@@ -421,7 +391,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                                 }
                             });
                         }); });
-                        params = { track: track, stopTracks: false };
+                        params = { track: track, stopTracks: !!this.configs.stopTracks };
                         if (this.configs.simulcast && kind === 'video' && this.simulcast) {
                             if (this.simulcast.encodings) {
                                 params.encodings = this.simulcast.encodings;
@@ -475,13 +445,18 @@ var ConferenceApi = /** @class */ (function (_super) {
                     case 6: return [2 /*return*/, transport.consume(data)];
                     case 7:
                         e_5 = _a.sent();
-                        if (!(e_5 && e_5.errorId === constants_1.ERROR.INVALID_STREAM)) return [3 /*break*/, 9];
+                        if (!e_5) return [3 /*break*/, 10];
+                        if (!(e_5.errorId === constants_1.ERROR.INVALID_STREAM)) return [3 /*break*/, 9];
                         return [4 /*yield*/, new Promise(function (resolve) { return _this.timeouts.push(setTimeout(resolve, 1000)); })];
                     case 8:
                         _a.sent();
                         return [2 /*return*/, this.consume(transport, stream, _kind)];
-                    case 9: throw e_5;
-                    case 10: return [3 /*break*/, 11];
+                    case 9:
+                        if (e_5.errorId === constants_1.ERROR.INVALID_TRANSPORT) {
+                            this.restartAll().then(function () { }).catch(function () { });
+                        }
+                        _a.label = 10;
+                    case 10: throw e_5;
                     case 11: return [2 /*return*/];
                 }
             });
@@ -586,7 +561,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                         this.emit('connectionstatechange', { state: 'disconnected' });
                         _a.label = 5;
                     case 5:
-                        if (hard && this.mediaStream) {
+                        if (hard && this.mediaStream && this.configs.stopTracks) {
                             this.mediaStream.getTracks().forEach(function (track) {
                                 track.stop();
                             });

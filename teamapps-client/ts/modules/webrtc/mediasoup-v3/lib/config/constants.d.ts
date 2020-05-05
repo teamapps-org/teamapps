@@ -24,7 +24,13 @@ export declare enum ACTION {
     PIPE_TO_REMOTE_PRODUCER = "pipeToRemoteProducer",
     PIPE_FROM_REMOTE_PRODUCER = "pipeFromRemoteProducer",
     WORKER_LOAD = "workerLoad",
-    NUM_WORKERS = "numWorkers"
+    NUM_WORKERS = "numWorkers",
+    RECORDED_STREAMS = "recordedStreams",
+    STREAM_RECORDINGS = "streamRecordings",
+    DELETE_STREAM_RECORDINGS = "deleteStreamRecordings",
+    DELETE_RECORDING = "deleteRecording",
+    PUSH_TO_SERVER_INPUTS = "pushToServerInputs",
+    PULL_FROM_SERVER_INPUTS = "pullFromServerInputs"
 }
 export declare enum PATH {
     RECORDINGS = "recordings",
