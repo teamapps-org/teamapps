@@ -31,10 +31,10 @@ public interface InfiniteItemViewModel<RECORD> {
 
 	Event<Void> onAllDataChanged();
 
-	Event<RECORD> onRecordAdded();
+	Event<ItemRangeChangeEvent<RECORD>> onRecordsAdded();
 
-	Event<RECORD> onRecordChanged();
+	Event<ItemRangeChangeEvent<RECORD>> onRecordsChanged();
 
-	Event<RECORD> onRecordDeleted();
+	Event<ItemRangeChangeEvent<RECORD>> onRecordsDeleted();
 
 }

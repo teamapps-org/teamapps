@@ -13,7 +13,8 @@
     "moduleResolution": "node",
     "declaration": true,
     "declarationDir": "../../dist/tsd",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "downlevelIteration": true
   },
   "files": [
     "index.ts",

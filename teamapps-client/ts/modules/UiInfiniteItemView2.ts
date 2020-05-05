@@ -20,13 +20,13 @@
 
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {Constants, deepEquals, insertAfter, parseHtml, Renderer} from "./Common";
+import {Constants, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
 	UiInfiniteItemView2_ContextMenuRequestedEvent,
-	UiInfiniteItemView2_DisplayedRangeChangedEvent,
 	UiInfiniteItemView2_ItemClickedEvent,
+	UiInfiniteItemView2_RenderedItemRangeChangedEvent,
 	UiInfiniteItemView2CommandHandler,
 	UiInfiniteItemView2Config,
 	UiInfiniteItemView2EventSource
@@ -35,12 +35,9 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {UiItemJustification} from "../generated/UiItemJustification";
 import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClientRecordConfig";
-import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
 import {ContextMenu} from "./micro-components/ContextMenu";
 import {UiComponent} from "./UiComponent";
-import {throttledMethod} from "./util/throttle";
-import {createUiInfiniteItemViewDataRequestConfig, UiInfiniteItemViewDataRequestConfig} from "../generated/UiInfiniteItemViewDataRequestConfig";
-import {debounce, debouncedMethod, DebounceMode} from "./util/debounce";
+import {debouncedMethod, DebounceMode} from "./util/debounce";
 import {UiHorizontalElementAlignment} from "../generated/UiHorizontalElementAlignment";
 import {UiVerticalElementAlignment} from "../generated/UiVerticalElementAlignment";
 
@@ -48,116 +45,19 @@ type RenderedItem = {
 	item: UiIdentifiableClientRecordConfig,
 	$element: HTMLElement,
 	$wrapper: HTMLElement,
-	position: [number, number]
+	x: number,
+	y: number,
+	width: number,
+	height: number
 };
 
-class UiInfiniteItemView2DataProvider {
-
-	data: UiIdentifiableClientRecordConfig[] = [];
-	private totalNumberOfRecords = 0;
-
-	constructor(private dataRequestCallback: (fromIndex: number, toIndex: number) => void) {
-	}
-
-	public setTotalNumberOfRecords(totalNumberOfRecords: number) {
-		if (this.data.length > totalNumberOfRecords) {
-			this.data.length = totalNumberOfRecords;
-		}
-		this.totalNumberOfRecords = totalNumberOfRecords;
-	}
-
-	public getTotalNumberOfRecords() {
-		return this.totalNumberOfRecords;
-	}
-
-	public getItems(startIndex: number, endIndex: number, requestMissing: boolean) {
-		if (requestMissing) {
-			console.log(`Get items: ${startIndex} - ${endIndex}`)
-		}
-		if (requestMissing) {
-			this.ensureData(startIndex, endIndex);
-		}
-		return this.data.slice(startIndex, endIndex);
-	}
-
-	public ensureData(startIndex: number, endIndex: number) {
-		if (endIndex <= startIndex) {
-			return;
-		}
-		endIndex = Math.min(endIndex, this.totalNumberOfRecords);
-		while (startIndex < endIndex && this.data[startIndex] !== undefined) {
-			startIndex++;
-		}
-		while (startIndex < endIndex && this.data[endIndex - 1] !== undefined) {
-			endIndex--;
-		}
-		if (startIndex == endIndex) {
-			return;
-		}
-		for (var i = startIndex; i < endIndex; i++) {
-			if (this.data[i] === undefined) {
-				this.data[i] = null; // null indicates a 'requested but not available yet'
-			}
-		}
-		this.requestRange(startIndex, endIndex);
-	}
-
-	private requestRange = (() => {
-		let rangesToBeRequested: [number, number][] = [];
-
-		let mergeAndRequestDebounced = debounce(() => {
-			console.log(`rangesToBeRequested: ${JSON.stringify(rangesToBeRequested)}`);
-			rangesToBeRequested.sort((a, b) => a[0] - b[0]);
-			for (let i = 0; i < rangesToBeRequested.length - 1;) {
-				let range1 = rangesToBeRequested[i];
-				let range2 = rangesToBeRequested[i + 1];
-				if (range1[1] >= range2[0]) {
-					range1[1] = range2[0];
-					rangesToBeRequested.splice(i + 1, 1);
-				} else {
-					i++
-				}
-			}
-			for (let range of rangesToBeRequested) {
-				this.dataRequestCallback(range[0], range[1]);
-			}
-			rangesToBeRequested = [];
-		}, 200, DebounceMode.BOTH);
-
-		return (startIndex: number, endIndex: number) => {
-			rangesToBeRequested.push([startIndex, endIndex]);
-			mergeAndRequestDebounced();
-		}
-	})();
-
-	public clear() {
-		this.data.length = 0;
-	}
-
-	setData(startIndex: number, data: any[]) {
-		this.data.splice.apply(this.data, ([startIndex, data.length] as any[]).concat(data));
-	}
-
-	removeData(ids: number[]) {
-		let idsAsMap: { [id: string]: number } = ids.reduce((previousValue: { [id: string]: number }, currentValue) => {
-			previousValue[currentValue] = currentValue;
-			return previousValue;
-		}, {});
-		for (let i = 0; i < this.data.length; i++) {
-			const currentRecord = this.data[i];
-			if (currentRecord != null && idsAsMap[currentRecord.id] != null) {
-				this.data[i] = undefined;
-			}
-		}
-	}
-}
-export var itemCssStringsJustification = {
+export var cssJustifyContent = {
 	[UiHorizontalElementAlignment.LEFT]: "flex-start",
 	[UiHorizontalElementAlignment.RIGHT]: "flex-end",
 	[UiHorizontalElementAlignment.CENTER]: "center",
 	[UiHorizontalElementAlignment.STRETCH]: "stretch",
 };
-export var itemCssStringsAlignItems = {
+export var cssAlignItems = {
 	[UiVerticalElementAlignment.TOP]: "flex-start",
 	[UiVerticalElementAlignment.CENTER]: "center",
 	[UiVerticalElementAlignment.BOTTOM]: "flex-end",
@@ -166,25 +66,23 @@ export var itemCssStringsAlignItems = {
 
 export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2Config> implements UiInfiniteItemView2CommandHandler, UiInfiniteItemView2EventSource {
 
-
-	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView2_DisplayedRangeChangedEvent> = new TeamAppsEvent(this);
+	public readonly onRenderedItemRangeChanged: TeamAppsEvent<UiInfiniteItemView2_RenderedItemRangeChangedEvent> = new TeamAppsEvent(this);
 	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView2_ItemClickedEvent> = new TeamAppsEvent(this);
 	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView2_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;
 	private $styles: HTMLStyleElement;
-	private dataProvider: UiInfiniteItemView2DataProvider;
 	private itemTemplateRenderer: Renderer;
 	private contextMenu: ContextMenu;
 
+	private renderedRange: [number, number] = [0, 0];
+	private renderedIds: number[] = []; // in order
+	private renderedItems: Map<number, RenderedItem> = new Map<number, RenderedItem>();
+	private totalNumberOfRecords: number = null;
+
 	constructor(config: UiInfiniteItemView2Config, context: TeamAppsUiContext) {
 		super(config, context);
-		this.dataProvider = new UiInfiniteItemView2DataProvider((fromIndex, endIndex) => {
-			let eventObject = this.createDisplayRangeChangedEvent(createUiInfiniteItemViewDataRequestConfig(fromIndex, endIndex - fromIndex));
-			console.log(`Requesting range: ${eventObject.dataRequest?.startIndex} - ${eventObject.dataRequest?.startIndex + eventObject.dataRequest?.length}; Displayed range: ${eventObject.startIndex} - ${eventObject.startIndex + eventObject.length};`); // Displayed IDs: ${eventObject.displayedRecordIds.join(", ")}`)
-			this.onDisplayedRangeChanged.fire(eventObject);
-		});
 		this.$mainDomElement = parseHtml(`<div id="${config.id}" class="UiInfiniteItemView2 grid-${this._config.id}">
                 <div class="grid"></div>
                 <style></style>
@@ -193,11 +91,15 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		this.$styles = this.$mainDomElement.querySelector<HTMLStyleElement>(":scope style");
 		this.updateStyles();
 		this.setItemTemplate(config.itemTemplate);
-		this.dataProvider.setTotalNumberOfRecords(config.totalNumberOfRecords || 0);
 		this.contextMenu = new ContextMenu();
 
 		this.$mainDomElement.addEventListener("scroll", ev => {
-			this.handleScroll();
+			this.requestDataIfNeededForScrollDebounced();
+		});
+		this.$mainDomElement.addEventListener("wheel", ev => {
+			if (Math.abs(ev.deltaY) < 5) {
+				this.requestDataIfNeededForWheelDebounced(); // not debounced!
+			}
 		});
 
 		let me = this;
@@ -223,13 +125,43 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 			});
 	}
 
-	private renderedItems: RenderedItem[] = [];
-	private numberOfPreRenderedLines = 3;
+	@debouncedMethod(150, DebounceMode.BOTH)
+	private requestDataIfNeededForScrollDebounced() {
+		this.requestDataIfNeeded();
+	}
 
-	@debouncedMethod(150, DebounceMode.LATER)
-	private handleScroll() {
-		this.updateRenderedItems();
-		this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent());
+	@debouncedMethod(150, DebounceMode.BOTH)
+	private requestDataIfNeededForWheelDebounced() {
+		this.requestDataIfNeeded();
+	}
+
+	private requestDataIfNeeded() {
+		let visibleItemRange = this.getVisibleItemRange();
+		let visibleItemRangeLength = visibleItemRange[1] - visibleItemRange[0];
+		let uncutOptimalWindow = [
+			visibleItemRange[0] - visibleItemRangeLength,
+			visibleItemRange[1] + visibleItemRangeLength
+		];
+		const newRenderedRange: [number, number] = [Math.max(0, uncutOptimalWindow[0]), uncutOptimalWindow[1]];
+		if (newRenderedRange[0] != this.renderedRange[0] || newRenderedRange[1] != this.renderedRange[1]) {
+			this.renderedRange = newRenderedRange;
+			let eventObject = {
+				startIndex: newRenderedRange[0],
+				endIndex: newRenderedRange[1] // send the uncut value, so the server will send new records if some are added user scrolled to the end
+			};
+			console.log("REQUESTING ", eventObject);
+			this.onRenderedItemRangeChanged.fire(eventObject);
+		}
+	}
+
+	private getVisibleItemRange() {
+		const itemsPerRow = this.getItemsPerRow();
+		const viewportTop = this.$mainDomElement.scrollTop;
+		const visibleStartRowIndex = Math.floor(viewportTop / this._config.itemHeight);
+		const numberOfVisibleRows = Math.ceil(this.getHeight() / this._config.itemHeight); // exclusive
+		let startIndex = Math.max(0, visibleStartRowIndex * itemsPerRow);
+		let endIndex = startIndex + numberOfVisibleRows * itemsPerRow;
+		return [startIndex, endIndex];
 	}
 
 	private getItemsPerRow() {
@@ -244,138 +176,90 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		return itemsPerRow;
 	}
 
-	private getVisibleItemRange() {
+	private updateItemPositions() {
 		const itemsPerRow = this.getItemsPerRow();
-		const viewportTop = this.$mainDomElement.scrollTop;
-		const viewportBottom = viewportTop + this.getHeight();
-		const visibleStartRowIndex = Math.floor(viewportTop / this._config.itemHeight);
-		const visibleEndRowIndex = Math.ceil(viewportBottom / this._config.itemHeight); // exclusive
-		let startIndex = Math.max(0, visibleStartRowIndex * itemsPerRow);
-		let endIndex = Math.min(visibleEndRowIndex * itemsPerRow, this.dataProvider.getTotalNumberOfRecords());
-		return [startIndex, endIndex];
-	}
-
-	private updateRenderedItems() {
-		let itemsPerRow = this.getItemsPerRow();
-		let [startIndex, endIndex] = this.getVisibleItemRange();
-		if (endIndex - startIndex > 1000) {
-			throw new Error(`the number of items to be drawn is unrealistically high: ${endIndex - startIndex}`);
-		}
-		startIndex = Math.max(0, startIndex - (this.numberOfPreRenderedLines * itemsPerRow));
-		endIndex = Math.min(endIndex + (this.numberOfPreRenderedLines * itemsPerRow), this.dataProvider.getTotalNumberOfRecords());
-		for (let i = 0; i < Math.min(this.renderedItems.length, this.dataProvider.getTotalNumberOfRecords()); i++) {
-			if ((i < startIndex || i >= endIndex) && this.renderedItems[i] != null) {
-				this.renderedItems[i].$wrapper.remove();
-				this.renderedItems[i] = null;
-			}
-		}
 		const availableWidth = this.getAvailableWidth();
 		const itemWidth = this._config.itemWidth <= 0 ? availableWidth : this._config.itemWidth < 1 ? availableWidth * this._config.itemWidth : this._config.itemWidth;
-		let items = this.dataProvider.getItems(startIndex, endIndex, true);
-		let $lastSeenItemElementWrapper: HTMLElement = null;
-		for (let i = startIndex; i < Math.min(endIndex, startIndex + items.length); i++) {
-			const item = items[i - startIndex];
-			const existingRenderedItem = this.renderedItems[i];
-			const positionX = this._config.itemWidth * (i % this.getItemsPerRow());
-			const positionY = this._config.itemHeight * Math.floor(i / this.getItemsPerRow());
-			if (item == null) { // item not yet loaded
-				if (existingRenderedItem != null) {
-					existingRenderedItem.$wrapper.remove();
-					this.renderedItems[i] = null;
-				}
-			} else if (existingRenderedItem == null || !deepEquals(existingRenderedItem.item.values, item.values)) {
-				let $wrapper = existingRenderedItem != null ? existingRenderedItem.$wrapper : document.createElement("div");
-				$wrapper.innerHTML = '';
-				let $element = parseHtml(this.itemTemplateRenderer.render(item.values));
-				$wrapper.classList.add("item-wrapper");
-				$wrapper.setAttribute("data-id", "" + item.id);
-				$wrapper.appendChild($element);
-				this.renderedItems[i] = {
-					item: item,
-					$element: $element,
-					$wrapper: $wrapper,
-					position: [positionX, positionY]
-				};
-				this.updateItemPosition(this.renderedItems[i], positionX, positionY, itemWidth, this._config.itemHeight);
-				if ($lastSeenItemElementWrapper == null) {
-					this.$grid.prepend(this.renderedItems[i].$wrapper);
-				} else {
-					insertAfter(this.renderedItems[i].$wrapper, $lastSeenItemElementWrapper);
-				}
-			} else if (!deepEquals([positionX, positionY], existingRenderedItem.position)) {
-				this.updateItemPosition(existingRenderedItem, positionX, positionY, itemWidth, this._config.itemHeight);
-			}
-			$lastSeenItemElementWrapper = this.renderedItems[i]?.$wrapper ?? $lastSeenItemElementWrapper;
+		const itemHeight = this._config.itemHeight;
+		for (let i = 0; i < this.renderedIds.length; i++) {
+			const absoluteIndex = i + this.renderedRange[0];
+			const item = this.renderedItems.get(this.renderedIds[i]);
+			const positionX = itemWidth * (absoluteIndex % itemsPerRow);
+			const positionY = itemHeight * Math.floor(absoluteIndex / itemsPerRow);
+			this.updateItemPosition(item, positionX, positionY, itemWidth, itemHeight, absoluteIndex);
 		}
 	}
 
-	private clearRenderedItems() {
-		this.renderedItems.forEach(item => item.$wrapper.remove());
-		this.renderedItems = [];
-	}
-
-	private updateItemPosition(renderedItem: RenderedItem, positionX: number, positionY: number, itemWidth: number, itemHeight: number) {
-		renderedItem.$wrapper.style.left = positionX + "px";
-		renderedItem.$wrapper.style.top = positionY + "px";
-		renderedItem.$wrapper.style.width = itemWidth + "px";
-		renderedItem.$wrapper.style.height = itemHeight + "px";
-		renderedItem.$wrapper;
-		renderedItem.position = [positionX, positionY];
-	}
-
-	@throttledMethod(500) // CAUTION: debounce/throttle scrolling without data requests only!!! (otherwise the tableDataProvider will mark rows as requested but the actual request will not get to the server)
-	private throttledFireDisplayedRangeChanged() {
-		this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent());
-	}
-
-	private createDisplayRangeChangedEvent(dataRequest?: UiInfiniteItemViewDataRequestConfig) {
-		let visibleItemRange = this.getVisibleItemRange();
+	private createRenderedItem(item: UiIdentifiableClientRecordConfig): RenderedItem {
+		let $wrapper = document.createElement("div");
+		let $element = parseHtml(this.itemTemplateRenderer.render(item.values));
+		$wrapper.classList.add("item-wrapper");
+		$wrapper.setAttribute("data-id", "" + item.id);
+		$wrapper.appendChild($element);
 		return {
-			startIndex: visibleItemRange[0],
-			length: visibleItemRange[1] - visibleItemRange[0],
-			displayedRecordIds: this.dataProvider.getItems(visibleItemRange[0], visibleItemRange[1] - visibleItemRange[0], false).filter(item => item != null).map(item => item.id),
-			dataRequest: dataRequest
+			item: item,
+			$element: $element,
+			$wrapper: $wrapper,
+			x: -1,
+			y: -1,
+			width: -1,
+			height: -1
 		};
 	}
 
-	@executeWhenFirstDisplayed()
-	public addData(startIndex: number,
-	               data: any[],
-	               totalNumberOfRecords: number,
-	               clearTableCache: boolean) {
-		console.log(`addData: ${startIndex} - ${startIndex + data.length}`);
-		if (clearTableCache) {
-			this.dataProvider.clear();
+	private updateItemPosition(renderedItem: RenderedItem, positionX: number, positionY: number, itemWidth: number, itemHeight: number, absoluteIndex: number) {
+		if (positionX !== renderedItem.x
+			|| positionY !== renderedItem.y
+			|| itemWidth !== renderedItem.width
+			|| itemWidth !== renderedItem.height
+		) {
+			renderedItem.$wrapper.style.left = positionX + "px";
+			renderedItem.$wrapper.style.top = positionY + "px";
+			renderedItem.$wrapper.style.width = itemWidth + "px";
+			renderedItem.$wrapper.style.height = itemHeight + "px";
+			renderedItem.$element.querySelector(":scope .name2").textContent = "Pos: " + absoluteIndex; // TODO remove!!!
+			renderedItem.x = positionX;
+			renderedItem.y = positionY;
+			renderedItem.width = itemWidth;
+			renderedItem.height = itemHeight;
 		}
-		this.dataProvider.setTotalNumberOfRecords(totalNumberOfRecords);
-		this.dataProvider.setData(startIndex, data);
-		this.$grid.style.height = this._config.itemHeight * Math.ceil(totalNumberOfRecords / this.getItemsPerRow()) + "px";
-		this.updateRenderedItems();
 	}
 
-	@executeWhenFirstDisplayed()
-	removeData(ids: number[]): void {
-		let deleteIndexes = ids.map(id => this.dataProvider.data.findIndex(item => item != null && item.id == id));
-		deleteIndexes.sort((a, b) => a - b);
-		let deleteRanges: [number, number][] = [];
-		let currentDeleteRange: [number, number] = null;
-		for (let i = 0; i < deleteIndexes.length; i++) {
-			if (currentDeleteRange == null || deleteIndexes[i] > currentDeleteRange[1]) {
-				currentDeleteRange = [deleteIndexes[i], deleteIndexes[i] + 1];
-				deleteRanges.push(currentDeleteRange)
-			} else {
-				currentDeleteRange[1] = deleteIndexes[i] + 1;
+	private rerenderAllItems() {
+		if (this.totalNumberOfRecords != null) { // data was ever received
+			let items = [...this.renderedItems.values()].map(renderdItem => renderdItem.item);
+			this.renderedItems.forEach(renderedItem => renderedItem.$wrapper.remove());
+			this.renderedItems.clear();
+			this.setData(this.renderedRange[0], items.map(item => item.id), items, this.totalNumberOfRecords);
+		}
+	}
+
+	setData(startIndex: number, recordIds: number[], newRecords: UiIdentifiableClientRecordConfig[], totalNumberOfRecords: number): void {
+		console.log("got data ", startIndex, recordIds.length, newRecords.length, totalNumberOfRecords);
+		this.totalNumberOfRecords = totalNumberOfRecords;
+		this.$grid.style.height = this._config.itemHeight * Math.ceil(totalNumberOfRecords / this.getItemsPerRow()) + "px";
+		let recordIdsAsSet: Set<number> = new Set(recordIds);
+		const existingItems = [...this.renderedItems.values()];
+		for (let existingItem of existingItems) {
+			if (!recordIdsAsSet.has(existingItem.item.id)) {
+				existingItem.$wrapper.remove();
+				this.renderedItems.delete(existingItem.item.id);
 			}
 		}
-		console.log(`removeData: `, JSON.stringify(deleteRanges));
-		this.dataProvider.removeData(ids);
-		this.updateRenderedItems();
+		newRecords.forEach(newRecord => {
+			let renderedItem = this.createRenderedItem(newRecord);
+			this.renderedItems.set(newRecord.id, renderedItem);
+			this.$grid.appendChild(renderedItem.$wrapper);
+		});
+		this.renderedIds = recordIds;
+		this.updateItemPositions()
 	}
 
 	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
 		console.log("onResize ", this.getWidth(), this.getHeight());
-		this.updateRenderedItems();
+		this.updateItemPositions();
+		this.requestDataIfNeededForScrollDebounced();
 	}
 
 	private getAvailableWidth() {
@@ -389,57 +273,63 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 	private updateStyles() {
 		this.$styles.textContent = `
             .grid-${this._config.id} .item-wrapper {
-                 align-items: ${itemCssStringsAlignItems[this._config.itemContentVerticalAlignment]};
-                 justify-content: ${itemCssStringsJustification[this._config.itemContentHorizontalAlignment]};
+                 align-items: ${cssAlignItems[this._config.itemContentVerticalAlignment]};
+                 justify-content: ${cssJustifyContent[this._config.itemContentHorizontalAlignment]};
             }`;
 	}
 
 	setItemTemplate(itemTemplate: UiTemplateConfig): void {
 		this.itemTemplateRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
-		this.clearRenderedItems();
-		this.updateRenderedItems();
+		this.rerenderAllItems();
 	}
 
 	setItemWidth(itemWidth: number): void {
 		this._config.itemWidth = itemWidth;
 		this.updateStyles();
-		this.updateRenderedItems();
+		this.requestDataIfNeeded();
+		this.updateItemPositions();
 	}
 
 	setItemHeight(itemHeight: number): void {
 		this._config.itemHeight = itemHeight;
 		this.updateStyles();
-		this.updateRenderedItems();
+		this.requestDataIfNeeded();
+		this.updateItemPositions();
 	}
 
 	setHorizontalSpacing(horizontalSpacing: number): void {
 		this._config.horizontalSpacing = horizontalSpacing;
 		this.updateStyles();
-		this.updateRenderedItems();
+		this.requestDataIfNeeded();
+		this.updateItemPositions();
 	}
 
 	setVerticalSpacing(verticalSpacing: number): void {
 		this.updateStyles();
 		this._config.verticalSpacing = verticalSpacing;
-		this.updateRenderedItems();
+		this.requestDataIfNeeded();
+		this.updateItemPositions();
 	}
 
 	setItemContentHorizontalAlignment(itemContentHorizontalAlignment: UiHorizontalElementAlignment): void {
 		this._config.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
 		this.updateStyles();
-		this.updateRenderedItems();
+		this.requestDataIfNeeded();
+		this.updateItemPositions();
 	}
 
 	setItemContentVerticalAlignment(itemContentVerticalAlignment: UiVerticalElementAlignment): void {
 		this._config.itemContentVerticalAlignment = itemContentVerticalAlignment;
 		this.updateStyles();
-		this.updateRenderedItems();
+		this.requestDataIfNeeded();
+		this.updateItemPositions();
 	}
 
 	setRowHorizontalAlignment(rowHorizontalAlignment: UiItemJustification): void {
 		this._config.rowHorizontalAlignment = rowHorizontalAlignment;
 		this.updateStyles();
-		this.updateRenderedItems();
+		this.requestDataIfNeeded();
+		this.updateItemPositions();
 	}
 
 	setContextMenuContent(requestId: number, component: UiComponent): void {
