@@ -1,4 +1,4 @@
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, StartRecordingRequest, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData } from './client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PushStreamInputsRequest, PushStreamInputsResponse, PullStreamInputsRequest, PullStreamInputsResponse, RecordingRequest } from './client-interfaces';
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { IMediasoupApi } from '../../ms/i-mediasoup-api';
 export declare class MediasoupRestApi implements IMediasoupApi {
@@ -30,9 +30,15 @@ export declare class MediasoupRestApi implements IMediasoupApi {
     numWorkers(): Promise<NumWorkersData>;
     pipeToRemoteProducer(json: PipeToRemoteProducerRequest): Promise<void>;
     pipeFromRemoteProducer(json: PipeFromRemoteProducerRequest): Promise<void>;
-    startRecording(json: StartRecordingRequest): Promise<void>;
-    stopRecording(json: StartRecordingRequest): Promise<void>;
+    startRecording(json: RecordingRequest): Promise<void>;
+    stopRecording(json: RecordingData): Promise<void>;
     streamFile(json: StreamFileRequest): Promise<void>;
+    recordedStreams(): Promise<ListData>;
+    streamRecordings(json: StreamData): Promise<ListData>;
+    deleteStreamRecordings(json: StreamData): Promise<void>;
+    deleteRecording(json: FilePathInput): Promise<void>;
+    pushToServerInputs(json: PushStreamInputsRequest): Promise<PushStreamInputsResponse>;
+    pullFromServerInputs(json: PullStreamInputsRequest): Promise<PullStreamInputsResponse>;
     clear(): void;
     private request;
 }

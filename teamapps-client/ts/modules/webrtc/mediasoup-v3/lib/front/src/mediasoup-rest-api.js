@@ -359,6 +359,70 @@ var MediasoupRestApi = /** @class */ (function () {
             });
         });
     };
+    MediasoupRestApi.prototype.recordedStreams = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.RECORDED_STREAMS)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.streamRecordings = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.STREAM_RECORDINGS, json)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.deleteStreamRecordings = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.DELETE_STREAM_RECORDINGS, json)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.deleteRecording = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.DELETE_RECORDING, json)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.pushToServerInputs = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PUSH_TO_SERVER_INPUTS, json)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.pullFromServerInputs = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PULL_FROM_SERVER_INPUTS, json)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     MediasoupRestApi.prototype.clear = function () {
         while (this.timeouts.length) {
             var t = this.timeouts.shift();

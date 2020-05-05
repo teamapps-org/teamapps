@@ -1,6 +1,6 @@
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { ACTION } from '../config/constants';
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, StartRecordingRequest, StatsInput, StatsOutput, StopRecordingRequest, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData } from '../front/src/client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest } from '../front/src/client-interfaces';
 export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} | void>> {
     [ACTION.RESUME_CONSUMER](json: ConsumerData): Promise<void>;
     [ACTION.PAUSE_CONSUMER](json: ConsumerData): Promise<void>;
@@ -17,8 +17,8 @@ export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} |
     [ACTION.CREATE_TRANSPORT](): Promise<TransportOptions>;
     [ACTION.CONNECT_TRANSPORT](json: ConnectTransportRequest): Promise<void>;
     [ACTION.STREAM_FILE](json: StreamFileRequest): Promise<void>;
-    [ACTION.START_RECORDING](json: StartRecordingRequest): Promise<void>;
-    [ACTION.STOP_RECORDING](json: StopRecordingRequest): Promise<void>;
+    [ACTION.START_RECORDING](json: RecordingRequest): Promise<void>;
+    [ACTION.STOP_RECORDING](json: RecordingData): Promise<void>;
     [ACTION.SET_MAX_INCOMING_BITRATE](json: TransportBitrateData): Promise<void>;
     [ACTION.TRANSPORT_STATS](json: StatsInput): Promise<StatsOutput>;
     [ACTION.CONSUMERS_STATS](json: StatsInput): Promise<StatsOutput>;
@@ -27,4 +27,10 @@ export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} |
     [ACTION.PIPE_FROM_REMOTE_PRODUCER](json: PipeFromRemoteProducerRequest): Promise<void>;
     [ACTION.WORKER_LOAD](): Promise<WorkerLoadData>;
     [ACTION.NUM_WORKERS](): Promise<NumWorkersData>;
+    [ACTION.RECORDED_STREAMS](): Promise<ListData>;
+    [ACTION.STREAM_RECORDINGS](json: StreamData): Promise<ListData>;
+    [ACTION.DELETE_STREAM_RECORDINGS](json: StreamData): Promise<void>;
+    [ACTION.DELETE_RECORDING](json: FilePathInput): Promise<void>;
+    [ACTION.PUSH_TO_SERVER_INPUTS](json: PushStreamInputsRequest): Promise<PushStreamInputsResponse>;
+    [ACTION.PULL_FROM_SERVER_INPUTS](json: PullStreamInputsRequest): Promise<PullStreamInputsResponse>;
 }

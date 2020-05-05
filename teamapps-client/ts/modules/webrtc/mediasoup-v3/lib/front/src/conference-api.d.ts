@@ -39,8 +39,6 @@ export declare class ConferenceApi extends EventEmitter implements IConferenceAp
     private simulcast;
     private readonly timeouts;
     constructor(configs: ConferenceInput);
-    startRecording(): Promise<void>;
-    stopRecording(): Promise<void>;
     setPreferredLayers(layers: ConsumerLayers): Promise<void>;
     addTrack(track: MediaStreamTrack): Promise<void>;
     removeTrack(track: MediaStreamTrack): Promise<void>;
