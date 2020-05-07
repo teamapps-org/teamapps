@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.field.upload;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiPictureChooser;
@@ -38,14 +39,8 @@ import org.teamapps.ux.css.CssJustifyContent;
 import org.teamapps.ux.resource.FileResource;
 import org.teamapps.ux.resource.Resource;
 
-import javax.imageio.ImageIO;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class PictureChooser extends AbstractField<Resource> {
 
@@ -64,7 +59,7 @@ public class PictureChooser extends AbstractField<Resource> {
 	private Icon deleteButtonIcon = MaterialIcon.DELETE;
 
 	private int targetImageWidth = 240;
-	private int targetImageHeight = 288;
+	private int targetImageHeight = 240;
 	private int imageDisplayWidth = -1;
 	private int imageDisplayHeight = -1;
 
@@ -81,14 +76,17 @@ public class PictureChooser extends AbstractField<Resource> {
 		verticalLayout.addComponentFillRemaining(imageCropper);
 		Button<BaseTemplateRecord> cancelButton = Button.create(getSessionContext().getLocalized("dict.cancel"));
 		cancelButton.setCssStyle("margin-right", "5px");
+		Button<BaseTemplateRecord> rotateButton = Button.create(getSessionContext().getLocalized("ux.pictureChooser.rotate"));
+		rotateButton.setCssStyle("margin-right", "5px");
 		Button<BaseTemplateRecord> okButton = Button.create(getSessionContext().getLocalized("dict.ok"));
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.addComponentAutoSize(cancelButton);
+		horizontalLayout.addComponentAutoSize(rotateButton);
 		horizontalLayout.addComponentAutoSize(okButton);
 		horizontalLayout.setJustifyContent(CssJustifyContent.FLEX_END);
 		horizontalLayout.setCssStyle("padding", "5px");
 		verticalLayout.addComponentAutoSize(horizontalLayout);
-		imageCropperWindow = new Window(MaterialIcon.IMAGE, getSessionContext().getLocalized("ux.pictureChooser.cropImageWindowTitle"), 600, 400, verticalLayout);
+		imageCropperWindow = new Window(MaterialIcon.IMAGE, getSessionContext().getLocalized("ux.pictureChooser.cropImageWindowTitle"), 700, 500, verticalLayout);
 		imageCropperWindow.setCloseable(true);
 		imageCropperWindow.setMaximizable(true);
 		imageCropperWindow.setModal(true);
@@ -106,6 +104,16 @@ public class PictureChooser extends AbstractField<Resource> {
 			}
 		});
 
+		rotateButton.onClicked.addListener(() -> {
+			try {
+				File rotatedImageFile = rotateImage(uploadedFile.getAsFile());
+				imageCropper.setImageUrl(getSessionContext().createFileLink(rotatedImageFile));
+				this.uploadedFile = new UploadedFile(uploadedFile.getUuid(), uploadedFile.getName(), uploadedFile.getSizeInBytes(), uploadedFile.getMimeType(), () -> createInputStream(rotatedImageFile), () -> rotatedImageFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+
 		cancelButton.onClicked.addListener(() -> {
 			imageCropperWindow.close();
 		});
@@ -114,19 +122,30 @@ public class PictureChooser extends AbstractField<Resource> {
 		uploadErrorMessage = getSessionContext().getLocalized("ux.fileField.uploadError_short");
 	}
 
+	private InputStream createInputStream(File file) {
+		try {
+			return new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	@Override
 	public Object convertUxValueToUiValue(Resource resource) {
 		return getSessionContext().createResourceLink(resource);
 	}
 
 	private Resource cropAndConvertImage(UploadedFile uploadedFile, ImageCropperSelection selection, int targetWidth, int targetHeight) throws IOException {
-		BufferedImage image = ImageIO.read(uploadedFile.getAsInputStream());
-		BufferedImage subImage = image.getSubimage(selection.getLeft(), selection.getTop(), selection.getWidth(), selection.getHeight());
-		BufferedImage resultImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
-		resultImage.createGraphics().drawImage(subImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH), 0, 0, null);
-		Path tempFile = Files.createTempFile("cropped-image", ".png");
-		ImageIO.write(resultImage, "jpg", tempFile.toFile());
-		return new FileResource(tempFile.toFile());
+		File tempFile = Files.createTempFile("cropped-image", ".jpg").toFile();
+		Thumbnails.of(uploadedFile.getAsInputStream()).sourceRegion(selection.getLeft(), selection.getTop(), selection.getWidth(), selection.getHeight()).size(targetWidth, targetHeight).outputFormat("jpg").toFile(tempFile);
+		return new FileResource(tempFile);
+	}
+
+	private File rotateImage(File imageFile) throws IOException {
+		File newImageFile = File.createTempFile("rotated-image", ".jpg");
+		Thumbnails.of(imageFile).scale(1).rotate(90).toFile(newImageFile);
+		return newImageFile;
 	}
 
 	@Override
