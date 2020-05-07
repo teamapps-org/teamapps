@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
-	public final Event<ForceLayoutNode> onNodeClicked = new Event<>();
+	public final Event<ForceLayoutNode<RECORD>> onNodeClicked = new Event<>();
 	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
 
 	private final List<ForceLayoutNode<RECORD>> nodes;
