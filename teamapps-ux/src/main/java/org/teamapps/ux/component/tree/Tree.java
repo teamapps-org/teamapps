@@ -39,10 +39,7 @@ import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.TreeModel;
 import org.teamapps.ux.model.TreeModelChangedEventData;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -93,10 +90,17 @@ public class Tree<RECORD> extends AbstractComponent {
 		List<RECORD> nodesAdded = changedEventData.getNodesAddedOrUpdated();
 		if (isRendered()) {
 			CacheManipulationHandle<List<Integer>> cacheRemoveResponse = recordCache.removeRecords(nodesRemoved);
-			CacheManipulationHandle<List<UiTreeRecord>> cacheAddResponse = recordCache.addRecords(nodesAdded);
-			getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), cacheRemoveResponse.getAndClearResult(), cacheAddResponse.getAndClearResult()), aVoid -> {
+
+			//this is a workaround to update existing nodes
+			List<UiTreeRecord> addedOrUpdatedUiTreeRecords = new ArrayList<>();
+			for (RECORD record : nodesAdded) {
+				CacheManipulationHandle<UiTreeRecord> cacheAddOrUpdateRecord = recordCache.addOrUpdateRecord(record);
+				addedOrUpdatedUiTreeRecords.add(cacheAddOrUpdateRecord.getAndClearResult());
+				cacheAddOrUpdateRecord.commit();
+			}
+
+			getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), cacheRemoveResponse.getAndClearResult(), addedOrUpdatedUiTreeRecords), aVoid -> {
 				cacheRemoveResponse.commit();
-				cacheAddResponse.commit();
 			});
 		}
 	};
