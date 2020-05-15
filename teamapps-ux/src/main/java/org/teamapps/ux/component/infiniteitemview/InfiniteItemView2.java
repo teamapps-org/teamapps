@@ -47,7 +47,6 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 
 	public final Event<ItemClickedEventData<RECORD>> onItemClicked = new Event<>();
 
-	private int numberOfInitialRecords = 100;
 	private Template itemTemplate;
 	private float itemWidth;
 	private float itemHeight;
@@ -135,105 +134,8 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 		}
 	}
 
-	public int getNumberOfInitialRecords() {
-		return numberOfInitialRecords;
-	}
-
-	public InfiniteItemView2<RECORD> setNumberOfInitialRecords(int numberOfInitialRecords) {
-		this.numberOfInitialRecords = numberOfInitialRecords;
-		return this;
-	}
-
-	public Template getItemTemplate() {
-		return itemTemplate;
-	}
-
-	public InfiniteItemView2<RECORD> setItemTemplate(Template itemTemplate) {
-		this.itemTemplate = itemTemplate;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemTemplateCommand(getId(), itemTemplate.createUiTemplate()));
-		return this;
-	}
-
-	public float getItemWidth() {
-		return itemWidth;
-	}
-
-	public InfiniteItemView2<RECORD> setItemWidth(float itemWidth) {
-		this.itemWidth = itemWidth;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemWidthCommand(getId(), itemWidth));
-		return this;
-	}
-
-	public float getItemHeight() {
-		return itemHeight;
-	}
-
-	public InfiniteItemView2<RECORD> setItemHeight(float itemHeight) {
-		this.itemHeight = itemHeight;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemHeightCommand(getId(), itemHeight));
-		return this;
-	}
-
-	// public float getHorizontalSpacing() {
-	// 	return horizontalSpacing;
-	// }
-	//
-	// public InfiniteItemView2<RECORD> setHorizontalSpacing(float horizontalSpacing) {
-	// 	this.horizontalSpacing = horizontalSpacing;
-	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetHorizontalSpacingCommand(getId(), horizontalSpacing));
-	// 	return this;
-	// }
-	//
-	// public float getVerticalSpacing() {
-	// 	return verticalSpacing;
-	// }
-	//
-	// public InfiniteItemView2<RECORD> setVerticalSpacing(float verticalSpacing) {
-	// 	this.verticalSpacing = verticalSpacing;
-	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetVerticalSpacingCommand(getId(), verticalSpacing));
-	// 	return this;
-	// }
-
-	public HorizontalElementAlignment getItemContentHorizontalAlignment() {
-		return itemContentHorizontalAlignment;
-	}
-
-	public InfiniteItemView2<RECORD> setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment) {
-		this.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentHorizontalAlignmentCommand(getId(), itemContentHorizontalAlignment.toUiHorizontalElementAlignment()));
-		return this;
-	}
-
-	public VerticalElementAlignment getItemContentVerticalAlignment() {
-		return itemContentVerticalAlignment;
-	}
-
-	public InfiniteItemView2<RECORD> setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment) {
-		this.itemContentVerticalAlignment = itemContentVerticalAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentVerticalAlignmentCommand(getId(), itemContentVerticalAlignment.toUiVerticalElementAlignment()));
-		return this;
-	}
-
-	// public ItemViewRowJustification getRowHorizontalAlignment() {
-	// 	return rowHorizontalAlignment;
-	// }
-
-	// public InfiniteItemView2<RECORD> setRowHorizontalAlignment(ItemViewRowJustification rowHorizontalAlignment) {
-	// 	this.rowHorizontalAlignment = rowHorizontalAlignment;
-	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetRowHorizontalAlignmentCommand(getId(), rowHorizontalAlignment.toUiItemJustification()));
-	// 	return this;
-	// }
-
 	public InfiniteItemViewModel<RECORD> getModel() {
 		return model;
-	}
-
-	public PropertyExtractor<RECORD> getItemPropertyExtractor() {
-		return itemPropertyExtractor;
-	}
-
-	public void setItemPropertyExtractor(PropertyExtractor<RECORD> itemPropertyExtractor) {
-		this.itemPropertyExtractor = itemPropertyExtractor;
 	}
 
 	public InfiniteItemView2<RECORD> setModel(InfiniteItemViewModel<RECORD> model) {
@@ -275,6 +177,7 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 		System.out.println("new renderedRange: " + newRange);
 		if (newRange.overlaps(oldRange)) {
 			List<UiIdentifiableClientRecord> newUiRecords = new ArrayList<>();
+			boolean recordsRemoved = false;
 			if (newRange.getStart() < oldRange.getStart()) {
 				List<RECORD> records = retrieveRecords(newRange.getStart(), oldRange.getStart() - newRange.getStart());
 				UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(records);
@@ -283,6 +186,7 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 				newUiRecords.addAll(uiRecordMappingResult.newUiRecords);
 			} else if (newRange.getStart() > oldRange.getStart()) {
 				renderedRecords.remove(0, newRange.getStart() - oldRange.getStart());
+				recordsRemoved = true;
 			}
 			if (newRange.getEnd() > oldRange.getEnd()) {
 				List<RECORD> records = retrieveRecords(oldRange.getEnd(), newRange.getEnd() - oldRange.getEnd());
@@ -293,8 +197,10 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 				int absoluteDeleteStartIndex = newRange.getEnd();
 				int absoluteDeleteEndIndex = Math.min(oldRange.getEnd(), getModelCount());
 				renderedRecords.remove(renderedRecords.size() - (absoluteDeleteEndIndex - absoluteDeleteStartIndex), renderedRecords.size());
+				recordsRemoved = true;
 			}
-			if (!oldRange.equals(newRange) || newUiRecords.size() > 0) {
+			boolean recordsAdded = newUiRecords.size() > 0;
+			if (recordsAdded || recordsRemoved) {
 				updateClientRenderData(newUiRecords);
 			}
 		} else {
@@ -384,7 +290,7 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 					renderedRange.getStart(),
 					renderedRecords.getUiRecordIds(),
 					newUiRecords,
-					getModelCount() // might optimize this too...
+					getModelCount()
 			);
 		});
 	}
@@ -422,6 +328,94 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 
 	public void closeContextMenu() {
 		queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
+	}
+
+	public Template getItemTemplate() {
+		return itemTemplate;
+	}
+
+	public InfiniteItemView2<RECORD> setItemTemplate(Template itemTemplate) {
+		this.itemTemplate = itemTemplate;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemTemplateCommand(getId(), itemTemplate.createUiTemplate()));
+		return this;
+	}
+
+	public float getItemWidth() {
+		return itemWidth;
+	}
+
+	public InfiniteItemView2<RECORD> setItemWidth(float itemWidth) {
+		this.itemWidth = itemWidth;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemWidthCommand(getId(), itemWidth));
+		return this;
+	}
+
+	public float getItemHeight() {
+		return itemHeight;
+	}
+
+	public InfiniteItemView2<RECORD> setItemHeight(float itemHeight) {
+		this.itemHeight = itemHeight;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemHeightCommand(getId(), itemHeight));
+		return this;
+	}
+
+	// public float getHorizontalSpacing() {
+	// 	return horizontalSpacing;
+	// }
+	//
+	// public InfiniteItemView2<RECORD> setHorizontalSpacing(float horizontalSpacing) {
+	// 	this.horizontalSpacing = horizontalSpacing;
+	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetHorizontalSpacingCommand(getId(), horizontalSpacing));
+	// 	return this;
+	// }
+	//
+	// public float getVerticalSpacing() {
+	// 	return verticalSpacing;
+	// }
+	//
+	// public InfiniteItemView2<RECORD> setVerticalSpacing(float verticalSpacing) {
+	// 	this.verticalSpacing = verticalSpacing;
+	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetVerticalSpacingCommand(getId(), verticalSpacing));
+	// 	return this;
+	// }
+
+	public HorizontalElementAlignment getItemContentHorizontalAlignment() {
+		return itemContentHorizontalAlignment;
+	}
+
+	public InfiniteItemView2<RECORD> setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment) {
+		this.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentHorizontalAlignmentCommand(getId(), itemContentHorizontalAlignment.toUiHorizontalElementAlignment()));
+		return this;
+	}
+
+	public VerticalElementAlignment getItemContentVerticalAlignment() {
+		return itemContentVerticalAlignment;
+	}
+
+	public InfiniteItemView2<RECORD> setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment) {
+		this.itemContentVerticalAlignment = itemContentVerticalAlignment;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentVerticalAlignmentCommand(getId(), itemContentVerticalAlignment.toUiVerticalElementAlignment()));
+		return this;
+	}
+
+	// public ItemViewRowJustification getRowHorizontalAlignment() {
+	// 	return rowHorizontalAlignment;
+	// }
+
+	// public InfiniteItemView2<RECORD> setRowHorizontalAlignment(ItemViewRowJustification rowHorizontalAlignment) {
+	// 	this.rowHorizontalAlignment = rowHorizontalAlignment;
+	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetRowHorizontalAlignmentCommand(getId(), rowHorizontalAlignment.toUiItemJustification()));
+	// 	return this;
+	// }
+
+	public PropertyExtractor<RECORD> getItemPropertyExtractor() {
+		return itemPropertyExtractor;
+	}
+
+	public void setItemPropertyExtractor(PropertyExtractor<RECORD> itemPropertyExtractor) {
+		this.itemPropertyExtractor = itemPropertyExtractor;
 	}
 
 	private static class RecordAndClientRecord<RECORD> {
