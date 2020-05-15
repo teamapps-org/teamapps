@@ -61,7 +61,6 @@ export class VideoTrackMixer {
 	}
 
 	private drawVideosToCanvas() {
-		console.log(`drawVideosToCanvas()`);
 		let fullCanvasVideo = this.inputTracks.filter(track => track.mixSizingInfo.fullCanvas)[0];
 		let remainingVideos = this.inputTracks.filter(ims => ims !== fullCanvasVideo);
 

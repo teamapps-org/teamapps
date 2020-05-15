@@ -1,6 +1,6 @@
 import { TransportOptions } from 'mediasoup-client/lib/Transport';
 import { ACTION } from '../config/constants';
-import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest } from '../front/src/client-interfaces';
+import { ConnectTransportRequest, ConsumerData, ConsumeRequest, ConsumeResponse, ConsumerPreferredLayers, NumWorkersData, PipeFromRemoteProducerRequest, PipeToRemoteProducerRequest, PipeTransportConnectData, PipeTransportData, ProducerData, ProduceRequest, ProduceResponse, ServerConfigs, RecordingData, StatsInput, StatsOutput, StreamFileRequest, TransportBitrateData, TransportData, WorkerLoadData, ListData, StreamData, FilePathInput, PullStreamInputsRequest, PushStreamInputsRequest, PullStreamInputsResponse, PushStreamInputsResponse, RecordingRequest, StreamKindsData } from '../front/src/client-interfaces';
 export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} | void>> {
     [ACTION.RESUME_CONSUMER](json: ConsumerData): Promise<void>;
     [ACTION.PAUSE_CONSUMER](json: ConsumerData): Promise<void>;
@@ -16,7 +16,8 @@ export interface IMediasoupApi extends Record<ACTION, (json: {}) => Promise<{} |
     [ACTION.GET_SERVER_CONFIGS](): Promise<ServerConfigs>;
     [ACTION.CREATE_TRANSPORT](): Promise<TransportOptions>;
     [ACTION.CONNECT_TRANSPORT](json: ConnectTransportRequest): Promise<void>;
-    [ACTION.STREAM_FILE](json: StreamFileRequest): Promise<void>;
+    [ACTION.FILE_STREAMING](json: StreamFileRequest): Promise<void>;
+    [ACTION.STOP_FILE_STREAMING](json: StreamKindsData): Promise<void>;
     [ACTION.START_RECORDING](json: RecordingRequest): Promise<void>;
     [ACTION.STOP_RECORDING](json: RecordingData): Promise<void>;
     [ACTION.SET_MAX_INCOMING_BITRATE](json: TransportBitrateData): Promise<void>;

@@ -59,13 +59,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 /*-
  * ========================LICENSE_START=================================
@@ -90,7 +83,7 @@ var constants_1 = require("../../config/constants");
 var events_1 = require("events");
 var mediasoup_rest_api_1 = require("./mediasoup-rest-api");
 var mediasoup_client_1 = require("mediasoup-client");
-var debug = __importStar(require("debug"));
+var debug_1 = require("debug");
 var ConferenceApi = /** @class */ (function (_super) {
     __extends(ConferenceApi, _super);
     function ConferenceApi(configs) {
@@ -102,8 +95,8 @@ var ConferenceApi = /** @class */ (function (_super) {
                 stats: 1000,
                 transport: 3000,
                 consumer: 5000
-            } }, configs);
-        _this.log = debug.debug("conference-api [" + _this.configs.stream + "]:");
+            }, retryConsumerTimeout: 1000 }, configs);
+        _this.log = debug_1.debug("conference-api [" + _this.configs.stream + "]:");
         _this.api = new mediasoup_rest_api_1.MediasoupRestApi(_this.configs.url, _this.configs.token, _this.log);
         _this.device = new mediasoup_client_1.Device();
         return _this;
@@ -154,16 +147,16 @@ var ConferenceApi = /** @class */ (function (_super) {
     };
     ConferenceApi.prototype.removeTrack = function (track) {
         return __awaiter(this, void 0, void 0, function () {
-            var consumer;
+            var producer;
             return __generator(this, function (_a) {
                 this.log('removeTrack', track);
                 if (this.operation === constants_1.API_OPERATION.PUBLISH && this.mediaStream) {
                     this.mediaStream.removeTrack(track);
                     this.emit("removetrack", new MediaStreamTrackEvent("removetrack", { track: track }));
-                    consumer = this.connectors.get(track.kind);
-                    if (consumer) {
-                        consumer.close();
-                        consumer.emit('close');
+                    producer = this.connectors.get(track.kind);
+                    if (producer) {
+                        producer.close();
+                        producer.emit('close');
                     }
                 }
                 return [2 /*return*/];
@@ -370,6 +363,28 @@ var ConferenceApi = /** @class */ (function (_super) {
                         kind = track.kind;
                         if (!this.configs.kinds.includes(kind)) return [3 /*break*/, 2];
                         track.addEventListener('ended', function () { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this.removeTrack(track)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        params = { track: track, stopTracks: !!this.configs.stopTracks };
+                        if (this.configs.simulcast && kind === 'video' && this.simulcast) {
+                            if (this.simulcast.encodings) {
+                                params.encodings = this.simulcast.encodings;
+                            }
+                            if (this.simulcast.codecOptions) {
+                                params.codecOptions = this.simulcast.codecOptions;
+                            }
+                        }
+                        return [4 /*yield*/, this.transport.produce(params)];
+                    case 1:
+                        producer = _a.sent();
+                        producer.on('close', function () { return __awaiter(_this, void 0, void 0, function () {
                             var producer, e_3;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
@@ -391,18 +406,6 @@ var ConferenceApi = /** @class */ (function (_super) {
                                 }
                             });
                         }); });
-                        params = { track: track, stopTracks: !!this.configs.stopTracks };
-                        if (this.configs.simulcast && kind === 'video' && this.simulcast) {
-                            if (this.simulcast.encodings) {
-                                params.encodings = this.simulcast.encodings;
-                            }
-                            if (this.simulcast.codecOptions) {
-                                params.codecOptions = this.simulcast.codecOptions;
-                            }
-                        }
-                        return [4 /*yield*/, this.transport.produce(params)];
-                    case 1:
-                        producer = _a.sent();
                         this.listenStats(producer, 'outbound-rtp');
                         this.connectors.set(kind, producer);
                         this.emit('newProducerId', { id: producer.id, kind: kind });
@@ -414,7 +417,7 @@ var ConferenceApi = /** @class */ (function (_super) {
     };
     ConferenceApi.prototype.consume = function (transport, stream, _kind) {
         return __awaiter(this, void 0, void 0, function () {
-            var rtpCapabilities, consumeData, data, layers, e_4, e_5;
+            var rtpCapabilities, consumeData, data, layers, e_4, e_5, timeout_1;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -447,9 +450,15 @@ var ConferenceApi = /** @class */ (function (_super) {
                         e_5 = _a.sent();
                         if (!e_5) return [3 /*break*/, 10];
                         if (!(e_5.errorId === constants_1.ERROR.INVALID_STREAM)) return [3 /*break*/, 9];
-                        return [4 /*yield*/, new Promise(function (resolve) { return _this.timeouts.push(setTimeout(resolve, 1000)); })];
+                        return [4 /*yield*/, new Promise(function (resolve) {
+                                timeout_1 = setTimeout(resolve, _this.configs.retryConsumerTimeout);
+                                _this.timeouts.push(timeout_1);
+                            })];
                     case 8:
                         _a.sent();
+                        if (!this.timeouts.includes(timeout_1)) {
+                            throw e_5;
+                        }
                         return [2 /*return*/, this.consume(transport, stream, _kind)];
                     case 9:
                         if (e_5.errorId === constants_1.ERROR.INVALID_TRANSPORT) {
@@ -481,7 +490,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                             alive_1 = false;
                             i_1 = 0;
                             checkTarget_1 = function () {
-                                if (i_1 === stats.size) {
+                                if (i_1 === stats['size']) {
                                     if (alive_1) {
                                         deadTime = 0;
                                     }
@@ -509,7 +518,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                                     setTimeout(getStats, _this.configs.timeout.stats);
                                 }
                             };
-                            if (stats.size) {
+                            if (stats['size']) {
                                 stats.forEach(function (s) {
                                     if (s && s.type === type) {
                                         if (s[bytesField] && s[bytesField] > lastBytes) {
@@ -538,7 +547,7 @@ var ConferenceApi = /** @class */ (function (_super) {
     ConferenceApi.prototype.close = function (hard) {
         if (hard === void 0) { hard = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var e_6, t;
+            var transportId, e_6, t;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -546,10 +555,12 @@ var ConferenceApi = /** @class */ (function (_super) {
                         if (!this.transport.closed && hard) {
                             this.transport.close();
                         }
+                        transportId = this.transport.id;
+                        delete this.transport;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.api.closeTransport({ transportId: this.transport.id })];
+                        return [4 /*yield*/, this.api.closeTransport({ transportId: transportId })];
                     case 2:
                         _a.sent();
                         return [3 /*break*/, 4];
@@ -557,7 +568,6 @@ var ConferenceApi = /** @class */ (function (_super) {
                         e_6 = _a.sent();
                         return [3 /*break*/, 4];
                     case 4:
-                        delete this.transport;
                         this.emit('connectionstatechange', { state: 'disconnected' });
                         _a.label = 5;
                     case 5:
@@ -586,22 +596,27 @@ var ConferenceApi = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                if (this.connectors.size) {
-                    return [2 /*return*/, new Promise(function (resolve) {
-                            _this.connectors.forEach(function (connector, kind) {
-                                _this.connectors.delete(kind);
-                                try {
-                                    connector.close();
-                                    connector.emit('close');
-                                }
-                                catch (e) { }
-                                if (!_this.connectors.size) {
-                                    resolve();
-                                }
-                            });
-                        })];
+                switch (_a.label) {
+                    case 0:
+                        if (!this.connectors.size) return [3 /*break*/, 2];
+                        return [4 /*yield*/, new Promise(function (resolve) {
+                                _this.connectors.forEach(function (connector, kind) {
+                                    _this.connectors.delete(kind);
+                                    try {
+                                        connector.close();
+                                        connector.emit('close');
+                                    }
+                                    catch (e) { }
+                                    if (!_this.connectors.size) {
+                                        resolve();
+                                    }
+                                });
+                            })];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
                 }
-                return [2 /*return*/];
             });
         });
     };
