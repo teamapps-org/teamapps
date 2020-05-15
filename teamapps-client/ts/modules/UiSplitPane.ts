@@ -165,11 +165,11 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 	}
 
 	private pageXof(event: MouseEvent) {
-		return event.pageX || (event as any).touches[0].pageX;
+		return event.pageX ?? (event as any).touches[0].pageX;
 	}
 
 	private pageYof(event: MouseEvent) {
-		return event.pageY || (event as any).touches[0].pageY;
+		return event.pageY ?? (event as any).touches[0].pageY;
 	}
 
 	public setFirstChild(firstChild: UiComponent<UiComponentConfig>) {
