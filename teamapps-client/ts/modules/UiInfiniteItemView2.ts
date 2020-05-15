@@ -275,6 +275,9 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
             .grid-${this._config.id} .item-wrapper {
                  align-items: ${cssAlignItems[this._config.itemContentVerticalAlignment]};
                  justify-content: ${cssJustifyContent[this._config.itemContentHorizontalAlignment]};
+            }
+            .grid-${this._config.id} .item-wrapper > * {
+                 flex: ${this._config.itemContentHorizontalAlignment == UiHorizontalElementAlignment.STRETCH ? "1 1 auto" : "0 1 auto"};
             }`;
 	}
 
