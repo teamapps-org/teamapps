@@ -149,7 +149,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 				startIndex: newRenderedRange[0],
 				endIndex: newRenderedRange[1] // send the uncut value, so the server will send new records if some are added user scrolled to the end
 			};
-			console.log("REQUESTING ", eventObject);
+			console.log("onRenderedItemRangeChanged ", eventObject);
 			this.onRenderedItemRangeChanged.fire(eventObject);
 		}
 	}
@@ -236,7 +236,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 	setData(startIndex: number, recordIds: number[], newRecords: UiIdentifiableClientRecordConfig[], totalNumberOfRecords: number): void {
 		console.log("got data ", startIndex, recordIds.length, newRecords.length, totalNumberOfRecords);
 		this.totalNumberOfRecords = totalNumberOfRecords;
-		this.$grid.style.height = this._config.itemHeight * Math.ceil(totalNumberOfRecords / this.getItemsPerRow()) + "px";
+		this.updateGridHeight();
 		let recordIdsAsSet: Set<number> = new Set(recordIds);
 		const existingItems = [...this.renderedItems.values()];
 		for (let existingItem of existingItems) {
@@ -254,9 +254,14 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		this.updateItemPositions()
 	}
 
+	private updateGridHeight() {
+		this.$grid.style.height = this._config.itemHeight * Math.ceil(this.totalNumberOfRecords / this.getItemsPerRow()) + "px";
+	}
+
 	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
 		console.log("onResize ", this.getWidth(), this.getHeight());
+		this.updateGridHeight();
 		this.updateItemPositions();
 		this.requestDataIfNeededForScrollDebounced();
 	}
