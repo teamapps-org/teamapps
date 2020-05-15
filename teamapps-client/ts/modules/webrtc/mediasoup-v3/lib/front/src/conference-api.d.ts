@@ -2,7 +2,7 @@
 import { EventEmitter } from "events";
 import { MediaKind } from 'mediasoup-client/lib/RtpParameters';
 import { ConferenceInput, ConsumerLayers } from './client-interfaces';
-interface IConferenceApi {
+export declare interface ConferenceApi {
     on(event: 'bitRate', listener: ({ bitRate: number, kind: MediaKind }: {
         bitRate: any;
         kind: any;
@@ -24,7 +24,7 @@ interface IConferenceApi {
     on(event: 'addtrack', listener: (event: MediaStreamTrackEvent) => void): this;
     on(event: 'removetrack', listener: (event: MediaStreamTrackEvent) => void): this;
 }
-export declare class ConferenceApi extends EventEmitter implements IConferenceApi {
+export declare class ConferenceApi extends EventEmitter {
     private readonly api;
     private readonly configs;
     private readonly device;
@@ -57,4 +57,3 @@ export declare class ConferenceApi extends EventEmitter implements IConferenceAp
     private getTransport;
     private static originOptions;
 }
-export {};

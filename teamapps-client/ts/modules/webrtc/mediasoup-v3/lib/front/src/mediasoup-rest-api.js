@@ -347,11 +347,23 @@ var MediasoupRestApi = /** @class */ (function () {
             });
         });
     };
-    MediasoupRestApi.prototype.streamFile = function (json) {
+    MediasoupRestApi.prototype.fileStreaming = function (json) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.STREAM_FILE, json)];
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.FILE_STREAMING, json)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.stopFileStreaming = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.STOP_FILE_STREAMING, json)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -452,7 +464,8 @@ var MediasoupRestApi = /** @class */ (function () {
                         return [2 /*return*/, data];
                     case 3:
                         e_1 = _a.sent();
-                        if (!(!e_1.response.status && !constants_1.ERROR[e_1.response.status])) return [3 /*break*/, 6];
+                        this.log('got error', e_1);
+                        if (!(e_1.response && !e_1.response.status && !constants_1.ERROR[e_1.response.status])) return [3 /*break*/, 6];
                         return [4 /*yield*/, new Promise(function (resolve) {
                                 timeout_1 = setTimeout(resolve, 1000);
                                 _this.timeouts.push(timeout_1);

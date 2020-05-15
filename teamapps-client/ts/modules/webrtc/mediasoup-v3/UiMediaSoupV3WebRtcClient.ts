@@ -238,12 +238,12 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private counter = 0;
 
 	update(config: UiMediaSoupV3WebRtcClientConfig): void {
-		let counterValue = ++this.counter;
-		console.log("UPDATE: " + counterValue);
+		// let counterValue = ++this.counter;
+		// console.log("UPDATE: " + counterValue);
 		this.updatePromise.finally(() => {
 			this.updatePromise = this.updateInternal(config);
 		})
-			.finally(() => console.log("DONE: " + counterValue));
+			// .finally(() => console.log("DONE: " + counterValue));
 	}
 
 	async updateInternal(config: UiMediaSoupV3WebRtcClientConfig) {
@@ -330,12 +330,6 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					this.$video.muted = false;
 					this.$video.srcObject = mediaStream;
 					this.makeSafariVideoElementObserveMediaStreamTracks(mediaStream);
-					this.conferenceClient.on('addtrack', (trackEvent: MediaStreamTrackEvent) => {
-						if (trackEvent.track.kind == 'audio') {
-							console.log("Adding audio track to mix.");
-							// UiMediaSoupV3WebRtcClient.audioTrackMixPlayer.addAudioTrack(trackEvent.track);
-						}
-					});
 
 					this.startVideoPlayback(() => {
 						console.log("Video playback successful.");
@@ -379,7 +373,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private makeSafariVideoElementObserveMediaStreamTracks(mediaStream: MediaStream) {
 		if (Utils.isSafari) {
 			["addtrack", "removetrack"].forEach(eventType => {
-				this.conferenceClient.on(eventType, (trackEvent: MediaStreamTrackEvent) => {
+				this.conferenceClient.on(eventType as any, (trackEvent: MediaStreamTrackEvent) => {
 					console.log(eventType);
 					this.$video.srcObject = new MediaStream(mediaStream.getTracks());
 					this.$video.play();
@@ -618,12 +612,12 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				this.$audioBitrateDisplay.innerText = (bitRate / 1000).toFixed(1) + "kb/s";
 				this.connectionStatus.audioBitrate = bitRate;
 				this.updateStateCssClasses();
-				console.log(`${logPrefix} audio bitrate: ${bitRate}`);
+				// console.log(`${logPrefix} audio bitrate: ${bitRate}`);
 			} else if (kind == "video") {
 				this.$videoBitrateDisplay.innerText = (bitRate / 1000).toFixed(1) + "kb/s";
 				this.connectionStatus.videoBitrate = bitRate;
 				this.updateStateCssClasses();
-				console.log(`${logPrefix} video bitrate: ${bitRate}`);
+				// console.log(`${logPrefix} video bitrate: ${bitRate}`);
 			}
 		});
 		conferenceClient.on('connectionstatechange', (event) => {

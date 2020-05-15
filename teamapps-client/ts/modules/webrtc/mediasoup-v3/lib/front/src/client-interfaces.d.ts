@@ -1,7 +1,6 @@
-import { MediaKind, RtpCapabilities, RtpParameters } from 'mediasoup-client/lib/RtpParameters';
+import { MediaKind, RtpCapabilities, RtpEncodingParameters, RtpParameters } from 'mediasoup-client/lib/RtpParameters';
 import { ProducerCodecOptions } from 'mediasoup-client/lib/Producer';
 import { DtlsParameters } from 'mediasoup-client/lib/Transport';
-import { TransportListenIp } from 'mediasoup/lib/Transport';
 export interface ConsumerData {
     consumerId: string;
 }
@@ -91,7 +90,7 @@ export interface IceSever {
     credential?: string;
 }
 export interface Simulcast {
-    encodings?: RTCRtpEncodingParameters[];
+    encodings?: RtpEncodingParameters[];
     codecOptions?: ProducerCodecOptions;
 }
 export interface ServerConfigs {
@@ -121,11 +120,17 @@ export interface StreamData {
 }
 export interface StreamFileRequest extends StreamKindsData {
     filePath: string;
+    additionalInputOptions?: string[];
+    additionalOutputOptions?: string[];
 }
 export interface PushStreamInputsResponse {
     options: string[];
 }
 export interface PushStreamInputsRequest extends PullStreamInputsRequest, PushStreamInputsResponse {
+}
+export interface TransportListenIp {
+    ip: string;
+    announcedIp?: string;
 }
 export interface PullStreamInputsRequest extends StreamKindsData {
     listenIp?: TransportListenIp | string;
@@ -151,11 +156,13 @@ export interface ConferenceInput {
     simulcast?: boolean;
     kinds?: MediaKind[];
     maxIncomingBitrate?: number;
+    retryConsumerTimeout?: number;
 }
 export interface ConferenceConfig extends ConferenceInput {
     url: string;
     kinds: MediaKind[];
     maxIncomingBitrate: number;
+    retryConsumerTimeout: number;
     timeout: {
         stats: number;
         transport: number;
