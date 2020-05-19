@@ -239,9 +239,24 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		this.logger.debug(gravity);
 	}
 
-	public setDistance(distance: number, overrideNodeCharge: boolean): void {
-		// this.force.distance(distance).start();
-		this.logger.debug("distance:" + distance);
+	public setDistance(linkDistance: number, nodeDistance: number): void {
+		this.linkForce.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
+			return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * linkDistance;
+		});
+
+		this.simulation.force("collide", d3.forceCollide((a: UiNetworkNodeConfig & any) => {
+			return Math.sqrt(a.width * a.width + a.height * a.height) * a.distanceFactor * nodeDistance;
+		}));
+
+		this.simulation.nodes(this.nodes);
+		this.linkForce.links(this.links);
+		this.simulation.alphaTarget(0.3).restart()
+			.stop();
+		this.calculateFinalNodePositions();
+		this.updateNodes(this._config.animationDuration);
+		this.updateLinks(this._config.animationDuration);
+
+		this.logger.debug("distance:" + linkDistance + ", " + nodeDistance);
 	}
 
 	public setCharge(charge: number, overrideNodeCharge: boolean): void {
