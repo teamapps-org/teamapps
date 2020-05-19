@@ -40,6 +40,7 @@ class UiNetworkGraph extends UiComponent{
 	command removeNodesAndLinks(List<String> nodeIds, Dictionary<List<String>> linksBySourceNodeId);
 
 	event nodeClicked(String nodeId);
+	event nodeDoubleClicked(String nodeId);
 	event nodeExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 

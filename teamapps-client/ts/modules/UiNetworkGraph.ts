@@ -26,6 +26,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
 	UiNetworkGraph_NodeClickedEvent,
+	UiNetworkGraph_NodeDoubleClickedEvent,
 	UiNetworkGraph_NodeExpandedOrCollapsedEvent,
 	UiNetworkGraphCommandHandler,
 	UiNetworkGraphConfig,
@@ -44,6 +45,8 @@ import {UiNetworkLinkConfig} from "../generated/UiNetworkLinkConfig";
 export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> implements UiNetworkGraphCommandHandler, UiNetworkGraphEventSource {
 
 	public readonly onNodeClicked: TeamAppsEvent<UiNetworkGraph_NodeClickedEvent> = new TeamAppsEvent(this);
+	public readonly onNodeDoubleClicked: TeamAppsEvent<UiNetworkGraph_NodeDoubleClickedEvent> = new TeamAppsEvent(this);
+
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiNetworkGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private $graph: HTMLElement;
@@ -272,12 +275,19 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		const nodeEnter = nodesSelection.enter().append('g')
 			.attr('class', 'node')
 			.attr('cursor', 'pointer')
-			.on('mousedown', (d: UiNetworkNodeConfig) => {
+			.on('click', (d: UiNetworkNodeConfig) => {
 				if (d3.event.srcElement.classList.contains('node-button-circle')) {
 					return;
 				}
 				this.onNodeClicked.fire({nodeId: d.id});
-			});
+			})
+			.on('dblclick', (d: UiNetworkNodeConfig) => {
+				if (d3.event.srcElement.classList.contains('node-button-circle')) {
+					return;
+				}
+				this.onNodeDoubleClicked.fire({nodeId: d.id});
+			})
+		;
 		// Add background rectangle for the nodes
 		patternify(nodeEnter, {
 			tag: 'rect',
@@ -307,6 +317,8 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				// if (!d3.event.active) {
 				// 	this.simulation.alphaTarget(0);
 				// }
+				d.fx = null;
+				d.fy = null;
 				this.container.attr("cursor", "grab")
 			})
 		);
