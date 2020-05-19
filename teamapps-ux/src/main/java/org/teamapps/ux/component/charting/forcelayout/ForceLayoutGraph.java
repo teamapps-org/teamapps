@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
 	public final Event<ForceLayoutNode<RECORD>> onNodeClicked = new Event<>();
+	public final Event<ForceLayoutNode<RECORD>> onNodeDoubleClicked = new Event<>();
 	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
 
 	private final List<ForceLayoutNode<RECORD>> nodes;
@@ -116,6 +117,14 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
 						.findFirst()
 						.ifPresent(onNodeClicked::fire);
+				break;
+			}
+			case UI_NETWORK_GRAPH_NODE_DOUBLE_CLICKED: {
+				UiNetworkGraph.NodeDoubleClickedEvent clickEvent = (UiNetworkGraph.NodeDoubleClickedEvent) event;
+				nodes.stream()
+						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
+						.findFirst()
+						.ifPresent(onNodeDoubleClicked::fire);
 				break;
 			}
 			case UI_NETWORK_GRAPH_NODE_EXPANDED_OR_COLLAPSED:
