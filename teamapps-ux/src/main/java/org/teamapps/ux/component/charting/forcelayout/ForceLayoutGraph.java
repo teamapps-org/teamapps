@@ -182,4 +182,8 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
 		this.propertyExtractor = propertyExtractor;
 	}
+
+	public void setDistance(float linkDistanceFactor, float nodeDistanceFactor) {
+		queueCommandIfRendered(() -> new UiNetworkGraph.SetDistanceCommand(getId(), linkDistanceFactor, nodeDistanceFactor));
+	}
 }

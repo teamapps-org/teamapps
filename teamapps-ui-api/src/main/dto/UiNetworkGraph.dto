@@ -33,7 +33,7 @@ class UiNetworkGraph extends UiComponent{
 	command setZoomFactor(float zoomFactor);
 	command setGravity(float gravity);
 	command setCharge(int charge, boolean overrideNodeCharge);
-	command setDistance(int distance, boolean overrideLinkDistance);
+	command setDistance(float linkDistance, float nodeDistance);
 
 	command zoomAllNodesIntoView(int animationDuration);
 	command addNodesAndLinks(List<UiNetworkNode> nodes, List<UiNetworkLink> links);
