@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,11 @@ import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.Button;
-import org.teamapps.ux.component.field.FieldEditingMode;
-import org.teamapps.ux.component.field.combobox.ComboBox;
+import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.ux.component.field.TemplateField;
+import org.teamapps.ux.component.flexcontainer.FlexSizeUnit;
+import org.teamapps.ux.component.flexcontainer.FlexSizingPolicy;
+import org.teamapps.ux.component.flexcontainer.HorizontalLayout;
 import org.teamapps.ux.component.form.ResponsiveForm;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
@@ -34,20 +37,33 @@ import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class FormDialogue extends Window {
 
 	public Event<Boolean> onResult = new Event<>();
-	private ComboBox<BaseTemplateRecord<?>> comboBox;
-	private Button<?> okButton;
-	private Button<?> cancelButton;
+	public Event<Void> onOk = new Event<>();
+	public Event<Void> onCancel = new Event<>();
+
+	private TemplateField<BaseTemplateRecord<?>> titleField;
 	private Integer buttonLineIndex;
 	private ResponsiveFormLayout formLayout;
+	private HorizontalLayout buttonRow;
+	private List<AbstractField<?>> fields = new ArrayList<>();
+
+	private boolean autoCloseOnOk = true;
 
 	public static FormDialogue create(Icon icon, String title, String text) {
 		return new FormDialogue(icon, title, text);
 	}
 
 	public FormDialogue(Icon icon, String title, String text) {
+		this(icon, null, title, text);
+	}
+
+	public FormDialogue(Icon icon, String imageUrl, String title, String text) {
 		setIcon(icon);
 		setTitle(title);
 		setWidth(550);
@@ -55,16 +71,14 @@ public class FormDialogue extends Window {
 		ResponsiveForm<?> responsiveForm = new ResponsiveForm<>(0, 200, 0);
 		formLayout = responsiveForm.addResponsiveFormLayout(450);
 		formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false).setMargin(new Spacing(10)).setGridGap(20);
-		comboBox = new ComboBox<>();
-		comboBox.setTemplate(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES);
-		comboBox.setEditingMode(FieldEditingMode.READONLY);
-		comboBox.setValue(new BaseTemplateRecord<>(icon, title, text));
-		formLayout.addField(0, 0, "header", comboBox).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setColSpan(3);
+		titleField = new TemplateField<>(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, new BaseTemplateRecord<>(icon, imageUrl, title, text, null));
+		formLayout.addField(0, 0, "header", titleField).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setColSpan(2);
 		setContent(responsiveForm);
 	}
 
 	public void addField(Icon icon, String caption, AbstractField<?> field) {
 		formLayout.addLabelAndField(icon, caption, field).field.setColSpan(2);
+		this.fields.add(field);
 	}
 
 	public void addOkCancelButtons(String okCaption, String cancelCaption) {
@@ -72,26 +86,59 @@ public class FormDialogue extends Window {
 		addCancelButton(cancelCaption);
 	}
 
-	public Button<?> addOkButton(String caption) {
-		okButton = Button.create(MaterialIcon.CHECK, caption);
-		okButton.onValueChanged.addListener((o) -> {
-			close(250);
-			getSessionContext().flushCommands();
-			onResult.fire(true);
-		});
+	public void addOkCancelButtons(Icon okIcon, String okCaption, Icon cancelIcon, String cancelCaption) {
+		addOkButton(okIcon, okCaption);
+		addCancelButton(cancelIcon, cancelCaption);
+	}
 
-		formLayout.addField(getButtonLineIndex(), 1, "ok", okButton);
+	public Button<?> addOkButton(String caption) {
+		return addOkButton(MaterialIcon.CHECK, caption);
+	}
+
+	public Button<?> addOkButton(Icon icon, String caption) {
+		createButtonRowIfNotExists();
+
+		Button<?> okButton = Button.create(icon, caption);
+		okButton.onClicked.addListener(() -> {
+			List<FieldMessage> errorMessages = fields.stream()
+					.flatMap(f -> f.validate().stream())
+					.filter(validationMessag -> validationMessag.getSeverity() == FieldMessage.Severity.ERROR)
+					.collect(Collectors.toList());
+			if (errorMessages.size() == 0) {
+				onResult.fire(true);
+				onOk.fire();
+				if (autoCloseOnOk) {
+					close(250);
+				}
+			}
+		});
+		buttonRow.addComponent(okButton, new FlexSizingPolicy(0, FlexSizeUnit.AUTO, 1, 1));
 		return okButton;
 	}
 
+	private void createButtonRowIfNotExists() {
+		if (buttonRow == null) {
+			buttonRow = new HorizontalLayout();
+			formLayout.addLabelAndComponent(buttonRow).field.setColSpan(2);
+		}
+	}
+
 	public Button<?> addCancelButton(String caption) {
-		cancelButton = Button.create(MaterialIcon.CANCEL, caption);
-		cancelButton.onValueChanged.addListener((o) -> {
+		return addCancelButton(MaterialIcon.CANCEL, caption);
+	}
+
+	public Button<?> addCancelButton(Icon icon, String caption) {
+		createButtonRowIfNotExists();
+
+		Button<?> cancelButton = Button.create(icon, caption);
+		cancelButton.setCssStyle("margin-left", "10px"); // TODO #css
+		cancelButton.onClicked.addListener(() -> {
 			close(250);
 			getSessionContext().flushCommands();
 			onResult.fire(false);
+			onCancel.fire();
 		});
-		formLayout.addField(getButtonLineIndex(), 2, "cancel", cancelButton);
+		buttonRow.addComponent(cancelButton, new FlexSizingPolicy(0, FlexSizeUnit.AUTO, 1, 1));
 		return cancelButton;
 	}
 
@@ -100,5 +147,13 @@ public class FormDialogue extends Window {
 			buttonLineIndex = formLayout.getLastNonEmptyRowInSection() + 1;
 		}
 		return buttonLineIndex;
+	}
+
+	public boolean isAutoCloseOnOk() {
+		return autoCloseOnOk;
+	}
+
+	public void setAutoCloseOnOk(boolean autoCloseOnOk) {
+		this.autoCloseOnOk = autoCloseOnOk;
 	}
 }

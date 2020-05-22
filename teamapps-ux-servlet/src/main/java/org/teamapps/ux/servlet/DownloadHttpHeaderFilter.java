@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 
 public class DownloadHttpHeaderFilter implements Filter {
@@ -33,11 +34,28 @@ public class DownloadHttpHeaderFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		String downloadFileName = req.getParameter("teamapps-download-filename");
+
 		if (downloadFileName != null) {
 			HttpServletResponse response = (HttpServletResponse) res;
-			response.addHeader("Content-Disposition", "attachment; filename=\""+downloadFileName+"\"");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + downloadFileName + "\"");
+			chain.doFilter(req, new HttpServletResponseWrapper(response) {
+				@Override
+				public void setHeader(String name, String value) {
+					if (!name.toLowerCase().equals("content-disposition")) {
+						super.setHeader(name, value);
+					}
+				}
+
+				@Override
+				public void addHeader(String name, String value) {
+					if (!name.toLowerCase().equals("content-disposition")) {
+						super.addHeader(name, value);
+					}
+				}
+			});
+		} else {
+			chain.doFilter(req, res);
 		}
-		chain.doFilter(req, res);
 	}
 
 	@Override

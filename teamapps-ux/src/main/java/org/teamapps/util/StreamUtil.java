@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@
 package org.teamapps.util;
 
 import java.util.LinkedHashMap;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -31,6 +34,11 @@ public class StreamUtil {
 				(u, v) -> v,
 				LinkedHashMap::new
 		);
+	}
+
+	public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+		Set<Object> seen = ConcurrentHashMap.newKeySet();
+		return t -> seen.add(keyExtractor.apply(t));
 	}
 
 }

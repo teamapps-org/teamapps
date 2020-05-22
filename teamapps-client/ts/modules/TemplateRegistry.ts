@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ import {wrapWithDefaultTagWrapper} from "trivial-components";
 import {Renderer} from "./Common";
 import {createHtmlTemplateRenderer} from "./util/UiHtmlTemplates";
 import {UiHtmlTemplateConfig} from "../generated/UiHtmlTemplateConfig";
+import {createMustacheTemplateRenderer} from "./util/UiMustacheTemplates";
+import {UiMustacheTemplateConfig} from "../generated/UiMustacheTemplateConfig";
 
 export class TemplateRegistry {
 
@@ -78,9 +80,11 @@ export class TemplateRegistry {
 		if (isTemplateReference(template)) {
 			return this.getTemplateRendererByName(template.templateId);
 		} else if (isGridTemplate(template)) {
-			return createGridTemplateRenderer(template, this.context, idPropertyName);
+			return createGridTemplateRenderer(template, idPropertyName);
 		} else if (isHtmlTemplate(template)) {
-			return createHtmlTemplateRenderer(template, this.context, idPropertyName);
+			return createHtmlTemplateRenderer(template, idPropertyName);
+		} else if (isMustacheTemplate(template)) {
+			return createMustacheTemplateRenderer(template, idPropertyName);
 		}
 	}
 
@@ -115,4 +119,8 @@ export function isGridTemplate(template: UiTemplateConfig): template is UiGridTe
 
 export function isHtmlTemplate(template: UiTemplateConfig): template is UiHtmlTemplateConfig {
 	return template._type === "UiHtmlTemplate";
+}
+
+export function isMustacheTemplate(template: UiTemplateConfig): template is UiMustacheTemplateConfig {
+	return template._type === "UiMustacheTemplate";
 }

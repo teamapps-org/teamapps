@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class PerspectiveImpl implements Perspective{
+public class PerspectiveImpl implements Perspective {
 
     private List<View> views = new ArrayList<>();
     private List<ToolbarButtonGroup> workspaceToolbarButtonGroups = new ArrayList<>();
     private List<PerspectiveChangeHandler> changeHandlers = new ArrayList<>();
     private LayoutItemDefinition layout;
+    private View focusedView;
 
     public PerspectiveImpl(LayoutItemDefinition layout) {
         this.layout = layout;
@@ -84,6 +85,11 @@ public class PerspectiveImpl implements Perspective{
     }
 
     @Override
+    public View getFocusedView() {
+        return focusedView;
+    }
+
+    @Override
     public ToolbarButtonGroup addWorkspaceButtonGroup(ToolbarButtonGroup buttonGroup) {
         workspaceToolbarButtonGroups.add(buttonGroup);
         changeHandlers.forEach(changeHandler -> changeHandler.handlePerspectiveToolbarButtonGroupAdded(this, buttonGroup));
@@ -113,6 +119,7 @@ public class PerspectiveImpl implements Perspective{
 
             @Override
             public void handleViewFocusRequest(boolean ensureVisible) {
+                focusedView = view;
                 changeHandlers.forEach(changeHandler -> changeHandler.handleViewFocusRequest(perspective, view, ensureVisible));
             }
 

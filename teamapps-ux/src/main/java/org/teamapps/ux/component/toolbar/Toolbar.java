@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,17 @@ public class Toolbar extends AbstractToolContainer {
 
 	@Override
 	public UiComponent createUiComponent() {
-		List<UiToolbarButtonGroup> uiButtonGroups = toolbarButtonGroups.stream()
+		List<UiToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
+				.filter(group -> !group.isRightSide())
 				.sorted()
 				.map(group -> group.createUiToolbarButtonGroup())
 				.collect(Collectors.toList());
-		UiToolbar uiToolbar = new UiToolbar(uiButtonGroups);
+		List<UiToolbarButtonGroup> rightUiButtonGroups = buttonGroups.stream()
+				.filter(group -> group.isRightSide())
+				.sorted()
+				.map(group -> group.createUiToolbarButtonGroup())
+				.collect(Collectors.toList());
+		UiToolbar uiToolbar = new UiToolbar(leftUiButtonGroups, rightUiButtonGroups);
 		mapAbstractUiComponentProperties(uiToolbar);
 		uiToolbar.setLogoImage(logoImageUrl);
 		return uiToolbar;

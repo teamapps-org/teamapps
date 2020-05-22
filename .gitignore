@@ -99,7 +99,7 @@ Temporary Items
 
 
 ### Teamapps custom ignore
-server-data/
+server-data*/
 tmp/
 */LICENSE.txt
 
@@ -109,7 +109,7 @@ yarn-error.log
 teamapps-client/node/
 teamapps-client/node_modules/
 teamapps-client/npm-debug.log
-teamapps-client/ts/**/*.js
+#teamapps-client/ts/**/*.js
 teamapps-client/ts/**/*.map
 teamapps-client/ts/generated/
 teamapps-client/dist/
@@ -123,4 +123,3 @@ teamapps-client/stats.json
 *.~vsd*
 # Excel Backup File
 *.xlk
-

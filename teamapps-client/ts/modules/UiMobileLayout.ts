@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ export class UiMobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> im
 
 		this.$contentContainer = parseHtml(`<div class="content-container"></div>`);
 		if (view != null) {
-			this.$contentContainer.appendChild(view.getMainDomElement());
+			this.$contentContainer.appendChild(view.getMainElement());
 		}
 		this.$contentContainerWrapper.appendChild(this.$contentContainer);
 
@@ -94,7 +94,7 @@ export class UiMobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> im
 		this.toolbar = toolbar;
 		this.$toolbarContainer.classList.toggle('hidden', !toolbar);
 		if (toolbar) {
-			this.$toolbarContainer.appendChild(this.toolbar.getMainDomElement());
+			this.$toolbarContainer.appendChild(this.toolbar.getMainElement());
 		}
 	}
 
@@ -105,16 +105,14 @@ export class UiMobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> im
 		this.navBar = navBar;
 		this.$navBarContainer.classList.toggle('hidden', !navBar);
 		if (navBar) {
-			this.$navBarContainer.appendChild(this.navBar.getMainDomElement());
+			this.$navBarContainer.appendChild(this.navBar.getMainElement());
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$mainDiv;
 	}
 
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMobileLayout", UiMobileLayout);

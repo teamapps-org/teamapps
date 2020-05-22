@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,10 @@ public class SizingPolicy {
 	private final float value;
 
 	private final int minAbsoluteSize;
+
+	public static SizingPolicy fixed(float sizeInPixels) {
+		return new SizingPolicy(SizeType.FIXED, sizeInPixels, (int) sizeInPixels);
+	}
 
 	public SizingPolicy(SizeType type, float value, int minAbsoluteSize) {
 		this.type = type;

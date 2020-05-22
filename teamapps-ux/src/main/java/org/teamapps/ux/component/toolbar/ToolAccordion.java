@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,17 @@ public class ToolAccordion extends AbstractToolContainer {
 
 	@Override
 	public UiComponent createUiComponent() {
-		List<UiToolbarButtonGroup> uiButtonGroups = toolbarButtonGroups.stream()
+		List<UiToolbarButtonGroup> leftUiButtonGroups = buttonGroups.stream()
+				.filter(group -> !group.isRightSide())
 				.sorted()
 				.map(group -> group.createUiToolbarButtonGroup())
 				.collect(Collectors.toList());
-		UiToolAccordion uiToolAccordion = new UiToolAccordion(uiButtonGroups);
+		List<UiToolbarButtonGroup> rightUiButtonGroups = buttonGroups.stream()
+				.filter(group -> group.isRightSide())
+				.sorted()
+				.map(group -> group.createUiToolbarButtonGroup())
+				.collect(Collectors.toList());
+		UiToolAccordion uiToolAccordion = new UiToolAccordion(leftUiButtonGroups, rightUiButtonGroups);
 		mapAbstractUiComponentProperties(uiToolAccordion);
 		return uiToolAccordion;
 	}

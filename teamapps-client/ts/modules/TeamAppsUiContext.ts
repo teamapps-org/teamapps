@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,29 +24,32 @@ import {TemplateRegistry} from "./TemplateRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiCommand} from "../generated/UiCommand";
 import {UiComponent} from "./UiComponent";
+import {UiClientObject} from "./UiClientObject";
+import {UiClientObjectConfig} from "../generated/UiClientObjectConfig";
 
 export const typescriptDeclarationFixConstant = 1;
 
-export interface IconPathProvider {
-	getIconPath(iconName: string, iconSize: number, ignoreRetina?: boolean): string;
-}
-
-export interface TeamAppsUiContext extends IconPathProvider {
+export interface TeamAppsUiContext {
 	readonly sessionId: string;
 	readonly isHighDensityScreen: boolean;
 	readonly executingCommand: boolean;
 	readonly config: UiConfigurationConfig;
 	readonly templateRegistry: TemplateRegistry;
 
-	getComponentById(id: string): UiComponent<UiComponentConfig>;
+	getClientObjectById(id: string): UiClientObject;
 }
 
 // TeamAppsUiContext implementations should implement this too. See usages.
-export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext{
+export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 	readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand>;
-	registerComponent(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void;
-	createAndRegisterComponent(config: UiComponentConfig): UiComponent<UiComponentConfig>;
-	destroyComponent(componentId: string): void;
+
+	registerClientObject(component: UiClientObject, id: string, teamappsType: string): void;
+
+	createClientObject(config: UiClientObjectConfig): UiClientObject;
+
 	refreshComponent(config: UiComponentConfig): void;
+
+	destroyClientObject(componentId: string): void;
+
 	fireEvent(eventObject: UiEvent): void;
 }

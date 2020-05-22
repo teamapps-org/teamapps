@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package org.teamapps.ux.component.workspacelayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiWorkSpaceLayoutView;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
@@ -125,9 +125,9 @@ public class WorkSpaceLayoutView {
 			title = panel.getTitle();
 		}
 
-		UiComponentReference uiPanel = null;
+		UiClientObjectReference uiPanel = null;
 		if (!lazyLoading) {
-			uiPanel = panel.createUiComponentReference();
+			uiPanel = panel.createUiReference();
 		}
 		UiWorkSpaceLayoutView view = new UiWorkSpaceLayoutView(getId(), icon, title, uiPanel);
 		view.setTabCloseable(closeable);
@@ -212,10 +212,6 @@ public class WorkSpaceLayoutView {
 
 	/*package-private*/ void fireOnRemoved() {
 		this.onRemoved.fire(null);
-	}
-
-	void destroy() {
-		panel.destroy(); // will also destroy the component
 	}
 
 	public WorkSpaceLayoutViewGroup getViewGroup() {

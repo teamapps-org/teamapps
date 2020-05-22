@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConf
 		//this.createAudioPlayer();
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$graph;
 	}
 
@@ -353,7 +353,7 @@ export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConf
 		let end: number = 0;
 		if (this.brush.empty( )) {
 			if ((d3.event as d3.BaseEvent).sourceEvent) {
-				start = end = this.x.invert(((d3.event as d3.BaseEvent).sourceEvent as MouseEvent).pageX - UiMediaTrackGraph.MARGINS.left - (this.getMainDomElement().getBoundingClientRect().left + document.body.scrollLeft)).getTime();
+				start = end = this.x.invert(((d3.event as d3.BaseEvent).sourceEvent as MouseEvent).pageX - UiMediaTrackGraph.MARGINS.left - (this.getMainElement().getBoundingClientRect().left + document.body.scrollLeft)).getTime();
 			}
 		} else {
 			start = (<Date><any>this.brush.extent()[0]).getTime();
@@ -382,9 +382,6 @@ export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConf
 		}
 	}
 
-	public destroy(): void {
-		// nothing to do
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMediaTrackGraph", UiMediaTrackGraph);

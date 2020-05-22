@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import org.teamapps.event.Event;
 public abstract class AbstractInfiniteItemViewModel<RECORD> implements InfiniteItemViewModel<RECORD> {
 
 	public final Event<Void> onAllDataChanged = new Event<>();
-	public final Event<RECORD> onRecordAdded = new Event<>();
-	public final Event<RECORD> onRecordChanged = new Event<>();
-	public final Event<RECORD> onRecordDeleted = new Event<>();
+	public final Event<ItemRangeChangeEvent<RECORD>> onRecordsAdded = new Event<>();
+	public final Event<ItemRangeChangeEvent<RECORD>> onRecordsChanged = new Event<>();
+	public final Event<ItemRangeChangeEvent<RECORD>> onRecordsDeleted = new Event<>();
 
 	@Override
 	public Event<Void> onAllDataChanged() {
@@ -34,17 +34,17 @@ public abstract class AbstractInfiniteItemViewModel<RECORD> implements InfiniteI
 	}
 
 	@Override
-	public Event<RECORD> onRecordAdded() {
-		return onRecordAdded;
+	public Event<ItemRangeChangeEvent<RECORD>> onRecordsAdded() {
+		return onRecordsAdded;
 	}
 
 	@Override
-	public Event<RECORD> onRecordChanged() {
-		return onRecordChanged;
+	public Event<ItemRangeChangeEvent<RECORD>> onRecordsChanged() {
+		return onRecordsChanged;
 	}
 
 	@Override
-	public Event<RECORD> onRecordDeleted() {
-		return onRecordDeleted;
+	public Event<ItemRangeChangeEvent<RECORD>> onRecordsDeleted() {
+		return onRecordsDeleted;
 	}
 }

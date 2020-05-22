@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,11 +54,11 @@ export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDat
 		let value = this.trivialDateTimeField.getValue();
 		if (value) {
 			return moment.tz({
-				year: value.year,
-				month: value.month - 1,
-				day: value.day,
-				hour: value.hour,
-				minute: value.minute
+				year: value.year || 0,
+				month: value.month ? value.month - 1 : 0,
+				day: value.day || 0,
+				hour: value.hour || 0,
+				minute: value.minute || 0
 			}, this.getTimeZoneId()).valueOf();
 		} else {
 			return null;

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,19 +29,19 @@ public class CommandBufferTest {
 	@Test
 	public void size() throws Exception {
 		CommandBuffer buffer = new CommandBuffer(3);
-		assertEquals(0, buffer.size());
+		assertEquals(0, buffer.getBufferedCommandsCount());
 		buffer.addCommand(createCmd(1));
-		assertEquals(1, buffer.size());
+		assertEquals(1, buffer.getBufferedCommandsCount());
 		buffer.addCommand(createCmd(2));
-		assertEquals(2, buffer.size());
+		assertEquals(2, buffer.getBufferedCommandsCount());
 		buffer.addCommand(createCmd(3));
-		assertEquals(3, buffer.size());
+		assertEquals(3, buffer.getBufferedCommandsCount());
 		buffer.consumeCommand();
 		buffer.addCommand(createCmd(4));
-		assertEquals(3, buffer.size()); // !!
+		assertEquals(3, buffer.getBufferedCommandsCount()); // !!
 		buffer.consumeCommand();
 		buffer.addCommand(createCmd(5));
-		assertEquals(3, buffer.size()); // !!
+		assertEquals(3, buffer.getBufferedCommandsCount()); // !!
 	}
 
 	@Test
@@ -84,11 +84,11 @@ public class CommandBufferTest {
 				buffer.consumeCommand();
 			}
 		}
-		assertEquals(4, buffer.size());
+		assertEquals(4, buffer.getBufferedCommandsCount());
 
 		buffer.rewindToCommand(2);
 
-		assertEquals(4, buffer.size());
+		assertEquals(4, buffer.getBufferedCommandsCount());
 		assertEquals(3, buffer.consumeCommand().getId());
 		assertEquals(4, buffer.consumeCommand().getId());
 		assertNull(buffer.consumeCommand());
@@ -103,11 +103,11 @@ public class CommandBufferTest {
 				buffer.consumeCommand();
 			}
 		}
-		assertEquals(6, buffer.size());
+		assertEquals(6, buffer.getBufferedCommandsCount());
 
 		buffer.rewindToCommand(3);
 
-		assertEquals(6, buffer.size());
+		assertEquals(6, buffer.getBufferedCommandsCount());
 		assertEquals(4, buffer.consumeCommand().getId());
 		assertEquals(5, buffer.consumeCommand().getId());
 		assertEquals(6, buffer.consumeCommand().getId());
@@ -135,7 +135,7 @@ public class CommandBufferTest {
 				buffer.consumeCommand();
 			}
 		}
-		assertEquals(6, buffer.size());
+		assertEquals(6, buffer.getBufferedCommandsCount());
 
 		assertEquals(false, buffer.rewindToCommand(-1));
 	}
@@ -151,22 +151,22 @@ public class CommandBufferTest {
 			}
 		}
 
-		Assert.assertEquals(10, buffer.size());
+		Assert.assertEquals(10, buffer.getBufferedCommandsCount());
 
 		buffer.purgeTillCommand(8);
-		Assert.assertEquals(8, buffer.size());
+		Assert.assertEquals(8, buffer.getBufferedCommandsCount());
 
 		buffer.purgeTillCommand(10);
-		Assert.assertEquals(6, buffer.size());
+		Assert.assertEquals(6, buffer.getBufferedCommandsCount());
 
 		buffer.purgeTillCommand(11);
-		Assert.assertEquals(5, buffer.size());
+		Assert.assertEquals(5, buffer.getBufferedCommandsCount());
 
 		buffer.purgeTillCommand(12);
-		Assert.assertEquals("must not purge next consumable command", 4, buffer.size()); 
+		Assert.assertEquals("must not purge next consumable command", 4, buffer.getBufferedCommandsCount());
 
 		buffer.purgeTillCommand(100);
-		Assert.assertEquals("must not purge next consumable command", 4, buffer.size());
+		Assert.assertEquals("must not purge next consumable command", 4, buffer.getBufferedCommandsCount());
 
 	}
 

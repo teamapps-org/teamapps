@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.media;
 
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
@@ -46,7 +46,7 @@ public class MediaPlayer extends AbstractComponent {
 
 	public MediaPlayer() {
 		videoPlayer = new VideoPlayer(null);
-		videoPlayer.onVideoPlayerProgress.addListener(position -> {
+		videoPlayer.onProgress.addListener(position -> {
 			if (trackGraph != null) {
 				trackGraph.setCursorPosition(position * 1000);
 			}
@@ -118,8 +118,8 @@ public class MediaPlayer extends AbstractComponent {
 	}
 
 	@Override
-	public UiComponentReference createUiComponentReference() {
-		return splitPane.createUiComponentReference();
+	public UiClientObjectReference createUiReference() {
+		return splitPane.createUiReference();
 	}
 
 	@Override
@@ -127,8 +127,4 @@ public class MediaPlayer extends AbstractComponent {
 
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

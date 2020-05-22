@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ export class UiApplicationLayout extends AbstractUiComponent<UiApplicationLayout
 		this._toolbar = toolbar;
 		this._$toolbarContainer.classList.toggle('hidden', !toolbar);
 		if (toolbar) {
-			this._$toolbarContainer.appendChild(this._toolbar.getMainDomElement());
+			this._$toolbarContainer.appendChild(this._toolbar.getMainElement());
 		}
 	}
 
@@ -70,17 +70,14 @@ export class UiApplicationLayout extends AbstractUiComponent<UiApplicationLayout
 		}
 		if (splitPane) {
 			this._rootSplitPane = splitPane;
-			this._$contentContainer.appendChild(this._rootSplitPane.getMainDomElement());
+			this._$contentContainer.appendChild(this._rootSplitPane.getMainElement());
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$mainDiv;
 	}
 
-
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiApplicationLayout", UiApplicationLayout);

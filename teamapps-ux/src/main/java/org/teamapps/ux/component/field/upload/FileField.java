@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
-	private Template uploadButtonTemplate = BaseTemplate.FORM_BUTTON;
+	private Template uploadButtonTemplate = BaseTemplate.BUTTON;
 	private Object uploadButtonData = new BaseTemplateRecord(MaterialIcon.BACKUP, getSessionContext().getLocalized("ux.fileField.upload_verb"));
 	private PropertyExtractor uploadButtonPropertyExtractor = new BeanPropertyExtractor();
 
@@ -109,7 +109,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 		}
 		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = recordCache.replaceRecords(uxValue);
 		cacheResponse.commit(); // this is only valid here, because updates from the ui are blocked during transmission of ux values
-		return cacheResponse.getResult();
+		return cacheResponse.getAndClearResult();
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 				RECORD record = uploadedFileToRecordConverter.convert(uploadedFile);
 				CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
 				if (isRendered()) {
-					getSessionContext().queueCommand(new UiFileField.ReplaceFileItemCommand(getId(), uploadedEvent.getFileItemUuid(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+					getSessionContext().queueCommand(new UiFileField.ReplaceFileItemCommand(getId(), uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 				} else {
 					cacheResponse.commit();
 				}
@@ -194,11 +194,6 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 			oldValue.removeAll(getValue() != null ? getValue() : Collections.emptyList());
 			oldValue.forEach(record -> onFileItemRemoved.fire(record));
 		}
-	}
-
-	@Override
-	protected void doDestroy() {
-		// nothing to do
 	}
 
 	public Template getFileItemTemplate() {

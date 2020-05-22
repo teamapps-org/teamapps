@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,25 +60,15 @@ public class SplitPane extends AbstractComponent {
 	}
 
 	@Override
-	protected void doDestroy() {
-		if (this.firstChild != null) {
-			this.firstChild.destroy();
-		}
-		if (this.lastChild != null) {
-			this.lastChild.destroy();
-		}
-	}
-
-	@Override
 	public UiComponent createUiComponent() {
 		UiSplitPane uiSplitPane = new UiSplitPane(splitDirection.toUiSplitDirection(), sizePolicy.toUiSplitSizePolicy());
 		mapAbstractUiComponentProperties(uiSplitPane);
 		uiSplitPane.setReferenceChildSize(referenceChildSize);
 		if (firstChild != null) {
-			uiSplitPane.setFirstChild(firstChild.createUiComponentReference());
+			uiSplitPane.setFirstChild(firstChild.createUiReference());
 		}
 		if (lastChild != null) {
-			uiSplitPane.setLastChild(lastChild.createUiComponentReference());
+			uiSplitPane.setLastChild(lastChild.createUiReference());
 		}
 		uiSplitPane.setFirstChildMinSize(firstChildMinSize);
 		uiSplitPane.setLastChildMinSize(lastChildMinSize);
@@ -106,7 +96,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setFirstChild(Component firstChild) {
 		this.firstChild = firstChild;
-		queueCommandIfRendered(() -> new UiSplitPane.SetFirstChildCommand(getId(), firstChild != null ? firstChild.createUiComponentReference() : null));
+		queueCommandIfRendered(() -> new UiSplitPane.SetFirstChildCommand(getId(), firstChild != null ? firstChild.createUiReference() : null));
 	}
 
 	public Component getLastChild() {
@@ -115,7 +105,7 @@ public class SplitPane extends AbstractComponent {
 
 	public void setLastChild(Component lastChild) {
 		this.lastChild = lastChild;
-		queueCommandIfRendered(() -> new UiSplitPane.SetLastChildCommand(getId(), lastChild != null ? lastChild.createUiComponentReference() : null));
+		queueCommandIfRendered(() -> new UiSplitPane.SetLastChildCommand(getId(), lastChild != null ? lastChild.createUiReference() : null));
 	}
 
 	public void setSize(float referenceChildSize, SplitSizePolicy sizePolicy) {

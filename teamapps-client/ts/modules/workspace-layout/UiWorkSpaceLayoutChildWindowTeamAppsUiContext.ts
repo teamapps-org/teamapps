@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./U
 import {UiRootPanel} from "../UiRootPanel";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
-import {getIconPath, logException} from "../Common";
+import {logException} from "../Common";
 import {UiConfigurationConfig} from "../../generated/UiConfigurationConfig";
 import {UiEvent} from "../../generated/UiEvent";
 import {EventRegistrator} from "../../generated/EventRegistrator";
@@ -53,7 +53,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 		if (this.isHighDensityScreen) {
 			document.body.classList.add('high-density-screen');
 		}
-		window.onmessage = (e) => {
+		window.onmessage = (e: MessageEvent) => {
 			if (e.origin !== location.origin || e.ports.length === 0) {
 				return;
 			}
@@ -73,7 +73,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 					UiRootPanel.setConfig(messageObject.uiConfiguration, this);
 					UiRootPanel.registerTemplates(messageObject.registeredTemplates, this);
 					// TODO set background image!
-					document.body.appendChild(rootPanel.getMainDomElement());
+					document.body.appendChild(rootPanel.getMainElement());
 					this.workSpaceLayout = new UiWorkSpaceLayout({
 						_type: "UiWorkSpaceLayout",
 						id: messageObject.workspaceLayoutId,
@@ -82,7 +82,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 						toolbar: null,
 						childWindowPageTitle: messageObject.childWindowPageTitle,
 					}, this, messageObject.windowId, this.parentWindowMessagePort);
-					this.registerComponent(this.workSpaceLayout, messageObject.workspaceLayoutId, "UiWorkSpaceLayout");
+					this.registerClientObject(this.workSpaceLayout, messageObject.workspaceLayoutId, "UiWorkSpaceLayout");
 					rootPanel.setContent(this.workSpaceLayout);
 				} else if (messageObject._type === "COMMAND") {
 					const commandMethodName = messageObject.methodName as string;
@@ -144,7 +144,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 		})
 	}
 
-	registerComponent(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void {
+	registerClientObject(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void {
 		this.components[id] = component;
 		EventRegistrator.registerForEvents(component, teamappsType, (eventObject: UiEvent) => this.fireEvent(eventObject), {id: id});
 
@@ -157,21 +157,21 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 		}
 	}
 
-	destroyComponent(id: string): void {
+	destroyClientObject(id: string): void {
 		let c = this.components[id];
 		if (c == null) {
 			UiWorkSpaceLayoutChildWindowTeamAppsUiContext.logger.error("Could not find component to destroy: " + id)
 		}
-		c.getMainDomElement().remove();
+		c.getMainElement().remove();
 		c.destroy();
 		delete this.components[id];
 	}
 
-	public createAndRegisterComponent(config: UiComponentConfig) {
+	public createClientObject(config: UiComponentConfig) {
 		let component: UiComponent<UiComponentConfig>;
 		if ((TeamAppsUiComponentRegistry.getComponentClassForName(config._type))) {
 			component = new (TeamAppsUiComponentRegistry.getComponentClassForName(config._type))(config, this);
-			this.registerComponent(component, config.id, config._type);
+			this.registerClientObject(component, config.id, config._type);
 			return component;
 		} else {
 			UiWorkSpaceLayoutChildWindowTeamAppsUiContext.logger.error("Unknown component type: " + config._type);
@@ -179,12 +179,8 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 		}
 	}
 
-	public getComponentById(id: string): UiComponent<UiComponentConfig> {
+	public getClientObjectById(id: string): UiComponent<UiComponentConfig> {
 		return this.components[id];
-	}
-
-	getIconPath(iconName: string, iconSize: number, ignoreRetina?: boolean): string {
-		return getIconPath(this, iconName, iconSize, ignoreRetina);
 	}
 
 	refreshComponent(config: UiComponentConfig): void {

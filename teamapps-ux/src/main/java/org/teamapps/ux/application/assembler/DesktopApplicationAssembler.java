@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,11 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
         WorkSpaceLayoutView layoutView = new WorkSpaceLayoutView(workSpaceLayout, view.getPanel(), tabTitle, true, false);
         viewGroup.addView(layoutView);
 
-        if (viewGroup != null && viewGroup.getPanelState() != ViewGroupPanelState.NORMAL) {
+        if (view.getCustomViewSize() != null) {
+            changeViewSize(layoutView, view.getCustomViewSize());
+        }
+        
+        if (viewGroup.getPanelState() != ViewGroupPanelState.NORMAL) {
             viewGroup.setPanelState(ViewGroupPanelState.NORMAL);
         }
     }
@@ -83,6 +87,13 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
         WorkSpaceLayoutView layoutView = workSpaceLayout.getViewByPanel(view.getPanel());
         if (layoutView != null) {
             layoutView.remove();
+        }
+    }
+
+    public void setWorkspaceViewVisible(View view, boolean visible) {
+        WorkSpaceLayoutView layoutView = workSpaceLayout.getViewByPanel(view.getPanel());
+        if (layoutView != null) {
+            layoutView.setVisible(visible);
         }
     }
 
@@ -153,6 +164,8 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
     @Override
     public void handleViewVisibilityChange(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, boolean visible) {
         if (isActivePerspective) {
+            //todo change visibility or remove view?
+            //setWorkspaceViewVisible(view, visible);
             if (visible) {
                 addView(view);
             } else {
@@ -173,20 +186,24 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
         if (isActivePerspective && viewSize != null) {
             WorkSpaceLayoutView layoutView = workSpaceLayout.getViewByPanel(view.getPanel());
             if (layoutView != null) {
-                if (viewSize.isWidthAvailable()) {
-                    if (viewSize.getRelativeWidth() != null) {
-                        layoutView.setRelativeWidth(viewSize.getRelativeWidth());
-                    } else {
-                        layoutView.setAbsoluteWidth(viewSize.getAbsoluteWidth());
-                    }
-                }
-                if (viewSize.isHeightAvailable()) {
-                    if (viewSize.getRelativeHeight() != null) {
-                        layoutView.setRelativeHeight(viewSize.getRelativeHeight());
-                    } else {
-                        layoutView.setAbsoluteHeight(viewSize.getAbsoluteHeight());
-                    }
-                }
+                changeViewSize(layoutView, viewSize);
+            }
+        }
+    }
+
+    private void changeViewSize(WorkSpaceLayoutView layoutView, ViewSize viewSize) {
+        if (viewSize.isWidthAvailable()) {
+            if (viewSize.getRelativeWidth() != null) {
+                layoutView.setRelativeWidth(viewSize.getRelativeWidth());
+            } else {
+                layoutView.setAbsoluteWidth(viewSize.getAbsoluteWidth());
+            }
+        }
+        if (viewSize.isHeightAvailable()) {
+            if (viewSize.getRelativeHeight() != null) {
+                layoutView.setRelativeHeight(viewSize.getRelativeHeight());
+            } else {
+                layoutView.setAbsoluteHeight(viewSize.getAbsoluteHeight());
             }
         }
     }

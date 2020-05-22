@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 
 	private boolean headerVisible = true;
 	private ItemViewFloatStyle floatStyle = ItemViewFloatStyle.HORIZONTAL_FLOAT;
-	private ItemViewItemJustification itemJustification = ItemViewItemJustification.LEFT;
+	private ItemViewRowJustification itemJustification = ItemViewRowJustification.LEFT;
 	private float buttonWidth = -1;
 	private int horizontalPadding = 0;
 	private int verticalPadding = 0;
@@ -81,7 +81,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 
 		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(this.items);
 		cacheResponse.commit();
-		itemGroup.setItems(cacheResponse.getResult());
+		itemGroup.setItems(cacheResponse.getAndClearResult());
 		itemGroup.setHeaderVisible(headerVisible);
 		itemGroup.setFloatStyle(floatStyle.toUiItemViewFloatStyle());
 		itemGroup.setButtonWidth(buttonWidth);
@@ -110,7 +110,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		items.add(item);
 		if (container != null) {
 			CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = itemCache.addRecord(item);
-			container.handleAddItem(cacheResponse.getResult(), aVoid -> cacheResponse.commit());
+			container.handleAddItem(cacheResponse.getAndClearResult(), aVoid -> cacheResponse.commit());
 		}
 	}
 
@@ -118,7 +118,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		boolean removed = items.remove(item);
 		if (removed) {
 			CacheManipulationHandle<Integer> cacheResponse = itemCache.removeRecord(item);
-			container.handleRemoveItem(cacheResponse.getResult(), aVoid -> cacheResponse.commit());
+			container.handleRemoveItem(cacheResponse.getAndClearResult(), aVoid -> cacheResponse.commit());
 		}
 	}
 
@@ -228,11 +228,11 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		return this;
 	}
 
-	public ItemViewItemJustification getItemJustification() {
+	public ItemViewRowJustification getItemJustification() {
 		return itemJustification;
 	}
 
-	public ItemGroup setItemJustification(ItemViewItemJustification itemJustification) {
+	public ItemGroup setItemJustification(ItemViewRowJustification itemJustification) {
 		this.itemJustification = itemJustification;
 		requireRefresh();
 		return this;

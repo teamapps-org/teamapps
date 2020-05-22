@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,6 @@ import java.util.stream.Collectors;
 public class PageView extends AbstractComponent {
 
 	private List<AbstractPageViewBlock> blocks = new ArrayList<>();
-
-	@Override
-	protected void doDestroy() {
-		// nothing to do...
-	}
 
 	@Override
 	public UiPageView createUiComponent() {

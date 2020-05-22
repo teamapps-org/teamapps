@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package org.teamapps.ux.component.infiniteitemview;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListInfiniteItemViewModel<RECORD> extends AbstractInfiniteItemViewModel<RECORD> {
 	private List<RECORD> records;
@@ -35,8 +36,57 @@ public class ListInfiniteItemViewModel<RECORD> extends AbstractInfiniteItemViewM
 	}
 
 	public void addRecord(RECORD record) {
-		this.records.add(record);
-		onRecordAdded.fire(record);
+		addRecord(records.size(), record);
+	}
+
+	public void addRecord(int index, RECORD record) {
+		this.records.add(index, record);
+		onRecordsAdded.fire(new ItemRangeChangeEvent<>(index, Collections.singletonList(record)));
+	}
+
+	public void addRecords(List<RECORD> records) {
+		addRecords(records.size(), records);
+	}
+
+	public void addRecords(int index, List<RECORD> records) {
+		this.records.addAll(index, records);
+		onRecordsAdded.fire(new ItemRangeChangeEvent<>(index, records));
+	}
+
+	public void removeRecord(RECORD record) {
+		removeRecord(records.indexOf(record));
+	}
+
+	public void removeRecord(int index) {
+		RECORD removedRecord = records.remove(index);
+		onRecordsDeleted.fire(new ItemRangeChangeEvent<>(index, Collections.singletonList(removedRecord)));
+	}
+
+	public void removeRecord(int startIndex, int length) {
+		List<RECORD> subList = records.subList(startIndex, startIndex + length);
+		List<RECORD> removedRecords = List.copyOf(subList);
+		subList.clear();
+		onRecordsDeleted.fire(new ItemRangeChangeEvent<>(startIndex, removedRecords));
+	}
+
+	public void updateRecord(int index) {
+		onRecordsChanged.fire(new ItemRangeChangeEvent<>(ItemRange.startLength(index, 1)));
+	}
+
+	public void updateRecords(int startIndex, int length) {
+		onRecordsChanged.fire(new ItemRangeChangeEvent<>(ItemRange.startLength(startIndex, length)));
+	}
+
+	public void replaceRecord(int index, RECORD record) {
+		records.set(index, record);
+		onRecordsChanged.fire(new ItemRangeChangeEvent<>(index, Collections.singletonList(record)));
+	}
+
+	public void replaceRecords(int startIndex, List<RECORD> records) {
+		for (int i = 0; i < records.size(); i++) {
+			records.set(startIndex + i, records.get(i));
+		}
+		onRecordsChanged.fire(new ItemRangeChangeEvent<>(ItemRange.startLength(startIndex, records.size())));
 	}
 
 	public void setRecords(List<RECORD> records) {
@@ -51,12 +101,6 @@ public class ListInfiniteItemViewModel<RECORD> extends AbstractInfiniteItemViewM
 
 	@Override
 	public List<RECORD> getRecords(int startIndex, int length) {
-		if (startIndex >= records.size()) {
-			return Collections.emptyList();
-		}
-		if (startIndex + length > records.size()) {
-			length = records.size() - startIndex;
-		}
-		return records.subList(startIndex, startIndex + length);
+		return records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
 	}
 }

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		let {$wrapper, subFieldSkeletons} = UiCompositeField.createDomStructure(config);
 		subFieldSkeletons.forEach(subFieldSkeleton => {
 			const field = subFieldSkeleton.config.field as UiField;
-			subFieldSkeleton.$cell.appendChild(field.getMainDomElement());
+			subFieldSkeleton.$cell.appendChild(field.getMainElement());
 			field.onValueChanged.addListener((eventObject: ValueChangeEventData ) => {
 				this.onSubFieldValueChanged.fire({
 					fieldName: "TODO!",
@@ -242,10 +242,6 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 
 	private getAllSubFields(): SubField[] {
 		return this.subFields;
-	}
-
-	doDestroy(): void {
-		this.$wrapper.remove();
 	}
 
 	public getReadOnlyHtml(value: any, availableWidth: number): string {

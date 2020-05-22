@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 class UiMap extends UiComponent {
 	required Dictionary<UiTemplate> markerTemplates;
 	String accessToken;
+	UiMapConfig mapConfig;
 
 	UiMapType mapType = UiMapType.MAP_BOX_STREETS;
 	int zoomLevel = 5;
@@ -52,8 +53,18 @@ class UiMap extends UiComponent {
 	event shapeDrawn(String shapeId, AbstractUiMapShape shape);
 }
 
+class UiMapConfig {
+	String urlTemplate;
+	String id = "";
+	int minZoom = 1;
+	int maxZoom = 18;
+	String attribution = "";
+}
+
 enum UiMapType {
 	INTERNAL,
+	INTERNAL_DARK,
+	INTERNAL_DARK_HIGH_RES,
 	MAP_BOX_STREETS,
 	MAP_BOX_STREETS_BASIC,
 	MAP_BOX_STREETS_SATELLITE,

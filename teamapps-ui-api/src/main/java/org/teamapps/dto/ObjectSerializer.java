@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,17 +33,15 @@ import com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;
 import com.fasterxml.jackson.databind.ser.std.EnumSerializer;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ObjectSerializer extends JsonSerializer<Object> {
 
 	private final StdTypeResolverBuilder typeResolverBuilder;
 	private final TeamAppsJacksonTypeIdResolver typeIdResolver;
-	private HashMap<Class<?>, TypeSerializer> typeSerializersCache = new HashMap<>();
-	private final Map<Class, BeanDescription> beanDescriptionsCache = new ConcurrentHashMap<>();
+	private final CopyOnWriteLeakyCache<Class<?>, TypeSerializer> typeSerializersCache = new CopyOnWriteLeakyCache<>();
+	private final CopyOnWriteLeakyCache<Class<?>, BeanDescription> beanDescriptionsCache = new CopyOnWriteLeakyCache<>();
 
 	public ObjectSerializer() {
 		typeIdResolver = new TeamAppsJacksonTypeIdResolver();
@@ -53,7 +51,7 @@ public class ObjectSerializer extends JsonSerializer<Object> {
 				.typeProperty("_type");
 	}
 
-	public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
+	public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
 		if (value == null) {
 			gen.writeNull();
 		} else if (value instanceof List) {
@@ -89,7 +87,7 @@ public class ObjectSerializer extends JsonSerializer<Object> {
 	}
 
 	public void serializeWithType(Object value, JsonGenerator gen, SerializerProvider serializers, TypeSerializer typeSer) throws IOException {
-		if (List.class.isInstance(value) || Map.class.isInstance(value)) {
+		if (value instanceof List || value instanceof Map) {
 			serialize(value, gen, serializers);
 		} else {
 			serializers.findValueSerializer(value.getClass()).serializeWithType(value, gen, serializers, typeSer);

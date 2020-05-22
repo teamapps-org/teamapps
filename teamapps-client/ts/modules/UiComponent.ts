@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,17 @@
  */
 import {UiComponentCommandHandler, UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
+import {UiClientObject} from "./UiClientObject";
 
-export interface UiComponent<C extends UiComponentConfig = UiComponentConfig> extends UiComponentCommandHandler {
-
-	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
-	isVisible(): boolean;
+export interface UiComponent<C extends UiComponentConfig = UiComponentConfig> extends UiClientObject<C>, UiComponentCommandHandler {
 
 	/**
 	 * @return The main DOM element of this component.
 	 */
-	getMainDomElement(): HTMLElement;
+	getMainElement(): HTMLElement;
 
+	readonly onVisibilityChanged: TeamAppsEvent<boolean>;
 
-	destroy(): void;
+	isVisible(): boolean;
 
 }

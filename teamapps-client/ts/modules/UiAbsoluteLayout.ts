@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig
 		this.update(config.components, 0, UiAnimationEasing.EASE);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -69,7 +69,7 @@ export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig
 		components
 			.map(c => c.component)
 			.forEach((c: UiComponent) => {
-				const mainDomElementElement = c.getMainDomElement();
+				const mainDomElementElement = c.getMainElement();
 				mainDomElementElement.removeEventListener("transitionend", this.transitionEndEventListener);
 				this.$main.appendChild(mainDomElementElement);
 			});
@@ -81,8 +81,8 @@ export class UiAbsoluteLayout extends AbstractUiComponent<UiAbsoluteLayoutConfig
 }`;
 		components.forEach(c => {
 			const component = c.component as AbstractUiComponent;
-			component.getMainDomElement().addEventListener('transitionend', this.transitionEndEventListener);
-			component.getMainDomElement().setAttribute("data-absolute-positioning-id", component.getId());
+			component.getMainElement().addEventListener('transitionend', this.transitionEndEventListener);
+			component.getMainElement().setAttribute("data-absolute-positioning-id", component.getId());
 			styles += `[data-teamapps-id=${this.getId()}] > [data-absolute-positioning-id=${component.getId()}] {
 	top: ${c.position.topCss != null ? c.position.topCss : "initial"};
 	right: ${c.position.rightCss != null ? c.position.rightCss : "initial"};

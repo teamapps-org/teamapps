@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -179,7 +179,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 						$fcContent.innerHTML = renderer.render(arg.event.extendedProps.data);
 					}
 				} else {
-					prependChild($fcContent, parseHtml(`<div class="fc-icon img img-16" style="background-image:url(${this._context.getIconPath(arg.event.extendedProps.icon, 16)})">`));
+					prependChild($fcContent, parseHtml(`<div class="fc-icon img img-16" style="background-image:url(${arg.event.extendedProps.icon})">`));
 				}
 				if (arg.event.allDay) {
 					arg.el.classList.add("all-day");
@@ -367,11 +367,12 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 		this.calendar.setOption('height', this.getHeight());
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.calendar && this.calendar.destroy();
 	}
 

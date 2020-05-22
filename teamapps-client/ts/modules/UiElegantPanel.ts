@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ export class UiElegantPanel extends AbstractUiComponent<UiElegantPanelConfig> im
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$element;
 	}
 
@@ -65,7 +65,7 @@ export class UiElegantPanel extends AbstractUiComponent<UiElegantPanelConfig> im
 		this.$contentContainer.innerHTML = '';
 		this.contentComponent = content;
 		if (content) {
-			this.$contentContainer.appendChild(this.contentComponent.getMainDomElement());
+			this.$contentContainer.appendChild(this.contentComponent.getMainElement());
 		}
 	}
 

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,13 +28,13 @@ public class SimpleItemGroup<PAYLOAD> extends ItemGroup<BaseTemplateRecord, Simp
 
 	public static SimpleItemGroup singleColumnGroup(Icon icon, String title) {
 		SimpleItemGroup group = new SimpleItemGroup<>(icon, title);
-		group.setButtonWidth(0.97f);
+		group.setButtonWidth(0);
 		return group;
 	}
 
 	public static SimpleItemGroup twoColumnGroup(Icon icon, String title) {
 		SimpleItemGroup group = new SimpleItemGroup<>(icon, title);
-		group.setButtonWidth(0.47f);
+		group.setButtonWidth(0.5f);
 		return group;
 	}
 

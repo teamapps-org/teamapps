@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,26 @@
  */
 package org.teamapps.ux.resource;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.util.Date;
+import java.util.function.Supplier;
 
 public interface Resource {
+
+	Logger LOGGER = LoggerFactory.getLogger(Resource.class);
 
 	InputStream getInputStream();
 
 	default long getLength() {
 		try {
 			InputStream inputStream = getInputStream();
+			if (inputStream == null) {
+				throw new IOException("Cannot get length of null resource: " + toString());
+			}
 			byte[] buf = new byte[4096];
 			int totalLength = 0;
 			int len;
@@ -37,7 +46,8 @@ public interface Resource {
 				totalLength += len;
 			}
 			return totalLength;
-		} catch (IOException e) {
+		} catch (IOException e) { // TODO change this to actually throw the IOException (see below)
+			LOGGER.error("Exception while calculating resource length: " + toString(), e);
 			return 0;
 		}
 	}
@@ -51,7 +61,7 @@ public interface Resource {
 	}
 
 	default Date getExpires() {
-		return new Date(System.currentTimeMillis() + 604800000L);
+		return new Date(System.currentTimeMillis() + 604800000L); // one week
 	}
 
 	default String getMimeType() {
@@ -64,6 +74,59 @@ public interface Resource {
 	 */
 	default boolean isAttachment() {
 		return false;
+	}
+
+	default File getAsFile() {
+		try {
+			String name = getName() != null ? getName() : ".bin";
+			File tempFile = File.createTempFile("temp", name);
+			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(tempFile));
+			IOUtils.copyLarge(getInputStream(), bos);
+			bos.close();
+			return tempFile;
+		} catch (IOException e) { // TODO change this to actually throw the IOException. Returning null is much more dangerous (NPE) than throwing a caught exception!
+			LOGGER.error("Exception while writing resource to file: " + toString(), e);
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	// util
+
+	default Resource lastModified(Date lastModifiedDate) {
+		return new ResourceWrapper(this) {
+			@Override
+			public Date getLastModified() {
+				return lastModifiedDate;
+			}
+		};
+	}
+
+	default Resource expiring(Date expiryDate) {
+		return new ResourceWrapper(this) {
+			@Override
+			public Date getExpires() {
+				return expiryDate;
+			}
+		};
+	}
+
+	default Resource withMimeType(String mimeType) {
+		return new ResourceWrapper(this) {
+			@Override
+			public String getMimeType() {
+				return mimeType;
+			}
+		};
+	}
+
+	default Resource asAttachment(boolean attachment) {
+		return new ResourceWrapper(this) {
+			@Override
+			public boolean isAttachment() {
+				return attachment;
+			}
+		};
 	}
 
 }

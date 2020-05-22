@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,8 @@
 package org.teamapps.databinding;
 
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
+
+import java.util.function.Consumer;
 
 public class ObservableSessionValue<T> {
 
@@ -62,19 +63,19 @@ public class ObservableSessionValue<T> {
 		return value;
 	}
 
-	public void addOnChangeListener(EventListener<T> listener) {
+	public void addOnChangeListener(Consumer<T> listener) {
 		onChanged.addListener(listener);
 	}
 
-	public void removeOnChangeListener(EventListener<T> listener) {
+	public void removeOnChangeListener(Consumer<T> listener) {
 		onChanged.removeListener(listener);
 	}
 
-	public void addOnBeforeChangeListener(EventListener<T> listener) {
+	public void addOnBeforeChangeListener(Consumer<T> listener) {
 		onBeforeChanged.addListener(listener);
 	}
 
-	public void removeBeforeOnChangeListener(EventListener<T> listener) {
+	public void removeBeforeOnChangeListener(Consumer<T> listener) {
 		onBeforeChanged.removeListener(listener);
 	}
 

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.teamapps.dto.UiCssJustifyContent;
 
 public enum CssJustifyContent {
 
-	FLEX_START, FLEX_END, CENTER, SPACE_BETWEEN, SPACE_AROUND, INITIAL, INHERIT;
+	FLEX_START, FLEX_END, CENTER, SPACE_BETWEEN, SPACE_AROUND, SPACE_EVENLY, INITIAL, INHERIT;
 
 	public UiCssJustifyContent toUiCssJustifyContent() {
 		return UiCssJustifyContent.valueOf(this.name());

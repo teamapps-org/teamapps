@@ -3,7 +3,7 @@
     <parent>
         <artifactId>teamapps</artifactId>
         <groupId>org.teamapps</groupId>
-        <version>0.9.25-SNAPSHOT</version>
+        <version>0.9.63-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,12 +42,6 @@
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

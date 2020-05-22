@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,13 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 
 	protected initialize(config: C, context: TeamAppsUiContext) {
 		this.$wrapper = parseHtml(`<div class="UiTextField field-border field-border-glow field-background clearable-field-wrapper form-control">
-    <input autocomplete="off" type="text"></input>
+    <input type="text"></input>
     <div class="clear-button tr-remove-button"></div>  
 </div>`);
 		this.$field = this.$wrapper.querySelector(":scope input");
+		if (!config.autofill) {
+			this.$field.autocomplete = "off";
+		}
 		let $clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
 		$clearButton.addEventListener('click',() => {
 			this.$field.value = "";

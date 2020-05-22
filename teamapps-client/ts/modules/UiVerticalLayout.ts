@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,23 +43,20 @@ export class UiVerticalLayout extends AbstractUiComponent<UiVerticalLayoutConfig
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$verticalLayout;
-	}
-
-	public destroy(): void {
 	}
 
 	public addComponent(childComponent: UiComponent) {
 		const $childWrapper = parseHtml('<div class="vertical-layout-child-wrapper" style="' + (this._config.fixedChildHeight ? 'height:' + this._config.fixedChildHeight + 'px' : '') + '">');
 		this.$verticalLayout.appendChild($childWrapper);
-		$childWrapper.appendChild(childComponent.getMainDomElement());
+		$childWrapper.appendChild(childComponent.getMainElement());
 		this.children.push(childComponent);
 	}
 
 	public removeComponent(childComponent: UiComponent) {
 		this.children = this.children.filter(c => c !== childComponent);
-		let $childWrapper = childComponent.getMainDomElement().closest(".vertical-layout-child-wrapper");
+		let $childWrapper = childComponent.getMainElement().closest(".vertical-layout-child-wrapper");
 		$childWrapper.remove();
 	}
 }

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class LogicalForm<RECORD> {
 
-	private final Map<String, AbstractField> fieldsByPropertyName = new HashMap<>();
+	private final Map<String, AbstractField<?>> fieldsByPropertyName = new HashMap<>();
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
 
@@ -42,23 +42,23 @@ public class LogicalForm<RECORD> {
 		this.propertyInjector = propertyInjector;
 	}
 
-	public LogicalForm(Map<String, AbstractField> fieldsByPropertyName) {
-		fieldsByPropertyName.putAll(fieldsByPropertyName);
+	public LogicalForm(Map<String, AbstractField<?>> fieldsByPropertyName) {
+		this.fieldsByPropertyName.putAll(fieldsByPropertyName);
 	}
 
-	public LogicalForm<RECORD> addField(String propertyName, AbstractField field) {
+	public LogicalForm<RECORD> addField(String propertyName, AbstractField<?> field) {
 		this.fieldsByPropertyName.put(propertyName, field);
 		return this;
 	}
 
-	public LogicalForm<RECORD> removeField(AbstractField field) {
+	public LogicalForm<RECORD> removeField(AbstractField<?> field) {
 		this.fieldsByPropertyName.remove(field);
 		return this;
 	}
 
 	public void applyRecordValuesToFields(RECORD record) {
 		Map<String, Object> values = propertyExtractor.getValues(record, fieldsByPropertyName.keySet());
-		values.forEach((dataKey, value) -> fieldsByPropertyName.get(dataKey).setValue(value));
+		values.forEach((dataKey, value) -> ((AbstractField) fieldsByPropertyName.get(dataKey)).setValue(value));
 	}
 
 	public void applyFieldValuesToRecord(RECORD record) {
@@ -67,7 +67,7 @@ public class LogicalForm<RECORD> {
 		propertyInjector.setValues(record, fieldValues);
 	}
 
-	public Map<String, AbstractField> getFields() {
+	public Map<String, AbstractField<?>> getFields() {
 		return fieldsByPropertyName;
 	}
 

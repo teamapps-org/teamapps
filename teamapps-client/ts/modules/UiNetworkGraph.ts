@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
 	UiNetworkGraph_NodeClickedEvent,
+	UiNetworkGraph_NodeDoubleClickedEvent,
 	UiNetworkGraph_NodeExpandedOrCollapsedEvent,
 	UiNetworkGraphCommandHandler,
 	UiNetworkGraphConfig,
@@ -44,6 +45,8 @@ import {UiNetworkLinkConfig} from "../generated/UiNetworkLinkConfig";
 export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> implements UiNetworkGraphCommandHandler, UiNetworkGraphEventSource {
 
 	public readonly onNodeClicked: TeamAppsEvent<UiNetworkGraph_NodeClickedEvent> = new TeamAppsEvent(this);
+	public readonly onNodeDoubleClicked: TeamAppsEvent<UiNetworkGraph_NodeDoubleClickedEvent> = new TeamAppsEvent(this);
+
 	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiNetworkGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
 
 	private $graph: HTMLElement;
@@ -70,7 +73,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		this.createGraph(config.gravity, config.images);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$graph;
 	}
 
@@ -81,13 +84,15 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
 				return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * 0.75;
 			});
+		let force = d3.forceManyBody();
+		force.strength(-30)
 		this.simulation = d3.forceSimulation<UiNetworkNodeConfig & any>()
 			.nodes(this.nodes)
-			.force("charge", d3.forceManyBody())
+			.force("charge", force)
 			.force("link", this.linkForce)
 			.force("center", d3.forceCenter(this.getWidth() / 2, this.getWidth() / 2))
 			.force("collide", d3.forceCollide((a: UiNetworkNodeConfig & any) => {
-				return Math.sqrt(a.width * a.width + a.height * a.height) * .6;
+				return Math.sqrt(a.width * a.width + a.height * a.height) * a.distanceFactor;
 			}))
 			.stop();
 
@@ -110,7 +115,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				this.container.attr("transform", d3.event.transform);
 			});
 
-		this.svg = d3.select(this.getMainDomElement())
+		this.svg = d3.select(this.getMainElement())
 			.append("svg")
 			.call(this.zoom)
 			.on("dblclick.zoom", null); // disable doubleclick zoom!;
@@ -234,18 +239,29 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		this.logger.debug(gravity);
 	}
 
-	public setDistance(distance: number, overrideNodeCharge: boolean): void {
-		// this.force.distance(distance).start();
-		this.logger.debug("distance:" + distance);
+	public setDistance(linkDistance: number, nodeDistance: number): void {
+		this.linkForce.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
+			return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * linkDistance;
+		});
+
+		this.simulation.force("collide", d3.forceCollide((a: UiNetworkNodeConfig & any) => {
+			return Math.sqrt(a.width * a.width + a.height * a.height) * a.distanceFactor * nodeDistance;
+		}));
+
+		this.simulation.nodes(this.nodes);
+		this.linkForce.links(this.links);
+		this.simulation.alphaTarget(0.3).restart()
+			.stop();
+		this.calculateFinalNodePositions();
+		this.updateNodes(this._config.animationDuration);
+		this.updateLinks(this._config.animationDuration);
+
+		this.logger.debug("distance:" + linkDistance + ", " + nodeDistance);
 	}
 
 	public setCharge(charge: number, overrideNodeCharge: boolean): void {
 		// this.force.charge(charge).start();
 		this.logger.debug("charge:" + charge);
-	}
-
-	public destroy(): void {
-		// nothing to do
 	}
 
 	private updateLinks(animationDuration: number = 0) {
@@ -274,12 +290,19 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		const nodeEnter = nodesSelection.enter().append('g')
 			.attr('class', 'node')
 			.attr('cursor', 'pointer')
-			.on('mousedown', (d: UiNetworkNodeConfig) => {
+			.on('click', (d: UiNetworkNodeConfig) => {
 				if (d3.event.srcElement.classList.contains('node-button-circle')) {
 					return;
 				}
 				this.onNodeClicked.fire({nodeId: d.id});
-			});
+			})
+			.on('dblclick', (d: UiNetworkNodeConfig) => {
+				if (d3.event.srcElement.classList.contains('node-button-circle')) {
+					return;
+				}
+				this.onNodeDoubleClicked.fire({nodeId: d.id});
+			})
+		;
 		// Add background rectangle for the nodes
 		patternify(nodeEnter, {
 			tag: 'rect',
@@ -309,6 +332,8 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				// if (!d3.event.active) {
 				// 	this.simulation.alphaTarget(0);
 				// }
+				d.fx = null;
+				d.fy = null;
 				this.container.attr("cursor", "grab")
 			})
 		);
@@ -322,7 +347,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		})
 			.attr('width', (data: UiNetworkNodeConfig) => data.icon.size)
 			.attr('height', (data: UiNetworkNodeConfig) => data.icon.size)
-			.attr("xlink:href", (data: UiNetworkNodeConfig) => this._context.getIconPath(data.icon.icon, data.icon.size))
+			.attr("xlink:href", (data: UiNetworkNodeConfig) => data.icon.icon)
 			.attr('x', (data: UiNetworkNodeConfig) => -data.width / 2 - data.icon.size / 2)
 			.attr('y', (data: UiNetworkNodeConfig) => -data.height / 2 - data.icon.size / 2);
 

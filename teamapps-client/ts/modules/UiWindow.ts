@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,6 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 
 	private $main: HTMLElement;
 	private $panelWrapper: HTMLElement;
-	private listener: UiWindowListener;
 	private panel: UiPanel;
 
 	private escapeKeyListener: (e: KeyboardEvent) => void;
@@ -65,7 +64,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		this.$panelWrapper = this.$main.querySelector<HTMLElement>(":scope >.panel-wrapper");
 
 		this.panel = new UiPanel(config, context);
-		this.$panelWrapper.appendChild(this.panel.getMainDomElement());
+		this.$panelWrapper.appendChild(this.panel.getMainElement());
 
 		if (config.closeable) {
 			this.panel.addWindowButton(UiWindowButtonType.CLOSE);
@@ -86,26 +85,28 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 	}
 
 	public show(animationDuration: number) {
+		document.body.appendChild(this.getMainElement());
+
 		this.$main.classList.remove("hidden");
 		this.$main.classList.add("open");
-		animateCSS(this.$panelWrapper, "zoomIn", 500);
+		animateCSS(this.$panelWrapper, "zoomIn", animationDuration);
 
 		this.escapeKeyListener = (e) => {
 			if (this.closeOnEscape && e.keyCode === keyCodes.escape) {
-				this.close(500);
+				this.close(animationDuration);
 			}
 		};
 		document.body.addEventListener("keydown", this.escapeKeyListener, {capture: true});
 
 		this.clickOutsideListener = (e) => {
 			if (this.closeOnClickOutside && e.target === this.$main) {
-				this.close(500);
+				this.close(animationDuration);
 			}
 		};
 		this.$main.addEventListener("click", this.clickOutsideListener)
 	}
 
-	private removeCloseEventListeners() {
+	private removeBodyClickAndEscapeListeners() {
 		if (this.escapeKeyListener) {
 			document.body.removeEventListener("keydown", this.escapeKeyListener, {capture: true})
 		}
@@ -114,21 +115,17 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$main;
-	}
-
-	public setListener(listener: UiWindowListener) {
-		this.listener = listener;
 	}
 
 	public close(animationDuration: number) {
 		this.$main.classList.remove("open");
 		animateCSS(this.$panelWrapper, "zoomOut", animationDuration, () => {
 			this.$main.classList.add("hidden");
-			this.listener.onWindowClosed(this, animationDuration);
+			this.getMainElement().remove();
 		});
-		this.removeCloseEventListeners();
+		this.removeBodyClickAndEscapeListeners();
 	}
 
 	public setContent(content: UiComponent) {
@@ -206,7 +203,8 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 	}
 
 	public destroy(): void {
-		this.removeCloseEventListeners();
+		super.destroy();
+		this.removeBodyClickAndEscapeListeners();
 	}
 
 

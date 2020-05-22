@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import {
 	cssObjectToString,
 	cssVerticalAlignmentByUiVerticalAlignment
 } from "./CssFormatUtil";
-import {IconPathProvider} from "../TeamAppsUiContext";
 import * as log from "loglevel";
 import {UiTextElementConfig} from "../../generated/UiTextElementConfig";
 import {UiBadgeElementConfig} from "../../generated/UiBadgeElementConfig";
@@ -68,8 +67,8 @@ function createBadgeElementRenderer(element: UiBadgeElementConfig, additionalCss
 	return createTextElementRenderer(element, 'UiBadgeElement', borderStyle + additionalCss);
 }
 
-function createFloatingElementRenderer(element: UiFloatingElementConfig, iconPathProvider: IconPathProvider, additionalCss: string): RenderingFunction {
-	const elementRenderers = element.elements.map(subElement => createElementRenderer(subElement, iconPathProvider));
+function createFloatingElementRenderer(element: UiFloatingElementConfig, additionalCss: string): RenderingFunction {
+	const elementRenderers = element.elements.map(subElement => createElementRenderer(subElement));
 	const wrapCss = `flex-wrap: ${element.wrap ? 'wrap' : 'nowrap'};`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${createUiColorCssString(element.backgroundColor)};`) : '';
 	return (data: any) => {
@@ -96,14 +95,13 @@ function createImageElementRenderer(element: UiImageElementConfig, additionalCss
 	};
 }
 
-function createIconElementRenderer(element: UiIconElementConfig, iconPathProvider: IconPathProvider, additionalCss: string): RenderingFunction {
+function createIconElementRenderer(element: UiIconElementConfig, additionalCss: string): RenderingFunction {
 	const style = `width:${element.size}px; height:${element.size}px; background-size:${element.size}px;`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${createUiColorCssString(element.backgroundColor)};`) : '';
 	return (data: any) => {
 		let value = data[element.dataKey];
 		if (value != null) {
-			let iconPath = iconPathProvider.getIconPath(value, element.size);
-			const backgroundImage = iconPath ? `background-image: url('${iconPath}');` : '';
+			const backgroundImage = value ? `background-image: url('${value}');` : '';
 			return `<div data-key="${element.dataKey}" class="grid-template-element UiIconElement" style="${style} ${backgroundImage} ${backgroundColorCss} ${additionalCss}"></div>`;
 		} else {
 			return '';
@@ -124,24 +122,33 @@ function createGlyphIconElementRenderer(element: UiGlyphIconElementConfig, addit
 	};
 }
 
-function createElementRenderer(element: AbstractUiTemplateElementConfig, iconPathProvider: IconPathProvider, additionalCss = ""): RenderingFunction {
+function createElementRenderer(element: AbstractUiTemplateElementConfig, additionalCss = ""): RenderingFunction {
 	const column = `grid-column: ${element.column + 1} / ${element.column + element.colSpan + 1};`;
 	const row = `grid-row: ${element.row + 1} / ${element.row + element.rowSpan + 1};`;
 	const horizontalAlignmentCss = `justify-self: ${cssHorizontalAlignmentByUiVerticalAlignment[element.horizontalAlignment]};`;
 	const verticalAlignmentCss = `align-self: ${cssVerticalAlignmentByUiVerticalAlignment[element.verticalAlignment]};`;
 
-	let totalCss = additionalCss + column + row + horizontalAlignmentCss + verticalAlignmentCss;
+	let marginCss: string = "";
+	if (additionalCss.indexOf("margin:") === -1) {
+		let marginTop = (element.margin && element.margin.top || 0);
+		let marginRight = (element.margin && element.margin.right || 0);
+		let marginBottom = (element.margin && element.margin.bottom || 0);
+		let marginLeft = (element.margin && element.margin.left || 0);
+		marginCss = `margin: ${marginTop}px ${marginRight}px ${marginBottom}px ${marginLeft}px;`;
+	}
+
+	let totalCss = marginCss + additionalCss + column + row + horizontalAlignmentCss + verticalAlignmentCss;
 
 	if (isUiTextElement(element)) {
 		return createTextElementRenderer(element, null, totalCss);
 	} else if (isUiBadgeElement(element)) {
 		return createBadgeElementRenderer(element, totalCss);
 	} else if (isUiFloatingElement(element)) {
-		return createFloatingElementRenderer(element, iconPathProvider, totalCss);
+		return createFloatingElementRenderer(element, totalCss);
 	} else if (isUiImageElement(element)) {
 		return createImageElementRenderer(element, totalCss);
 	} else if (isUiIconElement(element)) {
-		return createIconElementRenderer(element, iconPathProvider, totalCss);
+		return createIconElementRenderer(element, totalCss);
 	} else if (isUiGlyphIconElement(element)) {
 		return createGlyphIconElementRenderer(element, totalCss);
 	}
@@ -171,7 +178,7 @@ export function isUiGlyphIconElement(element: AbstractUiTemplateElementConfig): 
 	return element._type === "UiGlyphIconElement";
 }
 
-export function createGridTemplateRenderer(template: UiGridTemplateConfig, iconPathProvider: IconPathProvider, idPropertyName: string): Renderer {
+export function createGridTemplateRenderer(template: UiGridTemplateConfig, idPropertyName: string): Renderer {
 	const renderers = template.elements.map(element => {
 
 		let startColumn = template.columns[element.column];
@@ -193,7 +200,7 @@ export function createGridTemplateRenderer(template: UiGridTemplateConfig, iconP
 
 		// TODO handle element's own padding!!!
 
-		return createElementRenderer(element, iconPathProvider, marginCss);
+		return createElementRenderer(element, marginCss);
 	});
 
 	const gridTemplateColumnsString = 'grid-template-columns:' + template.columns.map(column => createCssGridRowOrColumnString(column.widthPolicy)).join(" ") + ';';

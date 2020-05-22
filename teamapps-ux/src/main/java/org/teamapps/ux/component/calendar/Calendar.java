@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,6 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiWeekDay;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -52,6 +51,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.teamapps.util.UiUtil.createUiColor;
@@ -105,7 +105,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private boolean navigateOnHeaderClicks = true;
 
-	private EventListener<Void> onCalendarDataChangedListener = (aVoid) -> {
+	private Consumer<Void> onCalendarDataChangedListener = (aVoid) -> {
 		refreshEvents();
 	};
 
@@ -207,19 +207,12 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		List<CEVENT> initialCalendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(initialCalendarEvents);
 		cacheResponse.commit();
-		uiCalendar.setInitialData(cacheResponse.getResult());
+		uiCalendar.setInitialData(cacheResponse.getAndClearResult());
 
 		uiCalendar.setTemplates(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 
 		return uiCalendar;
-	}
-
-	@Override
-	protected void doDestroy() {
-		if (model != null) {
-			unregisterModelEventListeners();
-		}
 	}
 
 	private List<CEVENT> query(Instant queryStart, Instant queryEnd) {
@@ -310,7 +303,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		List<CEVENT> calendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
 		if (isRendered()) {
-			getSessionContext().queueCommand(new UiCalendar.SetCalendarDataCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+			getSessionContext().queueCommand(new UiCalendar.SetCalendarDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 		} else {
 			cacheResponse.commit();
 		}
@@ -397,6 +390,40 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	public void setDisplayedDate(LocalDate displayedDate) {
 		this.displayedDate = displayedDate;
 		queueCommandIfRendered(() -> new UiCalendar.SetDisplayedDateCommand(getId(), displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
+	}
+
+	public void setDisplayDateOneUnitPrevious() {
+		switch (getActiveViewMode()) {
+			case YEAR:
+				setDisplayedDate(getDisplayedDate().minusYears(1));
+				break;
+			case MONTH:
+				setDisplayedDate(getDisplayedDate().minusMonths(1));
+				break;
+			case WEEK:
+				setDisplayedDate(getDisplayedDate().minusWeeks(1));
+				break;
+			case DAY:
+				setDisplayedDate(getDisplayedDate().minusDays(1));
+				break;
+		}
+	}
+
+	public void setDisplayDateOneUnitNext() {
+		switch (getActiveViewMode()) {
+			case YEAR:
+				setDisplayedDate(getDisplayedDate().plusYears(1));
+				break;
+			case MONTH:
+				setDisplayedDate(getDisplayedDate().plusMonths(1));
+				break;
+			case WEEK:
+				setDisplayedDate(getDisplayedDate().plusWeeks(1));
+				break;
+			case DAY:
+				setDisplayedDate(getDisplayedDate().plusDays(1));
+				break;
+		}
 	}
 
 	public boolean isShowHeader() {

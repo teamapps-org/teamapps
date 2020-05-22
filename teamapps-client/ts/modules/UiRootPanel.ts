@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		this.setOptimizedForTouch(context.config.optimizedForTouch);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$root;
 	}
 
@@ -102,7 +102,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 		this.$contentWrapper = parseHtml(`<div class="child-component-wrapper">`);
 		if (content != null) {
-			this.$contentWrapper.appendChild(content.getMainDomElement());
+			this.$contentWrapper.appendChild(content.getMainElement());
 		}
 		this.$root.appendChild(this.$contentWrapper);
 
@@ -116,11 +116,12 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	}
 
 	public static createComponent(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
-		context.createAndRegisterComponent(config);
+		let o = context.createClientObject(config);
+		context.registerClientObject(o, config.id, config._type);
 	}
 
 	public static destroyComponent(componentId: string, context: TeamAppsUiContextInternalApi) {
-		context.destroyComponent(componentId);
+		context.destroyClientObject(componentId);
 	}
 
 	public static refreshComponent(config: UiComponentConfig, context: TeamAppsUiContextInternalApi) {
@@ -129,7 +130,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 	public static setConfig(config: UiConfigurationConfig, context: TeamAppsUiContext) {
 		let oldConfig = context.config;
-		if (!oldConfig || oldConfig.isoLanguage !== config.isoLanguage) {
+		if ((!oldConfig || oldConfig.isoLanguage !== config.isoLanguage) && config.isoLanguage !== 'en') {
 			$.getScript("runtime-resources/moment-locales/" + config.isoLanguage + ".js");
 			$.getScript("runtime-resources/fullcalendar-locales/" + config.isoLanguage + ".js");
 		}
@@ -142,7 +143,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 			uiRootPanel.setOptimizedForTouch(config.optimizedForTouch);
 		});
 
-		this.LOGGER.warn("TODO Setting configuration on context. This should be implemented using an event instead!");
+		// this.LOGGER.warn("TODO Setting configuration on context. This should be implemented using an event instead!");
 		(context as any).config = config; // TODO change this to firing an event to the context!!!!
 	}
 
@@ -219,42 +220,8 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
             `;
 	}
 
-	public static showWindow(uiWindow: UiWindow, animationDuration = 1000, context?: TeamAppsUiContext) {
-		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			if (rootPanel.$contentWrapper) {
-				css(rootPanel.$contentWrapper, {
-					transition: `opacity ${animationDuration}ms, filter ${animationDuration}ms`
-				});
-			}
-		});
-
-		document.body.appendChild(uiWindow.getMainDomElement());
-		uiWindow.getMainDomElement().setAttribute("data-background-container-id", this.ALL_ROOT_PANELS[0] && this.ALL_ROOT_PANELS[0].getId());
-		uiWindow.setListener({
-			onWindowClosed: (window, animationDuration) => this.removeWindow(window.getId(), animationDuration)
-		});
-		this.WINDOWS_BY_ID[uiWindow.getId()] = uiWindow;
-		uiWindow.show(animationDuration);
-
-		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			rootPanel.getMainDomElement().classList.toggle("modal-window-mode", uiWindow.isModal());
-		});
-	}
-
-	public static removeWindow(windowId: string, animationDuration: number) {
-		this.ALL_ROOT_PANELS.forEach(rootPanel => {
-			rootPanel.getMainDomElement().classList.remove('modal-window-mode');
-		});
-
-		let uiWindow = this.WINDOWS_BY_ID[windowId];
-		delete this.WINDOWS_BY_ID[windowId];
-
-		setTimeout(() => {
-			uiWindow.getMainDomElement().remove();
-		}, animationDuration);
-	};
-
 	public destroy(): void {
+		super.destroy();
 		delete UiRootPanel.ALL_ROOT_PANELS_BY_ID[this.getId()];
 		if (Object.keys(UiRootPanel.ALL_ROOT_PANELS_BY_ID).length === 0) {
 			Object.keys(UiRootPanel.WINDOWS_BY_ID).forEach(windowId => UiRootPanel.WINDOWS_BY_ID[windowId].close(0));
@@ -263,7 +230,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 	public static buildRootPanel(containerElementId: string, uiRootPanel: UiRootPanel, context?: TeamAppsUiContext): void {
 		const $container = containerElementId ? document.querySelector("#" + containerElementId) : document.body;
-		$container.appendChild(uiRootPanel.getMainDomElement());
+		$container.appendChild(uiRootPanel.getMainElement());
 	}
 
 	public static setThemeClassName(theme: string) {
@@ -362,7 +329,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		$contentElement.querySelector<HTMLElement>(':scope .reload').addEventListener('click', () => {
 			window.location.reload(true);
 		});
-		UiRootPanel.showWindow(uiWindow, 500);
+		uiWindow.show(500);
 	}
 
 	setOptimizedForTouch(optimizedForTouch: boolean) {
@@ -372,11 +339,11 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 	public static showPopupAtCurrentMousePosition(popup: UiPopup) {
 		popup.setPosition(... getLastPointerCoordinates());
-		document.body.appendChild(popup.getMainDomElement());
+		document.body.appendChild(popup.getMainElement());
 	}
 
 	public static showPopup(popup: UiPopup) {
-		document.body.appendChild(popup.getMainDomElement());
+		document.body.appendChild(popup.getMainElement());
 	}
 }
 

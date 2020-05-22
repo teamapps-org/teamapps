@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 		this.$bar.style.borderColor = createUiColorCssString(color);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$bar;
 	}
 
@@ -133,14 +133,14 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 
 	public addFanOutComponent(fanOutComponent: UiComponent) {
 		if (this.fanOutComponents.indexOf(fanOutComponent) === -1) {
-			fanOutComponent.getMainDomElement().classList.add("pseudo-hidden");
-			this.$fanOutContainer.appendChild(fanOutComponent.getMainDomElement());
+			fanOutComponent.getMainElement().classList.add("pseudo-hidden");
+			this.$fanOutContainer.appendChild(fanOutComponent.getMainElement());
 			this.fanOutComponents.push(fanOutComponent);
 		}
 	};
 
 	public removeFanOutComponent(fanOutComponent: UiComponent) {
-		fanOutComponent.getMainDomElement().remove();
+		fanOutComponent.getMainElement().remove();
 		this.fanOutComponents = this.fanOutComponents.filter(c => c !== fanOutComponent);
 	};
 
@@ -148,13 +148,13 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 		this.addFanOutComponent(fanOutComponent);
 		const showFanout = () => {
 			this.currentFanOutComponent = fanOutComponent;
-			this.fanOutComponents.forEach(c => c.getMainDomElement().classList.add("pseudo-hidden"));
-			this.currentFanOutComponent.getMainDomElement().classList.remove("pseudo-hidden");
+			this.fanOutComponents.forEach(c => c.getMainElement().classList.add("pseudo-hidden"));
+			this.currentFanOutComponent.getMainElement().classList.remove("pseudo-hidden");
 			this.$fanOutContainerWrapper.classList.add("open");
 			this.$fanOutContainerWrapper.style.bottom = outerHeightIncludingMargins(this.$bar) + "px";
 			$(this.$fanOutContainerWrapper).slideDown(200);
 			this.onResize();
-			this.fanoutClickOutsideHandle = doOnceOnClickOutsideElement([this.getMainDomElement(), this.$fanOutContainerWrapper], e => {
+			this.fanoutClickOutsideHandle = doOnceOnClickOutsideElement([this.getMainElement(), this.$fanOutContainerWrapper], e => {
 				this.hideFanOutComponent();
 				this.onFanoutClosedDueToClickOutsideFanout.fire({});
 			});
@@ -199,14 +199,11 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 	}
 
 	public setMultiProgressDisplay(multiProgressDisplay: UiMultiProgressDisplay): void {
-		this.multiProgressDisplay && this.multiProgressDisplay.getMainDomElement().remove();
+		this.multiProgressDisplay && this.multiProgressDisplay.getMainElement().remove();
 		this.multiProgressDisplay = multiProgressDisplay;
-		multiProgressDisplay && this.$multiProgressDisplayContainer.appendChild(multiProgressDisplay.getMainDomElement());
+		multiProgressDisplay && this.$multiProgressDisplayContainer.appendChild(multiProgressDisplay.getMainElement());
 	}
 
-	public destroy(): void {
-		// do nothing
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiNavigationBar", UiNavigationBar);

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import {
 	UiMapEventSource
 } from "../generated/UiMapConfig";
 import {UiMapType} from "../generated/UiMapType";
-import * as L from "leaflet";
+import L from "leaflet";
 import {Circle, LatLngBounds, LatLngExpression, Layer, Marker, PathOptions, Polygon, Polyline, Rectangle} from "leaflet";
 import "leaflet.markercluster";
 import "leaflet.heat";
@@ -58,6 +58,7 @@ import {createUiMapPolygonConfig, UiMapPolygonConfig} from "../generated/UiMapPo
 import {createUiMapRectangleConfig, UiMapRectangleConfig} from "../generated/UiMapRectangleConfig";
 import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
 import {UiShapePropertiesConfig} from "../generated/UiShapePropertiesConfig";
+import {UiMapConfigConfig} from "../generated/UiMapConfigConfig";
 
 function isUiMapCircle(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapCircleConfig {
 	return shapeConfig._type === "UiMapCircle";
@@ -116,7 +117,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		this.setMapMarkerCluster(config.markerCluster);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$map;
 	}
 
@@ -132,7 +133,11 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 			center = [this._config.mapPosition.latitude, this._config.mapPosition.longitude];
 		}
 		this.leaflet.setView(center, this._config.zoomLevel);
-		this.setMapType(this._config.mapType);
+		if (this._config.mapConfig != null) {
+			this.setMapConfig(this._config.mapConfig);
+		} else {
+			this.setMapType(this._config.mapType);
+		}
 		this.leaflet.on('click', (event) => {
 			this.onMapClicked.fire({
 				location: createUiMapLocationConfig((event as any).latlng.lat, (event as any).latlng.lng)
@@ -308,6 +313,21 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		this.leaflet.setZoom(zoomLevel);
 	}
 
+	public setMapConfig(mapConfig: UiMapConfigConfig): void {
+		const token = this._config.accessToken;
+		let removeLayer = true;
+		let layer = L.tileLayer(mapConfig.urlTemplate, {
+			minZoom: mapConfig.minZoom,
+			maxZoom: mapConfig.maxZoom,
+			attribution: mapConfig.attribution,
+		});
+		if (removeLayer && this.tileLayer) {
+			this.leaflet.removeLayer(this.tileLayer);
+		}
+		this.tileLayer = layer;
+		this.leaflet.addLayer(this.tileLayer);
+	}
+
 	public setMapType(mapType: UiMapType): void {
 		const token = this._config.accessToken;
 		let layer;
@@ -316,6 +336,16 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 			case UiMapType.INTERNAL:
 				layer = L.tileLayer('tiles/{z}/{x}/{y}.png', {
 					maxZoom: 9,
+				});
+				break;
+			case UiMapType.INTERNAL_DARK:
+				layer = L.tileLayer('http://localhost/styles/dark-matter/{z}/{x}/{y}.png', {
+					maxZoom: 20,
+				});
+				break;
+			case UiMapType.INTERNAL_DARK_HIGH_RES:
+				layer = L.tileLayer('http://localhost/styles/dark-matter/{z}/{x}/{y}@2x.png', {
+					maxZoom: 20,
 				});
 				break;
 			case UiMapType.MAP_BOX_STREETS:
@@ -497,10 +527,6 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 
 	public onResize(): void {
 		this.leaflet.invalidateSize();
-	}
-
-	public destroy(): void {
-		// nothing to do
 	}
 
 	startDrawingShape(shapeType: UiMapShapeType, shapeProperties: UiShapePropertiesConfig): void {

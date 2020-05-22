@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import {UiComponent} from "../UiComponent";
 
 const logger = log.getLogger("RefreshableComponentProxyHandle");
 
-export class RefreshableComponentProxyHandle<T extends UiComponent> {
+export class RefreshableComponentProxyHandle<T extends UiComponent = UiComponent> {
 	public proxy: T;
 	private _component: T;
 
@@ -63,13 +63,13 @@ export class RefreshableComponentProxyHandle<T extends UiComponent> {
 			}
 		});
 
-		let parentElement: HTMLElement = oldComponent.getMainDomElement().parentElement;
-		const elementIndex = this.getElementIndex(oldComponent.getMainDomElement());
+		let parentElement: HTMLElement = oldComponent.getMainElement().parentElement;
+		const elementIndex = this.getElementIndex(oldComponent.getMainElement());
 		if (parentElement != null) {
-			insertAtIndex(parentElement, newComponent.getMainDomElement(), elementIndex);
+			insertAtIndex(parentElement, newComponent.getMainElement(), elementIndex);
 		}
 
-		oldComponent.getMainDomElement().remove();
+		oldComponent.getMainElement().remove();
 		oldComponent.destroy();
 		this._component = newComponent;
 	}
@@ -78,4 +78,8 @@ export class RefreshableComponentProxyHandle<T extends UiComponent> {
 		let parentElement = childElement.parentElement;
 		return parentElement != null ? Array.from(parentElement.children).indexOf(childElement) : null;
 	}
+}
+
+export function isRefreshableComponentProxyHandle(o: any): o is RefreshableComponentProxyHandle<any> {
+	return o != null && o.proxy && o.component;
 }

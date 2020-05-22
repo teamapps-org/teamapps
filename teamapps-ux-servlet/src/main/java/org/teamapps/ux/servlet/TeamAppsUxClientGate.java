@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,20 @@
 package org.teamapps.ux.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.icons.provider.IconProvider;
-import org.teamapps.server.CommandDispatcher;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.SessionRecorder;
 import org.teamapps.server.SessionResourceProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
-import org.teamapps.uisession.SessionClosingReason;
 import org.teamapps.uisession.UiCommandExecutor;
 import org.teamapps.uisession.UiSessionListener;
-import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.resource.ResourceProviderServlet;
 import org.teamapps.ux.resource.SystemIconResourceProvider;
@@ -41,6 +42,7 @@ import org.teamapps.ux.session.ClientSessionResourceProvider;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
+import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,10 +55,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class TeamAppsUxClientGate implements UiSessionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsUxClientGate.class);
 
 	private final WebController webController;
 	private final UiCommandExecutor commandExecutor;
@@ -87,7 +93,8 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 
 	}
 
-	public void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo) {
+	@Override
+	public void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession) {
 		SessionRecorder sessionRecorder = null;
 		if (userSessionCommandsRecordingPath != null) {
 			try {
@@ -98,8 +105,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				e.printStackTrace();
 			}
 		}
-		CommandDispatcher commandDispatcher = new CommandDispatcher(commandExecutor, sessionId, sessionRecorder);
-
 		ClientInfo clientInfo = new ClientInfo(
 				uiClientInfo.getIp(),
 				uiClientInfo.getScreenWidth(),
@@ -115,28 +120,36 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				uiClientInfo.getClientUrl(),
 				uiClientInfo.getClientParameters());
 
-		SessionContext context = new SessionContext(sessionId, clientInfo, commandDispatcher, uxServerContext,
+		SessionContext context = new SessionContext(sessionId, clientInfo, httpSession, commandExecutor, uxServerContext,
 				webController.getDefaultIconTheme(clientInfo.isMobileDevice()), objectMapper);
 		sessionContextById.put(sessionId, context);
 
-		context.runWithContext(() -> {
+		CompletableFuture<Void> future = context.runWithContext(() -> {
 			context.setConfiguration(webController.createSessionConfiguration(context));
 			context.registerTemplates(Arrays.stream(BaseTemplate.values())
 					.collect(Collectors.toMap(Enum::name, BaseTemplate::getTemplate)));
 			webController.onSessionStart(context);
 		});
+
+		try {
+			// TODO make non-blocking when exception handling (and thereby session invalidation) is changed
+			future.get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
 	public Collection<ServletRegistration> getServletRegistrations() {
 		ArrayList<ServletRegistration> registrations = new ArrayList<>();
-		registrations.add(new ServletRegistration(new ResourceProviderServlet(createSystemIconResourceProvider(webController.getIconProvider(), webController.getAdditionalIconProvider())), "/icons/*"));
+		registrations.add(new ServletRegistration(new ResourceProviderServlet(createSystemIconResourceProvider(webController.getIconProvider(), webController.getAdditionalIconProvider())), "/icons"
+				+ "/*"));
 		registrations.add(new ServletRegistration(new ResourceProviderServlet(new SessionResourceProvider(sessionContextById::get)), ClientSessionResourceProvider.BASE_PATH + "*"));
 		registrations.addAll(webController.getServletRegistrations(uxServerContext));
 		return registrations;
 	}
 
-	private SystemIconResourceProvider createSystemIconResourceProvider(IconProvider iconProvider, List<IconProvider> customIconProvider)  {
+	private SystemIconResourceProvider createSystemIconResourceProvider(IconProvider iconProvider, List<IconProvider> customIconProvider) {
 		try {
 			File tempDir = File.createTempFile("temp", "temp").getParentFile();
 			SystemIconResourceProvider systemIconProvider = new SystemIconResourceProvider(tempDir);
@@ -150,26 +163,41 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		}
 	}
 
-	public void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo) {
-		this.onUiSessionStarted(sessionId, clientInfo);
+	@Override
+	public void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession) {
+		this.onUiSessionStarted(sessionId, clientInfo, httpSession);
 	}
 
 	@Override
-	public void onUiSessionClosed(QualifiedUiSessionId sessionId, SessionClosingReason reason) {
-		SessionContext context = sessionContextById.remove(sessionId);
+	public void onActivityStateChanged(QualifiedUiSessionId sessionId, boolean active) {
+		SessionContext context = sessionContextById.get(sessionId);
 		if (context != null) {
-			context.destroy();
+			context.handleActivityStateChangedInternal(active);
 		}
 	}
 
+	@Override
+	public void onUiSessionClosed(QualifiedUiSessionId sessionId, UiSessionClosingReason reason) {
+		SessionContext context = sessionContextById.remove(sessionId);
+		if (context != null) {
+			context.handleSessionDestroyedInternal();
+		}
+	}
+
+	@Override
 	public void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
 		SessionContext sessionContext = sessionContextById.get(sessionId);
 		if (sessionContext != null) {
 			sessionContext.runWithContext(() -> {
-				sessionContext.setLastClientEventTimestamp(System.currentTimeMillis());
 				String uiComponentId = event.getComponentId();
-				Component component = sessionContext.getComponent(uiComponentId);
-				component.handleUiEvent(event);
+				ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
+				if (clientObject != null) {
+					clientObject.handleUiEvent(event);
+				}
+			}).exceptionally(e -> {
+				LOGGER.error("Exception while handling ui event", e);
+				commandExecutor.closeSession(sessionId, UiSessionClosingReason.SERVER_SIDE_ERROR);
+				return null;
 			});
 		}
 	}

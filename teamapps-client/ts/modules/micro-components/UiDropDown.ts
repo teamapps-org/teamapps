@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@
  * =========================LICENSE_END==================================
  */
 
-import {positionDropDown} from "../Common";
+import {ClickOutsideHandle, doOnceOnClickOutsideElement, parseHtml, positionDropDown} from "../Common";
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
-import {AbstractDropDown} from "./AbstractDropDown";
 import {UiComponent} from "../UiComponent";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
+import {UiSpinner} from "./UiSpinner";
 
 interface OpenConfig {
 	$reference: HTMLElement | Element,
@@ -30,27 +31,97 @@ interface OpenConfig {
 	minHeight?: number
 }
 
-export class UiDropDown extends AbstractDropDown<OpenConfig> {
+export class UiDropDown {
+
+	public onClose: TeamAppsEvent<void> = new TeamAppsEvent(this);
+	public onComponentRemoved: TeamAppsEvent<UiComponent> = new TeamAppsEvent(this);
+
+	protected $dropDown: HTMLElement;
+	protected $contentContainer: HTMLElement;
+	protected clickOutsideHandle: ClickOutsideHandle;
+	protected spinner = new UiSpinner({fixedSize: "25%"});
+	protected currentOpenConfig: OpenConfig;
+	private _isOpen = false;
+	private _contentComponent: UiComponent<UiComponentConfig>;
+
 	constructor(content?: UiComponent<UiComponentConfig>) {
-		super(content);
-		this.getMainDomElement().classList.add("UiDropDown");
+		this.$dropDown = parseHtml(`<div class="UiDropDown teamapps-blurredBackgroundImage">
+                <div class="background-color-div"></div>
+              </div>`);
+		this.$contentContainer = this.$dropDown.querySelector<HTMLElement>(':scope .background-color-div');
+
+		if (content) {
+			this.setContentComponent(content);
+		}
 	}
 
-	doOpen(options: OpenConfig) {
-		options.width = options.width || 250;
-		options.viewPortPadding = options.viewPortPadding || 5;
-		options.minHeight = options.minHeight || 0;
-		// this.$contentContainer.style.height = minHeight + "px";
-		this.$contentContainer.querySelector<HTMLElement>(":scope >*")
-			.style.minHeight = options.minHeight + "px";
-		this.$dropDown.style.width = options.width + "px";
-		document.body.appendChild(this.$dropDown);
-		this.$dropDown.classList.add('open');
-		positionDropDown(this.currentOpenConfig.$reference, this.$dropDown, this.currentOpenConfig);
+	setContentComponent(component: UiComponent<UiComponentConfig>) {
+		this.$contentContainer.innerHTML = '';
+		if (this._contentComponent && this.onComponentRemoved) {
+			this.onComponentRemoved.fire(this._contentComponent);
+		}
+
+		this._contentComponent = component;
+
+		if (component != null) {
+			this.$contentContainer.append(component.getMainElement())
+		}
+
+		if (this._isOpen) {
+			this.open(this.currentOpenConfig);
+		}
 	}
 
-	protected doClose(): void {
-		this.$dropDown.classList.remove('open');
-		this.$dropDown.remove();
+	open(config: OpenConfig) {
+		config.width = config.width || 250;
+		config.viewPortPadding = config.viewPortPadding || 5;
+		config.minHeight = config.minHeight || 0;
+
+		this.currentOpenConfig = config;
+
+		if (this._contentComponent == null) {
+			this.$contentContainer.innerHTML = '';
+			this.$contentContainer.appendChild(this.spinner.getMainDomElement());
+		}
+
+		if (!this._isOpen) {
+			this.$contentContainer.querySelector<HTMLElement>(":scope >*")
+				.style.minHeight = config.minHeight + "px";
+			this.$dropDown.style.width = config.width + "px";
+			document.body.appendChild(this.$dropDown);
+			this.$dropDown.classList.add('open');
+			positionDropDown(this.currentOpenConfig.$reference, this.$dropDown, this.currentOpenConfig);
+
+			this._isOpen = true;
+			this.clickOutsideHandle = doOnceOnClickOutsideElement(this.$dropDown, () => {
+				if (this._isOpen) {
+					this.close();
+				}
+			});
+		}
+	}
+
+	close() {
+		if (this.clickOutsideHandle != null) {
+			this.clickOutsideHandle.cancel();
+		}
+		if (this._isOpen) {
+			this.$dropDown.classList.remove('open');
+			this.$dropDown.remove();
+			this.onClose && this.onClose.fire(null);
+		}
+		this._isOpen = false;
+	}
+
+	get isOpen() {
+		return this._isOpen;
+	}
+
+	public getMainDomElement(): HTMLElement {
+		return this.$dropDown;
+	}
+
+	public getScrollContainer(): HTMLElement {
+		return this.$contentContainer;
 	}
 }

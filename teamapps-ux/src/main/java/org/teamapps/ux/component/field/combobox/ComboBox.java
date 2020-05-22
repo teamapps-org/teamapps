@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,10 @@ package org.teamapps.ux.component.field.combobox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiComboBox;
+import org.teamapps.dto.UiComboBoxTreeRecord;
 import org.teamapps.dto.UiField;
 import org.teamapps.event.Event;
+import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.BaseTreeModel;
@@ -104,8 +106,9 @@ public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD>
 		if (record == null) {
 			return null;
 		}
-		recordCache.addRecord(record).commit(); // directly committing only works because client-side changes are block during server-side changes
-		return this.createUiTreeRecordWithoutParentRelation(record);
+		CacheManipulationHandle<UiComboBoxTreeRecord> handle = recordCache.addRecord(record);
+		handle.commit(); // directly committing only works because client-side changes are blocked during server-side changes
+		return handle.getAndClearResult();
 	}
 
 	public String getFreeText() {

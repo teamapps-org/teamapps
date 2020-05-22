@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,12 +56,14 @@ public class LoginWindow {
 	private final Label loginLabel;
 
 	public LoginWindow() {
-		loginButton = new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(MaterialIcon.CHECK, "Ok"));
+		loginButton = new Button<>(BaseTemplate.BUTTON, new BaseTemplateRecord(MaterialIcon.CHECK, "Ok"));
 		//loginButton.setColor(Color.LIGHT_GRAY);
 		headerField = new DisplayField(false, true);
 		errorField = new DisplayField(false, true);
 		loginField = new TextField();
+		loginField.setAutofill(true);
 		passwordField = new PasswordField();
+		passwordField.setAutofill(true);
 
 		headerField.setValue("<span style='font-size:150%'>Login</span>");
 		errorField.setValue("<span style='font-size:120%;color:#961900'>&nbsp;</span>");

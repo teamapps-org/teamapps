@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 		});
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 
@@ -192,7 +192,7 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 				_type: "UiHttpLiveStreamPlayer",
 				id: generateUUID()
 			}, this._context);
-			this.$liveStreamPlayerContainer.append(this.hlsPlayer.getMainDomElement());
+			this.$liveStreamPlayerContainer.append(this.hlsPlayer.getMainElement());
 		}
 		this.hlsPlayer.setVolume(this.volume);
 		this.hlsPlayer.play(url);
@@ -209,9 +209,9 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 				_type: "UiLiveStreamComPlayer",
 				id: generateUUID()
 			}, this._context);
-			this.$liveStreamPlayerContainer.append(this.liveStreamComPlayer.getMainDomElement())
+			this.$liveStreamPlayerContainer.append(this.liveStreamComPlayer.getMainElement())
 		}
-		this.liveStreamComPlayer.getMainDomElement().classList.remove("hidden");
+		this.liveStreamComPlayer.getMainElement().classList.remove("hidden");
 		this.liveStreamComPlayer.setVolume(this.volume);
 		this.liveStreamComPlayer.play(url);
 
@@ -228,10 +228,10 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 				_type: "UiYoutubePlayer",
 				id: generateUUID()
 			}, this._context);
-			this.$liveStreamPlayerContainer.append(this.youtubePlayer.getMainDomElement());
+			this.$liveStreamPlayerContainer.append(this.youtubePlayer.getMainElement());
 		}
 
-		this.youtubePlayer.getMainDomElement().classList.remove("hidden");
+		this.youtubePlayer.getMainElement().classList.remove("hidden");
 		this.youtubePlayer.setVolume(this.volume);
 		this.youtubePlayer.play(url);
 
@@ -291,7 +291,7 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 		this.doWithAllPlayers(p => {
 			if (p.isPlaying()) {
 				// full size
-				css(p.getMainDomElement(), {
+				css(p.getMainElement(), {
 					top: "0px",
 					left: "0px",
 					width: "100%",
@@ -299,7 +299,7 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 				});
 			} else {
 				// hide
-				css(p.getMainDomElement(), {
+				css(p.getMainElement(), {
 					top: "0px",
 					left: "-100000px",
 					right: "500px",
@@ -309,9 +309,6 @@ export class UiLiveStreamComponent extends AbstractUiComponent<UiLiveStreamCompo
 		});
 	}
 
-	public destroy(): void {
-		// nothing to do as far as I know...
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiLiveStreamComponent", UiLiveStreamComponent);

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,8 +83,8 @@ export class UiGridLayout {
 					"min-height": placement.minHeight ? `${placement.minHeight}px` : '',
 					"max-height": placement.maxHeight ? `${placement.maxHeight}px` : ''
 				};
-				component.getMainDomElement().setAttribute("data-placement-uuid", placementId);
-				$container.appendChild(component.getMainDomElement());
+				component.getMainElement().setAttribute("data-placement-uuid", placementId);
+				$container.appendChild(component.getMainElement());
 			} else if (this.isFloatingPlacement(placement)) {
 				let $floatingContainer = parseHtml(`<div data-placement-uuid="${placementId}"></div>`);
 				cssRules[placementId] = {
@@ -100,8 +100,8 @@ export class UiGridLayout {
 						"max-height": floatingComponent.maxHeight ? `${floatingComponent.maxHeight}px` : '',
 						"margin": `${placement.verticalSpacing / 2}px ${placement.horizontalSpacing / 2}px`
 					};
-					uiComponent.getMainDomElement().setAttribute("data-placement-uuid", placementId);
-					$floatingContainer.appendChild(uiComponent.getMainDomElement());
+					uiComponent.getMainElement().setAttribute("data-placement-uuid", placementId);
+					$floatingContainer.appendChild(uiComponent.getMainElement());
 				});
 				$container.appendChild($floatingContainer);
 			}

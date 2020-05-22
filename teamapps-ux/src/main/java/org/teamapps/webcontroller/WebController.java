@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import java.util.Locale;
 
 public interface WebController {
 
-	void onSessionStart(SessionContext context);
+	void onSessionStart(SessionContext sessionContext);
 
 	default Collection<ServletRegistration> getServletRegistrations(UxServerContext serverContext) {
 		return Collections.emptyList();

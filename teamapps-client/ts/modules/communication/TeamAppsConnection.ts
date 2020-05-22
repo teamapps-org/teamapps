@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@
  * =========================LICENSE_END==================================
  */
 import {UiCommand} from "../../generated/UiCommand";
-import {INIT_NOK_Reason} from "../../generated/INIT_NOKConfig";
-import {REINIT_NOK_Reason} from "../../generated/REINIT_NOKConfig";
-import {SERVER_ERROR_Reason} from "../../generated/SERVER_ERRORConfig";
 import {UiEvent} from "../../generated/UiEvent";
+import {UiSessionClosingReason} from "../../generated/UiSessionClosingReason";
 
 export const typescriptDeclarationFixConstant = 1;
 
@@ -31,7 +29,6 @@ export interface TeamAppsConnection {
 
 export interface TeamAppsConnectionListener {
 	onConnectionInitialized(): void;
-	onConnectionErrorOrBroken(reason: INIT_NOK_Reason | REINIT_NOK_Reason | SERVER_ERROR_Reason, message?: string): void;
+	onConnectionErrorOrBroken(reason: UiSessionClosingReason, message?: string): void;
 	executeCommand(uiCommand: UiCommand): Promise<any>;
-	executeCommands(uiCommands: UiCommand[]): Promise<any>[];
 }

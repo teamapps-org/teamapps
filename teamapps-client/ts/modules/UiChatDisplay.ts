@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,14 @@
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {parseHtml, prependChild, removeDangerousTags} from "./Common";
+import {humanReadableFileSize, parseHtml, prependChild, removeDangerousTags} from "./Common";
 import {UiChatMessageConfig} from "../generated/UiChatMessageConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiChatDisplay_PreviousMessagesRequestedEvent, UiChatDisplayCommandHandler, UiChatDisplayConfig, UiChatDisplayEventSource} from "../generated/UiChatDisplayConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiSpinner} from "./micro-components/UiSpinner";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {Autolinker} from "autolinker";
 
 export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> implements UiChatDisplayCommandHandler, UiChatDisplayEventSource {
 
@@ -70,7 +71,7 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 		}
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -123,15 +124,41 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 TeamAppsUiComponentRegistry.registerComponentClass("UiChatDisplay", UiChatDisplay);
 
 class UiChatMessage {
+
+	private static readonly AUTOLINKER = new Autolinker( {
+		urls : {
+			schemeMatches : true,
+			wwwMatches    : true,
+			tldMatches    : true
+		},
+		email       : true,
+		phone       : true,
+		mention     : false,
+		hashtag     : false,
+
+		stripPrefix : false,
+		stripTrailingSlash : false,
+		newWindow   : true,
+
+		truncate : {
+			length   : 70,
+			location : 'smart'
+		},
+
+		className : ''
+	});
+
 	private $main: HTMLElement;
 	private $photos: HTMLElement;
 	private $files: HTMLElement;
 
 	constructor(private config: UiChatMessageConfig, private context: TeamAppsUiContext) {
+		let text = removeDangerousTags(config.text);
+		text = UiChatMessage.AUTOLINKER.link(text);
 		this.$main = parseHtml(`<div class="message">
 	<img class="user-image" src="${config.userImageUrl}">
 	<div class="user-nickname">${config.userNickname}</div>
-	<div class="text">${removeDangerousTags(config.text)}</div>
+	<div class="text">${text}</div>
 	<div class="photos"></div>
 	<div class="files"></div>
 </div>`);
@@ -146,9 +173,9 @@ class UiChatMessage {
 		if (config.files != null) {
 			config.files.forEach(file => {
 				this.$files.appendChild(parseHtml(`<a class="file" target="_blank" href="${file.downloadUrl}">
-	<div class="file-icon img img-32" style="background-image: url(${file.thumbnailUrl || context.getIconPath(file.icon, 24)})"> </div>
+	<div class="file-icon img img-32" style="background-image: url(${file.thumbnailUrl || file.icon})"> </div>
 	<div class="file-name">${file.name}</div>
-	<div class="file-size">23.4 kB</div>
+	<div class="file-size">${humanReadableFileSize(file.length)}</div>
 </a>`))
 			});
 		}

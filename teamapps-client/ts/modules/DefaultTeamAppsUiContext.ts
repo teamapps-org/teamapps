@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */
 "use strict";
 
-import {generateUUID, getIconPath, logException} from "./Common";
+import {generateUUID, logException} from "./Common";
 import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {UiWeekDay} from "../generated/UiWeekDay";
@@ -38,10 +38,16 @@ import {createUiClientInfoConfig} from "../generated/UiClientInfoConfig";
 import {UiGenericErrorMessageOption} from "../generated/UiGenericErrorMessageOption";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {bind} from "./util/Bind";
-import {RefreshableComponentProxyHandle} from "./util/RefreshableComponentProxyHandle";
+import {isRefreshableComponentProxyHandle, RefreshableComponentProxyHandle} from "./util/RefreshableComponentProxyHandle";
 import {TeamAppsConnectionImpl} from "./communication/TeamAppsConnectionImpl";
 import {UiComponent} from "./UiComponent";
-import {SERVER_ERROR_Reason} from "../generated/SERVER_ERRORConfig";
+import {UiSessionClosingReason} from "../generated/UiSessionClosingReason";
+import {UiClientObject} from "./UiClientObject";
+import {UiClientObjectConfig} from "../generated/UiClientObjectConfig";
+
+function isComponent(o: UiClientObject<UiClientObjectConfig>): o is UiComponent {
+	return o != null && (o as any).getMainElement;
+}
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 
@@ -55,7 +61,6 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		isoLanguage: "en",
 		themeClassName: null,
 		optimizedForTouch: false,
-		iconPath: "icons",
 		timeZoneId: "Europe/Berlin",
 		firstDayOfWeek: UiWeekDay.MONDAY,
 		dateFormat: "yyyy-MM-dd",
@@ -65,11 +70,11 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	};
 	public readonly templateRegistry: TemplateRegistry = new TemplateRegistry(this);
 
-	private components: { [identifier: string]: RefreshableComponentProxyHandle<UiComponent> } = {}; // only for debugging!!!
+	private components: { [identifier: string]: UiClientObject | RefreshableComponentProxyHandle<UiComponent> } = {};
 	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
 
-	constructor(webSocketUrl: string,	clientParameters: {[key: string]: string|number} = {}) {
+	constructor(webSocketUrl: string, clientParameters: { [key: string]: string | number } = {}) {
 		this.sessionId = generateUUID();
 
 		let clientInfo = createUiClientInfoConfig({
@@ -91,16 +96,18 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			onConnectionErrorOrBroken: (reason, message) => {
 				DefaultTeamAppsUiContext.logger.error("Connection broken.");
 				sessionStorage.clear();
-				if (reason == SERVER_ERROR_Reason.SESSION_NOT_FOUND) {
+				if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT || reason == UiSessionClosingReason.HTTP_SESSION_CLOSED) {
 					UiRootPanel.showGenericErrorMessage("Session Expired", "<p>Your session has expired.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
 						false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
+				} else if (reason == UiSessionClosingReason.TERMINATED_BY_APPLICATION) {
+					UiRootPanel.showGenericErrorMessage("Session Terminated", "<p>Your session has been terminated.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+						true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
 				} else {
-					UiRootPanel.showGenericErrorMessage("Server-Side Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+					UiRootPanel.showGenericErrorMessage("Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
 						true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
 				}
 			},
 			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand),
-			executeCommands: (uiCommands: UiCommand[]) => this.executeCommands(uiCommands)
 		};
 
 		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, connectionListener);
@@ -126,71 +133,70 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		this.connection.sendEvent(eventObject);
 	}
 
-	public registerComponent(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void {
-		DefaultTeamAppsUiContext.logger.debug("registering component: ", id);
-		if (this.components[id] == null) {
-			this.components[id] = new RefreshableComponentProxyHandle(component);
+	public registerClientObject(clientObject: UiClientObject, id: string, teamappsType: string): void {
+		DefaultTeamAppsUiContext.logger.debug("registering ClientObject: ", id);
+		if (isComponent(clientObject)) {
+			let existingProxy = this.components[id];
+			if (existingProxy != null) {
+				(existingProxy as RefreshableComponentProxyHandle).component = clientObject;
+			} else {
+				this.components[id] = new RefreshableComponentProxyHandle(clientObject);
+			}
 		} else {
-			this.components[id].component = component;
+			this.components[id] = clientObject;
 		}
-		EventRegistrator.registerForEvents(component, teamappsType, this.fireEvent, {componentId: id});
+		EventRegistrator.registerForEvents(clientObject, teamappsType, this.fireEvent, {componentId: id});
 	}
 
-	public createAndRegisterComponent(config: UiComponentConfig) {
+	public createClientObject(config: UiClientObjectConfig): UiClientObject {
 		if (TeamAppsUiComponentRegistry.getComponentClassForName(config._type)) {
-		let component = new (TeamAppsUiComponentRegistry.getComponentClassForName(config._type))(config, this);
-			this.registerComponent(component, config.id, config._type);
-			return this.getComponentById(config.id); // return the proxied component!!!
+			return new (TeamAppsUiComponentRegistry.getComponentClassForName(config._type))(config, this);
 		} else {
 			DefaultTeamAppsUiContext.logger.error("Unknown component type: " + config._type);
-			return;
-		}
-	}
-
-	destroyComponent(componentId: string): void {
-		let component = this.components[componentId].component;
-		if (component != null) {
-			component.getMainDomElement().remove();
-			component.destroy();
-			delete this.components[componentId];
-		} else {
-			DefaultTeamAppsUiContext.logger.warn("Could not find component to destroy: " + componentId);
+			return null;
 		}
 	}
 
 	refreshComponent(config: UiComponentConfig): void {
-		this.createAndRegisterComponent(config);
-	}
-
-	public getComponentById(id: string): UiComponent<UiComponentConfig> {
-		const componentProxyHandle = this.components[id];
-		if (componentProxyHandle == null) {
-			DefaultTeamAppsUiContext.logger.error(`Cannot find component with id ${id}`);
-			return null;
+		let clientObject = this.createClientObject(config) as UiComponent;
+		if (this.components[config.id] != null) {
+			(this.components[config.id] as RefreshableComponentProxyHandle).component = clientObject;
 		} else {
-			return componentProxyHandle.proxy;
+			this.registerClientObject(clientObject, config.id, config._type);
 		}
 	}
 
-	public getIconPath(iconName: string, iconSize: number, ignoreRetina?: boolean): string {
-		return getIconPath(this, iconName, iconSize, ignoreRetina);
+	destroyClientObject(id: string): void {
+		let o = this.components[id];
+		if (o != null) {
+			if (isRefreshableComponentProxyHandle(o)) {
+				o = o.component;
+			}
+			if (isComponent(o)) {
+				o.getMainElement().remove();
+			}
+			o.destroy();
+			delete this.components[id];
+		} else {
+			DefaultTeamAppsUiContext.logger.warn("Could not find component to destroy: " + id);
+		}
 	}
 
-	private executeCommands(uiCommands: UiCommand[]): Promise<any>[] {
-		return uiCommands.map(c => {
-			try {
-				return this.executeCommand(c);
-			} catch (error) {
-				logException(error);
-			}
-		});
+	public getClientObjectById(id: string): UiClientObject {
+		const clientObject = this.components[id];
+		if (clientObject == null) {
+			DefaultTeamAppsUiContext.logger.error(`Cannot find component with id ${id}`);
+			return null;
+		} else {
+			return isRefreshableComponentProxyHandle(clientObject) ? clientObject.proxy : clientObject;
+		}
 	}
 
 	private replaceComponentReferencesWithInstances(o: any) {
-		let replaceOrRecur = (key: number|string) => {
+		let replaceOrRecur = (key: number | string) => {
 			const value = o[key];
-			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("UiComponentReference") !== -1) {
-				const componentById = this.getComponentById(value.id);
+			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("UiClientObjectReference") !== -1) {
+				const componentById = this.getClientObjectById(value.id);
 				if (componentById != null) {
 					o[key] = componentById;
 				} else {
@@ -214,7 +220,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	private commandExecutor = new CommandExecutor(reference => this.getComponentById(reference.id));
+	private commandExecutor = new CommandExecutor(reference => this.getClientObjectById(reference.id));
 
 	private async executeCommand(command: UiCommand): Promise<any> {
 		try {
@@ -224,7 +230,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			const commandMethodName = command._type.substring(command._type.lastIndexOf('.') + 1);
 			if (command.componentId) {
 				DefaultTeamAppsUiContext.logger.trace(`Trying to call ${command.componentId}.${commandMethodName}()`);
-				let component: any = this.getComponentById(command.componentId);
+				let component: any = this.getClientObjectById(command.componentId);
 				if (!component) {
 					throw new Error("The component " + command.componentId + " does not exist, so cannot call " + commandMethodName + "() on it.");
 				} else if (typeof component[commandMethodName] !== "function") {

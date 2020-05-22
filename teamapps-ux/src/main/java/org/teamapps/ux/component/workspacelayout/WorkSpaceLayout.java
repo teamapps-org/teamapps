@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,20 +114,12 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 		UiWorkSpaceLayout uiLayout = new UiWorkSpaceLayout(uiViews, uiInitialLayout, childWindowPageTitle);
 		mapAbstractUiComponentProperties(uiLayout);
 		if (toolbar != null) {
-			uiLayout.setToolbar(toolbar.createUiComponentReference());
+			uiLayout.setToolbar(toolbar.createUiReference());
 		}
 		uiLayout.setNewWindowBackgroundImage(newWindowBackgroundImage);
 		uiLayout.setNewWindowBlurredBackgroundImage(newWindowBlurredBackgroundImage);
-		uiLayout.setMultiProgressDisplay(Component.createUiComponentReference(multiProgressDisplay));
+		uiLayout.setMultiProgressDisplay(Component.createUiClientObjectReference(multiProgressDisplay));
 		return uiLayout;
-	}
-
-	@Override
-	protected void doDestroy() {
-		this.rootItemsByWindowId.forEach((s, workSpaceLayoutItem) -> workSpaceLayoutItem.getAllViews().forEach(view -> view.destroy()));
-		if (this.toolbar != null) {
-			this.toolbar.destroy();
-		}
 	}
 
 	@Override
@@ -360,7 +352,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

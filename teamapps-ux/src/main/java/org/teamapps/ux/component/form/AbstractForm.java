@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFormLayoutPolicy;
 import org.teamapps.dto.UiGridForm;
@@ -68,7 +68,7 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		return getFieldByPropertyName(fieldName).getValue();
 	}
 
-	protected void addField(String propertyName, AbstractField field) {
+	protected void addField(String propertyName, AbstractField<?> field) {
 		addComponent(field);
 		logicalForm.addField(propertyName, field);
 		field.onValueChanged.addListener(value -> {
@@ -79,15 +79,15 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 	protected void addComponent(Component component) {
 		children.add(component);
 		component.setParent(this);
-		queueCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(getId(), component.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(getId(), component.createUiReference()));
 	}
 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
 
 	@Override
 	public UiComponent createUiComponent() {
-		List<UiComponentReference> uiFields = logicalForm.getFields().values().stream()
-				.map(field -> field != null ? field.createUiComponentReference() : null)
+		List<UiClientObjectReference> uiFields = logicalForm.getFields().values().stream()
+				.map(field -> field != null ? field.createUiReference() : null)
 				.collect(Collectors.toList());
 		List<UiFormLayoutPolicy> uiLayoutPolicies = getUiFormLayoutPolicies();
 		UiGridForm uiForm = new UiGridForm(uiFields, uiLayoutPolicies);
@@ -162,7 +162,7 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		return new ArrayList<>(logicalForm.getFields().keySet());
 	}
 
-	public List<AbstractField> getFields() {
+	public List<AbstractField<?>> getFields() {
 		return new ArrayList<>(logicalForm.getFields().values());
 	}
 
@@ -179,8 +179,4 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		queueCommandIfRendered(() -> new UiGridForm.SetSectionCollapsedCommand(getId(), sectionId, collapsed));
 	}
 
-	@Override
-	protected void doDestroy() {
-		this.logicalForm.getFields().forEach((fieldName, field) -> field.destroy());
-	}
 }

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class ClientCodeExtractor {
@@ -38,10 +40,11 @@ public class ClientCodeExtractor {
 
 	private static final String TEAMAPPS_CLIENT_FILE_NAME = "teamapps-client.zip";
 	private static final String TEAMAPPS_CLIENT_CHECKSUM_FILE_NAME = "teamapps-client.zip.MD5";
+	public static final String TEAMAPPS_CLIENT_CHECKSUM_RESOURCE_NAME = "/" + TEAMAPPS_CLIENT_CHECKSUM_FILE_NAME;
 
 	public static void initializeWebserverDirectory(File webAppDirectory) throws IOException {
 		File currentlyDeployedChecksumFile = new File(webAppDirectory, TEAMAPPS_CLIENT_CHECKSUM_FILE_NAME);
-		String currentlyDeployedArtifactChecksum = currentlyDeployedChecksumFile.exists() ? IOUtils.toString(currentlyDeployedChecksumFile.toURI()).trim() : null;
+		String currentlyDeployedArtifactChecksum = currentlyDeployedChecksumFile.exists() ? IOUtils.toString(new FileInputStream(currentlyDeployedChecksumFile), StandardCharsets.UTF_8).trim() : null;
 
 		String[] currentlyDeployedFiles = webAppDirectory.list((dir, name) -> !name.startsWith("."));
 		if (currentlyDeployedArtifactChecksum == null && currentlyDeployedFiles != null && currentlyDeployedFiles.length > 0) {
@@ -51,19 +54,19 @@ public class ClientCodeExtractor {
 		}
 
 		URL checksumResourceUrl = ClientCodeExtractor.class.getResource("/" + TEAMAPPS_CLIENT_CHECKSUM_FILE_NAME);
-		String artifactChecksum = checksumResourceUrl != null ? IOUtils.toString(checksumResourceUrl).trim() : null;
+		String artifactChecksum = checksumResourceUrl != null ? IOUtils.toString(checksumResourceUrl, StandardCharsets.UTF_8).trim() : null;
 
 		LOGGER.info("Checksum of currently deployed artifact (" + webAppDirectory.getAbsolutePath() + "): " + currentlyDeployedArtifactChecksum);
 		LOGGER.info("Checksum of executed artifact: " + artifactChecksum);
 
 		if (!Objects.equals(currentlyDeployedArtifactChecksum, artifactChecksum)) {
-			overwriteWebappDirectory(webAppDirectory, currentlyDeployedChecksumFile, checksumResourceUrl);
+			overwriteWebappDirectory(webAppDirectory, currentlyDeployedChecksumFile);
 		} else {
 			LOGGER.info("Checksum has not changed. Nothing to do.");
 		}
 	}
 
-	private static void overwriteWebappDirectory(File webAppDirectory, File currentlyDeployedChecksumFile, URL checksumResourceUrl) throws IOException {
+	private static void overwriteWebappDirectory(File webAppDirectory, File currentlyDeployedChecksumFile) throws IOException {
 		if (webAppDirectory.exists()) {
 			boolean deleted = webAppDirectory.delete();
 			if (!deleted) {
@@ -81,10 +84,10 @@ public class ClientCodeExtractor {
 
 		LOGGER.info("Unzipping " + tempFile.getAbsolutePath() + " to " + webAppDirectory.getAbsolutePath());
 		unzipFile(tempFile, webAppDirectory);
-		try (InputStream in = checksumResourceUrl.openStream();
-		     FileOutputStream out = new FileOutputStream(currentlyDeployedChecksumFile)) {
+		String newChecksum = readResourceAsStringOrNull(TEAMAPPS_CLIENT_CHECKSUM_RESOURCE_NAME);
+		try (FileOutputStream out = new FileOutputStream(currentlyDeployedChecksumFile)) {
 			LOGGER.info("Writing checksum to " + currentlyDeployedChecksumFile.getAbsolutePath());
-			IOUtils.copy(in, out);
+			IOUtils.write(newChecksum, out, StandardCharsets.UTF_8);
 		}
 	}
 
@@ -100,6 +103,19 @@ public class ClientCodeExtractor {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	static String readResourceAsStringOrNull(String resourceName) {
+		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+		try (InputStream is = classLoader.getResourceAsStream(resourceName)) {
+			if (is != null) {
+				return IOUtils.toString(is, StandardCharsets.UTF_8);
+			} else {
+				return null;
+			}
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 }

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ export class FixedSizeTableCellEditor extends AbstractTableEditor {
 		const preferredWidth = 300;
 		const preferredHeight = 200;
 
-		let $uiField = uiField.getMainDomElement();
+		let $uiField = uiField.getMainElement();
 		css($uiField, {
 			width: Math.max(editorOptions.position.width, Math.min(preferredWidth, editorOptions.gridPosition.width)),
 			height: Math.max(editorOptions.position.height, Math.min(preferredHeight, editorOptions.gridPosition.height)),

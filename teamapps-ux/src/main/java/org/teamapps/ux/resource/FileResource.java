@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,11 +75,6 @@ public class FileResource implements Resource {
 	}
 
 	@Override
-	public Date getExpires() {
-		return new Date(System.currentTimeMillis() + 604800000L);
-	}
-
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -99,5 +94,21 @@ public class FileResource implements Resource {
 			return null;
 		}
 		return name.substring(pos + 1).toLowerCase();
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	@Override
+	public File getAsFile() {
+		return file;
+	}
+
+	@Override
+	public String toString() {
+		return "FileResource{" +
+				"file=" + file +
+				'}';
 	}
 }

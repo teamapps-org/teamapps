@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ export class LayoutDescriptorApplyer {
 			let correspondingDescriptorItem = this.descriptorItemById[clientSideItem.id];
 			if (correspondingDescriptorItem != null) {
 				this.clientItemStash[clientSideItem.id] = clientSideItem;
-				clientSideItem.component.getMainDomElement().remove();
+				clientSideItem.component.getMainElement().remove();
 				this.cleanupUnknownClientItems(clientSideItem, correspondingDescriptorItem, null);
 			} else {
 				// not referenced in the descriptor! however, descendants might well be referenced in the descriptor!
@@ -129,7 +129,7 @@ export class LayoutDescriptorApplyer {
 				}
 			} else {
 				// this is the root item!
-				clientSideItem.component.getMainDomElement().remove();
+				clientSideItem.component.getMainElement().remove();
 			}
 		}
 	}
@@ -140,7 +140,7 @@ export class LayoutDescriptorApplyer {
 		viewsNotFoundInDescriptorItem.forEach((tab: View) => {
 			let viewIsReferencedAnywhereInRootDescriptor = this.descriptorViewNames.indexOf(tab.viewName) !== -1;
 			if (viewIsReferencedAnywhereInRootDescriptor) {
-				tab.component.getMainDomElement().remove();
+				tab.component.getMainElement().remove();
 				viewGroup.removeTab(tab);
 			} else {
 				// will not be used anymore in any way! just remove and destroy
@@ -177,7 +177,7 @@ export class LayoutDescriptorApplyer {
 				}
 				item.parent = parent;
 			} else {
-				this.$rootItemContainer.append(item.component.getMainDomElement());
+				this.$rootItemContainer.append(item.component.getMainElement());
 			}
 		}
 

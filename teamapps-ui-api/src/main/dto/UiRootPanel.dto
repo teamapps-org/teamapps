@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,6 @@ class UiRootPanel extends UiComponent {
     static command removeClientToken(String token);
     static command clearClientTokens();
 
-	static command showWindow(UiWindow* window, int animationDuration);
-	static command closeWindow(String windowId, int animationDuration);
     static command downloadFile(String fileUrl, String downloadFileName);
 	static command registerBackgroundImage(String id, String image, String blurredImage); // downloads the image without displaying it.
 	static command setBackgroundImage(String id, int animationDuration = 1000); // cross-fading to some pre-registered background image

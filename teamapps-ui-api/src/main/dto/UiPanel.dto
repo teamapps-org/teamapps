@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,7 @@ class UiWindow extends UiPanel {
     boolean closeOnEscape; // close if the user presses escape
     boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
 
+	command show(int animationDuration);
 	command close(int animationDuration);
 	command setCloseable(boolean closeable);
 	command setCloseOnEscape(boolean closeOnEscape);

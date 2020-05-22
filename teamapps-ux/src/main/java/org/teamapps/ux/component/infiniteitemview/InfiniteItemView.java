@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,18 +25,21 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiInfiniteItemView;
+import org.teamapps.dto.UiInfiniteItemViewDataRequest;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.itemview.ItemViewItemJustification;
+import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.itemview.ItemViewRowJustification;
 import org.teamapps.ux.component.itemview.ItemViewVerticalItemAlignment;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class InfiniteItemView<RECORD> extends AbstractComponent {
 
@@ -47,17 +50,25 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private float itemWidth;
 	private int rowHeight;
 	private int horizontalItemMargin = 0;
-	private ItemViewItemJustification itemJustification = ItemViewItemJustification.LEFT;
+	boolean autoHeight = false; // make this component set its own height using totalNumberOfRecords! Use with max-height to preserve infinite scrolling!
+	private ItemViewRowJustification itemJustification = ItemViewRowJustification.LEFT;
 	private ItemViewVerticalItemAlignment verticalItemAlignment = ItemViewVerticalItemAlignment.STRETCH;
 
 	private InfiniteItemViewModel<RECORD> model = new ListInfiniteItemViewModel<>(Collections.emptyList());
 	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
-	private final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
+	protected final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
 
-	private EventListener<Void> modelOnAllDataChangedListener = aVoid -> this.resetClientSideData();
-	private EventListener<RECORD> modelOnRecordAddedListener = record -> this.resetClientSideData();
-	private EventListener<RECORD> modelOnRecordChangedListener = record -> this.resetClientSideData();
-	private EventListener<RECORD> modelOnRecordDeletedListener = record -> this.resetClientSideData();
+	private final Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
+	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordAddedListener = x -> this.refresh();
+	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordChangedListener = x -> this.refresh();
+	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordDeletedListener = x -> this.refresh();
+
+	private Function<RECORD, Component> contextMenuProvider = null;
+	private int lastSeenContextMenuRequestId;
+
+	private int displayedRangeStart = 0;
+	private int displayedRangeLength = numberOfInitialRecords;
+	private List<Integer> viewportDisplayedRecordClientIds = Collections.emptyList();
 
 	public InfiniteItemView(Template itemTemplate, float itemWidth, int rowHeight) {
 		this.itemTemplate = itemTemplate;
@@ -66,9 +77,10 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 		itemCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
 		itemCache.setMaxCapacity(1000);
+		itemCache.setPurgeDecider((record, clientId) -> !viewportDisplayedRecordClientIds.contains(clientId));
 		itemCache.setPurgeListener(operationHandle -> {
 			if (isRendered()) {
-				List<Integer> removedItemIds = operationHandle.getResult();
+				List<Integer> removedItemIds = operationHandle.getAndClearResult();
 				getSessionContext().queueCommand(new UiInfiniteItemView.RemoveDataCommand(getId(), removedItemIds), aVoid -> operationHandle.commit());
 			} else {
 				operationHandle.commit();
@@ -86,37 +98,70 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiInfiniteItemView uiComponent = new UiInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
-		mapAbstractUiComponentProperties(uiComponent);
+		UiInfiniteItemView ui = new UiInfiniteItemView(itemTemplate.createUiTemplate(), rowHeight);
+		mapAbstractUiComponentProperties(ui);
 		int recordCount = model.getCount();
 		CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse = itemCache.replaceRecords(model.getRecords(0, Math.min(recordCount, numberOfInitialRecords)));
 		cacheResponse.commit();
-		uiComponent.setData(cacheResponse.getResult());
-		uiComponent.setTotalNumberOfRecords(recordCount);
-		uiComponent.setItemWidth(itemWidth);
-		uiComponent.setHorizontalItemMargin(horizontalItemMargin);
-		uiComponent.setItemJustification(itemJustification.toUiItemJustification());
-		uiComponent.setVerticalItemAlignment(verticalItemAlignment.toUiItemJustification());
-		return uiComponent;
+		ui.setData(cacheResponse.getAndClearResult());
+		ui.setTotalNumberOfRecords(recordCount);
+		ui.setItemWidth(itemWidth);
+		ui.setHorizontalItemMargin(horizontalItemMargin);
+		ui.setItemJustification(itemJustification.toUiItemJustification());
+		ui.setVerticalItemAlignment(verticalItemAlignment.toUiItemJustification());
+		ui.setAutoHeight(autoHeight);
+		ui.setContextMenuEnabled(contextMenuProvider != null);
+		return ui;
 	}
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_INFINITE_ITEM_VIEW_DATA_REQUEST:
-				UiInfiniteItemView.DataRequestEvent dataRequestEvent = (UiInfiniteItemView.DataRequestEvent) event;
-				int startIndex = dataRequestEvent.getStartIndex();
-				int length = dataRequestEvent.getLength();
-				sendRecords(startIndex, length, false);
+			case UI_INFINITE_ITEM_VIEW_DISPLAYED_RANGE_CHANGED:
+				UiInfiniteItemView.DisplayedRangeChangedEvent rangeChangedEvent = (UiInfiniteItemView.DisplayedRangeChangedEvent) event;
+				viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
+				displayedRangeStart = rangeChangedEvent.getStartIndex();
+				displayedRangeLength = rangeChangedEvent.getLength();
+				if (rangeChangedEvent.getDataRequest() != null) {
+					UiInfiniteItemViewDataRequest dataRequest = rangeChangedEvent.getDataRequest();
+					int startIndex = dataRequest.getStartIndex();
+					int length = dataRequest.getLength();
+					this.sendRecords(startIndex, length, false);
+				}
 				break;
-			case UI_INFINITE_ITEM_VIEW_ITEM_CLICKED:
+			case UI_INFINITE_ITEM_VIEW_ITEM_CLICKED: {
 				UiInfiniteItemView.ItemClickedEvent itemClickedEvent = (UiInfiniteItemView.ItemClickedEvent) event;
 				RECORD record = itemCache.getRecordByClientId(itemClickedEvent.getRecordId());
 				if (record != null) {
-					onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick()));
+					onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick(), itemClickedEvent.getIsRightMouseButton()));
 				}
 				break;
+			}
+			case UI_INFINITE_ITEM_VIEW_CONTEXT_MENU_REQUESTED: {
+				UiInfiniteItemView.ContextMenuRequestedEvent e = (UiInfiniteItemView.ContextMenuRequestedEvent) event;
+				lastSeenContextMenuRequestId = e.getRequestId();
+				RECORD record = itemCache.getRecordByClientId(e.getRecordId());
+				if (record != null && contextMenuProvider != null) {
+					Component contextMenuContent = contextMenuProvider.apply(record);
+					if (contextMenuContent != null) {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
+					} else {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
+					}
+				} else {
+					closeContextMenu();
+				}
+				break;
+			}
 		}
+	}
+
+	public boolean isAutoHeight() {
+		return autoHeight;
+	}
+
+	public void setAutoHeight(boolean autoHeight) {
+		this.autoHeight = autoHeight;
 	}
 
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
@@ -182,11 +227,11 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		return this;
 	}
 
-	public ItemViewItemJustification getItemJustification() {
+	public ItemViewRowJustification getItemJustification() {
 		return itemJustification;
 	}
 
-	public InfiniteItemView<RECORD> setItemJustification(ItemViewItemJustification itemJustification) {
+	public InfiniteItemView<RECORD> setItemJustification(ItemViewRowJustification itemJustification) {
 		this.itemJustification = itemJustification;
 		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemJustificationCommand(getId(), itemJustification.toUiItemJustification()));
 		return this;
@@ -207,36 +252,37 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	public InfiniteItemView<RECORD> setModel(InfiniteItemViewModel<RECORD> model) {
 		unregisterModelListeners();
 		this.model = model;
-		resetClientSideData();
+		refresh();
 		model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
-		model.onRecordAdded().addListener(this.modelOnRecordAddedListener);
-		model.onRecordChanged().addListener(this.modelOnRecordChangedListener);
-		model.onRecordDeleted().addListener(this.modelOnRecordDeletedListener);
+		model.onRecordsAdded().addListener(this.modelOnRecordAddedListener);
+		model.onRecordsChanged().addListener(this.modelOnRecordChangedListener);
+		model.onRecordsDeleted().addListener(this.modelOnRecordDeletedListener);
 		return this;
 	}
 
 	private void unregisterModelListeners() {
 		this.model.onAllDataChanged().removeListener(this.modelOnAllDataChangedListener);
-		this.model.onRecordAdded().removeListener(this.modelOnRecordAddedListener);
-		this.model.onRecordChanged().removeListener(this.modelOnRecordChangedListener);
-		this.model.onRecordDeleted().removeListener(this.modelOnRecordDeletedListener);
+		this.model.onRecordsAdded().removeListener(this.modelOnRecordAddedListener);
+		this.model.onRecordsChanged().removeListener(this.modelOnRecordChangedListener);
+		this.model.onRecordsDeleted().removeListener(this.modelOnRecordDeletedListener);
 	}
 
-	private void resetClientSideData() {
-		sendRecords(0, numberOfInitialRecords, true);
+	public void refresh() {
+		sendRecords(displayedRangeStart, displayedRangeLength, true);
 	}
 
-	private void sendRecords(int startIndex, int length, boolean clear) {
+	protected void sendRecords(int startIndex, int length, boolean clear) {
 		if (isRendered()) {
 			int totalCount = model.getCount();
-			List<RECORD> records = model.getRecords(startIndex, Math.min(totalCount - startIndex, length));
+			List<RECORD> records = model.getRecords(startIndex, Math.max(0, Math.min(totalCount - startIndex, length)));
 			CacheManipulationHandle<List<UiIdentifiableClientRecord>> cacheResponse;
 			if (clear) {
 				cacheResponse = itemCache.replaceRecords(records);
 			} else {
 				cacheResponse = itemCache.addRecords(records);
 			}
-			getSessionContext().queueCommand(new UiInfiniteItemView.AddDataCommand(getId(), startIndex, cacheResponse.getResult(), totalCount, clear), aVoid -> cacheResponse.commit());
+			getSessionContext().queueCommand(new UiInfiniteItemView.AddDataCommand(getId(), startIndex, cacheResponse.getAndClearResult(), totalCount, clear),
+					aVoid -> cacheResponse.commit());
 		}
 	}
 
@@ -244,8 +290,16 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		itemCache.setMaxCapacity(maxCapacity);
 	}
 
-	@Override
-	protected void doDestroy() {
-		unregisterModelListeners();
+	public Function<RECORD, Component> getContextMenuProvider() {
+		return contextMenuProvider;
 	}
+
+	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
+		this.contextMenuProvider = contextMenuProvider;
+	}
+
+	public void closeContextMenu() {
+		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
+	}
+
 }

@@ -6,14 +6,15 @@
     "target": "es5",
     "experimentalDecorators": true,
     "alwaysStrict": true,
-    "lib": ["es2017", "dom"],
+    "lib": ["es2019", "dom"],
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "moduleResolution": "node",
     "declaration": true,
     "declarationDir": "../../dist/tsd",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "downlevelIteration": true
   },
   "files": [
     "index.ts",
@@ -23,7 +24,8 @@
     "../custom-declarations/worker-loader.d.ts",
     "../custom-declarations/d3-flextree.d.ts",
     "../custom-declarations/image-layout.d.ts",
-    "../custom-declarations/voice-activity-detection.d.ts"
+    "../custom-declarations/voice-activity-detection.d.ts",
+    "../custom-declarations/mediasoup-v3-client.d.ts"
 //    "../../node_modules/@types/node/index.d.ts"
   ],
   "exclude": [

@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,16 +42,21 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractField<VALUE> extends AbstractComponent {
 
-	private static final FieldValidator REQUIRED_VALIDATOR = (field, value) -> field.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
+	private static Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
+	
+	private final FieldValidator<VALUE> requiredValidator = (value) ->
+			this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
 			CurrentSessionContext.get().getLocalized("dict.requiredField"))) : null;
 
-	private static Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
+	private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
+			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmpty()) ?
+					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
+			CurrentSessionContext.get().getLocalized("dict.requiredField"))) : null;
 
 	public final Event<VALUE> onValueChanged = new Event<>();
 	public final Event<Boolean> onVisibilityChanged = new Event<>();
 
 	private FieldEditingMode editingMode = FieldEditingMode.EDITABLE;
-	private boolean visible = true;
 
 	private final Set<FieldValidator<VALUE>> validators = new HashSet<>();
 	private final Map<FieldValidator<VALUE>, List<FieldMessage>> fieldMessagesByValidator = new HashMap<>(); // null key for custom field messages (not bound to a validator)
@@ -60,9 +65,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	private MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
 
-	public AbstractField() {
-		getSessionContext().onDestroyed().addListener(aVoid -> this.destroy());
-	}
+	private boolean valueChangedByClient;
 
 	public FieldEditingMode getEditingMode() {
 		return editingMode;
@@ -73,13 +76,8 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiField.SetEditingModeCommand(getId(), editingMode.toUiFieldEditingMode()));
 	}
 
-	public boolean isVisible() {
-		return visible;
-	}
-
 	public void setVisible(boolean visible) {
-		this.visible = visible;
-		queueCommandIfRendered(() -> new UiField.SetVisibleCommand(getId(), visible));
+		super.setVisible(visible);
 		onVisibilityChanged.fire(visible);
 	}
 
@@ -91,13 +89,13 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		mapAbstractUiComponentProperties(uiField);
 		uiField.setValue(convertUxValueToUiValue(this.value.read()));
 		uiField.setEditingMode(editingMode.toUiFieldEditingMode());
-		uiField.setVisible(this.visible);
 		uiField.setFieldMessages(getFieldMessages().stream()
 				.map(message -> message.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
 				.collect(Collectors.toList()));
 	}
 
 	public void setValue(VALUE value) {
+		valueChangedByClient = false;
 		MultiWriteLockableValue.Lock lock = this.value.writeAndLock(value);
 		Object uiValue = this.convertUxValueToUiValue(value);
 		if (isRendered()) {
@@ -141,6 +139,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 			VALUE transformedValue = convertUiValueToUxValue(value);
 			if (!this.value.isLocked()) {
 				this.value.writeIfNotLocked(transformedValue);
+				valueChangedByClient = true;
 				onValueChanged.fire(transformedValue);
 			}
 		}
@@ -174,18 +173,26 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		updateFieldMessages();
 	}
 
-	public void validate() {
+	public List<FieldMessage> validate() {
+		List<FieldMessage> allValidatorMessages = new ArrayList<>();
 		if (validators.size() > 0) {
 			for (FieldValidator<VALUE> validator : validators) {
 				fieldMessagesByValidator.remove(validator);
-				List<FieldMessage> messages = validator.validate(this, getValue());
+				List<FieldMessage> messages = validator.validate(getValue());
 				if (messages == null) {
 					messages = Collections.emptyList();
 				}
 				fieldMessagesByValidator.put(validator, messages);
+				allValidatorMessages.addAll(messages);
 			}
 			updateFieldMessages();
-		} 
+		}
+		return allValidatorMessages;
+	}
+
+	public void clearValidatorMessages() {
+		fieldMessagesByValidator.clear();
+		updateFieldMessages();
 	}
 
 	/**
@@ -193,14 +200,22 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	 */
 	public void setRequired(boolean required) {
 		if (required) {
-			addValidator(REQUIRED_VALIDATOR);
+			addValidator(requiredValidator);
 		} else {
-			removeValidator(REQUIRED_VALIDATOR);
+			removeValidator(requiredValidator);
+		}
+	}
+
+	public void setRequiredIfVisibleAndEditable(boolean required) {
+		if (required) {
+			addValidator(requiredIfVisibleAndEditableValidator);
+		} else {
+			removeValidator(requiredIfVisibleAndEditableValidator);
 		}
 	}
 
 	public boolean isRequired() {
-		return validators.contains(REQUIRED_VALIDATOR);
+		return validators.contains(requiredValidator);
 	}
 
 	public List<FieldMessage> getFieldMessages() {
@@ -265,5 +280,9 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	public void setDefaultMessageVisibility(FieldMessage.Visibility defaultMessageVisibility) {
 		this.defaultMessageVisibility = defaultMessageVisibility;
+	}
+
+	public boolean isValueChangedByClient() {
+		return valueChangedByClient;
 	}
 }

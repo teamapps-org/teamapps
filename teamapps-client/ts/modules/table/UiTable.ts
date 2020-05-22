@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,12 @@
 
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {
+	UiTable_CellClickedEvent,
 	UiTable_CellEditingStartedEvent,
-	UiTable_CellEditingStoppedEvent, UiTable_CellValueChangedEvent,
+	UiTable_CellEditingStoppedEvent,
+	UiTable_CellValueChangedEvent,
 	UiTable_ColumnSizeChangeEvent,
+	UiTable_ContextMenuRequestedEvent,
 	UiTable_DisplayedRangeChangedEvent,
 	UiTable_FieldOrderChangeEvent,
 	UiTable_MultipleRowsSelectedEvent,
@@ -58,11 +61,13 @@ import {UiButton, UiCheckBox, UiCompositeField, UiCurrencyField, UiFileField, Ui
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {FieldMessagesPopper, getHighestSeverity} from "../micro-components/FieldMessagesPopper";
 import {nonRecursive} from "../util/nonRecursive";
-import {createUiTableDataRequestConfig} from "../../generated/UiTableDataRequestConfig";
+import {createUiTableDataRequestConfig, UiTableDataRequestConfig} from "../../generated/UiTableDataRequestConfig";
 import {throttledMethod} from "../util/throttle";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
 import {UiTableRowSelectionModel} from "./UiTableRowSelectionModel";
+import {ContextMenu} from "../micro-components/ContextMenu";
+import {UiComponent} from "../UiComponent";
 import EventData = Slick.EventData;
 
 interface Column extends Slick.Column<any> {
@@ -104,12 +109,14 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	public readonly onCellEditingStopped: TeamAppsEvent<UiTable_CellEditingStoppedEvent> = new TeamAppsEvent(this);
 	public readonly onCellValueChanged: TeamAppsEvent<UiTable_CellValueChangedEvent> = new TeamAppsEvent(this);
 	public readonly onRowSelected: TeamAppsEvent<UiTable_RowSelectedEvent> = new TeamAppsEvent(this);
+	public readonly onCellClicked: TeamAppsEvent<UiTable_CellClickedEvent> = new TeamAppsEvent(this);
 	public readonly onMultipleRowsSelected: TeamAppsEvent<UiTable_MultipleRowsSelectedEvent> = new TeamAppsEvent<UiTable_MultipleRowsSelectedEvent>(this);
 	public readonly onSortingChanged: TeamAppsEvent<UiTable_SortingChangedEvent> = new TeamAppsEvent(this);
 	public readonly onRequestNestedData: TeamAppsEvent<UiTable_RequestNestedDataEvent> = new TeamAppsEvent(this);
 	public readonly onFieldOrderChange: TeamAppsEvent<UiTable_FieldOrderChangeEvent> = new TeamAppsEvent(this);
 	public readonly onColumnSizeChange: TeamAppsEvent<UiTable_ColumnSizeChangeEvent> = new TeamAppsEvent(this);
 	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiTable_DisplayedRangeChangedEvent> = new TeamAppsEvent(this);
+	public readonly onContextMenuRequested: TeamAppsEvent<UiTable_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
 
 	private $component: HTMLElement;
 	private _grid: Slick.Grid<any>;
@@ -132,6 +139,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private $editorFieldTempContainer: HTMLElement;
 
+	private contextMenu: ContextMenu;
+
 	constructor(config: UiTableConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$component = parseHtml(`<div class="UiTable" id="${config.id}">
@@ -145,20 +154,15 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this.$editorFieldTempContainer = this.$component.querySelector<HTMLElement>(":scope .editor-field-temp-container");
 
 		this.dataProvider = new TableDataProvider(config.tableData, (fromIndex: number, length: number) => {
-			const viewPort = this._grid.getViewport();
-			const currentlyDisplayedRecordIds = this.getCurrentlyDisplayedRecordIds();
-			this.onDisplayedRangeChanged.fire({
-				startIndex: viewPort.top,
-				length: viewPort.bottom - viewPort.top,
-				displayedRecordIds: currentlyDisplayedRecordIds,
-				dataRequest: createUiTableDataRequestConfig(fromIndex, length, this._sortField, this._sortDirection)
-			});
+			this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent(createUiTableDataRequestConfig(fromIndex, length, this._sortField, this._sortDirection)));
 		});
 		if (config.totalNumberOfRecords > this.dataProvider.getLength()) {
 			this.dataProvider.setTotalNumberOfRootNodes(config.totalNumberOfRecords);
 		}
 
 		this.createSlickGrid(config, $table);
+
+		this.contextMenu = new ContextMenu();
 
 		this.dropDown = new UiDropDown();
 
@@ -179,7 +183,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 		if (config.showRowCheckBoxes) {
 			var checkboxSelector = new Slick.CheckboxSelectColumn({
-				cssClass: "justify-center"
 			});
 			this.allColumns.unshift(checkboxSelector.getColumnDefinition() as Column);
 		}
@@ -192,7 +195,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				name: "#",
 				field: "",
 				formatter: RowNumberFormatter,
-				cssClass: "justify-right",
 				headerCssClass: "text-right",
 				width: 35,
 				maxWidth: 75,
@@ -325,7 +327,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 						this.dataProvider.toggleRowExpanded(args.row);
 						this.rerenderAllRows();
 					}
-					let cellValue: any = item.values[fieldName];
 					let $buttonElement = $(e.target).closest(".UiButton");
 					if (uiField && uiField instanceof UiButton && $buttonElement.length > 0) {
 						this.logger.warn("TODO: handle button click, especially in case of a dropdown...");
@@ -341,6 +342,9 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 							let index = $templateWrapper.parent().index($templateWrapper);
 							this.logger.warn("TODO: handle file field click");
 						}
+					}
+					if (UiField) {
+						this.onCellClicked.fire({columnPropertyName: fieldName, recordId: item.id})
 					}
 				}
 			});
@@ -382,11 +386,17 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 		$(this._grid.getCanvasNode()).on("contextmenu", (e) => {
 			let cell = this._grid.getCellFromEvent(<any>e);
-			this.onRowSelected.fire({
-				recordId: this.dataProvider.getItem(cell.row).id,
-				isRightMouseButton: true,
-				isDoubleClick: false
-			});
+			if (cell != null && this.dataProvider.getItem(cell.row) != null) {
+				let recordId = this.dataProvider.getItem(cell.row).id;
+				this.onRowSelected.fire({
+					recordId: recordId,
+					isRightMouseButton: true,
+					isDoubleClick: false
+				});
+				if (e.button == 2 && !isNaN(recordId) && this._config.contextMenuEnabled) {
+					this.contextMenu.open(e as unknown as MouseEvent, requestId => this.onContextMenuRequested.fire({recordId: recordId, requestId}));
+				}
+			}
 		});
 
 		if (config.selectionFrame) {
@@ -400,7 +410,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 		this._grid.onScroll.subscribe((eventData) => {
 			this.updateSelectionFramePosition();
-			this.fireDisplayedRangeChanged(config);
+			this.throttledFireDisplayedRangeChanged();
 		});
 		this._grid.onViewportChanged.subscribe((eventData) => {
 			this.toggleColumnsThatAreHiddenWhenTheyContainNoVisibleNonEmptyCells();
@@ -456,14 +466,18 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	@throttledMethod(500) // debounce/throttle scrolling without data requests only!!! (otherwise the tableDataProvider will mark rows as requested but the actual request will not get to the server)
-	private fireDisplayedRangeChanged(config: UiTableConfig) {
-		const viewport = this._grid.getViewport();
-		this.onDisplayedRangeChanged.fire({
-			startIndex: viewport.top,
-			length: viewport.bottom - viewport.top,
+	private throttledFireDisplayedRangeChanged() {
+		this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent());
+	}
+
+	private createDisplayRangeChangedEvent(dataRequest?: UiTableDataRequestConfig) {
+		const viewPort = this._grid.getViewport();
+		return {
+			startIndex: viewPort.top,
+			length: viewPort.bottom - viewPort.top,
 			displayedRecordIds: this.getCurrentlyDisplayedRecordIds(),
-			dataRequest: null
-		});
+			dataRequest: dataRequest
+		};
 	}
 
 	@nonRecursive
@@ -497,7 +511,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			const columnName = args.column.id;
 			let field = fieldsByColumnId[columnName];
 			if (field) {
-				args.node.appendChild(field.getMainDomElement());
+				args.node.appendChild(field.getMainElement());
 			}
 		});
 	}
@@ -514,7 +528,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		return currentlyDisplayedRecordIds;
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$component;
 	}
 
@@ -533,18 +547,18 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 		let editorFactory;
 		if (uiField instanceof UiCompositeField) {
-			editorFactory = UiCompositeFieldTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainDomElement()));
+			editorFactory = UiCompositeFieldTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		} else if (uiField instanceof UiRichTextEditor || uiField instanceof UiMultiLineTextField) {
-			editorFactory = FixedSizeTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainDomElement()));
+			editorFactory = FixedSizeTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		} else {
-			editorFactory = UiGenericTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainDomElement()));
+			editorFactory = UiGenericTableCellEditor.bind(null, uiField, () => this.$editorFieldTempContainer.appendChild(uiField.getMainElement()));
 		}
 
 		const slickColumnConfig: Column = {
 			id: columnConfig.propertyName,
 			field: columnConfig.propertyName,
 			uiField: uiField,
-			name: `<div class="column-header-icon img img-16 ${columnConfig.icon == null ? "hidden" : ""}" style="background-image: url(${this._context.getIconPath(columnConfig.icon, 16)})"></div>
+			name: `<div class="column-header-icon img img-16 ${columnConfig.icon == null ? "hidden" : ""}" style="background-image: url(${columnConfig.icon})"></div>
 <div class="column-header-title">${columnConfig.title}</div>`,
 			width: columnConfig.defaultWidth || ((columnConfig.minWidth + columnConfig.maxWidth) / 2) || undefined,
 			minWidth: columnConfig.minWidth || 30,
@@ -571,11 +585,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private getColumnCssClass(column: Column) {
 		let columnCssClasses: string[] = [];
-		if (column.uiField instanceof UiNumberField || column.uiField instanceof UiCurrencyField) {
-			columnCssClasses.push('justify-right');
-		} else if (column.uiField instanceof UiCheckBox || column.uiField instanceof UiButton) {
-			columnCssClasses.push('justify-center');
-		}
 		const highestSeverity = getHighestSeverity(column.messages, null);
 		if (highestSeverity != null) {
 			columnCssClasses.push(backgroundColorCssClassesByMessageSeverity[highestSeverity]);
@@ -584,7 +593,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	private prepareEditorField(columnPropertyName: string, uiField: UiField) {
-		this.$editorFieldTempContainer.appendChild(uiField.getMainDomElement());
+		this.$editorFieldTempContainer.appendChild(uiField.getMainElement());
 		if (uiField.getFocusableElement()) {
 			uiField.getFocusableElement().addEventListener("keydown", (e) => {
 				if (e.key === "ArrowLeft"
@@ -595,9 +604,9 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				}
 			});
 			uiField.getFocusableElement().addEventListener("focus", () => {
-				uiField.getMainDomElement().style.zIndex = "1000";
+				uiField.getMainElement().style.zIndex = "1000";
 			});
-			uiField.getFocusableElement().addEventListener("blur", () => uiField.getMainDomElement().style.zIndex = "0");
+			uiField.getFocusableElement().addEventListener("blur", () => uiField.getMainElement().style.zIndex = "0");
 		}
 		uiField.onValueChanged.addListener((eventData: ValueChangeEventData) => this.handleFieldValueChanged(columnPropertyName, eventData.value));
 		uiField.onVisibilityChanged.addListener(visible => this.setSlickGridColumns(this.getVisibleColumns()));
@@ -974,6 +983,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.fieldMessagePopper.destroy();
 	}
 
@@ -1015,8 +1025,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	private setSlickGridColumns(columns: Column[]) {
-		Object.values(this.headerRowFields).forEach(f => f.getMainDomElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
-		Object.values(this.footerRowFields).forEach(f => f.getMainDomElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
+		Object.values(this.headerRowFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
+		Object.values(this.footerRowFields).forEach(f => f.getMainElement().remove()); // prevent slickgrid from doing this via jQuery's empty() (and thereby removing all events handlers)
 		this._grid.setColumns(columns);
 	}
 
@@ -1032,14 +1042,24 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	@executeWhenFirstDisplayed()
 	setColumnVisibility(propertyName: string, visible: boolean): void {
 		const column = this.getColumnById(propertyName);
-		column.visible = visible;
-		this.setSlickGridColumns(this.getVisibleColumns());
+		if (column.visible !== visible) {
+			column.visible = visible;
+			this.setSlickGridColumns(this.getVisibleColumns());
+		}
 	}
 
 	cancelEditingCell(recordId: number, propertyName: string): void {
 		if (recordId === this.getActiveCellRecordId() && propertyName === this.getActiveCellFieldName()) {
 			this._grid.getEditController().cancelCurrentEdit();
 		}
+	}
+
+	setContextMenuContent(requestId: number, component: UiComponent): void {
+		this.contextMenu.setContent(component, requestId);
+	}
+
+	closeContextMenu(requestId: number): void {
+		this.contextMenu.close(requestId);
 	}
 
 }

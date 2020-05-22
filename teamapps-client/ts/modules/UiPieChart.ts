@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =====
-
+ * =========================LICENSE_END==================================
  */
 
 import {AbstractUiComponent} from "./AbstractUiComponent";
@@ -46,6 +45,7 @@ export class UiPieChart extends AbstractUiComponent<UiPieChartConfig> implements
 
 	createChart() {
 		let htmlDivElement = document.createElement("div");
+		htmlDivElement.classList.add("UiPieChart");
 
 		//@ts-ignore
 		this.chart = new Chart()
@@ -59,7 +59,7 @@ export class UiPieChart extends AbstractUiComponent<UiPieChartConfig> implements
 			.render();
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.chart.container() as HTMLElement;
 	}
 

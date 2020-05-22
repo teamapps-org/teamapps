@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,8 @@ export var itemCssStringsJustification = {
 	[UiItemJustification.RIGHT]: "flex-end",
 	[UiItemJustification.CENTER]: "center",
 	[UiItemJustification.SPACE_AROUND]: "space-around",
-	[UiItemJustification.SPACE_BETWEEN]: "space-between"
+	[UiItemJustification.SPACE_BETWEEN]: "space-between",
+	[UiItemJustification.SPACE_EVENLY]: "space-evenly"
 };
 export var itemCssStringsAlignItems = {
 	[UiVerticalItemAlignment.TOP]: "flex-start",
@@ -74,7 +75,7 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 		this.setFilter(config.filter);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$itemView;
 	}
 
@@ -148,6 +149,7 @@ export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements
 	}
 
 	public destroy(): void {
+		super.destroy();
 		Object.keys(this.groupsByGroupId).forEach(groupId => {
 			const group = this.groupsByGroupId[groupId];
 			group.destroy()

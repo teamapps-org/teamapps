@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,19 +26,21 @@ class UiNetworkGraph extends UiComponent{
 	float alpha = 0.1f;
 	int charge = -300;
 	int distance = 30;
+	int strength = -30;
 	String highlightColor;
 	int animationDuration = 1000;
 
 	command setZoomFactor(float zoomFactor);
 	command setGravity(float gravity);
 	command setCharge(int charge, boolean overrideNodeCharge);
-	command setDistance(int distance, boolean overrideLinkDistance);
+	command setDistance(float linkDistance, float nodeDistance);
 
 	command zoomAllNodesIntoView(int animationDuration);
 	command addNodesAndLinks(List<UiNetworkNode> nodes, List<UiNetworkLink> links);
 	command removeNodesAndLinks(List<String> nodeIds, Dictionary<List<String>> linksBySourceNodeId);
 
 	event nodeClicked(String nodeId);
+	event nodeDoubleClicked(String nodeId);
 	event nodeExpandedOrCollapsed(String nodeId, boolean expanded);
 }
 
@@ -51,6 +53,8 @@ class UiNetworkNode {
 	UiColor borderColor = new UiColor(100, 100, 100); // rgba
 	float borderWidth = 1;
 	float borderRadius = 0;
+
+	float distanceFactor = 0.6f;
 
 	UiTreeGraphNodeImage image;
 	UiTreeGraphNodeIcon icon;

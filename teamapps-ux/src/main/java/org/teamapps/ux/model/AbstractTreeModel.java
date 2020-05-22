@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ import java.util.List;
 
 public abstract class AbstractTreeModel<RECORD> implements TreeModel<RECORD> {
 
-	public final Event<List<RECORD>> onAllNodesChanged = new Event<>();
+	public final Event<Void> onAllNodesChanged = new Event<>();
 	public final Event<TreeModelChangedEventData<RECORD>> onChanged = new Event<>();
 
 	@Override
-	public Event<List<RECORD>> onAllNodesChanged() {
+	public Event<Void> onAllNodesChanged() {
 		return onAllNodesChanged;
 	}
 

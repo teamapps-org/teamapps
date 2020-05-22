@@ -1,3 +1,22 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2020 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
 import {UiNotification_ClosedEvent, UiNotification_OpenedEvent, UiNotificationCommandHandler, UiNotificationConfig, UiNotificationEventSource} from "../generated/UiNotificationConfig";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiNotificationPosition} from "../generated/UiNotificationPosition";
@@ -10,6 +29,7 @@ import {ProgressBar} from "./micro-components/ProgressBar";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
+import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 
 const containersByPosition: {
 	[UiNotificationPosition.TOP_LEFT]: HTMLElement,
@@ -59,7 +79,7 @@ export function showNotification(notification: UiNotification, position: UiNotif
 	if (notif == null || notif.position != position) {
 		if (notif == null) {
 			let $wrapper = parseHtml(`<div class="notification-wrapper"></div>`);
-			$wrapper.appendChild(notification.getMainDomElement());
+			$wrapper.appendChild(notification.getMainElement());
 			notif = {notification, position, $wrapper};
 			notifications.push(notif)
 		} else {
@@ -72,7 +92,7 @@ export function showNotification(notification: UiNotification, position: UiNotif
 
 		updateContainerVisibilities();
 
-		animateCSS(notification.getMainDomElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[entranceAnimation] as any, 700);
+		animateCSS(notification.getMainElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[entranceAnimation] as any, 700);
 
 		let closeListener = () => {
 			notification.onClosedAnyWay.removeListener(closeListener);
@@ -82,7 +102,7 @@ export function showNotification(notification: UiNotification, position: UiNotif
 			notif.$wrapper.style.marginBottom = "0px";
 			notif.$wrapper.style.zIndex = "0";
 
-			animateCSS(notification.getMainDomElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation] as any, 700, () => {
+			animateCSS(notification.getMainElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation] as any, 700, () => {
 				notif.$wrapper.remove();
 				updateContainerVisibilities();
 			});
@@ -127,7 +147,7 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 
 	public update(config: UiNotificationConfig) {
 		this._config = config;
-		this.$main.style.backgroundColor = createUiColorCssString(config.backgroundColor, "transparent");
+		this.$main.style.backgroundColor = createUiColorCssString(config.backgroundColor, null);
 		// this.$main.style.borderColor = createUiColorCssString(config.borderColor, "#00000022");
 		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
 		this.$main.classList.toggle("dismissible", config.dismissible);
@@ -141,16 +161,17 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 			this.progressBar = null;
 		}
 
-		if (this.$contentContainer.firstChild !== (config.content && (config.content as UiComponent).getMainDomElement())) {
+		if (this.$contentContainer.firstChild !== (config.content && (config.content as UiComponent).getMainElement())) {
 			this.$contentContainer.innerHTML = '';
 			if (config.content != null) {
-				this.$contentContainer.appendChild((config.content as UiComponent).getMainDomElement());
+				this.$contentContainer.appendChild((config.content as UiComponent).getMainElement());
 			}
 		}
 	}
 
 	private closeTimeout: number;
 
+	@executeWhenFirstDisplayed(true)
 	public startCloseTimeout() {
 		if (this.progressBar != null) {
 			this.progressBar.setProgress(1); // mind the css transition!
@@ -167,7 +188,7 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 		}
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

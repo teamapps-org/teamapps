@@ -4,36 +4,36 @@
  */
 export const typescriptDeclarationFixConstant = 1;
 
-import {UiComponent} from "../modules/UiComponent";
-import {UiComponentReference} from "./UiComponentConfig";
+import {UiClientObject} from "../modules/UiClientObject";
+import {UiClientObjectReference} from "./UiClientObjectConfig";
 import {TeamAppsUiComponentRegistry} from "../modules/TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "../modules/TeamAppsUiContext";
 
 export class CommandExecutor {
 	private commandExecutorsByCommandName: {[commandName: string]: (targetObject: any, command: any) => void} = {
-		    'A.nonStaticCommand': (targetObject: any, command: any) => {
-				targetObject.nonStaticCommand(command.x);
+		    'A.nonStaticCommand': async (targetObject: any, command: any) => {
+				return await targetObject.nonStaticCommand(command.x);
 			}
 	};
 
 	private staticCommandExecutorsByCommandName: {[commandName: string]: (command: any, context: TeamAppsUiContext) => void} = {
-		    'A.staticCommand': (command: any, context: TeamAppsUiContext) => {
-				(TeamAppsUiComponentRegistry.getComponentClassForName("A") as any).staticCommand(command.x, context);
+		    'A.staticCommand': async (command: any, context: TeamAppsUiContext) => {
+				return await (TeamAppsUiComponentRegistry.getComponentClassForName("A") as any).staticCommand(command.x, context);
 			}
 	};
 
-	constructor(private componentRegistry: (reference: UiComponentReference) => UiComponent) {
+	constructor(private componentRegistry: (reference: UiClientObjectReference) => UiClientObject) {
 	}
 
-	private getComponentForReference(reference: UiComponentReference) {
+	private getComponentForReference(reference: UiClientObjectReference) {
 		this.componentRegistry(reference);
 	}
 
-	public executeCommand(targetObject: any, command: any) {
-		return this.commandExecutorsByCommandName[command._type](targetObject, command);
+	public async executeCommand(targetObject: any, command: any) {
+		return await this.commandExecutorsByCommandName[command._type](targetObject, command);
 	}
 
-	public executeStaticCommand(command: any, context: TeamAppsUiContext) {
-		return this.staticCommandExecutorsByCommandName[command._type](command, context);
+	public async executeStaticCommand(command: any, context: TeamAppsUiContext) {
+		return await this.staticCommandExecutorsByCommandName[command._type](command, context);
 	}
 }

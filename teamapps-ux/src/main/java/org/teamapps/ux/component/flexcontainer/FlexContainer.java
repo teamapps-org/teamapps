@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class FlexContainer extends AbstractComponent {
 		UiFlexContainer uiFlexContainer = new UiFlexContainer();
 		mapAbstractUiComponentProperties(uiFlexContainer);
 		uiFlexContainer.setComponents(components.stream()
-				.map(c -> c.createUiComponentReference())
+				.map(c -> c.createUiReference())
 				.collect(Collectors.toList()));
 		uiFlexContainer.setFlexDirection(flexDirection.toUiCssFlexDirection());
 		uiFlexContainer.setAlignItems(alignItems.toCssAlignItems());
@@ -54,7 +54,7 @@ public class FlexContainer extends AbstractComponent {
 
 	public void addComponent(Component component) {
 		this.components.add(component);
-		queueCommandIfRendered(() -> new UiFlexContainer.AddComponentCommand(getId(), component.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiFlexContainer.AddComponentCommand(getId(), component.createUiReference()));
 	}
 
 	public void addComponent(Component component, FlexSizingPolicy sizingPolicy) {
@@ -64,7 +64,12 @@ public class FlexContainer extends AbstractComponent {
 
 	public void removeComponent(Component component) {
 		this.components.remove(component);
-		queueCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(getId(), component.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(getId(), component.createUiReference()));
+	}
+
+	public void removeAllComponents() {
+		this.components.forEach(c -> queueCommandIfRendered(() -> new UiFlexContainer.RemoveComponentCommand(getId(), c.createUiReference())));
+		this.components.clear();
 	}
 
 	@Override

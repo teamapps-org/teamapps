@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,15 @@ package org.teamapps.uisession;
 
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiSessionClosingReason;
+
+import javax.servlet.http.HttpSession;
 
 public interface UiSessionListener {
 
-    void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo);
-	void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo);
+    void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession);
+	void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession);
 	void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event);
-	void onUiSessionClosed(QualifiedUiSessionId sessionId, SessionClosingReason reason);
-
+	void onActivityStateChanged(QualifiedUiSessionId sessionId, boolean active);
+	void onUiSessionClosed(QualifiedUiSessionId sessionId, UiSessionClosingReason reason);
 }

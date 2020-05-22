@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.util.function.Function.identity;
 
 public class ClientRecordCache<RECORD, UIRECORD extends UiIdentifiableClientRecord> {
 
@@ -114,7 +117,9 @@ public class ClientRecordCache<RECORD, UIRECORD extends UiIdentifiableClientReco
 
 		LinkedHashMap<RECORD, UIRECORD> uiRecordsByRecord = createUiRecords(newRecords);
 
-		this.uiRecordsByRecord.putAll(uiRecordsByRecord.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().getId())));
+		this.uiRecordsByRecord.clear();
+		this.uiRecordsByRecord.putAll(uiRecordsByRecord.entrySet().stream()
+				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().getId())));
 
 		Map<Integer, RECORD> newRecordsByClientId = uiRecordsByRecord.entrySet().stream()
 				.collect(Collectors.toMap(entry -> entry.getValue().getId(), Map.Entry::getKey));
@@ -274,6 +279,22 @@ public class ClientRecordCache<RECORD, UIRECORD extends UiIdentifiableClientReco
 			result.putAll(unacknowledgedRecordsByClientId);
 		}
 		return result;
+	}
+
+	public <ID> boolean containsExactly(List<RECORD> records, Function<RECORD, ID> identifierExtractor, BiPredicate<RECORD, RECORD> recordsEqual) {
+		if (uiRecordsByRecord.size() != records.size()) {
+			return false;
+		}
+		Map<ID, RECORD> cachedRecordsById = uiRecordsByRecord.keySet().stream()
+				.collect(Collectors.toMap(identifierExtractor, identity()));
+		for (RECORD record : records) {
+			ID recordId = identifierExtractor.apply(record);
+			RECORD cachedRecord = cachedRecordsById.get(recordId);
+			if (cachedRecord == null || !recordsEqual.test(record, cachedRecord)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public interface UiIdentifiableClientRecordFactory<RECORD, UIRECORD> {

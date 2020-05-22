@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,6 @@ public class TwoWayBindableValueImpl<T> implements TwoWayBindableValue<T> {
 	@Override
 	public void set(T value) {
 		this.value = value;
-		onChanged.fire(value); // if you want to make this only fire when actually changed, be aware that every value class must implement equals in an appropriate way...
+		onChanged.fireIfChanged(value);
 	}
 }

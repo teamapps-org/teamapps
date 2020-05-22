@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@
 // third party
 @import "bootstrap-imports";
 @import "../node_modules/trivial-components/less/trivial-components";
-@import (less) "../node_modules/quill/dist/quill.snow.css";
 @import (inline) "../node_modules/slickgrid/slick.grid.css";
 @import (less) "../node_modules/@fullcalendar/core/main.css";
 @import (less) "../node_modules/@fullcalendar/daygrid/main.css";
@@ -85,6 +84,7 @@
 @import "components/UiFormDesignerFieldChooser";
 @import "components/UiPropertyEditor";
 @import "components/UiInfiniteItemView";
+@import "components/UiInfiniteItemView2";
 @import "components/UiImageCropper";
 @import "components/UiGauge";
 @import "components/UiResponsiveGridLayout";
@@ -101,7 +101,9 @@
 @import "components/UiDefaultMultiProgressDisplay";
 @import "components/UiNotification";
 @import "components/UiQrCodeScanner";
-@import "components/UiMediaSoupWebRtcClient";
+@import "components/UiMediaSoupV2WebRtcClient";
+@import "components/UiMediaSoupV3WebRtcClient";
+@import "components/UiPieChart";
 
 
 // formfield
@@ -129,6 +131,7 @@
 @import "formfield/UiRichTextEditor";
 @import "formfield/UiSlider";
 @import "formfield/UiColorPicker";
+@import "formfield/UiLinkButton";
 
 // micro-components
 @import "micro-components/ProgressBar";
@@ -139,6 +142,7 @@
 @import "micro-components/UiDropDown";
 @import "micro-components/tooltip";
 @import "micro-components/CalendarEventListPopper";
+@import "micro-components/ContextMenu";
 
 // util
 @import "util/drop-zone";

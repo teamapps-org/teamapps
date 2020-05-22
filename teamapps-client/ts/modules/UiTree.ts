@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeRecordConfig} from "../generated/UiTreeRecordConfig";
 import {UiComboBoxTreeRecordConfig} from "../generated/UiComboBoxTreeRecordConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
+import {loadSensitiveThrottling} from "./util/throttle";
 
 
 export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeCommandHandler, UiTreeEventSource {
@@ -110,10 +111,11 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$panel;
 	}
 
+	@loadSensitiveThrottling(100, 10, 3000)
 	replaceData(nodes: UiTreeRecordConfig[]): void {
 		this.nodes = nodes;
 		this.trivialTree.updateEntries(buildObjectTree(nodes, "id", "parentId"));
@@ -134,9 +136,6 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		this.templateRenderers[id] = this._context.templateRegistry.createTemplateRenderer(template);
 	}
 
-	public destroy(): void {
-		// nothing to do
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiTree", UiTree);

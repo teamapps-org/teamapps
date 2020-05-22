@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 
 	setIcon(icon: string): void {
 		this.$icon.classList.toggle("hidden", !icon);
-		this.$icon.style.backgroundImage = icon ? `url(${this._context.getIconPath(icon, 16)})` : null;
+		this.$icon.style.backgroundImage = icon ? `url(${icon})` : null;
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
