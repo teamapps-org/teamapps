@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,6 +74,8 @@ public interface Perspective {
     default void setFocusedView(View view) {
         view.focus();
     }
+
+    View getFocusedView();
 
     default void setViewPosition(View view, String position) {
         view.setLayoutPosition(position);

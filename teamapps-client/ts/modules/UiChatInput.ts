@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {createImageThumbnailUrl, fadeOut, parseHtml} from "./Common";
+import {createImageThumbnailUrl, fadeOut, insertAtCursorPosition, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {
 	UiChatInput_FileItemClickedEvent,
@@ -62,7 +62,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiChatInput drop-zone">
 	<div class="upload-items"></div>
-	<textarea class="text-input"></textarea>
+	<textarea class="text-input" maxlength="${config.messageLengthLimit}"></textarea>
 	<div class="button attachment-button glyphicon glyphicon-paperclip glyphicon-button glyphicon-button-md"></div>
 	<div class="button send-button glyphicon glyphicon-send glyphicon-button glyphicon-button-md"></div>
 	<input class="file-input" type="file" multiple tabindex="-1"></input>
@@ -76,7 +76,11 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		this.$textInput.addEventListener("keyup", () => this.updateSendability());
 		this.$textInput.addEventListener("keydown", (e: MouseEvent) => {
 			if ((e as any).key === 'Enter'){
-				this.send();
+				if (e.shiftKey) {
+					insertAtCursorPosition(this.$textInput, "\n");
+				} else {
+					this.send();
+				}
 				e.preventDefault(); // no new-line character in the text input, please
 			}
 		});
@@ -114,6 +118,10 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 	}
 
 	private send() {
+		if (!this.sendable()) {
+			return;
+		}
+		
 		this.onMessageSent.fire({
 			message: createUiNewChatMessageConfig({
 				text: this.$textInput.value,
@@ -128,7 +136,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		this.updateSendability();
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -155,13 +163,15 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 	}
 
 	private updateSendability() {
+		this.$sendButton.classList.toggle("disabled", !this.sendable());
+	}
+
+	private sendable() {
 		const uploading = this.uploadItems.some(item => item.state === UploadState.IN_PROGRESS);
 		const hasSuccessfulFileUploads = this.uploadItems.filter(item => item.state === UploadState.SUCCESS).length > 0;
 		const hasTextInput = this.$textInput.value.length > 0;
-		const sendable = !uploading && (hasSuccessfulFileUploads || hasTextInput);
-		this.$sendButton.classList.toggle("disabled", !sendable);
+		return !uploading && (hasSuccessfulFileUploads || hasTextInput);
 	}
-
 }
 
 enum UploadState {
@@ -179,7 +189,7 @@ class FileUploadItem {
 
 	constructor(public file: File, defaultFileIcon: string, uploadUrl: string, context: TeamAppsUiContext) {
 		this.$main = parseHtml(`<div class="upload-item">
-	<div class="icon img img-24" style="background-image: url(${context.getIconPath(defaultFileIcon, 24)})"></div>
+	<div class="icon img img-24" style="background-image: url(${defaultFileIcon})"></div>
 	<div class="name">${file.name}</div>
 </div>`);
 		const $icon = this.$main.querySelector<HTMLElement>(":scope .icon");

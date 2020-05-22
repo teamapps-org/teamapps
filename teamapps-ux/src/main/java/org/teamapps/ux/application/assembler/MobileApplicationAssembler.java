@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -136,9 +136,6 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		});
 
 		viewsItemView.onItemClicked.addListener(data -> {
-			//ScopeComponent component = data.getItem().getPayload();
-			//component.refreshPanelToolbar();
-			//displayComponent(component, MobileLayoutAnimation.FORWARD);
 			navigationBar.hideFanOutComponent();
 		});
 	}
@@ -260,33 +257,24 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 		perspectiveViews = activeViews;
 
 		viewsItemView.removeAllGroups();
-		if (applicationLauncher != null) {
-			SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_MODULE, "Launcher");
-			group.addItem(applicationLauncher.getPanel().getIcon(), applicationLauncher.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
-				showView(applicationLauncher);
-			});
-		}
-
+		SimpleItemGroup<Void> itemGroup = viewsItemView.addSingleColumnGroup(null, null);
 		if (!applicationViews.isEmpty()) {
-			SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.TOC, "Application views");
 			applicationViews.forEach(view -> {
-				group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
+				itemGroup.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
 					showView(view);
 				});
 			});
 		}
-
 		if (!perspectiveViews.isEmpty()) {
-			SimpleItemGroup<Void> group = viewsItemView.addSingleColumnGroup(MaterialIcon.VIEW_CAROUSEL, "Perspective views");
 			perspectiveViews.forEach(view -> {
-				group.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
+				itemGroup.addItem(view.getPanel().getIcon(), view.getPanel().getTitle(), null).onClick.addListener(aVoid -> {
 					showView(view);
 				});
 			});
 		}
 
 		if (!perspectiveViews.isEmpty()) {
-			View view = perspectiveViews.get(0);
+			View view = perspective.getFocusedView() != null ? perspective.getFocusedView() : perspectiveViews.get(0);
 			activeView = view;
 			mobileLayout.setContent(view.getPanel(), PageTransition.MOVE_TO_LEFT_VS_MOVE_FROM_RIGHT, PAGE_TRANSITION_ANIMATION_DURATION);
 		}

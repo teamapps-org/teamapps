@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,12 @@ import "@less/teamapps";
 
 import 'typeface-roboto';
 
-require("element-qsa-scope");
+import "element-qsa-scope"; // Polyfill: querySelector(":scope ...")
+import "array-flat-polyfill"; // Polyfill: array.flatmap() ...
 
 (window as any).jQuery = (window as any).$ = require("jquery"); // needs to be global for fullcalendar (at least)
 require("jquery-ui/ui/version.js");
 require("jquery-ui/ui/position.js");
-require("jquery-ui/ui/widgets/draggable.js");
-require("jquery-ui/ui/widgets/resizable.js");
 
 (window as any).moment = require("moment"); // needs to be a global variable for fullcalendar
 
@@ -61,6 +60,7 @@ export {UiGridForm} from "./UiGridForm";
 export {UiImageCropper} from "./UiImageCropper";
 export {UiImageDisplay} from "./UiImageDisplay";
 export {UiInfiniteItemView} from "./UiInfiniteItemView";
+export {UiInfiniteItemView2} from "./UiInfiniteItemView2";
 export {UiLiveStreamComponent} from "./UiLiveStreamComponent";
 export {UiMap} from "./UiMap";
 export {UiMediaTrackGraph} from "./UiMediaTrackGraph";
@@ -80,7 +80,6 @@ export {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 export {UiTree} from "./UiTree";
 export {UiVerticalLayout} from "./UiVerticalLayout";
 export {UiVideoPlayer} from "./UiVideoPlayer";
-export {UiWebRtcPublisher} from "./UiWebRtcPublisher";
 export {UiWebRtcPlayer} from "./UiWebRtcPlayer";
 export {UiWindow} from "./UiWindow";
 export {UiWorkSpaceLayout} from "./workspace-layout/UiWorkSpaceLayout";
@@ -95,7 +94,9 @@ export {UiProgressDisplay} from "./UiProgressDisplay";
 export {UiDefaultMultiProgressDisplay} from "./UiDefaultMultiProgressDisplay";
 export {UiNotification} from "./UiNotification";
 export {UiQrCodeScanner} from "./UiQrCodeScanner";
-export {UiMediaSoupWebRtcClient} from "./webrtc/UiMediaSoupWebRtcClient";
+export {UiMediaSoupV2WebRtcClient} from "./webrtc/mediasoup-v2/UiMediaSoupV2WebRtcClient";
+export {UiMediaSoupV3WebRtcClient} from "./webrtc/mediasoup-v3/UiMediaSoupV3WebRtcClient";
+export {UiHtmlView} from "./UiHtmlView";
 
 export {UiGauge} from "./UiGauge";
 
@@ -128,17 +129,19 @@ export {UiSlider} from "./formfield/UiSlider";
 export {UiColorPicker} from "./formfield/UiColorPicker";
 export {UiFieldGroup} from "./formfield/UiFieldGroup";
 export {UiTemplateField} from "./formfield/UiTemplateField";
+export {UiLinkButton} from "./UiLinkButton";
 
 export {UiToolButton} from "./micro-components/UiToolButton";
 
 export {UiPieChart} from "./UiPieChart";
 export {UiTreeGraph} from "./UiTreeGraph";
 
-export {UiReactTestComponent} from "./UiReactTestComponent";
-
 export {UiTestHarness} from "./UiTestHarness";
+export {draggable} from "./util/draggable";
 
 // export {typescriptDeclarationFixConstant as AbstractUiChartConfig} from "./../generated/AbstractUiChartConfig";
 
 import * as log from "loglevel";
 (window as any).log = log;
+
+export {VideoTrackMixer} from "./webrtc/VideoTrackMixer"

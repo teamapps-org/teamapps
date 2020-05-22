@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,9 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 		this.sendValueAsMd5 = config.sendValueAsMd5;
 		super.initialize(config, context);
 		this.$field.type = "password";
+		if (!config.autofill) {
+			this.$field.autocomplete = "new-password";
+		}
 	}
 
 	setSalt(salt: string): void {

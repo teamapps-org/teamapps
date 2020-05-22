@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class ToolButton extends AbstractComponent {
 		UiToolButton uiToolButton = new UiToolButton(icon, popoverText);
 		mapAbstractUiComponentProperties(uiToolButton);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
-		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent.createUiComponentReference() : null);
+		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent.createUiReference() : null);
 		uiToolButton.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		uiToolButton.setMinDropDownHeight(minDropDownHeight);
@@ -124,7 +124,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		queueCommandIfRendered(() -> new UiToolButton.SetDropDownComponentCommand(getId(), dropDownComponent != null ? dropDownComponent.createUiComponentReference() : null));
+		queueCommandIfRendered(() -> new UiToolButton.SetDropDownComponentCommand(getId(), dropDownComponent != null ? dropDownComponent.createUiReference() : null));
 	}
 
 	public Integer getMinDropDownWidth() {
@@ -145,10 +145,4 @@ public class ToolButton extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiToolButton.SetDropDownSizeCommand(getId(), minDropDownWidth, minDropDownHeight));
 	}
 
-	@Override
-	protected void doDestroy() {
-		if (this.dropDownComponent != null) {
-			this.dropDownComponent.destroy();
-		}
-	}
 }

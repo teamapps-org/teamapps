@@ -1,3 +1,22 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2020 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
 package org.teamapps.ux.component.charting.forcelayout;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
@@ -20,7 +39,8 @@ import java.util.stream.Collectors;
 
 public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
-	public final Event<ForceLayoutNode> onNodeClicked = new Event<>();
+	public final Event<ForceLayoutNode<RECORD>> onNodeClicked = new Event<>();
+	public final Event<ForceLayoutNode<RECORD>> onNodeDoubleClicked = new Event<>();
 	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
 
 	private final List<ForceLayoutNode<RECORD>> nodes;
@@ -78,6 +98,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		uiNode.setExpandState(node.getExpandedState().toExpandState());
 		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createUiTreeGraphNodeIcon() : null);
 		uiNode.setImage(node.getImage() != null ? node.getImage().createUiTreeGraphNodeImage() : null);
+		uiNode.setDistanceFactor(node.getDistanceFactor());
 		return uiNode;
 	}
 
@@ -96,6 +117,14 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
 						.findFirst()
 						.ifPresent(onNodeClicked::fire);
+				break;
+			}
+			case UI_NETWORK_GRAPH_NODE_DOUBLE_CLICKED: {
+				UiNetworkGraph.NodeDoubleClickedEvent clickEvent = (UiNetworkGraph.NodeDoubleClickedEvent) event;
+				nodes.stream()
+						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
+						.findFirst()
+						.ifPresent(onNodeDoubleClicked::fire);
 				break;
 			}
 			case UI_NETWORK_GRAPH_NODE_EXPANDED_OR_COLLAPSED:
@@ -152,5 +181,9 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	}
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
 		this.propertyExtractor = propertyExtractor;
+	}
+
+	public void setDistance(float linkDistanceFactor, float nodeDistanceFactor) {
+		queueCommandIfRendered(() -> new UiNetworkGraph.SetDistanceCommand(getId(), linkDistanceFactor, nodeDistanceFactor));
 	}
 }

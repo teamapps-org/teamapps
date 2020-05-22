@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,7 @@ export class TableDataProvider {
 	private data: TableDataProviderItem[];
 	private numberOfRootNodes: number;
 
-	constructor(
-		data: UiHierarchicalClientRecordConfig[],
-		private dataRequestCallback: Function) {
+	constructor(data: UiHierarchicalClientRecordConfig[], private dataRequestCallback: Function) {
 		this.data = this.prepareData(data);
 		this.numberOfRootNodes = this.data.filter(item => !item.parentId).length;
 	}

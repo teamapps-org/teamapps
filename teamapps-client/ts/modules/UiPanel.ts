@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -189,7 +189,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		this.toolButtons = [];
 		this.$buttonContainer.innerHTML = '';
 		toolButtons && toolButtons.forEach(toolButton => {
-			this.$buttonContainer.appendChild(toolButton.getMainDomElement());
+			this.$buttonContainer.appendChild(toolButton.getMainElement());
 			this.toolButtons.push(toolButton);
 		});
 		this.relayoutHeader();
@@ -215,22 +215,22 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		this.windowButtons.push(toolButtonType);
 		const button = this.defaultToolButtons[toolButtonType];
 		if (this.$windowButtonContainer.children.length === 0) {
-			prependChild(this.$windowButtonContainer, button.getMainDomElement());
+			prependChild(this.$windowButtonContainer, button.getMainElement());
 		} else {
 			let index = this.windowButtons
 				.sort((a, b) =>this.orderedDefaultToolButtonTypes.indexOf(a) - this.orderedDefaultToolButtonTypes.indexOf(b))
 				.indexOf(toolButtonType);
 			if (index >= this.$windowButtonContainer.childNodes.length) {
-				this.$windowButtonContainer.appendChild(button.getMainDomElement());
+				this.$windowButtonContainer.appendChild(button.getMainElement());
 			} else {
-				insertBefore(button.getMainDomElement(), this.$windowButtonContainer.children[index]);
+				insertBefore(button.getMainElement(), this.$windowButtonContainer.children[index]);
 			}
 		}
 		this.relayoutHeader();
 	}
 
 	public removeWindowButton(uiToolButton: UiWindowButtonType) {
-		this.defaultToolButtons[uiToolButton].getMainDomElement().remove();
+		this.defaultToolButtons[uiToolButton].getMainElement().remove();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {
 			this.$windowButtonContainer.classList.add("hidden");
@@ -241,7 +241,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		return this.defaultToolButtons[buttonType];
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$panel;
 	}
 
@@ -252,7 +252,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		this.$bodyContainer.innerHTML = '';
 		this.contentComponent = content;
 		if (content != null) {
-			this.$bodyContainer.appendChild(this.contentComponent.getMainDomElement());
+			this.$bodyContainer.appendChild(this.contentComponent.getMainElement());
 		}
 	}
 
@@ -306,9 +306,8 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		$componentWrapper.innerHTML = '';
 		$componentWrapper.classList.add('hidden');
 		if (headerFieldConfig) {
-			let iconPath = this._context.getIconPath(headerFieldConfig.icon, 16);
 			let $iconAndFieldWrapper = parseHtml(`<div class="icon-and-field-wrapper">
-                    <div class="icon img img-16" style="background-image: ${iconPath ? 'url(' + iconPath + ')' : 'none'}"></div>
+                    <div class="icon img img-16" style="background-image: ${headerFieldConfig.icon ? 'url(' + headerFieldConfig.icon + ')' : 'none'}"></div>
                     <div class="field-wrapper"></div>
                 </div>`);
 			let $icon = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope >.icon');
@@ -318,7 +317,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 			});
 			let $fieldWrapper = $iconAndFieldWrapper.querySelector<HTMLElement>(':scope >.field-wrapper');
 			const field = (headerFieldConfig.field as UiField);
-			$fieldWrapper.appendChild(field.getMainDomElement());
+			$fieldWrapper.appendChild(field.getMainElement());
 			field.onVisibilityChanged.addListener(visible => {
 				this.relayoutHeader();
 			});
@@ -342,7 +341,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		this.icon = icon;
 		if (icon) {
 			this.$icon.innerHTML = '';
-			this.$icon.appendChild(parseHtml(`<div class="img img-16" style="background-image: url(${this._context.getIconPath(icon, 16)})"></div>`));
+			this.$icon.appendChild(parseHtml(`<div class="img img-16" style="background-image: url(${icon})"></div>`));
 		}
 		this.$icon.classList.toggle('hidden', icon == null);
 		this.relayoutHeader();
@@ -370,18 +369,18 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 
 	public setToolbar(toolbar: UiToolbar) {
 		if (this.toolbar != null) {
-			this.toolbar.getMainDomElement().remove();
+			this.toolbar.getMainElement().remove();
 		}
 		this.toolbar = toolbar;
 		if (toolbar) {
-			this.$toolbarContainer.appendChild(this.toolbar.getMainDomElement());
+			this.$toolbarContainer.appendChild(this.toolbar.getMainElement());
 			this.toolbar.onEmptyStateChanged.addListener(() => this.updateToolbarVisibility())
 		}
 		this.updateToolbarVisibility();
 	}
 
 	public setStretchContent(stretch: boolean): void {
-		this.getMainDomElement().classList.toggle("stretch-content", stretch);
+		this.getMainElement().classList.toggle("stretch-content", stretch);
 	}
 
 	private updateToolbarVisibility() {
@@ -510,6 +509,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.$panel.remove(); // may be currently attached to document.body (maximized)
 	}
 

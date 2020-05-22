@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
  */
 import * as log from "loglevel";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
@@ -126,7 +125,7 @@ export class Constants {
 	}
 
 	private static calculateScrollbarWidth() {
-		const $div = parseHtml(`<div id="ASDF" style="width: 100px; height: 100px; position: absolute; top: -10000px">`)
+		const $div = parseHtml(`<div id="ASDF" style="width: 100px; height: 100px; position: absolute; top: -10000px">`);
 		document.body.appendChild($div);
 		const widthNoScroll = $div.clientWidth;
 		$div.style.overflowY = "scroll";
@@ -389,39 +388,79 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 		let width = innerPreferredDimensions.width * zoomFactor;
 		return {width: width, height: width / imageAspectRatio};
 	}
-};
+}
 
-export function boundSelection(selection: { left: number, top: number, width: number, height: number }, bounds: { width: number, height: number }, aspectRatio?: number) {
-	let newSelection = {
-		left: selection.left,
-		top: selection.top,
-		width: selection.width,
-		height: selection.height
-	};
-	if (newSelection.width > bounds.width) {
-		newSelection.width = bounds.width;
-	}
-	if (newSelection.height > bounds.height) {
-		newSelection.height = bounds.height;
-	}
-	if (aspectRatio > 0) {
-		if (newSelection.width / newSelection.height > aspectRatio) {
-			newSelection.width = newSelection.height * aspectRatio;
-		} else {
-			newSelection.height = newSelection.width / aspectRatio;
+export type Direction = "n" | "e" | "s" | "w" | "ne" | "se" | "nw" | "sw";
+
+export function boundSelection(
+	selection: { left: number, top: number, width: number, height: number },
+	bounds: { width: number, height: number },
+	aspectRatio?: number,
+	fixedAt?: Direction
+) {
+	let newSelection = {...selection};
+
+	if (fixedAt == null) {
+		if (newSelection.width > bounds.width) {
+			newSelection.width = bounds.width;
 		}
-	}
-	if (newSelection.left < 0) {
-		newSelection.left = 0;
-	}
-	if (newSelection.left + newSelection.width > bounds.width) {
-		newSelection.left = bounds.width - newSelection.width;
-	}
-	if (newSelection.top < 0) {
-		newSelection.top = 0;
-	}
-	if (newSelection.top + newSelection.height > bounds.height) {
-		newSelection.top = bounds.height - newSelection.height;
+		if (newSelection.height > bounds.height) {
+			newSelection.height = bounds.height;
+		}
+		if (aspectRatio > 0) {
+			if (newSelection.width / newSelection.height > aspectRatio) {
+				newSelection.width = newSelection.height * aspectRatio;
+			} else {
+				newSelection.height = newSelection.width / aspectRatio;
+			}
+		}
+		if (newSelection.left < 0) {
+			newSelection.left = 0;
+		}
+		if (newSelection.left + newSelection.width > bounds.width) {
+			newSelection.left = bounds.width - newSelection.width;
+		}
+		if (newSelection.top < 0) {
+			newSelection.top = 0;
+		}
+		if (newSelection.top + newSelection.height > bounds.height) {
+			newSelection.top = bounds.height - newSelection.height;
+		}
+	} else {
+		let selectionXCenter = selection.left + selection.width / 2;
+		let selectionYCenter = selection.top + selection.height / 2;
+		let maxWidth =
+			fixedAt == "n" || fixedAt == "s" ? Math.min(Math.min(selectionXCenter, bounds.width - selectionXCenter) * 2, bounds.width) :
+				fixedAt == "e" || fixedAt == "ne" || fixedAt == "se" ? Math.min(selection.left + selection.width, bounds.width) :
+					fixedAt == "w" || fixedAt == "nw" || fixedAt == "sw" ? Math.min(bounds.width - selection.left, bounds.width)
+						: bounds.width;
+		let maxHeight =
+			fixedAt == "e" || fixedAt == "w" ? Math.min(Math.min(selectionYCenter, bounds.height - selectionYCenter) * 2, bounds.height) :
+				fixedAt == "s" || fixedAt == "se" || fixedAt == "sw" ? Math.min(selection.top + selection.height, bounds.height) :
+					fixedAt == "n" || fixedAt == "ne" || fixedAt == "nw" ? Math.min(bounds.height - selection.top, bounds.height)
+						: bounds.height;
+
+		newSelection.width = Math.min(newSelection.width, maxWidth);
+		newSelection.height = Math.min(newSelection.height, maxHeight);
+
+		if (aspectRatio != null) {
+			if (aspectRatio > newSelection.width / newSelection.height) {
+				newSelection.height = newSelection.width / aspectRatio;
+			} else if (aspectRatio < newSelection.width / newSelection.height) {
+				newSelection.width = newSelection.height * aspectRatio;
+			}
+		}
+
+		newSelection.left =
+			fixedAt == "n" || fixedAt == "s" ? selectionXCenter - newSelection.width / 2 :
+				fixedAt == "e" || fixedAt == "ne" || fixedAt == "se" ? selection.left + selection.width - newSelection.width :
+					fixedAt == "w" || fixedAt == "nw" || fixedAt == "sw" ? selection.left
+						: 0;
+		newSelection.top =
+			fixedAt == "e" || fixedAt == "w" ? selectionYCenter - newSelection.height / 2 :
+				fixedAt == "s" || fixedAt == "se" || fixedAt == "sw" ? selection.top + selection.height - newSelection.height :
+					fixedAt == "n" || fixedAt == "ne" || fixedAt == "nw" ? selection.top
+						: 0;
 	}
 	return newSelection;
 }
@@ -435,7 +474,7 @@ document.addEventListener("mozfullscreenchange", fullScreenChangeHandler);
 document.addEventListener("MSFullscreenChange", fullScreenChangeHandler);
 
 export function enterFullScreen(component: UiComponent<UiComponentConfig>) {
-	let element: Element = component.getMainDomElement();
+	let element: Element = component.getMainElement();
 	element.classList.add("fullscreen");
 	if (element.requestFullscreen) {
 		element.requestFullscreen();
@@ -597,22 +636,6 @@ export function getMicrosoftBrowserVersion() {
 	return false;
 }
 
-export function getIconPath(context: TeamAppsUiContext, iconName: string, iconSize: number, ignoreRetina?: boolean): string {
-	if (!iconName) {
-		return null;
-	}
-	if (!ignoreRetina) {
-		iconSize = context.isHighDensityScreen ? iconSize * 2 : iconSize;
-	}
-	if (iconSize > 128) { // there are currently no icons larger than 128px
-		iconSize = 128;
-	}
-	if (iconName.indexOf("/") === 0) {
-		return iconName; // hack for static resources instead of icons...
-	}
-	return context.config.iconPath + '/' + iconSize + '/' + iconName;
-}
-
 export function enableScrollViaDragAndDrop($scrollContainer: HTMLElement) {
 	function mousedownHandler(startEvent: MouseEvent) {
 		$scrollContainer.style.cursor = "move";
@@ -654,6 +677,20 @@ export function arraysEqual(a: any[], b: any[]) {
 	}
 }
 
+export function deepEquals(x: any, y: any): boolean {
+	if (x != null && y != null && typeof x === 'object' && typeof x === typeof y) {
+		if (Array.isArray(x)) {
+			return x.length === y.length && x.every((xi, i) => deepEquals(x[i], y[i]));
+		} else {
+			return Object.keys(x).length === Object.keys(y).length &&
+				Object.keys(x).every(key => deepEquals(x[key], y[key]));
+		}
+	} else {
+		return x === y
+			|| ((x == null) && (y == null)); // make no difference between undefined and null!
+	}
+}
+
 export function convertJavaDateTimeFormatToMomentDateTimeFormat(javaFormat: string): string {
 	if (javaFormat == null) {
 		return null;
@@ -674,13 +711,13 @@ export function insertAtIndex($parent: Element, $child: Element, index: number) 
 }
 
 export function maximizeComponent(component: UiComponent, maximizeAnimationCallback?: () => void) {
-	const $parentDomElement = component.getMainDomElement().parentElement;
+	const $parentDomElement = component.getMainElement().parentElement;
 	const scrollTop = window.scrollY;
 	const scrollLeft = window.scrollX;
-	const offset = component.getMainDomElement().getBoundingClientRect();
+	const offset = component.getMainElement().getBoundingClientRect();
 
 	const changingCssProperties: ["position", "top", "left", "width", "height", "zIndex"] = ["position", "top", "left", "width", "height", "zIndex"];
-	const style = component.getMainDomElement().style as CSSStyleDeclaration;
+	const style = component.getMainElement().style as CSSStyleDeclaration;
 	const originalCssValues = changingCssProperties.reduce((properties, cssPropertyName) => {
 		properties[cssPropertyName] = style[cssPropertyName];
 		return properties;
@@ -692,18 +729,18 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 		width: offset.width,
 		height: offset.height,
 	};
-	Object.assign(component.getMainDomElement().style, {
+	Object.assign(component.getMainElement().style, {
 		...animationStartCssValues
 	});
-	document.body.appendChild(component.getMainDomElement());
-	component.getMainDomElement().classList.add("teamapps-component-maximized");
-	$(component.getMainDomElement()).animate({
+	document.body.appendChild(component.getMainElement());
+	component.getMainElement().classList.add("teamapps-component-maximized");
+	$(component.getMainElement()).animate({
 		top: "5px",
 		left: "5px",
 		width: (window.innerWidth - 10),
 		height: (window.innerHeight - 10)
 	}, 100, 'swing', () => {
-		css(component.getMainDomElement(), {
+		css(component.getMainElement(), {
 			width: "calc(100% - 10px)",
 			height: "calc(100% - 10px)"
 		});
@@ -711,10 +748,10 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 	});
 
 	let restore = (restoreAnimationCallback?: () => void) => {
-		$(component.getMainDomElement()).animate(animationStartCssValues, 100, 'swing', () => {
-			Object.assign(component.getMainDomElement().style, originalCssValues);
-			component.getMainDomElement().classList.remove("teamapps-component-maximized");
-			$parentDomElement.appendChild(component.getMainDomElement());
+		$(component.getMainElement()).animate(animationStartCssValues, 100, 'swing', () => {
+			Object.assign(component.getMainElement().style, originalCssValues);
+			component.getMainElement().classList.remove("teamapps-component-maximized");
+			$parentDomElement.appendChild(component.getMainElement());
 			restoreAnimationCallback && restoreAnimationCallback();
 		});
 	};
@@ -807,7 +844,7 @@ export function insertBefore(newNode: Element, referenceNode: Element) {
 }
 
 export function insertAfter(newNode: Element, referenceNode: Element) {
-	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling /* may be null ==> inserted at end!*/);
 }
 
 export function outerWidthIncludingMargins(el: HTMLElement) {
@@ -876,18 +913,28 @@ export async function createImageThumbnailUrl(file: File): Promise<string> {
 }
 
 export function removeClassesByFunction(classList: DOMTokenList, deleteDecider: (className: string) => boolean) {
-	let matches: string[] = [];
-	classList.forEach(function (className) {
-		if (deleteDecider(className)) {
-			matches.push(className);
-		}
-	});
+	let matches = findClassesByFunction(classList, deleteDecider);
 	matches.forEach(function (value) {
 		classList.remove(value);
 	});
 }
 
+export function findClassesByFunction(classList: DOMTokenList, matcher: (className: string) => boolean) {
+	let matches: string[] = [];
+	classList.forEach(function (className) {
+		if (matcher(className)) {
+			matches.push(className);
+		}
+	});
+	return matches;
+}
+
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {
+	if (!document.body.contains(el)) {
+		console.warn("Cannot animate detached element! Will fire callback directly.");
+		callback();
+		return;
+	}
 	let oldAnimationDurationValue = el.style.animationDuration;
 	el.style.animationDuration = animationDuration + "ms";
 	el.classList.add(...animationClassNames);
@@ -1219,4 +1266,16 @@ document.body.addEventListener("pointermove", ev => lastPointerCoordinates = [ev
 
 export function getLastPointerCoordinates() {
 	return lastPointerCoordinates;
+}
+
+export function insertAtCursorPosition(input: HTMLInputElement | HTMLTextAreaElement, text: string) {
+	if (input.selectionStart != null) {
+		var startPos = input.selectionStart;
+		var endPos = input.selectionEnd;
+		input.value = input.value.substring(0, startPos)
+			+ text
+			+ input.value.substring(endPos, input.value.length);
+	} else {
+		input.value += text;
+	}
 }

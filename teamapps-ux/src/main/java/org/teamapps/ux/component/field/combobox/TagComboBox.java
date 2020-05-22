@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiTagComboBox;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
-import org.teamapps.ux.model.TreeModel;
+import org.teamapps.ux.model.BaseTreeModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 
 	private List<String> freeTextEntries = new ArrayList<>();
 
-	public TagComboBox(TreeModel<RECORD> model) {
+	public TagComboBox(BaseTreeModel<RECORD> model) {
 		super(model);
 		init();
 	}
@@ -127,7 +127,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 					
 					if (isRendered()) {
 						getSessionContext().queueCommand(
-								new UiTagComboBox.ReplaceFreeTextEntryCommand(getId(), newFreeText, cacheResponse.getResult()),
+								new UiTagComboBox.ReplaceFreeTextEntryCommand(getId(), newFreeText, cacheResponse.getAndClearResult()),
 								aVoid -> {
 									cacheResponse.commit();
 								}
@@ -161,7 +161,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 		}
 		CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(uxValue);
 		cacheResponse.commit();
-		return cacheResponse.getResult();
+		return cacheResponse.getAndClearResult();
 	}
 
 	public int getMaxEntries() {

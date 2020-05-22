@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,14 +25,20 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiRootPanel;
+import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.api.IconTheme;
-import org.teamapps.server.CommandDispatcher;
 import org.teamapps.server.UxServerContext;
+import org.teamapps.uisession.ClientBackPressureInfo;
 import org.teamapps.uisession.QualifiedUiSessionId;
+import org.teamapps.uisession.UiCommandExecutor;
+import org.teamapps.uisession.UiCommandWithResultCallback;
+import org.teamapps.uisession.UiSessionActivityState;
+import org.teamapps.util.MultiKeySequentialExecutor;
+import org.teamapps.util.NamedThreadFactory;
 import org.teamapps.util.UiUtil;
-import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.notification.Notification;
@@ -47,42 +53,53 @@ import org.teamapps.ux.i18n.UTF8Control;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.InputStream;
 import java.text.MessageFormat;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
-	private static final int LOCK_TIMEOUT = 60_000;
+	private static final MultiKeySequentialExecutor<SessionContext> sessionMultiKeyExecutor = new MultiKeySequentialExecutor<>(new ThreadPoolExecutor(
+			Runtime.getRuntime().availableProcessors() / 2 + 1,
+			Runtime.getRuntime().availableProcessors() * 2,
+			60, TimeUnit.SECONDS,
+			new LinkedBlockingQueue<>(),
+			new NamedThreadFactory("teamapps-session-executor", true)
+	));
 	private static final Function<Locale, ResourceBundle> DEFAULT_RESOURCE_BUNDLE_PROVIDER = locale -> ResourceBundle.getBundle("org.teamapps.ux.i18n.DefaultCaptions", locale, new UTF8Control());
 
-	private final Event<Void> onDestroyed = new Event<>();
+	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
+	public final Event<Void> onDestroyed = new Event<>();
+	/**
+	 * Decorators around all executions inside this SessionContext. These will be invoked when the Thread is already bound to the SessionContext, so SessionContext.current() will
+	 * return this instance.
+	 */
+	public final ExecutionDecoratorStack executionDecorators = new ExecutionDecoratorStack();
 
-	private final ReentrantLock lock = new ReentrantLock();
-
-	private boolean isValid = true;
-	private long lastClientEventTimeStamp;
+	private boolean active = true;
+	private volatile boolean destroyed = false;
 
 	private final QualifiedUiSessionId sessionId;
 	private final ClientInfo clientInfo;
-	private final CommandDispatcher commandDispatcher;
+	private HttpSession httpSession;
+	private final UiCommandExecutor commandExecutor;
 	private final UxServerContext serverContext;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
-	private final HashMap<String, Component> componentsById = new HashMap<>();
+	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
 	private IconTheme iconTheme;
 	private ClientSessionResourceProvider sessionResourceProvider;
 
@@ -92,16 +109,16 @@ public class SessionContext {
 	private Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration = SessionConfiguration.createDefault();
 
-	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, CommandDispatcher commandDispatcher, UxServerContext serverContext, IconTheme iconTheme,
+	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, HttpSession httpSession, UiCommandExecutor commandExecutor, UxServerContext serverContext, IconTheme iconTheme,
 	                      ObjectMapper jacksonObjectMapper) {
 		this.sessionId = sessionId;
+		this.httpSession = httpSession;
 		this.clientInfo = clientInfo;
-		this.commandDispatcher = commandDispatcher;
+		this.commandExecutor = commandExecutor;
 		this.serverContext = serverContext;
 		this.iconTheme = iconTheme;
 		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(jacksonObjectMapper, this);
-		this.lastClientEventTimeStamp = System.currentTimeMillis();
 		updateMessageBundle();
 	}
 
@@ -144,24 +161,29 @@ public class SessionContext {
 		return value;
 	}
 
-	public long getLastClientEventTimestamp() {
-		return lastClientEventTimeStamp;
+	public boolean isActive() {
+		return active;
 	}
 
-	public void setLastClientEventTimestamp(long timestamp) {
-		lastClientEventTimeStamp = timestamp;
+	public void handleActivityStateChangedInternal(boolean active) {
+		this.active = active;
+		onActivityStateChanged.fire(new UiSessionActivityState(active));
 	}
 
-	public boolean isOpen() {
-		return isValid;
+	public boolean isDestroyed() {
+		return destroyed;
 	}
 
 	public void destroy() {
-		isValid = false;
-		commandDispatcher.close();
-		runWithContext(() -> {
-			onDestroyed.fire(null);
-		});
+		commandExecutor.closeSession(sessionId, UiSessionClosingReason.TERMINATED_BY_APPLICATION);
+	}
+
+	public void handleSessionDestroyedInternal() {
+		onDestroyed.fireIgnoringExceptions(null);
+		runWithContext(() -> { // Do in runWithContext() with forceEnqueue=true so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
+			destroyed = true;
+			sessionMultiKeyExecutor.closeForKey(this);
+		}, true);
 	}
 
 	public Event<Void> onDestroyed() {
@@ -176,7 +198,8 @@ public class SessionContext {
 			throw new IllegalStateException(errorMessage);
 		}
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
-		commandDispatcher.queueCommand(command, wrappedCallback);
+		
+		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> commandExecutor.sendCommand(sessionId, new UiCommandWithResultCallback<>(command, wrappedCallback)));
 	}
 
 	public <RESULT> void queueCommand(UiCommand<RESULT> command) {
@@ -187,8 +210,20 @@ public class SessionContext {
 		return clientInfo;
 	}
 
+	public HttpSession getHttpSession() {
+		return httpSession;
+	}
+
+	/**
+	 * @deprecated no more needed. commands are sent as early as the client can handle them.
+	 */
+	@Deprecated
 	public void flushCommands() {
-		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(commandDispatcher::flushCommands);
+		// TODO remove methods
+	}
+
+	public ClientBackPressureInfo getClientBackPressureInfo() {
+		return commandExecutor.getClientBackPressureInfo(sessionId);
 	}
 
 	public IconTheme getIconTheme() {
@@ -231,77 +266,49 @@ public class SessionContext {
 		return registeredTemplates.get(id);
 	}
 
-	private void lock(long timeoutMillis) {
-		try {
-			boolean locked = lock.tryLock(timeoutMillis, TimeUnit.MILLISECONDS);
-			if (!locked) {
-				String errorMessage = "Could not acquire lock for SessionContext " + sessionId + " after " + timeoutMillis + "ms.";
-				LOGGER.error(errorMessage);
-				throw new IllegalStateException(errorMessage);
-			}
-		} catch (InterruptedException e) {
-			String errorMessage = "Could not acquire lock for SessionContext " + sessionId + ". Thread was interrupted while waiting for the lock!";
-			LOGGER.error(errorMessage);
-			throw new IllegalStateException(errorMessage);
-		}
-	}
-
-	private void unlock() {
-		lock.unlock();
+	public CompletableFuture<Void> runWithContext(Runnable runnable) {
+		return this.runWithContext(runnable, false);
 	}
 
 	/**
-	 * Does the following:
-	 * <ol>
-	 * <li>Releases the current SessionContext (A) lock (if present)</li>
-	 * <li>Acquires the lock for this SessionContext (B)</li>
-	 * <li>Sets this SessionContext (B) as the current context (CurrentSessionContext).</li>
-	 * <li>Executes the specified Runnable.</li>
-	 * <li>Sets back the last SessionContext (A) as current context.</li>
-	 * <li>Releases the lock for this SessionContext (B)</li>
-	 * <li>Reacquires the lock for the last (A)</li>
-	 * </ol>
-	 *
-	 * @param runnable the code to be executed.
+	 * @param runnable
+	 * @param forceEnqueue No synchronous execution! Enqueue this at the end of this SessionContext's work queue.
+	 * @return
 	 */
-	public void runWithContext(Runnable runnable) {
-		if (CurrentSessionContext.getOrNull() == this) {
-			// Fast lane! This context is already bound to this thread. Just execute the runnable.
+	public CompletableFuture<Void> runWithContext(Runnable runnable, boolean forceEnqueue) {
+		if (destroyed) {
+			LOGGER.info("This SessionContext ({}) is already destroyed. Not sending command.", sessionId);
+			return CompletableFuture.failedFuture(new IllegalStateException("SessionContext destroyed."));
+		}
+		if (CurrentSessionContext.getOrNull() == this && !forceEnqueue) {
+			// Fast lane! This thread is already bound to this context. Just execute the runnable.
 			runnable.run();
+			return CompletableFuture.completedFuture(null);
 		} else {
-			if (CurrentSessionContext.getOrNull() != null) {
-				// unlock the previously locked sessionContext (WITHOUT POPPING IT!)
-				CurrentSessionContext.getOrNull().unlock();
-			}
-			try {
-				long startTime = System.currentTimeMillis();
-				lock(LOCK_TIMEOUT);
+			return sessionMultiKeyExecutor.submit(this, () -> {
+				CurrentSessionContext.set(this);
 				try {
-					CurrentSessionContext.pushContext(this);
-					try {
-						runnable.run();
-					} catch (Exception e) {
-						LOGGER.error("Exception while executing runnable! Context: " + sessionId.toString(), e);
-						throw e;
-					} finally {
-						CurrentSessionContext.popContext();
-					}
+					executionDecorators.createWrappedRunnable(runnable).run();
 				} finally {
-					unlock();
-					long endTime = System.currentTimeMillis();
-					if (endTime - startTime > LOCK_TIMEOUT) {
-						String message = "The execution within the session context {} took dangerously long (longer than the session's lock timeout). This might have caused other threads to fail "
-								+ "acquiring the session's lock. Stacktrace follows:";
-						LOGGER.warn(message, sessionId, new RuntimeException(message));
-					}
+					CurrentSessionContext.unset();
 				}
-			} finally {
-				if (CurrentSessionContext.getOrNull() != null) {
-					// relock the previously locked sessionContext
-					CurrentSessionContext.getOrNull().lock(Long.MAX_VALUE); // we WANT to wait here.
-				}
-			}
-			this.flushCommands();
+				this.flushCommands();
+			});
+		}
+	}
+
+	/**
+	 * Adds a decorator that gets invoked whenever a Thread is bound to this SessionContext.
+	 * The decorator will be called right <strong>after</strong> the Thread is bound to this SessionContext, so SessionContext.current() will return this instance.
+	 *
+	 * @param decorator
+	 * @param outer Whether to add this decorator as outermost or innermost execution wrapper.
+	 */
+	public void addExecutionDecorator(ExecutionDecorator decorator, boolean outer) {
+		if (outer) {
+			executionDecorators.addOuterDecorator(decorator);
+		} else {
+			executionDecorators.addInnerDecorator(decorator);
 		}
 	}
 
@@ -316,11 +323,11 @@ public class SessionContext {
 	}
 
 	public void showPopupAtCurrentMousePosition(Popup popup) {
-		queueCommand(new UiRootPanel.ShowPopupAtCurrentMousePositionCommand(popup.createUiComponentReference()));
+		queueCommand(new UiRootPanel.ShowPopupAtCurrentMousePositionCommand(popup.createUiReference()));
 	}
 
 	public void showPopup(Popup popup) {
-		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiComponentReference()));
+		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiReference()));
 	}
 
 	public Locale getLanguageLocale() {
@@ -335,61 +342,19 @@ public class SessionContext {
 		if (icon == null) {
 			return null;
 		}
-		return icon.getQualifiedIconId(getIconTheme());
+		return sessionConfiguration.getIconPath() + "/-1/" + icon.getQualifiedIconId(getIconTheme());
 	}
 
-	public void registerComponent(Component component) {
-		componentsById.put(component.getId(), component);
+	public void registerClientObject(ClientObject clientObject) {
+		clientObjectsById.put(clientObject.getId(), clientObject);
 	}
 
-	public void unregisterComponent(Component component) {
-		componentsById.remove(component.getId());
+	public void unregisterClientObject(ClientObject clientObject) {
+		clientObjectsById.remove(clientObject.getId());
 	}
 
-	public Component getComponent(String componentId) {
-		return componentsById.get(componentId);
-	}
-
-	public String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length) {
-		return createResourceLink(inputStreamSupplier, length, null);
-	}
-
-	public String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName) {
-		return createResourceLink(inputStreamSupplier, length, resourceName, null);
-	}
-
-	public String createResourceLink(Supplier<InputStream> inputStreamSupplier, long length, String resourceName, String uniqueIdentifier) {
-		return createResourceLink(new Resource() {
-			@Override
-			public InputStream getInputStream() {
-				return inputStreamSupplier.get();
-			}
-
-			@Override
-			public long getLength() {
-				return length;
-			}
-
-			@Override
-			public Date getLastModified() {
-				return new Date();
-			}
-
-			@Override
-			public Date getExpires() {
-				return new Date(System.currentTimeMillis() + 600000000L);
-			}
-
-			@Override
-			public String getName() {
-				return resourceName;
-			}
-
-			@Override
-			public String getMimeType() {
-				return null;
-			}
-		}, uniqueIdentifier);
+	public ClientObject getClientObject(String clientObjectId) {
+		return clientObjectsById.get(clientObjectId);
 	}
 
 	public String createResourceLink(Resource resource) {
@@ -397,19 +362,11 @@ public class SessionContext {
 	}
 
 	public void showWindow(Window window, int animationDuration) {
-		queueCommand(new UiRootPanel.ShowWindowCommand(window.createUiComponentReference(), animationDuration));
-	}
-
-	public void closeWindow(Window window, int animationDuration) {
-		queueCommand(new UiRootPanel.CloseWindowCommand(window.getId(), animationDuration));
-	}
-
-	public void closeWindow(String windowId, int animationDuration) {
-		queueCommand(new UiRootPanel.CloseWindowCommand(windowId, animationDuration));
+		window.show(animationDuration);
 	}
 
 	public void downloadFile(String fileUrl, String downloadFileName) {
-		queueCommand(new UiRootPanel.DownloadFileCommand(fileUrl, downloadFileName));
+		runWithContext(() -> queueCommand(new UiRootPanel.DownloadFileCommand(fileUrl, downloadFileName)));
 	}
 
 	public void registerBackgroundImage(String id, String image, String blurredImage) {
@@ -429,7 +386,7 @@ public class SessionContext {
 	}
 
 	public void addRootComponent(String containerElementId, RootPanel rootPanel) {
-		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementId, rootPanel.createUiComponentReference()));
+		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementId, rootPanel.createUiReference()));
 	}
 
 	public void addClientToken(String token) {
@@ -445,28 +402,45 @@ public class SessionContext {
 	}
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
-		queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiComponentReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
-				exitAnimation.toUiExitAnimation()));
+		runWithContext(() -> {
+			queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
+					exitAnimation.toUiExitAnimation()));
+		});
 	}
 
 	public void showNotification(Notification notification, NotificationPosition position) {
-		showNotification(notification, position, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		runWithContext(() -> {
+			showNotification(notification, position, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		});
 	}
 
 	public void showNotification(Icon icon, String caption) {
-		Notification notification = Notification.createWithIconAndCaption(icon, caption);
-		notification.setDismissible(true);
-		notification.setShowProgressBar(false);
-		notification.setDisplayTimeInMillis(5000);
-		showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		runWithContext(() -> {
+			Notification notification = Notification.createWithIconAndCaption(icon, caption);
+			notification.setDismissible(true);
+			notification.setShowProgressBar(false);
+			notification.setDisplayTimeInMillis(5000);
+			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		});
+	}
+
+	public void showNotification(Icon icon, String caption, String description) {
+		runWithContext(() -> {
+			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
+			notification.setDismissible(true);
+			notification.setShowProgressBar(false);
+			notification.setDisplayTimeInMillis(5000);
+			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		});
 	}
 
 	public void showNotification(Icon icon, String caption, String description, boolean dismissable, int displayTimeInMillis, boolean showProgress) {
-		Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
-		notification.setDismissible(dismissable);
-		notification.setDisplayTimeInMillis(displayTimeInMillis);
-		notification.setShowProgressBar(showProgress);
-		showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		runWithContext(() -> {
+			Notification notification = Notification.createWithIconAndTextAndDescription(icon, caption, description);
+			notification.setDismissible(dismissable);
+			notification.setDisplayTimeInMillis(displayTimeInMillis);
+			notification.setShowProgressBar(showProgress);
+			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
+		});
 	}
-
 }

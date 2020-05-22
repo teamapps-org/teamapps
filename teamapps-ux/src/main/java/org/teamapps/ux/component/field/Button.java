@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,12 @@ import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
 
-public class Button<RECORD> extends AbstractField<Boolean> {
+public class Button<RECORD> extends AbstractField<Void> {
 
+	public final Event<Void> onClicked = new Event<>();
 	public final Event<Void> onDropDownOpened = new Event<>();
 
-	private Template template = BaseTemplate.FORM_BUTTON; // null: toString!
+	private Template template; // null: toString!
 	private RECORD templateRecord;
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 
@@ -56,32 +57,44 @@ public class Button<RECORD> extends AbstractField<Boolean> {
 		this(template, templateRecord, null);
 	}
 
+	public static Button<BaseTemplateRecord> create(BaseTemplate template, Icon icon, String caption, Component dropDownComponent) {
+		return new Button<>(template, new BaseTemplateRecord(icon, caption), dropDownComponent);
+	}
+
+	public static Button<BaseTemplateRecord> create(BaseTemplate template, Icon icon, String caption) {
+		return create(template, icon, caption, null);
+	}
+
+	public static Button<BaseTemplateRecord> create(BaseTemplate template, String caption) {
+		return create(template, null, caption, null);
+	}
+
 	public static Button<BaseTemplateRecord> create(Icon icon, String caption, Component dropDownComponent) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(icon, caption), dropDownComponent);
+		return create(BaseTemplate.BUTTON, icon, caption, dropDownComponent);
 	}
 
 	public static Button<BaseTemplateRecord> create(String caption, Component dropDownComponent) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(caption), dropDownComponent);
+		return create(BaseTemplate.BUTTON, null, caption, dropDownComponent);
 	}
 
 	public static Button<BaseTemplateRecord> create(Icon icon, String caption) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(icon, caption));
+		return create(BaseTemplate.BUTTON, icon, caption, null);
 	}
 
 	public static Button<BaseTemplateRecord> create(String caption) {
-		return new Button<>(BaseTemplate.FORM_BUTTON, new BaseTemplateRecord(caption));
+		return create(BaseTemplate.BUTTON, null, caption, null);
 	}
 
 	@Override
 	public UiField createUiComponent() {
 		Object uiRecord = createUiRecord();
-		UiButton button = new UiButton(getTemplate().createUiTemplate(), uiRecord);
-		mapAbstractFieldAttributesToUiField(button);
-		button.setDropDownComponent(Component.createUiComponentReference(dropDownComponent));
-		button.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
-		button.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
-		button.setOpenDropDownIfNotSet(this.openDropDownIfNotSet);
-		return button;
+		UiButton ui = new UiButton(getTemplate().createUiTemplate(), uiRecord);
+		mapAbstractFieldAttributesToUiField(ui);
+		ui.setDropDownComponent(Component.createUiClientObjectReference(dropDownComponent));
+		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
+		ui.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
+		ui.setOpenDropDownIfNotSet(this.openDropDownIfNotSet);
+		return ui;
 	}
 
 	private Object createUiRecord() {
@@ -98,9 +111,14 @@ public class Button<RECORD> extends AbstractField<Boolean> {
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
 		switch (event.getUiEventType()) {
-			case UI_BUTTON_DROP_DOWN_OPENED:
+			case UI_BUTTON_CLICKED: {
+				this.onClicked.fire();
+				break;
+			}
+			case UI_BUTTON_DROP_DOWN_OPENED: {
 				this.onDropDownOpened.fire(null);
 				break;
+			}
 		}
 	}
 
@@ -180,14 +198,8 @@ public class Button<RECORD> extends AbstractField<Boolean> {
 
 	public Button<RECORD> setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		queueCommandIfRendered(() -> new UiButton.SetDropDownComponentCommand(getId(), Component.createUiComponentReference(dropDownComponent)));
+		queueCommandIfRendered(() -> new UiButton.SetDropDownComponentCommand(getId(), Component.createUiClientObjectReference(dropDownComponent)));
 		return this;
 	}
 
-	@Override
-	protected void doDestroy() {
-		if (this.dropDownComponent != null) {
-			this.dropDownComponent.destroy();
-		}
-	}
 }

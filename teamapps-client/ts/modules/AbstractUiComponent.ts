@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,28 +48,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 			_config.id = generateUUID();
 		}
 
-		// do this with timeout since the main dom element does not yet exist when executing this (subclass constructor gets called after this)
-		// TODO #timeout this introduces A LOT of race conditions! e.g. the resize observer might or might not fire the initial size
-		this.visible = _config.visible; // TODO #timeout !!
-		setTimeout(() => {
-			this.getMainDomElement().classList.toggle("invisible-component", _config.visible == null ? false : !_config.visible); // TODO #timeout !!
-			if (_config.stylesBySelector != null) { // might be null when used via JavaScript API!
-				Object.keys(_config.stylesBySelector).forEach(selector => this.setStyle(selector, _config.stylesBySelector[selector]));
-			}
-
-			let debouncedRelayout = debounce((entry: ResizeObserverEntry) => {
-				this.reLayout(entry.contentRect.width, entry.contentRect.height);
-				// this.reLayout(this.getMainDomElement().offsetWidth, this.getMainDomElement().offsetHeight);
-			}, 300, DebounceMode.BOTH);
-			const resizeObserver = new ResizeObserver(entries => {
-				for (let entry of entries) {
-					debouncedRelayout(entry);
-				}
-			});
-			resizeObserver.observe(this.getMainDomElement());
-
-			this.reLayout(this.getMainDomElement().offsetWidth, this.getMainDomElement().offsetHeight); // TODO remove when no more "setTimeout()"!
-		}, 0);
+		this.visible = _config.visible;
 	}
 
 	public getId(): string {
@@ -110,13 +89,51 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 	 *   - other resources that are not released just by removing the component's main DOM element
 	 */
 	public destroy() {
-		// empty default implementation
+		this.getMainElement().remove();
 	}
 
+	private firstTimeGetMainElementCalled = true;
 	/**
 	 * @return The main DOM element of this component.
 	 */
-	public abstract getMainDomElement(): HTMLElement;
+	public getMainElement(): HTMLElement {
+		let element = this.doGetMainElement();
+
+		if (this.firstTimeGetMainElementCalled) {
+			this.firstTimeGetMainElementCalled = false;
+
+			if (this._config.debuggingId != null) {
+				element.setAttribute("data-teamapps-debugging-id", this._config.debuggingId);
+			}
+
+			element.classList.toggle("invisible-component", this.visible == null ? false : !this.visible);
+			if (this._config.stylesBySelector != null) { // might be null when used via JavaScript API!
+				Object.keys(this._config.stylesBySelector).forEach(selector => this.setStyle(selector, this._config.stylesBySelector[selector]));
+			}
+
+			let relayoutCalled = false;
+			let debouncedRelayout: (size?: {width: number, height: number}) => void = debounce((size?: {width: number, height: number}) => {
+				relayoutCalled = true;
+				this.reLayout(size.width, size.height);
+			}, 200, DebounceMode.BOTH);
+			const resizeObserver = new ResizeObserver(entries => {
+				for (let entry of entries) {
+					debouncedRelayout({width: entry.contentRect.width, height: entry.contentRect.height});
+				}
+			});
+			resizeObserver.observe(element);
+			setTimeout(() => {
+				// It seems like the resize observer does not always get called when the element gets attached
+				if (!relayoutCalled) {
+					debouncedRelayout({width: element.offsetWidth, height: element.offsetHeight});
+				}
+			}, 300); // TODO remove when problems with missing resizeObserver calls are solved...
+		}
+
+		return element;
+	};
+
+	protected abstract doGetMainElement(): HTMLElement;
 
 	public getWidth(): number {
 		return this.width;
@@ -132,8 +149,8 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 
 	public setVisible(visible: boolean = true /*undefined == true!!*/, fireEvent = true) {
 		this.visible = visible;
-		if (this.getMainDomElement() != null) { // might not have been rendered yet, if setVisible is already called in the constructor/initializer
-			this.getMainDomElement().classList.toggle("invisible-component", !visible);
+		if (this.getMainElement() != null) { // might not have been rendered yet, if setVisible is already called in the constructor/initializer
+			this.getMainElement().classList.toggle("invisible-component", !visible);
 		}
 		if (fireEvent) {
 			this.onVisibilityChanged.fire(visible);
@@ -144,9 +161,9 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 	public setStyle(selector:string, style: {[property: string]: string}) {
 		let targetElement: HTMLElement[];
 		if (!selector) {
-			targetElement = [this.getMainDomElement()];
+			targetElement = [this.getMainElement()];
 		} else {
-			targetElement = Array.from((this.getMainDomElement() as HTMLElement).querySelectorAll(":scope " + selector));
+			targetElement = Array.from((this.getMainElement() as HTMLElement).querySelectorAll(":scope " + selector));
 		}
 		if (targetElement.length === 0) {
 			this.logger.error("Cannot set style on non-existing element. Selector: " + selector);

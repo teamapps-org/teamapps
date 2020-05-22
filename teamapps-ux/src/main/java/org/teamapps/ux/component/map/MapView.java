@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,17 +63,18 @@ public class MapView<RECORD> extends AbstractComponent {
 	private TemplateDecider<Marker<RECORD>> templateDecider = m -> defaultTemplate;
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
 	private int templateIdCounter = 0;
+	private UiMapConfig mapConfig;
 
 	private PropertyExtractor<RECORD> markerPropertyExtractor = new BeanPropertyExtractor<>();
 	private AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
 		public void handleChanged(AbstractMapShape shape) {
-			queueCommandIfRendered(() -> new UiMap.UpdateShapeCommand(getId(), shape.getClientId(), shape.createUiMapShape()));
+			queueCommandIfRendered(() -> new UiMap.UpdateShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
 		}
 
 		@Override
 		public void handleRemoved(AbstractMapShape shape) {
-			queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientId()));
+			queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
 		}
 	};
 
@@ -89,6 +90,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		UiMap uiMap = new UiMap(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 		mapAbstractUiComponentProperties(uiMap);
+		uiMap.setMapConfig(mapConfig);
 		uiMap.setMapType(mapType.toUiMapType());
 		uiMap.setAccessToken(accessToken);
 		uiMap.setZoomLevel(zoomLevel);
@@ -102,7 +104,7 @@ public class MapView<RECORD> extends AbstractComponent {
 			uiMap.setMarkerCluster(createMarkerCluster(clusterMarkers));
 		}
 		CacheManipulationHandle<List<UiMapMarkerClientRecord>> cacheResponse = recordCache.replaceRecords(markers);
-		uiMap.setMarkers(cacheResponse.getResult());
+		uiMap.setMarkers(cacheResponse.getAndClearResult());
 		cacheResponse.commit();
 		return uiMap;
 	}
@@ -177,30 +179,34 @@ public class MapView<RECORD> extends AbstractComponent {
 					default:
 						throw new IllegalArgumentException("Unknown shape type from UI: " + drawnEvent.getShape().getUiObjectType());
 				}
-				shape.setClientId(drawnEvent.getShapeId());
+				shape.setClientIdInternal(drawnEvent.getShapeId());
 				shapesByClientId.put(drawnEvent.getShapeId(), shape);
-				shape.setListener(shapeListener);
+				shape.setListenerInternal(shapeListener);
 				this.onShapeDrawn.fire(shape);
 				break;
 			}
 		}
 	}
 
-	public void addPolyLine(AbstractMapShape shape) {
-		shape.setListener(shapeListener);
-		shapesByClientId.put(shape.getClientId(), shape);
-		queueCommandIfRendered(() -> new UiMap.AddShapeCommand(getId(), shape.getClientId(), shape.createUiMapShape()));
+	public void setMapConfig(UiMapConfig mapConfig) {
+		this.mapConfig = mapConfig;
 	}
 
-	public void removeShape(MapPolyline mapPolyline) {
-		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), mapPolyline.getClientId()));
+	public void addPolyLine(AbstractMapShape shape) {
+		shape.setListenerInternal(shapeListener);
+		shapesByClientId.put(shape.getClientIdInternal(), shape);
+		queueCommandIfRendered(() -> new UiMap.AddShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
+	}
+
+	public void removeShape(AbstractMapShape shape) {
+		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
 		clusterMarkers = markers;
 		CacheManipulationHandle<List<UiMapMarkerClientRecord>> cacheManipulationHandle = recordCache.addRecords(markers);
 		cacheManipulationHandle.commit();
-		List<UiMapMarkerClientRecord> result = cacheManipulationHandle.getResult();
+		List<UiMapMarkerClientRecord> result = cacheManipulationHandle.getAndClearResult();
 		UiMapMarkerCluster cluster = new UiMapMarkerCluster(result);
 		queueCommandIfRendered(() -> new UiMap.SetMapMarkerClusterCommand(getId(), cluster));
 	}
@@ -279,7 +285,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		this.markers.add(marker);
 		CacheManipulationHandle<UiMapMarkerClientRecord> cacheResponse = recordCache.addRecord(marker);
 		if (isRendered()) {
-			getSessionContext().queueCommand(new UiMap.AddMarkerCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+			getSessionContext().queueCommand(new UiMap.AddMarkerCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 		} else {
 			cacheResponse.commit();
 		}
@@ -290,7 +296,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		if (removed) {
 			CacheManipulationHandle<Integer> cacheResponse = recordCache.removeRecord(marker);
 			if (isRendered()) {
-				getSessionContext().queueCommand(new UiMap.RemoveMarkerCommand(getId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+				getSessionContext().queueCommand(new UiMap.RemoveMarkerCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 			} else {
 				cacheResponse.commit();
 			}
@@ -334,8 +340,4 @@ public class MapView<RECORD> extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiMap.StopDrawingShapeCommand(getId()));
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,18 +47,18 @@ export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> 
 		return enumValueName.toLowerCase().replace("_", "-");
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
 	addComponent(component: UiComponent): void {
 		this.components.push(component);
-		this.$main.appendChild(component.getMainDomElement());
+		this.$main.appendChild(component.getMainElement());
 	}
 
 	removeComponent(component: UiComponent): void {
 		try {
-			this.$main.removeChild(component.getMainDomElement());
+			this.$main.removeChild(component.getMainElement());
 		} catch (e) {
 			// ignore if this is actually not a child...
 		}

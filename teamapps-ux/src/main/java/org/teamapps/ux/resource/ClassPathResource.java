@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,28 +24,51 @@ import java.io.InputStream;
 public class ClassPathResource implements Resource {
 
 	private final String resourceName;
-	private Integer length;
+	private final String name;
+	private final ClassLoader classLoader;
+	private long length = -1;
 
 	public ClassPathResource(String resourceName) {
+		this(resourceName, null);
+	}
+
+	public ClassPathResource(String resourceName, ClassLoader classLoader) {
 		this.resourceName = resourceName;
+		this.name = resourceName.contains("/") ? resourceName.substring(resourceName.lastIndexOf('/') + 1) : resourceName;
+		this.classLoader = classLoader;
 	}
 
 	@Override
 	public InputStream getInputStream() {
-		return getClass().getResourceAsStream(resourceName);
+		InputStream is;
+		if (classLoader != null) {
+			is = classLoader.getResourceAsStream(resourceName);
+		} else {
+			is = getClass().getResourceAsStream(resourceName);
+			if (is == null) {
+				is = ClassLoader.getSystemResourceAsStream(resourceName);
+			}
+		}
+		return is;
 	}
 
 	@Override
 	public String getName() {
-		return null;
+		return name;
 	}
 
 	@Override
 	public long getLength() {
-		if (length == null) {
-			return Resource.super.getLength();
-		} else {
-			return length;
+		if (length < 0) {
+			length = Resource.super.getLength();
 		}
+		return length;
+	}
+
+	@Override
+	public String toString() {
+		return "ClassPathResource{" +
+				"resourceName='" + resourceName + '\'' +
+				'}';
 	}
 }

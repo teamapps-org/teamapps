@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.toolbar;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.AbstractUiToolContainer;
@@ -29,19 +30,17 @@ import org.teamapps.event.Event;
 import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public abstract class AbstractToolContainer extends AbstractComponent {
 	public final Event<ToolbarButtonClickEventData> onButtonClick = new Event<>();
 	public final Event<ToolbarButton> onDropDownItemClick = new Event<>();
-	protected List<ToolbarButtonGroup> toolbarButtonGroups = new ArrayList<>();
+	protected List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
 
 	private Template buttonTemplate = BaseTemplate.TOOLBAR_BUTTON;
 	private PropertyExtractor propertyExtractor = new BeanPropertyExtractor<>();
@@ -61,7 +60,8 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 					if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
 						Component dropdownComponent = button.getDropDownComponent();
 						if (dropdownComponent != null) {
-							getSessionContext().queueCommand(new UiToolbar.SetDropDownComponentCommand(getId(), clickEvent.getGroupId(), ((AbstractUiToolContainer.ToolbarButtonClickEvent) event).getButtonId(), dropdownComponent.createUiComponentReference()));
+							getSessionContext().queueCommand(new UiToolbar.SetDropDownComponentCommand(getId(), clickEvent.getGroupId(),
+									((AbstractUiToolContainer.ToolbarButtonClickEvent) event).getButtonId(), dropdownComponent.createUiReference()));
 						}
 					}
 					button.onClick.fire(clickEvent);
@@ -84,7 +84,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	private ToolbarButton getButtonByClientId(String groupId, String buttonId) {
-		return toolbarButtonGroups.stream()
+		return buttonGroups.stream()
 				.filter(group -> Objects.equals(group.getClientId(), groupId))
 				.flatMap(group -> group.getButtons().stream())
 				.filter(button -> Objects.equals(button.getClientId(), buttonId))
@@ -92,24 +92,22 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	public boolean isEmpty() {
-		return toolbarButtonGroups.isEmpty();
+		return buttonGroups.isEmpty();
 	}
 
 	public ToolbarButtonGroup addButtonGroup(ToolbarButtonGroup buttonGroup) {
-		toolbarButtonGroups.add(buttonGroup);
+		buttonGroups.add(buttonGroup);
 		buttonGroup.setToolContainer(this);
-		queueCommandIfRendered(() -> new UiToolbar.AddButtonGroupCommand(getId(), buttonGroup.createUiToolbarButtonGroup()));
+		queueCommandIfRendered(() -> new UiToolbar.AddButtonGroupCommand(getId(), buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide()));
 		return buttonGroup;
 	}
 
 	public void removeAllToolbarButtonGroups() {
-		toolbarButtonGroups.stream()
-				.collect(Collectors.toList())
-				.forEach(this::removeToolbarButtonGroup);
+		List.copyOf(buttonGroups).forEach(this::removeToolbarButtonGroup);
 	}
 
 	public void removeToolbarButtonGroup(ToolbarButtonGroup group) {
-		toolbarButtonGroups.remove(group);
+		buttonGroups.remove(group);
 		queueCommandIfRendered(() -> new UiToolbar.RemoveButtonGroupCommand(getId(), group.getClientId()));
 	}
 
@@ -122,7 +120,8 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	protected void handleButtonColorChange(String groupClientId, String buttonClientId, Color backgroundColor, Color hoverBackgroundColor) {
-		queueCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(this.getId(), groupClientId, buttonClientId, UiUtil.createUiColor(backgroundColor), UiUtil.createUiColor(hoverBackgroundColor)));
+		queueCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(this.getId(), groupClientId, buttonClientId, UiUtil.createUiColor(backgroundColor),
+				UiUtil.createUiColor(hoverBackgroundColor)));
 	}
 
 	protected void handleAddButton(ToolbarButtonGroup group, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor) {
@@ -137,13 +136,10 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 		this.setCssStyle("> .background-color-div", "background-color", backgroundColor.toHtmlColorString());
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
-
 	public List<ToolbarButtonGroup> getToolbarButtonGroups() {
-		return toolbarButtonGroups;
+		ArrayList<ToolbarButtonGroup> groups = new ArrayList<>();
+		groups.addAll(buttonGroups);
+		return groups;
 	}
 
 	public Template getButtonTemplate() {

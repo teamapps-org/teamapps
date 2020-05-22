@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -223,6 +223,23 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.resetAllData(this.zoomLevels);
 	}
 
+	zoomTo(intervalX: UiLongIntervalConfig): void {
+		if (intervalX.min < this.intervalX.min) {
+			intervalX.min = this.intervalX.min;
+		}
+		if (intervalX.min > this.intervalX.max) {
+			intervalX.min = this.intervalX.max - 1;
+		}
+		if (intervalX.max < this.intervalX.min) {
+			intervalX.max = this.intervalX.min + 1;
+		}
+		if (intervalX.max > this.intervalX.max) {
+			intervalX.max = this.intervalX.max;
+		}
+		let k = (this.intervalX.max - this.intervalX.min) / (intervalX.max - intervalX.min);
+		this.zoom.transform(this.$graphClipContainer, d3.zoomIdentity.scale(k).translate(-this.scaleX(intervalX.min), 0));
+	}
+
 	private createSeries(lineFormat: UiLineChartLineConfig) {
 		let display = UiTimeGraph.createDataDisplay(this._config.id, lineFormat, this.$graphClipContainer, this.dropShadowFilterId, this.dataStore);
 		display.setScaleYRange([this.drawableHeight, 0]);
@@ -240,11 +257,6 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			display = new UiLineChartDataDisplayGroup(timeGraphId, lineFormat, $graphClipContainer, dropShadowFilterId, dataStore);
 		}
 		return display;
-	}
-
-	getZoomBoundsX() {
-		let transformedScaleX = this.getTransformedScaleX();
-		return [+transformedScaleX.domain()[0], +transformedScaleX.domain()[1]];
 	}
 
 	getTransformedScaleX(): ScaleTime<number, number> {
@@ -422,7 +434,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	resetAllData(newZoomLevels: UiTimeChartZoomLevelConfig[]): void {
 		this.zoomLevels = newZoomLevels;
 		this.initZoomLevelIntervalManagers();
-		this.dataStore.reset();
+		// do NOT remove the data from the dataStore. It will be re-requested anyway and thereby overwritten. Otherwise, you would get zoom flickering due to y-min/max-value changes
+		// this.dataStore.reset();
 		this.redraw();
 	}
 
@@ -430,7 +443,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	replaceAllData(newZoomLevels: UiTimeChartZoomLevelConfig[], zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [seriesId: string]: UiTimeGraphDataPointConfig[] }): void {
 		this.zoomLevels = newZoomLevels;
 		this.initZoomLevelIntervalManagers();
-		this.dataStore.reset();
+		// do NOT remove the data from the dataStore. It will be re-requested anyway and thereby overwritten. Otherwise, you would get zoom flickering due to y-min/max-value changes
+		// this.dataStore.reset();
 		this.addData(zoomLevel, intervalX, data);
 	}
 
@@ -482,11 +496,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.redraw();
 	}
 
-	destroy(): void {
-		// nothing to do!
-	}
-
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 

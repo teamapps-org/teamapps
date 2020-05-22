@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,5 +135,6 @@ public final class DataBindings {
 		NonRecursiveEventListenerBuilder nonRecursiveEventListenerBuilder = new NonRecursiveEventListenerBuilder();
 		bindable1.onChanged().addListener(nonRecursiveEventListenerBuilder.create(aVoid -> bindable2.set(bindable1.get())));
 		bindable2.onChanged().addListener(nonRecursiveEventListenerBuilder.create(aVoid -> bindable1.set(bindable2.get())));
+		bindable2.set(bindable1.get());
 	}
 }

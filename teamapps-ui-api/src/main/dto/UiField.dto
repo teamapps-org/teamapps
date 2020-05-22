@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ class UiTextField extends UiField implements UiTextInputHandlingField {
 	int maxCharacters; //if > 0, do not allow to enter more than this number of characters
 	boolean showClearButton;
 	String emptyText;
+	boolean autofill = false; // browser feature
 
 	command setMaxCharacters(int maxCharacters);
 	command setShowClearButton(boolean showClearButton);
@@ -72,17 +73,15 @@ class UiTextField extends UiField implements UiTextInputHandlingField {
 class UiPasswordField extends UiTextField {
 	boolean sendValueAsMd5;
 	String salt; // if sendValueAsMd5 == true and salt != null, then submit md5(salt + md5(fieldValue))
+	boolean autofill = false;
 
 	command setSendValueAsMd5(boolean sendValueAsMd5);
 	command setSalt(String salt);
 }
 
 class UiMultiLineTextField extends UiTextField {
-	int minHeight = 150;
-	int maxHeight = 150;
-
-	command setMinHeight(int minHeight);
-	command setMaxHeight(int maxHeight);
+	boolean adjustHeightToContent = false;
+	
 	command append(String s, boolean scrollToBottom);
 }
 
@@ -134,16 +133,14 @@ class UiLabel extends UiField {
 
 // StringValue
 class UiImageField extends UiField {
-	int width; // 0 = the width will be determined by the component's content and context
-	int height; // 0 = the height will be determined by the component's content and context
+	String width; // css
+	String height; // css
     UiBorder border;
     UiShadow shadow;
 	UiImageSizing imageSizing = UiImageSizing.CONTAIN;
+	String backgroundColor = "transparent";
 
-	command setSize(int width, int height);
-	command setBorder(UiBorder border);
-	command setShadow(UiShadow shadow);
-	command setImageSizing(UiImageSizing imageSizing );
+	command update(UiImageField config);
 }
 
 class UiNumberField extends UiField implements UiTextInputHandlingField {
@@ -167,7 +164,7 @@ class UiNumberField extends UiField implements UiTextInputHandlingField {
 }
 
 enum UiNumberFieldSliderMode {
-	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED
+	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED, SLIDER_ONLY
 }
 
 // the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
@@ -412,7 +409,22 @@ class UiButton extends UiField {
 	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
 	command setDropDownComponent(UiComponent* dropDownComponent);
 
+	event clicked();
 	event dropDownOpened();
+}
+
+class UiLinkButton extends UiComponent {
+	String text;
+	String url = null; // null = still render as link but do not open a page
+	UiLinkTarget target = UiLinkTarget.BLANK;
+
+	command update(UiLinkButton config);
+
+	event clicked();
+}
+
+enum UiLinkTarget {
+	SELF, BLANK, PARENT, TOP;
 }
 
 /**
@@ -527,27 +539,10 @@ class UiColorPicker extends UiField {
     String clearButtonCaption = "Clear";
 }
 
-class UiRadioGroup extends UiField {
-	List<UiRadioButton> radioButtons;
-
-	command addButton(UiRadioButton button);
-	command removeButton(String value);
-}
-
-class UiSwitch extends UiField {
-	UiColor uncheckedTrackColor;
-	UiColor uncheckedButtonColor;
-	UiColor checkedTrackColor;
-	UiColor checkedButtonColor;
-}
-
-class UiRadioButton {
-	required String value;
-	required String label;
-}
-
 class UiTemplateField extends UiField {
 	UiTemplate template;
 	
 	command update(UiTemplateField config);
+
+	event clicked();
 }

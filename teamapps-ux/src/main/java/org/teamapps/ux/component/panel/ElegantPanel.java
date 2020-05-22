@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,18 +48,11 @@ public class ElegantPanel extends AbstractComponent {
 		UiElegantPanel uiElegantPanel = new UiElegantPanel();
 		mapAbstractUiComponentProperties(uiElegantPanel);
 		uiElegantPanel.setBodyBackgroundColor(bodyBackgroundColor.toHtmlColorString());
-		uiElegantPanel.setContent(content.createUiComponentReference());
+		uiElegantPanel.setContent(content.createUiReference());
 		uiElegantPanel.setMaxContentWidth(maxContentWidth);
 		uiElegantPanel.setPadding(padding.createUiSpacing());
 		uiElegantPanel.setHorizontalContentAlignment(horizontalContentAlignment.toUiHorizontalElementAlignment());
 		return uiElegantPanel;
-	}
-
-	@Override
-	protected void doDestroy() {
-		if (this.content != null) {
-			this.content.destroy();
-		}
 	}
 
 	@Override

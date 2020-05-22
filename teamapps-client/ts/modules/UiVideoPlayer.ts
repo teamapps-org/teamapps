@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
+	UiVideoPlayer_EndedEvent,
 	UiVideoPlayer_ErrorLoadingEvent,
 	UiVideoPlayer_PlayerProgressEvent,
 	UiVideoPlayer_PosterImageSize,
@@ -41,6 +42,7 @@ import {parseHtml} from "./Common";
 export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> implements UiVideoPlayerCommandHandler, UiVideoPlayerEventSource {
 
 	public readonly onPlayerProgress: TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent>(this);
+	public readonly onEnded: TeamAppsEvent<UiVideoPlayer_EndedEvent> = new TeamAppsEvent<UiVideoPlayer_EndedEvent>(this);
 	public readonly onErrorLoading: TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent> = new TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent>(this);
 
 	private $componentWrapper: HTMLElement;
@@ -75,13 +77,11 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 			timerRate: 250,
 			success: (mediaElement: HTMLMediaElement) => {
 				this.onContentReady();
-
 				mediaElement.addEventListener('play', (e) => {
 					this.onPlayerProgress.fire({
 						positionInSeconds: 0
 					});
 				}, false);
-
 				let lastPlayTime = 0;
 				mediaElement.addEventListener('timeupdate', (e) => {
 					let currentPlayTime = mediaElement.currentTime;
@@ -92,6 +92,9 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 					}
 					lastPlayTime = currentPlayTime;
 				}, false);
+				mediaElement.addEventListener('ended', (e) => {
+					this.onEnded.fire({});
+				});
 			},
 			error: () => {
 				if (!this.destroyed) {
@@ -113,7 +116,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 		});
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 
@@ -145,11 +148,14 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	}
 
 	public onResize(): void {
+		// console.log(this.getWidth(), this.getHeight(), Math.min(this.getHeight(), this.mediaPlayer.height), this.mediaPlayer.width, this.mediaPlayer.height)
+		// this.mediaPlayer.setPlayerSize(this.getWidth(), Math.min(this.getHeight(), this.mediaPlayer.height)); // CAUTION: maybe we will have to handle fullscreen mode
 		this.mediaPlayer.setPlayerSize(this.mediaPlayer.width, this.mediaPlayer.height); // CAUTION: maybe we will have to handle fullscreen mode
 		this.mediaPlayer.setControlsSize();
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.destroyed = true;
 		try {
 			this.mediaPlayer.pause();
@@ -163,7 +169,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	setAutoplay(autoplay: boolean): void {
 		this.autoplay = autoplay;
 		this.playState = "initial";
-		
+
 		if (autoplay) {
 			if (this.contentReady) {
 				this.mediaPlayer.play();
@@ -179,9 +185,9 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	}
 
 	setUrl(url: string): void {
-		this.getMainDomElement().querySelector<HTMLElement>(":scope .mejs__overlay-error").parentElement.classList.add("hidden");
-		this.getMainDomElement().querySelector<HTMLElement>(":scope .mejs__poster").classList.remove("hidden");
-		this.getMainDomElement().querySelector<HTMLElement>(":scope .mejs__overlay-play").style.display = "flex";
+		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__overlay-error").parentElement.classList.add("hidden");
+		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__poster").classList.remove("hidden");
+		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__overlay-play").style.display = "flex";
 		this.mediaPlayer.pause();
 		this.contentReady = false;
 		if (url == null) {

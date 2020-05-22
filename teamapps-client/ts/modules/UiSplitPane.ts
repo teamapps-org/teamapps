@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 		return this._config.splitDirection
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this._$splitPane;
 	}
 
@@ -165,11 +165,11 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 	}
 
 	private pageXof(event: MouseEvent) {
-		return event.pageX || (event as any).touches[0].pageX;
+		return event.pageX ?? (event as any).touches[0].pageX;
 	}
 
 	private pageYof(event: MouseEvent) {
-		return event.pageY || (event as any).touches[0].pageY;
+		return event.pageY ?? (event as any).touches[0].pageY;
 	}
 
 	public setFirstChild(firstChild: UiComponent<UiComponentConfig>) {
@@ -177,7 +177,7 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 
 		this._firstChildComponent = firstChild;
 		if (firstChild) {
-			this._$firstChildContainer.appendChild(firstChild.getMainDomElement());
+			this._$firstChildContainer.appendChild(firstChild.getMainElement());
 			if (this._firstChildComponent && isEmptyable(this._firstChildComponent)) {
 				this._firstChildComponent.onEmptyStateChanged.addListener(this.onChildEmptyStateChanged);
 			}
@@ -193,7 +193,7 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 
 		this._lastChildComponent = lastChild;
 		if (lastChild) {
-			this._$lastChildContainer.appendChild(lastChild.getMainDomElement());
+			this._$lastChildContainer.appendChild(lastChild.getMainElement());
 			if (this._lastChildComponent && isEmptyable(this._lastChildComponent)) {
 				this._lastChildComponent.onEmptyStateChanged.addListener(this.onChildEmptyStateChanged);
 			}
@@ -326,8 +326,6 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 		this.onEmptyStateChanged.fireIfChanged(this.empty);
 	}
 
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiSplitPane", UiSplitPane);

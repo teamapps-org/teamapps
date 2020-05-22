@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,10 @@ import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {Emptyable} from "../../util/Emptyable";
 import {UiToolbarButton} from "./UiToolbarButton";
 import {UiToolbarButtonGroup} from "./UiToolbarButtonGroup";
-import {insertBefore, outerWidthIncludingMargins, parseHtml} from "../../Common";
+import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "../../Common";
 import {UiComponent} from "../../UiComponent";
 import {UiColorConfig} from "../../../generated/UiColorConfig";
+import {UiToolbarButtonGroupPosition} from "../../../generated/UiToolbarButtonGroupPosition";
 
 interface FQButtonId {
 	groupId: string,
@@ -53,7 +54,9 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
-	private buttonGroupsById: OrderedDictionary<UiToolbarButtonGroup> = new OrderedDictionary<UiToolbarButtonGroup>();
+	private buttonGroupsById: {[id:string]: UiToolbarButtonGroup} = {};
+	private leftButtonGroups: UiToolbarButtonGroup[] = [];
+	private rightButtonGroups: UiToolbarButtonGroup[] = [];
 
 	private _$toolbar: HTMLElement;
 	private _$backgroundColorDiv: HTMLElement;
@@ -92,15 +95,13 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 			}
 		});
 
-		for (let i = 0; i < config.buttonGroups.length; i++) {
-			const buttonGroupConfig = config.buttonGroups[i];
-			this.addButtonGroup(buttonGroupConfig);
-		}
+		config.leftButtonGroups && config.leftButtonGroups.forEach(bg => this.addButtonGroup(bg, false))
+		config.rightButtonGroups && config.rightButtonGroups.forEach(bg => this.addButtonGroup(bg, true))
 	}
 
 	private createDropDownAccordion(): UiToolAccordion {
 		let accordionConfig = $.extend({}, this._config, {
-			buttonGroups: this.buttonGroupsById.values.map(group => $.extend({}, group.getConfig(), {buttons: group.getButtonConfigs()}))
+			buttonGroups: [...this.leftButtonGroups, ...this.rightButtonGroups].map(group => $.extend({}, group.getConfig(), {buttons: group.getButtonConfigs()}))
 		});
 		let toolAccordion = new UiToolAccordion(accordionConfig, this._context);
 		toolAccordion.onToolbarButtonClick.addListener(eventObject => {
@@ -117,7 +118,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this._$toolbar;
 	}
 
@@ -133,16 +134,16 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public setDropDownComponent(groupId: string, buttonId: string, component: UiComponent): void {
-		this.buttonGroupsById.getValue(groupId).setDropDownComponent(buttonId, component);
+		this.buttonGroupsById[groupId].setDropDownComponent(buttonId, component);
 		this.overflowToolAccordion.setDropDownComponent(groupId, buttonId, component);
 	}
 
 	public setButtonHasDropDown(groupId: string, buttonId: string, hasDropDown: boolean): void {
-		this.buttonGroupsById.getValue(groupId).setButtonHasDropDown(buttonId, hasDropDown);
+		this.buttonGroupsById[groupId].setButtonHasDropDown(buttonId, hasDropDown);
 	}
 
 	public setButtonVisible(groupId: string, buttonId: string, visible: boolean) {
-		this.buttonGroupsById.values.forEach(buttonGroup => buttonGroup.setButtonVisible(buttonId, visible));
+		Object.values(this.buttonGroupsById).forEach(buttonGroup => buttonGroup.setButtonVisible(buttonId, visible));
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.setButtonVisible(groupId, buttonId, visible);
 		}
@@ -150,21 +151,22 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public setButtonGroupVisible(groupId: string, visible: boolean) {
-		this.buttonGroupsById.getValue(groupId) && this.buttonGroupsById.getValue(groupId).setVisible(visible);
+		this.buttonGroupsById[groupId] && this.buttonGroupsById[groupId].setVisible(visible);
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.setButtonGroupVisible(groupId, visible);
 		}
 		this.updateButtonOverflow();
 	}
 
-	public addButtonGroup(groupConfig: UiToolbarButtonGroupConfig) {
-		const existingButtonGroup = this.buttonGroupsById.getValue(groupConfig.groupId);
+	public addButtonGroup(groupConfig: UiToolbarButtonGroupConfig, rightSide: boolean) {
+		const existingButtonGroup = this.buttonGroupsById[groupConfig.groupId];
 		if (existingButtonGroup) {
 			this.removeButtonGroup(groupConfig.groupId);
 		}
-		let emptyStateChanges = this.empty && groupConfig != null;
+		let emptyStateChanges = this.empty;
 
 		const buttonGroup = new UiToolbarButtonGroup(groupConfig, this, this._context);
+		buttonGroup.getMainDomElement().classList.toggle("right-side", rightSide);
 		buttonGroup.onButtonClicked.addListener(e => {
 			return this.onToolbarButtonClick.fire({
 				groupId: groupConfig.groupId,
@@ -180,22 +182,14 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 				dropDownItemId: e.buttonId
 			});
 		});
-		this.buttonGroupsById.push(groupConfig.groupId, buttonGroup);
-
-		let allButtonGroups = this.buttonGroupsById.values.sort((group1, group2) => group1.position - group2.position);
-		let otherGroupIndex = 0;
-		for (; otherGroupIndex < allButtonGroups.length; otherGroupIndex++) {
-			let otherGroup = allButtonGroups[otherGroupIndex];
-			if (otherGroup.position > groupConfig.position) {
-				break;
-			}
-		}
-
-		if (allButtonGroups[otherGroupIndex]) {
-			insertBefore(buttonGroup.getMainDomElement(), allButtonGroups[otherGroupIndex].getMainDomElement())
+		this.buttonGroupsById[groupConfig.groupId] = buttonGroup;
+		if (rightSide) {
+			this.rightButtonGroups.push(buttonGroup);
 		} else {
-			insertBefore(buttonGroup.getMainDomElement(), this.$toolbarFiller)
+			this.leftButtonGroups.push(buttonGroup);
 		}
+
+		this.insertGroupAtCorrectSortingPosition(buttonGroup, groupConfig.position, rightSide);
 
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.addButtonGroup(groupConfig);
@@ -207,13 +201,34 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 		}
 	}
 
+	private insertGroupAtCorrectSortingPosition(buttonGroup: UiToolbarButtonGroup, position: UiToolbarButtonGroupPosition, rightSide: boolean) {
+		let otherButtonGroups = (rightSide ? this.rightButtonGroups: this.leftButtonGroups).sort((group1, group2) => group1.position - group2.position);
+		let otherGroupIndex = 0;
+		for (; otherGroupIndex < otherButtonGroups.length; otherGroupIndex++) {
+			let otherGroup = otherButtonGroups[otherGroupIndex];
+			if (otherGroup.position > position) {
+				break;
+			}
+		}
+
+		if (otherButtonGroups[otherGroupIndex]) {
+			insertBefore(buttonGroup.getMainDomElement(), otherButtonGroups[otherGroupIndex].getMainDomElement())
+		} else if (!rightSide) {
+			insertBefore(buttonGroup.getMainDomElement(), this.$toolbarFiller)
+		} else {
+			insertAfter(buttonGroup.getMainDomElement(), this.$toolbarFiller)
+		}
+	}
+
 	public removeButtonGroup(groupId: string): void {
 		let wasAlreadyEmpty = this.empty;
 
-		const buttonGroup = this.buttonGroupsById.getValue(groupId);
+		const buttonGroup = this.buttonGroupsById[groupId];
 
 		if (buttonGroup) {
-			this.buttonGroupsById.remove(groupId);
+			delete this.buttonGroupsById[groupId];
+			this.leftButtonGroups = this.leftButtonGroups.filter(g => g.getId() !== groupId);
+			this.rightButtonGroups = this.rightButtonGroups.filter(g => g.getId() !== groupId);
 			buttonGroup.getMainDomElement().remove();
 		}
 
@@ -228,7 +243,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public addButton(groupId: string, buttonConfig: UiToolbarButtonConfig, neighborButtonId: string, beforeNeighbor: boolean) {
-		this.buttonGroupsById.getValue(groupId) && this.buttonGroupsById.getValue(groupId).addButton(buttonConfig, neighborButtonId, beforeNeighbor);
+		this.buttonGroupsById[groupId] && this.buttonGroupsById[groupId].addButton(buttonConfig, neighborButtonId, beforeNeighbor);
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.addButton(groupId, buttonConfig, neighborButtonId, beforeNeighbor);
 		}
@@ -236,15 +251,11 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public removeButton(groupId: string, buttonId: string): void {
-		this.buttonGroupsById.values.forEach(group => group.removeButton(buttonId));
+		Object.values(this.buttonGroupsById).forEach(group => group.removeButton(buttonId));
 		if (this.overflowToolAccordion) {
 			this.overflowToolAccordion.removeButton(groupId, buttonId);
 		}
 		this.updateButtonOverflow();
-	}
-
-	updateButtonGroups(buttonGroups: UiToolbarButtonGroupConfig[]): void {
-		// TODO implement only if really needed
 	}
 
 	public onResize(): void {
@@ -264,7 +275,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 		let consumedWidth = Math.max(logoWidth, overflowDropDownButtonWidth);
 		let hasOverflowingButton = false;
 		this.totalWidthOfOverflowButtons = 0;
-		for (let group of this.buttonGroupsById.values) {
+		for (let group of [...this.rightButtonGroups, ...this.leftButtonGroups]) {
 			let buttonVisibilityInfo = group.calculateButtonVisibilities(availableWidth - consumedWidth);
 			this.totalWidthOfOverflowButtons += buttonVisibilityInfo.nonFittingButtons.reduce((sum, b) => sum + b.button.optimizedWidth, 0);
 			buttonVisibilityInfo.fittingButtons.forEach(b => {
@@ -290,15 +301,16 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	public get empty() {
-		return this.buttonGroupsById.length == 0;
+		return this.leftButtonGroups.length === 0 && this.rightButtonGroups.length === 0;
 	}
 
 	public destroy(): void {
+		super.destroy();
 		// TODO destroy all dropdowns
 	}
 
 	setButtonColors(groupId: string, buttonId: string, backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig): void {
-		this.buttonGroupsById.getValue(groupId).setButtonColors(buttonId, backgroundColor, hoverBackgroundColor);
+		this.buttonGroupsById[groupId].setButtonColors(buttonId, backgroundColor, hoverBackgroundColor);
 	}
 
 }

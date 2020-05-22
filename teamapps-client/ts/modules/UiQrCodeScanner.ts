@@ -1,11 +1,31 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2020 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiQrCodeScanner_QrCodeDetectedEvent, UiQrCodeScannerCommandHandler, UiQrCodeScannerConfig, UiQrCodeScannerEventSource} from "../generated/UiQrCodeScannerConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {parseHtml} from "./Common";
+import {calculateDisplayModeInnerSize, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {QrScanner} from './qr-code-scanner/qr-scanner';
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 
 export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> implements UiQrCodeScannerCommandHandler, UiQrCodeScannerEventSource {
 
@@ -13,6 +33,7 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 
 	private $main: HTMLElement;
 	private $video: HTMLVideoElement;
+	private $crosshair: HTMLElement;
 	private qrScanner: QrScanner = null;
 
 	private selectedCameraIndex: number = 0;
@@ -21,16 +42,22 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 		super(config, context);
 
 		this.$main = parseHtml(`<div class="UiQrCodeScanner">
-<video></video>
+	<video></video>
+	<div class="crosshair-wrapper">
+		<div class="crosshair"></div>
+	</div>
 </div>`);
 		this.$video = this.$main.querySelector(':scope video');
+		this.$crosshair = this.$main.querySelector(':scope .crosshair');
+
+		this.$video.addEventListener("playing", () => this.onResize());
 
 		if (config.scanning) {
 			this.startScanning(config.stopsScanningAtFirstResult);
 		}
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -72,8 +99,17 @@ export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> 
 			.then(devices => devices.filter(device => device.kind === 'videoinput'));
 	}
 
+	onResize(): void {
+		if (this.$video.videoWidth > 0 && this.$video.videoHeight > 0) {
+			let crosshairSize = calculateDisplayModeInnerSize(this.$main.getBoundingClientRect(), {width: this.$video.videoWidth, height: this.$video.videoHeight}, UiPageDisplayMode.FIT_SIZE);
+			this.$crosshair.style.width = crosshairSize.width + "px";
+			this.$crosshair.style.height = crosshairSize.height + "px";
+		}
+	}
+
 
 	destroy() {
+		super.destroy();
 		this.qrScanner.destroy();
 	}
 }

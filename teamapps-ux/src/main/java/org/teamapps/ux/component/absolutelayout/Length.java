@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,23 @@ package org.teamapps.ux.component.absolutelayout;
 
 public class Length {
 
+	public static final Length AUTO = new Length(-1) {
+		@Override
+		public String toCssString() {
+			return "auto";
+		}
+	};
+
 	private final float size;
 	private final SizeUnit unit;
+
+	public static Length ofPixels(int pixels) {
+		return new Length(pixels, SizeUnit.PIXEL);
+	}
+
+	public static Length ofPercent(int percent) {
+		return new Length(percent, SizeUnit.PERCENT);
+	}
 
 	public Length(float size) {
 		this(size, SizeUnit.PIXEL);

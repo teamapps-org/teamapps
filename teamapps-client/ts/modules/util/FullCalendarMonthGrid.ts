@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import {toMoment} from "@fullcalendar/moment";
 import moment from "moment-timezone";
 import {Moment} from "moment-timezone";
 import {CalendarEventListPopper} from "../micro-components/CalendarEventListPopper";
+import {ComponentContext} from "@fullcalendar/core/component/Component";
 
 class Segment {
 	constructor(
@@ -81,7 +82,7 @@ export class MonthGridView extends View {
 	private readonly textHangOffset = 4.8;
 
 	private get monthWidth() {
-		return (this.opt("weekNumbers") ? 8 : 7) * this.dayColumnWidth;
+		return (this.context.options.weekNumbers ? 8 : 7) * this.dayColumnWidth;
 	}
 
 	private get monthHeight() {
@@ -92,10 +93,9 @@ export class MonthGridView extends View {
 	private maxOccupationTime = 8; //hours
 	private events: EventApi[] = null;
 
-	private weekDayShortNames = this.initWeekDayShortNames();
+	private weekDayShortNames: string[];
 
 	private eventsPopper: CalendarEventListPopper;
-	private timeFormatter: DateFormatter = createFormatter({hour: 'numeric', minute: '2-digit'});
 
 	// called once when the view is instantiated, when the user switches to the view.
 	// initialize member variables or do other setup tasks.
@@ -108,6 +108,12 @@ export class MonthGridView extends View {
 		this.el.appendChild(this.$contentElement);
 		this._svg = d3.select<SVGElement, undefined>(svgElement);
 		this.eventsPopper = new CalendarEventListPopper();
+	}
+
+	// will get invoked when the context is set for the first time
+	firstContext(context: ComponentContext): void {
+		super.firstContext(context);
+		this.weekDayShortNames = this.initWeekDayShortNames();
 	}
 
 	destroy(): void {
@@ -133,8 +139,8 @@ export class MonthGridView extends View {
 	}
 
 	private getMonthRangesToBeDisplayed(): DisplayedMonth[] {
-		let startMoment = toMoment(this.currentStart, this.calendar);
-		let endMoment = toMoment(this.currentEnd, this.calendar);
+		let startMoment = toMoment(this.currentStart, this.context.calendar);
+		let endMoment = toMoment(this.currentEnd, this.context.calendar);
 		const numberOfMonths = endMoment.diff(startMoment, 'month');
 		const displayedMonths: DisplayedMonth[] = [];
 		for (let i = 0; i < numberOfMonths; i++) {
@@ -154,7 +160,7 @@ export class MonthGridView extends View {
 
 	private startOfWeek(m: Moment) {
 		let copy = m.clone();
-		let firstDay = this.opt("firstDay") || 0;
+		let firstDay = this.context.options.firstDay || 0;
 		while (copy.day() !== firstDay) {
 			copy.add(-1, 'day');
 		}
@@ -194,7 +200,7 @@ export class MonthGridView extends View {
 		let names = [];
 		for (let i = 0; i < 7; i++) {
 			let date = addDays(new Date(), i);
-			names[date.getDay()] = this.dateEnv.format(date, formatter);
+			names[date.getDay()] = this.context.dateEnv.format(date, formatter);
 		}
 		return names;
 	}
@@ -224,16 +230,16 @@ export class MonthGridView extends View {
 
 		let bestTileCoverageInfo = this.getBestTileCoverageInfo(monthRanges.length);
 
-		let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - this.opt("minMonthTileWidth")) / (3 * this.opt("minMonthTileWidth")));
+		let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - this.context.options.minMonthTileWidth) / (3 * this.context.options.minMonthTileWidth));
 
 		let viewBoxWidth: number;
 		let viewBoxHeight: number;
 		let viewBoxOffsetX: number;
 		let viewBoxOffsetY: number;
 		var monthTileWidth = bestTileCoverageInfo.monthTileWidth;
-		if (!bestTileCoverageInfo.needsScroll && this.opt("maxMonthTileWidth") && monthTileWidth > this.opt("maxMonthTileWidth")) {
-			viewBoxWidth = bestTileCoverageInfo.preferredDrawAreaWidth * (monthTileWidth / this.opt("maxMonthTileWidth"));
-			viewBoxHeight = bestTileCoverageInfo.preferredDrawAreaHeight * (monthTileWidth / this.opt("maxMonthTileWidth"));
+		if (!bestTileCoverageInfo.needsScroll && this.context.options.maxMonthTileWidth && monthTileWidth > this.context.options.maxMonthTileWidth) {
+			viewBoxWidth = bestTileCoverageInfo.preferredDrawAreaWidth * (monthTileWidth / this.context.options.maxMonthTileWidth);
+			viewBoxHeight = bestTileCoverageInfo.preferredDrawAreaHeight * (monthTileWidth / this.context.options.maxMonthTileWidth);
 			viewBoxOffsetX = (bestTileCoverageInfo.preferredDrawAreaWidth - viewBoxWidth) / 2;
 			viewBoxOffsetY = (bestTileCoverageInfo.preferredDrawAreaHeight - viewBoxHeight) / 2;
 		} else {
@@ -270,7 +276,7 @@ export class MonthGridView extends View {
 		_monthEnter
 			.append("text")
 			.classed("fc-month-grid-month-name", true)
-			.text(monthRange => this.dateEnv.format(strippedUtcLikeDate(monthRange.intervalStart), this.monthNameFormatter))
+			.text(monthRange => this.context.dateEnv.format(strippedUtcLikeDate(monthRange.intervalStart), this.monthNameFormatter))
 			.attr("x", 0)
 			.attr("y", 10)
 			.on("click", (monthRange) => this.context.options.navLinkMonthClick && this.context.options.navLinkMonthClick(monthRange.intervalStart.toDate(), d3.event));
@@ -283,13 +289,13 @@ export class MonthGridView extends View {
 		let _dayName = _month.merge(_monthEnter)
 			.selectAll("text.fc-month-grid-day-name")
 			.data([
-				this.weekDayShortNames[this.opt("firstDay")],
-				this.weekDayShortNames[(this.opt("firstDay") + 1) % 7],
-				this.weekDayShortNames[(this.opt("firstDay") + 2) % 7],
-				this.weekDayShortNames[(this.opt("firstDay") + 3) % 7],
-				this.weekDayShortNames[(this.opt("firstDay") + 4) % 7],
-				this.weekDayShortNames[(this.opt("firstDay") + 5) % 7],
-				this.weekDayShortNames[(this.opt("firstDay") + 6) % 7]
+				this.weekDayShortNames[this.context.options.firstDay],
+				this.weekDayShortNames[(this.context.options.firstDay + 1) % 7],
+				this.weekDayShortNames[(this.context.options.firstDay + 2) % 7],
+				this.weekDayShortNames[(this.context.options.firstDay + 3) % 7],
+				this.weekDayShortNames[(this.context.options.firstDay + 4) % 7],
+				this.weekDayShortNames[(this.context.options.firstDay + 5) % 7],
+				this.weekDayShortNames[(this.context.options.firstDay + 6) % 7]
 			]);
 		var _dayNameEnter = _dayName
 			.enter()
@@ -297,7 +303,7 @@ export class MonthGridView extends View {
 			.classed("fc-month-grid-day-name", true)
 			.text(name => name);
 		_dayName.merge(_dayNameEnter)
-			.attr("transform", (name, i) => `translate(${(i + (this.opt("weekNumbers") ? 1 : 0) + 0.5 /*center!*/) * this.dayColumnWidth}, ${this.monthNameHeight + this.textHangOffset}) scale(${subTileZoom})`);
+			.attr("transform", (name, i) => `translate(${(i + (this.context.options.weekNumbers ? 1 : 0) + 0.5 /*center!*/) * this.dayColumnWidth}, ${this.monthNameHeight + this.textHangOffset}) scale(${subTileZoom})`);
 
 		let _week = _month.merge(_monthEnter)
 			.selectAll("g.fc-month-grid-week")
@@ -311,7 +317,7 @@ export class MonthGridView extends View {
 
 		let _weekNumber = _week.merge(_weekEnter)
 			.selectAll("text.fc-month-grid-week-number")
-			.data(week => this.opt("weekNumbers") ? [week[Math.floor(week.length / 2)]] : []);
+			.data(week => this.context.options.weekNumbers ? [week[Math.floor(week.length / 2)]] : []);
 		let _weekNumberEnter = _weekNumber.enter()
 			.append("text")
 			.classed("fc-month-grid-week-number", true)
@@ -319,7 +325,7 @@ export class MonthGridView extends View {
 			.attr("y", this.textHangOffset)
 			.on("click", (d) => this.context.options.navLinkWeekClick && this.context.options.navLinkWeekClick(d.day.toDate(), d3.event));
 		_weekNumber.merge(_weekNumberEnter)
-			.text(day => this.dateEnv.computeWeekNumber(day.day.toDate()))
+			.text(day => this.context.dateEnv.computeWeekNumber(day.day.toDate()))
 			.attr("transform", (week, i) => `scale(${subTileZoom})`);
 
 		let _day = _week.merge(_weekEnter)
@@ -338,7 +344,7 @@ export class MonthGridView extends View {
 			});
 		_dayEnter.on("click", (d) => this.context.options.navLinkDayClick && this.context.options.navLinkDayClick(d.day.toDate(), d3.event));
 		_day.merge(_dayEnter)
-			.attr("transform", (day, dayIndex) => `translate(${((dayIndex % 7) + (this.opt("weekNumbers") ? 1 : 0) + 0.5) * this.dayColumnWidth}, 0) scale(${subTileZoom})`)
+			.attr("transform", (day, dayIndex) => `translate(${((dayIndex % 7) + (this.context.options.weekNumbers ? 1 : 0) + 0.5) * this.dayColumnWidth}, 0) scale(${subTileZoom})`)
 			.call((g) => {
 				g.select(".day-occupation-background-circle")
 					.attr("r", occupationRadius)
@@ -364,7 +370,7 @@ export class MonthGridView extends View {
 		_dayEnter.on("pointerenter", (d, i, nodes) => {
 			if (!d.foreignMonth) {
 				var bestTileCoverageInfo = this.getBestTileCoverageInfo(monthRanges.length);
-				let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - this.opt("minMonthTileWidth")) / (3 * this.opt("minMonthTileWidth")));
+				let subTileZoom = Math.max(.8, 1 - (bestTileCoverageInfo.monthTileWidth - this.context.options.minMonthTileWidth) / (3 * this.context.options.minMonthTileWidth));
 				var strokeWidth = 1.7 / (subTileZoom * subTileZoom);
 				d3.select(nodes[i])
 					.selectAll("path.day-occupation")
@@ -458,10 +464,10 @@ export class MonthGridView extends View {
 
 		let bestCoverageInfo = areaCoverageInfos.slice()
 			.sort((a, b) => b.fittingMonthTileWidth - a.fittingMonthTileWidth)[0];
-		const needsScroll = bestCoverageInfo.fittingMonthTileWidth < this.opt("minMonthTileWidth");
+		const needsScroll = bestCoverageInfo.fittingMonthTileWidth < this.context.options.minMonthTileWidth;
 		if (needsScroll) {
 			bestCoverageInfo = areaCoverageInfos.slice()
-				.filter(info => info.scrollingMonthTileWidth > this.opt("minMonthTileWidth"))
+				.filter(info => info.scrollingMonthTileWidth > this.context.options.minMonthTileWidth)
 				.sort((a, b) => a.scrollingHeight - b.scrollingHeight)[0];
 		}
 		if (bestCoverageInfo == null) {
@@ -482,8 +488,8 @@ export class MonthGridView extends View {
 		let dayStart = d.day;
 		let dayEnd = dayStart.clone().add(1, 'day');
 		return this.events.filter(e => {
-			let eventStart = toMoment(e.start, this.calendar);
-			let eventEnd = e.end != null ? toMoment(e.end, this.calendar) : eventStart.clone().add(1, 'second');
+			let eventStart = toMoment(e.start, this.context.calendar);
+			let eventEnd = e.end != null ? toMoment(e.end, this.context.calendar) : eventStart.clone().add(1, 'second');
 			return +eventEnd > +dayStart && +eventStart < +(dayEnd);
 		});
 	}
@@ -517,7 +523,7 @@ export class MonthGridView extends View {
 		$container.innerHTML = allDayEventsHtml;
 		$container.classList.toggle("hidden", events.length === 0);
 
-		let eventRender: (arg: { isMirror: boolean, isStart: boolean, isEnd: boolean, event: EventApi, el: HTMLElement, view: View }) => void = this.opt("eventRender");
+		let eventRender: (arg: { isMirror: boolean, isStart: boolean, isEnd: boolean, event: EventApi, el: HTMLElement, view: View }) => void = this.context.options.eventRender;
 		if (eventRender != null) {
 			$container.querySelectorAll(':scope .fc-event').forEach((el, i) => {
 				let event = events[i];
@@ -555,8 +561,8 @@ export class MonthGridView extends View {
 	}
 
 	private eventToSegments(event: EventApi): Segment[] {
-		let startMoment = toMoment(event.start, this.calendar);
-		let endMoment = event.end != null ? toMoment(event.end, this.calendar) : null;
+		let startMoment = toMoment(event.start, this.context.calendar);
+		let endMoment = event.end != null ? toMoment(event.end, this.context.calendar) : null;
 		if (event.end == null) {
 			let start = startMoment.clone().startOf("day").hour(8);
 			let end = startMoment.clone().startOf("day").hour(16);

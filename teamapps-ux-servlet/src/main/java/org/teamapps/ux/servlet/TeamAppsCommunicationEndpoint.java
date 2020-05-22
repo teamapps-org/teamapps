@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,13 +33,13 @@ import org.teamapps.dto.KEEPALIVE;
 import org.teamapps.dto.REINIT;
 import org.teamapps.dto.SERVER_ERROR;
 import org.teamapps.dto.TERMINATE;
+import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.ux.servlet.util.ZipRatioAnalyzer;
 import org.teamapps.ux.servlet.util.ZlibStatefulDeflater;
 import org.teamapps.ux.servlet.util.ZlibStatefulInflater;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.SendingErrorHandler;
-import org.teamapps.uisession.SessionClosingReason;
 import org.teamapps.uisession.TeamAppsSessionNotFoundException;
 import org.teamapps.uisession.TeamAppsUiSessionManager;
 
@@ -115,8 +115,8 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
 
-				// TODO #no-spring implement heartbeat http requests (shame...)
-//				((AbstractSession) httpSession).setLastAccessedTime(System.currentTimeMillis()); // this is jetty-specific code. Change if we want to support another server.
+				// TODO #http-timeout implement heartbeat http requests (shame...)
+				// ((AbstractSession) httpSession).setLastAccessedTime(System.currentTimeMillis()); // this is jetty-specific code. Change if we want to support another server.
 				// tomcat: http://tomcat.apache.org/tomcat-5.5-doc/catalina/docs/api/org/apache/catalina/session/StandardSession.html#access()
 
 				byte[] compressed = new byte[payload.remaining()];
@@ -136,6 +136,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 					sessionManager.initSession(
 							qualifiedUiSessionId,
 							init.getClientInfo(),
+							httpSession,
 							init.getMaxRequestedCommandId(),
 							(msg, sendingErrorHandler) -> send(wsSession, msg, null, sendingErrorHandler)
 					);
@@ -148,7 +149,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 							(msg, sendingErrorHandler) -> send(wsSession, msg, null, sendingErrorHandler)
 					);
 				} else if (clientMessage instanceof TERMINATE) {
-					sessionManager.closeSession(qualifiedUiSessionId, SessionClosingReason.TERMINATED_BY_CLIENT);
+					sessionManager.closeSession(qualifiedUiSessionId, UiSessionClosingReason.TERMINATED_BY_CLIENT);
 				} else if (clientMessage instanceof EVENT) {
 					EVENT eventMessage = (EVENT) clientMessage;
 					sessionManager.handleEvent(qualifiedUiSessionId, eventMessage.getId(), eventMessage.getUiEvent());
@@ -165,10 +166,10 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 				}
 			} catch (TeamAppsSessionNotFoundException e) {
 				LOGGER.warn("TeamApps session not found: " + e.getSessionId());
-				send(wsSession, new SERVER_ERROR(SERVER_ERROR.Reason.SESSION_NOT_FOUND).setMessage(e.getMessage()), () -> closeWebSocketSession(wsSession), null);
+				send(wsSession, new SERVER_ERROR(UiSessionClosingReason.SESSION_NOT_FOUND).setMessage(e.getMessage()), () -> closeWebSocketSession(wsSession), null);
 			} catch (Exception e) {
 				LOGGER.error("Exception while processing client message!", e);
-				send(wsSession, new SERVER_ERROR(SERVER_ERROR.Reason.EXCEPTION).setMessage(e.getMessage()), null, null);
+				send(wsSession, new SERVER_ERROR(UiSessionClosingReason.SERVER_SIDE_ERROR).setMessage(e.getMessage()), null, null);
 			}
 		}
 

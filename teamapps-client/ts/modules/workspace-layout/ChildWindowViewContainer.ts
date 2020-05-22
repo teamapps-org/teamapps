@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ export class ChildWindowViewContainer implements ViewContainer {
 		} else if (e.data._type === 'REGISTER_COMPONENT') {
 			const componentId = e.data.componentId;
 			const teamappsType = e.data.teamappsType;
-			(this.context as TeamAppsUiContextInternalApi).registerComponent(new Proxy({}, {
+			(this.context as TeamAppsUiContextInternalApi).registerClientObject(new Proxy({}, {
 				get: (target, property, receiver) => {
 					if (property === 'getId') {
 						return () => componentId;

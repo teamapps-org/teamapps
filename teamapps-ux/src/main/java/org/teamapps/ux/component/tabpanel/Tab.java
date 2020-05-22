@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,8 +69,8 @@ public class Tab {
 		uiTab.setCloseable(closeable);
 		uiTab.setLazyLoading(this.isLazyLoading());
 		uiTab.setRightSide(this.rightSide);
-		uiTab.setToolbar(Component.createUiComponentReference(this.toolbar));
-		uiTab.setContent(Component.createUiComponentReference(content));
+		uiTab.setToolbar(Component.createUiClientObjectReference(this.toolbar));
+		uiTab.setContent(Component.createUiClientObjectReference(content));
 		uiTab.setVisible(visible);
 		return uiTab;
 	}
@@ -183,12 +183,4 @@ public class Tab {
 		return this;
 	}
 
-	public void destroy() {
-		if (this.content != null) {
-			this.content.destroy();
-		}
-		if (this.toolbar != null) {
-			this.toolbar.destroy();
-		}
-	}
 }

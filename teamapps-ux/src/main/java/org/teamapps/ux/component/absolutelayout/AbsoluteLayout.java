@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public class AbsoluteLayout extends AbstractComponent {
 				.map(entry -> {
 					Component component = entry.getKey();
 					AbsolutePosition position = entry.getValue();
-					return new UiAbsolutePositionedComponent(component.createUiComponentReference(), new UiAbsolutePositioning(
+					return new UiAbsolutePositionedComponent(component.createUiReference(), new UiAbsolutePositioning(
 							position.getTop() != null ? position.getTop().toCssString(): null,
 							position.getRight() != null ? position.getRight().toCssString(): null,
 							position.getBottom() != null ? position.getBottom().toCssString(): null,
@@ -92,11 +92,6 @@ public class AbsoluteLayout extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		// none
-	}
-
-	@Override
-	protected void doDestroy() {
-		positionsByComponent.keySet().forEach(component -> component.destroy());
 	}
 
 	public AnimationEasing getAnimationEasing() {

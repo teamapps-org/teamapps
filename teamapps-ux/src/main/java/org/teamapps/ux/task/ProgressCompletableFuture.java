@@ -1,3 +1,22 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2020 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
 package org.teamapps.ux.task;
 
 import org.teamapps.ux.session.CurrentSessionContext;
@@ -32,12 +51,22 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 		this(new Progress());
 	}
 
-	private ProgressCompletableFuture(Progress progress) {
+	public ProgressCompletableFuture(Progress progress) {
 		this.progress = progress;
 	}
 
 	public ObservableProgress getProgress() {
 		return progress;
+	}
+
+	public boolean complete(T value) {
+		progress.markCompleted();
+		return super.complete(value);
+	}
+
+	public boolean completeExceptionally(Throwable ex) {
+		progress.markFailed();
+		return super.completeExceptionally(ex);
 	}
 
 	@Override
@@ -158,21 +187,33 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 	@Override
 	public <U> ProgressCompletableFuture<U> thenApply(Function<? super T, ? extends U> fn) {
 		final ProgressCompletableFuture<U> future = new ProgressCompletableFuture<>();
-		super.thenApply(applyWrapped(fn, future));
+		super.thenApply(applyWrapped(fn, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	@Override
 	public <U> ProgressCompletableFuture<U> thenApplyAsync(Function<? super T, ? extends U> fn) {
 		final ProgressCompletableFuture<U> future = new ProgressCompletableFuture<>();
-		super.thenApplyAsync(applyWrapped(fn, future));
+		super.thenApplyAsync(applyWrapped(fn, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	@Override
 	public <U> ProgressCompletableFuture<U> thenApplyAsync(Function<? super T, ? extends U> fn, Executor executor) {
 		final ProgressCompletableFuture<U> future = new ProgressCompletableFuture<>();
-		super.thenApplyAsync(applyWrapped(fn, future), executor);
+		super.thenApplyAsync(applyWrapped(fn, future), executor)
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
@@ -194,21 +235,33 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 	@Override
 	public ProgressCompletableFuture<Void> thenAccept(Consumer<? super T> action) {
 		ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenAccept(acceptWrapped(action, future));
+		super.thenAccept(acceptWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	@Override
 	public ProgressCompletableFuture<Void> thenAcceptAsync(Consumer<? super T> action) {
 		ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenAcceptAsync(acceptWrapped(action, future));
+		super.thenAcceptAsync(acceptWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	@Override
 	public ProgressCompletableFuture<Void> thenAcceptAsync(Consumer<? super T> action, Executor executor) {
 		ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenAcceptAsync(acceptWrapped(action, future), executor);
+		super.thenAcceptAsync(acceptWrapped(action, future), executor)
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
@@ -228,19 +281,31 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 
 	public ProgressCompletableFuture<Void> thenRun(Runnable action) {
 		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenRun(runWrapped(action, future));
+		super.thenRun(runWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<Void> thenRunAsync(Runnable action) {
 		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenRunAsync(runWrapped(action, future));
+		super.thenRunAsync(runWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<Void> thenRunAsync(Runnable action, Executor executor) {
 		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenRunAsync(runWrapped(action, future), executor);
+		super.thenRunAsync(runWrapped(action, future), executor)
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
@@ -260,19 +325,31 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 
 	public ProgressCompletableFuture<T> whenComplete(BiConsumer<? super T, ? super Throwable> action) {
 		final ProgressCompletableFuture<T> future = new ProgressCompletableFuture<>();
-		super.whenComplete(whenCompleteWrapped(action, future));
+		super.whenComplete(whenCompleteWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<T> whenCompleteAsync(BiConsumer<? super T, ? super Throwable> action) {
 		final ProgressCompletableFuture<T> future = new ProgressCompletableFuture<>();
-		super.whenCompleteAsync(whenCompleteWrapped(action, future));
+		super.whenCompleteAsync(whenCompleteWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<T> whenCompleteAsync(BiConsumer<? super T, ? super Throwable> action, Executor executor) {
 		final ProgressCompletableFuture<T> future = new ProgressCompletableFuture<>();
-		super.whenCompleteAsync(whenCompleteWrapped(action, future), executor);
+		super.whenCompleteAsync(whenCompleteWrapped(action, future), executor)
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
@@ -387,19 +464,31 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 
 	public <U> ProgressCompletableFuture<U> thenApply(ProgressReportingFunction<? super T, ? extends U> fn) {
 		final ProgressCompletableFuture<U> future = new ProgressCompletableFuture<>();
-		super.thenApply(applyWrapped(fn, future));
+		super.thenApply(applyWrapped(fn, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public <U> ProgressCompletableFuture<U> thenApplyAsync(ProgressReportingFunction<? super T, ? extends U> fn) {
 		final ProgressCompletableFuture<U> future = new ProgressCompletableFuture<>();
-		super.thenApplyAsync(applyWrapped(fn, future));
+		super.thenApplyAsync(applyWrapped(fn, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public <U> ProgressCompletableFuture<U> thenApplyAsync(ProgressReportingFunction<? super T, ? extends U> fn, Executor executor) {
 		final ProgressCompletableFuture<U> future = new ProgressCompletableFuture<>();
-		super.thenApplyAsync(applyWrapped(fn, future), executor);
+		super.thenApplyAsync(applyWrapped(fn, future), executor)
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
@@ -420,19 +509,31 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 
 	public ProgressCompletableFuture<Void> thenAccept(ProgressReportingConsumer<? super T> action) {
 		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenAccept(acceptWrapped(action, future));
+		super.thenAccept(acceptWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<Void> thenAcceptAsync(ProgressReportingConsumer<? super T> action) {
 		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenAcceptAsync(acceptWrapped(action, future));
+		super.thenAcceptAsync(acceptWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<Void> thenAcceptAsync(ProgressReportingConsumer<? super T> action, Executor executor) {
 		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenAcceptAsync(acceptWrapped(action, future), executor);
+		super.thenAcceptAsync(acceptWrapped(action, future), executor)
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
@@ -452,19 +553,31 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 
 	public ProgressCompletableFuture<Void> thenRun(ProgressReportingRunnable action) {
 		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenRun(runWrapped(action, future));
+		super.thenRun(runWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<Void> thenRunAsync(ProgressReportingRunnable action) {
 		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenRunAsync(runWrapped(action, future));
+		super.thenRunAsync(runWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<Void> thenRunAsync(ProgressReportingRunnable action, Executor executor) {
 		final ProgressCompletableFuture<Void> future = new ProgressCompletableFuture<>();
-		super.thenRunAsync(runWrapped(action, future), executor);
+		super.thenRunAsync(runWrapped(action, future), executor)
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
@@ -484,19 +597,31 @@ public class ProgressCompletableFuture<T> extends CompletableFuture<T> {
 
 	public ProgressCompletableFuture<T> whenComplete(ProgressReportingBiConsumer<? super T, ? super Throwable> action) {
 		final ProgressCompletableFuture<T> future = new ProgressCompletableFuture<>();
-		super.whenComplete(whenCompleteWrapped(action, future));
+		super.whenComplete(whenCompleteWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<T> whenCompleteAsync(ProgressReportingBiConsumer<? super T, ? super Throwable> action) {
 		final ProgressCompletableFuture<T> future = new ProgressCompletableFuture<>();
-		super.whenCompleteAsync(whenCompleteWrapped(action, future));
+		super.whenCompleteAsync(whenCompleteWrapped(action, future))
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 
 	public ProgressCompletableFuture<T> whenCompleteAsync(ProgressReportingBiConsumer<? super T, ? super Throwable> action, Executor executor) {
 		final ProgressCompletableFuture<T> future = new ProgressCompletableFuture<>();
-		super.whenCompleteAsync(whenCompleteWrapped(action, future), executor);
+		super.whenCompleteAsync(whenCompleteWrapped(action, future), executor)
+				.exceptionally(throwable -> {
+					future.completeExceptionally(throwable);
+					return null;
+				});
 		return future;
 	}
 

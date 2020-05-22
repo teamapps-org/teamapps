@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ public class TableColumn<RECORD> {
 
 	public UiTableColumn createUiTableColumn() {
 		SessionContext context = CurrentSessionContext.get();
-		UiTableColumn uiTableColumn = new UiTableColumn(propertyName, context.resolveIcon(icon), title, field.createUiComponentReference());
+		UiTableColumn uiTableColumn = new UiTableColumn(propertyName, context.resolveIcon(icon), title, field.createUiReference());
 		uiTableColumn.setDefaultWidth(defaultWidth);
 		uiTableColumn.setMinWidth(minWidth);
 		uiTableColumn.setDefaultWidth(defaultWidth);

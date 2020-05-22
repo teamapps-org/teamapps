@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,15 +31,16 @@ import org.teamapps.data.value.Sorting;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFieldMessage;
+import org.teamapps.dto.UiInfiniteItemView;
 import org.teamapps.dto.UiTable;
 import org.teamapps.dto.UiTableClientRecord;
 import org.teamapps.dto.UiTableColumn;
 import org.teamapps.dto.UiTableDataRequest;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
@@ -52,6 +53,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Table<RECORD> extends AbstractComponent implements Container {
@@ -62,6 +65,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	public final Event<CellEditingStoppedEvent<RECORD>> onCellEditingStopped = new Event<>();
 	public final Event<FieldValueChangedEventData<RECORD, Object>> onCellValueChanged = new Event<>();
 	public final Event<RECORD> onRowSelected = new Event<>();
+	public final Event<CellClickedEvent<RECORD>> onCellClicked = new Event<>();
 	public final Event<List<RECORD>> onMultipleRowsSelected = new Event<>();
 	public final Event<SortingChangedEventData> onSortingChanged = new Event<>();
 	public final Event<TableDataRequestEventData> onTableDataRequest = new Event<>();
@@ -79,11 +83,11 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	private final List<RECORD> selectedRecords = new ArrayList<>();
 	private TableCellCoordinates<RECORD> activeEditorCell;
 
-	private Map<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new HashMap<>();
-	private Map<RECORD, Map<String, List<FieldMessage>>> cellMessages = new HashMap<>();
-	private Map<RECORD, Set<String>> markedCells = new HashMap<>();
+	private final Map<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new HashMap<>();
+	private final Map<RECORD, Map<String, List<FieldMessage>>> cellMessages = new HashMap<>();
+	private final Map<RECORD, Set<String>> markedCells = new HashMap<>();
 
-	private List<TableColumn<RECORD>> columns = new ArrayList<>();
+	private final List<TableColumn<RECORD>> columns = new ArrayList<>();
 
 	private boolean displayAsList; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection
 	private boolean forceFitWidth; //if true, force the widths of all columns to fit into the available space of the list
@@ -110,26 +114,29 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	private boolean showHeaderRow = false;
 	private int headerRowHeight = 28;
-	private Map<String, AbstractField> headerRowFields = new HashMap<>(0);
+	private final Map<String, AbstractField> headerRowFields = new HashMap<>(0);
 
 	// ----- footer -----
 
 	private boolean showFooterRow = false;
 	private int footerRowHeight = 28;
-	private Map<String, AbstractField> footerRowFields = new HashMap<>(0);
+	private final Map<String, AbstractField> footerRowFields = new HashMap<>(0);
 
 	// ----- listeners -----
 
 	// needs to be a field for reference equality (sad but true, java method references are only syntactic sugar for lambdas)
-	private EventListener<Void> onAllDataChangedListener = this::onAllDataChanged;
-	private EventListener<RECORD> onRecordAddedListener = this::onRecordAdded;
-	private EventListener<RECORD> onRecordDeletedListener = this::onRecordDeleted;
-	private EventListener<RECORD> onRecordUpdatedListener = this::onRecordUpdated;
+	private final Consumer<Void> onAllDataChangedListener = this::onAllDataChanged;
+	private final Consumer<RECORD> onRecordAddedListener = this::onRecordAdded;
+	private final Consumer<RECORD> onRecordDeletedListener = this::onRecordDeleted;
+	private final Consumer<RECORD> onRecordUpdatedListener = this::onRecordUpdated;
 
-	private List<Integer> viewportDisplayedRecordClientIds;
+	private List<Integer> viewportDisplayedRecordClientIds = Collections.emptyList();
 
-	private List<RECORD> topNonModelRecords = new ArrayList<>();
-	private List<RECORD> bottomNonModelRecords = new ArrayList<>();
+	private final List<RECORD> topNonModelRecords = new ArrayList<>();
+	private final List<RECORD> bottomNonModelRecords = new ArrayList<>();
+
+	private Function<RECORD, Component> contextMenuProvider = null;
+	private int lastSeenContextMenuRequestId;
 
 	public Table() {
 		this(new ArrayList<>());
@@ -141,10 +148,10 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 		clientRecordCache = new ClientRecordCache<>(this::createUiTableClientRecord);
 		clientRecordCache.setMaxCapacity(200);
-		clientRecordCache.setPurgeDecider((record, clientId) -> viewportDisplayedRecordClientIds == null || !viewportDisplayedRecordClientIds.contains(clientId)); //todo: fix null handling!
+		clientRecordCache.setPurgeDecider((record, clientId) -> !viewportDisplayedRecordClientIds.contains(clientId));
 		clientRecordCache.setPurgeListener(purgedRecordIds -> {
 			if (isRendered()) {
-				getSessionContext().queueCommand(new UiTable.RemoveDataCommand(getId(), purgedRecordIds.getResult()), aVoid -> purgedRecordIds.commit());
+				getSessionContext().queueCommand(new UiTable.RemoveDataCommand(getId(), purgedRecordIds.getAndClearResult()), aVoid -> purgedRecordIds.commit());
 			} else {
 				purgedRecordIds.commit();
 			}
@@ -153,14 +160,6 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	public static <RECORD> Table<RECORD> create() {
 		return new Table<>();
-	}
-
-	@Override
-	protected void doDestroy() {
-		this.unregisterModelEventListeners();
-		this.headerRowFields.values().forEach(AbstractField::destroy);
-		this.footerRowFields.values().forEach(AbstractField::destroy);
-		this.columns.forEach(c -> c.getField().destroy());
 	}
 
 	public void addColumn(TableColumn<RECORD> column) {
@@ -231,7 +230,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		List<RECORD> records = retrieveRecords(0, pageSize);
 		CacheManipulationHandle<List<UiTableClientRecord>> cacheResponse = clientRecordCache.replaceRecords(records);
 		cacheResponse.commit();
-		uiTable.setTableData(cacheResponse.getResult());
+		uiTable.setTableData(cacheResponse.getAndClearResult());
 
 		uiTable.setTotalNumberOfRecords(getTotalRecordsCount());
 		uiTable.setSortField(sortField);
@@ -243,23 +242,34 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		uiTable.setShowHeaderRow(showHeaderRow);
 		uiTable.setHeaderRowHeight(headerRowHeight);
 		uiTable.setHeaderRowFields(this.headerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiComponentReference())));
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference())));
 		uiTable.setShowFooterRow(showFooterRow);
 		uiTable.setFooterRowHeight(footerRowHeight);
 		uiTable.setFooterRowFields(this.footerRowFields.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiComponentReference())));
+				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().createUiReference())));
+		uiTable.setContextMenuEnabled(contextMenuProvider != null);
 		return uiTable;
 	}
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_TABLE_ROW_SELECTED:
+			case UI_TABLE_ROW_SELECTED: {
 				UiTable.RowSelectedEvent rowSelectedEvent = (UiTable.RowSelectedEvent) event;
 				selectedRecord = clientRecordCache.getRecordByClientId(rowSelectedEvent.getRecordId());
 				selectedRecords.clear();
 				this.onRowSelected.fire(selectedRecord);
 				break;
+			}
+			case UI_TABLE_CELL_CLICKED: {
+				UiTable.CellClickedEvent cellClickedEvent = (UiTable.CellClickedEvent) event;
+				RECORD record = clientRecordCache.getRecordByClientId(cellClickedEvent.getRecordId());
+				TableColumn<RECORD> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
+				if (record != null && column != null) {
+					this.onCellClicked.fire(new CellClickedEvent<>(record, column));
+				}
+				break;
+			}
 			case UI_TABLE_CELL_EDITING_STARTED: {
 				UiTable.CellEditingStartedEvent editingStartedEvent = (UiTable.CellEditingStartedEvent) event;
 				RECORD record = clientRecordCache.getRecordByClientId(editingStartedEvent.getRecordId());
@@ -332,7 +342,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				List<RECORD> childRecords = model.getChildRecords(clientRecordCache.getRecordByClientId(nestedDataEvent.getRecordId()), getSorting());
 				CacheManipulationHandle<List<UiTableClientRecord>> cacheResponse = clientRecordCache.addRecords(childRecords);
 				if (isRendered()) {
-					getSessionContext().queueCommand(new UiTable.SetChildrenDataCommand(getId(), nestedDataEvent.getRecordId(), cacheResponse.getResult()), aVoid -> cacheResponse.commit());
+					getSessionContext().queueCommand(new UiTable.SetChildrenDataCommand(getId(), nestedDataEvent.getRecordId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 				} else {
 					cacheResponse.commit();
 				}
@@ -347,6 +357,22 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				UiTable.ColumnSizeChangeEvent columnSizeChangeEvent = (UiTable.ColumnSizeChangeEvent) event;
 				TableColumn<RECORD> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
 				onColumnSizeChange.fire(new ColumnSizeChangeEventData(column, columnSizeChangeEvent.getSize()));
+				break;
+			}
+			case UI_TABLE_CONTEXT_MENU_REQUESTED: {
+				UiTable.ContextMenuRequestedEvent e = (UiTable.ContextMenuRequestedEvent) event;
+				lastSeenContextMenuRequestId = e.getRequestId();
+				RECORD record = clientRecordCache.getRecordByClientId(e.getRecordId());
+				if (record != null && contextMenuProvider != null) {
+					Component contextMenuContent = contextMenuProvider.apply(record);
+					if (contextMenuContent != null) {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
+					} else {
+						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
+					}
+				} else {
+					closeContextMenu();
+				}
 				break;
 			}
 		}
@@ -490,18 +516,68 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 //		}
 //	}
 
+	public List<RECORD> getTopNonModelRecords() {
+		return List.copyOf(topNonModelRecords);
+	}
+
+	public List<RECORD> getBottomNonModelRecords() {
+		return List.copyOf(bottomNonModelRecords);
+	}
+
+	public List<RECORD> getNonModelRecords(boolean top) {
+		return top ? getTopNonModelRecords() : getBottomNonModelRecords();
+	}
+
+	public void addTopNonModelRecord(RECORD record) {
+		this.topNonModelRecords.add(0, record);
+		refreshData();
+	}
+
+	public void addBottomNonModelRecord(RECORD record) {
+		this.bottomNonModelRecords.add(record);
+		refreshData();
+	}
+
 	public void addNonModelRecord(RECORD record, boolean addToTop) {
 		if (addToTop) {
-			this.topNonModelRecords.add(0, record);
+			addTopNonModelRecord(record);
 		} else {
-			this.bottomNonModelRecords.add(record);
+			addBottomNonModelRecord(record);
 		}
+
+	}
+
+	public void removeTopNonModelRecord(RECORD record) {
+		this.topNonModelRecords.remove(record);
+		refreshData();
+	}
+
+	public void removeBottomNonModelRecord(RECORD record) {
+		this.bottomNonModelRecords.remove(record);
 		refreshData();
 	}
 
 	public void removeNonModelRecord(RECORD record) {
 		this.topNonModelRecords.remove(record);
 		this.bottomNonModelRecords.remove(record);
+		refreshData();
+	}
+
+	public void removeNonModelRecord(RECORD record, boolean top) {
+		if (top) {
+			removeTopNonModelRecord(record);
+		} else {
+			removeBottomNonModelRecord(record);
+		}
+	}
+
+	public void removeAllTopNonModelRecords() {
+		this.topNonModelRecords.clear();
+		refreshData();
+	}
+
+	public void removeAllBottomNonModelRecords() {
+		this.topNonModelRecords.clear();
 		refreshData();
 	}
 
@@ -556,7 +632,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		if (isRendered()) {
 			CacheManipulationHandle<Integer> cacheResponse = clientRecordCache.removeRecord(record);
 			getSessionContext().queueCommand(
-					new UiTable.DeleteRowsCommand(getId(), Collections.singletonList(cacheResponse.getResult())),
+					new UiTable.DeleteRowsCommand(getId(), Collections.singletonList(cacheResponse.getAndClearResult())),
 					aVoid -> cacheResponse.commit()
 			);
 		}
@@ -586,7 +662,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	private void updateRecordOnClientSide(RECORD record) {
 		if (isRendered()) {
 			CacheManipulationHandle<UiTableClientRecord> cacheResponse = clientRecordCache.addOrUpdateRecord(record);
-			UiTableClientRecord clientRecord = cacheResponse.getResult();
+			UiTableClientRecord clientRecord = cacheResponse.getAndClearResult();
 			applyTransientChangesToClientRecord(clientRecord);
 			getSessionContext().queueCommand(
 					new UiTable.UpdateRecordCommand(getId(), clientRecord),
@@ -617,7 +693,8 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		if (!resetEditingState && activeEditorCell != null) {
 			Integer editingClientRecordId = clientRecordCache.getUiRecordIdOrNull(activeEditorCell.getRecord());
 			if (editingClientRecordId != null) {
-				// TODO DO NOT DO THIS!! This must be done on the client side!!!! (client sends events for active cell vs server sends command to edit cell --> server will not know the currently edited cell. Solution: reuse ids to enable client to do this!
+				// TODO DO NOT DO THIS!! This must be done on the client side!!!! (client sends events for active cell vs server sends command to edit cell --> server will not know the currently
+				//  edited cell. Solution: reuse ids to enable client to do this!
 				// queueCommandIfRendered(() -> new UiTable.EditCellIfAvailableCommand(getId(), editingClientRecordId, activeEditorCell.getPropertyName()));
 			}
 		}
@@ -639,11 +716,12 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				cacheResponse = clientRecordCache.addRecords(records);
 			}
 
+			List<UiTableClientRecord> results = cacheResponse.getAndClearResult();
 			if (!transientChangesByRecordAndPropertyName.isEmpty()) {
-				cacheResponse.getResult().forEach(uiRecord -> applyTransientChangesToClientRecord(uiRecord));
+				results.forEach(uiRecord -> applyTransientChangesToClientRecord(uiRecord));
 			}
 
-			UiTable.AddDataCommand addDataCommand = new UiTable.AddDataCommand(getId(), startIndex, cacheResponse.getResult(), totalCount, sortField, sortDirection.toUiSortDirection(), clear);
+			UiTable.AddDataCommand addDataCommand = new UiTable.AddDataCommand(getId(), startIndex, results, totalCount, sortField, sortDirection.toUiSortDirection(), clear);
 			LOGGER.debug("Sending table data to client: start: " + addDataCommand.getStartRowIndex() + "; length: " + addDataCommand.getData().size());
 			getSessionContext().queueCommand(
 					addDataCommand,
@@ -657,6 +735,11 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	}
 
 	private List<RECORD> retrieveRecords(int startIndex, int length) {
+		if (startIndex < 0 || length < 0) {
+			LOGGER.warn("Data coordinates do not make sense: startIndex {}, length {}", startIndex, length);
+			return Collections.emptyList();
+		}
+
 		int endIndex = startIndex + length;
 		int totalTopRecords = topNonModelRecords.size();
 		int totalModelRecords = model.getCount();
@@ -668,27 +751,27 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		}
 
 		if (startIndex < totalTopRecords && endIndex <= totalTopRecords) {
-			return topNonModelRecords.subList(startIndex, endIndex);
+			return topNonModelRecords.stream().skip(startIndex).limit(length).collect(Collectors.toList());
 		} else if (startIndex < totalTopRecords && endIndex <= totalTopRecords + totalModelRecords) {
 			List<RECORD> records = new ArrayList<>();
-			records.addAll(topNonModelRecords.subList(startIndex, totalTopRecords));
-			records.addAll(retrieveRecordsFromModel(0, length - (totalTopRecords - startIndex)));
+			records.addAll(topNonModelRecords.stream().skip(startIndex).limit(totalTopRecords - startIndex).collect(Collectors.toList()));
+			records.addAll(retrieveRecordsFromModel(0, length - records.size()));
 			return records;
 		} else if (startIndex < totalTopRecords && endIndex > totalTopRecords + totalModelRecords) {
 			List<RECORD> records = new ArrayList<>();
-			records.addAll(topNonModelRecords.subList(startIndex, totalTopRecords));
+			records.addAll(topNonModelRecords.stream().skip(startIndex).limit(totalTopRecords - startIndex).collect(Collectors.toList()));
 			records.addAll(retrieveRecordsFromModel(0, totalModelRecords));
-			records.addAll(bottomNonModelRecords.subList(0, length - (totalTopRecords - startIndex) - totalModelRecords));
+			records.addAll(bottomNonModelRecords.stream().skip(0).limit(length - records.size()).collect(Collectors.toList()));
 			return records;
 		} else if (startIndex >= totalTopRecords && startIndex < totalTopRecords + totalModelRecords && endIndex <= totalTopRecords + totalModelRecords) {
 			return retrieveRecordsFromModel(startIndex - topNonModelRecords.size(), length);
 		} else if (startIndex >= totalTopRecords && startIndex < totalTopRecords + totalModelRecords && endIndex > totalTopRecords + totalModelRecords) {
 			List<RECORD> records = new ArrayList<>();
 			records.addAll(retrieveRecordsFromModel(startIndex - topNonModelRecords.size(), endIndex - startIndex - totalTopRecords));
-			records.addAll(bottomNonModelRecords.subList(0, endIndex - totalTopRecords - totalModelRecords));
+			records.addAll(bottomNonModelRecords.stream().skip(0).limit(length - records.size()).collect(Collectors.toList()));
 			return records;
 		} else if (startIndex >= totalTopRecords + totalModelRecords) {
-			return bottomNonModelRecords.subList(startIndex - totalTopRecords - totalModelRecords, endIndex - startIndex);
+			return bottomNonModelRecords.stream().skip(startIndex - totalTopRecords - totalModelRecords).limit(length).collect(Collectors.toList());
 		} else {
 			LOGGER.error("This path should never be reached!");
 			return Collections.emptyList();
@@ -703,7 +786,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 			LOGGER.warn("TableModel did not return the requested amount of data!");
 			return records;
 		} else {
-			LOGGER.warn("TableModel returned to much data. Truncating!");
+			LOGGER.warn("TableModel returned too much data. Truncating!");
 			return new ArrayList<>(records.subList(0, length));
 		}
 	}
@@ -1087,6 +1170,18 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	public List<RECORD> getSelectedRecords() {
 		return selectedRecords != null ? selectedRecords : selectedRecord != null ? Collections.singletonList(selectedRecord) : Collections.emptyList(); // TODO completely rewrite this!!! (multiple
 		// selected records should be standard!)
+	}
+
+	public Function<RECORD, Component> getContextMenuProvider() {
+		return contextMenuProvider;
+	}
+
+	public void setContextMenuProvider(Function<RECORD, Component> contextMenuProvider) {
+		this.contextMenuProvider = contextMenuProvider;
+	}
+
+	public void closeContextMenu() {
+		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
 }

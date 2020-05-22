@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
 		}
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$component;
 	}
 
@@ -149,6 +149,7 @@ export class UiPageView extends AbstractUiComponent<UiPageViewConfig> {
 	}
 
 	public destroy(): void {
+		super.destroy();
 		this.rows.forEach(row => {
 			row.blocks.forEach(block => block.block.destroy());
 		});
@@ -205,7 +206,7 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlo
 
 		this.$toolButtons.innerHTML = '';
 		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
-			this.$toolButtons.appendChild(tb.getMainDomElement());
+			this.$toolButtons.appendChild(tb.getMainElement());
 		});
 
 		removeClassesByFunction(this.$topRecord.classList, className => className.startsWith("align-"));
@@ -215,7 +216,7 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlo
 
 		this.$htmlContainer.innerHTML = config.html != null ? removeDangerousTags(config.html) : "";
 
-		if (config.imageUrls) {
+		if (config.imageUrls && config.imageUrls.length > 0) {
 			for (var i = 0; i < this.config.imageUrls.length; i++) {
 				const $image = new Image();
 				let image = {
@@ -238,20 +239,24 @@ class UiMessagePageViewBlock extends AbstractBlockComponent<UiMessagePageViewBlo
 	}
 
 	reLayout() {
-		let availableWidth = this.$images.clientWidth;
-		let layout = fixed_partition(this.images, {
-			containerWidth: availableWidth,
-			idealElementHeight: Math.max(this.minIdealImageHeight, availableWidth / 3),
-			align: 'center',
-			spacing: 10
-		});
-		for (let i = 0; i < this.images.length; i++) {
-			this.images[i].$img.style.left = layout.positions[i].x + "px";
-			this.images[i].$img.style.top = layout.positions[i].y + "px";
-			this.images[i].$img.style.width = layout.positions[i].width + "px";
-			this.images[i].$img.style.height = layout.positions[i].height + "px";
+		if (this.images.length > 0) {
+			let availableWidth = this.$images.clientWidth;
+			let layout = fixed_partition(this.images, {
+				containerWidth: availableWidth,
+				idealElementHeight: Math.max(this.minIdealImageHeight, availableWidth / 3),
+				align: 'center',
+				spacing: 10
+			});
+			for (let i = 0; i < this.images.length; i++) {
+				this.images[i].$img.style.left = layout.positions[i].x + "px";
+				this.images[i].$img.style.top = layout.positions[i].y + "px";
+				this.images[i].$img.style.width = layout.positions[i].width + "px";
+				this.images[i].$img.style.height = layout.positions[i].height + "px";
+			}
+			this.$images.style.height = layout.height + "px";
+		} else {
+			this.$images.style.height = "0";
 		}
-		this.$images.style.height = layout.height + "px";
 	}
 
 	public getMainDomElement(): HTMLElement {
@@ -288,7 +293,7 @@ class UiCitationPageViewBlock extends AbstractBlockComponent<UiCitationPageViewB
 		this.$toolButtons = this.$main.querySelector(":scope .tool-buttons");
 		this.$toolButtons.innerHTML = '';
 		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
-			this.$toolButtons.appendChild(tb.getMainDomElement());
+			this.$toolButtons.appendChild(tb.getMainElement());
 		});
 
 	}
@@ -326,7 +331,7 @@ class UiComponentPageViewBlock extends AbstractBlockComponent<UiComponentPageVie
 
 		this.$toolButtons.innerHTML = '';
 		config.toolButtons && config.toolButtons.forEach((tb: UiToolButton) => {
-			this.$toolButtons.appendChild(tb.getMainDomElement());
+			this.$toolButtons.appendChild(tb.getMainElement());
 		});
 		
 		if (config.title) {
@@ -334,7 +339,7 @@ class UiComponentPageViewBlock extends AbstractBlockComponent<UiComponentPageVie
 		}
 
 		this.component = config.component as UiComponent;
-		this.$componentWrapper.appendChild(this.component.getMainDomElement());
+		this.$componentWrapper.appendChild(this.component.getMainElement());
 	}
 
 	public getMainDomElement(): HTMLElement {

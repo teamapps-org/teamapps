@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,10 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TableDataProviderItem} from "./table/TableDataProvider";
 import {
-	UiInfiniteItemView_DataRequestEvent,
-	UiInfiniteItemView_ItemClickedEvent,
+	UiInfiniteItemView_ItemClickedEvent, UiInfiniteItemView_ContextMenuRequestedEvent,
 	UiInfiniteItemViewCommandHandler,
 	UiInfiniteItemViewConfig,
-	UiInfiniteItemViewEventSource
+	UiInfiniteItemViewEventSource, UiInfiniteItemView_DisplayedRangeChangedEvent
 } from "../generated/UiInfiniteItemViewConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
@@ -37,14 +36,19 @@ import {itemCssStringsAlignItems, itemCssStringsJustification} from "./UiItemVie
 import {UiItemJustification} from "../generated/UiItemJustification";
 import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClientRecordConfig";
 import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
+import {ContextMenu} from "./micro-components/ContextMenu";
+import {UiComponent} from "./UiComponent";
+import {loadSensitiveThrottling, throttledMethod} from "./util/throttle";
+import {createUiInfiniteItemViewDataRequestConfig, UiInfiniteItemViewDataRequestConfig} from "../generated/UiInfiniteItemViewDataRequestConfig";
 
-///<reference types="slickgrid"/>
+const ROW_LOOKAHAED = 10;
 
 class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiableClientRecordConfig> {
 
 	private availableWidth: number;
-	private static ROW_LOOKAHAED = 20;
 	private timerId: number = null;
+
+	private totalNumberOfRecords = 0;
 
 	constructor(private data: UiIdentifiableClientRecordConfig[], private itemWidthIncludingMargin: number, private dataRequestCallback: (from: number, length: number) => void) {
 	}
@@ -53,11 +57,14 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 	 * This method is called by SlickGrid.
 	 */
 	public getLength(): number {
-		return Math.ceil(this.data.length / this.getItemsPerRow());
+		return Math.ceil(this.totalNumberOfRecords / this.getItemsPerRow());
 	}
 
-	public setTotalNumberOfRecords(totalNumberOfRecords: number): number {
-		return this.data.length = totalNumberOfRecords;
+	public setTotalNumberOfRecords(totalNumberOfRecords: number) {
+		if (this.data.length > totalNumberOfRecords) {
+			this.data.length = totalNumberOfRecords;
+		}
+		this.totalNumberOfRecords = totalNumberOfRecords;
 	}
 
 	/**
@@ -76,7 +83,7 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 		return {};
 	}
 
-	private getItemsPerRow(): number {
+	public getItemsPerRow(): number {
 		return Math.floor(this.availableWidth / this.itemWidthIncludingMargin);
 	}
 
@@ -94,24 +101,22 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 		}
 
 		let itemsPerRow = this.getItemsPerRow();
-		let from = Math.max(firstVisibleRowIndex - UiInfiniteItemViewDataProvider.ROW_LOOKAHAED, 0) * itemsPerRow;
-		let to = (lastVisibleRowIndex + UiInfiniteItemViewDataProvider.ROW_LOOKAHAED) * itemsPerRow;
-		if (this.data.length) {
-			to = Math.min(to, this.data.length - 1);
-		}
+		let from = Math.max(firstVisibleRowIndex - ROW_LOOKAHAED, 0) * itemsPerRow;
+		let toInclusive = (lastVisibleRowIndex + ROW_LOOKAHAED) * itemsPerRow;
+		toInclusive = Math.min(toInclusive, this.totalNumberOfRecords - 1);
 
-		while (this.data[from] !== undefined && from < to) {
+		while (this.data[from] !== undefined && from < toInclusive) {
 			from++;
 		}
-		while (this.data[to] !== undefined && from < to) {
-			to--;
+		while (this.data[toInclusive] !== undefined && from < toInclusive) {
+			toInclusive--;
 		}
 
-		if (firstVisibleRowIndex * itemsPerRow > to || (lastVisibleRowIndex + 1) * itemsPerRow < from) { // not really necessary to load anything
+		if (firstVisibleRowIndex * itemsPerRow > toInclusive || (lastVisibleRowIndex + 1) * itemsPerRow < from) { // not really necessary to load anything
 			return;
 		}
 
-		if (from == to && this.data[to] !== undefined) {
+		if (from == toInclusive && this.data[toInclusive] !== undefined) {
 			return;
 		}
 
@@ -120,11 +125,11 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 		}
 
 		this.timerId = window.setTimeout(() => {
-			for (var i = from; i <= to; i++) {
+			for (var i = from; i <= toInclusive; i++) {
 				this.data[i] = null; // null indicates a 'requested but not available yet'
 			}
 
-			let length = to - from + 1;
+			let length = toInclusive - from;
 			this.dataRequestCallback(from, length);
 		}, 100);
 	}
@@ -134,7 +139,8 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 	}
 
 	setData(startIndex: number, data: any[]) {
-		this.data.splice.apply(this.data, (<any>[startIndex, data.length]).concat(data));
+		this.data.length = Math.max(this.data.length, startIndex + data.length);
+		this.data.splice.apply(this.data, ([startIndex, data.length] as any[]).concat(data));
 	}
 
 	removeData(ids: number[]) {
@@ -153,8 +159,10 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 
 export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewConfig> implements UiInfiniteItemViewCommandHandler, UiInfiniteItemViewEventSource {
 
-	public readonly onDataRequest: TeamAppsEvent<UiInfiniteItemView_DataRequestEvent> = new TeamAppsEvent<UiInfiniteItemView_DataRequestEvent>(this);
-	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent>(this);
+
+	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView_DisplayedRangeChangedEvent> = new TeamAppsEvent(this);
+	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent(this);
+	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;
@@ -166,6 +174,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	private itemWidth: number;
 	private itemJustification: UiItemJustification;
 	private verticalItemAlignment: UiVerticalItemAlignment;
+	private contextMenu: ContextMenu;
 
 	constructor(config: UiInfiniteItemViewConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -180,18 +189,17 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.itemJustification = config.itemJustification;
 		this.verticalItemAlignment = config.verticalItemAlignment;
 		this.dataProvider = new UiInfiniteItemViewDataProvider(config.data || [], 10 /*cannot know item width until component width is known*/, (fromIndex, length) => {
-			this.onDataRequest.fire({
-				startIndex: fromIndex,
-				length: length
-			});
+			this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent(createUiInfiniteItemViewDataRequestConfig(fromIndex, length)));
 		});
 		if (config.totalNumberOfRecords) {
 			this.dataProvider.setTotalNumberOfRecords(config.totalNumberOfRecords);
 		}
 		this.createGrid();
 
+		this.contextMenu = new ContextMenu();
+
 		let me = this;
-		$(this.getMainDomElement())
+		$(this.getMainElement())
 			.on("click contextmenu", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
 				me.onItemClicked.fire({
@@ -199,6 +207,9 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 					isRightMouseButton: e.button === 2,
 					isDoubleClick: false
 				});
+				if (e.button == 2 && !isNaN(recordId) && me._config.contextMenuEnabled) {
+					me.contextMenu.open(e as unknown as MouseEvent, requestId => me.onContextMenuRequested.fire({recordId: recordId, requestId}));
+				}
 			})
 			.on("dblclick", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
@@ -215,14 +226,11 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	@executeWhenFirstDisplayed()
 	private createGrid() {
 		let cellFormatter = (row: number, cell: number, value: any, columnDef: Slick.Column<TableDataProviderItem>, dataContext: any[]) => {
-			for (var i = 0; i < dataContext.length; i++) {
-				if (!dataContext[i]) {
-					return "";
-				}
-			}
 			let html = '<div class="line-wrapper">';
 			for (let record of dataContext) {
-				html += `<div class="item-wrapper" data-id="${record.id}" style="width: ${this.calculateItemWidthInPixels()}px;">${this.itemTemplateRenderer.render(record.values)}</div>`;
+				if (record != null) { // null happens for unknown reasons...
+					html += `<div class="item-wrapper" data-id="${record.id}" style="width: ${this.calculateItemWidthInPixels(false)}px;">${this.itemTemplateRenderer.render(record.values)}</div>`;
+				}
 			}
 			html += "</div>";
 			return html;
@@ -247,27 +255,66 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 			enableAddRow: false
 		};
 
-		this.dataProvider.setAvailableWidth(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
+		this.dataProvider.setAvailableWidth(this.getAvailableWidth());
 
 		this.grid = new Slick.Grid(this.$grid, this.dataProvider, columns, options);
 
 		this.grid.onViewportChanged.subscribe((e, args) => {
 			this.dataProvider.ensureData(this.grid.getViewport().top, this.grid.getViewport().bottom);
 		});
+		this.grid.onScroll.subscribe((eventData) => {
+			this.throttledFireDisplayedRangeChanged();
+		});
+
+		this.updateAutoHeight();
 	}
 
-	private calculateItemWidthInPixels() {
+	@throttledMethod(500) // CAUTION: debounce/throttle scrolling without data requests only!!! (otherwise the tableDataProvider will mark rows as requested but the actual request will not get to the server)
+	private throttledFireDisplayedRangeChanged() {
+		this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent());
+	}
+
+	private createDisplayRangeChangedEvent(dataRequest?: UiInfiniteItemViewDataRequestConfig) {
+		const viewPort = this.grid.getViewport();
+		return {
+			startIndex: Math.max(0, (viewPort.top - ROW_LOOKAHAED) * this.dataProvider.getItemsPerRow()),
+			length: (viewPort.bottom - viewPort.top + ROW_LOOKAHAED * 2) * this.dataProvider.getItemsPerRow(),
+			displayedRecordIds: this.getCurrentlyDisplayedRecordIds(),
+			dataRequest: dataRequest
+		};
+	}
+
+	private getCurrentlyDisplayedRecordIds() {
+		const viewPort = this.grid.getViewport();
+		const currentlyDisplayedRecordIds: any[] = [];
+		for (let i = Math.max(0, viewPort.top - ROW_LOOKAHAED); i <= viewPort.bottom + ROW_LOOKAHAED; i++) {
+			const row = this.dataProvider.getItem(i);
+			if (row != null) {
+				row.forEach(item => item != null && currentlyDisplayedRecordIds.push(item.id));
+			}
+		}
+		return currentlyDisplayedRecordIds;
+	}
+
+	private calculateItemWidthInPixels(includeMargins: boolean) {
 		if (this.itemWidth < 0) {
 			console.error("itemWidth < 0 not allowed! Displaying full-width!");
 			this.itemWidth = 0;
 		}
 
+		let availableWidth = this.getAvailableWidth();
 		if (this.itemWidth === 0) {
-			return this.getWidth() - Constants.SCROLLBAR_WIDTH - 1 /*TODO remove -1*/;
+			return availableWidth;
 		} else if (this.itemWidth < 1) {
-			return Math.min(this.getWidth() * this.itemWidth + this._config.horizontalItemMargin - Constants.SCROLLBAR_WIDTH - 1 /*TODO remove -1*/, this.getWidth() - Constants.SCROLLBAR_WIDTH - 1 /*TODO remove -1*/);
+			let widthIncludingMargins = availableWidth * this.itemWidth + this._config.horizontalItemMargin * 2;
+			if (widthIncludingMargins > availableWidth) {
+				return availableWidth - this._config.horizontalItemMargin * 2;
+			} else {
+				return availableWidth * this.itemWidth + (includeMargins ? this._config.horizontalItemMargin * 2 : 0);
+			}
+			return Math.min(widthIncludingMargins, availableWidth);
 		} else if (this.itemWidth >= 1) {
-			return Math.min(this.itemWidth + this._config.horizontalItemMargin, this.getWidth() - Constants.SCROLLBAR_WIDTH - 1 /*TODO remove -1*/);
+			return Math.min(this.itemWidth + (includeMargins ? this._config.horizontalItemMargin * 2 : 0), availableWidth);
 		}
 	}
 
@@ -280,52 +327,60 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 			this.dataProvider.clear();
 		}
 
-		this.dataProvider.setData(startIndex, data);
-
-		this.grid.invalidateAllRows();
-
 		if (totalNumberOfRecords != this.dataProvider.getLength()) {
 			this.dataProvider.setTotalNumberOfRecords(totalNumberOfRecords);
-			this.grid.updateRowCount();
 		}
 
+		this.dataProvider.setData(startIndex, data);
+
+		this.redrawGridContents();
+	}
+
+	@loadSensitiveThrottling(100, 7, 2000)
+	private redrawGridContents() {
+		this.grid.updateRowCount();
+		this.updateAutoHeight();
+		this.grid.invalidateAllRows();
 		this.grid.render();
-
-		// clearTimeout(this.loadingIndicatorFadeInTimer);
-		// this._$loadingIndicator.fadeOut();
-
 		this.grid.resizeCanvas();
+	}
+
+	private updateAutoHeight() {
+		if (this._config.autoHeight) {
+			let computedStyle = getComputedStyle(this.$mainDomElement);
+			let newHeight = Math.min(parseFloat(computedStyle.maxHeight) || Number.MAX_SAFE_INTEGER, this.dataProvider.getLength() * this._config.rowHeight
+				+ parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom)) + "px";
+			if (newHeight != this.$grid.style.height) {
+				this.$grid.style.height = newHeight;
+			}
+		}
 	}
 
 	@executeWhenFirstDisplayed()
 	removeData(ids: number[]): void {
 		this.dataProvider.removeData(ids);
-		this.grid.invalidateAllRows();
-		this.grid.resizeCanvas();
+		this.redrawGridContents();
 		this.dataProvider.ensureData(this.grid.getViewport().top, this.grid.getViewport().bottom);
 	}
 
 	@executeWhenFirstDisplayed(true)
 	public onResize(): void {
-		this.logger.debug(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
-		this.dataProvider.setAvailableWidth(this.$mainDomElement.offsetWidth - Constants.SCROLLBAR_WIDTH);
-		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels());
-		this.grid.invalidateAllRows();
-		this.grid.resizeCanvas();
+		this.dataProvider.setAvailableWidth(this.getAvailableWidth());
+		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels(true));
+		this.redrawGridContents();
 		this.dataProvider.ensureData(this.grid.getViewport().top, this.grid.getViewport().bottom);
 	}
 
-
-	destroy(): void {
-		// nothing to do...
+	private getAvailableWidth() {
+		return this.getWidth() - Constants.SCROLLBAR_WIDTH;
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$mainDomElement;
 	}
 
 	private updateStyles() {
-		this.getMainDomElement().append(parseHtml(`<style>
+		this.getMainElement().append(parseHtml(`<style>
             .grid-${this.uuid} .line-wrapper {
                  align-items: ${itemCssStringsAlignItems[this.verticalItemAlignment]};
                  justify-content: ${itemCssStringsJustification[this.itemJustification]};
@@ -339,11 +394,9 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	@executeWhenFirstDisplayed(true)
 	setHorizontalItemMargin(horizontalItemMargin: number): void {
 		this.horizontalItemMargin = horizontalItemMargin;
-		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels());
+		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels(true));
 		if (this.grid) {
-			this.grid.invalidateAllRows();
-			this.grid.updateRowCount();
-			this.grid.render();
+			this.redrawGridContents();
 		}
 		this.updateStyles();
 	}
@@ -356,25 +409,30 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	setItemTemplate(itemTemplate: UiTemplateConfig): void {
 		this.itemTemplateRenderer = this._context.templateRegistry.createTemplateRenderer(itemTemplate);
 		if (this.grid) {
-			this.grid.invalidateAllRows();
-			this.grid.render();
+			this.redrawGridContents();
 		}
 	}
 
 	@executeWhenFirstDisplayed(true)
 	setItemWidth(itemWidth: number): void {
 		this.itemWidth = itemWidth;
-		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels());
+		this.dataProvider.setItemWidthIncludingMargin(this.calculateItemWidthInPixels(true));
 		if (this.grid) {
-			this.grid.invalidateAllRows();
-			this.grid.updateRowCount();
-			this.grid.render();
+			this.redrawGridContents();
 		}
 	}
 
 	setItemJustification(itemJustification: UiItemJustification): void {
 		this.itemJustification = itemJustification;
 		this.updateStyles();
+	}
+
+	setContextMenuContent(requestId: number, component: UiComponent): void {
+		this.contextMenu.setContent(component, requestId);
+	}
+
+	closeContextMenu(requestId: number): void {
+		this.contextMenu.close(requestId);
 	}
 
 }

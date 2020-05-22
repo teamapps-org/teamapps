@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ public interface InfiniteItemViewModel<RECORD> {
 
 	Event<Void> onAllDataChanged();
 
-	Event<RECORD> onRecordAdded();
+	Event<ItemRangeChangeEvent<RECORD>> onRecordsAdded();
 
-	Event<RECORD> onRecordChanged();
+	Event<ItemRangeChangeEvent<RECORD>> onRecordsChanged();
 
-	Event<RECORD> onRecordDeleted();
+	Event<ItemRangeChangeEvent<RECORD>> onRecordsDeleted();
 
 }

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ export class UiLocalDateTimeField extends AbstractUiDateTimeField<UiLocalDateTim
 	public getTransientValue(): LocalDateTime {
 		let value = this.trivialDateTimeField.getValue();
 		if (value) {
-			return [value.year, value.month, value.day, value.hour, value.minute, 0, 0];
+			return [value.year || 0, value.month || 0, value.day || 0, value.hour || 0, value.minute || 0, 0, 0];
 		} else {
 			return null;
 		}

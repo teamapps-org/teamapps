@@ -2,21 +2,20 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =====
-
+ * =========================LICENSE_END==================================
  */
 
 import * as d3 from "d3";
@@ -135,7 +134,7 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 		this.chart.setZoomFactor(zoomFactor);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -791,8 +790,10 @@ class TreeChart {
 		const attrs = this.getChartState();
 
 		// Add patterns for each node (it's needed for rounded image implementation)
+		let allNormalNodes = attrs.root.descendants();
+		let allSideListNodes = attrs.root.descendants().flatMap(n => n.sideListNodes || []);
 		const patternsSelection = attrs.defs.selectAll('.pattern')
-			.data(attrs.root.descendants().filter(n => n.data.image != null), (d: TreeNode) => d.id)
+			.data([...allNormalNodes, ...allSideListNodes].filter(n => n.data.image != null), (d: TreeNode) => d.id)
 			.join(enter => enter.append('pattern'))
 			.attr('class', 'pattern')
 			.attr('height', 1)
@@ -884,7 +885,7 @@ class TreeChart {
 			)
 			.attr('width', d => d.data.icon.size)
 			.attr('height', d => d.data.icon.size)
-			.attr("xlink:href", d => this.context.getIconPath(d.data.icon.icon, d.data.icon.size))
+			.attr("xlink:href", d => d.data.icon.icon)
 			.attr('x', d => -d.data.icon.size / 2)
 			.attr('y', d => -d.data.icon.size / 2);
 

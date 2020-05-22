@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,9 @@ package org.teamapps.databinding;
 
 import org.teamapps.event.Event;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
 public interface ObservableValue<T> {
 
 	Event<T> onChanged();
@@ -29,6 +32,10 @@ public interface ObservableValue<T> {
 
 	// ------- utility -------
 
+	default boolean valueEquals(T other) {
+		return Objects.equals(get(), other);
+	}
+
 	default void bindWritingTo(MutableValue<T> mutableValue) {
 		DataBindings.bindOneWay(this, mutableValue);
 	}
@@ -36,6 +43,19 @@ public interface ObservableValue<T> {
 //	default <T2> ObservableValue<T2> transformed(Function<T, T2> transformation) {
 //		return DataBindings.createObservableValue(onChanged(), () -> null);
 //	}
+
+	// === static ===
+
+	public static <T> ObservableValue<T> fromEmptyEvent(Event<?> changeEvent, Supplier<T> provider) {
+		return DataBindings.createObservableValueWithEmptyEvent(changeEvent, provider);
+	}
+
+	public static <T> ObservableValue<T> fromEvent(Event<T> changeEvent, Supplier<T> provider) {
+		return DataBindings.createObservableValue(changeEvent, provider);
+	}
+	public static <T> ObservableValue<T> fromCachedEventValues(Event<T> changeEvent) {
+		return DataBindings.createObservableValue(changeEvent);
+	}
 
 //	static <T> ObservableValue<T> from(Event<?> changeEvent, Supplier<T> provider) {
 //		return DataBindings.createObservableValue(changeEvent, provider);

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,8 +135,8 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialComboBox.onFocus.addListener(() => this.getMainDomElement().classList.add("focus"));
-		this.trivialComboBox.onBlur.addListener(() => this.getMainDomElement().classList.remove("focus"));
+		this.trivialComboBox.onFocus.addListener(() => this.getMainElement().classList.add("focus"));
+		this.trivialComboBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
 	}
 
 	private renderRecord(record: NodeWithChildren<UiComboBoxTreeRecordConfig>, dropdown: boolean): string {
@@ -217,8 +217,8 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		this.getMainDomElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
-		this.getMainDomElement().classList.add(UiField.editingModeCssClasses[editingMode]);
+		this.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
+		this.getMainElement().classList.add(UiField.editingModeCssClasses[editingMode]);
 		if (editingMode === UiFieldEditingMode.READONLY) {
 			this.trivialComboBox.setEditingMode("readonly");
 		} else if (editingMode === UiFieldEditingMode.DISABLED) {
@@ -239,7 +239,8 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		}
 	}
 
-	doDestroy(): void {
+	destroy(): void {
+		super.destroy();
 		this.trivialComboBox.destroy();
 		this.$originalInput.remove();
 	}

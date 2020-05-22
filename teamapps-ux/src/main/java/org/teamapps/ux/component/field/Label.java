@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class Label extends AbstractField<String> {
 		UiLabel uiLabel = new UiLabel(caption);
 		mapAbstractFieldAttributesToUiField(uiLabel);
 		uiLabel.setIcon(getSessionContext().resolveIcon(icon));
-		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createUiComponentReference() : null);
+		uiLabel.setTargetComponent(targetComponent != null ? targetComponent.createUiReference() : null);
 		return uiLabel;
 	}
 
@@ -61,11 +61,6 @@ public class Label extends AbstractField<String> {
 				this.onClicked.fire(null);
 				break;
 		}
-	}
-
-	@Override
-	protected void doDestroy() {
-		// nothing to do
 	}
 
 	public String getCaption() {
@@ -95,7 +90,7 @@ public class Label extends AbstractField<String> {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
 		this.targetComponent = targetComponent;
-		queueCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(getId(), Component.createUiComponentReference(targetComponent)));
+		queueCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(getId(), Component.createUiClientObjectReference(targetComponent)));
 		return this;
 	}
 }

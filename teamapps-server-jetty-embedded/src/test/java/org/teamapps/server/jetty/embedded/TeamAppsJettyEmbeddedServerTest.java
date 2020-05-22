@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ package org.teamapps.server.jetty.embedded;
 
 import com.google.common.io.Files;
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.ux.component.field.upload.simple.SimpleFileField;
+import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
@@ -28,11 +30,23 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
 
-		WebController controller = (SessionContext context) -> {
-			context.showNotification(MaterialIcon.MESSAGE, "Hello World");
+		WebController controller = (SessionContext sessionContext) -> {
+			sessionContext.showNotification(MaterialIcon.MESSAGE, "Hello World");
+			RootPanel rootPanel = new RootPanel();
+			sessionContext.addRootComponent(null, rootPanel);
+			rootPanel.setContent(new SimpleFileField());
 		};
 
-		new TeamAppsJettyEmbeddedServer(controller, Files.createTempDir(), 8081).start();
+		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, Files.createTempDir(), 8081);
+
+		// Test custom configurations:
+		// jettyServer.configureHttpsUsingP12File(8443, new File("/path/to/cert.p12"), "changeit");
+		jettyServer.getWebapp().getSessionHandler().setSecureRequestOnly(true);
+		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setHttpOnly(true);
+		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setComment("__SAME_SITE_STRICT__");
+
+		// start server
+		jettyServer.start();
 
 	}
 

@@ -1,7 +1,8 @@
 /*-
+ * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * =========================LICENSE_END==================================
  */
 import {UiComponentConfig} from "../../generated/UiComponentConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
@@ -55,10 +57,10 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 
 	setComponent(component: UiComponent): void {
 		if (this.component != null) {
-			this.component.getMainDomElement().remove();
+			this.component.getMainElement().remove();
 		}
 		this.component = component;
-		this.$componentWrapper.appendChild(this.component.getMainDomElement());
+		this.$componentWrapper.appendChild(this.component.getMainElement());
 	}
 
 	setSize(width: number, height: number): void {
@@ -82,10 +84,6 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 
 	focus(): void {
 		// do nothing
-	}
-
-	doDestroy(): void {
-		this.$componentWrapper.remove();
 	}
 
 	getTransientValue(): void {

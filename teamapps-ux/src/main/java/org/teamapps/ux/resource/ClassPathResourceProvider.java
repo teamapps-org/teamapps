@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,27 +53,5 @@ public class ClassPathResourceProvider implements ResourceProvider {
 		}
 		return basePackage;
 	}
-
-	private class ClassPathResource implements Resource {
-
-		private final String resourceName;
-		private Long cachedSize;
-
-		public ClassPathResource(String resourceName) {
-			this.resourceName = resourceName;
-		}
-
-		@Override
-		public InputStream getInputStream() {
-			return getClass().getResourceAsStream(resourceName);
-		}
-
-		@Override
-		public long getLength() {
-			if (cachedSize == null) {
-				cachedSize = Resource.super.getLength();
-			}
-			return cachedSize;
-		}
-	}
+	
 }

@@ -5,7 +5,7 @@
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.25-SNAPSHOT</version>
+    <version>0.9.63-SNAPSHOT</version>
 
     <name>TeamApps</name>
     <description>A Java web application framework</description>
@@ -37,23 +37,23 @@
         <module>teamapps-material-icon-provider</module>
         <module>teamapps-ui-dsl</module>
         <module>teamapps-ui-api</module>
-        <module>teamapps-client</module>
         <module>teamapps-ux</module>
         <module>teamapps-ux-servlet</module>
+        <module>teamapps-client</module>
+        <module>teamapps-application-management</module>
         <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
         <module>teamapps-server-tomcat-embedded</module>
-        <module>teamapps-application-management</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>10</maven.compiler.source>
-        <maven.compiler.target>10</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
         <slf4j-version>1.7.25</slf4j-version>
-        <jackson-version>2.9.9</jackson-version>
+        <jackson-version>2.10.0</jackson-version>
         <guava-version>23.6-jre</guava-version>
         <apache-commons-io>2.6</apache-commons-io>
         <junit.version>4.12</junit.version>
@@ -65,6 +65,19 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.9.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -142,13 +155,6 @@
             </dependency>
 
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.4</version>
@@ -176,13 +182,6 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${apache-commons-io}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>3.9.0</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -281,6 +280,7 @@
                 <configuration>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
+                    <compilerArgument>-Xlint:-options</compilerArgument>
                 </configuration>
             </plugin>
             <plugin>

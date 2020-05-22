@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,8 @@ import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class ResponsiveApplicationToolbar implements ApplicationChangeHandler {
 
@@ -64,8 +63,8 @@ public class ResponsiveApplicationToolbar implements ApplicationChangeHandler {
 
     @Override
     public void handlePerspectiveChange(ResponsiveApplication application, Perspective perspective, Perspective previousPerspective, List<View> activeViews, List<View> addedViews, List<View> removedViews) {
-        Set<ToolbarButtonGroup> addGroups = new HashSet<>();
-        Set<ToolbarButtonGroup> removeGroups = new HashSet<>();
+        List<ToolbarButtonGroup> addGroups = new ArrayList<>();
+        List<ToolbarButtonGroup> removeGroups = new ArrayList<>();
 
         addedViews.forEach(view -> addGroups.addAll(view.getWorkspaceButtonGroups()));
         addGroups.addAll(perspective.getWorkspaceButtonGroups());
@@ -76,8 +75,8 @@ public class ResponsiveApplicationToolbar implements ApplicationChangeHandler {
             removeGroups.removeAll(addGroups);
         }
 
-        removeGroups.forEach(group -> toolbar.removeToolbarButtonGroup(group));
-        addGroups.forEach(group -> toolbar.addButtonGroup(group));
+        removeGroups.stream().distinct().forEach(group -> toolbar.removeToolbarButtonGroup(group));
+        addGroups.stream().distinct().forEach(group -> toolbar.addButtonGroup(group));
     }
 
     @Override

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public class PartitioningTimeGraphModel implements TimeGraphModel {
 	public PartitioningTimeGraphModel(ZoneId timeZone, RawTimedDataModel delegateModel) {
 		this.timeZone = timeZone;
 		this.delegateModel = delegateModel;
-		this.delegateModel.onDataChanged().addListener(onDataChanged::fire);
+		this.delegateModel.onDataChanged().addListener((Runnable) onDataChanged::fire);
 	}
 
 	public void setZoomLevelPartitionUnits(List<TimePartitionUnit> zoomLevelPartitionUnits) {

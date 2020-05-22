@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,8 @@ import static org.teamapps.util.UiUtil.createUiColor;
 public class VideoPlayer extends AbstractComponent {
 
 	public final Event<Void> onErrorLoading = new Event<>();
-	public final Event<Integer> onVideoPlayerProgress = new Event<>();
+	public final Event<Integer> onProgress = new Event<>();
+	public final Event<Void> onEnded = new Event<>();
 
 	private String url; //the url of the video
 	private boolean autoplay; // if set...
@@ -66,13 +67,19 @@ public class VideoPlayer extends AbstractComponent {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_VIDEO_PLAYER_ERROR_LOADING:
+			case UI_VIDEO_PLAYER_ERROR_LOADING: {
 				onErrorLoading.fire(null);
 				break;
-			case UI_VIDEO_PLAYER_PLAYER_PROGRESS:
-				UiVideoPlayer.PlayerProgressEvent progressEvent = (UiVideoPlayer.PlayerProgressEvent) event;
-				onVideoPlayerProgress.fire(progressEvent.getPositionInSeconds());
+			}
+			case UI_VIDEO_PLAYER_PLAYER_PROGRESS: {
+				UiVideoPlayer.PlayerProgressEvent e = (UiVideoPlayer.PlayerProgressEvent) event;
+				onProgress.fire(e.getPositionInSeconds());
 				break;
+			}
+			case UI_VIDEO_PLAYER_ENDED: {
+				onEnded.fire();
+				break;
+			}
 		}
 	}
 
@@ -160,8 +167,4 @@ public class VideoPlayer extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiVideoPlayer.SetPreloadModeCommand(getId(), preloadMode.toUiPreloadMode()));
 	}
 
-	@Override
-	protected void doDestroy() {
-		// nothing to do
-	}
 }

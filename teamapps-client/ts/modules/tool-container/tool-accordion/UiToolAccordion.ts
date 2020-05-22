@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiComponent} from "../../UiComponent";
 import {UiColorConfig} from "../../../generated/UiColorConfig";
 import {UiToolAccordionButton} from "./UiToolAccordionButton";
+require("jquery-ui/ui/scroll-parent.js")
 
 export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConfig> implements UiToolAccordionCommandHandler, UiToolAccordionEventSource {
 
@@ -54,8 +55,9 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 		this.$mainDomElement = parseHtml(`<div class="UiToolAccordion teamapps-blurredBackgroundImage"></div>`);
 		this.$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this.$mainDomElement.appendChild(this.$backgroundColorDiv);
-		for (let i = 0; i < config.buttonGroups.length; i++) {
-			const buttonGroupConfig = config.buttonGroups[i];
+		let allButtonGroups = [...config.leftButtonGroups, ...config.rightButtonGroups];
+		for (let i = 0; i < allButtonGroups.length; i++) {
+			const buttonGroupConfig = allButtonGroups[i];
 			let buttonGroup = this.createButtonGroup(buttonGroupConfig);
 			this.buttonGroupsById.push(buttonGroupConfig.groupId, buttonGroup);
 			this.$backgroundColorDiv.appendChild(buttonGroup.getMainDomElement());
@@ -64,7 +66,7 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 		this.refreshEnforcedButtonWidth();
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$mainDomElement;
 	}
 
@@ -208,7 +210,7 @@ class UiButtonGroup {
 				dropdownClickInfo = createUiDropDownButtonClickInfoConfig(!dropdownVisible, button.dropDownComponent != null);
 				if (!dropdownVisible) {
 					if (button.dropDownComponent != null) {
-						button.$dropDown.appendChild(button.dropDownComponent.getMainDomElement());
+						button.$dropDown.appendChild(button.dropDownComponent.getMainElement());
 					}
 					this.showDropDown(button);
 					doOnceOnClickOutsideElement(button.getMainDomElement(), e => $(button.$dropDown).slideUp(200))
@@ -294,7 +296,7 @@ class UiButtonGroup {
 
 	private setButtonDropDownComponent(button: UiToolAccordionButton, component: UiComponent) {
 		if (button.dropDownComponent != null) {
-			button.dropDownComponent.getMainDomElement().remove();
+			button.dropDownComponent.getMainElement().remove();
 		}
 
 		button.dropDownComponent = component;
@@ -313,7 +315,7 @@ class UiButtonGroup {
 			if (button.$dropDown != null) {
 				button.$dropDown.querySelectorAll<HTMLElement>(":scope :not(.source-button-indicator)").forEach(b => b.remove()); // remove spinner or old component, if present...
 				if ($(button.$dropDown).is(":visible")) {
-					button.$dropDown.appendChild(component.getMainDomElement());
+					button.$dropDown.appendChild(component.getMainElement());
 				}
 			}
 		}

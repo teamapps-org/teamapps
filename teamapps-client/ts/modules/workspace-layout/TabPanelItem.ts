@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -210,7 +210,7 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 		this.$minimizedTrayButton.innerHTML = '';
 		// noinspection CssUnknownTarget
 		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('/resources/window-restore-grey.png')"></div>`));
-		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${this.context.getIconPath(tab.view.tabIcon, iconSize)}')"></div>`)));
+		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${tab.view.tabIcon}')"></div>`)));
 		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(UiViewGroupPanelState.NORMAL));
 	}
 

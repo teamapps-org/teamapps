@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -353,13 +353,13 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					});
 					editor.on('focus', (e) => {
 						this._hasFocus = true;
-						this.getMainDomElement().classList.add('focus');
+						this.getMainElement().classList.add('focus');
 						this.updateToolbarVisibility();
 						this.onFocused.fire(null);
 					});
 					editor.on('blur', (e) => {
 						this._hasFocus = false;
-						this.getMainDomElement().classList.remove('focus');
+						this.getMainElement().classList.remove('focus');
 						if (this.mayFireChangeEvents()) {
 							this.commit();
 						}
@@ -484,7 +484,8 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		this.editor && this.editor.focus(false);
 	}
 
-	doDestroy(): void {
+	destroy(): void {
+		super.destroy();
 		this.destroying = true;
 		if (this.editor != null) {
             this.editor.destroy();

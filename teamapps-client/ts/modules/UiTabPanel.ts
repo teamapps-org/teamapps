@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -223,7 +223,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		return this.leftTabs.concat(this.rightTabs);
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$tabPanel;
 	}
 
@@ -269,9 +269,9 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		}
 	}
 
-	private createTabButton(tabId: string, iconName: string, caption: string, closeable: boolean) {
+	private createTabButton(tabId: string, icon: string, caption: string, closeable: boolean) {
 		const $tabButton = parseHtml(`<div class="tab-button" data-tab-name="${tabId}" draggable="true">
-                     ${iconName ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url(${this._context.getIconPath(iconName, 16)});"></div></div>` : ''}
+                     ${icon ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url(${icon});"></div></div>` : ''}
                      <div class="tab-button-caption">${caption}</div>                                                                                                                          	
                      <div class="tab-button-filler"></div>
                 </div>`);
@@ -328,7 +328,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		tab.contentComponent = content;
 		if (tab.contentComponent) {
 			isEmptyable(tab.contentComponent) && tab.contentComponent.onEmptyStateChanged.addListener(this.onChildEmptyStateChanged.bind(this));
-			$tabContentContainer.appendChild(content.getMainDomElement());
+			$tabContentContainer.appendChild(content.getMainElement());
 		}
 
 		this.onChildEmptyStateChanged();
@@ -404,11 +404,11 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 
 	private setTabToolbarInternal(tab: Tab, toolbar: UiToolbar) {
 		if (tab.toolbar != null) {
-			tab.toolbar.getMainDomElement().remove();
+			tab.toolbar.getMainElement().remove();
 		}
 		tab.toolbar = toolbar;
 		if (toolbar) {
-			tab.$toolbarContainer.append(toolbar.getMainDomElement());
+			tab.$toolbarContainer.append(toolbar.getMainElement());
 		}
 	}
 
@@ -508,7 +508,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		this.$toolButtonContainer.classList.toggle("hidden", !toolButtons || toolButtons.length === 0);
 		this.toolButtons = {};
 		toolButtons.forEach(toolButton => {
-			this.$toolButtonContainer.appendChild(toolButton.getMainDomElement());
+			this.$toolButtonContainer.appendChild(toolButton.getMainElement());
 			this.toolButtons[toolButton.getId()] = toolButton;
 		});
 		this.relayoutButtons();
@@ -538,22 +538,22 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		this.windowButtons.push(toolButtonType);
 		const button = this.defaultToolButtons[toolButtonType];
 		if (this.$windowButtonContainer.children.length === 0) {
-			prependChild(this.$windowButtonContainer, button.getMainDomElement());
+			prependChild(this.$windowButtonContainer, button.getMainElement());
 		} else {
 			let index = this.windowButtons
 				.sort((a, b) =>this.orderedDefaultToolButtonTypes.indexOf(a) - this.orderedDefaultToolButtonTypes.indexOf(b))
 				.indexOf(toolButtonType);
 			if (index >= this.$windowButtonContainer.childNodes.length) {
-				this.$windowButtonContainer.appendChild(button.getMainDomElement());
+				this.$windowButtonContainer.appendChild(button.getMainElement());
 			} else {
-				insertBefore(button.getMainDomElement(), this.$windowButtonContainer.children[index]);
+				insertBefore(button.getMainElement(), this.$windowButtonContainer.children[index]);
 			}
 		}
 		this.relayoutButtons();
 	}
 
 	public removeWindowButton(uiToolButton: UiWindowButtonType) {
-		this.defaultToolButtons[uiToolButton].getMainDomElement().remove();
+		this.defaultToolButtons[uiToolButton].getMainElement().remove();
 		this.windowButtons = this.windowButtons.filter(tb => tb !== uiToolButton);
 		if (this.windowButtons.length === 0) {
 			this.$windowButtonContainer.classList.add("hidden");
@@ -603,8 +603,6 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		this.$dropDownButton.classList.toggle("hidden", sumOfButtonWidths <= availableWidth);
 	}
 
-	public destroy(): void {
-	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiTabPanel", UiTabPanel);

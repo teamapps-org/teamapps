@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,18 +43,13 @@ public class MobileLayout extends AbstractComponent implements Container {
 		UiMobileLayout uiMobileLayout = new UiMobileLayout();
 		mapAbstractUiComponentProperties(uiMobileLayout);
 		if (content != null) {
-			uiMobileLayout.setInitialView(content.createUiComponentReference());
+			uiMobileLayout.setInitialView(content.createUiReference());
 		}
 		if (toolbar != null) {
-			uiMobileLayout.setToolbar(toolbar.createUiComponentReference());
+			uiMobileLayout.setToolbar(toolbar.createUiReference());
 		}
-		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar.createUiComponentReference() : null);
+		uiMobileLayout.setNavigationBar(navigationBar != null ? navigationBar.createUiReference() : null);
 		return uiMobileLayout;
-	}
-
-	@Override
-	protected void doDestroy() {
-
 	}
 
 	@Override
@@ -70,10 +65,12 @@ public class MobileLayout extends AbstractComponent implements Container {
 	}
 
 	public void setContent(Component component, PageTransition animation, int animationDuration) {
-		content = component;
-		component.setParent(this);
-		queueCommandIfRendered(() -> new UiMobileLayout.ShowViewCommand(getId(), component.createUiComponentReference(), animation != null ? animation.toUiPageTransition() : null,
-				animationDuration));
+		if (this.content != component) {
+			content = component;
+			component.setParent(this);
+			queueCommandIfRendered(() -> new UiMobileLayout.ShowViewCommand(getId(), component.createUiReference(), animation != null ? animation.toUiPageTransition() : null,
+					animationDuration));
+		}
 	}
 
 	public Toolbar getToolbar() {
@@ -97,7 +94,7 @@ public class MobileLayout extends AbstractComponent implements Container {
 		if (navigationBar != null) {
 			navigationBar.setParent(this);
 		}
-		queueCommandIfRendered(() -> new UiMobileLayout.SetNavigationBarCommand(getId(), navigationBar != null ? navigationBar.createUiComponentReference() : null));
+		queueCommandIfRendered(() -> new UiMobileLayout.SetNavigationBarCommand(getId(), navigationBar != null ? navigationBar.createUiReference() : null));
 	}
 
 	@Override

@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ export class UiFieldGroup extends AbstractUiComponent<UiFieldGroupConfig> implem
 		this.setFields(config.fields as UiField[]);
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
@@ -43,11 +43,12 @@ export class UiFieldGroup extends AbstractUiComponent<UiFieldGroupConfig> implem
 		this.fields = fields;
 		this.$main.innerHTML = '';
 		fields.forEach(f => {
-			this.$main.appendChild(f.getMainDomElement())
+			this.$main.appendChild(f.getMainElement())
 		});
 	}
 
 	destroy() {
+		super.destroy();
 		this.fields.forEach(f => f.destroy());
 	}
 }

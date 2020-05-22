@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,34 @@
  */
 package org.teamapps.databinding;
 
+import org.teamapps.event.Event;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 public interface TwoWayBindableValue<T> extends ObservableValue<T>, MutableValue<T> {
 
 	// ------- utility -------
 
 	default void bindTwoWays(TwoWayBindableValue<T> other) {
 		DataBindings.bindTwoWays(this, other);
+	}
+
+	// === static ===
+
+	static <T> TwoWayBindableValue<T> create() {
+		return new TwoWayBindableValueImpl<>();
+	}
+
+	static <T> TwoWayBindableValue<T> create(T initialValue) {
+		return new TwoWayBindableValueImpl<>(initialValue);
+	}
+
+	static <T> TwoWayBindableValue<T> create(Event<T> changeEvent, Supplier<T> getter, Consumer<T> setter) {
+		return DataBindings.createTwoWayBindable(changeEvent, getter, setter);
+	}
+
+	static <T> TwoWayBindableValue<T> create(Event<T> changeEvent, Consumer<T> setter) {
+		return DataBindings.createTwoWayBindable(changeEvent, setter);
 	}
 }

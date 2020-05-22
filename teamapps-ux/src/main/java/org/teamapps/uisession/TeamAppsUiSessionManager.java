@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,19 @@ import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.dto.AbstractServerMessage;
 import org.teamapps.dto.INIT_NOK;
 import org.teamapps.dto.INIT_OK;
 import org.teamapps.dto.MULTI_CMD;
 import org.teamapps.dto.REINIT_NOK;
 import org.teamapps.dto.REINIT_OK;
+import org.teamapps.dto.SERVER_ERROR;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiSessionClosingReason;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.ArrayList;
@@ -56,21 +60,21 @@ import java.util.stream.Collectors;
  */
 public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionListener {
 
-	private static final long UI_SESSION_TIMEOUT = 15 * 60 * 1000; // TODO make configurable
-
-	private ScheduledExecutorService scheduledExecutorService;
-	private final ObjectMapper objectMapper;
-	private UiSessionListener uiSessionListener;
-
 	private final static Logger LOGGER = LoggerFactory.getLogger(TeamAppsUiSessionManager.class);
 
+	private final ScheduledExecutorService scheduledExecutorService;
+	private final ObjectMapper objectMapper;
+	private final TeamAppsConfiguration config;
 	private final Table<String, String, UiSession> sessionsById = Tables.synchronizedTable(HashBasedTable.create());
+	private UiSessionListener uiSessionListener;
 
-	public TeamAppsUiSessionManager(ObjectMapper objectMapper) {
-		this(objectMapper, null);
+
+	public TeamAppsUiSessionManager(TeamAppsConfiguration config, ObjectMapper objectMapper) {
+		this(config, objectMapper, null);
 	}
 
-	public TeamAppsUiSessionManager(ObjectMapper objectMapper, UiSessionListener uiSessionListener) {
+	public TeamAppsUiSessionManager(TeamAppsConfiguration config, ObjectMapper objectMapper, UiSessionListener uiSessionListener) {
+		this.config = config;
 		this.uiSessionListener = uiSessionListener;
 		this.objectMapper = objectMapper;
 		this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -78,7 +82,12 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			thread.setDaemon(true);
 			return thread;
 		});
-		this.scheduledExecutorService.scheduleAtFixedRate(() -> removeTimedOutSessions(UI_SESSION_TIMEOUT), UI_SESSION_TIMEOUT, UI_SESSION_TIMEOUT, TimeUnit.MILLISECONDS);
+		this.scheduledExecutorService.scheduleAtFixedRate(
+				() -> updateSessionStates(),
+				config.getKeepaliveMessageIntervalMillis(),
+				config.getKeepaliveMessageIntervalMillis(),
+				TimeUnit.MILLISECONDS
+		);
 	}
 
 	public void setUiSessionListener(UiSessionListener uiSessionListener) {
@@ -92,6 +101,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 	public void initSession(
 			QualifiedUiSessionId sessionId,
 			UiClientInfo clientInfo,
+			HttpSession httpSession,
 			int maxRequestedCommandId,
 			MessageSender messageSender
 	) {
@@ -105,7 +115,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				isRefresh = true;
 				session = getSessionById(sessionId);
 			} else {
-				session = new UiSession(sessionId, clientInfo, System.currentTimeMillis(), uiSessionListener, messageSender);
+				session = new UiSession(sessionId, clientInfo, httpSession, System.currentTimeMillis(), uiSessionListener, messageSender);
 				sessionsById.put(sessionId.getHttpSessionId(), sessionId.getUiSessionId(), session);
 			}
 		}
@@ -114,7 +124,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			if (session != null) {
 				session.handleClientRefresh(maxRequestedCommandId, messageSender);
 			} else {
-				messageSender.sendMessageAsynchronously(new INIT_NOK(INIT_NOK.Reason.SESSION_NOT_FOUND), null);
+				messageSender.sendMessageAsynchronously(new INIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND), null);
 			}
 		} else {
 			session.init(maxRequestedCommandId);
@@ -156,7 +166,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			session.reinit(lastReceivedCommandId, maxRequestedCommandId, messageSender);
 		} else {
 			LOGGER.warn("Could not find teamAppsUiSession for REINIT: " + sessionId);
-			messageSender.sendMessageAsynchronously(new REINIT_NOK(REINIT_NOK.Reason.SESSION_NOT_FOUND), null);
+			messageSender.sendMessageAsynchronously(new REINIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND), null);
 		}
 	}
 
@@ -169,84 +179,91 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		}
 	}
 
-	public void sendCommand(QualifiedUiSessionId sessionId, UiCommandWithResultCallback commandWithCallback) {
+	public int sendCommand(QualifiedUiSessionId sessionId, UiCommandWithResultCallback commandWithCallback) {
 		UiSession session = getSessionById(sessionId);
 		if (session != null) {
-			try {
-				session.sendCommand(commandWithCallback);
-			} catch (UnconsumedCommandsOverflowException e) {
-				LOGGER.error("Too many unconsumed commands!", e);
-				closeSession(sessionId, SessionClosingReason.COMMANDS_OVERFLOW);
-			}
+			return session.sendCommand(commandWithCallback);
 		} else {
-			LOGGER.warn("Cannot send command to non-existing session: " + sessionId);
+			LOGGER.debug("Cannot send command to non-existing session: " + sessionId);
+			return -1;
 		}
 	}
 
-	public void sendCommands(QualifiedUiSessionId sessionId, List<UiCommandWithResultCallback> commandsWithCallback) {
+	@Override
+	public ClientBackPressureInfo getClientBackPressureInfo(QualifiedUiSessionId sessionId) {
 		UiSession session = getSessionById(sessionId);
 		if (session != null) {
-			try {
-				ArrayList<UiCommandWithResultCallback> uiCommandsCopy = new ArrayList<>(commandsWithCallback);
-				session.sendCommands(uiCommandsCopy);
-			} catch (UnconsumedCommandsOverflowException e) {
-				LOGGER.error("Too many unconsumed commands!", e);
-				closeSession(sessionId, SessionClosingReason.COMMANDS_OVERFLOW);
-			}
+			return session.getClientBackPressureInfo();
 		} else {
-			LOGGER.warn("Cannot send commands to non-existing session: " + sessionId);
+			LOGGER.info("Cannot get back pressure info for non-existing session: " + sessionId);
+			return null;
 		}
 	}
 
-	public void closeSession(QualifiedUiSessionId sessionId, SessionClosingReason reason) {
-		if (sessionsById.remove(sessionId.getHttpSessionId(), sessionId.getUiSessionId()) != null) {
-			LOGGER.info("Actively closing session: " + sessionId);
-			uiSessionListener.onUiSessionClosed(sessionId, reason);
+	@Override
+	public void closeSession(QualifiedUiSessionId sessionId, UiSessionClosingReason reason) {
+		LOGGER.info("Closing session: " + sessionId + " for reason: " + reason);
+		UiSession removedSession = sessionsById.remove(sessionId.getHttpSessionId(), sessionId.getUiSessionId());
+		if (removedSession == null) {
+			LOGGER.info("Session to be closed not found: " + sessionId);
+		} else {
+			removedSession.close(reason);
 		}
+		uiSessionListener.onUiSessionClosed(sessionId, reason);
 	}
 
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
-		// nothing to do...
+		se.getSession().setMaxInactiveInterval(config.getHttpSessionTimeoutSeconds());
 	}
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
-		removeAllSessionsForHttpSession(se.getSession().getId());
+		closeAllSessionsForHttpSession(se.getSession().getId());
 	}
 
-	public void removeAllSessionsForHttpSession(String httpSessionId) {
+	public void closeAllSessionsForHttpSession(String httpSessionId) {
 		LOGGER.trace("TeamAppsUiSessionManager.removeAllSessionsForHttpSession");
-		ArrayList<UiSession> removedSessions;
+		ArrayList<UiSession> sessionsToClose;
 		synchronized (sessionsById) {
 			Map<String, UiSession> sessionsToBeClosed = sessionsById.row(httpSessionId);
-			removedSessions = new ArrayList<>(sessionsToBeClosed.values());
+			sessionsToClose = new ArrayList<>(sessionsToBeClosed.values());
 			sessionsToBeClosed.clear();
 		}
-		removedSessions.forEach(session -> {
-			LOGGER.info("Removed session since HTTP session was closed: " + session.sessionId);
-			uiSessionListener.onUiSessionClosed(session.sessionId, SessionClosingReason.HTTP_SESSION_CLOSED);
-		});
+		for (UiSession uiSession : sessionsToClose) {
+			closeSession(uiSession.sessionId, UiSessionClosingReason.HTTP_SESSION_CLOSED);
+		}
 	}
 
-	public void removeTimedOutSessions(long timeoutMilliSeconds) {
+	public void updateSessionStates() {
 		long now = System.currentTimeMillis();
-		List<UiSession> removedSessions;
+		Map<Boolean, List<UiSession>> sessionsByActivity;
+		List<UiSession> sessionsToClose;
 		synchronized (sessionsById) {
-			removedSessions = new ArrayList<>();
-			sessionsById.values().removeIf(session -> {
-				boolean isTimedOut = now - session.getTimestampOfLastMessageFromClient() > timeoutMilliSeconds;
-				if (isTimedOut) {
-					LOGGER.debug("UI session timed out after " + timeoutMilliSeconds + " ms: " + session.sessionId);
-					removedSessions.add(session);
-				}
-				return isTimedOut;
-			});
+			sessionsByActivity = sessionsById.values().stream()
+					.collect(Collectors.partitioningBy(session -> now - session.getTimestampOfLastMessageFromClient() < config.getUiSessionInactivityTimeoutMillis()));
+
+			sessionsToClose = sessionsById.values().stream()
+					.filter(session -> now - session.getTimestampOfLastMessageFromClient() > config.getUiSessionTimeoutMillis())
+					.collect(Collectors.toList());
 		}
-		removedSessions.forEach(session -> {
-			LOGGER.info("Session timeout: " + session.sessionId);
-			uiSessionListener.onUiSessionClosed(session.sessionId, SessionClosingReason.TIMED_OUT);
-		});
+		for (UiSession inactiveSession : sessionsByActivity.get(false)) {
+			if (inactiveSession.taggedActive) {
+				LOGGER.info("Marking session inactive: {}",  inactiveSession.sessionId);
+				inactiveSession.taggedActive = false;
+				uiSessionListener.onActivityStateChanged(inactiveSession.sessionId, false);
+			}
+		}
+		for (UiSession activeSession : sessionsByActivity.get(true)) {
+			if (!activeSession.taggedActive) {
+				LOGGER.info("Marking session active: {}",  activeSession.sessionId);
+				activeSession.taggedActive = true;
+				uiSessionListener.onActivityStateChanged(activeSession.sessionId, true);
+			}
+		}
+		for (UiSession sessionToClose : sessionsToClose) {
+			closeSession(sessionToClose.sessionId, UiSessionClosingReason.SESSION_TIMEOUT);
+		}
 	}
 
 	public void destroy() {
@@ -255,29 +272,31 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 	private class UiSession {
 
-		private static final int COMMAND_BUFFER_SIZE = 10_000;
-
 		private final QualifiedUiSessionId sessionId;
 		private final UiClientInfo clientInfo;
+		private final HttpSession httpSession;
 		private final UiSessionListener sessionListener;
 
 		private MessageSender messageSender;
 
-		private final CommandBuffer commandBuffer = new CommandBuffer(COMMAND_BUFFER_SIZE);
+		private final CommandBuffer commandBuffer = new CommandBuffer(config.getCommandBufferSize());
 		private AtomicInteger commandIdCounter = new AtomicInteger();
 
 		private AtomicLong timestampOfLastMessageFromClient = new AtomicLong();
 		private int lastReceivedClientMessageId;
-		private boolean connectionActive = true;
+		private boolean clientReadyToReceiveCommands = true;
+		private boolean taggedActive = true;
 
 		private int maxRequestedCommandId = 0;
 		private int lastSentCommandId;
+		private long requestedCommandsZeroTimestamp = -1;
 
 		private Map<Integer, Consumer> resultCallbacksByCmdId = new ConcurrentHashMap<>();
 
-		public UiSession(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, long creationTime, UiSessionListener sessionListener, MessageSender messageSender) {
+		public UiSession(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession, long creationTime, UiSessionListener sessionListener, MessageSender messageSender) {
 			this.sessionId = sessionId;
 			this.clientInfo = clientInfo;
+			this.httpSession = httpSession;
 			this.timestampOfLastMessageFromClient.set(creationTime);
 			this.sessionListener = sessionListener;
 			this.messageSender = messageSender;
@@ -291,31 +310,31 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			this.messageSender = messageSender;
 		}
 
-		public void sendCommand(UiCommandWithResultCallback commandWithCallback) throws UnconsumedCommandsOverflowException {
+		public int sendCommand(UiCommandWithResultCallback commandWithCallback) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Sending command ({}): {}" , sessionId.getUiSessionId().substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
+				LOGGER.debug("Sending command ({}): {}", sessionId.getUiSessionId().substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
 			}
 			CMD cmd = createCMD(commandWithCallback);
 			synchronized (this) {
-				commandBuffer.addCommand(cmd);
+				try {
+					commandBuffer.addCommand(cmd);
+				} catch (UnconsumedCommandsOverflowException e) {
+					LOGGER.error("Too many unconsumed commands!", e);
+					closeSession(sessionId, UiSessionClosingReason.COMMANDS_OVERFLOW);
+					return -1;
+				}
 				sendAllQueuedCommandsIfPossible();
+				return commandBuffer.getUnconsumedCommandsCount();
 			}
 		}
 
-		public void sendCommands(List<UiCommandWithResultCallback> commandsWithCallback) throws UnconsumedCommandsOverflowException {
-			if (LOGGER.isDebugEnabled()) {
-				commandsWithCallback.stream()
-						.map(UiCommandWithResultCallback::getUiCommand)
-						.forEach(command -> LOGGER.debug("Sending command ({}): {}" , sessionId.getUiSessionId().substring(0, 8), command.getClass().getSimpleName()));
-			}
-			List<CMD> cmds = commandsWithCallback.stream()
-					.map(commandWithCallback -> createCMD(commandWithCallback))
-					.collect(Collectors.toList());
+		public ClientBackPressureInfo getClientBackPressureInfo() {
 			synchronized (this) {
-				for (CMD cmd : cmds) {
-					commandBuffer.addCommand(cmd);
-				}
-				sendAllQueuedCommandsIfPossible();
+				return new ClientBackPressureInfo(
+						config.getCommandBufferSize(), commandBuffer.getUnconsumedCommandsCount(),
+						config.getClientMinRequestedCommands(), config.getClientMaxRequestedCommands(), maxRequestedCommandId - lastSentCommandId,
+						requestedCommandsZeroTimestamp
+				);
 			}
 		}
 
@@ -343,13 +362,19 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		}
 
 		private void sendAllQueuedCommandsIfPossible() {
-			if (connectionActive) {
+			if (clientReadyToReceiveCommands) {
 				List<CMD> cmdsToSend = new ArrayList<>();
 				synchronized (this) {
 					while (true) {
-						if (lastSentCommandId >= maxRequestedCommandId) {
-							connectionActive = false;
+						if (!clientReadyToReceiveCommands) {
 							break;
+						}
+						if (lastSentCommandId >= maxRequestedCommandId) {
+							clientReadyToReceiveCommands = false;
+							requestedCommandsZeroTimestamp = System.currentTimeMillis();
+							break;
+						} else {
+							requestedCommandsZeroTimestamp = -1;
 						}
 						CMD cmd = commandBuffer.consumeCommand();
 						if (cmd != null) {
@@ -368,7 +393,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 		public void reviveConnection() {
 			synchronized (this) {
-				this.connectionActive = true;
+				this.clientReadyToReceiveCommands = true;
 				sendAllQueuedCommandsIfPossible();
 			}
 		}
@@ -389,8 +414,13 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				this.maxRequestedCommandId = maxRequestedCommandId;
 			}
 			LOGGER.debug("INIT successful: " + sessionId);
-			sessionListener.onUiSessionStarted(sessionId, clientInfo);
-			sendAsyncWithErrorHandler(new INIT_OK());
+			sessionListener.onUiSessionStarted(sessionId, clientInfo, httpSession);
+			sendAsyncWithErrorHandler(new INIT_OK(
+					config.getClientMinRequestedCommands(),
+					config.getClientMaxRequestedCommands(),
+					config.getClientEventsBufferSize(),
+					config.getKeepaliveMessageIntervalMillis()
+			));
 		}
 
 		public void handleClientRefresh(int maxRequestedCommandId, MessageSender messageSender) {
@@ -400,13 +430,18 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				this.commandBuffer.clear();
 				commandIdCounter.set(0);
 				lastReceivedClientMessageId = -1;
-				connectionActive = true;
+				clientReadyToReceiveCommands = true;
 				this.maxRequestedCommandId = maxRequestedCommandId;
 				lastSentCommandId = 0;
 			}
 			LOGGER.debug("INIT (client refresh) successful: " + sessionId);
-			sessionListener.onUiSessionClientRefresh(sessionId, clientInfo);
-			sendAsyncWithErrorHandler(new INIT_OK());
+			sessionListener.onUiSessionClientRefresh(sessionId, clientInfo, httpSession);
+			sendAsyncWithErrorHandler(new INIT_OK(
+					config.getClientMinRequestedCommands(),
+					config.getClientMaxRequestedCommands(),
+					config.getClientEventsBufferSize(),
+					config.getKeepaliveMessageIntervalMillis()
+			));
 		}
 
 		public void handleEvent(int clientMessageId, UiEvent event) {
@@ -453,7 +488,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				reviveConnection();
 			} else {
 				LOGGER.warn("Could not reinit. Command with id " + lastReceivedCommandId + "not found in command buffer.");
-				sendAsyncWithErrorHandler(new REINIT_NOK(REINIT_NOK.Reason.COMMAND_ID_NOT_FOUND));
+				sendAsyncWithErrorHandler(new REINIT_NOK(UiSessionClosingReason.REINIT_COMMAND_ID_NOT_FOUND));
 			}
 		}
 
@@ -461,7 +496,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			final long sendTime = System.currentTimeMillis();
 			this.messageSender.sendMessageAsynchronously(message, (exception) -> {
 				if (timestampOfLastMessageFromClient.get() <= sendTime) {
-					connectionActive = false;
+					clientReadyToReceiveCommands = false;
 				}
 			});
 		}
@@ -469,6 +504,10 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		public void handleKeepAlive() {
 			this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 			this.reviveConnection();
+		}
+
+		public void close(UiSessionClosingReason reason) {
+			sendAsyncWithErrorHandler(new SERVER_ERROR(reason));
 		}
 	}
 

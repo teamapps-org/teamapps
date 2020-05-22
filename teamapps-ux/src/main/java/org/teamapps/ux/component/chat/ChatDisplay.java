@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,30 @@ import org.teamapps.dto.UiChatFile;
 import org.teamapps.dto.UiChatMessage;
 import org.teamapps.dto.UiChatPhoto;
 import org.teamapps.dto.UiEvent;
-import org.teamapps.event.EventListener;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.resource.Resource;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ChatDisplay extends AbstractComponent {
 
 	private final ChatDisplayModel model;
-	private int messagesFetchSize = 20;
+	private int messagesFetchSize = 30;
 
-	private final EventListener<ChatMessageBatch> modelAddMessagesAddedListener = chatMessages -> {
+	private final Consumer<ChatMessageBatch> modelAddMessagesAddedListener = chatMessages -> {
 		queueCommandIfRendered(() -> new UiChatDisplay.AddChatMessagesCommand(getId(), createUiChatMessages(chatMessages.getMessages()), false, chatMessages.isIncludesFirstMessage()));
 	};
-	private final EventListener<Void> modelAllDataChangedListener = aVoid -> {
+	private final Consumer<Void> modelAllDataChangedListener = aVoid -> {
 		ChatMessageBatch messageBatch = this.getModel().getLastChatMessages(this.messagesFetchSize);
 		queueCommandIfRendered(() -> new UiChatDisplay.ReplaceChatMessagesCommand(getId(), createUiChatMessages(messageBatch.getMessages()), messageBatch.isIncludesFirstMessage()));
 	};
 
 	private Function<Resource, String> resourceToUrlConverter = resource -> {
 		if (resource != null) {
-			return getSessionContext().createResourceLink(() -> resource.getInputStream(), resource.getLength(), resource.getName());
+			return getSessionContext().createResourceLink(resource);
 		} else {
 			return null;
 		}
@@ -111,15 +111,10 @@ public class ChatDisplay extends AbstractComponent {
 		UiChatFile uiChatFile = new UiChatFile();
 		uiChatFile.setName(file.getName());
 		uiChatFile.setIcon(getSessionContext().resolveIcon(file.getIcon()));
+		uiChatFile.setLength(file.getLength());
 		uiChatFile.setThumbnailUrl(resourceToUrlConverter.apply(file.getThumbnail()));
 		uiChatFile.setDownloadUrl(resourceToUrlConverter.apply(file.getDownload()));
 		return uiChatFile;
-	}
-
-	@Override
-	protected void doDestroy() {
-		this.model.onMessagesAdded().removeListener(modelAddMessagesAddedListener);
-		this.model.onAllDataChanged().removeListener(modelAllDataChangedListener);
 	}
 
 	public ChatDisplayModel getModel() {

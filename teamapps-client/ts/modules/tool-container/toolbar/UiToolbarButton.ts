@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,8 +73,11 @@ export class UiToolbarButton {
 				if (isFullScreen()) {
 					exitFullScreen();
 				} else {
-					enterFullScreen(this.context.getComponentById(this.config.togglesFullScreenOnComponent));
+					enterFullScreen(this.config.togglesFullScreenOnComponent as UiComponent);
 				}
+			}
+			if (this.config.startPlaybackComponent) {
+				(this.config.startPlaybackComponent as any).play();
 			}
 			if (this.config.openNewTabWithUrl) {
 				window.open(this.config.openNewTabWithUrl, '_blank');

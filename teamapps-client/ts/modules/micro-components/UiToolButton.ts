@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,14 +49,14 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 		this.minDropDownHeight = config.minDropDownHeight;
 		this.openDropDownIfNotSet = config.openDropDownIfNotSet;
 
-		this.$button = parseHtml(`<div class="UiToolButton img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url(${context.getIconPath(config.icon, 12)});"></div>`);
+		this.$button = parseHtml(`<div class="UiToolButton img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url(${config.icon});"></div>`);
 		this.$button.addEventListener('click', () => {
 				if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
 					if (!this.dropDown.isOpen) {
-						const width = this.getMainDomElement().offsetWidth;
-						this.dropDown.open({$reference: this.getMainDomElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
+						const width = this.getMainElement().offsetWidth;
+						this.dropDown.open({$reference: this.getMainElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
 						this.onDropDownOpened.fire({});
-						this.getMainDomElement().classList.add("open");
+						this.getMainElement().classList.add("open");
 					} else {
 						this.dropDown.close(); // not needed for clicks, but for keydown!
 					}
@@ -71,12 +71,12 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 		if (this._dropDown == null) {
 			this._dropDown = new UiDropDown();
 			this._dropDown.getMainDomElement().classList.add("UiButton-dropdown");
-			this._dropDown.onClose.addListener(eventObject => this.getMainDomElement().classList.remove("open"))
+			this._dropDown.onClose.addListener(eventObject => this.getMainElement().classList.remove("open"))
 		}
 		return this._dropDown;
 	}
 
-	getMainDomElement(): HTMLElement {
+	doGetMainElement(): HTMLElement {
 		return this.$button;
 	}
 
@@ -115,14 +115,11 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 	}
 
 	setIcon(icon: string): void {
-		this.$button.style.backgroundImage = `url(${this._context.getIconPath(icon, 12)})`;
+		this.$button.style.backgroundImage = `url(${icon})`;
 	}
 
 	setPopoverText(popoverText: string): void {
 		// TODO
-	}
-
-	destroy(): void {
 	}
 
 }

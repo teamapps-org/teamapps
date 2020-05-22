@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,14 +28,13 @@ import org.teamapps.dto.UiTimeChartZoomLevel;
 import org.teamapps.dto.UiTimeGraph;
 import org.teamapps.dto.UiTimeGraphDataPoint;
 import org.teamapps.event.Event;
-import org.teamapps.event.EventListener;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class TimeGraph extends AbstractComponent {
@@ -49,16 +48,8 @@ public class TimeGraph extends AbstractComponent {
 	private LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode = LineChartMouseScrollZoomPanMode.ENABLED;
 	private Interval selectedInterval;
 
-	/**
-	 * If null, when the model fires {@link TimeGraphModel#onDataChanged()}, the data on the client is reset and new data will be requested by the client according to the current
-	 * client-side zoom level and displayed intervalX.
-	 * <p>
-	 * If not null, this supplier provides the required information (zoom level and intervalX) for retrieving data from the model, so no round trip through the client needed.
-	 */
-	private Supplier<EagerFetchingParameters> eagerFetchingParametersSupplier;
-
 	// needs to be a field for reference equality (sad but true, java method references are only syntactic sugar for lambdas)
-	private final EventListener<Void> onTimeGraphDataChangedListener = this::onTimeGraphDataChanged;
+	private final Consumer<Void> onTimeGraphDataChangedListener = this::onTimeGraphDataChanged;
 
 	public TimeGraph(TimeGraphModel model) {
 		super();
@@ -136,11 +127,6 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	@Override
-	protected void doDestroy() {
-		unregisterModelListeners();
-	}
-
-	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
 			case UI_TIME_GRAPH_DATA_NEEDED: {
@@ -180,17 +166,11 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	public void refresh() {
-		if (this.eagerFetchingParametersSupplier != null) {
-			queueCommandIfRendered(() -> {
-				EagerFetchingParameters eagerFetchingConfig = this.eagerFetchingParametersSupplier.get();
-				TimeGraphZoomLevel zoomLevel = model.getZoomLevels().get(eagerFetchingConfig.zoomLevelIndex);
-				Map<String, List<UiTimeGraphDataPoint>> uiData = convertToUiData(model.getDataPoints(getLineDataIds(), zoomLevel, eagerFetchingConfig.intervalX));
-				return new UiTimeGraph.ReplaceAllDataCommand(getId(), createUiZoomlevels(), eagerFetchingConfig.zoomLevelIndex, eagerFetchingConfig.intervalX.createUiLongInterval(), uiData);
-			});
-		} else {
-			queueCommandIfRendered(() -> new UiTimeGraph.ResetAllDataCommand(getId(), createUiZoomlevels()));
-			// the time graph will query for data
-		}
+		queueCommandIfRendered(() -> new UiTimeGraph.ResetAllDataCommand(getId(), createUiZoomlevels()));
+	}
+
+	public void zoomTo(long minX, long maxX) {
+		queueCommandIfRendered(() -> new UiTimeGraph.ZoomToCommand(getId(), new UiLongInterval(minX, maxX)));
 	}
 
 	public int getMaxPixelsBetweenDataPoints() {
@@ -242,29 +222,4 @@ public class TimeGraph extends AbstractComponent {
 		refresh();
 	}
 
-	public void setEagerFetchingParametersSupplier(Supplier<EagerFetchingParameters> eagerFetchingParameterSupplier) {
-		this.eagerFetchingParametersSupplier = eagerFetchingParameterSupplier;
-	}
-
-	public Supplier<EagerFetchingParameters> getEagerFetchingParametersSupplier() {
-		return eagerFetchingParametersSupplier;
-	}
-
-	public static class EagerFetchingParameters {
-		private final int zoomLevelIndex;
-		private final Interval intervalX;
-
-		public EagerFetchingParameters(int zoomLevelIndex, Interval intervalX) {
-			this.zoomLevelIndex = zoomLevelIndex;
-			this.intervalX = intervalX;
-		}
-
-		public int getZoomLevelIndex() {
-			return zoomLevelIndex;
-		}
-
-		public Interval getIntervalX() {
-			return intervalX;
-		}
-	}
 }

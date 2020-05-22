@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
-import {UiButton_DropDownOpenedEvent, UiButtonCommandHandler, UiButtonConfig, UiButtonEventSource} from "../../generated/UiButtonConfig";
+import {UiButton_ClickedEvent, UiButton_DropDownOpenedEvent, UiButtonCommandHandler, UiButtonConfig, UiButtonEventSource} from "../../generated/UiButtonConfig";
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
@@ -31,14 +31,15 @@ import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
 
-export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonEventSource, UiButtonCommandHandler {
+export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonEventSource, UiButtonCommandHandler {
 
+	public readonly onClicked: TeamAppsEvent<UiButton_ClickedEvent> = new TeamAppsEvent(this);
 	public readonly onDropDownOpened: TeamAppsEvent<UiButton_DropDownOpenedEvent> = new TeamAppsEvent(this);
 
 	private template: UiTemplateConfig;
 	private templateRecord: any;
 
-	private _$button: HTMLElement;
+	private $main: HTMLElement;
 
 	private _dropDown: UiDropDown; // lazy-init!
 	private dropDownComponent: UiComponent;
@@ -50,7 +51,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 		this.template = config.template;
 		this.templateRecord = config.templateRecord;
 
-		this._$button = parseHtml(this.getReadOnlyHtml(this.templateRecord, -1));
+		this.$main = parseHtml(this.getReadOnlyHtml(this.templateRecord, -1));
 
 		this.minDropDownWidth = config.minDropDownWidth;
 		this.minDropDownHeight = config.minDropDownHeight;
@@ -74,6 +75,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 		["click", "keypress"].forEach(eventName => this.getMainInnerDomElement().addEventListener(eventName, (e) => {
 			if (e.type === "click" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
 				if (this.getEditingMode() === UiFieldEditingMode.EDITABLE || this.getEditingMode() === UiFieldEditingMode.EDITABLE_IF_FOCUSED) {
+					this.onClicked.fire({});
 					this.commit(true);
 				}
 			}
@@ -122,7 +124,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
-		return this._$button;
+		return this.$main;
 	}
 
 	setTemplate(template: UiTemplateConfig, templateRecord: any): void {
@@ -133,7 +135,7 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 	setTemplateRecord(data: any): void {
 		this.templateRecord = data;
 		let innerHtml = this.renderContent();
-		this._$button.innerHTML = innerHtml;
+		this.$main.innerHTML = innerHtml;
 	}
 
 	private renderContent(): string {
@@ -145,11 +147,11 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 	}
 
 	public getFocusableElement(): HTMLElement {
-		return this._$button;
+		return this.$main;
 	}
 
 	focus(): void {
-		this._$button.focus();
+		this.$main.focus();
 	}
 
 	protected displayCommittedValue(): void {
@@ -164,20 +166,17 @@ export class UiButton extends UiField<UiButtonConfig, true> implements UiButtonE
 		UiField.defaultOnEditingModeChangedImpl(this);
 	}
 
-	public getReadOnlyHtml(value: boolean, availableWidth: number): string {
+	public getReadOnlyHtml(value: void, availableWidth: number): string {
 		return `<div class="UiButton btn field-border field-border-glow field-background">
 			${this.renderContent()}
         </div>`;
 	}
 
-	public valuesChanged(v1: boolean, v2: boolean): boolean {
+	public valuesChanged(v1: void, v2: void): boolean {
 		return false;
 	}
 
-	doDestroy(): void {
-	}
-
-	isValidData(v: boolean): boolean {
+	isValidData(v: void): boolean {
 		return true;
 	}
 

@@ -1,3 +1,22 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2020 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
 package org.teamapps.localize;
 
 import org.slf4j.Logger;
@@ -17,7 +36,7 @@ public class MachineTranslationLocalizationProviderFactory extends AbstractLocal
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(MachineTranslationLocalizationProviderFactory.class);
 
-	private final static List<String> preferredTranslationLanguages = Arrays.asList(new String[]{"en", "de", "fr", "es", "pt", "nl", "it", "pl", "ru"});
+	private static List<String> preferredTranslationLanguages = Arrays.asList(new String[]{"en", "de", "fr", "es", "pt", "nl", "it", "pl", "ru", "ja", "zh"});
 
 	public static MachineTranslationLocalizationProviderFactory create(LocalizationStore localizationStore, String deepLKey, String googleKey, String ... requiredLanguages) {
 		return new MachineTranslationLocalizationProviderFactory(localizationStore, deepLKey, googleKey, Arrays.asList(requiredLanguages));
@@ -41,19 +60,26 @@ public class MachineTranslationLocalizationProviderFactory extends AbstractLocal
 	}
 
 	private final LocalizationStore localizationStore;
-	private final MachineTranslation machineTranslationService;
+	private final String deepLKey;
+	private final String googleKey;
+	private MachineTranslation machineTranslationService;
 	private final List<String> requiredLanguages;
 
 	protected MachineTranslationLocalizationProviderFactory(LocalizationStore localizationStore, String deepLKey, String googleKey, List<String> requiredLanguages) {
 		this.localizationStore = localizationStore;
-		machineTranslationService = new MachineTranslation();
-		machineTranslationService.setDeepLKey(deepLKey);
-		machineTranslationService.setGoogleTranslationKey(googleKey);
+		this.deepLKey = deepLKey;
+		this.googleKey = googleKey;
 		this.requiredLanguages = requiredLanguages;
 	}
 
 
 	public void machineTranslateAllMissingEntries() {
+		if (machineTranslationService == null) {
+			LOGGER.info("Connecting to machine translation services...");
+			machineTranslationService = new MachineTranslation();
+			machineTranslationService.setDeepLKey(deepLKey);
+			machineTranslationService.setGoogleTranslationKey(googleKey);
+		}
 		LOGGER.info("Start translating entries");
 		int countTranslations = 0;
 		List<String> usedLanguages = localizationStore.getAllUsedLanguages();
@@ -109,6 +135,13 @@ public class MachineTranslationLocalizationProviderFactory extends AbstractLocal
 		}
 	}
 
+	public static List<String> getPreferredTranslationLanguages() {
+		return preferredTranslationLanguages;
+	}
+
+	public static void setPreferredTranslationLanguages(List<String> preferredTranslationLanguages) {
+		MachineTranslationLocalizationProviderFactory.preferredTranslationLanguages = preferredTranslationLanguages;
+	}
 
 	@Override
 	public LocalizationStore getLocalizationStore() {

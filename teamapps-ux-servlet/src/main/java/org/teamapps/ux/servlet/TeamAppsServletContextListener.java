@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package org.teamapps.ux.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.webcontroller.WebController;
@@ -43,14 +44,16 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsServletContextListener.class);
 
+	private TeamAppsConfiguration config;
 	private WebController webController;
 	private TeamAppsUiSessionManager uiSessionManager;
 
-	public TeamAppsServletContextListener() {
-		this(null);
+	public TeamAppsServletContextListener(TeamAppsConfiguration config) {
+		this(config, null);
 	}
 
-	public TeamAppsServletContextListener(WebController webController) {
+	public TeamAppsServletContextListener(TeamAppsConfiguration config, WebController webController) {
+		this.config = config;
 		this.webController = webController;
 	}
 
@@ -64,7 +67,7 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		}
 
 		ObjectMapper objectMapper = TeamAppsObjectMapperFactory.create();
-		uiSessionManager = new TeamAppsUiSessionManager(objectMapper);
+		uiSessionManager = new TeamAppsUiSessionManager(config, objectMapper);
 		TeamAppsUxClientGate teamAppsUxClientGate = new TeamAppsUxClientGate(webController, uiSessionManager, objectMapper);
 		uiSessionManager.setUiSessionListener(teamAppsUxClientGate);
 
@@ -118,6 +121,10 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 				throw new IllegalArgumentException("No WebController specified!");
 			}
 		}
+	}
+
+	public void setWebController(WebController webController) {
+		this.webController = webController;
 	}
 
 	@Override

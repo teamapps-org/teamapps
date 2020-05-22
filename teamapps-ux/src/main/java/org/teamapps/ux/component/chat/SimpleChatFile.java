@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,14 @@ public class SimpleChatFile implements ChatFile {
 
 	private final String name;
 	private final Icon icon;
+	private final long size;
 	private final Resource thumbnail;
 	private final Resource download;
 
 	public SimpleChatFile(String name, Icon icon, Resource thumbnail, Resource download) {
 		this.name = name;
 		this.icon = icon;
+		this.size = download.getLength();
 		this.thumbnail = thumbnail;
 		this.download = download;
 	}
@@ -44,6 +46,11 @@ public class SimpleChatFile implements ChatFile {
 	@Override
 	public Icon getIcon() {
 		return icon;
+	}
+
+	@Override
+	public long getLength() {
+		return size;
 	}
 
 	@Override

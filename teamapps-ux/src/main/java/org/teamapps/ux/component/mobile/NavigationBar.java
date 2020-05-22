@@ -2,14 +2,14 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,7 @@ package org.teamapps.ux.component.mobile;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiNavigationBar;
 import org.teamapps.dto.UiNavigationBarButton;
@@ -68,12 +68,12 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 			uiNavigationBar.setButtons(uiNavigationBarButtons);
 		}
 		if (fanOutComponents != null) {
-			List<UiComponentReference> uiComponents = fanOutComponents.stream()
-					.map(component -> component.createUiComponentReference())
+			List<UiClientObjectReference> uiComponents = fanOutComponents.stream()
+					.map(component -> component.createUiReference())
 					.collect(Collectors.toList());
 			uiNavigationBar.setFanOutComponents(uiComponents);
 		}
-		uiNavigationBar.setMultiProgressDisplay(multiProgressDisplay.createUiComponentReference());
+		uiNavigationBar.setMultiProgressDisplay(multiProgressDisplay.createUiReference());
 		return uiNavigationBar;
 	}
 
@@ -81,11 +81,6 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 		return buttons.stream()
 				.map(navigationBarButton -> navigationBarButton.createUiNavigationBarButton())
 				.collect(Collectors.toList());
-	}
-
-	@Override
-	protected void doDestroy() {
-
 	}
 
 	@Override
@@ -139,7 +134,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 	public void preloadFanOutComponent(Component component) {
 		fanOutComponents.add(component);
 		component.setParent(this);
-		queueCommandIfRendered(() -> new UiNavigationBar.AddFanOutComponentCommand(getId(), component.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiNavigationBar.AddFanOutComponentCommand(getId(), component.createUiReference()));
 	}
 
 	public void showFanOutComponent(Component component) {
@@ -147,7 +142,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 			preloadFanOutComponent(component);
 		}
 		activeFanOutComponent = component;
-		queueCommandIfRendered(() -> new UiNavigationBar.ShowFanOutComponentCommand(getId(), component.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiNavigationBar.ShowFanOutComponentCommand(getId(), component.createUiReference()));
 	}
 
 	public void hideFanOutComponent() {
@@ -216,7 +211,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		queueCommandIfRendered(() -> new UiNavigationBar.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiComponentReference()));
+		queueCommandIfRendered(() -> new UiNavigationBar.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

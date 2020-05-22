@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiComponentReference;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.absolutelayout.Length;
@@ -43,11 +43,11 @@ public abstract class AbstractComponent implements Component {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(AbstractComponent.class);
 
-	public final Event<Void> onDestroyed = new Event<>();
 	public final Event<Void> onRendered = new Event<>();
 
 //	public final Event<Boolean> onEffectiveVisibilityChanged = new Event<>();
 
+	private String debuggingId = "";
 	private String id;
 	private SessionContext sessionContext;
 	private boolean rendered;
@@ -60,11 +60,11 @@ public abstract class AbstractComponent implements Component {
 	public AbstractComponent() {
 		this.sessionContext = CurrentSessionContext.get();
 		id = getClass().getSimpleName() + "-" + UUID.randomUUID().toString();
-		sessionContext.onDestroyed().addListener(aVoid -> this.destroy());
 	}
 
 	protected void mapAbstractUiComponentProperties(UiComponent uiComponent) {
 		uiComponent.setId(id);
+		uiComponent.setDebuggingId(debuggingId);
 		uiComponent.setVisible(visible);
 		uiComponent.setStylesBySelector((Map) stylesBySelector);
 	}
@@ -74,7 +74,6 @@ public abstract class AbstractComponent implements Component {
 		return id;
 	}
 
-	@Override
 	public SessionContext getSessionContext() {
 		return sessionContext;
 	}
@@ -91,8 +90,11 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public void setVisible(boolean visible) {
+		boolean changed = visible != this.visible;
 		this.visible = visible;
-		queueCommandIfRendered(() -> new UiComponent.SetVisibleCommand(getId(), visible));
+		if (changed) {
+			queueCommandIfRendered(() -> new UiComponent.SetVisibleCommand(getId(), visible));
+		}
 	}
 
 	@Override
@@ -100,34 +102,8 @@ public abstract class AbstractComponent implements Component {
 		return isRendered() && isVisible() && getParent() != null && getParent().isChildVisible(this);
 	}
 
-	@Override
 	public boolean isDestroyed() {
 		return destroyed;
-	}
-
-	@Override
-	public final void destroy() {
-		if (!destroyed) {
-			if (isRendered()) {
-				unrender();
-			}
-			this.destroyed = true;
-			this.doDestroy();
-			this.onDestroyed.fire(null);
-//			onEffectiveVisibilityChanged.fire(true);  //todo #visibility
-		}
-	}
-
-	@Override
-	public Event<Void> onDestroyed() {
-		return onDestroyed;
-	}
-
-	/**
-	 * Override this method to release resources whenever this component gets destroyed
-	 */
-	protected void doDestroy() {
-		// do nothing
 	}
 
 	@Override
@@ -140,7 +116,7 @@ public abstract class AbstractComponent implements Component {
 					+ "themselves as \"parent\" of their children.");
 		}
 		LOGGER.debug("render: " + getId());
-		sessionContext.registerComponent(this);
+		sessionContext.registerClientObject(this);
 		UiComponent uiComponent = createUiComponent();
 		sessionContext.queueCommand(new UiRootPanel.CreateComponentCommand(uiComponent));
 		rendered = true; // after queuing creation! otherwise commands might be queued for this component before it creation is queued!
@@ -149,19 +125,20 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public final void unrender() {
-		sessionContext.unregisterComponent(this);
+		sessionContext.unregisterClientObject(this);
 		sessionContext.queueCommand(new UiRootPanel.DestroyComponentCommand(getId()));
+		rendered = false;
 	}
 
 	abstract public UiComponent createUiComponent();
 
 	@Override
-	public UiComponentReference createUiComponentReference() {
-		LOGGER.debug("createUiComponentReference: " + getId());
+	public UiClientObjectReference createUiReference() {
+		LOGGER.debug("createUiClientObjectReference: " + getId());
 		if (!isRendered()) {
 			render();
 		}
-		return new UiComponentReference(getId());
+		return new UiClientObjectReference(getId());
 	}
 
 	public void reRenderIfRendered() {
@@ -241,5 +218,13 @@ public abstract class AbstractComponent implements Component {
 	@Override
 	public String toString() {
 		return id;
+	}
+
+	public String getDebuggingId() {
+		return debuggingId;
+	}
+
+	public void setDebuggingId(String debuggingId) {
+		this.debuggingId = debuggingId;
 	}
 }

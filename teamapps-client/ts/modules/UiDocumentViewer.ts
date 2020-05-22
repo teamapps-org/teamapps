@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -172,12 +172,8 @@ export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig
 		this.updateImageSizes();
 	}
 
-	public getMainDomElement(): HTMLElement {
+	public doGetMainElement(): HTMLElement {
 		return this.$componentWrapper;
-	}
-
-	public destroy(): void {
-		// nothing to do
 	}
 
 	setPageBorder(pageBorder: UiBorderConfig): void {

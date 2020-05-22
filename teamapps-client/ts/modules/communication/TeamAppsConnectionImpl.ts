@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
- * Copyright (C) 2014 - 2019 TeamApps.org
+ * Copyright (C) 2014 - 2020 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,20 +21,21 @@ import {TeamAppsConnection, TeamAppsConnectionListener} from "./TeamAppsConnecti
 import {ReconnectingCompressingWebSocketConnection} from "./ReconnectingWebSocketConnection";
 import {UiClientInfoConfig} from "../../generated/UiClientInfoConfig";
 import {INITConfig} from "../../generated/INITConfig";
-import {INIT_NOK_Reason, INIT_NOKConfig} from "../../generated/INIT_NOKConfig";
-import {REINIT_NOK_Reason, REINIT_NOKConfig} from "../../generated/REINIT_NOKConfig";
+import {INIT_NOKConfig} from "../../generated/INIT_NOKConfig";
+import {REINIT_NOKConfig} from "../../generated/REINIT_NOKConfig";
 import {REINITConfig} from "../../generated/REINITConfig";
 import {CMD_REQUESTConfig} from "../../generated/CMD_REQUESTConfig";
 import {INIT_OKConfig} from "../../generated/INIT_OKConfig";
 import {REINIT_OKConfig} from "../../generated/REINIT_OKConfig";
 import {MULTI_CMDConfig} from "../../generated/MULTI_CMDConfig";
 import {EVENTConfig} from "../../generated/EVENTConfig";
-import {SERVER_ERROR_Reason, SERVER_ERRORConfig} from "../../generated/SERVER_ERRORConfig";
+import {SERVER_ERRORConfig} from "../../generated/SERVER_ERRORConfig";
 import {CMD} from "./CMD";
 import {logException} from "../Common";
 import {AbstractClientPayloadMessageConfig} from "../../generated/AbstractClientPayloadMessageConfig";
 import {UiEvent} from "../../generated/UiEvent";
 import {CMD_RESULTConfig} from "../../generated/CMD_RESULTConfig";
+import {UiSessionClosingReason} from "../../generated/UiSessionClosingReason";
 
 
 enum TeamAppsProtocolStatus {
@@ -46,11 +47,10 @@ enum TeamAppsProtocolStatus {
 
 export class TeamAppsConnectionImpl implements TeamAppsConnection {
 
-	private static readonly SENT_EVENTS_MIN_BUFFER_SIZE = 500;
-	private static readonly SENT_EVENTS_MAX_BUFFER_SIZE = 1000;
-	private static readonly KEEPALIVE_INTERVAL = 25000;
-	private static readonly MIN_REQUESTED_COMMANDS = 5;
-	private static readonly MAX_REQUESTED_COMMANDS = 20;
+	private sentEventsMinBufferSize = 500;
+	private keepaliveInterval = 25000;
+	private minRequestedCommands = 3;
+	private maxRequestedCommands = 20;
 
 	private protocolStatus: TeamAppsProtocolStatus;
 
@@ -75,24 +75,32 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					_type: "INIT",
 					sessionId,
 					clientInfo,
-					maxRequestedCommandId: TeamAppsConnectionImpl.MAX_REQUESTED_COMMANDS
+					maxRequestedCommandId: this.maxRequestedCommands
 				} as INITConfig)
 			},
-			onMessage: (message) => {
+			onMessage: async (message) => {
 				if (TeamAppsConnectionImpl.isMULTI_CMD(message)) {
 					let cmds = message.cmds as CMD[];
-					const resultPromises = commandHandler.executeCommands(cmds.map(cmd => cmd.c));
-					resultPromises.forEach((promise, i) => {
-						promise.then(result => {
-							if (cmds[i].r) {
-								this.sendResult(cmds[i].id, result);
+					for (let cmd of cmds) {
+						this.lastReceivedCommandId = cmd.id;
+						try {
+							let result = await commandHandler.executeCommand(cmd.c);
+							if (cmd.r) {
+								this.sendResult(cmd.id, result);
 							}
-						}).catch(reason => logException(reason))
-					});
+						} catch (reason) {
+							logException(reason);
+						} finally {
+							this.ensureEnoughCommandsRequested();
+						}
+					}
 					this.lastReceivedCommandId = cmds[cmds.length - 1].id;
-					this.ensureEnoughCommandsRequested();
 				} else if (TeamAppsConnectionImpl.isINIT_OK(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ESTABLISHED;
+					this.sentEventsMinBufferSize = message.sentEventsBufferSize;
+					this.keepaliveInterval = message.keepaliveInterval;
+					this.minRequestedCommands = message.minRequestedCommands;
+					this.maxRequestedCommands = message.maxRequestedCommands;
 					this.log("Connection accepted.");
 					this.flushPayloadMessages();
 					commandHandler.onConnectionInitialized();
@@ -113,19 +121,23 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					this.flushPayloadMessages();
 				} else if (TeamAppsConnectionImpl.isINIT_NOK(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
-					this.log("Connection refused. Reason: " + INIT_NOK_Reason[message.reason]);
+					this.log("Connection refused. Reason: " + UiSessionClosingReason[message.reason]);
 					commandHandler.onConnectionErrorOrBroken(message.reason);
 					this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
 				} else if (TeamAppsConnectionImpl.isREINIT_NOK(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
-					this.log("Reconnect refused. Reason: " + REINIT_NOK_Reason[message.reason]);
+					this.log("Reconnect refused. Reason: " + UiSessionClosingReason[message.reason]);
 					commandHandler.onConnectionErrorOrBroken(message.reason);
 					this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
 				} else if (TeamAppsConnectionImpl.isSERVER_ERROR(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
-					this.log("Error reported by server: " + SERVER_ERROR_Reason[message.reason] + ": " + message.message);
+					this.log("Error reported by server: " + UiSessionClosingReason[message.reason] + ": " + message.message);
 					commandHandler.onConnectionErrorOrBroken(message.reason, message.message);
-					// do NOT close the connection here. The server might handle this gracefully.
+					if (message.reason == UiSessionClosingReason.SESSION_NOT_FOUND) {
+						this.connection.stopReconnecting(); // since the server does not know us anymore...
+					} else {
+						// do NOT close the connection here. The server might handle the error gracefully.
+					}
 				} else {
 					this.log(`ERROR: unknown message type: ${message._type}`)
 				}
@@ -139,7 +151,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					_type: "REINIT",
 					sessionId,
 					lastReceivedCommandId: this.lastReceivedCommandId || -1,
-					maxRequestedCommandId: this.lastReceivedCommandId + TeamAppsConnectionImpl.MAX_REQUESTED_COMMANDS
+					maxRequestedCommandId: this.lastReceivedCommandId + this.maxRequestedCommands
 				} as REINITConfig)
 			}
 		});
@@ -150,13 +162,13 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					sessionId: sessionId
 				})
 			}
-		}, TeamAppsConnectionImpl.KEEPALIVE_INTERVAL)
+		}, this.keepaliveInterval)
 	}
 
 	private ensureEnoughCommandsRequested() {
-		if (this.maxRequestedCommandId - this.lastReceivedCommandId <= TeamAppsConnectionImpl.MIN_REQUESTED_COMMANDS) {
+		if (this.maxRequestedCommandId - this.lastReceivedCommandId <= this.minRequestedCommands) {
 			try {
-				let maxRequestedCommandId = this.lastReceivedCommandId + TeamAppsConnectionImpl.MAX_REQUESTED_COMMANDS;
+				let maxRequestedCommandId = this.lastReceivedCommandId + this.maxRequestedCommands;
 				this.connection.send({
 					_type: "CMD_REQUEST",
 					sessionId: this.sessionId,
@@ -241,8 +253,9 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 
 	private sendPayloadMessage(payloadMessage: AbstractClientPayloadMessageConfig) {
 		this.sentEventsBuffer.push(payloadMessage);
-		if (this.sentEventsBuffer.length > TeamAppsConnectionImpl.SENT_EVENTS_MAX_BUFFER_SIZE) {
-			this.sentEventsBuffer.splice(0, TeamAppsConnectionImpl.SENT_EVENTS_MAX_BUFFER_SIZE - TeamAppsConnectionImpl.SENT_EVENTS_MIN_BUFFER_SIZE);
+		let sentEventsMaxBufferSize = this.sentEventsMinBufferSize * 2;
+		if (this.sentEventsBuffer.length > sentEventsMaxBufferSize) {
+			this.sentEventsBuffer.splice(0, sentEventsMaxBufferSize - this.sentEventsMinBufferSize);
 		}
 		this.connection.send(payloadMessage);
 	}
