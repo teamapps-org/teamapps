@@ -35,8 +35,6 @@ import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.session.SessionContext;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -82,13 +80,7 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 	}
 
 	public MediaSoupV2WebRtcClient(String serverUrl) {
-		URL url;
-		try {
-			url = new URL(serverUrl);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		}
-		this.serverAddress = url.getHost();
+		this.serverAddress = serverUrl;
 	}
 
 	@Override
