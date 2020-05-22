@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@
 package org.teamapps.ux.component.webrtc;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import org.teamapps.common.format.Color;
@@ -351,28 +352,42 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public static String generatePublishJwtToken(String streamUuid, String secret, Duration tokenValidityDuration) {
-		return generateJwtToken(streamUuid, secret, tokenValidityDuration, "1" /*PUBLISH*/);
+		return generateJwtToken(secret, "1" /*PUBLISH*/, streamUuid, tokenValidityDuration  /*PUBLISH*/);
 	}
 
 	public static String generateSubscribeJwtToken(String streamUuid, String secret, Duration tokenValidityDuration) {
-		return generateJwtToken(streamUuid, secret, tokenValidityDuration, "0" /*SUBSCRIBE*/);
+		return generateJwtToken(secret, "0" /*SUBSCRIBE*/, streamUuid, tokenValidityDuration  /*SUBSCRIBE*/);
 	}
 
-	public static String generateRestApiJwtToken(String secret, Duration tokenValidityDuration) {
-		return generateJwtToken("-", secret, tokenValidityDuration, "2");
+	public static String generateRecordingJwtToken(String secret, Duration tokenValidityDuration) {
+		return generateJwtToken(secret, "2" /*RECORDING*/, "-", tokenValidityDuration);
 	}
 
-	private static String generateJwtToken(String streamUuid, String secret, Duration tokenValidityDuration, String operation) {
+	public static String generateStreamingJwtToken(String secret, Duration tokenValidityDuration) {
+		return generateJwtToken(secret, "3" /*STREAMING*/, "-", tokenValidityDuration);
+	}
+
+	public static String generatePublicRestApiToken(String secret, Duration tokenValidityDuration) {
+		return generateJwtToken(secret, null, null, tokenValidityDuration);
+	}
+
+	private static String generateJwtToken(String secret, String operation, String streamUuid, Duration tokenValidityDuration) {
 		if (secret == null) {
 			return "";
 		}
 		try {
 			Algorithm algorithm = Algorithm.HMAC512(secret);
-			return JWT.create()
-					.withClaim("stream", streamUuid)
-					.withClaim("operation", operation)
-					.withExpiresAt(new Date(Instant.now().plus(tokenValidityDuration).toEpochMilli()))
-					.sign(algorithm);
+			JWTCreator.Builder builder = JWT.create();
+			if (operation != null) {
+				builder = builder.withClaim("operation", operation);
+			}
+			if (streamUuid != null) {
+				builder = builder.withClaim("stream", streamUuid);
+			}
+			if (tokenValidityDuration != null) {
+				builder = builder.withExpiresAt(new Date(Instant.now().plus(tokenValidityDuration).toEpochMilli()));
+			}
+			return builder.sign(algorithm);
 		} catch (JWTCreationException exception) {
 			throw new RuntimeException("Could not create auth token - this should never happen!");
 		}

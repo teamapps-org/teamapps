@@ -1,5 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 /*-
  * ========================LICENSE_START=================================
@@ -55,6 +56,7 @@ var ACTION;
     ACTION["DELETE_RECORDING"] = "deleteRecording";
     ACTION["PUSH_TO_SERVER_INPUTS"] = "pushToServerInputs";
     ACTION["PULL_FROM_SERVER_INPUTS"] = "pullFromServerInputs";
+    ACTION["KINDS_BY_FILE"] = "kindsByFile";
 })(ACTION = exports.ACTION || (exports.ACTION = {}));
 var PATH;
 (function (PATH) {
@@ -78,7 +80,20 @@ var API_OPERATION;
 (function (API_OPERATION) {
     API_OPERATION[API_OPERATION["SUBSCRIBE"] = 0] = "SUBSCRIBE";
     API_OPERATION[API_OPERATION["PUBLISH"] = 1] = "PUBLISH";
+    API_OPERATION[API_OPERATION["RECORDING"] = 2] = "RECORDING";
+    API_OPERATION[API_OPERATION["STREAMING"] = 3] = "STREAMING";
 })(API_OPERATION = exports.API_OPERATION || (exports.API_OPERATION = {}));
+exports.API_OPERATION_BY_ACTION = (_a = {},
+    _a[ACTION.PRODUCE] = API_OPERATION.PUBLISH,
+    _a[ACTION.RECORDED_STREAMS] = API_OPERATION.RECORDING,
+    _a[ACTION.STREAM_RECORDINGS] = API_OPERATION.RECORDING,
+    _a[ACTION.DELETE_STREAM_RECORDINGS] = API_OPERATION.RECORDING,
+    _a[ACTION.STREAM_RECORDINGS] = API_OPERATION.RECORDING,
+    _a[ACTION.START_RECORDING] = API_OPERATION.RECORDING,
+    _a[ACTION.STOP_RECORDING] = API_OPERATION.RECORDING,
+    _a[ACTION.FILE_STREAMING] = API_OPERATION.STREAMING,
+    _a[ACTION.STOP_FILE_STREAMING] = API_OPERATION.STREAMING,
+    _a);
 
 },{}],2:[function(require,module,exports){
 "use strict";
@@ -1320,6 +1335,16 @@ var MediasoupRestApi = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.request(constants_1.ACTION.PULL_FROM_SERVER_INPUTS, json)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    MediasoupRestApi.prototype.kindsByFile = function (json) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.request(constants_1.ACTION.KINDS_BY_FILE, json)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

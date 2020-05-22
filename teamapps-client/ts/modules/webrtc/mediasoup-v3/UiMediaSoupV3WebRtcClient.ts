@@ -116,9 +116,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	constructor(config: UiMediaSoupV3WebRtcClientConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		debug.enable(
-			'conference-api* mediasoup-client*' //enable conference api and mediasoup client logs
-		);
+		// debug.enable(
+		// 	'conference-api* mediasoup-client*' //enable conference api and mediasoup client logs
+		// );
 
 
 		this.$main = parseHtml(`<div class="UiMediaSoupV3WebRtcClient state-idle">
