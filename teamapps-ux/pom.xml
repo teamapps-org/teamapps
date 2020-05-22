@@ -99,6 +99,13 @@
         </dependency>
 
         <dependency>
+            <!-- TODO only needed for MediaSoupV3HttpClient. Remove when it gets externalized! -->
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.12</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
