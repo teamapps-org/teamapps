@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-@teamapps-handle-size: 10px;
 
 .UiImageCropper {
   display: flex;
@@ -47,8 +46,8 @@
     }
 
     .ui-resizable-handle {
-      width: @teamapps-handle-size;
-      height: @teamapps-handle-size;
+      width: var(--ta-resize-square-handle-size);
+      height: var(--ta-resize-square-handle-size);
       background-color: rgba(255, 255, 255, .5);
       border: 1px solid black;
     }
