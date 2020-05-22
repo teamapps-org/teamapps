@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,11 +63,11 @@ public class PictureChooser extends AbstractField<Resource> {
 	private int imageDisplayWidth = -1;
 	private int imageDisplayHeight = -1;
 
-	private ImageCropper imageCropper;
-	private Window imageCropperWindow;
+	private final ImageCropper imageCropper;
+	private final Window imageCropperWindow;
 	private UploadedFile uploadedFile;
 
-	private ImageCropperConverter imageCropperConverter = this::cropAndConvertImage;
+	private final ImageCropperConverter imageCropperConverter = this::cropAndConvertImage;
 
 	public PictureChooser() {
 		imageCropper = new ImageCropper();
