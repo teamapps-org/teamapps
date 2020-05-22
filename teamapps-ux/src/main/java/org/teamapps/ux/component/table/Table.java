@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -83,11 +83,11 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	private final List<RECORD> selectedRecords = new ArrayList<>();
 	private TableCellCoordinates<RECORD> activeEditorCell;
 
-	private Map<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new HashMap<>();
-	private Map<RECORD, Map<String, List<FieldMessage>>> cellMessages = new HashMap<>();
-	private Map<RECORD, Set<String>> markedCells = new HashMap<>();
+	private final Map<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new HashMap<>();
+	private final Map<RECORD, Map<String, List<FieldMessage>>> cellMessages = new HashMap<>();
+	private final Map<RECORD, Set<String>> markedCells = new HashMap<>();
 
-	private List<TableColumn<RECORD>> columns = new ArrayList<>();
+	private final List<TableColumn<RECORD>> columns = new ArrayList<>();
 
 	private boolean displayAsList; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection
 	private boolean forceFitWidth; //if true, force the widths of all columns to fit into the available space of the list
@@ -114,26 +114,26 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	private boolean showHeaderRow = false;
 	private int headerRowHeight = 28;
-	private Map<String, AbstractField> headerRowFields = new HashMap<>(0);
+	private final Map<String, AbstractField> headerRowFields = new HashMap<>(0);
 
 	// ----- footer -----
 
 	private boolean showFooterRow = false;
 	private int footerRowHeight = 28;
-	private Map<String, AbstractField> footerRowFields = new HashMap<>(0);
+	private final Map<String, AbstractField> footerRowFields = new HashMap<>(0);
 
 	// ----- listeners -----
 
 	// needs to be a field for reference equality (sad but true, java method references are only syntactic sugar for lambdas)
-	private Consumer<Void> onAllDataChangedListener = this::onAllDataChanged;
-	private Consumer<RECORD> onRecordAddedListener = this::onRecordAdded;
-	private Consumer<RECORD> onRecordDeletedListener = this::onRecordDeleted;
-	private Consumer<RECORD> onRecordUpdatedListener = this::onRecordUpdated;
+	private final Consumer<Void> onAllDataChangedListener = this::onAllDataChanged;
+	private final Consumer<RECORD> onRecordAddedListener = this::onRecordAdded;
+	private final Consumer<RECORD> onRecordDeletedListener = this::onRecordDeleted;
+	private final Consumer<RECORD> onRecordUpdatedListener = this::onRecordUpdated;
 
 	private List<Integer> viewportDisplayedRecordClientIds = Collections.emptyList();
 
-	private List<RECORD> topNonModelRecords = new ArrayList<>();
-	private List<RECORD> bottomNonModelRecords = new ArrayList<>();
+	private final List<RECORD> topNonModelRecords = new ArrayList<>();
+	private final List<RECORD> bottomNonModelRecords = new ArrayList<>();
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
@@ -265,7 +265,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 				UiTable.CellClickedEvent cellClickedEvent = (UiTable.CellClickedEvent) event;
 				RECORD record = clientRecordCache.getRecordByClientId(cellClickedEvent.getRecordId());
 				TableColumn<RECORD> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
-				if (record != null && column != null)  {
+				if (record != null && column != null) {
 					this.onCellClicked.fire(new CellClickedEvent<>(record, column));
 				}
 				break;
@@ -516,18 +516,68 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 //		}
 //	}
 
+	public List<RECORD> getTopNonModelRecords() {
+		return List.copyOf(topNonModelRecords);
+	}
+
+	public List<RECORD> getBottomNonModelRecords() {
+		return List.copyOf(bottomNonModelRecords);
+	}
+
+	public List<RECORD> getNonModelRecords(boolean top) {
+		return top ? getTopNonModelRecords() : getBottomNonModelRecords();
+	}
+
+	public void addTopNonModelRecord(RECORD record) {
+		this.topNonModelRecords.add(0, record);
+		refreshData();
+	}
+
+	public void addBottomNonModelRecord(RECORD record) {
+		this.bottomNonModelRecords.add(record);
+		refreshData();
+	}
+
 	public void addNonModelRecord(RECORD record, boolean addToTop) {
 		if (addToTop) {
-			this.topNonModelRecords.add(0, record);
+			addTopNonModelRecord(record);
 		} else {
-			this.bottomNonModelRecords.add(record);
+			addBottomNonModelRecord(record);
 		}
+
+	}
+
+	public void removeTopNonModelRecord(RECORD record) {
+		this.topNonModelRecords.remove(record);
+		refreshData();
+	}
+
+	public void removeBottomNonModelRecord(RECORD record) {
+		this.bottomNonModelRecords.remove(record);
 		refreshData();
 	}
 
 	public void removeNonModelRecord(RECORD record) {
 		this.topNonModelRecords.remove(record);
 		this.bottomNonModelRecords.remove(record);
+		refreshData();
+	}
+
+	public void removeNonModelRecord(RECORD record, boolean top) {
+		if (top) {
+			removeTopNonModelRecord(record);
+		} else {
+			removeBottomNonModelRecord(record);
+		}
+	}
+
+	public void removeAllTopNonModelRecords() {
+		this.topNonModelRecords.clear();
+		refreshData();
+	}
+
+	public void removeAllBottomNonModelRecords() {
+		this.topNonModelRecords.clear();
 		refreshData();
 	}
 
@@ -643,7 +693,8 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		if (!resetEditingState && activeEditorCell != null) {
 			Integer editingClientRecordId = clientRecordCache.getUiRecordIdOrNull(activeEditorCell.getRecord());
 			if (editingClientRecordId != null) {
-				// TODO DO NOT DO THIS!! This must be done on the client side!!!! (client sends events for active cell vs server sends command to edit cell --> server will not know the currently edited cell. Solution: reuse ids to enable client to do this!
+				// TODO DO NOT DO THIS!! This must be done on the client side!!!! (client sends events for active cell vs server sends command to edit cell --> server will not know the currently
+				//  edited cell. Solution: reuse ids to enable client to do this!
 				// queueCommandIfRendered(() -> new UiTable.EditCellIfAvailableCommand(getId(), editingClientRecordId, activeEditorCell.getPropertyName()));
 			}
 		}
@@ -688,7 +739,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 			LOGGER.warn("Data coordinates do not make sense: startIndex {}, length {}", startIndex, length);
 			return Collections.emptyList();
 		}
-		
+
 		int endIndex = startIndex + length;
 		int totalTopRecords = topNonModelRecords.size();
 		int totalModelRecords = model.getCount();
