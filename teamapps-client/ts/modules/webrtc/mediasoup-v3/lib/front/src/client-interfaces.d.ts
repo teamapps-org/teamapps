@@ -120,6 +120,8 @@ export interface StreamData {
 }
 export interface StreamFileRequest extends StreamKindsData {
     filePath: string;
+    relativePath?: boolean;
+    streamInput?: boolean;
     additionalInputOptions?: string[];
     additionalOutputOptions?: string[];
 }
