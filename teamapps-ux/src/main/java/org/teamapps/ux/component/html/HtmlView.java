@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,7 +60,9 @@ public class HtmlView extends AbstractComponent {
 		ui.setHtml(html);
 		ui.setComponentsByContainerElementSelector(componentsByContainerElementSelector.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(ClientObject::createUiReference).collect(Collectors.toList()))));
-		ui.setContentHtmlByContainerElementSelector(Map.copyOf(contentHtmlByContainerElementSelector));
+		ui.setContentHtmlByContainerElementSelector(contentHtmlByContainerElementSelector.entrySet().stream()
+				.filter(entry -> entry.getValue() != null) // Map.copyOf() does not support null values!
+				.collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue)));
 		return ui;
 	}
 
