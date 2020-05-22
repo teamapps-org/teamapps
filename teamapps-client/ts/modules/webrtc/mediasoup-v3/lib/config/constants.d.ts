@@ -1,22 +1,3 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
- * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =========================LICENSE_END==================================
- */
 export declare enum ACTION {
     GET_SERVER_CONFIGS = "getServerConfigs",
     CREATE_TRANSPORT = "createTransport",
@@ -50,7 +31,8 @@ export declare enum ACTION {
     DELETE_STREAM_RECORDINGS = "deleteStreamRecordings",
     DELETE_RECORDING = "deleteRecording",
     PUSH_TO_SERVER_INPUTS = "pushToServerInputs",
-    PULL_FROM_SERVER_INPUTS = "pullFromServerInputs"
+    PULL_FROM_SERVER_INPUTS = "pullFromServerInputs",
+    KINDS_BY_FILE = "kindsByFile"
 }
 export declare enum PATH {
     RECORDINGS = "recordings",
@@ -70,5 +52,17 @@ export declare enum ERROR {
 }
 export declare enum API_OPERATION {
     SUBSCRIBE = 0,
-    PUBLISH = 1
+    PUBLISH = 1,
+    RECORDING = 2,
+    STREAMING = 3
 }
+export declare const API_OPERATION_BY_ACTION: {
+    produce: API_OPERATION;
+    recordedStreams: API_OPERATION;
+    streamRecordings: API_OPERATION;
+    deleteStreamRecordings: API_OPERATION;
+    startRecording: API_OPERATION;
+    stopRecording: API_OPERATION;
+    fileStreaming: API_OPERATION;
+    stopFileStreaming: API_OPERATION;
+};
