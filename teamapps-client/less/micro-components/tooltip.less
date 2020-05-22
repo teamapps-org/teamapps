@@ -17,7 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-@arrow-size: 5px;
 
 .ta-tooltip {
   position: absolute;
@@ -38,8 +37,8 @@
 
 .ta-tooltip .ta-tooltip-arrow {
   z-index: -1;
-  width: 2 * @arrow-size;
-  height: 2 * @arrow-size;
+  width: calc(2 * var(--ta-tooltip-arrow-size));
+  height: calc(2 * var(--ta-tooltip-arrow-size));
   position: absolute;
   border: 1px solid var(--ta-input-border-color);
   transform: rotate(45deg);
@@ -88,37 +87,37 @@
 }
 
 .ta-tooltip[x-placement^="top"] {
-  margin-bottom: @arrow-size + 1px;
+  margin-bottom: calc(var(--ta-tooltip-arrow-size) + 1px);
 }
 
 .ta-tooltip[x-placement^="top"] .ta-tooltip-arrow {
-  bottom: -@arrow-size;
-  left: calc(50% - @arrow-size);
+  bottom: -var(--ta-tooltip-arrow-size);
+  left: calc(50% - var(--ta-tooltip-arrow-size));
 }
 
 .ta-tooltip[x-placement^="bottom"] {
-  margin-top: @arrow-size + 1px;
+  margin-top: calc(var(--ta-tooltip-arrow-size) + 1px);
 }
 
 .ta-tooltip[x-placement^="bottom"] .ta-tooltip-arrow {
-  top: -@arrow-size;
-  left: calc(50% - @arrow-size);
+  top: -var(--ta-tooltip-arrow-size);
+  left: calc(50% - var(--ta-tooltip-arrow-size));
 }
 
 .ta-tooltip[x-placement^="right"] {
-  margin-left: @arrow-size + 1px;
+  margin-left: calc(var(--ta-tooltip-arrow-size) + 1px);
 }
 
 .ta-tooltip[x-placement^="right"] .ta-tooltip-arrow {
-  left: -@arrow-size;
-  top: calc(50% - @arrow-size);
+  left: -var(--ta-tooltip-arrow-size);
+  top: calc(50% - var(--ta-tooltip-arrow-size));
 }
 
 .ta-tooltip[x-placement^="left"] {
-  margin-right: @arrow-size + 1px;
+  margin-right: calc(var(--ta-tooltip-arrow-size) + 1px);
 }
 
 .ta-tooltip[x-placement^="left"] .ta-tooltip-arrow {
-  right: -@arrow-size;
-  top: calc(50% - @arrow-size);
+  right: -var(--ta-tooltip-arrow-size);
+  top: calc(50% - var(--ta-tooltip-arrow-size));
 }
