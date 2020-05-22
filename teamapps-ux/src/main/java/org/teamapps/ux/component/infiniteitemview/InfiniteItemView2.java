@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.component.infiniteitemview;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.dto.UiComponent;
@@ -33,6 +35,7 @@ import org.teamapps.ux.component.format.VerticalElementAlignment;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,6 +47,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class InfiniteItemView2<RECORD> extends AbstractComponent {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public final Event<ItemClickedEventData<RECORD>> onItemClicked = new Event<>();
 
@@ -174,7 +179,7 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	private void handleScrollOrResize(ItemRange newRange) {
 		var oldRange = this.renderedRange;
 		this.renderedRange = newRange;
-		System.out.println("new renderedRange: " + newRange);
+		LOGGER.debug("new renderedRange: {}", newRange);
 		if (newRange.overlaps(oldRange)) {
 			List<UiIdentifiableClientRecord> newUiRecords = new ArrayList<>();
 			boolean recordsRemoved = false;
@@ -182,7 +187,8 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 				List<RECORD> records = retrieveRecords(newRange.getStart(), oldRange.getStart() - newRange.getStart());
 				UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(records);
 				renderedRecords.insert(0, uiRecordMappingResult.recordAndClientRecords);
-				System.out.println("newRange.start < oldRange.start: " + newRange + " < " + oldRange + " so adding " + uiRecordMappingResult.newUiRecords.size() + " uiRecords");
+				LOGGER.debug("newRange.start < oldRange.start: {} < {} so adding {} uiRecords",
+						newRange, oldRange, uiRecordMappingResult.newUiRecords.size());
 				newUiRecords.addAll(uiRecordMappingResult.newUiRecords);
 			} else if (newRange.getStart() > oldRange.getStart()) {
 				renderedRecords.remove(0, newRange.getStart() - oldRange.getStart());
@@ -204,10 +210,10 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 				updateClientRenderData(newUiRecords);
 			}
 		} else {
-			System.out.println("no overlap!");
+			LOGGER.debug("no overlap!");
 			sendFullRenderedRange();
 		}
-		System.out.println("renderedRange after scroll update: " + renderedRange + "; renderedRecords.size: " + renderedRecords.size());
+		LOGGER.debug("renderedRange after scroll update: {}; renderedRecords.size: {}", renderedRange, renderedRecords.size());
 	}
 
 	private void handleModelRecordsAdded(ItemRangeChangeEvent<RECORD> changeEvent) {
@@ -282,9 +288,9 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	}
 
 	private void updateClientRenderData(List<UiIdentifiableClientRecord> newUiRecords) {
-		System.out.println(newUiRecords.size());
+		LOGGER.debug("newUiRecords: {}", newUiRecords.size());
 		queueCommandIfRendered(() -> {
-			System.out.println("SENDING: renderedRange.start: " + renderedRange.getStart() + "; renderedRecords.size: " + renderedRecords.size() + " Count:" + getModelCount());
+			LOGGER.debug("SENDING: renderedRange.start: {}; renderedRecords.size: {}; Count: {}", renderedRange.getStart(), renderedRecords.size(), getModelCount());
 			return new UiInfiniteItemView2.SetDataCommand(
 					getId(),
 					renderedRange.getStart(),
