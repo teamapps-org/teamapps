@@ -111,7 +111,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                         kind = 'video';
                         this.layers.set(kind, layers);
                         consumer = this.connectors.get(kind);
-                        if (!consumer) return [3 /*break*/, 4];
+                        if (!(consumer && consumer !== true)) return [3 /*break*/, 4];
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -154,7 +154,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                     this.mediaStream.removeTrack(track);
                     this.emit("removetrack", new MediaStreamTrackEvent("removetrack", { track: track }));
                     producer = this.connectors.get(track.kind);
-                    if (producer) {
+                    if (producer && producer !== true) {
                         producer.close();
                         producer.emit('close');
                     }
@@ -194,8 +194,13 @@ var ConferenceApi = /** @class */ (function (_super) {
                             if (!kinds.includes(kind)) {
                                 connector = this.connectors.get(kind);
                                 if (connector) {
-                                    connector.close();
-                                    connector.emit('close');
+                                    if (connector !== true) {
+                                        connector.close();
+                                        connector.emit('close');
+                                    }
+                                    else {
+                                        this.connectors.delete(kind);
+                                    }
                                 }
                             }
                         }
@@ -293,17 +298,13 @@ var ConferenceApi = /** @class */ (function (_super) {
     };
     ConferenceApi.prototype.subscribeTrack = function (kind) {
         return __awaiter(this, void 0, void 0, function () {
-            var api, consumer, onClose;
+            var api, onClose, consumer;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         api = this;
-                        return [4 /*yield*/, this.consume(this.transport, this.configs.stream, kind)];
-                    case 1:
-                        consumer = _a.sent();
-                        this.connectors.set(kind, consumer);
-                        this.emit('newConsumerId', { id: consumer.id, kind: kind });
+                        this.connectors.set(kind, true);
                         onClose = function () { return __awaiter(_this, void 0, void 0, function () {
                             var _consumer, e_2;
                             return __generator(this, function (_a) {
@@ -327,7 +328,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                                         e_2 = _a.sent();
                                         return [3 /*break*/, 4];
                                     case 4:
-                                        if (!(_consumer && consumer.id === _consumer.id)) return [3 /*break*/, 6];
+                                        if (!(_consumer && _consumer !== true && consumer.id === _consumer.id)) return [3 /*break*/, 6];
                                         this.connectors.delete(consumer.track.kind);
                                         if (!this.mediaStream) return [3 /*break*/, 6];
                                         if (!(this.transport && this.configs.kinds.includes(kind))) return [3 /*break*/, 6];
@@ -339,7 +340,13 @@ var ConferenceApi = /** @class */ (function (_super) {
                                 }
                             });
                         }); };
+                        return [4 /*yield*/, this.consume(this.transport, this.configs.stream, kind)];
+                    case 1:
+                        consumer = _a.sent();
                         consumer.on('close', onClose);
+                        if (!(this.connectors.get(kind) === true)) return [3 /*break*/, 3];
+                        this.connectors.set(kind, consumer);
+                        this.emit('newConsumerId', { id: consumer.id, kind: kind });
                         this.listenStats(consumer, 'inbound-rtp');
                         return [4 /*yield*/, api.api.resumeConsumer({ consumerId: consumer.id })];
                     case 2:
@@ -348,7 +355,12 @@ var ConferenceApi = /** @class */ (function (_super) {
                             this.mediaStream.addTrack(consumer.track);
                             this.emit("addtrack", new MediaStreamTrackEvent("addtrack", { track: consumer.track }));
                         }
-                        return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 3:
+                        consumer.close();
+                        consumer.emit('close');
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -390,7 +402,7 @@ var ConferenceApi = /** @class */ (function (_super) {
                                 switch (_a.label) {
                                     case 0:
                                         producer = this.connectors.get(kind);
-                                        if (!producer) return [3 /*break*/, 4];
+                                        if (!(producer && producer !== true)) return [3 /*break*/, 4];
                                         this.connectors.delete(kind);
                                         _a.label = 1;
                                     case 1:
@@ -603,8 +615,10 @@ var ConferenceApi = /** @class */ (function (_super) {
                                 _this.connectors.forEach(function (connector, kind) {
                                     _this.connectors.delete(kind);
                                     try {
-                                        connector.close();
-                                        connector.emit('close');
+                                        if (connector && connector !== true) {
+                                            connector.close();
+                                            connector.emit('close');
+                                        }
                                     }
                                     catch (e) { }
                                     if (!_this.connectors.size) {
