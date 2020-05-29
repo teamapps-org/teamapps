@@ -20,7 +20,7 @@
 ///<reference types="slickgrid"/>
 ///<reference types="slickgrid/slick.rowselectionmodel"/>
 
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "../trivial-components/TrivialCore";
 import {bind} from "../util/Bind";
 
 export class UiTableRowSelectionModel {

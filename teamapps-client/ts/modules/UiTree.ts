@@ -20,7 +20,8 @@
 
 import {UiTree_NodeSelectedEvent, UiTree_RequestTreeDataEvent, UiTree_TextInputEvent, UiTreeCommandHandler, UiTreeConfig, UiTreeEventSource} from "../generated/UiTreeConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {ResultCallback, TrivialTree} from "trivial-components";
+import {ResultCallback} from "./trivial-components/TrivialCore";
+import {TrivialTree} from "./trivial-components/TrivialTree";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {buildObjectTree, matchingModesMapping, NodeWithChildren, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";

@@ -4039,7 +4039,7 @@ jquery-ui@>=1.8.0, jquery-ui@^1.12.1:
   resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.12.1.tgz#bcb4045c8dd0539c134bc1488cdd3e768a7a9e51"
   integrity sha1-vLQEXI3QU5wTS8FIjN0+dop6nlE=
 
-jquery@>=1.8.0, jquery@^3.2.1:
+jquery@>=1.8.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
@@ -4635,14 +4635,14 @@ moment-jdateformatparser@^1.1.0:
   resolved "https://registry.yarnpkg.com/moment-jdateformatparser/-/moment-jdateformatparser-1.2.1.tgz#336c41ef7a6db8021d7ca086385a35fb8a648456"
   integrity sha512-lpUeQtMaxmpK+pPPHGWMnqzgsB/nunbAGPg72mzvRNbxxeQ2uBurdq9EJmvJtOiYB6k/4T9kuvQFbb+8Tirn4A==
 
-moment-timezone@^0.5.14, moment-timezone@^0.5.26:
+moment-timezone@^0.5.26:
   version "0.5.28"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.28.tgz#f093d789d091ed7b055d82aa81a82467f72e4338"
   integrity sha512-TDJkZvAyKIVWg5EtVqRzU97w0Rb0YVbfpqyjgu6GwXCAohVRqwZjf4fOzDE6p1Ch98Sro/8hQQi65WDXW5STPw==
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@>=2.14.0, moment@^2.21.0, moment@^2.22.0:
+"moment@>= 2.9.0", moment@>=2.14.0, moment@^2.21.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
@@ -6783,17 +6783,6 @@ tough-cookie@~2.5.0:
   dependencies:
     psl "^1.1.28"
     punycode "^2.1.1"
-
-trivial-components@^0.3.29:
-  version "0.3.29"
-  resolved "https://registry.yarnpkg.com/trivial-components/-/trivial-components-0.3.29.tgz#f31735df4d1501c94df3d697a54ebf3a99d0386d"
-  integrity sha512-EOPlq1yC/0CLDppZ1tgKzbcNRQHT+3tuOw1lWZSL6rxNl92MVxWBWp/u7/Ur2p9ElqpAj6S2xgY6xGCI1VALlQ==
-  dependencies:
-    jquery "^3.2.1"
-    levenshtein "^1.0.5"
-    moment "^2.22.0"
-    moment-timezone "^0.5.14"
-    place-to "^0.1.2"
 
 tryer@^1.0.1:
   version "1.0.1"

@@ -18,7 +18,9 @@
  * =========================LICENSE_END==================================
  */
 import * as Mustache from "mustache";
-import {ResultCallback, TrivialComboBox, TrivialDateSuggestionEngine} from "trivial-components";
+import {ResultCallback} from "../../trivial-components/TrivialCore";
+import {TrivialComboBox} from "../../trivial-components/TrivialComboBox";
+import {TrivialDateSuggestionEngine} from "../../trivial-components/TrivialDateSuggestionEngine";
 import moment from "moment-timezone";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";

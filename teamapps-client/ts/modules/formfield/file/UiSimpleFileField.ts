@@ -25,7 +25,7 @@ import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {arraysEqual, generateUUID, parseHtml} from "../../Common";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "../../trivial-components/TrivialCore";
 import {createUiFileItemConfig, UiFileItemConfig} from "../../../generated/UiFileItemConfig";
 import {
 	UiSimpleFileField_FileItemClickedEvent,

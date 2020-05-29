@@ -24,7 +24,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiGridTemplateConfig} from "../generated/UiGridTemplateConfig";
 import {createGridTemplateRenderer} from "./util/UiGridTemplates";
 import {UiTemplateReferenceConfig} from "../generated/UiTemplateReferenceConfig";
-import {wrapWithDefaultTagWrapper} from "trivial-components";
+import {wrapWithDefaultTagWrapper} from "./trivial-components/TrivialCore";
 import {Renderer} from "./Common";
 import {createHtmlTemplateRenderer} from "./util/UiHtmlTemplates";
 import {UiHtmlTemplateConfig} from "../generated/UiHtmlTemplateConfig";

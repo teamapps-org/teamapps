@@ -1,0 +1,74 @@
+/*
+ *
+ *  Copyright 2016 Yann Massard (https://github.com/yamass) and other contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+.tr-calendarcombobox {
+  min-height: @tr-input-min-height;
+
+  .tr-formatted-field {
+    flex: 1 1 0px;
+    padding: 3px 5px;
+    background-color: #f5f5f5;
+    font-family: @tr-editor-font-family;
+    font-size: @tr-editor-font-size;
+    border-radius: @tr-border-radius;
+
+    display: flex;
+    justify-content: flex-end;
+
+    .tr-formatted-input-section {
+      border: 1px solid lighten(@tr-border-color, 12%);
+      padding: 2px 2px;
+      outline: none;
+      background-color: white;
+      &:focus {
+        border-color: @tr-input-border-focus;
+      }
+      &.right {
+        text-align: right;
+      }
+      &.left {
+        text-align: left;
+      }
+      &.center {
+        text-align: center;
+      }
+
+      &:empty:not(:focus):before{
+        content:attr(data-placeholder);
+        color: @tr-disabled-text-color;
+      }
+    }
+
+    .separator {
+      padding: 2px 2px;
+      margin: 0 -1px;
+    }
+
+    .generate-char-widths(10);
+    .generate-char-widths(@n, @i: 1) when (@i =< @n) {
+      .tr-formatted-input-section.tr-@{i}-chars {
+        min-width: ~"calc(" @i * 1ch ~" + 6px)";
+      }
+      .generate-char-widths(@n, (@i + 1));
+    }
+  }
+}
+
+.tr-calendarcombobox-dropdown {
+  padding: 5px 0;
+}
