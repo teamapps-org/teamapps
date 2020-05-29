@@ -1,0 +1,243 @@
+/*
+ *
+ *  Copyright 2016 Yann Massard (https://github.com/yamass) and other contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+.tr-calendarbox {
+  font-family: @tr-editor-font-family;
+  font-size: @tr-editor-font-size;
+  cursor: default;
+  user-select: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  .tr-calendar-display {
+    width: 176px;
+
+    .year, .month {
+      display: flex;
+      border-radius: 2px;
+
+      .name {
+        flex: 1 1 100px;
+        text-align: center;
+        padding: 2px 0;
+        font-weight: bold;
+        .fix-firefox-baseline;
+      }
+
+      &.keyboard-nav {
+        .blinking-box-shadow;
+      }
+    }
+
+    .month-table {
+      margin-top: 5px;
+      th, td {
+        width: 28px;
+        border: none;
+        border-spacing: 0;
+        border-radius: 2px;
+        text-align: right;
+        padding: 1px 3px;
+        .fix-firefox-baseline;
+        position: relative;
+      }
+
+      td:hover {
+        background-color: @tr-highlight-color;
+      }
+
+      .current-month {
+        color: black;
+      }
+
+      .other-month {
+        color: lightgrey;
+      }
+
+      .today:before {
+        position: absolute;
+        top: 9px;
+        left: 2px;
+        display: block;
+        width: 4px;
+        height: 4px;
+        border-radius: 2px;
+        float: left;
+        background-color: #ff641c;
+        content: '';
+      }
+
+      .selected {
+        background-color: @tr-highlight-color;
+      }
+
+      .keyboard-nav {
+        .blinking-box-shadow;
+      }
+
+    }
+  }
+
+  .tr-clock-display {
+    .clock {
+      stroke: black;
+      stroke-linecap: round;
+
+      .clockcircle {
+        stroke-width: 2px;
+        fill: #fff;
+      }
+
+      .ticks {
+        stroke-width: 1px;
+      }
+
+      .hourhand {
+        stroke-width: 3px;
+      }
+
+      .minutehand {
+        stroke-width: 2px;
+      }
+
+      .hourhand.keyboard-nav, .minutehand.keyboard-nav {
+        .blinking-stroke;
+      }
+
+      .numbers {
+        font-family: sans-serif;
+        font-size: 10pt;
+        text-anchor: middle;
+        stroke: none;
+        fill: black;
+      }
+
+      .numbers {
+        font-family: sans-serif;
+        font-size: 10pt;
+        text-anchor: middle;
+        stroke: none;
+        fill: black;
+      }
+
+      .am-pm-box {
+        font-weight: 100;
+        font-size: 11px;
+        stroke-width: 0.3;
+        fill: transparent;
+        .am-pm-text {
+          fill: #444;
+          stroke: #444;
+          stroke-width: .3px;
+        }
+      }
+    }
+
+    .digital-time-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 130%;
+
+      .hour-wrapper, .minute-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 2px;
+        border-radius: 2px;
+        &.keyboard-nav {
+          .blinking-box-shadow;
+        }
+      }
+    }
+  }
+
+  .back-button, .forward-button, .up-button, .down-button {
+    flex: 0 0 16px;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAMklEQVQYV2NkIAIwIqn5D2Uji4GF0AWwKsTQxcDAgKEQmyKQDSgKyTKJoJuI9h3WUAMAntIHCtDLLc8AAAAASUVORK5CYII=);
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: transform 0.1s;
+    cursor: pointer;
+  }
+  .back-button {
+    transform: scale(-1, 1);
+  }
+  .down-button {
+    flex: 0 0 10px;
+    transform: rotate(90deg);
+  }
+  .up-button {
+    flex: 0 0 10px;
+    transform: rotate(-90deg) scale(1, -1);
+  }
+
+}
+
+.blinking-box-shadow {
+  animation: blinking-box-shadow 0.5s ease-in-out infinite alternate;
+  background-color: transparent;
+}
+
+@keyframes blinking-box-shadow {
+  0% {
+    box-shadow: inset 0 0 0 1px lighten(@tr-highlight-color-base, 40%, relative);
+  }
+  30% {
+    box-shadow: inset 0 0 0 1px lighten(@tr-highlight-color-base, 40%, relative);
+  }
+  70% {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5);
+  }
+  100% {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5);
+  }
+}
+
+.blinking-stroke {
+  animation: blinking-stroke 0.5s ease-out infinite alternate;
+}
+
+@keyframes blinking-stroke {
+  0% {
+    stroke: lighten(@tr-highlight-color-base, 40%, relative);
+    color: lighten(@tr-highlight-color-base, 40%, relative);
+  }
+  40% {
+    stroke: lighten(@tr-highlight-color-base, 40%, relative);
+    color: lighten(@tr-highlight-color-base, 40%, relative);
+  }
+  80% {
+    stroke: black;
+    color: black;
+  }
+  100% {
+    stroke: black;
+    color: black;
+  }
+}
+
+.fix-firefox-baseline {
+  &:after {
+    // this is a hack for fixing firefox baseline. See http://blogs.adobe.com/webplatform/2014/08/13/one-weird-trick-to-baseline-align-text/
+    content: '';
+    display: inline-block;
+    height: 13px;
+  }
+}

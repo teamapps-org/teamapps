@@ -25,7 +25,7 @@ import {generateUUID, parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiColorConfig} from "../../generated/UiColorConfig";
 import {createUiColorCssString} from "../util/CssFormatUtil";
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "../trivial-components/TrivialCore";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {getHighestSeverity} from "../micro-components/FieldMessagesPopper";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";

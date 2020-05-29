@@ -24,7 +24,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "../generated/UiWindowConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "./trivial-components/TrivialCore";
 import {UiColorConfig} from "../generated/UiColorConfig";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";

@@ -24,7 +24,7 @@ import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {humanReadableFileSize, parseHtml} from "../../Common";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "../../trivial-components/TrivialCore";
 import {
 	UiPictureChooser_UploadCanceledEvent,
 	UiPictureChooser_UploadFailedEvent,

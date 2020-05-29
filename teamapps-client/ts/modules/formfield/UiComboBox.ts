@@ -17,7 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {defaultTreeQueryFunctionFactory, ResultCallback, TrivialComboBox, trivialMatch, TrivialTreeBox} from "trivial-components";
+import {defaultTreeQueryFunctionFactory, ResultCallback, trivialMatch} from "../trivial-components/TrivialCore";
+import {TrivialComboBox} from "../trivial-components/TrivialComboBox";
+import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiTextMatchingMode} from "../../generated/UiTextMatchingMode";

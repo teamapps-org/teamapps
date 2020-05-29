@@ -1,0 +1,52 @@
+/*
+ *
+ *  Copyright 2016 Yann Massard (https://github.com/yamass) and other contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+.tr-datetimefield {
+  .tr-editor-wrapper {
+    padding: 2px 0;
+    flex: 1 1 0px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+
+    .tr-date-icon-wrapper,
+    .tr-time-icon-wrapper {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+    }
+    .tr-time-icon-wrapper {
+      margin-left: 4px;
+    }
+
+    .tr-date-editor,
+    .tr-time-editor {
+      outline: none;
+      font-family: @tr-editor-font-family;
+      font-size: @tr-editor-font-size;
+      padding-left: 1px;
+    }
+    .tr-date-editor {
+      flex: 0 0 auto;
+      min-width: 9ch;
+    }
+    .tr-time-editor {
+      flex: 1 0 auto;
+      min-width: 4.5ch;
+    }
+  }
+}

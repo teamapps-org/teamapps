@@ -43,7 +43,7 @@ import {ProgressCircle} from "../../micro-components/ProgressCircle";
 import {ProgressBar} from "../../micro-components/ProgressBar";
 import * as log from "loglevel";
 import {Logger} from "loglevel";
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "../../trivial-components/TrivialCore";
 import {UiIdentifiableClientRecordConfig} from "../../../generated/UiIdentifiableClientRecordConfig";
 import {FileUploader} from "../../util/FileUploader";
 

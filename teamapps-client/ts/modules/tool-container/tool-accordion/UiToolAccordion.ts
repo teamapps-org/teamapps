@@ -24,7 +24,7 @@ import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGroupConfig";
 import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
 import {createUiDropDownButtonClickInfoConfig, UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
-import {DEFAULT_TEMPLATES} from "trivial-components";
+import {DEFAULT_TEMPLATES} from "../../trivial-components/TrivialCore";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {doOnceOnClickOutsideElement, insertAfter, parseHtml} from "../../Common";
 import {UiToolAccordionCommandHandler, UiToolAccordionConfig, UiToolAccordionEventSource} from "../../../generated/UiToolAccordionConfig";
@@ -173,7 +173,7 @@ class UiButtonGroup {
 	private enforcedButtonWidth: number = 1;
 
 	constructor(buttonGroupConfig: UiToolbarButtonGroupConfig, private toolAccordion: UiToolAccordion, private context: TeamAppsUiContext, private $sizeTestingContainer: HTMLElement) {
-		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"/>');
+		const $buttonGroupWrapper = parseHtml('<div class="button-group-wrapper"></div>');
 
 		const $buttonGroup = parseHtml(`<div class="toolbar-button-group" id="${this.toolAccordionId}_${buttonGroupConfig.groupId}">`);
 		$buttonGroupWrapper.appendChild($buttonGroup);
