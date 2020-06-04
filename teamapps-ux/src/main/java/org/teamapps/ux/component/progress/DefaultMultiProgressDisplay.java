@@ -29,6 +29,7 @@ import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.notification.Notification;
 import org.teamapps.ux.component.notification.NotificationPosition;
+import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.task.ObservableProgress;
 import org.teamapps.ux.task.ProgressCompletableFuture;
 
@@ -59,7 +60,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	public DefaultMultiProgressDisplay() {
 		progressListVerticalLayout = new VerticalLayout();
 		noEntriesDisplayField = new DisplayField();
-		noEntriesDisplayField.setValue("<div style=\"text-align: center\">" + getSessionContext().getLocalized("dict.noRunningTasks") + "</div>");
+		noEntriesDisplayField.setValue("<div style=\"text-align: center\">" + getSessionContext().getLocalized(TeamAppsDictionary.NO_RUNNING_TASKS.getKey()) + "</div>");
 		noEntriesDisplayField.setShowHtml(true);
 		progressListVerticalLayout.addComponent(noEntriesDisplayField);
 		progressListNotification = new Notification(progressListVerticalLayout);
