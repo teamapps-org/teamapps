@@ -26,6 +26,7 @@ import org.teamapps.dto.UiField;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.validator.FieldValidator;
+import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.session.CurrentSessionContext;
 
 import java.util.ArrayList;
@@ -46,12 +47,12 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	
 	private final FieldValidator<VALUE> requiredValidator = (value) ->
 			this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
-			CurrentSessionContext.get().getLocalized("dict.requiredField"))) : null;
+			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : null;
 
 	private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
 			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmpty()) ?
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
-			CurrentSessionContext.get().getLocalized("dict.requiredField"))) : null;
+			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : null;
 
 	public final Event<VALUE> onValueChanged = new Event<>();
 	public final Event<Boolean> onVisibilityChanged = new Event<>();

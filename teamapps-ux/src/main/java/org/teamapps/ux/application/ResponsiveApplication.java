@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,6 @@
 package org.teamapps.ux.application;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.application.assembler.AdditionalNavigationButton;
 import org.teamapps.ux.application.assembler.DesktopApplicationAssembler;
@@ -29,7 +28,9 @@ import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
 
@@ -40,11 +41,12 @@ public interface ResponsiveApplication extends Application {
 	}
 
 	static ResponsiveApplication createApplication(View applicationLauncher) {
-		return createApplication(applicationLauncher, MaterialIcon.VIEW_MODULE,
-				MaterialIcon.TOC,
-				MaterialIcon.VIEW_CAROUSEL,
-				MaterialIcon.SUBTITLES,
-				MaterialIcon.NAVIGATE_BEFORE);
+		return createApplication(applicationLauncher,
+				SessionContext.current().getIcon(TeamAppsIconBundle.APPLICATION_LAUNCHER.getKey()),
+				SessionContext.current().getIcon(TeamAppsIconBundle.TREE.getKey()),
+				SessionContext.current().getIcon(TeamAppsIconBundle.VIEWS.getKey()),
+				SessionContext.current().getIcon(TeamAppsIconBundle.TOOLBAR.getKey()),
+				SessionContext.current().getIcon(TeamAppsIconBundle.TOOLBAR.getKey()));
 	}
 
 	static ResponsiveApplication createApplication(View applicationLauncher, Icon launcherIcon, Icon treeIcon, Icon viewsIcon, Icon toolbarIcon, Icon backIcon) {

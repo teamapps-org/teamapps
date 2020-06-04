@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.application.assembler;
 
-import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.ResponsiveApplicationToolbar;
@@ -39,6 +38,8 @@ import org.teamapps.ux.component.toolbar.AbstractToolContainer;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.tree.Tree;
 import org.teamapps.ux.component.workspacelayout.definition.LayoutItemDefinition;
+import org.teamapps.ux.icon.TeamAppsIconBundle;
+import org.teamapps.ux.session.SessionContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +67,12 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	private View activeView;
 
 	public MobileApplicationAssembler() {
-		this(MaterialIcon.VIEW_MODULE,
-				MaterialIcon.TOC,
-				MaterialIcon.VIEW_CAROUSEL,
-				MaterialIcon.SUBTITLES,
-				MaterialIcon.NAVIGATE_BEFORE,
+		this(
+				SessionContext.current().getIcon(TeamAppsIconBundle.APPLICATION_LAUNCHER.getKey()),
+				SessionContext.current().getIcon(TeamAppsIconBundle.TREE.getKey()),
+				SessionContext.current().getIcon(TeamAppsIconBundle.VIEWS.getKey()),
+				SessionContext.current().getIcon(TeamAppsIconBundle.TOOLBAR.getKey()),
+				SessionContext.current().getIcon(TeamAppsIconBundle.TOOLBAR.getKey()),
 				null);
 	}
 

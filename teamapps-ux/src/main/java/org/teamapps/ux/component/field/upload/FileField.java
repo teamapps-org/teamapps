@@ -34,6 +34,8 @@ import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.i18n.TeamAppsDictionary;
+import org.teamapps.ux.icon.TeamAppsIconBundle;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,7 +63,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Template uploadButtonTemplate = BaseTemplate.BUTTON;
-	private Object uploadButtonData = new BaseTemplateRecord(MaterialIcon.BACKUP, getSessionContext().getLocalized("ux.fileField.upload_verb"));
+	private Object uploadButtonData = new BaseTemplateRecord(getSessionContext().getIcon(TeamAppsIconBundle.UPLOAD.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD.getKey()));
 	private PropertyExtractor uploadButtonPropertyExtractor = new BeanPropertyExtractor();
 
 	private final UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter;
@@ -86,8 +88,8 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 		uiField.setMaxBytesPerFile(maxBytesPerFile);
 		uiField.setUploadUrl(uploadUrl);
 
-		uiField.setFileTooLargeMessage(getSessionContext().getLocalized("ux.fileField.fileTooLarge_short", FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
-		uiField.setUploadErrorMessage(getSessionContext().getLocalized("ux.fileField.uploadError"));
+		uiField.setFileTooLargeMessage(getSessionContext().getLocalized(TeamAppsDictionary.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1)));
+		uiField.setUploadErrorMessage(getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD_ERROR_MESSAGE.getKey()));
 
 		uiField.setDisplayType(displayType.toUiFileFieldDisplayType());
 		uiField.setMaxFiles(this.maxFiles);
