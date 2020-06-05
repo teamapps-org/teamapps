@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 
 public class FileLocalizationStore implements LocalizationStore {
 
-	private static final String DELIMITER = ":\t";
-	private static final String FILE_PREFIX = "localization_";
-	private static final String FILE_SUFFIX = ".txt";
+	private String delimiter = ":\t";
+	private String filePrefix = "localization_";
+	private String fileSuffix = ".txt";
 
 	private final File storeDirectory;
 	private final Map<String, Map<String, String>> translationMap;
@@ -44,18 +44,24 @@ public class FileLocalizationStore implements LocalizationStore {
 		loadEntries();
 	}
 
+	public void setPropertyFilesDefaults() {
+		delimiter = "=";
+		filePrefix = "captions_";
+		fileSuffix = ".properties";
+	}
+
 	private void loadEntries() throws IOException {
 		for (File file : storeDirectory.listFiles()) {
 			String name = file.getName();
-			if (name.endsWith(FILE_SUFFIX) && name.startsWith(FILE_PREFIX)) {
-				String language = name.substring(FILE_PREFIX.length(), name.lastIndexOf('.'));
+			if (name.endsWith(fileSuffix) && name.startsWith(filePrefix)) {
+				String language = name.substring(filePrefix.length(), name.lastIndexOf('.'));
 				Map<String, String> languageTranslations = translationMap.computeIfAbsent(language, s -> new HashMap<>());
 				List<String> translations = FileUtils.readLines(file, StandardCharsets.UTF_8);
 				for (String translation : translations) {
 					if (translation.startsWith("#") || translation.startsWith("//")) {
 						continue;
 					}
-					String[] parts = translation.split(DELIMITER);
+					String[] parts = translation.split(delimiter);
 					if (parts.length == 2) {
 						languageTranslations.put(parts[0], parts[1]);
 					}
@@ -68,7 +74,7 @@ public class FileLocalizationStore implements LocalizationStore {
 		for (Map.Entry<String, Map<String, String>> entry : translationMap.entrySet()) {
 			String language = entry.getKey();
 			Map<String, String> translations = entry.getValue();
-			File file = new File(storeDirectory, FILE_PREFIX + language + FILE_SUFFIX);
+			File file = new File(storeDirectory, filePrefix + language + fileSuffix);
 			StringBuilder translationLines = new StringBuilder();
 			translations.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).forEach(localizationEntry -> {
 				String translationLine = createTranslationLine(localizationEntry.getKey(), localizationEntry.getValue());
@@ -82,7 +88,7 @@ public class FileLocalizationStore implements LocalizationStore {
 
 
 	private String createTranslationLine(String key, String value) {
-		return key + DELIMITER + value + "\n";
+		return key + delimiter + value + "\n";
 	}
 
 	@Override
