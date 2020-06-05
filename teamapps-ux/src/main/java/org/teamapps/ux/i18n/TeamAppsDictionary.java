@@ -1,6 +1,6 @@
 package org.teamapps.ux.i18n;
 
-public enum  TeamAppsDictionary {
+public enum TeamAppsDictionary {
 
 	LOGIN("login"),
 	PASSWORD("password"),
@@ -9,9 +9,13 @@ public enum  TeamAppsDictionary {
 	USER_NAME("userName"),
 	USER_I_D("userID"),
 	ADD("add"),
+	ADD_RECORD("addRecord"),
 	EDIT("edit"),
 	REMOVE("remove"),
+	REMOVE_SELECTION("removeSelection"),
+	REMOVE_ALL_FILTERS("removeAllFilters"),
 	DELETE("delete"),
+	DELETE_RECORD("deleteRecord"),
 	SAVE("save"),
 	SAVE_CHANGES("saveChanges"),
 	SAVE_AND_CLOSE("saveAndClose"),
@@ -37,6 +41,7 @@ public enum  TeamAppsDictionary {
 	NOW("now"),
 	PREVIOUS("previous"),
 	NEXT("next"),
+	BACK("back"),
 	CREATION_DATE("creationDate"),
 	MODIFICATION_DATE("modificationDate"),
 	DELETION_DATE("deletionDate"),
@@ -47,8 +52,14 @@ public enum  TeamAppsDictionary {
 	RESTORED_BY("restoredBy"),
 	SEARCH("search"),
 	SEARCH___("search___"),
+	VALUES("values"),
+	COUNT("count"),
+	FILTER("filter"),
+	EMPTY("empty"),
+	SELECT("select"),
+	SELECT_AREA("selectArea"),
 	REQUIRED_FIELD("requiredField"),
-	RECORD_SUCCESSFULLY_SAVE("recordSuccessfullySave"),
+	RECORD_SUCCESSFULLY_SAVED("recordSuccessfullySaved"),
 	RECORD_SUCCESSFULLY_DELETED("recordSuccessfullyDeleted"),
 	FILE_TOO_LARGE_MESSAGE("fileTooLargeMsg"),
 	FILE_TOO_LARGE_SHORT_MESSAGE("fileTooLargeShortMsg"),

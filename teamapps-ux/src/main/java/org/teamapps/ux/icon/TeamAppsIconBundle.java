@@ -5,8 +5,18 @@ import org.teamapps.icons.api.Icon;
 
 public enum TeamAppsIconBundle implements IconBundleEntry {
 
+	ADD(MaterialIcon.ADD),
 	SAVE(MaterialIcon.SAVE),
+	DELETE(MaterialIcon.DELETE),
+	UNDO(MaterialIcon.UNDO),
+	CANCEL(MaterialIcon.CANCEL),
 
+	FILTER(MaterialIcon.FILTER),
+	SEARCH(MaterialIcon.SEARCH),
+	SELECTION(MaterialIcon.SELECT_ALL),
+	REMOVE(MaterialIcon.REMOVE),
+
+	BACK(MaterialIcon.NAVIGATE_BEFORE),
 	PREVIOUS(MaterialIcon.NAVIGATE_BEFORE),
 	NEXT(MaterialIcon.NAVIGATE_NEXT),
 
@@ -19,7 +29,6 @@ public enum TeamAppsIconBundle implements IconBundleEntry {
 	TREE(MaterialIcon.TOC),
 	VIEWS(MaterialIcon.VIEW_CAROUSEL),
 	TOOLBAR(MaterialIcon.SUBTITLES),
-	BACK(MaterialIcon.NAVIGATE_BEFORE),
 
 	UPLOAD(MaterialIcon.BACKUP),
 
