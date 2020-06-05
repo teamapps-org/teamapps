@@ -132,17 +132,17 @@ public class MaterialIconProvider implements SvgIconProvider<IconStyle> {
 
     @Override
     public IconStyle getDefaultDesktopStyle() {
-        return MaterialIconStyles.PLAIN_GREY_700;
+        return MaterialIconStyles.PLAIN_SHADOW_BLUE_700;
     }
 
     @Override
     public IconStyle getDefaultMobileStyle() {
-        return MaterialIconStyles.PLAIN_GREY_700;
+        return MaterialIconStyles.PLAIN_SHADOW_BLUE_700;
     }
 
     @Override
     public IconStyle getDefaultSubIconStyle() {
-        return MaterialIconStyles.PLAIN_GREY_700;
+        return MaterialIconStyles.PLAIN_SHADOW_BLUE_700;
     }
 
 }
