@@ -44,7 +44,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	public final Event<NodeExpandedOrCollapsedEvent<RECORD>> onNodeExpandedOrCollapsed = new Event<>();
 
 	private final List<ForceLayoutNode<RECORD>> nodes;
-	private final List<ForceLayoutLink> links;
+	private final List<ForceLayoutLink<RECORD>> links;
 
 	private int animationDuration = 1000;
 	// private float gravity = 0.1f;
@@ -60,9 +60,18 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		this(Collections.emptyList(), Collections.emptyList());
 	}
 
-	public ForceLayoutGraph(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink> links) {
+	public ForceLayoutGraph(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink<RECORD>> links) {
 		this.nodes = new ArrayList<>(nodes);
 		this.links = new ArrayList<>(links);
+	}
+
+	public void setModel(ForceLayoutModel<RECORD> model) {
+		model.onNodesAdded.addListener(change -> {
+			addNodesAndLinks(change.getAddedNodes(), change.getAddedLinks());
+		});
+		model.onNodesRemoved.addListener(change -> {
+			removeNodesAndLinks(change.getRemovedNodes(), change.getRemovedLinks());
+		});
 	}
 
 	@Override
@@ -81,7 +90,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 				.collect(Collectors.toList());
 	}
 
-	private List<UiNetworkLink> createUiLinks(List<ForceLayoutLink> links) {
+	private List<UiNetworkLink> createUiLinks(List<ForceLayoutLink<RECORD>> links) {
 		return links.stream()
 				.map(l -> l.toUiNetworkLink())
 				.collect(Collectors.toList());
@@ -145,21 +154,21 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		this.animationDuration = animationDuration;
 	}
 
-	public void addNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink> links) {
+	public void addNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink<RECORD>> links) {
 		this.nodes.addAll(nodes);
 		this.links.addAll(links);
 		queueCommandIfRendered(() -> new UiNetworkGraph.AddNodesAndLinksCommand(getId(), createUiNodes(nodes), createUiLinks(links)));
 	}
 
 	public void removeNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes) {
-		List<ForceLayoutLink> linksToRemove = links.stream()
+		List<ForceLayoutLink<RECORD>> linksToRemove = links.stream()
 				.filter(l -> nodes.contains(l.getSource()) || nodes.contains(l.getTarget()))
 				.collect(Collectors.toList());
 		System.out.println(linksToRemove);
 		removeNodesAndLinks(nodes, linksToRemove);
 	}
 
-	public void removeNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink> links) {
+	public void removeNodesAndLinks(List<ForceLayoutNode<RECORD>> nodes, List<ForceLayoutLink<RECORD>> links) {
 		this.nodes.removeAll(nodes);
 		this.links.removeAll(links);
 		List<String> nodeIds = nodes.stream().map(n -> n.getId()).collect(Collectors.toList());
@@ -172,7 +181,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		return Collections.unmodifiableList(nodes);
 	}
 
-	public List<ForceLayoutLink> getLinks() {
+	public List<ForceLayoutLink<RECORD>> getLinks() {
 		return Collections.unmodifiableList(links);
 	}
 
