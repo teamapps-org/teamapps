@@ -111,7 +111,7 @@ public class MediaSoupV3HttpClient {
 
 	public static CompletableFuture<Void> startStreamingUrl(String workerUrl, String serverSecret, String videoUrl, String uid) {
 		String jwtToken = MediaSoupV3WebRtcClient.generateStreamingJwtToken(serverSecret, Duration.ofMinutes(10));
-		String json = "{\"stream\":\"" + uid + "\",\"kinds\":[\"video\"],\"relativePath\":false,\"filePath\":\""+videoUrl+"\","
+		String json = "{\"stream\":\"" + uid + "\",\"checkKinds\":true,\"relativePath\":false,\"filePath\":\""+videoUrl+"\","
 				+ "\"additionalInputOptions\":[\"-stream_loop\",\"-1\"]}";
 		LOGGER.info("Starting streamed video {} on server {} using token {}", uid, workerUrl, jwtToken);
 		return post(workerUrl, "fileStreaming", jwtToken, json)
