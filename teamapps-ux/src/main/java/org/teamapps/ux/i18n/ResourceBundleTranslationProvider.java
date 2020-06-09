@@ -57,7 +57,11 @@ public class ResourceBundleTranslationProvider implements TranslationProvider {
 
 	@Override
 	public String getTranslation(String key, Locale locale) {
-		Object value = resourceBundleByLocale.get(locale).handleGetObject(key);
+		PropertyResourceBundle propertyResourceBundle = resourceBundleByLocale.get(locale);
+		if (propertyResourceBundle == null) {
+			return null;
+		}
+		Object value = propertyResourceBundle.handleGetObject(key);
 		if (value != null) {
 			return (String) value;
 		} else {
