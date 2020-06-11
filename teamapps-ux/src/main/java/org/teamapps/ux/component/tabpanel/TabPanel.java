@@ -41,7 +41,7 @@ public class TabPanel extends AbstractComponent implements Container {
 
 	private final List<Tab> tabs = new ArrayList<>();
 	private Tab selectedTab;
-	private List<ToolButton> toolButtons = new ArrayList<>();
+	private final List<ToolButton> toolButtons = new ArrayList<>();
 	private boolean hideTabBarIfSingleTab = false;
 	private TabPanelTabStyle tabStyle = TabPanelTabStyle.BLOCKS;
 
@@ -172,8 +172,12 @@ public class TabPanel extends AbstractComponent implements Container {
 					Tab oldSelectedTab = this.selectedTab;
 					Tab selectedTab = this.getTabByClientId(tabSelectedEvent.getTabId());
 					this.selectedTab = selectedTab;
-					oldSelectedTab.onDeselected.fire(null);
-					selectedTab.onSelected.fire(null);
+					if (oldSelectedTab != null) {
+						oldSelectedTab.onDeselected.fire(null);
+					}
+					if (selectedTab != null) {
+						selectedTab.onSelected.fire(null);
+					}
 				}
 				onTabSelected.fire(selectedTab);
 				break;
