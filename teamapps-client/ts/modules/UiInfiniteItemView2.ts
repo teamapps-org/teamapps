@@ -138,6 +138,9 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 	private requestDataIfNeeded() {
 		let visibleItemRange = this.getVisibleItemRange();
 		let visibleItemRangeLength = visibleItemRange[1] - visibleItemRange[0];
+		if (this._config.visible && visibleItemRangeLength === 0) {
+			visibleItemRangeLength = this.getItemsPerRow(); // even if this component has zero height, it should at least query one row in order to be able to auto-size!
+		}
 		let uncutOptimalWindow = [
 			visibleItemRange[0] - visibleItemRangeLength,
 			visibleItemRange[1] + visibleItemRangeLength
