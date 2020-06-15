@@ -33,7 +33,7 @@ public class FloatingComponent extends AbstractComponent {
 	public final Event<Boolean> onExpandedOrCollapsed = new Event<>();
 
 	private final Component containerComponent;
-	private final Component contentComponent;
+	private Component contentComponent;
 	private int width = -1;
 	private int height = -1;
 	private int marginX;
@@ -147,6 +147,15 @@ public class FloatingComponent extends AbstractComponent {
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
 		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpandedCommand(getId(), expanded));
+	}
+
+	public Component getContentComponent() {
+		return contentComponent;
+	}
+
+	public void setContentComponent(Component contentComponent) {
+		this.contentComponent = contentComponent;
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetContentComponentCommand(getId(), contentComponent.createUiReference()));
 	}
 
 	@Override
