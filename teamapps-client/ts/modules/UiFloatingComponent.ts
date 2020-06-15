@@ -151,7 +151,9 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 	public setContentComponent(contentComponent: unknown) {
 		this.$main.innerHTML = '';
 		this.contentComponent = contentComponent as UiComponent;
-		this.$main.appendChild(this.contentComponent.getMainElement());
+		if (contentComponent != null) {
+			this.$main.appendChild(this.contentComponent.getMainElement());
+		}
 	}
 
 	setExpanded(expanded: boolean): void {
