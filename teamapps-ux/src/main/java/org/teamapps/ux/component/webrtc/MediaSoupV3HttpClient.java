@@ -76,9 +76,15 @@ public class MediaSoupV3HttpClient {
 
 	public static CompletableFuture<Void> setRecordingEnabled(String workerUrl, String serverSecret, String uid, boolean enabled) {
 		String jwtToken = MediaSoupV3WebRtcClient.generateRecordingJwtToken(serverSecret, Duration.ofMinutes(10));
-		LOGGER.info("Setting recording to {} for {} on server {} with token {}", enabled, uid, workerUrl, jwtToken);
-		return post(workerUrl, "startRecording", jwtToken, "{\"stream\": \"" + uid + "\", \"kinds\": [" + (enabled ? "\"audio\", \"video\"" : "") + "]}")
-				.thenApply(s -> null);
+		if (enabled) {
+			LOGGER.info("Starting recording to {} for {} on server {} with token {}", enabled, uid, workerUrl, jwtToken);
+			return post(workerUrl, "startRecording", jwtToken, "{\"stream\": \"" + uid + "\", \"kinds\": [\"audio\", \"video\"]}")
+					.thenApply(s -> null);
+		} else {
+			LOGGER.info("Stopping recording to {} for {} on server {} with token {}", enabled, uid, workerUrl, jwtToken);
+			return post(workerUrl, "stopRecording", jwtToken, "{\"stream\": \"" + uid + "\", \"kinds\": [\"audio\", \"video\"]}")
+					.thenApply(s -> null);
+		}
 	}
 
 	public static CompletableFuture<List<String>> listRecordings(String workerUrl, String serverSecret, String uid) {
