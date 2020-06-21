@@ -95,7 +95,7 @@ public class MaterialIconProvider implements SvgIconProvider<IconStyle> {
         }
         AbstractMaterialIconStyle iconStyle = styleById.get(styleId);
         if (iconStyle == null) {
-            iconStyle = MaterialIconStyles.PLAIN_GREY_700;
+            iconStyle = MaterialIconStyles.PLAIN_SHADOW_BLUE_700;
         }
 
         InputStream inputStream = getClass().getResourceAsStream("/org/teamapps/icon/material/" + iconStyle.getStyleType().getPackageName() + "/" + iconName);
