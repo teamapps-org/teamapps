@@ -51,6 +51,10 @@ public enum TeamAppsIconBundle implements IconBundleEntry {
 
 	UPLOAD(MaterialIcon.BACKUP),
 
+	REFERENCE(MaterialIcon.LINK),
+	MULTI_REFERENCE(MaterialIcon.LINEAR_SCALE),
+	ENUM(MaterialIcon.LIST),
+
 	;
 
 	public static IconBundle createBundle() {
