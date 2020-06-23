@@ -58,7 +58,6 @@ import {determineVideoSize} from "../MultiStreamsMixer";
 import {UiMediaRetrievalFailureReason} from "../../../generated/UiMediaRetrievalFailureReason";
 import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType";
 import {ConferenceInputOrigin} from "./lib/front/src/client-interfaces";
-import * as debug from 'debug';
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent(this);
@@ -243,7 +242,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.updatePromise.finally(() => {
 			this.updatePromise = this.updateInternal(config);
 		})
-			// .finally(() => console.log("DONE: " + counterValue));
+		// .finally(() => console.log("DONE: " + counterValue));
 	}
 
 	async updateInternal(config: UiMediaSoupV3WebRtcClientConfig) {
@@ -307,7 +306,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.updateStateCssClasses();
 
 		const oldParams = this._config.playbackParameters;
-		const needsReset = !deepEquals(oldParams?.serverChain, newParams?.serverChain)
+		const needsReset =
+			oldParams?.serverChain?.map(chainLink => chainLink.url).concat("->") == newParams?.serverChain?.map(chainLink => chainLink.url).concat("->")
 			|| oldParams?.streamUuid != newParams?.streamUuid;
 		if (needsReset) {
 			console.log("updatePlayback() --> needsReset", newParams, newParams.serverChain.map(c => c.url).join(" -> "));
@@ -353,7 +353,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		}
 	}
 
-	private startVideoPlayback(successCallback: () => void, errorCallback: (e:Error) => void) {
+	private startVideoPlayback(successCallback: () => void, errorCallback: (e: Error) => void) {
 		try {
 			const playPromise = this.$video.play();
 			if (playPromise != null) {
