@@ -189,6 +189,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			});
 		});
 
+		this._config = {}; // make sure everything is regarded as new! _config will get set at the end again...
 		this.update(config);
 	}
 
