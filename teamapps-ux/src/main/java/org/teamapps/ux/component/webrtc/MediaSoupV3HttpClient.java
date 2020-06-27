@@ -109,15 +109,15 @@ public class MediaSoupV3HttpClient {
 	public static CompletableFuture<Void> startStreamingFile(String workerUrl, String serverSecret, String videoPath, String uid) {
 		String jwtToken = MediaSoupV3WebRtcClient.generateStreamingJwtToken(serverSecret, Duration.ofMinutes(10));
 		String json = "{\"stream\":\"" + uid + "\",\"relativePath\":true,\"filePath\":\""+videoPath+"\",\"additionalOutputOptions\":[\"-b:v\",\"1M\"],"
-				+ "\"additionalInputOptions\":[\"-stream_loop\",\"-1\"]}";
+				+ "\"additionalInputOptions\":[]}";
 		LOGGER.info("Starting streamed video {} on server {} using token {}", uid, workerUrl, jwtToken);
 		return post(workerUrl, "fileStreaming", jwtToken, json)
 				.thenApply(s -> null);
 	}
 
-	public static CompletableFuture<Void> startStreamingUrl(String workerUrl, String serverSecret, String videoUrl, String uid) {
+	public static CompletableFuture<Void> startStreamingUrl(String workerUrl, String serverSecret, String videoUrl, String uid, boolean isVideo) {
 		String jwtToken = MediaSoupV3WebRtcClient.generateStreamingJwtToken(serverSecret, Duration.ofMinutes(10));
-		String json = "{\"stream\":\"" + uid + "\",\"checkKinds\":true,\"relativePath\":false,\"filePath\":\""+videoUrl+"\","
+		String json = "{\"stream\":\"" + uid + "\",\"kinds\": [\"audio\"" + (isVideo ? ", \"video\"" : "") + "],\"relativePath\":false,\"filePath\":\""+videoUrl+"\","
 				+ "\"additionalInputOptions\":[]}";
 		LOGGER.info("Starting streamed video {} on server {} using token {}", uid, workerUrl, jwtToken);
 		return post(workerUrl, "fileStreaming", jwtToken, json)
