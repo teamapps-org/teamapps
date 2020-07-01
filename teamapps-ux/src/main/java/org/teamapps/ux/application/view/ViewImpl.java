@@ -73,8 +73,12 @@ public class ViewImpl implements View {
 
     @Override
     public void setVisible(boolean visible) {
-        this.visible = visible;
-        changeHandlers.forEach(changeHandler -> changeHandler.handleVisibilityChange(visible));
+        if (this.visible == visible) {
+            return;
+        } else {
+            this.visible = visible;
+            changeHandlers.forEach(changeHandler -> changeHandler.handleVisibilityChange(visible));
+        }
     }
 
     @Override
