@@ -1,0 +1,16 @@
+.ta-blink {
+  animation: ta-blink 1s linear infinite;
+}
+
+.ta-blink-subtle {
+  animation: ta-blink-subtle 7s linear infinite;
+}
+
+@keyframes ta-blink {
+  50% { opacity: .1; }
+}
+
+@keyframes ta-blink-subtle {
+  15% { opacity: .1; }
+  30% { opacity: 1; }
+}

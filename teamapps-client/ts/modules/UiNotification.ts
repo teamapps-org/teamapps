@@ -136,7 +136,7 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 	<div class="content-container"></div>
 	<div class="progress-container"></div>
 </div>`);
-		this.$contentContainer = this.$main.querySelector(":scope > .content-container");
+		let $contentContainer = this.$main.querySelector(":scope > .content-container");
 		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container");
 		this.$main.querySelector(":scope > .close-button").addEventListener("mousedown", () => {
 			this.close();
@@ -151,12 +151,12 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 		// this.$main.style.borderColor = createUiColorCssString(config.borderColor, "#00000022");
 		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
 		this.$main.classList.toggle("dismissible", config.dismissible);
-		this.$main.classList.toggle("show-progress", config.showProgressBar && config.displayTimeInMillis > 0);
+		this.$main.classList.toggle("show-progress", config.progressBarVisible && config.displayTimeInMillis > 0);
 
-		if (config.showProgressBar && this.progressBar == null) {
+		if (config.progressBarVisible && this.progressBar == null) {
 			this.progressBar = new ProgressBar(0, {height: 5, transitionTime: config.displayTimeInMillis});
 			this.$progressBarContainer.appendChild(this.progressBar.getMainDomElement());
-		} else if (!config.showProgressBar && this.progressBar != null) {
+		} else if (!config.progressBarVisible && this.progressBar != null) {
 			this.progressBar.getMainDomElement().remove();
 			this.progressBar = null;
 		}
