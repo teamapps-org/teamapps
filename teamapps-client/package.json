@@ -86,7 +86,7 @@
     "@fullcalendar/moment": "^4.2.0",
     "@fullcalendar/moment-timezone": "^4.2.0",
     "@fullcalendar/timegrid": "^4.2.0",
-    "animate.css": "^3.7.2",
+    "animate.css": "^4.1.0",
     "array-flat-polyfill": "^1.0.1",
     "autolinker": "^3.11.1",
     "axios": "^0.19.2",

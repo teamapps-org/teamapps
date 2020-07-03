@@ -14,14 +14,6 @@ if [ ! -z "$1" ]
   	export appServerUrl=$1
 fi
 
-if [ -z "$appServerUrl" ]
-  then
-  	export appServerUrl="http://localhost:8080"
-    echo "appServerUrl is not set! Setting to default: " $appServerUrl
-  else
-  	echo "appServerUrl set to " $appServerUrl
-fi
-
 export PORT=${2:-9000}
 echo "Dev server will be available on port " $PORT " or higher if already in use...";
 

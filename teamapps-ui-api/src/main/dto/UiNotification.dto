@@ -25,9 +25,9 @@ class UiNotification extends UiComponent {
 	UiColor backgroundColor;
 	UiSpacing padding;
 
-	int displayTimeInMillis = 3000; // 0 = display until user closes it actively
 	boolean dismissible = true;
-	boolean showProgressBar = false;
+	int displayTimeInMillis = 3000; // 0 = display until user closes it actively
+	boolean progressBarVisible = false;
 
 	UiComponent* content;
 	int contentHeight = 0; // <= 0: auto
@@ -39,3 +39,26 @@ class UiNotification extends UiComponent {
 	event closed(boolean byUser);
 }
 
+class UiNotificationBar extends UiComponent {
+	command addItem(UiNotificationBarItem item, UiEntranceAnimation entranceAnimation, UiExitAnimation exitAnimation);
+	command removeItem(String id, UiExitAnimation exitAnimation);
+
+	event itemClicked(String id);
+	event itemClosed(String id, boolean wasTimeout);
+}
+
+class UiNotificationBarItem {
+	String id;
+
+	String icon;
+	UiRepeatableAnimation iconAnimation;
+	String text;
+	UiColor backgroundColor;
+	UiColor borderColor;
+	UiColor textColor;
+	UiSpacing padding;
+
+	boolean dismissible = true;
+	int displayTimeInMillis = 3000; // 0 <= display until user closes it actively
+	boolean progressBarVisible = false;
+}

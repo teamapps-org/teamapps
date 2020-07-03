@@ -27,6 +27,7 @@ import {UiTextMatchingMode} from "../generated/UiTextMatchingMode";
 import moment from "moment-timezone";
 import {UiComponent} from "./UiComponent";
 import {UiPageTransition} from "../generated/UiPageTransition";
+import {UiRepeatableAnimation} from "../generated/UiRepeatableAnimation";
 
 export type RenderingFunction = (data: any) => string;
 
@@ -41,75 +42,128 @@ export class Constants {
 	private static _SCROLLBAR_WIDTH: number;
 
 	public static ENTRANCE_ANIMATION_CSS_CLASSES = {
-		[UiEntranceAnimation.LIGHTSPEED_IN]: "lightSpeedIn",
-		[UiEntranceAnimation.ROLL_IN]: "rollIn",
-		[UiEntranceAnimation.ZOOM_IN]: "zoomIn",
-		[UiEntranceAnimation.ZOOM_IN_DOWN]: "zoomInDown",
-		[UiEntranceAnimation.ZOOM_IN_LEFT]: "zoomInLeft",
-		[UiEntranceAnimation.ZOOM_IN_RIGHT]: "zoomInRight",
-		[UiEntranceAnimation.ZOOM_IN_UP]: "zoomInUp",
-		[UiEntranceAnimation.SLIDE_IN_UP]: "slideInUp",
-		[UiEntranceAnimation.SLIDE_IN_DOWN]: "slideInDown",
-		[UiEntranceAnimation.SLIDE_IN_LEFT]: "slideInLeft",
-		[UiEntranceAnimation.SLIDE_IN_RIGHT]: "slideInRight",
-		[UiEntranceAnimation.ROTATE_IN]: "rotateIn",
-		[UiEntranceAnimation.ROTATE_IN_DOWNLEFT]: "rotateInDownLeft",
-		[UiEntranceAnimation.ROTATE_IN_DOWNRIGHT]: "rotateInDownRight",
-		[UiEntranceAnimation.ROTATE_IN_UPLEFT]: "rotateInUpLeft",
-		[UiEntranceAnimation.ROTATE_IN_UPRIGHT]: "rotateInUpRight",
-		[UiEntranceAnimation.FLIP_IN_X]: "flipInX",
-		[UiEntranceAnimation.FLIP_IN_Y]: "flipInY",
-		[UiEntranceAnimation.FADE_IN]: "fadeIn",
-		[UiEntranceAnimation.FADE_IN_DOWN]: "fadeInDown",
-		[UiEntranceAnimation.FADE_IN_DOWNBIG]: "fadeInDownBig",
-		[UiEntranceAnimation.FADE_IN_LEFT]: "fadeInLeft",
-		[UiEntranceAnimation.FADE_IN_LEFTBIG]: "fadeInLeftBig",
-		[UiEntranceAnimation.FADE_IN_RIGHT]: "fadeInRight",
-		[UiEntranceAnimation.FADE_IN_RIGHTBIG]: "fadeInRightBig",
-		[UiEntranceAnimation.FADE_IN_UP]: "fadeInUp",
-		[UiEntranceAnimation.FADE_IN_UPBIG]: "fadeInUpBig",
-		[UiEntranceAnimation.BOUNCE_IN]: "bounceIn",
-		[UiEntranceAnimation.BOUNCE_IN_DOWN]: "bounceInDown",
-		[UiEntranceAnimation.BOUNCE_IN_LEFT]: "bounceInLeft",
-		[UiEntranceAnimation.BOUNCE_IN_RIGHT]: "bounceInRight",
-		[UiEntranceAnimation.BOUNCE_IN_UP]: "bounceInUp"
+		[UiEntranceAnimation.BACK_IN_DOWN]: "animate__animated animate__backInDown",
+		[UiEntranceAnimation.BACK_IN_LEFT]: "animate__animated animate__backInLeft",
+		[UiEntranceAnimation.BACK_IN_RIGHT]: "animate__animated animate__backInRight",
+		[UiEntranceAnimation.BACK_IN_UP]: "animate__animated animate__backInUp",
+
+		[UiEntranceAnimation.LIGHT_SPEED_IN_RIGHT]: "animate__animated animate__lightSpeedIn",
+		[UiEntranceAnimation.LIGHT_SPEED_IN_LEFT]: "animate__animated animate__lightSpeedIn",
+		[UiEntranceAnimation.JACK_IN_THE_BOX]: "animate__animated animate__lightSpeedIn",
+		[UiEntranceAnimation.ROLL_IN]: "animate__animated animate__rollIn",
+
+		[UiEntranceAnimation.ZOOM_IN]: "animate__animated animate__zoomIn",
+		[UiEntranceAnimation.ZOOM_IN_DOWN]: "animate__animated animate__zoomInDown",
+		[UiEntranceAnimation.ZOOM_IN_LEFT]: "animate__animated animate__zoomInLeft",
+		[UiEntranceAnimation.ZOOM_IN_RIGHT]: "animate__animated animate__zoomInRight",
+		[UiEntranceAnimation.ZOOM_IN_UP]: "animate__animated animate__zoomInUp",
+
+		[UiEntranceAnimation.SLIDE_IN_UP]: "animate__animated animate__slideInUp",
+		[UiEntranceAnimation.SLIDE_IN_DOWN]: "animate__animated animate__slideInDown",
+		[UiEntranceAnimation.SLIDE_IN_LEFT]: "animate__animated animate__slideInLeft",
+		[UiEntranceAnimation.SLIDE_IN_RIGHT]: "animate__animated animate__slideInRight",
+
+		[UiEntranceAnimation.ROTATE_IN]: "animate__animated animate__rotateIn",
+		[UiEntranceAnimation.ROTATE_IN_DOWNLEFT]: "animate__animated animate__rotateInDownLeft",
+		[UiEntranceAnimation.ROTATE_IN_DOWNRIGHT]: "animate__animated animate__rotateInDownRight",
+		[UiEntranceAnimation.ROTATE_IN_UPLEFT]: "animate__animated animate__rotateInUpLeft",
+		[UiEntranceAnimation.ROTATE_IN_UPRIGHT]: "animate__animated animate__rotateInUpRight",
+
+		[UiEntranceAnimation.FLIP_IN_X]: "animate__animated animate__flipInX",
+		[UiEntranceAnimation.FLIP_IN_Y]: "animate__animated animate__flipInY",
+
+		[UiEntranceAnimation.FADE_IN]: "animate__animated animate__fadeIn",
+		[UiEntranceAnimation.FADE_IN_DOWN]: "animate__animated animate__fadeInDown",
+		[UiEntranceAnimation.FADE_IN_DOWNBIG]: "animate__animated animate__fadeInDownBig",
+		[UiEntranceAnimation.FADE_IN_LEFT]: "animate__animated animate__fadeInLeft",
+		[UiEntranceAnimation.FADE_IN_LEFTBIG]: "animate__animated animate__fadeInLeftBig",
+		[UiEntranceAnimation.FADE_IN_RIGHT]: "animate__animated animate__fadeInRight",
+		[UiEntranceAnimation.FADE_IN_RIGHTBIG]: "animate__animated animate__fadeInRightBig",
+		[UiEntranceAnimation.FADE_IN_UP]: "animate__animated animate__fadeInUp",
+		[UiEntranceAnimation.FADE_IN_UPBIG]: "animate__animated animate__fadeInUpBig",
+		[UiEntranceAnimation.FADE_IN_TOP_LEFT]: "animate__animated animate__fadeInTopLeft",
+		[UiEntranceAnimation.FADE_IN_TOP_RIGHT]: "animate__animated animate__fadeInTopRight",
+		[UiEntranceAnimation.FADE_IN_BOTTOM_LEFT]: "animate__animated animate__fadeInBottomLeft",
+		[UiEntranceAnimation.FADE_IN_BOTTOM_RIGHT]: "animate__animated animate__fadeInBottomRight",
+
+		[UiEntranceAnimation.BOUNCE_IN]: "animate__animated animate__bounceIn",
+		[UiEntranceAnimation.BOUNCE_IN_DOWN]: "animate__animated animate__bounceInDown",
+		[UiEntranceAnimation.BOUNCE_IN_LEFT]: "animate__animated animate__bounceInLeft",
+		[UiEntranceAnimation.BOUNCE_IN_RIGHT]: "animate__animated animate__bounceInRight",
+		[UiEntranceAnimation.BOUNCE_IN_UP]: "animate__animated animate__bounceInUp"
 	};
 
 	public static EXIT_ANIMATION_CSS_CLASSES = {
-		[UiExitAnimation.LIGHTSPEED_OUT]: "lightSpeedOut",
-		[UiExitAnimation.ROLL_OUT]: "rollOut",
-		[UiExitAnimation.HINGE]: "hinge",
-		[UiExitAnimation.ZOOM_OUT]: "zoomOut",
-		[UiExitAnimation.ZOOM_OUT_DOWN]: "zoomOutDown",
-		[UiExitAnimation.ZOOM_OUT_LEFT]: "zoomOutLeft",
-		[UiExitAnimation.ZOOM_OUT_RIGHT]: "zoomOutRight",
-		[UiExitAnimation.ZOOM_OUT_UP]: "zoomOutUp",
-		[UiExitAnimation.SLIDE_OUT_UP]: "slideOutUp",
-		[UiExitAnimation.SLIDE_OUT_DOWN]: "slideOutDown",
-		[UiExitAnimation.SLIDE_OUT_LEFT]: "slideOutLeft",
-		[UiExitAnimation.SLIDE_OUT_RIGHT]: "slideOutRight",
-		[UiExitAnimation.ROTATE_OUT]: "rotateOut",
-		[UiExitAnimation.ROTATE_OUT_DOWNLEFT]: "rotateOutDownLeft",
-		[UiExitAnimation.ROTATE_OUT_DOWNRIGHT]: "rotateOutDownRight",
-		[UiExitAnimation.ROTATE_OUT_UPLEFT]: "rotateOutUpLeft",
-		[UiExitAnimation.ROTATE_OUT_UPRIGHT]: "rotateOutUpRight",
-		[UiExitAnimation.FLIP_OUT_X]: "flipOutX",
-		[UiExitAnimation.FLIP_OUT_Y]: "flipOutY",
-		[UiExitAnimation.FADE_OUT]: "fadeOut",
-		[UiExitAnimation.FADE_OUT_DOWN]: "fadeOutDown",
-		[UiExitAnimation.FADE_OUT_DOWNBIG]: "fadeOutDownBig",
-		[UiExitAnimation.FADE_OUT_LEFT]: "fadeOutLeft",
-		[UiExitAnimation.FADE_OUT_LEFTBIG]: "fadeOutLeftBig",
-		[UiExitAnimation.FADE_OUT_RIGHT]: "fadeOutRight",
-		[UiExitAnimation.FADE_OUT_RIGHTBIG]: "fadeOutRightBig",
-		[UiExitAnimation.FADE_OUT_UP]: "fadeOutUp",
-		[UiExitAnimation.FADE_OUT_UPBIG]: "fadeOutUpBig",
-		[UiExitAnimation.BOUNCE_OUT]: "bounceOut",
-		[UiExitAnimation.BOUNCE_OUT_DOWN]: "bounceOutDown",
-		[UiExitAnimation.BOUNCE_OUT_LEFT]: "bounceOutLeft",
-		[UiExitAnimation.BOUNCE_OUT_RIGHT]: "bounceOutRight",
-		[UiExitAnimation.BOUNCE_OUT_UP]: "bounceOutUp"
+		[UiExitAnimation.BACK_OUT_DOWN]: "animate__animated animate__backOutDown",
+		[UiExitAnimation.BACK_OUT_LEFT]: "animate__animated animate__backOutLeft",
+		[UiExitAnimation.BACK_OUT_RIGHT]: "animate__animated animate__backOutRight",
+		[UiExitAnimation.BACK_OUT_UP]: "animate__animated animate__backOutUp",
+
+		[UiExitAnimation.LIGHT_SPEED_OUT_RIGHT]: "animate__animated animate__lightSpeedOutRight",
+		[UiExitAnimation.LIGHT_SPEED_OUT_LEFT]: "animate__animated animate__lightSpeedOutLeft",
+		[UiExitAnimation.ROLL_OUT]: "animate__animated animate__rollOut",
+		[UiExitAnimation.HINGE]: "animate__animated animate__hinge",
+
+		[UiExitAnimation.ZOOM_OUT]: "animate__animated animate__zoomOut",
+		[UiExitAnimation.ZOOM_OUT_DOWN]: "animate__animated animate__zoomOutDown",
+		[UiExitAnimation.ZOOM_OUT_LEFT]: "animate__animated animate__zoomOutLeft",
+		[UiExitAnimation.ZOOM_OUT_RIGHT]: "animate__animated animate__zoomOutRight",
+		[UiExitAnimation.ZOOM_OUT_UP]: "animate__animated animate__zoomOutUp",
+
+		[UiExitAnimation.SLIDE_OUT_UP]: "animate__animated animate__slideOutUp",
+		[UiExitAnimation.SLIDE_OUT_DOWN]: "animate__animated animate__slideOutDown",
+		[UiExitAnimation.SLIDE_OUT_LEFT]: "animate__animated animate__slideOutLeft",
+		[UiExitAnimation.SLIDE_OUT_RIGHT]: "animate__animated animate__slideOutRight",
+
+		[UiExitAnimation.ROTATE_OUT]: "animate__animated animate__rotateOut",
+		[UiExitAnimation.ROTATE_OUT_DOWNLEFT]: "animate__animated animate__rotateOutDownLeft",
+		[UiExitAnimation.ROTATE_OUT_DOWNRIGHT]: "animate__animated animate__rotateOutDownRight",
+		[UiExitAnimation.ROTATE_OUT_UPLEFT]: "animate__animated animate__rotateOutUpLeft",
+		[UiExitAnimation.ROTATE_OUT_UPRIGHT]: "animate__animated animate__rotateOutUpRight",
+
+		[UiExitAnimation.FLIP_OUT_X]: "animate__animated animate__flipOutX",
+		[UiExitAnimation.FLIP_OUT_Y]: "animate__animated animate__flipOutY",
+
+		[UiExitAnimation.FADE_OUT]: "animate__animated animate__fadeOut",
+		[UiExitAnimation.FADE_OUT_DOWN]: "animate__animated animate__fadeOutDown",
+		[UiExitAnimation.FADE_OUT_DOWNBIG]: "animate__animated animate__fadeOutDownBig",
+		[UiExitAnimation.FADE_OUT_LEFT]: "animate__animated animate__fadeOutLeft",
+		[UiExitAnimation.FADE_OUT_LEFTBIG]: "animate__animated animate__fadeOutLeftBig",
+		[UiExitAnimation.FADE_OUT_RIGHT]: "animate__animated animate__fadeOutRight",
+		[UiExitAnimation.FADE_OUT_RIGHTBIG]: "animate__animated animate__fadeOutRightBig",
+		[UiExitAnimation.FADE_OUT_UP]: "animate__animated animate__fadeOutUp",
+		[UiExitAnimation.FADE_OUT_UPBIG]: "animate__animated animate__fadeOutUpBig",
+		[UiExitAnimation.FADE_OUT_TOP_LEFT]: "animate__animated animate__fadeOutTopLeft",
+		[UiExitAnimation.FADE_OUT_TOP_RIGHT]: "animate__animated animate__fadeOutTopRight",
+		[UiExitAnimation.FADE_OUT_BOTTOM_RIGHT]: "animate__animated animate__fadeOutBottomRight",
+		[UiExitAnimation.FADE_OUT_BOTTOM_LEFT]: "animate__animated animate__fadeOutBottomLeft",
+
+		[UiExitAnimation.BOUNCE_OUT]: "animate__animated animate__bounceOut",
+		[UiExitAnimation.BOUNCE_OUT_DOWN]: "animate__animated animate__bounceOutDown",
+		[UiExitAnimation.BOUNCE_OUT_LEFT]: "animate__animated animate__bounceOutLeft",
+		[UiExitAnimation.BOUNCE_OUT_RIGHT]: "animate__animated animate__bounceOutRight",
+		[UiExitAnimation.BOUNCE_OUT_UP]: "animate__animated animate__bounceOutUp"
 	};
+
+	public static REPEATABLE_ANIMATION_CSS_CLASSES = {
+		[UiRepeatableAnimation.BOUNCE]: "animate__animated animate__bounce",
+		[UiRepeatableAnimation.FLASH]: "animate__animated animate__flash",
+		[UiRepeatableAnimation.PULSE]: "animate__animated animate__pulse",
+		[UiRepeatableAnimation.RUBBER_BAND]: "animate__animated animate__rubberBand",
+		[UiRepeatableAnimation.SHAKE_X]: "animate__animated animate__shakeX",
+		[UiRepeatableAnimation.SHAKE_Y]: "animate__animated animate__shakeY",
+		[UiRepeatableAnimation.HEAD_SHAKE]: "animate__animated animate__headShake",
+		[UiRepeatableAnimation.SWING]: "animate__animated animate__swing",
+		[UiRepeatableAnimation.TADA]: "animate__animated animate__tada",
+		[UiRepeatableAnimation.WOBBLE]: "animate__animated animate__wobble",
+		[UiRepeatableAnimation.JELLO]: "animate__animated animate__jello",
+		[UiRepeatableAnimation.HEART_BEAT]: "animate__animated animate__heartBeat",
+		[UiRepeatableAnimation.FLIP]: "animate__animated animate__flip",
+
+		// custom:
+		[UiRepeatableAnimation.BLINK]: "ta-blink",
+		[UiRepeatableAnimation.BLINK_SUBTLE]: "ta-blink-subtle"
+	}
 
 	public static POINTER_EVENTS = {
 		start: 'pointerdown',
@@ -687,7 +741,7 @@ export function deepEquals(x: any, y: any): boolean {
 		}
 	} else {
 		return x === y
-			|| ((x == null) && (y == null)); // make no difference between undefined and null!
+			|| ((x == null) && (y == null)); // make no difference between undefined and null!
 	}
 }
 
@@ -932,7 +986,7 @@ export function findClassesByFunction(classList: DOMTokenList, matcher: (classNa
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {
 	if (!document.body.contains(el)) {
 		console.warn("Cannot animate detached element! Will fire callback directly.");
-		callback();
+		callback && callback();
 		return;
 	}
 	let oldAnimationDurationValue = el.style.animationDuration;
@@ -952,27 +1006,18 @@ function animate(el: HTMLElement, animationClassNames: string[], animationDurati
 	el.addEventListener('animationend', handleAnimationEnd);
 }
 
-export function animateCSS(el: HTMLElement, animationName: "bounce" | "flash" | "pulse" | "rubberBand" | "shake" | "headShake" | "swing" | "tada"
-	| "wobble" | "jello" | "bounceIn" | "bounceInDown" | "bounceInLeft" | "bounceInRight" | "bounceInUp" | "bounceOut" | "bounceOutDown"
-	| "bounceOutLeft" | "bounceOutRight" | "bounceOutUp" | "fadeIn" | "fadeInDown" | "fadeInDownBig" | "fadeInLeft" | "fadeInLeftBig" | "fadeInRight"
-	| "fadeInRightBig" | "fadeInUp" | "fadeInUpBig" | "fadeOut" | "fadeOutDown" | "fadeOutDownBig" | "fadeOutLeft" | "fadeOutLeftBig" | "fadeOutRight"
-	| "fadeOutRightBig" | "fadeOutUp" | "fadeOutUpBig" | "flipInX" | "flipInY" | "flipOutX" | "flipOutY" | "lightSpeedIn" | "lightSpeedOut" | "rotateIn"
-	| "rotateInDownLeft" | "rotateInDownRight" | "rotateInUpLeft" | "rotateInUpRight" | "rotateOut" | "rotateOutDownLeft" | "rotateOutDownRight"
-	| "rotateOutUpLeft" | "rotateOutUpRight" | "hinge" | "jackInTheBox" | "rollIn" | "rollOut" | "zoomIn" | "zoomInDown" | "zoomInLeft" | "zoomInRight"
-	| "zoomInUp" | "zoomOut" | "zoomOutDown" | "zoomOutLeft" | "zoomOutRight" | "zoomOutUp" | "slideInDown" | "slideInLeft" | "slideInRight" | "slideInUp"
-	| "slideOutDown" | "slideOutLeft" | "slideOutRight" | "slideOutUp" | "heartBeat", animationDuration: number = 300, callback?: () => any) {
-
-	animate(el, ['animated', animationName], animationDuration, callback)
+export function animateCSS(el: HTMLElement, animationCssClasses: string, animationDuration: number = 300, callback?: () => any) {
+	animate(el, animationCssClasses.split(/ +/), animationDuration, callback)
 }
 
 
 export function fadeOut(el: HTMLElement) {
-	animateCSS(el, "fadeOut", 300, () => el.classList.add("hidden"));
+	animateCSS(el, Constants.EXIT_ANIMATION_CSS_CLASSES[UiExitAnimation.FADE_OUT], 300, () => el.classList.add("hidden"));
 }
 
 export function fadeIn(el: HTMLElement) {
 	el.classList.remove("hidden");
-	animateCSS(el, "fadeIn");
+	animateCSS(el, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[UiEntranceAnimation.FADE_IN]);
 }
 
 export var pageTransitionAnimationPairs = {
