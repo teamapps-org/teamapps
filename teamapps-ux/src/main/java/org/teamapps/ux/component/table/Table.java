@@ -28,6 +28,8 @@ import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
 import org.teamapps.data.value.SortDirection;
 import org.teamapps.data.value.Sorting;
+import org.teamapps.databinding.ObservableValue;
+import org.teamapps.databinding.TwoWayBindableValueImpl;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFieldMessage;
@@ -71,6 +73,8 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	public final Event<TableDataRequestEventData> onTableDataRequest = new Event<>();
 	public final Event<FieldOrderChangeEventData<RECORD>> onFieldOrderChange = new Event<>();
 	public final Event<ColumnSizeChangeEventData<RECORD>> onColumnSizeChange = new Event<>();
+
+	private final TwoWayBindableValueImpl<Integer> count = new TwoWayBindableValueImpl<>(0);
 
 	private TableModel<RECORD> model = new ListTableModel<>(Collections.emptyList());
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
@@ -730,8 +734,10 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		}
 	}
 
+
+
 	private int getTotalRecordsCount() {
-		return model.getCount() + topNonModelRecords.size() + bottomNonModelRecords.size();
+		return getModelCount() + topNonModelRecords.size() + bottomNonModelRecords.size();
 	}
 
 	private List<RECORD> retrieveRecords(int startIndex, int length) {
@@ -742,7 +748,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 		int endIndex = startIndex + length;
 		int totalTopRecords = topNonModelRecords.size();
-		int totalModelRecords = model.getCount();
+		int totalModelRecords = getModelCount();
 		int totalBottomRecords = bottomNonModelRecords.size();
 
 		if (endIndex > totalTopRecords + totalModelRecords + totalBottomRecords) {
@@ -776,6 +782,12 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 			LOGGER.error("This path should never be reached!");
 			return Collections.emptyList();
 		}
+	}
+
+	private int getModelCount() {
+		int count = model.getCount();
+		this.count.set(count);
+		return count;
 	}
 
 	private List<RECORD> retrieveRecordsFromModel(int startIndex, int length) {
@@ -945,6 +957,12 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	}
 
 	public void setSortDirection(SortDirection sortDirection) {
+		this.sortDirection = sortDirection;
+		refreshData(false, false, false);
+	}
+
+	public void setSorting(String sortField, SortDirection sortDirection) {
+		this.sortField = sortField;
 		this.sortDirection = sortDirection;
 		refreshData(false, false, false);
 	}
@@ -1182,6 +1200,10 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	public void closeContextMenu() {
 		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
+	}
+
+	public ObservableValue<Integer> getCount() {
+		return count;
 	}
 
 }
