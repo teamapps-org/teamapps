@@ -1,3 +1,22 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2020 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
 package org.teamapps.ux.component.charting.forcelayout;
 
 
@@ -8,12 +27,12 @@ import java.util.Map;
 
 public class GraphChangeOperation<RECORD> {
 
-	private List<ForceLayoutNode<RECORD>> addedNodes = new ArrayList<>();
+	private final List<ForceLayoutNode<RECORD>> addedNodes = new ArrayList<>();
 	private List<ForceLayoutLink<RECORD>> addedLinks = new ArrayList<>();
 	private List<ForceLayoutNode<RECORD>> removedNodes = new ArrayList<>();
 	private List<ForceLayoutLink<RECORD>> removedLinks = new ArrayList<>();
 
-	private Map<RECORD, ForceLayoutNode<RECORD>> graphNodeByNode = new HashMap<>();
+	private final Map<RECORD, ForceLayoutNode<RECORD>> graphNodeByNode = new HashMap<>();
 
 	public GraphChangeOperation() {
 	}
@@ -29,19 +48,11 @@ public class GraphChangeOperation<RECORD> {
 	}
 
 	public boolean containsAddOperations() {
-		if (!addedNodes.isEmpty() || !addedLinks.isEmpty()) {
-			return true;
-		} else {
-			return false;
-		}
+		return !addedNodes.isEmpty() || !addedLinks.isEmpty();
 	}
 
 	public boolean containsRemoveOperations() {
-		if (!removedNodes.isEmpty() || !removedLinks.isEmpty()) {
-			return true;
-		} else {
-			return false;
-		}
+		return !removedNodes.isEmpty() || !removedLinks.isEmpty();
 	}
 
 	public void addNode(ForceLayoutNode<RECORD> record) {
