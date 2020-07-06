@@ -23,19 +23,23 @@ import java.util.*;
 
 public class ResourceBundleTranslationProvider implements TranslationProvider {
 
-	private List<Locale> languages;
-	private List<String> keys;
-	private Map<Locale, PropertyResourceBundle> resourceBundleByLocale = new HashMap<>();
+	private final List<Locale> languages;
+	private final List<String> keys;
+	private final Map<Locale, PropertyResourceBundle> resourceBundleByLocale = new HashMap<>();
 
 	public ResourceBundleTranslationProvider(String baseName, Locale ... languages) {
 		this(baseName, "properties", languages);
 	}
 
 	public ResourceBundleTranslationProvider(String baseName, String resourceFileSuffix, Locale ... languages) {
-		this.languages = Arrays.asList(languages);
+		this(baseName, resourceFileSuffix, Arrays.asList(languages), Locale.getDefault());
+	}
+
+	public ResourceBundleTranslationProvider(String baseName, String resourceFileSuffix, List<Locale> languages, Locale fallbackLocale) {
+		this.languages = languages;
 		Set<String> allKeys = new HashSet<>();
 		for (Locale language : languages) {
-			ResourceBundle bundle = ResourceBundle.getBundle(baseName, language, new UTF8Control(resourceFileSuffix));
+			ResourceBundle bundle = ResourceBundle.getBundle(baseName, language, new TeamAppsResourceBundleControl(resourceFileSuffix, fallbackLocale));
 			if (bundle instanceof PropertyResourceBundle) {
 				PropertyResourceBundle propertyResourceBundle = (PropertyResourceBundle) bundle;
 				resourceBundleByLocale.put(language, propertyResourceBundle);

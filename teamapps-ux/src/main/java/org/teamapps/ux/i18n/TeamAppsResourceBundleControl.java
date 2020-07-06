@@ -29,20 +29,21 @@ import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-public class UTF8Control extends ResourceBundle.Control {
+/**
+ * Handles UTF-8 resource bundles.
+ * Makes fallback locale explicitly configurable.
+ */
+public class TeamAppsResourceBundleControl extends ResourceBundle.Control {
 
-	private String resourceFileSuffix;
+	private final String resourceFileSuffix;
+	private final Locale fallbackLocale;
 
-	public UTF8Control() {
-		this("properties");
-	}
-
-	public UTF8Control(String resourceFileSuffix) {
+	public TeamAppsResourceBundleControl(String resourceFileSuffix, Locale fallbackLocale) {
 		this.resourceFileSuffix = resourceFileSuffix;
+		this.fallbackLocale = fallbackLocale;
 	}
 
-	public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader,
-	                                boolean reload) throws IllegalAccessException, InstantiationException, IOException {
+	public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IOException {
 		// The below is a copy of the default implementation.
 		String bundleName = toBundleName(baseName, locale);
 		String resourceName = toResourceName(bundleName, resourceFileSuffix);
@@ -69,5 +70,12 @@ public class UTF8Control extends ResourceBundle.Control {
 			}
 		}
 		return bundle;
+	}
+
+	public Locale getFallbackLocale(String baseName, Locale locale) {
+		if (baseName == null) {
+			throw new NullPointerException();
+		}
+		return locale.equals(fallbackLocale) ? null : fallbackLocale;
 	}
 }
