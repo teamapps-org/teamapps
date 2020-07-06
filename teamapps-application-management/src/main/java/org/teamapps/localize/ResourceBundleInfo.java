@@ -20,7 +20,7 @@
 package org.teamapps.localize;
 
 
-import org.teamapps.ux.i18n.UTF8Control;
+import org.teamapps.ux.i18n.TeamAppsResourceBundleControl;
 
 import java.util.*;
 import java.util.function.Function;
@@ -32,7 +32,7 @@ public interface ResourceBundleInfo {
 	}
 
 	static ResourceBundleInfo create(String baseName, String resourceFileSuffix, Locale... translations) {
-		Function<Locale, ResourceBundle> resourceBundleByLocaleFunction = locale -> ResourceBundle.getBundle(baseName, locale, new UTF8Control(resourceFileSuffix));
+		Function<Locale, ResourceBundle> resourceBundleByLocaleFunction = locale -> ResourceBundle.getBundle(baseName, locale, new TeamAppsResourceBundleControl(resourceFileSuffix, Locale.getDefault()));
 		return create(resourceBundleByLocaleFunction, translations);
 	}
 
