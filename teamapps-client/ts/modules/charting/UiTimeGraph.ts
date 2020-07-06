@@ -434,8 +434,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	resetAllData(newZoomLevels: UiTimeChartZoomLevelConfig[]): void {
 		this.zoomLevels = newZoomLevels;
 		this.initZoomLevelIntervalManagers();
-		// do NOT remove the data from the dataStore. It will be re-requested anyway and thereby overwritten. Otherwise, you would get zoom flickering due to y-min/max-value changes
-		// this.dataStore.reset();
+		this.dataStore.reset();
 		this.redraw();
 	}
 
