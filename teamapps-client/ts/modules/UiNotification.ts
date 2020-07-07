@@ -136,7 +136,7 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 	<div class="content-container"></div>
 	<div class="progress-container"></div>
 </div>`);
-		let $contentContainer = this.$main.querySelector(":scope > .content-container");
+		this.$contentContainer = this.$main.querySelector(":scope > .content-container");
 		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container");
 		this.$main.querySelector(":scope > .close-button").addEventListener("mousedown", () => {
 			this.close();
