@@ -110,7 +110,7 @@
     "levenshtein": "^1.0.5",
     "loglevel": "1.6.3",
     "md5": "^2.2.1",
-    "mediaelement": "^4.2.10",
+    "mediaelement": "^4.2.16",
     "mediasoup-client": "^3.3.17",
     "minimatch": "^3.0.4",
     "moment": "^2.21.0",
