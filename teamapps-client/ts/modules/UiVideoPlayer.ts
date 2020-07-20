@@ -48,7 +48,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	private $componentWrapper: HTMLElement;
 	private $video: HTMLElement;
 	private mediaPlayer: any;
-	private contentReady: boolean = false;
+	private playerInitialized: boolean = false;
 	private jumpToPositionWhenReady: number = 0;
 
 	private destroyed: boolean;
@@ -76,7 +76,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'],
 			timerRate: 250,
 			success: (mediaElement: HTMLMediaElement) => {
-				this.onContentReady();
+				this.onPlayerInitialized();
 				mediaElement.addEventListener('play', (e) => {
 					this.onPlayerProgress.fire({
 						positionInSeconds: 0
@@ -120,8 +120,8 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 		return this.$componentWrapper;
 	}
 
-	private onContentReady() {
-		this.contentReady = true;
+	private onPlayerInitialized() {
+		this.playerInitialized = true;
 		if (this.playState === "playing" || (this.autoplay && this.playState !== "paused")) {
 			this.play();
 		}
@@ -129,7 +129,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 
 	public play() {
 		this.playState = "playing";
-		if (this.contentReady) {
+		if (this.playerInitialized) {
 			this.mediaPlayer.play();
 		}
 	}
@@ -140,7 +140,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	}
 
 	public jumpTo(seconds: number) {
-		if (this.contentReady) {
+		if (this.playerInitialized) {
 			this.mediaPlayer.setCurrentTime(seconds);
 		} else {
 			this.jumpToPositionWhenReady = seconds;
@@ -171,7 +171,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 		this.playState = "initial";
 
 		if (autoplay) {
-			if (this.contentReady) {
+			if (this.playerInitialized) {
 				this.mediaPlayer.play();
 			}
 			this.$video.setAttribute("autoplay", "autoplay")
@@ -189,7 +189,6 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__poster").classList.remove("hidden");
 		this.getMainElement().querySelector<HTMLElement>(":scope .mejs__overlay-play").style.display = "flex";
 		this.mediaPlayer.pause();
-		this.contentReady = false;
 		if (url == null) {
 			this.pause();
 		} else {

@@ -4403,10 +4403,10 @@ media-typer@0.3.0:
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
   integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
 
-mediaelement@^4.2.10:
-  version "4.2.14"
-  resolved "https://registry.yarnpkg.com/mediaelement/-/mediaelement-4.2.14.tgz#87ad17e3926224b5273b438360f23052c6af8790"
-  integrity sha512-mUs01DCJzE1A3mYBUqswqINkqaxy2G/pbWveE04OLM5AqvJAL0v5K3vIGBdBfo5MbfQuaZknVFMfi+bpxyiz3w==
+mediaelement@^4.2.16:
+  version "4.2.16"
+  resolved "https://registry.yarnpkg.com/mediaelement/-/mediaelement-4.2.16.tgz#399a41815478134bbaf0f8f5a216f444de244d72"
+  integrity sha512-5GinxsRpVA36w6tAD6nTqVSiZ0LzIhqUrzD8wzOAtZPPM7NOwOBtz6Oa85VemS+3Jvoo38jM1RvNqwKYJBBxtQ==
   dependencies:
     global "^4.3.1"
 
