@@ -984,6 +984,10 @@ export function findClassesByFunction(classList: DOMTokenList, matcher: (classNa
 }
 
 function animate(el: HTMLElement, animationClassNames: string[], animationDuration: number = 300, callback?: () => any) {
+	if (animationClassNames == null || animationClassNames.length == 0) {
+		callback();
+		return;
+	}
 	if (!document.body.contains(el)) {
 		console.warn("Cannot animate detached element! Will fire callback directly.");
 		callback && callback();
@@ -1007,9 +1011,8 @@ function animate(el: HTMLElement, animationClassNames: string[], animationDurati
 }
 
 export function animateCSS(el: HTMLElement, animationCssClasses: string, animationDuration: number = 300, callback?: () => any) {
-	animate(el, animationCssClasses.split(/ +/), animationDuration, callback)
+	animate(el, animationCssClasses ? animationCssClasses.split(/ +/) : null, animationDuration, callback);
 }
-
 
 export function fadeOut(el: HTMLElement) {
 	animateCSS(el, Constants.EXIT_ANIMATION_CSS_CLASSES[UiExitAnimation.FADE_OUT], 300, () => el.classList.add("hidden"));
