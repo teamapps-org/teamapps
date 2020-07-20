@@ -157,7 +157,7 @@ export interface TrivialTreeBoxConfig<E> {
 }
 
 class EntryWrapper<E> {
-	public readonly entry: E;
+	public entry: E;
 	public $element: JQuery;
 	public children: EntryWrapper<E>[];
 	public readonly depth: number;
@@ -414,7 +414,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		}).on("mousedown", ".tr-tree-expander", () => {
 			return false; // prevent selection!
 		}).on("click", ".tr-tree-expander", (e) => {
-			let entryWrapper = ($(e.target).closest(".tr-tree-entry-and-expander-wrapper")[0] as any).trivialEntryWrapper  as EntryWrapper<E>;
+			let entryWrapper = ($(e.target).closest(".tr-tree-entry-and-expander-wrapper")[0] as any).trivialEntryWrapper as EntryWrapper<E>;
 			this.setNodeExpanded(entryWrapper, !entryWrapper.expanded, true);
 		});
 
@@ -530,8 +530,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		this.onSelectedEntryChanged.fire(entry.entry, originalEvent);
 	}
 
-	public selectNextEntry(direction: HighlightDirection, originalEvent?: unknown, fireEvents = false) {
-		const nextVisibleEntry = this.getNextVisibleEntry(this.getSelectedEntryWrapper(), direction);
+	public selectNextEntry(direction: HighlightDirection, rollover: boolean, originalEvent?: unknown, fireEvents = false) {
+		const nextVisibleEntry = this.getNextVisibleEntry(this.getSelectedEntryWrapper(), direction, rollover);
 		if (nextVisibleEntry != null) {
 			this.setSelectedEntry(nextVisibleEntry, originalEvent, fireEvents);
 		}
@@ -558,7 +558,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		this.setHighlightedEntry(this.findEntryById(entryId))
 	}
 
-	private getNextVisibleEntry(currentEntry: EntryWrapper<E>, direction: HighlightDirection, onlyEntriesWithTextMatches: boolean = false) {
+	private getNextVisibleEntry(currentEntry: EntryWrapper<E>, direction: HighlightDirection, rollover: boolean, onlyEntriesWithTextMatches: boolean = false) {
 		let newSelectedElementIndex: number;
 		const visibleEntriesAsList = this.findEntries((entry) => {
 			if (!entry.$element) {
@@ -579,7 +579,11 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			newSelectedElementIndex = visibleEntriesAsList.length + direction;
 		} else {
 			const currentSelectedElementIndex = visibleEntriesAsList.indexOf(currentEntry);
-			newSelectedElementIndex = (currentSelectedElementIndex + visibleEntriesAsList.length + direction) % visibleEntriesAsList.length;
+			if (rollover) {
+				newSelectedElementIndex = (currentSelectedElementIndex + visibleEntriesAsList.length + direction) % visibleEntriesAsList.length;
+			} else {
+				newSelectedElementIndex = Math.max(0, Math.min(visibleEntriesAsList.length - 1, currentSelectedElementIndex + direction));
+			}
 		}
 		return visibleEntriesAsList[newSelectedElementIndex];
 	}
@@ -616,22 +620,22 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		this.minimallyScrollTo(selectedEntry.$element);
 	}
 
-	public highlightNextEntry(direction: HighlightDirection) {
-		const nextVisibleEntry = this.getNextVisibleEntry(this.highlightedEntry || this.getSelectedEntryWrapper(), direction);
+	public highlightNextEntry(direction: HighlightDirection, rollover = true) {
+		const nextVisibleEntry = this.getNextVisibleEntry(this.highlightedEntry || this.getSelectedEntryWrapper(), direction, rollover);
 		if (nextVisibleEntry != null) {
 			this.setHighlightedEntry(nextVisibleEntry);
 		}
 	}
 
-	public highlightNextMatchingEntry(direction: HighlightDirection) {
-		const nextMatchingEntry = this.getNextVisibleEntry(this.highlightedEntry || this.getSelectedEntryWrapper(), direction, true);
+	public highlightNextMatchingEntry(direction: HighlightDirection, rollover = true) {
+		const nextMatchingEntry = this.getNextVisibleEntry(this.highlightedEntry || this.getSelectedEntryWrapper(), direction, rollover, true);
 		if (nextMatchingEntry != null) {
 			this.setHighlightedEntry(nextMatchingEntry);
 		}
 	}
 
-	public selectNextMatchingEntry(direction: HighlightDirection, fireEvents = false) {
-		const nextMatchingEntry = this.getNextVisibleEntry(this.highlightedEntry, direction, true);
+	public selectNextMatchingEntry(direction: HighlightDirection, rollover: boolean, fireEvents = false) {
+		const nextMatchingEntry = this.getNextVisibleEntry(this.highlightedEntry, direction, rollover, true);
 		if (nextMatchingEntry != null) {
 			this.setSelectedEntry(nextMatchingEntry, null, fireEvents);
 		}
@@ -639,6 +643,17 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 
 	public getHighlightedEntry() {
 		return this.highlightedEntry && this.highlightedEntry.entry;
+	}
+
+	public setSelectedNodeExpanded(expanded: boolean) {
+		let selectedEntry = this.getSelectedEntryWrapper();
+		if (!selectedEntry || selectedEntry.isLeaf()) {
+			return false;
+		} else {
+			let wasExpanded = selectedEntry.expanded;
+			this.setNodeExpanded(selectedEntry, expanded, true);
+			return !wasExpanded != !expanded;
+		}
 	}
 
 	public setHighlightedNodeExpanded(expanded: boolean) {
@@ -651,7 +666,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		}
 	}
 
-	public updateChildren(parentNodeId: string | number, children: E[]) {
+	public updateChildren(parentNodeId: string | number, children: E[]) {
 		const node = this.findEntryById(parentNodeId);
 		if (node) {
 			this.setChildren(node, children);
@@ -660,17 +675,28 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		}
 	};
 
-	public updateNode(node: E) {
+	public updateNode(node: E, recursive: boolean = false) {
 		const oldNode = this.findEntryById(this.config.idFunction(node));
 		let parentNode = oldNode.parent;
-		let newEntryWrapper = this.createEntryWrapper(node, parentNode);
+		let newEntryWrapper: EntryWrapper<E>;
+		if (recursive) {
+			newEntryWrapper = this.createEntryWrapper(node, parentNode);
+		} else {
+			oldNode.entry = node;
+			let $entry = $(this.config.entryRenderingFunction(node, oldNode.depth));
+			$entry.addClass("tr-tree-entry filterable-item");
+			oldNode.$element.find(".tr-tree-entry").first().replaceWith($entry)
+			newEntryWrapper = oldNode;
+		}
 		if (parentNode) {
 			parentNode.children[parentNode.children.indexOf(oldNode)] = newEntryWrapper;
 		} else {
 			this.entries[this.entries.indexOf(oldNode)] = newEntryWrapper;
 		}
-		newEntryWrapper.render().insertAfter(oldNode.$element);
-		oldNode.$element.remove();
+		if (newEntryWrapper != oldNode) {
+			newEntryWrapper.render().insertAfter(oldNode.$element);
+			oldNode.$element.remove();
+		}
 	};
 
 	public removeNode(nodeId: string | number) {
@@ -701,10 +727,10 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		parentNode.$element.addClass('has-children');
 	};
 
-	public addOrUpdateNode(parentNodeId: number | string, node: E) {
+	public addOrUpdateNode(parentNodeId: number | string, node: E, recursiveUpdate = false) {
 		let existingNode = this.findEntryById(this.config.idFunction(node));
 		if (existingNode != null) {
-			this.updateNode(node);
+			this.updateNode(node, recursiveUpdate);
 		} else {
 			this.addNode(parentNodeId, node);
 		}

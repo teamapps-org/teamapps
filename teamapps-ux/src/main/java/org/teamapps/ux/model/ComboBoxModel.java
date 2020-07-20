@@ -22,14 +22,12 @@ package org.teamapps.ux.model;
 import java.util.Collections;
 import java.util.List;
 
-public interface BaseTreeModel<RECORD> {
+public interface ComboBoxModel<RECORD> {
 
 	List<RECORD> getRecords(String query);
 
 	default List<RECORD> getChildRecords(RECORD parentRecord) {
 		return Collections.emptyList();
 	}
-
-
 
 }
