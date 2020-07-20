@@ -48,9 +48,10 @@ import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.component.window.Window;
-import org.teamapps.ux.i18n.*;
+import org.teamapps.ux.i18n.RankingTranslationProvider;
+import org.teamapps.ux.i18n.TeamAppsTranslationProviderFactory;
+import org.teamapps.ux.i18n.TranslationProvider;
 import org.teamapps.ux.icon.IconBundle;
-import org.teamapps.ux.icon.IconBundleEntry;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
@@ -59,14 +60,17 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.text.MessageFormat;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SessionContext {
@@ -93,21 +97,21 @@ public class SessionContext {
 
 	private final QualifiedUiSessionId sessionId;
 	private final ClientInfo clientInfo;
-	private HttpSession httpSession;
+	private final HttpSession httpSession;
 	private final UiCommandExecutor commandExecutor;
 	private final UxServerContext serverContext;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
 	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
 	private IconTheme iconTheme;
-	private ClientSessionResourceProvider sessionResourceProvider;
+	private final ClientSessionResourceProvider sessionResourceProvider;
 
-	private RankingTranslationProvider rankingTranslationProvider;
+	private final RankingTranslationProvider rankingTranslationProvider;
 
-	private Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
+	private final Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration = SessionConfiguration.createDefault();
 
 	private List<Locale> acceptedLanguages;
-	private Map<String, Icon> bundleIconByKey = new HashMap<>();
+	private final Map<String, Icon> bundleIconByKey = new HashMap<>();
 
 	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, HttpSession httpSession, UiCommandExecutor commandExecutor, UxServerContext serverContext, IconTheme iconTheme,
 	                      ObjectMapper jacksonObjectMapper) {
@@ -295,7 +299,6 @@ public class SessionContext {
 				} finally {
 					CurrentSessionContext.unset();
 				}
-				this.flushCommands();
 			});
 		}
 	}

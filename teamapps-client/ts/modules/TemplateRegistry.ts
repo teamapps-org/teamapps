@@ -95,18 +95,6 @@ export class TemplateRegistry {
 		}, <{ [name: string]: Renderer }> {});
 	}
 
-	public convertToWrappedTagMustacheTemplates(templates: { [name: string]: UiTemplateConfig }, idPropertyName?: string) {
-		return Object.keys(templates).reduce((templateStringMapObject, templateName) => {
-			let templateConfig = templates[templateName];
-			let textCellTemplateRenderer = this.createTemplateRenderer(templateConfig, idPropertyName);
-			templateStringMapObject[templateName] = {
-				render: (view) => wrapWithDefaultTagWrapper(textCellTemplateRenderer.render(view)),
-				template: templateConfig
-			};
-			return templateStringMapObject;
-		}, <{ [name: string]: Renderer }> {});
-	}
-
 }
 
 export function isTemplateReference(template: UiTemplateConfig): template is UiTemplateReferenceConfig {

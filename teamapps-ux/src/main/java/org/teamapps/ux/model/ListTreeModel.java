@@ -22,11 +22,10 @@ package org.teamapps.ux.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 
 public class ListTreeModel<RECORD> extends AbstractTreeModel<RECORD> {
 
-	private List<RECORD> records = new ArrayList<>();
+	private final List<RECORD> records = new ArrayList<>();
 	private BiPredicate<RECORD, String> searchPredicate = (record, queryString) -> record.toString() != null && record.toString().toLowerCase().contains(queryString.toLowerCase());
 
 	public ListTreeModel(List<RECORD> records) {
@@ -41,18 +40,13 @@ public class ListTreeModel<RECORD> extends AbstractTreeModel<RECORD> {
 	}
 
 	@Override
-	public List<RECORD> getRecords(String query) {
-		if (query == null || query.isEmpty()) {
-			return records;
-		} else {
-			return records.stream()
-					.filter(r -> searchPredicate.test(r, query))
-					.collect(Collectors.toList());
-		}
-	}
-
 	public List<RECORD> getRecords() {
 		return records;
+	}
+
+	@Override
+	public List<RECORD> getChildRecords(RECORD parentRecord) {
+		return null;
 	}
 
 	public void setRecords(List<RECORD> records) {

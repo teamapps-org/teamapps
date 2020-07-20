@@ -47,11 +47,11 @@ public class FormDialogue extends Window {
 	public Event<Void> onOk = new Event<>();
 	public Event<Void> onCancel = new Event<>();
 
-	private TemplateField<BaseTemplateRecord<?>> titleField;
+	private final TemplateField<BaseTemplateRecord<?>> titleField;
 	private Integer buttonLineIndex;
-	private ResponsiveFormLayout formLayout;
+	private final ResponsiveFormLayout formLayout;
 	private HorizontalLayout buttonRow;
-	private List<AbstractField<?>> fields = new ArrayList<>();
+	private final List<AbstractField<?>> fields = new ArrayList<>();
 
 	private boolean autoCloseOnOk = true;
 
@@ -134,7 +134,6 @@ public class FormDialogue extends Window {
 		cancelButton.setCssStyle("margin-left", "10px"); // TODO #css
 		cancelButton.onClicked.addListener(() -> {
 			close(250);
-			getSessionContext().flushCommands();
 			onResult.fire(false);
 			onCancel.fire();
 		});

@@ -104,13 +104,11 @@ public class Dialogue extends Window {
 		okButton = Button.create(MaterialIcon.CHECK, getSessionContext().getLocalized(TeamAppsDictionary.OK.getKey()));
 		okButton.onClicked.addListener(() -> {
 			close(250);
-			getSessionContext().flushCommands();
 			onResult.fire(true);
 		});
 		cancelButton = Button.create(MaterialIcon.CANCEL, getSessionContext().getLocalized(TeamAppsDictionary.CANCEL.getKey()));
 		cancelButton.onClicked.addListener(() -> {
 			close(250);
-			getSessionContext().flushCommands();
 			onResult.fire(false);
 		});
 		formLayout.addComponent(1, 1, okButton);

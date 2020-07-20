@@ -23,8 +23,7 @@ class UiTree extends UiComponent {
 
 	List<UiTreeRecord> initialData; //if available, use this as data source
 	Integer selectedNodeId;
-	UiTextMatchingMode textMatchingMode = UiTextMatchingMode.CONTAINS;
-	
+
 	boolean animate;
 	boolean showExpanders = true;
 	boolean openOnSelection = false;

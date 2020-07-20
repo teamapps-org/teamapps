@@ -28,7 +28,7 @@ import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.component.field.TextInputHandlingField;
 import org.teamapps.ux.component.template.Template;
-import org.teamapps.ux.model.BaseTreeModel;
+import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,7 +42,7 @@ public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD>
 	
 	private String freeTextEntry;
 
-	public ComboBox(BaseTreeModel<RECORD> model) {
+	public ComboBox(ComboBoxModel<RECORD> model) {
 		super(model);
 	}
 

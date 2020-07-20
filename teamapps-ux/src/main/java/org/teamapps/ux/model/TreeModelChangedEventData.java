@@ -22,27 +22,27 @@ package org.teamapps.ux.model;
 import java.util.List;
 
 public class TreeModelChangedEventData<RECORD> {
-	private List<RECORD> nodesRemoved;
-	private List<RECORD> nodesAddedOrUpdated;
+	private List<RECORD> removedNodes;
+	private List<RECORD> addedOrUpdatedNodes;
 
-	public TreeModelChangedEventData(List<RECORD> nodesRemoved, List<RECORD> nodesAddedOrUpdated) {
-		this.nodesRemoved = nodesRemoved;
-		this.nodesAddedOrUpdated = nodesAddedOrUpdated;
+	public TreeModelChangedEventData(List<RECORD> removedNodes, List<RECORD> addedOrUpdatedNodes) {
+		this.removedNodes = removedNodes;
+		this.addedOrUpdatedNodes = addedOrUpdatedNodes;
 	}
 
-	public List<RECORD> getNodesRemoved() {
-		return nodesRemoved;
+	public List<RECORD> getRemovedNodes() {
+		return removedNodes;
 	}
 
-	public void setNodesRemoved(List<RECORD> nodesRemoved) {
-		this.nodesRemoved = nodesRemoved;
+	public void setRemovedNodes(List<RECORD> removedNodes) {
+		this.removedNodes = removedNodes;
 	}
 
-	public List<RECORD> getNodesAddedOrUpdated() {
-		return nodesAddedOrUpdated;
+	public List<RECORD> getAddedOrUpdatedNodes() {
+		return addedOrUpdatedNodes;
 	}
 
-	public void setNodesAddedOrUpdated(List<RECORD> nodesAddedOrUpdated) {
-		this.nodesAddedOrUpdated = nodesAddedOrUpdated;
+	public void setAddedOrUpdatedNodes(List<RECORD> addedOrUpdatedNodes) {
+		this.addedOrUpdatedNodes = addedOrUpdatedNodes;
 	}
 }
