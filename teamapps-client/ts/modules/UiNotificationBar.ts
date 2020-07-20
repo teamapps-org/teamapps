@@ -34,7 +34,6 @@ import {createUiColorCssString, createUiSpacingValueCssString} from "./util/CssF
 import {ProgressBar} from "./micro-components/ProgressBar";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
-import {UiRepeatableAnimation} from "../generated/UiRepeatableAnimation";
 
 export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConfig> implements UiNotificationBarCommandHandler, UiNotificationBarEventSource {
 
@@ -54,6 +53,7 @@ export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConf
 	}
 
 	addItem(itemConfig: UiNotificationBarItemConfig, entranceAnimation: UiEntranceAnimation, exitAnimation: UiExitAnimation): void {
+		this.removeItem(itemConfig.id, null);
 		let item = new UiNotificationBarItem(itemConfig, exitAnimation);
 		this.itemsById[itemConfig.id] = item;
 		this.$main.appendChild(item.getMainElement());
@@ -69,9 +69,13 @@ export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConf
 	removeItem(id: string, exitAnimation?: UiExitAnimation): void {
 		let item = this.itemsById[id];
 		if (item != null) {
-			animateCSS(item.getMainElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation || item.exitAnimation], 300, () => {
+			if (exitAnimation != null) {
+				animateCSS(item.getMainElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation || item.exitAnimation], 300, () => {
+					item.getMainElement().remove();
+				});
+			} else {
 				item.getMainElement().remove();
-			});
+			}
 		}
 		delete this.itemsById[id];
 	}
