@@ -20,7 +20,11 @@
 package org.teamapps.ux.model;
 
 import org.teamapps.event.Event;
+import org.teamapps.ux.component.node.TreeNode;
+import org.teamapps.ux.component.tree.TreeNodeInfo;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public interface TreeModel<RECORD> {
@@ -31,6 +35,29 @@ public interface TreeModel<RECORD> {
 
 	List<RECORD> getRecords();
 
+	/**
+	 * Get the child records of a node. This is currently only used for lazy parent nodes but might be used
+	 * for other reasons later.
+	 */
 	List<RECORD> getChildRecords(RECORD parentRecord);
+
+	default TreeNodeInfo getTreeNodeInfo(RECORD record) {
+		if (record instanceof TreeNode) {
+			return (TreeNode) record;
+		} else {
+			return null;
+		}
+	}
+
+
+	// CONVENIENCE:
+
+	default void updateNodes(List<RECORD> records) {
+		onChanged().fire(new TreeModelChangedEventData<>(Collections.emptyList(), records));
+	}
+
+	default void updateNodes(RECORD... records) {
+		updateNodes(Arrays.asList(records));
+	}
 
 }
