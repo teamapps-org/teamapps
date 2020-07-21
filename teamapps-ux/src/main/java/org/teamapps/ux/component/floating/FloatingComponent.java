@@ -39,8 +39,8 @@ public class FloatingComponent extends AbstractComponent {
 	private int marginX;
 	private int marginY;
 	private FloatingPosition position;
-	private Color backgroundColor = Color.TRANSPARENT;
-	private Color expanderHandleColor = Color.WHITE;
+	private Color backgroundColor = null;
+	private Color expanderHandleColor = null;
 
 	private boolean collapsible;
 	private boolean expanded;

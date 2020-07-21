@@ -17,102 +17,175 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-@dark-theme-text-color: #f3f3f3;
-@dark-theme-placeholder-color: #f3f3f355;
-@dark-theme-background-color: rgba(50, 50, 65, .93);
-@dark-theme-background-color-transparent: rgba(80, 80, 90, 0.65);
-@dark-theme-background-color-light: rgb(80, 80, 90);
-@dark-theme-border-color: rgba(0, 0, 0, 0.15);
-@dark-theme-field-border: rgb(95, 95, 95);
-@dark-theme-field-background: rgba(95, 95, 95, .1);
+@ta-dark-color-primary: rgb(55, 90, 127);
+@ta-dark-color-success: rgb(0, 188, 140);
+@ta-dark-color-info: rgb(52, 152, 219);
+@ta-dark-color-warning: rgb(243, 156, 18);
+@ta-dark-color-danger: rgb(231, 76, 60);
+
+@ta-dark-text-color: #f3f3f3;
+@ta-dark-text-color-inverted: black;
+
+@ta-dark-state-primary-text:             @ta-dark-text-color;
+@ta-dark-state-primary-text-emphasis:    darken(@ta-dark-text-color, 10%);
+@ta-dark-state-primary-bg:               @ta-dark-color-primary;
+@ta-dark-state-primary-border:           darken(spin(@ta-dark-text-color, -10), 5%);
+
+@ta-dark-state-success-text:             @ta-dark-text-color;
+@ta-dark-state-success-text-emphasis:    average(@ta-dark-text-color, @ta-dark-color-success);
+@ta-dark-state-success-bg:               @ta-dark-color-success;
+@ta-dark-state-success-border:           darken(spin(@ta-dark-state-success-bg, -10), 5%);
+
+@ta-dark-state-info-text:                @ta-dark-text-color;
+@ta-dark-state-info-text-emphasis:       average(@ta-dark-text-color, @ta-dark-color-info);
+@ta-dark-state-info-bg:                  @ta-dark-color-info;
+@ta-dark-state-info-border:              darken(spin(@ta-dark-state-info-bg, -10), 7%);
+
+@ta-dark-state-warning-text:             @ta-dark-text-color;
+@ta-dark-state-warning-text-emphasis:    average(@ta-dark-text-color, @ta-dark-color-warning);
+@ta-dark-state-warning-bg:               @ta-dark-color-warning;
+@ta-dark-state-warning-border:           darken(spin(@ta-dark-state-warning-bg, -10), 20%);
+
+@ta-dark-state-danger-text:              @ta-dark-text-color;
+@ta-dark-state-danger-text-emphasis:     average(@ta-dark-text-color, @ta-dark-color-danger);
+@ta-dark-state-danger-bg:                @ta-dark-color-danger;
+@ta-dark-state-danger-border:            darken(spin(@ta-dark-state-danger-bg, -10), 5%);
+
+@dark-text-color: #f3f3f3;
+@dark-background-color: rgba(50, 50, 65, .93);
+@dark-background-color-transparent: rgba(80, 80, 90, 0.65);
+@dark-background-color-light: rgb(80, 80, 90);
+@dark-border-color: rgba(0, 0, 0, 0.15);
+@dark-input-border: rgb(95, 95, 95);
+@dark-input-background: rgba(95, 95, 95, .1);
 
 .theme-dark {
-  color: @dark-theme-text-color;
+  --ta-color-primary:         @ta-dark-color-primary;
+  --ta-color-success:         @ta-dark-color-success;
+  --ta-color-info:            @ta-dark-color-info;
+  --ta-color-warning:         @ta-dark-color-warning;
+  --ta-color-danger:          @ta-dark-color-danger;
 
+  --ta-state-primary-text:             @ta-dark-state-primary-text;
+  --ta-state-primary-text-emphasis:    @ta-dark-state-primary-text-emphasis;
+  --ta-state-primary-bg:               @ta-dark-state-primary-bg;
+  --ta-state-primary-border:           @ta-dark-state-primary-border;
+
+  --ta-state-success-text:             @ta-dark-state-success-text;
+  --ta-state-success-text-emphasis:    @ta-dark-state-success-text-emphasis;
+  --ta-state-success-bg:               @ta-dark-state-success-bg;
+  --ta-state-success-border:           @ta-dark-state-success-border;
+
+  --ta-state-info-text:                @ta-dark-state-info-text;
+  --ta-state-info-text-emphasis:       @ta-dark-state-info-text-emphasis;
+  --ta-state-info-bg:                  @ta-dark-state-info-bg;
+  --ta-state-info-border:              @ta-dark-state-info-border;
+
+  --ta-state-warning-text:             @ta-dark-state-warning-text;
+  --ta-state-warning-text-emphasis:    @ta-dark-state-warning-text-emphasis;
+  --ta-state-warning-bg:               @ta-dark-state-warning-bg;
+  --ta-state-warning-border:           @ta-dark-state-warning-border;
+
+  --ta-state-danger-text:              @ta-dark-state-danger-text;
+  --ta-state-danger-text-emphasis:     @ta-dark-state-danger-text-emphasis;
+  --ta-state-danger-bg:                @ta-dark-state-danger-bg;
+  --ta-state-danger-border:            @ta-dark-state-danger-border;
+
+  --ta-text-color: @dark-text-color;
+  --ta-text-color-faded: fadeout(@dark-text-color, 30%);
+  --ta-text-color-inverted: black;
+  --ta-text-color-gray: #909090;
+  --ta-bg-color: @dark-background-color;
+  --ta-bg-color-semi-transparent: @dark-background-color-transparent;
+  --ta-bg-color-semi-transparent-muted: #3e3e3ea6;
+  --ta-bg-color-solid: fade(@dark-background-color, 100%);
+  --ta-bg-color-disabled: rgba(128, 128, 128, 0.45);
+  --ta-bg-dim-overlay: rgba(0, 0, 0, .35);
+  --ta-special-button-section-bg: #5d5d5d40;
+  --ta-special-button-section-border: rgba(154, 154, 154, .2);
+  --ta-panel-border-color: @dark-border-color; // dark
+  --ta-border-color-disabled: #ccc;
+  --ta-inner-border-color: @dark-border-color; // dark
+  --ta-inner-border-color-gradient-end: rgba(0, 0, 0, 0);
+  --ta-inner-border-color-light: rgba(255, 255, 255, .5);
+  --ta-inner-border-color-light-gradient-end: rgba(255, 255, 255, 0);
+
+  --ta-hover-color: rgba(0, 0, 0, 0.3); // dark
+  --ta-active-color: rgba(0, 0, 0, 0.1);
+  --ta-selection-color: #3a5573cc;
+
+  --ta-link-color: lighten(@ta-dark-color-primary, 20%);
+  --ta-link-hover-color: lighten(@ta-dark-color-primary, 25%);
+  --ta-link-hover-decoration: underline;
+
+  --ta-pre-color: #333;
+
+  //== Buttons
+  --ta-btn-font-weight:                var(--ta-font-weight-normal);
+  --ta-btn-default-border:             var(--ta-panel-border-color);
+  --ta-btn-default-bg:                 var(--ta-bg-color);
+  --ta-btn-border-radius-base:         var(--ta-border-radius);
+
+
+  //== Forms
+  --ta-input-bg:                      @dark-input-background;
+  --ta-input-bg-disabled:             var(--ta-bg-color-disabled);
+  --ta-input-border-color:            @dark-input-border;
+  --ta-input-border-radius:           var(--ta-border-radius);
+  --ta-input-border-focus:            var(--ta-color-info);
+  --ta-input-height:                  calc(var(--ta-line-height-computed) + var(--ta-padding-base-vertical) * 2 + 2px);
+  --ta-input-color:                   var(--ta-text-color);
+  --ta-input-color-placeholder:       #f3f3f355;
+
+
+  //== Misc.
+  --ta-box-shadown-color: rgba(0, 0, 0, .3);
+
+  //== Component-Specific
+  --ta-calendar-grid-border-color: #6363631a;
+  --ta-calendar-grid-non-business-bg-color: #d7d7d755;
+  --ta-calendar-day-occupation-background-circle-color: #d7d7d729;
+  --ta-calendar-day-occupation-today-bg: rgba(255, 168, 61, 0.31);
+
+  
   html {
-    scrollbar-face-color: #555555;
-    scrollbar-base-color: #555555;
-    scrollbar-3dlight-color: #555555;
-    scrollbar-highlight-color: #555555;
-    scrollbar-track-color: #000;
-    scrollbar-arrow-color: #000;
-    scrollbar-shadow-color: #555555;
-    scrollbar-dark-shadow-color: #555555;
+    scrollbar-face-color: var(--ta-input-border-color);
+    scrollbar-base-color: var(--ta-input-border-color);
+    scrollbar-3dlight-color: var(--ta-input-border-color);
+    scrollbar-highlight-color: var(--ta-input-border-color);
+    scrollbar-track-color: var(--ta-bg-color);
+    scrollbar-arrow-color: var(--ta-bg-color);
+    scrollbar-shadow-color: var(--ta-input-border-color);
+    scrollbar-dark-shadow-color: var(--ta-input-border-color);
   }
 
   ::-webkit-scrollbar { width: 8px; height: 3px;}
-  ::-webkit-scrollbar-button {  background-color: #555555; }
-  ::-webkit-scrollbar-track {  background-color: #555555;}
-  ::-webkit-scrollbar-track-piece { background-color: #000;}
-  ::-webkit-scrollbar-thumb { height: 50px; background-color: #555; border-radius: 3px;}
-  ::-webkit-scrollbar-corner { background-color: #555555;}
-  ::-webkit-resizer { background-color: #555;}
-
-
-  .UiWorkSpaceLayout .bottom-bar {
-    background-color: @dark-theme-background-color-transparent;
-  }
-
-  .UiWorkSpaceLayout .bottom-bar .minimized-tabpanel-button-container .minimized-tabpanel-button {
-    background-color: @dark-theme-background-color-light;
-  }
-
-  .UiNotification {
-    background-color: @dark-theme-background-color-transparent;
-  }
+  ::-webkit-scrollbar-button {  background-color: var(--ta-input-border-color); }
+  ::-webkit-scrollbar-track {  background-color: var(--ta-input-border-color);}
+  ::-webkit-scrollbar-track-piece { background-color: var(--ta-bg-color);}
+  ::-webkit-scrollbar-thumb { height: 50px; background-color: var(--ta-input-border-color); border-radius: 3px;}
+  ::-webkit-scrollbar-corner { background-color: var(--ta-input-border-color);}
+  ::-webkit-resizer { background-color: var(--ta-input-border-color);}
 
   .UiToolbar {
     > .background-color-div {
-      background-color: @dark-theme-background-color-transparent;
-      border-bottom-color: @dark-theme-border-color;
-
       > .inner-container .button-group-wrapper > .toolbar-group-separator {
         border-right: 1px solid rgba(78, 78, 78, 0.5);
       }
     }
     .toolbar-button-wrapper:hover, .UiToolbar-size-testing-container .toolbar-button-wrapper:hover {
-      background-color: @dark-theme-background-color-light;
+      background-color: @dark-background-color-light;
     }
   }
 
   .UiToolAccordion {
     .toolbar-button-wrapper:hover {
-      background-color: @dark-theme-background-color-light;
+      background-color: @dark-background-color-light;
     }
   }
-
-  .UiNavigationBar {
-    background-color: @dark-theme-background-color-transparent;
-    border-top: 1px solid @dark-theme-border-color;
-    .buttons-wrapper {
-      background-color: @dark-theme-background-color-transparent;
-      > .nav-button-wrapper {
-        &:hover {
-          background-color: fadeout(@dark-theme-background-color-transparent, 5%);
-        }
-        &:active {
-          background-color: @dark-theme-background-color-transparent;
-        }
-      }
-    }
-
-    .fan-out-container-wrapper {
-      box-shadow: 0px -5px 20px -3px rgba(0, 0, 0, 0.3);
-      .fan-out-container {
-        background-color: @dark-theme-background-color-transparent;
-      }
-    }
-  }
-
 
   .UiPanel {
     .panel-heading {
-      border-bottom-color: @dark-theme-border-color;
-      background-color: @dark-theme-background-color-transparent;
-
-      .panel-heading-window-buttons {
-        background-color: rgba(0, 0, 0, 0.12);
-      }
       .panel-heading-window-buttons > .UiToolButton {
         filter: invert(100%);
       }
@@ -121,22 +194,22 @@
         background-color: rgba(255, 255, 255, 0.07);
       }
     }
-    .panel-body {
-      background-color: @dark-theme-background-color;
-    }
   }
 
   .UiTabPanel {
     > .tab-panel-header > .background-color-div {
-      background-color: @dark-theme-background-color-transparent;
-
       .tab-button .tab-button-close-button {
         filter: invert(100%);
       }
     }
-    &.tab-style-blocks > .tab-panel-header .tab-button-container .tab-button.selected {
-      background-color: rgba(0, 0, 0, 0.3);
+
+    .window-button-container .UiToolButton.img {
+      filter: invert(100%);
     }
+  }
+
+  .UiNotification .close-button {
+      filter: invert(100%);
   }
 
   .UiItemView .item-group .item-group-header:after {
@@ -145,25 +218,25 @@
   }
 
   .UiInfiniteItemView > .slickgrid .item-wrapper > *:hover {
-    border-color: @dark-theme-border-color;
-    background: linear-gradient(to bottom, @dark-theme-background-color 0%, @dark-theme-background-color 62%, @dark-theme-background-color-light 100%);
+    border-color: @dark-border-color;
+    background: linear-gradient(to bottom, @dark-background-color 0%, @dark-background-color 62%, @dark-background-color-light 100%);
   }
 
   .UiDropDown {
-    border-color: rgba(146, 146, 146, 0.2); // TODO @dark-theme-border-color, chrome bug...
+    border-color: var(--ta-panel-border-color); // TODO @dark-border-color, chrome bug...
 
     .background-color-div {
-      background-color: @dark-theme-background-color-transparent;
+      background-color: @dark-background-color-transparent;
     }
   }
 
   .UiField {
     .field-border,
     .field-border-visibility {
-      border-color: @dark-theme-field-border;
+      border-color: @dark-input-border;
     }
     .field-background {
-      background-color: @dark-theme-field-background;
+      background-color: @dark-input-background;
     }
 
     &.readonly .field-background,
@@ -179,29 +252,20 @@
     }
   }
 
-  .UiField,
-  .form-control {
-    color: @dark-theme-text-color;
-
-    ::placeholder {
-      color: @dark-theme-placeholder-color;
-    }
-  }
-
   .UiButton {
     &:hover,
     &:focus,
     &.focus {
-      color: lighten(@dark-theme-text-color, 20%);
+      color: lighten(@dark-text-color, 20%);
     }
   }
 
   .UiWorkSpaceLayout .minimized-tabpanel-bar {
-    background-color: @dark-theme-background-color;
+    background-color: @dark-background-color;
 
     .minimized-tabpanel-button {
-      border: @dark-theme-border-color;
-      background-color: @dark-theme-background-color-light;
+      border: @dark-border-color;
+      background-color: @dark-background-color-light;
 
       >.tab-icon:first-child {
         filter: invert(100%);
@@ -211,7 +275,7 @@
 
   .UiTable {
     .slick-cell {
-      border-bottom-color: @dark-theme-border-color;
+      border-bottom-color: @dark-border-color;
     }
     .slick-cell.selected,
     .slick-table.list-mode .slick-cell.selected {
@@ -222,33 +286,22 @@
     }
     .slick-headerrow {
       background-color: rgba(255, 255, 255, .05);
-      border-bottom-color: @dark-theme-border-color;
+      border-bottom-color: @dark-border-color;
     }
     .slick-footerrow {
       background-color: rgba(255, 255, 255, .05);
-      border-color: @dark-theme-border-color;
+      border-color: @dark-border-color;
     }
   }
 
   .UiChatInput {
-    background-color: @dark-theme-field-background;
-    border-top-color: @dark-theme-field-border;
+    background-color: @dark-input-background;
+    border-top-color: @dark-input-border;
 
     textarea {
       background-color: transparent;
     }
   }
-
-  .glyphicon-button {
-    color: fadeout(@dark-theme-text-color, 30%);
-    &:hover {
-      color: @dark-theme-text-color;
-    }
-    &.disabled {
-      color: fadeout(@dark-theme-text-color, 70%);
-    }
-  }
-
 
   .UiMediaTrackGraph {
     .area {
@@ -323,16 +376,20 @@
   }
 
   .tr-tagbox-default-wrapper-template {
-    border: 1px solid @dark-theme-field-border;
+    border: 1px solid @dark-input-border;
     box-shadow: 1px 2px 1px -1px rgba(0, 0, 0, 0.13);
-    background-color: @dark-theme-field-background;
+    background-color: @dark-input-background;
 
     .tr-remove-button {
-      border: 1px solid @dark-theme-field-border;
+      border: 1px solid @dark-input-border;
     }
   }
 
-
+  .tr-remove-button,
+  .teamapps-expander,
+  .file-list:empty:before {
+    filter: invert(100%);
+  }
 
   .tr-highlighted-text {
     background-color: rgba(244, 195, 125, 0.7);
@@ -340,16 +397,28 @@
   }
 
   .tr-highlighted-entry {
-    background-color: @dark-theme-background-color-light;
+    background-color: @dark-background-color-light;
   }
 
   .tr-selected-entry {
-    background-color: @dark-theme-background-color-light;
+    background-color: @dark-background-color-light;
   }
 
   .tr-dropdown {
-    background-color: @dark-theme-background-color;
-    border: @dark-theme-field-border;
+    background-color: @dark-background-color;
+    border: @dark-input-border;
+  }
+
+  .UiFloatingComponent .expander-handle:after {
+    filter: invert(100%);
+  }
+
+  .UiProgressDisplay .cancel-button {
+    filter: invert(100%);
+  }
+
+  .calendar-symbol-page {
+    stroke: transparent;
   }
 }
 
