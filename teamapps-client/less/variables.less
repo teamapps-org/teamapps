@@ -91,16 +91,21 @@
   --ta-text-color: @ta-text-color;
   --ta-text-color-faded: fadeout(@ta-text-color, 30%);
   --ta-text-color-inverted: @ta-text-color-inverted;
-  --ta-text-color-disabled: @ta-text-color-inverted;
+  --ta-text-color-gray: #999;
   --ta-bg-color: #fff;
   --ta-bg-color-semi-transparent: rgba(255, 255, 255, 0.8);
   --ta-bg-color-semi-transparent-muted: rgba(220, 220, 220, 0.8);
   --ta-bg-color-solid: #eee;
   --ta-bg-color-disabled: #eee;
   --ta-bg-dim-overlay: rgba(0, 0, 0, .35);
-  --ta-border-color: #ccc;
+  --ta-special-button-section-bg: rgba(173, 173, 173, .22);
+  --ta-special-button-section-border: rgba(0, 0, 0, 0.1);
+  --ta-panel-border-color: #ccc;
   --ta-border-color-disabled: #ccc;
   --ta-inner-border-color: rgba(0, 0, 0, 0.09);
+  --ta-inner-border-color-gradient-end: rgba(0, 0, 0, 0);
+  --ta-inner-border-color-light: rgba(255, 255, 255, .5);
+  --ta-inner-border-color-light-gradient-end: rgba(255, 255, 255, 0);
 
   --ta-hover-color: rgba(0, 0, 0, 0.05);
   --ta-active-color: rgba(0, 0, 0, 0.1);
@@ -150,7 +155,7 @@
 
   //== Buttons
   --ta-btn-font-weight:                var(--ta-font-weight-normal);
-  --ta-btn-default-border:             var(--ta-border-color);
+  --ta-btn-default-border:             var(--ta-panel-border-color);
   --ta-btn-default-bg:                 var(--ta-bg-color);
   --ta-btn-border-radius-base:         var(--ta-border-radius);
 
@@ -158,7 +163,7 @@
   //== Forms
   --ta-input-bg:                       var(--ta-bg-color);
   --ta-input-bg-disabled:              var(--ta-bg-color-disabled);
-  --ta-input-border-color:             var(--ta-border-color);
+  --ta-input-border-color:             var(--ta-panel-border-color);
   --ta-input-border-radius:            var(--ta-border-radius);
   --ta-input-border-focus:             #66afe9;
   --ta-input-height:                   calc(var(--ta-line-height-computed) + var(--ta-padding-base-vertical) * 2 + 2px);
@@ -186,6 +191,13 @@
   --ta-zindex-max:               1000000;
 
   --ta-tooltip-arrow-size: 5px;
+
+  //== Component-Specific
+  --ta-calendar-grid-border-color: #ECECEC;
+  --ta-calendar-grid-non-business-bg-color: #d7d7d7;
+
+  --ta-calendar-day-occupation-background-circle-color: #d7d7d755;
+  --ta-calendar-day-occupation-today-bg: #f8d9ac;
 }
 
 

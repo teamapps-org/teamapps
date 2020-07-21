@@ -36,17 +36,17 @@
   }
 
   .fc-month-grid-day-name {
-    fill: #999;
+    fill: var(--ta-text-color-gray);
   }
 
   .fc-month-grid-week-number {
     text-anchor: end;
-    fill: #999;
+    fill: var(--ta-text-color-gray);
     font-weight: var(--ta-font-weight-light);
     cursor: pointer;
     &:hover {
       text-decoration: underline;
-      text-decoration-color: #999;
+      text-decoration-color: var(--ta-text-color-gray);
     }
   }
 
@@ -79,7 +79,7 @@
     .day-occupation-background-circle,
     .day-occupation {
       fill: transparent; // not none, since we need the pointer events!
-      stroke: #ebebeb;
+      stroke: var(--ta-calendar-day-occupation-background-circle-color);
       stroke-width: 1;
     }
 
@@ -91,9 +91,6 @@
       .day-number {
         text-decoration: underline;
         text-decoration-color: var(--ta-text-color);
-      }
-      .day-occupation-background-circle {
-        background-color: white;
       }
     }
 
@@ -113,9 +110,9 @@
     }
 
     &.today .day-occupation-background-circle {
-      fill: #f8d9ac;
+      fill: var(--ta-calendar-day-occupation-today-bg);
       stroke-width: 1;
-      stroke: #f8d9ac;
+      stroke: var(--ta-calendar-day-occupation-today-bg);
     }
   }
 }

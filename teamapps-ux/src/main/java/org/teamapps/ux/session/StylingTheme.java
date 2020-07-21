@@ -23,7 +23,6 @@ public enum StylingTheme {
 
 	DEFAULT(""),
 	DARK("theme-dark"),
-	DARK2("theme-dark2"),
 	MODERN("theme-modern");
 
 	private final String cssClass;
