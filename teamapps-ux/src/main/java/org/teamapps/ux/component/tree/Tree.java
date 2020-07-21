@@ -31,7 +31,6 @@ import org.teamapps.dto.UiTreeRecord;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
-import org.teamapps.ux.component.node.TreeNode;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.TreeModel;
 import org.teamapps.ux.model.TreeModelChangedEventData;
@@ -70,14 +69,6 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	private int clientRecordIdCounter = 0;
 	private final Map<RECORD, UiTreeRecord> uiRecordsByRecord = new HashMap<>();
-
-	private TreeNodeInfoExtractor<RECORD> treeNodeInfoExtractor = record -> {
-		if (record instanceof TreeNode) {
-			return (TreeNode) record;
-		} else {
-			return null;
-		}
-	};
 
 	private final Runnable modelAllNodesChangedListener = () -> {
 		if (isRendered()) {
@@ -148,7 +139,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		uiTreeRecord.setDisplayTemplateId(templateIdsByTemplate.get(template));
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
 
-		TreeNodeInfo treeNodeInfo = treeNodeInfoExtractor.getTreeNodeInfo(record);
+		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
 		if (treeNodeInfo != null) {
 			uiTreeRecord.setExpanded(treeNodeInfo.isExpanded());
 			uiTreeRecord.setLazyChildren(treeNodeInfo.isLazyChildren());
@@ -158,7 +149,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	protected void addParentLinkToUiRecord(RECORD record, UiTreeRecord uiTreeRecord) {
-		TreeNodeInfo treeNodeInfo = treeNodeInfoExtractor.getTreeNodeInfo(record);
+		TreeNodeInfo treeNodeInfo = model.getTreeNodeInfo(record);
 		if (treeNodeInfo != null) {
 			RECORD parent = (RECORD) treeNodeInfo.getParent();
 			if (parent != null) {
@@ -333,14 +324,6 @@ public class Tree<RECORD> extends AbstractComponent {
 	public void setRecordToStringFunction(Function<RECORD, String> recordToStringFunction) {
 		this.recordToStringFunction = recordToStringFunction;
 		reRenderIfRendered();
-	}
-
-	public TreeNodeInfoExtractor<RECORD> getTreeNodeInfoExtractor() {
-		return treeNodeInfoExtractor;
-	}
-
-	public void setTreeNodeInfoExtractor(TreeNodeInfoExtractor<RECORD> treeNodeInfoExtractor) {
-		this.treeNodeInfoExtractor = treeNodeInfoExtractor;
 	}
 
 	private RECORD getRecordByUiId(int uiRecordId) {
