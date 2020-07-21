@@ -40,7 +40,10 @@ import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.ux.i18n.TeamAppsDictionary;
+import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.session.CurrentSessionContext;
+import org.teamapps.ux.session.SessionContext;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -312,31 +315,19 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	public ToolbarButtonGroup createViewModesToolbarButtonGroup() {
 		ToolbarButtonGroup group = new ToolbarButtonGroup();
 
-		ToolbarButton yearViewButton = new ToolbarButton(
-				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(MaterialIcon.EVENT_NOTE, "Year", "12 Months Overview" /*TODO*/)
-		);
+		ToolbarButton yearViewButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.YEAR.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.YEAR.getKey()));
 		yearViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.YEAR));
 		group.addButton(yearViewButton);
 
-		ToolbarButton monthViewButton = new ToolbarButton(
-				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(MaterialIcon.DATE_RANGE, "Month", "Full Month View")
-		);
+		ToolbarButton monthViewButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.MONTH.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.MONTH.getKey()));
 		monthViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.MONTH));
 		group.addButton(monthViewButton);
 
-		ToolbarButton weekViewButton = new ToolbarButton(
-				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(MaterialIcon.VIEW_WEEK, "Week", "Week View")
-		);
+		ToolbarButton weekViewButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.WEEK.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.WEEK.getKey()));
 		weekViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.WEEK));
 		group.addButton(weekViewButton);
 
-		ToolbarButton dayViewButton = new ToolbarButton(
-				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(MaterialIcon.VIEW_DAY, "Day", "Single Day View")
-		);
+		ToolbarButton dayViewButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.DAY.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.DAY.getKey()));
 		dayViewButton.onClick.addListener(toolbarButtonClickEvent -> this.setActiveViewMode(CalendarViewMode.DAY));
 		group.addButton(dayViewButton);
 
@@ -346,17 +337,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	public ToolbarButtonGroup createNavigationButtonGroup() {
 		ToolbarButtonGroup group = new ToolbarButtonGroup();
 
-		ToolbarButton forwardButton = new ToolbarButton(
-				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(MaterialIcon.NAVIGATE_BEFORE, "Previous", null)
-		);
+		ToolbarButton forwardButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.PREVIOUS.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.PREVIOUS.getKey()));
 		forwardButton.onClick.addListener(toolbarButtonClickEvent -> this.setDisplayedDate(activeViewMode.decrement(displayedDate)));
 		group.addButton(forwardButton);
 
-		ToolbarButton backButton = new ToolbarButton(
-				BaseTemplate.TOOLBAR_BUTTON,
-				new BaseTemplateRecord(MaterialIcon.NAVIGATE_NEXT, "Next", null)
-		);
+		ToolbarButton backButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.NEXT.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.NEXT.getKey()));
 		backButton.onClick.addListener(toolbarButtonClickEvent -> this.setDisplayedDate(activeViewMode.increment(displayedDate)));
 		group.addButton(backButton);
 

@@ -21,7 +21,8 @@ import Mustache from "mustache";
 import moment from "moment-timezone";
 
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
-import {TrivialComboBox, TrivialTimeSuggestionEngine} from "trivial-components";
+import {TrivialComboBox} from "../../trivial-components/TrivialComboBox";
+import {TrivialTimeSuggestionEngine} from "../../trivial-components/TrivialTimeSuggestionEngine";
 import {UiField} from "./../UiField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../../generated/UiTextInputHandlingFieldConfig";

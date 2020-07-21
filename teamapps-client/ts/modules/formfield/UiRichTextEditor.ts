@@ -35,7 +35,7 @@ import {Editor, Settings} from 'tinymce';
 import 'tinymce/themes/modern/theme';
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {DeferredExecutor} from "../util/DeferredExecutor";
-import {generateUUID, keyCodes} from "trivial-components";
+import {generateUUID, keyCodes} from "../trivial-components/TrivialCore";
 // Any plugins you want to use has to be imported
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/table';

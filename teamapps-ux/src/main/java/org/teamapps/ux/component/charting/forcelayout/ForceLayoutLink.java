@@ -23,16 +23,16 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiNetworkLink;
 import org.teamapps.util.UiUtil;
 
-public class ForceLayoutLink {
+public class ForceLayoutLink<RECORD> {
 
-	private final ForceLayoutNode source;
-	private final ForceLayoutNode target;
+	private final ForceLayoutNode<RECORD> source;
+	private final ForceLayoutNode<RECORD> target;
 
 	private float lineWidth = 1f;
 	private Color lineColor = Color.MATERIAL_GREY_500;
 	private String lineDashArray;
 
-	public ForceLayoutLink(ForceLayoutNode source, ForceLayoutNode target) {
+	public ForceLayoutLink(ForceLayoutNode<RECORD> source, ForceLayoutNode<RECORD> target) {
 		this.source = source;
 		this.target = target;
 	}
@@ -45,11 +45,11 @@ public class ForceLayoutLink {
 		return ui;
 	}
 
-	public ForceLayoutNode getSource() {
+	public ForceLayoutNode<RECORD> getSource() {
 		return source;
 	}
 
-	public ForceLayoutNode getTarget() {
+	public ForceLayoutNode<RECORD> getTarget() {
 		return target;
 	}
 

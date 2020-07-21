@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {TrivialDateTimeField} from "trivial-components";
+import {TrivialDateTimeField} from "../../trivial-components/TrivialDateTimeField";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";

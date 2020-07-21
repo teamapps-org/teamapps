@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,17 +29,18 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiTree;
 import org.teamapps.dto.UiTreeRecord;
 import org.teamapps.event.Event;
-import org.teamapps.ux.cache.CacheManipulationHandle;
-import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.field.TextMatchingMode;
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
 import org.teamapps.ux.component.node.TreeNode;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.TreeModel;
 import org.teamapps.ux.model.TreeModelChangedEventData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -52,8 +53,6 @@ public class Tree<RECORD> extends AbstractComponent {
 	public final Event<String> onTextInput = new Event<>();
 
 	private TreeModel<RECORD> model;
-	private final ClientRecordCache<RECORD, UiTreeRecord> recordCache = new ClientRecordCache<>(this::createUiTreeRecordWithoutParentRelation, this::addParentLinkToUiRecord);
-	private TextMatchingMode textMatchingMode = TextMatchingMode.CONTAINS;
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 	private RECORD selectedNode;
 
@@ -63,12 +62,15 @@ public class Tree<RECORD> extends AbstractComponent {
 	private int templateIdCounter = 0;
 
 	private int indentation = 15;
-	private boolean animate = true;
+	private boolean animated = true;
 	private boolean showExpanders = true;
 	private boolean openOnSelection = false;
 	private boolean enforceSingleExpandedPath = false;
-
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
+
+	private int clientRecordIdCounter = 0;
+	private final Map<RECORD, UiTreeRecord> uiRecordsByRecord = new HashMap<>();
+
 	private TreeNodeInfoExtractor<RECORD> treeNodeInfoExtractor = record -> {
 		if (record instanceof TreeNode) {
 			return (TreeNode) record;
@@ -77,31 +79,21 @@ public class Tree<RECORD> extends AbstractComponent {
 		}
 	};
 
-	private String lastQuery;
-
 	private final Runnable modelAllNodesChangedListener = () -> {
 		if (isRendered()) {
-			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(model.getRecords(lastQuery));
-			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
+			uiRecordsByRecord.clear();
+			List<UiTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
+			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), uiRecords));
 		}
 	};
+
 	private final Consumer<TreeModelChangedEventData<RECORD>> modelChangedListener = (changedEventData) -> {
-		List<RECORD> nodesRemoved = changedEventData.getNodesRemoved();
-		List<RECORD> nodesAdded = changedEventData.getNodesAddedOrUpdated();
 		if (isRendered()) {
-			CacheManipulationHandle<List<Integer>> cacheRemoveResponse = recordCache.removeRecords(nodesRemoved);
-
-			//this is a workaround to update existing nodes
-			List<UiTreeRecord> addedOrUpdatedUiTreeRecords = new ArrayList<>();
-			for (RECORD record : nodesAdded) {
-				CacheManipulationHandle<UiTreeRecord> cacheAddOrUpdateRecord = recordCache.addOrUpdateRecord(record);
-				addedOrUpdatedUiTreeRecords.add(cacheAddOrUpdateRecord.getAndClearResult());
-				cacheAddOrUpdateRecord.commit();
-			}
-
-			getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), cacheRemoveResponse.getAndClearResult(), addedOrUpdatedUiTreeRecords), aVoid -> {
-				cacheRemoveResponse.commit();
-			});
+			List<Integer> removedUiIds = changedEventData.getRemovedNodes().stream()
+					.map(key -> uiRecordsByRecord.remove(key).getId())
+					.collect(Collectors.toList());
+			List<UiTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
+			getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), removedUiIds, addedOrUpdatedUiTreeRecords));
 		}
 	};
 
@@ -121,16 +113,37 @@ public class Tree<RECORD> extends AbstractComponent {
 		model.onChanged().removeListener(modelChangedListener);
 	}
 
+	protected List<UiTreeRecord> createOrUpdateUiRecords(List<RECORD> records) {
+		if (records == null) {
+			return Collections.emptyList();
+		}
+		ArrayList<UiTreeRecord> uiRecords = new ArrayList<>();
+		for (RECORD record : records) {
+			UiTreeRecord uiRecord = createUiTreeRecordWithoutParentRelation(record);
+			uiRecordsByRecord.put(record, uiRecord);
+			uiRecords.add(uiRecord);
+		}
+		for (RECORD record : records) {
+			addParentLinkToUiRecord(record, uiRecordsByRecord.get(record));
+		}
+		return uiRecords;
+	}
+
 	protected UiTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
 		if (record == null) {
 			return null;
 		}
-		// do not look for objects inside the cache here. they are sent to the client anyway. Also, values like expanded would have to be updated in any case.
-
 		Template template = getTemplateForRecord(record);
 		List<String> dataKeys = template != null ? template.getDataKeys() : Collections.emptyList();
 		Map<String, Object> values = propertyExtractor.getValues(record, dataKeys);
-		UiComboBoxTreeRecord uiTreeRecord = new UiComboBoxTreeRecord();
+
+		UiTreeRecord uiTreeRecord;
+		if (uiRecordsByRecord.containsKey(record)) {
+			uiTreeRecord = uiRecordsByRecord.get(record);
+		} else {
+			uiTreeRecord = new UiComboBoxTreeRecord();
+			uiTreeRecord.setId(++clientRecordIdCounter);
+		}
 		uiTreeRecord.setValues(values);
 		uiTreeRecord.setDisplayTemplateId(templateIdsByTemplate.get(template));
 		uiTreeRecord.setAsString(this.recordToStringFunction.apply(record));
@@ -144,19 +157,14 @@ public class Tree<RECORD> extends AbstractComponent {
 		return uiTreeRecord;
 	}
 
-	protected void addParentLinkToUiRecord(RECORD record, UiTreeRecord uiTreeRecord, Map<RECORD, UiTreeRecord> othersCurrentlyBeingAddedToCache) {
+	protected void addParentLinkToUiRecord(RECORD record, UiTreeRecord uiTreeRecord) {
 		TreeNodeInfo treeNodeInfo = treeNodeInfoExtractor.getTreeNodeInfo(record);
 		if (treeNodeInfo != null) {
 			RECORD parent = (RECORD) treeNodeInfo.getParent();
 			if (parent != null) {
-				UiTreeRecord uiParentFromOthers = othersCurrentlyBeingAddedToCache.get(parent);
-				if (uiParentFromOthers != null) {
-					uiTreeRecord.setParentId(uiParentFromOthers.getId());
-				} else {
-					Integer cachedParentUiRecordId = recordCache.getUiRecordIdOrNull(parent);
-					if (cachedParentUiRecordId != null) {
-						uiTreeRecord.setParentId(cachedParentUiRecordId);
-					}
+				UiTreeRecord uiParent = uiRecordsByRecord.get(parent);
+				if (uiParent != null) {
+					uiTreeRecord.setParentId(uiParent.getId());
 				}
 			}
 		}
@@ -177,25 +185,24 @@ public class Tree<RECORD> extends AbstractComponent {
 	public UiComponent createUiComponent() {
 		UiTree uiTree = new UiTree();
 		mapAbstractUiComponentProperties(uiTree);
-		List<RECORD> records = model.getRecords(lastQuery);
+		List<RECORD> records = model.getRecords();
 		if (records != null) {
-			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
-			cacheResponse.commit();
-			uiTree.setInitialData(cacheResponse.getAndClearResult());
+			uiTree.setInitialData(createOrUpdateUiRecords(records));
 		}
 
-		uiTree.setSelectedNodeId(this.recordCache.getUiRecordIdOrNull(this.selectedNode));
+		if (this.selectedNode != null) {
+			uiTree.setSelectedNodeId(uiRecordsByRecord.get(this.selectedNode).getId());
+		}
 
 		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
 		uiTree.setTemplates(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 
 		uiTree.setDefaultTemplateId(templateIdsByTemplate.get(entryTemplate));
-		uiTree.setAnimate(animate);
+		uiTree.setAnimate(animated);
 		uiTree.setShowExpanders(showExpanders);
 		uiTree.setOpenOnSelection(openOnSelection);
 		uiTree.setEnforceSingleExpandedPath(enforceSingleExpandedPath);
-		uiTree.setTextMatchingMode(textMatchingMode.toUiTextMatchingMode());
 		uiTree.setIndentation(indentation);
 		return uiTree;
 	}
@@ -205,37 +212,21 @@ public class Tree<RECORD> extends AbstractComponent {
 		switch (event.getUiEventType()) {
 			case UI_TREE_NODE_SELECTED:
 				UiTree.NodeSelectedEvent nodeSelectedEvent = (UiTree.NodeSelectedEvent) event;
-				RECORD record = recordCache.getRecordByClientId(nodeSelectedEvent.getNodeId());
+				RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
 				selectedNode = record;
 				onNodeSelected.fire(record);
 				break;
 			case UI_TREE_REQUEST_TREE_DATA:
 				UiTree.RequestTreeDataEvent requestTreeDataEvent = (UiTree.RequestTreeDataEvent) event;
-				RECORD parentNode = recordCache.getRecordByClientId(requestTreeDataEvent.getParentNodeId());
+				RECORD parentNode = getRecordByUiId(requestTreeDataEvent.getParentNodeId());
 				if (parentNode != null) {
 					List<RECORD> children = model.getChildRecords(parentNode);
-					CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.addRecords(children);
+					List<UiTreeRecord> uiChildren = createOrUpdateUiRecords(children);
 					if (isRendered()) {
-						getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), Collections.emptyList(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
-					} else {
-						cacheResponse.commit();
+						getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), Collections.emptyList(), uiChildren));
 					}
 				}
 				break;
-			case UI_TREE_TEXT_INPUT:
-				UiTree.TextInputEvent textInputEvent = (UiTree.TextInputEvent) event;
-				if (model != null) {
-					lastQuery = textInputEvent.getText();
-					List<RECORD> records = model.getRecords(lastQuery);
-					CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
-					if (isRendered()) {
-						getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
-					} else {
-						cacheResponse.commit();
-					}
-				}
-				this.onTextInput.fire(textInputEvent.getText());
-
 		}
 	}
 
@@ -244,9 +235,9 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	public void setSelectedNode(RECORD selectedNode) {
-		Integer uiRecord = recordCache.getUiRecordIdOrNull(selectedNode);
+		int uiRecordId = uiRecordsByRecord.get(selectedNode) != null ? uiRecordsByRecord.get(selectedNode).getId() : -1;
 		this.selectedNode = selectedNode;
-		queueCommandIfRendered(() -> new UiTree.SetSelectedNodeCommand(getId(), uiRecord));
+		queueCommandIfRendered(() -> new UiTree.SetSelectedNodeCommand(getId(), uiRecordId));
 	}
 
 	public TreeModel<RECORD> getModel() {
@@ -261,20 +252,15 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	private void refresh() {
-		if (isRendered()) {
-			lastQuery = null;
-			List<RECORD> records = model.getRecords(lastQuery);
-			CacheManipulationHandle<List<UiTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
-			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
-		}
+		modelAllNodesChangedListener.run();
 	}
 
-	public boolean isAnimate() {
-		return animate;
+	public boolean isAnimated() {
+		return animated;
 	}
 
-	public void setAnimate(boolean animate) {
-		this.animate = animate;
+	public void setAnimated(boolean animated) {
+		this.animated = animated;
 		reRenderIfRendered();
 	}
 
@@ -302,15 +288,6 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	public void setEnforceSingleExpandedPath(boolean enforceSingleExpandedPath) {
 		this.enforceSingleExpandedPath = enforceSingleExpandedPath;
-		reRenderIfRendered();
-	}
-
-	public TextMatchingMode getTextMatchingMode() {
-		return textMatchingMode;
-	}
-
-	public void setTextMatchingMode(TextMatchingMode textMatchingMode) {
-		this.textMatchingMode = textMatchingMode;
 		reRenderIfRendered();
 	}
 
@@ -365,4 +342,12 @@ public class Tree<RECORD> extends AbstractComponent {
 	public void setTreeNodeInfoExtractor(TreeNodeInfoExtractor<RECORD> treeNodeInfoExtractor) {
 		this.treeNodeInfoExtractor = treeNodeInfoExtractor;
 	}
+
+	private RECORD getRecordByUiId(int uiRecordId) {
+		// no fast implementation needed! only called on user click
+		return uiRecordsByRecord.keySet().stream()
+				.filter(rr -> uiRecordsByRecord.get(rr).getId() == uiRecordId)
+				.findFirst().orElse(null);
+	}
+
 }

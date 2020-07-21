@@ -36,6 +36,7 @@ import org.teamapps.ux.component.grid.layout.GridRow;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
+import org.teamapps.ux.i18n.TeamAppsDictionary;
 
 
 public class Dialogue extends Window {
@@ -100,16 +101,14 @@ public class Dialogue extends Window {
 		comboBox.setTemplate(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES);
 		comboBox.setEditingMode(FieldEditingMode.READONLY);
 		formLayout.addField(0, 0, "data", comboBox).setHorizontalAlignment(HorizontalElementAlignment.CENTER).setColSpan(3);
-		okButton = Button.create(MaterialIcon.CHECK, getSessionContext().getLocalized("dict.ok"));
+		okButton = Button.create(MaterialIcon.CHECK, getSessionContext().getLocalized(TeamAppsDictionary.OK.getKey()));
 		okButton.onClicked.addListener(() -> {
 			close(250);
-			getSessionContext().flushCommands();
 			onResult.fire(true);
 		});
-		cancelButton = Button.create(MaterialIcon.CANCEL, getSessionContext().getLocalized("dict.cancel"));
+		cancelButton = Button.create(MaterialIcon.CANCEL, getSessionContext().getLocalized(TeamAppsDictionary.CANCEL.getKey()));
 		cancelButton.onClicked.addListener(() -> {
 			close(250);
-			getSessionContext().flushCommands();
 			onResult.fire(false);
 		});
 		formLayout.addComponent(1, 1, okButton);

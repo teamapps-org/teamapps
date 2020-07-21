@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-class EagerNodesFilter implements Predicate<TreeNode> {
+public class EagerNodesFilter implements Predicate<TreeNode> {
 
 	private final TreeNode evaluationRootNode;
 	private final Map<TreeNode, Boolean> includedInResultByNode = new HashMap<>();

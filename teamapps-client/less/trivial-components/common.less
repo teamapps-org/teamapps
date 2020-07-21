@@ -1,0 +1,235 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2020 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+/*
+ *
+ *  Copyright 2016 Yann Massard (https://github.com/yamass) and other contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+.tr-original-input {
+  tab-index: -1;
+  display: none !important;
+}
+
+.tr-default-spinner, .tr-default-no-data-display {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #999999;
+  background-color: rgba(255, 255, 255, 0.7);
+
+  .spinner {
+    animation: tr-spin 1s infinite linear;
+    width: 10px;
+    height: 10px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAN0lEQVQYV2NkQAXGDAwMPlChLQwMDGdh0oxoCuvR+I0UKyTaapBNMOvh1oIE0d1ItEKiraajrwH17w4LpvE5NgAAAABJRU5ErkJggg==);
+    margin-right: 5px;
+
+    @keyframes tr-spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+      }
+    }
+  }
+
+}
+
+.tr-component-focus() {
+  @color-rgba: rgba(red(@tr-input-border-focus), green(@tr-input-border-focus), blue(@tr-input-border-focus), .6);
+  &.focus, &:focus {
+    border-color: @tr-input-border-focus;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px ~"@{color-rgba}";
+  }
+}
+
+.tr-highlighted-text {
+  background-color: rgba(244, 195, 125, 0.7);
+  border-radius: 3px;
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.75);
+}
+
+.tr-highlighted-entry {
+  background-color: @tr-highlight-color;
+}
+
+.tr-selected-entry {
+  background-color: @tr-select-color;
+}
+
+.tr-dropdown {
+  display: none;
+  position: absolute;
+  background-color: white;
+  max-height: 260px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: @tr-border;
+  border-top: none;
+  border-radius: 0 0 @tr-border-radius @tr-border-radius;
+  z-index: 1;
+
+  &.flipped {
+    border-radius: @tr-border-radius @tr-border-radius 0 0;
+    border-top: @tr-border;
+    border-bottom: none;
+  }
+
+  > * {
+    // needs to be set on the content (e.g. listbox) so the dropdown component has the min size! Otherwise, the listbox will shrink down to zero, even if an empty template is to be displayed.
+    min-height: 20px;
+  }
+}
+
+.tr-input-wrapper {
+  display: flex;
+  background-color: white;
+  border: @tr-border;
+  border-radius: @tr-border-radius;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  .tr-component-focus;
+  &.open {
+    border-radius: @tr-border-radius @tr-border-radius 0 0;
+  }
+  &.open.dropdown-flipped {
+    border-radius: 0 0 @tr-border-radius @tr-border-radius;
+  }
+  &, * {
+    box-sizing: border-box;
+  }
+
+  .tr-remove-button {
+    align-self: center;
+    margin: 3px;
+  }
+
+  .tr-trigger {
+    order: 9999999;
+    flex: 0 0 20px;
+    width: 20px;
+    border-left: @tr-border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: @tr-button-bg;
+
+    .tr-trigger-icon {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      vertical-align: middle;
+      border-top: @tr-caret-width solid black;
+      border-right: @tr-caret-width solid transparent;
+      border-left: @tr-caret-width solid transparent;
+    }
+
+    &:hover, .open & {
+      background-color: @tr-button-bg-active;
+    }
+  }
+
+  &.disabled {
+    background-color: @tr-button-bg;
+
+    .tr-remove-button {
+      display: none !important;
+    }
+
+    .tr-trigger:hover {
+      background-color: inherit;
+    }
+
+    .tr-trigger-icon {
+      border-top-color: white;
+    }
+
+    .tr-editor {
+      display: none;
+    }
+  }
+
+  &.readonly {
+    border-color: transparent;
+    box-shadow: none;
+
+    .tr-remove-button {
+      display: none !important;
+    }
+
+    .tr-trigger {
+      display: none;
+    }
+
+    .tr-editor {
+      display: none;
+    }
+  }
+
+  input::-ms-clear { // hide ie's reset button
+    display: none;
+  }
+}
+
+.tr-remove-button {
+  flex: 0 0 15px;
+  width: 15px;
+  height: 15px;
+  text-align: center;
+  background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAUklEQVQYV2NkgAAfBgaGLVA2MgUWZ4Qq2AyVAfFh4D+U4QsThAmAxE0YGBjOIClmxKYT2TqwPLIiYzQTQCaeRVeEbCXMNBSTCLoJ5E2ifIc3nADKqBCiWqOKtgAAAABJRU5ErkJggg==);
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: .5;
+
+  .tr-input-wrapper.disabled &,
+  .tr-input-wrapper.readonly & {
+    display: none;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}

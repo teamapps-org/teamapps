@@ -62,6 +62,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	private nodes: (UiNetworkNodeConfig & any)[];
 	private links: (UiNetworkLinkConfig & any)[];
 
+	private lastDraggedNode: any;
 
 	constructor(config: UiNetworkGraphConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -317,6 +318,11 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				// }
 				d3.select(nodes[i]).raise();
 
+				if (this.lastDraggedNode) {
+					this.lastDraggedNode.fx = null;
+					this.lastDraggedNode.fy = null;
+				}
+
 				d.fx = d.x;
 				d.fy = d.y;
 
@@ -332,8 +338,9 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				// if (!d3.event.active) {
 				// 	this.simulation.alphaTarget(0);
 				// }
-				d.fx = null;
-				d.fy = null;
+				// d.fx = null;
+				// d.fy = null;
+				this.lastDraggedNode = d;
 				this.container.attr("cursor", "grab")
 			})
 		);
@@ -404,6 +411,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 				} else {
 					d.expandState = UiNetworkNode_ExpandState.EXPANDED;
 				}
+
 				this.onNodeExpandedOrCollapsed.fire({nodeId: d.id, expanded: d.expandState == UiNetworkNode_ExpandState.EXPANDED});
 				this.updateNodes();
 			});

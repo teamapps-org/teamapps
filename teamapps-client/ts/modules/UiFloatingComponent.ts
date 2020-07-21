@@ -43,11 +43,10 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 	constructor(config: UiFloatingComponentConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.containerComponent = config.containerComponent as UiComponent;
-		this.contentComponent = config.contentComponent as UiComponent;
 
 		this.$main = parseHtml(`<div class="UiFloatingComponent"></div>`);
 
-		this.$main.appendChild(this.contentComponent.getMainElement());
+		this.setContentComponent(config.contentComponent);
 		this.$expanderHandle = parseHtml(`<div class="expander-handle"></div>`);
 		this.$expanderHandle.addEventListener("click", evt => {
 			this.setExpanded(!this._config.expanded);
@@ -144,8 +143,17 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 		}
 	}
 
+
 	doGetMainElement(): HTMLElement {
 		return this.$main;
+	}
+
+	public setContentComponent(contentComponent: unknown) {
+		this.$main.innerHTML = '';
+		this.contentComponent = contentComponent as UiComponent;
+		if (contentComponent != null) {
+			this.$main.appendChild(this.contentComponent.getMainElement());
+		}
 	}
 
 	setExpanded(expanded: boolean): void {

@@ -23,10 +23,14 @@ import org.teamapps.event.Event;
 
 import java.util.List;
 
-public interface TreeModel<RECORD> extends BaseTreeModel<RECORD> {
+public interface TreeModel<RECORD> {
 
 	Event<Void> onAllNodesChanged();
 
 	Event<TreeModelChangedEventData<RECORD>> onChanged();
+
+	List<RECORD> getRecords();
+
+	List<RECORD> getChildRecords(RECORD parentRecord);
 
 }

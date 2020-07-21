@@ -21,13 +21,13 @@ import {ScaleContinuousNumeric, ScaleTime} from "d3-scale";
 import {fakeZeroIfLogScale, SVGGSelection} from "./Charting";
 import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMode";
 import * as d3 from "d3";
+import {Axis, NamespaceLocalObject} from "d3";
 import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {createUiColorCssString} from "../util/CssFormatUtil";
-import {NamespaceLocalObject} from "d3";
-import {Axis} from "d3";
 import {UiScaleType} from "../../generated/UiScaleType";
 import {yTickFormat} from "./UiTimeGraph";
+import {debouncedMethod, DebounceMode} from "../util/debounce";
 
 export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineChartDataDisplayConfig = AbstractUiLineChartDataDisplayConfig> {
 
@@ -58,19 +58,15 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 	}
 
 	public redraw() {
-		let {minY, maxY} = this.getYAxisRange();
+		let yRange = this.getYAxisRangeOrNull();
 
-		if (minY !== this.scaleY.domain()[0] || maxY !== this.scaleY.domain()[1]) {
-			if (Math.abs(this.scaleY.domain()[0]) > 1e15 || Math.abs(this.scaleY.domain()[1]) > 1e15) { // see https://github.com/d3/d3-interpolate/pull/63
-				this.scaleY.domain([0, 1])
-			}
-
+		if (yRange != null && (yRange.minY !== this.scaleY.domain()[0] || yRange.maxY !== this.scaleY.domain()[1])) {
 			d3.transition(`${this.timeGraphId}-${this.config.id}-zoomYToDisplayedDomain`)
 				.ease(d3.easeLinear)
 				.duration(300)
 				.tween(`${this.timeGraphId}-${this.config.id}-zoomYToDisplayedDomain`, () => {
 					// create interpolator and do not show nasty floating numbers
-					let intervalInterpolator = d3.interpolateArray(this.scaleY.domain().map(date => +date), [minY, maxY]);
+					let intervalInterpolator = d3.interpolateArray(this.scaleY.domain(), [yRange.minY, yRange.maxY]);
 					return (t: number) => {
 						this.scaleY.domain(intervalInterpolator(t));
 						this.redrawYAxis();
@@ -83,21 +79,23 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 		}
 	}
 
-	private getYAxisRange() {
+	private getYAxisRangeOrNull() {
 		let minY: number, maxY: number;
 		if (this.config.yScaleZoomMode === UiLineChartYScaleZoomMode.DYNAMIC) {
-			let displayedDataYBounds = this.getDisplayedDataYBounds();
+			let displayedDataYBounds = this.getDisplayedDataYBoundsOrNull();
+			if (displayedDataYBounds == null) {
+				return null;
+			}
 			let delta = displayedDataYBounds[1] - displayedDataYBounds[0];
 			minY = displayedDataYBounds[0] - delta * .05;
 			maxY = displayedDataYBounds[1] + delta * .05;
 		} else if (this.config.yScaleZoomMode === UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO) {
-			[minY, maxY] = this.getDisplayedDataYBounds();
-			if (minY > 0) {
-				minY = 0;
+			let displayedDataYBounds = this.getDisplayedDataYBoundsOrNull();
+			if (displayedDataYBounds == null) {
+				return null;
 			}
-			if (maxY < 0) {
-				maxY = 0;
-			}
+			minY = displayedDataYBounds[0] > 0 ? 0 : displayedDataYBounds[0];
+			maxY = displayedDataYBounds[1] < 0 ? 0 : displayedDataYBounds[1];
 		} else {
 			minY = this.config.intervalY.min;
 			maxY = this.config.intervalY.max;
@@ -116,9 +114,6 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 		if (oldScaleY != null) {
 			this.scaleY.range(oldScaleY.range());
 		}
-
-		let domainMin = fakeZeroIfLogScale(this.config.intervalY.min, this.config.yScaleType);
-		this.scaleY.domain([domainMin, this.config.intervalY.max]); // acutally not necessary here TODO remove! this is irritating!
 
 		this.yAxis.scale(this.scaleY);
 	}
@@ -200,7 +195,7 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 
 	public abstract destroy(): void;
 
-	public getDisplayedDataYBounds(): [number, number] {
+	private getDisplayedDataYBoundsOrNull(): [number, number] {
 		let bounds = this.getDataSeriesIds().map(dataSeriesId => {
 			let displayedData = this.getDisplayedData()[dataSeriesId];
 			let minY = Number.POSITIVE_INFINITY;
@@ -224,8 +219,7 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 			return globalMinMax;
 		}, [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) as [number, number];
 		if (bounds[0] === Number.POSITIVE_INFINITY && bounds[1] === Number.NEGATIVE_INFINITY) {
-			bounds[0] = 0;
-			bounds[1] = 1;
+			bounds = null;
 		}
 		return bounds;
 	}

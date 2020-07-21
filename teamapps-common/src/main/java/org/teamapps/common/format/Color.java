@@ -365,7 +365,7 @@ public class Color {
 		int r = Integer.valueOf(hex.substring(0, 2), 16);
 		int g = Integer.valueOf(hex.substring(2, 4), 16);
 		int b = Integer.valueOf(hex.substring(4, 6), 16);
-		int a = hex.length() == 8 ? Integer.valueOf(hex.substring(6, 8), 16) : 1;
+		int a = hex.length() == 8 ? Integer.valueOf(hex.substring(6, 8), 16) : 255;
 
 		return new Color(r, g, b, ((float) a) / 255);
 	}

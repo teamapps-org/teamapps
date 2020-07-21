@@ -26,7 +26,7 @@ import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiTagComboBox;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
-import org.teamapps.ux.model.BaseTreeModel;
+import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 
 	private List<String> freeTextEntries = new ArrayList<>();
 
-	public TagComboBox(BaseTreeModel<RECORD> model) {
+	public TagComboBox(ComboBoxModel<RECORD> model) {
 		super(model);
 		init();
 	}

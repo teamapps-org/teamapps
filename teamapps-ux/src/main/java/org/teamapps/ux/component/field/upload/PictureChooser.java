@@ -36,6 +36,7 @@ import org.teamapps.ux.component.imagecropper.ImageCropperSelectionMode;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.css.CssJustifyContent;
+import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.resource.FileResource;
 import org.teamapps.ux.resource.Resource;
 
@@ -74,11 +75,11 @@ public class PictureChooser extends AbstractField<Resource> {
 		imageCropper.setAspectRatio(targetImageWidth / (float) targetImageHeight);
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.addComponentFillRemaining(imageCropper);
-		Button<BaseTemplateRecord> cancelButton = Button.create(getSessionContext().getLocalized("dict.cancel"));
+		Button<BaseTemplateRecord> cancelButton = Button.create(getSessionContext().getLocalized(TeamAppsDictionary.CANCEL.getKey()));
 		cancelButton.setCssStyle("margin-right", "5px");
-		Button<BaseTemplateRecord> rotateButton = Button.create(getSessionContext().getLocalized("ux.pictureChooser.rotate"));
+		Button<BaseTemplateRecord> rotateButton = Button.create(getSessionContext().getLocalized(TeamAppsDictionary.ROTATE.getKey()));
 		rotateButton.setCssStyle("margin-right", "5px");
-		Button<BaseTemplateRecord> okButton = Button.create(getSessionContext().getLocalized("dict.ok"));
+		Button<BaseTemplateRecord> okButton = Button.create(getSessionContext().getLocalized(TeamAppsDictionary.OK.getKey()));
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.addComponentAutoSize(cancelButton);
 		horizontalLayout.addComponentAutoSize(rotateButton);
@@ -86,7 +87,7 @@ public class PictureChooser extends AbstractField<Resource> {
 		horizontalLayout.setJustifyContent(CssJustifyContent.FLEX_END);
 		horizontalLayout.setCssStyle("padding", "5px");
 		verticalLayout.addComponentAutoSize(horizontalLayout);
-		imageCropperWindow = new Window(MaterialIcon.IMAGE, getSessionContext().getLocalized("ux.pictureChooser.cropImageWindowTitle"), 700, 500, verticalLayout);
+		imageCropperWindow = new Window(MaterialIcon.IMAGE, getSessionContext().getLocalized(TeamAppsDictionary.CROP_IMAGE.getKey()), 700, 500, verticalLayout);
 		imageCropperWindow.setCloseable(true);
 		imageCropperWindow.setMaximizable(true);
 		imageCropperWindow.setModal(true);
@@ -118,8 +119,8 @@ public class PictureChooser extends AbstractField<Resource> {
 			imageCropperWindow.close();
 		});
 
-		fileTooLargeMessage = getSessionContext().getLocalized("ux.fileField.fileTooLarge_short");
-		uploadErrorMessage = getSessionContext().getLocalized("ux.fileField.uploadError_short");
+		fileTooLargeMessage = getSessionContext().getLocalized(TeamAppsDictionary.FILE_TOO_LARGE_SHORT_MESSAGE.getKey());
+		uploadErrorMessage = getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD_ERROR_SHORT_MESSAGE.getKey());
 	}
 
 	private InputStream createInputStream(File file) {

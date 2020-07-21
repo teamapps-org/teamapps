@@ -38,7 +38,7 @@ import org.teamapps.ux.component.node.TreeNode;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.component.tree.TreeNodeInfoExtractor;
-import org.teamapps.ux.model.BaseTreeModel;
+import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +59,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 
 	protected final ClientRecordCache<RECORD, UiComboBoxTreeRecord> recordCache;
 
-	private BaseTreeModel<RECORD> model;
+	private ComboBoxModel<RECORD> model;
 	private List<RECORD> staticData = new ArrayList<>(); //if available, use this as data source
 	private TextMatchingMode textMatchingMode = TextMatchingMode.CONTAINS; // only filter on client-side if staticData != null. SIMILARITY_MATCH allows levenshtein distance of 3
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
@@ -93,7 +93,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		}
 	};
 
-	private AbstractComboBox(List<RECORD> staticData, BaseTreeModel<RECORD> model) {
+	private AbstractComboBox(List<RECORD> staticData, ComboBoxModel<RECORD> model) {
 		super();
 		this.model = model;
 		if (staticData != null) {
@@ -102,7 +102,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		this.recordCache = new ClientRecordCache<>(this::createUiTreeRecordWithoutParentRelation, this::addParentLinkToUiRecord);
 	}
 
-	protected AbstractComboBox(BaseTreeModel<RECORD> model) {
+	protected AbstractComboBox(ComboBoxModel<RECORD> model) {
 		this(null, model);
 	}
 
@@ -275,11 +275,11 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		reRenderIfRendered();
 	}
 
-	public BaseTreeModel getModel() {
+	public ComboBoxModel getModel() {
 		return model;
 	}
 
-	public void setModel(BaseTreeModel<RECORD> model) {
+	public void setModel(ComboBoxModel<RECORD> model) {
 		this.model = model;
 		this.staticData = null;
 		reRenderIfRendered();

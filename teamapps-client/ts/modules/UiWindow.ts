@@ -24,7 +24,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "../generated/UiWindowConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "./trivial-components/TrivialCore";
 import {UiColorConfig} from "../generated/UiColorConfig";
 import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
@@ -32,8 +32,10 @@ import {UiToolButton} from "./micro-components/UiToolButton";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiPanel_WindowButtonClickedEvent} from "../generated/UiPanelConfig";
 import {UiWindowButtonType} from "../generated/UiWindowButtonType";
-import {animateCSS, css, parseHtml} from "./Common";
+import {animateCSS, Constants, css, parseHtml} from "./Common";
 import {UiComponent} from "./UiComponent";
+import {UiExitAnimation} from "../generated/UiExitAnimation";
+import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 
 export interface UiWindowListener {
 	onWindowClosed: (window: UiWindow, animationDuration: number) => void;
@@ -89,7 +91,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 
 		this.$main.classList.remove("hidden");
 		this.$main.classList.add("open");
-		animateCSS(this.$panelWrapper, "zoomIn", animationDuration);
+		animateCSS(this.$panelWrapper, Constants.ENTRANCE_ANIMATION_CSS_CLASSES[UiEntranceAnimation.ZOOM_IN], animationDuration);
 
 		this.escapeKeyListener = (e) => {
 			if (this.closeOnEscape && e.keyCode === keyCodes.escape) {
@@ -121,7 +123,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 
 	public close(animationDuration: number) {
 		this.$main.classList.remove("open");
-		animateCSS(this.$panelWrapper, "zoomOut", animationDuration, () => {
+		animateCSS(this.$panelWrapper, Constants.EXIT_ANIMATION_CSS_CLASSES[UiExitAnimation.ZOOM_OUT], animationDuration, () => {
 			this.$main.classList.add("hidden");
 			this.getMainElement().remove();
 		});

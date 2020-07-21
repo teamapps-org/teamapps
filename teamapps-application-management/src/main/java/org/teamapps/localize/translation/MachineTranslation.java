@@ -70,11 +70,29 @@ public class MachineTranslation implements TranslationService {
     public String translate(String text, String sourceLanguage, String targetLanguage) {
         for (TranslationService service : services) {
             if (service.canTranslate(sourceLanguage, targetLanguage)) {
-                return service.translate(text, sourceLanguage, targetLanguage);
+                String result = service.translate(transformParameters(text), sourceLanguage, targetLanguage);
+                return restoreParameters(result);
             }
         }
         return null;
     }
+
+    private static String transformParameters(String s) {
+        if (s == null) return s;
+        for (int i = 0; i < 10; i++) {
+            s = s.replace("{" + i + "}", "<attr-" + i + "/>");
+        }
+        return s;
+    }
+
+    private static String restoreParameters(String s) {
+        if (s == null) return s;
+        for (int i = 0; i < 10; i++) {
+            s = s.replace("<attr-" + i + "/>", "{" + i + "}");
+        }
+        return s;
+    }
+
 
     @Override
     public long getTranslatedCharacters() {

@@ -24,12 +24,17 @@ import {DataPoint} from "./Charting";
 export class TimeGraphDataStore {
 
 	private stores: { [dataSeriesId: string]: DataSeriesStore } = {};
+	private dataObsolete = false;
 
 	public reset(): void {
-		this.stores = {};
+		this.dataObsolete = true; // do not reset store's data directly but wait until the new data has been set!
 	}
 
 	public addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [dataSeriesId: string]: UiTimeGraphDataPointConfig[] }) {
+		if (this.dataObsolete) {
+			this.stores = {};
+			this.dataObsolete = false;
+		}
 		Object.keys(data).forEach(dataSeriesId => {
 			let store = this.getOrCreateStore(dataSeriesId);
 			store.addData(zoomLevel, intervalX, data[dataSeriesId]);
