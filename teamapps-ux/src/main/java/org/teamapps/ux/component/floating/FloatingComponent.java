@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ public class FloatingComponent extends AbstractComponent {
 	public final Event<Boolean> onExpandedOrCollapsed = new Event<>();
 
 	private final Component containerComponent;
-	private final Component contentComponent;
+	private Component contentComponent;
 	private int width = -1;
 	private int height = -1;
 	private int marginX;
@@ -147,6 +147,15 @@ public class FloatingComponent extends AbstractComponent {
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
 		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpandedCommand(getId(), expanded));
+	}
+
+	public Component getContentComponent() {
+		return contentComponent;
+	}
+
+	public void setContentComponent(Component contentComponent) {
+		this.contentComponent = contentComponent;
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetContentComponentCommand(getId(), contentComponent != null ? contentComponent.createUiReference() : null));
 	}
 
 	@Override

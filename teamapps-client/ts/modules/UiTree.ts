@@ -20,7 +20,8 @@
 
 import {UiTree_NodeSelectedEvent, UiTree_RequestTreeDataEvent, UiTree_TextInputEvent, UiTreeCommandHandler, UiTreeConfig, UiTreeEventSource} from "../generated/UiTreeConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {ResultCallback, TrivialTree} from "trivial-components";
+import {ResultCallback} from "./trivial-components/TrivialCore";
+import {TrivialTree} from "./trivial-components/TrivialTree";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {buildObjectTree, matchingModesMapping, NodeWithChildren, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -39,7 +40,6 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 
 	private $panel: HTMLElement;
 	private trivialTree: TrivialTree<UiTreeRecordConfig>;
-	private lastResultCallback: (result: NodeWithChildren<UiTreeRecordConfig>[]) => void;
 	private nodes: UiTreeRecordConfig[];
 	private templateRenderers: { [name: string]: Renderer };
 
@@ -47,55 +47,38 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 	constructor(config: UiTreeConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$panel = parseHtml('<div class="UiTree" data-teamapps-id="${config.id}">');
-		const $input = parseHtml('<input autocomplete="off"></input>');
-		this.$panel.appendChild($input);
 
 		this.templateRenderers = context.templateRegistry.createTemplateRenderers(config.templates);
 
 		this.nodes = config.initialData;
 
-		let localQueryFunction: Function;
-		let queryFunction = (queryString: string, resultCallback: ResultCallback<NodeWithChildren<UiTreeRecordConfig>>) => {
-			this.lastResultCallback = resultCallback;
-			this.onTextInput.fire({
-				text: queryString
-			});
-			if (localQueryFunction != null) {
-				localQueryFunction(queryString, resultCallback);
-			}
-		};
-
-		this.trivialTree = new TrivialTree<UiTreeRecordConfig>($input, {
+		this.trivialTree = new TrivialTree<UiTreeRecordConfig>({
 			entries: buildObjectTree(config.initialData, "id", "parentId"),
 			selectedEntryId: config.selectedNodeId,
 			childrenProperty: "__children",
 			expandedProperty: "expanded",
 			entryRenderingFunction: entry => this.renderRecord(entry),
-			searchBarMode: 'show-if-filled',
 			lazyChildrenFlag: 'lazyChildren',
 			lazyChildrenQueryFunction: (node, resultCallback) => {
 				this.onRequestTreeData.fire({
 					parentNodeId: node && node.id
 				})
 			},
-			spinnerTemplate: `<div class="teamapps-spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
-			queryFunction: queryFunction,
+			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			showExpanders: config.showExpanders,
 			expandOnSelection: config.openOnSelection,
 			enforceSingleExpandedPath: config.enforceSingleExpandedPath,
-			inputValueFunction: entry => entry && entry.id,
 			idFunction: entry => entry && entry.id,
 			indentation: config.indentation,
 			animationDuration: config.animate ? 70 : 0,
-			matchingOptions: {
-				matchingMode: matchingModesMapping[config.textMatchingMode]
-			}
+			directSelectionViaArrowKeys: true
 		});
 		this.trivialTree.onSelectedEntryChanged.addListener((entry) => {
 			this.onNodeSelected.fire({
 				nodeId: entry.id
 			});
 		});
+		this.$panel.appendChild(this.trivialTree.getMainDomElement());
 
 		if (config.selectedNodeId != null) {
 			this.trivialTree.getTreeBox().revealSelectedEntry(false);
@@ -125,7 +108,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		this.nodes = this.nodes.filter(node => nodesToBeRemoved.indexOf(node.id) === -1);
 		this.nodes.push(...nodesToBeAdded);
 		nodesToBeRemoved.forEach(nodeId => this.trivialTree.removeNode(nodeId));
-		nodesToBeAdded.forEach(node => this.trivialTree.addOrUpdateNode(node.parentId, node));
+		nodesToBeAdded.forEach(node => this.trivialTree.addOrUpdateNode(node.parentId, node, false));
 	}
 
 	public setSelectedNode(recordId: number | null): void {

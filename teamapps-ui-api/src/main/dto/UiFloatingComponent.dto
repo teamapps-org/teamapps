@@ -33,6 +33,7 @@ class UiFloatingComponent extends UiComponent {
     boolean collapsible = true;
     boolean expanded = true;
 
+	command setContentComponent(UiComponent* contentComponent);
 	command setExpanded(boolean expanded);
 	command setPosition(UiFloatingComponentPosition position);
 	command setDimensions(int width, int height);

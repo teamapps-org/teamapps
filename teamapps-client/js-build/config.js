@@ -4,12 +4,16 @@
 
 const path = require('path')
 
+
+let appServerUrlEnv = process.env.appServerUrl;
+let appServerUrl = appServerUrlEnv == null ? "http://localhost:8080" : /^\d+$/.test(appServerUrlEnv) ? "http://localhost:" + appServerUrlEnv : appServerUrlEnv;
+console.log("appServerUrl: " + appServerUrl)
 module.exports = {
 	dev: {
 		// Paths
 		assetsSubDirectory: '.',
 		assetsPublicPath: '/',
-		appServerUrl: process.env.appServerUrl || "http://localhost:9000",
+		appServerUrl: appServerUrl,
 
 		// Dev Server settings
 		host: 'localhost', // can be overwritten by process.env.HOST

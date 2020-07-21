@@ -41,7 +41,7 @@ import {
 	UiTableEventSource
 } from "../../generated/UiTableConfig";
 import {UiField, ValueChangeEventData} from "../formfield/UiField";
-import {DEFAULT_TEMPLATES} from "trivial-components";
+import {DEFAULT_TEMPLATES} from "../trivial-components/TrivialCore";
 import {UiTableColumnConfig} from "../../generated/UiTableColumnConfig";
 import {UiCompositeFieldTableCellEditor} from "./UiCompositeFieldTableCellEditor";
 import {debouncedMethod} from "../util/debounce";

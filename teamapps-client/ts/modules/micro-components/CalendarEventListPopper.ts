@@ -18,9 +18,10 @@
  * =========================LICENSE_END==================================
  */
 import Popper, {Data, PopperOptions} from "popper.js";
-import {animateCSS, parseHtml} from "../Common";
+import {animateCSS, Constants, parseHtml} from "../Common";
 import {EventApi} from "@fullcalendar/core";
 import {TemplateRegistry} from "../TemplateRegistry";
+import {UiEntranceAnimation} from "../../generated/UiEntranceAnimation";
 
 export class CalendarEventListPopper {
 
@@ -91,7 +92,7 @@ export class CalendarEventListPopper {
 					this.$popperElement.classList.remove("hidden");
 					this.popper.update();
 					if (wasHidden) {
-						animateCSS(this.$popperElement, "fadeIn", 200)
+						animateCSS(this.$popperElement, Constants.EXIT_ANIMATION_CSS_CLASSES[UiEntranceAnimation.FADE_IN], 200)
 					}
 				}, 200);
 			} else {

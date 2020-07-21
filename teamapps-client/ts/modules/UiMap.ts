@@ -125,7 +125,8 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	private createLeafletMap(): void {
 		this.leaflet = L.map(this.$map, {
 			zoomControl: false,
-			attributionControl: false
+			attributionControl: false,
+			preferCanvas: true
 		});
 
 		let center: LatLngExpression = [51.505, -0.09];
@@ -161,6 +162,8 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		this.drawPolygonFeature = new L.Draw.Polygon(this.leaflet as L.DrawMap, {});
 		this.drawPolylineFeature = new L.Draw.Polyline(this.leaflet as L.DrawMap, {});
 		this.drawRectangleFeature = new L.Draw.Rectangle(this.leaflet as L.DrawMap, {});
+
+		//let layerGroup = L.layerGroup().addTo(this.leaflet);
 
 		this.leaflet.on(L.Draw.Event.CREATED, (e: L.DrawEvents.Created) => {
 			var type = e.layerType,

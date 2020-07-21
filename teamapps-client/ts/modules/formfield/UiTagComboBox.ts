@@ -17,7 +17,9 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {defaultTreeQueryFunctionFactory, ResultCallback, trivialMatch, TrivialTagComboBox, TrivialTreeBox, wrapWithDefaultTagWrapper} from "trivial-components";
+import {defaultTreeQueryFunctionFactory, ResultCallback, trivialMatch, wrapWithDefaultTagWrapper} from "../trivial-components/TrivialCore";
+import {TrivialTagComboBox} from "../trivial-components/TrivialTagComboBox";
+import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 
 import {UiTagComboBox_WrappingMode, UiTagComboBoxCommandHandler, UiTagComboBoxConfig, UiTagComboBoxEventSource} from "../../generated/UiTagComboBoxConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";

@@ -48,8 +48,11 @@ import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.component.window.Window;
-import org.teamapps.ux.i18n.MultiResourceBundle;
-import org.teamapps.ux.i18n.UTF8Control;
+import org.teamapps.ux.i18n.RankingTranslationProvider;
+import org.teamapps.ux.i18n.TeamAppsTranslationProviderFactory;
+import org.teamapps.ux.i18n.TranslationProvider;
+import org.teamapps.ux.icon.IconBundle;
+import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
 
@@ -57,17 +60,17 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.text.MessageFormat;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SessionContext {
@@ -80,7 +83,6 @@ public class SessionContext {
 			new LinkedBlockingQueue<>(),
 			new NamedThreadFactory("teamapps-session-executor", true)
 	));
-	private static final Function<Locale, ResourceBundle> DEFAULT_RESOURCE_BUNDLE_PROVIDER = locale -> ResourceBundle.getBundle("org.teamapps.ux.i18n.DefaultCaptions", locale, new UTF8Control());
 
 	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
 	public final Event<Void> onDestroyed = new Event<>();
@@ -95,19 +97,21 @@ public class SessionContext {
 
 	private final QualifiedUiSessionId sessionId;
 	private final ClientInfo clientInfo;
-	private HttpSession httpSession;
+	private final HttpSession httpSession;
 	private final UiCommandExecutor commandExecutor;
 	private final UxServerContext serverContext;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
 	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
 	private IconTheme iconTheme;
-	private ClientSessionResourceProvider sessionResourceProvider;
+	private final ClientSessionResourceProvider sessionResourceProvider;
 
-	private Function<Locale, ResourceBundle> customMessageBundleProvider = DEFAULT_RESOURCE_BUNDLE_PROVIDER;
-	private ResourceBundle messagesBundle;
+	private final RankingTranslationProvider rankingTranslationProvider;
 
-	private Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
+	private final Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration = SessionConfiguration.createDefault();
+
+	private List<Locale> acceptedLanguages;
+	private final Map<String, Icon> bundleIconByKey = new HashMap<>();
 
 	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, HttpSession httpSession, UiCommandExecutor commandExecutor, UxServerContext serverContext, IconTheme iconTheme,
 	                      ObjectMapper jacksonObjectMapper) {
@@ -119,7 +123,9 @@ public class SessionContext {
 		this.iconTheme = iconTheme;
 		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(jacksonObjectMapper, this);
-		updateMessageBundle();
+		this.rankingTranslationProvider = new RankingTranslationProvider();
+		rankingTranslationProvider.addTranslationProvider(TeamAppsTranslationProviderFactory.createProvider());
+		addIconBundle(TeamAppsIconBundle.createBundle());
 	}
 
 	public static SessionContext current() {
@@ -130,31 +136,32 @@ public class SessionContext {
 		return CurrentSessionContext.getOrNull();
 	}
 
-	public void setCustomMessageBundleProvider(Function<Locale, ResourceBundle> provider) {
-		this.customMessageBundleProvider = provider;
-		updateMessageBundle();
+	public void addTranslationProvider(TranslationProvider translationProvider) {
+		rankingTranslationProvider.addTranslationProvider(translationProvider);
 	}
 
-	private void updateMessageBundle() {
-		if (customMessageBundleProvider != null) {
-			ResourceBundle customResourceBundle = customMessageBundleProvider.apply(sessionConfiguration.getLanguageLocale());
-			ResourceBundle defaultResourceBundle = DEFAULT_RESOURCE_BUNDLE_PROVIDER.apply(sessionConfiguration.getLanguageLocale());
-			this.messagesBundle = new MultiResourceBundle(customResourceBundle, defaultResourceBundle);
-		} else {
-			this.messagesBundle = DEFAULT_RESOURCE_BUNDLE_PROVIDER.apply(sessionConfiguration.getLanguageLocale());
-		}
+	public void addIconBundle(IconBundle iconBundle) {
+		iconBundle.getEntries().forEach(entry -> bundleIconByKey.put(entry.getKey(), entry.getIcon()));
+	}
+
+	public Icon getIcon(String key) {
+		return bundleIconByKey.get(key);
 	}
 
 	public Locale getLocale() {
 		return sessionConfiguration.getLanguageLocale();
 	}
 
-	public ResourceBundle getMessageBundle() {
-		return messagesBundle;
+	public List<Locale> getAcceptedLanguages() {
+		if (acceptedLanguages != null) {
+			return acceptedLanguages;
+		} else {
+			return Arrays.asList(getLocale(), Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN);
+		}
 	}
 
 	public String getLocalized(String key, Object... parameters) {
-		String value = messagesBundle.getString(key);
+		String value = rankingTranslationProvider.getTranslation(key, getAcceptedLanguages());
 		if (parameters != null) {
 			return MessageFormat.format(value, parameters);
 		}
@@ -292,7 +299,6 @@ public class SessionContext {
 				} finally {
 					CurrentSessionContext.unset();
 				}
-				this.flushCommands();
 			});
 		}
 	}
@@ -318,7 +324,6 @@ public class SessionContext {
 
 	public void setConfiguration(SessionConfiguration config) {
 		this.sessionConfiguration = config;
-		updateMessageBundle();
 		queueCommand(new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
 	}
 
@@ -328,10 +333,6 @@ public class SessionContext {
 
 	public void showPopup(Popup popup) {
 		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiReference()));
-	}
-
-	public Locale getLanguageLocale() {
-		return getConfiguration().getLanguageLocale();
 	}
 
 	public ZoneId getTimeZone() {

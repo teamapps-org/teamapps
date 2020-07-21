@@ -17,7 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DEFAULT_RENDERING_FUNCTIONS, defaultListQueryFunctionFactory, keyCodes, QueryFunction, TrivialUnitBox} from "trivial-components";
+import {DEFAULT_RENDERING_FUNCTIONS, defaultListQueryFunctionFactory, keyCodes, QueryFunction} from "../trivial-components/TrivialCore";
+import {TrivialUnitBox} from "../trivial-components/TrivialUnitBox";
 
 import {createUiCurrencyValueConfig, UiCurrencyValueConfig} from "../../generated/UiCurrencyValueConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";

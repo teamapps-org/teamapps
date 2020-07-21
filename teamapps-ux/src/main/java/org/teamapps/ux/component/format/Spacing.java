@@ -30,12 +30,20 @@ public class Spacing {
 	private final Length bottom;
 	private final Length left;
 
+	public static Spacing px(int value) {
+		return new Spacing(new Length(value, SizeUnit.PIXEL), new Length(value, SizeUnit.PIXEL), new Length(value, SizeUnit.PIXEL), new Length(value, SizeUnit.PIXEL));
+	}
+
+	public static Spacing px(int vertical, int horizontal) {
+		return new Spacing(new Length(vertical, SizeUnit.PIXEL), new Length(horizontal, SizeUnit.PIXEL), new Length(vertical, SizeUnit.PIXEL), new Length(horizontal, SizeUnit.PIXEL));
+	}
+
 	public Spacing(int value) {
 		this(new Length(value, SizeUnit.PIXEL), new Length(value, SizeUnit.PIXEL), new Length(value, SizeUnit.PIXEL), new Length(value, SizeUnit.PIXEL));
 	}
 
-	public Spacing(int verticalSpace, int horizontalSpace) {
-		this(new Length(verticalSpace, SizeUnit.PIXEL), new Length(horizontalSpace, SizeUnit.PIXEL), new Length(verticalSpace, SizeUnit.PIXEL), new Length(horizontalSpace, SizeUnit.PIXEL));
+	public Spacing(int vertical, int horizontal) {
+		this(new Length(vertical, SizeUnit.PIXEL), new Length(horizontal, SizeUnit.PIXEL), new Length(vertical, SizeUnit.PIXEL), new Length(horizontal, SizeUnit.PIXEL));
 	}
 
 	public Spacing(int top, int right, int bottom, int left) {

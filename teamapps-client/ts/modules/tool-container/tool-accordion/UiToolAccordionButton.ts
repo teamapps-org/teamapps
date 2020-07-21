@@ -24,8 +24,6 @@ import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
 import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
 import {UiToolAccordion} from "./UiToolAccordion";
-import {createUiDropDownButtonClickInfoConfig, UiDropDownButtonClickInfoConfig} from "../../../generated/UiDropDownButtonClickInfoConfig";
-import {DEFAULT_TEMPLATES} from "trivial-components";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiColorConfig} from "../../../generated/UiColorConfig";
 import {createUiColorCssString} from "../../util/CssFormatUtil";

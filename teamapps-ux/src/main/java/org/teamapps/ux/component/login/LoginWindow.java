@@ -33,6 +33,7 @@ import org.teamapps.ux.component.panel.ElegantPanel;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.window.Window;
+import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
 
@@ -76,11 +77,11 @@ public class LoginWindow {
 		layout.addSection().setDrawHeaderLine(false).setPadding(new Spacing(30, 25)).setCollapsible(false);
 		layout.addLabelField(headerField).setColSpan(2);
 		layout.addLabelField(errorField).setColSpan(2);
-		ResponsiveFormLayout.LabelAndField labelAndField = layout.addLabelAndField(null, sessionContext.getLocalized("ux.loginWindow.login"), loginField, true);
+		ResponsiveFormLayout.LabelAndField labelAndField = layout.addLabelAndField(null, sessionContext.getLocalized(TeamAppsDictionary.USER_NAME.getKey()), loginField, true);
 		labelAndField.label.getColumnDefinition().setWidthPolicy(SizingPolicy.AUTO);
 		labelAndField.field.getColumnDefinition().setWidthPolicy(SizingPolicy.FRACTION);
 		loginLabel = (Label) labelAndField.label.getField();
-		pwdLabel = (Label) layout.addLabelAndField(null, sessionContext.getLocalized("ux.loginWindow.password"), passwordField, true).label.getField();
+		pwdLabel = (Label) layout.addLabelAndField(null, sessionContext.getLocalized(TeamAppsDictionary.PASSWORD.getKey()), passwordField, true).label.getField();
 		layout.addLabelField(loginButton, 1).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setMinWidth(100).getRowDefinition().setTopPadding(10);
 
 		loginButton.onValueChanged.addListener(value -> login());
@@ -149,7 +150,7 @@ public class LoginWindow {
 	}
 
 	public void setError() {
-		errorField.setValue("<span style='font-size:120%;color:#961900'>" + sessionContext.getLocalized("ux.loginWindow.wrongUserNameOrPassword") + "</span>");
+		errorField.setValue("<span style='font-size:120%;color:#961900'>" + sessionContext.getLocalized(TeamAppsDictionary.WRONG_USER_NAME_OR_PASSWORD.getKey()) + "</span>");
 	}
 
 	public void removeErrorMessage() {

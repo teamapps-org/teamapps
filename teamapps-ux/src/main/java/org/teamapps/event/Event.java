@@ -54,7 +54,7 @@ public class Event<EVENT_DATA> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Event.class);
 	private final String source; // for debugging
 
-	private List<Consumer<EVENT_DATA>> listeners = new CopyOnWriteArrayList<>();
+	private final List<Consumer<EVENT_DATA>> listeners = new CopyOnWriteArrayList<>();
 	private EVENT_DATA lastEventData;
 
 	public Event() {
@@ -118,7 +118,7 @@ public class Event<EVENT_DATA> {
 	public void fire(EVENT_DATA eventData) {
 		this.lastEventData = eventData;
 		for (Consumer<EVENT_DATA> listener : listeners) {
-			listener.accept(eventData);
+			invokeListener(eventData, listener);
 		}
 	}
 
@@ -126,11 +126,18 @@ public class Event<EVENT_DATA> {
 		this.lastEventData = eventData;
 		for (Consumer<EVENT_DATA> listener : listeners) {
 			try {
-				listener.accept(eventData);
+				invokeListener(eventData, listener);
 			} catch (Exception e) {
 				LOGGER.error("Error while calling event handler. Ignoring exception.", e);
 			}
 		}
+	}
+
+	/**
+	 * May get overridden.
+	 */
+	protected void invokeListener(EVENT_DATA eventData, Consumer<EVENT_DATA> listener) {
+		listener.accept(eventData);
 	}
 
 	public void fire() {
@@ -195,7 +202,7 @@ public class Event<EVENT_DATA> {
 
 	private static class RunnableWrapper<T> implements Consumer<T> {
 
-		private Runnable runnable;
+		private final Runnable runnable;
 
 		public RunnableWrapper(Runnable runnable) {
 			this.runnable = runnable;

@@ -20,7 +20,8 @@
 
 import {UiItemViewItemGroupConfig} from "../generated/UiItemViewItemGroupConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {DEFAULT_TEMPLATES, trivialMatch, TrivialTreeBox} from "trivial-components";
+import {DEFAULT_TEMPLATES, trivialMatch} from "./trivial-components/TrivialCore";
+import {TrivialTreeBox} from "./trivial-components/TrivialTreeBox";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {generateUUID, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";

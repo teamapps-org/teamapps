@@ -26,7 +26,7 @@ import {createUiColorConfig, UiColorConfig} from "../../generated/UiColorConfig"
 import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";
 import {createUiColorCssString} from "../util/CssFormatUtil";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "../trivial-components/TrivialCore";
 import {parseHtml} from "../Common";
 
 export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> implements UiColorPickerEventSource {

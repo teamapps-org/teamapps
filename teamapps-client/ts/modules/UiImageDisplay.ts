@@ -21,7 +21,7 @@
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "./trivial-components/TrivialCore";
 import {UiCachedImageConfig} from "../generated/UiCachedImageConfig";
 import {applyDisplayMode, enableScrollViaDragAndDrop, parseHtml} from "./Common";
 import {UiImageDisplay_ImageDisplayedEvent, UiImageDisplay_ImagesRequestEvent, UiImageDisplayCommandHandler, UiImageDisplayConfig, UiImageDisplayEventSource} from "../generated/UiImageDisplayConfig";
@@ -43,9 +43,9 @@ export class UiImageDisplay extends AbstractUiComponent<UiImageDisplayConfig> im
 
 	private forwardImageSvg = `<svg width="64" height="64" viewBox="0 0 10240 10240" version="1.1">
     <path d="M5892 2747l2147 2147c124,124 124,328 0,452l-2147 2147c-124,124 -276,187 -452,187l-1159 0c-66,0 -122,-38 -148,-99 -25,-61 -12,-127 35,-174l1647 -1647 -3255 0c-176,0 -320,-144 -320,-320l0 -640c0,-176 144,-320 320,-320l3255 0 -1647 -1647c-47,-47 -60,-113 -35,-174 26,-61 82,-99 148,-99l1159 0c176,0 328,63 452,187z"
-          style="fill:#ffffff"/>
+          style="fill:#ffffff"></path>
     <path d="M5120 9600c-2474,0 -4480,-2006 -4480,-4480 0,-2474 2006,-4480 4480,-4480 2474,0 4480,2006 4480,4480 0,2474 -2006,4480 -4480,4480zm-3840 -4480c0,2121 1719,3840 3840,3840 2121,0 3840,-1719 3840,-3840 0,-2121 -1719,-3840 -3840,-3840 -2121,0 -3840,1719 -3840,3840z"
-          style="fill:#ffffff"/>`;
+          style="fill:#ffffff"></path></svg>`;
 
 	private $componentWrapper: HTMLElement;
 	private $imageContainerWrapper: HTMLElement;

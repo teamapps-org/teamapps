@@ -43,6 +43,7 @@ public class ForceLayoutNode<RECORD> {
 	private GraphNodeIcon icon;
 
 	private Template template;
+	private int level;
 
 	private ExpandedState expandedState = ExpandedState.NOT_EXPANDABLE;
 
@@ -155,5 +156,13 @@ public class ForceLayoutNode<RECORD> {
 
 	public void setDistanceFactor(float distanceFactor) {
 		this.distanceFactor = distanceFactor;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

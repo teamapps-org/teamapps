@@ -36,7 +36,7 @@ public class CompositeTimeGraphModel implements TimeGraphModel {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompositeTimeGraphModel.class);
 
-	private Event<Void> onDataChanged = new Event<>();
+	private final Event<Void> onDataChanged = new Event<>();
 
 	private final List<TimeGraphModel> delegates;
 
@@ -67,7 +67,11 @@ public class CompositeTimeGraphModel implements TimeGraphModel {
 				         Map<String, LineChartDataPoints> map2) -> {
 					HashMap<String, LineChartDataPoints> m = new HashMap<>();
 					m.putAll(map1);
-					m.putAll(map2);
+					for (String lineName : map2.keySet()) {
+						if (!m.containsKey(lineName) || m.get(lineName).size() <= 0) {
+							m.put(lineName, map2.get(lineName));
+						}
+					}
 					return m;
 				}).orElseGet(HashMap::new);
 		int count = points.values().stream()

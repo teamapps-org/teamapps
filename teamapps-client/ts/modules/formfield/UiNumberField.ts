@@ -22,7 +22,7 @@ import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiNumberFieldCommandHandler, UiNumberFieldConfig, UiNumberFieldEventSource} from "../../generated/UiNumberFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {Constants, formatNumber, parseHtml} from "../Common";
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "../trivial-components/TrivialCore";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";

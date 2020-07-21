@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {keyCodes} from "trivial-components";
+import {keyCodes} from "../trivial-components/TrivialCore";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiMultiLineTextFieldCommandHandler, UiMultiLineTextFieldConfig, UiMultiLineTextFieldEventSource} from "../../generated/UiMultiLineTextFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";

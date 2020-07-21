@@ -24,7 +24,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiGridTemplateConfig} from "../generated/UiGridTemplateConfig";
 import {createGridTemplateRenderer} from "./util/UiGridTemplates";
 import {UiTemplateReferenceConfig} from "../generated/UiTemplateReferenceConfig";
-import {wrapWithDefaultTagWrapper} from "trivial-components";
+import {wrapWithDefaultTagWrapper} from "./trivial-components/TrivialCore";
 import {Renderer} from "./Common";
 import {createHtmlTemplateRenderer} from "./util/UiHtmlTemplates";
 import {UiHtmlTemplateConfig} from "../generated/UiHtmlTemplateConfig";
@@ -91,18 +91,6 @@ export class TemplateRegistry {
 	public createTemplateRenderers(templates: { [name: string]: UiTemplateConfig }, idPropertyName?: string): { [name: string]: Renderer } {
 		return Object.keys(templates).reduce((templateStringMapObject, templateName) => {
 			templateStringMapObject[templateName] = this.createTemplateRenderer(templates[templateName], idPropertyName);
-			return templateStringMapObject;
-		}, <{ [name: string]: Renderer }> {});
-	}
-
-	public convertToWrappedTagMustacheTemplates(templates: { [name: string]: UiTemplateConfig }, idPropertyName?: string) {
-		return Object.keys(templates).reduce((templateStringMapObject, templateName) => {
-			let templateConfig = templates[templateName];
-			let textCellTemplateRenderer = this.createTemplateRenderer(templateConfig, idPropertyName);
-			templateStringMapObject[templateName] = {
-				render: (view) => wrapWithDefaultTagWrapper(textCellTemplateRenderer.render(view)),
-				template: templateConfig
-			};
 			return templateStringMapObject;
 		}, <{ [name: string]: Renderer }> {});
 	}

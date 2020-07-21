@@ -35,6 +35,8 @@ public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTree
 	private final List<BaseTemplateTreeNode<PAYLOAD>> nodes;
 	private int maxResultNodes = Integer.MAX_VALUE;
 
+	private String captionFilter;
+
 	public SimpleTreeModel() {
 		nodes = new ArrayList<>();
 	}
@@ -98,16 +100,25 @@ public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTree
 		this.maxResultNodes = maxResultNodes;
 	}
 
+	public String getCaptionFilter() {
+		return captionFilter;
+	}
+
+	public void setCaptionFilter(String captionFilter) {
+		this.captionFilter = captionFilter;
+		onAllNodesChanged.fire();
+	}
+
 	@Override
-	public List<BaseTemplateTreeNode<PAYLOAD>> getRecords(String query) {
-		if (StringUtils.isEmpty(query)) {
+	public List<BaseTemplateTreeNode<PAYLOAD>> getRecords() {
+		if (StringUtils.isEmpty(captionFilter)) {
 			return this.nodes.stream()
 					.filter(new EagerNodesFilter())
 					.limit(maxResultNodes)
 					.collect(Collectors.toList());
 		} else {
 			List<BaseTemplateTreeNode<PAYLOAD>> filteredTree = this.nodes.stream()
-					.filter(node -> StringUtils.containsIgnoreCase(node.getCaption(), query))
+					.filter(node -> StringUtils.containsIgnoreCase(node.getCaption(), captionFilter))
 					.flatMap(node -> ((List<BaseTemplateTreeNode<PAYLOAD>>) (List) node.getPath()).stream())
 					.distinct()
 					.collect(Collectors.toList());
