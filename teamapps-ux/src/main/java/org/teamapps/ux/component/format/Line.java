@@ -22,8 +22,6 @@ package org.teamapps.ux.component.format;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiLine;
 
-import static org.teamapps.util.UiUtil.createUiColor;
-
 public class Line {
 
 	private Color color = Color.BLACK;
@@ -53,6 +51,6 @@ public class Line {
 	}
 
 	public UiLine createUiLine() {
-		return new UiLine(thickness, color != null ? createUiColor(color) : null).setType(type != null ? type.createUiLineType() : null);
+		return new UiLine(thickness, color != null ? color.toHtmlColorString() : null).setType(type != null ? type.createUiLineType() : null);
 	}
 }

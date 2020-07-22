@@ -22,7 +22,6 @@ package org.teamapps.ux.component.popup;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiPopup;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 
@@ -52,9 +51,9 @@ public class Popup extends AbstractComponent {
 		ui.setY(y);
 		ui.setWidth(width);
 		ui.setHeight(height);
-		ui.setBackgroundColor(UiUtil.createUiColor(backgroundColor));
+		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setModal(modal);
-		ui.setDimmingColor(UiUtil.createUiColor(dimmingColor));
+		ui.setDimmingColor(dimmingColor != null ? dimmingColor.toHtmlColorString() : null);
 		ui.setCloseOnEscape(closeOnEscape);
 		ui.setCloseOnClickOutside(closeOnClickOutside);
 		return ui;
@@ -117,7 +116,7 @@ public class Popup extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiPopup.SetBackgroundColorCommand(getId(), UiUtil.createUiColor(backgroundColor)));
+		queueCommandIfRendered(() -> new UiPopup.SetBackgroundColorCommand(getId(), backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 	}
 
 	public boolean isModal() {
@@ -135,7 +134,7 @@ public class Popup extends AbstractComponent {
 
 	public void setDimmingColor(Color dimmingColor) {
 		this.dimmingColor = dimmingColor;
-		queueCommandIfRendered(() -> new UiPopup.SetDimmingColorCommand(getId(), UiUtil.createUiColor(dimmingColor)));
+		queueCommandIfRendered(() -> new UiPopup.SetDimmingColorCommand(getId(), dimmingColor != null ? dimmingColor.toHtmlColorString() : null));
 	}
 
 	public boolean isCloseOnEscape() {

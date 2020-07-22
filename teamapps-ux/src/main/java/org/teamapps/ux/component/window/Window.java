@@ -19,14 +19,12 @@
  */
 package org.teamapps.ux.component.window;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiWindow;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.Component;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.panel.Panel;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class Window extends Panel {
 
@@ -69,7 +67,7 @@ public class Window extends Panel {
 		window.setModal(modal);
 		window.setWidth(width);
 		window.setHeight(height);
-		window.setModalBackgroundDimmingColor(createUiColor(modalBackgroundDimmingColor));
+		window.setModalBackgroundDimmingColor(modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null);
 		window.setCloseable(closeable);
 		window.setCloseOnClickOutside(closeOnClickOutside);
 		window.setCloseOnEscape(closeOnEscape);
@@ -115,7 +113,7 @@ public class Window extends Panel {
 
 	public void setModalBackgroundDimmingColor(Color modalBackgroundDimmingColor) {
 		this.modalBackgroundDimmingColor = modalBackgroundDimmingColor;
-		queueCommandIfRendered(() -> new UiWindow.SetModalBackgroundDimmingColorCommand(getId(), createUiColor(modalBackgroundDimmingColor)));
+		queueCommandIfRendered(() -> new UiWindow.SetModalBackgroundDimmingColorCommand(getId(), modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null));
 	}
 
 	public void show() {

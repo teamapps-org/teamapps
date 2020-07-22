@@ -35,7 +35,6 @@ import {
 	UiVideoPlayerEventSource
 } from "../generated/UiVideoPlayerConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiMediaPreloadMode} from "../generated/UiMediaPreloadMode";
 import {parseHtml} from "./Common";
 
@@ -103,8 +102,8 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 			}
 		});
 
-		this.$componentWrapper.style.backgroundColor = createUiColorCssString(config.backgroundColor);
-		this.$componentWrapper.querySelector<HTMLElement>(':scope .mejs__container').style.backgroundColor = createUiColorCssString(config.backgroundColor);
+		this.$componentWrapper.style.backgroundColor = config.backgroundColor;
+		this.$componentWrapper.querySelector<HTMLElement>(':scope .mejs__container').style.backgroundColor = config.backgroundColor;
 
 		this.setPreloadMode(config.preloadMode);
 		this.setAutoplay(config.autoplay);

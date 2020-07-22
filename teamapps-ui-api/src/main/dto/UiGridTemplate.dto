@@ -27,7 +27,7 @@ class UiGridTemplate implements UiTemplate {
     int maxHeight = 0;
     UiSpacing padding;
     int gridGap = 0;
-    UiColor backgroundColor;
+    String backgroundColor;
     UiBorder border;
 }
 
@@ -40,7 +40,7 @@ abstract class AbstractUiTemplateElement {
     UiHorizontalElementAlignment horizontalAlignment = UiHorizontalElementAlignment.LEFT;
     UiVerticalElementAlignment verticalAlignment = UiVerticalElementAlignment.CENTER;
     UiSpacing margin;
-    UiColor backgroundColor; 
+    String backgroundColor;
 }
 
 class UiTextElement extends AbstractUiTemplateElement {
@@ -53,7 +53,7 @@ class UiTextElement extends AbstractUiTemplateElement {
 
 class UiBadgeElement extends UiTextElement {
 	// the badge background color is defined by the font background color. This only makes the element look like a badge.
-	UiColor borderColor;
+	String borderColor;
 }
 
 class UiFloatingElement extends AbstractUiTemplateElement {
@@ -80,7 +80,7 @@ class UiIconElement extends AbstractUiTemplateElement {
 
 class UiGlyphIconElement extends AbstractUiTemplateElement {
 	required int size;
-	UiColor fontColor;
+	String fontColor;
 }
 
 enum UiHorizontalElementAlignment {
@@ -106,17 +106,9 @@ enum UiTextAlignment {
 
 // ========== Format =============
 
-@TypeScriptFactory
-class UiColor {
-	required int red;
-	required int green;
-	required int blue;
-	float alpha = 1f;
-}
-
 class UiFontStyle {
-	UiColor fontColor;
-	UiColor backgroundColor;
+	String fontColor;
+	String backgroundColor;
 	boolean bold;
 	boolean underline;
 	boolean italic;
@@ -145,7 +137,7 @@ class UiBorder {
 }
 
 class UiShadow {
-	required UiColor color;
+	required String color;
 	required float blur;
 	float offsetX;
 	float offsetY;
@@ -161,7 +153,7 @@ enum UiSizeType {
 
 class UiLine {
 	required float thickness;
-	required UiColor color;
+	required String color;
 	UiLineType type = UiLineType.SOLID;
 }
 

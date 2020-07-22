@@ -21,7 +21,7 @@ import {UiGridLayoutConfig} from "../../generated/UiGridLayoutConfig";
 import {
 	createCssGridRowOrColumnString,
 	createUiBorderCssObject,
-	createUiColorCssObject, createUiColorCssString,
+	createUiColorCssObject,
 	createUiShadowCssObject,
 	createUiSpacingCssObject,
 	cssHorizontalAlignmentByUiVerticalAlignment, cssObjectToString, CssPropertyObject,

@@ -58,8 +58,8 @@ class UiWindow extends UiPanel {
 	boolean modal = true;
 	int width = 0; // 0 = full width
 	int height = 0; // 0 = full height
-	UiColor headerBackgroundColor = new UiColor(190, 190, 190).setAlpha(.72f);
-	UiColor modalBackgroundDimmingColor = new UiColor(0, 0, 0).setAlpha(.2f);
+	String headerBackgroundColor = "rgba(190, 190, 190, .72)";
+	String modalBackgroundDimmingColor = "rgba(0, 0, 0, .2)";
     boolean closeable; // show "close" special tool button
     boolean closeOnEscape; // close if the user presses escape
     boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
@@ -70,7 +70,7 @@ class UiWindow extends UiPanel {
 	command setCloseOnEscape(boolean closeOnEscape);
 	command setCloseOnClickOutside(boolean closeOnClickOutside);
 	command setModal(boolean modal);
-	command setModalBackgroundDimmingColor(UiColor modalBackgroundDimmingColor);
+	command setModalBackgroundDimmingColor(String modalBackgroundDimmingColor);
 	command setSize(int width, int height);
 }
 

@@ -29,8 +29,6 @@ import {UiItemView} from "../../UiItemView";
 
 import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
 import {UiComponent} from "../../UiComponent";
-import {createUiBorderCssString, createUiColorCssString, createUiShadowCssString} from "../../util/CssFormatUtil";
-import {UiColorConfig} from "../../../generated/UiColorConfig";
 
 export class UiToolbarButton {
 
@@ -140,7 +138,7 @@ export class UiToolbarButton {
 		return this.config.buttonId;
 	}
 
-	setColors(backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig) {
+	setColors(backgroundColor: string, hoverBackgroundColor: string) {
 		this.config.backgroundColor = backgroundColor;
 		this.config.hoverBackgroundColor = hoverBackgroundColor;
 		this.updateStyles();
@@ -150,10 +148,10 @@ export class UiToolbarButton {
 		this.$styleTag.innerHTML = '';
 		this.$styleTag.innerText = `
 		.${this.uuidClass} {
-			background-color: ${createUiColorCssString(this.config.backgroundColor)} !important;            
+			background-color: ${(this.config.backgroundColor ?? '')} !important;            
         }
 		.${this.uuidClass}:hover {
-			background-color: ${createUiColorCssString(this.config.hoverBackgroundColor)} !important;            
+			background-color: ${(this.config.hoverBackgroundColor ?? '')} !important;            
         }`;
 	}
 }

@@ -918,7 +918,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	}
 
 	public void setRowBorderColor(Color rowBorderColor) {
-		this.setCssStyle(".slick-cell", "border-color", rowBorderColor.toHtmlColorString());
+		this.setCssStyle(".slick-cell", "border-color", rowBorderColor != null ? rowBorderColor.toHtmlColorString() : null);
 	}
 
 	public boolean isShowRowCheckBoxes() {

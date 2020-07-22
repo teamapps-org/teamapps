@@ -27,7 +27,6 @@ import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
 	createCssGridRowOrColumnString,
 	createUiBorderCssString,
-	createUiColorCssString,
 	createUiShadowCssString,
 	createUiSpacingCssString,
 	cssHorizontalAlignmentByUiVerticalAlignment,
@@ -192,7 +191,7 @@ class UiFormSection {
 		const paddingCss = createUiSpacingCssString("padding", config.padding);
 		const borderCss = createUiBorderCssString(config.border);
 		const shadowCss = createUiShadowCssString(config.shadow);
-		const backgroundColorCss = config.backgroundColor ? `background-color:${createUiColorCssString(config.backgroundColor)};` : '';
+		const backgroundColorCss = config.backgroundColor ? `background-color:${(config.backgroundColor ?? '')};` : '';
 
 		const gridTemplateColumnsCss = 'grid-template-columns:' + config.columns.map(column => createCssGridRowOrColumnString(column.widthPolicy)).join(" ") + ';';
 		const gridTemplateRowsCss = 'grid-template-rows:' + config.rows.map(row => createCssGridRowOrColumnString(row.heightPolicy)).join(" ") + ';';

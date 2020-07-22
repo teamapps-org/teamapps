@@ -143,7 +143,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 	}
 
 	public Button<RECORD> setColor(Color color) {
-		this.setCssStyle(".btn", "background-color", color.toHtmlColorString());
+		this.setCssStyle(".btn", "background-color", color != null ? color.toHtmlColorString() : null);
 		return this;
 	}
 

@@ -21,13 +21,12 @@ import {Line} from "d3-shape";
 import {Selection} from "d3-selection";
 import * as d3 from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiLineChartBandConfig} from "../../generated/UiLineChartBandConfig";
 import {D3Area2} from "./D3Area2";
-import {UiColorConfig} from "../../generated/UiColorConfig";
+import {isVisibleColor} from "../Common";
 
 export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartBandConfig> {
 	private middleLine: Line<DataPoint>;
@@ -89,35 +88,31 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 			.classed("dots", true);
 	}
 	
-	private isVisibleColor(c: UiColorConfig) {
-		return c != null && c.alpha > 0; 
-	}
-
 	public doRedraw() {
-		let lineData = this.isVisibleColor(this.config.middleLineColor) ? this.getDisplayedData()[this.config.middleLineDataSeriesId] : [];
-		let areaDataMin = this.isVisibleColor(this.config.lowerLineColor) ? this.getDisplayedData()[this.config.lowerBoundDataSeriesId] : [];
-		let areaDataMax = this.isVisibleColor(this.config.upperLineColor) ? this.getDisplayedData()[this.config.upperBoundDataSeriesId] : [];
+		let lineData = isVisibleColor(this.config.middleLineColor) ? this.getDisplayedData()[this.config.middleLineDataSeriesId] : [];
+		let areaDataMin = isVisibleColor(this.config.lowerLineColor) ? this.getDisplayedData()[this.config.lowerBoundDataSeriesId] : [];
+		let areaDataMax = isVisibleColor(this.config.upperLineColor) ? this.getDisplayedData()[this.config.upperBoundDataSeriesId] : [];
 
 		this.middleLine
 			.x(d => this.scaleX(d.x))
 			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
 		this.$middleLine
 			.attr("d", this.middleLine(lineData))
-			.attr("stroke", createUiColorCssString(this.config.middleLineColor));
+			.attr("stroke", this.config.middleLineColor);
 		
 		this.lowerLine
 			.x(d => this.scaleX(d.x))
 			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
 		this.$lowerLine
 			.attr("d", this.lowerLine(areaDataMin))
-			.attr("stroke", createUiColorCssString(this.config.lowerLineColor));
+			.attr("stroke", this.config.lowerLineColor);
 		
 		this.upperLine
 			.x(d => this.scaleX(d.x))
 			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
 		this.$upperLine
 			.attr("d", this.upperLine(areaDataMax))
-			.attr("stroke", createUiColorCssString(this.config.upperLineColor));
+			.attr("stroke", this.config.upperLineColor);
 
 
 		this.area
@@ -129,7 +124,7 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 			});
 		this.$area
 			.attr("d", this.area.writePath(areaDataMin, areaDataMax))
-			.attr("fill", createUiColorCssString(this.config.areaColor));
+			.attr("fill", this.config.areaColor);
 
 		let $dotsDataSelection = this.$dots.selectAll<SVGCircleElement, UiTimeGraphDataPointConfig>("circle.dot")
 			.data(this.config.dataDotRadius > 0 ? lineData : [])
@@ -145,7 +140,7 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 			.attr("y1", this.scaleY(0))
 			.attr("x2", this.scaleX.range()[1])
 			.attr("y2", this.scaleY(0))
-			.attr("stroke", createUiColorCssString(this.config.yAxisColor))
+			.attr("stroke", this.config.yAxisColor)
 			.attr("visibility", (this.config.yZeroLineVisible && this.scaleY.domain()[0] !== 0) ? "visible" : "hidden");
 	}
 

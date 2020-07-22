@@ -51,7 +51,7 @@ class UiVideoPlayer extends UiComponent {
 	String posterImageUrl;
 	enum {CONTAIN, COVER, ORIGINAL} posterImageSize = PosterImageSize.CONTAIN;
 	int sendPlayerProgressEventsEachXSeconds = 1; // if 0, then send NO events
-	UiColor backgroundColor = new UiColor(68, 68, 68);
+	String backgroundColor = "rgb(68, 68, 68)";
 	UiMediaPreloadMode preloadMode;
 
 	command setUrl(String url);

@@ -32,8 +32,6 @@ import {
 	UiNavigationBarEventSource
 } from "../generated/UiNavigationBarConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {createUiColorCssString} from "./util/CssFormatUtil";
-import {UiColorConfig} from "../generated/UiColorConfig";
 import {UiComponent} from "./UiComponent";
 import {UiMultiProgressDisplay} from "./UiDefaultMultiProgressDisplay";
 
@@ -88,12 +86,12 @@ export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> 
 		config.buttons.forEach(button => this.addButton(button));
 	}
 
-	public setBackgroundColor(color: UiColorConfig) {
-		this.$buttonsContainer.style.backgroundColor = createUiColorCssString(color);
+	public setBackgroundColor(color: string) {
+		this.$buttonsContainer.style.backgroundColor = color;
 	}
 
-	public setBorderColor(color: UiColorConfig) {
-		this.$bar.style.borderColor = createUiColorCssString(color);
+	public setBorderColor(color: string) {
+		this.$bar.style.borderColor = color;
 	}
 
 	public doGetMainElement(): HTMLElement {

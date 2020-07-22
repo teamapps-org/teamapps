@@ -21,7 +21,6 @@ package org.teamapps.ux.component.charting.common;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiTreeGraphNodeImage;
-import org.teamapps.util.UiUtil;
 
 public class GraphNodeImage {
 
@@ -56,7 +55,7 @@ public class GraphNodeImage {
 		ui.setCornerShape(cornerShape.toUiCornerShape());
 		ui.setShadow(shadow);
 		ui.setBorderWidth(borderWidth);
-		ui.setBorderColor(UiUtil.createUiColor(borderColor));
+		ui.setBorderColor(borderColor != null ? borderColor.toHtmlColorString(): null);
 		return ui;
 	}
 

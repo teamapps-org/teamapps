@@ -24,8 +24,6 @@ import {UiComponent} from "./UiComponent";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiPopupCommandHandler, UiPopupConfig} from "../generated/UiPopupConfig";
 import {parseHtml} from "./Common";
-import {UiColorConfig} from "../generated/UiColorConfig";
-import {createUiColorCssString} from "./util/CssFormatUtil";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 
 export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPopupCommandHandler {
@@ -55,14 +53,14 @@ export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPop
 		return this.$main;
 	}
 
-	setBackgroundColor(backgroundColor: UiColorConfig): void {
+	setBackgroundColor(backgroundColor: string): void {
 		this._config.backgroundColor = backgroundColor;
-		this.$componentWrapper.style.backgroundColor = createUiColorCssString(backgroundColor);
+		this.$componentWrapper.style.backgroundColor = backgroundColor;
 	}
 
-	setDimmingColor(dimmingColor: UiColorConfig): void {
+	setDimmingColor(dimmingColor: string): void {
 		this._config.dimmingColor = dimmingColor;
-		this.$main.style.backgroundColor = createUiColorCssString(dimmingColor);
+		this.$main.style.backgroundColor = dimmingColor;
 	}
 
 	setDimensions(width: number, height: number): void {

@@ -27,8 +27,8 @@ class UiFloatingComponent extends UiComponent {
 	int marginY;
 	UiFloatingComponentPosition position;
 
-    UiColor backgroundColor;
-    UiColor expanderHandleColor;
+    String backgroundColor;
+    String expanderHandleColor;
 
     boolean collapsible = true;
     boolean expanded = true;
@@ -38,8 +38,8 @@ class UiFloatingComponent extends UiComponent {
 	command setPosition(UiFloatingComponentPosition position);
 	command setDimensions(int width, int height);
 	command setMargins(int marginX, int marginY);
-	command setBackgroundColor(UiColor backgroundColor);
-	command setExpanderHandleColor(UiColor expanderHandleColor);
+	command setBackgroundColor(String backgroundColor);
+	command setExpanderHandleColor(String expanderHandleColor);
 
 	event expandedOrCollapsed(boolean expanded);
 

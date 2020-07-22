@@ -30,7 +30,7 @@ import {
 	UiNotificationBarEventSource
 } from "../generated/UiNotificationBarConfig";
 import {UiNotificationBarItemConfig} from "../generated/UiNotificationBarItemConfig";
-import {createUiColorCssString, createUiSpacingValueCssString} from "./util/CssFormatUtil";
+import {createUiSpacingValueCssString} from "./util/CssFormatUtil";
 import {ProgressBar} from "./micro-components/ProgressBar";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
@@ -103,12 +103,12 @@ class UiNotificationBarItem {
 		let $closeButton: HTMLElement = this.$main.querySelector(":scope .close-button");
 		$closeButton.classList.toggle("hidden", !config.dismissible);
 		$closeButton.addEventListener("click", ev => this.onClosed.fire(false));
-		this.$main.style.backgroundColor = createUiColorCssString(config.backgroundColor, null);
-		this.$main.style.borderColor = createUiColorCssString(config.borderColor, null);
+		this.$main.style.backgroundColor = config.backgroundColor;
+		this.$main.style.borderColor = config.borderColor;
 		let $contentContainer: HTMLElement = this.$main.querySelector(":scope > .content-container");
 		$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
 		let $text: HTMLElement = this.$main.querySelector(":scope .text");
-		$text.style.color = createUiColorCssString(config.textColor, null);
+		$text.style.color = config.textColor;
 
 		this.$main.addEventListener("click", () => this.onClicked.fire())
 
@@ -130,7 +130,7 @@ class UiNotificationBarItem {
 					let duration = +(new Date()) - startTime + 500; // make sure the bar reaches the end!
 					let progress = Math.min(1, duration / this.config.displayTimeInMillis);
 					this.progressBar.setProgress(progress);
-					(this.progressBar.getMainDomElement().querySelector(":scope .progress-bar") as HTMLElement).style.backgroundColor = createUiColorCssString(this.config.borderColor, null);
+					(this.progressBar.getMainDomElement().querySelector(":scope .progress-bar") as HTMLElement).style.backgroundColor = this.config.borderColor;
 					if (progress >= 1) {
 						window.clearInterval(interval);
 					}

@@ -31,8 +31,6 @@ import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 
-import static org.teamapps.util.UiUtil.createUiColor;
-
 public class Notification extends AbstractComponent {
 	public final Event<Void> onOpened = new Event<>();
 	public final Event<Boolean> onClosed = new Event<>();
@@ -69,7 +67,7 @@ public class Notification extends AbstractComponent {
 	public UiNotification createUiComponent() {
 		UiNotification ui = new UiNotification();
 		mapAbstractUiComponentProperties(ui);
-		ui.setBackgroundColor(createUiColor(backgroundColor));
+		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setPadding(padding != null ? padding.createUiSpacing() : null);
 		ui.setDisplayTimeInMillis(displayTimeInMillis);
 		ui.setDismissible(dismissible);

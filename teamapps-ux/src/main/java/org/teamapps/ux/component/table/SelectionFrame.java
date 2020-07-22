@@ -19,10 +19,8 @@
  */
 package org.teamapps.ux.component.table;
 
-import org.teamapps.dto.UiSelectionFrame;
 import org.teamapps.common.format.Color;
-
-import static org.teamapps.util.UiUtil.createUiColor;
+import org.teamapps.dto.UiSelectionFrame;
 
 public class SelectionFrame {
 
@@ -35,7 +33,7 @@ public class SelectionFrame {
 
 	public UiSelectionFrame createUiSelectionFrame() {
 		UiSelectionFrame uiSelectionFrame = new UiSelectionFrame();
-		uiSelectionFrame.setColor(color != null ? createUiColor(color) : null);
+		uiSelectionFrame.setColor(color != null ? color.toHtmlColorString() : null);
 		uiSelectionFrame.setBorderWidth(borderWidth);
 		uiSelectionFrame.setAnimationDuration(animationDuration);
 		uiSelectionFrame.setGlowingWidth(glowingWidth);

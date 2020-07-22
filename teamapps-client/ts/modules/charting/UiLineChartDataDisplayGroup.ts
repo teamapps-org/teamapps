@@ -18,7 +18,6 @@
  * =========================LICENSE_END==================================
  */
 import {Selection} from "d3-selection";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 import {SVGGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
@@ -70,7 +69,7 @@ export class UiLineChartDataDisplayGroup extends AbstractUiLineChartDataDisplay<
 			.attr("y1", this.scaleY(0))
 			.attr("x2", this.scaleX.range()[1])
 			.attr("y2", this.scaleY(0))
-			.attr("stroke", createUiColorCssString(this.config.yAxisColor))
+			.attr("stroke", this.config.yAxisColor)
 			.attr("visibility", (this.config.yZeroLineVisible && this.scaleY.domain()[0] !== 0) ? "visible" : "hidden");
 
 		this.dataDisplays.forEach(dd => {

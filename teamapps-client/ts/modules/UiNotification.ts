@@ -24,7 +24,7 @@ import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {animateCSS, Constants, parseHtml} from "./Common";
-import {createUiColorCssString, createUiSpacingValueCssString} from "./util/CssFormatUtil";
+import {createUiSpacingValueCssString} from "./util/CssFormatUtil";
 import {ProgressBar} from "./micro-components/ProgressBar";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -147,7 +147,7 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 
 	public update(config: UiNotificationConfig) {
 		this._config = config;
-		this.$main.style.backgroundColor = createUiColorCssString(config.backgroundColor, null);
+		this.$main.style.backgroundColor = config.backgroundColor;
 		// this.$main.style.borderColor = createUiColorCssString(config.borderColor, "#00000022");
 		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
 		this.$main.classList.toggle("dismissible", config.dismissible);

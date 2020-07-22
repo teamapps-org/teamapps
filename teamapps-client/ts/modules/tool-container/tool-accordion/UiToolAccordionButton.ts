@@ -19,14 +19,12 @@
  */
 import {UiComponent} from "../../UiComponent";
 import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
-import {enterFullScreen, exitFullScreen, generateUUID, insertAfter, isFullScreen, parseHtml} from "../../Common";
+import {enterFullScreen, exitFullScreen, generateUUID, isFullScreen, parseHtml} from "../../Common";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
 import {UiGridTemplateConfig} from "../../../generated/UiGridTemplateConfig";
 import {UiToolAccordion} from "./UiToolAccordion";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {UiColorConfig} from "../../../generated/UiColorConfig";
-import {createUiColorCssString} from "../../util/CssFormatUtil";
 
 export class UiToolAccordionButton {
 
@@ -109,7 +107,7 @@ export class UiToolAccordionButton {
 		return this.config.hasDropDown;
 	}
 
-	setColors(backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig) {
+	setColors(backgroundColor: string, hoverBackgroundColor: string) {
 		this.config.backgroundColor = backgroundColor;
 		this.config.hoverBackgroundColor = hoverBackgroundColor;
 		this.updateStyles();
@@ -119,10 +117,10 @@ export class UiToolAccordionButton {
 		this.$styleTag.innerHTML = '';
 		this.$styleTag.innerText = `
 		.${this.uuidClass} {
-			background-color: ${createUiColorCssString(this.config.backgroundColor)} !important;           
+			background-color: ${(this.config.backgroundColor ?? '')} !important;           
         }
 		.${this.uuidClass}:hover {
-			background-color: ${createUiColorCssString(this.config.hoverBackgroundColor)} !important;            
+			background-color: ${(this.config.hoverBackgroundColor ?? '')} !important;            
         }`;
 	}
 }

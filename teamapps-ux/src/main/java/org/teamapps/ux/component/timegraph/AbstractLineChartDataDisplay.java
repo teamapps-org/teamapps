@@ -26,8 +26,6 @@ import org.teamapps.dto.UiLongInterval;
 import java.util.List;
 import java.util.UUID;
 
-import static org.teamapps.util.UiUtil.createUiColor;
-
 public abstract class AbstractLineChartDataDisplay  {
 
 	private final String id = UUID.randomUUID().toString();
@@ -88,7 +86,7 @@ public abstract class AbstractLineChartDataDisplay  {
 
 	protected void mapAbstractLineChartDataDisplayProperties(AbstractUiLineChartDataDisplay ui) {
 		ui.setId(id);
-		ui.setYAxisColor(yAxisColor != null ? createUiColor(yAxisColor) : null);
+		ui.setYAxisColor(yAxisColor != null ? yAxisColor.toHtmlColorString() : null);
 		ui.setIntervalY(intervalY != null ? intervalY.createUiLongInterval() : new UiLongInterval(0, 1000));
 		ui.setYScaleType(yScaleType.toUiScaleType());
 		ui.setYScaleZoomMode(yScaleZoomMode.toUiLineChartYScaleZoomMode());

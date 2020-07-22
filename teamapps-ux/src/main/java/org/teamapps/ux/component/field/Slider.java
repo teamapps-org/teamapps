@@ -19,11 +19,9 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiSlider;
-import org.teamapps.common.format.Color;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class Slider extends AbstractField<Number> {
 
@@ -48,7 +46,7 @@ public class Slider extends AbstractField<Number> {
 		uiSlider.setMax(max);
 		uiSlider.setStep(step);
 		uiSlider.setDisplayedDecimals(displayedDecimals);
-		uiSlider.setSelectionColor(selectionColor != null ? createUiColor(selectionColor) : null);
+		uiSlider.setSelectionColor(selectionColor != null ? selectionColor.toHtmlColorString() : null);
 		uiSlider.setTooltipPrefix(tooltipPrefix);
 		uiSlider.setTooltipPostfix(tooltipPostfix);
 		uiSlider.setHumanReadableFileSize(humanReadableFileSize);
@@ -97,7 +95,7 @@ public class Slider extends AbstractField<Number> {
 
 	public void setSelectionColor(Color selectionColor) {
 		this.selectionColor = selectionColor;
-		queueCommandIfRendered(() -> new UiSlider.SetSelectionColorCommand(getId(), selectionColor != null ? createUiColor(selectionColor) : null));
+		queueCommandIfRendered(() -> new UiSlider.SetSelectionColorCommand(getId(), selectionColor != null ? selectionColor.toHtmlColorString() : null));
 	}
 
 	public String getTooltipPrefix() {

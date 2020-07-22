@@ -20,8 +20,8 @@
 package org.teamapps.ux.component.mobile;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiClientObjectReference;
+import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiNavigationBar;
 import org.teamapps.dto.UiNavigationBarButton;
@@ -38,8 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.teamapps.util.UiUtil.createUiColor;
-
 public class NavigationBar<RECORD> extends AbstractComponent implements Container {
 
 	public Event<NavigationBarButton> onButtonClick = new Event<>();
@@ -48,7 +46,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 	private List<NavigationBarButton<RECORD>> buttons = new ArrayList<>();
 	private Color backgroundColor;
 	private Color borderColor;
-	private List<Component> fanOutComponents = new ArrayList<>();
+	private final List<Component> fanOutComponents = new ArrayList<>();
 	private Component activeFanOutComponent;
 	private int buttonClientIdCounter = 0;
 	private MultiProgressDisplay multiProgressDisplay = new DefaultMultiProgressDisplay();
@@ -61,8 +59,8 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 	public UiComponent createUiComponent() {
 		UiNavigationBar uiNavigationBar = new UiNavigationBar(buttonTemplate.createUiTemplate());
 		mapAbstractUiComponentProperties(uiNavigationBar);
-		uiNavigationBar.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);
-		uiNavigationBar.setBorderColor(borderColor != null ? createUiColor(borderColor) : null);
+		uiNavigationBar.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
+		uiNavigationBar.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
 		if (buttons != null) {
 			List<UiNavigationBarButton> uiNavigationBarButtons = createUiButtons();
 			uiNavigationBar.setButtons(uiNavigationBarButtons);
@@ -184,7 +182,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiNavigationBar.SetBackgroundColorCommand(getId(), backgroundColor != null ? createUiColor(backgroundColor) : null));
+		queueCommandIfRendered(() -> new UiNavigationBar.SetBackgroundColorCommand(getId(), backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 	}
 
 	public Color getBorderColor() {
@@ -193,7 +191,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 
 	public void setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
-		queueCommandIfRendered(() -> new UiNavigationBar.SetBorderColorCommand(getId(), borderColor != null ? createUiColor(borderColor) : null));
+		queueCommandIfRendered(() -> new UiNavigationBar.SetBorderColorCommand(getId(), borderColor != null ? borderColor.toHtmlColorString() : null));
 	}
 
 	public List<Component> getFanOutComponents() {

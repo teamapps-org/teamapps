@@ -44,7 +44,7 @@ class UiGridLayout {
     UiSpacing padding;
     UiBorder border;
     UiShadow shadow;
-    UiColor backgroundColor;
+    String backgroundColor;
     int gridGap = 7;
     UiVerticalElementAlignment verticalAlignment = UiVerticalElementAlignment.STRETCH;
     UiHorizontalElementAlignment horizontalAlignment = UiHorizontalElementAlignment.STRETCH;

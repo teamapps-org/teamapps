@@ -23,8 +23,6 @@ import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {generateUUID, parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiColorConfig} from "../../generated/UiColorConfig";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {getHighestSeverity} from "../micro-components/FieldMessagesPopper";
@@ -38,9 +36,9 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 	private $label: HTMLElement;
 	private $style: HTMLElement;
 
-	private backgroundColor: UiColorConfig;
-	private checkColor: UiColorConfig;
-	private borderColor: UiColorConfig;
+	private backgroundColor: string;
+	private checkColor: string;
+	private borderColor: string;
 
 	protected initialize(config: UiCheckBoxConfig, context: TeamAppsUiContext) {
 		const uuid = "cb-" + generateUUID();
@@ -92,17 +90,17 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 		this.$label.textContent = caption || '';
 	}
 
-	setBackgroundColor(backgroundColor: UiColorConfig): void {
+	setBackgroundColor(backgroundColor: string): void {
 		this.backgroundColor = backgroundColor;
 		this.updateStyles();
 	}
 
-	setCheckColor(checkColor: UiColorConfig): void {
+	setCheckColor(checkColor: string): void {
 		this.checkColor = checkColor;
 		this.updateStyles();
 	}
 
-	setBorderColor(borderColor: UiColorConfig): void {
+	setBorderColor(borderColor: string): void {
 		this.borderColor = borderColor;
 		this.updateStyles();
 	}
@@ -118,9 +116,9 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 			this.$style.textContent = ''; // styles are defined by message severity styles
 		} else {
 			this.$style.textContent = `[data-teamapps-id=${this._config.id}] > .checkbox-check {
-			background-color: ${createUiColorCssString(this.backgroundColor)};
-			color: ${createUiColorCssString(this.checkColor)};
-			border: 1px solid ${createUiColorCssString(this.borderColor)};  
+			background-color: ${(this.backgroundColor ?? '')};
+			color: ${(this.checkColor ?? '')};
+			border: 1px solid ${(this.borderColor ?? '')};  
 		}`;
 		}
 	}

@@ -92,6 +92,7 @@
     "axios": "^0.19.2",
     "bootstrap": "^3.4.1",
     "canvas-gauges": "^2.1.5",
+    "color-rgba": "^2.1.1",
     "d3": "^5.9.7",
     "d3-flextree": "^2.1.1",
     "d3v3": "npm:d3@3.x",

@@ -22,18 +22,15 @@ import * as moment from "moment-timezone";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiWindow} from "./UiWindow";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
-import {UiNotificationConfig} from "../generated/UiNotificationConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, css, exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml} from "./Common";
+import {convertJavaDateTimeFormatToMomentDateTimeFormat, exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml} from "./Common";
 import {UiRootPanelCommandHandler, UiRootPanelConfig} from "../generated/UiRootPanelConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import * as log from "loglevel";
 import {ElementUiComponentAdapter} from "./micro-components/ElementUiComponentAdapter";
 import {UiGenericErrorMessageOption} from "../generated/UiGenericErrorMessageOption";
-import {UiColorConfig} from "../generated/UiColorConfig";
-import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiComponent} from "./UiComponent";
 import {UiPageTransition} from "../generated/UiPageTransition";
 import {UiPopup} from "./UiPopup";
@@ -192,9 +189,9 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		});
 	}
 
-	public static setBackgroundColor(backgroundColor: UiColorConfig, animationDuration: number) {
+	public static setBackgroundColor(backgroundColor: string, animationDuration: number) {
 		this.ALL_ROOT_PANELS.forEach(uiRootPanel => {
-			uiRootPanel.backgroundColor = backgroundColor && createUiColorCssString(backgroundColor);
+			uiRootPanel.backgroundColor = backgroundColor;
 			uiRootPanel.updateBackground(animationDuration);
 		})
 	}
@@ -311,7 +308,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 			title: title,
 			width: 370,
 			height: 200,
-			modalBackgroundDimmingColor: {red: 0, green: 0, blue: 0, alpha: .5},
+			modalBackgroundDimmingColor: "rgba(0, 0, 0, .5)",
 			modal: true,
 			content: null
 		}, context);

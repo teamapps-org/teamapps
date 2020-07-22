@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.form.layoutpolicy;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiFormSection;
 import org.teamapps.dto.UiFormSectionPlacement;
 import org.teamapps.dto.UiGridColumn;
 import org.teamapps.dto.UiGridRow;
 import org.teamapps.ux.component.format.Border;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.format.Shadow;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.grid.layout.GridColumn;
@@ -34,8 +34,6 @@ import org.teamapps.ux.component.template.Template;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class FormSection {
 
@@ -282,7 +280,7 @@ public class FormSection {
 		uiSection.setBorder(this.border != null ? this.border.createUiBorder() : null);
 		uiSection.setShadow(this.shadow != null ? this.shadow.createUiShadow() : null);
 		uiSection.setDrawHeaderLine(this.drawHeaderLine);
-		uiSection.setBackgroundColor(this.backgroundColor != null ? createUiColor(backgroundColor) : null);
+		uiSection.setBackgroundColor(this.backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiSection.setCollapsible(this.collapsible);
 		uiSection.setCollapsed(this.collapsed);
 		uiSection.setVisible(this.visible);

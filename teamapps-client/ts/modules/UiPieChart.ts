@@ -25,7 +25,6 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {UiChartNamedDataPointConfig} from "../generated/UiChartNamedDataPointConfig";
 import * as d3 from "d3"
-import {UiColorConfig} from '../generated/UiColorConfig';
 import {UiDataPointWeighting} from '../generated/UiDataPointWeighting';
 import {UiChartLegendStyle} from "../generated/UiChartLegendStyle";
 
@@ -300,7 +299,7 @@ class Chart {
 		// Converting data to desired format
 		const convertedData = attrs.data.dataPoints.map(point => {
 			const label = point.name;
-			const color = Chart.colorToRGBAString(point.color);
+			const color = point.color;
 			const value = point.y;
 			return {
 				label: label,
@@ -651,10 +650,6 @@ class Chart {
 	}
 
 	// This function converts RGBA color object to js compatible rgba string color
-	static colorToRGBAString(color: UiColorConfig) {
-		return `rgba(${color.red},${color.green},${color.blue},${color.alpha == undefined ? 0 : color.alpha})`
-	}
-
 	//********** Function is responsible for building outer  shape paths */
 	static pieOuter(d: PieDataObject, {rx, ry, h, ir}: PieChartAttributes) {
 

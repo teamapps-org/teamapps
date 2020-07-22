@@ -22,7 +22,7 @@ enum UiNotificationPosition {
 }
 
 class UiNotification extends UiComponent {
-	UiColor backgroundColor;
+	String backgroundColor;
 	UiSpacing padding;
 
 	boolean dismissible = true;
@@ -53,9 +53,9 @@ class UiNotificationBarItem {
 	String icon;
 	UiRepeatableAnimation iconAnimation;
 	String text;
-	UiColor backgroundColor;
-	UiColor borderColor;
-	UiColor textColor;
+	String backgroundColor;
+	String borderColor;
+	String textColor;
 	UiSpacing padding;
 
 	boolean dismissible = true;

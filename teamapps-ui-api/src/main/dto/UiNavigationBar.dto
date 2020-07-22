@@ -20,15 +20,15 @@
 class UiNavigationBar extends UiComponent {
 	required UiTemplate buttonTemplate;
 	List<UiNavigationBarButton> buttons;
-	UiColor backgroundColor = new UiColor(255, 255, 255).setAlpha(0.84f);
-	UiColor borderColor;
+	String backgroundColor = "rgba(255, 255, 255, 0.84)";
+	String borderColor;
 	List<UiComponent*> fanOutComponents;
 	UiMultiProgressDisplay* multiProgressDisplay;
 
 	command setButtons(List<UiNavigationBarButton> buttons);
 	command setButtonVisible(String buttonId, boolean visible);
-	command setBackgroundColor(UiColor backgroundColor);
-	command setBorderColor(UiColor borderColor);
+	command setBackgroundColor(String backgroundColor);
+	command setBorderColor(String borderColor);
 
 	command addFanOutComponent(UiComponent* fanOutComponent); // TODO #componentRef No more necessary?
 	command removeFanOutComponent(UiComponent* fanOutComponent); // TODO #componentRef No more necessary?

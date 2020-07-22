@@ -23,7 +23,6 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiNotificationBarItem;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.animation.RepeatableAnimation;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.session.SessionContext;
@@ -86,9 +85,9 @@ public class NotificationBarItem {
 		ui.setDismissible(dismissible);
 		ui.setDisplayTimeInMillis(displayTimeInMillis);
 		ui.setProgressBarVisible(progressBarVisible);
-		ui.setBackgroundColor(UiUtil.createUiColor(backgroundColor));
-		ui.setBorderColor(UiUtil.createUiColor(borderColor));
-		ui.setTextColor(UiUtil.createUiColor(textColor));
+		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
+		ui.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
+		ui.setTextColor(textColor != null ? textColor.toHtmlColorString() : null);
 		ui.setPadding(padding != null ? padding.createUiSpacing() : null);
 		return ui;
 	}

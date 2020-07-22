@@ -38,7 +38,6 @@ import {UiNetworkNode_ExpandState, UiNetworkNodeConfig} from "../generated/UiNet
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {patternify} from "./UiTreeGraph";
-import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
 import {UiNetworkLinkConfig} from "../generated/UiNetworkLinkConfig";
 
@@ -270,7 +269,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.data(this.links)
 			.join("line")
 			.attr("stroke-width", (d: UiNetworkLinkConfig) => d.lineWidth || 2)
-			.attr('stroke', (d: UiNetworkLinkConfig) => createUiColorCssString(d.lineColor))
+			.attr('stroke', (d: UiNetworkLinkConfig) => d.lineColor)
 			.attr('stroke-dasharray', (d: UiNetworkLinkConfig) => d.lineDashArray ? d.lineDashArray : null)
 			.transition()
 			.duration(animationDuration)
@@ -426,8 +425,8 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 		nodeUpdate.select('.node-button-circle')
 			.attr('r', 10)
 			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
-			.attr('fill', (d: UiNetworkNodeConfig) => createUiColorCssString(d.backgroundColor))
-			.attr('stroke', (d: UiNetworkNodeConfig) => createUiColorCssString(d.borderColor));
+			.attr('fill', (d: UiNetworkNodeConfig) => d.backgroundColor)
+			.attr('stroke', (d: UiNetworkNodeConfig) => d.borderColor);
 
 		// Add button text
 		patternify(nodeButtonGroups, {
@@ -467,7 +466,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr('fill', (d: UiNetworkNodeConfig) => `url(#${d.id})`)
 			.attr('width', (d: UiNetworkNodeConfig) => d.image && d.image.width)
 			.attr('height', (d: UiNetworkNodeConfig) => d.image && d.image.height)
-			.attr('stroke', (d: UiNetworkNodeConfig) => d.image && createUiColorCssString(d.image.borderColor))
+			.attr('stroke', (d: UiNetworkNodeConfig) => d.image && (d.image.borderColor))
 			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.image && d.image.borderWidth)
 			.attr('rx', (d: UiNetworkNodeConfig) => d.image && (d.image.cornerShape == UiTreeGraphNodeImage_CornerShape.CIRCLE ? Math.max(d.image.width, d.image.height)
 				: d.image.cornerShape == UiTreeGraphNodeImage_CornerShape.ROUNDED ? Math.min(d.image.width, d.image.height) / 10
@@ -485,8 +484,8 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 			.attr('rx', (d: UiNetworkNodeConfig) => d.borderRadius || 0)
 			.attr('stroke-width', (d: UiNetworkNodeConfig) => d.borderWidth)
 			.attr('cursor', 'pointer')
-			.attr('stroke', ({borderColor}: UiNetworkNodeConfig) => createUiColorCssString(borderColor))
-			.style("fill", ({backgroundColor}: UiNetworkNodeConfig) => createUiColorCssString(backgroundColor));
+			.attr('stroke', ({borderColor}: UiNetworkNodeConfig) => borderColor)
+			.style("fill", ({backgroundColor}: UiNetworkNodeConfig) => backgroundColor);
 
 		// Remove any exiting nodes after transition
 		const nodeExitTransition = nodesSelection.exit()

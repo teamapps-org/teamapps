@@ -19,17 +19,15 @@
  */
 package org.teamapps.ux.component.grid.layout;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiGridLayout;
 import org.teamapps.ux.component.format.Border;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.format.Shadow;
 import org.teamapps.ux.component.format.Spacing;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class GridLayoutDefinition {
 
@@ -79,7 +77,7 @@ public class GridLayoutDefinition {
 		uiGridLayout.setPadding(padding != null ? padding.createUiSpacing() : null);
 		uiGridLayout.setBorder(border != null ? border.createUiBorder() : null);
 		uiGridLayout.setShadow(shadow != null ? shadow.createUiShadow() : null);
-		uiGridLayout.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);
+		uiGridLayout.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		return uiGridLayout;
 	}
 

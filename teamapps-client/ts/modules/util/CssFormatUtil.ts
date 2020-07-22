@@ -18,7 +18,6 @@
  * =========================LICENSE_END==================================
  */
 import {UiTextAlignment} from "../../generated/UiTextAlignment";
-import {UiColorConfig} from "../../generated/UiColorConfig";
 import {UiVerticalElementAlignment} from "../../generated/UiVerticalElementAlignment";
 import {UiHorizontalElementAlignment} from "../../generated/UiHorizontalElementAlignment";
 import {UiSizeType} from "../../generated/UiSizeType";
@@ -53,16 +52,12 @@ export const cssVerticalAlignmentByUiVerticalAlignment = {
 	[UiVerticalElementAlignment.STRETCH]: 'stretch'
 };
 
-export function createUiColorCssString(uiColor: UiColorConfig, emptyReturnValue = '') {
-	return uiColor != null ? `rgba(${uiColor.red || 0},${uiColor.green || 0},${uiColor.blue || 0},${uiColor.alpha != null ? uiColor.alpha : 1})` : emptyReturnValue;
-}
-
-export function createUiColorCssObject(cssProperty: string, uiColor: UiColorConfig) {
+export function createUiColorCssObject(cssProperty: string, uiColor: string) {
 	if (uiColor == null) {
 		return {};
 	} else {
 		return {
-			[cssProperty]: createUiColorCssString(uiColor)
+			[cssProperty]: uiColor
 		}
 	}
 }
@@ -75,8 +70,8 @@ export function createUiFontStyleCssString(fontStyle: UiFontStyleConfig) {
 	if (fontStyle == null) {
 		return '';
 	} else {
-		return (fontStyle.fontColor ? 'color:' + createUiColorCssString(fontStyle.fontColor) + ';' : '')
-			+ (fontStyle.backgroundColor ? 'background-color:' + createUiColorCssString(fontStyle.backgroundColor) + ';' : '')
+		return (fontStyle.fontColor ? 'color:' + (fontStyle.fontColor ?? '') + ';' : '')
+			+ (fontStyle.backgroundColor ? 'background-color:' + (fontStyle.backgroundColor ?? '') + ';' : '')
 			+ (fontStyle.bold ? 'font-weight:700;' : '')
 			+ (fontStyle.underline ? 'text-decoration:underline;' : '')
 			+ (fontStyle.italic ? 'font-style:italic;' : '')
@@ -85,7 +80,7 @@ export function createUiFontStyleCssString(fontStyle: UiFontStyleConfig) {
 }
 
 export function createUiLineCssString(lineConfig: UiLineConfig) {
-	return lineConfig != null ? `${lineConfig.thickness}px ${UiLineType[lineConfig.type]} ${createUiColorCssString(lineConfig.color)}` : '';
+	return lineConfig != null ? `${lineConfig.thickness}px ${UiLineType[lineConfig.type]} ${(lineConfig.color ?? '')}` : '';
 }
 
 export function createUiBorderCssObject(borderConfig: UiBorderConfig): CssPropertyObject {
@@ -126,7 +121,7 @@ export function createUiShadowCssObject(shadowConfig: UiShadowConfig): CssProper
 		return {};
 	} else {
 		return {
-			"boxShadow": `${shadowConfig.offsetX || 0}px ${shadowConfig.offsetY || 0}px ${shadowConfig.blur}px ${shadowConfig.spread || 0}px ${createUiColorCssString(shadowConfig.color)}`
+			"boxShadow": `${shadowConfig.offsetX || 0}px ${shadowConfig.offsetY || 0}px ${shadowConfig.blur}px ${shadowConfig.spread || 0}px ${(shadowConfig.color ?? '')}`
 		}
 	}
 }

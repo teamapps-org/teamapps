@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,19 +31,16 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiWeekDay;
 import org.teamapps.event.Event;
-import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.session.CurrentSessionContext;
-import org.teamapps.ux.session.SessionContext;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -56,8 +53,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
@@ -75,7 +70,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	private CalendarModel<CEVENT> model;
 	private PropertyExtractor<CEVENT> propertyExtractor = new BeanPropertyExtractor<>();
 
-	private ClientRecordCache<CEVENT, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
+	private final ClientRecordCache<CEVENT, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
 
 	private CalendarEventTemplateDecider<CEVENT> templateDecider = //(calendarEvent, viewMode) -> null;
 			createStaticTemplateDecider(
@@ -108,7 +103,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	private boolean navigateOnHeaderClicks = true;
 
-	private Consumer<Void> onCalendarDataChangedListener = (aVoid) -> {
+	private final Consumer<Void> onCalendarDataChangedListener = (aVoid) -> {
 		refreshEvents();
 	};
 
@@ -154,8 +149,8 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		// uiRecord.setAsString(calendarEvent.getRecord() != null ? calendarEvent.getRecord().toString() : null);
 		uiRecord.setAllDay(calendarEvent.isAllDay());
 		uiRecord.setAllowDragOperations(calendarEvent.isAllowDragOperations());
-		uiRecord.setBackgroundColor(calendarEvent.getBackgroundColor() != null ? createUiColor(calendarEvent.getBackgroundColor()) : null);
-		uiRecord.setBorderColor(calendarEvent.getBorderColor() != null ? createUiColor(calendarEvent.getBorderColor()) : null);
+		uiRecord.setBackgroundColor(calendarEvent.getBackgroundColor() != null ? calendarEvent.getBackgroundColor().toHtmlColorString() : null);
+		uiRecord.setBorderColor(calendarEvent.getBorderColor() != null ? calendarEvent.getBorderColor().toHtmlColorString() : null);
 		uiRecord.setRendering(calendarEvent.getRendering() != null ? calendarEvent.getRendering().toUiCalendarEventRenderingStyle() : UiCalendarEventRenderingStyle.DEFAULT);
 
 		return uiRecord;
@@ -199,7 +194,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		uiCalendar.setBusinessHoursEnd(businessHoursEnd);
 		uiCalendar.setFirstDayOfWeek(firstDayOfWeek != null ? UiWeekDay.valueOf(firstDayOfWeek.name()) : null);
 		uiCalendar.setWorkingDays(workingDays.stream().map(workingDay -> UiWeekDay.valueOf(workingDay.name())).collect(Collectors.toList()));
-		uiCalendar.setTableHeaderBackgroundColor(tableHeaderBackgroundColor != null ? createUiColor(tableHeaderBackgroundColor) : null);
+		uiCalendar.setTableHeaderBackgroundColor(tableHeaderBackgroundColor != null ? tableHeaderBackgroundColor.toHtmlColorString() : null);
 		uiCalendar.setNavigateOnHeaderClicks(navigateOnHeaderClicks);
 		uiCalendar.setTimeZoneId(timeZone.getId());
 		uiCalendar.setMinYearViewMonthTileWidth(minYearViewMonthTileWidth);
@@ -337,7 +332,8 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	public ToolbarButtonGroup createNavigationButtonGroup() {
 		ToolbarButtonGroup group = new ToolbarButtonGroup();
 
-		ToolbarButton forwardButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.PREVIOUS.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.PREVIOUS.getKey()));
+		ToolbarButton forwardButton = ToolbarButton.createSmall(getSessionContext().getIcon(TeamAppsIconBundle.PREVIOUS.getKey()),
+				getSessionContext().getLocalized(TeamAppsDictionary.PREVIOUS.getKey()));
 		forwardButton.onClick.addListener(toolbarButtonClickEvent -> this.setDisplayedDate(activeViewMode.decrement(displayedDate)));
 		group.addButton(forwardButton);
 

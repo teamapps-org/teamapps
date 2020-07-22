@@ -61,7 +61,7 @@ enum UiChartLegendStyle {
 class UiChartNamedDataPoint {
 	required String name;
 	required double y;
-	UiColor color;
+	String color;
 }
 
 class UiChartDataPoint2D {
@@ -111,8 +111,8 @@ class UiChartDataPoint3D {
 //    required UiBasicChartSeriesType seriesType;
 //    AbstractUiChartData[] values; //values - represents the array of {x,y} data points
 //    String key; //key  - the name of the series.
-//    UiColor color;  //color - optional: choose your own line color.
-//    UiColor secondaryColor; //e.g. for area
+//    String color;  //color - optional: choose your own line color.
+//    String secondaryColor; //e.g. for area
 //    UiLineChartCurveType curveType;
 //    boolean showDataLabels; //data labels to be displayed for each point of data in the series
 //    String dashStyle; //e.g. "3, 3"

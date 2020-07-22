@@ -24,10 +24,8 @@ import * as d3 from "d3";
 import {Axis, NamespaceLocalObject} from "d3";
 import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 import {UiScaleType} from "../../generated/UiScaleType";
 import {yTickFormat} from "./UiTimeGraph";
-import {debouncedMethod, DebounceMode} from "../util/debounce";
 
 export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineChartDataDisplayConfig = AbstractUiLineChartDataDisplayConfig> {
 
@@ -178,7 +176,7 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 			}
 		}
 
-		this.$yAxis.style("color", createUiColorCssString(this.config.yAxisColor));
+		this.$yAxis.style("color", this.config.yAxisColor);
 	}
 
 	public setConfig(config: C) {

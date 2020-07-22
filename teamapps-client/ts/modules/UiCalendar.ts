@@ -25,7 +25,8 @@ import {
 	UiCalendar_DayClickedEvent,
 	UiCalendar_DayHeaderClickedEvent,
 	UiCalendar_EventClickedEvent,
-	UiCalendar_EventMovedEvent, UiCalendar_IntervalSelectedEvent,
+	UiCalendar_EventMovedEvent,
+	UiCalendar_IntervalSelectedEvent,
 	UiCalendar_MonthHeaderClickedEvent,
 	UiCalendar_ViewChangedEvent,
 	UiCalendar_WeekHeaderClickedEvent,
@@ -39,7 +40,6 @@ import {UiCalendarViewMode} from "../generated/UiCalendarViewMode";
 import {UiCalendarEventRenderingStyle} from "../generated/UiCalendarEventRenderingStyle";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {Interval, IntervalManager} from "./util/IntervalManager";
-import {createUiColorCssString} from "./util/CssFormatUtil";
 import {parseHtml, prependChild, Renderer} from "./Common";
 import {UiCalendarEventClientRecordConfig} from "../generated/UiCalendarEventClientRecordConfig";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
@@ -112,8 +112,8 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 			},
 			firstDay: config.firstDayOfWeek != null ? config.firstDayOfWeek : context.config.firstDayOfWeek, // 1 = monday
 			fixedWeekCount: true,
-			eventBackgroundColor: createUiColorCssString(config.defaultBackgroundColor),
-			eventBorderColor: createUiColorCssString(config.defaultBorderColor),
+			eventBackgroundColor: config.defaultBackgroundColor,
+			eventBorderColor: config.defaultBorderColor,
 			eventTextColor: "#000",
 			handleWindowResize: false, // we handle this ourselves!
 			lazyFetching: false, // no intelligent fetching from fullcalendar. We handle all that!
@@ -311,10 +311,10 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 
 		this.$main.append(parseHtml(`<style>
                 #${config.id} .fc-head td.fc-widget-header>.fc-row.fc-widget-header {
-                    background-color: ${createUiColorCssString(config.tableHeaderBackgroundColor)};
+                    background-color: ${(config.tableHeaderBackgroundColor ?? '')};
                 }
                 #${config.id} .fc-bgevent-skeleton td.fc-week-number {
-                    background-color: ${createUiColorCssString(config.tableHeaderBackgroundColor)};
+                    background-color: ${(config.tableHeaderBackgroundColor ?? '')};
                 }
             </style>`));
 	}
@@ -377,14 +377,6 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 	}
 
 	public convertToFullCalendarEvent(event: UiCalendarEventClientRecordConfig): EventInput {
-		let backgroundColor = event.backgroundColor;
-		let backgroundColorCssString = typeof backgroundColor === 'string' ? backgroundColor
-			: backgroundColor != null ? createUiColorCssString(backgroundColor) : null;
-
-		let borderColor = event.borderColor;
-		let borderColorCssString = typeof borderColor === 'string' ? borderColor
-			: borderColor != null ? createUiColorCssString(borderColor) : null;
-
 		return {
 			id: "" + event.id,
 			start: new Date(event.start),
@@ -395,8 +387,8 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 			startEditable: event.allowDragOperations,
 			durationEditable: event.allowDragOperations,
 			allDay: event.allDay,
-			backgroundColor: backgroundColorCssString,
-			borderColor: borderColorCssString,
+			backgroundColor: event.backgroundColor,
+			borderColor: event.borderColor,
 			textColor: "#000",
 			extendedProps: {
 				timeGridTemplateId: event.timeGridTemplateId,

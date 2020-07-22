@@ -22,9 +22,10 @@ package org.teamapps.ux.component.template.gridtemplate;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.AbstractUiTemplateElement;
 import org.teamapps.dto.UiBadgeElement;
-import org.teamapps.ux.component.format.*;
-
-import static org.teamapps.util.UiUtil.createUiColor;
+import org.teamapps.ux.component.format.FontStyle;
+import org.teamapps.ux.component.format.HorizontalElementAlignment;
+import org.teamapps.ux.component.format.Spacing;
+import org.teamapps.ux.component.format.VerticalElementAlignment;
 
 public class BadgeElement extends TextElement {
 
@@ -76,7 +77,7 @@ public class BadgeElement extends TextElement {
 		UiBadgeElement uiBadgeElement = new UiBadgeElement(dataKey, row, column);
 		mapAbstractTemplateElementAttributesToUiElement(uiBadgeElement);
 		mapTextElementAttributesToUiElement(uiBadgeElement);
-		uiBadgeElement.setBorderColor(borderColor != null ? createUiColor(borderColor) : null);
+		uiBadgeElement.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
 		return uiBadgeElement;
 	}
 

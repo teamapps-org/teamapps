@@ -71,13 +71,13 @@ public class Panel extends AbstractComponent implements Container {
 	private final Set<WindowButtonType> windowButtons = new HashSet<>();
 
 	private ObservableValue<Icon> observableIcon;
-	private Consumer<Icon> iconChangeListener = this::setIcon;
+	private final Consumer<Icon> iconChangeListener = this::setIcon;
 	private ObservableValue<String> observableTitle;
-	private Consumer<String> titleChangeListener = this::setTitle;
+	private final Consumer<String> titleChangeListener = this::setTitle;
 	private ObservableValue<AbstractField<?>> observableLeftHeaderField;
-	private Consumer<AbstractField<?>> leftHeaderFieldChangeListener = this::setLeftHeaderField;
+	private final Consumer<AbstractField<?>> leftHeaderFieldChangeListener = this::setLeftHeaderField;
 	private ObservableValue<AbstractField<?>> observableRightHeaderField;
-	private Consumer<AbstractField<?>> rightHeaderFieldChangeListener = this::setRightHeaderField;
+	private final Consumer<AbstractField<?>> rightHeaderFieldChangeListener = this::setRightHeaderField;
 
 
 	public Panel() {
@@ -254,7 +254,7 @@ public class Panel extends AbstractComponent implements Container {
 	}
 
 	public void setHeaderBackgroundColor(Color headerBackgroundColor) {
-		this.setCssStyle("> .panel-heading", "background-color", headerBackgroundColor.toHtmlColorString());
+		this.setCssStyle("> .panel-heading", "background-color", headerBackgroundColor != null ? headerBackgroundColor.toHtmlColorString() : null);
 	}
 
 	public void setHeaderFontColor(Color headerFontColor) {

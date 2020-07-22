@@ -19,14 +19,12 @@
  */
 package org.teamapps.ux.component.media;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiVideoPlayer;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.common.format.Color;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class VideoPlayer extends AbstractComponent {
 
@@ -59,7 +57,7 @@ public class VideoPlayer extends AbstractComponent {
 		uiVideoPlayer.setPosterImageUrl(posterImageUrl);
 		uiVideoPlayer.setPosterImageSize(posterImageSize.toUiPosterImageSize());
 		uiVideoPlayer.setSendPlayerProgressEventsEachXSeconds(sendPlayerProgressEventsEachXSeconds);
-		uiVideoPlayer.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor): null);
+		uiVideoPlayer.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString(): null);
 		uiVideoPlayer.setPreloadMode(preloadMode.toUiPreloadMode());
 		return uiVideoPlayer;
 	}

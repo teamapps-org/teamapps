@@ -45,7 +45,7 @@ public class ImageField extends AbstractField<String> {
 		uiImageField.setHeight(height.toCssString());
 		uiImageField.setBorder(border != null ? border.createUiBorder() : null);
 		uiImageField.setImageSizing(imageSizing.toUiImageSizing());
-		uiImageField.setBackgroundColor(backgroundColor.toHtmlColorString());
+		uiImageField.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString(): null);
 		return uiImageField;
 	}
 

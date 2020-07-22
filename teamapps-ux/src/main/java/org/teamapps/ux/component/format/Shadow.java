@@ -22,8 +22,6 @@ package org.teamapps.ux.component.format;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiShadow;
 
-import static org.teamapps.util.UiUtil.createUiColor;
-
 public class Shadow {
 
 	private final float offsetX;
@@ -65,13 +63,13 @@ public class Shadow {
 	}
 
 	public UiShadow createUiShadow() {
-		return new UiShadow(color != null ? createUiColor(color) : null, blur)
+		return new UiShadow(color != null ? color.toHtmlColorString() : null, blur)
 				.setOffsetX(offsetX)
 				.setOffsetY(offsetY)
 				.setSpread(spread);
 	}
 
 	public String toCssString() {
-		return offsetX + "px " + offsetY + "px " + blur + "px " + spread + "px " + color.toHtmlColorString();
+		return offsetX + "px " + offsetY + "px " + blur + "px " + spread + "px " + (color != null ? color.toHtmlColorString() : null);
 	}
 }

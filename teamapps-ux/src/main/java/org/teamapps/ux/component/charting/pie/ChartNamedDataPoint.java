@@ -21,7 +21,6 @@ package org.teamapps.ux.component.charting.pie;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiChartNamedDataPoint;
-import org.teamapps.util.UiUtil;
 
 public class ChartNamedDataPoint {
 
@@ -37,7 +36,7 @@ public class ChartNamedDataPoint {
 
 	public UiChartNamedDataPoint createUiChartNamedDataPoint() {
 		UiChartNamedDataPoint ui = new UiChartNamedDataPoint(name, value);
-		ui.setColor(UiUtil.createUiColor(color));
+		ui.setColor(color != null ? color.toHtmlColorString() : null);
 		return ui;
 	}
 

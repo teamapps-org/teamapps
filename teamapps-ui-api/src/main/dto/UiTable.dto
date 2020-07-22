@@ -43,13 +43,13 @@ class UiTable extends UiComponent {
 	boolean forceFitWidth; //if true, force the widths of all columns to fit into the available space of the list
 	int rowHeight = 28;
 	boolean stripedRows = true;
-	UiColor stripedRowColorEven = new UiColor(255, 255, 255);
-	UiColor stripedRowColorOdd = new UiColor(0, 0, 0).setAlpha(0.05f);
+	String stripedRowColorEven = "rgb(255, 255, 255)";
+	String stripedRowColorOdd = "rgba(0, 0, 0, 0.05)";
 	boolean hideHeaders; //if true, do not show any headers
 	boolean allowMultiRowSelection = true;
-	UiColor selectionColor = new UiColor(222, 238, 255); // null = default color
+	String selectionColor = "rgb(222, 238, 255)"; // null = default color
 	int rowBorderWidth = 1; // even in list mode! the border will be there but transparent!
-	UiColor rowBorderColor = new UiColor(204, 204, 204);
+	String rowBorderColor = "rgb(204, 204, 204)";
 
 	boolean showRowCheckBoxes; //if true, show check boxes on the left
 	boolean showNumbering; //if true, show numbering on the left
@@ -110,16 +110,16 @@ class UiTable extends UiComponent {
 	// =========== header/footer row ("outerRow") ===========
 	boolean showHeaderRow = false;
     int headerRowBorderWidth = 1; // even in list mode! the border will be there but transparent!
-    UiColor headerRowBorderColor = new UiColor(204, 204, 204);
+    String headerRowBorderColor = "rgb(204, 204, 204)";
     int headerRowHeight = 28;
-    UiColor headerRowBackgroundColor = new UiColor(0, 0, 0).setAlpha(0.05f);
+    String headerRowBackgroundColor = "rgba(0, 0, 0, 0.05)";
     Dictionary<UiField*> headerRowFields;
 
 	boolean showFooterRow = false;
     int footerRowBorderWidth = 1; // even in list mode! the border will be there but transparent!
-    UiColor footerRowBorderColor = new UiColor(204, 204, 204);
+    String footerRowBorderColor = "rgb(204, 204, 204)";
     int footerRowHeight = 28;
-    UiColor footerRowBackgroundColor = new UiColor(0, 0, 0).setAlpha(0.05f);
+    String footerRowBackgroundColor = "rgba(0, 0, 0, 0.05)";
     Dictionary<UiField*> footerRowFields;
 }
 
@@ -137,7 +137,7 @@ class UiTableCellMessages {
 }
 
 class UiSelectionFrame {
-	UiColor color = new UiColor(102, 174, 232);
+	String color = "rgb(102, 174, 232)";
 	int borderWidth = 2;
 	int animationDuration = 100; // ms
 	int glowingWidth = 5;

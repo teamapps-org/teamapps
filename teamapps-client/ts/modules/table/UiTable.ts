@@ -54,10 +54,9 @@ import {UiSortDirection} from "../../generated/UiSortDirection";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiGenericTableCellEditor} from "./UiGenericTableCellEditor";
 import {FixedSizeTableCellEditor} from "./FixedSizeTableCellEditor";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 import {UiHierarchicalClientRecordConfig} from "../../generated/UiHierarchicalClientRecordConfig";
 import {TableDataProvider, TableDataProviderItem} from "./TableDataProvider";
-import {UiButton, UiCheckBox, UiCompositeField, UiCurrencyField, UiFileField, UiMultiLineTextField, UiNumberField, UiRichTextEditor} from "..";
+import {UiButton, UiCompositeField, UiFileField, UiMultiLineTextField, UiRichTextEditor} from "..";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {FieldMessagesPopper, getHighestSeverity} from "../micro-components/FieldMessagesPopper";
 import {nonRecursive} from "../util/nonRecursive";
@@ -402,8 +401,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		if (config.selectionFrame) {
 			this.$selectionFrame = parseHtml(`<div class="UiTable-selection-frame">`);
 			css(this.$selectionFrame, {
-				border: `${this._config.selectionFrame.borderWidth}px solid ${createUiColorCssString(this._config.selectionFrame.color)}`,
-				boxShadow: `0 0 ${this._config.selectionFrame.shadowWidth}px 0 rgba(0, 0, 0, .5), 0 0 ${this._config.selectionFrame.glowingWidth}px 0 ${createUiColorCssString(this._config.selectionFrame.color)}`,
+				border: `${this._config.selectionFrame.borderWidth}px solid ${(this._config.selectionFrame.color)}`,
+				boxShadow: `0 0 ${this._config.selectionFrame.shadowWidth}px 0 rgba(0, 0, 0, .5), 0 0 ${this._config.selectionFrame.glowingWidth}px 0 ${(this._config.selectionFrame.color)}`,
 				transition: `top ${this._config.selectionFrame.animationDuration}ms, left ${this._config.selectionFrame.animationDuration}ms, right ${this._config.selectionFrame.animationDuration}ms, width ${this._config.selectionFrame.animationDuration}ms, height ${this._config.selectionFrame.animationDuration}ms`
 			});
 			this.$component.appendChild(this.$selectionFrame);
