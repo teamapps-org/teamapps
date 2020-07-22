@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,7 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiInfiniteItemView;
 import org.teamapps.dto.UiMediaDeviceInfo;
+import org.teamapps.dto.UiMediaServerUrlAndToken;
 import org.teamapps.dto.UiMediaSoupPlaybackParameters;
 import org.teamapps.dto.UiMediaSoupPublishingParameters;
 import org.teamapps.dto.UiMediaSoupV3WebRtcClient;
@@ -170,16 +171,15 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void publish(
-			String streamUuid, String url, String token,
+			String streamUuid, String serverUrl, int worker, String token,
 			AudioTrackConstraints audioConstraints,
 			VideoTrackConstraints videoConstraints,
 			ScreenSharingConstraints screenSharingConstraints,
 			long maxBitrate, boolean simulcast
 	) {
 		UiMediaSoupPublishingParameters params = new UiMediaSoupPublishingParameters();
-		params.setUrl(url);
+		params.setServer(new UiMediaServerUrlAndToken(serverUrl, worker, token));
 		params.setStreamUuid(streamUuid);
-		params.setToken(token);
 		params.setAudioConstraints(audioConstraints != null ? audioConstraints.createUiAudioTrackConstraints() : null);
 		params.setVideoConstraints(videoConstraints != null ? videoConstraints.createUiVideoTrackConstraints() : null);
 		params.setScreenSharingConstraints(screenSharingConstraints != null ? screenSharingConstraints.createUiScreenSharingConstraints() : null);
@@ -190,21 +190,25 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void play(
-			String streamUuid, String url, String token,
+			String streamUuid,
+			MediaSoupServerUrlAndToken server,
 			boolean audio, boolean video,
 			long minBitrate, long maxBitrate
 	) {
-		this.play(streamUuid, Collections.singletonList(new MediaSoupServerUrlAndToken(url, token)), audio, video, minBitrate, maxBitrate);
+		this.play(streamUuid, server, null, audio, video, minBitrate, maxBitrate);
 	}
 
 	public void play(
-			String streamUuid, List<MediaSoupServerUrlAndToken> serverChain,
+			String streamUuid,
+			MediaSoupServerUrlAndToken server,
+			MediaSoupServerUrlAndToken origin,
 			boolean audio, boolean video,
 			long minBitrate, long maxBitrate
 	) {
 		UiMediaSoupPlaybackParameters params = new UiMediaSoupPlaybackParameters();
 		params.setStreamUuid(streamUuid);
-		params.setServerChain(serverChain.stream().map(MediaSoupServerUrlAndToken::createUiMediaSoupServerChain).collect(Collectors.toList()));
+		params.setServer(new UiMediaServerUrlAndToken(server.getServerUrl(), server.getWorker(), server.getToken()));
+		params.setOrigin(origin != null ? new UiMediaServerUrlAndToken(origin.getServerUrl(), origin.getWorker(), origin.getToken()) : null);
 		params.setAudio(audio);
 		params.setVideo(video);
 		params.setMinBitrate(minBitrate);

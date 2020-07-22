@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,9 +57,8 @@ public class MediaSoupV3HttpClient {
 
 	public static CompletableFuture<Integer> getNumberOfWorkers(String serverUrl, String serverSecret) {
 		String token = MediaSoupV3WebRtcClient.generatePublicRestApiToken(serverSecret, Duration.ofMinutes(10));
-		String workerUrl = serverUrl + "/0";
-		LOGGER.info("Requesting number of workers from {} with token {}", workerUrl, token);
-		return post(workerUrl, "numWorkers", token, "{}")
+		LOGGER.info("Requesting number of workers from server {} with token {}", serverUrl, token);
+		return post(serverUrl, 0, "numWorkers", token, "{}")
 				.thenApply(json -> {
 					try {
 						JsonNode rootNode = new ObjectMapper().readTree(json);
@@ -74,23 +73,23 @@ public class MediaSoupV3HttpClient {
 				});
 	}
 
-	public static CompletableFuture<Void> setRecordingEnabled(String workerUrl, String serverSecret, String uid, boolean enabled) {
+	public static CompletableFuture<Void> setRecordingEnabled(String serverUrl, int worker, String serverSecret, String uid, boolean enabled) {
 		String jwtToken = MediaSoupV3WebRtcClient.generateRecordingJwtToken(serverSecret, Duration.ofMinutes(10));
 		if (enabled) {
-			LOGGER.info("Starting recording to {} for {} on server {} with token {}", enabled, uid, workerUrl, jwtToken);
-			return post(workerUrl, "startRecording", jwtToken, "{\"stream\": \"" + uid + "\", \"kinds\": [\"audio\", \"video\"]}")
+			LOGGER.info("Starting recording to {} for {} on server {}, worker {} with token {}", enabled, uid, serverUrl, worker, jwtToken);
+			return post(serverUrl, worker, "startRecording", jwtToken, "{\"stream\": \"" + uid + "\", \"kinds\": [\"audio\", \"video\"]}")
 					.thenApply(s -> null);
 		} else {
-			LOGGER.info("Stopping recording to {} for {} on server {} with token {}", enabled, uid, workerUrl, jwtToken);
-			return post(workerUrl, "stopRecording", jwtToken, "{\"stream\": \"" + uid + "\", \"kinds\": [\"audio\", \"video\"]}")
+			LOGGER.info("Stopping recording to {} for {} on server {}, worker {} with token {}", enabled, uid, serverUrl, worker, jwtToken);
+			return post(serverUrl, worker, "stopRecording", jwtToken, "{\"stream\": \"" + uid + "\", \"kinds\": [\"audio\", \"video\"]}")
 					.thenApply(s -> null);
 		}
 	}
 
-	public static CompletableFuture<List<String>> listRecordings(String workerUrl, String serverSecret, String uid) {
+	public static CompletableFuture<List<String>> listRecordings(String serverUrl, int worker, String serverSecret, String uid) {
 		String jwtToken = MediaSoupV3WebRtcClient.generateRecordingJwtToken(serverSecret, Duration.ofMinutes(10));
-		LOGGER.info("Listing videos for {} on server {} with token {}", uid, workerUrl, jwtToken);
-		return post(workerUrl, "streamRecordings", jwtToken, "{\"stream\": \"" + uid + "\"}")
+		LOGGER.info("Listing videos for {} on server {}, worker {} with token {}", uid, serverUrl, worker, jwtToken);
+		return post(serverUrl, worker, "streamRecordings", jwtToken, "{\"stream\": \"" + uid + "\"}")
 				.thenApply(json -> {
 					try {
 						ObjectMapper objectMapper = new ObjectMapper();
@@ -106,35 +105,35 @@ public class MediaSoupV3HttpClient {
 				});
 	}
 
-	public static CompletableFuture<Void> startStreamingFile(String workerUrl, String serverSecret, String videoPath, String uid) {
+	public static CompletableFuture<Void> startStreamingFile(String serverUrl, int worker, String serverSecret, String videoPath, String uid) {
 		String jwtToken = MediaSoupV3WebRtcClient.generateStreamingJwtToken(serverSecret, Duration.ofMinutes(10));
-		String json = "{\"stream\":\"" + uid + "\",\"relativePath\":true,\"filePath\":\""+videoPath+"\",\"additionalOutputOptions\":[\"-b:v\",\"1M\"],"
+		String json = "{\"stream\":\"" + uid + "\",\"relativePath\":true,\"filePath\":\"" + videoPath + "\",\"additionalOutputOptions\":[\"-b:v\",\"1M\"],"
 				+ "\"additionalInputOptions\":[]}";
-		LOGGER.info("Starting streamed video {} on server {} using token {}", uid, workerUrl, jwtToken);
-		return post(workerUrl, "fileStreaming", jwtToken, json)
+		LOGGER.info("Starting streamed video {} on server {}, worker {} using token {}", uid, serverUrl, worker, jwtToken);
+		return post(serverUrl, worker, "fileStreaming", jwtToken, json)
 				.thenApply(s -> null);
 	}
 
-	public static CompletableFuture<Void> startStreamingUrl(String workerUrl, String serverSecret, String videoUrl, String uid, boolean isVideo) {
+	public static CompletableFuture<Void> startStreamingUrl(String serverUrl, int worker, String serverSecret, String videoUrl, String uid, boolean isVideo) {
 		String jwtToken = MediaSoupV3WebRtcClient.generateStreamingJwtToken(serverSecret, Duration.ofMinutes(10));
-		String json = "{\"stream\":\"" + uid + "\",\"kinds\": [\"audio\"" + (isVideo ? ", \"video\"" : "") + "],\"relativePath\":false,\"filePath\":\""+videoUrl+"\","
+		String json = "{\"stream\":\"" + uid + "\",\"kinds\": [\"audio\"" + (isVideo ? ", \"video\"" : "") + "],\"relativePath\":false,\"filePath\":\"" + videoUrl + "\","
 				+ "\"additionalInputOptions\":[]}";
-		LOGGER.info("Starting streamed video {} on server {} using token {}", uid, workerUrl, jwtToken);
-		return post(workerUrl, "fileStreaming", jwtToken, json)
+		LOGGER.info("Starting streamed video {} on server {}, worker {} using token {}", uid, serverUrl, worker, jwtToken);
+		return post(serverUrl, worker, "fileStreaming", jwtToken, json)
 				.thenApply(s -> null);
 	}
 
-	public static CompletableFuture<Void> stopStreaming(String workerUrl, String serverSecret, String uid) {
+	public static CompletableFuture<Void> stopStreaming(String serverUrl, int worker, String serverSecret, String uid) {
 		String jwtToken = MediaSoupV3WebRtcClient.generateStreamingJwtToken(serverSecret, Duration.ofMinutes(10));
 		String json = "{\"stream\":\"" + uid + "\"}";
-		LOGGER.info("Stopping streamed video {} on server {} using token {}", uid, workerUrl, jwtToken);
-		return post(workerUrl, "stopFileStreaming", jwtToken, json)
+		LOGGER.info("Stopping streamed video {} on server {}, worker {} using token {}", uid, serverUrl, worker, jwtToken);
+		return post(serverUrl, worker, "stopFileStreaming", jwtToken, json)
 				.thenApply(s -> null);
 	}
 
-	private static CompletableFuture<String> post(String workerUrl, final String resource, String token, String json) {
+	private static CompletableFuture<String> post(String serverUrl, int worker, final String resource, String token, String json) {
 		return CompletableFuture.supplyAsync(() -> {
-			URI uri = URI.create(workerUrl + "/mediasoup/" + resource);
+			URI uri = URI.create(workerUrl(serverUrl, worker) + "/mediasoup/" + resource);
 			HttpUriRequest request = RequestBuilder.post(uri)
 					.setConfig(RequestConfig.custom().setSocketTimeout(10_000).build())
 					.setEntity(new StringEntity(json, StandardCharsets.UTF_8))
@@ -163,6 +162,10 @@ public class MediaSoupV3HttpClient {
 				}
 			}
 		});
+	}
+
+	private static String workerUrl(String serverUrl, int worker) {
+		return (serverUrl.endsWith("/") ? serverUrl : serverUrl + "/") + worker;
 	}
 
 	public static File downloadVideo(URL url, File downloadDirectory) throws IOException {

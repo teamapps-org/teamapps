@@ -17,43 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-class UiMediaSoupV2WebRtcClient extends UiComponent {
-	Object initialPlaybackOrPublishParams;
-	Float displayAreaAspectRatio = 4/3f;  // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
-	boolean activityLineVisible;
-	String activityInactiveColor;
-	String activityActiveColor;
-	boolean active;
-	List<String> icons;
-	String caption;
-	String noVideoImageUrl;
-	WebRtcClientSpinnerPolicy spinnerPolicy;
-	double playbackVolume = 1; // 0-1
-	boolean contextMenuEnabled = false;
-
-	command update(UiMediaSoupV2WebRtcClient config);
-	command setActive(boolean active);
-	command publish(UiMediaSoupPublishingParameters parameters);
-	command playback(UiMediaSoupV2PlaybackParameters parameters);
-	command stop();
-	command setContextMenuContent(int requestId, UiComponent* component);
-	command closeContextMenu(int requestId);
-
-	event publishingSucceeded();
-	event publishingFailed(WebRtcPublishingFailureReason reason, String errorMessage);
-	event publishedStreamEnded(boolean isDisplay); // otherwise cam/mic
-	event publishedStreamsStatusChanged(boolean audio, boolean video);
-	event connectionStateChanged(boolean connected);
-	event playbackSucceeded();
-	event playbackFailed();
-	event playbackProfileChanged(UiMulticastPlaybackProfile profile);
-	event voiceActivityChanged(boolean active);
-	event clicked();
-	event contextMenuRequested(int requestId);
-
-	static command enumerateDevices() returns List<UiMediaDeviceInfo>;
-}
-
 class UiMediaSoupV3WebRtcClient extends UiComponent {
 	Float displayAreaAspectRatio = 4/3f;  // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
 	boolean activityLineVisible;
@@ -129,16 +92,9 @@ enum WebRtcClientSpinnerPolicy {
 	WHEN_NOT_STREAMING
 }
 
-enum UiMulticastPlaybackProfile {
-	HIGH,
-	MEDIUM,
-	LOW
-}
-
 class UiMediaSoupPublishingParameters {
-	String url;
 	String streamUuid;
-	String token;
+	UiMediaServerUrlAndToken server;
 
 	UiAudioTrackConstraints audioConstraints;
 	UiVideoTrackConstraints videoConstraints;
@@ -149,26 +105,16 @@ class UiMediaSoupPublishingParameters {
 	long maxBitrate;
 }
 
-class UiMediaSoupV2PlaybackParameters {
-	String url;
-	String streamUuid;
-	String token;
-
-	boolean audio;
-	boolean video;
-
-	long minBitrate;
-	long maxBitrate;
-}
-
 class UiMediaServerUrlAndToken {
 	required String url;
+	required int worker;
     required String token;
 }
 
 class UiMediaSoupPlaybackParameters {
 	String streamUuid;
-	List<UiMediaServerUrlAndToken> serverChain;
+	UiMediaServerUrlAndToken server; // the server/worker from which to receive the stream
+	UiMediaServerUrlAndToken origin; // the origin server/worker, if the stream is cascaded (scaling via origin/edge); may be null
 
 	boolean audio;
 	boolean video;
