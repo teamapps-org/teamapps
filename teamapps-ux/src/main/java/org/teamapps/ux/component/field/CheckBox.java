@@ -19,11 +19,9 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiCheckBox;
 import org.teamapps.dto.UiField;
-import org.teamapps.common.format.Color;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class CheckBox extends AbstractField<Boolean> {
 
@@ -47,9 +45,9 @@ public class CheckBox extends AbstractField<Boolean> {
 		UiCheckBox uiCheckBox = new UiCheckBox();
 		mapAbstractFieldAttributesToUiField(uiCheckBox);
 		uiCheckBox.setCaption(caption);
-		uiCheckBox.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);
-		uiCheckBox.setCheckColor(checkColor != null ? createUiColor(checkColor) : null);
-		uiCheckBox.setBorderColor(borderColor != null ? createUiColor(borderColor) : null);
+		uiCheckBox.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
+		uiCheckBox.setCheckColor(checkColor != null ? checkColor.toHtmlColorString() : null);
+		uiCheckBox.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
 		return uiCheckBox;
 	}
 
@@ -69,7 +67,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public CheckBox setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiCheckBox.SetBackgroundColorCommand(getId(), backgroundColor != null ? createUiColor(backgroundColor) : null));
+		queueCommandIfRendered(() -> new UiCheckBox.SetBackgroundColorCommand(getId(), backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 		return this;
 	}
 
@@ -79,7 +77,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public CheckBox setCheckColor(Color checkColor) {
 		this.checkColor = checkColor;
-		queueCommandIfRendered(() -> new UiCheckBox.SetCheckColorCommand(getId(), checkColor != null ? createUiColor(checkColor) : null));
+		queueCommandIfRendered(() -> new UiCheckBox.SetCheckColorCommand(getId(), checkColor != null ? checkColor.toHtmlColorString() : null));
 		return this;
 	}
 
@@ -89,7 +87,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public CheckBox setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
-		queueCommandIfRendered(() -> new UiCheckBox.SetBorderColorCommand(getId(), borderColor != null ? createUiColor(borderColor) : null));
+		queueCommandIfRendered(() -> new UiCheckBox.SetBorderColorCommand(getId(), borderColor != null ? borderColor.toHtmlColorString() : null));
 		return this;
 	}
 }

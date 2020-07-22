@@ -30,7 +30,6 @@ import org.teamapps.dto.UiObject;
 import org.teamapps.dto.WebRtcPublishingFailureReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.session.SessionContext;
@@ -89,8 +88,8 @@ public class MediaSoupV2WebRtcClient extends AbstractComponent {
 		mapAbstractUiComponentProperties(ui);
 		ui.setInitialPlaybackOrPublishParams(lastPublishOrPlaybackParams);
 		ui.setActivityLineVisible(activityLineVisible);
-		ui.setActivityInactiveColor(UiUtil.createUiColor(activityInactiveColor));
-		ui.setActivityActiveColor(UiUtil.createUiColor(activityActiveColor));
+		ui.setActivityInactiveColor(activityInactiveColor != null ? activityInactiveColor.toHtmlColorString() : null);
+		ui.setActivityActiveColor(activityActiveColor != null ? activityActiveColor.toHtmlColorString() : null);
 		ui.setIcons(icons.stream().map(icon -> getSessionContext().resolveIcon(icon)).collect(Collectors.toList()));
 		ui.setCaption(caption);
 		ui.setNoVideoImageUrl(noVideoImageUrl);

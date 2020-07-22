@@ -42,7 +42,7 @@ class UiFormSection {
     UiSpacing padding;
     UiBorder border;
     UiShadow shadow;
-    UiColor backgroundColor;
+    String backgroundColor;
     boolean collapsible;
     boolean collapsed;
     boolean visible = true;

@@ -51,12 +51,12 @@ class UiComponentField extends UiField {
 	int width; // 0 = the width will be determined by the component's content and context
 	int height; // 0 = the height will be determined by the component's content and context
 	UiBorder border;
-	UiColor backgroundColor = new UiColor(255, 255, 255);
+	String backgroundColor = "rgb(255, 255, 255)";
 
 	command setComponent(UiComponent* component);
 	command setSize(int width, int height);
 	command setBorder(UiBorder border);
-	command setBackgroundColor(UiColor backgroundColor);
+	command setBackgroundColor(String backgroundColor);
 }
 
 class UiTextField extends UiField implements UiTextInputHandlingField {
@@ -323,14 +323,14 @@ class UiFileItem {
 
 class UiCheckBox extends UiField {
 	String caption; // displayed on the right side of the checkbox
-	UiColor backgroundColor = new UiColor(255, 255, 255);
-	UiColor checkColor = new UiColor(70, 70, 70);
-	UiColor borderColor = new UiColor(123, 123, 123);
+	String backgroundColor = "rgb(255, 255, 255)";
+	String checkColor = "rgb(70, 70, 70)";
+	String borderColor = "rgb(123, 123, 123)";
 
 	command setCaption(String caption);
-	command setBackgroundColor(UiColor backgroundColor);
-	command setCheckColor(UiColor checkColor);
-	command setBorderColor(UiColor borderColor);
+	command setBackgroundColor(String backgroundColor);
+	command setCheckColor(String checkColor);
+	command setBorderColor(String borderColor);
 }
 
 abstract class AbstractUiTimeField extends UiField implements UiTextInputHandlingField {
@@ -518,7 +518,7 @@ class UiSlider extends UiField {
 	double max = 100;
 	double step = 1;
 	int displayedDecimals = 0;
-	UiColor selectionColor = new UiColor(51, 122, 183);
+	String selectionColor = "rgb(51, 122, 183)";
 	String tooltipPrefix;
 	String tooltipPostfix;
 	boolean humanReadableFileSize = false;
@@ -527,14 +527,14 @@ class UiSlider extends UiField {
 	command setMax(double max);
 	command setStep(double step);
 	command setDisplayedDecimals(int displayedDecimals);
-	command setSelectionColor(UiColor selectionColor);
+	command setSelectionColor(String selectionColor);
 	command setTooltipPrefix(String tooltipPrefi);
 	command setTooltipPostfix(String tooltipPostfi);
 	command setHumanReadableFileSize(boolean humanReadableFileSize);
 }
 
 class UiColorPicker extends UiField {
-	UiColor defaultColor = new UiColor(0, 0, 0);
+	String defaultColor = "rgb(0, 0, 0)";
 	String saveButtonCaption = "Save";
     String clearButtonCaption = "Clear";
 }

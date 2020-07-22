@@ -25,7 +25,6 @@ import org.teamapps.dto.UiToolbar;
 import org.teamapps.dto.UiToolbarButton;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
@@ -41,7 +40,7 @@ public class ToolbarButton {
 	public final Event<UiToolbar.ToolbarDropDownItemClickEvent> onDropDownItemClick = new Event<>();
 
 	private ToolbarButtonGroup toolbarButtonGroup;
-	private String clientId = UUID.randomUUID().toString();
+	private final String clientId = UUID.randomUUID().toString();
 
 	private final Object record;
 
@@ -140,8 +139,8 @@ public class ToolbarButton {
 		ui.setOpenNewTabWithUrl(openNewTabWithUrl);
 		ui.setTogglesFullScreenOnComponent(togglesFullScreenOnComponent != null ? togglesFullScreenOnComponent.createUiReference() : null);
 		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent.createUiReference() : null);
-		ui.setBackgroundColor(UiUtil.createUiColor(backgroundColor));
-		ui.setHoverBackgroundColor(UiUtil.createUiColor(hoverBackgroundColor));
+		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
+		ui.setHoverBackgroundColor(hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null);
 		return ui;
 	}
 

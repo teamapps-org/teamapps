@@ -34,7 +34,6 @@ import {UiToolbarButton} from "./UiToolbarButton";
 import {UiToolbarButtonGroup} from "./UiToolbarButtonGroup";
 import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "../../Common";
 import {UiComponent} from "../../UiComponent";
-import {UiColorConfig} from "../../../generated/UiColorConfig";
 import {UiToolbarButtonGroupPosition} from "../../../generated/UiToolbarButtonGroupPosition";
 
 interface FQButtonId {
@@ -309,7 +308,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 		// TODO destroy all dropdowns
 	}
 
-	setButtonColors(groupId: string, buttonId: string, backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig): void {
+	setButtonColors(groupId: string, buttonId: string, backgroundColor: string, hoverBackgroundColor: string): void {
 		this.buttonGroupsById[groupId].setButtonColors(buttonId, backgroundColor, hoverBackgroundColor);
 	}
 

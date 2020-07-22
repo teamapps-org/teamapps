@@ -25,10 +25,8 @@ import {UiComponent} from "./UiComponent";
 import ResizeObserver from 'resize-observer-polyfill';
 import {parseHtml, prependChild, removeClassesByFunction} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiFloatingComponentPosition} from "../generated/UiFloatingComponentPosition";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiColorConfig} from "../generated/UiColorConfig";
 
 export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponentConfig> implements UiFloatingComponentCommandHandler, UiFloatingComponentEventSource {
 
@@ -179,12 +177,12 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 		this.updateFloatingPosition();
 	}
 
-	setBackgroundColor(backgroundColor: UiColorConfig) {
-		this.getMainElement().style.backgroundColor = createUiColorCssString(backgroundColor);
+	setBackgroundColor(backgroundColor: string) {
+		this.getMainElement().style.backgroundColor = backgroundColor;
 	}
 
-	setExpanderHandleColor(expanderHandleColor: UiColorConfig) {
-		this.$expanderHandle.style.backgroundColor = createUiColorCssString(expanderHandleColor);
+	setExpanderHandleColor(expanderHandleColor: string) {
+		this.$expanderHandle.style.backgroundColor = expanderHandleColor;
 	}
 }
 

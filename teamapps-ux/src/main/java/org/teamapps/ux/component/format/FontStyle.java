@@ -22,8 +22,6 @@ package org.teamapps.ux.component.format;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiFontStyle;
 
-import static org.teamapps.util.UiUtil.createUiColor;
-
 public class FontStyle {
 
 	protected float relativeFontSize = 1;
@@ -110,8 +108,8 @@ public class FontStyle {
 
 	public UiFontStyle createUiFontStyle() {
 		UiFontStyle uiFontStyle = new UiFontStyle();
-		uiFontStyle.setFontColor(fontColor != null ? createUiColor(fontColor) : null);
-		uiFontStyle.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);
+		uiFontStyle.setFontColor(fontColor != null ? fontColor.toHtmlColorString() : null);
+		uiFontStyle.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiFontStyle.setBold(bold);
 		uiFontStyle.setUnderline(underline);
 		uiFontStyle.setItalic(italic);

@@ -22,14 +22,12 @@ import {UiColorPickerConfig, UiColorPickerEventSource} from "../../generated/UiC
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {createUiColorConfig, UiColorConfig} from "../../generated/UiColorConfig";
 import {create as createPickr, HSVaColor, Pickr} from "pickr-widget";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {parseHtml} from "../Common";
 
-export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> implements UiColorPickerEventSource {
+export class UiColorPicker extends UiField<UiColorPickerConfig, string> implements UiColorPickerEventSource {
 	private $main: HTMLElement;
 	private pickr: Pickr;
 	private doNotCommit: boolean;
@@ -42,7 +40,7 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 			parent: document.body,
 			position: "middle",
 
-			default: createUiColorCssString(config.defaultColor),
+			default: config.defaultColor,
 
 			comparison: false,
 
@@ -88,8 +86,8 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 		this.$main.querySelector<HTMLElement>(":scope .pcr-button").classList.add("field-border", "field-border-glow");
 	}
 
-	isValidData(v: UiColorConfig): boolean {
-		return v == null || (v.red != null && v.green != null && v.blue != null && v.alpha != null);
+	isValidData(v: string): boolean {
+		return v == null || typeof v == 'string';
 	}
 
 	commit(forceEvenIfNotChanged?: boolean): boolean {
@@ -99,10 +97,7 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 	@executeWhenFirstDisplayed()
 	protected displayCommittedValue(): void {
 		let committedValue = this.getCommittedValue();
-		if (committedValue != null && committedValue.alpha === 1) { // TODO https://github.com/Simonwep/pickr/issues/19
-			committedValue = {...committedValue, alpha: .999999};
-		}
-		let colorString = committedValue != null ? createUiColorCssString(committedValue) : createUiColorCssString(this.getDefaultValue());
+		let colorString = committedValue ?? this.getDefaultValue();
 
 		try {
 			this.doNotCommit = true;
@@ -112,7 +107,7 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 		}
 	}
 
-	getDefaultValue(): UiColorConfig {
+	getDefaultValue(): string {
 		return this._config.defaultColor;
 	}
 
@@ -124,11 +119,10 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 		return this.$main;
 	}
 
-	getTransientValue(): UiColorConfig {
+	getTransientValue(): string {
 		const color = this.pickr.getColor();
 		let rgb = color.toRGBA(); // the alpha value is buggy
-		const uiColorConfig = createUiColorConfig(rgb[0], rgb[1], rgb[2], {alpha: color.a});
-		return uiColorConfig;
+		return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${color.a})`;
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
@@ -139,13 +133,9 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, UiColorConfig> i
 		}
 	}
 
-	valuesChanged(v1: UiColorConfig, v2: UiColorConfig): boolean {
+	valuesChanged(v1: string, v2: string): boolean {
 		return (v1 == null) !== (v2 == null)
-			|| (v1 != null && v2 != null)
-			&& (v1.red !== v2.red
-				|| v1.green !== v2.green
-				|| v1.blue !== v2.blue
-				|| v1.alpha !== v2.alpha);
+			|| (v1 != null && v2 != null && v1 !== v2);
 	}
 
 	destroy(): void {

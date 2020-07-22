@@ -33,7 +33,6 @@ import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {UiItemView} from "../../UiItemView";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiComponent} from "../../UiComponent";
-import {UiColorConfig} from "../../../generated/UiColorConfig";
 import {UiToolAccordionButton} from "./UiToolAccordionButton";
 require("jquery-ui/ui/scroll-parent.js")
 
@@ -87,7 +86,7 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 		this.refreshEnforcedButtonWidth();
 	}
 
-	setButtonColors(groupId: string, buttonId: string, backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig): void {
+	setButtonColors(groupId: string, buttonId: string, backgroundColor: string, hoverBackgroundColor: string): void {
 		this.buttonGroupsById.getValue(groupId).setButtonColors(buttonId, backgroundColor, hoverBackgroundColor);
 	}
 
@@ -448,7 +447,7 @@ class UiButtonGroup {
 		})
 	}
 
-	setButtonColors(buttonId: string, backgroundColor: UiColorConfig, hoverBackgroundColor: UiColorConfig) {
+	setButtonColors(buttonId: string, backgroundColor: string, hoverBackgroundColor: string) {
 		this.buttons.filter(b => b.id === buttonId)[0].setColors(backgroundColor, hoverBackgroundColor);
 	}
 }

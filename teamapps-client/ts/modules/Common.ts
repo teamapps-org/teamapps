@@ -28,6 +28,7 @@ import moment from "moment-timezone";
 import {UiComponent} from "./UiComponent";
 import {UiPageTransition} from "../generated/UiPageTransition";
 import {UiRepeatableAnimation} from "../generated/UiRepeatableAnimation";
+import rgba from "color-rgba";
 
 export type RenderingFunction = (data: any) => string;
 
@@ -1326,4 +1327,8 @@ export function insertAtCursorPosition(input: HTMLInputElement | HTMLTextAreaEle
 	} else {
 		input.value += text;
 	}
+}
+
+export function isVisibleColor(c: string) {
+	return c != null && rgba(c)[3] > 0;
 }

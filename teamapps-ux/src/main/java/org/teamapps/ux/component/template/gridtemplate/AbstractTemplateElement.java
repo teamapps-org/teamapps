@@ -19,16 +19,14 @@
  */
 package org.teamapps.ux.component.template.gridtemplate;
 
-import org.teamapps.dto.AbstractUiTemplateElement;
 import org.teamapps.common.format.Color;
+import org.teamapps.dto.AbstractUiTemplateElement;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
 
 import java.util.Collections;
 import java.util.List;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public abstract class AbstractTemplateElement<C extends AbstractTemplateElement> {
 
@@ -163,6 +161,6 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 		uiElement.setHorizontalAlignment(horizontalAlignment.toUiHorizontalElementAlignment());
 		uiElement.setVerticalAlignment(verticalAlignment.toUiVerticalElementAlignment());
 		uiElement.setMargin(margin != null ? margin.createUiSpacing() : null);
-		uiElement.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);
+		uiElement.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 	}
 }

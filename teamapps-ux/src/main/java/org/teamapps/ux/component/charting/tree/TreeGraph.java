@@ -27,7 +27,6 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiTreeGraph;
 import org.teamapps.dto.UiTreeGraphNode;
 import org.teamapps.event.Event;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.Template;
 
@@ -54,7 +53,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	private int sideListIndent = 20;
 	private int sideListVerticalGap = 20;
 
-	private LinkedHashMap<String, TreeGraphNode<RECORD>> nodesById = new LinkedHashMap<>();
+	private final LinkedHashMap<String, TreeGraphNode<RECORD>> nodesById = new LinkedHashMap<>();
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 
 	public TreeGraph() {
@@ -101,15 +100,15 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	private void mapBaseTreeGraphNodeAttributes(BaseTreeGraphNode<RECORD> node, UiBaseTreeGraphNode uiNode) {
-		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? UiUtil.createUiColor(node.getBackgroundColor()) : null);
-		uiNode.setBorderColor(node.getBorderColor() != null ? UiUtil.createUiColor(node.getBorderColor()) : null);
+		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? node.getBackgroundColor().toHtmlColorString() : null);
+		uiNode.setBorderColor(node.getBorderColor() != null ? node.getBorderColor().toHtmlColorString() : null);
 		uiNode.setBorderWidth(node.getBorderWidth());
 		uiNode.setBorderRadius(node.getBorderRadius());
 		uiNode.setImage(node.getImage() != null ? node.getImage().createUiTreeGraphNodeImage() : null);
 		uiNode.setIcon(node.getIcon() != null ? node.getIcon().createUiTreeGraphNodeIcon() : null);
 		uiNode.setTemplate(node.getTemplate() != null ? node.getTemplate().createUiTemplate() : null);
 		uiNode.setRecord(node.getRecord() != null ? createUiRecord(node.getRecord(), node.getTemplate()) : null);
-		uiNode.setConnectorLineColor(node.getConnectorLineColor() != null ? UiUtil.createUiColor(node.getConnectorLineColor()) : null);
+		uiNode.setConnectorLineColor(node.getConnectorLineColor() != null ? node.getConnectorLineColor().toHtmlColorString() : null);
 		uiNode.setConnectorLineWidth(node.getConnectorLineWidth());
 		uiNode.setDashArray(node.getDashArray());
 	}

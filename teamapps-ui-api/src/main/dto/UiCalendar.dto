@@ -42,9 +42,9 @@ class UiCalendar extends UiComponent {
 	int businessHoursEnd = 17;
 	UiWeekDay firstDayOfWeek = null; // if set, overrides default set via UiConfiguration.firstDayOfWeek
 	List<UiWeekDay> workingDays = java.util.Arrays.asList(UiWeekDay.MONDAY, UiWeekDay.TUESDAY, UiWeekDay.WEDNESDAY, UiWeekDay.THURSDAY, UiWeekDay.FRIDAY);
-	UiColor tableHeaderBackgroundColor = new UiColor(255, 255, 255);
-    UiColor defaultBackgroundColor = new UiColor(154, 204, 228);
-    UiColor defaultBorderColor = new UiColor(154, 204, 228);
+	String tableHeaderBackgroundColor = "rgb(255, 255, 255)";
+    String defaultBackgroundColor = "rgb(154, 204, 228)";
+    String defaultBorderColor = "rgb(154, 204, 228)";
 
     boolean navigateOnHeaderClicks = true;
     int minYearViewMonthTileWidth = 175;

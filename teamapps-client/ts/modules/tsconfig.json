@@ -19,6 +19,7 @@
   },
   "files": [
     "index.ts",
+    "../custom-declarations/color-rgba.d.ts",
     "../custom-declarations/jquery.ui.position.d.ts",
     "../custom-declarations/webui-popover.d.ts",
     "../custom-declarations/pickr-widget.d.ts",

@@ -20,7 +20,7 @@
 class UiTreeGraph extends UiComponent {
     List<UiTreeGraphNode> nodes;
 
-	UiColor backgroundColor = new UiColor(0, 0, 0).setAlpha(0);
+	String backgroundColor = "rgba(0, 0, 0, 0)";
     float zoomFactor = 1;
     boolean compact;
 
@@ -52,8 +52,8 @@ class UiBaseTreeGraphNode {
 	required String id;
     required int width;
     required int height;
-    UiColor backgroundColor = new UiColor(255, 255, 255); // rgba
-    UiColor borderColor = new UiColor(100, 100, 100); // rgba
+    String backgroundColor = "rgb(255, 255, 255)";
+    String borderColor = "rgb(100, 100, 100)";
     float borderWidth = 1;
     float borderRadius = 0;
 
@@ -63,7 +63,7 @@ class UiBaseTreeGraphNode {
     UiTemplate template;     // will get embedded using foreignObject
     UiClientRecord record;   // will get embedded using foreignObject
 
-    UiColor connectorLineColor = new UiColor(100, 100, 100); // line to parent node
+    String connectorLineColor = "rgb(100, 100, 100)"; // line to parent node
     int connectorLineWidth;
     String dashArray;
 }
@@ -89,7 +89,7 @@ class UiTreeGraphNodeImage {
     enum { ORIGINAL, ROUNDED, CIRCLE } cornerShape = CornerShape.ROUNDED;
     boolean shadow = false;
     float borderWidth = 0;
-    UiColor borderColor = new UiColor(100, 100, 100);
+    String borderColor = "rgb(100, 100, 100)";
 }
 
 class UiTreeGraphNodeIcon {

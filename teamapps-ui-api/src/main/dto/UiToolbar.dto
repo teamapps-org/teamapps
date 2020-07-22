@@ -20,10 +20,10 @@
 abstract class AbstractUiToolContainer extends UiComponent {
 	required List<UiToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
 	required List<UiToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)
-	UiColor backgroundColor = new UiColor(255, 255, 255).setAlpha(0.84f);
+	String backgroundColor = "rgba(255, 255, 255, 0.84)";
 
 	command setButtonVisible(String groupId, String buttonId, boolean visible);
-	command setButtonColors(String groupId, String buttonId, UiColor backgroundColor, UiColor hoverBackgroundColor);
+	command setButtonColors(String groupId, String buttonId, String backgroundColor, String hoverBackgroundColor);
 	command setButtonGroupVisible(String groupId, boolean visible);
 	command addButton(String groupId, UiToolbarButton button, String neighborButtonId, boolean beforeNeighbor); //if neighborButtonId is empty, add at last position
 	command removeButton(String groupId, String buttonId);
@@ -72,8 +72,8 @@ class UiToolbarButton {
 	UiComponent* dropDownComponent;
 	int dropDownPanelWidth = 450;
 
-	UiColor backgroundColor;
-	UiColor hoverBackgroundColor;
+	String backgroundColor;
+	String hoverBackgroundColor;
 }
 
 @TypeScriptFactory

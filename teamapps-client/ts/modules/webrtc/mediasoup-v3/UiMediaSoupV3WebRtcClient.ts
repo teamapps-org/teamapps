@@ -42,7 +42,6 @@ import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaS
 import {arraysEqual, calculateDisplayModeInnerSize, deepEquals, findClassesByFunction, parseHtml} from "../../Common";
 import {ContextMenu} from "../../micro-components/ContextMenu";
 import {addVoiceActivityDetection, createVideoConstraints, enumerateDevices, getDisplayStream} from "../MediaUtil";
-import {createUiColorCssString} from "../../util/CssFormatUtil";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
 import {UiComponent} from "../../UiComponent";
 import {ConferenceApi} from "./lib/front/src/conference-api";
@@ -249,8 +248,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	async updateInternal(config: UiMediaSoupV3WebRtcClientConfig) {
 		console.log("update()", config);
 		this.$main.classList.toggle("activity-line-visible", config.activityLineVisible);
-		this.$main.style.setProperty("--activity-line-inactive-color", createUiColorCssString(config.activityInactiveColor));
-		this.$main.style.setProperty("--activity-line-inactive-color", createUiColorCssString(config.activityActiveColor));
+		this.$main.style.setProperty("--activity-line-inactive-color", config.activityInactiveColor);
+		this.$main.style.setProperty("--activity-line-inactive-color", config.activityActiveColor);
 
 		this.$bitrateDisplayWrapper.classList.toggle('hidden', !config.bitrateDisplayEnabled);
 
@@ -443,9 +442,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		newScreenConstraints: UiScreenSharingConstraintsConfig) {
 
 		let oldParams = this._config.publishingParameters;
-		const oldAudioConstraints = oldParams?.audioConstraints ?? null;
-		const oldWebcamConstraints = oldParams?.videoConstraints ?? null;
-		const oldScreenConstraints = oldParams?.screenSharingConstraints ?? null;
+		const oldAudioConstraints = oldParams?.audioConstraints;
+		const oldWebcamConstraints = oldParams?.videoConstraints;
+		const oldScreenConstraints = oldParams?.screenSharingConstraints;
 
 		const audioConstraintsChanged = !deepEquals(oldAudioConstraints, newAudioConstraints);
 		const webcamConstraintsChanged = !deepEquals(oldWebcamConstraints, newWebcamConstraints);

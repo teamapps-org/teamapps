@@ -28,7 +28,6 @@ import org.teamapps.dto.UiNetworkGraph;
 import org.teamapps.dto.UiNetworkLink;
 import org.teamapps.dto.UiNetworkNode;
 import org.teamapps.event.Event;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.ArrayList;
@@ -98,8 +97,8 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
 	private UiNetworkNode createUiNode(ForceLayoutNode<RECORD> node) {
 		UiNetworkNode uiNode = new UiNetworkNode(node.getId(), node.getWidth(), node.getHeight());
-		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? UiUtil.createUiColor(node.getBackgroundColor()) : null);
-		uiNode.setBorderColor(node.getBorderColor() != null ? UiUtil.createUiColor(node.getBorderColor()) : null);
+		uiNode.setBackgroundColor(node.getBackgroundColor() != null ? node.getBackgroundColor().toHtmlColorString() : null);
+		uiNode.setBorderColor(node.getBorderColor() != null ? node.getBorderColor().toHtmlColorString() : null);
 		uiNode.setBorderWidth(node.getBorderWidth());
 		uiNode.setBorderRadius(node.getBorderRadius());
 		uiNode.setTemplate(node.getTemplate() != null ? node.getTemplate().createUiTemplate() : null);

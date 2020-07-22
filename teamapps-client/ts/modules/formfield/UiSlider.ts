@@ -19,13 +19,11 @@
  */
 import * as noUiSlider from "nouislider";
 import {UiField} from "./UiField";
-import {UiSliderConfig, UiSliderCommandHandler, UiSliderEventSource} from "../../generated/UiSliderConfig";
+import {UiSliderCommandHandler, UiSliderConfig, UiSliderEventSource} from "../../generated/UiSliderConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiColorConfig} from "../../generated/UiColorConfig";
 import {generateUUID, humanReadableFileSize, parseHtml} from "../Common";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 
 const wNumb: (options: wNumb.Options) => wNumb.Instance = require('wnumb');
 
@@ -137,9 +135,9 @@ export class UiSlider extends UiField<UiSliderConfig, number> implements UiSlide
 		return v1 !== v2;
 	}
 
-	public setSelectionColor(selectionColor: UiColorConfig) {
+	public setSelectionColor(selectionColor: string) {
 		this.$style.innerHTML = `[data-uuid="${this.uuid}"] .noUi-connect {
-			background-color: ${createUiColorCssString(selectionColor)};
+			background-color: ${(selectionColor ?? '')};
 		}`;
 	}
 

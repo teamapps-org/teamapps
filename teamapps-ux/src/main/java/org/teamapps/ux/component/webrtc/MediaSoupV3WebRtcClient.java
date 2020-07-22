@@ -32,7 +32,6 @@ import org.teamapps.dto.UiMediaSoupPublishingParameters;
 import org.teamapps.dto.UiMediaSoupV3WebRtcClient;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.session.SessionContext;
@@ -94,8 +93,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		ui.setPublishingParameters(publishingParameters);
 		ui.setPlaybackParameters(playbackParameters);
 		ui.setActivityLineVisible(activityLineVisible);
-		ui.setActivityInactiveColor(UiUtil.createUiColor(activityInactiveColor));
-		ui.setActivityActiveColor(UiUtil.createUiColor(activityActiveColor));
+		ui.setActivityInactiveColor(activityInactiveColor != null ? activityInactiveColor.toHtmlColorString() : null);
+		ui.setActivityActiveColor(activityActiveColor != null ? activityActiveColor.toHtmlColorString() : null);
 		ui.setIcons(icons.stream().map(icon -> getSessionContext().resolveIcon(icon)).collect(Collectors.toList()));
 		ui.setBitrateDisplayEnabled(bitrateDisplayEnabled);
 		ui.setCaption(caption);

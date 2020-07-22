@@ -20,7 +20,11 @@
 package org.teamapps.ux.component.template.gridtemplate;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.*;
+import org.teamapps.dto.AbstractUiTemplateElement;
+import org.teamapps.dto.UiGridColumn;
+import org.teamapps.dto.UiGridRow;
+import org.teamapps.dto.UiGridTemplate;
+import org.teamapps.dto.UiTemplate;
 import org.teamapps.ux.component.format.Border;
 import org.teamapps.ux.component.format.SizeType;
 import org.teamapps.ux.component.format.SizingPolicy;
@@ -32,8 +36,6 @@ import org.teamapps.ux.component.template.Template;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class GridTemplate implements Template {
 
@@ -233,7 +235,7 @@ public class GridTemplate implements Template {
 		}
 		uiGridTemplate.setGridGap(gridGap);
 		uiGridTemplate.setBorder(border != null ? border.createUiBorder() : null);
-		uiGridTemplate.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);
+		uiGridTemplate.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		return uiGridTemplate;
 	}
 

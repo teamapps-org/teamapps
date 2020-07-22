@@ -19,12 +19,9 @@
  */
 package org.teamapps.ux.component.field;
 
-import org.teamapps.dto.UiColor;
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiColorPicker;
 import org.teamapps.dto.UiField;
-import org.teamapps.common.format.Color;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class ColorPicker extends AbstractField<Color> {
 
@@ -40,7 +37,7 @@ public class ColorPicker extends AbstractField<Color> {
 	public UiField createUiComponent() {
 		UiColorPicker uiColorPicker = new UiColorPicker();
 		mapAbstractFieldAttributesToUiField(uiColorPicker);
-		uiColorPicker.setDefaultColor(defaultColor != null ? createUiColor(defaultColor) : null);
+		uiColorPicker.setDefaultColor(defaultColor != null ? defaultColor.toHtmlColorString() : null);
 		uiColorPicker.setSaveButtonCaption(saveButtonCaption);
 		uiColorPicker.setClearButtonCaption(clearButtonCaption);
 		return uiColorPicker;
@@ -51,9 +48,13 @@ public class ColorPicker extends AbstractField<Color> {
 		if (value == null) {
 			return null;
 		} else {
-			UiColor uiColor = (UiColor) value;
-			return new Color(uiColor.getRed(), uiColor.getGreen(), uiColor.getBlue(), uiColor.getAlpha());
+			return Color.fromHtmlString((String) value);
 		}
+	}
+
+	@Override
+	public Object convertUxValueToUiValue(Color color) {
+		return color != null ? color.toHtmlColorString() : null;
 	}
 
 	public Color getDefaultColor() {

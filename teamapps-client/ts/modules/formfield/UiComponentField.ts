@@ -23,8 +23,7 @@ import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiComponentFieldCommandHandler, UiComponentFieldConfig, UiComponentFieldEventSource} from "../../generated/UiComponentFieldConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {createUiBorderCssObject, createUiColorCssString} from "../util/CssFormatUtil";
-import {UiColorConfig} from "../../generated/UiColorConfig";
+import {createUiBorderCssObject} from "../util/CssFormatUtil";
 import {UiBorderConfig} from "../../generated/UiBorderConfig";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
@@ -47,8 +46,8 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 		return true;
 	}
 
-	setBackgroundColor(backgroundColor: UiColorConfig): void {
-		this.$componentWrapper.style.backgroundColor = backgroundColor ? createUiColorCssString(backgroundColor) : '';
+	setBackgroundColor(backgroundColor: string): void {
+		this.$componentWrapper.style.backgroundColor = backgroundColor;
 	}
 
 	setBorder(border: UiBorderConfig): void {

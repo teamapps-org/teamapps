@@ -39,11 +39,9 @@ import {
 	UiMediaSoupV2WebRtcClientEventSource
 } from "../../../generated/UiMediaSoupV2WebRtcClientConfig";
 import {Conference} from "./lib/conference";
-import {UiMediaSoupPlaybackParametersConfig} from "../../../generated/UiMediaSoupPlaybackParametersConfig";
 import {UiMediaSoupPublishingParametersConfig} from "../../../generated/UiMediaSoupPublishingParametersConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiMulticastPlaybackProfile} from "../../../generated/UiMulticastPlaybackProfile";
-import {createUiColorCssString} from "../../util/CssFormatUtil";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
 import {WebRtcPublishingFailureReason} from "../../../generated/WebRtcPublishingFailureReason";
 import {ContextMenu} from "../../micro-components/ContextMenu";
@@ -381,8 +379,8 @@ export class UiMediaSoupV2WebRtcClient extends AbstractUiComponent<UiMediaSoupV2
 		this._config = config;
 
 		this.$main.classList.toggle("activity-line-visible", config.activityLineVisible);
-		this.$main.style.setProperty("--activity-line-inactive-color", createUiColorCssString(config.activityInactiveColor));
-		this.$main.style.setProperty("--activity-line-inactive-color", createUiColorCssString(config.activityActiveColor));
+		this.$main.style.setProperty("--activity-line-inactive-color", config.activityInactiveColor);
+		this.$main.style.setProperty("--activity-line-inactive-color", config.activityActiveColor);
 
 		if (iconsChanged) {
 			this.$icons.innerHTML = '';

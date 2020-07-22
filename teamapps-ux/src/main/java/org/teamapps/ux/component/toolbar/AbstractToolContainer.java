@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,6 @@ import org.teamapps.dto.UiDropDownButtonClickInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiToolbar;
 import org.teamapps.event.Event;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -120,8 +119,8 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	protected void handleButtonColorChange(String groupClientId, String buttonClientId, Color backgroundColor, Color hoverBackgroundColor) {
-		queueCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(this.getId(), groupClientId, buttonClientId, UiUtil.createUiColor(backgroundColor),
-				UiUtil.createUiColor(hoverBackgroundColor)));
+		queueCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(this.getId(), groupClientId, buttonClientId, backgroundColor != null ? backgroundColor.toHtmlColorString() : null,
+				hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null));
 	}
 
 	protected void handleAddButton(ToolbarButtonGroup group, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor) {
@@ -133,7 +132,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {
-		this.setCssStyle("> .background-color-div", "background-color", backgroundColor.toHtmlColorString());
+		this.setCssStyle("> .background-color-div", "background-color", backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 	}
 
 	public List<ToolbarButtonGroup> getToolbarButtonGroups() {

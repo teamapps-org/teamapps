@@ -24,7 +24,6 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFloatingComponent;
 import org.teamapps.event.Event;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 
@@ -62,8 +61,8 @@ public class FloatingComponent extends AbstractComponent {
 		ui.setMarginX(marginX);
 		ui.setMarginY(marginY);
 		ui.setPosition(position.toUiPosition());
-		ui.setBackgroundColor(UiUtil.createUiColor(backgroundColor));
-		ui.setExpanderHandleColor(UiUtil.createUiColor(expanderHandleColor));
+		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
+		ui.setExpanderHandleColor(expanderHandleColor != null ? expanderHandleColor.toHtmlColorString() : null);
 		ui.setCollapsible(collapsible);
 		ui.setExpanded(expanded);
 		return ui;
@@ -120,7 +119,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetBackgroundColorCommand(getId(), UiUtil.createUiColor(backgroundColor)));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetBackgroundColorCommand(getId(), backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 	}
 
 	public Color getExpanderHandleColor() {
@@ -129,7 +128,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanderHandleColor(Color expanderHandleColor) {
 		this.expanderHandleColor = expanderHandleColor;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpanderHandleColorCommand(getId(), UiUtil.createUiColor(expanderHandleColor)));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpanderHandleColorCommand(getId(), expanderHandleColor != null ? expanderHandleColor.toHtmlColorString() : null));
 	}
 
 	public boolean isCollapsible() {

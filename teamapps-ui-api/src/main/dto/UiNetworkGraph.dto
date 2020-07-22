@@ -49,8 +49,8 @@ class UiNetworkNode {
 	required int width;
 	required int height;
 
-	UiColor backgroundColor = new UiColor(255, 255, 255); // rgba
-	UiColor borderColor = new UiColor(100, 100, 100); // rgba
+	String backgroundColor = "rgb(255, 255, 255)";
+	String borderColor = "rgb(100, 100, 100)";
 	float borderWidth = 1;
 	float borderRadius = 0;
 
@@ -68,7 +68,7 @@ class UiNetworkNode {
 class UiNetworkLink {
 	required String source;
 	required String target;
-	UiColor lineColor = new UiColor(127, 127, 127);
+	String lineColor = "rgb(127, 127, 127)";
 	float lineWidth = 1.5f;
 	String lineDashArray;
 }

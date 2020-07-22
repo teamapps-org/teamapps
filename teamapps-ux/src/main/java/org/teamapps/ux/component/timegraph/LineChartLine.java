@@ -25,8 +25,6 @@ import org.teamapps.dto.UiLineChartLine;
 import java.util.Collections;
 import java.util.List;
 
-import static org.teamapps.util.UiUtil.createUiColor;
-
 public class LineChartLine extends AbstractLineChartDataDisplay {
 
 	private final String dataSeriesId;
@@ -71,10 +69,10 @@ public class LineChartLine extends AbstractLineChartDataDisplay {
 
 		ui.setGraphType(graphType.toUiLineChartCurveType());
 		ui.setDataDotRadius(dataDotRadius);
-		ui.setLineColorScaleMin(lineColorScaleMin != null ? createUiColor(lineColorScaleMin) : null);
-		ui.setLineColorScaleMax(lineColorScaleMax != null ? createUiColor(lineColorScaleMax) : null);
-		ui.setAreaColorScaleMin(areaColorScaleMin != null ? createUiColor(areaColorScaleMin) : null);
-		ui.setAreaColorScaleMax(areaColorScaleMax != null ? createUiColor(areaColorScaleMax) : null);
+		ui.setLineColorScaleMin(lineColorScaleMin != null ? lineColorScaleMin.toHtmlColorString() : null);
+		ui.setLineColorScaleMax(lineColorScaleMax != null ? lineColorScaleMax.toHtmlColorString() : null);
+		ui.setAreaColorScaleMin(areaColorScaleMin != null ? areaColorScaleMin.toHtmlColorString() : null);
+		ui.setAreaColorScaleMax(areaColorScaleMax != null ? areaColorScaleMax.toHtmlColorString() : null);
 
 		return ui;
 	}

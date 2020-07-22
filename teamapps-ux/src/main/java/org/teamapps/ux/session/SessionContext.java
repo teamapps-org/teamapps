@@ -37,7 +37,6 @@ import org.teamapps.uisession.UiCommandWithResultCallback;
 import org.teamapps.uisession.UiSessionActivityState;
 import org.teamapps.util.MultiKeySequentialExecutor;
 import org.teamapps.util.NamedThreadFactory;
-import org.teamapps.util.UiUtil;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
@@ -379,7 +378,7 @@ public class SessionContext {
 	}
 
 	public void setBackgroundColor(Color color, int animationDuration) {
-		queueCommand(new UiRootPanel.SetBackgroundColorCommand(UiUtil.createUiColor(color), animationDuration));
+		queueCommand(new UiRootPanel.SetBackgroundColorCommand(color != null ? color.toHtmlColorString() : null, animationDuration));
 	}
 
 	public void exitFullScreen() {

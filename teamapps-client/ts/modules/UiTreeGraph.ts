@@ -20,7 +20,6 @@
 
 import * as d3 from "d3";
 import {BaseType, HierarchyNode, HierarchyPointLink, HierarchyPointNode, Selection, ZoomBehavior} from "d3";
-import {UiColorConfig} from '../generated/UiColorConfig';
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {
 	UiTreeGraph_NodeClickedEvent,
@@ -37,7 +36,6 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeGraphNodeImage_CornerShape} from "../generated/UiTreeGraphNodeImageConfig";
 import {parseHtml} from "./Common";
-import {createUiColorCssString} from "./util/CssFormatUtil";
 import {flextree, FlexTreeLayout} from "d3-flextree";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 
@@ -64,7 +62,7 @@ export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implemen
 
 	public update(config: UiTreeGraphConfig) {
 		this.chart
-			.backgroundColor(createUiColorCssString(config.backgroundColor))
+			.backgroundColor(config.backgroundColor)
 			.initialZoom(config.zoomFactor)
 			.data(config.nodes)
 			.compact(config.compact)
@@ -663,7 +661,7 @@ class TreeChart {
 			)
 			.attr("fill", "none")
 			.attr("stroke-width", d => d.data.connectorLineWidth || 2)
-			.attr('stroke', d => d.data.connectorLineColor ? this.rgbaObjToColor(d.data.connectorLineColor) : 'white')
+			.attr('stroke', d => d.data.connectorLineColor ? d.data.connectorLineColor : 'white')
 			.attr('stroke-dasharray', d => d.data.dashArray ? d.data.dashArray : '')
 			.transition()
 			.duration(attrs.duration)
@@ -746,7 +744,7 @@ class TreeChart {
 			.attr('r', 10)
 			.attr('stroke-width', d => d.data.borderWidth || attrs.strokeWidth)
 			.attr('fill', "white")
-			.attr('stroke', d => createUiColorCssString(d.data.borderColor));
+			.attr('stroke', d => d.data.borderColor);
 
 // Add button text
 		childrenExpanderButtonG.selectAll(':scope > text.node-button-text')
@@ -873,8 +871,8 @@ class TreeChart {
 			.attr('y', 0)
 			.attr('rx', d => d.data.borderRadius || 0)
 			.attr('stroke-width', d => d.data.borderWidth)
-			.attr('stroke', d => createUiColorCssString(d.data.borderColor))
-			.style("fill", d => createUiColorCssString(d.data.backgroundColor));
+			.attr('stroke', d => d.data.borderColor)
+			.style("fill", d => d.data.backgroundColor);
 
 		// Add node icon image inside node
 		nodesSelection.selectAll(':scope > image.node-icon-image')
@@ -911,7 +909,7 @@ class TreeChart {
 			.attr('fill', d => `url(#${d.id})`)
 			.attr('width', d => d.data.image.width)
 			.attr('height', d => d.data.image.height)
-			.attr('stroke', d => createUiColorCssString(d.data.image.borderColor))
+			.attr('stroke', d => d.data.image.borderColor)
 			.attr('stroke-width', d => d.data.image.borderWidth)
 			.attr('rx', d => d.data.image.cornerShape == UiTreeGraphNodeImage_CornerShape.CIRCLE ? Math.max(d.data.image.width, d.data.image.height)
 				: d.data.image.cornerShape == UiTreeGraphNodeImage_CornerShape.ROUNDED ? Math.min(d.data.image.width, d.data.image.height) / 10
@@ -971,7 +969,7 @@ class TreeChart {
 			)
 			.attr("fill", "none")
 			.attr("stroke-width", d => d.target.data.connectorLineWidth || 2)
-			.attr('stroke', d => d.target.data.connectorLineColor ? this.rgbaObjToColor(d.target.data.connectorLineColor) : 'white')
+			.attr('stroke', d => d.target.data.connectorLineColor ? d.target.data.connectorLineColor : 'white')
 			.attr('stroke-dasharray', d => d.target.data.dashArray ? d.target.data.dashArray : '')
 			.transition()
 			.duration(attrs.duration)
@@ -980,18 +978,6 @@ class TreeChart {
 
 	private isEdge() {
 		return window.navigator.userAgent.includes("Edge");
-	}
-
-	/* Function converts rgba objects to rgba color string
-	  {red:110,green:150,blue:255,alpha:1}  => rgba(110,150,255,1)
-	*/
-	rgbaObjToColor({
-		               red,
-		               green,
-		               blue,
-		               alpha
-	               }: UiColorConfig) {
-		return `rgba(${red},${green},${blue},${alpha})`;
 	}
 
 	diagonalLine(s: { x: number, y: number }, t: { x: number, y: number }) {

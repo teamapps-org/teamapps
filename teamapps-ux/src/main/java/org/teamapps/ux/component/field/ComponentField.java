@@ -19,13 +19,11 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponentField;
 import org.teamapps.dto.UiField;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.Border;
-import org.teamapps.common.format.Color;
-
-import static org.teamapps.util.UiUtil.createUiColor;
 
 public class ComponentField extends AbstractField<Void> {
 
@@ -48,7 +46,7 @@ public class ComponentField extends AbstractField<Void> {
 		uiField.setWidth(width);
 		uiField.setHeight(height);
 		uiField.setBorder(border != null ? border.createUiBorder(): null);
-		uiField.setBackgroundColor(backgroundColor != null ? createUiColor(backgroundColor) : null);
+		uiField.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		return uiField;
 	}
 
@@ -94,6 +92,6 @@ public class ComponentField extends AbstractField<Void> {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiComponentField.SetBackgroundColorCommand(getId(), backgroundColor != null ? createUiColor(backgroundColor) : null));
+		queueCommandIfRendered(() -> new UiComponentField.SetBackgroundColorCommand(getId(), backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 	}
 }

@@ -25,13 +25,11 @@ import org.teamapps.dto.UiLineChartBand;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.teamapps.util.UiUtil.createUiColor;
-
 public class LineChartBand extends AbstractLineChartDataDisplay {
 
-	private String upperBoundDataSeriesId;
-	private String middleLineDataSeriesId;
-	private String lowerBoundDataSeriesId;
+	private final String upperBoundDataSeriesId;
+	private final String middleLineDataSeriesId;
+	private final String lowerBoundDataSeriesId;
 
 	private LineChartCurveType curveType;
 	private float dataDotRadius;
@@ -71,10 +69,10 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 
 		ui.setGraphType(curveType.toUiLineChartCurveType());
 		ui.setDataDotRadius(dataDotRadius);
-		ui.setMiddleLineColor(centerLineColor != null ? createUiColor(centerLineColor) : null);
-		ui.setLowerLineColor(lowerLineColor != null ? createUiColor(lowerLineColor) : null);
-		ui.setUpperLineColor(upperLineColor != null ? createUiColor(upperLineColor) : null);
-		ui.setAreaColor(areaColor != null ? createUiColor(areaColor) : null);
+		ui.setMiddleLineColor(centerLineColor != null ? centerLineColor.toHtmlColorString() : null);
+		ui.setLowerLineColor(lowerLineColor != null ? lowerLineColor.toHtmlColorString() : null);
+		ui.setUpperLineColor(upperLineColor != null ? upperLineColor.toHtmlColorString() : null);
+		ui.setAreaColor(areaColor != null ? areaColor.toHtmlColorString() : null);
 
 		return ui;
 	}

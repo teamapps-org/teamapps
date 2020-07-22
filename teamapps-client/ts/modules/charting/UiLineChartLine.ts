@@ -23,10 +23,10 @@ import * as d3 from "d3";
 import {ScaleLinear} from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
 import {UiLineChartLineConfig} from "../../generated/UiLineChartLineConfig";
-import {createUiColorCssString} from "../util/CssFormatUtil";
 import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
+import {isVisibleColor} from "../Common";
 
 export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartLineConfig> {
 	private line: Line<DataPoint>;
@@ -62,7 +62,7 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 		this.line = d3.line<DataPoint>()
 			.curve(CurveTypeToCurveFactory[this.config.graphType]);
 		this.colorScale = d3.scaleLinear<string, string>()
-			.range([createUiColorCssString(this.config.lineColorScaleMin), createUiColorCssString(this.config.lineColorScaleMax)]);
+			.range([this.config.lineColorScaleMin, this.config.lineColorScaleMax]);
 	}
 
 	private initDomNodes() {
@@ -91,14 +91,14 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 		this.$defs.select(".line-gradient")
 			.attr("y2", this.scaleY.range()[0])
 			.selectAll("stop")
-			.data([createUiColorCssString(this.config.lineColorScaleMax), createUiColorCssString(this.config.lineColorScaleMin)])
+			.data([this.config.lineColorScaleMax, this.config.lineColorScaleMin])
 			.join("stop")
 			.attr("stop-color", d => d)
 			.attr("offset", (datum, index) => index);
 		this.$defs.select(".area-gradient")
 			.attr("y2", this.scaleY.range()[0])
 			.selectAll("stop")
-			.data([createUiColorCssString(this.config.areaColorScaleMax), createUiColorCssString(this.config.areaColorScaleMin)])
+			.data([this.config.areaColorScaleMax, this.config.areaColorScaleMin])
 			.join("stop")
 			.attr("stop-color", d => d)
 			.attr("offset", (datum, index) => index);
@@ -109,8 +109,7 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
 		this.$line.attr("d", this.line(data));
 
-		if (this.config.areaColorScaleMin != null && this.config.areaColorScaleMin.alpha > 0
-			|| this.config.areaColorScaleMax != null && this.config.areaColorScaleMax.alpha > 0) { // do not render transparent area!
+		if (isVisibleColor(this.config.areaColorScaleMin) || isVisibleColor(this.config.areaColorScaleMax)) {
 			this.area
 				.x(d => this.scaleX(d.x))
 				.y0(this.scaleY.range()[0])
@@ -132,7 +131,7 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 			.attr("y1", this.scaleY(0))
 			.attr("x2", this.scaleX.range()[1])
 			.attr("y2", this.scaleY(0))
-			.attr("stroke", createUiColorCssString(this.config.yAxisColor))
+			.attr("stroke", this.config.yAxisColor)
 			.attr("visibility", (this.config.yZeroLineVisible && this.scaleY.domain()[0] !== 0) ? "visible" : "hidden");
 	}
 

@@ -23,7 +23,6 @@ import {
 	createImageSizingCssObject,
 	createTextAlignmentCssString,
 	createUiBorderCssString,
-	createUiColorCssString,
 	createUiFontStyleCssString,
 	createUiShadowCssString,
 	createUiSpacingCssString,
@@ -47,7 +46,7 @@ function createTextElementRenderer(element: UiTextElementConfig, additionalCssCl
 		+ (`white-space:${element.wrapLines ? 'normal' : 'nowrap'};`)
 		+ (createUiSpacingCssString("padding", element.padding))
 		+ (createTextAlignmentCssString(element.textAlignment));
-	const backgroundColorCss = element.backgroundColor ? (`background-color: ${createUiColorCssString(element.backgroundColor)};`) : '';
+	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
 		let value = data[element.dataKey];
 		if (value == null) {
@@ -63,14 +62,14 @@ function createTextElementRenderer(element: UiTextElementConfig, additionalCssCl
 }
 
 function createBadgeElementRenderer(element: UiBadgeElementConfig, additionalCss: string): RenderingFunction {
-	const borderStyle = `border: 1px solid ${element.borderColor ? createUiColorCssString(element.borderColor) : 'transparent'};`;
+	const borderStyle = `border: 1px solid ${element.borderColor ? element.borderColor ?? '' : 'transparent'};`;
 	return createTextElementRenderer(element, 'UiBadgeElement', borderStyle + additionalCss);
 }
 
 function createFloatingElementRenderer(element: UiFloatingElementConfig, additionalCss: string): RenderingFunction {
 	const elementRenderers = element.elements.map(subElement => createElementRenderer(subElement));
 	const wrapCss = `flex-wrap: ${element.wrap ? 'wrap' : 'nowrap'};`;
-	const backgroundColorCss = element.backgroundColor ? (`background-color: ${createUiColorCssString(element.backgroundColor)};`) : '';
+	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
 		return `<div class='grid-template-element UiFloatingElement' style="${wrapCss} ${backgroundColorCss} ${additionalCss}">${elementRenderers.map(renderer => renderer(data)).join('')}</div>`;
 	};
@@ -83,7 +82,7 @@ function createImageElementRenderer(element: UiImageElementConfig, additionalCss
 		+ createUiSpacingCssString("padding", element.padding)
 		+ createUiShadowCssString(element.shadow)
 		+ cssObjectToString(createImageSizingCssObject(element.imageSizing))
-		+ (element.backgroundColor ? (`background-color: ${createUiColorCssString(element.backgroundColor)};`) : '');
+		+ (element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '');
 	return (data: any) => {
 		let value = data[element.dataKey];
 		if (value != null) {
@@ -97,7 +96,7 @@ function createImageElementRenderer(element: UiImageElementConfig, additionalCss
 
 function createIconElementRenderer(element: UiIconElementConfig, additionalCss: string): RenderingFunction {
 	const style = `width:${element.size}px; height:${element.size}px; background-size:${element.size}px;`;
-	const backgroundColorCss = element.backgroundColor ? (`background-color: ${createUiColorCssString(element.backgroundColor)};`) : '';
+	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
 		let value = data[element.dataKey];
 		if (value != null) {
@@ -111,7 +110,7 @@ function createIconElementRenderer(element: UiIconElementConfig, additionalCss: 
 
 function createGlyphIconElementRenderer(element: UiGlyphIconElementConfig, additionalCss: string): RenderingFunction {
 	const style = `font-size:${element.size}px; text-align: center;`;
-	const backgroundColorCss = element.backgroundColor ? (`background-color: ${createUiColorCssString(element.backgroundColor)};`) : '';
+	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
 		let value = data[element.dataKey];
 		if (value == null) {
@@ -211,7 +210,7 @@ export function createGridTemplateRenderer(template: UiGridTemplateConfig, idPro
 	const maxHeightCss = template.maxHeight ? `max-height: ${template.maxHeight}px;` : '';
 	const minWidthCss = template.minWidth ? `min-width: ${template.minWidth}px;` : '';
 	const minHeightCss = template.minHeight ? `min-height: ${template.minHeight}px;` : '';
-	const backgroundColorCss = template.backgroundColor ? (`background-color: ${createUiColorCssString(template.backgroundColor)};`) : '';
+	const backgroundColorCss = template.backgroundColor ? (`background-color: ${(template.backgroundColor ?? '')};`) : '';
 	const borderCss = createUiBorderCssString(template.border);
 	const gridCss = `${gridTemplateColumnsString} ${gridTemplateRowsString} ${paddingCss} ${gridGapCss} ${minWidthCss} ${minHeightCss} ${maxWidthCss} ${maxHeightCss} ${backgroundColorCss} ${borderCss}`;
 

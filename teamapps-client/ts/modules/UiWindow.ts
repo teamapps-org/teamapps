@@ -25,8 +25,6 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "../generated/UiWindowConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {keyCodes} from "./trivial-components/TrivialCore";
-import {UiColorConfig} from "../generated/UiColorConfig";
-import {createUiColorCssString} from "./util/CssFormatUtil";
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiToolButton} from "./micro-components/UiToolButton";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
@@ -55,7 +53,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 	private closeOnEscape: boolean;
 	private closeOnClickOutside: boolean;
 	private modal: boolean;
-	private modalBackgroundDimmingColor: UiColorConfig;
+	private modalBackgroundDimmingColor: string;
 
 	constructor(config: UiWindowConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -179,9 +177,9 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 		}
 	}
 
-	public setModalBackgroundDimmingColor(modalBackgroundDimmingColor: UiColorConfig): void {
+	public setModalBackgroundDimmingColor(modalBackgroundDimmingColor: string): void {
 		this.modalBackgroundDimmingColor = modalBackgroundDimmingColor;
-		this.$main.style.backgroundColor = createUiColorCssString(modalBackgroundDimmingColor);
+		this.$main.style.backgroundColor = modalBackgroundDimmingColor;
 	}
 
 	public setModal(modal: boolean) {

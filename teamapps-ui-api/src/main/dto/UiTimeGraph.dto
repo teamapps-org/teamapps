@@ -62,7 +62,7 @@ class UiTimeChartZoomLevel {
 
 abstract class AbstractUiLineChartDataDisplay {
 	String id;
-	UiColor yAxisColor = new UiColor(0, 0, 0);
+	String yAxisColor = "rgb(0, 0, 0)";
 	UiScaleType yScaleType = UiScaleType.LINEAR;
 	UiLongInterval intervalY;
 	UiLineChartYScaleZoomMode yScaleZoomMode = UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
@@ -73,10 +73,10 @@ class UiLineChartLine extends AbstractUiLineChartDataDisplay {
 	String dataSeriesId;
 	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
     float dataDotRadius;
-    UiColor lineColorScaleMin;
-    UiColor lineColorScaleMax;
-    UiColor areaColorScaleMin;
-    UiColor areaColorScaleMax;
+    String lineColorScaleMin;
+    String lineColorScaleMax;
+    String areaColorScaleMin;
+    String areaColorScaleMax;
 }
 
 class UiLineChartBand extends AbstractUiLineChartDataDisplay {
@@ -85,10 +85,10 @@ class UiLineChartBand extends AbstractUiLineChartDataDisplay {
 	String lowerBoundDataSeriesId;
 	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
     float dataDotRadius;
-    UiColor areaColor;
-    UiColor middleLineColor;
-	UiColor lowerLineColor;
-	UiColor upperLineColor;
+    String areaColor;
+    String middleLineColor;
+	String lowerLineColor;
+	String upperLineColor;
 }
 
 class UiLineChartDataDisplayGroup extends AbstractUiLineChartDataDisplay {
