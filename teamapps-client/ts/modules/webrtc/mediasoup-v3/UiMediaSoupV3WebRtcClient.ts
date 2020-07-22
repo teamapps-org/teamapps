@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,8 +44,6 @@ import {ContextMenu} from "../../micro-components/ContextMenu";
 import {addVoiceActivityDetection, createVideoConstraints, enumerateDevices, getDisplayStream} from "../MediaUtil";
 import {UiPageDisplayMode} from "../../../generated/UiPageDisplayMode";
 import {UiComponent} from "../../UiComponent";
-import {ConferenceApi} from "./lib/front/src/conference-api";
-import {Utils} from "./lib/front/src/utils";
 import {UiMediaSoupPlaybackParametersConfig} from "../../../generated/UiMediaSoupPlaybackParametersConfig";
 import {UiMediaDeviceInfoConfig} from "../../../generated/UiMediaDeviceInfoConfig";
 import {MediaKind} from "mediasoup-client/lib/RtpParameters";
@@ -56,7 +54,8 @@ import {MixSizingInfo, TrackWithMixSizingInfo, VideoTrackMixer} from "../VideoTr
 import {determineVideoSize} from "../MultiStreamsMixer";
 import {UiMediaRetrievalFailureReason} from "../../../generated/UiMediaRetrievalFailureReason";
 import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType";
-import {ConferenceInputOrigin} from "./lib/front/src/client-interfaces";
+import {ConferenceApi, Utils} from "avcore.client/dist";
+import {ConferenceInput} from "avcore";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent(this);
@@ -306,22 +305,23 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.updateStateCssClasses();
 
 		const oldParams = this._config.playbackParameters;
-		const needsReset =
-			oldParams?.serverChain?.map(chainLink => chainLink.url).concat("->") == newParams?.serverChain?.map(chainLink => chainLink.url).concat("->")
+		const needsReset = oldParams?.server?.url !== newParams?.server?.url || oldParams?.server?.worker !== newParams?.server?.worker
+			|| oldParams?.origin?.url !== newParams?.origin?.url || oldParams?.origin?.worker !== newParams?.origin?.worker
 			|| oldParams?.streamUuid != newParams?.streamUuid;
 		if (needsReset) {
-			console.log("updatePlayback() --> needsReset", newParams, newParams.serverChain.map(c => c.url).join(" -> "));
+			console.log("updatePlayback() --> needsReset", oldParams, newParams);
 			await this.stop();
 
 			if (newParams != null) {
 				try {
-					let conferenceInputOrigin = UiMediaSoupV3WebRtcClient.convertServerListToConferenceInputOrigin(newParams.serverChain);
-					let conferenceApiConfig = {
+					let conferenceApiConfig: ConferenceInput = {
 						stream: newParams.streamUuid,
-						token: conferenceInputOrigin.token,
-						url: conferenceInputOrigin.url,
-						origin: conferenceInputOrigin.origin,
-						kinds: [...(newParams.audio ? ["audio"] : []), ...(newParams.video ? ["video"] : [])] as MediaKind[]
+						token: newParams.server.token,
+						url: newParams.server.url,
+						worker: newParams.server.worker,
+						origin: newParams.origin,
+						kinds: [...(newParams.audio ? ["audio"] : []), ...(newParams.video ? ["video"] : [])] as MediaKind[],
+						stopTracks: true
 					};
 					console.log("ConferenceApi config: ", conferenceApiConfig);
 					this.conferenceClient = new ConferenceApi(conferenceApiConfig);
@@ -389,12 +389,12 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		let oldParams = this._config.publishingParameters;
 
-		const needsReset = oldParams?.url != newParams?.url
+		const needsReset = oldParams?.server.url != newParams?.server.url
 			|| oldParams?.streamUuid != newParams?.streamUuid
 			|| oldParams?.simulcast !== newParams?.simulcast;
 
 		if (needsReset) {
-			console.log("updatePublishing() --> needsReset", newParams, newParams.url);
+			console.log("updatePublishing() --> needsReset", oldParams, newParams);
 			await this.stop();
 			if (newParams != null) {
 				this.targetStream = new MediaStream();
@@ -403,9 +403,11 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				try {
 					let conferenceApiConfig = {
 						stream: newParams.streamUuid,
-						token: newParams.token,
-						url: newParams.url,
-						simulcast: newParams.simulcast
+						token: newParams.server.token,
+						url: newParams.server.url,
+						worker: newParams.server.worker,
+						simulcast: newParams.simulcast,
+						stopTracks: true
 					};
 					console.log("ConferenceApi config: ", conferenceApiConfig);
 					this.conferenceClient = new ConferenceApi(conferenceApiConfig);
@@ -695,19 +697,6 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 	public static async enumerateDevices(): Promise<UiMediaDeviceInfoConfig[]> {
 		return enumerateDevices();
-	}
-
-	private static convertServerListToConferenceInputOrigin(serverList: { url: string, token: string }[]): ConferenceInputOrigin {
-		let origin: ConferenceInputOrigin = null;
-		for (let i = 0; i < serverList.length; i++) {
-			let urlAndToken = serverList[i];
-			origin = {
-				origin: origin,
-				url: urlAndToken.url,
-				token: urlAndToken.token
-			};
-		}
-		return origin;
 	}
 }
 

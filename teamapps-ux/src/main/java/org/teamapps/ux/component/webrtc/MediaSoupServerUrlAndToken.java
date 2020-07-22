@@ -19,24 +19,24 @@
  */
 package org.teamapps.ux.component.webrtc;
 
-import org.teamapps.dto.UiMediaServerUrlAndToken;
-
 public class MediaSoupServerUrlAndToken {
 
-	private final String url;
+	private final String serverUrl;
+	private final int worker;
 	private final String token;
 
-	public MediaSoupServerUrlAndToken(String url, String token) {
-		this.url = url;
+	public MediaSoupServerUrlAndToken(String serverUrl, int worker, String token) {
+		this.serverUrl = serverUrl;
+		this.worker = worker;
 		this.token = token;
 	}
 
-	public UiMediaServerUrlAndToken createUiMediaSoupServerChain() {
-		return new UiMediaServerUrlAndToken(url, token);
+	public String getServerUrl() {
+		return serverUrl;
 	}
 
-	public String getUrl() {
-		return url;
+	public int getWorker() {
+		return worker;
 	}
 
 	public String getToken() {
