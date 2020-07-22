@@ -19,15 +19,10 @@
  */
 package org.teamapps.ux.model;
 
-import java.util.Collections;
 import java.util.List;
 
-public interface ComboBoxModel<RECORD> {
-
+public interface ComboBoxModel<RECORD> extends BaseTreeModel<RECORD> {
+	
 	List<RECORD> getRecords(String query);
-
-	default List<RECORD> getChildRecords(RECORD parentRecord) {
-		return Collections.emptyList();
-	}
 
 }

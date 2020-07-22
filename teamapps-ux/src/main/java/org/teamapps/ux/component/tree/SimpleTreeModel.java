@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ package org.teamapps.ux.component.tree;
 import org.apache.commons.lang3.StringUtils;
 import org.teamapps.ux.component.template.BaseTemplateTreeNode;
 import org.teamapps.ux.model.AbstractTreeModel;
+import org.teamapps.ux.model.ComboBoxModel;
 import org.teamapps.ux.model.TreeModelChangedEventData;
 
 import java.util.ArrayList;
@@ -30,12 +31,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTreeNode<PAYLOAD>> {
+public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTreeNode<PAYLOAD>> implements ComboBoxModel<BaseTemplateTreeNode<PAYLOAD>> {
 
 	private final List<BaseTemplateTreeNode<PAYLOAD>> nodes;
 	private int maxResultNodes = Integer.MAX_VALUE;
-
-	private String captionFilter;
 
 	public SimpleTreeModel() {
 		nodes = new ArrayList<>();
@@ -100,25 +99,16 @@ public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTree
 		this.maxResultNodes = maxResultNodes;
 	}
 
-	public String getCaptionFilter() {
-		return captionFilter;
-	}
-
-	public void setCaptionFilter(String captionFilter) {
-		this.captionFilter = captionFilter;
-		onAllNodesChanged.fire();
-	}
-
 	@Override
-	public List<BaseTemplateTreeNode<PAYLOAD>> getRecords() {
-		if (StringUtils.isEmpty(captionFilter)) {
+	public List<BaseTemplateTreeNode<PAYLOAD>> getRecords(String query) {
+		if (StringUtils.isEmpty(query)) {
 			return this.nodes.stream()
 					.filter(new EagerNodesFilter())
 					.limit(maxResultNodes)
 					.collect(Collectors.toList());
 		} else {
 			List<BaseTemplateTreeNode<PAYLOAD>> filteredTree = this.nodes.stream()
-					.filter(node -> StringUtils.containsIgnoreCase(node.getCaption(), captionFilter))
+					.filter(node -> StringUtils.containsIgnoreCase(node.getCaption(), query))
 					.flatMap(node -> ((List<BaseTemplateTreeNode<PAYLOAD>>) (List) node.getPath()).stream())
 					.distinct()
 					.collect(Collectors.toList());
@@ -126,6 +116,11 @@ public class SimpleTreeModel<PAYLOAD> extends AbstractTreeModel<BaseTemplateTree
 			treeCopy.forEach(node -> node.setExpanded(true));
 			return treeCopy;
 		}
+	}
+
+	@Override
+	public List<BaseTemplateTreeNode<PAYLOAD>> getRecords() {
+		return this.getRecords(null);
 	}
 
 	@Override

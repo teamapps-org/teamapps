@@ -19,11 +19,14 @@
  */
 package org.teamapps.ux.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
-public class ListTreeModel<RECORD> extends AbstractTreeModel<RECORD> {
+public class ListTreeModel<RECORD> extends AbstractTreeModel<RECORD> implements ComboBoxModel<RECORD> {
 
 	private final List<RECORD> records = new ArrayList<>();
 	private BiPredicate<RECORD, String> searchPredicate = (record, queryString) -> record.toString() != null && record.toString().toLowerCase().contains(queryString.toLowerCase());
@@ -45,8 +48,14 @@ public class ListTreeModel<RECORD> extends AbstractTreeModel<RECORD> {
 	}
 
 	@Override
-	public List<RECORD> getChildRecords(RECORD parentRecord) {
-		return null;
+	public List<RECORD> getRecords(String query) {
+		if (StringUtils.isBlank(query)) {
+			return records;
+		} else {
+			return records.stream()
+					.filter(r -> searchPredicate.test(r, query))
+					.collect(Collectors.toList());
+		}
 	}
 
 	public void setRecords(List<RECORD> records) {
@@ -62,5 +71,4 @@ public class ListTreeModel<RECORD> extends AbstractTreeModel<RECORD> {
 	public void setSearchPredicate(BiPredicate<RECORD, String> searchPredicate) {
 		this.searchPredicate = searchPredicate;
 	}
-
 }
