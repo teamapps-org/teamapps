@@ -117,6 +117,25 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <!-- Needed for MediaSoupV3ApiClient only! -->
+            <groupId>io.socket</groupId>
+            <artifactId>socket.io-client</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.squareup.okhttp3</groupId>
+                    <artifactId>okhttp</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <!-- Needed for MediaSoupV3ApiClient only! -->
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.14.7</version>
+        </dependency>
+
     </dependencies>
 
 </project>
