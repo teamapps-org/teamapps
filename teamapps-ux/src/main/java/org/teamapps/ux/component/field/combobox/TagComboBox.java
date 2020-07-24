@@ -26,6 +26,7 @@ import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiTagComboBox;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
+import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.ArrayList;
@@ -47,18 +48,17 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 
 	private List<String> freeTextEntries = new ArrayList<>();
 
+	public TagComboBox() {
+		init();
+	}
+
+	public TagComboBox(Template template) {
+		setTemplate(template);
+		init();
+	}
+
 	public TagComboBox(ComboBoxModel<RECORD> model) {
 		super(model);
-		init();
-	}
-
-	public TagComboBox(List<RECORD> staticData) {
-		super(staticData);
-		init();
-	}
-
-	public TagComboBox() {
-		super((List<RECORD>) null);
 		init();
 	}
 
@@ -66,9 +66,20 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 		recordCache.setPurgeDecider((record, clientId) -> !(getValue() != null && getValue().contains(record)));
 	}
 
+	public static <R> TagComboBox<R> createForList(List<R> staticData) {
+		return createForList(staticData, null);
+	}
+
+	public static <R> TagComboBox<R> createForList(List<R> staticData, Template template) {
+		TagComboBox<R> comboBox = new TagComboBox<>(template);
+		comboBox.setModel(query -> staticData.stream()
+				.filter(record -> comboBox.getRecordToStringFunction().apply(record).toLowerCase().contains(query.toLowerCase()))
+				.collect(Collectors.toList()));
+		return comboBox;
+	}
 
 	public static <ENUM extends Enum> TagComboBox<ENUM> createForEnum(Class<ENUM> enumClass) {
-		TagComboBox<ENUM> tagComboBox = new TagComboBox<>(Arrays.asList(enumClass.getEnumConstants()));
+		TagComboBox<ENUM> tagComboBox = createForList(Arrays.asList(enumClass.getEnumConstants()));
 		tagComboBox.setShowClearButton(true);
 		return tagComboBox;
 	}

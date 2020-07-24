@@ -38,8 +38,6 @@ import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.model.ComboBoxModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,14 +56,13 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 	protected final ClientRecordCache<RECORD, UiComboBoxTreeRecord> recordCache;
 
 	private ComboBoxModel<RECORD> model;
-	private List<RECORD> staticData = new ArrayList<>(); //if available, use this as data source
 	private TextMatchingMode textMatchingMode = TextMatchingMode.CONTAINS; // only filter on client-side if staticData != null. SIMILARITY_MATCH allows levenshtein distance of 3
 	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
 
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
 	private int templateIdCounter = 0;
-	private Template selectedEntryTemplate = null; // null: use toString();
-	private Template dropDownTemplate = null; // null: use toString();
+	private Template selectedEntryTemplate = null; // null: use recordToStringFunction;
+	private Template dropDownTemplate = null; // null: use recordToStringFunction;
 	private TemplateDecider<RECORD> selectedEntryTemplateDecider = record -> selectedEntryTemplate;
 	private TemplateDecider<RECORD> dropdownTemplateDecider = record -> dropDownTemplate;
 
@@ -83,30 +80,17 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
 	protected Function<String, RECORD> freeTextRecordFactory = null;
 	
-	private AbstractComboBox(List<RECORD> staticData, ComboBoxModel<RECORD> model) {
-		super();
+	protected AbstractComboBox(ComboBoxModel<RECORD> model) {
 		this.model = model;
-		if (staticData != null) {
-			this.staticData = new ArrayList<>(staticData);
-		}
 		this.recordCache = new ClientRecordCache<>(this::createUiTreeRecordWithoutParentRelation, this::addParentLinkToUiRecord);
 	}
 
-	protected AbstractComboBox(ComboBoxModel<RECORD> model) {
-		this(null, model);
-	}
-
-	public AbstractComboBox(List<RECORD> staticData) {
-		this(staticData, null);
+	protected AbstractComboBox() {
+		this(query -> Collections.emptyList());
 	}
 
 	protected void mapCommonUiComboBoxProperties(UiComboBox comboBox) {
 		mapAbstractFieldAttributesToUiField(comboBox);
-		if (this.staticData != null) {
-			CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(this.staticData);
-			cacheResponse.commit();
-			comboBox.setStaticData(cacheResponse.getAndClearResult());
-		}
 
 		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
 		comboBox.setTemplates(templateIdsByTemplate.entrySet().stream()
@@ -231,47 +215,12 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		return animate;
 	}
 
-	public List<RECORD> getStaticData() {
-		return staticData;
-	}
-
-	public void setStaticData(List<RECORD> staticData) {
-		this.staticData = staticData;
-		this.model = null;
-		reRenderIfRendered();
-	}
-
-	public void addDropDownItem(RECORD record) {
-		if (staticData == null) {
-			staticData = new ArrayList<>();
-		}
-		this.staticData.add(record);
-		reRenderIfRendered();
-	}
-
-	public void addDropDownItems(RECORD... records) {
-		if (staticData == null) {
-			staticData = new ArrayList<>();
-		}
-		this.staticData.addAll(Arrays.asList(records));
-		reRenderIfRendered();
-	}
-
-	public void addDropDownItems(List<RECORD> records) {
-		if (staticData == null) {
-			staticData = new ArrayList<>();
-		}
-		this.staticData.addAll(records);
-		reRenderIfRendered();
-	}
-
-	public ComboBoxModel getModel() {
+	public ComboBoxModel<RECORD> getModel() {
 		return model;
 	}
 
 	public void setModel(ComboBoxModel<RECORD> model) {
 		this.model = model;
-		this.staticData = null;
 		reRenderIfRendered();
 	}
 
@@ -367,13 +316,17 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 
 	public void setSelectedEntryTemplate(Template selectedEntryTemplate) {
 		this.selectedEntryTemplate = selectedEntryTemplate;
-		this.templateIdsByTemplate.put(selectedEntryTemplate, "" + templateIdCounter++);
+		if (selectedEntryTemplate != null) {
+			this.templateIdsByTemplate.put(selectedEntryTemplate, "" + templateIdCounter++);
+		}
 		reRenderIfRendered();
 	}
 
 	public void setDropDownTemplate(Template dropDownTemplate) {
 		this.dropDownTemplate = dropDownTemplate;
-		this.templateIdsByTemplate.put(dropDownTemplate, "" + templateIdCounter++);
+		if (dropDownTemplate != null) {
+			this.templateIdsByTemplate.put(dropDownTemplate, "" + templateIdCounter++);
+		}
 		reRenderIfRendered();
 	}
 
