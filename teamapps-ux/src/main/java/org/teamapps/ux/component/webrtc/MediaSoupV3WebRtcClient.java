@@ -19,10 +19,6 @@
  */
 package org.teamapps.ux.component.webrtc;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiInfiniteItemView;
@@ -37,10 +33,7 @@ import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.session.SessionContext;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -354,45 +347,4 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
-	public static String generatePublishJwtToken(String streamUuid, String secret, Duration tokenValidityDuration) {
-		return generateJwtToken(secret, "1" /*PUBLISH*/, streamUuid, tokenValidityDuration  /*PUBLISH*/);
-	}
-
-	public static String generateSubscribeJwtToken(String streamUuid, String secret, Duration tokenValidityDuration) {
-		return generateJwtToken(secret, "0" /*SUBSCRIBE*/, streamUuid, tokenValidityDuration  /*SUBSCRIBE*/);
-	}
-
-	public static String generateRecordingJwtToken(String secret, Duration tokenValidityDuration) {
-		return generateJwtToken(secret, "2" /*RECORDING*/, "-", tokenValidityDuration);
-	}
-
-	public static String generateStreamingJwtToken(String secret, Duration tokenValidityDuration) {
-		return generateJwtToken(secret, "3" /*STREAMING*/, "-", tokenValidityDuration);
-	}
-
-	public static String generatePublicRestApiToken(String secret, Duration tokenValidityDuration) {
-		return generateJwtToken(secret, null, null, tokenValidityDuration);
-	}
-
-	private static String generateJwtToken(String secret, String operation, String streamUuid, Duration tokenValidityDuration) {
-		if (secret == null) {
-			return "";
-		}
-		try {
-			Algorithm algorithm = Algorithm.HMAC512(secret);
-			JWTCreator.Builder builder = JWT.create();
-			if (operation != null) {
-				builder = builder.withClaim("operation", operation);
-			}
-			if (streamUuid != null) {
-				builder = builder.withClaim("stream", streamUuid);
-			}
-			if (tokenValidityDuration != null) {
-				builder = builder.withExpiresAt(new Date(Instant.now().plus(tokenValidityDuration).toEpochMilli()));
-			}
-			return builder.sign(algorithm);
-		} catch (JWTCreationException exception) {
-			throw new RuntimeException("Could not create auth token - this should never happen!");
-		}
-	}
 }

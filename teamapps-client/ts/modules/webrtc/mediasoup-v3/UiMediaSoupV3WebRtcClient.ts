@@ -389,7 +389,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		let oldParams = this._config.publishingParameters;
 
-		const needsReset = oldParams?.server.url != newParams?.server.url
+		const needsReset = oldParams?.server?.url != newParams?.server?.url
 			|| oldParams?.streamUuid != newParams?.streamUuid
 			|| oldParams?.simulcast !== newParams?.simulcast;
 
