@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,34 +33,41 @@ import org.teamapps.ux.model.ComboBoxModel;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD> implements TextInputHandlingField {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ComboBox.class);
 
 	public final Event<String> onFreeTextEntered = new Event<>();
-	
+
 	private String freeTextEntry;
+
+	public ComboBox() {
+	}
 
 	public ComboBox(ComboBoxModel<RECORD> model) {
 		super(model);
 	}
 
-	public ComboBox(List<RECORD> staticData) {
-		super(staticData);
-	}
-
-	public ComboBox() {
-		super((List<RECORD>) null);
-	}
-
 	public ComboBox(Template template) {
-		super((List<RECORD>) null);
 		setTemplate(template);
 	}
 
+	public static <R> ComboBox<R> createForList(List<R> staticData) {
+		return createForList(staticData, null);
+	}
+
+	public static <R> ComboBox<R> createForList(List<R> staticData, Template template) {
+		ComboBox<R> comboBox = new ComboBox<>(template);
+		comboBox.setModel(query -> staticData.stream()
+				.filter(record -> comboBox.getRecordToStringFunction().apply(record).toLowerCase().contains(query.toLowerCase()))
+				.collect(Collectors.toList()));
+		return comboBox;
+	}
+
 	public static <ENUM extends Enum> ComboBox<ENUM> createForEnum(Class<ENUM> enumClass) {
-		return new ComboBox<>(Arrays.asList(enumClass.getEnumConstants()));
+		return ComboBox.createForList(Arrays.asList(enumClass.getEnumConstants()));
 	}
 
 	@Override
@@ -114,5 +121,5 @@ public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD>
 	public String getFreeText() {
 		return freeTextEntry;
 	}
-	
+
 }
