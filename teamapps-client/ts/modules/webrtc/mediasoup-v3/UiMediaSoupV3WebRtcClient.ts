@@ -54,8 +54,8 @@ import {MixSizingInfo, TrackWithMixSizingInfo, VideoTrackMixer} from "../VideoTr
 import {determineVideoSize} from "../MultiStreamsMixer";
 import {UiMediaRetrievalFailureReason} from "../../../generated/UiMediaRetrievalFailureReason";
 import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType";
-import {ConferenceApi, Utils} from "avcore.client/dist";
-import {ConferenceInput} from "avcore";
+import {ConferenceApi, Utils} from "./lib/avcore.client";
+import {ConferenceInput} from "./lib/avcore";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent(this);
@@ -219,7 +219,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		if (this.conferenceClient != null) {
 			let conferenceClient = this.conferenceClient;
 			conferenceClient.close()
-				.catch(e => {
+				.catch((e: any) => {
 					console.error("Error while closing conference client! Retrying the hard way.", e);
 					conferenceClient.close(true);
 				});
@@ -609,7 +609,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	private registerStatuslListeners(conferenceClient: ConferenceApi, logPrefix: string) {
-		conferenceClient.on('bitRate', ({bitRate, kind}) => {
+		conferenceClient.on('bitRate', ({bitRate, kind}: { bitRate: any, kind: any }) => {
 			if (kind === 'audio') {
 				this.$audioBitrateDisplay.innerText = (bitRate / 1000).toFixed(1) + "kb/s";
 				this.connectionStatus.audioBitrate = bitRate;
@@ -622,7 +622,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				// console.log(`${logPrefix} video bitrate: ${bitRate}`);
 			}
 		});
-		conferenceClient.on('connectionstatechange', (event) => {
+		conferenceClient.on('connectionstatechange', (event: any) => {
 			let state: RTCPeerConnectionState = event.state;
 			this.connectionStatus.rtcPeerConnectionState = state;
 			this.updateStateCssClasses();

@@ -940,29 +940,10 @@ autoprefixer@^9.6.1:
     postcss "^7.0.26"
     postcss-value-parser "^4.0.2"
 
-"avcore.client@file:../../github-clones/conference-client/client":
-  version "1.0.0"
-  dependencies:
-    avcore "../"
-
-avcore@../:
-  version "0.0.0"
-
-"avcore@file:../../github-clones/conference-client":
-  version "1.0.0"
-  dependencies:
-    mediasoup-client "^3.6.5"
-    socket.io-client "^2.3.0"
-
 awaitqueue@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/awaitqueue/-/awaitqueue-2.1.1.tgz#2d5a801cc8952702ad9374e5c193ed096c8c1f53"
   integrity sha512-pzmngNP5W9S0dg24oim4wEQRCBadowAxVv5aLIJmgI5a8m8Cxxm1jXtScgHzHFY1aDR5ep1rktPtRbUEuIPl0A==
-
-awaitqueue@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/awaitqueue/-/awaitqueue-2.2.3.tgz#cf97176cea8e9b39fccac7c4952deb9fba4d21c5"
-  integrity sha512-vKY8hHHt1FT05UBxaTKWoA8+A3APnyzcOO1UBY5wQ7ENzXCFi3Yy4wSKsqrO0ncDD/5CI6IZDN1nVZQKziWIqg==
 
 awesome-typescript-loader@^5.0.0:
   version "5.2.1"
@@ -4505,21 +4486,6 @@ mediasoup-client@^3.3.17:
     "@types/debug" "^4.1.5"
     "@types/events" "^3.0.0"
     awaitqueue "^2.1.1"
-    bowser "^2.9.0"
-    debug "^4.1.1"
-    events "^3.1.0"
-    h264-profile-level-id "^1.0.1"
-    sdp-transform "^2.14.0"
-    supports-color "^7.1.0"
-
-mediasoup-client@^3.6.5:
-  version "3.6.12"
-  resolved "https://registry.yarnpkg.com/mediasoup-client/-/mediasoup-client-3.6.12.tgz#3a865b69f6d1c93f33c4d03fc935d85b2be9edc5"
-  integrity sha512-smpXv4foIEgnt7PZtVrppJIswVJrGnExg3kS2WsHb48ByG+KCiLAaYDYoECUlwpxUxupps164u+ZTEs1gmiF2w==
-  dependencies:
-    "@types/debug" "^4.1.5"
-    "@types/events" "^3.0.0"
-    awaitqueue "^2.2.3"
     bowser "^2.9.0"
     debug "^4.1.1"
     events "^3.1.0"
