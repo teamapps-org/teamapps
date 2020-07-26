@@ -8,12 +8,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.NullNode;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -35,7 +46,7 @@ public class MediaSoupV3ApiClient {
 	private final Socket socket;
 	private final String serverSecret;
 
-	public MediaSoupV3ApiClient(String serverUrl, String serverSecret) throws URISyntaxException {
+	public MediaSoupV3ApiClient(String serverUrl, String serverSecret) {
 		this.socket = createSocket(serverUrl);
 		this.serverSecret = serverSecret;
 		socket.connect();
@@ -65,28 +76,36 @@ public class MediaSoupV3ApiClient {
 		});
 	}
 
-	public CompletableFuture<Double> workerLoad(int workerId) {
+	public CompletableFuture<Double> getWorkerLoad(int workerId) {
 		String token = MediaSoupV3TokenGenerator.generateGeneralApiToken(serverSecret, Duration.ofDays(365));
 		return call(workerId, WORKER_LOAD, token, null, new TypeReference<JsonNode>() {
 		}).thenApply(treeNode -> OBJECT_MAPPER.convertValue(treeNode.get("currentLoad"), Double.class));
 	}
 
-	public CompletableFuture<Integer> numWorkers() {
+	public CompletableFuture<Integer> getNumberOfWorkers() {
 		String token = MediaSoupV3TokenGenerator.generateGeneralApiToken(serverSecret, Duration.ofDays(365));
 		return call(0, NUM_WORKERS, token, null, new TypeReference<JsonNode>() {
 		}).thenApply(treeNode -> OBJECT_MAPPER.convertValue(treeNode.get("num"), Integer.class));
 	}
 
-	public CompletableFuture<Void> startRecording(int workerId, String streamUuid, Set<MediaKind> kinds) {
+	public CompletableFuture<Void> startRecording(String streamUuid) {
+		return startRecording(streamUuid, null);
+	}
+
+	public CompletableFuture<Void> startRecording(String streamUuid, Set<MediaKind> kinds) {
 		String token = MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365));
-		return call(workerId, START_RECORDING, token, new StreamAndKinds(streamUuid, kinds), new TypeReference<>() {
+		return call(0, START_RECORDING, token, new StreamAndKinds(streamUuid, kinds), new TypeReference<>() {
 		});
 	}
 
-	public CompletableFuture<Void> stopRecording(int workerId, String streamUuid) {
+	public CompletableFuture<Void> stopRecording(String streamUuid) {
 		String token = MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365));
-		return call(workerId, STOP_RECORDING, token, new StreamAndKinds(streamUuid, Set.of(MediaKind.AUDIO, MediaKind.VIDEO)), new TypeReference<>() {
+		return call(0, STOP_RECORDING, token, new StreamAndKinds(streamUuid, Set.of(MediaKind.AUDIO, MediaKind.VIDEO)), new TypeReference<>() {
 		});
+	}
+
+	public CompletableFuture<Void> setRecordingEnabled(String streamUuid, boolean enabled) {
+		return enabled ? startRecording(streamUuid) : stopRecording(streamUuid);
 	}
 
 	public CompletableFuture<Void> startFileStreaming(int workerId, StreamFileRequest streamFileRequest) {
@@ -162,36 +181,41 @@ public class MediaSoupV3ApiClient {
 		socket.close();
 	}
 
-	private Socket createSocket(String serverUrl) throws URISyntaxException {
-		Socket socket = IO.socket(serverUrl);
+	private Socket createSocket(String serverUrl)  {
+		Socket socket;
+		try {
+			socket = IO.socket(serverUrl);
+		} catch (URISyntaxException e) {
+			throw new MediaSoupV3ApiClientException(e);
+		}
 		socket.on(Socket.EVENT_CONNECT, args13 -> {
-			LOGGER.info("EVENT_CONNECT");
+			LOGGER.info("EVENT_CONNECT: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_CONNECTING, args13 -> {
-			LOGGER.info("EVENT_CONNECTING");
+			LOGGER.info("EVENT_CONNECTING: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_DISCONNECT, args13 -> {
-			LOGGER.info("EVENT_DISCONNECT");
+			LOGGER.info("EVENT_DISCONNECT: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_ERROR, args13 -> {
-			LOGGER.info("EVENT_ERROR");
+			LOGGER.error("EVENT_ERROR: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_MESSAGE, args13 -> {
-			LOGGER.info("EVENT_MESSAGE");
+			LOGGER.info("EVENT_MESSAGE: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_CONNECT_ERROR, args13 -> {
-			LOGGER.info("EVENT_CONNECT_ERROR");
+			LOGGER.info("EVENT_CONNECT_ERROR: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_CONNECT_TIMEOUT, args13 -> {
-			LOGGER.info("EVENT_CONNECT_TIMEOUT");
+			LOGGER.info("EVENT_CONNECT_TIMEOUT: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_RECONNECT, args13 -> {
-			LOGGER.info("EVENT_RECONNECT");
+			LOGGER.info("EVENT_RECONNECT: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_RECONNECT_ERROR, args13 -> {
-			LOGGER.info("EVENT_RECONNECT_ERROR");
+			LOGGER.info("EVENT_RECONNECT_ERROR: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_RECONNECT_FAILED, args13 -> {
-			LOGGER.info("EVENT_RECONNECT_FAILED");
+			LOGGER.info("EVENT_RECONNECT_FAILED: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_RECONNECT_ATTEMPT, args13 -> {
-			LOGGER.info("EVENT_RECONNECT_ATTEMPT");
+			LOGGER.info("EVENT_RECONNECT_ATTEMPT: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_RECONNECTING, args13 -> {
-			LOGGER.info("EVENT_RECONNECTING");
+			LOGGER.info("EVENT_RECONNECTING: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_PING, args13 -> {
-			LOGGER.info("EVENT_PING");
+			LOGGER.info("EVENT_PING: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_PONG, args13 -> {
-			LOGGER.info("EVENT_PONG");
+			LOGGER.info("EVENT_PONG: {}", Arrays.toString(args13));
 		});
 		return socket;
 	}
@@ -205,6 +229,33 @@ public class MediaSoupV3ApiClient {
 		} catch (JsonProcessingException e) {
 			return NullNode.getInstance();
 		}
+	}
+
+	public static File downloadVideo(URL url, File downloadDirectory) throws IOException {
+		HttpURLConnection con = null;
+		try {
+			con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+
+			LOGGER.info("Downloading video: {} to {}", url, downloadDirectory.getAbsolutePath());
+			File resultFile = new File(downloadDirectory, FilenameUtils.getName(url.getPath()).replace(':', '-'));
+			try (BufferedInputStream is = new BufferedInputStream(con.getInputStream());
+			     BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(resultFile, false))) {
+				IOUtils.copy(is, os);
+			}
+			return resultFile;
+		} catch (IOException e) {
+			LOGGER.error("Exception while downloading video: " + url, e);
+			throw e;
+		} finally {
+			if (con != null) {
+				con.disconnect();
+			}
+		}
+	}
+
+	public static File downloadVideo(String url) throws IOException {
+		return downloadVideo(new URL(url), Files.createTempDirectory("download").toFile());
 	}
 
 }
