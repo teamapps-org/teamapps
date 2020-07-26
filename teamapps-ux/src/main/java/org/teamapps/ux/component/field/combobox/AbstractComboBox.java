@@ -115,8 +115,9 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		switch (event.getUiEventType()) {
 			case UI_TEXT_INPUT_HANDLING_FIELD_TEXT_INPUT:
 				UiTextInputHandlingField.TextInputEvent keyStrokeEvent = (UiTextInputHandlingField.TextInputEvent) event;
+				String queryString = keyStrokeEvent.getEnteredString() != null ? keyStrokeEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
 				if (model != null) {
-					List<RECORD> records = model.getRecords(keyStrokeEvent.getEnteredString());
+					List<RECORD> records = model.getRecords(queryString);
 					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
 					if (isRendered()) {
 						getSessionContext().queueCommand(new UiComboBox.SetDropDownDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
@@ -124,7 +125,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 						cacheResponse.commit();
 					}
 				}
-				this.onTextInput.fire(keyStrokeEvent.getEnteredString());
+				this.onTextInput.fire(queryString);
 				break;
 			case UI_TEXT_INPUT_HANDLING_FIELD_SPECIAL_KEY_PRESSED:
 				UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
