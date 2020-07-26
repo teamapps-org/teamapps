@@ -20,16 +20,19 @@
 package org.teamapps.ux.model;
 
 import org.apache.commons.lang3.StringUtils;
+import org.teamapps.ux.component.tree.TreeNodeInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ListTreeModel<RECORD> extends AbstractTreeModel<RECORD> implements ComboBoxModel<RECORD> {
 
 	private final List<RECORD> records = new ArrayList<>();
 	private BiPredicate<RECORD, String> searchPredicate = (record, queryString) -> record.toString() != null && record.toString().toLowerCase().contains(queryString.toLowerCase());
+	private Function<RECORD, TreeNodeInfo> treeNodeInfoFunction;
 
 	public ListTreeModel(List<RECORD> records) {
 		this(records, null);
@@ -39,6 +42,19 @@ public class ListTreeModel<RECORD> extends AbstractTreeModel<RECORD> implements 
 		this.records.addAll(records);
 		if (searchPredicate != null) {
 			this.searchPredicate = searchPredicate;
+		}
+	}
+
+	public void setTreeNodeInfoFunction(Function<RECORD, TreeNodeInfo> treeNodeInfoFunction) {
+		this.treeNodeInfoFunction = treeNodeInfoFunction;
+	}
+
+	@Override
+	public TreeNodeInfo getTreeNodeInfo(RECORD record) {
+		if (treeNodeInfoFunction != null) {
+			return treeNodeInfoFunction.apply(record);
+		} else {
+			return super.getTreeNodeInfo(record);
 		}
 	}
 
