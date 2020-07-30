@@ -13,7 +13,7 @@ public class StreamFileRequest {
 	private final String filePath;
 	private final boolean relativePath;
 	private final boolean restartOnExit;
-	private final String videoBitrate;
+	private final Integer videoBitrate;
 	private final Integer width;
 	private final Integer height;
 	private final Float frameRate;
@@ -26,7 +26,7 @@ public class StreamFileRequest {
 	 */
 	@Deprecated
 	public StreamFileRequest(String streamUuid, Set<MediaKind> kinds, String filePath, boolean relativePath,
-	                         boolean restartOnExit, String videoBitrate, Integer width, Integer height,
+	                         boolean restartOnExit, Integer videoBitrate, Integer width, Integer height,
 	                         Float frameRate,
 	                         Integer audioSampleRate, Integer audioChannels, String[] additionalInputOptions) {
 		this.streamUuid = streamUuid;
@@ -67,7 +67,7 @@ public class StreamFileRequest {
 		return restartOnExit;
 	}
 
-	public String getVideoBitrate() {
+	public Integer getVideoBitrate() {
 		return videoBitrate;
 	}
 
