@@ -21,6 +21,7 @@ package org.teamapps.ux.component.infiniteitemview;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
@@ -55,7 +56,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private ItemViewVerticalItemAlignment verticalItemAlignment = ItemViewVerticalItemAlignment.STRETCH;
 
 	private InfiniteItemViewModel<RECORD> model = new ListInfiniteItemViewModel<>(Collections.emptyList());
-	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> itemPropertyProvider = new BeanPropertyExtractor<>();
 	protected final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
 
 	private final Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
@@ -166,7 +167,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
-		clientRecord.setValues(itemPropertyExtractor.getValues(record, itemTemplate.getDataKeys()));
+		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getDataKeys()));
 		return clientRecord;
 	}
 
@@ -241,12 +242,16 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		return model;
 	}
 
-	public PropertyExtractor<RECORD> getItemPropertyExtractor() {
-		return itemPropertyExtractor;
+	public PropertyProvider<RECORD> getItemPropertyProvider() {
+		return itemPropertyProvider;
 	}
 
-	public void setItemPropertyExtractor(PropertyExtractor<RECORD> itemPropertyExtractor) {
-		this.itemPropertyExtractor = itemPropertyExtractor;
+	public void setItemPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.itemPropertyProvider = propertyProvider;
+	}
+
+	public void setItemPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
+		this.setItemPropertyProvider(propertyExtractor);
 	}
 
 	public InfiniteItemView<RECORD> setModel(InfiniteItemViewModel<RECORD> model) {

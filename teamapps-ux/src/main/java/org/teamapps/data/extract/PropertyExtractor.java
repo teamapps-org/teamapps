@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface PropertyExtractor<RECORD> {
+public interface PropertyExtractor<RECORD> extends PropertyProvider<RECORD> {
 
 	Object getValue(RECORD record, String propertyName);
 

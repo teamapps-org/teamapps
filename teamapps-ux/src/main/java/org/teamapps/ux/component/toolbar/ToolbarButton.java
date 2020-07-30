@@ -21,6 +21,7 @@ package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiToolbar;
 import org.teamapps.dto.UiToolbarButton;
 import org.teamapps.event.Event;
@@ -45,7 +46,7 @@ public class ToolbarButton {
 	private final Object record;
 
 	private Template template; // if null, will fallback to toolbarButtonGroup's template
-	private PropertyExtractor propertyExtractor; // if null, will fallback to toolbarButtonGroup's valueExtractor
+	private PropertyProvider propertyProvider; // if null, will fallback to toolbarButtonGroup's valueExtractor
 
 	// ===== HACKS =====
 	private String openNewTabWithUrl;
@@ -127,7 +128,7 @@ public class ToolbarButton {
 
 	public UiToolbarButton createUiToolbarButton() {
 		Template template = getAppliedTemplate();
-		Map<String, Object> values = getAppliedPropertyExtractor().getValues(record, template.getDataKeys());
+		Map<String, Object> values = getAppliedPropertyProvider().getValues(record, template.getDataKeys());
 
 		UiToolbarButton ui = new UiToolbarButton(clientId, template.createUiTemplate(), values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {
@@ -248,17 +249,22 @@ public class ToolbarButton {
 		}
 	}
 
-	public PropertyExtractor getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider getPropertyProvider() {
+		return propertyProvider;
 	}
 
-	public ToolbarButton setPropertyExtractor(PropertyExtractor propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+	public ToolbarButton setPropertyProvider(PropertyProvider propertyProvider) {
+		this.propertyProvider = propertyProvider;
 		return this;
 	}
 
-	public PropertyExtractor getAppliedPropertyExtractor() {
-		return this.propertyExtractor != null ? this.propertyExtractor : toolbarButtonGroup.getAppliedPropertyExtractor();
+	public ToolbarButton setPropertyExtractor(PropertyExtractor propertyExtractor) {
+		this.setPropertyProvider(propertyExtractor);
+		return this;
+	}
+
+	public PropertyProvider getAppliedPropertyProvider() {
+		return this.propertyProvider != null ? this.propertyProvider : toolbarButtonGroup.getAppliedPropertyProvider();
 	}
 
 	public Supplier<Component> getDropDownComponentSupplier() {

@@ -21,20 +21,19 @@ package org.teamapps.ux.component.field;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiClientRecord;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiTemplateField;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.template.Template;
 
-import java.util.Collections;
-
 public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public final Event<Void> onClicked = new Event<>();
 
 	private Template template;
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
 	public TemplateField(Template template) {
 		this.template = template;
@@ -80,7 +79,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 			return null;
 		}
 		UiClientRecord uiClientRecord = new UiClientRecord();
-		uiClientRecord.setValues(propertyExtractor.getValues(record, template.getDataKeys()));
+		uiClientRecord.setValues(propertyProvider.getValues(record, template.getDataKeys()));
 		return uiClientRecord;
 	}
 
@@ -94,13 +93,17 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 		return this;
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider<RECORD> getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public TemplateField<RECORD> setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.propertyProvider = propertyProvider;
+		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(getId(), createUiComponent()));
+		return this;
 	}
 
 	public TemplateField<RECORD> setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
-		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(getId(), createUiComponent()));
-		return this;
+		return this.setPropertyProvider(propertyExtractor);
 	}
 }

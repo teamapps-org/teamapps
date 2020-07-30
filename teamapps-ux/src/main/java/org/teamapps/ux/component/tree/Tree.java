@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiComboBoxTreeRecord;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
@@ -52,7 +53,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	public final Event<String> onTextInput = new Event<>();
 
 	private TreeModel<RECORD> model;
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 	private RECORD selectedNode;
 
 	private Template entryTemplate = null; // null: use toString()
@@ -126,7 +127,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		}
 		Template template = getTemplateForRecord(record);
 		List<String> dataKeys = template != null ? template.getDataKeys() : Collections.emptyList();
-		Map<String, Object> values = propertyExtractor.getValues(record, dataKeys);
+		Map<String, Object> values = propertyProvider.getValues(record, dataKeys);
 
 		UiTreeRecord uiTreeRecord;
 		if (uiRecordsByRecord.containsKey(record)) {
@@ -291,12 +292,16 @@ public class Tree<RECORD> extends AbstractComponent {
 		reRenderIfRendered();
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider<RECORD> getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public void setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.propertyProvider = propertyProvider;
 	}
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.setPropertyProvider(propertyExtractor);
 	}
 
 	public Template getEntryTemplate() {

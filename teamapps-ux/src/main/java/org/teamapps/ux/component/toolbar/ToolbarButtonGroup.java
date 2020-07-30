@@ -21,6 +21,7 @@ package org.teamapps.ux.component.toolbar;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiToolbarButton;
 import org.teamapps.dto.UiToolbarButtonGroup;
 import org.teamapps.ux.component.template.Template;
@@ -43,7 +44,7 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 	private boolean showGroupSeparator = true;
 
 	private Template buttonTemplate; // if null, will fallback to toolbar's valueExtractor
-	private PropertyExtractor propertyExtractor; // if null, will fallback to toolbar's valueExtractor
+	private PropertyProvider propertyProvider; // if null, will fallback to toolbar's valueExtractor
 
 	public ToolbarButtonGroup() {
 		this(new ArrayList<>(), ToolbarButtonGroupPosition.CENTER);
@@ -167,16 +168,19 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 		return this.buttonTemplate != null ? this.buttonTemplate : this.toolContainer.getButtonTemplate();
 	}
 
-	public PropertyExtractor getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public void setPropertyProvider(PropertyProvider propertyProvider) {
+		this.propertyProvider = propertyProvider;
 	}
 
 	public void setPropertyExtractor(PropertyExtractor propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.setPropertyProvider(propertyExtractor);
 	}
-
-	public PropertyExtractor getAppliedPropertyExtractor() {
-		return propertyExtractor != null ? propertyExtractor : toolContainer.getPropertyExtractor();
+	public PropertyProvider getAppliedPropertyProvider() {
+		return propertyProvider != null ? propertyProvider : toolContainer.getPropertyProvider();
 	}
 
 	public void setClientId(String clientId) {

@@ -21,6 +21,7 @@ package org.teamapps.ux.component.field.upload;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiFileField;
@@ -64,12 +65,12 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Template uploadButtonTemplate = BaseTemplate.BUTTON;
 	private Object uploadButtonData = new BaseTemplateRecord(getSessionContext().getIcon(TeamAppsIconBundle.UPLOAD.getKey()), getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD.getKey()));
-	private PropertyExtractor uploadButtonPropertyExtractor = new BeanPropertyExtractor();
+	private PropertyProvider uploadButtonPropertyProvider = new BeanPropertyExtractor<>();
 
 	private final UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter;
 	private Template fileItemTemplate = BaseTemplate.FILE_ITEM_FLOATING;
-	private PropertyExtractor<RECORD> fileItemPropertyExtractor = new BeanPropertyExtractor<>();
-	private ClientRecordCache<RECORD, UiIdentifiableClientRecord> recordCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
+	private PropertyProvider<RECORD> fileItemPropertyProvider = new BeanPropertyExtractor<>();
+	private final ClientRecordCache<RECORD, UiIdentifiableClientRecord> recordCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
 
 	public FileField(UploadedFileToRecordConverter<RECORD> uploadedFileToRecordConverter) {
 		super();
@@ -82,7 +83,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	@Override
 	public UiField createUiComponent() {
-		Map uploadButtonData = uploadButtonPropertyExtractor.getValues(this.uploadButtonData, uploadButtonTemplate.getDataKeys());
+		Map uploadButtonData = uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getDataKeys());
 		UiFileField uiField = new UiFileField(fileItemTemplate.createUiTemplate(), uploadButtonTemplate.createUiTemplate(), uploadButtonData);
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxBytesPerFile(maxBytesPerFile);
@@ -100,7 +101,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
-		clientRecord.setValues(fileItemPropertyExtractor.getValues(record, fileItemTemplate.getDataKeys()));
+		clientRecord.setValues(fileItemPropertyProvider.getValues(record, fileItemTemplate.getDataKeys()));
 		return clientRecord;
 	}
 
@@ -270,23 +271,31 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 		queueCommandIfRendered(() -> new UiFileField.SetMaxFilesCommand(getId(), maxFiles));
 	}
 
-	public PropertyExtractor getUploadButtonPropertyExtractor() {
-		return uploadButtonPropertyExtractor;
+	public PropertyProvider getUploadButtonPropertyProvider() {
+		return uploadButtonPropertyProvider;
 	}
 
-	public void setUploadButtonPropertyExtractor(PropertyExtractor uploadButtonPropertyExtractor) {
-		this.uploadButtonPropertyExtractor = uploadButtonPropertyExtractor;
+	public void setUploadButtonPropertyProvider(PropertyProvider propertyProvider) {
+		this.uploadButtonPropertyProvider = propertyProvider;
+	}
+
+	public void setUploadButtonPropertyExtractor(PropertyExtractor propertyExtractor) {
+		this.setUploadButtonPropertyProvider(propertyExtractor);
 	}
 
 	public UploadedFileToRecordConverter<RECORD> getUploadedFileToRecordConverter() {
 		return uploadedFileToRecordConverter;
 	}
 
-	public PropertyExtractor<RECORD> getFileItemPropertyExtractor() {
-		return fileItemPropertyExtractor;
+	public PropertyProvider<RECORD> getFileItemPropertyProvider() {
+		return fileItemPropertyProvider;
+	}
+
+	public void setFileItemPropertyProvider(PropertyProvider<RECORD> fileItemPropertyProvider) {
+		this.fileItemPropertyProvider = fileItemPropertyProvider;
 	}
 
 	public void setFileItemPropertyExtractor(PropertyExtractor<RECORD> fileItemPropertyExtractor) {
-		this.fileItemPropertyExtractor = fileItemPropertyExtractor;
+		this.setFileItemPropertyProvider(fileItemPropertyExtractor);
 	}
 }

@@ -21,6 +21,7 @@ package org.teamapps.ux.component.charting.forcelayout;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiClientRecord;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
@@ -52,8 +53,8 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 	// private int charge = -300;
 	// private int distance = 30;
 	// private Color highlightColor;
-	
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+
+	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
 	public ForceLayoutGraph() {
 		this(Collections.emptyList(), Collections.emptyList());
@@ -112,7 +113,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
 	private UiClientRecord createUiRecord(ForceLayoutNode<RECORD> node) {
 		UiClientRecord uiClientRecord = new UiClientRecord();
-		uiClientRecord.setValues(propertyExtractor.getValues(node.getRecord(), node.getTemplate().getDataKeys()));
+		uiClientRecord.setValues(propertyProvider.getValues(node.getRecord(), node.getTemplate().getDataKeys()));
 		return uiClientRecord;
 	}
 
@@ -184,11 +185,16 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		return Collections.unmodifiableList(links);
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider<RECORD> getPropertyProvider() {
+		return propertyProvider;
 	}
+
+	public void setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.propertyProvider = propertyProvider;
+	}
+
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.setPropertyProvider(propertyExtractor);
 	}
 
 	public void setDistance(float linkDistanceFactor, float nodeDistanceFactor) {

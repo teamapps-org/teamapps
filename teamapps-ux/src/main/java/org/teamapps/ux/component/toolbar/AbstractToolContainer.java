@@ -22,6 +22,7 @@ package org.teamapps.ux.component.toolbar;
 import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.AbstractUiToolContainer;
 import org.teamapps.dto.UiDropDownButtonClickInfo;
 import org.teamapps.dto.UiEvent;
@@ -42,7 +43,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	protected List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
 
 	private Template buttonTemplate = BaseTemplate.TOOLBAR_BUTTON;
-	private PropertyExtractor propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider propertyProvider = new BeanPropertyExtractor<>();
 
 	public AbstractToolContainer() {
 		super();
@@ -149,11 +150,15 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 		this.buttonTemplate = buttonTemplate;
 	}
 
-	public PropertyExtractor getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public void setPropertyProvider(PropertyProvider propertyProvider) {
+		this.propertyProvider = propertyProvider;
 	}
 
 	public void setPropertyExtractor(PropertyExtractor propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.setPropertyProvider(propertyExtractor);
 	}
 }

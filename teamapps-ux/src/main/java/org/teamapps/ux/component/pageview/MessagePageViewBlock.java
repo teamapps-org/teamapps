@@ -21,6 +21,7 @@ package org.teamapps.ux.component.pageview;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiClientRecord;
 import org.teamapps.dto.UiMessagePageViewBlock;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
@@ -33,7 +34,7 @@ public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
 
 	private Template topTemplate = BaseTemplate.LIST_ITEM_LARGE_ICON_TWO_LINES;
 	private RECORD topRecord;
-	private PropertyExtractor<RECORD> topRecordPropertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> topRecordPropertyProvider = new BeanPropertyExtractor<>();
 	private HorizontalElementAlignment topRecordAlignment = HorizontalElementAlignment.LEFT;
 	private String html;
 	private List<String> imageUrls;
@@ -56,7 +57,7 @@ public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
 		UiMessagePageViewBlock uiBlock = new UiMessagePageViewBlock();
 		mapAbstractPageViewBlockAttributes(uiBlock);
 		uiBlock.setTopTemplate(topTemplate.createUiTemplate());
-		uiBlock.setTopRecord(topRecord != null ? new UiClientRecord().setValues(topRecordPropertyExtractor.getValues(topRecord, topTemplate.getDataKeys())) : null);
+		uiBlock.setTopRecord(topRecord != null ? new UiClientRecord().setValues(topRecordPropertyProvider.getValues(topRecord, topTemplate.getDataKeys())) : null);
 		uiBlock.setTopRecordAlignment(topRecordAlignment.toUiHorizontalElementAlignment());
 		uiBlock.setHtml(html);
 		uiBlock.setImageUrls(imageUrls);
@@ -79,12 +80,16 @@ public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
 		this.topRecord = topRecord;
 	}
 
-	public PropertyExtractor<RECORD> getTopRecordPropertyExtractor() {
-		return topRecordPropertyExtractor;
+	public PropertyProvider<RECORD> getTopRecordPropertyProvider() {
+		return topRecordPropertyProvider;
 	}
 
-	public void setTopRecordPropertyExtractor(PropertyExtractor<RECORD> topRecordPropertyExtractor) {
-		this.topRecordPropertyExtractor = topRecordPropertyExtractor;
+	public void setTopRecordPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.topRecordPropertyProvider = propertyProvider;
+	}
+
+	public void setTopRecordPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
+		this.setTopRecordPropertyProvider(propertyExtractor);
 	}
 
 	public HorizontalElementAlignment getTopRecordAlignment() {
