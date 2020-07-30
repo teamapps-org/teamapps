@@ -212,10 +212,6 @@ public class MediaSoupV3ApiClient {
 			LOGGER.info("EVENT_RECONNECT_ATTEMPT: {}", Arrays.toString(args13));
 		}).on(Socket.EVENT_RECONNECTING, args13 -> {
 			LOGGER.info("EVENT_RECONNECTING: {}", Arrays.toString(args13));
-		}).on(Socket.EVENT_PING, args13 -> {
-			LOGGER.info("EVENT_PING: {}", Arrays.toString(args13));
-		}).on(Socket.EVENT_PONG, args13 -> {
-			LOGGER.info("EVENT_PONG: {}", Arrays.toString(args13));
 		});
 		return socket;
 	}

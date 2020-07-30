@@ -8,7 +8,7 @@ public class StreamFileRequestBuilder {
 	private String filePath;
 	private boolean relativePath;
 	private boolean restartOnExit = false;
-	private String videoBitrate = null;
+	private Integer videoBitrate = null;
 	private Integer width;
 	private Integer height;
 	private Float frameRate;
@@ -48,7 +48,7 @@ public class StreamFileRequestBuilder {
 		return this;
 	}
 
-	public StreamFileRequestBuilder setVideoBitrate(String videoBitrate) {
+	public StreamFileRequestBuilder setVideoBitrate(int videoBitrate) {
 		this.videoBitrate = videoBitrate;
 		return this;
 	}
