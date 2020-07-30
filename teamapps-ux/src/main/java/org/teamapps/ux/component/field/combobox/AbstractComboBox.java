@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiComboBox;
 import org.teamapps.dto.UiComboBoxTreeRecord;
 import org.teamapps.dto.UiEvent;
@@ -57,7 +58,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 
 	private ComboBoxModel<RECORD> model;
 	private TextMatchingMode textMatchingMode = TextMatchingMode.CONTAINS; // only filter on client-side if staticData != null. SIMILARITY_MATCH allows levenshtein distance of 3
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
 	private int templateIdCounter = 0;
@@ -162,7 +163,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		HashSet<String> templateDataKeys = new HashSet<>();
 		templateDataKeys.addAll(displayTemplate != null ? displayTemplate.getDataKeys() : Collections.emptySet());
 		templateDataKeys.addAll(dropdownTemplate != null ? dropdownTemplate.getDataKeys() : Collections.emptySet());
-		Map<String, Object> values = propertyExtractor.getValues(record, templateDataKeys);
+		Map<String, Object> values = propertyProvider.getValues(record, templateDataKeys);
 		UiComboBoxTreeRecord uiTreeRecord = new UiComboBoxTreeRecord();
 		uiTreeRecord.setValues(values);
 
@@ -388,12 +389,16 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		this.recordToStringFunction = recordToStringFunction;
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider<RECORD> getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public void setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.propertyProvider = propertyProvider;
 	}
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.setPropertyProvider(propertyExtractor);
 	}
 
 	@Override

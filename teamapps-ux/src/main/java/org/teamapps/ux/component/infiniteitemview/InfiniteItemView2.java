@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
@@ -62,7 +63,7 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	// private ItemViewRowJustification rowHorizontalAlignment = ItemViewRowJustification.LEFT; // TODO
 
 	private InfiniteItemViewModel<RECORD> model = new ListInfiniteItemViewModel<>(Collections.emptyList());
-	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> itemPropertyProvider = new BeanPropertyExtractor<>();
 
 	private ItemRange renderedRange = ItemRange.startEnd(0, 0);
 	private RenderedRecordsCache<RECORD> renderedRecords = new RenderedRecordsCache<>();
@@ -320,7 +321,7 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
 		clientRecord.setId(++clientRecordIdCounter);
-		clientRecord.setValues(itemPropertyExtractor.getValues(record, itemTemplate.getDataKeys()));
+		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getDataKeys()));
 		return clientRecord;
 	}
 
@@ -416,12 +417,16 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	// 	return this;
 	// }
 
-	public PropertyExtractor<RECORD> getItemPropertyExtractor() {
-		return itemPropertyExtractor;
+	public PropertyProvider<RECORD> getItemPropertyProvider() {
+		return itemPropertyProvider;
 	}
 
-	public void setItemPropertyExtractor(PropertyExtractor<RECORD> itemPropertyExtractor) {
-		this.itemPropertyExtractor = itemPropertyExtractor;
+	public void setItemPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.itemPropertyProvider = propertyProvider;
+	}
+
+	public void setItemPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
+		this.setItemPropertyProvider(propertyExtractor);
 	}
 
 	private static class RecordAndClientRecord<RECORD> {

@@ -21,7 +21,22 @@ package org.teamapps.ux.component.map;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.dto.*;
+import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.dto.AbstractUiMapShape;
+import org.teamapps.dto.UiComboBox;
+import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiHeatMapData;
+import org.teamapps.dto.UiHeatMapDataElement;
+import org.teamapps.dto.UiMap;
+import org.teamapps.dto.UiMapArea;
+import org.teamapps.dto.UiMapCircle;
+import org.teamapps.dto.UiMapConfig;
+import org.teamapps.dto.UiMapMarkerClientRecord;
+import org.teamapps.dto.UiMapMarkerCluster;
+import org.teamapps.dto.UiMapPolygon;
+import org.teamapps.dto.UiMapPolyline;
+import org.teamapps.dto.UiMapRectangle;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -53,8 +68,8 @@ public class MapView<RECORD> extends AbstractComponent {
 	private String accessToken = null;
 	private int zoomLevel = 5;
 	private Location location = new Location(0, 0);
-	private Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
-	private List<Marker<RECORD>> markers = new ArrayList<>();
+	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
+	private final List<Marker<RECORD>> markers = new ArrayList<>();
 	private List<Marker<RECORD>> clusterMarkers = new ArrayList<>();
 
 	private final ClientRecordCache<Marker<RECORD>, UiMapMarkerClientRecord> recordCache = new ClientRecordCache<>(this::createUiRecord);
@@ -65,8 +80,8 @@ public class MapView<RECORD> extends AbstractComponent {
 	private int templateIdCounter = 0;
 	private UiMapConfig mapConfig;
 
-	private PropertyExtractor<RECORD> markerPropertyExtractor = new BeanPropertyExtractor<>();
-	private AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
+	private PropertyProvider<RECORD> markerPropertyProvider = new BeanPropertyExtractor<>();
+	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
 		public void handleChanged(AbstractMapShape shape) {
 			queueCommandIfRendered(() -> new UiMap.UpdateShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
@@ -115,7 +130,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		Template template = getTemplateForRecord(marker, templateDecider);
 		if (template != null) {
 			clientRecord.setTemplateId(templateIdsByTemplate.get(template));
-			clientRecord.setValues(markerPropertyExtractor.getValues(marker.getData(), template.getDataKeys()));
+			clientRecord.setValues(markerPropertyProvider.getValues(marker.getData(), template.getDataKeys()));
 		} else {
 			clientRecord.setAsString("" + marker.getData());
 		}
@@ -324,12 +339,16 @@ public class MapView<RECORD> extends AbstractComponent {
 		this.templateDecider = templateDecider;
 	}
 
-	public PropertyExtractor<RECORD> getMarkerPropertyExtractor() {
-		return markerPropertyExtractor;
+	public PropertyProvider<RECORD> getMarkerPropertyProvider() {
+		return markerPropertyProvider;
 	}
 
-	public void setMarkerPropertyExtractor(PropertyExtractor<RECORD> markerPropertyExtractor) {
-		this.markerPropertyExtractor = markerPropertyExtractor;
+	public void setMarkerPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.markerPropertyProvider = propertyProvider;
+	}
+
+	public void setMarkerPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
+		this.setMarkerPropertyProvider(propertyExtractor);
 	}
 
 	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {

@@ -21,6 +21,7 @@ package org.teamapps.ux.component.itemview;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiItemViewItemGroup;
 import org.teamapps.ux.cache.CacheManipulationHandle;
@@ -51,7 +52,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 	private int verticalItemMargin = 0;
 
 	private ItemGroupContainer<HEADERRECORD, RECORD> container;
-	private PropertyExtractor<RECORD> itemPropertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> itemPropertyProvider = new BeanPropertyExtractor<>();
 	private final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache = new ClientRecordCache<>(this::createUiIdentifiableClientRecord);
 
 	public ItemGroup() {
@@ -95,7 +96,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
-		clientRecord.setValues(itemPropertyExtractor.getValues(record, itemTemplate.getDataKeys()));
+		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getDataKeys()));
 		return clientRecord;
 	}
 
@@ -242,13 +243,16 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 		return container;
 	}
 
-	public PropertyExtractor<RECORD> getItemPropertyExtractor() {
-		return itemPropertyExtractor;
+	public PropertyProvider<RECORD> getItemPropertyProvider() {
+		return itemPropertyProvider;
 	}
 
-	public void setItemPropertyExtractor(PropertyExtractor<RECORD> itemPropertyExtractor) {
-		this.itemPropertyExtractor = itemPropertyExtractor;
-		requireRefresh();
+	public void setItemPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.itemPropertyProvider = propertyProvider;
+	}
+
+	public void setItemPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
+		this.setItemPropertyProvider(propertyExtractor);
 	}
 
 	/*package-private*/ RECORD getItemByClientId(int clientId) {

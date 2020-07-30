@@ -21,6 +21,7 @@ package org.teamapps.ux.component.itemview;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
@@ -50,7 +51,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 	private String filter;
 
 	private Template groupHeaderTemplate = BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE;
-	private PropertyExtractor<HEADERRECORD> headerPropertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<HEADERRECORD> headerPropertyProvider = new BeanPropertyExtractor<>();
 
 	public ItemView() {
 		this(null);
@@ -106,7 +107,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 			@Override
 			public UiIdentifiableClientRecord createHeaderClientRecord(HEADERRECORD headerRecord) {
 				UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
-				clientRecord.setValues(headerPropertyExtractor.getValues(headerRecord, groupHeaderTemplate.getDataKeys()));
+				clientRecord.setValues(headerPropertyProvider.getValues(headerRecord, groupHeaderTemplate.getDataKeys()));
 				return clientRecord;
 			}
 
@@ -188,13 +189,17 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 		reRenderIfRendered();
 	}
 
-	public PropertyExtractor<HEADERRECORD> getHeaderPropertyExtractor() {
-		return headerPropertyExtractor;
+	public PropertyProvider<HEADERRECORD> getHeaderPropertyProvider() {
+		return headerPropertyProvider;
 	}
 
-	public void setHeaderPropertyExtractor(PropertyExtractor<HEADERRECORD> headerPropertyExtractor) {
-		this.headerPropertyExtractor = headerPropertyExtractor;
+	public void setHeaderPropertyProvider(PropertyProvider<HEADERRECORD> propertyProvider) {
+		this.headerPropertyProvider = propertyProvider;
 		reRenderIfRendered();
+	}
+
+	public void setHeaderPropertyExtractor(PropertyExtractor<HEADERRECORD> propertyExtractor) {
+		this.setHeaderPropertyProvider(propertyExtractor);
 	}
 
 	@Override

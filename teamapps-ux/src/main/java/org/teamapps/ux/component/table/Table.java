@@ -26,6 +26,7 @@ import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.BeanPropertyInjector;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.data.value.SortDirection;
 import org.teamapps.data.value.Sorting;
 import org.teamapps.databinding.ObservableValue;
@@ -77,7 +78,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	private final TwoWayBindableValueImpl<Integer> count = new TwoWayBindableValueImpl<>(0);
 
 	private TableModel<RECORD> model = new ListTableModel<>(Collections.emptyList());
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
 	private final ClientRecordCache<RECORD, UiTableClientRecord> clientRecordCache;
 
@@ -398,8 +399,18 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		if (column.getValueExtractor() != null) {
 			return column.getValueExtractor().extract(record);
 		} else {
-			return propertyExtractor.getValue(record, column.getPropertyName());
+			return propertyProvider.getValues(record, Collections.singletonList(column.getPropertyName())).get(column.getPropertyName());
 		}
+	}
+
+	private Map<String, Object> extractRecordProperties(RECORD record) {
+		Map<Boolean, List<TableColumn<RECORD>>> columnsWithAndWithoutValueExtractor = columns.stream().collect(Collectors.partitioningBy(c -> c.getValueExtractor() != null));
+		Map<String, Object> valuesByPropertyName = new HashMap<>(propertyProvider.getValues(record, columnsWithAndWithoutValueExtractor.get(false).stream()
+				.map(TableColumn::getPropertyName)
+				.collect(Collectors.toList())));
+		columnsWithAndWithoutValueExtractor.get(true).forEach(recordTableColumn -> valuesByPropertyName.put(recordTableColumn.getPropertyName(),
+				recordTableColumn.getValueExtractor().extract(record)));
+		return valuesByPropertyName;
 	}
 
 	public List<String> getColumnPropertyNames() {
@@ -831,11 +842,9 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 
 	private UiTableClientRecord createUiTableClientRecord(RECORD record) {
 		UiTableClientRecord clientRecord = new UiTableClientRecord();
-		Map<String, Object> uiValues = new HashMap<>();
-		for (TableColumn<RECORD> column : columns) {
-			Object uxValue = extractRecordProperty(record, column);
-			uiValues.put(column.getPropertyName(), column.getField().convertUxValueToUiValue(uxValue));
-		}
+		Map<String, Object> uxValues = extractRecordProperties(record);
+		Map<String, Object> uiValues = columns.stream()
+				.collect(Collectors.toMap(TableColumn::getPropertyName, c -> c.getField().convertUxValueToUiValue(uxValues.get(c.getPropertyName()))));
 		clientRecord.setValues(uiValues);
 		clientRecord.setSelected(selectedRecord != null && selectedRecord.equals(record) || selectedRecords.contains(record));
 		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
@@ -1138,8 +1147,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 	}
 
 	public Map<String, Object> getAllCellValuesForRecord(RECORD record) {
-		Map<String, Object> values = columns.stream()
-				.collect(Collectors.toMap(TableColumn::getPropertyName, c -> extractRecordProperty(record, c)));
+		Map<String, Object> values = extractRecordProperties(record);
 		values.putAll(transientChangesByRecordAndPropertyName.getOrDefault(record, Collections.emptyMap()));
 		return values;
 	}
@@ -1161,12 +1169,16 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		return selectedRecord;
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider<RECORD> getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public void setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.propertyProvider = propertyProvider;
 	}
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.setPropertyProvider(propertyExtractor);
 	}
 
 	public PropertyInjector<RECORD> getPropertyInjector() {

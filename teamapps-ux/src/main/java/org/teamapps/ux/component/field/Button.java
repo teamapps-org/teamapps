@@ -19,15 +19,16 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiButton;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.Component;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
@@ -39,7 +40,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	private Template template; // null: toString!
 	private RECORD templateRecord;
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
 	private boolean openDropDownIfNotSet = false;
 	private Component dropDownComponent;
@@ -100,7 +101,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 	private Object createUiRecord() {
 		Object uiRecord;
 		if (template != null) {
-			uiRecord = propertyExtractor.getValues(templateRecord, template.getDataKeys());
+			uiRecord = propertyProvider.getValues(templateRecord, template.getDataKeys());
 		} else {
 			uiRecord = templateRecord.toString();
 		}
@@ -147,12 +148,16 @@ public class Button<RECORD> extends AbstractField<Void> {
 		return this;
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider<RECORD> getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public void setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.propertyProvider = propertyProvider;
 	}
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.propertyProvider = propertyExtractor;
 	}
 
 	public Integer getMinDropDownWidth() {

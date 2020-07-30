@@ -21,6 +21,7 @@ package org.teamapps.ux.component.charting.tree;
 
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiBaseTreeGraphNode;
 import org.teamapps.dto.UiClientRecord;
 import org.teamapps.dto.UiEvent;
@@ -54,7 +55,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	private int sideListVerticalGap = 20;
 
 	private final LinkedHashMap<String, TreeGraphNode<RECORD>> nodesById = new LinkedHashMap<>();
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
 	public TreeGraph() {
 	}
@@ -115,7 +116,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	private UiClientRecord createUiRecord(RECORD record, Template template) {
 		UiClientRecord uiClientRecord = new UiClientRecord();
-		uiClientRecord.setValues(propertyExtractor.getValues(record, template.getDataKeys()));
+		uiClientRecord.setValues(propertyProvider.getValues(record, template.getDataKeys()));
 		return uiClientRecord;
 	}
 
@@ -313,12 +314,16 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 		this.update();
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider<RECORD> getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public void setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.propertyProvider = propertyProvider;
 	}
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.setPropertyProvider(propertyExtractor);
 	}
 }
 

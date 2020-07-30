@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiCalendar;
 import org.teamapps.dto.UiCalendarEventClientRecord;
 import org.teamapps.dto.UiCalendarEventRenderingStyle;
@@ -68,7 +69,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	public final Event<LocalDate> onDayHeaderClicked = new Event<>();
 
 	private CalendarModel<CEVENT> model;
-	private PropertyExtractor<CEVENT> propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<CEVENT> propertyProvider = new BeanPropertyExtractor<>();
 
 	private final ClientRecordCache<CEVENT, UiCalendarEventClientRecord> recordCache = new ClientRecordCache<>(this::createUiCalendarEventClientRecord);
 
@@ -133,7 +134,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 			dataKeys.addAll(monthGridTemplate.getDataKeys());
 		}
 
-		Map<String, Object> values = propertyExtractor.getValues(calendarEvent, dataKeys);
+		Map<String, Object> values = propertyProvider.getValues(calendarEvent, dataKeys);
 		UiCalendarEventClientRecord uiRecord = new UiCalendarEventClientRecord();
 		uiRecord.setValues(values);
 
@@ -495,12 +496,16 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		this.defaultBorderColor = defaultBorderColor;
 	}
 
-	public PropertyExtractor<CEVENT> getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider<CEVENT> getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public void setPropertyProvider(PropertyProvider<CEVENT> propertyProvider) {
+		this.propertyProvider = propertyProvider;
 	}
 
 	public void setPropertyExtractor(PropertyExtractor<CEVENT> propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.setPropertyProvider(propertyExtractor);
 	}
 
 	public CalendarEventTemplateDecider<CEVENT> getTemplateDecider() {

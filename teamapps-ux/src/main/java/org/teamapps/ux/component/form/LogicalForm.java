@@ -23,6 +23,7 @@ import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.BeanPropertyInjector;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.ux.component.field.AbstractField;
 
 import java.util.HashMap;
@@ -31,15 +32,19 @@ import java.util.Map;
 public class LogicalForm<RECORD> {
 
 	private final Map<String, AbstractField<?>> fieldsByPropertyName = new HashMap<>();
-	private PropertyExtractor<RECORD> propertyExtractor = new BeanPropertyExtractor<>();
+	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
 
 	public LogicalForm() {
 	}
 
-	public LogicalForm(PropertyExtractor<RECORD> propertyExtractor, PropertyInjector<RECORD> propertyInjector) {
-		this.propertyExtractor = propertyExtractor;
+	public LogicalForm(PropertyProvider<RECORD> propertyProvider, PropertyInjector<RECORD> propertyInjector) {
+		this.propertyProvider = propertyProvider;
 		this.propertyInjector = propertyInjector;
+	}
+
+	public LogicalForm(PropertyExtractor<RECORD> propertyExtractor, PropertyInjector<RECORD> propertyInjector) {
+		this((PropertyProvider<RECORD>) propertyExtractor, propertyInjector);
 	}
 
 	public LogicalForm(Map<String, AbstractField<?>> fieldsByPropertyName) {
@@ -57,7 +62,7 @@ public class LogicalForm<RECORD> {
 	}
 
 	public void applyRecordValuesToFields(RECORD record) {
-		Map<String, Object> values = propertyExtractor.getValues(record, fieldsByPropertyName.keySet());
+		Map<String, Object> values = propertyProvider.getValues(record, fieldsByPropertyName.keySet());
 		values.forEach((dataKey, value) -> ((AbstractField) fieldsByPropertyName.get(dataKey)).setValue(value));
 	}
 
@@ -71,12 +76,16 @@ public class LogicalForm<RECORD> {
 		return fieldsByPropertyName;
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
-		return propertyExtractor;
+	public PropertyProvider<RECORD> getPropertyProvider() {
+		return propertyProvider;
+	}
+
+	public void setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		this.propertyProvider = propertyProvider;
 	}
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
-		this.propertyExtractor = propertyExtractor;
+		this.setPropertyProvider(propertyExtractor);
 	}
 
 	public PropertyInjector<RECORD> getPropertyInjector() {

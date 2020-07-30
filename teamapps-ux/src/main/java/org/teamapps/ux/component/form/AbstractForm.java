@@ -23,8 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
-import org.teamapps.dto.UiComponent;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiClientObjectReference;
+import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiFormLayoutPolicy;
 import org.teamapps.dto.UiGridForm;
@@ -45,8 +46,8 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 
 	public final Event<FieldChangeEventData> onFieldValueChanged = new Event<>();
 
-	private LogicalForm<RECORD> logicalForm = new LogicalForm<>();
-	private List<Component> children = new ArrayList<>();
+	private final LogicalForm<RECORD> logicalForm = new LogicalForm<>();
+	private final List<Component> children = new ArrayList<>();
 
 
 	public void clearAllFields() {
@@ -131,8 +132,12 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		logicalForm.applyFieldValuesToRecord(record);
 	}
 
-	public PropertyExtractor<RECORD> getPropertyExtractor() {
-		return logicalForm.getPropertyExtractor();
+	public PropertyProvider<RECORD> getPropertyProvider() {
+		return logicalForm.getPropertyProvider();
+	}
+
+	public void setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
+		logicalForm.setPropertyProvider(propertyProvider);
 	}
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
