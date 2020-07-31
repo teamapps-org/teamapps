@@ -13,7 +13,7 @@ import static org.teamapps.ux.component.webrtc.apiclient.MediaKind.VIDEO;
 public class MediaSoupV3ApiClientTest {
 
 	public static void main(String[] args) throws URISyntaxException, InterruptedException {
-		MediaSoupV3ApiClient client = new MediaSoupV3ApiClient("http://127.0.0.1:8723", "asdf");
+		MediaSoupV3SocketIoApiClient client = new MediaSoupV3SocketIoApiClient("http://127.0.0.1:8723", "asdf");
 
 		client.startRecording("myStream", Set.of(AUDIO, VIDEO)).thenAccept(r -> System.out.println("Response: " + r));
 		client.startRecording("myStream").thenAccept(r -> System.out.println("Response: " + r));
