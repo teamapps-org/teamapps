@@ -21,10 +21,10 @@
 package org.teamapps.ux.component.webrtc.apiclient;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.client.WebTarget;
@@ -43,7 +43,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	private final String serverSecret;
 
 	public MediaSoupV3RestClient(String serverUrl, String serverSecret) {
-		webTarget = ClientBuilder.newClient()
+		webTarget = JerseyClientBuilder.createClient()
 				.target(serverUrl)
 				.path("api");
 		this.serverSecret = serverSecret;
@@ -56,7 +56,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateStreamingJwtToken(streamFileRequest.getStreamUuid(), serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(streamFileRequest, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+				.post(Entity.json(streamFileRequest), new InvocationCallback<Void>() {
 					@Override
 					public void completed(Void s) {
 						future.complete(s);
@@ -77,7 +77,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateStreamingJwtToken(streamUuid, serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(new StreamData(streamUuid), MediaType.APPLICATION_JSON),
+				.post(Entity.json(new StreamData(streamUuid)),
 						new InvocationCallback<Void>() {
 							@Override
 							public void completed(Void s) {
@@ -102,7 +102,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(new StreamAndKinds(streamUuid, kinds), MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+				.post(Entity.json(new StreamAndKinds(streamUuid, kinds)), new InvocationCallback<Void>() {
 					@Override
 					public void completed(Void s) {
 						future.complete(s);
@@ -122,8 +122,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(new StreamAndKinds(streamUuid, Set.of(MediaKind.AUDIO, MediaKind.VIDEO)),
-						MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+				.post(Entity.json(new StreamAndKinds(streamUuid, Set.of(MediaKind.AUDIO, MediaKind.VIDEO))), new InvocationCallback<Void>() {
 					@Override
 					public void completed(Void s) {
 						future.complete(s);
@@ -144,7 +143,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateGeneralApiToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(new StatsInput(ids), MediaType.APPLICATION_JSON), new InvocationCallback<JsonNode>() {
+				.post(Entity.json(new StatsInput(ids)), new InvocationCallback<JsonNode>() {
 					@Override
 					public void completed(JsonNode s) {
 						future.complete(s);
@@ -165,7 +164,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateGeneralApiToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(null, MediaType.APPLICATION_JSON), new InvocationCallback<WorkerLoadData>() {
+				.post(Entity.json(null), new InvocationCallback<WorkerLoadData>() {
 					@Override
 					public void completed(WorkerLoadData s) {
 						future.complete(s.getCurrentLoad());
@@ -186,7 +185,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateGeneralApiToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(null, MediaType.APPLICATION_JSON), new InvocationCallback<NumWorkersData>() {
+				.post(Entity.json(null), new InvocationCallback<NumWorkersData>() {
 					@Override
 					public void completed(NumWorkersData s) {
 						future.complete(s.getNum());
@@ -207,7 +206,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(null, MediaType.APPLICATION_JSON), new InvocationCallback<ListData>() {
+				.post(Entity.json(null), new InvocationCallback<ListData>() {
 					@Override
 					public void completed(ListData s) {
 						future.complete(s.getList());
@@ -228,7 +227,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(new StreamData(streamUuid), MediaType.APPLICATION_JSON),
+				.post(Entity.json(new StreamData(streamUuid)),
 						new InvocationCallback<ListData>() {
 							@Override
 							public void completed(ListData s) {
@@ -249,7 +248,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(new StreamData(streamUuid), MediaType.APPLICATION_JSON),
+				.post(Entity.json(new StreamData(streamUuid)),
 						new InvocationCallback<Void>() {
 							@Override
 							public void completed(Void s) {
@@ -270,7 +269,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(new FilePathInput(filePathInput), MediaType.APPLICATION_JSON),
+				.post(Entity.json(new FilePathInput(filePathInput)),
 						new InvocationCallback<Void>() {
 							@Override
 							public void completed(Void s) {
@@ -292,7 +291,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateGeneralApiToken(serverSecret, Duration.ofDays(365)))
 				.async()
-				.post(Entity.entity(new KindsByFileInput(filePath, relativePath), MediaType.APPLICATION_JSON),
+				.post(Entity.json(new KindsByFileInput(filePath, relativePath)),
 						new InvocationCallback<KindsOptionsData>() {
 							@Override
 							public void completed(KindsOptionsData s) {
@@ -310,7 +309,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 
 	// public CompletableFuture<Void> resumeConsumer(ConsumerData consumerData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("resumeConsumer").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(consumerData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("resumeConsumer").request(MediaType.APPLICATION_JSON).async().post(Entity.json(consumerData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -326,7 +325,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> pauseConsumer(ConsumerData consumerData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("pauseConsumer").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(consumerData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("pauseConsumer").request(MediaType.APPLICATION_JSON).async().post(Entity.json(consumerData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -342,7 +341,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> setPreferredLayers(ConsumerPreferredLayers consumerPreferredLayers) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("setPreferredLayers").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(consumerPreferredLayers, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("setPreferredLayers").request(MediaType.APPLICATION_JSON).async().post(Entity.json(consumerPreferredLayers), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -358,7 +357,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> resumeProducer(ProducerData producerData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("resumeProducer").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(producerData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("resumeProducer").request(MediaType.APPLICATION_JSON).async().post(Entity.json(producerData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -374,7 +373,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> pauseProducer(ProducerData producerData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("pauseProducer").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(producerData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("pauseProducer").request(MediaType.APPLICATION_JSON).async().post(Entity.json(producerData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -390,7 +389,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> closeProducer(ProducerData producerData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("closeProducer").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(producerData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("closeProducer").request(MediaType.APPLICATION_JSON).async().post(Entity.json(producerData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -406,7 +405,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> liveStreaming(LiveStreamRequest liveStreamRequest) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("liveStreaming").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(liveStreamRequest, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("liveStreaming").request(MediaType.APPLICATION_JSON).async().post(Entity.json(liveStreamRequest), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -422,7 +421,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> liveToHls(LiveToHlsRequest liveToHlsRequest) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("liveToHls").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(liveToHlsRequest, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("liveToHls").request(MediaType.APPLICATION_JSON).async().post(Entity.json(liveToHlsRequest), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -437,7 +436,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	// }
 	// public CompletableFuture<PushStreamInputsResponse> pushToServerInputs(PushStreamInputsRequest pushStreamInputsRequest) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("pushToServerInputs").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(pushStreamInputsRequest, MediaType.APPLICATION_JSON),
+	// 	webTarget.path("pushToServerInputs").request(MediaType.APPLICATION_JSON).async().post(Entity.json(pushStreamInputsRequest),
 	// 			new InvocationCallback<PushStreamInputsResponse>() {
 	// 				@Override
 	// 				public void completed(PushStreamInputsResponse s) {
@@ -454,7 +453,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<PushStreamOptionsResponse> pushToServerOptions(PushStreamOptionsRequest pushStreamOptionsRequest) {
 	// 	CompletableFuture<PushStreamInputsResponse> future = new CompletableFuture<>();
-	// 	webTarget.path("pushToServerOptions").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(pushStreamOptionsRequest, MediaType.APPLICATION_JSON),
+	// 	webTarget.path("pushToServerOptions").request(MediaType.APPLICATION_JSON).async().post(Entity.json(pushStreamOptionsRequest),
 	// 			new InvocationCallback<PushStreamOptionsResponse>() {
 	// 				@Override
 	// 				public void completed(PushStreamOptionsResponse s) {
@@ -471,7 +470,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> pushToServer(PushStreamRequest pushStreamRequest) {
 	// 	CompletableFuture<PushStreamOptionsResponse> future = new CompletableFuture<>();
-	// 	webTarget.path("pushToServer").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(pushStreamRequest, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("pushToServer").request(MediaType.APPLICATION_JSON).async().post(Entity.json(pushStreamRequest), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -487,7 +486,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<PullStreamInputsResponse> pullFromServerInputs(PullStreamInputsRequest pullStreamInputsRequest) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("pullFromServerInputs").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(pullStreamInputsRequest, MediaType.APPLICATION_JSON),
+	// 	webTarget.path("pullFromServerInputs").request(MediaType.APPLICATION_JSON).async().post(Entity.json(pullStreamInputsRequest),
 	// 			new InvocationCallback<PullStreamInputsResponse>() {
 	// 				@Override
 	// 				public void completed(PullStreamInputsResponse s) {
@@ -503,7 +502,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	// }
 	// public CompletableFuture<Void> requestKeyframe(ConsumerData consumerData) {
 	// 	CompletableFuture<KindsOptionsData> future = new CompletableFuture<>();
-	// 	webTarget.path("requestKeyframe").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(consumerData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("requestKeyframe").request(MediaType.APPLICATION_JSON).async().post(Entity.json(consumerData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -519,7 +518,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 
 	// public CompletableFuture<MixerInput> mixerStart(MixerCreateOptions mixerCreateOptions) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("mixerStart").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(mixerCreateOptions, MediaType.APPLICATION_JSON), new InvocationCallback<MixerInput>() {
+	// 	webTarget.path("mixerStart").request(MediaType.APPLICATION_JSON).async().post(Entity.json(mixerCreateOptions), new InvocationCallback<MixerInput>() {
 	// 		@Override
 	// 		public void completed(MixerInput s) {
 	// 			future.complete(s);
@@ -535,7 +534,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> mixerClose(MixerInput mixerInput) {
 	// 	CompletableFuture<MixerInput> future = new CompletableFuture<>();
-	// 	webTarget.path("mixerClose").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(mixerInput, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("mixerClose").request(MediaType.APPLICATION_JSON).async().post(Entity.json(mixerInput), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -551,7 +550,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> mixerAdd(MixerAddAudioData mixerAddAudioData|MixerAddVideoData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("mixerAdd").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(mixerAddAudioData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("mixerAdd").request(MediaType.APPLICATION_JSON).async().post(Entity.json(mixerAddAudioData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -567,7 +566,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> mixerUpdate(MixerUpdateData mixerUpdateData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("mixerUpdate").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(mixerUpdateData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("mixerUpdate").request(MediaType.APPLICATION_JSON).async().post(Entity.json(mixerUpdateData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -583,7 +582,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> mixerRemove(MixerRemoveData mixerRemoveData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("mixerRemove").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(mixerRemoveData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("mixerRemove").request(MediaType.APPLICATION_JSON).async().post(Entity.json(mixerRemoveData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -599,7 +598,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<MixerPipeInput> mixerPipeStart(MixerPipeLiveData|MixerPipeRecordingData|MixerPipeRtmpData|MixerPipeHlsData mixerPipeLiveData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("mixerPipeStart").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(mixerPipeLiveData, MediaType.APPLICATION_JSON), new InvocationCallback<MixerPipeInput>() {
+	// 	webTarget.path("mixerPipeStart").request(MediaType.APPLICATION_JSON).async().post(Entity.json(mixerPipeLiveData), new InvocationCallback<MixerPipeInput>() {
 	// 		@Override
 	// 		public void completed(MixerPipeInput s) {
 	// 			future.complete(s);
@@ -615,7 +614,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	//
 	// public CompletableFuture<Void> mixerPipeStop(MixerPipeStopInput mixerPipeStopInput) {
 	// 	CompletableFuture<MixerPipeInput> future = new CompletableFuture<>();
-	// 	webTarget.path("mixerPipeStop").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(mixerPipeStopInput, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("mixerPipeStop").request(MediaType.APPLICATION_JSON).async().post(Entity.json(mixerPipeStopInput), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
@@ -630,7 +629,7 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 	// }
 	// public CompletableFuture<Void> setMaxIncomingBitrate(TransportBitrateData transportBitrateData) {
 	// 	CompletableFuture<Void> future = new CompletableFuture<>();
-	// 	webTarget.path("setMaxIncomingBitrate").request(MediaType.APPLICATION_JSON).async().post(Entity.entity(transportBitrateData, MediaType.APPLICATION_JSON), new InvocationCallback<Void>() {
+	// 	webTarget.path("setMaxIncomingBitrate").request(MediaType.APPLICATION_JSON).async().post(Entity.json(transportBitrateData), new InvocationCallback<Void>() {
 	// 		@Override
 	// 		public void completed(Void s) {
 	// 			future.complete(s);
