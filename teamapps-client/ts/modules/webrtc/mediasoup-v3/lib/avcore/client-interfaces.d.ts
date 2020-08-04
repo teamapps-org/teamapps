@@ -1,7 +1,7 @@
 import { MediaKind, RtpCapabilities, RtpEncodingParameters, RtpParameters } from 'mediasoup-client/lib/RtpParameters';
 import { ProducerCodecOptions } from 'mediasoup-client/lib/Producer';
 import { DtlsParameters } from 'mediasoup-client/lib/Transport';
-import { MIXER_PIPE_TYPE } from './constants';
+import { MIXER_PIPE_TYPE, MIXER_RENDER_TYPE } from './constants';
 export declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export interface ConsumerData {
     consumerId: string;
@@ -107,8 +107,10 @@ export interface RecordingRequest extends StreamKindsData {
     layer?: number;
     origin?: ConsumeRequestOriginData;
 }
-export interface KindsOptionsData {
+export interface KindsOptionsData extends SizeData {
     kinds: MediaKind[];
+}
+export interface SizeData {
     width?: number;
     height?: number;
 }
@@ -127,20 +129,18 @@ export interface StreamListenData extends StreamKindData {
 export interface StreamData {
     stream: string;
 }
-export interface StreamFileRequest extends StreamKindsData, KindsByFileInput, StreamingOptions {
+export interface StreamFileRequest extends StreamKindsData, KindsByFileInput, StreamingOptions, PushSimulcastInput {
     restartOnExit?: boolean;
     additionalInputOptions?: string[];
 }
-export interface LiveStreamRequest extends StreamKindsData, StreamingOptions {
+export interface LiveStreamRequest extends StreamKindsData, StreamingOptions, PushSimulcastInput {
     url: string;
     restartOnExit?: boolean;
 }
 export interface BitrateOptions {
     videoBitrate?: string;
 }
-export interface MixerCreateOptions {
-    width?: number;
-    height?: number;
+export interface MixerCreateOptions extends SizeData {
     frameRate?: number;
     audioSampleRate?: number;
     audioChannels?: number;
@@ -164,13 +164,16 @@ export interface PushStreamOptionsResponse {
 }
 export interface PortData {
     payloadType: number;
-    ssrc: number;
+    ssrcs: number[];
     rtpPort: number;
     rtcpPort: number;
     bindRtpPort?: number;
     bindRtcpPort?: number;
 }
-export interface PushStreamOptionsRequest extends PullStreamInputsRequest {
+export interface PushSimulcastInput {
+    simulcast?: SizeData[];
+}
+export interface PushStreamOptionsRequest extends PullStreamInputsRequest, PushSimulcastInput {
     bindPorts?: boolean;
 }
 export interface PushStreamRequest extends StreamKindsData {
@@ -237,6 +240,7 @@ export interface MixerOptions {
     width: number;
     height: number;
     z: number;
+    renderType?: MIXER_RENDER_TYPE;
 }
 export interface MixerUpdateData extends MixerInput, StreamData {
     options: MixerOptions;
@@ -249,13 +253,25 @@ export interface MixerAddAudioData extends MixerInput, StreamData {
 }
 export interface MixerRemoveData extends MixerInput, StreamKindData {
 }
-export interface MixerPipeData extends MixerInput, KindsData, BitrateOptions {
+export interface MixerPipeData extends MixerInput, KindsData {
 }
-export interface MixerPipeLiveData extends MixerPipeData, StreamData {
+export interface MixerHlsFormatOptions extends SizeData {
+    videoBitrate: number;
+}
+export interface MixerPipeLiveData extends MixerPipeData, StreamData, PushSimulcastInput {
     type: MIXER_PIPE_TYPE.LIVE;
 }
 export interface MixerPipeRecordingData extends MixerPipeData {
     type: MIXER_PIPE_TYPE.RECORDING;
+}
+export interface HlsData {
+    formats?: MixerHlsFormatOptions[];
+    numChunks?: number;
+    chunkDuration?: number;
+}
+export interface MixerPipeHlsData extends MixerPipeData, HlsData {
+    type: MIXER_PIPE_TYPE.HLS;
+    formats: MixerHlsFormatOptions[];
 }
 export interface MixerPipeRtmpData extends MixerPipeData {
     type: MIXER_PIPE_TYPE.RTMP;
@@ -265,4 +281,8 @@ export interface MixerPipeInput {
     pipeId: string;
 }
 export interface MixerPipeStopInput extends MixerPipeInput, MixerInput {
+}
+export interface LiveToHlsRequest extends StreamKindsData, HlsData {
+    url: string;
+    restartOnExit?: boolean;
 }

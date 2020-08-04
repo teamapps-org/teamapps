@@ -4,4 +4,5 @@ export declare class Utils {
     static isOpera: boolean;
     static isChrome: boolean;
     static isSafari: boolean;
+    static hlsPlaylistPath(pipeId: string): string;
 }

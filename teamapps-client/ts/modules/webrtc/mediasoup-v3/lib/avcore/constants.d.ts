@@ -13,6 +13,7 @@ export declare enum ACTION {
     CLOSE_PRODUCER = "closeProducer",
     FILE_STREAMING = "fileStreaming",
     LIVE_STREAMING = "liveStreaming",
+    LIVE_TO_HLS = "liveToHls",
     STOP_FILE_STREAMING = "stopFileStreaming",
     START_RECORDING = "startRecording",
     STOP_RECORDING = "stopRecording",
@@ -48,6 +49,8 @@ export declare enum ACTION {
     MIXER_PIPE_STOP = "mixerPipeStop",
     LISTEN_MIXER_STOPPED = "listenMixerStopped"
 }
+export declare const SOCKET_ONLY_ACTIONS: ACTION[];
+export declare const REST_ACTIONS: ACTION[];
 export declare enum EVENT {
     STREAM_STARTED = "streamStarted",
     STREAM_STOPPED = "streamStopped",
@@ -57,6 +60,13 @@ export declare enum STAT {
     STATS = "stats",
     TRAFFIC = "traffic",
     CPU = "cpu"
+}
+export declare const HLS: {
+    ROOT: string;
+    PLAYLIST: string;
+};
+export declare enum PATH {
+    API = "api"
 }
 export declare const NEXMO: {
     PATH: string;
@@ -72,7 +82,8 @@ export declare enum ERROR {
     INVALID_STREAM = 533,
     INVALID_OPERATION = 534,
     INVALID_WORKER = 535,
-    INVALID_INPUT = 536
+    INVALID_INPUT = 536,
+    INVALID_ACTION = 537
 }
 export declare enum API_OPERATION {
     SUBSCRIBE = 0,
@@ -84,5 +95,11 @@ export declare enum API_OPERATION {
 export declare enum MIXER_PIPE_TYPE {
     LIVE = 0,
     RECORDING = 1,
-    RTMP = 2
+    RTMP = 2,
+    HLS = 3
+}
+export declare enum MIXER_RENDER_TYPE {
+    SCALE = "scale",
+    CROP = "crop",
+    PAD = "pad"
 }
