@@ -844,7 +844,7 @@ public class Table<RECORD> extends AbstractComponent implements Container {
 		UiTableClientRecord clientRecord = new UiTableClientRecord();
 		Map<String, Object> uxValues = extractRecordProperties(record);
 		Map<String, Object> uiValues = columns.stream()
-				.collect(Collectors.toMap(TableColumn::getPropertyName, c -> c.getField().convertUxValueToUiValue(uxValues.get(c.getPropertyName()))));
+				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), column.getField().convertUxValueToUiValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
 		clientRecord.setValues(uiValues);
 		clientRecord.setSelected(selectedRecord != null && selectedRecord.equals(record) || selectedRecords.contains(record));
 		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
