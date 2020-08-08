@@ -452,29 +452,35 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		const webcamConstraintsChanged = !deepEquals(oldWebcamConstraints, newWebcamConstraints);
 		const screenConstraintsChanged = !deepEquals(oldScreenConstraints, newScreenConstraints);
 
+		let minorAudioChange = false;
 		if (audioConstraintsChanged) {
 			console.log("updatePublishedTracks() --> audioConstraintsChanged", newAudioConstraints);
-			if (this.audioTrack != null) {
-				this.audioTrack.stop();
-				this.audioTrack = null;
-			}
-			if (newAudioConstraints != null) {
-				try {
-					let audioTracks = (await window.navigator.mediaDevices.getUserMedia({audio: newAudioConstraints, video: false})) // rejected if user denies!
-						.getAudioTracks();
-					this.audioTrack = audioTracks[0];
-					for (let i = 1; i < audioTracks.length; i++) {
-						audioTracks[i].stop(); // stop all but the first (should never be more than one actually!)
-					}
-					this.audioTrack.addEventListener("ended", () => {
-						if (this.audioTrack != null) { // not intended stopping!
-							this.onSourceMediaTrackEnded.fire({trackType: UiSourceMediaTrackType.MIC});
+			if (newAudioConstraints != null && oldAudioConstraints?.deviceId === newAudioConstraints?.deviceId && oldAudioConstraints?.channelCount === newAudioConstraints?.channelCount) {
+				this.audioTrack.applyConstraints(newAudioConstraints);
+				minorAudioChange = true;
+			} else {
+				if (this.audioTrack != null) {
+					this.audioTrack.stop();
+					this.audioTrack = null;
+				}
+				if (newAudioConstraints != null) {
+					try {
+						let audioTracks = (await window.navigator.mediaDevices.getUserMedia({audio: newAudioConstraints, video: false})) // rejected if user denies!
+							.getAudioTracks();
+						this.audioTrack = audioTracks[0];
+						for (let i = 1; i < audioTracks.length; i++) {
+							audioTracks[i].stop(); // stop all but the first (should never be more than one actually!)
 						}
-					});
-					addVoiceActivityDetection(this.audioTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
-				} catch (e) {
-					console.error("Could not get user media: microphone!" + (location.protocol === "http:" ? " Probably due to plain HTTP (no encryption)." : ""), e);
-					this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
+						this.audioTrack.addEventListener("ended", () => {
+							if (this.audioTrack != null) { // not intended stopping!
+								this.onSourceMediaTrackEnded.fire({trackType: UiSourceMediaTrackType.MIC});
+							}
+						});
+						addVoiceActivityDetection(this.audioTrack, () => this.onVoiceActivityChanged.fire({active: true}), () => this.onVoiceActivityChanged.fire({active: false}));
+					} catch (e) {
+						console.error("Could not get user media: microphone!" + (location.protocol === "http:" ? " Probably due to plain HTTP (no encryption)." : ""), e);
+						this.onSourceMediaTrackRetrievalFailed.fire({reason: UiMediaRetrievalFailureReason.MIC_MEDIA_RETRIEVAL_FAILED});
+					}
 				}
 			}
 		}
@@ -570,7 +576,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		}
 
 		if (this.conferenceClient != null) {
-			if (audioConstraintsChanged) {
+			if (audioConstraintsChanged && !minorAudioChange) {
 				this.targetStream.getAudioTracks().forEach(t => {
 					this.conferenceClient.removeTrack(t);
 				});
