@@ -81,9 +81,12 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 	public createGraph(gravity: any, images: any) {
 		this.linkForce = d3.forceLink(this.links)
 			.id(d => (d as UiNetworkNodeConfig).id)
-			.distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
-				return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * 0.75;
-			});
+			.distance((link: UiNetworkLinkConfig) => {
+				return link.linkLength;
+			})
+			// .distance((link: SimulationLinkDatum<UiNetworkNodeConfig & any>) => {
+			// 	return (Math.max(link.source.width, link.source.height) + Math.max(link.target.width, link.target.height)) * 0.75 + ;
+			// });
 		let force = d3.forceManyBody();
 		force.strength(-30)
 		this.simulation = d3.forceSimulation<UiNetworkNodeConfig & any>()

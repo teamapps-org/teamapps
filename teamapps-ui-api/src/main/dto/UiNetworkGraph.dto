@@ -71,6 +71,7 @@ class UiNetworkLink {
 	String lineColor = "rgb(127, 127, 127)";
 	float lineWidth = 1.5f;
 	String lineDashArray;
+	int linkLength;
 }
 
 class UiNetworkImage {
