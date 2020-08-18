@@ -30,6 +30,7 @@ public class ForceLayoutLink<RECORD> {
 	private float lineWidth = 1f;
 	private Color lineColor = Color.MATERIAL_GREY_500;
 	private String lineDashArray;
+	private int linkLength = 150;
 
 	public ForceLayoutLink(ForceLayoutNode<RECORD> source, ForceLayoutNode<RECORD> target) {
 		this.source = source;
@@ -41,6 +42,7 @@ public class ForceLayoutLink<RECORD> {
 		ui.setLineWidth(lineWidth);
 		ui.setLineColor(lineColor != null ? lineColor.toHtmlColorString(): null);
 		ui.setLineDashArray(lineDashArray);
+		ui.setLinkLength(linkLength);
 		return ui;
 	}
 
@@ -74,5 +76,13 @@ public class ForceLayoutLink<RECORD> {
 
 	public void setLineDashArray(String lineDashArray) {
 		this.lineDashArray = lineDashArray;
+	}
+
+	public int getLinkLength() {
+		return linkLength;
+	}
+
+	public void setLinkLength(int linkLength) {
+		this.linkLength = linkLength;
 	}
 }
