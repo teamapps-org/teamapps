@@ -57,7 +57,7 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
         }
 
         String tabTitle = view.getTabTitle() != null ? view.getTabTitle() : view.getPanel().getTitle();
-        WorkSpaceLayoutView layoutView = new WorkSpaceLayoutView(workSpaceLayout, view.getPanel(), tabTitle, true, false);
+        WorkSpaceLayoutView layoutView = new WorkSpaceLayoutView(workSpaceLayout, view.getPanel(), tabTitle, view.isClosable(), false);
         viewGroup.addView(layoutView);
 
         if (view.getCustomViewSize() != null) {
@@ -177,7 +177,10 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
     @Override
     public void handleViewFocusRequest(ResponsiveApplication application, boolean isActivePerspective, Perspective perspective, View view, boolean ensureVisible) {
         if (isActivePerspective && ensureVisible) {
-            //todo find view group and ensure it is visible
+            WorkSpaceLayoutView layoutView = workSpaceLayout.getViewByPanel(view.getPanel());
+            if (layoutView != null) {
+                layoutView.select();
+            }
         }
     }
 

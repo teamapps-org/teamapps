@@ -45,6 +45,10 @@ public interface View {
         return new ViewImpl(layoutPosition, icon, title, component);
     }
 
+    static View createView(String layoutPosition, Icon icon, String title, Component component, boolean closable) {
+        return new ViewImpl(layoutPosition, icon, title, component, closable);
+    }
+
     void addViewChangeHandler(ViewChangeHandler viewChangeHandler);
 
     void removeViewChangeHandler(ViewChangeHandler viewChangeHandler);
@@ -78,6 +82,8 @@ public interface View {
     Component getComponent();
 
     Panel getPanel();
+
+    boolean isClosable();
 
     void setLayoutPosition(String position);
 

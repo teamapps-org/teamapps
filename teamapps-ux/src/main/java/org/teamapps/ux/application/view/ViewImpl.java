@@ -32,6 +32,7 @@ import java.util.List;
 public class ViewImpl implements View {
 
 
+    private final boolean closable;
     private boolean visible = true;
     private String layoutPosition;
     private ViewSize viewSize;
@@ -43,10 +44,12 @@ public class ViewImpl implements View {
     private List<ViewChangeHandler> changeHandlers = new ArrayList<>();
 
     public ViewImpl() {
+        closable = false;
     }
 
     public ViewImpl(String layoutPosition) {
         this.layoutPosition = layoutPosition;
+        closable = false;
     }
 
     public ViewImpl(Icon icon, String title, Component component) {
@@ -54,10 +57,15 @@ public class ViewImpl implements View {
     }
 
     public ViewImpl(String layoutPosition, Icon icon, String title, Component component) {
+        this(layoutPosition, icon, title, component, false);
+    }
+
+    public ViewImpl(String layoutPosition, Icon icon, String title, Component component, boolean closable) {
         this.layoutPosition = layoutPosition;
         panel.setIcon(icon);
         panel.setTitle(title);
         panel.setContent(component);
+        this.closable = closable;
     }
 
 
@@ -162,6 +170,11 @@ public class ViewImpl implements View {
     @Override
     public Panel getPanel() {
         return panel;
+    }
+
+    @Override
+    public boolean isClosable() {
+        return closable;
     }
 
     @Override
