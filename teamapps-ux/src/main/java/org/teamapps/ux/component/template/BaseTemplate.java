@@ -201,6 +201,10 @@ public enum BaseTemplate implements Template {
 	}
 
 	public static Template createListStyleIconTwoLinesBadgeTemplate(int iconSize, VerticalElementAlignment verticalIconAlignment, int maxHeight, int spacing) {
+		return createListStyleIconTwoLinesBadgeTemplate(iconSize, verticalIconAlignment, maxHeight, spacing, true);
+	}
+
+	public static Template createListStyleIconTwoLinesBadgeTemplate(int iconSize, VerticalElementAlignment verticalIconAlignment, int maxHeight, int spacing, boolean wrapLines) {
 		return new GridTemplate()
 				.setMaxHeight(maxHeight)
 				.setPadding(new Spacing(spacing))
@@ -219,18 +223,18 @@ public enum BaseTemplate implements Template {
 						.setVerticalAlignment(verticalIconAlignment)
 						.setMargin(new Spacing(0, 4, 0, 0)))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
-						.setWrapLines(true)
+						.setWrapLines(wrapLines)
 						.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
 						.setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_DESCRIPTION, 1, 1)
 						.setColSpan(2)
-						.setWrapLines(true)
+						.setWrapLines(wrapLines)
 						.setFontStyle(0.8f, Color.GRAY_STANDARD)
 						.setVerticalAlignment(VerticalElementAlignment.TOP)
 						.setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new BadgeElement(PROPERTY_BADGE, 0, 2)
 						.setFontStyle(new FontStyle().setFontColor(Color.WHITE).setBackgroundColor(Color.DEEP_SKY_BLUE))
-						.setWrapLines(true)
+						.setWrapLines(wrapLines)
 						.setVerticalAlignment(VerticalElementAlignment.BOTTOM)
 						.setHorizontalAlignment(HorizontalElementAlignment.RIGHT)
 						.setMargin(new Spacing(0, 0, 0, 3)));
@@ -322,6 +326,10 @@ public enum BaseTemplate implements Template {
 	}
 
 	public static Template createTreeSingleLineNodeTemplate(int iconSize, VerticalElementAlignment verticalIconAlignment, int maxHeight) {
+		return createTreeSingleLineNodeTemplate(iconSize, verticalIconAlignment, maxHeight, false);
+	}
+
+	public static Template createTreeSingleLineNodeTemplate(int iconSize, VerticalElementAlignment verticalIconAlignment, int maxHeight, boolean wrapLines) {
 		return new GridTemplate()
 				.setMinHeight(16).setMaxHeight(maxHeight)
 				.setPadding(new Spacing(2))
@@ -339,12 +347,13 @@ public enum BaseTemplate implements Template {
 						.setVerticalAlignment(verticalIconAlignment)
 						.setMargin(new Spacing(0, 3, 0, 0)))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
-						.setWrapLines(false)
+						.setWrapLines(wrapLines)
 						.setVerticalAlignment(VerticalElementAlignment.CENTER)
-						.setHorizontalAlignment(HorizontalElementAlignment.LEFT))
+						.setHorizontalAlignment(HorizontalElementAlignment.LEFT)
+				)
 				.addElement(new BadgeElement(PROPERTY_BADGE, 0, 2)
 						.setFontStyle(new FontStyle().setFontColor(Color.WHITE).setBackgroundColor(Color.DEEP_SKY_BLUE))
-						.setWrapLines(true)
+						.setWrapLines(wrapLines)
 						.setVerticalAlignment(VerticalElementAlignment.CENTER)
 						.setHorizontalAlignment(HorizontalElementAlignment.RIGHT)
 						.setMargin(new Spacing(0, 0, 0, 3)));
