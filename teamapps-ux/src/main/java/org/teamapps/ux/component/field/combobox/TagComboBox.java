@@ -27,6 +27,8 @@ import org.teamapps.dto.UiTagComboBox;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.component.tree.TreeNodeInfo;
+import org.teamapps.ux.component.tree.TreeNodeInfoExtractor;
 import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 	}
 
 	public static <R> TagComboBox<R> createForList(List<R> staticData) {
-		return createForList(staticData, null);
+		return createForList(staticData, (Template) null);
 	}
 
 	public static <R> TagComboBox<R> createForList(List<R> staticData, Template template) {
@@ -75,6 +77,24 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 		comboBox.setModel(query -> staticData.stream()
 				.filter(record -> comboBox.getRecordToStringFunction().apply(record).toLowerCase().contains(query.toLowerCase()))
 				.collect(Collectors.toList()));
+		return comboBox;
+	}
+
+	public static <R> TagComboBox<R> createForList(List<R> staticData, TreeNodeInfoExtractor<R> treeNodeInfoExtractor) {
+		TagComboBox<R> comboBox = new TagComboBox<>();
+		comboBox.setModel(new ComboBoxModel<>() {
+			@Override
+			public List<R> getRecords(String query) {
+				return staticData.stream()
+						.filter(record -> comboBox.getRecordToStringFunction().apply(record).toLowerCase().contains(query.toLowerCase()))
+						.collect(Collectors.toList());
+			}
+
+			@Override
+			public TreeNodeInfo getTreeNodeInfo(R r) {
+				return treeNodeInfoExtractor.getTreeNodeInfo(r);
+			}
+		});
 		return comboBox;
 	}
 
