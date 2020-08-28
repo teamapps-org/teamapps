@@ -369,6 +369,10 @@ public class SessionContext {
 		runWithContext(() -> queueCommand(new UiRootPanel.DownloadFileCommand(fileUrl, downloadFileName)));
 	}
 
+	public void downloadFile(File file, String downloadFileName) {
+		runWithContext(() -> queueCommand(new UiRootPanel.DownloadFileCommand(createFileLink(file), downloadFileName)));
+	}
+
 	public void registerBackgroundImage(String id, String image, String blurredImage) {
 		queueCommand(new UiRootPanel.RegisterBackgroundImageCommand(id, image, blurredImage));
 	}
