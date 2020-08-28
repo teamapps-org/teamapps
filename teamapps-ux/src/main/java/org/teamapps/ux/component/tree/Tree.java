@@ -206,7 +206,9 @@ public class Tree<RECORD> extends AbstractComponent {
 				UiTree.NodeSelectedEvent nodeSelectedEvent = (UiTree.NodeSelectedEvent) event;
 				RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
 				selectedNode = record;
-				onNodeSelected.fire(record);
+				if (record != null) {
+					onNodeSelected.fire(record);
+				}
 				break;
 			case UI_TREE_REQUEST_TREE_DATA:
 				UiTree.RequestTreeDataEvent requestTreeDataEvent = (UiTree.RequestTreeDataEvent) event;
