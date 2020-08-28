@@ -108,7 +108,7 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 
 	private createWindowButtonList(closeButton?: boolean): UiWindowButtonType[] {
 		let toolButtons: UiWindowButtonType[] = [UiWindowButtonType.MINIMIZE, UiWindowButtonType.MAXIMIZE_RESTORE];
-		if (closeButton != null) {
+		if (closeButton) {
 			toolButtons.push(UiWindowButtonType.CLOSE);
 		}
 		return toolButtons;
@@ -186,7 +186,7 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 			this.component.setWindowButtons(this.createWindowButtonList());
 		} else {
 			this._tabs.forEach(tab => {
-				tab.view.setWindowButtons(this.createWindowButtonList(true));
+				tab.view.setWindowButtons(this.createWindowButtonList(tab.view.tabCloseable));
 			});
 		}
 	}
