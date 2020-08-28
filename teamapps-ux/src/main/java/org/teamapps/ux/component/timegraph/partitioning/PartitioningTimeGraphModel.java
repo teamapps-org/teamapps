@@ -92,7 +92,7 @@ public class PartitioningTimeGraphModel implements TimeGraphModel {
 	}
 
 	@Override
-	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX) {
+	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX, Interval displayedInterval) {
 		TimePartitionUnit partitionUnit = zoomLevelPartitionUnits.stream()
 				.filter(partitioningUnit -> partitioningUnit.getAverageMilliseconds() == zoomLevel.getApproximateMillisecondsPerDataPoint())
 				.findFirst().orElse(null);

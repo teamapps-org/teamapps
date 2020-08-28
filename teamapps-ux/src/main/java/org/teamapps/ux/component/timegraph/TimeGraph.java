@@ -131,9 +131,10 @@ public class TimeGraph extends AbstractComponent {
 		switch (event.getUiEventType()) {
 			case UI_TIME_GRAPH_DATA_NEEDED: {
 				UiTimeGraph.DataNeededEvent dataNeededEvent = (UiTimeGraph.DataNeededEvent) event;
-				Interval interval = new Interval(dataNeededEvent.getNeededIntervalX().getMin(), dataNeededEvent.getNeededIntervalX().getMax());
+				Interval neededInterval = new Interval(dataNeededEvent.getNeededIntervalX().getMin(), dataNeededEvent.getNeededIntervalX().getMax());
+				Interval displayedInterval = new Interval(dataNeededEvent.getDisplayedInterval().getMin(), dataNeededEvent.getDisplayedInterval().getMax());
 				TimeGraphZoomLevel zoomLevel = model.getZoomLevels().get(dataNeededEvent.getZoomLevelIndex());
-				Map<String, LineChartDataPoints> data = model.getDataPoints(getLineDataIds(), zoomLevel, interval);
+				Map<String, LineChartDataPoints> data = model.getDataPoints(getLineDataIds(), zoomLevel, neededInterval, displayedInterval);
 				queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), dataNeededEvent.getZoomLevelIndex(), dataNeededEvent.getNeededIntervalX(), convertToUiData(data)));
 				break;
 			}

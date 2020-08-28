@@ -21,6 +21,8 @@ package org.teamapps.ux.component.timegraph;
 
 import org.teamapps.dto.UiLongInterval;
 
+import java.util.Objects;
+
 public class Interval {
 
 	private final long min;
@@ -53,5 +55,23 @@ public class Interval {
 				"min=" + min +
 				", max=" + max +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Interval interval = (Interval) o;
+		return min == interval.min &&
+				max == interval.max;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(min, max);
 	}
 }

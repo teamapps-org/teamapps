@@ -307,7 +307,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 				} else {
 					this.onDataNeeded.fire({
 						zoomLevelIndex: zoomLevel,
-						neededIntervalX: createUiLongIntervalConfig(uncoveredInterval.start, uncoveredInterval.end)
+						neededIntervalX: createUiLongIntervalConfig(uncoveredInterval.start, uncoveredInterval.end),
+						displayedInterval: createUiLongIntervalConfig(domain[0], domain[1])
 					});
 					this.zoomLevelIntervalManagers[zoomLevel].addInterval(new Interval(uncoveredInterval.start, uncoveredInterval.end));
 				}

@@ -60,9 +60,9 @@ public class CompositeTimeGraphModel implements TimeGraphModel {
 	}
 
 	@Override
-	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX) {
+	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX, Interval displayedInterval) {
 		Map<String, LineChartDataPoints> points = delegates.stream()
-				.map(delegate -> delegate.getDataPoints(lineIds, zoomLevel, neededIntervalX))
+				.map(delegate -> delegate.getDataPoints(lineIds, zoomLevel, neededIntervalX, displayedInterval))
 				.reduce((Map<String, LineChartDataPoints> map1,
 				         Map<String, LineChartDataPoints> map2) -> {
 					HashMap<String, LineChartDataPoints> m = new HashMap<>();

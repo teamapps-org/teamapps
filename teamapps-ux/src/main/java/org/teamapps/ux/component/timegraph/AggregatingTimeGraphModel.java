@@ -65,13 +65,13 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 			TimePartitionUnit.MILLISECOND_2,
 			TimePartitionUnit.MILLISECOND
 	);
-	private Map<String, LineChartDataPoints> dataPointsByDataSeriesId = new HashMap<>();
+	private final Map<String, LineChartDataPoints> dataPointsByDataSeriesId = new HashMap<>();
 
 	public enum AggregationPolicy {
 		FIRST_VALUE, MIN, AVERAGE, MAX
 	}
 
-	private Map<String, AggregationPolicy> aggregationPolicyByDataSeriesId = new HashMap<>();
+	private final Map<String, AggregationPolicy> aggregationPolicyByDataSeriesId = new HashMap<>();
 	private AggregationPolicy defaultAggregationPolicy = AggregationPolicy.FIRST_VALUE;
 
 	private boolean addDataPointBeforeAndAfterQueryResult = true;
@@ -117,7 +117,7 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 		onDataChanged.fire(null);
 	}
 
-	protected LineChartDataPoints getDataPoints(String dataSeriesId, TimeGraphZoomLevel partitionUnit, Interval interval) {
+	protected LineChartDataPoints getDataPoints(String dataSeriesId, TimeGraphZoomLevel partitionUnit, Interval interval, Interval displayedInterval) {
 		TimePartitionUnit zoomLevel = zoomLevels.stream()
 				.filter(unit -> unit.getAverageMilliseconds() == partitionUnit.getApproximateMillisecondsPerDataPoint())
 				.findFirst().orElse(zoomLevels.get(0));
