@@ -46,18 +46,21 @@ export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConf
 	constructor(config: UiNotificationBarConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiNotificationBar"></div>`);
+		config.initialItems.forEach(item => this.addItem(item))
 	}
 
 	doGetMainElement(): HTMLElement {
 		return this.$main;
 	}
 
-	addItem(itemConfig: UiNotificationBarItemConfig, entranceAnimation: UiEntranceAnimation, exitAnimation: UiExitAnimation): void {
+	addItem(itemConfig: UiNotificationBarItemConfig): void {
 		this.removeItem(itemConfig.id, null);
-		let item = new UiNotificationBarItem(itemConfig, exitAnimation);
+		let item = new UiNotificationBarItem(itemConfig);
 		this.itemsById[itemConfig.id] = item;
 		this.$main.appendChild(item.getMainElement());
-		animateCSS(item.getMainElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[entranceAnimation]);
+		if (itemConfig.entranceAnimation != null) {
+			animateCSS(item.getMainElement(), Constants.ENTRANCE_ANIMATION_CSS_CLASSES[itemConfig.entranceAnimation]);
+		}
 		item.startCloseTimeout();
 		item.onClicked.addListener(() => this.onItemClicked.fire({id: itemConfig.id}));
 		item.onClosed.addListener(wasTimeout => {
@@ -69,8 +72,8 @@ export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConf
 	removeItem(id: string, exitAnimation?: UiExitAnimation): void {
 		let item = this.itemsById[id];
 		if (item != null) {
-			if (exitAnimation != null) {
-				animateCSS(item.getMainElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation || item.exitAnimation], 300, () => {
+			if (exitAnimation != null || item.config.exitAnimation != null) {
+				animateCSS(item.getMainElement(), Constants.EXIT_ANIMATION_CSS_CLASSES[exitAnimation || item.config.exitAnimation], 300, () => {
 					item.getMainElement().remove();
 				});
 			} else {
@@ -91,7 +94,7 @@ class UiNotificationBarItem {
 	private $progressBarContainer: HTMLElement;
 	private progressBar: ProgressBar;
 
-	constructor(private config: UiNotificationBarItemConfig, public exitAnimation: UiExitAnimation) {
+	constructor(public readonly config: UiNotificationBarItemConfig) {
 		this.$main = parseHtml(`<div class="UiNotificationBarItem ${config.displayTimeInMillis > 0 && config.progressBarVisible ? "with-progress" : ""}">
 	<div class="content-container">
 		<div class="icon img img-20 ${config.icon == null ? "hidden" : ""}" style="background-image: url(${config.icon})"></div>
@@ -119,7 +122,9 @@ class UiNotificationBarItem {
 		}
 
 		let $icon: HTMLElement = this.$main.querySelector(":scope .icon");
-		$icon.classList.add(...Constants.REPEATABLE_ANIMATION_CSS_CLASSES[config.iconAnimation].split(/ +/));
+		if (config.iconAnimation != null) {
+			$icon.classList.add(...Constants.REPEATABLE_ANIMATION_CSS_CLASSES[config.iconAnimation].split(/ +/));
+		}
 	}
 
 	public startCloseTimeout() {
