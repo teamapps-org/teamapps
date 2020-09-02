@@ -402,12 +402,14 @@ class UiButton extends UiField {
 	int minDropDownHeight = 200;
 	boolean openDropDownIfNotSet = false;
 	UiComponent* dropDownComponent;
+	String onClickJavaScript;
 
 	command setTemplate(UiTemplate template, Object templateRecord);
 	command setTemplateRecord(Object templateRecord);
 	command setDropDownSize(int minDropDownWidth, int minDropDownHeight);
 	command setOpenDropDownIfNotSet(boolean openDropDownIfNotSet);
 	command setDropDownComponent(UiComponent* dropDownComponent);
+	command setOnClickJavaScript(String onClickJavaScript);
 
 	event clicked();
 	event dropDownOpened();
@@ -417,6 +419,7 @@ class UiLinkButton extends UiComponent {
 	String text;
 	String url = null; // null = still render as link but do not open a page
 	UiLinkTarget target = UiLinkTarget.BLANK;
+	String onClickJavaScript;
 
 	command update(UiLinkButton config);
 

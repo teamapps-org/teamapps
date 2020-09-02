@@ -46,6 +46,7 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 	private minDropDownWidth: number;
 	private minDropDownHeight: number;
 	private openDropDownIfNotSet: boolean;
+	private onClickJavaScript: string;
 
 	protected initialize(config: UiButtonConfig, context: TeamAppsUiContext) {
 		this.template = config.template;
@@ -75,12 +76,17 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 		["click", "keypress"].forEach(eventName => this.getMainInnerDomElement().addEventListener(eventName, (e) => {
 			if (e.type === "click" || (e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
 				if (this.getEditingMode() === UiFieldEditingMode.EDITABLE || this.getEditingMode() === UiFieldEditingMode.EDITABLE_IF_FOCUSED) {
+					if (this.onClickJavaScript != null) {
+						let context = this._context; // make context available in evaluated javascript
+						eval(this.onClickJavaScript);
+					}
 					this.onClicked.fire({});
 					this.commit(true);
 				}
 			}
 		}));
 		this.setDropDownComponent(config.dropDownComponent as UiComponent);
+		this.setOnClickJavaScript(config.onClickJavaScript);
 	}
 
 	setDropDownSize(minDropDownWidth: number, minDropDownHeight: number): void {
@@ -182,6 +188,10 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 
 	getDefaultValue(): true {
 		return true;
+	}
+
+	setOnClickJavaScript(onClickJavaScript: string): void {
+		this.onClickJavaScript = onClickJavaScript;
 	}
 }
 

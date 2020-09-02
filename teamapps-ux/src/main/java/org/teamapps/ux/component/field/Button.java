@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,6 +46,8 @@ public class Button<RECORD> extends AbstractField<Void> {
 	private Component dropDownComponent;
 	private Integer minDropDownWidth = null;
 	private Integer minDropDownHeight = 300;
+
+	private String onClickJavaScript;
 
 	public Button(Template template, RECORD templateRecord, Component dropDownComponent) {
 		super();
@@ -89,12 +91,13 @@ public class Button<RECORD> extends AbstractField<Void> {
 	@Override
 	public UiField createUiComponent() {
 		Object uiRecord = createUiRecord();
-		UiButton ui = new UiButton(getTemplate().createUiTemplate(), uiRecord);
+		UiButton ui = new UiButton(template != null ? template.createUiTemplate() : null, uiRecord);
 		mapAbstractFieldAttributesToUiField(ui);
 		ui.setDropDownComponent(Component.createUiClientObjectReference(dropDownComponent));
 		ui.setMinDropDownWidth(minDropDownWidth != null ? minDropDownWidth : 0);
 		ui.setMinDropDownHeight(minDropDownHeight != null ? minDropDownHeight : 0);
 		ui.setOpenDropDownIfNotSet(this.openDropDownIfNotSet);
+		ui.setOnClickJavaScript(onClickJavaScript);
 		return ui;
 	}
 
@@ -207,4 +210,12 @@ public class Button<RECORD> extends AbstractField<Void> {
 		return this;
 	}
 
+	public String getOnClickJavaScript() {
+		return onClickJavaScript;
+	}
+
+	public void setOnClickJavaScript(String onClickJavaScript) {
+		this.onClickJavaScript = onClickJavaScript;
+		queueCommandIfRendered(() -> new UiButton.SetOnClickJavaScriptCommand(getId(), onClickJavaScript));
+	}
 }

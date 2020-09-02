@@ -35,6 +35,10 @@ export class UiLinkButton extends AbstractUiComponent<UiLinkButtonConfig> implem
 		super(config, context);
 		this.$main = parseHtml(`<a class="UiLinkButton"></a>`)
 		this.$main.addEventListener("click", ev => {
+			if (this._config.onClickJavaScript != null) {
+				let context = this._context; // make context available in evaluated javascript
+				eval(this._config.onClickJavaScript);
+			}
 			this.onClicked.fire({});
 		});
 		this.update(config);
@@ -53,6 +57,7 @@ export class UiLinkButton extends AbstractUiComponent<UiLinkButtonConfig> implem
 			this.$main.removeAttribute("href");
 		}
 		this.$main.target = '_' + UiLinkTarget[config.target].toLocaleLowerCase();
+
 	}
 }
 

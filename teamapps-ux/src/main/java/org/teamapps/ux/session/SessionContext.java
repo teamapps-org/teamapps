@@ -40,6 +40,10 @@ import org.teamapps.util.NamedThreadFactory;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
+import org.teamapps.ux.component.field.Button;
+import org.teamapps.ux.component.field.DisplayField;
+import org.teamapps.ux.component.flexcontainer.VerticalLayout;
+import org.teamapps.ux.component.linkbutton.LinkButton;
 import org.teamapps.ux.component.notification.Notification;
 import org.teamapps.ux.component.notification.NotificationPosition;
 import org.teamapps.ux.component.popup.Popup;
@@ -109,9 +113,12 @@ public class SessionContext {
 	private final Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration = SessionConfiguration.createDefault();
 
-	private List<Locale> acceptedLanguages;
 	private final Map<String, Icon> bundleIconByKey = new HashMap<>();
 
+	private Window sessionExpiredWindow;
+	private Window sessionErrorWindow;
+	private Window sessionTerminatedWindow;
+	
 	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, HttpSession httpSession, UiCommandExecutor commandExecutor, UxServerContext serverContext, IconTheme iconTheme,
 	                      ObjectMapper jacksonObjectMapper) {
 		this.sessionId = sessionId;
@@ -125,6 +132,16 @@ public class SessionContext {
 		this.rankingTranslationProvider = new RankingTranslationProvider();
 		rankingTranslationProvider.addTranslationProvider(TeamAppsTranslationProviderFactory.createProvider());
 		addIconBundle(TeamAppsIconBundle.createBundle());
+
+		runWithContext(() -> {
+			sessionExpiredWindow = createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
+					getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel"));
+			sessionErrorWindow = createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
+					getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel"));
+			sessionTerminatedWindow = createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
+					getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel"));
+			updateSessionMessageWindows();
+		});
 	}
 
 	public static SessionContext current() {
@@ -152,11 +169,7 @@ public class SessionContext {
 	}
 
 	public List<Locale> getAcceptedLanguages() {
-		if (acceptedLanguages != null) {
-			return acceptedLanguages;
-		} else {
-			return Arrays.asList(getLocale(), Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN);
-		}
+		return Arrays.asList(getLocale(), Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN);
 	}
 
 	public String getLocalized(String key, Object... parameters) {
@@ -446,5 +459,59 @@ public class SessionContext {
 			notification.setShowProgressBar(showProgress);
 			showNotification(notification, NotificationPosition.TOP_RIGHT, EntranceAnimation.SLIDE_IN_RIGHT, ExitAnimation.FADE_OUT);
 		});
+	}
+
+	public void setSessionExpiredWindow(Window sessionExpiredWindow) {
+		this.sessionExpiredWindow = sessionExpiredWindow;
+		updateSessionMessageWindows();
+	}
+
+	public void setSessionErrorWindow(Window sessionErrorWindow) {
+		this.sessionErrorWindow = sessionErrorWindow;
+		updateSessionMessageWindows();
+	}
+
+	public void setSessionTerminatedWindow(Window sessionTerminatedWindow) {
+		this.sessionTerminatedWindow = sessionTerminatedWindow;
+		updateSessionMessageWindows();
+	}
+
+	private void updateSessionMessageWindows() {
+		queueCommand(new UiRootPanel.SetSessionMessageWindowsCommand(
+				sessionExpiredWindow != null ? sessionExpiredWindow.createUiReference() : null,
+				sessionErrorWindow != null ? sessionErrorWindow.createUiReference() : null,
+				sessionTerminatedWindow != null ? sessionTerminatedWindow.createUiReference() : null)
+		);
+	}
+
+	public static Window createDefaultSessionMessageWindow(String title, String message, String refreshButtonCaption, String cancelButtonCaption) {
+		Window window = new Window(null, title, null, 300, 300, false, false, false);
+		window.setPadding(10);
+
+		VerticalLayout verticalLayout = new VerticalLayout();
+
+		DisplayField messageField = new DisplayField(false, false);
+		messageField.setCssStyle("font-size", "110%");
+		messageField.setValue(message);
+		verticalLayout.addComponentFillRemaining(messageField);
+
+		Button<?> refreshButton = new Button<>(null, refreshButtonCaption);
+		refreshButton.setCssStyle("margin", "10px 0");
+		refreshButton.setCssStyle(".UiButton", "background-color", Color.MATERIAL_BLUE_600.toHtmlColorString());
+		refreshButton.setCssStyle(".UiButton", "color", Color.WHITE.toHtmlColorString());
+		refreshButton.setCssStyle(".UiButton", "font-size", "120%");
+		refreshButton.setCssStyle(".UiButton", "height", "50px");
+		refreshButton.setOnClickJavaScript("window.location.reload()");
+		verticalLayout.addComponentAutoSize(refreshButton);
+
+		if (cancelButtonCaption != null) {
+			LinkButton cancelLink = new LinkButton(cancelButtonCaption);
+			cancelLink.setCssStyle("text-align", "center");
+			cancelLink.setOnClickJavaScript("context.getClientObjectById(\""+window.createUiReference().getId()+"\").close();");
+			verticalLayout.addComponentAutoSize(cancelLink);
+		}
+
+		window.setContent(verticalLayout);
+		return window;
 	}
 }

@@ -49,6 +49,7 @@ export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implem
 
 	setShowHtml(showHtml: boolean): void {
 		this.showHtml = showHtml;
+		this._$field.classList.toggle("show-html", showHtml);
 		this.displayCommittedValue();
 	}
 

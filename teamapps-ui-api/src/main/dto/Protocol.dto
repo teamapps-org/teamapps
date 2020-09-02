@@ -106,15 +106,20 @@ class SESSION_CLOSED extends AbstractServerMessage {
 }
 
 enum UiSessionClosingReason {
-	SESSION_NOT_FOUND,    // reacting to unknown client
-	SESSION_TIMEOUT,      // actively sent by server
-	SERVER_SIDE_ERROR,
-	TERMINATED_BY_CLIENT,
-	TERMINATED_BY_APPLICATION,
+	// EXPIRED
+	SESSION_NOT_FOUND,    			// reacting to unknown client
+	SESSION_TIMEOUT,      			// actively sent by server
 	HTTP_SESSION_CLOSED,
-	COMMANDS_OVERFLOW,
-	REINIT_COMMAND_ID_NOT_FOUND,
-	CMD_REQUEST_TOO_LARGE // the client is requesting a too high amount of commands
+	TERMINATED_BY_CLIENT, 			// got leaving beacon
+
+	// ERROR
+	SERVER_SIDE_ERROR,    			// every uncaught exception on the server side within the client's SessionContext...
+	COMMANDS_OVERFLOW,    			// server-side command queue filled up
+	REINIT_COMMAND_ID_NOT_FOUND, 	// server did not find the command id the client would like to get
+	CMD_REQUEST_TOO_LARGE, 			// the client is requesting a too high amount of commands
+
+	// TERMINATED
+	TERMINATED_BY_APPLICATION 		// SessionContext.destroy() called
 }
 
 class MULTI_CMD extends AbstractServerMessage {
