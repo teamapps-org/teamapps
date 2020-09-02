@@ -24,11 +24,10 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiNotificationBar;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.animation.EntranceAnimation;
-import org.teamapps.ux.component.animation.ExitAnimation;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.teamapps.ux.component.notification.NotificationBarItemClosedEvent.ClosingReason.TIMEOUT;
 import static org.teamapps.ux.component.notification.NotificationBarItemClosedEvent.ClosingReason.USER;
@@ -38,7 +37,7 @@ public class NotificationBar extends AbstractComponent {
 	public final Event<NotificationBarItemClosedEvent> onItemClosed = new Event<>();
 	public final Event<NotificationBarItem> onItemClicked = new Event<>();
 
-	private final Map<String, NotificationBarItem> itemsByUiId = new HashMap<>();
+	private final Map<String, NotificationBarItem> itemsByUiId = new LinkedHashMap<>();
 
 	public NotificationBar() {
 	}
@@ -72,12 +71,15 @@ public class NotificationBar extends AbstractComponent {
 	public UiComponent createUiComponent() {
 		UiNotificationBar ui = new UiNotificationBar();
 		mapAbstractUiComponentProperties(ui);
+		ui.setInitialItems(itemsByUiId.values().stream()
+				.map(NotificationBarItem::toUiNotificationBarItem)
+				.collect(Collectors.toList()));
 		return ui;
 	}
 
-	public void addItem(NotificationBarItem item, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
+	public void addItem(NotificationBarItem item) {
 		itemsByUiId.put(item.getUiId(), item);
-		queueCommandIfRendered(() -> new UiNotificationBar.AddItemCommand(getId(), item.toUiNotificationBarItem(), entranceAnimation.toUiEntranceAnimation(), exitAnimation.toUiExitAnimation()));
+		queueCommandIfRendered(() -> new UiNotificationBar.AddItemCommand(getId(), item.toUiNotificationBarItem()));
 	}
 
 	public void removeItem(NotificationBarItem item) {

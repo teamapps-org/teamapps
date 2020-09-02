@@ -23,6 +23,8 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiNotificationBarItem;
 import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
+import org.teamapps.ux.component.animation.EntranceAnimation;
+import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.animation.RepeatableAnimation;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.session.SessionContext;
@@ -50,6 +52,9 @@ public class NotificationBarItem {
 	private final Color textColor;
 	private final Spacing padding;
 
+	private final EntranceAnimation entranceAnimation;
+	private final ExitAnimation exitAnimation;
+
 	public NotificationBarItem(Icon icon, String text) {
 		this(icon, text, true);
 	}
@@ -64,6 +69,12 @@ public class NotificationBarItem {
 
 	public NotificationBarItem(Icon icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible, Color backgroundColor, Color borderColor, Color textColor,
 	                           Spacing padding, RepeatableAnimation iconAnimation) {
+		this(icon, text, dismissible, displayTimeInMillis, progressBarVisible, backgroundColor, borderColor, textColor, padding, iconAnimation,
+				EntranceAnimation.FADE_IN_DOWN, ExitAnimation.FADE_OUT_UP);
+	}
+
+	public NotificationBarItem(Icon icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible, Color backgroundColor, Color borderColor, Color textColor,
+	                           Spacing padding, RepeatableAnimation iconAnimation, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		this.icon = icon;
 		this.text = text;
 		this.dismissible = dismissible;
@@ -74,13 +85,15 @@ public class NotificationBarItem {
 		this.textColor = textColor;
 		this.padding = padding;
 		this.iconAnimation = iconAnimation;
+		this.entranceAnimation = entranceAnimation;
+		this.exitAnimation = exitAnimation;
 	}
 
 	public UiNotificationBarItem toUiNotificationBarItem() {
 		UiNotificationBarItem ui = new UiNotificationBarItem();
 		ui.setId(uiId);
 		ui.setIcon(SessionContext.current().resolveIcon(icon));
-		ui.setIconAnimation(iconAnimation.toUiRepeatableAnimation());
+		ui.setIconAnimation(iconAnimation != null ? iconAnimation.toUiRepeatableAnimation() : null);
 		ui.setText(text);
 		ui.setDismissible(dismissible);
 		ui.setDisplayTimeInMillis(displayTimeInMillis);
