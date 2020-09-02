@@ -28,6 +28,7 @@ class UiRootPanel extends UiComponent {
 
 	static command setConfig(UiConfiguration config);
 	static command setThemeClassName(String theme);
+	static command setSessionMessageWindows(UiWindow* expiredMessageWindow, UiWindow* errorMessageWindow, UiWindow* terminatedMessageWindow);
 
 	static command setPageTitle(String pageTitle);
 	static command buildRootPanel(String containerElementId, UiRootPanel* uiRootPanel); // containerDomSelector == null --> body

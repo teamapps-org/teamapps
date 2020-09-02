@@ -144,6 +144,10 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		(context as any).config = config; // TODO change this to firing an event to the context!!!!
 	}
 
+	public static setSessionMessageWindows(expiredMessageWindow: UiWindow, errorMessageWindow: UiWindow, terminatedMessageWindow: UiWindow, context: TeamAppsUiContext) {
+		(context as any).setSessionMessageWindows(expiredMessageWindow, errorMessageWindow, terminatedMessageWindow);
+	}
+
 	public static setPageTitle(pageTitle: string) {
 		document.title = pageTitle;
 	}
@@ -302,7 +306,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		exitFullScreen();
 	}
 
-	public static showGenericErrorMessage(title: string, message: string, showErrorIcon: boolean, options: UiGenericErrorMessageOption[], context: TeamAppsUiContext): void {
+	public static createGenericErrorMessageWindow(title: string, message: string, showErrorIcon: boolean, options: UiGenericErrorMessageOption[], context: TeamAppsUiContext): UiWindow {
 		let uiWindow = new UiWindow({
 			id: null,
 			title: title,
@@ -326,7 +330,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		$contentElement.querySelector<HTMLElement>(':scope .reload').addEventListener('click', () => {
 			window.location.reload(true);
 		});
-		uiWindow.show(500);
+		return uiWindow;
 	}
 
 	setOptimizedForTouch(optimizedForTouch: boolean) {
@@ -335,7 +339,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	}
 
 	public static showPopupAtCurrentMousePosition(popup: UiPopup) {
-		popup.setPosition(... getLastPointerCoordinates());
+		popup.setPosition(...getLastPointerCoordinates());
 		document.body.appendChild(popup.getMainElement());
 	}
 

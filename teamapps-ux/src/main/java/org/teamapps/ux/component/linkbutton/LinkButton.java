@@ -31,6 +31,7 @@ public class LinkButton extends AbstractComponent {
 	private String text;
 	private String url;
 	private LinkTarget target = LinkTarget.BLANK;
+	private String onClickJavaScript;
 
 	public LinkButton(String text) {
 		this(text, null);
@@ -48,6 +49,7 @@ public class LinkButton extends AbstractComponent {
 		ui.setText(text);
 		ui.setUrl(url);
 		ui.setTarget(target.toUiLinkTarget());
+		ui.setOnClickJavaScript(onClickJavaScript);
 		return ui;
 	}
 
@@ -88,6 +90,15 @@ public class LinkButton extends AbstractComponent {
 
 	public void setTarget(LinkTarget target) {
 		this.target = target;
+		update();
+	}
+
+	public String getOnClickJavaScript() {
+		return onClickJavaScript;
+	}
+
+	public void setOnClickJavaScript(String onClickJavaScript) {
+		this.onClickJavaScript = onClickJavaScript;
 		update();
 	}
 }

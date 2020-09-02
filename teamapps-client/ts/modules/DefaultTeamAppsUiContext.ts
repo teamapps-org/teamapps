@@ -20,7 +20,7 @@
 "use strict";
 
 import {generateUUID, logException} from "./Common";
-import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
+import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {UiWeekDay} from "../generated/UiWeekDay";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
@@ -44,6 +44,7 @@ import {UiComponent} from "./UiComponent";
 import {UiSessionClosingReason} from "../generated/UiSessionClosingReason";
 import {UiClientObject} from "./UiClientObject";
 import {UiClientObjectConfig} from "../generated/UiClientObjectConfig";
+import {UiWindow} from "./UiWindow";
 
 function isComponent(o: UiClientObject<UiClientObjectConfig>): o is UiComponent {
 	return o != null && (o as any).getMainElement;
@@ -74,6 +75,12 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
 
+	private commandExecutor = new CommandExecutor(reference => this.getClientObjectById(reference.id));
+
+	private expiredMessageWindow: UiWindow;
+	private errorMessageWindow: UiWindow;
+	private terminatedMessageWindow: UiWindow;
+
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string | number } = {}) {
 		this.sessionId = generateUUID();
 
@@ -97,14 +104,26 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 				DefaultTeamAppsUiContext.logger.error("Connection broken.");
 				sessionStorage.clear();
 				if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT || reason == UiSessionClosingReason.HTTP_SESSION_CLOSED) {
-					UiRootPanel.showGenericErrorMessage("Session Expired", "<p>Your session has expired.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
-						false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
+					if (this.expiredMessageWindow != null) {
+						this.expiredMessageWindow.show(500);
+					} else {
+						UiRootPanel.createGenericErrorMessageWindow("Session Expired", "<p>Your session has expired.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+							false, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+					}
 				} else if (reason == UiSessionClosingReason.TERMINATED_BY_APPLICATION) {
-					UiRootPanel.showGenericErrorMessage("Session Terminated", "<p>Your session has been terminated.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
-						true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
+					if (this.terminatedMessageWindow != null) {
+						this.terminatedMessageWindow.show(500);
+					} else {
+						UiRootPanel.createGenericErrorMessageWindow("Session Terminated", "<p>Your session has been terminated.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+							true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+					}
 				} else {
-					UiRootPanel.showGenericErrorMessage("Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
-						true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this);
+					if (this.errorMessageWindow != null) {
+						this.errorMessageWindow.show(500);
+					} else {
+						UiRootPanel.createGenericErrorMessageWindow("Error", "<p>A server-side error has occurred.</p><p>Please reload this page or click OK if you want to refresh later. The application will however remain unresponsive until you reload this page.</p>",
+							true, [UiGenericErrorMessageOption.OK, UiGenericErrorMessageOption.RELOAD], this).show(500);
+					}
 				}
 			},
 			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand),
@@ -220,8 +239,6 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	private commandExecutor = new CommandExecutor(reference => this.getClientObjectById(reference.id));
-
 	private async executeCommand(command: UiCommand): Promise<any> {
 		try {
 			// console.warn(command);
@@ -248,5 +265,11 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		} finally {
 			this._executingCommand = false;
 		}
+	}
+
+	public setSessionMessageWindows(expiredMessageWindow: UiWindow, errorMessageWindow: UiWindow, terminatedMessageWindow: UiWindow) {
+		this.expiredMessageWindow = expiredMessageWindow;
+		this.errorMessageWindow = errorMessageWindow;
+		this.terminatedMessageWindow = terminatedMessageWindow;
 	}
 }
