@@ -33,7 +33,6 @@ import org.teamapps.dto.INIT_OK;
 import org.teamapps.dto.MULTI_CMD;
 import org.teamapps.dto.REINIT_NOK;
 import org.teamapps.dto.REINIT_OK;
-import org.teamapps.dto.SERVER_ERROR;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiSessionClosingReason;
@@ -280,9 +279,9 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		private MessageSender messageSender;
 
 		private final CommandBuffer commandBuffer = new CommandBuffer(config.getCommandBufferSize());
-		private AtomicInteger commandIdCounter = new AtomicInteger();
+		private final AtomicInteger commandIdCounter = new AtomicInteger();
 
-		private AtomicLong timestampOfLastMessageFromClient = new AtomicLong();
+		private final AtomicLong timestampOfLastMessageFromClient = new AtomicLong();
 		private int lastReceivedClientMessageId;
 		private boolean clientReadyToReceiveCommands = true;
 		private boolean taggedActive = true;
@@ -291,7 +290,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		private int lastSentCommandId;
 		private long requestedCommandsZeroTimestamp = -1;
 
-		private Map<Integer, Consumer> resultCallbacksByCmdId = new ConcurrentHashMap<>();
+		private final Map<Integer, Consumer> resultCallbacksByCmdId = new ConcurrentHashMap<>();
 
 		public UiSession(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession, long creationTime, UiSessionListener sessionListener, MessageSender messageSender) {
 			this.sessionId = sessionId;
@@ -414,13 +413,13 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				this.maxRequestedCommandId = maxRequestedCommandId;
 			}
 			LOGGER.debug("INIT successful: " + sessionId);
-			sessionListener.onUiSessionStarted(sessionId, clientInfo, httpSession);
 			sendAsyncWithErrorHandler(new INIT_OK(
 					config.getClientMinRequestedCommands(),
 					config.getClientMaxRequestedCommands(),
 					config.getClientEventsBufferSize(),
 					config.getKeepaliveMessageIntervalMillis()
 			));
+			sessionListener.onUiSessionStarted(sessionId, clientInfo, httpSession);
 		}
 
 		public void handleClientRefresh(int maxRequestedCommandId, MessageSender messageSender) {
@@ -435,13 +434,13 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 				lastSentCommandId = 0;
 			}
 			LOGGER.debug("INIT (client refresh) successful: " + sessionId);
-			sessionListener.onUiSessionClientRefresh(sessionId, clientInfo, httpSession);
 			sendAsyncWithErrorHandler(new INIT_OK(
 					config.getClientMinRequestedCommands(),
 					config.getClientMaxRequestedCommands(),
 					config.getClientEventsBufferSize(),
 					config.getKeepaliveMessageIntervalMillis()
 			));
+			sessionListener.onUiSessionClientRefresh(sessionId, clientInfo, httpSession);
 		}
 
 		public void handleEvent(int clientMessageId, UiEvent event) {
@@ -507,7 +506,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		}
 
 		public void close(UiSessionClosingReason reason) {
-			sendAsyncWithErrorHandler(new SERVER_ERROR(reason));
+			this.messageSender.close(reason, null);
 		}
 	}
 

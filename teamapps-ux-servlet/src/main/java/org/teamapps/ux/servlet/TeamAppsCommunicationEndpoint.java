@@ -31,13 +31,11 @@ import org.teamapps.dto.EVENT;
 import org.teamapps.dto.INIT;
 import org.teamapps.dto.KEEPALIVE;
 import org.teamapps.dto.REINIT;
-import org.teamapps.dto.SERVER_ERROR;
+import org.teamapps.dto.SESSION_CLOSED;
 import org.teamapps.dto.TERMINATE;
 import org.teamapps.dto.UiSessionClosingReason;
-import org.teamapps.ux.servlet.util.ZipRatioAnalyzer;
-import org.teamapps.ux.servlet.util.ZlibStatefulDeflater;
-import org.teamapps.ux.servlet.util.ZlibStatefulInflater;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
+import org.teamapps.uisession.MessageSender;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.SendingErrorHandler;
 import org.teamapps.uisession.TeamAppsSessionNotFoundException;
@@ -52,8 +50,6 @@ import javax.websocket.SendHandler;
 import javax.websocket.SendResult;
 import javax.websocket.Session;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class TeamAppsCommunicationEndpoint extends Endpoint {
@@ -65,9 +61,9 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsCommunicationEndpoint.class);
 
-	private ObjectMapper mapper = TeamAppsObjectMapperFactory.create();
+	private final ObjectMapper mapper = TeamAppsObjectMapperFactory.create();
 
-	private TeamAppsUiSessionManager sessionManager;
+	private final TeamAppsUiSessionManager sessionManager;
 
 	public TeamAppsCommunicationEndpoint(TeamAppsUiSessionManager sessionManager) {
 		this.sessionManager = sessionManager;
@@ -98,20 +94,16 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 		}
 	}
 
-	private class WebSocketHandler implements MessageHandler.Whole<ByteBuffer> {
+	private class WebSocketHandler implements MessageHandler.Whole<String> {
 		private final Session wsSession;
-		private final ZlibStatefulDeflater deflater = new ZlibStatefulDeflater();
-		private final ZlibStatefulInflater inflater = new ZlibStatefulInflater();
-
-		private ZipRatioAnalyzer sendingZipRatioAnalyzer = new ZipRatioAnalyzer("-> SEND");
-		private ZipRatioAnalyzer receivingZipRatioAnalyzer = new ZipRatioAnalyzer("<- RECEIVE");
+		private boolean closed;
 
 		public WebSocketHandler(Session session) {
 			this.wsSession = session;
 		}
 
 		@Override
-		public void onMessage(ByteBuffer payload) {
+		public void onMessage(String payload) {
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
 
@@ -119,12 +111,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 				// ((AbstractSession) httpSession).setLastAccessedTime(System.currentTimeMillis()); // this is jetty-specific code. Change if we want to support another server.
 				// tomcat: http://tomcat.apache.org/tomcat-5.5-doc/catalina/docs/api/org/apache/catalina/session/StandardSession.html#access()
 
-				byte[] compressed = new byte[payload.remaining()];
-				payload.get(compressed);
-				byte[] uncompressed = inflater.inflate(compressed);
-				String messageString = new String(uncompressed, StandardCharsets.UTF_8);
-				receivingZipRatioAnalyzer.addData(uncompressed, compressed.length);
-				AbstractClientMessage clientMessage = mapper.readValue(messageString, AbstractClientMessage.class);
+				AbstractClientMessage clientMessage = mapper.readValue(payload, AbstractClientMessage.class);
 
 				QualifiedUiSessionId qualifiedUiSessionId = new QualifiedUiSessionId(httpSession.getId(), clientMessage.getSessionId());
 				ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
@@ -138,7 +125,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 							init.getClientInfo(),
 							httpSession,
 							init.getMaxRequestedCommandId(),
-							(msg, sendingErrorHandler) -> send(wsSession, msg, null, sendingErrorHandler)
+							new MessageSenderImpl()
 					);
 				} else if (clientMessage instanceof REINIT) {
 					REINIT reinit = (REINIT) clientMessage;
@@ -146,7 +133,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 							qualifiedUiSessionId,
 							reinit.getLastReceivedCommandId(),
 							reinit.getMaxRequestedCommandId(),
-							(msg, sendingErrorHandler) -> send(wsSession, msg, null, sendingErrorHandler)
+							new MessageSenderImpl()
 					);
 				} else if (clientMessage instanceof TERMINATE) {
 					sessionManager.closeSession(qualifiedUiSessionId, UiSessionClosingReason.TERMINATED_BY_CLIENT);
@@ -166,14 +153,18 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 				}
 			} catch (TeamAppsSessionNotFoundException e) {
 				LOGGER.warn("TeamApps session not found: " + e.getSessionId());
-				send(wsSession, new SERVER_ERROR(UiSessionClosingReason.SESSION_NOT_FOUND).setMessage(e.getMessage()), () -> closeWebSocketSession(wsSession), null);
+				send(wsSession, new SESSION_CLOSED(UiSessionClosingReason.SESSION_NOT_FOUND).setMessage(e.getMessage()), this::close, (t) -> close());
 			} catch (Exception e) {
 				LOGGER.error("Exception while processing client message!", e);
-				send(wsSession, new SERVER_ERROR(UiSessionClosingReason.SERVER_SIDE_ERROR).setMessage(e.getMessage()), null, null);
+				send(wsSession, new SESSION_CLOSED(UiSessionClosingReason.SERVER_SIDE_ERROR).setMessage(e.getMessage()), this::close, (t) -> close());
 			}
 		}
 
 		private void send(Session session, AbstractServerMessage message, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
+			if (this.closed) {
+				sendingErrorHandler.onErrorWhileSending(new TeamAppsCommunicationException("Connection closed!"));
+				return;
+			}
 			try {
 				String messageAsString;
 				try {
@@ -181,15 +172,19 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 				} catch (JsonProcessingException e) {
 					throw new TeamAppsCommunicationException(e);
 				}
-				byte[] uncompressed = messageAsString.getBytes(StandardCharsets.UTF_8);
-				if (deflater != null) {
-					byte[] compressed = deflater.deflate(uncompressed);
-					sendingZipRatioAnalyzer.addData(uncompressed, compressed.length);
-					sendBinaryFrame(session, compressed, sendingSuccessHandler, sendingErrorHandler);
-				} else {
-					LOGGER.warn("Trying to send data to already closed session!");
-				}
-			} catch (RuntimeException e) {
+				//noinspection Convert2Lambda
+				session.getAsyncRemote().sendText(messageAsString, new SendHandler() {
+					@Override
+					public void onResult(SendResult result) {
+						if (result.isOK() && sendingSuccessHandler != null) {
+							sendingSuccessHandler.run();
+						}
+						if (!result.isOK() && sendingErrorHandler != null) {
+							sendingErrorHandler.onErrorWhileSending(result.getException());
+						}
+					}
+				});
+			} catch (Exception e) {
 				if (sendingErrorHandler != null) {
 					sendingErrorHandler.onErrorWhileSending(e);
 				}
@@ -205,40 +200,22 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 			);
 		}
 
-		/*
-		 * It might make sense in the future to split up large messages into multiple frames.
-		 * However, it seems that browsers don't have any problems with receiving (very) large frames, neither do Servlet containers have sending them.
-		 * Servlet containers only has a limitation receiving frames (see MAX_BINARY_CLIENT_MESSAGE_SIZE).
-		 */
-		private void splitAndSend(Session session, byte[] bytesToSend, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
-			int MAX_FRAME_SIZE = 64 * 1024;
-			int usableFrameSize = MAX_FRAME_SIZE - 1;
-			double numberOfFrames = Math.ceil(((float) bytesToSend.length / usableFrameSize));
-			for (int i = 0; i < numberOfFrames; i++) {
-				int frameSizeIncludingLastFrameOfMessageFlag = Math.min(bytesToSend.length - (i * usableFrameSize) + 1, MAX_FRAME_SIZE);
-				byte[] frame = new byte[frameSizeIncludingLastFrameOfMessageFlag]; // cannot reuse byte arrays here!
-				byte lastFrameOfMessageFlag = (i == numberOfFrames - 1) ? (byte) 1 : 0;
-				frame[0] = lastFrameOfMessageFlag;
-				System.arraycopy(bytesToSend, i * usableFrameSize, frame, 1, frame.length - 1);
-				sendBinaryFrame(session, frame, sendingSuccessHandler, sendingErrorHandler);
+		private void close() {
+			this.closed = true;
+			closeWebSocketSession(wsSession);
+		}
+
+		private class MessageSenderImpl implements MessageSender {
+			@Override
+			public void sendMessageAsynchronously(AbstractServerMessage msg, SendingErrorHandler sendingErrorHandler) {
+				WebSocketHandler.this.send(wsSession, msg, null, sendingErrorHandler);
+			}
+
+			@Override
+			public void close(UiSessionClosingReason closingReason, String message) {
+				send(wsSession, new SESSION_CLOSED(closingReason).setMessage(message), WebSocketHandler.this::close, (t) -> WebSocketHandler.this.close());
 			}
 		}
-
-		private void sendBinaryFrame(Session session, byte[] bytesToSend, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
-			//noinspection Convert2Lambda
-			session.getAsyncRemote().sendBinary(ByteBuffer.wrap(bytesToSend), new SendHandler() {
-				@Override
-				public void onResult(SendResult result) {
-					if (result.isOK() && sendingSuccessHandler != null) {
-						sendingSuccessHandler.run();
-					}
-					if (!result.isOK() && sendingErrorHandler != null) {
-						sendingErrorHandler.onErrorWhileSending(result.getException());
-					}
-				}
-			});
-		}
-
 	}
 
 }

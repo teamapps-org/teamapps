@@ -36,7 +36,6 @@
     "@types/mustache": "^0.8.30",
     "@types/node": "^12.6.6",
     "@types/nouislider": "^9.0.4",
-    "@types/pako": "^1.0.0",
     "@types/slick-carousel": "^1.6.32",
     "@types/slickgrid": "2.x",
     "@types/socket.io-client": "^1.4.32",

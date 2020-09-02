@@ -29,7 +29,7 @@ import {INIT_OKConfig} from "../../generated/INIT_OKConfig";
 import {REINIT_OKConfig} from "../../generated/REINIT_OKConfig";
 import {MULTI_CMDConfig} from "../../generated/MULTI_CMDConfig";
 import {EVENTConfig} from "../../generated/EVENTConfig";
-import {SERVER_ERRORConfig} from "../../generated/SERVER_ERRORConfig";
+import {SESSION_CLOSEDConfig} from "../../generated/SESSION_CLOSEDConfig";
 import {CMD} from "./CMD";
 import {logException} from "../Common";
 import {AbstractClientPayloadMessageConfig} from "../../generated/AbstractClientPayloadMessageConfig";
@@ -129,15 +129,11 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					this.log("Reconnect refused. Reason: " + UiSessionClosingReason[message.reason]);
 					commandHandler.onConnectionErrorOrBroken(message.reason);
 					this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
-				} else if (TeamAppsConnectionImpl.isSERVER_ERROR(message)) {
+				} else if (TeamAppsConnectionImpl.isSESSION_CLOSED(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
 					this.log("Error reported by server: " + UiSessionClosingReason[message.reason] + ": " + message.message);
 					commandHandler.onConnectionErrorOrBroken(message.reason, message.message);
-					if (message.reason == UiSessionClosingReason.SESSION_NOT_FOUND) {
-						this.connection.stopReconnecting(); // since the server does not know us anymore...
-					} else {
-						// do NOT close the connection here. The server might handle the error gracefully.
-					}
+					this.connection.stopReconnecting();
 				} else {
 					this.log(`ERROR: unknown message type: ${message._type}`)
 				}
@@ -202,8 +198,8 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		return message._type === 'MULTI_CMD';
 	}
 
-	private static isSERVER_ERROR(message: any): message is SERVER_ERRORConfig {
-		return message._type === 'SERVER_ERROR';
+	private static isSESSION_CLOSED(message: any): message is SESSION_CLOSEDConfig {
+		return message._type === 'SESSION_CLOSED';
 	}
 
 	private isConnected() {

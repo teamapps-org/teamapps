@@ -20,9 +20,12 @@
 package org.teamapps.uisession;
 
 import org.teamapps.dto.AbstractServerMessage;
+import org.teamapps.dto.UiSessionClosingReason;
 
 public interface MessageSender {
 
 	void sendMessageAsynchronously(AbstractServerMessage message, SendingErrorHandler sendingErrorHandler);
 
+	void close(UiSessionClosingReason closingReason, String message);
+	
 }

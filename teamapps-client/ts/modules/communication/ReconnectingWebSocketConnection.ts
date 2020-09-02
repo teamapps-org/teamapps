@@ -21,7 +21,6 @@ import {AbstractServerMessageConfig} from "../../generated/AbstractServerMessage
 import {AbstractClientMessageConfig} from "../../generated/AbstractClientMessageConfig";
 import log from "loglevel";
 import stringify from "json-stable-stringify";
-import {Inflate, Deflate} from "pako";
 
 export interface ReconnectingCompressingWebSocketConnectionListener {
 	onConnected: () => void;
@@ -37,8 +36,6 @@ export class ReconnectingCompressingWebSocketConnection {
 	private url: string;
 	private connection: WebSocket;
 	private initialConnection = true;
-	private inflator: ZlibStreamingInflator;
-	private deflator: ZlibStreamingDeflator;
 	private closed: any;
 
 	constructor(url: string, private listener: ReconnectingCompressingWebSocketConnectionListener) {
@@ -58,8 +55,7 @@ export class ReconnectingCompressingWebSocketConnection {
 				return (aIsUnderscore && !bIsUnderscore) ? -1 : (!aIsUnderscore && bIsUnderscore) ? 1 : 0;
 			}
 		});
-		const compressed = this.deflator.deflateData(jsonString);
-		this.connection.send(compressed);
+		this.connection.send(jsonString);
 	};
 
 	private reconnect() {
@@ -73,9 +69,6 @@ export class ReconnectingCompressingWebSocketConnection {
 		this.connection.binaryType = 'arraybuffer';
 
 		this.connection.onopen = () => {
-			this.inflator = new ZlibStreamingInflator();
-			this.deflator = new ZlibStreamingDeflator();
-
 			if (this.initialConnection) {
 				ReconnectingCompressingWebSocketConnection.log("Connected.");
 				this.listener.onConnected();
@@ -95,27 +88,12 @@ export class ReconnectingCompressingWebSocketConnection {
 			ReconnectingCompressingWebSocketConnection.log('WebSocket error: ' + error);
 		};
 		this.connection.onmessage = (e) => {
-			let jsonString: string;
-			try {
-				let data: ArrayBuffer = e.data;
-
-				/*
-				 * It might make sense in the future to split up large messages into multiple frames.
-				 * However, it seems that browsers don't have any problems with receiving (very) large frames, neither do Servlet containers have sending them.
-				 * Servlet containers only has a limitation receiving frames (see MAX_BINARY_CLIENT_MESSAGE_SIZE).
-				 */
-				// data = this.splitMessageConcatenator.pushData(data);
-
-				jsonString = this.inflator.inflateData(data);
-			} catch (err) {
-				ReconnectingCompressingWebSocketConnection.log("Error while inflating message: " + jsonString + "\n" + err);
-				return;
-			}
-			if (jsonString) {
+			let json: string = e.data as string;
+			if (json) {
 				try {
-					this.listener.onMessage(JSON.parse(jsonString));
+					this.listener.onMessage(JSON.parse(json));
 				} catch (err) {
-					ReconnectingCompressingWebSocketConnection.log("Error while parsing message JSON: " + jsonString + "\n" + err);
+					ReconnectingCompressingWebSocketConnection.log("Error while parsing message JSON: " + json + "\n" + err);
 				}
 			}
 		};
@@ -132,62 +110,5 @@ export class ReconnectingCompressingWebSocketConnection {
 
 	private static log(message: string) {
 		console.log("Connection: " + message);
-	}
-}
-
-class SplitMessageConcatenator {
-	private dataBuffer = new Uint8Array(10 * 1024 * 1024); // 10 MB
-	private dataBufferFillSize = 0;
-
-	public pushData(data: any): Uint8Array | null {
-		let uintArray = new Uint8Array(data);
-		let lastMessageFlag = uintArray[0];
-		this.dataBuffer.set(uintArray.slice(1), this.dataBufferFillSize);
-		this.dataBufferFillSize += uintArray.length - 1;
-
-		let completeMessageData: Uint8Array;
-		if (lastMessageFlag) {
-			completeMessageData = this.dataBuffer.slice(0, this.dataBufferFillSize);
-			this.dataBufferFillSize = 0;
-		} else {
-			console.warn("Receiving large (splitted) message!");
-		}
-		return completeMessageData;
-	}
-}
-
-class ZlibStreamingInflator {
-	private inflate: Inflate;
-	private currentInflatedData: string;
-
-	constructor() {
-		this.inflate = new Inflate({to: 'string'});
-		this.inflate.onData = (data: string) => this.currentInflatedData += data;
-	}
-
-	public inflateData(data: ArrayBuffer | Uint8Array): string {
-		this.currentInflatedData = "";
-		this.inflate.push(data, 2); // will update currentInflatedData synchronously!
-		return this.currentInflatedData;
-	}
-}
-
-class ZlibStreamingDeflator {
-	private deflate: Deflate;
-	private currentInflatedData: Uint8Array = new Uint8Array(20 * 1024 * 1024); // 20 MB
-	private currentInflatedDataFillSize = 0;
-
-	constructor() {
-		this.deflate = new Deflate();
-		this.deflate.onData = (data: Uint8Array) => {
-			this.currentInflatedData.set(data, this.currentInflatedDataFillSize);
-			this.currentInflatedDataFillSize += data.length;
-		}
-	}
-
-	public deflateData(data: string): Uint8Array {
-		this.currentInflatedDataFillSize = 0;
-		this.deflate.push(data, 2); // will update currentInflatedData synchronously!
-		return this.currentInflatedData.slice(0, this.currentInflatedDataFillSize)
 	}
 }

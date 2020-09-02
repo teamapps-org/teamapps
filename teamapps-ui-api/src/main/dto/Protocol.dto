@@ -100,7 +100,7 @@ class REINIT_NOK extends AbstractServerMessage {
     required UiSessionClosingReason reason;
 }
 
-class SERVER_ERROR extends AbstractServerMessage {
+class SESSION_CLOSED extends AbstractServerMessage {
     required UiSessionClosingReason reason;
     String message;
 }
