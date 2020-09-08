@@ -41,21 +41,24 @@ import java.util.function.Supplier;
 
 public abstract class AbstractComponent implements Component {
 
+	private enum RenderingState {
+		NOT_RENDERED,
+		RENDERING,
+		RENDERED
+	}
+
 	private final static Logger LOGGER = LoggerFactory.getLogger(AbstractComponent.class);
 
 	public final Event<Void> onRendered = new Event<>();
 
-//	public final Event<Boolean> onEffectiveVisibilityChanged = new Event<>();
-
 	private String debuggingId = "";
-	private String id;
-	private SessionContext sessionContext;
-	private boolean rendered;
+	private final String id;
+	private final SessionContext sessionContext;
+	private RenderingState renderingState = RenderingState.NOT_RENDERED;
 	private Container container;
-	private boolean destroyed = false;
 
 	private boolean visible = true;
-	private Map<String, CssStyles> stylesBySelector = new HashMap<>(0);
+	private final Map<String, CssStyles> stylesBySelector = new HashMap<>(0);
 
 	public AbstractComponent() {
 		this.sessionContext = CurrentSessionContext.get();
@@ -80,7 +83,7 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public boolean isRendered() {
-		return rendered;
+		return renderingState == RenderingState.RENDERED;
 	}
 
 	@Override
@@ -102,13 +105,9 @@ public abstract class AbstractComponent implements Component {
 		return isRendered() && isVisible() && getParent() != null && getParent().isChildVisible(this);
 	}
 
-	public boolean isDestroyed() {
-		return destroyed;
-	}
-
 	@Override
 	public final void render() {
-		if (rendered) {
+		if (renderingState == RenderingState.RENDERED) {
 			return; // already rendered!
 		}
 		if (!(this instanceof RootPanel) && this.getParent() == null) {
@@ -117,9 +116,11 @@ public abstract class AbstractComponent implements Component {
 		}
 		LOGGER.debug("render: " + getId());
 		sessionContext.registerClientObject(this);
+
+		this.renderingState = RenderingState.RENDERING;
 		UiComponent uiComponent = createUiComponent();
 		sessionContext.queueCommand(new UiRootPanel.CreateComponentCommand(uiComponent));
-		rendered = true; // after queuing creation! otherwise commands might be queued for this component before it creation is queued!
+		this.renderingState = RenderingState.RENDERED; // NOTE: after queuing creation! otherwise commands might be queued for this component before it creation is queued!
 		onRendered.fire(null);
 	}
 
@@ -127,7 +128,7 @@ public abstract class AbstractComponent implements Component {
 	public final void unrender() {
 		sessionContext.unregisterClientObject(this);
 		sessionContext.queueCommand(new UiRootPanel.DestroyComponentCommand(getId()));
-		rendered = false;
+		renderingState = RenderingState.NOT_RENDERED;
 	}
 
 	abstract public UiComponent createUiComponent();
@@ -142,14 +143,28 @@ public abstract class AbstractComponent implements Component {
 	}
 
 	public void reRenderIfRendered() {
-		if (rendered) {
+		if (renderingState == RenderingState.RENDERED) {
 			sessionContext.queueCommand(new UiRootPanel.RefreshComponentCommand(createUiComponent()));
 		}
 	}
 
-	protected void queueCommandIfRendered(Supplier<UiCommand> commandSupplier) {
-		if (rendered) {
+	protected void queueCommandIfRendered(Supplier<UiCommand<?>> commandSupplier) {
+		if (renderingState == RenderingState.RENDERED) {
 			sessionContext.queueCommand(commandSupplier.get());
+		} else if (renderingState == RenderingState.RENDERING) {
+			/*
+			This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a thrown event. This change must be transported to the client
+			as command (since the corresponding setter of the parent's UiComponent has possibly already been set). However, this command must be enqueued after the component is rendered on the client
+			side! Therefore, sending the command must be forcibly enqueued.
+
+			Example: A panel contains a table. The panel's title is bound to the table's "count" ObservableValue. When the panel is rendered, the table also is rendered (as part of rendering the
+			panel). While rendering, the table sets its "count" value, so the panel's title is changed. However, the UiPanel's setTitle() method already has been invoked, so the change will not have
+			any effect on the initialization of the UiPanel. Therefore, the change must be sent as a command. Sending the command directly however would make it arrive at the client before
+			the panel was rendered (which is only after completing its createUiComponent() method).
+			 */
+			sessionContext.runWithContext(() -> {
+				sessionContext.queueCommand(commandSupplier.get());
+			}, true);
 		}
 	}
 
