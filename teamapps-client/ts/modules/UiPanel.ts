@@ -75,7 +75,6 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	private $icon: HTMLElement;
 	private $title: HTMLElement;
 
-	private contentComponent: UiComponent<UiComponentConfig>;
 	private leftHeaderField: HeaderField;
 	private rightHeaderField: HeaderField;
 	private leftComponentFirstMinimized: boolean;
@@ -246,13 +245,11 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	}
 
 	public setContent(content: UiComponent) {
-		if (content == this.contentComponent) {
-			return;
+		if (content?.getMainElement() !== this.$bodyContainer.firstElementChild) {
+			this.$bodyContainer.innerHTML = '';
 		}
-		this.$bodyContainer.innerHTML = '';
-		this.contentComponent = content;
 		if (content != null) {
-			this.$bodyContainer.appendChild(this.contentComponent.getMainElement());
+			this.$bodyContainer.appendChild(content.getMainElement());
 		}
 	}
 
