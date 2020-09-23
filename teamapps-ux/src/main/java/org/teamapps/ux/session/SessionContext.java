@@ -48,6 +48,7 @@ import org.teamapps.ux.component.notification.Notification;
 import org.teamapps.ux.component.notification.NotificationPosition;
 import org.teamapps.ux.component.popup.Popup;
 import org.teamapps.ux.component.rootpanel.RootPanel;
+import org.teamapps.ux.component.rootpanel.WakeLock;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.component.window.Window;
@@ -68,6 +69,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -513,5 +515,20 @@ public class SessionContext {
 
 		window.setContent(verticalLayout);
 		return window;
+	}
+
+	public CompletableFuture<WakeLock> requestWakeLock() {
+		String uuid = UUID.randomUUID().toString();
+		CompletableFuture<WakeLock> completableFuture = new CompletableFuture<>();
+		runWithContext(() -> {
+			queueCommand(new UiRootPanel.RequestWakeLockCommand(uuid), successful -> {
+				if (successful) {
+					completableFuture.complete(() -> queueCommand(new UiRootPanel.ReleaseWakeLockCommand(uuid)));
+				} else {
+					completableFuture.completeExceptionally(new RuntimeException("Could not acquire WakeLock"));
+				}
+			});
+		});
+		return completableFuture;
 	}
 }

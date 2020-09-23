@@ -49,6 +49,10 @@ class UiRootPanel extends UiComponent {
 
 	static command showPopup(UiPopup* popup);
 	static command showPopupAtCurrentMousePosition(UiPopup* popup);
+
+	// uuid is a server-generated id for this particular lock. Multiple locks are possible!
+	static command requestWakeLock(String uuid) returns boolean;
+	static command releaseWakeLock(String uuid);
 }
 
 enum UiGenericErrorMessageOption {
