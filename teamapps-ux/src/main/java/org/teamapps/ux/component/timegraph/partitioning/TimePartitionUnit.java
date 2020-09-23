@@ -387,6 +387,60 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 			return zonedDateTime.minusHours(1);
 		}
 	},
+	HOURS_3(3 * 3_600_000) {
+		@Override
+		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+			return zonedDateTime.truncatedTo(ChronoUnit.HOURS).withHour(3 * (zonedDateTime.getHour() / 3));
+		}
+
+		@Override
+		public ZonedDateTime increment(ZonedDateTime zonedDateTime) {
+			// make sure we are not the victims of a clock change - still not perfect...
+			if (zonedDateTime.getHour() == 0) {
+				return zonedDateTime.withHour(3);
+			} else if (zonedDateTime.getHour() == 3) {
+				return zonedDateTime.withHour(6);
+			} else if (zonedDateTime.getHour() == 6) {
+				return zonedDateTime.withHour(9);
+			} else if (zonedDateTime.getHour() == 9) {
+				return zonedDateTime.withHour(12);
+			} else if (zonedDateTime.getHour() == 12) {
+				return zonedDateTime.withHour(15);
+			} else if (zonedDateTime.getHour() == 15) {
+				return zonedDateTime.withHour(18);
+			} else if (zonedDateTime.getHour() == 18) {
+				return zonedDateTime.withHour(21);
+			} else if (zonedDateTime.getHour() == 21) {
+				return zonedDateTime.plusDays(1).withHour(0);
+			} else {
+				return zonedDateTime.plusHours(3);
+			}
+		}
+
+		@Override
+		public ZonedDateTime decrement(ZonedDateTime zonedDateTime) {
+			// make sure we are not the victims of a clock change - still not perfect...
+			if (zonedDateTime.getHour() == 0) {
+				return zonedDateTime.minusDays(1).withHour(21);
+			} else if (zonedDateTime.getHour() == 3) {
+				return zonedDateTime.withHour(0);
+			} else if (zonedDateTime.getHour() == 6) {
+				return zonedDateTime.withHour(3);
+			} else if (zonedDateTime.getHour() == 9) {
+				return zonedDateTime.withHour(6);
+			} else if (zonedDateTime.getHour() == 12) {
+				return zonedDateTime.withHour(9);
+			} else if (zonedDateTime.getHour() == 15) {
+				return zonedDateTime.withHour(12);
+			} else if (zonedDateTime.getHour() == 18) {
+				return zonedDateTime.withHour(15);
+			} else if (zonedDateTime.getHour() == 21) {
+				return zonedDateTime.withHour(18);
+			} else {
+				return zonedDateTime.minusHours(3);
+			}
+		}
+	},
 	HOURS_6(6 * 3_600_000) {
 		@Override
 		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
