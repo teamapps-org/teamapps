@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import Popper from "popper.js";
+import { createPopper, Instance as Popper } from '@popperjs/core';
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {UiFieldMessagePosition} from "../../generated/UiFieldMessagePosition";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
@@ -39,16 +39,19 @@ export class FieldMessagesPopper {
 		</div>`);
 		document.body.appendChild(this.$popperElement);
 		this.$messagesContainer = this.$popperElement.querySelector<HTMLElement>(":scope .ta-tooltip-inner");
-		this.popper = new Popper(referenceElement || document.body, this.$popperElement, {
+		this.popper = createPopper(referenceElement || document.body, this.$popperElement, {
 			placement: 'right',
-			modifiers: {
-				flip: {
-					behavior: ['right', 'bottom', 'left', 'top']
+			modifiers: [
+				{
+					name: "flip",
+					options: {
+						fallbackPlacements: ['bottom', 'left', 'top']
+					}
 				},
-				preventOverflow: {
-					boundariesElement: document.body,
+				{
+					name: "preventOverflow"
 				}
-			},
+			]
 		});
 	}
 

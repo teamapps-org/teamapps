@@ -27,7 +27,7 @@ import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiFieldMessagePosition} from "../../generated/UiFieldMessagePosition";
 import {UiFieldMessageVisibilityMode} from "../../generated/UiFieldMessageVisibilityMode";
-import Popper from "popper.js";
+import {createPopper, Instance as Popper} from '@popperjs/core';
 import {bind} from "../util/Bind";
 import {parseHtml, prependChild} from "../Common";
 import Logger = log.Logger;
@@ -298,7 +298,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		this.$messagesContainerBelow.innerHTML = '';
 		if (this._messageTooltip != null) {
 			this._messageTooltip.$messageContainer.innerHTML = '';
-			this._messageTooltip.$popperElement.classList.remove(`tooltip-info tooltip-success tooltip-warning tooltip-error`);
+			this._messageTooltip.$popperElement.classList.remove("ta-tooltip-info", "ta-tooltip-success", "ta-tooltip-warning", "ta-tooltip-error");
 		}
 
 		this.fieldMessages = fieldMessageConfigs
@@ -325,7 +325,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		fieldMessagesByPosition[UiFieldMessagePosition.BELOW].forEach(message => this.getMessagesContainer(message.message.position).appendChild(message.$message));
 		if (fieldMessagesByPosition[UiFieldMessagePosition.POPOVER].length > 0) {
 			const highestPopoverSeverity = getHighestSeverity(fieldMessagesByPosition[UiFieldMessagePosition.POPOVER]);
-			this.messageTooltip.$popperElement.classList.add(`tooltip-${UiFieldMessageSeverity[highestPopoverSeverity].toLowerCase()}`);
+			this.messageTooltip.$popperElement.classList.add(`ta-tooltip-${UiFieldMessageSeverity[highestPopoverSeverity].toLowerCase()}`);
 			fieldMessagesByPosition[UiFieldMessagePosition.POPOVER].forEach(message => {
 				this.messageTooltip.$messageContainer.appendChild(message.$message);
 			});
@@ -347,19 +347,35 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 
 	private get messageTooltip() {
 		if (this._messageTooltip == null) {
-			let $popperElement = parseHtml(`<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>`);
+			let $popperElement = parseHtml(`<div class="ta-tooltip" role="tooltip"><div class="ta-tooltip-arrow"></div><div class="ta-tooltip-inner"></div></div>`);
 			document.body.appendChild($popperElement);
-			let $messageContainer = $popperElement.querySelector<HTMLElement>(":scope .tooltip-inner");
-			let popper = new Popper(this.getMainInnerDomElement(), $popperElement, {
+			let $messageContainer = $popperElement.querySelector<HTMLElement>(":scope .ta-tooltip-inner");
+			let popper = createPopper(this.getMainInnerDomElement(), $popperElement, {
 				placement: 'right',
-				modifiers: {
-					flip: {
-						behavior: ['right', 'bottom', 'left', 'top']
+				modifiers: [
+					{
+						name: "flip",
+						options: {
+							fallbackPlacements: ['bottom', 'left', 'top']
+						}
 					},
-					preventOverflow: {
-						boundariesElement: document.body,
+					{
+						name: "preventOverflow"
+					},
+					{
+						name: "offset",
+						options: {
+							offset: [0, 6]
+						}
+					},
+					{
+						name: "arrow",
+						options: {
+							element: ".ta-tooltip-arrow", // "[data-popper-arrow]"
+							padding: 10, // 0
+						}
 					}
-				},
+				]
 			});
 			this.onResized.addListener(this.updatePopperPosition);
 			this.deFactoVisibilityChanged.addListener(visible => {
@@ -380,7 +396,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 
 	@bind
 	private updatePopperPosition() {
-		this.messageTooltip.popper.scheduleUpdate();
+		this.messageTooltip.popper.update();
 	}
 
 	protected getMessagesContainer(position: UiFieldMessagePosition) {

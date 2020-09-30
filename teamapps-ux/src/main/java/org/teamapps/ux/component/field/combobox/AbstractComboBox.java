@@ -67,7 +67,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 	private TemplateDecider<RECORD> selectedEntryTemplateDecider = record -> selectedEntryTemplate;
 	private TemplateDecider<RECORD> dropdownTemplateDecider = record -> dropDownTemplate;
 
-	private boolean showDropDownButton = true;
+	private boolean dropDownButtonVisible = true;
 	private boolean showDropDownAfterResultsArrive = false;
 	private boolean highlightFirstResultEntry = true;
 	private boolean autoComplete = true; // if true, by typing any letter, the first matching will be selected (keeping all not yet entered letters int the text box selected)
@@ -98,7 +98,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 		
 		comboBox.setTextMatchingMode(textMatchingMode.toUiTextMatchingMode());
-		comboBox.setShowDropDownButton(showDropDownButton);
+		comboBox.setShowDropDownButton(dropDownButtonVisible);
 		comboBox.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);
 		comboBox.setHighlightFirstResultEntry(highlightFirstResultEntry);
 		comboBox.setShowHighlighting(showHighlighting);
@@ -230,8 +230,8 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		return textMatchingMode;
 	}
 
-	public boolean isShowDropDownButton() {
-		return showDropDownButton;
+	public boolean isDropDownButtonVisible() {
+		return dropDownButtonVisible;
 	}
 
 	public boolean isShowDropDownAfterResultsArrive() {
@@ -262,8 +262,8 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		return showClearButton;
 	}
 
-	public void setShowDropDownButton(boolean showDropDownButton) {
-		this.showDropDownButton = showDropDownButton;
+	public void setDropDownButtonVisible(boolean dropDownButtonVisible) {
+		this.dropDownButtonVisible = dropDownButtonVisible;
 		reRenderIfRendered();
 	}
 

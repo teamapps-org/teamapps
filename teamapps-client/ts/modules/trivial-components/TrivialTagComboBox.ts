@@ -41,6 +41,7 @@ import {
 } from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
 import {place} from "place-to";
+import {createPopper, Instance as Popper} from '@popperjs/core';
 import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import KeyDownEvent = JQuery.KeyDownEvent;
 import MouseDownEvent = JQuery.MouseDownEvent;
@@ -200,6 +201,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
     private $originalInput: JQuery;
     private $tagComboBox: JQuery;
     private $dropDown: JQuery;
+    private popper: Popper;
     private $trigger: JQuery;
     private $editor: JQuery;
     private $dropDownTargetElement: JQuery;
@@ -537,6 +539,30 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 
         // ===
         this.$tagComboBox.data("trivialTagComboBox", this);
+
+        this.popper = createPopper(this.$tagComboBox[0], this.$dropDown[0], {
+            placement: 'bottom',
+            modifiers: [
+                {
+                    name: "flip",
+                    options: {
+                        fallbackPlacements: ['top']
+                    }
+                },
+                {
+                    name: "preventOverflow"
+                },
+                {
+                    name: 'dropDownCornerSmoother',
+                    enabled: true,
+                    phase: 'write',
+                    fn: ({state}) => {
+                        this.$tagComboBox[0].classList.toggle("dropdown-flipped", state.placement === 'top');
+                        this.$dropDown[0].classList.toggle("flipped", state.placement === 'top');
+                    }
+                }
+            ]
+        })
     }
 
     private cancelPartialTag() {
@@ -696,10 +722,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
     }
 
     private repositionDropDown() {
-	    place(this.$dropDown[0], "top left")
-		    .to(this.$tagComboBox[0], "bottom left");
-	    this.$tagComboBox.removeClass("dropdown-flipped"); // TODO
-	    this.$dropDown.removeClass("flipped"); // TODO
+        this.popper.update();
 	    this.$dropDown.width(this.$tagComboBox.width());
     }
 

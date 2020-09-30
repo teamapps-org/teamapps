@@ -37,7 +37,7 @@ limitations under the License.
 
 import {DEFAULT_TEMPLATES, defaultListQueryFunctionFactory, EditingMode, HighlightDirection, QueryFunction, TrivialComponent, keyCodes, DEFAULT_RENDERING_FUNCTIONS, unProxyEntry} from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
-import {place} from "place-to";
+import {createPopper, Instance as Popper} from '@popperjs/core';
 import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import KeyDownEvent = JQuery.KeyDownEvent;
 
@@ -94,6 +94,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
     private $selectedEntryAndTriggerWrapper: JQuery;
     private $selectedEntryWrapper: JQuery;
     private $dropDown: JQuery;
+    private popper: Popper;
     private editingMode: EditingMode;
     private usingDefaultQueryFunction: boolean;
 
@@ -301,6 +302,31 @@ export class TrivialUnitBox<U> implements TrivialComponent {
         this.$editor.val(this.config.amount || this.$originalInput.val());
         this.formatEditorValue();
         this.setSelectedEntry(this.config.selectedEntry || null, false, null);
+
+
+        this.popper = createPopper(this.$unitBox[0], this.$dropDown[0], {
+            placement: 'bottom',
+            modifiers: [
+                {
+                    name: "flip",
+                    options: {
+                        fallbackPlacements: ['top']
+                    }
+                },
+                {
+                    name: "preventOverflow"
+                },
+                {
+                    name: 'dropDownCornerSmoother',
+                    enabled: true,
+                    phase: 'write',
+                    fn: ({state}) => {
+                        this.$unitBox[0].classList.toggle("dropdown-flipped", state.placement === 'top');
+                        this.$dropDown[0].classList.toggle("flipped", state.placement === 'top');
+                    }
+                }
+            ]
+        })
     }
 
     private ensureDecimalInput() {
@@ -437,10 +463,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 
     private repositionDropDown() {
         this.$dropDown.show();
-	    place(this.$dropDown[0], "top left")
-		    .to(this.$unitBox[0], "bottom left");
-	    this.$unitBox.removeClass("dropdown-flipped"); // TODO
-	    this.$dropDown.removeClass("flipped"); // TODO
+        this.popper.update();
 	    this.$dropDown.width(this.$unitBox.width());
     };
 

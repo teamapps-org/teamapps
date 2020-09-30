@@ -37,12 +37,22 @@
 
 .ta-tooltip .ta-tooltip-arrow {
   z-index: -1;
-  width: calc(2 * var(--ta-tooltip-arrow-size));
-  height: calc(2 * var(--ta-tooltip-arrow-size));
   position: absolute;
-  border: 1px solid var(--ta-input-border-color);
-  transform: rotate(45deg);
-  background-color: white;
+  width: var(--ta-tooltip-arrow-size);
+  height: var(--ta-tooltip-arrow-size);
+
+  &:after {
+    position: absolute;
+    content: ' ';
+    font-size: 0;
+    width: calc(2 * var(--ta-tooltip-arrow-size));
+    height: calc(2 * var(--ta-tooltip-arrow-size));
+    left: calc(-.5 * var(--ta-tooltip-arrow-size));
+    top: calc(-.5 * var(--ta-tooltip-arrow-size));
+    transform: rotate(45deg);
+    border: 1px solid var(--ta-input-border-color);
+    background-color: white;
+  }
 }
 
 .ta-tooltip-inner {
@@ -52,7 +62,7 @@
 }
 
 .ta-tooltip.ta-tooltip-info,
-.ta-tooltip.ta-tooltip-info .ta-tooltip-arrow {
+.ta-tooltip.ta-tooltip-info .ta-tooltip-arrow:after {
   border-color: var(--ta-input-border-color);
   &, .ta-tooltip-inner {
     background-color: white;
@@ -60,7 +70,7 @@
 }
 
 .ta-tooltip.ta-tooltip-success,
-.ta-tooltip.ta-tooltip-success .ta-tooltip-arrow {
+.ta-tooltip.ta-tooltip-success .ta-tooltip-arrow:after {
   border-color: var(--ta-state-success-border);
   &, .ta-tooltip-inner {
     //background-color: @state-success-bg;
@@ -69,7 +79,7 @@
 }
 
 .ta-tooltip.ta-tooltip-warning,
-.ta-tooltip.ta-tooltip-warning .ta-tooltip-arrow {
+.ta-tooltip.ta-tooltip-warning .ta-tooltip-arrow:after {
   border-color: var(--ta-state-warning-border);
   &, .ta-tooltip-inner {
     //background-color: @state-warning-bg;
@@ -78,7 +88,7 @@
 }
 
 .ta-tooltip.ta-tooltip-error,
-.ta-tooltip.ta-tooltip-error .ta-tooltip-arrow {
+.ta-tooltip.ta-tooltip-error .ta-tooltip-arrow:after {
   border-color: var(--ta-state-danger-border);
   &, .ta-tooltip-inner {
     //background-color: @state-danger-bg;
@@ -86,38 +96,18 @@
   }
 }
 
-.ta-tooltip[x-placement^="top"] {
-  margin-bottom: calc(var(--ta-tooltip-arrow-size) + 1px);
+.ta-tooltip[data-popper-placement^="top"] .ta-tooltip-arrow {
+  bottom: calc(-.5 * var(--ta-tooltip-arrow-size));
 }
 
-.ta-tooltip[x-placement^="top"] .ta-tooltip-arrow {
-  bottom: -var(--ta-tooltip-arrow-size);
-  left: calc(50% - var(--ta-tooltip-arrow-size));
+.ta-tooltip[data-popper-placement^="bottom"] .ta-tooltip-arrow {
+  top: calc(-.5 * var(--ta-tooltip-arrow-size));
 }
 
-.ta-tooltip[x-placement^="bottom"] {
-  margin-top: calc(var(--ta-tooltip-arrow-size) + 1px);
+.ta-tooltip[data-popper-placement^="right"] .ta-tooltip-arrow {
+  left: calc(-.5 * var(--ta-tooltip-arrow-size));
 }
 
-.ta-tooltip[x-placement^="bottom"] .ta-tooltip-arrow {
-  top: -var(--ta-tooltip-arrow-size);
-  left: calc(50% - var(--ta-tooltip-arrow-size));
-}
-
-.ta-tooltip[x-placement^="right"] {
-  margin-left: calc(var(--ta-tooltip-arrow-size) + 1px);
-}
-
-.ta-tooltip[x-placement^="right"] .ta-tooltip-arrow {
-  left: -var(--ta-tooltip-arrow-size);
-  top: calc(50% - var(--ta-tooltip-arrow-size));
-}
-
-.ta-tooltip[x-placement^="left"] {
-  margin-right: calc(var(--ta-tooltip-arrow-size) + 1px);
-}
-
-.ta-tooltip[x-placement^="left"] .ta-tooltip-arrow {
-  right: -var(--ta-tooltip-arrow-size);
-  top: calc(50% - var(--ta-tooltip-arrow-size));
+.ta-tooltip[data-popper-placement^="left"] .ta-tooltip-arrow {
+  right: calc(-.5 * var(--ta-tooltip-arrow-size));
 }
