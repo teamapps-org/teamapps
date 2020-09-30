@@ -43,6 +43,7 @@ import {TrivialCalendarBox} from "./TrivialCalendarBox";
 import {TrivialDateSuggestionEngine} from "./TrivialDateSuggestionEngine";
 import {TrivialTimeSuggestionEngine} from "./TrivialTimeSuggestionEngine";
 import {place} from "place-to";
+import {createPopper, Instance as Popper} from '@popperjs/core';
 import {TrivialTreeBox} from "./TrivialTreeBox";
 import KeyDownEvent = JQuery.KeyDownEvent;
 
@@ -163,6 +164,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private $originalInput: JQuery;
 	private $dateTimeField: JQuery;
 	private $dropDown: JQuery;
+	private popper: Popper;
 
 	private $dateIconWrapper: JQuery;
 	private $dateEditor: JQuery;
@@ -413,6 +415,31 @@ export class TrivialDateTimeField implements TrivialComponent {
 			favorPastDates: this.config.favorPastDates
 		});
 		this.timeSuggestionEngine = new TrivialTimeSuggestionEngine();
+
+
+		this.popper = createPopper(this.$dateTimeField[0], this.$dropDown[0], {
+			placement: 'bottom',
+			modifiers: [
+				{
+					name: "flip",
+					options: {
+						fallbackPlacements: ['top']
+					}
+				},
+				{
+					name: "preventOverflow"
+				},
+				{
+					name: 'dropDownCornerSmoother',
+					enabled: true,
+					phase: 'write',
+					fn: ({state}) => {
+						this.$dateTimeField[0].classList.toggle("dropdown-flipped", state.placement === 'top');
+						this.$dateTimeField[0].classList.toggle("flipped", state.placement === 'top');
+					}
+				}
+			]
+		})
 	}
 
 	private isDropDownNeeded() {
@@ -569,8 +596,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private repositionDropDown() {
 		place(this.$dropDown[0], "top left")
 			.to(this.$dateTimeField[0], "bottom left");
-		this.$dateTimeField.removeClass("dropdown-flipped"); // TODO
-		this.$dropDown.removeClass("flipped"); // TODO
+		this.popper.update();
 		this.$dropDown.width(this.$dateTimeField.width());
 	}
 

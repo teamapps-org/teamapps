@@ -17,10 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import Popper, {Data, PopperOptions} from "popper.js";
+import { createPopper, Instance as Popper } from '@popperjs/core';
 import {animateCSS, Constants, parseHtml} from "../Common";
-import {EventApi} from "@fullcalendar/core";
-import {TemplateRegistry} from "../TemplateRegistry";
 import {UiEntranceAnimation} from "../../generated/UiEntranceAnimation";
 
 export class CalendarEventListPopper {
@@ -45,21 +43,33 @@ export class CalendarEventListPopper {
 		document.body.appendChild(this.$popperElement);
 		this._$allDayEventsContainer = this.$popperElement.querySelector<HTMLElement>(":scope .all-day-events");
 		this._$normalEventsContainer = this.$popperElement.querySelector<HTMLElement>(":scope .normal-events");
-		this.popper = new Popper(referenceElement || document.body, this.$popperElement, {
+		this.popper = createPopper(referenceElement || document.body, this.$popperElement, {
 			placement: 'top',
-			modifiers: {
-				flip: {
-					behavior: ['top', 'right', 'left', 'bottom']
+			modifiers: [
+				{
+					name: "flip",
+					options: {
+						fallbackPlacements: ['right', 'left', 'bottom']
+					}
 				},
-				preventOverflow: {
-					boundariesElement: document.body,
+				{
+					name: "preventOverflow"
+				} ,
+				{
+					name: "offset",
+					options: {
+						offset: [0, 8]
+					}
 				},
-				offset: {
-					enabled: true,
-					offset: "0px, 3px"
+				{
+					name: "arrow",
+					options: {
+						element: ".ta-tooltip-arrow", // "[data-popper-arrow]"
+						padding: 10, // 0
+					}
 				}
-			}
-		} as PopperOptions);
+			]
+		});
 
 		this.$popperElement.addEventListener("pointerenter", ev => this.setVisible(false, false));
 	}
@@ -73,14 +83,12 @@ export class CalendarEventListPopper {
 	}
 
 	public setReferenceElement(referenceElement: Element) {
-		(this.popper as any).reference = referenceElement;
-		this.popper.update();
+		(this.popper as any).state.elements.reference = referenceElement;
 	}
 
 	public updatePosition() {
 		this.popper.update();
 	}
-
 
 	public setVisible(visible: boolean, animate = true) {
 		window.clearTimeout(this.visibilityTimeout);

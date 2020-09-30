@@ -107,7 +107,7 @@ export class MonthGridView extends View {
 		this.el.classList.add('fc-month-grid-view');
 		this.el.appendChild(this.$contentElement);
 		this._svg = d3.select<SVGElement, undefined>(svgElement);
-		this.eventsPopper = new CalendarEventListPopper();
+		this.eventsPopper = new CalendarEventListPopper(svgElement);
 	}
 
 	// will get invoked when the context is set for the first time
@@ -395,7 +395,7 @@ export class MonthGridView extends View {
 				.attr("d", (occupation: DayOccupationColorAmount, i, groups) => {
 					return this.describeArc(0, occupationCircleCenterOffset, occupationRadius, occupation.startAngle, occupation.endAngle);
 				});
-			this.eventsPopper.setVisible(false);
+			this.eventsPopper.setVisible(false, false);
 		});
 
 		let _dayOccupation = _day.merge(_dayEnter).selectAll("path.day-occupation")
@@ -502,9 +502,9 @@ export class MonthGridView extends View {
 			this.renderPopperEvents(day, allDayEvents, true);
 			this.renderPopperEvents(day, normalEvents, false);
 			this.eventsPopper.setReferenceElement(dayElement);
-			this.eventsPopper.setVisible(true);
+			this.eventsPopper.setVisible(true, false);
 		} else {
-			this.eventsPopper.setVisible(false);
+			this.eventsPopper.setVisible(false, false);
 		}
 	}
 
