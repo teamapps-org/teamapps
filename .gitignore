@@ -1,4 +1,4 @@
-### Maven template
+### Maven
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -9,7 +9,15 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
-### Java template
+### Gradle
+
+.gradle
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+### Java
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -23,7 +31,7 @@ buildNumber.properties
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-### JetBrains template
+### JetBrains
 *.iml
 .idea/
 *.ipr
@@ -41,7 +49,7 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 
-### Windows template
+### Windows
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -115,7 +123,7 @@ teamapps-client/ts/generated/
 teamapps-client/dist/
 teamapps-client/stats.json
 
-### MicrosoftOffice template
+### Microsoft Office
 *.tmp
 ~$*.doc*
 ~$*.xls*
