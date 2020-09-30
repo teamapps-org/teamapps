@@ -118,11 +118,12 @@ public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD>
 			if (this.freeTextRecordFactory != null) {
 				RECORD record = freeTextRecordFactory.apply(freeText);
 				recordCache.replaceRecords(Collections.singletonList(record)).commit();
+				return record;
 			} else {
 				this.freeTextEntry = freeText;
+				onFreeTextEntered.fire(freeText);
+				return null;
 			}
-			onFreeTextEntered.fire(freeText);
-			return null;
 		} else {
 			throw new IllegalArgumentException("Unknown ui value type: " + value);
 		}
