@@ -3,11 +3,10 @@
  */
 
 dependencies {
-    compile "io.undertow:undertow-servlet:2.0.17.Final"
-    compile "io.undertow:undertow-websockets-jsr:2.0.17.Final"
-    compile project(':teamapps-ux-servlet')
-    compile project(':teamapps-client')
-    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    api 'io.undertow:undertow-servlet:2.0.17.Final'
+    api 'io.undertow:undertow-websockets-jsr:2.0.17.Final'
+    api project(':teamapps-ux-servlet')
+    api project(':teamapps-client')
 }
 
 description = 'TeamApps Server Undertow Embedded'

@@ -3,11 +3,10 @@
  */
 
 dependencies {
-    compile "org.apache.tomcat.embed:tomcat-embed-core:9.0.16"
-    compile "org.apache.tomcat.embed:tomcat-embed-websocket:9.0.16"
-    compile project(':teamapps-ux-servlet')
-    compile project(':teamapps-client')
-    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    api 'org.apache.tomcat.embed:tomcat-embed-core:9.0.35'
+    api 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.35'
+    api project(':teamapps-ux-servlet')
+    api project(':teamapps-client')
 }
 
 description = 'TeamApps Server Tomcat Embedded'

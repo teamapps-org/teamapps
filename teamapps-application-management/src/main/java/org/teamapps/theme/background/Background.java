@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.theme.background;
 
@@ -63,14 +59,14 @@ public class Background {
 		return new Background(null, null, null,backgroundImageFile, blurredBackgroundImageFile, animationDuration);
 	}
 
-	private Color backgroundColor;
-	private String backgroundImagePath;
-	private String blurredBackgroundImagePath;
-	private File backgroundImageFile;
-	private File blurredBackgroundImageFile;
-	private int animationDuration;
+	private final Color backgroundColor;
+	private final String backgroundImagePath;
+	private final String blurredBackgroundImagePath;
+	private final File backgroundImageFile;
+	private final File blurredBackgroundImageFile;
+	private final int animationDuration;
 	private boolean blurred;
-	private String uuid = UUID.randomUUID().toString();
+	private final String uuid = UUID.randomUUID().toString();
 
 	private Background(Color backgroundColor, String backgroundImagePath, String blurredBackgroundImagePath, File backgroundImageFile, File blurredBackgroundImageFile, int animationDuration) {
 		this.backgroundColor = backgroundColor;

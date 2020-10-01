@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.dto;
 
@@ -50,7 +46,7 @@ public class ObjectDeserializer extends JsonDeserializer<Object> {
 
 	}
 
-	public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 		if (p.isExpectedStartArrayToken()) {
 			ArrayList<Object> list = new ArrayList<>();
 			p.setCurrentValue(list); // assign current value, to be accessible by custom serializers
@@ -124,7 +120,7 @@ public class ObjectDeserializer extends JsonDeserializer<Object> {
 			if (key.equals("_name")) {
 				String text = p.getText();
 				result = Arrays.stream(enumClass.getEnumConstants())
-						.filter(c -> ((Enum) c).name().equals(text))
+						.filter(c -> c.name().equals(text))
 						.findFirst()
 						.orElseThrow(() -> new IllegalArgumentException("Could not find enum value \"" + text + "\" in enum class " + enumClass));
 			}

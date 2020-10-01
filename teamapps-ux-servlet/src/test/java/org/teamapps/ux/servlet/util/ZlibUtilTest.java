@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.ux.servlet.util;
 
@@ -23,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.InflaterOutputStream;
 
 public class ZlibUtilTest {
@@ -43,7 +40,7 @@ public class ZlibUtilTest {
                 deflateStream.write(bytes);
             }
             byte[] result = byteOutStream.toByteArray();
-            Assert.assertEquals("hallo", new String(result, "UTF8"));
+            Assert.assertEquals("hallo", new String(result, StandardCharsets.UTF_8));
 
     }
 
@@ -59,7 +56,7 @@ public class ZlibUtilTest {
         byte[] result = byteOutStream.toByteArray();
         Assert.assertEquals("{\"_type\":\"CLIENT-INFO\",\"viewPortWidth\":658,\"viewPortHeight\":956,\"screenWidth\":1680,\"screenHeight\":1050," +
                 "\"highDensityScreen\":true,\"timeZoneOffsetMinutes\":-120,\"timeZoneIana\":\"Europe/Berlin\",\"clientTokens\":[]," +
-                "\"tabUuid\":\"eee8500f-de5e-42c2-bcde-d6f4ce7b3e49\"}", new String(result, "UTF8"));
+                "\"tabUuid\":\"eee8500f-de5e-42c2-bcde-d6f4ce7b3e49\"}", new String(result, StandardCharsets.UTF_8));
 
     }
 }

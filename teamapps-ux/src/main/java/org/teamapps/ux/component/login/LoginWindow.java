@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.ux.component.login;
 
@@ -40,19 +36,19 @@ import org.teamapps.ux.session.SessionContext;
 public class LoginWindow {
 	public Event<LoginData> onLogin = new Event<>();
 
-	private SessionContext sessionContext = CurrentSessionContext.get();
+	private final SessionContext sessionContext = CurrentSessionContext.get();
 
-	private TextField loginField;
-	private PasswordField passwordField;
+	private final TextField loginField;
+	private final PasswordField passwordField;
 
-	private Button<BaseTemplateRecord> loginButton;
+	private final Button<BaseTemplateRecord> loginButton;
 	private Button<BaseTemplateRecord> registerButton;
 	private Button<BaseTemplateRecord> forgotPasswordButton;
-	private DisplayField errorField;
-	private DisplayField headerField;
+	private final DisplayField errorField;
+	private final DisplayField headerField;
 
-	private Window window;
-	private ElegantPanel elegantPanel;
+	private final Window window;
+	private final ElegantPanel elegantPanel;
 	private final Label pwdLabel;
 	private final Label loginLabel;
 

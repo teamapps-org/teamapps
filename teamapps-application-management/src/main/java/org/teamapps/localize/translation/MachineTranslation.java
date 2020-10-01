@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.localize.translation;
 
@@ -29,8 +25,8 @@ public class MachineTranslation implements TranslationService {
 
     private DeepLTranslation deepLTranslation;
     private GoogleTranslation googleTranslation;
-    private List<TranslationService> services = new ArrayList<>();
-    private Set<String> supportedLanguages = new HashSet<>();
+    private final List<TranslationService> services = new ArrayList<>();
+    private final Set<String> supportedLanguages = new HashSet<>();
 
     public MachineTranslation() {
     }
@@ -101,10 +97,6 @@ public class MachineTranslation implements TranslationService {
 
     @Override
     public boolean canTranslate(String sourceLanguage, String targetLanguage) {
-        if (supportedLanguages.contains(sourceLanguage) && supportedLanguages.contains(targetLanguage)) {
-            return true;
-        } else {
-            return false;
-        }
+        return supportedLanguages.contains(sourceLanguage) && supportedLanguages.contains(targetLanguage);
     }
 }

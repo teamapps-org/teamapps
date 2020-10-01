@@ -3,14 +3,16 @@
  */
 
 rootProject.name = 'teamapps'
+
 include(':teamapps-common')
 include(':teamapps-icon')
 include(':teamapps-material-icon-provider')
 include(':teamapps-ui-dsl')
 include(':teamapps-ui-api')
-include(':teamapps-client')
 include(':teamapps-ux')
 include(':teamapps-ux-servlet')
+include(':teamapps-client')
+include(':teamapps-application-management')
 include(':teamapps-server-jetty-embedded')
 include(':teamapps-server-undertow-embedded')
 include(':teamapps-server-tomcat-embedded')

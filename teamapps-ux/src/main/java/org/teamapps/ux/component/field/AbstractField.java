@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.ux.component.field;
 
@@ -43,7 +39,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractField<VALUE> extends AbstractComponent {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
 	
 	private final FieldValidator<VALUE> requiredValidator = (value) ->
 			this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
@@ -64,7 +60,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	private FieldMessage.Position defaultMessagePosition = FieldMessage.Position.BELOW;
 	private FieldMessage.Visibility defaultMessageVisibility = FieldMessage.Visibility.ALWAYS_VISIBLE;
 
-	private MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
+	private final MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
 
 	private boolean valueChangedByClient;
 

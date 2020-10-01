@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.client;
 
@@ -39,7 +35,7 @@ public class ClientCodeExtractor {
 
 
 	private static final String TEAMAPPS_CLIENT_FILE_NAME = "teamapps-client.zip";
-	private static final String TEAMAPPS_CLIENT_CHECKSUM_FILE_NAME = "teamapps-client.zip.MD5";
+	private static final String TEAMAPPS_CLIENT_CHECKSUM_FILE_NAME = "teamapps-client.zip.md5";
 	public static final String TEAMAPPS_CLIENT_CHECKSUM_RESOURCE_NAME = "/" + TEAMAPPS_CLIENT_CHECKSUM_FILE_NAME;
 
 	public static void initializeWebserverDirectory(File webAppDirectory) throws IOException {
@@ -77,7 +73,7 @@ public class ClientCodeExtractor {
 
 		File tempFile = File.createTempFile("teamapps-client", "zip");
 		try (InputStream in = ClientCodeExtractor.class.getResourceAsStream("/" + TEAMAPPS_CLIENT_FILE_NAME);
-		     FileOutputStream out = new FileOutputStream(tempFile);) {
+		     FileOutputStream out = new FileOutputStream(tempFile)) {
 			LOGGER.info("Extracting " + TEAMAPPS_CLIENT_FILE_NAME + " from classpath to temp file: " + tempFile.getAbsolutePath());
 			IOUtils.copy(in, out);
 		}

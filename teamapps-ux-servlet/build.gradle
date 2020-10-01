@@ -3,8 +3,7 @@
  */
 
 dependencies {
-    compile project(':teamapps-ux')
-    testCompile "org.assertj:assertj-core:$assertJVersion"
+    api project(':teamapps-ux')
     compileOnly 'javax:javaee-web-api:8.0'
 }
 

@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.ux.component.form;
 
@@ -37,10 +33,10 @@ import java.util.UUID;
 public class ResponsiveFormLayout  {
 
 	protected static final String LABEL_NAME_SUFFIX = "Label";
-	private ResponsiveForm responsiveForm;
-	private int minWidth;
-	private List<ResponsiveFormSection> responsiveFormSections = new ArrayList<>();
-	private ResponsiveFormConfigurationTemplate configurationTemplate;
+	private final ResponsiveForm responsiveForm;
+	private final int minWidth;
+	private final List<ResponsiveFormSection> responsiveFormSections = new ArrayList<>();
+	private final ResponsiveFormConfigurationTemplate configurationTemplate;
 
 
 	protected ResponsiveFormLayout(int minWidth, ResponsiveForm responsiveForm, ResponsiveFormConfigurationTemplate configurationTemplate) {

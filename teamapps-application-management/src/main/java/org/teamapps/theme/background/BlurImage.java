@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 /*
  * Copyright (c) 2016 teamapps.org (see code comments for author's name)
@@ -853,7 +849,7 @@ class ImageMath {
                 break;
         if (span > numKnots-3)
             span = numKnots-3;
-        float t = (float)(x-xknots[span]) / (xknots[span+1]-xknots[span]);
+        float t = (x-xknots[span]) / (xknots[span+1]-xknots[span]);
         span--;
         if (span < 0) {
             span = 0;
@@ -1000,7 +996,7 @@ class ImageMath {
         for (j = 0; j < length; j++) {
             while (out[i+1] < j)
                 i++;
-            in[j] = i + (float) (j - out[i]) / (out[i + 1] - out[i]);
+            in[j] = i + (j - out[i]) / (out[i + 1] - out[i]);
         }
         in[length] = length;
 
@@ -1091,7 +1087,7 @@ class PixelUtils {
     public final static int ALPHA = 19;
     public final static int ALPHA_TO_GRAY = 20;
 
-    private static Random randomGenerator = new Random();
+    private static final Random randomGenerator = new Random();
 
     /**
      * Clamp a value to the range 0..255
@@ -1125,8 +1121,8 @@ class PixelUtils {
         return Math.abs(r1-r2) <= tolerance && Math.abs(g1-g2) <= tolerance && Math.abs(b1-b2) <= tolerance;
     }
 
-    private final static float hsb1[] = new float[3];//FIXME-not thread safe
-    private final static float hsb2[] = new float[3];//FIXME-not thread safe
+    private final static float[] hsb1 = new float[3];//FIXME-not thread safe
+    private final static float[] hsb2 = new float[3];//FIXME-not thread safe
 
     // Return rgb1 painted onto rgb2
     public static int combinePixels(int rgb1, int rgb2, int op) {

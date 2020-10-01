@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.ux.cache;
 
@@ -55,19 +51,19 @@ public class ClientRecordCache<RECORD, UIRECORD extends UiIdentifiableClientReco
 	/**
 	 * Always represents the current server-side state.
 	 */
-	private LinkedHashMap<RECORD, Integer> uiRecordsByRecord = new LinkedHashMap<>();
+	private final LinkedHashMap<RECORD, Integer> uiRecordsByRecord = new LinkedHashMap<>();
 
 	/**
 	 * Always represents the currently acknowledged client-side state.
 	 */
-	private LinkedHashMap<Integer, RECORD> recordsByClientId = new LinkedHashMap<>();
+	private final LinkedHashMap<Integer, RECORD> recordsByClientId = new LinkedHashMap<>();
 
 	/**
 	 * Represents records not yet acknowledged by the client side.
 	 * Example: Setting records of a tree, the tree might request child components of an expanded lazy node during its initialization. The corresponding "lazy children" request will come
 	 * before the actual acknowledgement of the tree data (with the parent lazy expanded node).
 	 */
-	private LinkedHashMap<Integer, RECORD> unacknowledgedRecordsByClientId = new LinkedHashMap<>();
+	private final LinkedHashMap<Integer, RECORD> unacknowledgedRecordsByClientId = new LinkedHashMap<>();
 
 	public ClientRecordCache(UiIdentifiableClientRecordFactory<RECORD, UIRECORD> clientRecordFactory, UiIdentifiableClientRecordPostProcessor<RECORD, UIRECORD> postProcessor) {
 		this.clientRecordFactory = clientRecordFactory;

@@ -3,14 +3,14 @@
  */
 
 apply plugin: 'antlr'
-apply plugin: 'java'
 
 dependencies {
-    antlr "org.antlr:antlr4:4.7.1"
-    compile "org.antlr:antlr4-runtime:4.7.1"
-    compile "org.antlr:ST4:4.0.8"
-    compile "org.apache.commons:commons-lang3:3.4"
-    compile "com.google.guava:guava:$guavaVersion"
+    antlr 'org.antlr:antlr4:4.7.1'
+    api "org.antlr:antlr4-runtime:4.7.1"
+    api 'org.antlr:ST4:4.0.8'
+    api 'com.googlecode.json-simple:json-simple:1.1.1'
+    api 'org.apache.commons:commons-lang3:3.4'
+    api "com.google.guava:guava:$guavaVersion"
 }
 
 description = 'TeamApps UI DSL'

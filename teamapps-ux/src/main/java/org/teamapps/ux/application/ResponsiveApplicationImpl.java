@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.ux.application;
 
@@ -39,13 +35,13 @@ public class ResponsiveApplicationImpl extends AbstractApplication implements Re
 
 	private final ApplicationAssembler assembler;
 
-	private List<View> applicationViews = new ArrayList<>();
-	private List<Perspective> perspectives = new ArrayList<>();
+	private final List<View> applicationViews = new ArrayList<>();
+	private final List<Perspective> perspectives = new ArrayList<>();
 	private Perspective activePerspective;
 	private List<View> activeViews;
-	private List<ToolbarButtonGroup> workspaceToolbarButtonGroups = new ArrayList<>();
-	private List<ApplicationChangeHandler> changeHandlers = new ArrayList<>();
-	private ResponsiveApplicationToolbar responsiveApplicationToolbar = new ResponsiveApplicationToolbar();
+	private final List<ToolbarButtonGroup> workspaceToolbarButtonGroups = new ArrayList<>();
+	private final List<ApplicationChangeHandler> changeHandlers = new ArrayList<>();
+	private final ResponsiveApplicationToolbar responsiveApplicationToolbar = new ResponsiveApplicationToolbar();
 
 	public ResponsiveApplicationImpl(ApplicationAssembler assembler) {
 		this.assembler = assembler;
@@ -176,11 +172,7 @@ public class ResponsiveApplicationImpl extends AbstractApplication implements Re
 	}
 
 	private boolean isActivePerspective(Perspective perspective) {
-		if (activePerspective != null && activePerspective.equals(perspective)) {
-			return true;
-		} else {
-			return false;
-		}
+		return activePerspective != null && activePerspective.equals(perspective);
 	}
 
 	@Override

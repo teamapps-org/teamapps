@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 /*
  * Copyright (c) 2016 teamapps.org (see code comments for author's name)
@@ -53,11 +49,11 @@ import java.util.Map;
 
 public class GeoIpLookupService {
 
-	private static Logger logger = LoggerFactory.getLogger(GeoIpLookupService.class);
+	private static final Logger logger = LoggerFactory.getLogger(GeoIpLookupService.class);
 
     private final String geoIpDatabasePath;
-    private DatabaseReader databaseReader;
-    private Map<String, CityResponse> resultCache;
+    private final DatabaseReader databaseReader;
+    private final Map<String, CityResponse> resultCache;
 
     public GeoIpLookupService(String geoIpDatabasePath) throws IOException {
 		this.geoIpDatabasePath = geoIpDatabasePath;

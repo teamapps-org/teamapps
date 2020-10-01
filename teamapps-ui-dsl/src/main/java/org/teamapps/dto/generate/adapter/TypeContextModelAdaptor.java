@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.dto.generate.adapter;
 
@@ -109,17 +105,17 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if ("isTypeScriptConfig".equals(propertyName)) {
 			return isTypeScriptConfigSuffixed(typeContext);
 		} else if ("isPrimitiveType".equals(propertyName)) {
-			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText());
+			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.containsKey(typeContext.getText());
 		} else if ("isPrimitiveOrWrapperType".equals(propertyName)) {
-			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText()) || PRIMITIVE_TYPE_TO_WRAPPER_TYPE.values().contains(typeContext.getText());
+			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.containsKey(typeContext.getText()) || PRIMITIVE_TYPE_TO_WRAPPER_TYPE.containsValue(typeContext.getText());
 		} else if ("isPrimitiveNumberOrNumberWrapperType".equals(propertyName)) {
 			return Arrays.asList("byte", "Byte", "short", "Short", "int", "Integer", "long", "Long", "float", "Float", "double", "Double").contains(typeContext.getText());
 		} else if ("isBoolean".equals(propertyName)) {
 			return "boolean".equals(typeContext.getText());
 		} else if ("primitiveType".equals(propertyName)) {
-			if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText())) {
+			if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.containsKey(typeContext.getText())) {
 				return typeContext.getText();
-			} else if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.values().contains(typeContext.getText())) {
+			} else if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.containsValue(typeContext.getText())) {
 				return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.get(typeContext.getText());
 			} else {
 				throw new IllegalArgumentException(typeContext.getText() + " is not a primitive type!");
@@ -127,7 +123,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if ("isReference".equals(propertyName)) {
 			return isReference(typeContext);
 		} else if ("objectType".equals(propertyName)) {
-			if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText())) {
+			if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.containsKey(typeContext.getText())) {
 				return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.get(typeContext.getText());
 			} else {
 				return typeContext.getText();
@@ -192,7 +188,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		} else if (typeContext.inlineEnum() != null) {
 			TeamAppsDtoParser.PropertyDeclarationContext propertyDecl = (TeamAppsDtoParser.PropertyDeclarationContext) typeContext.getParent();
 			String propertyName = propertyDecl.Identifier().getText();
-			TeamAppsDtoParser.ClassDeclarationContext classDeclaration = astUtil.findAncestorOfType(propertyDecl, TeamAppsDtoParser.ClassDeclarationContext.class);
+			TeamAppsDtoParser.ClassDeclarationContext classDeclaration = TeamAppsDtoModel.findAncestorOfType(propertyDecl, TeamAppsDtoParser.ClassDeclarationContext.class);
 			return classDeclaration.Identifier().getText() + "_" + StringUtils.capitalize(propertyName);
 		} else if (typeContext.subCommandReference() != null) {
 			return "any";

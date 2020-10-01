@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.icons.systemprovider;
 
@@ -30,15 +26,15 @@ import java.util.Set;
 public class SystemIconProvider {
 
 	private IconProvider standardIconProvider;
-	private Map<String, IconProvider> iconProviderByStyleId = new HashMap<>();
-	private Map<String, IconProvider> iconProviderByLibraryId = new HashMap<>();
-	private Map<String, CustomIconStyle> customIconStyleByStyleId = new HashMap<>();
+	private final Map<String, IconProvider> iconProviderByStyleId = new HashMap<>();
+	private final Map<String, IconProvider> iconProviderByLibraryId = new HashMap<>();
+	private final Map<String, CustomIconStyle> customIconStyleByStyleId = new HashMap<>();
 
-	private CachingIconProvider cachingIconProvider;
-	private ResizingIconProvider resizingIconProvider = new ResizingIconProvider();
-	private StylingIconProvider stylingIconProvider = new StylingIconProvider();
-	private CompositeIconProvider compositeIconProvider = new CompositeIconProvider();
-	private CompositeSvgProvider compositeSvgProvider = new CompositeSvgProvider();
+	private final CachingIconProvider cachingIconProvider;
+	private final ResizingIconProvider resizingIconProvider = new ResizingIconProvider();
+	private final StylingIconProvider stylingIconProvider = new StylingIconProvider();
+	private final CompositeIconProvider compositeIconProvider = new CompositeIconProvider();
+	private final CompositeSvgProvider compositeSvgProvider = new CompositeSvgProvider();
 
 	public SystemIconProvider() {
 		cachingIconProvider = new CachingIconProvider();

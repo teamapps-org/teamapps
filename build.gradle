@@ -4,43 +4,48 @@
 
 plugins {
     id "com.github.hierynomus.license" version "0.15.0"
+    id "com.jfrog.bintray" version "1.8.5"
 }
 
 allprojects {
     group = 'org.teamapps'
-    version = '0.9.17'
+    version = '0.9.76'
 }
 
 subprojects {
-    apply plugin: 'java'
+
+    apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: "com.github.hierynomus.license"
     apply plugin: 'signing'
+
+    apply plugin: "com.jfrog.bintray"
 
     license {
         header rootProject.file('LICENSE_HEADER.txt')
         ignoreFailures true
         mapping([
                 java: 'SLASHSTAR_STYLE',
-                ts  : 'SLASHSTAR_STYLE',
-                tsx : 'SLASHSTAR_STYLE'
+                ts  : 'SLASHSTAR_STYLE'
         ])
         excludes([
                 "**/*.json",
-                "*/*.svg",
-                "*/*.txt",
-                "*/TeamAppsJavaDtoGeneratorTest_*.java",
-                "*/TeamAppsTypeScriptGeneratorTest_*.tsd",
-                "*/d3v3.d.ts",
-                "*/jquery.event.drag-2.3.0-fixed.js"
+                "**/*.svg",
+                "**/*.txt",
+                "**/TeamAppsJavaDtoGeneratorTest_*.java",
+                "**/TeamAppsTypeScriptGeneratorTest_*.tsd",
+                "**/d3v3.d.ts",
+                "**/dist/**/*.js"
         ])
     }
     tasks.getByName('build').dependsOn << tasks.getByName('licenseFormat')
 
     dependencies {
-        compile "org.slf4j:slf4j-api:$slf4jVersion"
-        testCompile "junit:junit:$junitVersion"
-        testCompile "org.assertj:assertj-core:$assertJVersion"
+        api "org.slf4j:slf4j-api:$slf4jVersion"
+        testImplementation "junit:junit:$junitVersion"
+        testImplementation "org.assertj:assertj-core:$assertJVersion"
+        testImplementation 'org.mockito:mockito-core:2.3.5'
+        testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
     }
 
     sourceCompatibility = '11'
@@ -64,88 +69,92 @@ subprojects {
         archives javadocJar
     }
 
+    repositories {
+        mavenLocal()
+        maven {
+            url "https://jcenter.bintray.com"
+        }
+    }
+
     publishing {
         publications {
-            mavenJava(MavenPublication) {
-                customizePom(pom, project.name)
-                from(components.java)
+            TeamApps(MavenPublication) {
+                from components.java
                 artifact sourcesJar
                 artifact javadocJar
-            }
-        }
-        repositories {
-            maven {
-                url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-                credentials {
-                    username sonatypeUsername
-                    password sonatypePassword
+                groupId project.group
+                artifactId project.name
+                version project.version
+                pom.withXml {
+                    def root = asNode()
+                    root.dependencies.removeAll { dep -> dep.scope == "test" } // eliminate test-scoped dependencies (no need in maven central POMs)
+
+                    // add all items necessary for maven central publication
+                    root.children().last() + {
+                        resolveStrategy = Closure.DELEGATE_FIRST
+                        name project.description
+                        description project.description
+                        url 'https://github.com/teamapps-org/teamapps'
+                        organization {
+                            name 'TeamApps.org'
+                            url 'https://github.com/teamapps-org'
+                        }
+                        issueManagement {
+                            system 'GitHub'
+                            url 'https://github.com/teamapps-org/teamapps/issues'
+                        }
+                        licenses {
+                            license {
+                                name 'Apache License, Version 2.0'
+                                url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                                distribution 'repo'
+                                comments 'A business-friendly OSS license'
+                            }
+                        }
+                        scm {
+                            url 'https://github.com/teamapps-org/teamapps'
+                            connection 'scm:git:git@github.com:teamapps-org/teamapps.git'
+                            developerConnection 'scm:git:git@github.com:teamapps-org/teamapps.git'
+                        }
+                        developers {
+                            developer {
+                                name 'Matthias Bernstein'
+                                email 'matthias.bernstein@teamapps.org'
+                                id 'matthias-bernstein'
+                            }
+                            developer {
+                                name 'Yann Massard'
+                                email 'yann.massard@teamapps.org'
+                                id 'yamass'
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 
-    repositories {
-        mavenLocal()
-        mavenCentral {
-            url = 'http://repo.maven.apache.org/maven2'
+    bintray {
+        user = bintrayUser
+        key = bintrayPassword
+        publications = ['TeamApps']
+//    configurations ['archives']
+        pkg {
+            repo = 'TeamApps'
+            name = 'teamapps'
+            userOrg = 'teamapps'
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/teamapps-org/teamapps.git'
+            version {
+                name = project.version
+                desc = 'TeamApps is a Java web application framework'
+            }
         }
     }
 
     signing {
-        sign publishing.publications.mavenJava
-    }
-
-}
-
-def customizePom(pom, projectName) {
-    pom.withXml {
-        def root = asNode()
-
-        // eliminate test-scoped dependencies (no need in maven central POMs)
-        root.dependencies.removeAll { dep ->
-            dep.scope == "test"
-        }
-
-        // add all items necessary for maven central publication
-        root.children().last() + {
-            resolveStrategy = Closure.DELEGATE_FIRST
-            
-            name projectName
-            description "TeamApps is a Java web application framework"
-            url 'https://github.com/teamapps-org/teamapps'
-            organization {
-                name 'TeamApps.org'
-                url 'https://github.com/teamapps-org'
-            }
-            issueManagement {
-                system 'GitHub'
-                url 'https://github.com/teamapps-org/teamapps/issues'
-            }
-            licenses {
-                license {
-                    name 'Apache License, Version 2.0'
-                    url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                    comments 'A business-friendly OSS license'
-                }
-            }
-            scm {
-                url 'https://github.com/teamapps-org/teamapps'
-                connection 'scm:git:git@github.com:teamapps-org/teamapps.git'
-                developerConnection 'scm:git:git@github.com:teamapps-org/teamapps.git'
-            }
-            developers {
-                developer {
-                    name 'Matthias Bernstein'
-                    email 'matthias.bernstein@teamapps.org'
-                    id 'matthias-bernstein'
-                }
-                developer {
-                    name 'Yann Massard'
-                    email 'yann.massard@teamapps.org'
-                    id 'yamass'
-                }
-            }
-        }
+        setRequired { !version.toString().endsWith("-SNAPSHOT") }
+        useGpgCmd()
     }
 }
+

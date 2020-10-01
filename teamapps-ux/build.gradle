@@ -3,19 +3,23 @@
  */
 
 dependencies {
-    compile project(':teamapps-common')
-    compile project(':teamapps-icon')
-    compile project(':teamapps-material-icon-provider')
-    compile project(':teamapps-ui-api')
-    compile "io.github.classgraph:classgraph:4.1.7"
-    compile "org.jetbrains:annotations:13.0"
-    compile "com.sun.activation:javax.activation:1.2.0"
-    compile "org.apache.commons:commons-lang3:3.4"
-    compile "com.google.guava:guava:$guavaVersion"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
-    compile "javax:javaee-web-api:8.0"
-    testCompile "org.assertj:assertj-core:$assertJVersion"
-    testCompile "org.mockito:mockito-core:2.3.5"
+    api project(':teamapps-common')
+    api project(':teamapps-icon')
+    api project(':teamapps-material-icon-provider')
+    api project(':teamapps-ui-api')
+    api 'io.github.classgraph:classgraph:4.1.7'
+    api 'org.apache.commons:commons-lang3:3.4'
+    api "com.google.guava:guava:$guavaVersion"
+    api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+    api 'javax:javaee-web-api:8.0'
+    api 'it.unimi.dsi:fastutil:8.2.2'
+    api 'com.auth0:java-jwt:3.9.0'
+    api 'io.socket:socket.io-client:1.0.0'
+    api 'com.squareup.okhttp3:okhttp:3.14.7'
+    api 'org.glassfish.jersey.core:jersey-client:2.25.1'
+    api 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
+    api 'javax.activation:activation:1.1.1'
+    api 'javax.xml.bind:jaxb-api:2.3.1'
 }
 
 description = 'TeamApps UX'

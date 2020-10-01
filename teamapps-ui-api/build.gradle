@@ -3,15 +3,14 @@
  */
 
 dependencies {
-    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
-    runtime project(':teamapps-ui-dsl')
-    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    api "com.googlecode.json-simple:json-simple:1.1.1"
+    api "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    api project(':teamapps-ui-dsl')
 }
 
 description = 'TeamApps UI API'
-
 
 def generatedSrcDir = file("${buildDir}/generated-src")
 
@@ -26,13 +25,15 @@ sourceSets {
 
 task generateUiApiJava(type:JavaExec) {
     main = "org.teamapps.dto.generate.TeamAppsJavaDtoGenerator"
-    classpath = configurations.runtime
+    classpath = sourceSets.main.compileClasspath
+            .plus(files("${project(':teamapps-ui-dsl').buildDir}/resources/main")) // TODO this is a hack. I don't know how to make gradle take :teamapps-ui-dsl's resources into account.
     args ("${projectDir}/src/main/dto", "${projectDir}/build/generated-src", "org.teamapps.dto")
 }
 
 task generateUiApiTypescript(type:JavaExec) {
     main = "org.teamapps.dto.generate.TeamAppsTypeScriptGenerator"
-    classpath = configurations.runtime
+    classpath = sourceSets.main.compileClasspath
+            .plus(files("${project(':teamapps-ui-dsl').buildDir}/resources/main")) // TODO this is a hack. I don't know how to make gradle take :teamapps-ui-dsl's resources into account.
     args ("${projectDir}/src/main/dto", "${projectDir}/../teamapps-client/ts/generated")
 }
 

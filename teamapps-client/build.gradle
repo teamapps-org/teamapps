@@ -17,9 +17,10 @@ sourceSets {
     }
 }
 
+
 dependencies {
-    compile "commons-io:commons-io:$apacheCommonsIoVersion"
-    compile "net.lingala.zip4j:zip4j:1.3.2"
+    api "commons-io:commons-io:$apacheCommonsIoVersion"
+    api 'net.lingala.zip4j:zip4j:1.3.2'
 }
 
 description = 'TeamApps Client'
@@ -59,4 +60,4 @@ task createWebappChecksum(type: Checksum, dependsOn: webappZip) {
     algorithm = Checksum.Algorithm.MD5
 }
 
-processResources.dependsOn << createWebappChecksum;
+processResources.dependsOn << createWebappChecksum

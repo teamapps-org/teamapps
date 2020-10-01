@@ -1,21 +1,17 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
+/*
  * Copyright (C) 2014 - 2020 TeamApps.org
- * ---
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * =========================LICENSE_END==================================
  */
 package org.teamapps.dto.generate;
 
@@ -32,12 +28,18 @@ import org.teamapps.dto.generate.adapter.SubCommandDeclarationContextModelAdapto
 import org.teamapps.dto.generate.adapter.SubEventDeclarationContextModelAdaptor;
 import org.teamapps.dto.generate.adapter.TypeContextModelAdaptor;
 
+import java.net.URL;
+
 public class StGroupFactory {
     public static STGroupFile createStGroup(
             String templateFileResourcePath,
             TeamAppsDtoModel model
     ) {
-        STGroupFile stGroup = new STGroupFile(StGroupFactory.class.getResource(templateFileResourcePath), "UTF-8", '<', '>');
+        URL templateFile = StGroupFactory.class.getResource(templateFileResourcePath);
+        if (templateFile == null) {
+            throw new IllegalArgumentException("Could not find template file!");
+        }
+        STGroupFile stGroup = new STGroupFile(templateFile, "UTF-8", '<', '>');
         stGroup.registerRenderer(String.class, new StringRenderer());
 
         stGroup.registerModelAdaptor(Object.class, new PojoModelAdaptor());

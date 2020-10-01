@@ -3,8 +3,8 @@
  */
 
 dependencies {
-    compile "commons-io:commons-io:$apacheCommonsIoVersion"
-    compile "net.coobird:thumbnailator:0.4.8"
+    api "commons-io:commons-io:$apacheCommonsIoVersion"
+    api 'net.coobird:thumbnailator:0.4.8'
 }
 
 description = 'TeamApps Icon'

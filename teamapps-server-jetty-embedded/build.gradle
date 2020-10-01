@@ -3,11 +3,10 @@
  */
 
 dependencies {
-    compile "org.eclipse.jetty:jetty-webapp:9.4.12.v20180830"
-    compile "org.eclipse.jetty.websocket:javax-websocket-server-impl:9.4.12.v20180830"
-    compile project(':teamapps-ux-servlet')
-    compile project(':teamapps-client')
-    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    api 'org.eclipse.jetty:jetty-webapp:9.4.30.v20200611'
+    api 'org.eclipse.jetty.websocket:javax-websocket-server-impl:9.4.30.v20200611'
+    api project(':teamapps-ux-servlet')
+    api project(':teamapps-client')
 }
 
 description = 'TeamApps Server Jetty Embedded'
