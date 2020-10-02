@@ -28,7 +28,8 @@ public class TeamAppsUndertowEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
 		WebController controller = (SessionContext context) -> context.showNotification(MaterialIcon.MESSAGE, "Hello World");
-		new TeamAppsUndertowEmbeddedServer(controller, Files.createTempDir()).start(8081, "127.0.0.2");
+		new TeamAppsUndertowEmbeddedServer(controller, Files.createTempDir())
+				.start(8081);
 	}
 
 }

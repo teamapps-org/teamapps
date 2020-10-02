@@ -40,7 +40,7 @@ public class TeamAppsUndertowEmbeddedServer {
 
 	private final WebController webController;
 	private final File webAppDirectory;
-	private TeamAppsConfiguration config;
+	private final TeamAppsConfiguration config;
 	private Undertow server;
 
 	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory) {
@@ -75,7 +75,7 @@ public class TeamAppsUndertowEmbeddedServer {
 
 		HttpHandler httpHandler = deploymentManager.start();
 		server = Undertow.builder()
-				.addHttpListener(8080, "0.0.0.0")
+				.addHttpListener(port, host)
 				.setHandler(httpHandler)
 				.build();
 		server.start();
