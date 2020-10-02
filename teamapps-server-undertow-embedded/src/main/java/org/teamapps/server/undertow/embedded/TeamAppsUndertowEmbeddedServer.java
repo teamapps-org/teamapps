@@ -77,6 +77,8 @@ public class TeamAppsUndertowEmbeddedServer {
 		server = Undertow.builder()
 				.addHttpListener(port, host)
 				.setHandler(httpHandler)
+				.setIoThreads(Math.max(Runtime.getRuntime().availableProcessors() * 4, 10))
+				.setWorkerThreads(Math.max(Runtime.getRuntime().availableProcessors() * 8, 10))
 				.build();
 		server.start();
 
