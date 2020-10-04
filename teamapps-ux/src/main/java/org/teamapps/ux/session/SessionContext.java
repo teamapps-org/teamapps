@@ -83,7 +83,7 @@ public class SessionContext {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
 	private static final MultiKeySequentialExecutor<SessionContext> sessionMultiKeyExecutor = new MultiKeySequentialExecutor<>(new ThreadPoolExecutor(
 			Runtime.getRuntime().availableProcessors() / 2 + 1,
-			Runtime.getRuntime().availableProcessors() * 2,
+			1000,
 			60, TimeUnit.SECONDS,
 			new LinkedBlockingQueue<>(),
 			new NamedThreadFactory("teamapps-session-executor", true)
