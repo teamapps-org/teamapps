@@ -23,8 +23,6 @@ import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiComponentFieldCommandHandler, UiComponentFieldConfig, UiComponentFieldEventSource} from "../../generated/UiComponentFieldConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {createUiBorderCssObject} from "../util/CssFormatUtil";
-import {UiBorderConfig} from "../../generated/UiBorderConfig";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
 
@@ -36,22 +34,19 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 
 	protected initialize(config: UiComponentFieldConfig, context: TeamAppsUiContext) {
 		this.$componentWrapper = parseHtml('<div class="UiComponentField"></div>');
-		this.setBackgroundColor(config.backgroundColor);
-		this.setBorder(config.border);
-		this.setSize(config.width, config.height);
+		this.setHeight(config.height);
 		this.setComponent(config.component as UiComponent);
+		this.setBordered(!!config.bordered)
 	}
 
 	isValidData(v: void): boolean {
 		return true;
 	}
 
-	setBackgroundColor(backgroundColor: string): void {
-		this.$componentWrapper.style.backgroundColor = backgroundColor;
-	}
-
-	setBorder(border: UiBorderConfig): void {
-		Object.assign(this.$componentWrapper.style, createUiBorderCssObject(border));
+	setBordered(bordered: boolean): void {
+		this.$componentWrapper.classList.toggle("bordered", bordered);
+		this.$componentWrapper.classList.toggle("field-border", bordered);
+		this.$componentWrapper.classList.toggle("field-border-glow", bordered)
 	}
 
 	setComponent(component: UiComponent): void {
@@ -62,11 +57,8 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 		this.$componentWrapper.appendChild(this.component.getMainElement());
 	}
 
-	setSize(width: number, height: number): void {
-		Object.assign(this.$componentWrapper.style, {
-			height: height ? `${height}px` : '',
-			width: width ? `${width}px` : ''
-		});
+	setHeight(height: number): void {
+		this.$componentWrapper.style.height = height ? `${height}px` : '';
 	}
 
 	public getMainInnerDomElement(): HTMLElement {

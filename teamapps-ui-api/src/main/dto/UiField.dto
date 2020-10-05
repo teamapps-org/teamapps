@@ -48,15 +48,12 @@ enum UiSpecialKey {
 
 class UiComponentField extends UiField {
 	UiComponent* component;
-	int width; // 0 = the width will be determined by the component's content and context
 	int height; // 0 = the height will be determined by the component's content and context
-	UiBorder border;
-	String backgroundColor = "rgb(255, 255, 255)";
+	boolean bordered;
 
 	command setComponent(UiComponent* component);
-	command setSize(int width, int height);
-	command setBorder(UiBorder border);
-	command setBackgroundColor(String backgroundColor);
+	command setHeight(int height);
+	command setBordered(boolean bordered);
 }
 
 class UiTextField extends UiField implements UiTextInputHandlingField {
