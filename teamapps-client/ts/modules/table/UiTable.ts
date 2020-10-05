@@ -127,7 +127,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	private _sortField: string;
 	private _sortDirection: UiSortDirection;
 
-	private lastSelectedRowIds: number[];
+	private lastSelectedRecordIds: number[];
 
 	private doNotFireEventBecauseSelectionIsCausedByApiCall: boolean = false; // slickgrid fires events even if we set the selection via api...
 
@@ -283,9 +283,10 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			if (args.rows.some((row) => !this.dataProvider.getItem(row))) {
 				return; // one of the selected rows has no id (so it does not seem to be loaded yet). ==> do not fire an event.
 			}
+			const selectedIds = args.rows.map(i => this.dataProvider.getItem(i).id);
 			if (!this.doNotFireEventBecauseSelectionIsCausedByApiCall
-				&& JSON.stringify(this.lastSelectedRowIds) !== JSON.stringify(args.rows)) {
-				this.lastSelectedRowIds = args.rows;
+				&& JSON.stringify(this.lastSelectedRecordIds) !== JSON.stringify(selectedIds)) {
+				this.lastSelectedRecordIds = selectedIds;
 				if (args.rows.length === 1) {
 					this.onRowSelected.fire({
 						recordId: this.dataProvider.getItem(args.rows[0]).id,
