@@ -19,24 +19,30 @@
  */
 package org.teamapps.ux.component.chat;
 
-import org.teamapps.ux.resource.Resource;
+import org.teamapps.ux.resolvable.Resolvable;
 
 import java.util.List;
 
 public class SimpleChatMessage implements ChatMessage {
 
-	private String id;
-	private Resource userImage;
-	private String userNickname;
-	private String text;
-	private List<ChatPhoto> photos;
-	private List<ChatFile> files;
+	private final String id;
+	private final Resolvable userImage;
+	private final String userNickname;
+	private final String text;
+	private final List<ChatPhoto> photos;
+	private final List<ChatFile> files;
 
-	public SimpleChatMessage(String id, Resource userImage, String userNickname, String text) {
+	public SimpleChatMessage(String id, Resolvable userImage, String userNickname, String text) {
+		this(id, userImage, userNickname, text, null, null);
+	}
+
+	public SimpleChatMessage(String id, Resolvable userImage, String userNickname, String text, List<ChatPhoto> photos, List<ChatFile> files) {
 		this.id = id;
 		this.userImage = userImage;
 		this.userNickname = userNickname;
 		this.text = text;
+		this.photos = photos;
+		this.files = files;
 	}
 
 	@Override
@@ -45,7 +51,7 @@ public class SimpleChatMessage implements ChatMessage {
 	}
 
 	@Override
-	public Resource getUserImage() {
+	public Resolvable getUserImage() {
 		return userImage;
 	}
 
@@ -69,27 +75,4 @@ public class SimpleChatMessage implements ChatMessage {
 		return files;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public void setUserImage(Resource userImage) {
-		this.userImage = userImage;
-	}
-
-	public void setUserNickname(String userNickname) {
-		this.userNickname = userNickname;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public void setPhotos(List<ChatPhoto> photos) {
-		this.photos = photos;
-	}
-
-	public void setFiles(List<ChatFile> files) {
-		this.files = files;
-	}
 }

@@ -20,22 +20,22 @@
 package org.teamapps.ux.component.chat;
 
 import org.teamapps.icons.api.Icon;
-import org.teamapps.ux.resource.Resource;
+import org.teamapps.ux.resolvable.Resolvable;
 
 public class SimpleChatFile implements ChatFile {
 
 	private final String name;
 	private final Icon icon;
-	private final long size;
-	private final Resource thumbnail;
-	private final Resource download;
+	private final long length;
+	private final Resolvable thumbnail;
+	private final Resolvable download;
 
-	public SimpleChatFile(String name, Icon icon, Resource thumbnail, Resource download) {
+	public SimpleChatFile(String name, Icon icon, Resolvable thumbnail, Resolvable download, long sizeInBytes) {
 		this.name = name;
 		this.icon = icon;
-		this.size = download.getLength();
 		this.thumbnail = thumbnail;
 		this.download = download;
+		this.length = sizeInBytes;
 	}
 
 	@Override
@@ -50,16 +50,16 @@ public class SimpleChatFile implements ChatFile {
 
 	@Override
 	public long getLength() {
-		return size;
+		return length;
 	}
 
 	@Override
-	public Resource getThumbnail() {
+	public Resolvable getThumbnail() {
 		return thumbnail;
 	}
 
 	@Override
-	public Resource getDownload() {
+	public Resolvable getDownload() {
 		return download;
 	}
 }

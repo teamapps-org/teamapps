@@ -19,11 +19,11 @@
  */
 package org.teamapps.ux.component.chat;
 
-import org.teamapps.ux.resource.Resource;
+import org.teamapps.ux.resolvable.Resolvable;
 
 public interface ChatPhoto {
 
-	Resource getThumbnail();
-	Resource getImage();
+	Resolvable getThumbnail();
+	Resolvable getImage();
 
 }

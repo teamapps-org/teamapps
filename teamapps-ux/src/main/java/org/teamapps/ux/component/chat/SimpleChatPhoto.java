@@ -19,15 +19,15 @@
  */
 package org.teamapps.ux.component.chat;
 
-import org.teamapps.ux.resource.Resource;
+import org.teamapps.ux.resolvable.Resolvable;
 
 public class SimpleChatPhoto implements ChatPhoto {
 
 	private final String fileName;
-	private final Resource thumbnail;
-	private final Resource image;
+	private final Resolvable thumbnail;
+	private final Resolvable image;
 
-	public SimpleChatPhoto(String fileName, Resource thumbnail, Resource image) {
+	public SimpleChatPhoto(String fileName, Resolvable thumbnail, Resolvable image) {
 		this.fileName = fileName;
 		this.thumbnail = thumbnail;
 		this.image = image;
@@ -38,12 +38,12 @@ public class SimpleChatPhoto implements ChatPhoto {
 	}
 
 	@Override
-	public Resource getThumbnail() {
+	public Resolvable getThumbnail() {
 		return thumbnail;
 	}
 
 	@Override
-	public Resource getImage() {
+	public Resolvable getImage() {
 		return image;
 	}
 }

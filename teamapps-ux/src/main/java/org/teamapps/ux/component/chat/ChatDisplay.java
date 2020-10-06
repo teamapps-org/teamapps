@@ -19,17 +19,10 @@
  */
 package org.teamapps.ux.component.chat;
 
-import org.teamapps.dto.UiChatDisplay;
-import org.teamapps.dto.UiChatFile;
-import org.teamapps.dto.UiChatMessage;
-import org.teamapps.dto.UiChatPhoto;
-import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.*;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.resource.Resource;
 
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ChatDisplay extends AbstractComponent {
@@ -37,26 +30,15 @@ public class ChatDisplay extends AbstractComponent {
 	private final ChatDisplayModel model;
 	private int messagesFetchSize = 30;
 
-	private final Consumer<ChatMessageBatch> modelAddMessagesAddedListener = chatMessages -> {
-		queueCommandIfRendered(() -> new UiChatDisplay.AddChatMessagesCommand(getId(), createUiChatMessages(chatMessages.getMessages()), false, chatMessages.isIncludesFirstMessage()));
-	};
-	private final Consumer<Void> modelAllDataChangedListener = aVoid -> {
-		ChatMessageBatch messageBatch = this.getModel().getLastChatMessages(this.messagesFetchSize);
-		queueCommandIfRendered(() -> new UiChatDisplay.ReplaceChatMessagesCommand(getId(), createUiChatMessages(messageBatch.getMessages()), messageBatch.isIncludesFirstMessage()));
-	};
-
-	private Function<Resource, String> resourceToUrlConverter = resource -> {
-		if (resource != null) {
-			return getSessionContext().createResourceLink(resource);
-		} else {
-			return null;
-		}
-	};
-
 	public ChatDisplay(ChatDisplayModel model) {
 		this.model = model;
-		model.onMessagesAdded().addListener(modelAddMessagesAddedListener);
-		model.onAllDataChanged().addListener(modelAllDataChangedListener);
+		model.onMessagesAdded().addListener(chatMessages -> {
+			queueCommandIfRendered(() -> new UiChatDisplay.AddChatMessagesCommand(getId(), createUiChatMessages(chatMessages.getMessages()), false, chatMessages.isIncludesFirstMessage()));
+		});
+		model.onAllDataChanged().addListener(aVoid -> {
+			ChatMessageBatch messageBatch = this.getModel().getLastChatMessages(this.messagesFetchSize);
+			queueCommandIfRendered(() -> new UiChatDisplay.ReplaceChatMessagesCommand(getId(), createUiChatMessages(messageBatch.getMessages()), messageBatch.isIncludesFirstMessage()));
+		});
 	}
 
 	@Override
@@ -89,7 +71,7 @@ public class ChatDisplay extends AbstractComponent {
 		UiChatMessage uiChatMessage = new UiChatMessage();
 		uiChatMessage.setId(message.getId());
 		uiChatMessage.setUserNickname(message.getUserNickname());
-		uiChatMessage.setUserImageUrl(resourceToUrlConverter.apply(message.getUserImage()));
+		uiChatMessage.setUserImageUrl(message.getUserImage().getUrl(getSessionContext()));
 		uiChatMessage.setText(message.getText());
 		uiChatMessage.setPhotos(message.getPhotos() != null ? message.getPhotos().stream()
 				.map(photo -> createUiChatPhoto(photo))
@@ -102,8 +84,8 @@ public class ChatDisplay extends AbstractComponent {
 
 	private UiChatPhoto createUiChatPhoto(ChatPhoto photo) {
 		UiChatPhoto uiChatPhoto = new UiChatPhoto();
-		uiChatPhoto.setThumbnailUrl(resourceToUrlConverter.apply(photo.getThumbnail()));
-		uiChatPhoto.setImageUrl(resourceToUrlConverter.apply(photo.getImage()));
+		uiChatPhoto.setThumbnailUrl(photo.getThumbnail() != null ? photo.getThumbnail().getUrl(getSessionContext()) : null);
+		uiChatPhoto.setImageUrl(photo.getImage().getUrl(getSessionContext()));
 		return uiChatPhoto;
 	}
 
@@ -112,8 +94,8 @@ public class ChatDisplay extends AbstractComponent {
 		uiChatFile.setName(file.getName());
 		uiChatFile.setIcon(getSessionContext().resolveIcon(file.getIcon()));
 		uiChatFile.setLength(file.getLength());
-		uiChatFile.setThumbnailUrl(resourceToUrlConverter.apply(file.getThumbnail()));
-		uiChatFile.setDownloadUrl(resourceToUrlConverter.apply(file.getDownload()));
+		uiChatFile.setThumbnailUrl(file.getThumbnail() != null ? file.getThumbnail().getUrl(getSessionContext()) : null);
+		uiChatFile.setDownloadUrl(file.getDownload().getUrl(getSessionContext()));
 		return uiChatFile;
 	}
 
@@ -130,11 +112,4 @@ public class ChatDisplay extends AbstractComponent {
 		reRenderIfRendered();
 	}
 
-	public Function<Resource, String> getResourceToUrlConverter() {
-		return resourceToUrlConverter;
-	}
-
-	public void setResourceToUrlConverter(Function<Resource, String> resourceToUrlConverter) {
-		this.resourceToUrlConverter = resourceToUrlConverter;
-	}
 }

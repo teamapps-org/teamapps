@@ -20,14 +20,14 @@
 package org.teamapps.ux.component.chat;
 
 import org.teamapps.icons.api.Icon;
-import org.teamapps.ux.resource.Resource;
+import org.teamapps.ux.resolvable.Resolvable;
 
 public interface ChatFile {
 
 	String getName();
 	Icon getIcon();
 	long getLength();
-	Resource getThumbnail();
-	Resource getDownload();
+	Resolvable getThumbnail();
+	Resolvable getDownload();
 
 }
