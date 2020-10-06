@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 .UiChatDisplay {
-  overflow: auto;
+  overflow: hidden auto;
   padding: 6px;
 
   .message {
@@ -43,6 +43,8 @@
     }
     .text {
       grid-area: text;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .photos {
       grid-area: photos;

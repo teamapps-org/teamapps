@@ -17,24 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.component.chat;
+package org.teamapps.ux.resolvable;
 
-import org.teamapps.ux.resolvable.Resolvable;
+import org.teamapps.ux.session.SessionContext;
 
-import java.util.List;
+public interface Resolvable {
 
-public interface ChatMessage {
-
-	String getId();
-
-	Resolvable getUserImage();
-
-	String getUserNickname();
-
-	String getText();
-
-	List<ChatPhoto> getPhotos();
-
-	List<ChatFile> getFiles();
+	String getUrl(SessionContext sessionContext);
 
 }
