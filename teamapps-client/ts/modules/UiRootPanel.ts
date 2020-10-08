@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -358,9 +358,11 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 				wakeLock.addEventListener('release', (e) => {
 					this.LOGGER.info(`WakeLock released: ${uuid}`);
 				});
-				document.addEventListener('visibilitychange', () => {
+				document.addEventListener('visibilitychange', async () => {
 					if (this.wakeLocksByUuid[uuid] !== null && document.visibilityState === 'visible') {
-						this.requestWakeLock(uuid);
+						if (isWakeLockCapableNavigator(navigator)) {
+							this.wakeLocksByUuid[uuid] = await navigator.wakeLock.request('screen');
+						}
 					}
 				});
 				return true;
