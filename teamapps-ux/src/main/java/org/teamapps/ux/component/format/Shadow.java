@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.format;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiShadow;
 
@@ -31,7 +32,7 @@ public class Shadow {
 	private final Color color;
 
 	public static Shadow withSize(float size) {
-		return new Shadow(0, 0, size, 0, Color.BLACK);
+		return new Shadow(0, 0, size, 0, RgbaColor.BLACK);
 	}
 
 	public Shadow(float offsetX, float offsetY, float blur, float spread, Color color) {

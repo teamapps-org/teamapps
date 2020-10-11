@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiImageField;
 import org.teamapps.ux.component.absolutelayout.Length;
@@ -31,7 +32,7 @@ public class ImageField extends AbstractField<String> {
 	private Length height = Length.AUTO;
 	private Border border;
 	private ImageSizing imageSizing = ImageSizing.CONTAIN;
-	private Color backgroundColor = Color.TRANSPARENT;
+	private Color backgroundColor = RgbaColor.TRANSPARENT;
 
 	public ImageField() {
 		super();

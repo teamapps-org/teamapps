@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiLineChartLine;
 
@@ -31,11 +32,10 @@ public class LineChartLine extends AbstractLineChartDataDisplay {
 
 	private LineChartCurveType graphType = LineChartCurveType.MONOTONE;
 	private float dataDotRadius = 2;
-	private Color lineColorScaleMin = new Color(73, 128, 192);
-	private Color lineColorScaleMax = new Color(73, 128, 192);
-	private Color areaColorScaleMin = new Color(255, 255, 255, 0);
-	private Color areaColorScaleMax = new Color(255, 255, 255, 0);
-
+	private Color lineColorScaleMin = new RgbaColor(73, 128, 192);
+	private Color lineColorScaleMax = new RgbaColor(73, 128, 192);
+	private Color areaColorScaleMin = new RgbaColor(255, 255, 255, 0);
+	private Color areaColorScaleMax = new RgbaColor(255, 255, 255, 0);
 
 
 	public LineChartLine(String dataSeriesId) {
@@ -47,7 +47,7 @@ public class LineChartLine extends AbstractLineChartDataDisplay {
 	}
 
 	public LineChartLine(String dataSeriesId, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
-		this(dataSeriesId, graphType, dataDotRadius, lineColor, lineColor, Color.withAlpha(areaColor, 0.0f), areaColor);
+		this(dataSeriesId, graphType, dataDotRadius, lineColor, lineColor, (areaColor instanceof RgbaColor) ? ((RgbaColor) areaColor).withAlpha(0.0f) : null, areaColor);
 	}
 
 	public LineChartLine(String dataSeriesId, LineChartCurveType graphType, float dataDotRadius, Color lineColorScaleMin, Color lineColorScaleMax, Color areaColorScaleMin, Color areaColorScaleMax) {

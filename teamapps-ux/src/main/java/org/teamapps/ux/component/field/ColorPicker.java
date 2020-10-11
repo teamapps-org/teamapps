@@ -19,13 +19,14 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiColorPicker;
 import org.teamapps.dto.UiField;
 
 public class ColorPicker extends AbstractField<Color> {
 
-	private Color defaultColor = new Color(0, 0, 0);
+	private Color defaultColor = new RgbaColor(0, 0, 0);
 	private String saveButtonCaption = "Save";
 	private String clearButtonCaption = "Clear";
 

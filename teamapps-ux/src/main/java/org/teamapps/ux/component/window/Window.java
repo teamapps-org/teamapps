@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.window;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiWindow;
@@ -31,7 +32,7 @@ public class Window extends Panel {
 	private boolean modal = false;
 	private int width = 0;
 	private int height = 0;
-	private Color modalBackgroundDimmingColor = new Color(0, 0, 0, 0.2f);
+	private Color modalBackgroundDimmingColor = new RgbaColor(0, 0, 0, 0.2f);
 	private boolean closeable;
 	private boolean closeOnEscape;
 	private boolean closeOnClickOutside;

@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.charting.forcelayout;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiNetworkLink;
 
@@ -28,7 +29,7 @@ public class ForceLayoutLink<RECORD> {
 	private final ForceLayoutNode<RECORD> target;
 
 	private float lineWidth = 1f;
-	private Color lineColor = Color.MATERIAL_GREY_500;
+	private Color lineColor = RgbaColor.MATERIAL_GREY_500;
 	private String lineDashArray;
 	private int linkLength = 150;
 

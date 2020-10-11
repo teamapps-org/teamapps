@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.map.shape;
 
-import org.teamapps.common.format.Color;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.AbstractUiMapShape;
 
 import java.util.UUID;
@@ -32,7 +32,7 @@ public abstract class AbstractMapShape {
 	protected MapShapeListener listener;
 
 	public AbstractMapShape() {
-		this(new ShapeProperties(Color.BLUE));
+		this(new ShapeProperties(RgbaColor.BLUE));
 	}
 
 	public AbstractMapShape(ShapeProperties properties) {

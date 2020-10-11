@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.AbstractUiLineChartDataDisplay;
 import org.teamapps.dto.UiLongInterval;
@@ -34,7 +35,7 @@ public abstract class AbstractLineChartDataDisplay  {
 	private ScaleType yScaleType = ScaleType.LINEAR;
 	private LineChartYScaleZoomMode yScaleZoomMode = LineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
 	private boolean yZeroLineVisible = false;
-	private Color yAxisColor = Color.BLACK;
+	private Color yAxisColor = RgbaColor.BLACK;
 
 	public String getId() {
 		return id;

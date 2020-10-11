@@ -19,8 +19,9 @@
  */
 package org.teamapps.ux.component.template;
 
-import org.teamapps.dto.UiTemplate;
 import org.teamapps.common.format.Color;
+import org.teamapps.dto.UiTemplate;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.ux.component.format.FontStyle;
 import org.teamapps.ux.component.template.gridtemplate.AbstractTemplateElement;
 import org.teamapps.ux.component.template.gridtemplate.FloatingElement;
@@ -92,7 +93,7 @@ public interface Template {
 				return newTextElement;
 			}
 			Color fontColor = style.getFontColor();
-			Color newColor = Color.WHITE;
+			Color newColor = RgbaColor.WHITE;
 			if (fontColor != null) {
 				newColor = convertColorToDarkMode(fontColor);
 			} else {
@@ -106,15 +107,15 @@ public interface Template {
 	}
 
 	static Color convertColorToDarkMode(Color color) {
-		if (color.equals(Color.BLACK)) {
-			return Color.WHITE;
+		if (color.equals(RgbaColor.BLACK)) {
+			return RgbaColor.WHITE;
 		}
-		if (color.equals(Color.WHITE)) {
+		if (color.equals(RgbaColor.WHITE)) {
 			//todo: replace badge color as well
 		}
-		if (color.equals(Color.GRAY)) {
-			return Color.LIGHT_GRAY;
+		if (color.equals(RgbaColor.GRAY)) {
+			return RgbaColor.LIGHT_GRAY;
 		}
-		return Color.WHITE;
+		return RgbaColor.WHITE;
 	}
 }

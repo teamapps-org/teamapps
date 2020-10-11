@@ -68,13 +68,13 @@ public class NotificationBarItem {
 	}
 
 	public NotificationBarItem(Icon icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible, Color backgroundColor, Color borderColor, Color textColor,
-	                           Spacing padding, RepeatableAnimation iconAnimation) {
+							   Spacing padding, RepeatableAnimation iconAnimation) {
 		this(icon, text, dismissible, displayTimeInMillis, progressBarVisible, backgroundColor, borderColor, textColor, padding, iconAnimation,
 				EntranceAnimation.FADE_IN_DOWN, ExitAnimation.FADE_OUT_UP);
 	}
 
 	public NotificationBarItem(Icon icon, String text, boolean dismissible, int displayTimeInMillis, boolean progressBarVisible, Color backgroundColor, Color borderColor, Color textColor,
-	                           Spacing padding, RepeatableAnimation iconAnimation, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
+							   Spacing padding, RepeatableAnimation iconAnimation, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		this.icon = icon;
 		this.text = text;
 		this.dismissible = dismissible;

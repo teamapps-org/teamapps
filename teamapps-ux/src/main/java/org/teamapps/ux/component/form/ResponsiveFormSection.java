@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.form;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.form.layoutpolicy.FormSection;
 import org.teamapps.ux.component.grid.layout.GridColumn;
 import org.teamapps.ux.component.form.layoutpolicy.FormSectionFieldPlacement;
 import org.teamapps.ux.component.grid.layout.GridRow;
 import org.teamapps.ux.component.format.Border;
-import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.format.Shadow;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.template.Template;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ResponsiveFormSection {
-	private ResponsiveFormLayout formLayout;
+	private final ResponsiveFormLayout formLayout;
 	private final String id;
 	private Spacing margin;
 	private Spacing padding;
@@ -59,7 +59,7 @@ public class ResponsiveFormSection {
 	private final Map<Integer, GridColumn> columnMap = new HashMap<>();
 	private final List<ResponsiveFormField> responsiveFormFields = new ArrayList<>();
 
-	private ResponsiveFormConfigurationTemplate configurationTemplate;
+	private final ResponsiveFormConfigurationTemplate configurationTemplate;
 
 
 	protected ResponsiveFormSection(ResponsiveFormLayout formLayout, String id, ResponsiveFormConfigurationTemplate configurationTemplate) {

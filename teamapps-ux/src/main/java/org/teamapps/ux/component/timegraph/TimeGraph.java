@@ -20,13 +20,7 @@
 package org.teamapps.ux.component.timegraph;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.AbstractUiLineChartDataDisplay;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiLongInterval;
-import org.teamapps.dto.UiTimeChartZoomLevel;
-import org.teamapps.dto.UiTimeGraph;
-import org.teamapps.dto.UiTimeGraphDataPoint;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 

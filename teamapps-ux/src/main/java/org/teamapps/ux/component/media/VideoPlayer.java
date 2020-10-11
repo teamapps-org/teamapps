@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.media;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
@@ -38,7 +39,7 @@ public class VideoPlayer extends AbstractComponent {
 	private String posterImageUrl;
 	private PosterImageSize posterImageSize = PosterImageSize.COVER;
 	private int sendPlayerProgressEventsEachXSeconds = 1; // if 0, then send NO events
-	private Color backgroundColor = new Color(68, 68, 68);
+	private Color backgroundColor = new RgbaColor(68, 68, 68);
 	private PreloadMode preloadMode = PreloadMode.METADATA;
 
 	public VideoPlayer() {

@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.charting.tree;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.charting.common.GraphNodeIcon;
 import org.teamapps.ux.component.charting.common.GraphNodeImage;
@@ -30,15 +31,15 @@ public class BaseTreeGraphNode<RECORD> {
 	private final String id = UUID.randomUUID().toString();
 	private int width;
 	private int height;
-	private Color backgroundColor = new Color(255, 255, 255);
-	private Color borderColor = new Color(100, 100, 100);
+	private Color backgroundColor = new RgbaColor(255, 255, 255);
+	private Color borderColor = new RgbaColor(100, 100, 100);
 	private float borderWidth = 1;
 	private float borderRadius = 3;
 	private GraphNodeImage image;
 	private GraphNodeIcon icon;
 	private Template template;
 	private RECORD record;
-	private Color connectorLineColor = new Color(100, 100, 100);
+	private Color connectorLineColor = new RgbaColor(100, 100, 100);
 	private int connectorLineWidth;
 	private String dashArray;
 

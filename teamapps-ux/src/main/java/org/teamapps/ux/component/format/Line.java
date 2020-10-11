@@ -19,12 +19,13 @@
  */
 package org.teamapps.ux.component.format;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiLine;
 
 public class Line {
 
-	private Color color = Color.BLACK;
+	private Color color = RgbaColor.BLACK;
 	private LineType type = LineType.SOLID;
 	private float thickness = 1;
 

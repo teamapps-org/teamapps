@@ -20,7 +20,6 @@
 package org.teamapps.icon.material;
 
 import org.apache.commons.io.IOUtils;
-import org.teamapps.common.format.Color;
 import org.teamapps.icons.api.IconStyle;
 import org.teamapps.icons.provider.SvgIconProvider;
 
@@ -34,8 +33,8 @@ public class MaterialIconProvider implements SvgIconProvider<IconStyle> {
     public static final String LIBRARY_ID = "material";
 
 
-    private Map<String, AbstractMaterialIconStyle> styleById = new HashMap<>();
-    private Map<String, String> svgByStyleAndName = new HashMap<>();
+    private final Map<String, AbstractMaterialIconStyle> styleById = new HashMap<>();
+    private final Map<String, String> svgByStyleAndName = new HashMap<>();
 
     public MaterialIconProvider() {
         MaterialIconStyles.getBaseStyles().forEach(this::addIconStyle);

@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.charting.common;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiTreeGraphNodeImage;
 
@@ -40,7 +41,7 @@ public class GraphNodeImage {
 	private CornerShape cornerShape = CornerShape.ROUNDED;
 	private boolean shadow = false;
 	private float borderWidth = 0;
-	private Color borderColor = new Color(100, 100, 100);
+	private Color borderColor = new RgbaColor(100, 100, 100);
 
 	public GraphNodeImage(String url, int width, int height) {
 		this.url = url;

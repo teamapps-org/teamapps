@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.popup;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiPopup;
@@ -34,7 +35,7 @@ public class Popup extends AbstractComponent {
 	private int height; // 0 = full height, -1 = auto
 	private Color backgroundColor;
 	private boolean modal = false;
-	private Color dimmingColor = new Color(0, 0, 0, .2f);
+	private Color dimmingColor = new RgbaColor(0, 0, 0, .2f);
 	private boolean closeOnEscape; // close if the user presses escape
 	private boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
 
