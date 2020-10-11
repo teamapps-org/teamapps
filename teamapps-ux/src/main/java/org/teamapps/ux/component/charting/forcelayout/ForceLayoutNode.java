@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.charting.forcelayout;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.ux.component.charting.common.GraphNodeIcon;
 import org.teamapps.ux.component.charting.common.GraphNodeImage;
@@ -33,8 +34,8 @@ public class ForceLayoutNode<RECORD> {
 
 	private int width = 100;
 	private int height = 100;
-	private Color backgroundColor = new Color(255, 255, 255);
-	private Color borderColor = new Color(100, 100, 100);
+	private Color backgroundColor = new RgbaColor(255, 255, 255);
+	private Color borderColor = new RgbaColor(100, 100, 100);
 	private float borderWidth = 1;
 	private float borderRadius = 3;
 	private float distanceFactor = 0.6f;

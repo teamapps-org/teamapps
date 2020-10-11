@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiLineChartBand;
 
@@ -39,7 +40,7 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 	private Color areaColor;
 
 	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId) {
-		this(upperBoundDataSeriesId, middleLineDataSeriesId, lowerBoundDataSeriesId, LineChartCurveType.MONOTONE, 2, new Color(73, 128, 192));
+		this(upperBoundDataSeriesId, middleLineDataSeriesId, lowerBoundDataSeriesId, LineChartCurveType.MONOTONE, 2, Color.fromRgb(73, 128, 192));
 	}
 
 	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor) {
@@ -47,15 +48,15 @@ public class LineChartBand extends AbstractLineChartDataDisplay {
 	}
 
 	public LineChartBand(String upperBoundDataSeriesId, String middleLineDataSeriesId, String lowerBoundDataSeriesId, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor,
-	                     Color areaColor) {
+						 Color areaColor) {
 		this.upperBoundDataSeriesId = upperBoundDataSeriesId;
 		this.middleLineDataSeriesId = middleLineDataSeriesId;
 		this.lowerBoundDataSeriesId = lowerBoundDataSeriesId;
 		this.curveType = curveType;
 		this.dataDotRadius = dataDotRadius;
 		this.centerLineColor = centerLineColor;
-		this.lowerLineColor = centerLineColor.withAlpha(centerLineColor.getAlpha() / 4);
-		this.upperLineColor = centerLineColor.withAlpha(centerLineColor.getAlpha() / 4);
+		this.lowerLineColor = (centerLineColor instanceof RgbaColor) ? ((RgbaColor) centerLineColor).withAlpha(((RgbaColor) centerLineColor).getAlpha() / 4) : RgbaColor.TRANSPARENT;
+		this.upperLineColor = (centerLineColor instanceof RgbaColor) ? ((RgbaColor) centerLineColor).withAlpha(((RgbaColor) centerLineColor).getAlpha() / 4) : RgbaColor.TRANSPARENT;
 		this.areaColor = areaColor;
 	}
 

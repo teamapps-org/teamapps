@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.panel;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiElegantPanel;
@@ -29,7 +30,7 @@ import org.teamapps.ux.component.format.Spacing;
 
 public class ElegantPanel extends AbstractComponent {
 
-	private Color bodyBackgroundColor = Color.WHITE.withAlpha(.4f);
+	private Color bodyBackgroundColor = RgbaColor.WHITE.withAlpha(.4f);
 	private AbstractComponent content;
 	private HorizontalElementAlignment horizontalContentAlignment = HorizontalElementAlignment.CENTER;
 	private Spacing padding = new Spacing(20, 10, 20, 10);

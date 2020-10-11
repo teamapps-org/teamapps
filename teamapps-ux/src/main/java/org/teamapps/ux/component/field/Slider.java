@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiSlider;
@@ -29,7 +30,7 @@ public class Slider extends AbstractField<Number> {
 	private double max = 100;
 	private double step = 1;
 	private int displayedDecimals = 0;
-	private Color selectionColor = new Color(51, 122, 183);
+	private Color selectionColor = new RgbaColor(51, 122, 183);
 	private String tooltipPrefix;
 	private String tooltipPostfix;
 	private boolean humanReadableFileSize;

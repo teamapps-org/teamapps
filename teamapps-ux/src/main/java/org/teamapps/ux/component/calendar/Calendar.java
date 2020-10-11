@@ -21,6 +21,7 @@ package org.teamapps.ux.component.calendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
@@ -94,8 +95,8 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	private List<DayOfWeek> workingDays = java.util.Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
 	private Color tableHeaderBackgroundColor;
 
-	private Color defaultBackgroundColor = new Color(154, 204, 228);
-	private Color defaultBorderColor = new Color(154, 204, 228);
+	private Color defaultBackgroundColor = new RgbaColor(154, 204, 228);
+	private Color defaultBorderColor = new RgbaColor(154, 204, 228);
 
 	private int minYearViewMonthTileWidth = 175;
 	private int maxYearViewMonthTileWidth = 0;

@@ -19,12 +19,13 @@
  */
 package org.teamapps.ux.component.table;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiSelectionFrame;
 
 public class SelectionFrame {
 
-	private Color color = new Color(102, 174, 232);
+	private Color color = new RgbaColor(102, 174, 232);
 	private int borderWidth = 2;
 	private int animationDuration = 100; // ms
 	private int glowingWidth = 5;

@@ -25,7 +25,7 @@ import org.teamapps.ux.component.field.*;
 import org.teamapps.ux.component.form.ResponsiveForm;
 import org.teamapps.ux.component.form.ResponsiveFormConfigurationTemplate;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
-import org.teamapps.common.format.Color;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.SizingPolicy;
 import org.teamapps.ux.component.format.Spacing;
@@ -40,19 +40,19 @@ import org.teamapps.ux.session.SessionContext;
 public class LoginWindow {
 	public Event<LoginData> onLogin = new Event<>();
 
-	private SessionContext sessionContext = CurrentSessionContext.get();
+	private final SessionContext sessionContext = CurrentSessionContext.get();
 
-	private TextField loginField;
-	private PasswordField passwordField;
+	private final TextField loginField;
+	private final PasswordField passwordField;
 
-	private Button<BaseTemplateRecord> loginButton;
+	private final Button<BaseTemplateRecord> loginButton;
 	private Button<BaseTemplateRecord> registerButton;
 	private Button<BaseTemplateRecord> forgotPasswordButton;
-	private DisplayField errorField;
-	private DisplayField headerField;
+	private final DisplayField errorField;
+	private final DisplayField headerField;
 
-	private Window window;
-	private ElegantPanel elegantPanel;
+	private final Window window;
+	private final ElegantPanel elegantPanel;
 	private final Label pwdLabel;
 	private final Label loginLabel;
 
@@ -101,7 +101,7 @@ public class LoginWindow {
 		window.setModal(true);
 		window.setHeight(300);
 		window.setWidth(470);
-		window.setBodyBackgroundColor(Color.WHITE.withAlpha(0.8f));
+		window.setBodyBackgroundColor(RgbaColor.WHITE.withAlpha(0.8f));
 		window.setContent(loginForm);
 
 		elegantPanel = new ElegantPanel(loginForm);

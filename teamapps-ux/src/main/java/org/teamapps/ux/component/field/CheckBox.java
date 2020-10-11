@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.field;
 
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiCheckBox;
 import org.teamapps.dto.UiField;
@@ -26,9 +27,9 @@ import org.teamapps.dto.UiField;
 public class CheckBox extends AbstractField<Boolean> {
 
 	private String caption;
-	private Color backgroundColor = new Color(255, 255, 255);
-	private Color checkColor = new Color(70, 70, 70);
-	private Color borderColor = new Color(204, 204, 204);
+	private Color backgroundColor = new RgbaColor(255, 255, 255);
+	private Color checkColor = new RgbaColor(70, 70, 70);
+	private Color borderColor = new RgbaColor(204, 204, 204);
 
 	public CheckBox(String caption) {
 		super();

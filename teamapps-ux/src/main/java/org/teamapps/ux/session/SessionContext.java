@@ -22,6 +22,7 @@ package org.teamapps.ux.session;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiRootPanel;
@@ -499,8 +500,8 @@ public class SessionContext {
 
 		Button<?> refreshButton = new Button<>(null, refreshButtonCaption);
 		refreshButton.setCssStyle("margin", "10px 0");
-		refreshButton.setCssStyle(".UiButton", "background-color", Color.MATERIAL_BLUE_600.toHtmlColorString());
-		refreshButton.setCssStyle(".UiButton", "color", Color.WHITE.toHtmlColorString());
+		refreshButton.setCssStyle(".UiButton", "background-color", RgbaColor.MATERIAL_BLUE_600.toHtmlColorString());
+		refreshButton.setCssStyle(".UiButton", "color", RgbaColor.WHITE.toHtmlColorString());
 		refreshButton.setCssStyle(".UiButton", "font-size", "120%");
 		refreshButton.setCssStyle(".UiButton", "height", "50px");
 		refreshButton.setOnClickJavaScript("window.location.reload()");
