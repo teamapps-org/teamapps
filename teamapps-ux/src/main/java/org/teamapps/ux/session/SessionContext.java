@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,10 +20,11 @@
 package org.teamapps.ux.session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.icu.util.ULocale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.dto.UiSessionClosingReason;
@@ -31,11 +32,7 @@ import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.server.UxServerContext;
-import org.teamapps.uisession.ClientBackPressureInfo;
-import org.teamapps.uisession.QualifiedUiSessionId;
-import org.teamapps.uisession.UiCommandExecutor;
-import org.teamapps.uisession.UiCommandWithResultCallback;
-import org.teamapps.uisession.UiSessionActivityState;
+import org.teamapps.uisession.*;
 import org.teamapps.util.MultiKeySequentialExecutor;
 import org.teamapps.util.NamedThreadFactory;
 import org.teamapps.ux.component.ClientObject;
@@ -65,17 +62,8 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.text.MessageFormat;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -121,9 +109,9 @@ public class SessionContext {
 	private Window sessionExpiredWindow;
 	private Window sessionErrorWindow;
 	private Window sessionTerminatedWindow;
-	
+
 	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, HttpSession httpSession, UiCommandExecutor commandExecutor, UxServerContext serverContext, IconTheme iconTheme,
-	                      ObjectMapper jacksonObjectMapper) {
+						  ObjectMapper jacksonObjectMapper) {
 		this.sessionId = sessionId;
 		this.httpSession = httpSession;
 		this.clientInfo = clientInfo;
@@ -135,16 +123,7 @@ public class SessionContext {
 		this.rankingTranslationProvider = new RankingTranslationProvider();
 		rankingTranslationProvider.addTranslationProvider(TeamAppsTranslationProviderFactory.createProvider());
 		addIconBundle(TeamAppsIconBundle.createBundle());
-
-		runWithContext(() -> {
-			sessionExpiredWindow = createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
-					getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel"));
-			sessionErrorWindow = createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
-					getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel"));
-			sessionTerminatedWindow = createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
-					getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel"));
-			updateSessionMessageWindows();
-		});
+		runWithContext(this::updateSessionMessageWindows);
 	}
 
 	public static SessionContext current() {
@@ -167,16 +146,25 @@ public class SessionContext {
 		return bundleIconByKey.get(key);
 	}
 
-	public Locale getLocale() {
-		return sessionConfiguration.getLanguageLocale();
+	public ULocale getULocale() {
+		return sessionConfiguration.getULocale();
 	}
 
-	public List<Locale> getAcceptedLanguages() {
-		return Arrays.asList(getLocale(), Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN);
+	public Locale getLocale() {
+		return sessionConfiguration.getLocale();
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		sessionConfiguration.setULocale(locale);
+		setConfiguration(sessionConfiguration);
 	}
 
 	public String getLocalized(String key, Object... parameters) {
-		String value = rankingTranslationProvider.getTranslation(key, getAcceptedLanguages());
+		String value = rankingTranslationProvider.getTranslation(key, Arrays.asList(getLocale(), Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN));
 		if (parameters != null) {
 			return MessageFormat.format(value, parameters);
 		}
@@ -220,7 +208,7 @@ public class SessionContext {
 			throw new IllegalStateException(errorMessage);
 		}
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
-		
+
 		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> commandExecutor.sendCommand(sessionId, new UiCommandWithResultCallback<>(command, wrappedCallback)));
 	}
 
@@ -323,7 +311,7 @@ public class SessionContext {
 	 * The decorator will be called right <strong>after</strong> the Thread is bound to this SessionContext, so SessionContext.current() will return this instance.
 	 *
 	 * @param decorator
-	 * @param outer Whether to add this decorator as outermost or innermost execution wrapper.
+	 * @param outer     Whether to add this decorator as outermost or innermost execution wrapper.
 	 */
 	public void addExecutionDecorator(ExecutionDecorator decorator, boolean outer) {
 		if (outer) {
@@ -340,6 +328,7 @@ public class SessionContext {
 	public void setConfiguration(SessionConfiguration config) {
 		this.sessionConfiguration = config;
 		queueCommand(new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
+		updateSessionMessageWindows();
 	}
 
 	public void showPopupAtCurrentMousePosition(Popup popup) {
@@ -351,7 +340,7 @@ public class SessionContext {
 	}
 
 	public ZoneId getTimeZone() {
-		return getConfiguration().getTimeZone();
+		return sessionConfiguration.getTimeZone();
 	}
 
 	public String resolveIcon(Icon icon) {
@@ -481,9 +470,13 @@ public class SessionContext {
 
 	private void updateSessionMessageWindows() {
 		queueCommand(new UiRootPanel.SetSessionMessageWindowsCommand(
-				sessionExpiredWindow != null ? sessionExpiredWindow.createUiReference() : null,
-				sessionErrorWindow != null ? sessionErrorWindow.createUiReference() : null,
-				sessionTerminatedWindow != null ? sessionTerminatedWindow.createUiReference() : null)
+				sessionExpiredWindow != null ? sessionExpiredWindow.createUiReference()
+						: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
+						getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
+				sessionErrorWindow != null ? sessionErrorWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
+						getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
+				sessionTerminatedWindow != null ? sessionTerminatedWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
+						getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference())
 		);
 	}
 
@@ -510,7 +503,7 @@ public class SessionContext {
 		if (cancelButtonCaption != null) {
 			LinkButton cancelLink = new LinkButton(cancelButtonCaption);
 			cancelLink.setCssStyle("text-align", "center");
-			cancelLink.setOnClickJavaScript("context.getClientObjectById(\""+window.createUiReference().getId()+"\").close();");
+			cancelLink.setOnClickJavaScript("context.getClientObjectById(\"" + window.createUiReference().getId() + "\").close();");
 			verticalLayout.addComponentAutoSize(cancelLink);
 		}
 

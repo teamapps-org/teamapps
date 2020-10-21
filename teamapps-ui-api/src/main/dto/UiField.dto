@@ -87,6 +87,7 @@ enum UiToolbarVisibilityMode {
 }
 
 class UiRichTextEditor extends UiField implements UiTextInputHandlingField {
+    String locale;
 	String uploadUrl = "/upload";
 	long maxImageFileSizeInBytes = 5000000;
 	UiToolbarVisibilityMode toolbarVisibilityMode = UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED;
@@ -141,6 +142,7 @@ class UiImageField extends UiField {
 }
 
 class UiNumberField extends UiField implements UiTextInputHandlingField {
+  	String locale;
 	int precision = -1; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number
 	String emptyText;
 	boolean showClearButton;
@@ -158,6 +160,7 @@ class UiNumberField extends UiField implements UiTextInputHandlingField {
 	command setPrecision(int displayPrecision);
 	command setEmptyText(String emptyText);
 	command setShowClearButton(boolean showClearButton);
+	command setLocale(String locale);
 }
 
 enum UiNumberFieldSliderMode {
@@ -167,6 +170,7 @@ enum UiNumberFieldSliderMode {
 // the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
 //the value is always a long in cents for accuracy
 class UiCurrencyField extends UiField implements UiTextInputHandlingField {
+	String locale;
 	String defaultCurrencyCode; // the selected or default currency code (ISO 4217 - e.g. "USD", "EUR"). Nullable. However, the user has to select a currency.
 	List<String> currencyCodeList; //list of ISO 4217 currencies - e.g. "USD", "EUR", etc. to be displayed as dropdown selection if available
 	int precision = 2;
@@ -178,6 +182,8 @@ class UiCurrencyField extends UiField implements UiTextInputHandlingField {
 	command setCurrencyCodeList(List<String> currencyCodeList);
 	command setShowCurrencyBeforeAmount(boolean showCurrencyBeforeAmount);
 	command setShowCurrencySymbol(boolean showCurrencySymbol);
+	command setLocale(String locale);
+	command setPrecision(int precision);
 }
 
 /**
@@ -332,54 +338,44 @@ class UiCheckBox extends UiField {
 
 abstract class AbstractUiTimeField extends UiField implements UiTextInputHandlingField {
     boolean showDropDownButton = true;
-    String timeFormat = null; // if null, UiConfiguration.timeFormat applies
     boolean showClearButton;
+    String locale;
+    UiDateTimeFormatDescriptor timeFormat = null; // if null, UiConfiguration.timeFormat applies     
 
     command setShowDropDownButton(boolean showDropDownButton);
-    command setTimeFormat(String timeFormat);
     command setShowClearButton(boolean showClearButton);
+    command setLocaleAndTimeFormat(String locale, UiDateTimeFormatDescriptor timeFormat);
 }
 
 class UiLocalTimeField extends AbstractUiTimeField {
 }
 
-class UiInstantTimeField extends AbstractUiTimeField {
-	String timeZoneId = null; // if null, UiConfiguration.timeZoneId applies
-
-	command setTimeZoneId(String timeZoneId);
-}
-
 abstract class AbstractUiDateField extends UiField implements UiTextInputHandlingField {
     boolean showDropDownButton = true;
-	boolean favorPastDates = false;
-	String dateFormat = null; // if null, UiConfiguration.dateFormat applies
 	boolean showClearButton;
+	boolean favorPastDates = false;
+	String locale;
+	UiDateTimeFormatDescriptor dateFormat = null; // if null, UiConfiguration.dateFormat applies
 
 	command setShowDropDownButton(boolean showDropDownButton);
-	command setFavorPastDates(boolean favorPastDates);
-	command setDateFormat(String dateFormat);
 	command setShowClearButton(boolean showClearButton);
+	command setFavorPastDates(boolean favorPastDates);
+	command setLocaleAndDateFormat(String locale, UiDateTimeFormatDescriptor dateFormat);
 }
 
 class UiLocalDateField extends AbstractUiDateField {
 }
 
-class UiInstantDateField extends AbstractUiDateField {
-	String timeZoneId = null; // if null, UiConfiguration.timeZoneId applies
-
-	command setTimeZoneId(String timeZoneId);
-}
-
 abstract class AbstractUiDateTimeField extends UiField {
 	boolean showDropDownButton = true;
 	boolean favorPastDates = false; // TODO!!!
-	String dateFormat = null; // if null, UiConfiguration.dateFormat applies
-	String timeFormat = null; // if null, UiConfiguration.timeFormat applies
+	String locale;
+	UiDateTimeFormatDescriptor dateFormat = null; // if null, UiConfiguration.dateFormat applies
+	UiDateTimeFormatDescriptor timeFormat = null; // if null, UiConfiguration.timeFormat applies
 
 	command setShowDropDownButton(boolean showDropDownButton);
 	command setFavorPastDates(boolean favorPastDates);
-	command setDateFormat(String dateFormat);
-	command setTimeFormat(String timeFormat);
+	command setLocaleAndFormats(String locale, UiDateTimeFormatDescriptor dateFormat, UiDateTimeFormatDescriptor timeFormat);
 }
 
 class UiLocalDateTimeField extends AbstractUiDateTimeField {

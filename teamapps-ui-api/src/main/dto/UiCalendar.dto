@@ -40,7 +40,7 @@ class UiCalendar extends UiComponent {
 	boolean showWeekNumbers = true;
 	int businessHoursStart = 8;
 	int businessHoursEnd = 17;
-	UiWeekDay firstDayOfWeek = null; // if set, overrides default set via UiConfiguration.firstDayOfWeek
+	UiWeekDay firstDayOfWeek = null;
 	List<UiWeekDay> workingDays = java.util.Arrays.asList(UiWeekDay.MONDAY, UiWeekDay.TUESDAY, UiWeekDay.WEDNESDAY, UiWeekDay.THURSDAY, UiWeekDay.FRIDAY);
 	String tableHeaderBackgroundColor = "rgb(255, 255, 255)";
     String defaultBackgroundColor = "rgb(154, 204, 228)";
@@ -50,6 +50,7 @@ class UiCalendar extends UiComponent {
     int minYearViewMonthTileWidth = 175;
     int maxYearViewMonthTileWidth = 0;
 
+    String locale;
     String timeZoneId = "UTC";
 
 	command setViewMode(UiCalendarViewMode viewMode);

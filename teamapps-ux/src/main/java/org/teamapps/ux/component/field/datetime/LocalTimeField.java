@@ -25,7 +25,7 @@ import org.teamapps.dto.UiLocalTimeField;
 import java.time.LocalTime;
 import java.util.List;
 
-public class LocalTimeField extends AbstractTimeField<LocalTimeField, LocalTime> {
+public class LocalTimeField extends AbstractTimeField<LocalTime> {
 
 	public LocalTimeField() {
 		super();

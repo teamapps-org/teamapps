@@ -19,19 +19,15 @@
  */
 package org.teamapps.ux.component.calendar;
 
+import com.ibm.icu.util.ULocale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
+import org.teamapps.common.format.RgbaColor;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiCalendar;
-import org.teamapps.dto.UiCalendarEventClientRecord;
-import org.teamapps.dto.UiCalendarEventRenderingStyle;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiWeekDay;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -48,11 +44,7 @@ import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -101,6 +93,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 	private int minYearViewMonthTileWidth = 175;
 	private int maxYearViewMonthTileWidth = 0;
 
+	private ULocale locale = getSessionContext().getULocale();
 	private ZoneId timeZone = getSessionContext().getTimeZone();
 
 	private boolean navigateOnHeaderClicks = true;
@@ -194,10 +187,11 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		uiCalendar.setShowWeekNumbers(showWeekNumbers);
 		uiCalendar.setBusinessHoursStart(businessHoursStart);
 		uiCalendar.setBusinessHoursEnd(businessHoursEnd);
-		uiCalendar.setFirstDayOfWeek(firstDayOfWeek != null ? UiWeekDay.valueOf(firstDayOfWeek.name()) : null);
+		uiCalendar.setFirstDayOfWeek(UiWeekDay.valueOf(firstDayOfWeek.name()));
 		uiCalendar.setWorkingDays(workingDays.stream().map(workingDay -> UiWeekDay.valueOf(workingDay.name())).collect(Collectors.toList()));
 		uiCalendar.setTableHeaderBackgroundColor(tableHeaderBackgroundColor != null ? tableHeaderBackgroundColor.toHtmlColorString() : null);
 		uiCalendar.setNavigateOnHeaderClicks(navigateOnHeaderClicks);
+		uiCalendar.setLocale(locale.toLanguageTag());
 		uiCalendar.setTimeZoneId(timeZone.getId());
 		uiCalendar.setMinYearViewMonthTileWidth(minYearViewMonthTileWidth);
 		uiCalendar.setMaxYearViewMonthTileWidth(maxYearViewMonthTileWidth);
@@ -535,6 +529,24 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 					throw new IllegalArgumentException("Unknown view mode: " + viewMode);
 			}
 		};
+	}
+
+
+	public Locale getLocale() {
+		return locale.toLocale();
+	}
+
+	public ULocale getULocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		this.locale = locale;
+		reRenderIfRendered();
 	}
 
 	public ZoneId getTimeZone() {

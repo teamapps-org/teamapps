@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,15 +19,15 @@
  */
 package org.teamapps.ux.component.timegraph;
 
+import com.ibm.icu.util.ULocale;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.session.SessionContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -44,6 +44,9 @@ public class TimeGraph extends AbstractComponent {
 
 	// needs to be a field for reference equality (sad but true, java method references are only syntactic sugar for lambdas)
 	private final Consumer<Void> onTimeGraphDataChangedListener = this::onTimeGraphDataChanged;
+
+	private ULocale locale = SessionContext.current().getULocale();
+	private ZoneId timeZoneId = SessionContext.current().getTimeZone();
 
 	public TimeGraph(TimeGraphModel model) {
 		super();
@@ -109,6 +112,8 @@ public class TimeGraph extends AbstractComponent {
 				maxPixelsBetweenDataPoints,
 				toUiLineFormats(lines)
 		);
+		uiTimeGraph.setLocale(locale.toLanguageTag());
+		uiTimeGraph.setTimeZoneId(timeZoneId.getId());
 		mapAbstractUiComponentProperties(uiTimeGraph);
 		uiTimeGraph.setMouseScrollZoomPanMode(mouseScrollZoomPanMode.toUiLineChartMouseScrollZoomPanMode());
 		return uiTimeGraph;
@@ -215,6 +220,32 @@ public class TimeGraph extends AbstractComponent {
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).createUiLongInterval();
 		queueCommandIfRendered(() -> new UiTimeGraph.SetIntervalXCommand(getId(), uiIntervalX));
 		refresh();
+	}
+
+	public Locale getLocale() {
+		return locale.toLocale();
+	}
+
+	public ULocale getULocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		this.locale = locale;
+		reRenderIfRendered();
+	}
+
+	public ZoneId getTimeZoneId() {
+		return timeZoneId;
+	}
+
+	public void setTimeZoneId(ZoneId timeZoneId) {
+		this.timeZoneId = timeZoneId;
+		reRenderIfRendered();
 	}
 
 }

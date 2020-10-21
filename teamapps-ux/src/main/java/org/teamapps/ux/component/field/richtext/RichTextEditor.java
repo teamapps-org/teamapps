@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.field.richtext;
 
+import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiRichTextEditor;
@@ -31,6 +32,7 @@ import org.teamapps.ux.component.field.upload.UploadedFileAccessException;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Locale;
 
 public class RichTextEditor extends AbstractField<String> implements TextInputHandlingField {
 
@@ -46,6 +48,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	private int maxHeight;
 	private String uploadUrl = "/upload";
 	private int maxImageFileSizeInBytes = 5000000;
+	private ULocale locale = getSessionContext().getULocale();
 
 	private UploadedFileToUrlConverter uploadedFileToUrlConverter = (file) -> getSessionContext().createFileLink(getSessionContext().getUploadedFileByUuid(file.getUuid()));
 
@@ -62,6 +65,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 		field.setMaxImageFileSizeInBytes(maxImageFileSizeInBytes);
 		field.setMinHeight(minHeight);
 		field.setMaxHeight(maxHeight);
+		field.setLocale(locale.toLanguageTag());
 		return field;
 	}
 
@@ -173,5 +177,22 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	@Override
 	public Event<SpecialKey> onSpecialKeyPressed() {
 		return onSpecialKeyPressed;
+	}
+
+	public Locale getLocale() {
+		return locale.toLocale();
+	}
+
+	public ULocale getULocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		this.locale = locale;
+		reRenderIfRendered();
 	}
 }

@@ -17,15 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-describe('hexColorStringToRgb', function () {
+class UiConfiguration {
+    String locale = "en"; // general locale of the UI
+	String themeClassName = null; // null = default theme, others: "theme-modern", ...
+	boolean optimizedForTouch = false; // @MB #mobile This needs to be set to true if you want touch-friendly ui. I separated this from the naive "inside UiMobileLayout" approach to be able to support touch interaction in normal-style layout (UiSplitPanes etc...)
+}
 
-    it('converts', function () {
-        expect(hexColorStringToRgb("#fff")).toEqual({
-            r: 255,
-            g: 255,
-            b: 255
-        });
-    });
-
-});
 

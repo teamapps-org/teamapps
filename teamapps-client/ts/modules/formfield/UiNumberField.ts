@@ -28,6 +28,7 @@ import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingFiel
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiNumberFieldSliderMode} from "../../generated/UiNumberFieldSliderMode";
+import {NumberParser} from "../util/NumberParser";
 
 export class UiNumberField extends UiField<UiNumberFieldConfig, number> implements UiNumberFieldEventSource, UiNumberFieldCommandHandler {
 
@@ -37,7 +38,6 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	private $wrapper: HTMLElement;
 	private $clearableFieldWrapper: HTMLElement;
 	private $field: HTMLInputElement;
-	private precision: number;
 	private showClearButton: boolean;
 	private $slider: HTMLElement;
 	private $sliderHandle: HTMLElement;
@@ -48,7 +48,13 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	private sliderStep: number;
 	private commitOnSliderChange: boolean;
 
+	private numberFormat: Intl.NumberFormat;
+	private numberParser: NumberParser;
+
 	protected initialize(config: UiNumberFieldConfig, context: TeamAppsUiContext) {
+		this.numberFormat = new Intl.NumberFormat(config.locale, {minimumFractionDigits: this._config.precision, maximumFractionDigits: this._config.precision, useGrouping: true});
+		this.numberParser = new NumberParser(config.locale);
+
 		this.$wrapper = parseHtml(`<div class="UiNumberField form-control field-border field-border-glow field-background">
 	<div class="clearable-field-wrapper">
 		<input autocomplete="off" type="text"></input>
@@ -62,7 +68,6 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		this.$clearableFieldWrapper = this.$wrapper.querySelector<HTMLElement>(":scope .clearable-field-wrapper");
 		this.$field = this.$wrapper.querySelector(":scope input");
 		this.$slider = this.$wrapper.querySelector<HTMLElement>(":scope .slider");
-		const $sliderTrack = this.$wrapper.querySelector<HTMLElement>(":scope .slider-track");
 		this.$sliderHandle = this.$wrapper.querySelector<HTMLElement>(":scope .slider-handle");
 		let $clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
 		$clearButton.addEventListener('click',() => {
@@ -246,18 +251,8 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		return v == null || typeof v === "number";
 	}
 
-	private convertInputToDecimalValue(oldValue: string): number {
-		let decimalSeparator = this._context.config.decimalSeparator;
-		let newValue = oldValue.replace(new RegExp('[^\-0-9' + decimalSeparator + ']', 'g'), '');
-		newValue = newValue.replace(/(\d*\.\d*)\./g, '$1'); // only one decimal separator!!
-		newValue = newValue.replace(/(.)-*/g, '$1'); // minus may only occure at the beginning
-
-		const decimalSeparatorIndex = newValue.indexOf(decimalSeparator);
-		if (this.precision >= 0 && decimalSeparatorIndex != -1 && newValue.length - decimalSeparatorIndex - 1 > this.precision) {
-			newValue = newValue.substring(0, decimalSeparatorIndex + 1 + this.precision);
-		}
-		newValue = newValue.replace(decimalSeparator, '.');
-		return parseFloat(newValue);
+	private convertInputToDecimalValue(value: string): number {
+		return this.numberParser.parse(value);
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
@@ -276,7 +271,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	private formatNumber(value: number) {
-		return formatNumber(value, this.precision, this._context.config.decimalSeparator, "");
+		return this.numberFormat.format(value);
 	}
 
 	public getTransientValue(): number {
@@ -304,7 +299,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	public getReadOnlyHtml(value: number, availableWidth: number): string {
 		let formatedValue: string;
 		if (value != null && value != null) {
-			formatedValue = formatNumber(value, this.precision, this._context.config.decimalSeparator, this._context.config.thousandsSeparator);
+			formatedValue = this.numberFormat.format(value);
 		} else {
 			formatedValue = "";
 		}
@@ -315,8 +310,17 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		return null; // yes
 	}
 
+	setLocale(locale: string): void {
+		let value = this.getTransientValue();
+		this._config.locale = locale;
+		this.numberFormat = new Intl.NumberFormat(locale, {minimumFractionDigits: this._config.precision, maximumFractionDigits: this._config.precision, useGrouping: true});
+		this.numberParser = new NumberParser(locale);
+		this.setEditorValue(value);
+	}
+
 	setPrecision(precision: number): void {
-		this.precision = precision;
+		this._config.precision = precision;
+		this.numberFormat = new Intl.NumberFormat(this._config.locale, {minimumFractionDigits: this._config.precision, maximumFractionDigits: this._config.precision, useGrouping: true});
 		this.ensureDecimalInput();
 	}
 

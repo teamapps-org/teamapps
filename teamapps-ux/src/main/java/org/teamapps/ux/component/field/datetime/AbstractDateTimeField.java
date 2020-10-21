@@ -19,26 +19,35 @@
  */
 package org.teamapps.ux.component.field.datetime;
 
+import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.AbstractUiDateTimeField;
 import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.ux.session.DateTimeFormatDescriptor;
 
-public abstract class AbstractDateTimeField<FIELD extends AbstractDateTimeField<FIELD, VALUE>, VALUE> extends AbstractField<VALUE> {
+import java.util.Locale;
+
+public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> {
 
 	private boolean showDropDownButton = true;
-	private boolean favorPastDates = false; // TODO: fix in trivial-components!!!
-	private String dateFormat = null; // if null, the SessionContext's value applies
-	private String timeFormat = null; // if null, the SessionContext's value applies
+	private boolean favorPastDates = false;
+	private ULocale locale;
+	private DateTimeFormatDescriptor dateFormat;
+	private DateTimeFormatDescriptor timeFormat;
 
 	public AbstractDateTimeField() {
 		super();
+		this.locale = getSessionContext().getULocale();
+		this.dateFormat = getSessionContext().getConfiguration().getDateFormat();
+		this.timeFormat = getSessionContext().getConfiguration().getTimeFormat();
 	}
 
 	protected void mapAbstractDateTimeFieldUiValues(AbstractUiDateTimeField uiField) {
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setShowDropDownButton(showDropDownButton);
 		uiField.setFavorPastDates(favorPastDates);
-		uiField.setDateFormat(dateFormat);
-		uiField.setTimeFormat(timeFormat);
+		uiField.setLocale(locale.toLanguageTag());
+		uiField.setDateFormat(dateFormat.toDateTimeFormatDescriptor());
+		uiField.setTimeFormat(timeFormat.toDateTimeFormatDescriptor());
 	}
 
 	public boolean isShowDropDownButton() {
@@ -59,22 +68,39 @@ public abstract class AbstractDateTimeField<FIELD extends AbstractDateTimeField<
 		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetFavorPastDatesCommand(getId(), favorPastDates));
 	}
 
-	public String getDateFormat() {
+	public Locale getLocale() {
+		return locale.toLocale();
+	}
+
+	public ULocale getULocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		this.locale = locale;
+		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(getId(), locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
+	}
+
+	public DateTimeFormatDescriptor getDateFormat() {
 		return dateFormat;
 	}
 
-	public void setDateFormat(String dateFormat) {
+	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
 		this.dateFormat = dateFormat;
-		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetDateFormatCommand(getId(), dateFormat));
+		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(getId(), locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
-	public String getTimeFormat() {
+	public DateTimeFormatDescriptor getTimeFormat() {
 		return timeFormat;
 	}
 
-	public void setTimeFormat(String timeFormat) {
+	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetTimeFormatCommand(getId(), timeFormat));
+		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(getId(), locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 }

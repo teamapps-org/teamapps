@@ -35,17 +35,24 @@
  limitations under the License.
  */
 
-import Moment = moment.Moment;
-import moment from "moment-timezone";
 import {EditingMode, HighlightDirection, keyCodes, selectElementContents, TrivialComponent} from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
 import {TrivialCalendarBox} from "./TrivialCalendarBox";
-import {TrivialDateSuggestionEngine} from "./TrivialDateSuggestionEngine";
-import {TrivialTimeSuggestionEngine} from "./TrivialTimeSuggestionEngine";
+import {DateSuggestionEngine, getYearMonthDayOrderFromLocale} from "../formfield/datetime/DateSuggestionEngine";
+import {TimeSuggestionEngine} from "../formfield/datetime/TimeSuggestionEngine";
 import {place} from "place-to";
 import {createPopper, Instance as Popper} from '@popperjs/core';
 import {TrivialTreeBox} from "./TrivialTreeBox";
+import {DateTime} from "luxon";
+import {
+	createClockIconRenderer,
+	createDateIconRenderer,
+	createDateRenderer,
+	createTimeRenderer
+} from "../formfield/datetime/datetime-rendering";
+import {LocalDateTime} from "../util/LocalDateTime";
 import KeyDownEvent = JQuery.KeyDownEvent;
+import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 enum Mode {
 	MODE_CALENDAR,
@@ -53,29 +60,11 @@ enum Mode {
 	MODE_TIME_LIST
 }
 
-type DateComboBoxEntry = {
-	moment: Moment,
-	day: number,
-	weekDay: string,
-	month: number,
-	year: number,
-	displayString: string
-}
-
-type TimeComboBoxEntry = {
-	hour: number,
-	minute: number,
-	hourString: string,
-	minuteString: string,
-	displayString: string,
-	hourAngle: number,
-	minuteAngle: number,
-	isNight: boolean
-};
-
 export interface TrivialDateTimeFieldConfig {
-	dateFormat?: string,
-	timeFormat?: string,
+	locale?: string,
+	timeZone?: string,
+	dateFormat?: DateTimeFormatOptions,
+	timeFormat?: DateTimeFormatOptions,
 	autoComplete?: boolean,
 	autoCompleteDelay?: number,
 	showTrigger?: boolean,
@@ -95,62 +84,23 @@ export interface LocalTime {
 	second?: number
 }
 
-export interface LocalDateTime extends LocalDate, LocalTime {
-}
-
 export class TrivialDateTimeField implements TrivialComponent {
 
 	private config: TrivialDateTimeFieldConfig;
 
-	private dateIconRenderer = (entry: DateComboBoxEntry) => {
-		return `<svg viewBox="0 0 540 540" width="22" height="22" class="calendar-icon">
-        <defs>
-            <linearGradient id="Gradient1" x1="0" x2="0" y1="0" y2="1">
-                <stop class="calendar-symbol-ring-gradient-stop1" offset="0%"></stop>
-                <stop class="calendar-symbol-ring-gradient-stop2" offset="50%"></stop>
-                <stop class="calendar-symbol-ring-gradient-stop3" offset="100%"></stop>
-            </linearGradient>
-        </defs>        
-        <g id="layer1">
-            <rect class="calendar-symbol-page-background" x="90" y="90" width="360" height="400" ry="3.8"></rect>
-            <rect class="calendar-symbol-color" x="90" y="90" width="360" height="100" ry="3.5"></rect>
-            <rect class="calendar-symbol-page" x="90" y="90" width="360" height="395" ry="3.8"></rect>
-            <rect class="calendar-symbol-ring" fill="url(#Gradient2)" x="140" y="30" width="40" height="120" ry="30.8"></rect>
-            <rect class="calendar-symbol-ring" fill="url(#Gradient2)" x="250" y="30" width="40" height="120" ry="30.8"></rect>
-            <rect class="calendar-symbol-ring" fill="url(#Gradient2)" x="360" y="30" width="40" height="120" ry="30.8"></rect>
-            <text class="calendar-symbol-date" x="270" y="415" text-anchor="middle">${entry && entry.weekDay || ''}</text>
-        </g>
-    </svg>`;
-	};
-	private dateRenderer = (entry: DateComboBoxEntry) => {
-		return `<div class="tr-template-icon-single-line">
-            ${this.dateIconRenderer(entry)}
-            <div class="content-wrapper tr-editor-area">${entry && entry.displayString || ''}</div>
-        </div>`;
-	};
-	private timeIconRenderer = (entry: TimeComboBoxEntry) => {
-		return `<svg class="clock-icon night-${entry && entry.isNight}" viewBox="0 0 110 110" width="22" height="22">
-            <circle class="clockcircle" cx="55" cy="55" r="45"></circle>
-            <g class="hands">
-                <line class="hourhand" x1="55" y1="55" x2="55" y2="35" ${(entry && entry.hourAngle) ? `transform="rotate(${entry.hourAngle},55,55)"` : ''}></line>
-                <line class="minutehand" x1="55" y1="55" x2="55" y2="22" ${(entry && entry.minuteAngle) ? `transform="rotate(${entry.minuteAngle},55,55)"` : ''}></line>
-            </g>
-        </svg>`;
-	};
-	private timeRenderer = (entry: TimeComboBoxEntry) => `<div class="tr-template-icon-single-line">
-        ${this.timeIconRenderer(entry)}
-        <div class="content-wrapper tr-editor-area">${entry && entry.displayString || ''}</div>
-    </div>`;
+	private dateIconRenderer: (localDateTime: DateTime) => string;
+	private timeIconRenderer: (localDateTime: DateTime) => string;
+	private dateRenderer: (localDateTime: DateTime) => string;
+	private timeRenderer: (localDateTime: DateTime) => string;
 
-	public readonly onChange = new TrivialEvent<LocalDateTime>(this);
+	public readonly onChange = new TrivialEvent<DateTime>(this);
 
-	private dateListBox: TrivialTreeBox<DateComboBoxEntry>;
-	private timeListBox: TrivialTreeBox<TimeComboBoxEntry>;
+	private dateListBox: TrivialTreeBox<DateTime>;
+	private timeListBox: TrivialTreeBox<DateTime>;
 	private calendarBox: TrivialCalendarBox;
 	private _isDropDownOpen = false;
 
-	private dateValue: DateComboBoxEntry = null; // moment object representing the current value
-	private timeValue: TimeComboBoxEntry = null; // moment object representing the current value
+	private value: DateTime = null;
 
 	private blurCausedByClickInsideComponent = false;
 	private focusGoesToOtherEditor = false;
@@ -161,7 +111,6 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 	private dropDownMode = Mode.MODE_CALENDAR;
 
-	private $originalInput: JQuery;
 	private $dateTimeField: JQuery;
 	private $dropDown: JQuery;
 	private popper: Popper;
@@ -178,14 +127,23 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 	private $activeEditor: JQuery;
 
-	private dateSuggestionEngine: TrivialDateSuggestionEngine;
-	private timeSuggestionEngine: TrivialTimeSuggestionEngine;
+	private dateSuggestionEngine: DateSuggestionEngine;
+	private timeSuggestionEngine: TimeSuggestionEngine;
 
-	constructor(originalInput: Element, options: TrivialDateTimeFieldConfig = {}) {
+	constructor(options: TrivialDateTimeFieldConfig = {}) {
 		options = options || {};
-		this.config = $.extend(<TrivialDateTimeFieldConfig> {
-			dateFormat: "MM/DD/YYYY",
-			timeFormat: "HH:mm",
+		this.config = $.extend(<TrivialDateTimeFieldConfig>{
+			locale: "de-DE",
+			timeZone: "UTC",
+			dateFormat: {
+				year: "numeric",
+				month: "2-digit",
+				day: "2-digit"
+			},
+			timeFormat: {
+				hour: "2-digit",
+				minute: "2-digit"
+			},
 			autoComplete: true,
 			autoCompleteDelay: 0,
 			showTrigger: true,
@@ -193,7 +151,8 @@ export class TrivialDateTimeField implements TrivialComponent {
 			favorPastDates: false
 		}, options);
 
-		this.$originalInput = $(originalInput).addClass("tr-original-input");
+		this.updateRenderers();
+
 		this.$dateTimeField = $(`<div class="tr-datetimefield tr-input-wrapper">
             <div class="tr-editor-wrapper">
                 <div class="tr-date-icon-wrapper"></div>
@@ -202,8 +161,7 @@ export class TrivialDateTimeField implements TrivialComponent {
                 <div class="tr-time-editor" contenteditable="true"></div>
             </div>
             <div class="tr-trigger"><span class="tr-trigger-icon"></span></div>
-        </div>`)
-			.insertAfter(this.$originalInput);
+        </div>`);
 
 		let $editorWrapper = this.$dateTimeField.find('.tr-editor-wrapper').appendTo(this.$dateTimeField);
 		this.$dateIconWrapper = $editorWrapper.find('.tr-date-icon-wrapper');
@@ -221,20 +179,26 @@ export class TrivialDateTimeField implements TrivialComponent {
 			this.$activeEditor = this.$timeEditor;
 			this.setDropDownMode(Mode.MODE_TIME_LIST);
 			selectElementContents(this.$timeEditor[0], 0, this.$timeEditor.text().length);
-			this.query(1);
+			this.queryTime(1);
 			this.openDropDown();
 		});
 
 		this.$dateEditor.focus(() => {
 			this.$activeEditor = this.$dateEditor;
+			this.setDropDownMode(Mode.MODE_CALENDAR);
 			if (!this.blurCausedByClickInsideComponent || this.focusGoesToOtherEditor) {
 				selectElementContents(this.$dateEditor[0], 0, this.$dateEditor.text().length);
+				this.queryDate(0);
+				this.openDropDown();
 			}
 		});
 		this.$timeEditor.focus(() => {
 			this.$activeEditor = this.$timeEditor;
+			this.setDropDownMode(Mode.MODE_TIME_LIST);
 			if (!this.blurCausedByClickInsideComponent || this.focusGoesToOtherEditor) {
 				selectElementContents(this.$timeEditor[0], 0, this.$timeEditor.text().length);
+				this.queryTime(0);
+				this.openDropDown();
 			}
 		});
 
@@ -245,13 +209,11 @@ export class TrivialDateTimeField implements TrivialComponent {
 			if (this._isDropDownOpen) {
 				this.closeDropDown();
 			} else {
-				setTimeout(() => { // TODO remove this when Chrome bug is fixed. Chrome scrolls to the top of the page if we do this synchronously. Maybe this has something to do with https://code.google.com/p/chromium/issues/detail?id=342307 .
-					this.setDropDownMode(Mode.MODE_CALENDAR);
-					this.calendarBox.setSelectedDate(this.dateValue ? this.dateValue.moment : moment());
-					this.$activeEditor = this.$dateEditor;
-					selectElementContents(this.$dateEditor[0], 0, this.$dateEditor.text().length);
-					this.openDropDown();
-				});
+				this.setDropDownMode(Mode.MODE_CALENDAR);
+				this.calendarBox.setSelectedDate(this.value ?? DateTime.local());
+				this.$activeEditor = this.$dateEditor;
+				selectElementContents(this.$dateEditor[0], 0, this.$dateEditor.text().length);
+				this.openDropDown();
 			}
 		});
 
@@ -268,25 +230,25 @@ export class TrivialDateTimeField implements TrivialComponent {
 		this.setEditingMode(this.config.editingMode);
 
 		this.$dateListBoxWrapper = this.$dropDown.find('.date-listbox');
-		this.dateListBox = new TrivialTreeBox<DateComboBoxEntry>(this.$dateListBoxWrapper, {
+		this.dateListBox = new TrivialTreeBox<DateTime>(this.$dateListBoxWrapper, {
 			entryRenderingFunction: this.dateRenderer,
 			scrollContainer: this.$dropDown
 		});
-		this.dateListBox.onSelectedEntryChanged.addListener((selectedEntry: DateComboBoxEntry) => {
+		this.dateListBox.onSelectedEntryChanged.addListener((selectedEntry: DateTime) => {
 			if (selectedEntry) {
-				this.setDate(selectedEntry, selectedEntry.displayString != (this.dateValue && this.dateValue.displayString));
+				this.setDate(selectedEntry, true);
 				this.dateListBox.setSelectedEntryById(null);
 				this.closeDropDown();
 			}
 		});
 		this.$timeListBoxWrapper = this.$dropDown.find('.time-listbox');
-		this.timeListBox = new TrivialTreeBox<TimeComboBoxEntry>(this.$timeListBoxWrapper, {
+		this.timeListBox = new TrivialTreeBox<DateTime>(this.$timeListBoxWrapper, {
 			entryRenderingFunction: this.timeRenderer,
 			scrollContainer: this.$dropDown
 		});
-		this.timeListBox.onSelectedEntryChanged.addListener((selectedEntry: TimeComboBoxEntry) => {
+		this.timeListBox.onSelectedEntryChanged.addListener((selectedEntry: DateTime) => {
 			if (selectedEntry) {
-				this.setTime(selectedEntry, selectedEntry.displayString != (this.timeValue && this.timeValue.displayString));
+				this.setTime(selectedEntry, true);
 				this.dateListBox.setSelectedEntryById(null);
 				this.closeDropDown();
 			}
@@ -378,18 +340,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 				}
 			);
 
-		if (this.$originalInput.val()) {
-			this.setValue(moment(this.$originalInput.val()));
-		} else {
-			this.setValue(null);
-		}
-
-		if (this.$originalInput.attr("tabindex")) {
-			this.$dateEditor.add(this.$timeEditor).attr("tabindex", this.$originalInput.attr("tabindex"));
-		}
-		if (this.$originalInput.attr("autofocus")) {
-			this.$dateEditor.focus();
-		}
+		this.setValue(null);
 
 		this.$dateTimeField.add(this.$dropDown).mousedown((e) => {
 			if (this.$dateEditor.is(":focus") || this.$timeEditor.is(":focus")) {
@@ -410,11 +361,12 @@ export class TrivialDateTimeField implements TrivialComponent {
 		});
 		this.$activeEditor = this.$dateEditor;
 
-		this.dateSuggestionEngine = new TrivialDateSuggestionEngine({
-			preferredDateFormat: this.config.dateFormat,
+		this.dateSuggestionEngine = new DateSuggestionEngine({
+			locale: this.config.locale,
+			preferredYearMonthDayOrder: getYearMonthDayOrderFromLocale(this.config.locale),
 			favorPastDates: this.config.favorPastDates
 		});
-		this.timeSuggestionEngine = new TrivialTimeSuggestionEngine();
+		this.timeSuggestionEngine = new TimeSuggestionEngine();
 
 
 		this.popper = createPopper(this.$dateTimeField[0], this.$dropDown[0], {
@@ -442,6 +394,13 @@ export class TrivialDateTimeField implements TrivialComponent {
 		})
 	}
 
+	private updateRenderers() {
+		this.dateIconRenderer = createDateIconRenderer(this.config.locale);
+		this.timeIconRenderer = createClockIconRenderer();
+		this.dateRenderer = createDateRenderer(this.config.locale, this.config.dateFormat);
+		this.timeRenderer = createTimeRenderer(this.config.locale, this.config.timeFormat);
+	}
+
 	private isDropDownNeeded() {
 		return this.editingMode == 'editable';
 	}
@@ -455,7 +414,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 			});
 			this.calendarBox.setKeyboardNavigationState('month');
 			this.calendarBox.onChange.addListener(({value, timeUnitEdited}) => {
-				this.setDate(TrivialDateTimeField.createDateComboBoxEntry(value, this.config.dateFormat));
+				this.setDate(value);
 				if (timeUnitEdited === 'day') {
 					this.closeDropDown();
 					this.$activeEditor = this.$timeEditor;
@@ -498,99 +457,95 @@ export class TrivialDateTimeField implements TrivialComponent {
 		}
 	}
 
-
-	private query(highlightDirection: HighlightDirection) {
-		const queryString = this.getNonSelectedEditorValue();
-		let entries: DateComboBoxEntry[] | TimeComboBoxEntry[];
-		if (this.getActiveEditor() === this.$dateEditor) {
-			entries = this.dateSuggestionEngine.generateSuggestions(queryString, moment())
-				.map(s => TrivialDateTimeField.createDateComboBoxEntry(s.moment, this.config.dateFormat));
+	private query(direction: number) {
+		if (this.$activeEditor == this.$dateEditor) {
+			this.queryDate(direction);
 		} else {
-			entries = this.timeSuggestionEngine.generateSuggestions(queryString)
-				.map(s => TrivialDateTimeField.createTimeComboBoxEntry(s.hour, s.minute, this.config.timeFormat));
+			this.queryTime(direction)
 		}
+	}
+
+	private queryDate(highlightDirection: HighlightDirection = 1) {
+		const queryString = this.getNonSelectedEditorValue();
+		let entries: DateTime[] = this.dateSuggestionEngine
+			.generateSuggestions(queryString, LocalDateTime.fromDateTime(DateTime.fromObject({zone: this.config.timeZone})))
+			.map(s => s.toZoned(this.config.timeZone));
 		if (!entries || entries.length === 0) {
 			this.closeDropDown();
 		} else {
-			this.updateEntries(entries, highlightDirection);
+			this.dateListBox.updateEntries(entries);
+			this.dateListBox.highlightTextMatches(this.getNonSelectedEditorValue());
+			this.dateListBox.highlightNextEntry(highlightDirection);
+			this.autoCompleteIfPossible(this.config.autoCompleteDelay);
+			if (this._isDropDownOpen) {
+				this.openDropDown(); // only for repositioning!
+			}
 		}
 	}
 
-	public getValue(): LocalDateTime {
-		if (this.dateValue == null) {
-			return null;
-		} else if (this.timeValue == null) {
-			return {
-				year: this.dateValue.year,
-				month: this.dateValue.month,
-				day: this.dateValue.day,
-				hour: null,
-				minute: null
-			};
+	private queryTime(highlightDirection: HighlightDirection) {
+		const queryString = this.getNonSelectedEditorValue();
+		let entries: DateTime[] = this.timeSuggestionEngine
+			.generateSuggestions(queryString)
+			.map(s => s.toZoned(this.config.timeZone));
+		if (!entries || entries.length === 0) {
+			this.closeDropDown();
 		} else {
-			return {
-				year: this.dateValue.year,
-				month: this.dateValue.month,
-				day: this.dateValue.day,
-				hour: this.timeValue.hour,
-				minute: this.timeValue.minute
+			this.timeListBox.updateEntries(entries);
+			this.timeListBox.highlightTextMatches(this.getNonSelectedEditorValue());
+			this.timeListBox.highlightNextEntry(highlightDirection);
+			this.autoCompleteIfPossible(this.config.autoCompleteDelay);
+			if (this._isDropDownOpen) {
+				this.openDropDown(); // only for repositioning!
 			}
 		}
+	}
+
+	public getValue(): DateTime {
+		return this.value;
 	};
 
 	private fireChangeEvents() {
-		this.$originalInput.trigger("change");
 		this.onChange.fire(this.getValue());
 	}
 
-	private setDate(newDateValue: DateComboBoxEntry, fireEvent: boolean = false) {
-		this.dateValue = newDateValue;
-		this.updateOriginalInputValue();
+	private setDate(newDateValue: DateTime, fireEvent: boolean = false) {
+		let valuesObject = {
+			year: newDateValue.year, month: newDateValue.month, day: newDateValue.day
+		};
+		this.setValue(this.value == null ? DateTime.fromObject(valuesObject) : this.value.set(valuesObject), fireEvent);
+	}
+
+	private setTime(newTimeValue: DateTime, fireEvent: boolean = false) {
+		let valuesObject = {
+			hour: newTimeValue.hour,
+			minute: newTimeValue.minute,
+			second: newTimeValue.second,
+			millisecond: newTimeValue.millisecond
+		};
+		this.setValue(this.value == null ? DateTime.fromObject(valuesObject) : this.value.set(valuesObject), fireEvent);
+	}
+
+	public setValue(value: DateTime, fireEvent: boolean = false) {
+		this.value = value;
 		this.updateDisplay();
 		if (fireEvent) {
 			this.fireChangeEvents();
-		}
-	}
-
-	private setTime(newTimeValue: TimeComboBoxEntry, fireEvent: boolean = false) {
-		this.timeValue = newTimeValue;
-		this.updateOriginalInputValue();
-		this.updateDisplay();
-		if (fireEvent) {
-			this.fireChangeEvents();
-		}
-	}
-
-	private updateOriginalInputValue() {
-		if (this.dateValue == null) {
-			this.$originalInput.val('');
-		} else if (this.timeValue == null) {
-			this.$originalInput.val(moment(this.getValue()).format(this.config.dateFormat));
-		} else {
-			this.$originalInput.val(moment(this.getValue()).format(this.config.dateFormat + ' ' + this.config.timeFormat));
 		}
 	}
 
 	private updateDisplay() {
-		if (this.dateValue) {
-			this.$dateEditor.text(moment([this.dateValue.year, this.dateValue.month - 1, this.dateValue.day]).format(this.config.dateFormat));
-			this.$dateIconWrapper.empty().append(this.dateIconRenderer(this.dateValue));
+		if (this.value) {
+			this.$dateEditor.text(this.value.setLocale(this.config.locale).toLocaleString(this.config.dateFormat));
+			this.$dateIconWrapper.empty().append(this.dateIconRenderer(this.value));
+			this.$timeEditor.text(this.value.setLocale(this.config.locale).toLocaleString(this.config.timeFormat));
+			this.$timeIconWrapper.empty().append(this.timeIconRenderer(this.value));
 		} else {
 			this.$dateEditor.text("");
 			this.$dateIconWrapper.empty().append(this.dateIconRenderer(null));
-		}
-		if (this.timeValue) {
-			this.$timeEditor.text(moment([1970, 0, 1, this.timeValue.hour, this.timeValue.minute]).format(this.config.timeFormat));
-			this.$timeIconWrapper.empty().append(this.timeIconRenderer(this.timeValue));
-		} else {
 			this.$timeEditor.text("");
 			this.$timeIconWrapper.empty().append(this.timeIconRenderer(null));
 		}
-	}
-
-	public setValue(mom: Moment) {
-		this.setDate(mom && TrivialDateTimeField.createDateComboBoxEntry(mom, this.config.dateFormat));
-		this.setTime(mom && TrivialDateTimeField.createTimeComboBoxEntry(mom.hour(), mom.minute(), this.config.timeFormat));
 	}
 
 	private repositionDropDown() {
@@ -654,23 +609,6 @@ export class TrivialDateTimeField implements TrivialComponent {
 		}
 	}
 
-	private updateEntries(newEntries: any[], highlightDirection: HighlightDirection) {
-		const listBox = this.getActiveBox();
-
-		highlightDirection = highlightDirection === undefined ? 1 : highlightDirection;
-		listBox.updateEntries(newEntries);
-
-		listBox.highlightTextMatches(this.getNonSelectedEditorValue());
-
-		listBox.highlightNextEntry(highlightDirection);
-
-		this.autoCompleteIfPossible(this.config.autoCompleteDelay);
-
-		if (this._isDropDownOpen) {
-			this.openDropDown(); // only for repositioning!
-		}
-	}
-
 	public setEditingMode(newEditingMode: EditingMode) {
 		this.editingMode = newEditingMode;
 		this.$dateTimeField.removeClass("editable readonly disabled").addClass(this.editingMode);
@@ -688,34 +626,26 @@ export class TrivialDateTimeField implements TrivialComponent {
 		}
 	}
 
-	private static createTimeComboBoxEntry(hour: number, minute: number, timeFormat: string): TimeComboBoxEntry {
-		return {
-			hour: hour,
-			minute: minute,
-			hourString: TrivialDateTimeField.pad(hour, 2),
-			minuteString: TrivialDateTimeField.pad(minute, 2),
-			displayString: moment().hour(hour).minute(minute).format(timeFormat),
-			hourAngle: ((hour % 12) + minute / 60) * 30,
-			minuteAngle: minute * 6,
-			isNight: hour < 6 || hour >= 20
-		};
+	public setLocale(locale: string) {
+		this.config.locale = locale;
+		this.updateDisplay();
 	}
 
-	private static pad(num: number, size: number) {
-		let s = num + "";
-		while (s.length < size) s = "0" + s;
-		return s;
+	public setDateFormat(dateFormat: DateTimeFormatOptions) {
+		this.config.dateFormat = dateFormat;
+		this.updateDisplay();
 	}
 
-	private static createDateComboBoxEntry(m: Moment, dateFormat: string): DateComboBoxEntry {
-		return {
-			moment: m,
-			day: m.date(),
-			weekDay: m.format('dd'),
-			month: m.month() + 1,
-			year: m.year(),
-			displayString: m.format(dateFormat)
-		};
+	public setTimeFormat(timeFormat: DateTimeFormatOptions) {
+		this.config.timeFormat = timeFormat;
+		this.updateDisplay();
+	}
+
+	setLocaleAndFormats(locale: string, dateFormat: DateTimeFormatOptions, timeFormat: DateTimeFormatOptions) {
+		this.config.locale = locale;
+		this.config.dateFormat = dateFormat;
+		this.config.timeFormat = timeFormat;
+		this.updateDisplay();
 	}
 
 	public focus() {
@@ -727,7 +657,6 @@ export class TrivialDateTimeField implements TrivialComponent {
 	}
 
 	public destroy() {
-		this.$originalInput.removeClass('tr-original-input').insertBefore(this.$dateTimeField);
 		this.$dateTimeField.remove();
 		this.$dropDown.remove();
 	}

@@ -19,25 +19,30 @@
  */
 package org.teamapps.ux.component.field.datetime;
 
-import org.teamapps.dto.AbstractUiTimeField;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiInstantDateField;
+import com.ibm.icu.util.ULocale;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
+import org.teamapps.ux.session.DateTimeFormatDescriptor;
 
-public abstract class AbstractTimeField<FIELD extends AbstractTimeField, VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
+import java.util.Locale;
+
+public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
 
 	public final Event<String> onTextInput = new Event<>();
 	public final Event<SpecialKey> onSpecialKeyPressed = new Event<>();
 
 	private boolean showDropDownButton = true;
 	private boolean showClearButton = false;
-	private String timeFormat = null; // if null, UiConfiguration.timeFormat applies
+	private ULocale locale;
+	private DateTimeFormatDescriptor timeFormat;
 
 	public AbstractTimeField() {
 		super();
+		this.locale = getSessionContext().getULocale();
+		this.timeFormat = getSessionContext().getConfiguration().getTimeFormat();
 	}
 
 	@Override
@@ -49,7 +54,8 @@ public abstract class AbstractTimeField<FIELD extends AbstractTimeField, VALUE> 
 	public void mapAbstractTimeFieldUiValues(AbstractUiTimeField uiTimeField) {
 		mapAbstractFieldAttributesToUiField(uiTimeField);
 		uiTimeField.setShowDropDownButton(isShowDropDownButton());
-		uiTimeField.setTimeFormat(getTimeFormat());
+		uiTimeField.setLocale(locale.toLanguageTag());
+		uiTimeField.setTimeFormat(timeFormat.toDateTimeFormatDescriptor());
 		uiTimeField.setShowClearButton(isShowClearButton());
 	}
 
@@ -59,16 +65,34 @@ public abstract class AbstractTimeField<FIELD extends AbstractTimeField, VALUE> 
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		queueCommandIfRendered(() -> new UiInstantDateField.SetShowDropDownButtonCommand(getId(), showDropDownButton));
+		queueCommandIfRendered(() -> new AbstractUiTimeField.SetShowDropDownButtonCommand(getId(), showDropDownButton));
 	}
 
-	public String getTimeFormat() {
+
+	public Locale getLocale() {
+		return locale.toLocale();
+	}
+
+	public ULocale getULocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		this.locale = locale;
+		queueCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(getId(), locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
+	}
+
+	public DateTimeFormatDescriptor getTimeFormat() {
 		return timeFormat;
 	}
 
-	public void setTimeFormat(String timeFormat) {
+	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		queueCommandIfRendered(() -> new UiInstantDateField.SetDateFormatCommand(getId(), timeFormat));
+		queueCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(getId(), locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public boolean isShowClearButton() {
@@ -77,7 +101,7 @@ public abstract class AbstractTimeField<FIELD extends AbstractTimeField, VALUE> 
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		queueCommandIfRendered(() -> new UiInstantDateField.SetShowClearButtonCommand(getId(), showClearButton));
+		queueCommandIfRendered(() -> new AbstractUiTimeField.SetShowClearButtonCommand(getId(), showClearButton));
 	}
 
 	@Override

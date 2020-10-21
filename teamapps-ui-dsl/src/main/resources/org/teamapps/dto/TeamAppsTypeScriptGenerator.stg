@@ -178,10 +178,10 @@ typeScriptPropertyDeclaration(p, forceRequired) ::= <<
 enum(e) ::= <<
 <typeScriptFilePrelude()>
 export enum <e.Identifier> {
-	<if(!e.stringJsonValuesAnnotation)>
-	<e.enumConstant:{e|<e.Identifier>}; separator=", ">
+	<if(e.hasStringValues)>
+	<e.enumConstant:{ec|<ec.Identifier> = <ec.StringLiteral>}; separator=", ">
 	<else>
-	<e.enumConstant:{e|<e.Identifier> = "<e.Identifier>"}; separator=", ">
+	<e.enumConstant:{ec|<ec.Identifier>}; separator=", ">
 	<endif>
 }
 >>

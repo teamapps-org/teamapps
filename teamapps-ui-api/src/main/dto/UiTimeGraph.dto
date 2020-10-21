@@ -25,6 +25,8 @@ class UiTimeGraph extends UiComponent {
 	required List<AbstractUiLineChartDataDisplay> lines;
 	UiScaleType yScaleType = UiScaleType.LINEAR;
 	UiLineChartMouseScrollZoomPanMode mouseScrollZoomPanMode = UiLineChartMouseScrollZoomPanMode.ENABLED;
+	String locale;
+	String timeZoneId = null;
 
 	command setIntervalX(UiLongInterval intervalX);
 	command setMaxPixelsBetweenDataPoints(int maxPixelsBetweenDataPoints);

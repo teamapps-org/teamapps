@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {DEFAULT_RENDERING_FUNCTIONS, defaultListQueryFunctionFactory, keyCodes, QueryFunction} from "../trivial-components/TrivialCore";
-import {TrivialUnitBox} from "../trivial-components/TrivialUnitBox";
+import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "../trivial-components/TrivialUnitBox";
 
 import {createUiCurrencyValueConfig, UiCurrencyValueConfig} from "../../generated/UiCurrencyValueConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
@@ -26,7 +26,7 @@ import {UiCurrencyFieldCommandHandler, UiCurrencyFieldConfig, UiCurrencyFieldEve
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {CURRENCIES, Currency} from "../util/currencies";
-import {formatDecimalNumber, parseHtml, selectElementContents} from "../Common";
+import {parseHtml, selectElementContents} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
@@ -46,7 +46,11 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	
 	private queryFunction: QueryFunction<Currency>;
 
+	private numberFormat: Intl.NumberFormat;
+
 	protected initialize(config: UiCurrencyFieldConfig, context: TeamAppsUiContext) {
+		this.numberFormat = new Intl.NumberFormat(config.locale, {minimumFractionDigits: config.precision, maximumFractionDigits: config.precision, useGrouping: true});
+
 		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
 
 		this.trivialUnitBox = new TrivialUnitBox<Currency>(this.$originalInput, {
@@ -54,8 +58,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 			unitValueProperty: 'code',
 			unitIdProperty: 'code',
 			decimalPrecision: config.precision,
-			decimalSeparator: context.config.decimalSeparator,
-			thousandsSeparator: context.config.thousandsSeparator,
+			locale: config.locale,
 			unitDisplayPosition: config.showCurrencyBeforeAmount ? 'left' : 'right', // right or left
 			entryRenderingFunction: DEFAULT_RENDERING_FUNCTIONS.currencySingleLineLong,
 			selectedEntryRenderingFunction: (entry) => {
@@ -73,12 +76,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 			queryFunction: (queryString, callback) => this.queryFunction(queryString, callback)
 		});
 		this.trivialUnitBox.getMainDomElement().classList.add("UiCurrencyField");
-		this.trivialUnitBox.onChange.addListener((value: {
-			unit: string,
-			unitEntry: any,
-			amount: number,
-			amountAsFloatingPointNumber: number
-		}) => {
+		this.trivialUnitBox.onChange.addListener((value: TrivialUnitBoxChangeEvent<any>) => {
 			this.commit();
 		});
 		this.trivialUnitBox.getEditor().addEventListener('keyup', (e: KeyboardEvent) => {
@@ -167,7 +165,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		if (value != null) {
 			const currency = CURRENCIES[value.currencyCode || this.defaultCurrencyCode || ""];
 			const displayedCurrency = this.showCurrencySymbol ? currency.symbol : currency.code;
-			const amountAsString = formatDecimalNumber(value.value, this._config.precision, this._context.config.decimalSeparator, this._context.config.thousandsSeparator);
+			const amountAsString = this.numberFormat.format(value.value)
 			content = (this._config.showCurrencyBeforeAmount ? displayedCurrency + ' ' : '') + amountAsString + (this._config.showCurrencyBeforeAmount ? '' : ' ' + displayedCurrency);
 		} else {
 			content = "";
@@ -204,6 +202,18 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		let nullAndNonNull = ((v1 == null) !== (v2 == null));
 		let nonNullAndValuesDifferent = (v1 != null && v2 != null && (v1.value !== v2.value || v1.currencyCode !== v2.currencyCode));
 		return nullAndNonNull || nonNullAndValuesDifferent;
+	}
+
+	setLocale(locale: string): void {
+		this._config.locale = locale;
+		this.numberFormat = new Intl.NumberFormat(this._config.locale, {minimumFractionDigits: this._config.precision, maximumFractionDigits: this._config.precision, useGrouping: true});
+		this.trivialUnitBox.setLocale(locale);
+	}
+
+	setPrecision(precision: number): void {
+		this._config.precision = precision;
+		this.numberFormat = new Intl.NumberFormat(this._config.locale, {minimumFractionDigits: this._config.precision, maximumFractionDigits: this._config.precision, useGrouping: true});
+		this.trivialUnitBox.setDecimalPrecision(precision);
 	}
 }
 

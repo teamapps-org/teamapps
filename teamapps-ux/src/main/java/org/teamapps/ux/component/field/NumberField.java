@@ -19,10 +19,14 @@
  */
 package org.teamapps.ux.component.field;
 
+import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiNumberField;
 import org.teamapps.event.Event;
+import org.teamapps.ux.session.SessionContext;
+
+import java.util.Locale;
 
 public class NumberField extends AbstractField<Number> implements TextInputHandlingField {
 
@@ -38,6 +42,8 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 	private NumberFieldSliderMode sliderMode = NumberFieldSliderMode.DISABLED;
 	private double sliderStep = 1;
 	private boolean commitOnSliderChange = true;
+
+	private ULocale locale = SessionContext.current().getULocale();
 
 	public NumberField(int precision) {
 		super();
@@ -56,6 +62,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 		field.setSliderMode(sliderMode.toUiNumberFieldSliderMode());
 		field.setSliderStep(sliderStep);
 		field.setCommitOnSliderChange(commitOnSliderChange);
+		field.setLocale(locale.toLanguageTag());
 		return field;
 	}
 
@@ -143,6 +150,23 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 		this.commitOnSliderChange = commitOnSliderChange;
 		queueCommandIfRendered(() -> new UiNumberField.SetCommitOnSliderChangeCommand(getId(), commitOnSliderChange));
 		return this;
+	}
+
+	public Locale getLocale() {
+		return locale.toLocale();
+	}
+
+	public ULocale getULocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		this.locale = locale;
+		queueCommandIfRendered(() -> new UiNumberField.SetLocaleCommand(getId(), locale.toLanguageTag()));
 	}
 
 	@Override

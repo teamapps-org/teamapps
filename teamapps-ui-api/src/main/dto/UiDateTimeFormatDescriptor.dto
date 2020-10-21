@@ -1,0 +1,52 @@
+class UiDateTimeFormatDescriptor {
+
+	// either dateStyle and/or timeStyle can be set, or the other fields. Both does not work. Exception: hourCycle
+	UiFullLongMediumShortType dateStyle;
+	UiFullLongMediumShortType timeStyle;
+
+	Integer fractionalSecondDigits;
+	Boolean dayPeriod;
+	UiHourCycleType hourCycle;
+
+	UiLongShortNarrowType weekday;
+	UiLongShortNarrowType era;
+	UiNumericType year;
+	UiNumericOrLongShortNarrowType month;
+	UiNumericType day;
+	UiNumericType hour;
+	UiNumericType minute;
+	UiNumericType second;
+}
+
+enum UiHourCycleType {
+    H11 = "h11", // 0-11
+    H12 = "h12", // 1-12
+    H23 = "h23", // 0-23
+    H24 = "h24"; // 1-24
+}
+
+enum UiFullLongMediumShortType {
+    FULL = "full",
+    LONG = "long",
+    MEDIUM = "medium",
+    SHORT = "short";
+}
+
+enum UiLongShortNarrowType {
+    LONG = "long",
+    SHORT = "short",
+    NARROW = "narrow";
+}
+
+enum UiNumericType {
+    NUMERIC = "numeric",
+    TWO_DIGIT = "2-digit";
+}
+
+enum UiNumericOrLongShortNarrowType {
+    NUMERIC = "numeric",
+    TWO_DIGIT = "2-digit",
+    LONG = "long",
+    SHORT = "short",
+    NARROW = "narrow";
+}

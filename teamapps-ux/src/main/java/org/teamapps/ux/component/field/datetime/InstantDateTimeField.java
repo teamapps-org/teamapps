@@ -23,30 +23,32 @@ import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiInstantDateTimeField;
 
 import java.time.Instant;
+import java.time.ZoneId;
 
-public class InstantDateTimeField extends AbstractDateTimeField<InstantDateTimeField, Instant> {
+public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 
-	protected String timeZoneId = null; // if null, the SessionContext's value applies
+	protected ZoneId timeZoneId;
 
 	public InstantDateTimeField() {
 		super();
+		this.timeZoneId = getSessionContext().getTimeZone();
 	}
 
 	@Override
 	public UiField createUiComponent() {
 		UiInstantDateTimeField uiField = new UiInstantDateTimeField();
 		mapAbstractDateTimeFieldUiValues(uiField);
-		uiField.setTimeZoneId(timeZoneId);
+		uiField.setTimeZoneId(timeZoneId.getId());
 		return uiField;
 	}
 
-	public String getTimeZoneId() {
+	public ZoneId getTimeZoneId() {
 		return timeZoneId;
 	}
 
-	public void setTimeZoneId(String timeZoneId) {
+	public void setTimeZoneId(ZoneId timeZoneId) {
 		this.timeZoneId = timeZoneId;
-		queueCommandIfRendered(() -> new UiInstantDateTimeField.SetTimeZoneIdCommand(getId(), timeZoneId));
+		queueCommandIfRendered(() -> new UiInstantDateTimeField.SetTimeZoneIdCommand(getId(), timeZoneId.getId()));
 	}
 
 	@Override
