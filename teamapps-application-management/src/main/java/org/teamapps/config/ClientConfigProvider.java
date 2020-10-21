@@ -19,6 +19,7 @@
  */
 package org.teamapps.config;
 
+import com.ibm.icu.util.ULocale;
 import org.teamapps.theme.Theme;
 import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
@@ -72,7 +73,7 @@ public interface ClientConfigProvider<USER> extends LocaleProvider<USER>, TimeZo
 			theme = StylingTheme.DARK;
 		}
 
-		Locale locale = Locale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso());
+		ULocale locale = ULocale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso());
 		return SessionConfiguration.create(
 				locale,
 				ZoneId.of(context.getClientInfo().getTimeZone()),

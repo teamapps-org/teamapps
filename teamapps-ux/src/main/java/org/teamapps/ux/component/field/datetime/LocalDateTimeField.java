@@ -20,15 +20,12 @@
 package org.teamapps.ux.component.field.datetime;
 
 import org.teamapps.dto.UiField;
-import org.teamapps.dto.UiInstantDateTimeField;
 import org.teamapps.dto.UiLocalDateTimeField;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTimeField, LocalDateTime> {
-
-	protected String timeZoneId = null; // if null, the SessionContext's value applies
+public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTime> {
 
 	public LocalDateTimeField() {
 		super();
@@ -39,15 +36,6 @@ public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTimeField
 		UiLocalDateTimeField uiField = new UiLocalDateTimeField();
 		mapAbstractDateTimeFieldUiValues(uiField);
 		return uiField;
-	}
-
-	public String getTimeZoneId() {
-		return timeZoneId;
-	}
-
-	public void setTimeZoneId(String timeZoneId) {
-		this.timeZoneId = timeZoneId;
-		queueCommandIfRendered(() -> new UiInstantDateTimeField.SetTimeZoneIdCommand(getId(), timeZoneId));
 	}
 
 	@Override

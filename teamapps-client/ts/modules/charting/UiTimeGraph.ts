@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,6 +53,8 @@ import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiLineChartBand} from "./UiLineChartBand";
 import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
 import {UiLineChartDataDisplayGroup} from "./UiLineChartDataDisplayGroup";
+import {DateTime} from 'luxon';
+import {scaleZoned} from "d3-luxon";
 
 type SVGGSelection<DATUM = {}> = Selection<SVGGElement, DATUM, HTMLElement, undefined>;
 
@@ -121,7 +123,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 		this.$main = parseHtml('<div class="UiTimeGraph" id="' + this.getId() + '">');
 
-		this.scaleX = d3.scaleTime()
+		this.scaleX = scaleZoned(config.timeZoneId, 1) // TODO first day of week...
 			.range([0, this.drawableWidth]);
 
 		this.$svg = d3.select(this.$main)
@@ -150,24 +152,26 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.$xAxis.call(panZoom);
 		this.xAxis = d3.axisBottom(this.scaleX);
 
-		const hourFormat = this._context.config.timeFormat.indexOf('H') !== -1 || this._context.config.timeFormat.indexOf('k') !== -1 ? 'H' : 'I';
-		var formatMillisecond = d3.timeFormat(".%L"),
-			formatSecond = d3.timeFormat(":%S"),
-			formatMinute = d3.timeFormat(`%${hourFormat}:%M`),
-			formatHour = d3.timeFormat(`%${hourFormat}:00`),
-			formatDay = d3.timeFormat("%a %d"),
-			formatWeek = d3.timeFormat("%b %d"),
-			formatMonth = d3.timeFormat("%B"),
-			formatYear = d3.timeFormat("%Y");
-		function multiFormat(date: Date) {
-			return (d3.timeSecond(date) < date ? formatMillisecond
-				: d3.timeMinute(date) < date ? formatSecond
-					: d3.timeHour(date) < date ? formatMinute
-						: d3.timeDay(date) < date ? formatHour
-							: d3.timeMonth(date) < date ? (d3.timeWeek(date) < date ? formatDay : formatWeek)
-								: d3.timeYear(date) < date ? formatMonth
-									: formatYear)(date);
+		const formatMillisecond = (dateTime: DateTime) => dateTime.toFormat(".SSS"),
+			formatSecond = (dateTime: DateTime) => dateTime.toFormat(":ss"),
+			formatMinute = (dateTime: DateTime) => dateTime.toLocaleString({hour: "2-digit", minute: "2-digit"}),
+			formatHour = (dateTime: DateTime) => dateTime.toLocaleString({hour: "2-digit", minute: "2-digit"}),
+			formatDay = (dateTime: DateTime) => dateTime.toLocaleString({day: "2-digit", month: "2-digit"}),
+			formatMonth = (dateTime: DateTime) => dateTime.toFormat("LLL"),
+			formatYear = (dateTime: DateTime) => dateTime.toFormat("yyyy");
+
+		const multiFormat = (date: Date) => {
+			let dateTime = DateTime.fromJSDate(date).setZone(this._config.timeZoneId);
+			let formatter = dateTime.startOf("second") < dateTime ? formatMillisecond
+				: dateTime.startOf("minute") < dateTime ? formatSecond
+					: dateTime.startOf("hour") < dateTime ? formatMinute
+						: dateTime.startOf("day") < dateTime ? formatHour
+							: dateTime.startOf("month") < dateTime ? formatDay
+								: dateTime.startOf("year") < dateTime ? formatMonth
+									: formatYear;
+			return formatter(dateTime.setLocale(this._config.locale));
 		}
+
 		this.xAxis.tickFormat(multiFormat);
 
 		this.$yAxisContainer = this.$rootG.append<SVGGElement>("g")
@@ -521,7 +525,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 				this.linesById[lineConfig.id] = this.createSeries(lineConfig);
 			}
 		});
-		let lineConfigsById = lineConfigs.reduce((previousValue, currentValue) => (previousValue[currentValue.id] = previousValue) && previousValue, {} as {[id: string]: UiLineChartLineConfig});
+		let lineConfigsById = lineConfigs.reduce((previousValue, currentValue) => (previousValue[currentValue.id] = previousValue) && previousValue, {} as { [id: string]: UiLineChartLineConfig });
 		Object.keys(this.linesById).forEach(lineId => {
 			if (!lineConfigsById[lineId]) {
 				this.linesById[lineId].destroy();

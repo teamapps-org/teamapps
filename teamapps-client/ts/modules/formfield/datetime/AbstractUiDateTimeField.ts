@@ -21,25 +21,33 @@ import {TrivialDateTimeField} from "../../trivial-components/TrivialDateTimeFiel
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {AbstractUiDateTimeFieldConfig, AbstractUiDateTimeFieldCommandHandler, AbstractUiDateTimeFieldEventSource} from "../../../generated/AbstractUiDateTimeFieldConfig";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, parseHtml} from "../../Common";
+import {
+	AbstractUiDateTimeFieldCommandHandler,
+	AbstractUiDateTimeFieldConfig,
+	AbstractUiDateTimeFieldEventSource
+} from "../../../generated/AbstractUiDateTimeFieldConfig";
+import {UiDateTimeFormatDescriptorConfig} from "../../../generated/UiDateTimeFormatDescriptorConfig";
+import {DateTime} from "luxon";
+import {DateSuggestionEngine} from "./DateSuggestionEngine";
+import {createDateRenderer, createTimeRenderer} from "./datetime-rendering";
 
 export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiDateTimeFieldEventSource, AbstractUiDateTimeFieldCommandHandler {
 
-	private $originalInput: HTMLElement;
 	protected trivialDateTimeField: TrivialDateTimeField;
-	private dateFormat: string;
-	private timeFormat: string;
+	protected dateSuggestionEngine: DateSuggestionEngine;
+	protected dateRenderer: (time: DateTime) => string;
+	protected timeRenderer: (time: DateTime) => string;
 
 	protected initialize(config: AbstractUiDateTimeFieldConfig, context: TeamAppsUiContext) {
-		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
+		this.updateDateSuggestionEngine();
+		this.dateRenderer = this.createDateRenderer();
+		this.timeRenderer = this.createTimeRenderer();
 
-		this.dateFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.dateFormat);
-		this.timeFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.timeFormat);
-
-		this.trivialDateTimeField = new TrivialDateTimeField(this.$originalInput, {
-			dateFormat: this.getDateFormat(),
-			timeFormat: this.getTimeFormat(),
+		this.trivialDateTimeField = new TrivialDateTimeField({
+			timeZone: this.getTimeZone(),
+			locale: config.locale,
+			dateFormat: config.dateFormat,
+			timeFormat: config.timeFormat,
 			showTrigger: config.showDropDownButton,
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			favorPastDates: config.favorPastDates
@@ -48,18 +56,38 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 		this.trivialDateTimeField.onChange.addListener(() => this.commit());
 
 		this.trivialDateTimeField.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
-		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-date-editor, .tr-time-editor").classList.add("field-background");
+		this.trivialDateTimeField.getMainDomElement().querySelectorAll<HTMLElement>(":scope .tr-date-editor, :scope .tr-time-editor").forEach(element => element.classList.add("field-background"));
 		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-date-editor, .tr-time-editor")
-			.addEventListener("focus blur", e => this.getMainElement().classList.toggle("focus", e.type === "focus"));
+		this.trivialDateTimeField.getMainDomElement().querySelectorAll<HTMLElement>(":scope .tr-date-editor, :scope .tr-time-editor")
+			.forEach(element => {
+				element.addEventListener("focus", e => this.getMainElement().classList.add("focus"));
+				element.addEventListener("blur", e => this.getMainElement().classList.remove("focus"));
+			});
 	}
 
-	protected getDateFormat() {
-		return this.dateFormat || this._context.config.dateFormat;
+	protected abstract getTimeZone(): string;
+
+	protected createDateRenderer(): (time: DateTime) => string {
+		return createDateRenderer(this._config.locale, this._config.dateFormat);
 	}
 
-	protected getTimeFormat() {
-		return this.timeFormat || this._context.config.timeFormat;
+	protected createTimeRenderer(): (time: DateTime) => string {
+		return createTimeRenderer(this._config.locale, this._config.timeFormat);
+	}
+
+	protected dateTimeToDateString(dateTime: DateTime): string {
+		return dateTime.setLocale(this._config.locale).toLocaleString(this._config.dateFormat);
+	}
+
+	protected dateTimeToTimeString(dateTime: DateTime): string {
+		return dateTime.setLocale(this._config.locale).toLocaleString(this._config.timeFormat);
+	}
+
+	private updateDateSuggestionEngine() {
+		this.dateSuggestionEngine = new DateSuggestionEngine({
+			locale: this._config.locale,
+			favorPastDates: this._config.favorPastDates
+		});
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
@@ -67,7 +95,7 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 	}
 
 	public getFocusableElement(): HTMLElement {
-		return this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(':scope .tr-editor');
+		return null; // will handle all focus relevant stuff here...
 	}
 
 	focus(): void {
@@ -93,16 +121,19 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 	destroy(): void {
 		super.destroy();
 		this.trivialDateTimeField.destroy();
-		this.$originalInput.remove();
 	}
 
 	getDefaultValue(): V {
 		return null;
 	}
 
-	setDateFormat(dateFormat: string): void {
-		// TODO
-		this.logger.warn("TODO: implement AbstractUiDateTimeField.setDateFormat()")
+	setLocaleAndFormats(locale: string, dateFormat: UiDateTimeFormatDescriptorConfig, timeFormat: UiDateTimeFormatDescriptorConfig): void {
+		this._config.locale = locale;
+		this._config.dateFormat = dateFormat;
+		this._config.timeFormat = timeFormat;
+		this.updateDateSuggestionEngine();
+		this.dateRenderer = this.createDateRenderer();
+		this.trivialDateTimeField.setLocaleAndFormats(locale, dateFormat, timeFormat);
 	}
 
 	setFavorPastDates(favorPastDates: boolean): void {
@@ -113,11 +144,6 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 	setShowDropDownButton(showDropDownButton: boolean): void {
 		// TODO
 		this.logger.warn("TODO: implement AbstractUiDateTimeField.setShowDropDownButton()")
-	}
-
-	setTimeFormat(timeFormat: string): void {
-		// TODO
-		this.logger.warn("TODO: implement AbstractUiDateTimeField.setTimeFormat()")
 	}
 
 }

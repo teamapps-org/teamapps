@@ -25,7 +25,7 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
-import Moment = moment.Moment;
+import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export class UiDummyComponent extends AbstractUiComponent<UiDummyComponentConfig> implements UiDummyComponentCommandHandler, UiDummyComponentEventSource {
 
@@ -34,7 +34,7 @@ export class UiDummyComponent extends AbstractUiComponent<UiDummyComponentConfig
 	private static allDummies: UiDummyComponent[] = [];
 
 	private $panel: HTMLElement;
-	private lastResize: Moment;
+	private lastResize: Date;
 	private resizeCount: number = 0;
 	private destroyed: boolean = false;
 	private clickCount: number = 0;
@@ -82,14 +82,14 @@ clickCount: <span>${this.clickCount}</span><br>
 jsClickCount: <span>${this.jsClickCount}</span><br>
 commandCount: <span>${this.commandCount}</span><br>
 resizeCount: ${this.resizeCount}<br>
-lastResize: ${this.lastResize ? this.lastResize.format('HH:mm:ss.SSS') : '-'}<br>
+lastResize: ${this.lastResize ? this.lastResize.toLocaleString(undefined, {dateStyle: 'medium', timeStyle: 'medium'} as DateTimeFormatOptions) : '-'}<br>
 size: ${this.getWidth()} x ${this.getHeight()}<br> 
 destroyed: <span class="${this.destroyed ? 'text-danger blink text-bold' : ''}">${this.destroyed}</span><br>
 `;
 	}
 
 	public onResize(): void {
-		this.lastResize = moment();
+		this.lastResize = new Date();
 		this.resizeCount++;
 		this.updateContent();
 	}

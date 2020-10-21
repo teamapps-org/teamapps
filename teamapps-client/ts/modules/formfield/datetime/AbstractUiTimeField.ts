@@ -17,67 +17,60 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import Mustache from "mustache";
-import moment from "moment-timezone";
-
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {TrivialComboBox} from "../../trivial-components/TrivialComboBox";
-import {TrivialTimeSuggestionEngine} from "../../trivial-components/TrivialTimeSuggestionEngine";
+import {TimeSuggestionEngine} from "./TimeSuggestionEngine";
 import {UiField} from "./../UiField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../../generated/UiTextInputHandlingFieldConfig";
+import {
+	UiTextInputHandlingField_SpecialKeyPressedEvent,
+	UiTextInputHandlingField_TextInputEvent
+} from "../../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../../generated/UiSpecialKey";
-import {AbstractUiTimeFieldCommandHandler, AbstractUiTimeFieldConfig, AbstractUiTimeFieldEventSource} from "../../../generated/AbstractUiTimeFieldConfig";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, parseHtml} from "../../Common";
+import {
+	AbstractUiTimeFieldCommandHandler,
+	AbstractUiTimeFieldConfig,
+	AbstractUiTimeFieldEventSource
+} from "../../../generated/AbstractUiTimeFieldConfig";
+import {parseHtml} from "../../Common";
+import {UiDateTimeFormatDescriptorConfig} from "../../../generated/UiDateTimeFormatDescriptorConfig";
+import {LocalDateTime} from "../../util/LocalDateTime";
+
 
 export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiTimeFieldEventSource, AbstractUiTimeFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, 250);
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, 250);
 
-	public static comboBoxTemplate = '<div class="tr-template-icon-single-line">' +
-		'<svg class="clock-icon night-{{isNight}}" viewBox="0 0 110 110" width="22" height="22"> ' +
-		'<circle class="clockcircle" cx="55" cy="55" r="45"></circle>' +
-		'<g class="hands">' +
-		' <line class="hourhand" x1="55" y1="55" x2="55" y2="35" transform="rotate({{hourAngle}},55,55)"></line> ' +
-		' <line class="minutehand" x1="55" y1="55" x2="55" y2="22" transform="rotate({{minuteAngle}},55,55)"></line>' +
-		'</g> ' +
-		'</svg>' +
-		'  <div class="content-wrapper tr-editor-area">{{displayString}}</div>' +
-		'</div>';
-
 	private $originalInput: HTMLElement;
-	protected trivialComboBox: TrivialComboBox<any>;
-	private timeFormat: string;
+	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
+	protected timeRenderer: (time: LocalDateTime) => string;
 
 	protected initialize(config: AbstractUiTimeFieldConfig, context: TeamAppsUiContext) {
 		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
 
-		this.timeFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.timeFormat);
+		let timeSuggestionEngine = new TimeSuggestionEngine();
+		this.timeRenderer = this.createTimeRenderer();
 
-		let timeSuggestionEngine = new TrivialTimeSuggestionEngine();
-		this.trivialComboBox = new TrivialComboBox<any>(this.$originalInput, {
+		this.trivialComboBox = new TrivialComboBox<LocalDateTime>(this.$originalInput, {
 			queryFunction: (searchString: string, resultCallback: Function) => {
-				this.onTextInput.fire({
-					enteredString: searchString
-				});
-
-				let comboBoxEntries = timeSuggestionEngine.generateSuggestions(searchString)
-					.map(s => AbstractUiTimeField.createTimeComboBoxEntry(s.hour, s.minute, this.getTimeFormat()));
-				resultCallback(comboBoxEntries);
+				this.onTextInput.fire({enteredString: searchString});
+				let suggestedDateTimes = timeSuggestionEngine.generateSuggestions(searchString);
+				resultCallback(suggestedDateTimes);
 			},
 			showTrigger: config.showDropDownButton,
 			textHighlightingEntryLimit: -1, // no highlighting!
-			autoCompleteFunction: function (editorText, entry) {
-				if (editorText && entry.displayString.toLowerCase().indexOf(editorText.toLowerCase()) === 0) {
-					return entry.displayString;
+			autoCompleteFunction: (editorText, entry) => {
+				let entryAsString = this.localDateTimeToString(entry);
+				if (editorText && entryAsString.toLowerCase().indexOf(editorText.toLowerCase()) === 0) {
+					return entryAsString;
 				} else {
 					return null;
 				}
 			},
-			entryToEditorTextFunction: entry => entry.displayString,
-			entryRenderingFunction: (entry) => Mustache.render(AbstractUiTimeField.comboBoxTemplate, entry || {hourAngle: 0, minuteAngle: 0}),
+			entryToEditorTextFunction: entry => this.localDateTimeToString(entry),
+			entryRenderingFunction: localDateTime => this.timeRenderer(localDateTime),
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable'
 		});
 		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiTimeField");
@@ -101,6 +94,10 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		this.trivialComboBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
 	}
 
+	protected abstract localDateTimeToString(entry: LocalDateTime): string;
+
+	protected abstract createTimeRenderer(): (time: LocalDateTime) => string;
+
 	public getMainInnerDomElement(): HTMLElement {
 		return this.trivialComboBox.getMainDomElement() as HTMLElement;
 	}
@@ -109,57 +106,12 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		return this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor");
 	}
 
-	protected getTimeFormat() {
-		return this.timeFormat || this._context.config.timeFormat;
-	}
-
-
 	focus(): void {
 		this.trivialComboBox.focus();
 	}
 
 	public hasFocus(): boolean {
 		return this.getMainInnerDomElement().matches('.focus');
-	}
-
-	private static intRange(fromInclusive: number, toInclusive: number) {
-		const ints = [];
-		for (let i = fromInclusive; i <= toInclusive; i++) {
-			ints.push(i)
-		}
-		return ints;
-	}
-
-	private static pad(num: number, size: number) {
-		let s = num + "";
-		while (s.length < size) s = "0" + s;
-		return s;
-	}
-
-	public static createTimeComboBoxEntry(h: number, m: number, timeFormat: string) {
-		return {
-			hour: h,
-			minute: m,
-			hourString: AbstractUiTimeField.pad(h, 2),
-			minuteString: AbstractUiTimeField.pad(m, 2),
-			displayString: moment().hour(h).minute(m).second(0).millisecond(0).format(timeFormat),
-			hourAngle: ((h % 12) + m / 60) * 30,
-			minuteAngle: m * 6,
-			isNight: h < 6 || h >= 20
-		};
-	}
-
-	public static createTimeComboBoxEntryFromMoment(mom: moment.Moment, timeFormat: string) {
-		return {
-			hour: mom.hour(),
-			minute: mom.minute(),
-			hourString: AbstractUiTimeField.pad(mom.hour(), 2),
-			minuteString: AbstractUiTimeField.pad(mom.minute(), 2),
-			displayString: mom.format(timeFormat),
-			hourAngle: ((mom.hour() % 12) + mom.minute() / 60) * 30,
-			minuteAngle: mom.minute() * 6,
-			isNight: mom.hour() < 6 || mom.hour() >= 20
-		};
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
@@ -184,11 +136,11 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		return null;
 	}
 
-	setTimeFormat(timeFormat: string): void {
-		this.timeFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(timeFormat);
-		let selectedEntry = this.trivialComboBox.getSelectedEntry();
-		selectedEntry.displayString = selectedEntry.moment.format(this.getTimeFormat());
-		this.trivialComboBox.setSelectedEntry(selectedEntry, true);
+	setLocaleAndTimeFormat(locale: string, timeFormat: UiDateTimeFormatDescriptorConfig): void {
+		this._config.locale = locale;
+		this._config.timeFormat = timeFormat;
+		this.timeRenderer = this.createTimeRenderer();
+		this.trivialComboBox.setSelectedEntry(this.trivialComboBox.getSelectedEntry(), true);
 		this.trivialComboBox.updateEntries([]);
 	}
 
@@ -199,4 +151,5 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 	setShowClearButton(showClearButton: boolean): void {
 		this.trivialComboBox.setShowClearButton(showClearButton);
 	}
+
 }

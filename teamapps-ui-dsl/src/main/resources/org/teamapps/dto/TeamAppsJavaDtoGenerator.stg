@@ -207,20 +207,31 @@ public enum <propertyDeclaration.Identifier.text; format="cap"> {
 enumClass(e, package) ::= <<
 <javaFilePrelude(package)>
 public enum <e.Identifier> {
-	<e.enumConstant:{e|<e.Identifier>}; separator=", ">;
+	<e.enumConstant:enumConstant(e.hasStringValues); separator=",\n">;
 
-	<if(!e.stringJsonValuesAnnotation)>
-	@com.fasterxml.jackson.annotation.JsonValue
-	public int jsonValue() {
-		return ordinal();
+	<if(e.hasStringValues)>
+	private final String jsonValue;
+
+	<e.Identifier>(String jsonValue) {
+		this.jsonValue = jsonValue;
 	}
-	<else>
+
 	@com.fasterxml.jackson.annotation.JsonValue
 	public String jsonValue() {
-		return toString();
+		return jsonValue;
 	}
+	<else>
+    @com.fasterxml.jackson.annotation.JsonValue
+    public int jsonValue() {
+        return ordinal();
+    }
 	<endif>
 }>>
+
+
+enumConstant(ec, hasStringValues) ::= <<
+	<ec.Identifier><if(hasStringValues)>(<ec.StringLiteral>)<endif>
+>>
 
 eventClass(ed) ::= <<
 public static class <ed.Identifier.text; format="cap">Event implements UiEvent {

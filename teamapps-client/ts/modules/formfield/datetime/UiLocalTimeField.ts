@@ -17,12 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import Mustache from "mustache";
-import {UiLocalTimeFieldConfig, UiLocalTimeFieldCommandHandler, UiLocalTimeFieldEventSource} from "../../../generated/UiLocalTimeFieldConfig";
+import {
+	UiLocalTimeFieldCommandHandler,
+	UiLocalTimeFieldConfig,
+	UiLocalTimeFieldEventSource
+} from "../../../generated/UiLocalTimeFieldConfig";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {AbstractUiTimeField} from "./AbstractUiTimeField";
 import {arraysEqual} from "../../Common";
+import {LocalDateTime} from "../../util/LocalDateTime";
+import {createTimeRenderer} from "./datetime-rendering";
 
 type LocalTime = [number, number, number, number];
 
@@ -40,7 +45,7 @@ export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
-			this.trivialComboBox.setSelectedEntry(UiLocalTimeField.createTimeComboBoxEntry(uiValue[0], uiValue[1], this.getTimeFormat()), true);
+			this.trivialComboBox.setSelectedEntry(UiLocalTimeField.localTimeToLocalDateTime(uiValue), true);
 		} else {
 			this.trivialComboBox.setSelectedEntry(null, true);
 		}
@@ -56,8 +61,8 @@ export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig
 	}
 
 	public getReadOnlyHtml(value: LocalTime, availableWidth: number): string {
-		if (value != null && value != null) {
-			return `<div class="static-readonly-UiLocalTimeField">` + Mustache.render(UiLocalTimeField.comboBoxTemplate, UiLocalTimeField.createTimeComboBoxEntry(value[0], value[1], this._config.timeFormat || this._context.config.timeFormat)) + '</div>';
+		if (value != null) {
+			return this.timeRenderer(UiLocalTimeField.localTimeToLocalDateTime(value));
 		} else {
 			return "";
 		}
@@ -65,6 +70,19 @@ export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig
 
 	public valuesChanged(v1: LocalTime, v2: LocalTime): boolean {
 		return !arraysEqual(v1, v2);
+	}
+
+	private static localTimeToLocalDateTime(uiValue: [number, number, number, number]) {
+		return LocalDateTime.fromObject({hour: uiValue[0], minute: uiValue[1], second: uiValue[2], millisecond: uiValue[3]});
+	}
+
+	protected localDateTimeToString(entry: LocalDateTime): string {
+		return entry.setLocale(this._config.locale).toLocaleString(this._config.timeFormat);
+	}
+
+	protected createTimeRenderer(): (time: LocalDateTime) => string {
+		let timeRenderer = createTimeRenderer(this._config.locale, this._config.timeFormat);
+		return entry => timeRenderer(entry?.toUTC());
 	}
 }
 

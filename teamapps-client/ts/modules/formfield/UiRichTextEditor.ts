@@ -181,7 +181,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	private initTinyMce() {
 		if (this.isEditable() && !this.initializationStarted) {
 			this.initializationStarted = true;
-			const translationFileName = UiRichTextEditor.TRANSLATION_FILES[this._context.config.isoLanguage];
+			const translationFileName = UiRichTextEditor.TRANSLATION_FILES[this._config.locale];
 			tinymce.init({
 				theme_url: '/runtime-resources/tinymce/themes/modern/theme.js',
 				skin_url: '/runtime-resources/tinymce/skins/lightgray',

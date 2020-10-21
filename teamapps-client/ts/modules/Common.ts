@@ -24,7 +24,6 @@ import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {UiTextMatchingMode} from "../generated/UiTextMatchingMode";
-import moment from "moment-timezone";
 import {UiComponent} from "./UiComponent";
 import {UiPageTransition} from "../generated/UiPageTransition";
 import {UiRepeatableAnimation} from "../generated/UiRepeatableAnimation";
@@ -743,14 +742,6 @@ export function deepEquals(x: any, y: any): boolean {
 	} else {
 		return x === y
 			|| ((x == null) && (y == null)); // make no difference between undefined and null!
-	}
-}
-
-export function convertJavaDateTimeFormatToMomentDateTimeFormat(javaFormat: string): string {
-	if (javaFormat == null) {
-		return null;
-	} else {
-		return (moment() as any).toMomentFormatString(javaFormat);
 	}
 }
 

@@ -8,9 +8,8 @@ classCollection : typeDeclaration*;
 
 typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 
-enumDeclaration : stringJsonValuesAnnotation? 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? ';'? '}' ;
-stringJsonValuesAnnotation : '@SerializeAsString';
-enumConstant : Identifier;
+enumDeclaration : 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? ';'? '}' ;
+enumConstant : Identifier ('=' StringLiteral)?;
 
 classDeclaration  : typescriptFactoryAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|subCommandDeclaration|subEventDeclaration)*

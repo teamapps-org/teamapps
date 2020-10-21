@@ -25,7 +25,7 @@ import org.teamapps.dto.UiLocalDateField;
 import java.time.LocalDate;
 import java.util.List;
 
-public class LocalDateField extends AbstractDateField<LocalDateField, LocalDate> {
+public class LocalDateField extends AbstractDateField<LocalDate> {
 
 	public LocalDateField() {
 		super();

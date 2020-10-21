@@ -24,7 +24,7 @@ import {UiWindow} from "./UiWindow";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml} from "./Common";
+import {exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml} from "./Common";
 import {UiRootPanelCommandHandler, UiRootPanelConfig} from "../generated/UiRootPanelConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
@@ -38,8 +38,6 @@ import {showNotification, UiNotification} from "./UiNotification";
 import {UiNotificationPosition} from "../generated/UiNotificationPosition";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
-
-require("moment-jdateformatparser");
 
 export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implements UiRootPanelCommandHandler {
 
@@ -127,13 +125,11 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 	public static setConfig(config: UiConfigurationConfig, context: TeamAppsUiContext) {
 		let oldConfig = context.config;
-		if ((!oldConfig || oldConfig.isoLanguage !== config.isoLanguage) && config.isoLanguage !== 'en') {
-			$.getScript("runtime-resources/moment-locales/" + config.isoLanguage + ".js");
-			$.getScript("runtime-resources/fullcalendar-locales/" + config.isoLanguage + ".js");
+		if ((!oldConfig || oldConfig.locale !== config.locale) && config.locale !== 'en') {
+			$.getScript("runtime-resources/moment-locales/" + config.locale + ".js");
+			$.getScript("runtime-resources/fullcalendar-locales/" + config.locale + ".js");
 		}
-		moment.locale(config.isoLanguage);
-		config.dateFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.dateFormat);
-		config.timeFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.timeFormat);
+		moment.locale(config.locale);
 		this.setThemeClassName(config.themeClassName);
 
 		this.ALL_ROOT_PANELS.forEach(uiRootPanel => {

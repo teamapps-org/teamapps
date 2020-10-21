@@ -110,7 +110,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 				end: config.businessHoursEnd + ':00',
 				daysOfWeek: config.workingDays
 			},
-			firstDay: config.firstDayOfWeek != null ? config.firstDayOfWeek : context.config.firstDayOfWeek, // 1 = monday
+			firstDay: config.firstDayOfWeek, // 1 = monday
 			fixedWeekCount: true,
 			eventBackgroundColor: config.defaultBackgroundColor,
 			eventBorderColor: config.defaultBorderColor,
@@ -119,10 +119,10 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 			lazyFetching: false, // no intelligent fetching from fullcalendar. We handle all that!
 			selectable: true,
 			unselectAuto: false,
-			timeZone: config.timeZoneId || context.config.timeZoneId || 'local',
+			timeZone: config.timeZoneId,
 			height: 600,
 			slotEventOverlap: false,
-			locale: context.config.isoLanguage,
+			locale: config.locale,
 			views: {
 				timeGrid: {
 					slotLabelFormat: {

@@ -19,9 +19,10 @@
  */
 package org.teamapps.webcontroller;
 
+import com.ibm.icu.util.ULocale;
 import org.teamapps.icon.material.MaterialIconProvider;
-import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.icons.api.IconTheme;
+import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.ux.session.SessionConfiguration;
@@ -32,7 +33,6 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public interface WebController {
 
@@ -72,7 +72,7 @@ public interface WebController {
 		}
 
 		return SessionConfiguration.create(
-				Locale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso()),
+				ULocale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso()),
 				ZoneId.of(context.getClientInfo().getTimeZone()),
 				theme,
 				optimizedForTouch

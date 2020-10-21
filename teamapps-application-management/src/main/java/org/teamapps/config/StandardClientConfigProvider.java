@@ -19,6 +19,7 @@
  */
 package org.teamapps.config;
 
+import com.ibm.icu.util.ULocale;
 import org.teamapps.theme.Theme;
 import org.teamapps.theme.background.Background;
 import org.teamapps.ux.session.CurrentSessionContext;
@@ -96,7 +97,7 @@ public class StandardClientConfigProvider<USER> implements ClientConfigProvider<
 			stylingTheme = StylingTheme.DARK;
 		}
 		context.setConfiguration(SessionConfiguration.create(
-				locale,
+				ULocale.forLocale(locale),
 				timeZone,
 				stylingTheme,
 				optimizedForTouch

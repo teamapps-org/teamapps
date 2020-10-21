@@ -19,8 +19,11 @@
  */
 package org.teamapps.ux.component.calendar;
 
+import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.util.TimeZone;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 
+import java.util.Date;
 import java.util.List;
 
 public class SimpleCalendar<PAYLOAD> extends Calendar<SimpleCalendarEvent<PAYLOAD>> {
@@ -28,8 +31,13 @@ public class SimpleCalendar<PAYLOAD> extends Calendar<SimpleCalendarEvent<PAYLOA
 	public SimpleCalendar() {
 		super(new SimpleCalendarModel<PAYLOAD>());
 		setPropertyExtractor(new BeanPropertyExtractor<SimpleCalendarEvent<PAYLOAD>>().addProperty("description",
-				event -> event.getStartInstant().atZone(getTimeZone()).format(getSessionContext().getConfiguration().getTimeFormatter())
-				+ "\u2009-\u2009" + event.getEndInstant().atZone(getTimeZone()).format(getSessionContext().getConfiguration().getTimeFormatter())));
+				event -> {
+					com.ibm.icu.util.Calendar calendar = com.ibm.icu.util.Calendar.getInstance(TimeZone.getTimeZone(getTimeZone().getId()), getSessionContext().getULocale());
+					DateFormat timeFormatter = DateFormat.getTimeInstance(calendar, DateFormat.SHORT, getSessionContext().getULocale());
+					return timeFormatter.format(Date.from(event.getStartInstant()))
+							+ "\u2009-\u2009"
+							+ timeFormatter.format(Date.from(event.getEndInstant()));
+				}));
 	}
 
 	public SimpleCalendar(List<SimpleCalendarEvent<PAYLOAD>> events) {

@@ -17,99 +17,63 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import * as Mustache from "mustache";
 import {ResultCallback} from "../../trivial-components/TrivialCore";
 import {TrivialComboBox} from "../../trivial-components/TrivialComboBox";
-import {TrivialDateSuggestionEngine} from "../../trivial-components/TrivialDateSuggestionEngine";
-import moment from "moment-timezone";
+import {DateSuggestionEngine} from "./DateSuggestionEngine";
 import {UiFieldEditingMode} from "../../../generated/UiFieldEditingMode";
 import {UiField} from "../UiField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../../generated/UiTextInputHandlingFieldConfig";
+import {
+	UiTextInputHandlingField_SpecialKeyPressedEvent,
+	UiTextInputHandlingField_TextInputEvent
+} from "../../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../../generated/UiSpecialKey";
-import {AbstractUiDateFieldCommandHandler, AbstractUiDateFieldConfig, AbstractUiDateFieldEventSource} from "../../../generated/AbstractUiDateFieldConfig";
-import {convertJavaDateTimeFormatToMomentDateTimeFormat, parseHtml} from "../../Common";
-import Moment = moment.Moment;
-
-interface DateSuggestion {
-	moment: Moment;
-	ymdOrder: string;
-}
-
-export interface DateComboBoxEntry {
-	day: number,
-	weekDay: string,
-	month: number,
-	year: number,
-	displayString: string
-}
+import {
+	AbstractUiDateFieldCommandHandler,
+	AbstractUiDateFieldConfig,
+	AbstractUiDateFieldEventSource
+} from "../../../generated/AbstractUiDateFieldConfig";
+import {parseHtml} from "../../Common";
+import {UiDateTimeFormatDescriptorConfig} from "../../../generated/UiDateTimeFormatDescriptorConfig";
+import {LocalDateTime} from "../../util/LocalDateTime";
+import {createDateRenderer} from "./datetime-rendering";
 
 export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V> extends UiField<C, V> implements AbstractUiDateFieldEventSource, AbstractUiDateFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, 250);
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, 250);
 
-	public static comboBoxTemplate = `<div class="tr-template-icon-single-line">
-    <svg viewBox="0 0 540 540" width="22" height="22" class="calendar-icon">
-        <defs>
-            <linearGradient id="Gradient1" x1="0" x2="0" y1="0" y2="1">
-                <stop class="calendar-symbol-ring-gradient-stop1" offset="0%"></stop>
-                <stop class="calendar-symbol-ring-gradient-stop2" offset="50%"></stop>
-                <stop class="calendar-symbol-ring-gradient-stop3" offset="100%"></stop>
-            </linearGradient>
-        </defs>        
-        <g id="layer1">
-            <rect class="calendar-symbol-page-background" x="90" y="90" width="360" height="400" ry="3.8"></rect>
-            <rect class="calendar-symbol-color" x="90" y="90" width="360" height="100" ry="3.5"></rect>
-            <rect class="calendar-symbol-page" x="90" y="90" width="360" height="395" ry="3.8"></rect>
-            <rect class="calendar-symbol-ring" fill="url(#Gradient2)" x="140" y="30" width="40" height="120" ry="30.8"></rect>
-            <rect class="calendar-symbol-ring" fill="url(#Gradient2)" x="250" y="30" width="40" height="120" ry="30.8"></rect>
-            <rect class="calendar-symbol-ring" fill="url(#Gradient2)" x="360" y="30" width="40" height="120" ry="30.8"></rect>
-            <text class="calendar-symbol-date" x="270" y="415" text-anchor="middle">{{weekDay}}</text>
-        </g>
-    </svg>
-    <div class="content-wrapper tr-editor-area">{{displayString}}</div>
-</div>`;
-
 	private $originalInput: HTMLElement;
-	protected trivialComboBox: TrivialComboBox<DateComboBoxEntry>;
-	private dateSuggestionEngine: TrivialDateSuggestionEngine;
-
-	private favorPastDates: boolean;
-	private dateFormat: string;
+	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
+	protected dateSuggestionEngine: DateSuggestionEngine;
+	protected dateRenderer: (time: LocalDateTime) => string;
 
 	protected initialize(config: AbstractUiDateFieldConfig, context: TeamAppsUiContext) {
 		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
 
-		this.favorPastDates = config.favorPastDates;
-		this.dateFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(config.dateFormat);
-
 		this.updateDateSuggestionEngine();
-		this.trivialComboBox = new TrivialComboBox<DateComboBoxEntry>(this.$originalInput, {
-			queryFunction: (searchString: string, resultCallback: ResultCallback<DateComboBoxEntry>) => {
-				this.onTextInput.fire({
-					enteredString: searchString
-				});
-				let comboBoxEntries = this.dateSuggestionEngine.generateSuggestions(searchString, moment() as any)
-					.map(s => AbstractUiDateField.createDateComboBoxEntryFromMoment(s.moment as any, this.getDateFormat()));
-				resultCallback(comboBoxEntries);
+		this.dateRenderer = this.createDateRenderer();
+
+		this.trivialComboBox = new TrivialComboBox<LocalDateTime>(this.$originalInput, {
+			queryFunction: (searchString: string, resultCallback: ResultCallback<LocalDateTime>) => {
+				this.onTextInput.fire({enteredString: searchString});
+				resultCallback(this.dateSuggestionEngine.generateSuggestions(searchString, LocalDateTime.local()));
 			},
 			showTrigger: config.showDropDownButton,
 			textHighlightingEntryLimit: -1, // no highlighting!
-			autoCompleteFunction: function (editorText, entry) {
-				if (editorText && entry.displayString.toLowerCase().indexOf(editorText.toLowerCase()) === 0) {
-					return entry.displayString;
+			autoCompleteFunction: (editorText, entry) => {
+				let entryAsString = this.localDateTimeToString(entry);
+				if (editorText && entryAsString.toLowerCase().indexOf(editorText.toLowerCase()) === 0) {
+					return entryAsString;
 				} else {
 					return null;
 				}
 			},
 			entryToEditorTextFunction: entry => {
-				return entry.displayString;
+				return this.localDateTimeToString(entry);
 			},
-			entryRenderingFunction: (entry) => {
-				return entry ? Mustache.render(AbstractUiDateField.comboBoxTemplate, entry) : "";
-			},
+			entryRenderingFunction: (localDateTime) => this.dateRenderer(localDateTime),
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			showClearButton: config.showClearButton
 		});
@@ -134,10 +98,19 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 		this.trivialComboBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
 	}
 
+	protected localDateTimeToString(entry: LocalDateTime): string {
+		return entry.setLocale(this._config.locale).toLocaleString(this._config.dateFormat);
+	}
+
+	protected createDateRenderer(): (time: LocalDateTime) => string {
+		let dateRenderer = createDateRenderer(this._config.locale, this._config.dateFormat);
+		return entry => dateRenderer(entry?.toUTC());
+	}
+
 	private updateDateSuggestionEngine() {
-		this.dateSuggestionEngine = new TrivialDateSuggestionEngine({
-			preferredDateFormat: this.getDateFormat(),
-			favorPastDates: this.favorPastDates
+		this.dateSuggestionEngine = new DateSuggestionEngine({
+			locale: this._config.locale,
+			favorPastDates: this._config.favorPastDates
 		});
 	}
 
@@ -147,31 +120,6 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 
 	public getFocusableElement(): HTMLElement {
 		return this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor");
-	}
-
-	protected getDateFormat() {
-		return this.dateFormat || this._context.config.dateFormat;
-	}
-
-	public static createDateComboBoxEntryFromMoment(m: Moment, dateFormat: string): DateComboBoxEntry {
-		return {
-			day: m.date(),
-			weekDay: m.format('dd'), // see UiRootPanel.setConfig()...
-			month: m.month() + 1,
-			year: m.year(),
-			displayString: m.format(dateFormat)
-		};
-	}
-
-	public static createDateComboBoxEntryFromLocalValues(year: number, month: number, day: number, dateFormat: string): DateComboBoxEntry {
-		let m = moment({year: year, month: month - 1, day: day});
-		return {
-			day: day,
-			weekDay: m.format('dd'), // see UiRootPanel.setConfig()...
-			month: month,
-			year: year,
-			displayString: m.format(dateFormat)
-		};
 	}
 
 	focus(): void {
@@ -204,17 +152,17 @@ export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V
 		return null;
 	}
 
-	setDateFormat(dateFormat: string): void {
-		this.dateFormat = convertJavaDateTimeFormatToMomentDateTimeFormat(dateFormat);
+	setLocaleAndDateFormat(locale: string, dateFormat: UiDateTimeFormatDescriptorConfig): void {
+		this._config.locale = locale;
+		this._config.dateFormat = dateFormat;
 		this.updateDateSuggestionEngine();
-		let selectedEntry = this.trivialComboBox.getSelectedEntry();
-		selectedEntry.displayString = moment({year: selectedEntry.year, month: selectedEntry.month - 1, day: selectedEntry.day}).format(this.getDateFormat());
-		this.trivialComboBox.setSelectedEntry(selectedEntry, true);
+		this.dateRenderer = this.createDateRenderer();
+		this.trivialComboBox.setSelectedEntry(this.trivialComboBox.getSelectedEntry(), true);
 		this.trivialComboBox.updateEntries([]);
 	}
 
 	setFavorPastDates(favorPastDates: boolean): void {
-		this.favorPastDates = favorPastDates;
+		this._config.favorPastDates = favorPastDates;
 		this.updateDateSuggestionEngine();
 	}
 

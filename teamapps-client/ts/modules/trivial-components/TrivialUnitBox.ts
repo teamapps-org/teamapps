@@ -35,18 +35,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {DEFAULT_TEMPLATES, defaultListQueryFunctionFactory, EditingMode, HighlightDirection, QueryFunction, TrivialComponent, keyCodes, DEFAULT_RENDERING_FUNCTIONS, unProxyEntry} from "./TrivialCore";
+import {
+    DEFAULT_RENDERING_FUNCTIONS,
+    DEFAULT_TEMPLATES,
+    defaultListQueryFunctionFactory,
+    EditingMode,
+    HighlightDirection,
+    keyCodes,
+    QueryFunction,
+    TrivialComponent,
+    unProxyEntry
+} from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
 import {createPopper, Instance as Popper} from '@popperjs/core';
 import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import KeyDownEvent = JQuery.KeyDownEvent;
+import {NumberParser} from "../util/NumberParser";
 
 export interface TrivialUnitBoxConfig<U> extends TrivialTreeBoxConfig<U> {
     unitValueProperty?: string,
     unitIdProperty?: string,
+    locale?: string,
     decimalPrecision?: number,
-    decimalSeparator?: string,
-    thousandsSeparator?: string,
     unitDisplayPosition?: 'left' | 'right',
     allowNullAmount?: boolean,
     selectedEntryRenderingFunction?: (entry: U) => string,
@@ -85,7 +95,6 @@ export class TrivialUnitBox<U> implements TrivialComponent {
     private entries: U[];
     private selectedEntry: U;
     private blurCausedByClickInsideComponent = false;
-    private numberRegex: RegExp;
     private $spinners: JQuery = $();
     private $originalInput: JQuery;
     private $editor: JQuery;
@@ -98,13 +107,15 @@ export class TrivialUnitBox<U> implements TrivialComponent {
     private editingMode: EditingMode;
     private usingDefaultQueryFunction: boolean;
 
+    private numberFormat: Intl.NumberFormat;
+    private numberParser: NumberParser;
+
     constructor(originalInput: JQuery|Element, options: TrivialUnitBoxConfig<U> = {}) {
         this.config = $.extend(<TrivialUnitBoxConfig<U>> {
             unitValueProperty: 'code',
             unitIdProperty: 'code',
             decimalPrecision: 2,
-            decimalSeparator: '.',
-            thousandsSeparator: ',',
+            locale: "en-US",
             unitDisplayPosition: 'right', // right or left
             allowNullAmount: true,
             entryRenderingFunction: DEFAULT_RENDERING_FUNCTIONS.currency2Line,
@@ -132,8 +143,6 @@ export class TrivialUnitBox<U> implements TrivialComponent {
         }
 
         this.entries = this.config.entries;
-
-        this.numberRegex = new RegExp('\\d*\\' + this.config.decimalSeparator + '?\\d*', 'g');
 
         this.$originalInput = $(originalInput).addClass("tr-original-input");
         this.$editor = $('<input type="text" autocomplete="false"></input>');
@@ -217,11 +226,11 @@ export class TrivialUnitBox<U> implements TrivialComponent {
                     this.cleanupEditorValue();
                 } else if (!e.shiftKey && keyCodes.numberKeys.indexOf(e.which) != -1) {
                     const numberPart = this.getEditorValueNumberPart();
-                    const numberPartDecimalSeparatorIndex = numberPart.indexOf(this.config.decimalSeparator);
+                    const numberPartDecimalSeparatorIndex = numberPart.indexOf(this.getDecimalSeparator());
                     const maxDecimalDigitsReached = numberPartDecimalSeparatorIndex != -1 && numberPart.length - (numberPartDecimalSeparatorIndex + 1) >= this.config.decimalPrecision;
 
                     const editorValue = this.$editor.val() as string;
-                    const decimalSeparatorIndex = editorValue.indexOf(this.config.decimalSeparator);
+                    const decimalSeparatorIndex = editorValue.indexOf(this.getDecimalSeparator());
                     const selectionStart = (this.$editor[0] as any).selectionStart;
                     const selectionEnd = (this.$editor[0] as any).selectionEnd;
                     const wouldAddAnotherDigit = decimalSeparatorIndex !== -1 && selectionEnd > decimalSeparatorIndex && selectionStart === selectionEnd;
@@ -242,7 +251,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
                     && e.which != keyCodes.delete) {
                     return; // ignore
                 }
-                const hasDoubleDecimalSeparator = new RegExp("(?:\\" + this.config.decimalSeparator + ".*)" + "\\" + this.config.decimalSeparator, "g").test(this.$editor.val() as string);
+                const hasDoubleDecimalSeparator = new RegExp("(?:\\" + this.getDecimalSeparator() + ".*)" + "\\" + this.getDecimalSeparator(), "g").test(this.$editor.val() as string);
                 if (hasDoubleDecimalSeparator) {
                     this.cleanupEditorValue();
                     (this.$editor[0] as any).setSelectionRange((this.$editor.val() as string).length - this.config.decimalPrecision, (this.$editor.val() as string).length - this.config.decimalPrecision);
@@ -268,6 +277,9 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		            }
 	            }
             }).change((e) => {
+                if (this.getAmount() > Number.MAX_SAFE_INTEGER || this.getAmount() < Number.MIN_SAFE_INTEGER) {
+                    this.$editor.val("0"); // TODO handle too large inputs differently...
+                }
                 this.updateOriginalInputValue();
                 this.fireChangeEvents(e);
             }
@@ -329,15 +341,22 @@ export class TrivialUnitBox<U> implements TrivialComponent {
         })
     }
 
+    private getDecimalSeparator() {
+        return NumberParser.getDecimalSeparatorForLocale(this.config.locale);
+    }
+    private getThousandsSeparator() {
+        return NumberParser.getGroupSeparatorForLocale(this.config.locale);
+    }
+
     private ensureDecimalInput() {
         const cursorPosition = (<HTMLInputElement>this.$editor[0]).selectionEnd;
         const oldValue = this.$editor.val() as string;
 
-        let newValue = oldValue.replace(new RegExp('[^\-0-9' + this.config.decimalSeparator + this.config.thousandsSeparator + ']', 'g'), '');
+        let newValue = oldValue.replace(new RegExp('[^\-0-9' + this.getDecimalSeparator() + this.getThousandsSeparator() + ']', 'g'), '');
         newValue = newValue.replace(/(\d*\.\d*)\./g, '$1'); // only one decimal separator!!
         newValue = newValue.replace(/(.)-*/g, '$1'); // minus may only occure at the beginning
 
-        const decimalSeparatorIndex = newValue.indexOf(this.config.decimalSeparator);
+        const decimalSeparatorIndex = newValue.indexOf(this.getDecimalSeparator());
         if (decimalSeparatorIndex != -1 && newValue.length - decimalSeparatorIndex - 1 > this.config.decimalPrecision) {
             newValue = newValue.substring(0, decimalSeparatorIndex + 1 + this.config.decimalPrecision);
         }
@@ -354,12 +373,14 @@ export class TrivialUnitBox<U> implements TrivialComponent {
     }
 
     private getQueryString() {
-        return (this.$editor.val() || "").toString().replace(this.numberRegex, '').trim();
+        return (this.$editor.val() || "").toString()
+            .replace(/[\d\W]/g, '').trim();
     }
 
+    // TODO use Intl!
     private getEditorValueNumberPart(fillupDecimals?: boolean): string {
-        const rawNumber = (this.$editor.val() as string).match(this.numberRegex).join('');
-        const decimalDeparatorIndex = rawNumber.indexOf(this.config.decimalSeparator);
+        const rawNumber = (this.$editor.val() as string).replace(new RegExp(`[^${this.getDecimalSeparator()}${this.getThousandsSeparator()}\\d]`, "g"), '').trim();
+        const decimalDeparatorIndex = rawNumber.indexOf(this.getDecimalSeparator());
 
         let integerPart: string;
         let fractionalPart: string;
@@ -377,7 +398,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
             if (fillupDecimals) {
                 fractionalPart = (fractionalPart + new Array(this.config.decimalPrecision + 1).join("0")).substr(0, this.config.decimalPrecision);
             }
-            return integerPart + this.config.decimalSeparator + fractionalPart;
+            return integerPart + this.getDecimalSeparator() + fractionalPart;
         }
     }
 
@@ -413,7 +434,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
             unit: this.selectedEntry != null ? (this.selectedEntry as any)[this.config.unitValueProperty] : null,
             unitEntry: unProxyEntry(this.selectedEntry),
             amount: this.getAmount(),
-            amountAsFloatingPointNumber: parseFloat(this.formatAmount(this.getAmount(), this.config.decimalPrecision, this.config.decimalSeparator, this.config.thousandsSeparator))
+            amountAsFloatingPointNumber: parseFloat(this.formatAmount(this.getAmount(), this.config.decimalPrecision, this.getDecimalSeparator(), this.getThousandsSeparator()))
         }, originalEvent);
     }
 
@@ -435,7 +456,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
     }
 
     private formatEditorValue() {
-        this.$editor.val(this.formatAmount(this.getAmount(), this.config.decimalPrecision, this.config.decimalSeparator, this.config.thousandsSeparator));
+        this.$editor.val(this.formatAmount(this.getAmount(), this.config.decimalPrecision, this.getDecimalSeparator(), this.getThousandsSeparator()));
     }                                                            
 
     private cleanupEditorValue() {
@@ -481,9 +502,9 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 
     private updateOriginalInputValue() {
         if (this.config.unitDisplayPosition === 'left') {
-            this.$originalInput.val((this.selectedEntry ? (this.selectedEntry as any)[this.config.unitValueProperty] : '') + this.formatAmount(this.getAmount(), this.config.decimalPrecision, this.config.decimalSeparator, ''));
+            this.$originalInput.val((this.selectedEntry ? (this.selectedEntry as any)[this.config.unitValueProperty] : '') + this.formatAmount(this.getAmount(), this.config.decimalPrecision, this.getDecimalSeparator(), ''));
         } else {
-            this.$originalInput.val(this.formatAmount(this.getAmount(), this.config.decimalPrecision, this.config.decimalSeparator, '') + (this.selectedEntry ? (this.selectedEntry as any)[this.config.unitValueProperty] : ''));
+            this.$originalInput.val(this.formatAmount(this.getAmount(), this.config.decimalPrecision, this.getDecimalSeparator(), '') + (this.selectedEntry ? (this.selectedEntry as any)[this.config.unitValueProperty] : ''));
         }
     }
 
@@ -542,12 +563,12 @@ export class TrivialUnitBox<U> implements TrivialComponent {
             if (this.config.allowNullAmount) {
                 this.$editor.val("");
             } else {
-                this.$editor.val(this.formatAmount(0, this.config.decimalPrecision, this.config.decimalSeparator, ''));
+                this.$editor.val(this.formatAmount(0, this.config.decimalPrecision, this.getDecimalSeparator(), ''));
             }
         } else if (this.$editor.is(":focus")) {
-            this.$editor.val(this.formatAmount(amount, this.config.decimalPrecision, this.config.decimalSeparator, ''));
+            this.$editor.val(this.formatAmount(amount, this.config.decimalPrecision, this.getDecimalSeparator(), ''));
         } else {
-            this.$editor.val(this.formatAmount(amount, this.config.decimalPrecision, this.config.decimalSeparator, this.config.thousandsSeparator));
+            this.$editor.val(this.formatAmount(amount, this.config.decimalPrecision, this.getDecimalSeparator(), this.getThousandsSeparator()));
         }
     };
 
@@ -577,5 +598,29 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 
     getMainDomElement(): Element {
         return this.$unitBox[0];
+    }
+
+    setLocale(locale: string) {
+        let amount = this.getAmount();
+        this.config.locale = locale;
+        this.updateNumberFormatAndParser();
+        this.setAmount(amount); // update number display!
+    }
+
+    setDecimalPrecision(precision: number) {
+        let oldPrecision = this.config.decimalPrecision;
+        let amount = this.getAmount();
+        this.config.decimalPrecision = precision;
+        this.updateNumberFormatAndParser();
+        this.setAmount(amount * Math.pow(10, precision - oldPrecision)); // update number display!
+    }
+
+    private updateNumberFormatAndParser() {
+        this.numberFormat = new Intl.NumberFormat(this.config.locale, {
+            minimumFractionDigits: this.config.decimalPrecision,
+            maximumFractionDigits: this.config.decimalPrecision,
+            useGrouping: true
+        });
+        this.numberParser = new NumberParser(this.config.locale);
     }
 }

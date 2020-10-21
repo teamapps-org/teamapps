@@ -20,9 +20,24 @@
 package org.teamapps.dto.generate.adapter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.stringtemplate.v4.Interpreter;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 import org.teamapps.dto.TeamAppsDtoParser;
 
 public class EnumDeclarationContextModelAdapter extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.EnumDeclarationContext> {
+
+	@Override
+	public Object getProperty(Interpreter interpreter, ST self, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
+		TeamAppsDtoParser.EnumDeclarationContext enumContext = (TeamAppsDtoParser.EnumDeclarationContext) o;
+		switch (propertyName) {
+			case "hasStringValues":
+				return enumContext.enumConstant().stream().allMatch(ec -> ec.StringLiteral() != null);
+			default:
+				return super.getProperty(interpreter, self, o, property, propertyName);
+		}
+	}
+
 	@Override
 	protected String getTypeScriptIdentifier(TeamAppsDtoParser.EnumDeclarationContext node) {
 		return node.Identifier().getText();

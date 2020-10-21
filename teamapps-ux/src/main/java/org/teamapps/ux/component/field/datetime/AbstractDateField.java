@@ -19,23 +19,31 @@
  */
 package org.teamapps.ux.component.field.datetime;
 
+import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.AbstractUiDateField;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
+import org.teamapps.ux.session.DateTimeFormatDescriptor;
 
-public abstract class AbstractDateField<FIELD extends AbstractDateField<FIELD, VALUE>, VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
+import java.util.Locale;
+
+public abstract class AbstractDateField<VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
 	public final Event<String> onTextInput = new Event<>();
 	public final Event<SpecialKey> onSpecialKeyPressed = new Event<>();
+
 	protected boolean showDropDownButton = true;
 	protected boolean showClearButton = false;
 	protected boolean favorPastDates = false; // TODO: fix in trivial-components!!!
-	protected String dateFormat = null; // if null, UiConfiguration.dateFormat applies
+	protected ULocale locale;
+	protected DateTimeFormatDescriptor dateFormat;
 
 	public AbstractDateField() {
 		super();
+		this.locale = getSessionContext().getULocale();
+		this.dateFormat = getSessionContext().getConfiguration().getDateFormat();
 	}
 
 	@Override
@@ -48,7 +56,8 @@ public abstract class AbstractDateField<FIELD extends AbstractDateField<FIELD, V
 		mapAbstractFieldAttributesToUiField(dateField);
 		dateField.setShowDropDownButton(showDropDownButton);
 		dateField.setFavorPastDates(favorPastDates);
-		dateField.setDateFormat(dateFormat);
+		dateField.setLocale(locale.toLanguageTag());
+		dateField.setDateFormat(dateFormat.toDateTimeFormatDescriptor());
 		dateField.setShowClearButton(showClearButton);
 	}
 
@@ -70,13 +79,30 @@ public abstract class AbstractDateField<FIELD extends AbstractDateField<FIELD, V
 		queueCommandIfRendered(() -> new AbstractUiDateField.SetFavorPastDatesCommand(getId(), favorPastDates));
 	}
 
-	public String getDateFormat() {
+	public Locale getLocale() {
+		return locale.toLocale();
+	}
+
+	public ULocale getULocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		this.locale = locale;
+		queueCommandIfRendered(() -> new AbstractUiDateField.SetLocaleAndDateFormatCommand(getId(), locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor()));
+	}
+
+	public DateTimeFormatDescriptor getDateFormat() {
 		return dateFormat;
 	}
 
-	public void setDateFormat(String dateFormat) {
+	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
 		this.dateFormat = dateFormat;
-		queueCommandIfRendered(() -> new AbstractUiDateField.SetDateFormatCommand(getId(), dateFormat));
+		queueCommandIfRendered(() -> new AbstractUiDateField.SetLocaleAndDateFormatCommand(getId(), locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public boolean isShowClearButton() {

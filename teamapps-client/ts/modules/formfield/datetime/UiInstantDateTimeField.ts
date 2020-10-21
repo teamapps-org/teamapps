@@ -17,23 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import Mustache from "mustache";
-import moment from "moment-timezone";
-import {UiInstantDateField} from "./UiInstantDateField";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {AbstractUiTimeField} from "./AbstractUiTimeField";
 import {AbstractUiDateTimeField} from "./AbstractUiDateTimeField";
-import {UiInstantDateTimeFieldCommandHandler, UiInstantDateTimeFieldConfig, UiInstantDateTimeFieldEventSource} from "../../../generated/UiInstantDateTimeFieldConfig";
+import {
+	UiInstantDateTimeFieldCommandHandler,
+	UiInstantDateTimeFieldConfig,
+	UiInstantDateTimeFieldEventSource
+} from "../../../generated/UiInstantDateTimeFieldConfig";
+import {DateTime} from "luxon";
 
 export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDateTimeFieldConfig, number> implements UiInstantDateTimeFieldEventSource, UiInstantDateTimeFieldCommandHandler {
-
-	private timeZoneId: string;
 
 	protected initialize(config: UiInstantDateTimeFieldConfig, context: TeamAppsUiContext) {
 		super.initialize(config, context);
 		this.getMainInnerDomElement().classList.add("UiDateTimeField");
-		this.timeZoneId = config.timeZoneId;
+	}
+
+	protected getTimeZone(): string {
+		return this._config.timeZoneId;
 	}
 
 	isValidData(v: number): boolean {
@@ -43,38 +45,30 @@ export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDat
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
-			let newMoment = moment.tz(uiValue, "UTC").tz(this.getTimeZoneId());
-			this.trivialDateTimeField.setValue(newMoment as any);
+			this.trivialDateTimeField.setValue(this.toDateTime(uiValue));
 		} else {
 			this.trivialDateTimeField.setValue(null);
 		}
 	}
 
+	private toDateTime(uiValue: number) {
+		return DateTime.fromMillis(uiValue).setZone(this._config.timeZoneId);
+	}
+
 	public getTransientValue(): number {
 		let value = this.trivialDateTimeField.getValue();
 		if (value) {
-			return moment.tz({
-				year: value.year || 0,
-				month: value.month ? value.month - 1 : 0,
-				day: value.day || 0,
-				hour: value.hour || 0,
-				minute: value.minute || 0
-			}, this.getTimeZoneId()).valueOf();
+			return value.valueOf();
 		} else {
 			return null;
 		}
 	}
 
-	private getTimeZoneId() {
-		return this.timeZoneId || this._context.config.timeZoneId;
-	}
-
 	public getReadOnlyHtml(value: number, availableWidth: number): string {
 		if (value != null) {
-			let mom = moment.tz(value, "UTC").tz(this.getTimeZoneId());
 			return `<div class="static-readonly-UiDateTimeField">`
-				+ Mustache.render(UiInstantDateField.comboBoxTemplate, UiInstantDateField.createDateComboBoxEntryFromMoment(mom, this._config.dateFormat || this._context.config.dateFormat))
-				+ Mustache.render(AbstractUiTimeField.comboBoxTemplate, AbstractUiTimeField.createTimeComboBoxEntryFromMoment(mom, this._config.timeFormat || this._context.config.timeFormat))
+				+ this.dateRenderer(this.toDateTime(value))
+				+ this.timeRenderer(this.toDateTime(value))
 				+ '</div>';
 		} else {
 			return "";
@@ -90,9 +84,8 @@ export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDat
 	}
 
 	setTimeZoneId(timeZoneId: string): void {
-		this.timeZoneId = timeZoneId;
-		// TODO update display!
-		this.logger.warn("TODO: implement UiInstantDateTimeField.setTimeZoneId()");
+		this._config.timeZoneId = timeZoneId;
+		this.displayCommittedValue();
 	}
 
 }

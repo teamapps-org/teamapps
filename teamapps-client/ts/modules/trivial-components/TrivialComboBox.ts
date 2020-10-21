@@ -574,6 +574,11 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			.to($editorArea[0], "top left");
 		this.isEditorVisible = true;
 		$editorArea.css("visibility", "hidden");
+		if ($editorArea[0] != this.$selectedEntryWrapper[0]) {
+			this.$editor[0].style.padding = "0px";
+		} else {
+			this.$editor[0].style.padding = null;
+		}
 	}
 
 	private getEditorArea() {
@@ -592,6 +597,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.$editor.width(0).height(0);
 		this.isEditorVisible = false;
 		this.getEditorArea().css("visibility", "visible");
+		this.$selectedEntryWrapper.css("visibility", "visible");
 	}
 
 	private repositionDropDown() {

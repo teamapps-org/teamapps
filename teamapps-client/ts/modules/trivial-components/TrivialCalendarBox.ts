@@ -35,10 +35,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import moment from "moment-timezone";
-import Moment = moment.Moment;
 import {NavigationDirection, TrivialComponent} from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
+import {DateTime} from "luxon";
 
 export enum WeekDay {
     MONDAY = 1, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -46,7 +45,8 @@ export enum WeekDay {
 export type TimeUnit = 'year'|'month'|'day'|'hour'|'minute';
 
 export interface TrivialCalendarBoxConfig {
-    selectedDate?: Moment,
+    locale?: string,
+    selectedDate?: DateTime,
     firstDayOfWeek?: WeekDay,
     mode?: 'date' | 'time' | 'datetime',
     highlightKeyboardNavigationState?: boolean
@@ -58,7 +58,7 @@ export class TrivialCalendarBox implements TrivialComponent {
 
     private keyboardNavigationState: TimeUnit;
     private keyboardNavCssClass: string;
-    private selectedDate: Moment;
+    private selectedDate: DateTime;
     private $calendarBox: JQuery;
     private $calendarDisplay: JQuery;
     private $yearDisplay: JQuery;
@@ -75,12 +75,14 @@ export class TrivialCalendarBox implements TrivialComponent {
     private $digitalTimeMinuteDisplayWrapper: JQuery;
     private $digitalTimeMinuteDisplay: JQuery;
 
-    public readonly onChange = new TrivialEvent<{ value: Moment, timeUnitEdited: TimeUnit}>(this);
+    public readonly onChange = new TrivialEvent<{ value: DateTime, timeUnitEdited: TimeUnit}>(this);
     public readonly onOnEditingTimeUnitChange = new TrivialEvent<TimeUnit>(this);
 
     constructor(private $container: JQuery|Element|string, options: TrivialCalendarBoxConfig = {}) {
+        let now = DateTime.local();
         this.config = $.extend(<TrivialCalendarBoxConfig> {
-            selectedDate: moment(),
+            locale: "en-US",
+            selectedDate: now,
             firstDayOfWeek: WeekDay.MONDAY,
             mode: 'datetime', // 'date', 'time', 'datetime',
             highlightKeyboardNavigationState: false
@@ -152,72 +154,78 @@ export class TrivialCalendarBox implements TrivialComponent {
             this.updateMonthDisplay(this.selectedDate);
             this.updateClockDisplay(this.selectedDate);
         } else {
-            this.updateMonthDisplay(moment());
-            this.updateClockDisplay(moment());
+            this.updateMonthDisplay(now);
+            this.updateClockDisplay(now);
         }
     }
 
-    private static getDaysForCalendarDisplay(dateInMonthDoBeDisplayed: Moment, firstDayOfWeek: WeekDay) {
-        const firstDayOfMonth = dateInMonthDoBeDisplayed.clone().utc().startOf('month').hour(12); // mid-day to prevent strange daylight-saving effects.
-        const firstDayToBeDisplayed = firstDayOfMonth.clone().isoWeekday(firstDayOfWeek <= firstDayOfMonth.isoWeekday() ? firstDayOfWeek : firstDayOfWeek - 7);
+    private getDaysForCalendarDisplay(dateInMonthDoBeDisplayed: DateTime) {
+        const firstDayOfMonth = dateInMonthDoBeDisplayed.toLocal().startOf('month');
+        const firstDayToBeDisplayed = this.firstDayOfWeek(firstDayOfMonth);
 
-        const daysOfMonth: Moment[] = [];
-        for (const day = firstDayToBeDisplayed.clone(); daysOfMonth.length < 42; day.add(1, 'day')) {
-            daysOfMonth.push(day.clone());
+        const daysOfMonth: DateTime[] = [];
+        for (let day = firstDayToBeDisplayed; daysOfMonth.length < 42; day = day.plus({day: 1})) {
+            daysOfMonth.push(day);
         }
         return daysOfMonth;
     }
 
-    private updateMonthDisplay(dateInMonthToBeDisplayed: Moment) {
-        this.$year.text(dateInMonthToBeDisplayed.year());
-        this.$month.text(moment.months()[dateInMonthToBeDisplayed.month()]);
+    private firstDayOfWeek(firstDayOfMonth: DateTime): DateTime {
+        return firstDayOfMonth.set({weekday: this.config.firstDayOfWeek <= firstDayOfMonth.weekday ? this.config.firstDayOfWeek : this.config.firstDayOfWeek - 7});
+    }
+
+    private updateMonthDisplay(dateInMonthToBeDisplayed: DateTime) {
+        this.$year.text(dateInMonthToBeDisplayed.year);
+        this.$month.text(dateInMonthToBeDisplayed.setLocale(this.config.locale).toLocaleString({month: "long"}));
         this.$monthTable.remove();
         this.$monthTable = $('<div class="month-table">').appendTo(this.$calendarDisplay);
 
-        const daysToBeDisplayed = TrivialCalendarBox.getDaysForCalendarDisplay(dateInMonthToBeDisplayed, 1);
+        const daysToBeDisplayed = this.getDaysForCalendarDisplay(dateInMonthToBeDisplayed);
 
         let $tr = $('<tr>').appendTo(this.$monthTable);
-        for (let i = 0; i < 7; i++) {
-            $tr.append('<th>' + moment.weekdaysMin()[(this.config.firstDayOfWeek + i) % 7] + '</th>');
+        let weekDay = this.firstDayOfWeek(DateTime.local()).setLocale(this.config.locale);
+        for (let i = 0; i < 7; i++, weekDay = weekDay.plus({day: 1})) {
+            $tr.append('<th>' + weekDay.toLocaleString({weekday: "narrow"}) + '</th>');
         }
+        let today = DateTime.local().startOf("day");
         for (let w = 0; w < daysToBeDisplayed.length / 7; w++) {
             $tr = $('<tr>').appendTo(this.$monthTable);
             for (let d = 0; d < 7; d++) {
                 const day = daysToBeDisplayed[w * 7 + d];
-                const $td = $('<td>' + day.date() + '</td>');
-                if (day.month() == dateInMonthToBeDisplayed.month()) {
+                const $td = $('<td>' + day.day + '</td>');
+                if (day.month == dateInMonthToBeDisplayed.month) {
                     $td.addClass('current-month');
                 } else {
                     $td.addClass('other-month');
                 }
-                if (day.year() == moment().year() && day.dayOfYear() == moment().dayOfYear()) {
+                if (day.hasSame(today, 'day')) {
                     $td.addClass('today');
                 }
-                if (day.year() == this.selectedDate.year() && day.dayOfYear() == this.selectedDate.dayOfYear()) {
+                if (day.hasSame(this.selectedDate, 'day')) {
                     $td.addClass('selected');
                     if (this.keyboardNavigationState === 'day') {
                         $td.addClass(this.keyboardNavCssClass);
                     }
                 }
-                $td.click(((day: Moment) => {
+                $td.click(((day: DateTime) => {
                     this.setKeyboardNavigationState("day");
-                    this.setMonthAndDay(day.month() + 1, day.date(), true);
+                    this.setMonthAndDay(day.month + 1, day.day, true);
                 }).bind(this, day));
                 $tr.append($td);
             }
         }
     }
 
-    private updateClockDisplay(date: Moment) {
-        this.$amPmText.text(date.hour() >= 12 ? 'pm' : 'am');
-        const minutesAngle = date.minute() * 6;
-        const hours = (date.hour() % 12) + date.minute() / 60;
+    private updateClockDisplay(date: DateTime) {
+        this.$amPmText.text(date.hour >= 12 ? 'pm' : 'am');
+        const minutesAngle = date.minute * 6;
+        const hours = (date.hour % 12) + date.minute / 60;
         const hourAngle = hours * 30;
         this.$hourHand.attr("transform", "rotate(" + hourAngle + ",50,50)");
         this.$minuteHand.attr("transform", "rotate(" + minutesAngle + ",50,50)");
 
-        this.$digitalTimeHourDisplay.text(date.format('HH'));
-        this.$digitalTimeMinuteDisplay.text(date.format('mm'));
+        this.$digitalTimeHourDisplay.text(date.toFormat('HH'));
+        this.$digitalTimeMinuteDisplay.text(date.toFormat('mm'));
     }
 
     private updateDisplay() {
@@ -225,13 +233,13 @@ export class TrivialCalendarBox implements TrivialComponent {
         this.updateClockDisplay(this.selectedDate);
     };
 
-    public setSelectedDate(moment: Moment) {
-        this.selectedDate = moment;
+    public setSelectedDate(dateTime: DateTime) {
+        this.selectedDate = dateTime;
         this.updateDisplay();
     }
 
     public setYear(year: number, fireEvent?: boolean) {
-        this.selectedDate.year(year);
+        this.selectedDate = this.selectedDate.set({year});
         this.updateDisplay();
         if (fireEvent) {
             this.onOnEditingTimeUnitChange.fire('year');
@@ -240,7 +248,7 @@ export class TrivialCalendarBox implements TrivialComponent {
     }
 
     public setMonth(month: number, fireEvent?: boolean) {
-        this.selectedDate.month(month - 1);
+        this.selectedDate = this.selectedDate.set({month});
         this.updateDisplay();
         if (fireEvent) {
             this.onOnEditingTimeUnitChange.fire('month');
@@ -248,8 +256,8 @@ export class TrivialCalendarBox implements TrivialComponent {
         }
     }
 
-    public setDayOfMonth(dayOfMonth: number, fireEvent?: boolean) {
-        this.selectedDate.date(dayOfMonth);
+    public setDayOfMonth(day: number, fireEvent?: boolean) {
+        this.selectedDate = this.selectedDate.set({day});
         this.updateDisplay();
         if (fireEvent) {
             this.onOnEditingTimeUnitChange.fire('day');
@@ -258,8 +266,7 @@ export class TrivialCalendarBox implements TrivialComponent {
     }
 
     public setMonthAndDay(month: number, day: number, fireEvent?: boolean) {
-        this.selectedDate.month(month - 1);
-        this.selectedDate.date(day);
+        this.selectedDate = this.selectedDate.set({month, day});
         this.updateDisplay();
         if (fireEvent) {
             this.onOnEditingTimeUnitChange.fire('day');
@@ -269,7 +276,7 @@ export class TrivialCalendarBox implements TrivialComponent {
     }
 
     public setHour(hour: number, fireEvent?: boolean) {
-        this.selectedDate.hour(hour);
+        this.selectedDate = this.selectedDate.set({hour});
         this.updateDisplay();
         if (fireEvent) {
             this.onOnEditingTimeUnitChange.fire('hour');
@@ -278,7 +285,7 @@ export class TrivialCalendarBox implements TrivialComponent {
     }
 
     public setMinute(minute: number, fireEvent?: boolean) {
-        this.selectedDate.minute(minute);
+        this.selectedDate = this.selectedDate.set({minute});
         this.updateDisplay();
         if (fireEvent) {
             this.onOnEditingTimeUnitChange.fire('minute');
@@ -326,44 +333,44 @@ export class TrivialCalendarBox implements TrivialComponent {
     private navigateByUnit(unit: TimeUnit, direction: NavigationDirection, fireEvent: boolean = false): boolean { // returns true if effectively navigated, false if nothing has changed
         if (unit == 'year') {
             if (direction == 'down' || direction == 'left') {
-                this.setYear(this.selectedDate.year() - 1, fireEvent);
+                this.setYear(this.selectedDate.year - 1, fireEvent);
             } else if (direction == 'up' || direction == 'right') {
-                this.setYear(this.selectedDate.year() + 1, fireEvent);
+                this.setYear(this.selectedDate.year + 1, fireEvent);
             }
             return true;
         } else if (unit == 'month') {
             if (direction == 'down' || direction == 'left') {
-                this.setMonth(this.selectedDate.month(), fireEvent);
+                this.setMonth(this.selectedDate.month - 1, fireEvent);
             } else if (direction == 'up' || direction == 'right') {
-                this.setMonth(this.selectedDate.month() + 2, fireEvent);
+                this.setMonth(this.selectedDate.month + 1, fireEvent);
             }
             return true;
         } else if (unit == 'day') {
             if (direction == 'down') {
-                this.selectedDate.dayOfYear(this.selectedDate.dayOfYear() + 7);
+                this.selectedDate = this.selectedDate.plus({days: 7});
             } else if (direction == 'left') {
-                this.selectedDate.dayOfYear(this.selectedDate.dayOfYear() - 1);
+                this.selectedDate = this.selectedDate.minus({days: 1});
             } else if (direction == 'up') {
-                this.selectedDate.dayOfYear(this.selectedDate.dayOfYear() - 7);
+                this.selectedDate = this.selectedDate.minus({days: 7});
             } else if (direction == 'right') {
-                this.selectedDate.dayOfYear(this.selectedDate.dayOfYear() + 1);
+                this.selectedDate = this.selectedDate.plus({days: 1});
             }
             this.updateDisplay();
             fireEvent && this.fireChangeEvents('day');
             return true;
         } else if (unit == 'hour') {
             if (direction == 'down' || direction == 'left') {
-                this.setHour(this.selectedDate.hour() - 1, fireEvent);
+                this.setHour(this.selectedDate.hour - 1, fireEvent);
             } else if (direction == 'up' || direction == 'right') {
-                this.setHour(this.selectedDate.hour() + 1, fireEvent);
+                this.setHour(this.selectedDate.hour + 1, fireEvent);
             }
             fireEvent && this.fireChangeEvents('hour');
             return true;
         } else if (unit == 'minute') {
             if (direction == 'down' || direction == 'left') {
-                this.setMinute(this.selectedDate.minute() - (this.selectedDate.minute() % 5) - 5, fireEvent);
+                this.setMinute(this.selectedDate.minute - (this.selectedDate.minute % 5) - 5, fireEvent);
             } else if (direction == 'up' || direction == 'right') {
-                this.setMinute(this.selectedDate.minute() - (this.selectedDate.minute() % 5) + 5, fireEvent);
+                this.setMinute(this.selectedDate.minute - (this.selectedDate.minute % 5) + 5, fireEvent);
             }
             fireEvent && this.fireChangeEvents('minute');
             return true;

@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.field.multicurrency;
 
+import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.UiCurrencyField;
 import org.teamapps.dto.UiCurrencyValue;
 import org.teamapps.dto.UiEvent;
@@ -27,8 +28,10 @@ import org.teamapps.event.Event;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
+import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -37,6 +40,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	public final Event<String> onTextInput = new Event<>();
 	public final Event<SpecialKey> onSpecialKeyPressed = new Event<>();
 
+	private ULocale locale = SessionContext.current().getULocale();
 	private int precision = 2;
 	private boolean alphaKeysQueryForCurrency = true;
 	private Currency defaultCurrency; // the selected or default currency code (ISO 4217 - e.g. "USD", "EUR"). Nullable. However, the user has to select a currency.
@@ -61,6 +65,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 		field.setShowCurrencyBeforeAmount(showCurrencyBeforeAmount);
 		field.setShowCurrencySymbol(showCurrencySymbol);
 		field.setAlphaKeysQueryForCurrency(alphaKeysQueryForCurrency);
+		field.setLocale(locale.toLanguageTag());
 		return field;
 	}
 
@@ -142,12 +147,29 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public void setPrecision(int precision) {
 		this.precision = precision;
-		reRenderIfRendered();
+		queueCommandIfRendered(() -> new UiCurrencyField.SetPrecisionCommand(getId(), precision));
 	}
 
 	public void setAlphaKeysQueryForCurrency(boolean alphaKeysQueryForCurrency) {
 		this.alphaKeysQueryForCurrency = alphaKeysQueryForCurrency;
 		reRenderIfRendered();
+	}
+
+	public Locale getLocale() {
+		return locale.toLocale();
+	}
+
+	public ULocale getULocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		setULocale(ULocale.forLocale(locale));
+	}
+
+	public void setULocale(ULocale locale) {
+		this.locale = locale;
+		queueCommandIfRendered(() -> new UiCurrencyField.SetLocaleCommand(getId(), locale.toLanguageTag()));
 	}
 
 	@Override

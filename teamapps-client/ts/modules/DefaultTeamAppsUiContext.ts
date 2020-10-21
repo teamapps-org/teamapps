@@ -59,15 +59,9 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	public isHighDensityScreen: boolean;
 	public config: UiConfigurationConfig = {
 		_type: "UiConfigurationConfig",
-		isoLanguage: "en",
+		locale: "en",
 		themeClassName: null,
-		optimizedForTouch: false,
-		timeZoneId: "Europe/Berlin",
-		firstDayOfWeek: UiWeekDay.MONDAY,
-		dateFormat: "yyyy-MM-dd",
-		timeFormat: "HH:mm",
-		decimalSeparator: ".",
-		thousandsSeparator: ""
+		optimizedForTouch: false
 	};
 	public readonly templateRegistry: TemplateRegistry = new TemplateRegistry(this);
 
