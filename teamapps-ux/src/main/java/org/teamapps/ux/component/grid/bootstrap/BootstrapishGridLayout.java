@@ -32,7 +32,7 @@ import org.teamapps.dto.UiSizeType;
 import org.teamapps.dto.UiSizingPolicy;
 import org.teamapps.dto.UiSpacing;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Container;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.SizingPolicy;
 import org.teamapps.ux.component.format.VerticalElementAlignment;
@@ -47,7 +47,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class BootstrapishGridLayout extends AbstractComponent implements Container {
+public class BootstrapishGridLayout extends AbstractComponent implements Component {
 
 	private static final int DEFAULT_NUMBER_OF_COLUMNS = 12;
 

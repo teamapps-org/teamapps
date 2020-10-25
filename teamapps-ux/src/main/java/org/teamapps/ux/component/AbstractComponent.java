@@ -21,14 +21,11 @@ package org.teamapps.ux.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.event.Event;
-import org.teamapps.ux.component.absolutelayout.Length;
-import org.teamapps.ux.component.format.Shadow;
-import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
@@ -55,7 +52,7 @@ public abstract class AbstractComponent implements Component {
 	private final String id;
 	private final SessionContext sessionContext;
 	private RenderingState renderingState = RenderingState.NOT_RENDERED;
-	private Container container;
+	private Component parent;
 
 	private boolean visible = true;
 	private final Map<String, CssStyles> stylesBySelector = new HashMap<>(0);
@@ -98,11 +95,6 @@ public abstract class AbstractComponent implements Component {
 		if (changed) {
 			queueCommandIfRendered(() -> new UiComponent.SetVisibleCommand(getId(), visible));
 		}
-	}
-
-	@Override
-	public boolean isEffectivelyVisible() {
-		return isRendered() && isVisible() && getParent() != null && getParent().isChildVisible(this);
 	}
 
 	@Override
@@ -169,36 +161,6 @@ public abstract class AbstractComponent implements Component {
 	}
 
 	@Override
-	public void setMinWidth(Length minWidth) {
-		setCssStyle("min-width", minWidth.toCssString());
-	}
-
-	@Override
-	public void setMaxWidth(Length maxWidth) {
-		setCssStyle("max-width", maxWidth.toCssString());
-	}
-
-	@Override
-	public void setMinHeight(Length minHeight) {
-		setCssStyle("min-height", minHeight.toCssString());
-	}
-
-	@Override
-	public void setMaxHeight(Length maxHeight) {
-		setCssStyle("max-height", maxHeight.toCssString());
-	}
-
-	@Override
-	public void setMargin(Spacing margin) {
-		setCssStyle("margin", margin.toCssString());
-	}
-
-	@Override
-	public void setShadow(Shadow shadow) {
-		setCssStyle("box-shadow", shadow.toCssString());
-	}
-
-	@Override
 	public void setCssStyle(String selector, String propertyName, String value) {
 		if (selector == null) {
 			selector = "";
@@ -221,13 +183,13 @@ public abstract class AbstractComponent implements Component {
 //	}
 
 	@Override
-	public void setParent(Container container) {
-		this.container = container;
+	public void setParent(Component container) {
+		this.parent = container;
 	}
 
 	@Override
-	public Container getParent() {
-		return container;
+	public Component getParent() {
+		return parent;
 	}
 
 	@Override
