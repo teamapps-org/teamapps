@@ -19,17 +19,13 @@
  */
 package org.teamapps.webcontroller;
 
-import com.ibm.icu.util.ULocale;
 import org.teamapps.icon.material.MaterialIconProvider;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.UxServerContext;
-import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
-import org.teamapps.ux.session.StylingTheme;
 
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -59,23 +55,12 @@ public interface WebController {
 		return null;
 	}
 
+	/**
+	 * Invoked to invalidate the WebController as a whole (not only for a specific session).
+	 * This is usually when the ServletContext is about to be shut down.
+	 */
 	default void destroy() {
 		// do nothing by default
 	}
 
-	default SessionConfiguration createSessionConfiguration(SessionContext context) {
-		boolean optimizedForTouch = false;
-		StylingTheme theme = StylingTheme.DEFAULT;
-		if (context.getClientInfo().isMobileDevice()) {
-			optimizedForTouch = true;
-			theme = StylingTheme.MODERN;
-		}
-
-		return SessionConfiguration.create(
-				ULocale.forLanguageTag(context.getClientInfo().getPreferredLanguageIso()),
-				ZoneId.of(context.getClientInfo().getTimeZone()),
-				theme,
-				optimizedForTouch
-		);
-	}
 }
