@@ -29,7 +29,9 @@ import org.teamapps.server.UxServerContext;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.resource.ClassPathResourceProvider;
 import org.teamapps.ux.resource.ResourceProviderServlet;
-import org.teamapps.ux.session.*;
+import org.teamapps.ux.session.ClientGeoIpInfo;
+import org.teamapps.ux.session.ClientUserAgent;
+import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 import java.io.File;
@@ -45,12 +47,12 @@ public class ApplicationWebController implements WebController {
 	private final ComponentBuilder componentBuilder;
 	private final boolean darkTheme;
 	private GeoIpLookupService geoIpLookupService;
-	private UserAgentParser userAgentParser = new UserAgentParser();
-	private List<ServletRegistration> servletRegistrations = new ArrayList<>();
-	private List<Function<UxServerContext, ServletRegistration>> servletRegistrationFactories = new ArrayList<>();
+	private final UserAgentParser userAgentParser = new UserAgentParser();
+	private final List<ServletRegistration> servletRegistrations = new ArrayList<>();
+	private final List<Function<UxServerContext, ServletRegistration>> servletRegistrationFactories = new ArrayList<>();
 	private IconProvider defaultIconProvider;
-	private List<IconProvider> iconProviders = new ArrayList<>();
-	private List<SessionStartHandler> sessionStartHandlers = new ArrayList<>();
+	private final List<IconProvider> iconProviders = new ArrayList<>();
+	private final List<SessionStartHandler> sessionStartHandlers = new ArrayList<>();
 	private IconTheme defaultIconTheme;
 	private IconTheme defaultMobileIconTheme;
 
@@ -70,6 +72,7 @@ public class ApplicationWebController implements WebController {
 
 	@Override
 	public void onSessionStart(SessionContext context) {
+		context.setConfiguration(ClientConfigProvider.createUserAgentSessionConfiguration(darkTheme, context));
 		if (context.getClientInfo() != null && context.getClientInfo().getUserAgent() != null) {
 			ClientUserAgent clientUserAgent = userAgentParser.parseUserAgent(context.getClientInfo().getUserAgent());
 			context.getClientInfo().setUserAgentData(clientUserAgent);
@@ -139,11 +142,6 @@ public class ApplicationWebController implements WebController {
 	@Override
 	public List<IconProvider> getAdditionalIconProvider() {
 		return iconProviders;
-	}
-
-	@Override
-	public SessionConfiguration createSessionConfiguration(SessionContext context) {
-		return ClientConfigProvider.createUserAgentSessionConfiguration(darkTheme, context);
 	}
 
 	@Override
