@@ -46,23 +46,41 @@ import java.security.cert.CertificateException;
 
 public class TeamAppsJettyEmbeddedServer {
 
+	public static final int DEFAULT_PORT = 8080;
+	
 	private final File webAppDirectory;
 	private final Server server;
-	private WebAppContext webapp;
+	private final WebAppContext webapp;
+
+	public TeamAppsJettyEmbeddedServer(WebController webController) throws ServletException, IOException {
+		this(webController, new TeamAppsConfiguration());
+	}
+
+	public TeamAppsJettyEmbeddedServer(WebController webController, TeamAppsConfiguration config) throws ServletException, IOException {
+		this(webController, config, DEFAULT_PORT);
+	}
+
+	public TeamAppsJettyEmbeddedServer(WebController webController, int port) throws ServletException, IOException {
+		this(webController, new TeamAppsConfiguration(), port);
+	}
+
+	public TeamAppsJettyEmbeddedServer(WebController webController, TeamAppsConfiguration config, int port) throws ServletException, IOException {
+		this(webController, Files.createTempDirectory("teamapps").toFile(), config, port);
+	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory) throws ServletException {
 		this(webController, webAppDirectory, new TeamAppsConfiguration());
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) throws ServletException {
-		this(webController, webAppDirectory, 8080, config);
+		this(webController, webAppDirectory, config, DEFAULT_PORT);
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, int port) throws ServletException {
-		this(webController, webAppDirectory, port, new TeamAppsConfiguration());
+		this(webController, webAppDirectory, new TeamAppsConfiguration(), port);
 	}
 
-	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, int port, TeamAppsConfiguration config) throws ServletException {
+	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) throws ServletException {
 		this.webAppDirectory = webAppDirectory;
 
 		server = new Server(port);
@@ -138,6 +156,6 @@ public class TeamAppsJettyEmbeddedServer {
 			return;
 		}
 		WebController webController = (WebController) Class.forName(args[0]).getConstructor().newInstance();
-		new TeamAppsJettyEmbeddedServer(webController, Files.createTempDirectory("sf").toFile(), 8080).start();
+		new TeamAppsJettyEmbeddedServer(webController, Files.createTempDirectory("sf").toFile(), DEFAULT_PORT).start();
 	}
 }
