@@ -43,18 +43,9 @@ import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 import javax.servlet.http.HttpSession;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -68,8 +59,8 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 	private final UiCommandExecutor commandExecutor;
 
 	private final ObjectMapper objectMapper;
-	private Map<QualifiedUiSessionId, SessionContext> sessionContextById = new ConcurrentHashMap<>();
-	private Map<String, File> uploadedFilesByUuid = new ConcurrentHashMap<>();
+	private final Map<QualifiedUiSessionId, SessionContext> sessionContextById = new ConcurrentHashMap<>();
+	private final Map<String, File> uploadedFilesByUuid = new ConcurrentHashMap<>();
 
 	private final UxServerContext uxServerContext = new UxServerContext() {
 		@Override
@@ -95,12 +86,11 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 
 	@Override
 	public void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession) {
-		SessionRecorder sessionRecorder = null;
 		if (userSessionCommandsRecordingPath != null) {
 			try {
 				String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(new Date());
 				File outputFile = new File(userSessionCommandsRecordingPath, "Session-" + timeStamp + ".log");
-				sessionRecorder = new SessionRecorder(objectMapper, new BufferedOutputStream(new FileOutputStream(outputFile)));
+				new SessionRecorder(objectMapper, new BufferedOutputStream(new FileOutputStream(outputFile)));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -125,7 +115,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		sessionContextById.put(sessionId, context);
 
 		CompletableFuture<Void> future = context.runWithContext(() -> {
-			context.setConfiguration(webController.createSessionConfiguration(context));
 			context.registerTemplates(Arrays.stream(BaseTemplate.values())
 					.collect(Collectors.toMap(Enum::name, BaseTemplate::getTemplate)));
 			webController.onSessionStart(context);
@@ -138,7 +127,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	public Collection<ServletRegistration> getServletRegistrations() {
 		ArrayList<ServletRegistration> registrations = new ArrayList<>();
@@ -192,7 +180,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				String uiComponentId = event.getComponentId();
 				ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
 				if (clientObject != null) {
-					clientObject.handleUiEvent(event);
+					clientObject.handleUiEvent(event);  // TODO #custom
 				}
 			}).exceptionally(e -> {
 				LOGGER.error("Exception while handling ui event", e);
@@ -204,10 +192,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 
 	public void handleFileUpload(File file, String uuid) {
 		this.uploadedFilesByUuid.put(uuid, file);
-	}
-
-	public SessionContext getSessionContextById(QualifiedUiSessionId qualifiedUiSessionId) {
-		return sessionContextById.get(qualifiedUiSessionId);
 	}
 
 	public String getUserSessionCommandsRecordingPath() {

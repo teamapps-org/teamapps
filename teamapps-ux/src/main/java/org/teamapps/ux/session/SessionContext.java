@@ -102,7 +102,7 @@ public class SessionContext {
 	private final RankingTranslationProvider rankingTranslationProvider;
 
 	private final Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
-	private SessionConfiguration sessionConfiguration = SessionConfiguration.createDefault();
+	private SessionConfiguration sessionConfiguration;
 
 	private final Map<String, Icon> bundleIconByKey = new HashMap<>();
 
@@ -115,6 +115,7 @@ public class SessionContext {
 		this.sessionId = sessionId;
 		this.httpSession = httpSession;
 		this.clientInfo = clientInfo;
+		sessionConfiguration = SessionConfiguration.createForClientInfo(clientInfo);
 		this.commandExecutor = commandExecutor;
 		this.serverContext = serverContext;
 		this.iconTheme = iconTheme;

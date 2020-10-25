@@ -40,8 +40,19 @@ public class SessionConfiguration {
 	private String iconPath = "icons";
 	private StylingTheme theme = StylingTheme.DEFAULT;
 
-	public static SessionConfiguration createDefault() {
-		return new SessionConfiguration();
+	public static SessionConfiguration createForClientInfo(ClientInfo clientInfo) {
+		boolean optimizedForTouch = false;
+		StylingTheme theme = StylingTheme.DEFAULT;
+		if (clientInfo.isMobileDevice()) {
+			optimizedForTouch = true;
+			theme = StylingTheme.MODERN;
+		}
+		return SessionConfiguration.create(
+				ULocale.forLanguageTag(clientInfo.getPreferredLanguageIso()),
+				ZoneId.of(clientInfo.getTimeZone()),
+				theme,
+				optimizedForTouch
+		);
 	}
 
 	public static SessionConfiguration create(ULocale locale, ZoneId timeZone, StylingTheme theme, boolean optimizedForTouch) {
