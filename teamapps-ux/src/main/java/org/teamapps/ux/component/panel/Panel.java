@@ -29,7 +29,6 @@ import org.teamapps.event.Event;
 import org.teamapps.icons.api.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbutton.ToolButton;
@@ -43,7 +42,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class Panel extends AbstractComponent implements Container {
+public class Panel extends AbstractComponent implements Component {
 
 	public final Event<WindowButtonType> onWindowButtonClicked = new Event<>();
 
@@ -313,17 +312,6 @@ public class Panel extends AbstractComponent implements Container {
 		}
 		updateWindowButtons();
 	}
-
-	@Override
-	public boolean isChildVisible(Component child) {
-		return isEffectivelyVisible() && (content == child || leftHeaderField == child || rightHeaderField == child || toolButtons.contains(child) || toolbar == child);
-	}
-
-	//	TODO #focus
-//	@Override
-//	public void handleFieldFocused(AbstractField field) {
-//	}
-
 
 	public void setLeftHeaderField(AbstractField<?> leftHeaderField) {
 		if (this.leftHeaderField != null) {

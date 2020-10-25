@@ -24,11 +24,10 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiMobileLayout;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.animation.PageTransition;
 import org.teamapps.ux.component.toolbar.Toolbar;
 
-public class MobileLayout extends AbstractComponent implements Container {
+public class MobileLayout extends AbstractComponent implements Component {
 
 	protected Toolbar toolbar;
 	protected Component content;
@@ -97,8 +96,4 @@ public class MobileLayout extends AbstractComponent implements Container {
 		queueCommandIfRendered(() -> new UiMobileLayout.SetNavigationBarCommand(getId(), navigationBar != null ? navigationBar.createUiReference() : null));
 	}
 
-	@Override
-	public boolean isChildVisible(Component child) {
-		return this.isEffectivelyVisible() && (child == navigationBar || child == content || child == toolbar);
-	}
 }

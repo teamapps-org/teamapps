@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,29 +29,15 @@ public interface Component extends ClientObject {
 	/**
 	 * Used internally for setting the component's container. May only be invoked by the new container!!
 	 */
-	void setParent(Container container);
+	void setParent(Component container);
 
-	Container getParent();
+	Component getParent();
 
 	boolean isVisible();
 
 	void setVisible(boolean visible);
 
-	boolean isEffectivelyVisible();
-
 	// ===== CSS =====
-
-	void setMinWidth(Length minWidth);
-
-	void setMaxWidth(Length maxWidth);
-
-	void setMinHeight(Length minHeight);
-
-	void setMaxHeight(Length maxHeight);
-
-	void setMargin(Spacing margin);
-
-	void setShadow(Shadow shadow);
 
 	void setCssStyle(String selector, String propertyName, String value);
 
@@ -59,8 +45,29 @@ public interface Component extends ClientObject {
 		setCssStyle(null, propertyName, value);
 	}
 
-//	void updateEffectiveVisibility();
-//	Event<Boolean> onEffectiveVisibilityChanged();
+	default void setMinWidth(Length minWidth) {
+		setCssStyle("min-width", minWidth.toCssString());
+	}
+
+	default void setMaxWidth(Length maxWidth) {
+		setCssStyle("max-width", maxWidth.toCssString());
+	}
+
+	default void setMinHeight(Length minHeight) {
+		setCssStyle("min-height", minHeight.toCssString());
+	}
+
+	default void setMaxHeight(Length maxHeight) {
+		setCssStyle("max-height", maxHeight.toCssString());
+	}
+
+	default void setMargin(Spacing margin) {
+		setCssStyle("margin", margin.toCssString());
+	}
+
+	default void setShadow(Shadow shadow) {
+		setCssStyle("box-shadow", shadow.toCssString());
+	}
 
 	// == static methods ==
 

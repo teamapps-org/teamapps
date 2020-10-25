@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,6 @@ import org.teamapps.dto.UiNavigationBarButton;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -38,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NavigationBar<RECORD> extends AbstractComponent implements Container {
+public class NavigationBar<RECORD> extends AbstractComponent implements Component {
 
 	public Event<NavigationBarButton> onButtonClick = new Event<>();
 
@@ -131,8 +130,10 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 	// TODO #componentRef still needed after component reference implementation??
 	public void preloadFanOutComponent(Component component) {
 		fanOutComponents.add(component);
-		component.setParent(this);
-		queueCommandIfRendered(() -> new UiNavigationBar.AddFanOutComponentCommand(getId(), component.createUiReference()));
+		if (component != null) {
+			component.setParent(this);
+		}
+		queueCommandIfRendered(() -> new UiNavigationBar.AddFanOutComponentCommand(getId(), component != null ? component.createUiReference() : null));
 	}
 
 	public void showFanOutComponent(Component component) {
@@ -140,7 +141,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 			preloadFanOutComponent(component);
 		}
 		activeFanOutComponent = component;
-		queueCommandIfRendered(() -> new UiNavigationBar.ShowFanOutComponentCommand(getId(), component.createUiReference()));
+		queueCommandIfRendered(() -> new UiNavigationBar.ShowFanOutComponentCommand(getId(), component != null ? component.createUiReference() : null));
 	}
 
 	public void hideFanOutComponent() {
@@ -200,11 +201,6 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Containe
 
 	public Component getActiveFanOutComponent() {
 		return activeFanOutComponent;
-	}
-
-	@Override
-	public boolean isChildVisible(Component child) {
-		return this.isEffectivelyVisible() && this.activeFanOutComponent == child;
 	}
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
