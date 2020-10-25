@@ -31,7 +31,6 @@ import org.teamapps.dto.UiWorkSpaceLayoutView;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.progress.DefaultMultiProgressDisplay;
 import org.teamapps.ux.component.splitpane.SplitSizePolicy;
@@ -46,7 +45,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class WorkSpaceLayout extends AbstractComponent implements Container {
+public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public static String ROOT_WINDOW_ID = "ROOT_WINDOW";
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorkSpaceLayout.class);
@@ -57,7 +56,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 	public final Event<WorkSpaceLayoutView> onViewClosed = new Event<>();
 	public final Event<WorkSpaceLayoutViewGroup> onViewGroupPanelStateChanged = new Event<>();
 
-	private String childWindowPageTitle = "Application window";
+	private final String childWindowPageTitle = "Application window";
 	private Toolbar toolbar;
 	private String newWindowBackgroundImage;
 	private String newWindowBlurredBackgroundImage;
@@ -253,20 +252,6 @@ public class WorkSpaceLayout extends AbstractComponent implements Container {
 
 	public void setToolbar(Toolbar toolbar) {
 		this.toolbar = toolbar;
-	}
-
-	@Override
-	public boolean isChildVisible(Component child) {
-		if (child instanceof Panel) {
-			WorkSpaceLayoutView view = getViewByPanel(((Panel) child));
-			if (view != null && view.getViewGroup() != null) {
-				return isEffectivelyVisible() && view.getViewGroup().getPanelState() != ViewGroupPanelState.MINIMIZED && view.isSelected();
-			}
-		}
-		if (child == toolbar) {
-			return isEffectivelyVisible();
-		}
-		return false;
 	}
 
 	public void setNewWindowBackgroundImage(String newWindowBackgroundImage) {

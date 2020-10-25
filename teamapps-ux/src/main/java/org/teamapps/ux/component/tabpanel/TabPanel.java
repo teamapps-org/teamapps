@@ -26,7 +26,6 @@ import org.teamapps.dto.UiTabPanel;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class TabPanel extends AbstractComponent implements Container {
+public class TabPanel extends AbstractComponent implements Component {
 
 	public final Event<Tab> onTabSelected = new Event<>();
 	public final Event<Tab> onTabClosed = new Event<>();
@@ -223,10 +222,4 @@ public class TabPanel extends AbstractComponent implements Container {
 		queueCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(getId(), tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
 	}
 
-	@Override
-	public boolean isChildVisible(Component child) {
-		boolean isActiveTab = this.getSelectedTab() != null && this.getSelectedTab().getContent() == child;
-		boolean isToolButton = this.toolButtons.contains(child);
-		return this.isEffectivelyVisible() && (isActiveTab || isToolButton);
-	}
 }

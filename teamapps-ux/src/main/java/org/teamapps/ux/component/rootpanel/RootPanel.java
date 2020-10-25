@@ -24,10 +24,9 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.animation.PageTransition;
 
-public class RootPanel extends AbstractComponent implements Container {
+public class RootPanel extends AbstractComponent implements Component {
 
 	private Component content;
 
@@ -57,6 +56,9 @@ public class RootPanel extends AbstractComponent implements Container {
 			preloadContent(component);
 		}
 		content = component;
+		if (component != null) {
+			component.setParent(this);
+		}
 		queueCommandIfRendered(() -> new UiRootPanel.SetContentCommand(getId(), component != null ? component.createUiReference() : null, animation != null ? animation.toUiPageTransition() : null, animationDuration));
 	}
 
@@ -64,13 +66,4 @@ public class RootPanel extends AbstractComponent implements Container {
 		return content;
 	}
 
-	@Override
-	public boolean isEffectivelyVisible() {
-		return isRendered() && isVisible();
-	}
-
-	@Override
-	public boolean isChildVisible(Component child) {
-		return isVisible() && content == child;
-	}
 }

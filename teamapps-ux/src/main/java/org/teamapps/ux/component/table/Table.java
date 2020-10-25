@@ -44,7 +44,6 @@ import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 
@@ -60,7 +59,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Table<RECORD> extends AbstractComponent implements Container {
+public class Table<RECORD> extends AbstractComponent implements Component {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Table.class);
 

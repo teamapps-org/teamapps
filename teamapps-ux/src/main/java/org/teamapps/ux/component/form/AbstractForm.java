@@ -32,7 +32,6 @@ import org.teamapps.dto.UiGridForm;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
-import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
 
@@ -40,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> extends AbstractComponent implements Container {
+public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> extends AbstractComponent implements Component {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractForm.class);
 

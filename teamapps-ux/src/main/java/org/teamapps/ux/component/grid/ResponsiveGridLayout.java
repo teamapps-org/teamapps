@@ -24,7 +24,6 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiResponsiveGridLayout;
 import org.teamapps.dto.UiResponsiveGridLayoutPolicy;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.Container;
 import org.teamapps.ux.component.grid.layout.GridLayoutDefinition;
 
 import java.util.HashMap;
@@ -32,9 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ResponsiveGridLayout extends AbstractComponent implements Container {
+public class ResponsiveGridLayout extends AbstractComponent {
 
-	private Map<Integer, GridLayoutDefinition> layoutDefinitionsByMinWidth = new HashMap<>();
+	private final Map<Integer, GridLayoutDefinition> layoutDefinitionsByMinWidth = new HashMap<>();
 
 	@Override
 	public UiComponent createUiComponent() {
