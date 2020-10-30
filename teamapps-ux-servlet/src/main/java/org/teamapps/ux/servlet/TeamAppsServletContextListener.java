@@ -25,14 +25,10 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.server.ServletRegistration;
-import org.teamapps.webcontroller.WebController;
 import org.teamapps.uisession.TeamAppsUiSessionManager;
+import org.teamapps.webcontroller.WebController;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import javax.servlet.*;
 import javax.servlet.ServletRegistration.Dynamic;
 import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpointConfig;
@@ -44,7 +40,7 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsServletContextListener.class);
 
-	private TeamAppsConfiguration config;
+	private final TeamAppsConfiguration config;
 	private WebController webController;
 	private TeamAppsUiSessionManager uiSessionManager;
 
@@ -71,7 +67,9 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		TeamAppsUxClientGate teamAppsUxClientGate = new TeamAppsUxClientGate(webController, uiSessionManager, objectMapper);
 		uiSessionManager.setUiSessionListener(teamAppsUxClientGate);
 
-		context.addFilter("teamapps-download-header-filter", new DownloadHttpHeaderFilter()).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "*");
+		FilterRegistration.Dynamic downloadFilterRegistration = context.addFilter("teamapps-download-header-filter", new DownloadHttpHeaderFilter());
+		downloadFilterRegistration.setAsyncSupported(true);
+		downloadFilterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "*");
 
 		Dynamic uploadServletRegistration = context.addServlet("teamapps-upload-servlet", new UploadServlet((file, uuid) -> teamAppsUxClientGate.handleFileUpload(file, uuid)));
 		uploadServletRegistration.addMapping("/upload/*");
@@ -99,7 +97,9 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		for (ServletRegistration servletRegistration : servletRegistrations) {
 			for (String mapping : servletRegistration.getMappings()) {
 				LOGGER.info("Registering servlet on url path: " + mapping);
-				context.addServlet("teamapps-registered-" + servletRegistration.getServlet().getClass().getSimpleName() + UUID.randomUUID().toString(), servletRegistration.getServlet()).addMapping(mapping);
+				Dynamic dynamic = context.addServlet("teamapps-registered-" + servletRegistration.getServlet().getClass().getSimpleName() + UUID.randomUUID().toString(), servletRegistration.getServlet());
+				dynamic.setAsyncSupported(servletRegistration.isAsyncSupported());
+				dynamic.addMapping(mapping);
 			}
 		}
 	}

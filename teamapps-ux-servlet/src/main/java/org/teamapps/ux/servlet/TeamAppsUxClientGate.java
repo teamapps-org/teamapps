@@ -130,8 +130,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 
 	public Collection<ServletRegistration> getServletRegistrations() {
 		ArrayList<ServletRegistration> registrations = new ArrayList<>();
-		registrations.add(new ServletRegistration(new ResourceProviderServlet(createSystemIconResourceProvider(webController.getIconProvider(), webController.getAdditionalIconProvider())), "/icons"
-				+ "/*"));
+		registrations.add(new ServletRegistration(new ResourceProviderServlet(createSystemIconResourceProvider(webController.getIconProvider(), webController.getAdditionalIconProvider())), "/icons/*"));
 		registrations.add(new ServletRegistration(new ResourceProviderServlet(new SessionResourceProvider(sessionContextById::get)), ClientSessionResourceProvider.BASE_PATH + "*"));
 		registrations.addAll(webController.getServletRegistrations(uxServerContext));
 		return registrations;
