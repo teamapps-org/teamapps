@@ -80,6 +80,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 	private renderedIds: number[] = []; // in order
 	private renderedItems: Map<number, RenderedItem> = new Map<number, RenderedItem>();
 	private totalNumberOfRecords: number = null;
+	private itemZIndexCounter: number = 0;
 
 	constructor(config: UiInfiniteItemView2Config, context: TeamAppsUiContext) {
 		super(config, context);
@@ -91,6 +92,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		this.$styles = this.$mainDomElement.querySelector<HTMLStyleElement>(":scope style");
 		this.updateStyles();
 		this.setItemTemplate(config.itemTemplate);
+		this.setItemPositionAnimationTime(config.itemPositionAnimationTime);
 		this.contextMenu = new ContextMenu();
 
 		this.$mainDomElement.addEventListener("scroll", ev => {
@@ -112,7 +114,10 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 					isDoubleClick: false
 				});
 				if (e.button == 2 && !isNaN(recordId) && me._config.contextMenuEnabled) {
-					me.contextMenu.open(e as unknown as MouseEvent, requestId => me.onContextMenuRequested.fire({recordId: recordId, requestId}));
+					me.contextMenu.open(e as unknown as MouseEvent, requestId => me.onContextMenuRequested.fire({
+						recordId: recordId,
+						requestId
+					}));
 				}
 			})
 			.on("dblclick", ".item-wrapper", function (e: JQueryMouseEventObject) {
@@ -123,6 +128,10 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 					isDoubleClick: true
 				});
 			});
+	}
+
+	setItemPositionAnimationTime(animationMillis: number): void {
+		this.$mainDomElement.style.setProperty("--item-position-animation-time", animationMillis + "ms");
 	}
 
 	@debouncedMethod(150, DebounceMode.BOTH)
@@ -195,6 +204,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 
 	private createRenderedItem(item: UiIdentifiableClientRecordConfig): RenderedItem {
 		let $wrapper = document.createElement("div");
+		$wrapper.style.zIndex = "" + this.itemZIndexCounter--;
 		let $element = parseHtml(this.itemTemplateRenderer.render(item.values));
 		$wrapper.classList.add("item-wrapper");
 		$wrapper.setAttribute("data-id", "" + item.id);

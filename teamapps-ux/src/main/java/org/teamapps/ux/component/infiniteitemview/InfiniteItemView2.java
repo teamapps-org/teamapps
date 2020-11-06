@@ -62,6 +62,8 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	private VerticalElementAlignment itemContentVerticalAlignment = VerticalElementAlignment.STRETCH;
 	// private ItemViewRowJustification rowHorizontalAlignment = ItemViewRowJustification.LEFT; // TODO
 
+	private int itemPositionAnimationTime = 200;
+
 	private InfiniteItemViewModel<RECORD> model = new ListInfiniteItemViewModel<>(Collections.emptyList());
 	private PropertyProvider<RECORD> itemPropertyProvider = new BeanPropertyExtractor<>();
 
@@ -104,6 +106,7 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 		ui.setItemContentHorizontalAlignment(itemContentHorizontalAlignment.toUiHorizontalElementAlignment());
 		ui.setItemContentVerticalAlignment(itemContentVerticalAlignment.toUiVerticalElementAlignment());
 		// ui.setRowHorizontalAlignment(rowHorizontalAlignment.toUiItemJustification());
+		ui.setItemPositionAnimationTime(itemPositionAnimationTime);
 		ui.setContextMenuEnabled(contextMenuProvider != null);
 		return ui;
 	}
@@ -416,6 +419,15 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetRowHorizontalAlignmentCommand(getId(), rowHorizontalAlignment.toUiItemJustification()));
 	// 	return this;
 	// }
+
+	public int getItemPositionAnimationTime() {
+		return itemPositionAnimationTime;
+	}
+
+	public void setItemPositionAnimationTime(int itemPositionAnimationTime) {
+		this.itemPositionAnimationTime = itemPositionAnimationTime;
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemPositionAnimationTimeCommand(getId(), itemPositionAnimationTime));
+	}
 
 	public PropertyProvider<RECORD> getItemPropertyProvider() {
 		return itemPropertyProvider;
