@@ -21,6 +21,8 @@
   user-select: none;
   overflow: auto;
 
+  --item-position-animation-time: .5s;
+
   > .grid {
     position: relative;
     overflow: hidden;
@@ -28,16 +30,21 @@
 
     .item-wrapper {
       position: absolute;
+      transition: top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
       contain: strict; // !!!
       display: flex;
 
       // TODO make hover and active styles configurable!
       border: 1px solid transparent;
+
       &:hover {
         .button-style-item();
+        transition: background 0.1s, border-color 0.05s, top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
       }
+
       &:active {
         .button-style-item-lowered();
+        transition: background 0.1s, border-color 0.05s, top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
       }
     }
   }
