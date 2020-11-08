@@ -127,7 +127,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 			this._$logo = null;
 		}
 		if (logoImage) {
-			this._$logo = parseHtml(`<div class="logo" style="background-image: url(${logoImage});"></div>`);
+			this._$logo = parseHtml(`<div class="logo" style="background-image: url('${logoImage}');"></div>`);
 			this._$innerContainer.appendChild(this._$logo)
 		}
 	}

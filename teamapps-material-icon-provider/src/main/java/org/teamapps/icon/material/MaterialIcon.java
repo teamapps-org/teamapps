@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,962 +20,969 @@
 package org.teamapps.icon.material;
 
 import org.teamapps.icons.api.Icon;
-import org.teamapps.icons.api.SimpleIcon;
-import org.teamapps.icons.api.StyledIcon;
+import org.teamapps.icons.spi.IconLibrary;
 
-public enum MaterialIcon implements SimpleIcon {
+@IconLibrary(name = "material", encoder = MaterialIconEncoder.class, provider = MaterialIconProvider.class)
+public class MaterialIcon implements Icon {
 
-    ROTATION_3D("3d_rotation"),
-    AC_UNIT("ac_unit"),
-    ACCESS_ALARM("access_alarm"),
-    ACCESS_ALARMS("access_alarms"),
-    ACCESS_TIME("access_time"),
-    ACCESSIBILITY("accessibility"),
-    ACCESSIBLE("accessible"),
-    ACCOUNT_BALANCE("account_balance"),
-    ACCOUNT_BALANCE_WALLET("account_balance_wallet"),
-    ACCOUNT_BOX("account_box"),
-    ACCOUNT_CIRCLE("account_circle"),
-    ADB("adb"),
-    ADD("add"),
-    ADD_A_PHOTO("add_a_photo"),
-    ADD_ALARM("add_alarm"),
-    ADD_ALERT("add_alert"),
-    ADD_BOX("add_box"),
-    ADD_CIRCLE("add_circle"),
-    ADD_CIRCLE_OUTLINE("add_circle_outline"),
-    ADD_LOCATION("add_location"),
-    ADD_SHOPPING_CART("add_shopping_cart"),
-    ADD_TO_PHOTOS("add_to_photos"),
-    ADD_TO_QUEUE("add_to_queue"),
-    ADJUST("adjust"),
-    AIRLINE_SEAT_FLAT("airline_seat_flat"),
-    AIRLINE_SEAT_FLAT_ANGLED("airline_seat_flat_angled"),
-    AIRLINE_SEAT_INDIVIDUAL_SUITE("airline_seat_individual_suite"),
-    AIRLINE_SEAT_LEGROOM_EXTRA("airline_seat_legroom_extra"),
-    AIRLINE_SEAT_LEGROOM_NORMAL("airline_seat_legroom_normal"),
-    AIRLINE_SEAT_LEGROOM_REDUCED("airline_seat_legroom_reduced"),
-    AIRLINE_SEAT_RECLINE_EXTRA("airline_seat_recline_extra"),
-    AIRLINE_SEAT_RECLINE_NORMAL("airline_seat_recline_normal"),
-    AIRPLANE_MODE_ACTIVE("airplanemode_active"),
-    AIRPLANE_MODE_INACTIVE("airplanemode_inactive"),
-    AIRPLAY("airplay"),
-    AIRPORT_SHUTTLE("airport_shuttle"),
-    ALARM("alarm"),
-    ALARM_ADD("alarm_add"),
-    ALARM_OFF("alarm_off"),
-    ALARM_ON("alarm_on"),
-    ALBUM("album"),
-    ALL_INCLUSIVE("all_inclusive"),
-    ALL_OUT("all_out"),
-    ANDROID("android"),
-    ANNOUNCEMENT("announcement"),
-    APPS("apps"),
-    ARCHIVE("archive"),
-    ARROW_BACK("arrow_back"),
-    ARROW_DOWNWARD("arrow_downward"),
-    ARROW_DROP_DOWN("arrow_drop_down"),
-    ARROW_DROP_DOWN_CIRCLE("arrow_drop_down_circle"),
-    ARROW_DROP_UP("arrow_drop_up"),
-    ARROW_FORWARD("arrow_forward"),
-    ARROW_UPWARD("arrow_upward"),
-    ART_TRACK("art_track"),
-    ASPECT_RATIO("aspect_ratio"),
-    ASSESSMENT("assessment"),
-    ASSIGNMENT("assignment"),
-    ASSIGNMENT_IND("assignment_ind"),
-    ASSIGNMENT_LATE("assignment_late"),
-    ASSIGNMENT_RETURN("assignment_return"),
-    ASSIGNMENT_RETURNED("assignment_returned"),
-    ASSIGNMENT_TURNED_IN("assignment_turned_in"),
-    ASSISTANT("assistant"),
-    ASSISTANT_PHOTO("assistant_photo"),
-    ATTACH_FILE("attach_file"),
-    ATTACH_MONEY("attach_money"),
-    ATTACHMENT("attachment"),
-    AUDIO_TRACK("audiotrack"),
-    AUTO_RENEW("autorenew"),
-    AV_TIMER("av_timer"),
-    BACKSPACE("backspace"),
-    BACKUP("backup"),
-    BATTERY_ALERT("battery_alert"),
-    BATTERY_CHARGING_FULL("battery_charging_full"),
-    BATTERY_FULL("battery_full"),
-    BATTERY_STD("battery_std"),
-    BATTERY_UNKNOWN("battery_unknown"),
-    BEACH_ACCESS("beach_access"),
-    BEEN_HERE("beenhere"),
-    BLOCK("block"),
-    BLUETOOTH("bluetooth"),
-    BLUETOOTH_AUDIO("bluetooth_audio"),
-    BLUETOOTH_CONNECTED("bluetooth_connected"),
-    BLUETOOTH_DISABLED("bluetooth_disabled"),
-    BLUETOOTH_SEARCHING("bluetooth_searching"),
-    BLUR_CIRCULAR("blur_circular"),
-    BLUR_LINEAR("blur_linear"),
-    BLUR_OFF("blur_off"),
-    BLUR_ON("blur_on"),
-    BOOK("book"),
-    BOOKMARK("bookmark"),
-    BOOKMARK_BORDER("bookmark_border"),
-    BORDER_ALL("border_all"),
-    BORDER_BOTTOM("border_bottom"),
-    BORDER_CLEAR("border_clear"),
-    BORDER_COLOR("border_color"),
-    BORDER_HORIZONTAL("border_horizontal"),
-    BORDER_INNER("border_inner"),
-    BORDER_LEFT("border_left"),
-    BORDER_OUTER("border_outer"),
-    BORDER_RIGHT("border_right"),
-    BORDER_STYLE("border_style"),
-    BORDER_TOP("border_top"),
-    BORDER_VERTICAL("border_vertical"),
-    BRANDING_WATERMARK("branding_watermark"),
-    BRIGHTNESS_1("brightness_1"),
-    BRIGHTNESS_2("brightness_2"),
-    BRIGHTNESS_3("brightness_3"),
-    BRIGHTNESS_4("brightness_4"),
-    BRIGHTNESS_5("brightness_5"),
-    BRIGHTNESS_6("brightness_6"),
-    BRIGHTNESS_7("brightness_7"),
-    BRIGHTNESS_AUTO("brightness_auto"),
-    BRIGHTNESS_HIGH("brightness_high"),
-    BRIGHTNESS_LOW("brightness_low"),
-    BRIGHTNESS_MEDIUM("brightness_medium"),
-    BROKEN_IMAGE("broken_image"),
-    BRUSH("brush"),
-    BUBBLE_CHART("bubble_chart"),
-    BUG_REPORT("bug_report"),
-    BUILD("build"),
-    BURST_MODE("burst_mode"),
-    BUSINESS("business"),
-    BUSINESS_CENTER("business_center"),
-    CACHED("cached"),
-    CAKE("cake"),
-    CALL("call"),
-    CALL_END("call_end"),
-    CALL_MADE("call_made"),
-    CALL_MERGE("call_merge"),
-    CALL_MISSED("call_missed"),
-    CALL_MISSED_OUTGOING("call_missed_outgoing"),
-    CALL_RECEIVED("call_received"),
-    CALL_SPLIT("call_split"),
-    CALL_TO_ACTION("call_to_action"),
-    CAMERA("camera"),
-    CAMERA_ALT("camera_alt"),
-    CAMERA_ENHANCE("camera_enhance"),
-    CAMERA_FRONT("camera_front"),
-    CAMERA_REAR("camera_rear"),
-    CAMERA_ROLL("camera_roll"),
-    CANCEL("cancel"),
-    CARD_GIFTCARD("card_giftcard"),
-    CARD_MEMBERSHIP("card_membership"),
-    CARD_TRAVEL("card_travel"),
-    CASINO("casino"),
-    CAST("cast"),
-    CAST_CONNECTED("cast_connected"),
-    CENTER_FOCUS_STRONG("center_focus_strong"),
-    CENTER_FOCUS_WEAK("center_focus_weak"),
-    CHANGE_HISTORY("change_history"),
-    CHAT("chat"),
-    CHAT_BUBBLE("chat_bubble"),
-    CHAT_BUBBLE_OUTLINE("chat_bubble_outline"),
-    CHECK("check"),
-    CHECK_BOX("check_box"),
-    CHECK_BOX_OUTLINE_BLANK("check_box_outline_blank"),
-    CHECK_CIRCLE("check_circle"),
-    CHEVRON_LEFT("chevron_left"),
-    CHEVRON_RIGHT("chevron_right"),
-    CHILD_CARE("child_care"),
-    CHILD_FRIENDLY("child_friendly"),
-    CHROME_READER_MODE("chrome_reader_mode"),
-    CLASS("class"),
-    CLEAR("clear"),
-    CLEAR_ALL("clear_all"),
-    CLOSE("close"),
-    CLOSED_CAPTION("closed_caption"),
-    CLOUD("cloud"),
-    CLOUD_CIRCLE("cloud_circle"),
-    CLOUD_DONE("cloud_done"),
-    CLOUD_DOWNLOAD("cloud_download"),
-    CLOUD_OFF("cloud_off"),
-    CLOUD_QUEUE("cloud_queue"),
-    CLOUD_UPLOAD("cloud_upload"),
-    CODE("code"),
-    COLLECTIONS("collections"),
-    COLLECTIONS_BOOKMARK("collections_bookmark"),
-    COLOR_LENS("color_lens"),
-    COLORIZE("colorize"),
-    COMMENT("comment"),
-    COMPARE("compare"),
-    COMPARE_ARROWS("compare_arrows"),
-    COMPUTER("computer"),
-    CONFIRMATION_NUMBER("confirmation_number"),
-    CONTACT_MAIL("contact_mail"),
-    CONTACT_PHONE("contact_phone"),
-    CONTACTS("contacts"),
-    CONTENT_COPY("content_copy"),
-    CONTENT_CUT("content_cut"),
-    CONTENT_PASTE("content_paste"),
-    CONTROL_POINT("control_point"),
-    CONTROL_POINT_DUPLICATE("control_point_duplicate"),
-    COPYRIGHT("copyright"),
-    CREATE("create"),
-    CREATE_NEW_FOLDER("create_new_folder"),
-    CREDIT_CARD("credit_card"),
-    CROP("crop"),
-    CROP_16_9("crop_16_9"),
-    CROP_3_2("crop_3_2"),
-    CROP_5_4("crop_5_4"),
-    CROP_7_5("crop_7_5"),
-    CROP_DIN("crop_din"),
-    CROP_FREE("crop_free"),
-    CROP_LANDSCAPE("crop_landscape"),
-    CROP_ORIGINAL("crop_original"),
-    CROP_PORTRAIT("crop_portrait"),
-    CROP_ROTATE("crop_rotate"),
-    CROP_SQUARE("crop_square"),
-    DASHBOARD("dashboard"),
-    DATA_USAGE("data_usage"),
-    DATE_RANGE("date_range"),
-    DEHAZE("dehaze"),
-    DELETE("delete"),
-    DELETE_FOREVER("delete_forever"),
-    DELETE_SWEEP("delete_sweep"),
-    DESCRIPTION("description"),
-    DESKTOP_MAC("desktop_mac"),
-    DESKTOP_WINDOWS("desktop_windows"),
-    DETAILS("details"),
-    DEVELOPER_BOARD("developer_board"),
-    DEVELOPER_MODE("developer_mode"),
-    DEVICE_HUB("device_hub"),
-    DEVICES("devices"),
-    DEVICES_OTHER("devices_other"),
-    DIALER_SIP("dialer_sip"),
-    DIALPAD("dialpad"),
-    DIRECTIONS("directions"),
-    DIRECTIONS_BIKE("directions_bike"),
-    DIRECTIONS_BOAT("directions_boat"),
-    DIRECTIONS_BUS("directions_bus"),
-    DIRECTIONS_CAR("directions_car"),
-    DIRECTIONS_RAILWAY("directions_railway"),
-    DIRECTIONS_RUN("directions_run"),
-    DIRECTIONS_SUBWAY("directions_subway"),
-    DIRECTIONS_TRANSIT("directions_transit"),
-    DIRECTIONS_WALK("directions_walk"),
-    DISC_FULL("disc_full"),
-    DNS("dns"),
-    DO_NOT_DISTURB("do_not_disturb"),
-    DO_NOT_DISTURB_ALT("do_not_disturb_alt"),
-    DO_NOT_DISTURB_OFF("do_not_disturb_off"),
-    DO_NOT_DISTURB_ON("do_not_disturb_on"),
-    DOCK("dock"),
-    DOMAIN("domain"),
-    DONE("done"),
-    DONE_ALL("done_all"),
-    DONUT_LARGE("donut_large"),
-    DONUT_SMALL("donut_small"),
-    DRAFTS("drafts"),
-    DRAG_HANDLE("drag_handle"),
-    DRIVE_ETA("drive_eta"),
-    DVR("dvr"),
-    EDIT("edit"),
-    EDIT_LOCATION("edit_location"),
-    EJECT("eject"),
-    EMAIL("email"),
-    ENHANCED_ENCRYPTION("enhanced_encryption"),
-    EQUALIZER("equalizer"),
-    ERROR("error"),
-    ERROR_OUTLINE("error_outline"),
-    EURO_SYMBOL("euro_symbol"),
-    EV_STATION("ev_station"),
-    EVENT("event"),
-    EVENT_AVAILABLE("event_available"),
-    EVENT_BUSY("event_busy"),
-    EVENT_NOTE("event_note"),
-    EVENT_SEAT("event_seat"),
-    EXIT_TO_APP("exit_to_app"),
-    EXPAND_LESS("expand_less"),
-    EXPAND_MORE("expand_more"),
-    EXPLICIT("explicit"),
-    EXPLORE("explore"),
-    EXPOSURE("exposure"),
-    EXPOSURE_NEG_1("exposure_neg_1"),
-    EXPOSURE_NEG_2("exposure_neg_2"),
-    EXPOSURE_PLUS_1("exposure_plus_1"),
-    EXPOSURE_PLUS_2("exposure_plus_2"),
-    EXPOSURE_ZERO("exposure_zero"),
-    EXTENSION("extension"),
-    FACE("face"),
-    FAST_FORWARD("fast_forward"),
-    FAST_REWIND("fast_rewind"),
-    FAVORITE("favorite"),
-    FAVORITE_BORDER("favorite_border"),
-    FEATURED_PLAY_LIST("featured_play_list"),
-    FEATURED_VIDEO("featured_video"),
-    FEEDBACK("feedback"),
-    FIBER_DVR("fiber_dvr"),
-    FIBER_MANUAL_RECORD("fiber_manual_record"),
-    FIBER_NEW("fiber_new"),
-    FIBER_PIN("fiber_pin"),
-    FIBER_SMART_RECORD("fiber_smart_record"),
-    FILE_DOWNLOAD("file_download"),
-    FILE_UPLOAD("file_upload"),
-    FILTER("filter"),
-    FILTER_1("filter_1"),
-    FILTER_2("filter_2"),
-    FILTER_3("filter_3"),
-    FILTER_4("filter_4"),
-    FILTER_5("filter_5"),
-    FILTER_6("filter_6"),
-    FILTER_7("filter_7"),
-    FILTER_8("filter_8"),
-    FILTER_9("filter_9"),
-    FILTER_9_PLUS("filter_9_plus"),
-    FILTER_B_AND_W("filter_b_and_w"),
-    FILTER_CENTER_FOCUS("filter_center_focus"),
-    FILTER_DRAMA("filter_drama"),
-    FILTER_FRAMES("filter_frames"),
-    FILTER_HDR("filter_hdr"),
-    FILTER_LIST("filter_list"),
-    FILTER_NONE("filter_none"),
-    FILTER_TILT_SHIFT("filter_tilt_shift"),
-    FILTER_VINTAGE("filter_vintage"),
-    FIND_IN_PAGE("find_in_page"),
-    FIND_REPLACE("find_replace"),
-    FINGERPRINT("fingerprint"),
-    FIRST_PAGE("first_page"),
-    FITNESS_CENTER("fitness_center"),
-    FLAG("flag"),
-    FLARE("flare"),
-    FLASH_AUTO("flash_auto"),
-    FLASH_OFF("flash_off"),
-    FLASH_ON("flash_on"),
-    FLIGHT("flight"),
-    FLIGHT_LAND("flight_land"),
-    FLIGHT_TAKEOFF("flight_takeoff"),
-    FLIP("flip"),
-    FLIP_TO_BACK("flip_to_back"),
-    FLIP_TO_FRONT("flip_to_front"),
-    FOLDER("folder"),
-    FOLDER_OPEN("folder_open"),
-    FOLDER_SHARED("folder_shared"),
-    FOLDER_SPECIAL("folder_special"),
-    FONT_DOWNLOAD("font_download"),
-    FORMAT_ALIGN_CENTER("format_align_center"),
-    FORMAT_ALIGN_JUSTIFY("format_align_justify"),
-    FORMAT_ALIGN_LEFT("format_align_left"),
-    FORMAT_ALIGN_RIGHT("format_align_right"),
-    FORMAT_BOLD("format_bold"),
-    FORMAT_CLEAR("format_clear"),
-    FORMAT_COLOR_FILL("format_color_fill"),
-    FORMAT_COLOR_RESET("format_color_reset"),
-    FORMAT_COLOR_TEXT("format_color_text"),
-    FORMAT_INDENT_DECREASE("format_indent_decrease"),
-    FORMAT_INDENT_INCREASE("format_indent_increase"),
-    FORMAT_ITALIC("format_italic"),
-    FORMAT_LINE_SPACING("format_line_spacing"),
-    FORMAT_LIST_BULLETED("format_list_bulleted"),
-    FORMAT_LIST_NUMBERED("format_list_numbered"),
-    FORMAT_PAINT("format_paint"),
-    FORMAT_QUOTE("format_quote"),
-    FORMAT_SHAPES("format_shapes"),
-    FORMAT_SIZE("format_size"),
-    FORMAT_STRIKETHROUGH("format_strikethrough"),
-    FORMAT_TEXTDIRECTION_L_TO_R("format_textdirection_l_to_r"),
-    FORMAT_TEXTDIRECTION_R_TO_L("format_textdirection_r_to_l"),
-    FORMAT_UNDERLINED("format_underlined"),
-    FORUM("forum"),
-    FORWARD("forward"),
-    FORWARD_10("forward_10"),
-    FORWARD_30("forward_30"),
-    FORWARD_5("forward_5"),
-    FREE_BREAKFAST("free_breakfast"),
-    FULLSCREEN("fullscreen"),
-    FULLSCREEN_EXIT("fullscreen_exit"),
-    FUNCTIONS("functions"),
-    G_TRANSLATE("g_translate"),
-    GAMEPAD("gamepad"),
-    GAMES("games"),
-    GAVEL("gavel"),
-    GESTURE("gesture"),
-    GET_APP("get_app"),
-    GIF("gif"),
-    GOLF_COURSE("golf_course"),
-    GPS_FIXED("gps_fixed"),
-    GPS_NOT_FIXED("gps_not_fixed"),
-    GPS_OFF("gps_off"),
-    GRADE("grade"),
-    GRADIENT("gradient"),
-    GRAIN("grain"),
-    GRAPHIC_EQ("graphic_eq"),
-    GRID_OFF("grid_off"),
-    GRID_ON("grid_on"),
-    GROUP("group"),
-    GROUP_ADD("group_add"),
-    GROUP_WORK("group_work"),
-    HD("hd"),
-    HDR_OFF("hdr_off"),
-    HDR_ON("hdr_on"),
-    HDR_STRONG("hdr_strong"),
-    HDR_WEAK("hdr_weak"),
-    HEADSET("headset"),
-    HEADSET_MIC("headset_mic"),
-    HEALING("healing"),
-    HEARING("hearing"),
-    HELP("help"),
-    HELP_OUTLINE("help_outline"),
-    HIGH_QUALITY("high_quality"),
-    HIGHLIGHT("highlight"),
-    HIGHLIGHT_OFF("highlight_off"),
-    HISTORY("history"),
-    HOME("home"),
-    HOT_TUB("hot_tub"),
-    HOTEL("hotel"),
-    HOURGLASS_EMPTY("hourglass_empty"),
-    HOURGLASS_FULL("hourglass_full"),
-    HTTP("http"),
-    HTTPS("https"),
-    IMAGE("image"),
-    IMAGE_ASPECT_RATIO("image_aspect_ratio"),
-    IMPORT_CONTACTS("import_contacts"),
-    IMPORT_EXPORT("import_export"),
-    IMPORTANT_DEVICES("important_devices"),
-    INBOX("inbox"),
-    INDETERMINATE_CHECK_BOX("indeterminate_check_box"),
-    INFO("info"),
-    INFO_OUTLINE("info_outline"),
-    INPUT("input"),
-    INSERT_CHART("insert_chart"),
-    INSERT_COMMENT("insert_comment"),
-    INSERT_DRIVE_FILE("insert_drive_file"),
-    INSERT_EMOTICON("insert_emoticon"),
-    INSERT_INVITATION("insert_invitation"),
-    INSERT_LINK("insert_link"),
-    INSERT_PHOTO("insert_photo"),
-    INVERT_COLORS("invert_colors"),
-    INVERT_COLORS_OFF("invert_colors_off"),
-    ISO("iso"),
-    KEYBOARD("keyboard"),
-    KEYBOARD_ARROW_DOWN("keyboard_arrow_down"),
-    KEYBOARD_ARROW_LEFT("keyboard_arrow_left"),
-    KEYBOARD_ARROW_RIGHT("keyboard_arrow_right"),
-    KEYBOARD_ARROW_UP("keyboard_arrow_up"),
-    KEYBOARD_BACKSPACE("keyboard_backspace"),
-    KEYBOARD_CAPSLOCK("keyboard_capslock"),
-    KEYBOARD_HIDE("keyboard_hide"),
-    KEYBOARD_RETURN("keyboard_return"),
-    KEYBOARD_TAB("keyboard_tab"),
-    KEYBOARD_VOICE("keyboard_voice"),
-    KITCHEN("kitchen"),
-    LABEL("label"),
-    LABEL_OUTLINE("label_outline"),
-    LANDSCAPE("landscape"),
-    LANGUAGE("language"),
-    LAPTOP("laptop"),
-    LAPTOP_CHROMEBOOK("laptop_chromebook"),
-    LAPTOP_MAC("laptop_mac"),
-    LAPTOP_WINDOWS("laptop_windows"),
-    LAST_PAGE("last_page"),
-    LAUNCH("launch"),
-    LAYERS("layers"),
-    LAYERS_CLEAR("layers_clear"),
-    LEAK_ADD("leak_add"),
-    LEAK_REMOVE("leak_remove"),
-    LENS("lens"),
-    LIBRARY_ADD("library_add"),
-    LIBRARY_BOOKS("library_books"),
-    LIBRARY_MUSIC("library_music"),
-    LIGHTBULB_OUTLINE("lightbulb_outline"),
-    LINE_STYLE("line_style"),
-    LINE_WEIGHT("line_weight"),
-    LINEAR_SCALE("linear_scale"),
-    LINK("link"),
-    LINKED_CAMERA("linked_camera"),
-    LIST("list"),
-    LIVE_HELP("live_help"),
-    LIVE_TV("live_tv"),
-    LOCAL_ACTIVITY("local_activity"),
-    LOCAL_AIRPORT("local_airport"),
-    LOCAL_ATM("local_atm"),
-    LOCAL_BAR("local_bar"),
-    LOCAL_CAFE("local_cafe"),
-    LOCAL_CAR_WASH("local_car_wash"),
-    LOCAL_CONVENIENCE_STORE("local_convenience_store"),
-    LOCAL_DINING("local_dining"),
-    LOCAL_DRINK("local_drink"),
-    LOCAL_FLORIST("local_florist"),
-    LOCAL_GAS_STATION("local_gas_station"),
-    LOCAL_GROCERY_STORE("local_grocery_store"),
-    LOCAL_HOSPITAL("local_hospital"),
-    LOCAL_HOTEL("local_hotel"),
-    LOCAL_LAUNDRY_SERVICE("local_laundry_service"),
-    LOCAL_LIBRARY("local_library"),
-    LOCAL_MALL("local_mall"),
-    LOCAL_MOVIES("local_movies"),
-    LOCAL_OFFER("local_offer"),
-    LOCAL_PARKING("local_parking"),
-    LOCAL_PHARMACY("local_pharmacy"),
-    LOCAL_PHONE("local_phone"),
-    LOCAL_PIZZA("local_pizza"),
-    LOCAL_PLAY("local_play"),
-    LOCAL_POST_OFFICE("local_post_office"),
-    LOCAL_PRINTSHOP("local_printshop"),
-    LOCAL_SEE("local_see"),
-    LOCAL_SHIPPING("local_shipping"),
-    LOCAL_TAXI("local_taxi"),
-    LOCATION_CITY("location_city"),
-    LOCATION_DISABLED("location_disabled"),
-    LOCATION_OFF("location_off"),
-    LOCATION_ON("location_on"),
-    LOCATION_SEARCHING("location_searching"),
-    LOCK("lock"),
-    LOCK_OPEN("lock_open"),
-    LOCK_OUTLINE("lock_outline"),
-    LOOKS("looks"),
-    LOOKS_3("looks_3"),
-    LOOKS_4("looks_4"),
-    LOOKS_5("looks_5"),
-    LOOKS_6("looks_6"),
-    LOOKS_ONE("looks_one"),
-    LOOKS_TWO("looks_two"),
-    LOOP("loop"),
-    LOUPE("loupe"),
-    LOW_PRIORITY("low_priority"),
-    LOYALTY("loyalty"),
-    MAIL("mail"),
-    MAIL_OUTLINE("mail_outline"),
-    MAP("map"),
-    MARK_UNREAD("markunread"),
-    MARK_UNREAD_MAILBOX("markunread_mailbox"),
-    MEMORY("memory"),
-    MENU("menu"),
-    MERGE_TYPE("merge_type"),
-    MESSAGE("message"),
-    MIC("mic"),
-    MIC_NONE("mic_none"),
-    MIC_OFF("mic_off"),
-    MMS("mms"),
-    MODE_COMMENT("mode_comment"),
-    MODE_EDIT("mode_edit"),
-    MONETIZATION_ON("monetization_on"),
-    MONEY_OFF("money_off"),
-    MONOCHROME_PHOTOS("monochrome_photos"),
-    MOOD("mood"),
-    MOOD_BAD("mood_bad"),
-    MORE("more"),
-    MORE_HORIZ("more_horiz"),
-    MORE_VERT("more_vert"),
-    MOTORCYCLE("motorcycle"),
-    MOUSE("mouse"),
-    MOVE_TO_INBOX("move_to_inbox"),
-    MOVIE("movie"),
-    MOVIE_CREATION("movie_creation"),
-    MOVIE_FILTER("movie_filter"),
-    MULTILINE_CHART("multiline_chart"),
-    MUSIC_NOTE("music_note"),
-    MUSIC_VIDEO("music_video"),
-    MY_LOCATION("my_location"),
-    NATURE("nature"),
-    NATURE_PEOPLE("nature_people"),
-    NAVIGATE_BEFORE("navigate_before"),
-    NAVIGATE_NEXT("navigate_next"),
-    NAVIGATION("navigation"),
-    NEAR_ME("near_me"),
-    NETWORK_CELL("network_cell"),
-    NETWORK_CHECK("network_check"),
-    NETWORK_LOCKED("network_locked"),
-    NETWORK_WIFI("network_wifi"),
-    NEW_RELEASES("new_releases"),
-    NEXT_WEEK("next_week"),
-    NFC("nfc"),
-    NO_ENCRYPTION("no_encryption"),
-    NO_SIM("no_sim"),
-    NOT_INTERESTED("not_interested"),
-    NOTE("note"),
-    NOTE_ADD("note_add"),
-    NOTIFICATIONS("notifications"),
-    NOTIFICATIONS_ACTIVE("notifications_active"),
-    NOTIFICATIONS_NONE("notifications_none"),
-    NOTIFICATIONS_OFF("notifications_off"),
-    NOTIFICATIONS_PAUSED("notifications_paused"),
-    OFFLINE_PIN("offline_pin"),
-    ON_DEMAND_VIDEO("ondemand_video"),
-    OPACITY("opacity"),
-    OPEN_IN_BROWSER("open_in_browser"),
-    OPEN_IN_NEW("open_in_new"),
-    OPEN_WITH("open_with"),
-    PAGES("pages"),
-    PAGE_VIEW("pageview"),
-    PALETTE("palette"),
-    PAN_TOOL("pan_tool"),
-    PANORAMA("panorama"),
-    PANORAMA_FISH_EYE("panorama_fish_eye"),
-    PANORAMA_HORIZONTAL("panorama_horizontal"),
-    PANORAMA_VERTICAL("panorama_vertical"),
-    PANORAMA_WIDE_ANGLE("panorama_wide_angle"),
-    PARTY_MODE("party_mode"),
-    PAUSE("pause"),
-    PAUSE_CIRCLE_FILLED("pause_circle_filled"),
-    PAUSE_CIRCLE_OUTLINE("pause_circle_outline"),
-    PAYMENT("payment"),
-    PEOPLE("people"),
-    PEOPLE_OUTLINE("people_outline"),
-    PERM_CAMERA_MIC("perm_camera_mic"),
-    PERM_CONTACT_CALENDAR("perm_contact_calendar"),
-    PERM_DATA_SETTING("perm_data_setting"),
-    PERM_DEVICE_INFORMATION("perm_device_information"),
-    PERM_IDENTITY("perm_identity"),
-    PERM_MEDIA("perm_media"),
-    PERM_PHONE_MSG("perm_phone_msg"),
-    PERM_SCAN_WIFI("perm_scan_wifi"),
-    PERSON("person"),
-    PERSON_ADD("person_add"),
-    PERSON_OUTLINE("person_outline"),
-    PERSON_PIN("person_pin"),
-    PERSON_PIN_CIRCLE("person_pin_circle"),
-    PERSONAL_VIDEO("personal_video"),
-    PETS("pets"),
-    PHONE("phone"),
-    PHONE_ANDROID("phone_android"),
-    PHONE_BLUETOOTH_SPEAKER("phone_bluetooth_speaker"),
-    PHONE_FORWARDED("phone_forwarded"),
-    PHONE_IN_TALK("phone_in_talk"),
-    PHONE_IPHONE("phone_iphone"),
-    PHONE_LOCKED("phone_locked"),
-    PHONE_MISSED("phone_missed"),
-    PHONE_PAUSED("phone_paused"),
-    PHONE_LINK("phonelink"),
-    PHONE_LINK_ERASE("phonelink_erase"),
-    PHONE_LINK_LOCK("phonelink_lock"),
-    PHONE_LINK_OFF("phonelink_off"),
-    PHONE_LINK_RING("phonelink_ring"),
-    PHONE_LINK_SETUP("phonelink_setup"),
-    PHOTO("photo"),
-    PHOTO_ALBUM("photo_album"),
-    PHOTO_CAMERA("photo_camera"),
-    PHOTO_FILTER("photo_filter"),
-    PHOTO_LIBRARY("photo_library"),
-    PHOTO_SIZE_SELECT_ACTUAL("photo_size_select_actual"),
-    PHOTO_SIZE_SELECT_LARGE("photo_size_select_large"),
-    PHOTO_SIZE_SELECT_SMALL("photo_size_select_small"),
-    PICTURE_AS_PDF("picture_as_pdf"),
-    PICTURE_IN_PICTURE("picture_in_picture"),
-    PICTURE_IN_PICTURE_ALT("picture_in_picture_alt"),
-    PIE_CHART("pie_chart"),
-    PIE_CHART_OUTLINED("pie_chart_outlined"),
-    PIN_DROP("pin_drop"),
-    PLACE("place"),
-    PLAY_ARROW("play_arrow"),
-    PLAY_CIRCLE_FILLED("play_circle_filled"),
-    PLAY_CIRCLE_OUTLINE("play_circle_outline"),
-    PLAY_FOR_WORK("play_for_work"),
-    PLAYLIST_ADD("playlist_add"),
-    PLAYLIST_ADD_CHECK("playlist_add_check"),
-    PLAYLIST_PLAY("playlist_play"),
-    PLUS_ONE("plus_one"),
-    POLL("poll"),
-    POLYMER("polymer"),
-    POOL("pool"),
-    PORTABLE_WIFI_OFF("portable_wifi_off"),
-    PORTRAIT("portrait"),
-    POWER("power"),
-    POWER_INPUT("power_input"),
-    POWER_SETTINGS_NEW("power_settings_new"),
-    PREGNANT_WOMAN("pregnant_woman"),
-    PRESENT_TO_ALL("present_to_all"),
-    PRINT("print"),
-    PRIORITY_HIGH("priority_high"),
-    PUBLIC("public"),
-    PUBLISH("publish"),
-    QUERY_BUILDER("query_builder"),
-    QUESTION_ANSWER("question_answer"),
-    QUEUE("queue"),
-    QUEUE_MUSIC("queue_music"),
-    QUEUE_PLAY_NEXT("queue_play_next"),
-    RADIO("radio"),
-    RADIO_BUTTON_CHECKED("radio_button_checked"),
-    RADIO_BUTTON_UNCHECKED("radio_button_unchecked"),
-    RATE_REVIEW("rate_review"),
-    RECEIPT("receipt"),
-    RECENT_ACTORS("recent_actors"),
-    RECORD_VOICE_OVER("record_voice_over"),
-    REDEEM("redeem"),
-    REDO("redo"),
-    REFRESH("refresh"),
-    REMOVE("remove"),
-    REMOVE_CIRCLE("remove_circle"),
-    REMOVE_CIRCLE_OUTLINE("remove_circle_outline"),
-    REMOVE_FROM_QUEUE("remove_from_queue"),
-    REMOVE_RED_EYE("remove_red_eye"),
-    REMOVE_SHOPPING_CART("remove_shopping_cart"),
-    REORDER("reorder"),
-    REPEAT("repeat"),
-    REPEAT_ONE("repeat_one"),
-    REPLAY("replay"),
-    REPLAY_10("replay_10"),
-    REPLAY_30("replay_30"),
-    REPLAY_5("replay_5"),
-    REPLY("reply"),
-    REPLY_ALL("reply_all"),
-    REPORT("report"),
-    REPORT_PROBLEM("report_problem"),
-    RESTAURANT("restaurant"),
-    RESTAURANT_MENU("restaurant_menu"),
-    RESTORE("restore"),
-    RESTORE_PAGE("restore_page"),
-    RING_VOLUME("ring_volume"),
-    ROOM("room"),
-    ROOM_SERVICE("room_service"),
-    ROTATE_90_DEGREES_CCW("rotate_90_degrees_ccw"),
-    ROTATE_LEFT("rotate_left"),
-    ROTATE_RIGHT("rotate_right"),
-    ROUNDED_CORNER("rounded_corner"),
-    ROUTER("router"),
-    ROWING("rowing"),
-    RSS_FEED("rss_feed"),
-    RV_HOOKUP("rv_hookup"),
-    SATELLITE("satellite"),
-    SAVE("save"),
-    SCANNER("scanner"),
-    SCHEDULE("schedule"),
-    SCHOOL("school"),
-    SCREEN_LOCK_LANDSCAPE("screen_lock_landscape"),
-    SCREEN_LOCK_PORTRAIT("screen_lock_portrait"),
-    SCREEN_LOCK_ROTATION("screen_lock_rotation"),
-    SCREEN_ROTATION("screen_rotation"),
-    SCREEN_SHARE("screen_share"),
-    SD_CARD("sd_card"),
-    SD_STORAGE("sd_storage"),
-    SEARCH("search"),
-    SECURITY("security"),
-    SELECT_ALL("select_all"),
-    SEND("send"),
-    SENTIMENT_DISSATISFIED("sentiment_dissatisfied"),
-    SENTIMENT_NEUTRAL("sentiment_neutral"),
-    SENTIMENT_SATISFIED("sentiment_satisfied"),
-    SENTIMENT_VERY_DISSATISFIED("sentiment_very_dissatisfied"),
-    SENTIMENT_VERY_SATISFIED("sentiment_very_satisfied"),
-    SETTINGS("settings"),
-    SETTINGS_APPLICATIONS("settings_applications"),
-    SETTINGS_BACKUP_RESTORE("settings_backup_restore"),
-    SETTINGS_BLUETOOTH("settings_bluetooth"),
-    SETTINGS_BRIGHTNESS("settings_brightness"),
-    SETTINGS_CELL("settings_cell"),
-    SETTINGS_ETHERNET("settings_ethernet"),
-    SETTINGS_INPUT_ANTENNA("settings_input_antenna"),
-    SETTINGS_INPUT_COMPONENT("settings_input_component"),
-    SETTINGS_INPUT_COMPOSITE("settings_input_composite"),
-    SETTINGS_INPUT_HDMI("settings_input_hdmi"),
-    SETTINGS_INPUT_SVIDEO("settings_input_svideo"),
-    SETTINGS_OVERSCAN("settings_overscan"),
-    SETTINGS_PHONE("settings_phone"),
-    SETTINGS_POWER("settings_power"),
-    SETTINGS_REMOTE("settings_remote"),
-    SETTINGS_SYSTEM_DAYDREAM("settings_system_daydream"),
-    SETTINGS_VOICE("settings_voice"),
-    SHARE("share"),
-    SHOP("shop"),
-    SHOP_TWO("shop_two"),
-    SHOPPING_BASKET("shopping_basket"),
-    SHOPPING_CART("shopping_cart"),
-    SHORT_TEXT("short_text"),
-    SHOW_CHART("show_chart"),
-    SHUFFLE("shuffle"),
-    SIGNAL_CELLULAR_4_BAR("signal_cellular_4_bar"),
-    SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR("signal_cellular_connected_no_internet_4_bar"),
-    SIGNAL_CELLULAR_NO_SIM("signal_cellular_no_sim"),
-    SIGNAL_CELLULAR_NULL("signal_cellular_null"),
-    SIGNAL_CELLULAR_OFF("signal_cellular_off"),
-    SIGNAL_WIFI_4_BAR("signal_wifi_4_bar"),
-    SIGNAL_WIFI_4_BAR_LOCK("signal_wifi_4_bar_lock"),
-    SIGNAL_WIFI_OFF("signal_wifi_off"),
-    SIM_CARD("sim_card"),
-    SIM_CARD_ALERT("sim_card_alert"),
-    SKIP_NEXT("skip_next"),
-    SKIP_PREVIOUS("skip_previous"),
-    SLIDESHOW("slideshow"),
-    SLOW_MOTION_VIDEO("slow_motion_video"),
-    SMARTPHONE("smartphone"),
-    SMOKE_FREE("smoke_free"),
-    SMOKING_ROOMS("smoking_rooms"),
-    SMS("sms"),
-    SMS_FAILED("sms_failed"),
-    SNOOZE("snooze"),
-    SORT("sort"),
-    SORT_BY_ALPHA("sort_by_alpha"),
-    SPA("spa"),
-    SPACE_BAR("space_bar"),
-    SPEAKER("speaker"),
-    SPEAKER_GROUP("speaker_group"),
-    SPEAKER_NOTES("speaker_notes"),
-    SPEAKER_NOTES_OFF("speaker_notes_off"),
-    SPEAKER_PHONE("speaker_phone"),
-    SPELLCHECK("spellcheck"),
-    STAR("star"),
-    STAR_BORDER("star_border"),
-    STAR_HALF("star_half"),
-    STARS("stars"),
-    STAY_CURRENT_LANDSCAPE("stay_current_landscape"),
-    STAY_CURRENT_PORTRAIT("stay_current_portrait"),
-    STAY_PRIMARY_LANDSCAPE("stay_primary_landscape"),
-    STAY_PRIMARY_PORTRAIT("stay_primary_portrait"),
-    STOP("stop"),
-    STOP_SCREEN_SHARE("stop_screen_share"),
-    STORAGE("storage"),
-    STORE("store"),
-    STORE_MALL_DIRECTORY("store_mall_directory"),
-    STRAIGHTEN("straighten"),
-    STREET_VIEW("streetview"),
-    STRIKETHROUGH_S("strikethrough_s"),
-    STYLE("style"),
-    SUBDIRECTORY_ARROW_LEFT("subdirectory_arrow_left"),
-    SUBDIRECTORY_ARROW_RIGHT("subdirectory_arrow_right"),
-    SUBJECT("subject"),
-    SUBSCRIPTIONS("subscriptions"),
-    SUBTITLES("subtitles"),
-    SUBWAY("subway"),
-    SUPERVISOR_ACCOUNT("supervisor_account"),
-    SURROUND_SOUND("surround_sound"),
-    SWAP_CALLS("swap_calls"),
-    SWAP_HORIZ("swap_horiz"),
-    SWAP_VERT("swap_vert"),
-    SWAP_VERTICAL_CIRCLE("swap_vertical_circle"),
-    SWITCH_CAMERA("switch_camera"),
-    SWITCH_VIDEO("switch_video"),
-    SYNC("sync"),
-    SYNC_DISABLED("sync_disabled"),
-    SYNC_PROBLEM("sync_problem"),
-    SYSTEM_UPDATE("system_update"),
-    SYSTEM_UPDATE_ALT("system_update_alt"),
-    TAB("tab"),
-    TAB_UNSELECTED("tab_unselected"),
-    TABLET("tablet"),
-    TABLET_ANDROID("tablet_android"),
-    TABLET_MAC("tablet_mac"),
-    TAG_FACES("tag_faces"),
-    TAP_AND_PLAY("tap_and_play"),
-    TERRAIN("terrain"),
-    TEXT_FIELDS("text_fields"),
-    TEXT_FORMAT("text_format"),
-    TEXT_SMS("textsms"),
-    TEXTURE("texture"),
-    THEATERS("theaters"),
-    THUMB_DOWN("thumb_down"),
-    THUMB_UP("thumb_up"),
-    THUMBS_UP_DOWN("thumbs_up_down"),
-    TIME_TO_LEAVE("time_to_leave"),
-    TIME_LAPSE("timelapse"),
-    TIMELINE("timeline"),
-    TIMER("timer"),
-    TIMER_10("timer_10"),
-    TIMER_3("timer_3"),
-    TIMER_OFF("timer_off"),
-    TITLE("title"),
-    TOC("toc"),
-    TODAY("today"),
-    TOLL("toll"),
-    TONALITY("tonality"),
-    TOUCH_APP("touch_app"),
-    TOYS("toys"),
-    TRACK_CHANGES("track_changes"),
-    TRAFFIC("traffic"),
-    TRAIN("train"),
-    TRAM("tram"),
-    TRANSFER_WITHIN_A_STATION("transfer_within_a_station"),
-    TRANSFORM("transform"),
-    TRANSLATE("translate"),
-    TRENDING_DOWN("trending_down"),
-    TRENDING_FLAT("trending_flat"),
-    TRENDING_UP("trending_up"),
-    TUNE("tune"),
-    TURNED_IN("turned_in"),
-    TURNED_IN_NOT("turned_in_not"),
-    TV("tv"),
-    UNARCHIVE("unarchive"),
-    UNDO("undo"),
-    UNFOLD_LESS("unfold_less"),
-    UNFOLD_MORE("unfold_more"),
-    UPDATE("update"),
-    USB("usb"),
-    VERIFIED_USER("verified_user"),
-    VERTICAL_ALIGN_BOTTOM("vertical_align_bottom"),
-    VERTICAL_ALIGN_CENTER("vertical_align_center"),
-    VERTICAL_ALIGN_TOP("vertical_align_top"),
-    VIBRATION("vibration"),
-    VIDEO_CALL("video_call"),
-    VIDEO_LABEL("video_label"),
-    VIDEO_LIBRARY("video_library"),
-    VIDEO_CAM("videocam"),
-    VIDEO_CAM_OFF("videocam_off"),
-    VIDEO_GAME_ASSET("videogame_asset"),
-    VIEW_AGENDA("view_agenda"),
-    VIEW_ARRAY("view_array"),
-    VIEW_CAROUSEL("view_carousel"),
-    VIEW_COLUMN("view_column"),
-    VIEW_COMFY("view_comfy"),
-    VIEW_COMPACT("view_compact"),
-    VIEW_DAY("view_day"),
-    VIEW_HEADLINE("view_headline"),
-    VIEW_LIST("view_list"),
-    VIEW_MODULE("view_module"),
-    VIEW_QUILT("view_quilt"),
-    VIEW_STREAM("view_stream"),
-    VIEW_WEEK("view_week"),
-    VIGNETTE("vignette"),
-    VISIBILITY("visibility"),
-    VISIBILITY_OFF("visibility_off"),
-    VOICE_CHAT("voice_chat"),
-    VOICE_MAIL("voicemail"),
-    VOLUME_DOWN("volume_down"),
-    VOLUME_MUTE("volume_mute"),
-    VOLUME_OFF("volume_off"),
-    VOLUME_UP("volume_up"),
-    VPN_KEY("vpn_key"),
-    VPN_LOCK("vpn_lock"),
-    WALLPAPER("wallpaper"),
-    WARNING("warning"),
-    WATCH("watch"),
-    WATCH_LATER("watch_later"),
-    WB_AUTO("wb_auto"),
-    WB_CLOUDY("wb_cloudy"),
-    WB_INCANDESCENT("wb_incandescent"),
-    WB_IRIDESCENT("wb_iridescent"),
-    WB_SUNNY("wb_sunny"),
-    WC("wc"),
-    WEB("web"),
-    WEB_ASSET("web_asset"),
-    WEEKEND("weekend"),
-    WHATSHOT("whatshot"),
-    WIDGETS("widgets"),
-    WIFI("wifi"),
-    WIFI_LOCK("wifi_lock"),
-    WIFI_TETHERING("wifi_tethering"),
-    WORK("work"),
-    WRAP_TEXT("wrap_text"),
-    YOUTUBE_SEARCHED_FOR("youtube_searched_for"),
-    ZOOM_IN("zoom_in"),
-    ZOOM_OUT("zoom_out"),
-    ZOOM_OUT_MAP("zoom_out_map"),
-    ;
+	public static final MaterialIcon ROTATION_3D = forName("3d_rotation");
+	public static final MaterialIcon AC_UNIT = forName("ac_unit");
+	public static final MaterialIcon ACCESS_ALARM = forName("access_alarm");
+	public static final MaterialIcon ACCESS_ALARMS = forName("access_alarms");
+	public static final MaterialIcon ACCESS_TIME = forName("access_time");
+	public static final MaterialIcon ACCESSIBILITY = forName("accessibility");
+	public static final MaterialIcon ACCESSIBLE = forName("accessible");
+	public static final MaterialIcon ACCOUNT_BALANCE = forName("account_balance");
+	public static final MaterialIcon ACCOUNT_BALANCE_WALLET = forName("account_balance_wallet");
+	public static final MaterialIcon ACCOUNT_BOX = forName("account_box");
+	public static final MaterialIcon ACCOUNT_CIRCLE = forName("account_circle");
+	public static final MaterialIcon ADB = forName("adb");
+	public static final MaterialIcon ADD = forName("add");
+	public static final MaterialIcon ADD_A_PHOTO = forName("add_a_photo");
+	public static final MaterialIcon ADD_ALARM = forName("add_alarm");
+	public static final MaterialIcon ADD_ALERT = forName("add_alert");
+	public static final MaterialIcon ADD_BOX = forName("add_box");
+	public static final MaterialIcon ADD_CIRCLE = forName("add_circle");
+	public static final MaterialIcon ADD_CIRCLE_OUTLINE = forName("add_circle_outline");
+	public static final MaterialIcon ADD_LOCATION = forName("add_location");
+	public static final MaterialIcon ADD_SHOPPING_CART = forName("add_shopping_cart");
+	public static final MaterialIcon ADD_TO_PHOTOS = forName("add_to_photos");
+	public static final MaterialIcon ADD_TO_QUEUE = forName("add_to_queue");
+	public static final MaterialIcon ADJUST = forName("adjust");
+	public static final MaterialIcon AIRLINE_SEAT_FLAT = forName("airline_seat_flat");
+	public static final MaterialIcon AIRLINE_SEAT_FLAT_ANGLED = forName("airline_seat_flat_angled");
+	public static final MaterialIcon AIRLINE_SEAT_INDIVIDUAL_SUITE = forName("airline_seat_individual_suite");
+	public static final MaterialIcon AIRLINE_SEAT_LEGROOM_EXTRA = forName("airline_seat_legroom_extra");
+	public static final MaterialIcon AIRLINE_SEAT_LEGROOM_NORMAL = forName("airline_seat_legroom_normal");
+	public static final MaterialIcon AIRLINE_SEAT_LEGROOM_REDUCED = forName("airline_seat_legroom_reduced");
+	public static final MaterialIcon AIRLINE_SEAT_RECLINE_EXTRA = forName("airline_seat_recline_extra");
+	public static final MaterialIcon AIRLINE_SEAT_RECLINE_NORMAL = forName("airline_seat_recline_normal");
+	public static final MaterialIcon AIRPLANE_MODE_ACTIVE = forName("airplanemode_active");
+	public static final MaterialIcon AIRPLANE_MODE_INACTIVE = forName("airplanemode_inactive");
+	public static final MaterialIcon AIRPLAY = forName("airplay");
+	public static final MaterialIcon AIRPORT_SHUTTLE = forName("airport_shuttle");
+	public static final MaterialIcon ALARM = forName("alarm");
+	public static final MaterialIcon ALARM_ADD = forName("alarm_add");
+	public static final MaterialIcon ALARM_OFF = forName("alarm_off");
+	public static final MaterialIcon ALARM_ON = forName("alarm_on");
+	public static final MaterialIcon ALBUM = forName("album");
+	public static final MaterialIcon ALL_INCLUSIVE = forName("all_inclusive");
+	public static final MaterialIcon ALL_OUT = forName("all_out");
+	public static final MaterialIcon ANDROID = forName("android");
+	public static final MaterialIcon ANNOUNCEMENT = forName("announcement");
+	public static final MaterialIcon APPS = forName("apps");
+	public static final MaterialIcon ARCHIVE = forName("archive");
+	public static final MaterialIcon ARROW_BACK = forName("arrow_back");
+	public static final MaterialIcon ARROW_DOWNWARD = forName("arrow_downward");
+	public static final MaterialIcon ARROW_DROP_DOWN = forName("arrow_drop_down");
+	public static final MaterialIcon ARROW_DROP_DOWN_CIRCLE = forName("arrow_drop_down_circle");
+	public static final MaterialIcon ARROW_DROP_UP = forName("arrow_drop_up");
+	public static final MaterialIcon ARROW_FORWARD = forName("arrow_forward");
+	public static final MaterialIcon ARROW_UPWARD = forName("arrow_upward");
+	public static final MaterialIcon ART_TRACK = forName("art_track");
+	public static final MaterialIcon ASPECT_RATIO = forName("aspect_ratio");
+	public static final MaterialIcon ASSESSMENT = forName("assessment");
+	public static final MaterialIcon ASSIGNMENT = forName("assignment");
+	public static final MaterialIcon ASSIGNMENT_IND = forName("assignment_ind");
+	public static final MaterialIcon ASSIGNMENT_LATE = forName("assignment_late");
+	public static final MaterialIcon ASSIGNMENT_RETURN = forName("assignment_return");
+	public static final MaterialIcon ASSIGNMENT_RETURNED = forName("assignment_returned");
+	public static final MaterialIcon ASSIGNMENT_TURNED_IN = forName("assignment_turned_in");
+	public static final MaterialIcon ASSISTANT = forName("assistant");
+	public static final MaterialIcon ASSISTANT_PHOTO = forName("assistant_photo");
+	public static final MaterialIcon ATTACH_FILE = forName("attach_file");
+	public static final MaterialIcon ATTACH_MONEY = forName("attach_money");
+	public static final MaterialIcon ATTACHMENT = forName("attachment");
+	public static final MaterialIcon AUDIO_TRACK = forName("audiotrack");
+	public static final MaterialIcon AUTO_RENEW = forName("autorenew");
+	public static final MaterialIcon AV_TIMER = forName("av_timer");
+	public static final MaterialIcon BACKSPACE = forName("backspace");
+	public static final MaterialIcon BACKUP = forName("backup");
+	public static final MaterialIcon BATTERY_ALERT = forName("battery_alert");
+	public static final MaterialIcon BATTERY_CHARGING_FULL = forName("battery_charging_full");
+	public static final MaterialIcon BATTERY_FULL = forName("battery_full");
+	public static final MaterialIcon BATTERY_STD = forName("battery_std");
+	public static final MaterialIcon BATTERY_UNKNOWN = forName("battery_unknown");
+	public static final MaterialIcon BEACH_ACCESS = forName("beach_access");
+	public static final MaterialIcon BEEN_HERE = forName("beenhere");
+	public static final MaterialIcon BLOCK = forName("block");
+	public static final MaterialIcon BLUETOOTH = forName("bluetooth");
+	public static final MaterialIcon BLUETOOTH_AUDIO = forName("bluetooth_audio");
+	public static final MaterialIcon BLUETOOTH_CONNECTED = forName("bluetooth_connected");
+	public static final MaterialIcon BLUETOOTH_DISABLED = forName("bluetooth_disabled");
+	public static final MaterialIcon BLUETOOTH_SEARCHING = forName("bluetooth_searching");
+	public static final MaterialIcon BLUR_CIRCULAR = forName("blur_circular");
+	public static final MaterialIcon BLUR_LINEAR = forName("blur_linear");
+	public static final MaterialIcon BLUR_OFF = forName("blur_off");
+	public static final MaterialIcon BLUR_ON = forName("blur_on");
+	public static final MaterialIcon BOOK = forName("book");
+	public static final MaterialIcon BOOKMARK = forName("bookmark");
+	public static final MaterialIcon BOOKMARK_BORDER = forName("bookmark_border");
+	public static final MaterialIcon BORDER_ALL = forName("border_all");
+	public static final MaterialIcon BORDER_BOTTOM = forName("border_bottom");
+	public static final MaterialIcon BORDER_CLEAR = forName("border_clear");
+	public static final MaterialIcon BORDER_COLOR = forName("border_color");
+	public static final MaterialIcon BORDER_HORIZONTAL = forName("border_horizontal");
+	public static final MaterialIcon BORDER_INNER = forName("border_inner");
+	public static final MaterialIcon BORDER_LEFT = forName("border_left");
+	public static final MaterialIcon BORDER_OUTER = forName("border_outer");
+	public static final MaterialIcon BORDER_RIGHT = forName("border_right");
+	public static final MaterialIcon BORDER_STYLE = forName("border_style");
+	public static final MaterialIcon BORDER_TOP = forName("border_top");
+	public static final MaterialIcon BORDER_VERTICAL = forName("border_vertical");
+	public static final MaterialIcon BRANDING_WATERMARK = forName("branding_watermark");
+	public static final MaterialIcon BRIGHTNESS_1 = forName("brightness_1");
+	public static final MaterialIcon BRIGHTNESS_2 = forName("brightness_2");
+	public static final MaterialIcon BRIGHTNESS_3 = forName("brightness_3");
+	public static final MaterialIcon BRIGHTNESS_4 = forName("brightness_4");
+	public static final MaterialIcon BRIGHTNESS_5 = forName("brightness_5");
+	public static final MaterialIcon BRIGHTNESS_6 = forName("brightness_6");
+	public static final MaterialIcon BRIGHTNESS_7 = forName("brightness_7");
+	public static final MaterialIcon BRIGHTNESS_AUTO = forName("brightness_auto");
+	public static final MaterialIcon BRIGHTNESS_HIGH = forName("brightness_high");
+	public static final MaterialIcon BRIGHTNESS_LOW = forName("brightness_low");
+	public static final MaterialIcon BRIGHTNESS_MEDIUM = forName("brightness_medium");
+	public static final MaterialIcon BROKEN_IMAGE = forName("broken_image");
+	public static final MaterialIcon BRUSH = forName("brush");
+	public static final MaterialIcon BUBBLE_CHART = forName("bubble_chart");
+	public static final MaterialIcon BUG_REPORT = forName("bug_report");
+	public static final MaterialIcon BUILD = forName("build");
+	public static final MaterialIcon BURST_MODE = forName("burst_mode");
+	public static final MaterialIcon BUSINESS = forName("business");
+	public static final MaterialIcon BUSINESS_CENTER = forName("business_center");
+	public static final MaterialIcon CACHED = forName("cached");
+	public static final MaterialIcon CAKE = forName("cake");
+	public static final MaterialIcon CALL = forName("call");
+	public static final MaterialIcon CALL_END = forName("call_end");
+	public static final MaterialIcon CALL_MADE = forName("call_made");
+	public static final MaterialIcon CALL_MERGE = forName("call_merge");
+	public static final MaterialIcon CALL_MISSED = forName("call_missed");
+	public static final MaterialIcon CALL_MISSED_OUTGOING = forName("call_missed_outgoing");
+	public static final MaterialIcon CALL_RECEIVED = forName("call_received");
+	public static final MaterialIcon CALL_SPLIT = forName("call_split");
+	public static final MaterialIcon CALL_TO_ACTION = forName("call_to_action");
+	public static final MaterialIcon CAMERA = forName("camera");
+	public static final MaterialIcon CAMERA_ALT = forName("camera_alt");
+	public static final MaterialIcon CAMERA_ENHANCE = forName("camera_enhance");
+	public static final MaterialIcon CAMERA_FRONT = forName("camera_front");
+	public static final MaterialIcon CAMERA_REAR = forName("camera_rear");
+	public static final MaterialIcon CAMERA_ROLL = forName("camera_roll");
+	public static final MaterialIcon CANCEL = forName("cancel");
+	public static final MaterialIcon CARD_GIFTCARD = forName("card_giftcard");
+	public static final MaterialIcon CARD_MEMBERSHIP = forName("card_membership");
+	public static final MaterialIcon CARD_TRAVEL = forName("card_travel");
+	public static final MaterialIcon CASINO = forName("casino");
+	public static final MaterialIcon CAST = forName("cast");
+	public static final MaterialIcon CAST_CONNECTED = forName("cast_connected");
+	public static final MaterialIcon CENTER_FOCUS_STRONG = forName("center_focus_strong");
+	public static final MaterialIcon CENTER_FOCUS_WEAK = forName("center_focus_weak");
+	public static final MaterialIcon CHANGE_HISTORY = forName("change_history");
+	public static final MaterialIcon CHAT = forName("chat");
+	public static final MaterialIcon CHAT_BUBBLE = forName("chat_bubble");
+	public static final MaterialIcon CHAT_BUBBLE_OUTLINE = forName("chat_bubble_outline");
+	public static final MaterialIcon CHECK = forName("check");
+	public static final MaterialIcon CHECK_BOX = forName("check_box");
+	public static final MaterialIcon CHECK_BOX_OUTLINE_BLANK = forName("check_box_outline_blank");
+	public static final MaterialIcon CHECK_CIRCLE = forName("check_circle");
+	public static final MaterialIcon CHEVRON_LEFT = forName("chevron_left");
+	public static final MaterialIcon CHEVRON_RIGHT = forName("chevron_right");
+	public static final MaterialIcon CHILD_CARE = forName("child_care");
+	public static final MaterialIcon CHILD_FRIENDLY = forName("child_friendly");
+	public static final MaterialIcon CHROME_READER_MODE = forName("chrome_reader_mode");
+	public static final MaterialIcon CLASS = forName("class");
+	public static final MaterialIcon CLEAR = forName("clear");
+	public static final MaterialIcon CLEAR_ALL = forName("clear_all");
+	public static final MaterialIcon CLOSE = forName("close");
+	public static final MaterialIcon CLOSED_CAPTION = forName("closed_caption");
+	public static final MaterialIcon CLOUD = forName("cloud");
+	public static final MaterialIcon CLOUD_CIRCLE = forName("cloud_circle");
+	public static final MaterialIcon CLOUD_DONE = forName("cloud_done");
+	public static final MaterialIcon CLOUD_DOWNLOAD = forName("cloud_download");
+	public static final MaterialIcon CLOUD_OFF = forName("cloud_off");
+	public static final MaterialIcon CLOUD_QUEUE = forName("cloud_queue");
+	public static final MaterialIcon CLOUD_UPLOAD = forName("cloud_upload");
+	public static final MaterialIcon CODE = forName("code");
+	public static final MaterialIcon COLLECTIONS = forName("collections");
+	public static final MaterialIcon COLLECTIONS_BOOKMARK = forName("collections_bookmark");
+	public static final MaterialIcon COLOR_LENS = forName("color_lens");
+	public static final MaterialIcon COLORIZE = forName("colorize");
+	public static final MaterialIcon COMMENT = forName("comment");
+	public static final MaterialIcon COMPARE = forName("compare");
+	public static final MaterialIcon COMPARE_ARROWS = forName("compare_arrows");
+	public static final MaterialIcon COMPUTER = forName("computer");
+	public static final MaterialIcon CONFIRMATION_NUMBER = forName("confirmation_number");
+	public static final MaterialIcon CONTACT_MAIL = forName("contact_mail");
+	public static final MaterialIcon CONTACT_PHONE = forName("contact_phone");
+	public static final MaterialIcon CONTACTS = forName("contacts");
+	public static final MaterialIcon CONTENT_COPY = forName("content_copy");
+	public static final MaterialIcon CONTENT_CUT = forName("content_cut");
+	public static final MaterialIcon CONTENT_PASTE = forName("content_paste");
+	public static final MaterialIcon CONTROL_POINT = forName("control_point");
+	public static final MaterialIcon CONTROL_POINT_DUPLICATE = forName("control_point_duplicate");
+	public static final MaterialIcon COPYRIGHT = forName("copyright");
+	public static final MaterialIcon CREATE = forName("create");
+	public static final MaterialIcon CREATE_NEW_FOLDER = forName("create_new_folder");
+	public static final MaterialIcon CREDIT_CARD = forName("credit_card");
+	public static final MaterialIcon CROP = forName("crop");
+	public static final MaterialIcon CROP_16_9 = forName("crop_16_9");
+	public static final MaterialIcon CROP_3_2 = forName("crop_3_2");
+	public static final MaterialIcon CROP_5_4 = forName("crop_5_4");
+	public static final MaterialIcon CROP_7_5 = forName("crop_7_5");
+	public static final MaterialIcon CROP_DIN = forName("crop_din");
+	public static final MaterialIcon CROP_FREE = forName("crop_free");
+	public static final MaterialIcon CROP_LANDSCAPE = forName("crop_landscape");
+	public static final MaterialIcon CROP_ORIGINAL = forName("crop_original");
+	public static final MaterialIcon CROP_PORTRAIT = forName("crop_portrait");
+	public static final MaterialIcon CROP_ROTATE = forName("crop_rotate");
+	public static final MaterialIcon CROP_SQUARE = forName("crop_square");
+	public static final MaterialIcon DASHBOARD = forName("dashboard");
+	public static final MaterialIcon DATA_USAGE = forName("data_usage");
+	public static final MaterialIcon DATE_RANGE = forName("date_range");
+	public static final MaterialIcon DEHAZE = forName("dehaze");
+	public static final MaterialIcon DELETE = forName("delete");
+	public static final MaterialIcon DELETE_FOREVER = forName("delete_forever");
+	public static final MaterialIcon DELETE_SWEEP = forName("delete_sweep");
+	public static final MaterialIcon DESCRIPTION = forName("description");
+	public static final MaterialIcon DESKTOP_MAC = forName("desktop_mac");
+	public static final MaterialIcon DESKTOP_WINDOWS = forName("desktop_windows");
+	public static final MaterialIcon DETAILS = forName("details");
+	public static final MaterialIcon DEVELOPER_BOARD = forName("developer_board");
+	public static final MaterialIcon DEVELOPER_MODE = forName("developer_mode");
+	public static final MaterialIcon DEVICE_HUB = forName("device_hub");
+	public static final MaterialIcon DEVICES = forName("devices");
+	public static final MaterialIcon DEVICES_OTHER = forName("devices_other");
+	public static final MaterialIcon DIALER_SIP = forName("dialer_sip");
+	public static final MaterialIcon DIALPAD = forName("dialpad");
+	public static final MaterialIcon DIRECTIONS = forName("directions");
+	public static final MaterialIcon DIRECTIONS_BIKE = forName("directions_bike");
+	public static final MaterialIcon DIRECTIONS_BOAT = forName("directions_boat");
+	public static final MaterialIcon DIRECTIONS_BUS = forName("directions_bus");
+	public static final MaterialIcon DIRECTIONS_CAR = forName("directions_car");
+	public static final MaterialIcon DIRECTIONS_RAILWAY = forName("directions_railway");
+	public static final MaterialIcon DIRECTIONS_RUN = forName("directions_run");
+	public static final MaterialIcon DIRECTIONS_SUBWAY = forName("directions_subway");
+	public static final MaterialIcon DIRECTIONS_TRANSIT = forName("directions_transit");
+	public static final MaterialIcon DIRECTIONS_WALK = forName("directions_walk");
+	public static final MaterialIcon DISC_FULL = forName("disc_full");
+	public static final MaterialIcon DNS = forName("dns");
+	public static final MaterialIcon DO_NOT_DISTURB = forName("do_not_disturb");
+	public static final MaterialIcon DO_NOT_DISTURB_ALT = forName("do_not_disturb_alt");
+	public static final MaterialIcon DO_NOT_DISTURB_OFF = forName("do_not_disturb_off");
+	public static final MaterialIcon DO_NOT_DISTURB_ON = forName("do_not_disturb_on");
+	public static final MaterialIcon DOCK = forName("dock");
+	public static final MaterialIcon DOMAIN = forName("domain");
+	public static final MaterialIcon DONE = forName("done");
+	public static final MaterialIcon DONE_ALL = forName("done_all");
+	public static final MaterialIcon DONUT_LARGE = forName("donut_large");
+	public static final MaterialIcon DONUT_SMALL = forName("donut_small");
+	public static final MaterialIcon DRAFTS = forName("drafts");
+	public static final MaterialIcon DRAG_HANDLE = forName("drag_handle");
+	public static final MaterialIcon DRIVE_ETA = forName("drive_eta");
+	public static final MaterialIcon DVR = forName("dvr");
+	public static final MaterialIcon EDIT = forName("edit");
+	public static final MaterialIcon EDIT_LOCATION = forName("edit_location");
+	public static final MaterialIcon EJECT = forName("eject");
+	public static final MaterialIcon EMAIL = forName("email");
+	public static final MaterialIcon ENHANCED_ENCRYPTION = forName("enhanced_encryption");
+	public static final MaterialIcon EQUALIZER = forName("equalizer");
+	public static final MaterialIcon ERROR = forName("error");
+	public static final MaterialIcon ERROR_OUTLINE = forName("error_outline");
+	public static final MaterialIcon EURO_SYMBOL = forName("euro_symbol");
+	public static final MaterialIcon EV_STATION = forName("ev_station");
+	public static final MaterialIcon EVENT = forName("event");
+	public static final MaterialIcon EVENT_AVAILABLE = forName("event_available");
+	public static final MaterialIcon EVENT_BUSY = forName("event_busy");
+	public static final MaterialIcon EVENT_NOTE = forName("event_note");
+	public static final MaterialIcon EVENT_SEAT = forName("event_seat");
+	public static final MaterialIcon EXIT_TO_APP = forName("exit_to_app");
+	public static final MaterialIcon EXPAND_LESS = forName("expand_less");
+	public static final MaterialIcon EXPAND_MORE = forName("expand_more");
+	public static final MaterialIcon EXPLICIT = forName("explicit");
+	public static final MaterialIcon EXPLORE = forName("explore");
+	public static final MaterialIcon EXPOSURE = forName("exposure");
+	public static final MaterialIcon EXPOSURE_NEG_1 = forName("exposure_neg_1");
+	public static final MaterialIcon EXPOSURE_NEG_2 = forName("exposure_neg_2");
+	public static final MaterialIcon EXPOSURE_PLUS_1 = forName("exposure_plus_1");
+	public static final MaterialIcon EXPOSURE_PLUS_2 = forName("exposure_plus_2");
+	public static final MaterialIcon EXPOSURE_ZERO = forName("exposure_zero");
+	public static final MaterialIcon EXTENSION = forName("extension");
+	public static final MaterialIcon FACE = forName("face");
+	public static final MaterialIcon FAST_FORWARD = forName("fast_forward");
+	public static final MaterialIcon FAST_REWIND = forName("fast_rewind");
+	public static final MaterialIcon FAVORITE = forName("favorite");
+	public static final MaterialIcon FAVORITE_BORDER = forName("favorite_border");
+	public static final MaterialIcon FEATURED_PLAY_LIST = forName("featured_play_list");
+	public static final MaterialIcon FEATURED_VIDEO = forName("featured_video");
+	public static final MaterialIcon FEEDBACK = forName("feedback");
+	public static final MaterialIcon FIBER_DVR = forName("fiber_dvr");
+	public static final MaterialIcon FIBER_MANUAL_RECORD = forName("fiber_manual_record");
+	public static final MaterialIcon FIBER_NEW = forName("fiber_new");
+	public static final MaterialIcon FIBER_PIN = forName("fiber_pin");
+	public static final MaterialIcon FIBER_SMART_RECORD = forName("fiber_smart_record");
+	public static final MaterialIcon FILE_DOWNLOAD = forName("file_download");
+	public static final MaterialIcon FILE_UPLOAD = forName("file_upload");
+	public static final MaterialIcon FILTER = forName("filter");
+	public static final MaterialIcon FILTER_1 = forName("filter_1");
+	public static final MaterialIcon FILTER_2 = forName("filter_2");
+	public static final MaterialIcon FILTER_3 = forName("filter_3");
+	public static final MaterialIcon FILTER_4 = forName("filter_4");
+	public static final MaterialIcon FILTER_5 = forName("filter_5");
+	public static final MaterialIcon FILTER_6 = forName("filter_6");
+	public static final MaterialIcon FILTER_7 = forName("filter_7");
+	public static final MaterialIcon FILTER_8 = forName("filter_8");
+	public static final MaterialIcon FILTER_9 = forName("filter_9");
+	public static final MaterialIcon FILTER_9_PLUS = forName("filter_9_plus");
+	public static final MaterialIcon FILTER_B_AND_W = forName("filter_b_and_w");
+	public static final MaterialIcon FILTER_CENTER_FOCUS = forName("filter_center_focus");
+	public static final MaterialIcon FILTER_DRAMA = forName("filter_drama");
+	public static final MaterialIcon FILTER_FRAMES = forName("filter_frames");
+	public static final MaterialIcon FILTER_HDR = forName("filter_hdr");
+	public static final MaterialIcon FILTER_LIST = forName("filter_list");
+	public static final MaterialIcon FILTER_NONE = forName("filter_none");
+	public static final MaterialIcon FILTER_TILT_SHIFT = forName("filter_tilt_shift");
+	public static final MaterialIcon FILTER_VINTAGE = forName("filter_vintage");
+	public static final MaterialIcon FIND_IN_PAGE = forName("find_in_page");
+	public static final MaterialIcon FIND_REPLACE = forName("find_replace");
+	public static final MaterialIcon FINGERPRINT = forName("fingerprint");
+	public static final MaterialIcon FIRST_PAGE = forName("first_page");
+	public static final MaterialIcon FITNESS_CENTER = forName("fitness_center");
+	public static final MaterialIcon FLAG = forName("flag");
+	public static final MaterialIcon FLARE = forName("flare");
+	public static final MaterialIcon FLASH_AUTO = forName("flash_auto");
+	public static final MaterialIcon FLASH_OFF = forName("flash_off");
+	public static final MaterialIcon FLASH_ON = forName("flash_on");
+	public static final MaterialIcon FLIGHT = forName("flight");
+	public static final MaterialIcon FLIGHT_LAND = forName("flight_land");
+	public static final MaterialIcon FLIGHT_TAKEOFF = forName("flight_takeoff");
+	public static final MaterialIcon FLIP = forName("flip");
+	public static final MaterialIcon FLIP_TO_BACK = forName("flip_to_back");
+	public static final MaterialIcon FLIP_TO_FRONT = forName("flip_to_front");
+	public static final MaterialIcon FOLDER = forName("folder");
+	public static final MaterialIcon FOLDER_OPEN = forName("folder_open");
+	public static final MaterialIcon FOLDER_SHARED = forName("folder_shared");
+	public static final MaterialIcon FOLDER_SPECIAL = forName("folder_special");
+	public static final MaterialIcon FONT_DOWNLOAD = forName("font_download");
+	public static final MaterialIcon FORMAT_ALIGN_CENTER = forName("format_align_center");
+	public static final MaterialIcon FORMAT_ALIGN_JUSTIFY = forName("format_align_justify");
+	public static final MaterialIcon FORMAT_ALIGN_LEFT = forName("format_align_left");
+	public static final MaterialIcon FORMAT_ALIGN_RIGHT = forName("format_align_right");
+	public static final MaterialIcon FORMAT_BOLD = forName("format_bold");
+	public static final MaterialIcon FORMAT_CLEAR = forName("format_clear");
+	public static final MaterialIcon FORMAT_COLOR_FILL = forName("format_color_fill");
+	public static final MaterialIcon FORMAT_COLOR_RESET = forName("format_color_reset");
+	public static final MaterialIcon FORMAT_COLOR_TEXT = forName("format_color_text");
+	public static final MaterialIcon FORMAT_INDENT_DECREASE = forName("format_indent_decrease");
+	public static final MaterialIcon FORMAT_INDENT_INCREASE = forName("format_indent_increase");
+	public static final MaterialIcon FORMAT_ITALIC = forName("format_italic");
+	public static final MaterialIcon FORMAT_LINE_SPACING = forName("format_line_spacing");
+	public static final MaterialIcon FORMAT_LIST_BULLETED = forName("format_list_bulleted");
+	public static final MaterialIcon FORMAT_LIST_NUMBERED = forName("format_list_numbered");
+	public static final MaterialIcon FORMAT_PAINT = forName("format_paint");
+	public static final MaterialIcon FORMAT_QUOTE = forName("format_quote");
+	public static final MaterialIcon FORMAT_SHAPES = forName("format_shapes");
+	public static final MaterialIcon FORMAT_SIZE = forName("format_size");
+	public static final MaterialIcon FORMAT_STRIKETHROUGH = forName("format_strikethrough");
+	public static final MaterialIcon FORMAT_TEXTDIRECTION_L_TO_R = forName("format_textdirection_l_to_r");
+	public static final MaterialIcon FORMAT_TEXTDIRECTION_R_TO_L = forName("format_textdirection_r_to_l");
+	public static final MaterialIcon FORMAT_UNDERLINED = forName("format_underlined");
+	public static final MaterialIcon FORUM = forName("forum");
+	public static final MaterialIcon FORWARD = forName("forward");
+	public static final MaterialIcon FORWARD_10 = forName("forward_10");
+	public static final MaterialIcon FORWARD_30 = forName("forward_30");
+	public static final MaterialIcon FORWARD_5 = forName("forward_5");
+	public static final MaterialIcon FREE_BREAKFAST = forName("free_breakfast");
+	public static final MaterialIcon FULLSCREEN = forName("fullscreen");
+	public static final MaterialIcon FULLSCREEN_EXIT = forName("fullscreen_exit");
+	public static final MaterialIcon FUNCTIONS = forName("functions");
+	public static final MaterialIcon G_TRANSLATE = forName("g_translate");
+	public static final MaterialIcon GAMEPAD = forName("gamepad");
+	public static final MaterialIcon GAMES = forName("games");
+	public static final MaterialIcon GAVEL = forName("gavel");
+	public static final MaterialIcon GESTURE = forName("gesture");
+	public static final MaterialIcon GET_APP = forName("get_app");
+	public static final MaterialIcon GIF = forName("gif");
+	public static final MaterialIcon GOLF_COURSE = forName("golf_course");
+	public static final MaterialIcon GPS_FIXED = forName("gps_fixed");
+	public static final MaterialIcon GPS_NOT_FIXED = forName("gps_not_fixed");
+	public static final MaterialIcon GPS_OFF = forName("gps_off");
+	public static final MaterialIcon GRADE = forName("grade");
+	public static final MaterialIcon GRADIENT = forName("gradient");
+	public static final MaterialIcon GRAIN = forName("grain");
+	public static final MaterialIcon GRAPHIC_EQ = forName("graphic_eq");
+	public static final MaterialIcon GRID_OFF = forName("grid_off");
+	public static final MaterialIcon GRID_ON = forName("grid_on");
+	public static final MaterialIcon GROUP = forName("group");
+	public static final MaterialIcon GROUP_ADD = forName("group_add");
+	public static final MaterialIcon GROUP_WORK = forName("group_work");
+	public static final MaterialIcon HD = forName("hd");
+	public static final MaterialIcon HDR_OFF = forName("hdr_off");
+	public static final MaterialIcon HDR_ON = forName("hdr_on");
+	public static final MaterialIcon HDR_STRONG = forName("hdr_strong");
+	public static final MaterialIcon HDR_WEAK = forName("hdr_weak");
+	public static final MaterialIcon HEADSET = forName("headset");
+	public static final MaterialIcon HEADSET_MIC = forName("headset_mic");
+	public static final MaterialIcon HEALING = forName("healing");
+	public static final MaterialIcon HEARING = forName("hearing");
+	public static final MaterialIcon HELP = forName("help");
+	public static final MaterialIcon HELP_OUTLINE = forName("help_outline");
+	public static final MaterialIcon HIGH_QUALITY = forName("high_quality");
+	public static final MaterialIcon HIGHLIGHT = forName("highlight");
+	public static final MaterialIcon HIGHLIGHT_OFF = forName("highlight_off");
+	public static final MaterialIcon HISTORY = forName("history");
+	public static final MaterialIcon HOME = forName("home");
+	public static final MaterialIcon HOT_TUB = forName("hot_tub");
+	public static final MaterialIcon HOTEL = forName("hotel");
+	public static final MaterialIcon HOURGLASS_EMPTY = forName("hourglass_empty");
+	public static final MaterialIcon HOURGLASS_FULL = forName("hourglass_full");
+	public static final MaterialIcon HTTP = forName("http");
+	public static final MaterialIcon HTTPS = forName("https");
+	public static final MaterialIcon IMAGE = forName("image");
+	public static final MaterialIcon IMAGE_ASPECT_RATIO = forName("image_aspect_ratio");
+	public static final MaterialIcon IMPORT_CONTACTS = forName("import_contacts");
+	public static final MaterialIcon IMPORT_EXPORT = forName("import_export");
+	public static final MaterialIcon IMPORTANT_DEVICES = forName("important_devices");
+	public static final MaterialIcon INBOX = forName("inbox");
+	public static final MaterialIcon INDETERMINATE_CHECK_BOX = forName("indeterminate_check_box");
+	public static final MaterialIcon INFO = forName("info");
+	public static final MaterialIcon INFO_OUTLINE = forName("info_outline");
+	public static final MaterialIcon INPUT = forName("input");
+	public static final MaterialIcon INSERT_CHART = forName("insert_chart");
+	public static final MaterialIcon INSERT_COMMENT = forName("insert_comment");
+	public static final MaterialIcon INSERT_DRIVE_FILE = forName("insert_drive_file");
+	public static final MaterialIcon INSERT_EMOTICON = forName("insert_emoticon");
+	public static final MaterialIcon INSERT_INVITATION = forName("insert_invitation");
+	public static final MaterialIcon INSERT_LINK = forName("insert_link");
+	public static final MaterialIcon INSERT_PHOTO = forName("insert_photo");
+	public static final MaterialIcon INVERT_COLORS = forName("invert_colors");
+	public static final MaterialIcon INVERT_COLORS_OFF = forName("invert_colors_off");
+	public static final MaterialIcon ISO = forName("iso");
+	public static final MaterialIcon KEYBOARD = forName("keyboard");
+	public static final MaterialIcon KEYBOARD_ARROW_DOWN = forName("keyboard_arrow_down");
+	public static final MaterialIcon KEYBOARD_ARROW_LEFT = forName("keyboard_arrow_left");
+	public static final MaterialIcon KEYBOARD_ARROW_RIGHT = forName("keyboard_arrow_right");
+	public static final MaterialIcon KEYBOARD_ARROW_UP = forName("keyboard_arrow_up");
+	public static final MaterialIcon KEYBOARD_BACKSPACE = forName("keyboard_backspace");
+	public static final MaterialIcon KEYBOARD_CAPSLOCK = forName("keyboard_capslock");
+	public static final MaterialIcon KEYBOARD_HIDE = forName("keyboard_hide");
+	public static final MaterialIcon KEYBOARD_RETURN = forName("keyboard_return");
+	public static final MaterialIcon KEYBOARD_TAB = forName("keyboard_tab");
+	public static final MaterialIcon KEYBOARD_VOICE = forName("keyboard_voice");
+	public static final MaterialIcon KITCHEN = forName("kitchen");
+	public static final MaterialIcon LABEL = forName("label");
+	public static final MaterialIcon LABEL_OUTLINE = forName("label_outline");
+	public static final MaterialIcon LANDSCAPE = forName("landscape");
+	public static final MaterialIcon LANGUAGE = forName("language");
+	public static final MaterialIcon LAPTOP = forName("laptop");
+	public static final MaterialIcon LAPTOP_CHROMEBOOK = forName("laptop_chromebook");
+	public static final MaterialIcon LAPTOP_MAC = forName("laptop_mac");
+	public static final MaterialIcon LAPTOP_WINDOWS = forName("laptop_windows");
+	public static final MaterialIcon LAST_PAGE = forName("last_page");
+	public static final MaterialIcon LAUNCH = forName("launch");
+	public static final MaterialIcon LAYERS = forName("layers");
+	public static final MaterialIcon LAYERS_CLEAR = forName("layers_clear");
+	public static final MaterialIcon LEAK_ADD = forName("leak_add");
+	public static final MaterialIcon LEAK_REMOVE = forName("leak_remove");
+	public static final MaterialIcon LENS = forName("lens");
+	public static final MaterialIcon LIBRARY_ADD = forName("library_add");
+	public static final MaterialIcon LIBRARY_BOOKS = forName("library_books");
+	public static final MaterialIcon LIBRARY_MUSIC = forName("library_music");
+	public static final MaterialIcon LIGHTBULB_OUTLINE = forName("lightbulb_outline");
+	public static final MaterialIcon LINE_STYLE = forName("line_style");
+	public static final MaterialIcon LINE_WEIGHT = forName("line_weight");
+	public static final MaterialIcon LINEAR_SCALE = forName("linear_scale");
+	public static final MaterialIcon LINK = forName("link");
+	public static final MaterialIcon LINKED_CAMERA = forName("linked_camera");
+	public static final MaterialIcon LIST = forName("list");
+	public static final MaterialIcon LIVE_HELP = forName("live_help");
+	public static final MaterialIcon LIVE_TV = forName("live_tv");
+	public static final MaterialIcon LOCAL_ACTIVITY = forName("local_activity");
+	public static final MaterialIcon LOCAL_AIRPORT = forName("local_airport");
+	public static final MaterialIcon LOCAL_ATM = forName("local_atm");
+	public static final MaterialIcon LOCAL_BAR = forName("local_bar");
+	public static final MaterialIcon LOCAL_CAFE = forName("local_cafe");
+	public static final MaterialIcon LOCAL_CAR_WASH = forName("local_car_wash");
+	public static final MaterialIcon LOCAL_CONVENIENCE_STORE = forName("local_convenience_store");
+	public static final MaterialIcon LOCAL_DINING = forName("local_dining");
+	public static final MaterialIcon LOCAL_DRINK = forName("local_drink");
+	public static final MaterialIcon LOCAL_FLORIST = forName("local_florist");
+	public static final MaterialIcon LOCAL_GAS_STATION = forName("local_gas_station");
+	public static final MaterialIcon LOCAL_GROCERY_STORE = forName("local_grocery_store");
+	public static final MaterialIcon LOCAL_HOSPITAL = forName("local_hospital");
+	public static final MaterialIcon LOCAL_HOTEL = forName("local_hotel");
+	public static final MaterialIcon LOCAL_LAUNDRY_SERVICE = forName("local_laundry_service");
+	public static final MaterialIcon LOCAL_LIBRARY = forName("local_library");
+	public static final MaterialIcon LOCAL_MALL = forName("local_mall");
+	public static final MaterialIcon LOCAL_MOVIES = forName("local_movies");
+	public static final MaterialIcon LOCAL_OFFER = forName("local_offer");
+	public static final MaterialIcon LOCAL_PARKING = forName("local_parking");
+	public static final MaterialIcon LOCAL_PHARMACY = forName("local_pharmacy");
+	public static final MaterialIcon LOCAL_PHONE = forName("local_phone");
+	public static final MaterialIcon LOCAL_PIZZA = forName("local_pizza");
+	public static final MaterialIcon LOCAL_PLAY = forName("local_play");
+	public static final MaterialIcon LOCAL_POST_OFFICE = forName("local_post_office");
+	public static final MaterialIcon LOCAL_PRINTSHOP = forName("local_printshop");
+	public static final MaterialIcon LOCAL_SEE = forName("local_see");
+	public static final MaterialIcon LOCAL_SHIPPING = forName("local_shipping");
+	public static final MaterialIcon LOCAL_TAXI = forName("local_taxi");
+	public static final MaterialIcon LOCATION_CITY = forName("location_city");
+	public static final MaterialIcon LOCATION_DISABLED = forName("location_disabled");
+	public static final MaterialIcon LOCATION_OFF = forName("location_off");
+	public static final MaterialIcon LOCATION_ON = forName("location_on");
+	public static final MaterialIcon LOCATION_SEARCHING = forName("location_searching");
+	public static final MaterialIcon LOCK = forName("lock");
+	public static final MaterialIcon LOCK_OPEN = forName("lock_open");
+	public static final MaterialIcon LOCK_OUTLINE = forName("lock_outline");
+	public static final MaterialIcon LOOKS = forName("looks");
+	public static final MaterialIcon LOOKS_3 = forName("looks_3");
+	public static final MaterialIcon LOOKS_4 = forName("looks_4");
+	public static final MaterialIcon LOOKS_5 = forName("looks_5");
+	public static final MaterialIcon LOOKS_6 = forName("looks_6");
+	public static final MaterialIcon LOOKS_ONE = forName("looks_one");
+	public static final MaterialIcon LOOKS_TWO = forName("looks_two");
+	public static final MaterialIcon LOOP = forName("loop");
+	public static final MaterialIcon LOUPE = forName("loupe");
+	public static final MaterialIcon LOW_PRIORITY = forName("low_priority");
+	public static final MaterialIcon LOYALTY = forName("loyalty");
+	public static final MaterialIcon MAIL = forName("mail");
+	public static final MaterialIcon MAIL_OUTLINE = forName("mail_outline");
+	public static final MaterialIcon MAP = forName("map");
+	public static final MaterialIcon MARK_UNREAD = forName("markunread");
+	public static final MaterialIcon MARK_UNREAD_MAILBOX = forName("markunread_mailbox");
+	public static final MaterialIcon MEMORY = forName("memory");
+	public static final MaterialIcon MENU = forName("menu");
+	public static final MaterialIcon MERGE_TYPE = forName("merge_type");
+	public static final MaterialIcon MESSAGE = forName("message");
+	public static final MaterialIcon MIC = forName("mic");
+	public static final MaterialIcon MIC_NONE = forName("mic_none");
+	public static final MaterialIcon MIC_OFF = forName("mic_off");
+	public static final MaterialIcon MMS = forName("mms");
+	public static final MaterialIcon MODE_COMMENT = forName("mode_comment");
+	public static final MaterialIcon MODE_EDIT = forName("mode_edit");
+	public static final MaterialIcon MONETIZATION_ON = forName("monetization_on");
+	public static final MaterialIcon MONEY_OFF = forName("money_off");
+	public static final MaterialIcon MONOCHROME_PHOTOS = forName("monochrome_photos");
+	public static final MaterialIcon MOOD = forName("mood");
+	public static final MaterialIcon MOOD_BAD = forName("mood_bad");
+	public static final MaterialIcon MORE = forName("more");
+	public static final MaterialIcon MORE_HORIZ = forName("more_horiz");
+	public static final MaterialIcon MORE_VERT = forName("more_vert");
+	public static final MaterialIcon MOTORCYCLE = forName("motorcycle");
+	public static final MaterialIcon MOUSE = forName("mouse");
+	public static final MaterialIcon MOVE_TO_INBOX = forName("move_to_inbox");
+	public static final MaterialIcon MOVIE = forName("movie");
+	public static final MaterialIcon MOVIE_CREATION = forName("movie_creation");
+	public static final MaterialIcon MOVIE_FILTER = forName("movie_filter");
+	public static final MaterialIcon MULTILINE_CHART = forName("multiline_chart");
+	public static final MaterialIcon MUSIC_NOTE = forName("music_note");
+	public static final MaterialIcon MUSIC_VIDEO = forName("music_video");
+	public static final MaterialIcon MY_LOCATION = forName("my_location");
+	public static final MaterialIcon NATURE = forName("nature");
+	public static final MaterialIcon NATURE_PEOPLE = forName("nature_people");
+	public static final MaterialIcon NAVIGATE_BEFORE = forName("navigate_before");
+	public static final MaterialIcon NAVIGATE_NEXT = forName("navigate_next");
+	public static final MaterialIcon NAVIGATION = forName("navigation");
+	public static final MaterialIcon NEAR_ME = forName("near_me");
+	public static final MaterialIcon NETWORK_CELL = forName("network_cell");
+	public static final MaterialIcon NETWORK_CHECK = forName("network_check");
+	public static final MaterialIcon NETWORK_LOCKED = forName("network_locked");
+	public static final MaterialIcon NETWORK_WIFI = forName("network_wifi");
+	public static final MaterialIcon NEW_RELEASES = forName("new_releases");
+	public static final MaterialIcon NEXT_WEEK = forName("next_week");
+	public static final MaterialIcon NFC = forName("nfc");
+	public static final MaterialIcon NO_ENCRYPTION = forName("no_encryption");
+	public static final MaterialIcon NO_SIM = forName("no_sim");
+	public static final MaterialIcon NOT_INTERESTED = forName("not_interested");
+	public static final MaterialIcon NOTE = forName("note");
+	public static final MaterialIcon NOTE_ADD = forName("note_add");
+	public static final MaterialIcon NOTIFICATIONS = forName("notifications");
+	public static final MaterialIcon NOTIFICATIONS_ACTIVE = forName("notifications_active");
+	public static final MaterialIcon NOTIFICATIONS_NONE = forName("notifications_none");
+	public static final MaterialIcon NOTIFICATIONS_OFF = forName("notifications_off");
+	public static final MaterialIcon NOTIFICATIONS_PAUSED = forName("notifications_paused");
+	public static final MaterialIcon OFFLINE_PIN = forName("offline_pin");
+	public static final MaterialIcon ON_DEMAND_VIDEO = forName("ondemand_video");
+	public static final MaterialIcon OPACITY = forName("opacity");
+	public static final MaterialIcon OPEN_IN_BROWSER = forName("open_in_browser");
+	public static final MaterialIcon OPEN_IN_NEW = forName("open_in_new");
+	public static final MaterialIcon OPEN_WITH = forName("open_with");
+	public static final MaterialIcon PAGES = forName("pages");
+	public static final MaterialIcon PAGE_VIEW = forName("pageview");
+	public static final MaterialIcon PALETTE = forName("palette");
+	public static final MaterialIcon PAN_TOOL = forName("pan_tool");
+	public static final MaterialIcon PANORAMA = forName("panorama");
+	public static final MaterialIcon PANORAMA_FISH_EYE = forName("panorama_fish_eye");
+	public static final MaterialIcon PANORAMA_HORIZONTAL = forName("panorama_horizontal");
+	public static final MaterialIcon PANORAMA_VERTICAL = forName("panorama_vertical");
+	public static final MaterialIcon PANORAMA_WIDE_ANGLE = forName("panorama_wide_angle");
+	public static final MaterialIcon PARTY_MODE = forName("party_mode");
+	public static final MaterialIcon PAUSE = forName("pause");
+	public static final MaterialIcon PAUSE_CIRCLE_FILLED = forName("pause_circle_filled");
+	public static final MaterialIcon PAUSE_CIRCLE_OUTLINE = forName("pause_circle_outline");
+	public static final MaterialIcon PAYMENT = forName("payment");
+	public static final MaterialIcon PEOPLE = forName("people");
+	public static final MaterialIcon PEOPLE_OUTLINE = forName("people_outline");
+	public static final MaterialIcon PERM_CAMERA_MIC = forName("perm_camera_mic");
+	public static final MaterialIcon PERM_CONTACT_CALENDAR = forName("perm_contact_calendar");
+	public static final MaterialIcon PERM_DATA_SETTING = forName("perm_data_setting");
+	public static final MaterialIcon PERM_DEVICE_INFORMATION = forName("perm_device_information");
+	public static final MaterialIcon PERM_IDENTITY = forName("perm_identity");
+	public static final MaterialIcon PERM_MEDIA = forName("perm_media");
+	public static final MaterialIcon PERM_PHONE_MSG = forName("perm_phone_msg");
+	public static final MaterialIcon PERM_SCAN_WIFI = forName("perm_scan_wifi");
+	public static final MaterialIcon PERSON = forName("person");
+	public static final MaterialIcon PERSON_ADD = forName("person_add");
+	public static final MaterialIcon PERSON_OUTLINE = forName("person_outline");
+	public static final MaterialIcon PERSON_PIN = forName("person_pin");
+	public static final MaterialIcon PERSON_PIN_CIRCLE = forName("person_pin_circle");
+	public static final MaterialIcon PERSONAL_VIDEO = forName("personal_video");
+	public static final MaterialIcon PETS = forName("pets");
+	public static final MaterialIcon PHONE = forName("phone");
+	public static final MaterialIcon PHONE_ANDROID = forName("phone_android");
+	public static final MaterialIcon PHONE_BLUETOOTH_SPEAKER = forName("phone_bluetooth_speaker");
+	public static final MaterialIcon PHONE_FORWARDED = forName("phone_forwarded");
+	public static final MaterialIcon PHONE_IN_TALK = forName("phone_in_talk");
+	public static final MaterialIcon PHONE_IPHONE = forName("phone_iphone");
+	public static final MaterialIcon PHONE_LOCKED = forName("phone_locked");
+	public static final MaterialIcon PHONE_MISSED = forName("phone_missed");
+	public static final MaterialIcon PHONE_PAUSED = forName("phone_paused");
+	public static final MaterialIcon PHONE_LINK = forName("phonelink");
+	public static final MaterialIcon PHONE_LINK_ERASE = forName("phonelink_erase");
+	public static final MaterialIcon PHONE_LINK_LOCK = forName("phonelink_lock");
+	public static final MaterialIcon PHONE_LINK_OFF = forName("phonelink_off");
+	public static final MaterialIcon PHONE_LINK_RING = forName("phonelink_ring");
+	public static final MaterialIcon PHONE_LINK_SETUP = forName("phonelink_setup");
+	public static final MaterialIcon PHOTO = forName("photo");
+	public static final MaterialIcon PHOTO_ALBUM = forName("photo_album");
+	public static final MaterialIcon PHOTO_CAMERA = forName("photo_camera");
+	public static final MaterialIcon PHOTO_FILTER = forName("photo_filter");
+	public static final MaterialIcon PHOTO_LIBRARY = forName("photo_library");
+	public static final MaterialIcon PHOTO_SIZE_SELECT_ACTUAL = forName("photo_size_select_actual");
+	public static final MaterialIcon PHOTO_SIZE_SELECT_LARGE = forName("photo_size_select_large");
+	public static final MaterialIcon PHOTO_SIZE_SELECT_SMALL = forName("photo_size_select_small");
+	public static final MaterialIcon PICTURE_AS_PDF = forName("picture_as_pdf");
+	public static final MaterialIcon PICTURE_IN_PICTURE = forName("picture_in_picture");
+	public static final MaterialIcon PICTURE_IN_PICTURE_ALT = forName("picture_in_picture_alt");
+	public static final MaterialIcon PIE_CHART = forName("pie_chart");
+	public static final MaterialIcon PIE_CHART_OUTLINED = forName("pie_chart_outlined");
+	public static final MaterialIcon PIN_DROP = forName("pin_drop");
+	public static final MaterialIcon PLACE = forName("place");
+	public static final MaterialIcon PLAY_ARROW = forName("play_arrow");
+	public static final MaterialIcon PLAY_CIRCLE_FILLED = forName("play_circle_filled");
+	public static final MaterialIcon PLAY_CIRCLE_OUTLINE = forName("play_circle_outline");
+	public static final MaterialIcon PLAY_FOR_WORK = forName("play_for_work");
+	public static final MaterialIcon PLAYLIST_ADD = forName("playlist_add");
+	public static final MaterialIcon PLAYLIST_ADD_CHECK = forName("playlist_add_check");
+	public static final MaterialIcon PLAYLIST_PLAY = forName("playlist_play");
+	public static final MaterialIcon PLUS_ONE = forName("plus_one");
+	public static final MaterialIcon POLL = forName("poll");
+	public static final MaterialIcon POLYMER = forName("polymer");
+	public static final MaterialIcon POOL = forName("pool");
+	public static final MaterialIcon PORTABLE_WIFI_OFF = forName("portable_wifi_off");
+	public static final MaterialIcon PORTRAIT = forName("portrait");
+	public static final MaterialIcon POWER = forName("power");
+	public static final MaterialIcon POWER_INPUT = forName("power_input");
+	public static final MaterialIcon POWER_SETTINGS_NEW = forName("power_settings_new");
+	public static final MaterialIcon PREGNANT_WOMAN = forName("pregnant_woman");
+	public static final MaterialIcon PRESENT_TO_ALL = forName("present_to_all");
+	public static final MaterialIcon PRINT = forName("print");
+	public static final MaterialIcon PRIORITY_HIGH = forName("priority_high");
+	public static final MaterialIcon PUBLIC = forName("public");
+	public static final MaterialIcon PUBLISH = forName("publish");
+	public static final MaterialIcon QUERY_BUILDER = forName("query_builder");
+	public static final MaterialIcon QUESTION_ANSWER = forName("question_answer");
+	public static final MaterialIcon QUEUE = forName("queue");
+	public static final MaterialIcon QUEUE_MUSIC = forName("queue_music");
+	public static final MaterialIcon QUEUE_PLAY_NEXT = forName("queue_play_next");
+	public static final MaterialIcon RADIO = forName("radio");
+	public static final MaterialIcon RADIO_BUTTON_CHECKED = forName("radio_button_checked");
+	public static final MaterialIcon RADIO_BUTTON_UNCHECKED = forName("radio_button_unchecked");
+	public static final MaterialIcon RATE_REVIEW = forName("rate_review");
+	public static final MaterialIcon RECEIPT = forName("receipt");
+	public static final MaterialIcon RECENT_ACTORS = forName("recent_actors");
+	public static final MaterialIcon RECORD_VOICE_OVER = forName("record_voice_over");
+	public static final MaterialIcon REDEEM = forName("redeem");
+	public static final MaterialIcon REDO = forName("redo");
+	public static final MaterialIcon REFRESH = forName("refresh");
+	public static final MaterialIcon REMOVE = forName("remove");
+	public static final MaterialIcon REMOVE_CIRCLE = forName("remove_circle");
+	public static final MaterialIcon REMOVE_CIRCLE_OUTLINE = forName("remove_circle_outline");
+	public static final MaterialIcon REMOVE_FROM_QUEUE = forName("remove_from_queue");
+	public static final MaterialIcon REMOVE_RED_EYE = forName("remove_red_eye");
+	public static final MaterialIcon REMOVE_SHOPPING_CART = forName("remove_shopping_cart");
+	public static final MaterialIcon REORDER = forName("reorder");
+	public static final MaterialIcon REPEAT = forName("repeat");
+	public static final MaterialIcon REPEAT_ONE = forName("repeat_one");
+	public static final MaterialIcon REPLAY = forName("replay");
+	public static final MaterialIcon REPLAY_10 = forName("replay_10");
+	public static final MaterialIcon REPLAY_30 = forName("replay_30");
+	public static final MaterialIcon REPLAY_5 = forName("replay_5");
+	public static final MaterialIcon REPLY = forName("reply");
+	public static final MaterialIcon REPLY_ALL = forName("reply_all");
+	public static final MaterialIcon REPORT = forName("report");
+	public static final MaterialIcon REPORT_PROBLEM = forName("report_problem");
+	public static final MaterialIcon RESTAURANT = forName("restaurant");
+	public static final MaterialIcon RESTAURANT_MENU = forName("restaurant_menu");
+	public static final MaterialIcon RESTORE = forName("restore");
+	public static final MaterialIcon RESTORE_PAGE = forName("restore_page");
+	public static final MaterialIcon RING_VOLUME = forName("ring_volume");
+	public static final MaterialIcon ROOM = forName("room");
+	public static final MaterialIcon ROOM_SERVICE = forName("room_service");
+	public static final MaterialIcon ROTATE_90_DEGREES_CCW = forName("rotate_90_degrees_ccw");
+	public static final MaterialIcon ROTATE_LEFT = forName("rotate_left");
+	public static final MaterialIcon ROTATE_RIGHT = forName("rotate_right");
+	public static final MaterialIcon ROUNDED_CORNER = forName("rounded_corner");
+	public static final MaterialIcon ROUTER = forName("router");
+	public static final MaterialIcon ROWING = forName("rowing");
+	public static final MaterialIcon RSS_FEED = forName("rss_feed");
+	public static final MaterialIcon RV_HOOKUP = forName("rv_hookup");
+	public static final MaterialIcon SATELLITE = forName("satellite");
+	public static final MaterialIcon SAVE = forName("save");
+	public static final MaterialIcon SCANNER = forName("scanner");
+	public static final MaterialIcon SCHEDULE = forName("schedule");
+	public static final MaterialIcon SCHOOL = forName("school");
+	public static final MaterialIcon SCREEN_LOCK_LANDSCAPE = forName("screen_lock_landscape");
+	public static final MaterialIcon SCREEN_LOCK_PORTRAIT = forName("screen_lock_portrait");
+	public static final MaterialIcon SCREEN_LOCK_ROTATION = forName("screen_lock_rotation");
+	public static final MaterialIcon SCREEN_ROTATION = forName("screen_rotation");
+	public static final MaterialIcon SCREEN_SHARE = forName("screen_share");
+	public static final MaterialIcon SD_CARD = forName("sd_card");
+	public static final MaterialIcon SD_STORAGE = forName("sd_storage");
+	public static final MaterialIcon SEARCH = forName("search");
+	public static final MaterialIcon SECURITY = forName("security");
+	public static final MaterialIcon SELECT_ALL = forName("select_all");
+	public static final MaterialIcon SEND = forName("send");
+	public static final MaterialIcon SENTIMENT_DISSATISFIED = forName("sentiment_dissatisfied");
+	public static final MaterialIcon SENTIMENT_NEUTRAL = forName("sentiment_neutral");
+	public static final MaterialIcon SENTIMENT_SATISFIED = forName("sentiment_satisfied");
+	public static final MaterialIcon SENTIMENT_VERY_DISSATISFIED = forName("sentiment_very_dissatisfied");
+	public static final MaterialIcon SENTIMENT_VERY_SATISFIED = forName("sentiment_very_satisfied");
+	public static final MaterialIcon SETTINGS = forName("settings");
+	public static final MaterialIcon SETTINGS_APPLICATIONS = forName("settings_applications");
+	public static final MaterialIcon SETTINGS_BACKUP_RESTORE = forName("settings_backup_restore");
+	public static final MaterialIcon SETTINGS_BLUETOOTH = forName("settings_bluetooth");
+	public static final MaterialIcon SETTINGS_BRIGHTNESS = forName("settings_brightness");
+	public static final MaterialIcon SETTINGS_CELL = forName("settings_cell");
+	public static final MaterialIcon SETTINGS_ETHERNET = forName("settings_ethernet");
+	public static final MaterialIcon SETTINGS_INPUT_ANTENNA = forName("settings_input_antenna");
+	public static final MaterialIcon SETTINGS_INPUT_COMPONENT = forName("settings_input_component");
+	public static final MaterialIcon SETTINGS_INPUT_COMPOSITE = forName("settings_input_composite");
+	public static final MaterialIcon SETTINGS_INPUT_HDMI = forName("settings_input_hdmi");
+	public static final MaterialIcon SETTINGS_INPUT_SVIDEO = forName("settings_input_svideo");
+	public static final MaterialIcon SETTINGS_OVERSCAN = forName("settings_overscan");
+	public static final MaterialIcon SETTINGS_PHONE = forName("settings_phone");
+	public static final MaterialIcon SETTINGS_POWER = forName("settings_power");
+	public static final MaterialIcon SETTINGS_REMOTE = forName("settings_remote");
+	public static final MaterialIcon SETTINGS_SYSTEM_DAYDREAM = forName("settings_system_daydream");
+	public static final MaterialIcon SETTINGS_VOICE = forName("settings_voice");
+	public static final MaterialIcon SHARE = forName("share");
+	public static final MaterialIcon SHOP = forName("shop");
+	public static final MaterialIcon SHOP_TWO = forName("shop_two");
+	public static final MaterialIcon SHOPPING_BASKET = forName("shopping_basket");
+	public static final MaterialIcon SHOPPING_CART = forName("shopping_cart");
+	public static final MaterialIcon SHORT_TEXT = forName("short_text");
+	public static final MaterialIcon SHOW_CHART = forName("show_chart");
+	public static final MaterialIcon SHUFFLE = forName("shuffle");
+	public static final MaterialIcon SIGNAL_CELLULAR_4_BAR = forName("signal_cellular_4_bar");
+	public static final MaterialIcon SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR = forName("signal_cellular_connected_no_internet_4_bar");
+	public static final MaterialIcon SIGNAL_CELLULAR_NO_SIM = forName("signal_cellular_no_sim");
+	public static final MaterialIcon SIGNAL_CELLULAR_NULL = forName("signal_cellular_null");
+	public static final MaterialIcon SIGNAL_CELLULAR_OFF = forName("signal_cellular_off");
+	public static final MaterialIcon SIGNAL_WIFI_4_BAR = forName("signal_wifi_4_bar");
+	public static final MaterialIcon SIGNAL_WIFI_4_BAR_LOCK = forName("signal_wifi_4_bar_lock");
+	public static final MaterialIcon SIGNAL_WIFI_OFF = forName("signal_wifi_off");
+	public static final MaterialIcon SIM_CARD = forName("sim_card");
+	public static final MaterialIcon SIM_CARD_ALERT = forName("sim_card_alert");
+	public static final MaterialIcon SKIP_NEXT = forName("skip_next");
+	public static final MaterialIcon SKIP_PREVIOUS = forName("skip_previous");
+	public static final MaterialIcon SLIDESHOW = forName("slideshow");
+	public static final MaterialIcon SLOW_MOTION_VIDEO = forName("slow_motion_video");
+	public static final MaterialIcon SMARTPHONE = forName("smartphone");
+	public static final MaterialIcon SMOKE_FREE = forName("smoke_free");
+	public static final MaterialIcon SMOKING_ROOMS = forName("smoking_rooms");
+	public static final MaterialIcon SMS = forName("sms");
+	public static final MaterialIcon SMS_FAILED = forName("sms_failed");
+	public static final MaterialIcon SNOOZE = forName("snooze");
+	public static final MaterialIcon SORT = forName("sort");
+	public static final MaterialIcon SORT_BY_ALPHA = forName("sort_by_alpha");
+	public static final MaterialIcon SPA = forName("spa");
+	public static final MaterialIcon SPACE_BAR = forName("space_bar");
+	public static final MaterialIcon SPEAKER = forName("speaker");
+	public static final MaterialIcon SPEAKER_GROUP = forName("speaker_group");
+	public static final MaterialIcon SPEAKER_NOTES = forName("speaker_notes");
+	public static final MaterialIcon SPEAKER_NOTES_OFF = forName("speaker_notes_off");
+	public static final MaterialIcon SPEAKER_PHONE = forName("speaker_phone");
+	public static final MaterialIcon SPELLCHECK = forName("spellcheck");
+	public static final MaterialIcon STAR = forName("star");
+	public static final MaterialIcon STAR_BORDER = forName("star_border");
+	public static final MaterialIcon STAR_HALF = forName("star_half");
+	public static final MaterialIcon STARS = forName("stars");
+	public static final MaterialIcon STAY_CURRENT_LANDSCAPE = forName("stay_current_landscape");
+	public static final MaterialIcon STAY_CURRENT_PORTRAIT = forName("stay_current_portrait");
+	public static final MaterialIcon STAY_PRIMARY_LANDSCAPE = forName("stay_primary_landscape");
+	public static final MaterialIcon STAY_PRIMARY_PORTRAIT = forName("stay_primary_portrait");
+	public static final MaterialIcon STOP = forName("stop");
+	public static final MaterialIcon STOP_SCREEN_SHARE = forName("stop_screen_share");
+	public static final MaterialIcon STORAGE = forName("storage");
+	public static final MaterialIcon STORE = forName("store");
+	public static final MaterialIcon STORE_MALL_DIRECTORY = forName("store_mall_directory");
+	public static final MaterialIcon STRAIGHTEN = forName("straighten");
+	public static final MaterialIcon STREET_VIEW = forName("streetview");
+	public static final MaterialIcon STRIKETHROUGH_S = forName("strikethrough_s");
+	public static final MaterialIcon STYLE = forName("style");
+	public static final MaterialIcon SUBDIRECTORY_ARROW_LEFT = forName("subdirectory_arrow_left");
+	public static final MaterialIcon SUBDIRECTORY_ARROW_RIGHT = forName("subdirectory_arrow_right");
+	public static final MaterialIcon SUBJECT = forName("subject");
+	public static final MaterialIcon SUBSCRIPTIONS = forName("subscriptions");
+	public static final MaterialIcon SUBTITLES = forName("subtitles");
+	public static final MaterialIcon SUBWAY = forName("subway");
+	public static final MaterialIcon SUPERVISOR_ACCOUNT = forName("supervisor_account");
+	public static final MaterialIcon SURROUND_SOUND = forName("surround_sound");
+	public static final MaterialIcon SWAP_CALLS = forName("swap_calls");
+	public static final MaterialIcon SWAP_HORIZ = forName("swap_horiz");
+	public static final MaterialIcon SWAP_VERT = forName("swap_vert");
+	public static final MaterialIcon SWAP_VERTICAL_CIRCLE = forName("swap_vertical_circle");
+	public static final MaterialIcon SWITCH_CAMERA = forName("switch_camera");
+	public static final MaterialIcon SWITCH_VIDEO = forName("switch_video");
+	public static final MaterialIcon SYNC = forName("sync");
+	public static final MaterialIcon SYNC_DISABLED = forName("sync_disabled");
+	public static final MaterialIcon SYNC_PROBLEM = forName("sync_problem");
+	public static final MaterialIcon SYSTEM_UPDATE = forName("system_update");
+	public static final MaterialIcon SYSTEM_UPDATE_ALT = forName("system_update_alt");
+	public static final MaterialIcon TAB = forName("tab");
+	public static final MaterialIcon TAB_UNSELECTED = forName("tab_unselected");
+	public static final MaterialIcon TABLET = forName("tablet");
+	public static final MaterialIcon TABLET_ANDROID = forName("tablet_android");
+	public static final MaterialIcon TABLET_MAC = forName("tablet_mac");
+	public static final MaterialIcon TAG_FACES = forName("tag_faces");
+	public static final MaterialIcon TAP_AND_PLAY = forName("tap_and_play");
+	public static final MaterialIcon TERRAIN = forName("terrain");
+	public static final MaterialIcon TEXT_FIELDS = forName("text_fields");
+	public static final MaterialIcon TEXT_FORMAT = forName("text_format");
+	public static final MaterialIcon TEXT_SMS = forName("textsms");
+	public static final MaterialIcon TEXTURE = forName("texture");
+	public static final MaterialIcon THEATERS = forName("theaters");
+	public static final MaterialIcon THUMB_DOWN = forName("thumb_down");
+	public static final MaterialIcon THUMB_UP = forName("thumb_up");
+	public static final MaterialIcon THUMBS_UP_DOWN = forName("thumbs_up_down");
+	public static final MaterialIcon TIME_TO_LEAVE = forName("time_to_leave");
+	public static final MaterialIcon TIME_LAPSE = forName("timelapse");
+	public static final MaterialIcon TIMELINE = forName("timeline");
+	public static final MaterialIcon TIMER = forName("timer");
+	public static final MaterialIcon TIMER_10 = forName("timer_10");
+	public static final MaterialIcon TIMER_3 = forName("timer_3");
+	public static final MaterialIcon TIMER_OFF = forName("timer_off");
+	public static final MaterialIcon TITLE = forName("title");
+	public static final MaterialIcon TOC = forName("toc");
+	public static final MaterialIcon TODAY = forName("today");
+	public static final MaterialIcon TOLL = forName("toll");
+	public static final MaterialIcon TONALITY = forName("tonality");
+	public static final MaterialIcon TOUCH_APP = forName("touch_app");
+	public static final MaterialIcon TOYS = forName("toys");
+	public static final MaterialIcon TRACK_CHANGES = forName("track_changes");
+	public static final MaterialIcon TRAFFIC = forName("traffic");
+	public static final MaterialIcon TRAIN = forName("train");
+	public static final MaterialIcon TRAM = forName("tram");
+	public static final MaterialIcon TRANSFER_WITHIN_A_STATION = forName("transfer_within_a_station");
+	public static final MaterialIcon TRANSFORM = forName("transform");
+	public static final MaterialIcon TRANSLATE = forName("translate");
+	public static final MaterialIcon TRENDING_DOWN = forName("trending_down");
+	public static final MaterialIcon TRENDING_FLAT = forName("trending_flat");
+	public static final MaterialIcon TRENDING_UP = forName("trending_up");
+	public static final MaterialIcon TUNE = forName("tune");
+	public static final MaterialIcon TURNED_IN = forName("turned_in");
+	public static final MaterialIcon TURNED_IN_NOT = forName("turned_in_not");
+	public static final MaterialIcon TV = forName("tv");
+	public static final MaterialIcon UNARCHIVE = forName("unarchive");
+	public static final MaterialIcon UNDO = forName("undo");
+	public static final MaterialIcon UNFOLD_LESS = forName("unfold_less");
+	public static final MaterialIcon UNFOLD_MORE = forName("unfold_more");
+	public static final MaterialIcon UPDATE = forName("update");
+	public static final MaterialIcon USB = forName("usb");
+	public static final MaterialIcon VERIFIED_USER = forName("verified_user");
+	public static final MaterialIcon VERTICAL_ALIGN_BOTTOM = forName("vertical_align_bottom");
+	public static final MaterialIcon VERTICAL_ALIGN_CENTER = forName("vertical_align_center");
+	public static final MaterialIcon VERTICAL_ALIGN_TOP = forName("vertical_align_top");
+	public static final MaterialIcon VIBRATION = forName("vibration");
+	public static final MaterialIcon VIDEO_CALL = forName("video_call");
+	public static final MaterialIcon VIDEO_LABEL = forName("video_label");
+	public static final MaterialIcon VIDEO_LIBRARY = forName("video_library");
+	public static final MaterialIcon VIDEO_CAM = forName("videocam");
+	public static final MaterialIcon VIDEO_CAM_OFF = forName("videocam_off");
+	public static final MaterialIcon VIDEO_GAME_ASSET = forName("videogame_asset");
+	public static final MaterialIcon VIEW_AGENDA = forName("view_agenda");
+	public static final MaterialIcon VIEW_ARRAY = forName("view_array");
+	public static final MaterialIcon VIEW_CAROUSEL = forName("view_carousel");
+	public static final MaterialIcon VIEW_COLUMN = forName("view_column");
+	public static final MaterialIcon VIEW_COMFY = forName("view_comfy");
+	public static final MaterialIcon VIEW_COMPACT = forName("view_compact");
+	public static final MaterialIcon VIEW_DAY = forName("view_day");
+	public static final MaterialIcon VIEW_HEADLINE = forName("view_headline");
+	public static final MaterialIcon VIEW_LIST = forName("view_list");
+	public static final MaterialIcon VIEW_MODULE = forName("view_module");
+	public static final MaterialIcon VIEW_QUILT = forName("view_quilt");
+	public static final MaterialIcon VIEW_STREAM = forName("view_stream");
+	public static final MaterialIcon VIEW_WEEK = forName("view_week");
+	public static final MaterialIcon VIGNETTE = forName("vignette");
+	public static final MaterialIcon VISIBILITY = forName("visibility");
+	public static final MaterialIcon VISIBILITY_OFF = forName("visibility_off");
+	public static final MaterialIcon VOICE_CHAT = forName("voice_chat");
+	public static final MaterialIcon VOICE_MAIL = forName("voicemail");
+	public static final MaterialIcon VOLUME_DOWN = forName("volume_down");
+	public static final MaterialIcon VOLUME_MUTE = forName("volume_mute");
+	public static final MaterialIcon VOLUME_OFF = forName("volume_off");
+	public static final MaterialIcon VOLUME_UP = forName("volume_up");
+	public static final MaterialIcon VPN_KEY = forName("vpn_key");
+	public static final MaterialIcon VPN_LOCK = forName("vpn_lock");
+	public static final MaterialIcon WALLPAPER = forName("wallpaper");
+	public static final MaterialIcon WARNING = forName("warning");
+	public static final MaterialIcon WATCH = forName("watch");
+	public static final MaterialIcon WATCH_LATER = forName("watch_later");
+	public static final MaterialIcon WB_AUTO = forName("wb_auto");
+	public static final MaterialIcon WB_CLOUDY = forName("wb_cloudy");
+	public static final MaterialIcon WB_INCANDESCENT = forName("wb_incandescent");
+	public static final MaterialIcon WB_IRIDESCENT = forName("wb_iridescent");
+	public static final MaterialIcon WB_SUNNY = forName("wb_sunny");
+	public static final MaterialIcon WC = forName("wc");
+	public static final MaterialIcon WEB = forName("web");
+	public static final MaterialIcon WEB_ASSET = forName("web_asset");
+	public static final MaterialIcon WEEKEND = forName("weekend");
+	public static final MaterialIcon WHATSHOT = forName("whatshot");
+	public static final MaterialIcon WIDGETS = forName("widgets");
+	public static final MaterialIcon WIFI = forName("wifi");
+	public static final MaterialIcon WIFI_LOCK = forName("wifi_lock");
+	public static final MaterialIcon WIFI_TETHERING = forName("wifi_tethering");
+	public static final MaterialIcon WORK = forName("work");
+	public static final MaterialIcon WRAP_TEXT = forName("wrap_text");
+	public static final MaterialIcon YOUTUBE_SEARCHED_FOR = forName("youtube_searched_for");
+	public static final MaterialIcon ZOOM_IN = forName("zoom_in");
+	public static final MaterialIcon ZOOM_OUT = forName("zoom_out");
+	public static final MaterialIcon ZOOM_OUT_MAP = forName("zoom_out_map");
 
-    private String iconName;
+	static MaterialIcon forName(String name) {
+		return new MaterialIcon(name);
+	}
 
-    MaterialIcon(String iconName) {
-        this.iconName = iconName;
-    }
+	private final String iconName;
+	private final MaterialIconStyle style;
 
-    @Override
-    public String getIconName() {
-        return iconName + ".svg";
-    }
+	private MaterialIcon(String iconName) {
+		this(iconName, null);
+	}
 
-    @Override
-    public String getIconLibraryId() {
-        return MaterialIconProvider.LIBRARY_ID;
-    }
+	private MaterialIcon(String iconName, MaterialIconStyle style) {
+		this.iconName = iconName;
+		this.style = style;
+	}
 
-    public Icon withStyle(AbstractMaterialIconStyle style) {
-        return new StyledIcon(getIconLibraryId(), style.getStyleId(), getIconName());
-    }
+	public String getIconName() {
+		return iconName;
+	}
+
+	public MaterialIconStyle getStyle() {
+		return style;
+	}
+
+	public MaterialIcon withStyle(MaterialIconStyle style) {
+		return new MaterialIcon(iconName, style);
+	}
 }

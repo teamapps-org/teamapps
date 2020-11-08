@@ -23,9 +23,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
+import org.teamapps.icons.IconLibraryRegistry;
+import org.teamapps.icons.IconProviderDispatcher;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.uisession.TeamAppsUiSessionManager;
+import org.teamapps.ux.resource.IconResourceProvider;
+import org.teamapps.ux.resource.ResourceProviderServlet;
 import org.teamapps.webcontroller.WebController;
 
 import javax.servlet.*;
@@ -64,7 +68,8 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 
 		ObjectMapper objectMapper = TeamAppsObjectMapperFactory.create();
 		uiSessionManager = new TeamAppsUiSessionManager(config, objectMapper);
-		TeamAppsUxClientGate teamAppsUxClientGate = new TeamAppsUxClientGate(webController, uiSessionManager, objectMapper);
+		IconLibraryRegistry iconLibraryRegistry = new IconLibraryRegistry();
+		TeamAppsUxClientGate teamAppsUxClientGate = new TeamAppsUxClientGate(webController, uiSessionManager, objectMapper, iconLibraryRegistry);
 		uiSessionManager.setUiSessionListener(teamAppsUxClientGate);
 
 		FilterRegistration.Dynamic downloadFilterRegistration = context.addFilter("teamapps-download-header-filter", new DownloadHttpHeaderFilter());
@@ -77,6 +82,9 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 
 		Dynamic leaveBeaconServletRegistration = context.addServlet("teamapps-leave", new LeaveBeaconServlet(uiSessionManager));
 		leaveBeaconServletRegistration.addMapping("/leave/*");
+
+		Dynamic iconServletRegistration = context.addServlet("teamapps-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProviderDispatcher(iconLibraryRegistry))));
+		iconServletRegistration.addMapping("/icons/*");
 
 		context.addListener(new ServletRequestListener());
 		context.addListener(uiSessionManager);

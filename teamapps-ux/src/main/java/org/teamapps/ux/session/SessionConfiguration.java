@@ -58,7 +58,6 @@ public class SessionConfiguration {
 	public static SessionConfiguration create(ULocale locale, ZoneId timeZone, StylingTheme theme, boolean optimizedForTouch) {
 		SessionConfiguration config = new SessionConfiguration();
 		config.setULocale(locale);
-		config.setIconPath("icons");
 		config.setTimeZone(timeZone);
 		config.setTheme(theme);
 		config.setOptimizedForTouch(optimizedForTouch);

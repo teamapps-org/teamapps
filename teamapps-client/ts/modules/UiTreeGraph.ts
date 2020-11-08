@@ -906,7 +906,7 @@ class TreeChart {
 				.append("rect")
 				.classed("node-image-rect", true)
 			)
-			.attr('fill', d => `url(#${d.id})`)
+			.attr('fill', d => `url('#${d.id}')`)
 			.attr('width', d => d.data.image.width)
 			.attr('height', d => d.data.image.height)
 			.attr('stroke', d => d.data.image.borderColor)
@@ -916,7 +916,7 @@ class TreeChart {
 					: 0)
 			.attr('y', d => d.data.image.centerTopDistance)
 			.attr('x', d => d.data.image.centerLeftDistance)
-			.attr('filter', d => d.data.image.shadow ? `url(#${attrs.dropShadowId})` : 'none');
+			.attr('filter', d => d.data.image.shadow ? `url('#${attrs.dropShadowId}')` : 'none');
 
 		// Add foreignObject element inside rectangle
 		const fo = nodesSelection.selectAll(':scope > foreignObject.node-foreign-object')

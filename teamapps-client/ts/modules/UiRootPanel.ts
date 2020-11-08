@@ -208,11 +208,11 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 				/*[data-background-container-id='${this.getId()}']*/.teamapps-backgroundImage,
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-backgroundImage {
                     background-color: ${this.backgroundColor || ''};
-                    background-image: ${this.backgroundImage ? `url(${this.backgroundImage})` : 'none'};
+                    background-image: ${this.backgroundImage ? `url('${this.backgroundImage}')` : 'none'};
                 }
                 /*[data-background-container-id='${this.getId()}']*/.teamapps-blurredBackgroundImage,
                 /*[data-background-container-id='${this.getId()}']*/ .teamapps-blurredBackgroundImage {
-                    background-image: ${this.blurredBackgroundImage ? `url(${this.blurredBackgroundImage})` : 'none'};
+                    background-image: ${this.blurredBackgroundImage ? `url('${this.blurredBackgroundImage}')` : 'none'};
                 }
             `;
 	}
@@ -313,7 +313,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 			content: null
 		}, context);
 		let $contentElement = parseHtml(`<div class="UiGenericErrorMessage">
-	<div class="icon img img-48" style="background-image: url(/resources/window-close-grey.png); display: ${showErrorIcon ? 'block' : 'none'}"></div>
+	<div class="icon img img-48" style="background-image: url('/resources/window-close-grey.png'); display: ${showErrorIcon ? 'block' : 'none'}"></div>
 	<div class="message" style="text-align: justify;">${message}</div>
 	<div class="option-buttons">
 		${options.map(o => `<div class="btn btn-default ${UiGenericErrorMessageOption[o].toLowerCase()}">${UiGenericErrorMessageOption[o]}</div>`).join("")}

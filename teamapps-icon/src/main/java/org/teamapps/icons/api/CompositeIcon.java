@@ -28,18 +28,18 @@ public class CompositeIcon implements Icon {
 	public static final String TOP_LEFT_SUB_ICON = SUB_ICON_MARKER + "3.";
 	public static final String TOP_RIGHT_SUB_ICON = SUB_ICON_MARKER + "4.";
 
-	private Icon baseIcon;
+	private final Icon baseIcon;
 	private	Icon bottomRightIcon;
 	private	Icon bottomLeftIcon;
 	private	Icon topLeftIcon;
 	private	Icon topRightIcon;
 
 	public static CompositeIcon of(Icon baseIcon, Icon bottomRightIcon) {
-		return new CompositeIcon(baseIcon, bottomRightIcon);
+		return CompositeIcon.of(baseIcon, bottomRightIcon);
 	}
 
 	public static CompositeIcon of(Icon baseIcon, Icon bottomRightIcon, Icon bottomLeftIcon, Icon topLeftIcon, Icon topRightIcon) {
-		return new CompositeIcon(baseIcon, bottomRightIcon, bottomLeftIcon, topLeftIcon, topRightIcon);
+		return CompositeIcon.of(baseIcon, bottomRightIcon, bottomLeftIcon, topLeftIcon, topRightIcon);
 	}
 
 	public CompositeIcon(Icon baseIcon) {

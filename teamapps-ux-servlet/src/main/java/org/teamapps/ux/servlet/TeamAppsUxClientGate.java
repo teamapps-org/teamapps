@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiSessionClosingReason;
-import org.teamapps.icons.provider.IconProvider;
+import org.teamapps.icons.IconEncoderDispatcher;
+import org.teamapps.icons.IconLibraryRegistry;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.SessionRecorder;
 import org.teamapps.server.SessionResourceProvider;
@@ -36,14 +37,17 @@ import org.teamapps.uisession.UiSessionListener;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.resource.ResourceProviderServlet;
-import org.teamapps.ux.resource.SystemIconResourceProvider;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.ClientSessionResourceProvider;
+import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -59,6 +63,7 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 	private final UiCommandExecutor commandExecutor;
 
 	private final ObjectMapper objectMapper;
+	private final IconLibraryRegistry iconLibraryRegistry;
 	private final Map<QualifiedUiSessionId, SessionContext> sessionContextById = new ConcurrentHashMap<>();
 	private final Map<String, File> uploadedFilesByUuid = new ConcurrentHashMap<>();
 
@@ -76,12 +81,11 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 
 	private String userSessionCommandsRecordingPath;
 
-	public TeamAppsUxClientGate(WebController webController, UiCommandExecutor commandExecutor, ObjectMapper objectMapper) {
+	public TeamAppsUxClientGate(WebController webController, UiCommandExecutor commandExecutor, ObjectMapper objectMapper, IconLibraryRegistry iconLibraryRegistry) {
 		this.webController = webController;
 		this.commandExecutor = commandExecutor;
 		this.objectMapper = objectMapper;
-
-
+		this.iconLibraryRegistry = iconLibraryRegistry;
 	}
 
 	@Override
@@ -110,14 +114,24 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 				uiClientInfo.getClientUrl(),
 				uiClientInfo.getClientParameters());
 
-		SessionContext context = new SessionContext(sessionId, clientInfo, httpSession, commandExecutor, uxServerContext,
-				webController.getDefaultIconTheme(clientInfo.isMobileDevice()), objectMapper);
-		sessionContextById.put(sessionId, context);
+		SessionConfiguration sessionConfiguration = SessionConfiguration.createForClientInfo(clientInfo);
 
-		CompletableFuture<Void> future = context.runWithContext(() -> {
-			context.registerTemplates(Arrays.stream(BaseTemplate.values())
+		SessionContext sessionContext = new SessionContext(
+				sessionId,
+				clientInfo,
+				sessionConfiguration,
+				httpSession,
+				commandExecutor,
+				uxServerContext,
+				new IconEncoderDispatcher(iconLibraryRegistry),
+				objectMapper
+		);
+		sessionContextById.put(sessionId, sessionContext);
+
+		CompletableFuture<Void> future = sessionContext.runWithContext(() -> {
+			sessionContext.registerTemplates(Arrays.stream(BaseTemplate.values())
 					.collect(Collectors.toMap(Enum::name, BaseTemplate::getTemplate)));
-			webController.onSessionStart(context);
+			webController.onSessionStart(sessionContext);
 		});
 
 		try {
@@ -130,24 +144,9 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 
 	public Collection<ServletRegistration> getServletRegistrations() {
 		ArrayList<ServletRegistration> registrations = new ArrayList<>();
-		registrations.add(new ServletRegistration(new ResourceProviderServlet(createSystemIconResourceProvider(webController.getIconProvider(), webController.getAdditionalIconProvider())), "/icons/*"));
 		registrations.add(new ServletRegistration(new ResourceProviderServlet(new SessionResourceProvider(sessionContextById::get)), ClientSessionResourceProvider.BASE_PATH + "*"));
 		registrations.addAll(webController.getServletRegistrations(uxServerContext));
 		return registrations;
-	}
-
-	private SystemIconResourceProvider createSystemIconResourceProvider(IconProvider iconProvider, List<IconProvider> customIconProvider) {
-		try {
-			File tempDir = File.createTempFile("temp", "temp").getParentFile();
-			SystemIconResourceProvider systemIconProvider = new SystemIconResourceProvider(tempDir);
-			systemIconProvider.registerStandardIconProvider(iconProvider);
-			if (customIconProvider != null) {
-				customIconProvider.forEach(provider -> systemIconProvider.registerCustomIconProvider(provider));
-			}
-			return systemIconProvider;
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
-		}
 	}
 
 	@Override

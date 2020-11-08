@@ -17,27 +17,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.icon.material;
+package org.teamapps.icons;
 
-public enum StyleType {
+public enum IconType {
 
-    PLAIN("plain"),
-    PLAIN_SHADOW("shadow"),
-    STICKER("sticker"),
-    OUTLINE("outline"),
-    OUTLINE_FILLED("outlinefilled"),
-    GRADIENT("gradient"),
-    GRADIENT_OUTLINE("gradientoutline"),
+    PNG("image/png"),
+    SVG("image/svg+xml");
 
-    ;
+    private final String mimeType;
 
-    private String packageName;
-
-    StyleType(String packageName) {
-        this.packageName = packageName;
+    IconType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
-    public String getPackageName() {
-        return packageName;
+    public String getMimeType() {
+        return mimeType;
     }
 }

@@ -23,12 +23,12 @@ import java.awt.*;
 
 public class CustomIconStyle implements IconStyle {
 
-	private String styleId;
-	private String styleName;
-	private String baseStyleId;
-	private boolean canBeUseAsSubIcon;
-	private Color[] searchColors;
-	private Color[] replaceColors;
+	private final String styleId;
+	private final String styleName;
+	private final String baseStyleId;
+	private final boolean canBeUseAsSubIcon;
+	private final Color[] searchColors;
+	private final Color[] replaceColors;
 	private int matchFuzzinessThreshold = 25;
 
 	public CustomIconStyle(String styleId, String styleName, String baseStyleId, boolean canBeUseAsSubIcon, Color searchColor, Color replaceColor) {

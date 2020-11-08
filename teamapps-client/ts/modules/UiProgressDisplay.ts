@@ -79,7 +79,7 @@ export class UiProgressDisplay extends AbstractUiComponent<UiProgressDisplayConf
 	}
 
 	update(config: UiProgressDisplayConfig): void {
-		this.$icon.style.backgroundImage = `url(${config.icon})`;
+		this.$icon.style.backgroundImage = `url('${config.icon}')`;
 		this.$taskName.textContent = config.taskName;
 		this.$statusMessage.textContent = config.statusMessage;
 		this.progressBar.setProgress(config.progress);

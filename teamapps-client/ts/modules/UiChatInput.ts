@@ -189,12 +189,12 @@ class FileUploadItem {
 
 	constructor(public file: File, defaultFileIcon: string, uploadUrl: string, context: TeamAppsUiContext) {
 		this.$main = parseHtml(`<div class="upload-item">
-	<div class="icon img img-24" style="background-image: url(${defaultFileIcon})"></div>
+	<div class="icon img img-24" style="background-image: url('${defaultFileIcon}')"></div>
 	<div class="name">${file.name}</div>
 </div>`);
 		const $icon = this.$main.querySelector<HTMLElement>(":scope .icon");
 		createImageThumbnailUrl(file)
-			.then(url => $icon.style.backgroundImage = `url(${url})`)
+			.then(url => $icon.style.backgroundImage = `url('${url}')`)
 			.catch(reason => FileUploadItem.LOGGER.debug(`Could not create thumbnail for file ${file}. Reason: ${reason}.`));
 		const progressBar = new ProgressBar(0, {});
 

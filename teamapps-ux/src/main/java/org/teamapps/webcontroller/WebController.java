@@ -19,16 +19,12 @@
  */
 package org.teamapps.webcontroller;
 
-import org.teamapps.icon.material.MaterialIconProvider;
-import org.teamapps.icons.api.IconTheme;
-import org.teamapps.icons.provider.IconProvider;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 public interface WebController {
 
@@ -38,25 +34,8 @@ public interface WebController {
 		return Collections.emptyList();
 	}
 
-	default IconTheme getDefaultIconTheme(boolean isMobile) {
-		IconProvider iconProvider = getIconProvider();
-		if (isMobile) {
-			return IconTheme.of(iconProvider.getDefaultMobileStyle(), iconProvider.getDefaultSubIconStyle());
-		} else {
-			return IconTheme.of(iconProvider.getDefaultDesktopStyle(), iconProvider.getDefaultSubIconStyle());
-		}
-	}
-
-	default IconProvider getIconProvider() {
-		return new MaterialIconProvider();
-	}
-
-	default List<IconProvider> getAdditionalIconProvider() {
-		return null;
-	}
-
 	/**
-	 * Invoked to invalidate the WebController as a whole (not only for a specific session).
+	 * Invoked when the WebController as a whole is no more needed (not only for a specific session).
 	 * This is usually when the ServletContext is about to be shut down.
 	 */
 	default void destroy() {

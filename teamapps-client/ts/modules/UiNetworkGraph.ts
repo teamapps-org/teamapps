@@ -466,7 +466,7 @@ export class UiNetworkGraph extends AbstractUiComponent<UiNetworkGraphConfig> im
 
 		// Style node image rectangles
 		nodeUpdate.select('.node-image-rect')
-			.attr('fill', (d: UiNetworkNodeConfig) => `url(#${d.id})`)
+			.attr('fill', (d: UiNetworkNodeConfig) => `url('#${d.id}')`)
 			.attr('width', (d: UiNetworkNodeConfig) => d.image && d.image.width)
 			.attr('height', (d: UiNetworkNodeConfig) => d.image && d.image.height)
 			.attr('stroke', (d: UiNetworkNodeConfig) => d.image && (d.image.borderColor))

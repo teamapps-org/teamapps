@@ -27,10 +27,6 @@ public interface IconProvider<STYLE extends IconStyle>  {
 
 	byte[] getIcon(String styleId, int size, String iconName);
 
-	//IconType getIconType();
-
-	//Icon getStyledIcon(STYLE style, String iconName);
-
 	String getIconLibraryId();
 
 	Set<Integer> getAvailableIconSizes();

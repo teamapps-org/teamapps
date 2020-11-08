@@ -19,22 +19,30 @@
  */
 package org.teamapps.icon.material;
 
-public abstract class SingleColorStyle extends AbstractMaterialIconStyle {
+public enum MaterialIconStyleType {
 
-    private final String color;
+    PLAIN("plain", false),
+    PLAIN_SHADOW("shadow", false),
+    STICKER("sticker", false),
+    OUTLINE("outline", false),
+    OUTLINE_FILLED("outlinefilled", false),
+    GRADIENT("gradient", true),
+    GRADIENT_OUTLINE("gradientoutline", true),
+    ;
 
-    public SingleColorStyle(String styleId, StyleType styleType, String color) {
-        super(styleId, styleType);
-        this.color = color;
+    private final String packageName;
+    private final boolean multiColor;
+
+    MaterialIconStyleType(String packageName, boolean multiColor) {
+        this.packageName = packageName;
+        this.multiColor = multiColor;
     }
 
-    public String getColor() {
-        return color;
+    public String getPackageName() {
+        return packageName;
     }
 
-    @Override
-    public String applyStyle(String svg) {
-        String styleTags = createStyleTags(color);
-        return applyStyle(svg, styleTags);
+    public boolean isMultiColor() {
+        return multiColor;
     }
 }
