@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,49 +31,79 @@ import io.undertow.servlet.util.ImmediateInstanceHandle;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 import org.teamapps.client.ClientCodeExtractor;
 import org.teamapps.config.TeamAppsConfiguration;
+import org.teamapps.core.TeamAppsCore;
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 import org.teamapps.webcontroller.WebController;
 
+import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeamAppsUndertowEmbeddedServer {
 
-	private final WebController webController;
+	private final TeamAppsCore teamAppsCore;
 	private final File webAppDirectory;
-	private final TeamAppsConfiguration config;
+	private final List<ServletContextListener> customServletContextListeners = new ArrayList<>();
+
+	private final int port;
 	private Undertow server;
+	private boolean started;
 
 	public TeamAppsUndertowEmbeddedServer(WebController webController) throws IOException {
 		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration());
 	}
 
-	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory) {
-		this(webController, webAppDirectory, new TeamAppsConfiguration());
+	public TeamAppsUndertowEmbeddedServer(WebController webController, int port) throws IOException {
+		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration(), port);
+	}
+
+	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, int port) {
+		this(webController, webAppDirectory, new TeamAppsConfiguration(), port);
 	}
 
 	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) {
-		this.webController = webController;
-		this.webAppDirectory = webAppDirectory;
-		this.config = config;
+		this(webController, webAppDirectory, config, 8080);
 	}
 
-	public void start(int port, String host) throws Exception {
+	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) {
+		this.teamAppsCore = new TeamAppsCore(config, webController);
+		this.webAppDirectory = webAppDirectory;
+		this.port = port;
+	}
+
+	public TeamAppsCore getTeamAppsCore() {
+		return teamAppsCore;
+	}
+
+	public void addServletContextListener(ServletContextListener servletContextListener) {
+		if (started) {
+			throw new IllegalStateException("ServletContextListeners need to be registered before the server is started!");
+		}
+		this.customServletContextListeners.add(servletContextListener);
+	}
+
+	public void start() throws Exception {
+		this.started = true;
 		ClientCodeExtractor.initializeWebserverDirectory(webAppDirectory);
 
-		TeamAppsServletContextListener servletContextListener = new TeamAppsServletContextListener(config, webController);
+		TeamAppsServletContextListener servletContextListener = new TeamAppsServletContextListener(teamAppsCore);
 
 		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 		DeploymentInfo deploymentInfo = new DeploymentInfo()
 				.setContextPath("/")
 				.addWelcomePage("index.html")
 				.setDeploymentName("teamapps")
-				.addListener(new ListenerInfo(TeamAppsServletContextListener.class, () -> new ImmediateInstanceHandle<>(servletContextListener)))
+				.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(servletContextListener)))
 				.setResourceManager(new FileResourceManager(webAppDirectory.getAbsoluteFile()))
 				.setAllowNonStandardWrappers(true)
 				.addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo())
 				.setClassLoader(classLoader);
+
+		customServletContextListeners.forEach(l ->
+				deploymentInfo.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(l))));
 
 		ServletContainer servletContainer = Servlets.defaultContainer();
 		DeploymentManager deploymentManager = servletContainer.addDeployment(deploymentInfo);
@@ -81,7 +111,7 @@ public class TeamAppsUndertowEmbeddedServer {
 
 		HttpHandler httpHandler = deploymentManager.start();
 		server = Undertow.builder()
-				.addHttpListener(port, host)
+				.addHttpListener(port, "0.0.0.0")
 				.setHandler(httpHandler)
 				.setIoThreads(Math.max(Runtime.getRuntime().availableProcessors() * 4, 10))
 				.setWorkerThreads(Math.max(Runtime.getRuntime().availableProcessors() * 8, 10))
@@ -90,24 +120,8 @@ public class TeamAppsUndertowEmbeddedServer {
 
 	}
 
-	public void start(int port) throws Exception {
-		this.start(port, "0.0.0.0");
-	}
-
-	public void start() throws Exception {
-		this.start(8080, "0.0.0.0");
-	}
-
 	public void stop() throws Exception {
 		server.stop();
-	}
-
-	public static void main(String[] args) throws Exception {
-		if (args.length < 2) {
-			System.err.println("Usage: webControllerClass [webappDirectory]");
-		}
-		WebController webController = (WebController) Class.forName(args[0]).getConstructor().newInstance();
-		new TeamAppsUndertowEmbeddedServer(webController, new File(args[1])).start();
 	}
 
 }

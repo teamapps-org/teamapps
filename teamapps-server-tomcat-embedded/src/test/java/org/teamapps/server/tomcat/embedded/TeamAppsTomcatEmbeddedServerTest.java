@@ -19,7 +19,6 @@
  */
 package org.teamapps.server.tomcat.embedded;
 
-import com.google.common.io.Files;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
@@ -32,7 +31,7 @@ public class TeamAppsTomcatEmbeddedServerTest {
 			context.showNotification(MaterialIcon.MESSAGE, "Hello World");
 		};
 
-		new TeamAppsTomcatEmbeddedServer(controller, Files.createTempDir()).start(8081);
+		new TeamAppsTomcatEmbeddedServer(controller, 8081).start();
 
 	}
 

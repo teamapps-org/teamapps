@@ -28,6 +28,6 @@ public interface UxServerContext {
 
 	SessionContext getSessionContextById(QualifiedUiSessionId sessionId);
 
-	File getUploadedFileByUuid(String uuid); // TODO we might want to notify the application instead of polling from the application...
+	File getUploadedFileByUuid(String uuid);
 
 }

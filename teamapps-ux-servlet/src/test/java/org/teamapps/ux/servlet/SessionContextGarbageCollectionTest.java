@@ -24,6 +24,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.teamapps.config.TeamAppsConfiguration;
+import org.teamapps.core.TeamAppsUploadManager;
+import org.teamapps.core.TeamAppsUxSessionManager;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.icon.material.MaterialIcon;
@@ -47,19 +49,19 @@ public class SessionContextGarbageCollectionTest {
 	public void testSessionContextGarbageCollection() throws Exception {
 		ObjectMapper objectMapper = TeamAppsObjectMapperFactory.create();
 		TeamAppsUiSessionManager uiSessionManager = new TeamAppsUiSessionManager(new TeamAppsConfiguration(), objectMapper);
-		TeamAppsUxClientGate teamAppsUxClientGate = new TeamAppsUxClientGate(context -> {
+		TeamAppsUxSessionManager teamAppsUxSessionManager = new TeamAppsUxSessionManager(context -> {
 			RootPanel rootPanel = new RootPanel();
 			InfiniteItemView<BaseTemplateRecord> component = new InfiniteItemView<>();
 			component.setModel(new ListInfiniteItemViewModel<>(IntStream.range(0, 100).mapToObj(i -> new BaseTemplateRecord(MaterialIcon.ALARM_ON, "item" + i, "asdfkj")).collect(Collectors.toList())));
 			rootPanel.setContent(component);
 			context.addRootComponent(null, rootPanel);
-		}, uiSessionManager, objectMapper, Mockito.mock(IconLibraryRegistry.class));
-		uiSessionManager.setUiSessionListener(teamAppsUxClientGate);
+		}, uiSessionManager, objectMapper, Mockito.mock(IconLibraryRegistry.class), Mockito.mock(TeamAppsUploadManager.class));
+		uiSessionManager.setUiSessionListener(teamAppsUxSessionManager);
 
 		for (int i = 0; i < 100_000; i++) {
 			System.out.println(i);
-			teamAppsUxClientGate.onUiSessionStarted(new QualifiedUiSessionId("" + i, "" + i), createDummyClientInfo(), null);
-			teamAppsUxClientGate.onUiSessionClosed(new QualifiedUiSessionId("" + i, "" + i), UiSessionClosingReason.TERMINATED_BY_CLIENT);
+			teamAppsUxSessionManager.onUiSessionStarted(new QualifiedUiSessionId("" + i, "" + i), createDummyClientInfo(), null);
+			teamAppsUxSessionManager.onUiSessionClosed(new QualifiedUiSessionId("" + i, "" + i), UiSessionClosingReason.TERMINATED_BY_CLIENT);
 		}
 	}
 

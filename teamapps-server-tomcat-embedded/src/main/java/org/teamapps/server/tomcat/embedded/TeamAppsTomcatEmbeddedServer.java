@@ -27,52 +27,89 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.websocket.server.WsSci;
 import org.teamapps.client.ClientCodeExtractor;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.webcontroller.WebController;
+import org.teamapps.core.TeamAppsCore;
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
+import org.teamapps.webcontroller.WebController;
 
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * @deprecated This server variant is neither maintained nor tested in production. Please use one of jetty or undertow.
+ */
+@Deprecated
 public class TeamAppsTomcatEmbeddedServer {
 
-	private final WebController webController;
+	private final TeamAppsCore teamAppsCore;
 	private final File webAppDirectory;
-	private TeamAppsConfiguration config;
+	private final List<ServletContextListener> customServletContextListeners = new ArrayList<>();
+
+	private final int port;
 	private Tomcat server;
+	private boolean started;
 
-	boolean initialized = false;
-
-	public TeamAppsTomcatEmbeddedServer(WebController webController, File webAppDirectory) {
-		this(webController, webAppDirectory, new TeamAppsConfiguration());
+	public TeamAppsTomcatEmbeddedServer(WebController webController) throws IOException {
+		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration());
 	}
-	
+
+	public TeamAppsTomcatEmbeddedServer(WebController webController, int port) throws IOException {
+		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration(), port);
+	}
+
+	public TeamAppsTomcatEmbeddedServer(WebController webController, File webAppDirectory, int port) {
+		this(webController, webAppDirectory, new TeamAppsConfiguration(), port);
+	}
+
 	public TeamAppsTomcatEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) {
-		this.webController = webController;
-		this.webAppDirectory = webAppDirectory;
-		this.config = config;
+		this(webController, webAppDirectory, config, 8080);
 	}
 
-	public void start(int port) throws Exception {
+	public TeamAppsTomcatEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) {
+		this.teamAppsCore = new TeamAppsCore(config, webController);
+		this.webAppDirectory = webAppDirectory;
+		this.port = port;
+	}
+
+	public TeamAppsCore getTeamAppsCore() {
+		return teamAppsCore;
+	}
+
+	public void addServletContextListener(ServletContextListener servletContextListener) {
+		if (started) {
+			throw new IllegalStateException("ServletContextListeners need to be registered before the server is started!");
+		}
+		this.customServletContextListeners.add(servletContextListener);
+	}
+
+	public void start() throws Exception {
+		this.started = true;
 		ClientCodeExtractor.initializeWebserverDirectory(webAppDirectory);
 
 		server = new Tomcat();
 		server.setPort(port);
 		Context context = server.addContext("", webAppDirectory.getAbsolutePath());
-		TeamAppsServletContextListener listener = new TeamAppsServletContextListener(config, webController);
+		TeamAppsServletContextListener listener = new TeamAppsServletContextListener(teamAppsCore);
 
 		context.addServletContainerInitializer(new WsSci(), null);
 		context.addServletContainerInitializer((c, servletContext) -> {
-			listener.contextInitialized(new ServletContextEvent(context.getServletContext()));
+			ServletContextEvent servletContextEvent = new ServletContextEvent(servletContext);
+			listener.contextInitialized(servletContextEvent);
+			customServletContextListeners.forEach(l -> l.contextInitialized(servletContextEvent));
 		}, null);
 		context.addLifecycleListener(event -> {
 			if (event.getLifecycle().getState() == LifecycleState.DESTROYING) {
-				listener.contextDestroyed(new ServletContextEvent(context.getServletContext()));
-				initialized = false;
+				ServletContextEvent servletContextEvent = new ServletContextEvent(context.getServletContext());
+				listener.contextDestroyed(servletContextEvent);
+				customServletContextListeners.forEach(l -> l.contextDestroyed(servletContextEvent));
 			}
 		});
 
@@ -99,20 +136,8 @@ public class TeamAppsTomcatEmbeddedServer {
 		server.start();
 	}
 
-	public void start() throws Exception {
-		this.start(8080);
-	}
-
 	public void stop() throws Exception {
 		server.stop();
-	}
-
-	public static void main(String[] args) throws Exception {
-		if (args.length < 2) {
-			System.err.println("Usage: webControllerClass [webappDirectory]");
-		}
-		WebController webController = (WebController) Class.forName(args[0]).getConstructor().newInstance();
-		new TeamAppsTomcatEmbeddedServer(webController, new File(args[1])).start();
 	}
 
 }
