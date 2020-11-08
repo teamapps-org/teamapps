@@ -18,33 +18,33 @@ public class IconLibraryRegistry {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final Map<Class<? extends Icon>, IconLibrary> libraryAnnotationByIconClass = new HashMap<>();
-	private final Map<String, IconEncoder<?>> defaultEncodersByLibraryName = new HashMap<>();
+	private final Map<Class<? extends Icon<?, ?>>, IconLibrary> libraryAnnotationByIconClass = new HashMap<>();
+	private final Map<String, IconEncoder<?, ?>> defaultEncodersByLibraryName = new HashMap<>();
 	private final Map<String, IconProvider> providersByLibraryName = new HashMap<>();
 
 
-	public <I extends Icon> IconEncoder<I> getDefaultIconEncoder(Class<I> iconClass) {
+	public <I extends Icon<I, S>, S> IconEncoder<I, S> getDefaultIconEncoder(Class<I> iconClass) {
 		registerIconLibrary(iconClass);
 		String libraryName = libraryAnnotationByIconClass.get(iconClass).name();
-		return (IconEncoder<I>) defaultEncodersByLibraryName.get(libraryName);
+		return (IconEncoder<I, S>) defaultEncodersByLibraryName.get(libraryName);
 	}
 
 	public IconProvider getIconProvider(String libraryName) {
 		return providersByLibraryName.get(libraryName); // may be null, if no icon of this type has ever been encoded
 	}
 
-	public String getLibraryName(Icon icon) {
+	public String getLibraryName(Icon<?, ?> icon) {
 		registerIconLibrary(icon.getClass());
 		return libraryAnnotationByIconClass.get(icon.getClass()).name();
 	}
 
-	public <I extends Icon> void registerIconLibrary(Class<I> iconClass) {
+	public <I extends Icon<?, ?>> void registerIconLibrary(Class<I> iconClass) {
 		if (!libraryAnnotationByIconClass.containsKey(iconClass)) {
 			IconLibrary libraryAnnotation = findAnnotation(iconClass, IconLibrary.class);
 			libraryAnnotationByIconClass.put(iconClass, libraryAnnotation);
 			if (libraryAnnotation != null) {
 				try {
-					IconEncoder<I> iconEncoder = (IconEncoder<I>) libraryAnnotation.encoder().getDeclaredConstructor().newInstance();
+					var iconEncoder = (IconEncoder) libraryAnnotation.encoder().getDeclaredConstructor().newInstance();
 					defaultEncodersByLibraryName.put(libraryAnnotation.name(), iconEncoder);
 				} catch (Exception e) {
 					LOGGER.error("Could not create default icon encoder or provider for icon class " + iconClass, e);

@@ -8,7 +8,7 @@ public @interface IconLibrary {
 
 	String name();
 
-	Class<? extends IconEncoder<?>> encoder();
+	Class<? extends IconEncoder> encoder();
 
 	Class<? extends IconProvider> provider();
 

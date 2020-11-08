@@ -3,7 +3,7 @@ package org.teamapps.icon.material;
 import org.teamapps.icons.IconEncoderContext;
 import org.teamapps.icons.spi.IconEncoder;
 
-public class MaterialIconEncoder implements IconEncoder<MaterialIcon> {
+public class MaterialIconEncoder implements IconEncoder<MaterialIcon, MaterialIconStyle> {
 
 	private final MaterialIconStyle defaultStyle;
 
@@ -16,13 +16,18 @@ public class MaterialIconEncoder implements IconEncoder<MaterialIcon> {
 	}
 
 	@Override
-	public String encodeIcon(MaterialIcon icon, IconEncoderContext context) {
-		MaterialIconStyle style = icon.getStyle() != null ? icon.getStyle() : defaultStyle;
-		return icon.getIconName() + "." + style.getStyleType() + "." + String.join(".", style.getColors());
+	public MaterialIconEncoder withDefaultStyle(MaterialIconStyle style) {
+		return new MaterialIconEncoder(style);
 	}
 
 	public MaterialIconStyle getDefaultStyle() {
 		return defaultStyle;
+	}
+
+	@Override
+	public String encodeIcon(MaterialIcon icon, IconEncoderContext context) {
+		MaterialIconStyle style = icon.getStyle() != null ? icon.getStyle() : defaultStyle;
+		return icon.getIconName() + "." + style.getStyleType() + "." + String.join(".", style.getColors());
 	}
 
 }

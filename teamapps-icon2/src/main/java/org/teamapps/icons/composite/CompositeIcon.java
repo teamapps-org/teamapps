@@ -23,7 +23,7 @@ import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.spi.IconLibrary;
 
 @IconLibrary(name = "composite", encoder = CompositeIconEncoder.class, provider = CompositeIconProvider.class)
-public class CompositeIcon implements Icon {
+public class CompositeIcon implements Icon<CompositeIcon, Void> {
 
 	private final Icon baseIcon;
 	private	final Icon bottomRightIcon;
@@ -67,4 +67,13 @@ public class CompositeIcon implements Icon {
 		return topRightIcon;
 	}
 
+	@Override
+	public CompositeIcon withStyle(Void unused) {
+		return this;
+	}
+
+	@Override
+	public Void getStyle() {
+		return null;
+	}
 }

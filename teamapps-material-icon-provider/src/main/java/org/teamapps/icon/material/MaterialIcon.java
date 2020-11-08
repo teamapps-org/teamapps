@@ -23,7 +23,7 @@ import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.spi.IconLibrary;
 
 @IconLibrary(name = "material", encoder = MaterialIconEncoder.class, provider = MaterialIconProvider.class)
-public class MaterialIcon implements Icon {
+public class MaterialIcon implements Icon<MaterialIcon, MaterialIconStyle> {
 
 	public static final MaterialIcon ROTATION_3D = forName("3d_rotation");
 	public static final MaterialIcon AC_UNIT = forName("ac_unit");
@@ -978,11 +978,13 @@ public class MaterialIcon implements Icon {
 		return iconName;
 	}
 
-	public MaterialIconStyle getStyle() {
-		return style;
-	}
-
+	@Override
 	public MaterialIcon withStyle(MaterialIconStyle style) {
 		return new MaterialIcon(iconName, style);
+	}
+
+	@Override
+	public MaterialIconStyle getStyle() {
+		return style;
 	}
 }

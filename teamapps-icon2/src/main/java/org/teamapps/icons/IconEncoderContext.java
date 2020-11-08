@@ -4,6 +4,6 @@ import org.teamapps.icons.api.Icon;
 
 public interface IconEncoderContext {
 	
-	String encodeIcon(Icon icon);
+	String encodeIcon(Icon<?, ?> icon);
 
 }
