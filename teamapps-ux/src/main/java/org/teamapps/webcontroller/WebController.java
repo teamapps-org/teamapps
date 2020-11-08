@@ -19,27 +19,10 @@
  */
 package org.teamapps.webcontroller;
 
-import org.teamapps.server.ServletRegistration;
-import org.teamapps.server.UxServerContext;
 import org.teamapps.ux.session.SessionContext;
-
-import java.util.Collection;
-import java.util.Collections;
 
 public interface WebController {
 
 	void onSessionStart(SessionContext sessionContext);
-
-	default Collection<ServletRegistration> getServletRegistrations(UxServerContext serverContext) {
-		return Collections.emptyList();
-	}
-
-	/**
-	 * Invoked when the WebController as a whole is no more needed (not only for a specific session).
-	 * This is usually when the ServletContext is about to be shut down.
-	 */
-	default void destroy() {
-		// do nothing by default
-	}
 
 }

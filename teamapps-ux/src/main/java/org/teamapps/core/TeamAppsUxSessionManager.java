@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.servlet;
+package org.teamapps.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -27,78 +27,59 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.icons.IconEncoderDispatcher;
 import org.teamapps.icons.IconLibraryRegistry;
-import org.teamapps.server.ServletRegistration;
-import org.teamapps.server.SessionRecorder;
-import org.teamapps.server.SessionResourceProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.UiCommandExecutor;
 import org.teamapps.uisession.UiSessionListener;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.template.BaseTemplate;
-import org.teamapps.ux.resource.ResourceProviderServlet;
 import org.teamapps.ux.session.ClientInfo;
-import org.teamapps.ux.session.ClientSessionResourceProvider;
 import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 import javax.servlet.http.HttpSession;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class TeamAppsUxClientGate implements UiSessionListener {
+public class TeamAppsUxSessionManager implements UiSessionListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsUxClientGate.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsUxSessionManager.class);
 
 	private final WebController webController;
 	private final UiCommandExecutor commandExecutor;
 
 	private final ObjectMapper objectMapper;
 	private final IconLibraryRegistry iconLibraryRegistry;
+	private final TeamAppsUploadManager uploadManager;
 	private final Map<QualifiedUiSessionId, SessionContext> sessionContextById = new ConcurrentHashMap<>();
-	private final Map<String, File> uploadedFilesByUuid = new ConcurrentHashMap<>();
 
 	private final UxServerContext uxServerContext = new UxServerContext() {
 		@Override
 		public SessionContext getSessionContextById(QualifiedUiSessionId sessionId) {
 			return sessionContextById.get(sessionId);
 		}
-
 		@Override
 		public File getUploadedFileByUuid(String uuid) {
-			return uploadedFilesByUuid.get(uuid);
+			return uploadManager.getUploadedFile(uuid);
 		}
 	};
 
-	private String userSessionCommandsRecordingPath;
-
-	public TeamAppsUxClientGate(WebController webController, UiCommandExecutor commandExecutor, ObjectMapper objectMapper, IconLibraryRegistry iconLibraryRegistry) {
+	public TeamAppsUxSessionManager(WebController webController, UiCommandExecutor commandExecutor, ObjectMapper objectMapper, IconLibraryRegistry iconLibraryRegistry, TeamAppsUploadManager uploadManager) {
 		this.webController = webController;
 		this.commandExecutor = commandExecutor;
 		this.objectMapper = objectMapper;
 		this.iconLibraryRegistry = iconLibraryRegistry;
+		this.uploadManager = uploadManager;
 	}
 
 	@Override
 	public void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession) {
-		if (userSessionCommandsRecordingPath != null) {
-			try {
-				String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(new Date());
-				File outputFile = new File(userSessionCommandsRecordingPath, "Session-" + timeStamp + ".log");
-				new SessionRecorder(objectMapper, new BufferedOutputStream(new FileOutputStream(outputFile)));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
 		ClientInfo clientInfo = new ClientInfo(
 				uiClientInfo.getIp(),
 				uiClientInfo.getScreenWidth(),
@@ -142,13 +123,6 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		}
 	}
 
-	public Collection<ServletRegistration> getServletRegistrations() {
-		ArrayList<ServletRegistration> registrations = new ArrayList<>();
-		registrations.add(new ServletRegistration(new ResourceProviderServlet(new SessionResourceProvider(sessionContextById::get)), ClientSessionResourceProvider.BASE_PATH + "*"));
-		registrations.addAll(webController.getServletRegistrations(uxServerContext));
-		return registrations;
-	}
-
 	@Override
 	public void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession) {
 		this.onUiSessionStarted(sessionId, clientInfo, httpSession);
@@ -188,15 +162,8 @@ public class TeamAppsUxClientGate implements UiSessionListener {
 		}
 	}
 
-	public void handleFileUpload(File file, String uuid) {
-		this.uploadedFilesByUuid.put(uuid, file);
+	public SessionContext getSessionContext(QualifiedUiSessionId sessionId) {
+		return sessionContextById.get(sessionId);
 	}
 
-	public String getUserSessionCommandsRecordingPath() {
-		return userSessionCommandsRecordingPath;
-	}
-
-	public void setUserSessionCommandsRecordingPath(String userSessionCommandsRecordingPath) {
-		this.userSessionCommandsRecordingPath = userSessionCommandsRecordingPath;
-	}
 }

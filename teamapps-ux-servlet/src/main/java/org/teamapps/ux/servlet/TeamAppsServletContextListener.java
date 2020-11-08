@@ -19,126 +19,66 @@
  */
 package org.teamapps.ux.servlet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.icons.IconLibraryRegistry;
+import org.teamapps.core.TeamAppsCore;
 import org.teamapps.icons.IconProviderDispatcher;
-import org.teamapps.json.TeamAppsObjectMapperFactory;
-import org.teamapps.server.ServletRegistration;
-import org.teamapps.uisession.TeamAppsUiSessionManager;
 import org.teamapps.ux.resource.IconResourceProvider;
 import org.teamapps.ux.resource.ResourceProviderServlet;
-import org.teamapps.webcontroller.WebController;
 
 import javax.servlet.*;
 import javax.servlet.ServletRegistration.Dynamic;
 import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpointConfig;
-import java.util.Collection;
 import java.util.EnumSet;
-import java.util.UUID;
 
 public class TeamAppsServletContextListener implements ServletContextListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsServletContextListener.class);
 
-	private final TeamAppsConfiguration config;
-	private WebController webController;
-	private TeamAppsUiSessionManager uiSessionManager;
+	private final TeamAppsCore teamAppsCore;
 
-	public TeamAppsServletContextListener(TeamAppsConfiguration config) {
-		this(config, null);
-	}
-
-	public TeamAppsServletContextListener(TeamAppsConfiguration config, WebController webController) {
-		this.config = config;
-		this.webController = webController;
+	public TeamAppsServletContextListener(TeamAppsCore teamAppsCore) {
+		this.teamAppsCore = teamAppsCore;
 	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		ServletContext context = servletContextEvent.getServletContext();
 
-		WebController webController = this.webController != null ? this.webController : getWebController(context);
-		if (webController == null) {
-			throw new IllegalArgumentException("No WebController specified!");
-		}
-
-		ObjectMapper objectMapper = TeamAppsObjectMapperFactory.create();
-		uiSessionManager = new TeamAppsUiSessionManager(config, objectMapper);
-		IconLibraryRegistry iconLibraryRegistry = new IconLibraryRegistry();
-		TeamAppsUxClientGate teamAppsUxClientGate = new TeamAppsUxClientGate(webController, uiSessionManager, objectMapper, iconLibraryRegistry);
-		uiSessionManager.setUiSessionListener(teamAppsUxClientGate);
-
 		FilterRegistration.Dynamic downloadFilterRegistration = context.addFilter("teamapps-download-header-filter", new DownloadHttpHeaderFilter());
 		downloadFilterRegistration.setAsyncSupported(true);
 		downloadFilterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "*");
 
-		Dynamic uploadServletRegistration = context.addServlet("teamapps-upload-servlet", new UploadServlet((file, uuid) -> teamAppsUxClientGate.handleFileUpload(file, uuid)));
+		Dynamic uploadServletRegistration = context.addServlet("teamapps-upload-servlet", new UploadServlet(teamAppsCore.getUploadManager()::addUploadedFile));
 		uploadServletRegistration.addMapping("/upload/*");
 		uploadServletRegistration.setMultipartConfig(new MultipartConfigElement(null, -1L, -1L, 1000_000));
 
-		Dynamic leaveBeaconServletRegistration = context.addServlet("teamapps-leave", new LeaveBeaconServlet(uiSessionManager));
+		Dynamic leaveBeaconServletRegistration = context.addServlet("teamapps-leave", new LeaveBeaconServlet(teamAppsCore.getUiSessionManager()));
 		leaveBeaconServletRegistration.addMapping("/leave/*");
 
-		Dynamic iconServletRegistration = context.addServlet("teamapps-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProviderDispatcher(iconLibraryRegistry))));
+		Dynamic iconServletRegistration = context.addServlet("teamapps-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProviderDispatcher(teamAppsCore.getIconLibraryRegistry()))));
 		iconServletRegistration.addMapping("/icons/*");
 
 		context.addListener(new ServletRequestListener());
-		context.addListener(uiSessionManager);
+		context.addListener(teamAppsCore.getUiSessionManager());
 
 		try {
 			// WebSocket
-			ServerContainer serverContainer = (ServerContainer) servletContextEvent.getServletContext().getAttribute("javax.websocket.server.ServerContainer");
+			ServerContainer serverContainer = (ServerContainer) context.getAttribute("javax.websocket.server.ServerContainer");
 			ServerEndpointConfig communicationEndpointConfig = ServerEndpointConfig.Builder.create(TeamAppsCommunicationEndpoint.class, "/communication")
-					.configurator(new WebSocketServerEndpointConfigurator(uiSessionManager)).build();
+					.configurator(new WebSocketServerEndpointConfigurator(teamAppsCore.getUiSessionManager())).build();
 			serverContainer.addEndpoint(communicationEndpointConfig);
 		} catch (Exception e) {
 			String msg = "Could not register TeamApps communication endpoint";
 			LOGGER.error(msg, e);
 			throw new RuntimeException(msg, e);
 		}
-
-		Collection<ServletRegistration> servletRegistrations = teamAppsUxClientGate.getServletRegistrations();
-		for (ServletRegistration servletRegistration : servletRegistrations) {
-			for (String mapping : servletRegistration.getMappings()) {
-				LOGGER.info("Registering servlet on url path: " + mapping);
-				Dynamic dynamic = context.addServlet("teamapps-registered-" + servletRegistration.getServlet().getClass().getSimpleName() + UUID.randomUUID().toString(), servletRegistration.getServlet());
-				dynamic.setAsyncSupported(servletRegistration.isAsyncSupported());
-				dynamic.addMapping(mapping);
-			}
-		}
-	}
-
-	private WebController getWebController(ServletContext context) {
-		if (this.webController != null) {
-			return webController;
-		} else {
-			String classNameInitParameter = context.getInitParameter("teamapps.webController.className");
-			if (classNameInitParameter != null) {
-				try {
-					return ((WebController) Class.forName(classNameInitParameter).getDeclaredConstructor().newInstance());
-				} catch (Exception e) {
-					String msg = "Could instantiate WebController";
-					LOGGER.error(msg, e);
-					throw new IllegalArgumentException(msg, e);
-				}
-			} else {
-				throw new IllegalArgumentException("No WebController specified!");
-			}
-		}
-	}
-
-	public void setWebController(WebController webController) {
-		this.webController = webController;
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		uiSessionManager.destroy();
-		webController.destroy();
+		teamAppsCore.getUiSessionManager().destroy();
 	}
 
 }

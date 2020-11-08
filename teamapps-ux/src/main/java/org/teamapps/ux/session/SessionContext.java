@@ -104,7 +104,7 @@ public class SessionContext {
 	private final Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration;
 
-	private final Map<String, Icon> bundleIconByKey = new HashMap<>();
+	private final Map<String, Icon<?, ?>> bundleIconByKey = new HashMap<>();
 
 	private Window sessionExpiredWindow;
 	private Window sessionErrorWindow;
@@ -149,7 +149,7 @@ public class SessionContext {
 		iconBundle.getEntries().forEach(entry -> bundleIconByKey.put(entry.getKey(), entry.getIcon()));
 	}
 
-	public Icon getIcon(String key) {
+	public Icon<?, ?> getIcon(String key) {
 		return bundleIconByKey.get(key);
 	}
 
