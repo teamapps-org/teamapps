@@ -40,28 +40,32 @@ public class IconLibraryRegistry {
 
 	public <I extends Icon<?, ?>> void registerIconLibrary(Class<I> iconClass) {
 		if (!libraryAnnotationByIconClass.containsKey(iconClass)) {
-			IconLibrary libraryAnnotation = findAnnotation(iconClass, IconLibrary.class);
-			libraryAnnotationByIconClass.put(iconClass, libraryAnnotation);
-			if (libraryAnnotation != null) {
-				try {
-					var iconEncoder = (IconEncoder) libraryAnnotation.encoder().getDeclaredConstructor().newInstance();
-					defaultEncodersByLibraryName.put(libraryAnnotation.name(), iconEncoder);
-				} catch (Exception e) {
-					LOGGER.error("Could not create default icon encoder or provider for icon class " + iconClass, e);
-					throw new RuntimeException(e);
-				}
-				try {
-					IconProvider iconProvider = libraryAnnotation.provider().getDeclaredConstructor().newInstance();
-					providersByLibraryName.put(libraryAnnotation.name(), iconProvider);
-				} catch (Exception e) {
-					LOGGER.error("Could not create default icon encoder or provider for icon class " + iconClass, e);
-					throw new RuntimeException(e);
+			synchronized (this) {
+				if (!libraryAnnotationByIconClass.containsKey(iconClass)) {
+					IconLibrary libraryAnnotation = findAnnotation(iconClass, IconLibrary.class);
+					libraryAnnotationByIconClass.put(iconClass, libraryAnnotation);
+					if (libraryAnnotation != null) {
+						try {
+							var iconEncoder = (IconEncoder) libraryAnnotation.encoder().getDeclaredConstructor().newInstance();
+							defaultEncodersByLibraryName.put(libraryAnnotation.name(), iconEncoder);
+						} catch (Exception e) {
+							LOGGER.error("Could not create default icon encoder or provider for icon class " + iconClass, e);
+							throw new RuntimeException(e);
+						}
+						try {
+							IconProvider iconProvider = libraryAnnotation.provider().getDeclaredConstructor().newInstance();
+							providersByLibraryName.put(libraryAnnotation.name(), iconProvider);
+						} catch (Exception e) {
+							LOGGER.error("Could not create default icon encoder or provider for icon class " + iconClass, e);
+							throw new RuntimeException(e);
+						}
+					}
 				}
 			}
 		}
 	}
 
-	public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationClass) {
+	private static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationClass) {
 		A annotation = clazz.getAnnotation(annotationClass);
 		if (annotation != null) {
 			return annotation;
