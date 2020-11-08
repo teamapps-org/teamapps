@@ -36,7 +36,7 @@
     <dependencies>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-icon</artifactId>
+            <artifactId>teamapps-icon2</artifactId>
             <scope>provided</scope>
         </dependency>
 

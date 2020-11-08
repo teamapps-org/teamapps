@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,8 +29,9 @@ import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
+import org.teamapps.icons.IconEncoderDispatcher;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.icons.api.IconTheme;
+import org.teamapps.icons.spi.IconEncoder;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.util.MultiKeySequentialExecutor;
@@ -94,9 +95,9 @@ public class SessionContext {
 	private final HttpSession httpSession;
 	private final UiCommandExecutor commandExecutor;
 	private final UxServerContext serverContext;
+	private final IconEncoderDispatcher iconEncoderDispatcher;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
 	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
-	private IconTheme iconTheme;
 	private final ClientSessionResourceProvider sessionResourceProvider;
 
 	private final RankingTranslationProvider rankingTranslationProvider;
@@ -110,19 +111,25 @@ public class SessionContext {
 	private Window sessionErrorWindow;
 	private Window sessionTerminatedWindow;
 
-	public SessionContext(QualifiedUiSessionId sessionId, ClientInfo clientInfo, HttpSession httpSession, UiCommandExecutor commandExecutor, UxServerContext serverContext, IconTheme iconTheme,
+	public SessionContext(QualifiedUiSessionId sessionId,
+						  ClientInfo clientInfo,
+						  SessionConfiguration sessionConfiguration,
+						  HttpSession httpSession,
+						  UiCommandExecutor commandExecutor,
+						  UxServerContext serverContext,
+						  IconEncoderDispatcher iconEncoderDispatcher,
 						  ObjectMapper jacksonObjectMapper) {
 		this.sessionId = sessionId;
 		this.httpSession = httpSession;
 		this.clientInfo = clientInfo;
-		sessionConfiguration = SessionConfiguration.createForClientInfo(clientInfo);
+		this.sessionConfiguration = sessionConfiguration;
 		this.commandExecutor = commandExecutor;
 		this.serverContext = serverContext;
-		this.iconTheme = iconTheme;
+		this.iconEncoderDispatcher = iconEncoderDispatcher;
 		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(jacksonObjectMapper, this);
 		this.rankingTranslationProvider = new RankingTranslationProvider();
-		rankingTranslationProvider.addTranslationProvider(TeamAppsTranslationProviderFactory.createProvider());
+		this.rankingTranslationProvider.addTranslationProvider(TeamAppsTranslationProviderFactory.createProvider());
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
 	}
@@ -237,12 +244,8 @@ public class SessionContext {
 		return commandExecutor.getClientBackPressureInfo(sessionId);
 	}
 
-	public IconTheme getIconTheme() {
-		return iconTheme;
-	}
-
-	public void setIconTheme(IconTheme theme) {
-		this.iconTheme = theme;
+	public <I extends Icon> void setIconEncoderForIconClass(Class<I> iconClass, IconEncoder<I> iconEncoder) {
+		iconEncoderDispatcher.setIconEncoderForIconClass(iconClass, iconEncoder);
 	}
 
 	public String createFileLink(File file) {
@@ -348,7 +351,7 @@ public class SessionContext {
 		if (icon == null) {
 			return null;
 		}
-		return sessionConfiguration.getIconPath() + "/-1/" + icon.getQualifiedIconId(getIconTheme());
+		return sessionConfiguration.getIconPath() + "/" + iconEncoderDispatcher.encodeIcon(icon);
 	}
 
 	public void registerClientObject(ClientObject clientObject) {

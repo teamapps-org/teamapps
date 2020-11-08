@@ -40,9 +40,14 @@
             <artifactId>teamapps-common</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.teamapps</groupId>-->
+<!--            <artifactId>teamapps-icon</artifactId>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-icon</artifactId>
+            <artifactId>teamapps-icon2</artifactId>
         </dependency>
 
         <dependency>

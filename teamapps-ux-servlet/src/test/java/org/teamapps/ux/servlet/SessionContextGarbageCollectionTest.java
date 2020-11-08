@@ -22,10 +22,12 @@ package org.teamapps.ux.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.icons.IconLibraryRegistry;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.TeamAppsUiSessionManager;
@@ -51,7 +53,7 @@ public class SessionContextGarbageCollectionTest {
 			component.setModel(new ListInfiniteItemViewModel<>(IntStream.range(0, 100).mapToObj(i -> new BaseTemplateRecord(MaterialIcon.ALARM_ON, "item" + i, "asdfkj")).collect(Collectors.toList())));
 			rootPanel.setContent(component);
 			context.addRootComponent(null, rootPanel);
-		}, uiSessionManager, objectMapper);
+		}, uiSessionManager, objectMapper, Mockito.mock(IconLibraryRegistry.class));
 		uiSessionManager.setUiSessionListener(teamAppsUxClientGate);
 
 		for (int i = 0; i < 100_000; i++) {

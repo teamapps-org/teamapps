@@ -97,7 +97,7 @@ class UiNotificationBarItem {
 	constructor(public readonly config: UiNotificationBarItemConfig) {
 		this.$main = parseHtml(`<div class="UiNotificationBarItem ${config.displayTimeInMillis > 0 && config.progressBarVisible ? "with-progress" : ""}">
 	<div class="content-container">
-		<div class="icon img img-20 ${config.icon == null ? "hidden" : ""}" style="background-image: url(${config.icon})"></div>
+		<div class="icon img img-20 ${config.icon == null ? "hidden" : ""}" style="background-image: url('${config.icon}')"></div>
 		<div class="text">${config.text}</div>
 		<div class="close-button"></div>
 	</div>

@@ -88,7 +88,7 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
-		this._$field.style.backgroundImage = uiValue ? `url(${uiValue})` : 'none';
+		this._$field.style.backgroundImage = uiValue ? `url('${uiValue}')` : 'none';
 	}
 
 	focus(): void {
@@ -110,7 +110,7 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 			...createUiBorderCssObject(this._config.border),
 			...createUiShadowCssObject(this._config.shadow),
 			...createImageSizingCssObject(this._config.imageSizing),
-			'background-image': value ? `url(${value})` : 'none'
+			'background-image': value ? `url('${value}')` : 'none'
 		});
 		return `<div class="static-readonly-UiImageField" style="${css}"></div>`;
 	}

@@ -179,7 +179,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 						$fcContent.innerHTML = renderer.render(arg.event.extendedProps.data);
 					}
 				} else {
-					prependChild($fcContent, parseHtml(`<div class="fc-icon img img-16" style="background-image:url(${arg.event.extendedProps.icon})">`));
+					prependChild($fcContent, parseHtml(`<div class="fc-icon img img-16" style="background-image:url('${arg.event.extendedProps.icon}')">`));
 				}
 				if (arg.event.allDay) {
 					arg.el.classList.add("all-day");

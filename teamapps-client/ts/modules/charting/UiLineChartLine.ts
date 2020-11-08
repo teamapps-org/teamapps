@@ -68,10 +68,10 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 	private initDomNodes() {
 		this.$area = this.$main.append<SVGPathElement>("path")
 			.classed("area", true)
-			.attr("fill", `url(#area-gradient-${this.timeGraphId}-${this.config.id})`);
+			.attr("fill", `url('#area-gradient-${this.timeGraphId}-${this.config.id}')`);
 		this.$line = this.$main.append<SVGPathElement>("path")
 			.classed("line", true)
-			.attr("stroke", `url(#line-gradient-${this.timeGraphId}-${this.config.id})`);
+			.attr("stroke", `url('#line-gradient-${this.timeGraphId}-${this.config.id}')`);
 		this.$yZeroLine = this.$main.append<SVGLineElement>("line")
 			.classed("y-zero-line", true);
 

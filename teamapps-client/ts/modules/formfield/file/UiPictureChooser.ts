@@ -74,8 +74,8 @@ export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> im
     	<div class="picture hidden"></div>
 		<div class="progress-wrapper hidden"></div>
 		<input class="file-input" type="file" multiple tabindex="-1" accept="image/png,image/jpeg,image/bmp,image/gif"></input>
-		<div class="button upload-button icon img img-16" style="background-image: url(${config.browseButtonIcon});"></div>
-		<div class="button delete-button icon img img-16" style="background-image: url(${config.deleteButtonIcon});"></div>
+		<div class="button upload-button icon img img-16" style="background-image: url('${config.browseButtonIcon}');"></div>
+		<div class="button delete-button icon img img-16" style="background-image: url('${config.deleteButtonIcon}');"></div>
 	</div>
 </div>`);
 
@@ -156,7 +156,7 @@ export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> im
 		this.$deleteButton.classList.toggle("hidden", this.getCommittedValue() == null);
 		if (this.getCommittedValue() != null) {
 			this.$picture.classList.remove("hidden");
-			this.$picture.style.backgroundImage = `url(${this.getCommittedValue()})`;
+			this.$picture.style.backgroundImage = `url('${this.getCommittedValue()}')`;
 		} else {
 			this.$picture.classList.add("hidden");
 		}

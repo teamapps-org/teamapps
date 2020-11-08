@@ -198,7 +198,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 		this.$graphClipContainer = this.$rootG.append<SVGGElement>("g")
 			.classed("graph-clipping-container", true)
-			.attr("clip-path", `url(#${clipPathId})`);
+			.attr("clip-path", `url('#${clipPathId}')`);
 
 		this.zoom = d3.zoom()
 			.scaleExtent([1, this.calculateMaxZoomFactor()])

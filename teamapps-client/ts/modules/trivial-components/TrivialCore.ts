@@ -138,7 +138,7 @@ export const DEFAULT_RENDERING_FUNCTIONS = {
 	image2Lines: (entry: DefaultEntryStructure) => {
 		entry = entry || {};
 		return `<div class="tr-template-image-2-lines">  
-            <div class="img-wrapper" style="background-image: url(${entry.imageUrl || ''})"></div>
+            <div class="img-wrapper" style="background-image: url('${entry.imageUrl || ''}')"></div>
             <div class="content-wrapper tr-editor-area">
                 <div class="main-line">${entry.displayValue || ''}</div>
                 <div class="additional-info">${entry.additionalInfo || ''}</div>
@@ -148,7 +148,7 @@ export const DEFAULT_RENDERING_FUNCTIONS = {
 	roundImage2LinesColorBubble: (entry: DefaultEntryStructure) => {
 		entry = entry || {};
 		return `<div class="tr-template-round-image-2-lines-color-bubble">  
-            ${entry.imageUrl != null ? `<div class="img-wrapper" style="background-image: url(${entry.imageUrl || ''})"></div>` : ''} 
+            ${entry.imageUrl != null ? `<div class="img-wrapper" style="background-image: url('${entry.imageUrl || ''}')"></div>` : ''} 
             <div class="content-wrapper tr-editor-area">
                 <div class="main-line">${entry.displayValue || ''}</div>
                 <div class="additional-info">
@@ -161,7 +161,7 @@ export const DEFAULT_RENDERING_FUNCTIONS = {
 	icon2Lines: (entry: DefaultEntryStructure) => {
 		entry = entry || {};
 		return `<div class="tr-template-icon-2-lines">
-          <div class="img-wrapper" style="background-image: url(${entry.imageUrl || ''})"></div>
+          <div class="img-wrapper" style="background-image: url('${entry.imageUrl || ''}')"></div>
           <div class="content-wrapper tr-editor-area"> 
             <div class="main-line">${entry.displayValue || ''}</div> 
             <div class="additional-info">${entry.additionalInfo || ''}</div>
@@ -171,7 +171,7 @@ export const DEFAULT_RENDERING_FUNCTIONS = {
 	iconSingleLine: (entry: DefaultEntryStructure) => {
 		entry = entry || {};
 		return `<div class="tr-template-icon-single-line">
-          <div class="img-wrapper" style="background-image: url(${entry.imageUrl || ''})"></div>
+          <div class="img-wrapper" style="background-image: url('${entry.imageUrl || ''}')"></div>
           <div class="content-wrapper tr-editor-area">${entry.displayValue || ''}</div>
         </div>`;
 	},

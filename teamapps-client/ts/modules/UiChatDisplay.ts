@@ -173,7 +173,7 @@ class UiChatMessage {
 		if (config.files != null) {
 			config.files.forEach(file => {
 				this.$files.appendChild(parseHtml(`<a class="file" target="_blank" href="${file.downloadUrl}">
-	<div class="file-icon img img-32" style="background-image: url(${file.thumbnailUrl || file.icon})"> </div>
+	<div class="file-icon img img-32" style="background-image: url('${file.thumbnailUrl || file.icon}')"> </div>
 	<div class="file-name">${file.name}</div>
 	<div class="file-size">${humanReadableFileSize(file.length)}</div>
 </a>`))

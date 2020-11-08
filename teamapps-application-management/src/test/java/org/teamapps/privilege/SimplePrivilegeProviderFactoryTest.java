@@ -22,6 +22,7 @@ package org.teamapps.privilege;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.teamapps.icons.IconEncoderDispatcher;
 import org.teamapps.icons.api.IconTheme;
 import org.teamapps.privilege.preset.ApplicationRolePreset;
 import org.teamapps.privilege.preset.PrivilegeGroupPreset;
@@ -29,12 +30,14 @@ import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.UiCommandExecutor;
 import org.teamapps.ux.session.ClientInfo;
+import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SimplePrivilegeProviderFactoryTest {
 
@@ -55,12 +58,13 @@ public class SimplePrivilegeProviderFactoryTest {
 	}
 
 	public static SessionContext createDummySessionContext() {
+		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap());
 		return new SessionContext(
 				new QualifiedUiSessionId("httpSessionId", "uiSessionId"),
-				new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap()), Mockito.mock(HttpSession.class),
+				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),
 				Mockito.mock(UiCommandExecutor.class),
 				Mockito.mock(UxServerContext.class),
-				Mockito.mock(IconTheme.class),
+				Mockito.mock(IconEncoderDispatcher.class),
 				Mockito.mock(ObjectMapper.class)
 		);
 	}

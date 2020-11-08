@@ -49,7 +49,7 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 		this.minDropDownHeight = config.minDropDownHeight;
 		this.openDropDownIfNotSet = config.openDropDownIfNotSet;
 
-		this.$button = parseHtml(`<div class="UiToolButton img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url(${config.icon});"></div>`);
+		this.$button = parseHtml(`<div class="UiToolButton img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url('${config.icon}');"></div>`);
 		this.$button.addEventListener('click', () => {
 				if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
 					if (!this.dropDown.isOpen) {
@@ -115,7 +115,7 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 	}
 
 	setIcon(icon: string): void {
-		this.$button.style.backgroundImage = `url(${icon})`;
+		this.$button.style.backgroundImage = `url('${icon}')`;
 	}
 
 	setPopoverText(popoverText: string): void {

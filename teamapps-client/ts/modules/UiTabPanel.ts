@@ -271,7 +271,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 
 	private createTabButton(tabId: string, icon: string, caption: string, closeable: boolean) {
 		const $tabButton = parseHtml(`<div class="tab-button" data-tab-name="${tabId}" draggable="true">
-                     ${icon ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url(${icon});"></div></div>` : ''}
+                     ${icon ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url('${icon}');"></div></div>` : ''}
                      <div class="tab-button-caption">${caption}</div>                                                                                                                          	
                      <div class="tab-button-filler"></div>
                 </div>`);
@@ -279,7 +279,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		if (closeable) {
 			const closeIconPath = "/resources/window-close-grey.png";
 			let closeButtonHtml = `<div class="tab-button-close-button">
-                        <div class="img ${this._context.config.optimizedForTouch ? 'img-16' : 'img-12'}" style="background-image: url(${closeIconPath});"></div>
+                        <div class="img ${this._context.config.optimizedForTouch ? 'img-16' : 'img-12'}" style="background-image: url('${closeIconPath}');"></div>
                     </div>`;
 			const $closeButton1 = $tabButton.appendChild(parseHtml(closeButtonHtml));
 			$closeButton1.addEventListener("mousedown", () => {

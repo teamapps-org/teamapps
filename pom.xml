@@ -40,10 +40,11 @@
         <module>teamapps-ux</module>
         <module>teamapps-ux-servlet</module>
         <module>teamapps-client</module>
-        <module>teamapps-application-management</module>
+<!--        <module>teamapps-application-management</module>-->
         <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
         <module>teamapps-server-tomcat-embedded</module>
+        <module>teamapps-icon2</module>
     </modules>
 
     <properties>
@@ -93,6 +94,12 @@
             <dependency>
                 <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-icon</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.teamapps</groupId>
+                <artifactId>teamapps-icon2</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

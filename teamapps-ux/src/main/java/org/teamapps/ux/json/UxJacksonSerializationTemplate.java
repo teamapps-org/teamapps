@@ -20,16 +20,12 @@
 package org.teamapps.ux.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.icons.api.StaticIcon;
 import org.teamapps.ux.session.SessionContext;
 
 import java.io.IOException;
@@ -39,7 +35,7 @@ public class UxJacksonSerializationTemplate {
 	private static final SimpleModule UX_SERIALIZERS_JACKSON_MODULE = new UxSerializersJacksonModule();
 	private static final ThreadLocal<SessionContext> SESSION_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
-	private SessionContext sessionContext;
+	private final SessionContext sessionContext;
 
 	public UxJacksonSerializationTemplate(ObjectMapper objectMapper, SessionContext sessionContext) {
 		this.sessionContext = sessionContext;
@@ -57,7 +53,7 @@ public class UxJacksonSerializationTemplate {
 		}
 	}
 
-	private static SessionContext getCurrentSessionContext() {
+	private static SessionContext getSessionContext() {
 		return SESSION_CONTEXT_THREAD_LOCAL.get();
 	}
 
@@ -67,20 +63,13 @@ public class UxJacksonSerializationTemplate {
 			this.addSerializer(Icon.class, new JsonSerializer<Icon>() {
 				@Override
 				public void serialize(Icon icon, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-					SessionContext currentSessionContext = getCurrentSessionContext();
+					SessionContext currentSessionContext = getSessionContext();
 					gen.writeString(currentSessionContext.resolveIcon(icon));
 				}
 
 				@Override
 				public void serializeWithType(Icon value, JsonGenerator gen, SerializerProvider serializers, TypeSerializer typeSer) throws IOException {
 					serialize(value, gen, serializers);
-				}
-			});
-			this.addDeserializer(Icon.class, new JsonDeserializer<Icon>() {
-				@Override
-				public Icon deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-					String qualifiedIconId = p.getText();
-					return new StaticIcon(qualifiedIconId);
 				}
 			});
 		}

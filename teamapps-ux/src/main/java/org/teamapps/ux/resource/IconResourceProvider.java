@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,26 +19,25 @@
  */
 package org.teamapps.ux.resource;
 
-import org.teamapps.icons.api.CustomIconStyle;
-import org.teamapps.icons.provider.IconProvider;
-import org.teamapps.icons.systemprovider.IconResource;
-import org.teamapps.icons.systemprovider.SystemIconProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teamapps.icons.IconResource;
+import org.teamapps.icons.IconProviderDispatcher;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 
-public class SystemIconResourceProvider implements ResourceProvider {
+public class IconResourceProvider implements ResourceProvider {
 
-	private Date lastModifiedDate = new Date();
-	private final SystemIconProvider iconProvider;
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final Date lastModifiedDate = new Date();
 
-	public SystemIconResourceProvider() {
-		iconProvider = new SystemIconProvider();
-	}
+	private final IconProviderDispatcher iconResolver;
 
-	public SystemIconResourceProvider(File cachingDirectory) {
-		iconProvider = new SystemIconProvider(cachingDirectory);
+	public IconResourceProvider(IconProviderDispatcher iconProviderDispatcher) {
+		this.iconResolver = iconProviderDispatcher;
 	}
 
 	@Override
@@ -52,15 +51,15 @@ public class SystemIconResourceProvider implements ResourceProvider {
 		if (relativeResourcePath.endsWith("/")) {
 			relativeResourcePath = relativeResourcePath.substring(0, relativeResourcePath.length() - 1);
 		}
-		String[] parts = relativeResourcePath.split("/");
-		int size = getInt(parts[0]);
-		String iconId = parts[parts.length - 1];
-		IconResource iconResource = iconProvider.getIcon(size, iconId);
+		String[] parts = relativeResourcePath.split("@");
+		String qualifiedEncodedIcon = parts[0];
+		int size = getInt(parts[parts.length - 1]);
+		IconResource iconResource = iconResolver.getIcon(qualifiedEncodedIcon, size);
 		if (iconResource != null) {
 			return new Resource() {
 				@Override
 				public InputStream getInputStream() {
-					return iconResource.getInputStream();
+					return new ByteArrayInputStream(iconResource.getBytes());
 				}
 
 				@Override
@@ -70,12 +69,12 @@ public class SystemIconResourceProvider implements ResourceProvider {
 
 				@Override
 				public Date getLastModified() {
-					return iconResource.getLastModified();
+					return lastModifiedDate;
 				}
 
 				@Override
 				public Date getExpires() {
-					return iconResource.getExpires();
+					return new Date(System.currentTimeMillis() + 86_400_000L * 60);
 				}
 
 				@Override
@@ -97,18 +96,6 @@ public class SystemIconResourceProvider implements ResourceProvider {
 		} catch (Throwable ignore) {
 		}
 		return 0;
-	}
-
-	public void registerStandardIconProvider(IconProvider iconProvider) {
-		this.iconProvider.registerStandardIconProvider(iconProvider);
-	}
-
-	public void registerCustomIconProvider(IconProvider iconProvider) {
-		this.iconProvider.registerCustomIconProvider(iconProvider);
-	}
-
-	public void registerCustomIconStyle(CustomIconStyle customIconStyle) {
-		iconProvider.registerCustomIconStyle(customIconStyle);
 	}
 
 }

@@ -17,11 +17,35 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.icon.material;
+package org.teamapps.icons;
 
-public class GradientOutlineStyle extends MultiColorStyle {
+import java.util.Date;
 
-    public GradientOutlineStyle(String styleId, String color1, String color2, String color3) {
-        super(styleId, StyleType.GRADIENT_OUTLINE, color1, color2, color3);
+public class IconResource {
+
+    private static final Date DEFAULT_LAST_MODIFIED = new Date();
+
+    private final byte[] bytes;
+    private final IconType iconType;
+
+    public IconResource(byte[] bytes, IconType iconType) {
+        this.bytes = bytes;
+        this.iconType = iconType;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
+    }
+
+    public long getLength() {
+        return bytes.length;
+    }
+
+    public IconType getIconType() {
+        return iconType;
+    }
+
+    public String getMimeType() {
+        return iconType.getMimeType();
     }
 }

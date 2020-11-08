@@ -73,7 +73,7 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 
 	setIcon(icon: string): void {
 		this.$icon.classList.toggle("hidden", !icon);
-		this.$icon.style.backgroundImage = icon ? `url(${icon})` : null;
+		this.$icon.style.backgroundImage = icon ? `url('${icon}')` : null;
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
