@@ -31,7 +31,6 @@ import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.IconEncoderDispatcher;
 import org.teamapps.icons.api.Icon;
-import org.teamapps.icons.spi.IconEncoder;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.util.MultiKeySequentialExecutor;
@@ -244,8 +243,10 @@ public class SessionContext {
 		return commandExecutor.getClientBackPressureInfo(sessionId);
 	}
 
-	public <I extends Icon> void setIconEncoderForIconClass(Class<I> iconClass, IconEncoder<I> iconEncoder) {
-		iconEncoderDispatcher.setIconEncoderForIconClass(iconClass, iconEncoder);
+	public <I extends Icon<I, S>, S> void setDefaultStyleForIconClass(Class<I> iconClass, S defaultStyle) {
+		this.runWithContext(() -> {
+			iconEncoderDispatcher.setDefaultStyleForIconClass(iconClass, defaultStyle);
+		});
 	}
 
 	public String createFileLink(File file) {

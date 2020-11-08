@@ -19,6 +19,10 @@
  */
 package org.teamapps.icon.material;
 
+import org.teamapps.common.format.Color;
+
+import java.util.Arrays;
+
 public class MaterialIconStyle {
 
 	private final MaterialIconStyleType styleType;
@@ -27,6 +31,13 @@ public class MaterialIconStyle {
 	public MaterialIconStyle(MaterialIconStyleType styleType, String... colors) {
 		this.styleType = styleType;
 		this.colors = colors;
+	}
+
+	public MaterialIconStyle(MaterialIconStyleType styleType, Color... colors) {
+		this.styleType = styleType;
+		this.colors = Arrays.stream(colors)
+				.map(Color::toHtmlColorString)
+				.toArray(String[]::new);
 	}
 
 	public MaterialIconStyleType getStyleType() {
