@@ -17,34 +17,31 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.icons.api;
+package org.teamapps.icons;
 
-public interface IconTheme {
+import net.coobird.thumbnailator.Thumbnails;
 
-	IconStyle getBaseIconStyle();
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-	IconStyle getSubIconStyle();
+public class PngIconResizer {
 
-	default String getStyleId(boolean baseStyle) {
-		if (baseStyle) {
-			return getBaseIconStyle().getStyleId();
-		} else {
-			return getSubIconStyle().getStyleId();
-		}
+	public byte[] resizeIcon(byte[] bytes, int size) {
+		InputStream inputStream = new ByteArrayInputStream(bytes);
+		return resizeIcon(inputStream, size);
 	}
 
-	static IconTheme of(IconStyle baseIconStyle, IconStyle subIconStyle) {
-		return new IconTheme() {
-			@Override
-			public IconStyle getBaseIconStyle() {
-				return baseIconStyle;
-			}
-
-			@Override
-			public IconStyle getSubIconStyle() {
-				return subIconStyle;
-			}
-		};
+	public byte[] resizeIcon(InputStream inputStream, int size) {
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			Thumbnails.of(inputStream).width(size).toOutputStream(bos);
+			return bos.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
