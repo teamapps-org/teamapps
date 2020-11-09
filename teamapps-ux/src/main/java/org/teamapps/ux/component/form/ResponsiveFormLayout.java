@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.form;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.Label;
@@ -37,10 +37,10 @@ import java.util.UUID;
 public class ResponsiveFormLayout  {
 
 	protected static final String LABEL_NAME_SUFFIX = "Label";
-	private ResponsiveForm responsiveForm;
-	private int minWidth;
-	private List<ResponsiveFormSection> responsiveFormSections = new ArrayList<>();
-	private ResponsiveFormConfigurationTemplate configurationTemplate;
+	private final ResponsiveForm responsiveForm;
+	private final int minWidth;
+	private final List<ResponsiveFormSection> responsiveFormSections = new ArrayList<>();
+	private final ResponsiveFormConfigurationTemplate configurationTemplate;
 
 
 	protected ResponsiveFormLayout(int minWidth, ResponsiveForm responsiveForm, ResponsiveFormConfigurationTemplate configurationTemplate) {

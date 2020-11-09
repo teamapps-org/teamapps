@@ -23,7 +23,7 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiWindow;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.panel.Panel;
 

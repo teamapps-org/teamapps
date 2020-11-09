@@ -22,7 +22,7 @@ package org.teamapps.ux.component.notification;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiNotificationBarItem;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.animation.RepeatableAnimation;

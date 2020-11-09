@@ -23,7 +23,7 @@ import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.splitpane.SplitDirection;
 import org.teamapps.ux.component.splitpane.SplitPane;
@@ -39,9 +39,9 @@ import java.util.List;
 
 public class MediaPlayer extends AbstractComponent {
 
-	private VideoPlayer videoPlayer;
+	private final VideoPlayer videoPlayer;
 	private MediaTrackGraph trackGraph;
-	private SplitPane splitPane;
+	private final SplitPane splitPane;
 
 
 	public MediaPlayer() {

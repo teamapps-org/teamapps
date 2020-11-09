@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.template;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 

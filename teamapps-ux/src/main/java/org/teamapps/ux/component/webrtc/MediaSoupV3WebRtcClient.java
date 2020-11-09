@@ -28,7 +28,7 @@ import org.teamapps.dto.UiMediaSoupPlaybackParameters;
 import org.teamapps.dto.UiMediaSoupPublishingParameters;
 import org.teamapps.dto.UiMediaSoupV3WebRtcClient;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.session.SessionContext;

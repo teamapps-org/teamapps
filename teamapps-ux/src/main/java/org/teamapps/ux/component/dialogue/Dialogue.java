@@ -21,7 +21,7 @@ package org.teamapps.ux.component.dialogue;
 
 import org.teamapps.event.Event;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.Button;
 import org.teamapps.ux.component.field.FieldEditingMode;
 import org.teamapps.ux.component.field.combobox.ComboBox;

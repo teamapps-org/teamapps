@@ -22,7 +22,7 @@ package org.teamapps.ux.component.progress;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiProgressDisplay;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.task.ObservableProgress;
 import org.teamapps.ux.task.ProgressChangeEventData;

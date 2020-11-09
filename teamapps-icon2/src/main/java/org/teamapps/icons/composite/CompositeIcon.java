@@ -19,7 +19,7 @@
  */
 package org.teamapps.icons.composite;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.icons.spi.IconLibrary;
 
 @IconLibrary(name = "composite", encoder = CompositeIconEncoder.class, provider = CompositeIconProvider.class)

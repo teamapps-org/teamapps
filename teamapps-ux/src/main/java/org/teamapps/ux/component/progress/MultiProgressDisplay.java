@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.progress;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.task.ObservableProgress;
 import org.teamapps.ux.task.ProgressCompletableFuture;

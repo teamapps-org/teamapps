@@ -20,7 +20,7 @@
 package org.teamapps.ux.application.view;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.toolbar.Toolbar;
@@ -38,10 +38,10 @@ public class ViewImpl implements View {
     private ViewSize viewSize;
     private String tabTitle;
 
-    private Panel panel = new Panel();
+    private final Panel panel = new Panel();
     private Toolbar toolbar;
-    private List<ToolbarButtonGroup> workspaceToolbarButtonGroups = new ArrayList<>();
-    private List<ViewChangeHandler> changeHandlers = new ArrayList<>();
+    private final List<ToolbarButtonGroup> workspaceToolbarButtonGroups = new ArrayList<>();
+    private final List<ViewChangeHandler> changeHandlers = new ArrayList<>();
 
     public ViewImpl() {
         closable = false;

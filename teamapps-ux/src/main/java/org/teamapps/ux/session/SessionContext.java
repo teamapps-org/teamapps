@@ -30,7 +30,7 @@ import org.teamapps.dto.UiRootPanel;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
 import org.teamapps.icons.IconEncoderDispatcher;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.util.MultiKeySequentialExecutor;

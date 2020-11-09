@@ -23,7 +23,7 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiNotification;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.TemplateField;

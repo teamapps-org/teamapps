@@ -22,7 +22,7 @@ package org.teamapps.ux.component.field.upload.simple;
 
 import org.teamapps.dto.UiFileItem;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.session.CurrentSessionContext;
 
 import java.io.File;

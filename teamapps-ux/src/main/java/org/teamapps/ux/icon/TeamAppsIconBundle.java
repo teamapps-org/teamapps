@@ -20,7 +20,7 @@
 package org.teamapps.ux.icon;
 
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 public enum TeamAppsIconBundle implements IconBundleEntry {
 

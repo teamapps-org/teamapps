@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.template;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.node.TreeNode;
 
 import java.util.ArrayList;

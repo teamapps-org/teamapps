@@ -19,7 +19,7 @@
  */
 package org.teamapps.icon.material;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.icons.spi.IconLibrary;
 
 @IconLibrary(name = "material", encoder = MaterialIconEncoder.class, provider = MaterialIconProvider.class)
@@ -958,7 +958,7 @@ public class MaterialIcon implements Icon<MaterialIcon, MaterialIconStyle> {
 	public static final MaterialIcon ZOOM_OUT = forName("zoom_out");
 	public static final MaterialIcon ZOOM_OUT_MAP = forName("zoom_out_map");
 
-	static MaterialIcon forName(String name) {
+	public static MaterialIcon forName(String name) {
 		return new MaterialIcon(name);
 	}
 

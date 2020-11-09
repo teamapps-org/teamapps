@@ -2,7 +2,6 @@ package org.teamapps.icons;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.spi.IconEncoder;
 import org.teamapps.icons.spi.IconLibrary;
 import org.teamapps.icons.spi.IconProvider;

@@ -21,7 +21,7 @@ package org.teamapps.ux.component.table;
 
 import org.teamapps.data.extract.ValueExtractor;
 import org.teamapps.dto.UiTableColumn;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.session.CurrentSessionContext;
