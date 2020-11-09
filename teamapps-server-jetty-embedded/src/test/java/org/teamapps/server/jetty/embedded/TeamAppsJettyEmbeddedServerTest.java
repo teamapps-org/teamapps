@@ -54,6 +54,12 @@ public class TeamAppsJettyEmbeddedServerTest {
 			}
 		});
 
+		// Test custom configurations:
+		// jettyServer.configureHttpsUsingP12File(8443, new File("/path/to/cert.p12"), "changeit");
+		jettyServer.getWebapp().getSessionHandler().setSecureRequestOnly(true);
+		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setHttpOnly(true);
+		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setComment("__SAME_SITE_STRICT__");
+
 		// start server
 		jettyServer.start();
 
