@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.application.assembler;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 public class AdditionalNavigationButton {
 

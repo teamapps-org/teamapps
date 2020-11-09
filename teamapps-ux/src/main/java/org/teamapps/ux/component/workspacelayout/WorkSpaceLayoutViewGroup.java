@@ -21,7 +21,7 @@ package org.teamapps.ux.component.workspacelayout;
 
 import org.teamapps.dto.UiWorkSpaceLayoutItem;
 import org.teamapps.dto.UiWorkSpaceLayoutViewGroupItem;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.workspacelayout.definition.ViewGroupDefinition;
 import org.teamapps.ux.component.workspacelayout.definition.ViewDefinition;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class WorkSpaceLayoutViewGroup extends WorkSpaceLayoutItem {
 
 	private final boolean persistent;
-	private List<WorkSpaceLayoutView> views = new ArrayList<>();
+	private final List<WorkSpaceLayoutView> views = new ArrayList<>();
 	private WorkSpaceLayoutView selectedView;
 	private ViewGroupPanelState panelState = ViewGroupPanelState.NORMAL;
 

@@ -1,6 +1,6 @@
 package org.teamapps.icon;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 //@IconLibrary("example")
 public enum TestIcon implements Icon<TestIcon, Void> {

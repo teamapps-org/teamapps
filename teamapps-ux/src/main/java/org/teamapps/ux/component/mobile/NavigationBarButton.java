@@ -21,7 +21,7 @@ package org.teamapps.ux.component.mobile;
 
 import org.teamapps.dto.UiNavigationBarButton;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 
 public class NavigationBarButton<RECORD> {

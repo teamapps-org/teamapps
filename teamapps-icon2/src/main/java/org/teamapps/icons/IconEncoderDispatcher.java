@@ -1,6 +1,5 @@
 package org.teamapps.icons;
 
-import org.teamapps.icons.api.Icon;
 import org.teamapps.icons.spi.IconEncoder;
 
 import java.util.HashMap;

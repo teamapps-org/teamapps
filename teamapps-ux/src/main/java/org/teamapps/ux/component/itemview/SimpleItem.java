@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.itemview;
 
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 
 public class SimpleItem<PAYLOAD> extends BaseTemplateRecord<PAYLOAD>{

@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.charting.common;
 
 import org.teamapps.dto.UiTreeGraphNodeIcon;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.session.CurrentSessionContext;
 
 public class GraphNodeIcon {

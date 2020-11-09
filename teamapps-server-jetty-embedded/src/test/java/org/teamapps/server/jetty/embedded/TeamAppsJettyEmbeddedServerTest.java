@@ -26,6 +26,9 @@ import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
 public class TeamAppsJettyEmbeddedServerTest {
 
 	public static void main(String[] args) throws Exception {
@@ -39,11 +42,17 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, Files.createTempDir(), 8081);
 
-		// Test custom configurations:
-		// jettyServer.configureHttpsUsingP12File(8443, new File("/path/to/cert.p12"), "changeit");
-		jettyServer.getWebapp().getSessionHandler().setSecureRequestOnly(true);
-		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setHttpOnly(true);
-		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setComment("__SAME_SITE_STRICT__");
+		jettyServer.addServletContextListener(new ServletContextListener() {
+			@Override
+			public void contextInitialized(ServletContextEvent sce) {
+
+			}
+
+			@Override
+			public void contextDestroyed(ServletContextEvent sce) {
+
+			}
+		});
 
 		// start server
 		jettyServer.start();

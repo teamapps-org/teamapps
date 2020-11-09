@@ -26,7 +26,7 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiPanel;
 import org.teamapps.dto.UiPanelHeaderField;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;

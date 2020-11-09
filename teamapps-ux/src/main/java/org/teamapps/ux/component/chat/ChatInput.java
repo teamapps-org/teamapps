@@ -23,7 +23,7 @@ import org.teamapps.dto.UiChatInput;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.event.Event;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 
 import java.util.List;

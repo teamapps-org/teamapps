@@ -22,7 +22,7 @@ package org.teamapps.ux.component.progress;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiDefaultMultiProgressDisplay;
 import org.teamapps.event.Event;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.DisplayField;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
@@ -52,7 +52,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 
 	private boolean showNotificationOnProgressAdded = true;
 	private int notificationDisplayTimeMillis = 3000;
-	private NotificationPosition notificationPosition = NotificationPosition.BOTTOM_RIGHT;
+	private final NotificationPosition notificationPosition = NotificationPosition.BOTTOM_RIGHT;
 	private int listEntryRemainTimeout = 5000;
 
 	private boolean showingNotificationWithoutTimeout = false;

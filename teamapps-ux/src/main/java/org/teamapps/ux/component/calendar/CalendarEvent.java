@@ -20,7 +20,7 @@
 package org.teamapps.ux.component.calendar;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 import java.time.Instant;
 

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.icon;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 public interface IconBundleEntry {
 

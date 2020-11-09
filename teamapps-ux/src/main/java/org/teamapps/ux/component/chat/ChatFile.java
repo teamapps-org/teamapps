@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.chat;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.resolvable.Resolvable;
 
 public interface ChatFile {

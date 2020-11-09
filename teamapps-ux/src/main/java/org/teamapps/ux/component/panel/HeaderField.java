@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.panel;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.AbstractField;
 
 public class HeaderField {

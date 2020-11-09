@@ -26,7 +26,7 @@ import org.teamapps.dto.UiSimpleFileField;
 import org.teamapps.event.Event;
 import org.teamapps.formatter.FileSizeFormatter;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.upload.FileFieldDisplayType;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
@@ -50,14 +50,14 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	public final Event<FileItem> onFileItemClicked = new Event<>();
 	public final Event<FileItem> onFileItemRemoved = new Event<>();
 
-	private List<FileItem> fileItems = new ArrayList<>();
+	private final List<FileItem> fileItems = new ArrayList<>();
 
 	private FileFieldDisplayType displayType = FileFieldDisplayType.FLOATING;
 	private int maxFiles = Integer.MAX_VALUE;
 	private long maxBytesPerFile = 10_000_000; // There is also a hard limitation! (see application.properties)
 	private String uploadUrl = "/upload"; // May point anywhere.
 	private Icon browseButtonIcon = MaterialIcon.FILE_UPLOAD;
-	private Icon defaultItemIcon = MaterialIcon.CARD_TRAVEL;
+	private final Icon defaultItemIcon = MaterialIcon.CARD_TRAVEL;
 
 	private String browseButtonCaption = getSessionContext().getLocalized(TeamAppsDictionary.UPLOAD.getKey());
 

@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.application.assembler;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.ResponsiveApplicationToolbar;
 import org.teamapps.ux.application.perspective.Perspective;
@@ -54,15 +54,15 @@ public class MobileApplicationAssembler implements ApplicationAssembler {
 	private final NavigationBarButton<BaseTemplateRecord> applicationToolbarButton;
 	private final NavigationBarButton<BaseTemplateRecord> applicationBackButton;
 
-	private MobileLayout mobileLayout;
-	private NavigationBar<BaseTemplateRecord> navigationBar;
-	private SimpleItemView<Void> viewsItemView;
+	private final MobileLayout mobileLayout;
+	private final NavigationBar<BaseTemplateRecord> navigationBar;
+	private final SimpleItemView<Void> viewsItemView;
 	private AbstractToolContainer mainToolbar;
 
 
 	private View applicationLauncher;
 	private View appTree;
-	private List<View> applicationViews = new ArrayList<>();
+	private final List<View> applicationViews = new ArrayList<>();
 	private List<View> perspectiveViews = new ArrayList<>();
 	private View activeView;
 
