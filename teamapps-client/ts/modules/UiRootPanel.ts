@@ -38,6 +38,7 @@ import {showNotification, UiNotification} from "./UiNotification";
 import {UiNotificationPosition} from "../generated/UiNotificationPosition";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
+import {requestWakeLock, releaseWakeLock} from "./util/WakeLock";
 
 export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implements UiRootPanelCommandHandler {
 
@@ -343,58 +344,13 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		document.body.appendChild(popup.getMainElement());
 	}
 
-	private static wakeLocksByUuid: { [uuid: string]: WakeLockSentinel } = {};
-
-	public static async requestWakeLock(uuid: string) {
-		if (isWakeLockCapableNavigator(navigator)) {
-			try {
-				let wakeLock = await navigator.wakeLock.request('screen');
-				this.LOGGER.info(`WakeLock acquired: ${uuid}`);
-				this.wakeLocksByUuid[uuid] = wakeLock;
-				wakeLock.addEventListener('release', (e) => {
-					this.LOGGER.info(`WakeLock released: ${uuid}`);
-				});
-				document.addEventListener('visibilitychange', async () => {
-					if (this.wakeLocksByUuid[uuid] !== null && document.visibilityState === 'visible') {
-						if (isWakeLockCapableNavigator(navigator)) {
-							this.wakeLocksByUuid[uuid] = await navigator.wakeLock.request('screen');
-						}
-					}
-				});
-				return true;
-			} catch (e) {
-				this.LOGGER.info(`Could not acquire WakeLock: ${uuid}`)
-				return false;
-			}
-		} else {
-			return false;
-		}
+	public static async requestWakeLock(uuid: string): Promise<boolean> {
+		return await requestWakeLock(uuid);
 	}
 
-	public static releaseWakeLock(uuid: string) {
-		this.wakeLocksByUuid[uuid]?.release();
+	public static async releaseWakeLock(uuid: string) {
+		return releaseWakeLock(uuid);
 	}
-}
-
-function isWakeLockCapableNavigator(navigator: Navigator): navigator is WakeLockCapableNavigator {
-	return 'wakeLock' in (navigator as WakeLockCapableNavigator) && 'request' in (navigator as WakeLockCapableNavigator).wakeLock;
-}
-
-interface WakeLockCapableNavigator extends Navigator {
-	wakeLock: {
-		request: (type: 'screen') => Promise<WakeLockSentinel>;
-	}
-}
-
-interface WakeLockSentinel extends EventTarget {
-	released: boolean;
-	type: 'screen';
-
-	release(): Promise<void>;
-
-	addEventListener(type: "release", listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions): void;
-
-	removeEventListener(type: "release", callback: EventListenerOrEventListenerObject | null, options?: EventListenerOptions | boolean): void;
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiRootPanel", UiRootPanel);
