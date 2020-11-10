@@ -1428,11 +1428,6 @@ arr-union@^3.1.0:
   resolved "https://registry.yarnpkg.com/arr-union/-/arr-union-3.1.0.tgz#e39b09aea9def866a8f206e288af63919bae39c4"
   integrity sha1-45sJrqne+Gao8gbiiK9jkZuuOcQ=
 
-array-flat-polyfill@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/array-flat-polyfill/-/array-flat-polyfill-1.0.1.tgz#1e3a4255be619dfbffbfd1d635c1cf357cd034e7"
-  integrity sha512-hfJmKupmQN0lwi0xG6FQ5U8Rd97RnIERplymOv/qpq8AoNKPPAnxJadjFA23FNWm88wykh9HmpLJUUwUtNU/iw==
-
 array-flatten@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
@@ -3476,11 +3471,6 @@ electron-to-chromium@^1.3.349:
   version "1.3.358"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.358.tgz#1964cab37f57d49a5a421a4de4dba3c6baf14608"
   integrity sha512-y9xvv+9PplXSUkOSxgtOfwNrqD/948VIScyWURnY27PXprg3PmRl7e8ekRJhnksDNjxLVyBYY6I2nQmNBzdi6g==
-
-element-qsa-scope@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/element-qsa-scope/-/element-qsa-scope-1.1.0.tgz#6e1146a3aa796cd385846d39365578db358b647b"
-  integrity sha512-oBBTdmleT5eJ0r5/3/tVg0NcWv95ut4Oxj5Oh/IkZ3kc0UACF8psJU8Rocd4aXDgtoE5WD5/rqYOXvjOE1DxIg==
 
 elliptic@^6.0.0:
   version "6.5.2"
@@ -6496,6 +6486,11 @@ normalize-url@^3.0.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
+
+nosleep.js@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/nosleep.js/-/nosleep.js-0.11.0.tgz#4e03af6751d7a969ceade0c45a1b481887b2b0c2"
+  integrity sha512-Ewb7YpPJ6t1IAiMoXM5vWBMomqVFD0wUXXzUfE+kGftXxXFXqLPV3Aq6Iggxxm568tMVptrlXLw5BPMzEgOK6A==
 
 npm-run-path@^2.0.0:
   version "2.0.2"

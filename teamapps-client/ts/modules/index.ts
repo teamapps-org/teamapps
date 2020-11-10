@@ -21,9 +21,6 @@ import "@less/teamapps";
 
 import 'typeface-roboto';
 
-import "element-qsa-scope"; // Polyfill: querySelector(":scope ...")
-import "array-flat-polyfill"; // Polyfill: array.flatmap() ...
-
 (window as any).jQuery = (window as any).$ = require("jquery"); // needs to be global for fullcalendar (at least)
 require("jquery-ui/ui/version.js");
 require("jquery-ui/ui/position.js");
