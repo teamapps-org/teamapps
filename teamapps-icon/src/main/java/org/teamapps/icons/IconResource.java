@@ -19,18 +19,20 @@
  */
 package org.teamapps.icons;
 
-import java.util.Date;
-
 public class IconResource {
-
-    private static final Date DEFAULT_LAST_MODIFIED = new Date();
 
     private final byte[] bytes;
     private final IconType iconType;
+    private final int size;
 
     public IconResource(byte[] bytes, IconType iconType) {
+        this(bytes, iconType, -1);
+    }
+
+    public IconResource(byte[] bytes, IconType iconType, int size) {
         this.bytes = bytes;
         this.iconType = iconType;
+        this.size = size;
     }
 
     public byte[] getBytes() {
@@ -47,5 +49,9 @@ public class IconResource {
 
     public String getMimeType() {
         return iconType.getMimeType();
+    }
+
+    public int getSize() {
+        return size;
     }
 }

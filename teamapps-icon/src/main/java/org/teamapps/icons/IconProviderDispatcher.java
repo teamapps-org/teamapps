@@ -1,5 +1,7 @@
 package org.teamapps.icons;
 
+import org.teamapps.icons.spi.IconProvider;
+
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -33,7 +35,15 @@ public class IconProviderDispatcher implements IconProviderContext {
 
 		String libraryName = getLibraryName(qualifiedEncodedIcon);
 		String encodedIconString = qualifiedEncodedIcon.substring(libraryName.length() + 1);
-		return iconLibraryRegistry.getIconProvider(libraryName).getIcon(encodedIconString, size, this);
+		IconProvider iconProvider = iconLibraryRegistry.getIconProvider(libraryName);
+		IconResource icon = iconProvider.getIcon(encodedIconString, size, this);
+
+		if (icon.getIconType() == IconType.PNG && icon.getSize() > 0 && icon.getSize() != size) {
+			byte[] resizedIconBytes = new PngIconResizer().resizeIcon(icon.getBytes(), size);
+			icon = new IconResource(resizedIconBytes, IconType.PNG, size);
+		}
+
+		return icon;
 	}
 
 	private String getLibraryName(String qualifiedEncodedIcon) {
