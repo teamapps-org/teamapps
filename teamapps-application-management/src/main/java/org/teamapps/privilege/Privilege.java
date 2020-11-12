@@ -19,7 +19,7 @@
  */
 package org.teamapps.privilege;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 public class Privilege {
 

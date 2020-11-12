@@ -27,7 +27,7 @@ import org.teamapps.auth.SessionAuthenticatedUserResolver;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.config.ClientConfigProvider;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.theme.Theme;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.TextField;
