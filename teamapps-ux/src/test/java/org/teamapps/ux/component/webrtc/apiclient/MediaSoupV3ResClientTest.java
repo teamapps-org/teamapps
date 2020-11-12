@@ -41,9 +41,9 @@ public class MediaSoupV3ResClientTest {
 
 		List<CompletableFuture<?>> futures = new ArrayList<>();
 
-		futures.add(client.startRecording("myStream", Set.of(AUDIO, VIDEO)).thenAccept(r -> System.out.println("Response: " + r)));
-		futures.add(client.startRecording("myStream").thenAccept(r -> System.out.println("Response: " + r)));
-		futures.add(client.stopRecording("myStream").thenAccept(r -> System.out.println("Response: " + r)));
+		futures.add(client.startRecording(0, "myStream", Set.of(AUDIO, VIDEO)).thenAccept(r -> System.out.println("Response: " + r)));
+		futures.add(client.startRecording(0, "myStream").thenAccept(r -> System.out.println("Response: " + r)));
+		futures.add(client.stopRecording(0, "myStream").thenAccept(r -> System.out.println("Response: " + r)));
 		futures.add(client.getWorkerLoad(0).thenAccept(r -> System.out.println("Response: " + r)));
 		futures.add(client.getNumberOfWorkers().thenAccept(r -> System.out.println("Response: " + r)));
 		futures.add(client.getRecordedStreamUuids().thenAccept(r -> System.out.println("Response: " + r)));

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -92,13 +92,13 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 		return future;
 	}
 
-	public CompletableFuture<Void> startRecording(String streamUuid) {
-		return startRecording(streamUuid, null);
+	public CompletableFuture<Void> startRecording(int workerId, String streamUuid) {
+		return startRecording(workerId, streamUuid, null);
 	}
 
-	public CompletableFuture<Void> startRecording(String streamUuid, Set<MediaKind> kinds) {
+	public CompletableFuture<Void> startRecording(int workerId, String streamUuid, Set<MediaKind> kinds) {
 		CompletableFuture<Void> future = new CompletableFuture<>();
-		webTarget.path("0/startRecording")
+		webTarget.path(workerId + "/startRecording")
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365)))
 				.async()
@@ -116,9 +116,9 @@ public class MediaSoupV3RestClient implements MediaSoupV3ApiClient {
 		return future;
 	}
 
-	public CompletableFuture<Void> stopRecording(String streamUuid) {
+	public CompletableFuture<Void> stopRecording(int workerId, String streamUuid) {
 		CompletableFuture<Void> future = new CompletableFuture<>();
-		webTarget.path("0/stopRecording")
+		webTarget.path(workerId + "/stopRecording")
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + MediaSoupV3TokenGenerator.generateRecordingJwtToken(serverSecret, Duration.ofDays(365)))
 				.async()
