@@ -19,7 +19,7 @@
  */
 package org.teamapps.app.multi;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 import java.util.Objects;
 
