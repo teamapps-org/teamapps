@@ -53,7 +53,7 @@ public class IconResourceProvider implements ResourceProvider {
 		}
 		String[] parts = relativeResourcePath.split("@");
 		String qualifiedEncodedIcon = parts[0];
-		int size = getInt(parts[parts.length - 1]);
+		int size = parts.length > 1 ? getInt(parts[parts.length - 1]) : -1;
 		IconResource iconResource = iconResolver.loadIcon(qualifiedEncodedIcon, size);
 		if (iconResource != null) {
 			return new Resource() {
@@ -89,13 +89,13 @@ public class IconResourceProvider implements ResourceProvider {
 
 	private int getInt(String s) {
 		if (s == null) {
-			return 0;
+			return -1;
 		}
 		try {
 			return Integer.parseInt(s);
 		} catch (Throwable ignore) {
 		}
-		return 0;
+		return -1;
 	}
 
 }

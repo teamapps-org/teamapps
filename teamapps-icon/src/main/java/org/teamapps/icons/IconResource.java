@@ -33,6 +33,10 @@ public class IconResource {
         this.bytes = bytes;
         this.iconType = iconType;
         this.size = size;
+
+        if (iconType.isRasterImage() && size <= 0) {
+            throw new IllegalArgumentException("iconSize is required for non-scalable icons.");
+        }
     }
 
     public byte[] getBytes() {

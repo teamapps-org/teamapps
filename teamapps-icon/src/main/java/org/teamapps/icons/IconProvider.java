@@ -72,7 +72,7 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 			return null;
 		}
 
-		if (iconResource.getIconType() == IconType.PNG && iconResource.getSize() > 0 && iconResource.getSize() != size) {
+		if (iconResource.getIconType().isRasterImage() && iconResource.getSize() > 0 && size > 0 &&  iconResource.getSize() != size) {
 			byte[] resizedIconBytes = new PngIconResizer().resizeIcon(iconResource.getBytes(), size);
 			iconResource = new IconResource(resizedIconBytes, IconType.PNG, size);
 		}

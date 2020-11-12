@@ -21,16 +21,22 @@ package org.teamapps.icons;
 
 public enum IconType {
 
-    PNG("image/png"),
-    SVG("image/svg+xml");
+    PNG("image/png", true),
+    SVG("image/svg+xml", false);
 
     private final String mimeType;
+    private final boolean rasterImage;
 
-    IconType(String mimeType) {
+    IconType(String mimeType, boolean rasterImage) {
         this.mimeType = mimeType;
+        this.rasterImage = rasterImage;
     }
 
     public String getMimeType() {
         return mimeType;
+    }
+
+    public boolean isRasterImage() {
+        return rasterImage;
     }
 }
