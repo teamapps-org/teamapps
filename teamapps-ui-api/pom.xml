@@ -39,10 +39,6 @@
             <artifactId>teamapps-ui-dsl</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
