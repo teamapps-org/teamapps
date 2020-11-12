@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiSessionClosingReason;
-import org.teamapps.icons.IconEncoderDispatcher;
-import org.teamapps.icons.IconLibraryRegistry;
+import org.teamapps.icons.IconProvider;
+import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.UiCommandExecutor;
@@ -55,7 +55,7 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 	private final UiCommandExecutor commandExecutor;
 
 	private final ObjectMapper objectMapper;
-	private final IconLibraryRegistry iconLibraryRegistry;
+	private final IconProvider iconProvider;
 	private final TeamAppsUploadManager uploadManager;
 	private final Map<QualifiedUiSessionId, SessionContext> sessionContextById = new ConcurrentHashMap<>();
 
@@ -70,11 +70,11 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 		}
 	};
 
-	public TeamAppsUxSessionManager(WebController webController, UiCommandExecutor commandExecutor, ObjectMapper objectMapper, IconLibraryRegistry iconLibraryRegistry, TeamAppsUploadManager uploadManager) {
+	public TeamAppsUxSessionManager(WebController webController, UiCommandExecutor commandExecutor, ObjectMapper objectMapper, IconProvider iconProvider, TeamAppsUploadManager uploadManager) {
 		this.webController = webController;
 		this.commandExecutor = commandExecutor;
 		this.objectMapper = objectMapper;
-		this.iconLibraryRegistry = iconLibraryRegistry;
+		this.iconProvider = iconProvider;
 		this.uploadManager = uploadManager;
 	}
 
@@ -104,7 +104,7 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 				httpSession,
 				commandExecutor,
 				uxServerContext,
-				new IconEncoderDispatcher(iconLibraryRegistry),
+				new SessionIconProvider(iconProvider),
 				objectMapper
 		);
 		sessionContextById.put(sessionId, sessionContext);

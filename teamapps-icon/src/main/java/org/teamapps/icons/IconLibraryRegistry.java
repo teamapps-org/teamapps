@@ -2,9 +2,7 @@ package org.teamapps.icons;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.icons.spi.IconEncoder;
-import org.teamapps.icons.spi.IconLibrary;
-import org.teamapps.icons.spi.IconProvider;
+import org.teamapps.icons.spi.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
@@ -17,49 +15,85 @@ public class IconLibraryRegistry {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final Map<Class<? extends Icon<?, ?>>, IconLibrary> libraryAnnotationByIconClass = new HashMap<>();
-	private final Map<String, IconEncoder<?, ?>> defaultEncodersByLibraryName = new HashMap<>();
-	private final Map<String, IconProvider> providersByLibraryName = new HashMap<>();
+	private final Map<Class<? extends Icon<?, ?>>, String> libraryNameByIconClass = new HashMap<>();
+	private final Map<String, IconEncoder> encodersByLibraryName = new HashMap<>();
+	private final Map<String, IconDecoder> decodersByLibraryName = new HashMap<>();
+	private final Map<String, IconLoader> loadersByLibraryName = new HashMap<>();
+	private final Map<String, Object> defaultIconStylesByLibraryName = new HashMap<>();
 
 
-	public <I extends Icon<I, S>, S> IconEncoder<I, S> getDefaultIconEncoder(Class<I> iconClass) {
+	public <I extends Icon<I, S>, S> IconEncoder<I, S> getIconEncoder(Class<I> iconClass) {
 		registerIconLibrary(iconClass);
-		String libraryName = libraryAnnotationByIconClass.get(iconClass).name();
-		return (IconEncoder<I, S>) defaultEncodersByLibraryName.get(libraryName);
+		String libraryName = libraryNameByIconClass.get(iconClass);
+		return encodersByLibraryName.get(libraryName);
 	}
 
-	public IconProvider getIconProvider(String libraryName) {
-		return providersByLibraryName.get(libraryName); // may be null, if no icon of this type has ever been encoded
+	public <I extends Icon<I, S>, S> IconDecoder<I, S> getIconDecoder(String libraryName) {
+		return decodersByLibraryName.get(libraryName); // may be null, if no icon of this type has ever been encoded
+	}
+
+	public <I extends Icon<I, S>, S> IconLoader<I, S> getIconLoader(String libraryName) {
+		return loadersByLibraryName.get(libraryName);
+	}
+
+	public <S, I extends Icon<I, S>> S getDefaultStyle(Class<I> iconClass) {
+		return (S) defaultIconStylesByLibraryName.get(getLibraryName(iconClass));
 	}
 
 	public String getLibraryName(Icon<?, ?> icon) {
-		registerIconLibrary(icon.getClass());
-		return libraryAnnotationByIconClass.get(icon.getClass()).name();
+		return getLibraryName(icon.getClass());
 	}
 
-	public <I extends Icon<?, ?>> void registerIconLibrary(Class<I> iconClass) {
-		if (!libraryAnnotationByIconClass.containsKey(iconClass)) {
-			synchronized (this) {
-				if (!libraryAnnotationByIconClass.containsKey(iconClass)) {
-					IconLibrary libraryAnnotation = findAnnotation(iconClass, IconLibrary.class);
-					libraryAnnotationByIconClass.put(iconClass, libraryAnnotation);
-					if (libraryAnnotation != null) {
-						try {
-							var iconEncoder = (IconEncoder) libraryAnnotation.encoder().getDeclaredConstructor().newInstance();
-							defaultEncodersByLibraryName.put(libraryAnnotation.name(), iconEncoder);
-						} catch (Exception e) {
-							LOGGER.error("Could not create default icon encoder or provider for icon class " + iconClass, e);
-							throw new RuntimeException(e);
-						}
-						try {
-							IconProvider iconProvider = libraryAnnotation.provider().getDeclaredConstructor().newInstance();
-							providersByLibraryName.put(libraryAnnotation.name(), iconProvider);
-						} catch (Exception e) {
-							LOGGER.error("Could not create default icon encoder or provider for icon class " + iconClass, e);
-							throw new RuntimeException(e);
-						}
-					}
+	public <I extends Icon<I, S>, S> String getLibraryName(Class<I> iconClass) {
+		registerIconLibrary(iconClass);
+		return libraryNameByIconClass.get(iconClass);
+	}
+
+	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass) {
+		if (!libraryNameByIconClass.containsKey(iconClass)) {
+			IconLibrary libraryAnnotation = findAnnotation(iconClass, IconLibrary.class);
+			if (libraryAnnotation != null) {
+				IconEncoder<I, S> iconEncoder;
+				try {
+					iconEncoder = libraryAnnotation.encoder().getDeclaredConstructor().newInstance();
+				} catch (Exception e) {
+					LOGGER.error("Could not create icon encoder for icon class " + iconClass, e);
+					throw new RuntimeException(e);
 				}
+				IconDecoder<I, S> iconDecoder;
+				try {
+					iconDecoder = libraryAnnotation.decoder().getDeclaredConstructor().newInstance();
+				} catch (Exception e) {
+					LOGGER.error("Could not create icon decoder for icon class " + iconClass, e);
+					throw new RuntimeException(e);
+				}
+				IconLoader<I, S> iconLoader;
+				try {
+					iconLoader = libraryAnnotation.loader().getDeclaredConstructor().newInstance();
+				} catch (Exception e) {
+					LOGGER.error("Could not create icon loader for icon class " + iconClass, e);
+					throw new RuntimeException(e);
+				}
+				DefaultStyleSupplier<S> defaultStyleSupplier;
+				try {
+					defaultStyleSupplier = libraryAnnotation.defaultStyleSupplier().getDeclaredConstructor().newInstance();
+				} catch (Exception e) {
+					LOGGER.error("Could not create defaultStyleSupplier for icon class " + iconClass, e);
+					throw new RuntimeException(e);
+				}
+				registerIconLibrary(iconClass, libraryAnnotation.name(), iconEncoder, iconDecoder, iconLoader, defaultStyleSupplier.getDefaultStyle());
+			}
+		}
+	}
+
+	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I, S> iconEncoder, IconDecoder<I, S> iconDecoder, IconLoader<I, S> iconLoader, S defaultStyle) {
+		synchronized (this) {
+			if (!libraryNameByIconClass.containsKey(iconClass)) {
+				libraryNameByIconClass.put(iconClass, libraryName);
+				encodersByLibraryName.put(libraryName, iconEncoder);
+				decodersByLibraryName.put(libraryName, iconDecoder);
+				loadersByLibraryName.put(libraryName, iconLoader);
+				defaultIconStylesByLibraryName.put(libraryName, defaultStyle);
 			}
 		}
 	}
@@ -75,5 +109,4 @@ public class IconLibraryRegistry {
 				.findFirst()
 				.orElseGet(() -> findAnnotation(clazz.getSuperclass(), annotationClass));
 	}
-
 }

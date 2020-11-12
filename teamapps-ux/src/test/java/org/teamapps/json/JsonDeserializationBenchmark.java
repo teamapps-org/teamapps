@@ -22,36 +22,28 @@ package org.teamapps.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.junit.Test;
 import org.teamapps.dto.UiCommand;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 public class JsonDeserializationBenchmark {
 
-	private ObjectMapper teamAppsObjectMapper = TeamAppsObjectMapperFactory.create();
+	private final ObjectMapper teamAppsObjectMapper = TeamAppsObjectMapperFactory.create();
 
 	@Test
 	public void testLowLevelJsonParsingPerformance() throws Exception {
 		String json = readResourceToString("sample.json");
 
 		long startTime;
-		JSONObject[] jsonObjects = new JSONObject[1024];
 		JsonNode[] jsonNodes = new JsonNode[1024];
 		UiCommand[] uiCommands = new UiCommand[1024];
 
 		for (int j = 0; j < 5; j++) {
-			startTime = System.currentTimeMillis();
-			for (int i = 0; i < 1_000; i++) {
-				jsonObjects[i % 1024] = (JSONObject) new JSONParser().parse(json);
-			}
-			System.out.println("Simple: " + (System.currentTimeMillis() - startTime + "ms"));
-
 			startTime = System.currentTimeMillis();
 			for (int i = 0; i < 1_000; i++) {
 				jsonNodes[i % 1024] = teamAppsObjectMapper.readTree(json);
@@ -66,7 +58,6 @@ public class JsonDeserializationBenchmark {
 
 
 		}
-		System.out.println(jsonObjects[0]);
 		System.out.println(jsonNodes[0]);
 		System.out.println(uiCommands[0]);
 	}
@@ -74,7 +65,7 @@ public class JsonDeserializationBenchmark {
 	public static String readResourceToString(String resourceName) {
 		URL url = Resources.getResource(resourceName);
 		try {
-			return Resources.toString(url, Charset.forName("UTF-8"));
+			return Resources.toString(url, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

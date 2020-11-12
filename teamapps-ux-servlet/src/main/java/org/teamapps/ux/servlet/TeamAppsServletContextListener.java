@@ -22,7 +22,7 @@ package org.teamapps.ux.servlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.core.TeamAppsCore;
-import org.teamapps.icons.IconProviderDispatcher;
+import org.teamapps.icons.IconProvider;
 import org.teamapps.ux.resource.IconResourceProvider;
 import org.teamapps.ux.resource.ResourceProviderServlet;
 
@@ -57,7 +57,7 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		Dynamic leaveBeaconServletRegistration = context.addServlet("teamapps-leave", new LeaveBeaconServlet(teamAppsCore.getUiSessionManager()));
 		leaveBeaconServletRegistration.addMapping("/leave/*");
 
-		Dynamic iconServletRegistration = context.addServlet("teamapps-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProviderDispatcher(teamAppsCore.getIconLibraryRegistry()))));
+		Dynamic iconServletRegistration = context.addServlet("teamapps-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProvider(teamAppsCore.getIconLibraryRegistry()))));
 		iconServletRegistration.addMapping("/icons/*");
 
 		context.addListener(new ServletRequestListener());

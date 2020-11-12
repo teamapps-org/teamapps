@@ -29,8 +29,8 @@ import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
-import org.teamapps.icons.IconEncoderDispatcher;
 import org.teamapps.icons.Icon;
+import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.util.MultiKeySequentialExecutor;
@@ -94,7 +94,7 @@ public class SessionContext {
 	private final HttpSession httpSession;
 	private final UiCommandExecutor commandExecutor;
 	private final UxServerContext serverContext;
-	private final IconEncoderDispatcher iconEncoderDispatcher;
+	private final SessionIconProvider iconProvider;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
 	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
 	private final ClientSessionResourceProvider sessionResourceProvider;
@@ -116,7 +116,7 @@ public class SessionContext {
 						  HttpSession httpSession,
 						  UiCommandExecutor commandExecutor,
 						  UxServerContext serverContext,
-						  IconEncoderDispatcher iconEncoderDispatcher,
+						  SessionIconProvider iconProvider,
 						  ObjectMapper jacksonObjectMapper) {
 		this.sessionId = sessionId;
 		this.httpSession = httpSession;
@@ -124,7 +124,7 @@ public class SessionContext {
 		this.sessionConfiguration = sessionConfiguration;
 		this.commandExecutor = commandExecutor;
 		this.serverContext = serverContext;
-		this.iconEncoderDispatcher = iconEncoderDispatcher;
+		this.iconProvider = iconProvider;
 		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(jacksonObjectMapper, this);
 		this.rankingTranslationProvider = new RankingTranslationProvider();
@@ -243,12 +243,6 @@ public class SessionContext {
 		return commandExecutor.getClientBackPressureInfo(sessionId);
 	}
 
-	public <I extends Icon<I, S>, S> void setDefaultStyleForIconClass(Class<I> iconClass, S defaultStyle) {
-		this.runWithContext(() -> {
-			iconEncoderDispatcher.setDefaultStyleForIconClass(iconClass, defaultStyle);
-		});
-	}
-
 	public String createFileLink(File file) {
 		return sessionResourceProvider.createFileLink(file);
 	}
@@ -348,11 +342,21 @@ public class SessionContext {
 		return sessionConfiguration.getTimeZone();
 	}
 
+	public SessionIconProvider getIconProvider() {
+		return iconProvider;
+	}
+
+	public <I extends Icon<I, S>, S> void setDefaultStyleForIconClass(Class<I> iconClass, S defaultStyle) {
+		this.runWithContext(() -> {
+			iconProvider.setDefaultStyleForIconClass(iconClass, defaultStyle);
+		});
+	}
+
 	public String resolveIcon(Icon icon) {
 		if (icon == null) {
 			return null;
 		}
-		return sessionConfiguration.getIconPath() + "/" + iconEncoderDispatcher.encodeIcon(icon);
+		return sessionConfiguration.getIconPath() + "/" + iconProvider.encodeIcon(icon, true);
 	}
 
 	public void registerClientObject(ClientObject clientObject) {

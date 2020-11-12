@@ -62,6 +62,14 @@ public class TeamAppsJettyEmbeddedServer {
 		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration(), port);
 	}
 
+	public TeamAppsJettyEmbeddedServer(WebController webController, TeamAppsConfiguration config) throws IOException, ServletException {
+		this(webController, Files.createTempDirectory("teamapps").toFile(), config, 8080);
+	}
+
+	public TeamAppsJettyEmbeddedServer(WebController webController, TeamAppsConfiguration config, int port) throws IOException, ServletException {
+		this(webController, Files.createTempDirectory("teamapps").toFile(), config, port);
+	}
+
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, int port) throws ServletException {
 		this(webController, webAppDirectory, new TeamAppsConfiguration(), port);
 	}

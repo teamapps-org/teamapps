@@ -22,7 +22,7 @@ package org.teamapps.ux.resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.icons.IconResource;
-import org.teamapps.icons.IconProviderDispatcher;
+import org.teamapps.icons.IconProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -34,9 +34,9 @@ public class IconResourceProvider implements ResourceProvider {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private static final Date lastModifiedDate = new Date();
 
-	private final IconProviderDispatcher iconResolver;
+	private final IconProvider iconResolver;
 
-	public IconResourceProvider(IconProviderDispatcher iconProviderDispatcher) {
+	public IconResourceProvider(IconProvider iconProviderDispatcher) {
 		this.iconResolver = iconProviderDispatcher;
 	}
 
@@ -54,7 +54,7 @@ public class IconResourceProvider implements ResourceProvider {
 		String[] parts = relativeResourcePath.split("@");
 		String qualifiedEncodedIcon = parts[0];
 		int size = getInt(parts[parts.length - 1]);
-		IconResource iconResource = iconResolver.getIcon(qualifiedEncodedIcon, size);
+		IconResource iconResource = iconResolver.loadIcon(qualifiedEncodedIcon, size);
 		if (iconResource != null) {
 			return new Resource() {
 				@Override

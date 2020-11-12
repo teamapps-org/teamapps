@@ -28,8 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.assertj.core.api.Assertions;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.teamapps.dto.UiCommand;
@@ -103,17 +101,10 @@ public class JacksonTest {
 		String json = JsonDeserializationBenchmark.readResourceToString("sample.json");
 
 		long startTime;
-		JSONObject[] jsonObjects = new JSONObject[1024];
 		JsonNode[] jsonNodes = new JsonNode[1024];
 		UiCommand[] uiCommands = new UiCommand[1024];
 
 		for (int j = 0; j < 5; j++) {
-			startTime = System.currentTimeMillis();
-			for (int i = 0; i < 1_000; i++) {
-				jsonObjects[i % 1024] = (JSONObject) new JSONParser().parse(json);
-			}
-			System.out.println("Simple: " + (System.currentTimeMillis() - startTime));
-
 			startTime = System.currentTimeMillis();
 			for (int i = 0; i < 1_000; i++) {
 				jsonNodes[i % 1024] = mapper.readTree(json);
@@ -125,10 +116,7 @@ public class JacksonTest {
 				uiCommands[i % 1024] = mapper.readValue(json, UiCommand.class);
 			}
 			System.out.println("Jackson data binding: " + (System.currentTimeMillis() - startTime));
-
-
 		}
-		System.out.println(jsonObjects[0]);
 		System.out.println(jsonNodes[0]);
 	}
 
@@ -172,9 +160,9 @@ public class JacksonTest {
 	}
 
 	public static class FieldPojo {
-		private String a = "propertyA";
-		private String b = "propertyB";
-		private int c = 123;
+		private final String a = "propertyA";
+		private final String b = "propertyB";
+		private final int c = 123;
 
 		@JsonAnyGetter
 		public Map<String, Object> any() {
