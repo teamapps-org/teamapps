@@ -43,14 +43,14 @@ public interface MediaSoupV3ApiClient {
 
 	CompletableFuture<Integer> getNumberOfWorkers();
 
-	CompletableFuture<Void> startRecording(String streamUuid);
+	CompletableFuture<Void> startRecording(int workerId, String streamUuid);
 
-	CompletableFuture<Void> startRecording(String streamUuid, Set<MediaKind> kinds);
+	CompletableFuture<Void> startRecording(int workerId, String streamUuid, Set<MediaKind> kinds);
 
-	CompletableFuture<Void> stopRecording(String streamUuid);
+	CompletableFuture<Void> stopRecording(int workerId, String streamUuid);
 
-	default CompletableFuture<Void> setRecordingEnabled(String streamUuid, boolean enabled) {
-		return enabled ? startRecording(streamUuid) : stopRecording(streamUuid);
+	default CompletableFuture<Void> setRecordingEnabled(int workerId, String streamUuid, boolean enabled) {
+		return enabled ? startRecording(workerId, streamUuid) : stopRecording(workerId, streamUuid);
 	}
 
 	CompletableFuture<Void> startFileStreaming(int workerId, StreamFileRequest streamFileRequest);
