@@ -22,7 +22,13 @@ package org.teamapps.icons.composite;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.spi.IconLibrary;
 
-@IconLibrary(name = "composite", encoder = CompositeIconEncoder.class, provider = CompositeIconProvider.class)
+@IconLibrary(
+		name = "composite",
+		encoder = CompositeIconEncoder.class,
+		decoder = CompositeIconDecoder.class,
+		loader = CompositeIconLoader.class,
+		defaultStyleSupplier = CompositeIconDefaultStyleSupplier.class
+)
 public class CompositeIcon implements Icon<CompositeIcon, Void> {
 
 	private final Icon baseIcon;

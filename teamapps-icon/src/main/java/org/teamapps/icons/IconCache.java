@@ -26,8 +26,20 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class IconCache {
+
+	private static final MessageDigest DIGEST;
+
+	static {
+		try {
+			DIGEST = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	private final File cacheDirectory;
 
@@ -55,7 +67,8 @@ public class IconCache {
 	}
 
 	private File createFilePath(String encodedIconString, int size) {
-		return new File(cacheDirectory, size + "." + encodedIconString);
+		return new File(cacheDirectory,
+				bytesToHex(DIGEST.digest((size + "." + encodedIconString).getBytes(StandardCharsets.UTF_8))));
 	}
 
 	private static IconResource readFromFile(File file) {
@@ -85,5 +98,17 @@ public class IconCache {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	private static String bytesToHex(byte[] hash) {
+		StringBuilder hexString = new StringBuilder(2 * hash.length);
+		for (int i = 0; i < hash.length; i++) {
+			String hex = Integer.toHexString(0xff & hash[i]);
+			if (hex.length() == 1) {
+				hexString.append('0');
+			}
+			hexString.append(hex);
+		}
+		return hexString.toString();
 	}
 }

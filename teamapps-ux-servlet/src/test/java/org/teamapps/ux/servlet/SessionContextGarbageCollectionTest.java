@@ -29,7 +29,7 @@ import org.teamapps.core.TeamAppsUxSessionManager;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.icons.IconLibraryRegistry;
+import org.teamapps.icons.IconProvider;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.TeamAppsUiSessionManager;
@@ -55,7 +55,7 @@ public class SessionContextGarbageCollectionTest {
 			component.setModel(new ListInfiniteItemViewModel<>(IntStream.range(0, 100).mapToObj(i -> new BaseTemplateRecord(MaterialIcon.ALARM_ON, "item" + i, "asdfkj")).collect(Collectors.toList())));
 			rootPanel.setContent(component);
 			context.addRootComponent(null, rootPanel);
-		}, uiSessionManager, objectMapper, Mockito.mock(IconLibraryRegistry.class), Mockito.mock(TeamAppsUploadManager.class));
+		}, uiSessionManager, objectMapper, Mockito.mock(IconProvider.class), Mockito.mock(TeamAppsUploadManager.class));
 		uiSessionManager.setUiSessionListener(teamAppsUxSessionManager);
 
 		for (int i = 0; i < 100_000; i++) {

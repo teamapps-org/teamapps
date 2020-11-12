@@ -3,6 +3,7 @@ package org.teamapps.core;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.icons.IconLibraryRegistry;
+import org.teamapps.icons.IconProvider;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.TeamAppsUiSessionManager;
 import org.teamapps.webcontroller.WebController;
@@ -25,7 +26,7 @@ public class TeamAppsCore {
 		this.uploadManager = new TeamAppsUploadManager();
 
 		this.uiSessionManager = new TeamAppsUiSessionManager(config, objectMapper);
-		this.sessionManager = new TeamAppsUxSessionManager(webController, uiSessionManager, objectMapper, iconLibraryRegistry, uploadManager);
+		this.sessionManager = new TeamAppsUxSessionManager(webController, uiSessionManager, objectMapper, new IconProvider(iconLibraryRegistry), uploadManager);
 		this.uiSessionManager.setUiSessionListener(sessionManager);
 	}
 

@@ -60,6 +60,14 @@ public class TeamAppsUndertowEmbeddedServer {
 		this(webController, Files.createTempDirectory("teamapps").toFile(), new TeamAppsConfiguration(), port);
 	}
 
+	public TeamAppsUndertowEmbeddedServer(WebController webController, TeamAppsConfiguration config) throws IOException {
+		this(webController, Files.createTempDirectory("teamapps").toFile(), config, 8080);
+	}
+
+	public TeamAppsUndertowEmbeddedServer(WebController webController, TeamAppsConfiguration config, int port) throws IOException {
+		this(webController, Files.createTempDirectory("teamapps").toFile(), config, port);
+	}
+
 	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, int port) {
 		this(webController, webAppDirectory, new TeamAppsConfiguration(), port);
 	}

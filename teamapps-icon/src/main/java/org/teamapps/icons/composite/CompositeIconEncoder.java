@@ -6,11 +6,6 @@ import org.teamapps.icons.IconEncoderContext;
 public class CompositeIconEncoder implements IconEncoder<CompositeIcon, Void> {
 
 	@Override
-	public CompositeIconEncoder withDefaultStyle(Void o) {
-		return this;
-	}
-
-	@Override
 	public String encodeIcon(CompositeIcon icon, IconEncoderContext context) {
 		StringBuilder sb = new StringBuilder()
 				.append("0(")
