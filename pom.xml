@@ -5,7 +5,7 @@
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.80-SNAPSHOT</version>
+    <version>0.9.79.1-SNAPSHOT</version>
 
     <name>TeamApps</name>
     <description>A Java web application framework</description>
