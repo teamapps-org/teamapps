@@ -80,7 +80,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 	private renderedIds: number[] = []; // in order
 	private renderedItems: Map<number, RenderedItem> = new Map<number, RenderedItem>();
 	private totalNumberOfRecords: number = null;
-	private itemZIndexCounter: number = 0;
+	private itemZIndexCounter: number = 1000000000;
 
 	constructor(config: UiInfiniteItemView2Config, context: TeamAppsUiContext) {
 		super(config, context);
