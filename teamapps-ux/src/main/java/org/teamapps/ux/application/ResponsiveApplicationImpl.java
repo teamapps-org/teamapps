@@ -35,9 +35,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ResponsiveApplicationImpl extends AbstractApplication implements ResponsiveApplication {
+public class ResponsiveApplicationImpl implements ResponsiveApplication {
 
 	private final ApplicationAssembler assembler;
+	private Component ui;
 
 	private List<View> applicationViews = new ArrayList<>();
 	private List<Perspective> perspectives = new ArrayList<>();
@@ -52,6 +53,19 @@ public class ResponsiveApplicationImpl extends AbstractApplication implements Re
 		this.assembler.setWorkSpaceToolbar(responsiveApplicationToolbar);
 		addApplicationChangeHandler(assembler);
 		addApplicationChangeHandler(responsiveApplicationToolbar);
+	}
+
+
+	protected Component createUi() {
+		return assembler.createApplication(this);
+	}
+
+	@Override
+	public Component getUi() {
+		if (ui == null) {
+			ui = createUi();
+		}
+		return ui;
 	}
 
 	@Override
@@ -241,11 +255,6 @@ public class ResponsiveApplicationImpl extends AbstractApplication implements Re
 	@Override
 	public void setToolbarBackgroundColor(Color backgroundColor) {
 		responsiveApplicationToolbar.getToolbar().setBackgroundColor(backgroundColor);
-	}
-
-	@Override
-	protected Component createUi() {
-		return assembler.createApplication(this);
 	}
 
 	@Override
