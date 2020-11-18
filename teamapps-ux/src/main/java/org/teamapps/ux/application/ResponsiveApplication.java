@@ -26,6 +26,7 @@ import org.teamapps.ux.application.assembler.DesktopApplicationAssembler;
 import org.teamapps.ux.application.assembler.MobileApplicationAssembler;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
@@ -34,7 +35,7 @@ import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
 
-public interface ResponsiveApplication extends Application {
+public interface ResponsiveApplication {
 
 	static ResponsiveApplication createApplication() {
 		return createApplication(null);
@@ -69,6 +70,8 @@ public interface ResponsiveApplication extends Application {
 			return new ResponsiveApplicationImpl(new DesktopApplicationAssembler());
 		}
 	}
+
+	Component getUi();
 
 	void addApplicationChangeHandler(ApplicationChangeHandler changeHandler);
 
