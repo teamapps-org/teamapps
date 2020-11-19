@@ -80,7 +80,6 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 	private renderedIds: number[] = []; // in order
 	private renderedItems: Map<number, RenderedItem> = new Map<number, RenderedItem>();
 	private totalNumberOfRecords: number = null;
-	private itemZIndexCounter: number = 1000000000;
 
 	constructor(config: UiInfiniteItemView2Config, context: TeamAppsUiContext) {
 		super(config, context);
@@ -204,7 +203,6 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 
 	private createRenderedItem(item: UiIdentifiableClientRecordConfig): RenderedItem {
 		let $wrapper = document.createElement("div");
-		$wrapper.style.zIndex = "" + this.itemZIndexCounter--;
 		let $element = parseHtml(this.itemTemplateRenderer.render(item.values));
 		$wrapper.classList.add("item-wrapper");
 		$wrapper.setAttribute("data-id", "" + item.id);
@@ -261,7 +259,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		newRecords.forEach(newRecord => {
 			let renderedItem = this.createRenderedItem(newRecord);
 			this.renderedItems.set(newRecord.id, renderedItem);
-			this.$grid.appendChild(renderedItem.$wrapper);
+			this.$grid.prepend(renderedItem.$wrapper);
 		});
 		this.renderedIds = recordIds;
 		this.updateItemPositions()
