@@ -21,9 +21,7 @@ package org.teamapps.ux.application;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.application.assembler.AdditionalNavigationButton;
-import org.teamapps.ux.application.assembler.DesktopApplicationAssembler;
-import org.teamapps.ux.application.assembler.MobileApplicationAssembler;
+import org.teamapps.ux.application.assembler.*;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.component.Component;
@@ -66,6 +64,15 @@ public interface ResponsiveApplication {
 		if (mobileDevice) {
 			MobileApplicationAssembler mobileAssembler = new MobileApplicationAssembler(null, treeIcon, viewsIcon, toolbarIcon, backIcon, additionalLeftButtons);
 			return new ResponsiveApplicationImpl(mobileAssembler);
+		} else {
+			return new ResponsiveApplicationImpl(new DesktopApplicationAssembler());
+		}
+	}
+
+	static ResponsiveApplication createTopNavigationApplication(MobileApplicationNavigationController navigationController) {
+		boolean mobileDevice = CurrentSessionContext.get().getClientInfo().isMobileDevice();
+		if (mobileDevice) {
+			return new ResponsiveApplicationImpl(new TopNavigationMobileApplicationAssembler(navigationController));
 		} else {
 			return new ResponsiveApplicationImpl(new DesktopApplicationAssembler());
 		}
