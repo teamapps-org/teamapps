@@ -218,7 +218,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		console.log("stop()");
 		if (this.conferenceClient != null) {
 			let conferenceClient = this.conferenceClient;
-			conferenceClient.close()
+			await conferenceClient.close()
 				.catch((e: any) => {
 					console.error("Error while closing conference client! Retrying the hard way.", e);
 					conferenceClient.close(true);
@@ -230,18 +230,15 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		await this.updatePublishedTracks(null, null, null);
 		this.updateStateCssClasses();
 		this.$video.srcObject = null;
+		this._config.publishingParameters = null;
+		this._config.playbackParameters = null;
 	}
 
 	private updatePromise: Promise<void> = Promise.resolve();
-	private counter = 0;
-
 	update(config: UiMediaSoupV3WebRtcClientConfig): void {
-		// let counterValue = ++this.counter;
-		// console.log("UPDATE: " + counterValue);
-		this.updatePromise.finally(() => {
-			this.updatePromise = this.updateInternal(config);
+		this.updatePromise = this.updatePromise.finally(() => {
+			return this.updateInternal(config);
 		})
-		// .finally(() => console.log("DONE: " + counterValue));
 	}
 
 	async updateInternal(config: UiMediaSoupV3WebRtcClientConfig) {
@@ -455,7 +452,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		let minorAudioChange = false;
 		if (audioConstraintsChanged) {
 			console.log("updatePublishedTracks() --> audioConstraintsChanged", newAudioConstraints);
-			if (newAudioConstraints != null && oldAudioConstraints?.deviceId === newAudioConstraints?.deviceId && oldAudioConstraints?.channelCount === newAudioConstraints?.channelCount) {
+			if (this.audioTrack != null && newAudioConstraints != null && oldAudioConstraints?.deviceId === newAudioConstraints?.deviceId && oldAudioConstraints?.channelCount === newAudioConstraints?.channelCount) {
 				this.audioTrack.applyConstraints(newAudioConstraints);
 				minorAudioChange = true;
 			} else {
