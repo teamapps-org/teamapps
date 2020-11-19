@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,6 +78,10 @@ public class SessionContext {
 			new NamedThreadFactory("teamapps-session-executor", true)
 	));
 
+	private final static String DEFAULT_BACKGROUND_NAME = "defaultBackground";
+	private final static String DEFAULT_BACKGROUND_URL = "/resources/backgrounds/default-bl.jpg";
+	private boolean defaultBackgroundRegistered;
+
 	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
 	public final Event<Void> onDestroyed = new Event<>();
 	/**
@@ -109,6 +113,7 @@ public class SessionContext {
 	private Window sessionExpiredWindow;
 	private Window sessionErrorWindow;
 	private Window sessionTerminatedWindow;
+
 
 	public SessionContext(QualifiedUiSessionId sessionId,
 						  ClientInfo clientInfo,
@@ -393,6 +398,14 @@ public class SessionContext {
 
 	public void setBackgroundImage(String id, int animationDuration) {
 		queueCommand(new UiRootPanel.SetBackgroundImageCommand(id, animationDuration));
+	}
+
+	public void showDefaultBackground(int animationDuration) {
+		if (!defaultBackgroundRegistered) {
+			defaultBackgroundRegistered = true;
+			registerBackgroundImage(DEFAULT_BACKGROUND_NAME, DEFAULT_BACKGROUND_URL, DEFAULT_BACKGROUND_URL);
+		}
+		setBackgroundImage(DEFAULT_BACKGROUND_NAME, animationDuration);
 	}
 
 	public void setBackgroundColor(Color color, int animationDuration) {
