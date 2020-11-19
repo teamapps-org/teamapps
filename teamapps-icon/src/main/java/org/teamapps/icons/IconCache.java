@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,22 +26,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class IconCache {
 
-	private static final MessageDigest DIGEST;
-
-	static {
-		try {
-			DIGEST = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	private final File cacheDirectory;
+	private final Map<EncodedIconStringAndSize, File> cachedFilesByEncodedIconString = new ConcurrentHashMap<>();
 
 	public IconCache() {
 		try {
@@ -56,19 +49,17 @@ public class IconCache {
 	}
 
 	public IconResource getCachedIcon(String encodedIconString, int size) {
-		return readFromFile(createFilePath(encodedIconString, size));
+		File file = cachedFilesByEncodedIconString.get(new EncodedIconStringAndSize(encodedIconString, size));
+		return file != null ? readFromFile(file) : null;
 	}
 
-	public boolean putIcon(String encodedIconString, int size, IconResource iconResource) {
+	public void putIcon(String encodedIconString, int size, IconResource iconResource) {
 		if (iconResource == null || iconResource.getBytes().length == 0) {
-			return false;
+			return;
 		}
-		return writeToFile(iconResource, createFilePath(encodedIconString, size));
-	}
-
-	private File createFilePath(String encodedIconString, int size) {
-		return new File(cacheDirectory,
-				bytesToHex(DIGEST.digest((size + "." + encodedIconString).getBytes(StandardCharsets.UTF_8))));
+		File file = new File(cacheDirectory, UUID.randomUUID().toString());
+		writeToFile(iconResource, file);
+		cachedFilesByEncodedIconString.put(new EncodedIconStringAndSize(encodedIconString, size), file);
 	}
 
 	private static IconResource readFromFile(File file) {
@@ -110,5 +101,29 @@ public class IconCache {
 			hexString.append(hex);
 		}
 		return hexString.toString();
+	}
+
+	private static class EncodedIconStringAndSize {
+		String encodedIconString;
+		int size;
+
+		public EncodedIconStringAndSize(String encodedIconString, int size) {
+			this.encodedIconString = encodedIconString;
+			this.size = size;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			EncodedIconStringAndSize that = (EncodedIconStringAndSize) o;
+			return size == that.size &&
+					Objects.equals(encodedIconString, that.encodedIconString);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(encodedIconString, size);
+		}
 	}
 }
