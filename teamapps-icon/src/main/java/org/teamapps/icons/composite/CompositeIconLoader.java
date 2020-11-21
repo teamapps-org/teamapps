@@ -30,7 +30,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class CompositeIconLoader implements IconLoader<CompositeIcon, Void> {
+public class CompositeIconLoader implements IconLoader<CompositeIcon> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

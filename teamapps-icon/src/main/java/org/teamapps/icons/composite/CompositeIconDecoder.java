@@ -28,7 +28,7 @@ import java.util.Map;
 
 import static org.teamapps.icons.util.IconEncodeDecodeUtil.findClosingParenthesisPosition;
 
-public class CompositeIconDecoder implements IconDecoder<CompositeIcon, Void> {
+public class CompositeIconDecoder implements IconDecoder<CompositeIcon> {
 
 	@Override
 	public CompositeIcon decodeIcon(String encodedIconString, IconDecoderContext context) {

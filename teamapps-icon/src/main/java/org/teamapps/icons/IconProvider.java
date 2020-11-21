@@ -98,7 +98,7 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 		return iconResource;
 	}
 
-	public <I extends Icon<I, S>, S> IconEncoder<I, S> getIconEncoder(Class<I> iconClass) {
+	public <I extends Icon<I, S>, S> IconEncoder<I> getIconEncoder(Class<I> iconClass) {
 		return iconLibraryRegistry.getIconEncoder(iconClass);
 	}
 
@@ -110,7 +110,7 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 		iconLibraryRegistry.registerIconLibrary(iconClass);
 	}
 
-	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I, S> iconEncoder, IconDecoder<I, S> iconDecoder, IconLoader<I, S> iconLoader, S defaultStyle) {
+	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I> iconEncoder, IconDecoder<I> iconDecoder, IconLoader<I> iconLoader, S defaultStyle) {
 		iconLibraryRegistry.registerIconLibrary(iconClass, libraryName, iconEncoder, iconDecoder, iconLoader, defaultStyle);
 	}
 

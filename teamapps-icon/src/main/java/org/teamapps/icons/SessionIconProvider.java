@@ -71,7 +71,7 @@ public class SessionIconProvider {
 		iconProvider.registerIconLibrary(iconClass);
 	}
 
-	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I, S> iconEncoder, IconDecoder<I, S> iconDecoder, IconLoader<I, S> iconLoader, S defaultStyle) {
+	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I> iconEncoder, IconDecoder<I> iconDecoder, IconLoader<I> iconLoader, S defaultStyle) {
 		iconProvider.registerIconLibrary(iconClass, libraryName, iconEncoder, iconDecoder, iconLoader, defaultStyle);
 	}
 

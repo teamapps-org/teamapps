@@ -41,17 +41,17 @@ public class IconLibraryRegistry {
 	private final Map<String, Object> defaultIconStylesByLibraryName = new HashMap<>();
 
 
-	public <I extends Icon<I, S>, S> IconEncoder<I, S> getIconEncoder(Class<I> iconClass) {
+	public <I extends Icon<I, S>, S> IconEncoder<I> getIconEncoder(Class<I> iconClass) {
 		registerIconLibrary(iconClass);
 		String libraryName = libraryNameByIconClass.get(iconClass);
 		return encodersByLibraryName.get(libraryName);
 	}
 
-	public <I extends Icon<I, S>, S> IconDecoder<I, S> getIconDecoder(String libraryName) {
+	public <I extends Icon<I, S>, S> IconDecoder<I> getIconDecoder(String libraryName) {
 		return decodersByLibraryName.get(libraryName); // may be null, if no icon of this type has ever been encoded
 	}
 
-	public <I extends Icon<I, S>, S> IconLoader<I, S> getIconLoader(String libraryName) {
+	public <I extends Icon<I, S>, S> IconLoader<I> getIconLoader(String libraryName) {
 		return loadersByLibraryName.get(libraryName);
 	}
 
@@ -72,21 +72,21 @@ public class IconLibraryRegistry {
 		if (!libraryNameByIconClass.containsKey(iconClass)) {
 			IconLibrary libraryAnnotation = findAnnotation(iconClass, IconLibrary.class);
 			if (libraryAnnotation != null) {
-				IconEncoder<I, S> iconEncoder;
+				IconEncoder<I> iconEncoder;
 				try {
 					iconEncoder = libraryAnnotation.encoder().getDeclaredConstructor().newInstance();
 				} catch (Exception e) {
 					LOGGER.error("Could not create icon encoder for icon class " + iconClass, e);
 					throw new RuntimeException(e);
 				}
-				IconDecoder<I, S> iconDecoder;
+				IconDecoder<I> iconDecoder;
 				try {
 					iconDecoder = libraryAnnotation.decoder().getDeclaredConstructor().newInstance();
 				} catch (Exception e) {
 					LOGGER.error("Could not create icon decoder for icon class " + iconClass, e);
 					throw new RuntimeException(e);
 				}
-				IconLoader<I, S> iconLoader;
+				IconLoader<I> iconLoader;
 				try {
 					iconLoader = libraryAnnotation.loader().getDeclaredConstructor().newInstance();
 				} catch (Exception e) {
@@ -105,7 +105,7 @@ public class IconLibraryRegistry {
 		}
 	}
 
-	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I, S> iconEncoder, IconDecoder<I, S> iconDecoder, IconLoader<I, S> iconLoader, S defaultStyle) {
+	public <I extends Icon<I, S>, S> void registerIconLibrary(Class<I> iconClass, String libraryName, IconEncoder<I> iconEncoder, IconDecoder<I> iconDecoder, IconLoader<I> iconLoader, S defaultStyle) {
 		synchronized (this) {
 			if (!libraryNameByIconClass.containsKey(iconClass)) {
 				libraryNameByIconClass.put(iconClass, libraryName);

@@ -28,9 +28,8 @@ import org.teamapps.icons.IconDecoderContext;
  * Implementations MUST provide a default constructor!
  *
  * @param <ICON>  The icon class this provider will return.
- * @param <STYLE> The style class these icons support.
  */
-public interface IconDecoder<ICON extends Icon<ICON, STYLE>, STYLE> {
+public interface IconDecoder<ICON extends Icon<ICON, ?>> {
 
 	/**
 	 * Decodes an icon from an encoded icon {@link String}.
@@ -44,6 +43,6 @@ public interface IconDecoder<ICON extends Icon<ICON, STYLE>, STYLE> {
 	 * @param encodedIconString The encoded icon String as produced by the corresponding {@link IconEncoder}.
 	 * @return The icon.
 	 */
-	Icon<ICON, STYLE> decodeIcon(String encodedIconString, IconDecoderContext context);
+	ICON decodeIcon(String encodedIconString, IconDecoderContext context);
 
 }

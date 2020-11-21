@@ -22,7 +22,7 @@ package org.teamapps.icon.material;
 import org.teamapps.icons.IconEncoderContext;
 import org.teamapps.icons.spi.IconEncoder;
 
-public class MaterialIconEncoder implements IconEncoder<MaterialIcon, MaterialIconStyle> {
+public class MaterialIconEncoder implements IconEncoder<MaterialIcon> {
 
 	@Override
 	public String encodeIcon(MaterialIcon icon, IconEncoderContext context) {
