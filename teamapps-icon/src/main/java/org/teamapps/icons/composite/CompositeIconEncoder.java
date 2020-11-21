@@ -22,7 +22,7 @@ package org.teamapps.icons.composite;
 import org.teamapps.icons.spi.IconEncoder;
 import org.teamapps.icons.IconEncoderContext;
 
-public class CompositeIconEncoder implements IconEncoder<CompositeIcon, Void> {
+public class CompositeIconEncoder implements IconEncoder<CompositeIcon> {
 
 	@Override
 	public String encodeIcon(CompositeIcon icon, IconEncoderContext context) {

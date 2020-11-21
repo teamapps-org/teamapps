@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class MaterialIconLoader implements IconLoader<MaterialIcon, MaterialIconStyle> {
+public class MaterialIconLoader implements IconLoader<MaterialIcon> {
 
 	@Override
 	public IconResource loadIcon(MaterialIcon icon, int size, IconLoaderContext context) {
@@ -41,11 +41,10 @@ public class MaterialIconLoader implements IconLoader<MaterialIcon, MaterialIcon
 			iconName += ".svg";
 		}
 
-		InputStream inputStream = getClass().getResourceAsStream("/org/teamapps/icon/material/" + style.getStyleType().getPackageName() + "/" + iconName);
-		if (inputStream == null) {
-			return null;
-		}
-		try {
+		try (InputStream inputStream = getClass().getResourceAsStream("/org/teamapps/icon/material/" + style.getStyleType().getPackageName() + "/" + iconName)){
+			if (inputStream == null) {
+				return null;
+			}
 			String svg = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 			svg = svg.replace("<desc>add icon - Licensed under Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0) - Created with Iconfu.com - Derivative work of Material icons (Copyright Google Inc.)</desc>", "");
 			svg = style.applyStyle(svg);

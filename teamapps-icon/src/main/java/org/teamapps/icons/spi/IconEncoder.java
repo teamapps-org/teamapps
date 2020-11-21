@@ -35,9 +35,8 @@ import org.teamapps.icons.IconEncoderContext;
  * Implementations MUST provide a default constructor!
  *
  * @param <ICON>  The icon class this encoder can handle.
- * @param <STYLE> The style class these icons support.
  */
-public interface IconEncoder<ICON extends Icon<ICON, STYLE>, STYLE> {
+public interface IconEncoder<ICON extends Icon<ICON, ?>> {
 
 	/**
 	 * Creates a string representation of the provided icon.

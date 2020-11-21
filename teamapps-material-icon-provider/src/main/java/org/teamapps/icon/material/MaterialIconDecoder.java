@@ -25,7 +25,7 @@ import org.teamapps.icons.spi.IconDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaterialIconDecoder implements IconDecoder<MaterialIcon, MaterialIconStyle> {
+public class MaterialIconDecoder implements IconDecoder<MaterialIcon> {
 
 	@Override
 	public MaterialIcon decodeIcon(String encodedIconString, IconDecoderContext context) {
