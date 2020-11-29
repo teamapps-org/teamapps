@@ -271,7 +271,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	private formatNumber(value: number) {
-		return this.numberFormat.format(value);
+		return value == null ? null : this.numberFormat.format(value);
 	}
 
 	public getTransientValue(): number {
