@@ -23,19 +23,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import java.time.Instant;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class JacksonConfigJavaTimeTest {
 
-	private ObjectMapper teamAppsObjectMapper = TeamAppsObjectMapperFactory.create();
+	private final ObjectMapper teamAppsObjectMapper = TeamAppsObjectMapperFactory.create();
 
 	@Test
 	public void instant() throws Exception {
 		assertThat(teamAppsObjectMapper.writeValueAsString(Instant.ofEpochMilli(1528910356690L))).isEqualTo("1528910356690");
 		assertThat(teamAppsObjectMapper.readValue("1528910356690", Instant.class)).isEqualTo(Instant.ofEpochMilli(1528910356690L));
+	}
+
+	@Test
+	public void localDateTime() throws Exception {
+		assertThat(teamAppsObjectMapper.writeValueAsString(LocalDateTime.of(2020, 1, 1, 1, 1))).isEqualTo("[2020,1,1,1,1]");
+		assertThat(teamAppsObjectMapper.readValue("[2020,1,1,1,1]", LocalDateTime.class)).isEqualTo(LocalDateTime.of(2020, 1, 1, 1, 1));
 	}
 
 }
