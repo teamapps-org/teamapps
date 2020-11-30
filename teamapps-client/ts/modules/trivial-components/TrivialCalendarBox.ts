@@ -94,8 +94,8 @@ export class TrivialCalendarBox implements TrivialComponent {
         this.selectedDate = this.config.selectedDate;
         this.$calendarBox = $('<div class="tr-calendarbox"></div>').appendTo(this.$container);
         this.$calendarDisplay = $('<div class="tr-calendar-display"></div>');
-        this.$yearDisplay = $('<div class="year"><span class="back-button"></span><span class="name"/><span class="forward-button"/></div>').appendTo(this.$calendarDisplay);
-        this.$monthDisplay = $('<div class="month"><span class="back-button"></span><span class="name"/><span class="forward-button"/></div>').appendTo(this.$calendarDisplay);
+        this.$yearDisplay = $('<div class="year"><span class="back-button"></span><span class="name"></span><span class="forward-button"></span></div>').appendTo(this.$calendarDisplay);
+        this.$monthDisplay = $('<div class="month"><span class="back-button"></span><span class="name"></span><span class="forward-button"></span></div>').appendTo(this.$calendarDisplay);
         this.$monthTable = $('<div class="month-table">').appendTo(this.$calendarDisplay);
         this.$year = this.$yearDisplay.find(".name");
         this.$month = this.$monthDisplay.find(".name");
@@ -209,7 +209,7 @@ export class TrivialCalendarBox implements TrivialComponent {
                 }
                 $td.click(((day: DateTime) => {
                     this.setKeyboardNavigationState("day");
-                    this.setMonthAndDay(day.month + 1, day.day, true);
+                    this.setMonthAndDay(day.month, day.day, true);
                 }).bind(this, day));
                 $tr.append($td);
             }
