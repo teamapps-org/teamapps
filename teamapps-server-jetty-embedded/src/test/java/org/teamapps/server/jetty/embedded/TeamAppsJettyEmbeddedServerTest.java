@@ -21,7 +21,7 @@ package org.teamapps.server.jetty.embedded;
 
 import com.google.common.io.Files;
 import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.field.upload.simple.SimpleFileField;
+import org.teamapps.ux.component.field.MultiLineTextField;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
@@ -34,7 +34,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.showNotification(MaterialIcon.MESSAGE, "Hello World");
 			RootPanel rootPanel = new RootPanel();
 			sessionContext.addRootComponent(null, rootPanel);
-			rootPanel.setContent(new SimpleFileField());
+			rootPanel.setContent(new MultiLineTextField());
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, Files.createTempDir(), 8081);
