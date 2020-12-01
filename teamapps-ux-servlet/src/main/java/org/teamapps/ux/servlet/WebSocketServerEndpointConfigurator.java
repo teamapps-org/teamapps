@@ -21,6 +21,7 @@ package org.teamapps.ux.servlet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.uisession.TeamAppsUiSessionManager;
 
 import javax.servlet.http.HttpSession;
@@ -41,9 +42,11 @@ public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Co
 	public static final String CLIENT_IP_PROPERTY_NAME = "CLIENT_IP";
 
 	private final TeamAppsUiSessionManager sessionManager;
+	private final TeamAppsConfiguration teamAppsConfig;
 
-	public WebSocketServerEndpointConfigurator(TeamAppsUiSessionManager sessionManager) {
+	public WebSocketServerEndpointConfigurator(TeamAppsUiSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig) {
 		this.sessionManager = sessionManager;
+		this.teamAppsConfig = teamAppsConfig;
 	}
 
 	@Override
@@ -71,7 +74,7 @@ public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Co
 
 	@Override
 	public <T> T getEndpointInstance(Class<T> endpointClass) throws InstantiationException {
-		return (T) new TeamAppsCommunicationEndpoint(sessionManager);
+		return (T) new TeamAppsCommunicationEndpoint(sessionManager, teamAppsConfig);
 	}
 
 	private String getFirstHeaderOrNull(HandshakeRequest request, String headerName) {

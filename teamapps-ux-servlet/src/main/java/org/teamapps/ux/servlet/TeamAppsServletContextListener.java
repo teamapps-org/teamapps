@@ -72,7 +72,7 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 			// WebSocket
 			ServerContainer serverContainer = (ServerContainer) context.getAttribute("javax.websocket.server.ServerContainer");
 			ServerEndpointConfig communicationEndpointConfig = ServerEndpointConfig.Builder.create(TeamAppsCommunicationEndpoint.class, "/communication")
-					.configurator(new WebSocketServerEndpointConfigurator(teamAppsCore.getUiSessionManager())).build();
+					.configurator(new WebSocketServerEndpointConfigurator(teamAppsCore.getUiSessionManager(), teamAppsCore.getConfig())).build();
 			serverContainer.addEndpoint(communicationEndpointConfig);
 		} catch (Exception e) {
 			String msg = "Could not register TeamApps communication endpoint";
