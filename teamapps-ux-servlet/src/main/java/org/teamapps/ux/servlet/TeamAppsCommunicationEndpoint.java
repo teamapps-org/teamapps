@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.dto.AbstractClientMessage;
 import org.teamapps.dto.AbstractServerMessage;
 import org.teamapps.dto.CMD_REQUEST;
@@ -54,25 +55,22 @@ import java.util.Map;
 
 public class TeamAppsCommunicationEndpoint extends Endpoint {
 
-	/**
-	 * If the client wants to send a frame larger than this, an MESSAGE_TOO_LARGE exception will be thrown and the connection closes.
-	 */
-	private static final int MAX_BINARY_CLIENT_MESSAGE_SIZE = 1024 * 1024; // 1 MiB
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsCommunicationEndpoint.class);
 
 	private final ObjectMapper mapper = TeamAppsObjectMapperFactory.create();
 
 	private final TeamAppsUiSessionManager sessionManager;
+	private final TeamAppsConfiguration teamAppsConfig;
 
-	public TeamAppsCommunicationEndpoint(TeamAppsUiSessionManager sessionManager) {
+	public TeamAppsCommunicationEndpoint(TeamAppsUiSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig) {
 		this.sessionManager = sessionManager;
+		this.teamAppsConfig = teamAppsConfig;
 	}
 
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
-		session.setMaxIdleTimeout(MAX_BINARY_CLIENT_MESSAGE_SIZE);
-		session.setMaxBinaryMessageBufferSize(MAX_BINARY_CLIENT_MESSAGE_SIZE);
+		session.setMaxIdleTimeout(teamAppsConfig.getKeepaliveMessageIntervalMillis() * 3);
+		session.setMaxTextMessageBufferSize(teamAppsConfig.getMaxUiClientMessageSize());
 		session.addMessageHandler(new WebSocketHandler(session));
 	}
 
