@@ -102,6 +102,12 @@ public class TeamAppsConfiguration {
 	 */
 	private int clientEventsBufferSize = 500;
 
+	/**
+	 * The maximum size that client websocket messages may have (basically corresponding to individual client events).
+	 * If you plan having MultiLineTextFields with huge amounts of text, increase this.
+	 */
+	private int maxUiClientMessageSize = 1024 * 1024;
+
 	public TeamAppsConfiguration() {
 	}
 
@@ -215,5 +221,19 @@ public class TeamAppsConfiguration {
 	 */
 	public void setClientEventsBufferSize(int clientEventsBufferSize) {
 		this.clientEventsBufferSize = clientEventsBufferSize;
+	}
+
+	/**
+	 * @see #maxUiClientMessageSize
+	 */
+	public int getMaxUiClientMessageSize() {
+		return maxUiClientMessageSize;
+	}
+
+	/**
+	  @see #maxUiClientMessageSize
+	 */
+	public void setMaxUiClientMessageSize(int maxUiClientMessageSize) {
+		this.maxUiClientMessageSize = maxUiClientMessageSize;
 	}
 }
