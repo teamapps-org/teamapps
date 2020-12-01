@@ -76,6 +76,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 
 	@Override
 	public void onError(Session session, Throwable thr) {
+		LOGGER.warn("WebSocket communication error.", thr);
 		closeWebSocketSession(session);
 	}
 
