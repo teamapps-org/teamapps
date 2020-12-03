@@ -115,6 +115,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 			this.upload(files);
 		});
 
+		this.setAttachmentsEnabled(config.attachmentsEnabled);
 		this.updateSendability();
 	}
 
