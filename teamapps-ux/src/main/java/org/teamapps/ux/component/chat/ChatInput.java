@@ -46,6 +46,7 @@ public class ChatInput extends AbstractComponent {
 		uiChatInput.setMaxBytesPerUpload(maxBytesPerUpload);
 		uiChatInput.setUploadUrl(uploadUrl);
 		uiChatInput.setMessageLengthLimit(messageLengthLimit);
+		uiChatInput.setAttachmentsEnabled(attachmentsEnabled);
 		return uiChatInput;
 	}
 
@@ -116,7 +117,9 @@ public class ChatInput extends AbstractComponent {
 	}
 
 	public void setAttachmentsEnabled(boolean attachmentsEnabled) {
-		this.attachmentsEnabled = attachmentsEnabled;
-		queueCommandIfRendered(() -> new UiChatInput.SetAttachmentsEnabledCommand(getId(), attachmentsEnabled));
+		if (attachmentsEnabled != this.attachmentsEnabled) {
+			this.attachmentsEnabled = attachmentsEnabled;
+			queueCommandIfRendered(() -> new UiChatInput.SetAttachmentsEnabledCommand(getId(), attachmentsEnabled));
+		}
 	}
 }
