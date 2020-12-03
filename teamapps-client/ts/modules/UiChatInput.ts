@@ -57,6 +57,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 	private uploadItems: FileUploadItem[] = [];
 	private $textInput: HTMLInputElement;
 	private $sendButton: HTMLElement;
+	private $attachmentButton: Element;
 
 	constructor(config: UiChatInputConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -70,12 +71,12 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		this.$uploadItems = this.$main.querySelector(":scope .upload-items");
 		this.$textInput = this.$main.querySelector(":scope .text-input");
 		this.$sendButton = this.$main.querySelector(":scope .send-button");
-		const $attachmentButton = this.$main.querySelector(":scope .attachment-button");
+		this.$attachmentButton = this.$main.querySelector(":scope .attachment-button");
 		const $fileInput = this.$main.querySelector<HTMLInputElement>(":scope .file-input");
 
 		this.$textInput.addEventListener("keyup", () => this.updateSendability());
 		this.$textInput.addEventListener("keydown", (e: MouseEvent) => {
-			if ((e as any).key === 'Enter'){
+			if ((e as any).key === 'Enter') {
 				if (e.shiftKey) {
 					insertAtCursorPosition(this.$textInput, "\n");
 				} else {
@@ -85,7 +86,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 			}
 		});
 
-		$attachmentButton.addEventListener("click", () => $fileInput.click());
+		this.$attachmentButton.addEventListener("click", () => $fileInput.click());
 		$fileInput.addEventListener("change", e => {
 			this.upload($fileInput.files);
 			$fileInput.value = "";
@@ -113,7 +114,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 			const files = e.dataTransfer.files;
 			this.upload(files);
 		});
-		
+
 		this.updateSendability();
 	}
 
@@ -121,13 +122,16 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		if (!this.sendable()) {
 			return;
 		}
-		
+
 		this.onMessageSent.fire({
 			message: createUiNewChatMessageConfig({
 				text: this.$textInput.value,
 				uploadedFiles: this.uploadItems
 					.filter(item => item.state === UploadState.SUCCESS)
-					.map(item => createUiChatNewFileConfig({uploadedFileUuid: item.uploadedFileUuid, fileName: item.file.name}))
+					.map(item => createUiChatNewFileConfig({
+						uploadedFileUuid: item.uploadedFileUuid,
+						fileName: item.file.name
+					}))
 			})
 		});
 		this.$uploadItems.innerHTML = "";
@@ -171,6 +175,11 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		const hasSuccessfulFileUploads = this.uploadItems.filter(item => item.state === UploadState.SUCCESS).length > 0;
 		const hasTextInput = this.$textInput.value.length > 0;
 		return !uploading && (hasSuccessfulFileUploads || hasTextInput);
+	}
+
+	public setAttachmentsEnabled(enabled: boolean) {
+		this._config.attachmentsEnabled = enabled;
+		this.$attachmentButton.classList.toggle("hidden", !enabled);
 	}
 }
 

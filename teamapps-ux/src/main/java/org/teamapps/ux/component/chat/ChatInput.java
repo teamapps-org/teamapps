@@ -37,6 +37,7 @@ public class ChatInput extends AbstractComponent {
 	private String uploadUrl = "/upload";
 	private Icon defaultAttachmentIcon = MaterialIcon.ATTACHMENT;
 	private int messageLengthLimit = 10_000; // 10k characters, < 0 for no limit
+	private boolean attachmentsEnabled = true;
 
 	@Override
 	public UiChatInput createUiComponent() {
@@ -108,5 +109,14 @@ public class ChatInput extends AbstractComponent {
 
 	public void setMessageLengthLimit(int messageLengthLimit) {
 		this.messageLengthLimit = messageLengthLimit;
+	}
+
+	public boolean isAttachmentsEnabled() {
+		return attachmentsEnabled;
+	}
+
+	public void setAttachmentsEnabled(boolean attachmentsEnabled) {
+		this.attachmentsEnabled = attachmentsEnabled;
+		queueCommandIfRendered(() -> new UiChatInput.SetAttachmentsEnabledCommand(getId(), attachmentsEnabled));
 	}
 }
