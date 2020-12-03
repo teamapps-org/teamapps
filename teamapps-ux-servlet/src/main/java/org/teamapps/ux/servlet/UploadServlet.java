@@ -45,11 +45,12 @@ public class UploadServlet extends HttpServlet {
 
 	private static final Logger LOGGER  = LoggerFactory.getLogger(UploadServlet.class);
 
-	private String fileUploadTempDir = System.getProperty("java.io.tmpdir");
+	private final File uploadDirectory;
 
-	private BiConsumer<File, String> uploadListener;
+	private final BiConsumer<File, String> uploadListener;
 
-	public UploadServlet(BiConsumer<File, String> uploadListener) {
+	public UploadServlet(File uploadDirectory, BiConsumer<File, String> uploadListener) {
+		this.uploadDirectory = uploadDirectory;
 		this.uploadListener = uploadListener;
 	}
 
@@ -71,7 +72,7 @@ public class UploadServlet extends HttpServlet {
 		try {
 			for (Part file : parts) {
 				String uuidString = UUID.randomUUID().toString();
-				File tempFile = new File(fileUploadTempDir, uuidString);
+				File tempFile = new File(uploadDirectory, uuidString);
 
 				try (InputStream in = file.getInputStream();
 				     OutputStream out = new FileOutputStream(tempFile)) {

@@ -23,6 +23,8 @@ import org.teamapps.event.Event;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.ux.session.SessionContext;
 
+import java.io.File;
+
 /**
  * TODO Explain difference between UI session and HTTP session.
  * TODO Describe UI protocol and back pressure.
@@ -107,6 +109,11 @@ public class TeamAppsConfiguration {
 	 * If you plan having MultiLineTextFields with huge amounts of text, increase this.
 	 */
 	private int maxUiClientMessageSize = 1024 * 1024;
+
+	/**
+	 * The directory that uploaded files should get stored to (see UploadServlet).
+	 */
+	private File uploadDirectory = new File(System.getProperty("java.io.tmpdir"));
 
 	public TeamAppsConfiguration() {
 	}
@@ -235,5 +242,13 @@ public class TeamAppsConfiguration {
 	 */
 	public void setMaxUiClientMessageSize(int maxUiClientMessageSize) {
 		this.maxUiClientMessageSize = maxUiClientMessageSize;
+	}
+
+	public File getUploadDirectory() {
+		return uploadDirectory;
+	}
+
+	public void setUploadDirectory(File uploadDirectory) {
+		this.uploadDirectory = uploadDirectory;
 	}
 }
