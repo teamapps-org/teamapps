@@ -71,7 +71,7 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		downloadFilterRegistration.setAsyncSupported(true);
 		downloadFilterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "*");
 
-		Dynamic uploadServletRegistration = context.addServlet("teamapps-upload-servlet", new UploadServlet((file, uuid) -> teamAppsUxClientGate.handleFileUpload(file, uuid)));
+		Dynamic uploadServletRegistration = context.addServlet("teamapps-upload-servlet", new UploadServlet(config.getUploadDirectory(), (file, uuid) -> teamAppsUxClientGate.handleFileUpload(file, uuid)));
 		uploadServletRegistration.addMapping("/upload/*");
 		uploadServletRegistration.setMultipartConfig(new MultipartConfigElement(null, -1L, -1L, 1000_000));
 
