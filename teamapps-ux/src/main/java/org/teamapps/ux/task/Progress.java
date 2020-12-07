@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,22 +36,22 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  String getStatusMessage() {
+	public String getStatusMessage() {
 		return statusMessage;
 	}
 
 	@Override
-	public  double getProgress() {
+	public double getProgress() {
 		return progress;
 	}
 
 	@Override
-	public  boolean isCancelable() {
+	public boolean isCancelable() {
 		return cancelable;
 	}
 
 	@Override
-	public  void requestCancellation() {
+	public void requestCancellation() {
 		if (status.ordinal() < ProgressStatus.CANCELLATION_REQUESTED.ordinal()) {
 			this.status = ProgressStatus.CANCELLATION_REQUESTED;
 			fireChangeEvent();
@@ -59,17 +59,17 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  boolean isCancellationRequested() {
+	public boolean isCancellationRequested() {
 		return status == ProgressStatus.CANCELLATION_REQUESTED;
 	}
 
 	@Override
-	public  ProgressStatus getStatus() {
+	public ProgressStatus getStatus() {
 		return status;
 	}
 
 	@Override
-	public  void start() {
+	public void start() {
 		startIfNotYetStarted();
 	}
 
@@ -81,7 +81,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  void setProgress(double progress) {
+	public void setProgress(double progress) {
 		startIfNotYetStarted();
 		if (status.ordinal() == ProgressStatus.RUNNING.ordinal()) {
 			this.progress = progress;
@@ -90,7 +90,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  void setProgress(double progress, String statusMessage) {
+	public void setProgress(double progress, String statusMessage) {
 		startIfNotYetStarted();
 		if (status.ordinal() == ProgressStatus.RUNNING.ordinal()) {
 			this.progress = progress;
@@ -100,7 +100,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  void setStatusMessage(String statusMessage) {
+	public void setStatusMessage(String statusMessage) {
 		startIfNotYetStarted();
 		if (status.ordinal() >= ProgressStatus.RUNNING.ordinal()) {
 			this.statusMessage = statusMessage;
@@ -109,7 +109,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  void markCanceled() {
+	public void markCanceled() {
 		if (status.ordinal() < ProgressStatus.CANCELED.ordinal()) {
 			this.status = ProgressStatus.CANCELED;
 			fireChangeEvent();
@@ -117,7 +117,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  void markCanceled(String statusMessage) {
+	public void markCanceled(String statusMessage) {
 		if (status.ordinal() < ProgressStatus.CANCELED.ordinal()) {
 			this.status = ProgressStatus.CANCELED;
 		}
@@ -128,7 +128,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  void markCompleted() {
+	public void markCompleted() {
 		if (status.ordinal() < ProgressStatus.CANCELED.ordinal()) {
 			this.status = ProgressStatus.COMPLETE;
 			fireChangeEvent();
@@ -136,7 +136,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  void markCompleted(String statusMessage) {
+	public void markCompleted(String statusMessage) {
 		if (status.ordinal() < ProgressStatus.CANCELED.ordinal()) {
 			this.status = ProgressStatus.COMPLETE;
 		}
@@ -147,7 +147,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  void markFailed() {
+	public void markFailed() {
 		if (status.ordinal() < ProgressStatus.CANCELED.ordinal()) {
 			this.status = ProgressStatus.FAILED;
 			fireChangeEvent();
@@ -155,7 +155,7 @@ public class Progress implements ProgressMonitor, ObservableProgress {
 	}
 
 	@Override
-	public  void markFailed(String message) {
+	public void markFailed(String message) {
 		if (status.ordinal() < ProgressStatus.CANCELED.ordinal()) {
 			this.status = ProgressStatus.FAILED;
 		}
