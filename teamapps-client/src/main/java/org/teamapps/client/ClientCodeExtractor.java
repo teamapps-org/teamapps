@@ -24,13 +24,12 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 import java.util.Objects;
 
 public class ClientCodeExtractor {
@@ -77,7 +76,7 @@ public class ClientCodeExtractor {
 
 		File tempFile = File.createTempFile("teamapps-client", "zip");
 		try (InputStream in = ClientCodeExtractor.class.getResourceAsStream("/" + TEAMAPPS_CLIENT_FILE_NAME);
-		     FileOutputStream out = new FileOutputStream(tempFile);) {
+		     FileOutputStream out = new FileOutputStream(tempFile)) {
 			LOGGER.info("Extracting " + TEAMAPPS_CLIENT_FILE_NAME + " from classpath to temp file: " + tempFile.getAbsolutePath());
 			IOUtils.copy(in, out);
 		}
@@ -98,6 +97,8 @@ public class ClientCodeExtractor {
 			}
 			ZipFile zipFile = new ZipFile(file);
 			zipFile.extractAll(destinationDir.getAbsolutePath());
+			// make sure the server does never return a 304 for the index.html
+			Files.setLastModifiedTime(destinationDir.toPath().resolve("index.html"), FileTime.from(Instant.now()));
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
