@@ -24,4 +24,5 @@ class UiComponent extends UiClientObject {
 
 	command setVisible(boolean visible);
 	command setStyle(String selector, Dictionary<String> styles);
+	command setClassNames(String selector, Dictionary<Boolean> classNames);
 }

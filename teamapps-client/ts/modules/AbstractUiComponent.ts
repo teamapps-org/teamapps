@@ -172,4 +172,22 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		}
 	}
 
+	public setClassNames(selector:string, classNames: {[className: string]: boolean}) {
+		let targetElement: HTMLElement[];
+		if (!selector) {
+			targetElement = [this.getMainElement()];
+		} else {
+			targetElement = Array.from((this.getMainElement() as HTMLElement).querySelectorAll(":scope " + selector));
+		}
+		if (targetElement.length === 0) {
+			this.logger.error("Cannot set style on non-existing element. Selector: " + selector);
+		} else {
+			targetElement.forEach(el => {
+				for (let [className, enabled] of Object.entries(classNames)) {
+					el.classList.toggle(className, enabled);
+				}
+			});
+		}
+	}
+
 }
