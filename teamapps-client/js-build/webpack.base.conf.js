@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function resolve(dir) {
 	return path.join(__dirname, '..', dir)
@@ -29,6 +30,8 @@ module.exports = function (stageConfig) {
 				"@less": resolve('less/'),
 				"./images/sort-asc.gif": resolve('node_modules/slickgrid/images/sort-asc.gif'),
 				"./images/sort-desc.gif": resolve('node_modules/slickgrid/images/sort-desc.gif'),
+				"react": "preact/compat",
+				"react-dom": "preact/compat",
 			},
 			modules: [resolve("node_modules")]
 		},
@@ -167,7 +170,8 @@ module.exports = function (stageConfig) {
 					from: resolve('node_modules/tinymce-i18n/langs'),
 					to: path.posix.join(stageConfig.assetsSubDirectory, "/runtime-resources/tinymce/langs")
 				}
-			])
+			]),
+			// new BundleAnalyzerPlugin()
 		]
 	}
 };
