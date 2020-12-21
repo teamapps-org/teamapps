@@ -31,9 +31,7 @@ import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
 
 public abstract class AbstractComponent implements Component {
@@ -55,6 +53,7 @@ public abstract class AbstractComponent implements Component {
 	private Component parent;
 
 	private boolean visible = true;
+	private final Map<String, Map<String, Boolean>> cssClassesBySelector = new HashMap<>(0);
 	private final Map<String, CssStyles> stylesBySelector = new HashMap<>(0);
 
 	public AbstractComponent() {
@@ -170,6 +169,18 @@ public abstract class AbstractComponent implements Component {
 
 		final String selector2 = selector;
 		queueCommandIfRendered(() -> new UiComponent.SetStyleCommand(getId(), selector2, styles));
+	}
+
+	@Override
+	public void toggleCssClass(String selector, String className, boolean enabled) {
+		if (selector == null) {
+			selector = "";
+		}
+		Map<String, Boolean> classNames = cssClassesBySelector.computeIfAbsent(selector, s -> new HashMap<>());
+		classNames.put(className, enabled);
+
+		final String selector2 = selector;
+		queueCommandIfRendered(() -> new UiComponent.SetClassNamesCommand(getId(), selector2, classNames));
 	}
 
 	//	@Override
