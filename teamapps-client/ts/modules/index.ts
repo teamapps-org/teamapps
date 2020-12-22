@@ -125,6 +125,7 @@ export {UiFieldGroup} from "./formfield/UiFieldGroup";
 export {UiTemplateField} from "./formfield/UiTemplateField";
 export {UiLinkButton} from "./UiLinkButton";
 export {UiReactView} from "./UiReactView";
+export {UiDiv} from "./UiDiv";
 
 export {UiToolButton} from "./micro-components/UiToolButton";
 

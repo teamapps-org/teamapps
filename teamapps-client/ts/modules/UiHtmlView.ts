@@ -26,7 +26,7 @@ import {UiComponent} from "./UiComponent";
 
 export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements UiHtmlViewCommandHandler {
 
-	private $main: HTMLIFrameElement;
+	private $main: HTMLDivElement;
 
 	constructor(config: UiHtmlViewConfig, context: TeamAppsUiContext) {
 		super(config, context);
