@@ -34,7 +34,7 @@ export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements
 		for (let selector in config.componentsByContainerElementSelector) {
 			let components = config.componentsByContainerElementSelector[selector] as UiComponent[];
 			for (let c of components) {
-				this.addComponent(selector, c);
+				this.addComponent(selector, c, false);
 			}
 		}
 		for (let selector in config.contentHtmlByContainerElementSelector) {
@@ -46,9 +46,12 @@ export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements
 		return this.$main;
 	}
 
-	addComponent(containerElementSelector: string, component: unknown): void {
+	addComponent(containerElementSelector: string, component: unknown, clearContainer: boolean): void {
 		let containerElement = this.$main.querySelector(`:scope ${containerElementSelector}`);
 		if (containerElement != null) {
+			if (clearContainer) {
+				containerElement.innerHTML = '';
+			}
 			containerElement.appendChild((component as UiComponent).getMainElement());
 		} else {
 			this.logger.error(`Could not add child component since selector does not match any element: ${containerElementSelector}`);
