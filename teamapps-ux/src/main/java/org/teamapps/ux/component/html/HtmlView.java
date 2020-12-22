@@ -80,9 +80,13 @@ public class HtmlView extends AbstractComponent {
 	}
 
 	public void addComponent(String containerSelector, Component component) {
+		addComponent(containerSelector, component, false);
+	}
+
+	public void addComponent(String containerSelector, Component component, boolean clearContainer) {
 		this.componentsByContainerElementSelector.computeIfAbsent(containerSelector, s -> new ArrayList<>())
 				.add(component);
-		this.queueCommandIfRendered(() -> new UiHtmlView.AddComponentCommand(getId(), containerSelector, component.createUiReference()));
+		this.queueCommandIfRendered(() -> new UiHtmlView.AddComponentCommand(getId(), containerSelector, component.createUiReference(), clearContainer));
 	}
 
 	public void removeComponent(Component component) {
