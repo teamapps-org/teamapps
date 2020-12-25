@@ -95,6 +95,9 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		this.$sendButton.addEventListener("click", () => this.send());
 
 		this.$main.addEventListener("dragover", (e) => {
+			if (!this._config.attachmentsEnabled) {
+				return;
+			}
 			this.$main.classList.add("drop-zone-active");
 			// preventDefault() is important as it indicates that the drop is possible!!! see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Drag_operations#droptargets
 			e.preventDefault();
@@ -146,6 +149,9 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 	}
 
 	private upload(files: FileList) {
+		if (!this._config.attachmentsEnabled) {
+			return;
+		}
 		for (let i = 0; i < files.length; i++) {
 			const file = files[i];
 			const uploadItem = new FileUploadItem(file, this._config.defaultFileIcon, this._config.uploadUrl, this._context);
