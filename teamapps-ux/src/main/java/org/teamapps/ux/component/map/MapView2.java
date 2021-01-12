@@ -31,13 +31,10 @@ import org.teamapps.ux.component.field.combobox.TemplateDecider;
 import org.teamapps.ux.component.map.shape.*;
 import org.teamapps.ux.component.template.Template;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class MapView<RECORD> extends AbstractComponent {
+public class MapView2<RECORD> extends AbstractComponent {
 
 	public final Event<LocationChangedEventData> onLocationChanged = new Event<>();
 	public final Event<Integer> onZoomLevelChanged = new Event<>();
@@ -45,8 +42,10 @@ public class MapView<RECORD> extends AbstractComponent {
 	public final Event<Marker<RECORD>> onMarkerClicked = new Event<>();
 	public final Event<AbstractMapShape> onShapeDrawn = new Event<>();
 
-	private MapType mapType = MapType.MAP_BOX_STREETS_SATELLITE;
-	private String accessToken = null;
+
+	private final String baseApiUrl;
+	private final String accessToken;
+	private String styleUrl;
 	private int zoomLevel = 5;
 	private Location location = new Location(0, 0);
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
@@ -59,36 +58,36 @@ public class MapView<RECORD> extends AbstractComponent {
 	private TemplateDecider<Marker<RECORD>> templateDecider = m -> defaultTemplate;
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
 	private int templateIdCounter = 0;
-	private UiMapConfig mapConfig;
 
 	private PropertyProvider<RECORD> markerPropertyProvider = new BeanPropertyExtractor<>();
 	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
 		public void handleChanged(AbstractMapShape shape) {
-			queueCommandIfRendered(() -> new UiMap.UpdateShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
+			queueCommandIfRendered(() -> new UiMap2.UpdateShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
 		}
 
 		@Override
 		public void handleRemoved(AbstractMapShape shape) {
-			queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
+			queueCommandIfRendered(() -> new UiMap2.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
 		}
 	};
 
-	public MapView(String accessToken) {
+	public MapView2(String baseApiUrl, String accessToken, String styleUrl) {
+		this.baseApiUrl = baseApiUrl;
 		this.accessToken = accessToken;
-	}
-
-	public MapView() {
+		this.styleUrl = styleUrl;
 	}
 
 	@Override
 	public UiComponent createUiComponent() {
-		UiMap uiMap = new UiMap(templateIdsByTemplate.entrySet().stream()
+		UiMap2 uiMap = new UiMap2(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 		mapAbstractUiComponentProperties(uiMap);
-		uiMap.setMapConfig(mapConfig);
-		uiMap.setMapType(mapType.toUiMapType());
+
+		uiMap.setBaseApiUrl(baseApiUrl);
 		uiMap.setAccessToken(accessToken);
+		uiMap.setStyleUrl(styleUrl);
+
 		uiMap.setZoomLevel(zoomLevel);
 		Map<String, AbstractUiMapShape> uiShapes = new HashMap<>();
 		shapesByClientId.forEach((id, shape) -> uiShapes.put(id, shape.createUiMapShape()));
@@ -120,39 +119,40 @@ public class MapView<RECORD> extends AbstractComponent {
 		}
 		clientRecord.setOffsetPixelsX(marker.getOffsetPixelsX());
 		clientRecord.setOffsetPixelsY(marker.getOffsetPixelsY());
+		clientRecord.setAnchor(marker.getMarkerAnchor().toUiMapMarkerAnchor());
 		return clientRecord;
 	}
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_MAP_MAP_CLICKED: {
-				UiMap.MapClickedEvent mapClickedEvent = (UiMap.MapClickedEvent) event;
+			case UI_MAP2_MAP_CLICKED: {
+				UiMap2.MapClickedEvent mapClickedEvent = (UiMap2.MapClickedEvent) event;
 				this.onMapClicked.fire(new Location(mapClickedEvent.getLocation().getLatitude(), mapClickedEvent.getLocation().getLongitude()));
 				break;
 			}
-			case UI_MAP_MARKER_CLICKED: {
-				UiMap.MarkerClickedEvent markerClickedEvent = (UiMap.MarkerClickedEvent) event;
+			case UI_MAP2_MARKER_CLICKED: {
+				UiMap2.MarkerClickedEvent markerClickedEvent = (UiMap2.MarkerClickedEvent) event;
 				Marker<RECORD> marker = markersByClientId.get(markerClickedEvent.getMarkerId());
 				this.onMarkerClicked.fire(marker);
 				break;
 			}
-			case UI_MAP_ZOOM_LEVEL_CHANGED: {
-				UiMap.ZoomLevelChangedEvent zoomEvent = (UiMap.ZoomLevelChangedEvent) event;
+			case UI_MAP2_ZOOM_LEVEL_CHANGED: {
+				UiMap2.ZoomLevelChangedEvent zoomEvent = (UiMap2.ZoomLevelChangedEvent) event;
 				this.zoomLevel = zoomEvent.getZoomLevel();
 				this.onZoomLevelChanged.fire(zoomLevel);
 				break;
 			}
-			case UI_MAP_LOCATION_CHANGED: {
-				UiMap.LocationChangedEvent locationEvent = (UiMap.LocationChangedEvent) event;
+			case UI_MAP2_LOCATION_CHANGED: {
+				UiMap2.LocationChangedEvent locationEvent = (UiMap2.LocationChangedEvent) event;
 				this.location = Location.fromUiMapLocation(locationEvent.getCenter());
 				UiMapArea displayedUiArea = locationEvent.getDisplayedArea();
 				Area displayedArea = new Area(displayedUiArea.getMinLatitude(), displayedUiArea.getMaxLatitude(), displayedUiArea.getMinLongitude(), displayedUiArea.getMaxLongitude());
 				this.onLocationChanged.fire(new LocationChangedEventData(this.location, displayedArea));
 				break;
 			}
-			case UI_MAP_SHAPE_DRAWN: {
-				UiMap.ShapeDrawnEvent drawnEvent = (UiMap.ShapeDrawnEvent) event;
+			case UI_MAP2_SHAPE_DRAWN: {
+				UiMap2.ShapeDrawnEvent drawnEvent = (UiMap2.ShapeDrawnEvent) event;
 				AbstractMapShape shape;
 				switch (drawnEvent.getShape().getUiObjectType()) {
 					case UI_MAP_CIRCLE: {
@@ -168,7 +168,7 @@ public class MapView<RECORD> extends AbstractComponent {
 					case UI_MAP_POLYLINE: {
 						UiMapPolyline uiPolyLine = (UiMapPolyline) drawnEvent.getShape();
 						shape = new MapPolyline(uiPolyLine.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), null);
-						break;                                                       
+						break;
 					}
 					case UI_MAP_RECTANGLE: {
 						UiMapRectangle uiRect = (UiMapRectangle) drawnEvent.getShape();
@@ -187,79 +187,84 @@ public class MapView<RECORD> extends AbstractComponent {
 		}
 	}
 
-	public void setMapConfig(UiMapConfig mapConfig) {
-		this.mapConfig = mapConfig;
-	}
-
 	public void addPolyLine(MapPolyline polyline) {
 		addShape(polyline);
 	}
-	
+
 	public void addShape(AbstractMapShape shape) {
 		shape.setListenerInternal(shapeListener);
 		shapesByClientId.put(shape.getClientIdInternal(), shape);
-		queueCommandIfRendered(() -> new UiMap.AddShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
+		queueCommandIfRendered(() -> new UiMap2.AddShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
 	}
 
 	public void removeShape(AbstractMapShape shape) {
-		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
+		queueCommandIfRendered(() -> new UiMap2.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
+	}
+
+	public void clearShapes() {
+		queueCommandIfRendered(() -> new UiMap2.ClearShapesCommand(getId()));
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
 		clusterMarkers = markers;
 		markers.forEach(m -> this.markersByClientId.put(clientIdCounter++, m));
-		if (isRendered()) {
-			queueCommandIfRendered(() -> {
-				UiMapMarkerCluster markerCluster = new UiMapMarkerCluster(clusterMarkers.stream()
-						.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
-						.collect(Collectors.toList()));
-				return new UiMap.SetMapMarkerClusterCommand(getId(),
-						markerCluster);
-			});
-		}
+		queueCommandIfRendered(() -> {
+			UiMapMarkerCluster markerCluster = new UiMapMarkerCluster(clusterMarkers.stream()
+					.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
+					.collect(Collectors.toList()));
+			return new UiMap2.SetMapMarkerClusterCommand(getId(),
+					markerCluster);
+		});
 	}
 
-	public void unCacheMarkers(List<Marker<RECORD>> markers) {
-		markers.forEach(this.markersByClientId::removeValue);
+	public void clearMarkerCluster() {
+		markersByClientId.values().removeAll(clusterMarkers);
+		clusterMarkers.clear();
+		queueCommandIfRendered(() -> new UiMap2.SetMapMarkerClusterCommand(getId(), new UiMapMarkerCluster(Collections.emptyList())));
 	}
 
-	public void setHeatMap(List<Location> locations) {
-		List<UiHeatMapDataElement> heatMapElements = locations.stream().map(loc -> new UiHeatMapDataElement((float) loc.getLatitude(), (float) loc.getLongitude(), 1)).collect(Collectors.toList());
-		UiHeatMapData heatMap = new UiHeatMapData(heatMapElements);
-		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(getId(), heatMap));
-	}
-
-	public void setHeatMap(UiHeatMapData heatMap) {
-		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(getId(), heatMap));
-	}
+//	TODO
+//	public void setHeatMap(List<Location> locations) {
+//		List<UiHeatMapDataElement> heatMapElements = locations.stream().map(loc -> new UiHeatMapDataElement((float) loc.getLatitude(), (float) loc.getLongitude(), 1)).collect(Collectors.toList());
+//		UiHeatMapData heatMap = new UiHeatMapData(heatMapElements);
+//		queueCommandIfRendered(() -> new UiMap2.SetHeatMapCommand(getId(), heatMap));
+//	}
 
 	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {
 		Template template = templateDecider.getTemplate(record);
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String uuid = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, uuid);
-			queueCommandIfRendered(() -> new UiMap.RegisterTemplateCommand(getId(), uuid, template.createUiTemplate()));
+			queueCommandIfRendered(() -> new UiMap2.RegisterTemplateCommand(getId(), uuid, template.createUiTemplate()));
 		}
 		return template;
 	}
 
-	public MapType getMapType() {
-		return mapType;
+	public String getBaseApiUrl() {
+		return baseApiUrl;
 	}
 
-	public void setMapType(MapType mapType) {
-		this.mapType = mapType;
-		queueCommandIfRendered(() -> new UiMap.SetMapTypeCommand(getId(), this.mapType.toUiMapType()));
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public String getStyleUrl() {
+		return styleUrl;
+	}
+
+	public void setStyleUrl(String styleUrl) {
+		this.styleUrl = styleUrl;
+		queueCommandIfRendered(() -> new UiMap2.SetStyleUrlCommand(getId(), styleUrl));
 	}
 
 	public void setZoomLevel(int zoomLevel) {
 		this.zoomLevel = zoomLevel;
-		queueCommandIfRendered(() -> new UiMap.SetZoomLevelCommand(getId(), zoomLevel));
+		queueCommandIfRendered(() -> new UiMap2.SetZoomLevelCommand(getId(), zoomLevel));
 	}
 
 	public void setLocation(Location location) {
 		this.location = location;
-		queueCommandIfRendered(() -> new UiMap.SetLocationCommand(getId(), location.createUiLocation()));
+		queueCommandIfRendered(() -> new UiMap2.SetLocationCommand(getId(), location.createUiLocation()));
 	}
 
 	public void setLocation(double latitude, double longitude) {
@@ -285,23 +290,24 @@ public class MapView<RECORD> extends AbstractComponent {
 	public void addMarker(Marker<RECORD> marker) {
 		int clientId = clientIdCounter++;
 		this.markersByClientId.put(clientId, marker);
-		if (isRendered()) {
-			getSessionContext().queueCommand(new UiMap.AddMarkerCommand(getId(), createUiMarkerRecord(marker, clientId)));
-		}
+		queueCommandIfRendered(() -> new UiMap2.AddMarkerCommand(getId(), createUiMarkerRecord(marker, clientId)));
 	}
 
 	public void removeMarker(Marker<RECORD> marker) {
 		Integer clientId = markersByClientId.removeValue(marker);
 		if (clientId != null) {
-			if (isRendered()) {
-				getSessionContext().queueCommand(new UiMap.RemoveMarkerCommand(getId(), clientId));
-			}
+			queueCommandIfRendered(() -> new UiMap2.RemoveMarkerCommand(getId(), clientId));
 		}
+	}
+
+	public void clearMarkers() {
+		markersByClientId.clear();
+		queueCommandIfRendered(() -> new UiMap2.ClearMarkersCommand(getId()));
 	}
 
 	public void fitBounds(Location southWest, Location northEast) {
 		this.location = new Location((southWest.getLatitude() + northEast.getLatitude()) / 2, (southWest.getLongitude() + northEast.getLongitude()) / 2);
-		queueCommandIfRendered(() -> new UiMap.FitBoundsCommand(this.getId(), southWest.createUiLocation(), northEast.createUiLocation()));
+		queueCommandIfRendered(() -> new UiMap2.FitBoundsCommand(this.getId(), southWest.createUiLocation(), northEast.createUiLocation()));
 	}
 
 	public Template getDefaultTemplate() {
@@ -332,12 +338,13 @@ public class MapView<RECORD> extends AbstractComponent {
 		this.setMarkerPropertyProvider(propertyExtractor);
 	}
 
-	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
-		queueCommandIfRendered(() -> new UiMap.StartDrawingShapeCommand(getId(), shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
-	}
-
-	public void stopDrawingShape() {
-		queueCommandIfRendered(() -> new UiMap.StopDrawingShapeCommand(getId()));
-	}
+//  TODO
+//	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
+//		queueCommandIfRendered(() -> new UiMap2.StartDrawingShapeCommand(getId(), shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
+//	}
+//
+//	public void stopDrawingShape() {
+//		queueCommandIfRendered(() -> new UiMap2.StopDrawingShapeCommand(getId()));
+//	}
 
 }

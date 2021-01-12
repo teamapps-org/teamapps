@@ -22,12 +22,14 @@ package org.teamapps.ux.component.map.shape;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiShapeProperties;
 
+import java.util.List;
+
 public class ShapeProperties {
 
 	private Color strokeColor;
 	private float strokeWeight = 2f;
-	private String strokeDashArray;
-	private Color fillColor = null;
+	private List<Float> strokeDashArray;
+	private Color fillColor = Color.TRANSPARENT;
 
 	public ShapeProperties(Color strokeColor) {
 		this.strokeColor = strokeColor;
@@ -38,7 +40,7 @@ public class ShapeProperties {
 		this.strokeWeight = strokeWeight;
 	}
 
-	public ShapeProperties(Color strokeColor, float strokeWeight, String strokeDashArray) {
+	public ShapeProperties(Color strokeColor, float strokeWeight, List<Float> strokeDashArray) {
 		this.strokeColor = strokeColor;
 		this.strokeWeight = strokeWeight;
 		this.strokeDashArray = strokeDashArray;
@@ -49,7 +51,7 @@ public class ShapeProperties {
 		this.strokeWeight = strokeWeight;
 		this.fillColor = fillColor;
 	}
-
+	                                                                                                                      					
 	public Color getStrokeColor() {
 		return strokeColor;
 	}
@@ -74,11 +76,11 @@ public class ShapeProperties {
 		this.fillColor = fillColor;
 	}
 
-	public String getStrokeDashArray() {
+	public List<Float> getStrokeDashArray() {
 		return strokeDashArray;
 	}
 
-	public void setStrokeDashArray(String strokeDashArray) {
+	public void setStrokeDashArray(List<Float> strokeDashArray) {
 		this.strokeDashArray = strokeDashArray;
 	}
 

@@ -39,8 +39,8 @@ export function isFreeTextEntry(o: UiComboBoxTreeRecordConfig): boolean {
 }
 
 export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordConfig> implements UiComboBoxEventSource, UiComboBoxCommandHandler {
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent(this, 250);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent(this, 250);
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent(this, {throttlingMode: "debounce", delay: 250});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent(this, {throttlingMode: "debounce", delay: 250});
 	public readonly onLazyChildDataRequested: TeamAppsEvent<UiComboBox_LazyChildDataRequestedEvent> = new TeamAppsEvent(this);
 
 	private $originalInput: HTMLElement;

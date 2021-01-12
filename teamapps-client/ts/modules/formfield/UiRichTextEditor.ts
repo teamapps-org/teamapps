@@ -58,8 +58,8 @@ import {parseHtml, removeTags} from "../Common";
 
 export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> implements UiRichTextEditorEventSource, UiRichTextEditorCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, 5000);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, 250);
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {throttlingMode: "throttle", delay: 5000});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {throttlingMode: "debounce", delay: 250});
 	public readonly onImageUploadFailed: TeamAppsEvent<UiRichTextEditor_ImageUploadFailedEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadFailedEvent>(this);
 	public readonly onImageUploadStarted: TeamAppsEvent<UiRichTextEditor_ImageUploadStartedEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadStartedEvent>(this);
 	public readonly onImageUploadSuccessful: TeamAppsEvent<UiRichTextEditor_ImageUploadSuccessfulEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadSuccessfulEvent>(this);

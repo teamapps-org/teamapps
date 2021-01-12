@@ -34,8 +34,8 @@ import {UiSpecialKey} from "../../generated/UiSpecialKey";
 
 export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyValueConfig> implements UiCurrencyFieldEventSource, UiCurrencyFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, 250);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, 250);
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {throttlingMode: "debounce", delay: 250});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {throttlingMode: "debounce", delay: 250});
 
 	private trivialUnitBox: TrivialUnitBox<Currency>;
 	private $originalInput: HTMLElement;

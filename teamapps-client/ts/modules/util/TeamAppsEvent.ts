@@ -18,6 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {debounce, DebounceMode} from "./debounce";
+import {throttle} from "./throttle";
 
 export type TeamAppsEventListener<EO> = (eventObject?: EO, emitter?: any) => void;
 
@@ -29,7 +30,20 @@ export class TeamAppsEvent<EO> {
 	private listeners: TeamAppsEventListener<EO>[] = [];
 	private previousEventObject: EO = undefined;
 
-	constructor(private eventSource: any, private debounceDelay = 0, private debounceMode = DebounceMode.BOTH) {
+	public fire: (eventObject: EO) => void;
+
+	constructor(private eventSource: any, options?: {
+		throttlingMode: "throttle" | "debounce",
+		delay: number,
+		debounceMode?: DebounceMode
+	}) {
+		if (options?.throttlingMode === "debounce") {
+			this.fire = debounce(this._fire.bind(this), options.delay, options.debounceMode ?? DebounceMode.BOTH);
+		} else if (options?.throttlingMode === "throttle") {
+			this.fire = throttle(this._fire.bind(this), options.delay);
+		} else {
+			this.fire = this._fire.bind(this);
+		}
 	}
 
 	public addListener(fn: TeamAppsEventListener<EO>, allowDuplicates = false) {
@@ -53,7 +67,6 @@ export class TeamAppsEvent<EO> {
 		this.previousEventObject = eventObject;
 	};
 
-	public fire: (eventObject: EO) => void = debounce(this._fire.bind(this), this.debounceDelay, this.debounceMode);
 
 	public fireIfChanged(eventObject: EO) {
 		if (this.previousEventObject !== eventObject) {

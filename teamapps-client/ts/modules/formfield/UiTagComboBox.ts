@@ -36,8 +36,8 @@ import {isFreeTextEntry, UiComboBox} from "./UiComboBox";
 import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "../Common";
 
 export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRecordConfig[]> implements UiTagComboBoxEventSource, UiTagComboBoxCommandHandler {
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent(this, 250);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent(this, 250);
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent(this, {throttlingMode: "debounce", delay: 250});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent(this, {throttlingMode: "debounce", delay: 250});
 	public readonly onLazyChildDataRequested: TeamAppsEvent<UiComboBox_LazyChildDataRequestedEvent> = new TeamAppsEvent(this);
 
 	private $originalInput: HTMLElement;

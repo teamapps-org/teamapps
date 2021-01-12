@@ -32,7 +32,7 @@ public class MapRectangle extends AbstractMapShape {
 		this.location2 = location2;
 	}
 
-	public MapRectangle(ShapeProperties properties, Location location1, Location location2) {
+	public MapRectangle(Location location1, Location location2, ShapeProperties properties) {
 		super(properties);
 		this.location1 = location1;
 		this.location2 = location2;

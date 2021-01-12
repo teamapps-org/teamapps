@@ -41,8 +41,8 @@ import {createDateRenderer} from "./datetime-rendering";
 
 export abstract class AbstractUiDateField<C extends AbstractUiDateFieldConfig, V> extends UiField<C, V> implements AbstractUiDateFieldEventSource, AbstractUiDateFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, 250);
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, 250);
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {throttlingMode: "debounce", delay: 250});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {throttlingMode: "debounce", delay: 250});
 
 	private $originalInput: HTMLElement;
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;

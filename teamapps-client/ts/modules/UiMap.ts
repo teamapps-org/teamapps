@@ -53,30 +53,25 @@ import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMap
 import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
 import {UiMapShapeType} from "../generated/UiMapShapeType";
 import {createUiMapCircleConfig, UiMapCircleConfig} from "../generated/UiMapCircleConfig";
-import {createUiMapMarkerConfig, UiMapMarkerConfig} from "../generated/UiMapMarkerConfig";
 import {createUiMapPolygonConfig, UiMapPolygonConfig} from "../generated/UiMapPolygonConfig";
 import {createUiMapRectangleConfig, UiMapRectangleConfig} from "../generated/UiMapRectangleConfig";
 import {AbstractUiMapShapeConfig} from "../generated/AbstractUiMapShapeConfig";
 import {UiShapePropertiesConfig} from "../generated/UiShapePropertiesConfig";
 import {UiMapConfigConfig} from "../generated/UiMapConfigConfig";
 
-function isUiMapCircle(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapCircleConfig {
+export function isUiMapCircle(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapCircleConfig {
 	return shapeConfig._type === "UiMapCircle";
 }
 
-function isUiMapMarker(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapMarkerConfig {
-	return shapeConfig._type === "UiMapMarker";
-}
-
-function isUiMapPolygon(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapPolygonConfig {
+export function isUiMapPolygon(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapPolygonConfig {
 	return shapeConfig._type === "UiMapPolygon";
 }
 
-function isUiMapPolyline(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapPolylineConfig {
+export function isUiMapPolyline(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapPolylineConfig {
 	return shapeConfig._type === "UiMapPolyline";
 }
 
-function isUiMapRectangle(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapRectangleConfig {
+export function isUiMapRectangle(shapeConfig: AbstractUiMapShapeConfig): shapeConfig is UiMapRectangleConfig {
 	return shapeConfig._type === "UiMapRectangle";
 }
 
@@ -173,9 +168,6 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 			if (type === 'circle') {
 				let circle = layer as Circle;
 				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapCircleConfig({center: toUiLocation(circle.getLatLng()), radius: circle.getRadius()})});
-			} else if (type === 'marker') {
-				let marker = layer as Marker;
-				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapMarkerConfig({location: toUiLocation(marker.getLatLng())})});
 			} else if (type === 'polygon') {
 				let polygon = layer as Polygon;
 				let path = flattenArray(polygon.getLatLngs()).map(ll => toUiLocation(ll));
@@ -197,11 +189,6 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		if (isUiMapCircle(shapeConfig)) {
 			this.shapesById[shapeId] = L.circle(
 				this.createLeafletLatLng(shapeConfig.center), shapeConfig.radius, createPathOptions(shapeConfig.shapeProperties)
-			).addTo(this.leaflet);
-		} else if (isUiMapMarker(shapeConfig)) {
-			this.shapesById[shapeId] = L.marker(
-				this.createLeafletLatLng(shapeConfig.location)
-				// TODO marker options...
 			).addTo(this.leaflet);
 		} else if (isUiMapPolygon(shapeConfig)) {
 			let polyPath = new Array(shapeConfig.path.length);

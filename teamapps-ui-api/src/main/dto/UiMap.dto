@@ -99,8 +99,21 @@ class UiMapArea {
 class UiMapMarkerClientRecord extends UiIdentifiableClientRecord {
 	UiMapLocation location;
     String templateId; // null == use asString
+    UiMapMarkerAnchor anchor;
     int offsetPixelsX;
     int offsetPixelsY;
+}
+
+enum UiMapMarkerAnchor {
+	CENTER = "center",
+	TOP = "top",
+	BOTTOM = "bottom",
+	LEFT = "left",
+	RIGHT = "right",
+	TOP_LEFT = "top-left",
+	TOP_RIGHT = "top-right",
+	BOTTOM_LEFT = "bottom-left",
+	BOTTOM_RIGHT = "bottom-right";
 }
 
 class UiMapMarkerCluster {
@@ -122,7 +135,6 @@ class UiHeatMapDataElement {
 
 enum UiMapShapeType {
 	CIRCLE,
-//    MARKER, // TODO ux
     POLYGON,
     POLYLINE,
     RECTANGLE;
@@ -136,11 +148,6 @@ abstract class AbstractUiMapShape {
 class UiMapCircle extends AbstractUiMapShape {
 	UiMapLocation center;
 	int radius; // meters
-}
-
-@TypeScriptFactory
-class UiMapMarker extends AbstractUiMapShape { // TODO ux
-	UiMapLocation location;
 }
 
 @TypeScriptFactory
@@ -162,6 +169,6 @@ class UiMapRectangle extends AbstractUiMapShape {
 class UiShapeProperties {
   String strokeColor;
   float strokeWeight;
-  String strokeDashArray;
+  List<Float> strokeDashArray;
   String fillColor;
 }

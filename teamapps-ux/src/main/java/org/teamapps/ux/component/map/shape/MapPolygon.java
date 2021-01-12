@@ -29,7 +29,7 @@ public class MapPolygon extends AbstractMapShape {
 
 	private List<Location> locations;
 
-	public MapPolygon(ShapeProperties properties, List<Location> locations) {
+	public MapPolygon(List<Location> locations, ShapeProperties properties) {
 		super(properties);
 		this.locations = locations;
 	}

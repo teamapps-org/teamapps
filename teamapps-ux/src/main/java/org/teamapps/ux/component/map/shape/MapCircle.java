@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.map.shape;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiMapCircle;
 import org.teamapps.ux.component.map.Location;
 
@@ -32,10 +33,24 @@ public class MapCircle extends AbstractMapShape {
 		this.radiusMeters = radiusMeters;
 	}
 
-	public MapCircle(ShapeProperties properties, Location center, int radiusMeters) {
+	public MapCircle(Location center, int radiusMeters, ShapeProperties properties) {
 		super(properties);
 		this.center = center;
 		this.radiusMeters = radiusMeters;
+	}
+
+	public MapCircle(Location center, int radiusMeters, Color fillColor) {
+		this(center, radiusMeters, new ShapeProperties(Color.TRANSPARENT, 0, fillColor));
+		this.center = center;
+		this.radiusMeters = radiusMeters;
+	}
+
+	public MapCircle(Location center, int radiusMeters, Color fillColor, Color strokeColor) {
+		this(center, radiusMeters, new ShapeProperties(strokeColor, 1, fillColor));
+	}
+
+	public MapCircle(Location center, int radiusMeters, Color fillColor, Color strokeColor, float strokeWidth) {
+		this(center, radiusMeters, new ShapeProperties(strokeColor, strokeWidth, fillColor));
 	}
 
 	public UiMapCircle createUiMapShape() {
