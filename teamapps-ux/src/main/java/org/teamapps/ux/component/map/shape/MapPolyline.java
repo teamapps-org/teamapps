@@ -22,6 +22,7 @@ package org.teamapps.ux.component.map.shape;
 import org.teamapps.dto.UiMapPolyline;
 import org.teamapps.ux.component.map.Location;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,9 +30,9 @@ public class MapPolyline extends AbstractMapShape {
 
 	private List<Location> locations;
 
-	public MapPolyline(ShapeProperties properties, List<Location> locations) {
+	public MapPolyline(List<Location> locations, ShapeProperties properties) {
 		super(properties);
-		this.locations = locations;
+		this.locations = new ArrayList<>(locations);
 	}
 
 	public UiMapPolyline createUiMapShape() {

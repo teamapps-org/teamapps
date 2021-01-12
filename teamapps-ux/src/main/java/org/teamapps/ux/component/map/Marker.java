@@ -22,18 +22,17 @@ package org.teamapps.ux.component.map;
 public class Marker<RECORD> {
 
 	private final Location location;
-	private final String title;
 	private final RECORD data;
-	private int offsetPixelsX;
-	private int offsetPixelsY;
+	private MarkerAnchor markerAnchor = MarkerAnchor.BOTTOM_LEFT;
+	private int offsetPixelsX = 0;
+	private int offsetPixelsY = 0;
 
-	public Marker(Location location, String title, RECORD data) {
-		this(location, title, data, 0, 0);
+	public Marker(Location location, RECORD data) {
+		this(location, data, 0, 0);
 	}
 
-	public Marker(Location location, String title, RECORD data, int offsetPixelsX, int offsetPixelsY) {
+	public Marker(Location location, RECORD data, int offsetPixelsX, int offsetPixelsY) {
 		this.location = location;
-		this.title = title;
 		this.data = data;
 		this.offsetPixelsX = offsetPixelsX;
 		this.offsetPixelsY = offsetPixelsY;
@@ -43,12 +42,16 @@ public class Marker<RECORD> {
 		return location;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
 	public RECORD getData() {
 		return data;
+	}
+
+	public MarkerAnchor getMarkerAnchor() {
+		return markerAnchor;
+	}
+
+	public void setMarkerAnchor(MarkerAnchor markerAnchor) {
+		this.markerAnchor = markerAnchor;
 	}
 
 	public int getOffsetPixelsX() {

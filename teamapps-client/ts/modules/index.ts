@@ -60,6 +60,7 @@ export {UiInfiniteItemView} from "./UiInfiniteItemView";
 export {UiInfiniteItemView2} from "./UiInfiniteItemView2";
 export {UiLiveStreamComponent} from "./UiLiveStreamComponent";
 export {UiMap} from "./UiMap";
+export {UiMap2} from "./UiMap2";
 export {UiMediaTrackGraph} from "./UiMediaTrackGraph";
 export {UiMobileLayout} from "./UiMobileLayout";
 export {UiNavigationBar} from "./UiNavigationBar";
