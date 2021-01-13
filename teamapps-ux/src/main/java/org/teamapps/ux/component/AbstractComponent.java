@@ -66,6 +66,7 @@ public abstract class AbstractComponent implements Component {
 		uiComponent.setDebuggingId(debuggingId);
 		uiComponent.setVisible(visible);
 		uiComponent.setStylesBySelector((Map) stylesBySelector);
+		uiComponent.setClassNamesBySelector(cssClassesBySelector);
 	}
 
 	@Override
