@@ -562,4 +562,8 @@ public class SessionContext {
 		});
 		return completableFuture;
 	}
+
+	public void goToUrl(String url, boolean blankPage) {
+		queueCommand(new UiRootPanel.GoToUrlCommand(url, blankPage));
+	}
 }

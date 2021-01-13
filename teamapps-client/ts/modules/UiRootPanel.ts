@@ -38,7 +38,7 @@ import {showNotification, UiNotification} from "./UiNotification";
 import {UiNotificationPosition} from "../generated/UiNotificationPosition";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
-import {requestWakeLock, releaseWakeLock} from "./util/WakeLock";
+import {releaseWakeLock, requestWakeLock} from "./util/WakeLock";
 
 export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implements UiRootPanelCommandHandler {
 
@@ -350,6 +350,14 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 
 	public static async releaseWakeLock(uuid: string) {
 		return releaseWakeLock(uuid);
+	}
+
+	public static async goToUrl(url: string, blankPage: boolean) {
+		if (blankPage) {
+			window.open(url, '_blank');
+		} else {
+			location.href = url;
+		}
 	}
 }
 
