@@ -110,6 +110,9 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 			if (this._config.stylesBySelector != null) { // might be null when used via JavaScript API!
 				Object.keys(this._config.stylesBySelector).forEach(selector => this.setStyle(selector, this._config.stylesBySelector[selector]));
 			}
+			if (this._config.classNamesBySelector != null) { // might be null when used via JavaScript API!
+				Object.keys(this._config.classNamesBySelector).forEach(selector => this.setClassNames(selector, this._config.classNamesBySelector[selector]));
+			}
 
 			let relayoutCalled = false;
 			let debouncedRelayout: (size?: {width: number, height: number}) => void = debounce((size?: {width: number, height: number}) => {

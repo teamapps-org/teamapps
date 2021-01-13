@@ -21,6 +21,7 @@ class UiComponent extends UiClientObject {
 	String debuggingId;
 	boolean visible = true;
 	Dictionary<Dictionary<String>> stylesBySelector;
+	Dictionary<Dictionary<Boolean>> classNamesBySelector;
 
 	command setVisible(boolean visible);
 	command setStyle(String selector, Dictionary<String> styles);
