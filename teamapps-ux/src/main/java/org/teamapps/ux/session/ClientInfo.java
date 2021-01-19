@@ -19,8 +19,10 @@
  */
 package org.teamapps.ux.session;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ClientInfo {
 
@@ -33,7 +35,7 @@ public class ClientInfo {
 	private final boolean highDensityScreen;
 	private final String timeZone;
 	private final int timeZoneOffsetMinutes;
-	private final List<String> clientTokens;
+	private final Set<String> clientTokens;
 	private final String userAgent;
 	private final String clientUrl;
 	private final Map<String, Object> clientParameters;
@@ -53,7 +55,7 @@ public class ClientInfo {
 		this.highDensityScreen = highDensityScreen;
 		this.timeZone = timeZone;
 		this.timeZoneOffsetMinutes = timeZoneOffsetMinutes;
-		this.clientTokens = clientTokens;
+		this.clientTokens = new HashSet<>(clientTokens);
 		this.userAgent = userAgent;
 		this.clientUrl = clientUrl;
 		this.clientParameters = clientParameters;
@@ -107,7 +109,7 @@ public class ClientInfo {
 		return timeZoneOffsetMinutes;
 	}
 
-	public List<String> getClientTokens() {
+	public Set<String> getClientTokens() {
 		return clientTokens;
 	}
 
