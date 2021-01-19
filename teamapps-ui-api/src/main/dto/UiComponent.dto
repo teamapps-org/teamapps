@@ -22,8 +22,10 @@ class UiComponent extends UiClientObject {
 	boolean visible = true;
 	Dictionary<Dictionary<String>> stylesBySelector;
 	Dictionary<Dictionary<Boolean>> classNamesBySelector;
+	Dictionary<Dictionary<String>> attributesBySelector; // "__ta-deleted-attribute__" for removing attributes
 
 	command setVisible(boolean visible);
 	command setStyle(String selector, Dictionary<String> styles);
 	command setClassNames(String selector, Dictionary<Boolean> classNames);
+	command setAttributes(String selector, Dictionary<String> attributes);
 }

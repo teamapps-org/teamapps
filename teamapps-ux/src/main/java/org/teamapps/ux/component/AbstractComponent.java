@@ -31,10 +31,14 @@ import org.teamapps.ux.css.CssStyles;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public abstract class AbstractComponent implements Component {
+
+	public static final String DELETED_ATTRIBUTE = "__ta-deleted-attribute__";
 
 	private enum RenderingState {
 		NOT_RENDERED,
@@ -55,6 +59,7 @@ public abstract class AbstractComponent implements Component {
 	private boolean visible = true;
 	private final Map<String, Map<String, Boolean>> cssClassesBySelector = new HashMap<>(0);
 	private final Map<String, CssStyles> stylesBySelector = new HashMap<>(0);
+	private final Map<String, Map<String, String>> attributesBySelector = new HashMap<>(0);
 
 	public AbstractComponent() {
 		this.sessionContext = CurrentSessionContext.get();
@@ -182,6 +187,22 @@ public abstract class AbstractComponent implements Component {
 
 		final String selector2 = selector;
 		queueCommandIfRendered(() -> new UiComponent.SetClassNamesCommand(getId(), selector2, classNames));
+	}
+
+	@Override
+	public void setAttribute(String selector, String attributeName, String value) {
+		if (selector == null) {
+			selector = "";
+		}
+		Map<String, String> attributes = this.attributesBySelector.computeIfAbsent(selector, s -> new HashMap<>());
+		if (value != null) {
+			attributes.put(attributeName, value);
+		} else {
+			attributes.put(attributeName, DELETED_ATTRIBUTE);
+		}
+
+		final String selector2 = selector;
+		queueCommandIfRendered(() -> new UiComponent.SetAttributesCommand(getId(), selector2, attributes));
 	}
 
 	//	@Override

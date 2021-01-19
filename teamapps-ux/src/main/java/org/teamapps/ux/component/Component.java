@@ -51,6 +51,12 @@ public interface Component extends ClientObject {
 		setCssStyle(null, propertyName, value);
 	}
 
+	void setAttribute(String selector, String attributeName, String value);
+
+	default void setAttribute(String attributeName, String value) {
+		setAttribute(null, attributeName, value);
+	}
+
 	default void setMinWidth(Length minWidth) {
 		setCssStyle("min-width", minWidth.toCssString());
 	}
