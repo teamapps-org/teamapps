@@ -37,10 +37,17 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.showNotification(MaterialIcon.MESSAGE, "Hello World");
 			RootPanel rootPanel = new RootPanel();
 			sessionContext.addRootComponent(null, rootPanel);
-			rootPanel.setContent(new MultiLineTextField());
+			MultiLineTextField tf = new MultiLineTextField();
+			rootPanel.setContent(tf);
+
+
+			tf.setAttribute("XXXXXXX", "yyyyy");
+
+			tf.setAttribute("data-teamapps-debugging-id", null);
+			
 		};
 
-		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, Files.createTempDir(), 8081);
+		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, Files.createTempDir(), 8082);
 
 		jettyServer.addServletContextListener(new ServletContextListener() {
 			@Override

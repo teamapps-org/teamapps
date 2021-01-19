@@ -113,6 +113,9 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 			if (this._config.classNamesBySelector != null) { // might be null when used via JavaScript API!
 				Object.keys(this._config.classNamesBySelector).forEach(selector => this.setClassNames(selector, this._config.classNamesBySelector[selector]));
 			}
+			if (this._config.attributesBySelector != null) { // might be null when used via JavaScript API!
+				Object.keys(this._config.attributesBySelector).forEach(selector => this.setAttributes(selector, this._config.attributesBySelector[selector]));
+			}
 
 			let relayoutCalled = false;
 			let debouncedRelayout: (size?: {width: number, height: number}) => void = debounce((size?: {width: number, height: number}) => {
@@ -162,12 +165,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 
 	// TODO change this implementation to generate style sheets instead of setting styles!
 	public setStyle(selector:string, style: {[property: string]: string}) {
-		let targetElement: HTMLElement[];
-		if (!selector) {
-			targetElement = [this.getMainElement()];
-		} else {
-			targetElement = Array.from((this.getMainElement() as HTMLElement).querySelectorAll(":scope " + selector));
-		}
+		let targetElement = this.getElementForSelector(selector);
 		if (targetElement.length === 0) {
 			this.logger.error("Cannot set style on non-existing element. Selector: " + selector);
 		} else {
@@ -176,14 +174,9 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 	}
 
 	public setClassNames(selector:string, classNames: {[className: string]: boolean}) {
-		let targetElement: HTMLElement[];
-		if (!selector) {
-			targetElement = [this.getMainElement()];
-		} else {
-			targetElement = Array.from((this.getMainElement() as HTMLElement).querySelectorAll(":scope " + selector));
-		}
+		let targetElement = this.getElementForSelector(selector);
 		if (targetElement.length === 0) {
-			this.logger.error("Cannot set style on non-existing element. Selector: " + selector);
+			this.logger.error("Cannot set css class on non-existing element. Selector: " + selector);
 		} else {
 			targetElement.forEach(el => {
 				for (let [className, enabled] of Object.entries(classNames)) {
@@ -193,4 +186,30 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		}
 	}
 
+	public setAttributes(selector:string, attributes: {[property: string]: string}) {
+		let targetElement = this.getElementForSelector(selector);
+		if (targetElement.length === 0) {
+			this.logger.error("Cannot set attribute on non-existing element. Selector: " + selector);
+		} else {
+			targetElement.forEach(el => {
+				for (let [attribute, value] of Object.entries(attributes)) {
+					if (value === "__ta-deleted-attribute__") {
+						el.removeAttribute(attribute);
+					} else {
+						el.setAttribute(attribute, value);
+					}
+				}
+			});
+		}
+	}
+
+	private getElementForSelector(selector: string) {
+		let targetElement: HTMLElement[];
+		if (!selector) {
+			targetElement = [this.getMainElement()];
+		} else {
+			targetElement = Array.from((this.getMainElement() as HTMLElement).querySelectorAll(":scope " + selector));
+		}
+		return targetElement;
+	}
 }
