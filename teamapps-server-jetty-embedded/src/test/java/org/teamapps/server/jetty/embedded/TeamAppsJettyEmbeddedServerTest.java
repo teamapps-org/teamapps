@@ -39,12 +39,6 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.addRootComponent(null, rootPanel);
 			MultiLineTextField tf = new MultiLineTextField();
 			rootPanel.setContent(tf);
-
-
-			tf.setAttribute("XXXXXXX", "yyyyy");
-
-			tf.setAttribute("data-teamapps-debugging-id", null);
-			
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, Files.createTempDir(), 8082);
