@@ -26,16 +26,26 @@ public class ClassPathResource implements Resource {
 	private final String resourceName;
 	private final String name;
 	private final ClassLoader classLoader;
+	private final String mimeType;
 	private long length = -1;
 
 	public ClassPathResource(String resourceName) {
-		this(resourceName, null);
+		this(resourceName, null, null);
+	}
+
+	public ClassPathResource(String resourceName, String mimeType) {
+		this(resourceName, null, mimeType);
 	}
 
 	public ClassPathResource(String resourceName, ClassLoader classLoader) {
+		this(resourceName, classLoader, null);
+	}
+
+	public ClassPathResource(String resourceName, ClassLoader classLoader, String mimeType) {
 		this.resourceName = resourceName;
 		this.name = resourceName.contains("/") ? resourceName.substring(resourceName.lastIndexOf('/') + 1) : resourceName;
 		this.classLoader = classLoader;
+		this.mimeType = mimeType;
 	}
 
 	@Override
@@ -55,6 +65,11 @@ public class ClassPathResource implements Resource {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public String getMimeType() {
+		return mimeType;
 	}
 
 	@Override
