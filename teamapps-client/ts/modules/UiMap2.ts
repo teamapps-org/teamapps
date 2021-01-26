@@ -73,6 +73,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.map = new Map({
 			container: this.$map,
 			style: config.styleUrl,
+			center: this.convertToLngLatLike(config.mapPosition),
 			hash: false, // don't change the URL!
 			zoom: 9, // starting zoom
 		});
@@ -414,6 +415,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 	private convertToPosition(loc: UiMapLocationConfig): Position {
 		return [loc.longitude, loc.latitude];
+	}
+	
+	private convertToLngLatLike(loc: UiMapLocationConfig): LngLatLike {
+		return this.convertToPosition(loc) as LngLatLike;
 	}
 
 	public addMarker(markerConfig: UiMapMarkerClientRecordConfig): void {
