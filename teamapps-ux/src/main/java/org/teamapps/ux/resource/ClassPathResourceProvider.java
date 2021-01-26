@@ -21,19 +21,26 @@ package org.teamapps.ux.resource;
 
 import com.google.common.annotations.VisibleForTesting;
 
-import java.io.InputStream;
+import java.util.function.Function;
 
 public class ClassPathResourceProvider implements ResourceProvider {
 
 	private final String basePackage;
+	private final Function<String, String> javaResourceNameToMimeTypeFunction;
 
 	public ClassPathResourceProvider(String basePackage) {
+		this(basePackage, s -> null);
+	}
+
+	public ClassPathResourceProvider(String basePackage, Function<String, String> javaResourceNameToMimeTypeFunction) {
 		this.basePackage = normalizeClassPathResourcePath(basePackage);
+		this.javaResourceNameToMimeTypeFunction = javaResourceNameToMimeTypeFunction;
 	}
 
 	@Override
-	public Resource getResource(String servletPath, String relativeResourcePath, String sessionId) {
-		return new ClassPathResource(getJavaResourceName(relativeResourcePath));
+	public Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId) {
+		return new ClassPathResource(getJavaResourceName(relativeResourcePath),
+				javaResourceNameToMimeTypeFunction.apply(relativeResourcePath));
 	}
 
 	private String getJavaResourceName(String resource) {
