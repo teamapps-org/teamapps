@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class MapView2<RECORD> extends AbstractComponent {
 
 	public final Event<LocationChangedEventData> onLocationChanged = new Event<>();
-	public final Event<Integer> onZoomLevelChanged = new Event<>();
+	public final Event<Float> onZoomLevelChanged = new Event<>();
 	public final Event<Location> onMapClicked = new Event<>();
 	public final Event<Marker<RECORD>> onMarkerClicked = new Event<>();
 	public final Event<AbstractMapShape> onShapeDrawn = new Event<>();
@@ -46,7 +46,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private final String baseApiUrl;
 	private final String accessToken;
 	private String styleUrl;
-	private int zoomLevel = 5;
+	private float zoomLevel = 10f;
 	private Location location = new Location(0, 0);
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
 	private List<Marker<RECORD>> clusterMarkers = new ArrayList<>();
@@ -263,12 +263,17 @@ public class MapView2<RECORD> extends AbstractComponent {
 	}
 
 	public void setLocation(Location location) {
-		this.location = location;
-		queueCommandIfRendered(() -> new UiMap2.SetLocationCommand(getId(), location.createUiLocation()));
+		setLocation(location, 2000, 3);
 	}
 
 	public void setLocation(double latitude, double longitude) {
 		setLocation(new Location(latitude, longitude));
+	}
+
+	public void setLocation(Location location, long animationDurationMillis, int targetZoomLevel) {
+		this.location = location;
+		this.zoomLevel = targetZoomLevel;
+		queueCommandIfRendered(() -> new UiMap2.SetLocationCommand(getId(), location.createUiLocation(), animationDurationMillis, targetZoomLevel));
 	}
 
 	public void setLatitude(double latitude) {
@@ -279,7 +284,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 		setLocation(new Location(location.getLatitude(), longitude));
 	}
 
-	public int getZoomLevel() {
+	public float getZoomLevel() {
 		return zoomLevel;
 	}
 
