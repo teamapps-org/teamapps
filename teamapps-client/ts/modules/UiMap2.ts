@@ -476,10 +476,12 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		this.map.zoomTo(zoom)
 	}
 
-	setLocation(location: UiMapLocationConfig): void {
+	setLocation(location: UiMapLocationConfig, animationDurationMillis: number, targetZoomLevel: number): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.map.easeTo({
-				center: [location.longitude, location.latitude]
+				center: [location.longitude, location.latitude],
+				duration: animationDurationMillis,
+				zoom: targetZoomLevel
 			});
 		});
 	}
