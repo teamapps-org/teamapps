@@ -398,13 +398,14 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				this.$video.muted = true;
 				this.$video.srcObject = this.targetStream;
 				try {
-					let conferenceApiConfig = {
+					let conferenceApiConfig: ConferenceInput = {
 						stream: newParams.streamUuid,
 						token: newParams.server.token,
 						url: newParams.server.url,
 						worker: newParams.server.worker,
 						simulcast: newParams.simulcast,
-						stopTracks: true
+						stopTracks: true,
+						keyFrameRequestDelay: newParams.keyFrameRequestDelay
 					};
 					console.log("ConferenceApi config: ", conferenceApiConfig);
 					this.conferenceClient = new ConferenceApi(conferenceApiConfig);
