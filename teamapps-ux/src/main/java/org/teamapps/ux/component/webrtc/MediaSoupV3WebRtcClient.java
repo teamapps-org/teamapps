@@ -168,8 +168,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			AudioTrackConstraints audioConstraints,
 			VideoTrackConstraints videoConstraints,
 			ScreenSharingConstraints screenSharingConstraints,
-			long maxBitrate, boolean simulcast
-	) {
+			long maxBitrate, boolean simulcast,
+			long keyFrameRequestDelayMillis) {
 		UiMediaSoupPublishingParameters params = new UiMediaSoupPublishingParameters();
 		params.setServer(new UiMediaServerUrlAndToken(serverUrl, worker, token));
 		params.setStreamUuid(streamUuid);
@@ -178,6 +178,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		params.setScreenSharingConstraints(screenSharingConstraints != null ? screenSharingConstraints.createUiScreenSharingConstraints() : null);
 		params.setMaxBitrate(maxBitrate);
 		params.setSimulcast(simulcast);
+		params.setKeyFrameRequestDelay(keyFrameRequestDelayMillis);
 		this.publishingParameters = params;
 		update();
 	}

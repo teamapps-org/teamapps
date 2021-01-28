@@ -232,6 +232,7 @@ export interface ConferenceInput {
     simulcast?: boolean;
     kinds?: MediaKind[];
     maxIncomingBitrate?: number;
+    keyFrameRequestDelay?: number;
 }
 export interface ConferenceConfigTimeout {
     stats: number;
