@@ -68,17 +68,17 @@ public class TeamAppsUndertowEmbeddedServer {
 		this(webController, Files.createTempDirectory("teamapps").toFile(), config, port);
 	}
 
-	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, int port) {
+	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, int port) throws IOException {
 		this(webController, webAppDirectory, new TeamAppsConfiguration(), port);
 	}
 
-	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) {
+	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) throws IOException {
 		this(webController, webAppDirectory, config, 8080);
 	}
 
-	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) {
+	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) throws IOException {
 		this.teamAppsCore = new TeamAppsCore(config, webController);
-		this.webAppDirectory = webAppDirectory;
+		this.webAppDirectory = webAppDirectory.toPath().toRealPath().toFile();
 		this.port = port;
 	}
 
