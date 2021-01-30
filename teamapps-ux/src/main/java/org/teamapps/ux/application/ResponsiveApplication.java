@@ -36,7 +36,11 @@ import java.util.List;
 public interface ResponsiveApplication {
 
 	static ResponsiveApplication createApplication() {
-		return createApplication(null);
+		return createApplication((View) null);
+	}
+
+	static ResponsiveApplication createApplication(ApplicationAssembler assembler) {
+		return new ResponsiveApplicationImpl(assembler);
 	}
 
 	static ResponsiveApplication createApplication(View applicationLauncher) {
