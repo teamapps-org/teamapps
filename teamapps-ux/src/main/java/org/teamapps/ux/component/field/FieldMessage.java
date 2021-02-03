@@ -24,6 +24,8 @@ import org.teamapps.dto.UiFieldMessagePosition;
 import org.teamapps.dto.UiFieldMessageSeverity;
 import org.teamapps.dto.UiFieldMessageVisibilityMode;
 
+import java.util.Objects;
+
 public class FieldMessage {
 
 	private final Severity severity;
@@ -106,5 +108,18 @@ public class FieldMessage {
 				", position=" + position +
 				", visibilityMode=" + visibility +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FieldMessage that = (FieldMessage) o;
+		return severity == that.severity && Objects.equals(message, that.message) && position == that.position && visibility == that.visibility;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(severity, message, position, visibility);
 	}
 }
