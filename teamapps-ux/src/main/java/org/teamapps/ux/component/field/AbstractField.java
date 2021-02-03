@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractField<VALUE> extends AbstractComponent {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
 	
 	private final FieldValidator<VALUE> requiredValidator = (value) ->
 			this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
@@ -64,7 +64,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	private FieldMessage.Position defaultMessagePosition = FieldMessage.Position.BELOW;
 	private FieldMessage.Visibility defaultMessageVisibility = FieldMessage.Visibility.ALWAYS_VISIBLE;
 
-	private MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
+	private final MultiWriteLockableValue<VALUE> value = new MultiWriteLockableValue<>(null);
 
 	private boolean valueChangedByClient;
 
@@ -233,6 +233,10 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	public void setCustomFieldMessages(List<FieldMessage> fieldMessages) {
 		fieldMessagesByValidator.put(null, new ArrayList<>(fieldMessages));
 		updateFieldMessages();
+	}
+
+	public void addCustomFieldMessage(FieldMessage.Severity severity, String text) {
+		addCustomFieldMessage(new FieldMessage(severity, text));
 	}
 
 	public void addCustomFieldMessage(FieldMessage fieldMessage) {

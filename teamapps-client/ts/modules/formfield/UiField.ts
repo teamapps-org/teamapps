@@ -85,6 +85,8 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		this.$fieldWrapper.appendChild(this.$messagesContainerBelow);
 		this.setEditingMode(_config.editingMode);
 		this.setCommittedValue(_config.value);
+		this.setFieldMessages(_config.fieldMessages);
+
 		this.onValueChanged.addListener(() => this.onUserManipulation.fire(null));
 		this.getFocusableElement() && this.getFocusableElement().addEventListener("focus", () => {
 			this.getMainElement().classList.add("focus");
