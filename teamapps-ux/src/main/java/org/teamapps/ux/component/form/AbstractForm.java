@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,15 +24,13 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiClientObjectReference;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiFormLayoutPolicy;
-import org.teamapps.dto.UiGridForm;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.ux.component.field.validator.MultiFieldValidator;
 import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
 
 import java.util.ArrayList;
@@ -183,4 +181,11 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		queueCommandIfRendered(() -> new UiGridForm.SetSectionCollapsedCommand(getId(), sectionId, collapsed));
 	}
 
+	public void addMultiFieldValidator(MultiFieldValidator multiFieldValidator) {
+		this.logicalForm.addMultiFieldValidator(multiFieldValidator);
+	}
+
+	public FieldMessage.Severity validate() {
+		return this.logicalForm.validate();
+	}
 }

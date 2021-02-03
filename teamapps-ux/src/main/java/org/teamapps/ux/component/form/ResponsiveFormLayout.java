@@ -117,9 +117,7 @@ public class ResponsiveFormLayout  {
 
 	public LabelAndField addLabelAndField(Icon icon, String caption, String propertyName, AbstractField field, boolean newRow, int columnOffset) {
 		Label label = null;
-		String labelPropertyName = null;
 		if (icon != null || caption != null) {
-			labelPropertyName = propertyName + LABEL_NAME_SUFFIX;
 			label = new Label(caption, icon);
 			label.setTargetComponent(field);
 		}
@@ -132,7 +130,7 @@ public class ResponsiveFormLayout  {
 		}
 		ResponsiveFormField labelField = null;
 		if (label != null) {
-			labelField = addField(row, column, labelPropertyName, label);
+			labelField = addComponent(row, column, label);
 		}
 		ResponsiveFormField responsiveFormField = addField(row, column + 1, propertyName, field);
 		return new LabelAndField(labelField, responsiveFormField);
