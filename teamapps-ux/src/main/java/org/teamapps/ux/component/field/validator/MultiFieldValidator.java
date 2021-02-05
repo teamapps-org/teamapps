@@ -44,12 +44,10 @@ public class MultiFieldValidator {
 	public List<FieldMessage> validate() {
 		List<FieldMessage> validationResult = validation.validate();
 		List<FieldMessage> newFieldMessages = validationResult != null ? validationResult : List.of();
-		if (!Objects.equals(currentFieldMessages, newFieldMessages)) {
-			fields.forEach(f -> {
-				currentFieldMessages.forEach(f::removeCustomFieldMessage);
-				newFieldMessages.forEach(f::addCustomFieldMessage);
-			});
-		}
+		fields.forEach(f -> {
+			currentFieldMessages.forEach(f::removeCustomFieldMessage);
+			newFieldMessages.forEach(f::addCustomFieldMessage);
+		});
 		currentFieldMessages = newFieldMessages;
 		return newFieldMessages;
 	}
