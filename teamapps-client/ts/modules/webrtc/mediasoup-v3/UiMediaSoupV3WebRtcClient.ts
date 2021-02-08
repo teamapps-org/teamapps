@@ -131,7 +131,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			<div class="spinner teamapps-spinner"></div>
 		</div>
 		<div class="unmute-button-wrapper hidden" style="z-index: 2; position: absolute; top: 0; left: 0">
-			 <img class="unmute-button" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiIHdpZHRoPSIxMDAwMHB4IiBoZWlnaHQ9IjEwMDAwcHgiPjxwYXRoIGQ9Ik0xNi41IDEyYzAtMS43Ny0xLjAyLTMuMjktMi41LTQuMDN2Mi4yMWwyLjQ1IDIuNDVjLjAzLS4yLjA1LS40MS4wNS0uNjN6bTIuNSAwYzAgLjk0LS4yIDEuODItLjU0IDIuNjRsMS41MSAxLjUxQzIwLjYzIDE0LjkxIDIxIDEzLjUgMjEgMTJjMC00LjI4LTIuOTktNy44Ni03LTguNzd2Mi4wNmMyLjg5Ljg2IDUgMy41NCA1IDYuNzF6TTQuMjcgM0wzIDQuMjcgNy43MyA5SDN2Nmg0bDUgNXYtNi43M2w0LjI1IDQuMjVjLS42Ny41Mi0xLjQyLjkzLTIuMjUgMS4xOHYyLjA2YzEuMzgtLjMxIDIuNjMtLjk1IDMuNjktMS44MUwxOS43MyAyMSAyMSAxOS43M2wtOS05TDQuMjcgM3pNMTIgNEw5LjkxIDYuMDkgMTIgOC4xOFY0eiIvPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4="></img>
+			 <img class="unmute-button hidden" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiIHdpZHRoPSIxMDAwMHB4IiBoZWlnaHQ9IjEwMDAwcHgiPjxwYXRoIGQ9Ik0xNi41IDEyYzAtMS43Ny0xLjAyLTMuMjktMi41LTQuMDN2Mi4yMWwyLjQ1IDIuNDVjLjAzLS4yLjA1LS40MS4wNS0uNjN6bTIuNSAwYzAgLjk0LS4yIDEuODItLjU0IDIuNjRsMS41MSAxLjUxQzIwLjYzIDE0LjkxIDIxIDEzLjUgMjEgMTJjMC00LjI4LTIuOTktNy44Ni03LTguNzd2Mi4wNmMyLjg5Ljg2IDUgMy41NCA1IDYuNzF6TTQuMjcgM0wzIDQuMjcgNy43MyA5SDN2Nmg0bDUgNXYtNi43M2w0LjI1IDQuMjVjLS42Ny41Mi0xLjQyLjkzLTIuMjUgMS4xOHYyLjA2YzEuMzgtLjMxIDIuNjMtLjk1IDMuNjktMS44MUwxOS43MyAyMSAyMSAxOS43M2wtOS05TDQuMjcgM3pNMTIgNEw5LjkxIDYuMDkgMTIgOC4xOFY0eiIvPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4="></img>
 		</div>
 	</div>
 	<div class="caption"></div>
@@ -178,7 +178,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		["play"].forEach(eventName => {
 			this.$video.addEventListener(eventName, ev => {
 				console.log(eventName);
-				this.$unmuteButtonWrapper.classList.add("hidden");
+				// this.$unmuteButtonWrapper.classList.add("hidden");
 			});
 		});
 		["stalled", "waiting", "ended", "suspend", "abort"].forEach(eventName => {
@@ -286,23 +286,25 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			await this.stop();
 		}
 		if (config.playbackParameters != null) {
-			await this.updatePlayback(config.playbackParameters);
+			await this.updatePlayback(config.playbackParameters, this._config.forceRefreshCount != config.forceRefreshCount);
 		} else if (config.publishingParameters != null) {
-			await this.updatePublishing(config.publishingParameters);
+			await this.updatePublishing(config.publishingParameters, this._config.forceRefreshCount != config.forceRefreshCount);
 		} else {
 			this.connectionStatus.shouldHaveAudio = false;
 			this.connectionStatus.shouldHaveVideo = false;
 			await this.stop();
 		}
+		this._config.forceRefreshCount = config.forceRefreshCount;
 	}
 
-	async updatePlayback(newParams: UiMediaSoupPlaybackParametersConfig) {
+	async updatePlayback(newParams: UiMediaSoupPlaybackParametersConfig, forceRefresh: boolean) {
 		this.connectionStatus.shouldHaveAudio = newParams.audio;
 		this.connectionStatus.shouldHaveVideo = newParams.video;
 		this.updateStateCssClasses();
 
 		const oldParams = this._config.playbackParameters;
-		const needsReset = oldParams?.server?.url !== newParams?.server?.url || oldParams?.server?.worker !== newParams?.server?.worker
+		const needsReset = forceRefresh
+			|| oldParams?.server?.url !== newParams?.server?.url || oldParams?.server?.worker !== newParams?.server?.worker
 			|| oldParams?.origin?.url !== newParams?.origin?.url || oldParams?.origin?.worker !== newParams?.origin?.worker
 			|| oldParams?.streamUuid != newParams?.streamUuid;
 		if (needsReset) {
@@ -379,14 +381,15 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		}
 	}
 
-	async updatePublishing(newParams: UiMediaSoupPublishingParametersConfig) {
+	async updatePublishing(newParams: UiMediaSoupPublishingParametersConfig, forceRefresh: boolean) {
 		this.connectionStatus.shouldHaveAudio = newParams.audioConstraints != null;
 		this.connectionStatus.shouldHaveVideo = newParams.videoConstraints != null;
 		this.updateStateCssClasses();
 
 		let oldParams = this._config.publishingParameters;
 
-		const needsReset = oldParams?.server?.url != newParams?.server?.url
+		const needsReset = forceRefresh
+			|| oldParams?.server?.url != newParams?.server?.url
 			|| oldParams?.streamUuid != newParams?.streamUuid
 			|| oldParams?.simulcast !== newParams?.simulcast;
 
