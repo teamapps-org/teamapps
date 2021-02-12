@@ -28,20 +28,20 @@ public class ClientBackPressureInfo {
 	private final int maxRequestedCommands;
 	private final int remainingRequestedCommands;
 
-	private final long requestedCommandsBelowMinTimestamp;
+	private final long requestedCommandsZeroReachingTimestamp;
 
 	public ClientBackPressureInfo(int maxCommandBufferSize, int unconsumedCommandsCount, int minRequestedCommands, int maxRequestedCommands, int remainingRequestedCommands,
-	                              long requestedCommandsBelowMinTimestamp) {
+	                              long requestedCommandsZeroReachingTimestamp) {
 		this.maxCommandBufferSize = maxCommandBufferSize;
 		this.unconsumedCommandsCount = unconsumedCommandsCount;
 		this.minRequestedCommands = minRequestedCommands;
 		this.maxRequestedCommands = maxRequestedCommands;
 		this.remainingRequestedCommands = remainingRequestedCommands;
-		this.requestedCommandsBelowMinTimestamp = requestedCommandsBelowMinTimestamp;
+		this.requestedCommandsZeroReachingTimestamp = requestedCommandsZeroReachingTimestamp;
 	}
 
 	public boolean isBusy() {
-		boolean clientNotRequestingMoreCommands = requestedCommandsBelowMinTimestamp > 0 && requestedCommandsBelowMinTimestamp < System.currentTimeMillis() - 500;
+		boolean clientNotRequestingMoreCommands = requestedCommandsZeroReachingTimestamp > 0 && requestedCommandsZeroReachingTimestamp < System.currentTimeMillis() - 500;
 		boolean commandBufferCriticallyFull = unconsumedCommandsCount > 500;
 		return clientNotRequestingMoreCommands || commandBufferCriticallyFull;
 	}
@@ -66,8 +66,8 @@ public class ClientBackPressureInfo {
 		return remainingRequestedCommands;
 	}
 
-	public long getRequestedCommandsBelowMinTimestamp() {
-		return requestedCommandsBelowMinTimestamp;
+	public long getRequestedCommandsZeroReachingTimestamp() {
+		return requestedCommandsZeroReachingTimestamp;
 	}
 
 	@Override
@@ -78,8 +78,8 @@ public class ClientBackPressureInfo {
 				", minRequestedCommands=" + minRequestedCommands +
 				", maxRequestedCommands=" + maxRequestedCommands +
 				", remainingRequestedCommands=" + remainingRequestedCommands +
-				", requestedCommandsBelowMinTimestamp=" + requestedCommandsBelowMinTimestamp +
-				", timeSinceLastCommandRequestAfterZero=" + (System.currentTimeMillis() - requestedCommandsBelowMinTimestamp) +
+				", requestedCommandsBelowMinTimestamp=" + requestedCommandsZeroReachingTimestamp +
+				", timeSinceLastCommandRequestAfterZero=" + (System.currentTimeMillis() - requestedCommandsZeroReachingTimestamp) +
 				'}';
 	}
 }
