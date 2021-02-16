@@ -35,7 +35,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {DEFAULT_RENDERING_FUNCTIONS, DEFAULT_TEMPLATES, generateUUID, HighlightDirection, MatchingOptions, minimallyScrollTo, ResultCallback, TrivialComponent} from "./TrivialCore";
+import {DEFAULT_RENDERING_FUNCTIONS, DEFAULT_TEMPLATES, generateUUID, HighlightDirection, MatchingOptions, minimallyScrollTo, TrivialComponent} from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
 import {highlightMatches} from "./util/highlight";
 
@@ -54,7 +54,7 @@ export interface TrivialTreeBoxConfig<E> {
 	 * @return HTML string
 	 * @default Using the `image2LinesTemplate` from `TrivialCore`.
 	 */
-	entryRenderingFunction?: (entry: E, depth: number) => string,
+	entryRenderingFunction: (entry: E, depth: number) => string,
 
 	/**
 	 * The initially selected entry. (Caution: use `selectedEntries` for `TrivialTagBox`).
@@ -93,7 +93,7 @@ export interface TrivialTreeBoxConfig<E> {
 	 * @param node
 	 * @param resultCallback
 	 */
-	lazyChildrenQueryFunction?: (entry: E, resultCallback: ResultCallback<E>) => void,
+	lazyChildrenQueryFunction?: (entry: E) => Promise<E[]>,
 
 	/**
 	 * Property used to determine whether a node is expanded or not.
@@ -185,11 +185,10 @@ class EntryWrapper<E> {
 		return this._id;
 	}
 
-	public lazyLoadChildren(resultCallback: ResultCallback<E>) {
-		return this.config.lazyChildrenQueryFunction(this.entry, (entries: E[]) => {
-			this.children = entries.map(child => new EntryWrapper(child, this, this.config));
-			resultCallback(entries);
-		});
+	public async lazyLoadChildren(): Promise<E[]> {
+		let entries = await this.config.lazyChildrenQueryFunction(this.entry);
+		this.children = entries.map(child => new EntryWrapper(child, this, this.config));
+		return entries;
 	}
 
 	public render() {
@@ -229,8 +228,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	private selectedEntryId: string | number;
 	private highlightedEntry: EntryWrapper<E>;
 
-	constructor($container: JQuery | Element, options: TrivialTreeBoxConfig<E> = {}) {
-		let defaultConfig: TrivialTreeBoxConfig<E> = {
+	constructor(options: TrivialTreeBoxConfig<E>) {
+		this.config = $.extend({
 			idFunction: (entry: E) => entry ? (entry as any).id : null,
 			childrenProperty: "children",
 			lazyChildrenFlag: "hasLazyChildren",
@@ -238,11 +237,6 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 				resultCallback((node as any).children || []);
 			},
 			expandedProperty: 'expanded',
-			entryRenderingFunction: function (entry: E, depth: number) {
-				const defaultRenderers = [DEFAULT_RENDERING_FUNCTIONS.icon2Lines, DEFAULT_RENDERING_FUNCTIONS.iconSingleLine];
-				const renderer = defaultRenderers[Math.min(depth, defaultRenderers.length - 1)];
-				return renderer(entry);
-			},
 			spinnerTemplate: DEFAULT_TEMPLATES.defaultSpinnerTemplate,
 			noEntriesTemplate: DEFAULT_TEMPLATES.defaultNoEntriesTemplate,
 			entries: null,
@@ -256,12 +250,10 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			showExpanders: false,
 			expandOnSelection: false, // open expandable nodes when they are selected
 			enforceSingleExpandedPath: false, // only one path is expanded at any time
-			scrollContainer: $($container),
 			indentation: null
-		};
-		this.config = $.extend(defaultConfig, options);
+		}, options);
 
-		this.$componentWrapper = $('<div class="tr-treebox"></div>').appendTo($container);
+		this.$componentWrapper = $('<div class="tr-treebox"></div>');
 		this.$componentWrapper.toggleClass("hide-expanders", !this.config.showExpanders);
 
 		this.updateEntries(this.config.entries || []);
@@ -348,7 +340,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			};
 
 			if (expanded && node.children == null) {
-				node.lazyLoadChildren((children: E[]) => this.setChildren(node, children));
+				node.lazyLoadChildren()
+					.then((children) => this.setChildren(node, children));
 			} else if (expanded && nodeHasUnrenderedChildren(node)) {
 				this.renderChildren(node);
 			}
@@ -514,7 +507,10 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	}
 
 	private minimallyScrollTo($entryWrapper: JQuery) {
-		minimallyScrollTo(this.config.scrollContainer, $entryWrapper);
+		$entryWrapper[0].scrollIntoView({
+			behavior: "smooth",
+			block: "nearest"
+		});
 	}
 
 	private markSelectedEntry(entry: EntryWrapper<E>) {
@@ -740,7 +736,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		this.$componentWrapper.remove();
 	};
 
-	getMainDomElement(): Element {
+	getMainDomElement(): HTMLElement {
 		return this.$componentWrapper[0];
 	}
 }

@@ -21,16 +21,7 @@ package org.teamapps.dto.generate;
 
 import org.stringtemplate.v4.STGroupFile;
 import org.teamapps.dto.TeamAppsDtoParser;
-import org.teamapps.dto.generate.adapter.ClassDeclarationContextModelAdaptor;
-import org.teamapps.dto.generate.adapter.CommandDeclarationContextModelAdaptor;
-import org.teamapps.dto.generate.adapter.EnumDeclarationContextModelAdapter;
-import org.teamapps.dto.generate.adapter.EventDeclarationContextModelAdaptor;
-import org.teamapps.dto.generate.adapter.InterfaceDeclarationContextModelAdaptor;
-import org.teamapps.dto.generate.adapter.PojoModelAdaptor;
-import org.teamapps.dto.generate.adapter.PropertyDeclarationContextModelAdaptor;
-import org.teamapps.dto.generate.adapter.SubCommandDeclarationContextModelAdaptor;
-import org.teamapps.dto.generate.adapter.SubEventDeclarationContextModelAdaptor;
-import org.teamapps.dto.generate.adapter.TypeContextModelAdaptor;
+import org.teamapps.dto.generate.adapter.*;
 
 public class StGroupFactory {
     public static STGroupFile createStGroup(
@@ -46,8 +37,7 @@ public class StGroupFactory {
         stGroup.registerModelAdaptor(TeamAppsDtoParser.EnumDeclarationContext.class, new EnumDeclarationContextModelAdapter());
         stGroup.registerModelAdaptor(TeamAppsDtoParser.EventDeclarationContext.class, new EventDeclarationContextModelAdaptor(model));
         stGroup.registerModelAdaptor(TeamAppsDtoParser.CommandDeclarationContext.class, new CommandDeclarationContextModelAdaptor(model));
-        stGroup.registerModelAdaptor(TeamAppsDtoParser.SubEventDeclarationContext.class, new SubEventDeclarationContextModelAdaptor(model));
-        stGroup.registerModelAdaptor(TeamAppsDtoParser.SubCommandDeclarationContext.class, new SubCommandDeclarationContextModelAdaptor(model));
+        stGroup.registerModelAdaptor(TeamAppsDtoParser.QueryDeclarationContext.class, new QueryDeclarationContextModelAdaptor(model));
         stGroup.registerModelAdaptor(TeamAppsDtoParser.PropertyDeclarationContext.class, new PropertyDeclarationContextModelAdaptor());
         stGroup.registerModelAdaptor(TeamAppsDtoParser.TypeContext.class, new TypeContextModelAdaptor(model));
         return stGroup;

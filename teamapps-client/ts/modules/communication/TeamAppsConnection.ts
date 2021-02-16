@@ -25,10 +25,12 @@ export const typescriptDeclarationFixConstant = 1;
 
 export interface TeamAppsConnection {
 	sendEvent(event: UiEvent): void;
+	sendQuery(componentId: string, queryName: string, queryId: number, query: any): void;
 }
 
 export interface TeamAppsConnectionListener {
 	onConnectionInitialized(): void;
 	onConnectionErrorOrBroken(reason: UiSessionClosingReason, message?: string): void;
 	executeCommand(uiCommand: UiCommand): Promise<any>;
+	handleQueryResult(queryId: number, result: any): void;
 }

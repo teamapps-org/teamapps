@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {defaultTreeQueryFunctionFactory, ResultCallback, trivialMatch, wrapWithDefaultTagWrapper} from "../trivial-components/TrivialCore";
+import {defaultTreeQueryFunctionFactory, trivialMatch, wrapWithDefaultTagWrapper} from "../trivial-components/TrivialCore";
 import {TrivialTagComboBox} from "../trivial-components/TrivialTagComboBox";
 import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 
@@ -43,7 +43,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	private $originalInput: HTMLElement;
 	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>;
 	private templateRenderers: { [name: string]: Renderer };
-	private lastResultCallback: Function;
+	private resultCallbacksQueue: ((result: NodeWithChildren<UiComboBoxTreeRecordConfig>[]) => void)[] = [];
 
 	private freeTextIdEntryCounter = -1;
 
@@ -64,13 +64,14 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 				}
 			}, "__children", "expanded");
 		}
-		let queryFunction = (queryString: string, resultCallback: ResultCallback<NodeWithChildren<UiComboBoxTreeRecordConfig>>) => {
-			this.lastResultCallback = resultCallback;
+		let queryFunction = (queryString: string) => {
 			this.onTextInput.fire({
 				enteredString: queryString
 			});
 			if (localQueryFunction != null) {
-				localQueryFunction(queryString, resultCallback);
+				return localQueryFunction(queryString);
+			} else {
+				return new Promise(resolve => this.resultCallbacksQueue.push(resolve))
 			}
 		};
 
@@ -94,6 +95,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 				this.onLazyChildDataRequested.fire({
 					parentId: node.id
 				});
+				return null;
 			},
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			spinnerTemplate: `<div class="teamapps-spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
@@ -157,8 +159,9 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 
 	setDropDownData(data: UiComboBoxTreeRecordConfig[]): void {
 		const objectTree = buildObjectTree(data, "id", "parentId");
-		if (this.lastResultCallback != null) {
-			this.lastResultCallback(objectTree);
+		let nextResultCallback = this.resultCallbacksQueue.shift();
+		if (nextResultCallback != null) {
+			nextResultCallback(objectTree);
 		} else {
 			this.trivialTagComboBox.updateEntries(objectTree);
 		}

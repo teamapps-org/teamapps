@@ -21,7 +21,7 @@ export interface CConfig extends BConfig, AConfig {
 }
 
 export interface CCommandHandler extends BCommandHandler, ACommandHandler {
-	x3(y3: string): void;
+	x3(y3: string): any;
 }
 
 export interface CEventSource extends BEventSource, AEventSource {

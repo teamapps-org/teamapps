@@ -86,7 +86,7 @@
     "@fullcalendar/moment": "^4.2.0",
     "@fullcalendar/moment-timezone": "^4.2.0",
     "@fullcalendar/timegrid": "^4.2.0",
-    "@popperjs/core": "^2.5.2",
+    "@popperjs/core": "^2.6.0",
     "@types/luxon": "^1.25.0",
     "@types/maplibre-gl": "^1.13.0",
     "animate.css": "^4.1.0",

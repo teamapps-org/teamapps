@@ -137,7 +137,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 		return this._executingCommand;
 	}
 
-	fireEvent(eventObject: UiEvent): void {
+	sendEvent(eventObject: UiEvent): void {
 		this.parentWindowMessagePort.postMessage({
 			_type: "EVENT",
 			eventObject
@@ -146,7 +146,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 
 	registerClientObject(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void {
 		this.components[id] = component;
-		EventRegistrator.registerForEvents(component, teamappsType, (eventObject: UiEvent) => this.fireEvent(eventObject), {id: id});
+		EventRegistrator.registerForEvents(component, teamappsType, (eventObject: UiEvent) => this.sendEvent(eventObject), {id: id});
 
 		if (id !== this.workSpaceLayout.getId()) {
 			this.parentWindowMessagePort.postMessage({

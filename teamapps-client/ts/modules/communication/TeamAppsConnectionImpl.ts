@@ -161,6 +161,10 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		}, this.keepaliveInterval)
 	}
 
+	sendQuery(componentId: string, queryName: string, queryId: number, query: any): void {
+        throw new Error("Method not implemented.");
+    }
+
 	private ensureEnoughCommandsRequested() {
 		if (this.maxRequestedCommandId - this.lastReceivedCommandId <= this.minRequestedCommands) {
 			try {

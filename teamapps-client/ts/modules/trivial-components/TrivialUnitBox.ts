@@ -110,7 +110,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
     private numberFormat: Intl.NumberFormat;
     private numberParser: NumberParser;
 
-    constructor(originalInput: JQuery|Element, options: TrivialUnitBoxConfig<U> = {}) {
+    constructor(originalInput: JQuery|Element, options: TrivialUnitBoxConfig<U>) {
         this.config = $.extend(<TrivialUnitBoxConfig<U>> {
             unitValueProperty: 'code',
             unitIdProperty: 'code',
@@ -301,7 +301,8 @@ export class TrivialUnitBox<U> implements TrivialComponent {
             }
         });
 
-        this.listBox = new TrivialTreeBox(this.$dropDown, this.config);
+        this.listBox = new TrivialTreeBox(this.config);
+        this.$dropDown.append(this.listBox.getMainDomElement());
         this.listBox.onSelectedEntryChanged.addListener((selectedEntry: U, eventSource, originalEvent?: unknown) => {
             if (selectedEntry) {
                 this.setSelectedEntry(selectedEntry, true, originalEvent);
@@ -407,20 +408,19 @@ export class TrivialUnitBox<U> implements TrivialComponent {
         this.$spinners = this.$spinners.add($spinner);
 
         // call queryFunction asynchronously to be sure the input field has been updated before the result callback is called. Note: the query() method is called on keydown...
-        setTimeout(() => {
-            this.config.queryFunction(this.getQueryString(), (newEntries: U[]) => {
-                this.updateEntries(newEntries);
+        setTimeout(async () => {
+            let newEntries = await this.config.queryFunction(this.getQueryString());
+            this.updateEntries(newEntries);
 
-                const queryString = this.getQueryString();
-                if (queryString.length > 0) {
-                    this.listBox.highlightTextMatches(queryString);
-                }
-                this.listBox.highlightNextEntry(highlightDirection);
+            const queryString = this.getQueryString();
+            if (queryString.length > 0) {
+                this.listBox.highlightTextMatches(queryString);
+            }
+            this.listBox.highlightNextEntry(highlightDirection);
 
-                if (this._isDropDownOpen) {
-                    this.openDropDown(); // only for repositioning!
-                }
-            });
+            if (this._isDropDownOpen) {
+                this.openDropDown(); // only for repositioning!
+            }
         });
     }
 
@@ -596,7 +596,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
         this.$dropDown.remove();
     }
 
-    getMainDomElement(): Element {
+    getMainDomElement(): HTMLElement {
         return this.$unitBox[0];
     }
 

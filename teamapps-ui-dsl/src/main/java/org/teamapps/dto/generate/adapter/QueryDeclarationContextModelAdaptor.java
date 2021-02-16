@@ -23,41 +23,49 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
-import org.teamapps.dto.generate.TeamAppsDtoModel;
 import org.teamapps.dto.TeamAppsDtoParser;
+import org.teamapps.dto.generate.ParserFactory;
+import org.teamapps.dto.generate.TeamAppsDtoModel;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class SubEventDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.SubEventDeclarationContext> {
+public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.QueryDeclarationContext> {
 
+    private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
     private final TeamAppsDtoModel astUtil;
 
-    public SubEventDeclarationContextModelAdaptor(TeamAppsDtoModel astUtil) {
+    static {
+        try {
+            COMPONENT_ID_PARAMETER = ParserFactory.createParser(new StringReader("UiComponentId componentId")).formalParameterWithDefault();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public QueryDeclarationContextModelAdaptor(TeamAppsDtoModel astUtil) {
         this.astUtil = astUtil;
     }
 
     @Override
     public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
-        TeamAppsDtoParser.SubEventDeclarationContext subEventContext = (TeamAppsDtoParser.SubEventDeclarationContext) o;
+        TeamAppsDtoParser.QueryDeclarationContext eventContext = (TeamAppsDtoParser.QueryDeclarationContext) o;
         if ("declaringClass".equals(propertyName)) {
-            return TeamAppsDtoModel.getDeclaringClassOrInterface(subEventContext);
+            return TeamAppsDtoModel.getDeclaringClassOrInterface(eventContext);
         } else if ("typeScriptInterfaceName".equals(propertyName)) {
-            return astUtil.getDeclaringClassOrInterfaceName(subEventContext) + "_" + StringUtils.capitalize(subEventContext.Identifier().getText()) + "SubEvent";
+            return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(eventContext) + "_" + StringUtils.capitalize(eventContext.Identifier().getText()) + "Query";
         } else if ("allProperties".equals(propertyName)) {
-            return subEventContext.formalParameterWithDefault();
+            return getAllParameters(eventContext);
         } else if ("allRequiredProperties".equals(propertyName)) {
-            return subEventContext.formalParameterWithDefault();
+            return getAllParameters(eventContext);
         } else if ("requiredPropertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return subEventContext.formalParameterWithDefault();
-        } else if ("superClassDecl".equals(propertyName)) {
-            return null;
-        } else if ("allSubClasses".equals(propertyName)) {
-            return null;
-        } else if ("allNonRequiredProperties".equals(propertyName)) {
-            return null;
+            return getAllParameters(eventContext);
         } else if ("simplePropertiesByRelevance".equals(propertyName)) {
-            return subEventContext.formalParameterWithDefault().stream()
+            return getAllParameters(eventContext).stream()
                     .sorted((p1, p2) -> {
                         Function<TeamAppsDtoParser.FormalParameterWithDefaultContext, Integer> getPriority = (p) -> {
                             if (p.Identifier().getText().equals("id")) {
@@ -77,28 +85,30 @@ public class SubEventDeclarationContextModelAdaptor extends ReferencableEntityMo
                         return getPriority.apply(p2) - getPriority.apply(p1);
                     })
                     .collect(Collectors.toList());
-        } else if ("allReferencedClassesAndInterfaces".equals(propertyName)) {
-            return astUtil.findAllReferencedClassesAndInterfaces(subEventContext);
-        } else if ("allReferencedEnums".equals(propertyName)) {
-            return astUtil.findAllReferencedEnums(subEventContext);
         } else {
             return super.getProperty(interpreter, seld, o, property, propertyName);
         }
     }
 
     @Override
-    protected String getTypeScriptIdentifier(TeamAppsDtoParser.SubEventDeclarationContext node) {
-        return getDeclaringTypeScriptFileBaseName(node) + "_" + StringUtils.capitalize(node.Identifier().getText()) + "SubEvent";
+    protected String getTypeScriptIdentifier(TeamAppsDtoParser.QueryDeclarationContext node) {
+        return getDeclaringTypeScriptFileBaseName(node) + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Event";
     }
 
     @Override
-    protected String getJsonIdentifier(TeamAppsDtoParser.SubEventDeclarationContext node) {
+    protected String getJsonIdentifier(TeamAppsDtoParser.QueryDeclarationContext node) {
         return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + node.Identifier().getText();
     }
 
-    @Override
-    protected String getJavaClassName(TeamAppsDtoParser.SubEventDeclarationContext node) {
-        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "SubEvent";
+	@Override
+	protected String getJavaClassName(TeamAppsDtoParser.QueryDeclarationContext node) {
+        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Event";
+    }
+
+	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.QueryDeclarationContext commandContext) {
+        ArrayList<TeamAppsDtoParser.FormalParameterWithDefaultContext> allProperties = new ArrayList<>(commandContext.formalParameterWithDefault());
+        allProperties.add(0, COMPONENT_ID_PARAMETER);
+        return allProperties;
     }
 
 }

@@ -37,11 +37,12 @@
 .tr-combobox-selected-entry-wrapper {
   flex: 1 1 auto;
   overflow: hidden;
-  display:flex;
+  display: flex;
   align-items: center; // if the template doesn't take the whole space...
 
   .tr-combobox-entry {
     flex-grow: 1;
+
     * {
       cursor: text;
     }
@@ -49,13 +50,22 @@
 }
 
 .tr-combobox-editor {
-  width: 0;
-  height: 0;
-  position: absolute;
+  flex: 1 1 auto;
   border: none;
   outline: none;
   background-color: transparent;
   z-index: 1;
   font-family: @tr-editor-font-family;
   font-size: @tr-editor-font-size;
+}
+
+.tr-combobox.editor-hidden .tr-combobox-editor {
+  width: 0;
+  height: 0;
+  position: absolute;
+  opacity: 0;
+}
+
+.tr-combobox:not(.editor-hidden) .tr-combobox-selected-entry-wrapper {
+  display: none;
 }

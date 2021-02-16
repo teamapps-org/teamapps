@@ -73,7 +73,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 			selectedEntry: {...CURRENCIES[this.defaultCurrencyCode]},
 			queryOnNonNumberCharacters: config.alphaKeysQueryForCurrency,
 			editingMode: this.convertToTrivialComponentsEditingMode(config.editingMode),
-			queryFunction: (queryString, callback) => this.queryFunction(queryString, callback)
+			queryFunction: (queryString) => this.queryFunction(queryString)
 		});
 		this.trivialUnitBox.getMainDomElement().classList.add("UiCurrencyField");
 		this.trivialUnitBox.onChange.addListener((value: TrivialUnitBoxChangeEvent<any>) => {

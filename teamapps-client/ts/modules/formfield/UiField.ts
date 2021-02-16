@@ -88,11 +88,11 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		this.setFieldMessages(_config.fieldMessages);
 
 		this.onValueChanged.addListener(() => this.onUserManipulation.fire(null));
-		this.getFocusableElement() && this.getFocusableElement().addEventListener("focus", () => {
+		this.getFocusableElement()?.addEventListener("focus", () => {
 			this.getMainElement().classList.add("focus");
 			this.onFocused.fire(null);
 		});
-		this.getFocusableElement() && this.getFocusableElement().addEventListener("blur", () => {
+		this.getFocusableElement()?.addEventListener("blur", () => {
 			this.getMainElement().classList.remove("focus");
 			this.onBlurred.fire(null);
 		});

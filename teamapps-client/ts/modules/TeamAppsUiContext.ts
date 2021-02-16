@@ -51,5 +51,5 @@ export interface TeamAppsUiContextInternalApi extends TeamAppsUiContext {
 
 	destroyClientObject(componentId: string): void;
 
-	fireEvent(eventObject: UiEvent): void;
+	sendEvent(eventObject: UiEvent): void;
 }

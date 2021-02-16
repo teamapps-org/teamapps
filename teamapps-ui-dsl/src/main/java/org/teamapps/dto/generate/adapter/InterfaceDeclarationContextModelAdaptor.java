@@ -57,8 +57,6 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 			return astUtil.findAllSubClasses(interfaceContext);
 		} else if ("allSuperInterfaces".equals(propertyName)) {
 			return astUtil.findAllSuperInterfaces(interfaceContext);
-		} else if ("allSubEventsInHierarchy".equals(propertyName)) {
-			return astUtil.findAllSubEventsInHierarchy(interfaceContext);
 		} else if ("subEventBaseClassName".equals(propertyName)) {
 			return interfaceContext.Identifier().getText() + "SubEvent";
 		} else if ("isDescendantOfClassOrInterfaceReferencedForSubEvents".equals(propertyName)) {
@@ -71,22 +69,16 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 					.collect(Collectors.toList());
 		} else if ("hasCommands".equals(propertyName)) {
 			return !astUtil.getAllCommands(interfaceContext).isEmpty();
-		} else if ("hasSubCommands".equals(propertyName)) {
-			return !astUtil.getAllSubCommands(interfaceContext).isEmpty();
 		} else if ("hasEvents".equals(propertyName)) {
 			return !astUtil.getAllEvents(interfaceContext).isEmpty();
 		} else if ("allEvents".equals(propertyName)) {
 			return astUtil.getAllEvents(interfaceContext);
-		} else if ("hasSubEvents".equals(propertyName)) {
-			return !astUtil.getAllSubEvents(interfaceContext).isEmpty();
+		} else if ("allQueries".equals(propertyName)) {
+			return astUtil.getAllQueries(interfaceContext);
 		} else if ("superInterfacesWithCommands".equals(propertyName)) {
 			return astUtil.getSuperInterfacesWithCommands(interfaceContext);
-		} else if ("superInterfacesWithSubCommands".equals(propertyName)) {
-			return astUtil.getSuperInterfacesWithSubCommands(interfaceContext);
 		} else if ("superInterfacesWithEvents".equals(propertyName)) {
 			return astUtil.getSuperInterfacesWithEvents(interfaceContext);
-		} else if ("superInterfacesWithSubEvents".equals(propertyName)) {
-			return astUtil.getSuperInterfacesWithSubEvents(interfaceContext);
 		} else if ("inlineEnumProperties".equals(propertyName)) {
 			return interfaceContext.propertyDeclaration().stream().filter(p -> p.type().inlineEnum() != null).collect(Collectors.toList());
 		} else if ("allReferencedClassesAndInterfaces".equals(propertyName)) {
@@ -95,10 +87,6 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 			return astUtil.findAllReferencedEnums(interfaceContext);
 		} else if ("simplePropertiesByRelevance".equals(propertyName)) {
 			return astUtil.getSimplePropertiesSortedByRelevance(astUtil.findAllProperties(interfaceContext));
-		} else if ("subCommandInterfaceNeeded".equals(propertyName)) {
-			return astUtil.interfaceOrDescendantHasSubCommandDeclarations(interfaceContext);
-		} else if ("subEventInterfaceNeeded".equals(propertyName)) {
-			return astUtil.interfaceOrDescendantHasSubEventDeclarations(interfaceContext);
 		} else {
 			return super.getProperty(interpreter, seld, o, property, propertyName);
 		}
