@@ -76,6 +76,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 			center: this.convertToLngLatLike(config.mapPosition),
 			hash: false, // don't change the URL!
 			zoom: 9, // starting zoom
+			attributionControl: config.displayAttributionControl,
 		});
 		this.map.on('load', () => {
 			this.onResize();
