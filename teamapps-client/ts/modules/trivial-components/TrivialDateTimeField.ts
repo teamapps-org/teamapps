@@ -50,7 +50,7 @@ import {
 	createDateRenderer,
 	createTimeRenderer
 } from "../formfield/datetime/datetime-rendering";
-import {LocalDateTime} from "../util/LocalDateTime";
+import {LocalDateTime} from "../datetime/LocalDateTime";
 import KeyDownEvent = JQuery.KeyDownEvent;
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
@@ -70,12 +70,6 @@ export interface TrivialDateTimeFieldConfig {
 	showTrigger?: boolean,
 	editingMode?: EditingMode,
 	favorPastDates?: boolean
-}
-
-export interface LocalDate {
-	year: number,
-	month: number,
-	day: number
 }
 
 export interface LocalTime {
@@ -210,7 +204,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 				this.closeDropDown();
 			} else {
 				this.setDropDownMode(Mode.MODE_CALENDAR);
-				this.calendarBox.setSelectedDate(this.value ?? DateTime.local());
+				this.calendarBox.setSelectedDate(new LocalDateTime(this.value ?? DateTime.local()));
 				this.$activeEditor = this.$dateEditor;
 				selectElementContents(this.$dateEditor[0], 0, this.$dateEditor.text().length);
 				this.openDropDown();
@@ -230,10 +224,11 @@ export class TrivialDateTimeField implements TrivialComponent {
 		this.setEditingMode(this.config.editingMode);
 
 		this.$dateListBoxWrapper = this.$dropDown.find('.date-listbox');
-		this.dateListBox = new TrivialTreeBox<DateTime>(this.$dateListBoxWrapper, {
+		this.dateListBox = new TrivialTreeBox<DateTime>({
 			entryRenderingFunction: this.dateRenderer,
 			scrollContainer: this.$dropDown
 		});
+		this.$dateListBoxWrapper.append(this.dateListBox.getMainDomElement());
 		this.dateListBox.onSelectedEntryChanged.addListener((selectedEntry: DateTime) => {
 			if (selectedEntry) {
 				this.setDate(selectedEntry, true);
@@ -242,10 +237,11 @@ export class TrivialDateTimeField implements TrivialComponent {
 			}
 		});
 		this.$timeListBoxWrapper = this.$dropDown.find('.time-listbox');
-		this.timeListBox = new TrivialTreeBox<DateTime>(this.$timeListBoxWrapper, {
+		this.timeListBox = new TrivialTreeBox<DateTime>({
 			entryRenderingFunction: this.timeRenderer,
 			scrollContainer: this.$dropDown
 		});
+		this.$timeListBoxWrapper.append(this.timeListBox.getMainDomElement());
 		this.timeListBox.onSelectedEntryChanged.addListener((selectedEntry: DateTime) => {
 			if (selectedEntry) {
 				this.setTime(selectedEntry, true);
@@ -408,13 +404,13 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private setDropDownMode(mode: Mode) {
 		this.dropDownMode = mode;
 		if (!this.calendarBoxInitialized && mode === Mode.MODE_CALENDAR) {
-			this.calendarBox = new TrivialCalendarBox(this.$calendarBoxWrapper, {
-				firstDayOfWeek: 1,
-				mode: 'date' // 'date', 'time', 'datetime'
+			this.calendarBox = new TrivialCalendarBox({
+				firstDayOfWeek: 1
 			});
+			this.$calendarBoxWrapper.append(this.calendarBox.getMainDomElement());
 			this.calendarBox.setKeyboardNavigationState('month');
 			this.calendarBox.onChange.addListener(({value, timeUnitEdited}) => {
-				this.setDate(value);
+				this.setDate(value.toZoned(this.config.timeZone));
 				if (timeUnitEdited === 'day') {
 					this.closeDropDown();
 					this.$activeEditor = this.$timeEditor;
@@ -661,7 +657,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		this.$dropDown.remove();
 	}
 
-	getMainDomElement(): Element {
+	getMainDomElement(): HTMLElement {
 		return this.$dateTimeField[0];
 	}
 }

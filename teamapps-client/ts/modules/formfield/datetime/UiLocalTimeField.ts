@@ -26,7 +26,7 @@ import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {AbstractUiTimeField} from "./AbstractUiTimeField";
 import {arraysEqual} from "../../Common";
-import {LocalDateTime} from "../../util/LocalDateTime";
+import {LocalDateTime} from "../../datetime/LocalDateTime";
 import {createTimeRenderer} from "./datetime-rendering";
 
 type LocalTime = [number, number, number, number];

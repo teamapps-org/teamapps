@@ -36,25 +36,24 @@ limitations under the License.
 */
 
 import {
-	DEFAULT_TEMPLATES, defaultEntryMatchingFunctionFactory, defaultTreeQueryFunctionFactory, EditingMode, HighlightDirection, objectEquals, QueryFunction, setTimeoutOrDoImmediately,
-	TrivialComponent, keyCodes, RenderingFunction, DEFAULT_RENDERING_FUNCTIONS, generateUUID, unProxyEntry
+	DEFAULT_TEMPLATES,
+	EditingMode,
+	generateUUID,
+	HighlightDirection,
+	keyCodes,
+	objectEquals,
+	RenderingFunction,
+	setTimeoutOrDoImmediately,
+	TrivialComponent,
+	unProxyEntry
 } from "./TrivialCore";
-import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import {TrivialEvent} from "./TrivialEvent";
-import {place} from "place-to";
-import {createPopper, Instance as Popper} from '@popperjs/core';
-import KeyDownEvent = JQuery.KeyDownEvent;
-import BlurEvent = JQuery.BlurEvent;
+import {createPopper, detectOverflow, Instance as Popper} from '@popperjs/core';
+import ResizeObserver from "resize-observer-polyfill";
+import {parseHtml} from "../Common";
+import {DropDownComponent, SelectionDirection} from "./dropdown/DropdownComponent";
 
-export interface TrivialComboBoxConfig<E> extends TrivialTreeBoxConfig<E> {
-	/**
-	 * Calculates the value to set on the original input.
-	 *
-	 * @param entry the selected entry
-	 * @return the string to set as the value of the original input
-	 */
-	inputValueFunction?: (entry: E) => string,
-
+export interface TrivialComboBoxConfig<E> {
 	/**
 	 * Rendering function used to display a _selected_ entry
 	 * (i.e. an entry inside the editor area of the component, not the dropdown).
@@ -63,7 +62,7 @@ export interface TrivialComboBoxConfig<E> extends TrivialTreeBoxConfig<E> {
 	 * @return HTML string
 	 * @default `wrapWithDefaultTagWrapper(entryRenderingFunction(entry))`
 	 */
-	selectedEntryRenderingFunction?: RenderingFunction<E>,
+	selectedEntryRenderingFunction: RenderingFunction<E>,
 
 	/**
 	 * Initially selected entry.
@@ -79,14 +78,6 @@ export interface TrivialComboBoxConfig<E> extends TrivialTreeBoxConfig<E> {
 	 * @default `100`
 	 */
 	textHighlightingEntryLimit?: number,
-
-	/**
-	 * Used to retrieve the entries ("suggestions") to be displayed in the dropdown box.
-	 *
-	 * @see QueryFunction
-	 * @default creates a client-side query function using the provided [[entries]]
-	 */
-	queryFunction?: QueryFunction<E>,
 
 	/**
 	 * Whether or not to provide auto-completion.
@@ -163,13 +154,12 @@ export interface TrivialComboBoxConfig<E> extends TrivialTreeBoxConfig<E> {
 
 export class TrivialComboBox<E> implements TrivialComponent {
 
-	private $comboBox: JQuery;
-	private $dropDown: JQuery;
+	private $comboBox: HTMLElement;
+	private $dropDown: HTMLElement;
 	private popper: Popper;
-	private $dropDownTargetElement: JQuery;
+	private $dropDownTargetElement: HTMLElement;
 	private config: TrivialComboBoxConfig<E>;
-	private $editor: JQuery;
-	private treeBox: TrivialTreeBox<E>;
+	private $editor: HTMLInputElement;
 	private _isDropDownOpen = false;
 	private isEditorVisible = false;
 	private selectedEntry: E = null;
@@ -178,44 +168,21 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	private autoCompleteTimeoutId = -1;
 	private doNoAutoCompleteBecauseBackspaceWasPressed = false;
 	private editingMode: EditingMode;
-	private usingDefaultQueryFunction: boolean = false;
-	private $originalInput: JQuery;
-	private $selectedEntryWrapper: JQuery;
-	private $clearButton: JQuery;
-	private $trigger: JQuery;
-	private $spinners = $();
+	private $selectedEntryWrapper: HTMLElement;
+	private $clearButton: HTMLElement;
+	private $trigger: HTMLElement;
+	private dropDownComponent: DropDownComponent<E>;
 
 	public readonly onSelectedEntryChanged = new TrivialEvent<E>(this);
 	public readonly onFocus = new TrivialEvent<void>(this);
 	public readonly onBlur = new TrivialEvent<void>(this);
 
-	constructor(originalInput: HTMLElement, options: TrivialComboBoxConfig<E> = {}) {
-		let defaultIdFunction = (e: E) => {
-			if (e == null) {
-				return null;
-			} else if ((e as any)._isFreeTextEntry) {
-				return (e as any).displayValue;
-			} else {
-				return (e as any).id;
-			}
-		};
-		this.config = $.extend(<TrivialComboBoxConfig<E>>{
-			idFunction: defaultIdFunction,
-			inputValueFunction: defaultIdFunction,
-			entryRenderingFunction: (entry: E, depth: number) => {
-				const defaultRenderers = [DEFAULT_RENDERING_FUNCTIONS.icon2Lines, DEFAULT_RENDERING_FUNCTIONS.iconSingleLine];
-				const renderer = defaultRenderers[Math.min(depth, defaultRenderers.length - 1)];
-				return renderer(entry);
-			},
-			selectedEntryRenderingFunction: (entry: E) => {
-				return this.config.entryRenderingFunction(entry, null);
-			},
+	constructor(options: TrivialComboBoxConfig<E>, dropDownComponent?: DropDownComponent<E>) {
+		this.dropDownComponent = dropDownComponent;
+		this.config = {
 			selectedEntry: null,
 			spinnerTemplate: DEFAULT_TEMPLATES.defaultSpinnerTemplate,
-			noEntriesTemplate: DEFAULT_TEMPLATES.defaultNoEntriesTemplate,
 			textHighlightingEntryLimit: 100,
-			entries: null,
-			queryFunction: null, // defined below...
 			autoComplete: true,
 			autoCompleteDelay: 0,
 			entryToEditorTextFunction: (entry: E) => {
@@ -244,43 +211,25 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			},
 			showClearButton: false,
 			showTrigger: true,
-			matchingOptions: {
-				matchingMode: 'contains',
-				ignoreCase: true,
-				maxLevenshteinDistance: 2
-			},
-			childrenProperty: "children",
-			lazyChildrenFlag: "hasLazyChildren",
-			expandedProperty: 'expanded',
 			editingMode: "editable", // one of 'editable', 'disabled' and 'readonly'
-			showDropDownOnResultsOnly: false
-		}, options);
+			showDropDownOnResultsOnly: false,
 
-		if (!this.config.queryFunction) {
-			this.config.queryFunction = defaultTreeQueryFunctionFactory(
-				this.config.entries || [],
-				defaultEntryMatchingFunctionFactory(["displayValue", "additionalInfo"], this.config.matchingOptions),
-				this.config.childrenProperty,
-				this.config.expandedProperty
-			);
-			this.usingDefaultQueryFunction = true;
-		}
+			...options
+		};
 
-		this.$originalInput = $(originalInput);
-		this.$comboBox = $(`<div class="tr-comboBox tr-combobox tr-input-wrapper">
+		this.$comboBox = parseHtml(`<div class="tr-comboBox tr-combobox tr-input-wrapper editor-hidden">
             <div class="tr-combobox-selected-entry-wrapper"></div>
             <div class="tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
             <div class="tr-trigger ${this.config.showTrigger ? '' : 'hidden'}"><span class="tr-trigger-icon"></span></div>
-        </div>`)
-			.insertAfter(this.$originalInput);
-		this.$selectedEntryWrapper = this.$comboBox.find('.tr-combobox-selected-entry-wrapper');
-		this.$clearButton = this.$comboBox.find('.tr-remove-button');
-		this.$clearButton.mousedown((e) => {
-			this.$editor.val("");
+        </div>`);
+		this.$selectedEntryWrapper = this.$comboBox.querySelector(':scope .tr-combobox-selected-entry-wrapper');
+		this.$clearButton = this.$comboBox.querySelector(':scope .tr-remove-button');
+		this.$clearButton.addEventListener("mousedown", (e) => {
+			this.$editor.value = "";
 			this.setSelectedEntry(null, true, true, e);
 		});
-		this.$trigger = this.$comboBox.find('.tr-trigger');
-		this.$trigger.mousedown(() => {
+		this.$trigger = this.$comboBox.querySelector(':scope .tr-trigger');
+		this.$trigger.addEventListener("mousedown", () => {
 			if (this._isDropDownOpen) {
 				this.showEditor();
 				this.closeDropDown();
@@ -293,185 +242,131 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				});
 			}
 		});
-		this.$dropDown = $('<div class="tr-dropdown"></div>')
-			.scroll(() => {
-				return false;
-			});
-		this.$dropDownTargetElement = $("body");
+		this.$dropDown = parseHtml('<div class="tr-dropdown"></div>');
+		this.$dropDown.addEventListener("scroll", e => {
+			e.stopPropagation();
+			e.preventDefault();
+		});
+		this.$dropDownTargetElement = this.$comboBox;
 		this.setEditingMode(this.config.editingMode);
-		this.$originalInput.addClass("tr-original-input");
-		this.$editor = $('<input type="text" autocomplete="off"></input>');
-
-		this.$editor.prependTo(this.$comboBox).addClass("tr-combobox-editor tr-editor")
-			.focus(() => {
-				if (this.blurCausedByClickInsideComponent) {
-					// do nothing!
+		this.$editor = parseHtml('<input type="text" autocomplete="off"></input>');
+		this.$comboBox.prepend(this.$editor);
+		this.$editor.classList.add("tr-combobox-editor", "tr-editor");
+		this.$editor.addEventListener("focus", () => {
+			if (this.blurCausedByClickInsideComponent) {
+				// do nothing!
+			} else {
+				this.onFocus.fire();
+				this.$comboBox.classList.add('focus');
+				this.showEditor();
+			}
+		})
+		this.$editor.addEventListener("blur", (e: FocusEvent) => {
+			if (this.blurCausedByClickInsideComponent) {
+				this.$editor.focus();
+			} else {
+				this.onBlur.fire();
+				this.$comboBox.classList.remove('focus');
+				if (this.editorContainsFreeText()) {
+					if (!objectEquals(this.getSelectedEntry(), this.lastCommittedValue)) {
+						this.setSelectedEntry(this.getSelectedEntry(), true, true, e);
+					}
 				} else {
-					this.$originalInput.triggerHandler('focus');
-					this.onFocus.fire();
-					this.$comboBox.addClass('focus');
+					this.$editor.value = "";
+					this.setSelectedEntry(this.lastCommittedValue, false, false, e);
+				}
+				this.hideEditor();
+				this.closeDropDown();
+			}
+		})
+		this.$editor.addEventListener("keydown", (e: KeyboardEvent) => {
+			if (keyCodes.isModifierKey(e)) {
+				return;
+			} else if (e.which == keyCodes.tab) {
+				let highlightedEntry = this.dropDownComponent.getValue();
+				if (this._isDropDownOpen && highlightedEntry) {
+					this.setSelectedEntry(highlightedEntry, true, true, e);
+				} else if (this.$editor.value) {
+					this.setSelectedEntry(null, true, true, e);
+				} else if (this.config.allowFreeText) {
+					this.setSelectedEntry(this.getSelectedEntry(), true, true, e);
+				}
+				return;
+			} else if (e.which == keyCodes.left_arrow || e.which == keyCodes.right_arrow) {
+				if (this._isDropDownOpen && this.dropDownComponent.handleKeyboardInput(e)) {
+					e.preventDefault(); // the currently highlighted node got effectively expanded/collapsed, so cancel any other effect of the key stroke!
+					return;
+				} else {
+					this.showEditor();
+					return; // let the user navigate freely left and right...
+				}
+			}
+
+			if (e.which == keyCodes.backspace || e.which == keyCodes.delete) {
+				this.doNoAutoCompleteBecauseBackspaceWasPressed = true; // we want query results, but no autocomplete
+			}
+
+			if (e.which == keyCodes.up_arrow || e.which == keyCodes.down_arrow) {
+				if (!this.isEditorVisible) {
+					this.$editor.select();
 					this.showEditor();
 				}
-			})
-			.blur((e: BlurEvent) => {
-				if (this.blurCausedByClickInsideComponent) {
-					this.$editor.focus();
+				const direction = e.which == keyCodes.up_arrow ? -1 : 1;
+				if (!this._isDropDownOpen) {
+					this.query(direction);
+					this.openDropDown(); // directly open the dropdown (the user definitely wants to see it)
 				} else {
-					this.$originalInput.triggerHandler('blur');
-					this.onBlur.fire();
-					this.$comboBox.removeClass('focus');
-					if (this.editorContainsFreeText()) {
-						if (!objectEquals(this.getSelectedEntry(), this.lastCommittedValue)) {
-							this.setSelectedEntry(this.getSelectedEntry(), true, true, e);
+					if (this.dropDownComponent.handleKeyboardInput(e)) {
+						if (this.dropDownComponent.getValue() != null) {
+							this.$editor.value = this.config.autoCompleteFunction("", this.dropDownComponent.getValue())
+							this.$editor.select();
 						}
-					} else {
-						this.$editor.val("");
-						this.setSelectedEntry(this.lastCommittedValue, false, false, e);
 					}
-					this.hideEditor();
-					this.closeDropDown();
 				}
-			})
-			.keydown((e: KeyDownEvent) => {
-				if (keyCodes.isModifierKey(e)) {
-					return;
-				} else if (e.which == keyCodes.tab) {
-					let highlightedEntry = this.treeBox.getHighlightedEntry();
+				e.preventDefault(); // some browsers move the caret to the beginning on up key
+				return;
+			} else if (e.which == keyCodes.enter) {
+				if (this.isEditorVisible || this.editorContainsFreeText()) {
+					e.preventDefault(); // do not submit form
+					let highlightedEntry = this.dropDownComponent.getValue();
 					if (this._isDropDownOpen && highlightedEntry) {
 						this.setSelectedEntry(highlightedEntry, true, true, e);
-					} else if (!this.$editor.val()) {
+					} else if (!this.$editor.value) {
 						this.setSelectedEntry(null, true, true, e);
 					} else if (this.config.allowFreeText) {
 						this.setSelectedEntry(this.getSelectedEntry(), true, true, e);
 					}
-					return;
-				} else if (e.which == keyCodes.left_arrow || e.which == keyCodes.right_arrow) {
-					if (this._isDropDownOpen && this.treeBox.setHighlightedNodeExpanded(e.which == keyCodes.right_arrow)) {
-						return false; // the currently highlighted node got effectively expanded/collapsed, so cancel any other effect of the key stroke!
-					}
-					this.showEditor();
-					return; // let the user navigate freely left and right...
-				}
-
-				setTimeout(() => {
-					// After the keystroke has taken effect to the editor, check if the editor content has changed and if yes, deselect the currently selected entry!
-					let isNonIgnoredKey = !keyCodes.isModifierKey(e) && [keyCodes.enter, keyCodes.escape, keyCodes.tab].indexOf(e.which) === -1;
-					let editorValueDoesNotCorrespondToSelectedValue = this.isEntrySelected() && this.$editor.val() !== this.config.entryToEditorTextFunction(this.selectedEntry);
-					if (isNonIgnoredKey && (editorValueDoesNotCorrespondToSelectedValue || this.config.idFunction(this.treeBox.getHighlightedEntry())) !== this.config.idFunction(this.getSelectedEntry())) {
-						this.setSelectedEntry(null, false, false, e);
-					}
-				});
-
-				if (e.which == keyCodes.backspace || e.which == keyCodes.delete) {
-					this.doNoAutoCompleteBecauseBackspaceWasPressed = true; // we want query results, but no autocomplete
-				}
-
-				if (e.which == keyCodes.up_arrow || e.which == keyCodes.down_arrow) {
-					if (!this.isEditorVisible) {
-						this.$editor.select();
-						this.showEditor();
-					}
-					const direction = e.which == keyCodes.up_arrow ? -1 : 1;
-					if (!this._isDropDownOpen) {
-						this.query(direction);
-						this.openDropDown(); // directly open the dropdown (the user definitely wants to see it)
-					} else {
-						this.treeBox.highlightNextEntry(direction);
-						this.autoCompleteIfPossible(this.config.autoCompleteDelay);
-					}
-					return false; // some browsers move the caret to the beginning on up key
-				} else if (e.which == keyCodes.enter) {
-					if (this.isEditorVisible || this.editorContainsFreeText()) {
-						e.preventDefault(); // do not submit form
-						let highlightedEntry = this.treeBox.getHighlightedEntry();
-						if (this._isDropDownOpen && highlightedEntry) {
-							this.setSelectedEntry(highlightedEntry, true, true, e);
-						} else if (!this.$editor.val()) {
-							this.setSelectedEntry(null, true, true, e);
-						} else if (this.config.allowFreeText) {
-							this.setSelectedEntry(this.getSelectedEntry(), true, true, e);
-						}
-						this.closeDropDown();
-						this.hideEditor();
-					}
-				} else if (e.which == keyCodes.escape) {
-					e.preventDefault(); // prevent ie from doing its text field magic...
-					if (!(this.editorContainsFreeText() && this._isDropDownOpen)) { // TODO if list is empty, still reset, even if there is freetext.
-						this.hideEditor();
-						this.$editor.val("");
-						this.setSelectedEntry(this.lastCommittedValue, false, false, e);
-					}
 					this.closeDropDown();
-				} else {
-					if (!this.isEditorVisible) {
-						this.showEditor();
-						this.$editor.select();
-					}
-					if (!this.config.showDropDownOnResultsOnly) {
-						this.openDropDown();
-					}
-
-					setTimeout(() => { // We need the new editor value (after the keydown event). Therefore setTimeout().
-						if (this.$editor.val()) {
-							this.query(1);
-						} else {
-							this.query(0);
-							this.treeBox.setHighlightedEntryById(null);
-						}
-					})
+					this.hideEditor();
 				}
-			})
-			.mousedown(() => {
-				if (this.editingMode === "editable") {
-					if (!this.config.showDropDownOnResultsOnly) {
-						this.openDropDown();
-					}
-					this.query();
+			} else if (e.which == keyCodes.escape) {
+				e.preventDefault(); // prevent ie from doing its text field magic...
+				if (!(this.editorContainsFreeText() && this._isDropDownOpen)) { // TODO if list is empty, still reset, even if there is freetext.
+					this.hideEditor();
+					this.$editor.value = "";
+					this.setSelectedEntry(this.lastCommittedValue, false, false, e);
 				}
-			});
-
-		if (this.$originalInput.attr("tabindex")) {
-			this.$editor.attr("tabindex", this.$originalInput.attr("tabindex"));
-		}
-		if (this.$originalInput.attr("autofocus")) {
-			this.$editor.focus();
-		}
-
-		this.$comboBox.add(this.$dropDown)
-			.mousedown(() => {
-				if (this.$editor.is(":focus")) {
-					this.blurCausedByClickInsideComponent = true;
-				}
-			})
-			.mouseup(() => {
-				if (this.blurCausedByClickInsideComponent) {
-					this.$editor.focus();
-					this.blurCausedByClickInsideComponent = false;
-				}
-			})
-			.mouseout(() => {
-				if (this.blurCausedByClickInsideComponent) {
-					this.$editor.focus();
-					this.blurCausedByClickInsideComponent = false;
-				}
-			});
-
-		this.treeBox = new TrivialTreeBox(this.$dropDown, this.config);
-		this.treeBox.onSelectedEntryChanged.addListener((selectedEntry: E, eventSource, originalEvent) => {
-			if (selectedEntry) {
-				this.setSelectedEntry(selectedEntry, true, !objectEquals(selectedEntry, this.lastCommittedValue), originalEvent);
-				this.treeBox.setSelectedEntryById(null);
 				this.closeDropDown();
+			} else {
+				if (!this.isEditorVisible) {
+					this.showEditor();
+					this.$editor.select();
+				}
+				if (!this.config.showDropDownOnResultsOnly) {
+					this.openDropDown();
+				}
+
+				setTimeout(() => { // We need the new editor value (after the keydown event). Therefore setTimeout().
+					if (this.$editor.value) {
+						this.query(1);
+					} else {
+						this.query(0);
+					}
+				})
 			}
-			this.hideEditor();
-		});
-
-		this.setSelectedEntry(this.config.selectedEntry, true, false, null);
-
-		this.$selectedEntryWrapper.click(() => {
+		})
+		this.$editor.addEventListener("mousedown", () => {
 			if (this.editingMode === "editable") {
-				this.showEditor();
-				this.$editor.select();
 				if (!this.config.showDropDownOnResultsOnly) {
 					this.openDropDown();
 				}
@@ -479,68 +374,137 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			}
 		});
 
-		this.popper = createPopper(this.$comboBox[0], this.$dropDown[0], {
+		[this.$comboBox, this.$dropDown].forEach(element => {
+			element.addEventListener("mousedown", () => {
+				if (document.activeElement == this.$editor) {
+					this.blurCausedByClickInsideComponent = true;
+				}
+			})
+			element.addEventListener("mouseup", () => {
+				if (this.blurCausedByClickInsideComponent) {
+					this.$editor.focus();
+					this.blurCausedByClickInsideComponent = false;
+				}
+			})
+			element.addEventListener("mouseout", () => {
+				if (this.blurCausedByClickInsideComponent) {
+					this.$editor.focus();
+					this.blurCausedByClickInsideComponent = false;
+				}
+			});
+		});
+
+		this.$dropDown.append(this.dropDownComponent.getMainDomElement());
+		this.dropDownComponent.onValueChanged.addListener((eventData) => {
+			if (eventData.finalSelection) {
+				this.setSelectedEntry(eventData.value, true, !objectEquals(eventData.value, this.lastCommittedValue));
+				this.closeDropDown();
+				this.hideEditor();
+			}
+		});
+
+		this.setSelectedEntry(this.config.selectedEntry, true, false, null);
+
+		this.$selectedEntryWrapper.addEventListener("click", () => {
+			if (this.editingMode === "editable") {
+				this.showEditor();
+				this.$editor.select()
+				if (!this.config.showDropDownOnResultsOnly) {
+					this.openDropDown();
+				}
+				this.query();
+			}
+		});
+
+		this.popper = this.createPopper();
+	}
+
+	private createPopper() {
+		return createPopper(this.$comboBox, this.$dropDown, {
 			placement: 'bottom',
+			strategy: "fixed",
 			modifiers: [
 				{
 					name: "flip",
 					options: {
 						fallbackPlacements: ['top']
 					}
-				},
-				{
+				}, {
 					name: "preventOverflow"
-				},
-				{
+				}, {
+					name: 'hideDropdownIfFieldOutOfViewport',
+					enabled: true,
+					phase: 'main',
+					requiresIfExists: ['offset'],
+					fn: ({state}) => {
+						console.log("main: " + state.rects.reference.width);
+						let sideObject = detectOverflow(state, {elementContext: "reference"});
+						if (sideObject.left > state.rects.reference.width || sideObject.right > state.rects.reference.width
+							|| sideObject.top > state.rects.reference.height || sideObject.bottom > state.rects.reference.height) {
+							this.closeDropDown();
+						}
+					}
+				}, {
 					name: 'dropDownCornerSmoother',
 					enabled: true,
 					phase: 'write',
 					fn: ({state}) => {
-						this.$comboBox[0].classList.toggle("dropdown-flipped", state.placement === 'top');
-						this.$dropDown[0].classList.toggle("flipped", state.placement === 'top');
+						console.log("write: " + state.rects.reference.width);
+						this.$comboBox.classList.toggle("dropdown-flipped", state.placement === 'top');
+						this.$dropDown.classList.toggle("flipped", state.placement === 'top');
+
+					}
+				}, {
+					name: 'forceCorrectDropDownWidth_EvenIf_TemporarilyOverflowedViewPortAndThereforeScrollbarsCausedResizeBeforeFlip',
+					enabled: true,
+					phase: 'afterWrite',
+					fn: ({state}) => {
+						this.$dropDown.style.width = state.elements.reference.getBoundingClientRect().width + "px";
+					}
+				}, {
+					name: "observeReferenceModifier",
+					enabled: true,
+					phase: "main",
+					effect: ({state, instance}) => {
+						const RO_PROP = "__popperjsResizeObserver__";
+						const {reference} = state.elements;
+						(reference as any)[RO_PROP] = new ResizeObserver(() => instance.update());
+						(reference as any)[RO_PROP].observe(reference);
+						return () => {
+							(reference as any)[RO_PROP].disconnect();
+							delete (reference as any)[RO_PROP];
+						};
 					}
 				}
 			]
-		})
-	}
-
-	private query(highlightDirection?: HighlightDirection) {
-		this.showSpinner();
-		this.config.queryFunction(this.getNonSelectedEditorValue(), (newEntries: E[]) => {
-			this.updateEntries(newEntries, highlightDirection);
-			if (this.config.showDropDownOnResultsOnly && newEntries && newEntries.length > 0 && this.$editor.is(":focus")) {
-				this.openDropDown();
-			}
 		});
 	}
 
-	private showSpinner() {
-		if (this.$spinners.length === 0) {
-			const $spinner = $(this.config.spinnerTemplate).appendTo(this.$dropDown);
-			this.$spinners = this.$spinners.add($spinner);
-		}
-		$(this.getDropDownComponent().getMainDomElement()).addClass('hidden');
-	}
+	private async query(highlightDirection: SelectionDirection = 0) {
+		let gotResultsForQuery = await this.dropDownComponent.handleQuery(this.getNonSelectedEditorValue(), highlightDirection);
+		this.blurCausedByClickInsideComponent = false; // we won't get any mouseout or mouseup events for entries if they get removed. so do this here proactively
 
-	private hideSpinner() {
-		this.$spinners.remove();
-		this.$spinners = $();
-		$(this.getDropDownComponent().getMainDomElement()).removeClass('hidden');
+		this.autoCompleteIfPossible(this.config.autoCompleteDelay);
+		
+		if (this.config.showDropDownOnResultsOnly && gotResultsForQuery && document.activeElement == this.$editor) {
+			this.openDropDown();
+		}
 	}
 
 	private fireChangeEvents(entry: E, originalEvent?: unknown) {
-		this.$originalInput.trigger("change");
 		this.onSelectedEntryChanged.fire(unProxyEntry(entry), originalEvent);
 	}
 
 	public setSelectedEntry(entry: E, commit: boolean, fireEvent?: boolean, originalEvent?: unknown) {
-		this.$originalInput.val(this.config.inputValueFunction(entry));
 		this.selectedEntry = entry;
-		let $selectedEntry = $(this.config.selectedEntryRenderingFunction(entry))
-			.addClass("tr-combobox-entry");
-		this.$selectedEntryWrapper.empty().append($selectedEntry);
+		this.$selectedEntryWrapper.innerHTML = '';
+		let $selectedEntry = parseHtml(this.config.selectedEntryRenderingFunction(entry));
+		if ($selectedEntry != null) {
+			$selectedEntry.classList.add("tr-combobox-entry");
+			this.$selectedEntryWrapper.append($selectedEntry);
+		}
 		if (entry != null) {
-			this.$editor.val(this.config.entryToEditorTextFunction(entry));
+			this.$editor.value = this.config.entryToEditorTextFunction(entry);
 		}
 
 		if (commit) {
@@ -550,7 +514,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			}
 		}
 		if (this.$clearButton) {
-			this.$clearButton.toggle(entry != null);
+			this.$clearButton.classList.toggle("hidden", entry == null);
 		}
 		if (this.isEditorVisible) {
 			this.showEditor(); // reposition editor
@@ -564,77 +528,59 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		return this.selectedEntry != null;
 	}
 
-	private showEditor() {
-		let $editorArea = this.getEditorArea();
-		this.$editor.css({
-			"width": Math.min($editorArea[0].offsetWidth, this.$trigger.is(':visible') ? this.$trigger[0].offsetLeft - $editorArea[0].offsetLeft : 99999999) + "px", // prevent the editor from surpassing the trigger!
-			"height": ($editorArea[0].offsetHeight) + "px"
-		});
-		place(this.$editor[0], "top left")
-			.to($editorArea[0], "top left");
-		this.isEditorVisible = true;
-		$editorArea.css("visibility", "hidden");
-		if ($editorArea[0] != this.$selectedEntryWrapper[0]) {
-			this.$editor[0].style.padding = "0px";
-		} else {
-			this.$editor[0].style.padding = null;
-		}
-	}
-
-	private getEditorArea() {
-		let $editorArea = this.$selectedEntryWrapper.find(".tr-editor-area");
-		if ($editorArea.length === 0) {
-			$editorArea = this.$selectedEntryWrapper;
-		}
-		return $editorArea;
-	}
-
 	private editorContainsFreeText() {
-		return this.config.allowFreeText && (this.$editor.val() as string).length > 0 && !this.isEntrySelected();
+		return this.config.allowFreeText && (this.$editor.value).length > 0 && !this.isEntrySelected();
 	};
 
+	private showEditor() {
+		this.$comboBox.classList.remove("editor-hidden");
+		this.isEditorVisible = true;
+	}
+
 	private hideEditor() {
-		this.$editor.width(0).height(0);
+		this.$comboBox.classList.add("editor-hidden");
 		this.isEditorVisible = false;
-		this.getEditorArea().css("visibility", "visible");
-		this.$selectedEntryWrapper.css("visibility", "visible");
 	}
 
 	private repositionDropDown() {
-		this.$dropDown.show();
 		this.popper.update();
-		this.$dropDown.width(this.$comboBox.width());
 	};
+
+	private parentElement: Element;
 
 	public openDropDown() {
 		if (this.isDropDownNeeded()) {
-			this.$comboBox.addClass("open");
+			if (this.getMainDomElement().parentElement !== this.parentElement) {
+				this.popper.destroy();
+				this.popper = this.createPopper();
+				this.parentElement = this.getMainDomElement().parentElement;
+			}
+			this.$comboBox.classList.add("open");
 			this.repositionDropDown();
 			this._isDropDownOpen = true;
 		}
 	}
 
 	public closeDropDown() {
-		this.$comboBox.removeClass("open");
-		this.$dropDown.hide();
+		this.$comboBox.classList.remove("open");
 		this._isDropDownOpen = false;
 	}
 
 	private getNonSelectedEditorValue() {
-		return (this.$editor.val() as string).substring(0, (this.$editor[0] as any).selectionStart);
+		return this.$editor.value.substring(0, (this.$editor as any).selectionStart);
 	}
 
 	private autoCompleteIfPossible(delay?: number) {
 		if (this.config.autoComplete) {
 			clearTimeout(this.autoCompleteTimeoutId);
-			const highlightedEntry = this.treeBox.getHighlightedEntry();
+			const highlightedEntry = this.dropDownComponent.getValue();
 			if (highlightedEntry && !this.doNoAutoCompleteBecauseBackspaceWasPressed) {
 				this.autoCompleteTimeoutId = setTimeoutOrDoImmediately(() => {
 					const currentEditorValue = this.getNonSelectedEditorValue();
 					const autoCompleteString = this.config.autoCompleteFunction(currentEditorValue, highlightedEntry) || currentEditorValue;
-					this.$editor.val(currentEditorValue + autoCompleteString.substr(currentEditorValue.length));
-					if (this.$editor.is(":focus")) {
-						(this.$editor[0] as any).setSelectionRange(currentEditorValue.length, autoCompleteString.length);
+					this.$editor.value = currentEditorValue + autoCompleteString.substr(currentEditorValue.length);
+					if (document.activeElement == this.$editor) {
+						(this.$editor as any).setSelectionRange(currentEditorValue.length, autoCompleteString.length);
 					}
 				}, delay);
 			}
@@ -642,71 +588,31 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		}
 	}
 
-
-	public updateEntries(newEntries: E[], highlightDirection?: HighlightDirection) {
-		newEntries = newEntries || [];
-
-		this.blurCausedByClickInsideComponent = false; // we won't get any mouseout or mouseup events for entries if they get removed. so do this here proactively
-
-		this.hideSpinner();
-
-		this.treeBox.updateEntries(newEntries);
-
-		const nonSelectedEditorValue = this.getNonSelectedEditorValue();
-
-		this.treeBox.highlightTextMatches(newEntries.length <= this.config.textHighlightingEntryLimit ? nonSelectedEditorValue : null);
-
-		if (highlightDirection == null) {
-			if (this.selectedEntry) {
-				this.treeBox.setHighlightedEntryById(null);
-			} else {
-				if (nonSelectedEditorValue.length > 0) {
-					this.treeBox.highlightNextMatchingEntry(1);
-				} else {
-					this.treeBox.highlightNextEntry(1);
-				}
-			}
-		} else if (highlightDirection === 0) {
-			this.treeBox.setHighlightedEntryById(null)
-		} else {
-			if (nonSelectedEditorValue.length > 0) {
-				this.treeBox.highlightNextMatchingEntry(1);
-			} else {
-				this.treeBox.highlightNextEntry(1);
-			}
-		}
-
-		this.autoCompleteIfPossible(this.config.autoCompleteDelay);
-
-		if (this._isDropDownOpen) {
-			this.openDropDown(); // only for repositioning!
-		}
-	}
-
 	private isDropDownNeeded() {
-		return this.editingMode == 'editable' && (this.config.entries && this.config.entries.length > 0 || !this.usingDefaultQueryFunction || this.config.showTrigger);
+		return this.editingMode == 'editable';
 	}
 
 	public setEditingMode(newEditingMode: EditingMode) {
 		this.editingMode = newEditingMode;
-		this.$comboBox.removeClass("editable readonly disabled").addClass(this.editingMode);
+		this.$comboBox.classList.remove("editable", "readonly", "disabled");
+		this.$comboBox.classList.add(this.editingMode);
 		if (this.isDropDownNeeded()) {
-			this.$dropDown.appendTo(this.$dropDownTargetElement);
+			this.$dropDownTargetElement.append(this.$dropDown);
 		}
 	}
 
 	public getSelectedEntry(): E {
-		if (this.selectedEntry == null && (!this.config.allowFreeText || !this.$editor.val())) {
+		if (this.selectedEntry == null && (!this.config.allowFreeText || !this.$editor.value)) {
 			return null;
 		} else if (this.selectedEntry == null && this.config.allowFreeText) {
-			return this.config.freeTextEntryFactory(this.$editor.val() as string);
+			return this.config.freeTextEntryFactory(this.$editor.value);
 		} else {
 			return unProxyEntry(this.selectedEntry);
 		}
 	}
 
 	public getDropDownComponent(): TrivialComponent {
-		return this.treeBox;
+		return this.dropDownComponent;
 	}
 
 	public focus() {
@@ -715,7 +621,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	};
 
 	public getEditor(): Element {
-		return this.$editor[0];
+		return this.$editor;
 	}
 
 	public getDropDown() {
@@ -723,11 +629,13 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	};
 
 	public setShowClearButton(showClearButton: boolean) {
-		this.$clearButton.toggleClass('hidden', !showClearButton);
+		this.config.showClearButton = showClearButton;
+		this.$clearButton.classList.toggle('hidden', !showClearButton);
 	}
 
 	public setShowTrigger(showTrigger: boolean) {
-		this.$trigger.toggleClass('hidden', !showTrigger);
+		this.config.showTrigger = showTrigger;
+		this.$trigger.classList.toggle('hidden', !showTrigger);
 	}
 
 
@@ -736,12 +644,11 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	}
 
 	public destroy() {
-		this.$originalInput.removeClass('tr-original-input').insertBefore(this.$comboBox);
 		this.$comboBox.remove();
 		this.$dropDown.remove();
 	};
 
-	getMainDomElement(): Element {
-		return this.$comboBox[0];
+	getMainDomElement(): HTMLElement {
+		return this.$comboBox;
 	}
 }

@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {LocalDateTime} from "../../util/LocalDateTime";
+import {LocalDateTime} from "../../datetime/LocalDateTime";
 
 export interface DateSuggestion {
 	date: LocalDateTime;

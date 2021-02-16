@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {defaultTreeQueryFunctionFactory, ResultCallback, trivialMatch} from "../trivial-components/TrivialCore";
+import {defaultTreeQueryFunctionFactory, trivialMatch} from "../trivial-components/TrivialCore";
 import {TrivialComboBox} from "../trivial-components/TrivialComboBox";
 import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 
@@ -32,7 +32,8 @@ import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingFiel
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiComboBoxTreeRecordConfig} from "../../generated/UiComboBoxTreeRecordConfig";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
-import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "../Common";
+import {buildObjectTree, NodeWithChildren, Renderer} from "../Common";
+import {TreeBoxDropdown} from "../trivial-components/dropdown/TreeBoxDropdown";
 
 export function isFreeTextEntry(o: UiComboBoxTreeRecordConfig): boolean {
 	return o != null && o.id < 0;
@@ -43,16 +44,14 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent(this, {throttlingMode: "debounce", delay: 250});
 	public readonly onLazyChildDataRequested: TeamAppsEvent<UiComboBox_LazyChildDataRequestedEvent> = new TeamAppsEvent(this);
 
-	private $originalInput: HTMLElement;
 	private trivialComboBox: TrivialComboBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>;
 	private templateRenderers: { [name: string]: Renderer };
-	private lastResultCallback: (result: NodeWithChildren<UiComboBoxTreeRecordConfig>[]) => void;
+	private resultCallbacksQueue: ((result: NodeWithChildren<UiComboBoxTreeRecordConfig>[]) => void)[] = [];
+	private lazyChildrenCallbacksByParenId: Map<number, (result: NodeWithChildren<UiComboBoxTreeRecordConfig>[]) => void> = new Map();
 
 	private freeTextIdEntryCounter = -1;
 
 	protected initialize(config: UiComboBoxConfig, context: TeamAppsUiContext) {
-		this.$originalInput = parseHtml(`<input type="text" autocomplete="off">`);
-
 		this.templateRenderers = config.templates != null ? context.templateRegistry.createTemplateRenderers(config.templates) : {};
 
 		let localQueryFunction: Function;
@@ -67,23 +66,19 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 				}
 			}, "__children", "expanded");
 		}
-		let queryFunction = (queryString: string, resultCallback: ResultCallback<NodeWithChildren<UiComboBoxTreeRecordConfig>>) => {
-			this.lastResultCallback = resultCallback;
+		let queryFunction = (queryString: string) => {
 			this.onTextInput.fire({
 				enteredString: queryString
 			});
 			if (localQueryFunction != null) {
-				localQueryFunction(queryString, resultCallback);
+				return localQueryFunction(queryString);
+			} else {
+				return new Promise(resolve => this.resultCallbacksQueue.push(resolve))
 			}
 		};
 
-		this.trivialComboBox = new TrivialComboBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>(this.$originalInput, {
+		this.trivialComboBox = new TrivialComboBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>({
 			allowFreeText: config.allowAnyText,
-			childrenProperty: "__children",
-			expandedProperty: "expanded",
-			showExpanders: config.showExpanders,
-			queryFunction: queryFunction,
-			entryRenderingFunction: entry => this.renderRecord(entry, true),
 			selectedEntryRenderingFunction: entry => {
 				if (entry == null) {
 					return "";
@@ -96,12 +91,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			autoComplete: !!config.autoComplete,
 			showTrigger: config.showDropDownButton,
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
-			lazyChildrenQueryFunction: (node: NodeWithChildren<UiComboBoxTreeRecordConfig>) => {
-				this.onLazyChildDataRequested.fire({
-					parentId: node.id
-				});
-			},
-			lazyChildrenFlag: entry => entry.lazyChildren,
+
 			spinnerTemplate: `<div class="teamapps-spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			textHighlightingEntryLimit: config.textHighlightingEntryLimit,
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
@@ -118,8 +108,24 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			freeTextEntryFactory: (freeText) => {
 				return {id: this.freeTextIdEntryCounter--, values: {}, asString: freeText};
 			},
-			idFunction: entry => entry && entry.id
-		});
+
+		}, new TreeBoxDropdown(new TrivialTreeBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>({
+			childrenProperty: "__children",
+			expandedProperty: "expanded",
+			showExpanders: config.showExpanders,
+			entryRenderingFunction: entry => this.renderRecord(entry, true)  ,
+			idFunction: entry => entry && entry.id,
+			lazyChildrenQueryFunction: (node: NodeWithChildren<UiComboBoxTreeRecordConfig>) => {
+				this.onLazyChildDataRequested.fire({
+					parentId: node.id
+				});
+				return new Promise(resolve => this.lazyChildrenCallbacksByParenId.set(node.id, resolve));
+			},
+			lazyChildrenFlag: entry => entry.lazyChildren,
+		}), {
+			queryFunction: queryFunction,
+			textHighlightingEntryLimit: config.textHighlightingEntryLimit
+		}));
 		this.trivialComboBox.getMainDomElement().classList.add("UiComboBox");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
@@ -171,10 +177,9 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 
 	setDropDownData(data: UiComboBoxTreeRecordConfig[]): void {
 		const objectTree = buildObjectTree(data, "id", "parentId");
-		if (this.lastResultCallback != null) {
-			this.lastResultCallback(objectTree);
-		} else {
-			this.trivialComboBox.updateEntries(objectTree);
+		let nextResultCallback = this.resultCallbacksQueue.shift();
+		if (nextResultCallback != null) {
+			nextResultCallback(objectTree);
 		}
 		if (this._config.showDropDownAfterResultsArrive && data.length > 0 && this.hasFocus()) {
 			this.trivialComboBox.openDropDown();
@@ -182,8 +187,10 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 
 	setChildNodes(parentId: number, recordList: UiComboBoxTreeRecordConfig[]): void {
-		const objectTree = buildObjectTree(recordList, "id", "parentId");
-		(this.trivialComboBox.getDropDownComponent() as TrivialTreeBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>).updateChildren(parentId as any /*fix trivial-components tsd*/, objectTree);
+		let callback = this.lazyChildrenCallbacksByParenId.get(parentId);
+		if (callback != null) {
+			callback(buildObjectTree(recordList, "id", "parentId"));
+		}
 	}
 
 	public getMainInnerDomElement(): HTMLElement {
@@ -244,7 +251,6 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	destroy(): void {
 		super.destroy();
 		this.trivialComboBox.destroy();
-		this.$originalInput.remove();
 	}
 
 	public getReadOnlyHtml(value: UiComboBoxTreeRecordConfig, availableWidth: number): string {

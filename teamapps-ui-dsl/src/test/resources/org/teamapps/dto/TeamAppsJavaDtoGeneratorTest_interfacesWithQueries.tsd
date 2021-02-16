@@ -9,17 +9,12 @@ import {UiCommand} from "./UiCommand";
 import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
 
 
-export interface AConfig {
+export interface XConfig {
 	_type?: string;
-	req1: string;
-	req2: number
-}
-
-export function createAConfig(req1: string, req2: number): AConfig {
-	return {
-		_type: "A",
-		req1, req2
-	};
+	queryEntries: (query: X_QueryEntriesQuery) => Promise<string[]>
 }
 
 
+export interface X_QueryEntriesQuery {
+	x: number
+}

@@ -105,62 +105,6 @@ public class TeamAppsJavaDtoGeneratorTest {
 	}
 
 	@Test
-	public void classWithSubEvent() throws Exception {
-		executeClassTest(
-				"class A { subevent x(String b); }",
-				"A",
-				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_classWithSubEvent.java"
-		);
-	}
-
-	@Test
-	public void interfaceWithSubEvent() throws Exception {
-		executeInterfaceTest(
-				"interface A { subevent x(String b); }",
-				"A",
-				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_interfaceWithSubEvent.java"
-		);
-	}
-
-	@Test
-	public void classHierarchyWithSubEvents() throws Exception {
-		String dslString = "interface X { subevent x(String x); }"
-				+ "class A { subevent a(String a); }"
-				+ "class B extends A implements X { subevent b(String b); }"
-				+ "class C extends B { subevent c(String c); }";
-		executeClassTest(
-				dslString,
-				"B",
-				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_classHierarchyWithSubEvents_B.java"
-		);
-		executeClassTest(
-				dslString,
-				"C",
-				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_classHierarchyWithSubEvents_C.java"
-		);
-	}
-
-	@Test
-	public void subCommandReference() throws Exception {
-		String dslString = "class A { command a(String a, subcommand<X> sub); }";
-		executeClassTest(
-				dslString,
-				"A",
-				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_subCommandReference.java"
-		);
-	}
-
-	@Test
-	public void subEventReference() throws Exception {
-		String dslString = "class A { event a(String a, subevent<X> sub); }";
-		executeClassTest(
-				dslString,
-				"A",
-				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_subEventReference.java"
-		);
-	}
-
-	@Test
 	public void staticCommands() throws Exception {
 		String dslString = "abstract class A { static command a(String b); }";
 		executeClassTest(

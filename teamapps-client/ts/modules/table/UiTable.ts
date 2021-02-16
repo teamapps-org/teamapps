@@ -595,6 +595,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	private prepareEditorField(columnPropertyName: string, uiField: UiField) {
 		this.$editorFieldTempContainer.appendChild(uiField.getMainElement());
 		if (uiField.getFocusableElement()) {
+			// TODO do not rely on focusableElement as its focus and blur events are probably not what one wants!
 			uiField.getFocusableElement().addEventListener("keydown", (e) => {
 				if (e.key === "ArrowLeft"
 					|| e.key === "ArrowRight"

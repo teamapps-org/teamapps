@@ -36,7 +36,7 @@ limitations under the License.
 */
 
 import {
-	DEFAULT_TEMPLATES, defaultListQueryFunctionFactory, EditingMode, escapeSpecialRegexCharacter, HighlightDirection, minimallyScrollTo, QueryFunction, selectElementContents, TrivialComponent,
+	DEFAULT_TEMPLATES, defaultListQueryFunctionFactory, EditingMode, escapeSpecialRegexCharacter, HighlightDirection, QueryFunction, selectElementContents, TrivialComponent,
 	wrapWithDefaultTagWrapper, keyCodes, RenderingFunction, DEFAULT_RENDERING_FUNCTIONS, generateUUID, defaultEntryMatchingFunctionFactory, defaultTreeQueryFunctionFactory, unProxyEntry
 } from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
@@ -225,7 +225,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
     private usingDefaultQueryFunction: boolean;
     private currentPartialTag: E;
 
-    constructor(originalInput: Element, options: TrivialTagComboBoxConfig<E> = {} as any) {
+    constructor(originalInput: Element, options: TrivialTagComboBoxConfig<E>) {
 	    let defaultIdFunction = (e:E) => {
 		    if (e == null) {
 			    return null;
@@ -235,10 +235,9 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			    return (e as any).id;
 		    }
 	    };
-        this.config = $.extend(<TrivialTagComboBoxConfig<E>>{
+        this.config = $.extend({
             idFunction: defaultIdFunction,
             inputValueFunction: (entries:E[]) => entries.map(e => (e as any)._isFreeTextEntry ? (e as any).displayValue : defaultIdFunction(e)).join(','),
-            entryRenderingFunction: DEFAULT_RENDERING_FUNCTIONS.image2Lines,
             selectedEntryRenderingFunction: (entry: E) => {
                 return wrapWithDefaultTagWrapper(this.config.entryRenderingFunction(entry, 0));
             },
@@ -288,7 +287,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
             },
             editingMode: "editable", // one of 'editable', 'disabled' and 'readonly'
             showDropDownOnResultsOnly: false,
-            selectionAcceptor: (e) => !(e as any)._isFreeTextEntry // do not allow free text entries by default
+            selectionAcceptor: (e: E) => !(e as any)._isFreeTextEntry // do not allow free text entries by default
         }, options);
 
 	    if (!this.config.queryFunction) {
@@ -340,7 +339,11 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
                     this.$tagComboBox.addClass('focus');
                 }
                 setTimeout(() => { // the editor needs to apply its new css sheets (:focus) before we scroll to it...
-                    minimallyScrollTo(this.$tagArea, this.$editor);
+                    this.$editor[0].scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest",
+                        inline: "nearest"
+                    });
                 });
             })
             .blur((e) => {
@@ -503,7 +506,8 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 
         const configWithoutEntries = $.extend({}, this.config);
         configWithoutEntries.entries = []; // for init performance reasons, initialize the dropdown content lazily
-        this.treeBox = new TrivialTreeBox<E>(this.$dropDown, configWithoutEntries);
+        this.treeBox = new TrivialTreeBox<E>(configWithoutEntries);
+        this.$dropDown.append(this.treeBox.getMainDomElement());
         this.treeBox.onSelectedEntryChanged.addListener((selectedEntry: E, eventSource?: any, originalEvent?: Event) => {
             if (selectedEntry) {
                 this.addSelectedEntry(selectedEntry, true, originalEvent);
@@ -641,14 +645,13 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
         }
     }
 
-    private query(highlightDirection?: HighlightDirection) {
+    private async query(highlightDirection?: HighlightDirection) {
 	    this.showSpinner();
-        this.config.queryFunction(this.getNonSelectedEditorValue(), (newEntries: E[]) => {
-            this.updateEntries(newEntries, highlightDirection);
-            if (this.config.showDropDownOnResultsOnly && newEntries && newEntries.length > 0 && this.$editor.is(":focus")) {
-                this.openDropDown();
-            }
-        });
+        let newEntries = await this.config.queryFunction(this.getNonSelectedEditorValue());
+        this.updateEntries(newEntries, highlightDirection);
+        if (this.config.showDropDownOnResultsOnly && newEntries && newEntries.length > 0 && this.$editor.is(":focus")) {
+            this.openDropDown();
+        }
     }
 
 	private showSpinner() {
@@ -863,7 +866,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
         this.$dropDown.remove();
     };
 
-    getMainDomElement(): Element {
+    getMainDomElement(): HTMLElement {
         return this.$tagComboBox[0];
     }
 

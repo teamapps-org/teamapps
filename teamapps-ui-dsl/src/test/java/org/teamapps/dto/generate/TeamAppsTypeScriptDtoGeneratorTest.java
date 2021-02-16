@@ -19,12 +19,14 @@
  */
 package org.teamapps.dto.generate;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.junit.Test;
 import org.teamapps.dto.TeamAppsDtoParser;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.List;
 
 public class TeamAppsTypeScriptDtoGeneratorTest {
 
@@ -59,8 +61,10 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 				"interface A { "
 						+ " required String a;"
 						+ " String b;"
-						+ " command x(String x);"
+						+ " command x1(String x);"
+						+ " command x2(String x) returns List<Integer>;"
 						+ " event y(String y);"
+						+ " query z(String s) returns List<String>;"
 						+ "}",
 				"A",
 				"org/teamapps/dto/TeamAppsTypeScriptGeneratorTest_interfaces.tsd"
@@ -148,8 +152,8 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 	@Test
 	public void importStatementsForSuperClassCommandAndEventHandler() throws Exception {
 		executeClassTest(
-				"\tclass A {command a(); event b(); subcommand c(); subevent d();}\n"
-						+ "\tinterface I {command i(); event j(); subcommand k(); subevent l();}\n"
+				"\tclass A {command a(); event b();}\n"
+						+ "\tinterface I {command i(); event j();}\n"
 						+ "\tclass B extends A implements I {}",
 				"B",
 				"org/teamapps/dto/TeamAppsTypeScriptGeneratorTest_importStatementsForSuperClassCommandAndEventHandler.tsd"
@@ -186,6 +190,29 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 		new TeamAppsTypeScriptGenerator(model).generateCommandExecutor(model.getCommandDeclarations(), stringWriter);
 
 		GeneratorTestUtil.compareCodeWithResource("org/teamapps/dto/TeamAppsTypeScriptGeneratorTest_commandExecutor.tsd", stringWriter.toString());
+	}
+
+	@Test
+	public void queries() throws Exception {
+		String dslString = "interface X { query queryEntries(int x) returns List<String>; }";
+		executeInterfaceTest(
+				dslString,
+				"X",
+				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_interfacesWithQueries.tsd"
+		);
+	}
+
+	@Test
+	public void queryFunctionAdder() throws Exception {
+		String dslString = "interface X { query queryEntries(int x) returns List<String>; }";
+		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(dslString)).classCollection();
+		TeamAppsDtoModel model = new TeamAppsDtoModel(classCollectionContext);
+
+		StringWriter stringWriter = new StringWriter();
+		final List<ParserRuleContext> allClassesAndInterfacesWithQueries = model.getAllClassesAndInterfacesWithQueries();
+		new TeamAppsTypeScriptGenerator(model).generateQueryFunctionAdder(allClassesAndInterfacesWithQueries, stringWriter);
+
+		GeneratorTestUtil.compareCodeWithResource("org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_queryFunctionAdder.tsd", stringWriter.toString());
 	}
 
 	private void executeClassTest(String dslString, String className, String expectedResultResourceName) throws IOException {

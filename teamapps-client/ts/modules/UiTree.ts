@@ -18,12 +18,18 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiTree_NodeSelectedEvent, UiTree_RequestTreeDataEvent, UiTree_TextInputEvent, UiTreeCommandHandler, UiTreeConfig, UiTreeEventSource} from "../generated/UiTreeConfig";
+import {
+	UiTree_NodeSelectedEvent,
+	UiTree_RequestTreeDataEvent,
+	UiTree_TextInputEvent,
+	UiTreeCommandHandler,
+	UiTreeConfig,
+	UiTreeEventSource
+} from "../generated/UiTreeConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {ResultCallback} from "./trivial-components/TrivialCore";
 import {TrivialTree} from "./trivial-components/TrivialTree";
 import {AbstractUiComponent} from "./AbstractUiComponent";
-import {buildObjectTree, matchingModesMapping, NodeWithChildren, parseHtml, Renderer} from "./Common";
+import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTreeRecordConfig} from "../generated/UiTreeRecordConfig";
@@ -59,10 +65,11 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 			expandedProperty: "expanded",
 			entryRenderingFunction: entry => this.renderRecord(entry),
 			lazyChildrenFlag: 'lazyChildren',
-			lazyChildrenQueryFunction: (node, resultCallback) => {
+			lazyChildrenQueryFunction: async (node) => {
 				this.onRequestTreeData.fire({
 					parentNodeId: node && node.id
-				})
+				});
+				return []; // TODO this will not show a spinner...
 			},
 			spinnerTemplate: `<div class="UiSpinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
 			showExpanders: config.showExpanders,

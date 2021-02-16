@@ -19,8 +19,8 @@
  */
 package org.teamapps.dto.generate;
 
-import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,14 +33,13 @@ public class GeneratorTestUtil {
 	public static void compareCodeWithResource(String expectedResultResourceName, String actual) {
 		String expected = readResourceToString(expectedResultResourceName);
 
-//		Assert.assertEquals(expected, actual);
-//		Assertions.assertThat(actual).isEqualToNormalizingWhitespace(expected);
+		Assert.assertEquals(expected, actual);
 
-		try {
-			Files.asCharSink(new File("src/test/resources/" + expectedResultResourceName), StandardCharsets.UTF_8).write(actual);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Files.asCharSink(new File("src/test/resources/" + expectedResultResourceName).getAbsoluteFile(), StandardCharsets.UTF_8).write(actual);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}       
 
 	public static String readResourceToString(String resourceName) {
@@ -56,7 +55,7 @@ public class GeneratorTestUtil {
 			return null;
 		}
 		try {
-			return Resources.toString(url, Charset.forName("UTF-8"));
+			return Resources.toString(url, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null; // yes, just because we want to see the actual result ;-)

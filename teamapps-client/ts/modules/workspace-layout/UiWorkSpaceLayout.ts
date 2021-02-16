@@ -146,7 +146,7 @@ export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConf
 					handleUiEvent: (uiEvent) => {
 						// On the one hand, this is an event that gets emitted by (or at least bypassed through) the workspaceLayout.
 						// But the workspace layout should not be seen as the emitter!
-						(this._context as any as TeamAppsUiContextInternalApi).fireEvent(uiEvent);
+						(this._context as any as TeamAppsUiContextInternalApi).sendEvent(uiEvent);
 					}
 				});
 			this.viewContainersByWindowId[childWindowId] = childWindowViewContainer;

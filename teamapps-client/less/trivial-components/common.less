@@ -101,8 +101,7 @@
 }
 
 .tr-dropdown {
-  display: none;
-  position: absolute;
+  position: fixed;
   background-color: white;
   max-height: 260px;
   overflow-x: hidden;
@@ -122,6 +121,10 @@
     // needs to be set on the content (e.g. listbox) so the dropdown component has the min size! Otherwise, the listbox will shrink down to zero, even if an empty template is to be displayed.
     min-height: 20px;
   }
+}
+
+.tr-combobox:not(.open) .tr-dropdown {
+  display: none;
 }
 
 .tr-input-wrapper {

@@ -13,10 +13,6 @@ import {ACommandHandler} from "./AConfig";
 import {ICommandHandler} from "./IConfig";
 import {AEventSource} from "./AConfig";
 import {IEventSource} from "./IConfig";
-import {ASubCommandHandler} from "./AConfig";
-import {ISubCommandHandler} from "./IConfig";
-import {ASubEventSource} from "./AConfig";
-import {ISubEventSource} from "./IConfig";
 
 
 export interface BConfig extends AConfig, IConfig {
@@ -29,9 +25,4 @@ export interface BCommandHandler extends ACommandHandler, ICommandHandler {
 export interface BEventSource extends AEventSource, IEventSource {
 }
 
-export interface BSubCommandHandler extends ASubCommandHandler, ISubCommandHandler {
-}
-
-export interface BSubEventSource extends ASubEventSource, ISubEventSource {
-}
 
