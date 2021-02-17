@@ -21,51 +21,59 @@ import NoSleep from 'nosleep.js';
 import * as log from "loglevel";
 
 const LOGGER: log.Logger = log.getLogger("WakeLock");
-const wakeLocksByUuid: { [uuid: string]: WakeLockSentinel } = {};
 
-export async function requestWakeLock(uuid: string) {
-	try {
-		let wakeLock = await (navigator as WakeLockCapableNavigator).wakeLock.request('screen');
-		LOGGER.info(`WakeLock acquired: ${uuid}`);
-		wakeLocksByUuid[uuid] = wakeLock;
-		wakeLock.addEventListener('release', (e) => {
-			LOGGER.info(`WakeLock released: ${uuid}`);
-		});
-		document.addEventListener('visibilitychange', async () => {
-			if (wakeLocksByUuid[uuid] !== null && document.visibilityState === 'visible') {
-				if (isWakeLockCapableNavigator(navigator)) {
-					wakeLocksByUuid[uuid] = await navigator.wakeLock.request('screen');
-				}
-			}
-		});
-		return true;
-	} catch (e) {
-		LOGGER.error(`Could not acquire WakeLock: ${uuid}`, e)
-		return false;
-	}
+interface WakeLockApi {
+	request: (type: 'screen') => Promise<WakeLockSentinel>;
+	isPolyfill?: boolean;
 }
 
-export async function releaseWakeLock(uuid: string) {
-	return wakeLocksByUuid[uuid]?.release();
+interface WakeLockSentinel extends EventTarget {
+	released: boolean;
+	type: 'screen';
+
+	release(): Promise<void>;
 }
 
-function isWakeLockCapableNavigator(navigator: Navigator): navigator is WakeLockCapableNavigator {
-	return 'wakeLock' in (navigator as WakeLockCapableNavigator) && 'request' in (navigator as WakeLockCapableNavigator).wakeLock;
-}
+let wakeLockApi: WakeLockApi;
+
+let counter = 0;
 
 // WakeLock polyfill using nosleep.js
-if (!isWakeLockCapableNavigator(navigator)) {
-	(window.navigator as WakeLockCapableNavigator).wakeLock = {
-		request: () => new Promise((resolve) => {
-			console.log("Requesting wakelock via nosleep.js polyfill.")
+if ('wakeLock' in navigator && 'request' in (navigator as any).wakeLock) {
+	wakeLockApi = (navigator as any).wakeLock;
+} else {
+	wakeLockApi = {
+		request: () => new Promise((resolve, reject) => {
+			const c = counter++;
+			LOGGER.info("Requesting wakelock via nosleep.js polyfill.")
 			const noSleep = new NoSleep();
+			(noSleep as any).noSleepVideo.setAttribute("title", "");
+
+			const enableHandler = async () => {
+				document.removeEventListener('click', enableHandler, false);
+				try {
+					await noSleep.enable();
+					resolve(responseObject);
+				} catch (e) {
+					reject(e);
+				}
+			}
+
 			let listeners: EventListener[] = []
 			const responseObject = {
 				released: false,
 				type: 'screen' as 'screen',
 				release: async () => {
-					noSleep.disable()
-					listeners.forEach((fn) => fn(null))
+					noSleep.disable();
+					reject("released before clicked");
+					document.removeEventListener('click', enableHandler, false);
+
+					// HACK: this is needed to make iOS not show the player on the lock screen!!
+					document.body.append((noSleep as any).noSleepVideo);
+					(noSleep as any).noSleepVideo.remove();
+					// end HACK
+
+					listeners.forEach((fn) => fn(null));
 				},
 				addEventListener: (type: string, callback: EventListener) => {
 					listeners.push(callback)
@@ -73,29 +81,62 @@ if (!isWakeLockCapableNavigator(navigator)) {
 				removeEventListener: (type: string, callback: EventListener) => {
 					listeners = listeners.filter((fn) => fn !== callback)
 				},
-				dispatchEvent: () => true
+				dispatchEvent: () => true,
+				c
 			}
 
-			function enableHandler() {
-				document.removeEventListener('click', enableHandler, false)
-				noSleep.enable()
-				resolve(responseObject)
-			}
-
-			document.addEventListener('click', enableHandler, false)
-		})
+			document.addEventListener('click', enableHandler, false);
+		}),
+		isPolyfill: true
 	};
-	(window.navigator as any).wakeLock.isPolyfill = true;
 }
 
-interface WakeLockCapableNavigator extends Navigator {
-	wakeLock: {
-		request: (type: 'screen') => Promise<WakeLockSentinel>;
+const wakeLocksByUuid: {
+	[uuid: string]: {
+		wakeLockPromise: Promise<WakeLockSentinel>,
+		visibilityListener: (event: Event) => any
+	}
+} = {};
+
+export async function requestWakeLock(uuid: string): Promise<boolean> {
+	LOGGER.info(`requestWakeLock (${uuid})`)
+	try {
+		let visibilityListener = async () => {
+			if (document.visibilityState === 'visible') {
+				LOGGER.debug(`Visibility changed to visible. (${uuid})`);
+				wakeLocksByUuid[uuid].wakeLockPromise = doRequestWakeLock(uuid);
+			} else if (document.visibilityState === 'hidden') {
+				LOGGER.debug(`Visibility changed to hidden. Releasing wakeLock. (${uuid})`);
+				wakeLocksByUuid[uuid].wakeLockPromise.then(w => w.release());
+			}
+		};
+		wakeLocksByUuid[uuid] = {
+			wakeLockPromise: doRequestWakeLock(uuid),
+			visibilityListener
+		};
+		document.addEventListener('visibilitychange', visibilityListener);
+		return true;
+	} catch (e) {
+		LOGGER.error(`Could not acquire WakeLock! (${uuid})`, e)
+		return false;
 	}
 }
 
-interface WakeLockSentinel extends EventTarget {
-	released: boolean;
-	type: 'screen';
-	release(): Promise<void>;
+async function doRequestWakeLock(uuid: string) {
+	let wakeLockSentinelPromise = wakeLockApi.request('screen');
+	const wakeLock = await wakeLockSentinelPromise;
+	LOGGER.info(`WakeLock acquired. (${uuid})`);
+	wakeLock.addEventListener('release', (e) => {
+		LOGGER.info(`WakeLock released. (${uuid})`);
+	});
+	return wakeLock;
+}
+
+export async function releaseWakeLock(uuid: string) {
+	LOGGER.info(`releaseWakeLock (${uuid})`)
+	let wakeLocker = wakeLocksByUuid[uuid];
+	if (wakeLocker != null) {
+		wakeLocker.wakeLockPromise.then(w => w.release());
+		document.removeEventListener("visibilitychange", wakeLocker.visibilityListener);
+	}
 }
