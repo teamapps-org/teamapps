@@ -77,6 +77,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	private boolean bitrateDisplayEnabled;
 
+	private int forceRefreshCount = 0;
+
 	public MediaSoupV3WebRtcClient() {
 	}
 
@@ -96,6 +98,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		ui.setDisplayAreaAspectRatio(displayAreaAspectRatio);
 		ui.setPlaybackVolume(playbackVolume);
 		ui.setContextMenuEnabled(contextMenuProvider != null);
+		ui.setForceRefreshCount(forceRefreshCount);
 		return ui;
 	}
 
@@ -168,8 +171,8 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			AudioTrackConstraints audioConstraints,
 			VideoTrackConstraints videoConstraints,
 			ScreenSharingConstraints screenSharingConstraints,
-			long maxBitrate, boolean simulcast
-	) {
+			long maxBitrate, boolean simulcast,
+			long keyFrameRequestDelayMillis) {
 		UiMediaSoupPublishingParameters params = new UiMediaSoupPublishingParameters();
 		params.setServer(new UiMediaServerUrlAndToken(serverUrl, worker, token));
 		params.setStreamUuid(streamUuid);
@@ -178,6 +181,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		params.setScreenSharingConstraints(screenSharingConstraints != null ? screenSharingConstraints.createUiScreenSharingConstraints() : null);
 		params.setMaxBitrate(maxBitrate);
 		params.setSimulcast(simulcast);
+		params.setKeyFrameRequestDelay(keyFrameRequestDelayMillis);
 		this.publishingParameters = params;
 		update();
 	}
@@ -347,4 +351,16 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
+	public void reconnect() {
+		this.forceRefreshCount++;
+		update();
+	}
+
+	public UiMediaSoupPublishingParameters getPublishingParameters() {
+		return publishingParameters;
+	}
+
+	public UiMediaSoupPlaybackParameters getPlaybackParameters() {
+		return playbackParameters;
+	}
 }

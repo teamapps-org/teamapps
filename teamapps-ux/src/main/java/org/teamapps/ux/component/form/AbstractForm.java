@@ -24,15 +24,13 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyInjector;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiClientObjectReference;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiFormLayoutPolicy;
-import org.teamapps.dto.UiGridForm;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.ux.component.field.validator.MultiFieldValidator;
 import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
 
 import java.util.ArrayList;
@@ -183,4 +181,11 @@ public abstract class AbstractForm<COMPONENT extends AbstractForm, RECORD> exten
 		queueCommandIfRendered(() -> new UiGridForm.SetSectionCollapsedCommand(getId(), sectionId, collapsed));
 	}
 
+	public void addMultiFieldValidator(MultiFieldValidator multiFieldValidator) {
+		this.logicalForm.addMultiFieldValidator(multiFieldValidator);
+	}
+
+	public FieldMessage.Severity validate() {
+		return this.logicalForm.validate();
+	}
 }

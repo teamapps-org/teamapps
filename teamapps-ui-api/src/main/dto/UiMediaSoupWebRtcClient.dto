@@ -29,6 +29,7 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 	double playbackVolume = 1; // 0-1
 	boolean contextMenuEnabled = false;
 	boolean bitrateDisplayEnabled = false;
+	int forceRefreshCount = 0;
 	
 	// only one (or none) of the following must be set:
 	UiMediaSoupPublishingParameters publishingParameters;
@@ -103,6 +104,7 @@ class UiMediaSoupPublishingParameters {
 	boolean simulcast;
 	long minBitrate;
 	long maxBitrate;
+	long keyFrameRequestDelay = 2500; // milliseconds
 }
 
 class UiMediaServerUrlAndToken {

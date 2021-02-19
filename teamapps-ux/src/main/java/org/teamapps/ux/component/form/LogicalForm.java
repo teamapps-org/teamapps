@@ -19,21 +19,21 @@
  */
 package org.teamapps.ux.component.form;
 
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.BeanPropertyInjector;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyInjector;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.data.extract.*;
 import org.teamapps.ux.component.field.AbstractField;
+import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.ux.component.field.validator.MultiFieldValidator;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class LogicalForm<RECORD> {
 
 	private final Map<String, AbstractField<?>> fieldsByPropertyName = new HashMap<>();
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
+
+	private final List<MultiFieldValidator> multiFieldValidators = new ArrayList<>();
 
 	public LogicalForm() {
 	}
@@ -94,5 +94,22 @@ public class LogicalForm<RECORD> {
 
 	public void setPropertyInjector(PropertyInjector<RECORD> propertyInjector) {
 		this.propertyInjector = propertyInjector;
+	}
+
+	public void addMultiFieldValidator(MultiFieldValidator multiFieldValidator) {
+		this.multiFieldValidators.add(multiFieldValidator);
+	}
+
+	public FieldMessage.Severity validate() {
+		return Stream.concat(
+				fieldsByPropertyName.values().stream()
+						.flatMap(f -> f.validate().stream())
+						.map(FieldMessage::getSeverity),
+				multiFieldValidators.stream()
+						.flatMap(v -> v.validate().stream())
+						.map(FieldMessage::getSeverity)
+		)
+				.max(Comparator.comparing(Enum::ordinal))
+				.orElse(null);
 	}
 }
