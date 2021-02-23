@@ -85,6 +85,12 @@ public class PerspectiveImpl implements Perspective {
     }
 
     @Override
+    public void setFocusedView(View view) {
+        view.focus();
+        this.focusedView = view;
+    }
+
+    @Override
     public View getFocusedView() {
         return focusedView;
     }
