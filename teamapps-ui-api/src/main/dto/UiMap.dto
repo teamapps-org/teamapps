@@ -37,6 +37,11 @@ class UiMap extends UiComponent {
 	command addShape(String shapeId, AbstractUiMapShape shape);
 	command updateShape(String shapeId, AbstractUiMapShape shape);
 	command removeShape(String shapeId);
+	command clearShapes();
+	command clearMarkers();
+	command clearMarkerCluster();
+	command clearHeatMap();
+
 	command startDrawingShape(UiMapShapeType shapeType, UiShapeProperties shapeProperties);
 	command stopDrawingShape();
 	
