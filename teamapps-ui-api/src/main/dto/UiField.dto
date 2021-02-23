@@ -487,7 +487,6 @@ class UiComboBox extends UiField implements UiTextInputHandlingField {
 
 	query retrieveDropdownEntries(String queryString) returns List<UiComboBoxTreeRecord>;
 
-	command setDropDownData(List<UiComboBoxTreeRecord> data);
 	command setChildNodes(int parentId, List<UiComboBoxTreeRecord> children);
 	command registerTemplate(String id, UiTemplate template);
 	command replaceFreeTextEntry(String freeText, UiComboBoxTreeRecord newEntry);

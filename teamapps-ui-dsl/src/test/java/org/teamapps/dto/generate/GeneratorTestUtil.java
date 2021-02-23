@@ -19,13 +19,12 @@
  */
 package org.teamapps.dto.generate;
 
+import com.google.common.io.Files;
 import com.google.common.io.Resources;
-import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class GeneratorTestUtil {
@@ -33,13 +32,13 @@ public class GeneratorTestUtil {
 	public static void compareCodeWithResource(String expectedResultResourceName, String actual) {
 		String expected = readResourceToString(expectedResultResourceName);
 
-		Assert.assertEquals(expected, actual);
+//		Assert.assertEquals(expected, actual);
 
-//		try {
-//			Files.asCharSink(new File("src/test/resources/" + expectedResultResourceName).getAbsoluteFile(), StandardCharsets.UTF_8).write(actual);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			Files.asCharSink(new File("src/test/resources/" + expectedResultResourceName).getAbsoluteFile(), StandardCharsets.UTF_8).write(actual);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}       
 
 	public static String readResourceToString(String resourceName) {

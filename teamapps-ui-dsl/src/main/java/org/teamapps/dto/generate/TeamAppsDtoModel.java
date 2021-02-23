@@ -37,6 +37,7 @@ public class TeamAppsDtoModel {
 	private final List<InterfaceDeclarationContext> interfaceDeclarations = new ArrayList<>();
 	private final List<EnumDeclarationContext> enumDeclarations = new ArrayList<>();
 	private final List<EventDeclarationContext> eventDeclarations;
+	private final List<QueryDeclarationContext> queryDeclarations;
 	private final List<CommandDeclarationContext> commandDeclarations;
 	private final List<ParserRuleContext> classesAndInterfacesReferencedForSubEvents;
 
@@ -52,6 +53,7 @@ public class TeamAppsDtoModel {
 			enumDeclarations.addAll(extractEnumDeclarations(typeDeclarations));
 		});
 		eventDeclarations = extractEventDeclarations();
+		queryDeclarations = extractQueryDeclarations();
 		commandDeclarations = extractCommandDeclarations();
 		classesAndInterfacesReferencedForSubEvents = extractClassesAndInterfacesReferencedForSubEvents();
 	}
@@ -81,6 +83,13 @@ public class TeamAppsDtoModel {
 		return Stream.concat(
 				classDeclarations.stream().flatMap(c -> c.eventDeclaration().stream()),
 				interfaceDeclarations.stream().flatMap(i -> i.eventDeclaration().stream())
+		).collect(Collectors.toList());
+	}
+
+	private List<QueryDeclarationContext> extractQueryDeclarations() {
+		return Stream.concat(
+				classDeclarations.stream().flatMap(c -> c.queryDeclaration().stream()),
+				interfaceDeclarations.stream().flatMap(i -> i.queryDeclaration().stream())
 		).collect(Collectors.toList());
 	}
 
@@ -115,6 +124,10 @@ public class TeamAppsDtoModel {
 
 	public List<EventDeclarationContext> getEventDeclarations() {
 		return eventDeclarations;
+	}
+
+	public List<QueryDeclarationContext> getQueryDeclarations() {
+		return queryDeclarations;
 	}
 
 	public List<CommandDeclarationContext> getCommandDeclarations() {

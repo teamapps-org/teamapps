@@ -65,6 +65,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SessionContext {
@@ -287,22 +288,35 @@ public class SessionContext {
 	/**
 	 * @param runnable
 	 * @param forceEnqueue No synchronous execution! Enqueue this at the end of this SessionContext's work queue.
-	 * @return
 	 */
 	public CompletableFuture<Void> runWithContext(Runnable runnable, boolean forceEnqueue) {
+		return runWithContext(() -> {
+			runnable.run();
+			return null;
+		}, forceEnqueue);
+	}
+
+	public <R> CompletableFuture<R> runWithContext(Supplier<R> runnable) {
+		return runWithContext(runnable, false);
+	}
+
+	public <R> CompletableFuture<R> runWithContext(Supplier<R> runnable, boolean forceEnqueue) {
 		if (destroyed) {
 			LOGGER.info("This SessionContext ({}) is already destroyed. Not sending command.", sessionId);
 			return CompletableFuture.failedFuture(new IllegalStateException("SessionContext destroyed."));
 		}
 		if (CurrentSessionContext.getOrNull() == this && !forceEnqueue) {
 			// Fast lane! This thread is already bound to this context. Just execute the runnable.
-			runnable.run();
-			return CompletableFuture.completedFuture(null);
+			return CompletableFuture.completedFuture(runnable.get());
 		} else {
 			return sessionMultiKeyExecutor.submit(this, () -> {
 				CurrentSessionContext.set(this);
 				try {
-					executionDecorators.createWrappedRunnable(runnable).run();
+					Object[] resultHolder = new Object[1];
+					executionDecorators
+							.createWrappedRunnable(() -> resultHolder[0] = runnable.get())
+							.run();
+					return ((R) resultHolder[0]);
 				} finally {
 					CurrentSessionContext.unset();
 				}

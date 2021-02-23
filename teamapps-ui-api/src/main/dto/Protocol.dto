@@ -39,6 +39,10 @@ class EVENT extends AbstractClientPayloadMessage {
     required UiEvent uiEvent;
 }
 
+class QUERY extends AbstractClientPayloadMessage {
+    required UiQuery uiQuery;
+}
+
 class CMD_RESULT extends AbstractClientPayloadMessage {
 	required int cmdId;
 	required Object result;
@@ -124,4 +128,9 @@ enum UiSessionClosingReason {
 
 class MULTI_CMD extends AbstractServerMessage {
     required List<Object> cmds; // the CMS class does not get generated!
+}
+
+class QUERY_RESULT extends AbstractServerMessage {
+    required int queryId;
+    required Object result;
 }

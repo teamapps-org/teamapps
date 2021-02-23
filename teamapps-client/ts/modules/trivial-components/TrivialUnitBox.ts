@@ -200,7 +200,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
                 if (keyCodes.isModifierKey(e)) {
                     return;
                 } else if (e.which == keyCodes.tab) {
-                    const highlightedEntry = this.listBox.getHighlightedEntry();
+                    const highlightedEntry = this.listBox.getSelectedEntry();
                     if (this._isDropDownOpen && highlightedEntry) {
                         this.setSelectedEntry(highlightedEntry, true, e);
                     }
@@ -211,7 +211,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
                 if (e.which == keyCodes.up_arrow || e.which == keyCodes.down_arrow) {
                     const direction = e.which == keyCodes.up_arrow ? -1 : 1;
                     if (this._isDropDownOpen) {
-                        this.listBox.highlightNextEntry(direction);
+                        this.listBox.selectNextEntry(direction);
                     } else {
                         this.openDropDown();
                         this.query(direction);
@@ -219,7 +219,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
                     return false; // some browsers move the caret to the beginning on up key
                 } else if (this._isDropDownOpen && e.which == keyCodes.enter) {
                     e.preventDefault(); // do not submit form
-                    this.setSelectedEntry(this.listBox.getHighlightedEntry(), true, e);
+                    this.setSelectedEntry(this.listBox.getSelectedEntry(), true, e);
                     this.closeDropDown();
                 } else if (e.which == keyCodes.escape) {
                     this.closeDropDown();
@@ -416,7 +416,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
             if (queryString.length > 0) {
                 this.listBox.highlightTextMatches(queryString);
             }
-            this.listBox.highlightNextEntry(highlightDirection);
+            this.listBox.selectNextEntry(highlightDirection);
 
             if (this._isDropDownOpen) {
                 this.openDropDown(); // only for repositioning!

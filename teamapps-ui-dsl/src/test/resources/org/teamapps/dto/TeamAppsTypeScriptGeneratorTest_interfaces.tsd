@@ -29,6 +29,6 @@ export interface A_YEvent extends UiEvent {
 	y: string
 }
 
-export interface A_ZQuery {
+export interface A_ZQuery extends UiQuery {
 	s: string
 }

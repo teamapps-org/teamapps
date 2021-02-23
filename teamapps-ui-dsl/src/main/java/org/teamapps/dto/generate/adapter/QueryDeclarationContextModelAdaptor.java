@@ -53,19 +53,19 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
 
     @Override
     public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
-        TeamAppsDtoParser.QueryDeclarationContext eventContext = (TeamAppsDtoParser.QueryDeclarationContext) o;
+        TeamAppsDtoParser.QueryDeclarationContext queryContext = (TeamAppsDtoParser.QueryDeclarationContext) o;
         if ("declaringClass".equals(propertyName)) {
-            return TeamAppsDtoModel.getDeclaringClassOrInterface(eventContext);
+            return TeamAppsDtoModel.getDeclaringClassOrInterface(queryContext);
         } else if ("typeScriptInterfaceName".equals(propertyName)) {
-            return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(eventContext) + "_" + StringUtils.capitalize(eventContext.Identifier().getText()) + "Query";
+            return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(queryContext) + "_" + StringUtils.capitalize(queryContext.Identifier().getText()) + "Query";
         } else if ("allProperties".equals(propertyName)) {
-            return getAllParameters(eventContext);
+            return getAllParameters(queryContext);
         } else if ("allRequiredProperties".equals(propertyName)) {
-            return getAllParameters(eventContext);
+            return getAllParameters(queryContext);
         } else if ("requiredPropertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return getAllParameters(eventContext);
+            return getAllParameters(queryContext);
         } else if ("simplePropertiesByRelevance".equals(propertyName)) {
-            return getAllParameters(eventContext).stream()
+            return getAllParameters(queryContext).stream()
                     .sorted((p1, p2) -> {
                         Function<TeamAppsDtoParser.FormalParameterWithDefaultContext, Integer> getPriority = (p) -> {
                             if (p.Identifier().getText().equals("id")) {
@@ -92,7 +92,7 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
 
     @Override
     protected String getTypeScriptIdentifier(TeamAppsDtoParser.QueryDeclarationContext node) {
-        return getDeclaringTypeScriptFileBaseName(node) + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Event";
+        return getDeclaringTypeScriptFileBaseName(node) + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Query";
     }
 
     @Override
@@ -102,7 +102,7 @@ public class QueryDeclarationContextModelAdaptor extends ReferencableEntityModel
 
 	@Override
 	protected String getJavaClassName(TeamAppsDtoParser.QueryDeclarationContext node) {
-        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Event";
+        return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Query";
     }
 
 	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.QueryDeclarationContext commandContext) {

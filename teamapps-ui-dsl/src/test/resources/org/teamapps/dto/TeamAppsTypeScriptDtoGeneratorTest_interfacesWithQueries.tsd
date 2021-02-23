@@ -15,6 +15,6 @@ export interface XConfig {
 }
 
 
-export interface X_QueryEntriesQuery {
+export interface X_QueryEntriesQuery extends UiQuery {
 	x: number
 }

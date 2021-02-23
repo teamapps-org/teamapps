@@ -24,10 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiComboBox;
-import org.teamapps.dto.UiComboBoxTreeRecord;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiTextInputHandlingField;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
@@ -44,6 +41,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -116,17 +114,8 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		switch (event.getUiEventType()) {
 			case UI_TEXT_INPUT_HANDLING_FIELD_TEXT_INPUT:
 				UiTextInputHandlingField.TextInputEvent keyStrokeEvent = (UiTextInputHandlingField.TextInputEvent) event;
-				String queryString = keyStrokeEvent.getEnteredString() != null ? keyStrokeEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
-				if (model != null) {
-					List<RECORD> records = model.getRecords(queryString);
-					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
-					if (isRendered()) {
-						getSessionContext().queueCommand(new UiComboBox.SetDropDownDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
-					} else {
-						cacheResponse.commit();
-					}
-				}
-				this.onTextInput.fire(queryString);
+				String string = keyStrokeEvent.getEnteredString() != null ? keyStrokeEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
+				this.onTextInput.fire(string);
 				break;
 			case UI_TEXT_INPUT_HANDLING_FIELD_SPECIAL_KEY_PRESSED:
 				UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
@@ -148,6 +137,26 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 					}
 				}
 				break;
+		}
+	}
+
+	@Override
+	public CompletableFuture<?> handleUiQuery(UiQuery query) {
+		switch (query.getUiQueryType()) {
+			case UI_COMBO_BOX_RETRIEVE_DROPDOWN_ENTRIES: {
+				final UiComboBox.RetrieveDropdownEntriesQuery q = (UiComboBox.RetrieveDropdownEntriesQuery) query;
+				String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
+				if (model != null) {
+					List<RECORD> records = model.getRecords(string);
+					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
+					cacheResponse.commit();
+					return CompletableFuture.completedFuture(cacheResponse.getAndClearResult());
+				} else {
+					return CompletableFuture.completedFuture(List.of());
+				}
+			}
+			default:
+				return CompletableFuture.failedFuture(new IllegalArgumentException("unknown query"));
 		}
 	}
 

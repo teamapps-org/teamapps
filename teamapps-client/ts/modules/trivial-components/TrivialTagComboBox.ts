@@ -368,7 +368,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
                 if (keyCodes.isModifierKey(e)) {
                     return;
                 } else if (e.which == keyCodes.tab || e.which == keyCodes.enter) {
-                    const highlightedEntry = this.treeBox.getHighlightedEntry();
+                    const highlightedEntry = this.treeBox.getSelectedEntry();
                     if (this._isDropDownOpen && highlightedEntry != null) {
                         this.addSelectedEntry(highlightedEntry, true, e);
                         e.preventDefault(); // do not tab away from the tag box nor insert a newline character
@@ -390,7 +390,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
                         e.preventDefault(); // under any circumstances, prevent the new line to be added to the editor!
                     }
                 } else if (e.which == keyCodes.left_arrow || e.which == keyCodes.right_arrow) {
-                    if (this._isDropDownOpen && this.treeBox.setHighlightedNodeExpanded(e.which == keyCodes.right_arrow)) {
+                    if (this._isDropDownOpen && this.treeBox.setSelectedNodeExpanded(e.which == keyCodes.right_arrow)) {
                         return false; // the currently highlighted node got effectively expanded/collapsed, so cancel any other effect of the key stroke!
                     } else if (e.which == keyCodes.left_arrow && this.$editor.text().length === 0 && window.getSelection().anchorOffset === 0) {
                         if (this.$editor.prev()) {
@@ -425,7 +425,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 	                    this.query(direction);
                         this.openDropDown(); // directly open the dropdown (the user definitely wants to see it)
                     } else {
-                        this.treeBox.highlightNextEntry(direction);
+                        this.treeBox.selectNextEntry(direction);
                         this.autoCompleteIfPossible(this.config.autoCompleteDelay);
                     }
                     return false; // some browsers move the caret to the beginning on up key
@@ -621,9 +621,9 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
         }
 
         if (highlightDirection) {
-            this.treeBox.highlightNextEntry(highlightDirection);
+            this.treeBox.selectNextEntry(highlightDirection);
         } else {
-            this.treeBox.setHighlightedEntryById(null);
+            this.treeBox.setSelectedEntryById(null);
         }
 
         this.autoCompleteIfPossible(this.config.autoCompleteDelay);
@@ -767,7 +767,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
     private autoCompleteIfPossible(delay: number) {
         if (this.config.autoComplete) {
             clearTimeout(this.autoCompleteTimeoutId);
-            const highlightedEntry = this.treeBox.getHighlightedEntry();
+            const highlightedEntry = this.treeBox.getSelectedEntry();
             if (highlightedEntry && !this.doNoAutoCompleteBecauseBackspaceWasPressed) {
                 this.autoCompleteTimeoutId = window.setTimeout(() => {
                     const currentEditorValue = this.getNonSelectedEditorValue();

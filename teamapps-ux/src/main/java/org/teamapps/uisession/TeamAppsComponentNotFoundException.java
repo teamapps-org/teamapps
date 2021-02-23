@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,20 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiCommand} from "../../generated/UiCommand";
-import {UiEvent} from "../../generated/UiEvent";
-import {UiQuery} from "../../generated/UiQuery";
-import {UiSessionClosingReason} from "../../generated/UiSessionClosingReason";
+package org.teamapps.uisession;
 
-export const typescriptDeclarationFixConstant = 1;
+public class TeamAppsComponentNotFoundException extends RuntimeException {
 
-export interface TeamAppsConnection {
-	sendEvent(event: UiEvent): void;
-	sendQuery(query: UiQuery): Promise<any>;
-}
+	private final QualifiedUiSessionId sessionId;
+	private final String componentId;
 
-export interface TeamAppsConnectionListener {
-	onConnectionInitialized(): void;
-	onConnectionErrorOrBroken(reason: UiSessionClosingReason, message?: string): void;
-	executeCommand(uiCommand: UiCommand): Promise<any>;
+	public TeamAppsComponentNotFoundException(QualifiedUiSessionId sessionId, String componentId) {
+		super("Could not find component " + componentId + " in teamapps session: " + sessionId.toString());
+		this.componentId = componentId;
+		this.sessionId = sessionId;
+	}
+
+	public String getComponentId() {
+		return componentId;
+	}
+
+	public QualifiedUiSessionId getSessionId() {
+		return sessionId;
+	}
 }

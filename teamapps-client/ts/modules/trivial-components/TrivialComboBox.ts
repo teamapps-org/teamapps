@@ -437,7 +437,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					phase: 'main',
 					requiresIfExists: ['offset'],
 					fn: ({state}) => {
-						console.log("main: " + state.rects.reference.width);
+						// console.log("main: " + state.rects.reference.width);
 						let sideObject = detectOverflow(state, {elementContext: "reference"});
 						if (sideObject.left > state.rects.reference.width || sideObject.right > state.rects.reference.width
 							|| sideObject.top > state.rects.reference.height || sideObject.bottom > state.rects.reference.height) {
@@ -449,7 +449,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					enabled: true,
 					phase: 'write',
 					fn: ({state}) => {
-						console.log("write: " + state.rects.reference.width);
+						// console.log("write: " + state.rects.reference.width);
 						this.$comboBox.classList.toggle("dropdown-flipped", state.placement === 'top');
 						this.$dropDown.classList.toggle("flipped", state.placement === 'top');
 
@@ -571,13 +571,16 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	}
 
 	private autoCompleteIfPossible(delay?: number) {
+		console.log("autoCompleteIfPossible", delay)
 		if (this.config.autoComplete) {
 			clearTimeout(this.autoCompleteTimeoutId);
-			const highlightedEntry = this.dropDownComponent.getValue();
-			if (highlightedEntry && !this.doNoAutoCompleteBecauseBackspaceWasPressed) {
+			const dropDownValue = this.dropDownComponent.getValue();
+			console.log(dropDownValue)
+			if (dropDownValue && !this.doNoAutoCompleteBecauseBackspaceWasPressed) {
 				this.autoCompleteTimeoutId = setTimeoutOrDoImmediately(() => {
 					const currentEditorValue = this.getNonSelectedEditorValue();
-					const autoCompleteString = this.config.autoCompleteFunction(currentEditorValue, highlightedEntry) || currentEditorValue;
+					console.log(currentEditorValue)
+					const autoCompleteString = this.config.autoCompleteFunction(currentEditorValue, dropDownValue) || currentEditorValue;
 					this.$editor.value = currentEditorValue + autoCompleteString.substr(currentEditorValue.length);
 					if (document.activeElement == this.$editor) {
 						(this.$editor as any).setSelectionRange(currentEditorValue.length, autoCompleteString.length);

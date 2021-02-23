@@ -175,7 +175,7 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 		executeClassTest(
 				dslString,
 				"A",
-				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_plainObjects.tsd"
+				"org/teamapps/dto/TeamAppsTypeScriptDtoGeneratorTest_plainObjects.tsd"
 		);
 	}
 
@@ -198,7 +198,7 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 		executeInterfaceTest(
 				dslString,
 				"X",
-				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_interfacesWithQueries.tsd"
+				"org/teamapps/dto/TeamAppsTypeScriptDtoGeneratorTest_interfacesWithQueries.tsd"
 		);
 	}
 
@@ -212,7 +212,7 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 		final List<ParserRuleContext> allClassesAndInterfacesWithQueries = model.getAllClassesAndInterfacesWithQueries();
 		new TeamAppsTypeScriptGenerator(model).generateQueryFunctionAdder(allClassesAndInterfacesWithQueries, stringWriter);
 
-		GeneratorTestUtil.compareCodeWithResource("org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_queryFunctionAdder.tsd", stringWriter.toString());
+		GeneratorTestUtil.compareCodeWithResource("org/teamapps/dto/TeamAppsTypeScriptDtoGeneratorTest_queryFunctionAdder.tsd", stringWriter.toString());
 	}
 
 	private void executeClassTest(String dslString, String className, String expectedResultResourceName) throws IOException {

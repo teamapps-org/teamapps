@@ -83,10 +83,12 @@ public class TeamAppsTypeScriptGenerator {
 
         generateCommandBaseDefinition(new FileWriter(new File(parentDir, "UiCommand.ts")));
         generateCommandExecutor(model.getCommandDeclarations(), new FileWriter(new File(parentDir, "CommandExecutor.ts")));
-        generateEventRegistrator(model.getAllClassesAndInterfacesWithEvents(), new FileWriter(new File(parentDir, "EventRegistrator.ts")));
-        generateQueryFunctionAdder(model.getAllClassesAndInterfacesWithQueries(), new FileWriter(new File(parentDir, "QueryFunctionAdder.ts")));
 
         generateEventBaseDefinition(model.getEventDeclarations(), new FileWriter(new File(parentDir, "UiEvent.ts")));
+        generateEventRegistrator(model.getAllClassesAndInterfacesWithEvents(), new FileWriter(new File(parentDir, "EventRegistrator.ts")));
+
+        generateQueryBaseDefinition(model.getEventDeclarations(), new FileWriter(new File(parentDir, "UiQuery.ts")));
+        generateQueryFunctionAdder(model.getAllClassesAndInterfacesWithQueries(), new FileWriter(new File(parentDir, "QueryFunctionAdder.ts")));
     }
 
 	public void generateEnum(TeamAppsDtoParser.EnumDeclarationContext enumContext, Writer writer) throws IOException {

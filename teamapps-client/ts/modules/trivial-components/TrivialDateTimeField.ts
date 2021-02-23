@@ -225,8 +225,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 		this.$dateListBoxWrapper = this.$dropDown.find('.date-listbox');
 		this.dateListBox = new TrivialTreeBox<DateTime>({
-			entryRenderingFunction: this.dateRenderer,
-			scrollContainer: this.$dropDown
+			entryRenderingFunction: this.dateRenderer
 		});
 		this.$dateListBoxWrapper.append(this.dateListBox.getMainDomElement());
 		this.dateListBox.onSelectedEntryChanged.addListener((selectedEntry: DateTime) => {
@@ -238,8 +237,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		});
 		this.$timeListBoxWrapper = this.$dropDown.find('.time-listbox');
 		this.timeListBox = new TrivialTreeBox<DateTime>({
-			entryRenderingFunction: this.timeRenderer,
-			scrollContainer: this.$dropDown
+			entryRenderingFunction: this.timeRenderer
 		});
 		this.$timeListBoxWrapper.append(this.timeListBox.getMainDomElement());
 		this.timeListBox.onSelectedEntryChanged.addListener((selectedEntry: DateTime) => {
@@ -471,7 +469,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		} else {
 			this.dateListBox.updateEntries(entries);
 			this.dateListBox.highlightTextMatches(this.getNonSelectedEditorValue());
-			this.dateListBox.highlightNextEntry(highlightDirection);
+			this.dateListBox.selectNextEntry(highlightDirection);
 			this.autoCompleteIfPossible(this.config.autoCompleteDelay);
 			if (this._isDropDownOpen) {
 				this.openDropDown(); // only for repositioning!
@@ -489,7 +487,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		} else {
 			this.timeListBox.updateEntries(entries);
 			this.timeListBox.highlightTextMatches(this.getNonSelectedEditorValue());
-			this.timeListBox.highlightNextEntry(highlightDirection);
+			this.timeListBox.selectNextEntry(highlightDirection);
 			this.autoCompleteIfPossible(this.config.autoCompleteDelay);
 			if (this._isDropDownOpen) {
 				this.openDropDown(); // only for repositioning!

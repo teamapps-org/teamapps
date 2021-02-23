@@ -45,6 +45,7 @@ import {UiClientObject} from "./UiClientObject";
 import {UiClientObjectConfig} from "../generated/UiClientObjectConfig";
 import {UiWindow} from "./UiWindow";
 import {QueryFunctionAdder} from "../generated/QueryFunctionAdder";
+import {UiQuery} from "../generated/UiQuery";
 
 function isComponent(o: UiClientObject<UiClientObjectConfig>): o is UiComponent {
 	return o != null && (o as any).getMainElement;
@@ -120,8 +121,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 					}
 				}
 			},
-			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand),
-			handleQueryResult: (queryId: number, result: any) => this.handleQueryResult(queryId, result),
+			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand)
 		};
 
 		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, connectionListener);
@@ -148,8 +148,8 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	}
 
 	@bind
-	public sendQuery(componentId: string, queryName: string, queryId: number, query: any) {
-		this.connection.sendQuery(componentId, queryName, queryId, query);
+	public sendQuery(query: UiQuery): Promise<any> {
+		return this.connection.sendQuery(query);
 	}
 
 	public registerClientObject(clientObject: UiClientObject, id: string, teamappsType: string): void {
@@ -167,29 +167,16 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		EventRegistrator.registerForEvents(clientObject, teamappsType, this.sendEvent, {componentId: id});
 	}
 
-	private queryIdCounter: number = 0;
-	private queryCallbacksByNumber: Map<number, (result: any) => any> = new Map();
-
 	public createClientObject(config: UiClientObjectConfig): UiClientObject {
 		let componentClass = TeamAppsUiComponentRegistry.getComponentClassForName(config._type);
 		if (componentClass) {
-			QueryFunctionAdder.addQueryFunctionsToConfig(config, (componentId, queryName, queryObject) => {
-				let queryId = this.queryIdCounter++;
-				this.sendQuery(componentId, queryName, queryId, queryObject);
-				return new Promise(resolve => this.queryCallbacksByNumber.set(queryId, result => resolve(result)));
+			QueryFunctionAdder.addQueryFunctionsToConfig(config, (componentId, queryTypeId, queryObject) => {
+				return this.sendQuery({...queryObject, _type: queryTypeId, componentId: componentId});
 			});
 			return new componentClass(config, this);
 		} else {
 			DefaultTeamAppsUiContext.logger.error("Unknown component type: " + config._type);
 			return null;
-		}
-	}
-
-	private handleQueryResult(queryId: number, result: any) {
-		let callback = this.queryCallbacksByNumber.get(queryId);
-		if (callback != null) {
-			this.queryCallbacksByNumber.delete(queryId);
-			callback.apply(result);
 		}
 	}
 

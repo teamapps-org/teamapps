@@ -28,8 +28,9 @@ export const typescriptDeclarationFixConstant = 1;
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-import {UiEvent} from "./UiEvent";
 import {UiCommand} from "./UiCommand";
+import {UiEvent} from "./UiEvent";
+import {UiQuery} from "./UiQuery";
 import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
 <c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
@@ -92,7 +93,7 @@ export interface <evt.typeScriptInterfaceName> extends UiEvent {
 >>
 
 queryInterface(q) ::= <<
-export interface <q.typeScriptInterfaceName> {
+export interface <q.typeScriptInterfaceName> extends UiQuery {
 	<q.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
@@ -236,10 +237,11 @@ queryFunctionAdder(classesAndInterfacesWithQueries) ::= <<
 <typeScriptFilePrelude()>
 
 import {UiClientObjectConfig} from "./UiClientObjectConfig";
+import {UiQuery} from "./UiQuery";
 <classesAndInterfacesWithQueries:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
 
 export class QueryFunctionAdder {
-	public static addQueryFunctionsToConfig(config: UiClientObjectConfig, queryCallback: (componentId: string, queryName: string, queryObject: any) => Promise\<any>) {
+	public static addQueryFunctionsToConfig(config: UiClientObjectConfig, queryCallback: (componentId: string, queryTypeId: string, queryObject: UiQuery) => Promise\<any>) {
 		switch (config._type) {
 		    <classesAndInterfacesWithQueries:queryConfigAdditions(); separator="\n">
 		}
@@ -254,7 +256,7 @@ case "<c.Identifier.text>":
 >>
 
 queryConfigAddition(q, c) ::= <<
-    (config as <c.Identifier.text>Config).<q.Identifier> = (queryObject: any) => queryCallback(config.id, "<q.Identifier.text>", queryObject);
+    (config as <c.Identifier.text>Config).<q.Identifier> = (queryObject: UiQuery) => queryCallback(config.id, "<q._type>", queryObject);
 >>
 
 uiCommandBaseDefinition() ::= <<
@@ -269,7 +271,16 @@ export interface UiCommand {
 uiEventBaseDefinition() ::= <<
 <typeScriptFilePrelude()>
 export interface UiEvent {
-	//[key: string]: any;
+    _type?: string;
+    componentId?: string;
+}
+>>
+
+uiQueryBaseDefinition() ::= <<
+<typeScriptFilePrelude()>
+export interface UiQuery {
+    _type?: string;
+    componentId?: string;
 }
 >>
 
