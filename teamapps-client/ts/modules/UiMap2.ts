@@ -432,7 +432,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 
 	removeMarker(id: number): void {
 		this.deferredExecutor.invokeWhenReady(() => {
-			this.markersByClientId[id].remove();
+			this.markersByClientId[id]?.remove();
 			delete this.markersByClientId[id];
 		});
 	}
