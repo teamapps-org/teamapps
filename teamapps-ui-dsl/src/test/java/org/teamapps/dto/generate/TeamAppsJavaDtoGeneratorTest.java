@@ -74,6 +74,7 @@ public class TeamAppsJavaDtoGeneratorTest {
 						+ " command x(String x);"
 						+ " command x2(String x2) returns boolean;"
 						+ " event y(String y);"
+						+ " query q(String y) returns int;"
 						+ "}",
 				"A",
 				"org/teamapps/dto/TeamAppsJavaDtoGeneratorTest_interfaces.java"

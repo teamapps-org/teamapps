@@ -67,13 +67,17 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			}, "__children", "expanded");
 		}
 		let queryFunction = (queryString: string) => {
+
+			// TODO this is definitely the wrong place for this!!
 			this.onTextInput.fire({
 				enteredString: queryString
 			});
+
 			if (localQueryFunction != null) {
 				return localQueryFunction(queryString);
 			} else {
-				return new Promise(resolve => this.resultCallbacksQueue.push(resolve))
+				return config.retrieveDropdownEntries({queryString})
+					.then(entries => buildObjectTree(entries, "id", "parentId"));
 			}
 		};
 
@@ -122,6 +126,8 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 				return new Promise(resolve => this.lazyChildrenCallbacksByParenId.set(node.id, resolve));
 			},
 			lazyChildrenFlag: entry => entry.lazyChildren,
+			selectableDecider: entry => true, // TODO
+			selectOnHover: true
 		}), {
 			queryFunction: queryFunction,
 			textHighlightingEntryLimit: config.textHighlightingEntryLimit
@@ -173,17 +179,6 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			ignoreCase: true,
 			maxLevenshteinDistance: 3
 		};
-	}
-
-	setDropDownData(data: UiComboBoxTreeRecordConfig[]): void {
-		const objectTree = buildObjectTree(data, "id", "parentId");
-		let nextResultCallback = this.resultCallbacksQueue.shift();
-		if (nextResultCallback != null) {
-			nextResultCallback(objectTree);
-		}
-		if (this._config.showDropDownAfterResultsArrive && data.length > 0 && this.hasFocus()) {
-			this.trivialComboBox.openDropDown();
-		}
 	}
 
 	setChildNodes(parentId: number, recordList: UiComboBoxTreeRecordConfig[]): void {

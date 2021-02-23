@@ -71,6 +71,48 @@ public interface A extends UiObject {
 
 	}
 
+	public static class QQuery implements UiQuery {
+
+		@UiComponentId protected String componentId;
+		protected String y;
+
+		/**
+		 * @deprecated Only for Jackson deserialization. Use the other constructor instead.
+		 */
+		@Deprecated
+		public QQuery() {
+			// default constructor for Jackson
+		}
+
+		public QQuery(String componentId, String y) {
+			this.componentId = componentId;
+			this.y = y;
+		}
+
+		public UiQueryType getUiQueryType() {
+			return UiQueryType.A_Q;
+		}
+
+		@SuppressWarnings("unchecked")
+		public String toString() {
+			return new StringBuilder(getClass().getSimpleName()).append(": ")
+					.append("componentId=" + componentId).append(", ")
+					.append("y=" + y)
+					.toString();
+		}
+
+		@com.fasterxml.jackson.annotation.JsonGetter("componentId")
+		public String getComponentId() {
+			return componentId;
+		}
+
+		@com.fasterxml.jackson.annotation.JsonGetter("y")
+		public String getY() {
+			return y;
+		}
+
+	}
+
 	public static class XCommand implements UiCommand<Void> {
 
 		@UiComponentId protected String componentId;
@@ -146,8 +188,5 @@ public interface A extends UiObject {
 		}
 
 	}
-
-
-
 
 }

@@ -31,25 +31,27 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 	handleKeyboardInput(event: KeyboardEvent): boolean {
 		if (["ArrowUp", "ArrowDown"].indexOf(event.code) !== -1) {
 			this.treeBox.selectNextEntry(event.code == "ArrowUp" ? -1 : 1, true);
-			this.onValueChanged.fire({value: this.treeBox.getHighlightedEntry(), finalSelection: false});
+			this.onValueChanged.fire({value: this.treeBox.getSelectedEntry(), finalSelection: false});
 			return true;
 		} else if (["ArrowRight", "ArrowLeft"].indexOf(event.code) !== -1) {
-			this.treeBox.setHighlightedNodeExpanded(event.code == "ArrowRight");
+			this.treeBox.setSelectedNodeExpanded(event.code == "ArrowRight");
 			return true;
 		}
 	}
 
 	async handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
+		console.log(`handleQuery, query: ${query}, direction: ${selectionDirection}`);
 		let results = await this.config.queryFunction(query) ?? [];
 		this.treeBox.updateEntries(results);
 		this.treeBox.highlightTextMatches(results.length <= this.config.textHighlightingEntryLimit ? query : null);
 		if (selectionDirection === 0) {
+			console.log("deselecting")
 			this.treeBox.setSelectedEntryById(null)
-		} else if (query.length > 0) {
-			this.treeBox.selectNextMatchingEntry(1, false, false);
 		} else {
-			this.treeBox.selectNextEntry(1, false);
+			console.log("selecting next")
+			this.treeBox.selectNextEntry(1);
 		}
+		console.log(`=> selected: ${this.treeBox.getSelectedEntry()}`);
 		return results.length > 0;
 	}
 

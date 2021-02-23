@@ -21,6 +21,9 @@ package org.teamapps.ux.component;
 
 import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiQuery;
+
+import java.util.concurrent.CompletableFuture;
 
 public interface ClientObject {
 
@@ -37,4 +40,7 @@ public interface ClientObject {
 	default void handleUiEvent(UiEvent event) {
 	}
 
+	default CompletableFuture<?> handleUiQuery(UiQuery query) {
+		return CompletableFuture.completedFuture(null);
+	}
 }

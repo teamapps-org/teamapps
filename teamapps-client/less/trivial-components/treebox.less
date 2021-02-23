@@ -49,6 +49,10 @@
       align-items: center;
       user-select: none;
 
+      &:hover:not(.tr-selected-entry) {
+        background-color: @tr-highlight-color;
+      }
+
       .tr-indent-spacer {
         width: @tr-tree-indent;
         flex: 0 0 auto;
