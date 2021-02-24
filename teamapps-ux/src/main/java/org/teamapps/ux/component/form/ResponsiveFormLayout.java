@@ -201,7 +201,7 @@ public class ResponsiveFormLayout  {
 		}
 		int row = getSection().getLastNonEmptyRow();
 		int column = columnOffset;
-		if (newRow) {
+		if (newRow || row==-1) {
 			row++;
 		} else {
 			column = getSection().getLastNonEmptyColumnInRow(row) + columnOffset + 1;
