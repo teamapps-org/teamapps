@@ -507,6 +507,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		}
 	}
 
+	@executeWhenFirstDisplayed()
 	public clearMarkerCluster() {
 		if (this.clusterLayer) {
 			this.leaflet.removeLayer(this.clusterLayer);
@@ -531,7 +532,8 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		}
 	}
 
-	private clearHeatMap() {
+	@executeWhenFirstDisplayed()
+	public clearHeatMap() {
 		if (this.heatMapLayer) {
 			this.leaflet.removeLayer(this.heatMapLayer);
 		}
