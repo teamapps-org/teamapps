@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.util.ReflectionUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,11 +56,20 @@ public class BeanPropertyInjector<RECORD> implements PropertyInjector<RECORD> {
 
 	private ValueInjector<RECORD, ?> createValueInjector(ClassAndPropertyName classAndPropertyName) {
 		Method setter = ReflectionUtil.findSetter(classAndPropertyName.clazz, classAndPropertyName.propertyName);
+		Field field = ReflectionUtil.findField(classAndPropertyName.clazz, classAndPropertyName.propertyName);
 		return (record, value) -> {
-			if (setter !=null) {
+			if (setter != null) {
 				ReflectionUtil.invokeMethod(record, setter, value);
 			} else {
-				LOGGER.debug("Could not find setter for property {} on class {}!", classAndPropertyName.propertyName, record.getClass().getCanonicalName());
+				if (field != null) {
+					try {
+						field.set(record, value);
+					} catch (IllegalAccessException ex) {
+						LOGGER.debug("Could not access field for property {} on class {}!", classAndPropertyName.propertyName, record.getClass().getCanonicalName());
+					}
+				} else {
+					LOGGER.debug("Could not find setter or field for property {} on class {}!", classAndPropertyName.propertyName, record.getClass().getCanonicalName());
+				}
 			}
 		};
 	}
