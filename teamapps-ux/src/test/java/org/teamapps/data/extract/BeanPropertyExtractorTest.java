@@ -33,11 +33,18 @@ public class BeanPropertyExtractorTest {
 	}
 
 	@Test
-	public void testWontGetFieldValue() throws Exception {
+	public void testWontGetPrivateFieldValue() throws Exception {
 		BeanPropertyExtractor<Object> extractor = new BeanPropertyExtractor<>();
 		Object value = extractor.getValue(new A(), "r");
 		assertNull(value);
 		// see debug log!
+	}
+
+	@Test
+	public void testGetPublicFieldValue() throws Exception {
+		BeanPropertyExtractor<Object> extractor = new BeanPropertyExtractor<>();
+		Object value = extractor.getValue(new A(), "i");
+		assertEquals(1337, value);
 	}
 
 	@Test
@@ -66,6 +73,7 @@ public class BeanPropertyExtractorTest {
 	public static class A {
 		private String q = "qValue";
 		private String r = "rValue";
+		public int i = 1337;
 
 		public String getQ() {
 			return q;
@@ -75,5 +83,5 @@ public class BeanPropertyExtractorTest {
 			return true;
 		}
 	}
-	
+
 }

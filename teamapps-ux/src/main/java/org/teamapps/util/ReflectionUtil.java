@@ -49,6 +49,15 @@ public class ReflectionUtil {
 		return matchingFields;
 	}
 
+	public static Field findField(Class<?> clazz, Predicate<Field> predicate) {
+		List<Field> fields = findFields(clazz, predicate);
+		return fields.size() > 0 ? fields.get(0) : null;
+	}
+
+	public static Field findField(Class<?> clazz, String fieldName) {
+		return findField(clazz, field -> field.getName().equals(fieldName));
+	}
+
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate) {
 		List<Method> matchingFields = new ArrayList<>();
 		Class<?> c = clazz;
@@ -65,11 +74,11 @@ public class ReflectionUtil {
 
 	public static Method findMethod(Class<?> clazz, Predicate<Method> predicate) {
 		List<Method> methods = findMethods(clazz, predicate);
-		if (methods.size() > 0) {
-			return methods.get(0);
-		} else {
-			return null;
-		}
+		return methods.size() > 0 ? methods.get(0) : null;
+	}
+
+	public static Method findMethod(Class<?> clazz, String methodName) {
+		return findMethod(clazz, method -> method.getName().equals(methodName));
 	}
 
 	public static Method findMethodByName(Class<?> clazz, String methodName) {
@@ -90,29 +99,13 @@ public class ReflectionUtil {
 	}
 
 	public static <V> V getPropertyValue(Object o, String propertyName) {
-		try {
-			return (V) findGetter(o.getClass(), propertyName).invoke(o);
-		} catch (Exception e) {
-			throw new RuntimeException("Invocation failed.", e);
-		}
+		return (V) invokeMethod(o, findGetter(o.getClass(), propertyName));
 	}
 
-	public static <V> void setProperty(Object o, String propertyName, Object value) {
-		try {
-			findSetter(o.getClass(), propertyName).invoke(o, value);
-		} catch (Exception e) {
-			throw new RuntimeException("Invocation failed.", e);
-		}
+	public static <V> void setProperty(Object o, String propertyName, V value) {
+		invokeMethod(o, findSetter(o.getClass(), propertyName), value);
 	}
 
-	public static Object getFieldValue(Object object, Field field) {
-		try {
-			field.setAccessible(true);
-			return field.get(object);
-		} catch (IllegalAccessException e) {
-			throw new IllegalStateException(e);
-		}
-	}
 
 	public static String toStringUsingReflection(Object o) {
 		if (o == null) {
