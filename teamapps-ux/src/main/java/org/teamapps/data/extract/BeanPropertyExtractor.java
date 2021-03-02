@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.util.ReflectionUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,13 +56,22 @@ public class BeanPropertyExtractor<RECORD> implements PropertyExtractor<RECORD> 
 
 	private ValueExtractor<RECORD> createValueExtractor(ClassAndPropertyName classAndPropertyName) {
 		Method getter = ReflectionUtil.findGetter(classAndPropertyName.clazz, classAndPropertyName.propertyName);
+		Field field = ReflectionUtil.findField(classAndPropertyName.clazz, classAndPropertyName.propertyName);
 		return (record) -> {
-			if (getter !=null) {
+			if (getter != null) {
 				return ReflectionUtil.invokeMethod(record, getter);
 			} else {
-				LOGGER.debug("Could not find getter for property {} on class {}!", classAndPropertyName.propertyName, record.getClass().getCanonicalName());
-				return null;
+				if (field != null) {
+					try {
+						return field.get(record);
+					} catch (IllegalAccessException ex) {
+						LOGGER.debug("Could not access field for property {} on class {}!", classAndPropertyName.propertyName, record.getClass().getCanonicalName());
+					}
+				} else {
+					LOGGER.debug("Could not find getter or field for property {} on class {}!", classAndPropertyName.propertyName, record.getClass().getCanonicalName());
+				}
 			}
+			return null;
 		};
 	}
 
