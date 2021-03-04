@@ -379,7 +379,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				if (document.activeElement == this.$editor) {
 					this.blurCausedByClickInsideComponent = true;
 				}
-			})
+			}, true)
 			element.addEventListener("mouseup", () => {
 				if (this.blurCausedByClickInsideComponent) {
 					this.$editor.focus();
@@ -562,8 +562,8 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	}
 
 	public closeDropDown() {
-		this.$comboBox.classList.remove("open");
-		this._isDropDownOpen = false;
+		// this.$comboBox.classList.remove("open");
+		// this._isDropDownOpen = false;
 	}
 
 	private getNonSelectedEditorValue() {

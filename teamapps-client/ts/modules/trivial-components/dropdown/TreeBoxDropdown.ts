@@ -36,8 +36,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 			this.onValueChanged.fire({value: this.treeBox.getSelectedEntry(), finalSelection: false});
 			return true;
 		} else if (["ArrowRight", "ArrowLeft"].indexOf(event.code) !== -1) {
-			this.treeBox.setSelectedNodeExpanded(event.code == "ArrowRight");
-			return true;
+			return this.treeBox.setSelectedNodeExpanded(event.code == "ArrowRight");
 		}
 	}
 
