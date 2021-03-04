@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, List<RECORD>> {
+public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TagComboBox.class);
 

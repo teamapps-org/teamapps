@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD> implements TextInputHandlingField {
+public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implements TextInputHandlingField {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ComboBox.class);
 
