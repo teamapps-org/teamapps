@@ -25,6 +25,7 @@ import org.teamapps.util.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,7 +70,7 @@ public class BeanPropertyInjector<RECORD> implements PropertyInjector<RECORD> {
 			return (record, value) -> ReflectionUtil.invokeMethod(record, setter, value);
 		} else if (fallbackToFields) {
 			Field field = ReflectionUtil.findField(classAndPropertyName.clazz, classAndPropertyName.propertyName);
-			if (field != null) {
+			if (field != null && !Modifier.isFinal(field.getModifiers())) {
 				return (record, value) -> ReflectionUtil.setField(record, field, value, true);
 			}
 		}
