@@ -45,7 +45,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECORD, VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
+public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractComboBox.class);
 
