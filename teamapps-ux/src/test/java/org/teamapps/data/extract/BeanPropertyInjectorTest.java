@@ -1,5 +1,6 @@
 package org.teamapps.data.extract;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -42,6 +43,14 @@ public class BeanPropertyInjectorTest {
 	}
 
 	@Test
+	public void testDoesNotChangeFinalFields() throws Exception {
+		BeanPropertyInjector<A> injector = new BeanPropertyInjector<>(true);
+		A record = new A();
+		injector.setValue(record, "finalField", "foo");
+		Assert.assertEquals("finalFieldValue", record.finalField);
+	}
+
+	@Test
 	public void testSetPrivateFieldValue() throws Exception {
 		BeanPropertyInjector<A> injector = new BeanPropertyInjector<>(true);
 		A record = new A();
@@ -74,6 +83,7 @@ public class BeanPropertyInjectorTest {
 		private final int privateField = 2337;
 		private String custom;
 		private final String x = "xValue";
+		private final String finalField = "finalFieldValue";
 
 		public void setQ(String q) {
 			this.q = q;
