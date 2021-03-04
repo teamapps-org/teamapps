@@ -118,7 +118,8 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 				const violatesMaxEntriesSetting = !!config.maxEntries && this.trivialTagComboBox.getSelectedEntries().length >= config.maxEntries;
 				const violatesFreeTextSetting = !config.allowAnyText && isFreeTextEntry(entry);
 				return !violatesDistinctSetting && !violatesMaxEntriesSetting && !violatesFreeTextSetting;
-			}
+			},
+			selectableDecider: entry => entry.selectable
 		});
 		this.trivialTagComboBox.getMainDomElement().classList.add("UiTagComboBox");
 		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_LINE);

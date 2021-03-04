@@ -49,10 +49,6 @@
       align-items: center;
       user-select: none;
 
-      &:hover:not(.tr-selected-entry) {
-        background-color: @tr-highlight-color;
-      }
-
       .tr-indent-spacer {
         width: @tr-tree-indent;
         flex: 0 0 auto;
@@ -98,5 +94,9 @@
 
   &.hide-expanders .tr-tree-expander {
     display: none;
+  }
+
+  &.highlight-hovered-entries .tr-tree-entry-outer-wrapper > .tr-tree-entry-and-expander-wrapper:hover:not(.tr-selected-entry) {
+      background-color: @tr-highlight-color;
   }
 }

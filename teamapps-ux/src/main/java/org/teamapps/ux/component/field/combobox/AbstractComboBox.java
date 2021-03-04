@@ -184,6 +184,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		if (treeNodeInfo != null) {
 			uiTreeRecord.setExpanded(treeNodeInfo.isExpanded());
 			uiTreeRecord.setLazyChildren(treeNodeInfo.isLazyChildren());
+			uiTreeRecord.setSelectable(treeNodeInfo.isSelectable());
 		}
 
 		return uiTreeRecord;

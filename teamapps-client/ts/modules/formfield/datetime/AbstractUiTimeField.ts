@@ -73,6 +73,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 				return timeSuggestionEngine.generateSuggestions(searchString);
 			},
 			textHighlightingEntryLimit: -1, // no highlighting!
+			preselectionMatcher: (query, entry) => this.localDateTimeToString(entry).toLowerCase().indexOf(query.toLowerCase()) >= 0
 		}));
 		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiTimeField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());

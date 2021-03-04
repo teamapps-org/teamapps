@@ -544,7 +544,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
         this.entries = newEntries;
         this.$spinners.remove();
         this.$spinners = $();
-        this.listBox.updateEntries(newEntries);
+        this.listBox.setEntries(newEntries);
     }
 
     public getSelectedEntry(): U {
