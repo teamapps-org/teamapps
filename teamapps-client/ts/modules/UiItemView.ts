@@ -232,7 +232,7 @@ class ItemGroup {
 
 	private filter() {
 		const matchingElements = this.filterItems(this.filterString);
-		this.trivialTreeBox.updateEntries(matchingElements);
+		this.trivialTreeBox.setEntries(matchingElements);
 		if (matchingElements.length < 100) {
 			this.trivialTreeBox.highlightTextMatches(this.filterString);
 		}

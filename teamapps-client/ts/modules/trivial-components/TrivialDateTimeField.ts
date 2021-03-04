@@ -467,7 +467,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		if (!entries || entries.length === 0) {
 			this.closeDropDown();
 		} else {
-			this.dateListBox.updateEntries(entries);
+			this.dateListBox.setEntries(entries);
 			this.dateListBox.highlightTextMatches(this.getNonSelectedEditorValue());
 			this.dateListBox.selectNextEntry(highlightDirection);
 			this.autoCompleteIfPossible(this.config.autoCompleteDelay);
@@ -485,7 +485,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		if (!entries || entries.length === 0) {
 			this.closeDropDown();
 		} else {
-			this.timeListBox.updateEntries(entries);
+			this.timeListBox.setEntries(entries);
 			this.timeListBox.highlightTextMatches(this.getNonSelectedEditorValue());
 			this.timeListBox.selectNextEntry(highlightDirection);
 			this.autoCompleteIfPossible(this.config.autoCompleteDelay);

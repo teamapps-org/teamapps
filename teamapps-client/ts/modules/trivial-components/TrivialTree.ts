@@ -85,7 +85,7 @@ export class TrivialTree<E> implements TrivialComponent{
                 const direction = e.which == keyCodes.up_arrow ? -1 : 1;
                 if (this.entries != null) {
                     if (this.config.directSelectionViaArrowKeys) {
-                        this.treeBox.selectNextEntry(direction, false, () => true, true, e);
+                        this.treeBox.selectNextEntry(direction, false, false, () => true, true, e);
                     } else {
                         this.treeBox.selectNextEntry(direction, false);
                     }
@@ -117,7 +117,7 @@ export class TrivialTree<E> implements TrivialComponent{
         this.entries = newEntries;
         this.$spinners.remove();
         this.$spinners = $();
-        this.treeBox.updateEntries(newEntries);
+        this.treeBox.setEntries(newEntries);
     }
 
     private findEntries(filterFunction: ((node: E) => boolean)) {

@@ -155,7 +155,9 @@ export interface TrivialTreeBoxConfig<E> {
 	 */
 	selectableDecider?: (entry: E) => boolean,
 
-	selectOnHover?: boolean
+	selectOnHover?: boolean,
+
+	highlightHoveredEntries?: boolean
 }
 
 class EntryWrapper<E> {
@@ -253,13 +255,15 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			enforceSingleExpandedPath: false, // only one path is expanded at any time
 			indentation: null,
 			selectableDecider: () => true,
-			selectOnHover: false
+			selectOnHover: false,
+			highlightHoveredEntries: true
 		}, options);
 
 		this.$componentWrapper = $('<div class="tr-treebox"></div>');
 		this.$componentWrapper.toggleClass("hide-expanders", !this.config.showExpanders);
+		this.$componentWrapper.toggleClass("highlight-hovered-entries", this.config.highlightHoveredEntries);
 
-		this.updateEntries(this.config.entries || []);
+		this.setEntries(this.config.entries || []);
 
 		this.setSelectedEntryById(this.config.selectedEntryId);
 	}
@@ -390,7 +394,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		}
 	}
 
-	public updateEntries(newEntries: E[]) {
+	public setEntries(newEntries: E[]) {
 		newEntries = newEntries || [];
 		this.entries = newEntries.map(e => this.createEntryWrapper(e, null));
 
@@ -508,7 +512,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	}
 
 	private minimallyScrollTo($entryWrapper: JQuery) {
-		$entryWrapper[0].scrollIntoView({
+		$entryWrapper[0].querySelector(":scope > .tr-tree-entry-and-expander-wrapper").scrollIntoView({
 			// behavior: "smooth",
 			block: "nearest"
 		});
@@ -527,22 +531,16 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		this.onSelectedEntryChanged.fire(entry.entry, originalEvent);
 	}
 
-	// public selectNextEntry(direction: HighlightDirection, rollover: boolean = false, originalEvent?: unknown, fireEvents = false) {
-	// 	const visibleSelectableEntry = this.getNextVisibleSelectableEntry(this.getSelectedEntryWrapper(), direction, rollover);
-	// 	if (visibleSelectableEntry != null) {
-	// 		this.setSelectedEntry(visibleSelectableEntry, originalEvent, fireEvents);
-	// 	}
-	// }
-
-	public selectNextEntry(direction: HighlightDirection, rollover = false, matcher: (entry: E) => boolean = () => true, fireEvents = false, originalEvent?: unknown) {
-		const nextMatchingEntry = this.getNextVisibleSelectableEntry(this.getSelectedEntryWrapper(), direction, rollover, matcher);
+	public selectNextEntry(direction: HighlightDirection, rollover = false, selectableOnly = true, matcher: (entry: E) => boolean = () => true, fireEvents = false, originalEvent?: unknown): E {
+		const nextMatchingEntry = this.getNextVisibleEntry(this.getSelectedEntryWrapper(), direction, rollover, selectableOnly, matcher);
 		if (nextMatchingEntry != null) {
 			this.setSelectedEntry(nextMatchingEntry, originalEvent, fireEvents);
 			this.minimallyScrollTo(nextMatchingEntry.$element);
 		}
+		return nextMatchingEntry.entry;
 	}
 
-	private getNextVisibleSelectableEntry(currentEntry: EntryWrapper<E>, direction: HighlightDirection, rollover: boolean, entryMatcher: (entry: E) => boolean = () => true) {
+	private getNextVisibleEntry(currentEntry: EntryWrapper<E>, direction: HighlightDirection, rollover: boolean, selectableOnly = true, entryMatcher: (entry: E) => boolean = () => true) {
 		let newSelectedElementIndex: number;
 		const visibleEntriesAsList = this.findEntries((entry) => {
 			if (!entry.$element) {

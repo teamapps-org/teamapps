@@ -126,11 +126,13 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 				return new Promise(resolve => this.lazyChildrenCallbacksByParenId.set(node.id, resolve));
 			},
 			lazyChildrenFlag: entry => entry.lazyChildren,
-			selectableDecider: entry => true, // TODO
-			selectOnHover: true
+			selectableDecider: entry => entry.selectable,
+			selectOnHover: true,
+			highlightHoveredEntries: false
 		}), {
 			queryFunction: queryFunction,
-			textHighlightingEntryLimit: config.textHighlightingEntryLimit
+			textHighlightingEntryLimit: config.textHighlightingEntryLimit,
+			preselectionMatcher: (query, entry) => entry.asString.toLowerCase().indexOf(query.toLowerCase()) >= 0
 		}));
 		this.trivialComboBox.getMainDomElement().classList.add("UiComboBox");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());

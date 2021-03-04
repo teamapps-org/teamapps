@@ -599,7 +599,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
     private updateListBoxEntries() {
         this.blurCausedByClickInsideComponent = false; // we won't get any mouseout or mouseup events for entries if they get removed. so do this here proactively
 
-        this.treeBox.updateEntries(this.entries);
+        this.treeBox.setEntries(this.entries);
         this.treeBox.highlightTextMatches(this.entries && this.entries.length <= this.config.textHighlightingEntryLimit ? this.getNonSelectedEditorValue() : null);
 
         this.listBoxDirty = false;

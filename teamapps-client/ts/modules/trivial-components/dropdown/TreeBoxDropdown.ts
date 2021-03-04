@@ -1,20 +1,22 @@
 import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
 import {TeamAppsEvent} from "../../util/TeamAppsEvent";
-import {HighlightDirection, QueryFunction, TrivialComponent} from "../TrivialCore";
-import {LocalDateTime} from "../../datetime/LocalDateTime";
+import {QueryFunction} from "../TrivialCore";
 import {TrivialTreeBox} from "../TrivialTreeBox";
+
+type TreeBoxDropdownConfig<E> = {
+	queryFunction: QueryFunction<E>;
+	textHighlightingEntryLimit: number;
+	preselectionMatcher: (query: string, entry: E) => boolean;
+};
 
 export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 
 	public readonly onValueChanged: TeamAppsEvent<{ value: E; finalSelection: boolean }> = new TeamAppsEvent(this);
 
 	private treeBox: TrivialTreeBox<E>;
-	private config: { queryFunction: QueryFunction<E>; textHighlightingEntryLimit: number };
+	private config: TreeBoxDropdownConfig<E>;
 
-	constructor(treeBox: TrivialTreeBox<E>, config: {
-		queryFunction: QueryFunction<E>,
-		textHighlightingEntryLimit: number,
-	}) {
+	constructor(treeBox: TrivialTreeBox<E>, config: TreeBoxDropdownConfig<E>) {
 		this.treeBox = treeBox;
 		this.config = config;
 		this.treeBox.onSelectedEntryChanged.addListener(entry => this.onValueChanged.fire({value: entry, finalSelection: true}));
@@ -42,14 +44,18 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 	async handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
 		console.log(`handleQuery, query: ${query}, direction: ${selectionDirection}`);
 		let results = await this.config.queryFunction(query) ?? [];
-		this.treeBox.updateEntries(results);
+		this.treeBox.setEntries(results);
+		this.getMainDomElement().scrollIntoView({block: "start"}); // make sure we scroll up
 		this.treeBox.highlightTextMatches(results.length <= this.config.textHighlightingEntryLimit ? query : null);
 		if (selectionDirection === 0) {
 			console.log("deselecting")
 			this.treeBox.setSelectedEntryById(null)
 		} else {
 			console.log("selecting next")
-			this.treeBox.selectNextEntry(1);
+			let selectedEntry = this.treeBox.selectNextEntry(1, false, this.config.preselectionMatcher.bind(null, query));
+			if (selectedEntry == null) {
+				this.treeBox.selectNextEntry(1, false);
+			}
 		}
 		console.log(`=> selected: ${this.treeBox.getSelectedEntry()}`);
 		return results.length > 0;

@@ -81,6 +81,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, LocalDate>
 				return this.dateSuggestionEngine.generateSuggestions(searchString, LocalDateTime.local());
 			},
 			textHighlightingEntryLimit: -1, // no highlighting!
+			preselectionMatcher: (query, entry) => this.localDateTimeToString(entry).toLowerCase().indexOf(query.toLowerCase()) >= 0
 		}));
 		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiDateField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
