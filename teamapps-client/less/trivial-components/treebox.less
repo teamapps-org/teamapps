@@ -81,9 +81,9 @@
 
     > .tr-tree-entry-children-wrapper {
       padding-left: 0;
-      display: none;
+      overflow-y: hidden; // especially when collapsed!
       position: relative; // for lazy children spinner
-      min-height: 20px; // for displaying the spinner...
+      //min-height: 20px; // for displaying the spinner... // TODO
     }
 
     //&.expanded > .tr-tree-entry-children-wrapper {

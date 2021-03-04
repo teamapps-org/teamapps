@@ -35,9 +35,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {DEFAULT_RENDERING_FUNCTIONS, DEFAULT_TEMPLATES, generateUUID, HighlightDirection, MatchingOptions, minimallyScrollTo, TrivialComponent} from "./TrivialCore";
+import {DEFAULT_TEMPLATES, generateUUID, HighlightDirection, MatchingOptions, TrivialComponent} from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
 import {highlightMatches} from "./util/highlight";
+import {addDelegatedEventListener, closestAncestor, insertAfter, insertBefore, parseHtml, toggleNodeCollapsed} from "../Common";
 
 export interface TrivialTreeBoxConfig<E> {
 	/**
@@ -162,13 +163,13 @@ export interface TrivialTreeBoxConfig<E> {
 
 class EntryWrapper<E> {
 	public entry: E;
-	public $element: JQuery;
+	public $element: HTMLElement;
 	public children: EntryWrapper<E>[];
 	public readonly depth: number;
 	private _id: string | number;
 
 	constructor(entry: E, public readonly parent: EntryWrapper<E>, private config: TrivialTreeBoxConfig<E> & {
-		elementFactory?: (entry: EntryWrapper<E>) => JQuery
+		elementFactory?: (entry: EntryWrapper<E>) => HTMLElement
 	}) {
 		this.entry = entry;
 		this.depth = parent != null ? parent.depth + 1 : 0;
@@ -213,8 +214,16 @@ class EntryWrapper<E> {
 	public set expanded(expanded: boolean) {
 		(this.entry as any)[this.config.expandedProperty] = expanded;
 		if (this.$element) {
-			this.$element.toggleClass("expanded", expanded);
+			this.$element.classList.toggle("expanded", expanded);
 		}
+	}
+
+	public get $treeEntryAndExpanderWrapper() {
+		return this.$element?.querySelector(":scope > .tr-tree-entry-and-expander-wrapper");
+	}
+
+	public get $childrenWrapper(): HTMLElement {
+		return this.$element?.querySelector(":scope > .tr-tree-entry-children-wrapper")
 	}
 }
 
@@ -225,8 +234,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	public readonly onSelectedEntryChanged = new TrivialEvent<E>(this);
 	public readonly onNodeExpansionStateChanged = new TrivialEvent<E>(this);
 
-	private $componentWrapper: JQuery;
-	private $tree: JQuery;
+	private $componentWrapper: HTMLElement;
+	private $tree: HTMLElement;
 
 	private entries: EntryWrapper<E>[];
 	private selectedEntryId: string | number;
@@ -259,9 +268,9 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			highlightHoveredEntries: true
 		}, options);
 
-		this.$componentWrapper = $('<div class="tr-treebox"></div>');
-		this.$componentWrapper.toggleClass("hide-expanders", !this.config.showExpanders);
-		this.$componentWrapper.toggleClass("highlight-hovered-entries", this.config.highlightHoveredEntries);
+		this.$componentWrapper = parseHtml('<div class="tr-treebox"></div>');
+		this.$componentWrapper.classList.toggle("hide-expanders", !this.config.showExpanders);
+		this.$componentWrapper.classList.toggle("highlight-hovered-entries", this.config.highlightHoveredEntries);
 
 		this.setEntries(this.config.entries || []);
 
@@ -269,7 +278,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	}
 
 	private createEntryElement(entry: EntryWrapper<E>) {
-		const $outerEntryWrapper = $(`<div class="tr-tree-entry-outer-wrapper ${(entry.isLeaf() ? '' : 'has-children')}" data-id="${entry.id}"></div>`);
+		const $outerEntryWrapper = parseHtml(`<div class="tr-tree-entry-outer-wrapper ${(entry.isLeaf() ? '' : 'has-children')}" data-id="${entry.id}"></div>`);
 		entry.$element = $outerEntryWrapper;
 		const $entryAndExpanderWrapper = $('<div class="tr-tree-entry-and-expander-wrapper"></div>')
 			.appendTo($outerEntryWrapper);
@@ -301,19 +310,19 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		return $outerEntryWrapper;
 	}
 
-	private create$ChildrenWrapper(entry: EntryWrapper<E>): JQuery {
-		let $childrenWrapper = entry.$element.find('>.tr-tree-entry-children-wrapper');
-		if ($childrenWrapper[0] == null) {
-			$childrenWrapper = $('<div class="tr-tree-entry-children-wrapper"></div>')
-				.appendTo(entry.$element);
+	private create$ChildrenWrapper(entry: EntryWrapper<E>): HTMLElement {
+		let $childrenWrapper: HTMLElement = entry.$childrenWrapper;
+		if ($childrenWrapper == null) {
+			$childrenWrapper = parseHtml('<div class="tr-tree-entry-children-wrapper"></div>');
+			entry.$element.append($childrenWrapper);
 			if (entry.children != null) {
 				if (entry.expanded) {
 					for (let i = 0; i < entry.children.length; i++) {
-						this.createEntryElement(entry.children[i]).appendTo($childrenWrapper);
+						$childrenWrapper.append(this.createEntryElement(entry.children[i]));
 					}
 				}
 			} else {
-				$childrenWrapper.hide().append(this.config.spinnerTemplate);
+				$childrenWrapper.append(this.config.spinnerTemplate);
 			}
 		}
 		return $childrenWrapper;
@@ -342,7 +351,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		if (node.$element) {
 			let nodeHasUnrenderedChildren = (node: EntryWrapper<E>) => {
 				return node.children && node.children.some((child: EntryWrapper<E>) => {
-					return !child.$element || !$.contains(document.documentElement, child.$element[0]);
+					return !child.$element || !$.contains(document.documentElement, child.$element);
 				});
 			};
 
@@ -356,18 +365,21 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 				this.minimallyScrollTo(node.$element);
 			}
 
-			const childrenWrapper = node.$element.find("> .tr-tree-entry-children-wrapper");
-			if (expanded) {
-				if (animate && this.config.animationDuration > 0) {
-					childrenWrapper.slideDown(this.config.animationDuration);
+			const $childrenWrapper: HTMLElement = node.$childrenWrapper;
+			if ($childrenWrapper != null) {
+				if (expanded) {
+					if (animate && this.config.animationDuration > 0) {
+						$childrenWrapper.classList.remove("hidden")
+						toggleNodeCollapsed($childrenWrapper, false, this.config.animationDuration);
+					} else {
+						$childrenWrapper.classList.remove("hidden");
+					}
 				} else {
-					childrenWrapper.css("display", "block"); // show() does not do this if the node is not attached
-				}
-			} else {
-				if (animate && this.config.animationDuration > 0) {
-					childrenWrapper.slideUp(this.config.animationDuration);
-				} else {
-					childrenWrapper.hide();
+					if (animate && this.config.animationDuration > 0) {
+						toggleNodeCollapsed($childrenWrapper, true, this.config.animationDuration, () => $childrenWrapper.classList.add("hidden"));
+					} else {
+						$childrenWrapper.classList.add("hidden");
+					}
 				}
 			}
 		}
@@ -383,14 +395,14 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	}
 
 	private renderChildren(node: EntryWrapper<E>) {
-		const $childrenWrapper = node.$element.find('> .tr-tree-entry-children-wrapper');
-		$childrenWrapper[0].innerHTML = ''; // remove the spinner!
+		const $childrenWrapper = this.create$ChildrenWrapper(node);
+		$childrenWrapper.innerHTML = ''; // remove the spinner!
 		if (node.children && node.children.length > 0) {
 			node.children.forEach(child => {
-				child.render().appendTo($childrenWrapper);
+				$childrenWrapper.append(child.render());
 			});
 		} else {
-			node.$element.removeClass('has-children expanded');
+			node.$element.classList.remove('has-children', 'expanded');
 		}
 	}
 
@@ -399,30 +411,37 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		this.entries = newEntries.map(e => this.createEntryWrapper(e, null));
 
 		this.$tree && this.$tree.remove();
-		this.$tree = $('<div class="tr-tree-entryTree"></div>');
-		this.$tree.on("mousedown", ".tr-tree-entry-and-expander-wrapper", (e) => {
-			let entryWrapper = ($(e.target).closest(".tr-tree-entry-and-expander-wrapper")[0] as any).trivialEntryWrapper as EntryWrapper<E>;
-			if (this.config.selectableDecider(entryWrapper.entry)) {
-				this.setSelectedEntry(entryWrapper, null, true);
-			}
-		}).on("mouseenter", ".tr-tree-entry-and-expander-wrapper", (e) => {
-			let entryWrapper = ($(e.target).closest(".tr-tree-entry-and-expander-wrapper")[0] as any).trivialEntryWrapper as EntryWrapper<E>;
-			if (this.config.selectOnHover && this.config.selectableDecider(entryWrapper.entry)) {
-				this.setSelectedEntry(entryWrapper, e, false);
-			}
-		}).on("mousedown", ".tr-tree-expander", () => {
-			return false; // prevent selection!
-		}).on("click", ".tr-tree-expander", (e) => {
-			let entryWrapper = ($(e.target).closest(".tr-tree-entry-and-expander-wrapper")[0] as any).trivialEntryWrapper as EntryWrapper<E>;
+		this.$tree = parseHtml('<div class="tr-tree-entryTree"></div>');
+		addDelegatedEventListener(this.$tree, ".tr-tree-expander", "mousedown", (element, ev) => {
+			ev.stopPropagation();
+			ev.stopImmediatePropagation();
+		}, true);
+		addDelegatedEventListener(this.$tree, ".tr-tree-expander", "click", (element, ev) => {
+			let entryWrapper = (closestAncestor(element, ".tr-tree-entry-and-expander-wrapper") as any).trivialEntryWrapper as EntryWrapper<E>;
 			this.setNodeExpanded(entryWrapper, !entryWrapper.expanded, true);
 		});
+		addDelegatedEventListener(this.$tree, ".tr-tree-entry-and-expander-wrapper", "mousedown", (element, ev) => {
+			let entryWrapper = (element as any).trivialEntryWrapper as EntryWrapper<E>;
+			if (this.config.selectableDecider(entryWrapper.entry)) {
+				this.setSelectedEntry(entryWrapper, null, true);
+				if (entryWrapper && this.config.expandOnSelection) {
+					this.setNodeExpanded(entryWrapper, true, true);
+				}
+			}
+		});
+		addDelegatedEventListener(this.$tree, ".tr-tree-entry-and-expander-wrapper", "mouseenter", (element, ev) => {
+			let entryWrapper = (element as any).trivialEntryWrapper as EntryWrapper<E>;
+			if (this.config.selectOnHover && this.config.selectableDecider(entryWrapper.entry)) {
+				this.setSelectedEntry(entryWrapper, ev, false);
+			}
+		}, true);
 
 		if (this.entries.length > 0) {
-			this.entries.forEach(entry => entry.render().appendTo(this.$tree))
+			this.entries.forEach(entry => this.$tree.append(entry.render()));
 		} else {
-			this.$tree.append(this.config.noEntriesTemplate);
+			this.$tree.append(parseHtml(this.config.noEntriesTemplate));
 		}
-		this.$tree.appendTo(this.$componentWrapper);
+		this.$componentWrapper.append(this.$tree);
 
 		const selectedEntry = this.findEntryById(this.selectedEntryId);
 		if (selectedEntry) {
@@ -438,15 +457,17 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		});
 	}
 
-	private findEntries(filterFunction: ((node: EntryWrapper<E>) => boolean)) {
+	private findEntries(filterFunction: ((node: EntryWrapper<E>) => boolean), visibleOnly: boolean = false) {
 		let findEntriesInSubTree = (node: EntryWrapper<E>, listOfFoundEntries: EntryWrapper<E>[]) => {
 			if (filterFunction.call(this, node)) {
 				listOfFoundEntries.push(node);
 			}
-			if (node.children) {
-				for (let i = 0; i < node.children.length; i++) {
-					const child = node.children[i];
-					findEntriesInSubTree(child, listOfFoundEntries);
+			if (!visibleOnly || node.expanded) {
+				if (node.children) {
+					for (let i = 0; i < node.children.length; i++) {
+						const child = node.children[i];
+						findEntriesInSubTree(child, listOfFoundEntries);
+					}
 				}
 			}
 		};
@@ -502,32 +523,32 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		if (fireEvents) {
 			this.fireChangeEvents(entry, originalEvent);
 		}
+	}
+
+	public setSelectedEntryById(nodeId: number | string, fireEvents = false) {
+		let entry = this.findEntryById(nodeId);
+		this.setSelectedEntry(entry, null, fireEvents);
 		if (entry && this.config.expandOnSelection) {
 			this.setNodeExpanded(entry, true, true);
 		}
 	}
 
-	public setSelectedEntryById(nodeId: number | string, fireEvents = false) {
-		this.setSelectedEntry(this.findEntryById(nodeId), null, fireEvents);
-	}
-
-	private minimallyScrollTo($entryWrapper: JQuery) {
-		$entryWrapper[0].querySelector(":scope > .tr-tree-entry-and-expander-wrapper").scrollIntoView({
+	private minimallyScrollTo($entryWrapper: HTMLElement) {
+		$entryWrapper.querySelector(":scope > .tr-tree-entry-and-expander-wrapper").scrollIntoView({
 			// behavior: "smooth",
 			block: "nearest"
 		});
 	}
 
 	private markSelectedEntry(entry: EntryWrapper<E>) {
-		this.$tree.find(".tr-selected-entry").removeClass("tr-selected-entry");
+		this.$tree.querySelectorAll(":scope .tr-selected-entry").forEach(e => e.classList.remove("tr-selected-entry"));
 		if (entry && entry.$element) {
-			const $entryWrapper = entry.$element.find('>.tr-tree-entry-and-expander-wrapper');
-			$entryWrapper.addClass("tr-selected-entry");
+			const $entryWrapper = entry.$element.querySelector(':scope > .tr-tree-entry-and-expander-wrapper');
+			$entryWrapper.classList.add("tr-selected-entry");
 		}
 	}
 
 	private fireChangeEvents(entry: EntryWrapper<E>, originalEvent: unknown) {
-		this.$componentWrapper.trigger("change");
 		this.onSelectedEntryChanged.fire(entry.entry, originalEvent);
 	}
 
@@ -546,10 +567,9 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			if (!entry.$element) {
 				return false;
 			} else {
-				console.log(`visible: ${entry.$element.is(':visible')}, selectable: ${this.config.selectableDecider(entry.entry)}, matches: ${entryMatcher(entry.entry)}, current: ${entry === currentEntry}`)
-				return (entry.$element.is(':visible') && this.config.selectableDecider(entry.entry) && entryMatcher(entry.entry)) || entry === currentEntry;
+				return ((!selectableOnly || this.config.selectableDecider(entry.entry)) && entryMatcher(entry.entry)) || entry === currentEntry;
 			}
-		});
+		}, true);
 		if (visibleEntriesAsList == null || visibleEntriesAsList.length == 0) {
 			return null;
 		} else if (currentEntry == null && direction > 0) {
@@ -568,13 +588,13 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	}
 
 	public highlightTextMatches(searchString: string) {
-		this.$tree.detach();
+		this.$tree.remove();
 		for (let i = 0; i < this.entries.length; i++) {
 			const entry = this.entries[i];
-			const $entryElement = entry.$element.find('.tr-tree-entry');
+			const $entryElement = entry.$element.querySelectorAll(':scope .tr-tree-entry');
 			highlightMatches($entryElement, searchString, this.config.matchingOptions)
 		}
-		this.$tree.appendTo(this.$componentWrapper);
+		this.$componentWrapper.append(this.$tree);
 	}
 
 	public getSelectedEntry(): E | null {
@@ -626,9 +646,11 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			newEntryWrapper = this.createEntryWrapper(node, parentNode);
 		} else {
 			oldNode.entry = node;
-			let $entry = $(this.config.entryRenderingFunction(node, oldNode.depth));
-			$entry.addClass("tr-tree-entry filterable-item");
-			oldNode.$element.find(".tr-tree-entry").first().replaceWith($entry)
+			let $entry = parseHtml(this.config.entryRenderingFunction(node, oldNode.depth));
+			$entry.classList.add("tr-tree-entry", "filterable-item");
+			let $oldEntry = oldNode.$element.querySelector(":scope .tr-tree-entry");
+			insertBefore($entry, $oldEntry);
+			$oldEntry.remove();
 			newEntryWrapper = oldNode;
 		}
 		if (parentNode) {
@@ -637,7 +659,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			this.entries[this.entries.indexOf(oldNode)] = newEntryWrapper;
 		}
 		if (newEntryWrapper != oldNode) {
-			newEntryWrapper.render().insertAfter(oldNode.$element);
+			insertAfter(newEntryWrapper.render(), oldNode.$element);
 			oldNode.$element.remove();
 		}
 	};
@@ -663,11 +685,11 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		let newEntryWrapper = this.createEntryWrapper(node, parentNode);
 		let $childrenWrapper = this.create$ChildrenWrapper(parentNode);
 		if (parentNode.children.length === 0) {
-			$childrenWrapper[0].innerHTML = ''; // remove the spinner!
+			$childrenWrapper.innerHTML = ''; // remove the spinner!
 		}
 		parentNode.children.push(newEntryWrapper);
-		newEntryWrapper.render().appendTo($childrenWrapper);
-		parentNode.$element.addClass('has-children');
+		$childrenWrapper.append(newEntryWrapper.render());
+		parentNode.$element.classList.add('has-children');
 	};
 
 	public addOrUpdateNode(parentNodeId: number | string, node: E, recursiveUpdate = false) {
@@ -684,6 +706,6 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	};
 
 	getMainDomElement(): HTMLElement {
-		return this.$componentWrapper[0];
+		return this.$componentWrapper;
 	}
 }

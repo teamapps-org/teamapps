@@ -388,16 +388,19 @@ export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displ
 	let availableWidth = $outer.offsetWidth - 2 * options.padding;
 	let availableHeight = $outer.offsetHeight - 2 * options.padding;
 
-	let size = calculateDisplayModeInnerSize({width: availableWidth, height: availableHeight}, options.innerPreferredDimensions, displayMode, options.zoomFactor, options.considerScrollbars);
+	let size = calculateDisplayModeInnerSize({
+		width: availableWidth,
+		height: availableHeight
+	}, options.innerPreferredDimensions, displayMode, options.zoomFactor, options.considerScrollbars);
 	$inner.style.width = size.width + "px";
 	$inner.style.height = size.height + "px";
 }
 
 export function calculateDisplayModeInnerSize(containerDimensions: { width: number, height: number },
-                                              innerPreferredDimensions: { width: number, height: number },
-                                              displayMode: UiPageDisplayMode | any,
-                                              zoomFactor: number = 1,
-                                              considerScrollbars = false
+											  innerPreferredDimensions: { width: number, height: number },
+											  displayMode: UiPageDisplayMode | any,
+											  zoomFactor: number = 1,
+											  considerScrollbars = false
 ): { width: number, height: number } {
 	let viewPortAspectRatio = containerDimensions.width / containerDimensions.height;
 	let imageAspectRatio = innerPreferredDimensions.width / innerPreferredDimensions.height;
@@ -907,11 +910,23 @@ export function outerHeightIncludingMargins(el: HTMLElement) {
 	return height;
 }
 
-export function closestAncestor(el: HTMLElement, selector: string, includeSelf = false) {
+export function addDelegatedEventListener<K extends keyof HTMLElementEventMap>(rootElement: HTMLElement, selector: string, type: K, listener: (element: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
+	rootElement.addEventListener(type, ev => {
+		const target = selector != null ? closestAncestor(ev.target as HTMLElement, selector, true, rootElement) : ev.target as HTMLElement;
+		if (target != null) {
+			listener(target, ev);
+		}
+	}, options)
+}
+
+export function closestAncestor(el: HTMLElement, selector: string, includeSelf = false, $root: Element = document.body) {
 	let currentNode: HTMLElement = (includeSelf ? el : el.parentNode) as HTMLElement;
 	while (currentNode) {
 		if (currentNode.matches(selector)) {
 			return currentNode;
+		}
+		if (currentNode == $root) {
+			break;
 		}
 		currentNode = currentNode.parentNode as HTMLElement;
 	}
@@ -1295,6 +1310,28 @@ export function animatePageTransition(outEl: HTMLElement, inEl: HTMLElement, ani
 export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransition: UiPageTransition, animationDuration: number = 300, callback?: () => any) {
 	let s = UiPageTransition[pageTransition].toLowerCase().replace(/_{1,1}([a-z])/g, (g0, g1) => g1.toUpperCase()) as keyof typeof pageTransitionAnimationPairs;
 	animatePageTransition(outEl, inEl, s, animationDuration, callback);
+}
+
+export function toggleNodeCollapsed(element: HTMLElement, collapsed: boolean, duration: number, onTransitionEnd?: () => void) {
+	const initialMaxHeight = collapsed ? element.scrollHeight + "px" : "0px";
+	const targetMaxHeight = collapsed ? "0px" : element.scrollHeight + "px";
+	if (element.style.maxHeight == null || element.style.maxHeight == "") {
+		element.style.maxHeight = initialMaxHeight;
+	}
+	const oldTransitionStyle = element.style.transition;
+	element.style.transition = `max-height ${duration}ms`;
+
+	let transitionEndListener = () => {
+		["transitionend", "transitioncancel"].forEach(eventName => element.removeEventListener(eventName, transitionEndListener));
+		element.style.transition = oldTransitionStyle;
+		if (!collapsed) {
+			element.style.removeProperty("max-height");
+		}
+		onTransitionEnd?.();
+	};
+	["transitionend", "transitioncancel"].forEach(eventName => element.addEventListener(eventName, transitionEndListener));
+	window.setTimeout(transitionEndListener, duration + 100); // make sure the listener is removed no matter what!
+	element.style.maxHeight = targetMaxHeight;
 }
 
 export function css(el: HTMLElement, values: object) {
