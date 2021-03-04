@@ -80,9 +80,9 @@ public class BeanPropertyInjectorTest {
 	public static class A {
 		private String q = "qValue";
 		public int publicField = 1337;
-		private final int privateField = 2337;
+		private int privateField = 2337;
 		private String custom;
-		private final String x = "xValue";
+		private String x = "xValue";
 		private final String finalField = "finalFieldValue";
 
 		public void setQ(String q) {
