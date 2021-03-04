@@ -77,6 +77,7 @@ public class BeanPropertyInjectorTest {
 		assertEquals("blub", record.custom);
 	}
 
+	@SuppressWarnings("FieldMayBeFinal")
 	public static class A {
 		private String q = "qValue";
 		public int publicField = 1337;
