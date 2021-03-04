@@ -762,7 +762,7 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		int totalBottomRecords = bottomNonModelRecords.size();
 
 		if (endIndex > totalTopRecords + totalModelRecords + totalBottomRecords) {
-			endIndex = totalTopRecords + totalModelRecords + totalBottomRecords;
+			endIndex = Math.max(totalTopRecords + totalModelRecords + totalBottomRecords, startIndex);
 			length = endIndex - startIndex;
 		}
 

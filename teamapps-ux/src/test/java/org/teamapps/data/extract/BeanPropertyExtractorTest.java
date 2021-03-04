@@ -27,45 +27,70 @@ public class BeanPropertyExtractorTest {
 
 	@Test
 	public void testGetValue() throws Exception {
-		BeanPropertyExtractor<Object> extractor = new BeanPropertyExtractor<>();
+		BeanPropertyExtractor<A> extractor = new BeanPropertyExtractor<>();
 		Object value = extractor.getValue(new A(), "q");
 		assertEquals("qValue", value);
 	}
 
 	@Test
-	public void testWontGetFieldValue() throws Exception {
-		BeanPropertyExtractor<Object> extractor = new BeanPropertyExtractor<>();
-		Object value = extractor.getValue(new A(), "r");
+	public void testWontGetPrivateFieldValue() throws Exception {
+		BeanPropertyExtractor<A> extractor = new BeanPropertyExtractor<>();
+		Object value = extractor.getValue(new A(), "publicField");
 		assertNull(value);
 		// see debug log!
 	}
 
 	@Test
+	public void testValueExtractorsGetCachedSeparatelyDependingOnFallbackToFields() throws Exception {
+		BeanPropertyExtractor<A> extractor = new BeanPropertyExtractor<>();
+		assertNull(extractor.getValue(new A(), "x"));
+		BeanPropertyExtractor<A> extractor2 = new BeanPropertyExtractor<>(true);
+		assertEquals("xValue", extractor2.getValue(new A(), "x"));
+	}
+
+	@Test
+	public void testGetPublicFieldValue() throws Exception {
+		BeanPropertyExtractor<A> extractor = new BeanPropertyExtractor<>(true);
+		Object value = extractor.getValue(new A(), "publicField");
+		assertEquals(1337, value);
+	}
+
+	@Test
+	public void testGetPrivateFieldValue() throws Exception {
+		BeanPropertyExtractor<A> extractor = new BeanPropertyExtractor<>(true);
+		Object value = extractor.getValue(new A(), "privateField");
+		assertEquals(2337, value);
+	}
+
+	@Test
 	public void testGetsBooleanGetter() throws Exception {
-		BeanPropertyExtractor<Object> extractor = new BeanPropertyExtractor<>();
+		BeanPropertyExtractor<A> extractor = new BeanPropertyExtractor<>();
 		Object value = extractor.getValue(new A(), "s");
 		assertEquals(true, value);
 	}
 
 	@Test
-	public void testAddCustomPropertyExtractor() throws Exception {
-		BeanPropertyExtractor<Object> extractor = new BeanPropertyExtractor<>();
+	public void testAddCustomValueExtractor() throws Exception {
+		BeanPropertyExtractor<A> extractor = new BeanPropertyExtractor<>();
 		extractor.addProperty("blah", (object) -> "blahValue");
 		Object value = extractor.getValue(new A(), "blah");
 		assertEquals("blahValue", value);
 	}
 
 	@Test
-	public void testAddCustomPropertyExtractorOverwritesProperty() throws Exception {
-		BeanPropertyExtractor<Object> extractor = new BeanPropertyExtractor<>();
+	public void testAddCustomValueExtractorOverwritesProperty() throws Exception {
+		BeanPropertyExtractor<A> extractor = new BeanPropertyExtractor<>();
 		extractor.addProperty("q", (object) -> "overwrittenQValue");
 		Object value = extractor.getValue(new A(), "q");
 		assertEquals("overwrittenQValue", value);
 	}
 
 	public static class A {
-		private String q = "qValue";
-		private String r = "rValue";
+		private final String q = "qValue";
+		private final String r = "rValue";
+		public int publicField = 1337;
+		private final int privateField = 2337;
+		private final String x = "xValue";
 
 		public String getQ() {
 			return q;
@@ -75,5 +100,5 @@ public class BeanPropertyExtractorTest {
 			return true;
 		}
 	}
-	
+
 }

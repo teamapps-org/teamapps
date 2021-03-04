@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.util.ReflectionUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +36,15 @@ public class BeanPropertyInjector<RECORD> implements PropertyInjector<RECORD> {
 	private static final Map<ClassAndPropertyName, ValueInjector> settersByClassAndPropertyName = new ConcurrentHashMap<>();
 
 	private final Map<String, ValueInjector> customInjectors = new HashMap<>(0);
+	private final boolean fallbackToFields;
+
+	public BeanPropertyInjector() {
+		this(false);
+	}
+
+	public BeanPropertyInjector(boolean fallbackToFields) {
+		this.fallbackToFields = fallbackToFields;
+	}
 
 	@Override
 	public void setValue(RECORD record, String propertyName, Object value) {
@@ -47,7 +58,7 @@ public class BeanPropertyInjector<RECORD> implements PropertyInjector<RECORD> {
 			return ValueInjector;
 		} else {
 			return settersByClassAndPropertyName.computeIfAbsent(
-					new ClassAndPropertyName(clazz, propertyName),
+					new ClassAndPropertyName(clazz, propertyName, fallbackToFields),
 					classAndPropertyName -> createValueInjector(classAndPropertyName)
 			);
 		}
@@ -55,12 +66,16 @@ public class BeanPropertyInjector<RECORD> implements PropertyInjector<RECORD> {
 
 	private ValueInjector<RECORD, ?> createValueInjector(ClassAndPropertyName classAndPropertyName) {
 		Method setter = ReflectionUtil.findSetter(classAndPropertyName.clazz, classAndPropertyName.propertyName);
-		return (record, value) -> {
-			if (setter !=null) {
-				ReflectionUtil.invokeMethod(record, setter, value);
-			} else {
-				LOGGER.debug("Could not find setter for property {} on class {}!", classAndPropertyName.propertyName, record.getClass().getCanonicalName());
+		if (setter != null) {
+			return (record, value) -> ReflectionUtil.invokeMethod(record, setter, value);
+		} else if (fallbackToFields) {
+			Field field = ReflectionUtil.findField(classAndPropertyName.clazz, classAndPropertyName.propertyName);
+			if (field != null && !Modifier.isFinal(field.getModifiers())) {
+				return (record, value) -> ReflectionUtil.setField(record, field, value, true);
 			}
+		}
+		LOGGER.debug("Could not find setter or field for property {} on class {}!", classAndPropertyName.propertyName, classAndPropertyName.getClass().getCanonicalName());
+		return (record, value) -> {
 		};
 	}
 

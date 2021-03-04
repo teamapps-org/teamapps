@@ -99,6 +99,11 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		return fileItems.isEmpty();
+	}
+
+	@Override
 	public UiComponent createUiComponent() {
 		UiSimpleFileField field = new UiSimpleFileField();
 		mapAbstractFieldAttributesToUiField(field);
