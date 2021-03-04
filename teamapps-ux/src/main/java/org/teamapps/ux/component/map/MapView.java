@@ -202,7 +202,13 @@ public class MapView<RECORD> extends AbstractComponent {
 	}
 
 	public void removeShape(AbstractMapShape shape) {
+		shapesByClientId.remove(shape.getClientIdInternal());
 		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
+	}
+
+	public void clearShapes() {
+		shapesByClientId.clear();
+		queueCommandIfRendered(() -> new UiMap.ClearShapesCommand(getId()));
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
@@ -219,6 +225,12 @@ public class MapView<RECORD> extends AbstractComponent {
 		}
 	}
 
+	public void clearMarkerCluster() {
+		clusterMarkers.forEach(this.markersByClientId::removeValue);
+		clusterMarkers.clear();
+		queueCommandIfRendered(() -> new UiMap.ClearMarkerClusterCommand(getId()));
+	}
+
 	public void unCacheMarkers(List<Marker<RECORD>> markers) {
 		markers.forEach(this.markersByClientId::removeValue);
 	}
@@ -231,6 +243,10 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	public void setHeatMap(UiHeatMapData heatMap) {
 		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(getId(), heatMap));
+	}
+
+	public void clearHeatMap() {
+		queueCommandIfRendered(() -> new UiMap.ClearHeatMapCommand(getId()));
 	}
 
 	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {
@@ -297,6 +313,11 @@ public class MapView<RECORD> extends AbstractComponent {
 				getSessionContext().queueCommand(new UiMap.RemoveMarkerCommand(getId(), clientId));
 			}
 		}
+	}
+
+	public void clearMarkers() {
+		this.markersByClientId.values().removeIf(m -> !clusterMarkers.contains(m));
+		queueCommandIfRendered(() -> new UiMap.ClearMarkersCommand(getId()));
 	}
 
 	public void fitBounds(Location southWest, Location northEast) {

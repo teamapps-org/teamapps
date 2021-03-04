@@ -222,6 +222,129 @@
     background: linear-gradient(to bottom, @dark-background-color 0%, @dark-background-color 62%, @dark-background-color-light 100%);
   }
 
+  .UiInfiniteItemView2 {
+    user-select: none;
+    overflow: auto;
+
+    --item-position-animation-time: .5s;
+
+    > .grid {
+      position: relative;
+      overflow: hidden;
+      contain: strict; // !!!
+
+      .item-wrapper {
+        position: absolute;
+        transition: top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
+        contain: strict; // !!!
+        display: flex;
+
+        // TODO make hover and active styles configurable!
+        border: 1px solid transparent;
+
+        &:hover {
+          .button-style-item-dark();
+          transition: background 0.1s, border-color 0.05s, top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
+        }
+
+        &:active {
+          .button-style-item-dark();
+          transition: background 0.1s, border-color 0.05s, top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
+        }
+      }
+    }
+  }
+
+  .UiGridForm {
+    display: flex;
+    flex-direction: column;
+
+    .UiFormSection {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+
+      > .header {
+        display: flex;
+        align-items: center;
+
+        > .expand-button {
+          padding: 2px;
+          display: flex;
+          align-items: center;
+          border: 1px solid transparent;
+        }
+        > .header-line {
+          position: relative;
+          flex: 1 1 0;
+        }
+      }
+
+      &.draw-header-line {
+        .header-line:before, .header-line:after {
+          position: absolute;
+          display: block;
+          width: 100%;
+          bottom: 1px;
+          left: 0;
+          content: '';
+          height: 1px;
+          background: linear-gradient(to right, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 85%, rgba(0, 0, 0, 0) 100%);
+        }
+        .header-line:after {
+          bottom: 0;
+          background: linear-gradient(to right, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, .5) 85%, rgba(255, 255, 255, 0) 100%);
+        }
+      }
+
+      &.has-header-template {
+        .expand-button {
+          margin-right: 8px;
+        }
+        .teamapps-expander {
+          margin-right: 7px;
+        }
+      }
+      &.collapsible.has-header-template {
+        .expand-button:hover {
+          .button-style-item-dark;
+        }
+        .expand-button:active {
+          .button-style-item-dark;
+        }
+      }
+      &:not(.has-header-data):not(.collapsible) {
+        .header {
+          display: none;
+        }
+      }
+
+      .body {
+        display: grid;
+      }
+
+      &.fill-remaining-height:not(.collapsed) {
+        flex: 1 0 auto;
+        .body {
+          flex: 1 0 auto;
+        }
+      }
+    }
+
+    .UiFormSectionFloatingFieldsPlacement {
+      display: flex;
+      align-items: baseline;
+
+      > * {
+        flex: 1 1 auto;
+      }
+    }
+
+    .tmp-container {
+      .pseudo-hidden;
+    }
+  }
+
   .UiDropDown {
     border-color: var(--ta-panel-border-color); // TODO @dark-border-color, chrome bug...
 
@@ -419,6 +542,16 @@
 
   .calendar-symbol-page {
     stroke: transparent;
+  }
+
+  .button-style-item {
+    border-radius: var(--ta-border-radius-small);
+    border: 1px solid rgba(150, 140, 140, 0.4);
+    border-bottom-color: rgba(133, 135, 144, 0.51);
+    box-shadow: 0 3px 5px -2px rgba(0, 0, 0, .13);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(251, 251, 252, 0.1) 62%, rgba(247, 248, 249, 0.1) 84%, rgba(245, 246, 247, 0.1) 94%, rgba(237, 239, 241, 0.1) 100%);
+    user-select: none;
+    transition: background 0.1s, border-color 0.05s;
   }
 }
 

@@ -37,8 +37,7 @@ import {
 	UiMapEventSource
 } from "../generated/UiMapConfig";
 import {UiMapType} from "../generated/UiMapType";
-import L from "leaflet";
-import {Circle, LatLngBounds, LatLngExpression, Layer, Marker, PathOptions, Polygon, Polyline, Rectangle} from "leaflet";
+import L, {Circle, LatLngBounds, LatLngExpression, Layer, Marker, PathOptions, Polygon, Polyline, Rectangle} from "leaflet";
 import "leaflet.markercluster";
 import "leaflet.heat";
 import "leaflet-draw";
@@ -167,7 +166,10 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 			this.shapesById[shapeId] = layer;
 			if (type === 'circle') {
 				let circle = layer as Circle;
-				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapCircleConfig({center: toUiLocation(circle.getLatLng()), radius: circle.getRadius()})});
+				this.onShapeDrawn.fire({
+					shapeId: shapeId,
+					shape: createUiMapCircleConfig({center: toUiLocation(circle.getLatLng()), radius: circle.getRadius()})
+				});
 			} else if (type === 'polygon') {
 				let polygon = layer as Polygon;
 				let path = flattenArray(polygon.getLatLngs()).map(ll => toUiLocation(ll));
@@ -178,7 +180,13 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapPolylineConfig({path})});
 			} else if (type === 'rectangle') {
 				let rectangle = layer as Rectangle;
-				this.onShapeDrawn.fire({shapeId: shapeId, shape: createUiMapRectangleConfig({l1: toUiLocation(rectangle.getBounds().getNorthWest()), l2: toUiLocation(rectangle.getBounds().getSouthEast())})});
+				this.onShapeDrawn.fire({
+					shapeId: shapeId,
+					shape: createUiMapRectangleConfig({
+						l1: toUiLocation(rectangle.getBounds().getNorthWest()),
+						l2: toUiLocation(rectangle.getBounds().getSouthEast())
+					})
+				});
 			}
 			this.leaflet.addLayer(layer);
 		});
@@ -260,6 +268,20 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 			this.leaflet.removeLayer(marker);
 		}
 		delete this.markersByClientId[id];
+	}
+
+	@executeWhenFirstDisplayed()
+	clearMarkers() {
+		Object.keys(this.markersByClientId).forEach(clientId => {
+			this.removeMarker(Number(clientId));
+		});
+	}
+
+	@executeWhenFirstDisplayed()
+	clearShapes() {
+		Object.keys(this.shapesById).forEach(clientId => {
+			this.removeShape(clientId);
+		});
 	}
 
 	private createMarker(markerConfig: UiMapMarkerClientRecordConfig) {
@@ -474,9 +496,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 
 	@executeWhenFirstDisplayed()
 	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
-		if (this.clusterLayer) {
-			this.leaflet.removeLayer(this.clusterLayer);
-		}
+		this.clearMarkerCluster();
 		if (clusterConfig) {
 			this.clusterLayer = (L as any).markerClusterGroup();
 			for (let i = 0; i < clusterConfig.markers.length; i++) {
@@ -488,10 +508,15 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 	}
 
 	@executeWhenFirstDisplayed()
-	public setHeatMap(data: UiHeatMapDataConfig): void {
-		if (this.heatMapLayer) {
-			this.leaflet.removeLayer(this.heatMapLayer);
+	public clearMarkerCluster() {
+		if (this.clusterLayer) {
+			this.leaflet.removeLayer(this.clusterLayer);
 		}
+	}
+
+	@executeWhenFirstDisplayed()
+	public setHeatMap(data: UiHeatMapDataConfig): void {
+		this.clearHeatMap();
 		if (data) {
 			let elements = new Array(data.elements.length);
 			for (let i = 0; i < data.elements.length; i++) {
@@ -504,6 +529,13 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 				max: data.maxCount
 			});
 			this.leaflet.addLayer(this.heatMapLayer);
+		}
+	}
+
+	@executeWhenFirstDisplayed()
+	public clearHeatMap() {
+		if (this.heatMapLayer) {
+			this.leaflet.removeLayer(this.heatMapLayer);
 		}
 	}
 
@@ -561,7 +593,7 @@ function toUiLocation(latlng: L.LatLng) {
 	return createUiMapLocationConfig(latlng.lat, latlng.lng);
 }
 
-function flattenArray<T>(arr: T[]|T[][]|T[][][]): T[] {
+function flattenArray<T>(arr: T[] | T[][] | T[][][]): T[] {
 	return (arr as any[]).reduce((acc, cur) => {
 		if (Array.isArray(cur)) {
 			acc.push.apply(acc, flattenArray(cur));

@@ -46,6 +46,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private final String baseApiUrl;
 	private final String accessToken;
 	private String styleUrl;
+	private boolean displayAttributionControl = true;
 	private float zoomLevel = 10f;
 	private Location location = new Location(0, 0);
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
@@ -87,6 +88,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 		uiMap.setBaseApiUrl(baseApiUrl);
 		uiMap.setAccessToken(accessToken);
 		uiMap.setStyleUrl(styleUrl);
+		uiMap.setDisplayAttributionControl(displayAttributionControl);
 
 		uiMap.setZoomLevel(zoomLevel);
 		Map<String, AbstractUiMapShape> uiShapes = new HashMap<>();
@@ -343,7 +345,15 @@ public class MapView2<RECORD> extends AbstractComponent {
 		this.setMarkerPropertyProvider(propertyExtractor);
 	}
 
-//  TODO
+	public boolean isDisplayAttributionControl() {
+		return displayAttributionControl;
+	}
+
+	public void setDisplayAttributionControl(boolean displayAttributionControl) {
+		this.displayAttributionControl = displayAttributionControl;
+	}
+
+	//  TODO
 //	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
 //		queueCommandIfRendered(() -> new UiMap2.StartDrawingShapeCommand(getId(), shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
 //	}
