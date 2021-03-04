@@ -150,4 +150,26 @@ public class ReflectionUtil {
 			throw new IllegalArgumentException("Could not invoke method " + method.getName() + "(" + expectedParameterTypesString + ") with given parameter types: " + actualParameterTypesString, e);
 		}
 	}
+
+	public static <RECORD> Object readField(RECORD object, Field field, boolean makeAccessibleIfNecessary) {
+		try {
+			if (makeAccessibleIfNecessary && !field.canAccess(object)) {
+				field.setAccessible(true);
+			}
+			return field.get(object);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static <RECORD> void setField(RECORD object, Field field, Object value, boolean makeAccessibleIfNecessary) {
+		try {
+			if (makeAccessibleIfNecessary && !field.canAccess(object)) {
+				field.setAccessible(true);
+			}
+			field.set(object, value);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
