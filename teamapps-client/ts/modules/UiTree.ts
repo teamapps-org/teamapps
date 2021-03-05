@@ -77,7 +77,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 			enforceSingleExpandedPath: config.enforceSingleExpandedPath,
 			idFunction: entry => entry && entry.id,
 			indentation: config.indentation,
-			animationDuration: config.animate ? 70 : 0,
+			animationDuration: config.animate ? 120 : 0,
 			directSelectionViaArrowKeys: true
 		});
 		this.trivialTree.onSelectedEntryChanged.addListener((entry) => {

@@ -1312,7 +1312,35 @@ export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransi
 	animatePageTransition(outEl, inEl, s, animationDuration, callback);
 }
 
-export function toggleNodeCollapsed(element: HTMLElement, collapsed: boolean, duration: number, onTransitionEnd?: () => void) {
+export function toggleElementCollapsed($element: HTMLElement, collapsed: boolean, animationDuration: number = 0, hiddenClass: string = "hidden", completeHandler?: () => any) {
+	console.log(animationDuration);
+	if (collapsed) {
+		if (animationDuration > 0) {
+			animateCollapse($element, true, animationDuration, () => {
+				$element.classList.add(hiddenClass);
+				completeHandler?.();
+			});
+		} else {
+			$element.classList.add(hiddenClass);
+			completeHandler?.();
+		}
+	} else {
+		if (animationDuration > 0) {
+			$element.classList.remove(hiddenClass)
+			animateCollapse($element, false, animationDuration, completeHandler);
+		} else {
+			$element.classList.remove(hiddenClass);
+			completeHandler?.();
+		}
+	}
+}
+
+export function animateCollapse(element: HTMLElement, collapsed: boolean, duration: number, onTransitionEnd?: () => void) {
+	const isCollapsed = element.getAttribute("ta-collapsed") != null;
+	if (isCollapsed == collapsed) {
+		onTransitionEnd?.();
+		return;
+	}
 	const initialMaxHeight = collapsed ? element.scrollHeight + "px" : "0px";
 	const targetMaxHeight = collapsed ? "0px" : element.scrollHeight + "px";
 	if (element.style.maxHeight == null || element.style.maxHeight == "") {
@@ -1321,8 +1349,9 @@ export function toggleNodeCollapsed(element: HTMLElement, collapsed: boolean, du
 	const oldTransitionStyle = element.style.transition;
 	element.style.transition = `max-height ${duration}ms`;
 
-	let transitionEndListener = () => {
+	let transitionEndListener = (ev:Event) => {
 		["transitionend", "transitioncancel"].forEach(eventName => element.removeEventListener(eventName, transitionEndListener));
+		window.clearTimeout(timeout);
 		element.style.transition = oldTransitionStyle;
 		if (!collapsed) {
 			element.style.removeProperty("max-height");
@@ -1330,8 +1359,11 @@ export function toggleNodeCollapsed(element: HTMLElement, collapsed: boolean, du
 		onTransitionEnd?.();
 	};
 	["transitionend", "transitioncancel"].forEach(eventName => element.addEventListener(eventName, transitionEndListener));
-	window.setTimeout(transitionEndListener, duration + 100); // make sure the listener is removed no matter what!
+	let timeout = window.setTimeout(transitionEndListener, duration + 100); // make sure the listener is removed no matter what!
+
+	element.offsetHeight; // force reflow to make sure there is a transition animation
 	element.style.maxHeight = targetMaxHeight;
+	element.toggleAttribute("ta-collapsed", collapsed);
 }
 
 export function css(el: HTMLElement, values: object) {
