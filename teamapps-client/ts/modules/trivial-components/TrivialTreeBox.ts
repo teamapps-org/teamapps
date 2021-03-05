@@ -38,7 +38,7 @@ limitations under the License.
 import {DEFAULT_TEMPLATES, generateUUID, HighlightDirection, MatchingOptions, TrivialComponent} from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
 import {highlightMatches} from "./util/highlight";
-import {addDelegatedEventListener, closestAncestor, insertAfter, insertBefore, parseHtml, toggleNodeCollapsed} from "../Common";
+import {addDelegatedEventListener, closestAncestor, insertAfter, insertBefore, parseHtml, toggleElementCollapsed} from "../Common";
 
 export interface TrivialTreeBoxConfig<E> {
 	/**
@@ -329,7 +329,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 	}
 
 	private setNodeExpanded(node: EntryWrapper<E>, expanded: boolean, animate: boolean) {
-		let wasExpanded = node.expanded;
+		let expansionStateChange = !!node.expanded != !!expanded;
 
 		if (expanded && this.config.enforceSingleExpandedPath) {
 			const currentlyExpandedNodes = this.findEntries((n) => {
@@ -367,24 +367,11 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 
 			const $childrenWrapper: HTMLElement = node.$childrenWrapper;
 			if ($childrenWrapper != null) {
-				if (expanded) {
-					if (animate && this.config.animationDuration > 0) {
-						$childrenWrapper.classList.remove("hidden")
-						toggleNodeCollapsed($childrenWrapper, false, this.config.animationDuration);
-					} else {
-						$childrenWrapper.classList.remove("hidden");
-					}
-				} else {
-					if (animate && this.config.animationDuration > 0) {
-						toggleNodeCollapsed($childrenWrapper, true, this.config.animationDuration, () => $childrenWrapper.classList.add("hidden"));
-					} else {
-						$childrenWrapper.classList.add("hidden");
-					}
-				}
+				toggleElementCollapsed($childrenWrapper, !expanded, animate ? this.config.animationDuration : 0);
 			}
 		}
 
-		if (!!wasExpanded != !!expanded) {
+		if (expansionStateChange) {
 			this.onNodeExpansionStateChanged.fire(node.entry);
 		}
 	}
@@ -558,7 +545,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			this.setSelectedEntry(nextMatchingEntry, originalEvent, fireEvents);
 			this.minimallyScrollTo(nextMatchingEntry.$element);
 		}
-		return nextMatchingEntry.entry;
+		return nextMatchingEntry?.entry;
 	}
 
 	private getNextVisibleEntry(currentEntry: EntryWrapper<E>, direction: HighlightDirection, rollover: boolean, selectableOnly = true, entryMatcher: (entry: E) => boolean = () => true) {
