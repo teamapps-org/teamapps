@@ -59,30 +59,22 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, LocalDate>
 
 		this.trivialComboBox = new TrivialComboBox<LocalDateTime>({
 			showTrigger: config.showDropDownButton,
-			autoCompleteFunction: (editorText, entry) => {
-				let entryAsString = this.localDateTimeToString(entry);
-				if (editorText && entryAsString.toLowerCase().indexOf(editorText.toLowerCase()) === 0) {
-					return entryAsString;
-				} else {
-					return null;
-				}
-			},
 			entryToEditorTextFunction: entry => {
 				return this.localDateTimeToString(entry);
 			},
 			selectedEntryRenderingFunction: (localDateTime) => this.dateRenderer(localDateTime),
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			showClearButton: config.showClearButton
-		}, new TreeBoxDropdown(new TrivialTreeBox<LocalDateTime>({
-			entryRenderingFunction: (localDateTime) => this.dateRenderer(localDateTime),
-		}), {
+		}, new TreeBoxDropdown({
 			queryFunction: (searchString: string) => {
 				this.onTextInput.fire({enteredString: searchString});
 				return this.dateSuggestionEngine.generateSuggestions(searchString, LocalDateTime.local());
 			},
 			textHighlightingEntryLimit: -1, // no highlighting!
 			preselectionMatcher: (query, entry) => this.localDateTimeToString(entry).toLowerCase().indexOf(query.toLowerCase()) >= 0
-		}));
+		}, new TrivialTreeBox<LocalDateTime>({
+			entryRenderingFunction: (localDateTime) => this.dateRenderer(localDateTime),
+		})));
 		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiDateField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {

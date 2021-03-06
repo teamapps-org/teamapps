@@ -166,8 +166,8 @@ export const DEFAULT_TEMPLATES = {
 };
 
 export function wrapWithDefaultTagWrapper(entryHtml: string, deleteButton = true) {
-	return (`<div class="tr-tagbox-default-wrapper-template">
-        <div class="tr-tagbox-tag-content">
+	return (`<div class="tr-tagcombobox-default-wrapper-template">
+        <div class="tr-tagcombobox-tag-content">
             ${entryHtml}
         </div>
         ${deleteButton ? '<div class="tr-remove-button"></div>' : ''}
@@ -452,7 +452,7 @@ export function minimallyScrollTo(element: Element | JQuery<Element>, target: El
 }
 
 export function setTimeoutOrDoImmediately(f: Function, delay?: number): number {
-	if (delay != null) {
+	if (delay != null && delay > 0) {
 		return window.setTimeout(f(), delay);
 	} else {
 		return void f();

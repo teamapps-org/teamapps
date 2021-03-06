@@ -39,7 +39,6 @@ import {
 	DEFAULT_TEMPLATES,
 	EditingMode,
 	generateUUID,
-	HighlightDirection,
 	keyCodes,
 	objectEquals,
 	RenderingFunction,
@@ -48,10 +47,10 @@ import {
 	unProxyEntry
 } from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
-import {createPopper, detectOverflow, Instance as Popper} from '@popperjs/core';
-import ResizeObserver from "resize-observer-polyfill";
+import {Instance as Popper} from '@popperjs/core';
 import {parseHtml} from "../Common";
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropdownComponent";
+import {createComboBoxPopper} from "./ComboBoxPopper";
 
 export interface TrivialComboBoxConfig<E> {
 	/**
@@ -63,13 +62,6 @@ export interface TrivialComboBoxConfig<E> {
 	 * @default `wrapWithDefaultTagWrapper(entryRenderingFunction(entry))`
 	 */
 	selectedEntryRenderingFunction: RenderingFunction<E>,
-
-	/**
-	 * Initially selected entry.
-	 *
-	 * @default `null`
-	 */
-	selectedEntry?: E,
 
 	/**
 	 * Performance setting. Defines the maximum number of entries until which text highlighting is performed.
@@ -94,21 +86,12 @@ export interface TrivialComboBoxConfig<E> {
 	autoCompleteDelay?: number,
 
 	/**
-	 * Generates an autocompletion string for the current input of the user and currently highlighted entry in the dropdown.
+	 * Used to set the editor's text when focusing the component.
+	 * Additionally used to generate an autocompletion string for the current input of the user.
 	 *
-	 * @param editorText the current text input from the user
-	 * @param entry the currently highlighted entry in the dropdown
-	 * @return The _full_ string (not only the completion part) to apply for auto-completion.
-	 * @default best effort implementation using entry properties
+	 * @param entry the currently selected entry in the dropdown
 	 */
-	autoCompleteFunction?: (editorText: string, entry: E) => string,
-
-	/**
-	 * Similar to [[autoCompleteFunction]]. Used to set the editor's text when focusing the component.
-	 *
-	 * @default `entry["displayValue"]`
-	 */
-	entryToEditorTextFunction?: (entry: E) => string,
+	entryToEditorTextFunction: (entry: E) => string,
 
 	/**
 	 * Whether or not to allow free text to be entered by the user.
@@ -154,53 +137,40 @@ export interface TrivialComboBoxConfig<E> {
 
 export class TrivialComboBox<E> implements TrivialComponent {
 
-	private $comboBox: HTMLElement;
-	private $dropDown: HTMLElement;
-	private popper: Popper;
-	private $dropDownTargetElement: HTMLElement;
-	private config: TrivialComboBoxConfig<E>;
-	private $editor: HTMLInputElement;
-	private _isDropDownOpen = false;
-	private isEditorVisible = false;
-	private selectedEntry: E = null;
-	private lastCommittedValue: E = null;
-	private blurCausedByClickInsideComponent = false;
-	private autoCompleteTimeoutId = -1;
-	private doNoAutoCompleteBecauseBackspaceWasPressed = false;
-	private editingMode: EditingMode;
-	private $selectedEntryWrapper: HTMLElement;
-	private $clearButton: HTMLElement;
-	private $trigger: HTMLElement;
-	private dropDownComponent: DropDownComponent<E>;
-
 	public readonly onSelectedEntryChanged = new TrivialEvent<E>(this);
 	public readonly onFocus = new TrivialEvent<void>(this);
 	public readonly onBlur = new TrivialEvent<void>(this);
 
+	private config: TrivialComboBoxConfig<E>;
+
+	private $comboBox: HTMLElement;
+	private $dropDown: HTMLElement;
+	private $editor: HTMLInputElement;
+	private $selectedEntryWrapper: HTMLElement;
+	private $trigger: HTMLElement;
+	private $clearButton: HTMLElement;
+
+	private popper: Popper;
+	private dropDownComponent: DropDownComponent<E>;
+
+	private selectedEntry: E = null;
+	private lastCommittedValue: E = null;
+
+	private blurCausedByClickInsideComponent = false;
+	private autoCompleteTimeoutId = -1;
+	private doNoAutoCompleteBecauseBackspaceWasPressed = false;
+
+	private editingMode: EditingMode;
+	private _isDropDownOpen = false;
+	private isEditorVisible = false;
+
+
 	constructor(options: TrivialComboBoxConfig<E>, dropDownComponent?: DropDownComponent<E>) {
-		this.dropDownComponent = dropDownComponent;
 		this.config = {
-			selectedEntry: null,
 			spinnerTemplate: DEFAULT_TEMPLATES.defaultSpinnerTemplate,
 			textHighlightingEntryLimit: 100,
 			autoComplete: true,
 			autoCompleteDelay: 0,
-			entryToEditorTextFunction: (entry: E) => {
-				return (entry as any)["displayValue"];
-			},
-			autoCompleteFunction: (editorText: string, entry: E) => {
-				if (editorText) {
-					for (let propertyName in entry) {
-						const propertyValue = entry[propertyName];
-						if (propertyValue && (propertyValue as any).toString().toLowerCase().indexOf(editorText.toLowerCase()) === 0) {
-							return (propertyValue as any).toString();
-						}
-					}
-					return null;
-				} else {
-					return entry ? this.config.entryToEditorTextFunction(entry) : null;
-				}
-			},
 			allowFreeText: false,
 			freeTextEntryFactory: (freeText: string) => {
 				return {
@@ -216,8 +186,9 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 			...options
 		};
+		this.dropDownComponent = dropDownComponent;
 
-		this.$comboBox = parseHtml(`<div class="tr-comboBox tr-combobox tr-input-wrapper editor-hidden">
+		this.$comboBox = parseHtml(`<div class="tr-combobox tr-input-wrapper editor-hidden">
             <div class="tr-combobox-selected-entry-wrapper"></div>
             <div class="tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
             <div class="tr-trigger ${this.config.showTrigger ? '' : 'hidden'}"><span class="tr-trigger-icon"></span></div>
@@ -234,12 +205,10 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				this.showEditor();
 				this.closeDropDown();
 			} else if (this.editingMode === "editable") {
-				setTimeout(() => { // TODO remove this when Chrome bug is fixed. Chrome scrolls to the top of the page if we do this synchronously. Maybe this has something to do with https://code.google.com/p/chromium/issues/detail?id=342307 .
-					this.showEditor();
-					this.$editor.select();
-					this.openDropDown();
-					this.query();
-				});
+				this.showEditor();
+				this.$editor.select();
+				this.openDropDown();
+				this.query();
 			}
 		});
 		this.$dropDown = parseHtml('<div class="tr-dropdown"></div>');
@@ -247,17 +216,14 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			e.stopPropagation();
 			e.preventDefault();
 		});
-		this.$dropDownTargetElement = this.$comboBox;
 		this.setEditingMode(this.config.editingMode);
 		this.$editor = parseHtml('<input type="text" autocomplete="off"></input>');
 		this.$comboBox.prepend(this.$editor);
 		this.$editor.classList.add("tr-combobox-editor", "tr-editor");
 		this.$editor.addEventListener("focus", () => {
-			if (this.blurCausedByClickInsideComponent) {
-				// do nothing!
-			} else {
-				this.onFocus.fire();
-				this.$comboBox.classList.add('focus');
+			this.onFocus.fire();
+			this.$comboBox.classList.add('focus');
+			if (!this.blurCausedByClickInsideComponent) {
 				this.showEditor();
 			}
 		})
@@ -282,19 +248,24 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.$editor.addEventListener("keydown", (e: KeyboardEvent) => {
 			if (keyCodes.isModifierKey(e)) {
 				return;
-			} else if (e.which == keyCodes.tab) {
-				let highlightedEntry = this.dropDownComponent.getValue();
-				if (this._isDropDownOpen && highlightedEntry) {
-					this.setSelectedEntry(highlightedEntry, true, true, e);
-				} else if (this.$editor.value) {
-					this.setSelectedEntry(null, true, true, e);
-				} else if (this.config.allowFreeText) {
-					this.setSelectedEntry(this.getSelectedEntry(), true, true, e);
+			} else if (e.which == keyCodes.tab || e.which == keyCodes.enter) {
+				if (this.isEditorVisible || this.editorContainsFreeText()) {
+					e.which == keyCodes.enter && e.preventDefault(); // do not submit form
+					let highlightedEntry = this.dropDownComponent.getValue();
+					if (this._isDropDownOpen && highlightedEntry) {
+						this.setSelectedEntry(highlightedEntry, true, true, e);
+					} else if (!this.$editor.value) {
+						this.setSelectedEntry(null, true, true, e);
+					} else if (this.config.allowFreeText) {
+						this.setSelectedEntry(this.getSelectedEntry(), true, true, e);
+					}
+					this.closeDropDown();
+					this.hideEditor();
 				}
 				return;
 			} else if (e.which == keyCodes.left_arrow || e.which == keyCodes.right_arrow) {
 				if (this._isDropDownOpen && this.dropDownComponent.handleKeyboardInput(e)) {
-					e.preventDefault(); // the currently highlighted node got effectively expanded/collapsed, so cancel any other effect of the key stroke!
+					e.preventDefault();
 					return;
 				} else {
 					this.showEditor();
@@ -318,30 +289,16 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				} else {
 					if (this.dropDownComponent.handleKeyboardInput(e)) {
 						if (this.dropDownComponent.getValue() != null) {
-							this.$editor.value = this.config.autoCompleteFunction("", this.dropDownComponent.getValue())
+							this.$editor.value = this.config.entryToEditorTextFunction(this.dropDownComponent.getValue())
 							this.$editor.select();
+						} else {
+							this.$editor.value = "";
 						}
 					}
 				}
 				e.preventDefault(); // some browsers move the caret to the beginning on up key
-				return;
-			} else if (e.which == keyCodes.enter) {
-				if (this.isEditorVisible || this.editorContainsFreeText()) {
-					e.preventDefault(); // do not submit form
-					let highlightedEntry = this.dropDownComponent.getValue();
-					if (this._isDropDownOpen && highlightedEntry) {
-						this.setSelectedEntry(highlightedEntry, true, true, e);
-					} else if (!this.$editor.value) {
-						this.setSelectedEntry(null, true, true, e);
-					} else if (this.config.allowFreeText) {
-						this.setSelectedEntry(this.getSelectedEntry(), true, true, e);
-					}
-					this.closeDropDown();
-					this.hideEditor();
-				}
 			} else if (e.which == keyCodes.escape) {
-				e.preventDefault(); // prevent ie from doing its text field magic...
-				if (!(this.editorContainsFreeText() && this._isDropDownOpen)) { // TODO if list is empty, still reset, even if there is freetext.
+				if (!(this.editorContainsFreeText() && this._isDropDownOpen)) {
 					this.hideEditor();
 					this.$editor.value = "";
 					this.setSelectedEntry(this.lastCommittedValue, false, false, e);
@@ -356,15 +313,10 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					this.openDropDown();
 				}
 
-				setTimeout(() => { // We need the new editor value (after the keydown event). Therefore setTimeout().
-					if (this.$editor.value) {
-						this.query(1);
-					} else {
-						this.query(0);
-					}
-				})
+				// We need the new editor value (after the keydown event). Therefore setTimeout().
+				setTimeout(() => this.query(this.$editor.value ? 1 : 0))
 			}
-		})
+		});
 		this.$editor.addEventListener("mousedown", () => {
 			if (this.editingMode === "editable") {
 				if (!this.config.showDropDownOnResultsOnly) {
@@ -376,16 +328,14 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 		[this.$comboBox, this.$dropDown].forEach(element => {
 			element.addEventListener("mousedown", () => {
-				if (document.activeElement == this.$editor) {
-					this.blurCausedByClickInsideComponent = true;
-				}
-			}, true)
+				this.blurCausedByClickInsideComponent = true;
+			}, true);
 			element.addEventListener("mouseup", () => {
 				if (this.blurCausedByClickInsideComponent) {
 					this.$editor.focus();
 					this.blurCausedByClickInsideComponent = false;
 				}
-			})
+			});
 			element.addEventListener("mouseout", () => {
 				if (this.blurCausedByClickInsideComponent) {
 					this.$editor.focus();
@@ -403,8 +353,6 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			}
 		});
 
-		this.setSelectedEntry(this.config.selectedEntry, true, false, null);
-
 		this.$selectedEntryWrapper.addEventListener("click", () => {
 			if (this.editingMode === "editable") {
 				this.showEditor();
@@ -416,68 +364,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			}
 		});
 
-		this.popper = this.createPopper();
-	}
-
-	private createPopper() {
-		return createPopper(this.$comboBox, this.$dropDown, {
-			placement: 'bottom',
-			strategy: "fixed",
-			modifiers: [
-				{
-					name: "flip",
-					options: {
-						fallbackPlacements: ['top']
-					}
-				}, {
-					name: "preventOverflow"
-				}, {
-					name: 'hideDropdownIfFieldOutOfViewport',
-					enabled: true,
-					phase: 'main',
-					requiresIfExists: ['offset'],
-					fn: ({state}) => {
-						// console.log("main: " + state.rects.reference.width);
-						let sideObject = detectOverflow(state, {elementContext: "reference"});
-						if (sideObject.left > state.rects.reference.width || sideObject.right > state.rects.reference.width
-							|| sideObject.top > state.rects.reference.height || sideObject.bottom > state.rects.reference.height) {
-							this.closeDropDown();
-						}
-					}
-				}, {
-					name: 'dropDownCornerSmoother',
-					enabled: true,
-					phase: 'write',
-					fn: ({state}) => {
-						// console.log("write: " + state.rects.reference.width);
-						this.$comboBox.classList.toggle("dropdown-flipped", state.placement === 'top');
-						this.$dropDown.classList.toggle("flipped", state.placement === 'top');
-
-					}
-				}, {
-					name: 'forceCorrectDropDownWidth_EvenIf_TemporarilyOverflowedViewPortAndThereforeScrollbarsCausedResizeBeforeFlip',
-					enabled: true,
-					phase: 'afterWrite',
-					fn: ({state}) => {
-						this.$dropDown.style.width = state.elements.reference.getBoundingClientRect().width + "px";
-					}
-				}, {
-					name: "observeReferenceModifier",
-					enabled: true,
-					phase: "main",
-					effect: ({state, instance}) => {
-						const RO_PROP = "__popperjsResizeObserver__";
-						const {reference} = state.elements;
-						(reference as any)[RO_PROP] = new ResizeObserver(() => instance.update());
-						(reference as any)[RO_PROP].observe(reference);
-						return () => {
-							(reference as any)[RO_PROP].disconnect();
-							delete (reference as any)[RO_PROP];
-						};
-					}
-				}
-			]
-		});
+		this.popper = createComboBoxPopper(this.$comboBox, this.$dropDown, () => this.closeDropDown());
 	}
 
 	private async query(highlightDirection: SelectionDirection = 0) {
@@ -485,7 +372,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.blurCausedByClickInsideComponent = false; // we won't get any mouseout or mouseup events for entries if they get removed. so do this here proactively
 
 		this.autoCompleteIfPossible(this.config.autoCompleteDelay);
-		
+
 		if (this.config.showDropDownOnResultsOnly && gotResultsForQuery && document.activeElement == this.$editor) {
 			this.openDropDown();
 		}
@@ -552,7 +439,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		if (this.isDropDownNeeded()) {
 			if (this.getMainDomElement().parentElement !== this.parentElement) {
 				this.popper.destroy();
-				this.popper = this.createPopper();
+				this.popper = createComboBoxPopper(this.$comboBox, this.$dropDown, () => this.closeDropDown());
 				this.parentElement = this.getMainDomElement().parentElement;
 			}
 			this.$comboBox.classList.add("open");
@@ -562,8 +449,8 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	}
 
 	public closeDropDown() {
-		// this.$comboBox.classList.remove("open");
-		// this._isDropDownOpen = false;
+		this.$comboBox.classList.remove("open");
+		this._isDropDownOpen = false;
 	}
 
 	private getNonSelectedEditorValue() {
@@ -571,19 +458,18 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	}
 
 	private autoCompleteIfPossible(delay?: number) {
-		console.log("autoCompleteIfPossible", delay)
 		if (this.config.autoComplete) {
 			clearTimeout(this.autoCompleteTimeoutId);
 			const dropDownValue = this.dropDownComponent.getValue();
-			console.log(dropDownValue)
 			if (dropDownValue && !this.doNoAutoCompleteBecauseBackspaceWasPressed) {
 				this.autoCompleteTimeoutId = setTimeoutOrDoImmediately(() => {
 					const currentEditorValue = this.getNonSelectedEditorValue();
-					console.log(currentEditorValue)
-					const autoCompleteString = this.config.autoCompleteFunction(currentEditorValue, dropDownValue) || currentEditorValue;
-					this.$editor.value = currentEditorValue + autoCompleteString.substr(currentEditorValue.length);
-					if (document.activeElement == this.$editor) {
-						(this.$editor as any).setSelectionRange(currentEditorValue.length, autoCompleteString.length);
+					const entryAsString = this.config.entryToEditorTextFunction(dropDownValue);
+					if (entryAsString.toLowerCase().indexOf(("" + currentEditorValue).toLowerCase()) === 0) {
+						this.$editor.value = currentEditorValue + entryAsString.substr(currentEditorValue.length);
+						if (document.activeElement == this.$editor) {
+							(this.$editor as any).setSelectionRange(currentEditorValue.length, entryAsString.length);
+						}
 					}
 				}, delay);
 			}
@@ -600,7 +486,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.$comboBox.classList.remove("editable", "readonly", "disabled");
 		this.$comboBox.classList.add(this.editingMode);
 		if (this.isDropDownNeeded()) {
-			this.$dropDownTargetElement.append(this.$dropDown);
+			this.$comboBox.append(this.$dropDown);
 		}
 	}
 
@@ -614,7 +500,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		}
 	}
 
-	public getDropDownComponent(): TrivialComponent {
+	public getDropDownComponent(): DropDownComponent<E> {
 		return this.dropDownComponent;
 	}
 

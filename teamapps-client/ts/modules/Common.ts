@@ -829,7 +829,9 @@ export function removeDangerousTags(value: string) {
 }
 
 export function selectElementContents(domElement: Node, start?: number, end?: number) {
+	console.log("selectElementContents", domElement, start, end);
 	if (domElement == null || !document.body.contains(domElement)) {
+		console.log("null or detached!")
 		return;
 	}
 	domElement = domElement.firstChild || domElement;
@@ -848,6 +850,7 @@ export function selectElementContents(domElement: Node, start?: number, end?: nu
 		// ignore (ie 11 problem, can be ignored even in ie 11)
 	}
 	sel.addRange(range);
+	console.log("end", document.activeElement)
 }
 
 export function parseHtml<E extends HTMLElement>(htmlString: string): E {
@@ -880,7 +883,15 @@ export function parseSvg<E extends Element>(htmlString: string): E {
 	return $(htmlString)[0] as unknown as E;
 }
 
-export function prependChild(parent: Element, child: Element) {
+export function elementIndex(node: Element) {
+	let i = 0;
+	while ((node = node.previousElementSibling) != null) {
+		i++;
+	}
+	return i;
+}
+
+export function prependChild(parent: Node, child: Node) {
 	if (parent.childNodes.length > 0) {
 		parent.insertBefore(child, parent.firstChild);
 	} else {
@@ -888,11 +899,11 @@ export function prependChild(parent: Element, child: Element) {
 	}
 }
 
-export function insertBefore(newNode: Element, referenceNode: Element) {
+export function insertBefore(newNode: Node, referenceNode: Node) {
 	referenceNode.parentNode.insertBefore(newNode, referenceNode);
 }
 
-export function insertAfter(newNode: Element, referenceNode: Element) {
+export function insertAfter(newNode: Node, referenceNode: Node) {
 	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling /* may be null ==> inserted at end!*/);
 }
 
@@ -1313,7 +1324,6 @@ export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransi
 }
 
 export function toggleElementCollapsed($element: HTMLElement, collapsed: boolean, animationDuration: number = 0, hiddenClass: string = "hidden", completeHandler?: () => any) {
-	console.log(animationDuration);
 	if (collapsed) {
 		if (animationDuration > 0) {
 			animateCollapse($element, true, animationDuration, () => {
