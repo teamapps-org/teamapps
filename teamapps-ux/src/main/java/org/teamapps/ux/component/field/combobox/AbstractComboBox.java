@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,16 +31,11 @@ import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
-import org.teamapps.ux.component.field.TextMatchingMode;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.model.ComboBoxModel;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -55,7 +50,6 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	protected final ClientRecordCache<RECORD, UiComboBoxTreeRecord> recordCache;
 
 	private ComboBoxModel<RECORD> model;
-	private TextMatchingMode textMatchingMode = TextMatchingMode.CONTAINS; // only filter on client-side if staticData != null. SIMILARITY_MATCH allows levenshtein distance of 3
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
@@ -78,7 +72,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
 	protected Function<String, RECORD> freeTextRecordFactory = null;
-	
+
 	protected AbstractComboBox(ComboBoxModel<RECORD> model) {
 		this.model = model;
 		this.recordCache = new ClientRecordCache<>(this::createUiTreeRecordWithoutParentRelation, this::addParentLinkToUiRecord);
@@ -94,8 +88,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
 		comboBox.setTemplates(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
-		
-		comboBox.setTextMatchingMode(textMatchingMode.toUiTextMatchingMode());
+
 		comboBox.setShowDropDownButton(dropDownButtonVisible);
 		comboBox.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);
 		comboBox.setHighlightFirstResultEntry(highlightFirstResultEntry);
@@ -121,22 +114,6 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 				UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
 				this.onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
 				break;
-			case UI_COMBO_BOX_LAZY_CHILD_DATA_REQUESTED:
-				UiComboBox.LazyChildDataRequestedEvent lazyChildDataRequestedEvent = (UiComboBox.LazyChildDataRequestedEvent) event;
-				RECORD parentRecord = recordCache.getRecordByClientId(lazyChildDataRequestedEvent.getParentId());
-				if (parentRecord != null) {
-					if (model != null) {
-						List<RECORD> childRecords = model.getChildRecords(parentRecord);
-						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
-						if (isRendered()) {
-							getSessionContext().queueCommand(new UiComboBox.SetChildNodesCommand(getId(), lazyChildDataRequestedEvent.getParentId(), cacheResponse.getAndClearResult()),
-									aVoid -> cacheResponse.commit());
-						} else {
-							cacheResponse.commit();
-						}
-					}
-				}
-				break;
 		}
 	}
 
@@ -153,6 +130,20 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 					return CompletableFuture.completedFuture(cacheResponse.getAndClearResult());
 				} else {
 					return CompletableFuture.completedFuture(List.of());
+				}
+			}
+			case UI_COMBO_BOX_LAZY_CHILDREN: {
+				UiComboBox.LazyChildrenQuery lazyChildrenQuery = (UiComboBox.LazyChildrenQuery) query;
+				RECORD parentRecord = recordCache.getRecordByClientId(lazyChildrenQuery.getParentId());
+				if (parentRecord != null) {
+					if (model != null) {
+						List<RECORD> childRecords = model.getChildRecords(parentRecord);
+						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
+						cacheResponse.commit();                                                   
+						return CompletableFuture.completedFuture(cacheResponse.getAndClearResult());
+					}
+				} else {
+					return CompletableFuture.completedFuture(Collections.emptyList());
 				}
 			}
 			default:
@@ -236,10 +227,6 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		reRenderIfRendered();
 	}
 
-	public TextMatchingMode getTextMatchingMode() {
-		return textMatchingMode;
-	}
-
 	public boolean isDropDownButtonVisible() {
 		return dropDownButtonVisible;
 	}
@@ -318,11 +305,6 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setShowExpanders(boolean showExpanders) {
 		this.showExpanders = showExpanders;
-		reRenderIfRendered();
-	}
-
-	public void setTextMatchingMode(TextMatchingMode textMatchingMode) {
-		this.textMatchingMode = textMatchingMode;
 		reRenderIfRendered();
 	}
 
