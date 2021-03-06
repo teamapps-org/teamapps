@@ -45,7 +45,6 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 	}
 
 	async handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
-		console.log(`handleQuery, query: ${query}, direction: ${selectionDirection}`);
 		let results = await this.config.queryFunction(query) ?? [];
 		this.treeBox.setEntries(results);
 		this.getMainDomElement().scrollIntoView({block: "start"}); // make sure we scroll up
@@ -58,7 +57,6 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 				this.treeBox.selectNextEntry(1, false);
 			}
 		}
-		console.log(`=> selected: ${this.treeBox.getSelectedEntry()}`);
 		return results.length > 0;
 	}
 

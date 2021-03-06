@@ -277,14 +277,10 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					this.showEditor();
 					return; // let the user navigate freely left and right...
 				}
-			}
-
-			if (e.which == keyCodes.backspace || e.which == keyCodes.delete) {
+			} else if (e.which == keyCodes.backspace || e.which == keyCodes.delete) {
 				this.doNoAutoCompleteBecauseBackspaceWasPressed = true; // we want query results, but no autocomplete
 				setTimeout(() => this.query(0)); // asynchronously to make sure the editor has been updated
-			}
-
-			if (e.which == keyCodes.up_arrow || e.which == keyCodes.down_arrow) {
+			} else if (e.which == keyCodes.up_arrow || e.which == keyCodes.down_arrow) {
 				if (!this.isEditorVisible) {
 					this.$editor.select();
 					this.showEditor();
@@ -468,6 +464,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		if (this.config.autoComplete) {
 			clearTimeout(this.autoCompleteTimeoutId);
 			const dropDownValue = this.dropDownComponent.getValue();
+			console.log("dropdown value: ", dropDownValue);
 			if (dropDownValue && !this.doNoAutoCompleteBecauseBackspaceWasPressed) {
 				this.autoCompleteTimeoutId = setTimeoutOrDoImmediately(() => {
 					const currentEditorValue = this.getNonSelectedEditorValue();

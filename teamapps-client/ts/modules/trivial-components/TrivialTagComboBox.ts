@@ -482,11 +482,6 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		});
 
 		this.popper = createComboBoxPopper(this.$tagComboBox, this.$dropDown, () => this.closeDropDown());
-
-
-		window.setInterval(() => {
-			console.log(document.activeElement);
-		}, 5000)
 	}
 
 	private setTagToBeRemoved(tagToBeRemoved: Tag<E>) {
