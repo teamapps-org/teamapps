@@ -176,7 +176,12 @@ export interface TrivialTagComboBoxConfig<E> {
 	/**
 	 * This will cause tags to not directly be deleted when pressing the backspace or delete key, but first marked for deletion.
 	 */
-	twoStepDeletion?: false;
+	twoStepDeletion?: boolean;
+
+	/**
+	 * When typing, preselect the first returned query result.
+	 */
+	preselectFirstQueryResult?: boolean,
 }
 
 export class TrivialTagComboBox<E> implements TrivialComponent {
@@ -233,7 +238,8 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			showTrigger: true,
 			editingMode: "editable", // one of 'editable', 'disabled' and 'readonly'
 			showDropDownOnResultsOnly: false,
-
+			twoStepDeletion: false,
+			
 			...options
 		};
 		this.dropDownComponent = dropDownComponent;
@@ -352,7 +358,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 					}
 				} else {
 					this.doNoAutoCompleteBecauseBackspaceWasPressed = true; // we want query results, but no autocomplete
-					setTimeout(() => this.query(1)); // asynchronously to make sure the editor has been updated
+					setTimeout(() => this.query(0)); // asynchronously to make sure the editor has been updated
 				}
 			} else if (e.which == keyCodes.up_arrow || e.which == keyCodes.down_arrow) {
 				this.setTagToBeRemoved(null);
@@ -387,7 +393,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 				}
 
 				// We need the new editor value (after the keydown event). Therefore setTimeout().
-				setTimeout(() => this.query(this.$editor.textContent ? 1 : 0))
+				setTimeout(() => this.query(this.config.preselectFirstQueryResult && this.$editor.textContent ? 1 : 0))
 			}
 		});
 		this.$editor.addEventListener("keyup", (e) => {
@@ -578,10 +584,12 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		this.doIgnoringBlurEvents(() => insertAtIndex(this.$tagArea, $tagWrapper, editorIndex));
 
 		let removeButton = $entry.querySelector('.tr-remove-button');
-		removeButton.addEventListener("click", (e) => {
-			this.removeTag(tag, true, e);
-			return false;
-		});
+		if (removeButton != null) {
+			removeButton.addEventListener("click", (e) => {
+				this.removeTag(tag, true, e);
+				return false;
+			});
+		}
 
 		if (this.config.tagCompleteDecider(entry)) {
 			this.doIgnoringBlurEvents(() => insertAtIndex(this.$tagArea, this.$editor, editorIndex + 1));

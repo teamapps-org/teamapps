@@ -47,6 +47,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	private int maxEntries; // if 0, then the list is unbounded
 	private TagBoxWrappingMode wrappingMode = TagBoxWrappingMode.MULTI_LINE;
 	private boolean distinct = false; // if true, do not allow the same entry to be selected multiple times!
+	private boolean twoStepDeletion = false; // This will cause tags to not directly be deleted when pressing the backspace or delete key, but first marked for deletion.
 
 	private List<String> freeTextEntries = new ArrayList<>();
 
@@ -111,6 +112,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 		comboBox.setMaxEntries(maxEntries);
 		comboBox.setWrappingMode(this.wrappingMode.toUiWrappingMode());
 		comboBox.setDistinct(distinct);
+		comboBox.setTwoStepDeletion(twoStepDeletion);
 		return comboBox;
 	}
 
@@ -228,5 +230,14 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 
 	public void setFreeTextEntries(List<String> freeTextEntries) {
 		this.freeTextEntries = freeTextEntries;
+	}
+
+	public boolean isTwoStepDeletion() {
+		return twoStepDeletion;
+	}
+
+	public void setTwoStepDeletion(boolean twoStepDeletion) {
+		this.twoStepDeletion = twoStepDeletion;
+		reRenderIfRendered();
 	}
 }

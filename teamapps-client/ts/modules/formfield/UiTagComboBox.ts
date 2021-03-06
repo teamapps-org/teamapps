@@ -83,6 +83,8 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 				const violatesFreeTextSetting = !config.allowAnyText && isFreeTextEntry(entry);
 				return !violatesDistinctSetting && !violatesMaxEntriesSetting && !violatesFreeTextSetting;
 			},
+			twoStepDeletion: this._config.twoStepDeletion,
+			preselectFirstQueryResult: config.highlightFirstResultEntry
 		}, new TreeBoxDropdown({
 			queryFunction: (queryString: string) => {
 				this.onTextInput.fire({enteredString: queryString}); // TODO this is definitely the wrong place for this!!

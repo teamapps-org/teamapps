@@ -76,6 +76,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			freeTextEntryFactory: (freeText) => {
 				return {id: this.freeTextIdEntryCounter--, values: {}, asString: freeText};
 			},
+			preselectFirstQueryResult: config.highlightFirstResultEntry
 		}, new TreeBoxDropdown({
 			queryFunction: (queryString: string) => {
 				this.onTextInput.fire({enteredString: queryString}); // TODO this is definitely the wrong place for this!!
