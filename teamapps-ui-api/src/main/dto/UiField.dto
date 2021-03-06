@@ -490,6 +490,7 @@ class UiTagComboBox extends UiComboBox {
 	int maxEntries; // if 0, then the list is unbounded
 	enum {SINGLE_LINE, MULTI_LINE, SINGLE_TAG_PER_LINE} wrappingMode = WrappingMode.MULTI_LINE;
 	boolean distinct = true; // if true, do not allow the same entry to be selected multiple times!
+	boolean twoStepDeletion; // This will cause tags to not directly be deleted when pressing the backspace or delete key, but first marked for deletion.
 }
 
 //// the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")

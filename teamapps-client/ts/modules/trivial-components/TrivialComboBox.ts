@@ -132,7 +132,12 @@ export interface TrivialComboBoxConfig<E> {
 	/**
 	 * HTML string defining the spinner to be displayed while entries are being retrieved.
 	 */
-	spinnerTemplate?: string
+	spinnerTemplate?: string,
+
+	/**
+	 * When typing, preselect the first returned query result.
+	 */
+	preselectFirstQueryResult?: boolean,
 }
 
 export class TrivialComboBox<E> implements TrivialComponent {
@@ -183,6 +188,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			showTrigger: true,
 			editingMode: "editable", // one of 'editable', 'disabled' and 'readonly'
 			showDropDownOnResultsOnly: false,
+			preselectFirstQueryResult: true,
 
 			...options
 		};
@@ -275,6 +281,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 			if (e.which == keyCodes.backspace || e.which == keyCodes.delete) {
 				this.doNoAutoCompleteBecauseBackspaceWasPressed = true; // we want query results, but no autocomplete
+				setTimeout(() => this.query(0)); // asynchronously to make sure the editor has been updated
 			}
 
 			if (e.which == keyCodes.up_arrow || e.which == keyCodes.down_arrow) {
@@ -314,7 +321,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				}
 
 				// We need the new editor value (after the keydown event). Therefore setTimeout().
-				setTimeout(() => this.query(this.$editor.value ? 1 : 0))
+				setTimeout(() => this.query(this.config.preselectFirstQueryResult && this.$editor.value ? 1 : 0))
 			}
 		});
 		this.$editor.addEventListener("mousedown", () => {
