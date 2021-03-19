@@ -129,8 +129,8 @@ public class DesktopApplicationAssembler implements ApplicationAssembler {
             currentLayout = perspective.getLayout();
             workSpaceLayout.applyLayoutDefinition(currentLayout);
         }
-        removedViews.forEach(view -> removeView(view));
         addedViews.forEach(view -> addView(view));
+        removedViews.forEach(view -> removeView(view));
 
         application.getApplicationViews().forEach(view -> {
             if (!isViewAttached(view)) {

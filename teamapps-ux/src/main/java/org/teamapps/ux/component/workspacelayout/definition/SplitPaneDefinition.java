@@ -27,6 +27,7 @@ import org.teamapps.ux.component.workspacelayout.WorkSpaceLayoutSplitPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SplitPaneDefinition extends LayoutItemDefinition {
 
@@ -143,5 +144,40 @@ public class SplitPaneDefinition extends LayoutItemDefinition {
 	public void setLastChild(LayoutItemDefinition lastChild) {
 		this.lastChild = lastChild;
 		updateViewGroupParents();
+	}
+
+	public String getComparableDefinition() {
+		return "SplitPaneDefinition{" +
+				"splitDirection=" + splitDirection +
+				", sizePolicy=" + sizePolicy +
+				", referenceChildSize=" + referenceChildSize +
+				", firstChild=" + getChildLayoutDefinition(firstChild) +
+				", lastChild=" + getChildLayoutDefinition(lastChild) +
+				'}';
+	}
+
+	private String getChildLayoutDefinition(LayoutItemDefinition layoutItemDefinition) {
+		if (layoutItemDefinition == null) {
+			return null;
+		}
+		if (layoutItemDefinition instanceof SplitPaneDefinition) {
+			SplitPaneDefinition splitPaneDefinition = (SplitPaneDefinition) layoutItemDefinition;
+			return splitPaneDefinition.getComparableDefinition();
+		} else {
+			return layoutItemDefinition.getClass().getName();
+		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		SplitPaneDefinition that = (SplitPaneDefinition) o;
+		return getComparableDefinition().equals(that.getComparableDefinition());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getComparableDefinition());
 	}
 }
