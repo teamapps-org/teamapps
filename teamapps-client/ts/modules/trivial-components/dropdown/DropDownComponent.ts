@@ -5,6 +5,8 @@ export interface DropDownComponent<E> extends TrivialComponent {
 
 	readonly onValueChanged: TeamAppsEvent<{ value: E, finalSelection: boolean }>;
 
+	setValue(value: E): void;
+
 	getValue(): E;
 
 	/**
@@ -18,7 +20,7 @@ export interface DropDownComponent<E> extends TrivialComponent {
 	 * @param selectionDirection
 	 * @return true if it got results
 	 */
-	handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean>;
+	query(query: string, selectionDirection: SelectionDirection): Promise<boolean>;
 
 	getComponent(): TrivialComponent;
 

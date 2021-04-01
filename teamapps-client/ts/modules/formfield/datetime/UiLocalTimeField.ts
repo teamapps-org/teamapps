@@ -52,7 +52,7 @@ export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig
 	}
 
 	public getTransientValue(): LocalTime {
-		let selectedEntry = this.trivialComboBox.getSelectedEntry();
+		let selectedEntry = this.trivialComboBox.getValue();
 		if (selectedEntry) {
 			return [selectedEntry.hour, selectedEntry.minute, 0, 0];
 		} else {

@@ -161,7 +161,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 
 	public getTransientValue(): any {
-		return this.trivialComboBox.getSelectedEntry();
+		return this.trivialComboBox.getValue();
 	}
 
 	protected convertValueForSendingToServer(value: UiComboBoxTreeRecordConfig): any {
@@ -196,7 +196,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 
 	replaceFreeTextEntry(freeText: string, record: UiComboBoxTreeRecordConfig): void {
-		const selectedEntry = this.trivialComboBox.getSelectedEntry();
+		const selectedEntry = this.trivialComboBox.getValue();
 		if (isFreeTextEntry(selectedEntry) && selectedEntry.asString === freeText) {
 			this.setCommittedValue(record);
 		}

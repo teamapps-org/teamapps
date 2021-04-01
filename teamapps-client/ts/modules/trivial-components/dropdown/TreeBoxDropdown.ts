@@ -44,7 +44,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 		}
 	}
 
-	async handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
+	async query(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
 		let results = await this.config.queryFunction(query) ?? [];
 		this.treeBox.setEntries(results);
 		this.getMainDomElement().scrollIntoView({block: "start"}); // make sure we scroll up
@@ -52,7 +52,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 		if (selectionDirection === 0) {
 			this.treeBox.setSelectedEntryById(null)
 		} else {
-			let selectedEntry = this.treeBox.selectNextEntry(1, false, this.config.preselectionMatcher.bind(null, query));
+			let selectedEntry = this.treeBox.selectNextEntry(1, false, true, (entry) => this.config.preselectionMatcher(query, entry));
 			if (selectedEntry == null) {
 				this.treeBox.selectNextEntry(1, false);
 			}

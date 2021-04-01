@@ -50,7 +50,7 @@ export class DateSuggestionEngine {
 
 	constructor(options: Options) {
 		this.preferredYmdOrder = options.preferredYearMonthDayOrder
-			?? (options.locale != null ? getYearMonthDayOrderFromLocale(options.locale) : undefined)
+			?? (options.locale != null ? getYearMonthDayOrderForLocale(options.locale) : undefined)
 			?? "YMD";
 		this.favorPastDates = options.favorPastDates ?? false;
 	}
@@ -78,7 +78,8 @@ export class DateSuggestionEngine {
 			}
 		});
 
-		return suggestions.map(s => s.date)
+		return suggestions
+			.map(s => s.date)
 			.filter(this.removeDuplicateDates());
 	}
 
@@ -104,13 +105,20 @@ export class DateSuggestionEngine {
 			return [];
 		}
 
-		let suggestions: DateSuggestion[] = [];
+		let fragmentSets: [string, string, string][] = [];
 		for (let i = 1; i <= input.length; i++) {
 			for (let j = Math.min(input.length, i + 1); j <= input.length && j - i <= 4; j - i === 2 ? j += 2 : j++) {
-				suggestions = suggestions.concat(this.createSuggestionsForFragments([input.substring(0, i), input.substring(i, j), input.substring(j, input.length)], today));
+				fragmentSets.push([input.substring(0, i), input.substring(i, j), input.substring(j, input.length)]);
 			}
 		}
-		return suggestions;
+
+		let allSuggestions: DateSuggestion[] = [];
+		for (const fragments of fragmentSets) {
+			let suggestions = this.createSuggestionsForFragments(fragments, today);
+			allSuggestions = allSuggestions.concat(suggestions);
+		}
+
+		return allSuggestions;
 	}
 
 	todayOrFavoriteDirection(date: LocalDateTime, today: LocalDateTime): boolean {
@@ -130,7 +138,7 @@ export class DateSuggestionEngine {
 				return currentCentury + n;
 			} else if (n < 100) {
 				return currentCentury - 100 + n;
-			} else if (n > today.year - 100 && n < today.year + 100) {
+			} else if (n > today.year - 120 && n < today.year + 120) {
 				return n;
 			} else {
 				return null;
@@ -154,6 +162,7 @@ export class DateSuggestionEngine {
 					month: today.month,
 					day: n1
 				}, (currentDate) => {
+					// increase month
 					return {
 						year: currentDate.year + (this.favorPastDates ? (currentDate.month == 1 ? -1 : 0) : (currentDate.month == 12 ? 1 : 0)),
 						month: mod((currentDate.month - 1) + (this.favorPastDates ? -1 : 1), 12) + 1,
@@ -199,29 +208,35 @@ export class DateSuggestionEngine {
 			}
 		} else { // s1 && s2 && s3
 			let dateTime;
-			dateTime = LocalDateTime.fromObject({year: numberToYear(n1), month: n2, day: n3});
-			if (dateTime.isValid) {
-				suggestions.push(createSuggestion(dateTime, "YMD"));
+			if (numberToYear(n1) != null) {
+				dateTime = LocalDateTime.fromObject({year: numberToYear(n1), month: n2, day: n3});
+				if (dateTime.isValid) {
+					suggestions.push(createSuggestion(dateTime, "YMD"));
+				}
+				dateTime = LocalDateTime.fromObject({year: numberToYear(n1), month: n3, day: n2});
+				if (dateTime.isValid) {
+					suggestions.push(createSuggestion(dateTime, "YDM"));
+				}
 			}
-			dateTime = LocalDateTime.fromObject({year: numberToYear(n1), month: n3, day: n2});
-			if (dateTime.isValid) {
-				suggestions.push(createSuggestion(dateTime, "YDM"));
+			if (numberToYear(n2) != null) {
+				dateTime = LocalDateTime.fromObject({year: numberToYear(n2), month: n1, day: n3});
+				if (dateTime.isValid) {
+					suggestions.push(createSuggestion(dateTime, "MYD"));
+				}
+				dateTime = LocalDateTime.fromObject({year: numberToYear(n2), month: n3, day: n1});
+				if (dateTime.isValid) {
+					suggestions.push(createSuggestion(dateTime, "DYM"));
+				}
 			}
-			dateTime = LocalDateTime.fromObject({year: numberToYear(n2), month: n1, day: n3});
-			if (dateTime.isValid) {
-				suggestions.push(createSuggestion(dateTime, "MYD"));
-			}
-			dateTime = LocalDateTime.fromObject({year: numberToYear(n2), month: n3, day: n1});
-			if (dateTime.isValid) {
-				suggestions.push(createSuggestion(dateTime, "DYM"));
-			}
-			dateTime = LocalDateTime.fromObject({year: numberToYear(n3), month: n1, day: n2});
-			if (dateTime.isValid) {
-				suggestions.push(createSuggestion(dateTime, "MDY"));
-			}
-			dateTime = LocalDateTime.fromObject({year: numberToYear(n3), month: n2, day: n1});
-			if (dateTime.isValid) {
-				suggestions.push(createSuggestion(dateTime, "DMY"));
+			if (numberToYear(n3) != null) {
+				dateTime = LocalDateTime.fromObject({year: numberToYear(n3), month: n1, day: n2});
+				if (dateTime.isValid) {
+					suggestions.push(createSuggestion(dateTime, "MDY"));
+				}
+				dateTime = LocalDateTime.fromObject({year: numberToYear(n3), month: n2, day: n1});
+				if (dateTime.isValid) {
+					suggestions.push(createSuggestion(dateTime, "DMY"));
+				}
 			}
 		}
 
@@ -254,7 +269,7 @@ export function getYearMonthDayOrderFromDateFormat(dateFormat: string): YearMont
 	return <YearMonthDayOrder>(["D", "M", "Y"].sort((a, b) => ymdIndexes[a] - ymdIndexes[b]).join(""));
 }
 
-export function getYearMonthDayOrderFromLocale(locale: string): YearMonthDayOrder {
+export function getYearMonthDayOrderForLocale(locale: string): YearMonthDayOrder {
 	let parts = LocalDateTime.fromObject({
 		year: 2020,
 		month: 11,
@@ -265,7 +280,7 @@ export function getYearMonthDayOrderFromLocale(locale: string): YearMonthDayOrde
 		day: "2-digit"
 	});
 	return parts
-		.filter(p => p.type === "year" || p.type === "month" || p.type === "day" )
+		.filter(p => p.type === "year" || p.type === "month" || p.type === "day")
 		.map(p => (p.type as string).charAt(0).toUpperCase())
-		.join() as YearMonthDayOrder;
+		.join("") as YearMonthDayOrder;
 }
