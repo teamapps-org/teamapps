@@ -38,9 +38,9 @@ export type LocalDateObject = DateObjectUnits & LocaleOptions;
 
 var LOCAL_ZONE = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "valueOf" | "isInDST" | "isOffsetFixed" | "offsetNameShort" | "offsetNameLong" | "offset" | "setZone" | "diff" | "diffNow" | "endOf" | "equals" | "hasSame" | "minus" | "plus" | "reconfigure" | "set" | "setLocale" | "startOf" | "toJSDate" | "toMillis" | "toRelative" | "toRelativeCalendar" | "toRFC2822" | "toSeconds"> {
+export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "isInDST" | "isOffsetFixed" | "offsetNameShort" | "offsetNameLong" | "offset" | "setZone" | "diff" | "diffNow" | "endOf" | "equals" | "hasSame" | "minus" | "plus" | "reconfigure" | "set" | "setLocale" | "startOf" | "toJSDate" | "toMillis" | "toRelative" | "toRelativeCalendar" | "toRFC2822" | "toSeconds"> {
 
-	private dateTime: DateTime;
+	private dateTime: DateTime; // guaranteed to be "UTC"
 
 	constructor(dateTime: DateTime) {
 		this.dateTime = dateTime.setZone("UTC", {keepLocalTime: true});
@@ -56,6 +56,10 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "valu
 
 	static local() {
 		return new LocalDateTime(DateTime.local())
+	}
+
+	static fromISO(text: string) {
+		return new LocalDateTime(DateTime.fromISO(text));
 	}
 
 	get day(): number {
@@ -390,11 +394,14 @@ export class LocalDateTime implements Omit<DateTime, "zone" | "zoneName" | "valu
 	}
 
 	toString(): string {
-		return this.dateTime.toString();
+		return this.dateTime.year + "-" + this.dateTime.month + "-" + this.dateTime.day;
 	}
 
 	until(other: DateTime): Interval {
 		return this.dateTime.until(other);
 	}
 
+	valueOf() {
+		return this.dateTime.valueOf();
+	}
 }

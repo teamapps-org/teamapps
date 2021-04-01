@@ -38,7 +38,7 @@
 import {EditingMode, HighlightDirection, keyCodes, selectElementContents, TrivialComponent} from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
 import {TrivialCalendarBox} from "./TrivialCalendarBox";
-import {DateSuggestionEngine, getYearMonthDayOrderFromLocale} from "../formfield/datetime/DateSuggestionEngine";
+import {DateSuggestionEngine, getYearMonthDayOrderForLocale} from "../formfield/datetime/DateSuggestionEngine";
 import {TimeSuggestionEngine} from "../formfield/datetime/TimeSuggestionEngine";
 import {place} from "place-to";
 import {createPopper, Instance as Popper} from '@popperjs/core';
@@ -357,7 +357,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 		this.dateSuggestionEngine = new DateSuggestionEngine({
 			locale: this.config.locale,
-			preferredYearMonthDayOrder: getYearMonthDayOrderFromLocale(this.config.locale),
+			preferredYearMonthDayOrder: getYearMonthDayOrderForLocale(this.config.locale),
 			favorPastDates: this.config.favorPastDates
 		});
 		this.timeSuggestionEngine = new TimeSuggestionEngine();

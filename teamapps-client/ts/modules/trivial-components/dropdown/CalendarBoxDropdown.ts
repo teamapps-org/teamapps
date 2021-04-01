@@ -6,17 +6,23 @@ import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
 
 export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 
-	public readonly onValueChanged: TeamAppsEvent<{ value: LocalDateTime; finalSelection: boolean }>;
+	public readonly onValueChanged: TeamAppsEvent<{ value: LocalDateTime; finalSelection: boolean }> = new TeamAppsEvent(this);
 
 	private calendarBox: TrivialCalendarBox;
 
 	constructor(calendarBox: TrivialCalendarBox) {
 		this.calendarBox = calendarBox;
-		this.calendarBox.onChange.addListener(event => this.onValueChanged.fire({value: event.value, finalSelection: true}));
+		this.calendarBox.onChange.addListener(event => {
+			this.onValueChanged.fire({value: event.value, finalSelection: event.timeUnitEdited == "day"});
+		});
 	}
 
 	getMainDomElement(): HTMLElement {
 		return this.calendarBox.getMainDomElement();
+	}
+
+	setValue(value: LocalDateTime): void {
+		this.calendarBox.setSelectedDate(value ?? LocalDateTime.local());
 	}
 
 	getValue(): LocalDateTime {
@@ -31,16 +37,16 @@ export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 		}
 	}
 
-	handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
+	query(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
 		return Promise.resolve(false);
-	}
-
-	setValue(value: LocalDateTime): void {
-		this.calendarBox.setSelectedDate(value);
 	}
 
 	destroy(): void {
 		this.calendarBox.destroy();
+	}
+
+	getComponent(): TrivialCalendarBox {
+		return this.calendarBox;
 	}
 
 }

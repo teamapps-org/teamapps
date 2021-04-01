@@ -41,13 +41,21 @@ import {
 } from "../../../generated/UiLocalDateFieldConfig";
 import {TreeBoxDropdown} from "../../trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "../../trivial-components/TrivialTreeBox";
+import {CalendarBoxDropdown} from "../../trivial-components/dropdown/CalendarBoxDropdown";
+import {TrivialCalendarBox} from "../../trivial-components/TrivialCalendarBox";
 
 type LocalDate = [number, number, number];
 
 export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, LocalDate> implements UiLocalDateFieldEventSource, UiLocalDateFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {
+		throttlingMode: "debounce",
+		delay: 250
+	});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {
+		throttlingMode: "debounce",
+		delay: 250
+	});
 
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected dateSuggestionEngine: DateSuggestionEngine;
@@ -57,15 +65,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, LocalDate>
 		this.updateDateSuggestionEngine();
 		this.dateRenderer = this.createDateRenderer();
 
-		this.trivialComboBox = new TrivialComboBox<LocalDateTime>({
-			showTrigger: config.showDropDownButton,
-			entryToEditorTextFunction: entry => {
-				return this.localDateTimeToString(entry);
-			},
-			selectedEntryRenderingFunction: (localDateTime) => this.dateRenderer(localDateTime),
-			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
-			showClearButton: config.showClearButton
-		}, new TreeBoxDropdown({
+		let treeBoxDropdown = new TreeBoxDropdown({
 			queryFunction: (searchString: string) => {
 				this.onTextInput.fire({enteredString: searchString});
 				return this.dateSuggestionEngine.generateSuggestions(searchString, LocalDateTime.local());
@@ -74,7 +74,28 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, LocalDate>
 			preselectionMatcher: (query, entry) => this.localDateTimeToString(entry).toLowerCase().indexOf(query.toLowerCase()) >= 0
 		}, new TrivialTreeBox<LocalDateTime>({
 			entryRenderingFunction: (localDateTime) => this.dateRenderer(localDateTime),
-		})));
+		}));
+		let calendarDropdown = new CalendarBoxDropdown(new TrivialCalendarBox({
+			locale: config.locale,
+			// firstDayOfWeek?: config., TODO
+			highlightKeyboardNavigationState: false
+		}));
+		this.trivialComboBox = new TrivialComboBox<LocalDateTime>({
+			showTrigger: config.showDropDownButton,
+			entryToEditorTextFunction: entry => {
+				return this.localDateTimeToString(entry);
+			},
+			selectedEntryRenderingFunction: (localDateTime) => this.dateRenderer(localDateTime),
+			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			showClearButton: config.showClearButton
+		}, treeBoxDropdown);
+		this.trivialComboBox.onBeforeQuery.addListener(queryString => {
+			if (queryString) {
+				this.trivialComboBox.setDropDownComponent(treeBoxDropdown);
+			} else {
+				this.trivialComboBox.setDropDownComponent(calendarDropdown);
+			}
+		})
 		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiDateField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
@@ -156,7 +177,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, LocalDate>
 	}
 
 	public getTransientValue(): LocalDate {
-		let selectedEntry = this.trivialComboBox.getSelectedEntry();
+		let selectedEntry = this.trivialComboBox.getValue();
 		if (selectedEntry) {
 			return [selectedEntry.year, selectedEntry.month, selectedEntry.day];
 		} else {
@@ -194,7 +215,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, LocalDate>
 		this._config.dateFormat = dateFormat;
 		this.updateDateSuggestionEngine();
 		this.dateRenderer = this.createDateRenderer();
-		this.trivialComboBox.setSelectedEntry(this.trivialComboBox.getSelectedEntry(), true);
+		this.trivialComboBox.setSelectedEntry(this.trivialComboBox.getValue(), true);
 	}
 
 	setFavorPastDates(favorPastDates: boolean): void {
