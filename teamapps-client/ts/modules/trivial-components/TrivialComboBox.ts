@@ -138,6 +138,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	public readonly onFocus = new TrivialEvent<void>(this);
 	public readonly onBlur = new TrivialEvent<void>(this);
 	public readonly onBeforeQuery = new TrivialEvent<string>(this);
+	public readonly onBeforeDownOpens = new TrivialEvent<string>(this);
 
 	private config: TrivialComboBoxConfig<E>;
 
@@ -325,7 +326,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			} else if (this.editingMode === "editable") {
 				this.showEditor();
 				this.$editor.select();
-				this.query("");
+				this.dropDownComponent.setValue(this.getValue())
 				this.openDropDown();
 			}
 		});
@@ -336,7 +337,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				if (!this.config.showDropDownOnResultsOnly) {
 					this.openDropDown();
 				}
-				this.query("");
+				this.dropDownComponent.setValue(this.getValue())
 			}
 		});
 
@@ -367,7 +368,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	private async query(nonSelectedEditorValue: string, highlightDirection: SelectionDirection = 0) {
 		this.onBeforeQuery.fire(nonSelectedEditorValue);
-		let gotResultsForQuery = await this.dropDownComponent.query(nonSelectedEditorValue, highlightDirection);
+		let gotResultsForQuery = await this.dropDownComponent.handleQuery(nonSelectedEditorValue, highlightDirection);
 
 		if (highlightDirection !== 0) {
 			this.autoCompleteIfPossible(this.config.autoCompleteDelay);
@@ -405,7 +406,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			this.showEditor(); // reposition editor
 		}
 		if (this.dropDownOpen) {
-			this.repositionDropDown();
+			this.popper.update();
 		}
 	}
 
@@ -423,10 +424,6 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.isEditorVisible = false;
 	}
 
-	private repositionDropDown() {
-		this.popper.update();
-	};
-
 	private parentElement: Element;
 
 	public openDropDown() {
@@ -436,9 +433,12 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				this.popper = createComboBoxPopper(this.$comboBox, this.$dropDown, () => this.closeDropDown());
 				this.parentElement = this.getMainDomElement().parentElement;
 			}
-			this.$comboBox.classList.add("open");
-			this.repositionDropDown();
-			this.dropDownOpen = true;
+			if (!this.dropDownOpen) {
+				this.onBeforeDownOpens.fire();
+				this.$comboBox.classList.add("open");
+				this.popper.update();
+				this.dropDownOpen = true;
+			}
 		}
 	}
 

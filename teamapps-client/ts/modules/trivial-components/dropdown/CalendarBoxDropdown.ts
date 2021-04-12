@@ -38,7 +38,7 @@ export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 		}
 	}
 
-	async query(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
+	async handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
 		let suggestedDate = await this.queryFunction(query);
 		if (suggestedDate != null) {
 			this.calendarBox.setSelectedDate(suggestedDate);

@@ -532,7 +532,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 	}
 
 	private async query(highlightDirection: SelectionDirection = 0) {
-		let gotResultsForQuery = await this.dropDownComponent.query(this.getNonSelectedEditorValue(), highlightDirection);
+		let gotResultsForQuery = await this.dropDownComponent.handleQuery(this.getNonSelectedEditorValue(), highlightDirection);
 		this.blurCausedByClickInsideComponent = false; // we won't get any mouseout or mouseup events for entries if they get removed. so do this here proactively
 
 		this.autoCompleteIfPossible(this.config.autoCompleteDelay);
