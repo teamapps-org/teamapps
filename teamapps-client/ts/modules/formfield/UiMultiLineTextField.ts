@@ -55,7 +55,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 			this.updateClearButton();
 		});
 
-		this.setEmptyText(config.emptyText);
+		this.setPlaceholderText(config.placeholderText);
 		this.setMaxCharacters(config.maxCharacters);
 		this.setShowClearButton(config.showClearButton);
 
@@ -130,8 +130,8 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 		this.$clearButton.style.right = hasVerticalScrollBar(this.$field) ? Constants.SCROLLBAR_WIDTH + "px" : "0";
 	}
 
-	public setEmptyText(emptyText: string): void {
-		this.$field.placeholder = emptyText || '';
+	public setPlaceholderText(placeholderText: string): void {
+		this.$field.placeholder = placeholderText || '';
 	}
 
 	public getMainInnerDomElement(): HTMLElement {

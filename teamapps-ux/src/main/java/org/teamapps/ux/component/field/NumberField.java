@@ -55,7 +55,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 		UiNumberField field = new UiNumberField();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setPrecision(precision);
-		field.setEmptyText(emptyText);
+		field.setPlaceholderText(emptyText);
 		field.setShowClearButton(showClearButton);
 		field.setMinValue(minValue);
 		field.setMaxValue(maxValue);
@@ -88,7 +88,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		queueCommandIfRendered(() -> new UiNumberField.SetEmptyTextCommand(getId(), emptyText));
+		queueCommandIfRendered(() -> new UiNumberField.SetPlaceholderTextCommand(getId(), emptyText));
 		return this;
 	}
 

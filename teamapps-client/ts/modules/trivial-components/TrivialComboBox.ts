@@ -130,6 +130,8 @@ export interface TrivialComboBoxConfig<E> {
 	 * When typing, preselect the first returned query result.
 	 */
 	preselectFirstQueryResult?: boolean,
+
+	placeholderText?: string
 }
 
 export class TrivialComboBox<E> implements TrivialComponent {
@@ -176,6 +178,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			editingMode: "editable", // one of 'editable', 'disabled' and 'readonly'
 			showDropDownOnResultsOnly: false,
 			preselectFirstQueryResult: true,
+			placeholderText: "",
 
 			...options
 		};
@@ -192,7 +195,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.$clearButton = this.$comboBox.querySelector(':scope .tr-remove-button');
 		this.$clearButton.addEventListener("mousedown", (e) => {
 			this.$editor.value = (console.log(""), "")
-			this.setSelectedEntry(null, true, e);
+			this.setValue(null, true, e);
 		});
 		this.$trigger = this.$comboBox.querySelector(':scope .tr-trigger');
 		this.$dropDown = parseHtml('<div class="tr-dropdown"></div>');
@@ -218,7 +221,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				if (this.isEditorVisible) {
 					let freeTextEntry = this.getFreeTextEntry();
 					if (freeTextEntry != null) {
-						this.setSelectedEntry(freeTextEntry, true, e);
+						this.setValue(freeTextEntry, true, e);
 					}
 				}
 				this.hideEditor();
@@ -233,11 +236,11 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					e.which == keyCodes.enter && e.preventDefault(); // do not submit form
 					let highlightedEntry = this.dropDownComponent.getValue();
 					if (this.dropDownOpen && highlightedEntry) {
-						this.setSelectedEntry(highlightedEntry, true, e);
+						this.setValue(highlightedEntry, true, e);
 					} else {
 						let freeTextEntry = this.getFreeTextEntry();
 						if (freeTextEntry != null) {
-							this.setSelectedEntry(freeTextEntry, true, e);
+							this.setValue(freeTextEntry, true, e);
 						}
 					}
 					this.closeDropDown();
@@ -361,7 +364,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	private handleDropDownValueChange(eventData: { value: E; finalSelection: boolean }) {
 		if (eventData.finalSelection) {
-			this.setSelectedEntry(eventData.value, true);
+			this.setValue(eventData.value, true);
 			this.closeDropDown();
 			this.hideEditor();
 		}
@@ -384,7 +387,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.onSelectedEntryChanged.fire(unProxyEntry(entry), originalEvent);
 	}
 
-	public setSelectedEntry(entry: E, fireEventIfChanged?: boolean, originalEvent?: unknown) {
+	public setValue(entry: E, fireEventIfChanged?: boolean, originalEvent?: unknown) {
 		let changing = !objectEquals(entry, this.selectedEntry);
 		this.selectedEntry = entry;
 		this.$selectedEntryWrapper.innerHTML = '';
@@ -392,6 +395,8 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		if ($selectedEntry != null) {
 			$selectedEntry.classList.add("tr-combobox-entry");
 			this.$selectedEntryWrapper.append($selectedEntry);
+		} else {
+			this.$selectedEntryWrapper.append(parseHtml(`<div class="placeholder-text">${this.config.placeholderText ?? ""}</div>`))
 		}
 		if (entry != null) {
 			this.$editor.value = (console.log(this.config.entryToEditorTextFunction(entry)), this.config.entryToEditorTextFunction(entry))
@@ -494,7 +499,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	}
 
 	public setDropDownComponent(dropDownComponent: DropDownComponent<E>): void {
-		if (this.dropDownComponent != null){
+		if (this.dropDownComponent != null) {
 			this.dropDownComponent.onValueChanged.removeListener(this.handleDropDownValueChange);
 			this.$dropDown.innerHTML = '';
 		}
@@ -535,5 +540,13 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	getMainDomElement(): HTMLElement {
 		return this.$comboBox;
+	}
+
+	setPlaceholderText(placeholderText: string) {
+		this.config.placeholderText = placeholderText;
+		let $placeholderText: HTMLElement = this.$selectedEntryWrapper.querySelector(":scope .placeholder-text");
+		if ($placeholderText != null) {
+			$placeholderText.innerText = placeholderText ?? "";
+		}
 	}
 }

@@ -59,12 +59,12 @@ class UiComponentField extends UiField {
 class UiTextField extends UiField implements UiTextInputHandlingField {
 	int maxCharacters; //if > 0, do not allow to enter more than this number of characters
 	boolean showClearButton;
-	String emptyText;
+	String placeholderText;
 	boolean autofill = false; // browser feature
 
 	command setMaxCharacters(int maxCharacters);
 	command setShowClearButton(boolean showClearButton);
-	command setEmptyText(String emptyText);
+	command setPlaceholderText(String placeholderText);
 }
 
 class UiPasswordField extends UiTextField {
@@ -144,7 +144,7 @@ class UiImageField extends UiField {
 class UiNumberField extends UiField implements UiTextInputHandlingField {
   	String locale;
 	int precision = -1; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number
-	String emptyText;
+	String placeholderText;
 	boolean showClearButton;
 	double minValue = Double.MIN_VALUE;
     double maxValue = Double.MAX_VALUE;
@@ -158,7 +158,7 @@ class UiNumberField extends UiField implements UiTextInputHandlingField {
     command setSliderStep(double step);
     command setCommitOnSliderChange(boolean commitOnSliderChange);
 	command setPrecision(int displayPrecision);
-	command setEmptyText(String emptyText);
+	command setPlaceholderText(String placeholderText);
 	command setShowClearButton(boolean showClearButton);
 	command setLocale(String locale);
 }
@@ -366,6 +366,7 @@ class UiLocalDateField extends UiField {
 	UiLocalDate defaultSuggestionDate; // null == today
 	boolean shuffledFormatSuggestionsEnabled;
 	enum {CALENDAR, CALENDAR_SUGGESTION_LIST, SUGGESTION_LIST} dropDownMode = DropDownMode.CALENDAR_SUGGESTION_LIST;
+	String placeholderText;
 
     command update(UiLocalDateField config);
 }
@@ -482,6 +483,7 @@ class UiComboBox extends UiField implements UiTextInputHandlingField {
 	boolean showClearButton;
 	boolean animate;
 	boolean showExpanders = true;
+	String placeholderText;
 
 	query lazyChildren(int parentId) returns List<UiComboBoxTreeRecord>;
 	query retrieveDropdownEntries(String queryString) returns List<UiComboBoxTreeRecord>;

@@ -69,6 +69,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	private boolean showClearButton;
 	private boolean animate = true;
 	private boolean showExpanders = false;
+	private String emptyText;
 
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
 	protected Function<String, RECORD> freeTextRecordFactory = null;
@@ -82,23 +83,24 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		this(query -> Collections.emptyList());
 	}
 
-	protected void mapCommonUiComboBoxProperties(UiComboBox comboBox) {
-		mapAbstractFieldAttributesToUiField(comboBox);
+	protected void mapCommonUiComboBoxProperties(UiComboBox ui) {
+		mapAbstractFieldAttributesToUiField(ui);
 
 		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
-		comboBox.setTemplates(templateIdsByTemplate.entrySet().stream()
+		ui.setTemplates(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
 
-		comboBox.setShowDropDownButton(dropDownButtonVisible);
-		comboBox.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);
-		comboBox.setHighlightFirstResultEntry(highlightFirstResultEntry);
-		comboBox.setShowHighlighting(showHighlighting);
-		comboBox.setAutoComplete(autoComplete);
-		comboBox.setTextHighlightingEntryLimit(textHighlightingEntryLimit);
-		comboBox.setAllowAnyText(allowFreeText);
-		comboBox.setShowClearButton(showClearButton);
-		comboBox.setAnimate(animate);
-		comboBox.setShowExpanders(showExpanders);
+		ui.setShowDropDownButton(dropDownButtonVisible);
+		ui.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);
+		ui.setHighlightFirstResultEntry(highlightFirstResultEntry);
+		ui.setShowHighlighting(showHighlighting);
+		ui.setAutoComplete(autoComplete);
+		ui.setTextHighlightingEntryLimit(textHighlightingEntryLimit);
+		ui.setAllowAnyText(allowFreeText);
+		ui.setShowClearButton(showClearButton);
+		ui.setAnimate(animate);
+		ui.setShowExpanders(showExpanders);
+		ui.setPlaceholderText(emptyText);
 	}
 
 	@Override
@@ -391,6 +393,15 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
 		this.setPropertyProvider(propertyExtractor);
+	}
+
+	public String getEmptyText() {
+		return emptyText;
+	}
+
+	public void setEmptyText(String emptyText) {
+		this.emptyText = emptyText;
+		reRenderIfRendered();
 	}
 
 	@Override

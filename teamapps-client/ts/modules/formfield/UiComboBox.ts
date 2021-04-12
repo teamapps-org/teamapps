@@ -79,7 +79,8 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 					return null;
 				}
 			},
-			preselectFirstQueryResult: config.highlightFirstResultEntry
+			preselectFirstQueryResult: config.highlightFirstResultEntry,
+			placeholderText: config.placeholderText
 		}, new TreeBoxDropdown({
 			queryFunction: (queryString: string) => {
 				return config.retrieveDropdownEntries({queryString})
@@ -160,7 +161,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
-		this.trivialComboBox.setSelectedEntry(uiValue);
+		this.trivialComboBox.setValue(uiValue);
 	}
 
 	public getTransientValue(): any {
