@@ -78,7 +78,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 			this.setSliderPositionByValue(this.getTransientValue());
 		});
 
-		this.setEmptyText(config.emptyText);
+		this.setPlaceholderText(config.placeholderText);
 		this.setPrecision(config.precision);
 		this.setShowClearButton(config.showClearButton);
 		this.setCommitOnSliderChange(config.commitOnSliderChange);
@@ -324,8 +324,8 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		this.ensureDecimalInput();
 	}
 
-	setEmptyText(emptyText: string): void {
-		this.$field.placeholder = emptyText || '';
+	setPlaceholderText(placeholderText: string): void {
+		this.$field.placeholder = placeholderText || '';
 	}
 
 	setShowClearButton(showClearButton: boolean): void {

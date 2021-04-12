@@ -65,7 +65,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		queueCommandIfRendered(() -> new UiTextField.SetEmptyTextCommand(getId(), emptyText));
+		queueCommandIfRendered(() -> new UiTextField.SetPlaceholderTextCommand(getId(), emptyText));
 		return this;
 	}
 
@@ -83,7 +83,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(maxCharacters);
 		uiField.setShowClearButton(showClearButton);
-		uiField.setEmptyText(emptyText);
+		uiField.setPlaceholderText(emptyText);
 		uiField.setAutofill(autofill);
 		return uiField;
 	}

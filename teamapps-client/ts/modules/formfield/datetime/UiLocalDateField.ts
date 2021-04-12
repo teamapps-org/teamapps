@@ -96,7 +96,8 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 				return suggestions.length > 0 ? suggestions[0] : null;
 			},
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
-			showClearButton: config.showClearButton
+			showClearButton: config.showClearButton,
+			placeholderText: config.placeholderText
 		}, this._config.dropDownMode === UiLocalDateField_DropDownMode.CALENDAR ? calendarDropdown : treeBoxDropdown);
 		[this.trivialComboBox.onBeforeQuery, this.trivialComboBox.onBeforeDownOpens].forEach(event => event.addListener(queryString => {
 			if (this._config.dropDownMode == UiLocalDateField_DropDownMode.CALENDAR
@@ -185,9 +186,9 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
-			this.trivialComboBox.setSelectedEntry(UiLocalDateField.UiLocalDateToLocalDateTime(uiValue));
+			this.trivialComboBox.setValue(UiLocalDateField.UiLocalDateToLocalDateTime(uiValue));
 		} else {
-			this.trivialComboBox.setSelectedEntry(null);
+			this.trivialComboBox.setValue(null);
 		}
 	}
 
@@ -226,6 +227,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 		this.setShowClearButton(config.showClearButton);
 		this.setFavorPastDates(config.favorPastDates);
 		this.setLocaleAndDateFormat(config.locale, config.dateFormat);
+		this.trivialComboBox.setPlaceholderText(config.placeholderText);
 		this._config = config;
 		console.log(this._config);
 	}
@@ -235,7 +237,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 		this._config.dateFormat = dateFormat;
 		this.updateDateSuggestionEngine();
 		this.dateRenderer = this.createDateRenderer();
-		this.trivialComboBox.setSelectedEntry(this.trivialComboBox.getValue());
+		this.trivialComboBox.setValue(this.trivialComboBox.getValue());
 	}
 
 	setFavorPastDates(favorPastDates: boolean): void {

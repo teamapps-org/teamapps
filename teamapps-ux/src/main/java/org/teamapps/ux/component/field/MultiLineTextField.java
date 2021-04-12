@@ -36,7 +36,7 @@ public class MultiLineTextField extends TextField {
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
 		uiField.setShowClearButton(isShowClearButton());
-		uiField.setEmptyText(getEmptyText());
+		uiField.setPlaceholderText(getEmptyText());
 		uiField.setAdjustHeightToContent(adjustHeightToContent);
 		return uiField;
 	}
