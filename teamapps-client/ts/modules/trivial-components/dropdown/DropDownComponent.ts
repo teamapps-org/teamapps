@@ -20,7 +20,7 @@ export interface DropDownComponent<E> extends TrivialComponent {
 	 * @param selectionDirection
 	 * @return true if it got results
 	 */
-	query(query: string, selectionDirection: SelectionDirection): Promise<boolean>;
+	handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean>;
 
 	getComponent(): TrivialComponent;
 

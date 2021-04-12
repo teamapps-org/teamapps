@@ -99,14 +99,14 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			showClearButton: config.showClearButton
 		}, this._config.dropDownMode === UiLocalDateField_DropDownMode.CALENDAR ? calendarDropdown : treeBoxDropdown);
-		this.trivialComboBox.onBeforeQuery.addListener(queryString => {
+		[this.trivialComboBox.onBeforeQuery, this.trivialComboBox.onBeforeDownOpens].forEach(event => event.addListener(queryString => {
 			if (this._config.dropDownMode == UiLocalDateField_DropDownMode.CALENDAR
 				|| this._config.dropDownMode == UiLocalDateField_DropDownMode.CALENDAR_SUGGESTION_LIST && !queryString) {
 				this.trivialComboBox.setDropDownComponent(calendarDropdown);
 			} else {
 				this.trivialComboBox.setDropDownComponent(treeBoxDropdown);
 			}
-		})
+		}));
 		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiDateField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
