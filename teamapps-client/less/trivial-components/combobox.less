@@ -34,42 +34,53 @@
  *  limitations under the License.
  *
  */
-.tr-combobox-selected-entry-wrapper {
-  flex: 1 1 auto;
-  overflow: hidden;
-  display: flex;
-  align-items: center; // if the template doesn't take the whole space...
 
-  .tr-combobox-entry {
-    flex-grow: 1;
+.tr-combobox {
 
-    * {
-      cursor: text;
+  .tr-combobox-main-area {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: stretch;
+
+    .tr-combobox-selected-entry-wrapper {
+      overflow: hidden;
+      flex-grow: 1;
+      display: flex;
+      align-items: center; // if the template doesn't take the whole space...
+      
+      .tr-combobox-entry {
+        flex: 1 1 auto;
+        * {
+          cursor: text;
+        }
+      }
     }
+
+    .tr-combobox-editor {
+      flex: 1 1 auto;
+      border: none;
+      outline: none;
+      background-color: transparent;
+      z-index: 1;
+      font-family: @tr-editor-font-family;
+      font-size: @tr-editor-font-size;
+    }
+  }
+
+  &.editor-hidden .tr-combobox-editor {
+    width: 0;
+    height: 0;
+    position: absolute;
+    opacity: 0;
+  }
+
+  &:not(.editor-hidden) .tr-combobox-selected-entry-wrapper {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  &:not(.open) .tr-dropdown {
+    display: none;
   }
 }
 
-.tr-combobox-editor {
-  flex: 1 1 auto;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  z-index: 1;
-  font-family: @tr-editor-font-family;
-  font-size: @tr-editor-font-size;
-}
-
-.tr-combobox.editor-hidden .tr-combobox-editor {
-  width: 0;
-  height: 0;
-  position: absolute;
-  opacity: 0;
-}
-
-.tr-combobox:not(.editor-hidden) .tr-combobox-selected-entry-wrapper {
-  display: none;
-}
-
-.tr-combobox:not(.open) .tr-dropdown {
-  display: none;
-}
