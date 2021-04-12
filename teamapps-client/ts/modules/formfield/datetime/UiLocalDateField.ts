@@ -66,7 +66,6 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 
 		let treeBoxDropdown = new TreeBoxDropdown({
 			queryFunction: (searchString: string) => {
-				this.onTextInput.fire({enteredString: searchString});
 				return this.dateSuggestionEngine.generateSuggestions(searchString, this.getDefaultDate(), {
 					shuffledFormatSuggestionsEnabled: this._config.shuffledFormatSuggestionsEnabled
 				});
@@ -120,6 +119,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 				});
 			}
 		});
+		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
 
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");

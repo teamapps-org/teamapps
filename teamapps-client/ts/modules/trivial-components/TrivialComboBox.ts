@@ -181,7 +181,10 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		};
 
 		this.$comboBox = parseHtml(`<div class="tr-combobox tr-input-wrapper editor-hidden">
-            <div class="tr-combobox-selected-entry-wrapper"></div>
+			<div class="tr-combobox-main-area">
+				<input type="text" class="tr-combobox-editor tr-editor" autocomplete="off"></input>
+				<div class="tr-combobox-selected-entry-wrapper"></div>			
+			</div>
             <div class="tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
             <div class="tr-trigger ${this.config.showTrigger ? '' : 'hidden'}"><span class="tr-trigger-icon"></span></div>
         </div>`);
@@ -198,9 +201,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			e.preventDefault();
 		});
 		this.setEditingMode(this.config.editingMode);
-		this.$editor = parseHtml('<input type="text" autocomplete="off"></input>');
-		this.$comboBox.prepend(this.$editor);
-		this.$editor.classList.add("tr-combobox-editor", "tr-editor");
+		this.$editor = this.$comboBox.querySelector(':scope .tr-editor');
 		this.$editor.addEventListener("focus", () => {
 			this.onFocus.fire();
 			this.$comboBox.classList.add('focus');

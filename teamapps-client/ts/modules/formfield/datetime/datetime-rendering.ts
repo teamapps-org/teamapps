@@ -37,7 +37,7 @@ export function createDateIconRenderer(locale: string): (time: DateTime) => stri
 					</defs>        
 					<g id="layer1">
 						<rect class="calendar-symbol-page-background" x="90" y="90" width="360" height="400" ry="3.8"></rect>
-						<rect class="calendar-symbol-color" x="90" y="90" width="360" height="100" ry="3.5"></rect>
+						<rect class="calendar-symbol-color" x="90" y="90" width="360" height="85" ry="3.5"></rect>
 						<rect class="calendar-symbol-page" x="90" y="90" width="360" height="395" ry="3.8"></rect>
 						<rect class="calendar-symbol-ring" fill="url('#Gradient2')" x="140" y="30" width="40" height="120" ry="30.8"></rect>
 						<rect class="calendar-symbol-ring" fill="url('#Gradient2')" x="250" y="30" width="40" height="120" ry="30.8"></rect>
@@ -103,7 +103,7 @@ export var dateTemplate = `<div class="tr-template-icon-single-line">
         </defs>        
         <g id="layer1">
             <rect class="calendar-symbol-page-background" x="90" y="90" width="360" height="400" ry="3.8"></rect>
-            <rect class="calendar-symbol-color" x="90" y="90" width="360" height="100" ry="3.5"></rect>
+            <rect class="calendar-symbol-color" x="90" y="90" width="360" height="85" ry="3.5"></rect>
             <rect class="calendar-symbol-page" x="90" y="90" width="360" height="395" ry="3.8"></rect>
             <rect class="calendar-symbol-ring" fill="url('#Gradient2')" x="140" y="30" width="40" height="120" ry="30.8"></rect>
             <rect class="calendar-symbol-ring" fill="url('#Gradient2')" x="250" y="30" width="40" height="120" ry="30.8"></rect>

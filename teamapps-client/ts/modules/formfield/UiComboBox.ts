@@ -82,7 +82,6 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			preselectFirstQueryResult: config.highlightFirstResultEntry
 		}, new TreeBoxDropdown({
 			queryFunction: (queryString: string) => {
-				this.onTextInput.fire({enteredString: queryString}); // TODO this is definitely the wrong place for this!!
 				return config.retrieveDropdownEntries({queryString})
 					.then(entries => buildObjectTree(entries, "id", "parentId"));
 			},
@@ -114,6 +113,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 				});
 			}
 		});
+		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
 
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
