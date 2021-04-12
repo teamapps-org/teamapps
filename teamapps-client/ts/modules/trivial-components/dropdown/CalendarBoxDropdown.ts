@@ -8,10 +8,11 @@ export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 
 	public readonly onValueChanged: TeamAppsEvent<{ value: LocalDateTime; finalSelection: boolean }> = new TeamAppsEvent(this);
 
-	private calendarBox: TrivialCalendarBox;
 
-	constructor(calendarBox: TrivialCalendarBox) {
-		this.calendarBox = calendarBox;
+	constructor(
+		private calendarBox: TrivialCalendarBox,
+		private queryFunction: (query: string) => Promise<LocalDateTime | null> | LocalDateTime | null
+	) {
 		this.calendarBox.onChange.addListener(event => {
 			this.onValueChanged.fire({value: event.value, finalSelection: event.timeUnitEdited == "day"});
 		});
@@ -37,8 +38,14 @@ export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 		}
 	}
 
-	query(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
-		return Promise.resolve(false);
+	async query(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
+		let suggestedDate = await this.queryFunction(query);
+		if (suggestedDate != null) {
+			this.calendarBox.setSelectedDate(suggestedDate);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	destroy(): void {

@@ -54,7 +54,6 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		this.templateRenderers = config.templates != null ? context.templateRegistry.createTemplateRenderers(config.templates) : {};
 
 		this.trivialComboBox = new TrivialComboBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>({
-			allowFreeText: config.allowAnyText,
 			selectedEntryRenderingFunction: entry => {
 				if (entry == null) {
 					return "";
@@ -73,8 +72,12 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
 			showClearButton: config.showClearButton,
 			entryToEditorTextFunction: e => e.asString,
-			freeTextEntryFactory: (freeText) => {
-				return {id: this.freeTextIdEntryCounter--, values: {}, asString: freeText};
+			textToEntryFunction: (freeText) => {
+				if (config.allowAnyText) {
+					return {id: this.freeTextIdEntryCounter--, values: {}, asString: freeText};
+				} else {
+					return null;
+				}
 			},
 			preselectFirstQueryResult: config.highlightFirstResultEntry
 		}, new TreeBoxDropdown({
@@ -157,7 +160,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
-		this.trivialComboBox.setSelectedEntry(uiValue, true);
+		this.trivialComboBox.setSelectedEntry(uiValue);
 	}
 
 	public getTransientValue(): any {

@@ -45,9 +45,9 @@ export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
-			this.trivialComboBox.setSelectedEntry(UiLocalTimeField.localTimeToLocalDateTime(uiValue), true);
+			this.trivialComboBox.setSelectedEntry(UiLocalTimeField.localTimeToLocalDateTime(uiValue));
 		} else {
-			this.trivialComboBox.setSelectedEntry(null, true);
+			this.trivialComboBox.setSelectedEntry(null);
 		}
 	}
 

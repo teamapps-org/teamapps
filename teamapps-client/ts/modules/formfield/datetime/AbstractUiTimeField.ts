@@ -133,7 +133,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		this._config.locale = locale;
 		this._config.timeFormat = timeFormat;
 		this.timeRenderer = this.createTimeRenderer();
-		this.trivialComboBox.setSelectedEntry(this.trivialComboBox.getValue(), true);
+		this.trivialComboBox.setSelectedEntry(this.trivialComboBox.getValue());
 	}
 
 	setShowDropDownButton(showDropDownButton: boolean): void {

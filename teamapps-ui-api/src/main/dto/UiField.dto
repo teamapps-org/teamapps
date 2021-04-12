@@ -350,20 +350,24 @@ abstract class AbstractUiTimeField extends UiField implements UiTextInputHandlin
 class UiLocalTimeField extends AbstractUiTimeField {
 }
 
-abstract class AbstractUiDateField extends UiField implements UiTextInputHandlingField {
+@TypeScriptFactory
+class UiLocalDate {
+    required int year;
+    required int month;
+    required int day;
+}
+
+class UiLocalDateField extends UiField {
     boolean showDropDownButton = true;
 	boolean showClearButton;
 	boolean favorPastDates = false;
 	String locale;
 	UiDateTimeFormatDescriptor dateFormat = null; // if null, UiConfiguration.dateFormat applies
+	UiLocalDate defaultSuggestionDate; // null == today
+	boolean shuffledFormatSuggestionsEnabled;
+	enum {CALENDAR, CALENDAR_SUGGESTION_LIST, SUGGESTION_LIST} dropDownMode = DropDownMode.CALENDAR_SUGGESTION_LIST;
 
-	command setShowDropDownButton(boolean showDropDownButton);
-	command setShowClearButton(boolean showClearButton);
-	command setFavorPastDates(boolean favorPastDates);
-	command setLocaleAndDateFormat(String locale, UiDateTimeFormatDescriptor dateFormat);
-}
-
-class UiLocalDateField extends AbstractUiDateField {
+    command update(UiLocalDateField config);
 }
 
 abstract class AbstractUiDateTimeField extends UiField {
