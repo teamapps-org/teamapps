@@ -55,7 +55,25 @@ export class DateSuggestionEngine {
 		this.favorPastDates = options.favorPastDates ?? false;
 	}
 
-	public generateSuggestions(searchString: string, now: LocalDateTime): LocalDateTime[] {
+	public generateSuggestions(searchString: string, now: LocalDateTime, options?: {
+		suggestAdjacentWeekForEmptyInput?: boolean,
+		shuffledFormatSuggestionsEnabled?: boolean
+	}): LocalDateTime[] {
+
+		options = {
+			suggestAdjacentWeekForEmptyInput: true,
+			shuffledFormatSuggestionsEnabled: false,
+			...(options ?? {})
+		}
+
+		if (searchString.replace(/[^\d]/g, '').length == 0) {
+			if (options.suggestAdjacentWeekForEmptyInput) {
+				return this.createAdjacentWeekDaySuggestions(now).map(s => s.date);
+			} else {
+				return [];
+			}
+		}
+
 		let suggestions: DateSuggestion[];
 		if (searchString.match(/[^\d]/)) {
 			let fragments = searchString.split(/[^\d]/).filter(f => !!f);
@@ -79,6 +97,9 @@ export class DateSuggestionEngine {
 		});
 
 		return suggestions
+			.filter(value => {
+				return options.shuffledFormatSuggestionsEnabled || preferredYmdOrder.indexOf(value.ymdOrder) !== -1
+			})
 			.map(s => s.date)
 			.filter(this.removeDuplicateDates());
 	}
@@ -108,7 +129,10 @@ export class DateSuggestionEngine {
 		let fragmentSets: [string, string, string][] = [];
 		for (let i = 1; i <= input.length; i++) {
 			for (let j = Math.min(input.length, i + 1); j <= input.length && j - i <= 4; j - i === 2 ? j += 2 : j++) {
-				fragmentSets.push([input.substring(0, i), input.substring(i, j), input.substring(j, input.length)]);
+				let fragments: [string, string, string] = [input.substring(0, i), input.substring(i, j), input.substring(j, input.length)];
+				if (this.validateFragments(fragments)){
+					fragmentSets.push(fragments);
+				}
 			}
 		}
 
@@ -119,6 +143,22 @@ export class DateSuggestionEngine {
 		}
 
 		return allSuggestions;
+	}
+
+	private validateFragments(fragments: [string, string, string]) {
+		if (fragments.some(f => f.length === 3)) { // do not allow fragments of length 3
+			return false;
+		}
+		if (fragments.some(f => f.length > 4)) { // do not allow fragments of length > 4
+			return false;
+		}
+		if (fragments.filter(f => f.length > 2).length > 1) { // do not allow more than one fragment with length > 2 (so 4)
+			return false;
+		}
+		if (fragments.some(f => f.length == 4 && f.charAt(0) == '0')) { // do not allow 4 digit fragments padded with zeros
+			return false;
+		}
+		return true;
 	}
 
 	todayOrFavoriteDirection(date: LocalDateTime, today: LocalDateTime): boolean {
@@ -134,14 +174,22 @@ export class DateSuggestionEngine {
 			let shortYear = today.year % 100;
 			let yearSuggestionBoundary = (shortYear + 20) % 100; // suggest 20 years into the future and 80 year backwards
 			let currentCentury = Math.floor(today.year / 100) * 100;
-			if (n < yearSuggestionBoundary) {
-				return currentCentury + n;
-			} else if (n < 100) {
-				return currentCentury - 100 + n;
-			} else if (n > today.year - 120 && n < today.year + 120) {
-				return n;
+			if (n >= 1000 && n <= 9999) { // four digit year
+				if (n >= 1900 && n <= 2100) {
+					return n;
+				} else {
+					return null; // we're not getting more historic or futuristic here
+				}
 			} else {
-				return null;
+				if (n < yearSuggestionBoundary) {
+					return currentCentury + n;
+				} else if (n < 100) {
+					return currentCentury - 100 + n;
+				} else if (n > today.year - 120 && n < today.year + 120) {
+					return n;
+				} else {
+					return null;
+				}
 			}
 		}
 
@@ -150,11 +198,7 @@ export class DateSuggestionEngine {
 		let suggestions = [];
 
 		if (!s1 && !s2 && !s3) {
-			let result = [];
-			for (let i = 0; i < 7; i++) {
-				result.push(createSuggestion(today.plus({days: this.favorPastDates ? -i : i}), ""));
-			}
-			return result;
+			return this.createAdjacentWeekDaySuggestions(today);
 		} else if (s1 && !s2 && !s3) {
 			if (n1 > 0 && n1 <= 31) {
 				let nextValidDate = this.findNextValidDate({
@@ -242,6 +286,14 @@ export class DateSuggestionEngine {
 
 		return suggestions;
 	};
+
+	private createAdjacentWeekDaySuggestions(today: LocalDateTime) {
+		let result = [];
+		for (let i = 0; i < 7; i++) {
+			result.push(createSuggestion(today.plus({days: this.favorPastDates ? -i : i}), ""));
+		}
+		return result;
+	}
 
 	private findNextValidDate(startDate: FictiveLocalDate, incementor: (currentDate: FictiveLocalDate) => FictiveLocalDate, today: LocalDateTime): LocalDateTime {
 		let currentFictiveDate = startDate;
