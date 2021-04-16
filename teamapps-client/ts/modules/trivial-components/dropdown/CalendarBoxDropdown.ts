@@ -11,7 +11,8 @@ export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 
 	constructor(
 		private calendarBox: TrivialCalendarBox,
-		private queryFunction: (query: string) => Promise<LocalDateTime | null> | LocalDateTime | null
+		private queryFunction: (query: string) => Promise<LocalDateTime | null> | LocalDateTime | null,
+		public defaultDate: LocalDateTime
 	) {
 		this.calendarBox.onChange.addListener(event => {
 			this.onValueChanged.fire({value: event.value, finalSelection: event.timeUnitEdited == "day"});
@@ -23,7 +24,7 @@ export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 	}
 
 	setValue(value: LocalDateTime): void {
-		this.calendarBox.setSelectedDate(value ?? LocalDateTime.local());
+		this.calendarBox.setSelectedDate(value ?? this.defaultDate ?? LocalDateTime.local());
 	}
 
 	getValue(): LocalDateTime {
