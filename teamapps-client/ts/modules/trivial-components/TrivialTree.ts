@@ -47,7 +47,6 @@ export class TrivialTree<E> implements TrivialComponent{
     private entries: E[];
     private selectedEntryId: any;
 
-    private $spinners = $();
     private $componentWrapper: JQuery;
 
     constructor(options: TrivialTreeConfig<E>) {
@@ -115,8 +114,6 @@ export class TrivialTree<E> implements TrivialComponent{
 
     public updateEntries(newEntries: E[]) {
         this.entries = newEntries;
-        this.$spinners.remove();
-        this.$spinners = $();
         this.treeBox.setEntries(newEntries);
     }
 
