@@ -194,7 +194,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.$selectedEntryWrapper = this.$comboBox.querySelector(':scope .tr-combobox-selected-entry-wrapper');
 		this.$clearButton = this.$comboBox.querySelector(':scope .tr-remove-button');
 		this.$clearButton.addEventListener("mousedown", (e) => {
-			this.$editor.value = (console.log(""), "")
+			this.$editor.value = "";
 			this.setValue(null, true, e);
 		});
 		this.$trigger = this.$comboBox.querySelector(':scope .tr-trigger');
@@ -277,7 +277,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			} else if (e.which == keyCodes.escape) {
 				if (!(!this.isEntrySelected() && this.$editor.value.length > 0 && this.dropDownOpen)) {
 					this.hideEditor();
-					this.$editor.value = (console.log(""), "")
+					this.$editor.value = "";
 				}
 				this.closeDropDown();
 			} else {
@@ -355,10 +355,10 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	private setAndSelectEditorValue(value: E) {
 		if (value != null) {
-			this.$editor.value = (console.log(this.config.entryToEditorTextFunction(value)), this.config.entryToEditorTextFunction(value))
+			this.$editor.value = this.config.entryToEditorTextFunction(value);
 			this.$editor.select();
 		} else {
-			this.$editor.value = (console.log(""), "")
+			this.$editor.value = "";
 		}
 	}
 
@@ -399,14 +399,14 @@ export class TrivialComboBox<E> implements TrivialComponent {
 			this.$selectedEntryWrapper.append(parseHtml(`<div class="placeholder-text">${this.config.placeholderText ?? ""}</div>`))
 		}
 		if (entry != null) {
-			this.$editor.value = (console.log(this.config.entryToEditorTextFunction(entry)), this.config.entryToEditorTextFunction(entry))
+			this.$editor.value = this.config.entryToEditorTextFunction(entry)
 		}
 
 		if (changing && fireEventIfChanged) {
 			this.fireChangeEvents(entry, originalEvent);
 		}
 		if (this.$clearButton) {
-			this.$clearButton.classList.toggle("hidden", entry == null);
+			this.$clearButton.classList.toggle("hidden", !this.config.showClearButton || entry == null);
 		}
 		if (this.isEditorVisible) {
 			this.showEditor(); // reposition editor
@@ -466,7 +466,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					const currentEditorValue = this.getEditorValueLeftOfSelection();
 					const entryAsString = this.config.entryToEditorTextFunction(dropDownValue);
 					if (entryAsString.toLowerCase().indexOf(("" + currentEditorValue).toLowerCase()) === 0) {
-						this.$editor.value = (console.log(currentEditorValue + entryAsString.substr(currentEditorValue.length)), currentEditorValue + entryAsString.substr(currentEditorValue.length))
+						this.$editor.value = currentEditorValue + entryAsString.substr(currentEditorValue.length);
 						if (document.activeElement == this.$editor) {
 							(this.$editor as any).setSelectionRange(currentEditorValue.length, entryAsString.length);
 						}
@@ -520,7 +520,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	public setShowClearButton(showClearButton: boolean) {
 		this.config.showClearButton = showClearButton;
-		this.$clearButton.classList.toggle('hidden', !showClearButton);
+		this.$clearButton.classList.toggle('hidden', !this.config.showClearButton || this.selectedEntry == null);
 	}
 
 	public setShowTrigger(showTrigger: boolean) {
