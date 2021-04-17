@@ -34,77 +34,102 @@
  *  limitations under the License.
  *
  */
-.tr-tagcombobox-tagarea {
-  flex: 1 1 auto;
+
+.tr-tagcombobox {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 1px;
-  overflow: hidden;
 
-  .tr-tagcombobox.editable & {
-    cursor: text;
-  }
-}
+  .tr-tagcombobox-main-area {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    position: relative;
 
-.tr-tagcombobox-tag {
-  flex: 0 0 auto;
-  cursor: default;
+    .tr-tagcombobox-tagarea {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 1px;
+      overflow: hidden;
 
-  &.marked-for-removal > * {
-    box-shadow: 0 0 1px 1px var(--ta-input-border-focus);
-    > * {
-      filter: opacity(.8) grayscale(1);
+      .tr-tagcombobox.editable & {
+        cursor: text;
+      }
+    }
+
+    .placeholder-text {
+      position: absolute;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
-}
 
-@tr-default-tag-border-color: #BAD2EA;
+  .tr-tagcombobox-tag {
+    flex: 0 0 auto;
+    cursor: default;
 
-.tr-tagcombobox-default-wrapper-template {
-  border: 1px solid @tr-default-tag-border-color;
-  border-radius: 3px;
-  box-shadow: 1px 2px 1px -1px rgba(0, 0, 0, 0.13);
-  background-color: white;
-  margin: 2px;
-  overflow: hidden;
-
-  display: flex;
-  align-items: center;
-
-  .tr-tagcombobox-tag-content {
-    flex: 1 1 auto;
-    padding: 0 1px;
+    &.marked-for-removal > * {
+      box-shadow: 0 0 1px 1px var(--ta-input-border-focus);
+      > * {
+        filter: opacity(.8) grayscale(1);
+      }
+    }
   }
 
-  .tr-remove-button {
+  @tr-default-tag-border-color: #BAD2EA;
+
+  .tr-tagcombobox-default-wrapper-template {
     border: 1px solid @tr-default-tag-border-color;
     border-radius: 3px;
+    box-shadow: 1px 2px 1px -1px rgba(0, 0, 0, 0.13);
+    background-color: white;
     margin: 2px;
-    align-self: flex-start;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+
+    .tr-tagcombobox-tag-content {
+      flex: 1 1 auto;
+      padding: 0 1px;
+    }
+
+    .tr-remove-button {
+      border: 1px solid @tr-default-tag-border-color;
+      border-radius: 3px;
+      margin: 2px;
+      align-self: flex-start;
+    }
+  }
+
+  .tr-tagcombobox-editor {
+    flex: 0 0 auto;
+    max-width: 100%;
+    outline: none;
+    font-family: @tr-editor-font-family;
+    font-size: @tr-editor-font-size;
+    min-height: 1em;
+
+    &:focus,
+    &:not(:empty){
+      min-width: 2px;
+      margin: 2px 3px;
+    }
+
+    &:first-child:last-child:not(:focus):empty:before {
+      content: attr(placeholder);
+      color: @tr-disabled-text-color;
+    }
+  }
+
+  &:not(.open) .tr-dropdown {
+    display: none;
   }
 }
 
-.tr-tagcombobox-editor {
-  flex: 0 0 auto;
-  max-width: 100%;
-  outline: none;
-  font-family: @tr-editor-font-family;
-  font-size: @tr-editor-font-size;
-  min-height: 1em;
-
-  &:focus,
-  &:not(:empty){
-    min-width: 2px;
-    margin: 2px 3px;
-  }
-
-  &:first-child:last-child:not(:focus):empty:before {
-    content: attr(placeholder);
-    color: @tr-disabled-text-color;
-  }
-}
-
-.tr-tagcombobox:not(.open) .tr-dropdown {
-  display: none;
-}
