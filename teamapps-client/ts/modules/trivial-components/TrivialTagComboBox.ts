@@ -182,11 +182,16 @@ export interface TrivialTagComboBoxConfig<E> {
 	 * When typing, preselect the first returned query result.
 	 */
 	preselectFirstQueryResult?: boolean,
+
+	/**
+	 * Text displayed when nothing has been selected/typed.
+	 */
+	placeholderText?: string
 }
 
 export class TrivialTagComboBox<E> implements TrivialComponent {
 
-	public readonly onSelectedEntryChanged = new TrivialEvent<E[]>(this);
+	public readonly onValueChanged = new TrivialEvent<E[]>(this);
 	public readonly onFocus = new TrivialEvent<void>(this);
 	public readonly onBlur = new TrivialEvent<void>(this);
 
@@ -194,7 +199,8 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 
 	private $tagComboBox: HTMLElement;
 	private $dropDown: HTMLElement;
-	private $editor: HTMLElement;
+	private $placeholderText: HTMLElement;
+	private $editor: HTMLInputElement;
 	private $tagArea: HTMLElement;
 	private $trigger: HTMLElement;
 
@@ -239,16 +245,22 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			editingMode: "editable", // one of 'editable', 'disabled' and 'readonly'
 			showDropDownOnResultsOnly: false,
 			twoStepDeletion: false,
+			placeholderText: "",
 			
 			...options
 		};
 		this.dropDownComponent = dropDownComponent;
 
 		this.$tagComboBox = parseHtml(`<div class="tr-tagcombobox tr-input-wrapper">
-            <div class="tr-tagcombobox-tagarea"></div>
+			<div class="tr-tagcombobox-main-area">
+				<div class="placeholder-text"></div>
+				<div class="tr-tagcombobox-tagarea"></div>
+			</div>
             <div class="tr-trigger ${this.config.showTrigger ? '' : 'hidden'}"><span class="tr-trigger-icon"></span></div>
         </div>`);
 		this.$tagArea = this.$tagComboBox.querySelector(':scope .tr-tagcombobox-tagarea');
+		this.$placeholderText = this.$tagComboBox.querySelector(':scope .placeholder-text');
+		this.setPlaceholderText(this.config.placeholderText);
 		this.$trigger = this.$tagComboBox.querySelector(':scope .tr-trigger');
 		this.$trigger.addEventListener("mousedown", () => {
 			this.focus();
@@ -288,7 +300,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 				this.$tagComboBox.classList.remove('focus');
 				this.closeDropDown();
 				if (this.$editor.textContent.trim().length > 0) {
-					this.addSelectedEntry(this.config.freeTextEntryFactory(this.$editor.textContent), true, e);
+					this.addTag(this.config.freeTextEntryFactory(this.$editor.textContent), true, e);
 				}
 				if (this.config.removePartialTagOnBlur && this.currentPartialTag != null) {
 					this.cancelPartialTag();
@@ -303,10 +315,10 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 				this.setTagToBeRemoved(null);
 				const highlightedEntry = this.dropDownComponent.getValue();
 				if (this._isDropDownOpen && highlightedEntry != null) {
-					this.addSelectedEntry(highlightedEntry, true, e);
+					this.addTag(highlightedEntry, true, e);
 					e.preventDefault(); // do not tab away from the tag box nor insert a newline character
 				} else if (this.$editor.textContent.trim().length > 0) {
-					this.addSelectedEntry(this.config.freeTextEntryFactory(this.$editor.textContent), true, e);
+					this.addTag(this.config.freeTextEntryFactory(this.$editor.textContent), true, e);
 					e.preventDefault(); // do not tab away from the tag box nor insert a newline character
 				} else if (this.currentPartialTag) {
 					if (e.shiftKey) { // we do not want the editor to get the focus right back, so we need to position the $editor intelligently...
@@ -410,7 +422,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 				for (let i = 0; i < tagValuesEnteredByUser.length - 1; i++) {
 					const value = tagValuesEnteredByUser[i].trim();
 					if (value.length > 0) {
-						this.addSelectedEntry(this.config.freeTextEntryFactory(value), true, e);
+						this.addTag(this.config.freeTextEntryFactory(value), true, e);
 					}
 					this.$editor.textContent = tagValuesEnteredByUser[tagValuesEnteredByUser.length - 1];
 					selectElementContents(this.$editor, this.$editor.textContent.length, this.$editor.textContent.length);
@@ -450,7 +462,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		this.dropDownComponent.onValueChanged.addListener((eventData) => {
 			if (eventData.finalSelection) {
 				this.setTagToBeRemoved(null);
-				this.addSelectedEntry(eventData.value, true);
+				this.addTag(eventData.value, true);
 				this.closeDropDown();
 			}
 		});
@@ -481,6 +493,8 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		});
 
 		this.popper = createComboBoxPopper(this.$tagComboBox, this.$dropDown, () => this.closeDropDown());
+
+		this.$editor.addEventListener("keyup", () => this.updatePlaceholderTextVisibility());
 	}
 
 	private setTagToBeRemoved(tagToBeRemoved: Tag<E>) {
@@ -529,6 +543,8 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		if (fireChangeEvent) {
 			this.fireChangeEvents(this.getSelectedEntries(), originalEvent);
 		}
+
+		this.updatePlaceholderTextVisibility();
 	}
 
 	private async query(highlightDirection: SelectionDirection = 0) {
@@ -543,10 +559,10 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 	}
 
 	private fireChangeEvents(entries: E[], originalEvent: unknown) {
-		this.onSelectedEntryChanged.fire(entries.map(unProxyEntry), originalEvent);
+		this.onValueChanged.fire(entries.map(unProxyEntry), originalEvent);
 	}
 
-	private addSelectedEntry(entry: E, fireEvent = false, originalEvent?: unknown, forceAcceptance?: boolean) {
+	private addTag(entry: E, fireEvent = false, originalEvent?: unknown, forceAcceptance?: boolean) {
 		if (entry == null) {
 			return; // do nothing
 		}
@@ -599,6 +615,8 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		if (this.config.tagCompleteDecider(entry) && fireEvent) {
 			this.fireChangeEvents(this.getSelectedEntries(), originalEvent);
 		}
+
+		this.updatePlaceholderTextVisibility();
 	}
 
 	private repositionDropDown() {
@@ -684,7 +702,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			.forEach((e) => this.removeTag(e, false));
 		if (entries) {
 			for (let i = 0; i < entries.length; i++) {
-				this.addSelectedEntry(entries[i], false, null, forceAcceptance);
+				this.addTag(entries[i], false, null, forceAcceptance);
 			}
 		}
 	}
@@ -736,6 +754,13 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		return this.$tagComboBox;
 	}
 
+	private updatePlaceholderTextVisibility() {
+		this.$placeholderText.classList.toggle("hidden", this.selectedEntries.length > 0 || !!this.$editor.textContent)
+	}
+
+	private setPlaceholderText(placeholderText: string) {
+		this.$placeholderText.innerText = placeholderText ?? "";
+	}
 }
 
 class Tag<E> {

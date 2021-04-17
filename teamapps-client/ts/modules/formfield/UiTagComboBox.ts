@@ -84,7 +84,8 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 				return !violatesDistinctSetting && !violatesMaxEntriesSetting && !violatesFreeTextSetting;
 			},
 			twoStepDeletion: this._config.twoStepDeletion,
-			preselectFirstQueryResult: config.highlightFirstResultEntry
+			preselectFirstQueryResult: config.highlightFirstResultEntry,
+			placeholderText: config.placeholderText
 		}, new TreeBoxDropdown({
 			queryFunction: (queryString: string) => {
 				this.onTextInput.fire({enteredString: queryString}); // TODO this is definitely the wrong place for this!!
@@ -109,7 +110,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		this.trivialTagComboBox.getMainDomElement().classList.add("UiTagComboBox");
 		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_LINE);
 		this.trivialTagComboBox.getMainDomElement().classList.toggle("wrapping-mode-single-tag-per-line", config.wrappingMode === UiTagComboBox_WrappingMode.SINGLE_TAG_PER_LINE);
-		this.trivialTagComboBox.onSelectedEntryChanged.addListener(() => this.commit());
+		this.trivialTagComboBox.onValueChanged.addListener(() => this.commit());
 		this.trivialTagComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				this.onSpecialKeyPressed.fire({

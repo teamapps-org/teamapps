@@ -131,6 +131,9 @@ export interface TrivialComboBoxConfig<E> {
 	 */
 	preselectFirstQueryResult?: boolean,
 
+	/**
+	 * Text displayed when nothing has been selected/typed.
+	 */
 	placeholderText?: string
 }
 
