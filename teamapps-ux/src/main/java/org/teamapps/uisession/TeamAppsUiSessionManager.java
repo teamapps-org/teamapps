@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,15 +27,7 @@ import com.google.common.collect.Tables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.dto.AbstractServerMessage;
-import org.teamapps.dto.INIT_NOK;
-import org.teamapps.dto.INIT_OK;
-import org.teamapps.dto.MULTI_CMD;
-import org.teamapps.dto.REINIT_NOK;
-import org.teamapps.dto.REINIT_OK;
-import org.teamapps.dto.UiClientInfo;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiSessionClosingReason;
+import org.teamapps.dto.*;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
@@ -43,10 +35,7 @@ import javax.servlet.http.HttpSessionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -140,6 +129,15 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		}
 	}
 
+	public void handleQuery(QualifiedUiSessionId sessionId, int clientMessageId, UiQuery uiQuery) {
+		UiSession session = getSessionById(sessionId);
+		if (session == null) {
+			throw new TeamAppsSessionNotFoundException(sessionId);
+		} else {
+			session.handleQuery(clientMessageId, uiQuery);
+		}
+	}
+
 	public void handleCommandResult(QualifiedUiSessionId sessionId, int clientMessageId, int cmdId, Object result) {
 		UiSession session = getSessionById(sessionId);
 		if (session == null) {
@@ -159,7 +157,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 	}
 
 	public void reinitSession(QualifiedUiSessionId sessionId, int lastReceivedCommandId,
-	                          int maxRequestedCommandId, MessageSender messageSender) {
+							  int maxRequestedCommandId, MessageSender messageSender) {
 		UiSession session = getSessionById(sessionId);
 		if (session != null) {
 			session.reinit(lastReceivedCommandId, maxRequestedCommandId, messageSender);
@@ -248,14 +246,14 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		}
 		for (UiSession inactiveSession : sessionsByActivity.get(false)) {
 			if (inactiveSession.taggedActive) {
-				LOGGER.info("Marking session inactive: {}",  inactiveSession.sessionId);
+				LOGGER.info("Marking session inactive: {}", inactiveSession.sessionId);
 				inactiveSession.taggedActive = false;
 				uiSessionListener.onActivityStateChanged(inactiveSession.sessionId, false);
 			}
 		}
 		for (UiSession activeSession : sessionsByActivity.get(true)) {
 			if (!activeSession.taggedActive) {
-				LOGGER.info("Marking session active: {}",  activeSession.sessionId);
+				LOGGER.info("Marking session active: {}", activeSession.sessionId);
 				activeSession.taggedActive = true;
 				uiSessionListener.onActivityStateChanged(activeSession.sessionId, true);
 			}
@@ -450,7 +448,29 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			}
 			updateClientMessageId(clientMessageId);
 			reviveConnection();
-			sessionListener.onUiEvent(sessionId, event);
+			sessionListener.onUiEvent(sessionId, event)
+					.exceptionally(e -> {
+						LOGGER.error("Exception while handling ui event", e);
+						closeSession(sessionId, UiSessionClosingReason.SERVER_SIDE_ERROR);
+						return null;
+					});
+		}
+
+		public void handleQuery(int clientMessageId, UiQuery query) {
+			this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Recieved query ({}): {}", sessionId.getUiSessionId().substring(0, 8), query.getUiQueryType());
+			}
+			updateClientMessageId(clientMessageId);
+			reviveConnection();
+			sessionListener.onUiQuery(sessionId, query)
+					.whenComplete((result, throwable) -> {
+						sendAsyncWithErrorHandler(new QUERY_RESULT(clientMessageId, result));
+					}).exceptionally(e -> {
+						LOGGER.error("Exception while handling ui event", e);
+						closeSession(sessionId, UiSessionClosingReason.SERVER_SIDE_ERROR);
+						return null;
+					});
 		}
 
 		public void handleCommandResult(int clientMessageId, int cmdId, Object result) {

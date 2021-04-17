@@ -47,12 +47,11 @@ export class TrivialTree<E> implements TrivialComponent{
     private entries: E[];
     private selectedEntryId: any;
 
-    private $spinners = $();
     private $componentWrapper: JQuery;
 
-    constructor(options: TrivialTreeConfig<E> = {}) {
+    constructor(options: TrivialTreeConfig<E>) {
 	    let defaultIdFunction = (entry:E) => entry ? (entry as any).id : null;
-	    this.config = $.extend(<TrivialTreeConfig<E>> {
+	    this.config = $.extend({
             idFunction: defaultIdFunction,
             inputValueFunction: defaultIdFunction,
             childrenProperty: "children",
@@ -61,11 +60,6 @@ export class TrivialTree<E> implements TrivialComponent{
                 resultCallback([])
             },
             expandedProperty: 'expanded',
-            entryRenderingFunction: (entry: E, depth: number) => {
-                const defaultRenderers = [DEFAULT_RENDERING_FUNCTIONS.icon2Lines, DEFAULT_RENDERING_FUNCTIONS.iconSingleLine];
-                const renderer = defaultRenderers[Math.min(depth, defaultRenderers.length - 1)];
-                return renderer(entry);
-            },
             spinnerTemplate: DEFAULT_TEMPLATES.defaultSpinnerTemplate,
             noEntriesTemplate: DEFAULT_TEMPLATES.defaultNoEntriesTemplate,
             entries: null,
@@ -90,20 +84,21 @@ export class TrivialTree<E> implements TrivialComponent{
                 const direction = e.which == keyCodes.up_arrow ? -1 : 1;
                 if (this.entries != null) {
                     if (this.config.directSelectionViaArrowKeys) {
-                        this.treeBox.selectNextEntry(direction, false, e, true);
+                        this.treeBox.selectNextEntry(direction, false, false, () => true, true, e);
                     } else {
-                        this.treeBox.highlightNextEntry(direction, false);
+                        this.treeBox.selectNextEntry(direction, false);
                     }
                     return false; // some browsers move the caret to the beginning on up key
                 }
             } else if (e.which == keyCodes.left_arrow || e.which == keyCodes.right_arrow) {
                 this.treeBox.setSelectedNodeExpanded(e.which == keyCodes.right_arrow);
             } else if (e.which == keyCodes.enter) {
-                this.treeBox.setSelectedEntryById(this.config.idFunction(this.treeBox.getHighlightedEntry()), true);
+                this.treeBox.setSelectedEntryById(this.config.idFunction(this.treeBox.getSelectedEntry()), true);
             }
         });
 
-        this.treeBox = new TrivialTreeBox(this.$componentWrapper, this.config);
+        this.treeBox = new TrivialTreeBox(this.config);
+        this.$componentWrapper.append(this.treeBox.getMainDomElement());
         this.treeBox.onNodeExpansionStateChanged.addListener((node: E)=> {
             this.onNodeExpansionStateChanged.fire(node);
         });
@@ -119,9 +114,7 @@ export class TrivialTree<E> implements TrivialComponent{
 
     public updateEntries(newEntries: E[]) {
         this.entries = newEntries;
-        this.$spinners.remove();
-        this.$spinners = $();
-        this.treeBox.updateEntries(newEntries);
+        this.treeBox.setEntries(newEntries);
     }
 
     private findEntries(filterFunction: ((node: E) => boolean)) {
@@ -197,7 +190,7 @@ export class TrivialTree<E> implements TrivialComponent{
         this.$componentWrapper.remove();
     };
 
-    getMainDomElement(): Element {
+    getMainDomElement(): HTMLElement {
         return this.$componentWrapper[0];
     }
 }

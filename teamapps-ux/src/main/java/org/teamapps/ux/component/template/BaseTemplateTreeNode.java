@@ -30,8 +30,9 @@ import java.util.stream.Collectors;
 public class BaseTemplateTreeNode<PAYLOAD> extends BaseTemplateRecord<PAYLOAD> implements TreeNode {
 
 	private BaseTemplateTreeNode<PAYLOAD> parent;
-	private boolean lazyChildren;
 	private boolean expanded;
+	private boolean lazyChildren;
+	private boolean selectable = true;
 
 	public BaseTemplateTreeNode() {
 	}
@@ -77,6 +78,7 @@ public class BaseTemplateTreeNode<PAYLOAD> extends BaseTemplateRecord<PAYLOAD> i
 		copy.setParent(parent);
 		copy.setLazyChildren(lazyChildren);
 		copy.setExpanded(expanded);
+		copy.setSelectable(selectable);
 		return copy;
 	}
 
@@ -111,6 +113,15 @@ public class BaseTemplateTreeNode<PAYLOAD> extends BaseTemplateRecord<PAYLOAD> i
 
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
+	}
+
+	@Override
+	public boolean isSelectable() {
+		return selectable;
+	}
+
+	public void setSelectable(boolean selectable) {
+		this.selectable = selectable;
 	}
 
 	public static <PAYLOAD> List<BaseTemplateTreeNode<PAYLOAD>> copyTree(List<BaseTemplateTreeNode<PAYLOAD>> tree) {

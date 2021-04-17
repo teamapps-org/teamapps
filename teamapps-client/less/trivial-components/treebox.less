@@ -40,7 +40,6 @@
 
   .tr-tree-entryTree {
     flex: 1 1 300px;
-    overflow: auto;
   }
 
   .tr-tree-entry-outer-wrapper {
@@ -81,18 +80,17 @@
 
     > .tr-tree-entry-children-wrapper {
       padding-left: 0;
-      display: none;
+      overflow-y: hidden; // especially when collapsed!
       position: relative; // for lazy children spinner
-      min-height: 20px; // for displaying the spinner...
     }
-
-    //&.expanded > .tr-tree-entry-children-wrapper {
-    //  display: block;
-    //}
 
   }
 
   &.hide-expanders .tr-tree-expander {
     display: none;
+  }
+
+  &.highlight-hovered-entries .tr-tree-entry-outer-wrapper > .tr-tree-entry-and-expander-wrapper:hover:not(.tr-selected-entry) {
+      background-color: @tr-highlight-color;
   }
 }

@@ -54,7 +54,7 @@ function normalizeForIE11 (node:Node) {
 	normalizeForIE11(node.nextSibling);
 }
 
-export function highlightMatches(node: Element|JQuery, searchString:string, options: HighlightOptions) {
+export function highlightMatches(node: Element|Element[]|NodeListOf<Element>|JQuery, searchString:string, options: HighlightOptions) {
 	let defaultOptions: HighlightOptions = {
 		highlightClassName: 'tr-highlighted-text',
 		matchingMode: 'contains',

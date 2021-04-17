@@ -144,6 +144,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (treeNodeInfo != null) {
 			uiTreeRecord.setExpanded(treeNodeInfo.isExpanded());
 			uiTreeRecord.setLazyChildren(treeNodeInfo.isLazyChildren());
+			uiTreeRecord.setSelectable(treeNodeInfo.isSelectable());
 		}
 
 		return uiTreeRecord;

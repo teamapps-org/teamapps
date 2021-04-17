@@ -388,16 +388,19 @@ export function applyDisplayMode($outer: HTMLElement, $inner: HTMLElement, displ
 	let availableWidth = $outer.offsetWidth - 2 * options.padding;
 	let availableHeight = $outer.offsetHeight - 2 * options.padding;
 
-	let size = calculateDisplayModeInnerSize({width: availableWidth, height: availableHeight}, options.innerPreferredDimensions, displayMode, options.zoomFactor, options.considerScrollbars);
+	let size = calculateDisplayModeInnerSize({
+		width: availableWidth,
+		height: availableHeight
+	}, options.innerPreferredDimensions, displayMode, options.zoomFactor, options.considerScrollbars);
 	$inner.style.width = size.width + "px";
 	$inner.style.height = size.height + "px";
 }
 
 export function calculateDisplayModeInnerSize(containerDimensions: { width: number, height: number },
-                                              innerPreferredDimensions: { width: number, height: number },
-                                              displayMode: UiPageDisplayMode | any,
-                                              zoomFactor: number = 1,
-                                              considerScrollbars = false
+											  innerPreferredDimensions: { width: number, height: number },
+											  displayMode: UiPageDisplayMode | any,
+											  zoomFactor: number = 1,
+											  considerScrollbars = false
 ): { width: number, height: number } {
 	let viewPortAspectRatio = containerDimensions.width / containerDimensions.height;
 	let imageAspectRatio = innerPreferredDimensions.width / innerPreferredDimensions.height;
@@ -826,7 +829,9 @@ export function removeDangerousTags(value: string) {
 }
 
 export function selectElementContents(domElement: Node, start?: number, end?: number) {
+	console.log("selectElementContents", domElement, start, end);
 	if (domElement == null || !document.body.contains(domElement)) {
+		console.log("null or detached!")
 		return;
 	}
 	domElement = domElement.firstChild || domElement;
@@ -845,6 +850,7 @@ export function selectElementContents(domElement: Node, start?: number, end?: nu
 		// ignore (ie 11 problem, can be ignored even in ie 11)
 	}
 	sel.addRange(range);
+	console.log("end", document.activeElement)
 }
 
 export function parseHtml<E extends HTMLElement>(htmlString: string): E {
@@ -877,7 +883,15 @@ export function parseSvg<E extends Element>(htmlString: string): E {
 	return $(htmlString)[0] as unknown as E;
 }
 
-export function prependChild(parent: Element, child: Element) {
+export function elementIndex(node: Element) {
+	let i = 0;
+	while ((node = node.previousElementSibling) != null) {
+		i++;
+	}
+	return i;
+}
+
+export function prependChild(parent: Node, child: Node) {
 	if (parent.childNodes.length > 0) {
 		parent.insertBefore(child, parent.firstChild);
 	} else {
@@ -885,11 +899,11 @@ export function prependChild(parent: Element, child: Element) {
 	}
 }
 
-export function insertBefore(newNode: Element, referenceNode: Element) {
+export function insertBefore(newNode: Node, referenceNode: Node) {
 	referenceNode.parentNode.insertBefore(newNode, referenceNode);
 }
 
-export function insertAfter(newNode: Element, referenceNode: Element) {
+export function insertAfter(newNode: Node, referenceNode: Node) {
 	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling /* may be null ==> inserted at end!*/);
 }
 
@@ -907,11 +921,23 @@ export function outerHeightIncludingMargins(el: HTMLElement) {
 	return height;
 }
 
-export function closestAncestor(el: HTMLElement, selector: string, includeSelf = false) {
+export function addDelegatedEventListener<K extends keyof HTMLElementEventMap>(rootElement: HTMLElement, selector: string, type: K, listener: (element: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
+	rootElement.addEventListener(type, ev => {
+		const target = selector != null ? closestAncestor(ev.target as HTMLElement, selector, true, rootElement) : ev.target as HTMLElement;
+		if (target != null) {
+			listener(target, ev);
+		}
+	}, options)
+}
+
+export function closestAncestor(el: HTMLElement, selector: string, includeSelf = false, $root: Element = document.body) {
 	let currentNode: HTMLElement = (includeSelf ? el : el.parentNode) as HTMLElement;
 	while (currentNode) {
 		if (currentNode.matches(selector)) {
 			return currentNode;
+		}
+		if (currentNode == $root) {
+			break;
 		}
 		currentNode = currentNode.parentNode as HTMLElement;
 	}
@@ -1295,6 +1321,59 @@ export function animatePageTransition(outEl: HTMLElement, inEl: HTMLElement, ani
 export function pageTransition(outEl: HTMLElement, inEl: HTMLElement, pageTransition: UiPageTransition, animationDuration: number = 300, callback?: () => any) {
 	let s = UiPageTransition[pageTransition].toLowerCase().replace(/_{1,1}([a-z])/g, (g0, g1) => g1.toUpperCase()) as keyof typeof pageTransitionAnimationPairs;
 	animatePageTransition(outEl, inEl, s, animationDuration, callback);
+}
+
+export function toggleElementCollapsed($element: HTMLElement, collapsed: boolean, animationDuration: number = 0, hiddenClass: string = "hidden", completeHandler?: () => any) {
+	if (collapsed) {
+		if (animationDuration > 0) {
+			animateCollapse($element, true, animationDuration, () => {
+				$element.classList.add(hiddenClass);
+				completeHandler?.();
+			});
+		} else {
+			$element.classList.add(hiddenClass);
+			completeHandler?.();
+		}
+	} else {
+		if (animationDuration > 0) {
+			$element.classList.remove(hiddenClass)
+			animateCollapse($element, false, animationDuration, completeHandler);
+		} else {
+			$element.classList.remove(hiddenClass);
+			completeHandler?.();
+		}
+	}
+}
+
+export function animateCollapse(element: HTMLElement, collapsed: boolean, duration: number, onTransitionEnd?: () => void) {
+	const isCollapsed = element.getAttribute("ta-collapsed") != null;
+	if (isCollapsed == collapsed) {
+		onTransitionEnd?.();
+		return;
+	}
+	const initialMaxHeight = collapsed ? element.scrollHeight + "px" : "0px";
+	const targetMaxHeight = collapsed ? "0px" : element.scrollHeight + "px";
+	if (element.style.maxHeight == null || element.style.maxHeight == "") {
+		element.style.maxHeight = initialMaxHeight;
+	}
+	const oldTransitionStyle = element.style.transition;
+	element.style.transition = `max-height ${duration}ms`;
+
+	let transitionEndListener = (ev:Event) => {
+		["transitionend", "transitioncancel"].forEach(eventName => element.removeEventListener(eventName, transitionEndListener));
+		window.clearTimeout(timeout);
+		element.style.transition = oldTransitionStyle;
+		if (!collapsed) {
+			element.style.removeProperty("max-height");
+		}
+		onTransitionEnd?.();
+	};
+	["transitionend", "transitioncancel"].forEach(eventName => element.addEventListener(eventName, transitionEndListener));
+	let timeout = window.setTimeout(transitionEndListener, duration + 100); // make sure the listener is removed no matter what!
+
+	element.offsetHeight; // force reflow to make sure there is a transition animation
+	element.style.maxHeight = targetMaxHeight;
+	element.toggleAttribute("ta-collapsed", collapsed);
 }
 
 export function css(el: HTMLElement, values: object) {

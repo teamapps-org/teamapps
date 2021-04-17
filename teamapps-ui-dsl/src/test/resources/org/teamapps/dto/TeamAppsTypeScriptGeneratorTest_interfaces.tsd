@@ -13,10 +13,12 @@ export interface AConfig {
 	_type?: string;
 	a: string;
 	b?: string
+	z: (query: A_ZQuery) => Promise<string[]>
 }
 
 export interface ACommandHandler {
-	x(x: string): void;
+	x1(x: string): any;
+	x2(x: string): Promise<number[]>|number[];
 }
 
 export interface AEventSource {
@@ -27,3 +29,6 @@ export interface A_YEvent extends UiEvent {
 	y: string
 }
 
+export interface A_ZQuery extends UiQuery {
+	s: string
+}

@@ -36,6 +36,9 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 		this.$field.type = "password";
 		if (!config.autofill) {
 			this.$field.autocomplete = "new-password";
+			this.$field.setAttribute("autocorrect", "off");
+			this.$field.setAttribute("autocapitalize", "off");
+			this.$field.setAttribute("spellcheck", "off");
 		}
 	}
 

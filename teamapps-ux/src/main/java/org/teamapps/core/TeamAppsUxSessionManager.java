@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,13 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiQuery;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
-import org.teamapps.uisession.QualifiedUiSessionId;
-import org.teamapps.uisession.UiCommandExecutor;
-import org.teamapps.uisession.UiSessionListener;
+import org.teamapps.uisession.*;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.session.ClientInfo;
@@ -64,6 +63,7 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 		public SessionContext getSessionContextById(QualifiedUiSessionId sessionId) {
 			return sessionContextById.get(sessionId);
 		}
+
 		@Override
 		public File getUploadedFileByUuid(String uuid) {
 			return uploadManager.getUploadedFile(uuid);
@@ -145,20 +145,40 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 	}
 
 	@Override
-	public void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
+	public CompletableFuture<Void> onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
 		SessionContext sessionContext = sessionContextById.get(sessionId);
 		if (sessionContext != null) {
-			sessionContext.runWithContext(() -> {
+			return sessionContext.runWithContext(() -> {
 				String uiComponentId = event.getComponentId();
 				ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
 				if (clientObject != null) {
-					clientObject.handleUiEvent(event);  // TODO #custom
+					clientObject.handleUiEvent(event);
+				} else {
+					throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
 				}
-			}).exceptionally(e -> {
-				LOGGER.error("Exception while handling ui event", e);
-				commandExecutor.closeSession(sessionId, UiSessionClosingReason.SERVER_SIDE_ERROR);
-				return null;
 			});
+		} else {
+			return CompletableFuture.failedFuture(new TeamAppsSessionNotFoundException(sessionId));
+		}
+	}
+
+	@Override
+	public CompletableFuture<?> onUiQuery(QualifiedUiSessionId sessionId, UiQuery query) {
+		SessionContext sessionContext = sessionContextById.get(sessionId);
+		if (sessionContext != null) {
+			return sessionContext.runWithContext(() -> {
+				String uiComponentId = query.getComponentId();
+				ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
+				if (clientObject != null) {
+					return clientObject.handleUiQuery(query);
+				} else {
+					return CompletableFuture.failedFuture(new TeamAppsComponentNotFoundException(sessionId, uiComponentId));
+				}
+			}).thenCompose(
+					completableFuture -> completableFuture
+			);
+		} else {
+			return CompletableFuture.failedFuture(new TeamAppsSessionNotFoundException(sessionId));
 		}
 	}
 

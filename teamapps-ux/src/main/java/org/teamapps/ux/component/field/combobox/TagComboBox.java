@@ -31,13 +31,10 @@ import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.component.tree.TreeNodeInfoExtractor;
 import org.teamapps.ux.model.ComboBoxModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, List<RECORD>> {
+public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TagComboBox.class);
 
@@ -47,6 +44,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 	private int maxEntries; // if 0, then the list is unbounded
 	private TagBoxWrappingMode wrappingMode = TagBoxWrappingMode.MULTI_LINE;
 	private boolean distinct = false; // if true, do not allow the same entry to be selected multiple times!
+	private boolean twoStepDeletion = false; // This will cause tags to not directly be deleted when pressing the backspace or delete key, but first marked for deletion.
 
 	private List<String> freeTextEntries = new ArrayList<>();
 
@@ -62,6 +60,12 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 	public TagComboBox(ComboBoxModel<RECORD> model) {
 		super(model);
 		init();
+	}
+
+	@Override
+	protected Set<RECORD> getSelectedRecords() {
+		List<RECORD> value = getValue();
+		return value != null ? Set.copyOf(value) : Set.of();
 	}
 
 	private void init() {
@@ -111,6 +115,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 		comboBox.setMaxEntries(maxEntries);
 		comboBox.setWrappingMode(this.wrappingMode.toUiWrappingMode());
 		comboBox.setDistinct(distinct);
+		comboBox.setTwoStepDeletion(twoStepDeletion);
 		return comboBox;
 	}
 
@@ -228,5 +233,14 @@ public class TagComboBox<RECORD> extends AbstractComboBox<TagComboBox, RECORD, L
 
 	public void setFreeTextEntries(List<String> freeTextEntries) {
 		this.freeTextEntries = freeTextEntries;
+	}
+
+	public boolean isTwoStepDeletion() {
+		return twoStepDeletion;
+	}
+
+	public void setTwoStepDeletion(boolean twoStepDeletion) {
+		this.twoStepDeletion = twoStepDeletion;
+		reRenderIfRendered();
 	}
 }

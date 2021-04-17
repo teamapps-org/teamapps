@@ -4,8 +4,9 @@
  */
 export const typescriptDeclarationFixConstant = 1;
 
-import {UiEvent} from "./UiEvent";
 import {UiCommand} from "./UiCommand";
+import {UiEvent} from "./UiEvent";
+import {UiQuery} from "./UiQuery";
 import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
 
 
@@ -15,4 +16,5 @@ export interface AConfig {
 	b?: string;
 	c?: number[]
 }
+
 

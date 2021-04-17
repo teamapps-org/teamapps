@@ -88,6 +88,15 @@
                             <arguments>build</arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>test</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

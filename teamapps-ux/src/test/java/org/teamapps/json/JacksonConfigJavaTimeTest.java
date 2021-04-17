@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +41,12 @@ public class JacksonConfigJavaTimeTest {
 
 	@Test
 	public void localDateTime() throws Exception {
+		assertThat(teamAppsObjectMapper.writeValueAsString(LocalDate.of(2020, 1, 1))).isEqualTo("[2020,1,1]");
+		assertThat(teamAppsObjectMapper.readValue("[2020,1,1]", LocalDate.class)).isEqualTo(LocalDate.of(2020, 1, 1));
+	}
+
+	@Test
+	public void localDate() throws Exception {
 		assertThat(teamAppsObjectMapper.writeValueAsString(LocalDateTime.of(2020, 1, 1, 1, 1))).isEqualTo("[2020,1,1,1,1]");
 		assertThat(teamAppsObjectMapper.readValue("[2020,1,1,1,1]", LocalDateTime.class)).isEqualTo(LocalDateTime.of(2020, 1, 1, 1, 1));
 	}

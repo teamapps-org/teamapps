@@ -110,7 +110,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
     private numberFormat: Intl.NumberFormat;
     private numberParser: NumberParser;
 
-    constructor(originalInput: JQuery|Element, options: TrivialUnitBoxConfig<U> = {}) {
+    constructor(originalInput: JQuery|Element, options: TrivialUnitBoxConfig<U>) {
         this.config = $.extend(<TrivialUnitBoxConfig<U>> {
             unitValueProperty: 'code',
             unitIdProperty: 'code',
@@ -200,7 +200,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
                 if (keyCodes.isModifierKey(e)) {
                     return;
                 } else if (e.which == keyCodes.tab) {
-                    const highlightedEntry = this.listBox.getHighlightedEntry();
+                    const highlightedEntry = this.listBox.getSelectedEntry();
                     if (this._isDropDownOpen && highlightedEntry) {
                         this.setSelectedEntry(highlightedEntry, true, e);
                     }
@@ -211,7 +211,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
                 if (e.which == keyCodes.up_arrow || e.which == keyCodes.down_arrow) {
                     const direction = e.which == keyCodes.up_arrow ? -1 : 1;
                     if (this._isDropDownOpen) {
-                        this.listBox.highlightNextEntry(direction);
+                        this.listBox.selectNextEntry(direction);
                     } else {
                         this.openDropDown();
                         this.query(direction);
@@ -219,7 +219,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
                     return false; // some browsers move the caret to the beginning on up key
                 } else if (this._isDropDownOpen && e.which == keyCodes.enter) {
                     e.preventDefault(); // do not submit form
-                    this.setSelectedEntry(this.listBox.getHighlightedEntry(), true, e);
+                    this.setSelectedEntry(this.listBox.getSelectedEntry(), true, e);
                     this.closeDropDown();
                 } else if (e.which == keyCodes.escape) {
                     this.closeDropDown();
@@ -301,7 +301,8 @@ export class TrivialUnitBox<U> implements TrivialComponent {
             }
         });
 
-        this.listBox = new TrivialTreeBox(this.$dropDown, this.config);
+        this.listBox = new TrivialTreeBox(this.config);
+        this.$dropDown.append(this.listBox.getMainDomElement());
         this.listBox.onSelectedEntryChanged.addListener((selectedEntry: U, eventSource, originalEvent?: unknown) => {
             if (selectedEntry) {
                 this.setSelectedEntry(selectedEntry, true, originalEvent);
@@ -407,20 +408,19 @@ export class TrivialUnitBox<U> implements TrivialComponent {
         this.$spinners = this.$spinners.add($spinner);
 
         // call queryFunction asynchronously to be sure the input field has been updated before the result callback is called. Note: the query() method is called on keydown...
-        setTimeout(() => {
-            this.config.queryFunction(this.getQueryString(), (newEntries: U[]) => {
-                this.updateEntries(newEntries);
+        setTimeout(async () => {
+            let newEntries = await this.config.queryFunction(this.getQueryString());
+            this.updateEntries(newEntries);
 
-                const queryString = this.getQueryString();
-                if (queryString.length > 0) {
-                    this.listBox.highlightTextMatches(queryString);
-                }
-                this.listBox.highlightNextEntry(highlightDirection);
+            const queryString = this.getQueryString();
+            if (queryString.length > 0) {
+                this.listBox.highlightTextMatches(queryString);
+            }
+            this.listBox.selectNextEntry(highlightDirection);
 
-                if (this._isDropDownOpen) {
-                    this.openDropDown(); // only for repositioning!
-                }
-            });
+            if (this._isDropDownOpen) {
+                this.openDropDown(); // only for repositioning!
+            }
         });
     }
 
@@ -544,7 +544,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
         this.entries = newEntries;
         this.$spinners.remove();
         this.$spinners = $();
-        this.listBox.updateEntries(newEntries);
+        this.listBox.setEntries(newEntries);
     }
 
     public getSelectedEntry(): U {
@@ -596,7 +596,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
         this.$dropDown.remove();
     }
 
-    getMainDomElement(): Element {
+    getMainDomElement(): HTMLElement {
         return this.$unitBox[0];
     }
 

@@ -30,6 +30,7 @@ class UiHierarchicalClientRecord extends UiIdentifiableClientRecord {
 	Integer parentId;
 	boolean expanded;
 	boolean lazyChildren;
+	boolean selectable = true;
 }
 
 class UiTreeRecord extends UiHierarchicalClientRecord {

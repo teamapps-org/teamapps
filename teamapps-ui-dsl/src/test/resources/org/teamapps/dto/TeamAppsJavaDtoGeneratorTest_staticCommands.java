@@ -39,6 +39,7 @@ public abstract class A implements UiObject {
 
 
 
+
 	public static class ACommand implements UiCommand<Void> {
 
 		protected String b;
@@ -72,8 +73,5 @@ public abstract class A implements UiObject {
 		}
 
 	}
-
-
-
 
 }

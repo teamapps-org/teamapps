@@ -213,12 +213,13 @@ class ItemGroup {
 		$itemContainer.style.padding = config.verticalPadding + "px " + config.horizontalPadding + "px";
 
 		this.itemRenderer = context.templateRegistry.createTemplateRenderer(config.itemTemplate);
-		this.trivialTreeBox = new TrivialTreeBox<UiIdentifiableClientRecordConfig>($itemContainer, {
+		this.trivialTreeBox = new TrivialTreeBox<UiIdentifiableClientRecordConfig>({
 			entryRenderingFunction: (entry) => this.itemRenderer.render(entry.values),
 			spinnerTemplate: DEFAULT_TEMPLATES.defaultSpinnerTemplate,
 			entries: config.items,
 			idFunction: entry => entry && entry.id
 		});
+		$itemContainer.append(this.trivialTreeBox.getMainDomElement());
 		this.trivialTreeBox.onSelectedEntryChanged.addListener(() => {
 			this.onItemClicked.fire(this.trivialTreeBox.getSelectedEntry());
 		});
@@ -231,7 +232,7 @@ class ItemGroup {
 
 	private filter() {
 		const matchingElements = this.filterItems(this.filterString);
-		this.trivialTreeBox.updateEntries(matchingElements);
+		this.trivialTreeBox.setEntries(matchingElements);
 		if (matchingElements.length < 100) {
 			this.trivialTreeBox.highlightTextMatches(this.filterString);
 		}

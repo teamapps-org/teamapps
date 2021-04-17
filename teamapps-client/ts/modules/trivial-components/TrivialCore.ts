@@ -39,7 +39,7 @@ import * as Levenshtein from "levenshtein";
 import KeyboardEventBase = JQuery.KeyboardEventBase;
 
 export interface TrivialComponent {
-	getMainDomElement(): Element;
+	getMainDomElement(): HTMLElement;
 
 	destroy(): void;
 }
@@ -60,16 +60,7 @@ export type Match = {
 
 export type HighlightDirection = number | null | undefined;
 export type NavigationDirection = "up" | "left" | "down" | "right";
-export type ResultCallback<E> = (entries: E[]) => void;
-
-/**
- * A function used to retrieve the entries ("suggestions") to be displayed in the dropdown box.
- * Does _not_ return any result. The entries need to be provided via the `resultCallback` function.
- *
- * @param queryString the text currently entered by the user
- * @param resultCallback the callback function to call with the entries to display in the dropdown
- */
-export type QueryFunction<E> = (queryString: string, resultCallback: ResultCallback<E>) => void;
+export type QueryFunction<E> = (queryString: string) => E[] | Promise<E[]>;
 
 /**
  * Used to render an entry.
@@ -135,54 +126,6 @@ export interface DefaultCurrencyEntryStructure {
 }
 
 export const DEFAULT_RENDERING_FUNCTIONS = {
-	image2Lines: (entry: DefaultEntryStructure) => {
-		entry = entry || {};
-		return `<div class="tr-template-image-2-lines">  
-            <div class="img-wrapper" style="background-image: url('${entry.imageUrl || ''}')"></div>
-            <div class="content-wrapper tr-editor-area">
-                <div class="main-line">${entry.displayValue || ''}</div>
-                <div class="additional-info">${entry.additionalInfo || ''}</div>
-            </div>
-        </div>`
-	},
-	roundImage2LinesColorBubble: (entry: DefaultEntryStructure) => {
-		entry = entry || {};
-		return `<div class="tr-template-round-image-2-lines-color-bubble">  
-            ${entry.imageUrl != null ? `<div class="img-wrapper" style="background-image: url('${entry.imageUrl || ''}')"></div>` : ''} 
-            <div class="content-wrapper tr-editor-area">
-                <div class="main-line">${entry.displayValue || ''}</div>
-                <div class="additional-info">
-                    ${entry.statusColor != null ? `<span class="status-bubble" style="background-color: ${entry.statusColor || ''}"></span>` : ''}
-                    ${entry.additionalInfo || ''}
-                </div> 
-            </div>
-        </div>`;
-	},
-	icon2Lines: (entry: DefaultEntryStructure) => {
-		entry = entry || {};
-		return `<div class="tr-template-icon-2-lines">
-          <div class="img-wrapper" style="background-image: url('${entry.imageUrl || ''}')"></div>
-          <div class="content-wrapper tr-editor-area"> 
-            <div class="main-line">${entry.displayValue || ''}</div> 
-            <div class="additional-info">${entry.additionalInfo || ''}</div>
-          </div>
-        </div>`;
-	},
-	iconSingleLine: (entry: DefaultEntryStructure) => {
-		entry = entry || {};
-		return `<div class="tr-template-icon-single-line">
-          <div class="img-wrapper" style="background-image: url('${entry.imageUrl || ''}')"></div>
-          <div class="content-wrapper tr-editor-area">${entry.displayValue || ''}</div>
-        </div>`;
-	},
-	singleLine: (entry: DefaultEntryStructure) => {
-		entry = entry || {};
-		return `<div class="tr-template-single-line">
-          <div class="content-wrapper tr-editor-area"> 
-            <div>${entry.displayValue || ''}</div> 
-          </div>
-        </div>`;
-	},
 	currencySingleLineShort: (entry: DefaultCurrencyEntryStructure) => {
 		entry = entry || {};
 		return `<div class="tr-template-currency-single-line-short">
@@ -223,8 +166,8 @@ export const DEFAULT_TEMPLATES = {
 };
 
 export function wrapWithDefaultTagWrapper(entryHtml: string, deleteButton = true) {
-	return (`<div class="tr-tagbox-default-wrapper-template">
-        <div class="tr-tagbox-tag-content">
+	return (`<div class="tr-tagcombobox-default-wrapper-template">
+        <div class="tr-tagcombobox-tag-content">
             ${entryHtml}
         </div>
         ${deleteButton ? '<div class="tr-remove-button"></div>' : ''}
@@ -247,8 +190,8 @@ export function defaultListQueryFunctionFactory<E>(entries: E[], properties: (st
 		return visibleEntries;
 	}
 
-	return function (queryString: string, resultCallback: ResultCallback<E>) {
-		resultCallback(filterElements(queryString));
+	return function (queryString: string) {
+		return filterElements(queryString);
 	}
 }
 
@@ -287,7 +230,7 @@ export function defaultEntryMatchingFunctionFactory(searchedPropertyNames: strin
 	};
 }
 
-export function defaultTreeQueryFunctionFactory(topLevelEntries: any[] | (() => any[]), entryMatchingFunction: (entry: any, queryString: string, nodeDepth: number) => boolean, childrenPropertyName: string, expandedPropertyName: string) {
+export function defaultTreeQueryFunctionFactory(topLevelEntries: any[] | (() => any[]), entryMatchingFunction: (entry: any, queryString: string, nodeDepth: number) => boolean, childrenPropertyName: string, expandedPropertyName: string): QueryFunction<any> {
 
 	function findMatchingEntriesAndTheirAncestors(entry: any, queryString: string, nodeDepth: number) {
 		const entryProxy = createProxy(entry);
@@ -312,10 +255,10 @@ export function defaultTreeQueryFunctionFactory(topLevelEntries: any[] | (() => 
 		return matchesItself || hasMatchingChildren ? entryProxy : null;
 	}
 
-	return function (queryString: string, resultCallback: (entries: any[]) => void) {
+	return function (queryString: string) {
 		let theTopLevelEntries = typeof topLevelEntries === 'function' ? topLevelEntries() : topLevelEntries;
 		if (!queryString) {
-			resultCallback(theTopLevelEntries);
+			return theTopLevelEntries;
 		} else {
 			const matchingEntries: any[] = [];
 			for (let i = 0; i < theTopLevelEntries.length; i++) {
@@ -325,7 +268,7 @@ export function defaultTreeQueryFunctionFactory(topLevelEntries: any[] | (() => 
 					matchingEntries.push(entryProxy);
 				}
 			}
-			resultCallback(matchingEntries);
+			return matchingEntries;
 		}
 	}
 }
@@ -509,7 +452,7 @@ export function minimallyScrollTo(element: Element | JQuery<Element>, target: El
 }
 
 export function setTimeoutOrDoImmediately(f: Function, delay?: number): number {
-	if (delay != null) {
+	if (delay != null && delay > 0) {
 		return window.setTimeout(f(), delay);
 	} else {
 		return void f();

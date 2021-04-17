@@ -23,20 +23,26 @@ public class TreeNodeInfoImpl<PARENT> implements TreeNodeInfo {
 
 	private final PARENT parent;
 	private final boolean isExpanded;
+	private final boolean selectable;
 	private final boolean lazyChildren;
 
-	public TreeNodeInfoImpl(PARENT parent, boolean isExpanded, boolean lazyChildren) {
-		this.parent = parent;
-		this.isExpanded = isExpanded;
-		this.lazyChildren = lazyChildren;
-	}
-
 	public TreeNodeInfoImpl(PARENT parent) {
-		this(parent, false, false);
+		this(parent, false, true, false);
 	}
 
 	public TreeNodeInfoImpl(PARENT parent, boolean isExpanded) {
-		this(parent, isExpanded, false);
+		this(parent, isExpanded, true, false);
+	}
+
+	public TreeNodeInfoImpl(PARENT parent, boolean isExpanded, boolean selectable) {
+		this(parent, isExpanded, selectable, false);
+	}
+
+	public TreeNodeInfoImpl(PARENT parent, boolean isExpanded, boolean selectable, boolean lazyChildren) {
+		this.parent = parent;
+		this.isExpanded = isExpanded;
+		this.selectable = selectable;
+		this.lazyChildren = lazyChildren;
 	}
 
 	@Override
@@ -47,6 +53,11 @@ public class TreeNodeInfoImpl<PARENT> implements TreeNodeInfo {
 	@Override
 	public boolean isExpanded() {
 		return isExpanded;
+	}
+
+	@Override
+	public boolean isSelectable() {
+		return selectable;
 	}
 
 	@Override
