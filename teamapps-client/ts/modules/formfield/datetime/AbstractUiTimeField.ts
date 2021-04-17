@@ -35,7 +35,9 @@ import {
 } from "../../../generated/AbstractUiTimeFieldConfig";
 import {parseHtml} from "../../Common";
 import {UiDateTimeFormatDescriptorConfig} from "../../../generated/UiDateTimeFormatDescriptorConfig";
-import {LocalDateTime} from "../../util/LocalDateTime";
+import {LocalDateTime} from "../../datetime/LocalDateTime";
+import {TreeBoxDropdown} from "../../trivial-components/dropdown/TreeBoxDropdown";
+import {TrivialTreeBox} from "../../trivial-components/TrivialTreeBox";
 
 
 export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V> extends UiField<C, V> implements AbstractUiTimeFieldEventSource, AbstractUiTimeFieldCommandHandler {
@@ -43,36 +45,28 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {throttlingMode: "debounce", delay: 250});
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {throttlingMode: "debounce", delay: 250});
 
-	private $originalInput: HTMLElement;
 	protected trivialComboBox: TrivialComboBox<LocalDateTime>;
 	protected timeRenderer: (time: LocalDateTime) => string;
 
 	protected initialize(config: AbstractUiTimeFieldConfig, context: TeamAppsUiContext) {
-		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
-
 		let timeSuggestionEngine = new TimeSuggestionEngine();
 		this.timeRenderer = this.createTimeRenderer();
 
-		this.trivialComboBox = new TrivialComboBox<LocalDateTime>(this.$originalInput, {
-			queryFunction: (searchString: string, resultCallback: Function) => {
-				this.onTextInput.fire({enteredString: searchString});
-				let suggestedDateTimes = timeSuggestionEngine.generateSuggestions(searchString);
-				resultCallback(suggestedDateTimes);
-			},
+		this.trivialComboBox = new TrivialComboBox<LocalDateTime>({
 			showTrigger: config.showDropDownButton,
-			textHighlightingEntryLimit: -1, // no highlighting!
-			autoCompleteFunction: (editorText, entry) => {
-				let entryAsString = this.localDateTimeToString(entry);
-				if (editorText && entryAsString.toLowerCase().indexOf(editorText.toLowerCase()) === 0) {
-					return entryAsString;
-				} else {
-					return null;
-				}
-			},
 			entryToEditorTextFunction: entry => this.localDateTimeToString(entry),
+			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
+			selectedEntryRenderingFunction: localDateTime => this.timeRenderer(localDateTime),
+		}, new TreeBoxDropdown({
+			queryFunction: (searchString: string) => {
+				this.onTextInput.fire({enteredString: searchString});
+				return timeSuggestionEngine.generateSuggestions(searchString);
+			},
+			textHighlightingEntryLimit: -1, // no highlighting!
+			preselectionMatcher: (query, entry) => this.localDateTimeToString(entry).toLowerCase().indexOf(query.toLowerCase()) >= 0
+		}, new TrivialTreeBox<LocalDateTime>({
 			entryRenderingFunction: localDateTime => this.timeRenderer(localDateTime),
-			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable'
-		});
+		})));
 		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiTimeField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {
@@ -129,7 +123,6 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 	destroy(): void {
 		super.destroy();
 		this.trivialComboBox.destroy();
-		this.$originalInput.remove();
 	}
 
 	getDefaultValue(): V {
@@ -140,8 +133,7 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		this._config.locale = locale;
 		this._config.timeFormat = timeFormat;
 		this.timeRenderer = this.createTimeRenderer();
-		this.trivialComboBox.setSelectedEntry(this.trivialComboBox.getSelectedEntry(), true);
-		this.trivialComboBox.updateEntries([]);
+		this.trivialComboBox.setValue(this.trivialComboBox.getValue());
 	}
 
 	setShowDropDownButton(showDropDownButton: boolean): void {

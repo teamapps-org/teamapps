@@ -12,10 +12,10 @@ enumDeclaration : 'enum' Identifier '{' (enumConstant (',' enumConstant)*)? ';'?
 enumConstant : Identifier ('=' StringLiteral)?;
 
 classDeclaration  : typescriptFactoryAnnotation? abstractModifier? 'class' Identifier superClassDecl? implementsDecl? '{'
-	(propertyDeclaration|commandDeclaration|eventDeclaration|subCommandDeclaration|subEventDeclaration)*
+	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
 interfaceDeclaration  : 'interface' Identifier superInterfaceDecl? '{'
-	(propertyDeclaration|commandDeclaration|eventDeclaration|subCommandDeclaration|subEventDeclaration)*
+	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
 superClassDecl: 'extends' Identifier;
 superInterfaceDecl: 'extends' classList;
@@ -24,8 +24,7 @@ classList: ((Identifier ',')* Identifier)?;
 propertyDeclaration : referenceableAnnotation? requiredModifier? type Identifier (defaultValueAssignment)? ';';
 commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ('returns' type)? ';';
 eventDeclaration : 'event' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
-subCommandDeclaration : 'subcommand' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
-subEventDeclaration : 'subevent' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
+queryDeclaration : 'query' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' 'returns' type ';';
 formalParameter : type Identifier;
 formalParameterWithDefault : type Identifier (defaultValueAssignment)?;
 

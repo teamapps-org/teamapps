@@ -23,8 +23,21 @@ public interface TreeNodeInfo {
 
 	Object getParent();
 
-	boolean isLazyChildren();
+	/**
+	 * Whether or not this node is selectable by the user.
+	 */
+	default boolean isSelectable() {
+		return true;
+	}
 
+	/**
+	 * Wheter or not this node is <b>initially</b> expanded. The user can of course change the expansion state.
+	 */
 	boolean isExpanded();
+
+	/**
+	 * Whether or not this node has children that are not sent to the client directly but need to be lazy-loaded.
+	 */
+	boolean isLazyChildren();
 
 }

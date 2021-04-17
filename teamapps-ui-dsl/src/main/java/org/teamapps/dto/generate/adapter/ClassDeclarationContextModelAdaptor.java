@@ -55,8 +55,6 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
             return astUtil.findSuperClassAndDirectlyImplementedInterfaces(classContext);
         } else if ("hasCommands".equals(propertyName)) {
             return !astUtil.getAllCommands(classContext).isEmpty();
-        } else if ("hasSubCommands".equals(propertyName)) {
-            return !astUtil.getAllSubCommands(classContext).isEmpty();
         }  else if ("nonStaticCommandDeclaration".equals(propertyName)) {
             return classContext.commandDeclaration().stream()
                     .filter(cmd -> cmd.staticModifier() == null)
@@ -65,18 +63,12 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
             return !astUtil.getAllEvents(classContext).isEmpty();
         } else if ("allEvents".equals(propertyName)) {
             return astUtil.getAllEvents(classContext);
-        } else if ("hasSubEvents".equals(propertyName)) {
-            return !astUtil.getAllSubEvents(classContext).isEmpty();
+        } else if ("allQueries".equals(propertyName)) {
+            return astUtil.getAllQueries(classContext);
         } else if ("superClassAndDirectlyImplementedInterfacesWithCommands".equals(propertyName)) {
             return astUtil.superClassAndDirectlyImplementedInterfacesWithCommands(classContext);
-        } else if ("superClassAndDirectlyImplementedInterfacesWithSubCommands".equals(propertyName)) {
-            return astUtil.superClassAndDirectlyImplementedInterfacesWithSubCommands(classContext);
         } else if ("superClassAndDirectlyImplementedInterfacesWithEvents".equals(propertyName)) {
             return astUtil.superClassAndDirectlyImplementedInterfacesWithEvents(classContext);
-        } else if ("superClassAndDirectlyImplementedInterfacesWithSubEvents".equals(propertyName)) {
-            return astUtil.superClassAndDirectlyImplementedInterfacesWithSubEvents(classContext);
-        } else if ("allSubEventsInHierarchy".equals(propertyName)) {
-            return astUtil.findAllSubEventsInHierarchy(classContext);
         } else if ("subEventBaseClassName".equals(propertyName)) {
             return classContext.Identifier().getText() + "SubEvent";
         } else if ("isDescendantOfClassOrInterfaceReferencedForSubEvents".equals(propertyName)) {
@@ -101,10 +93,6 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
             return astUtil.getReferenceableProperties(classContext);
         } else if ("referenceableBaseClass".equals(propertyName)) {
             return astUtil.isReferenceableBaseClass(classContext);
-        } else if ("subCommandInterfaceNeeded".equals(propertyName)) {
-            return astUtil.classOrSubClassHasSubCommandDeclarations(classContext);
-        } else if ("subEventInterfaceNeeded".equals(propertyName)) {
-            return astUtil.classOrSubClassHasSubEventDeclarations(classContext);
         } else {
             return super.getProperty(interpreter, seld, o, property, propertyName);
         }

@@ -83,6 +83,9 @@
 
     .body {
       display: grid;
+      > * {
+        display: grid; // forces the fields / components to not take more space than available, just like overflow:hidden, but without cutting shadows visually... experimental
+      }
     }
 
     &.fill-remaining-height:not(.collapsed) {

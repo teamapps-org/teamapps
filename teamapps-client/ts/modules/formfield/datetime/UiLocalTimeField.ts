@@ -26,7 +26,7 @@ import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {AbstractUiTimeField} from "./AbstractUiTimeField";
 import {arraysEqual} from "../../Common";
-import {LocalDateTime} from "../../util/LocalDateTime";
+import {LocalDateTime} from "../../datetime/LocalDateTime";
 import {createTimeRenderer} from "./datetime-rendering";
 
 type LocalTime = [number, number, number, number];
@@ -45,14 +45,14 @@ export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
-			this.trivialComboBox.setSelectedEntry(UiLocalTimeField.localTimeToLocalDateTime(uiValue), true);
+			this.trivialComboBox.setValue(UiLocalTimeField.localTimeToLocalDateTime(uiValue));
 		} else {
-			this.trivialComboBox.setSelectedEntry(null, true);
+			this.trivialComboBox.setValue(null);
 		}
 	}
 
 	public getTransientValue(): LocalTime {
-		let selectedEntry = this.trivialComboBox.getSelectedEntry();
+		let selectedEntry = this.trivialComboBox.getValue();
 		if (selectedEntry) {
 			return [selectedEntry.hour, selectedEntry.minute, 0, 0];
 		} else {

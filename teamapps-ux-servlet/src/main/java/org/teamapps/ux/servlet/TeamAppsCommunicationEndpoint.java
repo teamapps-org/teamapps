@@ -24,17 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.dto.AbstractClientMessage;
-import org.teamapps.dto.AbstractServerMessage;
-import org.teamapps.dto.CMD_REQUEST;
-import org.teamapps.dto.CMD_RESULT;
-import org.teamapps.dto.EVENT;
-import org.teamapps.dto.INIT;
-import org.teamapps.dto.KEEPALIVE;
-import org.teamapps.dto.REINIT;
-import org.teamapps.dto.SESSION_CLOSED;
-import org.teamapps.dto.TERMINATE;
-import org.teamapps.dto.UiSessionClosingReason;
+import org.teamapps.dto.*;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.MessageSender;
 import org.teamapps.uisession.QualifiedUiSessionId;
@@ -139,6 +129,9 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 				} else if (clientMessage instanceof EVENT) {
 					EVENT eventMessage = (EVENT) clientMessage;
 					sessionManager.handleEvent(qualifiedUiSessionId, eventMessage.getId(), eventMessage.getUiEvent());
+				} else if (clientMessage instanceof QUERY) {
+					QUERY queryMessage = (QUERY) clientMessage;
+					sessionManager.handleQuery(qualifiedUiSessionId, queryMessage.getId(), queryMessage.getUiQuery());
 				} else if (clientMessage instanceof CMD_RESULT) {
 					CMD_RESULT cmdResult = (CMD_RESULT) clientMessage;
 					sessionManager.handleCommandResult(qualifiedUiSessionId, cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult());

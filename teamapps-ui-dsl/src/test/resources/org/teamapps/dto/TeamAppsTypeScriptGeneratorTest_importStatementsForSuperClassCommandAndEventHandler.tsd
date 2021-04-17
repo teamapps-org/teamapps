@@ -4,8 +4,9 @@
  */
 export const typescriptDeclarationFixConstant = 1;
 
-import {UiEvent} from "./UiEvent";
 import {UiCommand} from "./UiCommand";
+import {UiEvent} from "./UiEvent";
+import {UiQuery} from "./UiQuery";
 import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
 import {AConfig} from "./AConfig";
 import {IConfig} from "./IConfig";
@@ -13,10 +14,6 @@ import {ACommandHandler} from "./AConfig";
 import {ICommandHandler} from "./IConfig";
 import {AEventSource} from "./AConfig";
 import {IEventSource} from "./IConfig";
-import {ASubCommandHandler} from "./AConfig";
-import {ISubCommandHandler} from "./IConfig";
-import {ASubEventSource} from "./AConfig";
-import {ISubEventSource} from "./IConfig";
 
 
 export interface BConfig extends AConfig, IConfig {
@@ -29,9 +26,4 @@ export interface BCommandHandler extends ACommandHandler, ICommandHandler {
 export interface BEventSource extends AEventSource, IEventSource {
 }
 
-export interface BSubCommandHandler extends ASubCommandHandler, ISubCommandHandler {
-}
-
-export interface BSubEventSource extends ASubEventSource, ISubEventSource {
-}
 

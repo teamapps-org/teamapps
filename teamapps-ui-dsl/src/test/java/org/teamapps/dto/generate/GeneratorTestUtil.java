@@ -25,7 +25,6 @@ import com.google.common.io.Resources;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class GeneratorTestUtil {
@@ -34,10 +33,9 @@ public class GeneratorTestUtil {
 		String expected = readResourceToString(expectedResultResourceName);
 
 //		Assert.assertEquals(expected, actual);
-//		Assertions.assertThat(actual).isEqualToNormalizingWhitespace(expected);
 
 		try {
-			Files.asCharSink(new File("src/test/resources/" + expectedResultResourceName), StandardCharsets.UTF_8).write(actual);
+			Files.asCharSink(new File("src/test/resources/" + expectedResultResourceName).getAbsoluteFile(), StandardCharsets.UTF_8).write(actual);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -56,7 +54,7 @@ public class GeneratorTestUtil {
 			return null;
 		}
 		try {
-			return Resources.toString(url, Charset.forName("UTF-8"));
+			return Resources.toString(url, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null; // yes, just because we want to see the actual result ;-)

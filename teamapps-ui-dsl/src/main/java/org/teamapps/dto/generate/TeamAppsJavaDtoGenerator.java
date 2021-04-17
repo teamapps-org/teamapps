@@ -85,12 +85,14 @@ public class TeamAppsJavaDtoGenerator {
         generateObjectTypeEnum(new FileWriter(new File(parentDir, "UiObjectType.java")));
         generateUiObjectBaseClass(new FileWriter(new File(parentDir, "UiObject.java")));
 
-        generateComponentEventBaseClass(new FileWriter(new File(parentDir, "UiEvent.java")));
-        generateSubEventBaseClass(new FileWriter(new File(parentDir, "UiSubEvent.java")));
+        generateUiEventBaseClass(new FileWriter(new File(parentDir, "UiEvent.java")));
         generateEventEnum(new FileWriter(new File(parentDir, "UiEventType.java")));
-        generateSubEventEnum(new FileWriter(new File(parentDir, "UiSubEventType.java")));
+
+        generateUiQueryBaseClass(new FileWriter(new File(parentDir, "UiQuery.java")));
+        generateQueryEnum(new FileWriter(new File(parentDir, "UiQueryType.java")));
+
         generateComponentCommandBaseClass(new FileWriter(new File(parentDir, "UiCommand.java")));
-        generateSubCommandBaseClass(new FileWriter(new File(parentDir, "UiSubCommand.java")));
+
         generateJacksonTypeIdMaps(new FileWriter(new File(parentDir, "UiObjectJacksonTypeIdMaps.java")));
     }
 
@@ -130,7 +132,7 @@ public class TeamAppsJavaDtoGenerator {
         writer.close();
     }
 
-    void generateComponentEventBaseClass(Writer writer) throws IOException {
+    void generateUiEventBaseClass(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("uiEventBaseClass")
                 .add("package", packageName)
                 .add("allEventDeclarations", model.getEventDeclarations());
@@ -139,10 +141,10 @@ public class TeamAppsJavaDtoGenerator {
         writer.close();
     }
 
-    void generateSubEventBaseClass(Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("uiSubEventBaseClass")
+    void generateUiQueryBaseClass(Writer writer) throws IOException {
+        ST template = stGroup.getInstanceOf("uiQueryBaseClass")
                 .add("package", packageName)
-                .add("allEventDeclarations", model.getSubEventDeclarations());
+                .add("allQueryDeclarations", model.getQueryDeclarations());
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();
@@ -152,15 +154,6 @@ public class TeamAppsJavaDtoGenerator {
         ST template = stGroup.getInstanceOf("uiCommandBaseClass")
                 .add("package", packageName)
                 .add("allCommandDeclarations", model.getCommandDeclarations());
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
-    void generateSubCommandBaseClass(Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("uiSubCommandBaseClass")
-                .add("package", packageName)
-                .add("allCommandDeclarations", model.getSubCommandDeclarations());
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();
@@ -187,18 +180,16 @@ public class TeamAppsJavaDtoGenerator {
     void generateEventEnum(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("uiEventEnum")
                 .add("package", packageName)
-                .add("eventKind", "Event")
                 .add("allEventDeclarations", model.getEventDeclarations());
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();
     }
 
-    void generateSubEventEnum(Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("uiEventEnum")
+    void generateQueryEnum(Writer writer) throws IOException {
+        ST template = stGroup.getInstanceOf("uiQueryEnum")
                 .add("package", packageName)
-                .add("eventKind", "SubEvent")
-                .add("allEventDeclarations", model.getSubEventDeclarations());
+                .add("allQueryDeclarations", model.getQueryDeclarations());
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();
@@ -209,9 +200,8 @@ public class TeamAppsJavaDtoGenerator {
         allJsonSerializableClasses.addAll(model.getClassDeclarations());
         allJsonSerializableClasses.addAll(model.getInterfaceDeclarations());
         allJsonSerializableClasses.addAll(model.getCommandDeclarations());
-        allJsonSerializableClasses.addAll(model.getSubCommandDeclarations());
         allJsonSerializableClasses.addAll(model.getEventDeclarations());
-        allJsonSerializableClasses.addAll(model.getSubEventDeclarations());
+        allJsonSerializableClasses.addAll(model.getQueryDeclarations());
         ST template = stGroup.getInstanceOf("jacksonTypeIdMaps")
                 .add("package", packageName)
                 .add("allJsonSerializableClasses", allJsonSerializableClasses);

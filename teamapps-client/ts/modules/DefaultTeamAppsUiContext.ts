@@ -20,9 +20,8 @@
 "use strict";
 
 import {generateUUID, logException} from "./Common";
-import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
+import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
-import {UiWeekDay} from "../generated/UiWeekDay";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiEvent} from "../generated/UiEvent";
 import {UiRootPanel} from "./UiRootPanel";
@@ -45,6 +44,8 @@ import {UiSessionClosingReason} from "../generated/UiSessionClosingReason";
 import {UiClientObject} from "./UiClientObject";
 import {UiClientObjectConfig} from "../generated/UiClientObjectConfig";
 import {UiWindow} from "./UiWindow";
+import {QueryFunctionAdder} from "../generated/QueryFunctionAdder";
+import {UiQuery} from "../generated/UiQuery";
 
 function isComponent(o: UiClientObject<UiClientObjectConfig>): o is UiComponent {
 	return o != null && (o as any).getMainElement;
@@ -120,7 +121,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 					}
 				}
 			},
-			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand),
+			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand)
 		};
 
 		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, connectionListener);
@@ -142,8 +143,13 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	}
 
 	@bind
-	public fireEvent(eventObject: UiEvent) {
+	public sendEvent(eventObject: UiEvent) {
 		this.connection.sendEvent(eventObject);
+	}
+
+	@bind
+	public sendQuery(query: UiQuery): Promise<any> {
+		return this.connection.sendQuery(query);
 	}
 
 	public registerClientObject(clientObject: UiClientObject, id: string, teamappsType: string): void {
@@ -158,12 +164,16 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		} else {
 			this.components[id] = clientObject;
 		}
-		EventRegistrator.registerForEvents(clientObject, teamappsType, this.fireEvent, {componentId: id});
+		EventRegistrator.registerForEvents(clientObject, teamappsType, this.sendEvent, {componentId: id});
 	}
 
 	public createClientObject(config: UiClientObjectConfig): UiClientObject {
-		if (TeamAppsUiComponentRegistry.getComponentClassForName(config._type)) {
-			return new (TeamAppsUiComponentRegistry.getComponentClassForName(config._type))(config, this);
+		let componentClass = TeamAppsUiComponentRegistry.getComponentClassForName(config._type);
+		if (componentClass) {
+			QueryFunctionAdder.addQueryFunctionsToConfig(config, (componentId, queryTypeId, queryObject) => {
+				return this.sendQuery({...queryObject, _type: queryTypeId, componentId: componentId});
+			});
+			return new componentClass(config, this);
 		} else {
 			DefaultTeamAppsUiContext.logger.error("Unknown component type: " + config._type);
 			return null;

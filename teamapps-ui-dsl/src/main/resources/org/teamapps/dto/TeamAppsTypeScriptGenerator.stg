@@ -28,21 +28,21 @@ export const typescriptDeclarationFixConstant = 1;
 classConfigDefinition(c) ::= <<
 <typeScriptFilePrelude()>
 
-import {UiEvent} from "./UiEvent";
 import {UiCommand} from "./UiCommand";
+import {UiEvent} from "./UiEvent";
+import {UiQuery} from "./UiQuery";
 import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
 <c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithSubCommands:{c|import {<c.Identifier>SubCommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithSubEvents:{c|import {<c.Identifier>SubEventSource\} from "./<c.Identifier>Config";}; separator="\n">
 
 <c.inlineEnumProperties:inlineEnum(); separator="\n\n">
 
 export interface <c.Identifier.text>Config <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.Identifier>Config};  separator=", "> <endif>{
 	_type?: string;
 	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
+	<c.queryDeclaration:queryDeclaration(); separator=";\n">
 }
 
 <if(c.referenceableBaseClass)>
@@ -73,38 +73,28 @@ export interface <c.Identifier>EventSource <if(c.superClassAndDirectlyImplemente
 }
 <endif>
 
-<if(c.hasSubCommands)>
-export interface <c.Identifier.text>SubCommandHandler <if(c.superClassAndDirectlyImplementedInterfacesWithSubCommands)>extends <c.superClassAndDirectlyImplementedInterfacesWithSubCommands:{c|<c.Identifier>SubCommandHandler}; separator=", "> <endif>{
-	<c.subCommandDeclaration:commandMethodStub(); separator="\n">
-}
-<endif>
+<c.eventDeclaration:eventInterface(); separator="\n\n">
 
-<if(c.subEventInterfaceNeeded)>
-export interface <c.Identifier>SubEventSource <if(c.superClassAndDirectlyImplementedInterfacesWithSubEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithSubEvents:{c|<c.Identifier>SubEventSource}; separator=", "> <endif>{
-	<c.subEventDeclaration:teamAppsEventDeclaration(); separator="\n">
-}
-<endif>
-
-<if(c.eventDeclaration)>
-<c.eventDeclaration:eventInterface("UiEvent"); separator="\n\n">
-<endif>
-
-<if(c.subEventDeclaration)>
-<c.subEventDeclaration:eventInterface("UiSubEvent"); separator="\n\n">
-<endif>
+<c.queryDeclaration:queryInterface(); separator="\n\n">
 >>
 
 commandMethodStub(cmd) ::= <<
-<cmd.Identifier>(<cmd.formalParameterWithDefault:parameter(false); separator=", ">): void;
+<cmd.Identifier>(<cmd.formalParameterWithDefault:parameter(false); separator=", ">): <if(cmd.type)>Promise\<<cmd.type.typeScriptType>\>|<cmd.type.typeScriptType><else>any<endif>;
 >>
 
 teamAppsEventDeclaration(evt) ::= <<
 on<evt.Identifier.text; format="cap">: TeamAppsEvent\<<evt.typeScriptInterfaceName>\>;
 >>
 
-eventInterface(evt, eventKind) ::= <<
-export interface <evt.typeScriptInterfaceName> extends <eventKind> {
+eventInterface(evt) ::= <<
+export interface <evt.typeScriptInterfaceName> extends UiEvent {
 	<evt.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
+}
+>>
+
+queryInterface(q) ::= <<
+export interface <q.typeScriptInterfaceName> extends UiQuery {
+	<q.formalParameterWithDefault:typeScriptPropertyDeclaration(true); separator=";\n">
 }
 >>
 
@@ -115,21 +105,18 @@ interfaceConfigDefinition(c) ::= <<
 
 import {UiEvent} from "./UiEvent";
 import {UiCommand} from "./UiCommand";
-<! import {UiSubEvent} from "./UiSubEvent"; !>
-<! import {UiSubCommand} from "./UiSubCommand"; !>
 import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
 <c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithSubCommands:{c|import {<c.Identifier>SubCommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
-<c.superClassAndDirectlyImplementedInterfacesWithSubEvents:{c|import {<c.Identifier>SubEventSource\} from "./<c.Identifier>Config";}; separator="\n">
 
 <c.inlineEnumProperties:inlineEnum(); separator="\n\n">
 
 export interface <c.Identifier.text>Config <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|<superInterface.Identifier>Config}; separator=", "> <endif>{
 	_type?: string;
 	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
+	<c.queryDeclaration:queryDeclaration(); separator=";\n">
 }
 
 <if(c.hasCommands)>
@@ -144,25 +131,9 @@ export interface <c.Identifier>EventSource <if(c.superInterfacesWithEvents)>exte
 }
 <endif>
 
-<if(c.hasSubCommands)>
-export interface <c.Identifier.text>SubCommandHandler <if(c.superInterfacesWithSubCommands)>extends <c.superInterfacesWithSubCommands:{c|<c.Identifier>SubCommandHandler}; separator=", "> <endif>{
-	<c.subCommandDeclaration:commandMethodStub(); separator="\n">
-}
-<endif>
+<c.eventDeclaration:eventInterface(); separator="\n\n">
 
-<if(c.subEventInterfaceNeeded)>
-export interface <c.Identifier>SubEventSource <if(c.superInterfacesWithSubEvents)>extends <c.superInterfacesWithSubEvents:{c|<c.Identifier>SubEventSource}; separator=", "> <endif>{
-	<c.subEventDeclaration:teamAppsEventDeclaration(); separator="\n">
-}
-<endif>
-
-<if(c.eventDeclaration)>
-<c.eventDeclaration:eventInterface("UiEvent"); separator="\n\n">
-<endif>
-
-<if(c.subEventDeclaration)>
-<c.subEventDeclaration:eventInterface("UiSubEvent")>
-<endif>
+<c.queryDeclaration:queryInterface(); separator="\n\n">
 >>
 
 inlineEnum(propertyDeclaration) ::= <<
@@ -173,6 +144,10 @@ export enum <propertyDeclaration.parent.Identifier>_<propertyDeclaration.Identif
 
 typeScriptPropertyDeclaration(p, forceRequired) ::= <<
 <p.Identifier.text><if(!p.requiredModifier && !forceRequired)>?<endif>: <p.type.typeScriptType>
+>>
+
+queryDeclaration(q) ::= <<
+<q.Identifier.text>: (query: <q.typeScriptInterfaceName>) => Promise\<<q.type.typeScriptType>\>
 >>
 
 enum(e) ::= <<
@@ -254,25 +229,34 @@ case "<c.Identifier.text>":
 	break;
 >>
 
-subEventRegistrator(classesAndInterfacesReferencedForSubEvents) ::= <<
-<typeScriptFilePrelude()>
-
-<! import {UiSubEvent} from "./UiSubEvent"; !>
-import {TeamAppsEventListener} from "../modules/util/TeamAppsEvent";
-
-export class SubEventRegistrator {
-	<classesAndInterfacesReferencedForSubEvents:subEventRegistrations(); separator="\n">
-}
->>
-
-subEventRegistrations(c) ::= <<
-public static registerFor<c.Identifier>SubEvents(eventSource: any, eventHandler: TeamAppsEventListener\<UiSubEvent>) {
-	<c.allSubEventsInHierarchy:eventRegistration(); separator="\n">
-}
->>
-
 eventRegistration(evt) ::= <<
 	 eventSource.on<evt.Identifier.text; format="cap"> && eventSource.on<evt.Identifier.text; format="cap">.addListener((eventObject: any) => eventHandler({...eventObject, _type: "<evt._type>", ...additionalEventProperties}));
+>>
+
+queryFunctionAdder(classesAndInterfacesWithQueries) ::= <<
+<typeScriptFilePrelude()>
+
+import {UiClientObjectConfig} from "./UiClientObjectConfig";
+import {UiQuery} from "./UiQuery";
+<classesAndInterfacesWithQueries:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
+
+export class QueryFunctionAdder {
+	public static addQueryFunctionsToConfig(config: UiClientObjectConfig, queryCallback: (componentId: string, queryTypeId: string, queryObject: UiQuery) => Promise\<any>) {
+		switch (config._type) {
+		    <classesAndInterfacesWithQueries:queryConfigAdditions(); separator="\n">
+		}
+	}
+}
+>>
+
+queryConfigAdditions(c) ::= <<
+case "<c.Identifier.text>":
+	<c.allQueries:queryConfigAddition(c); separator="\n">
+	break;
+>>
+
+queryConfigAddition(q, c) ::= <<
+    (config as <c.Identifier.text>Config).<q.Identifier> = (queryObject: UiQuery) => queryCallback(config.id, "<q._type>", queryObject);
 >>
 
 uiCommandBaseDefinition() ::= <<
@@ -284,26 +268,20 @@ export interface UiCommand {
 }
 >>
 
-uiEventBaseDefinition(eventDeclarations) ::= <<
+uiEventBaseDefinition() ::= <<
 <typeScriptFilePrelude()>
 export interface UiEvent {
-	//[key: string]: any;
+    _type?: string;
+    componentId?: string;
 }
 >>
 
-uiSubCommandBaseDefinition() ::= <<
+uiQueryBaseDefinition() ::= <<
 <typeScriptFilePrelude()>
-export interface UiSubCommand {
-	_type: string;
-	[key: string]: any;
+export interface UiQuery {
+    _type?: string;
+    componentId?: string;
 }
 >>
 
-uiSubEventBaseDefinition(subEventDeclarations) ::= <<
-<typeScriptFilePrelude()>
-export interface UiSubEvent {
-	_type: string;
-	[key: string]: any;
-}
->>
 

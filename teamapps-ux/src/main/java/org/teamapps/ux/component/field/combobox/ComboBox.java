@@ -35,9 +35,10 @@ import org.teamapps.ux.model.ComboBoxModel;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD> implements TextInputHandlingField {
+public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implements TextInputHandlingField {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ComboBox.class);
 
@@ -46,6 +47,12 @@ public class ComboBox<RECORD> extends AbstractComboBox<ComboBox, RECORD, RECORD>
 	private String freeTextEntry;
 
 	public ComboBox() {
+	}
+
+	@Override
+	protected Set<RECORD> getSelectedRecords() {
+		RECORD value = getValue();
+		return value != null ? Set.of(value) : Set.of();
 	}
 
 	public ComboBox(ComboBoxModel<RECORD> model) {

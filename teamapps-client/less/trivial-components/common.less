@@ -92,17 +92,12 @@
   box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.75);
 }
 
-.tr-highlighted-entry {
-  background-color: @tr-highlight-color;
-}
-
 .tr-selected-entry {
   background-color: @tr-select-color;
 }
 
 .tr-dropdown {
-  display: none;
-  position: absolute;
+  position: fixed;
   background-color: white;
   max-height: 260px;
   overflow-x: hidden;
@@ -239,3 +234,4 @@ input.tr-editor {
   border-radius: 4px;
   padding: var(--ta-padding-base-vertical) var(--ta-padding-base-horizontal);
 }
+

@@ -36,6 +36,9 @@ import {AbstractClientPayloadMessageConfig} from "../../generated/AbstractClient
 import {UiEvent} from "../../generated/UiEvent";
 import {CMD_RESULTConfig} from "../../generated/CMD_RESULTConfig";
 import {UiSessionClosingReason} from "../../generated/UiSessionClosingReason";
+import {UiQuery} from "../../generated/UiQuery";
+import {QUERYConfig} from "../../generated/QUERYConfig";
+import {QUERY_RESULTConfig} from "../../generated/QUERY_RESULTConfig";
 
 
 enum TeamAppsProtocolStatus {
@@ -59,7 +62,8 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 	private payloadMessagesQueue: AbstractClientPayloadMessageConfig[] = [];
 	private sentEventsBuffer: AbstractClientPayloadMessageConfig[] = [];
 
-	private eventIdCounter = 1;
+	private clientMessageIdCounter = 1;
+	private queryResultHandlerByMessageId: Map<number, (result: any) => any> = new Map();
 
 	private maxRequestedCommandId = 0;
 	private lastReceivedCommandId: number;
@@ -95,6 +99,8 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 						}
 					}
 					this.lastReceivedCommandId = cmds[cmds.length - 1].id;
+				} else if (TeamAppsConnectionImpl.isQUERY_RESULT(message)) {
+					this.queryResultHandlerByMessageId.get(message.queryId)(message.result);
 				} else if (TeamAppsConnectionImpl.isINIT_OK(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ESTABLISHED;
 					this.sentEventsMinBufferSize = message.sentEventsBufferSize;
@@ -198,6 +204,10 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		return message._type === 'MULTI_CMD';
 	}
 
+	private static isQUERY_RESULT(message: any): message is QUERY_RESULTConfig {
+		return message._type === 'QUERY_RESULT';
+	}
+
 	private static isSESSION_CLOSED(message: any): message is SESSION_CLOSEDConfig {
 		return message._type === 'SESSION_CLOSED';
 	}
@@ -210,17 +220,29 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 		let protocolEvent: EVENTConfig = {
 			_type: "EVENT",
 			sessionId: this.sessionId,
-			id: this.eventIdCounter++,
+			id: this.clientMessageIdCounter++,
 			uiEvent: event
 		};
 		this.sendClientPayloadMessage(protocolEvent);
+	}
+
+	sendQuery(query: UiQuery): Promise<any> {
+		let clientMessageId = this.clientMessageIdCounter++;
+		let protocolQuery: QUERYConfig = {
+			_type: "QUERY",
+			sessionId: this.sessionId,
+			id: clientMessageId,
+			uiQuery: query
+		};
+		this.sendClientPayloadMessage(protocolQuery);
+		return new Promise<any>(resolve => this.queryResultHandlerByMessageId.set(clientMessageId, resolve))
 	}
 
 	private sendResult(cmdId: number, result: any) {
 		let cmdResult: CMD_RESULTConfig = {
 			_type: "CMD_RESULT",
 			sessionId: this.sessionId,
-			id: this.eventIdCounter++,
+			id: this.clientMessageIdCounter++,
 			cmdId: cmdId,
 			result: result
 		};

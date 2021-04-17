@@ -54,7 +54,7 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 			this.updateClearButton();
 		});
 
-		this.setEmptyText(config.emptyText);
+		this.setPlaceholderText(config.placeholderText);
 		this.setMaxCharacters(config.maxCharacters);
 		this.setShowClearButton(config.showClearButton);
 
@@ -123,8 +123,8 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 		this.$wrapper.classList.toggle("clearable", !!(this.showClearButton && this.$field.value));
 	}
 
-	setEmptyText(emptyText: string): void {
-		this.$field.placeholder = emptyText || '';
+	setPlaceholderText(placeholderText: string): void {
+		this.$field.placeholder = placeholderText || '';
 	}
 
 	public getMainInnerDomElement(): HTMLElement {

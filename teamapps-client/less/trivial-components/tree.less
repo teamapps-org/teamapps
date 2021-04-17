@@ -36,43 +36,11 @@
  */
 .tr-tree {
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 
   border: @tr-border;
   border-radius: @tr-border-radius;
 
   .tr-component-focus();
 
-  .tr-tree-editor {
-    flex: 0 0 auto;
-    border-width: 0 0 1px 0;
-    border-bottom: @tr-border;
-    border-radius: @tr-border-radius @tr-border-radius 0 0;
-    font-family: @tr-editor-font-family;
-    font-size: @tr-editor-font-size;
-    padding: 6px;
-    outline: none;
-  }
-                                  
-  .tr-treebox {
-    flex: 1 1 1px;
-    overflow: auto;
-  }
-
-  &.hide-searchfield {
-    overflow: hidden;
-    position: relative;
-    .tr-tree-editor {
-      position: absolute;
-      z-index: -1000;
-      top: -1px;
-      font-size: 1px;
-      padding: 0;
-      border: none;
-      opacity: 0;
-    }
-  }
-
+  overflow: auto;
 }

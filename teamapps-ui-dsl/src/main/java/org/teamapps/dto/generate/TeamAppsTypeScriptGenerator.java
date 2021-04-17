@@ -27,13 +27,8 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 import org.teamapps.dto.TeamAppsDtoParser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Writer;
-import java.util.Collections;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,7 +50,7 @@ public class TeamAppsTypeScriptGenerator {
         List<TeamAppsDtoParser.ClassCollectionContext> classCollections = TeamAppsGeneratorUtil.getFilesInDirectory(sourceDir).stream()
                 .map(dtoFile -> {
                     try {
-                        InputStreamReader reader = new InputStreamReader(new FileInputStream(dtoFile), "UTF-8");
+                        InputStreamReader reader = new InputStreamReader(new FileInputStream(dtoFile), StandardCharsets.UTF_8);
                         return ParserFactory.createParser(reader).classCollection();
                     } catch (Exception e1) {
                         throw new IllegalArgumentException(e1);
@@ -88,15 +83,12 @@ public class TeamAppsTypeScriptGenerator {
 
         generateCommandBaseDefinition(new FileWriter(new File(parentDir, "UiCommand.ts")));
         generateCommandExecutor(model.getCommandDeclarations(), new FileWriter(new File(parentDir, "CommandExecutor.ts")));
-        generateEventRegistrator(model.getAllClassesAndInterfacesWithEvents(), new FileWriter(new File(parentDir, "EventRegistrator.ts")));
 
         generateEventBaseDefinition(model.getEventDeclarations(), new FileWriter(new File(parentDir, "UiEvent.ts")));
+        generateEventRegistrator(model.getAllClassesAndInterfacesWithEvents(), new FileWriter(new File(parentDir, "EventRegistrator.ts")));
 
-//	    generateSubCommandBaseDefinition(new FileWriter(new File(parentDir, "UiSubCommand.ts")));
-//	    generateSubCommandExecutor(model.getSubCommandDeclarations(), new FileWriter(new File(parentDir, "SubCommandExecutor.ts")));
-
-//        generateSubEventBaseDefinition(model.getSubEventDeclarations(), new FileWriter(new File(parentDir, "UiSubEvent.ts")));
-//        generateSubEventRegistrator(model.getClassesAndInterfacesReferencedForSubEvents(), new FileWriter(new File(parentDir, "SubEventRegistrator.ts")));
+        generateQueryBaseDefinition(model.getEventDeclarations(), new FileWriter(new File(parentDir, "UiQuery.ts")));
+        generateQueryFunctionAdder(model.getAllClassesAndInterfacesWithQueries(), new FileWriter(new File(parentDir, "QueryFunctionAdder.ts")));
     }
 
 	public void generateEnum(TeamAppsDtoParser.EnumDeclarationContext enumContext, Writer writer) throws IOException {
@@ -133,23 +125,6 @@ public class TeamAppsTypeScriptGenerator {
         writer.close();
     }
 
-	public void generateSubCommandBaseDefinition(Writer writer) throws IOException {
-		ST template = stGroup.getInstanceOf("uiSubCommandBaseDefinition");
-		AutoIndentWriter out = new AutoIndentWriter(writer);
-		template.write(out, new StringTemplatesErrorListener());
-		writer.close();
-	}
-
-    public void generateSubCommandExecutor(List<TeamAppsDtoParser.SubCommandDeclarationContext> commandDeclarationContexts, Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("commandExecutor")
-                .add("name", "SubCommandExecutor")
-                .add("nonStaticCommands", commandDeclarationContexts)
-                .add("staticCommands", Collections.emptyList());
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
     public void generateCommandBaseDefinition(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("uiCommandBaseDefinition");
         AutoIndentWriter out = new AutoIndentWriter(writer);
@@ -158,16 +133,14 @@ public class TeamAppsTypeScriptGenerator {
     }
 
     public void generateEventBaseDefinition(List<TeamAppsDtoParser.EventDeclarationContext> eventDeclarations, Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("uiEventBaseDefinition")
-                .add("eventDeclarations", eventDeclarations);
+        ST template = stGroup.getInstanceOf("uiEventBaseDefinition");
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();
     }
 
-    public void generateSubEventBaseDefinition(List<TeamAppsDtoParser.SubEventDeclarationContext> subEventDeclarations, Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("uiSubEventBaseDefinition")
-                .add("subEventDeclarations", subEventDeclarations);
+    public void generateQueryBaseDefinition(List<TeamAppsDtoParser.EventDeclarationContext> eventDeclarations, Writer writer) throws IOException {
+        ST template = stGroup.getInstanceOf("uiQueryBaseDefinition");
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();
@@ -181,9 +154,9 @@ public class TeamAppsTypeScriptGenerator {
         writer.close();
     }
 
-    public void generateSubEventRegistrator(List<ParserRuleContext> classAndInterfaceContexts, Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("subEventRegistrator")
-		        .add("classesAndInterfacesReferencedForSubEvents", classAndInterfaceContexts);
+    public void generateQueryFunctionAdder(List<ParserRuleContext> classAndInterfaceContexts, Writer writer) throws IOException {
+        ST template = stGroup.getInstanceOf("queryFunctionAdder")
+		        .add("classesAndInterfacesWithQueries", classAndInterfaceContexts);
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();

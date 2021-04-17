@@ -52,40 +52,4 @@ public class TeamappsDtoLanguageTest {
 		parser.classDeclaration();
 	}
 
-	@Test
-	public void testSubCommandDeclarations() throws IOException {
-		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("class A {\n"
-				+ "  subcommand hallo(String x);"
-				+ "  subcommand blah(String x, int y);"
-				+ "}"));
-		parser.classDeclaration();
-	}
-
-	@Test
-	public void testSubEventDeclarations() throws IOException {
-		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("class A {\n"
-				+ "  subevent hallo(String x);"
-				+ "  subevent blah(String x, int y);"
-				+ "}"));
-		parser.classDeclaration();
-	}
-
-	@Test
-	public void testSubCommandReferences() throws IOException {
-		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("class A {\n"
-				+ "  subcommand<UiButton> subCommand;"
-				+ "  command blah(String x, subcommand<UiField> subCommand);"
-				+ "}"));
-		parser.classDeclaration();
-	}
-
-	@Test
-	public void testSubEventReferences() throws IOException {
-		TeamAppsDtoParser parser = ParserFactory.createParser(new StringReader("class A {\n"
-				+ "  subevent<UiButton> subEvent;"
-				+ "  event blah(String x, subevent<UiField> subEvent);"
-				+ "}"));
-		parser.classDeclaration();
-	}
-
 }

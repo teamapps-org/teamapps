@@ -37,7 +37,7 @@ public class PasswordField extends TextField {
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxCharacters(getMaxCharacters());
 		uiField.setShowClearButton(isShowClearButton());
-		uiField.setEmptyText(getEmptyText());
+		uiField.setPlaceholderText(getEmptyText());
 		uiField.setAutofill(isAutofill());
 		uiField.setSendValueAsMd5(sendValueAsMd5);
 		uiField.setSalt(salt);

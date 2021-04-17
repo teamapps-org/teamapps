@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,30 +24,23 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiComboBox;
-import org.teamapps.dto.UiComboBoxTreeRecord;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiTextInputHandlingField;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.CacheManipulationHandle;
 import org.teamapps.ux.cache.ClientRecordCache;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
 import org.teamapps.ux.component.field.TextInputHandlingField;
-import org.teamapps.ux.component.field.TextMatchingMode;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.model.ComboBoxModel;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECORD, VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
+public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALUE> implements TextInputHandlingField {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractComboBox.class);
 
@@ -57,7 +50,6 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 	protected final ClientRecordCache<RECORD, UiComboBoxTreeRecord> recordCache;
 
 	private ComboBoxModel<RECORD> model;
-	private TextMatchingMode textMatchingMode = TextMatchingMode.CONTAINS; // only filter on client-side if staticData != null. SIMILARITY_MATCH allows levenshtein distance of 3
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 
 	private final Map<Template, String> templateIdsByTemplate = new HashMap<>();
@@ -77,10 +69,21 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 	private boolean showClearButton;
 	private boolean animate = true;
 	private boolean showExpanders = false;
+	private String emptyText;
+
+	/**
+	 * If true, already selected entries will be filtered out from model query results.
+	 *
+	 * @apiNote While this is handy when dealing with list-style models (no hierarchy), it might cause unintended behavior with tree-style
+	 * models. This option will not pay any attention to hierarchical structures.
+	 * If the parent <code>P</code> of a child node <code>C</code> is filtered out due to this option,
+	 * then <code>C</code> will appear as a root node on the client side.
+	 */
+	private boolean distinctModelResultFiltering = false;
 
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
 	protected Function<String, RECORD> freeTextRecordFactory = null;
-	
+
 	protected AbstractComboBox(ComboBoxModel<RECORD> model) {
 		this.model = model;
 		this.recordCache = new ClientRecordCache<>(this::createUiTreeRecordWithoutParentRelation, this::addParentLinkToUiRecord);
@@ -90,24 +93,24 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		this(query -> Collections.emptyList());
 	}
 
-	protected void mapCommonUiComboBoxProperties(UiComboBox comboBox) {
-		mapAbstractFieldAttributesToUiField(comboBox);
+	protected void mapCommonUiComboBoxProperties(UiComboBox ui) {
+		mapAbstractFieldAttributesToUiField(ui);
 
 		// Note: it is important that the uiTemplates get set after the uiRecords are created, because custom templates (templateDecider) may lead to additional template registrations.
-		comboBox.setTemplates(templateIdsByTemplate.entrySet().stream()
+		ui.setTemplates(templateIdsByTemplate.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getValue, entry -> entry.getKey().createUiTemplate())));
-		
-		comboBox.setTextMatchingMode(textMatchingMode.toUiTextMatchingMode());
-		comboBox.setShowDropDownButton(dropDownButtonVisible);
-		comboBox.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);
-		comboBox.setHighlightFirstResultEntry(highlightFirstResultEntry);
-		comboBox.setShowHighlighting(showHighlighting);
-		comboBox.setAutoComplete(autoComplete);
-		comboBox.setTextHighlightingEntryLimit(textHighlightingEntryLimit);
-		comboBox.setAllowAnyText(allowFreeText);
-		comboBox.setShowClearButton(showClearButton);
-		comboBox.setAnimate(animate);
-		comboBox.setShowExpanders(showExpanders);
+
+		ui.setShowDropDownButton(dropDownButtonVisible);
+		ui.setShowDropDownAfterResultsArrive(showDropDownAfterResultsArrive);
+		ui.setHighlightFirstResultEntry(highlightFirstResultEntry);
+		ui.setShowHighlighting(showHighlighting);
+		ui.setAutoComplete(autoComplete);
+		ui.setTextHighlightingEntryLimit(textHighlightingEntryLimit);
+		ui.setAllowAnyText(allowFreeText);
+		ui.setShowClearButton(showClearButton);
+		ui.setAnimate(animate);
+		ui.setShowExpanders(showExpanders);
+		ui.setPlaceholderText(emptyText);
 	}
 
 	@Override
@@ -116,40 +119,65 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		switch (event.getUiEventType()) {
 			case UI_TEXT_INPUT_HANDLING_FIELD_TEXT_INPUT:
 				UiTextInputHandlingField.TextInputEvent keyStrokeEvent = (UiTextInputHandlingField.TextInputEvent) event;
-				String queryString = keyStrokeEvent.getEnteredString() != null ? keyStrokeEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
-				if (model != null) {
-					List<RECORD> records = model.getRecords(queryString);
-					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
-					if (isRendered()) {
-						getSessionContext().queueCommand(new UiComboBox.SetDropDownDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
-					} else {
-						cacheResponse.commit();
-					}
-				}
-				this.onTextInput.fire(queryString);
+				String string = keyStrokeEvent.getEnteredString() != null ? keyStrokeEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
+				this.onTextInput.fire(string);
 				break;
 			case UI_TEXT_INPUT_HANDLING_FIELD_SPECIAL_KEY_PRESSED:
 				UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
 				this.onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
 				break;
-			case UI_COMBO_BOX_LAZY_CHILD_DATA_REQUESTED:
-				UiComboBox.LazyChildDataRequestedEvent lazyChildDataRequestedEvent = (UiComboBox.LazyChildDataRequestedEvent) event;
-				RECORD parentRecord = recordCache.getRecordByClientId(lazyChildDataRequestedEvent.getParentId());
+		}
+	}
+
+	@Override
+	public CompletableFuture<?> handleUiQuery(UiQuery query) {
+		switch (query.getUiQueryType()) {
+			case UI_COMBO_BOX_RETRIEVE_DROPDOWN_ENTRIES: {
+				final UiComboBox.RetrieveDropdownEntriesQuery q = (UiComboBox.RetrieveDropdownEntriesQuery) query;
+				String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
+				if (model != null) {
+					List<RECORD> resultRecords = model.getRecords(string);
+					if (distinctModelResultFiltering) {
+						resultRecords = filterOutSelected(resultRecords);
+					}
+					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
+					cacheResponse.commit();
+					return CompletableFuture.completedFuture(cacheResponse.getAndClearResult());
+				} else {
+					return CompletableFuture.completedFuture(List.of());
+				}
+			}
+			case UI_COMBO_BOX_LAZY_CHILDREN: {
+				UiComboBox.LazyChildrenQuery lazyChildrenQuery = (UiComboBox.LazyChildrenQuery) query;
+				RECORD parentRecord = recordCache.getRecordByClientId(lazyChildrenQuery.getParentId());
 				if (parentRecord != null) {
 					if (model != null) {
 						List<RECORD> childRecords = model.getChildRecords(parentRecord);
-						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
-						if (isRendered()) {
-							getSessionContext().queueCommand(new UiComboBox.SetChildNodesCommand(getId(), lazyChildDataRequestedEvent.getParentId(), cacheResponse.getAndClearResult()),
-									aVoid -> cacheResponse.commit());
-						} else {
-							cacheResponse.commit();
+						if (distinctModelResultFiltering) {
+							childRecords = filterOutSelected(childRecords);
 						}
+						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
+						cacheResponse.commit();
+						return CompletableFuture.completedFuture(cacheResponse.getAndClearResult());
 					}
+				} else {
+					return CompletableFuture.completedFuture(Collections.emptyList());
 				}
-				break;
+			}
+			default:
+				return CompletableFuture.failedFuture(new IllegalArgumentException("unknown query"));
 		}
 	}
+
+	private List<RECORD> filterOutSelected(List<RECORD> resultRecords) {
+		Set<RECORD> selectedRecords = getSelectedRecords();
+		resultRecords = resultRecords.stream()
+				.filter(r -> !selectedRecords.contains(r))
+				.collect(Collectors.toList());
+		return resultRecords;
+	}
+
+	protected abstract Set<RECORD> getSelectedRecords();
 
 	protected UiComboBoxTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
 		if (record == null) {
@@ -175,6 +203,7 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 		if (treeNodeInfo != null) {
 			uiTreeRecord.setExpanded(treeNodeInfo.isExpanded());
 			uiTreeRecord.setLazyChildren(treeNodeInfo.isLazyChildren());
+			uiTreeRecord.setSelectable(treeNodeInfo.isSelectable());
 		}
 
 		return uiTreeRecord;
@@ -224,10 +253,6 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 	public void setModel(ComboBoxModel<RECORD> model) {
 		this.model = model;
 		reRenderIfRendered();
-	}
-
-	public TextMatchingMode getTextMatchingMode() {
-		return textMatchingMode;
 	}
 
 	public boolean isDropDownButtonVisible() {
@@ -308,11 +333,6 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 
 	public void setShowExpanders(boolean showExpanders) {
 		this.showExpanders = showExpanders;
-		reRenderIfRendered();
-	}
-
-	public void setTextMatchingMode(TextMatchingMode textMatchingMode) {
-		this.textMatchingMode = textMatchingMode;
 		reRenderIfRendered();
 	}
 
@@ -399,6 +419,23 @@ public abstract class AbstractComboBox<COMPONENT extends AbstractComboBox, RECOR
 
 	public void setPropertyExtractor(PropertyExtractor<RECORD> propertyExtractor) {
 		this.setPropertyProvider(propertyExtractor);
+	}
+
+	public String getEmptyText() {
+		return emptyText;
+	}
+
+	public void setEmptyText(String emptyText) {
+		this.emptyText = emptyText;
+		reRenderIfRendered();
+	}
+
+	public boolean isDistinctModelResultFiltering() {
+		return distinctModelResultFiltering;
+	}
+
+	public void setDistinctModelResultFiltering(boolean distinctModelResultFiltering) {
+		this.distinctModelResultFiltering = distinctModelResultFiltering;
 	}
 
 	@Override

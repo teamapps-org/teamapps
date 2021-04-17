@@ -19,12 +19,14 @@
  */
 import {UiCommand} from "../../generated/UiCommand";
 import {UiEvent} from "../../generated/UiEvent";
+import {UiQuery} from "../../generated/UiQuery";
 import {UiSessionClosingReason} from "../../generated/UiSessionClosingReason";
 
 export const typescriptDeclarationFixConstant = 1;
 
 export interface TeamAppsConnection {
 	sendEvent(event: UiEvent): void;
+	sendQuery(query: UiQuery): Promise<any>;
 }
 
 export interface TeamAppsConnectionListener {

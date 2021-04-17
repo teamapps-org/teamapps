@@ -22,25 +22,9 @@ package org.teamapps.dto.generate;
 import com.google.common.collect.Streams;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
-import org.teamapps.dto.TeamAppsDtoParser.ClassCollectionContext;
-import org.teamapps.dto.TeamAppsDtoParser.ClassDeclarationContext;
-import org.teamapps.dto.TeamAppsDtoParser.CommandDeclarationContext;
-import org.teamapps.dto.TeamAppsDtoParser.EnumDeclarationContext;
-import org.teamapps.dto.TeamAppsDtoParser.EventDeclarationContext;
-import org.teamapps.dto.TeamAppsDtoParser.InterfaceDeclarationContext;
-import org.teamapps.dto.TeamAppsDtoParser.PropertyDeclarationContext;
-import org.teamapps.dto.TeamAppsDtoParser.SubCommandDeclarationContext;
-import org.teamapps.dto.TeamAppsDtoParser.SubEventDeclarationContext;
-import org.teamapps.dto.TeamAppsDtoParser.TypeContext;
-import org.teamapps.dto.TeamAppsDtoParser.TypeDeclarationContext;
-import org.teamapps.dto.TeamAppsDtoParser.TypeReferenceContext;
+import org.teamapps.dto.TeamAppsDtoParser.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -53,9 +37,8 @@ public class TeamAppsDtoModel {
 	private final List<InterfaceDeclarationContext> interfaceDeclarations = new ArrayList<>();
 	private final List<EnumDeclarationContext> enumDeclarations = new ArrayList<>();
 	private final List<EventDeclarationContext> eventDeclarations;
+	private final List<QueryDeclarationContext> queryDeclarations;
 	private final List<CommandDeclarationContext> commandDeclarations;
-	private final List<SubEventDeclarationContext> subEventDeclarations;
-	private final List<SubCommandDeclarationContext> subCommandDeclarations;
 	private final List<ParserRuleContext> classesAndInterfacesReferencedForSubEvents;
 
 	public TeamAppsDtoModel(ClassCollectionContext classCollectionContext) {
@@ -70,9 +53,8 @@ public class TeamAppsDtoModel {
 			enumDeclarations.addAll(extractEnumDeclarations(typeDeclarations));
 		});
 		eventDeclarations = extractEventDeclarations();
+		queryDeclarations = extractQueryDeclarations();
 		commandDeclarations = extractCommandDeclarations();
-		subEventDeclarations = extractSubEventDeclarations();
-		subCommandDeclarations = extractSubCommandDeclarations();
 		classesAndInterfacesReferencedForSubEvents = extractClassesAndInterfacesReferencedForSubEvents();
 	}
 
@@ -104,24 +86,17 @@ public class TeamAppsDtoModel {
 		).collect(Collectors.toList());
 	}
 
+	private List<QueryDeclarationContext> extractQueryDeclarations() {
+		return Stream.concat(
+				classDeclarations.stream().flatMap(c -> c.queryDeclaration().stream()),
+				interfaceDeclarations.stream().flatMap(i -> i.queryDeclaration().stream())
+		).collect(Collectors.toList());
+	}
+
 	private List<CommandDeclarationContext> extractCommandDeclarations() {
 		return Stream.concat(
 				classDeclarations.stream().flatMap(c -> c.commandDeclaration().stream()),
 				interfaceDeclarations.stream().flatMap(i -> i.commandDeclaration().stream())
-		).collect(Collectors.toList());
-	}
-
-	private List<SubEventDeclarationContext> extractSubEventDeclarations() {
-		return Stream.concat(
-				classDeclarations.stream().flatMap(c -> c.subEventDeclaration().stream()),
-				interfaceDeclarations.stream().flatMap(i -> i.subEventDeclaration().stream())
-		).collect(Collectors.toList());
-	}
-
-	private List<SubCommandDeclarationContext> extractSubCommandDeclarations() {
-		return Stream.concat(
-				classDeclarations.stream().flatMap(c -> c.subCommandDeclaration().stream()),
-				interfaceDeclarations.stream().flatMap(i -> i.subCommandDeclaration().stream())
 		).collect(Collectors.toList());
 	}
 
@@ -151,16 +126,12 @@ public class TeamAppsDtoModel {
 		return eventDeclarations;
 	}
 
+	public List<QueryDeclarationContext> getQueryDeclarations() {
+		return queryDeclarations;
+	}
+
 	public List<CommandDeclarationContext> getCommandDeclarations() {
 		return commandDeclarations;
-	}
-
-	public List<SubEventDeclarationContext> getSubEventDeclarations() {
-		return subEventDeclarations;
-	}
-
-	public List<SubCommandDeclarationContext> getSubCommandDeclarations() {
-		return subCommandDeclarations;
 	}
 
 	public List<ParserRuleContext> getClassesAndInterfacesReferencedForSubEvents() {
@@ -475,45 +446,24 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<SubCommandDeclarationContext> getAllSubCommands(ClassDeclarationContext classContext) {
-		List<SubCommandDeclarationContext> commands = Stream.concat(
+	public List<QueryDeclarationContext> getAllQueries(ClassDeclarationContext classContext) {
+		List<QueryDeclarationContext> queries = Stream.concat(
 				findSelfAndAllSuperClasses(classContext).stream()
-						.flatMap(clazz -> clazz.subCommandDeclaration().stream()),
+						.flatMap(clazz -> clazz.queryDeclaration().stream()),
 				findAllImplementedInterfaces(classContext).stream()
-						.flatMap(interf -> interf.subCommandDeclaration().stream())
+						.flatMap(interf -> interf.queryDeclaration().stream())
 
 		)
-				.filter(distinctByKey(command -> command.Identifier().getText()))
+				.filter(distinctByKey(query -> query.Identifier().getText()))
 				.collect(Collectors.toList());
-		Collections.reverse(commands);
-		return commands;
+		Collections.reverse(queries);
+		return queries;
 	}
 
-	public List<SubCommandDeclarationContext> getAllSubCommands(InterfaceDeclarationContext interfaceContext) {
+	public List<QueryDeclarationContext> getAllQueries(InterfaceDeclarationContext interfaceContext) {
 		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
-				.flatMap(interf -> interf.subCommandDeclaration().stream())
-				.filter(distinctByKey(command -> command.Identifier().getText()))
-				.collect(Collectors.toList());
-	}
-
-	public List<SubEventDeclarationContext> getAllSubEvents(ClassDeclarationContext classContext) {
-		List<SubEventDeclarationContext> events = Stream.concat(
-				findSelfAndAllSuperClasses(classContext).stream()
-						.flatMap(clazz -> clazz.subEventDeclaration().stream()),
-				findAllImplementedInterfaces(classContext).stream()
-						.flatMap(interf -> interf.subEventDeclaration().stream())
-
-		)
-				.filter(distinctByKey(event -> event.Identifier().getText()))
-				.collect(Collectors.toList());
-		Collections.reverse(events);
-		return events;
-	}
-
-	public List<SubEventDeclarationContext> getAllSubEvents(InterfaceDeclarationContext interfaceContext) {
-		return findAllSuperInterfacesAndSelf(interfaceContext).stream()
-				.flatMap(interf -> interf.subEventDeclaration().stream())
-				.filter(distinctByKey(event -> event.Identifier().getText()))
+				.flatMap(interf -> interf.queryDeclaration().stream())
+				.filter(distinctByKey(query -> query.Identifier().getText()))
 				.collect(Collectors.toList());
 	}
 
@@ -527,16 +477,6 @@ public class TeamAppsDtoModel {
 		).collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithSubCommands(ClassDeclarationContext classContext) {
-		return Stream.concat(
-				Optional.ofNullable(findSuperClass(classContext))
-						.filter(clazz -> !getAllSubCommands(clazz).isEmpty())
-						.map(Stream::of).orElseGet(Stream::empty),
-				getDirectlyImplementedInterfaces(classContext).stream()
-						.filter(interf -> !getAllSubCommands(interf).isEmpty())
-		).collect(Collectors.toList());
-	}
-
 	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithEvents(ClassDeclarationContext classContext) {
 		return Stream.concat(
 				Optional.ofNullable(findSuperClass(classContext))
@@ -547,108 +487,15 @@ public class TeamAppsDtoModel {
 		).collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> superClassAndDirectlyImplementedInterfacesWithSubEvents(ClassDeclarationContext classContext) {
-		return Stream.concat(
-				Optional.ofNullable(findSuperClass(classContext))
-						.filter(clazz -> !getAllSubEvents(clazz).isEmpty())
-						.map(Stream::of).orElseGet(Stream::empty),
-				getDirectlyImplementedInterfaces(classContext).stream()
-						.filter(interf -> !getAllSubEvents(interf).isEmpty())
-		).collect(Collectors.toList());
-	}
-
 	public List<ParserRuleContext> getSuperInterfacesWithCommands(InterfaceDeclarationContext interfaceContext) {
 		return findSuperInterfaces(interfaceContext).stream()
 				.filter(itf -> !getAllCommands(itf).isEmpty())
 				.collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> getSuperInterfacesWithSubCommands(InterfaceDeclarationContext interfaceContext) {
-		return findSuperInterfaces(interfaceContext).stream()
-				.filter(itf -> !getAllSubCommands(itf).isEmpty())
-				.collect(Collectors.toList());
-	}
-
 	public List<ParserRuleContext> getSuperInterfacesWithEvents(InterfaceDeclarationContext interfaceContext) {
 		return findSuperInterfaces(interfaceContext).stream()
 				.filter(itf -> !getAllEvents(itf).isEmpty())
-				.collect(Collectors.toList());
-	}
-
-	public List<ParserRuleContext> getSuperInterfacesWithSubEvents(InterfaceDeclarationContext interfaceContext) {
-		return findSuperInterfaces(interfaceContext).stream()
-				.filter(itf -> !getAllSubEvents(itf).isEmpty())
-				.collect(Collectors.toList());
-	}
-
-	public boolean interfaceOrDescendantHasSubCommandDeclarations(InterfaceDeclarationContext interf) {
-		boolean hasOwnSubCommands = interf.subCommandDeclaration().size() > 0;
-		if (hasOwnSubCommands) {
-			return true;
-		} else {
-			return findAllSubClasses(interf).stream().anyMatch(subClass -> subClass.subCommandDeclaration().size() > 0)
-					|| findAllSubInterfaces(interf).stream().anyMatch(subInterface -> subInterface.subCommandDeclaration().size() > 0);
-		}
-	}
-
-	public boolean classOrSubClassHasSubCommandDeclarations(ClassDeclarationContext classContext) {
-		boolean hasOwnSubCommands = classContext.subCommandDeclaration().size() > 0;
-		if (hasOwnSubCommands) {
-			return true;
-		} else {
-			return findAllSubClasses(classContext).stream().anyMatch(subClass -> subClass.subCommandDeclaration().size() > 0);
-		}
-	}
-
-	public boolean interfaceOrDescendantHasSubEventDeclarations(InterfaceDeclarationContext interf) {
-		boolean referencedForSubEvents = isDescendantOfClassOrInterfaceReferencedForSubEvents(interf);
-		boolean hasOwnOrInheritedSubEvents = findAllSuperInterfacesAndSelf(interf).stream().anyMatch(i -> !i.subEventDeclaration().isEmpty());
-		return referencedForSubEvents || hasOwnOrInheritedSubEvents;
-//		if (hasOwnOrInheritedSubEvents) {
-//			return true;
-//		} else {
-//			boolean subInterfaceDeclaresSubEvent = findAllSubInterfaces(interf).stream().anyMatch(subInterface -> subInterface.subEventDeclaration().size() > 0);
-//			List<TeamAppsDtoParser.ClassDeclarationContext> allSubClasses = findAllSubClasses(interf);
-//			boolean subClassDeclaresSubEvent = allSubClasses.stream()
-//					.anyMatch(subClass -> subClass.subEventDeclaration().size() > 0);
-//			boolean subClassInheritsSubEventFromInterface = allSubClasses.stream()
-//					.flatMap(subClass -> findAllImplementedInterfaces(subClass).stream())
-//					.anyMatch(subClassImplementedInterface -> subClassImplementedInterface.subEventDeclaration().size() > 0);
-//			return subInterfaceDeclaresSubEvent || subClassDeclaresSubEvent || subClassInheritsSubEventFromInterface;
-//		}
-	}
-
-	public boolean classOrSubClassHasSubEventDeclarations(ClassDeclarationContext classContext) {
-		boolean referencedForSubEvents = isDescendantOfClassOrInterfaceReferencedForSubEvents(classContext);
-		boolean classHierarchyDeclaresSubEvents = findSelfAndAllSuperClasses(classContext).stream().anyMatch(i -> !i.subEventDeclaration().isEmpty());
-		boolean inheritsSubEventsFromInterfaces = findAllImplementedInterfaces(classContext).stream().anyMatch(i -> !i.subEventDeclaration().isEmpty());
-		return referencedForSubEvents || classHierarchyDeclaresSubEvents || inheritsSubEventsFromInterfaces;
-//		if (referencedForSubEvents || classHierarchyDeclaresSubEvents || inheritsSubEventsFromInterfaces) {
-//			return true;
-//		} else {
-//			List<TeamAppsDtoParser.ClassDeclarationContext> subClasses = findAllSubClasses(classContext);
-//			boolean subClassDeclaresSubEvent = subClasses.stream().anyMatch(subClass -> subClass.subEventDeclaration().size() > 0);
-//			boolean subClassInheritsSubEventFromInterface = subClasses.stream()
-//					.flatMap(subClass -> findAllImplementedInterfaces(subClass).stream())
-//					.anyMatch(subClassImplementedInterface -> subClassImplementedInterface.subEventDeclaration().size() > 0);
-//			return subClassDeclaresSubEvent || subClassInheritsSubEventFromInterface;
-//		}
-	}
-
-	public List<SubEventDeclarationContext> findAllSubEventsInHierarchy(ClassDeclarationContext classContext) {
-		List<ClassDeclarationContext> allSubClasses = findAllSubClasses(classContext);
-		allSubClasses.add(classContext);
-		return allSubClasses.stream()
-				.flatMap(c -> getAllSubEvents(c).stream())
-				.filter(distinctByKey(subEvent -> subEvent.Identifier().getText()))
-				.collect(Collectors.toList());
-	}
-
-	public List<SubEventDeclarationContext> findAllSubEventsInHierarchy(InterfaceDeclarationContext classContext) {
-		List<ClassDeclarationContext> allSubClasses = findAllSubClasses(classContext);
-		return allSubClasses.stream()
-				.flatMap(c -> getAllSubEvents(c).stream())
-				.filter(distinctByKey(subEvent -> subEvent.Identifier().getText()))
 				.collect(Collectors.toList());
 	}
 
@@ -703,12 +550,12 @@ public class TeamAppsDtoModel {
 		).collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> getAllClassesAndInterfacesWithSubEvents() {
+	public List<ParserRuleContext> getAllClassesAndInterfacesWithQueries() {
 		return Stream.concat(
 				classDeclarations.stream()
-						.filter(classDeclarationContext -> !getAllSubEvents(classDeclarationContext).isEmpty()),
+						.filter(classDeclarationContext -> !getAllQueries(classDeclarationContext).isEmpty()),
 				interfaceDeclarations.stream()
-						.filter(interfaceDeclarationContext -> !getAllSubEvents(interfaceDeclarationContext).isEmpty())
+						.filter(interfaceDeclarationContext -> !getAllQueries(interfaceDeclarationContext).isEmpty())
 		).collect(Collectors.toList());
 	}
 
@@ -731,12 +578,6 @@ public class TeamAppsDtoModel {
 						.map(fp -> findReferencedClassOrInterface(fp.type())),
 				classContext.eventDeclaration().stream()
 						.flatMap(cd -> cd.formalParameterWithDefault().stream())
-						.map(fp -> findReferencedClassOrInterface(fp.type())),
-				classContext.subCommandDeclaration().stream()
-						.flatMap(cd -> cd.formalParameterWithDefault().stream())
-						.map(fp -> findReferencedClassOrInterface(fp.type())),
-				classContext.subEventDeclaration().stream()
-						.flatMap(cd -> cd.formalParameterWithDefault().stream())
 						.map(fp -> findReferencedClassOrInterface(fp.type()))
 		)
 				.flatMap(Function.identity())
@@ -754,12 +595,6 @@ public class TeamAppsDtoModel {
 						.flatMap(cd -> cd.formalParameterWithDefault().stream())
 						.map(fp -> findReferencedEnum(fp.type())),
 				classContext.eventDeclaration().stream()
-						.flatMap(cd -> cd.formalParameterWithDefault().stream())
-						.map(fp -> findReferencedEnum(fp.type())),
-				classContext.subCommandDeclaration().stream()
-						.flatMap(cd -> cd.formalParameterWithDefault().stream())
-						.map(fp -> findReferencedEnum(fp.type())),
-				classContext.subEventDeclaration().stream()
 						.flatMap(cd -> cd.formalParameterWithDefault().stream())
 						.map(fp -> findReferencedEnum(fp.type()))
 		).flatMap(Function.identity())
@@ -779,12 +614,6 @@ public class TeamAppsDtoModel {
 						.map(fp -> findReferencedClassOrInterface(fp.type())),
 				interfaceContext.eventDeclaration().stream()
 						.flatMap(cd -> cd.formalParameterWithDefault().stream())
-						.map(fp -> findReferencedClassOrInterface(fp.type())),
-				interfaceContext.subCommandDeclaration().stream()
-						.flatMap(cd -> cd.formalParameterWithDefault().stream())
-						.map(fp -> findReferencedClassOrInterface(fp.type())),
-				interfaceContext.subEventDeclaration().stream()
-						.flatMap(cd -> cd.formalParameterWithDefault().stream())
 						.map(fp -> findReferencedClassOrInterface(fp.type()))
 		)
 				.flatMap(Function.identity())
@@ -802,12 +631,6 @@ public class TeamAppsDtoModel {
 						.flatMap(cd -> cd.formalParameterWithDefault().stream())
 						.map(fp -> findReferencedEnum(fp.type())),
 				interfaceContext.eventDeclaration().stream()
-						.flatMap(cd -> cd.formalParameterWithDefault().stream())
-						.map(fp -> findReferencedEnum(fp.type())),
-				interfaceContext.subCommandDeclaration().stream()
-						.flatMap(cd -> cd.formalParameterWithDefault().stream())
-						.map(fp -> findReferencedEnum(fp.type())),
-				interfaceContext.subEventDeclaration().stream()
 						.flatMap(cd -> cd.formalParameterWithDefault().stream())
 						.map(fp -> findReferencedEnum(fp.type()))
 		).flatMap(Function.identity())
@@ -832,22 +655,6 @@ public class TeamAppsDtoModel {
 				.collect(Collectors.toList());
 	}
 
-	public List<ParserRuleContext> findAllReferencedClassesAndInterfaces(SubEventDeclarationContext eventContext) {
-		return eventContext.formalParameterWithDefault().stream()
-				.map(p -> findReferencedClassOrInterface(p.type()))
-				.filter(Objects::nonNull)
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
-	public List<EnumDeclarationContext> findAllReferencedEnums(SubEventDeclarationContext eventDeclarationContext) {
-		return eventDeclarationContext.formalParameterWithDefault().stream()
-				.map(p -> findReferencedEnum(p.type()))
-				.filter(Objects::nonNull)
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
 	public List<ParserRuleContext> findAllClassesInterfacesAndEnumsReferencedByEvents() {
 		return eventDeclarations.stream().flatMap(ed -> Stream.concat(
 				findAllReferencedClassesAndInterfaces(ed).stream(),
@@ -856,16 +663,6 @@ public class TeamAppsDtoModel {
 				.distinct()
 				.collect(Collectors.toList());
 	}
-
-	public List<ParserRuleContext> findAllClassesInterfacesAndEnumsReferencedBySubEvents() {
-		return subEventDeclarations.stream().flatMap(ed -> Stream.concat(
-				findAllReferencedClassesAndInterfaces(ed).stream(),
-				findAllReferencedEnums(ed).stream()
-		))
-				.distinct()
-				.collect(Collectors.toList());
-	}
-
 
 	public List<PropertyDeclarationContext> findAllNotYetImplementedProperties(ClassDeclarationContext classContext) {
 		return Streams.concat(

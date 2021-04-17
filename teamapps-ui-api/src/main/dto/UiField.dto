@@ -59,12 +59,12 @@ class UiComponentField extends UiField {
 class UiTextField extends UiField implements UiTextInputHandlingField {
 	int maxCharacters; //if > 0, do not allow to enter more than this number of characters
 	boolean showClearButton;
-	String emptyText;
+	String placeholderText;
 	boolean autofill = false; // browser feature
 
 	command setMaxCharacters(int maxCharacters);
 	command setShowClearButton(boolean showClearButton);
-	command setEmptyText(String emptyText);
+	command setPlaceholderText(String placeholderText);
 }
 
 class UiPasswordField extends UiTextField {
@@ -144,7 +144,7 @@ class UiImageField extends UiField {
 class UiNumberField extends UiField implements UiTextInputHandlingField {
   	String locale;
 	int precision = -1; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number
-	String emptyText;
+	String placeholderText;
 	boolean showClearButton;
 	double minValue = Double.MIN_VALUE;
     double maxValue = Double.MAX_VALUE;
@@ -158,7 +158,7 @@ class UiNumberField extends UiField implements UiTextInputHandlingField {
     command setSliderStep(double step);
     command setCommitOnSliderChange(boolean commitOnSliderChange);
 	command setPrecision(int displayPrecision);
-	command setEmptyText(String emptyText);
+	command setPlaceholderText(String placeholderText);
 	command setShowClearButton(boolean showClearButton);
 	command setLocale(String locale);
 }
@@ -350,20 +350,25 @@ abstract class AbstractUiTimeField extends UiField implements UiTextInputHandlin
 class UiLocalTimeField extends AbstractUiTimeField {
 }
 
-abstract class AbstractUiDateField extends UiField implements UiTextInputHandlingField {
+@TypeScriptFactory
+class UiLocalDate {
+    required int year;
+    required int month;
+    required int day;
+}
+
+class UiLocalDateField extends UiField {
     boolean showDropDownButton = true;
 	boolean showClearButton;
 	boolean favorPastDates = false;
 	String locale;
 	UiDateTimeFormatDescriptor dateFormat = null; // if null, UiConfiguration.dateFormat applies
+	UiLocalDate defaultSuggestionDate; // null == today
+	boolean shuffledFormatSuggestionsEnabled;
+	enum {CALENDAR, CALENDAR_SUGGESTION_LIST, SUGGESTION_LIST} dropDownMode = DropDownMode.CALENDAR_SUGGESTION_LIST;
+	String placeholderText;
 
-	command setShowDropDownButton(boolean showDropDownButton);
-	command setShowClearButton(boolean showClearButton);
-	command setFavorPastDates(boolean favorPastDates);
-	command setLocaleAndDateFormat(String locale, UiDateTimeFormatDescriptor dateFormat);
-}
-
-class UiLocalDateField extends AbstractUiDateField {
+    command update(UiLocalDateField config);
 }
 
 abstract class AbstractUiDateTimeField extends UiField {
@@ -468,10 +473,6 @@ enum UiTextMatchingMode {
 
 class UiComboBox extends UiField implements UiTextInputHandlingField {
 	Dictionary<UiTemplate> templates;
-	List<UiComboBoxTreeRecord> staticData; //if available, use this as data source
-	List<String> staticDataMatchPropertyNames; // Fields that are matched against if staticData is specified. If null, use "asString" property
-	UiTextMatchingMode textMatchingMode = UiTextMatchingMode.CONTAINS; // only filter on client-side if staticList != null. SIMILARITY_MATCH allows levenshtein distance of 3
-
 	boolean showDropDownButton = true;
 	boolean showDropDownAfterResultsArrive = false;
 	boolean highlightFirstResultEntry = true;
@@ -482,11 +483,11 @@ class UiComboBox extends UiField implements UiTextInputHandlingField {
 	boolean showClearButton;
 	boolean animate;
 	boolean showExpanders = true;
+	String placeholderText;
 
-	event lazyChildDataRequested(int parentId);
+	query lazyChildren(int parentId) returns List<UiComboBoxTreeRecord>;
+	query retrieveDropdownEntries(String queryString) returns List<UiComboBoxTreeRecord>;
 
-	command setDropDownData(List<UiComboBoxTreeRecord> data);
-	command setChildNodes(int parentId, List<UiComboBoxTreeRecord> children);
 	command registerTemplate(String id, UiTemplate template);
 	command replaceFreeTextEntry(String freeText, UiComboBoxTreeRecord newEntry);
 }
@@ -495,6 +496,7 @@ class UiTagComboBox extends UiComboBox {
 	int maxEntries; // if 0, then the list is unbounded
 	enum {SINGLE_LINE, MULTI_LINE, SINGLE_TAG_PER_LINE} wrappingMode = WrappingMode.MULTI_LINE;
 	boolean distinct = true; // if true, do not allow the same entry to be selected multiple times!
+	boolean twoStepDeletion; // This will cause tags to not directly be deleted when pressing the backspace or delete key, but first marked for deletion.
 }
 
 //// the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
