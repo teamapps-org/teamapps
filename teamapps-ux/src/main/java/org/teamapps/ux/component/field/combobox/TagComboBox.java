@@ -31,10 +31,7 @@ import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.component.tree.TreeNodeInfoExtractor;
 import org.teamapps.ux.model.ComboBoxModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> {
@@ -63,6 +60,12 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 	public TagComboBox(ComboBoxModel<RECORD> model) {
 		super(model);
 		init();
+	}
+
+	@Override
+	protected Set<RECORD> getSelectedRecords() {
+		List<RECORD> value = getValue();
+		return value != null ? Set.copyOf(value) : Set.of();
 	}
 
 	private void init() {
