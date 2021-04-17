@@ -71,6 +71,16 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	private boolean showExpanders = false;
 	private String emptyText;
 
+	/**
+	 * If true, already selected entries will be filtered out from model query results.
+	 *
+	 * @apiNote While this is handy when dealing with list-style models (no hierarchy), it might cause unintended behavior with tree-style
+	 * models. This option will not pay any attention to hierarchical structures.
+	 * If the parent <code>P</code> of a child node <code>C</code> is filtered out due to this option,
+	 * then <code>C</code> will appear as a root node on the client side.
+	 */
+	private boolean distinctModelResultFiltering = false;
+
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
 	protected Function<String, RECORD> freeTextRecordFactory = null;
 
@@ -126,8 +136,11 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 				final UiComboBox.RetrieveDropdownEntriesQuery q = (UiComboBox.RetrieveDropdownEntriesQuery) query;
 				String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
 				if (model != null) {
-					List<RECORD> records = model.getRecords(string);
-					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(records);
+					List<RECORD> resultRecords = model.getRecords(string);
+					if (distinctModelResultFiltering) {
+						resultRecords = filterOutSelected(resultRecords);
+					}
+					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
 					cacheResponse.commit();
 					return CompletableFuture.completedFuture(cacheResponse.getAndClearResult());
 				} else {
@@ -140,8 +153,11 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 				if (parentRecord != null) {
 					if (model != null) {
 						List<RECORD> childRecords = model.getChildRecords(parentRecord);
+						if (distinctModelResultFiltering) {
+							childRecords = filterOutSelected(childRecords);
+						}
 						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
-						cacheResponse.commit();                                                   
+						cacheResponse.commit();
 						return CompletableFuture.completedFuture(cacheResponse.getAndClearResult());
 					}
 				} else {
@@ -152,6 +168,16 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 				return CompletableFuture.failedFuture(new IllegalArgumentException("unknown query"));
 		}
 	}
+
+	private List<RECORD> filterOutSelected(List<RECORD> resultRecords) {
+		Set<RECORD> selectedRecords = getSelectedRecords();
+		resultRecords = resultRecords.stream()
+				.filter(r -> !selectedRecords.contains(r))
+				.collect(Collectors.toList());
+		return resultRecords;
+	}
+
+	protected abstract Set<RECORD> getSelectedRecords();
 
 	protected UiComboBoxTreeRecord createUiTreeRecordWithoutParentRelation(RECORD record) {
 		if (record == null) {
@@ -402,6 +428,14 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	public void setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
 		reRenderIfRendered();
+	}
+
+	public boolean isDistinctModelResultFiltering() {
+		return distinctModelResultFiltering;
+	}
+
+	public void setDistinctModelResultFiltering(boolean distinctModelResultFiltering) {
+		this.distinctModelResultFiltering = distinctModelResultFiltering;
 	}
 
 	@Override
