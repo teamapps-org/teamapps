@@ -221,6 +221,12 @@ public class ToolbarButton {
 		return this;
 	}
 
+	public ToolbarButton updateDropDownComponent(Component dropDownComponent) {
+		this.dropDownComponentSupplier = () -> dropDownComponent;
+		this.toolbarButtonGroup.handleDropDownComponentUpdate(this, dropDownComponent);
+		return this;
+	}
+
 	public boolean isEagerDropDownRendering() {
 		return eagerDropDownRendering;
 	}

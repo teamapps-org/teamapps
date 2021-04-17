@@ -24,6 +24,7 @@ import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiToolbarButton;
 import org.teamapps.dto.UiToolbarButtonGroup;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.template.Template;
 
 import java.util.ArrayList;
@@ -147,6 +148,12 @@ public class ToolbarButtonGroup implements Comparable<ToolbarButtonGroup> {
 	/*package-private*/ void handleButtonVisibilityChange(String buttonClientId, boolean visible) {
 		if (this.toolContainer != null) {
 			this.toolContainer.handleButtonVisibilityChange(this.clientId, buttonClientId, visible);
+		}
+	}
+
+	void handleDropDownComponentUpdate(ToolbarButton button, Component component) {
+		if (this.toolContainer != null) {
+			this.toolContainer.handleButtonSetDropDownComponent(this, button, component);
 		}
 	}
 
