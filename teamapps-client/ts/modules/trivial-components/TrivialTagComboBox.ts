@@ -293,7 +293,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		});
 		this.$editor.addEventListener("blur", (e: FocusEvent) => {
 			if (this.blurCausedByClickInsideComponent) {
-				this.$editor.focus(); console.log("focus!!")
+				this.$editor.focus();
 			} else {
 				this.onBlur.fire();
 				this.setTagToBeRemoved(null);
@@ -336,7 +336,6 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			} else if (e.which == keyCodes.left_arrow || e.which == keyCodes.right_arrow) {
 				this.setTagToBeRemoved(null);
 				if (this._isDropDownOpen && this.dropDownComponent.handleKeyboardInput(e)) {
-					console.log("prevent default");
 					e.preventDefault();
 					return;
 				} else if (e.which == keyCodes.left_arrow && this.$editor.textContent.length === 0 && window.getSelection().anchorOffset === 0) {
@@ -441,18 +440,17 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 
 		[this.$tagComboBox, this.$dropDown].forEach(element => {
 			element.addEventListener("mousedown", () => {
-				console.log("mousedown...", document.activeElement);
 				this.blurCausedByClickInsideComponent = true;
 			}, true);
 			element.addEventListener("mouseup", () => {
 				if (this.blurCausedByClickInsideComponent) {
-					this.$editor.focus(); console.log("focus!!")
+					this.$editor.focus();
 					setTimeout(() => this.blurCausedByClickInsideComponent = false); // let the other handlers do their job before removing event blocker
 				}
 			});
 			element.addEventListener("mouseout", () => {
 				if (this.blurCausedByClickInsideComponent) {
-					this.$editor.focus(); console.log("focus!!")
+					this.$editor.focus();
 					setTimeout(() => this.blurCausedByClickInsideComponent = false); // let the other handlers do their job before removing event blocker
 				}
 			});
@@ -480,7 +478,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 					}
 				}
 			}
-			this.$editor.focus(); console.log("focus!!")
+			this.$editor.focus();
 		});
 
 		this.$tagArea.addEventListener("click", (e) => {
@@ -720,7 +718,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 	}
 
 	public focus() {
-		this.$editor.focus(); console.log("focus!!", this.$editor.textContent.length)
+		this.$editor.focus();
 		selectElementContents(this.$editor, 0, this.$editor.textContent.length); // we need to do this, else the cursor does not appear in Chrome when navigating using left and right keys...
 	}
 

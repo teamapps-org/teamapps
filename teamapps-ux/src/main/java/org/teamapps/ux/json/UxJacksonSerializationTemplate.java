@@ -21,7 +21,6 @@ package org.teamapps.ux.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -32,16 +31,13 @@ import java.io.IOException;
 
 public class UxJacksonSerializationTemplate {
 
-	private static final SimpleModule UX_SERIALIZERS_JACKSON_MODULE = new UxSerializersJacksonModule();
+	public static final SimpleModule UX_SERIALIZERS_JACKSON_MODULE = new UxSerializersJacksonModule();
 	private static final ThreadLocal<SessionContext> SESSION_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
 	private final SessionContext sessionContext;
 
-	public UxJacksonSerializationTemplate(ObjectMapper objectMapper, SessionContext sessionContext) {
+	public UxJacksonSerializationTemplate(SessionContext sessionContext) {
 		this.sessionContext = sessionContext;
-		if (!objectMapper.getRegisteredModuleIds().contains(UxSerializersJacksonModule.class)) {
-			objectMapper.registerModule(UX_SERIALIZERS_JACKSON_MODULE);
-		}
 	}
 
 	public void doWithUxJacksonSerializers(Runnable runnable) {

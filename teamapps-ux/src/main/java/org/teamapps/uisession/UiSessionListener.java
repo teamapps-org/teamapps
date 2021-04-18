@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,13 +26,24 @@ import org.teamapps.dto.UiSessionClosingReason;
 
 import javax.servlet.http.HttpSession;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public interface UiSessionListener {
 
-    void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession);
+	void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession);
+
 	void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession);
+
 	CompletableFuture<Void> onUiEvent(QualifiedUiSessionId sessionId, UiEvent event);
-	CompletableFuture<?> onUiQuery(QualifiedUiSessionId sessionId, UiQuery query);
+
+	/*
+	Note that this does not return CompletableFuture. The reason is that the handler needs to be wrapped with a
+	UxJacksonSerializationTemplate, which cannot be done with CompletableFutures.
+	TODO #reactive
+	*/
+	public void onUiQuery(QualifiedUiSessionId sessionId, UiQuery query, Consumer<Object> resultCallback, Consumer<Throwable> errorCallback);
+
 	void onActivityStateChanged(QualifiedUiSessionId sessionId, boolean active);
+
 	void onUiSessionClosed(QualifiedUiSessionId sessionId, UiSessionClosingReason reason);
 }
