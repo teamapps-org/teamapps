@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.session;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.icu.util.ULocale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,8 +121,7 @@ public class SessionContext {
 						  HttpSession httpSession,
 						  UiCommandExecutor commandExecutor,
 						  UxServerContext serverContext,
-						  SessionIconProvider iconProvider,
-						  ObjectMapper jacksonObjectMapper) {
+						  SessionIconProvider iconProvider) {
 		this.sessionId = sessionId;
 		this.httpSession = httpSession;
 		this.clientInfo = clientInfo;
@@ -132,7 +130,7 @@ public class SessionContext {
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
 		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
-		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(jacksonObjectMapper, this);
+		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(this);
 		this.rankingTranslationProvider = new RankingTranslationProvider();
 		this.rankingTranslationProvider.addTranslationProvider(TeamAppsTranslationProviderFactory.createProvider());
 		addIconBundle(TeamAppsIconBundle.createBundle());

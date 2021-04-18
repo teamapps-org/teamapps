@@ -19,7 +19,6 @@
  */
 package org.teamapps.testutil;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mockito.Mockito;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
@@ -47,8 +46,7 @@ public class UxTestUtil {
 				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),
 				Mockito.mock(UiCommandExecutor.class),
 				Mockito.mock(UxServerContext.class),
-				Mockito.mock(SessionIconProvider.class),
-				Mockito.mock(ObjectMapper.class)
+				Mockito.mock(SessionIconProvider.class)
 		);
 	}
 
