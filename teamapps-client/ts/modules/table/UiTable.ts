@@ -107,9 +107,9 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	public readonly onCellEditingStarted: TeamAppsEvent<UiTable_CellEditingStartedEvent> = new TeamAppsEvent(this);
 	public readonly onCellEditingStopped: TeamAppsEvent<UiTable_CellEditingStoppedEvent> = new TeamAppsEvent(this);
 	public readonly onCellValueChanged: TeamAppsEvent<UiTable_CellValueChangedEvent> = new TeamAppsEvent(this);
-	public readonly onRowSelected: TeamAppsEvent<UiTable_RowSelectedEvent> = new TeamAppsEvent(this);
+	public readonly onRowSelected: TeamAppsEvent<UiTable_RowSelectedEvent> = new TeamAppsEvent(this, {throttlingMode: "debounce", delay: 250});
 	public readonly onCellClicked: TeamAppsEvent<UiTable_CellClickedEvent> = new TeamAppsEvent(this);
-	public readonly onMultipleRowsSelected: TeamAppsEvent<UiTable_MultipleRowsSelectedEvent> = new TeamAppsEvent<UiTable_MultipleRowsSelectedEvent>(this);
+	public readonly onMultipleRowsSelected: TeamAppsEvent<UiTable_MultipleRowsSelectedEvent> = new TeamAppsEvent<UiTable_MultipleRowsSelectedEvent>(this, {throttlingMode: "debounce", delay: 250});
 	public readonly onSortingChanged: TeamAppsEvent<UiTable_SortingChangedEvent> = new TeamAppsEvent(this);
 	public readonly onRequestNestedData: TeamAppsEvent<UiTable_RequestNestedDataEvent> = new TeamAppsEvent(this);
 	public readonly onFieldOrderChange: TeamAppsEvent<UiTable_FieldOrderChangeEvent> = new TeamAppsEvent(this);
