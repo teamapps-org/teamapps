@@ -78,6 +78,7 @@ export {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 export {UiTree} from "./UiTree";
 export {UiVerticalLayout} from "./UiVerticalLayout";
 export {UiVideoPlayer} from "./UiVideoPlayer";
+export {UiShakaPlayer} from "./UiShakaPlayer";
 export {UiWebRtcPlayer} from "./UiWebRtcPlayer";
 export {UiWindow} from "./UiWindow";
 export {UiWorkSpaceLayout} from "./workspace-layout/UiWorkSpaceLayout";

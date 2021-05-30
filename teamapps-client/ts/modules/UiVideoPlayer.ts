@@ -29,7 +29,6 @@ import {
 	UiVideoPlayer_EndedEvent,
 	UiVideoPlayer_ErrorLoadingEvent,
 	UiVideoPlayer_PlayerProgressEvent,
-	UiVideoPlayer_PosterImageSize,
 	UiVideoPlayerCommandHandler,
 	UiVideoPlayerConfig,
 	UiVideoPlayerEventSource
@@ -37,6 +36,7 @@ import {
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiMediaPreloadMode} from "../generated/UiMediaPreloadMode";
 import {parseHtml} from "./Common";
+import {UiPosterImageSize} from "../generated/UiPosterImageSize";
 
 export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> implements UiVideoPlayerCommandHandler, UiVideoPlayerEventSource {
 
@@ -57,10 +57,11 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 	constructor(config: UiVideoPlayerConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		const posterImageSizeCssClass = `poster-${UiVideoPlayer_PosterImageSize[config.posterImageSize].toLowerCase()}`;
+		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
+		let preload = `${config.preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : config.preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}`;
 		this.$componentWrapper = parseHtml(
-			`<div id="${config.id}" class="UiVideoPlayer ${posterImageSizeCssClass} ${config.url == null ? "not-playable" : ""}">
-                    <video src="${config.url || ""}" width="100%" height="100%" poster="${config.posterImageUrl || ''}" preload="${config.preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : config.preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}" ${config.autoplay ? "autoplay" : ""}></video>
+			`<div id="${config.id}" class="UiVideoPlayer ${config.url == null ? "not-playable" : ""}">
+                    <video class="${posterImageSizeCssClass}" src="${config.url || ""}" width="100%" height="100%" poster="${config.posterImageUrl || ''}" preload="${preload}" ${config.autoplay ? "autoplay" : ""}></video>
                 </div>`);
 		this.$componentWrapper.classList.toggle("hide-controls", !config.showControls);
 		this.$video = this.$componentWrapper.querySelector<HTMLElement>(":scope video");
