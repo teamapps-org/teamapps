@@ -128,6 +128,7 @@
     "preact": "^10.5.7",
     "react-jsx-parser": "^1.28.1",
     "resize-observer-polyfill": "^1.5.1",
+    "shaka-player": "^3.1.0",
     "slick-carousel": "^1.8.1",
     "slickgrid": "https://github.com/yamass/SlickGrid.git#d8ed005670faae0635ec5abad2f5ed20bf454812",
     "socket.io-client": "^2.3.0",

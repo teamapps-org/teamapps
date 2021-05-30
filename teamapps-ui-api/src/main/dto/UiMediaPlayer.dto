@@ -49,7 +49,7 @@ class UiVideoPlayer extends UiComponent {
 	boolean autoplay;
 	boolean showControls;
 	String posterImageUrl;
-	enum {CONTAIN, COVER, ORIGINAL} posterImageSize = PosterImageSize.CONTAIN;
+	UiPosterImageSize posterImageSize = UiPosterImageSize.CONTAIN;
 	int sendPlayerProgressEventsEachXSeconds = 1; // if 0, then send NO events
 	String backgroundColor = "rgb(68, 68, 68)";
 	UiMediaPreloadMode preloadMode;
@@ -64,6 +64,10 @@ class UiVideoPlayer extends UiComponent {
 	event errorLoading();
 	event playerProgress(int positionInSeconds);
 	event ended();
+}
+
+enum UiPosterImageSize {
+    CONTAIN, COVER, FILL
 }
 
 enum UiMediaPreloadMode {

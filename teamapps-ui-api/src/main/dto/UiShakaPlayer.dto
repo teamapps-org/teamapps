@@ -1,0 +1,16 @@
+class UiShakaPlayer extends UiComponent {
+    String hlsUrl;
+    String dashUrl;
+    String posterImageUrl;
+    UiPosterImageSize posterImageSize = UiPosterImageSize.CONTAIN;
+    int timeUpdateEventThrottleMillis;
+    String backgroundColor;
+    boolean autoplay;
+
+	command setUrls(String hlsUrl, String dashUrl);
+	command jumpTo(long timeMillis);
+
+	event errorLoading();
+	event timeUpdate(long timeMillis);
+	event ended();
+}
