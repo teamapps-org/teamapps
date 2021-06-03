@@ -53,7 +53,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(TeamAppsUiSessionManager.class);
 
-	private final ScheduledExecutorService scheduledExecutorService;
+	private final ScheduledExecutorService houseKeepingScheduledExecutor;
 	private final ObjectMapper objectMapper;
 	private final TeamAppsConfiguration config;
 	private final Table<String, String, UiSession> sessionsById = Tables.synchronizedTable(HashBasedTable.create());
@@ -61,20 +61,16 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 
 	public TeamAppsUiSessionManager(TeamAppsConfiguration config, ObjectMapper objectMapper) {
-		this(config, objectMapper, null);
-	}
-
-	public TeamAppsUiSessionManager(TeamAppsConfiguration config, ObjectMapper objectMapper, UiSessionListener uiSessionListener) {
 		this.config = config;
-		this.uiSessionListener = uiSessionListener;
 		this.objectMapper = objectMapper;
-		this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(runnable -> {
+		this.houseKeepingScheduledExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
 			Thread thread = new Thread(runnable);
+			thread.setName("TeamAppsUiSessionManager.houseKeeping");
 			thread.setDaemon(true);
 			return thread;
 		});
-		this.scheduledExecutorService.scheduleAtFixedRate(
-				() -> updateSessionStates(),
+		this.houseKeepingScheduledExecutor.scheduleAtFixedRate(
+				this::updateSessionStates,
 				config.getKeepaliveMessageIntervalMillis(),
 				config.getKeepaliveMessageIntervalMillis(),
 				TimeUnit.MILLISECONDS
@@ -267,7 +263,7 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 	}
 
 	public void destroy() {
-		scheduledExecutorService.shutdown();
+		houseKeepingScheduledExecutor.shutdown();
 	}
 
 	private class UiSession {

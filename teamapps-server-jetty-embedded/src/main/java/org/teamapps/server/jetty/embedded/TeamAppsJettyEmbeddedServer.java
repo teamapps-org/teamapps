@@ -28,6 +28,7 @@ import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainer
 import org.teamapps.client.ClientCodeExtractor;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsCore;
+import org.teamapps.util.threading.CompletableFutureChainSequentialExecutorFactory;
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 import org.teamapps.webcontroller.WebController;
 
@@ -79,7 +80,7 @@ public class TeamAppsJettyEmbeddedServer {
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) throws ServletException {
-		teamAppsCore = new TeamAppsCore(config, webController);
+		teamAppsCore = new TeamAppsCore(config, new CompletableFutureChainSequentialExecutorFactory(config.getMaxNumberOfSessionExecutorThreads()), webController);
 		this.webAppDirectory = webAppDirectory;
 
 		server = new Server(port);

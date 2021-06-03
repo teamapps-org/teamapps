@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,6 @@
  */
 package org.teamapps.core;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiClientInfo;
@@ -30,6 +29,7 @@ import org.teamapps.icons.IconProvider;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
+import org.teamapps.util.threading.SequentialExecutorFactory;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
@@ -52,10 +52,10 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsUxSessionManager.class);
 
+	private final SequentialExecutorFactory sessionExecutorFactory;
 	private final WebController webController;
 	private final UiCommandExecutor commandExecutor;
 
-	private final ObjectMapper objectMapper;
 	private final IconProvider iconProvider;
 	private final TeamAppsUploadManager uploadManager;
 	private final Map<QualifiedUiSessionId, SessionContext> sessionContextById = new ConcurrentHashMap<>();
@@ -72,10 +72,14 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 		}
 	};
 
-	public TeamAppsUxSessionManager(WebController webController, UiCommandExecutor commandExecutor, ObjectMapper objectMapper, IconProvider iconProvider, TeamAppsUploadManager uploadManager) {
+	public TeamAppsUxSessionManager(SequentialExecutorFactory sessionExecutorFactory,
+									WebController webController,
+									UiCommandExecutor commandExecutor,
+									IconProvider iconProvider,
+									TeamAppsUploadManager uploadManager) {
+		this.sessionExecutorFactory = sessionExecutorFactory;
 		this.webController = webController;
 		this.commandExecutor = commandExecutor;
-		this.objectMapper = objectMapper;
 		this.iconProvider = iconProvider;
 		this.uploadManager = uploadManager;
 	}
@@ -101,6 +105,7 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 
 		SessionContext sessionContext = new SessionContext(
 				sessionId,
+				sessionExecutorFactory.createExecutor(),
 				clientInfo,
 				sessionConfiguration,
 				httpSession,

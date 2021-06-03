@@ -33,6 +33,7 @@ import org.teamapps.icons.IconProvider;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.TeamAppsUiSessionManager;
+import org.teamapps.util.threading.CompletableFutureChainSequentialExecutorFactory;
 import org.teamapps.ux.component.infiniteitemview.InfiniteItemView;
 import org.teamapps.ux.component.infiniteitemview.ListInfiniteItemViewModel;
 import org.teamapps.ux.component.rootpanel.RootPanel;
@@ -49,13 +50,13 @@ public class SessionContextGarbageCollectionTest {
 	public void testSessionContextGarbageCollection() throws Exception {
 		ObjectMapper objectMapper = TeamAppsObjectMapperFactory.create();
 		TeamAppsUiSessionManager uiSessionManager = new TeamAppsUiSessionManager(new TeamAppsConfiguration(), objectMapper);
-		TeamAppsUxSessionManager teamAppsUxSessionManager = new TeamAppsUxSessionManager(context -> {
+		TeamAppsUxSessionManager teamAppsUxSessionManager = new TeamAppsUxSessionManager(new CompletableFutureChainSequentialExecutorFactory(10), context -> {
 			RootPanel rootPanel = new RootPanel();
-			InfiniteItemView<BaseTemplateRecord> component = new InfiniteItemView<>();
-			component.setModel(new ListInfiniteItemViewModel<>(IntStream.range(0, 100).mapToObj(i -> new BaseTemplateRecord(MaterialIcon.ALARM_ON, "item" + i, "asdfkj")).collect(Collectors.toList())));
+			InfiniteItemView<BaseTemplateRecord<?>> component = new InfiniteItemView<>();
+			component.setModel(new ListInfiniteItemViewModel<>(IntStream.range(0, 100).mapToObj(i -> new BaseTemplateRecord<>(MaterialIcon.ALARM_ON, "item" + i, "asdfkj")).collect(Collectors.toList())));
 			rootPanel.setContent(component);
 			context.addRootComponent(null, rootPanel);
-		}, uiSessionManager, objectMapper, Mockito.mock(IconProvider.class), Mockito.mock(TeamAppsUploadManager.class));
+		}, uiSessionManager, Mockito.mock(IconProvider.class), Mockito.mock(TeamAppsUploadManager.class));
 		uiSessionManager.setUiSessionListener(teamAppsUxSessionManager);
 
 		for (int i = 0; i < 100_000; i++) {

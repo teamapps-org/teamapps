@@ -32,6 +32,7 @@ import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 import org.teamapps.client.ClientCodeExtractor;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsCore;
+import org.teamapps.util.threading.CompletableFutureChainSequentialExecutorFactory;
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 import org.teamapps.webcontroller.WebController;
 
@@ -77,7 +78,7 @@ public class TeamAppsUndertowEmbeddedServer {
 	}
 
 	public TeamAppsUndertowEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) throws IOException {
-		this.teamAppsCore = new TeamAppsCore(config, webController);
+		this.teamAppsCore = new TeamAppsCore(config, new CompletableFutureChainSequentialExecutorFactory(config.getMaxNumberOfSessionExecutorThreads()), webController);
 		this.webAppDirectory = webAppDirectory.toPath().toRealPath().toFile();
 		this.port = port;
 	}

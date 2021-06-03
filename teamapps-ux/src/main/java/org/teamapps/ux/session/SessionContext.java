@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,8 +32,6 @@ import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
-import org.teamapps.util.MultiKeySequentialExecutor;
-import org.teamapps.util.NamedThreadFactory;
 import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
@@ -64,23 +62,17 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static org.teamapps.util.ExceptionUtil.softenExceptions;
 
 public class SessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
-	private static final MultiKeySequentialExecutor<SessionContext> sessionMultiKeyExecutor = new MultiKeySequentialExecutor<>(new ThreadPoolExecutor(
-			Runtime.getRuntime().availableProcessors() / 2 + 1,
-			1000,
-			60, TimeUnit.SECONDS,
-			new LinkedBlockingQueue<>(),
-			new NamedThreadFactory("teamapps-session-executor", true)
-	));
+	private static final String DEFAULT_BACKGROUND_NAME = "defaultBackground";
+	private static final String DEFAULT_BACKGROUND_URL = "/resources/backgrounds/default-bl.jpg";
 
-	private final static String DEFAULT_BACKGROUND_NAME = "defaultBackground";
-	private final static String DEFAULT_BACKGROUND_URL = "/resources/backgrounds/default-bl.jpg";
-	private boolean defaultBackgroundRegistered;
+	private final ExecutorService sessionExecutor;
 
 	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
 	public final Event<Void> onDestroyed = new Event<>();
@@ -110,18 +102,22 @@ public class SessionContext {
 
 	private final Map<String, Icon<?, ?>> bundleIconByKey = new HashMap<>();
 
+	private boolean defaultBackgroundRegistered;
+
 	private Window sessionExpiredWindow;
 	private Window sessionErrorWindow;
 	private Window sessionTerminatedWindow;
 
 
 	public SessionContext(QualifiedUiSessionId sessionId,
+						  ExecutorService sessionExecutor,
 						  ClientInfo clientInfo,
 						  SessionConfiguration sessionConfiguration,
 						  HttpSession httpSession,
 						  UiCommandExecutor commandExecutor,
 						  UxServerContext serverContext,
 						  SessionIconProvider iconProvider) {
+		this.sessionExecutor = sessionExecutor;
 		this.sessionId = sessionId;
 		this.httpSession = httpSession;
 		this.clientInfo = clientInfo;
@@ -203,7 +199,7 @@ public class SessionContext {
 		onDestroyed.fireIgnoringExceptions(null);
 		runWithContext(() -> { // Do in runWithContext() with forceEnqueue=true so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
 			destroyed = true;
-			sessionMultiKeyExecutor.closeForKey(this);
+			sessionExecutor.shutdown();
 		}, true);
 	}
 
@@ -294,31 +290,35 @@ public class SessionContext {
 		}, forceEnqueue);
 	}
 
-	public <R> CompletableFuture<R> runWithContext(Supplier<R> runnable) {
+	public <R> CompletableFuture<R> runWithContext(Callable<R> runnable) {
 		return runWithContext(runnable, false);
 	}
 
-	public <R> CompletableFuture<R> runWithContext(Supplier<R> runnable, boolean forceEnqueue) {
+	public <R> CompletableFuture<R> runWithContext(Callable<R> runnable, boolean forceEnqueue) {
 		if (destroyed) {
 			LOGGER.info("This SessionContext ({}) is already destroyed. Not sending command.", sessionId);
 			return CompletableFuture.failedFuture(new IllegalStateException("SessionContext destroyed."));
 		}
 		if (CurrentSessionContext.getOrNull() == this && !forceEnqueue) {
 			// Fast lane! This thread is already bound to this context. Just execute the runnable.
-			return CompletableFuture.completedFuture(runnable.get());
+			try {
+				return CompletableFuture.completedFuture(runnable.call());
+			} catch (Exception e) {
+				return CompletableFuture.failedFuture(e);
+			}
 		} else {
-			return sessionMultiKeyExecutor.submit(this, () -> {
+			return CompletableFuture.supplyAsync(() -> {
 				CurrentSessionContext.set(this);
 				try {
 					Object[] resultHolder = new Object[1];
 					executionDecorators
-							.createWrappedRunnable(() -> resultHolder[0] = runnable.get())
+							.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(runnable::call))
 							.run();
 					return ((R) resultHolder[0]);
 				} finally {
 					CurrentSessionContext.unset();
 				}
-			});
+			}, sessionExecutor);
 		}
 	}
 

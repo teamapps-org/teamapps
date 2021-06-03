@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -114,6 +114,19 @@ public class TeamAppsConfiguration {
 	 * The directory that uploaded files should get stored to (see UploadServlet).
 	 */
 	private File uploadDirectory = new File(System.getProperty("java.io.tmpdir"));
+
+	/**
+	 * Max number of threads that should be used for changing session state.
+	 * Note that you can also choose to write an own {@link org.teamapps.util.threading.SequentialExecutorFactory},
+	 * in which case this
+	 *
+	 * @see org.teamapps.core.TeamAppsUxSessionManager#sessionExecutorFactory
+	 */
+	private int maxNumberOfSessionExecutorThreads = Runtime.getRuntime().availableProcessors() * 2;
+
+	public static void main(String[] args) {
+		System.out.println(Runtime.getRuntime().availableProcessors());
+	}
 
 	public TeamAppsConfiguration() {
 	}
@@ -238,17 +251,37 @@ public class TeamAppsConfiguration {
 	}
 
 	/**
-	  @see #maxUiClientMessageSize
+	 * @see #maxUiClientMessageSize
 	 */
 	public void setMaxUiClientMessageSize(int maxUiClientMessageSize) {
 		this.maxUiClientMessageSize = maxUiClientMessageSize;
 	}
 
+	/**
+	 * @see #uploadDirectory
+	 */
 	public File getUploadDirectory() {
 		return uploadDirectory;
 	}
 
+	/**
+	 * @see #uploadDirectory
+	 */
 	public void setUploadDirectory(File uploadDirectory) {
 		this.uploadDirectory = uploadDirectory;
+	}
+
+	/**
+	 * @see #maxNumberOfSessionExecutorThreads
+	 */
+	public int getMaxNumberOfSessionExecutorThreads() {
+		return maxNumberOfSessionExecutorThreads;
+	}
+
+	/**
+	 * @see #maxNumberOfSessionExecutorThreads
+	 */
+	public void setMaxNumberOfSessionExecutorThreads(int maxNumberOfSessionExecutorThreads) {
+		this.maxNumberOfSessionExecutorThreads = maxNumberOfSessionExecutorThreads;
 	}
 }
