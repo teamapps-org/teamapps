@@ -25,6 +25,7 @@ import org.teamapps.icons.IconLibraryRegistry;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.TeamAppsUiSessionManager;
+import org.teamapps.util.threading.SequentialExecutorFactory;
 import org.teamapps.webcontroller.WebController;
 
 public class TeamAppsCore {
@@ -37,7 +38,7 @@ public class TeamAppsCore {
 	private final TeamAppsUxSessionManager sessionManager;
 	private final TeamAppsUploadManager uploadManager;
 
-	public TeamAppsCore(TeamAppsConfiguration config, WebController webController) {
+	public TeamAppsCore(TeamAppsConfiguration config, SequentialExecutorFactory sessionExecutorFactory, WebController webController) {
 		this.config = config;
 		this.webController = webController;
 		this.objectMapper = TeamAppsObjectMapperFactory.create();
@@ -45,7 +46,7 @@ public class TeamAppsCore {
 		this.uploadManager = new TeamAppsUploadManager();
 
 		this.uiSessionManager = new TeamAppsUiSessionManager(config, objectMapper);
-		this.sessionManager = new TeamAppsUxSessionManager(webController, uiSessionManager, objectMapper, new IconProvider(iconLibraryRegistry), uploadManager);
+		this.sessionManager = new TeamAppsUxSessionManager(sessionExecutorFactory, webController, uiSessionManager, new IconProvider(iconLibraryRegistry), uploadManager);
 		this.uiSessionManager.setUiSessionListener(sessionManager);
 	}
 

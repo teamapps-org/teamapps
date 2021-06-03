@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.util;
+package org.teamapps.util.threading;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -26,43 +26,38 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class MultiKeySequentialExecutorTest {
+public class CompletableFutureChainSequentialExecutorFactoryTest {
 
 	@Test
 	public void executionOrderOneKey() throws Exception {
 		int numberOfExecutions = 1000;
 
-		MultiKeySequentialExecutor<String> executor = new MultiKeySequentialExecutor<>(2);
+		CompletableFutureChainSequentialExecutorFactory executor = new CompletableFutureChainSequentialExecutorFactory(2);
 
 		IntList executionOrderCheckingList = new IntArrayList();
 
-		CompletableFuture<Boolean> lastFuture = null;
+		Future<Boolean> lastFuture = null;
 		for (int i = 0; i < numberOfExecutions; i++) {
 			final int iFinal = i;
-			lastFuture = executor.submit("myKey", () -> executionOrderCheckingList.add(iFinal));
+			lastFuture = executor.createExecutor()
+					.submit(() -> executionOrderCheckingList.add(iFinal));
 		}
 
-		CompletableFuture<Void> allDoneFuture = lastFuture.thenRun(() -> {
-			checkIntListContents(executionOrderCheckingList, numberOfExecutions);
-		});
-
-		allDoneFuture.get(1, TimeUnit.SECONDS);
+		lastFuture.get();
+		checkIntListContents(executionOrderCheckingList, numberOfExecutions);
 	}
 
 	@Test
 	public void executionOrderMultipleKey() throws Exception {
 		int numberOfExecutions = 1000;
 
-		MultiKeySequentialExecutor<String> executor = new MultiKeySequentialExecutor<>(2);
+		CompletableFutureChainSequentialExecutorFactory executor = new CompletableFutureChainSequentialExecutorFactory(2);
 
 		IntList executionOrderCheckingList1 = new IntArrayList();
 		IntList executionOrderCheckingList2 = new IntArrayList();
@@ -73,9 +68,9 @@ public class MultiKeySequentialExecutorTest {
 		CompletableFuture<Boolean> lastFuture3 = null;
 		for (int i = 0; i < numberOfExecutions; i++) {
 			final int iFinal = i;
-			lastFuture1 = executor.submit("myKey1", () -> executionOrderCheckingList1.add(iFinal));
-			lastFuture2 = executor.submit("myKey2", () -> executionOrderCheckingList2.add(iFinal));
-			lastFuture3 = executor.submit("myKey3", () -> executionOrderCheckingList3.add(iFinal));
+			lastFuture1 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList1.add(iFinal), executor.createExecutor());
+			lastFuture2 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList2.add(iFinal), executor.createExecutor());
+			lastFuture3 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList3.add(iFinal), executor.createExecutor());
 		}
 
 		CompletableFuture.allOf(
@@ -94,14 +89,14 @@ public class MultiKeySequentialExecutorTest {
 
 	@Test
 	public void executionContinuesAfterException() throws Exception {
-		MultiKeySequentialExecutor<String> executor = new MultiKeySequentialExecutor<>(2);
+		CompletableFutureChainSequentialExecutorFactory executor = new CompletableFutureChainSequentialExecutorFactory(2);
 
-		executor.submit("a", () -> {
+		executor.createExecutor().submit(() -> {
 			throw new RuntimeException();
 		});
 
 		boolean[] secondWasExecuted = new boolean[]{false};
-		executor.submit("a", () -> {
+		executor.createExecutor().submit(() -> {
 			secondWasExecuted[0] = true;
 		})
 				.get();
@@ -112,7 +107,7 @@ public class MultiKeySequentialExecutorTest {
 	@Test
 	@Ignore
 	public void performance() throws InterruptedException, ExecutionException {
-		MultiKeySequentialExecutor<Integer> executor = new MultiKeySequentialExecutor<>(20);
+		CompletableFutureChainSequentialExecutorFactory executorFactory = new CompletableFutureChainSequentialExecutorFactory(20);
 		long now = System.currentTimeMillis();
 		long in5seconds = now + 3000;
 		AtomicBoolean shutdown = new AtomicBoolean(false);
@@ -127,10 +122,15 @@ public class MultiKeySequentialExecutorTest {
 			}
 		};
 
+		List<ExecutorService> executors = IntStream.range(0, 10)
+				.mapToObj(i -> executorFactory.createExecutor())
+				.collect(Collectors.toList());
+
 		ExecutorService x = Executors.newFixedThreadPool(20);
 		for (int i = 0; i < 1000_000; i++) {
 			x.submit(() -> {
-				executor.submit(ThreadLocalRandom.current().nextInt(0, 10), task);
+				executors.get(ThreadLocalRandom.current().nextInt(0, 10))
+						.submit(task);
 				if (shutdown.get()) {
 					System.err.println("After shutdown??");
 				}
@@ -142,7 +142,8 @@ public class MultiKeySequentialExecutorTest {
 		shutdown.set(true);
 
 		CompletableFuture[] completionFutures = IntStream.range(0, 10)
-				.mapToObj(i -> executor.submit(i, task))
+				.mapToObj(i -> executors.get(i)
+						.submit(task))
 				.toArray(CompletableFuture[]::new);
 		CompletableFuture.allOf(completionFutures)
 				.thenRun(() -> {
