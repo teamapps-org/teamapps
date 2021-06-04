@@ -6,11 +6,21 @@ class UiShakaPlayer extends UiComponent {
     int timeUpdateEventThrottleMillis;
     String backgroundColor;
     boolean autoplay;
+    UiTrackLabelFormat trackLabelFormat;
 
 	command setUrls(String hlsUrl, String dashUrl);
 	command jumpTo(long timeMillis);
 
+	static command setDistinctManifestLanguageFixEnabled(boolean enabled);
+
 	event errorLoading();
 	event timeUpdate(long timeMillis);
 	event ended();
+}
+
+enum UiTrackLabelFormat {
+	LABEL,
+	LANGUAGE,
+	LANGUAGE_ROLE,
+	ROLE;
 }
