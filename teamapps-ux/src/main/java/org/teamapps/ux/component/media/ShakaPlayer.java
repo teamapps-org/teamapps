@@ -6,6 +6,7 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiShakaPlayer;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.session.SessionContext;
 
 public class ShakaPlayer extends AbstractComponent {
 
@@ -13,12 +14,17 @@ public class ShakaPlayer extends AbstractComponent {
 	public final Event<Long> onTimeUpdate = new Event<>();
 	public final Event<Void> onEnded = new Event<>();
 
+	public static void setDistinctManifestLanguageFixEnabled(boolean enabled) {
+		SessionContext.current().queueCommand(new UiShakaPlayer.SetDistinctManifestLanguageFixEnabledCommand(enabled));
+	}
+
 	private String hlsUrl;
 	private String dashUrl;
 	private String posterImageUrl;
 	private PosterImageSize posterImageSize = PosterImageSize.COVER;
 	private int timeUpdateEventThrottleMillis = 1000;
 	private Color backgroundColor = Color.BLACK;
+	private TrackLabelFormat trackLabelFormat = TrackLabelFormat.LABEL;
 
 	private long timeMillis = 0;
 
@@ -40,6 +46,7 @@ public class ShakaPlayer extends AbstractComponent {
 		ui.setPosterImageSize(posterImageSize.toUiPosterImageSize());
 		ui.setTimeUpdateEventThrottleMillis(timeUpdateEventThrottleMillis);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString(): null);
+		ui.setTrackLabelFormat(trackLabelFormat.toUiTrackLabelFormat());
 		return ui;
 	}
 
@@ -129,4 +136,12 @@ public class ShakaPlayer extends AbstractComponent {
 		reRenderIfRendered();
 	}
 
+	public TrackLabelFormat getTrackLabelFormat() {
+		return trackLabelFormat;
+	}
+
+	public void setTrackLabelFormat(TrackLabelFormat trackLabelFormat) {
+		this.trackLabelFormat = trackLabelFormat;
+		reRenderIfRendered();
+	}
 }

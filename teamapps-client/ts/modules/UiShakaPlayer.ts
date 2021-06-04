@@ -36,6 +36,8 @@ import {
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 import {UiPosterImageSize} from "../generated/UiPosterImageSize";
+import {throttle} from "./util/throttle";
+import {UiTrackLabelFormat} from "../generated/UiTrackLabelFormat";
 
 (window as any).shaka = require("shaka-player");
 (window as any).shaka = require("../../node_modules/shaka-player/dist/shaka-player.ui");
@@ -43,7 +45,10 @@ import {UiPosterImageSize} from "../generated/UiPosterImageSize";
 import Player = shaka.Player;
 import UIConfiguration = shaka.extern.UIConfiguration;
 import Overlay = shaka.ui.Overlay;
-import {throttle} from "./util/throttle";
+import ManifestConfiguration = shaka.extern.ManifestConfiguration;
+import ManifestParser = shaka.extern.ManifestParser;
+import PlayerInterface = shaka.extern.ManifestParser.PlayerInterface;
+import TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
 
 export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> implements UiShakaPlayerCommandHandler, UiShakaPlayerEventSource {
 
@@ -77,7 +82,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 			this.player.addEventListener('error', () => this.onErrorLoading.fire({}));
 
 			const ui: Overlay = new shaka.ui.Overlay(this.player, this.$componentWrapper, this.$video);
-			const config: Partial<UIConfiguration> = {
+			const uiConfig: Partial<UIConfiguration> = {
 				addBigPlayButton: true,
 				controlPanelElements: [
 					"play_pause",
@@ -100,15 +105,18 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 					"language",
 					"picture_in_picture",
 					"playback_rate",
-					"airplay",
 				],
 				seekBarColors: undefined,
 				showUnbufferedStart: false,
-				trackLabelFormat: undefined,
+				trackLabelFormat: config.trackLabelFormat == UiTrackLabelFormat.LABEL ? TrackLabelFormat.LABEL
+					: config.trackLabelFormat == UiTrackLabelFormat.LANGUAGE ? TrackLabelFormat.LANGUAGE
+						: config.trackLabelFormat == UiTrackLabelFormat.ROLE ? TrackLabelFormat.ROLE
+							: config.trackLabelFormat == UiTrackLabelFormat.LANGUAGE_ROLE ? TrackLabelFormat.LANGUAGE_ROLE
+								: undefined,
 				volumeBarColors: undefined,
 				addSeekBar: true
 			};
-			ui.configure(config as UIConfiguration);
+			ui.configure(uiConfig as UIConfiguration);
 		});
 
 		this.setUrls(config.hlsUrl, config.dashUrl);
@@ -142,7 +150,46 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 			this.onErrorLoading.fire({});
 		}
 	}
+
+	static setDistinctManifestLanguageFixEnabled(enabled: boolean) {
+		const dashParserFactory = enabled ? () => new DistinctLanguageManifestParserDecorator(new shaka.dash.DashParser()) : () => new shaka.dash.DashParser();
+		shaka.media.ManifestParser.registerParserByExtension('mpd', dashParserFactory);
+		shaka.media.ManifestParser.registerParserByMime('application/dash+xml', dashParserFactory);
+		shaka.media.ManifestParser.registerParserByMime('video/vnd.mpeg.dash.mpd', dashParserFactory);
+		const hlsParserFactory = enabled ? () => new DistinctLanguageManifestParserDecorator(new shaka.hls.HlsParser()) : () => new shaka.hls.HlsParser();
+		shaka.media.ManifestParser.registerParserByExtension('m3u8', hlsParserFactory);
+		shaka.media.ManifestParser.registerParserByMime('application/x-mpegurl', hlsParserFactory);
+		shaka.media.ManifestParser.registerParserByMime('application/vnd.apple.mpegurl', hlsParserFactory);
+	}
+}
+
+class DistinctLanguageManifestParserDecorator implements ManifestParser {
+	constructor(private delegate: ManifestParser) {
+	}
+
+	configure(config: ManifestConfiguration) {
+		return this.delegate.configure(config);
+	}
+
+	async start(uri: string, playerInterface: PlayerInterface) {
+		let manifest = await this.delegate.start(uri, playerInterface);
+		manifest.variants.forEach((variant, i) => variant.language = variant.language + i)
+		return manifest;
+	}
+
+	async stop() {
+		return this.delegate.stop();
+	}
+
+	onExpirationUpdated(sessionId: string, expiration: number): any {
+		return this.delegate.onExpirationUpdated(sessionId, expiration);
+	}
+
+	update(): any {
+		return this.delegate.update();
+	}
 }
 
 shaka.polyfill.installAll();
+
 TeamAppsUiComponentRegistry.registerComponentClass("UiShakaPlayer", UiShakaPlayer);
