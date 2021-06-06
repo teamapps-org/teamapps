@@ -14,8 +14,8 @@ public class ShakaPlayer extends AbstractComponent {
 	public final Event<Long> onTimeUpdate = new Event<>();
 	public final Event<Void> onEnded = new Event<>();
 
-	public static void setDistinctManifestLanguageFixEnabled(boolean enabled) {
-		SessionContext.current().queueCommand(new UiShakaPlayer.SetDistinctManifestLanguageFixEnabledCommand(enabled));
+	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
+		SessionContext.current().queueCommand(new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
 
 	private String hlsUrl;

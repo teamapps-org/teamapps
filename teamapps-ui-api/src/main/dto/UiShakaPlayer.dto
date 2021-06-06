@@ -11,7 +11,7 @@ class UiShakaPlayer extends UiComponent {
 	command setUrls(String hlsUrl, String dashUrl);
 	command jumpTo(long timeMillis);
 
-	static command setDistinctManifestLanguageFixEnabled(boolean enabled);
+	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
 
 	event errorLoading();
 	event timeUpdate(long timeMillis);
