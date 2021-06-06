@@ -27,6 +27,8 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
+
 public class CompletableFutureChainSequentialExecutorFactory implements SequentialExecutorFactory {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompletableFutureChainSequentialExecutorFactory.class);
@@ -92,12 +94,7 @@ public class CompletableFutureChainSequentialExecutorFactory implements Sequenti
 				long executionStartTime = System.currentTimeMillis();
 				long delay = executionStartTime - submitTime;
 				delayStats.getAndUpdate(minMaxAverageStats -> minMaxAverageStats.push(delay));
-				V result;
-				try {
-					result = task.call();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+				V result = softenExceptions(task);
 				long executionTime = System.currentTimeMillis() - executionStartTime;
 				executionTimeStats.getAndUpdate(minMaxAverageStats -> minMaxAverageStats.push(executionTime));
 				this.queueSize.decrementAndGet();

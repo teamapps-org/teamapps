@@ -1,4 +1,4 @@
-package org.teamapps.util;
+package org.teamapps.common.util;
 
 public interface RunnableWithExceptions {
 

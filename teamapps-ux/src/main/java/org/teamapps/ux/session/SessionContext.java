@@ -64,7 +64,7 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static org.teamapps.util.ExceptionUtil.softenExceptions;
+import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
 public class SessionContext {
 

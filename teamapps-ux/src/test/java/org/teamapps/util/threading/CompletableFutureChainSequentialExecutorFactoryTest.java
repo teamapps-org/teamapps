@@ -38,14 +38,15 @@ public class CompletableFutureChainSequentialExecutorFactoryTest {
 	public void executionOrderOneKey() throws Exception {
 		int numberOfExecutions = 1000;
 
-		CompletableFutureChainSequentialExecutorFactory executor = new CompletableFutureChainSequentialExecutorFactory(2);
+		CompletableFutureChainSequentialExecutorFactory executorFactory = new CompletableFutureChainSequentialExecutorFactory(2);
 
 		IntList executionOrderCheckingList = new IntArrayList();
 
 		Future<Boolean> lastFuture = null;
+		ExecutorService executor = executorFactory.createExecutor();
 		for (int i = 0; i < numberOfExecutions; i++) {
 			final int iFinal = i;
-			lastFuture = executor.createExecutor()
+			lastFuture = executor
 					.submit(() -> executionOrderCheckingList.add(iFinal));
 		}
 
@@ -66,11 +67,14 @@ public class CompletableFutureChainSequentialExecutorFactoryTest {
 		CompletableFuture<Boolean> lastFuture1 = null;
 		CompletableFuture<Boolean> lastFuture2 = null;
 		CompletableFuture<Boolean> lastFuture3 = null;
+		ExecutorService executor1 = executor.createExecutor();
+		ExecutorService executor2 = executor.createExecutor();
+		ExecutorService executor3 = executor.createExecutor();
 		for (int i = 0; i < numberOfExecutions; i++) {
 			final int iFinal = i;
-			lastFuture1 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList1.add(iFinal), executor.createExecutor());
-			lastFuture2 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList2.add(iFinal), executor.createExecutor());
-			lastFuture3 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList3.add(iFinal), executor.createExecutor());
+			lastFuture1 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList1.add(iFinal), executor1);
+			lastFuture2 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList2.add(iFinal), executor2);
+			lastFuture3 = CompletableFuture.supplyAsync(() -> executionOrderCheckingList3.add(iFinal), executor3);
 		}
 
 		CompletableFuture.allOf(
