@@ -1,4 +1,4 @@
-package org.teamapps.util;
+package org.teamapps.common.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
