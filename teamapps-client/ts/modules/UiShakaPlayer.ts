@@ -151,19 +151,19 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 		}
 	}
 
-	static setDistinctManifestLanguageFixEnabled(enabled: boolean) {
-		const dashParserFactory = enabled ? () => new DistinctLanguageManifestParserDecorator(new shaka.dash.DashParser()) : () => new shaka.dash.DashParser();
+	static setDistinctManifestAudioTracksFixEnabled(enabled: boolean) {
+		const dashParserFactory = enabled ? () => new DistinctAudioTracksManifestParserDecorator(new shaka.dash.DashParser()) : () => new shaka.dash.DashParser();
 		shaka.media.ManifestParser.registerParserByExtension('mpd', dashParserFactory);
 		shaka.media.ManifestParser.registerParserByMime('application/dash+xml', dashParserFactory);
 		shaka.media.ManifestParser.registerParserByMime('video/vnd.mpeg.dash.mpd', dashParserFactory);
-		const hlsParserFactory = enabled ? () => new DistinctLanguageManifestParserDecorator(new shaka.hls.HlsParser()) : () => new shaka.hls.HlsParser();
+		const hlsParserFactory = enabled ? () => new DistinctAudioTracksManifestParserDecorator(new shaka.hls.HlsParser()) : () => new shaka.hls.HlsParser();
 		shaka.media.ManifestParser.registerParserByExtension('m3u8', hlsParserFactory);
 		shaka.media.ManifestParser.registerParserByMime('application/x-mpegurl', hlsParserFactory);
 		shaka.media.ManifestParser.registerParserByMime('application/vnd.apple.mpegurl', hlsParserFactory);
 	}
 }
 
-class DistinctLanguageManifestParserDecorator implements ManifestParser {
+class DistinctAudioTracksManifestParserDecorator implements ManifestParser {
 	constructor(private delegate: ManifestParser) {
 	}
 
@@ -173,7 +173,8 @@ class DistinctLanguageManifestParserDecorator implements ManifestParser {
 
 	async start(uri: string, playerInterface: PlayerInterface) {
 		let manifest = await this.delegate.start(uri, playerInterface);
-		manifest.variants.forEach((variant, i) => variant.language = variant.language + i)
+		// manifest.variants.forEach((variant, i) => variant.language = variant.language + i)
+		manifest.variants.forEach((variant, i) => variant.audio.roles.push("role"+i));
 		return manifest;
 	}
 
