@@ -19,7 +19,6 @@
  */
 package org.teamapps.client;
 
-import net.lingala.zip4j.ZipFile;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +30,8 @@ import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class ClientCodeExtractor {
 
@@ -90,20 +91,48 @@ public class ClientCodeExtractor {
 		}
 	}
 
-	private static boolean unzipFile(File file, File destinationDir) {
-		try {
-			if (file == null || !file.exists() || destinationDir == null || !destinationDir.isDirectory()) {
-				return false;
+	private static void unzipFile(File zipFile, File destDir) throws IOException {
+		Objects.requireNonNull(zipFile);
+		Objects.requireNonNull(destDir);
+		createDirIfNotExists(destDir);
+
+		byte[] buffer = new byte[1024];
+		try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
+			ZipEntry zipEntry = zis.getNextEntry();
+			while (zipEntry != null) {
+				while (zipEntry != null) {
+					File destFile = new File(destDir, zipEntry.getName());
+					String destDirPath = destDir.getCanonicalPath();
+					String destFilePath = destFile.getCanonicalPath();
+					if (!destFilePath.startsWith(destDirPath + File.separator)) {
+						// Prevent zip slip! See https://snyk.io/research/zip-slip-vulnerability
+						throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+					}
+					if (zipEntry.isDirectory()) {
+						createDirIfNotExists(destFile);
+					} else {
+						File parent = destFile.getParentFile();
+						createDirIfNotExists(parent);
+						FileOutputStream fos = new FileOutputStream(destFile);
+						int len;
+						while ((len = zis.read(buffer)) > 0) {
+							fos.write(buffer, 0, len);
+						}
+						fos.close();
+					}
+					zipEntry = zis.getNextEntry();
+				}
 			}
-			ZipFile zipFile = new ZipFile(file);
-			zipFile.extractAll(destinationDir.getAbsolutePath());
-			// make sure the server does never return a 304 for the index.html
-			Files.setLastModifiedTime(destinationDir.toPath().resolve("index.html"), FileTime.from(Instant.now()));
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
+			zis.closeEntry();
 		}
-		return false;
+
+		Files.setLastModifiedTime(destDir.toPath().resolve("index.html"), FileTime.from(Instant.now()));
+	}
+
+	private static void createDirIfNotExists(File dir) throws IOException {
+		if (!dir.isDirectory() && !dir.mkdirs()) {
+			throw new IOException("Failed to create directory " + dir);
+		}
 	}
 
 	static String readResourceAsStringOrNull(String resourceName) {
