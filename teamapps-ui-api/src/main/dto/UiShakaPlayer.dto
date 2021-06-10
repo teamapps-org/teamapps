@@ -7,9 +7,11 @@ class UiShakaPlayer extends UiComponent {
     String backgroundColor;
     boolean autoplay;
     UiTrackLabelFormat trackLabelFormat;
+    boolean videoDisabled;
+    long timeMillis;
 
 	command setUrls(String hlsUrl, String dashUrl);
-	command jumpTo(long timeMillis);
+	command setTime(long timeMillis);
 
 	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
 
