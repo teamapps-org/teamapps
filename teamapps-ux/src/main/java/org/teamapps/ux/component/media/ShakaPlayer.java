@@ -25,6 +25,7 @@ public class ShakaPlayer extends AbstractComponent {
 	private int timeUpdateEventThrottleMillis = 1000;
 	private Color backgroundColor = Color.BLACK;
 	private TrackLabelFormat trackLabelFormat = TrackLabelFormat.LABEL;
+	private boolean videoDisabled = false;
 
 	private long timeMillis = 0;
 
@@ -47,6 +48,8 @@ public class ShakaPlayer extends AbstractComponent {
 		ui.setTimeUpdateEventThrottleMillis(timeUpdateEventThrottleMillis);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString(): null);
 		ui.setTrackLabelFormat(trackLabelFormat.toUiTrackLabelFormat());
+		ui.setVideoDisabled(videoDisabled);
+		ui.setTimeMillis(timeMillis);
 		return ui;
 	}
 
@@ -60,6 +63,7 @@ public class ShakaPlayer extends AbstractComponent {
 			case UI_SHAKA_PLAYER_TIME_UPDATE: {
 				UiShakaPlayer.TimeUpdateEvent e = (UiShakaPlayer.TimeUpdateEvent) event;
 				onTimeUpdate.fire(e.getTimeMillis());
+				this.timeMillis = e.getTimeMillis();
 				break;
 			}
 			case UI_SHAKA_PLAYER_ENDED: {
@@ -71,7 +75,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setTime(long timeMillis) {
 		this.timeMillis = timeMillis;
-		queueCommandIfRendered(() -> new UiShakaPlayer.JumpToCommand(getId(), timeMillis));
+		queueCommandIfRendered(() -> new UiShakaPlayer.SetTimeCommand(getId(), timeMillis));
 	}
 
 	public long getTime() {
@@ -79,6 +83,7 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void setUrls(String hlsUrl, String dashUrl) {
+		this.timeMillis = 0;
 		this.hlsUrl = hlsUrl;
 		this.dashUrl = dashUrl;
 		queueCommandIfRendered(() -> new UiShakaPlayer.SetUrlsCommand(getId(), hlsUrl, dashUrl));
@@ -142,6 +147,15 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setTrackLabelFormat(TrackLabelFormat trackLabelFormat) {
 		this.trackLabelFormat = trackLabelFormat;
+		reRenderIfRendered();
+	}
+
+	public boolean isVideoDisabled() {
+		return videoDisabled;
+	}
+
+	public void setVideoDisabled(boolean videoDisabled) {
+		this.videoDisabled = videoDisabled;
 		reRenderIfRendered();
 	}
 }

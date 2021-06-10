@@ -60,7 +60,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 	private $video: HTMLMediaElement;
 	private player: Player;
 
-	// private playerInitializedDeferredExecutor: DeferredExecutor = new DeferredExecutor();
+	private ui: Overlay;
 
 	constructor(config: UiShakaPlayerConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -79,9 +79,14 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 
 		this.displayedDeferredExecutor.invokeWhenReady(() => {
 			this.player = new shaka.Player(this.$video);
+			this.reconfigurePlayer();
 			this.player.addEventListener('error', () => this.onErrorLoading.fire({}));
+			this.player.addEventListener('streaming', () => {
+				this.reconfigureUi();
+				this.setTime(this._config.timeMillis)
+			});
 
-			const ui: Overlay = new shaka.ui.Overlay(this.player, this.$componentWrapper, this.$video);
+			this.ui = new shaka.ui.Overlay(this.player, this.$componentWrapper, this.$video);
 			const uiConfig: Partial<UIConfiguration> = {
 				addBigPlayButton: true,
 				controlPanelElements: [
@@ -98,14 +103,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 				enableKeyboardPlaybackControls: true,
 				fadeDelay: 0,
 				forceLandscapeOnFullscreen: true,
-				overflowMenuButtons: [
-					"captions",
-					"cast",
-					"quality",
-					"language",
-					"picture_in_picture",
-					"playback_rate",
-				],
+				overflowMenuButtons: this.getOverflowMenuButtonsConfig(),
 				seekBarColors: undefined,
 				showUnbufferedStart: false,
 				trackLabelFormat: config.trackLabelFormat == UiTrackLabelFormat.LABEL ? TrackLabelFormat.LABEL
@@ -116,17 +114,48 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 				volumeBarColors: undefined,
 				addSeekBar: true
 			};
-			ui.configure(uiConfig as UIConfiguration);
+			this.ui.configure(uiConfig as UIConfiguration);
 		});
 
 		this.setUrls(config.hlsUrl, config.dashUrl);
+	}
+
+	private reconfigurePlayer() {
+		this.player.configure({
+			manifest: {
+				disableVideo: this._config.videoDisabled // will advice the manifest parser to set all videos to null. Note that the quality selection button must be removed!
+			},
+
+		});
+	}
+
+	private reconfigureUi() {
+		this.ui.configure({
+			overflowMenuButtons: this.getOverflowMenuButtonsConfig()
+		} as Partial<UIConfiguration>);
+	}
+
+	private getOverflowMenuButtonsConfig() {
+		let manifest = this.player.getManifest();
+		const overflowButtons = [
+			"playback_rate",
+			"captions",
+			// "picture_in_picture",
+		];
+		if (manifest != null && manifest.variants.some(v => v.video != null)) {
+			overflowButtons.unshift("quality");
+		}
+		if (manifest != null && manifest.variants.some(v => v.language && v.language !== "und")) {
+			overflowButtons.unshift("language");
+		}
+		return overflowButtons;
 	}
 
 	public doGetMainElement(): HTMLElement {
 		return this.$componentWrapper;
 	}
 
-	public jumpTo(timeMillis: number) {
+	public setTime(timeMillis: number) {
 		this.$video.currentTime = timeMillis / 1000;
 	}
 
@@ -174,7 +203,7 @@ class DistinctAudioTracksManifestParserDecorator implements ManifestParser {
 	async start(uri: string, playerInterface: PlayerInterface) {
 		let manifest = await this.delegate.start(uri, playerInterface);
 		// manifest.variants.forEach((variant, i) => variant.language = variant.language + i)
-		manifest.variants.forEach((variant, i) => variant.audio.roles.push("role"+i));
+		manifest.variants.forEach((variant, i) => variant.audio.roles.push("role" + i));
 		return manifest;
 	}
 
