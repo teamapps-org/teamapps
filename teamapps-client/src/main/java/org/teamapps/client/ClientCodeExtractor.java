@@ -19,6 +19,7 @@
  */
 package org.teamapps.client;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,10 +69,7 @@ public class ClientCodeExtractor {
 
 	private static void overwriteWebappDirectory(File webAppDirectory, File currentlyDeployedChecksumFile) throws IOException {
 		if (webAppDirectory.exists()) {
-			boolean deleted = webAppDirectory.delete();
-			if (!deleted) {
-				LOGGER.error("Could not delete webapp directory!");
-			}
+			FileUtils.deleteDirectory(webAppDirectory);
 		}
 		webAppDirectory.mkdirs();
 
