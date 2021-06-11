@@ -19,9 +19,13 @@
  */
 class(c, package) ::= <<
 <javaFilePrelude(package)>
+<if(c.hasSubTypes)>
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
 @JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+<else>
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type", defaultImpl = <c.Identifier>.class)
+<endif>
 public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superClassDecl)>extends <c.superClassDecl.Identifier> <endif>implements <if(c.implementsDecl)><c.implementsDecl.classList.Identifier:{id|<id>}; separator=", ">, <endif>UiObject {
 
 	<c.inlineEnumProperties:inlineEnum(); separator="\n\n">

@@ -27,7 +27,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {
 	UiShakaPlayer_EndedEvent,
-	UiShakaPlayer_ErrorLoadingEvent,
+	UiShakaPlayer_ErrorLoadingEvent, UiShakaPlayer_ManifestLoadedEvent,
 	UiShakaPlayer_TimeUpdateEvent,
 	UiShakaPlayerCommandHandler,
 	UiShakaPlayerConfig,
@@ -49,9 +49,12 @@ import ManifestConfiguration = shaka.extern.ManifestConfiguration;
 import ManifestParser = shaka.extern.ManifestParser;
 import PlayerInterface = shaka.extern.ManifestParser.PlayerInterface;
 import TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
+import {UiShakaManifestConfig} from "../generated/UiShakaManifestConfig";
+import Manifest = shaka.extern.Manifest;
 
 export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> implements UiShakaPlayerCommandHandler, UiShakaPlayerEventSource {
 
+	public readonly onManifestLoaded: TeamAppsEvent<UiShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent(this);
 	public readonly onTimeUpdate: TeamAppsEvent<UiShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent(this);
 	public readonly onEnded: TeamAppsEvent<UiShakaPlayer_EndedEvent> = new TeamAppsEvent(this);
 	public readonly onErrorLoading: TeamAppsEvent<UiShakaPlayer_ErrorLoadingEvent> = new TeamAppsEvent(this);
@@ -83,7 +86,8 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 			this.player.addEventListener('error', () => this.onErrorLoading.fire({}));
 			this.player.addEventListener('streaming', () => {
 				this.reconfigureUi();
-				this.setTime(this._config.timeMillis)
+				this.setTime(this._config.timeMillis);
+				this.onManifestLoaded.fire({manifest: this.createUiManifest(this.player.getManifest())});
 			});
 
 			this.ui = new shaka.ui.Overlay(this.player, this.$componentWrapper, this.$video);
@@ -118,6 +122,42 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 		});
 
 		this.setUrls(config.hlsUrl, config.dashUrl);
+	}
+
+	private createUiManifest(manifest: Manifest): UiShakaManifestConfig {
+		return {
+			variants: manifest.variants.map(v => {
+				return {
+					id: v.id,
+					audio: {
+						id: v.audio.id,
+						originalId: v.audio.originalId,
+						mimeType: v.audio.mimeType,
+						codecs: v.audio.codecs,
+						bandwidth: v.audio.bandwidth,
+						label: v.audio.label,
+						roles: v.audio.roles,
+						language: v.audio.language,
+						channelsCount: v.audio.channelsCount,
+						audioSamplingRate: v.audio.audioSamplingRate
+					},
+					video: {
+						id: v.video.id,
+						originalId: v.video.originalId,
+						mimeType: v.video.mimeType,
+						codecs: v.video.codecs,
+						bandwidth: v.video.bandwidth,
+						label: v.video.label,
+						roles: v.video.roles,
+						frameRate: v.video.frameRate,
+						pixelAspectRatio: v.video.pixelAspectRatio,
+						width: v.video.width,
+						height: v.video.height
+					},
+					bandwidth: v.bandwidth
+				}
+			})
+		};
 	}
 
 	private reconfigurePlayer() {
@@ -157,6 +197,10 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 
 	public setTime(timeMillis: number) {
 		this.$video.currentTime = timeMillis / 1000;
+	}
+
+	public selectAudioLanguage(language: string, role: string): any {
+		this.player.selectAudioLanguage(language, role);
 	}
 
 	public onResize(): void {

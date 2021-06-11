@@ -12,12 +12,14 @@ class UiShakaPlayer extends UiComponent {
 
 	command setUrls(String hlsUrl, String dashUrl);
 	command setTime(long timeMillis);
-
-	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
+	command selectAudioLanguage(String language, String role);
 
 	event errorLoading();
+	event manifestLoaded(UiShakaManifest manifest);
 	event timeUpdate(long timeMillis);
 	event ended();
+
+	static command setDistinctManifestAudioTracksFixEnabled(boolean enabled);
 }
 
 enum UiTrackLabelFormat {
@@ -25,4 +27,38 @@ enum UiTrackLabelFormat {
 	LANGUAGE,
 	LANGUAGE_ROLE,
 	ROLE;
+}
+
+class UiShakaManifest {
+    required List<UiShakaManifestVariant> variants;
+}
+
+class UiShakaManifestVariant {
+	int id;
+	UiShakaAudioStream audio;
+	UiShakaVideoStream video;
+	int bandwidth;
+}
+
+abstract class UiAbstractShakaStream {
+	int id;
+	String originalId;
+	String mimeType;
+	String codecs;
+	int bandwidth;
+	String label;
+	List<String> roles;
+}
+
+class UiShakaAudioStream extends UiAbstractShakaStream {
+    String language;
+    int channelsCount;
+    int audioSamplingRate;
+}
+
+class UiShakaVideoStream extends UiAbstractShakaStream {
+    int frameRate;
+    String pixelAspectRatio;
+    int width;
+    int height;
 }
