@@ -164,7 +164,6 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 		List<ForceLayoutLink<RECORD>> linksToRemove = links.stream()
 				.filter(l -> nodes.contains(l.getSource()) || nodes.contains(l.getTarget()))
 				.collect(Collectors.toList());
-		System.out.println(linksToRemove);
 		removeNodesAndLinks(nodes, linksToRemove);
 	}
 

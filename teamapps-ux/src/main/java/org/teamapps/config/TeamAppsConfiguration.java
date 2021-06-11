@@ -124,10 +124,6 @@ public class TeamAppsConfiguration {
 	 */
 	private int maxNumberOfSessionExecutorThreads = Runtime.getRuntime().availableProcessors() * 2;
 
-	public static void main(String[] args) {
-		System.out.println(Runtime.getRuntime().availableProcessors());
-	}
-
 	public TeamAppsConfiguration() {
 	}
 
