@@ -1,16 +1,20 @@
-package org.teamapps.ux.component.media;
+package org.teamapps.ux.component.media.shaka;
 
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
 import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiShakaManifest;
 import org.teamapps.dto.UiShakaPlayer;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.media.PosterImageSize;
+import org.teamapps.ux.component.media.TrackLabelFormat;
 import org.teamapps.ux.session.SessionContext;
 
 public class ShakaPlayer extends AbstractComponent {
 
 	public final Event<Void> onErrorLoading = new Event<>();
+	public final Event<UiShakaManifest> onManifestLoaded = new Event<>();
 	public final Event<Long> onTimeUpdate = new Event<>();
 	public final Event<Void> onEnded = new Event<>();
 
@@ -58,6 +62,11 @@ public class ShakaPlayer extends AbstractComponent {
 		switch (event.getUiEventType()) {
 			case UI_SHAKA_PLAYER_ERROR_LOADING: {
 				onErrorLoading.fire(null);
+				break;
+			}
+			case UI_SHAKA_PLAYER_MANIFEST_LOADED: {
+				UiShakaPlayer.ManifestLoadedEvent e = (UiShakaPlayer.ManifestLoadedEvent) event;
+				onManifestLoaded.fire(e.getManifest());
 				break;
 			}
 			case UI_SHAKA_PLAYER_TIME_UPDATE: {
@@ -157,5 +166,13 @@ public class ShakaPlayer extends AbstractComponent {
 	public void setVideoDisabled(boolean videoDisabled) {
 		this.videoDisabled = videoDisabled;
 		reRenderIfRendered();
+	}
+
+	public void selectAudioLanguage(String language) {
+		selectAudioLanguage(language, null);
+	}
+
+	public void selectAudioLanguage(String language, String role) {
+		queueCommandIfRendered(() -> new UiShakaPlayer.SelectAudioLanguageCommand(getId(), language, role));
 	}
 }
