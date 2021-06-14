@@ -247,7 +247,6 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	public static downloadFile(fileUrl: string, fileName: string) {
 		const link = document.createElement('a');
 		link.href = fileUrl;
-		link.target = '_blank';
 		if (fileName != null) {
 			link.href += (fileUrl.indexOf('?') === -1 ? '?' : '&') + 'teamapps-download-filename=' + fileName;
 			link.setAttribute("download", fileName);
