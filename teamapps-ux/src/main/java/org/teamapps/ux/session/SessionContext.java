@@ -300,10 +300,11 @@ public class SessionContext {
 			return CompletableFuture.failedFuture(new IllegalStateException("SessionContext destroyed."));
 		}
 		if (CurrentSessionContext.getOrNull() == this && !forceEnqueue) {
-			// Fast lane! This thread is already bound to this context. Just execute the runnable.
+			// Fast lane! This thread is already bound to this SessionContext. Just execute the runnable.
 			try {
 				return CompletableFuture.completedFuture(runnable.call());
 			} catch (Exception e) {
+				LOGGER.error("Exception while executing within session context (fast lane execution)", e);
 				return CompletableFuture.failedFuture(e);
 			}
 		} else {
@@ -312,7 +313,7 @@ public class SessionContext {
 				try {
 					Object[] resultHolder = new Object[1];
 					executionDecorators
-							.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(runnable::call))
+							.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(runnable))
 							.run();
 					return ((R) resultHolder[0]);
 				} finally {
