@@ -45,7 +45,7 @@ public class ClientCodeExtractor {
 
 	public static void initializeWebserverDirectory(File webAppDirectory) throws IOException {
 		File currentlyDeployedChecksumFile = new File(webAppDirectory, TEAMAPPS_CLIENT_CHECKSUM_FILE_NAME);
-		String currentlyDeployedArtifactChecksum = currentlyDeployedChecksumFile.exists() ? IOUtils.toString(new FileInputStream(currentlyDeployedChecksumFile), StandardCharsets.UTF_8).trim() : null;
+		String currentlyDeployedArtifactChecksum = currentlyDeployedChecksumFile.exists() ? read(currentlyDeployedChecksumFile) : null;
 
 		String[] currentlyDeployedFiles = webAppDirectory.list((dir, name) -> !name.startsWith("."));
 		if (currentlyDeployedArtifactChecksum == null && currentlyDeployedFiles != null && currentlyDeployedFiles.length > 0) {
@@ -64,6 +64,12 @@ public class ClientCodeExtractor {
 			overwriteWebappDirectory(webAppDirectory, currentlyDeployedChecksumFile);
 		} else {
 			LOGGER.info("Checksum has not changed. Nothing to do.");
+		}
+	}
+
+	private static String read(File currentlyDeployedChecksumFile) throws IOException {
+		try (FileInputStream input = new FileInputStream(currentlyDeployedChecksumFile)) {
+			return IOUtils.toString(input, StandardCharsets.UTF_8).trim();
 		}
 	}
 
