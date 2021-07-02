@@ -8408,7 +8408,7 @@ slick-carousel@^1.8.1:
 
 "slickgrid@https://github.com/yamass/SlickGrid.git#d8ed005670faae0635ec5abad2f5ed20bf454812":
   version "2.3.21"
-  resolved "git+ssh://git@github.com/yamass/SlickGrid.git#d8ed005670faae0635ec5abad2f5ed20bf454812"
+  resolved "https://github.com/yamass/SlickGrid.git#d8ed005670faae0635ec5abad2f5ed20bf454812"
   integrity sha512-pkMvzix6Z1u+Oh0DtNTWhYnFsscdATXVal+kNlqEKLtY9u1Ql34WiGwvaOxvszMKKiGtKxLXn4E6fW0K0yDQzQ==
   dependencies:
     jquery ">=1.8.0"
