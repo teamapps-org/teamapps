@@ -48,7 +48,7 @@ import {
 import {TrivialEvent} from "./TrivialEvent";
 import {Instance as Popper} from '@popperjs/core';
 import {parseHtml} from "../Common";
-import {DropDownComponent, SelectionDirection} from "./dropdown/DropdownComponent";
+import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {createComboBoxPopper} from "./ComboBoxPopper";
 
 export interface TrivialComboBoxConfig<E> {
