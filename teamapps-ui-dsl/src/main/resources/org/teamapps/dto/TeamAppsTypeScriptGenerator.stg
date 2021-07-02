@@ -208,30 +208,18 @@ staticCommandExecutorEntry(command) ::= <<
 >>
 commandExecutorMethodInvocationParameter(p) ::= "command.<p.Identifier>"
 
-eventRegistrator(classesAndInterfacesWithEvents) ::= <<
+componentEventDescriptors(classesAndInterfacesWithEvents) ::= <<
 <typeScriptFilePrelude()>
 
-import {UiEvent} from "./UiEvent";
-import {TeamAppsEventListener} from "../modules/util/TeamAppsEvent";
-
-export class EventRegistrator {
-	public static registerForEvents(eventSource: any, type: string, eventHandler: TeamAppsEventListener\<UiEvent>, additionalEventProperties: object) {
-		switch (type) {
-			<classesAndInterfacesWithEvents:eventRegistrations(); separator="\n">
-		}
-	}
-}
+export var componentEventDescriptors = [
+    <classesAndInterfacesWithEvents:eventNamesObject(); separator=",\n">
+];
 >>
 
-eventRegistrations(c) ::= <<
-case "<c.Identifier.text>":
-	<c.allEvents:eventRegistration(); separator="\n">
-	break;
+eventNamesObject(c) ::= <<
+{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }
 >>
 
-eventRegistration(evt) ::= <<
-	 eventSource.on<evt.Identifier.text; format="cap"> && eventSource.on<evt.Identifier.text; format="cap">.addListener((eventObject: any) => eventHandler({...eventObject, _type: "<evt._type>", ...additionalEventProperties}));
->>
 
 queryFunctionAdder(classesAndInterfacesWithQueries) ::= <<
 <typeScriptFilePrelude()>
