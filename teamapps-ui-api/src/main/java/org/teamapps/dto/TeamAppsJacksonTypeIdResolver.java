@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,16 +30,27 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * THIS IS GENERATED CODE!
- * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ * This TypeIdResolver provides type ids for all TeamApps UI API classes.
+ * Additionally it also provides type ids for all classes that get serialized, so they can be deserialized in the future.
+ * <p>
+ * Ratio: Components are allowed to send and receive.
+ * </p>
+ * On the sending side, this enables app developers to send arbitrary data for templates. E.g., a MustacheTemplate might be filled using
+ * a list of deep json structures.
+ * </p>
+ * On the receiving side, this is technically not necessary, since all data that comes from UiComponents might be defined as UiObjects.
+ * However, component developers might decide to send back arbitrary object (in original or changed state) that were previously sent to the
+ * client. This approach is not recommended but possible. Since only classes that have ever been serialized can be deserialized, there is
+ * no security risk in technically allowing {@link Object} values (unless developers send security critical classes, which we regard as
+ * very unlikely).
  */
-
 public class TeamAppsJacksonTypeIdResolver implements TypeIdResolver {
 
 	private static final Map<String, JavaType> JAVA_TYPE_BY_ID = new ConcurrentHashMap<>();
 	private static final Map<Class, String> ID_BY_CLASS = new ConcurrentHashMap<>();
 
 	public TeamAppsJacksonTypeIdResolver() {
+		// register all ui classes for de/serialization
 		UiObjectJacksonTypeIdMaps.CLASS_BY_ID.forEach((typeId, clazz) -> {
 			registerPojoClass(clazz, typeId);
 		});
@@ -79,6 +90,7 @@ public class TeamAppsJacksonTypeIdResolver implements TypeIdResolver {
 		if (id != null) {
 			return id;
 		} else {
+			// classes that are serialized may also be deserialized
 			return registerPojoClass(clazz);
 		}
 	}

@@ -219,7 +219,7 @@ public class SessionContext {
 		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> commandExecutor.sendCommand(sessionId, new UiCommandWithResultCallback<>(command, wrappedCallback)));
 	}
 
-	public <RESULT> void queueCommand(UiCommand<RESULT> command) {
+	public void queueCommand(UiCommand<?> command) {
 		this.queueCommand(command, null);
 	}
 

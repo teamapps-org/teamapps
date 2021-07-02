@@ -127,7 +127,7 @@ enum UiSessionClosingReason {
 }
 
 class MULTI_CMD extends AbstractServerMessage {
-    required List<Object> cmds; // the CMS class does not get generated!
+    required List<Object> cmds; // the CMD class does not get generated!
 }
 
 class QUERY_RESULT extends AbstractServerMessage {

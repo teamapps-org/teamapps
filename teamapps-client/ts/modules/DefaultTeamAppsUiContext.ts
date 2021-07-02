@@ -25,7 +25,7 @@ import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiEvent} from "../generated/UiEvent";
 import {UiRootPanel} from "./UiRootPanel";
-import {EventRegistrator} from "../generated/EventRegistrator";
+import {ComponentEventSubscriptionManager} from "./util/ComponentEventSubscriptionManager";
 import {UiCommand} from '../generated/UiCommand';
 import {CommandExecutor} from "../generated/CommandExecutor";
 import {TeamAppsConnection, TeamAppsConnectionListener} from "./communication/TeamAppsConnection";
@@ -46,6 +46,7 @@ import {UiClientObjectConfig} from "../generated/UiClientObjectConfig";
 import {UiWindow} from "./UiWindow";
 import {QueryFunctionAdder} from "../generated/QueryFunctionAdder";
 import {UiQuery} from "../generated/UiQuery";
+import {componentEventDescriptors} from "../generated/ComponentEventDescriptors";
 
 function isComponent(o: UiClientObject<UiClientObjectConfig>): o is UiComponent {
 	return o != null && (o as any).getMainElement;
@@ -76,7 +77,12 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	private errorMessageWindow: UiWindow;
 	private terminatedMessageWindow: UiWindow;
 
+	private componentEventSubscriptionManager: ComponentEventSubscriptionManager;
+
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string | number } = {}) {
+		this.componentEventSubscriptionManager = new ComponentEventSubscriptionManager();
+		this.componentEventSubscriptionManager.registerComponentTypes(componentEventDescriptors);
+
 		this.sessionId = generateUUID();
 
 		let clientInfo = createUiClientInfoConfig({
@@ -164,7 +170,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		} else {
 			this.components[id] = clientObject;
 		}
-		EventRegistrator.registerForEvents(clientObject, teamappsType, this.sendEvent, {componentId: id});
+		this.componentEventSubscriptionManager.registerEventListener(clientObject, teamappsType, this.sendEvent, {componentId: id});
 	}
 
 	public createClientObject(config: UiClientObjectConfig): UiClientObject {
@@ -200,6 +206,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			}
 			o.destroy();
 			delete this.components[id];
+			this.componentEventSubscriptionManager.unregisterEventListener(o);
 		} else {
 			DefaultTeamAppsUiContext.logger.warn("Could not find component to destroy: " + id);
 		}

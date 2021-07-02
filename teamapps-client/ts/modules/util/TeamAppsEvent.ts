@@ -22,6 +22,10 @@ import {throttle} from "./throttle";
 
 export type TeamAppsEventListener<EO> = (eventObject?: EO, emitter?: any) => void;
 
+export interface EventSubscription {
+	unsubscribe: () => void
+}
+
 /**
  * @param EO the event object type
  */
@@ -46,11 +50,12 @@ export class TeamAppsEvent<EO> {
 		}
 	}
 
-	public addListener(fn: TeamAppsEventListener<EO>, allowDuplicates = false) {
+	public addListener(fn: TeamAppsEventListener<EO>, allowDuplicates = false): EventSubscription {
 		if (!allowDuplicates) {
 			this.listeners = this.listeners.filter(l => l !== fn);
 		}
 		this.listeners.push(fn);
+		return {unsubscribe: () => this.removeListener(fn)};
 	};
 
 	public removeListener(fn: TeamAppsEventListener<EO>) {

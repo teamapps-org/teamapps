@@ -124,8 +124,9 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public final void unrender() {
-		sessionContext.unregisterClientObject(this);
-		sessionContext.queueCommand(new UiRootPanel.DestroyComponentCommand(getId()));
+		sessionContext.queueCommand(new UiRootPanel.DestroyComponentCommand(getId()),
+				// unregister only after the ui destroyed the object!
+				unused -> sessionContext.unregisterClientObject(this));
 		renderingState = RenderingState.NOT_RENDERED;
 	}
 

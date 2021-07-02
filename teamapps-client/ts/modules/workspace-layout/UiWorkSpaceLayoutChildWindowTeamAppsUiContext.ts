@@ -26,12 +26,13 @@ import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiCont
 import {logException} from "../Common";
 import {UiConfigurationConfig} from "../../generated/UiConfigurationConfig";
 import {UiEvent} from "../../generated/UiEvent";
-import {EventRegistrator} from "../../generated/EventRegistrator";
+import {ComponentEventSubscriptionManager} from "../util/ComponentEventSubscriptionManager";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TemplateRegistry} from "../TemplateRegistry";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiCommand} from "../../generated/UiCommand";
 import {UiComponent} from "../UiComponent";
+import {componentEventDescriptors} from "../../generated/ComponentEventDescriptors";
 
 export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUiContext, TeamAppsUiContextInternalApi {
 
@@ -48,7 +49,12 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 	private _executingCommand: boolean = false;
 	private components: { [identifier: string]: UiComponent<UiComponentConfig> } = {};
 
+	private componentEventSubscriptionManager: ComponentEventSubscriptionManager;
+
 	constructor() {
+		this.componentEventSubscriptionManager = new ComponentEventSubscriptionManager();
+		this.componentEventSubscriptionManager.registerComponentTypes(componentEventDescriptors);
+
 		this.isHighDensityScreen = ((window.matchMedia && (window.matchMedia('only screen and (min-resolution: 124dpi), only screen and (min-resolution: 1.3dppx), only screen and (min-resolution: 48.8dpcm)').matches || window.matchMedia('only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 2.6/2), only screen and (min--moz-device-pixel-ratio: 1.3), only screen and (min-device-pixel-ratio: 1.3)').matches)) || (window.devicePixelRatio && window.devicePixelRatio > 1.3));
 		if (this.isHighDensityScreen) {
 			document.body.classList.add('high-density-screen');
@@ -146,7 +152,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 
 	registerClientObject(component: UiComponent<UiComponentConfig>, id: string, teamappsType: string): void {
 		this.components[id] = component;
-		EventRegistrator.registerForEvents(component, teamappsType, (eventObject: UiEvent) => this.sendEvent(eventObject), {id: id});
+		this.componentEventSubscriptionManager.registerEventListener(component, teamappsType, (eventObject: UiEvent) => this.sendEvent(eventObject), {id: id})
 
 		if (id !== this.workSpaceLayout.getId()) {
 			this.parentWindowMessagePort.postMessage({
@@ -165,6 +171,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 		c.getMainElement().remove();
 		c.destroy();
 		delete this.components[id];
+		this.componentEventSubscriptionManager.unregisterEventListener(c)
 	}
 
 	public createClientObject(config: UiComponentConfig) {
