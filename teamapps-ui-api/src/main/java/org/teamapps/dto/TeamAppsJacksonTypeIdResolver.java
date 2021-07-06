@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
  * Additionally it also provides type ids for all classes that get serialized, so they can be deserialized in the future.
  * <p>
  * Ratio: Components are allowed to send and receive.
- * </p>
+ * <p>
  * On the sending side, this enables app developers to send arbitrary data for templates. E.g., a MustacheTemplate might be filled using
  * a list of deep json structures.
- * </p>
+ * <p>
  * On the receiving side, this is technically not necessary, since all data that comes from UiComponents might be defined as UiObjects.
  * However, component developers might decide to send back arbitrary object (in original or changed state) that were previously sent to the
  * client. This approach is not recommended but possible. Since only classes that have ever been serialized can be deserialized, there is
