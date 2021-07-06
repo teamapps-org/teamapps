@@ -145,6 +145,10 @@ public class SessionContext {
 		rankingTranslationProvider.addTranslationProvider(translationProvider);
 	}
 
+	public TranslationProvider getRankingTranslationProvider() {
+		return rankingTranslationProvider;
+	}
+
 	public void addIconBundle(IconBundle iconBundle) {
 		iconBundle.getEntries().forEach(entry -> bundleIconByKey.put(entry.getKey(), entry.getIcon()));
 	}
