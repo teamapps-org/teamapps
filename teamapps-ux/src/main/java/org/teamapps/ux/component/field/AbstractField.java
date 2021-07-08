@@ -290,4 +290,8 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	public boolean isValueChangedByClient() {
 		return valueChangedByClient;
 	}
+
+	public void setValueChangedByClient(boolean valueChangedByClient) {
+		this.valueChangedByClient = valueChangedByClient;
+	}
 }
