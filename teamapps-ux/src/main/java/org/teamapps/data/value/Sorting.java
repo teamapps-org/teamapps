@@ -19,14 +19,18 @@
  */
 package org.teamapps.data.value;
 
+import java.util.Objects;
+
 public class Sorting {
 
 	private final String fieldName;
 	private final SortDirection sorting;
 
-	public Sorting(String fieldName, SortDirection sorting) {
+	public Sorting(String fieldName, SortDirection sortDirection) {
+		Objects.requireNonNull(fieldName, "fieldName must not be null!");
+		Objects.requireNonNull(fieldName, "sortDirection must not be null!");
 		this.fieldName = fieldName;
-		this.sorting = sorting;
+		this.sorting = sortDirection;
 	}
 
 	public String getFieldName() {

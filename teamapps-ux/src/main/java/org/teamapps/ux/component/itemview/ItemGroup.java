@@ -24,8 +24,8 @@ import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiItemViewItemGroup;
-import org.teamapps.ux.cache.CacheManipulationHandle;
-import org.teamapps.ux.cache.ClientRecordCache;
+import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
+import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 

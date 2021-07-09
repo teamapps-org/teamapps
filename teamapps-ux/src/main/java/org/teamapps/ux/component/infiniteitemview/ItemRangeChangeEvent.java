@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.component.infiniteitemview;
 
+import org.teamapps.ux.cache.record.ItemRange;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,7 +32,9 @@ public class ItemRangeChangeEvent<RECORD> {
 
 	/**
 	 * Use this constructor if the model does not have the changed items at hand.
-	 * InfiniteItemViews might not actually need to react on the change, anyway.
+	 * This might happen when the model was not in charge of the actual change but got notified of it.
+	 * Views might not actually need to react on the change, anyway.
+	 * So forcing the model to retrieve the changed records does not make sense.
 	 */
 	public ItemRangeChangeEvent(ItemRange itemRange) {
 		this.itemRange = itemRange;

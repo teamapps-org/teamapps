@@ -23,12 +23,13 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {Constants, generateUUID, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
-import {TableDataProviderItem} from "./table/TableDataProvider";
 import {
-	UiInfiniteItemView_ItemClickedEvent, UiInfiniteItemView_ContextMenuRequestedEvent,
+	UiInfiniteItemView_ContextMenuRequestedEvent,
+	UiInfiniteItemView_DisplayedRangeChangedEvent,
+	UiInfiniteItemView_ItemClickedEvent,
 	UiInfiniteItemViewCommandHandler,
 	UiInfiniteItemViewConfig,
-	UiInfiniteItemViewEventSource, UiInfiniteItemView_DisplayedRangeChangedEvent
+	UiInfiniteItemViewEventSource
 } from "../generated/UiInfiniteItemViewConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
@@ -38,10 +39,21 @@ import {UiIdentifiableClientRecordConfig} from "../generated/UiIdentifiableClien
 import {UiVerticalItemAlignment} from "../generated/UiVerticalItemAlignment";
 import {ContextMenu} from "./micro-components/ContextMenu";
 import {UiComponent} from "./UiComponent";
-import {loadSensitiveThrottling, throttledMethod} from "./util/throttle";
-import {createUiInfiniteItemViewDataRequestConfig, UiInfiniteItemViewDataRequestConfig} from "../generated/UiInfiniteItemViewDataRequestConfig";
+import {loadSensitiveThrottling, throttle} from "./util/throttle";
+import {
+	createUiInfiniteItemViewDataRequestConfig,
+	UiInfiniteItemViewDataRequestConfig
+} from "../generated/UiInfiniteItemViewDataRequestConfig";
+import {UiTableClientRecordConfig} from "../generated/UiTableClientRecordConfig";
 
 const ROW_LOOKAHAED = 10;
+
+export interface TableDataProviderItem extends UiTableClientRecordConfig {
+	children: TableDataProviderItem[];
+	depth: number;
+	parentId: number;
+	expanded: boolean;
+}
 
 class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiableClientRecordConfig> {
 
@@ -208,7 +220,10 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 					isDoubleClick: false
 				});
 				if (e.button == 2 && !isNaN(recordId) && me._config.contextMenuEnabled) {
-					me.contextMenu.open(e as unknown as MouseEvent, requestId => me.onContextMenuRequested.fire({recordId: recordId, requestId}));
+					me.contextMenu.open(e as unknown as MouseEvent, requestId => me.onContextMenuRequested.fire({
+						recordId: recordId,
+						requestId
+					}));
 				}
 			})
 			.on("dblclick", ".item-wrapper", function (e: JQueryMouseEventObject) {
@@ -262,16 +277,12 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 		this.grid.onViewportChanged.subscribe((e, args) => {
 			this.dataProvider.ensureData(this.grid.getViewport().top, this.grid.getViewport().bottom);
 		});
-		this.grid.onScroll.subscribe((eventData) => {
-			this.throttledFireDisplayedRangeChanged();
-		});
+		this.grid.onScroll.subscribe(throttle((eventData) => {
+			// CAUTION: debounce/throttle scrolling without data requests only!!! (otherwise the tableDataProvider will mark rows as requested but the actual request will not get to the server)
+			this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent());
+		}, 500));
 
 		this.updateAutoHeight();
-	}
-
-	@throttledMethod(500) // CAUTION: debounce/throttle scrolling without data requests only!!! (otherwise the tableDataProvider will mark rows as requested but the actual request will not get to the server)
-	private throttledFireDisplayedRangeChanged() {
-		this.onDisplayedRangeChanged.fire(this.createDisplayRangeChangedEvent());
 	}
 
 	private createDisplayRangeChangedEvent(dataRequest?: UiInfiniteItemViewDataRequestConfig) {
@@ -320,9 +331,9 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 
 	@executeWhenFirstDisplayed()
 	public addData(startIndex: number,
-	               data: any[],
-	               totalNumberOfRecords: number,
-	               clearTableCache: boolean) {
+				   data: any[],
+				   totalNumberOfRecords: number,
+				   clearTableCache: boolean) {
 		if (clearTableCache) {
 			this.dataProvider.clear();
 		}
