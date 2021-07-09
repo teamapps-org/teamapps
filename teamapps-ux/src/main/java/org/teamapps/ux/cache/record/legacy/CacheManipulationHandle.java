@@ -17,32 +17,30 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.component.table;
+package org.teamapps.ux.cache.record.legacy;
 
-import org.teamapps.ux.component.field.AbstractField;
+public class CacheManipulationHandle<R> {
+	private ClientRecordCache cache;
+	private R result;
+	private Runnable committingActions;
+	private int operationSequenceNumber;
 
-public class FieldOrderChangeEventData<RECORD> {
-	private final TableColumn<RECORD> column;
-	private final int position;
-
-	public FieldOrderChangeEventData(TableColumn<RECORD> column, int position) {
-		this.column = column;
-		this.position = position;
+	public CacheManipulationHandle(ClientRecordCache cache, int operationSequenceNumber, R result, Runnable committingActions) {
+		this.cache = cache;
+		this.operationSequenceNumber = operationSequenceNumber;
+		this.result = result;
+		this.committingActions = committingActions;
 	}
 
-	public TableColumn<RECORD> getColumn() {
-		return column;
+	public R getAndClearResult() {
+		R result = this.result;
+		this.result = null;
+		return result;
 	}
 
-	public String getPropertyName() {
-		return column.getPropertyName();
-	}
-
-	public AbstractField getField() {
-		return column.getField();
-	}
-
-	public int getPosition() {
-		return position;
+	public void commit() {
+		if (cache.getOperationInvalidationSequenceNumber() < operationSequenceNumber) {
+			committingActions.run();
+		}
 	}
 }

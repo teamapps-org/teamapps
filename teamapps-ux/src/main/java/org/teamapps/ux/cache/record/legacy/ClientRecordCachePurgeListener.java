@@ -17,30 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.cache;
+package org.teamapps.ux.cache.record.legacy;
 
-public class CacheManipulationHandle<R> {
-	private ClientRecordCache cache;
-	private R result;
-	private Runnable committingActions;
-	private int operationSequenceNumber;
+import java.util.List;
 
-	public CacheManipulationHandle(ClientRecordCache cache, int operationSequenceNumber, R result, Runnable committingActions) {
-		this.cache = cache;
-		this.operationSequenceNumber = operationSequenceNumber;
-		this.result = result;
-		this.committingActions = committingActions;
-	}
+public interface ClientRecordCachePurgeListener {
 
-	public R getAndClearResult() {
-		R result = this.result;
-		this.result = null;
-		return result;
-	}
-
-	public void commit() {
-		if (cache.getOperationInvalidationSequenceNumber() < operationSequenceNumber) {
-			committingActions.run();
-		}
-	}
+	public void handleCacheEntriesPurged(CacheManipulationHandle<List<Integer>> operationHandle);
 }

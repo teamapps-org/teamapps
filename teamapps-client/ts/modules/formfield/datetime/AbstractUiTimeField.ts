@@ -58,15 +58,14 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 			selectedEntryRenderingFunction: localDateTime => this.timeRenderer(localDateTime),
 		}, new TreeBoxDropdown({
-			queryFunction: (searchString: string) => {
-				this.onTextInput.fire({enteredString: searchString});
-				return timeSuggestionEngine.generateSuggestions(searchString);
-			},
+			queryFunction: (searchString: string) => timeSuggestionEngine.generateSuggestions(searchString),
 			textHighlightingEntryLimit: -1, // no highlighting!
 			preselectionMatcher: (query, entry) => this.localDateTimeToString(entry).toLowerCase().indexOf(query.toLowerCase()) >= 0
 		}, new TrivialTreeBox<LocalDateTime>({
 			entryRenderingFunction: localDateTime => this.timeRenderer(localDateTime),
 		})));
+
+		this.trivialComboBox.getEditor().addEventListener("input", e => this.onTextInput.fire({enteredString: (e.target as HTMLInputElement).value}));
 		this.trivialComboBox.getMainDomElement().classList.add("AbstractUiTimeField");
 		this.trivialComboBox.onSelectedEntryChanged.addListener(() => this.commit());
 		this.trivialComboBox.getEditor().addEventListener("keydown", (e: KeyboardEvent) => {

@@ -20,13 +20,12 @@
 
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {parseHtml, Renderer} from "./Common";
+import {addDelegatedEventListener, parseHtml, Renderer} from "./Common";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {
-	UiInfiniteItemView2_ContextMenuRequestedEvent,
+	UiInfiniteItemView2_ContextMenuRequestedEvent, UiInfiniteItemView2_DisplayedRangeChangedEvent,
 	UiInfiniteItemView2_ItemClickedEvent,
-	UiInfiniteItemView2_RenderedItemRangeChangedEvent,
 	UiInfiniteItemView2CommandHandler,
 	UiInfiniteItemView2Config,
 	UiInfiniteItemView2EventSource
@@ -66,7 +65,7 @@ export var cssAlignItems = {
 
 export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2Config> implements UiInfiniteItemView2CommandHandler, UiInfiniteItemView2EventSource {
 
-	public readonly onRenderedItemRangeChanged: TeamAppsEvent<UiInfiniteItemView2_RenderedItemRangeChangedEvent> = new TeamAppsEvent(this);
+	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView2_DisplayedRangeChangedEvent> = new TeamAppsEvent(this);
 	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView2_ItemClickedEvent> = new TeamAppsEvent(this);
 	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView2_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
 
@@ -95,38 +94,36 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		this.contextMenu = new ContextMenu();
 
 		this.$mainDomElement.addEventListener("scroll", ev => {
-			this.requestDataIfNeededForScrollDebounced();
+			this.requestDataIfNeededDebounced();
 		});
 		this.$mainDomElement.addEventListener("wheel", ev => {
 			if (Math.abs(ev.deltaY) < 5) {
-				this.requestDataIfNeededForWheelDebounced(); // not debounced!
+				this.requestDataIfNeededDebounced();
 			}
 		});
 
-		let me = this;
-		$(this.getMainElement())
-			.on("click contextmenu", ".item-wrapper", function (e: JQueryMouseEventObject) {
-				let recordId = parseInt((<Element>this).getAttribute("data-id"));
-				me.onItemClicked.fire({
-					recordId: recordId,
-					isRightMouseButton: e.button === 2,
-					isDoubleClick: false
-				});
-				if (e.button == 2 && !isNaN(recordId) && me._config.contextMenuEnabled) {
-					me.contextMenu.open(e as unknown as MouseEvent, requestId => me.onContextMenuRequested.fire({
-						recordId: recordId,
-						requestId
-					}));
-				}
-			})
-			.on("dblclick", ".item-wrapper", function (e: JQueryMouseEventObject) {
-				let recordId = parseInt((<Element>this).getAttribute("data-id"));
-				me.onItemClicked.fire({
-					recordId: recordId,
-					isRightMouseButton: e.button === 2,
-					isDoubleClick: true
-				});
+		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", ["click", "contextmenu"], (element, ev) => {
+			let recordId = parseInt(element.getAttribute("data-id"));
+			this.onItemClicked.fire({
+				recordId: recordId,
+				isRightMouseButton: ev.button === 2,
+				isDoubleClick: false
 			});
+			if (ev.button == 2 && !isNaN(recordId) && this._config.contextMenuEnabled) {
+				this.contextMenu.open(ev, requestId => this.onContextMenuRequested.fire({
+					recordId: recordId,
+					requestId
+				}));
+			}
+		});
+		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", ["dblclick"], (element, ev) => {
+			let recordId = parseInt(element.getAttribute("data-id"));
+			this.onItemClicked.fire({
+				recordId: recordId,
+				isRightMouseButton: ev.button === 2,
+				isDoubleClick: true
+			});
+		});
 	}
 
 	setItemPositionAnimationTime(animationMillis: number): void {
@@ -134,12 +131,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 	}
 
 	@debouncedMethod(150, DebounceMode.BOTH)
-	private requestDataIfNeededForScrollDebounced() {
-		this.requestDataIfNeeded();
-	}
-
-	@debouncedMethod(150, DebounceMode.BOTH)
-	private requestDataIfNeededForWheelDebounced() {
+	private requestDataIfNeededDebounced() {
 		this.requestDataIfNeeded();
 	}
 
@@ -149,19 +141,18 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		if (this._config.visible && visibleItemRangeLength === 0) {
 			visibleItemRangeLength = this.getItemsPerRow(); // even if this component has zero height, it should at least query one row in order to be able to auto-size!
 		}
-		let uncutOptimalWindow = [
-			visibleItemRange[0] - visibleItemRangeLength,
+		const newRenderedRange: [number, number] = [
+			Math.max(0, visibleItemRange[0] - visibleItemRangeLength),
 			visibleItemRange[1] + visibleItemRangeLength
 		];
-		const newRenderedRange: [number, number] = [Math.max(0, uncutOptimalWindow[0]), uncutOptimalWindow[1]];
 		if (newRenderedRange[0] != this.renderedRange[0] || newRenderedRange[1] != this.renderedRange[1]) {
 			this.renderedRange = newRenderedRange;
 			let eventObject = {
 				startIndex: newRenderedRange[0],
-				endIndex: newRenderedRange[1] // send the uncut value, so the server will send new records if some are added user scrolled to the end
+				length: newRenderedRange[1] - newRenderedRange[0] // send the uncut value, so the server will send new records if some are added user scrolled to the end
 			};
 			this.logger.debug("onRenderedItemRangeChanged ", eventObject);
-			this.onRenderedItemRangeChanged.fire(eventObject);
+			this.onDisplayedRangeChanged.fire(eventObject);
 		}
 	}
 
@@ -274,7 +265,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 		this.logger.debug("onResize ", this.getWidth(), this.getHeight());
 		this.updateGridHeight();
 		this.updateItemPositions();
-		this.requestDataIfNeededForScrollDebounced();
+		this.requestDataIfNeededDebounced();
 	}
 
 	doGetMainElement(): HTMLElement {

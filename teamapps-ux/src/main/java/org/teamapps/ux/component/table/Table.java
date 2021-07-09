@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,69 +22,54 @@ package org.teamapps.ux.component.table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
-import org.teamapps.data.extract.BeanPropertyExtractor;
-import org.teamapps.data.extract.BeanPropertyInjector;
-import org.teamapps.data.extract.PropertyExtractor;
-import org.teamapps.data.extract.PropertyInjector;
-import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.data.extract.*;
 import org.teamapps.data.value.SortDirection;
 import org.teamapps.data.value.Sorting;
-import org.teamapps.databinding.ObservableValue;
-import org.teamapps.databinding.TwoWayBindableValueImpl;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiFieldMessage;
-import org.teamapps.dto.UiInfiniteItemView;
-import org.teamapps.dto.UiTable;
-import org.teamapps.dto.UiTableClientRecord;
-import org.teamapps.dto.UiTableColumn;
-import org.teamapps.dto.UiTableDataRequest;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
-import org.teamapps.ux.cache.CacheManipulationHandle;
-import org.teamapps.ux.cache.ClientRecordCache;
-import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.ux.component.infiniteitemview.AbstractInfiniteListComponent;
+import org.teamapps.ux.component.infiniteitemview.ItemRangeChangeEvent;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Table<RECORD> extends AbstractComponent implements Component {
+public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements Component {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Table.class);
 
 	public final Event<CellEditingStartedEvent<RECORD, Object>> onCellEditingStarted = new Event<>();
 	public final Event<CellEditingStoppedEvent<RECORD>> onCellEditingStopped = new Event<>();
 	public final Event<FieldValueChangedEventData<RECORD, Object>> onCellValueChanged = new Event<>();
-	public final Event<RECORD> onRowSelected = new Event<>();
-	public final Event<CellClickedEvent<RECORD>> onCellClicked = new Event<>();
+	/**
+	 * Fired when any number of rows is selected by the user.
+	 */
+	public final Event<List<RECORD>> onRowsSelected = new Event<>();
+	/**
+	 * Fired only when a single row is selected by the user.
+	 */
+	public final Event<RECORD> onSingleRowSelected = new Event<>();
+	/**
+	 * Fired only when multiple rows are selected by the user.
+	 */
 	public final Event<List<RECORD>> onMultipleRowsSelected = new Event<>();
+
+	public final Event<CellClickedEvent<RECORD>> onCellClicked = new Event<>();
 	public final Event<SortingChangedEventData> onSortingChanged = new Event<>();
 	public final Event<TableDataRequestEventData> onTableDataRequest = new Event<>();
-	public final Event<FieldOrderChangeEventData<RECORD>> onFieldOrderChange = new Event<>();
+	public final Event<ColumnOrderChangeEventData<RECORD>> onColumnOrderChange = new Event<>();
 	public final Event<ColumnSizeChangeEventData<RECORD>> onColumnSizeChange = new Event<>();
 
-	private final TwoWayBindableValueImpl<Integer> count = new TwoWayBindableValueImpl<>(0);
-
-	private TableModel<RECORD> model = new ListTableModel<>(Collections.emptyList());
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
-	private final ClientRecordCache<RECORD, UiTableClientRecord> clientRecordCache;
 
-	private int pageSize = 50;
+	private int clientRecordIdCounter = 0;
 
-	private RECORD selectedRecord;
-	private final List<RECORD> selectedRecords = new ArrayList<>();
+	private List<RECORD> selectedRecords = List.of();
 	private TableCellCoordinates<RECORD> activeEditorCell;
 
 	private final Map<RECORD, Map<String, Object>> transientChangesByRecordAndPropertyName = new HashMap<>();
@@ -126,16 +111,6 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 	private int footerRowHeight = 28;
 	private final Map<String, AbstractField> footerRowFields = new HashMap<>(0);
 
-	// ----- listeners -----
-
-	// needs to be a field for reference equality (sad but true, java method references are only syntactic sugar for lambdas)
-	private final Consumer<Void> onAllDataChangedListener = this::onAllDataChanged;
-	private final Consumer<RECORD> onRecordAddedListener = this::onRecordAdded;
-	private final Consumer<RECORD> onRecordDeletedListener = this::onRecordDeleted;
-	private final Consumer<RECORD> onRecordUpdatedListener = this::onRecordUpdated;
-
-	private List<Integer> viewportDisplayedRecordClientIds = Collections.emptyList();
-
 	private final List<RECORD> topNonModelRecords = new ArrayList<>();
 	private final List<RECORD> bottomNonModelRecords = new ArrayList<>();
 
@@ -147,19 +122,8 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 	}
 
 	public Table(List<TableColumn<RECORD>> columns) {
-		super();
+		super(new ListTableModel<>());
 		columns.forEach(this::addColumn);
-
-		clientRecordCache = new ClientRecordCache<>(this::createUiTableClientRecord);
-		clientRecordCache.setMaxCapacity(200);
-		clientRecordCache.setPurgeDecider((record, clientId) -> !viewportDisplayedRecordClientIds.contains(clientId));
-		clientRecordCache.setPurgeListener(purgedRecordIds -> {
-			if (isRendered()) {
-				getSessionContext().queueCommand(new UiTable.RemoveDataCommand(getId(), purgedRecordIds.getAndClearResult()), aVoid -> purgedRecordIds.commit());
-			} else {
-				purgedRecordIds.commit();
-			}
-		});
 	}
 
 	public static <RECORD> Table<RECORD> create() {
@@ -184,10 +148,10 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		if (isRendered()) {
 			getSessionContext().queueCommand(
 					new UiTable.AddColumnsCommand(getId(), newColumns.stream()
-							.map(c -> c.createUiTableColumn())
-							.collect(Collectors.toList()), index),
-					aVoid -> this.clientRecordCache.clear().commit()
+							.map(TableColumn::createUiTableColumn)
+							.collect(Collectors.toList()), index)
 			);
+			// TODO #table resend data
 		}
 	}
 
@@ -207,9 +171,8 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		if (isRendered()) {
 			getSessionContext().queueCommand(
 					new UiTable.RemoveColumnsCommand(getId(), obsoleteColumns.stream()
-							.map(c -> c.getPropertyName())
-							.collect(Collectors.toList())),
-					aVoid -> this.clientRecordCache.clear().commit()
+							.map(TableColumn::getPropertyName)
+							.collect(Collectors.toList()))
 			);
 		}
 	}
@@ -217,7 +180,7 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 	@Override
 	public UiComponent createUiComponent() {
 		List<UiTableColumn> columns = this.columns.stream()
-				.map(tableColumn -> tableColumn.createUiTableColumn())
+				.map(TableColumn::createUiTableColumn)
 				.collect(Collectors.toList());
 		UiTable uiTable = new UiTable(columns);
 		mapAbstractUiComponentProperties(uiTable);
@@ -230,13 +193,6 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		uiTable.setAllowMultiRowSelection(allowMultiRowSelection);
 		uiTable.setShowRowCheckBoxes(showRowCheckBoxes);
 		uiTable.setShowNumbering(showNumbering);
-
-		List<RECORD> records = retrieveRecords(0, pageSize);
-		CacheManipulationHandle<List<UiTableClientRecord>> cacheResponse = clientRecordCache.replaceRecords(records);
-		cacheResponse.commit();
-		uiTable.setTableData(cacheResponse.getAndClearResult());
-
-		uiTable.setTotalNumberOfRecords(getTotalRecordsCount());
 		uiTable.setSortField(sortField);
 		uiTable.setSortDirection(sortDirection.toUiSortDirection());
 		uiTable.setEditable(editable);
@@ -258,16 +214,20 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_TABLE_ROW_SELECTED: {
-				UiTable.RowSelectedEvent rowSelectedEvent = (UiTable.RowSelectedEvent) event;
-				selectedRecord = clientRecordCache.getRecordByClientId(rowSelectedEvent.getRecordId());
-				selectedRecords.clear();
-				this.onRowSelected.fire(selectedRecord);
+			case UI_TABLE_ROWS_SELECTED: {
+				UiTable.RowsSelectedEvent rowsSelectedEvent = (UiTable.RowsSelectedEvent) event;
+				selectedRecords = renderedRecords.getRecords(rowsSelectedEvent.getRecordIds());
+				this.onRowsSelected.fire(selectedRecords);
+				if (selectedRecords.size() == 1) {
+					this.onSingleRowSelected.fire(selectedRecords.get(0));
+				} else if (selectedRecords.size() > 1) {
+					this.onMultipleRowsSelected.fire(selectedRecords);
+				}
 				break;
 			}
 			case UI_TABLE_CELL_CLICKED: {
 				UiTable.CellClickedEvent cellClickedEvent = (UiTable.CellClickedEvent) event;
-				RECORD record = clientRecordCache.getRecordByClientId(cellClickedEvent.getRecordId());
+				RECORD record = renderedRecords.getRecord(cellClickedEvent.getRecordId());
 				TableColumn<RECORD> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
 				if (record != null && column != null) {
 					this.onCellClicked.fire(new CellClickedEvent<>(record, column));
@@ -276,10 +236,13 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 			}
 			case UI_TABLE_CELL_EDITING_STARTED: {
 				UiTable.CellEditingStartedEvent editingStartedEvent = (UiTable.CellEditingStartedEvent) event;
-				RECORD record = clientRecordCache.getRecordByClientId(editingStartedEvent.getRecordId());
-				this.activeEditorCell = new TableCellCoordinates<>(record, editingStartedEvent.getColumnPropertyName());
-				this.selectedRecord = activeEditorCell.getRecord();
+				RECORD record = renderedRecords.getRecord(editingStartedEvent.getRecordId());
 				TableColumn<RECORD> column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
+				if (record == null || column == null) {
+					return;
+				}
+				this.activeEditorCell = new TableCellCoordinates<>(record, editingStartedEvent.getColumnPropertyName());
+				this.selectedRecords = List.of(activeEditorCell.getRecord());
 				Object cellValue = getCellValue(record, column);
 				AbstractField activeEditorField = getActiveEditorField();
 				activeEditorField.setValue(cellValue);
@@ -291,20 +254,27 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 				List<FieldMessage> messages = new ArrayList<>(cellMessages);
 				messages.addAll(columnMessages);
 				activeEditorField.setCustomFieldMessages(messages);
-				this.onCellEditingStarted.fire(new CellEditingStartedEvent<>(clientRecordCache.getRecordByClientId(editingStartedEvent.getRecordId()), column, cellValue));
+				this.onCellEditingStarted.fire(new CellEditingStartedEvent<>(record, column, cellValue));
 				break;
 			}
 			case UI_TABLE_CELL_EDITING_STOPPED: {
 				this.activeEditorCell = null;
 				UiTable.CellEditingStoppedEvent editingStoppedEvent = (UiTable.CellEditingStoppedEvent) event;
+				RECORD record = renderedRecords.getRecord(editingStoppedEvent.getRecordId());
 				TableColumn<RECORD> column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
-				this.onCellEditingStopped.fire(new CellEditingStoppedEvent<>(clientRecordCache.getRecordByClientId(editingStoppedEvent.getRecordId()), column));
+				if (record == null || column == null) {
+					return;
+				}
+				this.onCellEditingStopped.fire(new CellEditingStoppedEvent<>(record, column));
 				break;
 			}
 			case UI_TABLE_CELL_VALUE_CHANGED: {
 				UiTable.CellValueChangedEvent changeEvent = (UiTable.CellValueChangedEvent) event;
+				RECORD record = renderedRecords.getRecord(changeEvent.getRecordId());
 				TableColumn<RECORD> column = this.getColumnByPropertyName(changeEvent.getColumnPropertyName());
-				RECORD record = clientRecordCache.getRecordByClientId(changeEvent.getRecordId());
+				if (record == null || column == null) {
+					return;
+				}
 				Object value = column.getField().convertUiValueToUxValue(changeEvent.getValue());
 				transientChangesByRecordAndPropertyName
 						.computeIfAbsent(record, idValue -> new HashMap<>())
@@ -312,61 +282,34 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 				onCellValueChanged.fire(new FieldValueChangedEventData<>(record, column, value));
 				break;
 			}
-			case UI_TABLE_MULTIPLE_ROWS_SELECTED:
-				selectedRecord = null;
-				UiTable.MultipleRowsSelectedEvent multipleRowsSelectedEvent = (UiTable.MultipleRowsSelectedEvent) event;
-				selectedRecords.clear();
-				selectedRecords.addAll(multipleRowsSelectedEvent.getRecordIds().stream().map(id -> clientRecordCache.getRecordByClientId(id)).collect(Collectors.toList()));
-				this.onMultipleRowsSelected.fire(selectedRecords);
-				break;
 			case UI_TABLE_SORTING_CHANGED:
 				UiTable.SortingChangedEvent sortingChangedEvent = (UiTable.SortingChangedEvent) event;
 				sortField = sortingChangedEvent.getSortField();
 				sortDirection = SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection());
 				onSortingChanged.fire(new SortingChangedEventData(sortingChangedEvent.getSortField(), SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection())));
-				refreshData(false, false, false);
+				refreshData();
 				break;
-			case UI_TABLE_DISPLAYED_RANGE_CHANGED:
-				UiTable.DisplayedRangeChangedEvent rangeChangedEvent = (UiTable.DisplayedRangeChangedEvent) event;
-				viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
-				if (rangeChangedEvent.getDataRequest() != null) {
-					UiTableDataRequest dataRequest = rangeChangedEvent.getDataRequest();
-					SortDirection sortDirection = SortDirection.fromUiSortDirection(dataRequest.getSortDirection());
-					int startIndex = dataRequest.getStartIndex();
-					int requestedLength = dataRequest.getLength();
-					onTableDataRequest.fire(new TableDataRequestEventData(startIndex, requestedLength, dataRequest.getSortField(), sortDirection));
-					int pagedStartIndex = startIndex - (startIndex % pageSize);
-					int endIndex = startIndex + requestedLength;
-					int pagedEndIndex = endIndex % pageSize == 0 ? endIndex : endIndex + pageSize - (endIndex % pageSize);
-					this.sendDataToClient(pagedStartIndex, pagedEndIndex, false);
-				}
+			case UI_TABLE_DISPLAYED_RANGE_CHANGED: {
+				UiTable.DisplayedRangeChangedEvent d = (UiTable.DisplayedRangeChangedEvent) event;
+				handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
 				break;
-			case UI_TABLE_REQUEST_NESTED_DATA:
-				UiTable.RequestNestedDataEvent nestedDataEvent = (UiTable.RequestNestedDataEvent) event;
-				List<RECORD> childRecords = model.getChildRecords(clientRecordCache.getRecordByClientId(nestedDataEvent.getRecordId()), getSorting());
-				CacheManipulationHandle<List<UiTableClientRecord>> cacheResponse = clientRecordCache.addRecords(childRecords);
-				if (isRendered()) {
-					getSessionContext().queueCommand(new UiTable.SetChildrenDataCommand(getId(), nestedDataEvent.getRecordId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
-				} else {
-					cacheResponse.commit();
-				}
-				break;
+			}
 			case UI_TABLE_FIELD_ORDER_CHANGE: {
 				UiTable.FieldOrderChangeEvent fieldOrderChangeEvent = (UiTable.FieldOrderChangeEvent) event;
 				TableColumn<RECORD> column = getColumnByPropertyName(fieldOrderChangeEvent.getColumnPropertyName());
-				onFieldOrderChange.fire(new FieldOrderChangeEventData(column, fieldOrderChangeEvent.getPosition()));
+				onColumnOrderChange.fire(new ColumnOrderChangeEventData<>(column, fieldOrderChangeEvent.getPosition()));
 				break;
 			}
 			case UI_TABLE_COLUMN_SIZE_CHANGE: {
 				UiTable.ColumnSizeChangeEvent columnSizeChangeEvent = (UiTable.ColumnSizeChangeEvent) event;
 				TableColumn<RECORD> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
-				onColumnSizeChange.fire(new ColumnSizeChangeEventData(column, columnSizeChangeEvent.getSize()));
+				onColumnSizeChange.fire(new ColumnSizeChangeEventData<>(column, columnSizeChangeEvent.getSize()));
 				break;
 			}
 			case UI_TABLE_CONTEXT_MENU_REQUESTED: {
 				UiTable.ContextMenuRequestedEvent e = (UiTable.ContextMenuRequestedEvent) event;
 				lastSeenContextMenuRequestId = e.getRequestId();
-				RECORD record = clientRecordCache.getRecordByClientId(e.getRecordId());
+				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null && contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
@@ -432,9 +375,9 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 
 	public void setCellValue(RECORD record, String propertyName, Object value) {
 		transientChangesByRecordAndPropertyName.computeIfAbsent(record, record1 -> new HashMap<>()).put(propertyName, value);
-		Integer uiRecordIdOrNull = clientRecordCache.getUiRecordIdOrNull(record);
+		UiIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
-			queueCommandIfRendered(() -> new UiTable.SetCellValueCommand(getId(), uiRecordIdOrNull, propertyName, value));
+			queueCommandIfRendered(() -> new UiTable.SetCellValueCommand(getId(), uiRecordIdOrNull.getId(), propertyName, value));
 		}
 	}
 
@@ -451,15 +394,15 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 				markedCells.remove(record);
 			}
 		}
-		Integer uiRecordIdOrNull = clientRecordCache.getUiRecordIdOrNull(record);
+		UiIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
-			queueCommandIfRendered(() -> new UiTable.MarkTableFieldCommand(getId(), uiRecordIdOrNull, propertyName, mark));
+			queueCommandIfRendered(() -> new UiTable.MarkTableFieldCommand(getId(), uiRecordIdOrNull.getId(), propertyName, mark));
 		}
 	}
 
 	public void clearRecordMarkings(RECORD record) {
 		markedCells.remove(record);
-		updateRecordOnClientSide(record);
+		updateSingleRecordOnClient(record);
 	}
 
 	public void clearAllCellMarkings() {
@@ -469,16 +412,19 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 
 	// TODO implement using decider? more general formatting options?
 	public void setRecordBold(RECORD record, boolean bold) {
-		Integer uiRecordIdOrNull = clientRecordCache.getUiRecordIdOrNull(record);
+		UiIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
-			queueCommandIfRendered(() -> new UiTable.SetRecordBoldCommand(getId(), uiRecordIdOrNull, bold));
+			queueCommandIfRendered(() -> new UiTable.SetRecordBoldCommand(getId(), uiRecordIdOrNull.getId(), bold));
 		}
 	}
 
-	public void selectSingleRow(RECORD record, boolean scrollToRecord) {
-		this.selectedRecord = record;
-		this.selectedRecords.clear();
-		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), clientRecordCache.getUiRecordIds(getSelectedRecords()), scrollToRecord));
+	public void setSelectedRecord(RECORD record, boolean scrollToRecord) {
+		setSelectedRecords(List.of(record), scrollToRecord);
+	}
+
+	public void setSelectedRecords(List<RECORD> records, boolean scrollToFirst) {
+		this.selectedRecords = List.copyOf(records);
+		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), renderedRecords.getUiRecordIds(selectedRecords), scrollToFirst));
 	}
 
 	protected void updateColumnMessages(TableColumn<RECORD> tableColumn) {
@@ -504,11 +450,11 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 	}
 
 	private void updateSingleCellMessages(RECORD record, String propertyName, List<FieldMessage> cellMessages) {
-		Integer uiRecordId = clientRecordCache.getUiRecordIdOrNull(record);
+		UiIdentifiableClientRecord uiRecordId = renderedRecords.getUiRecord(record);
 		if (uiRecordId != null) {
 			queueCommandIfRendered(() -> new UiTable.SetSingleCellMessagesCommand(
 					getId(),
-					uiRecordId,
+					uiRecordId.getId(),
 					propertyName,
 					cellMessages.stream()
 							.map(m -> m.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
@@ -601,65 +547,30 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		refreshData();
 	}
 
-	public TableModel getModel() {
-		return model;
-	}
-
-	public void setModel(TableModel<RECORD> model) {
-		unregisterModelEventListeners();
-		this.model = model;
-		clearChangeBuffer();
-		model.onAllDataChanged().addListener(this.onAllDataChangedListener);
-		model.onRecordAdded().addListener(this.onRecordAddedListener);
-		model.onRecordDeleted().addListener(this.onRecordDeletedListener);
-		model.onRecordUpdated().addListener(this.onRecordUpdatedListener);
-		refreshData(true, true, true);
-	}
-
-	private void unregisterModelEventListeners() {
-		if (this.model != null) {
-			this.model.onAllDataChanged().removeListener(this.onAllDataChangedListener);
-			this.model.onRecordAdded().removeListener(this.onRecordAddedListener);
-			this.model.onRecordDeleted().removeListener(this.onRecordDeletedListener);
-			this.model.onRecordUpdated().removeListener(this.onRecordUpdatedListener);
-		}
-	}
-
-	private void onAllDataChanged(Void aVoid) {
-		refreshData(true, false, true);
-	}
-
-	private void onRecordAdded(RECORD record) {
-		if (isRendered()) {
-			this.refreshData(false, false, false);
-		}
-	}
-
-	private void onRecordDeleted(RECORD record) {
-		clearMetaDataForRecord(record);
-		if (Objects.equals(selectedRecord, record)) {
-			selectedRecord = null;
-		}
-		if (selectedRecords != null) {
-			selectedRecords.remove(record);
-		}
-		if (isRendered()) {
-			CacheManipulationHandle<Integer> cacheResponse = clientRecordCache.removeRecord(record);
-			getSessionContext().queueCommand(
-					new UiTable.DeleteRowsCommand(getId(), Collections.singletonList(cacheResponse.getAndClearResult())),
-					aVoid -> cacheResponse.commit()
-			);
-		}
-	}
-
 	public void clearRecordMessages(RECORD record) {
 		cellMessages.remove(record);
-		updateRecordOnClientSide(record);
+		updateSingleRecordOnClient(record);
 	}
 
 	public void updateRecordMessages(RECORD record, Map<String, List<FieldMessage>> messages) {
 		cellMessages.put(record, new HashMap<>(messages));
-		updateRecordOnClientSide(record);
+		updateSingleRecordOnClient(record);
+	}
+
+	@Override
+	protected void handleModelRecordsDeleted(ItemRangeChangeEvent<RECORD> deleteEvent) {
+		for (int i = Math.max(deleteEvent.getStart(), renderedRecords.getStartIndex()); i < Math.min(deleteEvent.getEnd(), renderedRecords.getEndIndex()); i++) {
+			clearMetaDataForRecord(renderedRecords.getRecordByIndex(i));
+		}
+		super.handleModelRecordsDeleted(deleteEvent);
+	}
+
+	@Override
+	protected void handleModelRecordsChanged(ItemRangeChangeEvent<RECORD> changeEvent) {
+		for (int i = Math.max(changeEvent.getStart(), renderedRecords.getStartIndex()); i < Math.min(changeEvent.getEnd(), renderedRecords.getEndIndex()); i++) {
+			clearMetaDataForRecord(renderedRecords.getRecordByIndex(i));
+		}
+		super.handleModelRecordsChanged(changeEvent);
 	}
 
 	private void clearMetaDataForRecord(RECORD record) {
@@ -668,89 +579,30 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		markedCells.remove(record);
 	}
 
-	private void onRecordUpdated(RECORD record) {
-		clearMetaDataForRecord(record);
-		updateRecordOnClientSide(record);
-	}
-
-	private void updateRecordOnClientSide(RECORD record) {
-		if (isRendered()) {
-			CacheManipulationHandle<UiTableClientRecord> cacheResponse = clientRecordCache.addOrUpdateRecord(record);
-			UiTableClientRecord clientRecord = cacheResponse.getAndClearResult();
-			applyTransientChangesToClientRecord(clientRecord);
-			getSessionContext().queueCommand(
-					new UiTable.UpdateRecordCommand(getId(), clientRecord),
-					aVoid -> cacheResponse.commit()
-			);
-		}
-	}
-
 	public void refreshData() {
-		refreshData(false, false, false);
+		refresh();
 	}
 
-	private void refreshData(boolean resetMarkingsAndMessages, boolean resetSelection, boolean resetEditingState) {
-		if (resetEditingState) {
-			transientChangesByRecordAndPropertyName.clear();
-		}
-		if (resetMarkingsAndMessages) {
-			cellMessages.clear();
-			markedCells.clear();
-		}
-		if (resetSelection) {
-			selectedRecord = null;
-			selectedRecords.clear();
-		}
-
-		sendDataToClient(0, pageSize, true);
-
-		if (!resetEditingState && activeEditorCell != null) {
-			Integer editingClientRecordId = clientRecordCache.getUiRecordIdOrNull(activeEditorCell.getRecord());
-			if (editingClientRecordId != null) {
-				// TODO DO NOT DO THIS!! This must be done on the client side!!!! (client sends events for active cell vs server sends command to edit cell --> server will not know the currently
-				//  edited cell. Solution: reuse ids to enable client to do this!
-				// queueCommandIfRendered(() -> new UiTable.EditCellIfAvailableCommand(getId(), editingClientRecordId, activeEditorCell.getPropertyName()));
-			}
-		}
-	}
-
-	private void sendDataToClient(int startIndex, int endIndex, boolean clear) {
-		if (startIndex == endIndex && !clear && topNonModelRecords.isEmpty() && bottomNonModelRecords.isEmpty()) {
-			// nothing to do on the client side!
-			return;
-		}
-		if (isRendered()) {
-			int totalCount = getTotalRecordsCount();
-			List<RECORD> records = retrieveRecords(startIndex, endIndex - startIndex);
-
-			CacheManipulationHandle<List<UiTableClientRecord>> cacheResponse;
-			if (clear) {
-				cacheResponse = clientRecordCache.replaceRecords(records);
-			} else {
-				cacheResponse = clientRecordCache.addRecords(records);
-			}
-
-			List<UiTableClientRecord> results = cacheResponse.getAndClearResult();
-			if (!transientChangesByRecordAndPropertyName.isEmpty()) {
-				results.forEach(uiRecord -> applyTransientChangesToClientRecord(uiRecord));
-			}
-
-			UiTable.AddDataCommand addDataCommand = new UiTable.AddDataCommand(getId(), startIndex, results, totalCount, sortField, sortDirection.toUiSortDirection(), clear);
-			LOGGER.debug("Sending table data to client: start: " + addDataCommand.getStartRowIndex() + "; length: " + addDataCommand.getData().size());
-			getSessionContext().queueCommand(
-					addDataCommand,
-					aVoid -> cacheResponse.commit()
+	@Override
+	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<UiIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
+		queueCommandIfRendered(() -> {
+			LOGGER.info("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; totalCount: {}", start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
+			return new UiTable.UpdateDataCommand(
+					getId(),
+					start,
+					uiRecordIds,
+					(List) newUiRecords,
+					totalNumberOfRecords
 			);
-		}
+		});
 	}
-
 
 
 	private int getTotalRecordsCount() {
 		return getModelCount() + topNonModelRecords.size() + bottomNonModelRecords.size();
 	}
 
-	private List<RECORD> retrieveRecords(int startIndex, int length) {
+	protected List<RECORD> retrieveRecords(int startIndex, int length) {
 		if (startIndex < 0 || length < 0) {
 			LOGGER.warn("Data coordinates do not make sense: startIndex {}, length {}", startIndex, length);
 			return Collections.emptyList();
@@ -794,14 +646,8 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		}
 	}
 
-	private int getModelCount() {
-		int count = model.getCount();
-		this.count.set(count);
-		return count;
-	}
-
 	private List<RECORD> retrieveRecordsFromModel(int startIndex, int length) {
-		List<RECORD> records = model.getRecords(startIndex, length, getSorting());
+		List<RECORD> records = getModel().getRecords(startIndex, length);
 		if (records.size() == length) {
 			return records;
 		} else if (records.size() < length) {
@@ -815,7 +661,7 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 
 
 	private void applyTransientChangesToClientRecord(UiTableClientRecord uiRecord) {
-		Map<String, Object> changes = transientChangesByRecordAndPropertyName.get(clientRecordCache.getRecordByClientId(uiRecord.getId()));
+		Map<String, Object> changes = transientChangesByRecordAndPropertyName.get(renderedRecords.getRecord(uiRecord.getId()));
 		if (changes != null) {
 			changes.forEach((key, value) -> uiRecord.getValues().put(key, getColumnByPropertyName(key).getField().convertUxValueToUiValue(value)));
 		}
@@ -823,9 +669,9 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 
 	public void cancelEditing() {
 		TableCellCoordinates<RECORD> activeEditorCell = getActiveEditorCell();
-		Integer uiRecordIdOrNull = clientRecordCache.getUiRecordIdOrNull(activeEditorCell.getRecord());
-		if (uiRecordIdOrNull != null) {
-			queueCommandIfRendered(() -> new UiTable.CancelEditingCellCommand(getId(), uiRecordIdOrNull, activeEditorCell.getPropertyName()));
+		UiIdentifiableClientRecord uiRecord = renderedRecords.getUiRecord(activeEditorCell.getRecord());
+		if (uiRecord != null) {
+			queueCommandIfRendered(() -> new UiTable.CancelEditingCellCommand(getId(), uiRecord.getId(), activeEditorCell.getPropertyName()));
 		}
 	}
 
@@ -839,15 +685,18 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 				));
 	}
 
-	private UiTableClientRecord createUiTableClientRecord(RECORD record) {
+	@Override
+	protected UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiTableClientRecord clientRecord = new UiTableClientRecord();
+		clientRecord.setId(++clientRecordIdCounter);
 		Map<String, Object> uxValues = extractRecordProperties(record);
 		Map<String, Object> uiValues = columns.stream()
 				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), column.getField().convertUxValueToUiValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
 		clientRecord.setValues(uiValues);
-		clientRecord.setSelected(selectedRecord != null && selectedRecord.equals(record) || selectedRecords.contains(record));
+		clientRecord.setSelected(selectedRecords.contains(record));
 		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
 		clientRecord.setMarkings(new ArrayList<>(markedCells.getOrDefault(record, Collections.emptySet())));
+		applyTransientChangesToClientRecord(clientRecord);
 		return clientRecord;
 	}
 
@@ -957,7 +806,7 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 
 	public void setSortField(String sortField) {
 		this.sortField = sortField;
-		refreshData(false, false, false);
+		refreshData();
 	}
 
 	public SortDirection getSortDirection() {
@@ -966,13 +815,13 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 
 	public void setSortDirection(SortDirection sortDirection) {
 		this.sortDirection = sortDirection;
-		refreshData(false, false, false);
+		refreshData();
 	}
 
 	public void setSorting(String sortField, SortDirection sortDirection) {
 		this.sortField = sortField;
 		this.sortDirection = sortDirection;
-		refreshData(false, false, false);
+		refreshData();
 	}
 
 	public boolean isEditable() {
@@ -1119,10 +968,6 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		this.footerRowFields.put(columnName, field);
 	}
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
-
 	public TableColumn<RECORD> getColumnByPropertyName(String propertyName) {
 		return columns.stream()
 				.filter(column -> column.getPropertyName().equals(propertyName))
@@ -1161,11 +1006,16 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 	}
 
 	public void revertChanges() {
-		refreshData(true, false, true);
+		transientChangesByRecordAndPropertyName.clear();
+		refreshData();
 	}
 
 	public RECORD getSelectedRecord() {
-		return selectedRecord;
+		return selectedRecords.isEmpty() ? null : selectedRecords.get(selectedRecords.size() - 1);
+	}
+
+	public List<RECORD> getSelectedRecords() {
+		return selectedRecords;
 	}
 
 	public PropertyProvider<RECORD> getPropertyProvider() {
@@ -1188,19 +1038,6 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		this.propertyInjector = propertyInjector;
 	}
 
-	public void setMaxCacheCapacity(int maxCapacity) {
-		clientRecordCache.setMaxCapacity(maxCapacity);
-	}
-
-	public int getMaxCacheCapacity() {
-		return clientRecordCache.getMaxCapacity();
-	}
-
-	public List<RECORD> getSelectedRecords() {
-		return selectedRecords != null ? selectedRecords : selectedRecord != null ? Collections.singletonList(selectedRecord) : Collections.emptyList(); // TODO completely rewrite this!!! (multiple
-		// selected records should be standard!)
-	}
-
 	public Function<RECORD, Component> getContextMenuProvider() {
 		return contextMenuProvider;
 	}
@@ -1211,10 +1048,6 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 
 	public void closeContextMenu() {
 		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
-	}
-
-	public ObservableValue<Integer> getCount() {
-		return count;
 	}
 
 }

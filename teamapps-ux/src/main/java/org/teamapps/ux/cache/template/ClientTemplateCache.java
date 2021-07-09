@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.cache;
+package org.teamapps.ux.cache.template;
 
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
 import org.teamapps.ux.component.template.Template;

@@ -19,6 +19,7 @@
  */
 import {debounce, DebounceMode} from "./debounce";
 import {throttle} from "./throttle";
+import {deepEquals} from "../Common";
 
 export type TeamAppsEventListener<EO> = (eventObject?: EO, emitter?: any) => void;
 
@@ -74,7 +75,7 @@ export class TeamAppsEvent<EO> {
 
 
 	public fireIfChanged(eventObject: EO) {
-		if (this.previousEventObject !== eventObject) {
+		if (!deepEquals(this.previousEventObject, eventObject)) {
 			this.fire(eventObject);
 			this.previousEventObject = eventObject;
 		}

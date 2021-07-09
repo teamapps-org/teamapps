@@ -17,11 +17,32 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.cache;
+package org.teamapps.ux.component.table;
 
-import java.util.List;
+import org.teamapps.ux.component.field.AbstractField;
 
-public interface ClientRecordCachePurgeListener {
+public class ColumnOrderChangeEventData<RECORD> {
+	private final TableColumn<RECORD> column;
+	private final int position;
 
-	public void handleCacheEntriesPurged(CacheManipulationHandle<List<Integer>> operationHandle);
+	public ColumnOrderChangeEventData(TableColumn<RECORD> column, int position) {
+		this.column = column;
+		this.position = position;
+	}
+
+	public TableColumn<RECORD> getColumn() {
+		return column;
+	}
+
+	public String getPropertyName() {
+		return column.getPropertyName();
+	}
+
+	public AbstractField getField() {
+		return column.getField();
+	}
+
+	public int getPosition() {
+		return position;
+	}
 }

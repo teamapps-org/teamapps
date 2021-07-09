@@ -54,8 +54,6 @@ class UiTable extends UiComponent {
 	boolean showRowCheckBoxes; //if true, show check boxes on the left
 	boolean showNumbering; //if true, show numbering on the left
 
-	List<UiTableClientRecord> tableData; //if available the initial table data
-	int totalNumberOfRecords;
 	String sortField; //if available the table is initially sorted by this field
 	UiSortDirection sortDirection = UiSortDirection.ASC;
 
@@ -70,13 +68,9 @@ class UiTable extends UiComponent {
 	boolean contextMenuEnabled = false;
 
 	command clearTable();
-	command addData(int startRowIndex, List<UiTableClientRecord> data, int totalNumberOfRecords, String sortField, UiSortDirection sortDirection, boolean clearTableCache);
-	command removeData(List<Integer> ids);
-	command insertRows(int index, List<UiTableClientRecord> data);
-	command deleteRows(List<Integer> ids);
-    command updateRecord(UiTableClientRecord record);
+	command updateData(int startIndex, List<Integer> recordIds, List<UiTableClientRecord> newRecords, int totalNumberOfRecords);
+	command setSorting(String sortField, UiSortDirection sortDirection);
     command setCellValue(int recordId, String columnPropertyName, Object value);
-	command setChildrenData(int parentRecordId, List<UiTableClientRecord> data);
 	command markTableField(int recordId, String columnPropertyName, boolean mark); //mark or unmark the field to indicate errors or missing data
 	command clearAllFieldMarkings();
 	command setRecordBold(int recordId, boolean bold); //TODO
@@ -97,11 +91,9 @@ class UiTable extends UiComponent {
 	event cellEditingStarted(int recordId, String columnPropertyName, Object currentValue);
 	event cellEditingStopped(int recordId, String columnPropertyName);
 	event cellValueChanged(int recordId, String columnPropertyName, Object value);
-	event rowSelected(int recordId, boolean isRightMouseButton /* TODO */, boolean isDoubleClick /* TODO */); // TODO what if the user selects more than one row?
-	event multipleRowsSelected(List<Integer> recordIds); // send this event if the user selects more than one row. In this case, do not send rowSelected
+	event rowsSelected(List<Integer> recordIds);
 	event sortingChanged(String sortField, UiSortDirection sortDirection); // sent when the user clicks on a sortable header column
-	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, UiTableDataRequest dataRequest);
-	event requestNestedData(int recordId);
+	event displayedRangeChanged(int startIndex, int length);
 	event contextMenuRequested(int requestId, int recordId);
 
 	event fieldOrderChange(String columnPropertyName, int position); //zero based
