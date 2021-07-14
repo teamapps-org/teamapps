@@ -47,8 +47,7 @@ import org.teamapps.ux.component.rootpanel.WakeLock;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.component.window.Window;
-import org.teamapps.ux.i18n.RankingTranslationProvider;
-import org.teamapps.ux.i18n.TeamAppsTranslationProviderFactory;
+import org.teamapps.ux.i18n.ResourceBundleTranslationProvider;
 import org.teamapps.ux.i18n.TranslationProvider;
 import org.teamapps.ux.icon.IconBundle;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
@@ -60,7 +59,10 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -95,7 +97,7 @@ public class SessionContext {
 	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
 	private final ClientSessionResourceProvider sessionResourceProvider;
 
-	private final RankingTranslationProvider rankingTranslationProvider;
+	private TranslationProvider translationProvider;
 
 	private final Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration;
@@ -127,8 +129,7 @@ public class SessionContext {
 		this.iconProvider = iconProvider;
 		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(this);
-		this.rankingTranslationProvider = new RankingTranslationProvider();
-		this.rankingTranslationProvider.addTranslationProvider(TeamAppsTranslationProviderFactory.createProvider());
+		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
 	}
@@ -141,12 +142,12 @@ public class SessionContext {
 		return CurrentSessionContext.getOrNull();
 	}
 
-	public void addTranslationProvider(TranslationProvider translationProvider) {
-		rankingTranslationProvider.addTranslationProvider(translationProvider);
+	public void setTranslationProvider(TranslationProvider translationProvider) {
+		this.translationProvider = translationProvider;
 	}
 
-	public TranslationProvider getRankingTranslationProvider() {
-		return rankingTranslationProvider;
+	public TranslationProvider getTranslationProvider() {
+		return translationProvider;
 	}
 
 	public void addIconBundle(IconBundle iconBundle) {
@@ -175,7 +176,7 @@ public class SessionContext {
 	}
 
 	public String getLocalized(String key, Object... parameters) {
-		String value = rankingTranslationProvider.getTranslation(key, Arrays.asList(getLocale(), Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN));
+		String value = translationProvider.getTranslation(key, getLocale());
 		if (value != null && parameters != null) {
 			return MessageFormat.format(value, parameters);
 		}

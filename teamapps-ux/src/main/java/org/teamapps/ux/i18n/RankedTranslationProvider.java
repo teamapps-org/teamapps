@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,43 +19,28 @@
  */
 package org.teamapps.ux.i18n;
 
-import java.util.*;
+import java.util.Locale;
+import java.util.MissingResourceException;
 
-public class MapTranslationProvider implements TranslationProvider{
+public class RankedTranslationProvider implements TranslationProvider {
 
-	private Set<String> allKeys;
-	private Map<Locale, Map<String, String>> translationsMap;
+	private final TranslationProvider[] translationProviders;
 
-	public MapTranslationProvider() {
-		translationsMap = new HashMap<>();
-		allKeys = new HashSet<>();
-	}
-
-	public void addTranslation(Locale locale, String key, String value) {
-		if (value == null) {
-			return;
-		}
-		allKeys.add(key);
-		translationsMap.computeIfAbsent(locale, loc -> new HashMap<>()).put(key, value);
-	}
-
-
-	@Override
-	public List<Locale> getLanguages() {
-		return new ArrayList<>(translationsMap.keySet());
-	}
-
-	@Override
-	public List<String> getKeys() {
-		return new ArrayList<>(allKeys);
+	public RankedTranslationProvider(TranslationProvider... translationProviders) {
+		this.translationProviders = translationProviders;
 	}
 
 	@Override
 	public String getTranslation(String key, Locale locale) {
-		if (translationsMap.containsKey(locale)) {
-			return translationsMap.get(locale).get(key);
-		} else {
-			return null;
+		for (TranslationProvider translationProvider : translationProviders) {
+			try {
+				String translation = translationProvider.getTranslation(key, locale);
+				return translation;
+			} catch (MissingResourceException e) {
+				// ignore
+			}
 		}
+		throw new MissingResourceException("Can't find resource " + key, this.getClass().getName(), key);
 	}
+
 }
