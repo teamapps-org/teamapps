@@ -36,10 +36,10 @@ public class ShakaPlayer extends AbstractComponent {
 	public final Event<UiShakaManifest> onManifestLoaded = new Event<>();
 	public final Event<Long> onTimeUpdate = new Event<>();
 	public final Event<Void> onEnded = new Event<>();
-
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
 		SessionContext.current().queueCommand(new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
+
 
 	private String hlsUrl;
 	private String dashUrl;
@@ -49,6 +49,7 @@ public class ShakaPlayer extends AbstractComponent {
 	private Color backgroundColor = Color.BLACK;
 	private TrackLabelFormat trackLabelFormat = TrackLabelFormat.LABEL;
 	private boolean videoDisabled = false;
+	private String audioLanguage;
 
 	private long timeMillis = 0;
 
@@ -73,6 +74,7 @@ public class ShakaPlayer extends AbstractComponent {
 		ui.setTrackLabelFormat(trackLabelFormat.toUiTrackLabelFormat());
 		ui.setVideoDisabled(videoDisabled);
 		ui.setTimeMillis(timeMillis);
+		ui.setPreferredAudioLanguage(audioLanguage);
 		return ui;
 	}
 
@@ -192,6 +194,7 @@ public class ShakaPlayer extends AbstractComponent {
 	}
 
 	public void selectAudioLanguage(String language, String role) {
+		this.audioLanguage = language;
 		queueCommandIfRendered(() -> new UiShakaPlayer.SelectAudioLanguageCommand(getId(), language, role));
 	}
 }

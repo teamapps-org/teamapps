@@ -165,8 +165,8 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 			manifest: {
 				disableVideo: this._config.videoDisabled // will advice the manifest parser to set all videos to null. Note that the quality selection button must be removed!
 			},
-
-		});
+			preferredAudioLanguage: this._config.preferredAudioLanguage
+		} );
 	}
 
 	private reconfigureUi() {
@@ -200,6 +200,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 	}
 
 	public selectAudioLanguage(language: string, role: string): any {
+		this._config.preferredAudioLanguage = language;
 		this.player.selectAudioLanguage(language, role);
 	}
 
