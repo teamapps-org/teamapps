@@ -354,7 +354,7 @@ function _loadImage(imageOrFileOrUrl: ImageSource): Promise<ImageSourceElement> 
 }
 
 function _awaitImageLoad(image: HTMLImageElement) {
-	return new Promise((resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		if (image.complete && image.naturalWidth !== 0) {
 			// already loaded
 			resolve();

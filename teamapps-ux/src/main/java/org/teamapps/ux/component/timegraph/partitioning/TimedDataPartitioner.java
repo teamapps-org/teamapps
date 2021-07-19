@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.component.timegraph.partitioning;
 
+import org.teamapps.ux.component.timegraph.TimePartitioning;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -30,11 +32,11 @@ import java.util.stream.Collectors;
 
 public class TimedDataPartitioner {
 
-	public static List<TimedDataPartition> partition(long startTime, long endTime, List<Long> eventTimeStamps, ZoneId zoneId, TimePartitionUnit partitionUnit, boolean returnEmptyPartitions) {
+	public static List<TimedDataPartition> partition(long startTime, long endTime, List<Long> eventTimeStamps, ZoneId zoneId, TimePartitioning partitionUnit, boolean returnEmptyPartitions) {
 		return partition(startTime, endTime, eventTimeStamps.stream().mapToLong(l -> l).toArray(), zoneId, partitionUnit, returnEmptyPartitions);
 	}
 
-	public static List<TimedDataPartition> partition(long startTime, long endTime, long[] eventTimeStamps, ZoneId zoneId, TimePartitionUnit partitionUnit, boolean returnEmptyPartitions) {
+	public static List<TimedDataPartition> partition(long startTime, long endTime, long[] eventTimeStamps, ZoneId zoneId, TimePartitioning partitionUnit, boolean returnEmptyPartitions) {
 		TreeMap<Long, Integer> partitions = new TreeMap<>(Comparator.comparingLong(value -> value));
 
 		if (returnEmptyPartitions) {
@@ -45,9 +47,9 @@ public class TimedDataPartitioner {
 			}
 		}
 
-		long searchStartTime = partitionUnit.getPartition(Instant.ofEpochMilli(startTime).atZone(zoneId)).toInstant().toEpochMilli();
+		long searchStartTime = partitionUnit.getPartitionStart(Instant.ofEpochMilli(startTime).atZone(zoneId)).toInstant().toEpochMilli();
 		ZonedDateTime endTimeZonedDateTime = Instant.ofEpochMilli(endTime).atZone(zoneId);
-		long searchEndTime = partitionUnit.increment(partitionUnit.increment(partitionUnit.getPartition(endTimeZonedDateTime))).toInstant().toEpochMilli();
+		long searchEndTime = partitionUnit.increment(partitionUnit.increment(partitionUnit.getPartitionStart(endTimeZonedDateTime))).toInstant().toEpochMilli();
 
 		Arrays.stream(eventTimeStamps)
 				.filter(e -> e >= searchStartTime && e <= searchEndTime)
@@ -58,9 +60,9 @@ public class TimedDataPartitioner {
 				.collect(Collectors.toList());
 	}
 
-	private static long getPartition(Long eventTime, ZoneId zoneId, TimePartitionUnit partitionUnit) {
+	private static long getPartition(Long eventTime, ZoneId zoneId, TimePartitioning partitionUnit) {
 		ZonedDateTime zonedDateTime = Instant.ofEpochMilli(eventTime).atZone(zoneId);
-		return partitionUnit.getPartition(zonedDateTime).toInstant().toEpochMilli();
+		return partitionUnit.getPartitionStart(zonedDateTime).toInstant().toEpochMilli();
 	}
 
 

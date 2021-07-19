@@ -25,45 +25,45 @@ import org.junit.Test;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import static org.teamapps.ux.component.timegraph.partitioning.TimePartitionUnit.*;
+import static org.teamapps.ux.component.timegraph.partitioning.TimePartitioningUnit.*;
 
-public class TimePartitionUnitTest {
+public class TimePartitioningUnitTest {
 
 	private static final ZonedDateTime TEST_TIME_UNALIGNED = ZonedDateTime.of(2020, 7, 17, 17, 47, 47, 777777777, ZoneOffset.UTC);
 	private static final ZonedDateTime TEST_TIME_INCREMENT = ZonedDateTime.of(2020, 12, 31, 23, 59, 59, 999000000, ZoneOffset.UTC);
 	private static final ZonedDateTime TEST_TIME_DECREMENT = ZonedDateTime.of(2020, 01, 01, 00, 00, 00, 0, ZoneOffset.UTC);
 
-	@Test public void testGetPartition_MILLISECOND() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.777Z"), MILLISECOND.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MILLISECOND_2() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.776Z"), MILLISECOND_2.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MILLISECOND_5() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.775Z"), MILLISECOND_5.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MILLISECOND_10() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.770Z"), MILLISECOND_10.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MILLISECOND_20() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.760Z"), MILLISECOND_20.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MILLISECOND_50() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.750Z"), MILLISECOND_50.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MILLISECOND_100() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.700Z"), MILLISECOND_100.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MILLISECOND_200() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.600Z"), MILLISECOND_200.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MILLISECOND_500() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.500Z"), MILLISECOND_500.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_SECOND() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.000Z"), SECOND.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_SECONDS_2() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:46.000Z"), SECONDS_2.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_SECONDS_5() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:45.000Z"), SECONDS_5.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_SECONDS_10() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:40.000Z"), SECONDS_10.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_SECONDS_15() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:45.000Z"), SECONDS_15.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_SECONDS_30() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:30.000Z"), SECONDS_30.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MINUTE() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:00.000Z"), MINUTE.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MINUTES_2() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:46:00.000Z"), MINUTES_2.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MINUTES_5() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:45:00.000Z"), MINUTES_5.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MINUTES_10() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:40:00.000Z"), MINUTES_10.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MINUTES_15() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:45:00.000Z"), MINUTES_15.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MINUTES_30() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:30:00.000Z"), MINUTES_30.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_HOUR() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:00:00.000Z"), HOUR.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_HOURS_6() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T12:00:00.000Z"), HOURS_6.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_HOURS_12() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T12:00:00.000Z"), HOURS_12.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_DAY() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T00:00:00.000Z"), DAY.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_WEEK_SUNDAY() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-12T00:00:00.000Z"), WEEK_SUNDAY.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_WEEK_MONDAY() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-13T00:00:00.000Z"), WEEK_MONDAY.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_MONTH() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-01T00:00:00.000Z"), MONTH.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_QUARTER() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-01T00:00:00.000Z"), QUARTER.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_HALF_YEAR() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-01T00:00:00.000Z"), HALF_YEAR.getPartition(TEST_TIME_UNALIGNED));  }
-	@Test public void testGetPartition_YEAR() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-01-01T00:00:00.000Z"), YEAR.getPartition(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MILLISECOND() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.777Z"), MILLISECOND.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MILLISECOND_2() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.776Z"), MILLISECOND_2.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MILLISECOND_5() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.775Z"), MILLISECOND_5.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MILLISECOND_10() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.770Z"), MILLISECOND_10.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MILLISECOND_20() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.760Z"), MILLISECOND_20.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MILLISECOND_50() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.750Z"), MILLISECOND_50.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MILLISECOND_100() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.700Z"), MILLISECOND_100.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MILLISECOND_200() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.600Z"), MILLISECOND_200.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MILLISECOND_500() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.500Z"), MILLISECOND_500.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_SECOND() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:47.000Z"), SECOND.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_SECONDS_2() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:46.000Z"), SECONDS_2.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_SECONDS_5() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:45.000Z"), SECONDS_5.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_SECONDS_10() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:40.000Z"), SECONDS_10.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_SECONDS_15() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:45.000Z"), SECONDS_15.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_SECONDS_30() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:30.000Z"), SECONDS_30.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MINUTE() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:47:00.000Z"), MINUTE.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MINUTES_2() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:46:00.000Z"), MINUTES_2.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MINUTES_5() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:45:00.000Z"), MINUTES_5.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MINUTES_10() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:40:00.000Z"), MINUTES_10.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MINUTES_15() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:45:00.000Z"), MINUTES_15.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MINUTES_30() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:30:00.000Z"), MINUTES_30.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_HOUR() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T17:00:00.000Z"), HOUR.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_HOURS_6() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T12:00:00.000Z"), HOURS_6.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_HOURS_12() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T12:00:00.000Z"), HOURS_12.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_DAY() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-17T00:00:00.000Z"), DAY.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_WEEK_SUNDAY() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-12T00:00:00.000Z"), WEEK_SUNDAY.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_WEEK_MONDAY() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-13T00:00:00.000Z"), WEEK_MONDAY.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_MONTH() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-01T00:00:00.000Z"), MONTH.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_QUARTER() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-01T00:00:00.000Z"), QUARTER.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_HALF_YEAR() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-07-01T00:00:00.000Z"), HALF_YEAR.getPartitionStart(TEST_TIME_UNALIGNED));  }
+	@Test public void testGetPartition_YEAR() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2020-01-01T00:00:00.000Z"), YEAR.getPartitionStart(TEST_TIME_UNALIGNED));  }
 
 	@Test public void testIncrement_MILLISECOND() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2021-01-01T00:00:00.000Z"), MILLISECOND.increment(TEST_TIME_INCREMENT));  }
 	@Test public void testIncrement_MILLISECOND_2() throws Exception { Assert.assertEquals(ZonedDateTime.parse("2021-01-01T00:00:00.001Z"), MILLISECOND_2.increment(TEST_TIME_INCREMENT));  }

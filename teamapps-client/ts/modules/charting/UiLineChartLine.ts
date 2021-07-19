@@ -23,27 +23,27 @@ import * as d3 from "d3";
 import {ScaleLinear} from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
 import {UiLineChartLineConfig} from "../../generated/UiLineChartLineConfig";
-import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGGSelection} from "./Charting";
+import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {isVisibleColor} from "../Common";
 
 export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartLineConfig> {
 	private line: Line<DataPoint>;
-	private $line: Selection<SVGPathElement, {}, HTMLElement, undefined>;
+	private $line: SVGSelection<any>;
 	private area: Area<DataPoint>;
-	private $area: Selection<SVGPathElement, {}, HTMLElement, undefined>;
-	private $dots: d3.Selection<SVGGElement, {}, HTMLElement, undefined>;
-	private $defs: Selection<SVGDefsElement, {}, HTMLElement, undefined>;
+	private $area: SVGSelection<any>;
+	private $dots: SVGSelection<any>;
+	private $defs: SVGSelection<any>;
 	private colorScale: ScaleLinear<string, string>;
-	private $main: Selection<SVGGElement, {}, HTMLElement, undefined>;
+	private $main: SVGSelection<any>;
 
-	private $yZeroLine: Selection<SVGLineElement, {}, HTMLElement, undefined>;
+	private $yZeroLine: SVGSelection<any>;
 
 	constructor(
 		timeGraphId: string,
 		config: UiLineChartLineConfig,
-		$container: SVGGSelection, // TODO append outside!! https://stackoverflow.com/a/19951169/524913
+		$container: SVGSelection, // TODO append outside!! https://stackoverflow.com/a/19951169/524913
 		private dropShadowFilterId: string,
 		dataStore: TimeGraphDataStore
 	) {

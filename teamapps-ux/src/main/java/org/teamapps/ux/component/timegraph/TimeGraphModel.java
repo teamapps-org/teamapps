@@ -21,18 +21,16 @@ package org.teamapps.ux.component.timegraph;
 
 import org.teamapps.event.Event;
 
+import java.time.ZoneId;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public interface TimeGraphModel {
 
 	Event<Void> onDataChanged();
 
-	List<? extends TimeGraphZoomLevel> getZoomLevels();
+	Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimePartitioning zoomLevel, ZoneId zoneId, Interval neededInterval, Interval displayedInterval);
 
-	Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX, Interval displayedInterval);
-
-	Interval getDomainX(Collection<String> dataSeriesId);
+	Interval getDomainX();
 	
 }

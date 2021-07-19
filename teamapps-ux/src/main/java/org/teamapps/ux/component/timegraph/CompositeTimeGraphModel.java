@@ -23,14 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.event.Event;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.time.ZoneId;
+import java.util.*;
 
 public class CompositeTimeGraphModel implements TimeGraphModel {
 
@@ -51,18 +45,9 @@ public class CompositeTimeGraphModel implements TimeGraphModel {
 	}
 
 	@Override
-	public List<TimeGraphZoomLevel> getZoomLevels() {
-		return delegates.stream()
-				.flatMap(timeGraphModel -> timeGraphModel.getZoomLevels().stream())
-				.distinct()
-				.sorted(Comparator.comparing(TimeGraphZoomLevel::getApproximateMillisecondsPerDataPoint).reversed())
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> lineIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX, Interval displayedInterval) {
+	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimePartitioning partitioning, ZoneId zoneId, Interval neededInterval, Interval displayedInterval) {
 		Map<String, LineChartDataPoints> points = delegates.stream()
-				.map(delegate -> delegate.getDataPoints(lineIds, zoomLevel, neededIntervalX, displayedInterval))
+				.map(delegate -> delegate.getDataPoints(dataSeriesIds, partitioning, zoneId, neededInterval, displayedInterval))
 				.reduce((Map<String, LineChartDataPoints> map1,
 				         Map<String, LineChartDataPoints> map2) -> {
 					HashMap<String, LineChartDataPoints> m = new HashMap<>();
@@ -84,9 +69,9 @@ public class CompositeTimeGraphModel implements TimeGraphModel {
 	}
 
 	@Override
-	public Interval getDomainX(Collection<String> lineIds) {
+	public Interval getDomainX() {
 		return delegates.stream()
-				.map(delegate -> delegate.getDomainX(lineIds))
+				.map(TimeGraphModel::getDomainX)
 				.filter(Objects::nonNull)
 				.reduce((Interval interval1, Interval interval2) -> new Interval(Math.min(interval1.getMin(), interval2.getMin()), Math.max(interval1.getMax(), interval2.getMax())))
 				.orElseGet(() -> new Interval(0, 1));

@@ -21,6 +21,7 @@ package org.teamapps.ux.component.timegraph;
 
 import org.teamapps.event.Event;
 
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,11 +36,11 @@ public abstract class AbstractTimeGraphModel implements TimeGraphModel {
 	}
 
 	@Override
-	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX, Interval displayedInterval) {
+	public Map<String, LineChartDataPoints> getDataPoints(Collection<String> dataSeriesIds, TimePartitioning partitioning, ZoneId zoneId, Interval neededInterval, Interval displayedInterval) {
 		return dataSeriesIds.stream()
-				.collect(Collectors.toMap(dataSeriesId -> dataSeriesId, dataSeriesId -> getDataPoints(dataSeriesId, zoomLevel, neededIntervalX, displayedInterval)));
+				.collect(Collectors.toMap(dataSeriesId -> dataSeriesId, dataSeriesId -> getDataPoints(dataSeriesId, partitioning, zoneId, neededInterval, displayedInterval)));
 	}
 
-	protected abstract LineChartDataPoints getDataPoints(String dataSeriesId, TimeGraphZoomLevel zoomLevel, Interval neededIntervalX, Interval displayedInterval);
+	protected abstract LineChartDataPoints getDataPoints(String dataSeriesId, TimePartitioning zoomLevel, ZoneId zoneId, Interval neededIntervalX, Interval displayedInterval);
 
 }

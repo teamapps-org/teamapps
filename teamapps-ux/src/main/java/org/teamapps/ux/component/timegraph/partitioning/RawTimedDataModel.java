@@ -31,6 +31,6 @@ public interface RawTimedDataModel {
 	
 	Map<String, long[]> getRawEventTimes(Collection<String> dataSeriesIds, Interval neededIntervalX);
 
-	Interval getDomainX(Collection<String> dataSeriesId);
+	Interval getDomainX();
 
 }

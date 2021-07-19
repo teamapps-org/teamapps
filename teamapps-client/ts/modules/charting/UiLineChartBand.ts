@@ -21,7 +21,7 @@ import {Line} from "d3-shape";
 import {Selection} from "d3-selection";
 import * as d3 from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
-import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGGSelection} from "./Charting";
+import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiLineChartBandConfig} from "../../generated/UiLineChartBandConfig";
@@ -30,22 +30,22 @@ import {isVisibleColor} from "../Common";
 
 export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartBandConfig> {
 	private middleLine: Line<DataPoint>;
-	private $middleLine: Selection<SVGPathElement, {}, HTMLElement, undefined>;
+	private $middleLine: SVGSelection<any>;
 	private lowerLine: Line<DataPoint>;
-	private $lowerLine: Selection<SVGPathElement, {}, HTMLElement, undefined>;
+	private $lowerLine: SVGSelection<any>;
 	private upperLine: Line<DataPoint>;
-	private $upperLine: Selection<SVGPathElement, {}, HTMLElement, undefined>;
+	private $upperLine: SVGSelection<any>;
 	private area: D3Area2<DataPoint>;
-	private $area: Selection<SVGPathElement, {}, HTMLElement, undefined>;
-	private $dots: d3.Selection<SVGGElement, {}, HTMLElement, undefined>;
-	private $main: Selection<SVGGElement, {}, HTMLElement, undefined>;
+	private $area: SVGSelection<any>;
+	private $dots: SVGSelection<any>;
+	private $main: SVGSelection<any>;
 
-	private $yZeroLine: Selection<SVGLineElement, {}, HTMLElement, undefined>;
+	private $yZeroLine: SVGSelection<any>;
 
 	constructor(
 		timeGraphId: string,
 		config: UiLineChartBandConfig,
-		$container: SVGGSelection, // TODO append outside!! https://stackoverflow.com/a/19951169/524913
+		$container: SVGSelection, // TODO append outside!! https://stackoverflow.com/a/19951169/524913
 		private dropShadowFilterId: string,
 		dataStore: TimeGraphDataStore
 	) {

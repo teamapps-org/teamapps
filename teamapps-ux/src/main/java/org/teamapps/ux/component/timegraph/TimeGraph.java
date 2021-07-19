@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,7 @@ import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.timegraph.partitioning.TimePartitioningUnit;
 import org.teamapps.ux.session.SessionContext;
 
 import java.time.ZoneId;
@@ -37,9 +38,45 @@ public class TimeGraph extends AbstractComponent {
 	public final Event<Interval> onIntervalSelected = new Event<>();
 	private final List<AbstractLineChartDataDisplay> lines = new ArrayList<>();
 
+	private List<TimePartitioning> zoomLevels = Arrays.asList(
+			TimePartitioningUnit.YEAR,
+			TimePartitioningUnit.HALF_YEAR,
+			TimePartitioningUnit.QUARTER,
+			TimePartitioningUnit.MONTH,
+			TimePartitioningUnit.WEEK_MONDAY,
+			TimePartitioningUnit.DAY,
+			TimePartitioningUnit.HOURS_12,
+			TimePartitioningUnit.HOURS_6,
+			TimePartitioningUnit.HOURS_3,
+			TimePartitioningUnit.HOUR,
+			TimePartitioningUnit.MINUTES_30,
+			TimePartitioningUnit.MINUTES_15,
+			TimePartitioningUnit.MINUTES_5,
+			TimePartitioningUnit.MINUTES_2,
+			TimePartitioningUnit.MINUTE,
+			TimePartitioningUnit.SECONDS_30,
+			TimePartitioningUnit.SECONDS_10,
+			TimePartitioningUnit.SECONDS_5,
+			TimePartitioningUnit.SECONDS_2,
+			TimePartitioningUnit.SECOND,
+			TimePartitioningUnit.MILLISECOND_500,
+			TimePartitioningUnit.MILLISECOND_200,
+			TimePartitioningUnit.MILLISECOND_100,
+			TimePartitioningUnit.MILLISECOND_50,
+			TimePartitioningUnit.MILLISECOND_20,
+			TimePartitioningUnit.MILLISECOND_10,
+			TimePartitioningUnit.MILLISECOND_5,
+			TimePartitioningUnit.MILLISECOND_2,
+			TimePartitioningUnit.MILLISECOND
+	);
+
 	private int maxPixelsBetweenDataPoints = 50; // ... before switching to higher zoom level
 	private TimeGraphModel model;
 	private LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode = LineChartMouseScrollZoomPanMode.ENABLED;
+
+	// client-side state
+	private Interval displayedInterval;
+	private double millisecondsPerPixel;
 	private Interval selectedInterval;
 
 	// needs to be a field for reference equality (sad but true, java method references are only syntactic sugar for lambdas)
@@ -100,10 +137,11 @@ public class TimeGraph extends AbstractComponent {
 	public UiComponent createUiComponent() {
 		List<UiTimeChartZoomLevel> uiZoomLevels = createUiZoomlevels();
 
-		Interval domainX = model.getDomainX(getLineDataIds());
+		Interval domainX = model.getDomainX();
 		if (domainX == null) {
 			domainX = new Interval(0, 1);
 		}
+		this.displayedInterval = domainX;
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).createUiLongInterval();
 
 		UiTimeGraph uiTimeGraph = new UiTimeGraph(
@@ -120,27 +158,29 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	private List<UiTimeChartZoomLevel> createUiZoomlevels() {
-		return this.model.getZoomLevels().stream()
-				.map(TimeGraphZoomLevel::createUiTimeChartZoomLevel)
+		return this.zoomLevels.stream()
+				.map(timePartitioning -> new UiTimeChartZoomLevel(timePartitioning.getApproximateMillisecondsPerPartition()))
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
-			case UI_TIME_GRAPH_DATA_NEEDED: {
-				UiTimeGraph.DataNeededEvent dataNeededEvent = (UiTimeGraph.DataNeededEvent) event;
-				Interval neededInterval = new Interval(dataNeededEvent.getNeededIntervalX().getMin(), dataNeededEvent.getNeededIntervalX().getMax());
-				Interval displayedInterval = new Interval(dataNeededEvent.getDisplayedInterval().getMin(), dataNeededEvent.getDisplayedInterval().getMax());
-				TimeGraphZoomLevel zoomLevel = model.getZoomLevels().get(dataNeededEvent.getZoomLevelIndex());
-				Map<String, LineChartDataPoints> data = model.getDataPoints(getLineDataIds(), zoomLevel, neededInterval, displayedInterval);
-				queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), dataNeededEvent.getZoomLevelIndex(), dataNeededEvent.getNeededIntervalX(), convertToUiData(data)));
-				break;
-			}
 			case UI_TIME_GRAPH_ZOOMED: {
 				UiTimeGraph.ZoomedEvent zoomedEvent = (UiTimeGraph.ZoomedEvent) event;
-				Interval interval = new Interval(zoomedEvent.getIntervalX().getMin(), zoomedEvent.getIntervalX().getMax());
-				this.onZoomed.fire(new ZoomEventData(interval, zoomedEvent.getZoomLevelIndex()));
+
+				Interval displayedInterval = new Interval(zoomedEvent.getDisplayedInterval().getMin(), zoomedEvent.getDisplayedInterval().getMax());
+				TimePartitioning timePartitioning = zoomLevels.get(zoomedEvent.getZoomLevelIndex());
+
+				if (zoomedEvent.getNeededInterval() != null) {
+					Interval neededInterval = new Interval(zoomedEvent.getNeededInterval().getMin(), zoomedEvent.getNeededInterval().getMax());
+					Map<String, LineChartDataPoints> data = model.getDataPoints(getLineDataIds(), timePartitioning, timeZoneId, neededInterval, displayedInterval);
+					queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), zoomedEvent.getZoomLevelIndex(), zoomedEvent.getNeededInterval(), convertToUiData(data)));
+				}
+
+				this.displayedInterval = displayedInterval;
+				this.millisecondsPerPixel = zoomedEvent.getMillisecondsPerPixel();
+				this.onZoomed.fire(new ZoomEventData(displayedInterval, zoomedEvent.getMillisecondsPerPixel(), timePartitioning));
 				break;
 			}
 			case UI_TIME_GRAPH_INTERVAL_SELECTED: {
@@ -170,7 +210,12 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	public void zoomTo(long minX, long maxX) {
-		queueCommandIfRendered(() -> new UiTimeGraph.ZoomToCommand(getId(), new UiLongInterval(minX, maxX)));
+		if (isRendered()) {
+			getSessionContext().queueCommand(new UiTimeGraph.ZoomToCommand(getId(), new UiLongInterval(minX, maxX)),
+					aVoid -> this.displayedInterval = new Interval(minX, maxX));
+		} else {
+			this.displayedInterval = new Interval(minX, maxX);
+		}
 	}
 
 	public int getMaxPixelsBetweenDataPoints() {
@@ -216,7 +261,7 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	private void onTimeGraphDataChanged(Void aVoid) {
-		Interval domainX = model.getDomainX(getLineDataIds());
+		Interval domainX = model.getDomainX();
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).createUiLongInterval();
 		queueCommandIfRendered(() -> new UiTimeGraph.SetIntervalXCommand(getId(), uiIntervalX));
 		refresh();
@@ -248,4 +293,14 @@ public class TimeGraph extends AbstractComponent {
 		reRenderIfRendered();
 	}
 
+	public List<TimePartitioning> getZoomLevels() {
+		return zoomLevels;
+	}
+
+	public void setZoomLevels(List<TimePartitioning> zoomLevels) {
+		this.zoomLevels = zoomLevels.stream()
+				.sorted(Comparator.comparing(TimePartitioning::getApproximateMillisecondsPerPartition).reversed())
+				.collect(Collectors.toList());
+		refresh();
+	}
 }

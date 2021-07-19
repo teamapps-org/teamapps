@@ -19,14 +19,16 @@
  */
 package org.teamapps.ux.component.timegraph;
 
-import org.teamapps.dto.UiTimeChartZoomLevel;
+import java.time.ZonedDateTime;
 
-public interface TimeGraphZoomLevel {
+public interface TimePartitioning {
 
-	long getApproximateMillisecondsPerDataPoint();
+	long getApproximateMillisecondsPerPartition();
 
-	default UiTimeChartZoomLevel createUiTimeChartZoomLevel() {
-		return new UiTimeChartZoomLevel(getApproximateMillisecondsPerDataPoint());
-	}
+	ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime);
+
+	ZonedDateTime increment(ZonedDateTime zonedDateTime);
+
+	ZonedDateTime decrement(ZonedDateTime zonedDateTime);
 
 }

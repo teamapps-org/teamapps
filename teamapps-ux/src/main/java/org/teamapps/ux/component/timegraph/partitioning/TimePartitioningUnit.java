@@ -19,17 +19,17 @@
  */
 package org.teamapps.ux.component.timegraph.partitioning;
 
-import org.teamapps.ux.component.timegraph.TimeGraphZoomLevel;
+import org.teamapps.ux.component.timegraph.TimePartitioning;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-public enum TimePartitionUnit implements TimeGraphZoomLevel {
+public enum TimePartitioningUnit implements TimePartitioning {
 	MILLISECOND(1) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.MILLIS);
 		}
 
@@ -44,7 +44,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 		}
 	}, MILLISECOND_2(2) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			long epochMilli = zonedDateTime.toInstant().toEpochMilli();
 			epochMilli = epochMilli - epochMilli % 2;
 			return ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), zonedDateTime.getZone());
@@ -61,7 +61,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 		}
 	}, MILLISECOND_5(5) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			long epochMilli = zonedDateTime.toInstant().toEpochMilli();
 			epochMilli = epochMilli - epochMilli % 5;
 			return ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), zonedDateTime.getZone());
@@ -78,7 +78,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 		}
 	}, MILLISECOND_10(10) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			long epochMilli = zonedDateTime.toInstant().toEpochMilli();
 			epochMilli = epochMilli - epochMilli % 10;
 			return ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), zonedDateTime.getZone());
@@ -95,7 +95,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 		}
 	}, MILLISECOND_20(20) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			long epochMilli = zonedDateTime.toInstant().toEpochMilli();
 			epochMilli = epochMilli - epochMilli % 20;
 			return ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), zonedDateTime.getZone());
@@ -112,7 +112,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 		}
 	}, MILLISECOND_50(50) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			long epochMilli = zonedDateTime.toInstant().toEpochMilli();
 			epochMilli = epochMilli - epochMilli % 50;
 			return ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), zonedDateTime.getZone());
@@ -129,7 +129,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 		}
 	},	MILLISECOND_100(100) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			long epochMilli = zonedDateTime.toInstant().toEpochMilli();
 			epochMilli = epochMilli - epochMilli % 100;
 			return ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), zonedDateTime.getZone());
@@ -146,7 +146,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 		}
 	},	MILLISECOND_200(200) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			long epochMilli = zonedDateTime.toInstant().toEpochMilli();
 			epochMilli = epochMilli - epochMilli % 200;
 			return ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), zonedDateTime.getZone());
@@ -163,7 +163,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 		}
 	},	MILLISECOND_500(500) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			long epochMilli = zonedDateTime.toInstant().toEpochMilli();
 			epochMilli = epochMilli - epochMilli % 500;
 			return ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), zonedDateTime.getZone());
@@ -181,7 +181,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	SECOND(1000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.SECONDS);
 		}
 
@@ -197,7 +197,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	SECONDS_2(2000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.SECONDS).withSecond(2 * (zonedDateTime.getSecond() / 2));
 		}
 
@@ -213,7 +213,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	SECONDS_5(5000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.SECONDS).withSecond(5 * (zonedDateTime.getSecond() / 5));
 		}
 
@@ -229,7 +229,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	SECONDS_10(10_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.SECONDS).withSecond(10 * (zonedDateTime.getSecond() / 10));
 		}
 
@@ -245,7 +245,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	SECONDS_15(15_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.SECONDS).withSecond(15 * (zonedDateTime.getSecond() / 15));
 		}
 
@@ -261,7 +261,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	SECONDS_30(30_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.SECONDS).withSecond(30 * (zonedDateTime.getSecond() / 30));
 		}
 
@@ -277,7 +277,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	MINUTE(60_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.MINUTES);
 		}
 
@@ -293,7 +293,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	MINUTES_2(2 * 60_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.MINUTES).withMinute(2 * (zonedDateTime.getMinute() / 2));
 		}
 
@@ -309,7 +309,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	MINUTES_5(5 * 60_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.MINUTES).withMinute(5 * (zonedDateTime.getMinute() / 5));
 		}
 
@@ -325,7 +325,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	MINUTES_10(10 * 60_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.MINUTES).withMinute(10 * (zonedDateTime.getMinute() / 10));
 		}
 
@@ -341,7 +341,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	MINUTES_15(15 * 60_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.MINUTES).withMinute(15 * (zonedDateTime.getMinute() / 15));
 		}
 
@@ -357,7 +357,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	MINUTES_30(30 * 60_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.MINUTES).withMinute(30 * (zonedDateTime.getMinute() / 30));
 		}
 
@@ -373,7 +373,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	HOUR(3_600_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.HOURS);
 		}
 
@@ -389,7 +389,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	HOURS_3(3 * 3_600_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.HOURS).withHour(3 * (zonedDateTime.getHour() / 3));
 		}
 
@@ -443,7 +443,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	HOURS_6(6 * 3_600_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.HOURS).withHour(6 * (zonedDateTime.getHour() / 6));
 		}
 
@@ -481,7 +481,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	HOURS_12(12 * 3_600_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.HOURS).withHour(12 * (zonedDateTime.getHour() / 12));
 		}
 
@@ -511,7 +511,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	DAY(86_400_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.DAYS);
 		}
 
@@ -527,7 +527,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	WEEK_SUNDAY(7 * 86_400_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			zonedDateTime = zonedDateTime.truncatedTo(ChronoUnit.DAYS);
 			int dayOfWeek = zonedDateTime.getDayOfWeek().getValue();
 			if (dayOfWeek < DayOfWeek.SUNDAY.getValue() /*7*/) {
@@ -548,7 +548,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	WEEK_MONDAY(7 * 86_400_000) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			zonedDateTime = zonedDateTime.truncatedTo(ChronoUnit.DAYS);
 			zonedDateTime = zonedDateTime.minusDays(zonedDateTime.getDayOfWeek().ordinal());
 			return zonedDateTime;
@@ -566,7 +566,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	MONTH(2_592_000_000L) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return zonedDateTime.truncatedTo(ChronoUnit.DAYS).withDayOfMonth(1);
 		}
 
@@ -582,7 +582,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	QUARTER(3 * 2_592_000_000L) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			zonedDateTime = zonedDateTime.truncatedTo(ChronoUnit.DAYS).withDayOfMonth(1);
 			return zonedDateTime.withMonth(3 * ((zonedDateTime.getMonthValue() - 1) / 3) + 1);
 		}
@@ -599,7 +599,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	HALF_YEAR(6 * 2_592_000_000L) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			zonedDateTime = zonedDateTime.truncatedTo(ChronoUnit.DAYS).withDayOfMonth(1);
 			return zonedDateTime.withMonth(6 * ((zonedDateTime.getMonthValue() - 1) / 6) + 1);
 		}
@@ -616,7 +616,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 	},
 	YEAR(12 * 2_592_000_000L) {
 		@Override
-		public ZonedDateTime getPartition(ZonedDateTime zonedDateTime) {
+		public ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime) {
 			return ZonedDateTime.of(zonedDateTime.getYear(), 1, 1, 0, 0, 0, 0, zonedDateTime.getZone());
 		}
 
@@ -633,7 +633,7 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 
 	private final long averageMilliseconds;
 
-	TimePartitionUnit(long averageMilliseconds) {
+	TimePartitioningUnit(long averageMilliseconds) {
 		this.averageMilliseconds = averageMilliseconds;
 	}
 
@@ -641,14 +641,14 @@ public enum TimePartitionUnit implements TimeGraphZoomLevel {
 		return averageMilliseconds;
 	}
 
-	public abstract ZonedDateTime getPartition(ZonedDateTime zonedDateTime);
+	public abstract ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime);
 
 	public abstract ZonedDateTime increment(ZonedDateTime zonedDateTime);
 
 	public abstract ZonedDateTime decrement(ZonedDateTime zonedDateTime);
 
 	@Override
-	public long getApproximateMillisecondsPerDataPoint() {
+	public long getApproximateMillisecondsPerPartition() {
 		return averageMilliseconds;
 	}
 }

@@ -21,50 +21,15 @@ package org.teamapps.ux.component.timegraph;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
-import org.teamapps.ux.component.timegraph.partitioning.TimePartitionUnit;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 
-	private final ZoneId timeZone;
-
-	private List<TimePartitionUnit> zoomLevels = Arrays.asList(
-			TimePartitionUnit.YEAR,
-			TimePartitionUnit.HALF_YEAR,
-			TimePartitionUnit.QUARTER,
-			TimePartitionUnit.MONTH,
-			TimePartitionUnit.WEEK_MONDAY,
-			TimePartitionUnit.DAY,
-			TimePartitionUnit.HOURS_6,
-			TimePartitionUnit.HOUR,
-			TimePartitionUnit.MINUTES_30,
-			TimePartitionUnit.MINUTES_15,
-			TimePartitionUnit.MINUTES_5,
-			TimePartitionUnit.MINUTES_2,
-			TimePartitionUnit.MINUTE,
-			TimePartitionUnit.SECONDS_30,
-			TimePartitionUnit.SECONDS_10,
-			TimePartitionUnit.SECONDS_5,
-			TimePartitionUnit.SECONDS_2,
-			TimePartitionUnit.SECOND,
-			TimePartitionUnit.MILLISECOND_500,
-			TimePartitionUnit.MILLISECOND_200,
-			TimePartitionUnit.MILLISECOND_100,
-			TimePartitionUnit.MILLISECOND_50,
-			TimePartitionUnit.MILLISECOND_20,
-			TimePartitionUnit.MILLISECOND_10,
-			TimePartitionUnit.MILLISECOND_5,
-			TimePartitionUnit.MILLISECOND_2,
-			TimePartitionUnit.MILLISECOND
-	);
 	private final Map<String, LineChartDataPoints> dataPointsByDataSeriesId = new HashMap<>();
 
 	public enum AggregationPolicy {
@@ -76,18 +41,7 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 
 	private boolean addDataPointBeforeAndAfterQueryResult = true;
 
-	public AggregatingTimeGraphModel(ZoneId timeZone) {
-		this.timeZone = timeZone;
-	}
-
-	public AggregatingTimeGraphModel(ZoneId timeZone, List<TimePartitionUnit> zoomLevels) {
-		this.timeZone = timeZone;
-		this.zoomLevels = zoomLevels;
-	}
-
-	public void setZoomLevels(List<TimePartitionUnit> zoomLevels) {
-		this.zoomLevels = zoomLevels;
-		onDataChanged.fire(null);
+	public AggregatingTimeGraphModel() {
 	}
 
 	public void setDataPointsByDataSeriesId(Map<String, LineChartDataPoints> dataPointsByDataSeriesId) {
@@ -117,18 +71,16 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 		onDataChanged.fire(null);
 	}
 
-	protected LineChartDataPoints getDataPoints(String dataSeriesId, TimeGraphZoomLevel partitionUnit, Interval interval, Interval displayedInterval) {
-		TimePartitionUnit zoomLevel = zoomLevels.stream()
-				.filter(unit -> unit.getAverageMilliseconds() == partitionUnit.getApproximateMillisecondsPerDataPoint())
-				.findFirst().orElse(zoomLevels.get(0));
+	@Override
+	protected LineChartDataPoints getDataPoints(String dataSeriesId, TimePartitioning zoomLevel, ZoneId zoneId, Interval neededIntervalX, Interval interval) {
 		LineChartDataPoints dataPoints = this.dataPointsByDataSeriesId.get(dataSeriesId);
 
-		return getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByDataSeriesId.getOrDefault(dataSeriesId, defaultAggregationPolicy), timeZone, addDataPointBeforeAndAfterQueryResult);
+		return getAggregateDataPoints(dataPoints, zoomLevel, interval, aggregationPolicyByDataSeriesId.getOrDefault(dataSeriesId, defaultAggregationPolicy), zoneId, addDataPointBeforeAndAfterQueryResult);
 	}
 
 	public static LineChartDataPoints getAggregateDataPoints(
 			LineChartDataPoints dataPoints,
-			TimePartitionUnit zoomLevel,
+			TimePartitioning zoomLevel,
 			Interval interval,
 			AggregationPolicy aggregationPolicy,
 			ZoneId timeZone,
@@ -177,22 +129,17 @@ public class AggregatingTimeGraphModel extends AbstractTimeGraphModel {
 
 			currentPartitionStartMilli = nextPartitionStartMilli;
 			nextPartitionStartMilli = zoomLevel.increment(getPartitionStart(nextPartitionStartMilli, zoomLevel, timeZone)).toInstant().toEpochMilli();
-		} while (currentPartitionStartMilli <= interval.getMax() + (addDataPointBeforeAndAfterQueryResult ? zoomLevel.getAverageMilliseconds() : 0));
+		} while (currentPartitionStartMilli <= interval.getMax() + (addDataPointBeforeAndAfterQueryResult ? zoomLevel.getApproximateMillisecondsPerPartition() : 0));
 		return new DoubleArrayLineChartDataPoints(resultX.toDoubleArray(), resultY.toDoubleArray());
 	}
 
-	private static ZonedDateTime getPartitionStart(long timestampMillis, TimePartitionUnit partitionUnit, ZoneId timeZone) {
+	private static ZonedDateTime getPartitionStart(long timestampMillis, TimePartitioning partitionUnit, ZoneId timeZone) {
 		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestampMillis), timeZone);
-		return partitionUnit.getPartition(zonedDateTime);
+		return partitionUnit.getPartitionStart(zonedDateTime);
 	}
 
 	@Override
-	public List<? extends TimeGraphZoomLevel> getZoomLevels() {
-		return zoomLevels;
-	}
-
-	@Override
-	public Interval getDomainX(Collection<String> dataSeriesId) {
+	public Interval getDomainX() {
 		long minX = dataPointsByDataSeriesId.values().stream()
 				.flatMapToDouble(LineChartDataPoints::streamX)
 				.mapToLong(x -> (long) x)
