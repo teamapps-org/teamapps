@@ -34,7 +34,6 @@ import {Interval, IntervalManager} from "../util/IntervalManager";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
 import {generateUUID, parseHtml} from "../Common";
 import {
-	UiTimeGraph_DataNeededEvent,
 	UiTimeGraph_IntervalSelectedEvent,
 	UiTimeGraph_ZoomedEvent,
 	UiTimeGraphCommandHandler,
@@ -55,14 +54,12 @@ import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLi
 import {UiLineChartDataDisplayGroup} from "./UiLineChartDataDisplayGroup";
 import {DateTime} from 'luxon';
 import {scaleZoned} from "d3-luxon";
-
-type SVGGSelection<DATUM = {}> = Selection<SVGGElement, DATUM, HTMLElement, undefined>;
+import {SVGGSelection, SVGSelection} from "./Charting";
 
 export const yTickFormat = d3.format("-,.2s");
 
 export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implements UiTimeGraphCommandHandler, UiTimeGraphEventSource {
 
-	public readonly onDataNeeded: TeamAppsEvent<UiTimeGraph_DataNeededEvent> = new TeamAppsEvent<UiTimeGraph_DataNeededEvent>(this);
 	public readonly onIntervalSelected: TeamAppsEvent<UiTimeGraph_IntervalSelectedEvent> = new TeamAppsEvent<UiTimeGraph_IntervalSelectedEvent>(this);
 	public readonly onZoomed: TeamAppsEvent<UiTimeGraph_ZoomedEvent> = new TeamAppsEvent<UiTimeGraph_ZoomedEvent>(this);
 
@@ -77,10 +74,10 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 	private $main: HTMLElement;
 
-	private $svg: d3.Selection<SVGElement, {}, null, undefined>;
-	private $rootG: SVGGSelection;
-	private $dropShadowFilter: Selection<BaseType, {}, null, undefined>;
-	private $clipPath: d3.Selection<d3.BaseType, {}, null, undefined>;
+	private $svg: Selection<SVGSVGElement, {}, null, undefined>;
+	private $rootG: SVGSelection<any>;
+	private $dropShadowFilter: SVGSelection<any>;
+	private $clipPath: SVGSelection<any>;
 
 	private scaleX: ScaleTime<number, number>;
 
@@ -89,15 +86,15 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	private margin = {top: 20, right: 15, bottom: 25};
 	private zoom: ZoomBehavior<ZoomedElementBaseType, any>;
 	private xAxis: Axis<Date | number | { valueOf(): number }>;
-	private $xAxis: SVGGSelection;
-	private $horizontalPanRect: d3.Selection<SVGRectElement, {}, HTMLElement, undefined>;
+	private $xAxis: SVGSelection<any>;
+	private $horizontalPanRect: SVGSelection<any>;
 	private zoomLevelIntervalManagers: IntervalManager[];
 	private brush: BrushBehavior<number>;
 	private $brush: SVGGSelection<number>;
-	private $graphClipContainer: Selection<SVGGElement, {}, HTMLElement, undefined>;
+	private $graphClipContainer: SVGGSelection<any>;
 	private xSelection: UiLongIntervalConfig;
 	private zoomLevels: UiTimeChartZoomLevelConfig[];
-	private $yAxisContainer: Selection<SVGGElement, {}, HTMLElement, undefined>;
+	private $yAxisContainer: SVGSelection<any>;
 
 	private lastDrawableWidth: number = 0;
 
@@ -127,7 +124,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			.range([0, this.drawableWidth]);
 
 		this.$svg = d3.select(this.$main)
-			.append<SVGElement>("svg");
+			.append<SVGSVGElement>("svg");
 		this.$rootG = this.$svg
 			.append<SVGGElement>("g");
 
@@ -220,7 +217,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			.on("end", this.handleBrushSelection);
 
 		this.$brush = this.$graphClipContainer.append<SVGGElement>("g")
-			.classed("brush", true) as SVGGSelection<number>;
+			.classed("brush", true);
 		this.$brush
 			.call(this.brush);
 
@@ -251,7 +248,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		return display;
 	}
 
-	public static createDataDisplay(timeGraphId: string, lineFormat: AbstractUiLineChartDataDisplayConfig, $graphClipContainer: Selection<SVGGElement, {}, HTMLElement, undefined>, dropShadowFilterId: string, dataStore: TimeGraphDataStore) {
+	public static createDataDisplay(timeGraphId: string, lineFormat: AbstractUiLineChartDataDisplayConfig, $graphClipContainer: SVGSelection, dropShadowFilterId: string, dataStore: TimeGraphDataStore) {
 		let display: AbstractUiLineChartDataDisplay;
 		if (lineFormat._type === 'UiLineChartLine') {
 			display = new UiLineChartLine(timeGraphId, lineFormat, $graphClipContainer, dropShadowFilterId, dataStore);
@@ -309,9 +306,10 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 				if (uncoveredInterval.start == null || isNaN(uncoveredInterval.start) || uncoveredInterval.end == null || isNaN(uncoveredInterval.end)) {
 					this.logger.error("Uncovered interval is corrupt. Will not retrieve data!");
 				} else {
-					this.onDataNeeded.fire({
+					this.onZoomed.fire({
 						zoomLevelIndex: zoomLevel,
-						neededIntervalX: createUiLongIntervalConfig(uncoveredInterval.start, uncoveredInterval.end),
+						millisecondsPerPixel: this.getMillisecondsPerPixel(),
+						neededInterval: createUiLongIntervalConfig(uncoveredInterval.start, uncoveredInterval.end),
 						displayedInterval: createUiLongIntervalConfig(domain[0], domain[1])
 					});
 					this.zoomLevelIntervalManagers[zoomLevel].addInterval(new Interval(uncoveredInterval.start, uncoveredInterval.end));
@@ -352,6 +350,12 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 				return minMillisecondsPerPixels <= millisecondsPerPixel;
 			})[0] || sortedZoomLevels[sortedZoomLevels.length - 1];
 		return zoomLevelToApply.index;
+	}
+
+	private getMillisecondsPerPixel() {
+		let transformedScaleX = this.getTransformedScaleX();
+		let domain = this.restrictDomainXToConfiguredInterval([+transformedScaleX.domain()[0], +transformedScaleX.domain()[1]]);
+		return (domain[1] - domain[0]) / this.drawableWidth;
 	}
 
 	private getSortedZoomLevels() {
@@ -484,8 +488,10 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		let domain = transformedScaleX.domain();
 		let currentZoomLevel = this.getCurrentZoomLevel();
 		this.onZoomed.fire({
-			intervalX: createUiLongIntervalConfig(+domain[0], +domain[1]),
-			zoomLevelIndex: currentZoomLevel
+			millisecondsPerPixel: this.getMillisecondsPerPixel(),
+			displayedInterval: createUiLongIntervalConfig(+domain[0], +domain[1]),
+			zoomLevelIndex: currentZoomLevel,
+			neededInterval: null
 		});
 	}
 

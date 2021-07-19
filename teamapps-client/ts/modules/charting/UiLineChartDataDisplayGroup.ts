@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {Selection} from "d3-selection";
-import {SVGGSelection} from "./Charting";
+import {SVGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiLineChartDataDisplayGroupConfig} from "../../generated/UiLineChartDataDisplayGroupConfig";
@@ -28,15 +28,15 @@ import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMo
 
 export class UiLineChartDataDisplayGroup extends AbstractUiLineChartDataDisplay<UiLineChartDataDisplayGroupConfig> {
 
-	private $main: Selection<SVGGElement, {}, HTMLElement, undefined>;
+	private $main: SVGSelection;
 
-	private $yZeroLine: Selection<SVGLineElement, {}, HTMLElement, undefined>;
+	private $yZeroLine: SVGSelection;
 	private dataDisplays: AbstractUiLineChartDataDisplay[];
 
 	constructor(
 		timeGraphId: string,
 		config: UiLineChartDataDisplayGroupConfig,
-		$container: SVGGSelection, // TODO append outside!! https://stackoverflow.com/a/19951169/524913
+		$container: SVGSelection, // TODO append outside!! https://stackoverflow.com/a/19951169/524913
 		private dropShadowFilterId: string,
 		dataStore: TimeGraphDataStore
 	) {

@@ -22,7 +22,6 @@ package org.teamapps.ux.component.timegraph.partitioning;
 import org.teamapps.ux.component.timegraph.Interval;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,16 +46,14 @@ public class StaticRawTimedDataModel extends AbstractRawTimedDataModel {
 	}
 
 	@Override
-	public Interval getDomainX(Collection<String> dataSeriesId) {
+	public Interval getDomainX() {
 		if (staticDomainX != null) {
 			return staticDomainX;
 		} else {
 			long min = eventTimestampsByDataSeriesId.entrySet().stream()
-					.filter(e -> dataSeriesId.contains(e.getKey()))
 					.flatMapToLong(e -> Arrays.stream(e.getValue()))
 					.min().orElse(0);
 			long max = eventTimestampsByDataSeriesId.entrySet().stream()
-					.filter(e -> dataSeriesId.contains(e.getKey()))
 					.flatMapToLong(e -> Arrays.stream(e.getValue()))
 					.max().orElse(1);
 			return new Interval(min, max);

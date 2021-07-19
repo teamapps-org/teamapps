@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {ScaleContinuousNumeric, ScaleTime} from "d3-scale";
-import {fakeZeroIfLogScale, SVGGSelection} from "./Charting";
+import {fakeZeroIfLogScale, SVGSelection} from "./Charting";
 import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMode";
 import * as d3 from "d3";
 import {Axis, NamespaceLocalObject} from "d3";
@@ -30,7 +30,7 @@ import {yTickFormat} from "./UiTimeGraph";
 export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineChartDataDisplayConfig = AbstractUiLineChartDataDisplayConfig> {
 
 	public scaleY: ScaleContinuousNumeric<number, number>;
-	public $yAxis: SVGGSelection;
+	public $yAxis: SVGSelection<any>;
 	private yAxis: Axis<number | { valueOf(): number }>;
 
 	constructor(
@@ -131,7 +131,7 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 		let heightPerYTickGroup = availableHeight / numberOfYTickGroups;
 
 		if (this.config.yScaleType === UiScaleType.LOG10) {
-			this.yAxis.tickFormat((value: number, i: number) => {
+			this.yAxis.tickFormat((value: number) => {
 				if (value < 1) {
 					return "";
 				} else {

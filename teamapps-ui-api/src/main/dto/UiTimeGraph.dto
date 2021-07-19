@@ -41,8 +41,7 @@ class UiTimeGraph extends UiComponent {
 
 	command zoomTo(UiLongInterval intervalX);
 
-	event dataNeeded(int zoomLevelIndex, UiLongInterval neededIntervalX, UiLongInterval displayedInterval);
-	event zoomed(UiLongInterval intervalX, int zoomLevelIndex);
+	event zoomed(UiLongInterval displayedInterval, int zoomLevelIndex, double millisecondsPerPixel, UiLongInterval neededInterval);
 	event intervalSelected(UiLongInterval intervalX);
 }
 
