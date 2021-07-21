@@ -28,29 +28,26 @@ import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMo
 
 export class UiLineChartDataDisplayGroup extends AbstractUiLineChartDataDisplay<UiLineChartDataDisplayGroupConfig> {
 
-	private $main: SVGSelection;
-
 	private $yZeroLine: SVGSelection;
 	private dataDisplays: AbstractUiLineChartDataDisplay[];
 
 	constructor(
 		timeGraphId: string,
 		config: UiLineChartDataDisplayGroupConfig,
-		$container: SVGSelection, // TODO append outside!! https://stackoverflow.com/a/19951169/524913
 		private dropShadowFilterId: string,
 		dataStore: TimeGraphDataStore
 	) {
 		super(config, timeGraphId, dataStore);
 
-		this.$main = $container
-			.append<SVGGElement>("g")
-			.classed("data-display-group", true)
+		this.$main.classed("data-display-group", true)
 			.attr("data-series-ids", `${this.timeGraphId}-${this.config.id}`);
 		this.initDomNodes();
 
 		this.config.dataDisplays.forEach(ddConfig => ddConfig.yScaleZoomMode = UiLineChartYScaleZoomMode.FIXED)
 		this.dataDisplays = this.config.dataDisplays
-			.map(ddConfig => UiTimeGraph.createDataDisplay(timeGraphId, ddConfig, this.$main, dropShadowFilterId, dataStore));
+			.map(ddConfig => UiTimeGraph.createDataDisplay(timeGraphId, ddConfig, dropShadowFilterId, dataStore) as AbstractUiLineChartDataDisplay);
+
+		this.dataDisplays.forEach(dd => this.$main.node().append(dd.getMainSelection().node()));
 	}
 
 	updateZoomX(zoomLevelIndex: number, scaleX: ScaleTime<number, number>) {
@@ -78,22 +75,15 @@ export class UiLineChartDataDisplayGroup extends AbstractUiLineChartDataDisplay<
 		});
 	}
 
-	setScaleYRange(range: [number, number]) {
-		super.setScaleYRange(range);
+	setYRange(range: [number, number]) {
+		super.setYRange(range);
 		this.dataDisplays.forEach(dd => {
-			dd.setScaleYRange(range);
+			dd.setYRange(range);
 		});
 	}
 
 	setConfig(lineFormat: UiLineChartDataDisplayGroupConfig) {
 		super.setConfig(lineFormat);
-		this.redraw();
-	}
-
-	public get yScaleWidth(): number {
-		return (this.config.intervalY.max > 10000 || this.config.intervalY.min < 10) ? 37
-			: (this.config.intervalY.max > 100) ? 30
-				: 25;
 	}
 
 	public getDataSeriesIds(): string[] {
@@ -104,7 +94,6 @@ export class UiLineChartDataDisplayGroup extends AbstractUiLineChartDataDisplay<
 
 	public destroy() {
 		this.$main.remove();
-		this.$yAxis.remove();
 	}
 }
 

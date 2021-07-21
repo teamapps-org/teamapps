@@ -18,7 +18,6 @@
  * =========================LICENSE_END==================================
  */
 import {Line} from "d3-shape";
-import {Selection} from "d3-selection";
 import * as d3 from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
 import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGSelection} from "./Charting";
@@ -27,6 +26,7 @@ import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiLineChartBandConfig} from "../../generated/UiLineChartBandConfig";
 import {D3Area2} from "./D3Area2";
 import {isVisibleColor} from "../Common";
+import {NamespaceLocalObject} from "d3";
 
 export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartBandConfig> {
 	private middleLine: Line<DataPoint>;
@@ -38,22 +38,16 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 	private area: D3Area2<DataPoint>;
 	private $area: SVGSelection<any>;
 	private $dots: SVGSelection<any>;
-	private $main: SVGSelection<any>;
 
 	private $yZeroLine: SVGSelection<any>;
 
 	constructor(
 		timeGraphId: string,
 		config: UiLineChartBandConfig,
-		$container: SVGSelection, // TODO append outside!! https://stackoverflow.com/a/19951169/524913
 		private dropShadowFilterId: string,
 		dataStore: TimeGraphDataStore
 	) {
 		super(config, timeGraphId, dataStore);
-
-		this.$main = $container
-			.append<SVGGElement>("g")
-			.attr("data-series-id", `${this.timeGraphId}-${this.config.id}`);
 		this.initLinesAndColorScale();
 		this.initDomNodes();
 	}
@@ -147,13 +141,6 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 	setConfig(lineFormat: UiLineChartBandConfig) {
 		super.setConfig(lineFormat);
 		this.initLinesAndColorScale();
-		this.redraw();
-	}
-
-	public get yScaleWidth(): number {
-		return (this.config.intervalY.max > 10000 || this.config.intervalY.min < 10) ? 37
-			: (this.config.intervalY.max > 100) ? 30
-				: 25;
 	}
 
 	public getDataSeriesIds(): string[] {
@@ -162,7 +149,6 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 
 	public destroy() {
 		this.$main.remove();
-		this.$yAxis.remove();
 	}
 }
 
