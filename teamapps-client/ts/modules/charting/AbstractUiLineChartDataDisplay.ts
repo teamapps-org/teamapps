@@ -18,15 +18,15 @@
  * =========================LICENSE_END==================================
  */
 import {ScaleContinuousNumeric, ScaleTime} from "d3-scale";
-import {fakeZeroIfLogScale, SVGSelection} from "./Charting";
+import {SVGSelection} from "./Charting";
 import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMode";
 import * as d3 from "d3";
-import {Axis, NamespaceLocalObject} from "d3";
+import {NamespaceLocalObject} from "d3";
 import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiScaleType} from "../../generated/UiScaleType";
-import {yTickFormat} from "./UiTimeGraph";
-import {UiLineChartDataDisplay, YAxis} from "./UiLineChartDataDisplay";
+import {UiLineChartDataDisplay} from "./UiLineChartDataDisplay";
+import {YAxis} from "./YAxis";
 
 export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineChartDataDisplayConfig = AbstractUiLineChartDataDisplayConfig>
 	implements UiLineChartDataDisplay<C> {
@@ -45,7 +45,7 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 		protected timeGraphId: string,
 		protected dataStore: TimeGraphDataStore
 	) {
-		this.yAxis = new YAxis(config.yScaleType, config.yAxisColor);
+		this.yAxis = new YAxis(config.yAxisColor);
 		this.setConfig(config)
 		this.$main = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement)
 			.attr("data-series-id", `${this.timeGraphId}-${this.config.id}`);
@@ -61,7 +61,7 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 	}
 
 	public redraw() {
-		let yRange = this.getYAxisRangeOrNull();
+		let yRange = this.getScaleYRangeOrNull();
 
 		if (yRange != null && (yRange.minY !== this.scaleY.domain()[0] || yRange.maxY !== this.scaleY.domain()[1])) {
 			d3.transition(`${this.timeGraphId}-${this.config.id}-zoomYToDisplayedDomain`)
@@ -72,46 +72,52 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 					let intervalInterpolator = d3.interpolateArray(this.scaleY.domain(), [yRange.minY, yRange.maxY]);
 					return (t: number) => {
 						this.scaleY.domain(intervalInterpolator(t));
-						this.yAxis.setScaleType(this.config.yScaleType);
 						this.yAxis.draw();
 						this.doRedraw();
 					}
 				});
 		} else {
-			this.yAxis.setScaleType(this.config.yScaleType);
 			this.yAxis.draw();
 			this.doRedraw();
 		}
 	}
 
-	private getYAxisRangeOrNull() {
+	private getScaleYRangeOrNull() {
 		let minY: number, maxY: number;
+
+		function crossesZero(bound: number, margin: number) {
+			return Math.sign(bound + margin) !== Math.sign(bound);
+		}
+
 		if (this.config.yScaleZoomMode === UiLineChartYScaleZoomMode.DYNAMIC) {
 			let displayedDataYBounds = this.getDisplayedDataYBoundsOrNull();
 			if (displayedDataYBounds == null) {
 				return null;
 			}
-			let delta = displayedDataYBounds[1] - displayedDataYBounds[0];
-			minY = displayedDataYBounds[0] - delta * .05;
-			maxY = displayedDataYBounds[1] + delta * .05;
+			let margin = (displayedDataYBounds[1] - displayedDataYBounds[0]) * .05;
+			minY = crossesZero(displayedDataYBounds[0], -margin) ? displayedDataYBounds[0] : displayedDataYBounds[0] - margin;
+			maxY = crossesZero(displayedDataYBounds[1], margin) ? displayedDataYBounds[1] : displayedDataYBounds[1] + margin;
 		} else if (this.config.yScaleZoomMode === UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO) {
 			let displayedDataYBounds = this.getDisplayedDataYBoundsOrNull();
 			if (displayedDataYBounds == null) {
 				return null;
 			}
-			minY = displayedDataYBounds[0] > 0 ? 0 : displayedDataYBounds[0];
-			maxY = displayedDataYBounds[1] < 0 ? 0 : displayedDataYBounds[1];
+			let margin = (displayedDataYBounds[1] - displayedDataYBounds[0]) * .05;
+			minY = displayedDataYBounds[0] >= 0 ? 0 : displayedDataYBounds[0] - margin;
+			maxY = displayedDataYBounds[1] <= 0 ? 0 : displayedDataYBounds[1] + margin;
 		} else {
 			minY = this.config.intervalY.min;
 			maxY = this.config.intervalY.max;
 		}
-		minY = fakeZeroIfLogScale(minY, this.config.yScaleType);
+		minY = minY;
 		return {minY, maxY};
 	}
 
 	private updateYScale(): void {
 		const oldScaleY = this.scaleY;
-		if (this.config.yScaleType === UiScaleType.LOG10) {
+		if (this.config.yScaleType === UiScaleType.SYMLOG) {
+			this.scaleY = d3.scaleSymlog();
+		} else if (this.config.yScaleType === UiScaleType.LOG10) {
 			this.scaleY = d3.scaleLog();
 		} else {
 			this.scaleY = d3.scaleLinear();
@@ -132,7 +138,6 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 	public setConfig(config: C) {
 		this.config = config;
 		this.updateYScale();
-		this.yAxis.setScaleType(config.yScaleType);
 	}
 
 	protected getDisplayedData() {

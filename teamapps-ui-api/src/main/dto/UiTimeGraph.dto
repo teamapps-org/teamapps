@@ -119,6 +119,8 @@ enum UiLineChartCurveType {
 }
 
 enum UiScaleType {
-	LINEAR, LOG10
+	LINEAR,
+	LOG10,
+	SYMLOG // see https://github.com/d3/d3-scale/blob/main/README.md#symlog-scales
 }
 

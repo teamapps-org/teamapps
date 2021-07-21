@@ -18,12 +18,11 @@
  * =========================LICENSE_END==================================
  */
 import {Area, Line} from "d3-shape";
-import {Selection} from "d3-selection";
 import * as d3 from "d3";
-import {NamespaceLocalObject, ScaleLinear} from "d3";
+import {ScaleLinear} from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
 import {UiLineChartLineConfig} from "../../generated/UiLineChartLineConfig";
-import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGSelection} from "./Charting";
+import {CurveTypeToCurveFactory, DataPoint, SVGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {isVisibleColor} from "../Common";
@@ -101,14 +100,14 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 		let data = this.getDisplayedData()[this.config.dataSeriesId];
 		this.line
 			.x(d => this.scaleX(d.x))
-			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
+			.y(d => this.scaleY(d.y));
 		this.$line.attr("d", this.line(data));
 
 		if (isVisibleColor(this.config.areaColorScaleMin) || isVisibleColor(this.config.areaColorScaleMax)) {
 			this.area
 				.x(d => this.scaleX(d.x))
 				.y0(this.scaleY.range()[0])
-				.y1(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
+				.y1(d => this.scaleY(d.y));
 			this.$area.attr("d", this.area(data));
 		}
 
@@ -117,7 +116,7 @@ export class UiLineChartLine extends AbstractUiLineChartDataDisplay<UiLineChartL
 			.join("circle")
 			.classed("dot", true)
 			.attr("cx", d => this.scaleX(d.x))
-			.attr("cy", d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)))
+			.attr("cy", d => this.scaleY(d.y))
 			.attr("r", this.config.dataDotRadius);
 		$dotsDataSelection.exit().remove();
 

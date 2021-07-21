@@ -55,6 +55,8 @@ import {scaleZoned} from "d3-luxon";
 import {SVGGSelection, SVGSelection} from "./Charting";
 import {UiLineChartDataDisplay} from "./UiLineChartDataDisplay";
 import {UiEventChartDisplay} from "./UiEventChartDisplay";
+import {CalendarEventListPopper} from "../micro-components/CalendarEventListPopper";
+import {TimeGraphPopper} from "./TimeGraphPopper";
 
 export const yTickFormat = d3.format("-,.2s");
 
@@ -196,6 +198,13 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			.classed("graph-clipping-container", true)
 			.attr("clip-path", `url('#${clipPathId}')`);
 
+		this.brush = d3.brushX<number>()
+			.extent([[0, 0], [100, 100] /*provisional values!*/])
+			.on("end", this.handleBrushSelection);
+		this.$brush = this.$graphClipContainer.append<SVGGElement>("g")
+			.classed("brush", true)
+			.call(this.brush);
+
 		this.zoom = d3.zoom()
 			.scaleExtent([1, this.calculateMaxZoomFactor()])
 			.on("zoom", () => {
@@ -208,21 +217,22 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			this.linesById[line.id] = this.createSeries(line);
 		});
 
+
+		const eventsPopper: TimeGraphPopper = new TimeGraphPopper();
+
 		// TODO remove
-		let uiEventChartDisplay = new UiEventChartDisplay();
+		let uiEventChartDisplay = new UiEventChartDisplay({
+			showPopover(referenceElement: Element, content: Element) {
+				eventsPopper.update(referenceElement, content)
+			},
+			hidePopover() {
+				eventsPopper.update(null, null);
+			}
+		});
 		this.linesById["testtesttodo"] = uiEventChartDisplay;
 		this.$graphClipContainer.node().appendChild(uiEventChartDisplay.getMainSelection().node());
 
 		this.initZoomLevelIntervalManagers();
-
-		this.brush = d3.brushX<number>()
-			.extent([[0, 0], [100, 100] /*provisional values!*/])
-			.on("end", this.handleBrushSelection);
-
-		this.$brush = this.$graphClipContainer.append<SVGGElement>("g")
-			.classed("brush", true);
-		this.$brush
-			.call(this.brush);
 
 		this.resetAllData(this.zoomLevels);
 	}

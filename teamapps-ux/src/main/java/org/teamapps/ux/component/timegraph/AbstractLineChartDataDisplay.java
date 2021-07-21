@@ -57,7 +57,7 @@ public abstract class AbstractLineChartDataDisplay  {
 		return this;
 	}
 
-	public ScaleType getyScaleType() {
+	public ScaleType getYScaleType() {
 		return yScaleType;
 	}
 
