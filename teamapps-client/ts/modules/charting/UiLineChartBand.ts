@@ -20,13 +20,12 @@
 import {Line} from "d3-shape";
 import * as d3 from "d3";
 import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
-import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGSelection} from "./Charting";
+import {CurveTypeToCurveFactory, DataPoint, SVGSelection} from "./Charting";
 import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
 import {TimeGraphDataStore} from "./TimeGraphDataStore";
 import {UiLineChartBandConfig} from "../../generated/UiLineChartBandConfig";
 import {D3Area2} from "./D3Area2";
 import {isVisibleColor} from "../Common";
-import {NamespaceLocalObject} from "d3";
 
 export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartBandConfig> {
 	private middleLine: Line<DataPoint>;
@@ -89,21 +88,21 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 
 		this.middleLine
 			.x(d => this.scaleX(d.x))
-			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
+			.y(d => this.scaleY(d.y));
 		this.$middleLine
 			.attr("d", this.middleLine(lineData))
 			.attr("stroke", this.config.middleLineColor);
 		
 		this.lowerLine
 			.x(d => this.scaleX(d.x))
-			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
+			.y(d => this.scaleY(d.y));
 		this.$lowerLine
 			.attr("d", this.lowerLine(areaDataMin))
 			.attr("stroke", this.config.lowerLineColor);
 		
 		this.upperLine
 			.x(d => this.scaleX(d.x))
-			.y(d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)));
+			.y(d => this.scaleY(d.y));
 		this.$upperLine
 			.attr("d", this.upperLine(areaDataMax))
 			.attr("stroke", this.config.upperLineColor);
@@ -114,7 +113,7 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 				return this.scaleX(d.x)
 			})
 			.y((d, index) => {
-				return this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType))
+				return this.scaleY(d.y)
 			});
 		this.$area
 			.attr("d", this.area.writePath(areaDataMin, areaDataMax))
@@ -125,7 +124,7 @@ export class UiLineChartBand extends AbstractUiLineChartDataDisplay<UiLineChartB
 			.join("circle")
 			.classed("dot", true)
 			.attr("cx", d => this.scaleX(d.x))
-			.attr("cy", d => this.scaleY(fakeZeroIfLogScale(d.y, this.config.yScaleType)))
+			.attr("cy", d => this.scaleY(d.y))
 			.attr("r", this.config.dataDotRadius);
 		$dotsDataSelection.exit().remove();
 

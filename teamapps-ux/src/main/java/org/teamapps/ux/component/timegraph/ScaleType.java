@@ -24,7 +24,8 @@ import org.teamapps.dto.UiScaleType;
 public enum ScaleType {
 
 	LINEAR,
-	LOG10;
+	LOG10,
+	SYMLOG;
 
 	public UiScaleType toUiScaleType() {
 		return UiScaleType.valueOf(this.name());

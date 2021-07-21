@@ -23,14 +23,6 @@ import {UiLineChartCurveType} from "../../generated/UiLineChartCurveType";
 import * as d3 from "d3";
 import {BaseType, Selection} from "d3";
 
-export function fakeZeroIfLogScale(y: number, scaleType: UiScaleType) {
-	if (scaleType === UiScaleType.LOG10 && y === 0) {
-		return UiTimeGraph.LOGSCALE_MIN_Y;
-	} else {
-		return y;
-	}
-}
-
 export const CurveTypeToCurveFactory = {
 	[UiLineChartCurveType.LINEAR]: d3.curveLinear,
 	[UiLineChartCurveType.STEP]: d3.curveStep,

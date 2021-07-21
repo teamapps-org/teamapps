@@ -17,20 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Line} from "d3-shape";
 import {Selection} from "d3-selection";
 import * as d3 from "d3";
-import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
-import {CurveTypeToCurveFactory, DataPoint, fakeZeroIfLogScale, SVGSelection} from "./Charting";
-import {AbstractUiLineChartDataDisplay} from "./AbstractUiLineChartDataDisplay";
-import {TimeGraphDataStore} from "./TimeGraphDataStore";
-import {UiLineChartBandConfig} from "../../generated/UiLineChartBandConfig";
-import {D3Area2} from "./D3Area2";
-import {isVisibleColor} from "../Common";
-import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
-import {UiLineChartDataDisplay, YAxis} from "./UiLineChartDataDisplay";
 import {NamespaceLocalObject, ScaleLinear, ScaleTime} from "d3";
+import {SVGSelection} from "./Charting";
+import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
+import {UiLineChartDataDisplay} from "./UiLineChartDataDisplay";
 import {ScaleContinuousNumeric} from "d3-scale";
+import {TimeGraphContext} from "./TimeGraphContext";
+import {YAxis} from "./YAxis";
 
 export class UiEventChartDisplay implements UiLineChartDataDisplay {
 
@@ -39,7 +34,7 @@ export class UiEventChartDisplay implements UiLineChartDataDisplay {
 	private scaleX: ScaleTime<number, number>;
 	private scaleY: ScaleContinuousNumeric<number, number> = d3.scaleLinear().domain([0, 20]);
 
-	constructor() {
+	constructor(private context: TimeGraphContext) {
 		this.$main = d3.select(document.createElementNS((d3.namespace("svg:text") as NamespaceLocalObject).space, "g") as SVGGElement)
 			.attr("data-series-id", `testtesttodo`);
 	}
@@ -56,25 +51,67 @@ export class UiEventChartDisplay implements UiLineChartDataDisplay {
 		this.colorScale = d3.scaleLinear<string, string>()
 			.range(["#2222ff", "#cc0000"]);
 
-		this.colorScale.domain();
 		let data = [
-			{start: 3600000, end: 2*7200000},
+			{start: 3600000, end: 2 * 7200000, y: 10},
+			{start: 7200000, end: 7200000, y: 15},
+			{start: 5000000, end: 5000000, y: 15},
+			{start: 1000000, end: 2000000, y: 5},
 		];
 
+		// Three function that change the tooltip when user hover / move / leave a cell
+		const mouseenter = (d: any, i: number, nodes: Element[]) => {
+			d3.select(nodes[i])
+				.style("stroke-width", "2");
+			this.context.showPopover(nodes[i], "The exact value of<br>this cell is: " + d.y)
+		};
+		const mouseleave = (d: any, i: number, nodes: Element[]) => {
+			d3.select(nodes[i])
+				.style("stroke-width", "1");
+			this.context.hidePopover();
+		};
+
+		const thickness = 10;
+
 		this.$main
-			.selectAll("line.event")
+			.selectAll("rect.event-rect")
+			.data(data)
+			.join("rect")
+			.classed("event-rect", true)
+			.attr("stroke", "red")
+			.attr("stroke-width", 1)
+			.attr("fill", "#ffbbbb")
+			// .attr("stroke-linecap", "round")
+			.attr("x", d => this.scaleX(d.start) - (thickness / 2))
+			.attr("width", d => this.scaleX(d.end) - this.scaleX(d.start) + thickness)
+			.attr("y", d => this.scaleY(d.y) - (thickness / 2))
+			.attr("rx", (thickness / 2))
+			.attr("ry", (thickness / 2))
+			.attr("height", d => thickness)
+			.on("mouseenter", mouseenter)
+			.on("mouseleave", mouseleave);
+
+		this.$main
+			.selectAll("line.event-line")
 			.data(data)
 			.join("line")
-			.classed("event", true)
+			.classed("event-line", true)
 			.attr("stroke", "red")
-			.attr("stroke-width", 7)
+			.attr("stroke-width", 1)
 			.attr("stroke-linecap", "round")
 			.attr("x1", d => this.scaleX(d.start))
 			.attr("x2", d => this.scaleX(d.end))
-			.attr("y1", d => this.scaleY(10))
-			.attr("y2", d => this.scaleY(10))
-		;
-		// <line x1="0" y1="80" x2="100" y2="20" stroke="black" />
+			.attr("y1", d => this.scaleY(d.y))
+			.attr("y2", d => this.scaleY(d.y));
+
+		this.$main
+			.selectAll("circle.event-dot")
+			.data(data.flatMap(d => [{x: d.start, y: d.y}, {x: d.end, y: d.y}]))
+			.join("circle")
+			.classed("event-dot", true)
+			.attr("fill", "red")
+			.attr("cx", d => this.scaleX(d.x))
+			.attr("cy", d => this.scaleY(d.y))
+			.attr("r", "2");
 	}
 
 	setConfig(config: AbstractUiLineChartDataDisplayConfig): void {
