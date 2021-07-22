@@ -30,7 +30,6 @@ import {bind} from "../util/Bind";
 import {ZoomBehavior, ZoomedElementBaseType} from "d3-zoom";
 import {Axis} from "d3-axis";
 import {Interval, IntervalManager} from "../util/IntervalManager";
-import {UiTimeGraphDataPointConfig} from "../../generated/UiTimeGraphDataPointConfig";
 import {generateUUID, parseHtml} from "../Common";
 import {
 	UiTimeGraph_IntervalSelectedEvent,
@@ -41,22 +40,24 @@ import {
 } from "../../generated/UiTimeGraphConfig";
 import {createUiLongIntervalConfig, UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
 import {BrushBehavior} from "d3-brush";
-import {UiLineChartLineConfig} from "../../generated/UiLineChartLineConfig";
 import {debouncedMethod, DebounceMode} from "../util/debounce";
 import {UiLineChartMouseScrollZoomPanMode} from "../../generated/UiLineChartMouseScrollZoomPanMode";
 import {UiTimeChartZoomLevelConfig} from "../../generated/UiTimeChartZoomLevelConfig";
-import {UiLineChartLine} from "./UiLineChartLine";
-import {TimeGraphDataStore} from "./TimeGraphDataStore";
-import {UiLineChartBand} from "./UiLineChartBand";
-import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
-import {UiLineChartDataDisplayGroup} from "./UiLineChartDataDisplayGroup";
+import {UiLineGraph} from "./UiLineGraph";
+import {UiHoseGraph} from "./UiHoseGraph";
+import {UiGraphGroup} from "./UiGraphGroup";
 import {DateTime} from 'luxon';
 import {scaleZoned} from "d3-luxon";
 import {SVGGSelection, SVGSelection} from "./Charting";
 import {UiLineChartDataDisplay} from "./UiLineChartDataDisplay";
-import {UiEventChartDisplay} from "./UiEventChartDisplay";
+import {UiIncidentGraph} from "./UiIncidentGraph";
 import {CalendarEventListPopper} from "../micro-components/CalendarEventListPopper";
 import {TimeGraphPopper} from "./TimeGraphPopper";
+import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
+import {UiGraphConfig} from "../../generated/UiGraphConfig";
+import {UiLineGraphConfig} from "../../generated/UiLineGraphConfig";
+import {AbstractUiGraph} from "./AbstractUiGraph";
+import {GraphContext} from "./GraphContext";
 
 export const yTickFormat = d3.format("-,.2s");
 
@@ -72,7 +73,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	private intervalX: UiLongIntervalConfig;
 	private maxPixelsBetweenDataPoints: number;
 
-	private linesById: { [id: string]: UiLineChartDataDisplay } = {};
+	private graphById: { [id: string]: UiLineChartDataDisplay } = {};
 
 	private $main: HTMLElement;
 
@@ -100,7 +101,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 	private lastDrawableWidth: number = 0;
 
-	private dataStore: TimeGraphDataStore = new TimeGraphDataStore();
+	private eventsPopper: TimeGraphPopper = new TimeGraphPopper();
+	private graphContext: GraphContext;
 
 	get drawableWidth() {
 		return this.getWidth() - this.marginLeft - this.margin.right
@@ -116,6 +118,23 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 	constructor(config: UiTimeGraphConfig, context: TeamAppsUiContext) {
 		super(config, context);
+
+		const me = this;
+		this.graphContext = {
+			  getPopperHandle() {
+			  	  return {
+			  	  	update(referenceElement: Element, content: (Element | string)): void {
+			  	  		me.eventsPopper.update(referenceElement, content);
+					},
+			  	  	hide(): void {
+			  	  		me.eventsPopper.update(null, null);
+					},
+			  	  	destroy(): void {
+			  	  		me.eventsPopper.update(null, null);
+					}
+			  	  }
+			  }
+		}
 
 		this.zoomLevels = config.zoomLevels;
 		this.maxPixelsBetweenDataPoints = config.maxPixelsBetweenDataPoints;
@@ -213,24 +232,22 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			});
 		this.setMouseScrollZoomPanMode(config.mouseScrollZoomPanMode);
 
-		config.lines.forEach(line => {
-			this.linesById[line.id] = this.createSeries(line);
+		config.graphs.forEach(line => {
+			this.graphById[line.id] = this.createGraph(line);
 		});
 
-
-		const eventsPopper: TimeGraphPopper = new TimeGraphPopper();
 
 		// TODO remove
-		let uiEventChartDisplay = new UiEventChartDisplay({
-			showPopover(referenceElement: Element, content: Element) {
-				eventsPopper.update(referenceElement, content)
-			},
-			hidePopover() {
-				eventsPopper.update(null, null);
-			}
-		});
-		this.linesById["testtesttodo"] = uiEventChartDisplay;
-		this.$graphClipContainer.node().appendChild(uiEventChartDisplay.getMainSelection().node());
+		// let uiEventChartDisplay = new UiEventChartDisplay({
+		// 	showPopover(referenceElement: Element, content: Element) {
+		// 		eventsPopper.update(referenceElement, content)
+		// 	},
+		// 	hidePopover() {
+		// 		eventsPopper.update(null, null);
+		// 	}
+		// });
+		// this.linesById["testtesttodo"] = uiEventChartDisplay;
+		// this.$graphClipContainer.node().appendChild(uiEventChartDisplay.getMainSelection().node());
 
 		this.initZoomLevelIntervalManagers();
 
@@ -254,8 +271,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.zoom.transform(this.$graphClipContainer, d3.zoomIdentity.scale(k).translate(-this.scaleX(intervalX.min), 0));
 	}
 
-	private createSeries(lineFormat: UiLineChartLineConfig): UiLineChartDataDisplay {
-		let display = UiTimeGraph.createDataDisplay(this._config.id, lineFormat, this.dropShadowFilterId, this.dataStore);
+	private createGraph(lineFormat: UiGraphConfig): AbstractUiGraph {
+		let display = UiTimeGraph.createDataDisplay(this._config.id, lineFormat, this.dropShadowFilterId, this.graphContext);
 		this.$graphClipContainer.node().appendChild(display.getMainSelection().node());
 		display.setYRange([this.drawableHeight, 0]);
 		if (display.getYAxis() != null) {
@@ -264,14 +281,16 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		return display;
 	}
 
-	public static createDataDisplay(timeGraphId: string, lineFormat: AbstractUiLineChartDataDisplayConfig, dropShadowFilterId: string, dataStore: TimeGraphDataStore) {
-		let display: UiLineChartDataDisplay;
-		if (lineFormat._type === 'UiLineChartLine') {
-			display = new UiLineChartLine(timeGraphId, lineFormat, dropShadowFilterId, dataStore);
-		} else if (lineFormat._type === 'UiLineChartBand') {
-			display = new UiLineChartBand(timeGraphId, lineFormat, dropShadowFilterId, dataStore);
-		} else if (lineFormat._type === 'UiLineChartDataDisplayGroup') {
-			display = new UiLineChartDataDisplayGroup(timeGraphId, lineFormat, dropShadowFilterId, dataStore);
+	public static createDataDisplay(timeGraphId: string, graphConfig: UiGraphConfig, dropShadowFilterId: string, graphContext: GraphContext) {
+		let display: AbstractUiGraph;
+		if (graphConfig._type === 'UiLineGraph') {
+			display = new UiLineGraph(timeGraphId, graphConfig, dropShadowFilterId);
+		} else if (graphConfig._type === 'UiHoseGraph') {
+			display = new UiHoseGraph(timeGraphId, graphConfig, dropShadowFilterId);
+		} else if (graphConfig._type === 'UiIncidentGraph') {
+			display = new UiIncidentGraph(timeGraphId, graphConfig, graphContext);
+		} else if (graphConfig._type === 'UiGraphGroup') {
+			display = new UiGraphGroup(timeGraphId, graphConfig, dropShadowFilterId, graphContext);
 		}
 		return display;
 	}
@@ -446,28 +465,32 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	}
 
 	private getAllSeries() {
-		return Object.keys(this.linesById).map(id => this.linesById[id]);
+		return Object.keys(this.graphById).map(id => this.graphById[id]);
 	}
 
-	addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [seriesId: string]: UiTimeGraphDataPointConfig[] }): void {
+	addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [graphId: string]: UiGraphDataConfig }): void {
 		this.zoomLevelIntervalManagers[zoomLevel].addInterval(new Interval(intervalX.min, intervalX.max));
-		this.dataStore.addData(zoomLevel, intervalX, data);
+		for (const [graphId, graphData] of Object.entries(data)) {
+			let graph = this.graphById[graphId];
+			if (graph != null) {
+				graph.addData(zoomLevel, intervalX, data[graphId]);
+			}
+		}
 		this.redraw();
 	}
 
 	resetAllData(newZoomLevels: UiTimeChartZoomLevelConfig[]): void {
 		this.zoomLevels = newZoomLevels;
 		this.initZoomLevelIntervalManagers();
-		this.dataStore.reset();
+		Object.values(this.graphById).forEach(g => g.resetData());
 		this.redraw();
 	}
 
 	@debouncedMethod(500, DebounceMode.BOTH)
-	replaceAllData(newZoomLevels: UiTimeChartZoomLevelConfig[], zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [seriesId: string]: UiTimeGraphDataPointConfig[] }): void {
+	replaceAllData(newZoomLevels: UiTimeChartZoomLevelConfig[], zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [graphId: string]: UiGraphDataConfig }): void {
 		this.zoomLevels = newZoomLevels;
-		this.initZoomLevelIntervalManagers();
+		this.initZoomLevelIntervalManagers(); // reset
 		// do NOT remove the data from the dataStore. It will be re-requested anyway and thereby overwritten. Otherwise, you would get zoom flickering due to y-min/max-value changes
-		// this.dataStore.reset();
 		this.addData(zoomLevel, intervalX, data);
 	}
 
@@ -537,33 +560,33 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		return this.maxPixelsBetweenDataPoints * displayedMilliseconds / (this.drawableWidth * highestZoomLevelApproximateMillisPerDataPoint);
 	}
 
-	setLines(lineConfigs: UiLineChartLineConfig[]): void {
-		lineConfigs.forEach(lineConfig => {
-			let existingSeries = this.linesById[lineConfig.id];
+	setGraphs(graphs: UiGraphConfig[]) {
+		graphs.forEach(lineConfig => {
+			let existingSeries = this.graphById[lineConfig.id];
 			if (existingSeries) {
 				existingSeries.setConfig(lineConfig);
 			} else {
-				this.linesById[lineConfig.id] = this.createSeries(lineConfig);
+				this.graphById[lineConfig.id] = this.createGraph(lineConfig);
 			}
 		});
-		let lineConfigsById = lineConfigs.reduce((previousValue, currentValue) => (previousValue[currentValue.id] = previousValue) && previousValue, {} as { [id: string]: UiLineChartLineConfig });
-		Object.keys(this.linesById).forEach(lineId => {
+		let lineConfigsById = graphs.reduce((previousValue, currentValue) => (previousValue[currentValue.id] = previousValue) && previousValue, {} as { [id: string]: UiGraphConfig });
+		Object.keys(this.graphById).forEach(lineId => {
 			if (!lineConfigsById[lineId]) {
-				this.linesById[lineId].destroy();
-				delete this.linesById[lineId];
+				this.graphById[lineId].destroy();
+				delete this.graphById[lineId];
 			}
 		});
 		this.onResize();
 	}
 
-	setLine(lineId: string, lineFormat: UiLineChartLineConfig): void {
-		let series = this.linesById[lineId];
+	addOrUpdateGraph(graph: UiGraphConfig) {
+		let series = this.graphById[graph.id];
 		if (series) {
-			series.setConfig(lineFormat);
+			series.setConfig(graph);
 		} else {
-			this.linesById[lineId] = this.createSeries(lineFormat);
+			this.graphById[graph.id] = this.createGraph(graph);
 		}
-		this.redraw();
+		this.onResize();
 	}
 }
 

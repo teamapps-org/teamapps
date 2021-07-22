@@ -25,7 +25,7 @@ import org.junit.Test;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import static org.teamapps.ux.component.timegraph.partitioning.TimePartitioningUnit.*;
+import static org.teamapps.ux.component.timegraph.TimePartitioningUnit.*;
 
 public class TimePartitioningUnitTest {
 
