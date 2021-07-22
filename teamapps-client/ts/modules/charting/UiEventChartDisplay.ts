@@ -27,6 +27,12 @@ import {ScaleContinuousNumeric} from "d3-scale";
 import {TimeGraphContext} from "./TimeGraphContext";
 import {YAxis} from "./YAxis";
 
+type DataPoint = {
+	start: number,
+	end: number,
+	y: number
+}
+
 export class UiEventChartDisplay implements UiLineChartDataDisplay {
 
 	private $main: Selection<SVGGElement, unknown, null, undefined>;
@@ -48,21 +54,27 @@ export class UiEventChartDisplay implements UiLineChartDataDisplay {
 	}
 
 	redraw() {
-		this.colorScale = d3.scaleLinear<string, string>()
-			.range(["#2222ff", "#cc0000"]);
-
 		let data = [
 			{start: 3600000, end: 2 * 7200000, y: 10},
 			{start: 7200000, end: 7200000, y: 15},
-			{start: 5000000, end: 5000000, y: 15},
-			{start: 1000000, end: 2000000, y: 5},
+			{start: 30000000, end: 40000000, y: 15},
+			{start: 20000000, end: 45000000, y: 5},
 		];
+
+		let colors = ["#ddaa00", "#cc0000", "#7700bb"];
+		let yDataBounds = this.getDisplayedDataYBounds(data);
+		console.log(yDataBounds);
+		let values = colors.map((c, i) => yDataBounds[0] +  (i / (colors.length - 1)) * (yDataBounds[1] - yDataBounds[0]));
+		console.log(values);
+		this.colorScale = d3.scaleLinear<string, string>()
+			.domain(values)
+			.range(colors);
 
 		// Three function that change the tooltip when user hover / move / leave a cell
 		const mouseenter = (d: any, i: number, nodes: Element[]) => {
 			d3.select(nodes[i])
 				.style("stroke-width", "2");
-			this.context.showPopover(nodes[i], "The exact value of<br>this cell is: " + d.y)
+			this.context.showPopover(nodes[i], "<b>WAF_ASDF_0</b>: 2021-07-20 17:35 - 2021-07-20 18:00")
 		};
 		const mouseleave = (d: any, i: number, nodes: Element[]) => {
 			d3.select(nodes[i])
@@ -77,9 +89,13 @@ export class UiEventChartDisplay implements UiLineChartDataDisplay {
 			.data(data)
 			.join("rect")
 			.classed("event-rect", true)
-			.attr("stroke", "red")
+			.attr("stroke", d => this.colorScale(d.y))
 			.attr("stroke-width", 1)
-			.attr("fill", "#ffbbbb")
+			.attr("fill", d => {
+				let color = d3.color(this.colorScale(d.y));
+				color.opacity = color.opacity / 6;
+				return color.toString();
+			})
 			// .attr("stroke-linecap", "round")
 			.attr("x", d => this.scaleX(d.start) - (thickness / 2))
 			.attr("width", d => this.scaleX(d.end) - this.scaleX(d.start) + thickness)
@@ -95,7 +111,7 @@ export class UiEventChartDisplay implements UiLineChartDataDisplay {
 			.data(data)
 			.join("line")
 			.classed("event-line", true)
-			.attr("stroke", "red")
+			.attr("stroke", d => this.colorScale(d.y))
 			.attr("stroke-width", 1)
 			.attr("stroke-linecap", "round")
 			.attr("x1", d => this.scaleX(d.start))
@@ -108,11 +124,16 @@ export class UiEventChartDisplay implements UiLineChartDataDisplay {
 			.data(data.flatMap(d => [{x: d.start, y: d.y}, {x: d.end, y: d.y}]))
 			.join("circle")
 			.classed("event-dot", true)
-			.attr("fill", "red")
+			.attr("fill", d => this.colorScale(d.y))
 			.attr("cx", d => this.scaleX(d.x))
 			.attr("cy", d => this.scaleY(d.y))
 			.attr("r", "2");
 	}
+
+	private getDisplayedDataYBounds(data: DataPoint[]): [number, number] {
+		return d3.extent(data.map(dataPoint => dataPoint.y));
+	}
+
 
 	setConfig(config: AbstractUiLineChartDataDisplayConfig): void {
 	}

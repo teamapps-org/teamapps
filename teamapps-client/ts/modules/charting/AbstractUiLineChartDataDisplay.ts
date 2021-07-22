@@ -152,32 +152,14 @@ export abstract class AbstractUiLineChartDataDisplay<C extends AbstractUiLineCha
 	}
 
 	private getDisplayedDataYBoundsOrNull(): [number, number] {
-		let bounds = this.getDataSeriesIds().map(dataSeriesId => {
-			let displayedData = this.getDisplayedData()[dataSeriesId];
-			let minY = Number.POSITIVE_INFINITY;
-			let maxY = Number.NEGATIVE_INFINITY;
-			displayedData.forEach(d => {
-				if (d.y < minY) {
-					minY = d.y;
-				}
-				if (d.y > maxY) {
-					maxY = d.y;
-				}
-			});
-			return [minY, maxY];
-		}).reduce((globalMinMax, currentMinMax) => {
-			if (currentMinMax[0] < globalMinMax[0]) {
-				globalMinMax[0] = currentMinMax[0];
-			}
-			if (currentMinMax[1] > globalMinMax[1]) {
-				globalMinMax[1] = currentMinMax[1];
-			}
-			return globalMinMax;
-		}, [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) as [number, number];
-		if (bounds[0] === Number.POSITIVE_INFINITY && bounds[1] === Number.NEGATIVE_INFINITY) {
+		let bounds = d3.extent(this.getDataSeriesIds()
+			.flatMap(dataSeriesId => this.getDisplayedData()[dataSeriesId])
+			.map(dataPoint => dataPoint.y));
+		if (bounds[0] === undefined || bounds[1] === undefined) {
 			bounds = null;
+		} else {
+			return bounds;
 		}
-		return bounds;
 	}
 
 	getConfig() {
