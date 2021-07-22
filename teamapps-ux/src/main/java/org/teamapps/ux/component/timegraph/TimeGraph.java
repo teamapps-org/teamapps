@@ -20,11 +20,11 @@
 package org.teamapps.ux.component.timegraph;
 
 import com.ibm.icu.util.ULocale;
-import org.teamapps.common.format.Color;
 import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.timegraph.partitioning.TimePartitioningUnit;
+import org.teamapps.ux.component.timegraph.datapoints.GraphData;
+import org.teamapps.ux.component.timegraph.graph.AbstractGraph;
 import org.teamapps.ux.session.SessionContext;
 
 import java.time.ZoneId;
@@ -36,7 +36,7 @@ public class TimeGraph extends AbstractComponent {
 
 	public final Event<ZoomEventData> onZoomed = new Event<>();
 	public final Event<Interval> onIntervalSelected = new Event<>();
-	private final List<AbstractLineChartDataDisplay> lines = new ArrayList<>();
+	private final List<AbstractGraph<?>> graphs = new ArrayList<>();
 
 	private List<TimePartitioning> zoomLevels = Arrays.asList(
 			TimePartitioningUnit.YEAR,
@@ -71,7 +71,6 @@ public class TimeGraph extends AbstractComponent {
 	);
 
 	private int maxPixelsBetweenDataPoints = 50; // ... before switching to higher zoom level
-	private TimeGraphModel model;
 	private LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode = LineChartMouseScrollZoomPanMode.ENABLED;
 
 	// client-side state
@@ -85,51 +84,30 @@ public class TimeGraph extends AbstractComponent {
 	private ULocale locale = SessionContext.current().getULocale();
 	private ZoneId timeZoneId = SessionContext.current().getTimeZone();
 
-	public TimeGraph(TimeGraphModel model) {
+	public TimeGraph() {
 		super();
-		this.model = model;
-		setModel(model);
 	}
 
-	public void addLine(String dataSeriesId, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
-		addLine(new LineChartLine(dataSeriesId, graphType, dataDotRadius, lineColor, null));
+	public void addGraph(AbstractGraph<?> graph) {
+		this.graphs.add(graph);
+		setGraphs(List.copyOf(this.graphs));
 	}
 
-	public void addLine(String dataSeriesId, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
-		addLine(new LineChartLine(dataSeriesId, graphType, dataDotRadius, lineColor, areaColor));
-	}
-
-	public void addLine(AbstractLineChartDataDisplay lineFormat) {
-		this.addDataDisplay(lineFormat);
-	}
-
-	public void addDataDisplay(AbstractLineChartDataDisplay lineFormat) {
-		lines.add(lineFormat);
-		setLines(new ArrayList<>(this.lines));
-	}
-
-	public void setLines(List<? extends AbstractLineChartDataDisplay> lineFormats) {
-		lines.clear();
-		lineFormats.forEach(line -> {
-			lines.add(line);
-			line.setChangeListener(display -> {
-				queueCommandIfRendered(() -> new UiTimeGraph.SetLineCommand(getId(), display.getId(), display.createUiFormat()));
-			});
+	public void setGraphs(List<? extends AbstractGraph<?>> graphs) {
+		this.graphs.forEach(g -> g.getModel().onDataChanged().removeListener(onTimeGraphDataChangedListener));
+		this.graphs.clear();
+		graphs.forEach(graph -> {
+			this.graphs.add(graph);
+			graph.setChangeListener(display -> queueCommandIfRendered(() -> new UiTimeGraph.AddOrUpdateGraphCommand(getId(), display.createUiFormat())));
+			graph.getModel().onDataChanged().addListener(onTimeGraphDataChangedListener);
 		});
-		queueCommandIfRendered(() -> new UiTimeGraph.SetLinesCommand(getId(), toUiLineFormats(lineFormats)));
+		queueCommandIfRendered(() -> new UiTimeGraph.SetGraphsCommand(getId(), toUiLineFormats(this.graphs)));
 		refresh();
 	}
 
-	private List<AbstractUiLineChartDataDisplay> toUiLineFormats(List<? extends AbstractLineChartDataDisplay> lineFormats) {
+	private List<UiGraph> toUiLineFormats(List<? extends AbstractGraph<?>> lineFormats) {
 		return lineFormats.stream()
-				.map(AbstractLineChartDataDisplay::createUiFormat)
-				.collect(Collectors.toList());
-	}
-
-	public List<String> getLineDataIds() {
-		return lines.stream()
-				.flatMap(lineChartDataDisplay -> lineChartDataDisplay.getDataSeriesIds().stream())
-				.distinct()
+				.map(AbstractGraph::createUiFormat)
 				.collect(Collectors.toList());
 	}
 
@@ -137,10 +115,8 @@ public class TimeGraph extends AbstractComponent {
 	public UiComponent createUiComponent() {
 		List<UiTimeChartZoomLevel> uiZoomLevels = createUiZoomlevels();
 
-		Interval domainX = model.getDomainX();
-		if (domainX == null) {
-			domainX = new Interval(0, 1);
-		}
+		Interval domainX = retrieveDomainX();
+		
 		this.displayedInterval = domainX;
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).createUiLongInterval();
 
@@ -148,7 +124,7 @@ public class TimeGraph extends AbstractComponent {
 				uiIntervalX,
 				uiZoomLevels,
 				maxPixelsBetweenDataPoints,
-				toUiLineFormats(lines)
+				toUiLineFormats(graphs)
 		);
 		uiTimeGraph.setLocale(locale.toLanguageTag());
 		uiTimeGraph.setTimeZoneId(timeZoneId.getId());
@@ -174,7 +150,7 @@ public class TimeGraph extends AbstractComponent {
 
 				if (zoomedEvent.getNeededInterval() != null) {
 					Interval neededInterval = new Interval(zoomedEvent.getNeededInterval().getMin(), zoomedEvent.getNeededInterval().getMax());
-					Map<String, LineChartDataPoints> data = model.getDataPoints(getLineDataIds(), timePartitioning, timeZoneId, neededInterval, displayedInterval);
+					Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededInterval);
 					queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), zoomedEvent.getZoomLevelIndex(), zoomedEvent.getNeededInterval(), convertToUiData(data)));
 				}
 
@@ -193,16 +169,24 @@ public class TimeGraph extends AbstractComponent {
 		}
 	}
 
-	private Map<String, List<UiTimeGraphDataPoint>> convertToUiData(Map<String, LineChartDataPoints> data) {
-		Map<String, List<UiTimeGraphDataPoint>> uiData = new HashMap<>();
-		data.forEach((dataSeriesId, dataPoints) -> {
-			List<UiTimeGraphDataPoint> uiList = new ArrayList<>();
-			for (int i = 0; i < dataPoints.size(); i++) {
-				uiList.add(new UiTimeGraphDataPoint(dataPoints.getX(i), dataPoints.getY(i)));
-			}
-			uiData.put(dataSeriesId, uiList);
-		});
-		return uiData;
+	private Interval retrieveDomainX() {
+		return graphs.stream()
+				.map(g -> g.getModel().getDomainX())
+				.reduce(Interval::union)
+				.orElse(new Interval(0, 1));
+	}
+
+	private Map<String, GraphData> retrieveData(Interval displayedInterval, TimePartitioning timePartitioning, Interval neededInterval) {
+		return graphs.stream()
+				.collect(Collectors.toMap(
+						AbstractGraph::getId,
+						g -> g.getModel().getData(timePartitioning, timeZoneId, neededInterval, displayedInterval)
+				));
+	}
+
+	private Map<String, UiGraphData> convertToUiData(Map<String, GraphData> data) {
+		return data.entrySet().stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toUiGraphData()));
 	}
 
 	public void refresh() {
@@ -245,23 +229,8 @@ public class TimeGraph extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiTimeGraph.SetSelectedIntervalCommand(getId(), selectedInterval.createUiLongInterval()));
 	}
 
-	public void setModel(TimeGraphModel model) {
-		unregisterModelListeners();
-		if (model != null) {
-			model.onDataChanged().addListener(onTimeGraphDataChangedListener);
-		}
-		this.model = model;
-		refresh();
-	}
-
-	private void unregisterModelListeners() {
-		if (this.model != null) {
-			this.model.onDataChanged().removeListener(onTimeGraphDataChangedListener);
-		}
-	}
-
 	private void onTimeGraphDataChanged(Void aVoid) {
-		Interval domainX = model.getDomainX();
+		Interval domainX = retrieveDomainX();
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).createUiLongInterval();
 		queueCommandIfRendered(() -> new UiTimeGraph.SetIntervalXCommand(getId(), uiIntervalX));
 		refresh();

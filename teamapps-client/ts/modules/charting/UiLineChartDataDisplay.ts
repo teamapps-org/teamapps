@@ -19,13 +19,15 @@
  */
 import {ScaleTime} from "d3-scale";
 import {SVGSelection} from "./Charting";
-import {AbstractUiLineChartDataDisplayConfig} from "../../generated/AbstractUiLineChartDataDisplayConfig";
 import {YAxis} from "./YAxis";
+import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
+import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
+import {UiGraphConfig} from "../../generated/UiGraphConfig";
 
-export interface UiLineChartDataDisplay<C extends AbstractUiLineChartDataDisplayConfig = AbstractUiLineChartDataDisplayConfig> {
+export interface UiLineChartDataDisplay<C extends UiGraphConfig = UiGraphConfig, D extends UiGraphDataConfig = UiGraphDataConfig> {
 
 	setConfig(config: C): void;
-	getDataSeriesIds(): string[];
+
 	getMainSelection(): SVGSelection<any>;
 
 	updateZoomX(zoomLevelIndex: number, scaleX: ScaleTime<number, number>): void;
@@ -34,7 +36,12 @@ export interface UiLineChartDataDisplay<C extends AbstractUiLineChartDataDisplay
 
 	setYRange(range: [number, number]): void;
 
-	redraw():void;
+	redraw(): void;
+
+	addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: D): void;
+
+	resetData(): void;
+
 	destroy(): void;
 
 }

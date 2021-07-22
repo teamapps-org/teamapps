@@ -22,7 +22,10 @@ package org.teamapps.ux.component.timegraph;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.teamapps.ux.component.timegraph.partitioning.TimePartitioningUnit;
+import org.teamapps.ux.component.timegraph.datapoints.LineGraphDataPoint;
+import org.teamapps.ux.component.timegraph.datapoints.ListLineGraphData;
+import org.teamapps.ux.component.timegraph.model.AggregatingLineGraphModel;
+import org.teamapps.ux.component.timegraph.model.AggregationType;
 
 import java.time.ZoneOffset;
 import java.util.Arrays;
@@ -31,101 +34,101 @@ import java.util.stream.Collectors;
 
 public class AggregatingTimeGraphModelTest {
 
-	private AggregatingTimeGraphModel model;
+	private AggregatingLineGraphModel model;
 
 	@Before
 	public void setUp() throws Exception {
-		model = new AggregatingTimeGraphModel();
-		model.setDataPoints("line1", new ListLineChartDataPoints(Arrays.asList(
-				new LineChartDataPoint(100, 1),
-				new LineChartDataPoint(200, 11),
-				new LineChartDataPoint(300, 2),
-				new LineChartDataPoint(405, 0),
-				new LineChartDataPoint(500, 13),
-				new LineChartDataPoint(600, 12),
-				new LineChartDataPoint(700, 3)
+		model = new AggregatingLineGraphModel();
+		model.setGraphData(new ListLineGraphData(Arrays.asList(
+				new LineGraphDataPoint(100, 1),
+				new LineGraphDataPoint(200, 11),
+				new LineGraphDataPoint(300, 2),
+				new LineGraphDataPoint(405, 0),
+				new LineGraphDataPoint(500, 13),
+				new LineGraphDataPoint(600, 12),
+				new LineGraphDataPoint(700, 3)
 		)));
 		model.setAddDataPointBeforeAndAfterQueryResult(false); // for testing
 	}
 
 	@Test
 	public void testFirstValue() throws Exception {
-		model.setAggregationPolicy("line1", AggregatingTimeGraphModel.AggregationPolicy.FIRST_VALUE);
+		model.setAggregationPolicy(AggregationType.FIRST_VALUE);
 
-		List<LineChartDataPoint> dataPoints = model.getDataPoints("line1", TimePartitioningUnit.YEAR, ZoneOffset.UTC, new Interval(0, 1000), new Interval(0, 1000)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(0, 1));
+		List<LineGraphDataPoint> dataPoints = model.getData(TimePartitioningUnit.YEAR, ZoneOffset.UTC, new Interval(0, 1000), new Interval(0, 1000)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(0, 1));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(200, 350), new Interval(200, 350)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(200, 11));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(200, 350), new Interval(200, 350)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(200, 11));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(300, 400), new Interval(300, 400)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(200, 11), new LineChartDataPoint(400, 0));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(300, 400), new Interval(300, 400)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(200, 11), new LineGraphDataPoint(400, 0));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(500, 600), new Interval(500, 600)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(400, 0), new LineChartDataPoint(600, 12));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(500, 600), new Interval(500, 600)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(400, 0), new LineGraphDataPoint(600, 12));
 	}
 
 	@Test
 	public void testMin() throws Exception {
-		model.setAggregationPolicy("line1", AggregatingTimeGraphModel.AggregationPolicy.MIN);
+		model.setAggregationPolicy(AggregationType.MIN);
 
-		List<LineChartDataPoint> dataPoints = model.getDataPoints("line1", TimePartitioningUnit.YEAR, ZoneOffset.UTC, new Interval(0, 1000), new Interval(0, 1000)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(0, 0));
+		List<LineGraphDataPoint> dataPoints = model.getData(TimePartitioningUnit.YEAR, ZoneOffset.UTC, new Interval(0, 1000), new Interval(0, 1000)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(0, 0));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(200, 350), new Interval(200, 350)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(200, 2));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(200, 350), new Interval(200, 350)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(200, 2));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(300, 400), new Interval(300, 400)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(200, 2), new LineChartDataPoint(400, 0));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(300, 400), new Interval(300, 400)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(200, 2), new LineGraphDataPoint(400, 0));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(500, 600), new Interval(500, 600)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(400, 0), new LineChartDataPoint(600, 3));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(500, 600), new Interval(500, 600)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(400, 0), new LineGraphDataPoint(600, 3));
 	}
 
 	@Test
 	public void testMax() throws Exception {
-		model.setAggregationPolicy("line1", AggregatingTimeGraphModel.AggregationPolicy.MAX);
+		model.setAggregationPolicy(AggregationType.MAX);
 
-		List<LineChartDataPoint> dataPoints = model.getDataPoints("line1", TimePartitioningUnit.YEAR, ZoneOffset.UTC, new Interval(0, 1000), new Interval(0, 1000)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(0, 13));
+		List<LineGraphDataPoint> dataPoints = model.getData(TimePartitioningUnit.YEAR, ZoneOffset.UTC, new Interval(0, 1000), new Interval(0, 1000)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(0, 13));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(400, 550), new Interval(400, 550)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(400, 13));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(400, 550), new Interval(400, 550)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(400, 13));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(300, 400), new Interval(300, 400)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(200, 11), new LineChartDataPoint(400, 13));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(300, 400), new Interval(300, 400)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(200, 11), new LineGraphDataPoint(400, 13));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(500, 600), new Interval(500, 600)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(400, 13), new LineChartDataPoint(600, 12));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(500, 600), new Interval(500, 600)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(400, 13), new LineGraphDataPoint(600, 12));
 	}
 
 	@Test
 	public void testAverage() throws Exception {
-		model.setAggregationPolicy("line1", AggregatingTimeGraphModel.AggregationPolicy.AVERAGE);
+		model.setAggregationPolicy(AggregationType.AVERAGE);
 
-		List<LineChartDataPoint> dataPoints = model.getDataPoints("line1", TimePartitioningUnit.YEAR, ZoneOffset.UTC, new Interval(0, 1000), new Interval(0, 1000)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(0, 6));
+		List<LineGraphDataPoint> dataPoints = model.getData(TimePartitioningUnit.YEAR, ZoneOffset.UTC, new Interval(0, 1000), new Interval(0, 1000)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(0, 6));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(400, 550), new Interval(400, 550)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(400, 6.5));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(400, 550), new Interval(400, 550)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(400, 6.5));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(300, 400), new Interval(300, 400)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(200, 6.5), new LineChartDataPoint(400, 6.5));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(300, 400), new Interval(300, 400)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(200, 6.5), new LineGraphDataPoint(400, 6.5));
 
-		dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(500, 600), new Interval(500, 600)).streamDataPoints().collect(Collectors.toList());
-		Assertions.assertThat(dataPoints).containsExactly(new LineChartDataPoint(400, 6.5), new LineChartDataPoint(600, 7.5));
+		dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(500, 600), new Interval(500, 600)).streamDataPoints().collect(Collectors.toList());
+		Assertions.assertThat(dataPoints).containsExactly(new LineGraphDataPoint(400, 6.5), new LineGraphDataPoint(600, 7.5));
 	}
 
 	@Test
 	public void testAddDataPointBeforeAndAfterQueryResult() throws Exception {
-		model.setAggregationPolicy("line1", AggregatingTimeGraphModel.AggregationPolicy.FIRST_VALUE);
+		model.setAggregationPolicy(AggregationType.FIRST_VALUE);
 		model.setAddDataPointBeforeAndAfterQueryResult(true);
 
-		List<LineChartDataPoint> dataPoints = model.getDataPoints("line1", TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(400, 550), new Interval(400, 550)).streamDataPoints().collect(Collectors.toList());
+		List<LineGraphDataPoint> dataPoints = model.getData(TimePartitioningUnit.MILLISECOND_200, ZoneOffset.UTC, new Interval(400, 550), new Interval(400, 550)).streamDataPoints().collect(Collectors.toList());
 		Assertions.assertThat(dataPoints).containsExactly(
-				new LineChartDataPoint(200, 11),
-				new LineChartDataPoint(400, 0),
-				new LineChartDataPoint(600, 12)
+				new LineGraphDataPoint(200, 11),
+				new LineGraphDataPoint(400, 0),
+				new LineGraphDataPoint(600, 12)
 		);
 
 	}
