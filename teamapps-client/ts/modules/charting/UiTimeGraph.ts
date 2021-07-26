@@ -57,7 +57,7 @@ import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
 import {UiGraphConfig} from "../../generated/UiGraphConfig";
 import {UiLineGraphConfig} from "../../generated/UiLineGraphConfig";
 import {AbstractUiGraph} from "./AbstractUiGraph";
-import {GraphContext} from "./GraphContext";
+import {GraphContext, PopperHandle} from "./GraphContext";
 
 export const yTickFormat = d3.format("-,.2s");
 
@@ -132,7 +132,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			  	  	destroy(): void {
 			  	  		me.eventsPopper.update(null, null);
 					}
-			  	  }
+			  	  } as PopperHandle;
 			  }
 		}
 

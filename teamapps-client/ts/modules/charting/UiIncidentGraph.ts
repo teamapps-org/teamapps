@@ -18,8 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import * as d3 from "d3";
-import {ScaleLinear} from "d3";
-import {GraphContext} from "./GraphContext";
+import {GraphContext, PopperHandle} from "./GraphContext";
 import {AbstractUiGraph} from "./AbstractUiGraph";
 import {UiIncidentGraphConfig} from "../../generated/UiIncidentGraphConfig";
 import {UiIncidentGraphDataConfig} from "../../generated/UiIncidentGraphDataConfig";
@@ -29,7 +28,7 @@ import {IncidentGraphDataStore} from "./DataStore";
 export class UiIncidentGraph extends AbstractUiGraph<UiIncidentGraphConfig, UiIncidentGraphDataConfig> {
 
 	private dataStore = new IncidentGraphDataStore();
-	private popperHandle: { update(referenceElement: Element, content: (Element | string)): void; hide(): void; destroy(): void };
+	private popperHandle: PopperHandle;
 
 	constructor(
 		timeGraphId: string,

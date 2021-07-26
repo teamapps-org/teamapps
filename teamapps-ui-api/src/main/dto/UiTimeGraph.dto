@@ -122,8 +122,8 @@ class UiIncidentGraphDataPoint {
     required double x1;
 	required double x2;
 	required double y;
-	String color;
-	String tooltipHtml;
+	required String color;
+	required String tooltipHtml;
 }
 class UiHoseGraphData implements UiGraphData {
     required UiLineGraphData lowerLineData;

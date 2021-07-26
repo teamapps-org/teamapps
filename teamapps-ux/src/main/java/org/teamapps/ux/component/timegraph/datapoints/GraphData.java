@@ -4,7 +4,7 @@ import org.teamapps.dto.UiGraphData;
 
 public interface GraphData {
 
-//	Interval getInterval();
+	// Interval getInterval();
 	
 	UiGraphData toUiGraphData();
 

@@ -69,12 +69,14 @@ export class TimeGraphPopper {
 	}
 
 	public update(referenceElement: Element, content: Element|string) {
+		console.log("UPDATE: ", referenceElement, content, this.$popperElement);
 		let oldReferenceElement = this.referenceElement;
 		(this.popper as any).state.elements.reference = referenceElement;
 		this.$contentContainer.innerHTML = "";
 		if (typeof content === "string") {
 			content = parseHtml(content);
 		}
+		console.log("content: " + content);
 		this.$contentContainer.append(content);
 		this.setVisible(referenceElement != null && content != null, oldReferenceElement != null && referenceElement != null);
 	}
