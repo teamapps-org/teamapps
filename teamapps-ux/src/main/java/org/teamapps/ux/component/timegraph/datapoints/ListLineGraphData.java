@@ -19,14 +19,18 @@
  */
 package org.teamapps.ux.component.timegraph.datapoints;
 
+import org.teamapps.ux.component.timegraph.Interval;
+
 import java.util.List;
 
 public class ListLineGraphData implements LineGraphData {
 
 	private final List<LineGraphDataPoint> dataPoints;
+	private final Interval interval;
 
-	public ListLineGraphData(List<LineGraphDataPoint> dataPoints) {
+	public ListLineGraphData(List<LineGraphDataPoint> dataPoints, Interval interval) {
 		this.dataPoints = dataPoints;
+		this.interval = interval;
 	}
 
 	@Override
@@ -49,4 +53,8 @@ public class ListLineGraphData implements LineGraphData {
 		return dataPoints.get(index);
 	}
 
+	@Override
+	public Interval getInterval() {
+		return interval;
+	}
 }

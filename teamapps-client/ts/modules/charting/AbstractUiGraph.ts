@@ -23,15 +23,16 @@ import {UiLineChartYScaleZoomMode} from "../../generated/UiLineChartYScaleZoomMo
 import * as d3 from "d3";
 import {NamespaceLocalObject} from "d3";
 import {UiScaleType} from "../../generated/UiScaleType";
-import {UiLineChartDataDisplay} from "./UiLineChartDataDisplay";
+import {UiGraph} from "./UiGraph";
 import {YAxis} from "./YAxis";
 import {UiGraphConfig} from "../../generated/UiGraphConfig";
 import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
 import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
+import {Interval} from "../util/IntervalManager";
 
 export abstract class AbstractUiGraph<C extends UiGraphConfig = UiGraphConfig,
 	D extends UiGraphDataConfig = UiGraphDataConfig>
-	implements UiLineChartDataDisplay<C, D> {
+	implements UiGraph<C, D> {
 
 	protected config: C;
 
@@ -54,7 +55,11 @@ export abstract class AbstractUiGraph<C extends UiGraphConfig = UiGraphConfig,
 
 	protected abstract doRedraw(): void;
 
-	public abstract addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: D): void;
+	public abstract getUncoveredIntervals(zoomLevel: number, interval: [number, number]): [number, number][];
+
+	public abstract markIntervalAsCovered(zoomLevel: number, interval: [number, number]): void;
+
+	public abstract addData(zoomLevel: number, data: D): void;
 
 	public abstract resetData(): void;
 

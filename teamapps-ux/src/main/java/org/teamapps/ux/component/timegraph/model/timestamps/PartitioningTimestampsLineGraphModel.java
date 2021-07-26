@@ -27,6 +27,7 @@ import org.teamapps.ux.component.timegraph.datapoints.LineGraphDataPoint;
 import org.teamapps.ux.component.timegraph.datapoints.ListLineGraphData;
 import org.teamapps.ux.component.timegraph.model.AbstractGraphModel;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.stream.Collectors;
 
@@ -46,11 +47,14 @@ public class PartitioningTimestampsLineGraphModel extends AbstractGraphModel<Lin
 
 	@Override
 	public LineGraphData getData(TimePartitioning zoomLevel, ZoneId zoneId, Interval neededInterval, Interval displayedInterval) {
+		final long queryStart = zoomLevel.getPartitionStart(Instant.ofEpochMilli(displayedInterval.getMin()).atZone(zoneId)).toInstant().toEpochMilli();
+		final long queryEnd = zoomLevel.getPartitionEnd(Instant.ofEpochMilli(displayedInterval.getMax()).atZone(zoneId)).toInstant().toEpochMilli();
 		final long[] eventTimestamps = timestampsModel.getTimestamps(displayedInterval);
-		return new ListLineGraphData(TimestampsPartitioner.partition(displayedInterval.getMin(), displayedInterval.getMax(), eventTimestamps, zoneId, zoomLevel, true)
+		return new ListLineGraphData(TimestampsPartitioner.partition(queryStart, queryEnd, eventTimestamps, zoneId, zoomLevel, true)
 				.stream()
 				.map(p -> new LineGraphDataPoint(p.getTimestamp(), p.getCount()))
-				.collect(Collectors.toList()));
+				.collect(Collectors.toList()),
+				new Interval(queryStart, queryEnd));
 	}
 
 	@Override

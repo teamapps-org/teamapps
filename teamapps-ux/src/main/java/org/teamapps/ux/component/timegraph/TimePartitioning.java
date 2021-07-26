@@ -20,12 +20,17 @@
 package org.teamapps.ux.component.timegraph;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 public interface TimePartitioning {
 
 	long getApproximateMillisecondsPerPartition();
 
 	ZonedDateTime getPartitionStart(ZonedDateTime zonedDateTime);
+	
+	default ZonedDateTime getPartitionEnd(ZonedDateTime zonedDateTime) {
+		return increment(getPartitionStart(zonedDateTime.minus(1, ChronoUnit.MICROS)));
+	}
 
 	ZonedDateTime increment(ZonedDateTime zonedDateTime);
 

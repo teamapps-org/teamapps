@@ -47,7 +47,7 @@ public class AggregatingTimeGraphModelTest {
 				new LineGraphDataPoint(500, 13),
 				new LineGraphDataPoint(600, 12),
 				new LineGraphDataPoint(700, 3)
-		)));
+		), new Interval(100, 800)));
 		model.setAddDataPointBeforeAndAfterQueryResult(false); // for testing
 	}
 

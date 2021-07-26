@@ -116,9 +116,9 @@ public class TimeGraph extends AbstractComponent {
 		List<UiTimeChartZoomLevel> uiZoomLevels = createUiZoomlevels();
 
 		Interval domainX = retrieveDomainX();
-		
+
 		this.displayedInterval = domainX;
-		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).createUiLongInterval();
+		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
 
 		UiTimeGraph uiTimeGraph = new UiTimeGraph(
 				uiIntervalX,
@@ -148,10 +148,11 @@ public class TimeGraph extends AbstractComponent {
 				Interval displayedInterval = new Interval(zoomedEvent.getDisplayedInterval().getMin(), zoomedEvent.getDisplayedInterval().getMax());
 				TimePartitioning timePartitioning = zoomLevels.get(zoomedEvent.getZoomLevelIndex());
 
-				if (zoomedEvent.getNeededInterval() != null) {
-					Interval neededInterval = new Interval(zoomedEvent.getNeededInterval().getMin(), zoomedEvent.getNeededInterval().getMax());
-					Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededInterval);
-					queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), zoomedEvent.getZoomLevelIndex(), zoomedEvent.getNeededInterval(), convertToUiData(data)));
+				if (zoomedEvent.getNeededIntervalsByGraphId() != null) {
+					final Map<String, List<Interval>> neededIntervalsByGraphId = zoomedEvent.getNeededIntervalsByGraphId().entrySet().stream()
+							.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(i -> new Interval(i.getMin(), i.getMax())).collect(Collectors.toList())));
+					Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededIntervalsByGraphId);
+					queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), zoomedEvent.getZoomLevelIndex(), convertToUiData(data)));
 				}
 
 				this.displayedInterval = displayedInterval;
@@ -176,11 +177,15 @@ public class TimeGraph extends AbstractComponent {
 				.orElse(new Interval(0, 1));
 	}
 
-	private Map<String, GraphData> retrieveData(Interval displayedInterval, TimePartitioning timePartitioning, Interval neededInterval) {
+	private Map<String, GraphData> retrieveData(Interval displayedInterval, TimePartitioning timePartitioning, Map<String, List<Interval>> neededIntervalsByGraphId) {
 		return graphs.stream()
+				.filter(g -> neededIntervalsByGraphId.containsKey(g.getId()) && neededIntervalsByGraphId.get(g.getId()).size() > 0)
 				.collect(Collectors.toMap(
 						AbstractGraph::getId,
-						g -> g.getModel().getData(timePartitioning, timeZoneId, neededInterval, displayedInterval)
+						g -> neededIntervalsByGraphId.get(g.getId()).stream()
+								.reduce(Interval::union)
+								.map(interval -> g.getModel().getData(timePartitioning, timeZoneId, interval, displayedInterval))
+								.orElseThrow()
 				));
 	}
 
@@ -226,12 +231,12 @@ public class TimeGraph extends AbstractComponent {
 
 	public void setSelectedInterval(Interval selectedInterval) {
 		this.selectedInterval = selectedInterval;
-		queueCommandIfRendered(() -> new UiTimeGraph.SetSelectedIntervalCommand(getId(), selectedInterval.createUiLongInterval()));
+		queueCommandIfRendered(() -> new UiTimeGraph.SetSelectedIntervalCommand(getId(), selectedInterval.toUiLongInterval()));
 	}
 
 	private void onTimeGraphDataChanged(Void aVoid) {
 		Interval domainX = retrieveDomainX();
-		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).createUiLongInterval();
+		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
 		queueCommandIfRendered(() -> new UiTimeGraph.SetIntervalXCommand(getId(), uiIntervalX));
 		refresh();
 	}

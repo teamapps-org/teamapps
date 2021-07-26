@@ -49,7 +49,7 @@ import {UiGraphGroup} from "./UiGraphGroup";
 import {DateTime} from 'luxon';
 import {scaleZoned} from "d3-luxon";
 import {SVGGSelection, SVGSelection} from "./Charting";
-import {UiLineChartDataDisplay} from "./UiLineChartDataDisplay";
+import {UiGraph} from "./UiGraph";
 import {UiIncidentGraph} from "./UiIncidentGraph";
 import {CalendarEventListPopper} from "../micro-components/CalendarEventListPopper";
 import {TimeGraphPopper} from "./TimeGraphPopper";
@@ -73,7 +73,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	private intervalX: UiLongIntervalConfig;
 	private maxPixelsBetweenDataPoints: number;
 
-	private graphById: { [id: string]: UiLineChartDataDisplay } = {};
+	private graphById: { [id: string]: UiGraph } = {};
 
 	private $main: HTMLElement;
 
@@ -91,7 +91,6 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	private xAxis: Axis<Date | number | { valueOf(): number }>;
 	private $xAxis: SVGSelection<any>;
 	private $horizontalPanRect: SVGSelection<any>;
-	private zoomLevelIntervalManagers: IntervalManager[];
 	private brush: BrushBehavior<number>;
 	private $brush: SVGGSelection<number>;
 	private $graphClipContainer: SVGGSelection<any>;
@@ -121,19 +120,19 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 		const me = this;
 		this.graphContext = {
-			  getPopperHandle() {
-			  	  return {
-			  	  	update(referenceElement: Element, content: (Element | string)): void {
-			  	  		me.eventsPopper.update(referenceElement, content);
+			getPopperHandle() {
+				return {
+					update(referenceElement: Element, content: (Element | string)): void {
+						me.eventsPopper.update(referenceElement, content);
 					},
-			  	  	hide(): void {
-			  	  		me.eventsPopper.update(null, null);
+					hide(): void {
+						me.eventsPopper.update(null, null);
 					},
-			  	  	destroy(): void {
-			  	  		me.eventsPopper.update(null, null);
+					destroy(): void {
+						me.eventsPopper.update(null, null);
 					}
-			  	  } as PopperHandle;
-			  }
+				} as PopperHandle;
+			}
 		}
 
 		this.zoomLevels = config.zoomLevels;
@@ -249,8 +248,6 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		// this.linesById["testtesttodo"] = uiEventChartDisplay;
 		// this.$graphClipContainer.node().appendChild(uiEventChartDisplay.getMainSelection().node());
 
-		this.initZoomLevelIntervalManagers();
-
 		this.resetAllData(this.zoomLevels);
 	}
 
@@ -300,13 +297,6 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		return zoomTransform.rescaleX(this.scaleX as any);
 	}
 
-	private initZoomLevelIntervalManagers() {
-		this.zoomLevelIntervalManagers = [];
-		for (let i = 0; i < this.zoomLevels.length; i++) {
-			this.zoomLevelIntervalManagers[i] = new IntervalManager();
-		}
-	}
-
 	@executeWhenFirstDisplayed()
 	private redraw() {
 		if (this.getWidth() === 0 || this.getHeight() === 0) {
@@ -331,25 +321,28 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		const zoomLevel = this.getCurrentZoomLevel();
 		// this.logger.debug("millisecondsPerPixel: " + millisecondsPerPixel + " zoomLevel: " + zoomLevel + " at scale: " + zoomTransform.k);
 
-		let uncoveredIntervals = this.zoomLevelIntervalManagers[zoomLevel].getUncoveredIntervals(new Interval(domain[0], domain[1]));
-		if (uncoveredIntervals.length > 0) {
-			for (let uncoveredInterval of uncoveredIntervals) {
-				if (uncoveredInterval.start >= uncoveredInterval.end) {
-					continue; // do not request empty intervals. may happen if the domainX is [0, 0]
-				}
-				this.logger.debug("firing onDataNeeded: " + uncoveredInterval);
-				if (uncoveredInterval.start == null || isNaN(uncoveredInterval.start) || uncoveredInterval.end == null || isNaN(uncoveredInterval.end)) {
-					this.logger.error("Uncovered interval is corrupt. Will not retrieve data!");
-				} else {
-					this.onZoomed.fire({
-						zoomLevelIndex: zoomLevel,
-						millisecondsPerPixel: this.getMillisecondsPerPixel(),
-						neededInterval: createUiLongIntervalConfig(uncoveredInterval.start, uncoveredInterval.end),
-						displayedInterval: createUiLongIntervalConfig(domain[0], domain[1])
-					});
-					this.zoomLevelIntervalManagers[zoomLevel].addInterval(new Interval(uncoveredInterval.start, uncoveredInterval.end));
-				}
+
+		let uncoveredIntervalsByGraphId: { [graphId: string]: UiLongIntervalConfig[] } = {};
+		for (let [id, graph] of Object.entries(this.graphById)) {
+			let uncoveredIntervals = graph.getUncoveredIntervals(zoomLevel, [domain[0], domain[1]]);
+			console.log(`checking ${id} for uncovered intervals returned `, uncoveredIntervals);
+			uncoveredIntervals = uncoveredIntervals
+				.filter(i => (i[0] < i[1])) // remove empty intervals
+				.filter(i => !(i[0] == null || isNaN(i[0]) || i[1] == null || isNaN(i[1]))); // invalid intervals
+
+			if (uncoveredIntervals.length > 0) {
+				uncoveredIntervalsByGraphId[id] = uncoveredIntervals.map(i => createUiLongIntervalConfig(i[0], i[1]));
+				uncoveredIntervals.forEach(i => graph.markIntervalAsCovered(zoomLevel, i));
 			}
+		}
+		if (Object.keys(uncoveredIntervalsByGraphId).length > 0) {
+			this.logger.debug("firing onDataNeeded: " + uncoveredIntervalsByGraphId);
+			this.onZoomed.fire({
+				zoomLevelIndex: zoomLevel,
+				millisecondsPerPixel: this.getMillisecondsPerPixel(),
+				neededIntervalsByGraphId: uncoveredIntervalsByGraphId,
+				displayedInterval: createUiLongIntervalConfig(domain[0], domain[1])
+			});
 		}
 
 		if (this.xSelection) {
@@ -468,12 +461,11 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		return Object.keys(this.graphById).map(id => this.graphById[id]);
 	}
 
-	addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [graphId: string]: UiGraphDataConfig }): void {
-		this.zoomLevelIntervalManagers[zoomLevel].addInterval(new Interval(intervalX.min, intervalX.max));
+	addData(zoomLevel: number, data: { [graphId: string]: UiGraphDataConfig }): void {
 		for (const [graphId, graphData] of Object.entries(data)) {
 			let graph = this.graphById[graphId];
 			if (graph != null) {
-				graph.addData(zoomLevel, intervalX, data[graphId]);
+				graph.addData(zoomLevel, graphData);
 			}
 		}
 		this.redraw();
@@ -481,7 +473,6 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 
 	resetAllData(newZoomLevels: UiTimeChartZoomLevelConfig[]): void {
 		this.zoomLevels = newZoomLevels;
-		this.initZoomLevelIntervalManagers();
 		Object.values(this.graphById).forEach(g => g.resetData());
 		this.redraw();
 	}
@@ -489,9 +480,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 	@debouncedMethod(500, DebounceMode.BOTH)
 	replaceAllData(newZoomLevels: UiTimeChartZoomLevelConfig[], zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [graphId: string]: UiGraphDataConfig }): void {
 		this.zoomLevels = newZoomLevels;
-		this.initZoomLevelIntervalManagers(); // reset
-		// do NOT remove the data from the dataStore. It will be re-requested anyway and thereby overwritten. Otherwise, you would get zoom flickering due to y-min/max-value changes
-		this.addData(zoomLevel, intervalX, data);
+		Object.values(this.graphById).forEach(g => g.resetData());
+		this.addData(zoomLevel, data);
 	}
 
 	setIntervalX(intervalX: UiLongIntervalConfig): void {
@@ -529,7 +519,7 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			millisecondsPerPixel: this.getMillisecondsPerPixel(),
 			displayedInterval: createUiLongIntervalConfig(+domain[0], +domain[1]),
 			zoomLevelIndex: currentZoomLevel,
-			neededInterval: null
+			neededIntervalsByGraphId: null
 		});
 	}
 

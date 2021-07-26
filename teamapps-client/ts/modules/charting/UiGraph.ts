@@ -24,7 +24,7 @@ import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
 import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
 import {UiGraphConfig} from "../../generated/UiGraphConfig";
 
-export interface UiLineChartDataDisplay<C extends UiGraphConfig = UiGraphConfig, D extends UiGraphDataConfig = UiGraphDataConfig> {
+export interface UiGraph<C extends UiGraphConfig = UiGraphConfig, D extends UiGraphDataConfig = UiGraphDataConfig> {
 
 	setConfig(config: C): void;
 
@@ -38,7 +38,11 @@ export interface UiLineChartDataDisplay<C extends UiGraphConfig = UiGraphConfig,
 
 	redraw(): void;
 
-	addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: D): void;
+	getUncoveredIntervals(zoomLevel: number, interval: [number, number]): [number, number][];
+
+	markIntervalAsCovered(zoomLevel: number, interval: [number, number]): void;
+
+	addData(zoomLevel: number, data: D): void;
 
 	resetData(): void;
 

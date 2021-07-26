@@ -27,6 +27,7 @@ import {isVisibleColor} from "../Common";
 import {UiHoseGraphConfig} from "../../generated/UiHoseGraphConfig";
 import {UiHoseGraphDataConfig} from "../../generated/UiHoseGraphDataConfig";
 import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
+import {IntervalManager} from "../util/IntervalManager";
 
 export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphDataConfig> {
 	private middleLine: Line<DataPoint>;
@@ -45,6 +46,10 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 	private middleLineDataStore = new LineGraphDataStore();
 	private lowerLineDataStore = new LineGraphDataStore();
 
+	private get dataStores() {
+		return [this.upperLineDataStore, this.middleLineDataStore, this.lowerLineDataStore];
+	}
+
 	constructor(
 		timeGraphId: string,
 		config: UiHoseGraphConfig,
@@ -55,24 +60,30 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 		this.initDomNodes();
 	}
 
-	public addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: UiHoseGraphDataConfig): void {
-		this.upperLineDataStore.addData(zoomLevel, [intervalX.min, intervalX.max], data.upperLineData);
-		this.middleLineDataStore.addData(zoomLevel, [intervalX.min, intervalX.max], data.middleLineData);
-		this.lowerLineDataStore.addData(zoomLevel, [intervalX.min, intervalX.max], data.lowerLineData);
+	getUncoveredIntervals(zoomLevel: number, interval: [number, number]): [number, number][] {
+		let uncoveredIntervalManager = new IntervalManager();
+		this.dataStores.forEach(ds => uncoveredIntervalManager.addIntervals(ds.getUncoveredIntervals(zoomLevel, interval)));
+		return uncoveredIntervalManager.getCoveredIntervals(); // !!
+	}
+
+	markIntervalAsCovered(zoomLevel: number, interval: [number, number]): void {
+		this.dataStores.forEach(ds => ds.markIntervalAsCovered(zoomLevel, interval));
+	}
+
+	public addData(zoomLevel: number, data: UiHoseGraphDataConfig): void {
+		this.upperLineDataStore.addData(zoomLevel, data.upperLineData);
+		this.middleLineDataStore.addData(zoomLevel, data.middleLineData);
+		this.lowerLineDataStore.addData(zoomLevel, data.lowerLineData);
 	}
 
 	public resetData(): void {
-		this.upperLineDataStore.reset();
-		this.middleLineDataStore.reset();
-		this.lowerLineDataStore.reset();
+		this.dataStores.forEach(ds => ds.reset());
 	}
 
 	public getYDataBounds(xInterval: [number, number]): [number, number] {
-		return d3.extent([
-			this.upperLineDataStore.getData(this.zoomLevelIndex, xInterval).dataPoints,
-			this.middleLineDataStore.getData(this.zoomLevelIndex, xInterval).dataPoints,
-			this.lowerLineDataStore.getData(this.zoomLevelIndex, xInterval).dataPoints
-		].flat()
+		return d3.extent(this.dataStores
+			.map(ds => ds.getData(this.zoomLevelIndex, xInterval).dataPoints)
+			.flat()
 			.map(dataPoint => dataPoint.y));
 	}
 
