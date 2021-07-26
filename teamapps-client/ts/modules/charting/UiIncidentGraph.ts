@@ -24,6 +24,7 @@ import {UiIncidentGraphConfig} from "../../generated/UiIncidentGraphConfig";
 import {UiIncidentGraphDataConfig} from "../../generated/UiIncidentGraphDataConfig";
 import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
 import {IncidentGraphDataStore} from "./DataStore";
+import {IntervalManager} from "../util/IntervalManager";
 
 export class UiIncidentGraph extends AbstractUiGraph<UiIncidentGraphConfig, UiIncidentGraphDataConfig> {
 
@@ -39,8 +40,16 @@ export class UiIncidentGraph extends AbstractUiGraph<UiIncidentGraphConfig, UiIn
 		this.popperHandle = graphContext.getPopperHandle();
 	}
 
-	public addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: UiIncidentGraphDataConfig): void {
-		this.dataStore.addData(zoomLevel, [intervalX.min, intervalX.max], data)
+	getUncoveredIntervals(zoomLevel: number, interval: [number, number]): [number, number][] {
+		return this.dataStore.getUncoveredIntervals(zoomLevel, interval);
+	}
+
+	markIntervalAsCovered(zoomLevel: number, interval: [number, number]): void {
+		this.dataStore.markIntervalAsCovered(zoomLevel, interval);
+	}
+
+	public addData(zoomLevel: number, data: UiIncidentGraphDataConfig): void {
+		this.dataStore.addData(zoomLevel, data)
 	}
 
 	public resetData(): void {

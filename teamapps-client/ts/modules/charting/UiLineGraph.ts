@@ -53,8 +53,16 @@ export class UiLineGraph extends AbstractUiGraph<UiLineGraphConfig, UiLineGraphD
 		this.initDomNodes();
 	}
 
-	public addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: UiLineGraphDataConfig): void {
-		this.dataStore.addData(zoomLevel, [intervalX.min, intervalX.max], data);
+	getUncoveredIntervals(zoomLevel: number, interval: [number, number]): [number, number][] {
+		return this.dataStore.getUncoveredIntervals(zoomLevel, interval);
+	}
+
+	markIntervalAsCovered(zoomLevel: number, interval: [number, number]): void {
+		this.dataStore.markIntervalAsCovered(zoomLevel, interval);
+	}
+
+	public addData(zoomLevel: number, data: UiLineGraphDataConfig): void {
+		this.dataStore.addData(zoomLevel, data);
 	}
 
 	public resetData(): void {

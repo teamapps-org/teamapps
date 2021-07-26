@@ -57,20 +57,22 @@ public class AggregatingLineGraphModel extends AbstractGraphModel<LineGraphData>
 	}
 
 	@Override
-	public LineGraphData getData(TimePartitioning zoomLevel, ZoneId zoneId, Interval neededIntervalX, Interval interval) {
-		return getAggregateDataPoints(graphData, zoomLevel, interval, aggregationType, zoneId, addDataPointBeforeAndAfterQueryResult);
+	public LineGraphData getData(TimePartitioning zoomLevel, ZoneId zoneId, Interval neededIntervalX, Interval displayedInterval) {
+		final long queryStart = zoomLevel.getPartitionStart(Instant.ofEpochMilli(displayedInterval.getMin()).atZone(zoneId)).toInstant().toEpochMilli();
+		final long queryEnd = zoomLevel.getPartitionEnd(Instant.ofEpochMilli(displayedInterval.getMax()).atZone(zoneId)).toInstant().toEpochMilli();
+		return getAggregateDataPoints(graphData, zoomLevel, new Interval(queryStart, queryEnd), aggregationType, zoneId, addDataPointBeforeAndAfterQueryResult);
 	}
 
 	public static LineGraphData getAggregateDataPoints(
 			LineGraphData dataPoints,
 			TimePartitioning zoomLevel,
-			Interval interval,
+			Interval alignedInterval,
 			AggregationType aggregationType,
 			ZoneId timeZone,
 			boolean addDataPointBeforeAndAfterQueryResult
 	) {
 		List<LineGraphDataPoint> result = new ArrayList<>();
-		long currentPartitionStartMilli = getPartitionStart(interval.getMin(), zoomLevel, timeZone).toInstant().toEpochMilli();
+		long currentPartitionStartMilli = getPartitionStart(alignedInterval.getMin(), zoomLevel, timeZone).toInstant().toEpochMilli();
 		if (addDataPointBeforeAndAfterQueryResult) {
 			currentPartitionStartMilli = zoomLevel.decrement(ZonedDateTime.ofInstant(Instant.ofEpochMilli(currentPartitionStartMilli), timeZone)).toInstant().toEpochMilli();
 		}
@@ -107,8 +109,8 @@ public class AggregatingLineGraphModel extends AbstractGraphModel<LineGraphData>
 
 			currentPartitionStartMilli = nextPartitionStartMilli;
 			nextPartitionStartMilli = zoomLevel.increment(getPartitionStart(nextPartitionStartMilli, zoomLevel, timeZone)).toInstant().toEpochMilli();
-		} while (currentPartitionStartMilli <= interval.getMax() + (addDataPointBeforeAndAfterQueryResult ? zoomLevel.getApproximateMillisecondsPerPartition() : 0));
-		return new ListLineGraphData(result);
+		} while (currentPartitionStartMilli <= alignedInterval.getMax() + (addDataPointBeforeAndAfterQueryResult ? zoomLevel.getApproximateMillisecondsPerPartition() : 0));
+		return new ListLineGraphData(result, alignedInterval);
 	}
 
 	private static ZonedDateTime getPartitionStart(long timestampMillis, TimePartitioning partitionUnit, ZoneId timeZone) {

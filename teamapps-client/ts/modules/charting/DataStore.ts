@@ -24,29 +24,48 @@ import {UiLineGraphDataConfig} from "../../generated/UiLineGraphDataConfig";
 import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
 import {UiIncidentGraphDataConfig} from "../../generated/UiIncidentGraphDataConfig";
 import {UiIncidentGraphDataPointConfig} from "../../generated/UiIncidentGraphDataPointConfig";
+import {Interval, IntervalManager} from "../util/IntervalManager";
 
 
 abstract class AbstractDataStore<D extends UiGraphDataConfig> {
 
+	private intervalManagerByZoomLevel: Map<number, IntervalManager> = new Map();
 	private dataObsolete = false;
 
 	public reset(): void {
 		this.dataObsolete = true; // do not reset store's data directly but wait until the new data has been set!
+		this.intervalManagerByZoomLevel.clear();
 	}
 
-	public addData(zoomLevel: number, intervalX: [number, number], data: D) {
+	public getUncoveredIntervals(zoomLevel: number, interval: [number, number]): [number, number][] {
+		return this.getIntervalManager(zoomLevel).getUncoveredIntervals(interval);
+	}
+
+	public markIntervalAsCovered(zoomLevel: number, interval: [number, number]): void {
+		this.getIntervalManager(zoomLevel).addInterval(interval);
+	}
+
+	public addData(zoomLevel: number, data: D) {
 		if (this.dataObsolete) {
 			this.doResetData();
 			this.dataObsolete = false;
 		}
-		this.doAddData(zoomLevel, intervalX, data);
+		this.getIntervalManager(zoomLevel).addInterval([data.interval.min, data.interval.max]);
+		this.doAddData(zoomLevel, data);
 	}
 
 	protected abstract doResetData(): void;
 
-	protected abstract doAddData(zoomLevel: number, intervalX: [number, number], data: D): void;
+	protected abstract doAddData(zoomLevel: number, data: D): void;
 
-	public abstract getData(zoomLevelIndex: number, intervalX: [number, number]): D;
+	public abstract getData(zoomLevelIndex: number, intervalX: [number, number]): Omit<D, "interval">;
+
+	private getIntervalManager(zoomLevel: number) {
+		if (!this.intervalManagerByZoomLevel.has(zoomLevel)) {
+			this.intervalManagerByZoomLevel.set(zoomLevel, new IntervalManager())
+		}
+		return this.intervalManagerByZoomLevel.get(zoomLevel);
+	}
 }
 
 export class LineGraphDataStore extends AbstractDataStore<UiLineGraphDataConfig> {
@@ -57,14 +76,15 @@ export class LineGraphDataStore extends AbstractDataStore<UiLineGraphDataConfig>
 		this.zoomLevelData = [];
 	}
 
-	protected doAddData(zoomLevel: number, intervalX: [number, number], data: UiLineGraphDataConfig) {
+	protected doAddData(zoomLevel: number, data: UiLineGraphDataConfig) {
 		this.assureZoomLevelArrayExists(zoomLevel);
 
+		let interval = [data.interval.min, data.interval.max];
 		let zoomLevelData = this.zoomLevelData[zoomLevel];
 		let minOverlappingIndex: number = null;
 		let maxOverlappingIndex: number = null;
 		for (let i = 0; i < zoomLevelData.length; i++) {
-			if (zoomLevelData[i].x >= intervalX[0] && zoomLevelData[i].x <= intervalX[1]) {
+			if (zoomLevelData[i].x >= interval[0] && zoomLevelData[i].x <= interval[1]) {
 				if (minOverlappingIndex == null) {
 					minOverlappingIndex = i;
 				}
@@ -79,7 +99,7 @@ export class LineGraphDataStore extends AbstractDataStore<UiLineGraphDataConfig>
 		this.zoomLevelData[zoomLevel].sort((a, b) => a.x - b.x);
 	}
 
-	public getData(zoomLevelIndex: number, intervalX: [number, number]): UiLineGraphDataConfig {
+	public getData(zoomLevelIndex: number, intervalX: [number, number]) {
 		this.assureZoomLevelArrayExists(zoomLevelIndex);
 
 		let i = 0;
@@ -116,18 +136,18 @@ export class IncidentGraphDataStore extends AbstractDataStore<UiIncidentGraphDat
 		this.zoomLevelData = [];
 	}
 
-	protected doAddData(zoomLevel: number, intervalX: [number, number], data: UiIncidentGraphDataConfig) {
+	protected doAddData(zoomLevel: number, data: UiIncidentGraphDataConfig) {
+		let interval = [data.interval.min, data.interval.max];
 		this.assureZoomLevelArrayExists(zoomLevel);
 		console.log(this.zoomLevelData[zoomLevel].length)
 		this.zoomLevelData[zoomLevel] = this.zoomLevelData[zoomLevel].filter(dp => {
-			console.log(intervalX, dp, (dp.x2 >= intervalX[0] && dp.x1 < intervalX[1]))
-			return !(dp.x2 >= intervalX[0] && dp.x1 < intervalX[1])
+			return !(dp.x2 >= interval[0] && dp.x1 < interval[1])
 		});
 		this.zoomLevelData[zoomLevel].push(...data.dataPoints);
 		console.log("-->" +this.zoomLevelData[zoomLevel].length)
 	}
 
-	public getData(zoomLevelIndex: number, intervalX: [number, number]): UiIncidentGraphDataConfig {
+	public getData(zoomLevelIndex: number, intervalX: [number, number]) {
 		this.assureZoomLevelArrayExists(zoomLevelIndex);
 		return {dataPoints: this.zoomLevelData[zoomLevelIndex].filter(dp => dp.x2 >= intervalX[0] && dp.x1 < intervalX[1])};
 	}

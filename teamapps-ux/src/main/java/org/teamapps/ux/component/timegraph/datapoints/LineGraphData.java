@@ -58,6 +58,6 @@ public interface LineGraphData extends GraphData {
 	default UiLineGraphData toUiGraphData() {
 		return new UiLineGraphData(streamDataPoints()
 				.map(dp -> new UiLineGraphDataPoint(dp.getX(), dp.getY()))
-				.collect(Collectors.toList()));
+				.collect(Collectors.toList()), getInterval().toUiLongInterval());
 	}
 }

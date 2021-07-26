@@ -99,7 +99,7 @@ public abstract class AbstractGraph<D extends GraphData> {
 		ui.setId(id);
 		ui.setYAxisVisible(yAxisVisible);
 		ui.setYAxisColor(yAxisColor != null ? yAxisColor.toHtmlColorString() : null);
-		ui.setIntervalY(displayedIntervalY != null ? displayedIntervalY.createUiLongInterval() : new UiLongInterval(0, 1000));
+		ui.setIntervalY(displayedIntervalY != null ? displayedIntervalY.toUiLongInterval() : new UiLongInterval(0, 1000));
 		ui.setYScaleType(yScaleType.toUiScaleType());
 		ui.setYScaleZoomMode(yScaleZoomMode.toUiLineChartYScaleZoomMode());
 		ui.setYZeroLineVisible(yZeroLineVisible);

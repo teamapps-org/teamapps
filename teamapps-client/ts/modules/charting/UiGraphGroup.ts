@@ -27,6 +27,7 @@ import {UiGraphGroupDataConfig} from "../../generated/UiGraphGroupDataConfig";
 import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
 import * as d3 from "d3";
 import {GraphContext} from "./GraphContext";
+import {IntervalManager} from "../util/IntervalManager";
 
 export class UiGraphGroup extends AbstractUiGraph<UiGraphGroupConfig, UiGraphGroupDataConfig> {
 
@@ -53,9 +54,19 @@ export class UiGraphGroup extends AbstractUiGraph<UiGraphGroupConfig, UiGraphGro
 		this.graphs.forEach(dd => this.$main.node().append(dd.getMainSelection().node()));
 	}
 
-	addData(zoomLevel: number, intervalX: UiLongIntervalConfig, data: UiGraphGroupDataConfig): void {
+	getUncoveredIntervals(zoomLevel: number, interval: [number, number]): [number, number][] {
+		let uncoveredIntervalManager = new IntervalManager();
+		this.graphs.forEach(graph => uncoveredIntervalManager.addIntervals(graph.getUncoveredIntervals(zoomLevel, interval)));
+		return uncoveredIntervalManager.getCoveredIntervals(); // !!
+	}
+
+	markIntervalAsCovered(zoomLevel: number, interval: [number, number]): void {
+		this.graphs.forEach(graph => graph.markIntervalAsCovered(zoomLevel, interval));
+	}
+
+	addData(zoomLevel: number, data: UiGraphGroupDataConfig): void {
 		for(let [graphId, graphData] of Object.entries(data.graphDataByGraphId)) {
-			this.graphs.get(graphId).addData(zoomLevel, intervalX, graphData);
+			this.graphs.get(graphId).addData(zoomLevel, graphData);
 		}
 	}
 
