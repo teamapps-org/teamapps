@@ -30,6 +30,7 @@
 
     .slick-headerrow,
     .slick-footerrow {
+      z-index: 2; // needs to be higher than for slick-cell, where it is 1 (default styles by slick!)
       overflow: hidden; //removed since it breaks horizontal scrolling of header/footer row
 
       .slick-headerrow-columns,
