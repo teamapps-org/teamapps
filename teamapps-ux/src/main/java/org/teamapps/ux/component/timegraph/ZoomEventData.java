@@ -21,18 +21,24 @@ package org.teamapps.ux.component.timegraph;
 
 public class ZoomEventData {
 	private final Interval intervalX;
-	private final int zoomLevelIndex;
+	private final double millisecondsPerPixel;
+	private final TimePartitioning timePartitioning;
 
-	public ZoomEventData(Interval intervalX, int zoomLevelIndex) {
+	public ZoomEventData(Interval intervalX, double millisecondsPerPixel, TimePartitioning timePartitioning) {
 		this.intervalX = intervalX;
-		this.zoomLevelIndex = zoomLevelIndex;
-	}
-
-	public int getZoomLevelIndex() {
-		return zoomLevelIndex;
+		this.millisecondsPerPixel = millisecondsPerPixel;
+		this.timePartitioning = timePartitioning;
 	}
 
 	public Interval getIntervalX() {
 		return intervalX;
+	}
+
+	public double getMillisecondsPerPixel() {
+		return millisecondsPerPixel;
+	}
+
+	public TimePartitioning getTimePartitioning() {
+		return timePartitioning;
 	}
 }

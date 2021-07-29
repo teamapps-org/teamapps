@@ -96,7 +96,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
     private selectedEntry: U;
     private blurCausedByClickInsideComponent = false;
     private $spinners: JQuery = $();
-    private $originalInput: JQuery;
+    private $originalInput: JQuery<Element>;
     private $editor: JQuery;
     private $dropDownTargetElement: JQuery;
     private $unitBox: JQuery;
