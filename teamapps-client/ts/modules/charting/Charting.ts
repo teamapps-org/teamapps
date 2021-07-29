@@ -21,15 +21,7 @@ import {UiScaleType} from "../../generated/UiScaleType";
 import {UiTimeGraph} from "./UiTimeGraph";
 import {UiLineChartCurveType} from "../../generated/UiLineChartCurveType";
 import * as d3 from "d3";
-import {Selection} from "d3";
-
-export function fakeZeroIfLogScale(y: number, scaleType: UiScaleType) {
-	if (scaleType === UiScaleType.LOG10 && y === 0) {
-		return UiTimeGraph.LOGSCALE_MIN_Y;
-	} else {
-		return y;
-	}
-}
+import {BaseType, Selection} from "d3";
 
 export const CurveTypeToCurveFactory = {
 	[UiLineChartCurveType.LINEAR]: d3.curveLinear,
@@ -47,4 +39,5 @@ export interface DataPoint {
 	y: number
 }
 
-export type SVGGSelection<DATUM = {}> = Selection<SVGGElement, DATUM, HTMLElement, undefined>;
+export type SVGSelection<DATUM = unknown> = Selection<SVGElement, DATUM, BaseType, undefined>;
+export type SVGGSelection<DATUM = unknown> = Selection<SVGGElement, DATUM, BaseType, undefined>;

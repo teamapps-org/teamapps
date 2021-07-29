@@ -34,12 +34,9 @@ type EventData = {
 };
 
 export function draggable($elements: HTMLElement | HTMLElement[] | NodeListOf<HTMLElement>, callbacks: Options) {
-	if ($elements instanceof NodeList) {
-		$elements = [].slice.call($elements);
-	}
-	$elements = [$elements].flat();
-
-	$elements.forEach($element => {
+	let $els: HTMLElement[];
+	$els = $elements instanceof NodeList ? [].slice.call($elements) : [$elements].flat();
+	$els.forEach($element => {
 		$element.addEventListener(`${Constants.POINTER_EVENTS.start}`, (e: PointerEvent & TouchEvent) => {
 			const isSpecialMouseButton = e.button != null && e.button !== 0;
 			const isValidDragStart = callbacks.validDragStartDecider != null ? callbacks.validDragStartDecider(e) : !isSpecialMouseButton

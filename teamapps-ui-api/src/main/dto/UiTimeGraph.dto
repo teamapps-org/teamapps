@@ -22,7 +22,7 @@ class UiTimeGraph extends UiComponent {
 	required UiLongInterval intervalX;
 	required List<UiTimeChartZoomLevel> zoomLevels;
 	required int maxPixelsBetweenDataPoints;  // ... before switching to higher zoom level
-	required List<AbstractUiLineChartDataDisplay> lines;
+	required List<UiGraph> graphs;
 	UiScaleType yScaleType = UiScaleType.LINEAR;
 	UiLineChartMouseScrollZoomPanMode mouseScrollZoomPanMode = UiLineChartMouseScrollZoomPanMode.ENABLED;
 	String locale;
@@ -30,19 +30,18 @@ class UiTimeGraph extends UiComponent {
 
 	command setIntervalX(UiLongInterval intervalX);
 	command setMaxPixelsBetweenDataPoints(int maxPixelsBetweenDataPoints);
-	command addData(int zoomLevel, UiLongInterval intervalX, Dictionary<List<UiTimeGraphDataPoint>> data);
+	command addData(int zoomLevel, Dictionary<UiGraphData> data);
 	command resetAllData(List<UiTimeChartZoomLevel> newZoomLevels); // client will request data again (corresponding to zoom and component size)
-	command replaceAllData(List<UiTimeChartZoomLevel> newZoomLevels, int zoomLevel, UiLongInterval intervalX, Dictionary<List<UiTimeGraphDataPoint>> data); // acts similar to resetAllData() + addData(), but without the extra round trip of a client request for the new data
+	command replaceAllData(List<UiTimeChartZoomLevel> newZoomLevels, int zoomLevel, UiLongInterval intervalX, Dictionary<UiGraphData> data); // acts similar to resetAllData() + addData(), but without the extra round trip of a client request for the new data
 	command setMouseScrollZoomPanMode(UiLineChartMouseScrollZoomPanMode mouseScrollZoomPanMode);
 	command setSelectedInterval(UiLongInterval intervalX);
 
-	command setLines(List<AbstractUiLineChartDataDisplay> lines);
-	command setLine(String lineId, AbstractUiLineChartDataDisplay line);
+	command setGraphs(List<UiGraph> graphs);
+	command addOrUpdateGraph(UiGraph graph);
 
 	command zoomTo(UiLongInterval intervalX);
 
-	event dataNeeded(int zoomLevelIndex, UiLongInterval neededIntervalX, UiLongInterval displayedInterval);
-	event zoomed(UiLongInterval intervalX, int zoomLevelIndex);
+	event zoomed(UiLongInterval displayedInterval, int zoomLevelIndex, double millisecondsPerPixel, Dictionary<List<UiLongInterval>> neededIntervalsByGraphId);
 	event intervalSelected(UiLongInterval intervalX);
 }
 
@@ -62,16 +61,19 @@ class UiTimeChartZoomLevel {
 	required long approximateMillisecondsPerDataPoint;
 }
 
-abstract class AbstractUiLineChartDataDisplay {
+// ==== GRAPHS
+
+interface UiGraph {
 	String id;
-	String yAxisColor = "rgb(0, 0, 0)";
-	UiScaleType yScaleType = UiScaleType.LINEAR;
+	boolean yAxisVisible;
+	String yAxisColor;
+	UiScaleType yScaleType;
 	UiLongInterval intervalY;
-	UiLineChartYScaleZoomMode yScaleZoomMode = UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
+	UiLineChartYScaleZoomMode yScaleZoomMode;
 	boolean yZeroLineVisible;
 }
 
-class UiLineChartLine extends AbstractUiLineChartDataDisplay {
+class UiLineGraph implements UiGraph {
 	String dataSeriesId;
 	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
     float dataDotRadius;
@@ -81,7 +83,7 @@ class UiLineChartLine extends AbstractUiLineChartDataDisplay {
     String areaColorScaleMax;
 }
 
-class UiLineChartBand extends AbstractUiLineChartDataDisplay {
+class UiHoseGraph implements UiGraph {
 	String upperBoundDataSeriesId;
 	String middleLineDataSeriesId;
 	String lowerBoundDataSeriesId;
@@ -93,14 +95,46 @@ class UiLineChartBand extends AbstractUiLineChartDataDisplay {
 	String upperLineColor;
 }
 
-class UiLineChartDataDisplayGroup extends AbstractUiLineChartDataDisplay {
-	List<AbstractUiLineChartDataDisplay> dataDisplays;
+class UiIncidentGraph implements UiGraph {
+    // no config at the moment...
 }
 
-class UiTimeGraphDataPoint {
+class UiGraphGroup implements UiGraph {
+	List<UiGraph> graphs;
+}
+
+// ==== DATA
+
+interface UiGraphData {
+     required UiLongInterval interval;
+}
+class UiLineGraphData implements UiGraphData {
+    required List<UiLineGraphDataPoint> dataPoints;
+}
+class UiLineGraphDataPoint {
 	required double x;
 	required double y;
 }
+class UiIncidentGraphData implements UiGraphData {
+    required List<UiIncidentGraphDataPoint> dataPoints;
+}
+class UiIncidentGraphDataPoint {
+    required double x1;
+	required double x2;
+	required double y;
+	required String color;
+	required String tooltipHtml;
+}
+class UiHoseGraphData implements UiGraphData {
+    required UiLineGraphData lowerLineData;
+    required UiLineGraphData middleLineData;
+    required UiLineGraphData upperLineData;
+}
+class UiGraphGroupData implements UiGraphData {
+    required Dictionary<UiGraphData> graphDataByGraphId;
+}
+
+
 
 @TypeScriptFactory
 class UiLongInterval {
@@ -120,6 +154,8 @@ enum UiLineChartCurveType {
 }
 
 enum UiScaleType {
-	LINEAR, LOG10
+	LINEAR,
+	LOG10,
+	SYMLOG // see https://github.com/d3/d3-scale/blob/main/README.md#symlog-scales
 }
 

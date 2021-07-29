@@ -58,7 +58,7 @@ export class UiHttpLiveStreamPlayer extends AbstractUiComponent<UiHttpLiveStream
 		this.video.addEventListener("load", () => this.video.play());
 		['loadedmetadata', 'loadstart', 'loadeddata', 'playing', 'stalled', 'suspend', 'waiting', 'canplay', 'canplaythrough'].forEach(eventName => {
 			this.video.addEventListener(eventName, () => {
-				this.logger.debug(eventName + "; videoTracks: " + this.video.videoTracks.length + "; audioTracks: " + this.video.audioTracks.length);
+				// this.logger.debug(eventName + "; videoTracks: " + this.video.videoTracks.length + "; audioTracks: " + this.video.audioTracks.length);
 				this.updateState();
 			})
 		});
