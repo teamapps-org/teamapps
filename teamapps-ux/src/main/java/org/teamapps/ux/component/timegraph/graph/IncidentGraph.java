@@ -2,11 +2,11 @@ package org.teamapps.ux.component.timegraph.graph;
 
 import org.teamapps.dto.UiIncidentGraph;
 import org.teamapps.ux.component.timegraph.datapoints.IncidentGraphData;
-import org.teamapps.ux.component.timegraph.model.GraphModel;
+import org.teamapps.ux.component.timegraph.model.IncidentGraphModel;
 
-public class IncidentGraph extends AbstractGraph<IncidentGraphData> {
+public class IncidentGraph extends AbstractGraph<IncidentGraphData, IncidentGraphModel> {
 
-	public IncidentGraph(GraphModel<IncidentGraphData> graphModel) {
+	public IncidentGraph(IncidentGraphModel graphModel) {
 		super(graphModel);
 	}
 

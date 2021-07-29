@@ -24,9 +24,9 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiHoseGraph;
 import org.teamapps.ux.component.timegraph.LineChartCurveType;
 import org.teamapps.ux.component.timegraph.datapoints.HoseGraphData;
-import org.teamapps.ux.component.timegraph.model.GraphModel;
+import org.teamapps.ux.component.timegraph.model.HoseGraphModel;
 
-public class HoseGraph extends AbstractGraph<HoseGraphData> {
+public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 
 	private LineChartCurveType curveType;
 	private float dataDotRadius;
@@ -35,15 +35,15 @@ public class HoseGraph extends AbstractGraph<HoseGraphData> {
 	private Color upperLineColor;
 	private Color areaColor;
 
-	public HoseGraph(GraphModel<HoseGraphData> model) {
+	public HoseGraph(HoseGraphModel model) {
 		this(model, LineChartCurveType.MONOTONE, 2, Color.fromRgb(73, 128, 192));
 	}
 
-	public HoseGraph(GraphModel<HoseGraphData> model, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor) {
+	public HoseGraph(HoseGraphModel model, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor) {
 		this(model, curveType, dataDotRadius, centerLineColor, null);
 	}
 
-	public HoseGraph(GraphModel<HoseGraphData> model, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor, Color areaColor) {
+	public HoseGraph(HoseGraphModel model, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor, Color areaColor) {
 		super(model);
 		this.curveType = curveType;
 		this.dataDotRadius = dataDotRadius;

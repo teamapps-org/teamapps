@@ -9,7 +9,7 @@ import java.time.ZoneId;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class DelegatingHoseModel extends AbstractGraphModel<HoseGraphData> {
+public class DelegatingHoseModel extends AbstractHoseGraphModel {
 
 	private final GraphModel<LineGraphData> minModel;
 	private final GraphModel<LineGraphData> avgModel;

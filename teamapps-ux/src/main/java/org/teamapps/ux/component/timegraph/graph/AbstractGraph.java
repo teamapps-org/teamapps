@@ -32,11 +32,11 @@ import org.teamapps.ux.component.timegraph.model.GraphModel;
 
 import java.util.UUID;
 
-public abstract class AbstractGraph<D extends GraphData> {
+public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>> {
 
 	private final String id = UUID.randomUUID().toString();
 	protected GraphChangeListener changeListener;
-	private GraphModel<D> model;
+	private M model;
 
 	private Interval displayedIntervalY;
 	private ScaleType yScaleType = ScaleType.LINEAR;
@@ -45,7 +45,7 @@ public abstract class AbstractGraph<D extends GraphData> {
 	private boolean yAxisVisible = true;
 	private Color yAxisColor = RgbaColor.BLACK;
 
-	public AbstractGraph(GraphModel<D> model) {
+	public AbstractGraph(M model) {
 		this.model = model;
 	}
 
@@ -141,11 +141,11 @@ public abstract class AbstractGraph<D extends GraphData> {
 		return this;
 	}
 
-	public GraphModel<D> getModel() {
+	public M getModel() {
 		return model;
 	}
 
-	public AbstractGraph<D> setModel(GraphModel<D> model) {
+	public AbstractGraph<D, M> setModel(M model) {
 		this.model = model;
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);

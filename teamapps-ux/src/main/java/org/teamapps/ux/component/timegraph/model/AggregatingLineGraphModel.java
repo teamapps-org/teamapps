@@ -31,7 +31,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AggregatingLineGraphModel extends AbstractGraphModel<LineGraphData> {
+public class AggregatingLineGraphModel extends AbstractLineGraphModel {
 
 	private LineGraphData graphData;
 	private AggregationType aggregationType = AggregationType.FIRST_VALUE;
@@ -58,8 +58,8 @@ public class AggregatingLineGraphModel extends AbstractGraphModel<LineGraphData>
 
 	@Override
 	public LineGraphData getData(TimePartitioning zoomLevel, ZoneId zoneId, Interval neededIntervalX, Interval displayedInterval) {
-		final long queryStart = zoomLevel.getPartitionStart(Instant.ofEpochMilli(displayedInterval.getMin()).atZone(zoneId)).toInstant().toEpochMilli();
-		final long queryEnd = zoomLevel.getPartitionEnd(Instant.ofEpochMilli(displayedInterval.getMax()).atZone(zoneId)).toInstant().toEpochMilli();
+		final long queryStart = getPartitionStartMilli(displayedInterval.getMin(), zoomLevel, zoneId);
+		final long queryEnd = getPartitionEndMilli(displayedInterval.getMax(), zoomLevel, zoneId);
 		return getAggregateDataPoints(graphData, zoomLevel, new Interval(queryStart, queryEnd), aggregationType, zoneId, addDataPointBeforeAndAfterQueryResult);
 	}
 
@@ -72,10 +72,15 @@ public class AggregatingLineGraphModel extends AbstractGraphModel<LineGraphData>
 			boolean addDataPointBeforeAndAfterQueryResult
 	) {
 		List<LineGraphDataPoint> result = new ArrayList<>();
-		long currentPartitionStartMilli = getPartitionStart(alignedInterval.getMin(), zoomLevel, timeZone).toInstant().toEpochMilli();
+		long startPartitionStartMilli = alignedInterval.getMin();
 		if (addDataPointBeforeAndAfterQueryResult) {
-			currentPartitionStartMilli = zoomLevel.decrement(ZonedDateTime.ofInstant(Instant.ofEpochMilli(currentPartitionStartMilli), timeZone)).toInstant().toEpochMilli();
+			startPartitionStartMilli = zoomLevel.decrement(ZonedDateTime.ofInstant(Instant.ofEpochMilli(startPartitionStartMilli), timeZone)).toInstant().toEpochMilli();
 		}
+		long endPartitionEndMilli = alignedInterval.getMax();
+		if (addDataPointBeforeAndAfterQueryResult) {
+			endPartitionEndMilli = zoomLevel.increment(Instant.ofEpochMilli(alignedInterval.getMax()).atZone(timeZone)).toInstant().toEpochMilli();
+		}
+		long currentPartitionStartMilli = startPartitionStartMilli;
 		long nextPartitionStartMilli = zoomLevel.increment(ZonedDateTime.ofInstant(Instant.ofEpochMilli(currentPartitionStartMilli), timeZone)).toInstant().toEpochMilli();
 		int i = 0;
 		do {
@@ -109,13 +114,20 @@ public class AggregatingLineGraphModel extends AbstractGraphModel<LineGraphData>
 
 			currentPartitionStartMilli = nextPartitionStartMilli;
 			nextPartitionStartMilli = zoomLevel.increment(getPartitionStart(nextPartitionStartMilli, zoomLevel, timeZone)).toInstant().toEpochMilli();
-		} while (currentPartitionStartMilli <= alignedInterval.getMax() + (addDataPointBeforeAndAfterQueryResult ? zoomLevel.getApproximateMillisecondsPerPartition() : 0));
-		return new ListLineGraphData(result, alignedInterval);
+		} while (currentPartitionStartMilli < endPartitionEndMilli);
+		return new ListLineGraphData(result, new Interval(startPartitionStartMilli, endPartitionEndMilli));
 	}
 
 	private static ZonedDateTime getPartitionStart(long timestampMillis, TimePartitioning partitionUnit, ZoneId timeZone) {
-		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestampMillis), timeZone);
-		return partitionUnit.getPartitionStart(zonedDateTime);
+		return partitionUnit.getPartitionStart(ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestampMillis), timeZone));
+	}
+
+	private static long getPartitionStartMilli(long timestampMillis, TimePartitioning partitionUnit, ZoneId timeZone) {
+		return partitionUnit.getPartitionStart(Instant.ofEpochMilli(timestampMillis).atZone(timeZone)).toInstant().toEpochMilli();
+	}
+
+	private static long getPartitionEndMilli(long timestampMillis, TimePartitioning partitionUnit, ZoneId timeZone) {
+		return partitionUnit.getPartitionEnd(Instant.ofEpochMilli(timestampMillis).atZone(timeZone)).toInstant().toEpochMilli();
 	}
 
 	@Override

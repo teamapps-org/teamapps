@@ -22,12 +22,12 @@ package org.teamapps.ux.component.timegraph.graph;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiLineGraph;
-import org.teamapps.ux.component.timegraph.LineChartCurveType;
 import org.teamapps.ux.component.timegraph.GraphChangeListener;
+import org.teamapps.ux.component.timegraph.LineChartCurveType;
 import org.teamapps.ux.component.timegraph.datapoints.LineGraphData;
-import org.teamapps.ux.component.timegraph.model.GraphModel;
+import org.teamapps.ux.component.timegraph.model.LineGraphModel;
 
-public class LineGraph extends AbstractGraph<LineGraphData> {
+public class LineGraph extends AbstractGraph<LineGraphData, LineGraphModel> {
 
 	private LineChartCurveType graphType;
 	private float dataDotRadius;
@@ -37,19 +37,19 @@ public class LineGraph extends AbstractGraph<LineGraphData> {
 	private Color areaColorScaleMax;
 
 
-	public LineGraph(GraphModel<LineGraphData> model) {
+	public LineGraph(LineGraphModel model) {
 		this(model, LineChartCurveType.MONOTONE, 2, new RgbaColor(73, 128, 192));
 	}
 
-	public LineGraph(GraphModel<LineGraphData> model, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
+	public LineGraph(LineGraphModel model, LineChartCurveType graphType, float dataDotRadius, Color lineColor) {
 		this(model, graphType, dataDotRadius, lineColor, lineColor, null, null);
 	}
 
-	public LineGraph(GraphModel<LineGraphData> model, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
+	public LineGraph(LineGraphModel model, LineChartCurveType graphType, float dataDotRadius, Color lineColor, Color areaColor) {
 		this(model, graphType, dataDotRadius, lineColor, lineColor, (areaColor instanceof RgbaColor) ? ((RgbaColor) areaColor).withAlpha(0.0f) : null, areaColor);
 	}
 
-	public LineGraph(GraphModel<LineGraphData> model, LineChartCurveType graphType, float dataDotRadius, Color lineColorScaleMin, Color lineColorScaleMax, Color areaColorScaleMin, Color areaColorScaleMax) {
+	public LineGraph(LineGraphModel model, LineChartCurveType graphType, float dataDotRadius, Color lineColorScaleMin, Color lineColorScaleMax, Color areaColorScaleMin, Color areaColorScaleMax) {
 		super(model);
 		this.graphType = graphType;
 		this.dataDotRadius = dataDotRadius;

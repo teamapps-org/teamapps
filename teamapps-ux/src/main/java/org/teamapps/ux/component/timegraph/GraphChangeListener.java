@@ -22,5 +22,5 @@ package org.teamapps.ux.component.timegraph;
 import org.teamapps.ux.component.timegraph.graph.AbstractGraph;
 
 public interface GraphChangeListener {
-	void handleChange(AbstractGraph<?> display);
+	void handleChange(AbstractGraph<?, ?> display);
 }
