@@ -25,13 +25,13 @@ import org.teamapps.ux.component.timegraph.TimePartitioning;
 import org.teamapps.ux.component.timegraph.datapoints.LineGraphData;
 import org.teamapps.ux.component.timegraph.datapoints.LineGraphDataPoint;
 import org.teamapps.ux.component.timegraph.datapoints.ListLineGraphData;
-import org.teamapps.ux.component.timegraph.model.AbstractGraphModel;
+import org.teamapps.ux.component.timegraph.model.AbstractLineGraphModel;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.stream.Collectors;
 
-public class PartitioningTimestampsLineGraphModel extends AbstractGraphModel<LineGraphData> {
+public class PartitioningTimestampsLineGraphModel extends AbstractLineGraphModel {
 
 	private final TimestampsModel timestampsModel;
 

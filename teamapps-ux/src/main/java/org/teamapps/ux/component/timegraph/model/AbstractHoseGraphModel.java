@@ -19,16 +19,7 @@
  */
 package org.teamapps.ux.component.timegraph.model;
 
-import org.teamapps.event.Event;
-import org.teamapps.ux.component.timegraph.datapoints.GraphData;
+import org.teamapps.ux.component.timegraph.datapoints.HoseGraphData;
 
-abstract class AbstractGraphModel<D extends GraphData> implements GraphModel<D> {
-
-	public final Event<Void> onDataChanged = new Event<>();
-
-	@Override
-	public Event<Void> onDataChanged() {
-		return onDataChanged;
-	}
-
+public abstract class AbstractHoseGraphModel extends AbstractGraphModel<HoseGraphData> implements HoseGraphModel {
 }

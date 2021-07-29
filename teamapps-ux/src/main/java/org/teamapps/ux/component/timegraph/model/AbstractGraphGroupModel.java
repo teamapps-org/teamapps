@@ -19,16 +19,8 @@
  */
 package org.teamapps.ux.component.timegraph.model;
 
-import org.teamapps.event.Event;
-import org.teamapps.ux.component.timegraph.datapoints.GraphData;
+import org.teamapps.ux.component.timegraph.datapoints.GraphGroupData;
 
-abstract class AbstractGraphModel<D extends GraphData> implements GraphModel<D> {
-
-	public final Event<Void> onDataChanged = new Event<>();
-
-	@Override
-	public Event<Void> onDataChanged() {
-		return onDataChanged;
-	}
+public abstract class AbstractGraphGroupModel extends AbstractGraphModel<GraphGroupData> implements GraphGroupModel {
 
 }

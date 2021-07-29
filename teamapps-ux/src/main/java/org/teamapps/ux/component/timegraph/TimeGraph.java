@@ -36,7 +36,7 @@ public class TimeGraph extends AbstractComponent {
 
 	public final Event<ZoomEventData> onZoomed = new Event<>();
 	public final Event<Interval> onIntervalSelected = new Event<>();
-	private final List<AbstractGraph<?>> graphs = new ArrayList<>();
+	private final List<AbstractGraph<?, ?>> graphs = new ArrayList<>();
 
 	private List<TimePartitioning> zoomLevels = Arrays.asList(
 			TimePartitioningUnit.YEAR,
@@ -88,12 +88,12 @@ public class TimeGraph extends AbstractComponent {
 		super();
 	}
 
-	public void addGraph(AbstractGraph<?> graph) {
+	public void addGraph(AbstractGraph<?, ?> graph) {
 		this.graphs.add(graph);
 		setGraphs(List.copyOf(this.graphs));
 	}
 
-	public void setGraphs(List<? extends AbstractGraph<?>> graphs) {
+	public void setGraphs(List<? extends AbstractGraph<?, ?>> graphs) {
 		this.graphs.forEach(g -> g.getModel().onDataChanged().removeListener(onTimeGraphDataChangedListener));
 		this.graphs.clear();
 		graphs.forEach(graph -> {
@@ -105,7 +105,7 @@ public class TimeGraph extends AbstractComponent {
 		refresh();
 	}
 
-	private List<UiGraph> toUiLineFormats(List<? extends AbstractGraph<?>> lineFormats) {
+	private List<UiGraph> toUiLineFormats(List<? extends AbstractGraph<?, ?>> lineFormats) {
 		return lineFormats.stream()
 				.map(AbstractGraph::createUiFormat)
 				.collect(Collectors.toList());

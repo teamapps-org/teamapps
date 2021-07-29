@@ -25,7 +25,8 @@ import org.teamapps.ux.component.timegraph.Interval;
 import org.teamapps.ux.component.timegraph.TimePartitioning;
 import org.teamapps.ux.component.timegraph.datapoints.GraphData;
 import org.teamapps.ux.component.timegraph.datapoints.GraphGroupData;
-import org.teamapps.ux.component.timegraph.model.AbstractGraphModel;
+import org.teamapps.ux.component.timegraph.model.AbstractGraphGroupModel;
+import org.teamapps.ux.component.timegraph.model.GraphGroupModel;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -34,17 +35,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GraphGroup extends AbstractGraph<GraphGroupData> {
+public class GraphGroup extends AbstractGraph<GraphGroupData, GraphGroupModel> {
 
 	private GraphChangeListener changeListener;
 
-	private final List<AbstractGraph<?>> graphs = new ArrayList<>();
+	private final List<AbstractGraph<?, ?>> graphs = new ArrayList<>();
 
-	public GraphGroup(AbstractGraph<?>... graphs) {
+	public GraphGroup(AbstractGraph<?, ?>... graphs) {
 		this(Arrays.asList(graphs));
 	}
 
-	public GraphGroup(List<AbstractGraph<?>> graphs) {
+	public GraphGroup(List<AbstractGraph<?, ?>> graphs) {
 		super(null);
 		setModel(new GraphGroupModel());
 		this.graphs.addAll(graphs);
@@ -73,7 +74,7 @@ public class GraphGroup extends AbstractGraph<GraphGroupData> {
 		return ((GraphGroupModel) super.getModel());
 	}
 
-	public void addGraph(AbstractGraph<?> graph) {
+	public void addGraph(AbstractGraph<?, ?> graph) {
 		this.graphs.add(graph);
 		if (this.changeListener != null) {
 			this.changeListener.handleChange(this);
@@ -81,16 +82,16 @@ public class GraphGroup extends AbstractGraph<GraphGroupData> {
 		getModel().onDataChanged.fire();
 	}
 
-	public void removeGraph(AbstractGraph<?> graph) {
+	public void removeGraph(AbstractGraph<?, ?> graph) {
 		this.graphs.remove(graph);
 		getModel().onDataChanged.fire();
 	}
 
-	public List<AbstractGraph<?>> getGraphs() {
+	public List<AbstractGraph<?, ?>> getGraphs() {
 		return List.copyOf(graphs);
 	}
 
-	private class GraphGroupModel extends AbstractGraphModel<GraphGroupData> {
+	private class GraphGroupModel extends AbstractGraphGroupModel {
 
 		@Override
 		public Interval getDomainX() {
