@@ -48,7 +48,6 @@ export class IntervalManager {
 				Math.min(firstOverlappingInterval[0], newInterval[0]),
 				Math.max(lastOverlappingInterval[1], newInterval[1])
 			];
-			IntervalManager.subtractIntervals(newInterval, this._intervals.slice(firstOverlappingExistingIntervalIndex, lastOverlappingExistingIntervalIndex + 1));
 			this._intervals.splice(firstOverlappingExistingIntervalIndex, lastOverlappingExistingIntervalIndex - firstOverlappingExistingIntervalIndex + 1, resultingInterval);
 			this.log.info("Overlap detected, first: " + firstOverlappingInterval + ", last: " + lastOverlappingInterval + ". New intervals: " + this._intervals.map(interval => interval.toString()).join("; "));
 		}
