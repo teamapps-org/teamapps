@@ -61,9 +61,7 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 
 	public AbstractGraph setDisplayedIntervalY(Interval displayedIntervalY) {
 		this.displayedIntervalY = displayedIntervalY;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -73,9 +71,7 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 
 	public AbstractGraph setYScaleType(ScaleType yScaleType) {
 		this.yScaleType = yScaleType;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -85,9 +81,7 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 
 	public AbstractGraph setYScaleZoomMode(LineChartYScaleZoomMode yScaleZoomMode) {
 		this.yScaleZoomMode = yScaleZoomMode;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -111,9 +105,7 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 
 	public AbstractGraph setYZeroLineVisible(boolean yZeroLineVisible) {
 		this.yZeroLineVisible = yZeroLineVisible;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -123,9 +115,7 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 
 	public AbstractGraph setYAxisVisible(boolean yAxisVisible) {
 		this.yAxisVisible = yAxisVisible;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -135,9 +125,7 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 
 	public AbstractGraph setYAxisColor(Color yAxisColor) {
 		this.yAxisColor = yAxisColor;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -147,9 +135,13 @@ public abstract class AbstractGraph<D extends GraphData, M extends GraphModel<D>
 
 	public AbstractGraph<D, M> setModel(M model) {
 		this.model = model;
+		fireChange();
+		return this;
+	}
+
+	protected void fireChange() {
 		if (this.changeListener != null) {
 			changeListener.handleChange(this);
 		}
-		return this;
 	}
 }

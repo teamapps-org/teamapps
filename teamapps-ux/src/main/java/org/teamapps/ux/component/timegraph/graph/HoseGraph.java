@@ -40,7 +40,8 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 	}
 
 	public HoseGraph(HoseGraphModel model, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor) {
-		this(model, curveType, dataDotRadius, centerLineColor, null);
+		this(model, curveType, dataDotRadius, centerLineColor,
+				(centerLineColor instanceof RgbaColor) ? ((RgbaColor) centerLineColor).withAlpha(((RgbaColor) centerLineColor).getAlpha() / 5) : RgbaColor.TRANSPARENT);
 	}
 
 	public HoseGraph(HoseGraphModel model, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor, Color areaColor) {
@@ -48,8 +49,8 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 		this.curveType = curveType;
 		this.dataDotRadius = dataDotRadius;
 		this.centerLineColor = centerLineColor;
-		this.lowerLineColor = (centerLineColor instanceof RgbaColor) ? ((RgbaColor) centerLineColor).withAlpha(((RgbaColor) centerLineColor).getAlpha() / 4) : RgbaColor.TRANSPARENT;
-		this.upperLineColor = (centerLineColor instanceof RgbaColor) ? ((RgbaColor) centerLineColor).withAlpha(((RgbaColor) centerLineColor).getAlpha() / 4) : RgbaColor.TRANSPARENT;
+		this.lowerLineColor = (centerLineColor instanceof RgbaColor) ? ((RgbaColor) centerLineColor).withAlpha(((RgbaColor) centerLineColor).getAlpha() / 5) : RgbaColor.TRANSPARENT;
+		this.upperLineColor = (centerLineColor instanceof RgbaColor) ? ((RgbaColor) centerLineColor).withAlpha(((RgbaColor) centerLineColor).getAlpha() / 5) : RgbaColor.TRANSPARENT;
 		this.areaColor = areaColor;
 	}
 
@@ -73,9 +74,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 
 	public HoseGraph setCurveType(LineChartCurveType curveType) {
 		this.curveType = curveType;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -85,9 +84,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 
 	public HoseGraph setDataDotRadius(float dataDotRadius) {
 		this.dataDotRadius = dataDotRadius;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -97,9 +94,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 
 	public HoseGraph setCenterLineColor(Color centerLineColor) {
 		this.centerLineColor = centerLineColor;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -109,9 +104,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 
 	public HoseGraph setAreaColor(Color areaColor) {
 		this.areaColor = areaColor;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -121,9 +114,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 
 	public HoseGraph setLowerLineColor(Color lowerLineColor) {
 		this.lowerLineColor = lowerLineColor;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -133,9 +124,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 
 	public HoseGraph setUpperLineColor(Color upperLineColor) {
 		this.upperLineColor = upperLineColor;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 }

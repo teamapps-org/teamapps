@@ -29,7 +29,6 @@ import {ScaleTime} from "d3-scale";
 import {bind} from "../util/Bind";
 import {ZoomBehavior, ZoomedElementBaseType} from "d3-zoom";
 import {Axis} from "d3-axis";
-import {Interval, IntervalManager} from "../util/IntervalManager";
 import {generateUUID, parseHtml} from "../Common";
 import {
 	UiTimeGraph_IntervalSelectedEvent,
@@ -51,13 +50,13 @@ import {scaleZoned} from "d3-luxon";
 import {SVGGSelection, SVGSelection} from "./Charting";
 import {UiGraph} from "./UiGraph";
 import {UiIncidentGraph} from "./UiIncidentGraph";
-import {CalendarEventListPopper} from "../micro-components/CalendarEventListPopper";
 import {TimeGraphPopper} from "./TimeGraphPopper";
 import {UiGraphDataConfig} from "../../generated/UiGraphDataConfig";
 import {UiGraphConfig} from "../../generated/UiGraphConfig";
-import {UiLineGraphConfig} from "../../generated/UiLineGraphConfig";
 import {AbstractUiGraph} from "./AbstractUiGraph";
 import {GraphContext, PopperHandle} from "./GraphContext";
+import {UiLineGraphDataConfig} from "../../generated/UiLineGraphDataConfig";
+import {UiHoseGraphDataConfig} from "../../generated/UiHoseGraphDataConfig";
 
 export const yTickFormat = d3.format("-,.2s");
 
@@ -235,20 +234,6 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 			this.graphById[line.id] = this.createGraph(line);
 		});
 
-
-		// TODO remove
-		// let uiEventChartDisplay = new UiEventChartDisplay({
-		// 	showPopover(referenceElement: Element, content: Element) {
-		// 		eventsPopper.update(referenceElement, content)
-		// 	},
-		// 	hidePopover() {
-		// 		eventsPopper.update(null, null);
-		// 	}
-		// });
-		// this.linesById["testtesttodo"] = uiEventChartDisplay;
-		// this.$graphClipContainer.node().appendChild(uiEventChartDisplay.getMainSelection().node());
-
-		this.resetAllData(this.zoomLevels);
 	}
 
 	zoomTo(intervalX: UiLongIntervalConfig): void {
@@ -325,7 +310,6 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		let uncoveredIntervalsByGraphId: { [graphId: string]: UiLongIntervalConfig[] } = {};
 		for (let [id, graph] of Object.entries(this.graphById)) {
 			let uncoveredIntervals = graph.getUncoveredIntervals(zoomLevel, [domain[0], domain[1]]);
-			console.log(`checking ${id} for uncovered intervals returned `, uncoveredIntervals);
 			uncoveredIntervals = uncoveredIntervals
 				.filter(i => (i[0] < i[1])) // remove empty intervals
 				.filter(i => !(i[0] == null || isNaN(i[0]) || i[1] == null || isNaN(i[1]))); // invalid intervals
@@ -477,11 +461,9 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.redraw();
 	}
 
-	@debouncedMethod(500, DebounceMode.BOTH)
-	replaceAllData(newZoomLevels: UiTimeChartZoomLevelConfig[], zoomLevel: number, intervalX: UiLongIntervalConfig, data: { [graphId: string]: UiGraphDataConfig }): void {
-		this.zoomLevels = newZoomLevels;
-		Object.values(this.graphById).forEach(g => g.resetData());
-		this.addData(zoomLevel, data);
+	resetGraphData(graphId: string): void {
+		this.graphById[graphId]?.resetData();
+		this.redraw();
 	}
 
 	setIntervalX(intervalX: UiLongIntervalConfig): void {

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,17 @@ public class TimeGraph extends AbstractComponent {
 
 	public final Event<ZoomEventData> onZoomed = new Event<>();
 	public final Event<Interval> onIntervalSelected = new Event<>();
-	private final List<AbstractGraph<?, ?>> graphs = new ArrayList<>();
+	private final List<GraphAndListener> graphsAndListeners = new ArrayList<>();
+
+	private static class GraphAndListener {
+		AbstractGraph<?, ?> graph;
+		Consumer<Void> changeListener;
+
+		public GraphAndListener(AbstractGraph<?, ?> graph, Consumer<Void> changeListener) {
+			this.graph = graph;
+			this.changeListener = changeListener;
+		}
+	}
 
 	private List<TimePartitioning> zoomLevels = Arrays.asList(
 			TimePartitioningUnit.YEAR,
@@ -78,9 +88,6 @@ public class TimeGraph extends AbstractComponent {
 	private double millisecondsPerPixel;
 	private Interval selectedInterval;
 
-	// needs to be a field for reference equality (sad but true, java method references are only syntactic sugar for lambdas)
-	private final Consumer<Void> onTimeGraphDataChangedListener = this::onTimeGraphDataChanged;
-
 	private ULocale locale = SessionContext.current().getULocale();
 	private ZoneId timeZoneId = SessionContext.current().getTimeZone();
 
@@ -88,20 +95,28 @@ public class TimeGraph extends AbstractComponent {
 		super();
 	}
 
+	private ArrayList<AbstractGraph<?, ?>> getGraphs() {
+		return this.graphsAndListeners.stream()
+				.map(graphAndListener -> graphAndListener.graph)
+				.collect(Collectors.toCollection(ArrayList::new));
+	}
+
 	public void addGraph(AbstractGraph<?, ?> graph) {
-		this.graphs.add(graph);
-		setGraphs(List.copyOf(this.graphs));
+		final ArrayList<AbstractGraph<?, ?>> graphs = getGraphs();
+		graphs.add(graph);
+		setGraphs(graphs);
 	}
 
 	public void setGraphs(List<? extends AbstractGraph<?, ?>> graphs) {
-		this.graphs.forEach(g -> g.getModel().onDataChanged().removeListener(onTimeGraphDataChangedListener));
-		this.graphs.clear();
+		this.graphsAndListeners.forEach(g -> g.graph.getModel().onDataChanged().removeListener(g.changeListener));
+		this.graphsAndListeners.clear();
 		graphs.forEach(graph -> {
-			this.graphs.add(graph);
+			final GraphAndListener graphAndListener = new GraphAndListener(graph, aVoid -> handleGraphDataChanged(graph));
+			this.graphsAndListeners.add(graphAndListener);
 			graph.setChangeListener(display -> queueCommandIfRendered(() -> new UiTimeGraph.AddOrUpdateGraphCommand(getId(), display.createUiFormat())));
-			graph.getModel().onDataChanged().addListener(onTimeGraphDataChangedListener);
+			graph.getModel().onDataChanged().addListener(graphAndListener.changeListener);
 		});
-		queueCommandIfRendered(() -> new UiTimeGraph.SetGraphsCommand(getId(), toUiLineFormats(this.graphs)));
+		queueCommandIfRendered(() -> new UiTimeGraph.SetGraphsCommand(getId(), toUiLineFormats(graphs)));
 		refresh();
 	}
 
@@ -124,7 +139,7 @@ public class TimeGraph extends AbstractComponent {
 				uiIntervalX,
 				uiZoomLevels,
 				maxPixelsBetweenDataPoints,
-				toUiLineFormats(graphs)
+				toUiLineFormats(getGraphs())
 		);
 		uiTimeGraph.setLocale(locale.toLanguageTag());
 		uiTimeGraph.setTimeZoneId(timeZoneId.getId());
@@ -171,20 +186,20 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	private Interval retrieveDomainX() {
-		return graphs.stream()
-				.map(g -> g.getModel().getDomainX())
+		return graphsAndListeners.stream()
+				.map(g -> g.graph.getModel().getDomainX())
 				.reduce(Interval::union)
 				.orElse(new Interval(0, 1));
 	}
 
 	private Map<String, GraphData> retrieveData(Interval displayedInterval, TimePartitioning timePartitioning, Map<String, List<Interval>> neededIntervalsByGraphId) {
-		return graphs.stream()
-				.filter(g -> neededIntervalsByGraphId.containsKey(g.getId()) && neededIntervalsByGraphId.get(g.getId()).size() > 0)
+		return graphsAndListeners.stream()
+				.filter(g -> neededIntervalsByGraphId.containsKey(g.graph.getId()) && neededIntervalsByGraphId.get(g.graph.getId()).size() > 0)
 				.collect(Collectors.toMap(
-						AbstractGraph::getId,
-						g -> neededIntervalsByGraphId.get(g.getId()).stream()
+						g -> g.graph.getId(),
+						g -> neededIntervalsByGraphId.get(g.graph.getId()).stream()
 								.reduce(Interval::union)
-								.map(interval -> g.getModel().getData(timePartitioning, timeZoneId, interval, displayedInterval))
+								.map(interval -> g.graph.getModel().getData(timePartitioning, timeZoneId, interval, displayedInterval))
 								.orElseThrow()
 				));
 	}
@@ -234,11 +249,11 @@ public class TimeGraph extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiTimeGraph.SetSelectedIntervalCommand(getId(), selectedInterval.toUiLongInterval()));
 	}
 
-	private void onTimeGraphDataChanged(Void aVoid) {
+	private void handleGraphDataChanged(AbstractGraph<?, ?> graph) {
 		Interval domainX = retrieveDomainX();
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
 		queueCommandIfRendered(() -> new UiTimeGraph.SetIntervalXCommand(getId(), uiIntervalX));
-		refresh();
+		queueCommandIfRendered(() -> new UiTimeGraph.ResetGraphDataCommand(getId(), graph.getId()));
 	}
 
 	public Locale getLocale() {

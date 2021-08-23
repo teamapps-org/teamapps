@@ -37,6 +37,7 @@ export class UiIncidentGraph extends AbstractUiGraph<UiIncidentGraphConfig, UiIn
 		private graphContext: GraphContext
 	) {
 		super(config, timeGraphId);
+		this.$main.classed("incident-graph", true);
 		this.popperHandle = graphContext.getPopperHandle();
 	}
 

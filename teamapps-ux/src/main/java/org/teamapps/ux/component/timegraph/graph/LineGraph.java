@@ -22,7 +22,6 @@ package org.teamapps.ux.component.timegraph.graph;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiLineGraph;
-import org.teamapps.ux.component.timegraph.GraphChangeListener;
 import org.teamapps.ux.component.timegraph.LineChartCurveType;
 import org.teamapps.ux.component.timegraph.datapoints.LineGraphData;
 import org.teamapps.ux.component.timegraph.model.LineGraphModel;
@@ -78,9 +77,7 @@ public class LineGraph extends AbstractGraph<LineGraphData, LineGraphModel> {
 
 	public LineGraph setGraphType(LineChartCurveType graphType) {
 		this.graphType = graphType;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -90,9 +87,7 @@ public class LineGraph extends AbstractGraph<LineGraphData, LineGraphModel> {
 
 	public LineGraph setDataDotRadius(float dataDotRadius) {
 		this.dataDotRadius = dataDotRadius;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -102,9 +97,7 @@ public class LineGraph extends AbstractGraph<LineGraphData, LineGraphModel> {
 
 	public LineGraph setLineColorScaleMin(Color lineColorScaleMin) {
 		this.lineColorScaleMin = lineColorScaleMin;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -114,9 +107,7 @@ public class LineGraph extends AbstractGraph<LineGraphData, LineGraphModel> {
 
 	public LineGraph setLineColorScaleMax(Color lineColorScaleMax) {
 		this.lineColorScaleMax = lineColorScaleMax;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -126,9 +117,7 @@ public class LineGraph extends AbstractGraph<LineGraphData, LineGraphModel> {
 
 	public LineGraph setAreaColorScaleMin(Color areaColorScaleMin) {
 		this.areaColorScaleMin = areaColorScaleMin;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
 	}
 
@@ -138,15 +127,8 @@ public class LineGraph extends AbstractGraph<LineGraphData, LineGraphModel> {
 
 	public LineGraph setAreaColorScaleMax(Color areaColorScaleMax) {
 		this.areaColorScaleMax = areaColorScaleMax;
-		if (this.changeListener != null) {
-			changeListener.handleChange(this);
-		}
+		fireChange();
 		return this;
-	}
-
-	@Override
-	public void setChangeListener(GraphChangeListener listener) {
-		this.changeListener = listener;
 	}
 
 }
