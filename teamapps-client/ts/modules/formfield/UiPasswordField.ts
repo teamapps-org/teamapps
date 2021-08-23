@@ -22,6 +22,7 @@ import md5 from "md5";
 import {UiPasswordFieldCommandHandler, UiPasswordFieldConfig, UiPasswordFieldEventSource} from "../../generated/UiPasswordFieldConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiTextField} from "./UiTextField";
+import {getAutoCompleteOffValue} from "../Common";
 
 
 export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implements UiPasswordFieldEventSource, UiPasswordFieldCommandHandler {
@@ -36,6 +37,7 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 		this.$field.type = "password";
 		if (!config.autofill) {
 			this.$field.autocomplete = "new-password";
+			this.$field.setAttribute("autocomplete", getAutoCompleteOffValue());
 			this.$field.setAttribute("autocorrect", "off");
 			this.$field.setAttribute("autocapitalize", "off");
 			this.$field.setAttribute("spellcheck", "off");

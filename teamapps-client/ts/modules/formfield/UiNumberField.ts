@@ -21,7 +21,7 @@ import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiNumberFieldCommandHandler, UiNumberFieldConfig, UiNumberFieldEventSource} from "../../generated/UiNumberFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {Constants, formatNumber, parseHtml} from "../Common";
+import {Constants, formatNumber, getAutoCompleteOffValue, parseHtml} from "../Common";
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {
@@ -70,7 +70,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 
 		this.$wrapper = parseHtml(`<div class="UiNumberField form-control field-border field-border-glow field-background">
 	<div class="clearable-field-wrapper">
-		<input autocomplete="no" type="text"></input>
+		<input autocomplete="${getAutoCompleteOffValue()}" type="text"></input>
 		<div class="clear-button tr-remove-button"></div> 
 	</div>             
     <div class="slider field-readonly-invisible field-border-visibility">
