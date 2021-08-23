@@ -49,6 +49,7 @@ export class UiLineGraph extends AbstractUiGraph<UiLineGraphConfig, UiLineGraphD
 		private dropShadowFilterId: string
 	) {
 		super(config, timeGraphId);
+		this.$main.classed("line-graph", true);
 		this.initLinesAndColorScale();
 		this.initDomNodes();
 	}

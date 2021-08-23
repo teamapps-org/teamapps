@@ -42,7 +42,7 @@ export class UiGraphGroup extends AbstractUiGraph<UiGraphGroupConfig, UiGraphGro
 	) {
 		super(config, timeGraphId);
 
-		this.$main.classed("data-display-group", true)
+		this.$main.classed("graph-group", true)
 			.attr("data-series-ids", `${this.timeGraphId}-${this.config.id}`);
 		this.initDomNodes();
 
@@ -76,6 +76,7 @@ export class UiGraphGroup extends AbstractUiGraph<UiGraphGroupConfig, UiGraphGro
 	}
 
 	resetData(): void {
+		this.graphs.forEach(g => g.resetData());
 	}
 
 	updateZoomX(zoomLevelIndex: number, scaleX: ScaleTime<number, number>) {

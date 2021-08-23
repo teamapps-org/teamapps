@@ -24,6 +24,7 @@ import org.teamapps.dto.UiGraphGroupData;
 import org.teamapps.ux.component.timegraph.Interval;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public interface GraphGroupData extends GraphData {
@@ -40,6 +41,7 @@ public interface GraphGroupData extends GraphData {
 	@Override
 	default UiGraphGroupData toUiGraphData() {
 		final Map<String, UiGraphData> uiGraphDataMap = getGraphData().entrySet().stream()
+				.filter(Objects::nonNull)
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toUiGraphData()));
 		return new UiGraphGroupData(uiGraphDataMap, getInterval().toUiLongInterval());
 	}

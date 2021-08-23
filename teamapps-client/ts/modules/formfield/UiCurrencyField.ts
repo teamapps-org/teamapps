@@ -51,7 +51,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	protected initialize(config: UiCurrencyFieldConfig, context: TeamAppsUiContext) {
 		this.numberFormat = new Intl.NumberFormat(config.locale, {minimumFractionDigits: config.precision, maximumFractionDigits: config.precision, useGrouping: true});
 
-		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
+		this.$originalInput = parseHtml('<input type="text" autocomplete="no">');
 
 		this.trivialUnitBox = new TrivialUnitBox<Currency>(this.$originalInput, {
 			idFunction: entry => entry.code,

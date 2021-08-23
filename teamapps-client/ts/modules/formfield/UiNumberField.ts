@@ -24,7 +24,10 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {Constants, formatNumber, parseHtml} from "../Common";
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
+import {
+	UiTextInputHandlingField_SpecialKeyPressedEvent,
+	UiTextInputHandlingField_TextInputEvent
+} from "../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiNumberFieldSliderMode} from "../../generated/UiNumberFieldSliderMode";
@@ -32,8 +35,14 @@ import {NumberParser} from "../util/NumberParser";
 
 export class UiNumberField extends UiField<UiNumberFieldConfig, number> implements UiNumberFieldEventSource, UiNumberFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {
+		throttlingMode: "debounce",
+		delay: 250
+	});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {
+		throttlingMode: "debounce",
+		delay: 250
+	});
 
 	private $wrapper: HTMLElement;
 	private $clearableFieldWrapper: HTMLElement;
@@ -52,12 +61,16 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	private numberParser: NumberParser;
 
 	protected initialize(config: UiNumberFieldConfig, context: TeamAppsUiContext) {
-		this.numberFormat = new Intl.NumberFormat(config.locale, {minimumFractionDigits: this._config.precision, maximumFractionDigits: this._config.precision, useGrouping: true});
+		this.numberFormat = new Intl.NumberFormat(config.locale, {
+			minimumFractionDigits: this._config.precision,
+			maximumFractionDigits: this._config.precision,
+			useGrouping: true
+		});
 		this.numberParser = new NumberParser(config.locale);
 
 		this.$wrapper = parseHtml(`<div class="UiNumberField form-control field-border field-border-glow field-background">
 	<div class="clearable-field-wrapper">
-		<input autocomplete="off" type="text"></input>
+		<input autocomplete="no" type="text"></input>
 		<div class="clear-button tr-remove-button"></div> 
 	</div>             
     <div class="slider field-readonly-invisible field-border-visibility">
@@ -70,7 +83,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 		this.$slider = this.$wrapper.querySelector<HTMLElement>(":scope .slider");
 		this.$sliderHandle = this.$wrapper.querySelector<HTMLElement>(":scope .slider-handle");
 		let $clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
-		$clearButton.addEventListener('click',() => {
+		$clearButton.addEventListener('click', () => {
 			this.$field.value = "";
 			this.fireTextInput();
 			this.commit();
@@ -126,54 +139,60 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 			}
 		});
 
-		this.$wrapper.addEventListener('click',(e) => {
+		this.$wrapper.addEventListener('click', (e) => {
 			if (e.target !== this.$field) {
 				this.focus();
 			}
 		});
 
-		this.$sliderHandle.addEventListener(`${Constants.POINTER_EVENTS.start}`, (e: PointerEvent & TouchEvent) => {
-			const isSpecialMouseButton = e.button != null && e.button !== 0;
-			if (isSpecialMouseButton || this.getEditingMode() === UiFieldEditingMode.DISABLED) {
-				return;
-			}
-			if (!this.hasFocus() && !this._context.config.optimizedForTouch) {
-				this.focus();
-			}
-			e.preventDefault(); // do not lose the focus!
-			let pointerSliderHandleOffset = (e.clientX || e.touches[0].clientX) - this.$sliderHandle.getBoundingClientRect().left;
-			let moveHandler = (e: any) => {
-				let sliderClientX = this.$slider.getBoundingClientRect().left;
-				let aPrioriNewSliderPositionX = (e.clientX || e.touches[0].clientX) - pointerSliderHandleOffset - sliderClientX;
-				let [minSliderX, maxSliderX] = this.getSliderMinMaxPositionX();
-				const aPrioriNewValue = this.minValue + ((aPrioriNewSliderPositionX / (maxSliderX - minSliderX)) * (this.maxValue - this.minValue));
-				let newValue = this.coerceToSteppedValue(aPrioriNewValue);
-				this.setSliderPositionByValue(newValue);
-				this.$field.value = this.formatNumber(newValue);
-				if (!this._context.config.optimizedForTouch) {
-					this.$field.select();
-				}
-				this.ensureDecimalInput();
-				this.updateClearButton();
-			};
-			document.addEventListener(`${Constants.POINTER_EVENTS.move}`, moveHandler);
-			let endHandler = () => {
-				document.removeEventListener(`${Constants.POINTER_EVENTS.move}`, moveHandler);
-				document.removeEventListener(`${Constants.POINTER_EVENTS.end}`, endHandler);
-				if (!this._context.config.optimizedForTouch) {
-					this.focus();
-				}
-				if (this.commitOnSliderChange) {
-					this.commit();
-				}
-			};
-			document.addEventListener(`${Constants.POINTER_EVENTS.end}`, endHandler);
-		});
+		this.$sliderHandle.addEventListener(`pointerdown`, (e: PointerEvent & TouchEvent) => {this.handleDrag(e);});
+		this.$slider.addEventListener(`pointerdown`, (e: PointerEvent & TouchEvent) => {this.handleDrag(e);});
 
 		this.setMinValue(config.minValue);
 		this.setMaxValue(config.maxValue);
 		this.setSliderMode(config.sliderMode);
 		this.setSliderStep(config.sliderStep);
+	}
+
+	private handleDrag(e: PointerEvent & TouchEvent) {
+		const isSpecialMouseButton = e.button != null && e.button !== 0;
+		if (isSpecialMouseButton || this.getEditingMode() === UiFieldEditingMode.DISABLED) {
+			return;
+		}
+		if (!this.hasFocus() && !this._context.config.optimizedForTouch) {
+			this.focus();
+		}
+		e.preventDefault(); // do not lose the focus!
+		let pointerSliderHandleOffset = e.target === this.$sliderHandle
+			? (e.clientX || e.touches[0].clientX) - this.$sliderHandle.getBoundingClientRect().left
+			: this.$sliderHandle.getBoundingClientRect().width / 2;
+		let moveHandler = (e: any) => {
+			let sliderClientX = this.$slider.getBoundingClientRect().left;
+			let aPrioriNewSliderPositionX = (e.clientX || e.touches[0].clientX) - pointerSliderHandleOffset - sliderClientX;
+			let [minSliderX, maxSliderX] = this.getSliderMinMaxPositionX();
+			const aPrioriNewValue = this.minValue + ((aPrioriNewSliderPositionX / (maxSliderX - minSliderX)) * (this.maxValue - this.minValue));
+			let newValue = this.coerceToSteppedValue(aPrioriNewValue);
+			this.setSliderPositionByValue(newValue);
+			this.$field.value = this.formatNumber(newValue);
+			if (!this._context.config.optimizedForTouch) {
+				this.$field.select();
+			}
+			this.ensureDecimalInput();
+			this.updateClearButton();
+		};
+		document.addEventListener(`pointermove`, moveHandler);
+		moveHandler(e); // make sure even a click (without drag) gets handled
+		let endHandler = () => {
+			document.removeEventListener(`pointermove`, moveHandler);
+			document.removeEventListener(`pointerup`, endHandler);
+			if (!this._context.config.optimizedForTouch) {
+				this.focus();
+			}
+			if (this.commitOnSliderChange) {
+				this.commit();
+			}
+		};
+		document.addEventListener(`pointerup`, endHandler);
 	}
 
 	private fireTextInput() {
@@ -313,14 +332,22 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	setLocale(locale: string): void {
 		let value = this.getTransientValue();
 		this._config.locale = locale;
-		this.numberFormat = new Intl.NumberFormat(locale, {minimumFractionDigits: this._config.precision, maximumFractionDigits: this._config.precision, useGrouping: true});
+		this.numberFormat = new Intl.NumberFormat(locale, {
+			minimumFractionDigits: this._config.precision,
+			maximumFractionDigits: this._config.precision,
+			useGrouping: true
+		});
 		this.numberParser = new NumberParser(locale);
 		this.setEditorValue(value);
 	}
 
 	setPrecision(precision: number): void {
 		this._config.precision = precision;
-		this.numberFormat = new Intl.NumberFormat(this._config.locale, {minimumFractionDigits: this._config.precision, maximumFractionDigits: this._config.precision, useGrouping: true});
+		this.numberFormat = new Intl.NumberFormat(this._config.locale, {
+			minimumFractionDigits: this._config.precision,
+			maximumFractionDigits: this._config.precision,
+			useGrouping: true
+		});
 		this.ensureDecimalInput();
 	}
 

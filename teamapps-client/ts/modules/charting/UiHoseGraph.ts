@@ -28,8 +28,13 @@ import {UiHoseGraphConfig} from "../../generated/UiHoseGraphConfig";
 import {UiHoseGraphDataConfig} from "../../generated/UiHoseGraphDataConfig";
 import {UiLongIntervalConfig} from "../../generated/UiLongIntervalConfig";
 import {IntervalManager} from "../util/IntervalManager";
+import {UiLineGraphDataPointConfig} from "../../generated/UiLineGraphDataPointConfig";
+import * as log from "loglevel";
 
 export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphDataConfig> {
+
+	private static logger: log.Logger = log.getLogger("UiHoseGraph");
+
 	private middleLine: Line<DataPoint>;
 	private $middleLine: SVGSelection<any>;
 	private lowerLine: Line<DataPoint>;
@@ -56,6 +61,7 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 		private dropShadowFilterId: string
 	) {
 		super(config, timeGraphId);
+		this.$main.classed("hose-graph", true);
 		this.initLinesAndColorScale();
 		this.initDomNodes();
 	}
@@ -71,9 +77,15 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 	}
 
 	public addData(zoomLevel: number, data: UiHoseGraphDataConfig): void {
-		this.upperLineDataStore.addData(zoomLevel, data.upperLineData);
-		this.middleLineDataStore.addData(zoomLevel, data.middleLineData);
-		this.lowerLineDataStore.addData(zoomLevel, data.lowerLineData);
+		if (data.upperLineData != null) {
+			this.upperLineDataStore.addData(zoomLevel, data.upperLineData);
+		}
+		if (data.middleLineData != null) {
+			this.middleLineDataStore.addData(zoomLevel, data.middleLineData);
+		}
+		if (data.lowerLineData != null) {
+			this.lowerLineDataStore.addData(zoomLevel, data.lowerLineData);
+		}
 	}
 
 	public resetData(): void {
@@ -118,9 +130,27 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 	}
 
 	public doRedraw() {
-		let areaDataMax = isVisibleColor(this.config.upperLineColor) ? this.upperLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints : [];
-		let lineData = isVisibleColor(this.config.middleLineColor) ? this.middleLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints : [];
-		let areaDataMin = isVisibleColor(this.config.lowerLineColor) ? this.lowerLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints : [];
+		let areaDataMax: UiLineGraphDataPointConfig[];
+		if (isVisibleColor(this.config.upperLineColor)) {
+			areaDataMax = this.upperLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints;
+		} else {
+			UiHoseGraph.logger.info("NOT drawing upperLine, since line color is invisible!")
+			areaDataMax = [];
+		}
+		let lineData: UiLineGraphDataPointConfig[];
+		if (isVisibleColor(this.config.middleLineColor)) {
+			lineData = this.middleLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints;
+		} else {
+			UiHoseGraph.logger.info("NOT drawing middleLine, since line color is invisible!")
+			lineData = [];
+		}
+		let areaDataMin: UiLineGraphDataPointConfig[];
+		if (isVisibleColor(this.config.lowerLineColor)) {
+			areaDataMin = this.lowerLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints;
+		} else {
+			UiHoseGraph.logger.info("NOT drawing lowerLine, since line color is invisible!")
+			areaDataMin = [];
+		}
 
 		this.middleLine
 			.x(d => this.scaleX(d.x))
@@ -153,7 +183,7 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 			});
 		this.$area
 			.attr("d", this.area.writePath(areaDataMin, areaDataMax))
-			.attr("fill", this.config.areaColor);
+			.attr("fill", this.config.areaColor ?? "#00000000");
 
 		let $dotsDataSelection = this.$dots.selectAll<SVGCircleElement, UiHoseGraphDataConfig>("circle.dot")
 			.data(this.config.dataDotRadius > 0 ? lineData : [])

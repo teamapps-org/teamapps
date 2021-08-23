@@ -20,7 +20,6 @@
 package org.teamapps.ux.component.timegraph.graph;
 
 import org.teamapps.dto.UiGraphGroup;
-import org.teamapps.ux.component.timegraph.GraphChangeListener;
 import org.teamapps.ux.component.timegraph.Interval;
 import org.teamapps.ux.component.timegraph.TimePartitioning;
 import org.teamapps.ux.component.timegraph.datapoints.GraphData;
@@ -29,17 +28,13 @@ import org.teamapps.ux.component.timegraph.model.AbstractGraphGroupModel;
 import org.teamapps.ux.component.timegraph.model.GraphGroupModel;
 
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GraphGroup extends AbstractGraph<GraphGroupData, GraphGroupModel> {
 
-	private GraphChangeListener changeListener;
-
-	private final List<AbstractGraph<?, ?>> graphs = new ArrayList<>();
+	private final Runnable subModelListener = () -> this.getModel().onDataChanged.fire();
+	private List<AbstractGraph<?, ?>> graphs = new ArrayList<>();
 
 	public GraphGroup(AbstractGraph<?, ?>... graphs) {
 		this(Arrays.asList(graphs));
@@ -48,12 +43,7 @@ public class GraphGroup extends AbstractGraph<GraphGroupData, GraphGroupModel> {
 	public GraphGroup(List<AbstractGraph<?, ?>> graphs) {
 		super(null);
 		setModel(new GraphGroupModel());
-		this.graphs.addAll(graphs);
-		graphs.forEach(dd -> {
-			if (this.changeListener != null) {
-				this.changeListener.handleChange(this);
-			}
-		});
+		this.setGraphs(graphs);
 	}
 
 	@Override
@@ -65,26 +55,36 @@ public class GraphGroup extends AbstractGraph<GraphGroupData, GraphGroupModel> {
 	}
 
 	@Override
-	public void setChangeListener(GraphChangeListener listener) {
-		this.changeListener = listener;
-	}
-
-	@Override
 	public GraphGroupModel getModel() {
 		return ((GraphGroupModel) super.getModel());
 	}
 
 	public void addGraph(AbstractGraph<?, ?> graph) {
-		this.graphs.add(graph);
-		if (this.changeListener != null) {
-			this.changeListener.handleChange(this);
+		var newGraphs = new ArrayList<>(this.graphs);
+		newGraphs.add(graph);
+		setGraphs(newGraphs);
+	}
+
+	public void setGraphs(List<AbstractGraph<?, ?>> graphs) {
+		for (AbstractGraph<?, ?> graph : this.graphs) {
+			graph.setChangeListener(null);
+			graph.getModel().onDataChanged().removeListener(subModelListener);
 		}
+		this.graphs = new ArrayList<>(graphs);
+		for (AbstractGraph<?, ?> g : graphs) {
+			g.setChangeListener(unused -> fireChange());
+
+			g.getModel().onDataChanged().addListener(subModelListener);
+		}
+		fireChange();
 		getModel().onDataChanged.fire();
 	}
 
 	public void removeGraph(AbstractGraph<?, ?> graph) {
-		this.graphs.remove(graph);
-		getModel().onDataChanged.fire();
+		var newGraphs = new ArrayList<>(this.graphs);
+		if (newGraphs.remove(graph)) {
+			setGraphs(newGraphs);
+		}
 	}
 
 	public List<AbstractGraph<?, ?>> getGraphs() {
@@ -104,6 +104,7 @@ public class GraphGroup extends AbstractGraph<GraphGroupData, GraphGroupModel> {
 		@Override
 		public GraphGroupData getData(TimePartitioning zoomLevel, ZoneId zoneId, Interval neededInterval, Interval displayedInterval) {
 			final Map<String, GraphData> graphDataByGraphId = graphs.stream()
+					.filter(Objects::nonNull)
 					.collect(Collectors.toMap(AbstractGraph::getId, g -> g.getModel().getData(zoomLevel, zoneId, neededInterval, displayedInterval)));
 			return () -> graphDataByGraphId;
 		}

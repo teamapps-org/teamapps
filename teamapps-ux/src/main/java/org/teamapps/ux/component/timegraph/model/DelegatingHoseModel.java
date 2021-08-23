@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,8 +36,17 @@ public class DelegatingHoseModel extends AbstractHoseGraphModel {
 
 	public DelegatingHoseModel(GraphModel<LineGraphData> minModel, GraphModel<LineGraphData> avgModel, GraphModel<LineGraphData> maxModel) {
 		this.minModel = minModel;
+		if (this.minModel != null) {
+			this.minModel.onDataChanged().addListener(() -> this.onDataChanged().fire());
+		}
 		this.avgModel = avgModel;
+		if (this.avgModel != null) {
+			this.avgModel.onDataChanged().addListener(() -> this.onDataChanged().fire());
+		}
 		this.maxModel = maxModel;
+		if (this.maxModel != null) {
+			this.maxModel.onDataChanged().addListener(() -> this.onDataChanged().fire());
+		}
 	}
 
 	public DelegatingHoseModel(GraphModel<LineGraphData> minModel, GraphModel<LineGraphData> maxModel) {
