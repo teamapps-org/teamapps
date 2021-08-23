@@ -20,7 +20,7 @@
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {escapeHtml, parseHtml} from "../Common";
+import {escapeHtml, getAutoCompleteOffValue, parseHtml} from "../Common";
 import {UiTextFieldCommandHandler, UiTextFieldConfig, UiTextFieldEventSource} from "../../generated/UiTextFieldConfig";
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
@@ -44,7 +44,7 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 </div>`);
 		this.$field = this.$wrapper.querySelector(":scope input");
 		if (!config.autofill) {
-			this.$field.autocomplete = "off";
+			this.$field.autocomplete = getAutoCompleteOffValue();
 		}
 		let $clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
 		$clearButton.addEventListener('click',() => {

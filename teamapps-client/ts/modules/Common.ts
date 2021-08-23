@@ -189,6 +189,10 @@ export class Constants {
 	}
 }
 
+export function getAutoCompleteOffValue(): string {
+	return "no";
+}
+
 export function hasVerticalScrollBar(element: HTMLElement): boolean {
 	return element.scrollWidth < element.offsetWidth;
 }

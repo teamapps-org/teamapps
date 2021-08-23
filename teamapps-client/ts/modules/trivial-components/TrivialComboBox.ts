@@ -47,7 +47,7 @@ import {
 } from "./TrivialCore";
 import {TrivialEvent} from "./TrivialEvent";
 import {Instance as Popper} from '@popperjs/core';
-import {parseHtml} from "../Common";
+import {getAutoCompleteOffValue, parseHtml} from "../Common";
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {createComboBoxPopper} from "./ComboBoxPopper";
 
@@ -188,7 +188,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 		this.$comboBox = parseHtml(`<div class="tr-combobox tr-input-wrapper editor-hidden">
 			<div class="tr-combobox-main-area">
-				<input type="text" class="tr-combobox-editor tr-editor" autocomplete="off"></input>
+				<input type="text" class="tr-combobox-editor tr-editor" autocomplete="${getAutoCompleteOffValue()}"></input>
 				<div class="tr-combobox-selected-entry-wrapper"></div>			
 			</div>
             <div class="tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>

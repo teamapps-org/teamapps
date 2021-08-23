@@ -49,7 +49,7 @@ import {
 import {TrivialEvent} from "./TrivialEvent";
 import {Instance as Popper} from '@popperjs/core';
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
-import {elementIndex, insertAfter, insertAtIndex, insertBefore, parseHtml, selectElementContents} from "../Common";
+import {elementIndex, getAutoCompleteOffValue, insertAfter, insertAtIndex, insertBefore, parseHtml, selectElementContents} from "../Common";
 import {createComboBoxPopper} from "./ComboBoxPopper";
 
 export interface TrivialTagComboBoxConfig<E> {
@@ -278,7 +278,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			e.preventDefault();
 		});
 		this.setEditingMode(this.config.editingMode);
-		this.$editor = parseHtml('<span contenteditable="true" class="tagbox-editor" autocomplete="off"></span>');
+		this.$editor = parseHtml(`<span contenteditable="true" class="tagbox-editor" autocomplete="${getAutoCompleteOffValue()}"></span>`);
 		this.$tagArea.append(this.$editor);
 		this.$editor.classList.add("tr-tagcombobox-editor", "tr-editor");
 		this.$editor.addEventListener("focus", () => {
