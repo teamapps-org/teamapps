@@ -145,8 +145,12 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 			}
 		});
 
-		this.$sliderHandle.addEventListener(`pointerdown`, (e: PointerEvent & TouchEvent) => {this.handleDrag(e);});
-		this.$slider.addEventListener(`pointerdown`, (e: PointerEvent & TouchEvent) => {this.handleDrag(e);});
+		this.$sliderHandle.addEventListener(`pointerdown`, (e: PointerEvent & TouchEvent) => {
+			this.handleDrag(e);
+		});
+		this.$slider.addEventListener(`pointerdown`, (e: PointerEvent & TouchEvent) => {
+			this.handleDrag(e);
+		});
 
 		this.setMinValue(config.minValue);
 		this.setMaxValue(config.maxValue);
@@ -253,7 +257,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 
 		let newValue = this.convertInputToDecimalValue(oldValue);
 
-		if (oldValue !== this.formatNumber(newValue)) {
+		if (!isNaN(newValue) && oldValue !== this.formatNumber(newValue)) {
 			this.setEditorValue(newValue);
 
 			const newCursorPosition = Math.min(this.$field.value.length, cursorPosition);
@@ -298,7 +302,9 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 			return null;
 		} else {
 			let value = this.convertInputToDecimalValue(this.$field.value);
-			if (value > this.maxValue) {
+			if (isNaN(value)) {
+				return this.getCommittedValue();
+			} else if (value > this.maxValue) {
 				value = this.maxValue;
 			} else if (value < this.minValue) {
 				value = this.minValue;
@@ -361,7 +367,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	private updateClearButton() {
-		this.$clearableFieldWrapper.classList.toggle("clearable", !!(this.showClearButton && this.getTransientValue()));
+		this.$clearableFieldWrapper.classList.toggle("clearable", !!(this.showClearButton && this.getTransientValue() != null));
 	}
 
 	public valuesChanged(v1: number, v2: number): boolean {
