@@ -194,7 +194,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 	public setSize(width: number, height: number): void {
 		css(this.$panelWrapper, {
 			width: width ? width + "px" : "100%",
-			height: height ? height + "px" : "100%"
+			height: height === 0 ? "100%" : height < 0 ? "auto" : height + "px"
 		});
 	}
 
