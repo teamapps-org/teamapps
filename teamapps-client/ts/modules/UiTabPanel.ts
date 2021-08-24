@@ -71,9 +71,9 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	public readonly onWindowButtonClicked: TeamAppsEvent<UiTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent(this);
 
 	private readonly defaultToolButtons = {
-		[UiWindowButtonType.MINIMIZE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize"), this._context),
-		[UiWindowButtonType.MAXIMIZE_RESTORE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MAXIMIZE, "Maximize/Restore"), this._context),
-		[UiWindowButtonType.CLOSE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.CLOSE, "Close"), this._context),
+		[UiWindowButtonType.MINIMIZE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize", "window-button-minimize"), this._context),
+		[UiWindowButtonType.MAXIMIZE_RESTORE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MAXIMIZE, "Maximize/Restore", "window-button-maximize"), this._context),
+		[UiWindowButtonType.CLOSE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.CLOSE, "Close", "window-button-close"), this._context),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		UiWindowButtonType.MINIMIZE,
