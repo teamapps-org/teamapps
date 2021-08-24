@@ -53,6 +53,9 @@ export class UiToolAccordionButton {
 	</div>
 	<style></style>
 </div>`);
+		if (this.config.debuggingId != null) {
+			this.$buttonWrapper.setAttribute("data-teamapps-debugging-id", this.config.debuggingId);
+		}
 
 		this.$button = this.$buttonWrapper.firstElementChild as HTMLElement;
 		this.optimizedWidth = AbstractUiToolContainer.optimizeButtonWidth(this.$buttonWrapper, this.$button, (config.template as UiGridTemplateConfig).maxHeight || UiToolAccordion.DEFAULT_TOOLBAR_MAX_HEIGHT);

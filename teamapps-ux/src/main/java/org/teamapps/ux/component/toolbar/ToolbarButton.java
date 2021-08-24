@@ -42,6 +42,7 @@ public class ToolbarButton {
 
 	private ToolbarButtonGroup toolbarButtonGroup;
 	private final String clientId = UUID.randomUUID().toString();
+	private String debuggingId;
 
 	private final Object record;
 
@@ -142,6 +143,7 @@ public class ToolbarButton {
 		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent.createUiReference() : null);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setHoverBackgroundColor(hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null);
+		ui.setDebuggingId(debuggingId);
 		return ui;
 	}
 
@@ -308,5 +310,13 @@ public class ToolbarButton {
 			toolbarButtonGroup.handleColorChange(this.clientId, backgroundColor, hoverBackgroundColor);
 		}
 		return this;
+	}
+
+	public String getDebuggingId() {
+		return debuggingId;
+	}
+
+	public void setDebuggingId(String debuggingId) {
+		this.debuggingId = debuggingId;
 	}
 }
