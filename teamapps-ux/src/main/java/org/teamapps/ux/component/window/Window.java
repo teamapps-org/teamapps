@@ -30,8 +30,8 @@ import org.teamapps.ux.component.panel.Panel;
 public class Window extends Panel {
 
 	private boolean modal = false;
-	private int width = 0;
-	private int height = 0;
+	private int width = 0; // 0 = full width
+	private int height = 0; // 0 = full height; -1 = auto
 	private Color modalBackgroundDimmingColor = new RgbaColor(0, 0, 0, 0.2f);
 	private boolean closeable;
 	private boolean closeOnEscape;
@@ -100,6 +100,10 @@ public class Window extends Panel {
 	public void setHeight(int height) {
 		this.height = height;
 		queueCommandIfRendered(() -> new UiWindow.SetSizeCommand(getId(), width, height));
+	}
+
+	public void enableAutoHeight() {
+		setHeight(-1);
 	}
 
 	public void setSize(int width, int height) {

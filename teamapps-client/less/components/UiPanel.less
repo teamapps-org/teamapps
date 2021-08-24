@@ -39,23 +39,6 @@
     padding: 0 1px 0 8px;
     background-color: var(--ta-bg-color-semi-transparent);
 
-    //position: relative;
-    //.minAllExpandedWidth {
-    //  height: 2px;
-    //  position: absolute;
-    //  background-color: red;
-    //}
-    //.minFirstMinimizedWidth {
-    //  height: 2px;
-    //  position: absolute;
-    //  background-color: rgba(0, 0, 255, .5);
-    //}
-    //.minFirstMinimizedAndHiddenTitleWidth {
-    //  height: 2px;
-    //  position: absolute;
-    //  background-color: rgba(255, 255, 0, .5);
-    //}
-
     .optimized-for-touch & {
       min-height: 40px;
     }
@@ -178,10 +161,8 @@
     overflow: hidden;
     padding: 0;
     background-color: var(--ta-bg-color);
-    position: relative;
-
     .body-container {
-      .flex-filler();
+      height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
       border-bottom-left-radius: var(--ta-border-radius);

@@ -57,7 +57,7 @@ class UiPanelHeaderField {
 class UiWindow extends UiPanel {
 	boolean modal = true;
 	int width = 0; // 0 = full width
-	int height = 0; // 0 = full height
+	int height = 0; // 0 = full height, -1 = auto
 	String headerBackgroundColor = "rgba(190, 190, 190, .72)";
 	String modalBackgroundDimmingColor = "rgba(0, 0, 0, .2)";
     boolean closeable; // show "close" special tool button
