@@ -55,6 +55,9 @@ export class UiToolbarButton {
 	</div>
 	<style></style>
 </div>`);
+		if (this.config.debuggingId != null) {
+			this.$buttonWrapper.setAttribute("data-teamapps-debugging-id", this.config.debuggingId);
+		}
 		let renderer = context.templateRegistry.createTemplateRenderer(config.template);
 		this.$button = parseHtml(renderer.render(config.recordData));
 		prependChild(this.$buttonWrapper, this.$button);
