@@ -62,10 +62,10 @@ class UiToolbarButtonGroup {
 
 class UiToolbarButton {
 	required String buttonId;
+	String debuggingId;
 	required UiTemplate template;
 	boolean visible = true;
 	required Object recordData;
-	String debuggingId;
 	String openNewTabWithUrl; // If this is set, when the user clicks this button, the specified URL is navigated to in a new tab. The button still sends events to the server.
 	UiComponent* togglesFullScreenOnComponent; // If this is set, this button makes the specified component will enter fullscreen. The button still sends events to the server.
 	UiComponent* startPlaybackComponent; // If this is set, when the user clicks this button, the play() method of the specified component will be called (if it has such a method).
