@@ -139,6 +139,8 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	private $editorFieldTempContainer: HTMLElement;
 
 	private contextMenu: ContextMenu;
+	
+	private rowSelectionCausedByApiCall: boolean;
 
 	constructor(config: UiTableConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -674,7 +676,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this.dataProvider.clear();
 		this._grid.setData(this.dataProvider, true);
 		this._grid.render();
-		this._grid.setSelectedRows([]);
+		this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
 	}
 
 	@executeWhenFirstDisplayed()
@@ -688,7 +690,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		if (clearTableCache) {
 			editorCoordinates = this._grid.getCellEditor() != null ? {recordId: this.getActiveCellRecordId(), fieldName: this.getActiveCellFieldName()} : null;
 			this.dataProvider.clear();
-			this._grid.setSelectedRows([]);
+			this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
 		}
 
 		this._sortField = sortField;
@@ -713,7 +715,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 		const selectedRows = this._grid.getSelectedRows();
 		selectedRows.push(...data.filter(record => record.selected).map(record => this.dataProvider.findVisibleRowIndexById(record.id)));
-		this._grid.setSelectedRows(selectedRows);
+		this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(selectedRows));
 
 		clearTimeout(this.loadingIndicatorFadeInTimer);
 		fadeOut(this._$loadingIndicator);
@@ -750,7 +752,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		let newSelectedRows = this._grid.getSelectedRows()
 			.filter(selectedRowIndex => deletedItemRowNumbers.indexOf(selectedRowIndex) == -1)
 			.map(selectedRowIndex => selectedRowIndex - numberOfSmallerDeletedRows(selectedRowIndex));
-		this._grid.setSelectedRows(newSelectedRows);
+		this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(newSelectedRows));
 
 		this.rerenderAllRows();
 
@@ -884,15 +886,20 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	@executeWhenFirstDisplayed()
 	public selectRows(recordIds: number[], scrollToFirstRecord: boolean /*TODO*/) {
 		const rowIndexes = Object.values(this.dataProvider.findVisibleRowIndexesByIds(recordIds));
-
-		this.doNotFireEventBecauseSelectionIsCausedByApiCall = true;
-		try {
+		this.doWithoutFiringSelectionEvent(() => {
 			if (rowIndexes.length > 0) {
-				this._grid.setSelectedRows(rowIndexes);
+				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(rowIndexes));
 				this._grid.scrollRowToTop(rowIndexes[0]);
 			} else {
-				this._grid.setSelectedRows([]);
+				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
 			}
+		});
+	}
+
+	private doWithoutFiringSelectionEvent(action: () => any) {
+		this.doNotFireEventBecauseSelectionIsCausedByApiCall = true;
+		try {
+			return action();
 		} finally {
 			this.doNotFireEventBecauseSelectionIsCausedByApiCall = false;
 		}
