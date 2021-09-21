@@ -434,7 +434,8 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		transientChangesByRecordAndPropertyName.computeIfAbsent(record, record1 -> new HashMap<>()).put(propertyName, value);
 		Integer uiRecordIdOrNull = clientRecordCache.getUiRecordIdOrNull(record);
 		if (uiRecordIdOrNull != null) {
-			queueCommandIfRendered(() -> new UiTable.SetCellValueCommand(getId(), uiRecordIdOrNull, propertyName, value));
+			final Object uiValue = getColumnByPropertyName(propertyName).getField().convertUxValueToUiValue(value);
+			queueCommandIfRendered(() -> new UiTable.SetCellValueCommand(getId(), uiRecordIdOrNull, propertyName, uiValue));
 		}
 	}
 
