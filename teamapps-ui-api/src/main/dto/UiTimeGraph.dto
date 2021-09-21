@@ -32,7 +32,7 @@ class UiTimeGraph extends UiComponent {
 	command setMaxPixelsBetweenDataPoints(int maxPixelsBetweenDataPoints);
 	command addData(int zoomLevel, Dictionary<UiGraphData> data);
 	command resetGraphData(String graphId); // client will request data again (corresponding to zoom and component size)
-	command resetAllData(List<UiTimeChartZoomLevel> newZoomLevels); // resets all data
+	command resetAllData(UiLongInterval intervalX, List<UiTimeChartZoomLevel> newZoomLevels); // resets all data
 	command setMouseScrollZoomPanMode(UiLineChartMouseScrollZoomPanMode mouseScrollZoomPanMode);
 	command setSelectedInterval(UiLongInterval intervalX);
 
