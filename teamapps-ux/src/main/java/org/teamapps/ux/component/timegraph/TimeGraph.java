@@ -210,7 +210,9 @@ public class TimeGraph extends AbstractComponent {
 	}
 
 	public void refresh() {
-		queueCommandIfRendered(() -> new UiTimeGraph.ResetAllDataCommand(getId(), createUiZoomlevels()));
+		Interval domainX = retrieveDomainX();
+		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
+		queueCommandIfRendered(() -> new UiTimeGraph.ResetAllDataCommand(getId(), uiIntervalX, createUiZoomlevels()));
 	}
 
 	public void zoomTo(long minX, long maxX) {

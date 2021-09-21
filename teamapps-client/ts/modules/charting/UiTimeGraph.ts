@@ -455,7 +455,8 @@ export class UiTimeGraph extends AbstractUiComponent<UiTimeGraphConfig> implemen
 		this.redraw();
 	}
 
-	resetAllData(newZoomLevels: UiTimeChartZoomLevelConfig[]): void {
+	resetAllData(intervalX: UiLongIntervalConfig, newZoomLevels: UiTimeChartZoomLevelConfig[]): void {
+		this.setIntervalX(intervalX);
 		this.zoomLevels = newZoomLevels;
 		Object.values(this.graphById).forEach(g => g.resetData());
 		this.redraw();
