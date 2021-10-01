@@ -47,6 +47,8 @@ public class GridTemplate implements Template {
 	private int gridGap = 0;
 	private Color backgroundColor;
 	private Border border;
+	private String ariaLabelProperty = "ariaLabel";
+	private String titleProperty = "title";
 
 	List<GridColumn> columns = new ArrayList<>();
 	List<GridRow> rows = new ArrayList<>();
@@ -65,11 +67,18 @@ public class GridTemplate implements Template {
 		this.gridGap = gridGap;
 	}
 
-	public List<String> getDataKeys() {
-		return elements.stream()
-				.flatMap(element -> element.getDataKeys().stream())
+	public List<String> getPropertyNames() {
+		ArrayList<String> propertyNames = elements.stream()
+				.flatMap(element -> element.getPropertyNames().stream())
 				.distinct()
-				.collect(Collectors.toList());
+				.collect(Collectors.toCollection(ArrayList::new));
+		if (ariaLabelProperty != null) {
+			propertyNames.add(ariaLabelProperty);
+		}
+		if (titleProperty != null) {
+			propertyNames.add(titleProperty);
+		}
+		return propertyNames;
 	}
 
 	public GridTemplate addColumn(GridColumn column) {
@@ -202,16 +211,36 @@ public class GridTemplate implements Template {
 		return backgroundColor;
 	}
 
-	public void setBackgroundColor(Color backgroundColor) {
+	public GridTemplate setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
+		return this;
 	}
 
 	public Border getBorder() {
 		return border;
 	}
 
-	public void setBorder(Border border) {
+	public GridTemplate setBorder(Border border) {
 		this.border = border;
+		return this;
+	}
+
+	public String getAriaLabelProperty() {
+		return ariaLabelProperty;
+	}
+
+	public GridTemplate setAriaLabelProperty(String ariaLabelProperty) {
+		this.ariaLabelProperty = ariaLabelProperty;
+		return this;
+	}
+
+	public String getTitleProperty() {
+		return titleProperty;
+	}
+
+	public GridTemplate setTitleProperty(String titleProperty) {
+		this.titleProperty = titleProperty;
+		return this;
 	}
 
 	@Override
@@ -236,6 +265,8 @@ public class GridTemplate implements Template {
 		uiGridTemplate.setGridGap(gridGap);
 		uiGridTemplate.setBorder(border != null ? border.createUiBorder() : null);
 		uiGridTemplate.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
+		uiGridTemplate.setAriaLabelProperty(ariaLabelProperty);
+		uiGridTemplate.setTitleProperty(titleProperty);
 		return uiGridTemplate;
 	}
 

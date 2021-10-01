@@ -289,7 +289,7 @@ export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapComm
 		let iconWidth: number = 0;
 		if (isGridTemplate(renderer.template)) {
 			let iconElement = renderer.template.elements.filter(e => isUiGlyphIconElement(e) || isUiImageElement(e) || isUiIconElement(e))[0];
-			if (!iconElement || !markerConfig.values[iconElement.dataKey]) {
+			if (!iconElement || !markerConfig.values[iconElement.property]) {
 				iconWidth = 0;
 			} else if (iconElement) {
 				if (isUiGlyphIconElement(iconElement)) {

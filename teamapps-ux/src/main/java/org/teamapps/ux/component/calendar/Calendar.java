@@ -117,18 +117,18 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		Template dayGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.MONTH);
 		Template monthGridTemplate = getTemplateForRecord(calendarEvent, CalendarViewMode.YEAR);
 
-		HashSet<String> dataKeys = new HashSet<>();
+		HashSet<String> propertyNames = new HashSet<>();
 		if (timeGridTemplate != null) {
-			dataKeys.addAll(timeGridTemplate.getDataKeys());
+			propertyNames.addAll(timeGridTemplate.getPropertyNames());
 		}
 		if (dayGridTemplate != null) {
-			dataKeys.addAll(dayGridTemplate.getDataKeys());
+			propertyNames.addAll(dayGridTemplate.getPropertyNames());
 		}
 		if (monthGridTemplate != null) {
-			dataKeys.addAll(monthGridTemplate.getDataKeys());
+			propertyNames.addAll(monthGridTemplate.getPropertyNames());
 		}
 
-		Map<String, Object> values = propertyProvider.getValues(calendarEvent, dataKeys);
+		Map<String, Object> values = propertyProvider.getValues(calendarEvent, propertyNames);
 		UiCalendarEventClientRecord uiRecord = new UiCalendarEventClientRecord();
 		uiRecord.setValues(values);
 

@@ -31,20 +31,20 @@ public class BadgeElement extends TextElement {
 
 	private Color borderColor;
 
-	public BadgeElement(String dataKey) {
-		super(dataKey);
+	public BadgeElement(String propertyName) {
+		super(propertyName);
 	}
 
-	public BadgeElement(String dataKey, int row, int column) {
-		super(dataKey, row, column);
+	public BadgeElement(String propertyName, int row, int column) {
+		super(propertyName, row, column);
 	}
 
-	public BadgeElement(String dataKey, int row, int column, int rowSpan, int colSpan) {
-		super(dataKey, row, column, rowSpan, colSpan);
+	public BadgeElement(String propertyName, int row, int column, int rowSpan, int colSpan) {
+		super(propertyName, row, column, rowSpan, colSpan);
 	}
 
-	public BadgeElement(String dataKey, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment) {
-		super(dataKey, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
+	public BadgeElement(String propertyName, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment) {
+		super(propertyName, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
 	}
 
 	public BadgeElement setFontStyle(final FontStyle fontStyle) {
@@ -67,14 +67,14 @@ public class BadgeElement extends TextElement {
 		return this;
 	}
 
-	public BadgeElement setDataKey(final String dataKey) {
-		this.dataKey = dataKey;
+	public BadgeElement setPropertyName(final String propertyName) {
+		this.propertyName = propertyName;
 		return this;
 	}
 
 	@Override
 	public AbstractUiTemplateElement createUiTemplateElement() {
-		UiBadgeElement uiBadgeElement = new UiBadgeElement(dataKey, row, column);
+		UiBadgeElement uiBadgeElement = new UiBadgeElement(propertyName, row, column);
 		mapAbstractTemplateElementAttributesToUiElement(uiBadgeElement);
 		mapTextElementAttributesToUiElement(uiBadgeElement);
 		uiBadgeElement.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);

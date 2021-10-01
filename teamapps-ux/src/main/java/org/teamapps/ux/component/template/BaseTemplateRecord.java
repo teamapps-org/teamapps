@@ -28,6 +28,8 @@ public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 	private String caption;
 	private String description;
 	private String badge;
+	private String ariaLabel;
+	private String title;
 
 	private PAYLOAD payload;
 
@@ -160,5 +162,21 @@ public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 	public BaseTemplateRecord<PAYLOAD> setPayload(PAYLOAD payload) {
 		this.payload = payload;
 		return this;
+	}
+
+	public String getAriaLabel() {
+		return ariaLabel;
+	}
+
+	public void setAriaLabel(String ariaLabel) {
+		this.ariaLabel = ariaLabel;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

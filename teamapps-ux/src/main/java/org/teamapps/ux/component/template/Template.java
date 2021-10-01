@@ -37,7 +37,7 @@ public interface Template {
 
 	UiTemplate createUiTemplate();
 
-	List<String> getDataKeys();
+	List<String> getPropertyNames();
 
 
 	// === static methods ===
@@ -61,9 +61,9 @@ public interface Template {
 			orig.getElements().forEach(element -> {
 				if (element instanceof FloatingElement) {
 					FloatingElement floatingElement = (FloatingElement) element;
-					List<AbstractTemplateElement> elements = floatingElement.getElements();
-					List<AbstractTemplateElement> newElements = new ArrayList<>();
-					for (AbstractTemplateElement fltElement : elements) {
+					List<AbstractTemplateElement<?>> elements = floatingElement.getElements();
+					List<AbstractTemplateElement<?>> newElements = new ArrayList<>();
+					for (AbstractTemplateElement<?> fltElement : elements) {
 						newElements.add(convertElementToDarkMode(fltElement));
 					}
 					FloatingElement newFloatingElement = new FloatingElement(floatingElement.getRow(), floatingElement.getColumn()).setElements(newElements);
@@ -78,10 +78,10 @@ public interface Template {
 		return this;
 	}
 
-	static AbstractTemplateElement convertElementToDarkMode(AbstractTemplateElement element) {
+	static AbstractTemplateElement<?> convertElementToDarkMode(AbstractTemplateElement<?> element) {
 		if (element instanceof TextElement) {
 			TextElement txt = (TextElement) element;
-			TextElement newTextElement = new TextElement(txt.getDataKey(), txt.getRow(), txt.getColumn(), txt.getRowSpan(), txt.getColSpan(), txt.getHorizontalAlignment(), txt.getVerticalAlignment());
+			TextElement newTextElement = new TextElement(txt.getProperty(), txt.getRow(), txt.getColumn(), txt.getRowSpan(), txt.getColSpan(), txt.getHorizontalAlignment(), txt.getVerticalAlignment());
 			newTextElement.setPadding(txt.getPadding());
 			newTextElement.setMargin(txt.getMargin());
 			newTextElement.setTextAlignment(txt.getTextAlignment());

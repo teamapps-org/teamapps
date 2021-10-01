@@ -324,7 +324,7 @@ public class InfiniteItemView2<RECORD> extends AbstractComponent {
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
 		clientRecord.setId(++clientRecordIdCounter);
-		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getDataKeys()));
+		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getPropertyNames()));
 		return clientRecord;
 	}
 

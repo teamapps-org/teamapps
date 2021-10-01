@@ -92,6 +92,8 @@ public enum BaseTemplate implements Template {
 	public static final String PROPERTY_SUB_TEXT2 = "setText2";
 	public static final String PROPERTY_SUB_ICON1 = "subIcon1";
 	public static final String PROPERTY_SUB_ICON2 = "subIcon2";
+	public static final String PROPERTY_ARIA_LABEL = "ariaLabel";
+	public static final String PROPERTY_TITLE = "title";
 
 	public static Map<String, Template> createTemplateMap(BaseTemplate... templates) {
 		Map<String, Template> templateMap = new HashMap<>();
@@ -118,6 +120,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createToolbarButtonTemplate(int minWidth, int iconSize, float captionFontSize, float descriptionFontSize) {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMinWidth(minWidth)
 				.setPadding(new Spacing(0))
 				.addColumn(SizingPolicy.AUTO, 2, 2)
@@ -145,6 +149,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createToolbarButtonTinyTemplate() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setPadding(new Spacing(0))
 				.addColumn(SizeType.AUTO, 0, 0, 2, 2)
 				.addColumn(SizingPolicy.FRACTION)
@@ -161,6 +167,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createToolButtonTemplate() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.addColumn(SizingPolicy.AUTO)
 				.addRow(SizingPolicy.AUTO)
 				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 12))
@@ -169,6 +177,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createToolbarMenuGroupHeader() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMinHeight(20).setMaxHeight(20)
 				.setPadding(new Spacing(0))
 				.addColumn(SizeType.AUTO, 0, 0, 2, 2)
@@ -184,6 +194,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createToolbarMenuBigButtonTemplate() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMinWidth(0).setMaxWidth(0)
 				.setMinHeight(44).setMaxHeight(100)
 				.setGridGap(0)
@@ -207,6 +219,8 @@ public enum BaseTemplate implements Template {
 
 	public static Template createListStyleIconTwoLinesBadgeTemplate(int iconSize, VerticalElementAlignment verticalIconAlignment, int maxHeight, int spacing, boolean wrapLines) {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMaxHeight(maxHeight)
 				.setPadding(new Spacing(spacing))
 				.addColumn(SizingPolicy.AUTO) // margin defined by badge, so no margin when no badge
@@ -253,6 +267,8 @@ public enum BaseTemplate implements Template {
 		HorizontalElementAlignment horizontalElementAlignment2 = horizontalCenterAlignment ? HorizontalElementAlignment.CENTER : HorizontalElementAlignment.RIGHT;
 
 		return new GridTemplate(minWidth, maxWidth, minHeight, maxHeight, padding, gridGap)
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.addColumn(SizingPolicy.AUTO) // margin defined by badge, so no margin when no badge
 				.addColumn(SizingPolicy.FRACTION)
 				.addColumn(SizingPolicy.AUTO) // margin defined by badge, so no margin when no badge
@@ -332,6 +348,8 @@ public enum BaseTemplate implements Template {
 
 	public static Template createTreeSingleLineNodeTemplate(int iconSize, VerticalElementAlignment verticalIconAlignment, int maxHeight, boolean wrapLines) {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMinHeight(16).setMaxHeight(maxHeight)
 				.setPadding(new Spacing(2))
 				.addColumn(SizingPolicy.AUTO) // margin defined by badge, so no margin when no badge
@@ -362,6 +380,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createFormSectionHeaderTemplate() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMinWidth(0).setMaxWidth(0)
 				.setMinHeight(20).setMaxHeight(20)
 				.setGridGap(0)
@@ -379,6 +399,8 @@ public enum BaseTemplate implements Template {
 
 	public static Template createFormButtonTemplate(int iconSize, float relativeFontSize) {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMinHeight(20)
 				.setGridGap(0)
 				.setPadding(new Spacing(1, 5))
@@ -397,6 +419,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createNotificationTemplateWithIconAndCaption() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setGridGap(5)
 				.setPadding(new Spacing(5))
 				.addColumn(SizeType.AUTO, 0, 0, 0, 0)
@@ -419,6 +443,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createNotificationTemplateWithIconAndCaptionAndDescription() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setGridGap(3)
 				.setPadding(new Spacing(6))
 				.addColumn(SizeType.AUTO, 0, 0, 0, 0)
@@ -450,6 +476,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createItemViewTemplate() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMinWidth(0).setMaxWidth(0)
 				.setMinHeight(0).setMaxHeight(0)
 				.setGridGap(0)
@@ -485,6 +513,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createFloatingFileItemTemplate() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMinWidth(0).setMaxWidth(140)
 				.setMinHeight(0).setMaxHeight(0)
 				.setGridGap(0)
@@ -515,6 +545,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createListFileItemTemplate() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setMinWidth(0).setMaxWidth(0)
 				.setMinHeight(0).setMaxHeight(0)
 				.setGridGap(0)
@@ -542,8 +574,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createApplicationListingTemplate() {
 		return new GridTemplate()
-//				.setMaxHeight(170)
-//				.setMinHeight(170)
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setPadding(new Spacing(10))
 				.addColumn(SizingPolicy.AUTO) // margin defined by badge, so no margin when no badge
 				.addColumn(SizingPolicy.FRACTION)
@@ -579,6 +611,8 @@ public enum BaseTemplate implements Template {
 
 	private static Template createNavigationBarIconOnlyTemplate() {
 		return new GridTemplate()
+				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
+				.setTitleProperty(PROPERTY_TITLE)
 				.setPadding(new Spacing(2))
 				.addColumn(new SizingPolicy(SizeType.FIXED, 24, 24))
 				.addRow(new SizingPolicy(SizeType.FIXED, 24, 24))
@@ -599,8 +633,8 @@ public enum BaseTemplate implements Template {
 	}
 
 	@Override
-	public List<String> getDataKeys() {
-		return template.getDataKeys();
+	public List<String> getPropertyNames() {
+		return template.getPropertyNames();
 	}
 
 	public Template getTemplate() {

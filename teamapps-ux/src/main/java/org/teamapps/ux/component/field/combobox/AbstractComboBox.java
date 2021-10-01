@@ -188,10 +188,10 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		Template displayTemplate = getTemplateForRecord(record, selectedEntryTemplateDecider, selectedEntryTemplate);
 		Template dropdownTemplate = getTemplateForRecord(record, dropdownTemplateDecider, dropDownTemplate);
 
-		HashSet<String> templateDataKeys = new HashSet<>();
-		templateDataKeys.addAll(displayTemplate != null ? displayTemplate.getDataKeys() : Collections.emptySet());
-		templateDataKeys.addAll(dropdownTemplate != null ? dropdownTemplate.getDataKeys() : Collections.emptySet());
-		Map<String, Object> values = propertyProvider.getValues(record, templateDataKeys);
+		HashSet<String> templatePropertyNames = new HashSet<>();
+		templatePropertyNames.addAll(displayTemplate != null ? displayTemplate.getPropertyNames() : Collections.emptySet());
+		templatePropertyNames.addAll(dropdownTemplate != null ? dropdownTemplate.getPropertyNames() : Collections.emptySet());
+		Map<String, Object> values = propertyProvider.getValues(record, templatePropertyNames);
 		UiComboBoxTreeRecord uiTreeRecord = new UiComboBoxTreeRecord();
 		uiTreeRecord.setValues(values);
 
