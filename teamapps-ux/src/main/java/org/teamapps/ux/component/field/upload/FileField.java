@@ -53,7 +53,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	public final Event<UploadStartedEventData> onUploadStarted = new Event<>();
 	public final Event<UploadCanceledEventData> onUploadCanceled = new Event<>();
 	public final Event<UploadFailedEventData> onUploadFailed = new Event<>();
-	public final Event<UploadedFile> onUploadSuccessful = new Event<>();
+	public final Event<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = new Event<>();
 	public final Event<RECORD> onFileItemClicked = new Event<>();
 	public final Event<RECORD> onFileItemRemoved = new Event<>();
 
@@ -172,7 +172,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 				} else {
 					cacheResponse.commit();
 				}
-				onUploadSuccessful.fire(uploadedFile);
+				onUploadSuccessful.fire(new UploadSuccessfulEventData<>(uploadedFile, record));
 				break;
 			}
 			case UI_FILE_FIELD_FILE_ITEM_CLICKED: {
