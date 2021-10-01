@@ -286,11 +286,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 					clientId: data.id
 				});
 			}
-			this.removeFileItem(fileItem);
-			this.updateVisibilities();
-			if (fileItem.state === FileItemState.DISPLAYING) {
-				this.commit();
-			}
+			this.removeItem(fileItem);
 		});
 		fileItem.onUploadTooLarge.addListener(subEvent => {
 			this.onUploadTooLarge.fire(subEvent);
@@ -311,6 +307,14 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 			this.updateVisibilities();
 		});
 		return fileItem;
+	}
+
+	private removeItem(fileItem: UploadItem) {
+		this.removeFileItem(fileItem);
+		this.updateVisibilities();
+		if (fileItem.state === FileItemState.DISPLAYING) {
+			this.commit();
+		}
 	}
 
 	public getTransientValue(): UiIdentifiableClientRecordConfig[] {
@@ -340,6 +344,22 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 
 	public valuesChanged(v1: UiIdentifiableClientRecordConfig[], c2: UiIdentifiableClientRecordConfig[]): boolean {
 		return true; // TODO pojos
+	}
+
+	public cancelAllUploads() {
+		console.log("cancelAllUploads()");
+		this.fileItems.forEach(fi => this.cancelUpload(fi.uuid));
+	}
+
+	public cancelUpload(uuid: string) {
+		console.log("Canceling upload for " + uuid);
+		let correspondingItem = uuid && this.fileItems.filter(fileItem => fileItem.uuid === uuid)[0];
+		if (correspondingItem) {
+			correspondingItem.cancelUpload(false);
+			this.removeItem(correspondingItem);
+		} else {
+			this.logger.warn("Could not cancel upload of non-existing file item");
+		}
 	}
 }
 
@@ -401,16 +421,7 @@ class UploadItem {
 		this.$deleteButton = this.$main.querySelector<HTMLElement>(":scope .delete-button");
 		this.$main.addEventListener('click', (e) => {
 			if (e.target === this.$deleteButton) {
-				if (this.uploader) {
-					this.uploader.abort();
-					this.onUploadCanceled.fire({
-						fileItemUuid: this.uuid,
-						fileName: this.uploadingFile.name,
-						mimeType: this.uploadingFile.type,
-						sizeInBytes: this.uploadingFile.size,
-						incompleteUploadsCount: null
-					});
-				}
+				this.cancelUpload(true);
 				this.onDeleteButtonClick.fire(null);
 			} else {
 				this.onClick.fire(null)
@@ -466,6 +477,20 @@ class UploadItem {
 				});
 			});
 			this.uploader.onComplete.addListener(() => this.uploader = null)
+		}
+	}
+
+	public cancelUpload(fireEvent: boolean) {
+		if (this.uploader) {
+			this.uploader.abort();
+			this.onUploadCanceled.fire({
+				fileItemUuid: this.uuid,
+				fileName: this.uploadingFile.name,
+				mimeType: this.uploadingFile.type,
+				sizeInBytes: this.uploadingFile.size,
+				incompleteUploadsCount: null
+			});
+			this._state = FileItemState.ERROR;
 		}
 	}
 

@@ -99,6 +99,22 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 		return uiField;
 	}
 
+	@Override
+	public void setValue(List<RECORD> records) {
+		this.setValue(records, true);
+	}
+
+	public void setValue(List<RECORD> records, boolean cancelUploads) {
+		if (cancelUploads) {
+			cancelUploads();
+		}
+		super.setValue(records);
+	}
+
+	public void cancelUploads() {
+		this.queueCommandIfRendered(() -> new UiFileField.CancelAllUploadsCommand(getId()));
+	}
+
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
 		clientRecord.setValues(fileItemPropertyProvider.getValues(record, fileItemTemplate.getPropertyNames()));
@@ -137,7 +153,11 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 			}
 			case UI_FILE_FIELD_UPLOAD_STARTED: {
 				UiFileField.UploadStartedEvent uploadStartedEvent = (UiFileField.UploadStartedEvent) event;
-				this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes()
+				this.onUploadStarted.fire(new UploadStartedEventData(
+						uploadStartedEvent.getFileName(),
+						uploadStartedEvent.getMimeType(),
+						uploadStartedEvent.getSizeInBytes(),
+						() -> this.queueCommandIfRendered(() -> new UiFileField.CancelUploadCommand(getId(), uploadStartedEvent.getFileItemUuid()))
 				));
 				break;
 			}

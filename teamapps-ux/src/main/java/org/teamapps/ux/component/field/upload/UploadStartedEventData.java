@@ -24,11 +24,13 @@ public class UploadStartedEventData {
 	private final String fileName;
 	private final String mimeType;
 	private final long sizeInBytes;
+	private final Runnable uploadCanceler;
 
-	public UploadStartedEventData(String fileName, String mimeType, long sizeInBytes) {
+	public UploadStartedEventData(String fileName, String mimeType, long sizeInBytes, Runnable uploadCanceler) {
 		this.fileName = fileName;
 		this.mimeType = mimeType;
 		this.sizeInBytes = sizeInBytes;
+		this.uploadCanceler = uploadCanceler;
 	}
 
 	public String getFileName() {
@@ -42,5 +44,9 @@ public class UploadStartedEventData {
 	public long getSizeInBytes() {
 		return sizeInBytes;
 	}
-	
+
+	public void cancelUpload() {
+		uploadCanceler.run();
+	}
+
 }
