@@ -28,29 +28,29 @@ public class IconElement extends AbstractTemplateElement<IconElement> {
 
 	protected int size;
 
-	public IconElement(String dataKey, int size) {
-		super(dataKey);
+	public IconElement(String propertyName, int size) {
+		super(propertyName);
 		this.size = size;
 	}
 
-	public IconElement(String dataKey, int row, int column, int size) {
-		super(dataKey, row, column);
+	public IconElement(String propertyName, int row, int column, int size) {
+		super(propertyName, row, column);
 		this.size = size;
 	}
 
-	public IconElement(String dataKey, int row, int column, int rowSpan, int colSpan, int size) {
-		super(dataKey, row, column, rowSpan, colSpan);
+	public IconElement(String propertyName, int row, int column, int rowSpan, int colSpan, int size) {
+		super(propertyName, row, column, rowSpan, colSpan);
 		this.size = size;
 	}
 
-	public IconElement(String dataKey, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment, int size) {
-		super(dataKey, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
+	public IconElement(String propertyName, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment, int size) {
+		super(propertyName, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
 		this.size = size;
 	}
 
 	@Override
 	public AbstractUiTemplateElement createUiTemplateElement() {
-		UiIconElement uiIconElement = new UiIconElement(dataKey, row, column, size);
+		UiIconElement uiIconElement = new UiIconElement(propertyName, row, column, size);
 		mapAbstractTemplateElementAttributesToUiElement(uiIconElement);
 		return uiIconElement;
 	}

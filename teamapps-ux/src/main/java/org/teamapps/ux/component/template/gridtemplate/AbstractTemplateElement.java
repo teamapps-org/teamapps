@@ -30,7 +30,7 @@ import java.util.List;
 
 public abstract class AbstractTemplateElement<C extends AbstractTemplateElement> {
 
-	protected String dataKey;
+	protected String propertyName;
 	protected int row;
 	protected int column;
 	protected int rowSpan = 1;
@@ -40,26 +40,26 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 	protected Spacing margin;
 	protected Color backgroundColor;
 
-	public AbstractTemplateElement(String dataKey) {
-		this.dataKey = dataKey;
+	public AbstractTemplateElement(String propertyName) {
+		this.propertyName = propertyName;
 	}
 
-	public AbstractTemplateElement(String dataKey, int row, int column) {
-		this.dataKey = dataKey;
+	public AbstractTemplateElement(String propertyName, int row, int column) {
+		this.propertyName = propertyName;
 		this.row = row;
 		this.column = column;
 	}
 
-	public AbstractTemplateElement(String dataKey, int row, int column, int rowSpan, int colSpan) {
-		this.dataKey = dataKey;
+	public AbstractTemplateElement(String propertyName, int row, int column, int rowSpan, int colSpan) {
+		this.propertyName = propertyName;
 		this.row = row;
 		this.column = column;
 		this.rowSpan = rowSpan;
 		this.colSpan = colSpan;
 	}
 
-	public AbstractTemplateElement(String dataKey, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment) {
-		this.dataKey = dataKey;
+	public AbstractTemplateElement(String propertyName, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment) {
+		this.propertyName = propertyName;
 		this.row = row;
 		this.column = column;
 		this.rowSpan = rowSpan;
@@ -88,17 +88,13 @@ public abstract class AbstractTemplateElement<C extends AbstractTemplateElement>
 		return (C) this;
 	}
 
-	public C setDataKey(final String dataKey) {
-		this.dataKey = dataKey;
+	public C setPropertyName(final String propertyName) {
+		this.propertyName = propertyName;
 		return (C) this;
 	}
 
-	public String getDataKey() {
-		return dataKey;
-	}
-
-	public List<String> getDataKeys() {
-		return Collections.singletonList(dataKey);
+	public List<String> getPropertyNames() {
+		return Collections.singletonList(propertyName);
 	}
 
 	public int getRow() {

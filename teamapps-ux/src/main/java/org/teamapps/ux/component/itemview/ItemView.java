@@ -107,7 +107,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 			@Override
 			public UiIdentifiableClientRecord createHeaderClientRecord(HEADERRECORD headerRecord) {
 				UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
-				clientRecord.setValues(headerPropertyProvider.getValues(headerRecord, groupHeaderTemplate.getDataKeys()));
+				clientRecord.setValues(headerPropertyProvider.getValues(headerRecord, groupHeaderTemplate.getPropertyNames()));
 				return clientRecord;
 			}
 

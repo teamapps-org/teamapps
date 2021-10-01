@@ -104,7 +104,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 	private Object createUiRecord() {
 		Object uiRecord;
 		if (template != null) {
-			uiRecord = propertyProvider.getValues(templateRecord, template.getDataKeys());
+			uiRecord = propertyProvider.getValues(templateRecord, template.getPropertyNames());
 		} else {
 			uiRecord = templateRecord.toString();
 		}

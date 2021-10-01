@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,25 +33,25 @@ public class TextElement extends AbstractTemplateElement<TextElement> {
 	protected TextAlignment textAlignment = TextAlignment.LEFT;
 
 
-	public TextElement(String dataKey) {
-		super(dataKey);
+	public TextElement(String propertyName) {
+		super(propertyName);
 	}
 
-	public TextElement(String dataKey, int row, int column) {
-		super(dataKey, row, column);
+	public TextElement(String propertyName, int row, int column) {
+		super(propertyName, row, column);
 	}
 
-	public TextElement(String dataKey, int row, int column, int rowSpan, int colSpan) {
-		super(dataKey, row, column, rowSpan, colSpan);
+	public TextElement(String propertyName, int row, int column, int rowSpan, int colSpan) {
+		super(propertyName, row, column, rowSpan, colSpan);
 	}
 
-	public TextElement(String dataKey, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment) {
-		super(dataKey, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
+	public TextElement(String propertyName, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment) {
+		super(propertyName, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
 	}
 
 	@Override
 	public AbstractUiTemplateElement createUiTemplateElement() {
-		UiTextElement uiTextElement = new UiTextElement(dataKey, row, column);
+		UiTextElement uiTextElement = new UiTextElement(propertyName, row, column);
 		mapAbstractTemplateElementAttributesToUiElement(uiTextElement);
 		mapTextElementAttributesToUiElement(uiTextElement);
 		return uiTextElement;
@@ -63,6 +63,10 @@ public class TextElement extends AbstractTemplateElement<TextElement> {
 		uiTextElement.setWrapLines(wrapLines);
 		uiTextElement.setPadding(padding != null ? padding.createUiSpacing() : null);
 		uiTextElement.setTextAlignment(textAlignment.toUiTextAlignment());
+	}
+
+	public String getProperty() {
+		return propertyName;
 	}
 
 	public TextElement setFontStyle(final FontStyle fontStyle) {

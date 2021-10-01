@@ -248,7 +248,7 @@ class ItemGroup {
 		if (isGridTemplate(this.itemRenderer.template)) {
 			relevantFieldNames = this.itemRenderer.template.elements
 				.filter(e => e._type === "UiTextElement")
-				.map(e => e.dataKey);
+				.map(e => e.property);
 		} else {
 			ItemGroup.logger.error("Unknown type of template!");
 		}

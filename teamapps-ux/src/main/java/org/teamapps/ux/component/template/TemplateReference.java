@@ -47,8 +47,8 @@ public class TemplateReference implements Template {
 	}
 
 	@Override
-	public List<String> getDataKeys() {
-		return template.getDataKeys();
+	public List<String> getPropertyNames() {
+		return template.getPropertyNames();
 	}
 
 	@Override

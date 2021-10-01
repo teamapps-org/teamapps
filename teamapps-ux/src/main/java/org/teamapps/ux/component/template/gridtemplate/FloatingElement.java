@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class FloatingElement extends AbstractTemplateElement<FloatingElement> {
 
-	protected List<AbstractTemplateElement> elements = new ArrayList<>();
+	protected List<AbstractTemplateElement<?>> elements = new ArrayList<>();
 
 	public FloatingElement() {
 		super(null);
@@ -43,29 +43,29 @@ public class FloatingElement extends AbstractTemplateElement<FloatingElement> {
 		List<AbstractUiTemplateElement> uiElements = elements.stream()
 				.map(element -> element != null ? element.createUiTemplateElement() : null)
 				.collect(Collectors.toList());
-		UiFloatingElement uiFloatingElement = new UiFloatingElement(dataKey, row, column, uiElements);
+		UiFloatingElement uiFloatingElement = new UiFloatingElement(propertyName, row, column, uiElements);
 		mapAbstractTemplateElementAttributesToUiElement(uiFloatingElement);
 		return uiFloatingElement;
 	}
 
-	public FloatingElement addElement(AbstractTemplateElement element) {
+	public FloatingElement addElement(AbstractTemplateElement<?> element) {
 		elements.add(element);
 		return this;
 	}
 
-	public FloatingElement setElements(final List<AbstractTemplateElement> elements) {
+	public FloatingElement setElements(final List<AbstractTemplateElement<?>> elements) {
 		this.elements = elements;
 		return this;
 	}
 
-	public List<AbstractTemplateElement> getElements() {
+	public List<AbstractTemplateElement<?>> getElements() {
 		return elements;
 	}
 
 	@Override
-	public List<String> getDataKeys() {
+	public List<String> getPropertyNames() {
 		return elements.stream()
-				.map(element -> element.getDataKey())
+				.flatMap(element -> element.getPropertyNames().stream())
 				.collect(Collectors.toList());
 	}
 }

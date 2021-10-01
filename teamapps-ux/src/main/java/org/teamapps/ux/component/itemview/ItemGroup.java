@@ -96,7 +96,7 @@ public class ItemGroup<HEADERRECORD, RECORD> {
 
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
-		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getDataKeys()));
+		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getPropertyNames()));
 		return clientRecord;
 	}
 

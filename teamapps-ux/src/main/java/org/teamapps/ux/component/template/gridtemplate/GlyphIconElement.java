@@ -30,33 +30,33 @@ public class GlyphIconElement extends AbstractTemplateElement<GlyphIconElement> 
 	protected int size;
 	protected Color fontColor;
 
-	public GlyphIconElement(String dataKey, int size, Color fontColor) {
-		super(dataKey);
+	public GlyphIconElement(String propertyName, int size, Color fontColor) {
+		super(propertyName);
 		this.size = size;
 		this.fontColor = fontColor;
 	}
 
-	public GlyphIconElement(String dataKey, int row, int column, int size, Color fontColor) {
-		super(dataKey, row, column);
+	public GlyphIconElement(String propertyName, int row, int column, int size, Color fontColor) {
+		super(propertyName, row, column);
 		this.size = size;
 		this.fontColor = fontColor;
 	}
 
-	public GlyphIconElement(String dataKey, int row, int column, int rowSpan, int colSpan, int size, Color fontColor) {
-		super(dataKey, row, column, rowSpan, colSpan);
+	public GlyphIconElement(String propertyName, int row, int column, int rowSpan, int colSpan, int size, Color fontColor) {
+		super(propertyName, row, column, rowSpan, colSpan);
 		this.size = size;
 		this.fontColor = fontColor;
 	}
 
-	public GlyphIconElement(String dataKey, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment, int size, Color fontColor) {
-		super(dataKey, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
+	public GlyphIconElement(String propertyName, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment, int size, Color fontColor) {
+		super(propertyName, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
 		this.size = size;
 		this.fontColor = fontColor;
 	}
 
 	@Override
 	public AbstractUiTemplateElement createUiTemplateElement() {
-		UiGlyphIconElement uiElement = new UiGlyphIconElement(dataKey, row, column, size);
+		UiGlyphIconElement uiElement = new UiGlyphIconElement(propertyName, row, column, size);
 		uiElement.setFontColor(fontColor != null ? fontColor.toHtmlColorString() : null);
 		mapAbstractTemplateElementAttributesToUiElement(uiElement);
 		return uiElement;
