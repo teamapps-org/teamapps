@@ -244,6 +244,8 @@ class UiFileField extends UiField {
 	command setUploadButtonTemplate(UiTemplate uploadButtonTemplate);
     command setUploadButtonData(Object uploadButtonData);
     command setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover);
+    command cancelAllUploads();
+    command cancelUpload(String fileItemUuid);
 }
 
 enum UiFileFieldDisplayType {
@@ -311,6 +313,7 @@ class UiPictureChooser extends UiField {
 	command setMaxFileSize(long maxFileSize);
 	command setFileTooLargeMessage(String fileTooLargeMessage);
 	command setUploadErrorMessage(String uploadErrorMessage);
+	command cancelUpload();
 }
 
 @TypeScriptFactory
