@@ -30,9 +30,9 @@ import {
 	UiRichTextEditorConfig,
 	UiRichTextEditorEventSource
 } from "../../generated/UiRichTextEditorConfig";
-import * as tinymce from 'tinymce';
-import {Editor, Settings} from 'tinymce';
-import 'tinymce/themes/modern/theme';
+import tinymce, {Editor} from 'tinymce';
+import 'tinymce/themes/silver';
+import 'tinymce/icons/default';
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {DeferredExecutor} from "../util/DeferredExecutor";
 import {generateUUID, keyCodes} from "../trivial-components/TrivialCore";
@@ -48,18 +48,26 @@ import 'tinymce/plugins/searchreplace';
 import 'tinymce/plugins/spellchecker';
 import 'tinymce/plugins/textcolor';
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {debouncedMethod, DebounceMode} from "../util/debounce";
 import {UiToolbarVisibilityMode} from "../../generated/UiToolbarVisibilityMode";
 import {UiSpinner} from "../micro-components/UiSpinner";
-import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
+import {
+	UiTextInputHandlingField_SpecialKeyPressedEvent,
+	UiTextInputHandlingField_TextInputEvent
+} from "../../generated/UiTextInputHandlingFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {parseHtml, removeTags} from "../Common";
 
 
 export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> implements UiRichTextEditorEventSource, UiRichTextEditorCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {throttlingMode: "throttle", delay: 5000});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {
+		throttlingMode: "throttle",
+		delay: 5000
+	});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {
+		throttlingMode: "debounce",
+		delay: 250
+	});
 	public readonly onImageUploadFailed: TeamAppsEvent<UiRichTextEditor_ImageUploadFailedEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadFailedEvent>(this);
 	public readonly onImageUploadStarted: TeamAppsEvent<UiRichTextEditor_ImageUploadStartedEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadStartedEvent>(this);
 	public readonly onImageUploadSuccessful: TeamAppsEvent<UiRichTextEditor_ImageUploadSuccessfulEvent> = new TeamAppsEvent<UiRichTextEditor_ImageUploadSuccessfulEvent>(this);
@@ -121,17 +129,14 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	private $fileField: HTMLInputElement;
 	private buttonGroupWidths: number[];
 	private _hasFocus: boolean;
-	private toolbarVisibilityMode: UiToolbarVisibilityMode;
 	private maxImageFileSizeInBytes: number;
 	private uploadUrl: string;
 	private runningImageUploadsCount: number = 0;
 	private $spinnerWrapper: HTMLElement;
 	private destroying: boolean;
-	private $readonlyView: HTMLElement;
-	private initializationStarted: boolean;
 
 	protected initialize(config: UiRichTextEditorConfig, context: TeamAppsUiContext) {
-		this.toolbarVisibilityMode = config.toolbarVisibilityMode;
+		this._config.toolbarVisibilityMode = config.toolbarVisibilityMode;
 		this.setMaxImageFileSizeInBytes(config.maxImageFileSizeInBytes);
 		this.setUploadUrl(config.uploadUrl);
 
@@ -142,15 +147,13 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			<div class="inline-editor field-background"></div>
 			<input type="file" class="file-upload-button"></input>
 			<div class="spinner-wrapper hidden"></div>
-			<div class="readonly-view"></div>
 		</div>`);
 		this.$toolbarContainer = this.$main.querySelector<HTMLElement>(':scope .toolbar-container');
 		this.$spinnerWrapper = this.$main.querySelector<HTMLElement>(':scope .spinner-wrapper');
-		this.$readonlyView = this.$main.querySelector<HTMLElement>(':scope .readonly-view');
 		this.$spinnerWrapper.appendChild(new UiSpinner().getMainDomElement());
 		this.$fileField = this.$main.querySelector(':scope .file-upload-button');
 		this.$fileField.addEventListener("change", (e) => {
-			let files = (<HTMLInputElement> this.$fileField).files;
+			let files = (<HTMLInputElement>this.$fileField).files;
 			for (let i = 0; i < files.length; i++) {
 				let file = files.item(i);
 				if (file.size > this.maxImageFileSizeInBytes) {
@@ -167,7 +170,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 						this.editor.uploadImages(() => undefined);
 					};
 					fileReader.readAsDataURL(files.item(0));
-					this.$fileField.value ='';
+					this.$fileField.value = '';
 				}
 			}
 		});
@@ -179,24 +182,33 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 
 	@executeWhenFirstDisplayed()
 	private initTinyMce() {
-		if (this.isEditable() && !this.initializationStarted) {
-			this.initializationStarted = true;
-			const translationFileName = UiRichTextEditor.TRANSLATION_FILES[this._config.locale];
-			tinymce.init({
-				theme_url: '/runtime-resources/tinymce/themes/modern/theme.js',
-				skin_url: '/runtime-resources/tinymce/skins/lightgray',
-				selector: `#${this.uuid} > .inline-editor`,
-				fixed_toolbar_container: `#${this.uuid} > .toolbar-container`,
-				branding: false,
-				menubar: false,
-				inline: true,
-				toolbar: "undo redo | styleselect | bold italic underline forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | insertimage table | overflowbutton",
-				plugins: 'lists table image imagetools link autolink contextmenu searchreplace textcolor',
-				contextmenu: "openlink link unlink searchreplace",
-				language_url: translationFileName != null ? "/runtime-resources/tinymce/langs/" + translationFileName : undefined,
-				entity_encoding: "raw",
-				custom_elements: 'alert',
-				style_formats: [{
+		const translationFileName = UiRichTextEditor.TRANSLATION_FILES[this._config.locale];
+		tinymce.init({
+			// theme: 'mobile',
+			// skin: 'oxide',
+			// icons: 'default',
+			theme_url: '/runtime-resources/tinymce/themes/silver/index.js',
+			skin_url: '/runtime-resources/tinymce/skins/ui/oxide',
+			icons_url: '/runtime-resources/tinymce/icons/default',
+			selector: `#${this.uuid} > .inline-editor`,
+			fixed_toolbar_container: `#${this.uuid} > .toolbar-container`,
+			toolbar_persist: true,
+			branding: false,
+			menubar: false,
+			inline: true,
+			toolbar: "undo redo | styleselect | bold italic underline forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | insertimage table | overflowbutton",
+			plugins: 'lists table image imagetools link autolink contextmenu searchreplace textcolor',
+			contextmenu: "openlink link unlink searchreplace",
+			language_url: translationFileName != null ? "/runtime-resources/tinymce/langs/" + translationFileName : undefined,
+			entity_encoding: "raw",
+			formats: {
+				note: {block: 'p', classes: 'note'}
+			},
+			style_formats: [
+				// 	{
+				// 	title: 'Frequently Used'
+				// },
+				{
 					title: 'Heading 1',
 					format: 'h1'
 				}, {
@@ -210,19 +222,20 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					format: 'blockquote'
 				}, {
 					title: 'Note',
-					block: 'alert',
-					wrapper: 1,
+					format: "note",
 					remove: 'all'
 				}, {
 					title: 'Pre',
 					format: 'pre',
 				}, {
 					title: 'Code',
-					icon: 'code',
+					icon: 'sourcecode',
 					format: 'code'
-				}, {
-					title: '|'
-				}, {
+				},
+				// 	{
+				// 	title: 'All Styles'
+				// },
+				{
 					title: 'Headings',
 					items: [{
 						title: 'Heading 1',
@@ -253,8 +266,9 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 						format: 'blockquote'
 					}, {
 						title: 'Note',
-						block: 'alert',
-						wrapper: 1,
+						block: 'p',
+						wrapper: true,
+						classes: ".alert",
 						remove: 'all'
 					}, {
 						title: 'Pre',
@@ -276,7 +290,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 						format: 'underline'
 					}, {
 						title: 'Strikethrough',
-						icon: 'strikethrough',
+						icon: 'strike-through',
 						format: 'strikethrough'
 					}, {
 						title: 'Superscript',
@@ -288,152 +302,142 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 						format: 'subscript'
 					}, {
 						title: 'Code',
-						icon: 'code',
+						icon: 'sourcecode',
 						format: 'code'
 					}]
 				}],
-				init_instance_callback: editor => {
-					if (this.destroying) { // already destroyed
-						editor.destroy();
-						return;
-					}
-					this.editor = editor;
-
-					editor.addMenuItem('bullist', {text: 'Bullet list', icon: 'bullist', cmd: 'InsertUnorderedList'});
-					editor.addMenuItem('numlist', {text: 'Numbered list', icon: 'numlist', cmd: 'InsertOrderedList'});
-					editor.addMenuItem('insertimage', {icon: 'image', text: 'Insert image', onclick: () => this.$fileField.click()});
-					editor.addButton('overflowbutton', {
-						type: 'MenuButton',
-						image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABeUlEQVRYhe2TsWoUQRzGf//dWbYysZW7vIDBOq1NiK2+QcRU6RI4mNtbWLi7DRzoC0iSXkFfQZLq7NRHiBZ2Aatjb/ZvMx66mW1tMj9YmP3mm28+ZhiIRCKRyH1H/gzKsnzinHsN7KnqjYi8qev6IrRoNBo9MMacAS+89GG9XtvFYvEr5B+Pxy9V9UREdoBlmqan0+n0G0DiA4fOuWtgH9gSkV3g3Fp7GAo0xrwHjoFH/jvOsuxd3+bAuc/cAvadc1dFUQw2BYwxr4DtwPrTrlCW5S5w0NVV9Zm19nFAPwnkPlTVo00BYCfUXkSGXa1pmkHI6/135vyx92Yn/mfZk/m5KyRJ8gVoAt4G+BrQg9lt2y43BbIsuwCuO57bNE3vXEFd1z8B25EVsH7uH3zGbUe+yvP8Ev56BVVVmdVqdZgkyZ6qfheRt/P5/EeoPcBkMnnqnHvuN/k4m80+9XmLohio6pGIDNu2XeZ5fllV1brPH4lEIpHIf+U3FW15e2UaPR8AAAAASUVORK5CYII=',
-						title: '...',
-						menu: [
-							(editor as any).menuItems['undo'],
-							(editor as any).menuItems['redo'],
-							(editor as any).menuItems['formats'],
-							(editor as any).menuItems['bold'],
-							(editor as any).menuItems['italic'],
-							(editor as any).menuItems['removeformat'],
-							(editor as any).menuItems['align'],
-							(editor as any).menuItems['bullist'],
-							(editor as any).menuItems['numlist'],
-							(editor as any).menuItems['insertimage'],
-							(editor as any).menuItems['inserttable'],
-							(editor as any).menuItems['openlink'],
-							(editor as any).menuItems['link'],
-							(editor as any).menuItems['unlink'],
-							(editor as any).menuItems['searchreplace']
-						]
-					});
-					editor.addButton('insertimage', {icon: 'image', tooltip: 'Insert image', onclick: () => this.$fileField.click()});
-					this.editor.fire("focus"); // triggers the initial rendering of the toolbar
-					this.editor.fire("blur"); // make the editor NOT being rendered as focused
-					this.updateToolbarOverflow(); // the toolbar got visible only now...
-
-					this.mceReadyExecutor.ready = true;
-
-					this.onResize();
-				},
-				setup: (editor) => {
-					editor.on('change undo redo keypress', (e) => {
-						this.fireTextInputEvent();
-					});
-					editor.on('keydown', (e) => {
-						if (e.keyCode === keyCodes.escape) {
-							this.onSpecialKeyPressed.fire({
-								key: UiSpecialKey.ESCAPE
-							});
-						} else if (e.keyCode === keyCodes.enter) {
-							this.onSpecialKeyPressed.fire({
-								key: UiSpecialKey.ENTER
-							});
-						}
-					});
-					editor.on('undo redo', (e) => {
-						this.editor.uploadImages(() => undefined);
-					});
-					editor.on('focus', (e) => {
-						this._hasFocus = true;
-						this.getMainElement().classList.add('focus');
-						this.updateToolbarVisibility();
-						this.onFocused.fire(null);
-					});
-					editor.on('blur', (e) => {
-						this._hasFocus = false;
-						this.getMainElement().classList.remove('focus');
-						if (this.mayFireChangeEvents()) {
-							this.commit();
-						}
-						this.updateToolbarVisibility();
-						this.onBlurred.fire(null);
-					});
-				},
-				images_upload_handler: (blobInfo: { base64: () => string, blob: () => Blob, blobUri: () => string, filename: () => string, id: () => string, name: () => string, uri: () => string }, success, failure) => {
-					this.runningImageUploadsCount++;
-					this.updateSpinnerVisibility();
-					this.onImageUploadStarted.fire({
-						fileName: blobInfo.filename(),
-						mimeType: blobInfo.blob().type,
-						sizeInBytes: blobInfo.blob().size,
-						incompleteUploadsCount: this.runningImageUploadsCount
-					});
-
-					let upload = (isFirstUpload: boolean) => {
-						let xhr: XMLHttpRequest;
-						let formData: FormData;
-
-						xhr = new XMLHttpRequest();
-						xhr.withCredentials = false;
-						xhr.open('POST', this.uploadUrl);
-
-						const handleUploadFailure = () => {
-							if (isFirstUpload) {
-								setTimeout(() => upload(false), 5000);
-							} else {
-								this.runningImageUploadsCount--;
-								this.updateSpinnerVisibility();
-								this.onImageUploadFailed.fire({
-									name: blobInfo.filename(),
-									mimeType: blobInfo.blob().type,
-									sizeInBytes: blobInfo.blob().size,
-									incompleteUploadsCount: this.runningImageUploadsCount
-								});
-								this.editor.undoManager.transact(() => {
-									this.$main.querySelector<HTMLElement>(`:scope [src='${blobInfo.blobUri()}']`).remove();
-								});
-								failure(null);
-							}
-						};
-
-						xhr.onload = () => {
-							if (xhr.status < 200 || xhr.status >= 300) {
-								handleUploadFailure();
-							} else {
-								let fileUuid = JSON.parse(xhr.responseText)[0];
-								this.imageUploadSuccessCallbacksByUuid[fileUuid] = success;
-								this.runningImageUploadsCount--;
-								this.updateSpinnerVisibility();
-								this.onImageUploadSuccessful.fire({
-									fileUuid: fileUuid,
-									name: blobInfo.filename(),
-									mimeType: blobInfo.blob().type,
-									sizeInBytes: blobInfo.blob().size,
-									incompleteUploadsCount: this.runningImageUploadsCount
-								});
-							}
-						};
-						xhr.onerror = () => {
-							handleUploadFailure();
-						};
-
-						formData = new FormData();
-						formData.append('files', blobInfo.blob(), blobInfo.filename());
-
-						xhr.send(formData);
-					};
-					upload(true);
+			init_instance_callback: editor => {
+				if (this.destroying) { // already destroyed
+					editor.destroy();
+					return;
 				}
-			} as Settings);
-		}
+				this.editor = editor;
+
+				editor.ui.registry.addMenuItem('bullist', {
+					text: 'Bullet list',
+					icon: 'bullist',
+					onAction: () => editor.execCommand('InsertUnorderedList')
+				});
+				editor.ui.registry.addMenuItem('numlist', {
+					text: 'Numbered list',
+					icon: 'numlist',
+					onAction: () => editor.execCommand('InsertOrderedList')
+				});
+				editor.ui.registry.addMenuItem('insertimage', {
+					icon: 'image',
+					text: 'Insert image',
+					onAction: () => this.$fileField.click()
+				});
+				editor.ui.registry.addButton('insertimage', {
+					icon: 'image',
+					tooltip: 'Insert image',
+					onAction: () => this.$fileField.click()
+				});
+
+				this.mceReadyExecutor.ready = true;
+
+				this.onResize();
+			},
+			setup: (editor) => {
+				editor.on('change undo redo keypress', (e) => {
+					this.fireTextInputEvent();
+				});
+				editor.on('keydown', (e) => {
+					if (e.keyCode === keyCodes.escape) {
+						this.onSpecialKeyPressed.fire({
+							key: UiSpecialKey.ESCAPE
+						});
+					} else if (e.keyCode === keyCodes.enter) {
+						this.onSpecialKeyPressed.fire({
+							key: UiSpecialKey.ENTER
+						});
+					}
+				});
+				editor.on('undo redo', (e) => {
+					this.editor.uploadImages(() => undefined);
+				});
+				editor.on('focus', (e) => {
+					this._hasFocus = true;
+					this.getMainElement().classList.add('focus');
+					this.onFocused.fire(null);
+					this.updateToolbar();
+				});
+				editor.on('blur', (e) => {
+					this._hasFocus = false;
+					this.getMainElement().classList.remove('focus');
+					if (this.mayFireChangeEvents()) {
+						this.commit();
+					}
+					this.onBlurred.fire(null);
+					this.updateToolbar();
+				});
+			},
+			images_upload_handler: (blobInfo: { base64: () => string, blob: () => Blob, blobUri: () => string, filename: () => string, id: () => string, name: () => string, uri: () => string }, success, failure) => {
+				this.runningImageUploadsCount++;
+				this.updateSpinnerVisibility();
+				this.onImageUploadStarted.fire({
+					fileName: blobInfo.filename(),
+					mimeType: blobInfo.blob().type,
+					sizeInBytes: blobInfo.blob().size,
+					incompleteUploadsCount: this.runningImageUploadsCount
+				});
+
+				let upload = (isFirstUpload: boolean) => {
+					let xhr: XMLHttpRequest;
+					let formData: FormData;
+
+					xhr = new XMLHttpRequest();
+					xhr.withCredentials = false;
+					xhr.open('POST', this.uploadUrl);
+
+					const handleUploadFailure = () => {
+						if (isFirstUpload) {
+							setTimeout(() => upload(false), 5000);
+						} else {
+							this.runningImageUploadsCount--;
+							this.updateSpinnerVisibility();
+							this.onImageUploadFailed.fire({
+								name: blobInfo.filename(),
+								mimeType: blobInfo.blob().type,
+								sizeInBytes: blobInfo.blob().size,
+								incompleteUploadsCount: this.runningImageUploadsCount
+							});
+							this.editor.undoManager.transact(() => {
+								this.$main.querySelector<HTMLElement>(`:scope [src='${blobInfo.blobUri()}']`).remove();
+							});
+							failure(null);
+						}
+					};
+
+					xhr.onload = () => {
+						if (xhr.status < 200 || xhr.status >= 300) {
+							handleUploadFailure();
+						} else {
+							let fileUuid = JSON.parse(xhr.responseText)[0];
+							this.imageUploadSuccessCallbacksByUuid[fileUuid] = success;
+							this.runningImageUploadsCount--;
+							this.updateSpinnerVisibility();
+							this.onImageUploadSuccessful.fire({
+								fileUuid: fileUuid,
+								name: blobInfo.filename(),
+								mimeType: blobInfo.blob().type,
+								sizeInBytes: blobInfo.blob().size,
+								incompleteUploadsCount: this.runningImageUploadsCount
+							});
+						}
+					};
+					xhr.onerror = () => {
+						handleUploadFailure();
+					};
+
+					formData = new FormData();
+					formData.append('files', blobInfo.blob(), blobInfo.filename());
+
+					xhr.send(formData);
+				};
+				upload(true);
+			}
+		});
 	}
 
 	isValidData(v: string): boolean {
@@ -470,14 +474,11 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 
 	protected displayCommittedValue(): void {
 		const value = removeTags(this.getCommittedValue(), "style");
-		if (this.isEditable()) {
-			this.mceReadyExecutor.invokeWhenReady(() => {
-				this.editor.setContent(value);
-				this.editor.undoManager.clear();
-			});
-		} else {
-			this.$readonlyView.innerHTML = value || '';
-		}
+		this.mceReadyExecutor.invokeWhenReady(() => {
+			this.editor.setContent(value);
+			console.log("clear");
+			this.editor.undoManager.reset();
+		});
 	}
 
 	focus(): void {
@@ -488,8 +489,8 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		super.destroy();
 		this.destroying = true;
 		if (this.editor != null) {
-            this.editor.destroy();
-        }
+			this.editor.destroy();
+		}
 	}
 
 	getTransientValue(): string {
@@ -497,42 +498,29 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		return content.replace(/src="data:.*?"/g, "");
 	}
 
-	@debouncedMethod(700, DebounceMode.BOTH)
 	@executeWhenFirstDisplayed(true)
 	onResize(): void {
-		this.updateToolbarOverflow();
-	}
-
-	private updateToolbarOverflow() {
-		if (!this.buttonGroupWidths) {
-			let buttonGroupWidths = Array.from(this.$toolbarContainer.querySelectorAll<HTMLElement>(":scope .mce-btn-group:not(:last-child)"))
-				.map(e => e.offsetWidth);
-			if (buttonGroupWidths.reduce((sum, groupWidth) => sum + groupWidth, 0) === 0) { // toolbar apparently not visible
-				return;
-			} else {
-				this.buttonGroupWidths = buttonGroupWidths;
-			}
-		}
-
-		let availableWidth = this.$toolbarContainer.offsetWidth - 50 /*overflowbutton*/;
-		let $groupButtons = Array.from(this.$toolbarContainer.querySelectorAll<HTMLElement>(":scope .mce-btn-group:not(:last-child)"));
-		let consumedWidth = 0;
-		this.buttonGroupWidths.forEach((groupWidth, index) => {
-			consumedWidth = consumedWidth + groupWidth;
-			$groupButtons[index].classList.toggle('hidden', consumedWidth > availableWidth);
-		});
+		this.updateToolbar();
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode: UiFieldEditingMode): void {
-		let wasEditable = !(oldEditingMode === UiFieldEditingMode.DISABLED || oldEditingMode === UiFieldEditingMode.READONLY);
-		if (this.isEditable()) {
-			this.initTinyMce();
-		} else if (wasEditable && !this.isEditable()) {
-			this.$readonlyView.innerHTML = removeTags(this.getCommittedValue(), "style");
+		if (this.editor != null) {
+			this.editor.setMode(this.isEditable() ? 'design' : 'readonly');
+			this.updateToolbar();
 		}
+		let wasEditable = !(oldEditingMode === UiFieldEditingMode.DISABLED || oldEditingMode === UiFieldEditingMode.READONLY);
 		UiField.defaultOnEditingModeChangedImpl(this);
-		this.$main.classList.toggle("editable-if-focused", editingMode === UiFieldEditingMode.EDITABLE_IF_FOCUSED);
-		this.updateToolbarVisibility();
+	}
+
+	private updateToolbar() { // both visibility and content (+overflow) are updated on show()
+		if (this.editor != null) {
+			if (this.isEditable() &&
+				(this._config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE || (this._config.toolbarVisibilityMode == UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED && this.hasFocus()))) {
+				this.editor.ui.show();
+			} else {
+				this.editor.ui.hide();
+			}
+		}
 	}
 
 	getDefaultValue(): string {
@@ -540,15 +528,8 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	}
 
 	setToolbarVisibilityMode(toolbarVisibilityMode: UiToolbarVisibilityMode): void {
-		this.toolbarVisibilityMode = toolbarVisibilityMode;
-		this.updateToolbarVisibility();
-	}
-
-	private updateToolbarVisibility() {
-		const toolbarVisible =
-			(this.isEditable() && (this.toolbarVisibilityMode === UiToolbarVisibilityMode.VISIBLE || (this.toolbarVisibilityMode === UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED && this._hasFocus)));
-		this.$toolbarContainer.classList.toggle('hidden', !toolbarVisible);
-		this.updateToolbarOverflow();
+		this._config.toolbarVisibilityMode = toolbarVisibilityMode;
+		this.updateToolbar();
 	}
 
 	hasFocus(): boolean {

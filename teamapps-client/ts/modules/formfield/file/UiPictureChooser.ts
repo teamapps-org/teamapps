@@ -274,6 +274,10 @@ export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> im
 		this.$pictureWrapper.style.width = imageDisplayWidth + "px";
 		this.$pictureWrapper.style.height = imageDisplayHeight + "px";
 	}
+
+	cancelUpload(): any {
+		// TODO
+	}
 }
 
 export function formatString(s: string, ...params: any[]) {

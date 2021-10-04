@@ -60,7 +60,6 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 
 	private committedValue: V;
 
-	private editingMode: UiFieldEditingMode = UiFieldEditingMode.EDITABLE;
 	private $fieldWrapper: HTMLElement;
 
 	private _messageTooltip: {
@@ -235,15 +234,15 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	}
 
 	public setEditingMode(editingMode: UiFieldEditingMode = UiFieldEditingMode.EDITABLE): void {
-		const oldEditingMode = this.editingMode;
-		this.editingMode = editingMode;
+		const oldEditingMode = this._config.editingMode;
+		this._config.editingMode = editingMode;
 		this.onEditingModeChanged(editingMode, oldEditingMode);
 	}
 
 	protected abstract onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void;
 
 	public getEditingMode(): UiFieldEditingMode {
-		return this.editingMode;
+		return this._config.editingMode;
 	}
 
 	public isEditable(): boolean {
