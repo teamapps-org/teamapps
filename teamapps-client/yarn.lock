@@ -1099,13 +1099,6 @@
   resolved "https://registry.npmjs.org/@types/tapable/-/tapable-1.0.5.tgz"
   integrity sha512-/gG2M/Imw7cQFp8PGvz/SwocNrmKFjFsm5Pb8HdbHkZ1K8pmuPzOX4VeVoiEecFCVf4CsN1r3/BRvx+6sNqwtQ==
 
-"@types/tinymce@^4.6.2":
-  version "4.6.2"
-  resolved "https://registry.yarnpkg.com/@types/tinymce/-/tinymce-4.6.2.tgz#49be9707f042b7db55cfcbf402b96f04e8cd8cda"
-  integrity sha512-qmLwgNtpIl2PzHy50z3cV7k25eNMB6SgsFOfTRwDfSi+StQWS088hlL+ix5Ynqq5IJlBlu5KRbdFKTHAXnRfGg==
-  dependencies:
-    "@types/jquery" "*"
-
 "@types/tough-cookie@*":
   version "4.0.0"
   resolved "https://registry.npmjs.org/@types/tough-cookie/-/tough-cookie-4.0.0.tgz"
@@ -9014,10 +9007,10 @@ tinymce-i18n@^18.12.25:
   resolved "https://registry.yarnpkg.com/tinymce-i18n/-/tinymce-i18n-18.12.25.tgz#e20c5f7494edd79f70936dd5c39198b7ade7b059"
   integrity sha512-+VsZcwxW94yGov63ZNM0K4cMAqMnY7yl+rv09tU4efRj+V2CUj4QeejptQtjxjRdEdCVQvB9HjDaz4UzHaEQlw==
 
-tinymce@^4.9.11:
-  version "4.9.11"
-  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-4.9.11.tgz#e3dae099722294c5b8d84ba7ef18dd126de6b582"
-  integrity sha512-nkSLsax+VY5DBRjMFnHFqPwTnlLEGHCco82FwJF2JNH6W+5/ClvNC1P4uhD5lXPDNiDykSHR0XJdEh7w/ICHzA==
+tinymce@^5.9.2:
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-5.9.2.tgz#c56a1d7800ac23026fbe6e0fcf444c0f157ccafe"
+  integrity sha512-/dHTsbxo0YwLvB5krRqiw/qHEm04/k6l0dvAQ3hO5oNw4e9QalKcUQCdr+g/b/FWcsUMP6scvKmm8MX50/j3Cg==
 
 tinyqueue@^2.0.3:
   version "2.0.3"
@@ -9147,10 +9140,10 @@ tslib@^1.10.0, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.11.0.tgz"
   integrity sha512-BmndXUtiTn/VDDrJzQE7Mm22Ix3PxgLltW9bSNLoeCY31gnG2OPx0QqJnuc9oMIKioYrz487i6K9o4Pdn0j+Kg==
 
-tslib@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
-  integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
+tslib@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
 tslint-loader@^3.5.3:
   version "3.5.4"
