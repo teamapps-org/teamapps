@@ -383,18 +383,20 @@ public enum BaseTemplate implements Template {
 				.setAriaLabelProperty(PROPERTY_ARIA_LABEL)
 				.setTitleProperty(PROPERTY_TITLE)
 				.setMinWidth(0).setMaxWidth(0)
-				.setMinHeight(20).setMaxHeight(20)
-				.setGridGap(0)
+				.setMinHeight(28).setMaxHeight(28)
+				.setGridGap(4)
 				.setPadding(new Spacing(0))
 				.addColumn(SizeType.AUTO, 0, 0, 2, 2)
 				.addColumn(SizeType.AUTO, 0, 0, 0, 2)
 				.addRow(SizeType.AUTO, 0, 0, 1, 1)
-				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 16))
-				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 16, 16)
+				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 24))
+				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 24, 24)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
 						.setShadow(Shadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
-				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1).setWrapLines(false));
+				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
+						.setFontStyle(1.15f)
+						.setWrapLines(false));
 	}
 
 	public static Template createFormButtonTemplate(int iconSize, float relativeFontSize) {
