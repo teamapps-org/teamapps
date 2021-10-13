@@ -19,10 +19,19 @@
  */
 package org.teamapps.ux.i18n;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 
 public interface TranslationProvider {
 
 	String getTranslation(String key, Locale locale);
+
+	default String getLocalized(Locale locale, String key, Object... parameters) {
+		String value = getTranslation(key, locale);
+		if (value != null) {
+			return MessageFormat.format(value, parameters); // always use format, even without parameters, for consistent escaping!
+		}
+		return key;
+	}
 
 }
