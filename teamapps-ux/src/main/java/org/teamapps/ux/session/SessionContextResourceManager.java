@@ -19,27 +19,30 @@
  */
 package org.teamapps.ux.session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.ux.resource.FileResource;
 import org.teamapps.ux.resource.Resource;
-import org.teamapps.uisession.QualifiedUiSessionId;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ClientSessionResourceProvider {
+public class SessionContextResourceManager {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	public static final String BASE_PATH = "/files/";
-	private QualifiedUiSessionId sessionId;
-	private AtomicInteger idGenerator = new AtomicInteger();
-	private Map<Integer, Resource> binaryResourceById = new HashMap<>();
-	private Map<File, String> fileLinkByFile = new HashMap<>();
-	private Map<String, String> resourceLinkByUniqueIdentifier = new HashMap<>();
 
+	private final SessionContext sessionContext;
+	private final AtomicInteger idGenerator = new AtomicInteger();
+	private final Map<Integer, Resource> binaryResourceById = new HashMap<>();
+	private final Map<File, String> fileLinkByFile = new HashMap<>();
+	private final Map<String, String> resourceLinkByUniqueIdentifier = new HashMap<>();
 
-	public ClientSessionResourceProvider(QualifiedUiSessionId sessionId) {
-		this.sessionId = sessionId;
+	public SessionContextResourceManager(SessionContext sessionContext) {
+		this.sessionContext = sessionContext;
 	}
 
 	public Resource getBinaryResource(int resourceId) {
@@ -47,6 +50,7 @@ public class ClientSessionResourceProvider {
 	}
 
 	public String createFileLink(File file) {
+		checkThread();
 		if (file == null) {
 			return null;
 		}
@@ -62,6 +66,7 @@ public class ClientSessionResourceProvider {
 	}
 
 	public String createResourceLink(Resource resource, String uniqueIdentifier) {
+		checkThread();
 		if (resource == null) {
 			return null;
 		}
@@ -78,11 +83,17 @@ public class ClientSessionResourceProvider {
 		return resourceLink;
 	}
 
+	private void checkThread() {
+		if (SessionContext.current() != sessionContext) {
+			LOGGER.error("createFileLink called from wrong thread!", new RuntimeException());
+		}
+	}
+
 	private int createId() {
 		return idGenerator.incrementAndGet();
 	}
 
 	private String createLink(int id) {
-		return BASE_PATH + sessionId.getUiSessionId() + "/res" + id;
+		return BASE_PATH + sessionContext.getSessionId().getUiSessionId() + "/res" + id;
 	}
 }
