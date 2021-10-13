@@ -218,7 +218,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			rowHeight: config.rowHeight + config.rowBorderWidth,
 			multiColumnSort: false,
 			multiSelect: config.allowMultiRowSelection,
-			enableTextSelectionOnCells: false, // see also CSS style user-select: none
+			enableTextSelectionOnCells: config.textSelectionEnabled, // see also CSS style user-select: none
 			editable: config.editable,
 			// editCommandHandler: (item: TableDataProviderItem, column: Column, editCommand: any) => {
 			// 	column.uiField.commit();

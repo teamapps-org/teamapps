@@ -19,7 +19,6 @@
  */
 .UiTable {
   position: relative;
-  //user-select: none;
 
   // infiniteItemViews never know their size. slickgrid depends on size information via JavaScript. Make sure the container element can shrink while slickgrid is still fixed size (before javascript call, which itself depends on the size of the container element).
   // Also needed for preventing the selection frame to cause an additional scrollbar.
@@ -61,7 +60,6 @@
       border-bottom: 1px solid var(--ta-input-border-color);
       border-right: 1px solid var(--ta-input-border-color);
       padding: 0;
-      user-select: text;
       overflow: visible; // needed for validation borders to be displayed correctly; see anti-overflow-wrapper
 
       > .validation-class-wrapper {

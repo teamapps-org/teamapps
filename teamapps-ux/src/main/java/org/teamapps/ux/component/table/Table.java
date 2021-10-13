@@ -101,6 +101,7 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 	private boolean allowMultiRowSelection = false;
 	private boolean showRowCheckBoxes; //if true, show check boxes on the left
 	private boolean showNumbering; //if true, show numbering on the left
+	private boolean textSelectionEnabled = false;
 
 	private String sortField; //if available the table is initially sorted by this field
 	private SortDirection sortDirection = SortDirection.ASC;
@@ -230,6 +231,7 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		uiTable.setAllowMultiRowSelection(allowMultiRowSelection);
 		uiTable.setShowRowCheckBoxes(showRowCheckBoxes);
 		uiTable.setShowNumbering(showNumbering);
+		uiTable.setTextSelectionEnabled(textSelectionEnabled);
 
 		List<RECORD> records = retrieveRecords(0, pageSize);
 		CacheManipulationHandle<List<UiTableClientRecord>> cacheResponse = clientRecordCache.replaceRecords(records);
@@ -945,6 +947,15 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 
 	public void setShowNumbering(boolean showNumbering) {
 		this.showNumbering = showNumbering;
+		reRenderIfRendered();
+	}
+
+	public boolean isTextSelectionEnabled() {
+		return textSelectionEnabled;
+	}
+
+	public void setTextSelectionEnabled(boolean textSelectionEnabled) {
+		this.textSelectionEnabled = textSelectionEnabled;
 		reRenderIfRendered();
 	}
 

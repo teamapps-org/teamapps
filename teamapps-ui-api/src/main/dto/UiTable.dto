@@ -53,6 +53,7 @@ class UiTable extends UiComponent {
 
 	boolean showRowCheckBoxes; //if true, show check boxes on the left
 	boolean showNumbering; //if true, show numbering on the left
+	boolean textSelectionEnabled;
 
 	List<UiTableClientRecord> tableData; //if available the initial table data
 	int totalNumberOfRecords;
