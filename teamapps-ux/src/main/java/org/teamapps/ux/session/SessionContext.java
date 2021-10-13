@@ -56,9 +56,11 @@ import org.teamapps.ux.resource.Resource;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.text.MessageFormat;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -176,11 +178,7 @@ public class SessionContext {
 	}
 
 	public String getLocalized(String key, Object... parameters) {
-		String value = translationProvider.getTranslation(key, getLocale());
-		if (value != null && parameters != null) {
-			return MessageFormat.format(value, parameters);
-		}
-		return value;
+		return translationProvider.getLocalized(getLocale(), key, parameters);
 	}
 
 	public boolean isActive() {
