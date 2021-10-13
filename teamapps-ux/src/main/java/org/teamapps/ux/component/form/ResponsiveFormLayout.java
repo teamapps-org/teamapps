@@ -254,8 +254,10 @@ public class ResponsiveFormLayout  {
 			configurationTemplate = responsiveForm.getConfigurationTemplate();
 		}
 		ResponsiveFormSection responsiveFormSection = new ResponsiveFormSection(this, "section" + (responsiveFormSections.size() + 1), configurationTemplate);
-		if (icon != null || caption != null) {
+		if (configurationTemplate.getSectionTemplate().getHeaderTemplate() == null) {
 			responsiveFormSection.setHeaderTemplate(BaseTemplate.FORM_SECTION_HEADER);
+		}
+		if (icon != null || caption != null) {
 			responsiveFormSection.setHeaderData(new BaseTemplateRecord(icon, caption));
 		}
 		responsiveFormSections.add(responsiveFormSection);
