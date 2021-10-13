@@ -156,7 +156,7 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 
 	public getFocusableElement(): HTMLElement {
-		return this.trivialComboBox.getMainDomElement() as HTMLElement;
+		return this.trivialComboBox.getEditor() as HTMLElement;
 	}
 
 	protected displayCommittedValue(): void {

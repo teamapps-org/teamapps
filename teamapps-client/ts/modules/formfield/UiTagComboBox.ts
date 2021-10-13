@@ -149,7 +149,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	}
 
 	public getFocusableElement(): HTMLElement {
-		return this.trivialTagComboBox.getMainDomElement() as HTMLElement;
+		return this.trivialTagComboBox.getEditor() as HTMLElement;
 	}
 
 	protected displayCommittedValue(): void {
