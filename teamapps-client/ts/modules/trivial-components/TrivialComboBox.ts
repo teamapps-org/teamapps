@@ -334,6 +334,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				this.showEditor();
 				this.$editor.select();
 				this.dropDownComponent.setValue(this.getValue())
+				this.query("", 0);
 				this.openDropDown();
 			}
 		});
@@ -345,6 +346,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					this.openDropDown();
 				}
 				this.dropDownComponent.setValue(this.getValue())
+				this.query("", 0);
 			}
 		});
 

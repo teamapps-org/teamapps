@@ -80,7 +80,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 	}
 
 	setValue(value: E): void {
-		this.handleQuery("", 0);
+		// do nothing
 	}
 
 	destroy(): void {
