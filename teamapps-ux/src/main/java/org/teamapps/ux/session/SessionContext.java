@@ -97,7 +97,7 @@ public class SessionContext {
 	private final SessionIconProvider iconProvider;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
 	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
-	private final ClientSessionResourceProvider sessionResourceProvider;
+	private final SessionContextResourceManager sessionResourceProvider;
 
 	private TranslationProvider translationProvider;
 
@@ -129,11 +129,11 @@ public class SessionContext {
 		this.commandExecutor = commandExecutor;
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
-		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(this);
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
+		this.sessionResourceProvider = new SessionContextResourceManager(this);
 	}
 
 	public static SessionContext current() {
@@ -584,5 +584,9 @@ public class SessionContext {
 
 	public void goToUrl(String url, boolean blankPage) {
 		queueCommand(new UiRootPanel.GoToUrlCommand(url, blankPage));
+	}
+
+	public QualifiedUiSessionId getSessionId() {
+		return sessionId;
 	}
 }
