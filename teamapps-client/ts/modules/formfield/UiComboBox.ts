@@ -176,7 +176,9 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 
 	focus(): void {
-		this.trivialComboBox.focus();
+		if (this.isEditable()) {
+			this.trivialComboBox.focus();
+		}
 	}
 
 	public hasFocus(): boolean {
