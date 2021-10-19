@@ -18,6 +18,8 @@
  * =========================LICENSE_END==================================
  */
 .UiPanel {
+  background-color: var(--ta-bg-color);
+  border-radius: var(--ta-border-radius);
   background-size: cover;
 
   box-shadow: var(--ta-box-shadow-base);
@@ -35,7 +37,9 @@
     min-height: 32px;
     display: flex;
     align-items: center;
-    border-bottom-color: var(--ta-inner-border-color);
+    border-top-left-radius: calc(var(--ta-border-radius) - 1px);
+    border-top-right-radius: calc(var(--ta-border-radius) - 1px);
+    border-bottom: 1px solid var(--ta-inner-border-color);
     padding: 0 1px 0 8px;
     background-color: var(--ta-bg-color-semi-transparent);
 
@@ -158,19 +162,15 @@
 
   .panel-body {
     flex: 1 1 auto;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     padding: 0;
     background-color: var(--ta-bg-color);
-    .body-container {
-      height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      border-bottom-left-radius: var(--ta-border-radius);
-      border-bottom-right-radius: var(--ta-border-radius);
-    }
+    border-bottom-left-radius: var(--ta-border-radius);
+    border-bottom-right-radius: var(--ta-border-radius);
   }
 
-  &.stretch-content > .panel-body > .body-container > * {
+  &.stretch-content > .panel-body > * {
     width: 100%;
     height: 100%;
   }
