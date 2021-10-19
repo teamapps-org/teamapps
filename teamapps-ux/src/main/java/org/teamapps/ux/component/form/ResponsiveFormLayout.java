@@ -163,41 +163,26 @@ public class ResponsiveFormLayout  {
 	}
 
 	public LabelAndField addLabelAndComponent(Component field) {
-		return addLabelAndComponent(null, null, UUID.randomUUID().toString(), field, true, 0);
-	}
-
-	public LabelAndField addLabelAndComponent(String propertyName, Component field) {
-		return addLabelAndComponent(null, null, propertyName, field, true, 0);
+		return addLabelAndComponent(null, null, field, true, 0);
 	}
 
 	public LabelAndField addLabelAndComponent(Component field, boolean newRow) {
-		return addLabelAndComponent(null, null, UUID.randomUUID().toString(), field, newRow, 0);
-	}
-
-	public LabelAndField addLabelAndComponent(String propertyName, Component field, boolean newRow) {
-		return addLabelAndComponent(null, null, propertyName, field, newRow, 0);
-	}
-
-	public LabelAndField addLabelAndComponent(Icon icon, String caption, String propertyName, Component field) {
-		return addLabelAndComponent(icon, caption, propertyName, field, true, 0);
+		return addLabelAndComponent(null, null, field, newRow, 0);
 	}
 
 	public LabelAndField addLabelAndComponent(Icon icon, String caption, Component field) {
-		return addLabelAndComponent(icon, caption, UUID.randomUUID().toString(), field, true, 0);
-	}
-
-	public LabelAndField addLabelAndComponent(Icon icon, String caption, String propertyName, Component field, boolean newRow) {
-		return addLabelAndComponent(icon, caption, propertyName, field, newRow, 0);
+		return addLabelAndComponent(icon, caption, field, true, 0);
 	}
 
 	public LabelAndField addLabelAndComponent(Icon icon, String caption, Component field, boolean newRow) {
-		return addLabelAndComponent(icon, caption, UUID.randomUUID().toString(), field, newRow, 0);
+		return addLabelAndComponent(icon, caption, field, newRow, 0);
 	}
 
-	public LabelAndField addLabelAndComponent(Icon icon, String caption, String propertyName, Component field, boolean newRow, int columnOffset) {
+	public LabelAndField addLabelAndComponent(Icon icon, String caption, Component field, boolean newRow, int columnOffset) {
 		Label label = null;
 		if (icon != null || caption != null) {
 			label = new Label(caption, icon);
+			label.setTargetComponent(field);
 		}
 		int row = getSection().getLastNonEmptyRow();
 		int column = columnOffset;
@@ -254,7 +239,7 @@ public class ResponsiveFormLayout  {
 			configurationTemplate = responsiveForm.getConfigurationTemplate();
 		}
 		ResponsiveFormSection responsiveFormSection = new ResponsiveFormSection(this, "section" + (responsiveFormSections.size() + 1), configurationTemplate);
-		if (configurationTemplate.getSectionTemplate().getHeaderTemplate() == null) {
+		if (configurationTemplate.getSectionTemplate() == null || configurationTemplate.getSectionTemplate().getHeaderTemplate() == null) {
 			responsiveFormSection.setHeaderTemplate(BaseTemplate.FORM_SECTION_HEADER);
 		}
 		if (icon != null || caption != null) {
