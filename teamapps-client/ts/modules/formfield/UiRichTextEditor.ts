@@ -191,6 +191,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			skin_url: '/runtime-resources/tinymce/skins/ui/oxide',
 			icons_url: '/runtime-resources/tinymce/icons/default',
 			selector: `#${this.uuid} > .inline-editor`,
+			readonly: !this.isEditable(),
 			fixed_toolbar_container: `#${this.uuid} > .toolbar-container`,
 			toolbar_persist: true,
 			branding: false,
@@ -311,8 +312,6 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					editor.destroy();
 					return;
 				}
-				this.editor = editor;
-
 				editor.ui.registry.addMenuItem('bullist', {
 					text: 'Bullet list',
 					icon: 'bullist',
@@ -339,6 +338,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 				this.onResize();
 			},
 			setup: (editor) => {
+				this.editor = editor;
 				editor.on('change undo redo keypress', (e) => {
 					this.fireTextInputEvent();
 				});
