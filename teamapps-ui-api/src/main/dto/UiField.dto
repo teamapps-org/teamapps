@@ -332,6 +332,7 @@ class UiCheckBox extends UiField {
 	String backgroundColor = "rgb(255, 255, 255)";
 	String checkColor = "rgb(70, 70, 70)";
 	String borderColor = "rgb(123, 123, 123)";
+	boolean htmlEnabled = false;
 
 	command setCaption(String caption);
 	command setBackgroundColor(String backgroundColor);

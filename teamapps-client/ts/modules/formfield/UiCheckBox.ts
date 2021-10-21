@@ -59,7 +59,7 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 		this.$main.addEventListener("mousedown", () => {
 			setTimeout(() => this.focus());
 		});
-		this.$main.addEventListener('click',() => {
+		this.$main.addEventListener('click', () => {
 			if (this.getEditingMode() === UiFieldEditingMode.DISABLED || this.getEditingMode() === UiFieldEditingMode.READONLY) {
 				return;
 			}
@@ -87,7 +87,11 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 	}
 
 	setCaption(caption: string): void {
-		this.$label.textContent = caption || '';
+		if (!this._config.htmlEnabled) {
+			this.$label.textContent = caption || '';
+		} else {
+			this.$label.innerHTML = caption || '';
+		}
 	}
 
 	setBackgroundColor(backgroundColor: string): void {
