@@ -26,6 +26,8 @@ import org.teamapps.ux.session.SessionContext;
 
 import java.util.function.Function;
 
+import static org.teamapps.ux.session.SessionContextResourceManager.RESOURCE_LINK_ID_PREFIX;
+
 public class SessionResourceProvider implements ResourceProvider {
 
 	private final Function<QualifiedUiSessionId, SessionContext> sessionContexts;
@@ -43,31 +45,27 @@ public class SessionResourceProvider implements ResourceProvider {
 		return sessionContexts.apply(qualifiedUiSessionId);
 	}
 
-	private Resource getResource(String resource, String httpSessionId) {
+	@Override
+	public Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId) {
 		try {
-			if (resource == null) {
+			if (relativeResourcePath == null) {
 				return null;
 			}
-			if (resource.startsWith("/")) {
-				resource = resource.substring(1);
+			if (relativeResourcePath.startsWith("/")) {
+				relativeResourcePath = relativeResourcePath.substring(1);
 			}
-			String[] parts = resource.split("/");
+			String[] parts = relativeResourcePath.split("/");
 			QualifiedUiSessionId qualifiedUiSessionId = new QualifiedUiSessionId(httpSessionId, parts[0]);
 			SessionContext sessionContext = sessionContexts.apply(qualifiedUiSessionId);
 			if (sessionContext == null) {
 				return null;
 			}
-			int id = Integer.parseInt(parts[1].substring(3));
+			int id = Integer.parseInt(parts[1].substring(RESOURCE_LINK_ID_PREFIX.length()));
 			return sessionContext.getBinaryResource(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	@Override
-	public Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId) {
-		return getResource(relativeResourcePath, httpSessionId);
 	}
 	
 }

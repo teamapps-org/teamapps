@@ -22,6 +22,7 @@ package org.teamapps.ux.resource;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Objects;
 
 public class ResourceWrapper implements Resource {
 
@@ -74,5 +75,18 @@ public class ResourceWrapper implements Resource {
 	@Override
 	public Resource lastModified(Date date) {
 		return delegate.lastModified(date);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ResourceWrapper that = (ResourceWrapper) o;
+		return Objects.equals(delegate, that.delegate);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(delegate);
 	}
 }

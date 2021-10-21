@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,81 +19,90 @@
  */
 package org.teamapps.ux.session;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.ux.resource.FileResource;
 import org.teamapps.ux.resource.Resource;
+import org.teamapps.ux.resource.ResourceWrapper;
 
 import java.io.File;
-import java.lang.invoke.MethodHandles;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SessionContextResourceManager {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	public static final String BASE_PATH = "/files/";
+	public static final String RESOURCE_LINK_ID_PREFIX = "res-";
 
-	private final SessionContext sessionContext;
-	private final AtomicInteger idGenerator = new AtomicInteger();
-	private final Map<Integer, Resource> binaryResourceById = new HashMap<>();
-	private final Map<File, String> fileLinkByFile = new HashMap<>();
-	private final Map<String, String> resourceLinkByUniqueIdentifier = new HashMap<>();
+	private static final Map<Class<? extends Resource>, Boolean> IMPLEMENTS_EQUAL_BY_RESOURCE_CLASS = new ConcurrentHashMap<>();
 
-	public SessionContextResourceManager(SessionContext sessionContext) {
-		this.sessionContext = sessionContext;
+	private final QualifiedUiSessionId sessionId;
+	private final AtomicInteger linkIdGenerator = new AtomicInteger();
+	private final Map<Integer, Resource> resourceByLinkId = new ConcurrentHashMap<>();
+	private final Map<Resource, String> resourceLinkByResource = new ConcurrentHashMap<>();
+
+	public SessionContextResourceManager(QualifiedUiSessionId sessionId) {
+		this.sessionId = sessionId;
 	}
 
 	public Resource getBinaryResource(int resourceId) {
-		return binaryResourceById.get(resourceId);
+		return resourceByLinkId.get(resourceId);
 	}
 
 	public String createFileLink(File file) {
-		checkThread();
 		if (file == null) {
 			return null;
 		}
-		if (fileLinkByFile.containsKey(file)) {
-			return fileLinkByFile.get(file);
-		}
-		FileResource resource = new FileResource(file);
-		int id = createId();
-		binaryResourceById.put(id, resource);
-		String fileLink = createLink(id);
-		fileLinkByFile.put(file, fileLink);
-		return fileLink;
+		return createResourceLink(new FileResource(file), null);
 	}
 
 	public String createResourceLink(Resource resource, String uniqueIdentifier) {
-		checkThread();
 		if (resource == null) {
 			return null;
 		}
-		if (uniqueIdentifier != null && resourceLinkByUniqueIdentifier.containsKey(uniqueIdentifier)) {
-			return resourceLinkByUniqueIdentifier.get(uniqueIdentifier);
+		String existingLink = resourceLinkByResource.get(resource);
+		if (existingLink != null) {
+			return existingLink;
+		}
+		if (uniqueIdentifier != null) {
+			return createResourceLink(new UniqueIdentifierResourceWrapper(resource, uniqueIdentifier), null /*!!*/);
 		}
 
-		int id = createId();
-		binaryResourceById.put(id, resource);
-		String resourceLink = createLink(id);
-		if (uniqueIdentifier != null) {
-			resourceLinkByUniqueIdentifier.put(uniqueIdentifier, resourceLink);
-		}
+		int linkId = createLinkId();
+		String resourceLink = createLink(linkId);
+		resourceByLinkId.put(linkId, resource);
+		resourceLinkByResource.put(resource, resourceLink);
 		return resourceLink;
 	}
 
-	private void checkThread() {
-		if (SessionContext.current() != sessionContext) {
-			LOGGER.error("createFileLink called from wrong thread!", new RuntimeException());
-		}
-	}
-
-	private int createId() {
-		return idGenerator.incrementAndGet();
+	private int createLinkId() {
+		return linkIdGenerator.incrementAndGet();
 	}
 
 	private String createLink(int id) {
-		return BASE_PATH + sessionContext.getSessionId().getUiSessionId() + "/res" + id;
+		return BASE_PATH + sessionId.getUiSessionId() + "/" + RESOURCE_LINK_ID_PREFIX + id;
+	}
+
+	private static class UniqueIdentifierResourceWrapper extends ResourceWrapper {
+		private final String uniqueIdentifier;
+
+		public UniqueIdentifierResourceWrapper(Resource resource, String uniqueIdentifier) {
+			super(resource);
+			this.uniqueIdentifier = uniqueIdentifier;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			UniqueIdentifierResourceWrapper that = (UniqueIdentifierResourceWrapper) o;
+			return Objects.equals(uniqueIdentifier, that.uniqueIdentifier);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(uniqueIdentifier);
+		}
 	}
 }

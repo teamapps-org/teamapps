@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FileResource implements Resource {
 
@@ -110,5 +111,18 @@ public class FileResource implements Resource {
 		return "FileResource{" +
 				"file=" + file +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FileResource that = (FileResource) o;
+		return Objects.equals(file, that.file) && Objects.equals(name, that.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(file, name);
 	}
 }

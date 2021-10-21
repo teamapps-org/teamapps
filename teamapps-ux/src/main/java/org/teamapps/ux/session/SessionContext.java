@@ -133,7 +133,7 @@ public class SessionContext {
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
-		this.sessionResourceProvider = new SessionContextResourceManager(this);
+		this.sessionResourceProvider = new SessionContextResourceManager(sessionId);
 	}
 
 	public static SessionContext current() {
