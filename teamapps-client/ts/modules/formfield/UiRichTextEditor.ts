@@ -362,7 +362,9 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					this.onFocused.fire(null);
 					this.updateToolbar();
 				});
-				editor.on('blur', (e) => {
+				editor.on('focusout', (e) => {
+					// NOTE that it is important to do this on focusout instead of blur, since blur is called asynchronously only (setTimeout).
+					// Being synchronous is important, in order to make sure that the changes are commited before processing a, say, button event that will save the form...
 					this._hasFocus = false;
 					this.getMainElement().classList.remove('focus');
 					if (this.mayFireChangeEvents()) {
