@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -62,11 +63,11 @@ public class Event<EVENT_DATA> {
 		this.source = stackTraceElement.getFileName() + stackTraceElement.getLineNumber();
 	}
 
-	public void addListener(Consumer<EVENT_DATA> listener) {
-		addListener(listener, true);
+	public Disposable addListener(Consumer<EVENT_DATA> listener) {
+		return addListener(listener, true);
 	}
 
-	public void addListener(Consumer<EVENT_DATA> listener, boolean bindToSessionContext) {
+	public Disposable addListener(Consumer<EVENT_DATA> listener, boolean bindToSessionContext) {
 		SessionContext currentSessionContext;
 		if (bindToSessionContext && (currentSessionContext = CurrentSessionContext.getOrNull()) != null) {
 			listeners.add(new SessionContextAwareEventListener<>(currentSessionContext, listener));
@@ -75,22 +76,48 @@ public class Event<EVENT_DATA> {
 			// just add the listener. It will get called with whatever context is active at firing time
 			listeners.add(listener);
 		}
+		return () -> removeListener(listener);
 	}
 
-	public void addListener(Runnable listener) {
-		addListener(listener, true);
+	public Disposable addListener(SelfDisposingEventListener<EVENT_DATA> listener) {
+		return addListener(listener, true);
+	}
+
+	public Disposable addListener(SelfDisposingEventListener<EVENT_DATA> listener, boolean bindToSessionContext) {
+		AtomicReference<Disposable> disposable = new AtomicReference<>();
+		disposable.set(addListener(e -> {
+			listener.handle(e, disposable.get());
+		}, bindToSessionContext));
+		return disposable.get();
+	}
+
+	public Disposable addListener(Runnable listener) {
+		return addListener(listener, true);
+	}
+
+	public Disposable addListener(Runnable listener, boolean bindToSessionContext) {
+		return addListener(new RunnableWrapper<>(listener), bindToSessionContext);
 	}
 
 	List<Consumer<EVENT_DATA>> getListeners() {
 		return listeners;
 	}
 
-	public void addListener(Runnable listener, boolean bindToSessionContext) {
-		addListener(new RunnableWrapper<>(listener), bindToSessionContext);
-	}
-
+	/**
+	 * @deprecated Use the {@link Disposable} returned by {@link #addListener(Runnable)} instead!
+	 */
+	@Deprecated
 	public void removeListener(Runnable listener) {
 		removeListener(new RunnableWrapper<>(listener));
+	}
+
+	/**
+	 * @deprecated Use the {@link Disposable} returned by {@link #addListener(Consumer)} instead!
+	 */
+	@Deprecated
+	public void removeListener(Consumer<EVENT_DATA> listener) {
+		listeners.remove(listener); // in case it is not bound to a session
+		listeners.remove(new SessionContextAwareEventListener<>(listener));
 	}
 
 	/**
@@ -108,11 +135,6 @@ public class Event<EVENT_DATA> {
 				}
 			});
 		}
-	}
-
-	public void removeListener(Consumer<EVENT_DATA> listener) {
-		listeners.remove(listener); // in case it is not bound to a session
-		listeners.remove(new SessionContextAwareEventListener<>(listener));
 	}
 
 	public void fire(EVENT_DATA eventData) {
