@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ResponsiveFormLayout  {
+public class ResponsiveFormLayout {
 
 	protected static final String LABEL_NAME_SUFFIX = "Label";
 	private final ResponsiveForm responsiveForm;
@@ -59,7 +59,11 @@ public class ResponsiveFormLayout  {
 	}
 
 	public ResponsiveFormField addField(String propertyName, AbstractField field, int column, int colSpan) {
-		int row = getSection().getLastNonEmptyRow();
+		return addField(propertyName, field, column, colSpan, false);
+	}
+
+	private ResponsiveFormField addField(String propertyName, AbstractField field, int column, int colSpan, boolean newLine) {
+		int row = getSection().getLastNonEmptyRow() + (newLine ? 1 : 0);
 		ResponsiveFormField responsiveFormField = addField(row, column, propertyName, field);
 		responsiveFormField.setColSpan(colSpan);
 		return responsiveFormField;
@@ -123,7 +127,7 @@ public class ResponsiveFormLayout  {
 		}
 		int row = getSection().getLastNonEmptyRow();
 		int column = columnOffset;
-		if (newRow || row==-1) {
+		if (newRow || row == -1) {
 			row++;
 		} else {
 			column = getSection().getLastNonEmptyColumnInRow(row) + columnOffset + 1;
@@ -134,19 +138,23 @@ public class ResponsiveFormLayout  {
 		}
 		ResponsiveFormField responsiveFormField = addField(row, column + 1, propertyName, field);
 		return new LabelAndField(labelField, responsiveFormField);
-	}	
-	
+	}
+
 	public ResponsiveFormField addComponent(int row, int column, Component field) {
 		ResponsiveFormSection responsiveFormSection = getSection();
 		FormSectionFieldPlacement fieldPlacementTemplate = configurationTemplate.createFieldPlacementTemplate(column);
 		ResponsiveFormField sectionField = new ResponsiveFormField(responsiveFormSection, field, row, column, fieldPlacementTemplate);
 		responsiveFormSection.addField(sectionField);
-		responsiveForm.addLayoutComponent( field);
+		responsiveForm.addLayoutComponent(field);
 		return sectionField;
 	}
 
 	public ResponsiveFormField addComponent(Component field, int column, int colSpan) {
-		int row = getSection().getLastNonEmptyRow();
+		return addComponent(field, column, colSpan, false);
+	}
+
+	public ResponsiveFormField addComponent(Component field, int column, int colSpan, boolean newLine) {
+		int row = getSection().getLastNonEmptyRow() + (newLine ? 1 : 0);
 		ResponsiveFormField responsiveFormField = addComponent(row, column, field);
 		responsiveFormField.setColSpan(colSpan);
 		return responsiveFormField;
@@ -186,7 +194,7 @@ public class ResponsiveFormLayout  {
 		}
 		int row = getSection().getLastNonEmptyRow();
 		int column = columnOffset;
-		if (newRow || row==-1) {
+		if (newRow || row == -1) {
 			row++;
 		} else {
 			column = getSection().getLastNonEmptyColumnInRow(row) + columnOffset + 1;
