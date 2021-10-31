@@ -189,7 +189,6 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			// icons: 'default',
 			theme_url: '/runtime-resources/tinymce/themes/silver/index.js',
 			skin_url: '/runtime-resources/tinymce/skins/ui/oxide',
-			icons_url: '/runtime-resources/tinymce/icons/default',
 			selector: `#${this.uuid} > .inline-editor`,
 			readonly: !this.isEditable(),
 			fixed_toolbar_container: `#${this.uuid} > .toolbar-container`,
@@ -332,13 +331,12 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					tooltip: 'Insert image',
 					onAction: () => this.$fileField.click()
 				});
-
-				this.mceReadyExecutor.ready = true;
-
 				this.onResize();
+				
+				this.editor = editor;
+				this.mceReadyExecutor.ready = true;
 			},
 			setup: (editor) => {
-				this.editor = editor;
 				editor.on('change undo redo keypress', (e) => {
 					this.fireTextInputEvent();
 				});
@@ -490,9 +488,9 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	destroy(): void {
 		super.destroy();
 		this.destroying = true;
-		if (this.editor != null) {
+		this.mceReadyExecutor.invokeOnceWhenReady(() => {
 			this.editor.destroy();
-		}
+		})
 	}
 
 	getTransientValue(): string {
@@ -506,10 +504,12 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode: UiFieldEditingMode): void {
-		if (this.editor != null) {
+		this.mceReadyExecutor?.invokeOnceWhenReady(() => {
+			// this MUST be done after initializing! Don't skip it when the editor is null,
+			// since the editor might just be initializing and thereby setting the readonly value to an old value! (actually happened!)
 			this.editor.setMode(this.isEditable() ? 'design' : 'readonly');
 			this.updateToolbar();
-		}
+		})
 		let wasEditable = !(oldEditingMode === UiFieldEditingMode.DISABLED || oldEditingMode === UiFieldEditingMode.READONLY);
 		UiField.defaultOnEditingModeChangedImpl(this);
 	}
