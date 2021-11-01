@@ -144,7 +144,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	constructor(config: UiTableConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$component = parseHtml(`<div class="UiTable" id="${config.id}">
+		this.$component = parseHtml(`<div class="UiTable"">
     <div class="slick-table"></div>
     <div class="editor-field-temp-container hidden"></div>
 </div>`);

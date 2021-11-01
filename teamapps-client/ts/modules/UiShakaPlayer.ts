@@ -72,7 +72,7 @@ export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> impl
 
 		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
 		this.$componentWrapper = parseHtml(
-			`<div id="${config.id}" class="UiShakaPlayer" style="background-color: ${config.backgroundColor}">
+			`<div class="UiShakaPlayer" style="background-color: ${config.backgroundColor}">
 				<video id="video" poster="${config.posterImageUrl}" class="${posterImageSizeCssClass}"></video>
 			</div>`);
 		this.$video = this.$componentWrapper.querySelector(":scope video");

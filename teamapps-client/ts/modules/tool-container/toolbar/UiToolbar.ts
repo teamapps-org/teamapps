@@ -69,7 +69,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 
 	constructor(config: UiToolbarConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this._$toolbar = parseHtml(`<div class="UiToolbar teamapps-blurredBackgroundImage" id="${config.id}"></div>`);
+		this._$toolbar = parseHtml(`<div class="UiToolbar teamapps-blurredBackgroundImage"></div>`);
 		this._$backgroundColorDiv = parseHtml('<div class="background-color-div"></div>');
 		this._$toolbar.appendChild(this._$backgroundColorDiv);
 		this._$innerContainer = parseHtml('<div class="inner-container">');

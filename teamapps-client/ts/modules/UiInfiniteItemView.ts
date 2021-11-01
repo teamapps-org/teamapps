@@ -179,7 +179,7 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 	constructor(config: UiInfiniteItemViewConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.uuid = generateUUID();
-		this.$mainDomElement = parseHtml(`<div id="${config.id}" class="UiInfiniteItemView grid-${this.uuid}">
+		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView grid-${this.uuid}">
                 <div class="slickgrid"></div>
             </div>`);
 		this.$grid = this.$mainDomElement.querySelector<HTMLElement>(":scope .slickgrid");

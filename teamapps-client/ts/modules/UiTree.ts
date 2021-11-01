@@ -52,7 +52,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 
 	constructor(config: UiTreeConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = parseHtml('<div class="UiTree" data-teamapps-id="${config.id}">');
+		this.$panel = parseHtml('<div class="UiTree">');
 
 		this.templateRenderers = context.templateRegistry.createTemplateRenderers(config.templates);
 

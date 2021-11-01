@@ -58,7 +58,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 
 	constructor(config: UiGridFormConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$mainDiv = parseHtml(`<div class="UiGridForm" data-teamapps-id="${config.id}">
+		this.$mainDiv = parseHtml(`<div class="UiGridForm">
 </div>`);
 
 		config.fields.forEach(f => this.addField(f as UiComponent));

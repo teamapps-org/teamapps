@@ -90,7 +90,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 
 	constructor(config: UiPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = parseHtml(`<div id="${config.id}" class="UiPanel panel teamapps-blurredBackgroundImage">
+		this.$panel = parseHtml(`<div class="UiPanel panel teamapps-blurredBackgroundImage">
                 <div class="panel-heading">
                     <div class="panel-icon"></div>
                     <div class="panel-title"></div>
