@@ -91,7 +91,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 	constructor(config: UiCalendarConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiCalendar" id="${config.id}">
+		this.$main = parseHtml(`<div class="UiCalendar">
 	<div class="calendar"></div>
 </div>`);
 		let $fullCalendarElement: HTMLElement = this.$main.querySelector(':scope > .calendar');

@@ -156,11 +156,15 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 		if (sessionContext != null) {
 			return sessionContext.runWithContext(() -> {
 				String uiComponentId = event.getComponentId();
-				ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
-				if (clientObject != null) {
-					clientObject.handleUiEvent(event);
+				if (uiComponentId != null) {
+					ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
+					if (clientObject != null) {
+						clientObject.handleUiEvent(event);
+					} else {
+						throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
+					}
 				} else {
-					throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
+					sessionContext.handleStaticEvent(event);
 				}
 			});
 		} else {

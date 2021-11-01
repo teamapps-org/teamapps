@@ -109,7 +109,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	constructor(config: UiTabPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$tabPanel = parseHtml(`<div id="${config.id}" class="UiTabPanel">
+		this.$tabPanel = parseHtml(`<div class="UiTabPanel">
     <div class="tab-panel-header teamapps-blurredBackgroundImage">
         <div class="background-color-div">
 	        <div class="tab-button-container left"></div>

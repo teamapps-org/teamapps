@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiCommand;
+import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
@@ -33,6 +34,7 @@ import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.ux.component.ClientObject;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.field.Button;
@@ -78,6 +80,7 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
+	public final Event<KeyboardEvent> onGlobalKeyEventOccurred = new Event<>();
 	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
 	public final Event<Void> onDestroyed = new Event<>();
 	/**
@@ -586,7 +589,37 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.GoToUrlCommand(url, blankPage));
 	}
 
+	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
+		queueCommand(new UiRootPanel.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
+	}
+
 	public QualifiedUiSessionId getSessionId() {
 		return sessionId;
+	}
+
+	public void handleStaticEvent(UiEvent event) {
+		switch (event.getUiEventType()) {
+			case UI_ROOT_PANEL_GLOBAL_KEY_EVENT_OCCURRED: {
+				UiRootPanel.GlobalKeyEventOccurredEvent e = (UiRootPanel.GlobalKeyEventOccurredEvent) event;
+				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
+						e.getEventType(),
+						(e.getSourceComponentId() != null ? (Component) getClientObject(e.getSourceComponentId()) : null),
+						e.getCode(),
+						e.getIsComposing(),
+						e.getKey(),
+						e.getCharCode(),
+						e.getKeyCode(),
+						e.getLocale(),
+						e.getLocation(),
+						e.getRepeat(),
+						e.getAltKey(),
+						e.getCtrlKey(),
+						e.getShiftKey(),
+						e.getMetaKey()
+				));
+				break;
+			}
+			default: throw new TeamAppsUiApiException(getSessionId(), event.getUiEventType().toString());
+		}
 	}
 }

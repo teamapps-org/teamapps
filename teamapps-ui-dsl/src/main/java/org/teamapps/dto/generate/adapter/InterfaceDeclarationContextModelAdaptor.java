@@ -63,8 +63,12 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 			return astUtil.isDescendantOfClassOrInterfaceReferencedForSubEvents(interfaceContext);
 		} else if ("allImplementingClasses".equals(propertyName)) {
 			return astUtil.findAllImplementingClasses(interfaceContext);
-		} else if ("nonStaticCommandDeclaration".equals(propertyName)) {
+		} else if ("nonStaticCommandDeclarations".equals(propertyName)) {
 			return interfaceContext.commandDeclaration().stream()
+					.filter(cmd -> cmd.staticModifier() == null)
+					.collect(Collectors.toList());
+		} else if ("nonStaticEventDeclarations".equals(propertyName)) {
+			return interfaceContext.eventDeclaration().stream()
 					.filter(cmd -> cmd.staticModifier() == null)
 					.collect(Collectors.toList());
 		} else if ("hasCommands".equals(propertyName)) {
