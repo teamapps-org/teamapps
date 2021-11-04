@@ -88,6 +88,7 @@ enum UiToolbarVisibilityMode {
 
 class UiRichTextEditor extends UiField implements UiTextInputHandlingField {
     String locale;
+    boolean imageUploadEnabled;
 	String uploadUrl = "/upload";
 	long maxImageFileSizeInBytes = 5000000;
 	UiToolbarVisibilityMode toolbarVisibilityMode = UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED;

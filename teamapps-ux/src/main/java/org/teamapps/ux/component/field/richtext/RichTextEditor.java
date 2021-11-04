@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,6 +48,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	private int maxHeight;
 	private String uploadUrl = "/upload";
 	private int maxImageFileSizeInBytes = 5000000;
+	private boolean imageUploadEnabled = false;
 	private ULocale locale = getSessionContext().getULocale();
 
 	private UploadedFileToUrlConverter uploadedFileToUrlConverter = (file) -> getSessionContext().createFileLink(getSessionContext().getUploadedFileByUuid(file.getUuid()));
@@ -61,6 +62,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 		UiRichTextEditor field = new UiRichTextEditor();
 		mapAbstractFieldAttributesToUiField(field);
 		field.setToolbarVisibilityMode(this.toolbarVisibilityMode.toToolbarVisibilityMode());
+		field.setImageUploadEnabled(imageUploadEnabled);
 		field.setUploadUrl(uploadUrl);
 		field.setMaxImageFileSizeInBytes(maxImageFileSizeInBytes);
 		field.setMinHeight(minHeight);
@@ -193,6 +195,15 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
+		reRenderIfRendered();
+	}
+
+	public boolean isImageUploadEnabled() {
+		return imageUploadEnabled;
+	}
+
+	public void setImageUploadEnabled(boolean imageUploadEnabled) {
+		this.imageUploadEnabled = imageUploadEnabled;
 		reRenderIfRendered();
 	}
 }
