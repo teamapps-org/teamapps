@@ -99,8 +99,8 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return fileItems.isEmpty();
+	public boolean isEmptyValue(List<FileItem> value) {
+		return value.isEmpty();
 	}
 
 	@Override
