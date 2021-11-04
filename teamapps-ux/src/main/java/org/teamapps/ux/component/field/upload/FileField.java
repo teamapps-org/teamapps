@@ -205,8 +205,8 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return getValue() == null || getValue().isEmpty();
+	public boolean isEmptyValue(List<RECORD> value) {
+		return value == null || value.isEmpty();
 	}
 
 	@Override

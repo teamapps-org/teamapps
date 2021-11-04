@@ -42,6 +42,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Table<RECORD> extends AbstractComponent implements Component {
 
@@ -521,7 +522,14 @@ public class Table<RECORD> extends AbstractComponent implements Component {
 		//noinspection unchecked
 		return getColumns().stream()
 				.flatMap(column -> column.getField().getValidators().stream()
-						.flatMap(validator -> ((List<FieldMessage>)(((FieldValidator) validator).validate(stringObjectMap.get(column.getPropertyName())))).stream()))
+						.flatMap(validator -> {
+							List<FieldMessage> messages = (((FieldValidator) validator).validate(stringObjectMap.get(column.getPropertyName())));
+							if (messages != null) {
+								return messages.stream();
+							} else {
+								return Stream.empty();
+							}
+						}))
 				.collect(Collectors.toList());
 	}
 

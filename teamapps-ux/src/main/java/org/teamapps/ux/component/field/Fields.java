@@ -49,6 +49,10 @@ public final class Fields {
         return errorMessage.size() == 0;
     }
 
+    /**
+     * @deprecated really needed anywhere? what for?
+     */
+    @Deprecated
     public static boolean validateAllAsRequired(AbstractField<?>... fields) {
         FieldMessage errorMessage = new FieldMessage(FieldMessage.Severity.ERROR, CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()));
         boolean isNotEmpty = true;
