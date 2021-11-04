@@ -196,8 +196,8 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			branding: false,
 			menubar: false,
 			inline: true,
-			toolbar: "undo redo | styleselect | bold italic underline forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | insertimage table | overflowbutton",
-			plugins: 'lists table image imagetools link autolink contextmenu searchreplace textcolor',
+			toolbar: `undo redo | styleselect | bold italic underline forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | blockquote bullist numlist outdent indent | ${this._config.imageUploadEnabled ? 'insertimage' : ''} table | overflowbutton`,
+			plugins: `lists table link autolink contextmenu searchreplace textcolor ${this._config.imageUploadEnabled ? 'image imagetools' : ''}`,
 			contextmenu: "openlink link unlink searchreplace",
 			language_url: translationFileName != null ? "/runtime-resources/tinymce/langs/" + translationFileName : undefined,
 			entity_encoding: "raw",
@@ -321,16 +321,18 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					icon: 'numlist',
 					onAction: () => editor.execCommand('InsertOrderedList')
 				});
-				editor.ui.registry.addMenuItem('insertimage', {
-					icon: 'image',
-					text: 'Insert image',
-					onAction: () => this.$fileField.click()
-				});
-				editor.ui.registry.addButton('insertimage', {
-					icon: 'image',
-					tooltip: 'Insert image',
-					onAction: () => this.$fileField.click()
-				});
+				if (this._config.imageUploadEnabled) {
+					editor.ui.registry.addMenuItem('insertimage', {
+						icon: 'image',
+						text: 'Insert image',
+						onAction: () => this.$fileField.click()
+					});
+					editor.ui.registry.addButton('insertimage', {
+						icon: 'image',
+						tooltip: 'Insert image',
+						onAction: () => this.$fileField.click()
+					});
+				}
 				this.onResize();
 				
 				this.editor = editor;
