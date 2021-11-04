@@ -63,7 +63,8 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 				this.$field.select();
 			}
 		});
-		this.$field.addEventListener("blur", () => {
+		this.$field.addEventListener("change", () => {
+			console.log("change");
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
@@ -82,7 +83,6 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 					key: UiSpecialKey.ESCAPE
 				});
 			} else if (e.keyCode === keyCodes.enter) {
-				this.commit();
 				this.onSpecialKeyPressed.fire({
 					key: UiSpecialKey.ENTER
 				});
