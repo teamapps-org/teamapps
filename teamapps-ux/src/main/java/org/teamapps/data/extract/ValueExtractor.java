@@ -19,8 +19,8 @@
  */
 package org.teamapps.data.extract;
 
-public interface ValueExtractor<RECORD> {
+public interface ValueExtractor<RECORD, VALUE> {
 
-	Object extract(RECORD object);
+	VALUE extract(RECORD object);
 
 }
