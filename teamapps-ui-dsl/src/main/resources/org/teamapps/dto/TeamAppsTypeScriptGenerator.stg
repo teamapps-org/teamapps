@@ -69,7 +69,7 @@ export interface <c.Identifier.text>CommandHandler <if(c.superClassAndDirectlyIm
 
 <if(c.hasEvents)>
 export interface <c.Identifier>EventSource <if(c.superClassAndDirectlyImplementedInterfacesWithEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
-	<c.nonStaticEventDeclaration:teamAppsEventDeclaration(); separator="\n">
+	<c.nonStaticEventDeclarations:teamAppsEventDeclaration(); separator="\n">
 }
 <endif>
 
