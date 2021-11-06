@@ -28,7 +28,7 @@ import {DEFAULT_TEMPLATES} from "../../trivial-components/TrivialCore";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
 import {doOnceOnClickOutsideElement, insertAfter, parseHtml} from "../../Common";
 import {UiToolAccordionCommandHandler, UiToolAccordionConfig, UiToolAccordionEventSource} from "../../../generated/UiToolAccordionConfig";
-import {AbstractUiToolContainer_ToolbarButtonClickEvent, AbstractUiToolContainer_ToolbarDropDownItemClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
+import {AbstractUiToolContainer_ToolbarButtonClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {UiItemView} from "../../UiItemView";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
@@ -41,7 +41,6 @@ export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConf
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
 	public readonly onToolbarButtonClick: TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent>(this);
-	public readonly onToolbarDropDownItemClick: TeamAppsEvent<AbstractUiToolContainer_ToolbarDropDownItemClickEvent> = new TeamAppsEvent<AbstractUiToolContainer_ToolbarDropDownItemClickEvent>(this);
 
 	private buttonGroupsById: OrderedDictionary<UiButtonGroup> = new OrderedDictionary<UiButtonGroup>();
 
@@ -301,16 +300,6 @@ class UiButtonGroup {
 		button.dropDownComponent = component;
 
 		if (component != null) {
-			if (component instanceof UiItemView) {
-				component.onItemClicked.addListener(eventObject => {
-					this.toolAccordion.onToolbarDropDownItemClick.fire({
-						groupId: this.config.groupId,
-						buttonId: button.id,
-						dropDownGroupId: eventObject.groupId,
-						dropDownItemId: eventObject.itemId
-					});
-				});
-			}
 			if (button.$dropDown != null) {
 				button.$dropDown.querySelectorAll<HTMLElement>(":scope :not(.source-button-indicator)").forEach(b => b.remove()); // remove spinner or old component, if present...
 				if ($(button.$dropDown).is(":visible")) {

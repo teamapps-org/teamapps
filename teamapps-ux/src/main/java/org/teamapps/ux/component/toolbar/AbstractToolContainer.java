@@ -39,7 +39,6 @@ import java.util.Objects;
 
 public abstract class AbstractToolContainer extends AbstractComponent {
 	public final Event<ToolbarButtonClickEventData> onButtonClick = new Event<>();
-	public final Event<ToolbarButton> onDropDownItemClick = new Event<>();
 	protected List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
 
 	private Template buttonTemplate = BaseTemplate.TOOLBAR_BUTTON;
@@ -68,15 +67,6 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 					DropDownButtonClickInfo dropDownButtonClickInfo = uiDropDownButtonClickInfo != null ? new DropDownButtonClickInfo(uiDropDownButtonClickInfo.getIsOpening(),
 							uiDropDownButtonClickInfo.getIsContentSet()) : null;
 					onButtonClick.fire(new ToolbarButtonClickEventData(button, dropDownButtonClickInfo));
-				}
-				break;
-			}
-			case ABSTRACT_UI_TOOL_CONTAINER_TOOLBAR_DROP_DOWN_ITEM_CLICK: {
-				AbstractUiToolContainer.ToolbarDropDownItemClickEvent downItemClickEvent = (UiToolbar.ToolbarDropDownItemClickEvent) event;
-				ToolbarButton button = getButtonByClientId(downItemClickEvent.getGroupId(), downItemClickEvent.getButtonId());
-				if (button != null) {
-					button.onDropDownItemClick.fire(downItemClickEvent);
-					onDropDownItemClick.fire(button);
 				}
 				break;
 			}

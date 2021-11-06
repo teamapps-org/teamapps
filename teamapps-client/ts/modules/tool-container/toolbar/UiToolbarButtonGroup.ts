@@ -31,7 +31,6 @@ import {UiComponent} from "../../UiComponent";
 
 export class UiToolbarButtonGroup {
 	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: UiDropDownButtonClickInfoConfig}> = new TeamAppsEvent(this);
-	public readonly onDropDownItemClicked: TeamAppsEvent<{buttonId: string, groupId: string, itemId: number}> = new TeamAppsEvent(this);
 
 	private config: UiToolbarButtonGroupConfig;
 	private visible: boolean = true;
@@ -84,7 +83,6 @@ export class UiToolbarButtonGroup {
 	private createButton(buttonConfig: UiToolbarButtonConfig) {
 		const button = new UiToolbarButton(buttonConfig, this.context);
 		button.onClicked.addListener(dropDownButtonClickInfo => this.onButtonClicked.fire({buttonId: buttonConfig.buttonId, dropDownButtonClickInfo}));
-		button.onDropDownItemClicked.addListener(e => this.onDropDownItemClicked.fire({buttonId: buttonConfig.buttonId, ...e}));
 		return button;
 	}
 
