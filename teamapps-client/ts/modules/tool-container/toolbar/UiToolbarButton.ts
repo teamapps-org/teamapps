@@ -33,7 +33,6 @@ import {UiComponent} from "../../UiComponent";
 export class UiToolbarButton {
 
 	public readonly onClicked: TeamAppsEvent<UiDropDownButtonClickInfoConfig> = new TeamAppsEvent(this);
-	public readonly onDropDownItemClicked: TeamAppsEvent<{groupId: string, itemId: number}> = new TeamAppsEvent(this);
 
 	private $buttonWrapper: HTMLElement;
 	private $button: HTMLElement;
@@ -110,9 +109,8 @@ export class UiToolbarButton {
 		this.dropDownComponent = component;
 		if (this.dropDown != null) {
 			this.dropDown.setContentComponent(component);
-			if (component instanceof UiItemView) {
-				component.onItemClicked.addListener(eventObject => {
-					this.onDropDownItemClicked.fire({groupId: eventObject.groupId, itemId: eventObject.itemId});
+			if ((component as any).onItemClicked) {
+				((component as any).onItemClicked as TeamAppsEvent<any>).addListener(eventObject => {
 					this.dropDown.close();
 				});
 			}

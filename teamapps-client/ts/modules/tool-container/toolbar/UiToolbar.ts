@@ -24,10 +24,9 @@ import {UiToolbarButtonGroupConfig} from "../../../generated/UiToolbarButtonGrou
 import {UiToolbarButtonConfig} from "../../../generated/UiToolbarButtonConfig";
 import {UiToolAccordion} from "../tool-accordion/UiToolAccordion";
 import {AbstractUiToolContainer} from "../AbstractUiToolContainer";
-import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiDropDown} from "../../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "../../TeamAppsUiContext";
-import {AbstractUiToolContainer_ToolbarButtonClickEvent, AbstractUiToolContainer_ToolbarDropDownItemClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
+import {AbstractUiToolContainer_ToolbarButtonClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {Emptyable} from "../../util/Emptyable";
 import {UiToolbarButton} from "./UiToolbarButton";
@@ -49,7 +48,6 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>(this);
 
 	public readonly onToolbarButtonClick: TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent>(this);
-	public readonly onToolbarDropDownItemClick: TeamAppsEvent<AbstractUiToolContainer_ToolbarDropDownItemClickEvent> = new TeamAppsEvent<AbstractUiToolContainer_ToolbarDropDownItemClickEvent>(this);
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 
@@ -171,14 +169,6 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 				groupId: groupConfig.groupId,
 				buttonId: e.buttonId,
 				dropDownClickInfo: e.dropDownButtonClickInfo
-			});
-		});
-		buttonGroup.onDropDownItemClicked.addListener(e => {
-			return this.onToolbarDropDownItemClick.fire({
-				groupId: groupConfig.groupId,
-				buttonId: e.buttonId,
-				dropDownGroupId: e.groupId,
-				dropDownItemId: e.buttonId
 			});
 		});
 		this.buttonGroupsById[groupConfig.groupId] = buttonGroup;

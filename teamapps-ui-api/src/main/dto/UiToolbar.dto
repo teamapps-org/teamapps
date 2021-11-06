@@ -34,7 +34,6 @@ abstract class AbstractUiToolContainer extends UiComponent {
 	command setDropDownComponent(String groupId, String buttonId, UiComponent* component);
 
 	event toolbarButtonClick(String groupId, String buttonId, UiDropDownButtonClickInfo dropDownClickInfo); // dropDownInfo is null for non-dropdown buttons!
-	event toolbarDropDownItemClick(String groupId, String buttonId, String dropDownGroupId, Object dropDownItemId);
 }
 
 enum UiToolbarButtonGroupPosition {

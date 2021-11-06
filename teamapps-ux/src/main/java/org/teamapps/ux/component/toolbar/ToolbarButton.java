@@ -38,7 +38,6 @@ import java.util.function.Supplier;
 public class ToolbarButton {
 
 	public final Event<UiToolbar.ToolbarButtonClickEvent> onClick = new Event<>();
-	public final Event<UiToolbar.ToolbarDropDownItemClickEvent> onDropDownItemClick = new Event<>();
 
 	private ToolbarButtonGroup toolbarButtonGroup;
 	private final String clientId = UUID.randomUUID().toString();
