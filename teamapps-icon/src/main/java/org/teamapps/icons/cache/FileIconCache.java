@@ -17,9 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.icons;
+package org.teamapps.icons.cache;
 
 import org.apache.commons.io.IOUtils;
+import org.teamapps.icons.IconResource;
+import org.teamapps.icons.IconType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,12 +33,12 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class IconCache {
+public class FileIconCache implements IconCache {
 
 	private final File cacheDirectory;
 	private final Map<EncodedIconStringAndSize, File> cachedFilesByEncodedIconString = new ConcurrentHashMap<>();
 
-	public IconCache() {
+	public FileIconCache() {
 		try {
 			cacheDirectory = File.createTempFile("icon-cache", "temp").getParentFile();
 		} catch (IOException e) {
@@ -44,15 +46,17 @@ public class IconCache {
 		}
 	}
 
-	public IconCache(File cacheDirectory) {
+	public FileIconCache(File cacheDirectory) {
 		this.cacheDirectory = cacheDirectory;
 	}
 
-	public IconResource getCachedIcon(String encodedIconString, int size) {
+	@Override
+	public IconResource getIcon(String encodedIconString, int size) {
 		File file = cachedFilesByEncodedIconString.get(new EncodedIconStringAndSize(encodedIconString, size));
 		return file != null ? readFromFile(file) : null;
 	}
 
+	@Override
 	public void putIcon(String encodedIconString, int size, IconResource iconResource) {
 		if (iconResource == null || iconResource.getBytes().length == 0) {
 			return;

@@ -30,7 +30,6 @@ import {doOnceOnClickOutsideElement, insertAfter, parseHtml} from "../../Common"
 import {UiToolAccordionCommandHandler, UiToolAccordionConfig, UiToolAccordionEventSource} from "../../../generated/UiToolAccordionConfig";
 import {AbstractUiToolContainer_ToolbarButtonClickEvent} from "../../../generated/AbstractUiToolContainerConfig";
 import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
-import {UiItemView} from "../../UiItemView";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiComponent} from "../../UiComponent";
 import {UiToolAccordionButton} from "./UiToolAccordionButton";

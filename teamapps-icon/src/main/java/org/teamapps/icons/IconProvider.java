@@ -19,6 +19,8 @@
  */
 package org.teamapps.icons;
 
+import org.teamapps.icons.cache.IconCache;
+import org.teamapps.icons.cache.FileIconCache;
 import org.teamapps.icons.spi.IconDecoder;
 import org.teamapps.icons.spi.IconEncoder;
 import org.teamapps.icons.spi.IconLoader;
@@ -34,7 +36,7 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 	public IconProvider(IconLibraryRegistry iconLibraryRegistry) {
 		this.iconLibraryRegistry = iconLibraryRegistry;
 		try {
-			this.iconCache = new IconCache(Files.createTempDirectory("teamapps-icon-cache").toFile());
+			this.iconCache = new FileIconCache(Files.createTempDirectory("teamapps-icon-cache").toFile());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -45,25 +47,33 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 		this.iconCache = iconCache;
 	}
 
+	/**
+	 * Encodes the given icon. Does not provide any fallback style mechanism. If the icon's style is null, it is encoded without style.
+	 * @return the encoded icon
+	 */
+	public String encodeIcon(Icon<?, ?> icon) {
+		return getLibraryName(icon) + "." + getIconEncoder(icon.getClass()).encodeIcon(icon, this::encodeIcon);
+	}
+
 	@Override
 	public Icon<?, ?> decodeIcon(String qualifiedEncodedIcon) {
 		String libraryName = getLibraryName(qualifiedEncodedIcon);
-		String encodedIconString = qualifiedEncodedIcon.substring(libraryName.length() + 1);
 		IconDecoder iconDecoder = iconLibraryRegistry.getIconDecoder(libraryName);
+		String encodedIconString = qualifiedEncodedIcon.substring(libraryName.length() + 1);
 		return iconDecoder.decodeIcon(encodedIconString, this);
 	}
 
 	public IconResource loadIcon(String qualifiedEncodedIcon, int size) {
 		if (iconCache != null) {
-			IconResource cachedIcon = iconCache.getCachedIcon(qualifiedEncodedIcon, size);
+			IconResource cachedIcon = iconCache.getIcon(qualifiedEncodedIcon, size);
 			if (cachedIcon != null) {
 				return cachedIcon;
 			}
 		}
 
 		String libraryName = getLibraryName(qualifiedEncodedIcon);
-		String encodedIconString = qualifiedEncodedIcon.substring(libraryName.length() + 1);
 		IconDecoder iconDecoder = iconLibraryRegistry.getIconDecoder(libraryName);
+		String encodedIconString = qualifiedEncodedIcon.substring(libraryName.length() + 1);
 		Icon icon = iconDecoder.decodeIcon(encodedIconString, this);
 
 		IconResource iconResource = loadIconWithoutCaching(icon, size);
@@ -100,6 +110,10 @@ public class IconProvider implements IconLoaderContext, IconDecoderContext {
 
 	public <I extends Icon<I, S>, S> IconEncoder<I> getIconEncoder(Class<I> iconClass) {
 		return iconLibraryRegistry.getIconEncoder(iconClass);
+	}
+
+	public <I extends Icon<I, S>, S> IconDecoder<I> getIconDecoder(String libraryName) {
+		return iconLibraryRegistry.getIconDecoder(libraryName);
 	}
 
 	public <I extends Icon<I, S>, S> String getLibraryName(Icon icon) {
