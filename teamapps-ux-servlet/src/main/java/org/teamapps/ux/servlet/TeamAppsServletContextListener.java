@@ -48,6 +48,11 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		ServletContext context = servletContextEvent.getServletContext();
 
+		FilterRegistration.Dynamic indexHtmlHeaderFilter = context.addFilter("teamapps-index-html-header-filter", new IndexHtmlHeaderFilter());
+		indexHtmlHeaderFilter.setAsyncSupported(true);
+		indexHtmlHeaderFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/");
+		indexHtmlHeaderFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/index.html");
+
 		FilterRegistration.Dynamic downloadFilterRegistration = context.addFilter("teamapps-download-header-filter", new DownloadHttpHeaderFilter());
 		downloadFilterRegistration.setAsyncSupported(true);
 		downloadFilterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "*");
