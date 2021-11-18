@@ -37,6 +37,7 @@ import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
 
 public class SimplePrivilegeProviderFactoryTest {
 
@@ -57,7 +58,7 @@ public class SimplePrivilegeProviderFactoryTest {
 	}
 
 	public static SessionContext createDummySessionContext() {
-		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap());
+		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap(), TEAMAPPS_VERSION);
 		return new SessionContext(
 				new QualifiedUiSessionId("httpSessionId", "uiSessionId"), Executors.newSingleThreadExecutor(),
 				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),

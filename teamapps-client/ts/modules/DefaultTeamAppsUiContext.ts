@@ -48,6 +48,8 @@ import {QueryFunctionAdder} from "../generated/QueryFunctionAdder";
 import {UiQuery} from "../generated/UiQuery";
 import {componentEventDescriptors} from "../generated/ComponentEventDescriptors";
 
+declare var __TEAMAPPS_VERSION__: string;
+
 function isComponent(o: UiClientObject<UiClientObjectConfig>): o is UiComponent {
 	return o != null && (o as any).getMainElement;
 }
@@ -95,16 +97,24 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			timezoneIana: jstz.determine().name(),
 			clientTokens: UiRootPanel.getClientTokens(),
 			clientUrl: location.href,
-			clientParameters: clientParameters
+			clientParameters: clientParameters,
+			teamAppsVersion: __TEAMAPPS_VERSION__
 		});
 
 		let connectionListener: TeamAppsConnectionListener = {
 			onConnectionInitialized: () => {
 			},
 			onConnectionErrorOrBroken: (reason, message) => {
-				DefaultTeamAppsUiContext.logger.error("Connection broken.");
+				DefaultTeamAppsUiContext.logger.error(`Connection broken. ${message != null ? 'Message: ' + message : ""}`);
 				sessionStorage.clear();
-				if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT || reason == UiSessionClosingReason.HTTP_SESSION_CLOSED) {
+				if (reason == UiSessionClosingReason.WRONG_TEAMAPPS_VERSION) {
+					// NOTE that there is a special handling for wrong teamapps client versions on the server side, which sends the client a goToUrl() command for a page with a cache-prevention GET parameter.
+					// This is only in case the server-side logic does not work.
+					document.body.innerHTML = `<div class="centered-body-text">
+						<h3>Caching problem!</h3>
+						<p>Your browser uses an old client version to connect to our server. Please <a onclick="location.reload()">refresh this page</a>. If this does not help, please clear your browser's cache.</p>
+					<div>`;
+				} else if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT || reason == UiSessionClosingReason.HTTP_SESSION_CLOSED) {
 					if (this.expiredMessageWindow != null) {
 						this.expiredMessageWindow.show(500);
 					} else {

@@ -33,6 +33,8 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 
+import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
+
 public class UxTestUtil {
 
 	public static CompletableFuture<Void> doWithMockedSessionContext(Runnable runnable) {
@@ -41,7 +43,7 @@ public class UxTestUtil {
 	}
 
 	public static SessionContext createDummySessionContext() {
-		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap());
+		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap(), TEAMAPPS_VERSION);
 		return new SessionContext(
 				new QualifiedUiSessionId("httpSessionId", "uiSessionId"), Executors.newSingleThreadExecutor(),
 				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),

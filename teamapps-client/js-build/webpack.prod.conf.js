@@ -1,4 +1,5 @@
 'use strict';
+const pkgJson = require('../package.json')
 const path = require('path');
 const webpack = require('webpack');
 const config = require('./config').build;
@@ -17,6 +18,9 @@ const webpackConfig = merge(baseWebpackConfig, {
 		publicPath: config.assetsPublicPath
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			'__TEAMAPPS_VERSION__': `"${pkgJson.version}"`
+		}),
 		new CleanWebpackPlugin({
 			verbose: true,
 			dry: true
