@@ -17,14 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.icons.cache;
+package org.teamapps.common;
 
-import org.teamapps.icons.IconResource;
+import org.teamapps.common.util.ClassPathResourceUtil;
 
-public interface IconCache {
+public class TeamAppsVersion {
 
-	IconResource getIcon(String encodedIconString, int size);
+	public static final String TEAMAPPS_VERSION = ClassPathResourceUtil.readResourceToString("teamAppsVersion.txt");
+	public static final String TEAMAPPS_DEV_SERVER_VERSION = "DEV";
 
-	void putIcon(String encodedIconString, int size, IconResource iconResource);
-	
 }

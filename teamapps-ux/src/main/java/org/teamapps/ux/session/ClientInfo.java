@@ -39,13 +39,15 @@ public class ClientInfo {
 	private final String userAgent;
 	private final String clientUrl;
 	private final Map<String, Object> clientParameters;
+	private final String teamAppsVersion;
+
 	private ClientUserAgent userAgentData;
 	private ClientGeoIpInfo geoIpInfo;
 
 
 	public ClientInfo(String ip, int screenWidth, int screenHeight, int viewPortWidth, int viewPortHeight,
-	                  String preferredLanguageIso, boolean highDensityScreen, String timeZone, int timeZoneOffsetMinutes, List<String> clientTokens, String userAgent,
-	                  String clientUrl, Map<String, Object> clientParameters) {
+					  String preferredLanguageIso, boolean highDensityScreen, String timeZone, int timeZoneOffsetMinutes, List<String> clientTokens, String userAgent,
+					  String clientUrl, Map<String, Object> clientParameters, String teamAppsVersion) {
 		this.ip = ip;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
@@ -59,6 +61,7 @@ public class ClientInfo {
 		this.userAgent = userAgent;
 		this.clientUrl = clientUrl;
 		this.clientParameters = clientParameters;
+		this.teamAppsVersion = teamAppsVersion;
 	}
 
 	public boolean isMobileDevice() {

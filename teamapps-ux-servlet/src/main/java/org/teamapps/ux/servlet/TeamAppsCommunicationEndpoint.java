@@ -200,7 +200,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 		private class MessageSenderImpl implements MessageSender {
 			@Override
 			public void sendMessageAsynchronously(AbstractServerMessage msg, SendingErrorHandler sendingErrorHandler) {
-				WebSocketHandler.this.send(wsSession, msg, null, sendingErrorHandler);
+				send(wsSession, msg, null, sendingErrorHandler);
 			}
 
 			@Override

@@ -425,6 +425,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	}
 
 	public static async goToUrl(url: string, blankPage: boolean) {
+		this.LOGGER.info(`goToUrl(${url}, ${blankPage})`);
 		if (blankPage) {
 			window.open(url, '_blank');
 		} else {

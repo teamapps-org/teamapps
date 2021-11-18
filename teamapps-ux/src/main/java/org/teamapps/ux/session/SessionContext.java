@@ -237,14 +237,6 @@ public class SessionContext {
 		return httpSession;
 	}
 
-	/**
-	 * @deprecated no more needed. commands are sent as early as the client can handle them.
-	 */
-	@Deprecated
-	public void flushCommands() {
-		// TODO remove methods
-	}
-
 	public ClientBackPressureInfo getClientBackPressureInfo() {
 		return commandExecutor.getClientBackPressureInfo(sessionId);
 	}
