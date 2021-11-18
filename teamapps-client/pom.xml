@@ -70,6 +70,12 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>yarn install</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>sync version to package.json</id>
                         <goals>
                             <goal>yarn</goal>
@@ -77,12 +83,6 @@
                         <configuration>
                             <arguments>sync-pom-version</arguments>
                         </configuration>
-                    </execution>
-                    <execution>
-                        <id>yarn install</id>
-                        <goals>
-                            <goal>yarn</goal>
-                        </goals>
                     </execution>
                     <execution>
                         <id>webpack</id>
