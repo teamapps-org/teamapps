@@ -478,7 +478,6 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		const value = removeTags(this.getCommittedValue(), "style");
 		this.mceReadyExecutor.invokeWhenReady(() => {
 			this.editor.setContent(value);
-			console.log("clear");
 			this.editor.undoManager.reset();
 		});
 	}
