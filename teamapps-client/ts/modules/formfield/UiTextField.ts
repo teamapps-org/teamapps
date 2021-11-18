@@ -83,6 +83,10 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 					key: UiSpecialKey.ESCAPE
 				});
 			} else if (e.keyCode === keyCodes.enter) {
+				if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
+					// this needs to be done here, additionally, since otherwise the onSpecialKeyPressed gets fired before the commit...
+					this.commit();
+				}
 				this.onSpecialKeyPressed.fire({
 					key: UiSpecialKey.ENTER
 				});
