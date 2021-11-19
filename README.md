@@ -44,16 +44,16 @@ import org.teamapps.ux.component.rootpanel.RootPanel;
 
 public class HelloWorld {
 
-	public static void main(String[] args) throws Exception {
-		new TeamAppsJettyEmbeddedServer(sessionContext -> {
-			RootPanel rootPanel = sessionContext.addRootPanel();
-			Button<?> button = Button.create(MaterialIcon.INFO, "Click me!");
-			button.onClicked.addListener(() -> {
-				sessionContext.showNotification(MaterialIcon.CHAT, "Hello World!", "Congrats for your first TeamApps program!");
-			});
-			rootPanel.setContent(button);
-		}, 8080).start();
-	}
+    public static void main(String[] args) throws Exception {
+        new TeamAppsJettyEmbeddedServer(sessionContext -> {
+            RootPanel rootPanel = sessionContext.addRootPanel();
+            Button<?> button = Button.create(MaterialIcon.INFO, "Click me!");
+            button.onClicked.addListener(() -> {
+                sessionContext.showNotification(MaterialIcon.CHAT, "Hello World!", "Congrats for your first TeamApps program!");
+            });
+            rootPanel.setContent(button);
+        }, 8080).start();
+    }
 
 }
 ```
