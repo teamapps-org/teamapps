@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "preserveConstEnums": true,
+    "target": "es5",
+    "experimentalDecorators": true,
+    "alwaysStrict": true,
+    "lib": ["es2019", "dom"],
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "../../dist/tsd",
+    "esModuleInterop": true,
+    "downlevelIteration": true
+  },
+  "files": [
+    "index.ts",
+    "ts/custom-declarations/color-rgba.d.ts"
+  ],
+  "exclude": [
+    "./node_modules"
+  ]
+}

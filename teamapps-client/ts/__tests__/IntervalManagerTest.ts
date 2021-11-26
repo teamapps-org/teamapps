@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {Interval, IntervalManager} from "../modules/util/IntervalManager";
+import {Interval, IntervalManager} from "../util/IntervalManager";
 
 describe('IntervalManager', function () {
 
