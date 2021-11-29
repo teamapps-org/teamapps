@@ -576,30 +576,29 @@ export function positionDropDown($button: Element, $dropDown: HTMLElement, {
 	viewPortPadding = 10,
 	minHeightBeforeFlipping = 200
 }) {
-	console.log("TODO positionDropdown");
-	// $dropDown.classList.remove("pseudo-hidden");
-	//
-	// let boundingClientRect = $button.getBoundingClientRect();
-	// let maxHeight = window.innerHeight - (boundingClientRect.top + boundingClientRect.height) - viewPortPadding;
-	// let maxFlippedHeight = boundingClientRect.top - viewPortPadding;
-	// let flip = maxHeight < minHeightBeforeFlipping && maxFlippedHeight > maxHeight;
-	//
-	// $($dropDown).position({
-	// 	my: "left " + (flip ? "bottom" : "top"),
-	// 	at: "left " + (flip ? "top" : "bottom"),
-	// 	of: $button,
-	// 	collision: "fit none"
-	// });
-	// $dropDown.querySelector<HTMLElement>(':scope > .background-color-div').style.maxHeight = (flip ? maxFlippedHeight : maxHeight) + "px";
-	// $dropDown.querySelector<HTMLElement>(':scope > .background-color-div > *').style.maxHeight = (flip ? maxFlippedHeight : maxHeight) + "px";
-	// if ($dropDown.offsetWidth > window.innerWidth - 2 * viewPortPadding) {
-	// 	$dropDown.style.width = "auto";
-	// 	$dropDown.style.left = viewPortPadding + "px";
-	// 	$dropDown.style.right = viewPortPadding + "px";
-	// } else if ($dropDown.offsetLeft + $dropDown.offsetWidth > window.innerWidth - viewPortPadding) {
-	// 	$dropDown.style.left = "auto";
-	// 	$dropDown.style.right = viewPortPadding + "px";
-	// }
+	$dropDown.classList.remove("pseudo-hidden");
+
+	let boundingClientRect = $button.getBoundingClientRect();
+	let maxHeight = window.innerHeight - (boundingClientRect.top + boundingClientRect.height) - viewPortPadding;
+	let maxFlippedHeight = boundingClientRect.top - viewPortPadding;
+	let flip = maxHeight < minHeightBeforeFlipping && maxFlippedHeight > maxHeight;
+
+	$($dropDown).position({
+		my: "left " + (flip ? "bottom" : "top"),
+		at: "left " + (flip ? "top" : "bottom"),
+		of: $button,
+		collision: "fit none"
+	});
+	$dropDown.querySelector<HTMLElement>(':scope > .background-color-div').style.maxHeight = (flip ? maxFlippedHeight : maxHeight) + "px";
+	$dropDown.querySelector<HTMLElement>(':scope > .background-color-div > *').style.maxHeight = (flip ? maxFlippedHeight : maxHeight) + "px";
+	if ($dropDown.offsetWidth > window.innerWidth - 2 * viewPortPadding) {
+		$dropDown.style.width = "auto";
+		$dropDown.style.left = viewPortPadding + "px";
+		$dropDown.style.right = viewPortPadding + "px";
+	} else if ($dropDown.offsetLeft + $dropDown.offsetWidth > window.innerWidth - viewPortPadding) {
+		$dropDown.style.left = "auto";
+		$dropDown.style.right = viewPortPadding + "px";
+	}
 }
 
 export function manipulateWithoutTransitions($element: HTMLElement, action: Function, transitionEnabled = false) {

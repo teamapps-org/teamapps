@@ -19,7 +19,7 @@
  */
 import {Renderer} from "../Common";
 import {UiMustacheTemplateConfig} from "../generated/UiMustacheTemplateConfig";
-import Mustache = require("mustache");
+import * as Mustache from "mustache";
 
 export function createMustacheTemplateRenderer(template: UiMustacheTemplateConfig, idPropertyName: string): Renderer {
 	Mustache.parse(template.templateString);

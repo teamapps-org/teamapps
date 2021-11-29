@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "ES2020", // ES2020 adds support for dynamic imports, and import.meta.
+    "preserveConstEnums": true,
+    "target": "ESNext", // https://medium.com/@tommedema/typescript-confusion-tsconfig-json-module-moduleresolution-target-lib-explained-65db2c44b491
+    "experimentalDecorators": true,
+    "alwaysStrict": true,
+    "lib": ["ESNext", "dom"],
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "esModuleInterop": true,
+    "downlevelIteration": true
+  },
+  "files": [
+    "index.ts",
+    "ts/custom-declarations/image-layout.d.ts",
+    "ts/custom-declarations/levenshtein.d.ts",
+  ],
+  "exclude": [
+    "./node_modules"
+  ]
+}

@@ -17,6 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+.clearfix() {
+  &:before,
+  &:after {
+    display: table; // 2
+    content: " "; // 1
+  }
+  &:after {
+    clear: both;
+  }
+}
+
 .UiPageView {
   overflow-x: hidden;
   overflow-y: auto;

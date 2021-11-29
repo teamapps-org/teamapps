@@ -17,14 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-class UiApplicationLayout extends UiComponent {
-	UiSplitPane* rootSplitPane;
-	UiToolbar* toolbar;
-
-	command setToolbar(UiToolbar* toolbar); // null removes the toolbar
-	command setRootSplitPane(UiSplitPane* splitPane);
-}
-
 class UiMobileLayout extends UiComponent {
 	UiToolbar* toolbar;
 	UiComponent* initialView;

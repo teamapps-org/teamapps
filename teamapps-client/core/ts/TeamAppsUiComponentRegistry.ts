@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "./component/AbstractUiComponent";
 import {UiField} from "./component/UiField";
 import {UiFieldConfig} from "./generated/UiFieldConfig";
 import {UiComponentConfig} from "./generated/UiComponentConfig";

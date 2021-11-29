@@ -22,7 +22,7 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiField_ValueChangedEvent, UiFieldCommandHandler, UiFieldConfig, UiFieldEventSource} from "../generated/UiFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiFieldMessageConfig} from "../generated/UiFieldMessageConfig";
 import {UiFieldMessageSeverity} from "../generated/UiFieldMessageSeverity";
 import {UiFieldMessagePosition} from "../generated/UiFieldMessagePosition";

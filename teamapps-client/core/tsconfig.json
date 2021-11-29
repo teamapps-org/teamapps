@@ -2,12 +2,12 @@
   "compilerOptions": {
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "commonjs",
+    "module": "ES2020", // ES2020 adds support for dynamic imports, and import.meta.
     "preserveConstEnums": true,
-    "target": "es5",
+    "target": "ESNext", // https://medium.com/@tommedema/typescript-confusion-tsconfig-json-module-moduleresolution-target-lib-explained-65db2c44b491
     "experimentalDecorators": true,
     "alwaysStrict": true,
-    "lib": ["es2019", "dom"],
+    "lib": ["ESNext", "dom"],
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,

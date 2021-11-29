@@ -25,7 +25,37 @@ import "moment"; // needs to be a global variable for fullcalendar
 
 import "webui-popover";
 
+export {AbstractUiComponent} from "./ts/component/AbstractUiComponent";
 export {DefaultTeamAppsUiContext} from "./ts/DefaultTeamAppsUiContext";
+
+export * from "./ts/Common";
+export * from "./ts/DefaultTeamAppsUiContext";
+export * from "./ts/TeamAppsUiComponentRegistry";
+export * from "./ts/TeamAppsUiContext";
+export * from "./ts/TemplateRegistry";
+export * from "./ts/UiClientObject";
+export * from "./ts/UiComponent";
+export * from "./ts/UiNotification";
+
+export * from "./ts/micro-components/ContextMenu";
+export * from "./ts/micro-components/UiDropDown";
+export * from "./ts/micro-components/ProgressBar";
+
+export * from "./ts/util/Bind";
+export * from "./ts/util/CssFormatUtil";
+export * from "./ts/util/debounce";
+export * from "./ts/util/DeferredExecutor";
+export * from "./ts/util/draggable";
+export * from "./ts/util/Emptyable";
+export * from "./ts/util/ExecuteWhenFirstDisplayed";
+export * from "./ts/util/FileUploader";
+export * from "./ts/util/nonRecursive";
+export * from "./ts/util/NumberParser";
+export * from "./ts/util/StaticIcons";
+export * from "./ts/util/TeamAppsEvent";
+export * from "./ts/util/throttle";
+export * from "./ts/util/OrderedDictionary";
+
 // export {TeamAppsConnectionImpl} from "./ts/modules/communication/TeamAppsConnectionImpl";
 //
 // export {UiPanel} from "./ts/modules/UiPanel";

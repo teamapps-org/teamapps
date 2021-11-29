@@ -83,7 +83,7 @@ export class ProgressCircle implements ProgressIndicator {
 		this.$mainDomElement.classList.toggle('error', !!message);
 		if (message != null) {
 			this.$caption.textContent = '!';
-			$(this.$mainDomElement).webuiPopover({trigger: 'hover', content: message, closeable: true});
+			this.$mainDomElement.title = message;
 		} else {
 			this.$caption.textContent = this.caption;
 		}

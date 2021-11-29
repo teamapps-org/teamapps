@@ -22,7 +22,7 @@ import {UiPanelHeaderFieldConfig} from "../generated/UiPanelHeaderFieldConfig";
 import {UiField} from "./UiField";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiToolButton} from "../micro-components/UiToolButton";
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";

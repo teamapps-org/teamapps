@@ -20,7 +20,7 @@
 
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiToolButton_ClickedEvent, UiToolButton_DropDownOpenedEvent, UiToolButtonCommandHandler, UiToolButtonConfig, UiToolButtonEventSource} from "../generated/UiToolButtonConfig";
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {AbstractUiComponent} from "../component/AbstractUiComponent";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiDropDown} from "./UiDropDown";
 import {bind} from "../util/Bind";

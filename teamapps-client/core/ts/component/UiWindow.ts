@@ -20,7 +20,7 @@
 
 import {UiPanel} from "./UiPanel";
 import {UiPanelHeaderFieldConfig} from "../generated/UiPanelHeaderFieldConfig";
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiWindowCommandHandler, UiWindowConfig, UiWindowEventSource} from "../generated/UiWindowConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";

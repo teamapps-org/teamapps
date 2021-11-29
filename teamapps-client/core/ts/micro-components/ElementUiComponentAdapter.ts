@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {AbstractUiComponent} from "../component/AbstractUiComponent";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 
 export class ElementUiComponentAdapter extends AbstractUiComponent<UiComponentConfig> {

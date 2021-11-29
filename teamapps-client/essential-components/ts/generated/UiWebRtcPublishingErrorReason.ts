@@ -1,0 +1,8 @@
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+export const typescriptDeclarationFixConstant = 1;
+export enum UiWebRtcPublishingErrorReason {
+	CHROME_SCREEN_SHARING_EXTENSION_NOT_INSTALLED, CANNOT_GET_SCREEN_MEDIA_STREAM, OTHER
+}

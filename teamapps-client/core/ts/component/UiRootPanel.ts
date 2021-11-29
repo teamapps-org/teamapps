@@ -22,7 +22,7 @@ import * as moment from "moment-timezone";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiWindow} from "./UiWindow";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
-import {AbstractUiComponent} from "../AbstractUiComponent";
+import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
 import {exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml} from "../Common";
 import {

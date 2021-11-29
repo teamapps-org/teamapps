@@ -1,0 +1,8 @@
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+export const typescriptDeclarationFixConstant = 1;
+export enum UiCssJustifyContent {
+	FLEX_START, FLEX_END, CENTER, SPACE_BETWEEN, SPACE_AROUND, SPACE_EVENLY, INITIAL, INHERIT
+}

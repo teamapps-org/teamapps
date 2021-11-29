@@ -107,7 +107,7 @@ tmp/
 ### JavaScript stuff
 yarn-error.log
 teamapps-client/node/
-teamapps-client/node_modules/
+node_modules/
 teamapps-client/npm-debug.log
 #teamapps-client/ts/**/*.js
 teamapps-client/ts/**/*.map

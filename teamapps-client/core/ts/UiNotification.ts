@@ -21,7 +21,7 @@ import {UiNotification_ClosedEvent, UiNotification_OpenedEvent, UiNotificationCo
 import {UiEntranceAnimation} from "./generated/UiEntranceAnimation";
 import {UiNotificationPosition} from "./generated/UiNotificationPosition";
 import {UiExitAnimation} from "./generated/UiExitAnimation";
-import {AbstractUiComponent} from "./AbstractUiComponent";
+import {AbstractUiComponent} from "./component/AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {animateCSS, Constants, parseHtml} from "./Common";
 import {createUiSpacingValueCssString} from "./util/CssFormatUtil";

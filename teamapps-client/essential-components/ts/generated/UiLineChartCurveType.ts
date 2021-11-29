@@ -1,0 +1,8 @@
+/**
+ * THIS IS GENERATED CODE!
+ * PLEASE DO NOT MODIFY - ALL YOUR WORK WOULD BE LOST!
+ */
+export const typescriptDeclarationFixConstant = 1;
+export enum UiLineChartCurveType {
+	LINEAR, STEP, STEPBEFORE, STEPAFTER, BASIS, CARDINAL, MONOTONE, CATMULLROM
+}
