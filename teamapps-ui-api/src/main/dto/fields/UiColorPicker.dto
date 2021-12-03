@@ -1,0 +1,5 @@
+class UiColorPicker extends UiField {
+	String defaultColor = "rgb(0, 0, 0)";
+	String saveButtonCaption = "Save";
+    String clearButtonCaption = "Clear";
+}

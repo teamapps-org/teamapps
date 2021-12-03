@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,43 +17,39 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.component.field.multicurrency;
+package org.teamapps.ux.component.field.multicurrency.value;
 
 import org.teamapps.dto.UiCurrencyValue;
 
+import java.math.BigDecimal;
+import java.util.Locale;
+
 public class CurrencyValue {
 
+	/**
+	 * May be null!
+	 */
+	private final CurrencyUnit currencyUnit;
 
-	protected long value;
-	protected String currencyCode;
+	/**
+	 * May be null!
+	 */
+	private final BigDecimal amount;
 
-	public CurrencyValue() {
-		// default constructor for Jackson
+	public CurrencyValue(CurrencyUnit currencyUnit, BigDecimal amount) {
+		this.currencyUnit = currencyUnit;
+		this.amount = amount;
 	}
 
-	public CurrencyValue(long value, String currencyCode) {
-		this.value = value;
-		this.currencyCode = currencyCode;
+	public CurrencyUnit getCurrencyUnit() {
+		return currencyUnit;
 	}
 
-	@SuppressWarnings("unchecked")
-	public String toString() {
-		return new StringBuilder(getClass().getSimpleName()).append(": ")
-				.append("value=" + value).append(", ")
-				.append("currencyCode=" + currencyCode)
-				.toString();
+	public BigDecimal getAmount() {
+		return amount;
 	}
 
-	public long getValue() {
-		return value;
-	}
-
-	public String getCurrencyCode() {
-		return currencyCode;
-	}
-
-
-	public UiCurrencyValue toUiCurrencyValue() {
-		return new UiCurrencyValue(value, currencyCode);
+	public UiCurrencyValue toUiCurrencyValue(Locale locale) {
+		return new UiCurrencyValue(currencyUnit != null ? currencyUnit.toUiCurrencyUnit(locale) : null, amount != null ? amount.toString() : null);
 	}
 }

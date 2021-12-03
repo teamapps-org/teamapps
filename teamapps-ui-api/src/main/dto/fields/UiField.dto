@@ -17,8 +17,22 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-@TypeScriptFactory
-class UiCurrencyValue {
-	required long value; // in cents
-	required String currencyCode; //ISO 4217
+enum UiFieldEditingMode {
+	EDITABLE,
+	EDITABLE_IF_FOCUSED, // UiGridForm and UiCompositeField only!!
+	DISABLED,
+	READONLY
+}
+
+abstract class UiField extends UiComponent {
+	UiFieldEditingMode editingMode = UiFieldEditingMode.EDITABLE;
+	Object value;
+	List<UiFieldMessage> fieldMessages;
+
+	event valueChanged(Object value);
+
+	command setEditingMode(UiFieldEditingMode editingMode);
+	command setValue(Object value);
+    command focus();
+	command setFieldMessages(List<UiFieldMessage> fieldMessages);
 }

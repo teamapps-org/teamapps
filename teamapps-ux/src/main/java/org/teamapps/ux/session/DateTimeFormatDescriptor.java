@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ public class DateTimeFormatDescriptor {
 	private final FullLongMediumShortType timeStyle;
 
 	private final Integer fractionalSecondDigits;
-	private final Boolean dayPeriod;
+	private final DayPeriodType dayPeriod;
 	private final HourCycleType hourCycle;
 
 	private final LongShortNarrowType weekday;
@@ -57,7 +57,7 @@ public class DateTimeFormatDescriptor {
 	}
 
 	private DateTimeFormatDescriptor(FullLongMediumShortType dateStyle, FullLongMediumShortType timeStyle,
-									 Integer fractionalSecondDigits, Boolean dayPeriod, HourCycleType hourCycle,
+									 Integer fractionalSecondDigits, DayPeriodType dayPeriod, HourCycleType hourCycle,
 									 LongShortNarrowType weekday, LongShortNarrowType era, NumericType year,
 									 NumericOrLongShortNarrowType month, NumericType day, NumericType hour,
 									 NumericType minute, NumericType second) {
@@ -81,7 +81,7 @@ public class DateTimeFormatDescriptor {
 		ui.setDateStyle(dateStyle != null ? dateStyle.toUiValue() : null);
 		ui.setTimeStyle(timeStyle != null ? timeStyle.toUiValue() : null);
 		ui.setFractionalSecondDigits(fractionalSecondDigits == null || fractionalSecondDigits == 0 ? null : fractionalSecondDigits); // 0 not accepted by Chrome!
-		ui.setDayPeriod(dayPeriod);
+		ui.setDayPeriod(dayPeriod.toUiValue());
 		ui.setHourCycle(hourCycle != null ? hourCycle.toUiValue() : null);
 		ui.setWeekday(weekday != null ? weekday.toUiValue() : null);
 		ui.setEra(era != null ? era.toUiValue() : null);
@@ -102,7 +102,7 @@ public class DateTimeFormatDescriptor {
 		return timeStyle;
 	}
 
-	public Boolean getDayPeriod() {
+	public DayPeriodType getDayPeriod() {
 		return dayPeriod;
 	}
 
@@ -110,7 +110,7 @@ public class DateTimeFormatDescriptor {
 		return fractionalSecondDigits;
 	}
 
-	public Boolean isDayPeriod() {
+	public DayPeriodType isDayPeriod() {
 		return dayPeriod;
 	}
 
@@ -154,7 +154,7 @@ public class DateTimeFormatDescriptor {
 
 	public static class Builder {
 		private Integer fractionalSecondDigits;
-		private Boolean dayPeriod;
+		private DayPeriodType dayPeriod;
 		private HourCycleType hourCycle;
 
 		private LongShortNarrowType weekday;
@@ -171,7 +171,7 @@ public class DateTimeFormatDescriptor {
 			return this;
 		}
 
-		public Builder setDayPeriod(Boolean dayPeriod) {
+		public Builder setDayPeriod(DayPeriodType dayPeriod) {
 			this.dayPeriod = dayPeriod;
 			return this;
 		}
@@ -241,36 +241,36 @@ public class DateTimeFormatDescriptor {
 
 	// === ENUMS ===
 
+	public enum DayPeriodType {
+		NARROW,
+		SHORT,
+		LONG;
+
+		public UiDayPeriodType toUiValue() {
+			return UiDayPeriodType.valueOf(this.name());
+		}
+	}
+
 	public enum HourCycleType {
 		/**
 		 * 0-11
 		 */
-		H11("h11"),
+		H11,
 
 		/**
 		 * 1-12
 		 */
-		H12("h12"),
+		H12,
 
 		/**
 		 * 0-23
 		 */
-		H23("h23"),
+		H23,
 
 		/**
 		 * 1-24
 		 */
-		H24("h24");
-
-		private final String jsLiteral;
-
-		HourCycleType(String jsLiteral) {
-			this.jsLiteral = jsLiteral;
-		}
-
-		public String getJsLiteral() {
-			return jsLiteral;
-		}
+		H24;
 
 		public UiHourCycleType toUiValue() {
 			return UiHourCycleType.valueOf(name());
@@ -278,20 +278,10 @@ public class DateTimeFormatDescriptor {
 	}
 
 	public enum FullLongMediumShortType {
-		FULL("full"),
-		LONG("long"),
-		MEDIUM("medium"),
-		SHORT("short");
-
-		private final String jsLiteral;
-
-		FullLongMediumShortType(String jsLiteral) {
-			this.jsLiteral = jsLiteral;
-		}
-
-		public String getJsLiteral() {
-			return jsLiteral;
-		}
+		FULL,
+		LONG,
+		MEDIUM,
+		SHORT;
 
 		public UiFullLongMediumShortType toUiValue() {
 			return UiFullLongMediumShortType.valueOf(name());
@@ -299,19 +289,9 @@ public class DateTimeFormatDescriptor {
 	}
 
 	public enum LongShortNarrowType {
-		LONG("long"),
-		SHORT("short"),
-		NARROW("narrow");
-
-		private final String jsLiteral;
-
-		LongShortNarrowType(String jsLiteral) {
-			this.jsLiteral = jsLiteral;
-		}
-
-		public String getJsLiteral() {
-			return jsLiteral;
-		}
+		LONG,
+		SHORT,
+		NARROW;
 
 		public UiLongShortNarrowType toUiValue() {
 			return UiLongShortNarrowType.valueOf(name());
@@ -319,18 +299,8 @@ public class DateTimeFormatDescriptor {
 	}
 
 	public enum NumericType {
-		NUMERIC("numeric"),
-		TWO_DIGIT("2-digit");
-
-		private final String jsLiteral;
-
-		NumericType(String jsLiteral) {
-			this.jsLiteral = jsLiteral;
-		}
-
-		public String getJsLiteral() {
-			return jsLiteral;
-		}
+		NUMERIC(),
+		TWO_DIGIT();
 
 		public UiNumericType toUiValue() {
 			return UiNumericType.valueOf(name());
@@ -338,21 +308,11 @@ public class DateTimeFormatDescriptor {
 	}
 
 	public enum NumericOrLongShortNarrowType {
-		NUMERIC("numeric"),
-		TWO_DIGIT("2-digit"),
-		LONG("long"),
-		SHORT("short"),
-		NARROW("narrow");
-
-		private final String jsLiteral;
-
-		NumericOrLongShortNarrowType(String jsLiteral) {
-			this.jsLiteral = jsLiteral;
-		}
-
-		public String getJsLiteral() {
-			return jsLiteral;
-		}
+		NUMERIC,
+		TWO_DIGIT,
+		LONG,
+		SHORT,
+		NARROW;
 
 		public UiNumericOrLongShortNarrowType toUiValue() {
 			return UiNumericOrLongShortNarrowType.valueOf(name());

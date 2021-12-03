@@ -48,16 +48,27 @@ export class NumberParser {
 	}
 
 	public static getNumeralsForLocale(locale: string) {
-		return new Intl.NumberFormat(locale, {useGrouping: false}).format(9876543210).split('').reverse();
+		let numerals: string = new Intl.NumberFormat(locale, {useGrouping: false}).format(9876543210);
+		return numerals.split('').reverse();
 	}
 
 	public static getGroupSeparatorForLocale(locale: string) {
-		const parts = new Intl.NumberFormat(locale).formatToParts(12345.6);
+		const parts = new Intl.NumberFormat(locale, {useGrouping: true}).formatToParts(12345.6);
 		return parts.find(d => d.type === "group").value;
 	}
 
 	public static getDecimalSeparatorForLocale(locale: string) {
 		const parts = new Intl.NumberFormat(locale).formatToParts(12345.6);
+		return parts.find(d => d.type === "decimal").value;
+	}
+
+	public static getGroupSeparatorForFormat(format: Intl.NumberFormat) {
+		const parts: any[] = (format as any).formatToParts(12345.6); // TODO add types once typescript has this
+		return parts.find(d => d.type === "group").value;
+	}
+
+	public static getDecimalSeparatorForFormat(format: Intl.NumberFormat) {
+		const parts: any[] = (format as any).formatToParts(12345.6); // TODO add types once typescript has this
 		return parts.find(d => d.type === "decimal").value;
 	}
 }

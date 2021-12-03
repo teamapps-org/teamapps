@@ -1,0 +1,13 @@
+abstract class AbstractUiTimeField extends UiField implements UiTextInputHandlingField {
+    boolean showDropDownButton = true;
+    boolean showClearButton;
+    String locale;
+    UiDateTimeFormatDescriptor timeFormat = null; // if null, UiConfiguration.timeFormat applies
+
+    command setShowDropDownButton(boolean showDropDownButton);
+    command setShowClearButton(boolean showClearButton);
+    command setLocaleAndTimeFormat(String locale, UiDateTimeFormatDescriptor timeFormat);
+}
+
+class UiLocalTimeField extends AbstractUiTimeField {
+}

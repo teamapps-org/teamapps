@@ -1,0 +1,20 @@
+abstract class AbstractUiDateTimeField extends UiField {
+	boolean showDropDownButton = true;
+	boolean favorPastDates = false; // TODO!!!
+	String locale;
+	UiDateTimeFormatDescriptor dateFormat = null; // if null, UiConfiguration.dateFormat applies
+	UiDateTimeFormatDescriptor timeFormat = null; // if null, UiConfiguration.timeFormat applies
+
+	command setShowDropDownButton(boolean showDropDownButton);
+	command setFavorPastDates(boolean favorPastDates);
+	command setLocaleAndFormats(String locale, UiDateTimeFormatDescriptor dateFormat, UiDateTimeFormatDescriptor timeFormat);
+}
+
+class UiLocalDateTimeField extends AbstractUiDateTimeField {
+}
+
+class UiInstantDateTimeField extends AbstractUiDateTimeField {
+	String timeZoneId = null; // if null, UiConfiguration.timeZoneId applies
+
+	command setTimeZoneId(String timeZoneId);
+}

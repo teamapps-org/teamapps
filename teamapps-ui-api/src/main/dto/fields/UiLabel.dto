@@ -1,0 +1,11 @@
+class UiLabel extends UiField {
+	required String caption; // this is only displayed if value == null
+	String icon;
+	UiComponent* targetComponent; // if != null, this is the field that gets focused when this label gets clicked. This label also appears/disappears synchronously to its target field
+
+	event clicked();
+
+	command setCaption(String caption);
+	command setIcon(String icon);
+	command setTargetComponent(UiField* targetField);
+}

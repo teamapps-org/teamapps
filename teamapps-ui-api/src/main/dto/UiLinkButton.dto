@@ -1,0 +1,14 @@
+class UiLinkButton extends UiComponent {
+	String text;
+	String url = null; // null = still render as link but do not open a page
+	UiLinkTarget target = UiLinkTarget.BLANK;
+	String onClickJavaScript;
+
+	command update(UiLinkButton config);
+
+	event clicked();
+}
+
+enum UiLinkTarget {
+	SELF, BLANK, PARENT, TOP;
+}

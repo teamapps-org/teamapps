@@ -1,0 +1,19 @@
+class UiSlider extends UiField {
+	double min = 0;
+	double max = 100;
+	double step = 1;
+	int displayedDecimals = 0;
+	String selectionColor = "rgb(51, 122, 183)";
+	String tooltipPrefix;
+	String tooltipPostfix;
+	boolean humanReadableFileSize = false;
+
+	command setMin(double min);
+	command setMax(double max);
+	command setStep(double step);
+	command setDisplayedDecimals(int displayedDecimals);
+	command setSelectionColor(String selectionColor);
+	command setTooltipPrefix(String tooltipPrefi);
+	command setTooltipPostfix(String tooltipPostfi);
+	command setHumanReadableFileSize(boolean humanReadableFileSize);
+}

@@ -397,7 +397,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 			uiWindow.close(500);
 		});
 		$contentElement.querySelector<HTMLElement>(':scope .reload').addEventListener('click', () => {
-			window.location.reload(true);
+			window.location.reload();
 		});
 		return uiWindow;
 	}
