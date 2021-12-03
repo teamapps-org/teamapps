@@ -1,0 +1,10 @@
+class UiImageField extends UiField {
+	String width; // css
+	String height; // css
+    UiBorder border;
+    UiShadow shadow;
+	UiImageSizing imageSizing = UiImageSizing.CONTAIN;
+	String backgroundColor = "transparent";
+
+	command update(UiImageField config);
+}

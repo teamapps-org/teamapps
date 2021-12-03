@@ -23,29 +23,24 @@ import org.teamapps.dto.TeamAppsDtoParser;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TeamAppsGeneratorUtil {
 
-	public static List<File> getFilesInDirectory(File sourceDir) {
-		File[] files = sourceDir.listFiles();
-		if (files == null) {
-			throw new IllegalArgumentException("Directory does not exist: " + sourceDir);
-		}
-		return Arrays.asList(files);
-	}
-
-	public static List<TeamAppsDtoParser.ClassCollectionContext> parseClassCollections(File sourceDir) {
-		return TeamAppsGeneratorUtil.getFilesInDirectory(sourceDir).stream()
+	public static List<TeamAppsDtoParser.ClassCollectionContext> parseClassCollections(File sourceDir) throws IOException {
+		return Files.find(Paths.get(sourceDir.getPath()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile() && filePath.toString().endsWith(".dto"))
 				.map(dtoFile -> {
 					try {
-						InputStreamReader reader = new InputStreamReader(new FileInputStream(dtoFile), "UTF-8");
+						InputStreamReader reader = new InputStreamReader(new FileInputStream(dtoFile.toFile()), StandardCharsets.UTF_8);
 						return ParserFactory.createParser(reader).classCollection();
 					} catch (Exception e1) {
-						throw new IllegalArgumentException("Exception while parsing " + dtoFile.getPath() + ": " + e1.getMessage(), e1);
+						throw new IllegalArgumentException("Exception while parsing " + dtoFile + ": " + e1.getMessage(), e1);
 					}
 				})
 				.collect(Collectors.toList());

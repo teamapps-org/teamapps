@@ -1,0 +1,30 @@
+
+
+class UiPictureChooser extends UiField {
+	String uploadUrl = "/upload"; // May point anywhere.
+	long maxFileSize = 5000000;
+	String fileTooLargeMessage = "File too large!";
+	String uploadErrorMessage = "Error while transmitting file...";
+
+	String browseButtonIcon;
+    String deleteButtonIcon;
+
+    int imageDisplayWidth;
+    int imageDisplayHeight;
+
+	UiFileItem fileItem;
+
+	event uploadInitiatedByUser(String fileName, String mimeType, long sizeInBytes);
+    event uploadTooLarge(String fileName, String mimeType, long sizeInBytes);
+	event uploadStarted(String fileName, String mimeType, long sizeInBytes);
+	event uploadCanceled(String fileName, String mimeType, long sizeInBytes);
+	event uploadFailed(String fileName, String mimeType, long sizeInBytes);
+	event uploadSuccessful(String fileName, String mimeType, long sizeInBytes, String uploadedFileUuid);
+
+	command setBrowseButtonIcon(String browseButtonIcon);
+	command setUploadUrl(String uploadUrl);
+	command setMaxFileSize(long maxFileSize);
+	command setFileTooLargeMessage(String fileTooLargeMessage);
+	command setUploadErrorMessage(String uploadErrorMessage);
+	command cancelUpload();
+}

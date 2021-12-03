@@ -1,0 +1,7 @@
+class UiTemplateField extends UiField {
+	UiTemplate template;
+
+	command update(UiTemplateField config);
+
+	event clicked();
+}

@@ -1,0 +1,25 @@
+class UiNumberField extends UiField implements UiTextInputHandlingField {
+  	String locale;
+	int precision = -1; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number
+	String placeholderText;
+	boolean showClearButton;
+	double minValue = Double.MIN_VALUE;
+    double maxValue = Double.MAX_VALUE;
+    UiNumberFieldSliderMode sliderMode = UiNumberFieldSliderMode.DISABLED;
+    double sliderStep = 1;
+    boolean commitOnSliderChange = true;
+
+    command setMinValue(double min);
+    command setMaxValue(double max);
+    command setSliderMode(UiNumberFieldSliderMode sliderMode);
+    command setSliderStep(double step);
+    command setCommitOnSliderChange(boolean commitOnSliderChange);
+	command setPrecision(int displayPrecision);
+	command setPlaceholderText(String placeholderText);
+	command setShowClearButton(boolean showClearButton);
+	command setLocale(String locale);
+}
+
+enum UiNumberFieldSliderMode {
+	DISABLED, VISIBLE, VISIBLE_IF_FOCUSED, SLIDER_ONLY
+}

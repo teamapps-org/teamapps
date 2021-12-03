@@ -27,8 +27,10 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 import org.teamapps.dto.TeamAppsDtoParser;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,17 +49,10 @@ public class TeamAppsTypeScriptGenerator {
         File sourceDir = new File(args[0]);
         File targetDir = new File(args[1]);
 
-        List<TeamAppsDtoParser.ClassCollectionContext> classCollections = TeamAppsGeneratorUtil.getFilesInDirectory(sourceDir).stream()
-                .map(dtoFile -> {
-                    try {
-                        InputStreamReader reader = new InputStreamReader(new FileInputStream(dtoFile), StandardCharsets.UTF_8);
-                        return ParserFactory.createParser(reader).classCollection();
-                    } catch (Exception e1) {
-                        throw new IllegalArgumentException(e1);
-                    }
-                })
-                .collect(Collectors.toList());
-        new TeamAppsTypeScriptGenerator(new TeamAppsDtoModel(classCollections)).generate(targetDir);
+        System.out.println("Generating TypeScript from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath());
+
+        new TeamAppsTypeScriptGenerator(new TeamAppsDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir)))
+                .generate(targetDir);
     }
 
     public TeamAppsTypeScriptGenerator(TeamAppsDtoModel model) {

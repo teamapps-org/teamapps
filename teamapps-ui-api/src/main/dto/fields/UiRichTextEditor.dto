@@ -1,0 +1,25 @@
+enum UiToolbarVisibilityMode {
+	HIDDEN, VISIBLE, VISIBLE_IF_FOCUSED
+}
+
+class UiRichTextEditor extends UiField implements UiTextInputHandlingField {
+    String locale;
+    boolean imageUploadEnabled;
+	String uploadUrl = "/upload";
+	long maxImageFileSizeInBytes = 5000000;
+	UiToolbarVisibilityMode toolbarVisibilityMode = UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED;
+	int minHeight = 150;
+	int maxHeight = 150;
+
+	event imageUploadTooLarge(String fileName, String mimeType, long sizeInBytes);
+	event imageUploadStarted(String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event imageUploadSuccessful(String fileUuid, String name, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event imageUploadFailed(String name, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+
+	command setMinHeight(int minHeight);
+	command setMaxHeight(int maxHeight);
+	command setUploadUrl(String uploadUrl);
+	command setMaxImageFileSizeInBytes(long maxImageFileSizeInBytes);
+	command setUploadedImageUrl(String fileUuid, String url);
+	command setToolbarVisibilityMode(UiToolbarVisibilityMode toolbarVisibilityMode);
+}

@@ -1,0 +1,9 @@
+class UiComponentField extends UiField {
+	UiComponent* component;
+	int height; // 0 = the height will be determined by the component's content and context
+	boolean bordered;
+
+	command setComponent(UiComponent* component);
+	command setHeight(int height);
+	command setBordered(boolean bordered);
+}

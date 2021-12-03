@@ -1,0 +1,29 @@
+// the read-only view (e.g. in a table) shows the currency indicator as part of the value text (e.g. "23.00 EUR" or "23.50 €")
+//the value is always a long in cents for accuracy
+class UiCurrencyField extends UiField implements UiTextInputHandlingField {
+	String locale;
+	List<UiCurrencyUnit> currencyUnits; //list of ISO 4217 currencies - e.g. "USD", "EUR", etc. to be displayed as dropdown selection if available
+	int fixedPrecision = -1; // if >= 0, this overwrites the corresponding currency unit precision
+	boolean showCurrencyBeforeAmount; // If true, the currency indicator is on the left of the amount. If false, it is on the right of the amount.
+	boolean showCurrencySymbol; // If false, show "EUR", "USD", etc. as selected value of dropdown button. If true, show "$" for "USD", "€" for "EUR". The dopdown list shows always both ISO code and currency symbol (e.g. "$ (USD)" or "€ (EUR)"). Use "¤" as generic symbol (as defined in ISO standard).
+	boolean alphaKeysQueryForCurrency = true; //if true a hit on e will query all currencies starting with e; autocomplete
+
+	command setLocale(String locale);
+	command setCurrencyUnits(List<UiCurrencyUnit> currencyUnits);
+	command setFixedPrecision(int fixedPrecision);
+	command setShowCurrencyBeforeAmount(boolean showCurrencyBeforeAmount);
+	command setShowCurrencySymbol(boolean showCurrencySymbol);
+}
+
+class UiCurrencyUnit {
+    String code;
+    int fractionDigits;
+    String name;
+    String symbol;
+}
+
+@TypeScriptFactory
+class UiCurrencyValue {
+	required UiCurrencyUnit currencyUnit;
+	required String amount; // big decimal!
+}
