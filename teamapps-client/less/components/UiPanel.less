@@ -170,9 +170,20 @@
     border-bottom-right-radius: var(--ta-border-radius);
   }
 
-  &.stretch-content > .panel-body > * {
-    width: 100%;
-    height: 100%;
+  &.stretch-content > .panel-body{
+    // ==== START Safari Mobile flex:auto + 100% fix ====
+    // If height is not set, Safari Mobile does not apply the 100% to the child, since the .panel-body does not have a definite size.
+    // The value 123px is completely arbitrary. However, it makes safari regard the calculated panel body height as definite
+    // (but will obviously still applying the flex policy!!) and will stretch/shrink the child to 100%.
+    // Note that this behavior regarding indefinite size containers WAS at some point (till September 2017) according to the spec,
+    // but the standard was changed.
+    height: 123px; // TODO remove once Safari Mobile gets this right... (Safari desktop does already)
+    // ==== END Safari Mobile flex:auto + 100% fix ====
+
+    > * {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
