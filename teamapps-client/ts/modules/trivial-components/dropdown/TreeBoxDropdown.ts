@@ -75,6 +75,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 	async handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
 		let results = await this.config.queryFunction(query) ?? [];
 		this.treeBox.setEntries(results);
+		this.treeBox.setSelectedEntryById(null); // make sure we don't remember the last selected value and go down/up from it
 		this.getMainDomElement().scrollIntoView({block: "start"}); // make sure we scroll up
 		this.treeBox.highlightTextMatches(results.length <= this.config.textHighlightingEntryLimit ? query : null);
 		if (selectionDirection === 0) {

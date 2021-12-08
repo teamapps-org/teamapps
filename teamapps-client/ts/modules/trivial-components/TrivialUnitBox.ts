@@ -38,7 +38,6 @@ import {TreeBoxDropdown} from "./dropdown/TreeBoxDropdown";
 import {createComboBoxPopper} from "./ComboBoxPopper";
 
 export interface TrivialUnitBoxConfig<U> extends TrivialTreeBoxConfig<U> {
-	defaultNumberFormat: Intl.NumberFormat,
 	numberFormatFunction: (entry: U) => Intl.NumberFormat,
 	unitDisplayPosition?: 'left' | 'right',
 	allowNullAmount?: boolean,
@@ -78,15 +77,13 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	private numberParser: NumberParser;
 	private popper: Popper;
 
-	private listBox: TrivialTreeBox<U>;
 	private dropDownComponent: DropDownComponent<U>;
 	private editingMode: EditingMode;
 	private dropDownOpen = false;
 
 	constructor(options: TrivialUnitBoxConfig<U>) {
 		this.config = $.extend(<TrivialUnitBoxConfig<U>>{
-			defaultNumberFormat: new Intl.NumberFormat("en-US", {useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2}),
-			numberFormatFunction: entry => this.config.defaultNumberFormat,
+			numberFormatFunction: entry => new Intl.NumberFormat("en-US", {useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2}),
 			unitDisplayPosition: 'right', // right or left
 			allowNullAmount: true,
 			entryRenderingFunction: DEFAULT_RENDERING_FUNCTIONS.currency2Line,
@@ -241,17 +238,19 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 			});
 		});
 
-		this.listBox = new TrivialTreeBox(this.config);
+		const listBox = new TrivialTreeBox({
+			selectOnHover: true,
+			... this.config
+		});
 		this.dropDownComponent = new TreeBoxDropdown({
 			queryFunction: this.config.queryFunction,
 			preselectionMatcher: query => true,
 			textHighlightingEntryLimit: 100
-		}, this.listBox);
+		}, listBox);
 		this.$dropDown.append(this.dropDownComponent.getMainDomElement());
 		this.dropDownComponent.onValueChanged.addListener(({value, finalSelection}) => {
 			if (value && finalSelection) {
 				this.setSelectedEntry(value, true);
-				this.listBox.setSelectedEntryById(null);
 				this.closeDropDown();
 			}
 		});
@@ -268,7 +267,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	}
 
 	private getNumberFormat() {
-		return this.selectedEntry != null ? this.config.numberFormatFunction(this.selectedEntry) : this.config.defaultNumberFormat;
+		return this.config.numberFormatFunction(this.selectedEntry);
 	}
 
 	private getDecimalSeparator() {
@@ -292,8 +291,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	}
 
 	private getQueryString() {
-		return (this.$editor.value || "").toString()
-			.replace(/[\d\W]/g, '').trim();
+		return (this.$editor.value || "").toString().replace(new RegExp(`[${this.getDecimalSeparator()}${this.getThousandsSeparator()}${this.getNumerals().join("")}\\s]`, "g"), '').trim();
 	}
 
 	private getEditorValueNumberPart(fillupDecimals?: boolean): string {
@@ -330,22 +328,11 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 
 	}
 
-	private query(highlightDirection?: HighlightDirection) {
-		// call queryFunction asynchronously to be sure the input field has been updated before the result callback is called. Note: the query() method is called on keydown...
-		setTimeout(async () => {
-			let newEntries = await this.config.queryFunction(this.getQueryString());
-			this.updateEntries(newEntries);
-
-			const queryString = this.getQueryString();
-			if (queryString.length > 0) {
-				this.listBox.highlightTextMatches(queryString);
-			}
-			this.listBox.selectNextEntry(highlightDirection);
-
-			if (this.dropDownOpen) {
-				this.openDropDown(); // only for repositioning!
-			}
-		});
+	private async query(highlightDirection?: HighlightDirection) {
+		let gotResultsForQuery = await this.dropDownComponent.handleQuery(this.getQueryString(), highlightDirection);
+		if (gotResultsForQuery && document.activeElement == this.$editor) {
+			this.openDropDown();
+		}
 	}
 
 	private fireSelectedEntryChangedEvent() {
@@ -431,10 +418,6 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		}
 	}
 
-	public updateEntries(newEntries: U[]) {
-		this.listBox.setEntries(newEntries);
-	}
-
 	public getSelectedEntry(): U {
 		if (this.selectedEntry == null) {
 			return null;
@@ -490,7 +473,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		let [mainString, decimalString] = amount.split(".");
 		decimalString = decimalString ?? "";
 
-		let decimalSeparator = NumberParser.getGroupSeparatorForFormat(this.getNumberFormat());
+		let decimalSeparator = NumberParser.getDecimalSeparatorForFormat(this.getNumberFormat());
 		let resolvedNumberFormatOptions: ResolvedNumberFormatOptions = this.getNumberFormat().resolvedOptions();
 		let numerals = NumberParser.getNumeralsForLocale(resolvedNumberFormatOptions.locale);
 		let roundUpMain = false;
@@ -525,7 +508,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 			mainString.replace(this.getThousandsSeparator(), "");
 		}
 
-		return `${mainString}${decimalString}`;
+		return `${mainString}${decimalString.length > 0 ? decimalSeparator + decimalString : ""}`;
 	}
 }
 

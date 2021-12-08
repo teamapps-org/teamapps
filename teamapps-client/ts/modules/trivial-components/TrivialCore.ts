@@ -134,15 +134,6 @@ export const DEFAULT_RENDERING_FUNCTIONS = {
           </div>
         </div>`;
 	},
-	currencySingleLineLong: (entry: DefaultCurrencyEntryStructure) => {
-		entry = entry || {};
-		return `<div class="tr-template-currency-single-line-long">
-          <div class="content-wrapper tr-editor-area"> 
-            <div class="symbol-and-code">${entry.code != null ? `<span class="currency-code">${entry.code || ''}</span>` : ''} ${entry.symbol != null ? `<span class="currency-symbol">${entry.symbol || ''}</span>` : ''}</div>
-            <div class="currency-name">${entry.name || ''}</div>
-          </div>
-        </div>`;
-	},
 	currency2Line: (entry: DefaultCurrencyEntryStructure) => {
 		entry = entry || {};
 		return `<div class="tr-template-currency-2-lines">
