@@ -34,7 +34,7 @@
     </developers>
 
     <properties>
-        <jetty.version>9.4.40.v20210413</jetty.version>
+        <jetty.version>9.4.44.v20210927</jetty.version>
     </properties>
 
     <dependencies>
