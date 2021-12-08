@@ -23,7 +23,8 @@ public class CurrencyCurrencyUnit implements CurrencyUnit {
 
 	@Override
 	public String getSymbol(Locale locale) {
-		return currency.getSymbol(locale);
+		String symbol = currency.getSymbol(locale);
+		return !symbol.equals(currency.getCurrencyCode()) ? symbol : null;
 	}
 
 	@Override

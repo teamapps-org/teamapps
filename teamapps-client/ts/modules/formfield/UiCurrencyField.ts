@@ -45,11 +45,26 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		let initialPrecision = config.fixedPrecision >= 0 ? config.fixedPrecision : 2;
 
 		this.trivialUnitBox = new TrivialUnitBox<UiCurrencyUnitConfig>({
-			defaultNumberFormat: new Intl.NumberFormat(config.locale, {minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true}),
-			numberFormatFunction: entry => new Intl.NumberFormat(config.locale, {minimumFractionDigits: entry.fractionDigits, maximumFractionDigits: entry.fractionDigits, useGrouping: true}),
+			numberFormatFunction: entry => {
+				if (entry == null) {
+					let fractionDigits = config.fixedPrecision >= 0 ? config.fixedPrecision : 2;
+					return new Intl.NumberFormat(config.locale, {useGrouping: true, minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits});
+				} else {
+					let fractionDigits = config.fixedPrecision >= 0 ? config.fixedPrecision : entry.fractionDigits >= 0 ? entry.fractionDigits : 4;
+					return new Intl.NumberFormat(config.locale, {minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits, useGrouping: true})
+				}
+			},
 			idFunction: entry => entry.code,
 			unitDisplayPosition: config.showCurrencyBeforeAmount ? 'left' : 'right', // right or left
-			entryRenderingFunction: DEFAULT_RENDERING_FUNCTIONS.currencySingleLineLong,
+			entryRenderingFunction: entry => {
+				entry = entry || {};
+				return `<div class="tr-template-currency-single-line-long">
+				  <div class="content-wrapper tr-editor-area"> 
+					<div class="symbol-and-code">${entry.code != null ? `<span class="currency-code">${entry.code || ''}</span>` : ''} ${entry.symbol != null ? `<span class="currency-symbol">${entry.symbol || ''}</span>` : ''}</div>
+					<div class="currency-name">${entry.name || ''}</div>
+				  </div>
+				</div>`;
+			},
 			selectedEntryRenderingFunction: (entry) => {
 				if (entry == null) {
 					return `<div class="tr-template-currency-single-line-short">-</div>`
@@ -165,9 +180,6 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	setCurrencyUnits(currencyUnits: UiCurrencyUnitConfig[]): void {
 		this._config.currencyUnits = currencyUnits;
 		this.queryFunction = defaultListQueryFunctionFactory(currencyUnits, ["code", "name", "symbol"], {matchingMode: "prefix", ignoreCase: true});
-		if (this.trivialUnitBox.isDropDownOpen()) {
-			this.trivialUnitBox.updateEntries(currencyUnits);
-		}
 	}
 
 	setShowCurrencyBeforeAmount(showCurrencyBeforeAmount: boolean): void {
