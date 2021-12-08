@@ -18,7 +18,12 @@
  * =========================LICENSE_END==================================
  */
 
-import {UiGridForm_SectionCollapsedStateChangedEvent, UiGridFormCommandHandler, UiGridFormConfig, UiGridFormEventSource} from "../generated/UiGridFormConfig";
+import {
+	UiGridForm_SectionCollapsedStateChangedEvent,
+	UiGridFormCommandHandler,
+	UiGridFormConfig,
+	UiGridFormEventSource
+} from "../generated/UiGridFormConfig";
 import {UiFormLayoutPolicyConfig} from "../generated/UiFormLayoutPolicyConfig";
 import {UiFormSectionConfig} from "../generated/UiFormSectionConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
@@ -41,6 +46,7 @@ import {UiFormSectionFloatingFieldsPlacementConfig} from "../generated/UiFormSec
 import {generateUUID, parseHtml} from "./Common";
 import {bind} from "./util/Bind";
 import {UiComponent} from "./UiComponent";
+import {UiField} from "./formfield/UiField";
 
 export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements UiGridFormCommandHandler, UiGridFormEventSource {
 
@@ -55,6 +61,8 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 	private uiFields: UiComponent[] = [];
 	private fillRemainingHeightCheckerInterval: number;
 	private sectionCollapseOverrides: { [sectionId: string]: boolean };
+
+	private fieldWrappers = new Map<UiComponent, HTMLDivElement>();
 
 	constructor(config: UiGridFormConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -103,13 +111,18 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 
 	@executeWhenFirstDisplayed(true)
 	private applyLayoutPolicy(layoutPolicy: UiFormLayoutPolicyConfig) {
-		this.uiFields.forEach(uiField => uiField.getMainElement().remove());
+		this.uiFields.forEach(uiField => {
+			let fieldWrapper = this.fieldWrappers.get(uiField);
+			if (fieldWrapper != null) {
+				fieldWrapper.remove();
+			}
+		});
 		this.sections && this.sections.forEach(section => {
 			section.destroy();
 			section.getMainDomElement().remove();
 		});
 		this.sections = layoutPolicy.sections.map(sectionConfig => {
-			const section = new UiFormSection(sectionConfig, this._context, this.sectionCollapseOverrides[sectionConfig.id]);
+			const section = new UiFormSection(sectionConfig, this._context, this.sectionCollapseOverrides[sectionConfig.id], field => this.getFieldWrapper(field));
 			this.$mainDiv.appendChild(section.getMainDomElement());
 			section.placeFields();
 			section.onCollapsedStateChanged.addListener((collapsed) => {
@@ -158,6 +171,17 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 		this.applyLayoutPolicy(this.layoutPoliciesFromLargeToSmall[this.determineLayoutPolicyIndexToApply()]);
 	}
 
+
+	private getFieldWrapper(field: UiComponent): HTMLDivElement {
+		let wrapper = this.fieldWrappers.get(field);
+		if (wrapper == null) {
+			wrapper = document.createElement("div");
+			wrapper.classList.add("field-wrapper");
+			this.fieldWrappers.set(field, wrapper);
+		}
+		return wrapper;
+	}
+
 }
 
 class UiFormSection {
@@ -176,7 +200,7 @@ class UiFormSection {
 	private $expander: HTMLElement;
 	private collapsed: boolean;
 
-	constructor(public config: UiFormSectionConfig, context: TeamAppsUiContext, collapsedOverride: boolean) {
+	constructor(public config: UiFormSectionConfig, context: TeamAppsUiContext, collapsedOverride: boolean, private getFieldWrapper : (field: UiComponent) => HTMLDivElement) {
 		this.uuid = generateUUID();
 
 		const headerLineClass = config.drawHeaderLine ? 'draw-header-line' : '';
@@ -255,8 +279,10 @@ class UiFormSection {
 					"min-height": placement.minHeight ? `${placement.minHeight}px` : '',
 					"max-height": placement.maxHeight ? `${placement.maxHeight}px` : ''
 				};
-				uiField.getMainElement().setAttribute("data-placement-id", placementId);
-				this.$body.appendChild(uiField.getMainElement());
+				let fieldWrapper = this.getFieldWrapper(uiField);
+				fieldWrapper.appendChild(uiField.getMainElement());
+				fieldWrapper.setAttribute("data-placement-id", placementId);
+				this.$body.appendChild(fieldWrapper);
 			} else if (this.isUiFormSectionFloatingFieldsPlacement(placement)) {
 				let $container = parseHtml(`<div class="UiFormSectionFloatingFieldsPlacement" data-placement-id="${placementId}"></div>`);
 				allCssRules[placementId] = {
@@ -275,8 +301,11 @@ class UiFormSection {
 						"max-height": floatingField.maxHeight ? `${floatingField.maxHeight}px` : '',
 						"margin": `${placement.verticalSpacing / 2}px ${placement.horizontalSpacing / 2}px`
 					};
-					uiField.getMainElement().setAttribute("data-placement-id", floatingFieldPlacementId);
-					$container.appendChild(uiField.getMainElement());
+
+					let fieldWrapper = this.getFieldWrapper(uiField);
+					fieldWrapper.appendChild(uiField.getMainElement());
+					fieldWrapper.setAttribute("data-placement-id", floatingFieldPlacementId);
+					$container.appendChild(fieldWrapper);
 				});
 				this.$body.appendChild($container);
 			}
