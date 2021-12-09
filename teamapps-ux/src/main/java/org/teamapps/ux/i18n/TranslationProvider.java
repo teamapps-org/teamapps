@@ -20,11 +20,14 @@
 package org.teamapps.ux.i18n;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Locale;
 
 public interface TranslationProvider {
 
 	String getTranslation(String key, Locale locale);
+
+	Collection<String> getKeys(Locale locale);
 
 	default String getLocalized(Locale locale, String key, Object... parameters) {
 		String value = getTranslation(key, locale);
