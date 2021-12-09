@@ -21,6 +21,8 @@ package org.teamapps.ux.i18n;
 
 import org.junit.Test;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
@@ -34,7 +36,17 @@ public class RankedTranslationProviderTest {
 	public void shouldDelegate() {
 		final RankedTranslationProvider provider = new RankedTranslationProvider(
 				new ResourceBundleTranslationProvider("translations/Translations"),
-				(key, locale) -> "fallback " + key
+				new TranslationProvider() {
+					@Override
+					public String getTranslation(String key, Locale locale) {
+						return "fallback " + key;
+					}
+
+					@Override
+					public Collection<String> getKeys(Locale locale) {
+						return List.of();
+					}
+				}
 		);
 
 		assertThat(provider.getTranslation("allLanguages", Locale.GERMAN)).isEqualTo("alle Sprachen");

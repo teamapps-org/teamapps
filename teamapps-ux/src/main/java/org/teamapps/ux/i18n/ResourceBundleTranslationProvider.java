@@ -50,8 +50,17 @@ public class ResourceBundleTranslationProvider implements TranslationProvider {
 
 	@Override
 	public String getTranslation(String key, Locale locale) {
-		ResourceBundle propertyResourceBundle = resourceBundleByLocale.computeIfAbsent(locale,
-				language -> ResourceBundle.getBundle(this.baseName, language, resourceBundleControl));
+		ResourceBundle propertyResourceBundle = getResourceBundle(locale);
 		return propertyResourceBundle.getString(key);
+	}
+
+	@Override
+	public List<String> getKeys(Locale locale) {
+		return Collections.list(getResourceBundle(locale).getKeys());
+	}
+
+	private ResourceBundle getResourceBundle(Locale locale) {
+		return resourceBundleByLocale.computeIfAbsent(locale,
+				language -> ResourceBundle.getBundle(this.baseName, language, resourceBundleControl));
 	}
 }

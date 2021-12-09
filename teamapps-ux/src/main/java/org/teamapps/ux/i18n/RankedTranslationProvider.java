@@ -19,28 +19,34 @@
  */
 package org.teamapps.ux.i18n;
 
-import java.util.Locale;
-import java.util.MissingResourceException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RankedTranslationProvider implements TranslationProvider {
 
-	private final TranslationProvider[] translationProviders;
+	private final List<TranslationProvider> translationProviders;
 
 	public RankedTranslationProvider(TranslationProvider... translationProviders) {
-		this.translationProviders = translationProviders;
+		this.translationProviders = Arrays.asList(translationProviders);
 	}
 
 	@Override
 	public String getTranslation(String key, Locale locale) {
 		for (TranslationProvider translationProvider : translationProviders) {
 			try {
-				String translation = translationProvider.getTranslation(key, locale);
-				return translation;
+				return translationProvider.getTranslation(key, locale);
 			} catch (MissingResourceException e) {
 				// ignore
 			}
 		}
 		throw new MissingResourceException("Can't find resource " + key, this.getClass().getName(), key);
+	}
+
+	@Override
+	public Set<String> getKeys(Locale locale) {
+		return translationProviders.stream()
+				.flatMap(tp -> tp.getKeys(locale).stream())
+				.collect(Collectors.toSet());
 	}
 
 }
