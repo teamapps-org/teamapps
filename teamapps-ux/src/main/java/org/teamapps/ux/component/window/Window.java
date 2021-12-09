@@ -89,8 +89,7 @@ public class Window extends Panel {
 	}
 
 	public void setWidth(int width) {
-		this.width = width;
-		queueCommandIfRendered(() -> new UiWindow.SetSizeCommand(getId(), width, height));
+		setSize(width, height);
 	}
 
 	public int getHeight() {
@@ -98,8 +97,7 @@ public class Window extends Panel {
 	}
 
 	public void setHeight(int height) {
-		this.height = height;
-		queueCommandIfRendered(() -> new UiWindow.SetSizeCommand(getId(), width, height));
+		setSize(width, height);
 	}
 
 	public void enableAutoHeight() {
@@ -109,6 +107,9 @@ public class Window extends Panel {
 	public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
+		if (height < 0) { // auto-height -> do not stretch the content (#safariflex). TODO remove once Safari got fixed!
+			this.setStretchContent(false);
+		}
 		queueCommandIfRendered(() -> new UiWindow.SetSizeCommand(getId(), width, height));
 	}
 

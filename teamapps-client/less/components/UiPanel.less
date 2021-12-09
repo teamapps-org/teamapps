@@ -178,6 +178,9 @@
     // Note that this behavior regarding indefinite size containers WAS at some point (till September 2017) according to the spec,
     // but the standard was changed.
     height: 123px; // TODO remove once Safari Mobile gets this right... (Safari desktop does already)
+    // Note that this makes browsers unable to apply auto-height on windows (i.e. make the height of the panel depend on its content).
+    // Therefore, if the height of a window is set to < 0, the stretch-content class will be removed. (see Java code)
+    // #safariflex
     // ==== END Safari Mobile flex:auto + 100% fix ====
 
     > * {
