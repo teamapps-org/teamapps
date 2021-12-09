@@ -81,7 +81,7 @@ public class DateTimeFormatDescriptor {
 		ui.setDateStyle(dateStyle != null ? dateStyle.toUiValue() : null);
 		ui.setTimeStyle(timeStyle != null ? timeStyle.toUiValue() : null);
 		ui.setFractionalSecondDigits(fractionalSecondDigits == null || fractionalSecondDigits == 0 ? null : fractionalSecondDigits); // 0 not accepted by Chrome!
-		ui.setDayPeriod(dayPeriod.toUiValue());
+		ui.setDayPeriod(dayPeriod != null ? dayPeriod.toUiValue() : null);
 		ui.setHourCycle(hourCycle != null ? hourCycle.toUiValue() : null);
 		ui.setWeekday(weekday != null ? weekday.toUiValue() : null);
 		ui.setEra(era != null ? era.toUiValue() : null);
