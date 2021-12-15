@@ -27,6 +27,9 @@ import java.io.*;
 import java.util.Date;
 import java.util.function.Supplier;
 
+/**
+ * Interface for handling any type of data source that can be represented as an InputStream.
+ */
 public interface Resource {
 
 	Logger LOGGER = LoggerFactory.getLogger(Resource.class);
