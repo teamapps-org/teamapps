@@ -65,8 +65,11 @@ public class BeanPropertyExtractor<RECORD> implements PropertyExtractor<RECORD> 
 
 	private ValueExtractor<RECORD, ?> createValueExtractor(ClassAndPropertyName classAndPropertyName) {
 		Method getter = ReflectionUtil.findGetter(classAndPropertyName.clazz, classAndPropertyName.propertyName);
+		Method recordGetter = ReflectionUtil.findMethodByName(classAndPropertyName.clazz, classAndPropertyName.propertyName);
 		if (getter != null) {
 			return record -> ReflectionUtil.invokeMethod(record, getter);
+		} else if (recordGetter != null) {
+			return record -> ReflectionUtil.invokeMethod(record, recordGetter);
 		} else if (fallbackToFields) {
 			Field field = ReflectionUtil.findField(classAndPropertyName.clazz, classAndPropertyName.propertyName);
 			if (field != null) {

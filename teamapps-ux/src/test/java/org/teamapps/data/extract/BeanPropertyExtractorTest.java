@@ -85,6 +85,14 @@ public class BeanPropertyExtractorTest {
 		assertEquals("overwrittenQValue", value);
 	}
 
+	// TODO uncomment once we have Java 14
+//	@Test
+//	public void testWithRecords() throws Exception {
+//		BeanPropertyExtractor<R> extractor = new BeanPropertyExtractor<>();
+//		Object value = extractor.getValue(new R("asdf"), "s");
+//		assertEquals("asdf", value);
+//	}
+
 	public static class A {
 		private final String q = "qValue";
 		private final String r = "rValue";
@@ -100,5 +108,8 @@ public class BeanPropertyExtractorTest {
 			return true;
 		}
 	}
+
+	// TODO uncomment once we have Java 14
+//	public static record R (String s) {}
 
 }
