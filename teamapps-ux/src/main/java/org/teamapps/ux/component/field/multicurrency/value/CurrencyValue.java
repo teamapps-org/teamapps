@@ -23,33 +23,47 @@ import org.teamapps.dto.UiCurrencyValue;
 
 import java.math.BigDecimal;
 import java.util.Locale;
+import java.util.Optional;
 
 public class CurrencyValue {
 
 	/**
 	 * May be null!
 	 */
-	private final CurrencyUnit currencyUnit;
+	private final CurrencyUnit currency;
 
 	/**
 	 * May be null!
 	 */
 	private final BigDecimal amount;
 
-	public CurrencyValue(CurrencyUnit currencyUnit, BigDecimal amount) {
-		this.currencyUnit = currencyUnit;
+	public CurrencyValue(CurrencyUnit currency, BigDecimal amount) {
+		this.currency = currency;
 		this.amount = amount;
 	}
 
-	public CurrencyUnit getCurrencyUnit() {
-		return currencyUnit;
+	public Optional<CurrencyUnit> getCurrency() {
+		return Optional.ofNullable(currency);
 	}
 
-	public BigDecimal getAmount() {
-		return amount;
+	public Optional<BigDecimal> getAmount() {
+		return Optional.ofNullable(amount);
+	}
+
+	public Optional<Long> getAmountAsLong(int pointRightShift) {
+		return getAmount()
+				.map(amount -> amount.movePointRight(pointRightShift).longValue());
+	}
+
+	public CurrencyValue withAmount(BigDecimal amount) {
+		return new CurrencyValue(currency, amount);
+	}
+
+	public CurrencyValue withCurrencyUnit(CurrencyUnit currencyUnit) {
+		return new CurrencyValue(currencyUnit, amount);
 	}
 
 	public UiCurrencyValue toUiCurrencyValue(Locale locale) {
-		return new UiCurrencyValue(currencyUnit != null ? currencyUnit.toUiCurrencyUnit(locale) : null, amount != null ? amount.toString() : null);
+		return new UiCurrencyValue(currency != null ? currency.toUiCurrencyUnit(locale) : null, amount != null ? amount.toString() : null);
 	}
 }

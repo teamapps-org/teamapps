@@ -36,16 +36,20 @@
   }
 
   &.focus, & > .focus {
+    &.field-border-glow,
     .field-border-glow {
       .teamapps-form-control-focus();
     }
-    &.focus.message-success .field-border-glow {
+    &.focus.message-success .field-border-glow,
+    &.focus.message-success.field-border-glow {
       .teamapps-form-control-focus(var(--ta-state-success-border));
     }
-    &.focus.message-warning .field-border-glow {
+    &.focus.message-warning .field-border-glow,
+    &.focus.message-warning.field-border-glow {
       .teamapps-form-control-focus(var(--ta-state-warning-border));
     }
-    &.focus.message-error .field-border-glow {
+    &.focus.message-error .field-border-glow,
+    &.focus.message-error.field-border-glow {
       .teamapps-form-control-focus(var(--ta-state-danger-border));
     }
   }
