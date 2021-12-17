@@ -296,7 +296,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	}
 
 	public static buildRootPanel(containerElementId: string, uiRootPanel: UiRootPanel, context?: TeamAppsUiContext): void {
-		const $container = containerElementId ? document.querySelector("#" + containerElementId) : document.body;
+		const $container = containerElementId ? document.querySelector(containerElementId) : document.body;
 		$container.appendChild(uiRootPanel.getMainElement());
 	}
 

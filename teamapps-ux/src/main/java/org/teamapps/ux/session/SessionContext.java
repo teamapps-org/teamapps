@@ -427,23 +427,22 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.ExitFullScreenCommand());
 	}
 
-	@Deprecated
-	public void addRootComponent(String containerElementId, RootPanel rootPanel) {
-		addRootPanel(containerElementId, rootPanel);
+	public void addRootComponent(String containerElementSelector, Component component) {
+		addRootPanel(containerElementSelector, component);
 	}
 
-	public void addRootPanel(String containerElementId, RootPanel rootPanel) {
-		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementId, rootPanel.createUiReference()));
+	public void addRootPanel(String containerElementSelector, Component rootPanel) {
+		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementSelector, rootPanel.createUiReference()));
 	}
 
-	public RootPanel addRootPanel(String containerElementId) {
+	public RootPanel addRootPanel(String containerElementSelector) {
 		RootPanel rootPanel = new RootPanel();
-		addRootPanel(containerElementId, rootPanel);
+		addRootPanel(containerElementSelector, rootPanel);
 		return rootPanel;
 	}
 
 	public RootPanel addRootPanel() {
-		return addRootPanel(null);
+		return addRootPanel("body");
 	}
 
 	public void addClientToken(String token) {
