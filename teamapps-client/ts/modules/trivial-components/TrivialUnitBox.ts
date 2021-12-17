@@ -36,6 +36,7 @@ import {parseHtml} from "../Common";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {TreeBoxDropdown} from "./dropdown/TreeBoxDropdown";
 import {createComboBoxPopper} from "./ComboBoxPopper";
+import {BigDecimal} from "../util/BigDecimalString";
 
 export interface TrivialUnitBoxConfig<U> extends TrivialTreeBoxConfig<U> {
 	numberFormatFunction: (entry: U) => Intl.NumberFormat,
@@ -52,7 +53,7 @@ export interface TrivialUnitBoxConfig<U> extends TrivialTreeBoxConfig<U> {
 
 export type TrivialUnitBoxChangeEvent<U> = {
 	unitEntry: U,
-	amount: string
+	amount: BigDecimal
 }
 
 export class TrivialUnitBox<U> implements TrivialComponent {
@@ -65,6 +66,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	public readonly onBlur = new TeamAppsEvent<void>(this);
 
 	private selectedEntry: U;
+	private clickInsideEditorWasWhileNotHavingFocus = false;
 	private blurCausedByClickInsideComponent = false;
 	private $editor: HTMLInputElement;
 	private $unitBox: HTMLElement;
@@ -81,9 +83,14 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	private editingMode: EditingMode;
 	private dropDownOpen = false;
 
+
 	constructor(options: TrivialUnitBoxConfig<U>) {
 		this.config = $.extend(<TrivialUnitBoxConfig<U>>{
-			numberFormatFunction: entry => new Intl.NumberFormat("en-US", {useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2}),
+			numberFormatFunction: entry => new Intl.NumberFormat("en-US", {
+				useGrouping: true,
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2
+			}),
 			unitDisplayPosition: 'right', // right or left
 			allowNullAmount: true,
 			entryRenderingFunction: DEFAULT_RENDERING_FUNCTIONS.currency2Line,
@@ -127,6 +134,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 			} else if (this.editingMode === "editable") {
 				this.openDropDown();
 				this.$editor.focus();
+				this.$editor.selectionStart = this.$editor.selectionEnd = this.config.unitDisplayPosition == "left" ? 0 : Number.MAX_SAFE_INTEGER;
 				this.query();
 			}
 		});
@@ -138,7 +146,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		this.setEditingMode(this.config.editingMode);
 
 		this.$editor.classList.add("tr-unitbox-editor", "tr-editor")
-		this.$editor.addEventListener("focus", () => {
+		this.$editor.addEventListener("focus", (e) => {
 			if (this.editingMode !== "editable") {
 				this.$editor.blur(); // must not get focus!
 				return false;
@@ -149,7 +157,6 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 				this.onFocus.fire();
 				this.$unitBox.classList.add('focus');
 				this.cleanupEditorValue();
-				this.$editor.select();
 			}
 		});
 		this.$editor.addEventListener("blur", () => {
@@ -207,11 +214,17 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 			}
 		});
 		this.$editor.addEventListener("mousedown", () => {
+			this.clickInsideEditorWasWhileNotHavingFocus = (document.activeElement != this.$editor);
 			if (this.editingMode === "editable") {
 				if (this.config.openDropdownOnEditorClick) {
 					this.openDropDown();
 					this.query();
 				}
+			}
+		});
+		this.$editor.addEventListener("click", ev => {
+			if (this.clickInsideEditorWasWhileNotHavingFocus) {
+				this.$editor.select()
 			}
 		});
 		this.$editor.addEventListener("change", () => {
@@ -240,7 +253,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 
 		const listBox = new TrivialTreeBox({
 			selectOnHover: true,
-			... this.config
+			...this.config
 		});
 		this.dropDownComponent = new TreeBoxDropdown({
 			queryFunction: this.config.queryFunction,
@@ -294,7 +307,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		return (this.$editor.value || "").toString().replace(new RegExp(`[${this.getDecimalSeparator()}${this.getThousandsSeparator()}${this.getNumerals().join("")}\\s]`, "g"), '').trim();
 	}
 
-	private getEditorValueNumberPart(fillupDecimals?: boolean): string {
+	private getEditorValueLocalNumberPart(fillupDecimals?: boolean): string {
 		const rawNumber = (this.$editor.value as string || "").replace(new RegExp(`[^${this.getDecimalSeparator()}${this.getNumerals().join("")}]`, "g"), '').trim();
 		const decimalSeparatorIndex = rawNumber.indexOf(this.getDecimalSeparator());
 
@@ -318,13 +331,16 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		}
 	}
 
-	private toParsableNumber(localizedNumber: string): string {
+	private localNumberStringToBigDecimal(localizedNumber: string): BigDecimal {
+		if (localizedNumber == null || localizedNumber.length == 0) {
+			return null;
+		}
 		let numerals = this.getNumerals();
-		return localizedNumber
+		return BigDecimal.of(localizedNumber
 			.replace(this.getThousandsSeparator(), '')
 			.replace(this.getDecimalSeparator(), '.')
 			.split('').map(c => c == "." ? "." : "" + numerals.indexOf(c))
-			.join("");
+			.join(""));
 
 	}
 
@@ -364,12 +380,20 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	}
 
 	private formatEditorValue() {
-		this.$editor.value = this.formatAmount(this.getAmount());
+		let amount = this.orFallback(this.localNumberStringToBigDecimal(this.getEditorValueLocalNumberPart()));
+		this.$editor.value = amount != null ? amount.format(this.getNumberFormat(), this.$editor == document.activeElement) : "";
+	}
+
+	private orFallback(amount: BigDecimal): BigDecimal {
+		if (amount == null && !this.config.allowNullAmount) {
+			return BigDecimal.of("0");
+		}
+		return amount;
 	}
 
 	private cleanupEditorValue() {
 		if (this.$editor.value) {
-			this.$editor.value = this.getEditorValueNumberPart(true);
+			this.$editor.value = this.getEditorValueLocalNumberPart(true);
 		}
 	}
 
@@ -393,14 +417,14 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		this.dropDownOpen = false;
 	}
 
-	public getAmount(): string {
-		const editorValueNumberPart = this.getEditorValueNumberPart(false);
+	public getAmount(): BigDecimal {
+		const editorValueNumberPart = this.getEditorValueLocalNumberPart();
 		if (editorValueNumberPart.length === 0 && this.config.allowNullAmount) {
 			return null;
 		} else if (editorValueNumberPart.length === 0) {
-			return "0";
+			return BigDecimal.of("0");
 		} else {
-			return this.toParsableNumber(this.getEditorValueNumberPart(true));
+			return this.localNumberStringToBigDecimal(this.getEditorValueLocalNumberPart());
 		}
 	}
 
@@ -426,19 +450,10 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		}
 	}
 
-	public setAmount(amount: string) {
-		if (amount == null) {
-			if (this.config.allowNullAmount) {
-				this.$editor.value = "";
-			} else {
-				this.$editor.value = this.formatAmount("0");
-			}
-		} else if (this.$editor == document.activeElement) {
-			this.$editor.value = this.formatAmount(amount);
-		} else {
-			this.$editor.value = this.formatAmount(amount, false);
-		}
-	};
+	public setAmount(amount: BigDecimal) {
+		amount = this.orFallback(amount);
+		this.$editor.value = amount != null ? amount.format(this.getNumberFormat()): "";
+	}
 
 	public focus() {
 		this.$editor.select();
@@ -449,6 +464,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	}
 
 	public setUnitDisplayPosition(unitDisplayPosition: "left" | "right") {
+		this.config.unitDisplayPosition = unitDisplayPosition;
 		this.$unitBox.classList.toggle('unit-display-left', unitDisplayPosition === 'left');
 		this.$unitBox.classList.toggle('unit-display-right', unitDisplayPosition === 'right');
 	}
@@ -466,62 +482,6 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		return this.$unitBox;
 	}
 
-	private formatAmount(amount: string, noThousandSeparators: boolean = false) {
-		if (amount == null) {
-			return "";
-		}
-		let [mainString, decimalString] = amount.split(".");
-		decimalString = decimalString ?? "";
-
-		let decimalSeparator = NumberParser.getDecimalSeparatorForFormat(this.getNumberFormat());
-		let resolvedNumberFormatOptions: ResolvedNumberFormatOptions = this.getNumberFormat().resolvedOptions();
-		let numerals = NumberParser.getNumeralsForLocale(resolvedNumberFormatOptions.locale);
-		let roundUpMain = false;
-		if (resolvedNumberFormatOptions.minimumFractionDigits != null) {
-			if (decimalString.length < resolvedNumberFormatOptions.minimumFractionDigits) {
-				decimalString = decimalString + "0".repeat(resolvedNumberFormatOptions.minimumFractionDigits - decimalString.length)
-			} else if (decimalString.length > resolvedNumberFormatOptions.maximumFractionDigits) {
-				const truncatedPart = decimalString.substring(resolvedNumberFormatOptions.maximumFractionDigits);
-				decimalString = decimalString.substr(0, resolvedNumberFormatOptions.maximumFractionDigits);
-				if (truncatedPart.charCodeAt(0) >= "5".charCodeAt(0)) {
-					let incremented = BigInt(decimalString) + BigInt(1);
-					if (incremented.toString().length > decimalString.length) {
-						decimalString = "0".repeat(resolvedNumberFormatOptions.minimumIntegerDigits);
-						roundUpMain = true;
-					} else {
-						decimalString = incremented.toString(10);
-					}
-				}
-			}
-		} else {
-			throw "TODO";
-		}
-		decimalString.split('').map(digit => numerals[Number(digit)]).join("")
-
-		let mainBigInt = mainString.length > 0 ? BigInt(mainString) : BigInt(0);
-		if (roundUpMain) {
-			mainBigInt += BigInt(1);
-		}
-		mainString = this.getNumberFormat().format(mainBigInt).split(decimalSeparator)[0];
-
-		if (noThousandSeparators) {
-			mainString.replace(this.getThousandsSeparator(), "");
-		}
-
-		return `${mainString}${decimalString.length > 0 ? decimalSeparator + decimalString : ""}`;
-	}
 }
 
-interface ResolvedNumberFormatOptions {
-	locale: string;
-	numberingSystem: string;
-	style: string;
-	currency?: string;
-	currencyDisplay?: string;
-	minimumIntegerDigits?: number;
-	minimumFractionDigits?: number;
-	maximumFractionDigits?: number;
-	minimumSignificantDigits?: number;
-	maximumSignificantDigits?: number;
-	useGrouping: boolean;
-}
+

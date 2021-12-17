@@ -32,6 +32,7 @@ import org.teamapps.ux.session.SessionContext;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CurrencyField extends AbstractField<CurrencyValue> implements TextInputHandlingField {
@@ -41,7 +42,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	private ULocale locale = SessionContext.current().getULocale();
 
-	private List<CurrencyUnit> currencyUnits;
+	private List<CurrencyUnit> currencies;
 
 	/**
 	 * If this is >= 0 it will overwrite the precision of the currencies.
@@ -64,15 +65,15 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 		this(CurrencyUnit.getAllAvailableFromJdk());
 	}
 
-	public CurrencyField(List<CurrencyUnit> currencyUnits) {
-		this.currencyUnits = currencyUnits;
+	public CurrencyField(List<CurrencyUnit> currencies) {
+		this.currencies = currencies;
 	}
 
 	@Override
 	public UiField createUiComponent() {
 		UiCurrencyField field = new UiCurrencyField();
 		mapAbstractFieldAttributesToUiField(field);
-		field.setCurrencyUnits(currencyUnits.stream()
+		field.setCurrencyUnits(currencies.stream()
 				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
 				.collect(Collectors.toList()));
 		field.setFixedPrecision(fixedPrecision);
@@ -89,13 +90,13 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 		defaultHandleTextInputEvent(event);
 	}
 
-	public List<CurrencyUnit> getCurrencyUnits() {
-		return currencyUnits;
+	public List<CurrencyUnit> getCurrencies() {
+		return currencies;
 	}
 
-	public CurrencyField setCurrencyUnits(List<CurrencyUnit> currencyUnits) {
-		this.currencyUnits = currencyUnits;
-		queueCommandIfRendered(() -> new UiCurrencyField.SetCurrencyUnitsCommand(getId(), currencyUnits != null ? currencyUnits.stream()
+	public CurrencyField setCurrencies(List<CurrencyUnit> currencies) {
+		this.currencies = currencies;
+		queueCommandIfRendered(() -> new UiCurrencyField.SetCurrencyUnitsCommand(getId(), currencies != null ? currencies.stream()
 				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
 				.collect(Collectors.toList()) : null));
 		return this;
@@ -118,7 +119,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 			UiCurrencyUnit uiCurrencyUnit = uiCurrencyValue.getCurrencyUnit();
 			CurrencyUnit uxCurrencyUnit;
 			if (uiCurrencyUnit != null) {
-				uxCurrencyUnit = currencyUnits.stream()
+				uxCurrencyUnit = currencies.stream()
 						.filter(cu -> cu.getCode().equals(uiCurrencyUnit.getCode()) && cu.getFractionDigits() == uiCurrencyUnit.getFractionDigits())
 						.findFirst()
 						.orElseGet(() -> CurrencyUnit.from(uiCurrencyUnit.getCode(), uiCurrencyUnit.getFractionDigits(), uiCurrencyUnit.getName(), uiCurrencyUnit.getSymbol()));
@@ -129,6 +130,26 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 		} else {
 			throw new IllegalArgumentException("Unknown value type for CurrencyField: " + value.getClass().getCanonicalName());
 		}
+	}
+
+	public Optional<CurrencyUnit> getCurrency() {
+		CurrencyValue value = getValue();
+		return value != null ? value.getCurrency() : Optional.empty();
+	}
+
+	public void setCurrency(CurrencyUnit currencyUnit) {
+		CurrencyValue value = getValue();
+		setValue(value != null ? value.withCurrencyUnit(currencyUnit) : new CurrencyValue(currencyUnit, null));
+	}
+
+	public Optional<BigDecimal> getAmount() {
+		CurrencyValue value = getValue();
+		return value != null ? value.getAmount() : Optional.empty();
+	}
+
+	public void setAmount(BigDecimal amount) {
+		CurrencyValue value = getValue();
+		setValue(value != null ? value.withAmount(amount) : new CurrencyValue(null, amount));
 	}
 
 	public int getFixedPrecision() {
@@ -183,7 +204,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		setCurrencyUnits(currencyUnits);
+		setCurrencies(currencies);
 		queueCommandIfRendered(() -> new UiCurrencyField.SetLocaleCommand(getId(), locale.toLanguageTag()));
 	}
 

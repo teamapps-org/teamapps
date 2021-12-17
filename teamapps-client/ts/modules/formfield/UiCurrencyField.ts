@@ -17,20 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {DEFAULT_RENDERING_FUNCTIONS, defaultListQueryFunctionFactory, keyCodes, QueryFunction} from "../trivial-components/TrivialCore";
-import {TrivialUnitBox, TrivialUnitBoxChangeEvent, TrivialUnitBoxConfig} from "../trivial-components/TrivialUnitBox";
+import {defaultListQueryFunctionFactory, keyCodes, QueryFunction} from "../trivial-components/TrivialCore";
+import {TrivialUnitBox, TrivialUnitBoxChangeEvent} from "../trivial-components/TrivialUnitBox";
 
 import {createUiCurrencyValueConfig, UiCurrencyValueConfig} from "../../generated/UiCurrencyValueConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiCurrencyFieldCommandHandler, UiCurrencyFieldConfig, UiCurrencyFieldEventSource} from "../../generated/UiCurrencyFieldConfig";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {deepEquals, parseHtml, selectElementContents} from "../Common";
+import {deepEquals, selectElementContents} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
+import {
+	UiTextInputHandlingField_SpecialKeyPressedEvent,
+	UiTextInputHandlingField_TextInputEvent
+} from "../../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiCurrencyUnitConfig} from "../../generated/UiCurrencyUnitConfig";
+import {BigDecimal} from "../util/BigDecimalString";
 
 export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyValueConfig> implements UiCurrencyFieldEventSource, UiCurrencyFieldCommandHandler {
 
@@ -45,15 +49,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		let initialPrecision = config.fixedPrecision >= 0 ? config.fixedPrecision : 2;
 
 		this.trivialUnitBox = new TrivialUnitBox<UiCurrencyUnitConfig>({
-			numberFormatFunction: entry => {
-				if (entry == null) {
-					let fractionDigits = config.fixedPrecision >= 0 ? config.fixedPrecision : 2;
-					return new Intl.NumberFormat(config.locale, {useGrouping: true, minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits});
-				} else {
-					let fractionDigits = config.fixedPrecision >= 0 ? config.fixedPrecision : entry.fractionDigits >= 0 ? entry.fractionDigits : 4;
-					return new Intl.NumberFormat(config.locale, {minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits, useGrouping: true})
-				}
-			},
+			numberFormatFunction: entry => this.getNumberFormat(entry),
 			idFunction: entry => entry.code,
 			unitDisplayPosition: config.showCurrencyBeforeAmount ? 'left' : 'right', // right or left
 			entryRenderingFunction: entry => {
@@ -109,6 +105,24 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		this.trivialUnitBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
 	}
 
+	private getNumberFormat(entry: UiCurrencyUnitConfig) {
+		if (entry == null) {
+			let fractionDigits = this._config.fixedPrecision >= 0 ? this._config.fixedPrecision : 2;
+			return new Intl.NumberFormat(this._config.locale, {
+				useGrouping: true,
+				minimumFractionDigits: fractionDigits,
+				maximumFractionDigits: fractionDigits
+			});
+		} else {
+			let fractionDigits = this._config.fixedPrecision >= 0 ? this._config.fixedPrecision : entry.fractionDigits >= 0 ? entry.fractionDigits : 4;
+			return new Intl.NumberFormat(this._config.locale, {
+				minimumFractionDigits: fractionDigits,
+				maximumFractionDigits: fractionDigits,
+				useGrouping: true
+			})
+		}
+	}
+
 	isValidData(v: UiCurrencyValueConfig): boolean {
 		return v == null || typeof v === "object";
 	}
@@ -133,7 +147,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
 			this.trivialUnitBox.setSelectedEntry(uiValue?.currencyUnit);
-			this.trivialUnitBox.setAmount(uiValue?.amount);
+			this.trivialUnitBox.setAmount(BigDecimal.of(uiValue?.amount));
 		} else {
 			this.trivialUnitBox.setAmount(null);
 			this.trivialUnitBox.setSelectedEntry(null);
@@ -151,7 +165,8 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	}
 
 	getTransientValue(): UiCurrencyValueConfig {
-		return createUiCurrencyValueConfig(this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(), this.trivialUnitBox.getAmount());
+		let amount = this.trivialUnitBox.getAmount();
+		return createUiCurrencyValueConfig(this.trivialUnitBox.getSelectedEntry() && this.trivialUnitBox.getSelectedEntry(), this.trivialUnitBox.getAmount()?.value);
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
@@ -164,9 +179,19 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		let content: string;
 		if (value != null) {
 			const currency = value.currencyUnit;
-			const displayedCurrency = this._config.showCurrencySymbol ?`${currency?.symbol} (${currency?.code})` : currency?.code;
-			let currencyBeforeAmount = this._config.showCurrencyBeforeAmount;
-			content = `${currencyBeforeAmount ? displayedCurrency + ' ' : ''}${value?.amount || ""}${currencyBeforeAmount ? '' : ' ' + displayedCurrency}`;
+			let displayedCurrency: string;
+			if (currency != null) {
+				displayedCurrency = this._config.showCurrencySymbol ? `${currency?.symbol} (${currency?.code})` : currency?.code;
+			} else {
+				displayedCurrency = null;
+			}
+			let amount = BigDecimal.of(value.amount);
+			let formattedAmount = amount?.format(this.getNumberFormat(currency));
+			if (this._config.showCurrencyBeforeAmount) {
+				content = [displayedCurrency, formattedAmount].filter(x => x != null).join(' ');
+			} else {
+				content = [formattedAmount, displayedCurrency].filter(x => x != null).join(' ');
+			}
 		} else {
 			content = "";
 		}
@@ -179,7 +204,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 
 	setCurrencyUnits(currencyUnits: UiCurrencyUnitConfig[]): void {
 		this._config.currencyUnits = currencyUnits;
-		this.queryFunction = defaultListQueryFunctionFactory(currencyUnits, ["code", "name", "symbol"], {matchingMode: "prefix", ignoreCase: true});
+		this.queryFunction = defaultListQueryFunctionFactory(currencyUnits, ["code", "name", "symbol"], {matchingMode: "contains", ignoreCase: true});
 	}
 
 	setShowCurrencyBeforeAmount(showCurrencyBeforeAmount: boolean): void {
