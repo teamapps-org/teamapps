@@ -80,6 +80,7 @@ class UiClientInfo {
 	List<String> clientTokens;
 	String clientUrl;
 	Dictionary<Object> clientParameters;
+	String teamAppsVersion;
 }
 
 
@@ -121,6 +122,7 @@ enum UiSessionClosingReason {
 	COMMANDS_OVERFLOW,    			// server-side command queue filled up
 	REINIT_COMMAND_ID_NOT_FOUND, 	// server did not find the command id the client would like to get
 	CMD_REQUEST_TOO_LARGE, 			// the client is requesting a too high amount of commands
+	WRONG_TEAMAPPS_VERSION,          // The client is connecting with another teamapps version than the server serves.
 
 	// TERMINATED
 	TERMINATED_BY_APPLICATION 		// SessionContext.destroy() called

@@ -21,6 +21,8 @@ package org.teamapps.ux.resource;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class ByteArrayResource implements Resource {
 
@@ -45,5 +47,21 @@ public class ByteArrayResource implements Resource {
 	@Override
 	public long getLength() {
 		return data.length;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ByteArrayResource that = (ByteArrayResource) o;
+		return Arrays.equals(data, that.data) // this is extremely fast (<100µs for 1GB), so no problem
+				&& Objects.equals(name, that.name);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(name);
+		result = 31 * result + Arrays.hashCode(data);
+		return result;
 	}
 }

@@ -20,7 +20,7 @@
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {escapeHtml, parseHtml} from "../Common";
+import {escapeHtml, getAutoCompleteOffValue, parseHtml} from "../Common";
 import {UiTextFieldCommandHandler, UiTextFieldConfig, UiTextFieldEventSource} from "../../generated/UiTextFieldConfig";
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
@@ -44,7 +44,7 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 </div>`);
 		this.$field = this.$wrapper.querySelector(":scope input");
 		if (!config.autofill) {
-			this.$field.autocomplete = "off";
+			this.$field.autocomplete = getAutoCompleteOffValue();
 		}
 		let $clearButton = this.$wrapper.querySelector<HTMLElement>(':scope .clear-button');
 		$clearButton.addEventListener('click',() => {
@@ -63,7 +63,8 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 				this.$field.select();
 			}
 		});
-		this.$field.addEventListener("blur", () => {
+		this.$field.addEventListener("change", () => {
+			console.log("change");
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
@@ -82,7 +83,10 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 					key: UiSpecialKey.ESCAPE
 				});
 			} else if (e.keyCode === keyCodes.enter) {
-				this.commit();
+				if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
+					// this needs to be done here, additionally, since otherwise the onSpecialKeyPressed gets fired before the commit...
+					this.commit();
+				}
 				this.onSpecialKeyPressed.fire({
 					key: UiSpecialKey.ENTER
 				});

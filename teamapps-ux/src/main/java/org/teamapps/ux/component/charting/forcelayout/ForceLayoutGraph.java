@@ -113,7 +113,7 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
 	private UiClientRecord createUiRecord(ForceLayoutNode<RECORD> node) {
 		UiClientRecord uiClientRecord = new UiClientRecord();
-		uiClientRecord.setValues(propertyProvider.getValues(node.getRecord(), node.getTemplate().getDataKeys()));
+		uiClientRecord.setValues(propertyProvider.getValues(node.getRecord(), node.getTemplate().getPropertyNames()));
 		return uiClientRecord;
 	}
 

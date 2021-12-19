@@ -37,6 +37,21 @@ public class Interval {
 		return new Interval(Math.min(interval.getMin(), intervalB.getMin()), Math.max(interval.getMax(), intervalB.getMax()));
 	}
 
+	public static Interval intersection(Interval a, Interval b) {
+		if (a.min < b.max && a.max > b.min) {
+			return new Interval(
+					Math.max(a.min, b.min),
+					Math.min(a.max, b.max)
+			);
+		} else {
+			return Interval.empty();
+		}
+	}
+
+	public static Interval empty() {
+		return new Interval(0, 0);
+	}
+
 	public long getMin() {
 		return min;
 	}
@@ -45,7 +60,7 @@ public class Interval {
 		return max;
 	}
 
-	public UiLongInterval createUiLongInterval() {
+	public UiLongInterval toUiLongInterval() {
 		return new UiLongInterval(min, max);
 	}
 

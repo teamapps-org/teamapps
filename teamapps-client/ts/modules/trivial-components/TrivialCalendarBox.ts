@@ -18,9 +18,9 @@
  * =========================LICENSE_END==================================
  */
 import {NavigationDirection, TrivialComponent} from "./TrivialCore";
-import {TrivialEvent} from "./TrivialEvent";
 import {LocalDateTime} from "../datetime/LocalDateTime";
 import {parseHtml} from "../Common";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 export enum WeekDay {
     MONDAY = 1, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -49,8 +49,8 @@ export class TrivialCalendarBox implements TrivialComponent {
     private $year: HTMLElement;
     private $month: HTMLElement;
 
-    public readonly onChange = new TrivialEvent<{ value: LocalDateTime, timeUnitEdited: TimeUnit}>(this);
-    public readonly onOnEditingTimeUnitChange = new TrivialEvent<TimeUnit>(this);
+    public readonly onChange = new TeamAppsEvent<{ value: LocalDateTime, timeUnitEdited: TimeUnit}>(this);
+    public readonly onOnEditingTimeUnitChange = new TeamAppsEvent<TimeUnit>(this);
 
     constructor(options: TrivialCalendarBoxConfig = {}) {
         let now = LocalDateTime.local();

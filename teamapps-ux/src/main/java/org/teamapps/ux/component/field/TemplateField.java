@@ -79,7 +79,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 			return null;
 		}
 		UiClientRecord uiClientRecord = new UiClientRecord();
-		uiClientRecord.setValues(propertyProvider.getValues(record, template.getDataKeys()));
+		uiClientRecord.setValues(propertyProvider.getValues(record, template.getPropertyNames()));
 		return uiClientRecord;
 	}
 

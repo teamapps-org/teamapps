@@ -120,6 +120,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 	}
 
 	public close(animationDuration: number) {
+		this.setMaximized(false);
 		this.$main.classList.remove("open");
 		animateCSS(this.$panelWrapper, Constants.EXIT_ANIMATION_CSS_CLASSES[UiExitAnimation.ZOOM_OUT], animationDuration, () => {
 			this.$main.classList.add("hidden");
@@ -194,7 +195,7 @@ export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiW
 	public setSize(width: number, height: number): void {
 		css(this.$panelWrapper, {
 			width: width ? width + "px" : "100%",
-			height: height ? height + "px" : "100%"
+			height: height === 0 ? "100%" : height < 0 ? "auto" : height + "px"
 		});
 	}
 

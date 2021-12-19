@@ -26,6 +26,7 @@ import org.teamapps.ux.component.Component;
 public class Div extends AbstractComponent {
 
 	private Component content;
+	private boolean stretchContent;
 
 	public Div(Component content) {
 		this.content = content;
@@ -49,5 +50,9 @@ public class Div extends AbstractComponent {
 	public void setContent(Component content) {
 		this.content = content;
 		queueCommandIfRendered(() -> new UiDiv.SetContentCommand(getId(), content != null ? content.createUiReference() : null));
+	}
+
+	public void setStretchContent(boolean stretchContent) {
+		this.toggleCssClass("full-size-children", true);
 	}
 }

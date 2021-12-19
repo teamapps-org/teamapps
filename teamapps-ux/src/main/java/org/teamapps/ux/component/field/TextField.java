@@ -95,8 +95,8 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return StringUtils.isBlank(getValue());
+	public boolean isEmptyValue(String value) {
+		return StringUtils.isBlank(value);
 	}
 
 	@Override

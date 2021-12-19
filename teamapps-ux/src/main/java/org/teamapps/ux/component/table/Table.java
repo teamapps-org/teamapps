@@ -27,24 +27,28 @@ import org.teamapps.data.value.SortDirection;
 import org.teamapps.data.value.Sorting;
 import org.teamapps.dto.*;
 import org.teamapps.event.Event;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.infiniteitemview.AbstractInfiniteListComponent;
 import org.teamapps.ux.component.infiniteitemview.ItemRangeChangeEvent;
+import org.teamapps.ux.component.field.validator.FieldValidator;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableModel<RECORD>> implements Component {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Table.class);
 
-	public final Event<CellEditingStartedEvent<RECORD, Object>> onCellEditingStarted = new Event<>();
-	public final Event<CellEditingStoppedEvent<RECORD>> onCellEditingStopped = new Event<>();
-	public final Event<FieldValueChangedEventData<RECORD, Object>> onCellValueChanged = new Event<>();
+	public final Event<CellEditingStartedEvent<RECORD, ?>> onCellEditingStarted = new Event<>();
+	public final Event<CellEditingStoppedEvent<RECORD, ?>> onCellEditingStopped = new Event<>();
+	public final Event<FieldValueChangedEventData<RECORD, ?>> onCellValueChanged = new Event<>();
 	/**
 	 * Fired when any number of rows is selected by the user.
 	 */
@@ -52,7 +56,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	/**
 	 * Fired only when a single row is selected by the user.
 	 */
-	public final Event<RECORD> onSingleRowSelected = new Event<>();
+	public final Event<RECORD, ?> onSingleRowSelected = new Event<>();
 	/**
 	 * Fired only when multiple rows are selected by the user.
 	 */
@@ -61,8 +65,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	public final Event<CellClickedEvent<RECORD>> onCellClicked = new Event<>();
 	public final Event<SortingChangedEventData> onSortingChanged = new Event<>();
 	public final Event<TableDataRequestEventData> onTableDataRequest = new Event<>();
-	public final Event<ColumnOrderChangeEventData<RECORD>> onColumnOrderChange = new Event<>();
-	public final Event<ColumnSizeChangeEventData<RECORD>> onColumnSizeChange = new Event<>();
+	public final Event<ColumnOrderChangeEventData<RECORD, ?>> onColumnOrderChange = new Event<>();
+	public final Event<ColumnSizeChangeEventData<RECORD, ?>> onColumnSizeChange = new Event<>();
 
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 	private PropertyInjector<RECORD> propertyInjector = new BeanPropertyInjector<>();
@@ -76,7 +80,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private final Map<RECORD, Map<String, List<FieldMessage>>> cellMessages = new HashMap<>();
 	private final Map<RECORD, Set<String>> markedCells = new HashMap<>();
 
-	private final List<TableColumn<RECORD>> columns = new ArrayList<>();
+	private final List<TableColumn<RECORD, ?>> columns = new ArrayList<>();
 
 	private boolean displayAsList; // list has no cell borders, table has. selection policy: list = row selection, table = cell selection
 	private boolean forceFitWidth; //if true, force the widths of all columns to fit into the available space of the list
@@ -86,6 +90,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private boolean allowMultiRowSelection = false;
 	private boolean showRowCheckBoxes; //if true, show check boxes on the left
 	private boolean showNumbering; //if true, show numbering on the left
+	private boolean textSelectionEnabled = false;
 
 	private String sortField; //if available the table is initially sorted by this field
 	private SortDirection sortDirection = SortDirection.ASC;
@@ -121,7 +126,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this(new ArrayList<>());
 	}
 
-	public Table(List<TableColumn<RECORD>> columns) {
+	public Table(List<TableColumn<RECORD, ?>> columns) {
 		super(new ListTableModel<>());
 		columns.forEach(this::addColumn);
 	}
@@ -130,15 +135,29 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return new Table<>();
 	}
 
-	public void addColumn(TableColumn<RECORD> column) {
+	public void addColumn(TableColumn<RECORD, ?> column) {
 		addColumn(column, columns.size());
 	}
 
-	public void addColumn(TableColumn<RECORD> column, int index) {
+	public void addColumn(TableColumn<RECORD, ?> column, int index) {
 		addColumns(Collections.singletonList(column), index);
 	}
 
-	public void addColumns(List<TableColumn<RECORD>> newColumns, int index) {
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, String title, AbstractField<VALUE> field) {
+		return addColumn(propertyName, null, title, field, TableColumn.DEFAULT_WIDTH);
+	}
+
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field) {
+		return addColumn(propertyName, icon, title, field, TableColumn.DEFAULT_WIDTH);
+	}
+
+	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field, int defaultWidth) {
+		TableColumn<RECORD, VALUE> column = new TableColumn<>(propertyName, icon, title, field, defaultWidth);
+		addColumn(column);
+		return column;
+	}
+
+	public void addColumns(List<TableColumn<RECORD, ?>> newColumns, int index) {
 		this.columns.addAll(index, newColumns);
 		newColumns.forEach(column -> {
 			column.setTable(this);
@@ -162,11 +181,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				.ifPresent(this::removeColumn);
 	}
 
-	public void removeColumn(TableColumn<RECORD> column) {
+	public void removeColumn(TableColumn<RECORD, ?> column) {
 		this.removeColumns(Collections.singletonList(column));
 	}
 
-	public void removeColumns(List<TableColumn<RECORD>> obsoleteColumns) {
+	public void removeColumns(List<TableColumn<RECORD, ?>> obsoleteColumns) {
 		this.columns.removeAll(obsoleteColumns);
 		if (isRendered()) {
 			getSessionContext().queueCommand(
@@ -228,7 +247,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			case UI_TABLE_CELL_CLICKED: {
 				UiTable.CellClickedEvent cellClickedEvent = (UiTable.CellClickedEvent) event;
 				RECORD record = renderedRecords.getRecord(cellClickedEvent.getRecordId());
-				TableColumn<RECORD> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
+				TableColumn<RECORD, ?> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
 				if (record != null && column != null) {
 					this.onCellClicked.fire(new CellClickedEvent<>(record, column));
 				}
@@ -254,14 +273,14 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				List<FieldMessage> messages = new ArrayList<>(cellMessages);
 				messages.addAll(columnMessages);
 				activeEditorField.setCustomFieldMessages(messages);
-				this.onCellEditingStarted.fire(new CellEditingStartedEvent<>(record, column, cellValue));
+				this.onCellEditingStarted.fire(new CellEditingStartedEvent(record, column, cellValue));
 				break;
 			}
 			case UI_TABLE_CELL_EDITING_STOPPED: {
 				this.activeEditorCell = null;
 				UiTable.CellEditingStoppedEvent editingStoppedEvent = (UiTable.CellEditingStoppedEvent) event;
 				RECORD record = renderedRecords.getRecord(editingStoppedEvent.getRecordId());
-				TableColumn<RECORD> column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
+				TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
 				if (record == null || column == null) {
 					return;
 				}
@@ -271,7 +290,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			case UI_TABLE_CELL_VALUE_CHANGED: {
 				UiTable.CellValueChangedEvent changeEvent = (UiTable.CellValueChangedEvent) event;
 				RECORD record = renderedRecords.getRecord(changeEvent.getRecordId());
-				TableColumn<RECORD> column = this.getColumnByPropertyName(changeEvent.getColumnPropertyName());
+				TableColumn<RECORD, ?> column = this.getColumnByPropertyName(changeEvent.getColumnPropertyName());
 				if (record == null || column == null) {
 					return;
 				}
@@ -279,7 +298,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				transientChangesByRecordAndPropertyName
 						.computeIfAbsent(record, idValue -> new HashMap<>())
 						.put(column.getPropertyName(), value);
-				onCellValueChanged.fire(new FieldValueChangedEventData<>(record, column, value));
+				onCellValueChanged.fire(new FieldValueChangedEventData(record, column, value));
 				break;
 			}
 			case UI_TABLE_SORTING_CHANGED:
@@ -296,13 +315,13 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			}
 			case UI_TABLE_FIELD_ORDER_CHANGE: {
 				UiTable.FieldOrderChangeEvent fieldOrderChangeEvent = (UiTable.FieldOrderChangeEvent) event;
-				TableColumn<RECORD> column = getColumnByPropertyName(fieldOrderChangeEvent.getColumnPropertyName());
+				TableColumn<RECORD, ?> column = getColumnByPropertyName(fieldOrderChangeEvent.getColumnPropertyName());
 				onColumnOrderChange.fire(new ColumnOrderChangeEventData<>(column, fieldOrderChangeEvent.getPosition()));
 				break;
 			}
 			case UI_TABLE_COLUMN_SIZE_CHANGE: {
 				UiTable.ColumnSizeChangeEvent columnSizeChangeEvent = (UiTable.ColumnSizeChangeEvent) event;
-				TableColumn<RECORD> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
+				TableColumn<RECORD, ?> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
 				onColumnSizeChange.fire(new ColumnSizeChangeEventData<>(column, columnSizeChangeEvent.getSize()));
 				break;
 			}
@@ -325,7 +344,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		}
 	}
 
-	private Object getCellValue(RECORD record, TableColumn<RECORD> column) {
+	private <VALUE> VALUE getCellValue(RECORD record, TableColumn<RECORD, VALUE> column) {
 		Map<String, Object> changesForRecord = transientChangesByRecordAndPropertyName.getOrDefault(record, Collections.emptyMap());
 		boolean changed = changesForRecord.containsKey(column.getPropertyName());
 		Object cellValue;
@@ -334,19 +353,19 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		} else {
 			cellValue = extractRecordProperty(record, column);
 		}
-		return cellValue;
+		return (VALUE) cellValue;
 	}
 
-	private Object extractRecordProperty(RECORD record, TableColumn<RECORD> column) {
+	private <VALUE> VALUE extractRecordProperty(RECORD record, TableColumn<RECORD, VALUE> column) {
 		if (column.getValueExtractor() != null) {
 			return column.getValueExtractor().extract(record);
 		} else {
-			return propertyProvider.getValues(record, Collections.singletonList(column.getPropertyName())).get(column.getPropertyName());
+			return (VALUE) propertyProvider.getValues(record, Collections.singletonList(column.getPropertyName())).get(column.getPropertyName());
 		}
 	}
 
 	private Map<String, Object> extractRecordProperties(RECORD record) {
-		Map<Boolean, List<TableColumn<RECORD>>> columnsWithAndWithoutValueExtractor = columns.stream().collect(Collectors.partitioningBy(c -> c.getValueExtractor() != null));
+		Map<Boolean, List<TableColumn<RECORD, ?>>> columnsWithAndWithoutValueExtractor = columns.stream().collect(Collectors.partitioningBy(c -> c.getValueExtractor() != null));
 		Map<String, Object> valuesByPropertyName = new HashMap<>(propertyProvider.getValues(record, columnsWithAndWithoutValueExtractor.get(false).stream()
 				.map(TableColumn::getPropertyName)
 				.collect(Collectors.toList())));
@@ -377,7 +396,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		transientChangesByRecordAndPropertyName.computeIfAbsent(record, record1 -> new HashMap<>()).put(propertyName, value);
 		UiIdentifiableClientRecord uiRecordIdOrNull = renderedRecords.getUiRecord(record);
 		if (uiRecordIdOrNull != null) {
-			queueCommandIfRendered(() -> new UiTable.SetCellValueCommand(getId(), uiRecordIdOrNull.getId(), propertyName, value));
+			final Object uiValue = getColumnByPropertyName(propertyName).getField().convertUxValueToUiValue(value);
+			queueCommandIfRendered(() -> new UiTable.SetCellValueCommand(getId(), uiRecordIdOrNull.getId(), propertyName, uiValue));
 		}
 	}
 
@@ -427,7 +447,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), renderedRecords.getUiRecordIds(selectedRecords), scrollToFirst));
 	}
 
-	protected void updateColumnMessages(TableColumn<RECORD> tableColumn) {
+	protected void updateColumnMessages(TableColumn<RECORD, ?> tableColumn) {
 		queueCommandIfRendered(() -> new UiTable.SetColumnMessagesCommand(getId(), tableColumn.getPropertyName(), tableColumn.getMessages().stream()
 				.map(message -> message.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS))
 				.collect(Collectors.toList())));
@@ -449,6 +469,34 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		updateSingleCellMessages(record, propertyName, cellMessages);
 	}
 
+	public List<FieldMessage> validateRecord(RECORD record) {
+		return validateRowInternal(record, false);
+	}
+
+	public List<FieldMessage> validateRow(RECORD record) {
+		return validateRowInternal(record, true);
+	}
+
+	private List<FieldMessage> validateRowInternal(RECORD record, boolean considerChangedCellValues) {
+		Map<String, Object> stringObjectMap;
+		stringObjectMap = extractRecordProperties(record);
+		if (considerChangedCellValues) {
+			stringObjectMap.putAll(getChangedCellValues(record));
+		}
+		//noinspection unchecked
+		return getColumns().stream()
+				.flatMap(column -> column.getField().getValidators().stream()
+						.flatMap(validator -> {
+							List<FieldMessage> messages = (((FieldValidator) validator).validate(stringObjectMap.get(column.getPropertyName())));
+							if (messages != null) {
+								return messages.stream();
+							} else {
+								return Stream.empty();
+							}
+						}))
+				.collect(Collectors.toList());
+	}
+
 	private void updateSingleCellMessages(RECORD record, String propertyName, List<FieldMessage> cellMessages) {
 		UiIdentifiableClientRecord uiRecordId = renderedRecords.getUiRecord(record);
 		if (uiRecordId != null) {
@@ -464,7 +512,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 
-	protected void updateColumnVisibility(TableColumn<RECORD> tableColumn) {
+	protected void updateColumnVisibility(TableColumn<RECORD, ?> tableColumn) {
 		queueCommandIfRendered(() -> new UiTable.SetColumnVisibilityCommand(getId(), tableColumn.getPropertyName(), tableColumn.isVisible()));
 	}
 
@@ -597,7 +645,6 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		});
 	}
 
-
 	private int getTotalRecordsCount() {
 		return getModelCount() + topNonModelRecords.size() + bottomNonModelRecords.size();
 	}
@@ -691,7 +738,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		clientRecord.setId(++clientRecordIdCounter);
 		Map<String, Object> uxValues = extractRecordProperties(record);
 		Map<String, Object> uiValues = columns.stream()
-				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), column.getField().convertUxValueToUiValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
+				.collect(HashMap::new, (map, column) -> map.put(column.getPropertyName(), ((AbstractField) column.getField()).convertUxValueToUiValue(uxValues.get(column.getPropertyName()))), HashMap::putAll);
 		clientRecord.setValues(uiValues);
 		clientRecord.setSelected(selectedRecords.contains(record));
 		clientRecord.setMessages(createUiFieldMessagesForRecord(cellMessages.getOrDefault(record, Collections.emptyMap())));
@@ -700,7 +747,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		return clientRecord;
 	}
 
-	public List<TableColumn<RECORD>> getColumns() {
+	public List<TableColumn<RECORD, ?>> getColumns() {
 		return columns;
 	}
 
@@ -793,6 +840,15 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void setShowNumbering(boolean showNumbering) {
 		this.showNumbering = showNumbering;
+		reRenderIfRendered();
+	}
+
+	public boolean isTextSelectionEnabled() {
+		return textSelectionEnabled;
+	}
+
+	public void setTextSelectionEnabled(boolean textSelectionEnabled) {
+		this.textSelectionEnabled = textSelectionEnabled;
 		reRenderIfRendered();
 	}
 
@@ -968,9 +1024,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		this.footerRowFields.put(columnName, field);
 	}
 
-	public TableColumn<RECORD> getColumnByPropertyName(String propertyName) {
+	public <VALUE> TableColumn<RECORD, VALUE> getColumnByPropertyName(String propertyName) {
 		return columns.stream()
 				.filter(column -> column.getPropertyName().equals(propertyName))
+				.map(c -> (TableColumn<RECORD, VALUE>) c)
 				.findFirst().orElse(null);
 	}
 
@@ -1002,7 +1059,14 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	public void applyCellValuesToRecord(RECORD record) {
 		Map<String, Object> changedCellValues = getChangedCellValues(record);
-		propertyInjector.setValues(record, changedCellValues);
+		changedCellValues.forEach((propertyName, value) -> {
+			ValueInjector<RECORD, Object> columnValueInjector = getColumnByPropertyName(propertyName).getValueInjector();
+			if (columnValueInjector != null) {
+				columnValueInjector.inject(record, value);
+			} else {
+				propertyInjector.setValue(record, propertyName, value);
+			}
+		});
 	}
 
 	public void revertChanges() {

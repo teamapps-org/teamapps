@@ -44,7 +44,7 @@ export class UiMobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> im
 
 	constructor(config: UiMobileLayoutConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$mainDiv = parseHtml(`<div id="${config.id}" class="UiMobileLayout">
+		this.$mainDiv = parseHtml(`<div class="UiMobileLayout">
                              <div class="toolbar-container"></div>
                              <div class="content-container-wrapper"></div>
                              <div class="navigation-bar-container"></div>

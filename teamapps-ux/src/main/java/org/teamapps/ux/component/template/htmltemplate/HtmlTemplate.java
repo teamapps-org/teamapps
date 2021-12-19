@@ -32,11 +32,11 @@ public class HtmlTemplate implements Template {
 	private static final Pattern PLACE_HOLDER_REGEX = Pattern.compile("\\{\\{(\\w+)\\}\\}");
 
 	private final String html;
-	private final List<String> dataKeys;
+	private final List<String> propertyNames;
 
 	public HtmlTemplate(String htmlTemplateString) {
 		this.html = htmlTemplateString;
-		this.dataKeys = PLACE_HOLDER_REGEX.matcher(html).results()
+		this.propertyNames = PLACE_HOLDER_REGEX.matcher(html).results()
 				.map(matchResult -> matchResult.group(1))
 				.collect(Collectors.toList());
 	}
@@ -47,8 +47,8 @@ public class HtmlTemplate implements Template {
 	}
 
 	@Override
-	public List<String> getDataKeys() {
-		return dataKeys;
+	public List<String> getPropertyNames() {
+		return propertyNames;
 	}
 	
 }

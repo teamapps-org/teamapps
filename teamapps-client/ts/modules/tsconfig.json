@@ -8,7 +8,6 @@
     "experimentalDecorators": true,
     "alwaysStrict": true,
     "lib": ["es2019", "dom"],
-    "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "moduleResolution": "node",

@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.component.template.htmltemplate;
 
-import org.teamapps.dto.UiHtmlTemplate;
 import org.teamapps.dto.UiMustacheTemplate;
 import org.teamapps.dto.UiTemplate;
 import org.teamapps.ux.component.template.Template;
@@ -33,11 +32,11 @@ public class MustacheTemplate implements Template {
 	private static final Pattern PLACE_HOLDER_REGEX = Pattern.compile("\\{\\{#?(\\w+)\\}\\}");
 
 	private final String templateString;
-	private final List<String> dataKeys;
+	private final List<String> propertyNames;
 
 	public MustacheTemplate(String templateString) {
 		this.templateString = templateString;
-		this.dataKeys = PLACE_HOLDER_REGEX.matcher(this.templateString).results()
+		this.propertyNames = PLACE_HOLDER_REGEX.matcher(this.templateString).results()
 				.map(matchResult -> matchResult.group(1))
 				.collect(Collectors.toList());
 	}
@@ -48,8 +47,8 @@ public class MustacheTemplate implements Template {
 	}
 
 	@Override
-	public List<String> getDataKeys() {
-		return dataKeys;
+	public List<String> getPropertyNames() {
+		return propertyNames;
 	}
 	
 }

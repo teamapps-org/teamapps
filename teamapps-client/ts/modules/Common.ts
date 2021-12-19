@@ -23,7 +23,6 @@ import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 import {UiTemplateConfig} from "../generated/UiTemplateConfig";
-import {UiTextMatchingMode} from "../generated/UiTextMatchingMode";
 import {UiComponent} from "./UiComponent";
 import {UiPageTransition} from "../generated/UiPageTransition";
 import {UiRepeatableAnimation} from "../generated/UiRepeatableAnimation";
@@ -189,16 +188,13 @@ export class Constants {
 	}
 }
 
+export function getAutoCompleteOffValue(): string {
+	return "no";
+}
+
 export function hasVerticalScrollBar(element: HTMLElement): boolean {
 	return element.scrollWidth < element.offsetWidth;
 }
-
-export const matchingModesMapping: { [x in UiTextMatchingMode]: 'contains' | 'prefix' | 'prefix-word' | 'prefix-levenshtein' | 'levenshtein' } = {
-	[UiTextMatchingMode.PREFIX]: "prefix",
-	[UiTextMatchingMode.PREFIX_WORD]: "prefix-word",
-	[UiTextMatchingMode.CONTAINS]: "contains",
-	[UiTextMatchingMode.SIMILARITY]: "levenshtein"
-};
 
 export function loadScriptAsynchronously(url: string, callback?: EventListener) {
 	const scriptElement = document.createElement('script');
@@ -214,11 +210,11 @@ export interface ClickOutsideHandle {
 	cancel: () => void
 }
 
-export function doOnceOnClickOutsideElement(elements: Element | NodeList | Element[], handler: (e?: JQueryMouseEventObject) => any, useCapture = false): ClickOutsideHandle {
+export function doOnceOnClickOutsideElement(elements: Element | NodeList | Element[], handler: (e?: MouseEvent) => any, useCapture = false): ClickOutsideHandle {
 	const eventType = "mousedown";
 	const elementsAsArray = elements instanceof Element ? [elements] : Array.from(elements);
-	let handlerWrapper = (e: JQueryMouseEventObject) => {
-		if (closestAncestorMatching(e.target, ancestor => (elementsAsArray.indexOf(ancestor) !== -1), true) == null) {
+	let handlerWrapper = (e: MouseEvent) => {
+		if (closestAncestorMatching(e.target as Element, ancestor => (elementsAsArray.indexOf(ancestor) !== -1), true) == null) {
 			handler(e);
 			removeMouseDownListener();
 		}
@@ -808,12 +804,6 @@ export function maximizeComponent(component: UiComponent, maximizeAnimationCallb
 	return restore;
 }
 
-export function flattenArray<T>(array: (T | T[])[]): T[] {
-	return array.reduce(function (flat: T[], toFlatten: T | T[]) {
-		return flat.concat(Array.isArray(toFlatten) ? flattenArray(toFlatten) : toFlatten);
-	}, [] as any);
-}
-
 export function removeTags(value: string, ...tagNames: string[]) {
 	if (value == null) {
 		value = "";
@@ -866,7 +856,9 @@ export function parseHtml<E extends HTMLElement>(htmlString: string): E {
 	// let tmpl = document.createElement('template');
 	// tmpl.innerHTML = htmlString;
 	// return tmpl.content.cloneNode(true).firstChild as E;
-
+	if (!htmlString.startsWith("<") || !htmlString.endsWith(">")) {
+		htmlString = "<div>" + htmlString + "</div>";
+	}
 	return $(htmlString)[0] as E;
 }
 

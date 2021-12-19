@@ -46,13 +46,13 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
 	
 	private final FieldValidator<VALUE> requiredValidator = (value) ->
-			this.isEmpty() ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
-			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : null;
+			this.isEmptyValue(value) ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
+			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
 	private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
-			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmpty()) ?
+			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmptyValue(value)) ?
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
-			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : null;
+			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
 	public final Event<VALUE> onValueChanged = new Event<>();
 	public final Event<Boolean> onVisibilityChanged = new Event<>();
@@ -151,13 +151,17 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	/**
-	 * Whether this field can be regarded as empty / "no user input".
+	 * Whether this value be regarded as empty / "no user input".
 	 * Override for field-specific behaviour.
 	 *
 	 * @return true if the value can be regarded as "empty".
 	 */
+	protected boolean isEmptyValue(VALUE value) {
+		return value == null;
+	}
+
 	public boolean isEmpty() {
-		return getValue() == null;
+		return isEmptyValue(getValue());
 	}
 
 	public Collection<FieldValidator<VALUE>> getValidators() {

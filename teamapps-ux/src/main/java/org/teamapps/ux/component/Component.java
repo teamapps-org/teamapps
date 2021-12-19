@@ -81,6 +81,14 @@ public interface Component extends ClientObject {
 		setCssStyle("box-shadow", shadow.toCssString());
 	}
 
+	default void setAriaLabel(String ariaLabel) {
+		setAttribute("aria-label", ariaLabel);
+	}
+
+	default void setHtmlTitle(String title) {
+		setAttribute("title", title);
+	}
+
 	// == static methods ==
 
 	static UiClientObjectReference createUiClientObjectReference(Component component) {

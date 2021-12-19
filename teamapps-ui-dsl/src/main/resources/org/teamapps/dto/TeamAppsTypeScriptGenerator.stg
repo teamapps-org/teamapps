@@ -63,13 +63,13 @@ export function create<c.Identifier.text; format="cap">Config(<c.allRequiredProp
 
 <if(c.hasCommands)>
 export interface <c.Identifier.text>CommandHandler <if(c.superClassAndDirectlyImplementedInterfacesWithCommands)>extends <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
-	<c.nonStaticCommandDeclaration:commandMethodStub(); separator="\n">
+	<c.nonStaticCommandDeclarations:commandMethodStub(); separator="\n">
 }
 <endif>
 
 <if(c.hasEvents)>
 export interface <c.Identifier>EventSource <if(c.superClassAndDirectlyImplementedInterfacesWithEvents)>extends <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|<c.Identifier>EventSource}; separator=", "> <endif>{
-	<c.eventDeclaration:teamAppsEventDeclaration(); separator="\n">
+	<c.nonStaticEventDeclarations:teamAppsEventDeclaration(); separator="\n">
 }
 <endif>
 
@@ -121,7 +121,7 @@ export interface <c.Identifier.text>Config <if(c.superInterfaces)>extends <c.sup
 
 <if(c.hasCommands)>
 export interface <c.Identifier.text>CommandHandler <if(c.superInterfacesWithCommands)>extends <c.superInterfacesWithCommands:{c|<c.Identifier>CommandHandler}; separator=", "> <endif>{
-	<c.nonStaticCommandDeclaration:commandMethodStub(); separator="\n">
+	<c.nonStaticCommandDeclarations:commandMethodStub(); separator="\n">
 }
 <endif>
 

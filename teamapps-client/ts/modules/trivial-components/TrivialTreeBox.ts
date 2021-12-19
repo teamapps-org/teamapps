@@ -17,28 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-/*!
-Trivial Components (https://github.com/trivial-components/trivial-components)
-
-Copyright 2016 Yann Massard (https://github.com/yamass) and other contributors
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 
 import {DEFAULT_TEMPLATES, generateUUID, HighlightDirection, MatchingOptions, TrivialComponent} from "./TrivialCore";
-import {TrivialEvent} from "./TrivialEvent";
 import {highlightMatches} from "./util/highlight";
 import {addDelegatedEventListener, closestAncestor, insertAfter, insertBefore, parseHtml, toggleElementCollapsed} from "../Common";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 export interface TrivialTreeBoxConfig<E> {
 	/**
@@ -231,8 +214,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 
 	private config: TrivialTreeBoxConfig<E>;
 
-	public readonly onSelectedEntryChanged = new TrivialEvent<E>(this);
-	public readonly onNodeExpansionStateChanged = new TrivialEvent<E>(this);
+	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>(this);
+	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<E>(this);
 
 	private $componentWrapper: HTMLElement;
 	private $tree: HTMLElement;
@@ -508,7 +491,7 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		this.selectedEntryId = entry && entry.id;
 		this.markSelectedEntry(entry);
 		if (fireEvents) {
-			this.fireChangeEvents(entry, originalEvent);
+			this.fireChangeEvents(entry);
 		}
 	}
 
@@ -535,8 +518,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		}
 	}
 
-	private fireChangeEvents(entry: EntryWrapper<E>, originalEvent: unknown) {
-		this.onSelectedEntryChanged.fire(entry.entry, originalEvent);
+	private fireChangeEvents(entry: EntryWrapper<E>) {
+		this.onSelectedEntryChanged.fire(entry.entry);
 	}
 
 	public selectNextEntry(direction: HighlightDirection, rollover = false, selectableOnly = true, matcher: (entry: E) => boolean = () => true, fireEvents = false, originalEvent?: unknown): E {

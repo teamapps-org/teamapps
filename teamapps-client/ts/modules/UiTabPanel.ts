@@ -71,9 +71,9 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	public readonly onWindowButtonClicked: TeamAppsEvent<UiTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent(this);
 
 	private readonly defaultToolButtons = {
-		[UiWindowButtonType.MINIMIZE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize"), this._context),
-		[UiWindowButtonType.MAXIMIZE_RESTORE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MAXIMIZE, "Maximize/Restore"), this._context),
-		[UiWindowButtonType.CLOSE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.CLOSE, "Close"), this._context),
+		[UiWindowButtonType.MINIMIZE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize"}), this._context),
+		[UiWindowButtonType.MAXIMIZE_RESTORE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize"}), this._context),
+		[UiWindowButtonType.CLOSE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close"}), this._context),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		UiWindowButtonType.MINIMIZE,
@@ -109,7 +109,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	constructor(config: UiTabPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$tabPanel = parseHtml(`<div id="${config.id}" class="UiTabPanel">
+		this.$tabPanel = parseHtml(`<div class="UiTabPanel">
     <div class="tab-panel-header teamapps-blurredBackgroundImage">
         <div class="background-color-div">
 	        <div class="tab-button-container left"></div>

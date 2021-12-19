@@ -21,12 +21,12 @@ package org.teamapps.ux.component.table;
 
 import org.teamapps.ux.component.field.AbstractField;
 
-public class CellEditingStoppedEvent<RECORD> {
+public class CellEditingStoppedEvent<RECORD, VALUE> {
 
 	private final RECORD record;
-	private final TableColumn<RECORD> column;
+	private final TableColumn<RECORD, VALUE> column;
 
-	public CellEditingStoppedEvent(RECORD record, TableColumn<RECORD> column) {
+	public CellEditingStoppedEvent(RECORD record, TableColumn<RECORD, VALUE> column) {
 		this.record = record;
 		this.column = column;
 	}
@@ -35,7 +35,7 @@ public class CellEditingStoppedEvent<RECORD> {
 		return record;
 	}
 
-	public TableColumn<RECORD> getColumn() {
+	public TableColumn<RECORD, VALUE> getColumn() {
 		return column;
 	}
 

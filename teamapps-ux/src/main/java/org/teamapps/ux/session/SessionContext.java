@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.UiCommand;
+import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.event.Event;
@@ -33,6 +34,7 @@ import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.*;
 import org.teamapps.ux.component.ClientObject;
+import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
 import org.teamapps.ux.component.field.Button;
@@ -47,8 +49,7 @@ import org.teamapps.ux.component.rootpanel.WakeLock;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.TemplateReference;
 import org.teamapps.ux.component.window.Window;
-import org.teamapps.ux.i18n.RankingTranslationProvider;
-import org.teamapps.ux.i18n.TeamAppsTranslationProviderFactory;
+import org.teamapps.ux.i18n.ResourceBundleTranslationProvider;
 import org.teamapps.ux.i18n.TranslationProvider;
 import org.teamapps.ux.icon.IconBundle;
 import org.teamapps.ux.icon.TeamAppsIconBundle;
@@ -57,10 +58,15 @@ import org.teamapps.ux.resource.Resource;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.text.MessageFormat;
 import java.time.ZoneId;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -74,6 +80,7 @@ public class SessionContext {
 
 	private final ExecutorService sessionExecutor;
 
+	public final Event<KeyboardEvent> onGlobalKeyEventOccurred = new Event<>();
 	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
 	public final Event<Void> onDestroyed = new Event<>();
 	/**
@@ -93,9 +100,9 @@ public class SessionContext {
 	private final SessionIconProvider iconProvider;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
 	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
-	private final ClientSessionResourceProvider sessionResourceProvider;
+	private final SessionContextResourceManager sessionResourceProvider;
 
-	private final RankingTranslationProvider rankingTranslationProvider;
+	private TranslationProvider translationProvider;
 
 	private final Map<String, Template> registeredTemplates = new ConcurrentHashMap<>();
 	private SessionConfiguration sessionConfiguration;
@@ -125,12 +132,11 @@ public class SessionContext {
 		this.commandExecutor = commandExecutor;
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
-		this.sessionResourceProvider = new ClientSessionResourceProvider(sessionId);
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(this);
-		this.rankingTranslationProvider = new RankingTranslationProvider();
-		this.rankingTranslationProvider.addTranslationProvider(TeamAppsTranslationProviderFactory.createProvider());
+		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
+		this.sessionResourceProvider = new SessionContextResourceManager(sessionId);
 	}
 
 	public static SessionContext current() {
@@ -141,12 +147,12 @@ public class SessionContext {
 		return CurrentSessionContext.getOrNull();
 	}
 
-	public void addTranslationProvider(TranslationProvider translationProvider) {
-		rankingTranslationProvider.addTranslationProvider(translationProvider);
+	public void setTranslationProvider(TranslationProvider translationProvider) {
+		this.translationProvider = translationProvider;
 	}
 
-	public TranslationProvider getRankingTranslationProvider() {
-		return rankingTranslationProvider;
+	public TranslationProvider getTranslationProvider() {
+		return translationProvider;
 	}
 
 	public void addIconBundle(IconBundle iconBundle) {
@@ -175,11 +181,7 @@ public class SessionContext {
 	}
 
 	public String getLocalized(String key, Object... parameters) {
-		String value = rankingTranslationProvider.getTranslation(key, Arrays.asList(getLocale(), Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN));
-		if (value != null && parameters != null) {
-			return MessageFormat.format(value, parameters);
-		}
-		return value;
+		return translationProvider.getLocalized(getLocale(), key, parameters);
 	}
 
 	public boolean isActive() {
@@ -233,14 +235,6 @@ public class SessionContext {
 
 	public HttpSession getHttpSession() {
 		return httpSession;
-	}
-
-	/**
-	 * @deprecated no more needed. commands are sent as early as the client can handle them.
-	 */
-	@Deprecated
-	public void flushCommands() {
-		// TODO remove methods
 	}
 
 	public ClientBackPressureInfo getClientBackPressureInfo() {
@@ -433,23 +427,22 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.ExitFullScreenCommand());
 	}
 
-	@Deprecated
-	public void addRootComponent(String containerElementId, RootPanel rootPanel) {
-		addRootPanel(containerElementId, rootPanel);
+	public void addRootComponent(String containerElementSelector, Component component) {
+		addRootPanel(containerElementSelector, component);
 	}
 
-	public void addRootPanel(String containerElementId, RootPanel rootPanel) {
-		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementId, rootPanel.createUiReference()));
+	public void addRootPanel(String containerElementSelector, Component rootPanel) {
+		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementSelector, rootPanel.createUiReference()));
 	}
 
-	public RootPanel addRootPanel(String containerElementId) {
+	public RootPanel addRootPanel(String containerElementSelector) {
 		RootPanel rootPanel = new RootPanel();
-		addRootPanel(containerElementId, rootPanel);
+		addRootPanel(containerElementSelector, rootPanel);
 		return rootPanel;
 	}
 
 	public RootPanel addRootPanel() {
-		return addRootPanel(null);
+		return addRootPanel("body");
 	}
 
 	public void addClientToken(String token) {
@@ -585,5 +578,39 @@ public class SessionContext {
 
 	public void goToUrl(String url, boolean blankPage) {
 		queueCommand(new UiRootPanel.GoToUrlCommand(url, blankPage));
+	}
+
+	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
+		queueCommand(new UiRootPanel.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
+	}
+
+	public QualifiedUiSessionId getSessionId() {
+		return sessionId;
+	}
+
+	public void handleStaticEvent(UiEvent event) {
+		switch (event.getUiEventType()) {
+			case UI_ROOT_PANEL_GLOBAL_KEY_EVENT_OCCURRED: {
+				UiRootPanel.GlobalKeyEventOccurredEvent e = (UiRootPanel.GlobalKeyEventOccurredEvent) event;
+				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
+						e.getEventType(),
+						(e.getSourceComponentId() != null ? (Component) getClientObject(e.getSourceComponentId()) : null),
+						e.getCode(),
+						e.getIsComposing(),
+						e.getKey(),
+						e.getCharCode(),
+						e.getKeyCode(),
+						e.getLocale(),
+						e.getLocation(),
+						e.getRepeat(),
+						e.getAltKey(),
+						e.getCtrlKey(),
+						e.getShiftKey(),
+						e.getMetaKey()
+				));
+				break;
+			}
+			default: throw new TeamAppsUiApiException(getSessionId(), event.getUiEventType().toString());
+		}
 	}
 }

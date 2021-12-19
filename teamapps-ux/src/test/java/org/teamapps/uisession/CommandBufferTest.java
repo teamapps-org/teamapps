@@ -19,6 +19,7 @@
  */
 package org.teamapps.uisession;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -167,7 +168,22 @@ public class CommandBufferTest {
 
 		buffer.purgeTillCommand(100);
 		Assert.assertEquals("must not purge next consumable command", 4, buffer.getBufferedCommandsCount());
+	}
 
+	@Test
+	public void rewindToCommandWhenTailGreaterThanNextConsumableAndRewindedCommandIsLeftFromNextConsumable()
+			throws UnconsumedCommandsOverflowException {
+		CommandBuffer buffer = new CommandBuffer(10);
+
+		for (int i = 0; i < 15; i++) {
+			buffer.addCommand(createCmd(i));
+			buffer.consumeCommand();
+		}
+		buffer.addCommand(createCmd(15));
+
+		buffer.rewindToCommand(13);
+
+		Assertions.assertThat(buffer.consumeCommand().getId()).isEqualTo(14);
 	}
 
 	private CMD createCmd(int id) {

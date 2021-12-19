@@ -53,9 +53,9 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent(this);
 
 	private readonly defaultToolButtons = {
-		[UiWindowButtonType.MINIMIZE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize"), this._context),
-		[UiWindowButtonType.MAXIMIZE_RESTORE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MAXIMIZE, "Maximize/Restore"), this._context),
-		[UiWindowButtonType.CLOSE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.CLOSE, "Close"), this._context),
+		[UiWindowButtonType.MINIMIZE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize"}), this._context),
+		[UiWindowButtonType.MAXIMIZE_RESTORE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MAXIMIZE, "Maximize/Restore", {debuggingId: "window-button-maximize"}), this._context),
+		[UiWindowButtonType.CLOSE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.CLOSE, "Close", {debuggingId: "window-button-close"}), this._context),
 	};
 	private readonly orderedDefaultToolButtonTypes = [
 		UiWindowButtonType.MINIMIZE,
@@ -66,7 +66,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	private $panel: HTMLElement;
 	private $heading: HTMLElement;
 	private $toolbarContainer: HTMLElement;
-	private $bodyContainer: HTMLElement;
+	private panelBody: HTMLElement;
 	private $leftComponentWrapper: HTMLElement;
 	private $headingSpacer: HTMLElement;
 	private $rightComponentWrapper: HTMLElement;
@@ -86,12 +86,11 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	private titleNaturalWidth: number;
 	private toolButtons: UiToolButton[] = [];
 	private windowButtons: UiWindowButtonType[];
-	private dropDown: UiDropDown;
 	private restoreFunction: (animationCallback?: () => void) => void;
 
 	constructor(config: UiPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$panel = parseHtml(`<div id="${config.id}" class="UiPanel panel teamapps-blurredBackgroundImage">
+		this.$panel = parseHtml(`<div class="UiPanel panel teamapps-blurredBackgroundImage">
                 <div class="panel-heading">
                     <div class="panel-icon"></div>
                     <div class="panel-title"></div>
@@ -102,13 +101,11 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
                     <div class="panel-heading-window-buttons hidden"></div>
                 </div>
                 <div class="toolbar-container"></div>
-                <div class="panel-body">
-                  <div class="body-container scroll-container" style="padding: ${config.padding}px"></div>
-                </div>
+                <div class="panel-body" style="padding: ${config.padding}px"></div>
             </div>`);
 
 		this.$toolbarContainer = this.$panel.querySelector(':scope .toolbar-container');
-		this.$bodyContainer = this.$panel.querySelector(':scope .body-container');
+		this.panelBody = this.$panel.querySelector(':scope .panel-body');
 		this.$heading = this.$panel.querySelector(':scope >.panel-heading');
 		this.$icon = this.$heading.querySelector(':scope >.panel-icon');
 		this.$title = this.$heading.querySelector(':scope >.panel-title');
@@ -138,8 +135,6 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 			this.setContent(config.content as UiComponent);
 		}
 		this.leftComponentFirstMinimized = this._config.headerComponentMinimizationPolicy == UiPanel_HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
-
-		this.dropDown = new UiDropDown();
 
 		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
 			if (this.restoreFunction == null) {
@@ -245,11 +240,11 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 	}
 
 	public setContent(content: UiComponent) {
-		if (content?.getMainElement() !== this.$bodyContainer.firstElementChild) {
-			this.$bodyContainer.innerHTML = '';
+		if (content?.getMainElement() !== this.panelBody.firstElementChild) {
+			this.panelBody.innerHTML = '';
 		}
 		if (content != null) {
-			this.$bodyContainer.appendChild(content.getMainElement());
+			this.panelBody.appendChild(content.getMainElement());
 		}
 	}
 

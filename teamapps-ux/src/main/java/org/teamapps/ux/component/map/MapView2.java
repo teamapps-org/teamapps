@@ -115,7 +115,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 		Template template = getTemplateForRecord(marker, templateDecider);
 		if (template != null) {
 			clientRecord.setTemplateId(templateIdsByTemplate.get(template));
-			clientRecord.setValues(markerPropertyProvider.getValues(marker.getData(), template.getDataKeys()));
+			clientRecord.setValues(markerPropertyProvider.getValues(marker.getData(), template.getPropertyNames()));
 		} else {
 			clientRecord.setAsString("" + marker.getData());
 		}

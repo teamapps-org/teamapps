@@ -24,10 +24,10 @@ import org.teamapps.ux.component.field.AbstractField;
 public class FieldValueChangedEventData<RECORD, VALUE> {
 
 	private final RECORD record;
-	private final TableColumn<RECORD> column;
+	private final TableColumn<RECORD, VALUE> column;
 	private final VALUE value;
 
-	public FieldValueChangedEventData(RECORD record, TableColumn<RECORD> column, VALUE value) {
+	public FieldValueChangedEventData(RECORD record, TableColumn<RECORD, VALUE> column, VALUE value) {
 		this.record = record;
 		this.column = column;
 		this.value = value;
@@ -37,7 +37,7 @@ public class FieldValueChangedEventData<RECORD, VALUE> {
 		return record;
 	}
 
-	public TableColumn<RECORD> getColumn() {
+	public TableColumn<RECORD, VALUE> getColumn() {
 		return column;
 	}
 

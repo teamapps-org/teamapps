@@ -108,7 +108,7 @@
 
       .tab-panel-dropdown {
         position: absolute;
-        z-index: var(--ta-zindex-max);
+        z-index: var(--ta-zindex-dropdown);
         box-shadow: 0 3px 8px -1px rgba(0, 0, 0, .4);
         border-radius: 0 0 var(--ta-border-radius) var(--ta-border-radius);
         .dropdown-button-container {
@@ -176,6 +176,7 @@
         .tab-component-container {
           flex: 1 1 1px;
           height: 100%;
+          max-height: 100%; // needed for safari. Will make the content overflow (instead of auto-scroll) if not set.
           overflow: visible;
 
           > * {

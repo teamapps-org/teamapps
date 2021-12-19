@@ -23,7 +23,7 @@ implementsDecl: 'implements' classList;
 classList: ((Identifier ',')* Identifier)?;
 propertyDeclaration : referenceableAnnotation? requiredModifier? type Identifier (defaultValueAssignment)? ';';
 commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ('returns' type)? ';';
-eventDeclaration : 'event' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
+eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
 queryDeclaration : 'query' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' 'returns' type ';';
 formalParameter : type Identifier;
 formalParameterWithDefault : type Identifier (defaultValueAssignment)?;

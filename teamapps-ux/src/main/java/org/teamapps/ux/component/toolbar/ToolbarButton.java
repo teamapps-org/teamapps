@@ -38,10 +38,10 @@ import java.util.function.Supplier;
 public class ToolbarButton {
 
 	public final Event<UiToolbar.ToolbarButtonClickEvent> onClick = new Event<>();
-	public final Event<UiToolbar.ToolbarDropDownItemClickEvent> onDropDownItemClick = new Event<>();
 
 	private ToolbarButtonGroup toolbarButtonGroup;
 	private final String clientId = UUID.randomUUID().toString();
+	private String debuggingId;
 
 	private final Object record;
 
@@ -128,7 +128,7 @@ public class ToolbarButton {
 
 	public UiToolbarButton createUiToolbarButton() {
 		Template template = getAppliedTemplate();
-		Map<String, Object> values = getAppliedPropertyProvider().getValues(record, template.getDataKeys());
+		Map<String, Object> values = getAppliedPropertyProvider().getValues(record, template.getPropertyNames());
 
 		UiToolbarButton ui = new UiToolbarButton(clientId, template.createUiTemplate(), values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {
@@ -142,6 +142,7 @@ public class ToolbarButton {
 		ui.setStartPlaybackComponent(startPlaybackComponent != null ? startPlaybackComponent.createUiReference() : null);
 		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setHoverBackgroundColor(hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null);
+		ui.setDebuggingId(debuggingId);
 		return ui;
 	}
 
@@ -308,5 +309,13 @@ public class ToolbarButton {
 			toolbarButtonGroup.handleColorChange(this.clientId, backgroundColor, hoverBackgroundColor);
 		}
 		return this;
+	}
+
+	public String getDebuggingId() {
+		return debuggingId;
+	}
+
+	public void setDebuggingId(String debuggingId) {
+		this.debuggingId = debuggingId;
 	}
 }

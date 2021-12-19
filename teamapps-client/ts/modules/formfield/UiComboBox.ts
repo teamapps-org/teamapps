@@ -21,7 +21,6 @@ import {TrivialComboBox} from "../trivial-components/TrivialComboBox";
 import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiTextMatchingMode} from "../../generated/UiTextMatchingMode";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiComboBoxCommandHandler, UiComboBoxConfig, UiComboBoxEventSource} from "../../generated/UiComboBoxConfig";
@@ -67,8 +66,6 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			showTrigger: config.showDropDownButton,
 			editingMode: config.editingMode === UiFieldEditingMode.READONLY ? 'readonly' : config.editingMode === UiFieldEditingMode.DISABLED ? 'disabled' : 'editable',
 
-			spinnerTemplate: `<div class="teamapps-spinner" style="height: 20px; width: 20px; margin: 4px auto 4px auto;"></div>`,
-			textHighlightingEntryLimit: config.textHighlightingEntryLimit,
 			showDropDownOnResultsOnly: config.showDropDownAfterResultsArrive,
 			showClearButton: config.showClearButton,
 			entryToEditorTextFunction: e => e.asString,
@@ -137,26 +134,12 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		return v == null || typeof v === "object" && (v as UiComboBoxTreeRecordConfig).id != null;
 	}
 
-	static createTrivialMatchingOptions(config: { textMatchingMode?: UiTextMatchingMode }) {
-		let matchingModes: { [x: number]: 'contains' | 'prefix' | 'prefix-word' | 'prefix-levenshtein' | 'levenshtein' } = {
-			[UiTextMatchingMode.PREFIX]: "prefix",
-			[UiTextMatchingMode.PREFIX_WORD]: "prefix-word",
-			[UiTextMatchingMode.CONTAINS]: "contains",
-			[UiTextMatchingMode.SIMILARITY]: "prefix-levenshtein"
-		};
-		return {
-			matchingMode: matchingModes[config.textMatchingMode],
-			ignoreCase: true,
-			maxLevenshteinDistance: 3
-		};
-	}
-
 	public getMainInnerDomElement(): HTMLElement {
 		return this.trivialComboBox.getMainDomElement() as HTMLElement;
 	}
 
 	public getFocusableElement(): HTMLElement {
-		return this.trivialComboBox.getMainDomElement() as HTMLElement;
+		return this.trivialComboBox.getEditor() as HTMLElement;
 	}
 
 	protected displayCommittedValue(): void {
@@ -176,7 +159,9 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 
 	focus(): void {
-		this.trivialComboBox.focus();
+		if (this.isEditable()) {
+			this.trivialComboBox.focus();
+		}
 	}
 
 	public hasFocus(): boolean {

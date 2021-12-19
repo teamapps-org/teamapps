@@ -29,10 +29,12 @@ class UiGridTemplate implements UiTemplate {
     int gridGap = 0;
     String backgroundColor;
     UiBorder border;
+    String ariaLabelProperty;
+    String titleProperty;
 }
 
 abstract class AbstractUiTemplateElement {
-	required String dataKey;
+	required String property;
     required int row;
     required int column;
     int rowSpan = 1;

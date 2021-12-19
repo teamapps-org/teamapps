@@ -116,7 +116,7 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	private UiClientRecord createUiRecord(RECORD record, Template template) {
 		UiClientRecord uiClientRecord = new UiClientRecord();
-		uiClientRecord.setValues(propertyProvider.getValues(record, template.getDataKeys()));
+		uiClientRecord.setValues(propertyProvider.getValues(record, template.getPropertyNames()));
 		return uiClientRecord;
 	}
 

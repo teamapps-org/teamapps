@@ -32,6 +32,34 @@ To start a ready to run server with TeamApps included use:
 
 ## Quick start
 
+### Hello World
+         
+This will start a server on port 8080, so you should see the result under http://localhost:8080 
+
+```java
+import org.teamapps.icon.material.MaterialIcon;
+import org.teamapps.server.jetty.embedded.TeamAppsJettyEmbeddedServer;
+import org.teamapps.ux.component.field.Button;
+import org.teamapps.ux.component.rootpanel.RootPanel;
+
+public class HelloWorld {
+
+    public static void main(String[] args) throws Exception {
+        new TeamAppsJettyEmbeddedServer(sessionContext -> {
+            RootPanel rootPanel = sessionContext.addRootPanel();
+            Button<?> button = Button.create(MaterialIcon.INFO, "Click me!");
+            button.onClicked.addListener(() -> {
+                sessionContext.showNotification(MaterialIcon.CHAT, "Hello World!", "Congrats for your first TeamApps program!");
+            });
+            rootPanel.setContent(button);
+        }, 8080).start();
+    }
+
+}
+```
+
+### Application Layout
+
 In this example we create a responsive application with a single perspective, a few empty panels and a toolbar.
 Add the `teamapps-server-jetty-embedded` dependency to run this example.
 

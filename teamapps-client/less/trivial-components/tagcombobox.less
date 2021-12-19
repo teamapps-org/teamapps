@@ -35,6 +35,8 @@
  *
  */
 
+@tr-default-tag-border-color: #BAD2EA;
+
 .tr-tagcombobox {
   display: flex;
 
@@ -82,32 +84,6 @@
     }
   }
 
-  @tr-default-tag-border-color: #BAD2EA;
-
-  .tr-tagcombobox-default-wrapper-template {
-    border: 1px solid @tr-default-tag-border-color;
-    border-radius: 3px;
-    box-shadow: 1px 2px 1px -1px rgba(0, 0, 0, 0.13);
-    background-color: white;
-    margin: 2px;
-    overflow: hidden;
-
-    display: flex;
-    align-items: center;
-
-    .tr-tagcombobox-tag-content {
-      flex: 1 1 auto;
-      padding: 0 1px;
-    }
-
-    .tr-remove-button {
-      border: 1px solid @tr-default-tag-border-color;
-      border-radius: 3px;
-      margin: 2px;
-      align-self: flex-start;
-    }
-  }
-
   .tr-tagcombobox-editor {
     flex: 0 0 auto;
     max-width: 100%;
@@ -133,3 +109,26 @@
   }
 }
 
+.tr-tagcombobox-default-wrapper-template {
+  border: 1px solid @tr-default-tag-border-color;
+  border-radius: 3px;
+  box-shadow: 1px 2px 1px -1px rgba(0, 0, 0, 0.13);
+  background-color: white;
+  margin: 2px;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+
+  .tr-tagcombobox-tag-content {
+    flex: 1 1 auto;
+    padding: 0 1px;
+  }
+
+  .tr-remove-button {
+    border: 1px solid @tr-default-tag-border-color;
+    border-radius: 3px;
+    margin: 2px;
+    align-self: flex-start;
+  }
+}

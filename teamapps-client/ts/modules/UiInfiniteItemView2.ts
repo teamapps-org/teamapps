@@ -82,7 +82,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 
 	constructor(config: UiInfiniteItemView2Config, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$mainDomElement = parseHtml(`<div id="${config.id}" class="UiInfiniteItemView2 grid-${this._config.id}">
+		this.$mainDomElement = parseHtml(`<div class="UiInfiniteItemView2 grid-${this._config.id}">
                 <div class="grid"></div>
                 <style></style>
             </div>`);

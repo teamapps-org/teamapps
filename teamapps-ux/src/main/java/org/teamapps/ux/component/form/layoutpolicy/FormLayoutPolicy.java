@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class FormLayoutPolicy {
 
-	private int minWidth;
+	private int minWidth;  // in pixels
 	private List<FormSection> sections = new ArrayList<>();
 
 	public List<FormSection> getSections() {

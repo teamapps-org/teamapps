@@ -20,6 +20,7 @@
 package org.teamapps.ux.component.table;
 
 import org.teamapps.data.extract.ValueExtractor;
+import org.teamapps.data.extract.ValueInjector;
 import org.teamapps.dto.UiTableColumn;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.AbstractField;
@@ -31,13 +32,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TableColumn<RECORD> {
-	private Table table;
+public class TableColumn<RECORD, VALUE> {
+	public static final int DEFAULT_WIDTH = 150;
+	private Table<RECORD> table;
 
 	private final String propertyName;
-	private Icon icon;
+	private Icon<?, ?> icon;
 	private String title;
-	private AbstractField field;
+	private AbstractField<VALUE> field;
 	private int minWidth;
 	private int defaultWidth;
 	private int maxWidth;
@@ -45,27 +47,28 @@ public class TableColumn<RECORD> {
 	private boolean sortable = true;
 	private boolean resizeable = true;
 	private boolean hiddenIfOnlyEmptyCellsVisible = false;
-	private ValueExtractor<RECORD> valueExtractor;
+	private ValueExtractor<RECORD, VALUE> valueExtractor;
+	private ValueInjector<RECORD, VALUE> valueInjector;
 
 	private List<FieldMessage> messages = new ArrayList<>();
 
-	public TableColumn(String propertyName, AbstractField field) {
-		this(propertyName, null, null, field, 0, 150, 0);
+	public TableColumn(String propertyName, AbstractField<VALUE> field) {
+		this(propertyName, null, null, field, 0, DEFAULT_WIDTH, 0);
 	}
 
-	public TableColumn(String propertyName, String title, AbstractField field) {
-		this(propertyName, null, title, field, 0, 150, 0);
+	public TableColumn(String propertyName, String title, AbstractField<VALUE> field) {
+		this(propertyName, null, title, field, 0, DEFAULT_WIDTH, 0);
 	}
 
-	public TableColumn(String propertyName, Icon icon, String title, AbstractField field) {
-		this(propertyName, icon, title, field, 0, 150, 0);
+	public TableColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field) {
+		this(propertyName, icon, title, field, 0, DEFAULT_WIDTH, 0);
 	}
 
-	public TableColumn(String propertyName, Icon icon, String title, AbstractField field, int defaultWidth) {
+	public TableColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field, int defaultWidth) {
 		this(propertyName, icon, title, field, 0, defaultWidth, 0);
 	}
 
-	public TableColumn(String propertyName, Icon icon, String title, AbstractField field, int minWidth, int defaultWidth, int maxWidth) {
+	public TableColumn(String propertyName, Icon<?, ?> icon, String title, AbstractField<VALUE> field, int minWidth, int defaultWidth, int maxWidth) {
 		this.propertyName = propertyName;
 		this.icon = icon;
 		this.title = title;
@@ -115,11 +118,11 @@ public class TableColumn<RECORD> {
 		}
 	}
 
-	public Icon getIcon() {
+	public Icon<?, ?> getIcon() {
 		return icon;
 	}
 
-	public TableColumn<RECORD>setIcon(Icon icon) {
+	public TableColumn<RECORD, VALUE> setIcon(Icon<?, ?> icon) {
 		this.icon = icon;
 		return this;
 	}
@@ -128,16 +131,16 @@ public class TableColumn<RECORD> {
 		return title;
 	}
 
-	public TableColumn<RECORD>setTitle(String title) {
+	public TableColumn<RECORD, VALUE> setTitle(String title) {
 		this.title = title;
 		return this;
 	}
 
-	public AbstractField getField() {
+	public AbstractField<VALUE> getField() {
 		return field;
 	}
 
-	public TableColumn<RECORD>setField(AbstractField field) {
+	public TableColumn<RECORD, VALUE> setField(AbstractField<VALUE> field) {
 		this.field = field;
 		return this;
 	}
@@ -146,7 +149,7 @@ public class TableColumn<RECORD> {
 		return minWidth;
 	}
 
-	public TableColumn<RECORD>setMinWidth(int minWidth) {
+	public TableColumn<RECORD, VALUE> setMinWidth(int minWidth) {
 		this.minWidth = minWidth;
 		return this;
 	}
@@ -155,7 +158,7 @@ public class TableColumn<RECORD> {
 		return defaultWidth;
 	}
 
-	public TableColumn<RECORD>setDefaultWidth(int defaultWidth) {
+	public TableColumn<RECORD, VALUE> setDefaultWidth(int defaultWidth) {
 		this.defaultWidth = defaultWidth;
 		return this;
 	}
@@ -164,7 +167,7 @@ public class TableColumn<RECORD> {
 		return maxWidth;
 	}
 
-	public TableColumn<RECORD>setMaxWidth(int maxWidth) {
+	public TableColumn<RECORD, VALUE> setMaxWidth(int maxWidth) {
 		this.maxWidth = maxWidth;
 		return this;
 	}
@@ -173,7 +176,7 @@ public class TableColumn<RECORD> {
 		return visible;
 	}
 
-	public TableColumn<RECORD>setVisible(boolean visible) {
+	public TableColumn<RECORD, VALUE> setVisible(boolean visible) {
 		this.visible = visible;
 		if (table != null) {
 			table.updateColumnVisibility(this);
@@ -185,7 +188,7 @@ public class TableColumn<RECORD> {
 		return sortable;
 	}
 
-	public TableColumn<RECORD>setSortable(boolean sortable) {
+	public TableColumn<RECORD, VALUE> setSortable(boolean sortable) {
 		this.sortable = sortable;
 		return this;
 	}
@@ -194,7 +197,7 @@ public class TableColumn<RECORD> {
 		return resizeable;
 	}
 
-	public TableColumn<RECORD>setResizeable(boolean resizeable) {
+	public TableColumn<RECORD, VALUE> setResizeable(boolean resizeable) {
 		this.resizeable = resizeable;
 		return this;
 	}
@@ -203,12 +206,12 @@ public class TableColumn<RECORD> {
 		return hiddenIfOnlyEmptyCellsVisible;
 	}
 
-	public TableColumn<RECORD>setHiddenIfOnlyEmptyCellsVisible(boolean hiddenIfOnlyEmptyCellsVisible) {
+	public TableColumn<RECORD, VALUE> setHiddenIfOnlyEmptyCellsVisible(boolean hiddenIfOnlyEmptyCellsVisible) {
 		this.hiddenIfOnlyEmptyCellsVisible = hiddenIfOnlyEmptyCellsVisible;
 		return this;
 	}
 
-	/*package-private*/ void setTable(Table table) {
+	/*package-private*/ void setTable(Table<RECORD> table) {
 		this.table = table;
 	}
 
@@ -216,12 +219,21 @@ public class TableColumn<RECORD> {
 		return propertyName;
 	}
 
-	public ValueExtractor<RECORD> getValueExtractor() {
+	public ValueExtractor<RECORD, VALUE> getValueExtractor() {
 		return valueExtractor;
 	}
 
-	public TableColumn<RECORD> setValueExtractor(ValueExtractor<RECORD> valueExtractor) {
+	public TableColumn<RECORD, VALUE> setValueExtractor(ValueExtractor<RECORD, VALUE> valueExtractor) {
 		this.valueExtractor = valueExtractor;
+		return this;
+	}
+
+	public ValueInjector<RECORD, VALUE> getValueInjector() {
+		return valueInjector;
+	}
+
+	public TableColumn<RECORD, VALUE> setValueInjector(ValueInjector<RECORD, VALUE> valueInjector) {
+		this.valueInjector = valueInjector;
 		return this;
 	}
 }

@@ -126,8 +126,8 @@ public class Tree<RECORD> extends AbstractComponent {
 			return null;
 		}
 		Template template = getTemplateForRecord(record);
-		List<String> dataKeys = template != null ? template.getDataKeys() : Collections.emptyList();
-		Map<String, Object> values = propertyProvider.getValues(record, dataKeys);
+		List<String> propertyNames = template != null ? template.getPropertyNames() : Collections.emptyList();
+		Map<String, Object> values = propertyProvider.getValues(record, propertyNames);
 
 		UiTreeRecord uiTreeRecord;
 		if (uiRecordsByRecord.containsKey(record)) {

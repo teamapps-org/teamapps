@@ -39,7 +39,7 @@ import {UiSpecialKey} from "../../generated/UiSpecialKey";
 import {UiComboBoxTreeRecordConfig} from "../../generated/UiComboBoxTreeRecordConfig";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
 import {isFreeTextEntry} from "./UiComboBox";
-import {buildObjectTree, NodeWithChildren, parseHtml, Renderer} from "../Common";
+import {buildObjectTree, getAutoCompleteOffValue, NodeWithChildren, parseHtml, Renderer} from "../Common";
 import {TreeBoxDropdown} from "../trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 
@@ -55,7 +55,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	private freeTextIdEntryCounter = -1;
 
 	protected initialize(config: UiTagComboBoxConfig, context: TeamAppsUiContext) {
-		this.$originalInput = parseHtml('<input type="text" autocomplete="off">');
+		this.$originalInput = parseHtml(`<input type="text" autocomplete="${getAutoCompleteOffValue()}">`);
 
 		this.templateRenderers = config.templates != null ? context.templateRegistry.createTemplateRenderers(config.templates) : {};
 
@@ -149,7 +149,7 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	}
 
 	public getFocusableElement(): HTMLElement {
-		return this.trivialTagComboBox.getMainDomElement() as HTMLElement;
+		return this.trivialTagComboBox.getEditor() as HTMLElement;
 	}
 
 	protected displayCommittedValue(): void {

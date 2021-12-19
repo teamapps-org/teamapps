@@ -26,88 +26,26 @@
 
   position: relative;
 
-  .toolbar-container {
-    width: 100% !important;
-    height: auto !important;
-    flex: 0 0 auto;
-
-    border-top-left-radius: var(--ta-input-border-radius);
-    border-top-right-radius: var(--ta-input-border-radius);
-    overflow: hidden;
-    
-    transition: opacity var(--ta-color-transition-time);
-
-    > .mce-panel {
-      display: block !important;
-      width: 100% !important;
-      height: auto !important;
-      box-shadow: none;
-      border-width: 0 0 1px 0 !important;
-      transition: border-color var(--ta-color-transition-time);
-
-      > .mce-container-body {
-        width: 100% !important;
-        height: auto !important;
-
-        > .mce-toolbar-grp {
-          position: static;
-          width: 100% !important;
-          height: auto !important;
-          border-radius: var(--ta-input-border-radius);
-
-          > .mce-container-body {
-            height: auto !important;
-            width: 100% !important;
-
-            > .mce-toolbar {
-              height: auto !important;
-              width: 100% !important;
-
-              > .mce-flow-layout {
-                height: auto !important;
-                width: 100% !important;
-                display: flex;
-                flex-wrap: wrap;
-
-                > .mce-btn-group {
-                  padding: 0;
-                  margin: 0;
-                  transition: border-color var(--ta-color-transition-time);
-
-                  &:last-child {
-                    flex: 1 1 auto;
-                    text-align: right;
-                    border-left: none;
-                    > * {
-                      display: inline-block;
-                    }
-                  }
-
-                  .mce-btn {
-                    margin: 0;
-                    border: none;
-
-                    &:hover {
-                      background-color: var(--ta-hover-color);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+  .tox {
+    .tox-editor-header {
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+    .tox-toolbar-overlord {
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      overflow: hidden;
     }
   }
 
   .inline-editor {
     flex: 1 1 auto;
     outline: none !important;
-    //border: 1px solid transparent; // prevent margin merging!
     padding: 5px;
     overflow: auto;
 
-    alert {
+    .note {
       display: block;
 
       padding: var(--ta-half-line-height-computed);
@@ -120,7 +58,6 @@
       > *:last-child {
         margin-bottom: 0;
       }
-
     }
 
     blockquote {
@@ -178,4 +115,8 @@
     }
   }
 
+}
+
+.UiField.readonly > .UiRichTextEditor .toolbar-container {
+  display: none;
 }

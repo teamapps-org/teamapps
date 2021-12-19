@@ -240,6 +240,12 @@ public static class <ed.Identifier.text; format="cap">Event implements UiEvent {
 
 	<ed.allProperties:getter(); separator="\n\n">
 
+    <if(ed.staticModifier)>
+    public String getComponentId() {
+        return null;
+    }
+    <endif>
+
 }
 >>
 

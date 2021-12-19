@@ -36,7 +36,7 @@ export class UiElegantPanel extends AbstractUiComponent<UiElegantPanelConfig> im
 
 	constructor(config: UiElegantPanelConfig, context: TeamAppsUiContext) {
 		super(config, context);
-		this.$element = parseHtml(`<div id="${config.id}" class="UiElegantPanel">
+		this.$element = parseHtml(`<div class="UiElegantPanel">
                 <div class="flex-container">
                     <div class="background-image-div teamapps-blurredBackgroundImage">
                         <div class="background-color-div">

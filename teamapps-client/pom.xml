@@ -3,7 +3,7 @@
     <parent>
         <artifactId>teamapps</artifactId>
         <groupId>org.teamapps</groupId>
-        <version>0.9.107-SNAPSHOT</version>
+        <version>0.9.131-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -59,8 +59,8 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.6</version>
                 <configuration>
-                    <nodeVersion>v12.16.3</nodeVersion>
-                    <yarnVersion>v1.22.4</yarnVersion>
+                    <nodeVersion>v14.17.3</nodeVersion>
+                    <yarnVersion>v1.22.5</yarnVersion>
                 </configuration>
                 <executions>
                     <execution>
@@ -74,6 +74,15 @@
                         <goals>
                             <goal>yarn</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>sync version to package.json</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>sync-pom-version</arguments>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>webpack</id>

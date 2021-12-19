@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,8 +55,12 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
             return astUtil.findSuperClassAndDirectlyImplementedInterfaces(classContext);
         } else if ("hasCommands".equals(propertyName)) {
             return !astUtil.getAllCommands(classContext).isEmpty();
-        }  else if ("nonStaticCommandDeclaration".equals(propertyName)) {
+        }  else if ("nonStaticCommandDeclarations".equals(propertyName)) {
             return classContext.commandDeclaration().stream()
+                    .filter(cmd -> cmd.staticModifier() == null)
+                    .collect(Collectors.toList());
+        }  else if ("nonStaticEventDeclarations".equals(propertyName)) {
+            return classContext.eventDeclaration().stream()
                     .filter(cmd -> cmd.staticModifier() == null)
                     .collect(Collectors.toList());
         } else if ("hasEvents".equals(propertyName)) {

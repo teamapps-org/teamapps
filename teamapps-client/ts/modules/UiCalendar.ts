@@ -91,7 +91,7 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 	constructor(config: UiCalendarConfig, context: TeamAppsUiContext) {
 		super(config, context);
 
-		this.$main = parseHtml(`<div class="UiCalendar" id="${config.id}">
+		this.$main = parseHtml(`<div class="UiCalendar">
 	<div class="calendar"></div>
 </div>`);
 		let $fullCalendarElement: HTMLElement = this.$main.querySelector(':scope > .calendar');
@@ -445,10 +445,10 @@ class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 			});
 		}
 
-		let displayedInterval = new Interval(+query.start, +query.end);
+		let displayedInterval: Interval = [+query.start, +query.end];
 		this.logger.debug(`displayed: ${displayedInterval}`);
 		let events = this.cachedEvents.filter(event => {
-			let eventInterval = new Interval(+event.start, +event.end);
+			let eventInterval: Interval = [+event.start, +event.end];
 			let matches = IntervalManager.intervalsOverlap(displayedInterval, eventInterval);
 			if (matches) {
 				this.logger.debug(`matching: ${eventInterval}`);
@@ -474,7 +474,7 @@ class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 		}); // remove all obsolete events
 		this.cachedEvents = this.cachedEvents.concat(newEvents);
 		this.cachedEvents.sort((a, b) => a.start < b.start ? -1 : a.start > b.start ? 1 : 0);
-		this.intervalManager.addInterval(new Interval(start, end));
+		this.intervalManager.addInterval([start, end]);
 	}
 
 	public addEvent(newEvent: EventInput) {

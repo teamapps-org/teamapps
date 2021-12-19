@@ -233,7 +233,7 @@ export class UiWebRtcPlayer extends AbstractUiComponent<UiWebRtcPlayerConfig> im
 		}
 	}
 
-	private gotRemoteStream(event: MediaStreamEvent) {
+	private gotRemoteStream(event: any) {
 		// this.logger.debug('gotRemoteStream: ' + event.stream);
 		// this.remoteVideo.muted = false;
 		// try {
@@ -266,7 +266,6 @@ export class UiWebRtcPlayer extends AbstractUiComponent<UiWebRtcPlayerConfig> im
 
 }
 
-navigator.getUserMedia = navigator.getUserMedia || (navigator as any).mozGetUserMedia || (navigator as any).webkitGetUserMedia;
 (window as any).RTCPeerConnection = (window as any).RTCPeerConnection || (window as any).mozRTCPeerConnection || (window as any).webkitRTCPeerConnection;
 (window as any).RTCIceCandidate = (window as any).RTCIceCandidate || (window as any).mozRTCIceCandidate || (window as any).webkitRTCIceCandidate;
 (window as any).RTCSessionDescription = (window as any).RTCSessionDescription || (window as any).mozRTCSessionDescription || (window as any).webkitRTCSessionDescription;

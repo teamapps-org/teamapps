@@ -31,7 +31,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.List;
 
 public class TeamAppsJavaDtoGenerator {
     private final static Logger logger = LoggerFactory.getLogger(TeamAppsJavaDtoGenerator.class);
@@ -50,8 +49,10 @@ public class TeamAppsJavaDtoGenerator {
         File targetDir = new File(args[1]);
         String packageName = args[2];
 
-        List<TeamAppsDtoParser.ClassCollectionContext> classCollections = TeamAppsGeneratorUtil.parseClassCollections(sourceDir);
-        new TeamAppsJavaDtoGenerator(packageName, new TeamAppsDtoModel(classCollections)).generate(targetDir);
+        System.out.println("Generating Java from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath() + " with package name " + packageName);
+
+        new TeamAppsJavaDtoGenerator(packageName, new TeamAppsDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir)))
+                .generate(targetDir);
     }
 
     public TeamAppsJavaDtoGenerator(TeamAppsDtoModel model) throws IOException {
