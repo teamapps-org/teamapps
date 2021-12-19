@@ -23,53 +23,44 @@ import java.util.*;
 
 public class ResourceBundleTranslationProvider implements TranslationProvider {
 
-	private final List<Locale> languages;
-	private final List<String> keys;
-	private final Map<Locale, PropertyResourceBundle> resourceBundleByLocale = new HashMap<>();
+	private final String baseName;
+	private final ResourceBundle.Control resourceBundleControl;
+	private final Map<Locale, ResourceBundle> resourceBundleByLocale = new HashMap<>();
 
-	public ResourceBundleTranslationProvider(String baseName, Locale ... languages) {
-		this(baseName, "properties", languages);
+	public ResourceBundleTranslationProvider(String baseName) {
+		this(baseName, "properties");
 	}
 
-	public ResourceBundleTranslationProvider(String baseName, String resourceFileSuffix, Locale ... languages) {
-		this(baseName, resourceFileSuffix, Arrays.asList(languages), Locale.getDefault());
+	public ResourceBundleTranslationProvider(String baseName, String resourceFileSuffix) {
+		this(baseName, resourceFileSuffix, Locale.getDefault());
 	}
 
-	public ResourceBundleTranslationProvider(String baseName, String resourceFileSuffix, List<Locale> languages, Locale fallbackLocale) {
-		this.languages = languages;
-		Set<String> allKeys = new HashSet<>();
-		for (Locale language : languages) {
-			ResourceBundle bundle = ResourceBundle.getBundle(baseName, language, new TeamAppsResourceBundleControl(resourceFileSuffix, fallbackLocale));
-			if (bundle instanceof PropertyResourceBundle) {
-				PropertyResourceBundle propertyResourceBundle = (PropertyResourceBundle) bundle;
-				resourceBundleByLocale.put(language, propertyResourceBundle);
-				allKeys.addAll(propertyResourceBundle.keySet());
-			}
-		}
-		keys = new ArrayList<>(allKeys);
+	public ResourceBundleTranslationProvider(String baseName, Locale fallbackLocale) {
+		this(baseName, "properties", fallbackLocale);
 	}
 
-	@Override
-	public List<Locale> getLanguages() {
-		return languages;
+	public ResourceBundleTranslationProvider(String baseName, String resourceFileSuffix, Locale fallbackLocale) {
+		this(baseName, new TeamAppsResourceBundleControl(resourceFileSuffix, fallbackLocale));
 	}
 
-	@Override
-	public List<String> getKeys() {
-		return keys;
+	public ResourceBundleTranslationProvider(String baseName, ResourceBundle.Control control) {
+		this.baseName = baseName;
+		this.resourceBundleControl = control;
 	}
 
 	@Override
 	public String getTranslation(String key, Locale locale) {
-		PropertyResourceBundle propertyResourceBundle = resourceBundleByLocale.get(locale);
-		if (propertyResourceBundle == null) {
-			return null;
-		}
-		Object value = propertyResourceBundle.handleGetObject(key);
-		if (value != null) {
-			return (String) value;
-		} else {
-			return null;
-		}
+		ResourceBundle propertyResourceBundle = getResourceBundle(locale);
+		return propertyResourceBundle.getString(key);
+	}
+
+	@Override
+	public List<String> getKeys(Locale locale) {
+		return Collections.list(getResourceBundle(locale).getKeys());
+	}
+
+	private ResourceBundle getResourceBundle(Locale locale) {
+		return resourceBundleByLocale.computeIfAbsent(locale,
+				language -> ResourceBundle.getBundle(this.baseName, language, resourceBundleControl));
 	}
 }

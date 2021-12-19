@@ -21,16 +21,12 @@
 import {TrivialTreeBox, TrivialTreeBoxConfig} from "./TrivialTreeBox";
 import {
 	DEFAULT_TEMPLATES,
-	defaultEntryMatchingFunctionFactory,
-	defaultTreeQueryFunctionFactory,
-	HighlightDirection,
-	QueryFunction,
 	TrivialComponent,
 	keyCodes,
-	DEFAULT_RENDERING_FUNCTIONS, unProxyEntry
+	unProxyEntry
 } from "./TrivialCore";
-import {TrivialEvent} from "./TrivialEvent";
 import KeyDownEvent = JQuery.KeyDownEvent;
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 export interface TrivialTreeConfig<E> extends TrivialTreeBoxConfig<E> {
     directSelectionViaArrowKeys?: boolean
@@ -40,8 +36,8 @@ export class TrivialTree<E> implements TrivialComponent{
 
     private config: TrivialTreeConfig<E>;
 
-    public readonly onSelectedEntryChanged = new TrivialEvent<E>(this);
-    public readonly onNodeExpansionStateChanged = new TrivialEvent<E>(this);
+    public readonly onSelectedEntryChanged = new TeamAppsEvent<E>(this);
+    public readonly onNodeExpansionStateChanged = new TeamAppsEvent<E>(this);
 
     private treeBox: TrivialTreeBox<E>;
     private entries: E[];

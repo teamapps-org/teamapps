@@ -54,7 +54,7 @@ export class UiDocumentViewer extends AbstractUiComponent<UiDocumentViewerConfig
 
 		this.uuidClass = `UiDocumentViewer-${generateUUID()}`;
 
-		this.$componentWrapper = parseHtml(`<div id="${config.id}" class="UiDocumentViewer ${this.uuidClass}">  
+		this.$componentWrapper = parseHtml(`<div class="UiDocumentViewer ${this.uuidClass}">  
 		    <style></style>
 			<div class="toolbar-container"></div>  
 			<div class="pages-container-wrapper">

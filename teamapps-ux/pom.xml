@@ -3,7 +3,7 @@
     <parent>
         <artifactId>teamapps</artifactId>
         <groupId>org.teamapps</groupId>
-        <version>0.9.107-SNAPSHOT</version>
+        <version>0.9.131-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -175,6 +175,13 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.money</groupId>
+            <artifactId>money-api</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

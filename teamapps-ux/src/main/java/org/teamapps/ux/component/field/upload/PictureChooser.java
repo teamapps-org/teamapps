@@ -175,7 +175,7 @@ public class PictureChooser extends AbstractField<Resource> {
 			}
 			case UI_PICTURE_CHOOSER_UPLOAD_STARTED: {
 				UiPictureChooser.UploadStartedEvent uploadStartedEvent = (UiPictureChooser.UploadStartedEvent) event;
-				this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes()));
+				this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(), null /*TODO*/));
 				break;
 			}
 			case UI_PICTURE_CHOOSER_UPLOAD_CANCELED: {

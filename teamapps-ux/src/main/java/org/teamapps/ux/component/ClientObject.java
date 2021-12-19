@@ -25,6 +25,11 @@ import org.teamapps.dto.UiQuery;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * A client object has a representation on the client.
+ * This representation is said to be rendered when the client holds a corresponding instance of it.
+ * The server and the client refer to the {@link ClientObject} using the id (a UUID).
+ */
 public interface ClientObject {
 
 	String getId();
@@ -35,6 +40,10 @@ public interface ClientObject {
 
 	boolean isRendered();
 
+	/**
+	 * Creates a ui reference to a client object.
+	 * Ui references are just a simple way to reference objects on the client side.
+	 */
 	UiClientObjectReference createUiReference();
 
 	default void handleUiEvent(UiEvent event) {

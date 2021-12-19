@@ -30,6 +30,7 @@ public class CheckBox extends AbstractField<Boolean> {
 	private Color backgroundColor = new RgbaColor(255, 255, 255);
 	private Color checkColor = new RgbaColor(70, 70, 70);
 	private Color borderColor = new RgbaColor(204, 204, 204);
+	private boolean htmlEnabled = false;
 
 	public CheckBox(String caption) {
 		super();
@@ -49,6 +50,7 @@ public class CheckBox extends AbstractField<Boolean> {
 		uiCheckBox.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiCheckBox.setCheckColor(checkColor != null ? checkColor.toHtmlColorString() : null);
 		uiCheckBox.setBorderColor(borderColor != null ? borderColor.toHtmlColorString() : null);
+		uiCheckBox.setHtmlEnabled(htmlEnabled);
 		return uiCheckBox;
 	}
 
@@ -89,6 +91,16 @@ public class CheckBox extends AbstractField<Boolean> {
 	public CheckBox setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
 		queueCommandIfRendered(() -> new UiCheckBox.SetBorderColorCommand(getId(), borderColor != null ? borderColor.toHtmlColorString() : null));
+		return this;
+	}
+
+	public boolean isHtmlEnabled() {
+		return htmlEnabled;
+	}
+
+	public CheckBox setHtmlEnabled(boolean htmlEnabled) {
+		this.htmlEnabled = htmlEnabled;
+		reRenderIfRendered();
 		return this;
 	}
 }

@@ -34,7 +34,7 @@ public class BeanPropertyExtractor<RECORD> implements PropertyExtractor<RECORD> 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BeanPropertyExtractor.class);
 	private static final Map<ClassAndPropertyName, ValueExtractor> valueExtractorsByClassAndPropertyName = new ConcurrentHashMap<>();
 
-	private final Map<String, ValueExtractor<RECORD>> customExtractors = new HashMap<>(0);
+	private final Map<String, ValueExtractor<RECORD, ?>> customExtractors = new HashMap<>(0);
 	private final boolean fallbackToFields;
 
 	public BeanPropertyExtractor() {
@@ -47,12 +47,12 @@ public class BeanPropertyExtractor<RECORD> implements PropertyExtractor<RECORD> 
 
 	@Override
 	public Object getValue(RECORD record, String propertyName) {
-		ValueExtractor<RECORD> valueExtractor = getValueExtractor(record.getClass(), propertyName);
+		ValueExtractor<RECORD, ?> valueExtractor = getValueExtractor(record.getClass(), propertyName);
 		return valueExtractor.extract(record);
 	}
 
-	protected ValueExtractor<RECORD> getValueExtractor(Class clazz, String propertyName) {
-		ValueExtractor<RECORD> valueExtractor = customExtractors.get(propertyName);
+	protected ValueExtractor<RECORD, ?> getValueExtractor(Class clazz, String propertyName) {
+		ValueExtractor<RECORD, ?> valueExtractor = customExtractors.get(propertyName);
 		if (valueExtractor != null) {
 			return valueExtractor;
 		} else {
@@ -63,10 +63,13 @@ public class BeanPropertyExtractor<RECORD> implements PropertyExtractor<RECORD> 
 		}
 	}
 
-	private ValueExtractor<RECORD> createValueExtractor(ClassAndPropertyName classAndPropertyName) {
+	private ValueExtractor<RECORD, ?> createValueExtractor(ClassAndPropertyName classAndPropertyName) {
 		Method getter = ReflectionUtil.findGetter(classAndPropertyName.clazz, classAndPropertyName.propertyName);
+		Method recordGetter = ReflectionUtil.findMethodByName(classAndPropertyName.clazz, classAndPropertyName.propertyName);
 		if (getter != null) {
 			return record -> ReflectionUtil.invokeMethod(record, getter);
+		} else if (recordGetter != null) {
+			return record -> ReflectionUtil.invokeMethod(record, recordGetter);
 		} else if (fallbackToFields) {
 			Field field = ReflectionUtil.findField(classAndPropertyName.clazz, classAndPropertyName.propertyName);
 			if (field != null) {
@@ -77,7 +80,7 @@ public class BeanPropertyExtractor<RECORD> implements PropertyExtractor<RECORD> 
 		return record -> null;
 	}
 
-	public BeanPropertyExtractor<RECORD> addProperty(String propertyName, ValueExtractor<RECORD> valueExtractor) {
+	public BeanPropertyExtractor<RECORD> addProperty(String propertyName, ValueExtractor<RECORD, ?> valueExtractor) {
 		this.customExtractors.put(propertyName, valueExtractor);
 		return this;
 	}

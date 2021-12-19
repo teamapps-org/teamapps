@@ -23,7 +23,7 @@ import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
 
 import java.util.List;
 
-public class GenericForm<R> extends AbstractForm<GenericForm, R> {
+public class GenericForm<R> extends AbstractForm<R> {
 
 	private List<FormLayoutPolicy> layoutPolicies;
 

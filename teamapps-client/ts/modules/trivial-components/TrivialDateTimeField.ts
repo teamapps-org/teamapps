@@ -17,26 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-/*!
- Trivial Components (https://github.com/trivial-components/trivial-components)
-
- Copyright 2016 Yann Massard (https://github.com/yamass) and other contributors
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- */
 
 import {EditingMode, HighlightDirection, keyCodes, selectElementContents, TrivialComponent} from "./TrivialCore";
-import {TrivialEvent} from "./TrivialEvent";
 import {TrivialCalendarBox} from "./TrivialCalendarBox";
 import {DateSuggestionEngine, getYearMonthDayOrderForLocale} from "../formfield/datetime/DateSuggestionEngine";
 import {TimeSuggestionEngine} from "../formfield/datetime/TimeSuggestionEngine";
@@ -53,6 +35,7 @@ import {
 import {LocalDateTime} from "../datetime/LocalDateTime";
 import KeyDownEvent = JQuery.KeyDownEvent;
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 enum Mode {
 	MODE_CALENDAR,
@@ -87,7 +70,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private dateRenderer: (localDateTime: DateTime) => string;
 	private timeRenderer: (localDateTime: DateTime) => string;
 
-	public readonly onChange = new TrivialEvent<DateTime>(this);
+	public readonly onChange = new TeamAppsEvent<DateTime>(this);
 
 	private dateListBox: TrivialTreeBox<DateTime>;
 	private timeListBox: TrivialTreeBox<DateTime>;

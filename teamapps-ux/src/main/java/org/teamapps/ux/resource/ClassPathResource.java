@@ -20,6 +20,7 @@
 package org.teamapps.ux.resource;
 
 import java.io.InputStream;
+import java.util.Objects;
 
 public class ClassPathResource implements Resource {
 
@@ -85,5 +86,18 @@ public class ClassPathResource implements Resource {
 		return "ClassPathResource{" +
 				"resourceName='" + resourceName + '\'' +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ClassPathResource that = (ClassPathResource) o;
+		return length == that.length && Objects.equals(resourceName, that.resourceName) && Objects.equals(name, that.name) && Objects.equals(classLoader, that.classLoader) && Objects.equals(mimeType, that.mimeType);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(resourceName, name, classLoader, mimeType, length);
 	}
 }

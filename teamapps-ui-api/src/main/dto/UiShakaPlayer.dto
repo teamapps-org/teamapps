@@ -28,6 +28,7 @@ class UiShakaPlayer extends UiComponent {
     UiTrackLabelFormat trackLabelFormat;
     boolean videoDisabled;
     long timeMillis;
+    String preferredAudioLanguage;
 
 	command setUrls(String hlsUrl, String dashUrl);
 	command setTime(long timeMillis);

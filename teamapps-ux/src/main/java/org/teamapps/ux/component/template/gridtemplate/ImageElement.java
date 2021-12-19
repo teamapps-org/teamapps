@@ -32,41 +32,32 @@ public class ImageElement extends AbstractTemplateElement {
 	protected Shadow shadow;
 	protected ImageSizing imageSizing = ImageSizing.COVER;
 
-	public ImageElement(String dataKey, int width, int height) {
-		super(dataKey);
+	public ImageElement(String propertyName, int width, int height) {
+		super(propertyName);
 		this.width = width;
 		this.height = height;
 	}
 
-	public ImageElement(String dataKey, int row, int column, int width, int height) {
-		super(dataKey, row, column);
+	public ImageElement(String propertyName, int row, int column, int width, int height) {
+		super(propertyName, row, column);
 		this.width = width;
 		this.height = height;
 	}
 
-	public ImageElement(String dataKey, int row, int column, int rowSpan, int colSpan, int width, int height) {
-		super(dataKey, row, column, rowSpan, colSpan);
+	public ImageElement(String propertyName, int row, int column, int rowSpan, int colSpan, int width, int height) {
+		super(propertyName, row, column, rowSpan, colSpan);
 		this.width = width;
 		this.height = height;
 	}
 
-	public ImageElement(String dataKey, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment, int width, int height) {
-		super(dataKey, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
+	public ImageElement(String propertyName, int row, int column, int rowSpan, int colSpan, HorizontalElementAlignment horizontalAlignment, VerticalElementAlignment verticalAlignment, int width, int height) {
+		super(propertyName, row, column, rowSpan, colSpan, horizontalAlignment, verticalAlignment);
 		this.width = width;
 		this.height = height;
 	}
 
-	public ImageElement(String dataKey, int width, int height, Border border, Spacing padding, Shadow shadow) {
-		super(dataKey);
-		this.width = width;
-		this.height = height;
-		this.border = border;
-		this.padding = padding;
-		this.shadow = shadow;
-	}
-
-	public ImageElement(String dataKey, int row, int column, int width, int height, Border border, Spacing padding, Shadow shadow) {
-		super(dataKey, row, column);
+	public ImageElement(String propertyName, int width, int height, Border border, Spacing padding, Shadow shadow) {
+		super(propertyName);
 		this.width = width;
 		this.height = height;
 		this.border = border;
@@ -74,8 +65,17 @@ public class ImageElement extends AbstractTemplateElement {
 		this.shadow = shadow;
 	}
 
-	public ImageElement(String dataKey, int row, int column, int rowSpan, int colSpan, int width, int height, Border border, Spacing padding, Shadow shadow) {
-		super(dataKey, row, column, rowSpan, colSpan);
+	public ImageElement(String propertyName, int row, int column, int width, int height, Border border, Spacing padding, Shadow shadow) {
+		super(propertyName, row, column);
+		this.width = width;
+		this.height = height;
+		this.border = border;
+		this.padding = padding;
+		this.shadow = shadow;
+	}
+
+	public ImageElement(String propertyName, int row, int column, int rowSpan, int colSpan, int width, int height, Border border, Spacing padding, Shadow shadow) {
+		super(propertyName, row, column, rowSpan, colSpan);
 		this.width = width;
 		this.height = height;
 		this.border = border;
@@ -125,7 +125,7 @@ public class ImageElement extends AbstractTemplateElement {
 
 	@Override
 	public AbstractUiTemplateElement createUiTemplateElement() {
-		UiImageElement uiImageElement = new UiImageElement(dataKey, row, column, width, height);
+		UiImageElement uiImageElement = new UiImageElement(propertyName, row, column, width, height);
 		mapAbstractTemplateElementAttributesToUiElement(uiImageElement);
 		uiImageElement.setBorder(border != null ? border.createUiBorder() : null);
 		uiImageElement.setPadding(padding != null ? padding.createUiSpacing() : null);

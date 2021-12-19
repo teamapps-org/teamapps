@@ -34,7 +34,7 @@ public class RootPanel extends AbstractComponent implements Component {
 	public UiComponent createUiComponent() {
 		UiRootPanel uiRootPanel = new UiRootPanel();
 		mapAbstractUiComponentProperties(uiRootPanel);
-		uiRootPanel.setContent(content != null ? content.createUiReference(): null);
+		uiRootPanel.setContent(content != null ? content.createUiReference() : null);
 		return uiRootPanel;
 	}
 

@@ -42,7 +42,7 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 
 	protected initialize(config: UiCheckBoxConfig, context: TeamAppsUiContext) {
 		const uuid = "cb-" + generateUUID();
-		this.$main = parseHtml(`<div class="UiCheckBox" data-teamapps-id="${config.id}">
+		this.$main = parseHtml(`<div class="UiCheckBox">
 				<style></style>
                 <div class="checkbox-check field-border field-border-glow field-background" tabindex="0"></div>
                 <div class="checkbox-label"></div>
@@ -59,7 +59,7 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 		this.$main.addEventListener("mousedown", () => {
 			setTimeout(() => this.focus());
 		});
-		this.$main.addEventListener('click',() => {
+		this.$main.addEventListener('click', () => {
 			if (this.getEditingMode() === UiFieldEditingMode.DISABLED || this.getEditingMode() === UiFieldEditingMode.READONLY) {
 				return;
 			}
@@ -87,7 +87,11 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 	}
 
 	setCaption(caption: string): void {
-		this.$label.textContent = caption || '';
+		if (!this._config.htmlEnabled) {
+			this.$label.textContent = caption || '';
+		} else {
+			this.$label.innerHTML = caption || '';
+		}
 	}
 
 	setBackgroundColor(backgroundColor: string): void {

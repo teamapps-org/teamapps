@@ -5,7 +5,7 @@
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.107-SNAPSHOT</version>
+    <version>0.9.131-SNAPSHOT</version>
 
     <name>TeamApps</name>
     <description>A Java web application framework</description>
@@ -77,6 +77,12 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.1.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

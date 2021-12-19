@@ -24,7 +24,7 @@ class UiDateTimeFormatDescriptor {
 	UiFullLongMediumShortType timeStyle;
 
 	Integer fractionalSecondDigits;
-	Boolean dayPeriod;
+	UiDayPeriodType dayPeriod;
 	UiHourCycleType hourCycle;
 
 	UiLongShortNarrowType weekday;
@@ -35,6 +35,12 @@ class UiDateTimeFormatDescriptor {
 	UiNumericType hour;
 	UiNumericType minute;
 	UiNumericType second;
+}
+
+enum UiDayPeriodType {
+    NARROW = "narrow",
+    SHORT = "short",
+    LONG = "long";
 }
 
 enum UiHourCycleType {

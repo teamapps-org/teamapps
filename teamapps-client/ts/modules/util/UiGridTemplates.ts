@@ -48,15 +48,15 @@ function createTextElementRenderer(element: UiTextElementConfig, additionalCssCl
 		+ (createTextAlignmentCssString(element.textAlignment));
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
-		let value = data[element.dataKey];
+		let value = data[element.property];
 		if (value == null) {
 			return "";
 		} else if (element.fontStyle != null && element.fontStyle.backgroundColor) {
 			return `<div class="grid-template-element UiTextElement wrapper ${additionalCssClass || ''}" style="${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">
-	<span data-key="${element.dataKey}" style="${fontStyleCssString}">${value || ''}</span>
+	<span data-key="${element.property}" style="${fontStyleCssString}">${value || ''}</span>
 </div>`;
 		} else {
-			return `<span data-key="${element.dataKey}" class="grid-template-element UiTextElement ${additionalCssClass || ''}" style="${fontStyleCssString} ${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">${value || ''}</span>`;
+			return `<span data-key="${element.property}" class="grid-template-element UiTextElement ${additionalCssClass || ''}" style="${fontStyleCssString} ${elementStyleCssString} ${backgroundColorCss} ${additionalStyles || ''}">${value || ''}</span>`;
 		}
 	};
 }
@@ -84,10 +84,10 @@ function createImageElementRenderer(element: UiImageElementConfig, additionalCss
 		+ cssObjectToString(createImageSizingCssObject(element.imageSizing))
 		+ (element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '');
 	return (data: any) => {
-		let value = data[element.dataKey];
+		let value = data[element.property];
 		if (value != null) {
 			const backgroundImage = `background-image: url('${value}');`;
-			return `<div data-key="${element.dataKey}" class="grid-template-element UiImageElement" style="${style} ${backgroundImage} ${additionalCss}"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element UiImageElement" style="${style} ${backgroundImage} ${additionalCss}"></div>`;
 		} else {
 			return '';
 		}
@@ -98,10 +98,10 @@ function createIconElementRenderer(element: UiIconElementConfig, additionalCss: 
 	const style = `width:${element.size}px; height:${element.size}px; background-size:${element.size}px;`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
-		let value = data[element.dataKey];
+		let value = data[element.property];
 		if (value != null) {
 			const backgroundImage = value ? `background-image: url('${value}');` : '';
-			return `<div data-key="${element.dataKey}" class="grid-template-element UiIconElement" style="${style} ${backgroundImage} ${backgroundColorCss} ${additionalCss}"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element UiIconElement" style="${style} ${backgroundImage} ${backgroundColorCss} ${additionalCss}"></div>`;
 		} else {
 			return '';
 		}
@@ -112,11 +112,11 @@ function createGlyphIconElementRenderer(element: UiGlyphIconElementConfig, addit
 	const style = `font-size:${element.size}px; text-align: center;`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
 	return (data: any) => {
-		let value = data[element.dataKey];
+		let value = data[element.property];
 		if (value == null) {
 			return "";
 		} else {
-			return `<div data-key="${element.dataKey}" class="grid-template-element UiGlyphIconElement fas fa-${value}" style="${style} ${backgroundColorCss} ${additionalCss}')"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element UiGlyphIconElement fas fa-${value}" style="${style} ${backgroundColorCss} ${additionalCss}')"></div>`;
 		}
 	};
 }
@@ -219,7 +219,9 @@ export function createGridTemplateRenderer(template: UiGridTemplateConfig, idPro
 			if (data == null) {
 				return '';
 			} else {
-				return `<div class="UiGridTemplate" style="${gridCss}" ${data[idPropertyName] ? `data-id="${data[idPropertyName]}"` : ''}>
+				let ariaLabel = data[template.ariaLabelProperty];
+				let title = data[template.titleProperty];
+				return `<div class="UiGridTemplate" style="${gridCss}" ${data[idPropertyName] ? `data-id="${data[idPropertyName]}"` : ''} ${ariaLabel != null ? `aria-label="${ariaLabel}"` : ''} ${title != null ? `title="${title}"` : ""}>
 	${renderers.map(renderer => renderer(data)).join("")}
 </div>`;
 			}

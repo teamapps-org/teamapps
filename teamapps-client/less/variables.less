@@ -39,12 +39,12 @@
 @ta-state-success-text:             #3c763d;
 @ta-state-success-text-emphasis:    darken(#3c763d, 10%);
 @ta-state-success-bg:               #dff0d8;
-@ta-state-success-border:           darken(spin(@ta-state-success-bg, -10), 5%);
+@ta-state-success-border:           darken(spin(@ta-state-success-bg, -10), 15%);
 
 @ta-state-info-text:                #31708f;
 @ta-state-info-text-emphasis:       darken(#31708f, 10%);
 @ta-state-info-bg:                  #d9edf7;
-@ta-state-info-border:              darken(spin(@ta-state-info-bg, -10), 7%);
+@ta-state-info-border:              darken(spin(@ta-state-info-bg, -10), 15%);
 
 @ta-state-warning-text:             #8a6d3b;
 @ta-state-warning-text-emphasis:    darken(#8a6d3b, 10%);
@@ -54,7 +54,7 @@
 @ta-state-danger-text:              #a94442;
 @ta-state-danger-text-emphasis:     darken(#a94442, 10%);
 @ta-state-danger-bg:                #f2dede;
-@ta-state-danger-border:            darken(spin(@ta-state-danger-bg, -10), 5%);
+@ta-state-danger-border:            darken(spin(@ta-state-danger-bg, -10), 15%);
 
 :root {
   --ta-color-primary:         @ta-color-primary;
@@ -186,9 +186,10 @@
 
   --ta-color-transition-time: .3s;
 
-  --ta-zindex-dropdown:          1000;
-  --ta-zindex-modal:             1050;
-  --ta-zindex-max:               1000000;
+  --ta-zindex-floating-component: 500;
+  --ta-zindex-window:             1000;
+  --ta-zindex-dropdown:           2000;
+  --ta-zindex-tooltip:            10000;
 
   --ta-tooltip-arrow-size: 5px;
 

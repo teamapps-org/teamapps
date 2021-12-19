@@ -99,7 +99,7 @@ public class CommandBuffer {
 					return false;
 				}
 				if (command.getId() == commandId) {
-					nextConsumable = i + 1;
+					nextConsumable = (i + 1) % buffer.length;
 					return true;
 				}
 			}

@@ -115,9 +115,11 @@ public class EventDeclarationContextModelAdaptor extends ReferencableEntityModel
         return TeamAppsDtoModel.getDeclaringClassOrInterfaceName(node) + "." + StringUtils.capitalize(node.Identifier().getText()) + "Event";
     }
 
-	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.EventDeclarationContext commandContext) {
-        ArrayList<TeamAppsDtoParser.FormalParameterWithDefaultContext> allProperties = new ArrayList<>(commandContext.formalParameterWithDefault());
-        allProperties.add(0, COMPONENT_ID_PARAMETER);
+	private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.EventDeclarationContext eventContext) {
+        ArrayList<TeamAppsDtoParser.FormalParameterWithDefaultContext> allProperties = new ArrayList<>(eventContext.formalParameterWithDefault());
+        if (eventContext.staticModifier() == null) {
+			allProperties.add(0, COMPONENT_ID_PARAMETER);
+		}
         return allProperties;
     }
 

@@ -21,16 +21,16 @@ package org.teamapps.ux.component.table;
 
 import org.teamapps.ux.component.field.AbstractField;
 
-public class ColumnSizeChangeEventData<RECORD> {
+public class ColumnSizeChangeEventData<RECORD, VALUE> {
 	private final int size;
-	private final TableColumn<RECORD> column;
+	private final TableColumn<RECORD, VALUE> column;
 
-	public ColumnSizeChangeEventData(TableColumn<RECORD> column, int size) {
+	public ColumnSizeChangeEventData(TableColumn<RECORD, VALUE> column, int size) {
 		this.column = column;
 		this.size = size;
 	}
 
-	public TableColumn<RECORD> getColumn() {
+	public TableColumn<RECORD, VALUE> getColumn() {
 		return column;
 	}
 

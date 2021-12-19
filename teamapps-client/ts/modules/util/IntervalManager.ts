@@ -20,43 +20,48 @@
 import {Logger} from "loglevel";
 import * as log from "loglevel";
 
-export class Interval {
-	constructor(public start: number, public end: number) {
-	}
+export type Interval = [number, number]; 
 
-	public toString() {
-		return "Interval[" + new Date(this.start) + " - " + new Date(this.end) + "]";
-	}
+export function intervalToString(interval: Interval) {
+	return "Interval[" + new Date(interval[0]) + " - " + new Date(interval[1]) + "]";
 }
 
 export class IntervalManager {
 	private log: Logger = log.getLogger((<any>IntervalManager.prototype).name || this.constructor.toString().match(/\w+/g)[1]);
 	private _intervals: Interval[] = []; // sorted!
 
-	public addInterval(newInterval: Interval): Interval[] {
+	public addInterval(newInterval: Interval) {
 		this.log.info("Adding interval: " + newInterval);
-		var {firstOverlappingExistingIntervalIndex, lastOverlappingExistingIntervalIndex, firstLaterIntervalIndex} = this.getFirstAndLastOverlappingExistingIntervalIndex(newInterval);
+		let {
+			firstOverlappingExistingIntervalIndex,
+			lastOverlappingExistingIntervalIndex,
+			firstLaterIntervalIndex
+		} = this.getFirstAndLastOverlappingExistingIntervalIndex(newInterval);
 
 		if (firstOverlappingExistingIntervalIndex === null && lastOverlappingExistingIntervalIndex == null) {
 			this._intervals.splice(firstLaterIntervalIndex, 0, newInterval);
 			this.log.info("NO OVERLAP. New intervals: " + this._intervals.map(interval => interval.toString()).join("; "));
-			return [newInterval];
 		} else {
-			var firstOverlappingInterval = this._intervals[firstOverlappingExistingIntervalIndex];
-			var lastOverlappingInterval = this._intervals[lastOverlappingExistingIntervalIndex];
-			var resultingInterval = new Interval(
-				Math.min(firstOverlappingInterval.start, newInterval.start),
-				Math.max(lastOverlappingInterval.end, newInterval.end)
-			);
-			var result = IntervalManager.subtractIntervals(newInterval, this._intervals.slice(firstOverlappingExistingIntervalIndex, lastOverlappingExistingIntervalIndex + 1));
+			const firstOverlappingInterval = this._intervals[firstOverlappingExistingIntervalIndex];
+			const lastOverlappingInterval = this._intervals[lastOverlappingExistingIntervalIndex];
+			const resultingInterval: Interval = [
+				Math.min(firstOverlappingInterval[0], newInterval[0]),
+				Math.max(lastOverlappingInterval[1], newInterval[1])
+			];
 			this._intervals.splice(firstOverlappingExistingIntervalIndex, lastOverlappingExistingIntervalIndex - firstOverlappingExistingIntervalIndex + 1, resultingInterval);
 			this.log.info("Overlap detected, first: " + firstOverlappingInterval + ", last: " + lastOverlappingInterval + ". New intervals: " + this._intervals.map(interval => interval.toString()).join("; "));
-			return result;
 		}
 	}
 
+	public addIntervals(intervals: Interval[]) {
+		intervals.forEach(interval => this.addInterval(interval))
+	}
+
 	public getUncoveredIntervals(interval: Interval): Interval[] {
-		var {firstOverlappingExistingIntervalIndex, lastOverlappingExistingIntervalIndex} = this.getFirstAndLastOverlappingExistingIntervalIndex(interval);
+		let {
+			firstOverlappingExistingIntervalIndex,
+			lastOverlappingExistingIntervalIndex
+		} = this.getFirstAndLastOverlappingExistingIntervalIndex(interval);
 		if (firstOverlappingExistingIntervalIndex === null && lastOverlappingExistingIntervalIndex == null) {
 			return [interval];
 		} else {
@@ -64,19 +69,23 @@ export class IntervalManager {
 		}
 	}
 
+	public getCoveredIntervals(): Interval[] {
+		return this._intervals;
+	}
+
 	private getFirstAndLastOverlappingExistingIntervalIndex(interval: Interval) {
 		let firstOverlappingExistingIntervalIndex = null;
 		let lastOverlappingExistingIntervalIndex = null;
 		let index = 0;
 		for (; index < this._intervals.length; index++) {
-			var existingInterval = this._intervals[index];
+			const existingInterval = this._intervals[index];
 			if (IntervalManager.intervalsOverlap(existingInterval, interval)) {
 				if (firstOverlappingExistingIntervalIndex === null) {
 					firstOverlappingExistingIntervalIndex = index;
 				}
 				lastOverlappingExistingIntervalIndex = index;
 			}
-			if (existingInterval.end > interval.end) {
+			if (existingInterval[1] > interval[1]) {
 				break;
 			}
 		}
@@ -88,21 +97,21 @@ export class IntervalManager {
 	}
 
 	public static intervalsOverlap(existingInterval: Interval, interval: Interval) {
-		return existingInterval.start <= interval.end && existingInterval.end >= interval.start;
+		return existingInterval[0] <= interval[1] && existingInterval[1] >= interval[0];
 	}
 
 	private static subtractIntervals(minuend: Interval, subtrahends: Interval[]): Interval[] {
-		var currentPosition = minuend.start;
-		var difference: Interval[] = [];
-		for (var i = 0; i < subtrahends.length; i++) {
-			var subtrahend = subtrahends[i];
-			if (currentPosition < subtrahend.start) {
-				difference.push(new Interval(currentPosition, subtrahend.start));
+		let currentPosition = minuend[0];
+		const difference: Interval[] = [];
+		for (let i = 0; i < subtrahends.length; i++) {
+			const subtrahend = subtrahends[i];
+			if (currentPosition < subtrahend[0]) {
+				difference.push([currentPosition, subtrahend[0]]);
 			}
-			currentPosition = subtrahend.end;
+			currentPosition = subtrahend[1];
 		}
-		if (currentPosition < minuend.end) {
-			difference.push(new Interval(currentPosition, minuend.end));
+		if (currentPosition < minuend[1]) {
+			difference.push([currentPosition, minuend[1]]);
 		}
 		return difference;
 	}

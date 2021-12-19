@@ -64,7 +64,7 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 		this.sizePolicy = config.sizePolicy;
 		const firstChildContainerId = config.id + '_firstChildContainer';
 		const lastChildContainerId = config.id + '_lastChildContainer';
-		this._$splitPane = parseHtml(`<div class="splitpane splitpane-${UiSplitDirection[config.splitDirection].toLowerCase()} splitpane-${UiSplitSizePolicy[this.sizePolicy].toLowerCase()}" data-teamapps-id="${config.id}">
+		this._$splitPane = parseHtml(`<div class="splitpane splitpane-${UiSplitDirection[config.splitDirection].toLowerCase()} splitpane-${UiSplitSizePolicy[this.sizePolicy].toLowerCase()}">
 	<div class="splitpane-component-wrapper">
 		<div id="${firstChildContainerId}" class="splitpane-component"></div>
 	</div>

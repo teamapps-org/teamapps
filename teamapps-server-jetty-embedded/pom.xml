@@ -3,7 +3,7 @@
     <parent>
         <artifactId>teamapps</artifactId>
         <groupId>org.teamapps</groupId>
-        <version>0.9.107-SNAPSHOT</version>
+        <version>0.9.131-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,7 +34,7 @@
     </developers>
 
     <properties>
-        <jetty.version>9.4.40.v20210413</jetty.version>
+        <jetty.version>9.4.44.v20210927</jetty.version>
     </properties>
 
     <dependencies>

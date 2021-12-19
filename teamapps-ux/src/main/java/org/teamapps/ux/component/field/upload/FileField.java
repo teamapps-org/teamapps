@@ -53,7 +53,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	public final Event<UploadStartedEventData> onUploadStarted = new Event<>();
 	public final Event<UploadCanceledEventData> onUploadCanceled = new Event<>();
 	public final Event<UploadFailedEventData> onUploadFailed = new Event<>();
-	public final Event<UploadedFile> onUploadSuccessful = new Event<>();
+	public final Event<UploadSuccessfulEventData<RECORD>> onUploadSuccessful = new Event<>();
 	public final Event<RECORD> onFileItemClicked = new Event<>();
 	public final Event<RECORD> onFileItemRemoved = new Event<>();
 
@@ -83,7 +83,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	@Override
 	public UiField createUiComponent() {
-		Map uploadButtonData = uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getDataKeys());
+		Map uploadButtonData = uploadButtonPropertyProvider.getValues(this.uploadButtonData, uploadButtonTemplate.getPropertyNames());
 		UiFileField uiField = new UiFileField(fileItemTemplate.createUiTemplate(), uploadButtonTemplate.createUiTemplate(), uploadButtonData);
 		mapAbstractFieldAttributesToUiField(uiField);
 		uiField.setMaxBytesPerFile(maxBytesPerFile);
@@ -99,9 +99,25 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 		return uiField;
 	}
 
+	@Override
+	public void setValue(List<RECORD> records) {
+		this.setValue(records, true);
+	}
+
+	public void setValue(List<RECORD> records, boolean cancelUploads) {
+		if (cancelUploads) {
+			cancelUploads();
+		}
+		super.setValue(records);
+	}
+
+	public void cancelUploads() {
+		this.queueCommandIfRendered(() -> new UiFileField.CancelAllUploadsCommand(getId()));
+	}
+
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
-		clientRecord.setValues(fileItemPropertyProvider.getValues(record, fileItemTemplate.getDataKeys()));
+		clientRecord.setValues(fileItemPropertyProvider.getValues(record, fileItemTemplate.getPropertyNames()));
 		return clientRecord;
 	}
 
@@ -137,7 +153,11 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 			}
 			case UI_FILE_FIELD_UPLOAD_STARTED: {
 				UiFileField.UploadStartedEvent uploadStartedEvent = (UiFileField.UploadStartedEvent) event;
-				this.onUploadStarted.fire(new UploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes()
+				this.onUploadStarted.fire(new UploadStartedEventData(
+						uploadStartedEvent.getFileName(),
+						uploadStartedEvent.getMimeType(),
+						uploadStartedEvent.getSizeInBytes(),
+						() -> this.queueCommandIfRendered(() -> new UiFileField.CancelUploadCommand(getId(), uploadStartedEvent.getFileItemUuid()))
 				));
 				break;
 			}
@@ -172,7 +192,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 				} else {
 					cacheResponse.commit();
 				}
-				onUploadSuccessful.fire(uploadedFile);
+				onUploadSuccessful.fire(new UploadSuccessfulEventData<>(uploadedFile, record));
 				break;
 			}
 			case UI_FILE_FIELD_FILE_ITEM_CLICKED: {
@@ -185,8 +205,8 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return getValue() == null || getValue().isEmpty();
+	public boolean isEmptyValue(List<RECORD> value) {
+		return value == null || value.isEmpty();
 	}
 
 	@Override

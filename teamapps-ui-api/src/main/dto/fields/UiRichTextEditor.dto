@@ -1,0 +1,44 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2021 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+enum UiToolbarVisibilityMode {
+	HIDDEN, VISIBLE, VISIBLE_IF_FOCUSED
+}
+
+class UiRichTextEditor extends UiField implements UiTextInputHandlingField {
+    String locale;
+    boolean imageUploadEnabled;
+	String uploadUrl = "/upload";
+	long maxImageFileSizeInBytes = 5000000;
+	UiToolbarVisibilityMode toolbarVisibilityMode = UiToolbarVisibilityMode.VISIBLE_IF_FOCUSED;
+	int minHeight = 150;
+	int maxHeight = 150;
+
+	event imageUploadTooLarge(String fileName, String mimeType, long sizeInBytes);
+	event imageUploadStarted(String fileName, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event imageUploadSuccessful(String fileUuid, String name, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+	event imageUploadFailed(String name, String mimeType, long sizeInBytes, int incompleteUploadsCount);
+
+	command setMinHeight(int minHeight);
+	command setMaxHeight(int maxHeight);
+	command setUploadUrl(String uploadUrl);
+	command setMaxImageFileSizeInBytes(long maxImageFileSizeInBytes);
+	command setUploadedImageUrl(String fileUuid, String url);
+	command setToolbarVisibilityMode(UiToolbarVisibilityMode toolbarVisibilityMode);
+}

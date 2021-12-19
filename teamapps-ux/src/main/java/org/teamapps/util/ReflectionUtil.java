@@ -139,7 +139,7 @@ public class ReflectionUtil {
 		try {
 			return method.invoke(object, parameters);
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Exception while invoking method " + method.getName(), e);
 		} catch (IllegalArgumentException e) {
 			String expectedParameterTypesString = Arrays.stream(method.getParameterTypes())
 					.map(paramClass -> paramClass.getSimpleName())

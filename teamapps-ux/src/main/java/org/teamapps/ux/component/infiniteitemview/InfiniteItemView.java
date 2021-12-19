@@ -42,6 +42,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * @deprecated Use {@link InfiniteItemView2} instead!
+ */
+@Deprecated
 public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public final Event<ItemClickedEventData<RECORD>> onItemClicked = new Event<>();
@@ -167,7 +171,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
 		UiIdentifiableClientRecord clientRecord = new UiIdentifiableClientRecord();
-		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getDataKeys()));
+		clientRecord.setValues(itemPropertyProvider.getValues(record, itemTemplate.getPropertyNames()));
 		return clientRecord;
 	}
 

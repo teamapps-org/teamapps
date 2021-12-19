@@ -24,7 +24,13 @@ import {TrivialTreeBox} from "../TrivialTreeBox";
 
 type TreeBoxDropdownConfig<E> = {
 	queryFunction: QueryFunction<E>;
-	textHighlightingEntryLimit: number;
+	/**
+	 * Performance setting. Defines the maximum number of entries until which text highlighting is performed.
+	 * Set to `0` to disable text highlighting.
+	 *
+	 * @default `100`
+	 */
+	textHighlightingEntryLimit?: number;
 	preselectionMatcher: (query: string, entry: E) => boolean;
 };
 
@@ -37,7 +43,10 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 
 	constructor(config: TreeBoxDropdownConfig<E>, treeBox: TrivialTreeBox<E>) {
 		this.treeBox = treeBox;
-		this.config = config;
+		this.config = {
+			textHighlightingEntryLimit: 100,
+			...config
+		};
 		this.treeBox.onSelectedEntryChanged.addListener(entry => this.onValueChanged.fire({value: entry, finalSelection: true}));
 	}
 
@@ -66,6 +75,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 	async handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
 		let results = await this.config.queryFunction(query) ?? [];
 		this.treeBox.setEntries(results);
+		this.treeBox.setSelectedEntryById(null); // make sure we don't remember the last selected value and go down/up from it
 		this.getMainDomElement().scrollIntoView({block: "start"}); // make sure we scroll up
 		this.treeBox.highlightTextMatches(results.length <= this.config.textHighlightingEntryLimit ? query : null);
 		if (selectionDirection === 0) {
@@ -80,7 +90,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 	}
 
 	setValue(value: E): void {
-		this.handleQuery("", 0);
+		// do nothing
 	}
 
 	destroy(): void {

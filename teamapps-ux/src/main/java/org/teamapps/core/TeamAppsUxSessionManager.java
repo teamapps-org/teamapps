@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,10 +21,7 @@ package org.teamapps.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiClientInfo;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiQuery;
-import org.teamapps.dto.UiSessionClosingReason;
+import org.teamapps.dto.*;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
@@ -42,15 +39,20 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_DEV_SERVER_VERSION;
+import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
+
 public class TeamAppsUxSessionManager implements UiSessionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsUxSessionManager.class);
+	public static final String TEAMAPPS_REFRESH_PARAMETER = "teamappsRefresh"; // keep in-sync with JavaScript!!!
 
 	private final SequentialExecutorFactory sessionExecutorFactory;
 	private final WebController webController;
@@ -86,6 +88,21 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 
 	@Override
 	public void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession) {
+		boolean wrongTeamappsVersion = uiClientInfo.getTeamAppsVersion() == null
+				|| (!Objects.equals(uiClientInfo.getTeamAppsVersion(), TEAMAPPS_VERSION) && !Objects.equals(uiClientInfo.getTeamAppsVersion(), TEAMAPPS_DEV_SERVER_VERSION));
+		boolean hasTeamAppsRefreshParameter = uiClientInfo.getClientParameters().containsKey(TEAMAPPS_REFRESH_PARAMETER);
+		if (wrongTeamappsVersion) {
+			LOGGER.info("Wrong TeamApps client version {} in session {}! Expected: {}!", uiClientInfo.getTeamAppsVersion(), sessionId, TEAMAPPS_VERSION);
+			if (!hasTeamAppsRefreshParameter) {
+				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_REFRESH_PARAMETER);
+				String clientUrl = uiClientInfo.getClientUrl();
+				String separator = clientUrl.contains("?") ? "&" : "?";
+				commandExecutor.sendCommand(sessionId, new UiCommandWithResultCallback<>(new UiRootPanel.GoToUrlCommand(clientUrl + separator + TEAMAPPS_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false), null)); // TODO remove this in 2022, when all clients
+			}
+			commandExecutor.closeSession(sessionId, UiSessionClosingReason.WRONG_TEAMAPPS_VERSION);
+			return;
+		}
+
 		ClientInfo clientInfo = new ClientInfo(
 				uiClientInfo.getIp(),
 				uiClientInfo.getScreenWidth(),
@@ -99,7 +116,8 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 				uiClientInfo.getClientTokens(),
 				uiClientInfo.getUserAgentString(),
 				uiClientInfo.getClientUrl(),
-				uiClientInfo.getClientParameters());
+				uiClientInfo.getClientParameters(),
+				uiClientInfo.getTeamAppsVersion());
 
 		SessionConfiguration sessionConfiguration = SessionConfiguration.createForClientInfo(clientInfo);
 
@@ -156,11 +174,15 @@ public class TeamAppsUxSessionManager implements UiSessionListener {
 		if (sessionContext != null) {
 			return sessionContext.runWithContext(() -> {
 				String uiComponentId = event.getComponentId();
-				ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
-				if (clientObject != null) {
-					clientObject.handleUiEvent(event);
+				if (uiComponentId != null) {
+					ClientObject clientObject = sessionContext.getClientObject(uiComponentId);
+					if (clientObject != null) {
+						clientObject.handleUiEvent(event);
+					} else {
+						throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
+					}
 				} else {
-					throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
+					sessionContext.handleStaticEvent(event);
 				}
 			});
 		} else {

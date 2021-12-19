@@ -50,7 +50,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			'process.env': {NODE_ENV: "'development'"}
+			'process.env': {NODE_ENV: "'development'"},
+			'__TEAMAPPS_VERSION__': `"DEV"`
 		}),
 		new HtmlWebpackPlugin({
 			filename: 'index.html',

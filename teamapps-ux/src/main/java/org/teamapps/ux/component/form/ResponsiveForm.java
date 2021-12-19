@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class ResponsiveForm<RECORD> extends AbstractForm<ResponsiveForm, RECORD> {
+public class ResponsiveForm<RECORD> extends AbstractForm<RECORD> {
 
 	private List<ResponsiveFormLayout> responsiveFormLayouts = new ArrayList<>();
 	private boolean createSmallScreenLayoutIfMissing = true;

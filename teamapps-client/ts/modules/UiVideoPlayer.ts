@@ -60,7 +60,7 @@ export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> impl
 		const posterImageSizeCssClass = `poster-${UiPosterImageSize[config.posterImageSize].toLowerCase()}`;
 		let preload = `${config.preloadMode === UiMediaPreloadMode.AUTO ? 'auto' : config.preloadMode === UiMediaPreloadMode.METADATA ? 'metadata' : 'none'}`;
 		this.$componentWrapper = parseHtml(
-			`<div id="${config.id}" class="UiVideoPlayer ${config.url == null ? "not-playable" : ""}">
+			`<div class="UiVideoPlayer ${config.url == null ? "not-playable" : ""}">
                     <video class="${posterImageSizeCssClass}" src="${config.url || ""}" width="100%" height="100%" poster="${config.posterImageUrl || ''}" preload="${preload}" ${config.autoplay ? "autoplay" : ""}></video>
                 </div>`);
 		this.$componentWrapper.classList.toggle("hide-controls", !config.showControls);

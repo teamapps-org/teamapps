@@ -17,24 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-/*!
-Trivial Components (https://github.com/trivial-components/trivial-components)
-
-Copyright 2016 Yann Massard (https://github.com/yamass) and other contributors
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 import {
 	DEFAULT_TEMPLATES,
 	EditingMode,
@@ -46,11 +28,11 @@ import {
 	TrivialComponent,
 	unProxyEntry
 } from "./TrivialCore";
-import {TrivialEvent} from "./TrivialEvent";
 import {Instance as Popper} from '@popperjs/core';
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
-import {elementIndex, insertAfter, insertAtIndex, insertBefore, parseHtml, selectElementContents} from "../Common";
+import {elementIndex, getAutoCompleteOffValue, insertAfter, insertAtIndex, insertBefore, parseHtml, selectElementContents} from "../Common";
 import {createComboBoxPopper} from "./ComboBoxPopper";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 export interface TrivialTagComboBoxConfig<E> {
 	/**
@@ -191,9 +173,9 @@ export interface TrivialTagComboBoxConfig<E> {
 
 export class TrivialTagComboBox<E> implements TrivialComponent {
 
-	public readonly onValueChanged = new TrivialEvent<E[]>(this);
-	public readonly onFocus = new TrivialEvent<void>(this);
-	public readonly onBlur = new TrivialEvent<void>(this);
+	public readonly onValueChanged = new TeamAppsEvent<E[]>(this);
+	public readonly onFocus = new TeamAppsEvent<void>(this);
+	public readonly onBlur = new TeamAppsEvent<void>(this);
 
 	private config: TrivialTagComboBoxConfig<E>;
 
@@ -278,7 +260,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			e.preventDefault();
 		});
 		this.setEditingMode(this.config.editingMode);
-		this.$editor = parseHtml('<span contenteditable="true" class="tagbox-editor" autocomplete="off"></span>');
+		this.$editor = parseHtml(`<span contenteditable="true" class="tagbox-editor" autocomplete="${getAutoCompleteOffValue()}"></span>`);
 		this.$tagArea.append(this.$editor);
 		this.$editor.classList.add("tr-tagcombobox-editor", "tr-editor");
 		this.$editor.addEventListener("focus", () => {
@@ -557,7 +539,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 	}
 
 	private fireChangeEvents(entries: E[], originalEvent: unknown) {
-		this.onValueChanged.fire(entries.map(unProxyEntry), originalEvent);
+		this.onValueChanged.fire(entries.map(unProxyEntry));
 	}
 
 	private addTag(entry: E, fireEvent = false, originalEvent?: unknown, forceAcceptance?: boolean) {

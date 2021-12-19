@@ -76,13 +76,17 @@
       }
     }
     &:not(.has-header-data):not(.collapsible) {
-      .header {
+      > .header {
         display: none;
       }
     }
 
     .body {
       display: grid;
+
+      .field-wrapper {
+        // ?
+      }
     }
 
     &.fill-remaining-height:not(.collapsed) {

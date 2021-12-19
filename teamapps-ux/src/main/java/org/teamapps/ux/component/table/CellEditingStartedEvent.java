@@ -24,10 +24,10 @@ import org.teamapps.ux.component.field.AbstractField;
 public class CellEditingStartedEvent<RECORD, VALUE> {
 
 	private final RECORD recordId;
-	private final TableColumn<RECORD> column;
+	private final TableColumn<RECORD, VALUE> column;
 	private final VALUE currentValue;
 
-	public CellEditingStartedEvent(RECORD record, TableColumn<RECORD> column, VALUE currentValue) {
+	public CellEditingStartedEvent(RECORD record, TableColumn<RECORD, VALUE> column, VALUE currentValue) {
 		this.recordId = record;
 		this.column = column;
 		this.currentValue = currentValue;
@@ -37,7 +37,7 @@ public class CellEditingStartedEvent<RECORD, VALUE> {
 		return recordId;
 	}
 
-	public TableColumn<RECORD> getColumn() {
+	public TableColumn<RECORD, VALUE> getColumn() {
 		return column;
 	}
 

@@ -26,7 +26,7 @@ import org.teamapps.icons.IconProvider;
 import org.teamapps.server.SessionResourceProvider;
 import org.teamapps.ux.resource.IconResourceProvider;
 import org.teamapps.ux.resource.ResourceProviderServlet;
-import org.teamapps.ux.session.ClientSessionResourceProvider;
+import org.teamapps.ux.session.SessionContextResourceManager;
 
 import javax.servlet.*;
 import javax.servlet.ServletRegistration.Dynamic;
@@ -48,6 +48,11 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		ServletContext context = servletContextEvent.getServletContext();
 
+		FilterRegistration.Dynamic indexHtmlHeaderFilter = context.addFilter("teamapps-index-html-header-filter", new IndexHtmlHeaderFilter());
+		indexHtmlHeaderFilter.setAsyncSupported(true);
+		indexHtmlHeaderFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/");
+		indexHtmlHeaderFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/index.html");
+
 		FilterRegistration.Dynamic downloadFilterRegistration = context.addFilter("teamapps-download-header-filter", new DownloadHttpHeaderFilter());
 		downloadFilterRegistration.setAsyncSupported(true);
 		downloadFilterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "*");
@@ -63,7 +68,7 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		iconServletRegistration.addMapping("/icons/*");
 
 		Dynamic filesServletRegistration = context.addServlet("teamapps-files", new ResourceProviderServlet(new SessionResourceProvider(teamAppsCore.getSessionManager()::getSessionContext)));
-		filesServletRegistration.addMapping(ClientSessionResourceProvider.BASE_PATH + "*");
+		filesServletRegistration.addMapping(SessionContextResourceManager.BASE_PATH + "*");
 
 		context.addListener(new ServletRequestListener());
 		context.addListener(teamAppsCore.getUiSessionManager());

@@ -57,7 +57,7 @@ public class MessagePageViewBlock<RECORD> extends AbstractPageViewBlock {
 		UiMessagePageViewBlock uiBlock = new UiMessagePageViewBlock();
 		mapAbstractPageViewBlockAttributes(uiBlock);
 		uiBlock.setTopTemplate(topTemplate.createUiTemplate());
-		uiBlock.setTopRecord(topRecord != null ? new UiClientRecord().setValues(topRecordPropertyProvider.getValues(topRecord, topTemplate.getDataKeys())) : null);
+		uiBlock.setTopRecord(topRecord != null ? new UiClientRecord().setValues(topRecordPropertyProvider.getValues(topRecord, topTemplate.getPropertyNames())) : null);
 		uiBlock.setTopRecordAlignment(topRecordAlignment.toUiHorizontalElementAlignment());
 		uiBlock.setHtml(html);
 		uiBlock.setImageUrls(imageUrls);

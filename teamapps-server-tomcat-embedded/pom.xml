@@ -3,7 +3,7 @@
     <parent>
         <artifactId>teamapps</artifactId>
         <groupId>org.teamapps</groupId>
-        <version>0.9.107-SNAPSHOT</version>
+        <version>0.9.131-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,7 +34,7 @@
     </developers>
 
     <properties>
-        <tomcat.version>9.0.35</tomcat.version>
+        <tomcat.version>9.0.43</tomcat.version>
     </properties>
 
     <dependencies>

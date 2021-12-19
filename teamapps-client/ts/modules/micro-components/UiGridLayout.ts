@@ -30,7 +30,7 @@ import {
 import {UiFormSectionPlacementConfig} from "../../generated/UiFormSectionPlacementConfig";
 import {UiGridPlacementConfig} from "../../generated/UiGridPlacementConfig";
 import {AbstractUiComponent} from "../AbstractUiComponent";
-import {flattenArray, generateUUID, parseHtml} from "../Common";
+import {generateUUID, parseHtml} from "../Common";
 import {UiComponentGridPlacementConfig} from "../../generated/UiComponentGridPlacementConfig";
 import {UiFloatingComponentGridPlacementConfig} from "../../generated/UiFloatingComponentGridPlacementConfig";
 import {UiComponent} from "../UiComponent";
@@ -145,12 +145,12 @@ export class UiGridLayout {
 	}
 
 	public getAllComponents(): UiComponent[] {
-		return flattenArray(this.config.componentPlacements.map(p => {
+		return this.config.componentPlacements.map(p => {
 			if (this.isSimplePlacement(p)) {
 				return p.component as UiComponent;
 			} else if (this.isFloatingPlacement(p)) {
 				return p.components.map(c => c.component as UiComponent);
 			}
-		}));
+		}).flat(Number.MAX_SAFE_INTEGER) as UiComponent[];
 	}
 }

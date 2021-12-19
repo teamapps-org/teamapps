@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.table;
 
-public class CellClickedEvent<RECORD> {
+public class CellClickedEvent<RECORD, VALUE> {
 
 	private final RECORD record;
-	private final TableColumn<RECORD> column;
+	private final TableColumn<RECORD, VALUE> column;
 
-	public CellClickedEvent(RECORD record, TableColumn<RECORD> column) {
+	public CellClickedEvent(RECORD record, TableColumn<RECORD, VALUE> column) {
 		this.record = record;
 		this.column = column;
 	}
@@ -33,7 +33,7 @@ public class CellClickedEvent<RECORD> {
 		return record;
 	}
 
-	public TableColumn<RECORD> getColumn() {
+	public TableColumn<RECORD, VALUE> getColumn() {
 		return column;
 	}
 }

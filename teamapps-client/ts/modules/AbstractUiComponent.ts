@@ -102,6 +102,8 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		if (this.firstTimeGetMainElementCalled) {
 			this.firstTimeGetMainElementCalled = false;
 
+			element.setAttribute("data-teamapps-id", this._config.id);
+
 			if (this._config.debuggingId != null) {
 				element.setAttribute("data-teamapps-debugging-id", this._config.debuggingId);
 			}

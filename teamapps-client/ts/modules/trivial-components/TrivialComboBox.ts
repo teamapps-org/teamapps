@@ -17,24 +17,6 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-/*!
-Trivial Components (https://github.com/trivial-components/trivial-components)
-
-Copyright 2016 Yann Massard (https://github.com/yamass) and other contributors
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 import {
 	DEFAULT_TEMPLATES,
 	EditingMode,
@@ -45,11 +27,11 @@ import {
 	TrivialComponent,
 	unProxyEntry
 } from "./TrivialCore";
-import {TrivialEvent} from "./TrivialEvent";
 import {Instance as Popper} from '@popperjs/core';
-import {parseHtml} from "../Common";
+import {getAutoCompleteOffValue, parseHtml} from "../Common";
 import {DropDownComponent, SelectionDirection} from "./dropdown/DropDownComponent";
 import {createComboBoxPopper} from "./ComboBoxPopper";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 export interface TrivialComboBoxConfig<E> {
 	/**
@@ -61,14 +43,6 @@ export interface TrivialComboBoxConfig<E> {
 	 * @default `wrapWithDefaultTagWrapper(entryRenderingFunction(entry))`
 	 */
 	selectedEntryRenderingFunction: RenderingFunction<E>,
-
-	/**
-	 * Performance setting. Defines the maximum number of entries until which text highlighting is performed.
-	 * Set to `0` to disable text highlighting.
-	 *
-	 * @default `100`
-	 */
-	textHighlightingEntryLimit?: number,
 
 	/**
 	 * Whether or not to provide auto-completion.
@@ -122,11 +96,6 @@ export interface TrivialComboBoxConfig<E> {
 	showDropDownOnResultsOnly?: boolean,
 
 	/**
-	 * HTML string defining the spinner to be displayed while entries are being retrieved.
-	 */
-	spinnerTemplate?: string,
-
-	/**
 	 * When typing, preselect the first returned query result.
 	 */
 	preselectFirstQueryResult?: boolean,
@@ -139,11 +108,11 @@ export interface TrivialComboBoxConfig<E> {
 
 export class TrivialComboBox<E> implements TrivialComponent {
 
-	public readonly onSelectedEntryChanged = new TrivialEvent<E>(this);
-	public readonly onFocus = new TrivialEvent<void>(this);
-	public readonly onBlur = new TrivialEvent<void>(this);
-	public readonly onBeforeQuery = new TrivialEvent<string>(this);
-	public readonly onBeforeDownOpens = new TrivialEvent<string>(this);
+	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>(this);
+	public readonly onFocus = new TeamAppsEvent<void>(this);
+	public readonly onBlur = new TeamAppsEvent<void>(this);
+	public readonly onBeforeQuery = new TeamAppsEvent<string>(this);
+	public readonly onBeforeDownOpens = new TeamAppsEvent<string>(this);
 
 	private config: TrivialComboBoxConfig<E>;
 
@@ -171,8 +140,6 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	constructor(options: TrivialComboBoxConfig<E>, dropDownComponent?: DropDownComponent<E>) {
 		this.config = {
-			spinnerTemplate: DEFAULT_TEMPLATES.defaultSpinnerTemplate,
-			textHighlightingEntryLimit: 100,
 			autoComplete: true,
 			autoCompleteDelay: 0,
 			textToEntryFunction: (freeText: string) => null,
@@ -188,7 +155,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 		this.$comboBox = parseHtml(`<div class="tr-combobox tr-input-wrapper editor-hidden">
 			<div class="tr-combobox-main-area">
-				<input type="text" class="tr-combobox-editor tr-editor" autocomplete="off"></input>
+				<input type="text" class="tr-combobox-editor tr-editor" autocomplete="${getAutoCompleteOffValue()}"></input>
 				<div class="tr-combobox-selected-entry-wrapper"></div>			
 			</div>
             <div class="tr-remove-button ${this.config.showClearButton ? '' : 'hidden'}"></div>
@@ -234,9 +201,9 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.$editor.addEventListener("keydown", (e: KeyboardEvent) => {
 			if (keyCodes.isModifierKey(e)) {
 				return;
-			} else if (e.which == keyCodes.tab || e.which == keyCodes.enter) {
+			} else if (e.key === "Tab" || e.key === "Enter") {
 				if (this.isEditorVisible) {
-					e.which == keyCodes.enter && e.preventDefault(); // do not submit form
+					e.key == "Enter" && e.preventDefault(); // do not submit form
 					let highlightedEntry = this.dropDownComponent.getValue();
 					if (this.dropDownOpen && highlightedEntry) {
 						this.setValue(highlightedEntry, true, e);
@@ -250,7 +217,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					this.hideEditor();
 				}
 				return;
-			} else if (e.which == keyCodes.left_arrow || e.which == keyCodes.right_arrow) {
+			} else if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
 				if (this.dropDownOpen && this.dropDownComponent.handleKeyboardInput(e)) {
 					this.setAndSelectEditorValue(this.dropDownComponent.getValue());
 					e.preventDefault();
@@ -259,15 +226,15 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					this.showEditor();
 					return; // let the user navigate freely left and right...
 				}
-			} else if (e.which == keyCodes.backspace || e.which == keyCodes.delete) {
+			} else if (e.key === "Backspace" || e.key === "Delete") {
 				this.doNoAutoCompleteBecauseBackspaceWasPressed = true; // we want query results, but no autocomplete
 				setTimeout(() => this.query(this.getEditorValueLeftOfSelection(), 0)); // asynchronously to make sure the editor has been updated
-			} else if (e.which == keyCodes.up_arrow || e.which == keyCodes.down_arrow) {
+			} else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 				if (!this.isEditorVisible) {
 					this.$editor.select();
 					this.showEditor();
 				}
-				const direction = e.which == keyCodes.up_arrow ? -1 : 1;
+				const direction = e.key === "ArrowUp" ? -1 : 1;
 				if (!this.dropDownOpen) {
 					this.query(this.getEditorValueLeftOfSelection(), direction);
 					this.openDropDown(); // directly open the dropdown (the user definitely wants to see it)
@@ -277,7 +244,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					}
 				}
 				e.preventDefault(); // some browsers move the caret to the beginning on up key
-			} else if (e.which == keyCodes.escape) {
+			} else if (e.key === "Escape") {
 				if (!(!this.isEntrySelected() && this.$editor.value.length > 0 && this.dropDownOpen)) {
 					this.hideEditor();
 					this.$editor.value = "";
@@ -334,6 +301,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				this.showEditor();
 				this.$editor.select();
 				this.dropDownComponent.setValue(this.getValue())
+				this.query("", 0);
 				this.openDropDown();
 			}
 		});
@@ -345,6 +313,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 					this.openDropDown();
 				}
 				this.dropDownComponent.setValue(this.getValue())
+				this.query("", 0);
 			}
 		});
 
@@ -387,7 +356,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	}
 
 	private fireChangeEvents(entry: E, originalEvent?: unknown) {
-		this.onSelectedEntryChanged.fire(unProxyEntry(entry), originalEvent);
+		this.onSelectedEntryChanged.fire(unProxyEntry(entry));
 	}
 
 	public setValue(entry: E, fireEventIfChanged?: boolean, originalEvent?: unknown) {
@@ -434,7 +403,6 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	}
 
 	private parentElement: Element;
-
 	public openDropDown() {
 		if (this.isDropDownNeeded()) {
 			if (this.getMainDomElement().parentElement !== this.parentElement) {
@@ -443,7 +411,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				this.parentElement = this.getMainDomElement().parentElement;
 			}
 			if (!this.dropDownOpen) {
-				this.onBeforeDownOpens.fire();
+				this.onBeforeDownOpens.fire(this.$editor.value);
 				this.$comboBox.classList.add("open");
 				this.popper.update();
 				this.dropDownOpen = true;
