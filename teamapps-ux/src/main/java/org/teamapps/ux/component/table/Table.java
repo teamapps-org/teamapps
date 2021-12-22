@@ -32,12 +32,11 @@ import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.component.infiniteitemview.AbstractInfiniteListComponent;
 import org.teamapps.ux.component.infiniteitemview.ItemRangeChangeEvent;
-import org.teamapps.ux.component.field.validator.FieldValidator;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -56,13 +55,13 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	/**
 	 * Fired only when a single row is selected by the user.
 	 */
-	public final Event<RECORD, ?> onSingleRowSelected = new Event<>();
+	public final Event<RECORD> onSingleRowSelected = new Event<>();
 	/**
 	 * Fired only when multiple rows are selected by the user.
 	 */
 	public final Event<List<RECORD>> onMultipleRowsSelected = new Event<>();
 
-	public final Event<CellClickedEvent<RECORD>> onCellClicked = new Event<>();
+	public final Event<CellClickedEvent<RECORD, ?>> onCellClicked = new Event<>();
 	public final Event<SortingChangedEventData> onSortingChanged = new Event<>();
 	public final Event<TableDataRequestEventData> onTableDataRequest = new Event<>();
 	public final Event<ColumnOrderChangeEventData<RECORD, ?>> onColumnOrderChange = new Event<>();
@@ -140,7 +139,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void addColumn(TableColumn<RECORD, ?> column, int index) {
-		addColumns(Collections.singletonList(column), index);
+		addColumns(List.of(column), index);
 	}
 
 	public <VALUE> TableColumn<RECORD, VALUE> addColumn(String propertyName, String title, AbstractField<VALUE> field) {
@@ -256,7 +255,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			case UI_TABLE_CELL_EDITING_STARTED: {
 				UiTable.CellEditingStartedEvent editingStartedEvent = (UiTable.CellEditingStartedEvent) event;
 				RECORD record = renderedRecords.getRecord(editingStartedEvent.getRecordId());
-				TableColumn<RECORD> column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
+				TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
 				if (record == null || column == null) {
 					return;
 				}
@@ -438,13 +437,21 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		}
 	}
 
-	public void setSelectedRecord(RECORD record, boolean scrollToRecord) {
-		setSelectedRecords(List.of(record), scrollToRecord);
+	public void setSelectedRecord(RECORD record, boolean scrollToRecordIfAvailable) {
+		setSelectedRecords(List.of(record), scrollToRecordIfAvailable);
 	}
 
-	public void setSelectedRecords(List<RECORD> records, boolean scrollToFirst) {
+	public void setSelectedRecords(List<RECORD> records, boolean scrollToRecordIfAvailable) {
 		this.selectedRecords = List.copyOf(records);
-		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), renderedRecords.getUiRecordIds(selectedRecords), scrollToFirst));
+		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), renderedRecords.getUiRecordIds(selectedRecords), scrollToRecordIfAvailable));
+	}
+
+	public void setSelectedRecord(RECORD record) {
+		setSelectedRecords(List.of(record), false);
+	}
+
+	public void setSelectedRecords(List<RECORD> records) {
+		setSelectedRecords(records, false);
 	}
 
 	protected void updateColumnMessages(TableColumn<RECORD, ?> tableColumn) {
@@ -634,7 +641,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	@Override
 	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<UiIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
 		queueCommandIfRendered(() -> {
-			LOGGER.info("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; totalCount: {}", start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
+			LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; newUiRecords.size: {}; totalCount: {}",
+					start, uiRecordIds.size(), renderedRecords.size(), newUiRecords.size(), totalNumberOfRecords);
 			return new UiTable.UpdateDataCommand(
 					getId(),
 					start,

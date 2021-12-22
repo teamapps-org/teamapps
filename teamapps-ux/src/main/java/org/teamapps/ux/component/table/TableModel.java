@@ -23,7 +23,4 @@ import org.teamapps.ux.component.infiniteitemview.InfiniteListModel;
 
 public interface TableModel<RECORD> extends InfiniteListModel<RECORD> {
 
-	default void setSorting() {
-	}
-
 }

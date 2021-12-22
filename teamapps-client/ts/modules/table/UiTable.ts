@@ -46,7 +46,7 @@ import {AbstractUiComponent} from "../AbstractUiComponent";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
-import {arraysEqual, css, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml} from "../Common";
+import {arraysEqual, closestAncestor, css, fadeIn, fadeOut, manipulateWithoutTransitions, parseHtml} from "../Common";
 import {UiSortDirection} from "../../generated/UiSortDirection";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiGenericTableCellEditor} from "./UiGenericTableCellEditor";
@@ -643,11 +643,14 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	updateData(startIndex: number, recordIds: number[], newRecords: UiTableClientRecordConfig[], totalNumberOfRecords: number): any {
 		let editorCoordinates: { recordId: any; fieldName: any };
 		editorCoordinates = this._grid.getCellEditor() != null ? {recordId: this.getActiveCellRecordId(), fieldName: this.getActiveCellFieldName()} : null;
-		this.dataProvider.clear();
 		// TODO necessary: this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
 
-		this.dataProvider.updateData(startIndex, recordIds, newRecords, totalNumberOfRecords);
-		this._grid.invalidateRows(newRecords.map(r => recordIds.indexOf(r.id) + startIndex));
+		let changedRowNumbers = this.dataProvider.updateData(startIndex, recordIds, newRecords, totalNumberOfRecords);
+		if (changedRowNumbers === true) {
+			this._grid.invalidateAllRows();
+		} else {
+			this._grid.invalidateRows(changedRowNumbers);
+		}
 
 		this._grid.updateRowCount();
 		this._grid.render();
@@ -894,12 +897,15 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			manipulateWithoutTransitions(this.$selectionFrame, () => {
 				let $cell: HTMLElement = activeCellNode;
 				let computedStyle = getComputedStyle($cell);
-				css(this.$selectionFrame, {
-					top: $cell.offsetTop - this.$component.offsetTop - selectionFrame.borderWidth,
-					left: selectionFrame.fullRow ? -selectionFrame.borderWidth : parseInt(computedStyle.left) - selectionFrame.borderWidth - this._grid.getViewport().leftPx,
-					width: selectionFrame.fullRow ? $($cell.parentElement).width() + 2 * selectionFrame.borderWidth + 1 : $($cell.parentElement).width() - parseInt(computedStyle.left) - parseInt(computedStyle.right) + 2 * selectionFrame.borderWidth - 1,
-					height: $cell.offsetHeight + 2 * selectionFrame.borderWidth - this._config.rowBorderWidth
-				});
+				let cellOffsetParentClientTop = $cell.offsetParent.getBoundingClientRect().top;
+				let selectionFrameOffsetParentClientTop = this.$selectionFrame.offsetParent.getBoundingClientRect().top;
+				let cssValues = {
+					top: (cellOffsetParentClientTop - selectionFrameOffsetParentClientTop + $cell.offsetTop - selectionFrame.borderWidth) + "px",
+					left: (selectionFrame.fullRow ? -selectionFrame.borderWidth : parseInt(computedStyle.left) - selectionFrame.borderWidth - this._grid.getViewport().leftPx) + "px",
+					width: (selectionFrame.fullRow ? $($cell.parentElement).width() + 2 * selectionFrame.borderWidth + 1 : $($cell.parentElement).width() - parseInt(computedStyle.left) - parseInt(computedStyle.right) + 2 * selectionFrame.borderWidth - 1) + "px",
+					height: ($cell.offsetHeight + 2 * selectionFrame.borderWidth - this._config.rowBorderWidth) + "px"
+				};
+				css(this.$selectionFrame, cssValues);
 			}, animate);
 		}
 	}
