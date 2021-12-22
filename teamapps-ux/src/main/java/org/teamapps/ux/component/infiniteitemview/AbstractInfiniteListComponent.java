@@ -160,9 +160,9 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 			int removedRecordsStartIndex = Math.max(deleteEvent.getStart(), displayedRange.getStart());
 			int removedRecordsLength = Math.min(deleteEvent.getLength(), Math.min(displayedRange.getEnd() - deleteEvent.getStart(), displayedRange.getLength()));
 			int removeIndexInsideList = removedRecordsStartIndex - displayedRange.getStart();
-			List<RECORD> newRecords = retrieveRecords(displayedRange.getEnd(), removedRecordsLength);
-			UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(newRecords);
 			renderedRecords.removeNoShift(removedRecordsStartIndex, removedRecordsStartIndex + removedRecordsLength);
+			List<RECORD> newRecords = retrieveRecords(displayedRange.getEnd() - removedRecordsLength, removedRecordsLength);
+			UiRecordMappingResult<RECORD> uiRecordMappingResult = mapToClientRecords(newRecords);
 			renderedRecords.addNoShift(renderedRecords.getEndIndex(), uiRecordMappingResult.recordAndClientRecords);
 			updateClientRenderData(uiRecordMappingResult.newUiRecords);
 		}

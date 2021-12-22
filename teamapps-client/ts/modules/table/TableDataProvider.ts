@@ -49,7 +49,9 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 		}
 	}
 
-	updateData(startIndex: number, recordIds: number[], newRecords: UiIdentifiableClientRecordConfig[], totalNumberOfRecords: number) {
+	updateData(startIndex: number, recordIds: number[], newRecords: UiIdentifiableClientRecordConfig[], totalNumberOfRecords: number): number[]|true {
+		const changedRowNumbers = this.calculateChangingRowNumbers(startIndex, recordIds);
+
 		this.dataStartIndex = startIndex;
 		newRecords.forEach(r => this.recordById.set(r.id, r));
 		this.data = recordIds.map(recordId => this.recordById.get(recordId));
@@ -65,6 +67,23 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 		}
 
 		this.totalNumberOfRecords = totalNumberOfRecords;
+
+		return changedRowNumbers;
+	}
+
+	private calculateChangingRowNumbers(startIndex: number, recordIds: number[]) {
+		const everythingChanged = startIndex > (this.dataStartIndex + this.data.length) || (startIndex + recordIds.length) < this.dataStartIndex;
+		let changedRowNumbers: number[] = [];
+		if (!everythingChanged) {
+			for (let i = Math.min(startIndex, this.dataStartIndex); i < Math.max(startIndex + recordIds.length, this.dataStartIndex + this.data.length); i++) {
+				const oldId = this.data[i - this.dataStartIndex]?.id;
+				const newId = recordIds[i - startIndex];
+				if (oldId !== newId) {
+					changedRowNumbers.push(i);
+				}
+			}
+		}
+		return everythingChanged || changedRowNumbers;
 	}
 
 	public clear(): void {

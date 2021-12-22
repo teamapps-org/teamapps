@@ -145,7 +145,8 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 	@Override
 	protected void sendUpdateDataCommandToClient(int start, List<Integer> uiRecordIds, List<UiIdentifiableClientRecord> newUiRecords, int totalNumberOfRecords) {
 		queueCommandIfRendered(() -> {
-			LOGGER.info("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; totalCount: {}", start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
+			LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; totalCount: {}",
+					start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
 			return new UiInfiniteItemView2.SetDataCommand(
 					getId(),
 					start,

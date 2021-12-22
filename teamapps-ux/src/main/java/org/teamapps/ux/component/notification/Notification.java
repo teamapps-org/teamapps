@@ -52,12 +52,16 @@ public class Notification extends AbstractComponent {
 		this.content = content;
 	}
 
-	public static Notification createWithIconAndCaption(Icon icon, String text) {
-		return createWithIconAndTextAndDescription(icon, text, null);
+	public static Notification createWithIconAndCaption(Icon<?, ?> icon, String text) {
+		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplate.NOTIFICATION_ICON_CAPTION);
+		templateField.setValue(new BaseTemplateRecord<>(icon, text));
+		Notification notification = new Notification();
+		notification.setContent(templateField);
+		return notification;
 	}
 
-	public static Notification createWithIconAndTextAndDescription(Icon icon, String text, String description) {
-		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
+	public static Notification createWithIconAndTextAndDescription(Icon<?, ?> icon, String text, String description) {
+		TemplateField<BaseTemplateRecord<Void>> templateField = new TemplateField<>(BaseTemplate.NOTIFICATION_ICON_CAPTION_DESCRIPTION);
 		templateField.setValue(new BaseTemplateRecord<>(icon, text, description));
 		Notification notification = new Notification();
 		notification.setContent(templateField);

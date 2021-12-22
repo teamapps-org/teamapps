@@ -819,7 +819,6 @@ export function removeDangerousTags(value: string) {
 }
 
 export function selectElementContents(domElement: Node, start?: number, end?: number) {
-	console.log("selectElementContents", domElement, start, end);
 	if (domElement == null || !document.body.contains(domElement)) {
 		console.log("null or detached!")
 		return;
@@ -840,7 +839,6 @@ export function selectElementContents(domElement: Node, start?: number, end?: nu
 		// ignore (ie 11 problem, can be ignored even in ie 11)
 	}
 	sel.addRange(range);
-	console.log("end", document.activeElement)
 }
 
 export function parseHtml<E extends HTMLElement>(htmlString: string): E {

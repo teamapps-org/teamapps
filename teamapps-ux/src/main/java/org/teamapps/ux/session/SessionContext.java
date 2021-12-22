@@ -395,12 +395,16 @@ public class SessionContext {
 		window.show(animationDuration);
 	}
 
-	public void downloadFile(String fileUrl, String downloadFileName) {
-		runWithContext(() -> queueCommand(new UiRootPanel.DownloadFileCommand(fileUrl, downloadFileName)));
+	public void download(Resource resource, String downloadFileName) {
+		download(createResourceLink(resource), downloadFileName);
 	}
 
-	public void downloadFile(File file, String downloadFileName) {
-		runWithContext(() -> queueCommand(new UiRootPanel.DownloadFileCommand(createFileLink(file), downloadFileName)));
+	public void download(File file, String downloadFileName) {
+		download(createFileLink(file), downloadFileName);
+	}
+
+	public void download(String url, String downloadFileName) {
+		runWithContext(() -> queueCommand(new UiRootPanel.DownloadFileCommand(url, downloadFileName)));
 	}
 
 	public void registerBackgroundImage(String id, String image, String blurredImage) {
