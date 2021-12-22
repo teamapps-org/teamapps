@@ -22,6 +22,7 @@ package org.teamapps.icon.material;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.spi.IconLibrary;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -973,6 +974,10 @@ public class MaterialIcon implements Icon<MaterialIcon, MaterialIconStyle> {
 		MaterialIcon icon = new MaterialIcon(name);
 		ICONS_BY_NAME.put(name, icon);
 		return icon;
+	}
+
+	public static Collection<MaterialIcon> getAllIcons() {
+		return ICONS_BY_NAME.values();
 	}
 
 	public static MaterialIcon forName(String name) {

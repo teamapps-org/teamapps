@@ -44,6 +44,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static org.teamapps.uisession.TeamAppsUiSessionManager.SessionActivityState.*;
+
 /**
  * Implements a cache for {@link UiSession} instances.
  * <p>
@@ -62,6 +64,9 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 
 	public TeamAppsUiSessionManager(TeamAppsConfiguration config, ObjectMapper objectMapper) {
 		this.config = config;
+		if (config.getKeepaliveMessageIntervalMillis() >= config.getUiSessionInactivityTimeoutMillis() / 2) {
+			LOGGER.warn("keepaliveMessageIntervalMillis should be less than uiSessionInactivityTimeoutMillis / 2!");
+		}
 		this.objectMapper = objectMapper;
 		this.houseKeepingScheduledExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
 			Thread thread = new Thread(runnable);
@@ -69,10 +74,18 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 			thread.setDaemon(true);
 			return thread;
 		});
+
+		long sessionStateHouseKeepingInterval = config.getUiSessionInactivityTimeoutMillis() / 8;
 		this.houseKeepingScheduledExecutor.scheduleAtFixedRate(
-				this::updateSessionStates,
-				config.getKeepaliveMessageIntervalMillis(),
-				config.getKeepaliveMessageIntervalMillis(),
+				() -> {
+					try {
+						this.updateSessionStates();
+					} catch (Exception e) {
+						LOGGER.error("Exception while updating session states!", e);
+					}
+				},
+				sessionStateHouseKeepingInterval,
+				sessionStateHouseKeepingInterval,
 				TimeUnit.MILLISECONDS
 		);
 	}
@@ -231,26 +244,41 @@ public class TeamAppsUiSessionManager implements UiCommandExecutor, HttpSessionL
 		}
 	}
 
+	enum SessionActivityState {
+		ACTIVE, NEARLY_INACTIVE, INACTIVE
+	}
+
 	public void updateSessionStates() {
 		long now = System.currentTimeMillis();
-		Map<Boolean, List<UiSession>> sessionsByActivity;
+		Map<SessionActivityState, List<UiSession>> sessionsByActivity;
 		List<UiSession> sessionsToClose;
 		synchronized (sessionsById) {
 			sessionsByActivity = sessionsById.values().stream()
-					.collect(Collectors.partitioningBy(session -> now - session.getTimestampOfLastMessageFromClient() < config.getUiSessionInactivityTimeoutMillis()));
+					.collect(Collectors.groupingBy(session -> {
+						long timeSinceLastMessage = now - session.getTimestampOfLastMessageFromClient();
+						return timeSinceLastMessage > config.getUiSessionInactivityTimeoutMillis() ? INACTIVE
+								: timeSinceLastMessage > (config.getUiSessionInactivityTimeoutMillis() * 3 / 4) ? NEARLY_INACTIVE
+								: ACTIVE;
+					}));
 
 			sessionsToClose = sessionsById.values().stream()
 					.filter(session -> now - session.getTimestampOfLastMessageFromClient() > config.getUiSessionTimeoutMillis())
 					.collect(Collectors.toList());
 		}
-		for (UiSession inactiveSession : sessionsByActivity.get(false)) {
+		for (UiSession inactiveSession : sessionsByActivity.getOrDefault(INACTIVE, List.of())) {
 			if (inactiveSession.taggedActive) {
 				LOGGER.info("Marking session inactive: {}", inactiveSession.sessionId);
 				inactiveSession.taggedActive = false;
 				uiSessionListener.onActivityStateChanged(inactiveSession.sessionId, false);
 			}
 		}
-		for (UiSession activeSession : sessionsByActivity.get(true)) {
+		for (UiSession criticalSession : sessionsByActivity.getOrDefault(NEARLY_INACTIVE, List.of())) {
+			if (criticalSession.taggedActive) {
+				LOGGER.info("Sending PING to client: {}", criticalSession.sessionId);
+				criticalSession.sendAsyncWithErrorHandler(new PING());
+			}
+		}
+		for (UiSession activeSession : sessionsByActivity.getOrDefault(ACTIVE, List.of())) {
 			if (!activeSession.taggedActive) {
 				LOGGER.info("Marking session active: {}", activeSession.sessionId);
 				activeSession.taggedActive = true;

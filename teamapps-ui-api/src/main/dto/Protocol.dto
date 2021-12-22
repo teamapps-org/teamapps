@@ -60,11 +60,6 @@ class KEEPALIVE extends AbstractClientMessage {
 class TERMINATE extends AbstractClientMessage {
 }
 
-class CLIENT_ERROR extends AbstractServerMessage {
-    required enum { EXCEPTION } reason;
-    String message;
-}
-
 @TypeScriptFactory
 class UiClientInfo {
 	String ip;
@@ -103,6 +98,9 @@ class REINIT_OK extends AbstractServerMessage {
 
 class REINIT_NOK extends AbstractServerMessage {
     required UiSessionClosingReason reason;
+}
+
+class PING extends AbstractServerMessage { // Actively request a keepalive message from the client.
 }
 
 class SESSION_CLOSED extends AbstractServerMessage {

@@ -33,7 +33,7 @@ public class TeamAppsConfiguration {
 
 	/**
 	 * The timeout after which the UX server regards a UI session as obsolete.
-	 * This happens when the client stops sending keepalive messages or events.
+	 * This happens when the client stops sending messages to the server (especially KEEPALIVE messages, but also normal messages).
 	 * This may be caused by the browser tab being closed or the internet connection being interrupted.
 	 * <p>
 	 * When a UI session times out, the corresponding {@link SessionContext} gets closed
@@ -53,16 +53,26 @@ public class TeamAppsConfiguration {
 	private long uiSessionTimeoutMillis = 30 * 60_000;
 
 	/**
-	 * The timeout after which sessions are regarded as "inactive".
+	 * The timeout after which clients not sending any messages to the server anymore (including KEEPALIVE) are regarded as "inactive".
 	 * <p>
 	 * While this does not have any direct effects inside the TeamApps framework, the "activity state" can be monitored
 	 * on the application level (see {@link SessionContext#onActivityStateChanged}). For instance, this can be used to mark an application user
 	 * as "away".
+	 * <p>
+	 * The default value of 70 seconds has been chosen because browsers tend to optimize inactive tabs.
+	 * In Chrome for example, timers (e.g. for periodically sending KEEPALIVE messages) will be triggered only every 60 seconds
+	 * regardless of the actual scheduled interval.
+	 * <p>
+	 * Also note that, when a client did not send a KEEPALIVE message for 3/4 of this timeout, the server will send a PING message to the
+	 * client, which the client should respond to with a KEEPALIVE message. This circumvents client-side resource consumption optimizations,
+	 * since the client is actively triggered by the server instead of waiting for a timeout.
 	 */
-	private long uiSessionInactivityTimeoutMillis = 60_000;
+	private long uiSessionInactivityTimeoutMillis = 70_000;
 
 	/**
 	 * The interval at which the client sends keep alive messages.
+	 * <p>
+	 * Not that this interval should be less than uiSessionInactivityTimeoutMillis / 2.
 	 *
 	 * @see #uiSessionTimeoutMillis
 	 */
