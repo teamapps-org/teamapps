@@ -68,6 +68,9 @@ public class Window extends Panel {
 		window.setModal(modal);
 		window.setWidth(width);
 		window.setHeight(height);
+		if (height < 0) { // auto-height -> do not stretch the content (#safariflex). TODO remove once Safari got fixed!
+			window.setStretchContent(false);
+		}
 		window.setModalBackgroundDimmingColor(modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null);
 		window.setCloseable(closeable);
 		window.setCloseOnClickOutside(closeOnClickOutside);
