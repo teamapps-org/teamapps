@@ -51,7 +51,6 @@ enum TeamAppsProtocolStatus {
 export class TeamAppsConnectionImpl implements TeamAppsConnection {
 
 	private sentEventsMinBufferSize = 500;
-	private keepaliveInterval = 25000;
 	private minRequestedCommands = 3;
 	private maxRequestedCommands = 20;
 
@@ -104,7 +103,7 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 				} else if (TeamAppsConnectionImpl.isINIT_OK(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ESTABLISHED;
 					this.sentEventsMinBufferSize = message.sentEventsBufferSize;
-					this.keepaliveInterval = message.keepaliveInterval;
+					this.initKeepAlive(message.keepaliveInterval ?? 25_000);
 					this.minRequestedCommands = message.minRequestedCommands;
 					this.maxRequestedCommands = message.maxRequestedCommands;
 					this.log("Connection accepted.");
@@ -135,6 +134,10 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					this.log("Reconnect refused. Reason: " + UiSessionClosingReason[message.reason]);
 					commandHandler.onConnectionErrorOrBroken(message.reason);
 					this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
+				} else if (TeamAppsConnectionImpl.isPING(message)) {
+					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
+					this.log("Got PING from server.");
+					this.connection.send({_type: "KEEPALIVE", sessionId: this.sessionId});
 				} else if (TeamAppsConnectionImpl.isSESSION_CLOSED(message)) {
 					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
 					this.log("Error reported by server: " + UiSessionClosingReason[message.reason] + ": " + message.message);
@@ -157,14 +160,14 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 				} as REINITConfig)
 			}
 		});
+	}
+
+	private initKeepAlive(keepaliveInterval: number) {
 		self.setInterval(() => {
 			if (this.isConnected()) {
-				this.connection.send({
-					_type: "KEEPALIVE",
-					sessionId: sessionId
-				})
+				this.connection.send({_type: "KEEPALIVE", sessionId: this.sessionId});
 			}
-		}, this.keepaliveInterval)
+		}, keepaliveInterval)
 	}
 
 	private ensureEnoughCommandsRequested() {
@@ -198,6 +201,10 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 
 	private static isREINIT_NOK(message: any): message is REINIT_NOKConfig {
 		return message._type === 'REINIT_NOK';
+	}
+
+	private static isPING(message: any): message is REINIT_NOKConfig {
+		return message._type === 'PING';
 	}
 
 	private static isMULTI_CMD(message: any): message is MULTI_CMDConfig {
