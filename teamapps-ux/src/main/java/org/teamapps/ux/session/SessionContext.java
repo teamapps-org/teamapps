@@ -73,14 +73,22 @@ import java.util.stream.Collectors;
 import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
 /**
- * Provides access to several aspects of a Ui-Session and allows sending commands and updates to the client.
- * A UI-session starts upon opening the website and ends when leaving or reloading it. The Communication between client
+ * Represents a UI session and thereby provides access to several of its aspects and allows sending commands
+ * and updates to the client.
+ * A UI session starts upon opening the website and ends when leaving or reloading it. The Communication between client
  * and server happens via websocket.
- * Only one thread can interact with a Ui-Session at a time. Therefore, all interactions with the session context from
- * outside must be done using the {@link #runWithContext(Runnable)} method.
+ * Only one thread can interact with a Ui session at a time. This is important for mainly two reasons:
+ * <ul>
+ *     <li>to guarantee a certain order of events on the client and server side (most importantly: both process changes
+ *     in the <b>same</b> order)</li>
+ *     <li>because none of the UI components is thread-safe</li>
+ * </ul>
+ * Therefore, all interactions with the session context from outside must be done using the
+ * {@link #runWithContext(Runnable)} method.
  * When adding a listener to an {@link Event} from a thread that is bound to a session context, then by default,
  * the handling of the event will be performed within the same context without having to explicitly use the
  * {@link #runWithContext(Runnable)} method for the operations that the handler performs.
+ * Events coming from the client are generally handled in a thread bound to the UI session.
  * If a thread is bound to a SessionContext, its reference can be acquired via the {@link #current()} or the
  * {@link #currentOrNull()} method.
  */
@@ -152,14 +160,14 @@ public class SessionContext {
 	}
 
 	/**
-	 * @return the SessionContext which the thread, where this method is executed in, is bound to
+	 * @return the SessionContext which the thread is bound to where this method is executed in
 	 */
 	public static SessionContext current() {
 		return CurrentSessionContext.get();
 	}
 
 	/**
-	 * @return same as {@link #current()} but when not executed within a UI-session-thread, it returns null instead of
+	 * @return same as {@link #current()} but when not executed within a UI session thread, it returns null instead of
 	 * an exception
 	 */
 	public static SessionContext currentOrNull() {
@@ -315,12 +323,6 @@ public class SessionContext {
 		return this.runWithContext(runnable, false);
 	}
 
-	/**
-	 * Executes the runnable within a thread that is bound to the SessionContext.
-	 * This ensures thread safety by letting only one thread interact with a UI-session at a time.
-	 * @param runnable task to execute within the UI-session
-	 * @param forceEnqueue No synchronous execution! Enqueue this at the end of this SessionContext's work queue.
-	 */
 	public CompletableFuture<Void> runWithContext(Runnable runnable, boolean forceEnqueue) {
 		return runWithContext(() -> {
 			runnable.run();
@@ -332,6 +334,14 @@ public class SessionContext {
 		return runWithContext(runnable, false);
 	}
 
+	/**
+	 * Executes the Runnable/Callable within a thread that is bound to the SessionContext.
+	 * This ensures thread safety by letting only one thread interact with a UI session at a time.
+	 * If this method is called from a thread that was already bound to the SessionContext before, it might be executed
+	 * synchronously.
+	 * @param runnable task to execute within the UI session
+	 * @param forceEnqueue No synchronous execution! Enqueue this at the end of this SessionContext's work queue.
+	 */
 	public <R> CompletableFuture<R> runWithContext(Callable<R> runnable, boolean forceEnqueue) {
 		if (destroyed) {
 			LOGGER.info("This SessionContext ({}) is already destroyed. Not sending command.", sessionId);

@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.function.Supplier;
 
 /**
- * Interface for handling any type of data source that can be represented as an InputStream.
+ * A Resource provides access to data that can be downloaded by the client using HTTP and to the HTTP header information.
  */
 public interface Resource {
 
