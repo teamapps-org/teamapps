@@ -83,7 +83,7 @@ import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
  *     in the <b>same</b> order)</li>
  *     <li>because none of the UI components is thread-safe</li>
  * </ul>
- * Therefore, all interactions with the session context from outside must be done using the
+ * Therefore, all interactions with the session context and any UI components from outside must be done using the
  * {@link #runWithContext(Runnable)} method.
  * When adding a listener to an {@link Event} from a thread that is bound to a session context, then by default,
  * the handling of the event will be performed within the same context without having to explicitly use the
@@ -160,7 +160,7 @@ public class SessionContext {
 	}
 
 	/**
-	 * @return the SessionContext which the thread is bound to where this method is executed in
+	 * @return the SessionContext which the current thread is bound to
 	 */
 	public static SessionContext current() {
 		return CurrentSessionContext.get();
