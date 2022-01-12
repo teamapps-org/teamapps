@@ -23,11 +23,9 @@ import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.resource.FileResourceManager;
 import io.undertow.servlet.Servlets;
-import io.undertow.servlet.api.DeploymentInfo;
-import io.undertow.servlet.api.DeploymentManager;
-import io.undertow.servlet.api.ListenerInfo;
-import io.undertow.servlet.api.ServletContainer;
+import io.undertow.servlet.api.*;
 import io.undertow.servlet.util.ImmediateInstanceHandle;
+import io.undertow.websockets.extensions.PerMessageDeflateHandshake;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 import org.teamapps.client.ClientCodeExtractor;
 import org.teamapps.config.TeamAppsConfiguration;
@@ -42,12 +40,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class TeamAppsUndertowEmbeddedServer {
 
 	private final TeamAppsCore teamAppsCore;
 	private final File webAppDirectory;
 	private final List<ServletContextListener> customServletContextListeners = new ArrayList<>();
+	private Function<DeploymentInfo, DeploymentInfo> deploymentInfoManipulator;
 
 	private final int port;
 	private Undertow server;
@@ -94,6 +94,13 @@ public class TeamAppsUndertowEmbeddedServer {
 		this.customServletContextListeners.add(servletContextListener);
 	}
 
+	public void setDeploymentInfoCallback(Function<DeploymentInfo, DeploymentInfo> deploymentInfoCallback) {
+		if (started) {
+			throw new IllegalStateException("deploymentInfoManipulator need to be registered before the server is started!");
+		}
+		this.deploymentInfoManipulator = deploymentInfoCallback;
+	}
+
 	public void start() throws Exception {
 		this.started = true;
 		ClientCodeExtractor.initializeWebserverDirectory(webAppDirectory);
@@ -108,8 +115,13 @@ public class TeamAppsUndertowEmbeddedServer {
 				.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(servletContextListener)))
 				.setResourceManager(new FileResourceManager(webAppDirectory.getAbsoluteFile()))
 				.setAllowNonStandardWrappers(true)
-				.addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo())
+				.addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo()
+						.addExtension(new PerMessageDeflateHandshake(false, 6)))
 				.setClassLoader(classLoader);
+
+		if (deploymentInfoManipulator != null ) {
+			deploymentInfoManipulator.apply(deploymentInfo);
+		}
 
 		customServletContextListeners.forEach(l ->
 				deploymentInfo.addListener(new ListenerInfo(ServletContextListener.class, () -> new ImmediateInstanceHandle<>(l))));

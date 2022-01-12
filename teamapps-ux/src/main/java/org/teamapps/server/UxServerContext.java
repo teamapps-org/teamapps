@@ -19,14 +19,9 @@
  */
 package org.teamapps.server;
 
-import org.teamapps.uisession.QualifiedUiSessionId;
-import org.teamapps.ux.session.SessionContext;
-
 import java.io.File;
 
 public interface UxServerContext {
-
-	SessionContext getSessionContextById(QualifiedUiSessionId sessionId);
 
 	File getUploadedFileByUuid(String uuid);
 
