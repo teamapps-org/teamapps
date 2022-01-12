@@ -22,8 +22,7 @@ package org.teamapps.testutil;
 import org.mockito.Mockito;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
-import org.teamapps.uisession.QualifiedUiSessionId;
-import org.teamapps.uisession.UiCommandExecutor;
+import org.teamapps.uisession.UiSession;
 import org.teamapps.ux.session.ClientInfo;
 import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
@@ -45,9 +44,9 @@ public class UxTestUtil {
 	public static SessionContext createDummySessionContext() {
 		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap(), TEAMAPPS_VERSION);
 		return new SessionContext(
-				new QualifiedUiSessionId("httpSessionId", "uiSessionId"), Executors.newSingleThreadExecutor(),
+				Mockito.mock(UiSession.class),
+				Executors.newSingleThreadExecutor(),
 				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),
-				Mockito.mock(UiCommandExecutor.class),
 				Mockito.mock(UxServerContext.class),
 				Mockito.mock(SessionIconProvider.class)
 		);

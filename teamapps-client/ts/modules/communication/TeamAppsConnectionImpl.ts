@@ -135,7 +135,6 @@ export class TeamAppsConnectionImpl implements TeamAppsConnection {
 					commandHandler.onConnectionErrorOrBroken(message.reason);
 					this.connection.stopReconnecting(); // give the server the chance to send more commands, but if it disconnected, do not attempt to reconnect.
 				} else if (TeamAppsConnectionImpl.isPING(message)) {
-					this.protocolStatus = TeamAppsProtocolStatus.ERROR;
 					this.log("Got PING from server.");
 					this.connection.send({_type: "KEEPALIVE", sessionId: this.sessionId});
 				} else if (TeamAppsConnectionImpl.isSESSION_CLOSED(message)) {

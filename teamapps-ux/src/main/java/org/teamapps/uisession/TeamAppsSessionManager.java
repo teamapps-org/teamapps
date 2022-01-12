@@ -1,0 +1,303 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2021 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.uisession;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Queues;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teamapps.config.TeamAppsConfiguration;
+import org.teamapps.core.TeamAppsUploadManager;
+import org.teamapps.dto.UiClientInfo;
+import org.teamapps.dto.UiRootPanel;
+import org.teamapps.dto.UiSessionClosingReason;
+import org.teamapps.event.Event;
+import org.teamapps.icons.IconProvider;
+import org.teamapps.icons.SessionIconProvider;
+import org.teamapps.server.UxServerContext;
+import org.teamapps.uisession.statistics.SessionStatsUpdatedEventData;
+import org.teamapps.uisession.statistics.UiSessionStats;
+import org.teamapps.util.threading.SequentialExecutorFactory;
+import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.session.ClientInfo;
+import org.teamapps.ux.session.SessionConfiguration;
+import org.teamapps.ux.session.SessionContext;
+import org.teamapps.webcontroller.WebController;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+
+import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_DEV_SERVER_VERSION;
+import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
+import static org.teamapps.dto.UiSessionClosingReason.HTTP_SESSION_CLOSED;
+import static org.teamapps.uisession.TeamAppsSessionManager.SessionActivityState.*;
+
+/**
+ * Implements a cache for {@link UiSession} instances.
+ * <p>
+ * It takes care of the removal of timed-out sessions. The "last used" information is updated every time a session is retrieved.
+ */
+public class TeamAppsSessionManager implements HttpSessionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsSessionManager.class);
+	public static final String TEAMAPPS_VERSION_REFRESH_PARAMETER = "teamappsRefresh"; // keep in-sync with JavaScript!!!
+
+	public final Event<SessionStatsUpdatedEventData> onStatsUpdated = new Event<>();
+
+	private final ScheduledExecutorService houseKeepingScheduledExecutor;
+	private final ObjectMapper objectMapper;
+	private final TeamAppsConfiguration config;
+
+	private final Map<QualifiedUiSessionId, SessionPair> sessionsById = new ConcurrentHashMap<>();
+	private final Deque<UiSessionStats> closedSessionsStatistics = Queues.synchronizedDeque(new ArrayDeque<>());
+
+	private final SequentialExecutorFactory sessionExecutorFactory;
+	private final WebController webController;
+	private final IconProvider iconProvider;
+	private final UxServerContext uxServerContext;
+
+	public TeamAppsSessionManager(TeamAppsConfiguration config, ObjectMapper objectMapper,
+								  SequentialExecutorFactory sessionExecutorFactory,
+								  WebController webController,
+								  IconProvider iconProvider,
+								  TeamAppsUploadManager uploadManager) {
+		this.config = config;
+		if (config.getKeepaliveMessageIntervalMillis() >= config.getUiSessionInactivityTimeoutMillis() / 2) {
+			LOGGER.warn("keepaliveMessageIntervalMillis should be less than uiSessionInactivityTimeoutMillis / 2!");
+		}
+		this.objectMapper = objectMapper;
+		this.houseKeepingScheduledExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
+			Thread thread = new Thread(runnable);
+			thread.setName("TeamAppsUiSessionManager.houseKeeping");
+			thread.setDaemon(true);
+			return thread;
+		});
+
+		long sessionStateHouseKeepingInterval = config.getUiSessionInactivityTimeoutMillis() / 8;
+		this.houseKeepingScheduledExecutor.scheduleAtFixedRate(
+				() -> {
+					try {
+						this.updateSessionStates();
+					} catch (Exception e) {
+						LOGGER.error("Exception while updating session states!", e);
+					}
+				},
+				sessionStateHouseKeepingInterval, sessionStateHouseKeepingInterval, TimeUnit.MILLISECONDS
+		);
+		this.houseKeepingScheduledExecutor.scheduleAtFixedRate(
+				() -> {
+					try {
+						sessionsById.values().forEach(s -> s.getUiSession().updateStats());
+						onStatsUpdated.fire(new SessionStatsUpdatedEventData(getAllSessions(), getClosedSessionsStatistics()));
+					} catch (Exception e) {
+						LOGGER.error("Exception while flushing stats!", e);
+					}
+				},
+				10, 10, TimeUnit.SECONDS
+		);
+
+		this.sessionExecutorFactory = sessionExecutorFactory;
+		this.webController = webController;
+		this.iconProvider = iconProvider;
+		this.uxServerContext = uploadManager::getUploadedFile;
+	}
+
+	public UiSession getUiSessionById(QualifiedUiSessionId sessionId) {
+		SessionPair sessionPair = sessionsById.get(sessionId);
+		return sessionPair != null ? sessionPair.getUiSession() : null;
+	}
+
+	public SessionContext getSessionContextById(QualifiedUiSessionId sessionId) {
+		SessionPair sessionPair = sessionsById.get(sessionId);
+		return sessionPair != null ? sessionPair.getSessionContext() : null;
+	}
+
+	public int getNumberOfSessions() {
+		return sessionsById.size();
+	}
+
+	public List<SessionPair> getAllSessions() {
+		return List.copyOf(sessionsById.values());
+	}
+
+	public int getNumberOfAvailableClosedSessionStatistics() {
+		return closedSessionsStatistics.size();
+	}
+
+	public List<UiSessionStats> getClosedSessionsStatistics() {
+		synchronized (closedSessionsStatistics) {
+			return List.copyOf(closedSessionsStatistics);
+		}
+	}
+
+	public void initSession(
+			QualifiedUiSessionId sessionId,
+			UiClientInfo clientInfo,
+			HttpSession httpSession,
+			int maxRequestedCommandId,
+			MessageSender messageSender
+	) {
+		LOGGER.trace("initSession: sessionId = [" + sessionId + "], clientInfo = [" + clientInfo + "], "
+				+ "maxRequestedCommandId = [" + maxRequestedCommandId + "], messageSender = [" + messageSender + "]");
+
+		UiSession uiSession = new UiSession(sessionId, System.currentTimeMillis(), config, objectMapper, messageSender, uis -> {
+			sessionsById.remove(uis.getSessionId());
+			closedSessionsStatistics.addLast(uis.getStatistics().immutableCopy());
+			while (closedSessionsStatistics.size() > 10_000) {
+				closedSessionsStatistics.removeFirst();
+			}
+		});
+		SessionContext sessionContext = createSessionContext(uiSession, clientInfo, httpSession);
+		uiSession.setSessionListener(sessionContext.getAsUiSessionListenerInternal());
+
+		boolean wrongTeamappsVersion = clientInfo.getTeamAppsVersion() == null
+				|| (!Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_VERSION) && !Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_DEV_SERVER_VERSION));
+		boolean hasTeamAppsRefreshParameter = clientInfo.getClientParameters().containsKey(TEAMAPPS_VERSION_REFRESH_PARAMETER);
+		if (wrongTeamappsVersion) {
+			LOGGER.info("Wrong TeamApps client version {} in session {}! Expected: {}!", clientInfo.getTeamAppsVersion(), sessionId, TEAMAPPS_VERSION);
+			if (!hasTeamAppsRefreshParameter) {
+				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_VERSION_REFRESH_PARAMETER);
+				String clientUrl = clientInfo.getClientUrl();
+				String separator = clientUrl.contains("?") ? "&" : "?";
+				uiSession.sendCommand(new UiCommandWithResultCallback<>(new UiRootPanel.GoToUrlCommand(clientUrl + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false), null)); // TODO remove this in 2022, when all clients
+			}
+			uiSession.close(UiSessionClosingReason.WRONG_TEAMAPPS_VERSION);
+			return;
+		}
+
+		sessionsById.put(sessionId, new SessionPair(uiSession, sessionContext));
+
+		uiSession.init(maxRequestedCommandId);
+
+		try {
+			// TODO make non-blocking when exception handling (and thereby session invalidation) is changed
+			sessionContext.runWithContext(() -> {
+				sessionContext.registerTemplates(Arrays.stream(BaseTemplate.values())
+						.collect(Collectors.toMap(Enum::name, BaseTemplate::getTemplate)));     // TODO is this still necessary??
+				webController.onSessionStart(sessionContext);
+			}).get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	@Override
+	public void sessionCreated(HttpSessionEvent se) {
+		se.getSession().setMaxInactiveInterval(config.getHttpSessionTimeoutSeconds());
+	}
+
+	@Override
+	public void sessionDestroyed(HttpSessionEvent se) {
+		closeAllSessionsForHttpSession(se.getSession().getId());
+	}
+
+	public void closeAllSessionsForHttpSession(String httpSessionId) {
+		LOGGER.trace("TeamAppsUiSessionManager.removeAllSessionsForHttpSession");
+		List<UiSession> sessionsToClose = sessionsById.entrySet().stream()
+				.filter(e -> e.getKey().getHttpSessionId().equals(httpSessionId))
+				.map(qualifiedUiSessionIdSessionPairEntry -> qualifiedUiSessionIdSessionPairEntry.getValue().getUiSession())
+				.collect(Collectors.toList());
+		for (UiSession uiSession : sessionsToClose) {
+			uiSession.close(HTTP_SESSION_CLOSED);
+		}
+	}
+
+	enum SessionActivityState {
+		ACTIVE, NEARLY_INACTIVE, INACTIVE
+	}
+
+	public void updateSessionStates() {
+		long now = System.currentTimeMillis();
+		Map<SessionActivityState, List<UiSession>> sessionsByActivity;
+		List<UiSession> sessionsToClose;
+		sessionsByActivity = sessionsById.values().stream()
+				.map(SessionPair::getUiSession)
+				.collect(Collectors.groupingBy(session -> {
+					long timeSinceLastMessage = now - session.getTimestampOfLastMessageFromClient();
+					return timeSinceLastMessage > config.getUiSessionInactivityTimeoutMillis() ? INACTIVE
+							: timeSinceLastMessage > (config.getUiSessionInactivityTimeoutMillis() * 3 / 4) ? NEARLY_INACTIVE
+							: ACTIVE;
+				}));
+		sessionsToClose = sessionsById.values().stream()
+				.map(SessionPair::getUiSession)
+				.filter(session -> now - session.getTimestampOfLastMessageFromClient() > config.getUiSessionTimeoutMillis())
+				.collect(Collectors.toList());
+		for (UiSession inactiveSession : sessionsByActivity.getOrDefault(INACTIVE, List.of())) {
+			if (inactiveSession.isActive()) {
+				LOGGER.info("Marking session inactive: {}", inactiveSession.getSessionId());
+				inactiveSession.setActive(false);
+			}
+		}
+		for (UiSession criticalSession : sessionsByActivity.getOrDefault(NEARLY_INACTIVE, List.of())) {
+			if (criticalSession.isActive()) {
+				LOGGER.info("Sending PING to client: {}", criticalSession.getSessionId());
+				criticalSession.ping();
+			}
+		}
+		for (UiSession activeSession : sessionsByActivity.getOrDefault(ACTIVE, List.of())) {
+			if (!activeSession.isActive()) {
+				LOGGER.info("Marking session active: {}", activeSession.getSessionId());
+				activeSession.setActive(true);
+			}
+		}
+		for (UiSession sessionToClose : sessionsToClose) {
+			sessionToClose.close(UiSessionClosingReason.SESSION_TIMEOUT);
+		}
+	}
+
+	public void destroy() {
+		houseKeepingScheduledExecutor.shutdown();
+	}
+
+	public SessionContext createSessionContext(UiSession uiSession, UiClientInfo uiClientInfo, HttpSession httpSession) {
+		ClientInfo clientInfo = new ClientInfo(
+				uiClientInfo.getIp(),
+				uiClientInfo.getScreenWidth(),
+				uiClientInfo.getScreenHeight(),
+				uiClientInfo.getViewPortWidth(),
+				uiClientInfo.getViewPortHeight(),
+				uiClientInfo.getPreferredLanguageIso(),
+				uiClientInfo.getHighDensityScreen(),
+				uiClientInfo.getTimezoneIana(),
+				uiClientInfo.getTimezoneOffsetMinutes(),
+				uiClientInfo.getClientTokens(),
+				uiClientInfo.getUserAgentString(),
+				uiClientInfo.getClientUrl(),
+				uiClientInfo.getClientParameters(),
+				uiClientInfo.getTeamAppsVersion());
+		SessionConfiguration sessionConfiguration = SessionConfiguration.createForClientInfo(clientInfo);
+
+		return new SessionContext(
+				uiSession,
+				sessionExecutorFactory.createExecutor(),
+				clientInfo,
+				sessionConfiguration,
+				httpSession,
+				uxServerContext,
+				new SessionIconProvider(iconProvider)
+		);
+	}
+
+}

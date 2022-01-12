@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,10 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
-import org.teamapps.dto.UiCommand;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiRootPanel;
-import org.teamapps.dto.UiSessionClosingReason;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
@@ -92,10 +89,9 @@ public class SessionContext {
 	private boolean active = true;
 	private volatile boolean destroyed = false;
 
-	private final QualifiedUiSessionId sessionId;
+	private final UiSession uiSession;
 	private final ClientInfo clientInfo;
 	private final HttpSession httpSession;
-	private final UiCommandExecutor commandExecutor;
 	private final UxServerContext serverContext;
 	private final SessionIconProvider iconProvider;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
@@ -115,28 +111,83 @@ public class SessionContext {
 	private Window sessionErrorWindow;
 	private Window sessionTerminatedWindow;
 
+	private final UiSessionListener uiSessionListener = new UiSessionListener() {
+		@Override
+		public CompletableFuture<Void> onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
+			return runWithContext(() -> {
+				String uiComponentId = event.getComponentId();
+				if (uiComponentId != null) {
+					ClientObject clientObject = getClientObject(uiComponentId);
+					if (clientObject != null) {
+						clientObject.handleUiEvent(event);
+					} else {
+						throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
+					}
+				} else {
+					handleStaticEvent(event);
+				}
+			});
+		}
 
-	public SessionContext(QualifiedUiSessionId sessionId,
+		@Override
+		public void onUiQuery(QualifiedUiSessionId sessionId, UiQuery query, Consumer<Object> resultCallback, Consumer<Throwable> errorCallback) {
+			runWithContext(() -> {
+				String uiComponentId = query.getComponentId();
+				ClientObject clientObject = getClientObject(uiComponentId);
+				if (clientObject != null) {
+					clientObject.handleUiQuery(query)
+							.handle((result, throwable) -> {
+								if (throwable != null) {
+									errorCallback.accept(throwable);
+								} else {
+									new UxJacksonSerializationTemplate(SessionContext.this).doWithUxJacksonSerializers(() -> {
+										resultCallback.accept(result);
+									});
+								}
+								return null;
+							});
+				} else {
+					errorCallback.accept(new TeamAppsComponentNotFoundException(sessionId, uiComponentId));
+				}
+			});
+		}
+
+		@Override
+		public void onActivityStateChanged(QualifiedUiSessionId sessionId, boolean active) {
+			SessionContext.this.active = active;
+			onActivityStateChanged.fire(new UiSessionActivityState(active));
+		}
+
+		@Override
+		public void onUiSessionClosed(QualifiedUiSessionId sessionId, UiSessionClosingReason reason) {
+			onDestroyed.fireIgnoringExceptions(null);
+			runWithContext(() -> { // Do in runWithContext() with forceEnqueue=true so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
+				destroyed = true;
+				sessionExecutor.shutdown();
+			}, true);
+		}
+	};
+
+
+	public SessionContext(UiSession uiSession,
 						  ExecutorService sessionExecutor,
 						  ClientInfo clientInfo,
 						  SessionConfiguration sessionConfiguration,
 						  HttpSession httpSession,
-						  UiCommandExecutor commandExecutor,
 						  UxServerContext serverContext,
 						  SessionIconProvider iconProvider) {
 		this.sessionExecutor = sessionExecutor;
-		this.sessionId = sessionId;
+		this.uiSession = uiSession;
 		this.httpSession = httpSession;
 		this.clientInfo = clientInfo;
 		this.sessionConfiguration = sessionConfiguration;
-		this.commandExecutor = commandExecutor;
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
 		this.uxJacksonSerializationTemplate = new UxJacksonSerializationTemplate(this);
 		this.translationProvider = new ResourceBundleTranslationProvider("org.teamapps.ux.i18n.DefaultCaptions", Locale.ENGLISH);
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
-		this.sessionResourceProvider = new SessionContextResourceManager(sessionId);
+		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 	}
 
 	public static SessionContext current() {
@@ -188,25 +239,12 @@ public class SessionContext {
 		return active;
 	}
 
-	public void handleActivityStateChangedInternal(boolean active) {
-		this.active = active;
-		onActivityStateChanged.fire(new UiSessionActivityState(active));
-	}
-
 	public boolean isDestroyed() {
 		return destroyed;
 	}
 
 	public void destroy() {
-		commandExecutor.closeSession(sessionId, UiSessionClosingReason.TERMINATED_BY_APPLICATION);
-	}
-
-	public void handleSessionDestroyedInternal() {
-		onDestroyed.fireIgnoringExceptions(null);
-		runWithContext(() -> { // Do in runWithContext() with forceEnqueue=true so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
-			destroyed = true;
-			sessionExecutor.shutdown();
-		}, true);
+		uiSession.close(UiSessionClosingReason.TERMINATED_BY_APPLICATION);
 	}
 
 	public Event<Void> onDestroyed() {
@@ -222,7 +260,7 @@ public class SessionContext {
 		}
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
 
-		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> commandExecutor.sendCommand(sessionId, new UiCommandWithResultCallback<>(command, wrappedCallback)));
+		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(command, wrappedCallback)));
 	}
 
 	public void queueCommand(UiCommand<?> command) {
@@ -238,7 +276,7 @@ public class SessionContext {
 	}
 
 	public ClientBackPressureInfo getClientBackPressureInfo() {
-		return commandExecutor.getClientBackPressureInfo(sessionId);
+		return uiSession.getClientBackPressureInfo();
 	}
 
 	public String createFileLink(File file) {
@@ -294,7 +332,7 @@ public class SessionContext {
 
 	public <R> CompletableFuture<R> runWithContext(Callable<R> runnable, boolean forceEnqueue) {
 		if (destroyed) {
-			LOGGER.info("This SessionContext ({}) is already destroyed. Not sending command.", sessionId);
+			LOGGER.info("This SessionContext ({}) is already destroyed. Not sending command.", uiSession.getSessionId());
 			return CompletableFuture.failedFuture(new IllegalStateException("SessionContext destroyed."));
 		}
 		if (CurrentSessionContext.getOrNull() == this && !forceEnqueue) {
@@ -585,7 +623,7 @@ public class SessionContext {
 	}
 
 	public QualifiedUiSessionId getSessionId() {
-		return sessionId;
+		return uiSession.getSessionId();
 	}
 
 	public void handleStaticEvent(UiEvent event) {
@@ -610,7 +648,20 @@ public class SessionContext {
 				));
 				break;
 			}
-			default: throw new TeamAppsUiApiException(getSessionId(), event.getUiEventType().toString());
+			default:
+				throw new TeamAppsUiApiException(getSessionId(), event.getUiEventType().toString());
 		}
+	}
+
+	public UiSessionListener getAsUiSessionListenerInternal() {
+		return uiSessionListener;
+	}
+
+	public void setName(String name) {
+		uiSession.setName(name);
+	}
+
+	public String getName() {
+		return uiSession.getName();
 	}
 }

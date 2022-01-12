@@ -24,7 +24,7 @@ import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.icons.IconLibraryRegistry;
 import org.teamapps.icons.IconProvider;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
-import org.teamapps.uisession.TeamAppsUiSessionManager;
+import org.teamapps.uisession.TeamAppsSessionManager;
 import org.teamapps.util.threading.SequentialExecutorFactory;
 import org.teamapps.webcontroller.WebController;
 
@@ -33,9 +33,8 @@ public class TeamAppsCore {
 	private final TeamAppsConfiguration config;
 	private final WebController webController;
 	private final ObjectMapper objectMapper;
-	private final TeamAppsUiSessionManager uiSessionManager;
+	private final TeamAppsSessionManager uiSessionManager;
 	private final IconLibraryRegistry iconLibraryRegistry;
-	private final TeamAppsUxSessionManager sessionManager;
 	private final TeamAppsUploadManager uploadManager;
 	private final IconProvider iconProvider;
 
@@ -46,10 +45,8 @@ public class TeamAppsCore {
 		this.iconLibraryRegistry = new IconLibraryRegistry();
 		this.uploadManager = new TeamAppsUploadManager();
 
-		this.uiSessionManager = new TeamAppsUiSessionManager(config, objectMapper);
 		this.iconProvider = new IconProvider(iconLibraryRegistry);
-		this.sessionManager = new TeamAppsUxSessionManager(sessionExecutorFactory, webController, uiSessionManager, iconProvider, uploadManager);
-		this.uiSessionManager.setUiSessionListener(sessionManager);
+		this.uiSessionManager = new TeamAppsSessionManager(config, objectMapper, sessionExecutorFactory, webController, iconProvider, uploadManager);
 	}
 
 	public TeamAppsConfiguration getConfig() {
@@ -64,7 +61,7 @@ public class TeamAppsCore {
 		return objectMapper;
 	}
 
-	public TeamAppsUiSessionManager getUiSessionManager() {
+	public TeamAppsSessionManager getSessionManager() {
 		return uiSessionManager;
 	}
 
@@ -74,10 +71,6 @@ public class TeamAppsCore {
 
 	public IconProvider getIconProvider() {
 		return iconProvider;
-	}
-
-	public TeamAppsUxSessionManager getSessionManager() {
-		return sessionManager;
 	}
 
 	public TeamAppsUploadManager getUploadManager() {

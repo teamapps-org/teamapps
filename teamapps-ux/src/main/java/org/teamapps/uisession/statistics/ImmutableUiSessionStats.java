@@ -1,0 +1,165 @@
+package org.teamapps.uisession.statistics;
+
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import org.teamapps.uisession.QualifiedUiSessionId;
+
+public class ImmutableUiSessionStats implements UiSessionStats {
+
+	private final long startTime;
+	private final long endTime;
+	private final QualifiedUiSessionId sessionId;
+	private final String name;
+	private final SessionState state;
+	private final ImmutableCountStats commandStats;
+	private final ImmutableCountStats commandResultStats;
+	private final ImmutableCountStats eventStats;
+	private final ImmutableCountStats queryStats;
+	private final ImmutableCountStats queryResultStats;
+	private final ImmutableSumStats sentDataStats;
+	private final ImmutableSumStats receivedDataStats;
+
+	public static class ImmutableCountStats implements CountStats {
+		private final long count;
+		private final long countLastMinute;
+		private final long countLast10Seconds;
+		private final Object2LongMap<Class<?>> countByClass;
+
+		public ImmutableCountStats(long count, long countLastMinute, long countLast10Seconds, Object2LongMap<Class<?>> countByClass) {
+			this.count = count;
+			this.countLastMinute = countLastMinute;
+			this.countLast10Seconds = countLast10Seconds;
+			this.countByClass = countByClass;
+		}
+
+		@Override
+		public long getCount() {
+			return count;
+		}
+
+		@Override
+		public long getCountLastMinute() {
+			return countLastMinute;
+		}
+
+		@Override
+		public long getCountLast10Seconds() {
+			return countLast10Seconds;
+		}
+
+		@Override
+		public Object2LongMap<Class<?>> getCountByClass() {
+			return countByClass;
+		}
+	}
+
+	public static class ImmutableSumStats implements SumStats {
+		private final long total;
+		private final long sumLastMinute;
+		private final long sumLast10Seconds;
+
+		public ImmutableSumStats(long total, long sumLastMinute, long sumLast10Seconds) {
+			this.total = total;
+			this.sumLastMinute = sumLastMinute;
+			this.sumLast10Seconds = sumLast10Seconds;
+		}
+
+		@Override
+		public long getSum() {
+			return total;
+		}
+
+		@Override
+		public long getSumLastMinute() {
+			return sumLastMinute;
+		}
+
+		@Override
+		public long getSumLast10Seconds() {
+			return sumLast10Seconds;
+		}
+	}
+
+	public ImmutableUiSessionStats(long startTime, long endTime,
+								   QualifiedUiSessionId sessionId, String name, SessionState state,
+								   ImmutableCountStats commandStats         ,
+								   ImmutableCountStats commandResultStats   ,
+								   ImmutableCountStats eventStats           ,
+								   ImmutableCountStats queryStats           ,
+								   ImmutableCountStats queryResultStats     ,
+								   ImmutableSumStats sentDataStats,
+								   ImmutableSumStats receivedDataStats
+	) {
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.sessionId = sessionId;
+		this.name = name;
+		this.state = state;
+		this.commandStats = commandStats;
+		this.commandResultStats = commandResultStats;
+		this.eventStats = eventStats;
+		this.queryStats = queryStats;
+		this.queryResultStats = queryResultStats;
+		this.sentDataStats = sentDataStats;
+		this.receivedDataStats = receivedDataStats;
+	}
+
+	@Override
+	public long getStartTime() {
+		return startTime;
+	}
+
+	@Override
+	public long getEndTime() {
+		return endTime;
+	}
+
+	@Override
+	public QualifiedUiSessionId getSessionId() {
+		return sessionId;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public SessionState getState() {
+		return state;
+	}
+
+	@Override
+	public CountStats getCommandStats() {
+		return commandStats;
+	}
+
+	@Override
+	public CountStats getCommandResultStats() {
+		return commandResultStats;
+	}
+
+	@Override
+	public CountStats getEventStats() {
+		return eventStats;
+	}
+
+	@Override
+	public CountStats getQueryStats() {
+		return queryStats;
+	}
+
+	@Override
+	public CountStats getQueryResultStats() {
+		return queryResultStats;
+	}
+
+	@Override
+	public SumStats getSentDataStats() {
+		return sentDataStats;
+	}
+
+	@Override
+	public SumStats getReceivedDataStats() {
+		return receivedDataStats;
+	}
+}

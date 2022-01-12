@@ -26,22 +26,14 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.dto.*;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
-import org.teamapps.uisession.MessageSender;
-import org.teamapps.uisession.QualifiedUiSessionId;
-import org.teamapps.uisession.SendingErrorHandler;
-import org.teamapps.uisession.TeamAppsSessionNotFoundException;
-import org.teamapps.uisession.TeamAppsUiSessionManager;
+import org.teamapps.uisession.*;
 
 import javax.servlet.http.HttpSession;
-import javax.websocket.CloseReason;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.SendHandler;
-import javax.websocket.SendResult;
-import javax.websocket.Session;
+import javax.websocket.*;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class TeamAppsCommunicationEndpoint extends Endpoint {
 
@@ -49,10 +41,10 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 
 	private final ObjectMapper mapper = TeamAppsObjectMapperFactory.create();
 
-	private final TeamAppsUiSessionManager sessionManager;
+	private final TeamAppsSessionManager sessionManager;
 	private final TeamAppsConfiguration teamAppsConfig;
 
-	public TeamAppsCommunicationEndpoint(TeamAppsUiSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig) {
+	public TeamAppsCommunicationEndpoint(TeamAppsSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig) {
 		this.sessionManager = sessionManager;
 		this.teamAppsConfig = teamAppsConfig;
 	}
@@ -86,25 +78,39 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 	private class WebSocketHandler implements MessageHandler.Whole<String> {
 		private final Session wsSession;
 		private boolean closed;
+		private UiSession uiSession;
+
+		private AtomicLong sendCount = new AtomicLong();
+		private AtomicLong receivedCount = new AtomicLong();
 
 		public WebSocketHandler(Session session) {
 			this.wsSession = session;
 		}
 
+		private Optional<UiSession> getUiSession(QualifiedUiSessionId qualifiedUiSessionId) {
+			if (uiSession != null) {
+				return Optional.of(uiSession);
+			} else {
+				UiSession session = sessionManager.getUiSessionById(qualifiedUiSessionId);
+				if (session != null) {
+					this.uiSession = session;
+				} else {
+					LOGGER.warn("Could not find uiSession with id {}", qualifiedUiSessionId);
+				}
+				return Optional.ofNullable(session);
+			}
+		}
+
 		@Override
 		public void onMessage(String payload) {
+			receivedCount.addAndGet(payload.length());
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
-
-				// TODO #http-timeout implement heartbeat http requests (shame...)
-				// ((AbstractSession) httpSession).setLastAccessedTime(System.currentTimeMillis()); // this is jetty-specific code. Change if we want to support another server.
-				// tomcat: http://tomcat.apache.org/tomcat-5.5-doc/catalina/docs/api/org/apache/catalina/session/StandardSession.html#access()
-
 				AbstractClientMessage clientMessage = mapper.readValue(payload, AbstractClientMessage.class);
 
 				QualifiedUiSessionId qualifiedUiSessionId = new QualifiedUiSessionId(httpSession.getId(), clientMessage.getSessionId());
-				ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
 				if (clientMessage instanceof INIT) {
+					ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
 					INIT init = (INIT) clientMessage;
 					init.getClientInfo().setIp(serverSideClientInfo.getIp());
 					init.getClientInfo().setUserAgentString(serverSideClientInfo.getUserAgentString());
@@ -118,41 +124,41 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 					);
 				} else if (clientMessage instanceof REINIT) {
 					REINIT reinit = (REINIT) clientMessage;
-					sessionManager.reinitSession(
-							qualifiedUiSessionId,
-							reinit.getLastReceivedCommandId(),
-							reinit.getMaxRequestedCommandId(),
-							new MessageSenderImpl()
-					);
+					getUiSession(qualifiedUiSessionId).ifPresentOrElse(uiSession -> {
+						uiSession.reinit(reinit.getLastReceivedCommandId(), reinit.getMaxRequestedCommandId(), new MessageSenderImpl());
+					}, () -> {
+						LOGGER.warn("Could not find teamAppsUiSession for REINIT: " + qualifiedUiSessionId);
+						send(new REINIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND), null, null);
+					});
 				} else if (clientMessage instanceof TERMINATE) {
-					sessionManager.closeSession(qualifiedUiSessionId, UiSessionClosingReason.TERMINATED_BY_CLIENT);
+					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.close(UiSessionClosingReason.TERMINATED_BY_CLIENT));
 				} else if (clientMessage instanceof EVENT) {
 					EVENT eventMessage = (EVENT) clientMessage;
-					sessionManager.handleEvent(qualifiedUiSessionId, eventMessage.getId(), eventMessage.getUiEvent());
+					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleEvent(eventMessage.getId(), eventMessage.getUiEvent()));
 				} else if (clientMessage instanceof QUERY) {
 					QUERY queryMessage = (QUERY) clientMessage;
-					sessionManager.handleQuery(qualifiedUiSessionId, queryMessage.getId(), queryMessage.getUiQuery());
+					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleQuery(queryMessage.getId(), queryMessage.getUiQuery()));
 				} else if (clientMessage instanceof CMD_RESULT) {
 					CMD_RESULT cmdResult = (CMD_RESULT) clientMessage;
-					sessionManager.handleCommandResult(qualifiedUiSessionId, cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult());
+					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult()));
 				} else if (clientMessage instanceof CMD_REQUEST) {
 					CMD_REQUEST cmdRequest = (CMD_REQUEST) clientMessage;
-					sessionManager.handleCommandRequest(qualifiedUiSessionId, cmdRequest.getLastReceivedCommandId(), cmdRequest.getMaxRequestedCommandId());
+					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleCommandRequest(cmdRequest.getLastReceivedCommandId(), cmdRequest.getMaxRequestedCommandId()));
 				} else if (clientMessage instanceof KEEPALIVE) {
-					sessionManager.handleKeepAlive(qualifiedUiSessionId);
+					getUiSession(qualifiedUiSessionId).ifPresent(UiSession::handleKeepAlive);
 				} else {
 					throw new TeamAppsCommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());
 				}
 			} catch (TeamAppsSessionNotFoundException e) {
 				LOGGER.warn("TeamApps session not found: " + e.getSessionId());
-				send(wsSession, new SESSION_CLOSED(UiSessionClosingReason.SESSION_NOT_FOUND).setMessage(e.getMessage()), this::close, (t) -> close());
+				send(new SESSION_CLOSED(UiSessionClosingReason.SESSION_NOT_FOUND).setMessage(e.getMessage()), this::close, (t) -> close());
 			} catch (Exception e) {
 				LOGGER.error("Exception while processing client message!", e);
-				send(wsSession, new SESSION_CLOSED(UiSessionClosingReason.SERVER_SIDE_ERROR).setMessage(e.getMessage()), this::close, (t) -> close());
+				send(new SESSION_CLOSED(UiSessionClosingReason.SERVER_SIDE_ERROR).setMessage(e.getMessage()), this::close, (t) -> close());
 			}
 		}
 
-		private void send(Session session, AbstractServerMessage message, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
+		private void send(AbstractServerMessage message, Runnable sendingSuccessHandler, SendingErrorHandler sendingErrorHandler) {
 			if (this.closed) {
 				sendingErrorHandler.onErrorWhileSending(new TeamAppsCommunicationException("Connection closed!"));
 				return;
@@ -164,8 +170,9 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 				} catch (JsonProcessingException e) {
 					throw new TeamAppsCommunicationException(e);
 				}
+				sendCount.addAndGet(messageAsString.length());
 				//noinspection Convert2Lambda
-				session.getAsyncRemote().sendText(messageAsString, new SendHandler() {
+				wsSession.getAsyncRemote().sendText(messageAsString, new SendHandler() {
 					@Override
 					public void onResult(SendResult result) {
 						if (result.isOK() && sendingSuccessHandler != null) {
@@ -200,12 +207,22 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 		private class MessageSenderImpl implements MessageSender {
 			@Override
 			public void sendMessageAsynchronously(AbstractServerMessage msg, SendingErrorHandler sendingErrorHandler) {
-				send(wsSession, msg, null, sendingErrorHandler);
+				send(msg, null, sendingErrorHandler);
 			}
 
 			@Override
 			public void close(UiSessionClosingReason closingReason, String message) {
-				send(wsSession, new SESSION_CLOSED(closingReason).setMessage(message), WebSocketHandler.this::close, (t) -> WebSocketHandler.this.close());
+				send(new SESSION_CLOSED(closingReason).setMessage(message), WebSocketHandler.this::close, (t) -> WebSocketHandler.this.close());
+			}
+
+			@Override
+			public long getDataReceived() {
+				return receivedCount.get();
+			}
+
+			@Override
+			public long getDataSent() {
+				return sendCount.get();
 			}
 		}
 	}

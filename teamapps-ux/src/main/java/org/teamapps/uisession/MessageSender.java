@@ -27,5 +27,9 @@ public interface MessageSender {
 	void sendMessageAsynchronously(AbstractServerMessage message, SendingErrorHandler sendingErrorHandler);
 
 	void close(UiSessionClosingReason closingReason, String message);
+
+	long getDataReceived();
 	
+	long getDataSent();
+
 }

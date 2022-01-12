@@ -19,20 +19,14 @@
  */
 package org.teamapps.uisession;
 
-import org.teamapps.dto.UiClientInfo;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiQuery;
 import org.teamapps.dto.UiSessionClosingReason;
 
-import javax.servlet.http.HttpSession;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public interface UiSessionListener {
-
-	void onUiSessionStarted(QualifiedUiSessionId sessionId, UiClientInfo uiClientInfo, HttpSession httpSession);
-
-	void onUiSessionClientRefresh(QualifiedUiSessionId sessionId, UiClientInfo clientInfo, HttpSession httpSession);
 
 	CompletableFuture<Void> onUiEvent(QualifiedUiSessionId sessionId, UiEvent event);
 

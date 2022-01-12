@@ -30,9 +30,11 @@ import org.teamapps.ux.session.SessionContextResourceManager;
 
 import javax.servlet.*;
 import javax.servlet.ServletRegistration.Dynamic;
+import javax.websocket.Extension;
 import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpointConfig;
 import java.util.EnumSet;
+import java.util.List;
 
 public class TeamAppsServletContextListener implements ServletContextListener {
 
@@ -61,23 +63,25 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		uploadServletRegistration.addMapping("/upload/*");
 		uploadServletRegistration.setMultipartConfig(new MultipartConfigElement(null, -1L, -1L, 1000_000));
 
-		Dynamic leaveBeaconServletRegistration = context.addServlet("teamapps-leave", new LeaveBeaconServlet(teamAppsCore.getUiSessionManager()));
+		Dynamic leaveBeaconServletRegistration = context.addServlet("teamapps-leave", new LeaveBeaconServlet(teamAppsCore.getSessionManager()));
 		leaveBeaconServletRegistration.addMapping("/leave/*");
 
 		Dynamic iconServletRegistration = context.addServlet("teamapps-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProvider(teamAppsCore.getIconLibraryRegistry()))));
 		iconServletRegistration.addMapping("/icons/*");
 
-		Dynamic filesServletRegistration = context.addServlet("teamapps-files", new ResourceProviderServlet(new SessionResourceProvider(teamAppsCore.getSessionManager()::getSessionContext)));
+		Dynamic filesServletRegistration = context.addServlet("teamapps-files", new ResourceProviderServlet(new SessionResourceProvider(teamAppsCore.getSessionManager()::getSessionContextById)));
 		filesServletRegistration.addMapping(SessionContextResourceManager.BASE_PATH + "*");
 
 		context.addListener(new ServletRequestListener());
-		context.addListener(teamAppsCore.getUiSessionManager());
+		context.addListener(teamAppsCore.getSessionManager());
 
 		try {
 			// WebSocket
 			ServerContainer serverContainer = (ServerContainer) context.getAttribute("javax.websocket.server.ServerContainer");
 			ServerEndpointConfig communicationEndpointConfig = ServerEndpointConfig.Builder.create(TeamAppsCommunicationEndpoint.class, "/communication")
-					.configurator(new WebSocketServerEndpointConfigurator(teamAppsCore.getUiSessionManager(), teamAppsCore.getConfig())).build();
+					.configurator(new WebSocketServerEndpointConfigurator(teamAppsCore.getSessionManager(), teamAppsCore.getConfig()))
+					.extensions(List.of(new WebsocketExtension("permessage-deflate")))
+					.build();
 			serverContainer.addEndpoint(communicationEndpointConfig);
 		} catch (Exception e) {
 			String msg = "Could not register TeamApps communication endpoint";
@@ -88,7 +92,26 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		teamAppsCore.getUiSessionManager().destroy();
+		teamAppsCore.getSessionManager().destroy();
 	}
 
+
+	private static class WebsocketExtension implements Extension {
+
+		private final String name;
+
+		public WebsocketExtension(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public List<Parameter> getParameters() {
+			return List.of();
+		}
+	}
 }
