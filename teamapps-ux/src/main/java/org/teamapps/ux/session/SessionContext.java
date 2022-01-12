@@ -69,6 +69,26 @@ import java.util.stream.Collectors;
 
 import static org.teamapps.common.util.ExceptionUtil.softenExceptions;
 
+/**
+ * Represents a UI session and thereby provides access to several of its aspects and allows sending commands
+ * and updates to the client.
+ * A UI session starts upon opening the website and ends when leaving or reloading it. The Communication between client
+ * and server happens via websocket.
+ * Only one thread can interact with a Ui session at a time. This is important for mainly two reasons:
+ * <ul>
+ *     <li>to guarantee a certain order of events on the client and server side (most importantly: both process changes
+ *     in the <b>same</b> order)</li>
+ *     <li>because none of the UI components is thread-safe</li>
+ * </ul>
+ * Therefore, all interactions with the session context and any UI components from outside must be done using the
+ * {@link #runWithContext(Runnable)} method.
+ * When adding a listener to an {@link Event} from a thread that is bound to a session context, then by default,
+ * the handling of the event will be performed within the same context without having to explicitly use the
+ * {@link #runWithContext(Runnable)} method for the operations that the handler performs.
+ * Events coming from the client are generally handled in a thread bound to the UI session.
+ * If a thread is bound to a SessionContext, its reference can be acquired via the {@link #current()} or the
+ * {@link #currentOrNull()} method.
+ */
 public class SessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
@@ -190,10 +210,17 @@ public class SessionContext {
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
 	}
 
+	/**
+	 * @return the SessionContext which the current thread is bound to
+	 */
 	public static SessionContext current() {
 		return CurrentSessionContext.get();
 	}
 
+	/**
+	 * @return same as {@link #current()} but when not executed within a UI session thread, it returns null instead of
+	 * an exception
+	 */
 	public static SessionContext currentOrNull() {
 		return CurrentSessionContext.getOrNull();
 	}
@@ -251,6 +278,9 @@ public class SessionContext {
 		return onDestroyed;
 	}
 
+	/**
+	 * Sends commands to the client.
+	 */
 	public <RESULT> void queueCommand(UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
 		if (CurrentSessionContext.get() != this) {
 			String errorMessage = "Trying to queue a command for foreign/null SessionContext (CurrentSessionContext.get() != this)."
@@ -279,8 +309,24 @@ public class SessionContext {
 		return uiSession.getClientBackPressureInfo();
 	}
 
+	/**
+	 * Create a link for the client to download a file.
+	 * Example output file link: /files/84b7b1c6-2be3-4fb5-a098-3bbd878bade1/res-1, contains the session-id
+	 * The link can be applied in the browser as host:port/fileLink within the same http session it was created in.
+	 * @param file File object which was instantiated with the source path of the file
+	 * @return URL to the file
+	 */
 	public String createFileLink(File file) {
 		return sessionResourceProvider.createFileLink(file);
+	}
+
+	/**
+	 * Generalized version of {@link #createFileLink} method to create a URL for downloading a resource.
+	 * @param resource Resource implementation object representing any type of data source
+	 * @return link to the data resource
+	 */
+	public String createResourceLink(Resource resource) {
+		return createResourceLink(resource, null);
 	}
 
 	public String createResourceLink(Resource resource, String uniqueIdentifier) {
@@ -315,10 +361,6 @@ public class SessionContext {
 		return this.runWithContext(runnable, false);
 	}
 
-	/**
-	 * @param runnable
-	 * @param forceEnqueue No synchronous execution! Enqueue this at the end of this SessionContext's work queue.
-	 */
 	public CompletableFuture<Void> runWithContext(Runnable runnable, boolean forceEnqueue) {
 		return runWithContext(() -> {
 			runnable.run();
@@ -330,6 +372,14 @@ public class SessionContext {
 		return runWithContext(runnable, false);
 	}
 
+	/**
+	 * Executes the Runnable/Callable within a thread that is bound to the SessionContext.
+	 * This ensures thread safety by letting only one thread interact with a UI session at a time.
+	 * If this method is called from a thread that was already bound to the SessionContext before, it might be executed
+	 * synchronously.
+	 * @param runnable task to execute within the UI session
+	 * @param forceEnqueue No synchronous execution! Enqueue this at the end of this SessionContext's work queue.
+	 */
 	public <R> CompletableFuture<R> runWithContext(Callable<R> runnable, boolean forceEnqueue) {
 		if (destroyed) {
 			LOGGER.info("This SessionContext ({}) is already destroyed. Not sending command.", uiSession.getSessionId());
@@ -425,18 +475,22 @@ public class SessionContext {
 		return clientObjectsById.get(clientObjectId);
 	}
 
-	public String createResourceLink(Resource resource) {
-		return createResourceLink(resource, null);
-	}
-
 	public void showWindow(Window window, int animationDuration) {
 		window.show(animationDuration);
 	}
 
+	/**
+	 * Instructs the client to download a file.
+	 * @param fileUrl generated by the {@link #createFileLink(File)} method
+	 * @param downloadFileName name which the downloaded file should be saved by
+	 */
 	public void downloadFile(String fileUrl, String downloadFileName) {
 		runWithContext(() -> queueCommand(new UiRootPanel.DownloadFileCommand(fileUrl, downloadFileName)));
 	}
 
+	/**
+	 * @param file File object instantiated with the relative path to the content root
+	 */
 	public void downloadFile(File file, String downloadFileName) {
 		runWithContext(() -> queueCommand(new UiRootPanel.DownloadFileCommand(createFileLink(file), downloadFileName)));
 	}

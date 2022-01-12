@@ -27,6 +27,9 @@ import java.io.*;
 import java.util.Date;
 import java.util.function.Supplier;
 
+/**
+ * A Resource provides access to data that can be downloaded by the client using HTTP and to the HTTP header information.
+ */
 public interface Resource {
 
 	Logger LOGGER = LoggerFactory.getLogger(Resource.class);
