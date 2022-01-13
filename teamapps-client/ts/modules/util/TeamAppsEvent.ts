@@ -75,11 +75,15 @@ export class TeamAppsEvent<EO> {
 
 
 	public fireIfChanged(eventObject: EO) {
-		if (!deepEquals(this.previousEventObject, eventObject)) {
+		if (this.previousEventObject === undefined || !deepEquals(this.previousEventObject, eventObject)) {
 			this.fire(eventObject);
 			this.previousEventObject = eventObject;
 		}
-	};
+	}
+
+	public resetChangeValue() {
+		this.previousEventObject = undefined;
+	}
 
 	public getListeners() {
 		return this.listeners.slice();
