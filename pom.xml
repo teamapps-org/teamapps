@@ -121,12 +121,6 @@
 
             <dependency>
                 <groupId>org.teamapps</groupId>
-                <artifactId>teamapps-ux-servlet</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.teamapps</groupId>
                 <artifactId>teamapps-ux</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -50,7 +50,7 @@
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-ux-servlet</artifactId>
+            <artifactId>teamapps-ux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.teamapps</groupId>
