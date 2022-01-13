@@ -21,8 +21,6 @@ package org.teamapps.ux.servlet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.uisession.TeamAppsSessionManager;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.HandshakeResponse;
@@ -40,13 +38,10 @@ public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Co
 	public static final String USER_AGENT_PROPERTY_NAME = "USER_AGENT";
 	public static final String LANGUAGE_PROPERTY_NAME = "LANGUAGE";
 	public static final String CLIENT_IP_PROPERTY_NAME = "CLIENT_IP";
+	private final WebSocketCommunicationEndpoint webSocketCommunicationEndpoint;
 
-	private final TeamAppsSessionManager sessionManager;
-	private final TeamAppsConfiguration teamAppsConfig;
-
-	public WebSocketServerEndpointConfigurator(TeamAppsSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig) {
-		this.sessionManager = sessionManager;
-		this.teamAppsConfig = teamAppsConfig;
+	public WebSocketServerEndpointConfigurator(WebSocketCommunicationEndpoint webSocketCommunicationEndpoint) {
+		this.webSocketCommunicationEndpoint = webSocketCommunicationEndpoint;
 	}
 
 	@Override
@@ -74,7 +69,7 @@ public class WebSocketServerEndpointConfigurator extends ServerEndpointConfig.Co
 
 	@Override
 	public <T> T getEndpointInstance(Class<T> endpointClass) throws InstantiationException {
-		return (T) new TeamAppsCommunicationEndpoint(sessionManager, teamAppsConfig);
+		return (T) webSocketCommunicationEndpoint;
 	}
 
 	private String getFirstHeaderOrNull(HandshakeRequest request, String headerName) {
