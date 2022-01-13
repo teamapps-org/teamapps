@@ -364,6 +364,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 
 	public setSelectedEntry(entry: U, fireEvent?: boolean, originalEvent?: unknown) {
 		this.selectedEntry = entry;
+		this.onChange.resetChangeValue();
 		const $selectedEntry = parseHtml(this.config.selectedEntryRenderingFunction(entry));
 		$selectedEntry.classList.add("tr-combobox-entry");
 		this.$selectedEntryWrapper.innerHTML = "";
@@ -453,6 +454,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	public setAmount(amount: BigDecimal) {
 		amount = this.orFallback(amount);
 		this.$editor.value = amount != null ? amount.format(this.getNumberFormat()): "";
+		this.onChange.resetChangeValue();
 	}
 
 	public focus() {

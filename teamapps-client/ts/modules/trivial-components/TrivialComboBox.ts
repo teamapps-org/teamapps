@@ -372,6 +372,8 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		}
 		if (entry != null) {
 			this.$editor.value = this.config.entryToEditorTextFunction(entry)
+		} else {
+			this.$editor.value = '';
 		}
 
 		if (changing && fireEventIfChanged) {
