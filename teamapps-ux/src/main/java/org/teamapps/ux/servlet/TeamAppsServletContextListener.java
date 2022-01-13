@@ -78,8 +78,8 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		try {
 			// WebSocket
 			ServerContainer serverContainer = (ServerContainer) context.getAttribute("javax.websocket.server.ServerContainer");
-			ServerEndpointConfig communicationEndpointConfig = ServerEndpointConfig.Builder.create(TeamAppsCommunicationEndpoint.class, "/communication")
-					.configurator(new WebSocketServerEndpointConfigurator(teamAppsCore.getSessionManager(), teamAppsCore.getConfig()))
+			ServerEndpointConfig communicationEndpointConfig = ServerEndpointConfig.Builder.create(WebSocketCommunicationEndpoint.class, "/communication")
+					.configurator(new WebSocketServerEndpointConfigurator(teamAppsCore.getWebSocketCommunicationEndpoint()))
 					.extensions(List.of(new WebsocketExtension("permessage-deflate")))
 					.build();
 			serverContainer.addEndpoint(communicationEndpointConfig);

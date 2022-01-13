@@ -26,6 +26,7 @@ import org.teamapps.icons.IconProvider;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.TeamAppsSessionManager;
 import org.teamapps.util.threading.SequentialExecutorFactory;
+import org.teamapps.ux.servlet.WebSocketCommunicationEndpoint;
 import org.teamapps.webcontroller.WebController;
 
 public class TeamAppsCore {
@@ -33,10 +34,11 @@ public class TeamAppsCore {
 	private final TeamAppsConfiguration config;
 	private final WebController webController;
 	private final ObjectMapper objectMapper;
-	private final TeamAppsSessionManager uiSessionManager;
+	private final TeamAppsSessionManager sessionManager;
 	private final IconLibraryRegistry iconLibraryRegistry;
 	private final TeamAppsUploadManager uploadManager;
 	private final IconProvider iconProvider;
+	private final WebSocketCommunicationEndpoint webSocketCommunicationEndpoint;
 
 	public TeamAppsCore(TeamAppsConfiguration config, SequentialExecutorFactory sessionExecutorFactory, WebController webController) {
 		this.config = config;
@@ -46,7 +48,8 @@ public class TeamAppsCore {
 		this.uploadManager = new TeamAppsUploadManager();
 
 		this.iconProvider = new IconProvider(iconLibraryRegistry);
-		this.uiSessionManager = new TeamAppsSessionManager(config, objectMapper, sessionExecutorFactory, webController, iconProvider, uploadManager);
+		this.sessionManager = new TeamAppsSessionManager(config, objectMapper, sessionExecutorFactory, webController, iconProvider, uploadManager);
+		this.webSocketCommunicationEndpoint = new WebSocketCommunicationEndpoint(sessionManager, config);
 	}
 
 	public TeamAppsConfiguration getConfig() {
@@ -62,7 +65,7 @@ public class TeamAppsCore {
 	}
 
 	public TeamAppsSessionManager getSessionManager() {
-		return uiSessionManager;
+		return sessionManager;
 	}
 
 	public IconLibraryRegistry getIconLibraryRegistry() {
@@ -75,5 +78,9 @@ public class TeamAppsCore {
 
 	public TeamAppsUploadManager getUploadManager() {
 		return uploadManager;
+	}
+
+	public WebSocketCommunicationEndpoint getWebSocketCommunicationEndpoint() {
+		return webSocketCommunicationEndpoint;
 	}
 }

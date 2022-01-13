@@ -35,16 +35,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class TeamAppsCommunicationEndpoint extends Endpoint {
+public class WebSocketCommunicationEndpoint extends Endpoint {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TeamAppsCommunicationEndpoint.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketCommunicationEndpoint.class);
 
 	private final ObjectMapper mapper = TeamAppsObjectMapperFactory.create();
+
+	private final AtomicLong totalSendCount = new AtomicLong();
+	private final AtomicLong totalReceiveCount = new AtomicLong();
 
 	private final TeamAppsSessionManager sessionManager;
 	private final TeamAppsConfiguration teamAppsConfig;
 
-	public TeamAppsCommunicationEndpoint(TeamAppsSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig) {
+	public WebSocketCommunicationEndpoint(TeamAppsSessionManager sessionManager, TeamAppsConfiguration teamAppsConfig) {
 		this.sessionManager = sessionManager;
 		this.teamAppsConfig = teamAppsConfig;
 	}
@@ -75,13 +78,21 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 		}
 	}
 
+	public long getTotalSendCount() {
+		return totalSendCount.get();
+	}
+
+	public long getTotalReceiveCount() {
+		return totalReceiveCount.get();
+	}
+
 	private class WebSocketHandler implements MessageHandler.Whole<String> {
 		private final Session wsSession;
 		private boolean closed;
 		private UiSession uiSession;
 
-		private AtomicLong sendCount = new AtomicLong();
-		private AtomicLong receivedCount = new AtomicLong();
+		private final AtomicLong sendCount = new AtomicLong();
+		private final AtomicLong receivedCount = new AtomicLong();
 
 		public WebSocketHandler(Session session) {
 			this.wsSession = session;
@@ -104,6 +115,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 		@Override
 		public void onMessage(String payload) {
 			receivedCount.addAndGet(payload.length());
+			totalReceiveCount.addAndGet(payload.length());
 			try {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
 				AbstractClientMessage clientMessage = mapper.readValue(payload, AbstractClientMessage.class);
@@ -171,6 +183,7 @@ public class TeamAppsCommunicationEndpoint extends Endpoint {
 					throw new TeamAppsCommunicationException(e);
 				}
 				sendCount.addAndGet(messageAsString.length());
+				totalSendCount.addAndGet(messageAsString.length());
 				//noinspection Convert2Lambda
 				wsSession.getAsyncRemote().sendText(messageAsString, new SendHandler() {
 					@Override
