@@ -658,7 +658,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 	onResize(): void {
 		// this component consists of a video display and a caption. unfortunately, this makes sizing impossible to be calculated by CSS
-		let availableHeight = this.getHeight() - this.$caption.offsetHeight;
+		let availableHeight = this.getHeight() - this.$caption.getBoundingClientRect().height; // don't use offsetHeight! It will flicker in Chrome!
 		if (availableHeight <= 0) {
 			this.$video.style.width = "0";
 			this.$video.style.height = "0";

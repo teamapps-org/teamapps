@@ -41,7 +41,7 @@ public class SessionStatsSharedBaseTableModel {
 							.map(UiSessionStatsStatsTableRecord::new)
 			).collect(Collectors.toList());
 			onUpdated.fire();
-		});
+		}, false);
 	}
 
 	public List<SessionStatsTableRecord> getRecords() {
