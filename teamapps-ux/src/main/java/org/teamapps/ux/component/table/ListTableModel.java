@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.table;
 
-import org.teamapps.ux.component.infiniteitemview.ItemRangeChangeEvent;
+import org.teamapps.ux.component.infiniteitemview.RecordsAddedEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +53,7 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 
 	public void addRecord(RECORD record) {
 		list.add(record);
-		onRecordAdded.fire(new ItemRangeChangeEvent<>(list.size() - 1, List.of(record)));
+		onRecordAdded.fire(new RecordsAddedEvent<>(list.size() - 1, List.of(record)));
 	}
 
 	public void addRecords(List<RECORD> records) {

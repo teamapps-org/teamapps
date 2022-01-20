@@ -19,32 +19,35 @@
  */
 package org.teamapps.ux.component.infiniteitemview;
 
-import org.teamapps.event.Event;
+import org.teamapps.ux.cache.record.ItemRange;
 
-public abstract class AbstractInfiniteItemViewModel<RECORD> implements InfiniteItemViewModel<RECORD> {
+public class RecordsRemovedEvent<RECORD> {
 
-	public final Event<Void> onAllDataChanged = new Event<>();
-	public final Event<RecordsAddedEvent<RECORD>> onRecordsAdded = new Event<>();
-	public final Event<RecordsChangedEvent<RECORD>> onRecordsChanged = new Event<>();
-	public final Event<RecordsRemovedEvent<RECORD>> onRecordsDeleted = new Event<>();
+	private final ItemRange itemRange;
 
-	@Override
-	public Event<Void> onAllDataChanged() {
-		return onAllDataChanged;
+	/**
+	 * Use this constructor if the model does not have the changed items at hand.
+	 * This might happen when the model was not in charge of the actual change but got notified of it.
+	 * Views might not actually need to react on the change, anyway.
+	 * So forcing the model to retrieve the changed records does not make sense.
+	 */
+	public RecordsRemovedEvent(ItemRange itemRange) {
+		this.itemRange = itemRange;
 	}
 
-	@Override
-	public Event<RecordsAddedEvent<RECORD>> onRecordsAdded() {
-		return onRecordsAdded;
+	public ItemRange getItemRange() {
+		return itemRange;
 	}
 
-	@Override
-	public Event<RecordsChangedEvent<RECORD>> onRecordsChanged() {
-		return onRecordsChanged;
+	public int getStart() {
+		return getItemRange().getStart();
 	}
 
-	@Override
-	public Event<RecordsRemovedEvent<RECORD>> onRecordsRemoved() {
-		return onRecordsDeleted;
+	public int getLength() {
+		return getItemRange().getLength();
+	}
+
+	public int getEnd() {
+		return getItemRange().getEnd();
 	}
 }

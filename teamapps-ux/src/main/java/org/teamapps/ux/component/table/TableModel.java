@@ -19,8 +19,13 @@
  */
 package org.teamapps.ux.component.table;
 
+import org.teamapps.data.value.Sorting;
 import org.teamapps.ux.component.infiniteitemview.InfiniteListModel;
 
 public interface TableModel<RECORD> extends InfiniteListModel<RECORD> {
+
+	default void setSorting(Sorting sorting) {
+		// as a default, ignore...
+	}
 
 }
