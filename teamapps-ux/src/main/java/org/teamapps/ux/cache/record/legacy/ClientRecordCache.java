@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.cache;
+package org.teamapps.ux.cache.record.legacy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

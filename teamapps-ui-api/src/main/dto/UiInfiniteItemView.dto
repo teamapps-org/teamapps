@@ -74,7 +74,7 @@ class UiInfiniteItemView2 extends UiComponent {
     command setContextMenuContent(int requestId, UiComponent* component);
     command closeContextMenu(int requestId);
 
-	event renderedItemRangeChanged(int startIndex, int endIndex /*exclusive!*/);
+	event displayedRangeChanged(int startIndex, int length);
 	event itemClicked(int recordId, boolean isRightMouseButton, boolean isDoubleClick);
 	event contextMenuRequested(int requestId, int recordId);
 }

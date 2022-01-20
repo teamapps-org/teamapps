@@ -20,13 +20,14 @@
 package org.teamapps.ux.component.table;
 
 import org.teamapps.event.Event;
+import org.teamapps.ux.component.infiniteitemview.ItemRangeChangeEvent;
 
 public abstract class AbstractTableModel<RECORD> implements TableModel<RECORD> {
 
 	public final Event<Void> onAllDataChanged = new Event<>();
-	public final Event<RECORD> onRecordAdded = new Event<>();
-	public final Event<RECORD> onRecordUpdated = new Event<>();
-	public final Event<RECORD> onRecordDeleted = new Event<>();
+	public final Event<ItemRangeChangeEvent<RECORD>> onRecordAdded = new Event<>();
+	public final Event<ItemRangeChangeEvent<RECORD>> onRecordUpdated = new Event<>();
+	public final Event<ItemRangeChangeEvent<RECORD>> onRecordDeleted = new Event<>();
 
 	@Override
 	public Event<Void> onAllDataChanged() {
@@ -34,17 +35,18 @@ public abstract class AbstractTableModel<RECORD> implements TableModel<RECORD> {
 	}
 
 	@Override
-	public Event<RECORD> onRecordAdded() {
+	public Event<ItemRangeChangeEvent<RECORD>> onRecordsAdded() {
 		return onRecordAdded;
 	}
 
 	@Override
-	public Event<RECORD> onRecordUpdated() {
+	public Event<ItemRangeChangeEvent<RECORD>> onRecordsChanged() {
 		return onRecordUpdated;
 	}
 
 	@Override
-	public Event<RECORD> onRecordDeleted() {
+	public Event<ItemRangeChangeEvent<RECORD>> onRecordsDeleted() {
 		return onRecordDeleted;
 	}
+
 }
