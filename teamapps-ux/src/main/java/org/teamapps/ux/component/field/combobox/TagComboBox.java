@@ -25,7 +25,7 @@ import org.teamapps.dto.UiComboBoxTreeRecord;
 import org.teamapps.dto.UiField;
 import org.teamapps.dto.UiTagComboBox;
 import org.teamapps.event.Event;
-import org.teamapps.ux.cache.CacheManipulationHandle;
+import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.component.tree.TreeNodeInfoExtractor;

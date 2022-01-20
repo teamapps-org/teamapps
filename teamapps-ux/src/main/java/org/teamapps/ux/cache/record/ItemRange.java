@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.component.infiniteitemview;
+package org.teamapps.ux.cache.record;
 
 import java.util.Objects;
 

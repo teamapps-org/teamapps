@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.cache;
+package org.teamapps.ux.cache.record.legacy;
 
 public class CacheManipulationHandle<R> {
 	private ClientRecordCache cache;

@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.component.infiniteitemview;
 
+import org.teamapps.ux.cache.record.ItemRange;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,7 +72,7 @@ public class ListInfiniteItemViewModel<RECORD> extends AbstractInfiniteItemViewM
 	}
 
 	public void updateRecord(int index) {
-		onRecordsChanged.fire(new ItemRangeChangeEvent<>(ItemRange.startLength(index, 1)));
+		onRecordsChanged.fire(new ItemRangeChangeEvent<>(index, List.of(records.get(index))));
 	}
 
 	public void updateRecords(int startIndex, int length) {

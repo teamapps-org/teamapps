@@ -819,7 +819,6 @@ export function removeDangerousTags(value: string) {
 }
 
 export function selectElementContents(domElement: Node, start?: number, end?: number) {
-	console.log("selectElementContents", domElement, start, end);
 	if (domElement == null || !document.body.contains(domElement)) {
 		console.log("null or detached!")
 		return;
@@ -840,7 +839,6 @@ export function selectElementContents(domElement: Node, start?: number, end?: nu
 		// ignore (ie 11 problem, can be ignored even in ie 11)
 	}
 	sel.addRange(range);
-	console.log("end", document.activeElement)
 }
 
 export function parseHtml<E extends HTMLElement>(htmlString: string): E {
@@ -913,13 +911,18 @@ export function outerHeightIncludingMargins(el: HTMLElement) {
 	return height;
 }
 
-export function addDelegatedEventListener<K extends keyof HTMLElementEventMap>(rootElement: HTMLElement, selector: string, type: K, listener: (element: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
-	rootElement.addEventListener(type, ev => {
-		const target = selector != null ? closestAncestor(ev.target as HTMLElement, selector, true, rootElement) : ev.target as HTMLElement;
-		if (target != null) {
-			listener(target, ev);
-		}
-	}, options)
+export function addDelegatedEventListener<K extends keyof HTMLElementEventMap>(rootElement: HTMLElement, selector: string, eventTypes: K|K[], listener: (element: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
+	if (!Array.isArray(eventTypes)) {
+		eventTypes = [eventTypes];
+	}
+	for (const eventType of eventTypes) {
+		rootElement.addEventListener(eventType, ev => {
+			const target = selector != null ? closestAncestor(ev.target as HTMLElement, selector, true, rootElement) : ev.target as HTMLElement;
+			if (target != null) {
+				listener(target, ev);
+			}
+		}, options)
+	}
 }
 
 export function closestAncestor(el: HTMLElement, selector: string, includeSelf = false, $root: Element = document.body) {

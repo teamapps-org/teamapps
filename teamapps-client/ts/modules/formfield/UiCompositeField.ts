@@ -26,9 +26,10 @@ import {UiCompositeFieldConfig} from "../../generated/UiCompositeFieldConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiColumnDefinitionConfig} from "../../generated/UiColumnDefinitionConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {TableDataProviderItem} from "../table/TableDataProvider";
 import Logger = log.Logger;
 import {closestAncestor, parseHtml} from "../Common";
+import {TableDataProviderItem} from "../UiInfiniteItemView";
+import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
 
 export type SubField = {
 	config: UiCompositeSubFieldConfig,
@@ -251,7 +252,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 
 		subFieldSkeletons.forEach(subfield => {
 			if (subfield.field.getReadOnlyHtml) {
-				return (row: number, cell: number, value: any, columnDef: Slick.Column<TableDataProviderItem>, dataContext: TableDataProviderItem) => {
+				return (row: number, cell: number, value: any, columnDef: Slick.Column<UiTableClientRecordConfig>, dataContext: UiTableClientRecordConfig) => {
 					return subfield.field.getReadOnlyHtml(dataContext.values[subfield.config.propertyName], columnDef.width);
 				};
 			}

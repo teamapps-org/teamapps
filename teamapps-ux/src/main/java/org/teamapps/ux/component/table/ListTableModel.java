@@ -19,7 +19,7 @@
  */
 package org.teamapps.ux.component.table;
 
-import org.teamapps.data.value.Sorting;
+import org.teamapps.ux.component.infiniteitemview.ItemRangeChangeEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +53,7 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 
 	public void addRecord(RECORD record) {
 		list.add(record);
-		onRecordAdded.fire(record);
+		onRecordAdded.fire(new ItemRangeChangeEvent<>(list.size() - 1, List.of(record)));
 	}
 
 	public void addRecords(List<RECORD> records) {
@@ -73,7 +73,7 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 	}
 
 	@Override
-	public List<RECORD> getRecords(int startIndex, int length, Sorting sorting) {
+	public List<RECORD> getRecords(int startIndex, int length) {
 		if (filter == null) {
 			return list.subList(startIndex, Math.min(list.size(), startIndex + length));
 		} else {
@@ -87,11 +87,6 @@ public class ListTableModel<RECORD> extends AbstractTableModel<RECORD> {
 
 	public List<RECORD> getAllRecords() {
 		return new ArrayList<>(list);
-	}
-
-	@Override
-	public List<RECORD> getChildRecords(RECORD parentRecord, Sorting sorting) {
-		return null;
 	}
 
 	public Predicate<RECORD> getFilter() {
