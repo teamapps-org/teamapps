@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,9 @@
  */
 package org.teamapps.uisession.statistics.app;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.data.value.SortDirection;
-import org.teamapps.data.value.Sorting;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.uisession.statistics.CountStats;
@@ -39,7 +40,9 @@ import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.ux.session.SessionContext;
 
+import java.lang.invoke.MethodHandles;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
@@ -48,6 +51,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SessionStatsPerspective {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final Table<SessionStatsTableRecord> table;
 	private final VerticalLayout detailVerticalLayout;
@@ -102,7 +107,7 @@ public class SessionStatsPerspective {
 
 		table.setModel(new StatsTableModel(baseTableModel));
 
-		table.onRowSelected.addListener((record) -> {
+		table.onSingleRowSelected.addListener((record) -> {
 			commandStatsTableModel.setStats(record.getStatistics());
 			eventStatsTableModel.setStats(record.getStatistics());
 			commandResultStatsTableModel.setStats(record.getStatistics());
@@ -200,7 +205,13 @@ public class SessionStatsPerspective {
 
 		public StatsTableModel(SessionStatsSharedBaseTableModel baseTableModel) {
 			this.baseTableModel = baseTableModel;
-			baseTableModel.onUpdated.addListener(() -> this.onAllDataChanged.fire());
+			baseTableModel.onUpdated.addListener(() -> {
+				if (SessionContext.current().getClientBackPressureInfo().getUnconsumedCommandsCount() < 100) {
+					this.onAllDataChanged.fire();
+				} else {
+					LOGGER.info("Not sending updates due to high amount of unconsumed commands!");
+				}
+			});
 		}
 
 		@Override
@@ -209,73 +220,73 @@ public class SessionStatsPerspective {
 		}
 
 		@Override
-		public List<SessionStatsTableRecord> getRecords(int startIndex, int length, Sorting sorting) {
+		public List<SessionStatsTableRecord> getRecords(int startIndex, int length) {
 			Comparator<SessionStatsTableRecord> comparator = (o1, o2) -> 0;
-			if (sorting.getFieldName() != null) {
-				switch(sorting.getFieldName()) {
+			if (sorting != null) {
+				switch (sorting.getFieldName()) {
 					case "startTime":
 						comparator = Comparator.comparing(record -> record.getStatistics().getStartTime());
-					break;
+						break;
 					case "endTime":
 						comparator = Comparator.comparing(record -> record.getStatistics().getEndTime());
-					break;
+						break;
 					case "sessionId":
 						comparator = Comparator.comparing(record -> record.getStatistics().getSessionId().toString());
-					break;
+						break;
 					case "name":
 						comparator = Comparator.comparing(record -> record.getStatistics().getName());
-					break;
+						break;
 					case "state":
 						comparator = Comparator.comparing(record -> record.getStatistics().getState());
-					break;
+						break;
 					case "bufferSize":
 						comparator = Comparator.comparing(record -> record.getClientBackPressureInfo() != null ? record.getClientBackPressureInfo().getUnconsumedCommandsCount() : -1);
-					break;
+						break;
 					case "readyToReceive":
 						comparator = Comparator.comparing(record -> record.getClientBackPressureInfo() != null && record.getClientBackPressureInfo().getRemainingRequestedCommands() > 0);
-					break;
+						break;
 					case "sentDataTotal":
 						comparator = Comparator.comparing(record -> record.getStatistics().getSentDataStats().getSum());
-					break;
+						break;
 					case "sentDataLastMinute":
 						comparator = Comparator.comparing(record -> record.getStatistics().getSentDataStats().getSumLastMinute());
-					break;
+						break;
 					case "receivedDataTotal":
 						comparator = Comparator.comparing(record -> record.getStatistics().getReceivedDataStats().getSum());
-					break;
+						break;
 					case "receivedDataLastMinute":
 						comparator = Comparator.comparing(record -> record.getStatistics().getReceivedDataStats().getSumLastMinute());
-					break;
+						break;
 					case "commandTotal":
 						comparator = Comparator.comparing(record -> record.getStatistics().getCommandStats().getCount());
-					break;
+						break;
 					case "commandLastMinute":
 						comparator = Comparator.comparing(record -> record.getStatistics().getCommandStats().getCountLastMinute());
-					break;
+						break;
 					case "commandResultTotal":
 						comparator = Comparator.comparing(record -> record.getStatistics().getCommandResultStats().getCount());
-					break;
+						break;
 					case "commandResultLastMinute":
 						comparator = Comparator.comparing(record -> record.getStatistics().getCommandResultStats().getCountLastMinute());
-					break;
+						break;
 					case "eventTotal":
 						comparator = Comparator.comparing(record -> record.getStatistics().getEventStats().getCount());
-					break;
+						break;
 					case "eventLastMinute":
 						comparator = Comparator.comparing(record -> record.getStatistics().getEventStats().getCountLastMinute());
-					break;
+						break;
 					case "queryTotal":
 						comparator = Comparator.comparing(record -> record.getStatistics().getQueryStats().getCount());
-					break;
+						break;
 					case "queryLastMinute":
 						comparator = Comparator.comparing(record -> record.getStatistics().getQueryStats().getCountLastMinute());
-					break;
+						break;
 					case "queryResultTotal":
 						comparator = Comparator.comparing(record -> record.getStatistics().getQueryResultStats().getCount());
-					break;
+						break;
 					case "queryResultLastMinute":
 						comparator = Comparator.comparing(record -> record.getStatistics().getQueryResultStats().getCountLastMinute());
-					break;
+						break;
 
 				}
 				if (sorting.getSorting() == SortDirection.DESC) {
@@ -313,13 +324,16 @@ public class SessionStatsPerspective {
 		}
 
 		@Override
-		public List<CountStatEntry> getRecords(int startIndex, int length, Sorting sorting) {
+		public List<CountStatEntry> getRecords(int startIndex, int length) {
 			if (stats == null) {
 				return List.of();
 			}
-			Comparator<CountStatEntry> comparator = Objects.equals(sorting.getFieldName(), "className") ? Comparator.<CountStatEntry, String>comparing(e -> e.clazz.getName()) : Comparator.<CountStatEntry, Long>comparing(e -> e.count);
-			if (sorting.getSorting() == SortDirection.DESC || sorting.getFieldName() == null) {
-				comparator = comparator.reversed();
+			Comparator<CountStatEntry> comparator = (o1, o2) -> 0;
+			if (sorting != null) {
+				comparator = Objects.equals(sorting.getFieldName(), "className") ? Comparator.comparing(e -> e.clazz.getName()) : Comparator.comparing(e -> e.count);
+				if (sorting.getSorting() == SortDirection.DESC || sorting.getFieldName() == null) {
+					comparator = comparator.reversed();
+				}
 			}
 			return countStatExtractor.apply(stats).getCountByClass().object2LongEntrySet().stream()
 					.map(e -> new CountStatEntry(e.getKey(), e.getLongValue()))

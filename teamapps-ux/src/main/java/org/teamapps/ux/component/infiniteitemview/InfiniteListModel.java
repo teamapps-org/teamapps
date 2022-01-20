@@ -11,9 +11,9 @@ public interface InfiniteListModel<RECORD> {
 
 	Event<Void> onAllDataChanged();
 
-	Event<ItemRangeChangeEvent<RECORD>> onRecordsAdded();
+	Event<RecordsAddedEvent<RECORD>> onRecordsAdded();
 
-	Event<ItemRangeChangeEvent<RECORD>> onRecordsChanged();
+	Event<RecordsChangedEvent<RECORD>> onRecordsChanged();
 
-	Event<ItemRangeChangeEvent<RECORD>> onRecordsDeleted();
+	Event<RecordsRemovedEvent<RECORD>> onRecordsRemoved();
 }

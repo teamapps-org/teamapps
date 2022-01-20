@@ -19,15 +19,20 @@
  */
 package org.teamapps.ux.component.table;
 
+import org.teamapps.data.value.Sorting;
 import org.teamapps.event.Event;
-import org.teamapps.ux.component.infiniteitemview.ItemRangeChangeEvent;
+import org.teamapps.ux.component.infiniteitemview.RecordsAddedEvent;
+import org.teamapps.ux.component.infiniteitemview.RecordsChangedEvent;
+import org.teamapps.ux.component.infiniteitemview.RecordsRemovedEvent;
 
 public abstract class AbstractTableModel<RECORD> implements TableModel<RECORD> {
 
 	public final Event<Void> onAllDataChanged = new Event<>();
-	public final Event<ItemRangeChangeEvent<RECORD>> onRecordAdded = new Event<>();
-	public final Event<ItemRangeChangeEvent<RECORD>> onRecordUpdated = new Event<>();
-	public final Event<ItemRangeChangeEvent<RECORD>> onRecordDeleted = new Event<>();
+	public final Event<RecordsAddedEvent<RECORD>> onRecordAdded = new Event<>();
+	public final Event<RecordsChangedEvent<RECORD>> onRecordUpdated = new Event<>();
+	public final Event<RecordsRemovedEvent<RECORD>> onRecordDeleted = new Event<>();
+
+	protected Sorting sorting;
 
 	@Override
 	public Event<Void> onAllDataChanged() {
@@ -35,18 +40,22 @@ public abstract class AbstractTableModel<RECORD> implements TableModel<RECORD> {
 	}
 
 	@Override
-	public Event<ItemRangeChangeEvent<RECORD>> onRecordsAdded() {
+	public Event<RecordsAddedEvent<RECORD>> onRecordsAdded() {
 		return onRecordAdded;
 	}
 
 	@Override
-	public Event<ItemRangeChangeEvent<RECORD>> onRecordsChanged() {
+	public Event<RecordsChangedEvent<RECORD>> onRecordsChanged() {
 		return onRecordUpdated;
 	}
 
 	@Override
-	public Event<ItemRangeChangeEvent<RECORD>> onRecordsDeleted() {
+	public Event<RecordsRemovedEvent<RECORD>> onRecordsRemoved() {
 		return onRecordDeleted;
 	}
 
+	@Override
+	public void setSorting(Sorting sorting) {
+		this.sorting = sorting;
+	}
 }

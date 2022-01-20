@@ -75,7 +75,10 @@ public class RenderedRecordsCache<RECORD> {
 	}
 
 	public void addNoShift(int startIndex, List<RecordAndClientRecord<RECORD>> newClientRecordPairs) {
-		LOGGER.info("inserting at {}: {}", startIndex, newClientRecordPairs.size());
+		LOGGER.debug("inserting at {}: {}", startIndex, newClientRecordPairs.size());
+		if (newClientRecordPairs.size() == 0) {
+			return; // this is important! if the startIndex is completely of, this might otherwise throw an "unattached records" exception
+		}
 		if (this.recordPairs.size() == 0) { // fresh record cache!
 			this.startIndex = startIndex;
 		}

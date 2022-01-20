@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ItemRangeChangeEvent<RECORD> {
+public class RecordsChangedEvent<RECORD> {
 
 	private final ItemRange itemRange;
 	private final List<RECORD> records;
@@ -36,7 +36,7 @@ public class ItemRangeChangeEvent<RECORD> {
 	 * Views might not actually need to react on the change, anyway.
 	 * So forcing the model to retrieve the changed records does not make sense.
 	 */
-	public ItemRangeChangeEvent(ItemRange itemRange) {
+	public RecordsChangedEvent(ItemRange itemRange) {
 		this.itemRange = itemRange;
 		this.records = null;
 	}
@@ -44,7 +44,7 @@ public class ItemRangeChangeEvent<RECORD> {
 	/**
 	 * Use this constructor if the model has the changed items at hand.
 	 */
-	public ItemRangeChangeEvent(int startIndex, List<RECORD> records) {
+	public RecordsChangedEvent(int startIndex, List<RECORD> records) {
 		Objects.requireNonNull(records);
 		this.itemRange = ItemRange.startLength(startIndex, records.size());
 		this.records = records;

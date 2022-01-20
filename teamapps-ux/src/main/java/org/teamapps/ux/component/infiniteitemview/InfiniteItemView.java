@@ -64,9 +64,9 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	protected final ClientRecordCache<RECORD, UiIdentifiableClientRecord> itemCache;
 
 	private final Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
-	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordAddedListener = x -> this.refresh();
-	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordChangedListener = x -> this.refresh();
-	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordDeletedListener = x -> this.refresh();
+	private final Consumer<RecordsAddedEvent<RECORD>> modelOnRecordAddedListener = x -> this.refresh();
+	private final Consumer<RecordsChangedEvent<RECORD>> modelOnRecordChangedListener = x -> this.refresh();
+	private final Consumer<RecordsRemovedEvent<RECORD>> modelOnRecordDeletedListener = x -> this.refresh();
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
@@ -265,7 +265,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
 		model.onRecordsAdded().addListener(this.modelOnRecordAddedListener);
 		model.onRecordsChanged().addListener(this.modelOnRecordChangedListener);
-		model.onRecordsDeleted().addListener(this.modelOnRecordDeletedListener);
+		model.onRecordsRemoved().addListener(this.modelOnRecordDeletedListener);
 		return this;
 	}
 
@@ -273,7 +273,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		this.model.onAllDataChanged().removeListener(this.modelOnAllDataChangedListener);
 		this.model.onRecordsAdded().removeListener(this.modelOnRecordAddedListener);
 		this.model.onRecordsChanged().removeListener(this.modelOnRecordChangedListener);
-		this.model.onRecordsDeleted().removeListener(this.modelOnRecordDeletedListener);
+		this.model.onRecordsRemoved().removeListener(this.modelOnRecordDeletedListener);
 	}
 
 	public void refresh() {

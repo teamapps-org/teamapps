@@ -24,9 +24,9 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 	public final Event<ItemRange> onDisplayedRangeChanged = new Event<>();
 
 	private final Consumer<Void> modelOnAllDataChangedListener = aVoid -> this.refresh();
-	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordsAddedListener = this::handleModelRecordsAdded;
-	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordsChangedListener = this::handleModelRecordsChanged;
-	private final Consumer<ItemRangeChangeEvent<RECORD>> modelOnRecordsDeletedListener = this::handleModelRecordsDeleted;
+	private final Consumer<RecordsAddedEvent<RECORD>> modelOnRecordsAddedListener = this::handleModelRecordsAdded;
+	private final Consumer<RecordsChangedEvent<RECORD>> modelOnRecordsChangedListener = this::handleModelRecordsChanged;
+	private final Consumer<RecordsRemovedEvent<RECORD>> modelOnRecordsDeletedListener = this::handleModelRecordsRemoved;
 
 	private final TwoWayBindableValueImpl<Integer> count = new TwoWayBindableValueImpl<>(0);
 
@@ -48,7 +48,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
 		model.onRecordsAdded().addListener(this.modelOnRecordsAddedListener);
 		model.onRecordsChanged().addListener(this.modelOnRecordsChangedListener);
-		model.onRecordsDeleted().addListener(this.modelOnRecordsDeletedListener);
+		model.onRecordsRemoved().addListener(this.modelOnRecordsDeletedListener);
 		refresh();
 	}
 
@@ -56,7 +56,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		this.model.onAllDataChanged().removeListener(this.modelOnAllDataChangedListener);
 		this.model.onRecordsAdded().removeListener(this.modelOnRecordsAddedListener);
 		this.model.onRecordsChanged().removeListener(this.modelOnRecordsChangedListener);
-		this.model.onRecordsDeleted().removeListener(this.modelOnRecordsDeletedListener);
+		this.model.onRecordsRemoved().removeListener(this.modelOnRecordsDeletedListener);
 	}
 
 	public void refresh() {
@@ -114,7 +114,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		LOGGER.debug("displayedRange after scroll update: {}; renderedRecords.size: {}", displayedRange, renderedRecords.size());
 	}
 
-	protected void handleModelRecordsAdded(ItemRangeChangeEvent<RECORD> changeEvent) {
+	protected void handleModelRecordsAdded(RecordsAddedEvent<RECORD> changeEvent) {
 		count.set(count.get() + changeEvent.getLength());
 		if (!isRendered()) {
 			return;
@@ -134,7 +134,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		}
 	}
 
-	protected void handleModelRecordsChanged(ItemRangeChangeEvent<RECORD> changeEvent) {
+	protected void handleModelRecordsChanged(RecordsChangedEvent<RECORD> changeEvent) {
 		if (!isRendered()) {
 			return;
 		}
@@ -151,7 +151,7 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		}
 	}
 
-	protected void handleModelRecordsDeleted(ItemRangeChangeEvent<RECORD> deleteEvent) {
+	protected void handleModelRecordsRemoved(RecordsRemovedEvent<RECORD> deleteEvent) {
 		count.set(count.get() - deleteEvent.getLength());
 		if (!isRendered()) {
 			return;

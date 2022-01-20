@@ -34,7 +34,8 @@ import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.component.infiniteitemview.AbstractInfiniteListComponent;
-import org.teamapps.ux.component.infiniteitemview.ItemRangeChangeEvent;
+import org.teamapps.ux.component.infiniteitemview.RecordsChangedEvent;
+import org.teamapps.ux.component.infiniteitemview.RecordsRemovedEvent;
 
 import java.util.*;
 import java.util.function.Function;
@@ -89,7 +90,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private boolean allowMultiRowSelection = false;
 	private boolean showRowCheckBoxes; //if true, show check boxes on the left
 	private boolean showNumbering; //if true, show numbering on the left
-	private boolean textSelectionEnabled = false;
+	private boolean textSelectionEnabled = true;
 
 	private String sortField; //if available the table is initially sorted by this field
 	private SortDirection sortDirection = SortDirection.ASC;
@@ -304,6 +305,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				UiTable.SortingChangedEvent sortingChangedEvent = (UiTable.SortingChangedEvent) event;
 				sortField = sortingChangedEvent.getSortField();
 				sortDirection = SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection());
+				Sorting sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
+				getModel().setSorting(sorting);
 				onSortingChanged.fire(new SortingChangedEventData(sortingChangedEvent.getSortField(), SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection())));
 				refreshData();
 				break;
@@ -438,16 +441,16 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void setSelectedRecord(RECORD record, boolean scrollToRecordIfAvailable) {
-		setSelectedRecords(List.of(record), scrollToRecordIfAvailable);
+		setSelectedRecords(record != null ? List.of(record) : List.of(), scrollToRecordIfAvailable);
 	}
 
 	public void setSelectedRecords(List<RECORD> records, boolean scrollToRecordIfAvailable) {
-		this.selectedRecords = List.copyOf(records);
+		this.selectedRecords = records == null ? List.of() : List.copyOf(records);
 		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), renderedRecords.getUiRecordIds(selectedRecords), scrollToRecordIfAvailable));
 	}
 
 	public void setSelectedRecord(RECORD record) {
-		setSelectedRecords(List.of(record), false);
+		setSelectedRecord(record, false);
 	}
 
 	public void setSelectedRecords(List<RECORD> records) {
@@ -613,15 +616,15 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	protected void handleModelRecordsDeleted(ItemRangeChangeEvent<RECORD> deleteEvent) {
+	protected void handleModelRecordsRemoved(RecordsRemovedEvent<RECORD> deleteEvent) {
 		for (int i = Math.max(deleteEvent.getStart(), renderedRecords.getStartIndex()); i < Math.min(deleteEvent.getEnd(), renderedRecords.getEndIndex()); i++) {
 			clearMetaDataForRecord(renderedRecords.getRecordByIndex(i));
 		}
-		super.handleModelRecordsDeleted(deleteEvent);
+		super.handleModelRecordsRemoved(deleteEvent);
 	}
 
 	@Override
-	protected void handleModelRecordsChanged(ItemRangeChangeEvent<RECORD> changeEvent) {
+	protected void handleModelRecordsChanged(RecordsChangedEvent<RECORD> changeEvent) {
 		for (int i = Math.max(changeEvent.getStart(), renderedRecords.getStartIndex()); i < Math.min(changeEvent.getEnd(), renderedRecords.getEndIndex()); i++) {
 			clearMetaDataForRecord(renderedRecords.getRecordByIndex(i));
 		}
