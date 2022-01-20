@@ -30,9 +30,8 @@ export class UiAudioActivityDisplay {
 
 
 	constructor() {
-		this.$main = parseHtml(`
-<div class="UiAudioActivityDisplay">
-	<div class="level-div hidden"></div>
+		this.$main = parseHtml(`<div class="UiAudioActivityDisplay">
+	<div class="level-div"></div>
 </div>`);
 		this.$activityDisplay = this.$main;
 		this.$levelDiv = this.$main.querySelector<HTMLElement>(':scope .level-div');
@@ -41,35 +40,50 @@ export class UiAudioActivityDisplay {
 
 	private analyserNode: AnalyserNode;
 
-	public bindToStream(userMediaStream: MediaStream) {
-		(window as any).AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
-		this.audioContext = new AudioContext();
+	private intervalId: number;
 
-		let scriptProcessor = this.audioContext.createScriptProcessor(2048, 1, 1);
-		scriptProcessor.connect(this.audioContext.destination);
+	public bindToStream(mediaStream: MediaStream) {
+		let audioContext = new AudioContext();
 
-		this.analyserNode = this.audioContext.createAnalyser();
-		this.analyserNode.smoothingTimeConstant = 0.3;
-		this.analyserNode.fftSize = 32; // 16 spectral lines - that's the minimum. we don't want to get a spectral analysis anyway...
-		this.analyserNode.connect(scriptProcessor);
+		let audioSource = audioContext.createMediaStreamSource(mediaStream);
+		let audioGain1 = audioContext.createGain();
+		let audioChannelSplitter = audioContext.createChannelSplitter(audioSource.channelCount);
 
-		this.mediaStreamSource = this.audioContext.createMediaStreamSource(userMediaStream);
-		this.mediaStreamSource.connect(this.analyserNode, 0, 0);
+		audioSource.connect(audioGain1);
+		audioGain1.connect(audioChannelSplitter);
 
-		scriptProcessor.onaudioprocess = this.throttle(() => {
-			const array = new Uint8Array(this.analyserNode.frequencyBinCount);
-			this.analyserNode.getByteFrequencyData(array);
-			const average = UiAudioActivityDisplay.getAverageVolume(array);
-			let averageRatio = average / 255;
-			let videoHeight = this.$activityDisplay.offsetHeight;
+		let audioAnalyser: AnalyserNode[] = [];
+		let freqs: Uint8Array[] = [];
+		for (let i = 0; i < audioSource.channelCount; i++) {
+			audioAnalyser[i] = audioContext.createAnalyser();
+			audioAnalyser[i].smoothingTimeConstant = 0.1;
+			audioAnalyser[i].fftSize = 32;
+			freqs[i] = new Uint8Array(audioAnalyser[i].frequencyBinCount);
+
+			audioChannelSplitter.connect(audioAnalyser[i], i, 0);
+		}
+
+		this.intervalId = window.setInterval(() => {
+			let audioLevels = [0];
+			for (let channelI = 0; channelI < audioAnalyser.length; channelI++) {
+				audioAnalyser[channelI].getByteFrequencyData(freqs[channelI]);
+				let value = 0;
+				for (let freqBinI = 0; freqBinI < audioAnalyser[channelI].frequencyBinCount; freqBinI++) {
+					value = Math.max(value, freqs[channelI][freqBinI]);
+				}
+				audioLevels[channelI] = value / 256;
+			}
+			let averageLevel = audioLevels.reduce((sum, val) => sum + val, 0) / audioLevels.length;
+
+			let availableHeight = this.$activityDisplay.offsetHeight;
 			css(this.$levelDiv, {
-				height: (videoHeight * averageRatio) + "px",
-				backgroundPosition: "0 " + (-videoHeight * (1 - averageRatio) + "px"),
-				backgroundSize: 100 + "px " + videoHeight + "px"
+				height: (availableHeight * averageLevel) + "px",
+				backgroundPosition: "0 " + (-availableHeight * (1 - averageLevel) + "px"),
+				backgroundSize: 100 + "px " + availableHeight + "px"
 			});
-		}, 200);
+		}, 100);
 
-		this.$levelDiv.classList.remove("hidden");
+		mediaStream.getAudioTracks()[0].addEventListener("ended", ev => this.unbind());
 	}
 
 	/**
@@ -87,20 +101,10 @@ export class UiAudioActivityDisplay {
 	}
 
 	public unbind() {
+		clearInterval(this.intervalId);
 		this.audioContext && this.audioContext.close()
 			.catch(reason => console.log(reason));
 		this.mediaStreamSource && this.mediaStreamSource.disconnect();
-		this.$levelDiv.classList.add("hidden");
-	}
-
-	private static getAverageVolume(sampleVolumes: Uint8Array) {
-		let max = 0;
-		let sum = 0;
-		for (let i = 0; i < sampleVolumes.length; i++) {
-			max = Math.max(max, sampleVolumes[i]);
-			sum += sampleVolumes[i];
-		}
-		return (max * 3 + (sum / sampleVolumes.length)) / 4;
 	}
 
 	public getMainDomElement() {

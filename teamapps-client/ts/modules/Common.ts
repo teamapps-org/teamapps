@@ -856,6 +856,7 @@ export function parseHtml<E extends HTMLElement>(htmlString: string): E {
 	// let tmpl = document.createElement('template');
 	// tmpl.innerHTML = htmlString;
 	// return tmpl.content.cloneNode(true).firstChild as E;
+	htmlString = htmlString.trim();
 	if (!htmlString.startsWith("<") || !htmlString.endsWith(">")) {
 		htmlString = "<div>" + htmlString + "</div>";
 	}

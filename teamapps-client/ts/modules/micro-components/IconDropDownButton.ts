@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,8 +35,16 @@ import {bind} from "../util/Bind";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
+import {UiComponentConfig} from "../../generated/UiComponentConfig";
 
-export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implements UiToolButtonEventSource, UiToolButtonCommandHandler {
+export class IconDropDownButtonConfig {
+	icon: string;
+	popoverText: string;
+	dropDownWidth?: number;
+	dropDownComponent: { getMainElement(): HTMLElement };
+}
+
+export class IconDropDownButton {
 
 	public readonly onClicked: TeamAppsEvent<UiToolButton_ClickedEvent> = new TeamAppsEvent(this);
 	public readonly onDropDownOpened: TeamAppsEvent<UiToolButton_DropDownOpenedEvent> = new TeamAppsEvent(this);
@@ -47,23 +55,20 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 	private _dropDown: UiDropDown; // lazy-init!
 	private dropDownComponent: UiComponent;
 
-	constructor(config: UiToolButtonConfig, context: TeamAppsUiContext) {
-		super(config, context);
-
-		this.$button = parseHtml(`<div class="UiToolButton img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url('${config.icon}');"></div>`);
-		this.$button.addEventListener('click', () => {
-				if (this.dropDownComponent != null || this._config.openDropDownIfNotSet) {
-					if (!this.dropDown.isOpen) {
-						const width = this.getMainElement().offsetWidth;
-						this.dropDown.open({$reference: this.getMainElement(), width: Math.max(this._config.minDropDownWidth, width), minHeight: this._config.minDropDownHeight});
-						this.onDropDownOpened.fire({});
-						this.getMainElement().classList.add("open");
-					} else {
-						this.closeDropDown(); // not needed for clicks, but for keydown!
-					}
-				}
-				this.onClicked.fire({});
-			});
+	constructor(private config: IconDropDownButtonConfig) {
+		this.$button = parseHtml(`<img class="IconDropDownButton" src="${config.icon}"></img>`);
+		this.$button.addEventListener('click', (e) => {
+			e.stopPropagation();
+			if (!this.dropDown.isOpen) {
+				const width = this.getMainElement().offsetWidth;
+				this.dropDown.open({$reference: this.getMainElement(), width: Math.max(config.dropDownWidth ?? 250, width), minHeight: 50});
+				this.onDropDownOpened.fire({});
+				this.getMainElement().classList.add("open");
+			} else {
+				this.closeDropDown(); // not needed for clicks, but for keydown!
+			}
+			this.onClicked.fire({});
+		});
 		this.setDropDownComponent(config.dropDownComponent as UiComponent);
 		this.setPopoverText(config.popoverText);
 	}
@@ -81,13 +86,8 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 		return this._dropDown;
 	}
 
-	doGetMainElement(): HTMLElement {
+	getMainElement(): HTMLElement {
 		return this.$button;
-	}
-
-	setDropDownSize(minDropDownWidth: number, minDropDownHeight: number): void {
-		this._config.minDropDownWidth = minDropDownWidth;
-		this._config.minDropDownHeight = minDropDownHeight;
 	}
 
 	setDropDownComponent(component: UiComponent): void {
@@ -107,12 +107,8 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 	}
 
 	@bind
-	private closeDropDown() {
+	public closeDropDown() {
 		this.dropDown.close();
-	}
-
-	setOpenDropDownIfNotSet(openDropDownIfNotSet: boolean): void {
-		this._config.openDropDownIfNotSet = openDropDownIfNotSet;
 	}
 
 	setGrayOutIfNotHovered(grayOutIfNotHovered: boolean): void {
@@ -124,9 +120,8 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 	}
 
 	setPopoverText(popoverText: string): void {
+		this.config.popoverText = popoverText;
 		this.getMainElement().title = popoverText;
 	}
 
 }
-
-TeamAppsUiComponentRegistry.registerComponentClass("UiToolButton", UiToolButton);

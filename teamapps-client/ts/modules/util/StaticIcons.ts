@@ -21,5 +21,6 @@ export enum StaticIcons {
 	CLOSE = "/resources/window-close-grey.png",
 	MAXIMIZE = "/resources/window-maximize-grey.png",
 	MINIMIZE = "/resources/window-minimize-grey.png",
-	RESTORE = "/resources/window-restore-grey.png"
+	RESTORE = "/resources/window-restore-grey.png",
+	MIC = "/resources/mic.svg"
 }

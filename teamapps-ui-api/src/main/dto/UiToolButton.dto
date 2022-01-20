@@ -37,4 +37,5 @@ class UiToolButton extends UiComponent {
 
 	event clicked();
 	event dropDownOpened();
+	event dropDownClosed();
 }

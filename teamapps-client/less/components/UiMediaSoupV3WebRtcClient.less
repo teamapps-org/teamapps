@@ -34,7 +34,6 @@
 
   .video-container {
     position: relative;
-    line-height: 0;
     transition: box-shadow 500ms;
     box-shadow: 0 10px 10px -10px var(--activity-bar-color);
     overflow: hidden;
@@ -93,21 +92,49 @@
       }
     }
 
-    > .icons {
+    > .bottom-bar {
       position: absolute;
       bottom: 5px;
-      right: 3px;
       height: 10%;
+      width: 100%; // firefox...
       min-height: 16px;
       max-height: 50px;
       display: flex;
-      width: 100%; // firefox...
-      justify-content: flex-end;
       z-index: 1;
+      justify-content: space-between;
 
-      > .icon {
-        height: 100%;
-        width: auto;
+      > .buttons {
+        flex: 1 1 auto;
+        margin-left: 3px;
+        display: flex;
+        justify-content: flex-start;
+
+        > .IconDropDownButton {
+          height: 100%;
+          width: auto;
+        }
+      }
+
+      > .icons {
+        flex: 1 1 auto;
+        margin-right: 3px;
+        display: flex;
+        justify-content: flex-end;
+
+        > .icon {
+          height: 100%;
+          width: auto;
+        }
+      }
+    }
+
+    @media (hover: hover) {
+      .IconDropDownButton {
+        opacity: 0;
+        transition: opacity var(--ta-color-transition-time);
+      }
+      &:hover .IconDropDownButton {
+        opacity: 1;
       }
     }
 

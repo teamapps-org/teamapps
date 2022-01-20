@@ -51,6 +51,7 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 	event voiceActivityChanged(boolean active);
 	event clicked();
 	event contextMenuRequested(int requestId);
+	event microphoneSelected(String deviceId);
 
 	static command enumerateDevices() returns List<UiMediaDeviceInfo>;
 }

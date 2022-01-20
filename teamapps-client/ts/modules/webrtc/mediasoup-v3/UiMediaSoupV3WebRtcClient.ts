@@ -24,7 +24,7 @@ import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 import {
 	UiMediaSoupV3WebRtcClient_ClickedEvent,
 	UiMediaSoupV3WebRtcClient_ConnectionStateChangedEvent,
-	UiMediaSoupV3WebRtcClient_ContextMenuRequestedEvent,
+	UiMediaSoupV3WebRtcClient_ContextMenuRequestedEvent, UiMediaSoupV3WebRtcClient_MicrophoneSelectedEvent,
 	UiMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent,
 	UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent,
 	UiMediaSoupV3WebRtcClient_SubscribingFailedEvent,
@@ -56,6 +56,10 @@ import {UiMediaRetrievalFailureReason} from "../../../generated/UiMediaRetrieval
 import {UiSourceMediaTrackType} from "../../../generated/UiSourceMediaTrackType";
 import {ConferenceApi, Utils} from "./lib/avcore.client";
 import {ConferenceInput} from "./lib/avcore";
+import {UiMicrophoneSelector} from "../../micro-components/UiMicrophoneSelector";
+import {UiToolButton} from "../../micro-components/UiToolButton";
+import {StaticIcons} from "../../util/StaticIcons";
+import {IconDropDownButton} from "../../micro-components/IconDropDownButton";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
 	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent(this);
@@ -74,6 +78,9 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	public readonly onClicked: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ClickedEvent> = new TeamAppsEvent(this);
 	public readonly onContextMenuRequested: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
 
+	public readonly onMicrophoneSelected: TeamAppsEvent<UiMediaSoupV3WebRtcClient_MicrophoneSelectedEvent> = new TeamAppsEvent(this);
+
+
 	private $main: HTMLDivElement;
 	private $image: HTMLImageElement;
 	private $videoContainer: HTMLElement;
@@ -83,6 +90,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	private $audioBitrateDisplay: HTMLElement;
 	private $videoBitrateDisplay: HTMLElement;
 	private $icons: HTMLImageElement;
+	private $buttons: HTMLElement;
 	private $caption: HTMLElement;
 	private $spinner: HTMLElement;
 	private $unmuteButtonWrapper: HTMLElement;
@@ -109,6 +117,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		audioBitrate: 0,
 		videoBitrate: 0
 	};
+	private microphoneSelector: UiMicrophoneSelector;
 
 	constructor(config: UiMediaSoupV3WebRtcClientConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -122,7 +131,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	<div class="video-container">
 		<img class="image"></img>
 		<video class="video" playsinline></video>
-		<div class="icons"></div>
+		<div class="bottom-bar">
+		    <div class="buttons"></div>
+			<div class="icons"></div>
+		</div>
 		<div class="bitrate-display hidden">
 			<div class="bitrate-audio"></div>
 			<div class="bitrate-video"></div>
@@ -145,6 +157,17 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 		this.$audioBitrateDisplay = this.$main.querySelector(":scope .bitrate-audio");
 		this.$videoBitrateDisplay = this.$main.querySelector(":scope .bitrate-video");
 		this.$icons = this.$main.querySelector(":scope .icons");
+		this.$buttons = this.$main.querySelector(":scope .buttons");
+		this.microphoneSelector = new UiMicrophoneSelector();
+		let micButton = new IconDropDownButton({icon: StaticIcons.MIC, popoverText: "Select Microphone", dropDownComponent: this.microphoneSelector});
+		this.microphoneSelector.onMicrophoneSelected.addListener(deviceId => {
+			this.onMicrophoneSelected.fire({deviceId});
+			micButton.closeDropDown();
+		});
+		micButton.onDropDownOpened.addListener(() => this.microphoneSelector.startIndicating());
+		micButton.onDropDownClosed.addListener(() => this.microphoneSelector.stopIndicating());
+		this.$buttons.appendChild(micButton.getMainElement());
+
 		this.$caption = this.$main.querySelector(":scope .caption");
 		this.$spinner = this.$main.querySelector(":scope .spinner");
 		this.$unmuteButtonWrapper = this.$main.querySelector(":scope .unmute-button-wrapper");

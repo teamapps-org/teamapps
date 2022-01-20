@@ -56,6 +56,11 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	public final Event<Boolean> onVoiceActivityChanged = new Event<>();
 	public final Event<Void> onClicked = new Event<>();
 
+	/**
+	 * device id
+	 */
+	public final Event<String> onMicrophoneSelected = new Event<>();
+
 	private boolean activityLineVisible;
 	private Color activityInactiveColor;
 	private Color activityActiveColor;
@@ -161,6 +166,10 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 				} else {
 					closeContextMenu();
 				}
+				break;
+			}
+			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_MICROPHONE_SELECTED: {
+				onMicrophoneSelected.fire(((UiMediaSoupV3WebRtcClient.MicrophoneSelectedEvent) event).getDeviceId());
 				break;
 			}
 		}
