@@ -307,7 +307,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		return (this.$editor.value || "").toString().replace(new RegExp(`[${this.getDecimalSeparator()}${this.getThousandsSeparator()}${this.getNumerals().join("")}\\s]`, "g"), '').trim();
 	}
 
-	private getEditorValueLocalNumberPart(fillupDecimals?: boolean): string {
+	private getEditorValueLocalNumberPart(fillupDecimals = false): string {
 		const rawNumber = (this.$editor.value as string || "").replace(new RegExp(`[^${this.getDecimalSeparator()}${this.getNumerals().join("")}]`, "g"), '').trim();
 		const decimalSeparatorIndex = rawNumber.indexOf(this.getDecimalSeparator());
 
@@ -324,8 +324,11 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 		if (integerPart.length == 0 && fractionalPart.length == 0) {
 			return "";
 		} else {
-			if (fillupDecimals) {
-				fractionalPart = fractionalPart.length < this.getMinFractionDigits() ? (fractionalPart + this.getNumerals()[0].repeat(this.getMinFractionDigits() - fractionalPart.length)) : fractionalPart.substr(0, this.getMaxFractionDigits());
+			if (fillupDecimals && fractionalPart.length < this.getMinFractionDigits()) {
+				fractionalPart = fractionalPart + this.getNumerals()[0].repeat(this.getMinFractionDigits() - fractionalPart.length);
+			}
+			if (fractionalPart.length > this.getMaxFractionDigits()) {
+				fractionalPart =  fractionalPart.substr(0, this.getMaxFractionDigits())
 			}
 			return integerPart + (fractionalPart.length > 0 ? this.getDecimalSeparator() + fractionalPart : "");
 		}
