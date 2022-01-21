@@ -64,11 +64,18 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 	public void setModel(MODEL model) {
 		unregisterModelListeners();
 		this.model = model;
-		model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
-		model.onRecordsAdded().addListener(this.modelOnRecordsAddedListener);
-		model.onRecordsChanged().addListener(this.modelOnRecordsChangedListener);
-		model.onRecordsRemoved().addListener(this.modelOnRecordsDeletedListener);
+		if (model != null) {
+			model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
+			model.onRecordsAdded().addListener(this.modelOnRecordsAddedListener);
+			model.onRecordsChanged().addListener(this.modelOnRecordsChangedListener);
+			model.onRecordsRemoved().addListener(this.modelOnRecordsDeletedListener);
+			handleModelRegistered(model);
+		}
 		refresh();
+	}
+
+	protected void handleModelRegistered(MODEL model) {
+		// override if needed
 	}
 
 	private void unregisterModelListeners() {

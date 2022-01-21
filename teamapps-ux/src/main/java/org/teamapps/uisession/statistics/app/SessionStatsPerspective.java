@@ -289,7 +289,7 @@ public class SessionStatsPerspective {
 						break;
 
 				}
-				if (sorting.getSorting() == SortDirection.DESC) {
+				if (sorting.getSortDirection() == SortDirection.DESC) {
 					comparator = comparator.reversed();
 				}
 			}
@@ -331,7 +331,7 @@ public class SessionStatsPerspective {
 			Comparator<CountStatEntry> comparator = (o1, o2) -> 0;
 			if (sorting != null) {
 				comparator = Objects.equals(sorting.getFieldName(), "className") ? Comparator.comparing(e -> e.clazz.getName()) : Comparator.comparing(e -> e.count);
-				if (sorting.getSorting() == SortDirection.DESC || sorting.getFieldName() == null) {
+				if (sorting.getSortDirection() == SortDirection.DESC || sorting.getFieldName() == null) {
 					comparator = comparator.reversed();
 				}
 			}
