@@ -24,25 +24,25 @@ import java.util.Objects;
 public class Sorting {
 
 	private final String fieldName;
-	private final SortDirection sorting;
+	private final SortDirection sortDirection;
 
 	public Sorting(String fieldName, SortDirection sortDirection) {
 		Objects.requireNonNull(fieldName, "fieldName must not be null!");
 		Objects.requireNonNull(fieldName, "sortDirection must not be null!");
 		this.fieldName = fieldName;
-		this.sorting = sortDirection;
+		this.sortDirection = sortDirection;
 	}
 
 	public String getFieldName() {
 		return fieldName;
 	}
 
-	public SortDirection getSorting() {
-		return sorting;
+	public SortDirection getSortDirection() {
+		return sortDirection;
 	}
 
 	public boolean isSorted() {
-		if (sorting != null && fieldName !=null && !fieldName.isEmpty()) {
+		if (sortDirection != null && fieldName !=null && !fieldName.isEmpty()) {
 			return true;
 		}
 		return false;
@@ -62,13 +62,13 @@ public class Sorting {
 		if (fieldName != null ? !fieldName.equals(sorting1.fieldName) : sorting1.fieldName != null) {
 			return false;
 		}
-		return sorting == sorting1.sorting;
+		return sortDirection == sorting1.sortDirection;
 	}
 
 	@Override
 	public int hashCode() {
 		int result = fieldName != null ? fieldName.hashCode() : 0;
-		result = 31 * result + (sorting != null ? sorting.hashCode() : 0);
+		result = 31 * result + (sortDirection != null ? sortDirection.hashCode() : 0);
 		return result;
 	}
 }

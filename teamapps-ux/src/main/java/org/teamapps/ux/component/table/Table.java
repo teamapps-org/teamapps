@@ -92,8 +92,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	private boolean showNumbering; //if true, show numbering on the left
 	private boolean textSelectionEnabled = true;
 
-	private String sortField; //if available the table is initially sorted by this field
-	private SortDirection sortDirection = SortDirection.ASC;
+	private Sorting sorting; // nullable
 
 	private boolean editable; //only valid for tables
 	private boolean ensureEmptyLastRow; //if true, there is always an empty last row, as soon as any data is inserted into the empty row a new empty row is inserted
@@ -197,6 +196,11 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
+	protected void handleModelRegistered(TableModel<RECORD> model) {
+		model.setSorting(sorting);
+	}
+
+	@Override
 	public UiComponent createUiComponent() {
 		List<UiTableColumn> columns = this.columns.stream()
 				.map(TableColumn::createUiTableColumn)
@@ -212,8 +216,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		uiTable.setAllowMultiRowSelection(allowMultiRowSelection);
 		uiTable.setShowRowCheckBoxes(showRowCheckBoxes);
 		uiTable.setShowNumbering(showNumbering);
-		uiTable.setSortField(sortField);
-		uiTable.setSortDirection(sortDirection.toUiSortDirection());
+		uiTable.setSortField(sorting != null ? sorting.getFieldName() : null);
+		uiTable.setSortDirection(sorting != null ? sorting.getSortDirection().toUiSortDirection() : null);
 		uiTable.setEditable(editable);
 		uiTable.setTreeMode(treeMode);
 		uiTable.setIndentedColumnName(indentedColumnName);
@@ -303,9 +307,9 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 			}
 			case UI_TABLE_SORTING_CHANGED:
 				UiTable.SortingChangedEvent sortingChangedEvent = (UiTable.SortingChangedEvent) event;
-				sortField = sortingChangedEvent.getSortField();
-				sortDirection = SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection());
-				Sorting sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
+				var sortField = sortingChangedEvent.getSortField();
+				var sortDirection = SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection());
+				this.sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
 				getModel().setSorting(sorting);
 				onSortingChanged.fire(new SortingChangedEventData(sortingChangedEvent.getSortField(), SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection())));
 				refreshData();
@@ -864,30 +868,19 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public Sorting getSorting() {
-		return new Sorting(sortField, sortDirection);
-	}
-
-	public String getSortField() {
-		return sortField;
-	}
-
-	public void setSortField(String sortField) {
-		this.sortField = sortField;
-		refreshData();
-	}
-
-	public SortDirection getSortDirection() {
-		return sortDirection;
-	}
-
-	public void setSortDirection(SortDirection sortDirection) {
-		this.sortDirection = sortDirection;
-		refreshData();
+		return sorting;
 	}
 
 	public void setSorting(String sortField, SortDirection sortDirection) {
-		this.sortField = sortField;
-		this.sortDirection = sortDirection;
+		setSorting(sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null);
+	}
+
+	public void setSorting(Sorting sorting) {
+		this.sorting = sorting;
+		TableModel<RECORD> model = getModel();
+		if (model != null) {
+			model.setSorting(sorting);
+		}
 		refreshData();
 	}
 
