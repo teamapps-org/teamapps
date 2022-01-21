@@ -86,8 +86,7 @@ public class SessionContext {
 	 */
 	public final ExecutionDecoratorStack executionDecorators = new ExecutionDecoratorStack();
 
-	private boolean active = true;
-	private volatile boolean destroyed = false;
+	private UiSessionState state = UiSessionState.ACTIVE;
 
 	private final UiSession uiSession;
 	private final ClientInfo clientInfo;
@@ -153,19 +152,19 @@ public class SessionContext {
 		}
 
 		@Override
-		public void onActivityStateChanged(QualifiedUiSessionId sessionId, boolean active) {
-			SessionContext.this.active = active;
-			onActivityStateChanged.fire(new UiSessionActivityState(active));
+		public void onStateChanged(QualifiedUiSessionId sessionId, UiSessionState state) {
+			boolean activityStateChanged = SessionContext.this.state.isActive() != state.isActive();
+			SessionContext.this.state = state;
+			if (state == UiSessionState.CLOSED) {
+				onDestroyed.fireIgnoringExceptions(null);
+				// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
+				sessionExecutor.submit(sessionExecutor::shutdown);
+			}
+			if (activityStateChanged) {
+				onActivityStateChanged.fire(new UiSessionActivityState(state.isActive()));
+			}
 		}
 
-		@Override
-		public void onUiSessionClosed(QualifiedUiSessionId sessionId, UiSessionClosingReason reason) {
-			onDestroyed.fireIgnoringExceptions(null);
-			runWithContext(() -> { // Do in runWithContext() with forceEnqueue=true so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
-				destroyed = true;
-				sessionExecutor.shutdown();
-			}, true);
-		}
 	};
 
 
@@ -236,11 +235,11 @@ public class SessionContext {
 	}
 
 	public boolean isActive() {
-		return active;
+		return state.isActive();
 	}
 
 	public boolean isDestroyed() {
-		return destroyed;
+		return state == UiSessionState.CLOSED;
 	}
 
 	public void destroy() {
@@ -330,15 +329,15 @@ public class SessionContext {
 		return runWithContext(runnable, false);
 	}
 
-	public <R> CompletableFuture<R> runWithContext(Callable<R> runnable, boolean forceEnqueue) {
-		if (destroyed) {
-			LOGGER.info("This SessionContext ({}) is already destroyed. Not sending command.", uiSession.getSessionId());
+	public <R> CompletableFuture<R> runWithContext(Callable<R> callable, boolean forceEnqueue) {
+		if (state == UiSessionState.CLOSED) {
+			LOGGER.info("This SessionContext ({}) is already destroyed. Not executing callable.", uiSession.getName());
 			return CompletableFuture.failedFuture(new IllegalStateException("SessionContext destroyed."));
 		}
 		if (CurrentSessionContext.getOrNull() == this && !forceEnqueue) {
 			// Fast lane! This thread is already bound to this SessionContext. Just execute the runnable.
 			try {
-				return CompletableFuture.completedFuture(runnable.call());
+				return CompletableFuture.completedFuture(callable.call());
 			} catch (Exception e) {
 				LOGGER.error("Exception while executing within session context (fast lane execution)", e);
 				return CompletableFuture.failedFuture(e);
@@ -349,7 +348,7 @@ public class SessionContext {
 				try {
 					Object[] resultHolder = new Object[1];
 					executionDecorators
-							.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(runnable))
+							.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(callable))
 							.run();
 					return ((R) resultHolder[0]);
 				} finally {

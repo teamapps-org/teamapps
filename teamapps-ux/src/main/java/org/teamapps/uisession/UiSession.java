@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,13 +26,13 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.dto.*;
 import org.teamapps.uisession.statistics.RunningUiSessionStats;
-import org.teamapps.uisession.statistics.SessionState;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -45,8 +45,7 @@ public class UiSession {
 	private String name;
 	private final TeamAppsConfiguration config;
 	private final ObjectMapper objectMapper;
-	private final Consumer<UiSession> closeListener;
-	private UiSessionListener sessionListener;
+	private CopyOnWriteArrayList<UiSessionListener> sessionListeners = new CopyOnWriteArrayList<>();
 
 	private MessageSender messageSender;
 
@@ -56,7 +55,7 @@ public class UiSession {
 	private final AtomicLong timestampOfLastMessageFromClient = new AtomicLong();
 	private int lastReceivedClientMessageId;
 	private boolean clientReadyToReceiveCommands = true;
-	private boolean active = true;
+	private UiSessionState state = UiSessionState.ACTIVE;
 
 	private int maxRequestedCommandId = 0;
 	private int lastSentCommandId;
@@ -76,12 +75,11 @@ public class UiSession {
 
 	private final RunningUiSessionStats statistics;
 
-	public UiSession(QualifiedUiSessionId sessionId, long creationTime, TeamAppsConfiguration config, ObjectMapper objectMapper, MessageSender messageSender, Consumer<UiSession> closeListener) {
+	public UiSession(QualifiedUiSessionId sessionId, long creationTime, TeamAppsConfiguration config, ObjectMapper objectMapper, MessageSender messageSender) {
 		this.sessionId = sessionId;
 		this.name = sessionId.toString();
 		this.config = config;
 		this.objectMapper = objectMapper;
-		this.closeListener = closeListener;
 		this.timestampOfLastMessageFromClient.set(creationTime);
 		this.messageSender = messageSender;
 
@@ -106,16 +104,6 @@ public class UiSession {
 		return name;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
-		statistics.stateChanged(active ? SessionState.ACTIVE : SessionState.INACTIVE);
-		sessionListener.onActivityStateChanged(sessionId, false);
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
 	public long getTimestampOfLastMessageFromClient() {
 		return timestampOfLastMessageFromClient.get();
 	}
@@ -124,8 +112,8 @@ public class UiSession {
 		this.messageSender = messageSender;
 	}
 
-	public void setSessionListener(UiSessionListener sessionListener) {
-		this.sessionListener = sessionListener;
+	public void addSessionListener(UiSessionListener sessionListener) {
+		this.sessionListeners.add(sessionListener);
 	}
 
 	public int sendCommand(UiCommandWithResultCallback commandWithCallback) {
@@ -249,12 +237,12 @@ public class UiSession {
 		}
 		updateClientMessageId(clientMessageId);
 		reviveConnection();
-		sessionListener.onUiEvent(sessionId, event)
+		sessionListeners.forEach(sl -> sl.onUiEvent(sessionId, event)
 				.exceptionally(e -> {
 					LOGGER.error("Exception while handling ui event", e);
 					close(UiSessionClosingReason.SERVER_SIDE_ERROR);
 					return null;
-				});
+				}));
 	}
 
 	public void handleQuery(int clientMessageId, UiQuery query) {
@@ -265,7 +253,7 @@ public class UiSession {
 		}
 		updateClientMessageId(clientMessageId);
 		reviveConnection();
-		sessionListener.onUiQuery(
+		sessionListeners.forEach(sl -> sl.onUiQuery(
 				sessionId,
 				query,
 				result -> {
@@ -276,7 +264,7 @@ public class UiSession {
 					LOGGER.error("Exception while handling ui event", exception);
 					close(UiSessionClosingReason.SERVER_SIDE_ERROR);
 				}
-		);
+		));
 	}
 
 	public void handleCommandResult(int clientMessageId, int cmdId, Object result) {
@@ -336,11 +324,34 @@ public class UiSession {
 		sendAsyncWithErrorHandler(new PING());
 	}
 
+	public void setActive() {
+		setState(UiSessionState.ACTIVE);
+	}
+
+	public void setNearlyInactive() {
+		setState(UiSessionState.NEARLY_INACTIVE);
+	}
+
+	public void setInactive() {
+		setState(UiSessionState.INACTIVE);
+	}
+
 	public void close(UiSessionClosingReason reason) {
+		setState(UiSessionState.CLOSED);
 		this.messageSender.close(reason, null);
-		statistics.stateChanged(SessionState.CLOSED);
-		closeListener.accept(this);
-		sessionListener.onUiSessionClosed(sessionId, reason);
+	}
+
+	private void setState(UiSessionState sessionState) {
+		boolean changed = sessionState != this.state;
+		this.state = sessionState;
+		if (changed) {
+			statistics.stateChanged(sessionState);
+			sessionListeners.forEach(sl -> sl.onStateChanged(sessionId, sessionState));
+		}
+	}
+
+	public UiSessionState getState() {
+		return this.state;
 	}
 
 	public RunningUiSessionStats getStatistics() {

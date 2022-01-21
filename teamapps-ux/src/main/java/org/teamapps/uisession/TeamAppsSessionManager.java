@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_DEV_SERVER_VERSION;
 import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
 import static org.teamapps.dto.UiSessionClosingReason.HTTP_SESSION_CLOSED;
-import static org.teamapps.uisession.TeamAppsSessionManager.SessionActivityState.*;
+import static org.teamapps.uisession.UiSessionState.*;
 
 /**
  * Implements a cache for {@link UiSession} instances.
@@ -84,7 +84,13 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 								  TeamAppsUploadManager uploadManager) {
 		this.config = config;
 		if (config.getKeepaliveMessageIntervalMillis() >= config.getUiSessionInactivityTimeoutMillis() / 2) {
-			LOGGER.warn("keepaliveMessageIntervalMillis should be less than uiSessionInactivityTimeoutMillis / 2!");
+			LOGGER.error("keepaliveMessageIntervalMillis should be less than uiSessionInactivityTimeoutMillis / 2!");
+		}
+		if (config.getUiSessionPreInactivityPingMillis() > config.getUiSessionInactivityTimeoutMillis() / 2) {
+			LOGGER.error("uiSessionPreInactivityPingMillis should not be larger than uiSessionInactivityTimeoutMillis / 2!");
+		}
+		if (config.getUiSessionInactivityTimeoutMillis() > config.getUiSessionTimeoutMillis()) {
+			LOGGER.error("uiSessionInactivityTimeoutMillis must not be greater than uiSessionTimeoutMillis!");
 		}
 		this.objectMapper = objectMapper;
 		this.houseKeepingScheduledExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -94,7 +100,8 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			return thread;
 		});
 
-		long sessionStateHouseKeepingInterval = config.getUiSessionInactivityTimeoutMillis() / 8;
+		long sessionStateHouseKeepingInterval = Math.min(config.getUiSessionPreInactivityPingMillis() / 2, config.getUiSessionInactivityTimeoutMillis() / 4);
+		LOGGER.info("sessionStateHouseKeepingInterval: {}ms", sessionStateHouseKeepingInterval);
 		this.houseKeepingScheduledExecutor.scheduleAtFixedRate(
 				() -> {
 					try {
@@ -161,15 +168,21 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		LOGGER.trace("initSession: sessionId = [" + sessionId + "], clientInfo = [" + clientInfo + "], "
 				+ "maxRequestedCommandId = [" + maxRequestedCommandId + "], messageSender = [" + messageSender + "]");
 
-		UiSession uiSession = new UiSession(sessionId, System.currentTimeMillis(), config, objectMapper, messageSender, uis -> {
-			sessionsById.remove(uis.getSessionId());
-			closedSessionsStatistics.addLast(uis.getStatistics().immutableCopy());
-			while (closedSessionsStatistics.size() > 10_000) {
-				closedSessionsStatistics.removeFirst();
+		UiSession uiSession = new UiSession(sessionId, System.currentTimeMillis(), config, objectMapper, messageSender);
+		uiSession.addSessionListener(new UiSessionListener() {
+			@Override
+			public void onStateChanged(QualifiedUiSessionId sessionId, UiSessionState state) {
+				if (state == CLOSED) {
+					sessionsById.remove(uiSession.getSessionId());
+					closedSessionsStatistics.addLast(uiSession.getStatistics().immutableCopy());
+					while (closedSessionsStatistics.size() > 10_000) {
+						closedSessionsStatistics.removeFirst();
+					}
+				}
 			}
 		});
 		SessionContext sessionContext = createSessionContext(uiSession, clientInfo, httpSession);
-		uiSession.setSessionListener(sessionContext.getAsUiSessionListenerInternal());
+		uiSession.addSessionListener(sessionContext.getAsUiSessionListenerInternal());
 
 		boolean wrongTeamappsVersion = clientInfo.getTeamAppsVersion() == null
 				|| (!Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_VERSION) && !Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_DEV_SERVER_VERSION));
@@ -224,20 +237,17 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		}
 	}
 
-	enum SessionActivityState {
-		ACTIVE, NEARLY_INACTIVE, INACTIVE
-	}
-
 	public void updateSessionStates() {
 		long now = System.currentTimeMillis();
-		Map<SessionActivityState, List<UiSession>> sessionsByActivity;
+		Map<UiSessionState, List<UiSession>> sessionsByActivity;
 		List<UiSession> sessionsToClose;
+		long nearlyInactiveTimeout = config.getUiSessionInactivityTimeoutMillis() - config.getUiSessionPreInactivityPingMillis();
 		sessionsByActivity = sessionsById.values().stream()
 				.map(SessionPair::getUiSession)
 				.collect(Collectors.groupingBy(session -> {
 					long timeSinceLastMessage = now - session.getTimestampOfLastMessageFromClient();
 					return timeSinceLastMessage > config.getUiSessionInactivityTimeoutMillis() ? INACTIVE
-							: timeSinceLastMessage > (config.getUiSessionInactivityTimeoutMillis() * 3 / 4) ? NEARLY_INACTIVE
+							: timeSinceLastMessage > nearlyInactiveTimeout ? NEARLY_INACTIVE
 							: ACTIVE;
 				}));
 		sessionsToClose = sessionsById.values().stream()
@@ -245,24 +255,26 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				.filter(session -> now - session.getTimestampOfLastMessageFromClient() > config.getUiSessionTimeoutMillis())
 				.collect(Collectors.toList());
 		for (UiSession inactiveSession : sessionsByActivity.getOrDefault(INACTIVE, List.of())) {
-			if (inactiveSession.isActive()) {
-				LOGGER.info("Marking session inactive: {}", inactiveSession.getSessionId());
-				inactiveSession.setActive(false);
+			if (inactiveSession.getState() != INACTIVE) {
+				LOGGER.info("Marking session inactive: {} ({})",  inactiveSession.getName(), inactiveSession.getSessionId());
+				inactiveSession.setInactive();
 			}
 		}
 		for (UiSession criticalSession : sessionsByActivity.getOrDefault(NEARLY_INACTIVE, List.of())) {
-			if (criticalSession.isActive()) {
-				LOGGER.info("Sending PING to client: {}", criticalSession.getSessionId());
+			if (criticalSession.getState() != NEARLY_INACTIVE) {
+				LOGGER.info("Marking session nearly inactive and sending PING to client: {} ({})",  criticalSession.getName(), criticalSession.getSessionId());
+				criticalSession.setNearlyInactive();
 				criticalSession.ping();
 			}
 		}
 		for (UiSession activeSession : sessionsByActivity.getOrDefault(ACTIVE, List.of())) {
-			if (!activeSession.isActive()) {
-				LOGGER.info("Marking session active: {}", activeSession.getSessionId());
-				activeSession.setActive(true);
+			if (activeSession.getState() != ACTIVE) {
+				LOGGER.info("Marking session active: {} ({})",  activeSession.getName(), activeSession.getSessionId());
+				activeSession.setActive();
 			}
 		}
 		for (UiSession sessionToClose : sessionsToClose) {
+			LOGGER.info("Closing session: {} ({})",  sessionToClose.getName(), sessionToClose.getSessionId());
 			sessionToClose.close(UiSessionClosingReason.SESSION_TIMEOUT);
 		}
 	}

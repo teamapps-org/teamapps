@@ -24,8 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.value.SortDirection;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
+import org.teamapps.icons.composite.CompositeIcon;
+import org.teamapps.uisession.UiSessionState;
 import org.teamapps.uisession.statistics.CountStats;
-import org.teamapps.uisession.statistics.SessionState;
 import org.teamapps.uisession.statistics.SumStats;
 import org.teamapps.uisession.statistics.UiSessionStats;
 import org.teamapps.ux.component.Component;
@@ -76,15 +77,17 @@ public class SessionStatsPerspective {
 		table.addColumn("sessionId", "ID", new TextField()).setDefaultWidth(50)
 				.setValueExtractor(record -> record.getStatistics().getSessionId().toString());
 		table.addColumn("name", "Name", new TextField()).setValueExtractor(record -> record.getStatistics().getName());
-		table.addColumn("state", "State", new TemplateField<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE)).setDefaultWidth(100)
+		table.addColumn("state", "State", new TemplateField<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE)).setDefaultWidth(120)
 				.setValueExtractor(record -> {
 					Icon<?, ?> icon;
-					SessionState state = record.getStatistics().getState();
-					if (state == SessionState.ACTIVE) {
-						icon = MaterialIcon.PLAY_ARROW;
-					} else if (state == SessionState.INACTIVE) {
+					UiSessionState state = record.getStatistics().getState();
+					if (state == UiSessionState.ACTIVE) {
+						icon = MaterialIcon.CHECK;
+					} else if (state == UiSessionState.NEARLY_INACTIVE) {
+						icon = CompositeIcon.of(MaterialIcon.CHECK, MaterialIcon.SCHEDULE);
+					}  else if (state == UiSessionState.INACTIVE) {
 						icon = MaterialIcon.SCHEDULE;
-					} else if (state == SessionState.CLOSED) {
+					} else if (state == UiSessionState.CLOSED) {
 						icon = MaterialIcon.CANCEL;
 					} else {
 						icon = MaterialIcon.HELP_OUTLINE;

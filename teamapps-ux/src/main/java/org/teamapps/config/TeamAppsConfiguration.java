@@ -59,15 +59,26 @@ public class TeamAppsConfiguration {
 	 * on the application level (see {@link SessionContext#onActivityStateChanged}). For instance, this can be used to mark an application user
 	 * as "away".
 	 * <p>
-	 * The default value of 70 seconds has been chosen because browsers tend to optimize inactive tabs.
+	 * The default value of 75 seconds has been chosen because browsers tend to optimize inactive tabs.
 	 * In Chrome for example, timers (e.g. for periodically sending KEEPALIVE messages) will be triggered only every 60 seconds
 	 * regardless of the actual scheduled interval.
 	 * <p>
-	 * Also note that, when a client did not send a KEEPALIVE message for 3/4 of this timeout, the server will send a PING message to the
-	 * client, which the client should respond to with a KEEPALIVE message. This circumvents client-side resource consumption optimizations,
-	 * since the client is actively triggered by the server instead of waiting for a timeout.
+	 * Also note that, when a client did not send a KEEPALIVE message for uiSessionInactivityTimeoutMillis - uiSessionPreInactivityPingMillis,
+	 * the server will send a PING message to the client, which the client should respond to with a KEEPALIVE message.
+	 * This circumvents client-side resource consumption optimizations, since the client is actively triggered by the server
+	 * instead of waiting for a timeout.
 	 */
-	private long uiSessionInactivityTimeoutMillis = 70_000;
+	private long uiSessionInactivityTimeoutMillis = 75_000;
+
+	/**
+	 * Before setting a session inactive (after uiSessionInactivityTimeoutMillis without any sign from the client), the server will attempt
+	 * to send a PING message to the client, in order to actively request a KEEPALIVE from it.
+	 *<p>
+	 * This specifies the amount of milliseconds before setting the client inactive that the server will send the PING.
+	 *<p>
+	 * By default, this is 10 seconds, so the server will wait (uiSessionInactivityTimeoutMillis - 10s) before sending the PING.
+	 */
+	private long uiSessionPreInactivityPingMillis = 10_000;
 
 	/**
 	 * The interval at which the client sends keep alive messages.
@@ -163,6 +174,20 @@ public class TeamAppsConfiguration {
 	 */
 	public void setUiSessionInactivityTimeoutMillis(long uiSessionInactivityTimeoutMillis) {
 		this.uiSessionInactivityTimeoutMillis = uiSessionInactivityTimeoutMillis;
+	}
+
+	/**
+	 * @see #uiSessionPreInactivityPingMillis
+	 */
+	public long getUiSessionPreInactivityPingMillis() {
+		return uiSessionPreInactivityPingMillis;
+	}
+
+	/**
+	 * @see #uiSessionPreInactivityPingMillis
+	 */
+	public void setUiSessionPreInactivityPingMillis(long uiSessionPreInactivityPingMillis) {
+		this.uiSessionPreInactivityPingMillis = uiSessionPreInactivityPingMillis;
 	}
 
 	/**
