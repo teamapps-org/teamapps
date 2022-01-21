@@ -25,6 +25,7 @@ import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiQuery;
 import org.teamapps.uisession.QualifiedUiSessionId;
+import org.teamapps.uisession.UiSessionState;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -122,7 +123,7 @@ public class RunningUiSessionStats implements UiSessionStats {
 	private long endTime = -1;
 	private final QualifiedUiSessionId sessionId;
 	private String name;
-	private SessionState state = SessionState.ACTIVE;
+	private UiSessionState state = UiSessionState.ACTIVE;
 
 	private final RunningCountStats commandStats = new RunningCountStats();
 	private final RunningCountStats commandResultStats = new RunningCountStats();
@@ -161,7 +162,7 @@ public class RunningUiSessionStats implements UiSessionStats {
 	}
 
 	@Override
-	public SessionState getState() {
+	public UiSessionState getState() {
 		return state;
 	}
 
@@ -225,15 +226,15 @@ public class RunningUiSessionStats implements UiSessionStats {
 	}
 
 
-	public void stateChanged(SessionState sessionState) {
+	public void stateChanged(UiSessionState sessionState) {
 		state = sessionState;
-		if (state == SessionState.CLOSED) {
+		if (state == UiSessionState.CLOSED) {
 			endTime = System.currentTimeMillis();
 		}
 	}
 
 	public ImmutableUiSessionStats immutableCopy() {
-		return new ImmutableUiSessionStats(startTime, endTime, sessionId, name, SessionState.CLOSED,
+		return new ImmutableUiSessionStats(startTime, endTime, sessionId, name, state,
 				commandStats.toImmutable(),
 				commandResultStats.toImmutable(),
 				eventStats.toImmutable(),

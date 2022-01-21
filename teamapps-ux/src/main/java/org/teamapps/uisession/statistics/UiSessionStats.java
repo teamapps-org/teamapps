@@ -20,6 +20,7 @@
 package org.teamapps.uisession.statistics;
 
 import org.teamapps.uisession.QualifiedUiSessionId;
+import org.teamapps.uisession.UiSessionState;
 
 public interface UiSessionStats {
 
@@ -27,7 +28,7 @@ public interface UiSessionStats {
 	long getEndTime();
 	QualifiedUiSessionId getSessionId();
 	String getName();
-	SessionState getState();
+	UiSessionState getState();
 
 	CountStats getCommandStats();
 	CountStats getCommandResultStats();

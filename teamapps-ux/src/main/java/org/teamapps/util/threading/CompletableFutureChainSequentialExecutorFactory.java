@@ -72,7 +72,7 @@ public class CompletableFutureChainSequentialExecutorFactory implements Sequenti
 			submit(command);
 		}
 
-		public synchronized CompletableFuture<Void> submit(Runnable runnable) {
+		public CompletableFuture<Void> submit(Runnable runnable) {
 			return this.submit(() -> {
 				runnable.run();
 				return null;
@@ -100,16 +100,19 @@ public class CompletableFutureChainSequentialExecutorFactory implements Sequenti
 				this.queueSize.decrementAndGet();
 				return result;
 			}, pool);
-			lastFuture = returnedFuture.exceptionally(throwable -> {
-				LOGGER.error("Error while executing: ", throwable);
-				return null; // do not interrupt the execution chain!!
-			});
+			if (!closed) { // Go 100% sure! shutdown() might be executed as a task!
+				lastFuture = returnedFuture.exceptionally(throwable -> {
+					LOGGER.error("Error while executing: ", throwable);
+					return null; // do not interrupt the execution chain!!
+				});
+			}
 			return returnedFuture;
 		}
 
 		@Override
-		public void shutdown() {
+		public synchronized void shutdown() {
 			this.closed = true;
+			this.lastFuture = null; // prevent memory leak!
 		}
 
 		@Override
