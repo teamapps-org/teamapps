@@ -229,6 +229,19 @@ public class UiSession {
 		));
 	}
 
+	/**
+	 * Make sure an exception in one sessionListener does not prevent the others from being invoked!
+	 */
+	private void failsafeInvokeSessionListeners(Consumer<UiSessionListener> runnable) {
+		sessionListeners.forEach(sl -> {
+			try {
+				runnable.accept(sl);
+			} catch (Exception e) {
+				LOGGER.error("Exception while invoking sessionListener!", e);
+			}
+		});
+	}
+
 	public void handleEvent(int clientMessageId, UiEvent event) {
 		statistics.eventReceived(event);
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
@@ -237,7 +250,7 @@ public class UiSession {
 		}
 		updateClientMessageId(clientMessageId);
 		reviveConnection();
-		sessionListeners.forEach(sl -> sl.onUiEvent(sessionId, event)
+		failsafeInvokeSessionListeners(sl -> sl.onUiEvent(sessionId, event)
 				.exceptionally(e -> {
 					LOGGER.error("Exception while handling ui event", e);
 					close(UiSessionClosingReason.SERVER_SIDE_ERROR);
@@ -253,7 +266,7 @@ public class UiSession {
 		}
 		updateClientMessageId(clientMessageId);
 		reviveConnection();
-		sessionListeners.forEach(sl -> sl.onUiQuery(
+		failsafeInvokeSessionListeners(sl -> sl.onUiQuery(
 				sessionId,
 				query,
 				result -> {
@@ -346,7 +359,7 @@ public class UiSession {
 		this.state = sessionState;
 		if (changed) {
 			statistics.stateChanged(sessionState);
-			sessionListeners.forEach(sl -> sl.onStateChanged(sessionId, sessionState));
+			failsafeInvokeSessionListeners(sl -> sl.onStateChanged(sessionId, sessionState));
 		}
 	}
 
