@@ -23,6 +23,7 @@ import org.teamapps.dto.UiCurrencyValue;
 
 import java.math.BigDecimal;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CurrencyValue {
@@ -65,5 +66,26 @@ public class CurrencyValue {
 
 	public UiCurrencyValue toUiCurrencyValue(Locale locale) {
 		return new UiCurrencyValue(currency != null ? currency.toUiCurrencyUnit(locale) : null, amount != null ? amount.toString() : null);
+	}
+
+	@Override
+	public String toString() {
+		return "CurrencyValue{" +
+				"currency=" + currency +
+				", amount=" + amount +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CurrencyValue that = (CurrencyValue) o;
+		return Objects.equals(currency, that.currency) && Objects.equals(amount, that.amount);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(currency, amount);
 	}
 }
