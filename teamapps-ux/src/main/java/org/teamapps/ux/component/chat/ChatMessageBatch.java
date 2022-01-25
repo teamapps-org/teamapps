@@ -24,18 +24,23 @@ import java.util.List;
 public class ChatMessageBatch {
 
 	private final List<ChatMessage> messages;
-	private final boolean includesFirstMessage;
+	private final boolean containsFirstMessage;
 
-	public ChatMessageBatch(List<ChatMessage> messages, boolean includesFirstMessage) {
+	public ChatMessageBatch(List<ChatMessage> messages, boolean containsFirstMessage) {
 		this.messages = messages;
-		this.includesFirstMessage = includesFirstMessage;
+		this.containsFirstMessage = containsFirstMessage;
 	}
 
 	public List<ChatMessage> getMessages() {
 		return messages;
 	}
 
-	public boolean isIncludesFirstMessage() {
-		return includesFirstMessage;
+	public boolean isContainsFirstMessage() {
+		return containsFirstMessage;
 	}
+
+	public Integer getEarliestMessageId() {
+		return messages.size() > 0 ? messages.get(0).getId() : null;
+	}
+
 }

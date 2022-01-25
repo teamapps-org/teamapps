@@ -73,7 +73,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
 
-	private commandExecutor = new CommandExecutor(reference => this.getClientObjectById(reference.id));
+	private commandExecutor = new CommandExecutor();
 
 	private expiredMessageWindow: UiWindow;
 	private errorMessageWindow: UiWindow;
@@ -164,8 +164,11 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	}
 
 	@bind
-	public sendQuery(query: UiQuery): Promise<any> {
-		return this.connection.sendQuery(query);
+	public async sendQuery(query: UiQuery): Promise<any> {
+		let result = await this.connection.sendQuery(query);
+		let resultWrapper = [result];
+		this.replaceComponentReferencesWithInstances(resultWrapper)
+		return resultWrapper[0];
 	}
 
 	public registerClientObject(clientObject: UiClientObject, id: string, teamappsType: string): void {
@@ -233,29 +236,37 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	}
 
 	private replaceComponentReferencesWithInstances(o: any) {
-		let replaceOrRecur = (key: number | string) => {
-			const value = o[key];
+		let replaceOrRecur = (value: any) => {
 			if (value != null && value._type && typeof (value._type) === "string" && value._type.indexOf("UiClientObjectReference") !== -1) {
 				const componentById = this.getClientObjectById(value.id);
 				if (componentById != null) {
-					o[key] = componentById;
+					return componentById;
 				} else {
 					throw new Error("Could not find component with id " + value.id);
 				}
 			} else {
 				this.replaceComponentReferencesWithInstances(value);
+				return value;
 			}
 		};
 
 		if (o == null || typeof o === "string" || typeof o === "boolean" || typeof o === "function" || typeof o === "number" || typeof o === "symbol") {
-			return o;
+			return;
 		} else if (Array.isArray(o)) {
 			for (let i = 0; i < o.length; i++) {
-				replaceOrRecur(i);
+				let value = o[i];
+				const replacingValue = replaceOrRecur(value);
+				if (replacingValue !== value) {
+					o[i] = replacingValue;
+				}
 			}
 		} else if (typeof o === "object") {
 			Object.keys(o).forEach(key => {
-				replaceOrRecur(key);
+				let value = o[key];
+				const replacingValue = replaceOrRecur(value);
+				if (replacingValue !== value) {
+					o[key] = replacingValue;
+				}
 			})
 		}
 	}

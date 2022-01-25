@@ -30,7 +30,9 @@ import org.teamapps.ux.component.flexcontainer.FlexSizeUnit;
 import org.teamapps.ux.component.flexcontainer.FlexSizingPolicy;
 import org.teamapps.ux.component.flexcontainer.HorizontalLayout;
 import org.teamapps.ux.component.form.ResponsiveForm;
+import org.teamapps.ux.component.form.ResponsiveFormConfigurationTemplate;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
+import org.teamapps.ux.component.form.ResponsiveFormSection;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
 import org.teamapps.ux.component.format.Spacing;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -64,16 +66,24 @@ public class FormDialogue extends Window {
 	}
 
 	public FormDialogue(Icon icon, String imageUrl, String title, String text) {
+		this(icon, imageUrl, title, text, ResponsiveFormConfigurationTemplate.createDefaultTwoColumnTemplate(0, 200, 0));
+	}
+
+	public FormDialogue(Icon icon, String imageUrl, String title, String text, ResponsiveFormConfigurationTemplate configurationTemplate) {
 		setIcon(icon);
 		setTitle(title);
 		setWidth(550);
 		setHeight(350);
-		ResponsiveForm<?> responsiveForm = new ResponsiveForm<>(0, 200, 0);
+		ResponsiveForm<?> responsiveForm = new ResponsiveForm<>(configurationTemplate);
 		formLayout = responsiveForm.addResponsiveFormLayout(450);
 		formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false).setMargin(new Spacing(10)).setGridGap(20);
 		titleField = new TemplateField<>(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, new BaseTemplateRecord<>(icon, imageUrl, title, text, null));
 		formLayout.addField(0, 0, "header", titleField).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setColSpan(2);
 		setContent(responsiveForm);
+	}
+
+	public ResponsiveFormSection addSection(Icon<?, ?> icon, String caption)  {
+		return formLayout.addSection(icon, caption);
 	}
 
 	public void addField(Icon icon, String caption, AbstractField<?> field) {
@@ -118,6 +128,7 @@ public class FormDialogue extends Window {
 
 	private void createButtonRowIfNotExists() {
 		if (buttonRow == null) {
+			formLayout.addSection().setCollapsible(false).setDrawHeaderLine(false);
 			buttonRow = new HorizontalLayout();
 			formLayout.addLabelAndComponent(buttonRow).field.setColSpan(2);
 		}

@@ -18,13 +18,18 @@
  * =========================LICENSE_END==================================
  */
 class UiChatDisplay extends UiComponent {
-	List<UiChatMessage> messages;
-	boolean includesFirstMessage;
+	UiChatMessageBatch initialMessages;
+    boolean contextMenuEnabled = false;
+    String deletedMessageIcon;
 
-	command addChatMessages(List<UiChatMessage> chatMessages, boolean prepend, boolean includesFirstMessage);
-	command replaceChatMessages(List<UiChatMessage> chatMessages, boolean includesFirstMessage);
+	command addMessages(UiChatMessageBatch messages);
+	command updateMessage(UiChatMessage message);
+	command deleteMessage(int messageId);
+	command clearMessages(UiChatMessageBatch messages);
+    command closeContextMenu();
 
-	event previousMessagesRequested(String earliestKnownMessageId);
+	query requestPreviousMessages() returns UiChatMessageBatch;
+    query requestContextMenu(int chatMessageId) returns UiComponent*;
 }
 
 class UiChatInput extends UiComponent {
@@ -46,13 +51,19 @@ class UiChatInput extends UiComponent {
 	event fileItemRemoved(String fileItemUuid);
 }
 
+class UiChatMessageBatch {
+    required List<UiChatMessage> messages;
+    required boolean containsFirstMessage;
+}
+
 class UiChatMessage {
-	String id;
+	int id;
 	String userImageUrl;
 	String userNickname;
 	String text;
 	List<UiChatPhoto> photos;
 	List<UiChatFile> files;
+	boolean deleted;
 }
 
 class UiChatPhoto {
