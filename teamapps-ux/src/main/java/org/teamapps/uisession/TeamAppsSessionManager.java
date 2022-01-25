@@ -303,7 +303,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 
 		return new SessionContext(
 				uiSession,
-				sessionExecutorFactory.createExecutor(),
+				sessionExecutorFactory.createExecutor(uiSession.getSessionId().toString()),
 				clientInfo,
 				sessionConfiguration,
 				httpSession,

@@ -36,13 +36,13 @@ public class SequentialExecutionPerformanceTest {
 	@Test
 	@Ignore
 	public void testA() throws Exception {
-		SequentialExecutorFactory factory = Executors::newSingleThreadExecutor;
+		SequentialExecutorFactory factory = name -> Executors.newSingleThreadExecutor();
 
 		int numberOfThreads = 10_000;
 
 		// will fail on OSX!
 		List<ExecutorService> executors = IntStream.range(0, numberOfThreads)
-				.mapToObj(i -> factory.createExecutor())
+				.mapToObj(i -> factory.createExecutor("" + i))
 				.collect(Collectors.toList());
 
 		for (int i = 0; i < numberOfThreads; i++) {
