@@ -153,18 +153,19 @@ public class SessionContext {
 
 		@Override
 		public void onStateChanged(QualifiedUiSessionId sessionId, UiSessionState state) {
-			boolean activityStateChanged = SessionContext.this.state.isActive() != state.isActive();
-			SessionContext.this.state = state;
-			if (state == UiSessionState.CLOSED) {
-				onDestroyed.fireIgnoringExceptions(null);
-				// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
-				sessionExecutor.submit(sessionExecutor::shutdown);
-			}
-			if (activityStateChanged) {
-				onActivityStateChanged.fire(new UiSessionActivityState(state.isActive()));
-			}
+			runWithContext(() -> {
+				boolean activityStateChanged = SessionContext.this.state.isActive() != state.isActive();
+				SessionContext.this.state = state;
+				if (state == UiSessionState.CLOSED) {
+					onDestroyed.fireIgnoringExceptions(null);
+					// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
+					sessionExecutor.submit(sessionExecutor::shutdown);
+				}
+				if (activityStateChanged) {
+					onActivityStateChanged.fire(new UiSessionActivityState(state.isActive()));
+				}
+			});
 		}
-
 	};
 
 
@@ -330,10 +331,6 @@ public class SessionContext {
 	}
 
 	public <R> CompletableFuture<R> runWithContext(Callable<R> callable, boolean forceEnqueue) {
-		if (state == UiSessionState.CLOSED) {
-			LOGGER.info("This SessionContext ({}) is already destroyed. Not executing callable.", uiSession.getName());
-			return CompletableFuture.failedFuture(new IllegalStateException("SessionContext destroyed."));
-		}
 		if (CurrentSessionContext.getOrNull() == this && !forceEnqueue) {
 			// Fast lane! This thread is already bound to this SessionContext. Just execute the runnable.
 			try {

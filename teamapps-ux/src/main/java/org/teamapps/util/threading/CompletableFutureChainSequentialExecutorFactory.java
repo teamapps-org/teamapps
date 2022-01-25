@@ -59,13 +59,22 @@ public class CompletableFutureChainSequentialExecutorFactory implements Sequenti
 	}
 
 	public ExecutorService createExecutor() {
-		return new SequentialExecutor();
+		return createExecutor("unnamed");
+	}
+
+	public ExecutorService createExecutor(String name) {
+		return new SequentialExecutor(name);
 	}
 
 	public class SequentialExecutor extends AbstractExecutorService {
+		private final String name;
 		private CompletableFuture<?> lastFuture = CompletableFuture.completedFuture(null);
 		private final AtomicInteger queueSize = new AtomicInteger(0);
 		private boolean closed = false;
+
+		public SequentialExecutor(String name) {
+			this.name = name;
+		}
 
 		@Override
 		public void execute(Runnable command) {
@@ -81,13 +90,13 @@ public class CompletableFutureChainSequentialExecutorFactory implements Sequenti
 
 		public synchronized <V> CompletableFuture<V> submit(Callable<V> task) {
 			if (this.closed) {
-				LOGGER.debug("SequentialExecutor already closed.");
+				LOGGER.info("{}: SequentialExecutor already closed.", name);
 				return CompletableFuture.failedFuture(new SequentialExecutorClosedException());
 			}
 			int queueSize = this.queueSize.incrementAndGet();
-			LOGGER.debug("Queue size: {}", queueSize);
+			LOGGER.debug("{}: Queue size: {}", name, queueSize);
 			if (queueSize >= 500 && queueSize % 10 == 0) { // the queue gets quite long when destroying a session, since there are very many listeners to the destroyed event
-				LOGGER.warn("Queue is very long: {}", queueSize);
+				LOGGER.warn("{}: Queue is very long: {}", name, queueSize);
 			}
 			long submitTime = System.currentTimeMillis();
 			CompletableFuture<V> returnedFuture = lastFuture.thenApplyAsync(o -> {
@@ -102,7 +111,7 @@ public class CompletableFutureChainSequentialExecutorFactory implements Sequenti
 			}, pool);
 			if (!closed) { // Go 100% sure! shutdown() might be executed as a task!
 				lastFuture = returnedFuture.exceptionally(throwable -> {
-					LOGGER.error("Error while executing: ", throwable);
+					LOGGER.error("{}: Error while executing: ", name, throwable);
 					return null; // do not interrupt the execution chain!!
 				});
 			}
