@@ -23,18 +23,19 @@
 
   .message {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto;
     grid-template-rows: auto;
-    grid-template-areas: "icon userNickname" "icon text" "icon photos" "icon files";
+    grid-template-areas: "userimage userNickname" "userimage text" "userimage photos" "userimage files";
 
     .user-image {
-      grid-area: icon;
+      grid-area: userimage;
+      justify-self: end;
       box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, .2);
       border: 1px solid rgba(0, 0, 0, .2);
-      margin: 2px 7px 0 0;
+      margin: 0 5px 0 0;
       width: 40px;
       height: 40px;
-      border-radius: 50%;
+      border-radius: var(--ta-border-radius-small);
       object-fit: cover;
     }
     .user-nickname {
@@ -77,6 +78,33 @@
           color: var(--ta-text-color);
         }
       }
+    }
+    &:not(.deleted) .deleted-icon{
+      display: none;
+    }
+    &.deleted {
+      filter: grayscale(1) opacity(0.5);
+      grid-template-columns: 45px auto 1fr;
+      grid-template-areas: "userimage userNickname deletedicon";
+      align-items: center;
+
+      //.user-nickname {
+      //  align-self: center;
+      //}
+      .text, .photos, .files {
+        display: none;
+      }
+
+      .deleted-icon {
+        .img;
+        .img-16;
+        margin-left: 4px;
+        grid-area: deletedicon;
+      }
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 3px;
     }
   }
 }

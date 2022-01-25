@@ -25,28 +25,30 @@ import java.util.List;
 
 public class SimpleChatMessage implements ChatMessage {
 
-	private final String id;
+	private final int id;
 	private final Resolvable userImage;
 	private final String userNickname;
 	private final String text;
 	private final List<ChatPhoto> photos;
 	private final List<ChatFile> files;
+	private final boolean deleted;
 
-	public SimpleChatMessage(String id, Resolvable userImage, String userNickname, String text) {
-		this(id, userImage, userNickname, text, null, null);
+	public SimpleChatMessage(int id, Resolvable userImage, String userNickname, String text) {
+		this(id, userImage, userNickname, text, null, null, false);
 	}
 
-	public SimpleChatMessage(String id, Resolvable userImage, String userNickname, String text, List<ChatPhoto> photos, List<ChatFile> files) {
+	public SimpleChatMessage(int id, Resolvable userImage, String userNickname, String text, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted) {
 		this.id = id;
 		this.userImage = userImage;
 		this.userNickname = userNickname;
 		this.text = text;
 		this.photos = photos;
 		this.files = files;
+		this.deleted = deleted;
 	}
 
 	@Override
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -75,4 +77,7 @@ public class SimpleChatMessage implements ChatMessage {
 		return files;
 	}
 
+	public boolean isDeleted() {
+		return deleted;
+	}
 }

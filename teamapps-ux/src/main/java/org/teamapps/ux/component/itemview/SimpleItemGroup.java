@@ -53,4 +53,10 @@ public class SimpleItemGroup<PAYLOAD> extends ItemGroup<BaseTemplateRecord, Simp
 		return item;
 	}
 
+	public SimpleItem<PAYLOAD> addItem(Icon icon, String title, String caption, PAYLOAD payload) {
+		SimpleItem<PAYLOAD> item = new SimpleItem<>(icon, title, caption, payload);
+		addItem(item);
+		return item;
+	}
+
 }

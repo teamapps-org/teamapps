@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import java.util.List;
 
 public interface ChatMessage {
 
-	String getId();
+	int getId();
 
 	Resolvable getUserImage();
 
@@ -33,8 +33,16 @@ public interface ChatMessage {
 
 	String getText();
 
-	List<ChatPhoto> getPhotos();
+	default List<ChatPhoto> getPhotos() {
+		return List.of();
+	}
 
-	List<ChatFile> getFiles();
+	default List<ChatFile> getFiles() {
+		return List.of();
+	}
+
+	default boolean isDeleted() {
+		return false;
+	}
 
 }

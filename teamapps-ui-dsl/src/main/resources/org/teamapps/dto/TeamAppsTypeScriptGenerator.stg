@@ -180,13 +180,6 @@ export class <name> {
 		<staticCommands:staticCommandExecutorEntry(); separator=",\n">
 	};
 
-	constructor(private componentRegistry: (reference: UiClientObjectReference) => UiClientObject) {
-	}
-
-	private getComponentForReference(reference: UiClientObjectReference) {
-		this.componentRegistry(reference);
-	}
-
 	public async executeCommand(targetObject: any, command: any) {
 		return await this.commandExecutorsByCommandName[command._type](targetObject, command);
 	}

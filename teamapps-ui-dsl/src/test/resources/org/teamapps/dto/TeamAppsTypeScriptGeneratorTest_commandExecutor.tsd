@@ -22,11 +22,7 @@ export class CommandExecutor {
 			}
 	};
 
-	constructor(private componentRegistry: (reference: UiClientObjectReference) => UiClientObject) {
-	}
-
-	private getComponentForReference(reference: UiClientObjectReference) {
-		this.componentRegistry(reference);
+	constructor() {
 	}
 
 	public async executeCommand(targetObject: any, command: any) {
