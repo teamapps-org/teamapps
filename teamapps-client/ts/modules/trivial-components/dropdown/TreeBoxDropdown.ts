@@ -72,7 +72,7 @@ export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 		}
 	}
 
-	async handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
+	async handleQuery(query: string, selectionDirection: SelectionDirection, currentComboBoxValue: E): Promise<boolean> {
 		let results = await this.config.queryFunction(query) ?? [];
 		this.treeBox.setEntries(results);
 		this.treeBox.setSelectedEntryById(null); // make sure we don't remember the last selected value and go down/up from it
