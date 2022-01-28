@@ -228,7 +228,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			showDropDownOnResultsOnly: false,
 			twoStepDeletion: false,
 			placeholderText: "",
-			
+
 			...options
 		};
 		this.dropDownComponent = dropDownComponent;
@@ -528,7 +528,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 	}
 
 	private async query(highlightDirection: SelectionDirection = 0) {
-		let gotResultsForQuery = await this.dropDownComponent.handleQuery(this.getNonSelectedEditorValue(), highlightDirection);
+		let gotResultsForQuery = await this.dropDownComponent.handleQuery(this.getNonSelectedEditorValue(), highlightDirection, this.getSelectedEntries()[0] ?? null);
 		this.blurCausedByClickInsideComponent = false; // we won't get any mouseout or mouseup events for entries if they get removed. so do this here proactively
 
 		this.autoCompleteIfPossible(this.config.autoCompleteDelay);
@@ -604,6 +604,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 	}
 
 	private parentElement: Element;
+
 	public openDropDown() {
 		if (this.isDropDownNeeded()) {
 			if (this.getMainDomElement().parentElement !== this.parentElement) {

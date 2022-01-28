@@ -112,7 +112,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	public readonly onFocus = new TeamAppsEvent<void>(this);
 	public readonly onBlur = new TeamAppsEvent<void>(this);
 	public readonly onBeforeQuery = new TeamAppsEvent<string>(this);
-	public readonly onBeforeDownOpens = new TeamAppsEvent<string>(this);
+	public readonly onBeforeDropdownOpens = new TeamAppsEvent<string>(this);
 
 	private config: TrivialComboBoxConfig<E>;
 
@@ -344,7 +344,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 
 	private async query(nonSelectedEditorValue: string, highlightDirection: SelectionDirection = 0) {
 		this.onBeforeQuery.fire(nonSelectedEditorValue);
-		let gotResultsForQuery = await this.dropDownComponent.handleQuery(nonSelectedEditorValue, highlightDirection);
+		let gotResultsForQuery = await this.dropDownComponent.handleQuery(nonSelectedEditorValue, highlightDirection, this.getValue());
 
 		if (highlightDirection !== 0) {
 			this.autoCompleteIfPossible(this.config.autoCompleteDelay);
@@ -413,7 +413,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				this.parentElement = this.getMainDomElement().parentElement;
 			}
 			if (!this.dropDownOpen) {
-				this.onBeforeDownOpens.fire(this.$editor.value);
+				this.onBeforeDropdownOpens.fire(this.getEditorValueLeftOfSelection());
 				this.$comboBox.classList.add("open");
 				this.popper.update();
 				this.dropDownOpen = true;

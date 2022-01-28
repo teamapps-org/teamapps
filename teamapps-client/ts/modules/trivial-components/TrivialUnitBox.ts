@@ -348,7 +348,7 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 	}
 
 	private async query(highlightDirection?: HighlightDirection) {
-		let gotResultsForQuery = await this.dropDownComponent.handleQuery(this.getQueryString(), highlightDirection);
+		let gotResultsForQuery = await this.dropDownComponent.handleQuery(this.getQueryString(), highlightDirection, this.getSelectedEntry());
 		if (gotResultsForQuery && document.activeElement == this.$editor) {
 			this.openDropDown();
 		}

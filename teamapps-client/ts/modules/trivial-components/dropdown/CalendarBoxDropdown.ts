@@ -58,13 +58,17 @@ export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 		}
 	}
 
-	async handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean> {
-		let suggestedDate = await this.queryFunction(query);
-		if (suggestedDate != null) {
-			this.calendarBox.setSelectedDate(suggestedDate);
-			return true;
+	async handleQuery(query: string, selectionDirection: SelectionDirection, currentComboBoxValue: LocalDateTime): Promise<boolean> {
+		if (!query && currentComboBoxValue != null) {
+			this.calendarBox.setSelectedDate(currentComboBoxValue);
 		} else {
-			return false;
+			let suggestedDate = await this.queryFunction(query);
+			if (suggestedDate != null) {
+				this.calendarBox.setSelectedDate(suggestedDate);
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 

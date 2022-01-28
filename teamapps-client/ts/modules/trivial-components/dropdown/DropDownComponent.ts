@@ -37,9 +37,10 @@ export interface DropDownComponent<E> extends TrivialComponent {
 	/**
 	 * @param query
 	 * @param selectionDirection
+	 * @param referenceValue normally the current value of the comboBox
 	 * @return true if it got results
 	 */
-	handleQuery(query: string, selectionDirection: SelectionDirection): Promise<boolean>;
+	handleQuery(query: string, selectionDirection: SelectionDirection, referenceValue: E): Promise<boolean>;
 
 	getComponent(): TrivialComponent;
 

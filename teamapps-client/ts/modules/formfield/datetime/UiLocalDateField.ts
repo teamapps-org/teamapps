@@ -105,7 +105,7 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 			placeholderText: config.placeholderText
 		}, this._config.dropDownMode === UiLocalDateField_DropDownMode.CALENDAR ? this.calendarBoxDropdown : treeBoxDropdown);
 		
-		[this.trivialComboBox.onBeforeQuery, this.trivialComboBox.onBeforeDownOpens].forEach(event => event.addListener(queryString => {
+		[this.trivialComboBox.onBeforeQuery, this.trivialComboBox.onBeforeDropdownOpens].forEach(event => event.addListener(queryString => {
 			if (this._config.dropDownMode == UiLocalDateField_DropDownMode.CALENDAR
 				|| this._config.dropDownMode == UiLocalDateField_DropDownMode.CALENDAR_SUGGESTION_LIST && !queryString) {
 				this.trivialComboBox.setDropDownComponent(this.calendarBoxDropdown);
