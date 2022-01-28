@@ -47,7 +47,7 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 	<style> [data-teamapps-id=${config.id}] .message.deleted .deleted-icon {
 		background-image: url('${config.deletedMessageIcon}');				
 	}</style>
-	<div class="loading-indicator-wrapper"></div>
+	<div class="loading-indicator-wrapper hidden"></div>
 	<div class="messages"></div>
 </div>`);
 		this.$loadingIndicatorWrapper = this.$main.querySelector(":scope .loading-indicator-wrapper");

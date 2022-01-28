@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ public class ChatDisplay extends AbstractComponent {
 
 	private final ChatDisplayModel model;
 	private int messagesFetchSize = 50;
-	private Integer earliestKnownMessageId = null;
+	private int earliestKnownMessageId = Integer.MAX_VALUE;
 
 	private Icon<?, ?> deletedMessageIcon = MaterialIcon.DELETE.withStyle(MaterialIconStyles.OUTLINE_GREY_900);
 
@@ -45,6 +45,7 @@ public class ChatDisplay extends AbstractComponent {
 	public ChatDisplay(ChatDisplayModel model) {
 		this.model = model;
 		model.onMessagesAdded().addListener(chatMessages -> {
+			updateEarliestKnownMessageId(chatMessages);
 			queueCommandIfRendered(() -> new UiChatDisplay.AddMessagesCommand(getId(), createUiChatMessageBatch(chatMessages)));
 		});
 		model.onMessageChanged().addListener((chatMessage) -> {
@@ -59,6 +60,8 @@ public class ChatDisplay extends AbstractComponent {
 		});
 		model.onAllDataChanged().addListener(aVoid -> {
 			ChatMessageBatch messageBatch = this.getModel().getLastChatMessages(this.messagesFetchSize);
+			this.earliestKnownMessageId = Integer.MAX_VALUE;
+			updateEarliestKnownMessageId(messageBatch);
 			queueCommandIfRendered(() -> new UiChatDisplay.ClearMessagesCommand(getId(), createUiChatMessageBatch(messageBatch)));
 		});
 	}
@@ -76,7 +79,7 @@ public class ChatDisplay extends AbstractComponent {
 	}
 
 	private void updateEarliestKnownMessageId(ChatMessageBatch response) {
-		earliestKnownMessageId = response.getEarliestMessageId() != null ? response.getEarliestMessageId() : earliestKnownMessageId;
+		earliestKnownMessageId = response.getEarliestMessageId() != null && response.getEarliestMessageId() < this.earliestKnownMessageId ? response.getEarliestMessageId() : earliestKnownMessageId;
 	}
 
 	@Override
