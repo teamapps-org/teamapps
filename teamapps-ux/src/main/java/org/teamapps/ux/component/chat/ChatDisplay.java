@@ -48,10 +48,14 @@ public class ChatDisplay extends AbstractComponent {
 			queueCommandIfRendered(() -> new UiChatDisplay.AddMessagesCommand(getId(), createUiChatMessageBatch(chatMessages)));
 		});
 		model.onMessageChanged().addListener((chatMessage) -> {
-			queueCommandIfRendered(() -> new UiChatDisplay.UpdateMessageCommand(getId(), createUiChatMessage(chatMessage)));
+			if (earliestKnownMessageId <= chatMessage.getId()) {
+				queueCommandIfRendered(() -> new UiChatDisplay.UpdateMessageCommand(getId(), createUiChatMessage(chatMessage)));
+			}
 		});
 		model.onMessageDeleted().addListener((messageId) -> {
-			queueCommandIfRendered(() -> new UiChatDisplay.DeleteMessageCommand(getId(), messageId));
+			if (earliestKnownMessageId <= messageId) {
+				queueCommandIfRendered(() -> new UiChatDisplay.DeleteMessageCommand(getId(), messageId));
+			}
 		});
 		model.onAllDataChanged().addListener(aVoid -> {
 			ChatMessageBatch messageBatch = this.getModel().getLastChatMessages(this.messagesFetchSize);

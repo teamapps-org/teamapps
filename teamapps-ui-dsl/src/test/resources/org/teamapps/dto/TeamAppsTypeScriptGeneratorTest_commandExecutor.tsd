@@ -22,9 +22,6 @@ export class CommandExecutor {
 			}
 	};
 
-	constructor() {
-	}
-
 	public async executeCommand(targetObject: any, command: any) {
 		return await this.commandExecutorsByCommandName[command._type](targetObject, command);
 	}
