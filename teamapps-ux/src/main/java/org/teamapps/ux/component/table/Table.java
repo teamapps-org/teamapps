@@ -218,6 +218,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		uiTable.setAllowMultiRowSelection(allowMultiRowSelection);
 		uiTable.setShowRowCheckBoxes(showRowCheckBoxes);
 		uiTable.setShowNumbering(showNumbering);
+		uiTable.setTextSelectionEnabled(textSelectionEnabled);
 		uiTable.setSortField(sorting != null ? sorting.getFieldName() : null);
 		uiTable.setSortDirection(sorting != null ? sorting.getSortDirection().toUiSortDirection() : null);
 		uiTable.setEditable(editable);
@@ -452,21 +453,63 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		}
 	}
 
-	public void setSelectedRecord(RECORD record, boolean scrollToRecordIfAvailable) {
-		setSelectedRecords(record != null ? List.of(record) : List.of(), scrollToRecordIfAvailable);
-	}
-
-	public void setSelectedRecords(List<RECORD> records, boolean scrollToRecordIfAvailable) {
-		this.selectedRecords = records == null ? List.of() : List.copyOf(records);
-		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), renderedRecords.getUiRecordIds(selectedRecords), scrollToRecordIfAvailable));
-	}
-
 	public void setSelectedRecord(RECORD record) {
 		setSelectedRecord(record, false);
 	}
 
+	public void setSelectedRecord(RECORD record, boolean scrollToRecordIfAvailable) {
+		setSelectedRecords(record != null ? List.of(record) : List.of(), scrollToRecordIfAvailable);
+	}
+
 	public void setSelectedRecords(List<RECORD> records) {
 		setSelectedRecords(records, false);
+	}
+
+	public void setSelectedRecords(List<RECORD> records, boolean scrollToFirstIfAvailable) {
+		this.selectedRecords = records == null ? List.of() : List.copyOf(records);
+		queueCommandIfRendered(() -> new UiTable.SelectRecordsCommand(getId(), renderedRecords.getUiRecordIds(selectedRecords), scrollToFirstIfAvailable));
+	}
+
+	public void setSelectedRow(int rowIndex) {
+		setSelectedRow(rowIndex, false);
+	}
+
+	public void setSelectedRow(int rowIndex, boolean scrollTo) {
+		getRecordByRowIndex(rowIndex).ifPresentOrElse(record -> {
+			this.selectedRecords = List.of(record);
+			queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), List.of(rowIndex), scrollTo));
+		}, () -> {
+			this.selectedRecords = List.of();
+			queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), List.of(), scrollTo));
+		});
+	}
+
+	public void setSelectedRows(List<Integer> rowIndexes) {
+		setSelectedRows(rowIndexes, false);
+	}
+
+	public void setSelectedRows(List<Integer> rowIndexes, boolean scrollToFirst) {
+		this.selectedRecords = getRecordsByRowIndexes(rowIndexes);
+		queueCommandIfRendered(() -> new UiTable.SelectRowsCommand(getId(), rowIndexes, scrollToFirst));
+	}
+
+	private List<RECORD> getRecordsByRowIndexes(List<Integer> rowIndexes) {
+		return rowIndexes.stream()
+				.flatMap((Integer rowIndex) -> getRecordByRowIndex(rowIndex).stream())
+				.collect(Collectors.toList());
+	}
+
+	private Optional<RECORD> getRecordByRowIndex(int rowIndex) {
+		List<RECORD> records = getModel().getRecords(rowIndex, 1);
+		if (records.size() >= 1) {
+			if (records.size() > 1) {
+				LOGGER.warn("Got multiple records from model when only asking for one! Taking the first one.");
+			}
+			return Optional.of(records.get(0));
+		} else {
+			LOGGER.error("Could not find record at row index {}", rowIndex);
+			return Optional.empty();
+		}
 	}
 
 	protected void updateColumnMessages(TableColumn<RECORD, ?> tableColumn) {

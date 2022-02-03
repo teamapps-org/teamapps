@@ -75,7 +75,8 @@ class UiTable extends UiComponent {
 	command markTableField(int recordId, String columnPropertyName, boolean mark); //mark or unmark the field to indicate errors or missing data
 	command clearAllFieldMarkings();
 	command setRecordBold(int recordId, boolean bold); //TODO
-	command selectRows(List<Integer> recordIds, boolean scrollToFirstRecord /* TODO */);
+	command selectRecords(List<Integer> recordIds, boolean scrollToFirstRecord);
+	command selectRows(List<Integer> rowIndexes, boolean scrollToFirstRowIndex);
 	command editCellIfAvailable(int recordId, String propertyName);
 	command cancelEditingCell(int recordId, String propertyName);
 	command focusCell(int recordId, String columnPropertyName);
