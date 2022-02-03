@@ -121,8 +121,6 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	private _sortField: string;
 	private _sortDirection: UiSortDirection;
 
-	private lastSelectedRecordIds: number[];
-
 	private doNotFireEventBecauseSelectionIsCausedByApiCall: boolean = false; // slickgrid fires events even if we set the selection via api...
 
 	private dropDown: UiDropDown;
@@ -172,8 +170,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		this.allColumns = this._createColumns();
 
 		if (config.showRowCheckBoxes) {
-			var checkboxSelector = new Slick.CheckboxSelectColumn({
-			});
+			var checkboxSelector = new Slick.CheckboxSelectColumn({});
 			this.allColumns.unshift(checkboxSelector.getColumnDefinition() as Column);
 		}
 		if (config.showNumbering) {
@@ -270,20 +267,17 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			});
 		});
 		this._grid.onSelectedRowsChanged.subscribe((eventData, args) => {
-			this.dataProvider.setSelectedRows(args.rows);
 			if (args.rows.some((row) => !this.dataProvider.getItem(row))) {
 				return; // TODO one of the selected rows has no id. How to handle this? What if the user wants to select a huge range?
 			}
-			const selectedIds = args.rows.map(i => this.dataProvider.getItem(i).id);
-			if (!this.doNotFireEventBecauseSelectionIsCausedByApiCall
-				&& JSON.stringify(this.lastSelectedRecordIds) !== JSON.stringify(selectedIds)) {
-				this.lastSelectedRecordIds = selectedIds;
+			if (!this.doNotFireEventBecauseSelectionIsCausedByApiCall && !this.dataProvider.agreesWithSelectedRows(args.rows)) {
 				this.onRowsSelected.fire({
 					recordIds: args.rows.map((selectionIndex) => {
 						return this.dataProvider.getItem(selectionIndex).id;
 					})
 				});
 			}
+			this.dataProvider.setSelectedRows(args.rows);
 			this.updateSelectionFramePosition(true);
 		});
 		this._grid.onCellChange.subscribe((eventData: EventData, args: Slick.OnCellChangeEventArgs<UiTableClientRecordConfig>) => {
@@ -363,7 +357,10 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 					recordIds: [recordId]
 				});
 				if (e.button == 2 && !isNaN(recordId) && this._config.contextMenuEnabled) {
-					this.contextMenu.open(e as unknown as MouseEvent, requestId => this.onContextMenuRequested.fire({recordId: recordId, requestId}));
+					this.contextMenu.open(e as unknown as MouseEvent, requestId => this.onContextMenuRequested.fire({
+						recordId: recordId,
+						requestId
+					}));
 				}
 			}
 		});
@@ -439,9 +436,14 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private createDisplayRangeChangedEvent(): UiTable_DisplayedRangeChangedEvent {
 		const viewPort = this._grid.getViewport();
+		const displayedStartIndex = viewPort.top;
+		const displayedLength = viewPort.bottom - viewPort.top;
+
+		const requestedStartIndex = Math.max(0, displayedStartIndex - displayedLength);
+		const requestedEndIndex = displayedStartIndex + 2 * displayedLength;
 		return {
-			startIndex: viewPort.top,
-			length: viewPort.bottom - viewPort.top
+			startIndex: requestedStartIndex,
+			length: requestedEndIndex - requestedStartIndex
 		};
 	}
 
@@ -642,7 +644,10 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	@executeWhenFirstDisplayed()
 	updateData(startIndex: number, recordIds: number[], newRecords: UiTableClientRecordConfig[], totalNumberOfRecords: number): any {
 		let editorCoordinates: { recordId: any; fieldName: any };
-		editorCoordinates = this._grid.getCellEditor() != null ? {recordId: this.getActiveCellRecordId(), fieldName: this.getActiveCellFieldName()} : null;
+		editorCoordinates = this._grid.getCellEditor() != null ? {
+			recordId: this.getActiveCellRecordId(),
+			fieldName: this.getActiveCellFieldName()
+		} : null;
 		// TODO necessary: this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
 
 		let changedRowNumbers = this.dataProvider.updateData(startIndex, recordIds, newRecords, totalNumberOfRecords);
@@ -669,7 +674,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		}
 	}
 
-	setSorting(sortField:string, sortDirection:UiSortDirection) {
+	setSorting(sortField: string, sortDirection: UiSortDirection) {
 		this._sortField = sortField;
 		this._sortDirection = sortDirection;
 		if (sortField) {
@@ -775,12 +780,26 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	}
 
 	@executeWhenFirstDisplayed()
-	public selectRows(recordIds: number[], scrollToFirstRecord: boolean /*TODO*/) {
+	public selectRecords(recordIds: number[], scrollToFirstIfAvailable: boolean) {
 		const rowIndexes = recordIds.map(id => this.dataProvider.getRowIndexByRecordId(id));
 		this.doWithoutFiringSelectionEvent(() => {
 			if (rowIndexes.length > 0) {
 				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(rowIndexes));
-				if (scrollToFirstRecord) {
+				if (scrollToFirstIfAvailable) {
+					this._grid.scrollRowToTop(rowIndexes[0]);
+				}
+			} else {
+				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
+			}
+		});
+	}
+
+	@executeWhenFirstDisplayed()
+	public selectRows(rowIndexes: number[], scrollToFirst: boolean) {
+		this.doWithoutFiringSelectionEvent(() => {
+			if (rowIndexes.length > 0) {
+				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(rowIndexes));
+				if (scrollToFirst) {
 					this._grid.scrollRowToTop(rowIndexes[0]);
 				}
 			} else {

@@ -19,8 +19,8 @@
  */
 import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
 import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
-import DataProvider = Slick.DataProvider;
 import {UiIdentifiableClientRecordConfig} from "../../generated/UiIdentifiableClientRecordConfig";
+import DataProvider = Slick.DataProvider;
 
 export class TableDataProvider implements DataProvider<UiTableClientRecordConfig> {
 	public onDataLoading = new Slick.Event();
@@ -49,7 +49,7 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 		}
 	}
 
-	updateData(startIndex: number, recordIds: number[], newRecords: UiIdentifiableClientRecordConfig[], totalNumberOfRecords: number): number[]|true {
+	updateData(startIndex: number, recordIds: number[], newRecords: UiIdentifiableClientRecordConfig[], totalNumberOfRecords: number): number[] | true {
 		const changedRowNumbers = this.calculateChangingRowNumbers(startIndex, recordIds);
 
 		this.dataStartIndex = startIndex;
@@ -151,4 +151,30 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 			}
 		})
 	}
+
+	/**
+	 *  Selection management might seem a bit tricky, but with the following explanation, things might clear up:
+	 *  - When the user selects a row, it gets selected on the client side (dataprovider) and server side.
+	 *  - Even after getting thrown out of the data provider, the server still knows about the selection and will set the selected flag
+	 *    when re-sending a selected record to the client
+	 *  - When a record is selected via server-side API, it also gets selected here (if present).
+	 *  TODO multi selection handling does currently not work with rows outside the buffer!
+	 */
+	agreesWithSelectedRows(rowIndexes: number[]) {
+		for (let i = 0; i < rowIndexes.length; i++) {
+			const item = this.getItem(rowIndexes[i]);
+			if (item != null && !item.selected) {
+				return false; // record selected in given rowIndexes but not selected here!
+			}
+		}
+		for (let i = 0; i < this.data.length; i++) {
+			const record = this.data[i];
+			const rowIndex = i + this.dataStartIndex;
+			if (record.selected && rowIndexes.indexOf(rowIndex) < 0) {
+				return false; // record not selected in given rowIndexes but here!
+			}
+		}
+		return true;
+	}
+
 }
