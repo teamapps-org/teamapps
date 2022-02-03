@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,7 @@ import org.teamapps.data.value.Sorting;
 import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
+import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
@@ -196,7 +197,8 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	@Override
-	protected void handleModelRegistered(TableModel<RECORD> model) {
+	protected void preRegisteringModel(TableModel<RECORD> model) {
+		// this should be done before registering the model, so we don't have to handle the corresponding model events
 		model.setSorting(sorting);
 	}
 
@@ -312,11 +314,17 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				this.sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
 				getModel().setSorting(sorting);
 				onSortingChanged.fire(new SortingChangedEventData(sortingChangedEvent.getSortField(), SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection())));
-				refreshData();
 				break;
 			case UI_TABLE_DISPLAYED_RANGE_CHANGED: {
 				UiTable.DisplayedRangeChangedEvent d = (UiTable.DisplayedRangeChangedEvent) event;
-				handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
+				try {
+					handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
+				} catch (DuplicateEntriesException e) {
+					// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
+					// So try to refresh the whole data instead.
+					LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
+					refreshData();
+				}
 				break;
 			}
 			case UI_TABLE_FIELD_ORDER_CHANGE: {
@@ -881,7 +889,6 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 		if (model != null) {
 			model.setSorting(sorting);
 		}
-		refreshData();
 	}
 
 	public boolean isEditable() {

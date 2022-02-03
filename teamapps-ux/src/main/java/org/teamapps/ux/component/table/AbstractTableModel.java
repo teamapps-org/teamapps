@@ -57,5 +57,6 @@ public abstract class AbstractTableModel<RECORD> implements TableModel<RECORD> {
 	@Override
 	public void setSorting(Sorting sorting) {
 		this.sorting = sorting;
+		onAllDataChanged.fire();
 	}
 }

@@ -65,16 +65,16 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		unregisterModelListeners();
 		this.model = model;
 		if (model != null) {
+			preRegisteringModel(model);
 			model.onAllDataChanged().addListener(this.modelOnAllDataChangedListener);
 			model.onRecordsAdded().addListener(this.modelOnRecordsAddedListener);
 			model.onRecordsChanged().addListener(this.modelOnRecordsChangedListener);
 			model.onRecordsRemoved().addListener(this.modelOnRecordsDeletedListener);
-			handleModelRegistered(model);
 		}
 		refresh();
 	}
 
-	protected void handleModelRegistered(MODEL model) {
+	protected void preRegisteringModel(MODEL model) {
 		// override if needed
 	}
 

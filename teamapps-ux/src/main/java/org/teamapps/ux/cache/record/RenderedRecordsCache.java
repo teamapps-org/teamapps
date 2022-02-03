@@ -109,7 +109,7 @@ public class RenderedRecordsCache<RECORD> {
 		}
 		int listInsertIndex = Math.max(0, startIndex - this.startIndex);
 		if (newClientRecordPairs.stream().anyMatch(rp -> uiRecordsByRecord.containsKey(rp.getRecord()))) {
-			throw new IllegalArgumentException("List components MUST NOT contains the same item several times!");
+			throw new DuplicateEntriesException("List components MUST NOT contains the same item several times!");
 		}
 		recordPairs.addAll(listInsertIndex, newClientRecordPairs);
 		for (RecordAndClientRecord<RECORD> rr : newClientRecordPairs) {
@@ -126,7 +126,7 @@ public class RenderedRecordsCache<RECORD> {
 		}
 		int listInsertIndex = startIndex - this.startIndex;
 		if (newClientRecordPairs.stream().anyMatch(rp -> uiRecordsByRecord.containsKey(rp.getRecord()))) {
-			throw new IllegalArgumentException("List components MUST NOT contains the same item several times! ");
+			throw new DuplicateEntriesException("List components MUST NOT contains the same item several times! ");
 		}
 		recordPairs.addAll(listInsertIndex, newClientRecordPairs);
 		for (RecordAndClientRecord<RECORD> rr : newClientRecordPairs) {
