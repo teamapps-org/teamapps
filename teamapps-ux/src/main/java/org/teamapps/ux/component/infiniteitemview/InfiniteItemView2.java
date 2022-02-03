@@ -29,6 +29,7 @@ import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiInfiniteItemView2;
 import org.teamapps.event.Event;
+import org.teamapps.ux.cache.record.DuplicateEntriesException;
 import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;
@@ -101,7 +102,14 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 		switch (event.getUiEventType()) {
 			case UI_INFINITE_ITEM_VIEW2_DISPLAYED_RANGE_CHANGED:
 				UiInfiniteItemView2.DisplayedRangeChangedEvent d = (UiInfiniteItemView2.DisplayedRangeChangedEvent) event;
-				handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
+				try {
+					handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
+				} catch (DuplicateEntriesException e) {
+					// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
+					// So try to refresh the whole data instead.
+					LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
+					refresh();
+				}
 				break;
 			case UI_INFINITE_ITEM_VIEW2_ITEM_CLICKED: {
 				UiInfiniteItemView2.ItemClickedEvent e = (UiInfiniteItemView2.ItemClickedEvent) event;
