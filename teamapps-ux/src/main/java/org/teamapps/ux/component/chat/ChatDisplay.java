@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,20 +19,24 @@
  */
 package org.teamapps.ux.component.chat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teamapps.dto.*;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icon.material.MaterialIconStyles;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
-import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ChatDisplay extends AbstractComponent {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final ChatDisplayModel model;
 	private int messagesFetchSize = 50;
@@ -95,7 +99,17 @@ public class ChatDisplay extends AbstractComponent {
 				ChatMessage chatMessage = model.getChatMessageById(q.getChatMessageId());
 				if (chatMessage != null) {
 					return contextMenuProvider.apply(chatMessage)
-							.thenApply(ClientObject::createUiReference);
+							.thenCompose(component -> {
+								if (component != null) {
+									return getSessionContext().runWithContext(component::createUiReference);
+								} else {
+									return CompletableFuture.completedFuture(null);
+								}
+							})
+							.exceptionally(throwable -> {
+								LOGGER.error("Exception in contextMenuProvider!", throwable);
+								return null;
+							});
 				}
 			}
 			default:
