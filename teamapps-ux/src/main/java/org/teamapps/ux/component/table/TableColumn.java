@@ -25,6 +25,7 @@ import org.teamapps.dto.UiTableColumn;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldMessage;
+import org.teamapps.ux.component.format.TextAlignment;
 import org.teamapps.ux.session.CurrentSessionContext;
 import org.teamapps.ux.session.SessionContext;
 
@@ -47,6 +48,7 @@ public class TableColumn<RECORD, VALUE> {
 	private boolean sortable = true;
 	private boolean resizeable = true;
 	private boolean hiddenIfOnlyEmptyCellsVisible = false;
+	private TextAlignment headerAlignment = TextAlignment.LEFT;
 	private ValueExtractor<RECORD, VALUE> valueExtractor;
 	private ValueInjector<RECORD, VALUE> valueInjector;
 
@@ -88,6 +90,7 @@ public class TableColumn<RECORD, VALUE> {
 		uiTableColumn.setSortable(sortable);
 		uiTableColumn.setResizeable(resizeable);
 		uiTableColumn.setVisible(visible);
+		uiTableColumn.setHeaderAlignment(headerAlignment.toUiTextAlignment());
 		uiTableColumn.setHiddenIfOnlyEmptyCellsVisible(hiddenIfOnlyEmptyCellsVisible);
 		uiTableColumn.setMessages(messages.stream().map(fieldMessage -> fieldMessage.createUiFieldMessage(FieldMessage.Position.POPOVER, FieldMessage.Visibility.ON_HOVER_OR_FOCUS)).collect(Collectors.toList()));
 		return uiTableColumn;
@@ -217,6 +220,15 @@ public class TableColumn<RECORD, VALUE> {
 
 	public String getPropertyName() {
 		return propertyName;
+	}
+
+	public TextAlignment getHeaderAlignment() {
+		return headerAlignment;
+	}
+
+	public TableColumn<RECORD, VALUE> setHeaderAlignment(TextAlignment headerAlignment) {
+		this.headerAlignment = headerAlignment;
+		return this;
 	}
 
 	public ValueExtractor<RECORD, VALUE> getValueExtractor() {

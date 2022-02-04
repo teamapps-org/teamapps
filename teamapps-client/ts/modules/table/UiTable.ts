@@ -64,6 +64,7 @@ import {UiTableRowSelectionModel} from "./UiTableRowSelectionModel";
 import {ContextMenu} from "../micro-components/ContextMenu";
 import {UiComponent} from "../UiComponent";
 import EventData = Slick.EventData;
+import {UiTextAlignment} from "../../generated/UiTextAlignment";
 
 interface Column extends Slick.Column<any> {
 	id: string;
@@ -556,6 +557,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		if (highestSeverity != null) {
 			columnCssClasses.push(backgroundColorCssClassesByMessageSeverity[highestSeverity]);
 		}
+		columnCssClasses.push("align-" + UiTextAlignment[column.uiConfig.headerAlignment].toLocaleLowerCase());
 		return columnCssClasses.join(" ");
 	}
 

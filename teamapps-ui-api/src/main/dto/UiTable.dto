@@ -34,6 +34,7 @@ class UiTableColumn {
 	boolean visible = true;
 	boolean hiddenIfOnlyEmptyCellsVisible = false;
 	List<UiFieldMessage> messages;
+	UiTextAlignment headerAlignment;
 }
 
 class UiTable extends UiComponent {
