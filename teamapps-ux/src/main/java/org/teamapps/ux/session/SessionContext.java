@@ -410,6 +410,7 @@ public class SessionContext {
 	}
 
 	public void registerClientObject(ClientObject clientObject) {
+		CurrentSessionContext.throwIfNotSameAs(this);
 		clientObjectsById.put(clientObject.getId(), clientObject);
 	}
 

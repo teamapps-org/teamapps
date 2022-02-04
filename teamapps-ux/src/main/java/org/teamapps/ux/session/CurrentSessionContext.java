@@ -38,6 +38,21 @@ public class CurrentSessionContext {
 		return sessionContext;
 	}
 
+	public static void throwIfNotSameAs(SessionContext sessionContext) {
+		SessionContext currentSessionContext = CURRENT_CONTEXT.get();
+		if (currentSessionContext != sessionContext) {
+			String errorMessage;
+			if (currentSessionContext == null) {
+				errorMessage = "CurrentSessionContext is not set! Please use SessionContext.runWithContext(Runnable) to set the context.";
+			} else {
+				errorMessage = "CurrentSessionContext is set to a different session context than expected! Please use SessionContext.runWithContext(Runnable) to set the context.";
+			}
+			IllegalStateException illegalStateException = new IllegalStateException(errorMessage);
+			LOGGER.error(errorMessage, illegalStateException);
+			throw illegalStateException;
+		}
+	}
+
 	public static SessionContext getOrNull() {
 		return CURRENT_CONTEXT.get();
 	}

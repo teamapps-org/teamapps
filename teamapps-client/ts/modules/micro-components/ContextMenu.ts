@@ -64,9 +64,12 @@ export class ContextMenu {
 		e.preventDefault();
 		this.setContent(null);
 
+		this.$main.style.opacity = "0";
 		document.body.appendChild(this.$main);
-		let rect = this.$main.getBoundingClientRect();
+		this.$main.offsetHeight; // force css layout
+		this.$main.style.opacity = "1";
 
+		let rect = this.$main.getBoundingClientRect();
 		let {pageX, pageY} = e;
 		pageX = Math.min(pageX, window.innerWidth - rect.width - this.viewPortPadding);
 		pageX = Math.max(pageX, this.viewPortPadding);

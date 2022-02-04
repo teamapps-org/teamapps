@@ -72,7 +72,11 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 				let chatMessageId = Number(element.getAttribute("data-id"));
 				this.contextMenu.open(ev, async requestId => {
 					let contentComponent = await config.requestContextMenu({chatMessageId}) as UiComponent;
-					this.contextMenu.setContent(contentComponent, requestId)
+					if (contentComponent != null) {
+						this.contextMenu.setContent(contentComponent, requestId);
+					} else {
+						this.contextMenu.close(requestId);
+					}
 				});
 			}
 		})
