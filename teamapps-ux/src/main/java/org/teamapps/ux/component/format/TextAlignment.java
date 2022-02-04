@@ -26,7 +26,7 @@ public enum TextAlignment {
 	LEFT,
 	CENTER,
 	RIGHT,
-	JUSTIFIED,;
+	JUSTIFY;
 
 	public UiTextAlignment toUiTextAlignment() {
 		return UiTextAlignment.valueOf(this.toString());

@@ -219,6 +219,11 @@
       height: 29px;
       display: inline-flex;
       align-items: center;
+
+      &.align-left .slick-column-name {justify-content: flex-start;}
+      &.align-right .slick-column-name {justify-content: flex-end;}
+      &.align-center .slick-column-name {justify-content: center;}
+      &.align-justify .slick-column-name {justify-content: space-between;}
     }
 
     .slick-header-columns {
