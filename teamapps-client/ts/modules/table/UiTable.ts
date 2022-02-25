@@ -788,7 +788,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			if (rowIndexes.length > 0) {
 				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(rowIndexes));
 				if (scrollToFirstIfAvailable) {
-					this._grid.scrollRowToTop(rowIndexes[0]);
+					this._grid.scrollRowIntoView(rowIndexes[0], false);
 				}
 			} else {
 				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));
@@ -802,7 +802,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 			if (rowIndexes.length > 0) {
 				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(rowIndexes));
 				if (scrollToFirst) {
-					this._grid.scrollRowToTop(rowIndexes[0]);
+					this._grid.scrollRowIntoView(rowIndexes[0], false);
 				}
 			} else {
 				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows([]));

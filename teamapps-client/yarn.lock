@@ -1072,10 +1072,10 @@
   dependencies:
     "@types/jquery" "*"
 
-"@types/slickgrid@2.x":
-  version "2.1.29"
-  resolved "https://registry.npmjs.org/@types/slickgrid/-/slickgrid-2.1.29.tgz"
-  integrity sha512-dAWPuYLDb4EfEaMZtbI2Z/4epL1o8tazkv+7gIEwbU2gYwATW4cce75/R6m2/Zfxj1FmEX71SL9WRwf2x4VQQw==
+"@types/slickgrid@^2.1.31":
+  version "2.1.31"
+  resolved "https://registry.yarnpkg.com/@types/slickgrid/-/slickgrid-2.1.31.tgz#a552ab629f1676c6ae7deac846e916196e4cbc0d"
+  integrity sha512-t/LodOkh8yP+o2jKcHsC0hAjDh1kl4RSFXKWmR9+U5FwXE7VpipqiAkE1W3NnGNA3ni5xnKQJt/CNXurJWTQ6w==
   dependencies:
     "@types/jquery" "*"
 
@@ -5711,12 +5711,24 @@ jest@^26.5.3:
     import-local "^3.0.2"
     jest-cli "^26.5.3"
 
-jquery-ui@>=1.8.0, jquery-ui@^1.12.1:
+jquery-ui@>=1.8.0:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.13.1.tgz#d0b7a42e73a04c31bb5706adf86f6f8942f64eaa"
+  integrity sha512-2VlU59N5P4HaumDK1Z3XEVjSvegFbEOQRgpHUBaB2Ak98Axl3hFhJ6RFcNQNuk9SfL6WxIbuLst8dW/U56NSiA==
+  dependencies:
+    jquery ">=1.8.0 <4.0.0"
+
+jquery-ui@^1.12.1:
   version "1.12.1"
   resolved "https://registry.npmjs.org/jquery-ui/-/jquery-ui-1.12.1.tgz"
   integrity sha1-vLQEXI3QU5wTS8FIjN0+dop6nlE=
 
-jquery@>=1.8.0, jquery@^3.5.1:
+jquery@>=1.8.0, "jquery@>=1.8.0 <4.0.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
+  integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
+
+jquery@^3.5.1:
   version "3.5.1"
   resolved "https://registry.npmjs.org/jquery/-/jquery-3.5.1.tgz"
   integrity sha512-XwIBPqcMn57FxfT+Go5pzySnm4KWkT1Tv7gjrpT1srtf8Weynl6R273VJ5GjkRb51IzMp5nbaPjJXMWeju2MKg==
@@ -8409,10 +8421,10 @@ slick-carousel@^1.8.1:
   resolved "https://registry.npmjs.org/slick-carousel/-/slick-carousel-1.8.1.tgz"
   integrity sha512-XB9Ftrf2EEKfzoQXt3Nitrt/IPbT+f1fgqBdoxO3W/+JYvtEOW6EgxnWfr9GH6nmULv7Y2tPmEX3koxThVmebA==
 
-"slickgrid@https://github.com/yamass/SlickGrid.git#d8ed005670faae0635ec5abad2f5ed20bf454812":
-  version "2.3.21"
-  resolved "https://github.com/yamass/SlickGrid.git#d8ed005670faae0635ec5abad2f5ed20bf454812"
-  integrity sha512-pkMvzix6Z1u+Oh0DtNTWhYnFsscdATXVal+kNlqEKLtY9u1Ql34WiGwvaOxvszMKKiGtKxLXn4E6fW0K0yDQzQ==
+slickgrid@^2.4.44:
+  version "2.4.44"
+  resolved "https://registry.yarnpkg.com/slickgrid/-/slickgrid-2.4.44.tgz#ddcb41c8a0184a2c177bc88d90e428ff42e1cb9a"
+  integrity sha512-DF7ePE5bwitJrRdJSNrV+qAnQsfds0GbRA02ywy6TQrQewkm9DSHGDUxJaoJk2WUMlyQ7Odrf2o1PCZM50BcSg==
   dependencies:
     jquery ">=1.8.0"
     jquery-ui ">=1.8.0"
