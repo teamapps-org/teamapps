@@ -235,6 +235,7 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	private updatePromise: Promise<void> = Promise.resolve();
+
 	update(config: UiMediaSoupV3WebRtcClientConfig): void {
 		this.updatePromise = this.updatePromise.finally(() => {
 			return this.updateInternal(config);
@@ -304,45 +305,42 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 
 		const oldParams = this._config.playbackParameters;
 		const needsReset = forceRefresh
-			|| oldParams?.server?.url !== newParams?.server?.url || oldParams?.server?.worker !== newParams?.server?.worker
-			|| oldParams?.origin?.url !== newParams?.origin?.url || oldParams?.origin?.worker !== newParams?.origin?.worker
-			|| oldParams?.streamUuid != newParams?.streamUuid;
+			|| oldParams?.server?.url !== newParams.server?.url || oldParams?.server?.worker !== newParams.server?.worker
+			|| oldParams?.origin?.url !== newParams.origin?.url || oldParams?.origin?.worker !== newParams.origin?.worker
+			|| oldParams?.streamUuid != newParams.streamUuid;
 		if (needsReset) {
 			console.log("updatePlayback() --> needsReset", oldParams, newParams);
 			await this.stop();
+			try {
+				let conferenceApiConfig: ConferenceInput = {
+					stream: newParams.streamUuid,
+					token: newParams.server.token,
+					url: newParams.server.url,
+					worker: newParams.server.worker,
+					origin: newParams.origin,
+					kinds: [...(newParams.audio ? ["audio"] : []), ...(newParams.video ? ["video"] : [])] as MediaKind[],
+					stopTracks: true
+				};
+				console.log("ConferenceApi config: ", conferenceApiConfig);
+				this.conferenceClient = new ConferenceApi(conferenceApiConfig);
+				this.registerStatuslListeners(this.conferenceClient, "playback");
+				const mediaStream = await this.conferenceClient.subscribe();
+				this.$video.muted = false;
+				this.$video.srcObject = mediaStream;
+				this.makeSafariVideoElementObserveMediaStreamTracks(mediaStream);
 
-			if (newParams != null) {
-				try {
-					let conferenceApiConfig: ConferenceInput = {
-						stream: newParams.streamUuid,
-						token: newParams.server.token,
-						url: newParams.server.url,
-						worker: newParams.server.worker,
-						origin: newParams.origin,
-						kinds: [...(newParams.audio ? ["audio"] : []), ...(newParams.video ? ["video"] : [])] as MediaKind[],
-						stopTracks: true
-					};
-					console.log("ConferenceApi config: ", conferenceApiConfig);
-					this.conferenceClient = new ConferenceApi(conferenceApiConfig);
-					this.registerStatuslListeners(this.conferenceClient, "playback");
-					const mediaStream = await this.conferenceClient.subscribe();
-					this.$video.muted = false;
-					this.$video.srcObject = mediaStream;
-					this.makeSafariVideoElementObserveMediaStreamTracks(mediaStream);
-
-					this.startVideoPlayback(() => {
-						console.log("Video playback successful.");
-						this.onSubscribingSuccessful.fire({});
-						this.$unmuteButtonWrapper.classList.add("hidden");
-					}, (e) => {
-						console.error("Video playback failed.");
-						this.onSubscribingFailed.fire({errorMessage: e.toString()});
-						this.$unmuteButtonWrapper.classList.remove("hidden");
-					})
-				} catch (error) {
-					console.error("Error while starting playback!", error, error.stack);
-					this.onSubscribingFailed.fire({errorMessage: error.toString()});
-				}
+				this.startVideoPlayback(() => {
+					console.log("Video playback successful.");
+					this.onSubscribingSuccessful.fire({});
+					this.$unmuteButtonWrapper.classList.add("hidden");
+				}, (e) => {
+					console.error("Video playback failed.");
+					this.onSubscribingFailed.fire({errorMessage: e.toString()});
+					this.$unmuteButtonWrapper.classList.remove("hidden");
+				})
+			} catch (error) {
+				console.error("Error while starting playback!", error, error.stack);
+				this.onSubscribingFailed.fire({errorMessage: error.toString()});
 			}
 		} else {
 			if (oldParams?.audio !== newParams.audio || oldParams.video !== newParams.video) {
@@ -382,8 +380,8 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 	}
 
 	async updatePublishing(newParams: UiMediaSoupPublishingParametersConfig, forceRefresh: boolean) {
-		this.connectionStatus.shouldHaveAudio = newParams.audioConstraints != null;
-		this.connectionStatus.shouldHaveVideo = newParams.videoConstraints != null;
+		this.connectionStatus.shouldHaveAudio = newParams?.audioConstraints != null;
+		this.connectionStatus.shouldHaveVideo = newParams?.videoConstraints != null;
 		this.updateStateCssClasses();
 
 		let oldParams = this._config.publishingParameters;
@@ -420,7 +418,11 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 					if (e.statusCode) {
 						console.error("HTTP status code: " + e.statusCode);
 					}
-					this.onTrackPublishingFailed.fire({audio: newParams.audioConstraints != null, video: newParams.videoConstraints != null, errorMessage: e.toString()});
+					this.onTrackPublishingFailed.fire({
+						audio: newParams.audioConstraints != null,
+						video: newParams.videoConstraints != null,
+						errorMessage: e.toString()
+					});
 					await this.stop();
 					this.updateStateCssClasses();
 				}
@@ -437,6 +439,16 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			this.$video.play(); // do not await - will hang for audio only (don't know why!)
 		}
 		this.$video.classList.toggle("mirrored", (newParams?.videoConstraints != null) && (newParams?.screenSharingConstraints == null));
+
+		if (oldParams?.recording !== newParams.recording) {
+			if (newParams.recording) {
+				console.log("startRecording"); //, jwt_decode(newParams.server.token));
+				await this.conferenceClient.startRecording();
+			} else {
+				console.log("stopRecording");
+				await this.conferenceClient.stopRecording();
+			}
+		}
 	}
 
 	private async updatePublishedTracks(
@@ -466,7 +478,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 				}
 				if (newAudioConstraints != null) {
 					try {
-						let audioTracks = (await window.navigator.mediaDevices.getUserMedia({audio: newAudioConstraints, video: false})) // rejected if user denies!
+						let audioTracks = (await window.navigator.mediaDevices.getUserMedia({
+							audio: newAudioConstraints,
+							video: false
+						})) // rejected if user denies!
 							.getAudioTracks();
 						this.audioTrack = audioTracks[0];
 						for (let i = 1; i < audioTracks.length; i++) {
@@ -494,7 +509,10 @@ export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3
 			}
 			if (newWebcamConstraints != null) {
 				try {
-					let videoTracks = (await window.navigator.mediaDevices.getUserMedia({audio: false, video: createVideoConstraints(newWebcamConstraints)})) // rejected if user denies!
+					let videoTracks = (await window.navigator.mediaDevices.getUserMedia({
+						audio: false,
+						video: createVideoConstraints(newWebcamConstraints)
+					})) // rejected if user denies!
 						.getVideoTracks();
 					this.webcamTrack = videoTracks[0];
 					for (let i = 1; i < videoTracks.length; i++) {
