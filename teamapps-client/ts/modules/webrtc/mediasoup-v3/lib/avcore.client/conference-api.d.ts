@@ -1,26 +1,7 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
- * Copyright (C) 2014 - 2022 TeamApps.org
- * ---
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =========================LICENSE_END==================================
- */
 /// <reference types="node" />
 import { EventEmitter } from "events";
 import { MediaKind } from 'mediasoup-client/lib/RtpParameters';
-import { ConferenceInput, ConsumerLayers } from '../avcore';
+import { ConferenceInput, ConsumerLayers } from 'avcore';
 export declare interface ConferenceApi {
     on(event: 'bitRate', listener: ({ bitRate: number, kind: MediaKind }: {
         bitRate: any;
@@ -57,10 +38,14 @@ export declare class ConferenceApi extends EventEmitter {
     private iceServers;
     private simulcast;
     private readonly availableKinds;
+    private mixerId;
+    private pipeId;
     constructor(configs: ConferenceInput);
     setPreferredLayers(layers: ConsumerLayers): Promise<void>;
     addTrack(track: MediaStreamTrack): Promise<void>;
     removeTrack(track: MediaStreamTrack): Promise<void>;
+    startRecording(width?: number, height?: number): Promise<void>;
+    stopRecording(): Promise<void>;
     setMaxPublisherBitrate(bitrate: number): Promise<void>;
     updateKinds(kinds: MediaKind[]): Promise<void>;
     private destroyClient;
