@@ -34,7 +34,7 @@ class UiMediaSoupV3WebRtcClient extends UiComponent {
 	// only one (or none) of the following must be set:
 	UiMediaSoupPublishingParameters publishingParameters;
     UiMediaSoupPlaybackParameters playbackParameters;
-
+	
 	command update(UiMediaSoupV3WebRtcClient config);
 	command setActive(boolean active);
 	command setContextMenuContent(int requestId, UiComponent* component);
@@ -105,8 +105,6 @@ class UiMediaSoupPublishingParameters {
 	long minBitrate;
 	long maxBitrate;
 	long keyFrameRequestDelay = 2500; // milliseconds
-
-	boolean recording;
 }
 
 class UiMediaServerUrlAndToken {
