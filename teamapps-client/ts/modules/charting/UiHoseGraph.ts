@@ -43,6 +43,7 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 	private $upperLine: SVGSelection<any>;
 	private area: D3Area2<DataPoint>;
 	private $area: SVGSelection<any>;
+	private $defs: SVGSelection<any>;
 	private $dots: SVGSelection<any>;
 
 	private $yZeroLine: SVGSelection<any>;
@@ -127,9 +128,17 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 		// .style("filter", `url("#${this.dropShadowFilterId}")`);
 		this.$dots = this.$main.append<SVGGElement>("g")
 			.classed("dots", true);
+
+		this.$defs = this.$main.append<SVGDefsElement>("defs")
+			.html(`<pattern id="area-stripe-fill-${this.timeGraphId}-${this.config.id}" class="area-stripe-fill" patternUnits="userSpaceOnUse" width="6" height="6">
+				  <path d="M-1,1 l2,-2 M0,6 l6,-6 M5,7 l2,-2" stroke="${this.config.areaColor ?? "#00000000"}" stroke-width="1"></path>
+				</pattern>`);
 	}
 
 	public doRedraw() {
+		this.$defs.select(".area-stripe-fill path")
+			.attr("stroke", this.config.areaColor ?? "#00000000");
+
 		let areaDataMax: UiLineGraphDataPointConfig[];
 		if (isVisibleColor(this.config.upperLineColor)) {
 			areaDataMax = this.upperLineDataStore.getData(this.zoomLevelIndex, this.getDisplayedIntervalX()).dataPoints;
@@ -183,7 +192,7 @@ export class UiHoseGraph extends AbstractUiGraph<UiHoseGraphConfig, UiHoseGraphD
 			});
 		this.$area
 			.attr("d", this.area.writePath(areaDataMin, areaDataMax))
-			.attr("fill", this.config.areaColor ?? "#00000000");
+			.attr("fill", this.config.stripedArea ? `url(#area-stripe-fill-${this.timeGraphId}-${this.config.id})`: this.config.areaColor ?? "#00000000");
 
 		let $dotsDataSelection = this.$dots.selectAll<SVGCircleElement, UiHoseGraphDataConfig>("circle.dot")
 			.data(this.config.dataDotRadius > 0 ? lineData : [])

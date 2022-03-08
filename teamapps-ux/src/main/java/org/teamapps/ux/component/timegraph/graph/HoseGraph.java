@@ -34,6 +34,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 	private Color lowerLineColor;
 	private Color upperLineColor;
 	private Color areaColor;
+	private boolean stripedArea;
 
 	public HoseGraph(HoseGraphModel model) {
 		this(model, LineChartCurveType.MONOTONE, 2, Color.fromRgb(73, 128, 192));
@@ -45,6 +46,10 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 	}
 
 	public HoseGraph(HoseGraphModel model, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor, Color areaColor) {
+		this(model, curveType, dataDotRadius, centerLineColor, areaColor, false);
+	}
+
+	public HoseGraph(HoseGraphModel model, LineChartCurveType curveType, float dataDotRadius, Color centerLineColor, Color areaColor, boolean stripedArea) {
 		super(model);
 		this.curveType = curveType;
 		this.dataDotRadius = dataDotRadius;
@@ -52,6 +57,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 		this.lowerLineColor = (centerLineColor instanceof RgbaColor) ? ((RgbaColor) centerLineColor).withAlpha(((RgbaColor) centerLineColor).getAlpha() / 5) : RgbaColor.TRANSPARENT;
 		this.upperLineColor = (centerLineColor instanceof RgbaColor) ? ((RgbaColor) centerLineColor).withAlpha(((RgbaColor) centerLineColor).getAlpha() / 5) : RgbaColor.TRANSPARENT;
 		this.areaColor = areaColor;
+		this.stripedArea = stripedArea;
 	}
 
 	public UiHoseGraph createUiFormat() {
@@ -64,6 +70,7 @@ public class HoseGraph extends AbstractGraph<HoseGraphData, HoseGraphModel> {
 		ui.setLowerLineColor(lowerLineColor != null ? lowerLineColor.toHtmlColorString() : null);
 		ui.setUpperLineColor(upperLineColor != null ? upperLineColor.toHtmlColorString() : null);
 		ui.setAreaColor(areaColor != null ? areaColor.toHtmlColorString() : null);
+		ui.setStripedArea(stripedArea);
 
 		return ui;
 	}

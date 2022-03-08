@@ -90,6 +90,7 @@ class UiHoseGraph implements UiGraph {
 	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
     float dataDotRadius;
     String areaColor;
+    boolean stripedArea;
     String middleLineColor;
 	String lowerLineColor;
 	String upperLineColor;
