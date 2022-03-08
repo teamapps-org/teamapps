@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -155,11 +155,12 @@ public enum BaseTemplate implements Template {
 				.addColumn(SizeType.AUTO, 0, 0, 2, 2)
 				.addColumn(SizingPolicy.FRACTION)
 				.addRow(SizeType.AUTO, 0, 0, 2, 2)
-				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 20))
+				.addElement(new IconElement(PROPERTY_ICON, 0, 0, 20).setMargin(new Spacing(0, 2, 0, 0)))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, 20, 20)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))
 						.setShadow(Shadow.withSize(1.5f))
-						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
+						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT)
+						.setMargin(new Spacing(0, 2, 0, 0)))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1)
 						.setWrapLines(false)
 						.setPadding(new Spacing(0, 2, 0, 0)));
