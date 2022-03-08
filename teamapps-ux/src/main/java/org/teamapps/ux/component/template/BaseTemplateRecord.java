@@ -73,7 +73,7 @@ public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 	}
 
 	public BaseTemplateRecord(String image, String caption, PAYLOAD payload) {
-		this(null, image, caption, null, payload);
+		this(image, caption, null, payload);
 	}
 
 	public BaseTemplateRecord(String image, String caption, String description) {
@@ -81,7 +81,7 @@ public class BaseTemplateRecord<PAYLOAD> implements PayloadProvider<PAYLOAD> {
 	}
 
 	public BaseTemplateRecord(String image, String caption, String description, PAYLOAD payload) {
-		this(null, image, caption, description, payload);
+		this(null, image, caption, description, null, payload);
 	}
 
 	public BaseTemplateRecord(String image, String caption, String description, String badge) {
