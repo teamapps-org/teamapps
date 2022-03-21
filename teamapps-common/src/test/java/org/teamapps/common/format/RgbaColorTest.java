@@ -38,7 +38,7 @@ public class RgbaColorTest {
 	}
 
 	@Test
-	public void test() throws Exception {
+	public void testFromHsla() throws Exception {
 		testColorToAndFromHsl(RgbaColor.MATERIAL_GREEN_300);
 		testColorToAndFromHsl(RgbaColor.MATERIAL_RED_500);
 		testColorToAndFromHsl(RgbaColor.MATERIAL_BLUE_300);
@@ -91,6 +91,31 @@ public class RgbaColorTest {
 	@Test
 	public void fromHtmlString_standardColor() throws Exception {
 		assertRgba(RgbaColor.fromHtmlString("floralwhite"), 255, 250, 240, 1);
+	}
+
+	@Test
+	public void testToHtmlHexColorString() {
+		assertThat(Color.fromRgb(0xFF, 0x0, 0x0).toHtmlHexColorString()).isEqualTo("#FF0000");
+		assertThat(Color.fromRgb(0x0, 0xFF, 0x0).toHtmlHexColorString()).isEqualTo("#00FF00");
+		assertThat(Color.fromRgb(0x0, 0x0, 0xFF).toHtmlHexColorString()).isEqualTo("#0000FF");
+		assertThat(Color.fromRgb(0x1, 0x1, 0x1).toHtmlHexColorString()).isEqualTo("#010101");
+
+		assertThat(Color.fromRgba(0xFF, 0x0, 0x0, 0.75f).toHtmlHexColorString()).isEqualTo("#FF0000BF");
+		assertThat(Color.fromRgba(0x0, 0xFF, 0x0, 0.75f).toHtmlHexColorString()).isEqualTo("#00FF00BF");
+		assertThat(Color.fromRgba(0x0, 0x0, 0xFF, 0.75f).toHtmlHexColorString()).isEqualTo("#0000FFBF");
+		assertThat(Color.fromRgba(0x1, 0x1, 0x1, 0.75f).toHtmlHexColorString()).isEqualTo("#010101BF");
+		assertThat(Color.fromRgba(0xFF, 0x0, 0x0, 0.05f).toHtmlHexColorString()).isEqualTo("#FF00000C");
+		assertThat(Color.fromRgba(0x0, 0x0, 0xFF, 0.05f).toHtmlHexColorString()).isEqualTo("#0000FF0C");
+
+		assertThat(Color.fromRgba(0xFF, 0x0, 0x0, 1).toHtmlHexColorString()).isEqualTo("#FF0000");
+		assertThat(Color.fromRgba(0x0, 0xFF, 0x0, 1).toHtmlHexColorString()).isEqualTo("#00FF00");
+		assertThat(Color.fromRgba(0x0, 0x0, 0xFF, 1).toHtmlHexColorString()).isEqualTo("#0000FF");
+		assertThat(Color.fromRgba(0x1, 0x1, 0x1, 1).toHtmlHexColorString()).isEqualTo("#010101");
+
+		assertThat(Color.fromRgba(0xFF, 0x0, 0x0, 0).toHtmlHexColorString()).isEqualTo("#FF000000");
+		assertThat(Color.fromRgba(0x0, 0xFF, 0x0, 0).toHtmlHexColorString()).isEqualTo("#00FF0000");
+		assertThat(Color.fromRgba(0x0, 0x0, 0xFF, 0).toHtmlHexColorString()).isEqualTo("#0000FF00");
+		assertThat(Color.fromRgba(0x1, 0x1, 0x1, 0).toHtmlHexColorString()).isEqualTo("#01010100");
 	}
 
 	private void assertRgba(RgbaColor color, int r, int g, int b, float a) {
