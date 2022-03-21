@@ -23,8 +23,6 @@ import org.teamapps.dto.UiClientObjectReference;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiQuery;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
  * A client object has a representation on the client.
  * This representation is said to be rendered when the client holds a corresponding instance of it.
@@ -49,7 +47,7 @@ public interface ClientObject {
 	default void handleUiEvent(UiEvent event) {
 	}
 
-	default CompletableFuture<?> handleUiQuery(UiQuery query) {
-		return CompletableFuture.completedFuture(null);
+	default Object handleUiQuery(UiQuery query) {
+		return null;
 	}
 }

@@ -112,8 +112,8 @@ public class SessionContext {
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
-		public CompletableFuture<Void> onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
-			return runWithContext(() -> {
+		public void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
+			runWithContext(() -> {
 				String uiComponentId = event.getComponentId();
 				if (uiComponentId != null) {
 					ClientObject clientObject = getClientObject(uiComponentId);
@@ -129,24 +129,17 @@ public class SessionContext {
 		}
 
 		@Override
-		public void onUiQuery(QualifiedUiSessionId sessionId, UiQuery query, Consumer<Object> resultCallback, Consumer<Throwable> errorCallback) {
+		public void onUiQuery(QualifiedUiSessionId sessionId, UiQuery query, Consumer<Object> resultCallback) {
 			runWithContext(() -> {
 				String uiComponentId = query.getComponentId();
 				ClientObject clientObject = getClientObject(uiComponentId);
 				if (clientObject != null) {
-					clientObject.handleUiQuery(query)
-							.handle((result, throwable) -> {
-								if (throwable != null) {
-									errorCallback.accept(throwable);
-								} else {
-									new UxJacksonSerializationTemplate(SessionContext.this).doWithUxJacksonSerializers(() -> {
-										resultCallback.accept(result);
-									});
-								}
-								return null;
-							});
+					Object result = clientObject.handleUiQuery(query);
+					new UxJacksonSerializationTemplate(SessionContext.this).doWithUxJacksonSerializers(() -> {
+						resultCallback.accept(result);
+					});
 				} else {
-					errorCallback.accept(new TeamAppsComponentNotFoundException(sessionId, uiComponentId));
+					throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
 				}
 			});
 		}
@@ -244,7 +237,11 @@ public class SessionContext {
 	}
 
 	public void destroy() {
-		uiSession.close(UiSessionClosingReason.TERMINATED_BY_APPLICATION);
+		destroy(UiSessionClosingReason.TERMINATED_BY_APPLICATION);
+	}
+
+	private void destroy(UiSessionClosingReason reason) {
+		uiSession.close(reason);
 	}
 
 	public Event<Void> onDestroyed() {
@@ -335,9 +332,15 @@ public class SessionContext {
 			// Fast lane! This thread is already bound to this SessionContext. Just execute the runnable.
 			try {
 				return CompletableFuture.completedFuture(callable.call());
-			} catch (Exception e) {
-				LOGGER.error("Exception while executing within session context (fast lane execution)", e);
-				return CompletableFuture.failedFuture(e);
+			} catch (Throwable t) {
+				/*
+				 note that we don't return a failed completable future in this case, since we want to make sure
+				 1) the exception is logged
+				 2) the session is closed
+				 3) the code that is calling this (which is already in a thread bound to this session context)
+				    does not do any further stuff inside the sessionContext.
+				*/
+				throw new FastLaneExecutionException("Exception during fast lane execution!", t);
 			}
 		} else {
 			return CompletableFuture.supplyAsync(() -> {
@@ -348,6 +351,10 @@ public class SessionContext {
 							.createWrappedRunnable(() -> resultHolder[0] = softenExceptions(callable))
 							.run();
 					return ((R) resultHolder[0]);
+				} catch (Throwable t) {
+					LOGGER.error("Exception while executing within session context", t);
+					this.destroy(UiSessionClosingReason.SERVER_SIDE_ERROR);
+					throw t;
 				} finally {
 					CurrentSessionContext.unset();
 				}
