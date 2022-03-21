@@ -36,7 +36,6 @@ import org.teamapps.ux.component.tree.TreeNodeInfo;
 import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -130,7 +129,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	}
 
 	@Override
-	public CompletableFuture<?> handleUiQuery(UiQuery query) {
+	public Object handleUiQuery(UiQuery query) {
 		switch (query.getUiQueryType()) {
 			case UI_COMBO_BOX_RETRIEVE_DROPDOWN_ENTRIES: {
 				final UiComboBox.RetrieveDropdownEntriesQuery q = (UiComboBox.RetrieveDropdownEntriesQuery) query;
@@ -142,9 +141,9 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 					}
 					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
 					cacheResponse.commit();
-					return CompletableFuture.completedFuture(cacheResponse.getAndClearResult());
+					return cacheResponse.getAndClearResult();
 				} else {
-					return CompletableFuture.completedFuture(List.of());
+					return List.of();
 				}
 			}
 			case UI_COMBO_BOX_LAZY_CHILDREN: {
@@ -158,14 +157,14 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 						}
 						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
 						cacheResponse.commit();
-						return CompletableFuture.completedFuture(cacheResponse.getAndClearResult());
+						return cacheResponse.getAndClearResult();
 					}
 				} else {
-					return CompletableFuture.completedFuture(Collections.emptyList());
+					return Collections.emptyList();
 				}
 			}
 			default:
-				return CompletableFuture.failedFuture(new IllegalArgumentException("unknown query"));
+				return super.handleUiQuery(query);
 		}
 	}
 

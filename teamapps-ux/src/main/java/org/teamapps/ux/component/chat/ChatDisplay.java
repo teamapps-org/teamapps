@@ -87,12 +87,12 @@ public class ChatDisplay extends AbstractComponent {
 	}
 
 	@Override
-	public CompletableFuture<?> handleUiQuery(UiQuery query) {
+	public Object handleUiQuery(UiQuery query) {
 		switch (query.getUiQueryType()) {
 			case UI_CHAT_DISPLAY_REQUEST_PREVIOUS_MESSAGES: {
 				ChatMessageBatch response = model.getPreviousMessages(earliestKnownMessageId, messagesFetchSize);
 				updateEarliestKnownMessageId(response);
-				return CompletableFuture.completedFuture(createUiChatMessageBatch(response));
+				return createUiChatMessageBatch(response);
 			}
 			case UI_CHAT_DISPLAY_REQUEST_CONTEXT_MENU: {
 				UiChatDisplay.RequestContextMenuQuery q = (UiChatDisplay.RequestContextMenuQuery) query;
@@ -103,7 +103,7 @@ public class ChatDisplay extends AbstractComponent {
 								if (component != null) {
 									return getSessionContext().runWithContext(component::createUiReference);
 								} else {
-									return CompletableFuture.completedFuture(null);
+									return null;
 								}
 							})
 							.exceptionally(throwable -> {
@@ -113,7 +113,7 @@ public class ChatDisplay extends AbstractComponent {
 				}
 			}
 			default:
-				return CompletableFuture.failedFuture(new IllegalArgumentException("unknown query"));
+				return super.handleUiQuery(query);
 		}
 	}
 
