@@ -26,6 +26,7 @@ import org.teamapps.databinding.TwoWayBindableValueImpl;
 import org.teamapps.dto.UiIdentifiableClientRecord;
 import org.teamapps.dto.UiTableClientRecord;
 import org.teamapps.event.Event;
+import org.teamapps.ux.cache.record.EqualsAndHashCode;
 import org.teamapps.ux.cache.record.ItemRange;
 import org.teamapps.ux.cache.record.RecordAndClientRecord;
 import org.teamapps.ux.cache.record.RenderedRecordsCache;
@@ -50,7 +51,8 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 	private final TwoWayBindableValueImpl<Integer> count = new TwoWayBindableValueImpl<>(0);
 
 	private MODEL model;
-	protected final RenderedRecordsCache<RECORD> renderedRecords = new RenderedRecordsCache<>();
+	protected EqualsAndHashCode<RECORD> customEqualsAndHashCode = EqualsAndHashCode.bypass();
+	protected RenderedRecordsCache<RECORD> renderedRecords = new RenderedRecordsCache<>();
 	private ItemRange displayedRange = ItemRange.startEnd(0, 0);
 
 	public AbstractInfiniteListComponent(MODEL model) {
@@ -249,4 +251,13 @@ public abstract class AbstractInfiniteListComponent<RECORD, MODEL extends Infini
 		return count;
 	}
 
+	public EqualsAndHashCode<RECORD> getCustomEqualsAndHashCode() {
+		return customEqualsAndHashCode;
+	}
+
+	public void setCustomEqualsAndHashCode(EqualsAndHashCode<RECORD> customEqualsAndHashCode) {
+		this.customEqualsAndHashCode = customEqualsAndHashCode;
+		this.renderedRecords = new RenderedRecordsCache<>(customEqualsAndHashCode);
+		refresh();
+	}
 }
