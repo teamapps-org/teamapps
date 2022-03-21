@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,10 +66,23 @@ public class RgbaColor implements Color {
 
 	@Override
 	public String toHtmlColorString() {
+		return toHtmlHexColorString();
+	}
+
+	public String toHtmlHexColorString() {
+		if (alpha == 1) {
+			return String.format("#%06X", 0xFFFFFF & (red << 16 | green << 8 | blue));
+		} else {
+			return String.format("#%08X", red << 24 | green << 16 | blue << 8 | (int) (alpha * 255));
+		}
+	}
+
+	public String toRgbColorString() {
 		if (alpha == 1) {
 			return "rgb(" + red + "," + green + "," + blue + ")";
+		} else {
+			return "rgba(" + red + "," + green + "," + blue + "," + alpha + ")";
 		}
-		return "rgba(" + red + "," + green + "," + blue + "," + alpha + ")";
 	}
 
 	public int getRed() {
