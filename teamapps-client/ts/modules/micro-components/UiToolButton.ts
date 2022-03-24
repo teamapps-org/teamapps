@@ -19,7 +19,13 @@
  */
 
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {UiToolButton_ClickedEvent, UiToolButton_DropDownOpenedEvent, UiToolButtonCommandHandler, UiToolButtonConfig, UiToolButtonEventSource} from "../../generated/UiToolButtonConfig";
+import {
+	UiToolButton_ClickedEvent,
+	UiToolButton_DropDownOpenedEvent,
+	UiToolButtonCommandHandler,
+	UiToolButtonConfig,
+	UiToolButtonEventSource
+} from "../../generated/UiToolButtonConfig";
 import {AbstractUiComponent} from "../AbstractUiComponent";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiDropDown} from "./UiDropDown";
@@ -49,20 +55,27 @@ export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implem
 		this.minDropDownHeight = config.minDropDownHeight;
 		this.openDropDownIfNotSet = config.openDropDownIfNotSet;
 
-		this.$button = parseHtml(`<div class="UiToolButton img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url('${config.icon}');"></div>`);
+		this.$button = parseHtml(`<div class="UiToolButton">
+	<div class="img img-12 ${config.grayOutIfNotHovered ? 'gray-out-if-not-hovered' : ''}" style="background-image: url('${config.icon}');"></div>
+	<div class="caption">${config.caption ?? ""}</div>
+</div>`);
 		this.$button.addEventListener('click', () => {
-				if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
-					if (!this.dropDown.isOpen) {
-						const width = this.getMainElement().offsetWidth;
-						this.dropDown.open({$reference: this.getMainElement(), width: Math.max(this.minDropDownWidth, width), minHeight: this.minDropDownHeight});
-						this.onDropDownOpened.fire({});
-						this.getMainElement().classList.add("open");
-					} else {
-						this.dropDown.close(); // not needed for clicks, but for keydown!
-					}
+			if (this.dropDownComponent != null || this.openDropDownIfNotSet) {
+				if (!this.dropDown.isOpen) {
+					const width = this.getMainElement().offsetWidth;
+					this.dropDown.open({
+						$reference: this.getMainElement(),
+						width: Math.max(this.minDropDownWidth, width),
+						minHeight: this.minDropDownHeight
+					});
+					this.onDropDownOpened.fire({});
+					this.getMainElement().classList.add("open");
+				} else {
+					this.dropDown.close(); // not needed for clicks, but for keydown!
 				}
-				this.onClicked.fire({});
-			});
+			}
+			this.onClicked.fire({});
+		});
 		this.setDropDownComponent(config.dropDownComponent as UiComponent);
 	}
 

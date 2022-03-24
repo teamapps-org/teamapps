@@ -19,7 +19,8 @@
  */
 @TypeScriptFactory
 class UiToolButton extends UiComponent {
-	required String icon; // hack to make the ux ToolButton not require SessionContext
+	required String icon;
+    String caption;
 	required String popoverText;
 	boolean grayOutIfNotHovered = true;
 

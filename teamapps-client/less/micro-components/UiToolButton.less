@@ -20,9 +20,15 @@
 .UiToolButton {
 
   margin: 0 3px;
+  display: flex;
+  align-items: center;
 
   &.gray-out-if-not-hovered:not(:hover) {
     filter: grayscale(100%);
+  }
+
+  .caption:not(:empty) {
+    margin-left: 2px;
   }
 }
 

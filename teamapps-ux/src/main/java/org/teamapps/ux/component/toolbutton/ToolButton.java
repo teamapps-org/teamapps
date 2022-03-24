@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,7 @@ public class ToolButton extends AbstractComponent {
 	public final Event<Void> onDropDownOpened = new Event<>();
 
 	private Icon icon;
+	private String caption;
 	private String popoverText;
 	private boolean grayOutIfNotHovered;
 
@@ -69,6 +70,7 @@ public class ToolButton extends AbstractComponent {
 	public UiComponent createUiComponent() {
 		String icon = getSessionContext().resolveIcon(this.icon);
 		UiToolButton uiToolButton = new UiToolButton(icon, popoverText);
+		uiToolButton.setCaption(caption);
 		mapAbstractUiComponentProperties(uiToolButton);
 		uiToolButton.setGrayOutIfNotHovered(grayOutIfNotHovered);
 		uiToolButton.setDropDownComponent(this.dropDownComponent != null ? this.dropDownComponent.createUiReference() : null);
@@ -98,6 +100,15 @@ public class ToolButton extends AbstractComponent {
 	public void setIcon(Icon icon) {
 		this.icon = icon;
 		queueCommandIfRendered(() -> new UiToolButton.SetIconCommand(getId(), getSessionContext().resolveIcon(icon)));
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
+		// TODO handle change after rendered...
 	}
 
 	public String getPopoverText() {

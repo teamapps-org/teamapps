@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -76,13 +76,13 @@ public class FormDialogue extends Window {
 		setHeight(350);
 		ResponsiveForm<?> responsiveForm = new ResponsiveForm<>(configurationTemplate);
 		formLayout = responsiveForm.addResponsiveFormLayout(450);
-		formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false).setMargin(new Spacing(10)).setGridGap(20);
+		formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false).setMargin(new Spacing(10)).setGridGap(10);
 		titleField = new TemplateField<>(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES, new BaseTemplateRecord<>(icon, imageUrl, title, text, null));
 		formLayout.addField(0, 0, "header", titleField).setHorizontalAlignment(HorizontalElementAlignment.LEFT).setColSpan(2);
 		setContent(responsiveForm);
 	}
 
-	public ResponsiveFormSection addSection(Icon<?, ?> icon, String caption)  {
+	public ResponsiveFormSection addSection(Icon<?, ?> icon, String caption) {
 		return formLayout.addSection(icon, caption);
 	}
 
