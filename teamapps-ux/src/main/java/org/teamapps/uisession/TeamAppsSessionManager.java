@@ -256,25 +256,25 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				.collect(Collectors.toList());
 		for (UiSession inactiveSession : sessionsByActivity.getOrDefault(INACTIVE, List.of())) {
 			if (inactiveSession.getState() != INACTIVE) {
-				LOGGER.info("Marking session inactive: {} ({})",  inactiveSession.getName(), inactiveSession.getSessionId());
+				LOGGER.info("Marking session inactive: {} ({})", inactiveSession.getName(), inactiveSession.getSessionId());
 				inactiveSession.setInactive();
 			}
 		}
 		for (UiSession criticalSession : sessionsByActivity.getOrDefault(NEARLY_INACTIVE, List.of())) {
 			if (criticalSession.getState() != NEARLY_INACTIVE) {
-				LOGGER.info("Marking session nearly inactive and sending PING to client: {} ({})",  criticalSession.getName(), criticalSession.getSessionId());
+				LOGGER.info("Marking session nearly inactive and sending PING to client: {} ({})", criticalSession.getName(), criticalSession.getSessionId());
 				criticalSession.setNearlyInactive();
 				criticalSession.ping();
 			}
 		}
 		for (UiSession activeSession : sessionsByActivity.getOrDefault(ACTIVE, List.of())) {
 			if (activeSession.getState() != ACTIVE) {
-				LOGGER.info("Marking session active: {} ({})",  activeSession.getName(), activeSession.getSessionId());
+				LOGGER.info("Marking session active: {} ({})", activeSession.getName(), activeSession.getSessionId());
 				activeSession.setActive();
 			}
 		}
 		for (UiSession sessionToClose : sessionsToClose) {
-			LOGGER.info("Closing session: {} ({})",  sessionToClose.getName(), sessionToClose.getSessionId());
+			LOGGER.info("Closing session: {} ({})", sessionToClose.getName(), sessionToClose.getSessionId());
 			sessionToClose.close(UiSessionClosingReason.SESSION_TIMEOUT);
 		}
 	}
