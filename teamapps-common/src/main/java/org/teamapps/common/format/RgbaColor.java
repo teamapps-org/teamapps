@@ -66,7 +66,8 @@ public class RgbaColor implements Color {
 
 	@Override
 	public String toHtmlColorString() {
-		return toHtmlHexColorString();
+		// Note that we are not using the more compact hex notation, since it is not URL-safe (hash character).
+		return toRgbColorString();
 	}
 
 	public String toHtmlHexColorString() {
