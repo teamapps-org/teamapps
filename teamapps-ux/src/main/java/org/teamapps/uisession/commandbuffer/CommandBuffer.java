@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.uisession;
+package org.teamapps.uisession.commandbuffer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teamapps.uisession.CMD;
 
 /**
  * NOT THREAD-SAFE! Synchronization must be provided by using code.
@@ -30,14 +31,21 @@ public class CommandBuffer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommandBuffer.class);
 
 	private final int maxFillableCapacity;
+	/**
+	 * The total number of characters that all commands in the command buffer of a session may hold.
+	 * Keep in mind that every character in Java takes 1 or 2 bytes of heap space (prior Java 9 always 2 bytes).
+	 */
+	private final int maxTotalSize;
 	private final CMD[] buffer;
 	private int head = 0;
 	private int nextConsumable = 0;
 	private int tail = 0;
 	private boolean bufferFlippedAtLeastOnce;
+	private int totalSize = 0; // in characters
 
-	public CommandBuffer(int capacity) {
-		this.maxFillableCapacity = capacity;
+	public CommandBuffer(int maxLength, int maxTotalSize) {
+		this.maxFillableCapacity = maxLength;
+		this.maxTotalSize = maxTotalSize;
 		buffer = new CMD[maxFillableCapacity + 1];
 	}
 
@@ -49,18 +57,33 @@ public class CommandBuffer {
 		return head - nextConsumable + (head < nextConsumable ? buffer.length : 0);
 	}
 
-	public void addCommand(CMD command) throws UnconsumedCommandsOverflowException {
-		if (getBufferedCommandsCount() == maxFillableCapacity) {
-			if (tail == nextConsumable) {
-				throw new UnconsumedCommandsOverflowException("Command buffer overflow. Max capacity: " + maxFillableCapacity);
+	public int getCommandsSize() {
+		int size = 0;
+		for (int i = 0; i < buffer.length; i++) {
+			if (buffer[i] != null) {
+				size += buffer[i].getUiCommand().length();
 			}
-			tail = (tail + 1) % buffer.length;
+		}
+		return size;
+	}
+
+	public void addCommand(CMD command) throws CommandBufferException {
+		while (totalSize + command.getUiCommand().length() > maxTotalSize) {
+			if (!tryPurgingNextCommandFromTail()) {
+				throw new CommandBufferSizeOverflowException("Command buffer SIZE overflow. Max total size: " + maxTotalSize + " characters");
+			}
+		}
+		if (getBufferedCommandsCount() == maxFillableCapacity) {
+			if (!tryPurgingNextCommandFromTail()) {
+				throw new CommandBufferLengthOverflowException("Command buffer LENGTH overflow. Max capacity: " + maxFillableCapacity);
+			}
 		}
 		buffer[head] = command;
 		if (head + 1 == buffer.length) {
 			bufferFlippedAtLeastOnce = true;
 		}
 		head = (head + 1) % buffer.length;
+		totalSize += command.getUiCommand().length();
 	}
 
 	public CMD consumeCommand() {
@@ -75,13 +98,22 @@ public class CommandBuffer {
 
 	public void purgeTillCommand(int commandIdExclusive) {
 		while (buffer[tail].getId() != commandIdExclusive) {
-			if (tail == nextConsumable) {
+			if (!tryPurgingNextCommandFromTail()) {
 				LOGGER.error("Will not purge next consumable command!");
 				return;
 			}
-			buffer[tail] = null;
-			tail = (tail + 1) % buffer.length;
 		}
+	}
+
+	private boolean tryPurgingNextCommandFromTail() {
+		if (tail == nextConsumable) {
+			return false;
+		}
+		CMD cmd = buffer[tail];
+		buffer[tail] = null;
+		tail = (tail + 1) % buffer.length;
+		totalSize -= cmd.getUiCommand().length();
+		return true;
 	}
 
 	public boolean rewindToCommand(long commandId) {

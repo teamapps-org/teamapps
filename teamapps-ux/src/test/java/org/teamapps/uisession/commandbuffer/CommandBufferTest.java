@@ -17,19 +17,24 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.uisession;
+package org.teamapps.uisession.commandbuffer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
+import org.teamapps.uisession.CMD;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class CommandBufferTest {
 
 	@Test
 	public void size() throws Exception {
-		CommandBuffer buffer = new CommandBuffer(3);
+		CommandBuffer buffer = new CommandBuffer(3, 1_000_000);
 		assertEquals(0, buffer.getBufferedCommandsCount());
 		buffer.addCommand(createCmd(1));
 		assertEquals(1, buffer.getBufferedCommandsCount());
@@ -47,7 +52,7 @@ public class CommandBufferTest {
 
 	@Test
 	public void consumeCommand() throws Exception {
-		CommandBuffer buffer = new CommandBuffer(2);
+		CommandBuffer buffer = new CommandBuffer(2, 1_000_000);
 
 		buffer.addCommand(createCmd(1));
 		assertEquals(1, buffer.consumeCommand().getId());
@@ -62,23 +67,19 @@ public class CommandBufferTest {
 
 	@Test
 	public void throwsExceptionIfCommandsNextConsumableCommandGetsDeletedDueToBufferOverflow() throws Exception {
-		CommandBuffer buffer = new CommandBuffer(3);
+		CommandBuffer buffer = new CommandBuffer(3, 1_000_000);
 		buffer.addCommand(createCmd(1));
 		buffer.addCommand(createCmd(2));
 		buffer.addCommand(createCmd(3));
 		buffer.consumeCommand();
 		buffer.addCommand(createCmd(4));
-		try {
-			buffer.addCommand(createCmd(5));
-		} catch (UnconsumedCommandsOverflowException e) {
-			return;
-		}
-		fail();
+		assertThatThrownBy(() -> buffer.addCommand(createCmd(5)))
+				.isInstanceOf(CommandBufferLengthOverflowException.class);
 	}
 
 	@Test
 	public void rewindToCommand() throws Exception {
-		CommandBuffer buffer = new CommandBuffer(5);
+		CommandBuffer buffer = new CommandBuffer(5, 1_000_000);
 		for (int i = 1; i <= 4; i++) {
 			buffer.addCommand(createCmd(i));
 			if (i <= 3) {
@@ -97,7 +98,7 @@ public class CommandBufferTest {
 
 	@Test
 	public void rewindToCommand2() throws Exception {
-		CommandBuffer buffer = new CommandBuffer(6);
+		CommandBuffer buffer = new CommandBuffer(6, 1_000_000);
 		for (int i = 1; i <= 7; i++) {
 			buffer.addCommand(createCmd(i));
 			if (i <= 5) {
@@ -118,7 +119,7 @@ public class CommandBufferTest {
 
 	@Test
 	public void rewindToCommandWithLastReceivedIsMinusOne() throws Exception {
-		CommandBuffer buffer = new CommandBuffer(6);
+		CommandBuffer buffer = new CommandBuffer(6, 1_000_000);
 		for (int i = 1; i <= 3; i++) {
 			buffer.addCommand(createCmd(i));
 		}
@@ -129,7 +130,7 @@ public class CommandBufferTest {
 
 	@Test
 	public void rewindToCommandWithLastReceivedIsMinusOneFailsIfAlreadyOutOfBuffer() throws Exception {
-		CommandBuffer buffer = new CommandBuffer(6);
+		CommandBuffer buffer = new CommandBuffer(6, 1_000_000);
 		for (int i = 1; i <= 7; i++) {
 			buffer.addCommand(createCmd(i));
 			if (i <= 2) {
@@ -143,7 +144,7 @@ public class CommandBufferTest {
 
 	@Test
 	public void purgeTillCommand() throws Exception {
-		CommandBuffer buffer = new CommandBuffer(10);
+		CommandBuffer buffer = new CommandBuffer(10, 1_000_000);
 
 		for (int i = 1; i <= 15; i++) {
 			buffer.addCommand(createCmd(i));
@@ -172,8 +173,8 @@ public class CommandBufferTest {
 
 	@Test
 	public void rewindToCommandWhenTailGreaterThanNextConsumableAndRewindedCommandIsLeftFromNextConsumable()
-			throws UnconsumedCommandsOverflowException {
-		CommandBuffer buffer = new CommandBuffer(10);
+			throws CommandBufferException {
+		CommandBuffer buffer = new CommandBuffer(10, 1_000_000);
 
 		for (int i = 0; i < 15; i++) {
 			buffer.addCommand(createCmd(i));
@@ -186,7 +187,66 @@ public class CommandBufferTest {
 		Assertions.assertThat(buffer.consumeCommand().getId()).isEqualTo(14);
 	}
 
+	@Test
+	public void shouldThrowExceptionWhenMaxTotalSizeIsReached() throws CommandBufferException {
+		CommandBuffer buffer = new CommandBuffer(100, 1_000);
+
+		for (int i = 0; i < 10; i++) {
+			buffer.addCommand(createCmd(i, 100));
+		}
+
+		assertThatThrownBy(() -> buffer.addCommand(createCmd(10, 1)))
+				.isInstanceOf(CommandBufferSizeOverflowException.class);
+	}
+
+	@Test
+	public void shouldPurgeACommandBeforeThrowingExceptionWhenMaxTotalSizeIsReached() throws CommandBufferException {
+		CommandBuffer buffer = new CommandBuffer(100, 1_000);
+
+		for (int i = 0; i < 10; i++) {
+			buffer.addCommand(createCmd(i, 100));
+		}
+
+		assertThat(buffer.getBufferedCommandsCount()).isEqualTo(10);
+
+		for (int i = 10; i < 20; i++) {
+			buffer.consumeCommand();
+			buffer.addCommand(createCmd(10, 100)); // does not throw an exception!
+		}
+
+		assertThat(buffer.getBufferedCommandsCount()).isEqualTo(10);
+
+		assertThatThrownBy(() -> buffer.addCommand(createCmd(11, 1)))
+				.isInstanceOf(CommandBufferSizeOverflowException.class);
+	}
+
+	@Test
+	public void shouldPurgeMultipleCommandsBeforeThrowingExceptionWhenMaxTotalSizeIsReached() throws CommandBufferException {
+		CommandBuffer buffer = new CommandBuffer(100, 1_000);
+
+		for (int i = 0; i < 10; i++) {
+			buffer.addCommand(createCmd(i, 100));
+		}
+
+		for (int i = 0; i < 5; i++) {
+			buffer.consumeCommand();
+		}
+
+		assertThat(buffer.getBufferedCommandsCount()).isEqualTo(10);
+
+		buffer.addCommand(createCmd(10, 500)); // fills up the buffer
+
+		assertThat(buffer.getBufferedCommandsCount()).isEqualTo(6);
+
+		assertThatThrownBy(() -> buffer.addCommand(createCmd(11, 1)))
+				.isInstanceOf(CommandBufferSizeOverflowException.class);
+	}
+
 	private CMD createCmd(int id) {
-		return new CMD(id, "asdf");
+		return createCmd(id, 10);
+	}
+
+	private CMD createCmd(int id, int length) {
+		return new CMD(id, StringUtils.repeat('x', length));
 	}
 }

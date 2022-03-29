@@ -17,27 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.uisession;
+package org.teamapps.uisession.commandbuffer;
 
-public class UnconsumedCommandsOverflowException extends Exception {
+public class CommandBufferException extends Exception {
 
-	public UnconsumedCommandsOverflowException() {
-		super();
+	public CommandBufferException() {
+		this(null);
 	}
 
-	public UnconsumedCommandsOverflowException(String message) {
+	public CommandBufferException(String message) {
 		super(message);
 	}
 
-	public UnconsumedCommandsOverflowException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public UnconsumedCommandsOverflowException(Throwable cause) {
-		super(cause);
-	}
-
-	protected UnconsumedCommandsOverflowException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
 }

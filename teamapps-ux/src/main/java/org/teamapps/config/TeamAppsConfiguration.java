@@ -103,7 +103,15 @@ public class TeamAppsConfiguration {
 	/**
 	 * The number of UI commands for a client that will be buffered on the server side before the UI session will be closed.
 	 */
-	private int commandBufferSize = 5_000;
+	private int commandBufferLength = 5_000;
+
+	/**
+	 * The total number of characters that all commands in the command buffer of a session may hold. This is NOT the same as
+	 * {@link #commandBufferLength}, which specifies the maximum <i>number</i> of commands that the buffer may hold.
+	 * <p>
+	 * Keep in mind that every character in Java takes 1 or 2 bytes of heap space (prior Java 9 always 2 bytes).
+	 */
+	private int commandBufferTotalSize = 5_000_000;
 
 	/**
 	 * This is a client back pressure protocol parameter.
@@ -219,17 +227,31 @@ public class TeamAppsConfiguration {
 	}
 
 	/**
-	 * @see #commandBufferSize
+	 * @see #commandBufferLength
 	 */
-	public int getCommandBufferSize() {
-		return commandBufferSize;
+	public int getCommandBufferLength() {
+		return commandBufferLength;
 	}
 
 	/**
-	 * @see #commandBufferSize
+	 * @see #commandBufferLength
 	 */
-	public void setCommandBufferSize(int commandBufferSize) {
-		this.commandBufferSize = commandBufferSize;
+	public void setCommandBufferLength(int commandBufferLength) {
+		this.commandBufferLength = commandBufferLength;
+	}
+
+	/**
+	 * @see #commandBufferTotalSize
+	 */
+	public int getCommandBufferTotalSize() {
+		return commandBufferTotalSize;
+	}
+
+	/**
+	 * @see #commandBufferTotalSize
+	 */
+	public void setCommandBufferTotalSize(int commandBufferTotalSize) {
+		this.commandBufferTotalSize = commandBufferTotalSize;
 	}
 
 	/**
