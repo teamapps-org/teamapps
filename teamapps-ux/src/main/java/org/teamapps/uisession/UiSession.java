@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.dto.*;
+import org.teamapps.uisession.commandbuffer.CommandBuffer;
+import org.teamapps.uisession.commandbuffer.CommandBufferException;
 import org.teamapps.uisession.statistics.RunningUiSessionStats;
 
 import java.lang.invoke.MethodHandles;
@@ -84,7 +86,7 @@ public class UiSession {
 		this.messageSender = messageSender;
 
 		statistics = new RunningUiSessionStats(System.currentTimeMillis(), sessionId, name);
-		commandBuffer = new CommandBuffer(config.getCommandBufferSize());
+		commandBuffer = new CommandBuffer(config.getCommandBufferLength(), config.getCommandBufferTotalSize());
 	}
 
 	public void updateStats() {
@@ -125,8 +127,8 @@ public class UiSession {
 		synchronized (this) {
 			try {
 				commandBuffer.addCommand(cmd);
-			} catch (UnconsumedCommandsOverflowException e) {
-				LOGGER.error("Too many unconsumed commands!", e);
+			} catch (CommandBufferException e) {
+				LOGGER.error("Exception while adding command to CommandBuffer!", e);
 				close(UiSessionClosingReason.COMMANDS_OVERFLOW);
 				return -1;
 			}
@@ -138,7 +140,7 @@ public class UiSession {
 	public ClientBackPressureInfo getClientBackPressureInfo() {
 		synchronized (this) {
 			return new ClientBackPressureInfo(
-					config.getCommandBufferSize(), commandBuffer.getUnconsumedCommandsCount(),
+					config.getCommandBufferLength(), commandBuffer.getUnconsumedCommandsCount(),
 					config.getClientMinRequestedCommands(), config.getClientMaxRequestedCommands(), maxRequestedCommandId - lastSentCommandId,
 					requestedCommandsZeroTimestamp
 			);
