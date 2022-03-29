@@ -52,7 +52,7 @@
 
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
         <slf4j-version>1.7.25</slf4j-version>
-        <jackson-version>2.12.2</jackson-version>
+        <jackson-version>2.12.6.1</jackson-version>
         <guava-version>30.1.1-jre</guava-version>
         <apache-commons-io>2.8.0</apache-commons-io>
         <junit.version>4.13.1</junit.version>
