@@ -62,6 +62,11 @@ public class SimpleTree<PAYLOAD> extends Tree<BaseTemplateTreeNode<PAYLOAD>> {
 		getModel().updateNode(node);
 	}
 
+	public void setNodeExpanded(BaseTemplateTreeNode<PAYLOAD> node, boolean expanded) {
+		node.setExpanded(expanded);
+		updateNode(node);
+	}
+
 	public void relocateNode(BaseTemplateTreeNode<PAYLOAD> node) {
 		getModel().relocateNode(node);
 	}
