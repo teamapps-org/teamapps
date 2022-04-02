@@ -44,8 +44,8 @@ import {TreeBoxDropdown} from "../trivial-components/dropdown/TreeBoxDropdown";
 import {TrivialTreeBox} from "../trivial-components/TrivialTreeBox";
 
 export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRecordConfig[]> implements UiTagComboBoxEventSource, UiTagComboBoxCommandHandler {
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent(this, {throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent(this, {throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 250});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 250});
 
 	private $originalInput: HTMLElement;
 	private trivialTagComboBox: TrivialTagComboBox<NodeWithChildren<UiComboBoxTreeRecordConfig>>;

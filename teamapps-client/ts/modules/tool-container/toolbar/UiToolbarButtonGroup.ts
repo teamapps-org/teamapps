@@ -30,7 +30,7 @@ import {insertAfter, insertBefore, outerWidthIncludingMargins, parseHtml} from "
 import {UiComponent} from "../../UiComponent";
 
 export class UiToolbarButtonGroup {
-	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: UiDropDownButtonClickInfoConfig}> = new TeamAppsEvent(this);
+	public readonly onButtonClicked: TeamAppsEvent<{buttonId: string, dropDownButtonClickInfo: UiDropDownButtonClickInfoConfig}> = new TeamAppsEvent();
 
 	private config: UiToolbarButtonGroupConfig;
 	private visible: boolean = true;

@@ -54,10 +54,10 @@ import Manifest = shaka.extern.Manifest;
 
 export class UiShakaPlayer extends AbstractUiComponent<UiShakaPlayerConfig> implements UiShakaPlayerCommandHandler, UiShakaPlayerEventSource {
 
-	public readonly onManifestLoaded: TeamAppsEvent<UiShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent(this);
-	public readonly onTimeUpdate: TeamAppsEvent<UiShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent(this);
-	public readonly onEnded: TeamAppsEvent<UiShakaPlayer_EndedEvent> = new TeamAppsEvent(this);
-	public readonly onErrorLoading: TeamAppsEvent<UiShakaPlayer_ErrorLoadingEvent> = new TeamAppsEvent(this);
+	public readonly onManifestLoaded: TeamAppsEvent<UiShakaPlayer_ManifestLoadedEvent> = new TeamAppsEvent();
+	public readonly onTimeUpdate: TeamAppsEvent<UiShakaPlayer_TimeUpdateEvent> = new TeamAppsEvent();
+	public readonly onEnded: TeamAppsEvent<UiShakaPlayer_EndedEvent> = new TeamAppsEvent();
+	public readonly onErrorLoading: TeamAppsEvent<UiShakaPlayer_ErrorLoadingEvent> = new TeamAppsEvent();
 
 	private $componentWrapper: HTMLElement;
 	private $video: HTMLMediaElement;

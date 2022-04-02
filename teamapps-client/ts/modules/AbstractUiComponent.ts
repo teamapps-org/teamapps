@@ -31,9 +31,9 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 
 	protected readonly logger: log.Logger = log.getLogger((<any>(this.constructor)).name || this.constructor.toString().match(/\w+/g)[1]);
 
-	public readonly onVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent(this);
-	public readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent(this);
-	public readonly onResized: TeamAppsEvent<{width: number; height: number}> = new TeamAppsEvent(this);
+	public readonly onVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
+	public readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
+	public readonly onResized: TeamAppsEvent<{width: number; height: number}> = new TeamAppsEvent();
 
 	private width: number = 0;
 	private height: number = 0;

@@ -44,10 +44,10 @@ interface FieldMessage {
 
 export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> extends AbstractUiComponent<C> implements UiFieldCommandHandler, UiFieldEventSource {
 
-	public readonly onValueChanged: TeamAppsEvent<UiField_ValueChangedEvent> = new TeamAppsEvent<UiField_ValueChangedEvent>(this);
-	public readonly onFocused: TeamAppsEvent<void> = new TeamAppsEvent<void>(this);
-	public readonly onBlurred: TeamAppsEvent<void> = new TeamAppsEvent<void>(this);
-	public readonly onUserManipulation: TeamAppsEvent<void> = new TeamAppsEvent<void>(this);
+	public readonly onValueChanged: TeamAppsEvent<UiField_ValueChangedEvent> = new TeamAppsEvent<UiField_ValueChangedEvent>();
+	public readonly onFocused: TeamAppsEvent<void> = new TeamAppsEvent<void>();
+	public readonly onBlurred: TeamAppsEvent<void> = new TeamAppsEvent<void>();
+	public readonly onUserManipulation: TeamAppsEvent<void> = new TeamAppsEvent<void>();
 
 	public static editingModeCssClasses: { [x: number]: string } = {
 		[UiFieldEditingMode.EDITABLE]: "editable",

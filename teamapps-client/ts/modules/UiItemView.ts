@@ -52,7 +52,7 @@ export var itemCssStringsAlignItems = {
 
 export class UiItemView extends AbstractUiComponent<UiItemViewConfig> implements UiItemViewCommandHandler, UiItemViewEventSource {
 
-	public readonly onItemClicked: TeamAppsEvent<UiItemView_ItemClickedEvent> = new TeamAppsEvent<UiItemView_ItemClickedEvent>(this);
+	public readonly onItemClicked: TeamAppsEvent<UiItemView_ItemClickedEvent> = new TeamAppsEvent<UiItemView_ItemClickedEvent>();
 
 	private $itemView: HTMLElement;
 	private groupHeaderTemplateRenderer: Renderer;
@@ -167,7 +167,7 @@ class ItemGroup {
 
 	private static logger = log.getLogger("UiItemView-ItemGroup");
 
-	public readonly onItemClicked: TeamAppsEvent<UiIdentifiableClientRecordConfig> = new TeamAppsEvent<UiIdentifiableClientRecordConfig>(this);
+	public readonly onItemClicked: TeamAppsEvent<UiIdentifiableClientRecordConfig> = new TeamAppsEvent<UiIdentifiableClientRecordConfig>();
 
 	constructor(private itemView: UiItemView, private context: TeamAppsUiContext, private config: UiItemViewItemGroupConfig, groupHeaderTemplateRenderer: Renderer) {
 		this.items = config.items;

@@ -155,7 +155,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult()));
 				} else if (clientMessage instanceof CMD_REQUEST) {
 					CMD_REQUEST cmdRequest = (CMD_REQUEST) clientMessage;
-					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleCommandRequest(cmdRequest.getLastReceivedCommandId(), cmdRequest.getMaxRequestedCommandId()));
+					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId()));
 				} else if (clientMessage instanceof KEEPALIVE) {
 					getUiSession(qualifiedUiSessionId).ifPresent(UiSession::handleKeepAlive);
 				} else {

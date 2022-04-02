@@ -28,7 +28,7 @@ import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 
 export class UiToolAccordionButton {
 
-	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent(this);
+	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent();
 
 	private config: UiToolbarButtonConfig;
 	private $buttonWrapper: HTMLElement;

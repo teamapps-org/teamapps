@@ -30,7 +30,7 @@ import {TeamAppsEvent} from "./util/TeamAppsEvent";
 
 export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponentConfig> implements UiFloatingComponentCommandHandler, UiFloatingComponentEventSource {
 
-	public readonly onExpandedOrCollapsed: TeamAppsEvent<UiFloatingComponent_ExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
+	public readonly onExpandedOrCollapsed: TeamAppsEvent<UiFloatingComponent_ExpandedOrCollapsedEvent> = new TeamAppsEvent();
 
 	private containerComponent: UiComponent;
 	private contentComponent: UiComponent;

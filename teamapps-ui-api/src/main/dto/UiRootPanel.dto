@@ -58,6 +58,10 @@ class UiRootPanel extends UiComponent {
 	static command releaseWakeLock(String uuid);
 
 	static command goToUrl(String url, boolean blankPage);
+
+	static command pushHistoryState(String relativeUrl);
+	static command navigateForward(int steps);
+    static event navigationStateChange(UiLocation location, boolean triggeredByUser);
 }
 
 enum KeyEventType {

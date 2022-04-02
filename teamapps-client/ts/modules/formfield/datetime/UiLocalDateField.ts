@@ -47,11 +47,11 @@ import {createUiLocalDateConfig, UiLocalDateConfig} from "../../../generated/UiL
 
 export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDateConfig> implements UiLocalDateFieldEventSource, UiLocalDateFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({
 		throttlingMode: "debounce",
 		delay: 250
 	});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({
 		throttlingMode: "debounce",
 		delay: 250
 	});

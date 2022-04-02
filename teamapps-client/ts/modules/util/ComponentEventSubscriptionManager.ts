@@ -17,10 +17,12 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+
 export const typescriptDeclarationFixConstant = 1;
 
 import {UiEvent} from "../../generated/UiEvent";
 import {EventSubscription, TeamAppsEventListener} from "./TeamAppsEvent";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 
 type EventDescriptor = { name: string, _type: string };
 
@@ -30,27 +32,39 @@ function capitalizeFirstLetter(s: string) {
 
 export class ComponentEventSubscriptionManager {
 
-	private readonly eventNamesByComponentType: Map<string, EventDescriptor[]> = new Map();
+	private readonly eventDescriptorsByComponentType: Map<string, EventDescriptor[]> = new Map();
 	private readonly subscriptionsByComponent: Map<any, EventSubscription[]> = new Map();
 
 	public registerComponentType(componentType: string, eventDescriptors: EventDescriptor[]) {
-		this.eventNamesByComponentType.set(componentType, eventDescriptors);
+		this.eventDescriptorsByComponentType.set(componentType, eventDescriptors);
 	}
 
-	public registerComponentTypes(componentEventDescriptors: { componentType: string, eventDescriptors: EventDescriptor[] }[]) {
+	public registerComponentTypes(componentEventDescriptors: { componentType: string, eventDescriptors: EventDescriptor[] }[],
+								  staticComponentEventDescriptors: { componentType: string, eventDescriptors: EventDescriptor[] }[],
+								  staticEventListener: TeamAppsEventListener<UiEvent>) {
 		componentEventDescriptors.forEach(r => this.registerComponentType(r.componentType, r.eventDescriptors));
+
+		staticComponentEventDescriptors.forEach((value) => {
+			let className = value.componentType as string;
+			let componentClass = TeamAppsUiComponentRegistry.getComponentClassForName(className, false);
+			this.registerListeners(componentClass, value.eventDescriptors, staticEventListener, {});
+		})
 	}
 
 	public registerEventListener(component: any, type: string, eventListener: TeamAppsEventListener<UiEvent>, additionalEventProperties: object) {
-		let eventNames = this.eventNamesByComponentType.get(type);
+		let eventNames = this.eventDescriptorsByComponentType.get(type);
 		if (eventNames != null) {
-			let subscriptions = eventNames
-				.map(eventDescriptor => {
-					let listener = (eventObject: any) => eventListener({_type: eventDescriptor._type, ...eventObject, ...additionalEventProperties});
-					return component["on" + capitalizeFirstLetter(eventDescriptor.name)]?.addListener(listener);
-				});
-			this.subscriptionsByComponent.set(component, subscriptions);
+			this.registerListeners(component, eventNames, eventListener, additionalEventProperties);
 		}
+	}
+
+	private registerListeners(component: any, eventNames: EventDescriptor[], eventListener: (eventObject?: UiEvent) => void, additionalEventProperties: object) {
+		let subscriptions = eventNames
+			.map(eventDescriptor => {
+				let listener = (eventObject: any) => eventListener({_type: eventDescriptor._type, ...eventObject, ...additionalEventProperties});
+				return component["on" + capitalizeFirstLetter(eventDescriptor.name)]?.addListener(listener);
+			});
+		this.subscriptionsByComponent.set(component, subscriptions);
 	}
 
 	public unregisterEventListener(component: any) {

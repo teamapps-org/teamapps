@@ -29,7 +29,7 @@ import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export class UiDummyComponent extends AbstractUiComponent<UiDummyComponentConfig> implements UiDummyComponentCommandHandler, UiDummyComponentEventSource {
 
-	public readonly onClicked: TeamAppsEvent<UiDummyComponent_ClickedEvent> = new TeamAppsEvent<UiDummyComponent_ClickedEvent>(this);
+	public readonly onClicked: TeamAppsEvent<UiDummyComponent_ClickedEvent> = new TeamAppsEvent<UiDummyComponent_ClickedEvent>();
 
 	private static allDummies: UiDummyComponent[] = [];
 

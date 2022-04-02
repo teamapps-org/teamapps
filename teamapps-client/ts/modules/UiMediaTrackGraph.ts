@@ -43,7 +43,7 @@ interface Marker {
 
 export class UiMediaTrackGraph extends AbstractUiComponent<UiMediaTrackGraphConfig> implements UiMediaTrackGraphCommandHandler, UiMediaTrackGraphEventSource {
 
-	public readonly onHandleTimeSelection: TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent> = new TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent>(this);
+	public readonly onHandleTimeSelection: TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent> = new TeamAppsEvent<UiMediaTrackGraph_HandleTimeSelectionEvent>();
 
 	private static MARGINS = {top: 5, right: 5, bottom: 15, left: 5};
 

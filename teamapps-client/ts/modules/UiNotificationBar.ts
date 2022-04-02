@@ -37,8 +37,8 @@ import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 
 export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConfig> implements UiNotificationBarCommandHandler, UiNotificationBarEventSource {
 
-	public readonly onItemClicked: TeamAppsEvent<UiNotificationBar_ItemClickedEvent> = new TeamAppsEvent(this);
-	public readonly onItemClosed: TeamAppsEvent<UiNotificationBar_ItemClosedEvent> = new TeamAppsEvent(this);
+	public readonly onItemClicked: TeamAppsEvent<UiNotificationBar_ItemClickedEvent> = new TeamAppsEvent();
+	public readonly onItemClosed: TeamAppsEvent<UiNotificationBar_ItemClosedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private itemsById: { [id: string]: UiNotificationBarItem } = {};
@@ -87,8 +87,8 @@ export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConf
 
 class UiNotificationBarItem {
 
-	public readonly onClicked: TeamAppsEvent<void> = new TeamAppsEvent<void>(this);
-	public readonly onClosed: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>(this);
+	public readonly onClicked: TeamAppsEvent<void> = new TeamAppsEvent<void>();
+	public readonly onClosed: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>();
 
 	private $main: HTMLElement;
 	private $progressBarContainer: HTMLElement;

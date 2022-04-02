@@ -139,12 +139,10 @@ export class IncidentGraphDataStore extends AbstractDataStore<UiIncidentGraphDat
 	protected doAddData(zoomLevel: number, data: UiIncidentGraphDataConfig) {
 		let interval = [data.interval.min, data.interval.max];
 		this.assureZoomLevelArrayExists(zoomLevel);
-		console.log(this.zoomLevelData[zoomLevel].length)
 		this.zoomLevelData[zoomLevel] = this.zoomLevelData[zoomLevel].filter(dp => {
 			return !(dp.x2 >= interval[0] && dp.x1 < interval[1])
 		});
 		this.zoomLevelData[zoomLevel].push(...data.dataPoints);
-		console.log("-->" +this.zoomLevelData[zoomLevel].length)
 	}
 
 	public getData(zoomLevelIndex: number, intervalX: [number, number]) {

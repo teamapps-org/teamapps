@@ -41,7 +41,7 @@ export interface UiWindowListener {
 
 export class UiWindow extends AbstractUiComponent<UiWindowConfig> implements UiWindowCommandHandler, UiWindowEventSource {
 
-	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent(this);
+	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $panelWrapper: HTMLElement;

@@ -172,9 +172,9 @@ class UiInfiniteItemViewDataProvider implements Slick.DataProvider<UiIdentifiabl
 export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewConfig> implements UiInfiniteItemViewCommandHandler, UiInfiniteItemViewEventSource {
 
 
-	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView_DisplayedRangeChangedEvent> = new TeamAppsEvent(this);
-	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent(this);
-	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
+	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView_DisplayedRangeChangedEvent> = new TeamAppsEvent();
+	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView_ItemClickedEvent> = new TeamAppsEvent();
+	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView_ContextMenuRequestedEvent> = new TeamAppsEvent();
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;

@@ -214,8 +214,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 
 	private config: TrivialTreeBoxConfig<E>;
 
-	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>(this);
-	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<E>(this);
+	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
+	public readonly onNodeExpansionStateChanged = new TeamAppsEvent<E>();
 
 	private $componentWrapper: HTMLElement;
 	private $tree: HTMLElement;
@@ -610,6 +610,8 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 
 	public updateNode(node: E, recursive: boolean = false) {
 		const oldNode = this.findEntryById(this.config.idFunction(node));
+		let shouldBeExpanded = (node as any)[this.config.expandedProperty];
+		const expandedStateChanged = oldNode.expanded !== shouldBeExpanded;
 		let parentNode = oldNode.parent;
 		let newEntryWrapper: EntryWrapper<E>;
 		if (recursive) {
@@ -631,6 +633,9 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		if (newEntryWrapper != oldNode) {
 			insertAfter(newEntryWrapper.render(), oldNode.$element);
 			oldNode.$element.remove();
+		}
+		if (expandedStateChanged) {
+			this.setNodeExpanded(newEntryWrapper, shouldBeExpanded as boolean, true)
 		}
 	};
 

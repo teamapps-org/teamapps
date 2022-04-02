@@ -76,11 +76,11 @@ export function isUiMapRectangle(shapeConfig: AbstractUiMapShapeConfig): shapeCo
 
 export class UiMap extends AbstractUiComponent<UiMapConfig> implements UiMapCommandHandler, UiMapEventSource {
 
-	public readonly onZoomLevelChanged: TeamAppsEvent<UiMap_ZoomLevelChangedEvent> = new TeamAppsEvent(this);
-	public readonly onLocationChanged: TeamAppsEvent<UiMap_LocationChangedEvent> = new TeamAppsEvent(this);
-	public readonly onMapClicked: TeamAppsEvent<UiMap_MapClickedEvent> = new TeamAppsEvent(this);
-	public readonly onMarkerClicked: TeamAppsEvent<UiMap_MarkerClickedEvent> = new TeamAppsEvent(this);
-	public readonly onShapeDrawn: TeamAppsEvent<UiMap_ShapeDrawnEvent> = new TeamAppsEvent(this);
+	public readonly onZoomLevelChanged: TeamAppsEvent<UiMap_ZoomLevelChangedEvent> = new TeamAppsEvent();
+	public readonly onLocationChanged: TeamAppsEvent<UiMap_LocationChangedEvent> = new TeamAppsEvent();
+	public readonly onMapClicked: TeamAppsEvent<UiMap_MapClickedEvent> = new TeamAppsEvent();
+	public readonly onMarkerClicked: TeamAppsEvent<UiMap_MarkerClickedEvent> = new TeamAppsEvent();
+	public readonly onShapeDrawn: TeamAppsEvent<UiMap_ShapeDrawnEvent> = new TeamAppsEvent();
 
 	private id: any;
 	private leaflet: L.Map;

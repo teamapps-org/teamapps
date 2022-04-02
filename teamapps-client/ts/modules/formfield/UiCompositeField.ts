@@ -48,7 +48,7 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 	private static logger: Logger = log.getLogger("UiCompositeField");
 
 	public readonly onSubFieldValueChanged: TeamAppsEvent<ValueChangeEventData & { fieldName: string, originalEmitter: UiField }> =
-		new TeamAppsEvent<ValueChangeEventData & { fieldName: string, originalEmitter: UiField }>(this);
+		new TeamAppsEvent<ValueChangeEventData & { fieldName: string, originalEmitter: UiField }>();
 
 	private subFields: SubField[];
 	private $wrapper: HTMLElement;

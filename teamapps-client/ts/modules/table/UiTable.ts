@@ -101,16 +101,16 @@ type FieldsByName = { [fieldName: string]: UiField };
 
 export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTableCommandHandler, UiTableEventSource {
 
-	public readonly onCellEditingStarted: TeamAppsEvent<UiTable_CellEditingStartedEvent> = new TeamAppsEvent(this);
-	public readonly onCellEditingStopped: TeamAppsEvent<UiTable_CellEditingStoppedEvent> = new TeamAppsEvent(this);
-	public readonly onCellValueChanged: TeamAppsEvent<UiTable_CellValueChangedEvent> = new TeamAppsEvent(this);
-	public readonly onCellClicked: TeamAppsEvent<UiTable_CellClickedEvent> = new TeamAppsEvent(this);
-	public readonly onSortingChanged: TeamAppsEvent<UiTable_SortingChangedEvent> = new TeamAppsEvent(this);
-	public readonly onRowsSelected: TeamAppsEvent<UiTable_RowsSelectedEvent> = new TeamAppsEvent(this);
-	public readonly onFieldOrderChange: TeamAppsEvent<UiTable_FieldOrderChangeEvent> = new TeamAppsEvent(this);
-	public readonly onColumnSizeChange: TeamAppsEvent<UiTable_ColumnSizeChangeEvent> = new TeamAppsEvent(this);
-	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiTable_DisplayedRangeChangedEvent> = new TeamAppsEvent(this);
-	public readonly onContextMenuRequested: TeamAppsEvent<UiTable_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
+	public readonly onCellEditingStarted: TeamAppsEvent<UiTable_CellEditingStartedEvent> = new TeamAppsEvent();
+	public readonly onCellEditingStopped: TeamAppsEvent<UiTable_CellEditingStoppedEvent> = new TeamAppsEvent();
+	public readonly onCellValueChanged: TeamAppsEvent<UiTable_CellValueChangedEvent> = new TeamAppsEvent();
+	public readonly onCellClicked: TeamAppsEvent<UiTable_CellClickedEvent> = new TeamAppsEvent();
+	public readonly onSortingChanged: TeamAppsEvent<UiTable_SortingChangedEvent> = new TeamAppsEvent();
+	public readonly onRowsSelected: TeamAppsEvent<UiTable_RowsSelectedEvent> = new TeamAppsEvent();
+	public readonly onFieldOrderChange: TeamAppsEvent<UiTable_FieldOrderChangeEvent> = new TeamAppsEvent();
+	public readonly onColumnSizeChange: TeamAppsEvent<UiTable_ColumnSizeChangeEvent> = new TeamAppsEvent();
+	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiTable_DisplayedRangeChangedEvent> = new TeamAppsEvent();
+	public readonly onContextMenuRequested: TeamAppsEvent<UiTable_ContextMenuRequestedEvent> = new TeamAppsEvent();
 
 	private $component: HTMLElement;
 	private _grid: Slick.Grid<any>;

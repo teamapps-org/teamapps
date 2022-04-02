@@ -35,8 +35,8 @@ import {UiProgressStatus} from "../generated/UiProgressStatus";
 
 
 export class UiProgressDisplay extends AbstractUiComponent<UiProgressDisplayConfig> implements UiProgressDisplayCommandHandler, UiProgressDisplayEventSource {
-	onCancelButtonClicked: TeamAppsEvent<UiProgressDisplay_CancelButtonClickedEvent> = new TeamAppsEvent(this);
-	onClicked: TeamAppsEvent<UiProgressDisplay_ClickedEvent> = new TeamAppsEvent(this);
+	onCancelButtonClicked: TeamAppsEvent<UiProgressDisplay_CancelButtonClickedEvent> = new TeamAppsEvent();
+	onClicked: TeamAppsEvent<UiProgressDisplay_ClickedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $icon: HTMLElement;

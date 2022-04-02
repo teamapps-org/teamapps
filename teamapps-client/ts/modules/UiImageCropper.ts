@@ -41,7 +41,7 @@ type Rect = { x: number, y: number, width: number, height: number }
 
 export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> implements UiImageCropperCommandHandler, UiImageCropperEventSource {
 
-	public readonly onSelectionChanged: TeamAppsEvent<UiImageCropper_SelectionChangedEvent> = new TeamAppsEvent<UiImageCropper_SelectionChangedEvent>(this);
+	public readonly onSelectionChanged: TeamAppsEvent<UiImageCropper_SelectionChangedEvent> = new TeamAppsEvent<UiImageCropper_SelectionChangedEvent>();
 
 	private $element: HTMLElement;
 	private $selectionFrame: HTMLElement;
@@ -180,12 +180,8 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 
 	private handleDragEnd() {
 		let selectionFrameOffsetRect = this.getSelectionFrameOffsetRect();
-		console.log("selectionFrameOffsetRect", selectionFrameOffsetRect)
 		let selection = this.frameRectToSelection(selectionFrameOffsetRect);
-		console.log("unconstrained", selection);
 		selection = this.boundSelection(selection);
-		console.log("bounded", selection);
-		console.log("boundedOffsetRect", this.selectionToFrameRect(selection));
 		this.updateCroppingFramePosition(selection);
 		this.selection = selection;
 		this.logger.debug("selection: ", this.selection);
@@ -214,7 +210,6 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 		let fx = this.imageNaturalWidth / this.getWidth();
 		let fy = this.imageNaturalHeight / this.getHeight();
 		let factor = Math.max(fx, fy);
-		console.log(factor, fx, fy);
 		return factor;
 	}
 

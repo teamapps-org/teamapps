@@ -19,6 +19,8 @@
  */
 package org.teamapps.ux.session;
 
+import org.teamapps.dto.UiClientInfo;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,7 @@ public class ClientInfo {
 	private final int timeZoneOffsetMinutes;
 	private final Set<String> clientTokens;
 	private final String userAgent;
-	private final String clientUrl;
+	private final Location location;
 	private final Map<String, Object> clientParameters;
 	private final String teamAppsVersion;
 
@@ -47,7 +49,7 @@ public class ClientInfo {
 
 	public ClientInfo(String ip, int screenWidth, int screenHeight, int viewPortWidth, int viewPortHeight,
 					  String preferredLanguageIso, boolean highDensityScreen, String timeZone, int timeZoneOffsetMinutes, List<String> clientTokens, String userAgent,
-					  String clientUrl, Map<String, Object> clientParameters, String teamAppsVersion) {
+					  Location location, Map<String, Object> clientParameters, String teamAppsVersion) {
 		this.ip = ip;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
@@ -59,9 +61,27 @@ public class ClientInfo {
 		this.timeZoneOffsetMinutes = timeZoneOffsetMinutes;
 		this.clientTokens = new HashSet<>(clientTokens);
 		this.userAgent = userAgent;
-		this.clientUrl = clientUrl;
+		this.location = location;
 		this.clientParameters = clientParameters;
 		this.teamAppsVersion = teamAppsVersion;
+	}
+
+	public static ClientInfo fromUiClientInfo(UiClientInfo uiClientInfo) {
+		return new ClientInfo(
+				uiClientInfo.getIp(),
+				uiClientInfo.getScreenWidth(),
+				uiClientInfo.getScreenHeight(),
+				uiClientInfo.getViewPortWidth(),
+				uiClientInfo.getViewPortHeight(),
+				uiClientInfo.getPreferredLanguageIso(),
+				uiClientInfo.getHighDensityScreen(),
+				uiClientInfo.getTimezoneIana(),
+				uiClientInfo.getTimezoneOffsetMinutes(),
+				uiClientInfo.getClientTokens(),
+				uiClientInfo.getUserAgentString(),
+				Location.fromUiLocation(uiClientInfo.getLocation()),
+				uiClientInfo.getClientParameters(),
+				uiClientInfo.getTeamAppsVersion());
 	}
 
 	public boolean isMobileDevice() {
@@ -120,8 +140,12 @@ public class ClientInfo {
 		return userAgent;
 	}
 
+	public Location getLocation() {
+		return location;
+	}
+
 	public String getClientUrl() {
-		return clientUrl;
+		return location.getHref();
 	}
 
 	public Map<String, Object> getClientParameters() {

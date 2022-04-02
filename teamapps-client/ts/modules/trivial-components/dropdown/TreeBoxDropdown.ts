@@ -36,7 +36,7 @@ type TreeBoxDropdownConfig<E> = {
 
 export class TreeBoxDropdown<E> implements DropDownComponent<E> {
 
-	public readonly onValueChanged: TeamAppsEvent<{ value: E; finalSelection: boolean }> = new TeamAppsEvent(this);
+	public readonly onValueChanged: TeamAppsEvent<{ value: E; finalSelection: boolean }> = new TeamAppsEvent();
 
 	private treeBox: TrivialTreeBox<E>;
 	private config: TreeBoxDropdownConfig<E>;

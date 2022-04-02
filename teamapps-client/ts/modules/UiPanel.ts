@@ -50,7 +50,7 @@ interface HeaderField {
 
 export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPanelCommandHandler, UiPanelEventSource {
 
-	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent(this);
+	public readonly onWindowButtonClicked: TeamAppsEvent<UiPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
 		[UiWindowButtonType.MINIMIZE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize"}), this._context),

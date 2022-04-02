@@ -27,7 +27,7 @@ import {UiLinkTarget} from "../generated/UiLinkTarget";
 
 export class UiLinkButton extends AbstractUiComponent<UiLinkButtonConfig> implements UiLinkButtonEventSource, UiLinkButtonCommandHandler {
 
-	public readonly onClicked: TeamAppsEvent<UiLinkButton_ClickedEvent> = new TeamAppsEvent(this);
+	public readonly onClicked: TeamAppsEvent<UiLinkButton_ClickedEvent> = new TeamAppsEvent();
 	
 	private readonly $main: HTMLAnchorElement;
 

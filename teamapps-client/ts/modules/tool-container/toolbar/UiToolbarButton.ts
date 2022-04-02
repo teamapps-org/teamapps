@@ -32,7 +32,7 @@ import {UiComponent} from "../../UiComponent";
 
 export class UiToolbarButton {
 
-	public readonly onClicked: TeamAppsEvent<UiDropDownButtonClickInfoConfig> = new TeamAppsEvent(this);
+	public readonly onClicked: TeamAppsEvent<UiDropDownButtonClickInfoConfig> = new TeamAppsEvent();
 
 	private $buttonWrapper: HTMLElement;
 	private $button: HTMLElement;

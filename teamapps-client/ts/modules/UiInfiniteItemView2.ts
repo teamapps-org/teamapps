@@ -65,9 +65,9 @@ export var cssAlignItems = {
 
 export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2Config> implements UiInfiniteItemView2CommandHandler, UiInfiniteItemView2EventSource {
 
-	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView2_DisplayedRangeChangedEvent> = new TeamAppsEvent(this);
-	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView2_ItemClickedEvent> = new TeamAppsEvent(this);
-	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView2_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
+	public readonly onDisplayedRangeChanged: TeamAppsEvent<UiInfiniteItemView2_DisplayedRangeChangedEvent> = new TeamAppsEvent();
+	public readonly onItemClicked: TeamAppsEvent<UiInfiniteItemView2_ItemClickedEvent> = new TeamAppsEvent();
+	public readonly onContextMenuRequested: TeamAppsEvent<UiInfiniteItemView2_ContextMenuRequestedEvent> = new TeamAppsEvent();
 
 	private $mainDomElement: HTMLElement;
 	private $grid: HTMLElement;

@@ -207,22 +207,20 @@ public class UiSession {
 		}
 	}
 
-	public void handleCommandRequest(int lastReceivedCommandId, int maxRequestedCommandId) {
+	public void handleCommandRequest(int maxRequestedCommandId, Integer lastReceivedCommandIdOrNull) {
 		LOGGER.trace("UiSession.requestCommands: maxRequestedCommandId = [" + maxRequestedCommandId + "]");
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		synchronized (this) {
-			this.commandBuffer.purgeTillCommand(lastReceivedCommandId);
+			if (lastReceivedCommandIdOrNull != null) {
+				this.commandBuffer.purgeTillCommand(lastReceivedCommandIdOrNull);
+			}
 			this.maxRequestedCommandId = Math.max(maxRequestedCommandId, this.maxRequestedCommandId);
 			reviveConnection();
 		}
 	}
 
-	public void init(int maxRequestedCommandId) {
-		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
-		synchronized (this) {
-			this.maxRequestedCommandId = maxRequestedCommandId;
-		}
-		LOGGER.debug("INIT successful: " + sessionId);
+	public void sendInitOk() {
+		LOGGER.debug("Sending INIT_OK for {}", sessionId);
 		sendAsyncWithErrorHandler(new INIT_OK(
 				config.getClientMinRequestedCommands(),
 				config.getClientMaxRequestedCommands(),

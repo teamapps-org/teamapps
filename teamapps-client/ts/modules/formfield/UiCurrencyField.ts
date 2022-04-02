@@ -38,8 +38,8 @@ import {BigDecimal} from "../util/BigDecimalString";
 
 export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyValueConfig> implements UiCurrencyFieldEventSource, UiCurrencyFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>(this, {throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>(this, {throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
 
 	private trivialUnitBox: TrivialUnitBox<UiCurrencyUnitConfig>;
 	private queryFunction: QueryFunction<UiCurrencyUnitConfig>;

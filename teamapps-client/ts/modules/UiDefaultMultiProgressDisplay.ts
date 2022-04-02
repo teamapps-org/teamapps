@@ -27,7 +27,7 @@ import {UiDefaultMultiProgressDisplayCommandHandler, UiDefaultMultiProgressDispl
 import {UiMultiProgressDisplay_ClickedEvent, UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayConfig, UiMultiProgressDisplayEventSource} from "../generated/UiMultiProgressDisplayConfig";
 
 export abstract class UiMultiProgressDisplay<C extends UiMultiProgressDisplayConfig = UiMultiProgressDisplayConfig> extends AbstractUiComponent<C> implements UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayEventSource {
-	public readonly onClicked: TeamAppsEvent<UiMultiProgressDisplay_ClickedEvent> = new TeamAppsEvent(this);
+	public readonly onClicked: TeamAppsEvent<UiMultiProgressDisplay_ClickedEvent> = new TeamAppsEvent();
 	abstract update(config: C): void;
 }
 

@@ -33,8 +33,8 @@ interface OpenConfig {
 
 export class UiDropDown {
 
-	public onClose: TeamAppsEvent<void> = new TeamAppsEvent(this);
-	public onComponentRemoved: TeamAppsEvent<UiComponent> = new TeamAppsEvent(this);
+	public onClose: TeamAppsEvent<void> = new TeamAppsEvent();
+	public onComponentRemoved: TeamAppsEvent<UiComponent> = new TeamAppsEvent();
 
 	protected $dropDown: HTMLElement;
 	protected $contentContainer: HTMLElement;

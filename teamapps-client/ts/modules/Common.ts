@@ -820,7 +820,6 @@ export function removeDangerousTags(value: string) {
 
 export function selectElementContents(domElement: Node, start?: number, end?: number) {
 	if (domElement == null || !document.body.contains(domElement)) {
-		console.log("null or detached!")
 		return;
 	}
 	domElement = domElement.firstChild || domElement;
@@ -1396,4 +1395,18 @@ export function insertAtCursorPosition(input: HTMLInputElement | HTMLTextAreaEle
 
 export function isVisibleColor(c: string) {
 	return c != null && rgba(c)[3] > 0;
+}
+
+export function createUiLocation() {
+	return {
+		href: location.href,
+		origin: location.origin,
+		protocol: location.protocol,
+		host: location.host,
+		hostname: location.hostname,
+		port: location.port && Number(location.port),
+		pathname: location.pathname ?? '',
+		search: location.search ?? '',
+		hash: location.hash ?? ''
+	};
 }

@@ -32,12 +32,12 @@ import {ProgressCircle} from "../../micro-components/ProgressCircle";
 
 export class UiFileItem {
 	private static LOGGER: Logger = log.getLogger("UploadItem");
-	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent<void>(this);
-	public readonly onDeleteButtonClick: TeamAppsEvent<void> = new TeamAppsEvent<void>(this);
-	public readonly onUploadCanceled: TeamAppsEvent<void> = new TeamAppsEvent(this);
-	public readonly onUploadFailed: TeamAppsEvent<void> = new TeamAppsEvent(this);
-	public readonly onUploadSuccessful: TeamAppsEvent<string> = new TeamAppsEvent(this);
-	public readonly onUploadTooLarge: TeamAppsEvent<void> = new TeamAppsEvent(this);
+	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
+	public readonly onDeleteButtonClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
+	public readonly onUploadCanceled: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onUploadFailed: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onUploadSuccessful: TeamAppsEvent<string> = new TeamAppsEvent();
+	public readonly onUploadTooLarge: TeamAppsEvent<void> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $progressIndicator: HTMLElement;

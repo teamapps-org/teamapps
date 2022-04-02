@@ -47,14 +47,14 @@ import {FileItemState, UiFileItem} from "./UiFileItem";
  */
 export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileItemConfig[]> implements UiSimpleFileFieldEventSource, UiSimpleFileFieldCommandHandler {
 
-	public readonly onFileItemClicked: TeamAppsEvent<UiSimpleFileField_FileItemClickedEvent> = new TeamAppsEvent(this);
-	public readonly onFileItemRemoved: TeamAppsEvent<UiSimpleFileField_FileItemRemovedEvent> = new TeamAppsEvent(this);
-	public readonly onUploadCanceled: TeamAppsEvent<UiSimpleFileField_UploadCanceledEvent> = new TeamAppsEvent(this);
-	public readonly onUploadFailed: TeamAppsEvent<UiSimpleFileField_UploadFailedEvent> = new TeamAppsEvent(this);
-	public readonly onUploadInitiatedByUser: TeamAppsEvent<UiSimpleFileField_UploadInitiatedByUserEvent> = new TeamAppsEvent(this);
-	public readonly onUploadStarted: TeamAppsEvent<UiSimpleFileField_UploadStartedEvent> = new TeamAppsEvent(this);
-	public readonly onUploadSuccessful: TeamAppsEvent<UiSimpleFileField_UploadSuccessfulEvent> = new TeamAppsEvent(this);
-	public readonly onUploadTooLarge: TeamAppsEvent<UiSimpleFileField_UploadTooLargeEvent> = new TeamAppsEvent(this);
+	public readonly onFileItemClicked: TeamAppsEvent<UiSimpleFileField_FileItemClickedEvent> = new TeamAppsEvent();
+	public readonly onFileItemRemoved: TeamAppsEvent<UiSimpleFileField_FileItemRemovedEvent> = new TeamAppsEvent();
+	public readonly onUploadCanceled: TeamAppsEvent<UiSimpleFileField_UploadCanceledEvent> = new TeamAppsEvent();
+	public readonly onUploadFailed: TeamAppsEvent<UiSimpleFileField_UploadFailedEvent> = new TeamAppsEvent();
+	public readonly onUploadInitiatedByUser: TeamAppsEvent<UiSimpleFileField_UploadInitiatedByUserEvent> = new TeamAppsEvent();
+	public readonly onUploadStarted: TeamAppsEvent<UiSimpleFileField_UploadStartedEvent> = new TeamAppsEvent();
+	public readonly onUploadSuccessful: TeamAppsEvent<UiSimpleFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onUploadTooLarge: TeamAppsEvent<UiSimpleFileField_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $uploadButton: HTMLElement;

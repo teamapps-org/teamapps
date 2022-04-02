@@ -40,7 +40,7 @@ export class TemplateRegistry {
 		}
 	};
 
-	public readonly onTemplateRegistered: TeamAppsEvent<string> = new TeamAppsEvent<string>(this);
+	public readonly onTemplateRegistered: TeamAppsEvent<string> = new TeamAppsEvent<string>();
 
 	private static logger: log.Logger = log.getLogger("TemplateRegistry");
 	private renderersByName: { [name: string]: Renderer } = {};

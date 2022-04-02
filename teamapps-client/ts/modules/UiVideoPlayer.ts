@@ -40,9 +40,9 @@ import {UiPosterImageSize} from "../generated/UiPosterImageSize";
 
 export class UiVideoPlayer extends AbstractUiComponent<UiVideoPlayerConfig> implements UiVideoPlayerCommandHandler, UiVideoPlayerEventSource {
 
-	public readonly onPlayerProgress: TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent>(this);
-	public readonly onEnded: TeamAppsEvent<UiVideoPlayer_EndedEvent> = new TeamAppsEvent<UiVideoPlayer_EndedEvent>(this);
-	public readonly onErrorLoading: TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent> = new TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent>(this);
+	public readonly onPlayerProgress: TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent> = new TeamAppsEvent<UiVideoPlayer_PlayerProgressEvent>();
+	public readonly onEnded: TeamAppsEvent<UiVideoPlayer_EndedEvent> = new TeamAppsEvent<UiVideoPlayer_EndedEvent>();
+	public readonly onErrorLoading: TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent> = new TeamAppsEvent<UiVideoPlayer_ErrorLoadingEvent>();
 
 	private $componentWrapper: HTMLElement;
 	private $video: HTMLElement;

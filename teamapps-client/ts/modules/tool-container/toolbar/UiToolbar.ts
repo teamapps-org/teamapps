@@ -45,9 +45,9 @@ export type ButtonVisibilities = { fittingButtons: FQButtonId[], nonFittingButto
 
 export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implements Emptyable, UiToolbarCommandHandler, UiToolbarEventSource {
 
-	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>(this);
+	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>();
 
-	public readonly onToolbarButtonClick: TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent>(this);
+	public readonly onToolbarButtonClick: TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent> = new TeamAppsEvent<AbstractUiToolContainer_ToolbarButtonClickEvent>();
 
 	public static DEFAULT_TOOLBAR_MAX_HEIGHT = 70;
 

@@ -50,7 +50,7 @@ import {UiField} from "./formfield/UiField";
 
 export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements UiGridFormCommandHandler, UiGridFormEventSource {
 
-	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent>(this);
+	public readonly onSectionCollapsedStateChanged: TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent> = new TeamAppsEvent<UiGridForm_SectionCollapsedStateChangedEvent>();
 
 	private $mainDiv: HTMLElement;
 
@@ -187,7 +187,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 class UiFormSection {
 
 	private static readonly LOGGER = log.getLogger("UiFormSection");
-	public readonly onCollapsedStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>(this);
+	public readonly onCollapsedStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>();
 
 	private uiFields: UiComponent[] = [];
 

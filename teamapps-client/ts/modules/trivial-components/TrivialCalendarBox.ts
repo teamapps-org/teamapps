@@ -49,8 +49,8 @@ export class TrivialCalendarBox implements TrivialComponent {
     private $year: HTMLElement;
     private $month: HTMLElement;
 
-    public readonly onChange = new TeamAppsEvent<{ value: LocalDateTime, timeUnitEdited: TimeUnit}>(this);
-    public readonly onOnEditingTimeUnitChange = new TeamAppsEvent<TimeUnit>(this);
+    public readonly onChange = new TeamAppsEvent<{ value: LocalDateTime, timeUnitEdited: TimeUnit}>();
+    public readonly onOnEditingTimeUnitChange = new TeamAppsEvent<TimeUnit>();
 
     constructor(options: TrivialCalendarBoxConfig = {}) {
         let now = LocalDateTime.local();

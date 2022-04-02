@@ -21,6 +21,7 @@ package org.teamapps.uisession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Queues;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
@@ -184,6 +185,8 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		SessionContext sessionContext = createSessionContext(uiSession, clientInfo, httpSession);
 		uiSession.addSessionListener(sessionContext.getAsUiSessionListenerInternal());
 
+		uiSession.handleCommandRequest(maxRequestedCommandId, null);
+
 		boolean wrongTeamappsVersion = clientInfo.getTeamAppsVersion() == null
 				|| (!Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_VERSION) && !Objects.equals(clientInfo.getTeamAppsVersion(), TEAMAPPS_DEV_SERVER_VERSION));
 		boolean hasTeamAppsRefreshParameter = clientInfo.getClientParameters().containsKey(TEAMAPPS_VERSION_REFRESH_PARAMETER);
@@ -191,9 +194,8 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 			LOGGER.info("Wrong TeamApps client version {} in session {}! Expected: {}!", clientInfo.getTeamAppsVersion(), sessionId, TEAMAPPS_VERSION);
 			if (!hasTeamAppsRefreshParameter) {
 				LOGGER.info("Sending redirect with {} parameter.", TEAMAPPS_VERSION_REFRESH_PARAMETER);
-				String clientUrl = clientInfo.getClientUrl();
-				String separator = clientUrl.contains("?") ? "&" : "?";
-				uiSession.sendCommand(new UiCommandWithResultCallback<>(new UiRootPanel.GoToUrlCommand(clientUrl + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false), null)); // TODO remove this in 2022, when all clients
+				String separator = StringUtils.isNotEmpty(clientInfo.getLocation().getSearch()) ? "&" : "?";
+				uiSession.sendCommand(new UiCommandWithResultCallback<>(new UiRootPanel.GoToUrlCommand(clientInfo.getLocation().getHref() + separator + TEAMAPPS_VERSION_REFRESH_PARAMETER + "=" + System.currentTimeMillis(), false)));
 			}
 			uiSession.close(UiSessionClosingReason.WRONG_TEAMAPPS_VERSION);
 			return;
@@ -201,7 +203,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 
 		sessionsById.put(sessionId, new SessionPair(uiSession, sessionContext));
 
-		uiSession.init(maxRequestedCommandId);
+		uiSession.sendInitOk();
 
 		try {
 			// TODO make non-blocking when exception handling (and thereby session invalidation) is changed
@@ -284,21 +286,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	}
 
 	public SessionContext createSessionContext(UiSession uiSession, UiClientInfo uiClientInfo, HttpSession httpSession) {
-		ClientInfo clientInfo = new ClientInfo(
-				uiClientInfo.getIp(),
-				uiClientInfo.getScreenWidth(),
-				uiClientInfo.getScreenHeight(),
-				uiClientInfo.getViewPortWidth(),
-				uiClientInfo.getViewPortHeight(),
-				uiClientInfo.getPreferredLanguageIso(),
-				uiClientInfo.getHighDensityScreen(),
-				uiClientInfo.getTimezoneIana(),
-				uiClientInfo.getTimezoneOffsetMinutes(),
-				uiClientInfo.getClientTokens(),
-				uiClientInfo.getUserAgentString(),
-				uiClientInfo.getClientUrl(),
-				uiClientInfo.getClientParameters(),
-				uiClientInfo.getTeamAppsVersion());
+		ClientInfo clientInfo = ClientInfo.fromUiClientInfo(uiClientInfo);
 		SessionConfiguration sessionConfiguration = SessionConfiguration.createForClientInfo(clientInfo);
 
 		return new SessionContext(

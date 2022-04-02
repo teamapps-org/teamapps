@@ -27,7 +27,7 @@ import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
 
 export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEventSource, UiLabelCommandHandler {
-	public readonly onClicked: TeamAppsEvent<UiLabel_ClickedEvent> = new TeamAppsEvent<UiLabel_ClickedEvent>(this);
+	public readonly onClicked: TeamAppsEvent<UiLabel_ClickedEvent> = new TeamAppsEvent<UiLabel_ClickedEvent>();
 
 	private $main: HTMLElement;
 	private $icon: HTMLElement;
