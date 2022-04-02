@@ -39,7 +39,7 @@ public class Div extends AbstractComponent {
 	public UiDiv createUiComponent() {
 		UiDiv ui = new UiDiv();
 		mapAbstractUiComponentProperties(ui);
-		ui.setContent(content.createUiReference());
+		ui.setContent(content != null ? content.createUiReference() : null);
 		return ui;
 	}
 
