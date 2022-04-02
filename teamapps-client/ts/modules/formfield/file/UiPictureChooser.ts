@@ -45,12 +45,12 @@ import {ProgressCircle} from "../../micro-components/ProgressCircle";
  */
 export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> implements UiPictureChooserEventSource, UiPictureChooserCommandHandler {
 
-	public readonly onUploadCanceled: TeamAppsEvent<UiPictureChooser_UploadCanceledEvent> = new TeamAppsEvent(this);
-	public readonly onUploadFailed: TeamAppsEvent<UiPictureChooser_UploadFailedEvent> = new TeamAppsEvent(this);
-	public readonly onUploadInitiatedByUser: TeamAppsEvent<UiPictureChooser_UploadInitiatedByUserEvent> = new TeamAppsEvent(this);
-	public readonly onUploadStarted: TeamAppsEvent<UiPictureChooser_UploadStartedEvent> = new TeamAppsEvent(this);
-	public readonly onUploadSuccessful: TeamAppsEvent<UiPictureChooser_UploadSuccessfulEvent> = new TeamAppsEvent(this);
-	public readonly onUploadTooLarge: TeamAppsEvent<UiPictureChooser_UploadTooLargeEvent> = new TeamAppsEvent(this);
+	public readonly onUploadCanceled: TeamAppsEvent<UiPictureChooser_UploadCanceledEvent> = new TeamAppsEvent();
+	public readonly onUploadFailed: TeamAppsEvent<UiPictureChooser_UploadFailedEvent> = new TeamAppsEvent();
+	public readonly onUploadInitiatedByUser: TeamAppsEvent<UiPictureChooser_UploadInitiatedByUserEvent> = new TeamAppsEvent();
+	public readonly onUploadStarted: TeamAppsEvent<UiPictureChooser_UploadStartedEvent> = new TeamAppsEvent();
+	public readonly onUploadSuccessful: TeamAppsEvent<UiPictureChooser_UploadSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onUploadTooLarge: TeamAppsEvent<UiPictureChooser_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $picture: HTMLElement;

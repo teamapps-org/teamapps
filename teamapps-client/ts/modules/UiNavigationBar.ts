@@ -42,8 +42,8 @@ interface Button {
 
 export class UiNavigationBar extends AbstractUiComponent<UiNavigationBarConfig> implements UiNavigationBarCommandHandler, UiNavigationBarEventSource {
 
-	public readonly onButtonClicked: TeamAppsEvent<UiNavigationBar_ButtonClickedEvent> = new TeamAppsEvent(this);
-	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent(this);
+	public readonly onButtonClicked: TeamAppsEvent<UiNavigationBar_ButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onFanoutClosedDueToClickOutsideFanout: TeamAppsEvent<UiNavigationBar_FanoutClosedDueToClickOutsideFanoutEvent> = new TeamAppsEvent();
 
 	private $bar: HTMLElement;
 	private $buttonsContainer: HTMLElement;

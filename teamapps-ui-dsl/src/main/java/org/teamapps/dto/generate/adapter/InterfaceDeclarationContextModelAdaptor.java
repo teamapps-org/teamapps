@@ -77,6 +77,14 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 			return !astUtil.getAllEvents(interfaceContext).isEmpty();
 		} else if ("allEvents".equals(propertyName)) {
 			return astUtil.getAllEvents(interfaceContext);
+		} else if ("allNonStaticEvents".equals(propertyName)) {
+			return astUtil.getAllEvents(interfaceContext).stream()
+					.filter(eventDeclarationContext -> eventDeclarationContext.staticModifier() == null)
+					.collect(Collectors.toList());
+		} else if ("allStaticEvents".equals(propertyName)) {
+			return astUtil.getAllEvents(interfaceContext).stream()
+					.filter(eventDeclarationContext -> eventDeclarationContext.staticModifier() != null)
+					.collect(Collectors.toList());
 		} else if ("allQueries".equals(propertyName)) {
 			return astUtil.getAllQueries(interfaceContext);
 		} else if ("superInterfacesWithCommands".equals(propertyName)) {

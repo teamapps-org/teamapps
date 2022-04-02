@@ -32,7 +32,7 @@ import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
 
 export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implements Emptyable, UiSplitPaneCommandHandler, UiSplitPaneEventSource {
-	public readonly onSplitResized: TeamAppsEvent<UiSplitPane_SplitResizedEvent> = new TeamAppsEvent<UiSplitPane_SplitResizedEvent>(this);
+	public readonly onSplitResized: TeamAppsEvent<UiSplitPane_SplitResizedEvent> = new TeamAppsEvent<UiSplitPane_SplitResizedEvent>();
 
 	private _firstChildComponent: UiComponent<UiComponentConfig>;
 	private _lastChildComponent: UiComponent<UiComponentConfig>;
@@ -55,7 +55,7 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 	private firstChildMinSize: number;
 	private lastChildMinSize: number;
 
-	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent(this);
+	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
 	constructor(config: UiSplitPaneConfig,
 	            context: TeamAppsUiContext) {

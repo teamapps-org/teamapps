@@ -81,14 +81,14 @@ export type UiWorkspaceLayoutDndDataTransfer = {
 
 export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConfig> implements UiWorkSpaceLayoutCommandHandler, UiWorkSpaceLayoutEventSource {
 
-	public readonly onLayoutChanged: TeamAppsEvent<UiWorkSpaceLayout_LayoutChangedEvent> = new TeamAppsEvent(this);
-	public readonly onViewDraggedToNewWindow: TeamAppsEvent<UiWorkSpaceLayout_ViewDraggedToNewWindowEvent> = new TeamAppsEvent(this);
-	public readonly onViewNeedsRefresh: TeamAppsEvent<UiWorkSpaceLayout_ViewNeedsRefreshEvent> = new TeamAppsEvent(this);
-	public readonly onChildWindowCreationFailed: TeamAppsEvent<UiWorkSpaceLayout_ChildWindowCreationFailedEvent> = new TeamAppsEvent(this);
-	public readonly onChildWindowClosed: TeamAppsEvent<UiWorkSpaceLayout_ChildWindowClosedEvent> = new TeamAppsEvent(this);
-	public readonly onViewSelected: TeamAppsEvent<UiWorkSpaceLayout_ViewSelectedEvent> = new TeamAppsEvent(this);
-	public readonly onViewClosed: TeamAppsEvent<UiWorkSpaceLayout_ViewClosedEvent> = new TeamAppsEvent(this);
-	public readonly onViewGroupPanelStateChanged: TeamAppsEvent<UiWorkSpaceLayout_ViewGroupPanelStateChangedEvent> = new TeamAppsEvent(this);
+	public readonly onLayoutChanged: TeamAppsEvent<UiWorkSpaceLayout_LayoutChangedEvent> = new TeamAppsEvent();
+	public readonly onViewDraggedToNewWindow: TeamAppsEvent<UiWorkSpaceLayout_ViewDraggedToNewWindowEvent> = new TeamAppsEvent();
+	public readonly onViewNeedsRefresh: TeamAppsEvent<UiWorkSpaceLayout_ViewNeedsRefreshEvent> = new TeamAppsEvent();
+	public readonly onChildWindowCreationFailed: TeamAppsEvent<UiWorkSpaceLayout_ChildWindowCreationFailedEvent> = new TeamAppsEvent();
+	public readonly onChildWindowClosed: TeamAppsEvent<UiWorkSpaceLayout_ChildWindowClosedEvent> = new TeamAppsEvent();
+	public readonly onViewSelected: TeamAppsEvent<UiWorkSpaceLayout_ViewSelectedEvent> = new TeamAppsEvent();
+	public readonly onViewClosed: TeamAppsEvent<UiWorkSpaceLayout_ViewClosedEvent> = new TeamAppsEvent();
+	public readonly onViewGroupPanelStateChanged: TeamAppsEvent<UiWorkSpaceLayout_ViewGroupPanelStateChangedEvent> = new TeamAppsEvent();
 
 	public static readonly ROOT_WINDOW_ID: string = "ROOT_WINDOW";
 

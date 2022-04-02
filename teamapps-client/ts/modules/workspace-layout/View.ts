@@ -29,7 +29,7 @@ import {UiComponent} from "../UiComponent";
 
 export class View implements ViewInfo {
 
-	public readonly onPanelWindowButtonClicked: TeamAppsEvent<UiWindowButtonType> = new TeamAppsEvent(this);
+	public readonly onPanelWindowButtonClicked: TeamAppsEvent<UiWindowButtonType> = new TeamAppsEvent();
 
 	private _parent: TabPanelItem;
 	private _component: UiComponent<UiComponentConfig>;

@@ -108,11 +108,11 @@ export interface TrivialComboBoxConfig<E> {
 
 export class TrivialComboBox<E> implements TrivialComponent {
 
-	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>(this);
-	public readonly onFocus = new TeamAppsEvent<void>(this);
-	public readonly onBlur = new TeamAppsEvent<void>(this);
-	public readonly onBeforeQuery = new TeamAppsEvent<string>(this);
-	public readonly onBeforeDropdownOpens = new TeamAppsEvent<string>(this);
+	public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
+	public readonly onFocus = new TeamAppsEvent<void>();
+	public readonly onBlur = new TeamAppsEvent<void>();
+	public readonly onBeforeQuery = new TeamAppsEvent<string>();
+	public readonly onBeforeDropdownOpens = new TeamAppsEvent<string>();
 
 	private config: TrivialComboBoxConfig<E>;
 

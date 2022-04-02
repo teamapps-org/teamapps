@@ -27,6 +27,7 @@ import org.teamapps.privilege.preset.PrivilegeGroupPreset;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.uisession.UiSession;
 import org.teamapps.ux.session.ClientInfo;
+import org.teamapps.ux.session.Location;
 import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 
@@ -57,7 +58,7 @@ public class SimplePrivilegeProviderFactoryTest {
 	}
 
 	public static SessionContext createDummySessionContext() {
-		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", "", Collections.emptyMap(), TEAMAPPS_VERSION);
+		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", Mockito.mock(Location.class), Collections.emptyMap(), TEAMAPPS_VERSION);
 		return new SessionContext(
 				Mockito.mock(UiSession.class),
 				Executors.newSingleThreadExecutor(),

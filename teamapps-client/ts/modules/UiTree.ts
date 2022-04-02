@@ -40,9 +40,9 @@ import {loadSensitiveThrottling} from "./util/throttle";
 
 export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeCommandHandler, UiTreeEventSource {
 
-	public readonly onTextInput: TeamAppsEvent<UiTree_TextInputEvent> = new TeamAppsEvent(this, {throttlingMode: "debounce", delay: 500});
-	public readonly onNodeSelected: TeamAppsEvent<UiTree_NodeSelectedEvent> = new TeamAppsEvent(this);
-	public readonly onRequestTreeData: TeamAppsEvent<UiTree_RequestTreeDataEvent> = new TeamAppsEvent(this);
+	public readonly onTextInput: TeamAppsEvent<UiTree_TextInputEvent> = new TeamAppsEvent({throttlingMode: "debounce", delay: 500});
+	public readonly onNodeSelected: TeamAppsEvent<UiTree_NodeSelectedEvent> = new TeamAppsEvent();
+	public readonly onRequestTreeData: TeamAppsEvent<UiTree_RequestTreeDataEvent> = new TeamAppsEvent();
 
 	private $panel: HTMLElement;
 	private trivialTree: TrivialTree<UiTreeRecordConfig>;

@@ -62,13 +62,13 @@ interface Tab {
 
 export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements UiTabPanelCommandHandler, UiTabPanelEventSource, Emptyable {
 
-	public readonly onTabSelected: TeamAppsEvent<UiTabPanel_TabSelectedEvent> = new TeamAppsEvent<UiTabPanel_TabSelectedEvent>(this);
+	public readonly onTabSelected: TeamAppsEvent<UiTabPanel_TabSelectedEvent> = new TeamAppsEvent<UiTabPanel_TabSelectedEvent>();
 
-	public readonly onTabNeedsRefresh: TeamAppsEvent<UiTabPanel_TabNeedsRefreshEvent> = new TeamAppsEvent<UiTabPanel_TabNeedsRefreshEvent>(this);
-	public readonly onTabClosed: TeamAppsEvent<UiTabPanel_TabClosedEvent> = new TeamAppsEvent<UiTabPanel_TabClosedEvent>(this);
-	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent(this);
+	public readonly onTabNeedsRefresh: TeamAppsEvent<UiTabPanel_TabNeedsRefreshEvent> = new TeamAppsEvent<UiTabPanel_TabNeedsRefreshEvent>();
+	public readonly onTabClosed: TeamAppsEvent<UiTabPanel_TabClosedEvent> = new TeamAppsEvent<UiTabPanel_TabClosedEvent>();
+	public readonly onEmptyStateChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
-	public readonly onWindowButtonClicked: TeamAppsEvent<UiTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent(this);
+	public readonly onWindowButtonClicked: TeamAppsEvent<UiTabPanel_WindowButtonClickedEvent> = new TeamAppsEvent();
 
 	private readonly defaultToolButtons = {
 		[UiWindowButtonType.MINIMIZE]: new UiToolButton(createUiToolButtonConfig(StaticIcons.MINIMIZE, "Minimize", {debuggingId: "window-button-minimize"}), this._context),

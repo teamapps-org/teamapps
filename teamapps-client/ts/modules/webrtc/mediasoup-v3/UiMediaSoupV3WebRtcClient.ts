@@ -58,21 +58,21 @@ import {ConferenceApi, Utils} from "./lib/avcore.client";
 import {ConferenceInput} from "./lib/avcore";
 
 export class UiMediaSoupV3WebRtcClient extends AbstractUiComponent<UiMediaSoupV3WebRtcClientConfig> implements UiMediaSoupV3WebRtcClientCommandHandler, UiMediaSoupV3WebRtcClientEventSource {
-	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent(this);
-	public readonly onSourceMediaTrackEnded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent> = new TeamAppsEvent(this);
+	public readonly onSourceMediaTrackRetrievalFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackRetrievalFailedEvent> = new TeamAppsEvent();
+	public readonly onSourceMediaTrackEnded: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SourceMediaTrackEndedEvent> = new TeamAppsEvent();
 
-	public readonly onTrackPublishingSuccessful: TeamAppsEvent<UiMediaSoupV3WebRtcClient_TrackPublishingSuccessfulEvent> = new TeamAppsEvent(this);
-	public readonly onTrackPublishingFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_TrackPublishingFailedEvent> = new TeamAppsEvent(this);
+	public readonly onTrackPublishingSuccessful: TeamAppsEvent<UiMediaSoupV3WebRtcClient_TrackPublishingSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onTrackPublishingFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_TrackPublishingFailedEvent> = new TeamAppsEvent();
 
-	public readonly onSubscribingSuccessful: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SubscribingSuccessfulEvent> = new TeamAppsEvent(this);
-	public readonly onSubscribingFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SubscribingFailedEvent> = new TeamAppsEvent(this);
-	public readonly onSubscriptionPlaybackFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SubscriptionPlaybackFailedEvent> = new TeamAppsEvent(this);
+	public readonly onSubscribingSuccessful: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SubscribingSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onSubscribingFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SubscribingFailedEvent> = new TeamAppsEvent();
+	public readonly onSubscriptionPlaybackFailed: TeamAppsEvent<UiMediaSoupV3WebRtcClient_SubscriptionPlaybackFailedEvent> = new TeamAppsEvent();
 
-	public readonly onConnectionStateChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ConnectionStateChangedEvent> = new TeamAppsEvent(this);
+	public readonly onConnectionStateChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ConnectionStateChangedEvent> = new TeamAppsEvent();
 
-	public readonly onVoiceActivityChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_VoiceActivityChangedEvent> = new TeamAppsEvent(this);
-	public readonly onClicked: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ClickedEvent> = new TeamAppsEvent(this);
-	public readonly onContextMenuRequested: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ContextMenuRequestedEvent> = new TeamAppsEvent(this);
+	public readonly onVoiceActivityChanged: TeamAppsEvent<UiMediaSoupV3WebRtcClient_VoiceActivityChangedEvent> = new TeamAppsEvent();
+	public readonly onClicked: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ClickedEvent> = new TeamAppsEvent();
+	public readonly onContextMenuRequested: TeamAppsEvent<UiMediaSoupV3WebRtcClient_ContextMenuRequestedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLDivElement;
 	private $image: HTMLImageElement;

@@ -33,8 +33,8 @@ import {UiComponent} from "../UiComponent";
 
 export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonEventSource, UiButtonCommandHandler {
 
-	public readonly onClicked: TeamAppsEvent<UiButton_ClickedEvent> = new TeamAppsEvent(this);
-	public readonly onDropDownOpened: TeamAppsEvent<UiButton_DropDownOpenedEvent> = new TeamAppsEvent(this);
+	public readonly onClicked: TeamAppsEvent<UiButton_ClickedEvent> = new TeamAppsEvent();
+	public readonly onDropDownOpened: TeamAppsEvent<UiButton_DropDownOpenedEvent> = new TeamAppsEvent();
 
 	private template: UiTemplateConfig;
 	private templateRecord: any;

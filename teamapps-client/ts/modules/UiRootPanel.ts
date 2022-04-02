@@ -24,9 +24,9 @@ import {UiWindow} from "./UiWindow";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
-import {exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml} from "./Common";
+import {createUiLocation, exitFullScreen, getLastPointerCoordinates, pageTransition, parseHtml} from "./Common";
 import {
-	UiRootPanel_GlobalKeyEventOccurredEvent,
+	UiRootPanel_GlobalKeyEventOccurredEvent, UiRootPanel_NavigationStateChangeEvent,
 	UiRootPanelCommandHandler,
 	UiRootPanelConfig,
 	UiRootPanelEventSource
@@ -44,12 +44,13 @@ import {UiNotificationPosition} from "../generated/UiNotificationPosition";
 import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 import {UiExitAnimation} from "../generated/UiExitAnimation";
 import {releaseWakeLock, requestWakeLock} from "./util/WakeLock";
-import {TeamAppsEvent} from "./util/TeamAppsEvent";
+import {EventSubscription, TeamAppsEvent, TeamAppsEventListener} from "./util/TeamAppsEvent";
 import {KeyEventType} from "../generated/KeyEventType";
 
 export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implements UiRootPanelCommandHandler, UiRootPanelEventSource {
 
-	public readonly onGlobalKeyEventOccurred: TeamAppsEvent<UiRootPanel_GlobalKeyEventOccurredEvent> = new TeamAppsEvent(this);
+	public static readonly onGlobalKeyEventOccurred: TeamAppsEvent<UiRootPanel_GlobalKeyEventOccurredEvent> = new TeamAppsEvent();
+	public static readonly onNavigationStateChange: TeamAppsEvent<UiRootPanel_NavigationStateChangeEvent> = new TeamAppsEvent();
 
 	private static LOGGER: log.Logger = log.getLogger("UiRootPanel");
 	private static ALL_ROOT_PANELS_BY_ID: { [id: string]: UiRootPanel } = {};
@@ -60,14 +61,6 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		}
 	} = {};
 	private static WINDOWS_BY_ID: { [windowId: string]: UiWindow } = {};
-	private static keyboardEventListener: (e: KeyboardEvent) => void;
-	private static keyboardEventSettings: { unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, includeRepeats: boolean } = {
-		unmodified: false,
-		modifiedWithAltKey: false,
-		modifiedWithCtrlKey: false,
-		modifiedWithMetaKey: false,
-		includeRepeats: false,
-	};
 
 	private $root: HTMLElement;
 	private content: UiComponent;
@@ -97,58 +90,10 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 		this.setContent(config.content as UiComponent);
 
 		this.setOptimizedForTouch(context.config.optimizedForTouch);
-
-		UiRootPanel.keyboardEventListener = (e: KeyboardEvent) => {
-			let settings = UiRootPanel.keyboardEventSettings;
-			if (e.repeat && !settings.includeRepeats) {
-				return;
-			}
-			let modified = e.ctrlKey || e.altKey || e.metaKey;
-			if (!modified && settings.unmodified
-				|| e.ctrlKey && settings.modifiedWithCtrlKey
-				|| e.altKey && settings.modifiedWithAltKey
-				|| e.metaKey && settings.modifiedWithMetaKey) {
-
-				let el = e.target as Element;
-				let componentId: string | null;
-				while (el != null) {
-					el = el.parentElement;
-					componentId = el?.getAttribute("data-teamapps-id");
-					if (componentId != null) {
-						break;
-					}
-				}
-
-				this.onGlobalKeyEventOccurred.fire({
-					eventType: e.type == "keydown" ? KeyEventType.KEY_DOWN : KeyEventType.KEY_UP,
-					sourceComponentId: componentId,
-					code: e.code,
-					isComposing: e.isComposing,
-					key: e.key,
-					charCode: e.charCode,
-					keyCode: e.keyCode,
-					locale: (e as any).locale,
-					location: e.location,
-					repeat: e.repeat,
-					altKey: e.altKey,
-					ctrlKey: e.ctrlKey,
-					shiftKey: e.shiftKey,
-					metaKey: e.metaKey
-				})
-			}
-		}
 	}
 
 	public static setGlobalKeyEventsEnabled(unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, includeRepeats: boolean, keyDown: boolean, keyUp: boolean) {
-		document.removeEventListener("keydown", this.keyboardEventListener, {capture: true});
-		document.removeEventListener("keyup", this.keyboardEventListener, {capture: true});
-		UiRootPanel.keyboardEventSettings = {unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats};
-		if (keyDown) {
-			document.addEventListener("keydown", this.keyboardEventListener, {capture: true, passive: true})
-		}
-		if (keyUp) {
-			document.addEventListener("keyup", this.keyboardEventListener, {capture: true, passive: true})
-		}
+		setGlobalKeyEventsEnabled.call(this, unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp);
 	}
 
 	public doGetMainElement(): HTMLElement {
@@ -432,6 +377,83 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 			location.href = url;
 		}
 	}
+
+	public static async pushHistoryState(relativeUrl: string) {
+		window.history.pushState({}, "", relativeUrl);
+		UiRootPanel.onNavigationStateChange.fire({location: createUiLocation(), triggeredByUser: false});
+	}
+
+	public static async navigateForward(steps: number) {
+		window.history.go(steps);
+	}
+}
+TeamAppsUiComponentRegistry.registerComponentClass("UiRootPanel", UiRootPanel);
+
+// GLOBAL:
+
+let keyboardEventSettings: { unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, includeRepeats: boolean } = {
+	unmodified: false,
+	modifiedWithAltKey: false,
+	modifiedWithCtrlKey: false,
+	modifiedWithMetaKey: false,
+	includeRepeats: false,
+};
+
+let keyboardEventListener = (e: KeyboardEvent) => {
+	let settings = keyboardEventSettings;
+	if (e.repeat && !settings.includeRepeats) {
+		return;
+	}
+	let modified = e.ctrlKey || e.altKey || e.metaKey;
+	if (!modified && settings.unmodified
+		|| e.ctrlKey && settings.modifiedWithCtrlKey
+		|| e.altKey && settings.modifiedWithAltKey
+		|| e.metaKey && settings.modifiedWithMetaKey) {
+
+		let el = e.target as Element;
+		let componentId: string | null;
+		while (el != null) {
+			el = el.parentElement;
+			componentId = el?.getAttribute("data-teamapps-id");
+			if (componentId != null) {
+				break;
+			}
+		}
+
+		UiRootPanel.onGlobalKeyEventOccurred.fire({
+			eventType: e.type == "keydown" ? KeyEventType.KEY_DOWN : KeyEventType.KEY_UP,
+			sourceComponentId: componentId,
+			code: e.code,
+			isComposing: e.isComposing,
+			key: e.key,
+			charCode: e.charCode,
+			keyCode: e.keyCode,
+			locale: (e as any).locale,
+			location: e.location,
+			repeat: e.repeat,
+			altKey: e.altKey,
+			ctrlKey: e.ctrlKey,
+			shiftKey: e.shiftKey,
+			metaKey: e.metaKey
+		})
+	}
 }
 
-TeamAppsUiComponentRegistry.registerComponentClass("UiRootPanel", UiRootPanel);
+function setGlobalKeyEventsEnabled(unmodified: boolean, modifiedWithAltKey: boolean, modifiedWithCtrlKey: boolean, modifiedWithMetaKey: boolean, includeRepeats: boolean, keyDown: boolean, keyUp: boolean) {
+	document.removeEventListener("keydown", keyboardEventListener, {capture: true});
+	document.removeEventListener("keyup", keyboardEventListener, {capture: true});
+	keyboardEventSettings = {unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats};
+	if (keyDown) {
+		document.addEventListener("keydown", keyboardEventListener, {capture: true, passive: true})
+	}
+	if (keyUp) {
+		document.addEventListener("keyup", keyboardEventListener, {capture: true, passive: true})
+	}
+}
+
+window.addEventListener('popstate', (event) => {
+	UiRootPanel.onNavigationStateChange.fire({
+		location: createUiLocation(),
+		triggeredByUser: true
+	});
+});

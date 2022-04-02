@@ -204,13 +204,17 @@ commandExecutorMethodInvocationParameter(p) ::= "command.<p.Identifier>"
 componentEventDescriptors(classesAndInterfacesWithEvents) ::= <<
 <typeScriptFilePrelude()>
 
+export var staticComponentEventDescriptors = [
+    <classesAndInterfacesWithEvents:eventNamesObject(true); separator=",\n">
+];
+
 export var componentEventDescriptors = [
-    <classesAndInterfacesWithEvents:eventNamesObject(); separator=",\n">
+    <classesAndInterfacesWithEvents:eventNamesObject(false); separator=",\n">
 ];
 >>
 
-eventNamesObject(c) ::= <<
-{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }
+eventNamesObject(c, static) ::= <<
+<if(static)>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<else>{ componentType: "<c.Identifier.text>", eventDescriptors: [<c.allNonStaticEvents:{e|{name: "<e.Identifier.text>", _type: "<e._type>"\}}; separator=", ">] }<endif>
 >>
 
 

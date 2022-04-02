@@ -37,8 +37,8 @@ import {UiComponent} from "../UiComponent";
 
 export class UiToolButton extends AbstractUiComponent<UiToolButtonConfig> implements UiToolButtonEventSource, UiToolButtonCommandHandler {
 
-	public readonly onClicked: TeamAppsEvent<UiToolButton_ClickedEvent> = new TeamAppsEvent(this);
-	public readonly onDropDownOpened: TeamAppsEvent<UiToolButton_DropDownOpenedEvent> = new TeamAppsEvent(this);
+	public readonly onClicked: TeamAppsEvent<UiToolButton_ClickedEvent> = new TeamAppsEvent();
+	public readonly onDropDownOpened: TeamAppsEvent<UiToolButton_DropDownOpenedEvent> = new TeamAppsEvent();
 
 	private $button: HTMLElement;
 

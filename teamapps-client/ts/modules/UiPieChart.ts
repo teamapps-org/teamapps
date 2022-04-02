@@ -30,7 +30,7 @@ import {UiChartLegendStyle} from "../generated/UiChartLegendStyle";
 
 export class UiPieChart extends AbstractUiComponent<UiPieChartConfig> implements UiPieChartCommandHandler, UiPieChartEventSource {
 
-	readonly onDataPointClicked: TeamAppsEvent<UiPieChart_DataPointClickedEvent> = new TeamAppsEvent(this);
+	readonly onDataPointClicked: TeamAppsEvent<UiPieChart_DataPointClickedEvent> = new TeamAppsEvent();
 
 	chart: Chart;
 	config: UiPieChartConfig;

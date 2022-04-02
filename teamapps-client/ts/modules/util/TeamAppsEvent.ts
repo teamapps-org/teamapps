@@ -21,7 +21,7 @@ import {debounce, DebounceMode} from "./debounce";
 import {throttle} from "./throttle";
 import {deepEquals} from "../Common";
 
-export type TeamAppsEventListener<EO> = (eventObject?: EO, emitter?: any) => void;
+export type TeamAppsEventListener<EO> = (eventObject?: EO) => void;
 
 export interface EventSubscription {
 	unsubscribe: () => void
@@ -37,11 +37,7 @@ export class TeamAppsEvent<EO> {
 
 	public fire: (eventObject: EO) => void;
 
-	constructor(private eventSource: any, options?: {
-		throttlingMode: "throttle" | "debounce",
-		delay: number,
-		debounceMode?: DebounceMode
-	}) {
+	constructor(options?: { throttlingMode: "throttle" | "debounce"; delay: number; debounceMode?: DebounceMode }) {
 		if (options?.throttlingMode === "debounce") {
 			this.fire = debounce(this._fire.bind(this), options.delay, options.debounceMode ?? DebounceMode.BOTH);
 		} else if (options?.throttlingMode === "throttle") {
@@ -68,7 +64,7 @@ export class TeamAppsEvent<EO> {
 
 	private _fire(eventObject: EO) {
 		for (let i = 0; i < this.listeners.length; i++) {
-			this.listeners[i].call(null, eventObject, this.eventSource);
+			this.listeners[i].call(null, eventObject);
 		}
 		this.previousEventObject = eventObject;
 	};

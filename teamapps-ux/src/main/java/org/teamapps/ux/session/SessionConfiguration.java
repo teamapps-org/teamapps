@@ -37,7 +37,7 @@ public class SessionConfiguration {
 	private DayOfWeek firstDayOfWeek; // null == determine by locale
 
 	private boolean optimizedForTouch = false;
-	private String iconPath = "icons";
+	private String iconPath = "/icons";
 	private StylingTheme theme = StylingTheme.DEFAULT;
 
 	public static SessionConfiguration createForClientInfo(ClientInfo clientInfo) {

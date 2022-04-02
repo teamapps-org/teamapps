@@ -64,10 +64,10 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 
 	$minimizedTrayButton: HTMLElement = parseHtml(`<div class="minimized-tabpanel-button"></div>`);
 
-	public readonly onTabSelected: TeamAppsEvent<{ tabPanelItemId: string, tabId: string }> = new TeamAppsEvent(this);
-	public readonly onTabNeedsRefresh: TeamAppsEvent<{ tabId: string }> = new TeamAppsEvent(this);
-	public readonly onTabClosed: TeamAppsEvent<string> = new TeamAppsEvent(this);
-	public readonly onPanelStateChangeTriggered: TeamAppsEvent<UiViewGroupPanelState> = new TeamAppsEvent(this);
+	public readonly onTabSelected: TeamAppsEvent<{ tabPanelItemId: string, tabId: string }> = new TeamAppsEvent();
+	public readonly onTabNeedsRefresh: TeamAppsEvent<{ tabId: string }> = new TeamAppsEvent();
+	public readonly onTabClosed: TeamAppsEvent<string> = new TeamAppsEvent();
+	public readonly onPanelStateChangeTriggered: TeamAppsEvent<UiViewGroupPanelState> = new TeamAppsEvent();
 
 	private _state: UiViewGroupPanelState = UiViewGroupPanelState.NORMAL;
 

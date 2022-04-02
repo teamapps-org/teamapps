@@ -39,9 +39,9 @@ export class TeamAppsUiComponentRegistry {
 		this.componentClasses[componentName] = componentClass;
 	}
 
-	public static getComponentClassForName(componentName: string): ComponentClass<UiComponent<UiComponentConfig>> {
+	public static getComponentClassForName(componentName: string, logErrorIfNotFound = true): ComponentClass<UiComponent<UiComponentConfig>> {
 		let componentClass = this.componentClasses[componentName];
-		if (!componentClass) {
+		if (!componentClass && logErrorIfNotFound) {
 			TeamAppsUiComponentRegistry.logger.error("There is no registered component type with name: " + componentName);
 		}
 		return componentClass;

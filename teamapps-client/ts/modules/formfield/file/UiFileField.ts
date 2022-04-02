@@ -49,13 +49,13 @@ import {FileUploader} from "../../util/FileUploader";
 
 export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClientRecordConfig[]> implements UiFileFieldEventSource, UiFileFieldCommandHandler {
 
-	public readonly onFileItemClicked: TeamAppsEvent<UiFileField_FileItemClickedEvent> = new TeamAppsEvent(this);
-	public readonly onFileItemRemoveButtonClicked: TeamAppsEvent<UiFileField_FileItemRemoveButtonClickedEvent> = new TeamAppsEvent(this);
-	public readonly onUploadCanceled: TeamAppsEvent<UiFileField_UploadCanceledEvent> = new TeamAppsEvent(this);
-	public readonly onUploadFailed: TeamAppsEvent<UiFileField_UploadFailedEvent> = new TeamAppsEvent(this);
-	public readonly onUploadStarted: TeamAppsEvent<UiFileField_UploadStartedEvent> = new TeamAppsEvent(this);
-	public readonly onUploadSuccessful: TeamAppsEvent<UiFileField_UploadSuccessfulEvent> = new TeamAppsEvent(this);
-	public readonly onUploadTooLarge: TeamAppsEvent<UiFileField_UploadTooLargeEvent> = new TeamAppsEvent(this);
+	public readonly onFileItemClicked: TeamAppsEvent<UiFileField_FileItemClickedEvent> = new TeamAppsEvent();
+	public readonly onFileItemRemoveButtonClicked: TeamAppsEvent<UiFileField_FileItemRemoveButtonClickedEvent> = new TeamAppsEvent();
+	public readonly onUploadCanceled: TeamAppsEvent<UiFileField_UploadCanceledEvent> = new TeamAppsEvent();
+	public readonly onUploadFailed: TeamAppsEvent<UiFileField_UploadFailedEvent> = new TeamAppsEvent();
+	public readonly onUploadStarted: TeamAppsEvent<UiFileField_UploadStartedEvent> = new TeamAppsEvent();
+	public readonly onUploadSuccessful: TeamAppsEvent<UiFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onUploadTooLarge: TeamAppsEvent<UiFileField_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $wrapper: HTMLElement;
 	private $uploadButton: HTMLElement;
@@ -273,14 +273,13 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 
 	private createFileItem() {
 		let fileItem = new UploadItem(this.displayType === UiFileFieldDisplayType.FLOATING, this.maxBytesPerFile, this._config.fileTooLargeMessage, this._config.uploadErrorMessage, this.uploadUrl, this.itemRenderer, this.getId());
-		fileItem.onClick.addListener((eventObject, emitter) => {
+		fileItem.onClick.addListener((eventObject) => {
 			this.onFileItemClicked.fire({
-				clientId: (emitter as UploadItem).data.id
+				clientId: fileItem.data.id
 			});
 		});
-		fileItem.onDeleteButtonClick.addListener((eventObject, emitter) => {
-			let fileItem = emitter as UploadItem;
-			let data = (fileItem).data;
+		fileItem.onDeleteButtonClick.addListener((eventObject) => {
+			let data = fileItem.data;
 			if (data) {
 				this.onFileItemRemoveButtonClicked.fire({
 					clientId: data.id
@@ -372,12 +371,12 @@ enum FileItemState {
 
 class UploadItem {
 	private static LOGGER: Logger = log.getLogger("UploadItem");
-	public readonly onDeleteButtonClick: TeamAppsEvent<void> = new TeamAppsEvent<void>(this);
-	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent<void>(this);
-	public readonly onUploadCanceled: TeamAppsEvent<UiFileField_UploadCanceledEvent> = new TeamAppsEvent(this);
-	public readonly onUploadFailed: TeamAppsEvent<UiFileField_UploadFailedEvent> = new TeamAppsEvent(this);
-	public readonly onUploadSuccessful: TeamAppsEvent<UiFileField_UploadSuccessfulEvent> = new TeamAppsEvent(this);
-	public readonly onUploadTooLarge: TeamAppsEvent<UiFileField_UploadTooLargeEvent> = new TeamAppsEvent(this);
+	public readonly onDeleteButtonClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
+	public readonly onClick: TeamAppsEvent<void> = new TeamAppsEvent<void>();
+	public readonly onUploadCanceled: TeamAppsEvent<UiFileField_UploadCanceledEvent> = new TeamAppsEvent();
+	public readonly onUploadFailed: TeamAppsEvent<UiFileField_UploadFailedEvent> = new TeamAppsEvent();
+	public readonly onUploadSuccessful: TeamAppsEvent<UiFileField_UploadSuccessfulEvent> = new TeamAppsEvent();
+	public readonly onUploadTooLarge: TeamAppsEvent<UiFileField_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 

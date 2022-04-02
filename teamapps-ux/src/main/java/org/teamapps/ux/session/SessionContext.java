@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,10 +56,7 @@ import org.teamapps.ux.resource.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -78,6 +75,7 @@ public class SessionContext {
 	private final ExecutorService sessionExecutor;
 
 	public final Event<KeyboardEvent> onGlobalKeyEventOccurred = new Event<>();
+	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();
 	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
 	public final Event<Void> onDestroyed = new Event<>();
 	/**
@@ -89,7 +87,10 @@ public class SessionContext {
 	private UiSessionState state = UiSessionState.ACTIVE;
 
 	private final UiSession uiSession;
+
 	private final ClientInfo clientInfo;
+	private Location currentLocation;
+
 	private final HttpSession httpSession;
 	private final UxServerContext serverContext;
 	private final SessionIconProvider iconProvider;
@@ -161,7 +162,6 @@ public class SessionContext {
 		}
 	};
 
-
 	public SessionContext(UiSession uiSession,
 						  ExecutorService sessionExecutor,
 						  ClientInfo clientInfo,
@@ -173,6 +173,7 @@ public class SessionContext {
 		this.uiSession = uiSession;
 		this.httpSession = httpSession;
 		this.clientInfo = clientInfo;
+		this.currentLocation = clientInfo.getLocation();
 		this.sessionConfiguration = sessionConfiguration;
 		this.serverContext = serverContext;
 		this.iconProvider = iconProvider;
@@ -181,6 +182,19 @@ public class SessionContext {
 		addIconBundle(TeamAppsIconBundle.createBundle());
 		runWithContext(this::updateSessionMessageWindows);
 		this.sessionResourceProvider = new SessionContextResourceManager(uiSession.getSessionId());
+	}
+
+
+	public void pushNavigationState(String relativeUrl) {
+		queueCommand(new UiRootPanel.PushHistoryStateCommand(relativeUrl));
+	}
+
+	public void navigateBack(int steps) {
+		navigateForward(-steps);
+	}
+
+	public void navigateForward(int steps) {
+		queueCommand(new UiRootPanel.NavigateForwardCommand(steps));
 	}
 
 	public static SessionContext current() {
@@ -635,7 +649,8 @@ public class SessionContext {
 	}
 
 	public void handleStaticEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
+		UiEventType uiEventType = event.getUiEventType();
+		switch (uiEventType) {
 			case UI_ROOT_PANEL_GLOBAL_KEY_EVENT_OCCURRED: {
 				UiRootPanel.GlobalKeyEventOccurredEvent e = (UiRootPanel.GlobalKeyEventOccurredEvent) event;
 				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
@@ -656,9 +671,20 @@ public class SessionContext {
 				));
 				break;
 			}
+			case UI_ROOT_PANEL_NAVIGATION_STATE_CHANGE: {
+				UiRootPanel.NavigationStateChangeEvent e = (UiRootPanel.NavigationStateChangeEvent) event;
+				Location location = Location.fromUiLocation(e.getLocation());
+				this.currentLocation = location;
+				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
+				break;
+			}
 			default:
-				throw new TeamAppsUiApiException(getSessionId(), event.getUiEventType().toString());
+				throw new TeamAppsUiApiException(getSessionId(), uiEventType.toString());
 		}
+	}
+
+	public Location getCurrentLocation() {
+		return currentLocation;
 	}
 
 	public UiSessionListener getAsUiSessionListenerInternal() {

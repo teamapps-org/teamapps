@@ -459,7 +459,7 @@ export class LocalViewContainer implements ViewContainer {
 	@bind
 	private createTabPanelItem(config: UiWorkSpaceLayoutViewGroupItemConfig, parent: SplitPaneItem) {
 		let tabPanelItem = new TabPanelItem(config.id, config.persistent, parent, this.context);
-		tabPanelItem.onTabSelected.addListener(this.tabSelected);
+		tabPanelItem.onTabSelected.addListener(eventObject => this.tabSelected(eventObject, tabPanelItem));
 		tabPanelItem.onTabNeedsRefresh.addListener(this.tabNeedsRefresh);
 		tabPanelItem.onPanelStateChangeTriggered.addListener(panelState => this.setViewGroupPanelState2(tabPanelItem, panelState, true));
 		tabPanelItem.onTabClosed.addListener(tabId => {
@@ -473,7 +473,6 @@ export class LocalViewContainer implements ViewContainer {
 		return tabPanelItem;
 	}
 
-	@bind
 	private tabSelected(eventObject: { tabPanelItemId: string, tabId: string }, tabPanelItem: TabPanelItem) {
 		let otherViewNames = tabPanelItem.tabs.map(tab => tab.viewName).filter(otherViewName => otherViewName !== eventObject.tabId);
 		if (!this.viewEventsSuppressed) {

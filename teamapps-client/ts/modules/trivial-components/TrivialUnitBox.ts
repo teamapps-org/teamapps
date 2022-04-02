@@ -60,10 +60,10 @@ export class TrivialUnitBox<U> implements TrivialComponent {
 
 	private config: TrivialUnitBoxConfig<U>;
 
-	public readonly onChange = new TeamAppsEvent<TrivialUnitBoxChangeEvent<U>>(this);
-	public readonly onSelectedEntryChanged = new TeamAppsEvent<U>(this);
-	public readonly onFocus = new TeamAppsEvent<void>(this);
-	public readonly onBlur = new TeamAppsEvent<void>(this);
+	public readonly onChange = new TeamAppsEvent<TrivialUnitBoxChangeEvent<U>>();
+	public readonly onSelectedEntryChanged = new TeamAppsEvent<U>();
+	public readonly onFocus = new TeamAppsEvent<void>();
+	public readonly onBlur = new TeamAppsEvent<void>();
 
 	private selectedEntry: U;
 	private clickInsideEditorWasWhileNotHavingFocus = false;

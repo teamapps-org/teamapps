@@ -67,6 +67,14 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
             return !astUtil.getAllEvents(classContext).isEmpty();
         } else if ("allEvents".equals(propertyName)) {
             return astUtil.getAllEvents(classContext);
+        } else if ("allNonStaticEvents".equals(propertyName)) {
+            return astUtil.getAllEvents(classContext).stream()
+                    .filter(eventDeclarationContext -> eventDeclarationContext.staticModifier() == null)
+                    .collect(Collectors.toList());
+        } else if ("allStaticEvents".equals(propertyName)) {
+            return astUtil.getAllEvents(classContext).stream()
+                    .filter(eventDeclarationContext -> eventDeclarationContext.staticModifier() != null)
+                    .collect(Collectors.toList());
         } else if ("allQueries".equals(propertyName)) {
             return astUtil.getAllQueries(classContext);
         } else if ("superClassAndDirectlyImplementedInterfacesWithCommands".equals(propertyName)) {

@@ -24,10 +24,10 @@ export class FileUploader {
 
 	private static LOGGER: log.Logger = log.getLogger("UploadItem");
 
-	public readonly onProgress: TeamAppsEvent<number> = new TeamAppsEvent(this);
-	public readonly onSuccess: TeamAppsEvent<string> = new TeamAppsEvent(this);
-	public readonly onError: TeamAppsEvent<void> = new TeamAppsEvent(this);
-	public readonly onComplete: TeamAppsEvent<void> = new TeamAppsEvent(this);
+	public readonly onProgress: TeamAppsEvent<number> = new TeamAppsEvent();
+	public readonly onSuccess: TeamAppsEvent<string> = new TeamAppsEvent();
+	public readonly onError: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onComplete: TeamAppsEvent<void> = new TeamAppsEvent();
 
 	private xhr: JQuery.jqXHR;
 

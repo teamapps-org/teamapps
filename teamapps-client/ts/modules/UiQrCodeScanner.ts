@@ -29,7 +29,7 @@ import {UiPageDisplayMode} from "../generated/UiPageDisplayMode";
 
 export class UiQrCodeScanner extends AbstractUiComponent<UiQrCodeScannerConfig> implements UiQrCodeScannerCommandHandler, UiQrCodeScannerEventSource {
 
-	public readonly onQrCodeDetected: TeamAppsEvent<UiQrCodeScanner_QrCodeDetectedEvent> = new TeamAppsEvent(this);
+	public readonly onQrCodeDetected: TeamAppsEvent<UiQrCodeScanner_QrCodeDetectedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $video: HTMLVideoElement;

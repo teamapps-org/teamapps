@@ -41,10 +41,10 @@ import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 
 export class UiTreeGraph extends AbstractUiComponent<UiTreeGraphConfig> implements UiTreeGraphCommandHandler, UiTreeGraphEventSource {
 
-	public readonly onNodeClicked: TeamAppsEvent<UiTreeGraph_NodeClickedEvent> = new TeamAppsEvent(this);
-	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
-	public readonly onParentExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_ParentExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
-	public readonly onSideListExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_SideListExpandedOrCollapsedEvent> = new TeamAppsEvent(this);
+	public readonly onNodeClicked: TeamAppsEvent<UiTreeGraph_NodeClickedEvent> = new TeamAppsEvent();
+	public readonly onNodeExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_NodeExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onParentExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_ParentExpandedOrCollapsedEvent> = new TeamAppsEvent();
+	public readonly onSideListExpandedOrCollapsed: TeamAppsEvent<UiTreeGraph_SideListExpandedOrCollapsedEvent> = new TeamAppsEvent();
 
 	private chart: TreeChart;
 	private $main: HTMLElement;

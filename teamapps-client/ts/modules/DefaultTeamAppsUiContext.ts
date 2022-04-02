@@ -19,7 +19,7 @@
  */
 "use strict";
 
-import {generateUUID, logException} from "./Common";
+import {createUiLocation, generateUUID, logException} from "./Common";
 import {TeamAppsUiContextInternalApi} from "./TeamAppsUiContext";
 import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {UiComponentConfig} from "../generated/UiComponentConfig";
@@ -46,7 +46,7 @@ import {UiClientObjectConfig} from "../generated/UiClientObjectConfig";
 import {UiWindow} from "./UiWindow";
 import {QueryFunctionAdder} from "../generated/QueryFunctionAdder";
 import {UiQuery} from "../generated/UiQuery";
-import {componentEventDescriptors} from "../generated/ComponentEventDescriptors";
+import {componentEventDescriptors, staticComponentEventDescriptors} from "../generated/ComponentEventDescriptors";
 
 declare var __TEAMAPPS_VERSION__: string;
 
@@ -58,7 +58,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 
 	private static logger = log.getLogger("DefaultTeamAppsUiContext");
 
-	public readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand> = new TeamAppsEvent(this);
+	public readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand> = new TeamAppsEvent();
 	public readonly sessionId: string;
 	public isHighDensityScreen: boolean;
 	public config: UiConfigurationConfig = {
@@ -83,7 +83,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 
 	constructor(webSocketUrl: string, clientParameters: { [key: string]: string | number } = {}) {
 		this.componentEventSubscriptionManager = new ComponentEventSubscriptionManager();
-		this.componentEventSubscriptionManager.registerComponentTypes(componentEventDescriptors);
+		this.componentEventSubscriptionManager.registerComponentTypes(componentEventDescriptors, staticComponentEventDescriptors, this.sendEvent);
 
 		this.sessionId = generateUUID();
 
@@ -96,7 +96,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			timezoneOffsetMinutes: new Date().getTimezoneOffset(),
 			timezoneIana: jstz.determine().name(),
 			clientTokens: UiRootPanel.getClientTokens(),
-			clientUrl: location.href,
+			location: createUiLocation(),
 			clientParameters: clientParameters,
 			teamAppsVersion: __TEAMAPPS_VERSION__
 		});

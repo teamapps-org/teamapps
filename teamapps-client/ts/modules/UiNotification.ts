@@ -119,9 +119,9 @@ export function showNotification(notification: UiNotification, position: UiNotif
 
 export class UiNotification extends AbstractUiComponent<UiNotificationConfig> implements UiNotificationCommandHandler, UiNotificationEventSource {
 
-	public readonly onOpened: TeamAppsEvent<UiNotification_OpenedEvent> = new TeamAppsEvent(this);
-	public readonly onClosed: TeamAppsEvent<UiNotification_ClosedEvent> = new TeamAppsEvent(this);
-	public readonly onClosedAnyWay: TeamAppsEvent<void> = new TeamAppsEvent(this);
+	public readonly onOpened: TeamAppsEvent<UiNotification_OpenedEvent> = new TeamAppsEvent();
+	public readonly onClosed: TeamAppsEvent<UiNotification_ClosedEvent> = new TeamAppsEvent();
+	public readonly onClosedAnyWay: TeamAppsEvent<void> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $contentContainer: HTMLElement;

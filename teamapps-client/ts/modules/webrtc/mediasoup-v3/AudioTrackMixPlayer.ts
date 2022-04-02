@@ -21,7 +21,7 @@ import {TeamAppsEvent} from "../../util/TeamAppsEvent";
 
 export class AudioTrackMixPlayer {
 
-	public readonly onResumeSuccessful: TeamAppsEvent<void> = new TeamAppsEvent(this);
+	public readonly onResumeSuccessful: TeamAppsEvent<void> = new TeamAppsEvent();
 	private audioContext: AudioContext;
 
 	constructor() {

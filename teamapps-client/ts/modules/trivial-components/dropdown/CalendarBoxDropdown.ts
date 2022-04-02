@@ -25,7 +25,7 @@ import {DropDownComponent, SelectionDirection} from "./DropDownComponent";
 
 export class CalendarBoxDropdown implements DropDownComponent<LocalDateTime> {
 
-	public readonly onValueChanged: TeamAppsEvent<{ value: LocalDateTime; finalSelection: boolean }> = new TeamAppsEvent(this);
+	public readonly onValueChanged: TeamAppsEvent<{ value: LocalDateTime; finalSelection: boolean }> = new TeamAppsEvent();
 
 
 	constructor(

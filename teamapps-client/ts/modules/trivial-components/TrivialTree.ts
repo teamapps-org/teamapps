@@ -36,8 +36,8 @@ export class TrivialTree<E> implements TrivialComponent{
 
     private config: TrivialTreeConfig<E>;
 
-    public readonly onSelectedEntryChanged = new TeamAppsEvent<E>(this);
-    public readonly onNodeExpansionStateChanged = new TeamAppsEvent<E>(this);
+    public readonly onSelectedEntryChanged = new TeamAppsEvent<E>();
+    public readonly onNodeExpansionStateChanged = new TeamAppsEvent<E>();
 
     private treeBox: TrivialTreeBox<E>;
     private entries: E[];

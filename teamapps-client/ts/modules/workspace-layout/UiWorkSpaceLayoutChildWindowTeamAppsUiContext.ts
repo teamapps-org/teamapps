@@ -32,13 +32,13 @@ import {TemplateRegistry} from "../TemplateRegistry";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiCommand} from "../../generated/UiCommand";
 import {UiComponent} from "../UiComponent";
-import {componentEventDescriptors} from "../../generated/ComponentEventDescriptors";
+import {componentEventDescriptors, staticComponentEventDescriptors} from "../../generated/ComponentEventDescriptors";
 
 export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUiContext, TeamAppsUiContextInternalApi {
 
 	private static logger: log.Logger = log.getLogger("UiWorkSpaceLayoutChildWindowTeamAppsUiContext");
 
-	public readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand> = new TeamAppsEvent(this);
+	public readonly onStaticMethodCommandInvocation: TeamAppsEvent<UiCommand> = new TeamAppsEvent();
 	private _sessionId: string;
 	public readonly isHighDensityScreen: boolean;
 	public config: UiConfigurationConfig;
@@ -53,7 +53,7 @@ export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUi
 
 	constructor() {
 		this.componentEventSubscriptionManager = new ComponentEventSubscriptionManager();
-		this.componentEventSubscriptionManager.registerComponentTypes(componentEventDescriptors);
+		this.componentEventSubscriptionManager.registerComponentTypes(componentEventDescriptors, staticComponentEventDescriptors, this.sendEvent);
 
 		this.isHighDensityScreen = ((window.matchMedia && (window.matchMedia('only screen and (min-resolution: 124dpi), only screen and (min-resolution: 1.3dppx), only screen and (min-resolution: 48.8dpcm)').matches || window.matchMedia('only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 2.6/2), only screen and (min--moz-device-pixel-ratio: 1.3), only screen and (min-device-pixel-ratio: 1.3)').matches)) || (window.devicePixelRatio && window.devicePixelRatio > 1.3));
 		if (this.isHighDensityScreen) {

@@ -73,15 +73,15 @@ const RENDERING_STYLE_2_FULL_CALENDAR_CONFIG_STRING: { [index: number]: EventRen
 
 export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements UiCalendarCommandHandler, UiCalendarEventSource {
 
-	public readonly onEventClicked: TeamAppsEvent<UiCalendar_EventClickedEvent> = new TeamAppsEvent(this);
-	public readonly onEventMoved: TeamAppsEvent<UiCalendar_EventMovedEvent> = new TeamAppsEvent(this);
-	public readonly onDayClicked: TeamAppsEvent<UiCalendar_DayClickedEvent> = new TeamAppsEvent(this);
-	public readonly onIntervalSelected: TeamAppsEvent<UiCalendar_IntervalSelectedEvent> = new TeamAppsEvent(this);
-	public readonly onViewChanged: TeamAppsEvent<UiCalendar_ViewChangedEvent> = new TeamAppsEvent(this);
-	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent(this);
-	public readonly onDayHeaderClicked: TeamAppsEvent<UiCalendar_DayHeaderClickedEvent> = new TeamAppsEvent(this);
-	public readonly onWeekHeaderClicked: TeamAppsEvent<UiCalendar_WeekHeaderClickedEvent> = new TeamAppsEvent(this);
-	public readonly onMonthHeaderClicked: TeamAppsEvent<UiCalendar_MonthHeaderClickedEvent> = new TeamAppsEvent(this);
+	public readonly onEventClicked: TeamAppsEvent<UiCalendar_EventClickedEvent> = new TeamAppsEvent();
+	public readonly onEventMoved: TeamAppsEvent<UiCalendar_EventMovedEvent> = new TeamAppsEvent();
+	public readonly onDayClicked: TeamAppsEvent<UiCalendar_DayClickedEvent> = new TeamAppsEvent();
+	public readonly onIntervalSelected: TeamAppsEvent<UiCalendar_IntervalSelectedEvent> = new TeamAppsEvent();
+	public readonly onViewChanged: TeamAppsEvent<UiCalendar_ViewChangedEvent> = new TeamAppsEvent();
+	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent();
+	public readonly onDayHeaderClicked: TeamAppsEvent<UiCalendar_DayHeaderClickedEvent> = new TeamAppsEvent();
+	public readonly onWeekHeaderClicked: TeamAppsEvent<UiCalendar_WeekHeaderClickedEvent> = new TeamAppsEvent();
+	public readonly onMonthHeaderClicked: TeamAppsEvent<UiCalendar_MonthHeaderClickedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private eventSource: UiCalendarFullCalendarEventSource;
@@ -409,8 +409,8 @@ export class UiCalendar extends AbstractUiComponent<UiCalendarConfig> implements
 export /* for testing ... */
 class UiCalendarFullCalendarEventSource implements ExtendedEventSourceInput {
 
-	public readonly onViewChanged: TeamAppsEvent<UiCalendar_ViewChangedEvent> = new TeamAppsEvent<UiCalendar_ViewChangedEvent>(this);
-	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent<UiCalendar_DataNeededEvent>(this);
+	public readonly onViewChanged: TeamAppsEvent<UiCalendar_ViewChangedEvent> = new TeamAppsEvent<UiCalendar_ViewChangedEvent>();
+	public readonly onDataNeeded: TeamAppsEvent<UiCalendar_DataNeededEvent> = new TeamAppsEvent<UiCalendar_DataNeededEvent>();
 
 	private logger = log.getLogger((<any>UiCalendarFullCalendarEventSource.prototype).name || this.constructor.toString().match(/\w+/g)[1]);
 	private intervalManager: IntervalManager = new IntervalManager();

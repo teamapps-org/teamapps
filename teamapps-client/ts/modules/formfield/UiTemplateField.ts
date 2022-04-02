@@ -28,7 +28,7 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
 export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientRecordConfig> implements UiTemplateFieldCommandHandler, UiTemplateFieldEventSource {
 
-    public readonly onClicked: TeamAppsEvent<UiTemplateField_ClickedEvent> = new TeamAppsEvent(this);
+    public readonly onClicked: TeamAppsEvent<UiTemplateField_ClickedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private templateRenderer: Renderer;

@@ -43,14 +43,14 @@ import {createUiChatNewFileConfig} from "../generated/UiChatNewFileConfig";
 
 export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implements UiChatInputCommandHandler, UiChatInputEventSource {
 
-	onFileItemClicked: TeamAppsEvent<UiChatInput_FileItemClickedEvent> = new TeamAppsEvent(this);
-	onFileItemRemoved: TeamAppsEvent<UiChatInput_FileItemRemovedEvent> = new TeamAppsEvent(this);
-	onMessageSent: TeamAppsEvent<UiChatInput_MessageSentEvent> = new TeamAppsEvent(this);
-	onUploadCanceled: TeamAppsEvent<UiChatInput_UploadCanceledEvent> = new TeamAppsEvent(this);
-	onUploadFailed: TeamAppsEvent<UiChatInput_UploadFailedEvent> = new TeamAppsEvent(this);
-	onUploadStarted: TeamAppsEvent<UiChatInput_UploadStartedEvent> = new TeamAppsEvent(this);
-	onUploadSuccessful: TeamAppsEvent<UiChatInput_UploadSuccessfulEvent> = new TeamAppsEvent(this);
-	onUploadTooLarge: TeamAppsEvent<UiChatInput_UploadTooLargeEvent> = new TeamAppsEvent(this);
+	onFileItemClicked: TeamAppsEvent<UiChatInput_FileItemClickedEvent> = new TeamAppsEvent();
+	onFileItemRemoved: TeamAppsEvent<UiChatInput_FileItemRemovedEvent> = new TeamAppsEvent();
+	onMessageSent: TeamAppsEvent<UiChatInput_MessageSentEvent> = new TeamAppsEvent();
+	onUploadCanceled: TeamAppsEvent<UiChatInput_UploadCanceledEvent> = new TeamAppsEvent();
+	onUploadFailed: TeamAppsEvent<UiChatInput_UploadFailedEvent> = new TeamAppsEvent();
+	onUploadStarted: TeamAppsEvent<UiChatInput_UploadStartedEvent> = new TeamAppsEvent();
+	onUploadSuccessful: TeamAppsEvent<UiChatInput_UploadSuccessfulEvent> = new TeamAppsEvent();
+	onUploadTooLarge: TeamAppsEvent<UiChatInput_UploadTooLargeEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $uploadItems: HTMLElement;
@@ -197,7 +197,7 @@ enum UploadState {
 class FileUploadItem {
 	private static LOGGER: log.Logger = log.getLogger("UploadItem");
 
-	public readonly onComplete: TeamAppsEvent<void> = new TeamAppsEvent(this);
+	public readonly onComplete: TeamAppsEvent<void> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	public state: UploadState = UploadState.IN_PROGRESS;

@@ -70,7 +70,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private dateRenderer: (localDateTime: DateTime) => string;
 	private timeRenderer: (localDateTime: DateTime) => string;
 
-	public readonly onChange = new TeamAppsEvent<DateTime>(this);
+	public readonly onChange = new TeamAppsEvent<DateTime>();
 
 	private dateListBox: TrivialTreeBox<DateTime>;
 	private timeListBox: TrivialTreeBox<DateTime>;

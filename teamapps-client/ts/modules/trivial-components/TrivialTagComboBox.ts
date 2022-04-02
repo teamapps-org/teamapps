@@ -173,9 +173,9 @@ export interface TrivialTagComboBoxConfig<E> {
 
 export class TrivialTagComboBox<E> implements TrivialComponent {
 
-	public readonly onValueChanged = new TeamAppsEvent<E[]>(this);
-	public readonly onFocus = new TeamAppsEvent<void>(this);
-	public readonly onBlur = new TeamAppsEvent<void>(this);
+	public readonly onValueChanged = new TeamAppsEvent<E[]>();
+	public readonly onFocus = new TeamAppsEvent<void>();
+	public readonly onBlur = new TeamAppsEvent<void>();
 
 	private config: TrivialTagComboBoxConfig<E>;
 
