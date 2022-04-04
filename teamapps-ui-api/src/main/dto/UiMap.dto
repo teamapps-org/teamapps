@@ -149,6 +149,10 @@ abstract class AbstractUiMapShape {
 	UiShapeProperties shapeProperties;
 }
 
+
+abstract class AbstractUiMapShapeChange {
+}
+
 @TypeScriptFactory
 class UiMapCircle extends AbstractUiMapShape {
 	UiMapLocation center;
@@ -163,6 +167,11 @@ class UiMapPolygon extends AbstractUiMapShape {
 @TypeScriptFactory
 class UiMapPolyline extends AbstractUiMapShape {
 	List<UiMapLocation> path;
+}
+
+
+class UiPolylineAppend extends AbstractUiMapShapeChange {
+    required List<UiMapLocation> appendedPath;
 }
 
 @TypeScriptFactory

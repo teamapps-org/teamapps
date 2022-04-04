@@ -21,6 +21,7 @@ package org.teamapps.ux.component.map.shape;
 
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.AbstractUiMapShape;
+import org.teamapps.dto.AbstractUiMapShapeChange;
 
 import java.util.UUID;
 
@@ -51,7 +52,7 @@ public abstract class AbstractMapShape {
 	}
 
 	public void remove() {
-		listener.handleRemoved(this);
+		listener.handleShapeRemoved(this);
 	}
 
 	public void setListenerInternal(MapShapeListener listener) {
@@ -67,8 +68,10 @@ public abstract class AbstractMapShape {
 	}
 
 	public interface MapShapeListener {
-		void handleChanged(AbstractMapShape shape);
+		void handleShapeChanged(AbstractMapShape shape);
 
-		void handleRemoved(AbstractMapShape shape);
+		void handleShapeChanged(AbstractMapShape shape, AbstractUiMapShapeChange change);
+
+		void handleShapeRemoved(AbstractMapShape shape);
 	}
 }

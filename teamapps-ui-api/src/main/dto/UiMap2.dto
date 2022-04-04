@@ -41,6 +41,7 @@ class UiMap2 extends UiComponent {
 
 	command addShape(String shapeId, AbstractUiMapShape shape);
 	command updateShape(String shapeId, AbstractUiMapShape shape);
+	command changeShape(String shapeId, AbstractUiMapShapeChange change);
 	command removeShape(String shapeId);
 	command clearShapes();
 

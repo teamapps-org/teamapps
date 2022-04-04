@@ -67,7 +67,7 @@ public class MapCircle extends AbstractMapShape {
 
 	public void setCenter(Location center) {
 		this.center = center;
-		listener.handleChanged(this);
+		listener.handleShapeChanged(this);
 	}
 
 	public int getRadiusMeters() {
@@ -76,6 +76,6 @@ public class MapCircle extends AbstractMapShape {
 
 	public void setRadiusMeters(int radiusMeters) {
 		this.radiusMeters = radiusMeters;
-		listener.handleChanged(this);
+		listener.handleShapeChanged(this);
 	}
 }
