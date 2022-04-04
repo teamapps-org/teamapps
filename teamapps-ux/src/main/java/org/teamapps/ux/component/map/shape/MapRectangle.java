@@ -52,7 +52,7 @@ public class MapRectangle extends AbstractMapShape {
 
 	public void setLocation1(Location location1) {
 		this.location1 = location1;
-		listener.handleChanged(this);
+		listener.handleShapeChanged(this);
 	}
 
 	public Location getLocation2() {
@@ -61,6 +61,6 @@ public class MapRectangle extends AbstractMapShape {
 
 	public void setLocation2(Location location2) {
 		this.location2 = location2;
-		listener.handleChanged(this);
+		listener.handleShapeChanged(this);
 	}
 }

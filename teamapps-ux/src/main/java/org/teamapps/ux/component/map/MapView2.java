@@ -63,12 +63,17 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private PropertyProvider<RECORD> markerPropertyProvider = new BeanPropertyExtractor<>();
 	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
-		public void handleChanged(AbstractMapShape shape) {
+		public void handleShapeChanged(AbstractMapShape shape) {
 			queueCommandIfRendered(() -> new UiMap2.UpdateShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
 		}
 
 		@Override
-		public void handleRemoved(AbstractMapShape shape) {
+		public void handleShapeChanged(AbstractMapShape shape, AbstractUiMapShapeChange change) {
+			queueCommandIfRendered(() -> new UiMap2.ChangeShapeCommand(getId(), shape.getClientIdInternal(), change));
+		}
+
+		@Override
+		public void handleShapeRemoved(AbstractMapShape shape) {
 			queueCommandIfRendered(() -> new UiMap2.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
 		}
 	};

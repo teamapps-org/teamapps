@@ -34,7 +34,7 @@ import {
 } from "../generated/UiMap2Config";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import mapboxgl, {GeoJSONSource, LngLatLike, Map, Marker} from "maplibre-gl";
+import mapboxgl, {GeoJSONSource, LngLatLike, Map as MapBoxMap, Marker} from "maplibre-gl";
 import {createUiMapLocationConfig, UiMapLocationConfig} from "../generated/UiMapLocationConfig";
 import {createUiMapAreaConfig} from "../generated/UiMapAreaConfig";
 import {UiMapMarkerClientRecordConfig} from "../generated/UiMapMarkerClientRecordConfig";
@@ -45,7 +45,9 @@ import {Feature, Point, Position} from "geojson";
 import {UiMapMarkerClusterConfig} from "../generated/UiMapMarkerClusterConfig";
 import * as d3 from "d3";
 import {DeferredExecutor} from "./util/DeferredExecutor";
-import {DebounceMode} from "./util/debounce";
+import {AbstractUiMapShapeChangeConfig} from "../generated/AbstractUiMapShapeChangeConfig";
+import {UiPolylineAppendConfig} from "../generated/UiPolylineAppendConfig";
+import {UiMapPolylineConfig} from "../generated/UiMapPolylineConfig";
 
 export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2EventSource, UiMap2CommandHandler {
 
@@ -56,10 +58,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	public readonly onShapeDrawn: TeamAppsEvent<UiMap2_ShapeDrawnEvent> = new TeamAppsEvent();
 
 	private $map: HTMLElement;
-	private map: Map;
+	private map: MapBoxMap;
 	private markerTemplateRenderers: { [templateName: string]: Renderer } = {};
 	private markersByClientId: { [id: number]: Marker } = {};
-	private shapeIds: Set<string> = new Set();
+	private shapesById: Map<string, { config: AbstractUiMapShapeConfig }> = new Map();
 
 	private deferredExecutor: DeferredExecutor = new DeferredExecutor();
 
@@ -70,7 +72,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		mapboxgl.baseApiUrl = config.baseApiUrl;
 		mapboxgl.accessToken = config.accessToken;
 
-		this.map = new Map({
+		this.map = new MapBoxMap({
 			container: this.$map,
 			style: config.styleUrl,
 			center: this.convertToLngLatLike(config.mapPosition),
@@ -115,8 +117,8 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	}
 
 	public addShape(shapeId: string, shapeConfig: AbstractUiMapShapeConfig): void {
-		this.shapeIds.add(shapeId);
 		this.deferredExecutor.invokeWhenReady(() => {
+			this.shapesById.set(shapeId, {config: shapeConfig});
 			if (isUiMapCircle(shapeConfig)) {
 				this.map.addSource(shapeId, {
 					type: "geojson",
@@ -152,17 +154,9 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 				shapeConfig.shapeProperties.strokeWeight;
 				shapeConfig.shapeProperties.strokeDashArray;
 				shapeConfig.shapeProperties.fillColor;
-
 				this.map.addSource(shapeId, {
 					'type': 'geojson',
-					'data': {
-						'type': 'Feature',
-						'properties': {},
-						'geometry': {
-							'type': 'LineString',
-							'coordinates': shapeConfig.path.map(loc => this.convertToPosition(loc))
-						}
-					}
+					'data': this.toGeoJsonFeature(shapeConfig)
 				});
 				let paintProperties = {} as any;
 				if (shapeConfig.shapeProperties.strokeColor != null) paintProperties['line-color'] = shapeConfig.shapeProperties.strokeColor;
@@ -238,6 +232,18 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
+	private toGeoJsonFeature(shapeConfig: UiMapPolylineConfig) {
+		let data: GeoJSON.Feature<GeoJSON.Geometry> = {
+			'type': 'Feature',
+			'properties': {},
+			'geometry': {
+				'type': 'LineString',
+				'coordinates': shapeConfig.path.map(loc => this.convertToPosition(loc))
+			}
+		};
+		return data;
+	}
+
 	updateShape(shapeId: string, shape: AbstractUiMapShapeConfig): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.removeShape(shapeId);
@@ -245,16 +251,27 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 		});
 	}
 
+	changeShape(shapeId: string, change: AbstractUiMapShapeChangeConfig): void {
+		this.deferredExecutor.invokeWhenReady(() => {
+			if (isPolyLineAppend(change)) {
+				let config = this.shapesById.get(shapeId).config as UiMapPolylineConfig;
+				config.path = config.path.concat(change.appendedPath);
+				let source = this.map.getSource(shapeId) as GeoJSONSource;
+				source.setData(this.toGeoJsonFeature(config));
+			}
+		});
+	}
+
 	removeShape(shapeId: string): void {
 		this.deferredExecutor.invokeWhenReady(() => {
 			this.map.removeLayer(shapeId);
 			this.map.removeSource(shapeId);
-			this.shapeIds.delete(shapeId);
+			this.shapesById.delete(shapeId);
 		});
 	}
 
 	clearShapes(): void {
-		this.shapeIds.forEach(value => this.removeShape(value))
+		this.shapesById.forEach((shape, id) => this.removeShape(id))
 	}
 
 	public setMapMarkerCluster(clusterConfig: UiMapMarkerClusterConfig): void {
@@ -417,7 +434,7 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	private convertToPosition(loc: UiMapLocationConfig): Position {
 		return [loc.longitude, loc.latitude];
 	}
-	
+
 	private convertToLngLatLike(loc: UiMapLocationConfig): LngLatLike {
 		return this.convertToPosition(loc) as LngLatLike;
 	}
@@ -507,6 +524,10 @@ export class UiMap2 extends AbstractUiComponent<UiMap2Config> implements UiMap2E
 	onResize() {
 		this.map.resize();
 	}
+}
+
+function isPolyLineAppend(change: AbstractUiMapShapeChangeConfig): change is UiPolylineAppendConfig {
+	return change._type === "UiPolylineAppend";
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiMap2", UiMap2);

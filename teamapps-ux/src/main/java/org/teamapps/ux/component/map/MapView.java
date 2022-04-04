@@ -64,12 +64,17 @@ public class MapView<RECORD> extends AbstractComponent {
 	private PropertyProvider<RECORD> markerPropertyProvider = new BeanPropertyExtractor<>();
 	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
-		public void handleChanged(AbstractMapShape shape) {
+		public void handleShapeChanged(AbstractMapShape shape) {
 			queueCommandIfRendered(() -> new UiMap.UpdateShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
 		}
 
 		@Override
-		public void handleRemoved(AbstractMapShape shape) {
+		public void handleShapeChanged(AbstractMapShape shape, AbstractUiMapShapeChange change) {
+			handleShapeChanged(shape); // this is a lazy implementation, but since this is the legacy map implementation...
+		}
+
+		@Override
+		public void handleShapeRemoved(AbstractMapShape shape) {
 			queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
 		}
 	};

@@ -19,7 +19,9 @@
  */
 package org.teamapps.ux.component.map.shape;
 
+import org.teamapps.dto.UiMapLocation;
 import org.teamapps.dto.UiMapPolyline;
+import org.teamapps.dto.UiPolylineAppend;
 import org.teamapps.ux.component.map.Location;
 
 import java.util.ArrayList;
@@ -28,40 +30,42 @@ import java.util.stream.Collectors;
 
 public class MapPolyline extends AbstractMapShape {
 
-	private List<Location> locations;
+	private List<Location> points;
 
-	public MapPolyline(List<Location> locations, ShapeProperties properties) {
+	public MapPolyline(List<Location> points, ShapeProperties properties) {
 		super(properties);
-		this.locations = new ArrayList<>(locations);
+		this.points = new ArrayList<>(points);
 	}
 
 	public UiMapPolyline createUiMapShape() {
 		UiMapPolyline uiPolyline = new UiMapPolyline();
 		mapAbstractUiShapeProperties(uiPolyline);
-		uiPolyline.setPath(locations.stream()
-				.map(Location::createUiLocation)
-				.collect(Collectors.toList()));
+		uiPolyline.setPath(toUiMapLocations(points));
 		return uiPolyline;
 	}
 
+	private List<UiMapLocation> toUiMapLocations(List<Location> locations) {
+		return locations.stream()
+				.map(Location::createUiLocation)
+				.collect(Collectors.toList());
+	}
+
 	public MapPolyline addPoint(Location location) {
-		this.locations.add(location);
-		this.listener.handleChanged(this);
+		return addPoints(List.of(location));
+	}
+
+	public MapPolyline addPoints(List<Location> points) {
+		this.points.addAll(points);
+		this.listener.handleShapeChanged(this, new UiPolylineAppend(toUiMapLocations(points)));
 		return this;
 	}
 
-	public MapPolyline addPoints(List<Location> locations) {
-		this.locations.addAll(locations);
-		this.listener.handleChanged(this);
-		return this;
+	public List<Location> getPoints() {
+		return points;
 	}
 
-	public List<Location> getLocations() {
-		return locations;
-	}
-
-	public void setLocations(List<Location> locations) {
-		this.locations = locations;
-		listener.handleChanged(this);
+	public void setPoints(List<Location> points) {
+		this.points = points;
+		listener.handleShapeChanged(this);
 	}
 }

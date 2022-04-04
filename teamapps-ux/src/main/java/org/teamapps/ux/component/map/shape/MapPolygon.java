@@ -49,6 +49,6 @@ public class MapPolygon extends AbstractMapShape {
 
 	public void setLocations(List<Location> locations) {
 		this.locations = locations;
-		listener.handleChanged(this);
+		listener.handleShapeChanged(this);
 	}
 }
