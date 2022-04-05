@@ -910,7 +910,7 @@ export function outerHeightIncludingMargins(el: HTMLElement) {
 	return height;
 }
 
-export function addDelegatedEventListener<K extends keyof HTMLElementEventMap>(rootElement: HTMLElement, selector: string, eventTypes: K|K[], listener: (element: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
+export function addDelegatedEventListener<K extends keyof HTMLElementEventMap>(rootElement: HTMLElement, selector: string, eventTypes: K | K[], listener: (element: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
 	if (!Array.isArray(eventTypes)) {
 		eventTypes = [eventTypes];
 	}
@@ -1353,7 +1353,7 @@ export function animateCollapse(element: HTMLElement, collapsed: boolean, durati
 	const oldTransitionStyle = element.style.transition;
 	element.style.transition = `max-height ${duration}ms`;
 
-	let transitionEndListener = (ev:Event) => {
+	let transitionEndListener = (ev: Event) => {
 		["transitionend", "transitioncancel"].forEach(eventName => element.removeEventListener(eventName, transitionEndListener));
 		window.clearTimeout(timeout);
 		element.style.transition = oldTransitionStyle;
