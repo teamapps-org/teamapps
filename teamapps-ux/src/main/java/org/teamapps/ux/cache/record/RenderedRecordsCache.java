@@ -92,9 +92,11 @@ public class RenderedRecordsCache<RECORD> {
 	}
 
 	public List<Integer> getUiRecordIds(List<RECORD> records) {
-		HashSet<RECORD> recordsAsSet = new HashSet<>(records);
+		Set<EqualsHashCodeWrapper<RECORD>> recordsAsSet = records.stream()
+				.map(this::withCustomEqualsHashCode)
+				.collect(Collectors.toSet());
 		return recordPairs.stream()
-				.filter(rp -> recordsAsSet.contains(rp.getRecord()))
+				.filter(rp -> recordsAsSet.contains(withCustomEqualsHashCode(rp.getRecord())))
 				.map(rr -> rr.getUiRecord().getId())
 				.collect(Collectors.toList());
 	}
