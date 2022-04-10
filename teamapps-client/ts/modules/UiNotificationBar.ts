@@ -19,10 +19,11 @@
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {animateCSS, Constants, parseHtml} from "./Common";
+import {animateCSS, Constants, parseHtml, removeClassesByFunction} from "./Common";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {
+	UiNotificationBar_ItemActionLinkClickedEvent,
 	UiNotificationBar_ItemClickedEvent,
 	UiNotificationBar_ItemClosedEvent,
 	UiNotificationBarCommandHandler,
@@ -38,6 +39,7 @@ import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
 export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConfig> implements UiNotificationBarCommandHandler, UiNotificationBarEventSource {
 
 	public readonly onItemClicked: TeamAppsEvent<UiNotificationBar_ItemClickedEvent> = new TeamAppsEvent();
+	public readonly onItemActionLinkClicked: TeamAppsEvent<UiNotificationBar_ItemActionLinkClickedEvent> = new TeamAppsEvent();
 	public readonly onItemClosed: TeamAppsEvent<UiNotificationBar_ItemClosedEvent> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
@@ -63,10 +65,18 @@ export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConf
 		}
 		item.startCloseTimeout();
 		item.onClicked.addListener(() => this.onItemClicked.fire({id: itemConfig.id}));
+		item.onActionLinkClicked.addListener(() => this.onItemActionLinkClicked.fire({id: itemConfig.id}));
 		item.onClosed.addListener(wasTimeout => {
 			this.removeItem(itemConfig.id);
 			this.onItemClosed.fire({id: itemConfig.id, wasTimeout: wasTimeout});
 		});
+	}
+
+	updateItem(itemConfig: UiNotificationBarItemConfig): any {
+		let item = this.itemsById[itemConfig.id];
+		if (item != null) {
+			item.update(itemConfig);
+		}
 	}
 
 	removeItem(id: string, exitAnimation?: UiExitAnimation): void {
@@ -87,43 +97,68 @@ export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConf
 
 class UiNotificationBarItem {
 
-	public readonly onClicked: TeamAppsEvent<void> = new TeamAppsEvent<void>();
-	public readonly onClosed: TeamAppsEvent<boolean> = new TeamAppsEvent<boolean>();
+	public readonly onClicked: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onActionLinkClicked: TeamAppsEvent<void> = new TeamAppsEvent();
+	public readonly onClosed: TeamAppsEvent<boolean> = new TeamAppsEvent();
 
 	private $main: HTMLElement;
 	private $progressBarContainer: HTMLElement;
 	private progressBar: ProgressBar;
+	private $closeButton: HTMLElement;
+	private $contentContainer: HTMLElement;
+	private $icon: HTMLElement;
+	private $text: HTMLElement;
+	private $actionLink: HTMLElement;
 
 	constructor(public readonly config: UiNotificationBarItemConfig) {
-		this.$main = parseHtml(`<div class="UiNotificationBarItem ${config.displayTimeInMillis > 0 && config.progressBarVisible ? "with-progress" : ""}">
+		this.$main = parseHtml(`<div class="UiNotificationBarItem">
 	<div class="content-container">
-		<div class="icon img img-20 ${config.icon == null ? "hidden" : ""}" style="background-image: url('${config.icon}')"></div>
-		<div class="text">${config.text}</div>
+		<div class="icon img img-20"></div>
+		<div class="text-container">
+			<span class="text"></span>
+			<a class="action-link"></a>
+		</div>
 		<div class="close-button"></div>
 	</div>
 	<div class="progress-container"></div>
 </div>`);
-		let $closeButton: HTMLElement = this.$main.querySelector(":scope .close-button");
-		$closeButton.classList.toggle("hidden", !config.dismissible);
-		$closeButton.addEventListener("click", ev => this.onClosed.fire(false));
-		this.$main.style.backgroundColor = config.backgroundColor;
-		this.$main.style.borderColor = config.borderColor;
-		let $contentContainer: HTMLElement = this.$main.querySelector(":scope > .content-container");
-		$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
-		let $text: HTMLElement = this.$main.querySelector(":scope .text");
-		$text.style.color = config.textColor;
+		this.$closeButton = this.$main.querySelector(":scope .close-button");
+		 this.$contentContainer = this.$main.querySelector(":scope > .content-container");
+		this.$icon = this.$main.querySelector(":scope .icon");
+		this.$text = this.$main.querySelector(":scope .text");
+		this.$actionLink = this.$main.querySelector(":scope .action-link");
+		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container");
+		this.progressBar = new ProgressBar(0, {height: 3, transitionTime: 500});
+		this.$progressBarContainer.appendChild(this.progressBar.getMainDomElement());
 
 		this.$main.addEventListener("click", () => this.onClicked.fire())
+		this.$actionLink.addEventListener("click", (e) => this.onActionLinkClicked.fire())
+		this.$closeButton.addEventListener("click", ev => this.onClosed.fire(false));
 
-		this.$progressBarContainer = this.$main.querySelector(":scope > .progress-container");
-		if (config.displayTimeInMillis > 0 && config.progressBarVisible) {
-			this.progressBar = new ProgressBar(0, {height: 3, transitionTime: 500});
-			this.$progressBarContainer.appendChild(this.progressBar.getMainDomElement());
-		}
+		this.update(config);
+	}
 
-		let $icon: HTMLElement = this.$main.querySelector(":scope .icon");
+	public update(config: UiNotificationBarItemConfig) {
+		this.$closeButton.classList.toggle("hidden", !config.dismissible);
+		this.$main.style.backgroundColor = config.backgroundColor;
+		this.$main.style.borderColor = config.borderColor;
+		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
+
+		this.$text.textContent = config.text;
+		this.$text.style.color = config.textColor;
+
+		this.$actionLink.textContent = config.actionLinkText;
+		this.$actionLink.classList.toggle("hidden", config.actionLinkText == null);
+		this.$actionLink.style.color = config.actionLinkColor;
+
+		this.$main.classList.toggle("with-progress", config.displayTimeInMillis > 0 && config.progressBarVisible)
+
+		this.$icon.classList.toggle("hidden", config.icon == null)
+		this.$icon.style.backgroundImage = `url('${config.icon}')`;
+		removeClassesByFunction(this.$icon.classList, className => className.startsWith("animate__"));
+
 		if (config.iconAnimation != null) {
-			$icon.classList.add(...Constants.REPEATABLE_ANIMATION_CSS_CLASSES[config.iconAnimation].split(/ +/));
+			this.$icon.classList.add(...Constants.REPEATABLE_ANIMATION_CSS_CLASSES[config.iconAnimation].split(/ +/));
 		}
 	}
 
@@ -150,7 +185,6 @@ class UiNotificationBarItem {
 	public getMainElement() {
 		return this.$main;
 	}
-
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiNotificationBar", UiNotificationBar);

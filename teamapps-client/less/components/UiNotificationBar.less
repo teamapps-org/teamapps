@@ -36,8 +36,13 @@
         animation-iteration-count: infinite;
       }
 
-      > .text {
+      > .text-container {
         flex: 1 1 auto;
+
+        > .action-link {
+          margin-left: 5px;
+          cursor: pointer;
+        }
       }
 
       > .close-button {
@@ -50,8 +55,13 @@
         background-repeat: no-repeat;
       }
     }
-    &.with-progress>.content-container{
+
+    &.with-progress > .content-container {
       padding-bottom: 0;
+    }
+
+    &:not(.with-progress) > .progress-container {
+      display: none;
     }
 
     .progress-container {

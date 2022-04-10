@@ -43,9 +43,11 @@ class UiNotificationBar extends UiComponent {
 	List<UiNotificationBarItem> initialItems;
 
 	command addItem(UiNotificationBarItem item);
+	command updateItem(UiNotificationBarItem item);
 	command removeItem(String id, UiExitAnimation exitAnimation);
 
 	event itemClicked(String id);
+	event itemActionLinkClicked(String id);
 	event itemClosed(String id, boolean wasTimeout);
 }
 
@@ -55,9 +57,11 @@ class UiNotificationBarItem {
 	String icon;
 	UiRepeatableAnimation iconAnimation;
 	String text;
+	String actionLinkText;
 	String backgroundColor;
 	String borderColor;
 	String textColor;
+	String actionLinkColor;
 	UiSpacing padding;
 	UiEntranceAnimation entranceAnimation;
 	UiExitAnimation exitAnimation;
