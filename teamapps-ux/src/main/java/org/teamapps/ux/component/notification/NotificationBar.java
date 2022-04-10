@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,6 +36,7 @@ public class NotificationBar extends AbstractComponent {
 
 	public final Event<NotificationBarItemClosedEvent> onItemClosed = new Event<>();
 	public final Event<NotificationBarItem> onItemClicked = new Event<>();
+	public final Event<NotificationBarItem> onItemActionLinkClicked = new Event<>();
 
 	private final Map<String, NotificationBarItem> itemsByUiId = new LinkedHashMap<>();
 
@@ -51,6 +52,15 @@ public class NotificationBar extends AbstractComponent {
 				if (item != null) {
 					item.onClicked.fire();
 					onItemClicked.fire(item);
+				}
+				break;
+			}
+			case UI_NOTIFICATION_BAR_ITEM_ACTION_LINK_CLICKED: {
+				UiNotificationBar.ItemActionLinkClickedEvent e = (UiNotificationBar.ItemActionLinkClickedEvent) event;
+				NotificationBarItem item = itemsByUiId.get(e.getId());
+				if (item != null) {
+					item.onActionLinkClicked.fire();
+					onItemActionLinkClicked.fire(item);
 				}
 				break;
 			}
@@ -79,11 +89,13 @@ public class NotificationBar extends AbstractComponent {
 
 	public void addItem(NotificationBarItem item) {
 		itemsByUiId.put(item.getUiId(), item);
+		item.setListener(() -> queueCommandIfRendered(() -> new UiNotificationBar.UpdateItemCommand(getId(), item.toUiNotificationBarItem())));
 		queueCommandIfRendered(() -> new UiNotificationBar.AddItemCommand(getId(), item.toUiNotificationBarItem()));
 	}
 
 	public void removeItem(NotificationBarItem item) {
 		itemsByUiId.remove(item.getUiId());
+		item.setListener(null);
 		queueCommandIfRendered(() -> new UiNotificationBar.RemoveItemCommand(getId(), item.getUiId(), null));
 	}
 
