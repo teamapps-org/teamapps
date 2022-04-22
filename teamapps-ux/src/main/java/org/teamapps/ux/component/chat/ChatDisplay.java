@@ -30,7 +30,6 @@ import org.teamapps.ux.component.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -44,7 +43,7 @@ public class ChatDisplay extends AbstractComponent {
 
 	private Icon<?, ?> deletedMessageIcon = MaterialIcon.DELETE.withStyle(MaterialIconStyles.OUTLINE_GREY_900);
 
-	private Function<ChatMessage, CompletableFuture<Component>> contextMenuProvider = null;
+	private Function<ChatMessage, Component> contextMenuProvider = null;
 
 	public ChatDisplay(ChatDisplayModel model) {
 		this.model = model;
@@ -98,18 +97,8 @@ public class ChatDisplay extends AbstractComponent {
 				UiChatDisplay.RequestContextMenuQuery q = (UiChatDisplay.RequestContextMenuQuery) query;
 				ChatMessage chatMessage = model.getChatMessageById(q.getChatMessageId());
 				if (chatMessage != null) {
-					return contextMenuProvider.apply(chatMessage)
-							.thenCompose(component -> {
-								if (component != null) {
-									return getSessionContext().runWithContext(component::createUiReference);
-								} else {
-									return null;
-								}
-							})
-							.exceptionally(throwable -> {
-								LOGGER.error("Exception in contextMenuProvider!", throwable);
-								return null;
-							});
+					Component component = contextMenuProvider.apply(chatMessage);
+					return component != null ? component.createUiReference() : null;
 				}
 			}
 			default:
@@ -174,11 +163,11 @@ public class ChatDisplay extends AbstractComponent {
 		reRenderIfRendered();
 	}
 
-	public Function<ChatMessage, CompletableFuture<Component>> getContextMenuProvider() {
+	public Function<ChatMessage, Component> getContextMenuProvider() {
 		return contextMenuProvider;
 	}
 
-	public void setContextMenuProvider(Function<ChatMessage, CompletableFuture<Component>> contextMenuProvider) {
+	public void setContextMenuProvider(Function<ChatMessage, Component> contextMenuProvider) {
 		this.contextMenuProvider = contextMenuProvider;
 	}
 
