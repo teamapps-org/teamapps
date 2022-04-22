@@ -106,8 +106,8 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	@executeWhenFirstDisplayed(true)
 	private updateTextareaHeight() {
 		if (this._config.adjustHeightToContent) {
-			this.$field.style.height = '0px';
-			this.$field.style.height = (Math.max(this.minHeight - 2, Math.min(this.$field.scrollHeight, this.maxHeight - 2))) + 'px';
+			this.$field.style.height = '2px';
+			this.$field.style.height = (Math.max((this.minHeight ?? 0) - 2, Math.min(this.$field.scrollHeight, (this.maxHeight ?? Number.MAX_SAFE_INTEGER) - 2))) + 'px';
 		}
 	}
 
