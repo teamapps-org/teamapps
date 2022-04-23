@@ -106,10 +106,13 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 			let recordId = parseInt(element.getAttribute("data-id"));
 			this.onItemClicked.fire({
 				recordId: recordId,
-				isRightMouseButton: ev.button === 2,
 				isDoubleClick: false
 			});
-			if (ev.button == 2 && !isNaN(recordId) && this._config.contextMenuEnabled) {
+		});
+		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", "contextmenu", (element, ev) => {
+			console.log("contextmenu");
+			let recordId = parseInt(element.getAttribute("data-id"));
+			if (!isNaN(recordId) && this._config.contextMenuEnabled) {
 				this.contextMenu.open(ev, requestId => this.onContextMenuRequested.fire({
 					recordId: recordId,
 					requestId
@@ -120,7 +123,6 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 			let recordId = parseInt(element.getAttribute("data-id"));
 			this.onItemClicked.fire({
 				recordId: recordId,
-				isRightMouseButton: ev.button === 2,
 				isDoubleClick: true
 			});
 		});

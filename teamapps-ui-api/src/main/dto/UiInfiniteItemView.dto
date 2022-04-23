@@ -40,7 +40,7 @@ class UiInfiniteItemView extends UiComponent {
     command closeContextMenu(int requestId);
 
 	event displayedRangeChanged(int startIndex, int length, List<Integer> displayedRecordIds, UiInfiniteItemViewDataRequest dataRequest);
-	event itemClicked(int recordId, boolean isRightMouseButton, boolean isDoubleClick);
+	event itemClicked(int recordId, boolean isDoubleClick);
 	event contextMenuRequested(int requestId, int recordId);
 }
 
@@ -75,7 +75,7 @@ class UiInfiniteItemView2 extends UiComponent {
     command closeContextMenu(int requestId);
 
 	event displayedRangeChanged(int startIndex, int length);
-	event itemClicked(int recordId, boolean isRightMouseButton, boolean isDoubleClick);
+	event itemClicked(int recordId, boolean isDoubleClick);
 	event contextMenuRequested(int requestId, int recordId);
 }
 

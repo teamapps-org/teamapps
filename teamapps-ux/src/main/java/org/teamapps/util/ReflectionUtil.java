@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,9 +27,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -59,17 +57,35 @@ public class ReflectionUtil {
 	}
 
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate) {
-		List<Method> matchingFields = new ArrayList<>();
-		Class<?> c = clazz;
-		while (c != null) {
+		List<Method> matchingMethods = new ArrayList<>();
+
+		List<Class<?>> hierarchy = getAllExtendedOrImplementedTypesRecursively(clazz);
+		for (Class<?> c : hierarchy) {
 			for (Method method : c.getDeclaredMethods()) {
 				if (predicate.test(method)) {
-					matchingFields.add(method);
+					matchingMethods.add(method);
 				}
 			}
-			c = c.getSuperclass();
 		}
-		return matchingFields;
+		return matchingMethods;
+	}
+
+	public static List<Class<?>> getAllExtendedOrImplementedTypesRecursively(Class<?> clazz) {
+		List<Class<?>> res = new ArrayList<>();
+
+		do {
+			res.add(clazz);
+
+			Class<?>[] interfaces = clazz.getInterfaces();
+			for (Class<?> interf : interfaces) {
+				res.add(interf);
+				res.addAll(getAllExtendedOrImplementedTypesRecursively(interf));
+			}
+
+			clazz = clazz.getSuperclass();
+		} while (clazz != null);
+
+		return res.stream().distinct().collect(Collectors.toList());
 	}
 
 	public static Method findMethod(Class<?> clazz, Predicate<Method> predicate) {
@@ -86,14 +102,16 @@ public class ReflectionUtil {
 	}
 
 	public static Method findGetter(Class<?> clazz, String propertyName) {
+		String methodName = "get" + StringUtils.capitalize(propertyName);
 		return findMethods(clazz,
-				method -> (method.getName().equals("get" + StringUtils.capitalize(propertyName)) || method.getName().equals("is" + StringUtils.capitalize(propertyName))) && method.getParameterCount() == 0)
+				method -> (method.getName().equals(methodName) || method.getName().equals("is" + StringUtils.capitalize(propertyName))) && method.getParameterCount() == 0)
 				.stream()
 				.findFirst().orElse(null);
 	}
 
 	public static Method findSetter(Class<?> clazz, String propertyName) {
-		return findMethods(clazz, method -> method.getName().equals("set" + StringUtils.capitalize(propertyName)) && method.getParameterCount() == 1)
+		String methodName = "set" + StringUtils.capitalize(propertyName);
+		return findMethods(clazz, method -> method.getName().equals(methodName) && method.getParameterCount() == 1)
 				.stream()
 				.findFirst().orElse(null);
 	}

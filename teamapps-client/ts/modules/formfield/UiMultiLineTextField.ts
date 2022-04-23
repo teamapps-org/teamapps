@@ -19,9 +19,16 @@
  */
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiMultiLineTextFieldCommandHandler, UiMultiLineTextFieldConfig, UiMultiLineTextFieldEventSource} from "../../generated/UiMultiLineTextFieldConfig";
+import {
+	UiMultiLineTextFieldCommandHandler,
+	UiMultiLineTextFieldConfig,
+	UiMultiLineTextFieldEventSource
+} from "../../generated/UiMultiLineTextFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
-import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
+import {
+	UiTextInputHandlingField_SpecialKeyPressedEvent,
+	UiTextInputHandlingField_TextInputEvent
+} from "../../generated/UiTextInputHandlingFieldConfig";
 import {Constants, escapeHtml, hasVerticalScrollBar, parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
@@ -31,15 +38,19 @@ import {UiField} from "./UiField";
 
 export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, string> implements UiMultiLineTextFieldEventSource, UiMultiLineTextFieldCommandHandler {
 
-	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
-	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
+	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({
+		throttlingMode: "debounce",
+		delay: 250
+	});
+	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({
+		throttlingMode: "debounce",
+		delay: 250
+	});
 
 	private $wrapper: HTMLElement;
 	private $field: HTMLTextAreaElement;
 	private $clearButton: HTMLElement;
 	private showClearButton: boolean;
-	private minHeight: number;
-	private maxHeight: number;
 
 	protected initialize(config: UiMultiLineTextFieldConfig, context: TeamAppsUiContext) {
 		this.$wrapper = parseHtml(`<div class="UiMultiLineTextField teamapps-input-wrapper field-border field-border-glow field-background">
@@ -107,7 +118,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	private updateTextareaHeight() {
 		if (this._config.adjustHeightToContent) {
 			this.$field.style.height = '2px';
-			this.$field.style.height = (Math.max((this.minHeight ?? 0) - 2, Math.min(this.$field.scrollHeight, (this.maxHeight ?? Number.MAX_SAFE_INTEGER) - 2))) + 'px';
+			this.$field.style.height = this.$field.scrollHeight + 'px';
 		}
 	}
 
