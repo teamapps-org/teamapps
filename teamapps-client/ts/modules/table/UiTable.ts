@@ -357,7 +357,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 				this.onRowsSelected.fire({
 					recordIds: [recordId]
 				});
-				if (e.button == 2 && !isNaN(recordId) && this._config.contextMenuEnabled) {
+				if (!isNaN(recordId) && this._config.contextMenuEnabled) {
 					this.contextMenu.open(e as unknown as MouseEvent, requestId => this.onContextMenuRequested.fire({
 						recordId: recordId,
 						requestId

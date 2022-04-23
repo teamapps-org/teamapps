@@ -212,14 +212,16 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 
 		let me = this;
 		$(this.getMainElement())
-			.on("click contextmenu", ".item-wrapper", function (e: JQueryMouseEventObject) {
+			.on("click", ".item-wrapper", function (e: JQueryMouseEventObject) {
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
 				me.onItemClicked.fire({
 					recordId: recordId,
-					isRightMouseButton: e.button === 2,
 					isDoubleClick: false
 				});
-				if (e.button == 2 && !isNaN(recordId) && me._config.contextMenuEnabled) {
+			})
+			.on("contextmenu", ".item-wrapper", function (e: JQueryMouseEventObject) {
+				let recordId = parseInt((<Element>this).getAttribute("data-id"));
+				if (!isNaN(recordId) && me._config.contextMenuEnabled) {
 					me.contextMenu.open(e as unknown as MouseEvent, requestId => me.onContextMenuRequested.fire({
 						recordId: recordId,
 						requestId
@@ -230,7 +232,6 @@ export class UiInfiniteItemView extends AbstractUiComponent<UiInfiniteItemViewCo
 				let recordId = parseInt((<Element>this).getAttribute("data-id"));
 				me.onItemClicked.fire({
 					recordId: recordId,
-					isRightMouseButton: e.button === 2,
 					isDoubleClick: true
 				});
 			});

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -115,7 +115,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 				UiInfiniteItemView2.ItemClickedEvent e = (UiInfiniteItemView2.ItemClickedEvent) event;
 				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null) {
-					onItemClicked.fire(new ItemClickedEventData<>(record, e.getIsDoubleClick(), e.getIsRightMouseButton()));
+					onItemClicked.fire(new ItemClickedEventData<>(record, e.getIsDoubleClick()));
 				}
 				break;
 			}
@@ -142,12 +142,12 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	@Override
 	protected List<RECORD> retrieveRecords(int startIndex, int length) {
-			if (startIndex > getModelCount() || length <= 0) {
-				return Collections.emptyList();
-			}
-			int actualStartIndex = Math.max(startIndex, 0);
-			int actualLength = Math.min(getModelCount() - startIndex, length);
-			return getModel().getRecords(actualStartIndex, actualLength);
+		if (startIndex > getModelCount() || length <= 0) {
+			return Collections.emptyList();
+		}
+		int actualStartIndex = Math.max(startIndex, 0);
+		int actualLength = Math.min(getModelCount() - startIndex, length);
+		return getModel().getRecords(actualStartIndex, actualLength);
 	}
 
 	@Override
