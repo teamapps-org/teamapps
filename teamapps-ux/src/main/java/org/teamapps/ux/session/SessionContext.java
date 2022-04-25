@@ -53,7 +53,7 @@ import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 import java.io.File;
 import java.time.ZoneId;
 import java.util.*;

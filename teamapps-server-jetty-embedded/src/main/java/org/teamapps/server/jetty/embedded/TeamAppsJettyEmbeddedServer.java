@@ -19,12 +19,11 @@
  */
 package org.teamapps.server.jetty.embedded;
 
-import org.eclipse.jetty.server.*;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
-import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
+import org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 import org.teamapps.client.ClientCodeExtractor;
 import org.teamapps.config.TeamAppsConfiguration;
 import org.teamapps.core.TeamAppsCore;
@@ -32,15 +31,11 @@ import org.teamapps.util.threading.CompletableFutureChainSequentialExecutorFacto
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 import org.teamapps.webcontroller.WebController;
 
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +59,7 @@ public class TeamAppsJettyEmbeddedServer {
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, TeamAppsConfiguration config) throws IOException, ServletException {
-		this(webController, Files.createTempDirectory("teamapps").toFile(), config, 8080);
+		this(webController, Files.createTempDirectory("teamapps").toFile(), config, DEFAULT_PORT);
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, TeamAppsConfiguration config, int port) throws IOException, ServletException {
@@ -76,7 +71,7 @@ public class TeamAppsJettyEmbeddedServer {
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config) throws ServletException {
-		this(webController, webAppDirectory, config, 8080);
+		this(webController, webAppDirectory, config, DEFAULT_PORT);
 	}
 
 	public TeamAppsJettyEmbeddedServer(WebController webController, File webAppDirectory, TeamAppsConfiguration config, int port) throws ServletException {
@@ -85,6 +80,7 @@ public class TeamAppsJettyEmbeddedServer {
 
 		server = new Server(port);
 		webapp = new WebAppContext();
+		webapp.setClassLoader(TeamAppsJettyEmbeddedServer.class.getClassLoader());
 		webapp.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
 		webapp.setContextPath("/");
 		webapp.addEventListener(new TeamAppsServletContextListener(teamAppsCore));
@@ -94,42 +90,7 @@ public class TeamAppsJettyEmbeddedServer {
 		// Use getWebapp().getSessionHandler().getSessionCookieConfig().setSecure(true) if you want to force secure cookies.
 		webapp.getSessionHandler().setSecureRequestOnly(true);
 		server.setHandler(webapp);
-		WebSocketServerContainerInitializer.configureContext(webapp);
-	}
-
-	public void configureHttpsUsingP12File(int port, File keyStoreFile, String keyStorePassword) {
-		if (server.isStarting() || server.isStarted()) {
-			throw new IllegalStateException("HTTPS must be configured before starting the server!");
-		}
-
-		HttpConfiguration http_config = new HttpConfiguration();
-		http_config.setSecureScheme("https");
-		http_config.setSecurePort(port);
-
-		HttpConfiguration https_config = new HttpConfiguration(http_config);
-		https_config.addCustomizer(new SecureRequestCustomizer());
-
-		SslContextFactory sslContextFactory = new SslContextFactory.Server();
-		try {
-			sslContextFactory.setKeyStore(KeyStore.getInstance(keyStoreFile, keyStorePassword.toCharArray()));
-		} catch (KeyStoreException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (CertificateException e) {
-			e.printStackTrace();
-		}
-		sslContextFactory.setKeyStorePassword(keyStorePassword);
-
-		ServerConnector httpsConnector = new ServerConnector(server,
-				new SslConnectionFactory(sslContextFactory, "http/1.1"),
-				new HttpConnectionFactory(https_config));
-		httpsConnector.setPort(8443);
-		httpsConnector.setIdleTimeout(50000);
-
-		server.addConnector(httpsConnector);
+		JakartaWebSocketServletContainerInitializer.configure(webapp, null);
 	}
 
 	public Server getServer() {

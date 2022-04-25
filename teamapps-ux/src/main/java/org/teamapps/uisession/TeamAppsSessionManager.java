@@ -42,9 +42,9 @@ import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionListener;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;

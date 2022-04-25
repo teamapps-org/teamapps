@@ -19,7 +19,7 @@
  */
 package org.teamapps.server;
 
-import javax.servlet.Servlet;
+import jakarta.servlet.Servlet;
 import java.util.Collection;
 import java.util.Collections;
 

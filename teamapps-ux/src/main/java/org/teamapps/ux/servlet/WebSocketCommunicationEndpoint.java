@@ -21,6 +21,8 @@ package org.teamapps.ux.servlet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
@@ -28,8 +30,6 @@ import org.teamapps.dto.*;
 import org.teamapps.json.TeamAppsObjectMapperFactory;
 import org.teamapps.uisession.*;
 
-import javax.servlet.http.HttpSession;
-import javax.websocket.*;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;

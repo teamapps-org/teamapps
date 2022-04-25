@@ -34,18 +34,18 @@
     </developers>
 
     <properties>
-        <undertow.version>2.2.8.Final</undertow.version>
+        <undertow.version>2.2.17.Final</undertow.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.undertow</groupId>
-            <artifactId>undertow-servlet</artifactId>
+            <artifactId>undertow-servlet-jakarta</artifactId>
             <version>${undertow.version}</version>
         </dependency>
         <dependency>
             <groupId>io.undertow</groupId>
-            <artifactId>undertow-websockets-jsr</artifactId>
+            <artifactId>undertow-websockets-jsr-jakarta</artifactId>
             <version>${undertow.version}</version>
         </dependency>
         <dependency>
