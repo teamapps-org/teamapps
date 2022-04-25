@@ -19,10 +19,10 @@
  */
 package org.teamapps.ux.servlet;
 
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.http.HttpServletRequest;
 
-public class ServletRequestListener implements javax.servlet.ServletRequestListener {
+public class ServletRequestListener implements jakarta.servlet.ServletRequestListener {
 
 	@Override
 	public void requestInitialized(ServletRequestEvent sre) {

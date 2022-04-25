@@ -42,7 +42,6 @@
         <module>teamapps-application-management</module>
         <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
-        <module>teamapps-server-tomcat-embedded</module>
     </modules>
 
     <properties>

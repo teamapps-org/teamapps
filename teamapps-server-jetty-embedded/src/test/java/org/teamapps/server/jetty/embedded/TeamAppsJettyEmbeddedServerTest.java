@@ -19,15 +19,13 @@
  */
 package org.teamapps.server.jetty.embedded;
 
-import com.google.common.io.Files;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.field.MultiLineTextField;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 public class TeamAppsJettyEmbeddedServerTest {
 
@@ -41,7 +39,7 @@ public class TeamAppsJettyEmbeddedServerTest {
 			rootPanel.setContent(tf);
 		};
 
-		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, Files.createTempDir(), 8082);
+		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, 8082);
 
 		jettyServer.addServletContextListener(new ServletContextListener() {
 			@Override
@@ -57,9 +55,9 @@ public class TeamAppsJettyEmbeddedServerTest {
 
 		// Test custom configurations:
 		// jettyServer.configureHttpsUsingP12File(8443, new File("/path/to/cert.p12"), "changeit");
-		jettyServer.getWebapp().getSessionHandler().setSecureRequestOnly(true);
-		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setHttpOnly(true);
-		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setComment("__SAME_SITE_STRICT__");
+//		jettyServer.getWebapp().getSessionHandler().setSecureRequestOnly(true);
+//		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setHttpOnly(true);
+//		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setComment("__SAME_SITE_STRICT__");
 
 		// start server
 		jettyServer.start();

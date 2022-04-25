@@ -28,11 +28,11 @@ import org.teamapps.ux.resource.IconResourceProvider;
 import org.teamapps.ux.resource.ResourceProviderServlet;
 import org.teamapps.ux.session.SessionContextResourceManager;
 
-import javax.servlet.*;
-import javax.servlet.ServletRegistration.Dynamic;
-import javax.websocket.Extension;
-import javax.websocket.server.ServerContainer;
-import javax.websocket.server.ServerEndpointConfig;
+import jakarta.servlet.*;
+import jakarta.servlet.ServletRegistration.Dynamic;
+import jakarta.websocket.Extension;
+import jakarta.websocket.server.ServerContainer;
+import jakarta.websocket.server.ServerEndpointConfig;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -77,7 +77,7 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 
 		try {
 			// WebSocket
-			ServerContainer serverContainer = (ServerContainer) context.getAttribute("javax.websocket.server.ServerContainer");
+			ServerContainer serverContainer = (ServerContainer) context.getAttribute("jakarta.websocket.server.ServerContainer");
 			ServerEndpointConfig communicationEndpointConfig = ServerEndpointConfig.Builder.create(WebSocketCommunicationEndpoint.class, "/communication")
 					.configurator(new WebSocketServerEndpointConfigurator(teamAppsCore.getWebSocketCommunicationEndpoint()))
 					.extensions(List.of(new WebsocketExtension("permessage-deflate")))

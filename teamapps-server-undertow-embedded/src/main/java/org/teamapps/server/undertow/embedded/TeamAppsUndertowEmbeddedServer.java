@@ -34,7 +34,7 @@ import org.teamapps.util.threading.CompletableFutureChainSequentialExecutorFacto
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 import org.teamapps.webcontroller.WebController;
 
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

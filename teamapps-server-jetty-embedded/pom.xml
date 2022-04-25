@@ -34,7 +34,7 @@
     </developers>
 
     <properties>
-        <jetty.version>9.4.44.v20210927</jetty.version>
+        <jetty.version>11.0.9</jetty.version>
     </properties>
 
     <dependencies>
@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>javax-websocket-server-impl</artifactId>
+            <artifactId>websocket-jakarta-server</artifactId>
             <version>${jetty.version}</version>
         </dependency>
         <dependency>
