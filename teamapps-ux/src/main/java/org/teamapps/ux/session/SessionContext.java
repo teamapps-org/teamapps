@@ -54,6 +54,7 @@ import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
 
 import jakarta.servlet.http.HttpSession;
+
 import java.io.File;
 import java.time.ZoneId;
 import java.util.*;
@@ -389,6 +390,20 @@ public class SessionContext {
 		} else {
 			executionDecorators.addInnerDecorator(decorator);
 		}
+	}
+
+	/**
+	 * Removes the specified execution decorator.
+	 */
+	public void removeExecutionDecorator(ExecutionDecorator decorator) {
+		executionDecorators.removeDecorator(decorator);
+	}
+
+	/**
+	 * Removes all decorators.
+	 */
+	public void clearExecutionDecorators() {
+		executionDecorators.clear();
 	}
 
 	public SessionConfiguration getConfiguration() {
