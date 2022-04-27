@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -130,7 +130,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 		if (value != null && !(value instanceof List)) {
 			throw new IllegalArgumentException("Invalid TagComboBox value coming from ui: " + value);
 		}
-		
+
 		if (value == null) {
 			value = Collections.emptyList();
 		}
@@ -160,7 +160,7 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 					RECORD record = freeTextRecordFactory.apply(newFreeText);
 					CacheManipulationHandle<UiComboBoxTreeRecord> cacheResponse = recordCache.addRecord(record);
 					records.add(record);
-					
+
 					if (isRendered()) {
 						getSessionContext().queueCommand(
 								new UiTagComboBox.ReplaceFreeTextEntryCommand(getId(), newFreeText, cacheResponse.getAndClearResult()),
@@ -184,10 +184,15 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 			});
 			this.freeTextEntries = uiFreeTextEntries;
 		}
-		
+
 		recordCache.replaceRecords(records).commit();
 
 		return records;
+	}
+
+	@Override
+	protected boolean isEmptyValue(List<RECORD> records) {
+		return records == null || records.isEmpty();
 	}
 
 	@Override
