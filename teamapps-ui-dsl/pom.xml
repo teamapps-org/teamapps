@@ -34,7 +34,7 @@
     </developers>
 
     <properties>
-        <antlr.version>4.7.1</antlr.version>
+        <antlr.version>4.10.1</antlr.version>
     </properties>
 
     <dependencies>
@@ -46,6 +46,7 @@
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>ST4</artifactId>
+            <version>4.3.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
