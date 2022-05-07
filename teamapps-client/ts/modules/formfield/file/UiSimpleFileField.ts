@@ -148,10 +148,9 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 		return [];
 	}
 
-	getFocusableElement(): HTMLElement {
-		return this.$uploadButton;
+	focus(): void {
+		this.$uploadButton.focus();
 	}
-
 	getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
@@ -175,7 +174,7 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}
 

@@ -80,8 +80,8 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 		return this.$main;
 	}
 
-	public getFocusableElement(): HTMLElement {
-		return null;
+	focus() {
+		// do nothing
 	}
 
 	public getTransientValue(): string {

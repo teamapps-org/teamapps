@@ -30,6 +30,8 @@ abstract class UiField extends UiComponent {
 	List<UiFieldMessage> fieldMessages;
 
 	event valueChanged(Object value);
+	event focus();
+	event blur();
 
 	command setEditingMode(UiFieldEditingMode editingMode);
 	command setValue(Object value);

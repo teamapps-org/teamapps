@@ -110,7 +110,6 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 			});
 		});
 		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", "contextmenu", (element, ev) => {
-			console.log("contextmenu");
 			let recordId = parseInt(element.getAttribute("data-id"));
 			if (!isNaN(recordId) && this._config.contextMenuEnabled) {
 				this.contextMenu.open(ev, requestId => this.onContextMenuRequested.fire({

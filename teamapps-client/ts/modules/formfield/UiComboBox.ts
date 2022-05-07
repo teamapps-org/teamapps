@@ -116,8 +116,11 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialComboBox.onFocus.addListener(() => this.getMainElement().classList.add("focus"));
-		this.trivialComboBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
+	}
+
+	protected initFocusHandling() {
+		this.trivialComboBox.onFocus.addListener(() => this.onFocus.fire({}));
+		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
 	private renderRecord(record: NodeWithChildren<UiComboBoxTreeRecordConfig>, dropdown: boolean): string {
@@ -136,10 +139,6 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 
 	public getMainInnerDomElement(): HTMLElement {
 		return this.trivialComboBox.getMainDomElement() as HTMLElement;
-	}
-
-	public getFocusableElement(): HTMLElement {
-		return this.trivialComboBox.getEditor() as HTMLElement;
 	}
 
 	protected displayCommittedValue(): void {
@@ -162,10 +161,6 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 		if (this.isEditable()) {
 			this.trivialComboBox.focus();
 		}
-	}
-
-	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {

@@ -199,6 +199,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 
 	private editingMode: EditingMode;
 	private _isDropDownOpen = false;
+	private focused: boolean;
 
 
 	constructor(options: TrivialTagComboBoxConfig<E>, dropDownComponent?: DropDownComponent<E>) {
@@ -264,8 +265,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		this.$tagArea.append(this.$editor);
 		this.$editor.classList.add("tr-tagcombobox-editor", "tr-editor");
 		this.$editor.addEventListener("focus", () => {
-			this.onFocus.fire();
-			this.$tagComboBox.classList.add('focus');
+			this.setFocused(true);
 			this.$tagComboBox.offsetHeight;
 			this.$editor.scrollIntoView({
 				behavior: "smooth",
@@ -276,10 +276,10 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		this.$editor.addEventListener("blur", (e: FocusEvent) => {
 			if (this.blurCausedByClickInsideComponent) {
 				this.$editor.focus();
+				this.blurCausedByClickInsideComponent = false;
 			} else {
-				this.onBlur.fire();
+				this.setFocused(false);
 				this.setTagToBeRemoved(null);
-				this.$tagComboBox.classList.remove('focus');
 				this.closeDropDown();
 				if (this.$editor.textContent.trim().length > 0) {
 					this.addTag(this.config.freeTextEntryFactory(this.$editor.textContent), true, e);
@@ -423,19 +423,8 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		[this.$tagComboBox, this.$dropDown].forEach(element => {
 			element.addEventListener("mousedown", () => {
 				this.blurCausedByClickInsideComponent = true;
+				setTimeout(() => this.blurCausedByClickInsideComponent = false);
 			}, true);
-			element.addEventListener("mouseup", () => {
-				if (this.blurCausedByClickInsideComponent) {
-					this.$editor.focus();
-					setTimeout(() => this.blurCausedByClickInsideComponent = false); // let the other handlers do their job before removing event blocker
-				}
-			});
-			element.addEventListener("mouseout", () => {
-				if (this.blurCausedByClickInsideComponent) {
-					this.$editor.focus();
-					setTimeout(() => this.blurCausedByClickInsideComponent = false); // let the other handlers do their job before removing event blocker
-				}
-			});
 		});
 
 		this.$dropDown.append(this.dropDownComponent.getMainDomElement());
@@ -475,6 +464,18 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		this.popper = createComboBoxPopper(this.$tagComboBox, this.$dropDown, () => this.closeDropDown());
 
 		this.$editor.addEventListener("keyup", () => this.updatePlaceholderTextVisibility());
+	}
+
+	private setFocused(focused: boolean) {
+		if (focused != this.focused) {
+			if (focused) {
+				this.onFocus.fire();
+			} else {
+				this.onBlur.fire();
+			}
+			this.$tagComboBox.classList.toggle('focus', focused);
+			this.focused = focused;
+		}
 	}
 
 	private setTagToBeRemoved(tagToBeRemoved: Tag<E>) {

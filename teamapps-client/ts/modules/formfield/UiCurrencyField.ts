@@ -135,14 +135,6 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 		return this.trivialUnitBox.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): HTMLElement {
-		return this.trivialUnitBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor");
-	}
-
-	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().matches('.focus');
-	}
-
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
@@ -156,7 +148,7 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 
 	focus(): void {
 		this.trivialUnitBox.focus();
-		selectElementContents(this.getFocusableElement());
+		selectElementContents(this.trivialUnitBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor"));
 	}
 
 	destroy(): void {

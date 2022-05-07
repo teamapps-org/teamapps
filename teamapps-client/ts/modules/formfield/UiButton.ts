@@ -22,7 +22,13 @@ import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiDropDown} from "../micro-components/UiDropDown";
 import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
-import {UiButton_ClickedEvent, UiButton_DropDownOpenedEvent, UiButtonCommandHandler, UiButtonConfig, UiButtonEventSource} from "../../generated/UiButtonConfig";
+import {
+	UiButton_ClickedEvent,
+	UiButton_DropDownOpenedEvent,
+	UiButtonCommandHandler,
+	UiButtonConfig,
+	UiButtonEventSource
+} from "../../generated/UiButtonConfig";
 import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
@@ -152,10 +158,6 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 		super.setFieldMessages(fieldMessageConfigs);
 	}
 
-	public getFocusableElement(): HTMLElement {
-		return this.$main;
-	}
-
 	focus(): void {
 		this.$main.focus();
 	}
@@ -169,7 +171,7 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => this.$main);
 	}
 
 	public getReadOnlyHtml(value: void, availableWidth: number): string {

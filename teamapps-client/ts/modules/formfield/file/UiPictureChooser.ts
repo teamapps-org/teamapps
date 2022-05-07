@@ -166,10 +166,9 @@ export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> im
 		return null;
 	}
 
-	getFocusableElement(): HTMLElement {
-		return this.$uploadButton;
+	focus(): void {
+		this.$uploadButton.focus();
 	}
-
 	getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
@@ -183,7 +182,7 @@ export class UiPictureChooser extends UiField<UiPictureChooserConfig, string> im
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}
 

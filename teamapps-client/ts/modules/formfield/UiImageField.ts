@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {UiField} from "./UiField";
-import {UiImageFieldConfig, UiImageFieldCommandHandler, UiImageFieldEventSource} from "../../generated/UiImageFieldConfig";
+import {UiImageFieldCommandHandler, UiImageFieldConfig, UiImageFieldEventSource} from "../../generated/UiImageFieldConfig";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
@@ -81,11 +81,6 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 	public getMainInnerDomElement(): HTMLElement {
 		return this._$field;
 	}
-
-	public getFocusableElement(): HTMLElement {
-		return null;
-	}
-
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		this._$field.style.backgroundImage = uiValue ? `url('${uiValue}')` : 'none';
@@ -100,7 +95,7 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => null);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {

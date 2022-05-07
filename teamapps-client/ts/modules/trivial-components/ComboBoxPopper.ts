@@ -38,7 +38,6 @@ export function createComboBoxPopper($reference: Element, $dropdown: HTMLElement
 				phase: 'main',
 				requiresIfExists: ['offset'],
 				fn: ({state}) => {
-					// console.log("main: " + state.rects.reference.width);
 					let sideObject = detectOverflow(state, {elementContext: "reference"});
 					if (sideObject.left > state.rects.reference.width || sideObject.right > state.rects.reference.width
 						|| sideObject.top > state.rects.reference.height || sideObject.bottom > state.rects.reference.height) {
@@ -50,7 +49,6 @@ export function createComboBoxPopper($reference: Element, $dropdown: HTMLElement
 				enabled: true,
 				phase: 'write',
 				fn: ({state}) => {
-					// console.log("write: " + state.rects.reference.width);
 					$reference.classList.toggle("dropdown-flipped", state.placement === 'top');
 					$dropdown.classList.toggle("flipped", state.placement === 'top');
 

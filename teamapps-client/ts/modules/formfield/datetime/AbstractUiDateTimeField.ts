@@ -58,11 +58,6 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 		this.trivialDateTimeField.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialDateTimeField.getMainDomElement().querySelectorAll<HTMLElement>(":scope .tr-date-editor, :scope .tr-time-editor").forEach(element => element.classList.add("field-background"));
 		this.trivialDateTimeField.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialDateTimeField.getMainDomElement().querySelectorAll<HTMLElement>(":scope .tr-date-editor, :scope .tr-time-editor")
-			.forEach(element => {
-				element.addEventListener("focus", e => this.getMainElement().classList.add("focus"));
-				element.addEventListener("blur", e => this.getMainElement().classList.remove("focus"));
-			});
 	}
 
 	protected abstract getTimeZone(): string;
@@ -94,16 +89,13 @@ export abstract class AbstractUiDateTimeField<C extends AbstractUiDateTimeFieldC
 		return this.trivialDateTimeField.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): HTMLElement {
-		return null; // will handle all focus relevant stuff here...
+	protected initFocusHandling() {
+		this.trivialDateTimeField.onFocus.addListener(() => this.onFocus.fire({}));
+		this.trivialDateTimeField.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
 	focus(): void {
 		this.trivialDateTimeField.focus();
-	}
-
-	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {

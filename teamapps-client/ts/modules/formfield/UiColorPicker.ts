@@ -111,8 +111,8 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, string> implemen
 		return this._config.defaultColor;
 	}
 
-	getFocusableElement(): HTMLElement {
-		return this.$main;
+	focus(): void {
+		return this.$main.focus();
 	}
 
 	getMainInnerDomElement(): HTMLElement {

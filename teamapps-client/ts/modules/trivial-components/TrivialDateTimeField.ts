@@ -63,14 +63,16 @@ export interface LocalTime {
 
 export class TrivialDateTimeField implements TrivialComponent {
 
+	public readonly onFocus = new TeamAppsEvent<void>();
+	public readonly onBlur = new TeamAppsEvent<void>();
+	public readonly onChange = new TeamAppsEvent<DateTime>();
+
 	private config: TrivialDateTimeFieldConfig;
 
 	private dateIconRenderer: (localDateTime: DateTime) => string;
 	private timeIconRenderer: (localDateTime: DateTime) => string;
 	private dateRenderer: (localDateTime: DateTime) => string;
 	private timeRenderer: (localDateTime: DateTime) => string;
-
-	public readonly onChange = new TeamAppsEvent<DateTime>();
 
 	private dateListBox: TrivialTreeBox<DateTime>;
 	private timeListBox: TrivialTreeBox<DateTime>;
@@ -80,7 +82,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 	private value: DateTime = null;
 
 	private blurCausedByClickInsideComponent = false;
-	private focusGoesToOtherEditor = false;
+	private focused: boolean;
 	private autoCompleteTimeoutId = -1;
 	private doNoAutoCompleteBecauseBackspaceWasPressed = false;
 	private calendarBoxInitialized = false;
@@ -163,7 +165,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		this.$dateEditor.focus(() => {
 			this.$activeEditor = this.$dateEditor;
 			this.setDropDownMode(Mode.MODE_CALENDAR);
-			if (!this.blurCausedByClickInsideComponent || this.focusGoesToOtherEditor) {
+			if (!this.blurCausedByClickInsideComponent) {
 				selectElementContents(this.$dateEditor[0], 0, this.$dateEditor.text().length);
 				this.queryDate(0);
 				this.openDropDown();
@@ -172,7 +174,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 		this.$timeEditor.focus(() => {
 			this.$activeEditor = this.$timeEditor;
 			this.setDropDownMode(Mode.MODE_TIME_LIST);
-			if (!this.blurCausedByClickInsideComponent || this.focusGoesToOtherEditor) {
+			if (!this.blurCausedByClickInsideComponent) {
 				selectElementContents(this.$timeEditor[0], 0, this.$timeEditor.text().length);
 				this.queryTime(0);
 				this.openDropDown();
@@ -232,19 +234,20 @@ export class TrivialDateTimeField implements TrivialComponent {
 		});
 		this.$calendarBoxWrapper = this.$dropDown.find('.calendarbox');
 
-		this.$dateEditor
-			.add(this.$timeEditor)
+		this.$dateEditor.add(this.$timeEditor)
 			.focus(
 				() => {
-					this.$dateTimeField.addClass('focus');
+					this.setFocused(true)
 				}
 			)
 			.blur(
 				() => {
-					if (!this.blurCausedByClickInsideComponent) {
-						this.$dateTimeField.removeClass('focus');
+					if (this.blurCausedByClickInsideComponent) {
+						this.blurCausedByClickInsideComponent = false;
+					} else {
 						this.updateDisplay();
 						this.closeDropDown();
+						this.setFocused(false);
 					}
 				}
 			)
@@ -253,6 +256,10 @@ export class TrivialDateTimeField implements TrivialComponent {
 					if (keyCodes.isModifierKey(e)) {
 						return;
 					} else if (e.which == keyCodes.tab) {
+						if (!e.shiftKey && document.activeElement == this.$dateEditor[0]
+							|| e.shiftKey && document.activeElement == this.$timeEditor[0]) {
+							this.blurCausedByClickInsideComponent = true;
+						}
 						this.selectHighlightedListBoxEntry();
 						return;
 					} else if (e.which == keyCodes.left_arrow || e.which == keyCodes.right_arrow) {
@@ -275,7 +282,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 						const direction = e.which == keyCodes.up_arrow ? -1 : 1;
 						if (this._isDropDownOpen) {
 							if (this.dropDownMode !== Mode.MODE_CALENDAR) {
-								this.getActiveBox().highlightNextEntry(direction);
+								(this.getActiveBox() as TrivialTreeBox<any>).selectNextEntry(direction);
 								this.autoCompleteIfPossible(this.config.autoCompleteDelay);
 							} else if (this.calendarBox != null) {
 								this.getActiveBox().navigate(direction === 1 ? 'down' : 'up');
@@ -320,21 +327,8 @@ export class TrivialDateTimeField implements TrivialComponent {
 		this.setValue(null);
 
 		this.$dateTimeField.add(this.$dropDown).mousedown((e) => {
-			if (this.$dateEditor.is(":focus") || this.$timeEditor.is(":focus")) {
-				this.blurCausedByClickInsideComponent = true;
-			}
-			if (e.target === this.$dateEditor[0]
-				|| e.target === this.$timeEditor[0]
-				|| e.target === this.$dateIconWrapper[0]
-				|| e.target === this.$timeIconWrapper[0]) {
-				this.focusGoesToOtherEditor = true;
-			}
-		}).on('mouseup mouseout', () => {
-			if (this.blurCausedByClickInsideComponent && !this.focusGoesToOtherEditor) {
-				this.getActiveEditor().focus();
-			}
-			this.blurCausedByClickInsideComponent = false;
-			this.focusGoesToOtherEditor = false;
+			this.blurCausedByClickInsideComponent = true;
+			setTimeout(() => this.blurCausedByClickInsideComponent = false);
 		});
 		this.$activeEditor = this.$dateEditor;
 
@@ -369,6 +363,18 @@ export class TrivialDateTimeField implements TrivialComponent {
 				}
 			]
 		})
+	}
+
+	private setFocused(focused: boolean) {
+		if (focused != this.focused) {
+			if (focused) {
+				this.onFocus.fire();
+			} else {
+				this.onBlur.fire();
+			}
+			this.$dateTimeField[0].classList.toggle('focus', focused);
+			this.focused = focused;
+		}
 	}
 
 	private updateRenderers() {
@@ -423,7 +429,7 @@ export class TrivialDateTimeField implements TrivialComponent {
 
 	private selectHighlightedListBoxEntry() {
 		if (this.dropDownMode === Mode.MODE_DATE_LIST || this.dropDownMode === Mode.MODE_TIME_LIST) {
-			const highlightedEntry = this.getActiveBox().getHighlightedEntry();
+			const highlightedEntry = (this.getActiveBox() as TrivialTreeBox<any>).getSelectedEntry();
 			if (this._isDropDownOpen && highlightedEntry) {
 				if (this.getActiveEditor() === this.$dateEditor) {
 					this.setDate(highlightedEntry, true);
@@ -561,8 +567,8 @@ export class TrivialDateTimeField implements TrivialComponent {
 		if (this.config.autoComplete && (this.dropDownMode === Mode.MODE_DATE_LIST || this.dropDownMode === Mode.MODE_TIME_LIST)) {
 			clearTimeout(this.autoCompleteTimeoutId);
 
-			const listBox = this.getActiveBox();
-			const highlightedEntry = listBox.getHighlightedEntry();
+			const listBox = this.getActiveBox() as TrivialTreeBox<any>;
+			const highlightedEntry = listBox.getSelectedEntry();
 			if (highlightedEntry && !this.doNoAutoCompleteBecauseBackspaceWasPressed) {
 				const autoCompletingEntryDisplayValue = highlightedEntry.displayString;
 				if (autoCompletingEntryDisplayValue) {
