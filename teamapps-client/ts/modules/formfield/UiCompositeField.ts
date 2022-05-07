@@ -130,7 +130,6 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 		let allFocusableSubFields = allSubFields
 			.filter(f => f.field.getEditingMode() !== UiFieldEditingMode.READONLY
 				&& f.field.getEditingMode() !== UiFieldEditingMode.DISABLED
-				&& f.field.getFocusableElement() != null
 				&& f.visible === true);
 		return allFocusableSubFields
 			.sort((sf1: SubField, sf2: SubField) => {
@@ -154,10 +153,6 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
-	}
-
-	public getFocusableElement(): HTMLElement {
-		return this.$wrapper; // TODO!!
 	}
 
 	protected displayCommittedValue(): void {

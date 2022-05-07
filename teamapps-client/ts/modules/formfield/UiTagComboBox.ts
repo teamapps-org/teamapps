@@ -126,8 +126,11 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		this.trivialTagComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialTagComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialTagComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialTagComboBox.onFocus.addListener(() => this.getMainElement().classList.add("focus"));
-		this.trivialTagComboBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
+	}
+
+	protected initFocusHandling() {
+		this.trivialTagComboBox.onFocus.addListener(() => this.onFocus.fire({}));
+		this.trivialTagComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
 	private renderRecord(record: NodeWithChildren<UiComboBoxTreeRecordConfig>, dropdown: boolean): string {
@@ -148,10 +151,6 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 		return this.trivialTagComboBox.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): HTMLElement {
-		return this.trivialTagComboBox.getEditor() as HTMLElement;
-	}
-
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		this.trivialTagComboBox.setSelectedEntries(uiValue);
@@ -167,10 +166,6 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 
 	focus(): void {
 		this.trivialTagComboBox.focus(); // TODO
-	}
-
-	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {

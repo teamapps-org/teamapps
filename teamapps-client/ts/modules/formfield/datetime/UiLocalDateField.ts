@@ -131,8 +131,6 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialComboBox.onFocus.addListener(() => this.getMainElement().classList.add("focus"));
-		this.trivialComboBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
 
 		this.getMainInnerDomElement().classList.add("UiLocalDateField");
 	}
@@ -161,16 +159,13 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 		return this.trivialComboBox.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): HTMLElement {
-		return this.trivialComboBox.getMainDomElement();
+	protected initFocusHandling() {
+		this.trivialComboBox.onFocus.addListener(() => this.onFocus.fire({}));
+		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
 	focus(): void {
 		this.trivialComboBox.focus();
-	}
-
-	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {

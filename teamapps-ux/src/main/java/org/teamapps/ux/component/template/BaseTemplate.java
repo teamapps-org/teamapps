@@ -409,7 +409,7 @@ public enum BaseTemplate implements Template {
 				.setPadding(new Spacing(1, 5))
 				.addColumn(SizeType.AUTO, 0, 0, 2, 4)
 				.addColumn(SizingPolicy.AUTO, 0, 2)
-				.addRow(SizeType.AUTO, 0, 0, 3, 3)
+				.addRow(SizeType.AUTO, 0, 0, 3, 0)
 				.addElement(new IconElement(PROPERTY_ICON, 0, 0, iconSize))
 				.addElement(new ImageElement(PROPERTY_IMAGE, 0, 0, iconSize, iconSize)
 						.setBorder(new Border(new Line(RgbaColor.GRAY, LineType.SOLID, 0.5f)).setBorderRadius(300))

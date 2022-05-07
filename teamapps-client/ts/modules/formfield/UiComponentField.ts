@@ -65,10 +65,6 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 		return this.$componentWrapper;
 	}
 
-	public getFocusableElement(): HTMLElement {
-		return null;
-	}
-
 	protected displayCommittedValue(): void {
 		// do nothing
 	}

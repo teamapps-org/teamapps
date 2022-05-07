@@ -18,7 +18,6 @@
  * =========================LICENSE_END==================================
  */
 import {
-	DEFAULT_TEMPLATES,
 	EditingMode,
 	keyCodes,
 	objectEquals,
@@ -129,6 +128,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 	private selectedEntry: E = null;
 
 	private blurCausedByClickInsideComponent = false;
+	private focused: boolean;
 
 	private autoCompleteTimeoutId = -1;
 	private doNoAutoCompleteBecauseBackspaceWasPressed = false;
@@ -176,8 +176,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.setEditingMode(this.config.editingMode);
 		this.$editor = this.$comboBox.querySelector(':scope .tr-editor');
 		this.$editor.addEventListener("focus", () => {
-			this.onFocus.fire();
-			this.$comboBox.classList.add('focus');
+			this.setFocused(true);
 			if (!this.blurCausedByClickInsideComponent) {
 				this.showEditor();
 			}
@@ -185,9 +184,9 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.$editor.addEventListener("blur", (e: FocusEvent) => {
 			if (this.blurCausedByClickInsideComponent) {
 				this.$editor.focus();
+				this.blurCausedByClickInsideComponent = false;
 			} else {
-				this.onBlur.fire();
-				this.$comboBox.classList.remove('focus');
+				this.setFocused(false);
 				if (this.isEditorVisible) {
 					let freeTextEntry = this.getFreeTextEntry();
 					if (freeTextEntry != null) {
@@ -269,18 +268,6 @@ export class TrivialComboBox<E> implements TrivialComponent {
 				this.blurCausedByClickInsideComponent = true;
 				setTimeout(() => this.blurCausedByClickInsideComponent = false);
 			}, true);
-			element.addEventListener("mouseup", () => {
-				if (this.blurCausedByClickInsideComponent) {
-					this.$editor.focus();
-					this.blurCausedByClickInsideComponent = false;
-				}
-			});
-			element.addEventListener("mouseout", () => {
-				if (this.blurCausedByClickInsideComponent) {
-					this.$editor.focus();
-					this.blurCausedByClickInsideComponent = false;
-				}
-			});
 		});
 
 		this.setDropDownComponent(dropDownComponent);
@@ -318,6 +305,18 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		});
 
 		this.popper = createComboBoxPopper(this.$comboBox, this.$dropDown, () => this.closeDropDown());
+	}
+
+	private setFocused(focused: boolean) {
+		if (focused != this.focused) {
+			if (focused) {
+				this.onFocus.fire();
+			} else {
+				this.onBlur.fire();
+			}
+			this.$comboBox.classList.toggle('focus', focused);
+			this.focused = focused;
+		}
 	}
 
 	private getFreeTextEntry() {

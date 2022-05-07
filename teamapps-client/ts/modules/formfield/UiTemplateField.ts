@@ -56,8 +56,8 @@ export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientReco
 		this.$main.innerHTML = this.templateRenderer.render(this.getCommittedValue() && this.getCommittedValue().values);
 	}
 
-	getFocusableElement(): HTMLElement {
-		return null;
+	focus() {
+		// do nothing
 	}
 
 	getTransientValue(): UiClientRecordConfig {

@@ -54,6 +54,8 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
 			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
+	public final Event<VALUE> onFocus = new Event<>();
+	public final Event<VALUE> onBlur = new Event<>();
 	public final Event<VALUE> onValueChanged = new Event<>();
 	public final Event<Boolean> onVisibilityChanged = new Event<>();
 
@@ -131,6 +133,12 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 			case UI_FIELD_VALUE_CHANGED:
 				applyValueFromUi(((UiField.ValueChangedEvent) event).getValue());
 				validate();
+				break;
+			case UI_FIELD_FOCUS:
+				onFocus.fire();
+				break;
+			case UI_FIELD_BLUR:
+				onBlur.fire();
 				break;
 		}
 	}

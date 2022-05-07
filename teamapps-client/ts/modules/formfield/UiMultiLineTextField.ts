@@ -148,11 +148,6 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
-
-	public getFocusableElement(): HTMLElement {
-		return this.$field;
-	}
-
 	protected displayCommittedValue(): void {
 		const value = this.getCommittedValue();
 		this.$field.value = value || "";
@@ -178,7 +173,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {

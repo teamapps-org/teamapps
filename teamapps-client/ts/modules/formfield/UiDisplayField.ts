@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiDisplayFieldConfig, UiDisplayFieldCommandHandler, UiDisplayFieldEventSource} from "../../generated/UiDisplayFieldConfig";
+import {UiDisplayFieldCommandHandler, UiDisplayFieldConfig, UiDisplayFieldEventSource} from "../../generated/UiDisplayFieldConfig";
 import {UiField} from "./UiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {escapeHtml, parseHtml, removeTags} from "../Common";
@@ -61,11 +61,6 @@ export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implem
 	public getMainInnerDomElement(): HTMLElement {
 		return this._$field;
 	}
-
-	public getFocusableElement(): HTMLElement {
-		return null;
-	}
-
 	protected displayCommittedValue(): void {
 		let uiValue = this.getCommittedValue();
 		if (uiValue) {
@@ -89,7 +84,7 @@ export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implem
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => null);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {

@@ -19,7 +19,14 @@
  */
 import * as log from "loglevel";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {UiField_ValueChangedEvent, UiFieldCommandHandler, UiFieldConfig, UiFieldEventSource} from "../../generated/UiFieldConfig";
+import {
+	UiField_BlurEvent,
+	UiField_FocusEvent,
+	UiField_ValueChangedEvent,
+	UiFieldCommandHandler,
+	UiFieldConfig,
+	UiFieldEventSource
+} from "../../generated/UiFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {AbstractUiComponent} from "../AbstractUiComponent";
@@ -44,10 +51,10 @@ interface FieldMessage {
 
 export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> extends AbstractUiComponent<C> implements UiFieldCommandHandler, UiFieldEventSource {
 
-	public readonly onValueChanged: TeamAppsEvent<UiField_ValueChangedEvent> = new TeamAppsEvent<UiField_ValueChangedEvent>();
-	public readonly onFocused: TeamAppsEvent<void> = new TeamAppsEvent<void>();
-	public readonly onBlurred: TeamAppsEvent<void> = new TeamAppsEvent<void>();
-	public readonly onUserManipulation: TeamAppsEvent<void> = new TeamAppsEvent<void>();
+	public readonly onValueChanged: TeamAppsEvent<UiField_ValueChangedEvent> = new TeamAppsEvent();
+	public readonly onFocus: TeamAppsEvent<UiField_FocusEvent> = new TeamAppsEvent();
+	public readonly onBlur: TeamAppsEvent<UiField_BlurEvent> = new TeamAppsEvent();
+	public readonly onUserManipulation: TeamAppsEvent<void> = new TeamAppsEvent();
 
 	public static editingModeCssClasses: { [x: number]: string } = {
 		[UiFieldEditingMode.EDITABLE]: "editable",
@@ -71,6 +78,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	private $messagesContainerBelow: HTMLElement;
 	private fieldMessages: FieldMessage[] = [];
 	private hovering: boolean;
+	private focused: boolean;
 
 	constructor(_config: C,
 	            _context: TeamAppsUiContext) {
@@ -87,19 +95,17 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		this.setFieldMessages(_config.fieldMessages);
 
 		this.onValueChanged.addListener(() => this.onUserManipulation.fire(null));
-		this.getFocusableElement()?.addEventListener("focus", () => {
-			this.getMainElement().classList.add("focus");
-			this.onFocused.fire(null);
-		});
-		this.getFocusableElement()?.addEventListener("blur", () => {
-			this.getMainElement().classList.remove("focus");
-			this.onBlurred.fire(null);
-		});
+		this.initFocusHandling();
 
-		this.onFocused.addListener(() => {
+		this.onFocus.addListener(() => {
+			this.focused = true;
+			this.getMainElement().classList.add("focus");
 			this.updateFieldMessageVisibilities();
+
 		});
-		this.onBlurred.addListener(() => {
+		this.onBlur.addListener(() => {
+			this.focused = false;
+			this.getMainElement().classList.remove("focus");
 			this.updateFieldMessageVisibilities();
 		});
 
@@ -107,6 +113,11 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 			this.hovering = e.type === 'mouseenter';
 			this.updateFieldMessageVisibilities();
 		}));
+	}
+
+	protected initFocusHandling() {
+		this.getMainElement()?.addEventListener("focusin", () => this.onFocus.fire(null));
+		this.getMainElement()?.addEventListener("focusout", () => this.onBlur.fire(null));
 	}
 
 	private updateFieldMessageVisibilities() {
@@ -158,17 +169,11 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 
 	abstract getMainInnerDomElement(): HTMLElement;
 
-	abstract getFocusableElement(): HTMLElement;
-
 	public hasFocus() {
-		let focusableElement = this.getFocusableElement();
-		return focusableElement && focusableElement.matches(":focus");
+		return this.focused;
 	}
 
-	public focus(): void {
-		let focusableElement = this.getFocusableElement();
-		focusableElement && focusableElement.focus();
-	}
+	abstract focus(): void;
 
 	destroy() {
 		super.destroy();
@@ -249,31 +254,31 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		return this.getEditingMode() === UiFieldEditingMode.EDITABLE || this.getEditingMode() === UiFieldEditingMode.EDITABLE_IF_FOCUSED;
 	}
 
-	public static defaultOnEditingModeChangedImpl(field: UiField<UiFieldConfig, any>) {
+	public static defaultOnEditingModeChangedImpl(field: UiField<UiFieldConfig, any>, $focusableElementProvider: () => HTMLElement) {
 		field.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
 		field.getMainElement().classList.add(UiField.editingModeCssClasses[field.getEditingMode()]);
 
-		let $focusable = field.getFocusableElement();
-		if ($focusable) {
+		const $focusableElement = $focusableElementProvider();
+		if ($focusableElement) {
 			switch (field.getEditingMode()) {
 				case UiFieldEditingMode.EDITABLE:
-					$focusable.removeAttribute("readonly");
-					$focusable.removeAttribute("disabled");
-					$focusable.setAttribute("tabindex", "0");
+					$focusableElement.removeAttribute("readonly");
+					$focusableElement.removeAttribute("disabled");
+					$focusableElement.setAttribute("tabindex", "0");
 					break;
 				case UiFieldEditingMode.EDITABLE_IF_FOCUSED:
-					$focusable.removeAttribute("readonly");
-					$focusable.removeAttribute("disabled");
-					$focusable.setAttribute("tabindex", "0");
+					$focusableElement.removeAttribute("readonly");
+					$focusableElement.removeAttribute("disabled");
+					$focusableElement.setAttribute("tabindex", "0");
 					break;
 				case UiFieldEditingMode.DISABLED:
-					$focusable.removeAttribute("readonly");
-					$focusable.setAttribute("disabled", "disabled");
+					$focusableElement.removeAttribute("readonly");
+					$focusableElement.setAttribute("disabled", "disabled");
 					break;
 				case UiFieldEditingMode.READONLY:
-					$focusable.setAttribute("readonly", "readonly");
-					$focusable.removeAttribute("disabled");
-					$focusable.setAttribute("tabindex", "-1");
+					$focusableElement.setAttribute("readonly", "readonly");
+					$focusableElement.removeAttribute("disabled");
+					$focusableElement.setAttribute("tabindex", "-1");
 					break;
 				default:
 					log.getLogger("UiField").error("unknown editing mode! " + field.getEditingMode());

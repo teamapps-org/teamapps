@@ -83,8 +83,6 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		this.trivialComboBox.getMainDomElement().classList.add("field-border", "field-border-glow", "field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor").classList.add("field-background");
 		this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-trigger").classList.add("field-border");
-		this.trivialComboBox.onFocus.addListener(() => this.getMainElement().classList.add("focus"));
-		this.trivialComboBox.onBlur.addListener(() => this.getMainElement().classList.remove("focus"));
 	}
 
 	protected abstract localDateTimeToString(entry: LocalDateTime): string;
@@ -95,16 +93,13 @@ export abstract class AbstractUiTimeField<C extends AbstractUiTimeFieldConfig, V
 		return this.trivialComboBox.getMainDomElement() as HTMLElement;
 	}
 
-	public getFocusableElement(): HTMLElement {
-		return this.trivialComboBox.getMainDomElement().querySelector<HTMLElement>(":scope .tr-editor");
+	protected initFocusHandling() {
+		this.trivialComboBox.onFocus.addListener(() => this.onFocus.fire({}));
+		this.trivialComboBox.onBlur.addListener(() => this.onBlur.fire({}));
 	}
 
 	focus(): void {
 		this.trivialComboBox.focus();
-	}
-
-	public hasFocus(): boolean {
-		return this.getMainInnerDomElement().matches('.focus');
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {

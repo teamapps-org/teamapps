@@ -21,7 +21,7 @@ import {UiField} from "./UiField";
 import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
 import {UiNumberFieldCommandHandler, UiNumberFieldConfig, UiNumberFieldEventSource} from "../../generated/UiNumberFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {Constants, formatNumber, getAutoCompleteOffValue, parseHtml} from "../Common";
+import {getAutoCompleteOffValue, parseHtml} from "../Common";
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {
@@ -281,11 +281,6 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
-
-	public getFocusableElement(): HTMLElement {
-		return this.$field;
-	}
-
 	protected displayCommittedValue(): void {
 		let value = this.getCommittedValue();
 		this.$field.value = value != null ? this.formatNumber(value) : "";
@@ -318,7 +313,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
 	public getReadOnlyHtml(value: number, availableWidth: number): string {

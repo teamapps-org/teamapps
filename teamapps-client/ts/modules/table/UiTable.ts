@@ -563,21 +563,19 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 
 	private prepareEditorField(columnPropertyName: string, uiField: UiField) {
 		this.$editorFieldTempContainer.appendChild(uiField.getMainElement());
-		if (uiField.getFocusableElement()) {
-			// TODO do not rely on focusableElement as its focus and blur events are probably not what one wants!
-			uiField.getFocusableElement().addEventListener("keydown", (e) => {
-				if (e.key === "ArrowLeft"
-					|| e.key === "ArrowRight"
-					|| e.key === "ArrowUp"
-					|| e.key === "ArrowDown") {
-					e.stopPropagation();
-				}
-			});
-			uiField.getFocusableElement().addEventListener("focus", () => {
-				uiField.getMainElement().style.zIndex = "1000";
-			});
-			uiField.getFocusableElement().addEventListener("blur", () => uiField.getMainElement().style.zIndex = "0");
-		}
+		uiField.getMainElement().addEventListener("keydown", (e) => {
+			if (e.key === "ArrowLeft"
+				|| e.key === "ArrowRight"
+				|| e.key === "ArrowUp"
+				|| e.key === "ArrowDown") {
+				e.stopPropagation();
+			}
+		});
+		// TODO do not rely on focusableElement as its focus and blur events are probably not what one wants!
+		uiField.getMainElement().addEventListener("focusin", () => {
+			uiField.getMainElement().style.zIndex = "1000";
+		});
+		uiField.getMainElement().addEventListener("focusout", () => uiField.getMainElement().style.zIndex = "0");
 		uiField.onValueChanged.addListener((eventData: ValueChangeEventData) => this.handleFieldValueChanged(columnPropertyName, eventData.value));
 		uiField.onVisibilityChanged.addListener(visible => this.setSlickGridColumns(this.getVisibleColumns()));
 

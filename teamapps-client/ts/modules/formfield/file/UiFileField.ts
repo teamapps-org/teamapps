@@ -223,9 +223,8 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
-
-	public getFocusableElement(): HTMLElement {
-		return this.$uploadButton;
+	focus(): void {
+		this.$uploadButton.focus();
 	}
 
 	protected displayCommittedValue(): void {
@@ -323,7 +322,7 @@ export class UiFileField extends UiField<UiFileFieldConfig, UiIdentifiableClient
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => this.$uploadButton);
 		this.updateVisibilities();
 	}
 

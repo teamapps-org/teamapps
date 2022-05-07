@@ -25,7 +25,10 @@ import {UiTextFieldCommandHandler, UiTextFieldConfig, UiTextFieldEventSource} fr
 import {keyCodes} from "../trivial-components/TrivialCore";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiTextInputHandlingField_SpecialKeyPressedEvent, UiTextInputHandlingField_TextInputEvent} from "../../generated/UiTextInputHandlingFieldConfig";
+import {
+	UiTextInputHandlingField_SpecialKeyPressedEvent,
+	UiTextInputHandlingField_TextInputEvent
+} from "../../generated/UiTextInputHandlingFieldConfig";
 import {UiSpecialKey} from "../../generated/UiSpecialKey";
 
 export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends UiField<C, string> implements UiTextFieldEventSource, UiTextFieldCommandHandler {
@@ -64,7 +67,6 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 			}
 		});
 		this.$field.addEventListener("change", () => {
-			console.log("change");
 			if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 				this.commit();
 				this.updateClearButton();
@@ -134,11 +136,6 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$wrapper;
 	}
-
-	public getFocusableElement(): HTMLElement {
-		return this.$field;
-	}
-
 	protected displayCommittedValue(): void {
 		let value = this.getCommittedValue();
 		this.$field.value = value || "";
@@ -154,7 +151,7 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {

@@ -359,7 +359,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 				editor.on('focus', (e) => {
 					this._hasFocus = true;
 					this.getMainElement().classList.add('focus');
-					this.onFocused.fire(null);
+					this.onFocus.fire(null);
 					this.updateToolbar();
 				});
 				editor.on('focusout', (e) => {
@@ -370,7 +370,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 					if (this.mayFireChangeEvents()) {
 						this.commit();
 					}
-					this.onBlurred.fire(null);
+					this.onBlur.fire(null);
 					this.updateToolbar();
 				});
 			},
@@ -442,6 +442,10 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 		});
 	}
 
+	protected initFocusHandling() {
+		// do nothing (see editor initialization)
+	}
+
 	isValidData(v: string): boolean {
 		return v == null || typeof v === "string";
 	}
@@ -469,11 +473,6 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	public getMainInnerDomElement(): HTMLElement {
 		return this.$main;
 	}
-
-	public getFocusableElement(): HTMLElement {
-		return this.editor != null ? this.editor.getBody() : null;
-	}
-
 	protected displayCommittedValue(): void {
 		const value = removeTags(this.getCommittedValue(), "style");
 		this.mceReadyExecutor.invokeWhenReady(() => {
@@ -512,7 +511,7 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 			this.updateToolbar();
 		})
 		let wasEditable = !(oldEditingMode === UiFieldEditingMode.DISABLED || oldEditingMode === UiFieldEditingMode.READONLY);
-		UiField.defaultOnEditingModeChangedImpl(this);
+		UiField.defaultOnEditingModeChangedImpl(this, () => this.editor != null ? this.editor.getBody() : null);
 	}
 
 	private updateToolbar() { // both visibility and content (+overflow) are updated on show()
@@ -533,10 +532,6 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	setToolbarVisibilityMode(toolbarVisibilityMode: UiToolbarVisibilityMode): void {
 		this._config.toolbarVisibilityMode = toolbarVisibilityMode;
 		this.updateToolbar();
-	}
-
-	hasFocus(): boolean {
-		return this._hasFocus;
 	}
 
 	setMaxImageFileSizeInBytes(maxImageFileSizeInBytes: number): void {

@@ -35,34 +35,34 @@
     border-color: var(--ta-state-danger-border);
   }
 
-  &.focus, & > .focus {
+  &:focus-within, &.focus, & > .focus {
     &.field-border-glow,
     .field-border-glow {
       .teamapps-form-control-focus();
     }
-    &.focus.message-success .field-border-glow,
-    &.focus.message-success.field-border-glow {
+    &.message-success .field-border-glow,
+    &.message-success.field-border-glow {
       .teamapps-form-control-focus(var(--ta-state-success-border));
     }
-    &.focus.message-warning .field-border-glow,
-    &.focus.message-warning.field-border-glow {
+    &.message-warning .field-border-glow,
+    &.message-warning.field-border-glow {
       .teamapps-form-control-focus(var(--ta-state-warning-border));
     }
-    &.focus.message-error .field-border-glow,
-    &.focus.message-error.field-border-glow {
+    &.message-error .field-border-glow,
+    &.message-error.field-border-glow {
       .teamapps-form-control-focus(var(--ta-state-danger-border));
     }
   }
 
   &.readonly .field-border,
   &.readonly .field-border-visibility,
-  &.editable-if-focused:not(.focus):not(:hover) .field-border,
-  &.editable-if-focused:not(.focus):not(:hover) .field-border-visibility {
+  &.editable-if-focused:not(:focus-within):not(.focus):not(:hover) .field-border,
+  &.editable-if-focused:not(:focus-within):not(.focus):not(:hover) .field-border-visibility {
     border-color: transparent;
   }
 
   &.readonly .field-border-glow,
-  &.editable-if-focused:not(.focus):not(:hover) .field-border-glow {
+  &.editable-if-focused:not(:focus-within):not(.focus):not(:hover) .field-border-glow {
     box-shadow: none;
   }
 
@@ -85,7 +85,7 @@
     background-color: var(--ta-input-bg-disabled);
   }
   &.readonly .field-background,
-  &.editable-if-focused:not(.focus):not(:hover) .field-background {
+  &.editable-if-focused:not(:focus-within):not(.focus):not(:hover) .field-background {
     background: transparent;
   }
 
@@ -103,7 +103,7 @@
 
   // === SPECIFIC ===
 
-  &.editable-if-focused:not(.focus):not(:hover) {
+  &.editable-if-focused:not(:focus-within):not(.focus):not(:hover) {
     .tr-trigger,
     .tr-remove-button,
     .tr-unitbox-selected-entry-and-trigger-wrapper {
@@ -164,12 +164,3 @@
   outline: 0;
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px @color;
 }
-
-/* TODO
-- editable_if_focused and readonly: border transparent + no background!
-//  &.editable-if-focused:not(:focus):not(.focus):hover {
-//    border-color: @input-border-hover;
-//  }
-- trivial-components triggers, remove buttons
- */
-

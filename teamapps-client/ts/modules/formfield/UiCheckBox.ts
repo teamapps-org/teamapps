@@ -127,10 +127,6 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 		}
 	}
 
-	public getFocusableElement(): HTMLElement {
-		return this.$check;
-	}
-
 	protected displayCommittedValue(): void {
 		let v = this.getCommittedValue();
 		this.$check.textContent = v ? "\ue013" : "";
