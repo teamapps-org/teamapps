@@ -1,0 +1,5 @@
+class UiAudioLevelIndicator extends UiComponent {
+    String deviceId;
+    
+    command setDeviceId(String deviceId);
+}

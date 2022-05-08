@@ -95,6 +95,7 @@ export {UiNotification} from "./UiNotification";
 export {UiNotificationBar} from "./UiNotificationBar";
 export {UiQrCodeScanner} from "./UiQrCodeScanner";
 export {UiMediaSoupV3WebRtcClient} from "./webrtc/mediasoup-v3/UiMediaSoupV3WebRtcClient";
+export {UiAudioLevelIndicator} from "./UiAudioLevelIndicator";
 export {UiHtmlView} from "./UiHtmlView";
 
 export {UiGauge} from "./UiGauge";

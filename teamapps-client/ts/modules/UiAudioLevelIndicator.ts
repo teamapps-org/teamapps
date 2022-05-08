@@ -18,10 +18,14 @@
  * =========================LICENSE_END==================================
  */
 
-import {Util} from "leaflet";
-import {css, parseHtml} from "../Common";
+import {css, parseHtml} from "./Common";
+import {AbstractUiComponent} from "./AbstractUiComponent";
+import {UiAudioLevelIndicatorCommandHandler, UiAudioLevelIndicatorConfig} from "../generated/UiAudioLevelIndicatorConfig";
+import {TeamAppsUiContext} from "./TeamAppsUiContext";
+import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
+import {UiCalendar} from "./UiCalendar";
 
-export class UiAudioActivityDisplay {
+export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndicatorConfig> implements UiAudioLevelIndicatorCommandHandler {
 	private $main: HTMLElement;
 	private $activityDisplay: HTMLElement;
 	private $levelDiv: HTMLElement;
@@ -29,19 +33,22 @@ export class UiAudioActivityDisplay {
 	private audioContext: AudioContext;
 
 
-	constructor() {
+	constructor(config: UiAudioLevelIndicatorConfig, context: TeamAppsUiContext) {
+		super(config, context)
+
 		this.$main = parseHtml(`
-<div class="UiAudioActivityDisplay">
+<div class="UiAudioLevelIndicator">
 	<div class="level-div hidden"></div>
 </div>`);
 		this.$activityDisplay = this.$main;
 		this.$levelDiv = this.$main.querySelector<HTMLElement>(':scope .level-div');
-
 	}
 
 	private analyserNode: AnalyserNode;
 
-	public bindToStream(userMediaStream: MediaStream) {
+	public bindToStream(mediaStream: MediaStream) {
+		this.unbind();
+
 		(window as any).AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
 		this.audioContext = new AudioContext();
 
@@ -53,21 +60,21 @@ export class UiAudioActivityDisplay {
 		this.analyserNode.fftSize = 32; // 16 spectral lines - that's the minimum. we don't want to get a spectral analysis anyway...
 		this.analyserNode.connect(scriptProcessor);
 
-		this.mediaStreamSource = this.audioContext.createMediaStreamSource(userMediaStream);
+		this.mediaStreamSource = this.audioContext.createMediaStreamSource(mediaStream);
 		this.mediaStreamSource.connect(this.analyserNode, 0, 0);
 
 		scriptProcessor.onaudioprocess = this.throttle(() => {
 			const array = new Uint8Array(this.analyserNode.frequencyBinCount);
 			this.analyserNode.getByteFrequencyData(array);
-			const average = UiAudioActivityDisplay.getAverageVolume(array);
+			const average = UiAudioLevelIndicator.getAverageVolume(array);
 			let averageRatio = average / 255;
-			let videoHeight = this.$activityDisplay.offsetHeight;
+			let availableHeight = this.$activityDisplay.offsetHeight;
 			css(this.$levelDiv, {
-				height: (videoHeight * averageRatio) + "px",
-				backgroundPosition: "0 " + (-videoHeight * (1 - averageRatio) + "px"),
-				backgroundSize: 100 + "px " + videoHeight + "px"
+				height: (availableHeight * averageRatio) + "px",
+				backgroundPosition: "0 " + (-availableHeight * (1 - averageRatio) + "px"),
+				backgroundSize: 100 + "px " + availableHeight + "px"
 			});
-		}, 200);
+		}, 100);
 
 		this.$levelDiv.classList.remove("hidden");
 	}
@@ -87,9 +94,9 @@ export class UiAudioActivityDisplay {
 	}
 
 	public unbind() {
-		this.audioContext && this.audioContext.close()
+		this.audioContext && this.audioContext?.close()
 			.catch(reason => console.log(reason));
-		this.mediaStreamSource && this.mediaStreamSource.disconnect();
+		this.mediaStreamSource?.disconnect();
 		this.$levelDiv.classList.add("hidden");
 	}
 
@@ -100,10 +107,26 @@ export class UiAudioActivityDisplay {
 			max = Math.max(max, sampleVolumes[i]);
 			sum += sampleVolumes[i];
 		}
-		return (max * 3 + (sum / sampleVolumes.length)) / 4;
+		return max;
 	}
 
-	public getMainDomElement() {
+	public doGetMainElement() {
 		return this.$main;
 	}
+
+	public async setDeviceId(deviceId: string) {
+		if (deviceId == null) {
+			this.unbind();
+			return;
+		} else {
+			let mediaStream = await navigator.mediaDevices.getUserMedia({
+				audio: {
+					deviceId
+				}
+			});
+			this.bindToStream(mediaStream);
+		}
+	}
 }
+
+TeamAppsUiComponentRegistry.registerComponentClass("UiAudioLevelIndicator", UiAudioLevelIndicator);

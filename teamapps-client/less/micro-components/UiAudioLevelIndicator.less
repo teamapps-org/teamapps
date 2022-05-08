@@ -17,16 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-.UiAudioActivityDisplay {
+.UiAudioLevelIndicator {
   position: relative;
 
   .level-div {
     position: absolute;
     bottom: 0;
     width: 100%;
-    background: linear-gradient(0deg, #192e83 0%, #0fb83f 30%, #0fb83f 60%, yellow 80%, red 95%);
+    background: linear-gradient(0deg, #192e83 0%, #0fb83f 40%, #0fb83f 60%, orange 80%, #e00 95%);
     background-attachment: scroll;
-    transition: height 200ms linear, background-position 200ms linear;
+    transition: height 100ms linear, background-position 100ms linear;
     will-change: height, background-position;
   }
 }
