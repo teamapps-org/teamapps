@@ -142,7 +142,7 @@ public enum BaseTemplate implements Template {
 						.setHorizontalAlignment(HorizontalElementAlignment.CENTER))
 				.addElement(new TextElement(PROPERTY_DESCRIPTION, 2, 0)
 						.setWrapLines(true)
-						.setFontStyle(descriptionFontSize, RgbaColor.GRAY_STANDARD)
+						.setFontStyle(descriptionFontSize, Color.fromVariableName("ta-text-color-gray"))
 						.setVerticalAlignment(VerticalElementAlignment.TOP)
 						.setHorizontalAlignment(HorizontalElementAlignment.CENTER));
 	}
@@ -211,7 +211,7 @@ public enum BaseTemplate implements Template {
 						.setShadow(Shadow.withSize(1.5f))
 						.setVerticalAlignment(VerticalElementAlignment.TOP).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1).setWrapLines(true))
-				.addElement(new TextElement(PROPERTY_DESCRIPTION, 1, 1).setWrapLines(true).setFontStyle(0.8f, RgbaColor.GRAY_STANDARD));
+				.addElement(new TextElement(PROPERTY_DESCRIPTION, 1, 1).setWrapLines(true).setFontStyle(0.8f, Color.fromVariableName("ta-text-color-gray")));
 	}
 
 	public static Template createListStyleIconTwoLinesBadgeTemplate(int iconSize, VerticalElementAlignment verticalIconAlignment, int maxHeight, int spacing) {
@@ -245,7 +245,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new TextElement(PROPERTY_DESCRIPTION, 1, 1)
 						.setColSpan(2)
 						.setWrapLines(wrapLines)
-						.setFontStyle(0.8f, RgbaColor.GRAY_STANDARD)
+						.setFontStyle(0.8f, Color.fromVariableName("ta-text-color-gray"))
 						.setVerticalAlignment(VerticalElementAlignment.TOP)
 						.setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new BadgeElement(PROPERTY_BADGE, 0, 2)
@@ -509,7 +509,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new TextElement(PROPERTY_DESCRIPTION, 2, 0)
 						.setTextAlignment(TextAlignment.CENTER)
 						.setWrapLines(true)
-						.setFontStyle(0.8f, RgbaColor.GRAY_STANDARD)
+						.setFontStyle(0.8f, Color.fromVariableName("ta-text-color-gray"))
 						.setVerticalAlignment(VerticalElementAlignment.TOP)
 						.setHorizontalAlignment(HorizontalElementAlignment.CENTER));
 	}
@@ -541,7 +541,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new TextElement(PROPERTY_DESCRIPTION, 2, 0)
 						.setWrapLines(true)
 						.setTextAlignment(TextAlignment.CENTER)
-						.setFontStyle(0.8f, RgbaColor.GRAY_STANDARD)
+						.setFontStyle(0.8f, Color.fromVariableName("ta-text-color-gray"))
 						.setVerticalAlignment(VerticalElementAlignment.TOP)
 						.setHorizontalAlignment(HorizontalElementAlignment.CENTER));
 	}
@@ -571,7 +571,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new TextElement(PROPERTY_CAPTION, 0, 1).setWrapLines(true)
 						.setVerticalAlignment(VerticalElementAlignment.BOTTOM).setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new TextElement(PROPERTY_DESCRIPTION, 1, 1).setWrapLines(true)
-						.setFontStyle(0.8f, RgbaColor.GRAY_STANDARD).setVerticalAlignment(VerticalElementAlignment.TOP)
+						.setFontStyle(0.8f, Color.fromVariableName("ta-text-color-gray")).setVerticalAlignment(VerticalElementAlignment.TOP)
 						.setHorizontalAlignment(HorizontalElementAlignment.LEFT));
 	}
 
@@ -601,7 +601,7 @@ public enum BaseTemplate implements Template {
 				.addElement(new TextElement(PROPERTY_DESCRIPTION, 1, 1)
 						.setColSpan(2)
 						.setWrapLines(true)
-						.setFontStyle(0.8f, RgbaColor.GRAY_STANDARD)
+						.setFontStyle(0.8f, Color.fromVariableName("ta-text-color-gray"))
 						.setVerticalAlignment(VerticalElementAlignment.TOP)
 						.setHorizontalAlignment(HorizontalElementAlignment.LEFT))
 				.addElement(new BadgeElement(PROPERTY_BADGE, 0, 2)

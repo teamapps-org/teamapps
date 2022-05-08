@@ -94,7 +94,7 @@
   --ta-text-color: @dark-text-color;
   --ta-text-color-faded: fadeout(@dark-text-color, 30%);
   --ta-text-color-inverted: black;
-  --ta-text-color-gray: #909090;
+  --ta-text-color-gray: #9f9f9f;
   --ta-bg-color: @dark-background-color;
   --ta-bg-color-semi-transparent: @dark-background-color-transparent;
   --ta-bg-color-semi-transparent-muted: #3e3e3ea6;
@@ -146,6 +146,13 @@
   --ta-calendar-grid-non-business-bg-color: #d7d7d755;
   --ta-calendar-day-occupation-background-circle-color: #d7d7d729;
   --ta-calendar-day-occupation-today-bg: rgba(255, 168, 61, 0.31);
+
+  // == button-style-item
+  --ta-3d-button-gradient:         linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(251, 251, 252, 0.1) 62%, rgba(247, 248, 249, 0.1) 84%, rgba(245, 246, 247, 0.1) 94%, rgba(237, 239, 241, 0.1) 100%);
+  --ta-3d-button-gradient-lowered: linear-gradient(to bottom, rgba(200, 200, 200, 0.1) 0%, rgba(190, 190, 190, 0.1) 62%, rgba(185, 185, 185, 0.1) 84%, rgba(180, 180, 180, 0.1) 94%, rgba(175, 175, 175, 0.1) 100%);
+  --ta-glow-gradient: linear-gradient(to bottom, #feeeac22 0%,#fee5a622 7%,#fee7a822 92%,#fef4b022 97%,#fef7b422 100%);
+  --ta-glow-gradient-lowered: linear-gradient(to bottom, #fef7b422 0%,#fef4b022 7%,#fee7a822 92%,#fee5a622 97%,#feeeac22 100%);
+  --ta-glow-border-color: darken(#C19344, 30%);
 
   
   html {
@@ -238,19 +245,6 @@
         transition: top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
         contain: strict; // !!!
         display: flex;
-
-        // TODO make hover and active styles configurable!
-        border: 1px solid transparent;
-
-        &:hover {
-          .button-style-item-dark();
-          transition: background 0.1s, border-color 0.05s, top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
-        }
-
-        &:active {
-          .button-style-item-dark();
-          transition: background 0.1s, border-color 0.05s, top var(--item-position-animation-time) ease, left var(--item-position-animation-time) ease;
-        }
       }
     }
   }
@@ -303,14 +297,6 @@
         }
         .teamapps-expander {
           margin-right: 7px;
-        }
-      }
-      &.collapsible.has-header-template {
-        .expand-button:hover {
-          .button-style-item-dark;
-        }
-        .expand-button:active {
-          .button-style-item-dark;
         }
       }
       &:not(.has-header-data):not(.collapsible) {
@@ -418,8 +404,8 @@
   }
 
   .UiChatInput {
-    background-color: @dark-input-background;
-    border-top-color: @dark-input-border;
+    background-color: var(--ta-input-bg);
+    border-top-color: var(--ta-input-border-color);
 
     textarea {
       background-color: transparent;
@@ -542,16 +528,6 @@
 
   .calendar-symbol-page {
     stroke: transparent;
-  }
-
-  .button-style-item {
-    border-radius: var(--ta-border-radius-small);
-    border: 1px solid rgba(150, 140, 140, 0.4);
-    border-bottom-color: rgba(133, 135, 144, 0.51);
-    box-shadow: 0 3px 5px -2px rgba(0, 0, 0, .13);
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(251, 251, 252, 0.1) 62%, rgba(247, 248, 249, 0.1) 84%, rgba(245, 246, 247, 0.1) 94%, rgba(237, 239, 241, 0.1) 100%);
-    user-select: none;
-    transition: background 0.1s, border-color 0.05s;
   }
 }
 
