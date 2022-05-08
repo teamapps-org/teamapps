@@ -57,31 +57,12 @@
     }
   }
 
-  &.background-mode-light .tr-tree-entry-and-expander-wrapper {
+  .tr-treebox .tr-tree-entryTree .tr-tree-entry-outer-wrapper .tr-tree-entry-and-expander-wrapper { // artificially increase css rule precedence...
     &:hover {
       .button-style-item();
     }
     &:active {
       .button-style-item-glow-lowered();
-    }
-  }
-
-  &.background-mode-opaque .tr-tree-entry-and-expander-wrapper {
-    .button-style-item();
-    &:hover {
-      .button-style-item-glow();
-    }
-    &:active {
-      .button-style-item-glow2();
-    }
-  }
-
-  &.background-mode-dark .tr-tree-entry-and-expander-wrapper {
-    &:hover {
-      .button-style-item-dark();
-    }
-    &:active {
-      .button-style-item-glow-dark();
     }
   }
 
