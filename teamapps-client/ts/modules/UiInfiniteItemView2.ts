@@ -102,7 +102,7 @@ export class UiInfiniteItemView2 extends AbstractUiComponent<UiInfiniteItemView2
 			}
 		});
 
-		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", ["click", "contextmenu"], (element, ev) => {
+		addDelegatedEventListener(this.getMainElement(), ".item-wrapper", ["click"], (element, ev) => {
 			let recordId = parseInt(element.getAttribute("data-id"));
 			this.onItemClicked.fire({
 				recordId: recordId,
