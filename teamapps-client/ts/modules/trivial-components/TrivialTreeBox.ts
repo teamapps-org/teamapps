@@ -141,7 +141,6 @@ export interface TrivialTreeBoxConfig<E> {
 
 	selectOnHover?: boolean,
 
-	highlightHoveredEntries?: boolean
 }
 
 class EntryWrapper<E> {
@@ -247,13 +246,11 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 			enforceSingleExpandedPath: false, // only one path is expanded at any time
 			indentation: null,
 			selectableDecider: () => true,
-			selectOnHover: false,
-			highlightHoveredEntries: true
+			selectOnHover: false
 		}, options);
 
 		this.$componentWrapper = parseHtml('<div class="tr-treebox"></div>');
 		this.$componentWrapper.classList.toggle("hide-expanders", !this.config.showExpanders);
-		this.$componentWrapper.classList.toggle("highlight-hovered-entries", this.config.highlightHoveredEntries);
 
 		this.setEntries(this.config.entries || []);
 

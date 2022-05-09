@@ -90,7 +90,7 @@
     display: none;
   }
 
-  &.highlight-hovered-entries .tr-tree-entry-outer-wrapper > .tr-tree-entry-and-expander-wrapper:hover:not(.tr-selected-entry) {
-      background-color: @tr-highlight-color;
+  .tr-tree-entry-and-expander-wrapper:not(.tr-selected-entry):hover {
+    background-color: var(--ta-hover-color);
   }
 }
