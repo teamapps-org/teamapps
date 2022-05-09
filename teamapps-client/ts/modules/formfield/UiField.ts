@@ -81,7 +81,7 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 	private focused: boolean;
 
 	constructor(_config: C,
-	            _context: TeamAppsUiContext) {
+				_context: TeamAppsUiContext) {
 		super(_config, _context);
 		this.$messagesContainerAbove = parseHtml(`<div class="messages messages-above"></div>`);
 		this.$messagesContainerBelow = parseHtml(`<div class="messages messages-below"></div>`);
