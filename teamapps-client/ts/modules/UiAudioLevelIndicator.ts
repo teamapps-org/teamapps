@@ -31,6 +31,7 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 	private $levelDiv: HTMLElement;
 	private mediaStreamSource: MediaStreamAudioSourceNode;
 	private audioContext: AudioContext;
+	private mediaStreamToBeClosedWhenUnbinding: MediaStream;
 
 
 	constructor(config: UiAudioLevelIndicatorConfig, context: TeamAppsUiContext) {
@@ -46,8 +47,12 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 
 	private analyserNode: AnalyserNode;
 
-	public bindToStream(mediaStream: MediaStream) {
+	public bindToStream(mediaStream: MediaStream, mediaStreamIsExclusiveToThisComponent: boolean) {
 		this.unbind();
+
+		if (mediaStreamIsExclusiveToThisComponent) {
+			this.mediaStreamToBeClosedWhenUnbinding = mediaStream;
+		}
 
 		(window as any).AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
 		this.audioContext = new AudioContext();
@@ -97,6 +102,9 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 		this.audioContext && this.audioContext?.close()
 			.catch(reason => console.log(reason));
 		this.mediaStreamSource?.disconnect();
+		if (this.mediaStreamToBeClosedWhenUnbinding != null) {
+			this.mediaStreamToBeClosedWhenUnbinding.getTracks().forEach(t => t.stop());
+		}
 		this.$levelDiv.classList.add("hidden");
 	}
 
@@ -124,7 +132,7 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 					deviceId
 				}
 			});
-			this.bindToStream(mediaStream);
+			this.bindToStream(mediaStream, true);
 		}
 	}
 }
