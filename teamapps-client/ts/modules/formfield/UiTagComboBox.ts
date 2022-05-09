@@ -104,7 +104,6 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			selectableDecider: entry => entry.selectable,
 			selectOnHover: true,
-			highlightHoveredEntries: false,
 			animationDuration: this._config.animate ? 120 : 0
 		})));
 		this.trivialTagComboBox.getMainDomElement().classList.add("UiTagComboBox");

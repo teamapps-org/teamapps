@@ -95,7 +95,6 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 			lazyChildrenFlag: entry => entry.lazyChildren,
 			selectableDecider: entry => entry.selectable,
 			selectOnHover: true,
-			highlightHoveredEntries: false,
 			animationDuration: this._config.animate ? 120 : 0
 		})));
 		this.trivialComboBox.getMainDomElement().classList.add("UiComboBox");
