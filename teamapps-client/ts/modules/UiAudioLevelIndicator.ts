@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 
-import {css, parseHtml} from "./Common";
+import {parseHtml} from "./Common";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiAudioLevelIndicatorCommandHandler, UiAudioLevelIndicatorConfig} from "../generated/UiAudioLevelIndicatorConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
@@ -33,12 +33,16 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 	private mediaStreamToBeClosedWhenUnbinding: MediaStream;
 	private canvasContext: CanvasRenderingContext2D;
 
+	private maxLevel = 0;
+	private maxLevel2 = 0;
+	private lastDrawingTimestamp = 0;
+
 	constructor(config: UiAudioLevelIndicatorConfig, context: TeamAppsUiContext) {
 		super(config, context)
 
 		this.$main = parseHtml(`
 <div class="UiAudioLevelIndicator">
-	<canvas class="hidden"></canvas>
+	<canvas></canvas>
 </div>`);
 		this.$activityDisplay = this.$main;
 		this.$canvas = this.$main.querySelector<HTMLElement>(':scope canvas') as HTMLCanvasElement;
@@ -68,14 +72,26 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 		this.mediaStreamSource = this.audioContext.createMediaStreamSource(mediaStream);
 		this.mediaStreamSource.connect(this.analyserNode, 0, 0);
 
-		scriptProcessor.onaudioprocess = this.throttle(() => window.requestAnimationFrame(() => {
-			const array = new Uint8Array(this.analyserNode.frequencyBinCount);
-			this.analyserNode.getByteFrequencyData(array);
-			const maxVolume = UiAudioLevelIndicator.getMaxVolume(array) / 255;
-			this.draw(maxVolume);
-		}), 100);
+		scriptProcessor.onaudioprocess = event => {
+			var buf = event.inputBuffer.getChannelData(0);
+			var bufLength = buf.length;
+			for (var i = 0; i < bufLength; i++) {
+				let x = buf[i];
+				if (x > this.maxLevel) {
+					this.maxLevel2 = this.maxLevel;
+					this.maxLevel = x;
+				}
+			}
 
-		this.$canvas.classList.remove("hidden");
+			if (Date.now() - this.lastDrawingTimestamp > 100) {
+				requestAnimationFrame(() => {
+					let displayedLevel = this.maxLevel2 == 0 ? 0 : Math.max(-10, Math.log2(this.maxLevel)) / 10 + 1;
+					this.draw(displayedLevel);
+					this.maxLevel = 0;
+					this.maxLevel2 = 0;
+				});
+			}
+		};
 	}
 
 	private draw(level: number) {
@@ -97,6 +113,8 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 		// draw a bar based on the current volume
 		let volumeBarSize = canvasHeight * level;
 		this.canvasContext.fillRect(canvasWidth - this._config.barWidth, canvasHeight - volumeBarSize, this._config.barWidth, volumeBarSize);
+
+		this.lastDrawingTimestamp = Date.now();
 	}
 
 	/**
@@ -120,17 +138,7 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 		if (this.mediaStreamToBeClosedWhenUnbinding != null) {
 			this.mediaStreamToBeClosedWhenUnbinding.getTracks().forEach(t => t.stop());
 		}
-		this.$canvas.classList.add("hidden");
-	}
-
-	private static getMaxVolume(sampleVolumes: Uint8Array) {
-		let max = 0;
-		let sum = 0;
-		for (let i = 0; i < sampleVolumes.length; i++) {
-			max = Math.max(max, sampleVolumes[i]);
-			sum += sampleVolumes[i];
-		}
-		return max;
+		this.canvasContext.clearRect(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
 	}
 
 	onResize() {

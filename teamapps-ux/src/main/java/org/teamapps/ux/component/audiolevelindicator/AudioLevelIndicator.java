@@ -26,7 +26,7 @@ import org.teamapps.ux.component.AbstractComponent;
 public class AudioLevelIndicator extends AbstractComponent {
 
 	private String deviceId;
-	private int barWidth = 3;
+	private int barWidth = 1;
 
 	@Override
 	public UiComponent createUiComponent() {
