@@ -23,26 +23,26 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {UiAudioLevelIndicatorCommandHandler, UiAudioLevelIndicatorConfig} from "../generated/UiAudioLevelIndicatorConfig";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiCalendar} from "./UiCalendar";
 
 export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndicatorConfig> implements UiAudioLevelIndicatorCommandHandler {
 	private $main: HTMLElement;
 	private $activityDisplay: HTMLElement;
-	private $levelDiv: HTMLElement;
+	private $canvas: HTMLCanvasElement;
 	private mediaStreamSource: MediaStreamAudioSourceNode;
 	private audioContext: AudioContext;
 	private mediaStreamToBeClosedWhenUnbinding: MediaStream;
-
+	private canvasContext: CanvasRenderingContext2D;
 
 	constructor(config: UiAudioLevelIndicatorConfig, context: TeamAppsUiContext) {
 		super(config, context)
 
 		this.$main = parseHtml(`
 <div class="UiAudioLevelIndicator">
-	<div class="level-div hidden"></div>
+	<canvas class="hidden"></canvas>
 </div>`);
 		this.$activityDisplay = this.$main;
-		this.$levelDiv = this.$main.querySelector<HTMLElement>(':scope .level-div');
+		this.$canvas = this.$main.querySelector<HTMLElement>(':scope canvas') as HTMLCanvasElement;
+		this.canvasContext = this.$canvas.getContext("2d");
 	}
 
 	private analyserNode: AnalyserNode;
@@ -68,20 +68,35 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 		this.mediaStreamSource = this.audioContext.createMediaStreamSource(mediaStream);
 		this.mediaStreamSource.connect(this.analyserNode, 0, 0);
 
-		scriptProcessor.onaudioprocess = this.throttle(() => {
+		scriptProcessor.onaudioprocess = this.throttle(() => window.requestAnimationFrame(() => {
 			const array = new Uint8Array(this.analyserNode.frequencyBinCount);
 			this.analyserNode.getByteFrequencyData(array);
-			const average = UiAudioLevelIndicator.getAverageVolume(array);
-			let averageRatio = average / 255;
-			let availableHeight = this.$activityDisplay.offsetHeight;
-			css(this.$levelDiv, {
-				height: (availableHeight * averageRatio) + "px",
-				backgroundPosition: "0 " + (-availableHeight * (1 - averageRatio) + "px"),
-				backgroundSize: 100 + "px " + availableHeight + "px"
-			});
-		}, 100);
+			const maxVolume = UiAudioLevelIndicator.getMaxVolume(array) / 255;
+			this.draw(maxVolume);
+		}), 100);
 
-		this.$levelDiv.classList.remove("hidden");
+		this.$canvas.classList.remove("hidden");
+	}
+
+	private draw(level: number) {
+		let canvasWidth = this.canvasContext.canvas.width;
+		let canvasHeight = this.canvasContext.canvas.height;
+
+		var imageData = this.canvasContext.getImageData(this._config.barWidth, 0, canvasWidth - this._config.barWidth, canvasHeight);
+		this.canvasContext.putImageData(imageData, 0, 0);
+		this.canvasContext.clearRect(canvasWidth - this._config.barWidth, 0, this._config.barWidth, canvasHeight);
+
+		var grd = this.canvasContext.createLinearGradient(0, canvasHeight, 0, 0);
+		grd.addColorStop(0, "#192e83")
+		grd.addColorStop(.4, "#0fb83f")
+		grd.addColorStop(.6, "#0fb83f")
+		grd.addColorStop(.8, "orange")
+		grd.addColorStop(.95, "#e00")
+		this.canvasContext.fillStyle = grd;
+
+		// draw a bar based on the current volume
+		let volumeBarSize = canvasHeight * level;
+		this.canvasContext.fillRect(canvasWidth - this._config.barWidth, canvasHeight - volumeBarSize, this._config.barWidth, volumeBarSize);
 	}
 
 	/**
@@ -105,10 +120,10 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 		if (this.mediaStreamToBeClosedWhenUnbinding != null) {
 			this.mediaStreamToBeClosedWhenUnbinding.getTracks().forEach(t => t.stop());
 		}
-		this.$levelDiv.classList.add("hidden");
+		this.$canvas.classList.add("hidden");
 	}
 
-	private static getAverageVolume(sampleVolumes: Uint8Array) {
+	private static getMaxVolume(sampleVolumes: Uint8Array) {
 		let max = 0;
 		let sum = 0;
 		for (let i = 0; i < sampleVolumes.length; i++) {
@@ -116,6 +131,11 @@ export class UiAudioLevelIndicator extends AbstractUiComponent<UiAudioLevelIndic
 			sum += sampleVolumes[i];
 		}
 		return max;
+	}
+
+	onResize() {
+		this.$canvas.width = this.getWidth();
+		this.$canvas.height = this.getHeight();
 	}
 
 	public doGetMainElement() {
