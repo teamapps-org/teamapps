@@ -19,6 +19,7 @@
  */
 class UiAudioLevelIndicator extends UiComponent {
     String deviceId;
+    int barWidth;
     
     command setDeviceId(String deviceId);
 }

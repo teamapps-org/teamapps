@@ -20,13 +20,8 @@
 .UiAudioLevelIndicator {
   position: relative;
 
-  .level-div {
-    position: absolute;
-    bottom: 0;
+  canvas {
     width: 100%;
-    background: linear-gradient(0deg, #192e83 0%, #0fb83f 40%, #0fb83f 60%, orange 80%, #e00 95%);
-    background-attachment: scroll;
-    transition: height 100ms linear, background-position 100ms linear;
-    will-change: height, background-position;
+    height: 100%;
   }
 }

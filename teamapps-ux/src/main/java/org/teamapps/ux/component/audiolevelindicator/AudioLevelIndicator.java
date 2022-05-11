@@ -26,12 +26,14 @@ import org.teamapps.ux.component.AbstractComponent;
 public class AudioLevelIndicator extends AbstractComponent {
 
 	private String deviceId;
+	private int barWidth = 3;
 
 	@Override
 	public UiComponent createUiComponent() {
 		UiAudioLevelIndicator ui = new UiAudioLevelIndicator();
 		mapAbstractUiComponentProperties(ui);
 		ui.setDeviceId(this.deviceId);
+		ui.setBarWidth(this.barWidth);
 		return ui;
 	}
 
@@ -40,4 +42,8 @@ public class AudioLevelIndicator extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiAudioLevelIndicator.SetDeviceIdCommand(getId(), deviceId));
 	}
 
+	public void setBarWidth(int barWidth) {
+		this.barWidth = barWidth;
+		reRenderIfRendered();
+	}
 }
