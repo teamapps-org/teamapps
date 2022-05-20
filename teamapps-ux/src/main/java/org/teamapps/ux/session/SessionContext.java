@@ -247,6 +247,10 @@ public class SessionContext {
 		return state.isActive();
 	}
 
+	public UiSessionState getState() {
+		return state;
+	}
+
 	public boolean isDestroyed() {
 		return state == UiSessionState.CLOSED;
 	}
