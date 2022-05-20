@@ -146,8 +146,28 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		return sessionsById.size();
 	}
 
+	public int getNumberOfSessionsByState(UiSessionState state) {
+		return (int) sessionsById.values().stream()
+				.filter(sessionPair -> sessionPair.getSessionContext().getState() == state)
+				.count();
+	}
+
 	public List<SessionPair> getAllSessions() {
 		return List.copyOf(sessionsById.values());
+	}
+
+	public int getBufferedCommandsCount() {
+		return sessionsById.values().stream()
+				.map(SessionPair::getUiSession)
+				.mapToInt(UiSession::getBufferedCommandsCount)
+				.sum();
+	}
+
+	public int getUnconsumedCommandsCount() {
+		return sessionsById.values().stream()
+				.map(SessionPair::getUiSession)
+				.mapToInt(UiSession::getUnconsumedCommandsCount)
+				.sum();
 	}
 
 	public int getNumberOfAvailableClosedSessionStatistics() {
