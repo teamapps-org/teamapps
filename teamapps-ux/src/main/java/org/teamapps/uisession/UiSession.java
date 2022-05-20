@@ -361,4 +361,12 @@ public class UiSession {
 	public RunningUiSessionStats getStatistics() {
 		return statistics;
 	}
+
+	public int getBufferedCommandsCount() {
+		return commandBuffer.getBufferedCommandsCount();
+	}
+
+	public int getUnconsumedCommandsCount() {
+		return commandBuffer.getUnconsumedCommandsCount();
+	}
 }
