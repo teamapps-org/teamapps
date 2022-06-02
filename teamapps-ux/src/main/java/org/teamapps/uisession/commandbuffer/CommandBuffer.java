@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.uisession.CMD;
 
 /**
- * NOT THREAD-SAFE! Synchronization must be provided by using code.
+ * NOT THREAD-SAFE! Synchronization must be provided by client code.
  */
 public class CommandBuffer {
 
