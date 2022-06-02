@@ -140,8 +140,12 @@ public class UiSession {
 	public ClientBackPressureInfo getClientBackPressureInfo() {
 		synchronized (this) {
 			return new ClientBackPressureInfo(
-					config.getCommandBufferLength(), commandBuffer.getUnconsumedCommandsCount(),
-					config.getClientMinRequestedCommands(), config.getClientMaxRequestedCommands(), maxRequestedCommandId - lastSentCommandId,
+					config.getCommandBufferLength(),
+					commandBuffer.getBufferedCommandsCount(),
+					commandBuffer.getUnconsumedCommandsCount(),
+					config.getClientMinRequestedCommands(),
+					config.getClientMaxRequestedCommands(),
+					maxRequestedCommandId - lastSentCommandId,
 					requestedCommandsZeroTimestamp
 			);
 		}
@@ -362,11 +366,4 @@ public class UiSession {
 		return statistics;
 	}
 
-	public int getBufferedCommandsCount() {
-		return commandBuffer.getBufferedCommandsCount();
-	}
-
-	public int getUnconsumedCommandsCount() {
-		return commandBuffer.getUnconsumedCommandsCount();
-	}
 }
