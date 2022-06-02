@@ -22,6 +22,7 @@ package org.teamapps.uisession;
 public class ClientBackPressureInfo {
 
 	private final int maxCommandBufferSize;
+	private final int bufferedCommandsCount;
 	private final int unconsumedCommandsCount;
 
 	private final int minRequestedCommands;
@@ -30,9 +31,11 @@ public class ClientBackPressureInfo {
 
 	private final long requestedCommandsZeroReachingTimestamp;
 
-	public ClientBackPressureInfo(int maxCommandBufferSize, int unconsumedCommandsCount, int minRequestedCommands, int maxRequestedCommands, int remainingRequestedCommands,
-	                              long requestedCommandsZeroReachingTimestamp) {
+	public ClientBackPressureInfo(int maxCommandBufferSize, int bufferedCommandsCount, int unconsumedCommandsCount,
+								  int minRequestedCommands, int maxRequestedCommands, int remainingRequestedCommands,
+								  long requestedCommandsZeroReachingTimestamp) {
 		this.maxCommandBufferSize = maxCommandBufferSize;
+		this.bufferedCommandsCount = bufferedCommandsCount;
 		this.unconsumedCommandsCount = unconsumedCommandsCount;
 		this.minRequestedCommands = minRequestedCommands;
 		this.maxRequestedCommands = maxRequestedCommands;
@@ -48,6 +51,10 @@ public class ClientBackPressureInfo {
 
 	public int getMaxCommandBufferSize() {
 		return maxCommandBufferSize;
+	}
+
+	public int getBufferedCommandsCount() {
+		return bufferedCommandsCount;
 	}
 
 	public int getUnconsumedCommandsCount() {

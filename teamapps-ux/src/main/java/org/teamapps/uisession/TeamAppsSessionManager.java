@@ -159,14 +159,14 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	public int getBufferedCommandsCount() {
 		return sessionsById.values().stream()
 				.map(SessionPair::getUiSession)
-				.mapToInt(UiSession::getBufferedCommandsCount)
+				.mapToInt(uiSession -> uiSession.getClientBackPressureInfo().getBufferedCommandsCount())
 				.sum();
 	}
 
 	public int getUnconsumedCommandsCount() {
 		return sessionsById.values().stream()
 				.map(SessionPair::getUiSession)
-				.mapToInt(UiSession::getUnconsumedCommandsCount)
+				.mapToInt(uiSession -> uiSession.getClientBackPressureInfo().getUnconsumedCommandsCount())
 				.sum();
 	}
 
