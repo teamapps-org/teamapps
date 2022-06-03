@@ -276,7 +276,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		this.$editor.addEventListener("blur", (e: FocusEvent) => {
 			if (this.blurCausedByClickInsideComponent) {
 				this.$editor.focus();
-				this.blurCausedByClickInsideComponent = false;
+				// Don't just unset the blurCausedByClickInsideComponent here! See the comment with hashtag #regainFocus.
 			} else {
 				this.setFocused(false);
 				this.setTagToBeRemoved(null);
@@ -304,9 +304,9 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 					e.preventDefault(); // do not tab away from the tag box nor insert a newline character
 				} else if (this.currentPartialTag) {
 					if (e.shiftKey) { // we do not want the editor to get the focus right back, so we need to position the $editor intelligently...
-						this.doIgnoringBlurEvents(() => insertAfter(this.$editor, this.currentPartialTag.$tagWrapper));
+						this.doPreservingFocus(() => insertAfter(this.$editor, this.currentPartialTag.$tagWrapper));
 					} else {
-						this.doIgnoringBlurEvents(() => insertBefore(this.$editor, this.currentPartialTag.$tagWrapper));
+						this.doPreservingFocus(() => insertBefore(this.$editor, this.currentPartialTag.$tagWrapper));
 					}
 					this.currentPartialTag.$tagWrapper.remove();
 					this.currentPartialTag = null;
@@ -322,12 +322,12 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 					return;
 				} else if (e.which == keyCodes.left_arrow && this.$editor.textContent.length === 0 && window.getSelection().anchorOffset === 0) {
 					if (this.$editor.previousElementSibling != null) {
-						this.doIgnoringBlurEvents(() => insertBefore(this.$editor, this.$editor.previousElementSibling));
+						this.doPreservingFocus(() => insertBefore(this.$editor, this.$editor.previousElementSibling));
 						this.focus();
 					}
 				} else if (e.which == keyCodes.right_arrow && this.$editor.textContent.length === 0 && window.getSelection().anchorOffset === 0) {
 					if (this.$editor.nextElementSibling != null) {
-						this.doIgnoringBlurEvents(() => insertAfter(this.$editor, this.$editor.nextElementSibling));
+						this.doPreservingFocus(() => insertAfter(this.$editor, this.$editor.nextElementSibling));
 						this.focus();
 					}
 				}
@@ -423,8 +423,27 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		[this.$tagComboBox, this.$dropDown].forEach(element => {
 			element.addEventListener("mousedown", () => {
 				this.blurCausedByClickInsideComponent = true;
-				setTimeout(() => this.blurCausedByClickInsideComponent = false);
+
+				// #regainFocus
+				// Why don't we just do a "setTimeout(() => this.blurCausedByClickInsideComponent = false);" and check for
+				// the flag in the blur event handler instead of this overly complex handling of "mouseup" and "mousedown" events?
+				// That's because in Firefox, doing $editor.focus() has no effect as long as the mouse is pressed. The
+				// document.activeElement will be document.body until the mouse is released.
+				// So when the user presses somewhere inside the tag combobox (except the $editor), the focus will be lost (blur event)
+				// and re-focusing will have no effect. We HAVE TO wait for the mouseup or mouseout event in order to re-focus.
 			}, true);
+			element.addEventListener("mouseup", () => {
+				if (this.blurCausedByClickInsideComponent) {
+					this.$editor.focus();
+					this.blurCausedByClickInsideComponent = false;
+				}
+			});
+			element.addEventListener("mouseout", () => {
+				if (this.blurCausedByClickInsideComponent) {
+					this.$editor.focus();
+					this.blurCausedByClickInsideComponent = false;
+				}
+			});
 		});
 
 		this.$dropDown.append(this.dropDownComponent.getMainDomElement());
@@ -443,9 +462,9 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 					const tagBoundingRect = $nearestTag.getBoundingClientRect();
 					const isRightSide = e.clientX > (tagBoundingRect.left + tagBoundingRect.right) / 2;
 					if (isRightSide) {
-						this.doIgnoringBlurEvents(() => insertAfter(this.$editor, $nearestTag));
+						this.doPreservingFocus(() => insertAfter(this.$editor, $nearestTag));
 					} else {
-						this.doIgnoringBlurEvents(() => insertBefore(this.$editor, $nearestTag));
+						this.doPreservingFocus(() => insertBefore(this.$editor, $nearestTag));
 					}
 				}
 			}
@@ -489,7 +508,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 	}
 
 	private cancelPartialTag() {
-		this.doIgnoringBlurEvents(() => insertBefore(this.$editor, this.currentPartialTag.$tagWrapper));
+		this.doPreservingFocus(() => insertBefore(this.$editor, this.currentPartialTag.$tagWrapper));
 		this.currentPartialTag.$tagWrapper.remove();
 		this.currentPartialTag = null;
 	}
@@ -554,7 +573,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		let wasPartial = !!this.currentPartialTag;
 		const editorIndex = wasPartial ? elementIndex(this.currentPartialTag.$tagWrapper) : elementIndex(this.$editor);
 		if (wasPartial) {
-			this.doIgnoringBlurEvents(() => this.$tagArea.append(this.$editor)); // make sure the event handlers don't get detached when removing the partial tag
+			this.doPreservingFocus(() => this.$tagArea.append(this.$editor)); // make sure the event handlers don't get detached when removing the partial tag
 			this.currentPartialTag.$tagWrapper.remove();
 			entry = this.config.entryMerger(this.currentPartialTag.entry, entry);
 		}
@@ -572,7 +591,7 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 			this.currentPartialTag = tag;
 		}
 
-		this.doIgnoringBlurEvents(() => insertAtIndex(this.$tagArea, $tagWrapper, editorIndex));
+		this.doPreservingFocus(() => insertAtIndex(this.$tagArea, $tagWrapper, editorIndex));
 
 		let removeButton = $entry.querySelector('.tr-remove-button');
 		if (removeButton != null) {
@@ -583,9 +602,9 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		}
 
 		if (this.config.tagCompleteDecider(entry)) {
-			this.doIgnoringBlurEvents(() => insertAtIndex(this.$tagArea, this.$editor, editorIndex + 1));
+			this.doPreservingFocus(() => insertAtIndex(this.$tagArea, this.$editor, editorIndex + 1));
 		} else {
-			this.doIgnoringBlurEvents(() => $entry.querySelector('.tr-editor').append(this.$editor));
+			this.doPreservingFocus(() => $entry.querySelector('.tr-editor').append(this.$editor));
 		}
 
 		this.$editor.textContent = "";
@@ -659,13 +678,18 @@ export class TrivialTagComboBox<E> implements TrivialComponent {
 		return this.editingMode == 'editable';
 	}
 
-	private doIgnoringBlurEvents(f: Function) {
+	private doPreservingFocus(f: Function) {
+		const hadFocus = document.activeElement == this.$editor;
 		let oldValueOfBlurCausedByClickInsideComponent = this.blurCausedByClickInsideComponent;
-		this.blurCausedByClickInsideComponent = true;
+		this.blurCausedByClickInsideComponent = true; // prevent triggering the onBlur event etc...
 		try {
 			return f.call(this);
 		} finally {
 			this.blurCausedByClickInsideComponent = oldValueOfBlurCausedByClickInsideComponent;
+			const hasFocus = document.activeElement == this.$editor;
+			if (hadFocus && !hasFocus) {
+				this.$editor.focus();
+			}
 		}
 	}
 
