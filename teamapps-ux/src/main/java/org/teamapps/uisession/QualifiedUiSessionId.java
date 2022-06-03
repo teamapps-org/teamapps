@@ -23,49 +23,31 @@ import java.util.Objects;
 
 public class QualifiedUiSessionId {
 
-	private final String httpSessionId;
 	private final String uiSessionId;
 
-	public QualifiedUiSessionId(String httpSessionId, String uiSessionId) {
-		if (httpSessionId == null) {
-			throw new NullPointerException("httpSessionId may not be null!");
-		}
+	public QualifiedUiSessionId(String uiSessionId) {
 		if (uiSessionId == null) {
 			throw new NullPointerException("uiSessionId may not be null!");
 		}
-		this.httpSessionId = httpSessionId;
 		this.uiSessionId = uiSessionId;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		QualifiedUiSessionId that = (QualifiedUiSessionId) o;
-		return Objects.equals(httpSessionId, that.httpSessionId) && Objects.equals(uiSessionId, that.uiSessionId);
+		return Objects.equals(uiSessionId, that.uiSessionId);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = httpSessionId.hashCode();
-		result = 31 * result + uiSessionId.hashCode();
-		return result;
+		return Objects.hash(uiSessionId);
 	}
 
 	@Override
 	public String toString() {
-		return httpSessionId + ':' + uiSessionId;
-	}
-
-	public String getHttpSessionId() {
-		return httpSessionId;
-	}
-
-	public String getUiSessionId() {
 		return uiSessionId;
 	}
+
 }

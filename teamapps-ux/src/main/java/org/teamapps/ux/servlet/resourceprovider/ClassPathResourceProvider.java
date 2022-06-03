@@ -17,9 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.resource;
+package org.teamapps.ux.servlet.resourceprovider;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.teamapps.ux.resource.ClassPathResource;
+import org.teamapps.ux.resource.Resource;
 
 import java.util.function.Function;
 

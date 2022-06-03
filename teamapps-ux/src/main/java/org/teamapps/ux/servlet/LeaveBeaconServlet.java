@@ -19,6 +19,9 @@
  */
 package org.teamapps.ux.servlet;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +30,6 @@ import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.TeamAppsSessionManager;
 import org.teamapps.uisession.UiSession;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class LeaveBeaconServlet extends HttpServlet {
@@ -43,10 +42,10 @@ public class LeaveBeaconServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String sessionId = IOUtils.toString(request.getReader());
 		LOGGER.info("Got leaving beacon for SessionId: " + sessionId);
-		UiSession uiSession = uiSessionManager.getUiSessionById(new QualifiedUiSessionId(request.getSession().getId(), sessionId));
+		UiSession uiSession = uiSessionManager.getUiSessionById(new QualifiedUiSessionId(sessionId));
 		if (uiSession != null) {
 			uiSession.close(UiSessionClosingReason.TERMINATED_BY_CLIENT);
 		}

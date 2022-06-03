@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.resource;
+package org.teamapps.ux.servlet.resourceprovider;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -28,6 +28,8 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.teamapps.ux.resource.Resource;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -43,12 +45,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class ResourceProviderServlet extends HttpServlet {
 
-
-	// Constants ------------------------------------------------------------------------------------------------------
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceProviderServlet.class);
 
-	private static final Long DEFAULT_EXPIRE_TIME_IN_SECONDS = TimeUnit.DAYS.toSeconds(30);
 	private static final long ONE_SECOND_IN_MILLIS = TimeUnit.SECONDS.toMillis(1);
 	private static final String ETAG = "W/\"%s-%s\"";
 	private static final Pattern RANGE_PATTERN = Pattern.compile("^bytes=[0-9]*-[0-9]*(,[0-9]*-[0-9]*)*$");
@@ -60,8 +58,6 @@ public class ResourceProviderServlet extends HttpServlet {
 	public ResourceProviderServlet(ResourceProvider resourceProvider) {
 		this.resourceProvider = resourceProvider;
 	}
-
-	// Actions --------------------------------------------------------------------------------------------------------
 
 	@Override
 	protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -153,8 +149,6 @@ public class ResourceProviderServlet extends HttpServlet {
 		return file.getName();
 	}
 
-	// Sub-actions ----------------------------------------------------------------------------------------------------
-
 	/**
 	 * Returns true if it's a conditional request which must return 412.
 	 */
@@ -164,9 +158,6 @@ public class ResourceProviderServlet extends HttpServlet {
 		return (match != null) ? !matches(match, getETag(resource)) : (unmodified != -1 && modified(unmodified, resource.getLastModified().getTime()));
 	}
 
-	/**
-	 * Set cache headers.
-	 */
 	private void setCacheHeaders(HttpServletResponse response, Resource resource, long expires) {
 		setCacheHeaders(response, expires);
 		response.setHeader("ETag", getETag(resource));
@@ -227,8 +218,8 @@ public class ResourceProviderServlet extends HttpServlet {
 	 * Parse range header part. Returns null if there's a logic error (i.e. start after end).
 	 */
 	private Range parseRange(String range, long length) {
-		long start = sublong(range, 0, range.indexOf('-'));
-		long end = sublong(range, range.indexOf('-') + 1, range.length());
+		long start = parseLong(range, 0, range.indexOf('-'));
+		long end = parseLong(range, range.indexOf('-') + 1, range.length());
 
 		if (start == -1) {
 			start = length - end;
@@ -244,9 +235,6 @@ public class ResourceProviderServlet extends HttpServlet {
 		return new Range(start, end);
 	}
 
-	/**
-	 * Set content headers.
-	 */
 	private String setContentHeaders(HttpServletResponse response, Resource resource, List<Range> ranges) {
 		String contentType = resource.getMimeType();
 		String filename = resource.getName();
@@ -294,8 +282,6 @@ public class ResourceProviderServlet extends HttpServlet {
 			output.println("--" + MULTIPART_BOUNDARY + "--");
 		}
 	}
-
-	// Helpers --------------------------------------------------------------------------------------------------------
 
 	/**
 	 * URL-encode the given string using UTF-8.
@@ -378,9 +364,6 @@ public class ResourceProviderServlet extends HttpServlet {
 		return String.format(ETAG, encodeURL(resource.getName()), resource.getLastModified());
 	}
 
-	/**
-	 * Returns true if the given match header matches the given ETag value.
-	 */
 	private static boolean matches(String matchHeader, String eTag) {
 		String[] matchValues = matchHeader.split("\\s*,\\s*");
 		Arrays.sort(matchValues);
@@ -388,25 +371,15 @@ public class ResourceProviderServlet extends HttpServlet {
 				|| Arrays.binarySearch(matchValues, "*") > -1;
 	}
 
-	/**
-	 * Returns true if the given modified header is older than the given last modified value.
-	 */
 	private static boolean modified(long modifiedHeader, long lastModified) {
 		return (modifiedHeader + ONE_SECOND_IN_MILLIS <= lastModified); // That second is because the header is in seconds, not millis.
 	}
 
-	/**
-	 * Returns a substring of the given string value from the given begin index to the given end index as a long.
-	 * If the substring is empty, then -1 will be returned.
-	 */
-	private static long sublong(String value, int beginIndex, int endIndex) {
+	private static long parseLong(String value, int beginIndex, int endIndex) {
 		String substring = value.substring(beginIndex, endIndex);
 		return substring.isEmpty() ? -1 : Long.parseLong(substring);
 	}
 
-	/**
-	 * Returns true if the given accept header accepts the given value.
-	 */
 	private static boolean accepts(String acceptHeader, String toAccept) {
 		String[] acceptValues = acceptHeader.split("\\s*([,;])\\s*");
 		Arrays.sort(acceptValues);
@@ -415,11 +388,6 @@ public class ResourceProviderServlet extends HttpServlet {
 				|| Arrays.binarySearch(acceptValues, "*/*") > -1;
 	}
 
-	// Nested classes -------------------------------------------------------------------------------------------------
-
-	/**
-	 * Convenience class for a byte range.
-	 */
 	private static class Range {
 		private final long start;
 		private final long end;

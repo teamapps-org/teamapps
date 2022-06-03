@@ -17,13 +17,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.resource;
+package org.teamapps.ux.servlet.resourceprovider;
 
-/**
- * Created by mb on 08.10.15.
- */
-public interface ResourceProvider {
+import org.junit.Test;
 
-    Resource getResource(String servletPath, String relativeResourcePath, String httpSessionId);
+import static org.junit.Assert.assertEquals;
+
+public class ClassPathResourceProviderTest {
+
+	@Test
+	public void testNormalizeClassPathResourcePath() throws Exception {
+		assertEquals("/my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("my.package"));
+		assertEquals("/my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("/my/package/"));
+		assertEquals("/my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("my/package"));
+		assertEquals("/my/package", ClassPathResourceProvider.normalizeClassPathResourcePath("/my/package"));
+	}
 
 }

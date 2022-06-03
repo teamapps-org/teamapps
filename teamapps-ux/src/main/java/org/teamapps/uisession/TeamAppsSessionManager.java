@@ -21,6 +21,9 @@ package org.teamapps.uisession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Queues;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionListener;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,17 +45,12 @@ import org.teamapps.ux.session.SessionConfiguration;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionEvent;
-import jakarta.servlet.http.HttpSessionListener;
-
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_DEV_SERVER_VERSION;
 import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
-import static org.teamapps.dto.UiSessionClosingReason.HTTP_SESSION_CLOSED;
 import static org.teamapps.uisession.UiSessionState.*;
 
 /**
@@ -242,22 +240,6 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
 		se.getSession().setMaxInactiveInterval(config.getHttpSessionTimeoutSeconds());
-	}
-
-	@Override
-	public void sessionDestroyed(HttpSessionEvent se) {
-		closeAllSessionsForHttpSession(se.getSession().getId());
-	}
-
-	public void closeAllSessionsForHttpSession(String httpSessionId) {
-		LOGGER.trace("TeamAppsUiSessionManager.removeAllSessionsForHttpSession");
-		List<UiSession> sessionsToClose = sessionsById.entrySet().stream()
-				.filter(e -> e.getKey().getHttpSessionId().equals(httpSessionId))
-				.map(qualifiedUiSessionIdSessionPairEntry -> qualifiedUiSessionIdSessionPairEntry.getValue().getUiSession())
-				.collect(Collectors.toList());
-		for (UiSession uiSession : sessionsToClose) {
-			uiSession.close(HTTP_SESSION_CLOSED);
-		}
 	}
 
 	public void updateSessionStates() {
