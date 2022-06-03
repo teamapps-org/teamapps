@@ -19,14 +19,13 @@
  */
 package org.teamapps.uisession.statistics;
 
-import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.UiSessionState;
 
 public interface UiSessionStats {
 
 	long getStartTime();
 	long getEndTime();
-	QualifiedUiSessionId getSessionId();
+	String getSessionId();
 	String getName();
 	UiSessionState getState();
 

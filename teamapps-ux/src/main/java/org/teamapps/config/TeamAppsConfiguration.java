@@ -20,7 +20,6 @@
 package org.teamapps.config;
 
 import org.teamapps.event.Event;
-import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.ux.session.SessionContext;
 
 import java.io.File;
@@ -37,7 +36,7 @@ public class TeamAppsConfiguration {
 	 * This may be caused by the browser tab being closed or the internet connection being interrupted.
 	 * <p>
 	 * When a UI session times out, the corresponding {@link SessionContext} gets closed
-	 * and removed from the map of known {@link QualifiedUiSessionId}s.
+	 * and removed from the map of known {@link String}s.
 	 * <p>
 	 * The {@link SessionContext} will also fire its
 	 * {@link SessionContext#onDestroyed onDestroyed} event, which will detach any {@link Event SessionContext-bound event} listeners.

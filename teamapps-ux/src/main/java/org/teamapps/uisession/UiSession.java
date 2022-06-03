@@ -43,7 +43,7 @@ public class UiSession {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final QualifiedUiSessionId sessionId;
+	private final String sessionId;
 	private String name;
 	private final TeamAppsConfiguration config;
 	private final ObjectMapper objectMapper;
@@ -77,7 +77,7 @@ public class UiSession {
 
 	private final RunningUiSessionStats statistics;
 
-	public UiSession(QualifiedUiSessionId sessionId, long creationTime, TeamAppsConfiguration config, ObjectMapper objectMapper, MessageSender messageSender) {
+	public UiSession(String sessionId, long creationTime, TeamAppsConfiguration config, ObjectMapper objectMapper, MessageSender messageSender) {
 		this.sessionId = sessionId;
 		this.name = sessionId.toString();
 		this.config = config;
@@ -93,7 +93,7 @@ public class UiSession {
 		statistics.update(messageSender.getDataSent(), messageSender.getDataReceived());
 	}
 
-	public QualifiedUiSessionId getSessionId() {
+	public String getSessionId() {
 		return sessionId;
 	}
 

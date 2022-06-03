@@ -21,10 +21,10 @@ package org.teamapps.uisession;
 
 public class TeamAppsComponentNotFoundException extends RuntimeException {
 
-	private final QualifiedUiSessionId sessionId;
+	private final String sessionId;
 	private final String componentId;
 
-	public TeamAppsComponentNotFoundException(QualifiedUiSessionId sessionId, String componentId) {
+	public TeamAppsComponentNotFoundException(String sessionId, String componentId) {
 		super("Could not find component " + componentId + " in teamapps session: " + sessionId.toString());
 		this.componentId = componentId;
 		this.sessionId = sessionId;
@@ -34,7 +34,7 @@ public class TeamAppsComponentNotFoundException extends RuntimeException {
 		return componentId;
 	}
 
-	public QualifiedUiSessionId getSessionId() {
+	public String getSessionId() {
 		return sessionId;
 	}
 }

@@ -20,14 +20,13 @@
 package org.teamapps.uisession.statistics;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
-import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.UiSessionState;
 
 public class ImmutableUiSessionStats implements UiSessionStats {
 
 	private final long startTime;
 	private final long endTime;
-	private final QualifiedUiSessionId sessionId;
+	private final String sessionId;
 	private final String name;
 	private final UiSessionState state;
 	private final ImmutableCountStats commandStats;
@@ -100,7 +99,7 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 	}
 
 	public ImmutableUiSessionStats(long startTime, long endTime,
-								   QualifiedUiSessionId sessionId, String name, UiSessionState state,
+								   String sessionId, String name, UiSessionState state,
 								   ImmutableCountStats commandStats         ,
 								   ImmutableCountStats commandResultStats   ,
 								   ImmutableCountStats eventStats           ,
@@ -134,7 +133,7 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 	}
 
 	@Override
-	public QualifiedUiSessionId getSessionId() {
+	public String getSessionId() {
 		return sessionId;
 	}
 

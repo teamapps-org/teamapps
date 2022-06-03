@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.session;
 
-import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.ux.resource.FileResource;
 import org.teamapps.ux.resource.Resource;
 import org.teamapps.ux.resource.ResourceWrapper;
@@ -37,12 +36,12 @@ public class SessionContextResourceManager {
 
 	private static final Map<Class<? extends Resource>, Boolean> IMPLEMENTS_EQUAL_BY_RESOURCE_CLASS = new ConcurrentHashMap<>();
 
-	private final QualifiedUiSessionId sessionId;
+	private final String sessionId;
 	private final AtomicInteger linkIdGenerator = new AtomicInteger();
 	private final Map<Integer, Resource> resourceByLinkId = new ConcurrentHashMap<>();
 	private final Map<Resource, String> resourceLinkByResource = new ConcurrentHashMap<>();
 
-	public SessionContextResourceManager(QualifiedUiSessionId sessionId) {
+	public SessionContextResourceManager(String sessionId) {
 		this.sessionId = sessionId;
 	}
 

@@ -98,15 +98,15 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 			this.wsSession = session;
 		}
 
-		private Optional<UiSession> getUiSession(QualifiedUiSessionId qualifiedUiSessionId) {
+		private Optional<UiSession> getUiSession(String uiSessionId) {
 			if (uiSession != null) {
 				return Optional.of(uiSession);
 			} else {
-				UiSession session = sessionManager.getUiSessionById(qualifiedUiSessionId);
+				UiSession session = sessionManager.getUiSessionById(uiSessionId);
 				if (session != null) {
 					this.uiSession = session;
 				} else {
-					LOGGER.warn("Could not find uiSession with id {}", qualifiedUiSessionId);
+					LOGGER.warn("Could not find uiSession with id {}", uiSessionId);
 				}
 				return Optional.ofNullable(session);
 			}
@@ -120,7 +120,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
 				AbstractClientMessage clientMessage = mapper.readValue(payload, AbstractClientMessage.class);
 
-				QualifiedUiSessionId qualifiedUiSessionId = new QualifiedUiSessionId(clientMessage.getSessionId());
+				String uiSessionId = clientMessage.getSessionId();
 				if (clientMessage instanceof INIT) {
 					ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
 					INIT init = (INIT) clientMessage;
@@ -128,7 +128,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 					init.getClientInfo().setUserAgentString(serverSideClientInfo.getUserAgentString());
 					init.getClientInfo().setPreferredLanguageIso(serverSideClientInfo.getPreferredLanguageIso());
 					sessionManager.initSession(
-							qualifiedUiSessionId,
+							uiSessionId,
 							init.getClientInfo(),
 							httpSession,
 							init.getMaxRequestedCommandId(),
@@ -136,28 +136,28 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 					);
 				} else if (clientMessage instanceof REINIT) {
 					REINIT reinit = (REINIT) clientMessage;
-					getUiSession(qualifiedUiSessionId).ifPresentOrElse(uiSession -> {
+					getUiSession(uiSessionId).ifPresentOrElse(uiSession -> {
 						uiSession.reinit(reinit.getLastReceivedCommandId(), reinit.getMaxRequestedCommandId(), new MessageSenderImpl());
 					}, () -> {
-						LOGGER.warn("Could not find teamAppsUiSession for REINIT: " + qualifiedUiSessionId);
+						LOGGER.warn("Could not find teamAppsUiSession for REINIT: " + uiSessionId);
 						send(new REINIT_NOK(UiSessionClosingReason.SESSION_NOT_FOUND), null, null);
 					});
 				} else if (clientMessage instanceof TERMINATE) {
-					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.close(UiSessionClosingReason.TERMINATED_BY_CLIENT));
+					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.close(UiSessionClosingReason.TERMINATED_BY_CLIENT));
 				} else if (clientMessage instanceof EVENT) {
 					EVENT eventMessage = (EVENT) clientMessage;
-					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleEvent(eventMessage.getId(), eventMessage.getUiEvent()));
+					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleEvent(eventMessage.getId(), eventMessage.getUiEvent()));
 				} else if (clientMessage instanceof QUERY) {
 					QUERY queryMessage = (QUERY) clientMessage;
-					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleQuery(queryMessage.getId(), queryMessage.getUiQuery()));
+					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleQuery(queryMessage.getId(), queryMessage.getUiQuery()));
 				} else if (clientMessage instanceof CMD_RESULT) {
 					CMD_RESULT cmdResult = (CMD_RESULT) clientMessage;
-					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult()));
+					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandResult(cmdResult.getId(), cmdResult.getCmdId(), cmdResult.getResult()));
 				} else if (clientMessage instanceof CMD_REQUEST) {
 					CMD_REQUEST cmdRequest = (CMD_REQUEST) clientMessage;
-					getUiSession(qualifiedUiSessionId).ifPresent(uiSession -> uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId()));
+					getUiSession(uiSessionId).ifPresent(uiSession -> uiSession.handleCommandRequest(cmdRequest.getMaxRequestedCommandId(), cmdRequest.getLastReceivedCommandId()));
 				} else if (clientMessage instanceof KEEPALIVE) {
-					getUiSession(qualifiedUiSessionId).ifPresent(UiSession::handleKeepAlive);
+					getUiSession(uiSessionId).ifPresent(UiSession::handleKeepAlive);
 				} else {
 					throw new TeamAppsCommunicationException("Unknown message type: " + clientMessage.getClass().getCanonicalName());
 				}

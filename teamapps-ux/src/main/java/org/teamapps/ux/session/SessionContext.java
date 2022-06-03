@@ -114,7 +114,7 @@ public class SessionContext {
 
 	private final UiSessionListener uiSessionListener = new UiSessionListener() {
 		@Override
-		public void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
+		public void onUiEvent(String sessionId, UiEvent event) {
 			runWithContext(() -> {
 				String uiComponentId = event.getComponentId();
 				if (uiComponentId != null) {
@@ -131,7 +131,7 @@ public class SessionContext {
 		}
 
 		@Override
-		public void onUiQuery(QualifiedUiSessionId sessionId, UiQuery query, Consumer<Object> resultCallback) {
+		public void onUiQuery(String sessionId, UiQuery query, Consumer<Object> resultCallback) {
 			runWithContext(() -> {
 				String uiComponentId = query.getComponentId();
 				ClientObject clientObject = getClientObject(uiComponentId);
@@ -147,7 +147,7 @@ public class SessionContext {
 		}
 
 		@Override
-		public void onStateChanged(QualifiedUiSessionId sessionId, UiSessionState state) {
+		public void onStateChanged(String sessionId, UiSessionState state) {
 			runWithContext(() -> {
 				boolean activityStateChanged = SessionContext.this.state.isActive() != state.isActive();
 				SessionContext.this.state = state;
@@ -663,7 +663,7 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
 	}
 
-	public QualifiedUiSessionId getSessionId() {
+	public String getSessionId() {
 		return uiSession.getSessionId();
 	}
 

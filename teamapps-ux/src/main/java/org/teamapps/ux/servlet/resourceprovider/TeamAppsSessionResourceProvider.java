@@ -19,7 +19,6 @@
  */
 package org.teamapps.ux.servlet.resourceprovider;
 
-import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.ux.resource.Resource;
 import org.teamapps.ux.session.SessionContext;
 
@@ -29,9 +28,9 @@ import static org.teamapps.ux.session.SessionContextResourceManager.RESOURCE_LIN
 
 public class TeamAppsSessionResourceProvider implements ResourceProvider {
 
-	private final Function<QualifiedUiSessionId, SessionContext> sessionContextLookup;
+	private final Function<String, SessionContext> sessionContextLookup;
 
-	public TeamAppsSessionResourceProvider(Function<QualifiedUiSessionId, SessionContext> sessionContextLookup) {
+	public TeamAppsSessionResourceProvider(Function<String, SessionContext> sessionContextLookup) {
 		this.sessionContextLookup = sessionContextLookup;
 	}
 
@@ -45,7 +44,8 @@ public class TeamAppsSessionResourceProvider implements ResourceProvider {
 				relativeResourcePath = relativeResourcePath.substring(1);
 			}
 			String[] parts = relativeResourcePath.split("/");
-			SessionContext sessionContext = sessionContextLookup.apply(new QualifiedUiSessionId(parts[0]));
+			String uiSessionId = parts[0];
+			SessionContext sessionContext = sessionContextLookup.apply(uiSessionId);
 			if (sessionContext == null) {
 				return null;
 			}
@@ -56,5 +56,5 @@ public class TeamAppsSessionResourceProvider implements ResourceProvider {
 		}
 		return null;
 	}
-	
+
 }

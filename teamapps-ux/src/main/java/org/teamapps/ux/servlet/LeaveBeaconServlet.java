@@ -26,7 +26,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.dto.UiSessionClosingReason;
-import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.TeamAppsSessionManager;
 import org.teamapps.uisession.UiSession;
 
@@ -43,9 +42,9 @@ public class LeaveBeaconServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String sessionId = IOUtils.toString(request.getReader());
-		LOGGER.info("Got leaving beacon for SessionId: " + sessionId);
-		UiSession uiSession = uiSessionManager.getUiSessionById(new QualifiedUiSessionId(sessionId));
+		String uiSessionId = IOUtils.toString(request.getReader());
+		LOGGER.info("Got leaving beacon for teamapps session id: " + uiSessionId);
+		UiSession uiSession = uiSessionManager.getUiSessionById(uiSessionId);
 		if (uiSession != null) {
 			uiSession.close(UiSessionClosingReason.TERMINATED_BY_CLIENT);
 		}
