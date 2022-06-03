@@ -69,7 +69,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	private final ObjectMapper objectMapper;
 	private final TeamAppsConfiguration config;
 
-	private final Map<QualifiedUiSessionId, SessionPair> sessionsById = new ConcurrentHashMap<>();
+	private final Map<String, SessionPair> sessionsById = new ConcurrentHashMap<>();
 	private final Deque<UiSessionStats> closedSessionsStatistics = Queues.synchronizedDeque(new ArrayDeque<>());
 
 	private final SequentialExecutorFactory sessionExecutorFactory;
@@ -130,12 +130,12 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		this.uxServerContext = uploadManager::getUploadedFile;
 	}
 
-	public UiSession getUiSessionById(QualifiedUiSessionId sessionId) {
+	public UiSession getUiSessionById(String sessionId) {
 		SessionPair sessionPair = sessionsById.get(sessionId);
 		return sessionPair != null ? sessionPair.getUiSession() : null;
 	}
 
-	public SessionContext getSessionContextById(QualifiedUiSessionId sessionId) {
+	public SessionContext getSessionContextById(String sessionId) {
 		SessionPair sessionPair = sessionsById.get(sessionId);
 		return sessionPair != null ? sessionPair.getSessionContext() : null;
 	}
@@ -179,7 +179,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 	}
 
 	public void initSession(
-			QualifiedUiSessionId sessionId,
+			String sessionId,
 			UiClientInfo clientInfo,
 			HttpSession httpSession,
 			int maxRequestedCommandId,
@@ -191,7 +191,7 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		UiSession uiSession = new UiSession(sessionId, System.currentTimeMillis(), config, objectMapper, messageSender);
 		uiSession.addSessionListener(new UiSessionListener() {
 			@Override
-			public void onStateChanged(QualifiedUiSessionId sessionId, UiSessionState state) {
+			public void onStateChanged(String sessionId, UiSessionState state) {
 				if (state == CLOSED) {
 					sessionsById.remove(uiSession.getSessionId());
 					closedSessionsStatistics.addLast(uiSession.getStatistics().immutableCopy());

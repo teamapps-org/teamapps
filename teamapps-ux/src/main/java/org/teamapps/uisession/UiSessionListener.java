@@ -26,13 +26,13 @@ import java.util.function.Consumer;
 
 public interface UiSessionListener {
 
-	default void onUiEvent(QualifiedUiSessionId sessionId, UiEvent event) {
+	default void onUiEvent(String sessionId, UiEvent event) {
 	}
 
-	default void onUiQuery(QualifiedUiSessionId sessionId, UiQuery query, Consumer<Object> resultCallback) {
+	default void onUiQuery(String sessionId, UiQuery query, Consumer<Object> resultCallback) {
 	}
 
-	default void onStateChanged(QualifiedUiSessionId sessionId, UiSessionState state) {
+	default void onStateChanged(String sessionId, UiSessionState state) {
 	}
 
 }

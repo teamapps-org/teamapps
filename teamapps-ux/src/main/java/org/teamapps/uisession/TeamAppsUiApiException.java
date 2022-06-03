@@ -21,10 +21,10 @@ package org.teamapps.uisession;
 
 public class TeamAppsUiApiException extends RuntimeException {
 
-	private final QualifiedUiSessionId sessionId;
+	private final String sessionId;
 	private final String api;
 
-	public TeamAppsUiApiException(QualifiedUiSessionId sessionId, String api) {
+	public TeamAppsUiApiException(String sessionId, String api) {
 		super("Incompatible API call: " + api + "; session" + sessionId.toString());
 		this.sessionId = sessionId;
 		this.api = api;
@@ -34,7 +34,7 @@ public class TeamAppsUiApiException extends RuntimeException {
 		return api;
 	}
 
-	public QualifiedUiSessionId getSessionId() {
+	public String getSessionId() {
 		return sessionId;
 	}
 }

@@ -24,7 +24,6 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import org.teamapps.dto.UiCommand;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiQuery;
-import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.uisession.UiSessionState;
 
 import java.util.ArrayDeque;
@@ -121,7 +120,7 @@ public class RunningUiSessionStats implements UiSessionStats {
 
 	private final long startTime;
 	private long endTime = -1;
-	private final QualifiedUiSessionId sessionId;
+	private final String sessionId;
 	private String name;
 	private UiSessionState state = UiSessionState.ACTIVE;
 
@@ -135,7 +134,7 @@ public class RunningUiSessionStats implements UiSessionStats {
 	private final RunningSumStats receivedDataStats = new RunningSumStats();
 
 
-	public RunningUiSessionStats(long startTime, QualifiedUiSessionId sessionId, String name) {
+	public RunningUiSessionStats(long startTime, String sessionId, String name) {
 		this.startTime = startTime;
 		this.sessionId = sessionId;
 		this.name = name;
@@ -152,7 +151,7 @@ public class RunningUiSessionStats implements UiSessionStats {
 	}
 
 	@Override
-	public QualifiedUiSessionId getSessionId() {
+	public String getSessionId() {
 		return sessionId;
 	}
 

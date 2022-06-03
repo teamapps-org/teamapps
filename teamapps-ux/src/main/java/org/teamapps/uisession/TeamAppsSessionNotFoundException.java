@@ -21,14 +21,14 @@ package org.teamapps.uisession;
 
 public class TeamAppsSessionNotFoundException extends RuntimeException {
 
-	private final QualifiedUiSessionId sessionId;
+	private final String sessionId;
 
-	public TeamAppsSessionNotFoundException(QualifiedUiSessionId sessionId) {
+	public TeamAppsSessionNotFoundException(String sessionId) {
 		super("Could not find TeamApps session: " + sessionId.toString());
 		this.sessionId = sessionId;
 	}
 
-	public QualifiedUiSessionId getSessionId() {
+	public String getSessionId() {
 		return sessionId;
 	}
 }
