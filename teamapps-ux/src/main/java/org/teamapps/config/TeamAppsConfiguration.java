@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -73,9 +73,9 @@ public class TeamAppsConfiguration {
 	/**
 	 * Before setting a session inactive (after uiSessionInactivityTimeoutMillis without any sign from the client), the server will attempt
 	 * to send a PING message to the client, in order to actively request a KEEPALIVE from it.
-	 *<p>
+	 * <p>
 	 * This specifies the amount of milliseconds before setting the client inactive that the server will send the PING.
-	 *<p>
+	 * <p>
 	 * By default, this is 10 seconds, so the server will wait (uiSessionInactivityTimeoutMillis - 10s) before sending the PING.
 	 */
 	private long uiSessionPreInactivityPingMillis = 10_000;
@@ -97,7 +97,14 @@ public class TeamAppsConfiguration {
 	 * TeamApps does currently not provide a HTTP keep-alive request mechanism, so you might want to set this to a high value.
 	 * <p>
 	 * NOTE that TeamApps will get independent of HTTP sessions. So this configuration will be obsolete very soon.
+	 *
+	 * @deprecated TeamApps does not care about HTTP sessions anymore. Please set the http session timeout in a different way.
+	 * This will be removed in some future version.
+	 * The cleanest way to set {@link jakarta.servlet.http.HttpSession#setMaxInactiveInterval(int)} would be by registering a
+	 * {@link jakarta.servlet.http.HttpSessionListener}.
+	 * Also note that the {@link jakarta.servlet.http.HttpSession} is still available via {@link SessionContext#getHttpSession()}.
 	 */
+	@Deprecated
 	private int httpSessionTimeoutSeconds = 24 * 3600;
 
 	/**
@@ -214,14 +221,23 @@ public class TeamAppsConfiguration {
 
 	/**
 	 * @see #httpSessionTimeoutSeconds
+	 * @deprecated TeamApps does not care about HTTP sessions anymore. Please set the http session timeout in a different way.
+	 * This will be removed in some future version.
 	 */
+	@Deprecated
 	public int getHttpSessionTimeoutSeconds() {
 		return httpSessionTimeoutSeconds;
 	}
 
 	/**
 	 * @see #httpSessionTimeoutSeconds
+	 * @deprecated TeamApps does not care about HTTP sessions anymore. Please set the http session timeout in a different way.
+	 * This will be removed in some future version.
+	 * The cleanest way to set {@link jakarta.servlet.http.HttpSession#setMaxInactiveInterval(int)} would be by registering a
+	 * {@link jakarta.servlet.http.HttpSessionListener}.
+	 * Also note that the {@link jakarta.servlet.http.HttpSession} is still available via {@link SessionContext#getHttpSession()}.
 	 */
+	@Deprecated
 	public void setHttpSessionTimeoutSeconds(int httpSessionTimeoutSeconds) {
 		this.httpSessionTimeoutSeconds = httpSessionTimeoutSeconds;
 	}

@@ -23,9 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.core.TeamAppsCore;
 import org.teamapps.icons.IconProvider;
-import org.teamapps.server.SessionResourceProvider;
-import org.teamapps.ux.resource.IconResourceProvider;
-import org.teamapps.ux.resource.ResourceProviderServlet;
+import org.teamapps.ux.servlet.resourceprovider.TeamAppsSessionResourceProvider;
+import org.teamapps.ux.servlet.resourceprovider.IconResourceProvider;
+import org.teamapps.ux.servlet.resourceprovider.ResourceProviderServlet;
 import org.teamapps.ux.session.SessionContextResourceManager;
 
 import jakarta.servlet.*;
@@ -69,7 +69,7 @@ public class TeamAppsServletContextListener implements ServletContextListener {
 		Dynamic iconServletRegistration = context.addServlet("teamapps-icons", new ResourceProviderServlet(new IconResourceProvider(new IconProvider(teamAppsCore.getIconLibraryRegistry()))));
 		iconServletRegistration.addMapping("/icons/*");
 
-		Dynamic filesServletRegistration = context.addServlet("teamapps-files", new ResourceProviderServlet(new SessionResourceProvider(teamAppsCore.getSessionManager()::getSessionContextById)));
+		Dynamic filesServletRegistration = context.addServlet("teamapps-files", new ResourceProviderServlet(new TeamAppsSessionResourceProvider(teamAppsCore.getSessionManager()::getSessionContextById)));
 		filesServletRegistration.addMapping(SessionContextResourceManager.BASE_PATH + "*");
 
 		context.addListener(new ServletRequestListener());

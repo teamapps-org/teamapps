@@ -17,12 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.resource;
+package org.teamapps.ux.servlet.resourceprovider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.icons.IconResource;
 import org.teamapps.icons.IconProvider;
+import org.teamapps.ux.resource.Resource;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

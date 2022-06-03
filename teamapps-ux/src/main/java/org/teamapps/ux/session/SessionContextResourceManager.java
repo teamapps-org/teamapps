@@ -81,7 +81,7 @@ public class SessionContextResourceManager {
 	}
 
 	private String createLink(int id) {
-		return BASE_PATH + sessionId.getUiSessionId() + "/" + RESOURCE_LINK_ID_PREFIX + id;
+		return BASE_PATH + sessionId.toString() + "/" + RESOURCE_LINK_ID_PREFIX + id;
 	}
 
 	private static class UniqueIdentifierResourceWrapper extends ResourceWrapper {

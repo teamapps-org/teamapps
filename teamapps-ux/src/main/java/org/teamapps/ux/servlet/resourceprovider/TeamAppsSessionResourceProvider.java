@@ -17,32 +17,22 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.server;
+package org.teamapps.ux.servlet.resourceprovider;
 
 import org.teamapps.uisession.QualifiedUiSessionId;
 import org.teamapps.ux.resource.Resource;
-import org.teamapps.ux.resource.ResourceProvider;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.function.Function;
 
 import static org.teamapps.ux.session.SessionContextResourceManager.RESOURCE_LINK_ID_PREFIX;
 
-public class SessionResourceProvider implements ResourceProvider {
+public class TeamAppsSessionResourceProvider implements ResourceProvider {
 
-	private final Function<QualifiedUiSessionId, SessionContext> sessionContexts;
+	private final Function<QualifiedUiSessionId, SessionContext> sessionContextLookup;
 
-	public SessionResourceProvider(Function<QualifiedUiSessionId, SessionContext> sessionContexts) {
-		this.sessionContexts = sessionContexts;
-	}
-
-	private SessionContext getSessionContext(String resource, String httpSessionId) {
-		if (resource == null) {
-			return null;
-		}
-		String[] parts = resource.split("/");
-		QualifiedUiSessionId qualifiedUiSessionId = new QualifiedUiSessionId(httpSessionId, parts[0]);
-		return sessionContexts.apply(qualifiedUiSessionId);
+	public TeamAppsSessionResourceProvider(Function<QualifiedUiSessionId, SessionContext> sessionContextLookup) {
+		this.sessionContextLookup = sessionContextLookup;
 	}
 
 	@Override
@@ -55,8 +45,7 @@ public class SessionResourceProvider implements ResourceProvider {
 				relativeResourcePath = relativeResourcePath.substring(1);
 			}
 			String[] parts = relativeResourcePath.split("/");
-			QualifiedUiSessionId qualifiedUiSessionId = new QualifiedUiSessionId(httpSessionId, parts[0]);
-			SessionContext sessionContext = sessionContexts.apply(qualifiedUiSessionId);
+			SessionContext sessionContext = sessionContextLookup.apply(new QualifiedUiSessionId(parts[0]));
 			if (sessionContext == null) {
 				return null;
 			}

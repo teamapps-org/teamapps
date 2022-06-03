@@ -120,7 +120,7 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 				HttpSession httpSession = (HttpSession) wsSession.getUserProperties().get(WebSocketServerEndpointConfigurator.HTTP_SESSION_PROPERTY_NAME);
 				AbstractClientMessage clientMessage = mapper.readValue(payload, AbstractClientMessage.class);
 
-				QualifiedUiSessionId qualifiedUiSessionId = new QualifiedUiSessionId(httpSession.getId(), clientMessage.getSessionId());
+				QualifiedUiSessionId qualifiedUiSessionId = new QualifiedUiSessionId(clientMessage.getSessionId());
 				if (clientMessage instanceof INIT) {
 					ServerSideClientInfo serverSideClientInfo = createServerSideClientInfo(wsSession);
 					INIT init = (INIT) clientMessage;

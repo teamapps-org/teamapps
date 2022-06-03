@@ -30,7 +30,7 @@ public class SessionContextResourceManagerTest {
 
 	@Test
 	public void shouldCache() {
-		SessionContextResourceManager manager = new SessionContextResourceManager(new QualifiedUiSessionId("http1", "ui1"));
+		SessionContextResourceManager manager = new SessionContextResourceManager(new QualifiedUiSessionId("ui1"));
 
 		String resourceLink1 = manager.createResourceLink(new FileResource(new File("asdf.b")), null);
 		String resourceLink2 = manager.createResourceLink(new FileResource(new File("asdf.b")), null);
@@ -42,7 +42,7 @@ public class SessionContextResourceManagerTest {
 
 	@Test
 	public void shouldCacheUsingUniqueIdentifier() {
-		SessionContextResourceManager manager = new SessionContextResourceManager(new QualifiedUiSessionId("http1", "ui1"));
+		SessionContextResourceManager manager = new SessionContextResourceManager(new QualifiedUiSessionId("ui1"));
 
 		String resourceLink1 = manager.createResourceLink(new FileResource(new File("asdf.b")), "uid1");
 		String resourceLink2 = manager.createResourceLink(new FileResource(new File("999.b")), "uid1");
