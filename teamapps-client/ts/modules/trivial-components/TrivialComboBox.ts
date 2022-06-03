@@ -184,7 +184,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		this.$editor.addEventListener("blur", (e: FocusEvent) => {
 			if (this.blurCausedByClickInsideComponent) {
 				this.$editor.focus();
-				this.blurCausedByClickInsideComponent = false;
+				// Don't just unset the blurCausedByClickInsideComponent here! See the comment with hashtag #regainFocus.
 			} else {
 				this.setFocused(false);
 				if (this.isEditorVisible) {
@@ -266,8 +266,27 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		[this.$comboBox, this.$dropDown].forEach(element => {
 			element.addEventListener("mousedown", () => {
 				this.blurCausedByClickInsideComponent = true;
-				setTimeout(() => this.blurCausedByClickInsideComponent = false);
+
+				// #regainFocus
+				// Why don't we just do a "setTimeout(() => this.blurCausedByClickInsideComponent = false);" and check for
+				// the flag in the blur event handler instead of this overly complex handling of "mouseup" and "mousedown" events?
+				// That's because in Firefox, doing $editor.focus() has no effect as long as the mouse is pressed. The
+				// document.activeElement will be document.body until the mouse is released.
+				// So when the user presses somewhere inside the tag combobox (except the $editor), the focus will be lost (blur event)
+				// and re-focusing will have no effect. We HAVE TO wait for the mouseup or mouseout event in order to re-focus.
 			}, true);
+			element.addEventListener("mouseup", () => {
+				if (this.blurCausedByClickInsideComponent) {
+					this.$editor.focus();
+					this.blurCausedByClickInsideComponent = false;
+				}
+			});
+			element.addEventListener("mouseout", () => {
+				if (this.blurCausedByClickInsideComponent) {
+					this.$editor.focus();
+					this.blurCausedByClickInsideComponent = false;
+				}
+			});
 		});
 
 		this.setDropDownComponent(dropDownComponent);
