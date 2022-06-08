@@ -637,6 +637,7 @@ public class SessionContext {
 		}
 
 		window.setContent(verticalLayout);
+		window.enableAutoHeight();
 		return window;
 	}
 
