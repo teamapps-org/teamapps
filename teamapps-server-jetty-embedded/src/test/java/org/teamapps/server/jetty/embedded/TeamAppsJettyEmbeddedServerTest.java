@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,6 @@
  */
 package org.teamapps.server.jetty.embedded;
 
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.ux.component.field.MultiLineTextField;
 import org.teamapps.ux.component.rootpanel.RootPanel;
@@ -40,26 +38,6 @@ public class TeamAppsJettyEmbeddedServerTest {
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, 8082);
-
-		jettyServer.addServletContextListener(new ServletContextListener() {
-			@Override
-			public void contextInitialized(ServletContextEvent sce) {
-
-			}
-
-			@Override
-			public void contextDestroyed(ServletContextEvent sce) {
-
-			}
-		});
-
-		// Test custom configurations:
-		// jettyServer.configureHttpsUsingP12File(8443, new File("/path/to/cert.p12"), "changeit");
-//		jettyServer.getWebapp().getSessionHandler().setSecureRequestOnly(true);
-//		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setHttpOnly(true);
-//		jettyServer.getWebapp().getSessionHandler().getSessionCookieConfig().setComment("__SAME_SITE_STRICT__");
-
-		// start server
 		jettyServer.start();
 
 	}

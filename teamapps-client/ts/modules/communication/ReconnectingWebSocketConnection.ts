@@ -103,10 +103,6 @@ export class ReconnectingCompressingWebSocketConnection {
 		this.closed = true;
 	}
 
-	public close() {
-		this.stopReconnecting();
-		this.connection.close();
-	}
 
 	private static log(message: string) {
 		console.log("Connection: " + message);

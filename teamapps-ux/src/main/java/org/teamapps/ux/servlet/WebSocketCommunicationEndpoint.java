@@ -33,12 +33,19 @@ import org.teamapps.uisession.*;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class WebSocketCommunicationEndpoint extends Endpoint {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketCommunicationEndpoint.class);
 
+	/**
+	 * This is needed due to https://github.com/eclipse/jetty.project/issues/8151.
+	 * TODO: remove once the ticket is fixed.
+	 */
+	private final Executor jettyWorkaroundCloseExecutor = Executors.newFixedThreadPool(5);
 	private final ObjectMapper mapper = TeamAppsObjectMapperFactory.create();
 
 	private final AtomicLong totalSendCount = new AtomicLong();
@@ -225,7 +232,11 @@ public class WebSocketCommunicationEndpoint extends Endpoint {
 
 			@Override
 			public void close(UiSessionClosingReason closingReason, String message) {
-				send(new SESSION_CLOSED(closingReason).setMessage(message), WebSocketHandler.this::close, (t) -> WebSocketHandler.this.close());
+				send(
+						new SESSION_CLOSED(closingReason).setMessage(message),
+						() -> jettyWorkaroundCloseExecutor.execute(WebSocketHandler.this::close),
+						(t) -> jettyWorkaroundCloseExecutor.execute(() -> WebSocketHandler.this.close())
+				);
 			}
 
 			@Override
