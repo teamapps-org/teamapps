@@ -58,7 +58,9 @@ export function createComboBoxPopper($reference: Element, $dropdown: HTMLElement
 				enabled: true,
 				phase: 'afterWrite',
 				fn: ({state}) => {
-					$dropdown.style.width = state.elements.reference.getBoundingClientRect().width + "px";
+					const comboBoxWidth = state.elements.reference.getBoundingClientRect().width;
+					$dropdown.style.width = comboBoxWidth + "px";
+					$dropdown.classList.toggle("broader-than-combobox", $dropdown.clientWidth > comboBoxWidth)
 				}
 			}, {
 				name: "observeReferenceModifier",

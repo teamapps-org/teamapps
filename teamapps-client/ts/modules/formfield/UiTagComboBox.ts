@@ -85,7 +85,9 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 			},
 			twoStepDeletion: this._config.twoStepDeletion,
 			preselectFirstQueryResult: config.highlightFirstResultEntry,
-			placeholderText: config.placeholderText
+			placeholderText: config.placeholderText,
+			dropDownMaxHeight: config.dropDownMaxHeight,
+			dropDownMinWidth: config.dropDownMinWidth
 		}, new TreeBoxDropdown({
 			queryFunction: (queryString: string) => {
 				this.onTextInput.fire({enteredString: queryString}); // TODO this is definitely the wrong place for this!!
