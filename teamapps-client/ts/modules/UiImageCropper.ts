@@ -159,7 +159,10 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 		if (this.imageNaturalWidth != null) {
 			this.selection = createUiImageCropperSelectionConfig(0, 0, 0, 0);
 			let naturalImageAspectRatio = this.imageNaturalWidth / this.imageNaturalHeight;
-			if (aspectRatio / naturalImageAspectRatio > 1) {
+			if (aspectRatio === 0) {
+				this.selection.width = 0.8 * this.imageNaturalWidth;
+				this.selection.height = 0.8 * this.imageNaturalHeight;
+			} else if (aspectRatio / naturalImageAspectRatio > 1) {
 				this.selection.width = 0.8 * this.imageNaturalWidth;
 				this.selection.height = this.selection.width / aspectRatio;
 			} else {
@@ -199,7 +202,7 @@ export class UiImageCropper extends AbstractUiComponent<UiImageCropperConfig> im
 		};
 	}
 
-	private boundSelection(selection: Selection, fixedAt?: Direction) {
+	private boundSelection(selection: Selection, fixedAt?: Direction): Selection {
 		return boundSelection(selection, {
 			width: this.imageNaturalWidth,
 			height: this.imageNaturalHeight

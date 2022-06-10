@@ -460,7 +460,7 @@ export function boundSelection(
 		if (newSelection.height > bounds.height) {
 			newSelection.height = bounds.height;
 		}
-		if (aspectRatio > 0) {
+		if (aspectRatio != null && aspectRatio > 0) {
 			if (newSelection.width / newSelection.height > aspectRatio) {
 				newSelection.width = newSelection.height * aspectRatio;
 			} else {
@@ -496,7 +496,7 @@ export function boundSelection(
 		newSelection.width = Math.min(newSelection.width, maxWidth);
 		newSelection.height = Math.min(newSelection.height, maxHeight);
 
-		if (aspectRatio != null) {
+		if (aspectRatio != null && aspectRatio > 0) {
 			if (aspectRatio > newSelection.width / newSelection.height) {
 				newSelection.height = newSelection.width / aspectRatio;
 			} else if (aspectRatio < newSelection.width / newSelection.height) {
