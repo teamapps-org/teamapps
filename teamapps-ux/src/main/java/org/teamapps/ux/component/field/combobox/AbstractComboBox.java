@@ -69,6 +69,8 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	private boolean animate = true;
 	private boolean showExpanders = false;
 	private String emptyText;
+	private Integer dropDownMinWidth;
+	private Integer dropDownMaxHeight;
 
 	/**
 	 * If true, already selected entries will be filtered out from model query results.
@@ -110,6 +112,8 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		ui.setAnimate(animate);
 		ui.setShowExpanders(showExpanders);
 		ui.setPlaceholderText(emptyText);
+		ui.setDropDownMinWidth(dropDownMinWidth);
+		ui.setDropDownMaxHeight(dropDownMaxHeight);
 	}
 
 	@Override
@@ -435,6 +439,24 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 
 	public void setDistinctModelResultFiltering(boolean distinctModelResultFiltering) {
 		this.distinctModelResultFiltering = distinctModelResultFiltering;
+	}
+
+	public Integer getDropDownMinWidth() {
+		return dropDownMinWidth;
+	}
+
+	public void setDropDownMinWidth(Integer dropDownMinWidth) {
+		this.dropDownMinWidth = dropDownMinWidth;
+		reRenderIfRendered();
+	}
+
+	public Integer getDropDownMaxHeight() {
+		return dropDownMaxHeight;
+	}
+
+	public void setDropDownMaxHeight(Integer dropDownMaxHeight) {
+		this.dropDownMaxHeight = dropDownMaxHeight;
+		reRenderIfRendered();
 	}
 
 	@Override

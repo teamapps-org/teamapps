@@ -30,6 +30,8 @@ class UiComboBox extends UiField implements UiTextInputHandlingField {
 	boolean animate;
 	boolean showExpanders = true;
 	String placeholderText;
+	Integer dropDownMinWidth;
+	Integer dropDownMaxHeight;
 
 	query lazyChildren(int parentId) returns List<UiComboBoxTreeRecord>;
 	query retrieveDropdownEntries(String queryString) returns List<UiComboBoxTreeRecord>;

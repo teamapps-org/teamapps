@@ -77,7 +77,9 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 				}
 			},
 			preselectFirstQueryResult: config.highlightFirstResultEntry,
-			placeholderText: config.placeholderText
+			placeholderText: config.placeholderText,
+			dropDownMaxHeight: config.dropDownMaxHeight,
+			dropDownMinWidth: config.dropDownMinWidth
 		}, new TreeBoxDropdown({
 			queryFunction: (queryString: string) => {
 				return config.retrieveDropdownEntries({queryString})

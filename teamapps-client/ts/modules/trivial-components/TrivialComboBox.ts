@@ -102,7 +102,10 @@ export interface TrivialComboBoxConfig<E> {
 	/**
 	 * Text displayed when nothing has been selected/typed.
 	 */
-	placeholderText?: string
+	placeholderText?: string,
+
+	dropDownMinWidth? : number,
+	dropDownMaxHeight? : number
 }
 
 export class TrivialComboBox<E> implements TrivialComponent {
@@ -169,6 +172,8 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		});
 		this.$trigger = this.$comboBox.querySelector(':scope .tr-trigger');
 		this.$dropDown = parseHtml('<div class="tr-dropdown"></div>');
+		this.$dropDown.style.minWidth = this.config.dropDownMinWidth != null ? (this.config.dropDownMinWidth + "px") : null;
+		this.$dropDown.style.maxHeight = this.config.dropDownMaxHeight != null ? (this.config.dropDownMaxHeight + "px") : null
 		this.$dropDown.addEventListener("scroll", e => {
 			e.stopPropagation();
 			e.preventDefault();
