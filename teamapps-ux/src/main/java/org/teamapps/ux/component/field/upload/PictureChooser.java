@@ -84,7 +84,7 @@ public class PictureChooser extends AbstractField<Resource> {
 		horizontalLayout.addComponentAutoSize(cancelButton);
 		horizontalLayout.addComponentAutoSize(rotateButton);
 		horizontalLayout.addComponentAutoSize(okButton);
-		horizontalLayout.setJustifyContent(CssJustifyContent.FLEX_END);
+		horizontalLayout.setJustifyContent(CssJustifyContent.END);
 		horizontalLayout.setCssStyle("padding", "5px");
 		verticalLayout.addComponentAutoSize(horizontalLayout);
 		imageCropperWindow = new Window(MaterialIcon.IMAGE, getSessionContext().getLocalized(TeamAppsDictionary.CROP_IMAGE.getKey()), 700, 500, verticalLayout);

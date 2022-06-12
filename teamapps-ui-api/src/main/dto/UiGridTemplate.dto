@@ -61,6 +61,8 @@ class UiBadgeElement extends UiTextElement {
 class UiFloatingElement extends AbstractUiTemplateElement {
 	required List<AbstractUiTemplateElement> elements;
 	boolean wrap;
+    UiCssAlignItems alignItems;
+    UiCssJustifyContent justifyContent;
 }
 
 class UiImageElement extends AbstractUiTemplateElement {

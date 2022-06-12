@@ -19,12 +19,12 @@
  */
 
 enum UiProgressStatus {
-	NOT_YET_STARTED,
-	RUNNING,
-	CANCELLATION_REQUESTED,
-	CANCELED,
-	COMPLETE,
-	FAILED
+	NOT_YET_STARTED = "not-yet-started",
+	RUNNING = "running",
+	CANCELLATION_REQUESTED = "cancellation-requested",
+	CANCELED = "canceled",
+	COMPLETE = "complete",
+	FAILED = "failed"
 }
 
 class UiProgressDisplay extends UiComponent {

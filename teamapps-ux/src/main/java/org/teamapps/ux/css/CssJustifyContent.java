@@ -23,7 +23,7 @@ import org.teamapps.dto.UiCssJustifyContent;
 
 public enum CssJustifyContent {
 
-	FLEX_START, FLEX_END, CENTER, SPACE_BETWEEN, SPACE_AROUND, SPACE_EVENLY, INITIAL, INHERIT;
+	START, END, CENTER, SPACE_BETWEEN, SPACE_AROUND, SPACE_EVENLY, INITIAL, INHERIT;
 
 	public UiCssJustifyContent toUiCssJustifyContent() {
 		return UiCssJustifyContent.valueOf(this.name());

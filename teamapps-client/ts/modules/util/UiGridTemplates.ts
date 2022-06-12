@@ -70,8 +70,10 @@ function createFloatingElementRenderer(element: UiFloatingElementConfig, additio
 	const elementRenderers = element.elements.map(subElement => createElementRenderer(subElement));
 	const wrapCss = `flex-wrap: ${element.wrap ? 'wrap' : 'nowrap'};`;
 	const backgroundColorCss = element.backgroundColor ? (`background-color: ${(element.backgroundColor ?? '')};`) : '';
+	const alignItemsCss = `align-items: ${element.alignItems ?? 'flex-start'};`;
+	const justifyContentCss = `justify-content: ${element.justifyContent ?? 'start'};`;
 	return (data: any) => {
-		return `<div class='grid-template-element UiFloatingElement' style="${wrapCss} ${backgroundColorCss} ${additionalCss}">${elementRenderers.map(renderer => renderer(data)).join('')}</div>`;
+		return `<div class='grid-template-element UiFloatingElement' style="${wrapCss} ${backgroundColorCss} ${alignItemsCss} ${justifyContentCss} ${additionalCss}">${elementRenderers.map(renderer => renderer(data)).join('')}</div>`;
 	};
 }
 

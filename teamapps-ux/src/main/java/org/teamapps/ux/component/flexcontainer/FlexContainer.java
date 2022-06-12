@@ -37,7 +37,7 @@ public class FlexContainer extends AbstractComponent {
 	private List<Component> components = new ArrayList<>();
 	private CssFlexDirection flexDirection = CssFlexDirection.ROW;
 	private CssAlignItems alignItems = CssAlignItems.STRETCH;
-	private CssJustifyContent justifyContent = CssJustifyContent.FLEX_START;
+	private CssJustifyContent justifyContent = CssJustifyContent.START;
 
 	@Override
 	public UiFlexContainer createUiComponent() {
