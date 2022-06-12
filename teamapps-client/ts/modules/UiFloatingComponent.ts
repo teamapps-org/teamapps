@@ -81,7 +81,7 @@ export class UiFloatingComponent extends AbstractUiComponent<UiFloatingComponent
 
 	private updateFloatingPosition() {
 		removeClassesByFunction(this.$expanderHandle.classList, className => className.startsWith("position-"));
-		this.$expanderHandle.classList.add("position-" + UiFloatingComponentPosition[this._config.position].toLowerCase().replace('_', '-'));
+		this.$expanderHandle.classList.add("position-" + this._config.position);
 
 		let containerWidth = this.containerComponent.getMainElement().offsetWidth;
 		let containerHeight = this.containerComponent.getMainElement().offsetHeight;

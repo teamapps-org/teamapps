@@ -36,15 +36,11 @@ export class UiFlexContainer extends AbstractUiComponent<UiFlexContainerConfig> 
 	constructor(config: UiFlexContainerConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiFlexContainer"></div>`);
-		this.$main.style.flexDirection = this.convertToCssValueString(UiCssFlexDirection[config.flexDirection]);
-		this.$main.style.alignItems = this.convertToCssValueString(UiCssAlignItems[config.alignItems]);
-		this.$main.style.justifyContent = this.convertToCssValueString(UiCssJustifyContent[config.justifyContent]);
+		this.$main.style.flexDirection = config.flexDirection;
+		this.$main.style.alignItems = config.alignItems;
+		this.$main.style.justifyContent = config.justifyContent;
 
 		config.components.forEach(c => this.addComponent(c as UiComponent));
-	}
-
-	private convertToCssValueString(enumValueName: string) {
-		return enumValueName.toLowerCase().replace("_", "-");
 	}
 
 	doGetMainElement(): HTMLElement {

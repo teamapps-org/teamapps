@@ -87,7 +87,7 @@ export class UiProgressDisplay extends AbstractUiComponent<UiProgressDisplayConf
 		this.$main.classList.toggle("unknown-progress", config.progress < 0);
 
 		removeClassesByFunction(this.$main.classList, className => className.startsWith("status-"));
-		let statusClass = `status-${UiProgressStatus[config.status].toLowerCase().replace(/_/g, '-')}`;
+		let statusClass = `status-${config.status}`;
 		this.$main.classList.add(statusClass);
 
 		this.$main.classList.toggle(`cancelable`, config.cancelable);

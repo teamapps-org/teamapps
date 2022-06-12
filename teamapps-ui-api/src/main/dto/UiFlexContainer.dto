@@ -22,40 +22,40 @@ class UiFlexContainer extends UiComponent {
 
 	UiCssFlexDirection flexDirection = UiCssFlexDirection.ROW;
 	UiCssAlignItems alignItems = UiCssAlignItems.STRETCH;
-	UiCssJustifyContent justifyContent = UiCssJustifyContent.FLEX_START;
+	UiCssJustifyContent justifyContent = UiCssJustifyContent.START;
 
 	command addComponent(UiComponent* component);
 	command removeComponent(UiComponent* component);
 }
 
 enum UiCssFlexDirection {
-	ROW,
-    ROW_REVERSE,
-    COLUMN,
-    COLUMN_REVERSE,
-    INITIAL,
-    INHERIT
+	ROW = "row",
+    ROW_REVERSE = "row-reverse",
+    COLUMN = "column",
+    COLUMN_REVERSE = "column-reverse",
+    INITIAL = "initial",
+    INHERIT = "inherit"
 }
 
 enum UiCssAlignItems {
-	STRETCH,
-    CENTER,
-    FLEX_START,
-    FLEX_END,
-    BASELINE,
-    INITIAL,
-    INHERIT
+	STRETCH = "stretch",
+    CENTER = "center",
+    FLEX_START = "flex-start",
+    FLEX_END = "flex-end",
+    BASELINE = "baseline",
+    INITIAL = "initial",
+    INHERIT = "inherit"
 }
 
 enum UiCssJustifyContent {
-	FLEX_START,
-	FLEX_END,
-	CENTER,
-	SPACE_BETWEEN,
-	SPACE_AROUND,
-	SPACE_EVENLY,
-	INITIAL,
-	INHERIT
+	START = "flex-start",
+	END = "flex-end",
+	CENTER = "center",
+	SPACE_BETWEEN = "space-between",
+	SPACE_AROUND = "space-around",
+	SPACE_EVENLY = "space-evenly",
+	INITIAL = "initial",
+	INHERIT = "inherit"
 }
 
 	

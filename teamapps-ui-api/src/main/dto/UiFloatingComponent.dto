@@ -46,5 +46,8 @@ class UiFloatingComponent extends UiComponent {
 }
 
 enum UiFloatingComponentPosition {
-	TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+	TOP_LEFT = "top-left",
+	TOP_RIGHT = "top-right",
+	BOTTOM_LEFT = "bottom-left",
+	BOTTOM_RIGHT = "bottom-right"
 }
