@@ -63,7 +63,12 @@ public class LogicalForm<RECORD> {
 
 	public void applyRecordValuesToFields(RECORD record) {
 		Map<String, Object> values = propertyProvider.getValues(record, fieldsByPropertyName.keySet());
-		values.forEach((propertyNames, value) -> ((AbstractField) fieldsByPropertyName.get(propertyNames)).setValue(value));
+		values.forEach((propertyNames, value) -> {
+			AbstractField<?> field = fieldsByPropertyName.get(propertyNames);
+			if (field != null) {
+				((AbstractField) field).setValue(value);
+			}
+		});
 	}
 
 	public void applyFieldValuesToRecord(RECORD record) {
