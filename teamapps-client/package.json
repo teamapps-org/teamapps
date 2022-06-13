@@ -1,6 +1,6 @@
 {
   "name": "teamapps-client",
-  "version": "0.9.153-SNAPSHOT",
+  "version": "0.9.154-SNAPSHOT",
   "description": "teamapps",
   "author": "TeamApps.org",
   "main": "dist/js/main.js",
@@ -39,7 +39,6 @@
     "@types/nouislider": "^9.0.4",
     "@types/slick-carousel": "^1.6.32",
     "@types/slickgrid": "^2.1.31",
-    "@types/socket.io-client": "^1.4.32",
     "@types/wnumb": "^1.0.28",
     "@types/youtube": "^0.0.38",
     "autoprefixer": "^9.6.1",
@@ -93,7 +92,7 @@
     "@types/maplibre-gl": "^1.13.0",
     "animate.css": "^4.1.0",
     "autolinker": "^3.11.1",
-    "axios": "^0.21.1",
+    "axios": "^0.27.2",
     "bootstrap": "^3.4.1",
     "canvas-gauges": "^2.1.5",
     "color-rgba": "^2.1.1",
@@ -118,7 +117,7 @@
     "maplibre-gl": "^1.13.0-rc.4",
     "md5": "^2.2.1",
     "mediaelement": "^4.2.16",
-    "mediasoup-client": "^3.3.17",
+    "mediasoup-client": "^3.6.28",
     "minimatch": "^3.0.4",
     "moment": "^2.21.0",
     "moment-timezone": "^0.5.26",
@@ -132,7 +131,7 @@
     "shaka-player": "^3.1.0",
     "slick-carousel": "^1.8.1",
     "slickgrid": "^2.4.44",
-    "socket.io-client": "^2.3.0",
+    "socket.io-client": "^4.5.1",
     "tinymce": "^5.10.0",
     "tinymce-i18n": "^18.12.25",
     "ts-jest": "^26.5.4",
@@ -144,8 +143,8 @@
   },
   "comments": {
     "axios": "mediasoup v3",
-    "mediasoup": "mediasoup v3",
-    "mediasoup-client": "mediasoup v3"
+    "mediasoup-client": "mediasoup v3",
+    "socket.io-client": "mediasoup v3"
   },
   "engines": {
     "node": ">= 7.0.0",

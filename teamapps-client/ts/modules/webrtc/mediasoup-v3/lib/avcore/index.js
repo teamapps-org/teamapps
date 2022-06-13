@@ -1,20 +1,640 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
- * Copyright (C) 2014 - 2022 TeamApps.org
- * ---
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =========================LICENSE_END==================================
- */
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t(require("socket.io-client"),require("axios")):"function"==typeof define&&define.amd?define(["socket.io-client","axios"],t):"object"==typeof exports?exports.avcore=t(require("socket.io-client"),require("axios")):e.avcore=t(e.io,e.axios)}(this,(function(e,t){return function(e){var t={};function r(i){if(t[i])return t[i].exports;var n=t[i]={i:i,l:!1,exports:{}};return e[i].call(n.exports,n,n.exports,r),n.l=!0,n.exports}return r.m=e,r.c=t,r.d=function(e,t,i){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:i})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var i=Object.create(null);if(r.r(i),Object.defineProperty(i,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var n in e)r.d(i,n,function(t){return e[t]}.bind(null,n));return i},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=6)}([function(e,t,r){"use strict";var i;r.d(t,"a",(function(){return i})),r.d(t,"k",(function(){return n})),r.d(t,"j",(function(){return o})),r.d(t,"d",(function(){return s})),r.d(t,"l",(function(){return u})),r.d(t,"e",(function(){return E})),r.d(t,"i",(function(){return R})),r.d(t,"h",(function(){return d})),r.d(t,"c",(function(){return c})),r.d(t,"b",(function(){return S})),r.d(t,"f",(function(){return T})),r.d(t,"g",(function(){return a})),function(e){e.GET_SERVER_CONFIGS="getServerConfigs",e.CREATE_TRANSPORT="createTransport",e.CONNECT_TRANSPORT="connectTransport",e.CLOSE_TRANSPORT="closeTransport",e.PRODUCE="produce",e.CONSUME="consume",e.RESUME_CONSUMER="resumeConsumer",e.PAUSE_CONSUMER="pauseConsumer",e.CLOSE_CONSUMER="closeConsumer",e.RESUME_PRODUCER="resumeProducer",e.PAUSE_PRODUCER="pauseProducer",e.CLOSE_PRODUCER="closeProducer",e.FILE_STREAMING="fileStreaming",e.LIVE_STREAMING="liveStreaming",e.LIVE_TO_HLS="liveToHls",e.STOP_FILE_STREAMING="stopFileStreaming",e.START_RECORDING="startRecording",e.STOP_RECORDING="stopRecording",e.CREATE_PIPE_TRANSPORT="createPipeTransport",e.CONNECT_PIPE_TRANSPORT="connectPipeTransport",e.SET_PREFERRED_LAYERS="setPreferredLayers",e.SET_MAX_INCOMING_BITRATE="setMaxIncomingBitrate",e.PRODUCERS_STATS="producersStats",e.CONSUMERS_STATS="consumersStats",e.TRANSPORT_STATS="transportStats",e.PIPE_TO_REMOTE_PRODUCER="pipeToRemoteProducer",e.PIPE_FROM_REMOTE_PRODUCER="pipeFromRemoteProducer",e.WORKER_LOAD="workerLoad",e.NUM_WORKERS="numWorkers",e.RECORDED_STREAMS="recordedStreams",e.STREAM_RECORDINGS="streamRecordings",e.DELETE_STREAM_RECORDINGS="deleteStreamRecordings",e.DELETE_RECORDING="deleteRecording",e.PUSH_TO_SERVER_INPUTS="pushToServerInputs",e.PULL_FROM_SERVER_INPUTS="pullFromServerInputs",e.PUSH_TO_SERVER_OPTIONS="pushToServerOptions",e.PUSH_TO_SERVER="pushToServer",e.KINDS_BY_FILE="kindsByFile",e.REQUEST_KEYFRAME="requestKeyframe",e.LISTEN_STREAM_STARTED="listenStreamStarted",e.LISTEN_STREAM_STOPPED="listenStreamStopped",e.MIXER_START="mixerStart",e.MIXER_CLOSE="mixerClose",e.MIXER_ADD="mixerAdd",e.MIXER_REMOVE="mixerRemove",e.MIXER_UPDATE="mixerUpdate",e.MIXER_PIPE_START="mixerPipeStart",e.MIXER_PIPE_STOP="mixerPipeStop",e.LISTEN_MIXER_STOPPED="listenMixerStopped"}(i||(i={}));const n=[i.GET_SERVER_CONFIGS,i.CREATE_TRANSPORT,i.CONNECT_TRANSPORT,i.CLOSE_TRANSPORT,i.PRODUCE,i.CONSUME,i.LISTEN_STREAM_STARTED,i.LISTEN_STREAM_STOPPED,i.LISTEN_MIXER_STOPPED,i.CREATE_PIPE_TRANSPORT,i.CONNECT_PIPE_TRANSPORT,i.PIPE_TO_REMOTE_PRODUCER,i.PIPE_FROM_REMOTE_PRODUCER],o=Object.values(i).filter(e=>!n.includes(e));var s,u;!function(e){e.STREAM_STARTED="streamStarted",e.STREAM_STOPPED="streamStopped",e.MIXER_STOPPED="mixerStopped"}(s||(s={})),function(e){e.STATS="stats",e.TRAFFIC="traffic",e.CPU="cpu"}(u||(u={}));const E={ROOT:"hls",PLAYLIST:"master.m3u8"};var R;!function(e){e.API="api"}(R||(R={}));const d={PATH:"nexmo",AUDIO_SAMPLE_RATE:16e3,AUDIO_CHANNELS:1};var c,S,T,a;!function(e){e[e.UNKNOWN=500]="UNKNOWN",e[e.UNAUTHORIZED=401]="UNAUTHORIZED",e[e.INVALID_TRANSPORT=530]="INVALID_TRANSPORT",e[e.INVALID_PRODUCER=531]="INVALID_PRODUCER",e[e.INVALID_CONSUMER=532]="INVALID_CONSUMER",e[e.INVALID_STREAM=533]="INVALID_STREAM",e[e.INVALID_OPERATION=534]="INVALID_OPERATION",e[e.INVALID_WORKER=535]="INVALID_WORKER",e[e.INVALID_INPUT=536]="INVALID_INPUT",e[e.INVALID_ACTION=537]="INVALID_ACTION"}(c||(c={})),function(e){e[e.SUBSCRIBE=0]="SUBSCRIBE",e[e.PUBLISH=1]="PUBLISH",e[e.RECORDING=2]="RECORDING",e[e.STREAMING=3]="STREAMING",e[e.MIXER=4]="MIXER"}(S||(S={})),function(e){e[e.LIVE=0]="LIVE",e[e.RECORDING=1]="RECORDING",e[e.RTMP=2]="RTMP",e[e.HLS=3]="HLS"}(T||(T={})),function(e){e.SCALE="scale",e.CROP="crop",e.PAD="pad"}(a||(a={}))},function(e,t,r){"use strict";r.d(t,"a",(function(){return R}));var i=r(4),n=r.n(i),o=r(5),s=r.n(o),u=r(0),E=function(e,t,r,i){return new(r||(r=Promise))((function(n,o){function s(e){try{E(i.next(e))}catch(e){o(e)}}function u(e){try{E(i.throw(e))}catch(e){o(e)}}function E(e){var t;e.done?n(e.value):(t=e.value,t instanceof r?t:new r((function(e){e(t)}))).then(s,u)}E((i=i.apply(e,t||[])).next())}))};class R{constructor(e,t,r,i){this.closed=!1,this.log=i||console.log,this.url=e,this.worker=t,this.token=r}get client(){return this._client||(this._client=n()(this.url,{path:"",transports:["websocket"],query:`auth_token=${this.token}&mediasoup_worker=${this.worker}`,forceNew:!0})),this._client}connectSocket(){return new Promise((e,t)=>{this.client.connected?e():(this.client.on("error",e=>{"Not enough or too many segments"===e.message?e.errorId=u.c.UNAUTHORIZED:e.errorId=u.c.UNKNOWN,t(e)}),this.client.on("connect",e))})}resumeConsumer(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.RESUME_CONSUMER,e)}))}pauseConsumer(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.PAUSE_CONSUMER,e)}))}setPreferredLayers(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.SET_PREFERRED_LAYERS,e)}))}closeConsumer(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.CLOSE_CONSUMER,e)}))}resumeProducer(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.RESUME_PRODUCER,e)}))}pauseProducer(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.PAUSE_PRODUCER,e)}))}closeProducer(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.CLOSE_PRODUCER,e)}))}produce(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.PRODUCE,e)}))}consume(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.CONSUME,e)}))}createPipeTransport(){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.CREATE_PIPE_TRANSPORT)}))}connectPipeTransport(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.CONNECT_PIPE_TRANSPORT,e)}))}closeTransport(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.CLOSE_TRANSPORT,e)}))}getServerConfigs(){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.GET_SERVER_CONFIGS)}))}createTransport(){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.CREATE_TRANSPORT)}))}connectTransport(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.CONNECT_TRANSPORT,e)}))}setMaxIncomingBitrate(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.SET_MAX_INCOMING_BITRATE,e)}))}producersStats(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.PRODUCERS_STATS,e)}))}consumersStats(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.CONSUMERS_STATS,e)}))}transportStats(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.TRANSPORT_STATS,e)}))}workerLoad(){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.WORKER_LOAD)}))}numWorkers(){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.NUM_WORKERS)}))}pipeToRemoteProducer(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.PIPE_TO_REMOTE_PRODUCER,e)}))}pipeFromRemoteProducer(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.PIPE_FROM_REMOTE_PRODUCER,e)}))}startRecording(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.START_RECORDING,e)}))}stopRecording(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.STOP_RECORDING,e)}))}fileStreaming(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.FILE_STREAMING,e)}))}stopFileStreaming(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.STOP_FILE_STREAMING,e)}))}recordedStreams(){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.RECORDED_STREAMS)}))}streamRecordings(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.STREAM_RECORDINGS,e)}))}deleteStreamRecordings(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.DELETE_STREAM_RECORDINGS,e)}))}deleteRecording(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.DELETE_RECORDING,e)}))}pushToServerInputs(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.PUSH_TO_SERVER_INPUTS,e)}))}pushToServerOptions(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.PUSH_TO_SERVER_OPTIONS,e)}))}pushToServer(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.PUSH_TO_SERVER,e)}))}pullFromServerInputs(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.PULL_FROM_SERVER_INPUTS,e)}))}kindsByFile(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.KINDS_BY_FILE,e)}))}requestKeyframe(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.REQUEST_KEYFRAME,e)}))}listenStreamStarted(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.LISTEN_STREAM_STARTED,e)}))}listenStreamStopped(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.LISTEN_STREAM_STOPPED,e)}))}liveStreaming(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.LIVE_STREAMING,e)}))}liveToHls(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.LIVE_TO_HLS,e)}))}mixerStart(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.MIXER_START,e)}))}mixerClose(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.MIXER_CLOSE,e)}))}mixerAdd(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.MIXER_ADD,e)}))}mixerUpdate(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.MIXER_UPDATE,e)}))}mixerRemove(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.MIXER_REMOVE,e)}))}mixerPipeStart(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.MIXER_PIPE_START,e)}))}mixerPipeStop(e){return E(this,void 0,void 0,(function*(){yield this.request(u.a.MIXER_PIPE_STOP,e)}))}listenMixerStopped(e){return E(this,void 0,void 0,(function*(){return yield this.request(u.a.LISTEN_MIXER_STOPPED,e)}))}clear(){this.closed=!0,this._client&&(this._client.removeAllListeners(),this.client.connected&&this._client.disconnect())}request(e,t={}){return E(this,void 0,void 0,(function*(){if(!this.closed)return this._client||u.k.includes(e)?this.socketRequest(e,t):this.restRequest(e,t)}))}socketRequest(e,t={}){return E(this,void 0,void 0,(function*(){return yield this.connectSocket(),this.log("sent message",e,JSON.stringify(t)),new Promise((r,i)=>{this.client.emit(e,t,t=>{t&&"boolean"!=typeof t&&t.hasOwnProperty("errorId")?(this.log("got error",e,JSON.stringify(t)),i(t)):(this.log("got message",e,JSON.stringify(t)),r(t))})})}))}restRequest(e,t={}){return E(this,void 0,void 0,(function*(){try{const{data:r}=yield s.a.post(`${this.url}/${u.i.API}/${this.worker}/${e}`,t,{headers:{"Content-Type":"application/json",Authorization:"Bearer "+this.token}});return this.log("got message",e,JSON.stringify(r)),r}catch(e){let t=u.c.UNKNOWN;throw this.log("got error",e),e.response&&e.response.status&&u.c[e.response.status]&&(t=e.response.status),{errorId:t}}}))}}},function(e,t){},function(e,t,r){"use strict";r.d(t,"a",(function(){return n}));var i=r(0);class n{static pinCodeChoice(e,t,r="Please, enter active pin code."){return[{action:"talk",text:r,bargeIn:!0},{action:"input",maxDigits:e,timeOut:10,eventUrl:[t]}]}static pinCodeChoiceRepeat(e,t,r="Sorry, this pin code is invalid.",i){return[{action:"talk",text:r},...n.pinCodeChoice(e,t,i)]}static mixerConnect(e,t,r="Connecting to meeting. Please, wait."){return[{action:"talk",text:r},{action:"connect",endpoint:[{type:"websocket",uri:`${e.replace("http","ws")}/${i.h.PATH}`,"content-type":"audio/l16;rate="+i.h.AUDIO_SAMPLE_RATE,headers:t}]}]}}},function(t,r){t.exports=e},function(e,r){e.exports=t},function(e,t,r){"use strict";r.r(t);var i=r(0);r.d(t,"ERROR",(function(){return i.c})),r.d(t,"ACTION",(function(){return i.a})),r.d(t,"API_OPERATION",(function(){return i.b})),r.d(t,"EVENT",(function(){return i.d})),r.d(t,"STAT",(function(){return i.l})),r.d(t,"MIXER_PIPE_TYPE",(function(){return i.f})),r.d(t,"NEXMO",(function(){return i.h})),r.d(t,"HLS",(function(){return i.e})),r.d(t,"PATH",(function(){return i.i})),r.d(t,"SOCKET_ONLY_ACTIONS",(function(){return i.k})),r.d(t,"REST_ACTIONS",(function(){return i.j})),r.d(t,"MIXER_RENDER_TYPE",(function(){return i.g}));var n=r(1);r.d(t,"MediasoupSocketApi",(function(){return n.a}));var o=r(2);for(var s in o)["ERROR","ACTION","API_OPERATION","EVENT","STAT","MIXER_PIPE_TYPE","NEXMO","HLS","PATH","SOCKET_ONLY_ACTIONS","REST_ACTIONS","MIXER_RENDER_TYPE","MediasoupSocketApi","NexmoUtils","default"].indexOf(s)<0&&function(e){r.d(t,e,(function(){return o[e]}))}(s);var u=r(3);r.d(t,"NexmoUtils",(function(){return u.a}))}])}));
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("socket.io-client"), require("axios"));
+	else if(typeof define === 'function' && define.amd)
+		define(["socket.io-client", "axios"], factory);
+	else if(typeof exports === 'object')
+		exports["avcore"] = factory(require("socket.io-client"), require("axios"));
+	else
+		root["avcore"] = factory(root["io"], root["axios"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE__0__, __WEBPACK_EXTERNAL_MODULE__1__) {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__0__;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "ERROR", function() { return /* reexport */ ERROR; });
+__webpack_require__.d(__webpack_exports__, "ACTION", function() { return /* reexport */ ACTION; });
+__webpack_require__.d(__webpack_exports__, "API_OPERATION", function() { return /* reexport */ API_OPERATION; });
+__webpack_require__.d(__webpack_exports__, "EVENT", function() { return /* reexport */ EVENT; });
+__webpack_require__.d(__webpack_exports__, "STAT", function() { return /* reexport */ STAT; });
+__webpack_require__.d(__webpack_exports__, "MIXER_PIPE_TYPE", function() { return /* reexport */ MIXER_PIPE_TYPE; });
+__webpack_require__.d(__webpack_exports__, "NEXMO", function() { return /* reexport */ NEXMO; });
+__webpack_require__.d(__webpack_exports__, "HLS", function() { return /* reexport */ HLS; });
+__webpack_require__.d(__webpack_exports__, "PATH", function() { return /* reexport */ PATH; });
+__webpack_require__.d(__webpack_exports__, "SOCKET_ONLY_ACTIONS", function() { return /* reexport */ SOCKET_ONLY_ACTIONS; });
+__webpack_require__.d(__webpack_exports__, "REST_ACTIONS", function() { return /* reexport */ REST_ACTIONS; });
+__webpack_require__.d(__webpack_exports__, "MIXER_RENDER_TYPE", function() { return /* reexport */ MIXER_RENDER_TYPE; });
+__webpack_require__.d(__webpack_exports__, "MediasoupSocketApi", function() { return /* reexport */ mediasoup_socket_api_MediasoupSocketApi; });
+
+// CONCATENATED MODULE: ./src/constants.ts
+var ACTION;
+(function (ACTION) {
+    ACTION["GET_SERVER_CONFIGS"] = "getServerConfigs";
+    ACTION["CREATE_TRANSPORT"] = "createTransport";
+    ACTION["CONNECT_TRANSPORT"] = "connectTransport";
+    ACTION["CLOSE_TRANSPORT"] = "closeTransport";
+    ACTION["PRODUCE"] = "produce";
+    ACTION["CONSUME"] = "consume";
+    ACTION["RESUME_CONSUMER"] = "resumeConsumer";
+    ACTION["PAUSE_CONSUMER"] = "pauseConsumer";
+    ACTION["CLOSE_CONSUMER"] = "closeConsumer";
+    ACTION["RESUME_PRODUCER"] = "resumeProducer";
+    ACTION["PAUSE_PRODUCER"] = "pauseProducer";
+    ACTION["CLOSE_PRODUCER"] = "closeProducer";
+    ACTION["FILE_STREAMING"] = "fileStreaming";
+    ACTION["LIVE_STREAMING"] = "liveStreaming";
+    ACTION["LIVE_TO_HLS"] = "liveToHls";
+    ACTION["STOP_FILE_STREAMING"] = "stopFileStreaming";
+    ACTION["START_RECORDING"] = "startRecording";
+    ACTION["STOP_RECORDING"] = "stopRecording";
+    ACTION["CREATE_PIPE_TRANSPORT"] = "createPipeTransport";
+    ACTION["CONNECT_PIPE_TRANSPORT"] = "connectPipeTransport";
+    ACTION["SET_PREFERRED_LAYERS"] = "setPreferredLayers";
+    ACTION["SET_MAX_INCOMING_BITRATE"] = "setMaxIncomingBitrate";
+    ACTION["PRODUCERS_STATS"] = "producersStats";
+    ACTION["CONSUMERS_STATS"] = "consumersStats";
+    ACTION["TRANSPORT_STATS"] = "transportStats";
+    ACTION["PIPE_TO_REMOTE_PRODUCER"] = "pipeToRemoteProducer";
+    ACTION["PIPE_FROM_REMOTE_PRODUCER"] = "pipeFromRemoteProducer";
+    ACTION["WORKER_LOAD"] = "workerLoad";
+    ACTION["NUM_WORKERS"] = "numWorkers";
+    ACTION["RECORDED_STREAMS"] = "recordedStreams";
+    ACTION["STREAM_RECORDINGS"] = "streamRecordings";
+    ACTION["DELETE_STREAM_RECORDINGS"] = "deleteStreamRecordings";
+    ACTION["DELETE_RECORDING"] = "deleteRecording";
+    ACTION["PUSH_TO_SERVER_INPUTS"] = "pushToServerInputs";
+    ACTION["PULL_FROM_SERVER_INPUTS"] = "pullFromServerInputs";
+    ACTION["PUSH_TO_SERVER_OPTIONS"] = "pushToServerOptions";
+    ACTION["PUSH_TO_SERVER"] = "pushToServer";
+    ACTION["KINDS_BY_FILE"] = "kindsByFile";
+    ACTION["REQUEST_KEYFRAME"] = "requestKeyframe";
+    ACTION["LISTEN_STREAM_STARTED"] = "listenStreamStarted";
+    ACTION["LISTEN_STREAM_STOPPED"] = "listenStreamStopped";
+    ACTION["MIXER_START"] = "mixerStart";
+    ACTION["MIXER_CLOSE"] = "mixerClose";
+    ACTION["MIXER_ADD"] = "mixerAdd";
+    ACTION["MIXER_REMOVE"] = "mixerRemove";
+    ACTION["MIXER_UPDATE"] = "mixerUpdate";
+    ACTION["MIXER_PIPE_START"] = "mixerPipeStart";
+    ACTION["MIXER_PIPE_STOP"] = "mixerPipeStop";
+    ACTION["LISTEN_MIXER_STOPPED"] = "listenMixerStopped";
+})(ACTION || (ACTION = {}));
+const SOCKET_ONLY_ACTIONS = [
+    ACTION.GET_SERVER_CONFIGS,
+    ACTION.CREATE_TRANSPORT,
+    ACTION.CONNECT_TRANSPORT,
+    ACTION.CLOSE_TRANSPORT,
+    ACTION.PRODUCE,
+    ACTION.CONSUME,
+    ACTION.LISTEN_STREAM_STARTED,
+    ACTION.LISTEN_STREAM_STOPPED,
+    ACTION.LISTEN_MIXER_STOPPED,
+    ACTION.CREATE_PIPE_TRANSPORT,
+    ACTION.CONNECT_PIPE_TRANSPORT,
+    ACTION.PIPE_TO_REMOTE_PRODUCER,
+    ACTION.PIPE_FROM_REMOTE_PRODUCER
+];
+const REST_ACTIONS = Object.values(ACTION).filter(a => !SOCKET_ONLY_ACTIONS.includes(a));
+var EVENT;
+(function (EVENT) {
+    EVENT["STREAM_STARTED"] = "streamStarted";
+    EVENT["STREAM_STOPPED"] = "streamStopped";
+    EVENT["MIXER_STOPPED"] = "mixerStopped";
+})(EVENT || (EVENT = {}));
+var STAT;
+(function (STAT) {
+    STAT["STATS"] = "stats";
+    STAT["TRAFFIC"] = "traffic";
+    STAT["CPU"] = "cpu";
+})(STAT || (STAT = {}));
+const HLS = {
+    ROOT: 'hls',
+    PLAYLIST: 'master.m3u8'
+};
+var PATH;
+(function (PATH) {
+    PATH["API"] = "api";
+})(PATH || (PATH = {}));
+const NEXMO = {
+    PATH: "nexmo",
+    AUDIO_SAMPLE_RATE: 16000,
+    AUDIO_CHANNELS: 1
+};
+var ERROR;
+(function (ERROR) {
+    ERROR[ERROR["UNKNOWN"] = 500] = "UNKNOWN";
+    ERROR[ERROR["UNAUTHORIZED"] = 401] = "UNAUTHORIZED";
+    ERROR[ERROR["INVALID_TRANSPORT"] = 530] = "INVALID_TRANSPORT";
+    ERROR[ERROR["INVALID_PRODUCER"] = 531] = "INVALID_PRODUCER";
+    ERROR[ERROR["INVALID_CONSUMER"] = 532] = "INVALID_CONSUMER";
+    ERROR[ERROR["INVALID_STREAM"] = 533] = "INVALID_STREAM";
+    ERROR[ERROR["INVALID_OPERATION"] = 534] = "INVALID_OPERATION";
+    ERROR[ERROR["INVALID_WORKER"] = 535] = "INVALID_WORKER";
+    ERROR[ERROR["INVALID_INPUT"] = 536] = "INVALID_INPUT";
+    ERROR[ERROR["INVALID_ACTION"] = 537] = "INVALID_ACTION";
+})(ERROR || (ERROR = {}));
+var API_OPERATION;
+(function (API_OPERATION) {
+    API_OPERATION[API_OPERATION["SUBSCRIBE"] = 0] = "SUBSCRIBE";
+    API_OPERATION[API_OPERATION["PUBLISH"] = 1] = "PUBLISH";
+    API_OPERATION[API_OPERATION["RECORDING"] = 2] = "RECORDING";
+    API_OPERATION[API_OPERATION["STREAMING"] = 3] = "STREAMING";
+    API_OPERATION[API_OPERATION["MIXER"] = 4] = "MIXER";
+})(API_OPERATION || (API_OPERATION = {}));
+var MIXER_PIPE_TYPE;
+(function (MIXER_PIPE_TYPE) {
+    MIXER_PIPE_TYPE[MIXER_PIPE_TYPE["LIVE"] = 0] = "LIVE";
+    MIXER_PIPE_TYPE[MIXER_PIPE_TYPE["RECORDING"] = 1] = "RECORDING";
+    MIXER_PIPE_TYPE[MIXER_PIPE_TYPE["RTMP"] = 2] = "RTMP";
+    MIXER_PIPE_TYPE[MIXER_PIPE_TYPE["HLS"] = 3] = "HLS";
+})(MIXER_PIPE_TYPE || (MIXER_PIPE_TYPE = {}));
+var MIXER_RENDER_TYPE;
+(function (MIXER_RENDER_TYPE) {
+    MIXER_RENDER_TYPE["SCALE"] = "scale";
+    MIXER_RENDER_TYPE["CROP"] = "crop";
+    MIXER_RENDER_TYPE["PAD"] = "pad";
+})(MIXER_RENDER_TYPE || (MIXER_RENDER_TYPE = {}));
+
+// CONCATENATED MODULE: ./src/client-interfaces.ts
+
+
+// EXTERNAL MODULE: external {"root":"io","commonjs":"socket.io-client","commonjs2":"socket.io-client","amd":"socket.io-client"}
+var external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_ = __webpack_require__(0);
+
+// EXTERNAL MODULE: external {"root":"axios","commonjs2":"axios","commonjs":"axios","amd":"axios"}
+var external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_ = __webpack_require__(1);
+var external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_default = /*#__PURE__*/__webpack_require__.n(external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_);
+
+// CONCATENATED MODULE: ./src/mediasoup-socket-api.ts
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+class mediasoup_socket_api_MediasoupSocketApi {
+    constructor(url, worker, token, log) {
+        this.closed = false;
+        this.log = log || console.log;
+        this.url = url;
+        this.worker = worker;
+        this.token = token;
+    }
+    get client() {
+        if (!this._client) {
+            this._client = Object(external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_["io"])(this.url, {
+                // path:"",
+                // transports:['websocket'],
+                query: {
+                    mediasoup_worker: this.worker
+                },
+                auth: {
+                    token: this.token
+                }
+                // forceNew: true
+            });
+        }
+        return this._client;
+    }
+    connectSocket() {
+        return new Promise((resolve, reject) => {
+            if (this.client.connected) {
+                resolve();
+            }
+            else {
+                this.client.on('error', (e) => {
+                    if (e.message === 'Not enough or too many segments') {
+                        e.errorId = ERROR.UNAUTHORIZED;
+                    }
+                    else {
+                        e.errorId = ERROR.UNKNOWN;
+                    }
+                    reject(e);
+                });
+                this.client.on('connect', resolve);
+            }
+        });
+    }
+    resumeConsumer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.RESUME_CONSUMER, json);
+        });
+    }
+    pauseConsumer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PAUSE_CONSUMER, json);
+        });
+    }
+    setPreferredLayers(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.SET_PREFERRED_LAYERS, json);
+        });
+    }
+    closeConsumer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CLOSE_CONSUMER, json);
+        });
+    }
+    resumeProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.RESUME_PRODUCER, json);
+        });
+    }
+    pauseProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PAUSE_PRODUCER, json);
+        });
+    }
+    closeProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CLOSE_PRODUCER, json);
+        });
+    }
+    produce(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.PRODUCE, json));
+        });
+    }
+    consume(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.CONSUME, json));
+        });
+    }
+    createPipeTransport() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.CREATE_PIPE_TRANSPORT));
+        });
+    }
+    connectPipeTransport(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CONNECT_PIPE_TRANSPORT, json);
+        });
+    }
+    closeTransport(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CLOSE_TRANSPORT, json);
+        });
+    }
+    getServerConfigs() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.GET_SERVER_CONFIGS));
+        });
+    }
+    createTransport() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.CREATE_TRANSPORT));
+        });
+    }
+    connectTransport(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CONNECT_TRANSPORT, json);
+        });
+    }
+    setMaxIncomingBitrate(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.SET_MAX_INCOMING_BITRATE, json);
+        });
+    }
+    producersStats(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.PRODUCERS_STATS, json));
+        });
+    }
+    consumersStats(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.CONSUMERS_STATS, json));
+        });
+    }
+    transportStats(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.TRANSPORT_STATS, json));
+        });
+    }
+    workerLoad() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.WORKER_LOAD));
+        });
+    }
+    numWorkers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.NUM_WORKERS));
+        });
+    }
+    pipeToRemoteProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PIPE_TO_REMOTE_PRODUCER, json);
+        });
+    }
+    pipeFromRemoteProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PIPE_FROM_REMOTE_PRODUCER, json);
+        });
+    }
+    startRecording(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.START_RECORDING, json);
+        });
+    }
+    stopRecording(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.STOP_RECORDING, json);
+        });
+    }
+    fileStreaming(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.FILE_STREAMING, json);
+        });
+    }
+    stopFileStreaming(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.STOP_FILE_STREAMING, json);
+        });
+    }
+    recordedStreams() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.RECORDED_STREAMS);
+        });
+    }
+    streamRecordings(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.STREAM_RECORDINGS, json);
+        });
+    }
+    deleteStreamRecordings(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.DELETE_STREAM_RECORDINGS, json);
+        });
+    }
+    deleteRecording(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.DELETE_RECORDING, json);
+        });
+    }
+    pushToServerInputs(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.PUSH_TO_SERVER_INPUTS, json);
+        });
+    }
+    pushToServerOptions(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.PUSH_TO_SERVER_OPTIONS, json);
+        });
+    }
+    pushToServer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PUSH_TO_SERVER, json);
+        });
+    }
+    pullFromServerInputs(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.PULL_FROM_SERVER_INPUTS, json);
+        });
+    }
+    kindsByFile(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.KINDS_BY_FILE, json);
+        });
+    }
+    requestKeyframe(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.REQUEST_KEYFRAME, json);
+        });
+    }
+    listenStreamStarted(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.LISTEN_STREAM_STARTED, json);
+        });
+    }
+    listenStreamStopped(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.LISTEN_STREAM_STOPPED, json);
+        });
+    }
+    liveStreaming(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.LIVE_STREAMING, json);
+        });
+    }
+    liveToHls(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.LIVE_TO_HLS, json);
+        });
+    }
+    mixerStart(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.MIXER_START, json);
+        });
+    }
+    mixerClose(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_CLOSE, json);
+        });
+    }
+    mixerAdd(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_ADD, json);
+        });
+    }
+    mixerUpdate(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_UPDATE, json);
+        });
+    }
+    mixerRemove(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_REMOVE, json);
+        });
+    }
+    mixerPipeStart(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.MIXER_PIPE_START, json);
+        });
+    }
+    mixerPipeStop(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_PIPE_STOP, json);
+        });
+    }
+    listenMixerStopped(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.LISTEN_MIXER_STOPPED, json);
+        });
+    }
+    clear() {
+        this.closed = true;
+        if (this._client) {
+            this._client.removeAllListeners();
+            if (this.client.connected) {
+                this._client.disconnect();
+            }
+        }
+    }
+    request(action, json = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.closed) {
+                if (!this._client && !SOCKET_ONLY_ACTIONS.includes(action)) {
+                    return this.restRequest(action, json);
+                }
+                else {
+                    return this.socketRequest(action, json);
+                }
+            }
+        });
+    }
+    socketRequest(action, json = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.connectSocket();
+            this.log('sent message', action, JSON.stringify(json));
+            return new Promise((resolve, reject) => {
+                this.client.emit(action, json, (data) => {
+                    if (data && typeof data !== 'boolean' && data.hasOwnProperty('errorId')) {
+                        this.log('got error', action, JSON.stringify(data));
+                        reject(data);
+                    }
+                    else {
+                        this.log('got message', action, JSON.stringify(data));
+                        resolve(data);
+                    }
+                });
+            });
+        });
+    }
+    restRequest(action, json = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { data } = yield external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_default.a.post(`${this.url}/${PATH.API}/${this.worker}/${action}`, json, {
+                    headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${this.token}` },
+                });
+                this.log('got message', action, JSON.stringify(data));
+                return data;
+            }
+            catch (e) {
+                let errorId = ERROR.UNKNOWN;
+                this.log('got error', e);
+                if (e.response && e.response.status && ERROR[e.response.status]) {
+                    errorId = e.response.status;
+                }
+                throw { errorId };
+            }
+        });
+    }
+}
+
+// CONCATENATED MODULE: ./src/index.ts
+
+
+
+
+
+/***/ })
+/******/ ]);
+});

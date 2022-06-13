@@ -1,20 +1,13855 @@
-/*-
- * ========================LICENSE_START=================================
- * TeamApps
- * ---
- * Copyright (C) 2014 - 2022 TeamApps.org
- * ---
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =========================LICENSE_END==================================
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("socket.io-client"), require("axios"));
+	else if(typeof define === 'function' && define.amd)
+		define(["socket.io-client", "axios"], factory);
+	else if(typeof exports === 'object')
+		exports["avcoreClient"] = factory(require("socket.io-client"), require("axios"));
+	else
+		root["avcoreClient"] = factory(root["io"], root["axios"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE__46__, __WEBPACK_EXTERNAL_MODULE__47__) {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 48);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory(__webpack_require__(46), __webpack_require__(47));
+	else {}
+})(this, function(__WEBPACK_EXTERNAL_MODULE__0__, __WEBPACK_EXTERNAL_MODULE__1__) {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__0__;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "ERROR", function() { return /* reexport */ ERROR; });
+__webpack_require__.d(__webpack_exports__, "ACTION", function() { return /* reexport */ ACTION; });
+__webpack_require__.d(__webpack_exports__, "API_OPERATION", function() { return /* reexport */ API_OPERATION; });
+__webpack_require__.d(__webpack_exports__, "EVENT", function() { return /* reexport */ EVENT; });
+__webpack_require__.d(__webpack_exports__, "STAT", function() { return /* reexport */ STAT; });
+__webpack_require__.d(__webpack_exports__, "MIXER_PIPE_TYPE", function() { return /* reexport */ MIXER_PIPE_TYPE; });
+__webpack_require__.d(__webpack_exports__, "NEXMO", function() { return /* reexport */ NEXMO; });
+__webpack_require__.d(__webpack_exports__, "HLS", function() { return /* reexport */ HLS; });
+__webpack_require__.d(__webpack_exports__, "PATH", function() { return /* reexport */ PATH; });
+__webpack_require__.d(__webpack_exports__, "SOCKET_ONLY_ACTIONS", function() { return /* reexport */ SOCKET_ONLY_ACTIONS; });
+__webpack_require__.d(__webpack_exports__, "REST_ACTIONS", function() { return /* reexport */ REST_ACTIONS; });
+__webpack_require__.d(__webpack_exports__, "MIXER_RENDER_TYPE", function() { return /* reexport */ MIXER_RENDER_TYPE; });
+__webpack_require__.d(__webpack_exports__, "MediasoupSocketApi", function() { return /* reexport */ mediasoup_socket_api_MediasoupSocketApi; });
+
+// CONCATENATED MODULE: ./src/constants.ts
+var ACTION;
+(function (ACTION) {
+    ACTION["GET_SERVER_CONFIGS"] = "getServerConfigs";
+    ACTION["CREATE_TRANSPORT"] = "createTransport";
+    ACTION["CONNECT_TRANSPORT"] = "connectTransport";
+    ACTION["CLOSE_TRANSPORT"] = "closeTransport";
+    ACTION["PRODUCE"] = "produce";
+    ACTION["CONSUME"] = "consume";
+    ACTION["RESUME_CONSUMER"] = "resumeConsumer";
+    ACTION["PAUSE_CONSUMER"] = "pauseConsumer";
+    ACTION["CLOSE_CONSUMER"] = "closeConsumer";
+    ACTION["RESUME_PRODUCER"] = "resumeProducer";
+    ACTION["PAUSE_PRODUCER"] = "pauseProducer";
+    ACTION["CLOSE_PRODUCER"] = "closeProducer";
+    ACTION["FILE_STREAMING"] = "fileStreaming";
+    ACTION["LIVE_STREAMING"] = "liveStreaming";
+    ACTION["LIVE_TO_HLS"] = "liveToHls";
+    ACTION["STOP_FILE_STREAMING"] = "stopFileStreaming";
+    ACTION["START_RECORDING"] = "startRecording";
+    ACTION["STOP_RECORDING"] = "stopRecording";
+    ACTION["CREATE_PIPE_TRANSPORT"] = "createPipeTransport";
+    ACTION["CONNECT_PIPE_TRANSPORT"] = "connectPipeTransport";
+    ACTION["SET_PREFERRED_LAYERS"] = "setPreferredLayers";
+    ACTION["SET_MAX_INCOMING_BITRATE"] = "setMaxIncomingBitrate";
+    ACTION["PRODUCERS_STATS"] = "producersStats";
+    ACTION["CONSUMERS_STATS"] = "consumersStats";
+    ACTION["TRANSPORT_STATS"] = "transportStats";
+    ACTION["PIPE_TO_REMOTE_PRODUCER"] = "pipeToRemoteProducer";
+    ACTION["PIPE_FROM_REMOTE_PRODUCER"] = "pipeFromRemoteProducer";
+    ACTION["WORKER_LOAD"] = "workerLoad";
+    ACTION["NUM_WORKERS"] = "numWorkers";
+    ACTION["RECORDED_STREAMS"] = "recordedStreams";
+    ACTION["STREAM_RECORDINGS"] = "streamRecordings";
+    ACTION["DELETE_STREAM_RECORDINGS"] = "deleteStreamRecordings";
+    ACTION["DELETE_RECORDING"] = "deleteRecording";
+    ACTION["PUSH_TO_SERVER_INPUTS"] = "pushToServerInputs";
+    ACTION["PULL_FROM_SERVER_INPUTS"] = "pullFromServerInputs";
+    ACTION["PUSH_TO_SERVER_OPTIONS"] = "pushToServerOptions";
+    ACTION["PUSH_TO_SERVER"] = "pushToServer";
+    ACTION["KINDS_BY_FILE"] = "kindsByFile";
+    ACTION["REQUEST_KEYFRAME"] = "requestKeyframe";
+    ACTION["LISTEN_STREAM_STARTED"] = "listenStreamStarted";
+    ACTION["LISTEN_STREAM_STOPPED"] = "listenStreamStopped";
+    ACTION["MIXER_START"] = "mixerStart";
+    ACTION["MIXER_CLOSE"] = "mixerClose";
+    ACTION["MIXER_ADD"] = "mixerAdd";
+    ACTION["MIXER_REMOVE"] = "mixerRemove";
+    ACTION["MIXER_UPDATE"] = "mixerUpdate";
+    ACTION["MIXER_PIPE_START"] = "mixerPipeStart";
+    ACTION["MIXER_PIPE_STOP"] = "mixerPipeStop";
+    ACTION["LISTEN_MIXER_STOPPED"] = "listenMixerStopped";
+})(ACTION || (ACTION = {}));
+const SOCKET_ONLY_ACTIONS = [
+    ACTION.GET_SERVER_CONFIGS,
+    ACTION.CREATE_TRANSPORT,
+    ACTION.CONNECT_TRANSPORT,
+    ACTION.CLOSE_TRANSPORT,
+    ACTION.PRODUCE,
+    ACTION.CONSUME,
+    ACTION.LISTEN_STREAM_STARTED,
+    ACTION.LISTEN_STREAM_STOPPED,
+    ACTION.LISTEN_MIXER_STOPPED,
+    ACTION.CREATE_PIPE_TRANSPORT,
+    ACTION.CONNECT_PIPE_TRANSPORT,
+    ACTION.PIPE_TO_REMOTE_PRODUCER,
+    ACTION.PIPE_FROM_REMOTE_PRODUCER
+];
+const REST_ACTIONS = Object.values(ACTION).filter(a => !SOCKET_ONLY_ACTIONS.includes(a));
+var EVENT;
+(function (EVENT) {
+    EVENT["STREAM_STARTED"] = "streamStarted";
+    EVENT["STREAM_STOPPED"] = "streamStopped";
+    EVENT["MIXER_STOPPED"] = "mixerStopped";
+})(EVENT || (EVENT = {}));
+var STAT;
+(function (STAT) {
+    STAT["STATS"] = "stats";
+    STAT["TRAFFIC"] = "traffic";
+    STAT["CPU"] = "cpu";
+})(STAT || (STAT = {}));
+const HLS = {
+    ROOT: 'hls',
+    PLAYLIST: 'master.m3u8'
+};
+var PATH;
+(function (PATH) {
+    PATH["API"] = "api";
+})(PATH || (PATH = {}));
+const NEXMO = {
+    PATH: "nexmo",
+    AUDIO_SAMPLE_RATE: 16000,
+    AUDIO_CHANNELS: 1
+};
+var ERROR;
+(function (ERROR) {
+    ERROR[ERROR["UNKNOWN"] = 500] = "UNKNOWN";
+    ERROR[ERROR["UNAUTHORIZED"] = 401] = "UNAUTHORIZED";
+    ERROR[ERROR["INVALID_TRANSPORT"] = 530] = "INVALID_TRANSPORT";
+    ERROR[ERROR["INVALID_PRODUCER"] = 531] = "INVALID_PRODUCER";
+    ERROR[ERROR["INVALID_CONSUMER"] = 532] = "INVALID_CONSUMER";
+    ERROR[ERROR["INVALID_STREAM"] = 533] = "INVALID_STREAM";
+    ERROR[ERROR["INVALID_OPERATION"] = 534] = "INVALID_OPERATION";
+    ERROR[ERROR["INVALID_WORKER"] = 535] = "INVALID_WORKER";
+    ERROR[ERROR["INVALID_INPUT"] = 536] = "INVALID_INPUT";
+    ERROR[ERROR["INVALID_ACTION"] = 537] = "INVALID_ACTION";
+})(ERROR || (ERROR = {}));
+var API_OPERATION;
+(function (API_OPERATION) {
+    API_OPERATION[API_OPERATION["SUBSCRIBE"] = 0] = "SUBSCRIBE";
+    API_OPERATION[API_OPERATION["PUBLISH"] = 1] = "PUBLISH";
+    API_OPERATION[API_OPERATION["RECORDING"] = 2] = "RECORDING";
+    API_OPERATION[API_OPERATION["STREAMING"] = 3] = "STREAMING";
+    API_OPERATION[API_OPERATION["MIXER"] = 4] = "MIXER";
+})(API_OPERATION || (API_OPERATION = {}));
+var MIXER_PIPE_TYPE;
+(function (MIXER_PIPE_TYPE) {
+    MIXER_PIPE_TYPE[MIXER_PIPE_TYPE["LIVE"] = 0] = "LIVE";
+    MIXER_PIPE_TYPE[MIXER_PIPE_TYPE["RECORDING"] = 1] = "RECORDING";
+    MIXER_PIPE_TYPE[MIXER_PIPE_TYPE["RTMP"] = 2] = "RTMP";
+    MIXER_PIPE_TYPE[MIXER_PIPE_TYPE["HLS"] = 3] = "HLS";
+})(MIXER_PIPE_TYPE || (MIXER_PIPE_TYPE = {}));
+var MIXER_RENDER_TYPE;
+(function (MIXER_RENDER_TYPE) {
+    MIXER_RENDER_TYPE["SCALE"] = "scale";
+    MIXER_RENDER_TYPE["CROP"] = "crop";
+    MIXER_RENDER_TYPE["PAD"] = "pad";
+})(MIXER_RENDER_TYPE || (MIXER_RENDER_TYPE = {}));
+
+// CONCATENATED MODULE: ./src/client-interfaces.ts
+
+
+// EXTERNAL MODULE: external {"root":"io","commonjs":"socket.io-client","commonjs2":"socket.io-client","amd":"socket.io-client"}
+var external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_ = __webpack_require__(0);
+
+// EXTERNAL MODULE: external {"root":"axios","commonjs2":"axios","commonjs":"axios","amd":"axios"}
+var external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_ = __webpack_require__(1);
+var external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_default = /*#__PURE__*/__webpack_require__.n(external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_);
+
+// CONCATENATED MODULE: ./src/mediasoup-socket-api.ts
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+class mediasoup_socket_api_MediasoupSocketApi {
+    constructor(url, worker, token, log) {
+        this.closed = false;
+        this.log = log || console.log;
+        this.url = url;
+        this.worker = worker;
+        this.token = token;
+    }
+    get client() {
+        if (!this._client) {
+            this._client = Object(external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_["io"])(this.url, {
+                // path:"",
+                // transports:['websocket'],
+                query: {
+                    mediasoup_worker: this.worker
+                },
+                auth: {
+                    token: this.token
+                }
+                // forceNew: true
+            });
+        }
+        return this._client;
+    }
+    connectSocket() {
+        return new Promise((resolve, reject) => {
+            if (this.client.connected) {
+                resolve();
+            }
+            else {
+                this.client.on('error', (e) => {
+                    if (e.message === 'Not enough or too many segments') {
+                        e.errorId = ERROR.UNAUTHORIZED;
+                    }
+                    else {
+                        e.errorId = ERROR.UNKNOWN;
+                    }
+                    reject(e);
+                });
+                this.client.on('connect', resolve);
+            }
+        });
+    }
+    resumeConsumer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.RESUME_CONSUMER, json);
+        });
+    }
+    pauseConsumer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PAUSE_CONSUMER, json);
+        });
+    }
+    setPreferredLayers(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.SET_PREFERRED_LAYERS, json);
+        });
+    }
+    closeConsumer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CLOSE_CONSUMER, json);
+        });
+    }
+    resumeProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.RESUME_PRODUCER, json);
+        });
+    }
+    pauseProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PAUSE_PRODUCER, json);
+        });
+    }
+    closeProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CLOSE_PRODUCER, json);
+        });
+    }
+    produce(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.PRODUCE, json));
+        });
+    }
+    consume(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.CONSUME, json));
+        });
+    }
+    createPipeTransport() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.CREATE_PIPE_TRANSPORT));
+        });
+    }
+    connectPipeTransport(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CONNECT_PIPE_TRANSPORT, json);
+        });
+    }
+    closeTransport(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CLOSE_TRANSPORT, json);
+        });
+    }
+    getServerConfigs() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.GET_SERVER_CONFIGS));
+        });
+    }
+    createTransport() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.CREATE_TRANSPORT));
+        });
+    }
+    connectTransport(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.CONNECT_TRANSPORT, json);
+        });
+    }
+    setMaxIncomingBitrate(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.SET_MAX_INCOMING_BITRATE, json);
+        });
+    }
+    producersStats(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.PRODUCERS_STATS, json));
+        });
+    }
+    consumersStats(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.CONSUMERS_STATS, json));
+        });
+    }
+    transportStats(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.TRANSPORT_STATS, json));
+        });
+    }
+    workerLoad() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.WORKER_LOAD));
+        });
+    }
+    numWorkers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.request(ACTION.NUM_WORKERS));
+        });
+    }
+    pipeToRemoteProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PIPE_TO_REMOTE_PRODUCER, json);
+        });
+    }
+    pipeFromRemoteProducer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PIPE_FROM_REMOTE_PRODUCER, json);
+        });
+    }
+    startRecording(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.START_RECORDING, json);
+        });
+    }
+    stopRecording(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.STOP_RECORDING, json);
+        });
+    }
+    fileStreaming(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.FILE_STREAMING, json);
+        });
+    }
+    stopFileStreaming(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.STOP_FILE_STREAMING, json);
+        });
+    }
+    recordedStreams() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.RECORDED_STREAMS);
+        });
+    }
+    streamRecordings(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.STREAM_RECORDINGS, json);
+        });
+    }
+    deleteStreamRecordings(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.DELETE_STREAM_RECORDINGS, json);
+        });
+    }
+    deleteRecording(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.DELETE_RECORDING, json);
+        });
+    }
+    pushToServerInputs(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.PUSH_TO_SERVER_INPUTS, json);
+        });
+    }
+    pushToServerOptions(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.PUSH_TO_SERVER_OPTIONS, json);
+        });
+    }
+    pushToServer(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.PUSH_TO_SERVER, json);
+        });
+    }
+    pullFromServerInputs(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.PULL_FROM_SERVER_INPUTS, json);
+        });
+    }
+    kindsByFile(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.KINDS_BY_FILE, json);
+        });
+    }
+    requestKeyframe(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.REQUEST_KEYFRAME, json);
+        });
+    }
+    listenStreamStarted(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.LISTEN_STREAM_STARTED, json);
+        });
+    }
+    listenStreamStopped(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.LISTEN_STREAM_STOPPED, json);
+        });
+    }
+    liveStreaming(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.LIVE_STREAMING, json);
+        });
+    }
+    liveToHls(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.LIVE_TO_HLS, json);
+        });
+    }
+    mixerStart(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.MIXER_START, json);
+        });
+    }
+    mixerClose(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_CLOSE, json);
+        });
+    }
+    mixerAdd(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_ADD, json);
+        });
+    }
+    mixerUpdate(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_UPDATE, json);
+        });
+    }
+    mixerRemove(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_REMOVE, json);
+        });
+    }
+    mixerPipeStart(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.MIXER_PIPE_START, json);
+        });
+    }
+    mixerPipeStop(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.request(ACTION.MIXER_PIPE_STOP, json);
+        });
+    }
+    listenMixerStopped(json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(ACTION.LISTEN_MIXER_STOPPED, json);
+        });
+    }
+    clear() {
+        this.closed = true;
+        if (this._client) {
+            this._client.removeAllListeners();
+            if (this.client.connected) {
+                this._client.disconnect();
+            }
+        }
+    }
+    request(action, json = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.closed) {
+                if (!this._client && !SOCKET_ONLY_ACTIONS.includes(action)) {
+                    return this.restRequest(action, json);
+                }
+                else {
+                    return this.socketRequest(action, json);
+                }
+            }
+        });
+    }
+    socketRequest(action, json = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.connectSocket();
+            this.log('sent message', action, JSON.stringify(json));
+            return new Promise((resolve, reject) => {
+                this.client.emit(action, json, (data) => {
+                    if (data && typeof data !== 'boolean' && data.hasOwnProperty('errorId')) {
+                        this.log('got error', action, JSON.stringify(data));
+                        reject(data);
+                    }
+                    else {
+                        this.log('got message', action, JSON.stringify(data));
+                        resolve(data);
+                    }
+                });
+            });
+        });
+    }
+    restRequest(action, json = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { data } = yield external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_default.a.post(`${this.url}/${PATH.API}/${this.worker}/${action}`, json, {
+                    headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${this.token}` },
+                });
+                this.log('got message', action, JSON.stringify(data));
+                return data;
+            }
+            catch (e) {
+                let errorId = ERROR.UNKNOWN;
+                this.log('got error', e);
+                if (e.response && e.response.status && ERROR[e.response.status]) {
+                    errorId = e.response.status;
+                }
+                throw { errorId };
+            }
+        });
+    }
+}
+
+// CONCATENATED MODULE: ./src/index.ts
+
+
+
+
+
+/***/ })
+/******/ ]);
+});
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Logger = void 0;
+const debug_1 = __importDefault(__webpack_require__(10));
+const APP_NAME = 'mediasoup-client';
+class Logger {
+    constructor(prefix) {
+        if (prefix) {
+            this._debug = (0, debug_1.default)(`${APP_NAME}:${prefix}`);
+            this._warn = (0, debug_1.default)(`${APP_NAME}:WARN:${prefix}`);
+            this._error = (0, debug_1.default)(`${APP_NAME}:ERROR:${prefix}`);
+        }
+        else {
+            this._debug = (0, debug_1.default)(APP_NAME);
+            this._warn = (0, debug_1.default)(`${APP_NAME}:WARN`);
+            this._error = (0, debug_1.default)(`${APP_NAME}:ERROR`);
+        }
+        /* eslint-disable no-console */
+        this._debug.log = console.info.bind(console);
+        this._warn.log = console.warn.bind(console);
+        this._error.log = console.error.bind(console);
+        /* eslint-enable no-console */
+    }
+    get debug() {
+        return this._debug;
+    }
+    get warn() {
+        return this._warn;
+    }
+    get error() {
+        return this._error;
+    }
+}
+exports.Logger = Logger;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.generateRandomNumber = exports.clone = void 0;
+/**
+ * Clones the given data.
  */
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t(require("socket.io-client"),require("axios")):"function"==typeof define&&define.amd?define(["socket.io-client","axios"],t):"object"==typeof exports?exports.avcoreClient=t(require("socket.io-client"),require("axios")):e.avcoreClient=t(e.io,e.axios)}(this,(function(e,t){return function(e){var t={};function r(s){if(t[s])return t[s].exports;var i=t[s]={i:s,l:!1,exports:{}};return e[s].call(i.exports,i,i.exports,r),i.l=!0,i.exports}return r.m=e,r.c=t,r.d=function(e,t,s){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:s})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var s=Object.create(null);if(r.r(s),Object.defineProperty(s,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var i in e)r.d(s,i,function(t){return e[t]}.bind(null,i));return s},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=52)}([function(e,t,r){var s,i;e.exports=(s=r(50),i=r(51),function(e){var t={};function r(s){if(t[s])return t[s].exports;var i=t[s]={i:s,l:!1,exports:{}};return e[s].call(i.exports,i,i.exports,r),i.l=!0,i.exports}return r.m=e,r.c=t,r.d=function(e,t,s){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:s})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var s=Object.create(null);if(r.r(s),Object.defineProperty(s,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var i in e)r.d(s,i,function(t){return e[t]}.bind(null,i));return s},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=6)}([function(e,t,r){"use strict";var s;r.d(t,"a",(function(){return s})),r.d(t,"k",(function(){return i})),r.d(t,"j",(function(){return n})),r.d(t,"d",(function(){return a})),r.d(t,"l",(function(){return o})),r.d(t,"e",(function(){return c})),r.d(t,"i",(function(){return d})),r.d(t,"h",(function(){return p})),r.d(t,"c",(function(){return l})),r.d(t,"b",(function(){return u})),r.d(t,"f",(function(){return h})),r.d(t,"g",(function(){return m})),function(e){e.GET_SERVER_CONFIGS="getServerConfigs",e.CREATE_TRANSPORT="createTransport",e.CONNECT_TRANSPORT="connectTransport",e.CLOSE_TRANSPORT="closeTransport",e.PRODUCE="produce",e.CONSUME="consume",e.RESUME_CONSUMER="resumeConsumer",e.PAUSE_CONSUMER="pauseConsumer",e.CLOSE_CONSUMER="closeConsumer",e.RESUME_PRODUCER="resumeProducer",e.PAUSE_PRODUCER="pauseProducer",e.CLOSE_PRODUCER="closeProducer",e.FILE_STREAMING="fileStreaming",e.LIVE_STREAMING="liveStreaming",e.LIVE_TO_HLS="liveToHls",e.STOP_FILE_STREAMING="stopFileStreaming",e.START_RECORDING="startRecording",e.STOP_RECORDING="stopRecording",e.CREATE_PIPE_TRANSPORT="createPipeTransport",e.CONNECT_PIPE_TRANSPORT="connectPipeTransport",e.SET_PREFERRED_LAYERS="setPreferredLayers",e.SET_MAX_INCOMING_BITRATE="setMaxIncomingBitrate",e.PRODUCERS_STATS="producersStats",e.CONSUMERS_STATS="consumersStats",e.TRANSPORT_STATS="transportStats",e.PIPE_TO_REMOTE_PRODUCER="pipeToRemoteProducer",e.PIPE_FROM_REMOTE_PRODUCER="pipeFromRemoteProducer",e.WORKER_LOAD="workerLoad",e.NUM_WORKERS="numWorkers",e.RECORDED_STREAMS="recordedStreams",e.STREAM_RECORDINGS="streamRecordings",e.DELETE_STREAM_RECORDINGS="deleteStreamRecordings",e.DELETE_RECORDING="deleteRecording",e.PUSH_TO_SERVER_INPUTS="pushToServerInputs",e.PULL_FROM_SERVER_INPUTS="pullFromServerInputs",e.PUSH_TO_SERVER_OPTIONS="pushToServerOptions",e.PUSH_TO_SERVER="pushToServer",e.KINDS_BY_FILE="kindsByFile",e.REQUEST_KEYFRAME="requestKeyframe",e.LISTEN_STREAM_STARTED="listenStreamStarted",e.LISTEN_STREAM_STOPPED="listenStreamStopped",e.MIXER_START="mixerStart",e.MIXER_CLOSE="mixerClose",e.MIXER_ADD="mixerAdd",e.MIXER_REMOVE="mixerRemove",e.MIXER_UPDATE="mixerUpdate",e.MIXER_PIPE_START="mixerPipeStart",e.MIXER_PIPE_STOP="mixerPipeStop",e.LISTEN_MIXER_STOPPED="listenMixerStopped"}(s||(s={}));const i=[s.GET_SERVER_CONFIGS,s.CREATE_TRANSPORT,s.CONNECT_TRANSPORT,s.CLOSE_TRANSPORT,s.PRODUCE,s.CONSUME,s.LISTEN_STREAM_STARTED,s.LISTEN_STREAM_STOPPED,s.LISTEN_MIXER_STOPPED,s.CREATE_PIPE_TRANSPORT,s.CONNECT_PIPE_TRANSPORT,s.PIPE_TO_REMOTE_PRODUCER,s.PIPE_FROM_REMOTE_PRODUCER],n=Object.values(s).filter(e=>!i.includes(e));var a,o;!function(e){e.STREAM_STARTED="streamStarted",e.STREAM_STOPPED="streamStopped",e.MIXER_STOPPED="mixerStopped"}(a||(a={})),function(e){e.STATS="stats",e.TRAFFIC="traffic",e.CPU="cpu"}(o||(o={}));const c={ROOT:"hls",PLAYLIST:"master.m3u8"};var d;!function(e){e.API="api"}(d||(d={}));const p={PATH:"nexmo",AUDIO_SAMPLE_RATE:16e3,AUDIO_CHANNELS:1};var l,u,h,m;!function(e){e[e.UNKNOWN=500]="UNKNOWN",e[e.UNAUTHORIZED=401]="UNAUTHORIZED",e[e.INVALID_TRANSPORT=530]="INVALID_TRANSPORT",e[e.INVALID_PRODUCER=531]="INVALID_PRODUCER",e[e.INVALID_CONSUMER=532]="INVALID_CONSUMER",e[e.INVALID_STREAM=533]="INVALID_STREAM",e[e.INVALID_OPERATION=534]="INVALID_OPERATION",e[e.INVALID_WORKER=535]="INVALID_WORKER",e[e.INVALID_INPUT=536]="INVALID_INPUT",e[e.INVALID_ACTION=537]="INVALID_ACTION"}(l||(l={})),function(e){e[e.SUBSCRIBE=0]="SUBSCRIBE",e[e.PUBLISH=1]="PUBLISH",e[e.RECORDING=2]="RECORDING",e[e.STREAMING=3]="STREAMING",e[e.MIXER=4]="MIXER"}(u||(u={})),function(e){e[e.LIVE=0]="LIVE",e[e.RECORDING=1]="RECORDING",e[e.RTMP=2]="RTMP",e[e.HLS=3]="HLS"}(h||(h={})),function(e){e.SCALE="scale",e.CROP="crop",e.PAD="pad"}(m||(m={}))},function(e,t,r){"use strict";r.d(t,"a",(function(){return d}));var s=r(4),i=r.n(s),n=r(5),a=r.n(n),o=r(0),c=function(e,t,r,s){return new(r||(r=Promise))((function(i,n){function a(e){try{c(s.next(e))}catch(e){n(e)}}function o(e){try{c(s.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof r?t:new r((function(e){e(t)}))).then(a,o)}c((s=s.apply(e,t||[])).next())}))};class d{constructor(e,t,r,s){this.closed=!1,this.log=s||console.log,this.url=e,this.worker=t,this.token=r}get client(){return this._client||(this._client=i()(this.url,{path:"",transports:["websocket"],query:`auth_token=${this.token}&mediasoup_worker=${this.worker}`,forceNew:!0})),this._client}connectSocket(){return new Promise((e,t)=>{this.client.connected?e():(this.client.on("error",e=>{"Not enough or too many segments"===e.message?e.errorId=o.c.UNAUTHORIZED:e.errorId=o.c.UNKNOWN,t(e)}),this.client.on("connect",e))})}resumeConsumer(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.RESUME_CONSUMER,e)}))}pauseConsumer(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.PAUSE_CONSUMER,e)}))}setPreferredLayers(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.SET_PREFERRED_LAYERS,e)}))}closeConsumer(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.CLOSE_CONSUMER,e)}))}resumeProducer(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.RESUME_PRODUCER,e)}))}pauseProducer(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.PAUSE_PRODUCER,e)}))}closeProducer(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.CLOSE_PRODUCER,e)}))}produce(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.PRODUCE,e)}))}consume(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.CONSUME,e)}))}createPipeTransport(){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.CREATE_PIPE_TRANSPORT)}))}connectPipeTransport(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.CONNECT_PIPE_TRANSPORT,e)}))}closeTransport(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.CLOSE_TRANSPORT,e)}))}getServerConfigs(){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.GET_SERVER_CONFIGS)}))}createTransport(){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.CREATE_TRANSPORT)}))}connectTransport(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.CONNECT_TRANSPORT,e)}))}setMaxIncomingBitrate(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.SET_MAX_INCOMING_BITRATE,e)}))}producersStats(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.PRODUCERS_STATS,e)}))}consumersStats(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.CONSUMERS_STATS,e)}))}transportStats(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.TRANSPORT_STATS,e)}))}workerLoad(){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.WORKER_LOAD)}))}numWorkers(){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.NUM_WORKERS)}))}pipeToRemoteProducer(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.PIPE_TO_REMOTE_PRODUCER,e)}))}pipeFromRemoteProducer(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.PIPE_FROM_REMOTE_PRODUCER,e)}))}startRecording(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.START_RECORDING,e)}))}stopRecording(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.STOP_RECORDING,e)}))}fileStreaming(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.FILE_STREAMING,e)}))}stopFileStreaming(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.STOP_FILE_STREAMING,e)}))}recordedStreams(){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.RECORDED_STREAMS)}))}streamRecordings(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.STREAM_RECORDINGS,e)}))}deleteStreamRecordings(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.DELETE_STREAM_RECORDINGS,e)}))}deleteRecording(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.DELETE_RECORDING,e)}))}pushToServerInputs(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.PUSH_TO_SERVER_INPUTS,e)}))}pushToServerOptions(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.PUSH_TO_SERVER_OPTIONS,e)}))}pushToServer(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.PUSH_TO_SERVER,e)}))}pullFromServerInputs(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.PULL_FROM_SERVER_INPUTS,e)}))}kindsByFile(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.KINDS_BY_FILE,e)}))}requestKeyframe(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.REQUEST_KEYFRAME,e)}))}listenStreamStarted(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.LISTEN_STREAM_STARTED,e)}))}listenStreamStopped(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.LISTEN_STREAM_STOPPED,e)}))}liveStreaming(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.LIVE_STREAMING,e)}))}liveToHls(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.LIVE_TO_HLS,e)}))}mixerStart(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.MIXER_START,e)}))}mixerClose(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.MIXER_CLOSE,e)}))}mixerAdd(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.MIXER_ADD,e)}))}mixerUpdate(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.MIXER_UPDATE,e)}))}mixerRemove(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.MIXER_REMOVE,e)}))}mixerPipeStart(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.MIXER_PIPE_START,e)}))}mixerPipeStop(e){return c(this,void 0,void 0,(function*(){yield this.request(o.a.MIXER_PIPE_STOP,e)}))}listenMixerStopped(e){return c(this,void 0,void 0,(function*(){return yield this.request(o.a.LISTEN_MIXER_STOPPED,e)}))}clear(){this.closed=!0,this._client&&(this._client.removeAllListeners(),this.client.connected&&this._client.disconnect())}request(e,t={}){return c(this,void 0,void 0,(function*(){if(!this.closed)return this._client||o.k.includes(e)?this.socketRequest(e,t):this.restRequest(e,t)}))}socketRequest(e,t={}){return c(this,void 0,void 0,(function*(){return yield this.connectSocket(),this.log("sent message",e,JSON.stringify(t)),new Promise((r,s)=>{this.client.emit(e,t,t=>{t&&"boolean"!=typeof t&&t.hasOwnProperty("errorId")?(this.log("got error",e,JSON.stringify(t)),s(t)):(this.log("got message",e,JSON.stringify(t)),r(t))})})}))}restRequest(e,t={}){return c(this,void 0,void 0,(function*(){try{const{data:r}=yield a.a.post(`${this.url}/${o.i.API}/${this.worker}/${e}`,t,{headers:{"Content-Type":"application/json",Authorization:"Bearer "+this.token}});return this.log("got message",e,JSON.stringify(r)),r}catch(e){let t=o.c.UNKNOWN;throw this.log("got error",e),e.response&&e.response.status&&o.c[e.response.status]&&(t=e.response.status),{errorId:t}}}))}}},function(e,t){},function(e,t,r){"use strict";r.d(t,"a",(function(){return i}));var s=r(0);class i{static pinCodeChoice(e,t,r="Please, enter active pin code."){return[{action:"talk",text:r,bargeIn:!0},{action:"input",maxDigits:e,timeOut:10,eventUrl:[t]}]}static pinCodeChoiceRepeat(e,t,r="Sorry, this pin code is invalid.",s){return[{action:"talk",text:r},...i.pinCodeChoice(e,t,s)]}static mixerConnect(e,t,r="Connecting to meeting. Please, wait."){return[{action:"talk",text:r},{action:"connect",endpoint:[{type:"websocket",uri:`${e.replace("http","ws")}/${s.h.PATH}`,"content-type":"audio/l16;rate="+s.h.AUDIO_SAMPLE_RATE,headers:t}]}]}}},function(e,t){e.exports=s},function(e,t){e.exports=i},function(e,t,r){"use strict";r.r(t);var s=r(0);r.d(t,"ERROR",(function(){return s.c})),r.d(t,"ACTION",(function(){return s.a})),r.d(t,"API_OPERATION",(function(){return s.b})),r.d(t,"EVENT",(function(){return s.d})),r.d(t,"STAT",(function(){return s.l})),r.d(t,"MIXER_PIPE_TYPE",(function(){return s.f})),r.d(t,"NEXMO",(function(){return s.h})),r.d(t,"HLS",(function(){return s.e})),r.d(t,"PATH",(function(){return s.i})),r.d(t,"SOCKET_ONLY_ACTIONS",(function(){return s.k})),r.d(t,"REST_ACTIONS",(function(){return s.j})),r.d(t,"MIXER_RENDER_TYPE",(function(){return s.g}));var i=r(1);r.d(t,"MediasoupSocketApi",(function(){return i.a}));var n=r(2);for(var a in n)["ERROR","ACTION","API_OPERATION","EVENT","STAT","MIXER_PIPE_TYPE","NEXMO","HLS","PATH","SOCKET_ONLY_ACTIONS","REST_ACTIONS","MIXER_RENDER_TYPE","MediasoupSocketApi","NexmoUtils","default"].indexOf(a)<0&&function(e){r.d(t,e,(function(){return n[e]}))}(a);var o=r(3);r.d(t,"NexmoUtils",(function(){return o.a}))}]))},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(26),i="mediasoup-client";t.Logger=class{constructor(e){e?(this._debug=s.default(`${i}:${e}`),this._warn=s.default(`${i}:WARN:${e}`),this._error=s.default(`${i}:ERROR:${e}`)):(this._debug=s.default(i),this._warn=s.default(i+":WARN"),this._error=s.default(i+":ERROR")),this._debug.log=console.info.bind(console),this._warn.log=console.warn.bind(console),this._error.log=console.error.bind(console)}get debug(){return this._debug}get warn(){return this._warn}get error(){return this._error}}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.clone=function(e,t){return void 0===e?t:JSON.parse(JSON.stringify(e))},t.generateRandomNumber=function(){return Math.round(1e7*Math.random())}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(29),i=r(2);function n(e){const t=new RegExp("^(audio|video)/(.+)","i");if("object"!=typeof e)throw new TypeError("codec is not an object");if(!e.mimeType||"string"!=typeof e.mimeType)throw new TypeError("missing codec.mimeType");const r=t.exec(e.mimeType);if(!r)throw new TypeError("invalid codec.mimeType");if(e.kind=r[1].toLowerCase(),e.preferredPayloadType&&"number"!=typeof e.preferredPayloadType)throw new TypeError("invalid codec.preferredPayloadType");if("number"!=typeof e.clockRate)throw new TypeError("missing codec.clockRate");"audio"===e.kind?"number"!=typeof e.channels&&(e.channels=1):delete e.channels,e.parameters&&"object"==typeof e.parameters||(e.parameters={});for(const t of Object.keys(e.parameters)){let r=e.parameters[t];if(void 0===r&&(e.parameters[t]="",r=""),"string"!=typeof r&&"number"!=typeof r)throw new TypeError(`invalid codec parameter [key:${t}s, value:${r}]`);if("apt"===t&&"number"!=typeof r)throw new TypeError("invalid codec apt parameter")}e.rtcpFeedback&&Array.isArray(e.rtcpFeedback)||(e.rtcpFeedback=[]);for(const t of e.rtcpFeedback)a(t)}function a(e){if("object"!=typeof e)throw new TypeError("fb is not an object");if(!e.type||"string"!=typeof e.type)throw new TypeError("missing fb.type");e.parameter&&"string"==typeof e.parameter||(e.parameter="")}function o(e){if("object"!=typeof e)throw new TypeError("ext is not an object");if(e.kind&&"string"==typeof e.kind||(e.kind=""),""!==e.kind&&"audio"!==e.kind&&"video"!==e.kind)throw new TypeError("invalid ext.kind");if(!e.uri||"string"!=typeof e.uri)throw new TypeError("missing ext.uri");if("number"!=typeof e.preferredId)throw new TypeError("missing ext.preferredId");if(e.preferredEncrypt&&"boolean"!=typeof e.preferredEncrypt)throw new TypeError("invalid ext.preferredEncrypt");if(e.preferredEncrypt||(e.preferredEncrypt=!1),e.direction&&"string"!=typeof e.direction)throw new TypeError("invalid ext.direction");e.direction||(e.direction="sendrecv")}function c(e){if("object"!=typeof e)throw new TypeError("params is not an object");if(e.mid&&"string"!=typeof e.mid)throw new TypeError("params.mid is not a string");if(!Array.isArray(e.codecs))throw new TypeError("missing params.codecs");for(const t of e.codecs)d(t);if(e.headerExtensions&&!Array.isArray(e.headerExtensions))throw new TypeError("params.headerExtensions is not an array");e.headerExtensions||(e.headerExtensions=[]);for(const t of e.headerExtensions)p(t);if(e.encodings&&!Array.isArray(e.encodings))throw new TypeError("params.encodings is not an array");e.encodings||(e.encodings=[]);for(const t of e.encodings)l(t);if(e.rtcp&&"object"!=typeof e.rtcp)throw new TypeError("params.rtcp is not an object");e.rtcp||(e.rtcp={}),u(e.rtcp)}function d(e){const t=new RegExp("^(audio|video)/(.+)","i");if("object"!=typeof e)throw new TypeError("codec is not an object");if(!e.mimeType||"string"!=typeof e.mimeType)throw new TypeError("missing codec.mimeType");const r=t.exec(e.mimeType);if(!r)throw new TypeError("invalid codec.mimeType");if("number"!=typeof e.payloadType)throw new TypeError("missing codec.payloadType");if("number"!=typeof e.clockRate)throw new TypeError("missing codec.clockRate");"audio"===r[1].toLowerCase()?"number"!=typeof e.channels&&(e.channels=1):delete e.channels,e.parameters&&"object"==typeof e.parameters||(e.parameters={});for(const t of Object.keys(e.parameters)){let r=e.parameters[t];if(void 0===r&&(e.parameters[t]="",r=""),"string"!=typeof r&&"number"!=typeof r)throw new TypeError(`invalid codec parameter [key:${t}s, value:${r}]`);if("apt"===t&&"number"!=typeof r)throw new TypeError("invalid codec apt parameter")}e.rtcpFeedback&&Array.isArray(e.rtcpFeedback)||(e.rtcpFeedback=[]);for(const t of e.rtcpFeedback)a(t)}function p(e){if("object"!=typeof e)throw new TypeError("ext is not an object");if(!e.uri||"string"!=typeof e.uri)throw new TypeError("missing ext.uri");if("number"!=typeof e.id)throw new TypeError("missing ext.id");if(e.encrypt&&"boolean"!=typeof e.encrypt)throw new TypeError("invalid ext.encrypt");e.encrypt||(e.encrypt=!1),e.parameters&&"object"==typeof e.parameters||(e.parameters={});for(const t of Object.keys(e.parameters)){let r=e.parameters[t];if(void 0===r&&(e.parameters[t]="",r=""),"string"!=typeof r&&"number"!=typeof r)throw new TypeError("invalid header extension parameter")}}function l(e){if("object"!=typeof e)throw new TypeError("encoding is not an object");if(e.ssrc&&"number"!=typeof e.ssrc)throw new TypeError("invalid encoding.ssrc");if(e.rid&&"string"!=typeof e.rid)throw new TypeError("invalid encoding.rid");if(e.rtx&&"object"!=typeof e.rtx)throw new TypeError("invalid encoding.rtx");if(e.rtx&&"number"!=typeof e.rtx.ssrc)throw new TypeError("missing encoding.rtx.ssrc");if(e.dtx&&"boolean"==typeof e.dtx||(e.dtx=!1),e.scalabilityMode&&"string"!=typeof e.scalabilityMode)throw new TypeError("invalid encoding.scalabilityMode")}function u(e){if("object"!=typeof e)throw new TypeError("rtcp is not an object");if(e.cname&&"string"!=typeof e.cname)throw new TypeError("invalid rtcp.cname");e.reducedSize&&"boolean"==typeof e.reducedSize||(e.reducedSize=!0)}function h(e){if("object"!=typeof e)throw new TypeError("numStreams is not an object");if("number"!=typeof e.OS)throw new TypeError("missing numStreams.OS");if("number"!=typeof e.MIS)throw new TypeError("missing numStreams.MIS")}function m(e){return!!e&&/.+\/rtx$/i.test(e.mimeType)}function f(e,t,{strict:r=!1,modify:i=!1}={}){const n=e.mimeType.toLowerCase();if(n!==t.mimeType.toLowerCase())return!1;if(e.clockRate!==t.clockRate)return!1;if(e.channels!==t.channels)return!1;switch(n){case"video/h264":if((e.parameters["packetization-mode"]||0)!==(t.parameters["packetization-mode"]||0))return!1;if(r){if(!s.isSameProfile(e.parameters,t.parameters))return!1;let r;try{r=s.generateProfileLevelIdForAnswer(e.parameters,t.parameters)}catch(e){return!1}i&&(r?(e.parameters["profile-level-id"]=r,t.parameters["profile-level-id"]=r):(delete e.parameters["profile-level-id"],delete t.parameters["profile-level-id"]))}break;case"video/vp9":if(r){if((e.parameters["profile-id"]||0)!==(t.parameters["profile-id"]||0))return!1}}return!0}function g(e,t){return(!e.kind||!t.kind||e.kind===t.kind)&&e.uri===t.uri}function _(e,t){const r=[];for(const s of e.rtcpFeedback||[]){const e=(t.rtcpFeedback||[]).find(e=>e.type===s.type&&(e.parameter===s.parameter||!e.parameter&&!s.parameter));e&&r.push(e)}return r}t.validateRtpCapabilities=function(e){if("object"!=typeof e)throw new TypeError("caps is not an object");if(e.codecs&&!Array.isArray(e.codecs))throw new TypeError("caps.codecs is not an array");e.codecs||(e.codecs=[]);for(const t of e.codecs)n(t);if(e.headerExtensions&&!Array.isArray(e.headerExtensions))throw new TypeError("caps.headerExtensions is not an array");e.headerExtensions||(e.headerExtensions=[]);for(const t of e.headerExtensions)o(t)},t.validateRtpCodecCapability=n,t.validateRtcpFeedback=a,t.validateRtpHeaderExtension=o,t.validateRtpParameters=c,t.validateRtpCodecParameters=d,t.validateRtpHeaderExtensionParameters=p,t.validateRtpEncodingParameters=l,t.validateRtcpParameters=u,t.validateSctpCapabilities=function(e){if("object"!=typeof e)throw new TypeError("caps is not an object");if(!e.numStreams||"object"!=typeof e.numStreams)throw new TypeError("missing caps.numStreams");h(e.numStreams)},t.validateNumSctpStreams=h,t.validateSctpParameters=function(e){if("object"!=typeof e)throw new TypeError("params is not an object");if("number"!=typeof e.port)throw new TypeError("missing params.port");if("number"!=typeof e.OS)throw new TypeError("missing params.OS");if("number"!=typeof e.MIS)throw new TypeError("missing params.MIS");if("number"!=typeof e.maxMessageSize)throw new TypeError("missing params.maxMessageSize")},t.validateSctpStreamParameters=function(e){if("object"!=typeof e)throw new TypeError("params is not an object");if("number"!=typeof e.streamId)throw new TypeError("missing params.streamId");let t=!1;if("boolean"==typeof e.ordered?t=!0:e.ordered=!0,e.maxPacketLifeTime&&"number"!=typeof e.maxPacketLifeTime)throw new TypeError("invalid params.maxPacketLifeTime");if(e.maxRetransmits&&"number"!=typeof e.maxRetransmits)throw new TypeError("invalid params.maxRetransmits");if(e.maxPacketLifeTime&&e.maxRetransmits)throw new TypeError("cannot provide both maxPacketLifeTime and maxRetransmits");if(t&&e.ordered&&(e.maxPacketLifeTime||e.maxRetransmits))throw new TypeError("cannot be ordered with maxPacketLifeTime or maxRetransmits");if(t||!e.maxPacketLifeTime&&!e.maxRetransmits||(e.ordered=!1),e.priority&&"string"!=typeof e.priority)throw new TypeError("invalid params.priority");if(e.label&&"string"!=typeof e.label)throw new TypeError("invalid params.label");if(e.protocol&&"string"!=typeof e.protocol)throw new TypeError("invalid params.protocol")},t.getExtendedRtpCapabilities=function(e,t){const r={codecs:[],headerExtensions:[]};for(const s of t.codecs||[]){if(m(s))continue;const t=(e.codecs||[]).find(e=>f(e,s,{strict:!0,modify:!0}));if(!t)continue;const i={mimeType:t.mimeType,kind:t.kind,clockRate:t.clockRate,channels:t.channels,localPayloadType:t.preferredPayloadType,localRtxPayloadType:void 0,remotePayloadType:s.preferredPayloadType,remoteRtxPayloadType:void 0,localParameters:t.parameters,remoteParameters:s.parameters,rtcpFeedback:_(t,s)};r.codecs.push(i)}for(const s of r.codecs){const r=e.codecs.find(e=>m(e)&&e.parameters.apt===s.localPayloadType),i=t.codecs.find(e=>m(e)&&e.parameters.apt===s.remotePayloadType);r&&i&&(s.localRtxPayloadType=r.preferredPayloadType,s.remoteRtxPayloadType=i.preferredPayloadType)}for(const s of t.headerExtensions){const t=e.headerExtensions.find(e=>g(e,s));if(!t)continue;const i={kind:s.kind,uri:s.uri,sendId:t.preferredId,recvId:s.preferredId,encrypt:t.preferredEncrypt,direction:"sendrecv"};switch(s.direction){case"sendrecv":i.direction="sendrecv";break;case"recvonly":i.direction="sendonly";break;case"sendonly":i.direction="recvonly";break;case"inactive":i.direction="inactive"}r.headerExtensions.push(i)}return r},t.getRecvRtpCapabilities=function(e){const t={codecs:[],headerExtensions:[]};for(const r of e.codecs){const e={mimeType:r.mimeType,kind:r.kind,preferredPayloadType:r.remotePayloadType,clockRate:r.clockRate,channels:r.channels,parameters:r.localParameters,rtcpFeedback:r.rtcpFeedback};if(t.codecs.push(e),!r.remoteRtxPayloadType)continue;const s={mimeType:r.kind+"/rtx",kind:r.kind,preferredPayloadType:r.remoteRtxPayloadType,clockRate:r.clockRate,parameters:{apt:r.remotePayloadType},rtcpFeedback:[]};t.codecs.push(s)}for(const r of e.headerExtensions){if("sendrecv"!==r.direction&&"recvonly"!==r.direction)continue;const e={kind:r.kind,uri:r.uri,preferredId:r.recvId,preferredEncrypt:r.encrypt,direction:r.direction};t.headerExtensions.push(e)}return t},t.getSendingRtpParameters=function(e,t){const r={mid:void 0,codecs:[],headerExtensions:[],encodings:[],rtcp:{}};for(const s of t.codecs){if(s.kind!==e)continue;const t={mimeType:s.mimeType,payloadType:s.localPayloadType,clockRate:s.clockRate,channels:s.channels,parameters:s.localParameters,rtcpFeedback:s.rtcpFeedback};if(r.codecs.push(t),s.localRtxPayloadType){const e={mimeType:s.kind+"/rtx",payloadType:s.localRtxPayloadType,clockRate:s.clockRate,parameters:{apt:s.localPayloadType},rtcpFeedback:[]};r.codecs.push(e)}}for(const s of t.headerExtensions){if(s.kind&&s.kind!==e||"sendrecv"!==s.direction&&"sendonly"!==s.direction)continue;const t={uri:s.uri,id:s.sendId,encrypt:s.encrypt,parameters:{}};r.headerExtensions.push(t)}return r},t.getSendingRemoteRtpParameters=function(e,t){const r={mid:void 0,codecs:[],headerExtensions:[],encodings:[],rtcp:{}};for(const s of t.codecs){if(s.kind!==e)continue;const t={mimeType:s.mimeType,payloadType:s.localPayloadType,clockRate:s.clockRate,channels:s.channels,parameters:s.remoteParameters,rtcpFeedback:s.rtcpFeedback};if(r.codecs.push(t),s.localRtxPayloadType){const e={mimeType:s.kind+"/rtx",payloadType:s.localRtxPayloadType,clockRate:s.clockRate,parameters:{apt:s.localPayloadType},rtcpFeedback:[]};r.codecs.push(e)}}for(const s of t.headerExtensions){if(s.kind&&s.kind!==e||"sendrecv"!==s.direction&&"sendonly"!==s.direction)continue;const t={uri:s.uri,id:s.sendId,encrypt:s.encrypt,parameters:{}};r.headerExtensions.push(t)}if(r.headerExtensions.some(e=>"http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01"===e.uri))for(const e of r.codecs)e.rtcpFeedback=(e.rtcpFeedback||[]).filter(e=>"goog-remb"!==e.type);else if(r.headerExtensions.some(e=>"http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time"===e.uri))for(const e of r.codecs)e.rtcpFeedback=(e.rtcpFeedback||[]).filter(e=>"transport-cc"!==e.type);else for(const e of r.codecs)e.rtcpFeedback=(e.rtcpFeedback||[]).filter(e=>"transport-cc"!==e.type&&"goog-remb"!==e.type);return r},t.reduceCodecs=function(e,t){const r=[];if(t){for(let s=0;s<e.length;++s)if(f(e[s],t)){r.push(e[s]),m(e[s+1])&&r.push(e[s+1]);break}if(0===r.length)throw new TypeError("no matching codec found")}else r.push(e[0]),m(e[1])&&r.push(e[1]);return r},t.generateProbatorRtpParameters=function(e){c(e=i.clone(e,{}));const t={mid:"probator",codecs:[],headerExtensions:[],encodings:[{ssrc:1234}],rtcp:{cname:"probator"}};return t.codecs.push(e.codecs[0]),t.codecs[0].payloadType=127,t.headerExtensions=e.headerExtensions,t},t.canSend=function(e,t){return t.codecs.some(t=>t.kind===e)},t.canReceive=function(e,t){if(c(e),0===e.codecs.length)return!1;const r=e.codecs[0];return t.codecs.some(e=>e.remotePayloadType===r.payloadType)}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});class s extends Error{constructor(e){super(e),this.name="UnsupportedError",Error.hasOwnProperty("captureStackTrace")?Error.captureStackTrace(this,s):this.stack=new Error(e).stack}}t.UnsupportedError=s;class i extends Error{constructor(e){super(e),this.name="InvalidStateError",Error.hasOwnProperty("captureStackTrace")?Error.captureStackTrace(this,i):this.stack=new Error(e).stack}}t.InvalidStateError=i},function(e,t,r){var s=r(35),i=r(36);t.write=i,t.parse=s.parse,t.parseParams=s.parseParams,t.parseFmtpConfig=s.parseFmtpConfig,t.parsePayloads=s.parsePayloads,t.parseRemoteCandidates=s.parseRemoteCandidates,t.parseImageAttributes=s.parseImageAttributes,t.parseSimulcastStreamList=s.parseSimulcastStreamList},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(9);class i extends s.EnhancedEventEmitter{constructor(){super()}}t.HandlerInterface=i},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5);t.extractRtpCapabilities=function({sdpObject:e}){const t=new Map,r=[];let i=!1,n=!1;for(const a of e.media){const e=a.type;switch(e){case"audio":if(i)continue;i=!0;break;case"video":if(n)continue;n=!0;break;default:continue}for(const r of a.rtp){const s={kind:e,mimeType:`${e}/${r.codec}`,preferredPayloadType:r.payload,clockRate:r.rate,channels:r.encoding,parameters:{},rtcpFeedback:[]};t.set(s.preferredPayloadType,s)}for(const e of a.fmtp||[]){const r=s.parseParams(e.config),i=t.get(e.payload);i&&(r&&r["profile-level-id"]&&(r["profile-level-id"]=String(r["profile-level-id"])),i.parameters=r)}for(const e of a.rtcpFb||[]){const r=t.get(e.payload);if(!r)continue;const s={type:e.type,parameter:e.subtype};s.parameter||delete s.parameter,r.rtcpFeedback.push(s)}for(const t of a.ext||[]){if(t["encrypt-uri"])continue;const s={kind:e,uri:t.uri,preferredId:t.value};r.push(s)}}return{codecs:Array.from(t.values()),headerExtensions:r}},t.extractDtlsParameters=function({sdpObject:e}){const t=(e.media||[]).find(e=>e.iceUfrag&&0!==e.port);if(!t)throw new Error("no active media section found");const r=t.fingerprint||e.fingerprint;let s;switch(t.setup){case"active":s="client";break;case"passive":s="server";break;case"actpass":s="auto"}return{role:s,fingerprints:[{algorithm:r.type,value:r.hash}]}},t.getCname=function({offerMediaObject:e}){const t=(e.ssrcs||[]).find(e=>"cname"===e.attribute);return t?t.value:""},t.applyCodecParameters=function({offerRtpParameters:e,answerMediaObject:t}){for(const r of e.codecs){const e=r.mimeType.toLowerCase();if("audio/opus"!==e)continue;if(!(t.rtp||[]).find(e=>e.payload===r.payloadType))continue;t.fmtp=t.fmtp||[];let i=t.fmtp.find(e=>e.payload===r.payloadType);i||(i={payload:r.payloadType,config:""},t.fmtp.push(i));const n=s.parseParams(i.config);switch(e){case"audio/opus":{const e=r.parameters["sprop-stereo"];void 0!==e&&(n.stereo=e?1:0);break}}i.config="";for(const e of Object.keys(n))i.config&&(i.config+=";"),i.config+=`${e}=${n[e]}`}}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5),i=r(1),n=r(37),a=new i.Logger("RemoteSdp");t.RemoteSdp=class{constructor({iceParameters:e,iceCandidates:t,dtlsParameters:r,sctpParameters:s,plainRtpParameters:i,planB:n=!1}){if(this._mediaSections=[],this._midToIndex=new Map,this._iceParameters=e,this._iceCandidates=t,this._dtlsParameters=r,this._sctpParameters=s,this._plainRtpParameters=i,this._planB=n,this._sdpObject={version:0,origin:{address:"0.0.0.0",ipVer:4,netType:"IN",sessionId:1e4,sessionVersion:0,username:"mediasoup-client"},name:"-",timing:{start:0,stop:0},media:[]},e&&e.iceLite&&(this._sdpObject.icelite="ice-lite"),r){this._sdpObject.msidSemantic={semantic:"WMS",token:"*"};const e=this._dtlsParameters.fingerprints.length;this._sdpObject.fingerprint={type:r.fingerprints[e-1].algorithm,hash:r.fingerprints[e-1].value},this._sdpObject.groups=[{type:"BUNDLE",mids:""}]}i&&(this._sdpObject.origin.address=i.ip,this._sdpObject.origin.ipVer=i.ipVersion)}updateIceParameters(e){a.debug("updateIceParameters() [iceParameters:%o]",e),this._iceParameters=e,this._sdpObject.icelite=e.iceLite?"ice-lite":void 0;for(const t of this._mediaSections)t.setIceParameters(e)}updateDtlsRole(e){a.debug("updateDtlsRole() [role:%s]",e),this._dtlsParameters.role=e;for(const t of this._mediaSections)t.setDtlsRole(e)}getNextMediaSectionIdx(){for(let e=0;e<this._mediaSections.length;++e){const t=this._mediaSections[e];if(t.closed)return{idx:e,reuseMid:t.mid}}return{idx:this._mediaSections.length}}send({offerMediaObject:e,reuseMid:t,offerRtpParameters:r,answerRtpParameters:s,codecOptions:i,extmapAllowMixed:a=!1}){const o=new n.AnswerMediaSection({iceParameters:this._iceParameters,iceCandidates:this._iceCandidates,dtlsParameters:this._dtlsParameters,plainRtpParameters:this._plainRtpParameters,planB:this._planB,offerMediaObject:e,offerRtpParameters:r,answerRtpParameters:s,codecOptions:i,extmapAllowMixed:a});t?this._replaceMediaSection(o,t):this._midToIndex.has(o.mid)?this._replaceMediaSection(o):this._addMediaSection(o)}receive({mid:e,kind:t,offerRtpParameters:r,streamId:s,trackId:i}){const a=this._midToIndex.get(e);let o;if(void 0!==a&&(o=this._mediaSections[a]),o)o.planBReceive({offerRtpParameters:r,streamId:s,trackId:i}),this._replaceMediaSection(o);else{o=new n.OfferMediaSection({iceParameters:this._iceParameters,iceCandidates:this._iceCandidates,dtlsParameters:this._dtlsParameters,plainRtpParameters:this._plainRtpParameters,planB:this._planB,mid:e,kind:t,offerRtpParameters:r,streamId:s,trackId:i});const a=this._mediaSections.find(e=>e.closed);a?this._replaceMediaSection(o,a.mid):this._addMediaSection(o)}}disableMediaSection(e){const t=this._midToIndex.get(e);if(void 0===t)throw new Error(`no media section found with mid '${e}'`);this._mediaSections[t].disable()}closeMediaSection(e){const t=this._midToIndex.get(e);if(void 0===t)throw new Error(`no media section found with mid '${e}'`);const r=this._mediaSections[t];if(e===this._firstMid)return a.debug("closeMediaSection() | cannot close first media section, disabling it instead [mid:%s]",e),void this.disableMediaSection(e);r.close(),this._regenerateBundleMids()}planBStopReceiving({mid:e,offerRtpParameters:t}){const r=this._midToIndex.get(e);if(void 0===r)throw new Error(`no media section found with mid '${e}'`);const s=this._mediaSections[r];s.planBStopReceiving({offerRtpParameters:t}),this._replaceMediaSection(s)}sendSctpAssociation({offerMediaObject:e}){const t=new n.AnswerMediaSection({iceParameters:this._iceParameters,iceCandidates:this._iceCandidates,dtlsParameters:this._dtlsParameters,sctpParameters:this._sctpParameters,plainRtpParameters:this._plainRtpParameters,offerMediaObject:e});this._addMediaSection(t)}receiveSctpAssociation({oldDataChannelSpec:e=!1}={}){const t=new n.OfferMediaSection({iceParameters:this._iceParameters,iceCandidates:this._iceCandidates,dtlsParameters:this._dtlsParameters,sctpParameters:this._sctpParameters,plainRtpParameters:this._plainRtpParameters,mid:"datachannel",kind:"application",oldDataChannelSpec:e});this._addMediaSection(t)}getSdp(){return this._sdpObject.origin.sessionVersion++,s.write(this._sdpObject)}_addMediaSection(e){this._firstMid||(this._firstMid=e.mid),this._mediaSections.push(e),this._midToIndex.set(e.mid,this._mediaSections.length-1),this._sdpObject.media.push(e.getObject()),this._regenerateBundleMids()}_replaceMediaSection(e,t){if("string"==typeof t){const r=this._midToIndex.get(t);if(void 0===r)throw new Error(`no media section found for reuseMid '${t}'`);const s=this._mediaSections[r];this._mediaSections[r]=e,this._midToIndex.delete(s.mid),this._midToIndex.set(e.mid,r),this._sdpObject.media[r]=e.getObject(),this._regenerateBundleMids()}else{const t=this._midToIndex.get(e.mid);if(void 0===t)throw new Error(`no media section found with mid '${e.mid}'`);this._mediaSections[t]=e,this._sdpObject.media[t]=e.getObject()}}_regenerateBundleMids(){this._dtlsParameters&&(this._sdpObject.groups[0].mids=this._mediaSections.filter(e=>!e.closed).map(e=>e.mid).join(" "))}}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(14),i=new(r(1).Logger)("EnhancedEventEmitter");class n extends s.EventEmitter{constructor(){super(),this.setMaxListeners(1/0)}safeEmit(e,...t){const r=this.listenerCount(e);try{return this.emit(e,...t)}catch(t){return i.error("safeEmit() | event listener threw an error [event:%s]:%o",e,t),Boolean(r)}}async safeEmitAsPromise(e,...t){return new Promise((r,s)=>{try{this.emit(e,...t,r,s)}catch(t){i.error("safeEmitAsPromise() | event listener threw an error [event:%s]:%o",e,t),s(t)}})}}t.EnhancedEventEmitter=n},function(e,t){var r,s,i=e.exports={};function n(){throw new Error("setTimeout has not been defined")}function a(){throw new Error("clearTimeout has not been defined")}function o(e){if(r===setTimeout)return setTimeout(e,0);if((r===n||!r)&&setTimeout)return r=setTimeout,setTimeout(e,0);try{return r(e,0)}catch(t){try{return r.call(null,e,0)}catch(t){return r.call(this,e,0)}}}!function(){try{r="function"==typeof setTimeout?setTimeout:n}catch(e){r=n}try{s="function"==typeof clearTimeout?clearTimeout:a}catch(e){s=a}}();var c,d=[],p=!1,l=-1;function u(){p&&c&&(p=!1,c.length?d=c.concat(d):l=-1,d.length&&h())}function h(){if(!p){var e=o(u);p=!0;for(var t=d.length;t;){for(c=d,d=[];++l<t;)c&&c[l].run();l=-1,t=d.length}c=null,p=!1,function(e){if(s===clearTimeout)return clearTimeout(e);if((s===a||!s)&&clearTimeout)return s=clearTimeout,clearTimeout(e);try{s(e)}catch(t){try{return s.call(null,e)}catch(t){return s.call(this,e)}}}(e)}}function m(e,t){this.fun=e,this.array=t}function f(){}i.nextTick=function(e){var t=new Array(arguments.length-1);if(arguments.length>1)for(var r=1;r<arguments.length;r++)t[r-1]=arguments[r];d.push(new m(e,t)),1!==d.length||p||o(h)},m.prototype.run=function(){this.fun.apply(null,this.array)},i.title="browser",i.browser=!0,i.env={},i.argv=[],i.version="",i.versions={},i.on=f,i.addListener=f,i.once=f,i.off=f,i.removeListener=f,i.removeAllListeners=f,i.emit=f,i.prependListener=f,i.prependOnceListener=f,i.listeners=function(e){return[]},i.binding=function(e){throw new Error("process.binding is not supported")},i.cwd=function(){return"/"},i.chdir=function(e){throw new Error("process.chdir is not supported")},i.umask=function(){return 0}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.getRtpEncodings=function({offerMediaObject:e}){const t=new Set;for(const r of e.ssrcs||[]){const e=r.id;t.add(e)}if(0===t.size)throw new Error("no a=ssrc lines found");const r=new Map;for(const s of e.ssrcGroups||[]){if("FID"!==s.semantics)continue;let[e,i]=s.ssrcs.split(/\s+/);e=Number(e),i=Number(i),t.has(e)&&(t.delete(e),t.delete(i),r.set(e,i))}for(const e of t)r.set(e,null);const s=[];for(const[e,t]of r){const r={ssrc:e};t&&(r.rtx={ssrc:t}),s.push(r)}return s},t.addLegacySimulcast=function({offerMediaObject:e,numStreams:t}){if(t<=1)throw new TypeError("numStreams must be greater than 1");const r=(e.ssrcs||[]).find(e=>"msid"===e.attribute);if(!r)throw new Error("a=ssrc line with msid information not found");const[s,i]=r.value.split(" ")[0],n=r.id;let a;(e.ssrcGroups||[]).some(e=>{if("FID"!==e.semantics)return!1;const t=e.ssrcs.split(/\s+/);return Number(t[0])===n&&(a=Number(t[1]),!0)});const o=e.ssrcs.find(e=>"cname"===e.attribute);if(!o)throw new Error("a=ssrc line with cname information not found");const c=o.value,d=[],p=[];for(let e=0;e<t;++e)d.push(n+e),a&&p.push(a+e);e.ssrcGroups=[],e.ssrcs=[],e.ssrcGroups.push({semantics:"SIM",ssrcs:d.join(" ")});for(let t=0;t<d.length;++t){const r=d[t];e.ssrcs.push({id:r,attribute:"cname",value:c}),e.ssrcs.push({id:r,attribute:"msid",value:`${s} ${i}`})}for(let t=0;t<p.length;++t){const r=d[t],n=p[t];e.ssrcs.push({id:n,attribute:"cname",value:c}),e.ssrcs.push({id:n,attribute:"msid",value:`${s} ${i}`}),e.ssrcGroups.push({semantics:"FID",ssrcs:`${r} ${n}`})}}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.getRtpEncodings=function({offerMediaObject:e,track:t}){let r;const s=new Set;for(const i of e.ssrcs||[]){if("msid"!==i.attribute)continue;if(i.value.split(" ")[1]===t.id){const e=i.id;s.add(e),r||(r=e)}}if(0===s.size)throw new Error(`a=ssrc line with msid information not found [track.id:${t.id}]`);const i=new Map;for(const t of e.ssrcGroups||[]){if("FID"!==t.semantics)continue;let[e,r]=t.ssrcs.split(/\s+/);e=Number(e),r=Number(r),s.has(e)&&(s.delete(e),s.delete(r),i.set(e,r))}for(const e of s)i.set(e,null);const n=[];for(const[e,t]of i){const r={ssrc:e};t&&(r.rtx={ssrc:t}),n.push(r)}return n},t.addLegacySimulcast=function({offerMediaObject:e,track:t,numStreams:r}){if(r<=1)throw new TypeError("numStreams must be greater than 1");let s,i,n;if(!(e.ssrcs||[]).find(e=>{if("msid"!==e.attribute)return!1;return e.value.split(" ")[1]===t.id&&(s=e.id,n=e.value.split(" ")[0],!0)}))throw new Error(`a=ssrc line with msid information not found [track.id:${t.id}]`);(e.ssrcGroups||[]).some(e=>{if("FID"!==e.semantics)return!1;const t=e.ssrcs.split(/\s+/);return Number(t[0])===s&&(i=Number(t[1]),!0)});const a=e.ssrcs.find(e=>"cname"===e.attribute&&e.id===s);if(!a)throw new Error(`a=ssrc line with cname information not found [track.id:${t.id}]`);const o=a.value,c=[],d=[];for(let e=0;e<r;++e)c.push(s+e),i&&d.push(i+e);e.ssrcGroups=e.ssrcGroups||[],e.ssrcs=e.ssrcs||[],e.ssrcGroups.push({semantics:"SIM",ssrcs:c.join(" ")});for(let r=0;r<c.length;++r){const s=c[r];e.ssrcs.push({id:s,attribute:"cname",value:o}),e.ssrcs.push({id:s,attribute:"msid",value:`${n} ${t.id}`})}for(let r=0;r<d.length;++r){const s=c[r],i=d[r];e.ssrcs.push({id:i,attribute:"cname",value:o}),e.ssrcs.push({id:i,attribute:"msid",value:`${n} ${t.id}`}),e.ssrcGroups.push({semantics:"FID",ssrcs:`${s} ${i}`})}}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=new RegExp("^[LS]([1-9]\\d{0,1})T([1-9]\\d{0,1})");t.parse=function(e){const t=s.exec(e||"");return t?{spatialLayers:Number(t[1]),temporalLayers:Number(t[2])}:{spatialLayers:1,temporalLayers:1}}},function(e,t,r){"use strict";var s,i="object"==typeof Reflect?Reflect:null,n=i&&"function"==typeof i.apply?i.apply:function(e,t,r){return Function.prototype.apply.call(e,t,r)};s=i&&"function"==typeof i.ownKeys?i.ownKeys:Object.getOwnPropertySymbols?function(e){return Object.getOwnPropertyNames(e).concat(Object.getOwnPropertySymbols(e))}:function(e){return Object.getOwnPropertyNames(e)};var a=Number.isNaN||function(e){return e!=e};function o(){o.init.call(this)}e.exports=o,o.EventEmitter=o,o.prototype._events=void 0,o.prototype._eventsCount=0,o.prototype._maxListeners=void 0;var c=10;function d(e){if("function"!=typeof e)throw new TypeError('The "listener" argument must be of type Function. Received type '+typeof e)}function p(e){return void 0===e._maxListeners?o.defaultMaxListeners:e._maxListeners}function l(e,t,r,s){var i,n,a,o;if(d(r),void 0===(n=e._events)?(n=e._events=Object.create(null),e._eventsCount=0):(void 0!==n.newListener&&(e.emit("newListener",t,r.listener?r.listener:r),n=e._events),a=n[t]),void 0===a)a=n[t]=r,++e._eventsCount;else if("function"==typeof a?a=n[t]=s?[r,a]:[a,r]:s?a.unshift(r):a.push(r),(i=p(e))>0&&a.length>i&&!a.warned){a.warned=!0;var c=new Error("Possible EventEmitter memory leak detected. "+a.length+" "+String(t)+" listeners added. Use emitter.setMaxListeners() to increase limit");c.name="MaxListenersExceededWarning",c.emitter=e,c.type=t,c.count=a.length,o=c,console&&console.warn&&console.warn(o)}return e}function u(){if(!this.fired)return this.target.removeListener(this.type,this.wrapFn),this.fired=!0,0===arguments.length?this.listener.call(this.target):this.listener.apply(this.target,arguments)}function h(e,t,r){var s={fired:!1,wrapFn:void 0,target:e,type:t,listener:r},i=u.bind(s);return i.listener=r,s.wrapFn=i,i}function m(e,t,r){var s=e._events;if(void 0===s)return[];var i=s[t];return void 0===i?[]:"function"==typeof i?r?[i.listener||i]:[i]:r?function(e){for(var t=new Array(e.length),r=0;r<t.length;++r)t[r]=e[r].listener||e[r];return t}(i):g(i,i.length)}function f(e){var t=this._events;if(void 0!==t){var r=t[e];if("function"==typeof r)return 1;if(void 0!==r)return r.length}return 0}function g(e,t){for(var r=new Array(t),s=0;s<t;++s)r[s]=e[s];return r}Object.defineProperty(o,"defaultMaxListeners",{enumerable:!0,get:function(){return c},set:function(e){if("number"!=typeof e||e<0||a(e))throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received '+e+".");c=e}}),o.init=function(){void 0!==this._events&&this._events!==Object.getPrototypeOf(this)._events||(this._events=Object.create(null),this._eventsCount=0),this._maxListeners=this._maxListeners||void 0},o.prototype.setMaxListeners=function(e){if("number"!=typeof e||e<0||a(e))throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received '+e+".");return this._maxListeners=e,this},o.prototype.getMaxListeners=function(){return p(this)},o.prototype.emit=function(e){for(var t=[],r=1;r<arguments.length;r++)t.push(arguments[r]);var s="error"===e,i=this._events;if(void 0!==i)s=s&&void 0===i.error;else if(!s)return!1;if(s){var a;if(t.length>0&&(a=t[0]),a instanceof Error)throw a;var o=new Error("Unhandled error."+(a?" ("+a.message+")":""));throw o.context=a,o}var c=i[e];if(void 0===c)return!1;if("function"==typeof c)n(c,this,t);else{var d=c.length,p=g(c,d);for(r=0;r<d;++r)n(p[r],this,t)}return!0},o.prototype.addListener=function(e,t){return l(this,e,t,!1)},o.prototype.on=o.prototype.addListener,o.prototype.prependListener=function(e,t){return l(this,e,t,!0)},o.prototype.once=function(e,t){return d(t),this.on(e,h(this,e,t)),this},o.prototype.prependOnceListener=function(e,t){return d(t),this.prependListener(e,h(this,e,t)),this},o.prototype.removeListener=function(e,t){var r,s,i,n,a;if(d(t),void 0===(s=this._events))return this;if(void 0===(r=s[e]))return this;if(r===t||r.listener===t)0==--this._eventsCount?this._events=Object.create(null):(delete s[e],s.removeListener&&this.emit("removeListener",e,r.listener||t));else if("function"!=typeof r){for(i=-1,n=r.length-1;n>=0;n--)if(r[n]===t||r[n].listener===t){a=r[n].listener,i=n;break}if(i<0)return this;0===i?r.shift():function(e,t){for(;t+1<e.length;t++)e[t]=e[t+1];e.pop()}(r,i),1===r.length&&(s[e]=r[0]),void 0!==s.removeListener&&this.emit("removeListener",e,a||t)}return this},o.prototype.off=o.prototype.removeListener,o.prototype.removeAllListeners=function(e){var t,r,s;if(void 0===(r=this._events))return this;if(void 0===r.removeListener)return 0===arguments.length?(this._events=Object.create(null),this._eventsCount=0):void 0!==r[e]&&(0==--this._eventsCount?this._events=Object.create(null):delete r[e]),this;if(0===arguments.length){var i,n=Object.keys(r);for(s=0;s<n.length;++s)"removeListener"!==(i=n[s])&&this.removeAllListeners(i);return this.removeAllListeners("removeListener"),this._events=Object.create(null),this._eventsCount=0,this}if("function"==typeof(t=r[e]))this.removeListener(e,t);else if(void 0!==t)for(s=t.length-1;s>=0;s--)this.removeListener(e,t[s]);return this},o.prototype.listeners=function(e){return m(this,e,!0)},o.prototype.rawListeners=function(e){return m(this,e,!1)},o.listenerCount=function(e,t){return"function"==typeof e.listenerCount?e.listenerCount(t):f.call(e,t)},o.prototype.listenerCount=f,o.prototype.eventNames=function(){return this._eventsCount>0?s(this._events):[]}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(25),i=r(1),n=r(9),a=r(4),o=r(2),c=r(3),d=r(16),p=r(34),l=r(38),u=r(39),h=r(40),m=r(41),f=r(42),g=r(43),_=r(44),S=r(46),v=new i.Logger("Device");function y(){if("object"==typeof navigator&&"ReactNative"===navigator.product)return"undefined"==typeof RTCPeerConnection?void v.warn("this._detectDevice() | unsupported ReactNative without RTCPeerConnection"):(v.debug("this._detectDevice() | ReactNative handler chosen"),"ReactNative");if("object"!=typeof navigator||"string"!=typeof navigator.userAgent)v.warn("this._detectDevice() | unknown device");else{const e=navigator.userAgent,t=s.getParser(e),r=t.getEngine();if(t.satisfies({chrome:">=74",chromium:">=74"}))return"Chrome74";if(t.satisfies({chrome:">=70",chromium:">=70"}))return"Chrome70";if(t.satisfies({chrome:">=67",chromium:">=67"}))return"Chrome67";if(t.satisfies({chrome:">=55",chromium:">=55"}))return"Chrome55";if(t.satisfies({firefox:">=60"}))return"Firefox60";if(t.satisfies({safari:">=12.0"})&&"undefined"!=typeof RTCRtpTransceiver&&RTCRtpTransceiver.prototype.hasOwnProperty("currentDirection"))return"Safari12";if(t.satisfies({safari:">=11"}))return"Safari11";if(t.satisfies({"microsoft edge":">=11"})&&t.satisfies({"microsoft edge":"<=18"}))return"Edge11";if(r.name&&"blink"===r.name.toLowerCase()){const t=e.match(/(?:(?:Chrome|Chromium))[ /](\w+)/i);if(t){const e=Number(t[1]);return e>=74?"Chrome74":e>=70?"Chrome70":e>=67?"Chrome67":"Chrome55"}return"Chrome74"}v.warn("this._detectDevice() | browser not supported [name:%s, version:%s]",t.getBrowserName(),t.getBrowserVersion())}}t.detectDevice=y;t.Device=class{constructor({handlerName:e,handlerFactory:t,Handler:r}={}){if(this._loaded=!1,this._observer=new n.EnhancedEventEmitter,v.debug("constructor()"),r){if(v.warn("constructor() | Handler option is DEPRECATED, use handlerName or handlerFactory instead"),"string"!=typeof r)throw new TypeError("non string Handler option no longer supported, use handlerFactory instead");e=r}if(e&&t)throw new TypeError("just one of handlerName or handlerInterface can be given");if(t)this._handlerFactory=t;else{if(e)v.debug("constructor() | handler given: %s",e);else{if(!(e=y()))throw new a.UnsupportedError("device not supported");v.debug("constructor() | detected handler: %s",e)}switch(e){case"Chrome74":this._handlerFactory=p.Chrome74.createFactory();break;case"Chrome70":this._handlerFactory=l.Chrome70.createFactory();break;case"Chrome67":this._handlerFactory=u.Chrome67.createFactory();break;case"Chrome55":this._handlerFactory=h.Chrome55.createFactory();break;case"Firefox60":this._handlerFactory=m.Firefox60.createFactory();break;case"Safari12":this._handlerFactory=f.Safari12.createFactory();break;case"Safari11":this._handlerFactory=g.Safari11.createFactory();break;case"Edge11":this._handlerFactory=_.Edge11.createFactory();break;case"ReactNative":this._handlerFactory=S.ReactNative.createFactory();break;default:throw new TypeError(`unknown handlerName "${e}"`)}}const s=this._handlerFactory();this._handlerName=s.name,s.close(),this._extendedRtpCapabilities=void 0,this._recvRtpCapabilities=void 0,this._canProduceByKind={audio:!1,video:!1},this._sctpCapabilities=void 0}get handlerName(){return this._handlerName}get loaded(){return this._loaded}get rtpCapabilities(){if(!this._loaded)throw new a.InvalidStateError("not loaded");return this._recvRtpCapabilities}get sctpCapabilities(){if(!this._loaded)throw new a.InvalidStateError("not loaded");return this._sctpCapabilities}get observer(){return this._observer}async load({routerRtpCapabilities:e}){let t;v.debug("load() [routerRtpCapabilities:%o]",e),e=o.clone(e,void 0);try{if(this._loaded)throw new a.InvalidStateError("already loaded");c.validateRtpCapabilities(e),t=this._handlerFactory();const r=await t.getNativeRtpCapabilities();v.debug("load() | got native RTP capabilities:%o",r),c.validateRtpCapabilities(r),this._extendedRtpCapabilities=c.getExtendedRtpCapabilities(r,e),v.debug("load() | got extended RTP capabilities:%o",this._extendedRtpCapabilities),this._canProduceByKind.audio=c.canSend("audio",this._extendedRtpCapabilities),this._canProduceByKind.video=c.canSend("video",this._extendedRtpCapabilities),this._recvRtpCapabilities=c.getRecvRtpCapabilities(this._extendedRtpCapabilities),c.validateRtpCapabilities(this._recvRtpCapabilities),v.debug("load() | got receiving RTP capabilities:%o",this._recvRtpCapabilities),this._sctpCapabilities=await t.getNativeSctpCapabilities(),v.debug("load() | got native SCTP capabilities:%o",this._sctpCapabilities),c.validateSctpCapabilities(this._sctpCapabilities),v.debug("load() succeeded"),this._loaded=!0,t.close()}catch(e){throw t&&t.close(),e}}canProduce(e){if(!this._loaded)throw new a.InvalidStateError("not loaded");if("audio"!==e&&"video"!==e)throw new TypeError(`invalid kind "${e}"`);return this._canProduceByKind[e]}createSendTransport({id:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:a,additionalSettings:o,proprietaryConstraints:c,appData:d={}}){return v.debug("createSendTransport()"),this._createTransport({direction:"send",id:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:a,additionalSettings:o,proprietaryConstraints:c,appData:d})}createRecvTransport({id:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:a,additionalSettings:o,proprietaryConstraints:c,appData:d={}}){return v.debug("createRecvTransport()"),this._createTransport({direction:"recv",id:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:a,additionalSettings:o,proprietaryConstraints:c,appData:d})}_createTransport({direction:e,id:t,iceParameters:r,iceCandidates:s,dtlsParameters:i,sctpParameters:n,iceServers:o,iceTransportPolicy:c,additionalSettings:p,proprietaryConstraints:l,appData:u={}}){if(!this._loaded)throw new a.InvalidStateError("not loaded");if("string"!=typeof t)throw new TypeError("missing id");if("object"!=typeof r)throw new TypeError("missing iceParameters");if(!Array.isArray(s))throw new TypeError("missing iceCandidates");if("object"!=typeof i)throw new TypeError("missing dtlsParameters");if(n&&"object"!=typeof n)throw new TypeError("wrong sctpParameters");if(u&&"object"!=typeof u)throw new TypeError("if given, appData must be an object");const h=new d.Transport({direction:e,id:t,iceParameters:r,iceCandidates:s,dtlsParameters:i,sctpParameters:n,iceServers:o,iceTransportPolicy:c,additionalSettings:p,proprietaryConstraints:l,appData:u,handlerFactory:this._handlerFactory,extendedRtpCapabilities:this._extendedRtpCapabilities,canProduceByKind:this._canProduceByKind});return this._observer.safeEmit("newtransport",h),h}}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(33),i=r(1),n=r(9),a=r(4),o=r(2),c=r(3),d=r(17),p=r(18),l=r(19),u=r(20),h=new i.Logger("Transport");class m extends n.EnhancedEventEmitter{constructor({direction:e,id:t,iceParameters:r,iceCandidates:i,dtlsParameters:c,sctpParameters:d,iceServers:p,iceTransportPolicy:l,additionalSettings:u,proprietaryConstraints:m,appData:f,handlerFactory:g,extendedRtpCapabilities:_,canProduceByKind:S}){super(),this._closed=!1,this._connectionState="new",this._producers=new Map,this._consumers=new Map,this._dataProducers=new Map,this._dataConsumers=new Map,this._probatorConsumerCreated=!1,this._awaitQueue=new s.AwaitQueue({ClosedErrorClass:a.InvalidStateError}),this._observer=new n.EnhancedEventEmitter,h.debug("constructor() [id:%s, direction:%s]",t,e),this._id=t,this._direction=e,this._extendedRtpCapabilities=_,this._canProduceByKind=S,this._maxSctpMessageSize=d?d.maxMessageSize:null,delete(u=o.clone(u,{})).iceServers,delete u.iceTransportPolicy,delete u.bundlePolicy,delete u.rtcpMuxPolicy,delete u.sdpSemantics,this._handler=g(),this._handler.run({direction:e,iceParameters:r,iceCandidates:i,dtlsParameters:c,sctpParameters:d,iceServers:p,iceTransportPolicy:l,additionalSettings:u,proprietaryConstraints:m,extendedRtpCapabilities:_}),this._appData=f,this._handleHandler()}get id(){return this._id}get closed(){return this._closed}get direction(){return this._direction}get handler(){return this._handler}get connectionState(){return this._connectionState}get appData(){return this._appData}set appData(e){throw new Error("cannot override appData object")}get observer(){return this._observer}close(){if(!this._closed){h.debug("close()"),this._closed=!0,this._awaitQueue.close(),this._handler.close();for(const e of this._producers.values())e.transportClosed();this._producers.clear();for(const e of this._consumers.values())e.transportClosed();this._consumers.clear();for(const e of this._dataProducers.values())e.transportClosed();this._dataProducers.clear();for(const e of this._dataConsumers.values())e.transportClosed();this._dataConsumers.clear(),this._observer.safeEmit("close")}}async getStats(){if(this._closed)throw new a.InvalidStateError("closed");return this._handler.getTransportStats()}async restartIce({iceParameters:e}){if(h.debug("restartIce()"),this._closed)throw new a.InvalidStateError("closed");if(!e)throw new TypeError("missing iceParameters");return this._awaitQueue.push(async()=>this._handler.restartIce(e),"transport.restartIce()")}async updateIceServers({iceServers:e}={}){if(h.debug("updateIceServers()"),this._closed)throw new a.InvalidStateError("closed");if(!Array.isArray(e))throw new TypeError("missing iceServers");return this._awaitQueue.push(async()=>this._handler.updateIceServers(e),"transport.updateIceServers()")}async produce({track:e,encodings:t,codecOptions:r,codec:s,stopTracks:i=!0,disableTrackOnPause:n=!0,zeroRtpOnPause:o=!1,appData:p={}}={}){if(h.debug("produce() [track:%o]",e),!e)throw new TypeError("missing track");if("send"!==this._direction)throw new a.UnsupportedError("not a sending Transport");if(!this._canProduceByKind[e.kind])throw new a.UnsupportedError("cannot produce "+e.kind);if("ended"===e.readyState)throw new a.InvalidStateError("track ended");if(0===this.listenerCount("connect")&&"new"===this._connectionState)throw new TypeError('no "connect" listener set into this transport');if(0===this.listenerCount("produce"))throw new TypeError('no "produce" listener set into this transport');if(p&&"object"!=typeof p)throw new TypeError("if given, appData must be an object");return this._awaitQueue.push(async()=>{let a;if(t&&!Array.isArray(t))throw TypeError("encodings must be an array");t&&0===t.length?a=void 0:t&&(a=t.map(e=>{const t={active:!0};return!1===e.active&&(t.active=!1),"boolean"==typeof e.dtx&&(t.dtx=e.dtx),"string"==typeof e.scalabilityMode&&(t.scalabilityMode=e.scalabilityMode),"number"==typeof e.scaleResolutionDownBy&&(t.scaleResolutionDownBy=e.scaleResolutionDownBy),"number"==typeof e.maxBitrate&&(t.maxBitrate=e.maxBitrate),"number"==typeof e.maxFramerate&&(t.maxFramerate=e.maxFramerate),"boolean"==typeof e.adaptivePtime&&(t.adaptivePtime=e.adaptivePtime),"string"==typeof e.priority&&(t.priority=e.priority),"string"==typeof e.networkPriority&&(t.networkPriority=e.networkPriority),t}));const{localId:l,rtpParameters:u,rtpSender:h}=await this._handler.send({track:e,encodings:a,codecOptions:r,codec:s});try{c.validateRtpParameters(u);const{id:t}=await this.safeEmitAsPromise("produce",{kind:e.kind,rtpParameters:u,appData:p}),r=new d.Producer({id:t,localId:l,rtpSender:h,track:e,rtpParameters:u,stopTracks:i,disableTrackOnPause:n,zeroRtpOnPause:o,appData:p});return this._producers.set(r.id,r),this._handleProducer(r),this._observer.safeEmit("newproducer",r),r}catch(e){throw this._handler.stopSending(l).catch(()=>{}),e}},"transport.produce()").catch(t=>{if(i)try{e.stop()}catch(e){}throw t})}async consume({id:e,producerId:t,kind:r,rtpParameters:s,appData:i={}}){if(h.debug("consume()"),s=o.clone(s,void 0),this._closed)throw new a.InvalidStateError("closed");if("recv"!==this._direction)throw new a.UnsupportedError("not a receiving Transport");if("string"!=typeof e)throw new TypeError("missing id");if("string"!=typeof t)throw new TypeError("missing producerId");if("audio"!==r&&"video"!==r)throw new TypeError(`invalid kind '${r}'`);if(0===this.listenerCount("connect")&&"new"===this._connectionState)throw new TypeError('no "connect" listener set into this transport');if(i&&"object"!=typeof i)throw new TypeError("if given, appData must be an object");return this._awaitQueue.push(async()=>{if(!c.canReceive(s,this._extendedRtpCapabilities))throw new a.UnsupportedError("cannot consume this Producer");const{localId:n,rtpReceiver:o,track:d}=await this._handler.receive({trackId:e,kind:r,rtpParameters:s}),l=new p.Consumer({id:e,localId:n,producerId:t,rtpReceiver:o,track:d,rtpParameters:s,appData:i});if(this._consumers.set(l.id,l),this._handleConsumer(l),!this._probatorConsumerCreated&&"video"===r)try{const e=c.generateProbatorRtpParameters(l.rtpParameters);await this._handler.receive({trackId:"probator",kind:"video",rtpParameters:e}),h.debug("consume() | Consumer for RTP probation created"),this._probatorConsumerCreated=!0}catch(e){h.error("consume() | failed to create Consumer for RTP probation:%o",e)}return this._observer.safeEmit("newconsumer",l),l},"transport.consume()")}async produceData({ordered:e=!0,maxPacketLifeTime:t,maxRetransmits:r,priority:s="low",label:i="",protocol:n="",appData:o={}}={}){if(h.debug("produceData()"),"send"!==this._direction)throw new a.UnsupportedError("not a sending Transport");if(!this._maxSctpMessageSize)throw new a.UnsupportedError("SCTP not enabled by remote Transport");if(!["very-low","low","medium","high"].includes(s))throw new TypeError("wrong priority");if(0===this.listenerCount("connect")&&"new"===this._connectionState)throw new TypeError('no "connect" listener set into this transport');if(0===this.listenerCount("producedata"))throw new TypeError('no "producedata" listener set into this transport');if(o&&"object"!=typeof o)throw new TypeError("if given, appData must be an object");return(t||r)&&(e=!1),this._awaitQueue.push(async()=>{const{dataChannel:a,sctpStreamParameters:d}=await this._handler.sendDataChannel({ordered:e,maxPacketLifeTime:t,maxRetransmits:r,priority:s,label:i,protocol:n});c.validateSctpStreamParameters(d);const{id:p}=await this.safeEmitAsPromise("producedata",{sctpStreamParameters:d,label:i,protocol:n,appData:o}),u=new l.DataProducer({id:p,dataChannel:a,sctpStreamParameters:d,appData:o});return this._dataProducers.set(u.id,u),this._handleDataProducer(u),this._observer.safeEmit("newdataproducer",u),u},"transport.produceData()")}async consumeData({id:e,dataProducerId:t,sctpStreamParameters:r,label:s="",protocol:i="",appData:n={}}){if(h.debug("consumeData()"),r=o.clone(r,void 0),this._closed)throw new a.InvalidStateError("closed");if("recv"!==this._direction)throw new a.UnsupportedError("not a receiving Transport");if(!this._maxSctpMessageSize)throw new a.UnsupportedError("SCTP not enabled by remote Transport");if("string"!=typeof e)throw new TypeError("missing id");if("string"!=typeof t)throw new TypeError("missing dataProducerId");if(0===this.listenerCount("connect")&&"new"===this._connectionState)throw new TypeError('no "connect" listener set into this transport');if(n&&"object"!=typeof n)throw new TypeError("if given, appData must be an object");return c.validateSctpStreamParameters(r),this._awaitQueue.push(async()=>{const{dataChannel:a}=await this._handler.receiveDataChannel({sctpStreamParameters:r,label:s,protocol:i}),o=new u.DataConsumer({id:e,dataProducerId:t,dataChannel:a,sctpStreamParameters:r,appData:n});return this._dataConsumers.set(o.id,o),this._handleDataConsumer(o),this._observer.safeEmit("newdataconsumer",o),o},"transport.consumeData()")}_handleHandler(){const e=this._handler;e.on("@connect",({dtlsParameters:e},t,r)=>{this._closed?r(new a.InvalidStateError("closed")):this.safeEmit("connect",{dtlsParameters:e},t,r)}),e.on("@connectionstatechange",e=>{e!==this._connectionState&&(h.debug("connection state changed to %s",e),this._connectionState=e,this._closed||this.safeEmit("connectionstatechange",e))})}_handleProducer(e){e.on("@close",()=>{this._producers.delete(e.id),this._closed||this._awaitQueue.push(async()=>this._handler.stopSending(e.localId),"producer @close event").catch(e=>h.warn("producer.close() failed:%o",e))}),e.on("@replacetrack",(t,r,s)=>{this._awaitQueue.push(async()=>this._handler.replaceTrack(e.localId,t),"producer @replacetrack event").then(r).catch(s)}),e.on("@setmaxspatiallayer",(t,r,s)=>{this._awaitQueue.push(async()=>this._handler.setMaxSpatialLayer(e.localId,t),"producer @setmaxspatiallayer event").then(r).catch(s)}),e.on("@setrtpencodingparameters",(t,r,s)=>{this._awaitQueue.push(async()=>this._handler.setRtpEncodingParameters(e.localId,t),"producer @setrtpencodingparameters event").then(r).catch(s)}),e.on("@getstats",(t,r)=>{if(this._closed)return r(new a.InvalidStateError("closed"));this._handler.getSenderStats(e.localId).then(t).catch(r)})}_handleConsumer(e){e.on("@close",()=>{this._consumers.delete(e.id),this._closed||this._awaitQueue.push(async()=>this._handler.stopReceiving(e.localId),"consumer @close event").catch(()=>{})}),e.on("@getstats",(t,r)=>{if(this._closed)return r(new a.InvalidStateError("closed"));this._handler.getReceiverStats(e.localId).then(t).catch(r)})}_handleDataProducer(e){e.on("@close",()=>{this._dataProducers.delete(e.id)})}_handleDataConsumer(e){e.on("@close",()=>{this._dataConsumers.delete(e.id)})}}t.Transport=m},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(1),i=r(9),n=r(4),a=new s.Logger("Producer");class o extends i.EnhancedEventEmitter{constructor({id:e,localId:t,rtpSender:r,track:s,rtpParameters:n,stopTracks:o,disableTrackOnPause:c,zeroRtpOnPause:d,appData:p}){super(),this._closed=!1,this._observer=new i.EnhancedEventEmitter,a.debug("constructor()"),this._id=e,this._localId=t,this._rtpSender=r,this._track=s,this._kind=s.kind,this._rtpParameters=n,this._paused=!!c&&!s.enabled,this._maxSpatialLayer=void 0,this._stopTracks=o,this._disableTrackOnPause=c,this._zeroRtpOnPause=d,this._appData=p,this._onTrackEnded=this._onTrackEnded.bind(this),this._handleTrack()}get id(){return this._id}get localId(){return this._localId}get closed(){return this._closed}get kind(){return this._kind}get rtpSender(){return this._rtpSender}get track(){return this._track}get rtpParameters(){return this._rtpParameters}get paused(){return this._paused}get maxSpatialLayer(){return this._maxSpatialLayer}get appData(){return this._appData}set appData(e){throw new Error("cannot override appData object")}get observer(){return this._observer}close(){this._closed||(a.debug("close()"),this._closed=!0,this._destroyTrack(),this.emit("@close"),this._observer.safeEmit("close"))}transportClosed(){this._closed||(a.debug("transportClosed()"),this._closed=!0,this._destroyTrack(),this.safeEmit("transportclose"),this._observer.safeEmit("close"))}async getStats(){if(this._closed)throw new n.InvalidStateError("closed");return this.safeEmitAsPromise("@getstats")}pause(){a.debug("pause()"),this._closed?a.error("pause() | Producer closed"):(this._paused=!0,this._track&&this._disableTrackOnPause&&(this._track.enabled=!1),this._zeroRtpOnPause&&this.safeEmitAsPromise("@replacetrack",null).catch(()=>{}),this._observer.safeEmit("pause"))}resume(){a.debug("resume()"),this._closed?a.error("resume() | Producer closed"):(this._paused=!1,this._track&&this._disableTrackOnPause&&(this._track.enabled=!0),this._zeroRtpOnPause&&this.safeEmitAsPromise("@replacetrack",this._track).catch(()=>{}),this._observer.safeEmit("resume"))}async replaceTrack({track:e}){if(a.debug("replaceTrack() [track:%o]",e),this._closed){if(e&&this._stopTracks)try{e.stop()}catch(e){}throw new n.InvalidStateError("closed")}if(e&&"ended"===e.readyState)throw new n.InvalidStateError("track ended");e!==this._track?(this._zeroRtpOnPause&&this._paused||await this.safeEmitAsPromise("@replacetrack",e),this._destroyTrack(),this._track=e,this._track&&this._disableTrackOnPause&&(this._paused?this._paused&&(this._track.enabled=!1):this._track.enabled=!0),this._handleTrack()):a.debug("replaceTrack() | same track, ignored")}async setMaxSpatialLayer(e){if(this._closed)throw new n.InvalidStateError("closed");if("video"!==this._kind)throw new n.UnsupportedError("not a video Producer");if("number"!=typeof e)throw new TypeError("invalid spatialLayer");e!==this._maxSpatialLayer&&(await this.safeEmitAsPromise("@setmaxspatiallayer",e),this._maxSpatialLayer=e)}async setRtpEncodingParameters(e){if(this._closed)throw new n.InvalidStateError("closed");if("object"!=typeof e)throw new TypeError("invalid params");await this.safeEmitAsPromise("@setrtpencodingparameters",e)}_onTrackEnded(){a.debug('track "ended" event'),this.safeEmit("trackended"),this._observer.safeEmit("trackended")}_handleTrack(){this._track&&this._track.addEventListener("ended",this._onTrackEnded)}_destroyTrack(){if(this._track)try{this._track.removeEventListener("ended",this._onTrackEnded),this._stopTracks&&this._track.stop()}catch(e){}}}t.Producer=o},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(1),i=r(9),n=r(4),a=new s.Logger("Consumer");class o extends i.EnhancedEventEmitter{constructor({id:e,localId:t,producerId:r,rtpReceiver:s,track:n,rtpParameters:o,appData:c}){super(),this._closed=!1,this._observer=new i.EnhancedEventEmitter,a.debug("constructor()"),this._id=e,this._localId=t,this._producerId=r,this._rtpReceiver=s,this._track=n,this._rtpParameters=o,this._paused=!n.enabled,this._appData=c,this._onTrackEnded=this._onTrackEnded.bind(this),this._handleTrack()}get id(){return this._id}get localId(){return this._localId}get producerId(){return this._producerId}get closed(){return this._closed}get kind(){return this._track.kind}get rtpReceiver(){return this._rtpReceiver}get track(){return this._track}get rtpParameters(){return this._rtpParameters}get paused(){return this._paused}get appData(){return this._appData}set appData(e){throw new Error("cannot override appData object")}get observer(){return this._observer}close(){this._closed||(a.debug("close()"),this._closed=!0,this._destroyTrack(),this.emit("@close"),this._observer.safeEmit("close"))}transportClosed(){this._closed||(a.debug("transportClosed()"),this._closed=!0,this._destroyTrack(),this.safeEmit("transportclose"),this._observer.safeEmit("close"))}async getStats(){if(this._closed)throw new n.InvalidStateError("closed");return this.safeEmitAsPromise("@getstats")}pause(){a.debug("pause()"),this._closed?a.error("pause() | Consumer closed"):(this._paused=!0,this._track.enabled=!1,this._observer.safeEmit("pause"))}resume(){a.debug("resume()"),this._closed?a.error("resume() | Consumer closed"):(this._paused=!1,this._track.enabled=!0,this._observer.safeEmit("resume"))}_onTrackEnded(){a.debug('track "ended" event'),this.safeEmit("trackended"),this._observer.safeEmit("trackended")}_handleTrack(){this._track.addEventListener("ended",this._onTrackEnded)}_destroyTrack(){try{this._track.removeEventListener("ended",this._onTrackEnded),this._track.stop()}catch(e){}}}t.Consumer=o},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(1),i=r(9),n=r(4),a=new s.Logger("DataProducer");class o extends i.EnhancedEventEmitter{constructor({id:e,dataChannel:t,sctpStreamParameters:r,appData:s}){super(),this._closed=!1,this._observer=new i.EnhancedEventEmitter,a.debug("constructor()"),this._id=e,this._dataChannel=t,this._sctpStreamParameters=r,this._appData=s,this._handleDataChannel()}get id(){return this._id}get closed(){return this._closed}get sctpStreamParameters(){return this._sctpStreamParameters}get readyState(){return this._dataChannel.readyState}get label(){return this._dataChannel.label}get protocol(){return this._dataChannel.protocol}get bufferedAmount(){return this._dataChannel.bufferedAmount}get bufferedAmountLowThreshold(){return this._dataChannel.bufferedAmountLowThreshold}set bufferedAmountLowThreshold(e){this._dataChannel.bufferedAmountLowThreshold=e}get appData(){return this._appData}set appData(e){throw new Error("cannot override appData object")}get observer(){return this._observer}close(){this._closed||(a.debug("close()"),this._closed=!0,this._dataChannel.close(),this.emit("@close"),this._observer.safeEmit("close"))}transportClosed(){this._closed||(a.debug("transportClosed()"),this._closed=!0,this._dataChannel.close(),this.safeEmit("transportclose"),this._observer.safeEmit("close"))}send(e){if(a.debug("send()"),this._closed)throw new n.InvalidStateError("closed");this._dataChannel.send(e)}_handleDataChannel(){this._dataChannel.addEventListener("open",()=>{this._closed||(a.debug('DataChannel "open" event'),this.safeEmit("open"))}),this._dataChannel.addEventListener("error",e=>{if(this._closed)return;let{error:t}=e;t||(t=new Error("unknown DataChannel error")),"sctp-failure"===t.errorDetail?a.error("DataChannel SCTP error [sctpCauseCode:%s]: %s",t.sctpCauseCode,t.message):a.error('DataChannel "error" event: %o',t),this.safeEmit("error",t)}),this._dataChannel.addEventListener("close",()=>{this._closed||(a.warn('DataChannel "close" event'),this._closed=!0,this.emit("@close"),this.safeEmit("close"))}),this._dataChannel.addEventListener("message",()=>{this._closed||a.warn('DataChannel "message" event in a DataProducer, message discarded')}),this._dataChannel.addEventListener("bufferedamountlow",()=>{this._closed||this.safeEmit("bufferedamountlow")})}}t.DataProducer=o},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(1),i=r(9),n=new s.Logger("DataConsumer");class a extends i.EnhancedEventEmitter{constructor({id:e,dataProducerId:t,dataChannel:r,sctpStreamParameters:s,appData:a}){super(),this._closed=!1,this._observer=new i.EnhancedEventEmitter,n.debug("constructor()"),this._id=e,this._dataProducerId=t,this._dataChannel=r,this._sctpStreamParameters=s,this._appData=a,this._handleDataChannel()}get id(){return this._id}get dataProducerId(){return this._dataProducerId}get closed(){return this._closed}get sctpStreamParameters(){return this._sctpStreamParameters}get readyState(){return this._dataChannel.readyState}get label(){return this._dataChannel.label}get protocol(){return this._dataChannel.protocol}get binaryType(){return this._dataChannel.binaryType}set binaryType(e){this._dataChannel.binaryType=e}get appData(){return this._appData}set appData(e){throw new Error("cannot override appData object")}get observer(){return this._observer}close(){this._closed||(n.debug("close()"),this._closed=!0,this._dataChannel.close(),this.emit("@close"),this._observer.safeEmit("close"))}transportClosed(){this._closed||(n.debug("transportClosed()"),this._closed=!0,this._dataChannel.close(),this.safeEmit("transportclose"),this._observer.safeEmit("close"))}_handleDataChannel(){this._dataChannel.addEventListener("open",()=>{this._closed||(n.debug('DataChannel "open" event'),this.safeEmit("open"))}),this._dataChannel.addEventListener("error",e=>{if(this._closed)return;let{error:t}=e;t||(t=new Error("unknown DataChannel error")),"sctp-failure"===t.errorDetail?n.error("DataChannel SCTP error [sctpCauseCode:%s]: %s",t.sctpCauseCode,t.message):n.error('DataChannel "error" event: %o',t),this.safeEmit("error",t)}),this._dataChannel.addEventListener("close",()=>{this._closed||(n.warn('DataChannel "close" event'),this._closed=!0,this.emit("@close"),this.safeEmit("close"))}),this._dataChannel.addEventListener("message",e=>{this._closed||this.safeEmit("message",e.data)})}}t.DataConsumer=a},function(e,t){var r=e.exports={v:[{name:"version",reg:/^(\d*)$/}],o:[{name:"origin",reg:/^(\S*) (\d*) (\d*) (\S*) IP(\d) (\S*)/,names:["username","sessionId","sessionVersion","netType","ipVer","address"],format:"%s %s %d %s IP%d %s"}],s:[{name:"name"}],i:[{name:"description"}],u:[{name:"uri"}],e:[{name:"email"}],p:[{name:"phone"}],z:[{name:"timezones"}],r:[{name:"repeats"}],t:[{name:"timing",reg:/^(\d*) (\d*)/,names:["start","stop"],format:"%d %d"}],c:[{name:"connection",reg:/^IN IP(\d) (\S*)/,names:["version","ip"],format:"IN IP%d %s"}],b:[{push:"bandwidth",reg:/^(TIAS|AS|CT|RR|RS):(\d*)/,names:["type","limit"],format:"%s:%s"}],m:[{reg:/^(\w*) (\d*) ([\w/]*)(?: (.*))?/,names:["type","port","protocol","payloads"],format:"%s %d %s %s"}],a:[{push:"rtp",reg:/^rtpmap:(\d*) ([\w\-.]*)(?:\s*\/(\d*)(?:\s*\/(\S*))?)?/,names:["payload","codec","rate","encoding"],format:function(e){return e.encoding?"rtpmap:%d %s/%s/%s":e.rate?"rtpmap:%d %s/%s":"rtpmap:%d %s"}},{push:"fmtp",reg:/^fmtp:(\d*) ([\S| ]*)/,names:["payload","config"],format:"fmtp:%d %s"},{name:"control",reg:/^control:(.*)/,format:"control:%s"},{name:"rtcp",reg:/^rtcp:(\d*)(?: (\S*) IP(\d) (\S*))?/,names:["port","netType","ipVer","address"],format:function(e){return null!=e.address?"rtcp:%d %s IP%d %s":"rtcp:%d"}},{push:"rtcpFbTrrInt",reg:/^rtcp-fb:(\*|\d*) trr-int (\d*)/,names:["payload","value"],format:"rtcp-fb:%s trr-int %d"},{push:"rtcpFb",reg:/^rtcp-fb:(\*|\d*) ([\w-_]*)(?: ([\w-_]*))?/,names:["payload","type","subtype"],format:function(e){return null!=e.subtype?"rtcp-fb:%s %s %s":"rtcp-fb:%s %s"}},{push:"ext",reg:/^extmap:(\d+)(?:\/(\w+))?(?: (urn:ietf:params:rtp-hdrext:encrypt))? (\S*)(?: (\S*))?/,names:["value","direction","encrypt-uri","uri","config"],format:function(e){return"extmap:%d"+(e.direction?"/%s":"%v")+(e["encrypt-uri"]?" %s":"%v")+" %s"+(e.config?" %s":"")}},{name:"extmapAllowMixed",reg:/^(extmap-allow-mixed)/},{push:"crypto",reg:/^crypto:(\d*) ([\w_]*) (\S*)(?: (\S*))?/,names:["id","suite","config","sessionConfig"],format:function(e){return null!=e.sessionConfig?"crypto:%d %s %s %s":"crypto:%d %s %s"}},{name:"setup",reg:/^setup:(\w*)/,format:"setup:%s"},{name:"connectionType",reg:/^connection:(new|existing)/,format:"connection:%s"},{name:"mid",reg:/^mid:([^\s]*)/,format:"mid:%s"},{name:"msid",reg:/^msid:(.*)/,format:"msid:%s"},{name:"ptime",reg:/^ptime:(\d*(?:\.\d*)*)/,format:"ptime:%d"},{name:"maxptime",reg:/^maxptime:(\d*(?:\.\d*)*)/,format:"maxptime:%d"},{name:"direction",reg:/^(sendrecv|recvonly|sendonly|inactive)/},{name:"icelite",reg:/^(ice-lite)/},{name:"iceUfrag",reg:/^ice-ufrag:(\S*)/,format:"ice-ufrag:%s"},{name:"icePwd",reg:/^ice-pwd:(\S*)/,format:"ice-pwd:%s"},{name:"fingerprint",reg:/^fingerprint:(\S*) (\S*)/,names:["type","hash"],format:"fingerprint:%s %s"},{push:"candidates",reg:/^candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcptype (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?/,names:["foundation","component","transport","priority","ip","port","type","raddr","rport","tcptype","generation","network-id","network-cost"],format:function(e){var t="candidate:%s %d %s %d %s %d typ %s";return t+=null!=e.raddr?" raddr %s rport %d":"%v%v",t+=null!=e.tcptype?" tcptype %s":"%v",null!=e.generation&&(t+=" generation %d"),t+=null!=e["network-id"]?" network-id %d":"%v",t+=null!=e["network-cost"]?" network-cost %d":"%v"}},{name:"endOfCandidates",reg:/^(end-of-candidates)/},{name:"remoteCandidates",reg:/^remote-candidates:(.*)/,format:"remote-candidates:%s"},{name:"iceOptions",reg:/^ice-options:(\S*)/,format:"ice-options:%s"},{push:"ssrcs",reg:/^ssrc:(\d*) ([\w_-]*)(?::(.*))?/,names:["id","attribute","value"],format:function(e){var t="ssrc:%d";return null!=e.attribute&&(t+=" %s",null!=e.value&&(t+=":%s")),t}},{push:"ssrcGroups",reg:/^ssrc-group:([\x21\x23\x24\x25\x26\x27\x2A\x2B\x2D\x2E\w]*) (.*)/,names:["semantics","ssrcs"],format:"ssrc-group:%s %s"},{name:"msidSemantic",reg:/^msid-semantic:\s?(\w*) (\S*)/,names:["semantic","token"],format:"msid-semantic: %s %s"},{push:"groups",reg:/^group:(\w*) (.*)/,names:["type","mids"],format:"group:%s %s"},{name:"rtcpMux",reg:/^(rtcp-mux)/},{name:"rtcpRsize",reg:/^(rtcp-rsize)/},{name:"sctpmap",reg:/^sctpmap:([\w_/]*) (\S*)(?: (\S*))?/,names:["sctpmapNumber","app","maxMessageSize"],format:function(e){return null!=e.maxMessageSize?"sctpmap:%s %s %s":"sctpmap:%s %s"}},{name:"xGoogleFlag",reg:/^x-google-flag:([^\s]*)/,format:"x-google-flag:%s"},{push:"rids",reg:/^rid:([\d\w]+) (\w+)(?: ([\S| ]*))?/,names:["id","direction","params"],format:function(e){return e.params?"rid:%s %s %s":"rid:%s %s"}},{push:"imageattrs",reg:new RegExp("^imageattr:(\\d+|\\*)[\\s\\t]+(send|recv)[\\s\\t]+(\\*|\\[\\S+\\](?:[\\s\\t]+\\[\\S+\\])*)(?:[\\s\\t]+(recv|send)[\\s\\t]+(\\*|\\[\\S+\\](?:[\\s\\t]+\\[\\S+\\])*))?"),names:["pt","dir1","attrs1","dir2","attrs2"],format:function(e){return"imageattr:%s %s %s"+(e.dir2?" %s %s":"")}},{name:"simulcast",reg:new RegExp("^simulcast:(send|recv) ([a-zA-Z0-9\\-_~;,]+)(?:\\s?(send|recv) ([a-zA-Z0-9\\-_~;,]+))?$"),names:["dir1","list1","dir2","list2"],format:function(e){return"simulcast:%s %s"+(e.dir2?" %s %s":"")}},{name:"simulcast_03",reg:/^simulcast:[\s\t]+([\S+\s\t]+)$/,names:["value"],format:"simulcast: %s"},{name:"framerate",reg:/^framerate:(\d+(?:$|\.\d+))/,format:"framerate:%s"},{name:"sourceFilter",reg:/^source-filter: *(excl|incl) (\S*) (IP4|IP6|\*) (\S*) (.*)/,names:["filterMode","netType","addressTypes","destAddress","srcList"],format:"source-filter: %s %s %s %s %s"},{name:"bundleOnly",reg:/^(bundle-only)/},{name:"label",reg:/^label:(.+)/,format:"label:%s"},{name:"sctpPort",reg:/^sctp-port:(\d+)$/,format:"sctp-port:%s"},{name:"maxMessageSize",reg:/^max-message-size:(\d+)$/,format:"max-message-size:%s"},{push:"tsRefClocks",reg:/^ts-refclk:([^\s=]*)(?:=(\S*))?/,names:["clksrc","clksrcExt"],format:function(e){return"ts-refclk:%s"+(null!=e.clksrcExt?"=%s":"")}},{name:"mediaClk",reg:/^mediaclk:(?:id=(\S*))? *([^\s=]*)(?:=(\S*))?(?: *rate=(\d+)\/(\d+))?/,names:["id","mediaClockName","mediaClockValue","rateNumerator","rateDenominator"],format:function(e){var t="mediaclk:";return t+=null!=e.id?"id=%s %s":"%v%s",t+=null!=e.mediaClockValue?"=%s":"",t+=null!=e.rateNumerator?" rate=%s":"",t+=null!=e.rateDenominator?"/%s":""}},{name:"keywords",reg:/^keywds:(.+)$/,format:"keywds:%s"},{name:"content",reg:/^content:(.+)/,format:"content:%s"},{name:"bfcpFloorCtrl",reg:/^floorctrl:(c-only|s-only|c-s)/,format:"floorctrl:%s"},{name:"bfcpConfId",reg:/^confid:(\d+)/,format:"confid:%s"},{name:"bfcpUserId",reg:/^userid:(\d+)/,format:"userid:%s"},{name:"bfcpFloorId",reg:/^floorid:(.+) (?:m-stream|mstrm):(.+)/,names:["id","mStream"],format:"floorid:%s mstrm:%s"},{push:"invalid",names:["value"]}]};Object.keys(r).forEach((function(e){r[e].forEach((function(e){e.reg||(e.reg=/(.*)/),e.format||(e.format="%s")}))}))},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(15);t.Device=s.Device,t.detectDevice=s.detectDevice;const i=r(47);t.types=i,t.version="3.6.28";var n=r(13);t.parseScalabilityMode=n.parse},function(e,t,r){(function(s){function i(){var e;try{e=t.storage.debug}catch(e){}return!e&&void 0!==s&&"env"in s&&(e=s.env.DEBUG),e}(t=e.exports=r(48)).log=function(){return"object"==typeof console&&console.log&&Function.prototype.apply.call(console.log,console,arguments)},t.formatArgs=function(e){var r=this.useColors;if(e[0]=(r?"%c":"")+this.namespace+(r?" %c":" ")+e[0]+(r?"%c ":" ")+"+"+t.humanize(this.diff),!r)return;var s="color: "+this.color;e.splice(1,0,s,"color: inherit");var i=0,n=0;e[0].replace(/%[a-zA-Z%]/g,(function(e){"%%"!==e&&(i++,"%c"===e&&(n=i))})),e.splice(n,0,s)},t.save=function(e){try{null==e?t.storage.removeItem("debug"):t.storage.debug=e}catch(e){}},t.load=i,t.useColors=function(){if("undefined"!=typeof window&&window.process&&"renderer"===window.process.type)return!0;if("undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/))return!1;return"undefined"!=typeof document&&document.documentElement&&document.documentElement.style&&document.documentElement.style.WebkitAppearance||"undefined"!=typeof window&&window.console&&(window.console.firebug||window.console.exception&&window.console.table)||"undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)&&parseInt(RegExp.$1,10)>=31||"undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/)},t.storage="undefined"!=typeof chrome&&void 0!==chrome.storage?chrome.storage.local:function(){try{return window.localStorage}catch(e){}}(),t.colors=["#0000CC","#0000FF","#0033CC","#0033FF","#0066CC","#0066FF","#0099CC","#0099FF","#00CC00","#00CC33","#00CC66","#00CC99","#00CCCC","#00CCFF","#3300CC","#3300FF","#3333CC","#3333FF","#3366CC","#3366FF","#3399CC","#3399FF","#33CC00","#33CC33","#33CC66","#33CC99","#33CCCC","#33CCFF","#6600CC","#6600FF","#6633CC","#6633FF","#66CC00","#66CC33","#9900CC","#9900FF","#9933CC","#9933FF","#99CC00","#99CC33","#CC0000","#CC0033","#CC0066","#CC0099","#CC00CC","#CC00FF","#CC3300","#CC3333","#CC3366","#CC3399","#CC33CC","#CC33FF","#CC6600","#CC6633","#CC9900","#CC9933","#CCCC00","#CCCC33","#FF0000","#FF0033","#FF0066","#FF0099","#FF00CC","#FF00FF","#FF3300","#FF3333","#FF3366","#FF3399","#FF33CC","#FF33FF","#FF6600","#FF6633","#FF9900","#FF9933","#FFCC00","#FFCC33"],t.formatters.j=function(e){try{return JSON.stringify(e)}catch(e){return"[UnexpectedJSONParseError]: "+e.message}},t.enable(i())}).call(this,r(10))},function(e,t,r){(function(e){function r(e,t){for(var r=0,s=e.length-1;s>=0;s--){var i=e[s];"."===i?e.splice(s,1):".."===i?(e.splice(s,1),r++):r&&(e.splice(s,1),r--)}if(t)for(;r--;r)e.unshift("..");return e}function s(e,t){if(e.filter)return e.filter(t);for(var r=[],s=0;s<e.length;s++)t(e[s],s,e)&&r.push(e[s]);return r}t.resolve=function(){for(var t="",i=!1,n=arguments.length-1;n>=-1&&!i;n--){var a=n>=0?arguments[n]:e.cwd();if("string"!=typeof a)throw new TypeError("Arguments to path.resolve must be strings");a&&(t=a+"/"+t,i="/"===a.charAt(0))}return(i?"/":"")+(t=r(s(t.split("/"),(function(e){return!!e})),!i).join("/"))||"."},t.normalize=function(e){var n=t.isAbsolute(e),a="/"===i(e,-1);return(e=r(s(e.split("/"),(function(e){return!!e})),!n).join("/"))||n||(e="."),e&&a&&(e+="/"),(n?"/":"")+e},t.isAbsolute=function(e){return"/"===e.charAt(0)},t.join=function(){var e=Array.prototype.slice.call(arguments,0);return t.normalize(s(e,(function(e,t){if("string"!=typeof e)throw new TypeError("Arguments to path.join must be strings");return e})).join("/"))},t.relative=function(e,r){function s(e){for(var t=0;t<e.length&&""===e[t];t++);for(var r=e.length-1;r>=0&&""===e[r];r--);return t>r?[]:e.slice(t,r-t+1)}e=t.resolve(e).substr(1),r=t.resolve(r).substr(1);for(var i=s(e.split("/")),n=s(r.split("/")),a=Math.min(i.length,n.length),o=a,c=0;c<a;c++)if(i[c]!==n[c]){o=c;break}var d=[];for(c=o;c<i.length;c++)d.push("..");return(d=d.concat(n.slice(o))).join("/")},t.sep="/",t.delimiter=":",t.dirname=function(e){if("string"!=typeof e&&(e+=""),0===e.length)return".";for(var t=e.charCodeAt(0),r=47===t,s=-1,i=!0,n=e.length-1;n>=1;--n)if(47===(t=e.charCodeAt(n))){if(!i){s=n;break}}else i=!1;return-1===s?r?"/":".":r&&1===s?"/":e.slice(0,s)},t.basename=function(e,t){var r=function(e){"string"!=typeof e&&(e+="");var t,r=0,s=-1,i=!0;for(t=e.length-1;t>=0;--t)if(47===e.charCodeAt(t)){if(!i){r=t+1;break}}else-1===s&&(i=!1,s=t+1);return-1===s?"":e.slice(r,s)}(e);return t&&r.substr(-1*t.length)===t&&(r=r.substr(0,r.length-t.length)),r},t.extname=function(e){"string"!=typeof e&&(e+="");for(var t=-1,r=0,s=-1,i=!0,n=0,a=e.length-1;a>=0;--a){var o=e.charCodeAt(a);if(47!==o)-1===s&&(i=!1,s=a+1),46===o?-1===t?t=a:1!==n&&(n=1):-1!==t&&(n=-1);else if(!i){r=a+1;break}}return-1===t||-1===s||0===n||1===n&&t===s-1&&t===r+1?"":e.slice(t,s)};var i="b"==="ab".substr(-1)?function(e,t,r){return e.substr(t,r)}:function(e,t,r){return t<0&&(t=e.length+t),e.substr(t,r)}}).call(this,r(10))},function(e,t,r){e.exports=function(e){var t={};function r(s){if(t[s])return t[s].exports;var i=t[s]={i:s,l:!1,exports:{}};return e[s].call(i.exports,i,i.exports,r),i.l=!0,i.exports}return r.m=e,r.c=t,r.d=function(e,t,s){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:s})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var s=Object.create(null);if(r.r(s),Object.defineProperty(s,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var i in e)r.d(s,i,function(t){return e[t]}.bind(null,i));return s},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=90)}({17:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var s=r(18),i=function(){function e(){}return e.getFirstMatch=function(e,t){var r=t.match(e);return r&&r.length>0&&r[1]||""},e.getSecondMatch=function(e,t){var r=t.match(e);return r&&r.length>1&&r[2]||""},e.matchAndReturnConst=function(e,t,r){if(e.test(t))return r},e.getWindowsVersionName=function(e){switch(e){case"NT":return"NT";case"XP":return"XP";case"NT 5.0":return"2000";case"NT 5.1":return"XP";case"NT 5.2":return"2003";case"NT 6.0":return"Vista";case"NT 6.1":return"7";case"NT 6.2":return"8";case"NT 6.3":return"8.1";case"NT 10.0":return"10";default:return}},e.getMacOSVersionName=function(e){var t=e.split(".").splice(0,2).map((function(e){return parseInt(e,10)||0}));if(t.push(0),10===t[0])switch(t[1]){case 5:return"Leopard";case 6:return"Snow Leopard";case 7:return"Lion";case 8:return"Mountain Lion";case 9:return"Mavericks";case 10:return"Yosemite";case 11:return"El Capitan";case 12:return"Sierra";case 13:return"High Sierra";case 14:return"Mojave";case 15:return"Catalina";default:return}},e.getAndroidVersionName=function(e){var t=e.split(".").splice(0,2).map((function(e){return parseInt(e,10)||0}));if(t.push(0),!(1===t[0]&&t[1]<5))return 1===t[0]&&t[1]<6?"Cupcake":1===t[0]&&t[1]>=6?"Donut":2===t[0]&&t[1]<2?"Eclair":2===t[0]&&2===t[1]?"Froyo":2===t[0]&&t[1]>2?"Gingerbread":3===t[0]?"Honeycomb":4===t[0]&&t[1]<1?"Ice Cream Sandwich":4===t[0]&&t[1]<4?"Jelly Bean":4===t[0]&&t[1]>=4?"KitKat":5===t[0]?"Lollipop":6===t[0]?"Marshmallow":7===t[0]?"Nougat":8===t[0]?"Oreo":9===t[0]?"Pie":void 0},e.getVersionPrecision=function(e){return e.split(".").length},e.compareVersions=function(t,r,s){void 0===s&&(s=!1);var i=e.getVersionPrecision(t),n=e.getVersionPrecision(r),a=Math.max(i,n),o=0,c=e.map([t,r],(function(t){var r=a-e.getVersionPrecision(t),s=t+new Array(r+1).join(".0");return e.map(s.split("."),(function(e){return new Array(20-e.length).join("0")+e})).reverse()}));for(s&&(o=a-Math.min(i,n)),a-=1;a>=o;){if(c[0][a]>c[1][a])return 1;if(c[0][a]===c[1][a]){if(a===o)return 0;a-=1}else if(c[0][a]<c[1][a])return-1}},e.map=function(e,t){var r,s=[];if(Array.prototype.map)return Array.prototype.map.call(e,t);for(r=0;r<e.length;r+=1)s.push(t(e[r]));return s},e.find=function(e,t){var r,s;if(Array.prototype.find)return Array.prototype.find.call(e,t);for(r=0,s=e.length;r<s;r+=1){var i=e[r];if(t(i,r))return i}},e.assign=function(e){for(var t,r,s=e,i=arguments.length,n=new Array(i>1?i-1:0),a=1;a<i;a++)n[a-1]=arguments[a];if(Object.assign)return Object.assign.apply(Object,[e].concat(n));var o=function(){var e=n[t];"object"==typeof e&&null!==e&&Object.keys(e).forEach((function(t){s[t]=e[t]}))};for(t=0,r=n.length;t<r;t+=1)o();return e},e.getBrowserAlias=function(e){return s.BROWSER_ALIASES_MAP[e]},e.getBrowserTypeByAlias=function(e){return s.BROWSER_MAP[e]||""},e}();t.default=i,e.exports=t.default},18:function(e,t,r){"use strict";t.__esModule=!0,t.ENGINE_MAP=t.OS_MAP=t.PLATFORMS_MAP=t.BROWSER_MAP=t.BROWSER_ALIASES_MAP=void 0,t.BROWSER_ALIASES_MAP={"Amazon Silk":"amazon_silk","Android Browser":"android",Bada:"bada",BlackBerry:"blackberry",Chrome:"chrome",Chromium:"chromium",Electron:"electron",Epiphany:"epiphany",Firefox:"firefox",Focus:"focus",Generic:"generic","Google Search":"google_search",Googlebot:"googlebot","Internet Explorer":"ie","K-Meleon":"k_meleon",Maxthon:"maxthon","Microsoft Edge":"edge","MZ Browser":"mz","NAVER Whale Browser":"naver",Opera:"opera","Opera Coast":"opera_coast",PhantomJS:"phantomjs",Puffin:"puffin",QupZilla:"qupzilla",QQ:"qq",QQLite:"qqlite",Safari:"safari",Sailfish:"sailfish","Samsung Internet for Android":"samsung_internet",SeaMonkey:"seamonkey",Sleipnir:"sleipnir",Swing:"swing",Tizen:"tizen","UC Browser":"uc",Vivaldi:"vivaldi","WebOS Browser":"webos",WeChat:"wechat","Yandex Browser":"yandex",Roku:"roku"},t.BROWSER_MAP={amazon_silk:"Amazon Silk",android:"Android Browser",bada:"Bada",blackberry:"BlackBerry",chrome:"Chrome",chromium:"Chromium",electron:"Electron",epiphany:"Epiphany",firefox:"Firefox",focus:"Focus",generic:"Generic",googlebot:"Googlebot",google_search:"Google Search",ie:"Internet Explorer",k_meleon:"K-Meleon",maxthon:"Maxthon",edge:"Microsoft Edge",mz:"MZ Browser",naver:"NAVER Whale Browser",opera:"Opera",opera_coast:"Opera Coast",phantomjs:"PhantomJS",puffin:"Puffin",qupzilla:"QupZilla",qq:"QQ Browser",qqlite:"QQ Browser Lite",safari:"Safari",sailfish:"Sailfish",samsung_internet:"Samsung Internet for Android",seamonkey:"SeaMonkey",sleipnir:"Sleipnir",swing:"Swing",tizen:"Tizen",uc:"UC Browser",vivaldi:"Vivaldi",webos:"WebOS Browser",wechat:"WeChat",yandex:"Yandex Browser"},t.PLATFORMS_MAP={tablet:"tablet",mobile:"mobile",desktop:"desktop",tv:"tv"},t.OS_MAP={WindowsPhone:"Windows Phone",Windows:"Windows",MacOS:"macOS",iOS:"iOS",Android:"Android",WebOS:"WebOS",BlackBerry:"BlackBerry",Bada:"Bada",Tizen:"Tizen",Linux:"Linux",ChromeOS:"Chrome OS",PlayStation4:"PlayStation 4",Roku:"Roku"},t.ENGINE_MAP={EdgeHTML:"EdgeHTML",Blink:"Blink",Trident:"Trident",Presto:"Presto",Gecko:"Gecko",WebKit:"WebKit"}},90:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var s,i=(s=r(91))&&s.__esModule?s:{default:s},n=r(18);function a(e,t){for(var r=0;r<t.length;r++){var s=t[r];s.enumerable=s.enumerable||!1,s.configurable=!0,"value"in s&&(s.writable=!0),Object.defineProperty(e,s.key,s)}}var o=function(){function e(){}var t,r;return e.getParser=function(e,t){if(void 0===t&&(t=!1),"string"!=typeof e)throw new Error("UserAgent should be a string");return new i.default(e,t)},e.parse=function(e){return new i.default(e).getResult()},t=e,(r=[{key:"BROWSER_MAP",get:function(){return n.BROWSER_MAP}},{key:"ENGINE_MAP",get:function(){return n.ENGINE_MAP}},{key:"OS_MAP",get:function(){return n.OS_MAP}},{key:"PLATFORMS_MAP",get:function(){return n.PLATFORMS_MAP}}])&&a(t,r),e}();t.default=o,e.exports=t.default},91:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var s=c(r(92)),i=c(r(93)),n=c(r(94)),a=c(r(95)),o=c(r(17));function c(e){return e&&e.__esModule?e:{default:e}}var d=function(){function e(e,t){if(void 0===t&&(t=!1),null==e||""===e)throw new Error("UserAgent parameter can't be empty");this._ua=e,this.parsedResult={},!0!==t&&this.parse()}var t=e.prototype;return t.getUA=function(){return this._ua},t.test=function(e){return e.test(this._ua)},t.parseBrowser=function(){var e=this;this.parsedResult.browser={};var t=o.default.find(s.default,(function(t){if("function"==typeof t.test)return t.test(e);if(t.test instanceof Array)return t.test.some((function(t){return e.test(t)}));throw new Error("Browser's test function is not valid")}));return t&&(this.parsedResult.browser=t.describe(this.getUA())),this.parsedResult.browser},t.getBrowser=function(){return this.parsedResult.browser?this.parsedResult.browser:this.parseBrowser()},t.getBrowserName=function(e){return e?String(this.getBrowser().name).toLowerCase()||"":this.getBrowser().name||""},t.getBrowserVersion=function(){return this.getBrowser().version},t.getOS=function(){return this.parsedResult.os?this.parsedResult.os:this.parseOS()},t.parseOS=function(){var e=this;this.parsedResult.os={};var t=o.default.find(i.default,(function(t){if("function"==typeof t.test)return t.test(e);if(t.test instanceof Array)return t.test.some((function(t){return e.test(t)}));throw new Error("Browser's test function is not valid")}));return t&&(this.parsedResult.os=t.describe(this.getUA())),this.parsedResult.os},t.getOSName=function(e){var t=this.getOS().name;return e?String(t).toLowerCase()||"":t||""},t.getOSVersion=function(){return this.getOS().version},t.getPlatform=function(){return this.parsedResult.platform?this.parsedResult.platform:this.parsePlatform()},t.getPlatformType=function(e){void 0===e&&(e=!1);var t=this.getPlatform().type;return e?String(t).toLowerCase()||"":t||""},t.parsePlatform=function(){var e=this;this.parsedResult.platform={};var t=o.default.find(n.default,(function(t){if("function"==typeof t.test)return t.test(e);if(t.test instanceof Array)return t.test.some((function(t){return e.test(t)}));throw new Error("Browser's test function is not valid")}));return t&&(this.parsedResult.platform=t.describe(this.getUA())),this.parsedResult.platform},t.getEngine=function(){return this.parsedResult.engine?this.parsedResult.engine:this.parseEngine()},t.getEngineName=function(e){return e?String(this.getEngine().name).toLowerCase()||"":this.getEngine().name||""},t.parseEngine=function(){var e=this;this.parsedResult.engine={};var t=o.default.find(a.default,(function(t){if("function"==typeof t.test)return t.test(e);if(t.test instanceof Array)return t.test.some((function(t){return e.test(t)}));throw new Error("Browser's test function is not valid")}));return t&&(this.parsedResult.engine=t.describe(this.getUA())),this.parsedResult.engine},t.parse=function(){return this.parseBrowser(),this.parseOS(),this.parsePlatform(),this.parseEngine(),this},t.getResult=function(){return o.default.assign({},this.parsedResult)},t.satisfies=function(e){var t=this,r={},s=0,i={},n=0;if(Object.keys(e).forEach((function(t){var a=e[t];"string"==typeof a?(i[t]=a,n+=1):"object"==typeof a&&(r[t]=a,s+=1)})),s>0){var a=Object.keys(r),c=o.default.find(a,(function(e){return t.isOS(e)}));if(c){var d=this.satisfies(r[c]);if(void 0!==d)return d}var p=o.default.find(a,(function(e){return t.isPlatform(e)}));if(p){var l=this.satisfies(r[p]);if(void 0!==l)return l}}if(n>0){var u=Object.keys(i),h=o.default.find(u,(function(e){return t.isBrowser(e,!0)}));if(void 0!==h)return this.compareVersion(i[h])}},t.isBrowser=function(e,t){void 0===t&&(t=!1);var r=this.getBrowserName().toLowerCase(),s=e.toLowerCase(),i=o.default.getBrowserTypeByAlias(s);return t&&i&&(s=i.toLowerCase()),s===r},t.compareVersion=function(e){var t=[0],r=e,s=!1,i=this.getBrowserVersion();if("string"==typeof i)return">"===e[0]||"<"===e[0]?(r=e.substr(1),"="===e[1]?(s=!0,r=e.substr(2)):t=[],">"===e[0]?t.push(1):t.push(-1)):"="===e[0]?r=e.substr(1):"~"===e[0]&&(s=!0,r=e.substr(1)),t.indexOf(o.default.compareVersions(i,r,s))>-1},t.isOS=function(e){return this.getOSName(!0)===String(e).toLowerCase()},t.isPlatform=function(e){return this.getPlatformType(!0)===String(e).toLowerCase()},t.isEngine=function(e){return this.getEngineName(!0)===String(e).toLowerCase()},t.is=function(e,t){return void 0===t&&(t=!1),this.isBrowser(e,t)||this.isOS(e)||this.isPlatform(e)},t.some=function(e){var t=this;return void 0===e&&(e=[]),e.some((function(e){return t.is(e)}))},e}();t.default=d,e.exports=t.default},92:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var s,i=(s=r(17))&&s.__esModule?s:{default:s},n=/version\/(\d+(\.?_?\d+)+)/i,a=[{test:[/googlebot/i],describe:function(e){var t={name:"Googlebot"},r=i.default.getFirstMatch(/googlebot\/(\d+(\.\d+))/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/opera/i],describe:function(e){var t={name:"Opera"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:opera)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/opr\/|opios/i],describe:function(e){var t={name:"Opera"},r=i.default.getFirstMatch(/(?:opr|opios)[\s/](\S+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/SamsungBrowser/i],describe:function(e){var t={name:"Samsung Internet for Android"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:SamsungBrowser)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/Whale/i],describe:function(e){var t={name:"NAVER Whale Browser"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:whale)[\s/](\d+(?:\.\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/MZBrowser/i],describe:function(e){var t={name:"MZ Browser"},r=i.default.getFirstMatch(/(?:MZBrowser)[\s/](\d+(?:\.\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/focus/i],describe:function(e){var t={name:"Focus"},r=i.default.getFirstMatch(/(?:focus)[\s/](\d+(?:\.\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/swing/i],describe:function(e){var t={name:"Swing"},r=i.default.getFirstMatch(/(?:swing)[\s/](\d+(?:\.\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/coast/i],describe:function(e){var t={name:"Opera Coast"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:coast)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/opt\/\d+(?:.?_?\d+)+/i],describe:function(e){var t={name:"Opera Touch"},r=i.default.getFirstMatch(/(?:opt)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/yabrowser/i],describe:function(e){var t={name:"Yandex Browser"},r=i.default.getFirstMatch(/(?:yabrowser)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/ucbrowser/i],describe:function(e){var t={name:"UC Browser"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:ucbrowser)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/Maxthon|mxios/i],describe:function(e){var t={name:"Maxthon"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:Maxthon|mxios)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/epiphany/i],describe:function(e){var t={name:"Epiphany"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:epiphany)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/puffin/i],describe:function(e){var t={name:"Puffin"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:puffin)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/sleipnir/i],describe:function(e){var t={name:"Sleipnir"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:sleipnir)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/k-meleon/i],describe:function(e){var t={name:"K-Meleon"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/(?:k-meleon)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/micromessenger/i],describe:function(e){var t={name:"WeChat"},r=i.default.getFirstMatch(/(?:micromessenger)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/qqbrowser/i],describe:function(e){var t={name:/qqbrowserlite/i.test(e)?"QQ Browser Lite":"QQ Browser"},r=i.default.getFirstMatch(/(?:qqbrowserlite|qqbrowser)[/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/msie|trident/i],describe:function(e){var t={name:"Internet Explorer"},r=i.default.getFirstMatch(/(?:msie |rv:)(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/\sedg\//i],describe:function(e){var t={name:"Microsoft Edge"},r=i.default.getFirstMatch(/\sedg\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/edg([ea]|ios)/i],describe:function(e){var t={name:"Microsoft Edge"},r=i.default.getSecondMatch(/edg([ea]|ios)\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/vivaldi/i],describe:function(e){var t={name:"Vivaldi"},r=i.default.getFirstMatch(/vivaldi\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/seamonkey/i],describe:function(e){var t={name:"SeaMonkey"},r=i.default.getFirstMatch(/seamonkey\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/sailfish/i],describe:function(e){var t={name:"Sailfish"},r=i.default.getFirstMatch(/sailfish\s?browser\/(\d+(\.\d+)?)/i,e);return r&&(t.version=r),t}},{test:[/silk/i],describe:function(e){var t={name:"Amazon Silk"},r=i.default.getFirstMatch(/silk\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/phantom/i],describe:function(e){var t={name:"PhantomJS"},r=i.default.getFirstMatch(/phantomjs\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/slimerjs/i],describe:function(e){var t={name:"SlimerJS"},r=i.default.getFirstMatch(/slimerjs\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/blackberry|\bbb\d+/i,/rim\stablet/i],describe:function(e){var t={name:"BlackBerry"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/blackberry[\d]+\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/(web|hpw)[o0]s/i],describe:function(e){var t={name:"WebOS Browser"},r=i.default.getFirstMatch(n,e)||i.default.getFirstMatch(/w(?:eb)?[o0]sbrowser\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/bada/i],describe:function(e){var t={name:"Bada"},r=i.default.getFirstMatch(/dolfin\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/tizen/i],describe:function(e){var t={name:"Tizen"},r=i.default.getFirstMatch(/(?:tizen\s?)?browser\/(\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/qupzilla/i],describe:function(e){var t={name:"QupZilla"},r=i.default.getFirstMatch(/(?:qupzilla)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/firefox|iceweasel|fxios/i],describe:function(e){var t={name:"Firefox"},r=i.default.getFirstMatch(/(?:firefox|iceweasel|fxios)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/electron/i],describe:function(e){var t={name:"Electron"},r=i.default.getFirstMatch(/(?:electron)\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/MiuiBrowser/i],describe:function(e){var t={name:"Miui"},r=i.default.getFirstMatch(/(?:MiuiBrowser)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/chromium/i],describe:function(e){var t={name:"Chromium"},r=i.default.getFirstMatch(/(?:chromium)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/chrome|crios|crmo/i],describe:function(e){var t={name:"Chrome"},r=i.default.getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/GSA/i],describe:function(e){var t={name:"Google Search"},r=i.default.getFirstMatch(/(?:GSA)\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:function(e){var t=!e.test(/like android/i),r=e.test(/android/i);return t&&r},describe:function(e){var t={name:"Android Browser"},r=i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/playstation 4/i],describe:function(e){var t={name:"PlayStation 4"},r=i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/safari|applewebkit/i],describe:function(e){var t={name:"Safari"},r=i.default.getFirstMatch(n,e);return r&&(t.version=r),t}},{test:[/.*/i],describe:function(e){var t=-1!==e.search("\\(")?/^(.*)\/(.*)[ \t]\((.*)/:/^(.*)\/(.*) /;return{name:i.default.getFirstMatch(t,e),version:i.default.getSecondMatch(t,e)}}}];t.default=a,e.exports=t.default},93:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var s,i=(s=r(17))&&s.__esModule?s:{default:s},n=r(18),a=[{test:[/Roku\/DVP/],describe:function(e){var t=i.default.getFirstMatch(/Roku\/DVP-(\d+\.\d+)/i,e);return{name:n.OS_MAP.Roku,version:t}}},{test:[/windows phone/i],describe:function(e){var t=i.default.getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i,e);return{name:n.OS_MAP.WindowsPhone,version:t}}},{test:[/windows /i],describe:function(e){var t=i.default.getFirstMatch(/Windows ((NT|XP)( \d\d?.\d)?)/i,e),r=i.default.getWindowsVersionName(t);return{name:n.OS_MAP.Windows,version:t,versionName:r}}},{test:[/Macintosh(.*?) FxiOS(.*?)\//],describe:function(e){var t={name:n.OS_MAP.iOS},r=i.default.getSecondMatch(/(Version\/)(\d[\d.]+)/,e);return r&&(t.version=r),t}},{test:[/macintosh/i],describe:function(e){var t=i.default.getFirstMatch(/mac os x (\d+(\.?_?\d+)+)/i,e).replace(/[_\s]/g,"."),r=i.default.getMacOSVersionName(t),s={name:n.OS_MAP.MacOS,version:t};return r&&(s.versionName=r),s}},{test:[/(ipod|iphone|ipad)/i],describe:function(e){var t=i.default.getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i,e).replace(/[_\s]/g,".");return{name:n.OS_MAP.iOS,version:t}}},{test:function(e){var t=!e.test(/like android/i),r=e.test(/android/i);return t&&r},describe:function(e){var t=i.default.getFirstMatch(/android[\s/-](\d+(\.\d+)*)/i,e),r=i.default.getAndroidVersionName(t),s={name:n.OS_MAP.Android,version:t};return r&&(s.versionName=r),s}},{test:[/(web|hpw)[o0]s/i],describe:function(e){var t=i.default.getFirstMatch(/(?:web|hpw)[o0]s\/(\d+(\.\d+)*)/i,e),r={name:n.OS_MAP.WebOS};return t&&t.length&&(r.version=t),r}},{test:[/blackberry|\bbb\d+/i,/rim\stablet/i],describe:function(e){var t=i.default.getFirstMatch(/rim\stablet\sos\s(\d+(\.\d+)*)/i,e)||i.default.getFirstMatch(/blackberry\d+\/(\d+([_\s]\d+)*)/i,e)||i.default.getFirstMatch(/\bbb(\d+)/i,e);return{name:n.OS_MAP.BlackBerry,version:t}}},{test:[/bada/i],describe:function(e){var t=i.default.getFirstMatch(/bada\/(\d+(\.\d+)*)/i,e);return{name:n.OS_MAP.Bada,version:t}}},{test:[/tizen/i],describe:function(e){var t=i.default.getFirstMatch(/tizen[/\s](\d+(\.\d+)*)/i,e);return{name:n.OS_MAP.Tizen,version:t}}},{test:[/linux/i],describe:function(){return{name:n.OS_MAP.Linux}}},{test:[/CrOS/],describe:function(){return{name:n.OS_MAP.ChromeOS}}},{test:[/PlayStation 4/],describe:function(e){var t=i.default.getFirstMatch(/PlayStation 4[/\s](\d+(\.\d+)*)/i,e);return{name:n.OS_MAP.PlayStation4,version:t}}}];t.default=a,e.exports=t.default},94:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var s,i=(s=r(17))&&s.__esModule?s:{default:s},n=r(18),a=[{test:[/googlebot/i],describe:function(){return{type:"bot",vendor:"Google"}}},{test:[/huawei/i],describe:function(e){var t=i.default.getFirstMatch(/(can-l01)/i,e)&&"Nova",r={type:n.PLATFORMS_MAP.mobile,vendor:"Huawei"};return t&&(r.model=t),r}},{test:[/nexus\s*(?:7|8|9|10).*/i],describe:function(){return{type:n.PLATFORMS_MAP.tablet,vendor:"Nexus"}}},{test:[/ipad/i],describe:function(){return{type:n.PLATFORMS_MAP.tablet,vendor:"Apple",model:"iPad"}}},{test:[/Macintosh(.*?) FxiOS(.*?)\//],describe:function(){return{type:n.PLATFORMS_MAP.tablet,vendor:"Apple",model:"iPad"}}},{test:[/kftt build/i],describe:function(){return{type:n.PLATFORMS_MAP.tablet,vendor:"Amazon",model:"Kindle Fire HD 7"}}},{test:[/silk/i],describe:function(){return{type:n.PLATFORMS_MAP.tablet,vendor:"Amazon"}}},{test:[/tablet(?! pc)/i],describe:function(){return{type:n.PLATFORMS_MAP.tablet}}},{test:function(e){var t=e.test(/ipod|iphone/i),r=e.test(/like (ipod|iphone)/i);return t&&!r},describe:function(e){var t=i.default.getFirstMatch(/(ipod|iphone)/i,e);return{type:n.PLATFORMS_MAP.mobile,vendor:"Apple",model:t}}},{test:[/nexus\s*[0-6].*/i,/galaxy nexus/i],describe:function(){return{type:n.PLATFORMS_MAP.mobile,vendor:"Nexus"}}},{test:[/[^-]mobi/i],describe:function(){return{type:n.PLATFORMS_MAP.mobile}}},{test:function(e){return"blackberry"===e.getBrowserName(!0)},describe:function(){return{type:n.PLATFORMS_MAP.mobile,vendor:"BlackBerry"}}},{test:function(e){return"bada"===e.getBrowserName(!0)},describe:function(){return{type:n.PLATFORMS_MAP.mobile}}},{test:function(e){return"windows phone"===e.getBrowserName()},describe:function(){return{type:n.PLATFORMS_MAP.mobile,vendor:"Microsoft"}}},{test:function(e){var t=Number(String(e.getOSVersion()).split(".")[0]);return"android"===e.getOSName(!0)&&t>=3},describe:function(){return{type:n.PLATFORMS_MAP.tablet}}},{test:function(e){return"android"===e.getOSName(!0)},describe:function(){return{type:n.PLATFORMS_MAP.mobile}}},{test:function(e){return"macos"===e.getOSName(!0)},describe:function(){return{type:n.PLATFORMS_MAP.desktop,vendor:"Apple"}}},{test:function(e){return"windows"===e.getOSName(!0)},describe:function(){return{type:n.PLATFORMS_MAP.desktop}}},{test:function(e){return"linux"===e.getOSName(!0)},describe:function(){return{type:n.PLATFORMS_MAP.desktop}}},{test:function(e){return"playstation 4"===e.getOSName(!0)},describe:function(){return{type:n.PLATFORMS_MAP.tv}}},{test:function(e){return"roku"===e.getOSName(!0)},describe:function(){return{type:n.PLATFORMS_MAP.tv}}}];t.default=a,e.exports=t.default},95:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var s,i=(s=r(17))&&s.__esModule?s:{default:s},n=r(18),a=[{test:function(e){return"microsoft edge"===e.getBrowserName(!0)},describe:function(e){if(/\sedg\//i.test(e))return{name:n.ENGINE_MAP.Blink};var t=i.default.getFirstMatch(/edge\/(\d+(\.?_?\d+)+)/i,e);return{name:n.ENGINE_MAP.EdgeHTML,version:t}}},{test:[/trident/i],describe:function(e){var t={name:n.ENGINE_MAP.Trident},r=i.default.getFirstMatch(/trident\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:function(e){return e.test(/presto/i)},describe:function(e){var t={name:n.ENGINE_MAP.Presto},r=i.default.getFirstMatch(/presto\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:function(e){var t=e.test(/gecko/i),r=e.test(/like gecko/i);return t&&!r},describe:function(e){var t={name:n.ENGINE_MAP.Gecko},r=i.default.getFirstMatch(/gecko\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/(apple)?webkit\/537\.36/i],describe:function(){return{name:n.ENGINE_MAP.Blink}}},{test:[/(apple)?webkit/i],describe:function(e){var t={name:n.ENGINE_MAP.WebKit},r=i.default.getFirstMatch(/webkit\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}}];t.default=a,e.exports=t.default}})},function(e,t,r){(function(s){t.formatArgs=function(t){if(t[0]=(this.useColors?"%c":"")+this.namespace+(this.useColors?" %c":" ")+t[0]+(this.useColors?"%c ":" ")+"+"+e.exports.humanize(this.diff),!this.useColors)return;const r="color: "+this.color;t.splice(1,0,r,"color: inherit");let s=0,i=0;t[0].replace(/%[a-zA-Z%]/g,e=>{"%%"!==e&&(s++,"%c"===e&&(i=s))}),t.splice(i,0,r)},t.save=function(e){try{e?t.storage.setItem("debug",e):t.storage.removeItem("debug")}catch(e){}},t.load=function(){let e;try{e=t.storage.getItem("debug")}catch(e){}!e&&void 0!==s&&"env"in s&&(e=s.env.DEBUG);return e},t.useColors=function(){if("undefined"!=typeof window&&window.process&&("renderer"===window.process.type||window.process.__nwjs))return!0;if("undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/))return!1;return"undefined"!=typeof document&&document.documentElement&&document.documentElement.style&&document.documentElement.style.WebkitAppearance||"undefined"!=typeof window&&window.console&&(window.console.firebug||window.console.exception&&window.console.table)||"undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)&&parseInt(RegExp.$1,10)>=31||"undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/)},t.storage=function(){try{return localStorage}catch(e){}}(),t.destroy=(()=>{let e=!1;return()=>{e||(e=!0,console.warn("Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`."))}})(),t.colors=["#0000CC","#0000FF","#0033CC","#0033FF","#0066CC","#0066FF","#0099CC","#0099FF","#00CC00","#00CC33","#00CC66","#00CC99","#00CCCC","#00CCFF","#3300CC","#3300FF","#3333CC","#3333FF","#3366CC","#3366FF","#3399CC","#3399FF","#33CC00","#33CC33","#33CC66","#33CC99","#33CCCC","#33CCFF","#6600CC","#6600FF","#6633CC","#6633FF","#66CC00","#66CC33","#9900CC","#9900FF","#9933CC","#9933FF","#99CC00","#99CC33","#CC0000","#CC0033","#CC0066","#CC0099","#CC00CC","#CC00FF","#CC3300","#CC3333","#CC3366","#CC3399","#CC33CC","#CC33FF","#CC6600","#CC6633","#CC9900","#CC9933","#CCCC00","#CCCC33","#FF0000","#FF0033","#FF0066","#FF0099","#FF00CC","#FF00FF","#FF3300","#FF3333","#FF3366","#FF3399","#FF33CC","#FF33FF","#FF6600","#FF6633","#FF9900","#FF9933","#FFCC00","#FFCC33"],t.log=console.debug||console.log||(()=>{}),e.exports=r(27)(t);const{formatters:i}=e.exports;i.j=function(e){try{return JSON.stringify(e)}catch(e){return"[UnexpectedJSONParseError]: "+e.message}}}).call(this,r(10))},function(e,t,r){e.exports=function(e){function t(e){let r,i=null;function n(...e){if(!n.enabled)return;const s=n,i=Number(new Date),a=i-(r||i);s.diff=a,s.prev=r,s.curr=i,r=i,e[0]=t.coerce(e[0]),"string"!=typeof e[0]&&e.unshift("%O");let o=0;e[0]=e[0].replace(/%([a-zA-Z%])/g,(r,i)=>{if("%%"===r)return"%";o++;const n=t.formatters[i];if("function"==typeof n){const t=e[o];r=n.call(s,t),e.splice(o,1),o--}return r}),t.formatArgs.call(s,e);(s.log||t.log).apply(s,e)}return n.namespace=e,n.useColors=t.useColors(),n.color=t.selectColor(e),n.extend=s,n.destroy=t.destroy,Object.defineProperty(n,"enabled",{enumerable:!0,configurable:!1,get:()=>null===i?t.enabled(e):i,set:e=>{i=e}}),"function"==typeof t.init&&t.init(n),n}function s(e,r){const s=t(this.namespace+(void 0===r?":":r)+e);return s.log=this.log,s}function i(e){return e.toString().substring(2,e.toString().length-2).replace(/\.\*\?$/,"*")}return t.debug=t,t.default=t,t.coerce=function(e){if(e instanceof Error)return e.stack||e.message;return e},t.disable=function(){const e=[...t.names.map(i),...t.skips.map(i).map(e=>"-"+e)].join(",");return t.enable(""),e},t.enable=function(e){let r;t.save(e),t.names=[],t.skips=[];const s=("string"==typeof e?e:"").split(/[\s,]+/),i=s.length;for(r=0;r<i;r++)s[r]&&("-"===(e=s[r].replace(/\*/g,".*?"))[0]?t.skips.push(new RegExp("^"+e.substr(1)+"$")):t.names.push(new RegExp("^"+e+"$")))},t.enabled=function(e){if("*"===e[e.length-1])return!0;let r,s;for(r=0,s=t.skips.length;r<s;r++)if(t.skips[r].test(e))return!1;for(r=0,s=t.names.length;r<s;r++)if(t.names[r].test(e))return!0;return!1},t.humanize=r(28),t.destroy=function(){console.warn("Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.")},Object.keys(e).forEach(r=>{t[r]=e[r]}),t.names=[],t.skips=[],t.formatters={},t.selectColor=function(e){let r=0;for(let t=0;t<e.length;t++)r=(r<<5)-r+e.charCodeAt(t),r|=0;return t.colors[Math.abs(r)%t.colors.length]},t.enable(t.load()),t}},function(e,t){var r=1e3,s=6e4,i=60*s,n=24*i;function a(e,t,r,s){var i=t>=1.5*r;return Math.round(e/r)+" "+s+(i?"s":"")}e.exports=function(e,t){t=t||{};var o=typeof e;if("string"===o&&e.length>0)return function(e){if((e=String(e)).length>100)return;var t=/^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(e);if(!t)return;var a=parseFloat(t[1]);switch((t[2]||"ms").toLowerCase()){case"years":case"year":case"yrs":case"yr":case"y":return 315576e5*a;case"weeks":case"week":case"w":return 6048e5*a;case"days":case"day":case"d":return a*n;case"hours":case"hour":case"hrs":case"hr":case"h":return a*i;case"minutes":case"minute":case"mins":case"min":case"m":return a*s;case"seconds":case"second":case"secs":case"sec":case"s":return a*r;case"milliseconds":case"millisecond":case"msecs":case"msec":case"ms":return a;default:return}}(e);if("number"===o&&isFinite(e))return t.long?function(e){var t=Math.abs(e);if(t>=n)return a(e,t,n,"day");if(t>=i)return a(e,t,i,"hour");if(t>=s)return a(e,t,s,"minute");if(t>=r)return a(e,t,r,"second");return e+" ms"}(e):function(e){var t=Math.abs(e);if(t>=n)return Math.round(e/n)+"d";if(t>=i)return Math.round(e/i)+"h";if(t>=s)return Math.round(e/s)+"m";if(t>=r)return Math.round(e/r)+"s";return e+"ms"}(e);throw new Error("val is not a non-empty string or a valid number. val="+JSON.stringify(e))}},function(e,t,r){const s=r(30)("h264-profile-level-id");s.log=console.info.bind(console);t.ProfileConstrainedBaseline=1,t.ProfileBaseline=2,t.ProfileMain=3,t.ProfileConstrainedHigh=4,t.ProfileHigh=5;t.Level1_b=0,t.Level1=10,t.Level1_1=11,t.Level1_2=12,t.Level1_3=13,t.Level2=20,t.Level2_1=21,t.Level2_2=22,t.Level3=30,t.Level3_1=31,t.Level3_2=32,t.Level4=40,t.Level4_1=41,t.Level4_2=42,t.Level5=50,t.Level5_1=51,t.Level5_2=52;class i{constructor(e,t){this.profile=e,this.level=t}}t.ProfileLevelId=i;const n=new i(1,31);class a{constructor(e){this._mask=~d("x",e),this._maskedValue=d("1",e)}isMatch(e){return this._maskedValue===(e&this._mask)}}class o{constructor(e,t,r){this.profile_idc=e,this.profile_iop=t,this.profile=r}}const c=[new o(66,new a("x1xx0000"),1),new o(77,new a("1xxx0000"),1),new o(88,new a("11xx0000"),1),new o(66,new a("x0xx0000"),2),new o(88,new a("10xx0000"),2),new o(77,new a("0x0x0000"),3),new o(100,new a("00000000"),5),new o(100,new a("00001100"),4)];function d(e,t){return(t[0]===e)<<7|(t[1]===e)<<6|(t[2]===e)<<5|(t[3]===e)<<4|(t[4]===e)<<3|(t[5]===e)<<2|(t[6]===e)<<1|(t[7]===e)<<0}function p(e={}){const t=e["level-asymmetry-allowed"];return 1===t||"1"===t}t.parseProfileLevelId=function(e){if("string"!=typeof e||6!==e.length)return null;const t=parseInt(e,16);if(0===t)return null;const r=255&t,n=t>>8&255,a=t>>16&255;let o;switch(r){case 11:o=0!=(16&n)?0:11;break;case 10:case 12:case 13:case 20:case 21:case 22:case 30:case 31:case 32:case 40:case 41:case 42:case 50:case 51:case 52:o=r;break;default:return s("parseProfileLevelId() | unrecognized level_idc:%s",r),null}for(const e of c)if(a===e.profile_idc&&e.profile_iop.isMatch(n))return new i(e.profile,o);return s("parseProfileLevelId() | unrecognized profile_idc/profile_iop combination"),null},t.profileLevelIdToString=function(e){if(0==e.level)switch(e.profile){case 1:return"42f00b";case 2:return"42100b";case 3:return"4d100b";default:return s("profileLevelIdToString() | Level 1_b not is allowed for profile:%s",e.profile),null}let t;switch(e.profile){case 1:t="42e0";break;case 2:t="4200";break;case 3:t="4d00";break;case 4:t="640c";break;case 5:t="6400";break;default:return s("profileLevelIdToString() | unrecognized profile:%s",e.profile),null}let r=e.level.toString(16);return 1===r.length&&(r="0"+r),`${t}${r}`},t.parseSdpProfileLevelId=function(e={}){const r=e["profile-level-id"];return r?t.parseProfileLevelId(r):n},t.isSameProfile=function(e={},r={}){const s=t.parseSdpProfileLevelId(e),i=t.parseSdpProfileLevelId(r);return Boolean(s&&i&&s.profile===i.profile)},t.generateProfileLevelIdForAnswer=function(e={},r={}){if(!e["profile-level-id"]&&!r["profile-level-id"])return s("generateProfileLevelIdForAnswer() | no profile-level-id in local and remote params"),null;const n=t.parseSdpProfileLevelId(e),a=t.parseSdpProfileLevelId(r);if(!n)throw new TypeError("invalid local_profile_level_id");if(!a)throw new TypeError("invalid remote_profile_level_id");if(n.profile!==a.profile)throw new TypeError("H264 Profile mismatch");const o=p(e)&&p(r),c=n.level,d=a.level,l=function(e,t){return 0===e?10!==t&&0!==t:0===t?10!==e:e<t}(u=c,h=d)?u:h;var u,h;const m=o?c:l;return s("generateProfileLevelIdForAnswer() | result: [profile:%s, level:%s]",n.profile,m),t.profileLevelIdToString(new i(n.profile,m))}},function(e,t,r){(function(s){t.formatArgs=function(t){if(t[0]=(this.useColors?"%c":"")+this.namespace+(this.useColors?" %c":" ")+t[0]+(this.useColors?"%c ":" ")+"+"+e.exports.humanize(this.diff),!this.useColors)return;const r="color: "+this.color;t.splice(1,0,r,"color: inherit");let s=0,i=0;t[0].replace(/%[a-zA-Z%]/g,e=>{"%%"!==e&&(s++,"%c"===e&&(i=s))}),t.splice(i,0,r)},t.save=function(e){try{e?t.storage.setItem("debug",e):t.storage.removeItem("debug")}catch(e){}},t.load=function(){let e;try{e=t.storage.getItem("debug")}catch(e){}!e&&void 0!==s&&"env"in s&&(e=s.env.DEBUG);return e},t.useColors=function(){if("undefined"!=typeof window&&window.process&&("renderer"===window.process.type||window.process.__nwjs))return!0;if("undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/))return!1;return"undefined"!=typeof document&&document.documentElement&&document.documentElement.style&&document.documentElement.style.WebkitAppearance||"undefined"!=typeof window&&window.console&&(window.console.firebug||window.console.exception&&window.console.table)||"undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)&&parseInt(RegExp.$1,10)>=31||"undefined"!=typeof navigator&&navigator.userAgent&&navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/)},t.storage=function(){try{return localStorage}catch(e){}}(),t.destroy=(()=>{let e=!1;return()=>{e||(e=!0,console.warn("Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`."))}})(),t.colors=["#0000CC","#0000FF","#0033CC","#0033FF","#0066CC","#0066FF","#0099CC","#0099FF","#00CC00","#00CC33","#00CC66","#00CC99","#00CCCC","#00CCFF","#3300CC","#3300FF","#3333CC","#3333FF","#3366CC","#3366FF","#3399CC","#3399FF","#33CC00","#33CC33","#33CC66","#33CC99","#33CCCC","#33CCFF","#6600CC","#6600FF","#6633CC","#6633FF","#66CC00","#66CC33","#9900CC","#9900FF","#9933CC","#9933FF","#99CC00","#99CC33","#CC0000","#CC0033","#CC0066","#CC0099","#CC00CC","#CC00FF","#CC3300","#CC3333","#CC3366","#CC3399","#CC33CC","#CC33FF","#CC6600","#CC6633","#CC9900","#CC9933","#CCCC00","#CCCC33","#FF0000","#FF0033","#FF0066","#FF0099","#FF00CC","#FF00FF","#FF3300","#FF3333","#FF3366","#FF3399","#FF33CC","#FF33FF","#FF6600","#FF6633","#FF9900","#FF9933","#FFCC00","#FFCC33"],t.log=console.debug||console.log||(()=>{}),e.exports=r(31)(t);const{formatters:i}=e.exports;i.j=function(e){try{return JSON.stringify(e)}catch(e){return"[UnexpectedJSONParseError]: "+e.message}}}).call(this,r(10))},function(e,t,r){e.exports=function(e){function t(e){let r,i=null;function n(...e){if(!n.enabled)return;const s=n,i=Number(new Date),a=i-(r||i);s.diff=a,s.prev=r,s.curr=i,r=i,e[0]=t.coerce(e[0]),"string"!=typeof e[0]&&e.unshift("%O");let o=0;e[0]=e[0].replace(/%([a-zA-Z%])/g,(r,i)=>{if("%%"===r)return"%";o++;const n=t.formatters[i];if("function"==typeof n){const t=e[o];r=n.call(s,t),e.splice(o,1),o--}return r}),t.formatArgs.call(s,e);(s.log||t.log).apply(s,e)}return n.namespace=e,n.useColors=t.useColors(),n.color=t.selectColor(e),n.extend=s,n.destroy=t.destroy,Object.defineProperty(n,"enabled",{enumerable:!0,configurable:!1,get:()=>null===i?t.enabled(e):i,set:e=>{i=e}}),"function"==typeof t.init&&t.init(n),n}function s(e,r){const s=t(this.namespace+(void 0===r?":":r)+e);return s.log=this.log,s}function i(e){return e.toString().substring(2,e.toString().length-2).replace(/\.\*\?$/,"*")}return t.debug=t,t.default=t,t.coerce=function(e){if(e instanceof Error)return e.stack||e.message;return e},t.disable=function(){const e=[...t.names.map(i),...t.skips.map(i).map(e=>"-"+e)].join(",");return t.enable(""),e},t.enable=function(e){let r;t.save(e),t.names=[],t.skips=[];const s=("string"==typeof e?e:"").split(/[\s,]+/),i=s.length;for(r=0;r<i;r++)s[r]&&("-"===(e=s[r].replace(/\*/g,".*?"))[0]?t.skips.push(new RegExp("^"+e.substr(1)+"$")):t.names.push(new RegExp("^"+e+"$")))},t.enabled=function(e){if("*"===e[e.length-1])return!0;let r,s;for(r=0,s=t.skips.length;r<s;r++)if(t.skips[r].test(e))return!1;for(r=0,s=t.names.length;r<s;r++)if(t.names[r].test(e))return!0;return!1},t.humanize=r(32),t.destroy=function(){console.warn("Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.")},Object.keys(e).forEach(r=>{t[r]=e[r]}),t.names=[],t.skips=[],t.formatters={},t.selectColor=function(e){let r=0;for(let t=0;t<e.length;t++)r=(r<<5)-r+e.charCodeAt(t),r|=0;return t.colors[Math.abs(r)%t.colors.length]},t.enable(t.load()),t}},function(e,t){var r=1e3,s=6e4,i=60*s,n=24*i;function a(e,t,r,s){var i=t>=1.5*r;return Math.round(e/r)+" "+s+(i?"s":"")}e.exports=function(e,t){t=t||{};var o=typeof e;if("string"===o&&e.length>0)return function(e){if((e=String(e)).length>100)return;var t=/^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(e);if(!t)return;var a=parseFloat(t[1]);switch((t[2]||"ms").toLowerCase()){case"years":case"year":case"yrs":case"yr":case"y":return 315576e5*a;case"weeks":case"week":case"w":return 6048e5*a;case"days":case"day":case"d":return a*n;case"hours":case"hour":case"hrs":case"hr":case"h":return a*i;case"minutes":case"minute":case"mins":case"min":case"m":return a*s;case"seconds":case"second":case"secs":case"sec":case"s":return a*r;case"milliseconds":case"millisecond":case"msecs":case"msec":case"ms":return a;default:return}}(e);if("number"===o&&isFinite(e))return t.long?function(e){var t=Math.abs(e);if(t>=n)return a(e,t,n,"day");if(t>=i)return a(e,t,i,"hour");if(t>=s)return a(e,t,s,"minute");if(t>=r)return a(e,t,r,"second");return e+" ms"}(e):function(e){var t=Math.abs(e);if(t>=n)return Math.round(e/n)+"d";if(t>=i)return Math.round(e/i)+"h";if(t>=s)return Math.round(e/s)+"m";if(t>=r)return Math.round(e/r)+"s";return e+"ms"}(e);throw new Error("val is not a non-empty string or a valid number. val="+JSON.stringify(e))}},function(e,t,r){"use strict";var s=this&&this.__awaiter||function(e,t,r,s){return new(r||(r=Promise))((function(i,n){function a(e){try{c(s.next(e))}catch(e){n(e)}}function o(e){try{c(s.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof r?t:new r((function(e){e(t)}))).then(a,o)}c((s=s.apply(e,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:!0});t.AwaitQueue=class{constructor({ClosedErrorClass:e=Error,StoppedErrorClass:t=Error}={ClosedErrorClass:Error,StoppedErrorClass:Error}){this.closed=!1,this.pendingTasks=[],this.ClosedErrorClass=Error,this.StoppedErrorClass=Error,this.ClosedErrorClass=e,this.StoppedErrorClass=t}get size(){return this.pendingTasks.length}close(){if(!this.closed){this.closed=!0;for(const e of this.pendingTasks)e.stopped=!0,e.reject(new this.ClosedErrorClass("AwaitQueue closed"));this.pendingTasks.length=0}}push(e,t){return s(this,void 0,void 0,(function*(){if(this.closed)throw new this.ClosedErrorClass("AwaitQueue closed");if("function"!=typeof e)throw new TypeError("given task is not a function");if(!e.name&&t)try{Object.defineProperty(e,"name",{value:t})}catch(e){}return new Promise((r,s)=>{const i={task:e,name:t,resolve:r,reject:s,stopped:!1,enqueuedAt:new Date,executedAt:void 0};this.pendingTasks.push(i),1===this.pendingTasks.length&&this.next()})}))}stop(){if(!this.closed){for(const e of this.pendingTasks)e.stopped=!0,e.reject(new this.StoppedErrorClass("AwaitQueue stopped"));this.pendingTasks.length=0}}dump(){const e=new Date;return this.pendingTasks.map(t=>({task:t.task,name:t.name,enqueuedTime:t.executedAt?t.executedAt.getTime()-t.enqueuedAt.getTime():e.getTime()-t.enqueuedAt.getTime(),executingTime:t.executedAt?e.getTime()-t.executedAt.getTime():0}))}next(){return s(this,void 0,void 0,(function*(){const e=this.pendingTasks[0];e&&(yield this.executeTask(e),this.pendingTasks.shift(),this.next())}))}executeTask(e){return s(this,void 0,void 0,(function*(){if(!e.stopped){e.executedAt=new Date;try{const t=yield e.task();if(e.stopped)return;e.resolve(t)}catch(t){if(e.stopped)return;e.reject(t)}}}))}}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5),i=r(1),n=r(2),a=r(3),o=r(7),c=r(11),d=r(6),p=r(8),l=r(13),u=new i.Logger("Chrome74"),h={OS:1024,MIS:1024};class m extends d.HandlerInterface{constructor(){super(),this._mapMidTransceiver=new Map,this._sendStream=new MediaStream,this._hasDataChannelMediaSection=!1,this._nextSendSctpStreamId=0,this._transportReady=!1}static createFactory(){return()=>new m}get name(){return"Chrome74"}close(){if(u.debug("close()"),this._pc)try{this._pc.close()}catch(e){}}async getNativeRtpCapabilities(){u.debug("getNativeRtpCapabilities()");const e=new RTCPeerConnection({iceServers:[],iceTransportPolicy:"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"unified-plan"});try{e.addTransceiver("audio"),e.addTransceiver("video");const t=await e.createOffer();try{e.close()}catch(e){}const r=s.parse(t.sdp);return o.extractRtpCapabilities({sdpObject:r})}catch(t){try{e.close()}catch(e){}throw t}}async getNativeSctpCapabilities(){return u.debug("getNativeSctpCapabilities()"),{numStreams:h}}run({direction:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:o,additionalSettings:c,proprietaryConstraints:d,extendedRtpCapabilities:l}){u.debug("run()"),this._direction=e,this._remoteSdp=new p.RemoteSdp({iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i}),this._sendingRtpParametersByKind={audio:a.getSendingRtpParameters("audio",l),video:a.getSendingRtpParameters("video",l)},this._sendingRemoteRtpParametersByKind={audio:a.getSendingRemoteRtpParameters("audio",l),video:a.getSendingRemoteRtpParameters("video",l)},this._pc=new RTCPeerConnection(Object.assign({iceServers:n||[],iceTransportPolicy:o||"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"unified-plan"},c),d),this._pc.addEventListener("iceconnectionstatechange",()=>{switch(this._pc.iceConnectionState){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}})}async updateIceServers(e){u.debug("updateIceServers()");const t=this._pc.getConfiguration();t.iceServers=e,this._pc.setConfiguration(t)}async restartIce(e){if(u.debug("restartIce()"),this._remoteSdp.updateIceParameters(e),this._transportReady)if("send"===this._direction){const e=await this._pc.createOffer({iceRestart:!0});u.debug("restartIce() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e);const t={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setRemoteDescription(t)}else{const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();u.debug("restartIce() | calling pc.setLocalDescription() [answer:%o]",t),await this._pc.setLocalDescription(t)}}async getTransportStats(){return this._pc.getStats()}async send({track:e,encodings:t,codecOptions:r,codec:i}){this._assertSendDirection(),u.debug("send() [kind:%s, track.id:%s]",e.kind,e.id),t&&t.length>1&&t.forEach((e,t)=>{e.rid="r"+t});const d=n.clone(this._sendingRtpParametersByKind[e.kind],{});d.codecs=a.reduceCodecs(d.codecs,i);const p=n.clone(this._sendingRemoteRtpParametersByKind[e.kind],{});p.codecs=a.reduceCodecs(p.codecs,i);const h=this._remoteSdp.getNextMediaSectionIdx(),m=this._pc.addTransceiver(e,{direction:"sendonly",streams:[this._sendStream],sendEncodings:t});let f,g=await this._pc.createOffer(),_=s.parse(g.sdp);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:_});let S=!1;const v=l.parse((t||[{}])[0].scalabilityMode);t&&1===t.length&&v.spatialLayers>1&&"video/vp9"===d.codecs[0].mimeType.toLowerCase()&&(u.debug("send() | enabling legacy simulcast for VP9 SVC"),S=!0,_=s.parse(g.sdp),f=_.media[h.idx],c.addLegacySimulcast({offerMediaObject:f,numStreams:v.spatialLayers}),g={type:"offer",sdp:s.write(_)}),u.debug("send() | calling pc.setLocalDescription() [offer:%o]",g),await this._pc.setLocalDescription(g);const y=m.mid;if(d.mid=y,_=s.parse(this._pc.localDescription.sdp),f=_.media[h.idx],d.rtcp.cname=o.getCname({offerMediaObject:f}),t)if(1===t.length){let e=c.getRtpEncodings({offerMediaObject:f});Object.assign(e[0],t[0]),S&&(e=[e[0]]),d.encodings=e}else d.encodings=t;else d.encodings=c.getRtpEncodings({offerMediaObject:f});if(d.encodings.length>1&&("video/vp8"===d.codecs[0].mimeType.toLowerCase()||"video/h264"===d.codecs[0].mimeType.toLowerCase()))for(const e of d.encodings)e.scalabilityMode="S1T3";this._remoteSdp.send({offerMediaObject:f,reuseMid:h.reuseMid,offerRtpParameters:d,answerRtpParameters:p,codecOptions:r,extmapAllowMixed:!0});const b={type:"answer",sdp:this._remoteSdp.getSdp()};return u.debug("send() | calling pc.setRemoteDescription() [answer:%o]",b),await this._pc.setRemoteDescription(b),this._mapMidTransceiver.set(y,m),{localId:y,rtpParameters:d,rtpSender:m.sender}}async stopSending(e){this._assertSendDirection(),u.debug("stopSending() [localId:%s]",e);const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");t.sender.replaceTrack(null),this._pc.removeTrack(t.sender),this._remoteSdp.closeMediaSection(t.mid);const r=await this._pc.createOffer();u.debug("stopSending() | calling pc.setLocalDescription() [offer:%o]",r),await this._pc.setLocalDescription(r);const s={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("stopSending() | calling pc.setRemoteDescription() [answer:%o]",s),await this._pc.setRemoteDescription(s)}async replaceTrack(e,t){this._assertSendDirection(),t?u.debug("replaceTrack() [localId:%s, track.id:%s]",e,t.id):u.debug("replaceTrack() [localId:%s, no track]",e);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");await r.sender.replaceTrack(t)}async setMaxSpatialLayer(e,t){this._assertSendDirection(),u.debug("setMaxSpatialLayer() [localId:%s, spatialLayer:%s]",e,t);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");const s=r.sender.getParameters();s.encodings.forEach((e,r)=>{e.active=r<=t}),await r.sender.setParameters(s)}async setRtpEncodingParameters(e,t){this._assertSendDirection(),u.debug("setRtpEncodingParameters() [localId:%s, params:%o]",e,t);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");const s=r.sender.getParameters();s.encodings.forEach((e,r)=>{s.encodings[r]=Object.assign(Object.assign({},e),t)}),await r.sender.setParameters(s)}async getSenderStats(e){this._assertSendDirection();const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");return t.sender.getStats()}async sendDataChannel({ordered:e,maxPacketLifeTime:t,maxRetransmits:r,label:i,protocol:n,priority:a}){this._assertSendDirection();const o={negotiated:!0,id:this._nextSendSctpStreamId,ordered:e,maxPacketLifeTime:t,maxRetransmits:r,protocol:n,priority:a};u.debug("sendDataChannel() [options:%o]",o);const c=this._pc.createDataChannel(i,o);if(this._nextSendSctpStreamId=++this._nextSendSctpStreamId%h.MIS,!this._hasDataChannelMediaSection){const e=await this._pc.createOffer(),t=s.parse(e.sdp),r=t.media.find(e=>"application"===e.type);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:t}),u.debug("sendDataChannel() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e),this._remoteSdp.sendSctpAssociation({offerMediaObject:r});const i={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]",i),await this._pc.setRemoteDescription(i),this._hasDataChannelMediaSection=!0}return{dataChannel:c,sctpStreamParameters:{streamId:o.id,ordered:o.ordered,maxPacketLifeTime:o.maxPacketLifeTime,maxRetransmits:o.maxRetransmits}}}async receive({trackId:e,kind:t,rtpParameters:r}){this._assertRecvDirection(),u.debug("receive() [trackId:%s, kind:%s]",e,t);const i=r.mid||String(this._mapMidTransceiver.size);this._remoteSdp.receive({mid:i,kind:t,offerRtpParameters:r,streamId:r.rtcp.cname,trackId:e});const n={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receive() | calling pc.setRemoteDescription() [offer:%o]",n),await this._pc.setRemoteDescription(n);let a=await this._pc.createAnswer();const c=s.parse(a.sdp),d=c.media.find(e=>String(e.mid)===i);o.applyCodecParameters({offerRtpParameters:r,answerMediaObject:d}),a={type:"answer",sdp:s.write(c)},this._transportReady||await this._setupTransport({localDtlsRole:"client",localSdpObject:c}),u.debug("receive() | calling pc.setLocalDescription() [answer:%o]",a),await this._pc.setLocalDescription(a);const p=this._pc.getTransceivers().find(e=>e.mid===i);if(!p)throw new Error("new RTCRtpTransceiver not found");return this._mapMidTransceiver.set(i,p),{localId:i,track:p.receiver.track,rtpReceiver:p.receiver}}async stopReceiving(e){this._assertRecvDirection(),u.debug("stopReceiving() [localId:%s]",e);const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");this._remoteSdp.closeMediaSection(t.mid);const r={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("stopReceiving() | calling pc.setRemoteDescription() [offer:%o]",r),await this._pc.setRemoteDescription(r);const s=await this._pc.createAnswer();u.debug("stopReceiving() | calling pc.setLocalDescription() [answer:%o]",s),await this._pc.setLocalDescription(s)}async getReceiverStats(e){this._assertRecvDirection();const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");return t.receiver.getStats()}async receiveDataChannel({sctpStreamParameters:e,label:t,protocol:r}){this._assertRecvDirection();const{streamId:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o}=e,c={negotiated:!0,id:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o,protocol:r};u.debug("receiveDataChannel() [options:%o]",c);const d=this._pc.createDataChannel(t,c);if(!this._hasDataChannelMediaSection){this._remoteSdp.receiveSctpAssociation();const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();if(!this._transportReady){const e=s.parse(t.sdp);await this._setupTransport({localDtlsRole:"client",localSdpObject:e})}u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setLocalDescription(t),this._hasDataChannelMediaSection=!0}return{dataChannel:d}}async _setupTransport({localDtlsRole:e,localSdpObject:t}){t||(t=s.parse(this._pc.localDescription.sdp));const r=o.extractDtlsParameters({sdpObject:t});r.role=e,this._remoteSdp.updateDtlsRole("client"===e?"server":"client"),await this.safeEmitAsPromise("@connect",{dtlsParameters:r}),this._transportReady=!0}_assertSendDirection(){if("send"!==this._direction)throw new Error('method can just be called for handlers with "send" direction')}_assertRecvDirection(){if("recv"!==this._direction)throw new Error('method can just be called for handlers with "recv" direction')}}t.Chrome74=m},function(e,t,r){var s=function(e){return String(Number(e))===e?Number(e):e},i=function(e,t,r){var i=e.name&&e.names;e.push&&!t[e.push]?t[e.push]=[]:i&&!t[e.name]&&(t[e.name]={});var n=e.push?{}:i?t[e.name]:t;!function(e,t,r,i){if(i&&!r)t[i]=s(e[1]);else for(var n=0;n<r.length;n+=1)null!=e[n+1]&&(t[r[n]]=s(e[n+1]))}(r.match(e.reg),n,e.names,e.name),e.push&&t[e.push].push(n)},n=r(21),a=RegExp.prototype.test.bind(/^([a-z])=(.*)/);t.parse=function(e){var t={},r=[],s=t;return e.split(/(\r\n|\r|\n)/).filter(a).forEach((function(e){var t=e[0],a=e.slice(2);"m"===t&&(r.push({rtp:[],fmtp:[]}),s=r[r.length-1]);for(var o=0;o<(n[t]||[]).length;o+=1){var c=n[t][o];if(c.reg.test(a))return i(c,s,a)}})),t.media=r,t};var o=function(e,t){var r=t.split(/=(.+)/,2);return 2===r.length?e[r[0]]=s(r[1]):1===r.length&&t.length>1&&(e[r[0]]=void 0),e};t.parseParams=function(e){return e.split(/;\s?/).reduce(o,{})},t.parseFmtpConfig=t.parseParams,t.parsePayloads=function(e){return e.toString().split(" ").map(Number)},t.parseRemoteCandidates=function(e){for(var t=[],r=e.split(" ").map(s),i=0;i<r.length;i+=3)t.push({component:r[i],ip:r[i+1],port:r[i+2]});return t},t.parseImageAttributes=function(e){return e.split(" ").map((function(e){return e.substring(1,e.length-1).split(",").reduce(o,{})}))},t.parseSimulcastStreamList=function(e){return e.split(";").map((function(e){return e.split(",").map((function(e){var t,r=!1;return"~"!==e[0]?t=s(e):(t=s(e.substring(1,e.length)),r=!0),{scid:t,paused:r}}))}))}},function(e,t,r){var s=r(21),i=/%[sdv%]/g,n=function(e){var t=1,r=arguments,s=r.length;return e.replace(i,(function(e){if(t>=s)return e;var i=r[t];switch(t+=1,e){case"%%":return"%";case"%s":return String(i);case"%d":return Number(i);case"%v":return""}}))},a=function(e,t,r){var s=[e+"="+(t.format instanceof Function?t.format(t.push?r:r[t.name]):t.format)];if(t.names)for(var i=0;i<t.names.length;i+=1){var a=t.names[i];t.name?s.push(r[t.name][a]):s.push(r[t.names[i]])}else s.push(r[t.name]);return n.apply(null,s)},o=["v","o","s","i","u","e","p","c","b","t","r","z","a"],c=["i","c","b","a"];e.exports=function(e,t){t=t||{},null==e.version&&(e.version=0),null==e.name&&(e.name=" "),e.media.forEach((function(e){null==e.payloads&&(e.payloads="")}));var r=t.outerOrder||o,i=t.innerOrder||c,n=[];return r.forEach((function(t){s[t].forEach((function(r){r.name in e&&null!=e[r.name]?n.push(a(t,r,e)):r.push in e&&null!=e[r.push]&&e[r.push].forEach((function(e){n.push(a(t,r,e))}))}))})),e.media.forEach((function(e){n.push(a("m",s.m[0],e)),i.forEach((function(t){s[t].forEach((function(r){r.name in e&&null!=e[r.name]?n.push(a(t,r,e)):r.push in e&&null!=e[r.push]&&e[r.push].forEach((function(e){n.push(a(t,r,e))}))}))}))})),n.join("\r\n")+"\r\n"}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(2);class i{constructor({iceParameters:e,iceCandidates:t,dtlsParameters:r,planB:s=!1}){if(this._mediaObject={},this._planB=s,e&&this.setIceParameters(e),t){this._mediaObject.candidates=[];for(const e of t){const t={component:1};t.foundation=e.foundation,t.ip=e.ip,t.port=e.port,t.priority=e.priority,t.transport=e.protocol,t.type=e.type,e.tcpType&&(t.tcptype=e.tcpType),this._mediaObject.candidates.push(t)}this._mediaObject.endOfCandidates="end-of-candidates",this._mediaObject.iceOptions="renomination"}r&&this.setDtlsRole(r.role)}get mid(){return String(this._mediaObject.mid)}get closed(){return 0===this._mediaObject.port}getObject(){return this._mediaObject}setIceParameters(e){this._mediaObject.iceUfrag=e.usernameFragment,this._mediaObject.icePwd=e.password}disable(){this._mediaObject.direction="inactive",delete this._mediaObject.ext,delete this._mediaObject.ssrcs,delete this._mediaObject.ssrcGroups,delete this._mediaObject.simulcast,delete this._mediaObject.simulcast_03,delete this._mediaObject.rids}close(){this._mediaObject.direction="inactive",this._mediaObject.port=0,delete this._mediaObject.ext,delete this._mediaObject.ssrcs,delete this._mediaObject.ssrcGroups,delete this._mediaObject.simulcast,delete this._mediaObject.simulcast_03,delete this._mediaObject.rids,delete this._mediaObject.extmapAllowMixed}}t.MediaSection=i;t.AnswerMediaSection=class extends i{constructor({iceParameters:e,iceCandidates:t,dtlsParameters:r,sctpParameters:i,plainRtpParameters:a,planB:o=!1,offerMediaObject:c,offerRtpParameters:d,answerRtpParameters:p,codecOptions:l,extmapAllowMixed:u=!1}){switch(super({iceParameters:e,iceCandidates:t,dtlsParameters:r,planB:o}),this._mediaObject.mid=String(c.mid),this._mediaObject.type=c.type,this._mediaObject.protocol=c.protocol,a?(this._mediaObject.connection={ip:a.ip,version:a.ipVersion},this._mediaObject.port=a.port):(this._mediaObject.connection={ip:"127.0.0.1",version:4},this._mediaObject.port=7),c.type){case"audio":case"video":this._mediaObject.direction="recvonly",this._mediaObject.rtp=[],this._mediaObject.rtcpFb=[],this._mediaObject.fmtp=[];for(const e of p.codecs){const t={payload:e.payloadType,codec:n(e),rate:e.clockRate};e.channels>1&&(t.encoding=e.channels),this._mediaObject.rtp.push(t);const r=s.clone(e.parameters,{});if(l){const{opusStereo:t,opusFec:s,opusDtx:i,opusMaxPlaybackRate:n,opusMaxAverageBitrate:a,opusPtime:o,videoGoogleStartBitrate:c,videoGoogleMaxBitrate:p,videoGoogleMinBitrate:u}=l,h=d.codecs.find(t=>t.payloadType===e.payloadType);switch(e.mimeType.toLowerCase()){case"audio/opus":void 0!==t&&(h.parameters["sprop-stereo"]=t?1:0,r.stereo=t?1:0),void 0!==s&&(h.parameters.useinbandfec=s?1:0,r.useinbandfec=s?1:0),void 0!==i&&(h.parameters.usedtx=i?1:0,r.usedtx=i?1:0),void 0!==n&&(r.maxplaybackrate=n),void 0!==a&&(r.maxaveragebitrate=a),void 0!==o&&(h.parameters.ptime=o,r.ptime=o);break;case"video/vp8":case"video/vp9":case"video/h264":case"video/h265":void 0!==c&&(r["x-google-start-bitrate"]=c),void 0!==p&&(r["x-google-max-bitrate"]=p),void 0!==u&&(r["x-google-min-bitrate"]=u)}}const i={payload:e.payloadType,config:""};for(const e of Object.keys(r))i.config&&(i.config+=";"),i.config+=`${e}=${r[e]}`;i.config&&this._mediaObject.fmtp.push(i);for(const t of e.rtcpFeedback)this._mediaObject.rtcpFb.push({payload:e.payloadType,type:t.type,subtype:t.parameter})}this._mediaObject.payloads=p.codecs.map(e=>e.payloadType).join(" "),this._mediaObject.ext=[];for(const e of p.headerExtensions){(c.ext||[]).some(t=>t.uri===e.uri)&&this._mediaObject.ext.push({uri:e.uri,value:e.id})}if(u&&"extmap-allow-mixed"===c.extmapAllowMixed&&(this._mediaObject.extmapAllowMixed="extmap-allow-mixed"),c.simulcast){this._mediaObject.simulcast={dir1:"recv",list1:c.simulcast.list1},this._mediaObject.rids=[];for(const e of c.rids||[])"send"===e.direction&&this._mediaObject.rids.push({id:e.id,direction:"recv"})}else if(c.simulcast_03){this._mediaObject.simulcast_03={value:c.simulcast_03.value.replace(/send/g,"recv")},this._mediaObject.rids=[];for(const e of c.rids||[])"send"===e.direction&&this._mediaObject.rids.push({id:e.id,direction:"recv"})}this._mediaObject.rtcpMux="rtcp-mux",this._mediaObject.rtcpRsize="rtcp-rsize",this._planB&&"video"===this._mediaObject.type&&(this._mediaObject.xGoogleFlag="conference");break;case"application":"number"==typeof c.sctpPort?(this._mediaObject.payloads="webrtc-datachannel",this._mediaObject.sctpPort=i.port,this._mediaObject.maxMessageSize=i.maxMessageSize):c.sctpmap&&(this._mediaObject.payloads=i.port,this._mediaObject.sctpmap={app:"webrtc-datachannel",sctpmapNumber:i.port,maxMessageSize:i.maxMessageSize})}}setDtlsRole(e){switch(e){case"client":this._mediaObject.setup="active";break;case"server":this._mediaObject.setup="passive";break;case"auto":this._mediaObject.setup="actpass"}}};function n(e){const t=new RegExp("^(audio|video)/(.+)","i").exec(e.mimeType);if(!t)throw new TypeError("invalid codec.mimeType");return t[2]}t.OfferMediaSection=class extends i{constructor({iceParameters:e,iceCandidates:t,dtlsParameters:r,sctpParameters:s,plainRtpParameters:i,planB:a=!1,mid:o,kind:c,offerRtpParameters:d,streamId:p,trackId:l,oldDataChannelSpec:u=!1}){switch(super({iceParameters:e,iceCandidates:t,dtlsParameters:r,planB:a}),this._mediaObject.mid=String(o),this._mediaObject.type=c,i?(this._mediaObject.connection={ip:i.ip,version:i.ipVersion},this._mediaObject.protocol="RTP/AVP",this._mediaObject.port=i.port):(this._mediaObject.connection={ip:"127.0.0.1",version:4},this._mediaObject.protocol=s?"UDP/DTLS/SCTP":"UDP/TLS/RTP/SAVPF",this._mediaObject.port=7),c){case"audio":case"video":{this._mediaObject.direction="sendonly",this._mediaObject.rtp=[],this._mediaObject.rtcpFb=[],this._mediaObject.fmtp=[],this._planB||(this._mediaObject.msid=`${p||"-"} ${l}`);for(const e of d.codecs){const t={payload:e.payloadType,codec:n(e),rate:e.clockRate};e.channels>1&&(t.encoding=e.channels),this._mediaObject.rtp.push(t);const r={payload:e.payloadType,config:""};for(const t of Object.keys(e.parameters))r.config&&(r.config+=";"),r.config+=`${t}=${e.parameters[t]}`;r.config&&this._mediaObject.fmtp.push(r);for(const t of e.rtcpFeedback)this._mediaObject.rtcpFb.push({payload:e.payloadType,type:t.type,subtype:t.parameter})}this._mediaObject.payloads=d.codecs.map(e=>e.payloadType).join(" "),this._mediaObject.ext=[];for(const e of d.headerExtensions)this._mediaObject.ext.push({uri:e.uri,value:e.id});this._mediaObject.rtcpMux="rtcp-mux",this._mediaObject.rtcpRsize="rtcp-rsize";const e=d.encodings[0],t=e.ssrc,r=e.rtx&&e.rtx.ssrc?e.rtx.ssrc:void 0;this._mediaObject.ssrcs=[],this._mediaObject.ssrcGroups=[],d.rtcp.cname&&this._mediaObject.ssrcs.push({id:t,attribute:"cname",value:d.rtcp.cname}),this._planB&&this._mediaObject.ssrcs.push({id:t,attribute:"msid",value:`${p||"-"} ${l}`}),r&&(d.rtcp.cname&&this._mediaObject.ssrcs.push({id:r,attribute:"cname",value:d.rtcp.cname}),this._planB&&this._mediaObject.ssrcs.push({id:r,attribute:"msid",value:`${p||"-"} ${l}`}),this._mediaObject.ssrcGroups.push({semantics:"FID",ssrcs:`${t} ${r}`}));break}case"application":u?(this._mediaObject.payloads=s.port,this._mediaObject.sctpmap={app:"webrtc-datachannel",sctpmapNumber:s.port,maxMessageSize:s.maxMessageSize}):(this._mediaObject.payloads="webrtc-datachannel",this._mediaObject.sctpPort=s.port,this._mediaObject.maxMessageSize=s.maxMessageSize)}}setDtlsRole(e){this._mediaObject.setup="actpass"}planBReceive({offerRtpParameters:e,streamId:t,trackId:r}){const s=e.encodings[0],i=s.ssrc,n=s.rtx&&s.rtx.ssrc?s.rtx.ssrc:void 0;e.rtcp.cname&&this._mediaObject.ssrcs.push({id:i,attribute:"cname",value:e.rtcp.cname}),this._mediaObject.ssrcs.push({id:i,attribute:"msid",value:`${t||"-"} ${r}`}),n&&(e.rtcp.cname&&this._mediaObject.ssrcs.push({id:n,attribute:"cname",value:e.rtcp.cname}),this._mediaObject.ssrcs.push({id:n,attribute:"msid",value:`${t||"-"} ${r}`}),this._mediaObject.ssrcGroups.push({semantics:"FID",ssrcs:`${i} ${n}`}))}planBStopReceiving({offerRtpParameters:e}){const t=e.encodings[0],r=t.ssrc,s=t.rtx&&t.rtx.ssrc?t.rtx.ssrc:void 0;this._mediaObject.ssrcs=this._mediaObject.ssrcs.filter(e=>e.id!==r&&e.id!==s),s&&(this._mediaObject.ssrcGroups=this._mediaObject.ssrcGroups.filter(e=>e.ssrcs!==`${r} ${s}`))}}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5),i=r(1),n=r(2),a=r(3),o=r(7),c=r(11),d=r(6),p=r(8),l=r(13),u=new i.Logger("Chrome70"),h={OS:1024,MIS:1024};class m extends d.HandlerInterface{constructor(){super(),this._mapMidTransceiver=new Map,this._sendStream=new MediaStream,this._hasDataChannelMediaSection=!1,this._nextSendSctpStreamId=0,this._transportReady=!1}static createFactory(){return()=>new m}get name(){return"Chrome70"}close(){if(u.debug("close()"),this._pc)try{this._pc.close()}catch(e){}}async getNativeRtpCapabilities(){u.debug("getNativeRtpCapabilities()");const e=new RTCPeerConnection({iceServers:[],iceTransportPolicy:"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"unified-plan"});try{e.addTransceiver("audio"),e.addTransceiver("video");const t=await e.createOffer();try{e.close()}catch(e){}const r=s.parse(t.sdp);return o.extractRtpCapabilities({sdpObject:r})}catch(t){try{e.close()}catch(e){}throw t}}async getNativeSctpCapabilities(){return u.debug("getNativeSctpCapabilities()"),{numStreams:h}}run({direction:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:o,additionalSettings:c,proprietaryConstraints:d,extendedRtpCapabilities:l}){u.debug("run()"),this._direction=e,this._remoteSdp=new p.RemoteSdp({iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i}),this._sendingRtpParametersByKind={audio:a.getSendingRtpParameters("audio",l),video:a.getSendingRtpParameters("video",l)},this._sendingRemoteRtpParametersByKind={audio:a.getSendingRemoteRtpParameters("audio",l),video:a.getSendingRemoteRtpParameters("video",l)},this._pc=new RTCPeerConnection(Object.assign({iceServers:n||[],iceTransportPolicy:o||"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"unified-plan"},c),d),this._pc.addEventListener("iceconnectionstatechange",()=>{switch(this._pc.iceConnectionState){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}})}async updateIceServers(e){u.debug("updateIceServers()");const t=this._pc.getConfiguration();t.iceServers=e,this._pc.setConfiguration(t)}async restartIce(e){if(u.debug("restartIce()"),this._remoteSdp.updateIceParameters(e),this._transportReady)if("send"===this._direction){const e=await this._pc.createOffer({iceRestart:!0});u.debug("restartIce() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e);const t={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setRemoteDescription(t)}else{const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();u.debug("restartIce() | calling pc.setLocalDescription() [answer:%o]",t),await this._pc.setLocalDescription(t)}}async getTransportStats(){return this._pc.getStats()}async send({track:e,encodings:t,codecOptions:r,codec:i}){this._assertSendDirection(),u.debug("send() [kind:%s, track.id:%s]",e.kind,e.id);const d=n.clone(this._sendingRtpParametersByKind[e.kind],{});d.codecs=a.reduceCodecs(d.codecs,i);const p=n.clone(this._sendingRemoteRtpParametersByKind[e.kind],{});p.codecs=a.reduceCodecs(p.codecs,i);const h=this._remoteSdp.getNextMediaSectionIdx(),m=this._pc.addTransceiver(e,{direction:"sendonly",streams:[this._sendStream]});let f,g=await this._pc.createOffer(),_=s.parse(g.sdp);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:_}),t&&t.length>1&&(u.debug("send() | enabling legacy simulcast"),_=s.parse(g.sdp),f=_.media[h.idx],c.addLegacySimulcast({offerMediaObject:f,numStreams:t.length}),g={type:"offer",sdp:s.write(_)});let S=!1;const v=l.parse((t||[{}])[0].scalabilityMode);if(t&&1===t.length&&v.spatialLayers>1&&"video/vp9"===d.codecs[0].mimeType.toLowerCase()&&(u.debug("send() | enabling legacy simulcast for VP9 SVC"),S=!0,_=s.parse(g.sdp),f=_.media[h.idx],c.addLegacySimulcast({offerMediaObject:f,numStreams:v.spatialLayers}),g={type:"offer",sdp:s.write(_)}),u.debug("send() | calling pc.setLocalDescription() [offer:%o]",g),await this._pc.setLocalDescription(g),t){u.debug("send() | applying given encodings");const e=m.sender.getParameters();for(let r=0;r<(e.encodings||[]).length;++r){const s=e.encodings[r],i=t[r];if(!i)break;e.encodings[r]=Object.assign(s,i)}await m.sender.setParameters(e)}const y=m.mid;if(d.mid=y,_=s.parse(this._pc.localDescription.sdp),f=_.media[h.idx],d.rtcp.cname=o.getCname({offerMediaObject:f}),d.encodings=c.getRtpEncodings({offerMediaObject:f}),t)for(let e=0;e<d.encodings.length;++e)t[e]&&Object.assign(d.encodings[e],t[e]);if(S&&(d.encodings=[d.encodings[0]]),d.encodings.length>1&&("video/vp8"===d.codecs[0].mimeType.toLowerCase()||"video/h264"===d.codecs[0].mimeType.toLowerCase()))for(const e of d.encodings)e.scalabilityMode="S1T3";this._remoteSdp.send({offerMediaObject:f,reuseMid:h.reuseMid,offerRtpParameters:d,answerRtpParameters:p,codecOptions:r});const b={type:"answer",sdp:this._remoteSdp.getSdp()};return u.debug("send() | calling pc.setRemoteDescription() [answer:%o]",b),await this._pc.setRemoteDescription(b),this._mapMidTransceiver.set(y,m),{localId:y,rtpParameters:d,rtpSender:m.sender}}async stopSending(e){this._assertSendDirection(),u.debug("stopSending() [localId:%s]",e);const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");t.sender.replaceTrack(null),this._pc.removeTrack(t.sender),this._remoteSdp.closeMediaSection(t.mid);const r=await this._pc.createOffer();u.debug("stopSending() | calling pc.setLocalDescription() [offer:%o]",r),await this._pc.setLocalDescription(r);const s={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("stopSending() | calling pc.setRemoteDescription() [answer:%o]",s),await this._pc.setRemoteDescription(s)}async replaceTrack(e,t){this._assertSendDirection(),t?u.debug("replaceTrack() [localId:%s, track.id:%s]",e,t.id):u.debug("replaceTrack() [localId:%s, no track]",e);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");await r.sender.replaceTrack(t)}async setMaxSpatialLayer(e,t){this._assertSendDirection(),u.debug("setMaxSpatialLayer() [localId:%s, spatialLayer:%s]",e,t);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");const s=r.sender.getParameters();s.encodings.forEach((e,r)=>{e.active=r<=t}),await r.sender.setParameters(s)}async setRtpEncodingParameters(e,t){this._assertSendDirection(),u.debug("setRtpEncodingParameters() [localId:%s, params:%o]",e,t);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");const s=r.sender.getParameters();s.encodings.forEach((e,r)=>{s.encodings[r]=Object.assign(Object.assign({},e),t)}),await r.sender.setParameters(s)}async getSenderStats(e){this._assertSendDirection();const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");return t.sender.getStats()}async sendDataChannel({ordered:e,maxPacketLifeTime:t,maxRetransmits:r,label:i,protocol:n,priority:a}){this._assertSendDirection();const o={negotiated:!0,id:this._nextSendSctpStreamId,ordered:e,maxPacketLifeTime:t,maxRetransmitTime:t,maxRetransmits:r,protocol:n,priority:a};u.debug("sendDataChannel() [options:%o]",o);const c=this._pc.createDataChannel(i,o);if(this._nextSendSctpStreamId=++this._nextSendSctpStreamId%h.MIS,!this._hasDataChannelMediaSection){const e=await this._pc.createOffer(),t=s.parse(e.sdp),r=t.media.find(e=>"application"===e.type);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:t}),u.debug("sendDataChannel() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e),this._remoteSdp.sendSctpAssociation({offerMediaObject:r});const i={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]",i),await this._pc.setRemoteDescription(i),this._hasDataChannelMediaSection=!0}return{dataChannel:c,sctpStreamParameters:{streamId:o.id,ordered:o.ordered,maxPacketLifeTime:o.maxPacketLifeTime,maxRetransmits:o.maxRetransmits}}}async receive({trackId:e,kind:t,rtpParameters:r}){this._assertRecvDirection(),u.debug("receive() [trackId:%s, kind:%s]",e,t);const i=r.mid||String(this._mapMidTransceiver.size);this._remoteSdp.receive({mid:i,kind:t,offerRtpParameters:r,streamId:r.rtcp.cname,trackId:e});const n={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receive() | calling pc.setRemoteDescription() [offer:%o]",n),await this._pc.setRemoteDescription(n);let a=await this._pc.createAnswer();const c=s.parse(a.sdp),d=c.media.find(e=>String(e.mid)===i);o.applyCodecParameters({offerRtpParameters:r,answerMediaObject:d}),a={type:"answer",sdp:s.write(c)},this._transportReady||await this._setupTransport({localDtlsRole:"client",localSdpObject:c}),u.debug("receive() | calling pc.setLocalDescription() [answer:%o]",a),await this._pc.setLocalDescription(a);const p=this._pc.getTransceivers().find(e=>e.mid===i);if(!p)throw new Error("new RTCRtpTransceiver not found");return this._mapMidTransceiver.set(i,p),{localId:i,track:p.receiver.track,rtpReceiver:p.receiver}}async stopReceiving(e){this._assertRecvDirection(),u.debug("stopReceiving() [localId:%s]",e);const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");this._remoteSdp.closeMediaSection(t.mid);const r={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("stopReceiving() | calling pc.setRemoteDescription() [offer:%o]",r),await this._pc.setRemoteDescription(r);const s=await this._pc.createAnswer();u.debug("stopReceiving() | calling pc.setLocalDescription() [answer:%o]",s),await this._pc.setLocalDescription(s)}async getReceiverStats(e){this._assertRecvDirection();const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");return t.receiver.getStats()}async receiveDataChannel({sctpStreamParameters:e,label:t,protocol:r}){this._assertRecvDirection();const{streamId:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o}=e,c={negotiated:!0,id:i,ordered:n,maxPacketLifeTime:a,maxRetransmitTime:a,maxRetransmits:o,protocol:r};u.debug("receiveDataChannel() [options:%o]",c);const d=this._pc.createDataChannel(t,c);if(!this._hasDataChannelMediaSection){this._remoteSdp.receiveSctpAssociation();const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();if(!this._transportReady){const e=s.parse(t.sdp);await this._setupTransport({localDtlsRole:"client",localSdpObject:e})}u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setLocalDescription(t),this._hasDataChannelMediaSection=!0}return{dataChannel:d}}async _setupTransport({localDtlsRole:e,localSdpObject:t}){t||(t=s.parse(this._pc.localDescription.sdp));const r=o.extractDtlsParameters({sdpObject:t});r.role=e,this._remoteSdp.updateDtlsRole("client"===e?"server":"client"),await this.safeEmitAsPromise("@connect",{dtlsParameters:r}),this._transportReady=!0}_assertSendDirection(){if("send"!==this._direction)throw new Error('method can just be called for handlers with "send" direction')}_assertRecvDirection(){if("recv"!==this._direction)throw new Error('method can just be called for handlers with "recv" direction')}}t.Chrome70=m},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5),i=r(1),n=r(2),a=r(3),o=r(7),c=r(12),d=r(6),p=r(8),l=new i.Logger("Chrome67"),u={OS:1024,MIS:1024};class h extends d.HandlerInterface{constructor(){super(),this._sendStream=new MediaStream,this._mapSendLocalIdRtpSender=new Map,this._nextSendLocalId=0,this._mapRecvLocalIdInfo=new Map,this._hasDataChannelMediaSection=!1,this._nextSendSctpStreamId=0,this._transportReady=!1}static createFactory(){return()=>new h}get name(){return"Chrome67"}close(){if(l.debug("close()"),this._pc)try{this._pc.close()}catch(e){}}async getNativeRtpCapabilities(){l.debug("getNativeRtpCapabilities()");const e=new RTCPeerConnection({iceServers:[],iceTransportPolicy:"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"plan-b"});try{const t=await e.createOffer({offerToReceiveAudio:!0,offerToReceiveVideo:!0});try{e.close()}catch(e){}const r=s.parse(t.sdp);return o.extractRtpCapabilities({sdpObject:r})}catch(t){try{e.close()}catch(e){}throw t}}async getNativeSctpCapabilities(){return l.debug("getNativeSctpCapabilities()"),{numStreams:u}}run({direction:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:o,additionalSettings:c,proprietaryConstraints:d,extendedRtpCapabilities:u}){l.debug("run()"),this._direction=e,this._remoteSdp=new p.RemoteSdp({iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,planB:!0}),this._sendingRtpParametersByKind={audio:a.getSendingRtpParameters("audio",u),video:a.getSendingRtpParameters("video",u)},this._sendingRemoteRtpParametersByKind={audio:a.getSendingRemoteRtpParameters("audio",u),video:a.getSendingRemoteRtpParameters("video",u)},this._pc=new RTCPeerConnection(Object.assign({iceServers:n||[],iceTransportPolicy:o||"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"plan-b"},c),d),this._pc.addEventListener("iceconnectionstatechange",()=>{switch(this._pc.iceConnectionState){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}})}async updateIceServers(e){l.debug("updateIceServers()");const t=this._pc.getConfiguration();t.iceServers=e,this._pc.setConfiguration(t)}async restartIce(e){if(l.debug("restartIce()"),this._remoteSdp.updateIceParameters(e),this._transportReady)if("send"===this._direction){const e=await this._pc.createOffer({iceRestart:!0});l.debug("restartIce() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e);const t={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("restartIce() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setRemoteDescription(t)}else{const e={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("restartIce() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();l.debug("restartIce() | calling pc.setLocalDescription() [answer:%o]",t),await this._pc.setLocalDescription(t)}}async getTransportStats(){return this._pc.getStats()}async send({track:e,encodings:t,codecOptions:r,codec:i}){this._assertSendDirection(),l.debug("send() [kind:%s, track.id:%s]",e.kind,e.id),i&&l.warn("send() | codec selection is not available in %s handler",this.name),this._sendStream.addTrack(e),this._pc.addTrack(e,this._sendStream);let d,p=await this._pc.createOffer(),u=s.parse(p.sdp);const h=n.clone(this._sendingRtpParametersByKind[e.kind],{});h.codecs=a.reduceCodecs(h.codecs);const m=n.clone(this._sendingRemoteRtpParametersByKind[e.kind],{});if(m.codecs=a.reduceCodecs(m.codecs),this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:u}),"video"===e.kind&&t&&t.length>1&&(l.debug("send() | enabling simulcast"),u=s.parse(p.sdp),d=u.media.find(e=>"video"===e.type),c.addLegacySimulcast({offerMediaObject:d,track:e,numStreams:t.length}),p={type:"offer",sdp:s.write(u)}),l.debug("send() | calling pc.setLocalDescription() [offer:%o]",p),await this._pc.setLocalDescription(p),u=s.parse(this._pc.localDescription.sdp),d=u.media.find(t=>t.type===e.kind),h.rtcp.cname=o.getCname({offerMediaObject:d}),h.encodings=c.getRtpEncodings({offerMediaObject:d,track:e}),t)for(let e=0;e<h.encodings.length;++e)t[e]&&Object.assign(h.encodings[e],t[e]);if(h.encodings.length>1&&"video/vp8"===h.codecs[0].mimeType.toLowerCase())for(const e of h.encodings)e.scalabilityMode="S1T3";this._remoteSdp.send({offerMediaObject:d,offerRtpParameters:h,answerRtpParameters:m,codecOptions:r});const f={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("send() | calling pc.setRemoteDescription() [answer:%o]",f),await this._pc.setRemoteDescription(f);const g=String(this._nextSendLocalId);this._nextSendLocalId++;const _=this._pc.getSenders().find(t=>t.track===e);return this._mapSendLocalIdRtpSender.set(g,_),{localId:g,rtpParameters:h,rtpSender:_}}async stopSending(e){this._assertSendDirection(),l.debug("stopSending() [localId:%s]",e);const t=this._mapSendLocalIdRtpSender.get(e);if(!t)throw new Error("associated RTCRtpSender not found");this._pc.removeTrack(t),t.track&&this._sendStream.removeTrack(t.track),this._mapSendLocalIdRtpSender.delete(e);const r=await this._pc.createOffer();l.debug("stopSending() | calling pc.setLocalDescription() [offer:%o]",r);try{await this._pc.setLocalDescription(r)}catch(e){if(0===this._sendStream.getTracks().length)return void l.warn("stopSending() | ignoring expected error due no sending tracks: %s",e.toString());throw e}if("stable"===this._pc.signalingState)return;const s={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("stopSending() | calling pc.setRemoteDescription() [answer:%o]",s),await this._pc.setRemoteDescription(s)}async replaceTrack(e,t){this._assertSendDirection(),t?l.debug("replaceTrack() [localId:%s, track.id:%s]",e,t.id):l.debug("replaceTrack() [localId:%s, no track]",e);const r=this._mapSendLocalIdRtpSender.get(e);if(!r)throw new Error("associated RTCRtpSender not found");const s=r.track;await r.replaceTrack(t),s&&this._sendStream.removeTrack(s),t&&this._sendStream.addTrack(t)}async setMaxSpatialLayer(e,t){this._assertSendDirection(),l.debug("setMaxSpatialLayer() [localId:%s, spatialLayer:%s]",e,t);const r=this._mapSendLocalIdRtpSender.get(e);if(!r)throw new Error("associated RTCRtpSender not found");const s=r.getParameters();s.encodings.forEach((e,r)=>{e.active=r<=t}),await r.setParameters(s)}async setRtpEncodingParameters(e,t){this._assertSendDirection(),l.debug("setRtpEncodingParameters() [localId:%s, params:%o]",e,t);const r=this._mapSendLocalIdRtpSender.get(e);if(!r)throw new Error("associated RTCRtpSender not found");const s=r.getParameters();s.encodings.forEach((e,r)=>{s.encodings[r]=Object.assign(Object.assign({},e),t)}),await r.setParameters(s)}async getSenderStats(e){this._assertSendDirection();const t=this._mapSendLocalIdRtpSender.get(e);if(!t)throw new Error("associated RTCRtpSender not found");return t.getStats()}async sendDataChannel({ordered:e,maxPacketLifeTime:t,maxRetransmits:r,label:i,protocol:n,priority:a}){this._assertSendDirection();const o={negotiated:!0,id:this._nextSendSctpStreamId,ordered:e,maxPacketLifeTime:t,maxRetransmitTime:t,maxRetransmits:r,protocol:n,priority:a};l.debug("sendDataChannel() [options:%o]",o);const c=this._pc.createDataChannel(i,o);if(this._nextSendSctpStreamId=++this._nextSendSctpStreamId%u.MIS,!this._hasDataChannelMediaSection){const e=await this._pc.createOffer(),t=s.parse(e.sdp),r=t.media.find(e=>"application"===e.type);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:t}),l.debug("sendDataChannel() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e),this._remoteSdp.sendSctpAssociation({offerMediaObject:r});const i={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]",i),await this._pc.setRemoteDescription(i),this._hasDataChannelMediaSection=!0}return{dataChannel:c,sctpStreamParameters:{streamId:o.id,ordered:o.ordered,maxPacketLifeTime:o.maxPacketLifeTime,maxRetransmits:o.maxRetransmits}}}async receive({trackId:e,kind:t,rtpParameters:r}){this._assertRecvDirection(),l.debug("receive() [trackId:%s, kind:%s]",e,t);const i=e,n=t;this._remoteSdp.receive({mid:n,kind:t,offerRtpParameters:r,streamId:r.rtcp.cname,trackId:e});const a={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("receive() | calling pc.setRemoteDescription() [offer:%o]",a),await this._pc.setRemoteDescription(a);let c=await this._pc.createAnswer();const d=s.parse(c.sdp),p=d.media.find(e=>String(e.mid)===n);o.applyCodecParameters({offerRtpParameters:r,answerMediaObject:p}),c={type:"answer",sdp:s.write(d)},this._transportReady||await this._setupTransport({localDtlsRole:"client",localSdpObject:d}),l.debug("receive() | calling pc.setLocalDescription() [answer:%o]",c),await this._pc.setLocalDescription(c);const u=this._pc.getReceivers().find(e=>e.track&&e.track.id===i);if(!u)throw new Error("new RTCRtpReceiver not");return this._mapRecvLocalIdInfo.set(i,{mid:n,rtpParameters:r,rtpReceiver:u}),{localId:i,track:u.track,rtpReceiver:u}}async stopReceiving(e){this._assertRecvDirection(),l.debug("stopReceiving() [localId:%s]",e);const{mid:t,rtpParameters:r}=this._mapRecvLocalIdInfo.get(e)||{};this._mapRecvLocalIdInfo.delete(e),this._remoteSdp.planBStopReceiving({mid:t,offerRtpParameters:r});const s={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("stopReceiving() | calling pc.setRemoteDescription() [offer:%o]",s),await this._pc.setRemoteDescription(s);const i=await this._pc.createAnswer();l.debug("stopReceiving() | calling pc.setLocalDescription() [answer:%o]",i),await this._pc.setLocalDescription(i)}async getReceiverStats(e){this._assertRecvDirection();const{rtpReceiver:t}=this._mapRecvLocalIdInfo.get(e)||{};if(!t)throw new Error("associated RTCRtpReceiver not found");return t.getStats()}async receiveDataChannel({sctpStreamParameters:e,label:t,protocol:r}){this._assertRecvDirection();const{streamId:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o}=e,c={negotiated:!0,id:i,ordered:n,maxPacketLifeTime:a,maxRetransmitTime:a,maxRetransmits:o,protocol:r};l.debug("receiveDataChannel() [options:%o]",c);const d=this._pc.createDataChannel(t,c);if(!this._hasDataChannelMediaSection){this._remoteSdp.receiveSctpAssociation({oldDataChannelSpec:!0});const e={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();if(!this._transportReady){const e=s.parse(t.sdp);await this._setupTransport({localDtlsRole:"client",localSdpObject:e})}l.debug("receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setLocalDescription(t),this._hasDataChannelMediaSection=!0}return{dataChannel:d}}async _setupTransport({localDtlsRole:e,localSdpObject:t}){t||(t=s.parse(this._pc.localDescription.sdp));const r=o.extractDtlsParameters({sdpObject:t});r.role=e,this._remoteSdp.updateDtlsRole("client"===e?"server":"client"),await this.safeEmitAsPromise("@connect",{dtlsParameters:r}),this._transportReady=!0}_assertSendDirection(){if("send"!==this._direction)throw new Error('method can just be called for handlers with "send" direction')}_assertRecvDirection(){if("recv"!==this._direction)throw new Error('method can just be called for handlers with "recv" direction')}}t.Chrome67=h},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5),i=r(1),n=r(4),a=r(2),o=r(3),c=r(7),d=r(12),p=r(6),l=r(8),u=new i.Logger("Chrome55"),h={OS:1024,MIS:1024};class m extends p.HandlerInterface{constructor(){super(),this._sendStream=new MediaStream,this._mapSendLocalIdTrack=new Map,this._nextSendLocalId=0,this._mapRecvLocalIdInfo=new Map,this._hasDataChannelMediaSection=!1,this._nextSendSctpStreamId=0,this._transportReady=!1}static createFactory(){return()=>new m}get name(){return"Chrome55"}close(){if(u.debug("close()"),this._pc)try{this._pc.close()}catch(e){}}async getNativeRtpCapabilities(){u.debug("getNativeRtpCapabilities()");const e=new RTCPeerConnection({iceServers:[],iceTransportPolicy:"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"plan-b"});try{const t=await e.createOffer({offerToReceiveAudio:!0,offerToReceiveVideo:!0});try{e.close()}catch(e){}const r=s.parse(t.sdp);return c.extractRtpCapabilities({sdpObject:r})}catch(t){try{e.close()}catch(e){}throw t}}async getNativeSctpCapabilities(){return u.debug("getNativeSctpCapabilities()"),{numStreams:h}}run({direction:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:a,additionalSettings:c,proprietaryConstraints:d,extendedRtpCapabilities:p}){u.debug("run()"),this._direction=e,this._remoteSdp=new l.RemoteSdp({iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,planB:!0}),this._sendingRtpParametersByKind={audio:o.getSendingRtpParameters("audio",p),video:o.getSendingRtpParameters("video",p)},this._sendingRemoteRtpParametersByKind={audio:o.getSendingRemoteRtpParameters("audio",p),video:o.getSendingRemoteRtpParameters("video",p)},this._pc=new RTCPeerConnection(Object.assign({iceServers:n||[],iceTransportPolicy:a||"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"plan-b"},c),d),this._pc.addEventListener("iceconnectionstatechange",()=>{switch(this._pc.iceConnectionState){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}})}async updateIceServers(e){u.debug("updateIceServers()");const t=this._pc.getConfiguration();t.iceServers=e,this._pc.setConfiguration(t)}async restartIce(e){if(u.debug("restartIce()"),this._remoteSdp.updateIceParameters(e),this._transportReady)if("send"===this._direction){const e=await this._pc.createOffer({iceRestart:!0});u.debug("restartIce() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e);const t={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setRemoteDescription(t)}else{const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();u.debug("restartIce() | calling pc.setLocalDescription() [answer:%o]",t),await this._pc.setLocalDescription(t)}}async getTransportStats(){return this._pc.getStats()}async send({track:e,encodings:t,codecOptions:r,codec:i}){this._assertSendDirection(),u.debug("send() [kind:%s, track.id:%s]",e.kind,e.id),i&&u.warn("send() | codec selection is not available in %s handler",this.name),this._sendStream.addTrack(e),this._pc.addStream(this._sendStream);let n,p=await this._pc.createOffer(),l=s.parse(p.sdp);const h=a.clone(this._sendingRtpParametersByKind[e.kind],{});h.codecs=o.reduceCodecs(h.codecs);const m=a.clone(this._sendingRemoteRtpParametersByKind[e.kind],{});if(m.codecs=o.reduceCodecs(m.codecs),this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:l}),"video"===e.kind&&t&&t.length>1&&(u.debug("send() | enabling simulcast"),l=s.parse(p.sdp),n=l.media.find(e=>"video"===e.type),d.addLegacySimulcast({offerMediaObject:n,track:e,numStreams:t.length}),p={type:"offer",sdp:s.write(l)}),u.debug("send() | calling pc.setLocalDescription() [offer:%o]",p),await this._pc.setLocalDescription(p),l=s.parse(this._pc.localDescription.sdp),n=l.media.find(t=>t.type===e.kind),h.rtcp.cname=c.getCname({offerMediaObject:n}),h.encodings=d.getRtpEncodings({offerMediaObject:n,track:e}),t)for(let e=0;e<h.encodings.length;++e)t[e]&&Object.assign(h.encodings[e],t[e]);if(h.encodings.length>1&&"video/vp8"===h.codecs[0].mimeType.toLowerCase())for(const e of h.encodings)e.scalabilityMode="S1T3";this._remoteSdp.send({offerMediaObject:n,offerRtpParameters:h,answerRtpParameters:m,codecOptions:r});const f={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("send() | calling pc.setRemoteDescription() [answer:%o]",f),await this._pc.setRemoteDescription(f);const g=String(this._nextSendLocalId);return this._nextSendLocalId++,this._mapSendLocalIdTrack.set(g,e),{localId:g,rtpParameters:h}}async stopSending(e){this._assertSendDirection(),u.debug("stopSending() [localId:%s]",e);const t=this._mapSendLocalIdTrack.get(e);if(!t)throw new Error("track not found");this._mapSendLocalIdTrack.delete(e),this._sendStream.removeTrack(t),this._pc.addStream(this._sendStream);const r=await this._pc.createOffer();u.debug("stopSending() | calling pc.setLocalDescription() [offer:%o]",r);try{await this._pc.setLocalDescription(r)}catch(e){if(0===this._sendStream.getTracks().length)return void u.warn("stopSending() | ignoring expected error due no sending tracks: %s",e.toString());throw e}if("stable"===this._pc.signalingState)return;const s={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("stopSending() | calling pc.setRemoteDescription() [answer:%o]",s),await this._pc.setRemoteDescription(s)}async replaceTrack(e,t){throw new n.UnsupportedError("not implemented")}async setMaxSpatialLayer(e,t){throw new n.UnsupportedError(" not implemented")}async setRtpEncodingParameters(e,t){throw new n.UnsupportedError("not supported")}async getSenderStats(e){throw new n.UnsupportedError("not implemented")}async sendDataChannel({ordered:e,maxPacketLifeTime:t,maxRetransmits:r,label:i,protocol:n,priority:a}){this._assertSendDirection();const o={negotiated:!0,id:this._nextSendSctpStreamId,ordered:e,maxPacketLifeTime:t,maxRetransmitTime:t,maxRetransmits:r,protocol:n,priority:a};u.debug("sendDataChannel() [options:%o]",o);const c=this._pc.createDataChannel(i,o);if(this._nextSendSctpStreamId=++this._nextSendSctpStreamId%h.MIS,!this._hasDataChannelMediaSection){const e=await this._pc.createOffer(),t=s.parse(e.sdp),r=t.media.find(e=>"application"===e.type);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:t}),u.debug("sendDataChannel() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e),this._remoteSdp.sendSctpAssociation({offerMediaObject:r});const i={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]",i),await this._pc.setRemoteDescription(i),this._hasDataChannelMediaSection=!0}return{dataChannel:c,sctpStreamParameters:{streamId:o.id,ordered:o.ordered,maxPacketLifeTime:o.maxPacketLifeTime,maxRetransmits:o.maxRetransmits}}}async receive({trackId:e,kind:t,rtpParameters:r}){this._assertRecvDirection(),u.debug("receive() [trackId:%s, kind:%s]",e,t);const i=e,n=t,a=r.rtcp.cname;this._remoteSdp.receive({mid:n,kind:t,offerRtpParameters:r,streamId:a,trackId:e});const o={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receive() | calling pc.setRemoteDescription() [offer:%o]",o),await this._pc.setRemoteDescription(o);let d=await this._pc.createAnswer();const p=s.parse(d.sdp),l=p.media.find(e=>String(e.mid)===n);c.applyCodecParameters({offerRtpParameters:r,answerMediaObject:l}),d={type:"answer",sdp:s.write(p)},this._transportReady||await this._setupTransport({localDtlsRole:"client",localSdpObject:p}),u.debug("receive() | calling pc.setLocalDescription() [answer:%o]",d),await this._pc.setLocalDescription(d);const h=this._pc.getRemoteStreams().find(e=>e.id===a).getTrackById(i);if(!h)throw new Error("remote track not found");return this._mapRecvLocalIdInfo.set(i,{mid:n,rtpParameters:r}),{localId:i,track:h}}async stopReceiving(e){this._assertRecvDirection(),u.debug("stopReceiving() [localId:%s]",e);const{mid:t,rtpParameters:r}=this._mapRecvLocalIdInfo.get(e)||{};this._mapRecvLocalIdInfo.delete(e),this._remoteSdp.planBStopReceiving({mid:t,offerRtpParameters:r});const s={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("stopReceiving() | calling pc.setRemoteDescription() [offer:%o]",s),await this._pc.setRemoteDescription(s);const i=await this._pc.createAnswer();u.debug("stopReceiving() | calling pc.setLocalDescription() [answer:%o]",i),await this._pc.setLocalDescription(i)}async getReceiverStats(e){throw new n.UnsupportedError("not implemented")}async receiveDataChannel({sctpStreamParameters:e,label:t,protocol:r}){this._assertRecvDirection();const{streamId:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o}=e,c={negotiated:!0,id:i,ordered:n,maxPacketLifeTime:a,maxRetransmitTime:a,maxRetransmits:o,protocol:r};u.debug("receiveDataChannel() [options:%o]",c);const d=this._pc.createDataChannel(t,c);if(!this._hasDataChannelMediaSection){this._remoteSdp.receiveSctpAssociation({oldDataChannelSpec:!0});const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();if(!this._transportReady){const e=s.parse(t.sdp);await this._setupTransport({localDtlsRole:"client",localSdpObject:e})}u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setLocalDescription(t),this._hasDataChannelMediaSection=!0}return{dataChannel:d}}async _setupTransport({localDtlsRole:e,localSdpObject:t}){t||(t=s.parse(this._pc.localDescription.sdp));const r=c.extractDtlsParameters({sdpObject:t});r.role=e,this._remoteSdp.updateDtlsRole("client"===e?"server":"client"),await this.safeEmitAsPromise("@connect",{dtlsParameters:r}),this._transportReady=!0}_assertSendDirection(){if("send"!==this._direction)throw new Error('method can just be called for handlers with "send" direction')}_assertRecvDirection(){if("recv"!==this._direction)throw new Error('method can just be called for handlers with "recv" direction')}}t.Chrome55=m},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5),i=r(1),n=r(4),a=r(2),o=r(3),c=r(7),d=r(11),p=r(6),l=r(8),u=new i.Logger("Firefox60"),h={OS:16,MIS:2048};class m extends p.HandlerInterface{constructor(){super(),this._mapMidTransceiver=new Map,this._sendStream=new MediaStream,this._hasDataChannelMediaSection=!1,this._nextSendSctpStreamId=0,this._transportReady=!1}static createFactory(){return()=>new m}get name(){return"Firefox60"}close(){if(u.debug("close()"),this._pc)try{this._pc.close()}catch(e){}}async getNativeRtpCapabilities(){u.debug("getNativeRtpCapabilities()");const e=new RTCPeerConnection({iceServers:[],iceTransportPolicy:"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require"}),t=document.createElement("canvas");t.getContext("2d");const r=t.captureStream().getVideoTracks()[0];try{e.addTransceiver("audio",{direction:"sendrecv"});const i=e.addTransceiver(r,{direction:"sendrecv"}),n=i.sender.getParameters(),a=[{rid:"r0",maxBitrate:1e5},{rid:"r1",maxBitrate:5e5}];n.encodings=a,await i.sender.setParameters(n);const o=await e.createOffer();try{t.remove()}catch(e){}try{r.stop()}catch(e){}try{e.close()}catch(e){}const d=s.parse(o.sdp);return c.extractRtpCapabilities({sdpObject:d})}catch(s){try{t.remove()}catch(e){}try{r.stop()}catch(e){}try{e.close()}catch(e){}throw s}}async getNativeSctpCapabilities(){return u.debug("getNativeSctpCapabilities()"),{numStreams:h}}run({direction:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:a,additionalSettings:c,proprietaryConstraints:d,extendedRtpCapabilities:p}){u.debug("run()"),this._direction=e,this._remoteSdp=new l.RemoteSdp({iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i}),this._sendingRtpParametersByKind={audio:o.getSendingRtpParameters("audio",p),video:o.getSendingRtpParameters("video",p)},this._sendingRemoteRtpParametersByKind={audio:o.getSendingRemoteRtpParameters("audio",p),video:o.getSendingRemoteRtpParameters("video",p)},this._pc=new RTCPeerConnection(Object.assign({iceServers:n||[],iceTransportPolicy:a||"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require"},c),d),this._pc.addEventListener("iceconnectionstatechange",()=>{switch(this._pc.iceConnectionState){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}})}async updateIceServers(e){throw new n.UnsupportedError("not supported")}async restartIce(e){if(u.debug("restartIce()"),this._remoteSdp.updateIceParameters(e),this._transportReady)if("send"===this._direction){const e=await this._pc.createOffer({iceRestart:!0});u.debug("restartIce() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e);const t={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setRemoteDescription(t)}else{const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();u.debug("restartIce() | calling pc.setLocalDescription() [answer:%o]",t),await this._pc.setLocalDescription(t)}}async getTransportStats(){return this._pc.getStats()}async send({track:e,encodings:t,codecOptions:r,codec:i}){this._assertSendDirection(),u.debug("send() [kind:%s, track.id:%s]",e.kind,e.id),t&&(t=a.clone(t,[])).length>1&&(t.forEach((e,t)=>{e.rid="r"+t}),t.reverse());const n=a.clone(this._sendingRtpParametersByKind[e.kind],{});n.codecs=o.reduceCodecs(n.codecs,i);const p=a.clone(this._sendingRemoteRtpParametersByKind[e.kind],{});p.codecs=o.reduceCodecs(p.codecs,i);const l=this._pc.addTransceiver(e,{direction:"sendonly",streams:[this._sendStream]});if(t){const e=l.sender.getParameters();e.encodings=t,await l.sender.setParameters(e)}const h=await this._pc.createOffer();let m=s.parse(h.sdp);this._transportReady||await this._setupTransport({localDtlsRole:"client",localSdpObject:m}),u.debug("send() | calling pc.setLocalDescription() [offer:%o]",h),await this._pc.setLocalDescription(h);const f=l.mid;n.mid=f,m=s.parse(this._pc.localDescription.sdp);const g=m.media[m.media.length-1];if(n.rtcp.cname=c.getCname({offerMediaObject:g}),t)if(1===t.length){const e=d.getRtpEncodings({offerMediaObject:g});Object.assign(e[0],t[0]),n.encodings=e}else n.encodings=t.reverse();else n.encodings=d.getRtpEncodings({offerMediaObject:g});if(n.encodings.length>1&&("video/vp8"===n.codecs[0].mimeType.toLowerCase()||"video/h264"===n.codecs[0].mimeType.toLowerCase()))for(const e of n.encodings)e.scalabilityMode="S1T3";this._remoteSdp.send({offerMediaObject:g,offerRtpParameters:n,answerRtpParameters:p,codecOptions:r,extmapAllowMixed:!0});const _={type:"answer",sdp:this._remoteSdp.getSdp()};return u.debug("send() | calling pc.setRemoteDescription() [answer:%o]",_),await this._pc.setRemoteDescription(_),this._mapMidTransceiver.set(f,l),{localId:f,rtpParameters:n,rtpSender:l.sender}}async stopSending(e){u.debug("stopSending() [localId:%s]",e);const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated transceiver not found");t.sender.replaceTrack(null),this._pc.removeTrack(t.sender),this._remoteSdp.disableMediaSection(t.mid);const r=await this._pc.createOffer();u.debug("stopSending() | calling pc.setLocalDescription() [offer:%o]",r),await this._pc.setLocalDescription(r);const s={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("stopSending() | calling pc.setRemoteDescription() [answer:%o]",s),await this._pc.setRemoteDescription(s)}async replaceTrack(e,t){this._assertSendDirection(),t?u.debug("replaceTrack() [localId:%s, track.id:%s]",e,t.id):u.debug("replaceTrack() [localId:%s, no track]",e);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");await r.sender.replaceTrack(t)}async setMaxSpatialLayer(e,t){this._assertSendDirection(),u.debug("setMaxSpatialLayer() [localId:%s, spatialLayer:%s]",e,t);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated transceiver not found");const s=r.sender.getParameters();t=s.encodings.length-1-t,s.encodings.forEach((e,r)=>{e.active=r>=t}),await r.sender.setParameters(s)}async setRtpEncodingParameters(e,t){this._assertSendDirection(),u.debug("setRtpEncodingParameters() [localId:%s, params:%o]",e,t);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");const s=r.sender.getParameters();s.encodings.forEach((e,r)=>{s.encodings[r]=Object.assign(Object.assign({},e),t)}),await r.sender.setParameters(s)}async getSenderStats(e){this._assertSendDirection();const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");return t.sender.getStats()}async sendDataChannel({ordered:e,maxPacketLifeTime:t,maxRetransmits:r,label:i,protocol:n,priority:a}){this._assertSendDirection();const o={negotiated:!0,id:this._nextSendSctpStreamId,ordered:e,maxPacketLifeTime:t,maxRetransmits:r,protocol:n,priority:a};u.debug("sendDataChannel() [options:%o]",o);const c=this._pc.createDataChannel(i,o);if(this._nextSendSctpStreamId=++this._nextSendSctpStreamId%h.MIS,!this._hasDataChannelMediaSection){const e=await this._pc.createOffer(),t=s.parse(e.sdp),r=t.media.find(e=>"application"===e.type);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:t}),u.debug("sendDataChannel() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e),this._remoteSdp.sendSctpAssociation({offerMediaObject:r});const i={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]",i),await this._pc.setRemoteDescription(i),this._hasDataChannelMediaSection=!0}return{dataChannel:c,sctpStreamParameters:{streamId:o.id,ordered:o.ordered,maxPacketLifeTime:o.maxPacketLifeTime,maxRetransmits:o.maxRetransmits}}}async receive({trackId:e,kind:t,rtpParameters:r}){this._assertRecvDirection(),u.debug("receive() [trackId:%s, kind:%s]",e,t);const i=r.mid||String(this._mapMidTransceiver.size);this._remoteSdp.receive({mid:i,kind:t,offerRtpParameters:r,streamId:r.rtcp.cname,trackId:e});const n={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receive() | calling pc.setRemoteDescription() [offer:%o]",n),await this._pc.setRemoteDescription(n);let a=await this._pc.createAnswer();const o=s.parse(a.sdp),d=o.media.find(e=>String(e.mid)===i);c.applyCodecParameters({offerRtpParameters:r,answerMediaObject:d}),a={type:"answer",sdp:s.write(o)},this._transportReady||await this._setupTransport({localDtlsRole:"client",localSdpObject:o}),u.debug("receive() | calling pc.setLocalDescription() [answer:%o]",a),await this._pc.setLocalDescription(a);const p=this._pc.getTransceivers().find(e=>e.mid===i);if(!p)throw new Error("new RTCRtpTransceiver not found");return this._mapMidTransceiver.set(i,p),{localId:i,track:p.receiver.track,rtpReceiver:p.receiver}}async stopReceiving(e){this._assertRecvDirection(),u.debug("stopReceiving() [localId:%s]",e);const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");this._remoteSdp.closeMediaSection(t.mid);const r={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("stopReceiving() | calling pc.setRemoteDescription() [offer:%o]",r),await this._pc.setRemoteDescription(r);const s=await this._pc.createAnswer();u.debug("stopReceiving() | calling pc.setLocalDescription() [answer:%o]",s),await this._pc.setLocalDescription(s)}async getReceiverStats(e){this._assertRecvDirection();const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");return t.receiver.getStats()}async receiveDataChannel({sctpStreamParameters:e,label:t,protocol:r}){this._assertRecvDirection();const{streamId:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o}=e,c={negotiated:!0,id:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o,protocol:r};u.debug("receiveDataChannel() [options:%o]",c);const d=this._pc.createDataChannel(t,c);if(!this._hasDataChannelMediaSection){this._remoteSdp.receiveSctpAssociation();const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();if(!this._transportReady){const e=s.parse(t.sdp);await this._setupTransport({localDtlsRole:"client",localSdpObject:e})}u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setLocalDescription(t),this._hasDataChannelMediaSection=!0}return{dataChannel:d}}async _setupTransport({localDtlsRole:e,localSdpObject:t}){t||(t=s.parse(this._pc.localDescription.sdp));const r=c.extractDtlsParameters({sdpObject:t});r.role=e,this._remoteSdp.updateDtlsRole("client"===e?"server":"client"),await this.safeEmitAsPromise("@connect",{dtlsParameters:r}),this._transportReady=!0}_assertSendDirection(){if("send"!==this._direction)throw new Error('method can just be called for handlers with "send" direction')}_assertRecvDirection(){if("recv"!==this._direction)throw new Error('method can just be called for handlers with "recv" direction')}}t.Firefox60=m},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5),i=r(1),n=r(2),a=r(3),o=r(7),c=r(11),d=r(6),p=r(8),l=new i.Logger("Safari12"),u={OS:1024,MIS:1024};class h extends d.HandlerInterface{constructor(){super(),this._mapMidTransceiver=new Map,this._sendStream=new MediaStream,this._hasDataChannelMediaSection=!1,this._nextSendSctpStreamId=0,this._transportReady=!1}static createFactory(){return()=>new h}get name(){return"Safari12"}close(){if(l.debug("close()"),this._pc)try{this._pc.close()}catch(e){}}async getNativeRtpCapabilities(){l.debug("getNativeRtpCapabilities()");const e=new RTCPeerConnection({iceServers:[],iceTransportPolicy:"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require"});try{e.addTransceiver("audio"),e.addTransceiver("video");const t=await e.createOffer();try{e.close()}catch(e){}const r=s.parse(t.sdp);return o.extractRtpCapabilities({sdpObject:r})}catch(t){try{e.close()}catch(e){}throw t}}async getNativeSctpCapabilities(){return l.debug("getNativeSctpCapabilities()"),{numStreams:u}}run({direction:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:o,additionalSettings:c,proprietaryConstraints:d,extendedRtpCapabilities:u}){l.debug("run()"),this._direction=e,this._remoteSdp=new p.RemoteSdp({iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i}),this._sendingRtpParametersByKind={audio:a.getSendingRtpParameters("audio",u),video:a.getSendingRtpParameters("video",u)},this._sendingRemoteRtpParametersByKind={audio:a.getSendingRemoteRtpParameters("audio",u),video:a.getSendingRemoteRtpParameters("video",u)},this._pc=new RTCPeerConnection(Object.assign({iceServers:n||[],iceTransportPolicy:o||"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require"},c),d),this._pc.addEventListener("iceconnectionstatechange",()=>{switch(this._pc.iceConnectionState){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}})}async updateIceServers(e){l.debug("updateIceServers()");const t=this._pc.getConfiguration();t.iceServers=e,this._pc.setConfiguration(t)}async restartIce(e){if(l.debug("restartIce()"),this._remoteSdp.updateIceParameters(e),this._transportReady)if("send"===this._direction){const e=await this._pc.createOffer({iceRestart:!0});l.debug("restartIce() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e);const t={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("restartIce() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setRemoteDescription(t)}else{const e={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("restartIce() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();l.debug("restartIce() | calling pc.setLocalDescription() [answer:%o]",t),await this._pc.setLocalDescription(t)}}async getTransportStats(){return this._pc.getStats()}async send({track:e,encodings:t,codecOptions:r,codec:i}){this._assertSendDirection(),l.debug("send() [kind:%s, track.id:%s]",e.kind,e.id);const d=n.clone(this._sendingRtpParametersByKind[e.kind],{});d.codecs=a.reduceCodecs(d.codecs,i);const p=n.clone(this._sendingRemoteRtpParametersByKind[e.kind],{});p.codecs=a.reduceCodecs(p.codecs,i);const u=this._remoteSdp.getNextMediaSectionIdx(),h=this._pc.addTransceiver(e,{direction:"sendonly",streams:[this._sendStream]});let m,f=await this._pc.createOffer(),g=s.parse(f.sdp);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:g}),t&&t.length>1&&(l.debug("send() | enabling legacy simulcast"),g=s.parse(f.sdp),m=g.media[u.idx],c.addLegacySimulcast({offerMediaObject:m,numStreams:t.length}),f={type:"offer",sdp:s.write(g)}),l.debug("send() | calling pc.setLocalDescription() [offer:%o]",f),await this._pc.setLocalDescription(f);const _=h.mid;if(d.mid=_,g=s.parse(this._pc.localDescription.sdp),m=g.media[u.idx],d.rtcp.cname=o.getCname({offerMediaObject:m}),d.encodings=c.getRtpEncodings({offerMediaObject:m}),t)for(let e=0;e<d.encodings.length;++e)t[e]&&Object.assign(d.encodings[e],t[e]);if(d.encodings.length>1&&("video/vp8"===d.codecs[0].mimeType.toLowerCase()||"video/h264"===d.codecs[0].mimeType.toLowerCase()))for(const e of d.encodings)e.scalabilityMode="S1T3";this._remoteSdp.send({offerMediaObject:m,reuseMid:u.reuseMid,offerRtpParameters:d,answerRtpParameters:p,codecOptions:r});const S={type:"answer",sdp:this._remoteSdp.getSdp()};return l.debug("send() | calling pc.setRemoteDescription() [answer:%o]",S),await this._pc.setRemoteDescription(S),this._mapMidTransceiver.set(_,h),{localId:_,rtpParameters:d,rtpSender:h.sender}}async stopSending(e){this._assertSendDirection(),l.debug("stopSending() [localId:%s]",e);const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");t.sender.replaceTrack(null),this._pc.removeTrack(t.sender),this._remoteSdp.closeMediaSection(t.mid);const r=await this._pc.createOffer();l.debug("stopSending() | calling pc.setLocalDescription() [offer:%o]",r),await this._pc.setLocalDescription(r);const s={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("stopSending() | calling pc.setRemoteDescription() [answer:%o]",s),await this._pc.setRemoteDescription(s)}async replaceTrack(e,t){this._assertSendDirection(),t?l.debug("replaceTrack() [localId:%s, track.id:%s]",e,t.id):l.debug("replaceTrack() [localId:%s, no track]",e);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");await r.sender.replaceTrack(t)}async setMaxSpatialLayer(e,t){this._assertSendDirection(),l.debug("setMaxSpatialLayer() [localId:%s, spatialLayer:%s]",e,t);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");const s=r.sender.getParameters();s.encodings.forEach((e,r)=>{e.active=r<=t}),await r.sender.setParameters(s)}async setRtpEncodingParameters(e,t){this._assertSendDirection(),l.debug("setRtpEncodingParameters() [localId:%s, params:%o]",e,t);const r=this._mapMidTransceiver.get(e);if(!r)throw new Error("associated RTCRtpTransceiver not found");const s=r.sender.getParameters();s.encodings.forEach((e,r)=>{s.encodings[r]=Object.assign(Object.assign({},e),t)}),await r.sender.setParameters(s)}async getSenderStats(e){this._assertSendDirection();const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");return t.sender.getStats()}async sendDataChannel({ordered:e,maxPacketLifeTime:t,maxRetransmits:r,label:i,protocol:n,priority:a}){this._assertSendDirection();const o={negotiated:!0,id:this._nextSendSctpStreamId,ordered:e,maxPacketLifeTime:t,maxRetransmits:r,protocol:n,priority:a};l.debug("sendDataChannel() [options:%o]",o);const c=this._pc.createDataChannel(i,o);if(this._nextSendSctpStreamId=++this._nextSendSctpStreamId%u.MIS,!this._hasDataChannelMediaSection){const e=await this._pc.createOffer(),t=s.parse(e.sdp),r=t.media.find(e=>"application"===e.type);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:t}),l.debug("sendDataChannel() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e),this._remoteSdp.sendSctpAssociation({offerMediaObject:r});const i={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]",i),await this._pc.setRemoteDescription(i),this._hasDataChannelMediaSection=!0}return{dataChannel:c,sctpStreamParameters:{streamId:o.id,ordered:o.ordered,maxPacketLifeTime:o.maxPacketLifeTime,maxRetransmits:o.maxRetransmits}}}async receive({trackId:e,kind:t,rtpParameters:r}){this._assertRecvDirection(),l.debug("receive() [trackId:%s, kind:%s]",e,t);const i=r.mid||String(this._mapMidTransceiver.size);this._remoteSdp.receive({mid:i,kind:t,offerRtpParameters:r,streamId:r.rtcp.cname,trackId:e});const n={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("receive() | calling pc.setRemoteDescription() [offer:%o]",n),await this._pc.setRemoteDescription(n);let a=await this._pc.createAnswer();const c=s.parse(a.sdp),d=c.media.find(e=>String(e.mid)===i);o.applyCodecParameters({offerRtpParameters:r,answerMediaObject:d}),a={type:"answer",sdp:s.write(c)},this._transportReady||await this._setupTransport({localDtlsRole:"client",localSdpObject:c}),l.debug("receive() | calling pc.setLocalDescription() [answer:%o]",a),await this._pc.setLocalDescription(a);const p=this._pc.getTransceivers().find(e=>e.mid===i);if(!p)throw new Error("new RTCRtpTransceiver not found");return this._mapMidTransceiver.set(i,p),{localId:i,track:p.receiver.track,rtpReceiver:p.receiver}}async stopReceiving(e){this._assertRecvDirection(),l.debug("stopReceiving() [localId:%s]",e);const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");this._remoteSdp.closeMediaSection(t.mid);const r={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("stopReceiving() | calling pc.setRemoteDescription() [offer:%o]",r),await this._pc.setRemoteDescription(r);const s=await this._pc.createAnswer();l.debug("stopReceiving() | calling pc.setLocalDescription() [answer:%o]",s),await this._pc.setLocalDescription(s)}async getReceiverStats(e){this._assertRecvDirection();const t=this._mapMidTransceiver.get(e);if(!t)throw new Error("associated RTCRtpTransceiver not found");return t.receiver.getStats()}async receiveDataChannel({sctpStreamParameters:e,label:t,protocol:r}){this._assertRecvDirection();const{streamId:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o}=e,c={negotiated:!0,id:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o,protocol:r};l.debug("receiveDataChannel() [options:%o]",c);const d=this._pc.createDataChannel(t,c);if(!this._hasDataChannelMediaSection){this._remoteSdp.receiveSctpAssociation();const e={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();if(!this._transportReady){const e=s.parse(t.sdp);await this._setupTransport({localDtlsRole:"client",localSdpObject:e})}l.debug("receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setLocalDescription(t),this._hasDataChannelMediaSection=!0}return{dataChannel:d}}async _setupTransport({localDtlsRole:e,localSdpObject:t}){t||(t=s.parse(this._pc.localDescription.sdp));const r=o.extractDtlsParameters({sdpObject:t});r.role=e,this._remoteSdp.updateDtlsRole("client"===e?"server":"client"),await this.safeEmitAsPromise("@connect",{dtlsParameters:r}),this._transportReady=!0}_assertSendDirection(){if("send"!==this._direction)throw new Error('method can just be called for handlers with "send" direction')}_assertRecvDirection(){if("recv"!==this._direction)throw new Error('method can just be called for handlers with "recv" direction')}}t.Safari12=h},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5),i=r(1),n=r(2),a=r(3),o=r(7),c=r(12),d=r(6),p=r(8),l=new i.Logger("Safari11"),u={OS:1024,MIS:1024};class h extends d.HandlerInterface{constructor(){super(),this._sendStream=new MediaStream,this._mapSendLocalIdRtpSender=new Map,this._nextSendLocalId=0,this._mapRecvLocalIdInfo=new Map,this._hasDataChannelMediaSection=!1,this._nextSendSctpStreamId=0,this._transportReady=!1}static createFactory(){return()=>new h}get name(){return"Safari11"}close(){if(l.debug("close()"),this._pc)try{this._pc.close()}catch(e){}}async getNativeRtpCapabilities(){l.debug("getNativeRtpCapabilities()");const e=new RTCPeerConnection({iceServers:[],iceTransportPolicy:"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"plan-b"});try{const t=await e.createOffer({offerToReceiveAudio:!0,offerToReceiveVideo:!0});try{e.close()}catch(e){}const r=s.parse(t.sdp);return o.extractRtpCapabilities({sdpObject:r})}catch(t){try{e.close()}catch(e){}throw t}}async getNativeSctpCapabilities(){return l.debug("getNativeSctpCapabilities()"),{numStreams:u}}run({direction:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:o,additionalSettings:c,proprietaryConstraints:d,extendedRtpCapabilities:u}){l.debug("run()"),this._direction=e,this._remoteSdp=new p.RemoteSdp({iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,planB:!0}),this._sendingRtpParametersByKind={audio:a.getSendingRtpParameters("audio",u),video:a.getSendingRtpParameters("video",u)},this._sendingRemoteRtpParametersByKind={audio:a.getSendingRemoteRtpParameters("audio",u),video:a.getSendingRemoteRtpParameters("video",u)},this._pc=new RTCPeerConnection(Object.assign({iceServers:n||[],iceTransportPolicy:o||"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require"},c),d),this._pc.addEventListener("iceconnectionstatechange",()=>{switch(this._pc.iceConnectionState){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}})}async updateIceServers(e){l.debug("updateIceServers()");const t=this._pc.getConfiguration();t.iceServers=e,this._pc.setConfiguration(t)}async restartIce(e){if(l.debug("restartIce()"),this._remoteSdp.updateIceParameters(e),this._transportReady)if("send"===this._direction){const e=await this._pc.createOffer({iceRestart:!0});l.debug("restartIce() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e);const t={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("restartIce() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setRemoteDescription(t)}else{const e={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("restartIce() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();l.debug("restartIce() | calling pc.setLocalDescription() [answer:%o]",t),await this._pc.setLocalDescription(t)}}async getTransportStats(){return this._pc.getStats()}async send({track:e,encodings:t,codecOptions:r,codec:i}){this._assertSendDirection(),l.debug("send() [kind:%s, track.id:%s]",e.kind,e.id),i&&l.warn("send() | codec selection is not available in %s handler",this.name),this._sendStream.addTrack(e),this._pc.addTrack(e,this._sendStream);let d,p=await this._pc.createOffer(),u=s.parse(p.sdp);const h=n.clone(this._sendingRtpParametersByKind[e.kind],{});h.codecs=a.reduceCodecs(h.codecs);const m=n.clone(this._sendingRemoteRtpParametersByKind[e.kind],{});if(m.codecs=a.reduceCodecs(m.codecs),this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:u}),"video"===e.kind&&t&&t.length>1&&(l.debug("send() | enabling simulcast"),u=s.parse(p.sdp),d=u.media.find(e=>"video"===e.type),c.addLegacySimulcast({offerMediaObject:d,track:e,numStreams:t.length}),p={type:"offer",sdp:s.write(u)}),l.debug("send() | calling pc.setLocalDescription() [offer:%o]",p),await this._pc.setLocalDescription(p),u=s.parse(this._pc.localDescription.sdp),d=u.media.find(t=>t.type===e.kind),h.rtcp.cname=o.getCname({offerMediaObject:d}),h.encodings=c.getRtpEncodings({offerMediaObject:d,track:e}),t)for(let e=0;e<h.encodings.length;++e)t[e]&&Object.assign(h.encodings[e],t[e]);if(h.encodings.length>1&&"video/vp8"===h.codecs[0].mimeType.toLowerCase())for(const e of h.encodings)e.scalabilityMode="S1T3";this._remoteSdp.send({offerMediaObject:d,offerRtpParameters:h,answerRtpParameters:m,codecOptions:r});const f={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("send() | calling pc.setRemoteDescription() [answer:%o]",f),await this._pc.setRemoteDescription(f);const g=String(this._nextSendLocalId);this._nextSendLocalId++;const _=this._pc.getSenders().find(t=>t.track===e);return this._mapSendLocalIdRtpSender.set(g,_),{localId:g,rtpParameters:h,rtpSender:_}}async stopSending(e){this._assertSendDirection();const t=this._mapSendLocalIdRtpSender.get(e);if(!t)throw new Error("associated RTCRtpSender not found");t.track&&this._sendStream.removeTrack(t.track),this._mapSendLocalIdRtpSender.delete(e);const r=await this._pc.createOffer();l.debug("stopSending() | calling pc.setLocalDescription() [offer:%o]",r);try{await this._pc.setLocalDescription(r)}catch(e){if(0===this._sendStream.getTracks().length)return void l.warn("stopSending() | ignoring expected error due no sending tracks: %s",e.toString());throw e}if("stable"===this._pc.signalingState)return;const s={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("stopSending() | calling pc.setRemoteDescription() [answer:%o]",s),await this._pc.setRemoteDescription(s)}async replaceTrack(e,t){this._assertSendDirection(),t?l.debug("replaceTrack() [localId:%s, track.id:%s]",e,t.id):l.debug("replaceTrack() [localId:%s, no track]",e);const r=this._mapSendLocalIdRtpSender.get(e);if(!r)throw new Error("associated RTCRtpSender not found");const s=r.track;await r.replaceTrack(t),s&&this._sendStream.removeTrack(s),t&&this._sendStream.addTrack(t)}async setMaxSpatialLayer(e,t){this._assertSendDirection(),l.debug("setMaxSpatialLayer() [localId:%s, spatialLayer:%s]",e,t);const r=this._mapSendLocalIdRtpSender.get(e);if(!r)throw new Error("associated RTCRtpSender not found");const s=r.getParameters();s.encodings.forEach((e,r)=>{e.active=r<=t}),await r.setParameters(s)}async setRtpEncodingParameters(e,t){this._assertSendDirection(),l.debug("setRtpEncodingParameters() [localId:%s, params:%o]",e,t);const r=this._mapSendLocalIdRtpSender.get(e);if(!r)throw new Error("associated RTCRtpSender not found");const s=r.getParameters();s.encodings.forEach((e,r)=>{s.encodings[r]=Object.assign(Object.assign({},e),t)}),await r.setParameters(s)}async getSenderStats(e){this._assertSendDirection();const t=this._mapSendLocalIdRtpSender.get(e);if(!t)throw new Error("associated RTCRtpSender not found");return t.getStats()}async sendDataChannel({ordered:e,maxPacketLifeTime:t,maxRetransmits:r,label:i,protocol:n,priority:a}){this._assertSendDirection();const o={negotiated:!0,id:this._nextSendSctpStreamId,ordered:e,maxPacketLifeTime:t,maxRetransmits:r,protocol:n,priority:a};l.debug("sendDataChannel() [options:%o]",o);const c=this._pc.createDataChannel(i,o);if(this._nextSendSctpStreamId=++this._nextSendSctpStreamId%u.MIS,!this._hasDataChannelMediaSection){const e=await this._pc.createOffer(),t=s.parse(e.sdp),r=t.media.find(e=>"application"===e.type);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:t}),l.debug("sendDataChannel() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e),this._remoteSdp.sendSctpAssociation({offerMediaObject:r});const i={type:"answer",sdp:this._remoteSdp.getSdp()};l.debug("sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]",i),await this._pc.setRemoteDescription(i),this._hasDataChannelMediaSection=!0}return{dataChannel:c,sctpStreamParameters:{streamId:o.id,ordered:o.ordered,maxPacketLifeTime:o.maxPacketLifeTime,maxRetransmits:o.maxRetransmits}}}async receive({trackId:e,kind:t,rtpParameters:r}){this._assertRecvDirection(),l.debug("receive() [trackId:%s, kind:%s]",e,t);const i=e,n=t;this._remoteSdp.receive({mid:n,kind:t,offerRtpParameters:r,streamId:r.rtcp.cname,trackId:e});const a={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("receive() | calling pc.setRemoteDescription() [offer:%o]",a),await this._pc.setRemoteDescription(a);let c=await this._pc.createAnswer();const d=s.parse(c.sdp),p=d.media.find(e=>String(e.mid)===n);o.applyCodecParameters({offerRtpParameters:r,answerMediaObject:p}),c={type:"answer",sdp:s.write(d)},this._transportReady||await this._setupTransport({localDtlsRole:"client",localSdpObject:d}),l.debug("receive() | calling pc.setLocalDescription() [answer:%o]",c),await this._pc.setLocalDescription(c);const u=this._pc.getReceivers().find(e=>e.track&&e.track.id===i);if(!u)throw new Error("new RTCRtpReceiver not");return this._mapRecvLocalIdInfo.set(i,{mid:n,rtpParameters:r,rtpReceiver:u}),{localId:i,track:u.track,rtpReceiver:u}}async stopReceiving(e){this._assertRecvDirection(),l.debug("stopReceiving() [localId:%s]",e);const{mid:t,rtpParameters:r}=this._mapRecvLocalIdInfo.get(e)||{};this._mapRecvLocalIdInfo.delete(e),this._remoteSdp.planBStopReceiving({mid:t,offerRtpParameters:r});const s={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("stopReceiving() | calling pc.setRemoteDescription() [offer:%o]",s),await this._pc.setRemoteDescription(s);const i=await this._pc.createAnswer();l.debug("stopReceiving() | calling pc.setLocalDescription() [answer:%o]",i),await this._pc.setLocalDescription(i)}async getReceiverStats(e){this._assertRecvDirection();const{rtpReceiver:t}=this._mapRecvLocalIdInfo.get(e)||{};if(!t)throw new Error("associated RTCRtpReceiver not found");return t.getStats()}async receiveDataChannel({sctpStreamParameters:e,label:t,protocol:r}){this._assertRecvDirection();const{streamId:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o}=e,c={negotiated:!0,id:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o,protocol:r};l.debug("receiveDataChannel() [options:%o]",c);const d=this._pc.createDataChannel(t,c);if(!this._hasDataChannelMediaSection){this._remoteSdp.receiveSctpAssociation({oldDataChannelSpec:!0});const e={type:"offer",sdp:this._remoteSdp.getSdp()};l.debug("receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();if(!this._transportReady){const e=s.parse(t.sdp);await this._setupTransport({localDtlsRole:"client",localSdpObject:e})}l.debug("receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setLocalDescription(t),this._hasDataChannelMediaSection=!0}return{dataChannel:d}}async _setupTransport({localDtlsRole:e,localSdpObject:t}){t||(t=s.parse(this._pc.localDescription.sdp));const r=o.extractDtlsParameters({sdpObject:t});r.role=e,this._remoteSdp.updateDtlsRole("client"===e?"server":"client"),await this.safeEmitAsPromise("@connect",{dtlsParameters:r}),this._transportReady=!0}_assertSendDirection(){if("send"!==this._direction)throw new Error('method can just be called for handlers with "send" direction')}_assertRecvDirection(){if("recv"!==this._direction)throw new Error('method can just be called for handlers with "recv" direction')}}t.Safari11=h},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(1),i=r(4),n=r(2),a=r(3),o=r(45),c=r(6),d=new s.Logger("Edge11");class p extends c.HandlerInterface{constructor(){super(),this._rtpSenders=new Map,this._rtpReceivers=new Map,this._nextSendLocalId=0,this._transportReady=!1}static createFactory(){return()=>new p}get name(){return"Edge11"}close(){d.debug("close()");try{this._iceGatherer.close()}catch(e){}try{this._iceTransport.stop()}catch(e){}try{this._dtlsTransport.stop()}catch(e){}for(const e of this._rtpSenders.values())try{e.stop()}catch(e){}for(const e of this._rtpReceivers.values())try{e.stop()}catch(e){}}async getNativeRtpCapabilities(){return d.debug("getNativeRtpCapabilities()"),o.getCapabilities()}async getNativeSctpCapabilities(){return d.debug("getNativeSctpCapabilities()"),{numStreams:{OS:0,MIS:0}}}run({direction:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:o,iceTransportPolicy:c,additionalSettings:p,proprietaryConstraints:l,extendedRtpCapabilities:u}){d.debug("run()"),this._sendingRtpParametersByKind={audio:a.getSendingRtpParameters("audio",u),video:a.getSendingRtpParameters("video",u)},this._remoteIceParameters=t,this._remoteIceCandidates=r,this._remoteDtlsParameters=s,this._cname="CNAME-"+n.generateRandomNumber(),this._setIceGatherer({iceServers:o,iceTransportPolicy:c}),this._setIceTransport(),this._setDtlsTransport()}async updateIceServers(e){throw new i.UnsupportedError("not supported")}async restartIce(e){if(d.debug("restartIce()"),this._remoteIceParameters=e,this._transportReady){d.debug("restartIce() | calling iceTransport.start()"),this._iceTransport.start(this._iceGatherer,e,"controlling");for(const e of this._remoteIceCandidates)this._iceTransport.addRemoteCandidate(e);this._iceTransport.addRemoteCandidate({})}}async getTransportStats(){return this._iceTransport.getStats()}async send({track:e,encodings:t,codecOptions:r,codec:s}){d.debug("send() [kind:%s, track.id:%s]",e.kind,e.id),this._transportReady||await this._setupTransport({localDtlsRole:"server"}),d.debug("send() | calling new RTCRtpSender()");const i=new RTCRtpSender(e,this._dtlsTransport),c=n.clone(this._sendingRtpParametersByKind[e.kind],{});c.codecs=a.reduceCodecs(c.codecs,s);const p=c.codecs.some(e=>/.+\/rtx$/i.test(e.mimeType));t||(t=[{}]);for(const e of t)e.ssrc=n.generateRandomNumber(),p&&(e.rtx={ssrc:n.generateRandomNumber()});c.encodings=t,c.rtcp={cname:this._cname,reducedSize:!0,mux:!0};const l=o.mangleRtpParameters(c);d.debug("send() | calling rtpSender.send() [params:%o]",l),await i.send(l);const u=String(this._nextSendLocalId);return this._nextSendLocalId++,this._rtpSenders.set(u,i),{localId:u,rtpParameters:c,rtpSender:i}}async stopSending(e){d.debug("stopSending() [localId:%s]",e);const t=this._rtpSenders.get(e);if(!t)throw new Error("RTCRtpSender not found");this._rtpSenders.delete(e);try{d.debug("stopSending() | calling rtpSender.stop()"),t.stop()}catch(e){throw d.warn("stopSending() | rtpSender.stop() failed:%o",e),e}}async replaceTrack(e,t){t?d.debug("replaceTrack() [localId:%s, track.id:%s]",e,t.id):d.debug("replaceTrack() [localId:%s, no track]",e);const r=this._rtpSenders.get(e);if(!r)throw new Error("RTCRtpSender not found");r.setTrack(t)}async setMaxSpatialLayer(e,t){d.debug("setMaxSpatialLayer() [localId:%s, spatialLayer:%s]",e,t);const r=this._rtpSenders.get(e);if(!r)throw new Error("RTCRtpSender not found");const s=r.getParameters();s.encodings.forEach((e,r)=>{e.active=r<=t}),await r.setParameters(s)}async setRtpEncodingParameters(e,t){d.debug("setRtpEncodingParameters() [localId:%s, params:%o]",e,t);const r=this._rtpSenders.get(e);if(!r)throw new Error("RTCRtpSender not found");const s=r.getParameters();s.encodings.forEach((e,r)=>{s.encodings[r]=Object.assign(Object.assign({},e),t)}),await r.setParameters(s)}async getSenderStats(e){const t=this._rtpSenders.get(e);if(!t)throw new Error("RTCRtpSender not found");return t.getStats()}async sendDataChannel(e){throw new i.UnsupportedError("not implemented")}async receive({trackId:e,kind:t,rtpParameters:r}){d.debug("receive() [trackId:%s, kind:%s]",e,t),this._transportReady||await this._setupTransport({localDtlsRole:"server"}),d.debug("receive() | calling new RTCRtpReceiver()");const s=new RTCRtpReceiver(this._dtlsTransport,t);s.addEventListener("error",e=>{d.error('rtpReceiver "error" event [event:%o]',e)});const i=o.mangleRtpParameters(r);d.debug("receive() | calling rtpReceiver.receive() [params:%o]",i),await s.receive(i);const n=e;return this._rtpReceivers.set(n,s),{localId:n,track:s.track,rtpReceiver:s}}async stopReceiving(e){d.debug("stopReceiving() [localId:%s]",e);const t=this._rtpReceivers.get(e);if(!t)throw new Error("RTCRtpReceiver not found");this._rtpReceivers.delete(e);try{d.debug("stopReceiving() | calling rtpReceiver.stop()"),t.stop()}catch(e){d.warn("stopReceiving() | rtpReceiver.stop() failed:%o",e)}}async getReceiverStats(e){const t=this._rtpReceivers.get(e);if(!t)throw new Error("RTCRtpReceiver not found");return t.getStats()}async receiveDataChannel(e){throw new i.UnsupportedError("not implemented")}_setIceGatherer({iceServers:e,iceTransportPolicy:t}){const r=new RTCIceGatherer({iceServers:e||[],gatherPolicy:t||"all"});r.addEventListener("error",e=>{d.error('iceGatherer "error" event [event:%o]',e)});try{r.gather()}catch(e){d.debug("_setIceGatherer() | iceGatherer.gather() failed: %s",e.toString())}this._iceGatherer=r}_setIceTransport(){const e=new RTCIceTransport(this._iceGatherer);e.addEventListener("statechange",()=>{switch(e.state){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}}),e.addEventListener("icestatechange",()=>{switch(e.state){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}}),e.addEventListener("candidatepairchange",e=>{d.debug('iceTransport "candidatepairchange" event [pair:%o]',e.pair)}),this._iceTransport=e}_setDtlsTransport(){const e=new RTCDtlsTransport(this._iceTransport);e.addEventListener("statechange",()=>{d.debug('dtlsTransport "statechange" event [state:%s]',e.state)}),e.addEventListener("dtlsstatechange",()=>{d.debug('dtlsTransport "dtlsstatechange" event [state:%s]',e.state),"closed"===e.state&&this.emit("@connectionstatechange","closed")}),e.addEventListener("error",e=>{d.error('dtlsTransport "error" event [event:%o]',e)}),this._dtlsTransport=e}async _setupTransport({localDtlsRole:e}){d.debug("_setupTransport()");const t=this._dtlsTransport.getLocalParameters();t.role=e,await this.safeEmitAsPromise("@connect",{dtlsParameters:t}),this._iceTransport.start(this._iceGatherer,this._remoteIceParameters,"controlling");for(const e of this._remoteIceCandidates)this._iceTransport.addRemoteCandidate(e);this._iceTransport.addRemoteCandidate({}),this._remoteDtlsParameters.fingerprints=this._remoteDtlsParameters.fingerprints.filter(e=>"sha-256"===e.algorithm||"sha-384"===e.algorithm||"sha-512"===e.algorithm),this._dtlsTransport.start(this._remoteDtlsParameters),this._transportReady=!0}}t.Edge11=p},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(2);t.getCapabilities=function(){const e=RTCRtpReceiver.getCapabilities(),t=s.clone(e,{});for(const e of t.codecs){if(e.channels=e.numChannels,delete e.numChannels,e.mimeType=e.mimeType||`${e.kind}/${e.name}`,e.parameters){const t=e.parameters;t.apt&&(t.apt=Number(t.apt)),t["packetization-mode"]&&(t["packetization-mode"]=Number(t["packetization-mode"]))}for(const t of e.rtcpFeedback||[])t.parameter||(t.parameter="")}return t},t.mangleRtpParameters=function(e){const t=s.clone(e,{});t.mid&&(t.muxId=t.mid,delete t.mid);for(const e of t.codecs)e.channels&&(e.numChannels=e.channels,delete e.channels),e.mimeType&&!e.name&&(e.name=e.mimeType.split("/")[1]),delete e.mimeType;return t}},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});const s=r(5),i=r(1),n=r(4),a=r(2),o=r(3),c=r(7),d=r(12),p=r(6),l=r(8),u=new i.Logger("ReactNative"),h={OS:1024,MIS:1024};class m extends p.HandlerInterface{constructor(){super(),this._sendStream=new MediaStream,this._mapSendLocalIdTrack=new Map,this._nextSendLocalId=0,this._mapRecvLocalIdInfo=new Map,this._hasDataChannelMediaSection=!1,this._nextSendSctpStreamId=0,this._transportReady=!1}static createFactory(){return()=>new m}get name(){return"ReactNative"}close(){if(u.debug("close()"),this._pc)try{this._pc.close()}catch(e){}}async getNativeRtpCapabilities(){u.debug("getNativeRtpCapabilities()");const e=new RTCPeerConnection({iceServers:[],iceTransportPolicy:"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"plan-b"});try{const t=await e.createOffer({offerToReceiveAudio:!0,offerToReceiveVideo:!0});try{e.close()}catch(e){}const r=s.parse(t.sdp);return c.extractRtpCapabilities({sdpObject:r})}catch(t){try{e.close()}catch(e){}throw t}}async getNativeSctpCapabilities(){return u.debug("getNativeSctpCapabilities()"),{numStreams:h}}run({direction:e,iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,iceServers:n,iceTransportPolicy:a,additionalSettings:c,proprietaryConstraints:d,extendedRtpCapabilities:p}){u.debug("run()"),this._direction=e,this._remoteSdp=new l.RemoteSdp({iceParameters:t,iceCandidates:r,dtlsParameters:s,sctpParameters:i,planB:!0}),this._sendingRtpParametersByKind={audio:o.getSendingRtpParameters("audio",p),video:o.getSendingRtpParameters("video",p)},this._sendingRemoteRtpParametersByKind={audio:o.getSendingRemoteRtpParameters("audio",p),video:o.getSendingRemoteRtpParameters("video",p)},this._pc=new RTCPeerConnection(Object.assign({iceServers:n||[],iceTransportPolicy:a||"all",bundlePolicy:"max-bundle",rtcpMuxPolicy:"require",sdpSemantics:"plan-b"},c),d),this._pc.addEventListener("iceconnectionstatechange",()=>{switch(this._pc.iceConnectionState){case"checking":this.emit("@connectionstatechange","connecting");break;case"connected":case"completed":this.emit("@connectionstatechange","connected");break;case"failed":this.emit("@connectionstatechange","failed");break;case"disconnected":this.emit("@connectionstatechange","disconnected");break;case"closed":this.emit("@connectionstatechange","closed")}})}async updateIceServers(e){u.debug("updateIceServers()");const t=this._pc.getConfiguration();t.iceServers=e,this._pc.setConfiguration(t)}async restartIce(e){if(u.debug("restartIce()"),this._remoteSdp.updateIceParameters(e),this._transportReady)if("send"===this._direction){const e=await this._pc.createOffer({iceRestart:!0});u.debug("restartIce() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e);const t={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setRemoteDescription(t)}else{const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("restartIce() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();u.debug("restartIce() | calling pc.setLocalDescription() [answer:%o]",t),await this._pc.setLocalDescription(t)}}async getTransportStats(){return this._pc.getStats()}async send({track:e,encodings:t,codecOptions:r,codec:i}){this._assertSendDirection(),u.debug("send() [kind:%s, track.id:%s]",e.kind,e.id),i&&u.warn("send() | codec selection is not available in %s handler",this.name),this._sendStream.addTrack(e),this._pc.addStream(this._sendStream);let n,p=await this._pc.createOffer(),l=s.parse(p.sdp);const h=a.clone(this._sendingRtpParametersByKind[e.kind],{});h.codecs=o.reduceCodecs(h.codecs);const m=a.clone(this._sendingRemoteRtpParametersByKind[e.kind],{});if(m.codecs=o.reduceCodecs(m.codecs),this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:l}),"video"===e.kind&&t&&t.length>1&&(u.debug("send() | enabling simulcast"),l=s.parse(p.sdp),n=l.media.find(e=>"video"===e.type),d.addLegacySimulcast({offerMediaObject:n,track:e,numStreams:t.length}),p={type:"offer",sdp:s.write(l)}),u.debug("send() | calling pc.setLocalDescription() [offer:%o]",p),await this._pc.setLocalDescription(p),l=s.parse(this._pc.localDescription.sdp),n=l.media.find(t=>t.type===e.kind),h.rtcp.cname=c.getCname({offerMediaObject:n}),h.encodings=d.getRtpEncodings({offerMediaObject:n,track:e}),t)for(let e=0;e<h.encodings.length;++e)t[e]&&Object.assign(h.encodings[e],t[e]);if(h.encodings.length>1&&("video/vp8"===h.codecs[0].mimeType.toLowerCase()||"video/h264"===h.codecs[0].mimeType.toLowerCase()))for(const e of h.encodings)e.scalabilityMode="S1T3";this._remoteSdp.send({offerMediaObject:n,offerRtpParameters:h,answerRtpParameters:m,codecOptions:r});const f={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("send() | calling pc.setRemoteDescription() [answer:%o]",f),await this._pc.setRemoteDescription(f);const g=String(this._nextSendLocalId);return this._nextSendLocalId++,this._mapSendLocalIdTrack.set(g,e),{localId:g,rtpParameters:h}}async stopSending(e){this._assertSendDirection(),u.debug("stopSending() [localId:%s]",e);const t=this._mapSendLocalIdTrack.get(e);if(!t)throw new Error("track not found");this._mapSendLocalIdTrack.delete(e),this._sendStream.removeTrack(t),this._pc.addStream(this._sendStream);const r=await this._pc.createOffer();u.debug("stopSending() | calling pc.setLocalDescription() [offer:%o]",r);try{await this._pc.setLocalDescription(r)}catch(e){if(0===this._sendStream.getTracks().length)return void u.warn("stopSending() | ignoring expected error due no sending tracks: %s",e.toString());throw e}if("stable"===this._pc.signalingState)return;const s={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("stopSending() | calling pc.setRemoteDescription() [answer:%o]",s),await this._pc.setRemoteDescription(s)}async replaceTrack(e,t){throw new n.UnsupportedError("not implemented")}async setMaxSpatialLayer(e,t){throw new n.UnsupportedError("not implemented")}async setRtpEncodingParameters(e,t){throw new n.UnsupportedError("not implemented")}async getSenderStats(e){throw new n.UnsupportedError("not implemented")}async sendDataChannel({ordered:e,maxPacketLifeTime:t,maxRetransmits:r,label:i,protocol:n,priority:a}){this._assertSendDirection();const o={negotiated:!0,id:this._nextSendSctpStreamId,ordered:e,maxPacketLifeTime:t,maxRetransmitTime:t,maxRetransmits:r,protocol:n,priority:a};u.debug("sendDataChannel() [options:%o]",o);const c=this._pc.createDataChannel(i,o);if(this._nextSendSctpStreamId=++this._nextSendSctpStreamId%h.MIS,!this._hasDataChannelMediaSection){const e=await this._pc.createOffer(),t=s.parse(e.sdp),r=t.media.find(e=>"application"===e.type);this._transportReady||await this._setupTransport({localDtlsRole:"server",localSdpObject:t}),u.debug("sendDataChannel() | calling pc.setLocalDescription() [offer:%o]",e),await this._pc.setLocalDescription(e),this._remoteSdp.sendSctpAssociation({offerMediaObject:r});const i={type:"answer",sdp:this._remoteSdp.getSdp()};u.debug("sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]",i),await this._pc.setRemoteDescription(i),this._hasDataChannelMediaSection=!0}return{dataChannel:c,sctpStreamParameters:{streamId:o.id,ordered:o.ordered,maxPacketLifeTime:o.maxPacketLifeTime,maxRetransmits:o.maxRetransmits}}}async receive({trackId:e,kind:t,rtpParameters:r}){this._assertRecvDirection(),u.debug("receive() [trackId:%s, kind:%s]",e,t);const i=e,n=t;let o=r.rtcp.cname;u.debug("receive() | forcing a random remote streamId to avoid well known bug in react-native-webrtc"),o+="-hack-"+a.generateRandomNumber(),this._remoteSdp.receive({mid:n,kind:t,offerRtpParameters:r,streamId:o,trackId:e});const d={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receive() | calling pc.setRemoteDescription() [offer:%o]",d),await this._pc.setRemoteDescription(d);let p=await this._pc.createAnswer();const l=s.parse(p.sdp),h=l.media.find(e=>String(e.mid)===n);c.applyCodecParameters({offerRtpParameters:r,answerMediaObject:h}),p={type:"answer",sdp:s.write(l)},this._transportReady||await this._setupTransport({localDtlsRole:"client",localSdpObject:l}),u.debug("receive() | calling pc.setLocalDescription() [answer:%o]",p),await this._pc.setLocalDescription(p);const m=this._pc.getRemoteStreams().find(e=>e.id===o).getTrackById(i);if(!m)throw new Error("remote track not found");return this._mapRecvLocalIdInfo.set(i,{mid:n,rtpParameters:r}),{localId:i,track:m}}async stopReceiving(e){this._assertRecvDirection(),u.debug("stopReceiving() [localId:%s]",e);const{mid:t,rtpParameters:r}=this._mapRecvLocalIdInfo.get(e)||{};this._mapRecvLocalIdInfo.delete(e),this._remoteSdp.planBStopReceiving({mid:t,offerRtpParameters:r});const s={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("stopReceiving() | calling pc.setRemoteDescription() [offer:%o]",s),await this._pc.setRemoteDescription(s);const i=await this._pc.createAnswer();u.debug("stopReceiving() | calling pc.setLocalDescription() [answer:%o]",i),await this._pc.setLocalDescription(i)}async getReceiverStats(e){throw new n.UnsupportedError("not implemented")}async receiveDataChannel({sctpStreamParameters:e,label:t,protocol:r}){this._assertRecvDirection();const{streamId:i,ordered:n,maxPacketLifeTime:a,maxRetransmits:o}=e,c={negotiated:!0,id:i,ordered:n,maxPacketLifeTime:a,maxRetransmitTime:a,maxRetransmits:o,protocol:r};u.debug("receiveDataChannel() [options:%o]",c);const d=this._pc.createDataChannel(t,c);if(!this._hasDataChannelMediaSection){this._remoteSdp.receiveSctpAssociation({oldDataChannelSpec:!0});const e={type:"offer",sdp:this._remoteSdp.getSdp()};u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]",e),await this._pc.setRemoteDescription(e);const t=await this._pc.createAnswer();if(!this._transportReady){const e=s.parse(t.sdp);await this._setupTransport({localDtlsRole:"client",localSdpObject:e})}u.debug("receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]",t),await this._pc.setLocalDescription(t),this._hasDataChannelMediaSection=!0}return{dataChannel:d}}async _setupTransport({localDtlsRole:e,localSdpObject:t}){t||(t=s.parse(this._pc.localDescription.sdp));const r=c.extractDtlsParameters({sdpObject:t});r.role=e,this._remoteSdp.updateDtlsRole("client"===e?"server":"client"),await this.safeEmitAsPromise("@connect",{dtlsParameters:r}),this._transportReady=!0}_assertSendDirection(){if("send"!==this._direction)throw new Error('method can just be called for handlers with "send" direction')}_assertRecvDirection(){if("recv"!==this._direction)throw new Error('method can just be called for handlers with "recv" direction')}}t.ReactNative=m},function(e,t,r){"use strict";function s(e){for(var r in e)t.hasOwnProperty(r)||(t[r]=e[r])}Object.defineProperty(t,"__esModule",{value:!0}),s(r(15)),s(r(16)),s(r(17)),s(r(18)),s(r(19)),s(r(20)),s(r(6)),s(r(4))},function(e,t,r){function s(e){var r;function s(){if(s.enabled){var e=s,i=+new Date,n=i-(r||i);e.diff=n,e.prev=r,e.curr=i,r=i;for(var a=new Array(arguments.length),o=0;o<a.length;o++)a[o]=arguments[o];a[0]=t.coerce(a[0]),"string"!=typeof a[0]&&a.unshift("%O");var c=0;a[0]=a[0].replace(/%([a-zA-Z%])/g,(function(r,s){if("%%"===r)return r;c++;var i=t.formatters[s];if("function"==typeof i){var n=a[c];r=i.call(e,n),a.splice(c,1),c--}return r})),t.formatArgs.call(e,a);var d=s.log||t.log||console.log.bind(console);d.apply(e,a)}}return s.namespace=e,s.enabled=t.enabled(e),s.useColors=t.useColors(),s.color=function(e){var r,s=0;for(r in e)s=(s<<5)-s+e.charCodeAt(r),s|=0;return t.colors[Math.abs(s)%t.colors.length]}(e),s.destroy=i,"function"==typeof t.init&&t.init(s),t.instances.push(s),s}function i(){var e=t.instances.indexOf(this);return-1!==e&&(t.instances.splice(e,1),!0)}(t=e.exports=s.debug=s.default=s).coerce=function(e){return e instanceof Error?e.stack||e.message:e},t.disable=function(){t.enable("")},t.enable=function(e){var r;t.save(e),t.names=[],t.skips=[];var s=("string"==typeof e?e:"").split(/[\s,]+/),i=s.length;for(r=0;r<i;r++)s[r]&&("-"===(e=s[r].replace(/\*/g,".*?"))[0]?t.skips.push(new RegExp("^"+e.substr(1)+"$")):t.names.push(new RegExp("^"+e+"$")));for(r=0;r<t.instances.length;r++){var n=t.instances[r];n.enabled=t.enabled(n.namespace)}},t.enabled=function(e){if("*"===e[e.length-1])return!0;var r,s;for(r=0,s=t.skips.length;r<s;r++)if(t.skips[r].test(e))return!1;for(r=0,s=t.names.length;r<s;r++)if(t.names[r].test(e))return!0;return!1},t.humanize=r(49),t.instances=[],t.names=[],t.skips=[],t.formatters={}},function(e,t){var r=1e3,s=6e4,i=60*s,n=24*i;function a(e,t,r){if(!(e<t))return e<1.5*t?Math.floor(e/t)+" "+r:Math.ceil(e/t)+" "+r+"s"}e.exports=function(e,t){t=t||{};var o,c=typeof e;if("string"===c&&e.length>0)return function(e){if((e=String(e)).length>100)return;var t=/^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(e);if(!t)return;var a=parseFloat(t[1]);switch((t[2]||"ms").toLowerCase()){case"years":case"year":case"yrs":case"yr":case"y":return 315576e5*a;case"days":case"day":case"d":return a*n;case"hours":case"hour":case"hrs":case"hr":case"h":return a*i;case"minutes":case"minute":case"mins":case"min":case"m":return a*s;case"seconds":case"second":case"secs":case"sec":case"s":return a*r;case"milliseconds":case"millisecond":case"msecs":case"msec":case"ms":return a;default:return}}(e);if("number"===c&&!1===isNaN(e))return t.long?a(o=e,n,"day")||a(o,i,"hour")||a(o,s,"minute")||a(o,r,"second")||o+" ms":function(e){if(e>=n)return Math.round(e/n)+"d";if(e>=i)return Math.round(e/i)+"h";if(e>=s)return Math.round(e/s)+"m";if(e>=r)return Math.round(e/r)+"s";return e+"ms"}(e);throw new Error("val is not a non-empty string or a valid number. val="+JSON.stringify(e))}},function(t,r){t.exports=e},function(e,r){e.exports=t},function(e,t,r){"use strict";r.r(t),r.d(t,"ConferenceApi",(function(){return d})),r.d(t,"Utils",(function(){return w}));var s,i=r(14),n=r(22),a=r(23),o=r(0),c=function(e,t,r,s){return new(r||(r=Promise))((function(i,n){function a(e){try{c(s.next(e))}catch(e){n(e)}}function o(e){try{c(s.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof r?t:new r((function(e){e(t)}))).then(a,o)}c((s=s.apply(e,t||[])).next())}))};class d extends i.EventEmitter{constructor(e){super(),this.connectors=new Map,this.layers=new Map,this.availableKinds=[],this.configs=Object.assign({worker:0,stopTracks:!0,kinds:["video","audio"],maxIncomingBitrate:0,timeout:{stats:1e3,transport:3e3,consumer:5e3}},e),this.log=Object(a.debug)(`conference-api [${this.configs.stream}]:`),this.createClient(),this.device=new n.Device}setPreferredLayers(e){return c(this,void 0,void 0,(function*(){if(this.operation===o.API_OPERATION.SUBSCRIBE){const t="video";this.layers.set(t,e);const r=this.connectors.get(t);if(r&&"number"!=typeof r)try{yield this.api.setPreferredLayers({consumerId:r.id,layers:e})}catch(e){}}}))}addTrack(e){return c(this,void 0,void 0,(function*(){if(this.log("addTrack",e),this.operation===o.API_OPERATION.PUBLISH&&this.mediaStream){const t=e.kind;this.configs.kinds.includes(t)||this.configs.kinds.push(t),this.mediaStream.addTrack(e),this.emit("addtrack",new MediaStreamTrackEvent("addtrack",{track:e})),yield this.publishTrack(e)}}))}removeTrack(e){return c(this,void 0,void 0,(function*(){if(this.log("removeTrack",e),this.operation===o.API_OPERATION.PUBLISH&&this.mediaStream){this.mediaStream.removeTrack(e),this.emit("removetrack",new MediaStreamTrackEvent("removetrack",{track:e}));const t=this.connectors.get(e.kind);t&&"number"!=typeof t&&(t.close(),t.emit("close"))}}))}setMaxPublisherBitrate(e){return c(this,void 0,void 0,(function*(){this.configs.maxIncomingBitrate=e,this.transport&&(yield this.api.setMaxIncomingBitrate({transportId:this.transport.id,bitrate:e}))}))}updateKinds(e){return c(this,void 0,void 0,(function*(){if(this.operation===o.API_OPERATION.SUBSCRIBE){this.log("updateKinds",e);const t=this.configs.kinds;this.configs.kinds=e;for(const r of t)e.includes(r)||this.unsubscribeTrack(r);const r=[];for(const t of e)!this.connectors.get(t)&&this.availableKinds.includes(t)&&r.push(this.subscribeTrack(t));yield Promise.all(r)}}))}destroyClient(){this.api&&this.api.clear()}createClient(){this.api=new o.MediasoupSocketApi(this.configs.url,this.configs.worker,this.configs.token,this.log);const e=this;this.api.client.on("disconnect",()=>c(this,void 0,void 0,(function*(){yield e.restartAll()})))}init(e){return c(this,void 0,void 0,(function*(){if(this.operation)throw new Error("Already processing");if(this.operation=e,!this.device.loaded){const{routerRtpCapabilities:e,iceServers:t,simulcast:r,timeout:s}=yield this.api.getServerConfigs();e.headerExtensions&&(e.headerExtensions=e.headerExtensions.filter(e=>"urn:3gpp:video-orientation"!==e.uri)),yield this.device.load({routerRtpCapabilities:e}),this.iceServers=t,this.simulcast=r,this.configs.timeout=Object.assign(Object.assign({},this.configs.timeout),s)}yield this.getTransport()}))}publish(e){return c(this,void 0,void 0,(function*(){return yield this.init(o.API_OPERATION.PUBLISH),this.mediaStream=e,yield Promise.all(e.getTracks().map(e=>this.publishTrack(e))),e}))}subscribe(){return c(this,void 0,void 0,(function*(){console.log("subscribe"),yield this.init(o.API_OPERATION.SUBSCRIBE);const e=this.mediaStream||new MediaStream;this.mediaStream=e;const{stream:t}=this.configs,r=[];let s;if(this.api.client.on(o.EVENT.STREAM_STARTED,({stream:e,kind:t})=>c(this,void 0,void 0,(function*(){this.availableKinds.includes(t)||this.availableKinds.push(t),this.unsubscribeTrack(t),console.log("on stream started",t),this.configs.kinds.includes(t)&&(yield this.subscribeTrack(t))}))),this.api.client.on(o.EVENT.STREAM_STOPPED,({stream:e,kind:t})=>c(this,void 0,void 0,(function*(){this.availableKinds.includes(t)&&this.availableKinds.splice(this.availableKinds.indexOf(t),1),console.log("on stream stopped",t),this.unsubscribeTrack(t)}))),this.configs.origin&&(this.configs.url!==this.configs.origin.url||this.configs.worker!==this.configs.origin.worker)){const{token:e,worker:t,url:r}=this.configs;s={target:{url:r,worker:t,token:e},source:{url:this.configs.origin.url,worker:this.configs.origin.worker,token:this.configs.origin.token||e}}}for(const e of["audio","video"])r.push(this.api.listenStreamStarted({stream:t,kind:e,origin:s}),this.api.listenStreamStopped({stream:t,kind:e}));return yield Promise.all(r),e}))}unsubscribeTrack(e){const t=this.connectors.get(e);t&&("number"!=typeof t?(t.close(),t.emit("close")):this.connectors.delete(e))}subscribeTrack(e){return c(this,void 0,void 0,(function*(){const t=Math.random();console.log("new connector",t),this.connectors.set(e,t);const{stream:r}=this.configs,s=this,i=this.device.rtpCapabilities;try{if(!this.transport)throw{errorId:o.ERROR.INVALID_TRANSPORT};const n={rtpCapabilities:i,stream:r,kind:e,transportId:this.transport.id},a=yield this.api.consume(n),d=this.layers.get(e);if(d)try{yield this.api.setPreferredLayers({consumerId:a.id,layers:d})}catch(e){}const p=yield this.transport.consume(a);p.on("close",()=>c(this,void 0,void 0,(function*(){if(this.mediaStream&&(p.track.stop(),this.mediaStream.removeTrack(p.track),this.emit("removetrack",new MediaStreamTrackEvent("removetrack",{track:p.track}))),this.transport&&!this.transport.closed){const t=this.connectors.get(e);try{yield this.api.closeConsumer({consumerId:p.id})}catch(e){}t&&"number"!=typeof t&&p.id===t.id&&this.connectors.delete(p.track.kind)}}))),this.connectors.get(e)===t&&this.configs.kinds.includes(e)?(this.connectors.set(e,p),this.emit("newConsumerId",{id:p.id,kind:e}),this.listenStats(p,"inbound-rtp"),yield s.api.resumeConsumer({consumerId:p.id}),this.mediaStream&&(this.mediaStream.addTrack(p.track),this.emit("addtrack",new MediaStreamTrackEvent("addtrack",{track:p.track})))):(console.log("wrong connector",this.connectors.get(e)),this.unsubscribeTrack(e))}catch(e){if(e)if(e.errorId===o.ERROR.INVALID_STREAM);else{if(e.errorId!==o.ERROR.INVALID_TRANSPORT&&e.errorId!==o.ERROR.INVALID_CONSUMER)throw e;this.restartAll().then(()=>{}).catch(()=>{})}}}))}publishTrack(e){return c(this,void 0,void 0,(function*(){const t=e.kind;if(this.configs.kinds.includes(t)){e.addEventListener("ended",()=>c(this,void 0,void 0,(function*(){yield this.removeTrack(e)})));const r={track:e,stopTracks:!1};this.configs.simulcast&&"video"===t&&this.simulcast&&(this.simulcast.encodings&&(r.encodings=this.simulcast.encodings),this.simulcast.codecOptions&&(r.codecOptions=this.simulcast.codecOptions));const s=yield this.transport.produce(r);s.on("close",()=>c(this,void 0,void 0,(function*(){const e=this.connectors.get(t);if(e&&"number"!=typeof e){this.connectors.delete(t);try{yield this.api.closeProducer({producerId:e.id})}catch(e){}}}))),this.listenStats(s,"outbound-rtp"),this.connectors.set(t,s),this.emit("newProducerId",{id:s.id,kind:t})}}))}listenStats(e,t){let r=0,s=Date.now();const i="inbound-rtp"===t?"bytesReceived":"bytesSent";e.on("close",()=>{this.emit("bitRate",{bitRate:0,kind:e.kind})});const n=()=>{e&&!e.closed&&e.getStats().then(a=>c(this,void 0,void 0,(function*(){e&&!e.closed&&(a.size?a.forEach(n=>{if(n&&n.type===t&&n[i]&&n[i]>r){const t=Math.round((n[i]-r)/(Date.now()-s)*1e3*8);this.emit("bitRate",{bitRate:t,kind:e.kind}),r=n[i],s=Date.now()}}):this.emit("bitRate",{bitRate:0,kind:e.kind}),setTimeout(n,this.configs.timeout.stats))})))};n()}close(e=!0){return c(this,void 0,void 0,(function*(){if(this.transport){this.transport.closed||this.transport.close();const e=this.transport.id;delete this.transport;try{yield this.api.closeTransport({transportId:e})}catch(e){}this.emit("connectionstatechange",{state:"disconnected"})}(e||this.operation===o.API_OPERATION.SUBSCRIBE)&&this.mediaStream&&this.configs.stopTracks&&(console.log("stopping tracks"),this.mediaStream.getTracks().forEach((function(e){e.stop()}))),yield this.closeConnectors(),delete this.operation,e&&this.api&&this.api.clear()}))}closeConnectors(){return c(this,void 0,void 0,(function*(){this.connectors.size&&(yield new Promise(e=>{this.connectors.forEach((t,r)=>{this.connectors.delete(r);try{t&&"number"!=typeof t&&(t.close(),t.emit("close"))}catch(e){}this.connectors.size||e()})}))}))}restartAll(){return c(this,void 0,void 0,(function*(){const e=this.operation;this.destroyClient(),yield this.close(!1),this.createClient(),e===o.API_OPERATION.SUBSCRIBE?yield this.subscribe():e===o.API_OPERATION.PUBLISH&&this.mediaStream&&(yield this.publish(this.mediaStream))}))}getTransport(){return c(this,void 0,void 0,(function*(){if(!this.transport){const e=this,t=yield this.api.createTransport();this.iceServers&&(t.iceServers=this.iceServers),this.operation===o.API_OPERATION.SUBSCRIBE?this.transport=this.device.createRecvTransport(t):this.operation===o.API_OPERATION.PUBLISH&&(this.transport=this.device.createSendTransport(t)),this.emit("newTransportId",{id:this.transport.id}),this.configs.maxIncomingBitrate&&(yield this.api.setMaxIncomingBitrate({transportId:this.transport.id,bitrate:this.configs.maxIncomingBitrate})),this.transport.on("connect",({dtlsParameters:t},r,s)=>{e.api.connectTransport({transportId:this.transport.id,dtlsParameters:t}).then(r).catch(s)}),this.operation===o.API_OPERATION.PUBLISH&&this.transport.on("produce",({kind:t,rtpParameters:r},s,i)=>c(this,void 0,void 0,(function*(){try{const i=yield e.api.produce({transportId:this.transport.id,stream:e.configs.stream,kind:t,rtpParameters:r,keyFrameRequestDelay:e.configs.keyFrameRequestDelay});s(i)}catch(e){i(e)}}))),this.transport.on("connectionstatechange",e=>c(this,void 0,void 0,(function*(){switch(this.emit("connectionstatechange",{state:e}),e){case"connected":this.transportTimeout&&clearTimeout(this.transportTimeout)}})))}return this.transport}))}}!function(e){e.GET_SERVER_CONFIGS="getServerConfigs",e.CREATE_TRANSPORT="createTransport",e.CONNECT_TRANSPORT="connectTransport",e.CLOSE_TRANSPORT="closeTransport",e.PRODUCE="produce",e.CONSUME="consume",e.RESUME_CONSUMER="resumeConsumer",e.PAUSE_CONSUMER="pauseConsumer",e.CLOSE_CONSUMER="closeConsumer",e.RESUME_PRODUCER="resumeProducer",e.PAUSE_PRODUCER="pauseProducer",e.CLOSE_PRODUCER="closeProducer",e.FILE_STREAMING="fileStreaming",e.LIVE_STREAMING="liveStreaming",e.LIVE_TO_HLS="liveToHls",e.STOP_FILE_STREAMING="stopFileStreaming",e.START_RECORDING="startRecording",e.STOP_RECORDING="stopRecording",e.CREATE_PIPE_TRANSPORT="createPipeTransport",e.CONNECT_PIPE_TRANSPORT="connectPipeTransport",e.SET_PREFERRED_LAYERS="setPreferredLayers",e.SET_MAX_INCOMING_BITRATE="setMaxIncomingBitrate",e.PRODUCERS_STATS="producersStats",e.CONSUMERS_STATS="consumersStats",e.TRANSPORT_STATS="transportStats",e.PIPE_TO_REMOTE_PRODUCER="pipeToRemoteProducer",e.PIPE_FROM_REMOTE_PRODUCER="pipeFromRemoteProducer",e.WORKER_LOAD="workerLoad",e.NUM_WORKERS="numWorkers",e.RECORDED_STREAMS="recordedStreams",e.STREAM_RECORDINGS="streamRecordings",e.DELETE_STREAM_RECORDINGS="deleteStreamRecordings",e.DELETE_RECORDING="deleteRecording",e.PUSH_TO_SERVER_INPUTS="pushToServerInputs",e.PULL_FROM_SERVER_INPUTS="pullFromServerInputs",e.PUSH_TO_SERVER_OPTIONS="pushToServerOptions",e.PUSH_TO_SERVER="pushToServer",e.KINDS_BY_FILE="kindsByFile",e.REQUEST_KEYFRAME="requestKeyframe",e.LISTEN_STREAM_STARTED="listenStreamStarted",e.LISTEN_STREAM_STOPPED="listenStreamStopped",e.MIXER_START="mixerStart",e.MIXER_CLOSE="mixerClose",e.MIXER_ADD="mixerAdd",e.MIXER_REMOVE="mixerRemove",e.MIXER_UPDATE="mixerUpdate",e.MIXER_PIPE_START="mixerPipeStart",e.MIXER_PIPE_STOP="mixerPipeStop",e.LISTEN_MIXER_STOPPED="listenMixerStopped"}(s||(s={}));const p=[s.GET_SERVER_CONFIGS,s.CREATE_TRANSPORT,s.CONNECT_TRANSPORT,s.CLOSE_TRANSPORT,s.PRODUCE,s.CONSUME,s.LISTEN_STREAM_STARTED,s.LISTEN_STREAM_STOPPED,s.LISTEN_MIXER_STOPPED,s.CREATE_PIPE_TRANSPORT,s.CONNECT_PIPE_TRANSPORT,s.PIPE_TO_REMOTE_PRODUCER,s.PIPE_FROM_REMOTE_PRODUCER];Object.values(s).filter(e=>!p.includes(e));var l,u;!function(e){e.STREAM_STARTED="streamStarted",e.STREAM_STOPPED="streamStopped",e.MIXER_STOPPED="mixerStopped"}(l||(l={})),function(e){e.STATS="stats",e.TRAFFIC="traffic",e.CPU="cpu"}(u||(u={}));const h="hls",m="master.m3u8";var f;!function(e){e.API="api"}(f||(f={}));var g,_,S,v;!function(e){e[e.UNKNOWN=500]="UNKNOWN",e[e.UNAUTHORIZED=401]="UNAUTHORIZED",e[e.INVALID_TRANSPORT=530]="INVALID_TRANSPORT",e[e.INVALID_PRODUCER=531]="INVALID_PRODUCER",e[e.INVALID_CONSUMER=532]="INVALID_CONSUMER",e[e.INVALID_STREAM=533]="INVALID_STREAM",e[e.INVALID_OPERATION=534]="INVALID_OPERATION",e[e.INVALID_WORKER=535]="INVALID_WORKER",e[e.INVALID_INPUT=536]="INVALID_INPUT",e[e.INVALID_ACTION=537]="INVALID_ACTION"}(g||(g={})),function(e){e[e.SUBSCRIBE=0]="SUBSCRIBE",e[e.PUBLISH=1]="PUBLISH",e[e.RECORDING=2]="RECORDING",e[e.STREAMING=3]="STREAMING",e[e.MIXER=4]="MIXER"}(_||(_={})),function(e){e[e.LIVE=0]="LIVE",e[e.RECORDING=1]="RECORDING",e[e.RTMP=2]="RTMP",e[e.HLS=3]="HLS"}(S||(S={})),function(e){e.SCALE="scale",e.CROP="crop",e.PAD="pad"}(v||(v={}));var y=r(24),b=function(e,t,r,s){return new(r||(r=Promise))((function(i,n){function a(e){try{c(s.next(e))}catch(e){n(e)}}function o(e){try{c(s.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof r?t:new r((function(e){e(t)}))).then(a,o)}c((s=s.apply(e,t||[])).next())}))};class w{static getUserMedia(e,t=!1){return b(this,void 0,void 0,(function*(){return t?yield navigator.mediaDevices.getDisplayMedia(e):yield navigator.mediaDevices.getUserMedia(e)}))}static hlsPlaylistPath(e){return Object(y.join)(h,e,m)}}w.isFirefox=void 0!==window.InstallTrigger,w.isOpera=!!window.opera||navigator.userAgent.indexOf(" OPR/")>=0,w.isChrome=!!window.chrome&&!w.isOpera,w.isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent)}])}));
+function clone(data, defaultValue) {
+    if (typeof data === 'undefined')
+        return defaultValue;
+    return JSON.parse(JSON.stringify(data));
+}
+exports.clone = clone;
+/**
+ * Generates a random positive integer.
+ */
+function generateRandomNumber() {
+    return Math.round(Math.random() * 10000000);
+}
+exports.generateRandomNumber = generateRandomNumber;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.canReceive = exports.canSend = exports.generateProbatorRtpParameters = exports.reduceCodecs = exports.getSendingRemoteRtpParameters = exports.getSendingRtpParameters = exports.getRecvRtpCapabilities = exports.getExtendedRtpCapabilities = exports.validateSctpStreamParameters = exports.validateSctpParameters = exports.validateNumSctpStreams = exports.validateSctpCapabilities = exports.validateRtcpParameters = exports.validateRtpEncodingParameters = exports.validateRtpHeaderExtensionParameters = exports.validateRtpCodecParameters = exports.validateRtpParameters = exports.validateRtpHeaderExtension = exports.validateRtcpFeedback = exports.validateRtpCodecCapability = exports.validateRtpCapabilities = void 0;
+const h264 = __importStar(__webpack_require__(28));
+const utils = __importStar(__webpack_require__(2));
+const RTP_PROBATOR_MID = 'probator';
+const RTP_PROBATOR_SSRC = 1234;
+const RTP_PROBATOR_CODEC_PAYLOAD_TYPE = 127;
+/**
+ * Validates RtpCapabilities. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateRtpCapabilities(caps) {
+    if (typeof caps !== 'object')
+        throw new TypeError('caps is not an object');
+    // codecs is optional. If unset, fill with an empty array.
+    if (caps.codecs && !Array.isArray(caps.codecs))
+        throw new TypeError('caps.codecs is not an array');
+    else if (!caps.codecs)
+        caps.codecs = [];
+    for (const codec of caps.codecs) {
+        validateRtpCodecCapability(codec);
+    }
+    // headerExtensions is optional. If unset, fill with an empty array.
+    if (caps.headerExtensions && !Array.isArray(caps.headerExtensions))
+        throw new TypeError('caps.headerExtensions is not an array');
+    else if (!caps.headerExtensions)
+        caps.headerExtensions = [];
+    for (const ext of caps.headerExtensions) {
+        validateRtpHeaderExtension(ext);
+    }
+}
+exports.validateRtpCapabilities = validateRtpCapabilities;
+/**
+ * Validates RtpCodecCapability. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateRtpCodecCapability(codec) {
+    const MimeTypeRegex = new RegExp('^(audio|video)/(.+)', 'i');
+    if (typeof codec !== 'object')
+        throw new TypeError('codec is not an object');
+    // mimeType is mandatory.
+    if (!codec.mimeType || typeof codec.mimeType !== 'string')
+        throw new TypeError('missing codec.mimeType');
+    const mimeTypeMatch = MimeTypeRegex.exec(codec.mimeType);
+    if (!mimeTypeMatch)
+        throw new TypeError('invalid codec.mimeType');
+    // Just override kind with media component of mimeType.
+    codec.kind = mimeTypeMatch[1].toLowerCase();
+    // preferredPayloadType is optional.
+    if (codec.preferredPayloadType && typeof codec.preferredPayloadType !== 'number')
+        throw new TypeError('invalid codec.preferredPayloadType');
+    // clockRate is mandatory.
+    if (typeof codec.clockRate !== 'number')
+        throw new TypeError('missing codec.clockRate');
+    // channels is optional. If unset, set it to 1 (just if audio).
+    if (codec.kind === 'audio') {
+        if (typeof codec.channels !== 'number')
+            codec.channels = 1;
+    }
+    else {
+        delete codec.channels;
+    }
+    // parameters is optional. If unset, set it to an empty object.
+    if (!codec.parameters || typeof codec.parameters !== 'object')
+        codec.parameters = {};
+    for (const key of Object.keys(codec.parameters)) {
+        let value = codec.parameters[key];
+        if (value === undefined) {
+            codec.parameters[key] = '';
+            value = '';
+        }
+        if (typeof value !== 'string' && typeof value !== 'number') {
+            throw new TypeError(`invalid codec parameter [key:${key}s, value:${value}]`);
+        }
+        // Specific parameters validation.
+        if (key === 'apt') {
+            if (typeof value !== 'number')
+                throw new TypeError('invalid codec apt parameter');
+        }
+    }
+    // rtcpFeedback is optional. If unset, set it to an empty array.
+    if (!codec.rtcpFeedback || !Array.isArray(codec.rtcpFeedback))
+        codec.rtcpFeedback = [];
+    for (const fb of codec.rtcpFeedback) {
+        validateRtcpFeedback(fb);
+    }
+}
+exports.validateRtpCodecCapability = validateRtpCodecCapability;
+/**
+ * Validates RtcpFeedback. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateRtcpFeedback(fb) {
+    if (typeof fb !== 'object')
+        throw new TypeError('fb is not an object');
+    // type is mandatory.
+    if (!fb.type || typeof fb.type !== 'string')
+        throw new TypeError('missing fb.type');
+    // parameter is optional. If unset set it to an empty string.
+    if (!fb.parameter || typeof fb.parameter !== 'string')
+        fb.parameter = '';
+}
+exports.validateRtcpFeedback = validateRtcpFeedback;
+/**
+ * Validates RtpHeaderExtension. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateRtpHeaderExtension(ext) {
+    if (typeof ext !== 'object')
+        throw new TypeError('ext is not an object');
+    // kind is mandatory.
+    if (ext.kind !== 'audio' && ext.kind !== 'video')
+        throw new TypeError('invalid ext.kind');
+    // uri is mandatory.
+    if (!ext.uri || typeof ext.uri !== 'string')
+        throw new TypeError('missing ext.uri');
+    // preferredId is mandatory.
+    if (typeof ext.preferredId !== 'number')
+        throw new TypeError('missing ext.preferredId');
+    // preferredEncrypt is optional. If unset set it to false.
+    if (ext.preferredEncrypt && typeof ext.preferredEncrypt !== 'boolean')
+        throw new TypeError('invalid ext.preferredEncrypt');
+    else if (!ext.preferredEncrypt)
+        ext.preferredEncrypt = false;
+    // direction is optional. If unset set it to sendrecv.
+    if (ext.direction && typeof ext.direction !== 'string')
+        throw new TypeError('invalid ext.direction');
+    else if (!ext.direction)
+        ext.direction = 'sendrecv';
+}
+exports.validateRtpHeaderExtension = validateRtpHeaderExtension;
+/**
+ * Validates RtpParameters. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateRtpParameters(params) {
+    if (typeof params !== 'object')
+        throw new TypeError('params is not an object');
+    // mid is optional.
+    if (params.mid && typeof params.mid !== 'string')
+        throw new TypeError('params.mid is not a string');
+    // codecs is mandatory.
+    if (!Array.isArray(params.codecs))
+        throw new TypeError('missing params.codecs');
+    for (const codec of params.codecs) {
+        validateRtpCodecParameters(codec);
+    }
+    // headerExtensions is optional. If unset, fill with an empty array.
+    if (params.headerExtensions && !Array.isArray(params.headerExtensions))
+        throw new TypeError('params.headerExtensions is not an array');
+    else if (!params.headerExtensions)
+        params.headerExtensions = [];
+    for (const ext of params.headerExtensions) {
+        validateRtpHeaderExtensionParameters(ext);
+    }
+    // encodings is optional. If unset, fill with an empty array.
+    if (params.encodings && !Array.isArray(params.encodings))
+        throw new TypeError('params.encodings is not an array');
+    else if (!params.encodings)
+        params.encodings = [];
+    for (const encoding of params.encodings) {
+        validateRtpEncodingParameters(encoding);
+    }
+    // rtcp is optional. If unset, fill with an empty object.
+    if (params.rtcp && typeof params.rtcp !== 'object')
+        throw new TypeError('params.rtcp is not an object');
+    else if (!params.rtcp)
+        params.rtcp = {};
+    validateRtcpParameters(params.rtcp);
+}
+exports.validateRtpParameters = validateRtpParameters;
+/**
+ * Validates RtpCodecParameters. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateRtpCodecParameters(codec) {
+    const MimeTypeRegex = new RegExp('^(audio|video)/(.+)', 'i');
+    if (typeof codec !== 'object')
+        throw new TypeError('codec is not an object');
+    // mimeType is mandatory.
+    if (!codec.mimeType || typeof codec.mimeType !== 'string')
+        throw new TypeError('missing codec.mimeType');
+    const mimeTypeMatch = MimeTypeRegex.exec(codec.mimeType);
+    if (!mimeTypeMatch)
+        throw new TypeError('invalid codec.mimeType');
+    // payloadType is mandatory.
+    if (typeof codec.payloadType !== 'number')
+        throw new TypeError('missing codec.payloadType');
+    // clockRate is mandatory.
+    if (typeof codec.clockRate !== 'number')
+        throw new TypeError('missing codec.clockRate');
+    const kind = mimeTypeMatch[1].toLowerCase();
+    // channels is optional. If unset, set it to 1 (just if audio).
+    if (kind === 'audio') {
+        if (typeof codec.channels !== 'number')
+            codec.channels = 1;
+    }
+    else {
+        delete codec.channels;
+    }
+    // parameters is optional. If unset, set it to an empty object.
+    if (!codec.parameters || typeof codec.parameters !== 'object')
+        codec.parameters = {};
+    for (const key of Object.keys(codec.parameters)) {
+        let value = codec.parameters[key];
+        if (value === undefined) {
+            codec.parameters[key] = '';
+            value = '';
+        }
+        if (typeof value !== 'string' && typeof value !== 'number') {
+            throw new TypeError(`invalid codec parameter [key:${key}s, value:${value}]`);
+        }
+        // Specific parameters validation.
+        if (key === 'apt') {
+            if (typeof value !== 'number')
+                throw new TypeError('invalid codec apt parameter');
+        }
+    }
+    // rtcpFeedback is optional. If unset, set it to an empty array.
+    if (!codec.rtcpFeedback || !Array.isArray(codec.rtcpFeedback))
+        codec.rtcpFeedback = [];
+    for (const fb of codec.rtcpFeedback) {
+        validateRtcpFeedback(fb);
+    }
+}
+exports.validateRtpCodecParameters = validateRtpCodecParameters;
+/**
+ * Validates RtpHeaderExtensionParameteters. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateRtpHeaderExtensionParameters(ext) {
+    if (typeof ext !== 'object')
+        throw new TypeError('ext is not an object');
+    // uri is mandatory.
+    if (!ext.uri || typeof ext.uri !== 'string')
+        throw new TypeError('missing ext.uri');
+    // id is mandatory.
+    if (typeof ext.id !== 'number')
+        throw new TypeError('missing ext.id');
+    // encrypt is optional. If unset set it to false.
+    if (ext.encrypt && typeof ext.encrypt !== 'boolean')
+        throw new TypeError('invalid ext.encrypt');
+    else if (!ext.encrypt)
+        ext.encrypt = false;
+    // parameters is optional. If unset, set it to an empty object.
+    if (!ext.parameters || typeof ext.parameters !== 'object')
+        ext.parameters = {};
+    for (const key of Object.keys(ext.parameters)) {
+        let value = ext.parameters[key];
+        if (value === undefined) {
+            ext.parameters[key] = '';
+            value = '';
+        }
+        if (typeof value !== 'string' && typeof value !== 'number')
+            throw new TypeError('invalid header extension parameter');
+    }
+}
+exports.validateRtpHeaderExtensionParameters = validateRtpHeaderExtensionParameters;
+/**
+ * Validates RtpEncodingParameters. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateRtpEncodingParameters(encoding) {
+    if (typeof encoding !== 'object')
+        throw new TypeError('encoding is not an object');
+    // ssrc is optional.
+    if (encoding.ssrc && typeof encoding.ssrc !== 'number')
+        throw new TypeError('invalid encoding.ssrc');
+    // rid is optional.
+    if (encoding.rid && typeof encoding.rid !== 'string')
+        throw new TypeError('invalid encoding.rid');
+    // rtx is optional.
+    if (encoding.rtx && typeof encoding.rtx !== 'object') {
+        throw new TypeError('invalid encoding.rtx');
+    }
+    else if (encoding.rtx) {
+        // RTX ssrc is mandatory if rtx is present.
+        if (typeof encoding.rtx.ssrc !== 'number')
+            throw new TypeError('missing encoding.rtx.ssrc');
+    }
+    // dtx is optional. If unset set it to false.
+    if (!encoding.dtx || typeof encoding.dtx !== 'boolean')
+        encoding.dtx = false;
+    // scalabilityMode is optional.
+    if (encoding.scalabilityMode && typeof encoding.scalabilityMode !== 'string')
+        throw new TypeError('invalid encoding.scalabilityMode');
+}
+exports.validateRtpEncodingParameters = validateRtpEncodingParameters;
+/**
+ * Validates RtcpParameters. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateRtcpParameters(rtcp) {
+    if (typeof rtcp !== 'object')
+        throw new TypeError('rtcp is not an object');
+    // cname is optional.
+    if (rtcp.cname && typeof rtcp.cname !== 'string')
+        throw new TypeError('invalid rtcp.cname');
+    // reducedSize is optional. If unset set it to true.
+    if (!rtcp.reducedSize || typeof rtcp.reducedSize !== 'boolean')
+        rtcp.reducedSize = true;
+}
+exports.validateRtcpParameters = validateRtcpParameters;
+/**
+ * Validates SctpCapabilities. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateSctpCapabilities(caps) {
+    if (typeof caps !== 'object')
+        throw new TypeError('caps is not an object');
+    // numStreams is mandatory.
+    if (!caps.numStreams || typeof caps.numStreams !== 'object')
+        throw new TypeError('missing caps.numStreams');
+    validateNumSctpStreams(caps.numStreams);
+}
+exports.validateSctpCapabilities = validateSctpCapabilities;
+/**
+ * Validates NumSctpStreams. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateNumSctpStreams(numStreams) {
+    if (typeof numStreams !== 'object')
+        throw new TypeError('numStreams is not an object');
+    // OS is mandatory.
+    if (typeof numStreams.OS !== 'number')
+        throw new TypeError('missing numStreams.OS');
+    // MIS is mandatory.
+    if (typeof numStreams.MIS !== 'number')
+        throw new TypeError('missing numStreams.MIS');
+}
+exports.validateNumSctpStreams = validateNumSctpStreams;
+/**
+ * Validates SctpParameters. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateSctpParameters(params) {
+    if (typeof params !== 'object')
+        throw new TypeError('params is not an object');
+    // port is mandatory.
+    if (typeof params.port !== 'number')
+        throw new TypeError('missing params.port');
+    // OS is mandatory.
+    if (typeof params.OS !== 'number')
+        throw new TypeError('missing params.OS');
+    // MIS is mandatory.
+    if (typeof params.MIS !== 'number')
+        throw new TypeError('missing params.MIS');
+    // maxMessageSize is mandatory.
+    if (typeof params.maxMessageSize !== 'number')
+        throw new TypeError('missing params.maxMessageSize');
+}
+exports.validateSctpParameters = validateSctpParameters;
+/**
+ * Validates SctpStreamParameters. It may modify given data by adding missing
+ * fields with default values.
+ * It throws if invalid.
+ */
+function validateSctpStreamParameters(params) {
+    if (typeof params !== 'object')
+        throw new TypeError('params is not an object');
+    // streamId is mandatory.
+    if (typeof params.streamId !== 'number')
+        throw new TypeError('missing params.streamId');
+    // ordered is optional.
+    let orderedGiven = false;
+    if (typeof params.ordered === 'boolean')
+        orderedGiven = true;
+    else
+        params.ordered = true;
+    // maxPacketLifeTime is optional.
+    if (params.maxPacketLifeTime && typeof params.maxPacketLifeTime !== 'number')
+        throw new TypeError('invalid params.maxPacketLifeTime');
+    // maxRetransmits is optional.
+    if (params.maxRetransmits && typeof params.maxRetransmits !== 'number')
+        throw new TypeError('invalid params.maxRetransmits');
+    if (params.maxPacketLifeTime && params.maxRetransmits)
+        throw new TypeError('cannot provide both maxPacketLifeTime and maxRetransmits');
+    if (orderedGiven &&
+        params.ordered &&
+        (params.maxPacketLifeTime || params.maxRetransmits)) {
+        throw new TypeError('cannot be ordered with maxPacketLifeTime or maxRetransmits');
+    }
+    else if (!orderedGiven && (params.maxPacketLifeTime || params.maxRetransmits)) {
+        params.ordered = false;
+    }
+    // label is optional.
+    if (params.label && typeof params.label !== 'string')
+        throw new TypeError('invalid params.label');
+    // protocol is optional.
+    if (params.protocol && typeof params.protocol !== 'string')
+        throw new TypeError('invalid params.protocol');
+}
+exports.validateSctpStreamParameters = validateSctpStreamParameters;
+/**
+ * Generate extended RTP capabilities for sending and receiving.
+ */
+function getExtendedRtpCapabilities(localCaps, remoteCaps) {
+    const extendedRtpCapabilities = {
+        codecs: [],
+        headerExtensions: []
+    };
+    // Match media codecs and keep the order preferred by remoteCaps.
+    for (const remoteCodec of remoteCaps.codecs || []) {
+        if (isRtxCodec(remoteCodec))
+            continue;
+        const matchingLocalCodec = (localCaps.codecs || [])
+            .find((localCodec) => (matchCodecs(localCodec, remoteCodec, { strict: true, modify: true })));
+        if (!matchingLocalCodec)
+            continue;
+        const extendedCodec = {
+            mimeType: matchingLocalCodec.mimeType,
+            kind: matchingLocalCodec.kind,
+            clockRate: matchingLocalCodec.clockRate,
+            channels: matchingLocalCodec.channels,
+            localPayloadType: matchingLocalCodec.preferredPayloadType,
+            localRtxPayloadType: undefined,
+            remotePayloadType: remoteCodec.preferredPayloadType,
+            remoteRtxPayloadType: undefined,
+            localParameters: matchingLocalCodec.parameters,
+            remoteParameters: remoteCodec.parameters,
+            rtcpFeedback: reduceRtcpFeedback(matchingLocalCodec, remoteCodec)
+        };
+        extendedRtpCapabilities.codecs.push(extendedCodec);
+    }
+    // Match RTX codecs.
+    for (const extendedCodec of extendedRtpCapabilities.codecs) {
+        const matchingLocalRtxCodec = localCaps.codecs
+            .find((localCodec) => (isRtxCodec(localCodec) &&
+            localCodec.parameters.apt === extendedCodec.localPayloadType));
+        const matchingRemoteRtxCodec = remoteCaps.codecs
+            .find((remoteCodec) => (isRtxCodec(remoteCodec) &&
+            remoteCodec.parameters.apt === extendedCodec.remotePayloadType));
+        if (matchingLocalRtxCodec && matchingRemoteRtxCodec) {
+            extendedCodec.localRtxPayloadType = matchingLocalRtxCodec.preferredPayloadType;
+            extendedCodec.remoteRtxPayloadType = matchingRemoteRtxCodec.preferredPayloadType;
+        }
+    }
+    // Match header extensions.
+    for (const remoteExt of remoteCaps.headerExtensions) {
+        const matchingLocalExt = localCaps.headerExtensions
+            .find((localExt) => (matchHeaderExtensions(localExt, remoteExt)));
+        if (!matchingLocalExt)
+            continue;
+        const extendedExt = {
+            kind: remoteExt.kind,
+            uri: remoteExt.uri,
+            sendId: matchingLocalExt.preferredId,
+            recvId: remoteExt.preferredId,
+            encrypt: matchingLocalExt.preferredEncrypt,
+            direction: 'sendrecv'
+        };
+        switch (remoteExt.direction) {
+            case 'sendrecv':
+                extendedExt.direction = 'sendrecv';
+                break;
+            case 'recvonly':
+                extendedExt.direction = 'sendonly';
+                break;
+            case 'sendonly':
+                extendedExt.direction = 'recvonly';
+                break;
+            case 'inactive':
+                extendedExt.direction = 'inactive';
+                break;
+        }
+        extendedRtpCapabilities.headerExtensions.push(extendedExt);
+    }
+    return extendedRtpCapabilities;
+}
+exports.getExtendedRtpCapabilities = getExtendedRtpCapabilities;
+/**
+ * Generate RTP capabilities for receiving media based on the given extended
+ * RTP capabilities.
+ */
+function getRecvRtpCapabilities(extendedRtpCapabilities) {
+    const rtpCapabilities = {
+        codecs: [],
+        headerExtensions: []
+    };
+    for (const extendedCodec of extendedRtpCapabilities.codecs) {
+        const codec = {
+            mimeType: extendedCodec.mimeType,
+            kind: extendedCodec.kind,
+            preferredPayloadType: extendedCodec.remotePayloadType,
+            clockRate: extendedCodec.clockRate,
+            channels: extendedCodec.channels,
+            parameters: extendedCodec.localParameters,
+            rtcpFeedback: extendedCodec.rtcpFeedback
+        };
+        rtpCapabilities.codecs.push(codec);
+        // Add RTX codec.
+        if (!extendedCodec.remoteRtxPayloadType)
+            continue;
+        const rtxCodec = {
+            mimeType: `${extendedCodec.kind}/rtx`,
+            kind: extendedCodec.kind,
+            preferredPayloadType: extendedCodec.remoteRtxPayloadType,
+            clockRate: extendedCodec.clockRate,
+            parameters: {
+                apt: extendedCodec.remotePayloadType
+            },
+            rtcpFeedback: []
+        };
+        rtpCapabilities.codecs.push(rtxCodec);
+        // TODO: In the future, we need to add FEC, CN, etc, codecs.
+    }
+    for (const extendedExtension of extendedRtpCapabilities.headerExtensions) {
+        // Ignore RTP extensions not valid for receiving.
+        if (extendedExtension.direction !== 'sendrecv' &&
+            extendedExtension.direction !== 'recvonly') {
+            continue;
+        }
+        const ext = {
+            kind: extendedExtension.kind,
+            uri: extendedExtension.uri,
+            preferredId: extendedExtension.recvId,
+            preferredEncrypt: extendedExtension.encrypt,
+            direction: extendedExtension.direction
+        };
+        rtpCapabilities.headerExtensions.push(ext);
+    }
+    return rtpCapabilities;
+}
+exports.getRecvRtpCapabilities = getRecvRtpCapabilities;
+/**
+ * Generate RTP parameters of the given kind for sending media.
+ * NOTE: mid, encodings and rtcp fields are left empty.
+ */
+function getSendingRtpParameters(kind, extendedRtpCapabilities) {
+    const rtpParameters = {
+        mid: undefined,
+        codecs: [],
+        headerExtensions: [],
+        encodings: [],
+        rtcp: {}
+    };
+    for (const extendedCodec of extendedRtpCapabilities.codecs) {
+        if (extendedCodec.kind !== kind)
+            continue;
+        const codec = {
+            mimeType: extendedCodec.mimeType,
+            payloadType: extendedCodec.localPayloadType,
+            clockRate: extendedCodec.clockRate,
+            channels: extendedCodec.channels,
+            parameters: extendedCodec.localParameters,
+            rtcpFeedback: extendedCodec.rtcpFeedback
+        };
+        rtpParameters.codecs.push(codec);
+        // Add RTX codec.
+        if (extendedCodec.localRtxPayloadType) {
+            const rtxCodec = {
+                mimeType: `${extendedCodec.kind}/rtx`,
+                payloadType: extendedCodec.localRtxPayloadType,
+                clockRate: extendedCodec.clockRate,
+                parameters: {
+                    apt: extendedCodec.localPayloadType
+                },
+                rtcpFeedback: []
+            };
+            rtpParameters.codecs.push(rtxCodec);
+        }
+    }
+    for (const extendedExtension of extendedRtpCapabilities.headerExtensions) {
+        // Ignore RTP extensions of a different kind and those not valid for sending.
+        if ((extendedExtension.kind && extendedExtension.kind !== kind) ||
+            (extendedExtension.direction !== 'sendrecv' &&
+                extendedExtension.direction !== 'sendonly')) {
+            continue;
+        }
+        const ext = {
+            uri: extendedExtension.uri,
+            id: extendedExtension.sendId,
+            encrypt: extendedExtension.encrypt,
+            parameters: {}
+        };
+        rtpParameters.headerExtensions.push(ext);
+    }
+    return rtpParameters;
+}
+exports.getSendingRtpParameters = getSendingRtpParameters;
+/**
+ * Generate RTP parameters of the given kind suitable for the remote SDP answer.
+ */
+function getSendingRemoteRtpParameters(kind, extendedRtpCapabilities) {
+    const rtpParameters = {
+        mid: undefined,
+        codecs: [],
+        headerExtensions: [],
+        encodings: [],
+        rtcp: {}
+    };
+    for (const extendedCodec of extendedRtpCapabilities.codecs) {
+        if (extendedCodec.kind !== kind)
+            continue;
+        const codec = {
+            mimeType: extendedCodec.mimeType,
+            payloadType: extendedCodec.localPayloadType,
+            clockRate: extendedCodec.clockRate,
+            channels: extendedCodec.channels,
+            parameters: extendedCodec.remoteParameters,
+            rtcpFeedback: extendedCodec.rtcpFeedback
+        };
+        rtpParameters.codecs.push(codec);
+        // Add RTX codec.
+        if (extendedCodec.localRtxPayloadType) {
+            const rtxCodec = {
+                mimeType: `${extendedCodec.kind}/rtx`,
+                payloadType: extendedCodec.localRtxPayloadType,
+                clockRate: extendedCodec.clockRate,
+                parameters: {
+                    apt: extendedCodec.localPayloadType
+                },
+                rtcpFeedback: []
+            };
+            rtpParameters.codecs.push(rtxCodec);
+        }
+    }
+    for (const extendedExtension of extendedRtpCapabilities.headerExtensions) {
+        // Ignore RTP extensions of a different kind and those not valid for sending.
+        if ((extendedExtension.kind && extendedExtension.kind !== kind) ||
+            (extendedExtension.direction !== 'sendrecv' &&
+                extendedExtension.direction !== 'sendonly')) {
+            continue;
+        }
+        const ext = {
+            uri: extendedExtension.uri,
+            id: extendedExtension.sendId,
+            encrypt: extendedExtension.encrypt,
+            parameters: {}
+        };
+        rtpParameters.headerExtensions.push(ext);
+    }
+    // Reduce codecs' RTCP feedback. Use Transport-CC if available, REMB otherwise.
+    if (rtpParameters.headerExtensions.some((ext) => (ext.uri === 'http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01'))) {
+        for (const codec of rtpParameters.codecs) {
+            codec.rtcpFeedback = (codec.rtcpFeedback || [])
+                .filter((fb) => fb.type !== 'goog-remb');
+        }
+    }
+    else if (rtpParameters.headerExtensions.some((ext) => (ext.uri === 'http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time'))) {
+        for (const codec of rtpParameters.codecs) {
+            codec.rtcpFeedback = (codec.rtcpFeedback || [])
+                .filter((fb) => fb.type !== 'transport-cc');
+        }
+    }
+    else {
+        for (const codec of rtpParameters.codecs) {
+            codec.rtcpFeedback = (codec.rtcpFeedback || [])
+                .filter((fb) => (fb.type !== 'transport-cc' &&
+                fb.type !== 'goog-remb'));
+        }
+    }
+    return rtpParameters;
+}
+exports.getSendingRemoteRtpParameters = getSendingRemoteRtpParameters;
+/**
+ * Reduce given codecs by returning an array of codecs "compatible" with the
+ * given capability codec. If no capability codec is given, take the first
+ * one(s).
+ *
+ * Given codecs must be generated by ortc.getSendingRtpParameters() or
+ * ortc.getSendingRemoteRtpParameters().
+ *
+ * The returned array of codecs also include a RTX codec if available.
+ */
+function reduceCodecs(codecs, capCodec) {
+    const filteredCodecs = [];
+    // If no capability codec is given, take the first one (and RTX).
+    if (!capCodec) {
+        filteredCodecs.push(codecs[0]);
+        if (isRtxCodec(codecs[1]))
+            filteredCodecs.push(codecs[1]);
+    }
+    // Otherwise look for a compatible set of codecs.
+    else {
+        for (let idx = 0; idx < codecs.length; ++idx) {
+            if (matchCodecs(codecs[idx], capCodec)) {
+                filteredCodecs.push(codecs[idx]);
+                if (isRtxCodec(codecs[idx + 1]))
+                    filteredCodecs.push(codecs[idx + 1]);
+                break;
+            }
+        }
+        if (filteredCodecs.length === 0)
+            throw new TypeError('no matching codec found');
+    }
+    return filteredCodecs;
+}
+exports.reduceCodecs = reduceCodecs;
+/**
+ * Create RTP parameters for a Consumer for the RTP probator.
+ */
+function generateProbatorRtpParameters(videoRtpParameters) {
+    // Clone given reference video RTP parameters.
+    videoRtpParameters = utils.clone(videoRtpParameters, {});
+    // This may throw.
+    validateRtpParameters(videoRtpParameters);
+    const rtpParameters = {
+        mid: RTP_PROBATOR_MID,
+        codecs: [],
+        headerExtensions: [],
+        encodings: [{ ssrc: RTP_PROBATOR_SSRC }],
+        rtcp: { cname: 'probator' }
+    };
+    rtpParameters.codecs.push(videoRtpParameters.codecs[0]);
+    rtpParameters.codecs[0].payloadType = RTP_PROBATOR_CODEC_PAYLOAD_TYPE;
+    rtpParameters.headerExtensions = videoRtpParameters.headerExtensions;
+    return rtpParameters;
+}
+exports.generateProbatorRtpParameters = generateProbatorRtpParameters;
+/**
+ * Whether media can be sent based on the given RTP capabilities.
+ */
+function canSend(kind, extendedRtpCapabilities) {
+    return extendedRtpCapabilities.codecs.
+        some((codec) => codec.kind === kind);
+}
+exports.canSend = canSend;
+/**
+ * Whether the given RTP parameters can be received with the given RTP
+ * capabilities.
+ */
+function canReceive(rtpParameters, extendedRtpCapabilities) {
+    // This may throw.
+    validateRtpParameters(rtpParameters);
+    if (rtpParameters.codecs.length === 0)
+        return false;
+    const firstMediaCodec = rtpParameters.codecs[0];
+    return extendedRtpCapabilities.codecs
+        .some((codec) => codec.remotePayloadType === firstMediaCodec.payloadType);
+}
+exports.canReceive = canReceive;
+function isRtxCodec(codec) {
+    if (!codec)
+        return false;
+    return /.+\/rtx$/i.test(codec.mimeType);
+}
+function matchCodecs(aCodec, bCodec, { strict = false, modify = false } = {}) {
+    const aMimeType = aCodec.mimeType.toLowerCase();
+    const bMimeType = bCodec.mimeType.toLowerCase();
+    if (aMimeType !== bMimeType)
+        return false;
+    if (aCodec.clockRate !== bCodec.clockRate)
+        return false;
+    if (aCodec.channels !== bCodec.channels)
+        return false;
+    // Per codec special checks.
+    switch (aMimeType) {
+        case 'video/h264':
+            {
+                if (strict) {
+                    const aPacketizationMode = aCodec.parameters['packetization-mode'] || 0;
+                    const bPacketizationMode = bCodec.parameters['packetization-mode'] || 0;
+                    if (aPacketizationMode !== bPacketizationMode)
+                        return false;
+                    if (!h264.isSameProfile(aCodec.parameters, bCodec.parameters))
+                        return false;
+                    let selectedProfileLevelId;
+                    try {
+                        selectedProfileLevelId =
+                            h264.generateProfileLevelIdForAnswer(aCodec.parameters, bCodec.parameters);
+                    }
+                    catch (error) {
+                        return false;
+                    }
+                    if (modify) {
+                        if (selectedProfileLevelId) {
+                            aCodec.parameters['profile-level-id'] = selectedProfileLevelId;
+                            bCodec.parameters['profile-level-id'] = selectedProfileLevelId;
+                        }
+                        else {
+                            delete aCodec.parameters['profile-level-id'];
+                            delete bCodec.parameters['profile-level-id'];
+                        }
+                    }
+                }
+                break;
+            }
+        case 'video/vp9':
+            {
+                if (strict) {
+                    const aProfileId = aCodec.parameters['profile-id'] || 0;
+                    const bProfileId = bCodec.parameters['profile-id'] || 0;
+                    if (aProfileId !== bProfileId)
+                        return false;
+                }
+                break;
+            }
+    }
+    return true;
+}
+function matchHeaderExtensions(aExt, bExt) {
+    if (aExt.kind && bExt.kind && aExt.kind !== bExt.kind)
+        return false;
+    if (aExt.uri !== bExt.uri)
+        return false;
+    return true;
+}
+function reduceRtcpFeedback(codecA, codecB) {
+    const reducedRtcpFeedback = [];
+    for (const aFb of codecA.rtcpFeedback || []) {
+        const matchingBFb = (codecB.rtcpFeedback || [])
+            .find((bFb) => (bFb.type === aFb.type &&
+            (bFb.parameter === aFb.parameter || (!bFb.parameter && !aFb.parameter))));
+        if (matchingBFb)
+            reducedRtcpFeedback.push(matchingBFb);
+    }
+    return reducedRtcpFeedback;
+}
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InvalidStateError = exports.UnsupportedError = void 0;
+/**
+ * Error indicating not support for something.
+ */
+class UnsupportedError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UnsupportedError';
+        if (Error.hasOwnProperty('captureStackTrace')) // Just in V8.
+         {
+            // @ts-ignore
+            Error.captureStackTrace(this, UnsupportedError);
+        }
+        else {
+            this.stack = (new Error(message)).stack;
+        }
+    }
+}
+exports.UnsupportedError = UnsupportedError;
+/**
+ * Error produced when calling a method in an invalid state.
+ */
+class InvalidStateError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'InvalidStateError';
+        if (Error.hasOwnProperty('captureStackTrace')) // Just in V8.
+         {
+            // @ts-ignore
+            Error.captureStackTrace(this, InvalidStateError);
+        }
+        else {
+            this.stack = (new Error(message)).stack;
+        }
+    }
+}
+exports.InvalidStateError = InvalidStateError;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var parser = __webpack_require__(31);
+var writer = __webpack_require__(32);
+
+exports.write = writer;
+exports.parse = parser.parse;
+exports.parseParams = parser.parseParams;
+exports.parseFmtpConfig = parser.parseFmtpConfig; // Alias of parseParams().
+exports.parsePayloads = parser.parsePayloads;
+exports.parseRemoteCandidates = parser.parseRemoteCandidates;
+exports.parseImageAttributes = parser.parseImageAttributes;
+exports.parseSimulcastStreamList = parser.parseSimulcastStreamList;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.HandlerInterface = void 0;
+const EnhancedEventEmitter_1 = __webpack_require__(9);
+class HandlerInterface extends EnhancedEventEmitter_1.EnhancedEventEmitter {
+    /**
+     * @emits @connect - (
+     *     { dtlsParameters: DtlsParameters },
+     *     callback: Function,
+     *     errback: Function
+     *   )
+     * @emits @connectionstatechange - (connectionState: ConnectionState)
+     */
+    constructor() {
+        super();
+    }
+}
+exports.HandlerInterface = HandlerInterface;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.applyCodecParameters = exports.getCname = exports.extractDtlsParameters = exports.extractRtpCapabilities = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+function extractRtpCapabilities({ sdpObject }) {
+    // Map of RtpCodecParameters indexed by payload type.
+    const codecsMap = new Map();
+    // Array of RtpHeaderExtensions.
+    const headerExtensions = [];
+    // Whether a m=audio/video section has been already found.
+    let gotAudio = false;
+    let gotVideo = false;
+    for (const m of sdpObject.media) {
+        const kind = m.type;
+        switch (kind) {
+            case 'audio':
+                {
+                    if (gotAudio)
+                        continue;
+                    gotAudio = true;
+                    break;
+                }
+            case 'video':
+                {
+                    if (gotVideo)
+                        continue;
+                    gotVideo = true;
+                    break;
+                }
+            default:
+                {
+                    continue;
+                }
+        }
+        // Get codecs.
+        for (const rtp of m.rtp) {
+            const codec = {
+                kind: kind,
+                mimeType: `${kind}/${rtp.codec}`,
+                preferredPayloadType: rtp.payload,
+                clockRate: rtp.rate,
+                channels: rtp.encoding,
+                parameters: {},
+                rtcpFeedback: []
+            };
+            codecsMap.set(codec.preferredPayloadType, codec);
+        }
+        // Get codec parameters.
+        for (const fmtp of m.fmtp || []) {
+            const parameters = sdpTransform.parseParams(fmtp.config);
+            const codec = codecsMap.get(fmtp.payload);
+            if (!codec)
+                continue;
+            // Specials case to convert parameter value to string.
+            if (parameters && parameters.hasOwnProperty('profile-level-id'))
+                parameters['profile-level-id'] = String(parameters['profile-level-id']);
+            codec.parameters = parameters;
+        }
+        // Get RTCP feedback for each codec.
+        for (const fb of m.rtcpFb || []) {
+            const codec = codecsMap.get(fb.payload);
+            if (!codec)
+                continue;
+            const feedback = {
+                type: fb.type,
+                parameter: fb.subtype
+            };
+            if (!feedback.parameter)
+                delete feedback.parameter;
+            codec.rtcpFeedback.push(feedback);
+        }
+        // Get RTP header extensions.
+        for (const ext of m.ext || []) {
+            // Ignore encrypted extensions (not yet supported in mediasoup).
+            if (ext['encrypt-uri'])
+                continue;
+            const headerExtension = {
+                kind: kind,
+                uri: ext.uri,
+                preferredId: ext.value
+            };
+            headerExtensions.push(headerExtension);
+        }
+    }
+    const rtpCapabilities = {
+        codecs: Array.from(codecsMap.values()),
+        headerExtensions: headerExtensions
+    };
+    return rtpCapabilities;
+}
+exports.extractRtpCapabilities = extractRtpCapabilities;
+function extractDtlsParameters({ sdpObject }) {
+    const mediaObject = (sdpObject.media || [])
+        .find((m) => (m.iceUfrag && m.port !== 0));
+    if (!mediaObject)
+        throw new Error('no active media section found');
+    const fingerprint = mediaObject.fingerprint || sdpObject.fingerprint;
+    let role;
+    switch (mediaObject.setup) {
+        case 'active':
+            role = 'client';
+            break;
+        case 'passive':
+            role = 'server';
+            break;
+        case 'actpass':
+            role = 'auto';
+            break;
+    }
+    const dtlsParameters = {
+        role,
+        fingerprints: [
+            {
+                algorithm: fingerprint.type,
+                value: fingerprint.hash
+            }
+        ]
+    };
+    return dtlsParameters;
+}
+exports.extractDtlsParameters = extractDtlsParameters;
+function getCname({ offerMediaObject }) {
+    const ssrcCnameLine = (offerMediaObject.ssrcs || [])
+        .find((line) => line.attribute === 'cname');
+    if (!ssrcCnameLine)
+        return '';
+    return ssrcCnameLine.value;
+}
+exports.getCname = getCname;
+/**
+ * Apply codec parameters in the given SDP m= section answer based on the
+ * given RTP parameters of an offer.
+ */
+function applyCodecParameters({ offerRtpParameters, answerMediaObject }) {
+    for (const codec of offerRtpParameters.codecs) {
+        const mimeType = codec.mimeType.toLowerCase();
+        // Avoid parsing codec parameters for unhandled codecs.
+        if (mimeType !== 'audio/opus')
+            continue;
+        const rtp = (answerMediaObject.rtp || [])
+            .find((r) => r.payload === codec.payloadType);
+        if (!rtp)
+            continue;
+        // Just in case.
+        answerMediaObject.fmtp = answerMediaObject.fmtp || [];
+        let fmtp = answerMediaObject.fmtp
+            .find((f) => f.payload === codec.payloadType);
+        if (!fmtp) {
+            fmtp = { payload: codec.payloadType, config: '' };
+            answerMediaObject.fmtp.push(fmtp);
+        }
+        const parameters = sdpTransform.parseParams(fmtp.config);
+        switch (mimeType) {
+            case 'audio/opus':
+                {
+                    const spropStereo = codec.parameters['sprop-stereo'];
+                    if (spropStereo !== undefined)
+                        parameters.stereo = spropStereo ? 1 : 0;
+                    break;
+                }
+        }
+        // Write the codec fmtp.config back.
+        fmtp.config = '';
+        for (const key of Object.keys(parameters)) {
+            if (fmtp.config)
+                fmtp.config += ';';
+            fmtp.config += `${key}=${parameters[key]}`;
+        }
+    }
+}
+exports.applyCodecParameters = applyCodecParameters;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RemoteSdp = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+const Logger_1 = __webpack_require__(1);
+const MediaSection_1 = __webpack_require__(33);
+const logger = new Logger_1.Logger('RemoteSdp');
+class RemoteSdp {
+    constructor({ iceParameters, iceCandidates, dtlsParameters, sctpParameters, plainRtpParameters, planB = false }) {
+        // MediaSection instances with same order as in the SDP.
+        this._mediaSections = [];
+        // MediaSection indices indexed by MID.
+        this._midToIndex = new Map();
+        this._iceParameters = iceParameters;
+        this._iceCandidates = iceCandidates;
+        this._dtlsParameters = dtlsParameters;
+        this._sctpParameters = sctpParameters;
+        this._plainRtpParameters = plainRtpParameters;
+        this._planB = planB;
+        this._sdpObject =
+            {
+                version: 0,
+                origin: {
+                    address: '0.0.0.0',
+                    ipVer: 4,
+                    netType: 'IN',
+                    sessionId: 10000,
+                    sessionVersion: 0,
+                    username: 'mediasoup-client'
+                },
+                name: '-',
+                timing: { start: 0, stop: 0 },
+                media: []
+            };
+        // If ICE parameters are given, add ICE-Lite indicator.
+        if (iceParameters && iceParameters.iceLite) {
+            this._sdpObject.icelite = 'ice-lite';
+        }
+        // If DTLS parameters are given, assume WebRTC and BUNDLE.
+        if (dtlsParameters) {
+            this._sdpObject.msidSemantic = { semantic: 'WMS', token: '*' };
+            // NOTE: We take the latest fingerprint.
+            const numFingerprints = this._dtlsParameters.fingerprints.length;
+            this._sdpObject.fingerprint =
+                {
+                    type: dtlsParameters.fingerprints[numFingerprints - 1].algorithm,
+                    hash: dtlsParameters.fingerprints[numFingerprints - 1].value
+                };
+            this._sdpObject.groups = [{ type: 'BUNDLE', mids: '' }];
+        }
+        // If there are plain RPT parameters, override SDP origin.
+        if (plainRtpParameters) {
+            this._sdpObject.origin.address = plainRtpParameters.ip;
+            this._sdpObject.origin.ipVer = plainRtpParameters.ipVersion;
+        }
+    }
+    updateIceParameters(iceParameters) {
+        logger.debug('updateIceParameters() [iceParameters:%o]', iceParameters);
+        this._iceParameters = iceParameters;
+        this._sdpObject.icelite = iceParameters.iceLite ? 'ice-lite' : undefined;
+        for (const mediaSection of this._mediaSections) {
+            mediaSection.setIceParameters(iceParameters);
+        }
+    }
+    updateDtlsRole(role) {
+        logger.debug('updateDtlsRole() [role:%s]', role);
+        this._dtlsParameters.role = role;
+        for (const mediaSection of this._mediaSections) {
+            mediaSection.setDtlsRole(role);
+        }
+    }
+    getNextMediaSectionIdx() {
+        // If a closed media section is found, return its index.
+        for (let idx = 0; idx < this._mediaSections.length; ++idx) {
+            const mediaSection = this._mediaSections[idx];
+            if (mediaSection.closed)
+                return { idx, reuseMid: mediaSection.mid };
+        }
+        // If no closed media section is found, return next one.
+        return { idx: this._mediaSections.length };
+    }
+    send({ offerMediaObject, reuseMid, offerRtpParameters, answerRtpParameters, codecOptions, extmapAllowMixed = false }) {
+        const mediaSection = new MediaSection_1.AnswerMediaSection({
+            iceParameters: this._iceParameters,
+            iceCandidates: this._iceCandidates,
+            dtlsParameters: this._dtlsParameters,
+            plainRtpParameters: this._plainRtpParameters,
+            planB: this._planB,
+            offerMediaObject,
+            offerRtpParameters,
+            answerRtpParameters,
+            codecOptions,
+            extmapAllowMixed
+        });
+        // Unified-Plan with closed media section replacement.
+        if (reuseMid) {
+            this._replaceMediaSection(mediaSection, reuseMid);
+        }
+        // Unified-Plan or Plan-B with different media kind.
+        else if (!this._midToIndex.has(mediaSection.mid)) {
+            this._addMediaSection(mediaSection);
+        }
+        // Plan-B with same media kind.
+        else {
+            this._replaceMediaSection(mediaSection);
+        }
+    }
+    receive({ mid, kind, offerRtpParameters, streamId, trackId }) {
+        const idx = this._midToIndex.get(mid);
+        let mediaSection;
+        if (idx !== undefined)
+            mediaSection = this._mediaSections[idx];
+        // Unified-Plan or different media kind.
+        if (!mediaSection) {
+            mediaSection = new MediaSection_1.OfferMediaSection({
+                iceParameters: this._iceParameters,
+                iceCandidates: this._iceCandidates,
+                dtlsParameters: this._dtlsParameters,
+                plainRtpParameters: this._plainRtpParameters,
+                planB: this._planB,
+                mid,
+                kind,
+                offerRtpParameters,
+                streamId,
+                trackId
+            });
+            // Let's try to recycle a closed media section (if any).
+            // NOTE: Yes, we can recycle a closed m=audio section with a new m=video.
+            const oldMediaSection = this._mediaSections.find((m) => (m.closed));
+            if (oldMediaSection) {
+                this._replaceMediaSection(mediaSection, oldMediaSection.mid);
+            }
+            else {
+                this._addMediaSection(mediaSection);
+            }
+        }
+        // Plan-B.
+        else {
+            mediaSection.planBReceive({ offerRtpParameters, streamId, trackId });
+            this._replaceMediaSection(mediaSection);
+        }
+    }
+    disableMediaSection(mid) {
+        const idx = this._midToIndex.get(mid);
+        if (idx === undefined) {
+            throw new Error(`no media section found with mid '${mid}'`);
+        }
+        const mediaSection = this._mediaSections[idx];
+        mediaSection.disable();
+    }
+    closeMediaSection(mid) {
+        const idx = this._midToIndex.get(mid);
+        if (idx === undefined) {
+            throw new Error(`no media section found with mid '${mid}'`);
+        }
+        const mediaSection = this._mediaSections[idx];
+        // NOTE: Closing the first m section is a pain since it invalidates the
+        // bundled transport, so let's avoid it.
+        if (mid === this._firstMid) {
+            logger.debug('closeMediaSection() | cannot close first media section, disabling it instead [mid:%s]', mid);
+            this.disableMediaSection(mid);
+            return;
+        }
+        mediaSection.close();
+        // Regenerate BUNDLE mids.
+        this._regenerateBundleMids();
+    }
+    planBStopReceiving({ mid, offerRtpParameters }) {
+        const idx = this._midToIndex.get(mid);
+        if (idx === undefined) {
+            throw new Error(`no media section found with mid '${mid}'`);
+        }
+        const mediaSection = this._mediaSections[idx];
+        mediaSection.planBStopReceiving({ offerRtpParameters });
+        this._replaceMediaSection(mediaSection);
+    }
+    sendSctpAssociation({ offerMediaObject }) {
+        const mediaSection = new MediaSection_1.AnswerMediaSection({
+            iceParameters: this._iceParameters,
+            iceCandidates: this._iceCandidates,
+            dtlsParameters: this._dtlsParameters,
+            sctpParameters: this._sctpParameters,
+            plainRtpParameters: this._plainRtpParameters,
+            offerMediaObject
+        });
+        this._addMediaSection(mediaSection);
+    }
+    receiveSctpAssociation({ oldDataChannelSpec = false } = {}) {
+        const mediaSection = new MediaSection_1.OfferMediaSection({
+            iceParameters: this._iceParameters,
+            iceCandidates: this._iceCandidates,
+            dtlsParameters: this._dtlsParameters,
+            sctpParameters: this._sctpParameters,
+            plainRtpParameters: this._plainRtpParameters,
+            mid: 'datachannel',
+            kind: 'application',
+            oldDataChannelSpec
+        });
+        this._addMediaSection(mediaSection);
+    }
+    getSdp() {
+        // Increase SDP version.
+        this._sdpObject.origin.sessionVersion++;
+        return sdpTransform.write(this._sdpObject);
+    }
+    _addMediaSection(newMediaSection) {
+        if (!this._firstMid)
+            this._firstMid = newMediaSection.mid;
+        // Add to the vector.
+        this._mediaSections.push(newMediaSection);
+        // Add to the map.
+        this._midToIndex.set(newMediaSection.mid, this._mediaSections.length - 1);
+        // Add to the SDP object.
+        this._sdpObject.media.push(newMediaSection.getObject());
+        // Regenerate BUNDLE mids.
+        this._regenerateBundleMids();
+    }
+    _replaceMediaSection(newMediaSection, reuseMid) {
+        // Store it in the map.
+        if (typeof reuseMid === 'string') {
+            const idx = this._midToIndex.get(reuseMid);
+            if (idx === undefined) {
+                throw new Error(`no media section found for reuseMid '${reuseMid}'`);
+            }
+            const oldMediaSection = this._mediaSections[idx];
+            // Replace the index in the vector with the new media section.
+            this._mediaSections[idx] = newMediaSection;
+            // Update the map.
+            this._midToIndex.delete(oldMediaSection.mid);
+            this._midToIndex.set(newMediaSection.mid, idx);
+            // Update the SDP object.
+            this._sdpObject.media[idx] = newMediaSection.getObject();
+            // Regenerate BUNDLE mids.
+            this._regenerateBundleMids();
+        }
+        else {
+            const idx = this._midToIndex.get(newMediaSection.mid);
+            if (idx === undefined) {
+                throw new Error(`no media section found with mid '${newMediaSection.mid}'`);
+            }
+            // Replace the index in the vector with the new media section.
+            this._mediaSections[idx] = newMediaSection;
+            // Update the SDP object.
+            this._sdpObject.media[idx] = newMediaSection.getObject();
+        }
+    }
+    _regenerateBundleMids() {
+        if (!this._dtlsParameters)
+            return;
+        this._sdpObject.groups[0].mids = this._mediaSections
+            .filter((mediaSection) => !mediaSection.closed)
+            .map((mediaSection) => mediaSection.mid)
+            .join(' ');
+    }
+}
+exports.RemoteSdp = RemoteSdp;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EnhancedEventEmitter = void 0;
+const events_1 = __webpack_require__(14);
+const Logger_1 = __webpack_require__(1);
+const logger = new Logger_1.Logger('EnhancedEventEmitter');
+class EnhancedEventEmitter extends events_1.EventEmitter {
+    constructor() {
+        super();
+        this.setMaxListeners(Infinity);
+    }
+    safeEmit(event, ...args) {
+        const numListeners = this.listenerCount(event);
+        try {
+            return this.emit(event, ...args);
+        }
+        catch (error) {
+            logger.error('safeEmit() | event listener threw an error [event:%s]:%o', event, error);
+            return Boolean(numListeners);
+        }
+    }
+    async safeEmitAsPromise(event, ...args) {
+        return new Promise((resolve, reject) => {
+            try {
+                this.emit(event, ...args, resolve, reject);
+            }
+            catch (error) {
+                logger.error('safeEmitAsPromise() | event listener threw an error [event:%s]:%o', event, error);
+                reject(error);
+            }
+        });
+    }
+}
+exports.EnhancedEventEmitter = EnhancedEventEmitter;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {/* eslint-env browser */
+
+/**
+ * This is the web browser implementation of `debug()`.
+ */
+
+exports.formatArgs = formatArgs;
+exports.save = save;
+exports.load = load;
+exports.useColors = useColors;
+exports.storage = localstorage();
+exports.destroy = (() => {
+	let warned = false;
+
+	return () => {
+		if (!warned) {
+			warned = true;
+			console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+		}
+	};
+})();
+
+/**
+ * Colors.
+ */
+
+exports.colors = [
+	'#0000CC',
+	'#0000FF',
+	'#0033CC',
+	'#0033FF',
+	'#0066CC',
+	'#0066FF',
+	'#0099CC',
+	'#0099FF',
+	'#00CC00',
+	'#00CC33',
+	'#00CC66',
+	'#00CC99',
+	'#00CCCC',
+	'#00CCFF',
+	'#3300CC',
+	'#3300FF',
+	'#3333CC',
+	'#3333FF',
+	'#3366CC',
+	'#3366FF',
+	'#3399CC',
+	'#3399FF',
+	'#33CC00',
+	'#33CC33',
+	'#33CC66',
+	'#33CC99',
+	'#33CCCC',
+	'#33CCFF',
+	'#6600CC',
+	'#6600FF',
+	'#6633CC',
+	'#6633FF',
+	'#66CC00',
+	'#66CC33',
+	'#9900CC',
+	'#9900FF',
+	'#9933CC',
+	'#9933FF',
+	'#99CC00',
+	'#99CC33',
+	'#CC0000',
+	'#CC0033',
+	'#CC0066',
+	'#CC0099',
+	'#CC00CC',
+	'#CC00FF',
+	'#CC3300',
+	'#CC3333',
+	'#CC3366',
+	'#CC3399',
+	'#CC33CC',
+	'#CC33FF',
+	'#CC6600',
+	'#CC6633',
+	'#CC9900',
+	'#CC9933',
+	'#CCCC00',
+	'#CCCC33',
+	'#FF0000',
+	'#FF0033',
+	'#FF0066',
+	'#FF0099',
+	'#FF00CC',
+	'#FF00FF',
+	'#FF3300',
+	'#FF3333',
+	'#FF3366',
+	'#FF3399',
+	'#FF33CC',
+	'#FF33FF',
+	'#FF6600',
+	'#FF6633',
+	'#FF9900',
+	'#FF9933',
+	'#FFCC00',
+	'#FFCC33'
+];
+
+/**
+ * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+ * and the Firebug extension (any Firefox version) are known
+ * to support "%c" CSS customizations.
+ *
+ * TODO: add a `localStorage` variable to explicitly enable/disable colors
+ */
+
+// eslint-disable-next-line complexity
+function useColors() {
+	// NB: In an Electron preload script, document will be defined but not fully
+	// initialized. Since we know we're in Chrome, we'll just detect this case
+	// explicitly
+	if (typeof window !== 'undefined' && window.process && (window.process.type === 'renderer' || window.process.__nwjs)) {
+		return true;
+	}
+
+	// Internet Explorer and Edge do not support colors.
+	if (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) {
+		return false;
+	}
+
+	// Is webkit? http://stackoverflow.com/a/16459606/376773
+	// document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
+	return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
+		// Is firebug? http://stackoverflow.com/a/398120/376773
+		(typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
+		// Is firefox >= v31?
+		// https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
+		// Double check webkit in userAgent just in case we are in a worker
+		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+}
+
+/**
+ * Colorize log arguments if enabled.
+ *
+ * @api public
+ */
+
+function formatArgs(args) {
+	args[0] = (this.useColors ? '%c' : '') +
+		this.namespace +
+		(this.useColors ? ' %c' : ' ') +
+		args[0] +
+		(this.useColors ? '%c ' : ' ') +
+		'+' + module.exports.humanize(this.diff);
+
+	if (!this.useColors) {
+		return;
+	}
+
+	const c = 'color: ' + this.color;
+	args.splice(1, 0, c, 'color: inherit');
+
+	// The final "%c" is somewhat tricky, because there could be other
+	// arguments passed either before or after the %c, so we need to
+	// figure out the correct index to insert the CSS into
+	let index = 0;
+	let lastC = 0;
+	args[0].replace(/%[a-zA-Z%]/g, match => {
+		if (match === '%%') {
+			return;
+		}
+		index++;
+		if (match === '%c') {
+			// We only are interested in the *last* %c
+			// (the user may have provided their own)
+			lastC = index;
+		}
+	});
+
+	args.splice(lastC, 0, c);
+}
+
+/**
+ * Invokes `console.debug()` when available.
+ * No-op when `console.debug` is not a "function".
+ * If `console.debug` is not available, falls back
+ * to `console.log`.
+ *
+ * @api public
+ */
+exports.log = console.debug || console.log || (() => {});
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+function save(namespaces) {
+	try {
+		if (namespaces) {
+			exports.storage.setItem('debug', namespaces);
+		} else {
+			exports.storage.removeItem('debug');
+		}
+	} catch (error) {
+		// Swallow
+		// XXX (@Qix-) should we be logging these?
+	}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+function load() {
+	let r;
+	try {
+		r = exports.storage.getItem('debug');
+	} catch (error) {
+		// Swallow
+		// XXX (@Qix-) should we be logging these?
+	}
+
+	// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
+	if (!r && typeof process !== 'undefined' && 'env' in process) {
+		r = process.env.DEBUG;
+	}
+
+	return r;
+}
+
+/**
+ * Localstorage attempts to return the localstorage.
+ *
+ * This is necessary because safari throws
+ * when a user disables cookies/localstorage
+ * and you attempt to access it.
+ *
+ * @return {LocalStorage}
+ * @api private
+ */
+
+function localstorage() {
+	try {
+		// TVMLKit (Apple TV JS Runtime) does not have a window object, just localStorage in the global context
+		// The Browser also has localStorage in the global context.
+		return localStorage;
+	} catch (error) {
+		// Swallow
+		// XXX (@Qix-) should we be logging these?
+	}
+}
+
+module.exports = __webpack_require__(25)(exports);
+
+const {formatters} = module.exports;
+
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+formatters.j = function (v) {
+	try {
+		return JSON.stringify(v);
+	} catch (error) {
+		return '[UnexpectedJSONParseError]: ' + error.message;
+	}
+};
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(15)))
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.addLegacySimulcast = exports.getRtpEncodings = void 0;
+function getRtpEncodings({ offerMediaObject }) {
+    const ssrcs = new Set();
+    for (const line of offerMediaObject.ssrcs || []) {
+        const ssrc = line.id;
+        ssrcs.add(ssrc);
+    }
+    if (ssrcs.size === 0)
+        throw new Error('no a=ssrc lines found');
+    const ssrcToRtxSsrc = new Map();
+    // First assume RTX is used.
+    for (const line of offerMediaObject.ssrcGroups || []) {
+        if (line.semantics !== 'FID')
+            continue;
+        let [ssrc, rtxSsrc] = line.ssrcs.split(/\s+/);
+        ssrc = Number(ssrc);
+        rtxSsrc = Number(rtxSsrc);
+        if (ssrcs.has(ssrc)) {
+            // Remove both the SSRC and RTX SSRC from the set so later we know that they
+            // are already handled.
+            ssrcs.delete(ssrc);
+            ssrcs.delete(rtxSsrc);
+            // Add to the map.
+            ssrcToRtxSsrc.set(ssrc, rtxSsrc);
+        }
+    }
+    // If the set of SSRCs is not empty it means that RTX is not being used, so take
+    // media SSRCs from there.
+    for (const ssrc of ssrcs) {
+        // Add to the map.
+        ssrcToRtxSsrc.set(ssrc, null);
+    }
+    const encodings = [];
+    for (const [ssrc, rtxSsrc] of ssrcToRtxSsrc) {
+        const encoding = { ssrc };
+        if (rtxSsrc)
+            encoding.rtx = { ssrc: rtxSsrc };
+        encodings.push(encoding);
+    }
+    return encodings;
+}
+exports.getRtpEncodings = getRtpEncodings;
+/**
+ * Adds multi-ssrc based simulcast into the given SDP media section offer.
+ */
+function addLegacySimulcast({ offerMediaObject, numStreams }) {
+    if (numStreams <= 1)
+        throw new TypeError('numStreams must be greater than 1');
+    // Get the SSRC.
+    const ssrcMsidLine = (offerMediaObject.ssrcs || [])
+        .find((line) => line.attribute === 'msid');
+    if (!ssrcMsidLine)
+        throw new Error('a=ssrc line with msid information not found');
+    const [streamId, trackId] = ssrcMsidLine.value.split(' ');
+    const firstSsrc = ssrcMsidLine.id;
+    let firstRtxSsrc;
+    // Get the SSRC for RTX.
+    (offerMediaObject.ssrcGroups || [])
+        .some((line) => {
+        if (line.semantics !== 'FID')
+            return false;
+        const ssrcs = line.ssrcs.split(/\s+/);
+        if (Number(ssrcs[0]) === firstSsrc) {
+            firstRtxSsrc = Number(ssrcs[1]);
+            return true;
+        }
+        else {
+            return false;
+        }
+    });
+    const ssrcCnameLine = offerMediaObject.ssrcs
+        .find((line) => line.attribute === 'cname');
+    if (!ssrcCnameLine)
+        throw new Error('a=ssrc line with cname information not found');
+    const cname = ssrcCnameLine.value;
+    const ssrcs = [];
+    const rtxSsrcs = [];
+    for (let i = 0; i < numStreams; ++i) {
+        ssrcs.push(firstSsrc + i);
+        if (firstRtxSsrc)
+            rtxSsrcs.push(firstRtxSsrc + i);
+    }
+    offerMediaObject.ssrcGroups = [];
+    offerMediaObject.ssrcs = [];
+    offerMediaObject.ssrcGroups.push({
+        semantics: 'SIM',
+        ssrcs: ssrcs.join(' ')
+    });
+    for (let i = 0; i < ssrcs.length; ++i) {
+        const ssrc = ssrcs[i];
+        offerMediaObject.ssrcs.push({
+            id: ssrc,
+            attribute: 'cname',
+            value: cname
+        });
+        offerMediaObject.ssrcs.push({
+            id: ssrc,
+            attribute: 'msid',
+            value: `${streamId} ${trackId}`
+        });
+    }
+    for (let i = 0; i < rtxSsrcs.length; ++i) {
+        const ssrc = ssrcs[i];
+        const rtxSsrc = rtxSsrcs[i];
+        offerMediaObject.ssrcs.push({
+            id: rtxSsrc,
+            attribute: 'cname',
+            value: cname
+        });
+        offerMediaObject.ssrcs.push({
+            id: rtxSsrc,
+            attribute: 'msid',
+            value: `${streamId} ${trackId}`
+        });
+        offerMediaObject.ssrcGroups.push({
+            semantics: 'FID',
+            ssrcs: `${ssrc} ${rtxSsrc}`
+        });
+    }
+}
+exports.addLegacySimulcast = addLegacySimulcast;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.addLegacySimulcast = exports.getRtpEncodings = void 0;
+function getRtpEncodings({ offerMediaObject, track }) {
+    // First media SSRC (or the only one).
+    let firstSsrc;
+    const ssrcs = new Set();
+    for (const line of offerMediaObject.ssrcs || []) {
+        if (line.attribute !== 'msid')
+            continue;
+        const trackId = line.value.split(' ')[1];
+        if (trackId === track.id) {
+            const ssrc = line.id;
+            ssrcs.add(ssrc);
+            if (!firstSsrc)
+                firstSsrc = ssrc;
+        }
+    }
+    if (ssrcs.size === 0)
+        throw new Error(`a=ssrc line with msid information not found [track.id:${track.id}]`);
+    const ssrcToRtxSsrc = new Map();
+    // First assume RTX is used.
+    for (const line of offerMediaObject.ssrcGroups || []) {
+        if (line.semantics !== 'FID')
+            continue;
+        let [ssrc, rtxSsrc] = line.ssrcs.split(/\s+/);
+        ssrc = Number(ssrc);
+        rtxSsrc = Number(rtxSsrc);
+        if (ssrcs.has(ssrc)) {
+            // Remove both the SSRC and RTX SSRC from the set so later we know that they
+            // are already handled.
+            ssrcs.delete(ssrc);
+            ssrcs.delete(rtxSsrc);
+            // Add to the map.
+            ssrcToRtxSsrc.set(ssrc, rtxSsrc);
+        }
+    }
+    // If the set of SSRCs is not empty it means that RTX is not being used, so take
+    // media SSRCs from there.
+    for (const ssrc of ssrcs) {
+        // Add to the map.
+        ssrcToRtxSsrc.set(ssrc, null);
+    }
+    const encodings = [];
+    for (const [ssrc, rtxSsrc] of ssrcToRtxSsrc) {
+        const encoding = { ssrc };
+        if (rtxSsrc)
+            encoding.rtx = { ssrc: rtxSsrc };
+        encodings.push(encoding);
+    }
+    return encodings;
+}
+exports.getRtpEncodings = getRtpEncodings;
+/**
+ * Adds multi-ssrc based simulcast into the given SDP media section offer.
+ */
+function addLegacySimulcast({ offerMediaObject, track, numStreams }) {
+    if (numStreams <= 1)
+        throw new TypeError('numStreams must be greater than 1');
+    let firstSsrc;
+    let firstRtxSsrc;
+    let streamId;
+    // Get the SSRC.
+    const ssrcMsidLine = (offerMediaObject.ssrcs || [])
+        .find((line) => {
+        if (line.attribute !== 'msid')
+            return false;
+        const trackId = line.value.split(' ')[1];
+        if (trackId === track.id) {
+            firstSsrc = line.id;
+            streamId = line.value.split(' ')[0];
+            return true;
+        }
+        else {
+            return false;
+        }
+    });
+    if (!ssrcMsidLine)
+        throw new Error(`a=ssrc line with msid information not found [track.id:${track.id}]`);
+    // Get the SSRC for RTX.
+    (offerMediaObject.ssrcGroups || [])
+        .some((line) => {
+        if (line.semantics !== 'FID')
+            return false;
+        const ssrcs = line.ssrcs.split(/\s+/);
+        if (Number(ssrcs[0]) === firstSsrc) {
+            firstRtxSsrc = Number(ssrcs[1]);
+            return true;
+        }
+        else {
+            return false;
+        }
+    });
+    const ssrcCnameLine = offerMediaObject.ssrcs
+        .find((line) => (line.attribute === 'cname' && line.id === firstSsrc));
+    if (!ssrcCnameLine)
+        throw new Error(`a=ssrc line with cname information not found [track.id:${track.id}]`);
+    const cname = ssrcCnameLine.value;
+    const ssrcs = [];
+    const rtxSsrcs = [];
+    for (let i = 0; i < numStreams; ++i) {
+        ssrcs.push(firstSsrc + i);
+        if (firstRtxSsrc)
+            rtxSsrcs.push(firstRtxSsrc + i);
+    }
+    offerMediaObject.ssrcGroups = offerMediaObject.ssrcGroups || [];
+    offerMediaObject.ssrcs = offerMediaObject.ssrcs || [];
+    offerMediaObject.ssrcGroups.push({
+        semantics: 'SIM',
+        ssrcs: ssrcs.join(' ')
+    });
+    for (let i = 0; i < ssrcs.length; ++i) {
+        const ssrc = ssrcs[i];
+        offerMediaObject.ssrcs.push({
+            id: ssrc,
+            attribute: 'cname',
+            value: cname
+        });
+        offerMediaObject.ssrcs.push({
+            id: ssrc,
+            attribute: 'msid',
+            value: `${streamId} ${track.id}`
+        });
+    }
+    for (let i = 0; i < rtxSsrcs.length; ++i) {
+        const ssrc = ssrcs[i];
+        const rtxSsrc = rtxSsrcs[i];
+        offerMediaObject.ssrcs.push({
+            id: rtxSsrc,
+            attribute: 'cname',
+            value: cname
+        });
+        offerMediaObject.ssrcs.push({
+            id: rtxSsrc,
+            attribute: 'msid',
+            value: `${streamId} ${track.id}`
+        });
+        offerMediaObject.ssrcGroups.push({
+            semantics: 'FID',
+            ssrcs: `${ssrc} ${rtxSsrc}`
+        });
+    }
+}
+exports.addLegacySimulcast = addLegacySimulcast;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.parse = void 0;
+const ScalabilityModeRegex = new RegExp('^[LS]([1-9]\\d{0,1})T([1-9]\\d{0,1})');
+function parse(scalabilityMode) {
+    const match = ScalabilityModeRegex.exec(scalabilityMode || '');
+    if (match) {
+        return {
+            spatialLayers: Number(match[1]),
+            temporalLayers: Number(match[2])
+        };
+    }
+    else {
+        return {
+            spatialLayers: 1,
+            temporalLayers: 1
+        };
+    }
+}
+exports.parse = parse;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+var R = typeof Reflect === 'object' ? Reflect : null
+var ReflectApply = R && typeof R.apply === 'function'
+  ? R.apply
+  : function ReflectApply(target, receiver, args) {
+    return Function.prototype.apply.call(target, receiver, args);
+  }
+
+var ReflectOwnKeys
+if (R && typeof R.ownKeys === 'function') {
+  ReflectOwnKeys = R.ownKeys
+} else if (Object.getOwnPropertySymbols) {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target)
+      .concat(Object.getOwnPropertySymbols(target));
+  };
+} else {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target);
+  };
+}
+
+function ProcessEmitWarning(warning) {
+  if (console && console.warn) console.warn(warning);
+}
+
+var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
+  return value !== value;
+}
+
+function EventEmitter() {
+  EventEmitter.init.call(this);
+}
+module.exports = EventEmitter;
+module.exports.once = once;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._eventsCount = 0;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+var defaultMaxListeners = 10;
+
+function checkListener(listener) {
+  if (typeof listener !== 'function') {
+    throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
+  }
+}
+
+Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
+  enumerable: true,
+  get: function() {
+    return defaultMaxListeners;
+  },
+  set: function(arg) {
+    if (typeof arg !== 'number' || arg < 0 || NumberIsNaN(arg)) {
+      throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' + arg + '.');
+    }
+    defaultMaxListeners = arg;
+  }
+});
+
+EventEmitter.init = function() {
+
+  if (this._events === undefined ||
+      this._events === Object.getPrototypeOf(this)._events) {
+    this._events = Object.create(null);
+    this._eventsCount = 0;
+  }
+
+  this._maxListeners = this._maxListeners || undefined;
+};
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || NumberIsNaN(n)) {
+    throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received ' + n + '.');
+  }
+  this._maxListeners = n;
+  return this;
+};
+
+function _getMaxListeners(that) {
+  if (that._maxListeners === undefined)
+    return EventEmitter.defaultMaxListeners;
+  return that._maxListeners;
+}
+
+EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
+  return _getMaxListeners(this);
+};
+
+EventEmitter.prototype.emit = function emit(type) {
+  var args = [];
+  for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
+  var doError = (type === 'error');
+
+  var events = this._events;
+  if (events !== undefined)
+    doError = (doError && events.error === undefined);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    var er;
+    if (args.length > 0)
+      er = args[0];
+    if (er instanceof Error) {
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event
+    }
+    // At least give some kind of context to the user
+    var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
+    err.context = er;
+    throw err; // Unhandled 'error' event
+  }
+
+  var handler = events[type];
+
+  if (handler === undefined)
+    return false;
+
+  if (typeof handler === 'function') {
+    ReflectApply(handler, this, args);
+  } else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      ReflectApply(listeners[i], this, args);
+  }
+
+  return true;
+};
+
+function _addListener(target, type, listener, prepend) {
+  var m;
+  var events;
+  var existing;
+
+  checkListener(listener);
+
+  events = target._events;
+  if (events === undefined) {
+    events = target._events = Object.create(null);
+    target._eventsCount = 0;
+  } else {
+    // To avoid recursion in the case that type === "newListener"! Before
+    // adding it to the listeners, first emit "newListener".
+    if (events.newListener !== undefined) {
+      target.emit('newListener', type,
+                  listener.listener ? listener.listener : listener);
+
+      // Re-assign `events` because a newListener handler could have caused the
+      // this._events to be assigned to a new object
+      events = target._events;
+    }
+    existing = events[type];
+  }
+
+  if (existing === undefined) {
+    // Optimize the case of one listener. Don't need the extra array object.
+    existing = events[type] = listener;
+    ++target._eventsCount;
+  } else {
+    if (typeof existing === 'function') {
+      // Adding the second element, need to change to array.
+      existing = events[type] =
+        prepend ? [listener, existing] : [existing, listener];
+      // If we've already got an array, just append.
+    } else if (prepend) {
+      existing.unshift(listener);
+    } else {
+      existing.push(listener);
+    }
+
+    // Check for listener leak
+    m = _getMaxListeners(target);
+    if (m > 0 && existing.length > m && !existing.warned) {
+      existing.warned = true;
+      // No error code for this since it is a Warning
+      // eslint-disable-next-line no-restricted-syntax
+      var w = new Error('Possible EventEmitter memory leak detected. ' +
+                          existing.length + ' ' + String(type) + ' listeners ' +
+                          'added. Use emitter.setMaxListeners() to ' +
+                          'increase limit');
+      w.name = 'MaxListenersExceededWarning';
+      w.emitter = target;
+      w.type = type;
+      w.count = existing.length;
+      ProcessEmitWarning(w);
+    }
+  }
+
+  return target;
+}
+
+EventEmitter.prototype.addListener = function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.prependListener =
+    function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    };
+
+function onceWrapper() {
+  if (!this.fired) {
+    this.target.removeListener(this.type, this.wrapFn);
+    this.fired = true;
+    if (arguments.length === 0)
+      return this.listener.call(this.target);
+    return this.listener.apply(this.target, arguments);
+  }
+}
+
+function _onceWrap(target, type, listener) {
+  var state = { fired: false, wrapFn: undefined, target: target, type: type, listener: listener };
+  var wrapped = onceWrapper.bind(state);
+  wrapped.listener = listener;
+  state.wrapFn = wrapped;
+  return wrapped;
+}
+
+EventEmitter.prototype.once = function once(type, listener) {
+  checkListener(listener);
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+};
+
+EventEmitter.prototype.prependOnceListener =
+    function prependOnceListener(type, listener) {
+      checkListener(listener);
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    };
+
+// Emits a 'removeListener' event if and only if the listener was removed.
+EventEmitter.prototype.removeListener =
+    function removeListener(type, listener) {
+      var list, events, position, i, originalListener;
+
+      checkListener(listener);
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      list = events[type];
+      if (list === undefined)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = Object.create(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        position = -1;
+
+        for (i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else {
+          spliceOne(list, position);
+        }
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener !== undefined)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    };
+
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+
+EventEmitter.prototype.removeAllListeners =
+    function removeAllListeners(type) {
+      var listeners, events, i;
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      // not listening for removeListener, no need to emit
+      if (events.removeListener === undefined) {
+        if (arguments.length === 0) {
+          this._events = Object.create(null);
+          this._eventsCount = 0;
+        } else if (events[type] !== undefined) {
+          if (--this._eventsCount === 0)
+            this._events = Object.create(null);
+          else
+            delete events[type];
+        }
+        return this;
+      }
+
+      // emit removeListener for all listeners on all events
+      if (arguments.length === 0) {
+        var keys = Object.keys(events);
+        var key;
+        for (i = 0; i < keys.length; ++i) {
+          key = keys[i];
+          if (key === 'removeListener') continue;
+          this.removeAllListeners(key);
+        }
+        this.removeAllListeners('removeListener');
+        this._events = Object.create(null);
+        this._eventsCount = 0;
+        return this;
+      }
+
+      listeners = events[type];
+
+      if (typeof listeners === 'function') {
+        this.removeListener(type, listeners);
+      } else if (listeners !== undefined) {
+        // LIFO order
+        for (i = listeners.length - 1; i >= 0; i--) {
+          this.removeListener(type, listeners[i]);
+        }
+      }
+
+      return this;
+    };
+
+function _listeners(target, type, unwrap) {
+  var events = target._events;
+
+  if (events === undefined)
+    return [];
+
+  var evlistener = events[type];
+  if (evlistener === undefined)
+    return [];
+
+  if (typeof evlistener === 'function')
+    return unwrap ? [evlistener.listener || evlistener] : [evlistener];
+
+  return unwrap ?
+    unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
+}
+
+EventEmitter.prototype.listeners = function listeners(type) {
+  return _listeners(this, type, true);
+};
+
+EventEmitter.prototype.rawListeners = function rawListeners(type) {
+  return _listeners(this, type, false);
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  if (typeof emitter.listenerCount === 'function') {
+    return emitter.listenerCount(type);
+  } else {
+    return listenerCount.call(emitter, type);
+  }
+};
+
+EventEmitter.prototype.listenerCount = listenerCount;
+function listenerCount(type) {
+  var events = this._events;
+
+  if (events !== undefined) {
+    var evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener !== undefined) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+
+EventEmitter.prototype.eventNames = function eventNames() {
+  return this._eventsCount > 0 ? ReflectOwnKeys(this._events) : [];
+};
+
+function arrayClone(arr, n) {
+  var copy = new Array(n);
+  for (var i = 0; i < n; ++i)
+    copy[i] = arr[i];
+  return copy;
+}
+
+function spliceOne(list, index) {
+  for (; index + 1 < list.length; index++)
+    list[index] = list[index + 1];
+  list.pop();
+}
+
+function unwrapListeners(arr) {
+  var ret = new Array(arr.length);
+  for (var i = 0; i < ret.length; ++i) {
+    ret[i] = arr[i].listener || arr[i];
+  }
+  return ret;
+}
+
+function once(emitter, name) {
+  return new Promise(function (resolve, reject) {
+    function errorListener(err) {
+      emitter.removeListener(name, resolver);
+      reject(err);
+    }
+
+    function resolver() {
+      if (typeof emitter.removeListener === 'function') {
+        emitter.removeListener('error', errorListener);
+      }
+      resolve([].slice.call(arguments));
+    };
+
+    eventTargetAgnosticAddListener(emitter, name, resolver, { once: true });
+    if (name !== 'error') {
+      addErrorHandlerIfEventEmitter(emitter, errorListener, { once: true });
+    }
+  });
+}
+
+function addErrorHandlerIfEventEmitter(emitter, handler, flags) {
+  if (typeof emitter.on === 'function') {
+    eventTargetAgnosticAddListener(emitter, 'error', handler, flags);
+  }
+}
+
+function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
+  if (typeof emitter.on === 'function') {
+    if (flags.once) {
+      emitter.once(name, listener);
+    } else {
+      emitter.on(name, listener);
+    }
+  } else if (typeof emitter.addEventListener === 'function') {
+    // EventTarget does not have `error` event semantics like Node
+    // EventEmitters, we do not listen for `error` events here.
+    emitter.addEventListener(name, function wrapListener(arg) {
+      // IE does not have builtin `{ once: true }` support so we
+      // have to do it manually.
+      if (flags.once) {
+        emitter.removeEventListener(name, wrapListener);
+      }
+      listener(arg);
+    });
+  } else {
+    throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
+  }
+}
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* global RTCRtpTransceiver */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Device = exports.detectDevice = void 0;
+const bowser_1 = __importDefault(__webpack_require__(27));
+const Logger_1 = __webpack_require__(1);
+const EnhancedEventEmitter_1 = __webpack_require__(9);
+const errors_1 = __webpack_require__(4);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const Transport_1 = __webpack_require__(17);
+const Chrome74_1 = __webpack_require__(30);
+const Chrome70_1 = __webpack_require__(34);
+const Chrome67_1 = __webpack_require__(35);
+const Chrome55_1 = __webpack_require__(36);
+const Firefox60_1 = __webpack_require__(37);
+const Safari12_1 = __webpack_require__(38);
+const Safari11_1 = __webpack_require__(39);
+const Edge11_1 = __webpack_require__(40);
+const ReactNative_1 = __webpack_require__(42);
+const logger = new Logger_1.Logger('Device');
+function detectDevice() {
+    // React-Native.
+    // NOTE: react-native-webrtc >= 1.75.0 is required.
+    if (typeof navigator === 'object' && navigator.product === 'ReactNative') {
+        if (typeof RTCPeerConnection === 'undefined') {
+            logger.warn('this._detectDevice() | unsupported ReactNative without RTCPeerConnection');
+            return undefined;
+        }
+        logger.debug('this._detectDevice() | ReactNative handler chosen');
+        return 'ReactNative';
+    }
+    // Browser.
+    else if (typeof navigator === 'object' && typeof navigator.userAgent === 'string') {
+        const ua = navigator.userAgent;
+        const browser = bowser_1.default.getParser(ua);
+        const engine = browser.getEngine();
+        // Chrome, Chromium, and Edge.
+        if (browser.satisfies({ chrome: '>=74', chromium: '>=74', 'microsoft edge': '>=88' })) {
+            return 'Chrome74';
+        }
+        else if (browser.satisfies({ chrome: '>=70', chromium: '>=70' })) {
+            return 'Chrome70';
+        }
+        else if (browser.satisfies({ chrome: '>=67', chromium: '>=67' })) {
+            return 'Chrome67';
+        }
+        else if (browser.satisfies({ chrome: '>=55', chromium: '>=55' })) {
+            return 'Chrome55';
+        }
+        // Firefox.
+        else if (browser.satisfies({ firefox: '>=60' })) {
+            return 'Firefox60';
+        }
+        // Firefox on iOS.
+        else if (browser.satisfies({ ios: { OS: '>=14.3', firefox: '>=30.0' } })) {
+            return 'Safari12';
+        }
+        // Safari with Unified-Plan support enabled.
+        else if (browser.satisfies({ safari: '>=12.0' }) &&
+            typeof RTCRtpTransceiver !== 'undefined' &&
+            RTCRtpTransceiver.prototype.hasOwnProperty('currentDirection')) {
+            return 'Safari12';
+        }
+        // Safari with Plab-B support.
+        else if (browser.satisfies({ safari: '>=11' })) {
+            return 'Safari11';
+        }
+        // Old Edge with ORTC support.
+        else if (browser.satisfies({ 'microsoft edge': '>=11' }) &&
+            browser.satisfies({ 'microsoft edge': '<=18' })) {
+            return 'Edge11';
+        }
+        // Best effort for Chromium based browsers.
+        else if (engine.name && engine.name.toLowerCase() === 'blink') {
+            const match = ua.match(/(?:(?:Chrome|Chromium))[ /](\w+)/i);
+            if (match) {
+                const version = Number(match[1]);
+                if (version >= 74) {
+                    return 'Chrome74';
+                }
+                else if (version >= 70) {
+                    return 'Chrome70';
+                }
+                else if (version >= 67) {
+                    return 'Chrome67';
+                }
+                else {
+                    return 'Chrome55';
+                }
+            }
+            else {
+                return 'Chrome74';
+            }
+        }
+        // Unsupported browser.
+        else {
+            logger.warn('this._detectDevice() | browser not supported [name:%s, version:%s]', browser.getBrowserName(), browser.getBrowserVersion());
+            return undefined;
+        }
+    }
+    // Unknown device.
+    else {
+        logger.warn('this._detectDevice() | unknown device');
+        return undefined;
+    }
+}
+exports.detectDevice = detectDevice;
+class Device {
+    /**
+     * Create a new Device to connect to mediasoup server.
+     *
+     * @throws {UnsupportedError} if device is not supported.
+     */
+    constructor({ handlerName, handlerFactory, Handler } = {}) {
+        // Loaded flag.
+        this._loaded = false;
+        // Observer instance.
+        this._observer = new EnhancedEventEmitter_1.EnhancedEventEmitter();
+        logger.debug('constructor()');
+        // Handle deprecated option.
+        if (Handler) {
+            logger.warn('constructor() | Handler option is DEPRECATED, use handlerName or handlerFactory instead');
+            if (typeof Handler === 'string')
+                handlerName = Handler;
+            else
+                throw new TypeError('non string Handler option no longer supported, use handlerFactory instead');
+        }
+        if (handlerName && handlerFactory) {
+            throw new TypeError('just one of handlerName or handlerInterface can be given');
+        }
+        if (handlerFactory) {
+            this._handlerFactory = handlerFactory;
+        }
+        else {
+            if (handlerName) {
+                logger.debug('constructor() | handler given: %s', handlerName);
+            }
+            else {
+                handlerName = detectDevice();
+                if (handlerName)
+                    logger.debug('constructor() | detected handler: %s', handlerName);
+                else
+                    throw new errors_1.UnsupportedError('device not supported');
+            }
+            switch (handlerName) {
+                case 'Chrome74':
+                    this._handlerFactory = Chrome74_1.Chrome74.createFactory();
+                    break;
+                case 'Chrome70':
+                    this._handlerFactory = Chrome70_1.Chrome70.createFactory();
+                    break;
+                case 'Chrome67':
+                    this._handlerFactory = Chrome67_1.Chrome67.createFactory();
+                    break;
+                case 'Chrome55':
+                    this._handlerFactory = Chrome55_1.Chrome55.createFactory();
+                    break;
+                case 'Firefox60':
+                    this._handlerFactory = Firefox60_1.Firefox60.createFactory();
+                    break;
+                case 'Safari12':
+                    this._handlerFactory = Safari12_1.Safari12.createFactory();
+                    break;
+                case 'Safari11':
+                    this._handlerFactory = Safari11_1.Safari11.createFactory();
+                    break;
+                case 'Edge11':
+                    this._handlerFactory = Edge11_1.Edge11.createFactory();
+                    break;
+                case 'ReactNative':
+                    this._handlerFactory = ReactNative_1.ReactNative.createFactory();
+                    break;
+                default:
+                    throw new TypeError(`unknown handlerName "${handlerName}"`);
+            }
+        }
+        // Create a temporal handler to get its name.
+        const handler = this._handlerFactory();
+        this._handlerName = handler.name;
+        handler.close();
+        this._extendedRtpCapabilities = undefined;
+        this._recvRtpCapabilities = undefined;
+        this._canProduceByKind =
+            {
+                audio: false,
+                video: false
+            };
+        this._sctpCapabilities = undefined;
+    }
+    /**
+     * The RTC handler name.
+     */
+    get handlerName() {
+        return this._handlerName;
+    }
+    /**
+     * Whether the Device is loaded.
+     */
+    get loaded() {
+        return this._loaded;
+    }
+    /**
+     * RTP capabilities of the Device for receiving media.
+     *
+     * @throws {InvalidStateError} if not loaded.
+     */
+    get rtpCapabilities() {
+        if (!this._loaded)
+            throw new errors_1.InvalidStateError('not loaded');
+        return this._recvRtpCapabilities;
+    }
+    /**
+     * SCTP capabilities of the Device.
+     *
+     * @throws {InvalidStateError} if not loaded.
+     */
+    get sctpCapabilities() {
+        if (!this._loaded)
+            throw new errors_1.InvalidStateError('not loaded');
+        return this._sctpCapabilities;
+    }
+    /**
+     * Observer.
+     *
+     * @emits newtransport - (transport: Transport)
+     */
+    get observer() {
+        return this._observer;
+    }
+    /**
+     * Initialize the Device.
+     */
+    async load({ routerRtpCapabilities }) {
+        logger.debug('load() [routerRtpCapabilities:%o]', routerRtpCapabilities);
+        routerRtpCapabilities = utils.clone(routerRtpCapabilities, undefined);
+        // Temporal handler to get its capabilities.
+        let handler;
+        try {
+            if (this._loaded)
+                throw new errors_1.InvalidStateError('already loaded');
+            // This may throw.
+            ortc.validateRtpCapabilities(routerRtpCapabilities);
+            handler = this._handlerFactory();
+            const nativeRtpCapabilities = await handler.getNativeRtpCapabilities();
+            logger.debug('load() | got native RTP capabilities:%o', nativeRtpCapabilities);
+            // This may throw.
+            ortc.validateRtpCapabilities(nativeRtpCapabilities);
+            // Get extended RTP capabilities.
+            this._extendedRtpCapabilities = ortc.getExtendedRtpCapabilities(nativeRtpCapabilities, routerRtpCapabilities);
+            logger.debug('load() | got extended RTP capabilities:%o', this._extendedRtpCapabilities);
+            // Check whether we can produce audio/video.
+            this._canProduceByKind.audio =
+                ortc.canSend('audio', this._extendedRtpCapabilities);
+            this._canProduceByKind.video =
+                ortc.canSend('video', this._extendedRtpCapabilities);
+            // Generate our receiving RTP capabilities for receiving media.
+            this._recvRtpCapabilities =
+                ortc.getRecvRtpCapabilities(this._extendedRtpCapabilities);
+            // This may throw.
+            ortc.validateRtpCapabilities(this._recvRtpCapabilities);
+            logger.debug('load() | got receiving RTP capabilities:%o', this._recvRtpCapabilities);
+            // Generate our SCTP capabilities.
+            this._sctpCapabilities = await handler.getNativeSctpCapabilities();
+            logger.debug('load() | got native SCTP capabilities:%o', this._sctpCapabilities);
+            // This may throw.
+            ortc.validateSctpCapabilities(this._sctpCapabilities);
+            logger.debug('load() succeeded');
+            this._loaded = true;
+            handler.close();
+        }
+        catch (error) {
+            if (handler)
+                handler.close();
+            throw error;
+        }
+    }
+    /**
+     * Whether we can produce audio/video.
+     *
+     * @throws {InvalidStateError} if not loaded.
+     * @throws {TypeError} if wrong arguments.
+     */
+    canProduce(kind) {
+        if (!this._loaded)
+            throw new errors_1.InvalidStateError('not loaded');
+        else if (kind !== 'audio' && kind !== 'video')
+            throw new TypeError(`invalid kind "${kind}"`);
+        return this._canProduceByKind[kind];
+    }
+    /**
+     * Creates a Transport for sending media.
+     *
+     * @throws {InvalidStateError} if not loaded.
+     * @throws {TypeError} if wrong arguments.
+     */
+    createSendTransport({ id, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, appData }) {
+        logger.debug('createSendTransport()');
+        return this._createTransport({
+            direction: 'send',
+            id: id,
+            iceParameters: iceParameters,
+            iceCandidates: iceCandidates,
+            dtlsParameters: dtlsParameters,
+            sctpParameters: sctpParameters,
+            iceServers: iceServers,
+            iceTransportPolicy: iceTransportPolicy,
+            additionalSettings: additionalSettings,
+            proprietaryConstraints: proprietaryConstraints,
+            appData: appData
+        });
+    }
+    /**
+     * Creates a Transport for receiving media.
+     *
+     * @throws {InvalidStateError} if not loaded.
+     * @throws {TypeError} if wrong arguments.
+     */
+    createRecvTransport({ id, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, appData }) {
+        logger.debug('createRecvTransport()');
+        return this._createTransport({
+            direction: 'recv',
+            id: id,
+            iceParameters: iceParameters,
+            iceCandidates: iceCandidates,
+            dtlsParameters: dtlsParameters,
+            sctpParameters: sctpParameters,
+            iceServers: iceServers,
+            iceTransportPolicy: iceTransportPolicy,
+            additionalSettings: additionalSettings,
+            proprietaryConstraints: proprietaryConstraints,
+            appData: appData
+        });
+    }
+    _createTransport({ direction, id, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, appData }) {
+        if (!this._loaded)
+            throw new errors_1.InvalidStateError('not loaded');
+        else if (typeof id !== 'string')
+            throw new TypeError('missing id');
+        else if (typeof iceParameters !== 'object')
+            throw new TypeError('missing iceParameters');
+        else if (!Array.isArray(iceCandidates))
+            throw new TypeError('missing iceCandidates');
+        else if (typeof dtlsParameters !== 'object')
+            throw new TypeError('missing dtlsParameters');
+        else if (sctpParameters && typeof sctpParameters !== 'object')
+            throw new TypeError('wrong sctpParameters');
+        else if (appData && typeof appData !== 'object')
+            throw new TypeError('if given, appData must be an object');
+        // Create a new Transport.
+        const transport = new Transport_1.Transport({
+            direction,
+            id,
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters,
+            iceServers,
+            iceTransportPolicy,
+            additionalSettings,
+            proprietaryConstraints,
+            appData,
+            handlerFactory: this._handlerFactory,
+            extendedRtpCapabilities: this._extendedRtpCapabilities,
+            canProduceByKind: this._canProduceByKind
+        });
+        // Emit observer event.
+        this._observer.safeEmit('newtransport', transport);
+        return transport;
+    }
+}
+exports.Device = Device;
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Transport = void 0;
+const awaitqueue_1 = __webpack_require__(29);
+const Logger_1 = __webpack_require__(1);
+const EnhancedEventEmitter_1 = __webpack_require__(9);
+const errors_1 = __webpack_require__(4);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const Producer_1 = __webpack_require__(18);
+const Consumer_1 = __webpack_require__(19);
+const DataProducer_1 = __webpack_require__(20);
+const DataConsumer_1 = __webpack_require__(21);
+class ConsumerCreationTask {
+    constructor(consumerOptions) {
+        this.consumerOptions = consumerOptions;
+        this.promise = new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
+    }
+}
+const logger = new Logger_1.Logger('Transport');
+class Transport extends EnhancedEventEmitter_1.EnhancedEventEmitter {
+    /**
+     * @emits connect - (transportLocalParameters: any, callback: Function, errback: Function)
+     * @emits connectionstatechange - (connectionState: ConnectionState)
+     * @emits produce - (producerLocalParameters: any, callback: Function, errback: Function)
+     * @emits producedata - (dataProducerLocalParameters: any, callback: Function, errback: Function)
+     */
+    constructor({ direction, id, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, appData, handlerFactory, extendedRtpCapabilities, canProduceByKind }) {
+        super();
+        // Closed flag.
+        this._closed = false;
+        // Transport connection state.
+        this._connectionState = 'new';
+        // Map of Producers indexed by id.
+        this._producers = new Map();
+        // Map of Consumers indexed by id.
+        this._consumers = new Map();
+        // Map of DataProducers indexed by id.
+        this._dataProducers = new Map();
+        // Map of DataConsumers indexed by id.
+        this._dataConsumers = new Map();
+        // Whether the Consumer for RTP probation has been created.
+        this._probatorConsumerCreated = false;
+        // AwaitQueue instance to make async tasks happen sequentially.
+        this._awaitQueue = new awaitqueue_1.AwaitQueue({ ClosedErrorClass: errors_1.InvalidStateError });
+        // Consumer creation tasks awaiting to be processed.
+        this._pendingConsumerTasks = [];
+        // Consumer creation in progress flag.
+        this._consumerCreationInProgress = false;
+        // Consumers pending to be paused.
+        this._pendingPauseConsumers = new Map();
+        // Consumer pause in progress flag.
+        this._consumerPauseInProgress = false;
+        // Consumers pending to be resumed.
+        this._pendingResumeConsumers = new Map();
+        // Consumer resume in progress flag.
+        this._consumerResumeInProgress = false;
+        // Observer instance.
+        this._observer = new EnhancedEventEmitter_1.EnhancedEventEmitter();
+        logger.debug('constructor() [id:%s, direction:%s]', id, direction);
+        this._id = id;
+        this._direction = direction;
+        this._extendedRtpCapabilities = extendedRtpCapabilities;
+        this._canProduceByKind = canProduceByKind;
+        this._maxSctpMessageSize =
+            sctpParameters ? sctpParameters.maxMessageSize : null;
+        // Clone and sanitize additionalSettings.
+        additionalSettings = utils.clone(additionalSettings, {});
+        delete additionalSettings.iceServers;
+        delete additionalSettings.iceTransportPolicy;
+        delete additionalSettings.bundlePolicy;
+        delete additionalSettings.rtcpMuxPolicy;
+        delete additionalSettings.sdpSemantics;
+        this._handler = handlerFactory();
+        this._handler.run({
+            direction,
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters,
+            iceServers,
+            iceTransportPolicy,
+            additionalSettings,
+            proprietaryConstraints,
+            extendedRtpCapabilities
+        });
+        this._appData = appData || {};
+        this._handleHandler();
+    }
+    /**
+     * Transport id.
+     */
+    get id() {
+        return this._id;
+    }
+    /**
+     * Whether the Transport is closed.
+     */
+    get closed() {
+        return this._closed;
+    }
+    /**
+     * Transport direction.
+     */
+    get direction() {
+        return this._direction;
+    }
+    /**
+     * RTC handler instance.
+     */
+    get handler() {
+        return this._handler;
+    }
+    /**
+     * Connection state.
+     */
+    get connectionState() {
+        return this._connectionState;
+    }
+    /**
+     * App custom data.
+     */
+    get appData() {
+        return this._appData;
+    }
+    /**
+     * Invalid setter.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    set appData(appData) {
+        throw new Error('cannot override appData object');
+    }
+    /**
+     * Observer.
+     *
+     * @emits close
+     * @emits newproducer - (producer: Producer)
+     * @emits newconsumer - (producer: Producer)
+     * @emits newdataproducer - (dataProducer: DataProducer)
+     * @emits newdataconsumer - (dataProducer: DataProducer)
+     */
+    get observer() {
+        return this._observer;
+    }
+    /**
+     * Close the Transport.
+     */
+    close() {
+        if (this._closed)
+            return;
+        logger.debug('close()');
+        this._closed = true;
+        // Close the AwaitQueue.
+        this._awaitQueue.close();
+        // Close the handler.
+        this._handler.close();
+        // Close all Producers.
+        for (const producer of this._producers.values()) {
+            producer.transportClosed();
+        }
+        this._producers.clear();
+        // Close all Consumers.
+        for (const consumer of this._consumers.values()) {
+            consumer.transportClosed();
+        }
+        this._consumers.clear();
+        // Close all DataProducers.
+        for (const dataProducer of this._dataProducers.values()) {
+            dataProducer.transportClosed();
+        }
+        this._dataProducers.clear();
+        // Close all DataConsumers.
+        for (const dataConsumer of this._dataConsumers.values()) {
+            dataConsumer.transportClosed();
+        }
+        this._dataConsumers.clear();
+        // Emit observer event.
+        this._observer.safeEmit('close');
+    }
+    /**
+     * Get associated Transport (RTCPeerConnection) stats.
+     *
+     * @returns {RTCStatsReport}
+     */
+    async getStats() {
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        return this._handler.getTransportStats();
+    }
+    /**
+     * Restart ICE connection.
+     */
+    async restartIce({ iceParameters }) {
+        logger.debug('restartIce()');
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        else if (!iceParameters)
+            throw new TypeError('missing iceParameters');
+        // Enqueue command.
+        return this._awaitQueue.push(async () => this._handler.restartIce(iceParameters), 'transport.restartIce()');
+    }
+    /**
+     * Update ICE servers.
+     */
+    async updateIceServers({ iceServers } = {}) {
+        logger.debug('updateIceServers()');
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        else if (!Array.isArray(iceServers))
+            throw new TypeError('missing iceServers');
+        // Enqueue command.
+        return this._awaitQueue.push(async () => this._handler.updateIceServers(iceServers), 'transport.updateIceServers()');
+    }
+    /**
+     * Create a Producer.
+     */
+    async produce({ track, encodings, codecOptions, codec, stopTracks = true, disableTrackOnPause = true, zeroRtpOnPause = false, appData = {} } = {}) {
+        logger.debug('produce() [track:%o]', track);
+        if (!track)
+            throw new TypeError('missing track');
+        else if (this._direction !== 'send')
+            throw new errors_1.UnsupportedError('not a sending Transport');
+        else if (!this._canProduceByKind[track.kind])
+            throw new errors_1.UnsupportedError(`cannot produce ${track.kind}`);
+        else if (track.readyState === 'ended')
+            throw new errors_1.InvalidStateError('track ended');
+        else if (this.listenerCount('connect') === 0 && this._connectionState === 'new')
+            throw new TypeError('no "connect" listener set into this transport');
+        else if (this.listenerCount('produce') === 0)
+            throw new TypeError('no "produce" listener set into this transport');
+        else if (appData && typeof appData !== 'object')
+            throw new TypeError('if given, appData must be an object');
+        // Enqueue command.
+        return this._awaitQueue.push(async () => {
+            let normalizedEncodings;
+            if (encodings && !Array.isArray(encodings)) {
+                throw TypeError('encodings must be an array');
+            }
+            else if (encodings && encodings.length === 0) {
+                normalizedEncodings = undefined;
+            }
+            else if (encodings) {
+                normalizedEncodings = encodings
+                    .map((encoding) => {
+                    const normalizedEncoding = { active: true };
+                    if (encoding.active === false)
+                        normalizedEncoding.active = false;
+                    if (typeof encoding.dtx === 'boolean')
+                        normalizedEncoding.dtx = encoding.dtx;
+                    if (typeof encoding.scalabilityMode === 'string')
+                        normalizedEncoding.scalabilityMode = encoding.scalabilityMode;
+                    if (typeof encoding.scaleResolutionDownBy === 'number')
+                        normalizedEncoding.scaleResolutionDownBy = encoding.scaleResolutionDownBy;
+                    if (typeof encoding.maxBitrate === 'number')
+                        normalizedEncoding.maxBitrate = encoding.maxBitrate;
+                    if (typeof encoding.maxFramerate === 'number')
+                        normalizedEncoding.maxFramerate = encoding.maxFramerate;
+                    if (typeof encoding.adaptivePtime === 'boolean')
+                        normalizedEncoding.adaptivePtime = encoding.adaptivePtime;
+                    if (typeof encoding.priority === 'string')
+                        normalizedEncoding.priority = encoding.priority;
+                    if (typeof encoding.networkPriority === 'string')
+                        normalizedEncoding.networkPriority = encoding.networkPriority;
+                    return normalizedEncoding;
+                });
+            }
+            const { localId, rtpParameters, rtpSender } = await this._handler.send({
+                track,
+                encodings: normalizedEncodings,
+                codecOptions,
+                codec
+            });
+            try {
+                // This will fill rtpParameters's missing fields with default values.
+                ortc.validateRtpParameters(rtpParameters);
+                const { id } = await this.safeEmitAsPromise('produce', {
+                    kind: track.kind,
+                    rtpParameters,
+                    appData
+                });
+                const producer = new Producer_1.Producer({
+                    id,
+                    localId,
+                    rtpSender,
+                    track,
+                    rtpParameters,
+                    stopTracks,
+                    disableTrackOnPause,
+                    zeroRtpOnPause,
+                    appData
+                });
+                this._producers.set(producer.id, producer);
+                this._handleProducer(producer);
+                // Emit observer event.
+                this._observer.safeEmit('newproducer', producer);
+                return producer;
+            }
+            catch (error) {
+                this._handler.stopSending(localId)
+                    .catch(() => { });
+                throw error;
+            }
+        }, 'transport.produce()')
+            // This catch is needed to stop the given track if the command above
+            // failed due to closed Transport.
+            .catch((error) => {
+            if (stopTracks) {
+                try {
+                    track.stop();
+                }
+                catch (error2) { }
+            }
+            throw error;
+        });
+    }
+    /**
+     * Create a Consumer to consume a remote Producer.
+     */
+    async consume({ id, producerId, kind, rtpParameters, appData = {} }) {
+        logger.debug('consume()');
+        rtpParameters = utils.clone(rtpParameters, undefined);
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        else if (this._direction !== 'recv')
+            throw new errors_1.UnsupportedError('not a receiving Transport');
+        else if (typeof id !== 'string')
+            throw new TypeError('missing id');
+        else if (typeof producerId !== 'string')
+            throw new TypeError('missing producerId');
+        else if (kind !== 'audio' && kind !== 'video')
+            throw new TypeError(`invalid kind '${kind}'`);
+        else if (this.listenerCount('connect') === 0 && this._connectionState === 'new')
+            throw new TypeError('no "connect" listener set into this transport');
+        else if (appData && typeof appData !== 'object')
+            throw new TypeError('if given, appData must be an object');
+        // Ensure the device can consume it.
+        const canConsume = ortc.canReceive(rtpParameters, this._extendedRtpCapabilities);
+        if (!canConsume)
+            throw new errors_1.UnsupportedError('cannot consume this Producer');
+        const consumerCreationTask = new ConsumerCreationTask({
+            id,
+            producerId,
+            kind,
+            rtpParameters,
+            appData
+        });
+        // Store the Consumer creation task.
+        this._pendingConsumerTasks.push(consumerCreationTask);
+        // There is no Consumer creation in progress, create it now.
+        if (this._consumerCreationInProgress === false) {
+            this._createPendingConsumers();
+        }
+        return consumerCreationTask.promise;
+    }
+    /**
+     * Create a DataProducer
+     */
+    async produceData({ ordered = true, maxPacketLifeTime, maxRetransmits, label = '', protocol = '', appData = {} } = {}) {
+        logger.debug('produceData()');
+        if (this._direction !== 'send')
+            throw new errors_1.UnsupportedError('not a sending Transport');
+        else if (!this._maxSctpMessageSize)
+            throw new errors_1.UnsupportedError('SCTP not enabled by remote Transport');
+        else if (this.listenerCount('connect') === 0 && this._connectionState === 'new')
+            throw new TypeError('no "connect" listener set into this transport');
+        else if (this.listenerCount('producedata') === 0)
+            throw new TypeError('no "producedata" listener set into this transport');
+        else if (appData && typeof appData !== 'object')
+            throw new TypeError('if given, appData must be an object');
+        if (maxPacketLifeTime || maxRetransmits)
+            ordered = false;
+        // Enqueue command.
+        return this._awaitQueue.push(async () => {
+            const { dataChannel, sctpStreamParameters } = await this._handler.sendDataChannel({
+                ordered,
+                maxPacketLifeTime,
+                maxRetransmits,
+                label,
+                protocol
+            });
+            // This will fill sctpStreamParameters's missing fields with default values.
+            ortc.validateSctpStreamParameters(sctpStreamParameters);
+            const { id } = await this.safeEmitAsPromise('producedata', {
+                sctpStreamParameters,
+                label,
+                protocol,
+                appData
+            });
+            const dataProducer = new DataProducer_1.DataProducer({ id, dataChannel, sctpStreamParameters, appData });
+            this._dataProducers.set(dataProducer.id, dataProducer);
+            this._handleDataProducer(dataProducer);
+            // Emit observer event.
+            this._observer.safeEmit('newdataproducer', dataProducer);
+            return dataProducer;
+        }, 'transport.produceData()');
+    }
+    /**
+     * Create a DataConsumer
+     */
+    async consumeData({ id, dataProducerId, sctpStreamParameters, label = '', protocol = '', appData = {} }) {
+        logger.debug('consumeData()');
+        sctpStreamParameters = utils.clone(sctpStreamParameters, undefined);
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        else if (this._direction !== 'recv')
+            throw new errors_1.UnsupportedError('not a receiving Transport');
+        else if (!this._maxSctpMessageSize)
+            throw new errors_1.UnsupportedError('SCTP not enabled by remote Transport');
+        else if (typeof id !== 'string')
+            throw new TypeError('missing id');
+        else if (typeof dataProducerId !== 'string')
+            throw new TypeError('missing dataProducerId');
+        else if (this.listenerCount('connect') === 0 && this._connectionState === 'new')
+            throw new TypeError('no "connect" listener set into this transport');
+        else if (appData && typeof appData !== 'object')
+            throw new TypeError('if given, appData must be an object');
+        // This may throw.
+        ortc.validateSctpStreamParameters(sctpStreamParameters);
+        // Enqueue command.
+        return this._awaitQueue.push(async () => {
+            const { dataChannel } = await this._handler.receiveDataChannel({
+                sctpStreamParameters,
+                label,
+                protocol
+            });
+            const dataConsumer = new DataConsumer_1.DataConsumer({
+                id,
+                dataProducerId,
+                dataChannel,
+                sctpStreamParameters,
+                appData
+            });
+            this._dataConsumers.set(dataConsumer.id, dataConsumer);
+            this._handleDataConsumer(dataConsumer);
+            // Emit observer event.
+            this._observer.safeEmit('newdataconsumer', dataConsumer);
+            return dataConsumer;
+        }, 'transport.consumeData()');
+    }
+    // This method is guaranteed to never throw.
+    async _createPendingConsumers() {
+        this._awaitQueue.push(async () => {
+            this._consumerCreationInProgress = true;
+            const pendingConsumerTasks = [...this._pendingConsumerTasks];
+            // Clear pending Consumer tasks.
+            this._pendingConsumerTasks = [];
+            // Video Consumer in order to create the probator.
+            let videoConsumerForProbator = undefined;
+            // Fill options list.
+            const optionsList = [];
+            for (const task of pendingConsumerTasks) {
+                const { id, kind, rtpParameters } = task.consumerOptions;
+                optionsList.push({
+                    trackId: id,
+                    kind: kind,
+                    rtpParameters
+                });
+            }
+            try {
+                const results = await this._handler.receive(optionsList);
+                for (let idx = 0; idx < results.length; idx++) {
+                    const task = pendingConsumerTasks[idx];
+                    const result = results[idx];
+                    const { id, producerId, kind, rtpParameters, appData } = task.consumerOptions;
+                    const { localId, rtpReceiver, track } = result;
+                    const consumer = new Consumer_1.Consumer({
+                        id: id,
+                        localId,
+                        producerId: producerId,
+                        rtpReceiver,
+                        track,
+                        rtpParameters,
+                        appData
+                    });
+                    this._consumers.set(consumer.id, consumer);
+                    this._handleConsumer(consumer);
+                    // If this is the first video Consumer and the Consumer for RTP probation
+                    // has not yet been created, it's time to create it.
+                    if (!this._probatorConsumerCreated && !videoConsumerForProbator && kind === 'video') {
+                        videoConsumerForProbator = consumer;
+                    }
+                    // Emit observer event.
+                    this._observer.safeEmit('newconsumer', consumer);
+                    task.resolve(consumer);
+                }
+            }
+            catch (error) {
+                for (const task of pendingConsumerTasks) {
+                    task.reject(error);
+                }
+            }
+            // If RTP probation must be handled, do it now.
+            if (videoConsumerForProbator) {
+                try {
+                    const probatorRtpParameters = ortc.generateProbatorRtpParameters(videoConsumerForProbator.rtpParameters);
+                    await this._handler.receive([{
+                            trackId: 'probator',
+                            kind: 'video',
+                            rtpParameters: probatorRtpParameters
+                        }]);
+                    logger.debug('_createPendingConsumers() | Consumer for RTP probation created');
+                    this._probatorConsumerCreated = true;
+                }
+                catch (error) {
+                    logger.error('_createPendingConsumers() | failed to create Consumer for RTP probation:%o', error);
+                }
+            }
+            this._consumerCreationInProgress = false;
+        }, 'transport._createPendingConsumers()')
+            .then(() => {
+            // There are pending Consumer tasks, enqueue their creation.
+            if (this._pendingConsumerTasks.length > 0) {
+                this._createPendingConsumers();
+            }
+        })
+            // NOTE: We only get here when the await queue is closed.
+            .catch(() => { });
+    }
+    _pausePendingConsumers() {
+        this._awaitQueue.push(async () => {
+            this._consumerPauseInProgress = true;
+            const pendingPauseConsumers = Array.from(this._pendingPauseConsumers.values());
+            // Clear pending pause Consumer map.
+            this._pendingPauseConsumers.clear();
+            try {
+                await this._handler.pauseReceiving(pendingPauseConsumers.map((consumer) => consumer.localId));
+            }
+            catch (error) {
+                logger.error('_pausePendingConsumers() | failed to pause Consumers:', error);
+            }
+            this._consumerPauseInProgress = false;
+        }, 'consumer @pause event')
+            .then(() => {
+            // There are pending Consumers to be paused, do it.
+            if (this._pendingPauseConsumers.size > 0) {
+                this._pausePendingConsumers();
+            }
+        })
+            // NOTE: We only get here when the await queue is closed.
+            .catch(() => { });
+    }
+    _resumePendingConsumers() {
+        this._awaitQueue.push(async () => {
+            this._consumerResumeInProgress = true;
+            const pendingResumeConsumers = Array.from(this._pendingResumeConsumers.values());
+            // Clear pending resume Consumer map.
+            this._pendingResumeConsumers.clear();
+            try {
+                await this._handler.resumeReceiving(pendingResumeConsumers.map((consumer) => consumer.localId));
+            }
+            catch (error) {
+                logger.error('_resumePendingConsumers() | failed to resume Consumers:', error);
+            }
+        }, 'consumer @resume event')
+            .then(() => {
+            this._consumerResumeInProgress = false;
+            // There are pending Consumer to be resumed, do it.
+            if (this._pendingResumeConsumers.size > 0) {
+                this._resumePendingConsumers();
+            }
+        })
+            // NOTE: We only get here when the await queue is closed.
+            .catch(() => { });
+    }
+    _handleHandler() {
+        const handler = this._handler;
+        handler.on('@connect', ({ dtlsParameters }, callback, errback) => {
+            if (this._closed) {
+                errback(new errors_1.InvalidStateError('closed'));
+                return;
+            }
+            this.safeEmit('connect', { dtlsParameters }, callback, errback);
+        });
+        handler.on('@connectionstatechange', (connectionState) => {
+            if (connectionState === this._connectionState)
+                return;
+            logger.debug('connection state changed to %s', connectionState);
+            this._connectionState = connectionState;
+            if (!this._closed)
+                this.safeEmit('connectionstatechange', connectionState);
+        });
+    }
+    _handleProducer(producer) {
+        producer.on('@close', () => {
+            this._producers.delete(producer.id);
+            if (this._closed)
+                return;
+            this._awaitQueue.push(async () => this._handler.stopSending(producer.localId), 'producer @close event')
+                .catch((error) => logger.warn('producer.close() failed:%o', error));
+        });
+        producer.on('@replacetrack', (track, callback, errback) => {
+            this._awaitQueue.push(async () => this._handler.replaceTrack(producer.localId, track), 'producer @replacetrack event')
+                .then(callback)
+                .catch(errback);
+        });
+        producer.on('@setmaxspatiallayer', (spatialLayer, callback, errback) => {
+            this._awaitQueue.push(async () => (this._handler.setMaxSpatialLayer(producer.localId, spatialLayer)), 'producer @setmaxspatiallayer event')
+                .then(callback)
+                .catch(errback);
+        });
+        producer.on('@setrtpencodingparameters', (params, callback, errback) => {
+            this._awaitQueue.push(async () => (this._handler.setRtpEncodingParameters(producer.localId, params)), 'producer @setrtpencodingparameters event')
+                .then(callback)
+                .catch(errback);
+        });
+        producer.on('@getstats', (callback, errback) => {
+            if (this._closed)
+                return errback(new errors_1.InvalidStateError('closed'));
+            this._handler.getSenderStats(producer.localId)
+                .then(callback)
+                .catch(errback);
+        });
+    }
+    _handleConsumer(consumer) {
+        consumer.on('@close', () => {
+            this._consumers.delete(consumer.id);
+            this._pendingPauseConsumers.delete(consumer.id);
+            this._pendingResumeConsumers.delete(consumer.id);
+            if (this._closed)
+                return;
+            this._awaitQueue.push(async () => this._handler.stopReceiving(consumer.localId), 'consumer @close event')
+                .catch(() => { });
+        });
+        consumer.on('@pause', () => {
+            // If Consumer is pending to be resumed, remove from pending resume list.
+            if (this._pendingResumeConsumers.has(consumer.id)) {
+                this._pendingResumeConsumers.delete(consumer.id);
+            }
+            // Store the Consumer into the pending list.
+            this._pendingPauseConsumers.set(consumer.id, consumer);
+            // There is no Consumer pause in progress, do it now.
+            if (this._consumerPauseInProgress === false) {
+                this._pausePendingConsumers();
+            }
+        });
+        consumer.on('@resume', () => {
+            // If Consumer is pending to be paused, remove from pending pause list.
+            if (this._pendingPauseConsumers.has(consumer.id)) {
+                this._pendingPauseConsumers.delete(consumer.id);
+            }
+            // Store the Consumer into the pending list.
+            this._pendingResumeConsumers.set(consumer.id, consumer);
+            // There is no Consumer resume in progress, do it now.
+            if (this._consumerResumeInProgress === false) {
+                this._resumePendingConsumers();
+            }
+        });
+        consumer.on('@getstats', (callback, errback) => {
+            if (this._closed)
+                return errback(new errors_1.InvalidStateError('closed'));
+            this._handler.getReceiverStats(consumer.localId)
+                .then(callback)
+                .catch(errback);
+        });
+    }
+    _handleDataProducer(dataProducer) {
+        dataProducer.on('@close', () => {
+            this._dataProducers.delete(dataProducer.id);
+        });
+    }
+    _handleDataConsumer(dataConsumer) {
+        dataConsumer.on('@close', () => {
+            this._dataConsumers.delete(dataConsumer.id);
+        });
+    }
+}
+exports.Transport = Transport;
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Producer = void 0;
+const Logger_1 = __webpack_require__(1);
+const EnhancedEventEmitter_1 = __webpack_require__(9);
+const errors_1 = __webpack_require__(4);
+const logger = new Logger_1.Logger('Producer');
+class Producer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
+    /**
+     * @emits transportclose
+     * @emits trackended
+     * @emits @replacetrack - (track: MediaStreamTrack | null)
+     * @emits @setmaxspatiallayer - (spatialLayer: string)
+     * @emits @setrtpencodingparameters - (params: any)
+     * @emits @getstats
+     * @emits @close
+     */
+    constructor({ id, localId, rtpSender, track, rtpParameters, stopTracks, disableTrackOnPause, zeroRtpOnPause, appData }) {
+        super();
+        // Closed flag.
+        this._closed = false;
+        // Observer instance.
+        this._observer = new EnhancedEventEmitter_1.EnhancedEventEmitter();
+        logger.debug('constructor()');
+        this._id = id;
+        this._localId = localId;
+        this._rtpSender = rtpSender;
+        this._track = track;
+        this._kind = track.kind;
+        this._rtpParameters = rtpParameters;
+        this._paused = disableTrackOnPause ? !track.enabled : false;
+        this._maxSpatialLayer = undefined;
+        this._stopTracks = stopTracks;
+        this._disableTrackOnPause = disableTrackOnPause;
+        this._zeroRtpOnPause = zeroRtpOnPause;
+        this._appData = appData || {};
+        this._onTrackEnded = this._onTrackEnded.bind(this);
+        // NOTE: Minor issue. If zeroRtpOnPause is true, we cannot emit the
+        // '@replacetrack' event here, so RTCRtpSender.track won't be null.
+        this._handleTrack();
+    }
+    /**
+     * Producer id.
+     */
+    get id() {
+        return this._id;
+    }
+    /**
+     * Local id.
+     */
+    get localId() {
+        return this._localId;
+    }
+    /**
+     * Whether the Producer is closed.
+     */
+    get closed() {
+        return this._closed;
+    }
+    /**
+     * Media kind.
+     */
+    get kind() {
+        return this._kind;
+    }
+    /**
+     * Associated RTCRtpSender.
+     */
+    get rtpSender() {
+        return this._rtpSender;
+    }
+    /**
+     * The associated track.
+     */
+    get track() {
+        return this._track;
+    }
+    /**
+     * RTP parameters.
+     */
+    get rtpParameters() {
+        return this._rtpParameters;
+    }
+    /**
+     * Whether the Producer is paused.
+     */
+    get paused() {
+        return this._paused;
+    }
+    /**
+     * Max spatial layer.
+     *
+     * @type {Number | undefined}
+     */
+    get maxSpatialLayer() {
+        return this._maxSpatialLayer;
+    }
+    /**
+     * App custom data.
+     */
+    get appData() {
+        return this._appData;
+    }
+    /**
+     * Invalid setter.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    set appData(appData) {
+        throw new Error('cannot override appData object');
+    }
+    /**
+     * Observer.
+     *
+     * @emits close
+     * @emits pause
+     * @emits resume
+     * @emits trackended
+     */
+    get observer() {
+        return this._observer;
+    }
+    /**
+     * Closes the Producer.
+     */
+    close() {
+        if (this._closed)
+            return;
+        logger.debug('close()');
+        this._closed = true;
+        this._destroyTrack();
+        this.emit('@close');
+        // Emit observer event.
+        this._observer.safeEmit('close');
+    }
+    /**
+     * Transport was closed.
+     */
+    transportClosed() {
+        if (this._closed)
+            return;
+        logger.debug('transportClosed()');
+        this._closed = true;
+        this._destroyTrack();
+        this.safeEmit('transportclose');
+        // Emit observer event.
+        this._observer.safeEmit('close');
+    }
+    /**
+     * Get associated RTCRtpSender stats.
+     */
+    async getStats() {
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        return this.safeEmitAsPromise('@getstats');
+    }
+    /**
+     * Pauses sending media.
+     */
+    pause() {
+        logger.debug('pause()');
+        if (this._closed) {
+            logger.error('pause() | Producer closed');
+            return;
+        }
+        this._paused = true;
+        if (this._track && this._disableTrackOnPause) {
+            this._track.enabled = false;
+        }
+        if (this._zeroRtpOnPause) {
+            this.safeEmitAsPromise('@replacetrack', null)
+                .catch(() => { });
+        }
+        // Emit observer event.
+        this._observer.safeEmit('pause');
+    }
+    /**
+     * Resumes sending media.
+     */
+    resume() {
+        logger.debug('resume()');
+        if (this._closed) {
+            logger.error('resume() | Producer closed');
+            return;
+        }
+        this._paused = false;
+        if (this._track && this._disableTrackOnPause) {
+            this._track.enabled = true;
+        }
+        if (this._zeroRtpOnPause) {
+            this.safeEmitAsPromise('@replacetrack', this._track)
+                .catch(() => { });
+        }
+        // Emit observer event.
+        this._observer.safeEmit('resume');
+    }
+    /**
+     * Replaces the current track with a new one or null.
+     */
+    async replaceTrack({ track }) {
+        logger.debug('replaceTrack() [track:%o]', track);
+        if (this._closed) {
+            // This must be done here. Otherwise there is no chance to stop the given
+            // track.
+            if (track && this._stopTracks) {
+                try {
+                    track.stop();
+                }
+                catch (error) { }
+            }
+            throw new errors_1.InvalidStateError('closed');
+        }
+        else if (track && track.readyState === 'ended') {
+            throw new errors_1.InvalidStateError('track ended');
+        }
+        // Do nothing if this is the same track as the current handled one.
+        if (track === this._track) {
+            logger.debug('replaceTrack() | same track, ignored');
+            return;
+        }
+        if (!this._zeroRtpOnPause || !this._paused) {
+            await this.safeEmitAsPromise('@replacetrack', track);
+        }
+        // Destroy the previous track.
+        this._destroyTrack();
+        // Set the new track.
+        this._track = track;
+        // If this Producer was paused/resumed and the state of the new
+        // track does not match, fix it.
+        if (this._track && this._disableTrackOnPause) {
+            if (!this._paused)
+                this._track.enabled = true;
+            else if (this._paused)
+                this._track.enabled = false;
+        }
+        // Handle the effective track.
+        this._handleTrack();
+    }
+    /**
+     * Sets the video max spatial layer to be sent.
+     */
+    async setMaxSpatialLayer(spatialLayer) {
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        else if (this._kind !== 'video')
+            throw new errors_1.UnsupportedError('not a video Producer');
+        else if (typeof spatialLayer !== 'number')
+            throw new TypeError('invalid spatialLayer');
+        if (spatialLayer === this._maxSpatialLayer)
+            return;
+        await this.safeEmitAsPromise('@setmaxspatiallayer', spatialLayer);
+        this._maxSpatialLayer = spatialLayer;
+    }
+    /**
+     * Sets the DSCP value.
+     */
+    async setRtpEncodingParameters(params) {
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        else if (typeof params !== 'object')
+            throw new TypeError('invalid params');
+        await this.safeEmitAsPromise('@setrtpencodingparameters', params);
+    }
+    _onTrackEnded() {
+        logger.debug('track "ended" event');
+        this.safeEmit('trackended');
+        // Emit observer event.
+        this._observer.safeEmit('trackended');
+    }
+    _handleTrack() {
+        if (!this._track)
+            return;
+        this._track.addEventListener('ended', this._onTrackEnded);
+    }
+    _destroyTrack() {
+        if (!this._track)
+            return;
+        try {
+            this._track.removeEventListener('ended', this._onTrackEnded);
+            // Just stop the track unless the app set stopTracks: false.
+            if (this._stopTracks)
+                this._track.stop();
+        }
+        catch (error) { }
+    }
+}
+exports.Producer = Producer;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Consumer = void 0;
+const Logger_1 = __webpack_require__(1);
+const EnhancedEventEmitter_1 = __webpack_require__(9);
+const errors_1 = __webpack_require__(4);
+const logger = new Logger_1.Logger('Consumer');
+class Consumer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
+    /**
+     * @emits transportclose
+     * @emits trackended
+     * @emits @getstats
+     * @emits @close
+     * @emits @pause
+     * @emits @resume
+     */
+    constructor({ id, localId, producerId, rtpReceiver, track, rtpParameters, appData }) {
+        super();
+        // Closed flag.
+        this._closed = false;
+        // Observer instance.
+        this._observer = new EnhancedEventEmitter_1.EnhancedEventEmitter();
+        logger.debug('constructor()');
+        this._id = id;
+        this._localId = localId;
+        this._producerId = producerId;
+        this._rtpReceiver = rtpReceiver;
+        this._track = track;
+        this._rtpParameters = rtpParameters;
+        this._paused = !track.enabled;
+        this._appData = appData || {};
+        this._onTrackEnded = this._onTrackEnded.bind(this);
+        this._handleTrack();
+    }
+    /**
+     * Consumer id.
+     */
+    get id() {
+        return this._id;
+    }
+    /**
+     * Local id.
+     */
+    get localId() {
+        return this._localId;
+    }
+    /**
+     * Associated Producer id.
+     */
+    get producerId() {
+        return this._producerId;
+    }
+    /**
+     * Whether the Consumer is closed.
+     */
+    get closed() {
+        return this._closed;
+    }
+    /**
+     * Media kind.
+     */
+    get kind() {
+        return this._track.kind;
+    }
+    /**
+     * Associated RTCRtpReceiver.
+     */
+    get rtpReceiver() {
+        return this._rtpReceiver;
+    }
+    /**
+     * The associated track.
+     */
+    get track() {
+        return this._track;
+    }
+    /**
+     * RTP parameters.
+     */
+    get rtpParameters() {
+        return this._rtpParameters;
+    }
+    /**
+     * Whether the Consumer is paused.
+     */
+    get paused() {
+        return this._paused;
+    }
+    /**
+     * App custom data.
+     */
+    get appData() {
+        return this._appData;
+    }
+    /**
+     * Invalid setter.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    set appData(appData) {
+        throw new Error('cannot override appData object');
+    }
+    /**
+     * Observer.
+     *
+     * @emits close
+     * @emits pause
+     * @emits resume
+     * @emits trackended
+     */
+    get observer() {
+        return this._observer;
+    }
+    /**
+     * Closes the Consumer.
+     */
+    close() {
+        if (this._closed)
+            return;
+        logger.debug('close()');
+        this._closed = true;
+        this._destroyTrack();
+        this.emit('@close');
+        // Emit observer event.
+        this._observer.safeEmit('close');
+    }
+    /**
+     * Transport was closed.
+     */
+    transportClosed() {
+        if (this._closed)
+            return;
+        logger.debug('transportClosed()');
+        this._closed = true;
+        this._destroyTrack();
+        this.safeEmit('transportclose');
+        // Emit observer event.
+        this._observer.safeEmit('close');
+    }
+    /**
+     * Get associated RTCRtpReceiver stats.
+     */
+    async getStats() {
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        return this.safeEmitAsPromise('@getstats');
+    }
+    /**
+     * Pauses receiving media.
+     */
+    pause() {
+        logger.debug('pause()');
+        if (this._closed) {
+            logger.error('pause() | Consumer closed');
+            return;
+        }
+        this._paused = true;
+        this._track.enabled = false;
+        this.emit('@pause');
+        // Emit observer event.
+        this._observer.safeEmit('pause');
+    }
+    /**
+     * Resumes receiving media.
+     */
+    resume() {
+        logger.debug('resume()');
+        if (this._closed) {
+            logger.error('resume() | Consumer closed');
+            return;
+        }
+        this._paused = false;
+        this._track.enabled = true;
+        this.emit('@resume');
+        // Emit observer event.
+        this._observer.safeEmit('resume');
+    }
+    _onTrackEnded() {
+        logger.debug('track "ended" event');
+        this.safeEmit('trackended');
+        // Emit observer event.
+        this._observer.safeEmit('trackended');
+    }
+    _handleTrack() {
+        this._track.addEventListener('ended', this._onTrackEnded);
+    }
+    _destroyTrack() {
+        try {
+            this._track.removeEventListener('ended', this._onTrackEnded);
+            this._track.stop();
+        }
+        catch (error) { }
+    }
+}
+exports.Consumer = Consumer;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DataProducer = void 0;
+const Logger_1 = __webpack_require__(1);
+const EnhancedEventEmitter_1 = __webpack_require__(9);
+const errors_1 = __webpack_require__(4);
+const logger = new Logger_1.Logger('DataProducer');
+class DataProducer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
+    /**
+     * @emits transportclose
+     * @emits open
+     * @emits error - (error: Error)
+     * @emits close
+     * @emits bufferedamountlow
+     * @emits @close
+     */
+    constructor({ id, dataChannel, sctpStreamParameters, appData }) {
+        super();
+        // Closed flag.
+        this._closed = false;
+        // Observer instance.
+        this._observer = new EnhancedEventEmitter_1.EnhancedEventEmitter();
+        logger.debug('constructor()');
+        this._id = id;
+        this._dataChannel = dataChannel;
+        this._sctpStreamParameters = sctpStreamParameters;
+        this._appData = appData || {};
+        this._handleDataChannel();
+    }
+    /**
+     * DataProducer id.
+     */
+    get id() {
+        return this._id;
+    }
+    /**
+     * Whether the DataProducer is closed.
+     */
+    get closed() {
+        return this._closed;
+    }
+    /**
+     * SCTP stream parameters.
+     */
+    get sctpStreamParameters() {
+        return this._sctpStreamParameters;
+    }
+    /**
+     * DataChannel readyState.
+     */
+    get readyState() {
+        return this._dataChannel.readyState;
+    }
+    /**
+     * DataChannel label.
+     */
+    get label() {
+        return this._dataChannel.label;
+    }
+    /**
+     * DataChannel protocol.
+     */
+    get protocol() {
+        return this._dataChannel.protocol;
+    }
+    /**
+     * DataChannel bufferedAmount.
+     */
+    get bufferedAmount() {
+        return this._dataChannel.bufferedAmount;
+    }
+    /**
+     * DataChannel bufferedAmountLowThreshold.
+     */
+    get bufferedAmountLowThreshold() {
+        return this._dataChannel.bufferedAmountLowThreshold;
+    }
+    /**
+     * Set DataChannel bufferedAmountLowThreshold.
+     */
+    set bufferedAmountLowThreshold(bufferedAmountLowThreshold) {
+        this._dataChannel.bufferedAmountLowThreshold = bufferedAmountLowThreshold;
+    }
+    /**
+     * App custom data.
+     */
+    get appData() {
+        return this._appData;
+    }
+    /**
+     * Invalid setter.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    set appData(appData) {
+        throw new Error('cannot override appData object');
+    }
+    /**
+     * Observer.
+     *
+     * @emits close
+     */
+    get observer() {
+        return this._observer;
+    }
+    /**
+     * Closes the DataProducer.
+     */
+    close() {
+        if (this._closed)
+            return;
+        logger.debug('close()');
+        this._closed = true;
+        this._dataChannel.close();
+        this.emit('@close');
+        // Emit observer event.
+        this._observer.safeEmit('close');
+    }
+    /**
+     * Transport was closed.
+     */
+    transportClosed() {
+        if (this._closed)
+            return;
+        logger.debug('transportClosed()');
+        this._closed = true;
+        this._dataChannel.close();
+        this.safeEmit('transportclose');
+        // Emit observer event.
+        this._observer.safeEmit('close');
+    }
+    /**
+     * Send a message.
+     *
+     * @param {String|Blob|ArrayBuffer|ArrayBufferView} data.
+     */
+    send(data) {
+        logger.debug('send()');
+        if (this._closed)
+            throw new errors_1.InvalidStateError('closed');
+        this._dataChannel.send(data);
+    }
+    _handleDataChannel() {
+        this._dataChannel.addEventListener('open', () => {
+            if (this._closed)
+                return;
+            logger.debug('DataChannel "open" event');
+            this.safeEmit('open');
+        });
+        this._dataChannel.addEventListener('error', (event) => {
+            if (this._closed)
+                return;
+            let { error } = event;
+            if (!error)
+                error = new Error('unknown DataChannel error');
+            if (error.errorDetail === 'sctp-failure') {
+                logger.error('DataChannel SCTP error [sctpCauseCode:%s]: %s', error.sctpCauseCode, error.message);
+            }
+            else {
+                logger.error('DataChannel "error" event: %o', error);
+            }
+            this.safeEmit('error', error);
+        });
+        this._dataChannel.addEventListener('close', () => {
+            if (this._closed)
+                return;
+            logger.warn('DataChannel "close" event');
+            this._closed = true;
+            this.emit('@close');
+            this.safeEmit('close');
+        });
+        this._dataChannel.addEventListener('message', () => {
+            if (this._closed)
+                return;
+            logger.warn('DataChannel "message" event in a DataProducer, message discarded');
+        });
+        this._dataChannel.addEventListener('bufferedamountlow', () => {
+            if (this._closed)
+                return;
+            this.safeEmit('bufferedamountlow');
+        });
+    }
+}
+exports.DataProducer = DataProducer;
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DataConsumer = void 0;
+const Logger_1 = __webpack_require__(1);
+const EnhancedEventEmitter_1 = __webpack_require__(9);
+const logger = new Logger_1.Logger('DataConsumer');
+class DataConsumer extends EnhancedEventEmitter_1.EnhancedEventEmitter {
+    /**
+     * @emits transportclose
+     * @emits open
+     * @emits error - (error: Error)
+     * @emits close
+     * @emits message - (message: any)
+     * @emits @close
+     */
+    constructor({ id, dataProducerId, dataChannel, sctpStreamParameters, appData }) {
+        super();
+        // Closed flag.
+        this._closed = false;
+        // Observer instance.
+        this._observer = new EnhancedEventEmitter_1.EnhancedEventEmitter();
+        logger.debug('constructor()');
+        this._id = id;
+        this._dataProducerId = dataProducerId;
+        this._dataChannel = dataChannel;
+        this._sctpStreamParameters = sctpStreamParameters;
+        this._appData = appData || {};
+        this._handleDataChannel();
+    }
+    /**
+     * DataConsumer id.
+     */
+    get id() {
+        return this._id;
+    }
+    /**
+     * Associated DataProducer id.
+     */
+    get dataProducerId() {
+        return this._dataProducerId;
+    }
+    /**
+     * Whether the DataConsumer is closed.
+     */
+    get closed() {
+        return this._closed;
+    }
+    /**
+     * SCTP stream parameters.
+     */
+    get sctpStreamParameters() {
+        return this._sctpStreamParameters;
+    }
+    /**
+     * DataChannel readyState.
+     */
+    get readyState() {
+        return this._dataChannel.readyState;
+    }
+    /**
+     * DataChannel label.
+     */
+    get label() {
+        return this._dataChannel.label;
+    }
+    /**
+     * DataChannel protocol.
+     */
+    get protocol() {
+        return this._dataChannel.protocol;
+    }
+    /**
+     * DataChannel binaryType.
+     */
+    get binaryType() {
+        return this._dataChannel.binaryType;
+    }
+    /**
+     * Set DataChannel binaryType.
+     */
+    set binaryType(binaryType) {
+        this._dataChannel.binaryType = binaryType;
+    }
+    /**
+     * App custom data.
+     */
+    get appData() {
+        return this._appData;
+    }
+    /**
+     * Invalid setter.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    set appData(appData) {
+        throw new Error('cannot override appData object');
+    }
+    /**
+     * Observer.
+     *
+     * @emits close
+     */
+    get observer() {
+        return this._observer;
+    }
+    /**
+     * Closes the DataConsumer.
+     */
+    close() {
+        if (this._closed)
+            return;
+        logger.debug('close()');
+        this._closed = true;
+        this._dataChannel.close();
+        this.emit('@close');
+        // Emit observer event.
+        this._observer.safeEmit('close');
+    }
+    /**
+     * Transport was closed.
+     */
+    transportClosed() {
+        if (this._closed)
+            return;
+        logger.debug('transportClosed()');
+        this._closed = true;
+        this._dataChannel.close();
+        this.safeEmit('transportclose');
+        // Emit observer event.
+        this._observer.safeEmit('close');
+    }
+    _handleDataChannel() {
+        this._dataChannel.addEventListener('open', () => {
+            if (this._closed)
+                return;
+            logger.debug('DataChannel "open" event');
+            this.safeEmit('open');
+        });
+        this._dataChannel.addEventListener('error', (event) => {
+            if (this._closed)
+                return;
+            let { error } = event;
+            if (!error)
+                error = new Error('unknown DataChannel error');
+            if (error.errorDetail === 'sctp-failure') {
+                logger.error('DataChannel SCTP error [sctpCauseCode:%s]: %s', error.sctpCauseCode, error.message);
+            }
+            else {
+                logger.error('DataChannel "error" event: %o', error);
+            }
+            this.safeEmit('error', error);
+        });
+        this._dataChannel.addEventListener('close', () => {
+            if (this._closed)
+                return;
+            logger.warn('DataChannel "close" event');
+            this._closed = true;
+            this.emit('@close');
+            this.safeEmit('close');
+        });
+        this._dataChannel.addEventListener('message', (event) => {
+            if (this._closed)
+                return;
+            this.safeEmit('message', event.data);
+        });
+    }
+}
+exports.DataConsumer = DataConsumer;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+var grammar = module.exports = {
+  v: [{
+    name: 'version',
+    reg: /^(\d*)$/
+  }],
+  o: [{
+    // o=- 20518 0 IN IP4 203.0.113.1
+    // NB: sessionId will be a String in most cases because it is huge
+    name: 'origin',
+    reg: /^(\S*) (\d*) (\d*) (\S*) IP(\d) (\S*)/,
+    names: ['username', 'sessionId', 'sessionVersion', 'netType', 'ipVer', 'address'],
+    format: '%s %s %d %s IP%d %s'
+  }],
+  // default parsing of these only (though some of these feel outdated)
+  s: [{ name: 'name' }],
+  i: [{ name: 'description' }],
+  u: [{ name: 'uri' }],
+  e: [{ name: 'email' }],
+  p: [{ name: 'phone' }],
+  z: [{ name: 'timezones' }], // TODO: this one can actually be parsed properly...
+  r: [{ name: 'repeats' }],   // TODO: this one can also be parsed properly
+  // k: [{}], // outdated thing ignored
+  t: [{
+    // t=0 0
+    name: 'timing',
+    reg: /^(\d*) (\d*)/,
+    names: ['start', 'stop'],
+    format: '%d %d'
+  }],
+  c: [{
+    // c=IN IP4 10.47.197.26
+    name: 'connection',
+    reg: /^IN IP(\d) (\S*)/,
+    names: ['version', 'ip'],
+    format: 'IN IP%d %s'
+  }],
+  b: [{
+    // b=AS:4000
+    push: 'bandwidth',
+    reg: /^(TIAS|AS|CT|RR|RS):(\d*)/,
+    names: ['type', 'limit'],
+    format: '%s:%s'
+  }],
+  m: [{
+    // m=video 51744 RTP/AVP 126 97 98 34 31
+    // NB: special - pushes to session
+    // TODO: rtp/fmtp should be filtered by the payloads found here?
+    reg: /^(\w*) (\d*) ([\w/]*)(?: (.*))?/,
+    names: ['type', 'port', 'protocol', 'payloads'],
+    format: '%s %d %s %s'
+  }],
+  a: [
+    {
+      // a=rtpmap:110 opus/48000/2
+      push: 'rtp',
+      reg: /^rtpmap:(\d*) ([\w\-.]*)(?:\s*\/(\d*)(?:\s*\/(\S*))?)?/,
+      names: ['payload', 'codec', 'rate', 'encoding'],
+      format: function (o) {
+        return (o.encoding)
+          ? 'rtpmap:%d %s/%s/%s'
+          : o.rate
+            ? 'rtpmap:%d %s/%s'
+            : 'rtpmap:%d %s';
+      }
+    },
+    {
+      // a=fmtp:108 profile-level-id=24;object=23;bitrate=64000
+      // a=fmtp:111 minptime=10; useinbandfec=1
+      push: 'fmtp',
+      reg: /^fmtp:(\d*) ([\S| ]*)/,
+      names: ['payload', 'config'],
+      format: 'fmtp:%d %s'
+    },
+    {
+      // a=control:streamid=0
+      name: 'control',
+      reg: /^control:(.*)/,
+      format: 'control:%s'
+    },
+    {
+      // a=rtcp:65179 IN IP4 193.84.77.194
+      name: 'rtcp',
+      reg: /^rtcp:(\d*)(?: (\S*) IP(\d) (\S*))?/,
+      names: ['port', 'netType', 'ipVer', 'address'],
+      format: function (o) {
+        return (o.address != null)
+          ? 'rtcp:%d %s IP%d %s'
+          : 'rtcp:%d';
+      }
+    },
+    {
+      // a=rtcp-fb:98 trr-int 100
+      push: 'rtcpFbTrrInt',
+      reg: /^rtcp-fb:(\*|\d*) trr-int (\d*)/,
+      names: ['payload', 'value'],
+      format: 'rtcp-fb:%s trr-int %d'
+    },
+    {
+      // a=rtcp-fb:98 nack rpsi
+      push: 'rtcpFb',
+      reg: /^rtcp-fb:(\*|\d*) ([\w-_]*)(?: ([\w-_]*))?/,
+      names: ['payload', 'type', 'subtype'],
+      format: function (o) {
+        return (o.subtype != null)
+          ? 'rtcp-fb:%s %s %s'
+          : 'rtcp-fb:%s %s';
+      }
+    },
+    {
+      // a=extmap:2 urn:ietf:params:rtp-hdrext:toffset
+      // a=extmap:1/recvonly URI-gps-string
+      // a=extmap:3 urn:ietf:params:rtp-hdrext:encrypt urn:ietf:params:rtp-hdrext:smpte-tc 25@600/24
+      push: 'ext',
+      reg: /^extmap:(\d+)(?:\/(\w+))?(?: (urn:ietf:params:rtp-hdrext:encrypt))? (\S*)(?: (\S*))?/,
+      names: ['value', 'direction', 'encrypt-uri', 'uri', 'config'],
+      format: function (o) {
+        return (
+          'extmap:%d' +
+          (o.direction ? '/%s' : '%v') +
+          (o['encrypt-uri'] ? ' %s' : '%v') +
+          ' %s' +
+          (o.config ? ' %s' : '')
+        );
+      }
+    },
+    {
+      // a=extmap-allow-mixed
+      name: 'extmapAllowMixed',
+      reg: /^(extmap-allow-mixed)/
+    },
+    {
+      // a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:PS1uQCVeeCFCanVmcjkpPywjNWhcYD0mXXtxaVBR|2^20|1:32
+      push: 'crypto',
+      reg: /^crypto:(\d*) ([\w_]*) (\S*)(?: (\S*))?/,
+      names: ['id', 'suite', 'config', 'sessionConfig'],
+      format: function (o) {
+        return (o.sessionConfig != null)
+          ? 'crypto:%d %s %s %s'
+          : 'crypto:%d %s %s';
+      }
+    },
+    {
+      // a=setup:actpass
+      name: 'setup',
+      reg: /^setup:(\w*)/,
+      format: 'setup:%s'
+    },
+    {
+      // a=connection:new
+      name: 'connectionType',
+      reg: /^connection:(new|existing)/,
+      format: 'connection:%s'
+    },
+    {
+      // a=mid:1
+      name: 'mid',
+      reg: /^mid:([^\s]*)/,
+      format: 'mid:%s'
+    },
+    {
+      // a=msid:0c8b064d-d807-43b4-b434-f92a889d8587 98178685-d409-46e0-8e16-7ef0db0db64a
+      name: 'msid',
+      reg: /^msid:(.*)/,
+      format: 'msid:%s'
+    },
+    {
+      // a=ptime:20
+      name: 'ptime',
+      reg: /^ptime:(\d*(?:\.\d*)*)/,
+      format: 'ptime:%d'
+    },
+    {
+      // a=maxptime:60
+      name: 'maxptime',
+      reg: /^maxptime:(\d*(?:\.\d*)*)/,
+      format: 'maxptime:%d'
+    },
+    {
+      // a=sendrecv
+      name: 'direction',
+      reg: /^(sendrecv|recvonly|sendonly|inactive)/
+    },
+    {
+      // a=ice-lite
+      name: 'icelite',
+      reg: /^(ice-lite)/
+    },
+    {
+      // a=ice-ufrag:F7gI
+      name: 'iceUfrag',
+      reg: /^ice-ufrag:(\S*)/,
+      format: 'ice-ufrag:%s'
+    },
+    {
+      // a=ice-pwd:x9cml/YzichV2+XlhiMu8g
+      name: 'icePwd',
+      reg: /^ice-pwd:(\S*)/,
+      format: 'ice-pwd:%s'
+    },
+    {
+      // a=fingerprint:SHA-1 00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33
+      name: 'fingerprint',
+      reg: /^fingerprint:(\S*) (\S*)/,
+      names: ['type', 'hash'],
+      format: 'fingerprint:%s %s'
+    },
+    {
+      // a=candidate:0 1 UDP 2113667327 203.0.113.1 54400 typ host
+      // a=candidate:1162875081 1 udp 2113937151 192.168.34.75 60017 typ host generation 0 network-id 3 network-cost 10
+      // a=candidate:3289912957 2 udp 1845501695 193.84.77.194 60017 typ srflx raddr 192.168.34.75 rport 60017 generation 0 network-id 3 network-cost 10
+      // a=candidate:229815620 1 tcp 1518280447 192.168.150.19 60017 typ host tcptype active generation 0 network-id 3 network-cost 10
+      // a=candidate:3289912957 2 tcp 1845501695 193.84.77.194 60017 typ srflx raddr 192.168.34.75 rport 60017 tcptype passive generation 0 network-id 3 network-cost 10
+      push:'candidates',
+      reg: /^candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcptype (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?/,
+      names: ['foundation', 'component', 'transport', 'priority', 'ip', 'port', 'type', 'raddr', 'rport', 'tcptype', 'generation', 'network-id', 'network-cost'],
+      format: function (o) {
+        var str = 'candidate:%s %d %s %d %s %d typ %s';
+
+        str += (o.raddr != null) ? ' raddr %s rport %d' : '%v%v';
+
+        // NB: candidate has three optional chunks, so %void middles one if it's missing
+        str += (o.tcptype != null) ? ' tcptype %s' : '%v';
+
+        if (o.generation != null) {
+          str += ' generation %d';
+        }
+
+        str += (o['network-id'] != null) ? ' network-id %d' : '%v';
+        str += (o['network-cost'] != null) ? ' network-cost %d' : '%v';
+        return str;
+      }
+    },
+    {
+      // a=end-of-candidates (keep after the candidates line for readability)
+      name: 'endOfCandidates',
+      reg: /^(end-of-candidates)/
+    },
+    {
+      // a=remote-candidates:1 203.0.113.1 54400 2 203.0.113.1 54401 ...
+      name: 'remoteCandidates',
+      reg: /^remote-candidates:(.*)/,
+      format: 'remote-candidates:%s'
+    },
+    {
+      // a=ice-options:google-ice
+      name: 'iceOptions',
+      reg: /^ice-options:(\S*)/,
+      format: 'ice-options:%s'
+    },
+    {
+      // a=ssrc:2566107569 cname:t9YU8M1UxTF8Y1A1
+      push: 'ssrcs',
+      reg: /^ssrc:(\d*) ([\w_-]*)(?::(.*))?/,
+      names: ['id', 'attribute', 'value'],
+      format: function (o) {
+        var str = 'ssrc:%d';
+        if (o.attribute != null) {
+          str += ' %s';
+          if (o.value != null) {
+            str += ':%s';
+          }
+        }
+        return str;
+      }
+    },
+    {
+      // a=ssrc-group:FEC 1 2
+      // a=ssrc-group:FEC-FR 3004364195 1080772241
+      push: 'ssrcGroups',
+      // token-char = %x21 / %x23-27 / %x2A-2B / %x2D-2E / %x30-39 / %x41-5A / %x5E-7E
+      reg: /^ssrc-group:([\x21\x23\x24\x25\x26\x27\x2A\x2B\x2D\x2E\w]*) (.*)/,
+      names: ['semantics', 'ssrcs'],
+      format: 'ssrc-group:%s %s'
+    },
+    {
+      // a=msid-semantic: WMS Jvlam5X3SX1OP6pn20zWogvaKJz5Hjf9OnlV
+      name: 'msidSemantic',
+      reg: /^msid-semantic:\s?(\w*) (\S*)/,
+      names: ['semantic', 'token'],
+      format: 'msid-semantic: %s %s' // space after ':' is not accidental
+    },
+    {
+      // a=group:BUNDLE audio video
+      push: 'groups',
+      reg: /^group:(\w*) (.*)/,
+      names: ['type', 'mids'],
+      format: 'group:%s %s'
+    },
+    {
+      // a=rtcp-mux
+      name: 'rtcpMux',
+      reg: /^(rtcp-mux)/
+    },
+    {
+      // a=rtcp-rsize
+      name: 'rtcpRsize',
+      reg: /^(rtcp-rsize)/
+    },
+    {
+      // a=sctpmap:5000 webrtc-datachannel 1024
+      name: 'sctpmap',
+      reg: /^sctpmap:([\w_/]*) (\S*)(?: (\S*))?/,
+      names: ['sctpmapNumber', 'app', 'maxMessageSize'],
+      format: function (o) {
+        return (o.maxMessageSize != null)
+          ? 'sctpmap:%s %s %s'
+          : 'sctpmap:%s %s';
+      }
+    },
+    {
+      // a=x-google-flag:conference
+      name: 'xGoogleFlag',
+      reg: /^x-google-flag:([^\s]*)/,
+      format: 'x-google-flag:%s'
+    },
+    {
+      // a=rid:1 send max-width=1280;max-height=720;max-fps=30;depend=0
+      push: 'rids',
+      reg: /^rid:([\d\w]+) (\w+)(?: ([\S| ]*))?/,
+      names: ['id', 'direction', 'params'],
+      format: function (o) {
+        return (o.params) ? 'rid:%s %s %s' : 'rid:%s %s';
+      }
+    },
+    {
+      // a=imageattr:97 send [x=800,y=640,sar=1.1,q=0.6] [x=480,y=320] recv [x=330,y=250]
+      // a=imageattr:* send [x=800,y=640] recv *
+      // a=imageattr:100 recv [x=320,y=240]
+      push: 'imageattrs',
+      reg: new RegExp(
+        // a=imageattr:97
+        '^imageattr:(\\d+|\\*)' +
+        // send [x=800,y=640,sar=1.1,q=0.6] [x=480,y=320]
+        '[\\s\\t]+(send|recv)[\\s\\t]+(\\*|\\[\\S+\\](?:[\\s\\t]+\\[\\S+\\])*)' +
+        // recv [x=330,y=250]
+        '(?:[\\s\\t]+(recv|send)[\\s\\t]+(\\*|\\[\\S+\\](?:[\\s\\t]+\\[\\S+\\])*))?'
+      ),
+      names: ['pt', 'dir1', 'attrs1', 'dir2', 'attrs2'],
+      format: function (o) {
+        return 'imageattr:%s %s %s' + (o.dir2 ? ' %s %s' : '');
+      }
+    },
+    {
+      // a=simulcast:send 1,2,3;~4,~5 recv 6;~7,~8
+      // a=simulcast:recv 1;4,5 send 6;7
+      name: 'simulcast',
+      reg: new RegExp(
+        // a=simulcast:
+        '^simulcast:' +
+        // send 1,2,3;~4,~5
+        '(send|recv) ([a-zA-Z0-9\\-_~;,]+)' +
+        // space + recv 6;~7,~8
+        '(?:\\s?(send|recv) ([a-zA-Z0-9\\-_~;,]+))?' +
+        // end
+        '$'
+      ),
+      names: ['dir1', 'list1', 'dir2', 'list2'],
+      format: function (o) {
+        return 'simulcast:%s %s' + (o.dir2 ? ' %s %s' : '');
+      }
+    },
+    {
+      // old simulcast draft 03 (implemented by Firefox)
+      //   https://tools.ietf.org/html/draft-ietf-mmusic-sdp-simulcast-03
+      // a=simulcast: recv pt=97;98 send pt=97
+      // a=simulcast: send rid=5;6;7 paused=6,7
+      name: 'simulcast_03',
+      reg: /^simulcast:[\s\t]+([\S+\s\t]+)$/,
+      names: ['value'],
+      format: 'simulcast: %s'
+    },
+    {
+      // a=framerate:25
+      // a=framerate:29.97
+      name: 'framerate',
+      reg: /^framerate:(\d+(?:$|\.\d+))/,
+      format: 'framerate:%s'
+    },
+    {
+      // RFC4570
+      // a=source-filter: incl IN IP4 239.5.2.31 10.1.15.5
+      name: 'sourceFilter',
+      reg: /^source-filter: *(excl|incl) (\S*) (IP4|IP6|\*) (\S*) (.*)/,
+      names: ['filterMode', 'netType', 'addressTypes', 'destAddress', 'srcList'],
+      format: 'source-filter: %s %s %s %s %s'
+    },
+    {
+      // a=bundle-only
+      name: 'bundleOnly',
+      reg: /^(bundle-only)/
+    },
+    {
+      // a=label:1
+      name: 'label',
+      reg: /^label:(.+)/,
+      format: 'label:%s'
+    },
+    {
+      // RFC version 26 for SCTP over DTLS
+      // https://tools.ietf.org/html/draft-ietf-mmusic-sctp-sdp-26#section-5
+      name: 'sctpPort',
+      reg: /^sctp-port:(\d+)$/,
+      format: 'sctp-port:%s'
+    },
+    {
+      // RFC version 26 for SCTP over DTLS
+      // https://tools.ietf.org/html/draft-ietf-mmusic-sctp-sdp-26#section-6
+      name: 'maxMessageSize',
+      reg: /^max-message-size:(\d+)$/,
+      format: 'max-message-size:%s'
+    },
+    {
+      // RFC7273
+      // a=ts-refclk:ptp=IEEE1588-2008:39-A7-94-FF-FE-07-CB-D0:37
+      push:'tsRefClocks',
+      reg: /^ts-refclk:([^\s=]*)(?:=(\S*))?/,
+      names: ['clksrc', 'clksrcExt'],
+      format: function (o) {
+        return 'ts-refclk:%s' + (o.clksrcExt != null ? '=%s' : '');
+      }
+    },
+    {
+      // RFC7273
+      // a=mediaclk:direct=963214424
+      name:'mediaClk',
+      reg: /^mediaclk:(?:id=(\S*))? *([^\s=]*)(?:=(\S*))?(?: *rate=(\d+)\/(\d+))?/,
+      names: ['id', 'mediaClockName', 'mediaClockValue', 'rateNumerator', 'rateDenominator'],
+      format: function (o) {
+        var str = 'mediaclk:';
+        str += (o.id != null ? 'id=%s %s' : '%v%s');
+        str += (o.mediaClockValue != null ? '=%s' : '');
+        str += (o.rateNumerator != null ? ' rate=%s' : '');
+        str += (o.rateDenominator != null ? '/%s' : '');
+        return str;
+      }
+    },
+    {
+      // a=keywds:keywords
+      name: 'keywords',
+      reg: /^keywds:(.+)$/,
+      format: 'keywds:%s'
+    },
+    {
+      // a=content:main
+      name: 'content',
+      reg: /^content:(.+)/,
+      format: 'content:%s'
+    },
+    // BFCP https://tools.ietf.org/html/rfc4583
+    {
+      // a=floorctrl:c-s
+      name: 'bfcpFloorCtrl',
+      reg: /^floorctrl:(c-only|s-only|c-s)/,
+      format: 'floorctrl:%s'
+    },
+    {
+      // a=confid:1
+      name: 'bfcpConfId',
+      reg: /^confid:(\d+)/,
+      format: 'confid:%s'
+    },
+    {
+      // a=userid:1
+      name: 'bfcpUserId',
+      reg: /^userid:(\d+)/,
+      format: 'userid:%s'
+    },
+    {
+      // a=floorid:1
+      name: 'bfcpFloorId',
+      reg: /^floorid:(.+) (?:m-stream|mstrm):(.+)/,
+      names: ['id', 'mStream'],
+      format: 'floorid:%s mstrm:%s'
+    },
+    {
+      // any a= that we don't understand is kept verbatim on media.invalid
+      push: 'invalid',
+      names: ['value']
+    }
+  ]
+};
+
+// set sensible defaults to avoid polluting the grammar with boring details
+Object.keys(grammar).forEach(function (key) {
+  var objs = grammar[key];
+  objs.forEach(function (obj) {
+    if (!obj.reg) {
+      obj.reg = /(.*)/;
+    }
+    if (!obj.format) {
+      obj.format = '%s';
+    }
+  });
+});
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.debug = exports.parseScalabilityMode = exports.detectDevice = exports.Device = exports.version = exports.types = void 0;
+const debug_1 = __importDefault(__webpack_require__(10));
+exports.debug = debug_1.default;
+const Device_1 = __webpack_require__(16);
+Object.defineProperty(exports, "Device", { enumerable: true, get: function () { return Device_1.Device; } });
+Object.defineProperty(exports, "detectDevice", { enumerable: true, get: function () { return Device_1.detectDevice; } });
+const types = __importStar(__webpack_require__(43));
+exports.types = types;
+/**
+ * Expose mediasoup-client version.
+ */
+exports.version = '3.6.52';
+/**
+ * Expose parseScalabilityMode() function.
+ */
+var scalabilityModes_1 = __webpack_require__(13);
+Object.defineProperty(exports, "parseScalabilityMode", { enumerable: true, get: function () { return scalabilityModes_1.parse; } });
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {// .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
+// backported and transplited with Babel, with backwards-compat fixes
+
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var last = parts[i];
+    if (last === '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
+}
+
+// path.resolve([from ...], to)
+// posix version
+exports.resolve = function() {
+  var resolvedPath = '',
+      resolvedAbsolute = false;
+
+  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    var path = (i >= 0) ? arguments[i] : process.cwd();
+
+    // Skip empty and invalid entries
+    if (typeof path !== 'string') {
+      throw new TypeError('Arguments to path.resolve must be strings');
+    } else if (!path) {
+      continue;
+    }
+
+    resolvedPath = path + '/' + resolvedPath;
+    resolvedAbsolute = path.charAt(0) === '/';
+  }
+
+  // At this point the path should be resolved to a full absolute path, but
+  // handle relative paths to be safe (might happen when process.cwd() fails)
+
+  // Normalize the path
+  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+};
+
+// path.normalize(path)
+// posix version
+exports.normalize = function(path) {
+  var isAbsolute = exports.isAbsolute(path),
+      trailingSlash = substr(path, -1) === '/';
+
+  // Normalize the path
+  path = normalizeArray(filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isAbsolute).join('/');
+
+  if (!path && !isAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+
+  return (isAbsolute ? '/' : '') + path;
+};
+
+// posix version
+exports.isAbsolute = function(path) {
+  return path.charAt(0) === '/';
+};
+
+// posix version
+exports.join = function() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return exports.normalize(filter(paths, function(p, index) {
+    if (typeof p !== 'string') {
+      throw new TypeError('Arguments to path.join must be strings');
+    }
+    return p;
+  }).join('/'));
+};
+
+
+// path.relative(from, to)
+// posix version
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
+exports.sep = '/';
+exports.delimiter = ':';
+
+exports.dirname = function (path) {
+  if (typeof path !== 'string') path = path + '';
+  if (path.length === 0) return '.';
+  var code = path.charCodeAt(0);
+  var hasRoot = code === 47 /*/*/;
+  var end = -1;
+  var matchedSlash = true;
+  for (var i = path.length - 1; i >= 1; --i) {
+    code = path.charCodeAt(i);
+    if (code === 47 /*/*/) {
+        if (!matchedSlash) {
+          end = i;
+          break;
+        }
+      } else {
+      // We saw the first non-path separator
+      matchedSlash = false;
+    }
+  }
+
+  if (end === -1) return hasRoot ? '/' : '.';
+  if (hasRoot && end === 1) {
+    // return '//';
+    // Backwards-compat fix:
+    return '/';
+  }
+  return path.slice(0, end);
+};
+
+function basename(path) {
+  if (typeof path !== 'string') path = path + '';
+
+  var start = 0;
+  var end = -1;
+  var matchedSlash = true;
+  var i;
+
+  for (i = path.length - 1; i >= 0; --i) {
+    if (path.charCodeAt(i) === 47 /*/*/) {
+        // If we reached a path separator that was not part of a set of path
+        // separators at the end of the string, stop now
+        if (!matchedSlash) {
+          start = i + 1;
+          break;
+        }
+      } else if (end === -1) {
+      // We saw the first non-path separator, mark this as the end of our
+      // path component
+      matchedSlash = false;
+      end = i + 1;
+    }
+  }
+
+  if (end === -1) return '';
+  return path.slice(start, end);
+}
+
+// Uses a mixed approach for backwards-compatibility, as ext behavior changed
+// in new Node.js versions, so only basename() above is backported here
+exports.basename = function (path, ext) {
+  var f = basename(path);
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+};
+
+exports.extname = function (path) {
+  if (typeof path !== 'string') path = path + '';
+  var startDot = -1;
+  var startPart = 0;
+  var end = -1;
+  var matchedSlash = true;
+  // Track the state of characters (if any) we see before our first dot and
+  // after any path separator we find
+  var preDotState = 0;
+  for (var i = path.length - 1; i >= 0; --i) {
+    var code = path.charCodeAt(i);
+    if (code === 47 /*/*/) {
+        // If we reached a path separator that was not part of a set of path
+        // separators at the end of the string, stop now
+        if (!matchedSlash) {
+          startPart = i + 1;
+          break;
+        }
+        continue;
+      }
+    if (end === -1) {
+      // We saw the first non-path separator, mark this as the end of our
+      // extension
+      matchedSlash = false;
+      end = i + 1;
+    }
+    if (code === 46 /*.*/) {
+        // If this is our first dot, mark it as the start of our extension
+        if (startDot === -1)
+          startDot = i;
+        else if (preDotState !== 1)
+          preDotState = 1;
+    } else if (startDot !== -1) {
+      // We saw a non-dot and non-path separator before our dot, so we should
+      // have a good chance at having a non-empty extension
+      preDotState = -1;
+    }
+  }
+
+  if (startDot === -1 || end === -1 ||
+      // We saw a non-dot character immediately before the dot
+      preDotState === 0 ||
+      // The (right-most) trimmed path component is exactly '..'
+      preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+    return '';
+  }
+  return path.slice(startDot, end);
+};
+
+function filter (xs, f) {
+    if (xs.filter) return xs.filter(f);
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        if (f(xs[i], i, xs)) res.push(xs[i]);
+    }
+    return res;
+}
+
+// String.prototype.substr - negative index don't work in IE8
+var substr = 'ab'.substr(-1) === 'b'
+    ? function (str, start, len) { return str.substr(start, len) }
+    : function (str, start, len) {
+        if (start < 0) start = str.length + start;
+        return str.substr(start, len);
+    }
+;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(15)))
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/**
+ * This is the common logic for both the Node.js and web browser
+ * implementations of `debug()`.
+ */
+
+function setup(env) {
+	createDebug.debug = createDebug;
+	createDebug.default = createDebug;
+	createDebug.coerce = coerce;
+	createDebug.disable = disable;
+	createDebug.enable = enable;
+	createDebug.enabled = enabled;
+	createDebug.humanize = __webpack_require__(26);
+	createDebug.destroy = destroy;
+
+	Object.keys(env).forEach(key => {
+		createDebug[key] = env[key];
+	});
+
+	/**
+	* The currently active debug mode names, and names to skip.
+	*/
+
+	createDebug.names = [];
+	createDebug.skips = [];
+
+	/**
+	* Map of special "%n" handling functions, for the debug "format" argument.
+	*
+	* Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
+	*/
+	createDebug.formatters = {};
+
+	/**
+	* Selects a color for a debug namespace
+	* @param {String} namespace The namespace string for the debug instance to be colored
+	* @return {Number|String} An ANSI color code for the given namespace
+	* @api private
+	*/
+	function selectColor(namespace) {
+		let hash = 0;
+
+		for (let i = 0; i < namespace.length; i++) {
+			hash = ((hash << 5) - hash) + namespace.charCodeAt(i);
+			hash |= 0; // Convert to 32bit integer
+		}
+
+		return createDebug.colors[Math.abs(hash) % createDebug.colors.length];
+	}
+	createDebug.selectColor = selectColor;
+
+	/**
+	* Create a debugger with the given `namespace`.
+	*
+	* @param {String} namespace
+	* @return {Function}
+	* @api public
+	*/
+	function createDebug(namespace) {
+		let prevTime;
+		let enableOverride = null;
+		let namespacesCache;
+		let enabledCache;
+
+		function debug(...args) {
+			// Disabled?
+			if (!debug.enabled) {
+				return;
+			}
+
+			const self = debug;
+
+			// Set `diff` timestamp
+			const curr = Number(new Date());
+			const ms = curr - (prevTime || curr);
+			self.diff = ms;
+			self.prev = prevTime;
+			self.curr = curr;
+			prevTime = curr;
+
+			args[0] = createDebug.coerce(args[0]);
+
+			if (typeof args[0] !== 'string') {
+				// Anything else let's inspect with %O
+				args.unshift('%O');
+			}
+
+			// Apply any `formatters` transformations
+			let index = 0;
+			args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
+				// If we encounter an escaped % then don't increase the array index
+				if (match === '%%') {
+					return '%';
+				}
+				index++;
+				const formatter = createDebug.formatters[format];
+				if (typeof formatter === 'function') {
+					const val = args[index];
+					match = formatter.call(self, val);
+
+					// Now we need to remove `args[index]` since it's inlined in the `format`
+					args.splice(index, 1);
+					index--;
+				}
+				return match;
+			});
+
+			// Apply env-specific formatting (colors, etc.)
+			createDebug.formatArgs.call(self, args);
+
+			const logFn = self.log || createDebug.log;
+			logFn.apply(self, args);
+		}
+
+		debug.namespace = namespace;
+		debug.useColors = createDebug.useColors();
+		debug.color = createDebug.selectColor(namespace);
+		debug.extend = extend;
+		debug.destroy = createDebug.destroy; // XXX Temporary. Will be removed in the next major release.
+
+		Object.defineProperty(debug, 'enabled', {
+			enumerable: true,
+			configurable: false,
+			get: () => {
+				if (enableOverride !== null) {
+					return enableOverride;
+				}
+				if (namespacesCache !== createDebug.namespaces) {
+					namespacesCache = createDebug.namespaces;
+					enabledCache = createDebug.enabled(namespace);
+				}
+
+				return enabledCache;
+			},
+			set: v => {
+				enableOverride = v;
+			}
+		});
+
+		// Env-specific initialization logic for debug instances
+		if (typeof createDebug.init === 'function') {
+			createDebug.init(debug);
+		}
+
+		return debug;
+	}
+
+	function extend(namespace, delimiter) {
+		const newDebug = createDebug(this.namespace + (typeof delimiter === 'undefined' ? ':' : delimiter) + namespace);
+		newDebug.log = this.log;
+		return newDebug;
+	}
+
+	/**
+	* Enables a debug mode by namespaces. This can include modes
+	* separated by a colon and wildcards.
+	*
+	* @param {String} namespaces
+	* @api public
+	*/
+	function enable(namespaces) {
+		createDebug.save(namespaces);
+		createDebug.namespaces = namespaces;
+
+		createDebug.names = [];
+		createDebug.skips = [];
+
+		let i;
+		const split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
+		const len = split.length;
+
+		for (i = 0; i < len; i++) {
+			if (!split[i]) {
+				// ignore empty strings
+				continue;
+			}
+
+			namespaces = split[i].replace(/\*/g, '.*?');
+
+			if (namespaces[0] === '-') {
+				createDebug.skips.push(new RegExp('^' + namespaces.slice(1) + '$'));
+			} else {
+				createDebug.names.push(new RegExp('^' + namespaces + '$'));
+			}
+		}
+	}
+
+	/**
+	* Disable debug output.
+	*
+	* @return {String} namespaces
+	* @api public
+	*/
+	function disable() {
+		const namespaces = [
+			...createDebug.names.map(toNamespace),
+			...createDebug.skips.map(toNamespace).map(namespace => '-' + namespace)
+		].join(',');
+		createDebug.enable('');
+		return namespaces;
+	}
+
+	/**
+	* Returns true if the given mode name is enabled, false otherwise.
+	*
+	* @param {String} name
+	* @return {Boolean}
+	* @api public
+	*/
+	function enabled(name) {
+		if (name[name.length - 1] === '*') {
+			return true;
+		}
+
+		let i;
+		let len;
+
+		for (i = 0, len = createDebug.skips.length; i < len; i++) {
+			if (createDebug.skips[i].test(name)) {
+				return false;
+			}
+		}
+
+		for (i = 0, len = createDebug.names.length; i < len; i++) {
+			if (createDebug.names[i].test(name)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	* Convert regexp to namespace
+	*
+	* @param {RegExp} regxep
+	* @return {String} namespace
+	* @api private
+	*/
+	function toNamespace(regexp) {
+		return regexp.toString()
+			.substring(2, regexp.toString().length - 2)
+			.replace(/\.\*\?$/, '*');
+	}
+
+	/**
+	* Coerce `val`.
+	*
+	* @param {Mixed} val
+	* @return {Mixed}
+	* @api private
+	*/
+	function coerce(val) {
+		if (val instanceof Error) {
+			return val.stack || val.message;
+		}
+		return val;
+	}
+
+	/**
+	* XXX DO NOT USE. This is a temporary stub function.
+	* XXX It WILL be removed in the next major release.
+	*/
+	function destroy() {
+		console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+	}
+
+	createDebug.enable(createDebug.load());
+
+	return createDebug;
+}
+
+module.exports = setup;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports) {
+
+/**
+ * Helpers.
+ */
+
+var s = 1000;
+var m = s * 60;
+var h = m * 60;
+var d = h * 24;
+var w = d * 7;
+var y = d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} [options]
+ * @throws {Error} throw an error if val is not a non-empty string or a number
+ * @return {String|Number}
+ * @api public
+ */
+
+module.exports = function(val, options) {
+  options = options || {};
+  var type = typeof val;
+  if (type === 'string' && val.length > 0) {
+    return parse(val);
+  } else if (type === 'number' && isFinite(val)) {
+    return options.long ? fmtLong(val) : fmtShort(val);
+  }
+  throw new Error(
+    'val is not a non-empty string or a valid number. val=' +
+      JSON.stringify(val)
+  );
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function parse(str) {
+  str = String(str);
+  if (str.length > 100) {
+    return;
+  }
+  var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
+    str
+  );
+  if (!match) {
+    return;
+  }
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'yrs':
+    case 'yr':
+    case 'y':
+      return n * y;
+    case 'weeks':
+    case 'week':
+    case 'w':
+      return n * w;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * d;
+    case 'hours':
+    case 'hour':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return n * h;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return n * m;
+    case 'seconds':
+    case 'second':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return n * s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
+    case 'ms':
+      return n;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtShort(ms) {
+  var msAbs = Math.abs(ms);
+  if (msAbs >= d) {
+    return Math.round(ms / d) + 'd';
+  }
+  if (msAbs >= h) {
+    return Math.round(ms / h) + 'h';
+  }
+  if (msAbs >= m) {
+    return Math.round(ms / m) + 'm';
+  }
+  if (msAbs >= s) {
+    return Math.round(ms / s) + 's';
+  }
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtLong(ms) {
+  var msAbs = Math.abs(ms);
+  if (msAbs >= d) {
+    return plural(ms, msAbs, d, 'day');
+  }
+  if (msAbs >= h) {
+    return plural(ms, msAbs, h, 'hour');
+  }
+  if (msAbs >= m) {
+    return plural(ms, msAbs, m, 'minute');
+  }
+  if (msAbs >= s) {
+    return plural(ms, msAbs, s, 'second');
+  }
+  return ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function plural(ms, msAbs, n, name) {
+  var isPlural = msAbs >= n * 1.5;
+  return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
+}
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(e,t){ true?module.exports=t():undefined}(this,(function(){return function(e){var t={};function r(n){if(t[n])return t[n].exports;var i=t[n]={i:n,l:!1,exports:{}};return e[n].call(i.exports,i,i.exports,r),i.l=!0,i.exports}return r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var i in e)r.d(n,i,function(t){return e[t]}.bind(null,i));return n},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=90)}({17:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var n=r(18),i=function(){function e(){}return e.getFirstMatch=function(e,t){var r=t.match(e);return r&&r.length>0&&r[1]||""},e.getSecondMatch=function(e,t){var r=t.match(e);return r&&r.length>1&&r[2]||""},e.matchAndReturnConst=function(e,t,r){if(e.test(t))return r},e.getWindowsVersionName=function(e){switch(e){case"NT":return"NT";case"XP":return"XP";case"NT 5.0":return"2000";case"NT 5.1":return"XP";case"NT 5.2":return"2003";case"NT 6.0":return"Vista";case"NT 6.1":return"7";case"NT 6.2":return"8";case"NT 6.3":return"8.1";case"NT 10.0":return"10";default:return}},e.getMacOSVersionName=function(e){var t=e.split(".").splice(0,2).map((function(e){return parseInt(e,10)||0}));if(t.push(0),10===t[0])switch(t[1]){case 5:return"Leopard";case 6:return"Snow Leopard";case 7:return"Lion";case 8:return"Mountain Lion";case 9:return"Mavericks";case 10:return"Yosemite";case 11:return"El Capitan";case 12:return"Sierra";case 13:return"High Sierra";case 14:return"Mojave";case 15:return"Catalina";default:return}},e.getAndroidVersionName=function(e){var t=e.split(".").splice(0,2).map((function(e){return parseInt(e,10)||0}));if(t.push(0),!(1===t[0]&&t[1]<5))return 1===t[0]&&t[1]<6?"Cupcake":1===t[0]&&t[1]>=6?"Donut":2===t[0]&&t[1]<2?"Eclair":2===t[0]&&2===t[1]?"Froyo":2===t[0]&&t[1]>2?"Gingerbread":3===t[0]?"Honeycomb":4===t[0]&&t[1]<1?"Ice Cream Sandwich":4===t[0]&&t[1]<4?"Jelly Bean":4===t[0]&&t[1]>=4?"KitKat":5===t[0]?"Lollipop":6===t[0]?"Marshmallow":7===t[0]?"Nougat":8===t[0]?"Oreo":9===t[0]?"Pie":void 0},e.getVersionPrecision=function(e){return e.split(".").length},e.compareVersions=function(t,r,n){void 0===n&&(n=!1);var i=e.getVersionPrecision(t),s=e.getVersionPrecision(r),a=Math.max(i,s),o=0,u=e.map([t,r],(function(t){var r=a-e.getVersionPrecision(t),n=t+new Array(r+1).join(".0");return e.map(n.split("."),(function(e){return new Array(20-e.length).join("0")+e})).reverse()}));for(n&&(o=a-Math.min(i,s)),a-=1;a>=o;){if(u[0][a]>u[1][a])return 1;if(u[0][a]===u[1][a]){if(a===o)return 0;a-=1}else if(u[0][a]<u[1][a])return-1}},e.map=function(e,t){var r,n=[];if(Array.prototype.map)return Array.prototype.map.call(e,t);for(r=0;r<e.length;r+=1)n.push(t(e[r]));return n},e.find=function(e,t){var r,n;if(Array.prototype.find)return Array.prototype.find.call(e,t);for(r=0,n=e.length;r<n;r+=1){var i=e[r];if(t(i,r))return i}},e.assign=function(e){for(var t,r,n=e,i=arguments.length,s=new Array(i>1?i-1:0),a=1;a<i;a++)s[a-1]=arguments[a];if(Object.assign)return Object.assign.apply(Object,[e].concat(s));var o=function(){var e=s[t];"object"==typeof e&&null!==e&&Object.keys(e).forEach((function(t){n[t]=e[t]}))};for(t=0,r=s.length;t<r;t+=1)o();return e},e.getBrowserAlias=function(e){return n.BROWSER_ALIASES_MAP[e]},e.getBrowserTypeByAlias=function(e){return n.BROWSER_MAP[e]||""},e}();t.default=i,e.exports=t.default},18:function(e,t,r){"use strict";t.__esModule=!0,t.ENGINE_MAP=t.OS_MAP=t.PLATFORMS_MAP=t.BROWSER_MAP=t.BROWSER_ALIASES_MAP=void 0;t.BROWSER_ALIASES_MAP={"Amazon Silk":"amazon_silk","Android Browser":"android",Bada:"bada",BlackBerry:"blackberry",Chrome:"chrome",Chromium:"chromium",Electron:"electron",Epiphany:"epiphany",Firefox:"firefox",Focus:"focus",Generic:"generic","Google Search":"google_search",Googlebot:"googlebot","Internet Explorer":"ie","K-Meleon":"k_meleon",Maxthon:"maxthon","Microsoft Edge":"edge","MZ Browser":"mz","NAVER Whale Browser":"naver",Opera:"opera","Opera Coast":"opera_coast",PhantomJS:"phantomjs",Puffin:"puffin",QupZilla:"qupzilla",QQ:"qq",QQLite:"qqlite",Safari:"safari",Sailfish:"sailfish","Samsung Internet for Android":"samsung_internet",SeaMonkey:"seamonkey",Sleipnir:"sleipnir",Swing:"swing",Tizen:"tizen","UC Browser":"uc",Vivaldi:"vivaldi","WebOS Browser":"webos",WeChat:"wechat","Yandex Browser":"yandex",Roku:"roku"};t.BROWSER_MAP={amazon_silk:"Amazon Silk",android:"Android Browser",bada:"Bada",blackberry:"BlackBerry",chrome:"Chrome",chromium:"Chromium",electron:"Electron",epiphany:"Epiphany",firefox:"Firefox",focus:"Focus",generic:"Generic",googlebot:"Googlebot",google_search:"Google Search",ie:"Internet Explorer",k_meleon:"K-Meleon",maxthon:"Maxthon",edge:"Microsoft Edge",mz:"MZ Browser",naver:"NAVER Whale Browser",opera:"Opera",opera_coast:"Opera Coast",phantomjs:"PhantomJS",puffin:"Puffin",qupzilla:"QupZilla",qq:"QQ Browser",qqlite:"QQ Browser Lite",safari:"Safari",sailfish:"Sailfish",samsung_internet:"Samsung Internet for Android",seamonkey:"SeaMonkey",sleipnir:"Sleipnir",swing:"Swing",tizen:"Tizen",uc:"UC Browser",vivaldi:"Vivaldi",webos:"WebOS Browser",wechat:"WeChat",yandex:"Yandex Browser"};t.PLATFORMS_MAP={tablet:"tablet",mobile:"mobile",desktop:"desktop",tv:"tv"};t.OS_MAP={WindowsPhone:"Windows Phone",Windows:"Windows",MacOS:"macOS",iOS:"iOS",Android:"Android",WebOS:"WebOS",BlackBerry:"BlackBerry",Bada:"Bada",Tizen:"Tizen",Linux:"Linux",ChromeOS:"Chrome OS",PlayStation4:"PlayStation 4",Roku:"Roku"};t.ENGINE_MAP={EdgeHTML:"EdgeHTML",Blink:"Blink",Trident:"Trident",Presto:"Presto",Gecko:"Gecko",WebKit:"WebKit"}},90:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var n,i=(n=r(91))&&n.__esModule?n:{default:n},s=r(18);function a(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}var o=function(){function e(){}var t,r,n;return e.getParser=function(e,t){if(void 0===t&&(t=!1),"string"!=typeof e)throw new Error("UserAgent should be a string");return new i.default(e,t)},e.parse=function(e){return new i.default(e).getResult()},t=e,n=[{key:"BROWSER_MAP",get:function(){return s.BROWSER_MAP}},{key:"ENGINE_MAP",get:function(){return s.ENGINE_MAP}},{key:"OS_MAP",get:function(){return s.OS_MAP}},{key:"PLATFORMS_MAP",get:function(){return s.PLATFORMS_MAP}}],(r=null)&&a(t.prototype,r),n&&a(t,n),e}();t.default=o,e.exports=t.default},91:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var n=u(r(92)),i=u(r(93)),s=u(r(94)),a=u(r(95)),o=u(r(17));function u(e){return e&&e.__esModule?e:{default:e}}var d=function(){function e(e,t){if(void 0===t&&(t=!1),null==e||""===e)throw new Error("UserAgent parameter can't be empty");this._ua=e,this.parsedResult={},!0!==t&&this.parse()}var t=e.prototype;return t.getUA=function(){return this._ua},t.test=function(e){return e.test(this._ua)},t.parseBrowser=function(){var e=this;this.parsedResult.browser={};var t=o.default.find(n.default,(function(t){if("function"==typeof t.test)return t.test(e);if(t.test instanceof Array)return t.test.some((function(t){return e.test(t)}));throw new Error("Browser's test function is not valid")}));return t&&(this.parsedResult.browser=t.describe(this.getUA())),this.parsedResult.browser},t.getBrowser=function(){return this.parsedResult.browser?this.parsedResult.browser:this.parseBrowser()},t.getBrowserName=function(e){return e?String(this.getBrowser().name).toLowerCase()||"":this.getBrowser().name||""},t.getBrowserVersion=function(){return this.getBrowser().version},t.getOS=function(){return this.parsedResult.os?this.parsedResult.os:this.parseOS()},t.parseOS=function(){var e=this;this.parsedResult.os={};var t=o.default.find(i.default,(function(t){if("function"==typeof t.test)return t.test(e);if(t.test instanceof Array)return t.test.some((function(t){return e.test(t)}));throw new Error("Browser's test function is not valid")}));return t&&(this.parsedResult.os=t.describe(this.getUA())),this.parsedResult.os},t.getOSName=function(e){var t=this.getOS().name;return e?String(t).toLowerCase()||"":t||""},t.getOSVersion=function(){return this.getOS().version},t.getPlatform=function(){return this.parsedResult.platform?this.parsedResult.platform:this.parsePlatform()},t.getPlatformType=function(e){void 0===e&&(e=!1);var t=this.getPlatform().type;return e?String(t).toLowerCase()||"":t||""},t.parsePlatform=function(){var e=this;this.parsedResult.platform={};var t=o.default.find(s.default,(function(t){if("function"==typeof t.test)return t.test(e);if(t.test instanceof Array)return t.test.some((function(t){return e.test(t)}));throw new Error("Browser's test function is not valid")}));return t&&(this.parsedResult.platform=t.describe(this.getUA())),this.parsedResult.platform},t.getEngine=function(){return this.parsedResult.engine?this.parsedResult.engine:this.parseEngine()},t.getEngineName=function(e){return e?String(this.getEngine().name).toLowerCase()||"":this.getEngine().name||""},t.parseEngine=function(){var e=this;this.parsedResult.engine={};var t=o.default.find(a.default,(function(t){if("function"==typeof t.test)return t.test(e);if(t.test instanceof Array)return t.test.some((function(t){return e.test(t)}));throw new Error("Browser's test function is not valid")}));return t&&(this.parsedResult.engine=t.describe(this.getUA())),this.parsedResult.engine},t.parse=function(){return this.parseBrowser(),this.parseOS(),this.parsePlatform(),this.parseEngine(),this},t.getResult=function(){return o.default.assign({},this.parsedResult)},t.satisfies=function(e){var t=this,r={},n=0,i={},s=0;if(Object.keys(e).forEach((function(t){var a=e[t];"string"==typeof a?(i[t]=a,s+=1):"object"==typeof a&&(r[t]=a,n+=1)})),n>0){var a=Object.keys(r),u=o.default.find(a,(function(e){return t.isOS(e)}));if(u){var d=this.satisfies(r[u]);if(void 0!==d)return d}var c=o.default.find(a,(function(e){return t.isPlatform(e)}));if(c){var f=this.satisfies(r[c]);if(void 0!==f)return f}}if(s>0){var l=Object.keys(i),h=o.default.find(l,(function(e){return t.isBrowser(e,!0)}));if(void 0!==h)return this.compareVersion(i[h])}},t.isBrowser=function(e,t){void 0===t&&(t=!1);var r=this.getBrowserName().toLowerCase(),n=e.toLowerCase(),i=o.default.getBrowserTypeByAlias(n);return t&&i&&(n=i.toLowerCase()),n===r},t.compareVersion=function(e){var t=[0],r=e,n=!1,i=this.getBrowserVersion();if("string"==typeof i)return">"===e[0]||"<"===e[0]?(r=e.substr(1),"="===e[1]?(n=!0,r=e.substr(2)):t=[],">"===e[0]?t.push(1):t.push(-1)):"="===e[0]?r=e.substr(1):"~"===e[0]&&(n=!0,r=e.substr(1)),t.indexOf(o.default.compareVersions(i,r,n))>-1},t.isOS=function(e){return this.getOSName(!0)===String(e).toLowerCase()},t.isPlatform=function(e){return this.getPlatformType(!0)===String(e).toLowerCase()},t.isEngine=function(e){return this.getEngineName(!0)===String(e).toLowerCase()},t.is=function(e,t){return void 0===t&&(t=!1),this.isBrowser(e,t)||this.isOS(e)||this.isPlatform(e)},t.some=function(e){var t=this;return void 0===e&&(e=[]),e.some((function(e){return t.is(e)}))},e}();t.default=d,e.exports=t.default},92:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var n,i=(n=r(17))&&n.__esModule?n:{default:n};var s=/version\/(\d+(\.?_?\d+)+)/i,a=[{test:[/googlebot/i],describe:function(e){var t={name:"Googlebot"},r=i.default.getFirstMatch(/googlebot\/(\d+(\.\d+))/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/opera/i],describe:function(e){var t={name:"Opera"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:opera)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/opr\/|opios/i],describe:function(e){var t={name:"Opera"},r=i.default.getFirstMatch(/(?:opr|opios)[\s/](\S+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/SamsungBrowser/i],describe:function(e){var t={name:"Samsung Internet for Android"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:SamsungBrowser)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/Whale/i],describe:function(e){var t={name:"NAVER Whale Browser"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:whale)[\s/](\d+(?:\.\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/MZBrowser/i],describe:function(e){var t={name:"MZ Browser"},r=i.default.getFirstMatch(/(?:MZBrowser)[\s/](\d+(?:\.\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/focus/i],describe:function(e){var t={name:"Focus"},r=i.default.getFirstMatch(/(?:focus)[\s/](\d+(?:\.\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/swing/i],describe:function(e){var t={name:"Swing"},r=i.default.getFirstMatch(/(?:swing)[\s/](\d+(?:\.\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/coast/i],describe:function(e){var t={name:"Opera Coast"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:coast)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/opt\/\d+(?:.?_?\d+)+/i],describe:function(e){var t={name:"Opera Touch"},r=i.default.getFirstMatch(/(?:opt)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/yabrowser/i],describe:function(e){var t={name:"Yandex Browser"},r=i.default.getFirstMatch(/(?:yabrowser)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/ucbrowser/i],describe:function(e){var t={name:"UC Browser"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:ucbrowser)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/Maxthon|mxios/i],describe:function(e){var t={name:"Maxthon"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:Maxthon|mxios)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/epiphany/i],describe:function(e){var t={name:"Epiphany"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:epiphany)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/puffin/i],describe:function(e){var t={name:"Puffin"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:puffin)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/sleipnir/i],describe:function(e){var t={name:"Sleipnir"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:sleipnir)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/k-meleon/i],describe:function(e){var t={name:"K-Meleon"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/(?:k-meleon)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/micromessenger/i],describe:function(e){var t={name:"WeChat"},r=i.default.getFirstMatch(/(?:micromessenger)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/qqbrowser/i],describe:function(e){var t={name:/qqbrowserlite/i.test(e)?"QQ Browser Lite":"QQ Browser"},r=i.default.getFirstMatch(/(?:qqbrowserlite|qqbrowser)[/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/msie|trident/i],describe:function(e){var t={name:"Internet Explorer"},r=i.default.getFirstMatch(/(?:msie |rv:)(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/\sedg\//i],describe:function(e){var t={name:"Microsoft Edge"},r=i.default.getFirstMatch(/\sedg\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/edg([ea]|ios)/i],describe:function(e){var t={name:"Microsoft Edge"},r=i.default.getSecondMatch(/edg([ea]|ios)\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/vivaldi/i],describe:function(e){var t={name:"Vivaldi"},r=i.default.getFirstMatch(/vivaldi\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/seamonkey/i],describe:function(e){var t={name:"SeaMonkey"},r=i.default.getFirstMatch(/seamonkey\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/sailfish/i],describe:function(e){var t={name:"Sailfish"},r=i.default.getFirstMatch(/sailfish\s?browser\/(\d+(\.\d+)?)/i,e);return r&&(t.version=r),t}},{test:[/silk/i],describe:function(e){var t={name:"Amazon Silk"},r=i.default.getFirstMatch(/silk\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/phantom/i],describe:function(e){var t={name:"PhantomJS"},r=i.default.getFirstMatch(/phantomjs\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/slimerjs/i],describe:function(e){var t={name:"SlimerJS"},r=i.default.getFirstMatch(/slimerjs\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/blackberry|\bbb\d+/i,/rim\stablet/i],describe:function(e){var t={name:"BlackBerry"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/blackberry[\d]+\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/(web|hpw)[o0]s/i],describe:function(e){var t={name:"WebOS Browser"},r=i.default.getFirstMatch(s,e)||i.default.getFirstMatch(/w(?:eb)?[o0]sbrowser\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/bada/i],describe:function(e){var t={name:"Bada"},r=i.default.getFirstMatch(/dolfin\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/tizen/i],describe:function(e){var t={name:"Tizen"},r=i.default.getFirstMatch(/(?:tizen\s?)?browser\/(\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/qupzilla/i],describe:function(e){var t={name:"QupZilla"},r=i.default.getFirstMatch(/(?:qupzilla)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/firefox|iceweasel|fxios/i],describe:function(e){var t={name:"Firefox"},r=i.default.getFirstMatch(/(?:firefox|iceweasel|fxios)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/electron/i],describe:function(e){var t={name:"Electron"},r=i.default.getFirstMatch(/(?:electron)\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/MiuiBrowser/i],describe:function(e){var t={name:"Miui"},r=i.default.getFirstMatch(/(?:MiuiBrowser)[\s/](\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/chromium/i],describe:function(e){var t={name:"Chromium"},r=i.default.getFirstMatch(/(?:chromium)[\s/](\d+(\.?_?\d+)+)/i,e)||i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/chrome|crios|crmo/i],describe:function(e){var t={name:"Chrome"},r=i.default.getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/GSA/i],describe:function(e){var t={name:"Google Search"},r=i.default.getFirstMatch(/(?:GSA)\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:function(e){var t=!e.test(/like android/i),r=e.test(/android/i);return t&&r},describe:function(e){var t={name:"Android Browser"},r=i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/playstation 4/i],describe:function(e){var t={name:"PlayStation 4"},r=i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/safari|applewebkit/i],describe:function(e){var t={name:"Safari"},r=i.default.getFirstMatch(s,e);return r&&(t.version=r),t}},{test:[/.*/i],describe:function(e){var t=-1!==e.search("\\(")?/^(.*)\/(.*)[ \t]\((.*)/:/^(.*)\/(.*) /;return{name:i.default.getFirstMatch(t,e),version:i.default.getSecondMatch(t,e)}}}];t.default=a,e.exports=t.default},93:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var n,i=(n=r(17))&&n.__esModule?n:{default:n},s=r(18);var a=[{test:[/Roku\/DVP/],describe:function(e){var t=i.default.getFirstMatch(/Roku\/DVP-(\d+\.\d+)/i,e);return{name:s.OS_MAP.Roku,version:t}}},{test:[/windows phone/i],describe:function(e){var t=i.default.getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i,e);return{name:s.OS_MAP.WindowsPhone,version:t}}},{test:[/windows /i],describe:function(e){var t=i.default.getFirstMatch(/Windows ((NT|XP)( \d\d?.\d)?)/i,e),r=i.default.getWindowsVersionName(t);return{name:s.OS_MAP.Windows,version:t,versionName:r}}},{test:[/Macintosh(.*?) FxiOS(.*?)\//],describe:function(e){var t={name:s.OS_MAP.iOS},r=i.default.getSecondMatch(/(Version\/)(\d[\d.]+)/,e);return r&&(t.version=r),t}},{test:[/macintosh/i],describe:function(e){var t=i.default.getFirstMatch(/mac os x (\d+(\.?_?\d+)+)/i,e).replace(/[_\s]/g,"."),r=i.default.getMacOSVersionName(t),n={name:s.OS_MAP.MacOS,version:t};return r&&(n.versionName=r),n}},{test:[/(ipod|iphone|ipad)/i],describe:function(e){var t=i.default.getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i,e).replace(/[_\s]/g,".");return{name:s.OS_MAP.iOS,version:t}}},{test:function(e){var t=!e.test(/like android/i),r=e.test(/android/i);return t&&r},describe:function(e){var t=i.default.getFirstMatch(/android[\s/-](\d+(\.\d+)*)/i,e),r=i.default.getAndroidVersionName(t),n={name:s.OS_MAP.Android,version:t};return r&&(n.versionName=r),n}},{test:[/(web|hpw)[o0]s/i],describe:function(e){var t=i.default.getFirstMatch(/(?:web|hpw)[o0]s\/(\d+(\.\d+)*)/i,e),r={name:s.OS_MAP.WebOS};return t&&t.length&&(r.version=t),r}},{test:[/blackberry|\bbb\d+/i,/rim\stablet/i],describe:function(e){var t=i.default.getFirstMatch(/rim\stablet\sos\s(\d+(\.\d+)*)/i,e)||i.default.getFirstMatch(/blackberry\d+\/(\d+([_\s]\d+)*)/i,e)||i.default.getFirstMatch(/\bbb(\d+)/i,e);return{name:s.OS_MAP.BlackBerry,version:t}}},{test:[/bada/i],describe:function(e){var t=i.default.getFirstMatch(/bada\/(\d+(\.\d+)*)/i,e);return{name:s.OS_MAP.Bada,version:t}}},{test:[/tizen/i],describe:function(e){var t=i.default.getFirstMatch(/tizen[/\s](\d+(\.\d+)*)/i,e);return{name:s.OS_MAP.Tizen,version:t}}},{test:[/linux/i],describe:function(){return{name:s.OS_MAP.Linux}}},{test:[/CrOS/],describe:function(){return{name:s.OS_MAP.ChromeOS}}},{test:[/PlayStation 4/],describe:function(e){var t=i.default.getFirstMatch(/PlayStation 4[/\s](\d+(\.\d+)*)/i,e);return{name:s.OS_MAP.PlayStation4,version:t}}}];t.default=a,e.exports=t.default},94:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var n,i=(n=r(17))&&n.__esModule?n:{default:n},s=r(18);var a=[{test:[/googlebot/i],describe:function(){return{type:"bot",vendor:"Google"}}},{test:[/huawei/i],describe:function(e){var t=i.default.getFirstMatch(/(can-l01)/i,e)&&"Nova",r={type:s.PLATFORMS_MAP.mobile,vendor:"Huawei"};return t&&(r.model=t),r}},{test:[/nexus\s*(?:7|8|9|10).*/i],describe:function(){return{type:s.PLATFORMS_MAP.tablet,vendor:"Nexus"}}},{test:[/ipad/i],describe:function(){return{type:s.PLATFORMS_MAP.tablet,vendor:"Apple",model:"iPad"}}},{test:[/Macintosh(.*?) FxiOS(.*?)\//],describe:function(){return{type:s.PLATFORMS_MAP.tablet,vendor:"Apple",model:"iPad"}}},{test:[/kftt build/i],describe:function(){return{type:s.PLATFORMS_MAP.tablet,vendor:"Amazon",model:"Kindle Fire HD 7"}}},{test:[/silk/i],describe:function(){return{type:s.PLATFORMS_MAP.tablet,vendor:"Amazon"}}},{test:[/tablet(?! pc)/i],describe:function(){return{type:s.PLATFORMS_MAP.tablet}}},{test:function(e){var t=e.test(/ipod|iphone/i),r=e.test(/like (ipod|iphone)/i);return t&&!r},describe:function(e){var t=i.default.getFirstMatch(/(ipod|iphone)/i,e);return{type:s.PLATFORMS_MAP.mobile,vendor:"Apple",model:t}}},{test:[/nexus\s*[0-6].*/i,/galaxy nexus/i],describe:function(){return{type:s.PLATFORMS_MAP.mobile,vendor:"Nexus"}}},{test:[/[^-]mobi/i],describe:function(){return{type:s.PLATFORMS_MAP.mobile}}},{test:function(e){return"blackberry"===e.getBrowserName(!0)},describe:function(){return{type:s.PLATFORMS_MAP.mobile,vendor:"BlackBerry"}}},{test:function(e){return"bada"===e.getBrowserName(!0)},describe:function(){return{type:s.PLATFORMS_MAP.mobile}}},{test:function(e){return"windows phone"===e.getBrowserName()},describe:function(){return{type:s.PLATFORMS_MAP.mobile,vendor:"Microsoft"}}},{test:function(e){var t=Number(String(e.getOSVersion()).split(".")[0]);return"android"===e.getOSName(!0)&&t>=3},describe:function(){return{type:s.PLATFORMS_MAP.tablet}}},{test:function(e){return"android"===e.getOSName(!0)},describe:function(){return{type:s.PLATFORMS_MAP.mobile}}},{test:function(e){return"macos"===e.getOSName(!0)},describe:function(){return{type:s.PLATFORMS_MAP.desktop,vendor:"Apple"}}},{test:function(e){return"windows"===e.getOSName(!0)},describe:function(){return{type:s.PLATFORMS_MAP.desktop}}},{test:function(e){return"linux"===e.getOSName(!0)},describe:function(){return{type:s.PLATFORMS_MAP.desktop}}},{test:function(e){return"playstation 4"===e.getOSName(!0)},describe:function(){return{type:s.PLATFORMS_MAP.tv}}},{test:function(e){return"roku"===e.getOSName(!0)},describe:function(){return{type:s.PLATFORMS_MAP.tv}}}];t.default=a,e.exports=t.default},95:function(e,t,r){"use strict";t.__esModule=!0,t.default=void 0;var n,i=(n=r(17))&&n.__esModule?n:{default:n},s=r(18);var a=[{test:function(e){return"microsoft edge"===e.getBrowserName(!0)},describe:function(e){if(/\sedg\//i.test(e))return{name:s.ENGINE_MAP.Blink};var t=i.default.getFirstMatch(/edge\/(\d+(\.?_?\d+)+)/i,e);return{name:s.ENGINE_MAP.EdgeHTML,version:t}}},{test:[/trident/i],describe:function(e){var t={name:s.ENGINE_MAP.Trident},r=i.default.getFirstMatch(/trident\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:function(e){return e.test(/presto/i)},describe:function(e){var t={name:s.ENGINE_MAP.Presto},r=i.default.getFirstMatch(/presto\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:function(e){var t=e.test(/gecko/i),r=e.test(/like gecko/i);return t&&!r},describe:function(e){var t={name:s.ENGINE_MAP.Gecko},r=i.default.getFirstMatch(/gecko\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}},{test:[/(apple)?webkit\/537\.36/i],describe:function(){return{name:s.ENGINE_MAP.Blink}}},{test:[/(apple)?webkit/i],describe:function(e){var t={name:s.ENGINE_MAP.WebKit},r=i.default.getFirstMatch(/webkit\/(\d+(\.?_?\d+)+)/i,e);return r&&(t.version=r),t}}];t.default=a,e.exports=t.default}})}));
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const debug = __webpack_require__(10)('h264-profile-level-id');
+
+/* eslint-disable no-console */
+debug.log = console.info.bind(console);
+/* eslint-enable no-console */
+
+const ProfileConstrainedBaseline = 1;
+const ProfileBaseline = 2;
+const ProfileMain = 3;
+const ProfileConstrainedHigh = 4;
+const ProfileHigh = 5;
+
+exports.ProfileConstrainedBaseline = ProfileConstrainedBaseline;
+exports.ProfileBaseline = ProfileBaseline;
+exports.ProfileMain = ProfileMain;
+exports.ProfileConstrainedHigh = ProfileConstrainedHigh;
+exports.ProfileHigh = ProfileHigh;
+
+// All values are equal to ten times the level number, except level 1b which is
+// special.
+const Level1_b = 0;
+const Level1 = 10;
+const Level1_1 = 11;
+const Level1_2 = 12;
+const Level1_3 = 13;
+const Level2 = 20;
+const Level2_1 = 21;
+const Level2_2 = 22;
+const Level3 = 30;
+const Level3_1 = 31;
+const Level3_2 = 32;
+const Level4 = 40;
+const Level4_1 = 41;
+const Level4_2 = 42;
+const Level5 = 50;
+const Level5_1 = 51;
+const Level5_2 = 52;
+
+exports.Level1_b = Level1_b;
+exports.Level1 = Level1;
+exports.Level1_1 = Level1_1;
+exports.Level1_2 = Level1_2;
+exports.Level1_3 = Level1_3;
+exports.Level2 = Level2;
+exports.Level2_1 = Level2_1;
+exports.Level2_2 = Level2_2;
+exports.Level3 = Level3;
+exports.Level3_1 = Level3_1;
+exports.Level3_2 = Level3_2;
+exports.Level4 = Level4;
+exports.Level4_1 = Level4_1;
+exports.Level4_2 = Level4_2;
+exports.Level5 = Level5;
+exports.Level5_1 = Level5_1;
+exports.Level5_2 = Level5_2;
+
+class ProfileLevelId
+{
+	constructor(profile, level)
+	{
+		this.profile = profile;
+		this.level = level;
+	}
+}
+
+exports.ProfileLevelId = ProfileLevelId;
+
+// Default ProfileLevelId.
+//
+// TODO: The default should really be profile Baseline and level 1 according to
+// the spec: https://tools.ietf.org/html/rfc6184#section-8.1. In order to not
+// break backwards compatibility with older versions of WebRTC where external
+// codecs don't have any parameters, use profile ConstrainedBaseline level 3_1
+// instead. This workaround will only be done in an interim period to allow
+// external clients to update their code.
+//
+// http://crbug/webrtc/6337.
+const DefaultProfileLevelId =
+	new ProfileLevelId(ProfileConstrainedBaseline, Level3_1);
+
+// For level_idc=11 and profile_idc=0x42, 0x4D, or 0x58, the constraint set3
+// flag specifies if level 1b or level 1.1 is used.
+const ConstraintSet3Flag = 0x10;
+
+// Class for matching bit patterns such as "x1xx0000" where 'x' is allowed to be
+// either 0 or 1.
+class BitPattern
+{
+	constructor(str)
+	{
+		this._mask = ~byteMaskString('x', str);
+		this._maskedValue = byteMaskString('1', str);
+	}
+
+	isMatch(value)
+	{
+		return this._maskedValue === (value & this._mask);
+	}
+}
+
+// Class for converting between profile_idc/profile_iop to Profile.
+class ProfilePattern
+{
+	constructor(profile_idc, profile_iop, profile)
+	{
+		this.profile_idc = profile_idc;
+		this.profile_iop = profile_iop;
+		this.profile = profile;
+	}
+}
+
+// This is from https://tools.ietf.org/html/rfc6184#section-8.1.
+const ProfilePatterns =
+[
+	new ProfilePattern(0x42, new BitPattern('x1xx0000'), ProfileConstrainedBaseline),
+	new ProfilePattern(0x4D, new BitPattern('1xxx0000'), ProfileConstrainedBaseline),
+	new ProfilePattern(0x58, new BitPattern('11xx0000'), ProfileConstrainedBaseline),
+	new ProfilePattern(0x42, new BitPattern('x0xx0000'), ProfileBaseline),
+	new ProfilePattern(0x58, new BitPattern('10xx0000'), ProfileBaseline),
+	new ProfilePattern(0x4D, new BitPattern('0x0x0000'), ProfileMain),
+	new ProfilePattern(0x64, new BitPattern('00000000'), ProfileHigh),
+	new ProfilePattern(0x64, new BitPattern('00001100'), ProfileConstrainedHigh)
+];
+
+/**
+ * Parse profile level id that is represented as a string of 3 hex bytes.
+ * Nothing will be returned if the string is not a recognized H264 profile
+ * level id.
+ *
+ * @param {String} str - profile-level-id value as a string of 3 hex bytes.
+ *
+ * @returns {ProfileLevelId}
+ */
+exports.parseProfileLevelId = function(str)
+{
+	// The string should consist of 3 bytes in hexadecimal format.
+	if (typeof str !== 'string' || str.length !== 6)
+		return null;
+
+	const profile_level_id_numeric = parseInt(str, 16);
+
+	if (profile_level_id_numeric === 0)
+		return null;
+
+	// Separate into three bytes.
+	const level_idc = profile_level_id_numeric & 0xFF;
+	const profile_iop = (profile_level_id_numeric >> 8) & 0xFF;
+	const profile_idc = (profile_level_id_numeric >> 16) & 0xFF;
+
+	// Parse level based on level_idc and constraint set 3 flag.
+	let level;
+
+	switch (level_idc)
+	{
+		case Level1_1:
+		{
+			level = (profile_iop & ConstraintSet3Flag) !== 0 ? Level1_b : Level1_1;
+			break;
+		}
+		case Level1:
+		case Level1_2:
+		case Level1_3:
+		case Level2:
+		case Level2_1:
+		case Level2_2:
+		case Level3:
+		case Level3_1:
+		case Level3_2:
+		case Level4:
+		case Level4_1:
+		case Level4_2:
+		case Level5:
+		case Level5_1:
+		case Level5_2:
+		{
+			level = level_idc;
+			break;
+		}
+		// Unrecognized level_idc.
+		default:
+		{
+			debug('parseProfileLevelId() | unrecognized level_idc:%s', level_idc);
+
+			return null;
+		}
+	}
+
+	// Parse profile_idc/profile_iop into a Profile enum.
+	for (const pattern of ProfilePatterns)
+	{
+		if (
+			profile_idc === pattern.profile_idc &&
+			pattern.profile_iop.isMatch(profile_iop)
+		)
+		{
+			return new ProfileLevelId(pattern.profile, level);
+		}
+	}
+
+	debug('parseProfileLevelId() | unrecognized profile_idc/profile_iop combination');
+
+	return null;
+};
+
+/**
+ * Returns canonical string representation as three hex bytes of the profile
+ * level id, or returns nothing for invalid profile level ids.
+ *
+ * @param {ProfileLevelId} profile_level_id
+ *
+ * @returns {String}
+ */
+exports.profileLevelIdToString = function(profile_level_id)
+{
+	// Handle special case level == 1b.
+	if (profile_level_id.level == Level1_b)
+	{
+		switch (profile_level_id.profile)
+		{
+			case ProfileConstrainedBaseline:
+			{
+				return '42f00b';
+			}
+			case ProfileBaseline:
+			{
+				return '42100b';
+			}
+			case ProfileMain:
+			{
+				return '4d100b';
+			}
+			// Level 1_b is not allowed for other profiles.
+			default:
+			{
+				debug(
+					'profileLevelIdToString() | Level 1_b not is allowed for profile:%s',
+					profile_level_id.profile);
+
+				return null;
+			}
+		}
+	}
+
+	let profile_idc_iop_string;
+
+	switch (profile_level_id.profile)
+	{
+		case ProfileConstrainedBaseline:
+		{
+			profile_idc_iop_string = '42e0';
+			break;
+		}
+		case ProfileBaseline:
+		{
+			profile_idc_iop_string = '4200';
+			break;
+		}
+		case ProfileMain:
+		{
+			profile_idc_iop_string = '4d00';
+			break;
+		}
+		case ProfileConstrainedHigh:
+		{
+			profile_idc_iop_string = '640c';
+			break;
+		}
+		case ProfileHigh:
+		{
+			profile_idc_iop_string = '6400';
+			break;
+		}
+		default:
+		{
+			debug(
+				'profileLevelIdToString() | unrecognized profile:%s',
+				profile_level_id.profile);
+
+			return null;
+		}
+	}
+
+	let levelStr = (profile_level_id.level).toString(16);
+
+	if (levelStr.length === 1)
+		levelStr = `0${levelStr}`;
+
+	return `${profile_idc_iop_string}${levelStr}`;
+};
+
+/**
+ * Parse profile level id that is represented as a string of 3 hex bytes
+ * contained in an SDP key-value map. A default profile level id will be
+ * returned if the profile-level-id key is missing. Nothing will be returned if
+ * the key is present but the string is invalid.
+ *
+ * @param {Object} [params={}] - Codec parameters object.
+ *
+ * @returns {ProfileLevelId}
+ */
+exports.parseSdpProfileLevelId = function(params = {})
+{
+	const profile_level_id = params['profile-level-id'];
+
+	return !profile_level_id
+		? DefaultProfileLevelId
+		: exports.parseProfileLevelId(profile_level_id);
+};
+
+/**
+ * Returns true if the parameters have the same H264 profile, i.e. the same
+ * H264 profile (Baseline, High, etc).
+ *
+ * @param {Object} [params1={}] - Codec parameters object.
+ * @param {Object} [params2={}] - Codec parameters object.
+ *
+ * @returns {Boolean}
+ */
+exports.isSameProfile = function(params1 = {}, params2 = {})
+{
+	const profile_level_id_1 = exports.parseSdpProfileLevelId(params1);
+	const profile_level_id_2 = exports.parseSdpProfileLevelId(params2);
+
+	// Compare H264 profiles, but not levels.
+	return Boolean(
+		profile_level_id_1 &&
+		profile_level_id_2 &&
+		profile_level_id_1.profile === profile_level_id_2.profile
+	);
+};
+
+/**
+ * Generate codec parameters that will be used as answer in an SDP negotiation
+ * based on local supported parameters and remote offered parameters. Both
+ * local_supported_params and remote_offered_params represent sendrecv media
+ * descriptions, i.e they are a mix of both encode and decode capabilities. In
+ * theory, when the profile in local_supported_params represent a strict superset
+ * of the profile in remote_offered_params, we could limit the profile in the
+ * answer to the profile in remote_offered_params.
+ *
+ * However, to simplify the code, each supported H264 profile should be listed
+ * explicitly in the list of local supported codecs, even if they are redundant.
+ * Then each local codec in the list should be tested one at a time against the
+ * remote codec, and only when the profiles are equal should this function be
+ * called. Therefore, this function does not need to handle profile intersection,
+ * and the profile of local_supported_params and remote_offered_params must be
+ * equal before calling this function. The parameters that are used when
+ * negotiating are the level part of profile-level-id and level-asymmetry-allowed.
+ *
+ * @param {Object} [local_supported_params={}]
+ * @param {Object} [remote_offered_params={}]
+ *
+ * @returns {String} Canonical string representation as three hex bytes of the
+ *   profile level id, or null if no one of the params have profile-level-id.
+ *
+ * @throws {TypeError} If Profile mismatch or invalid params.
+ */
+exports.generateProfileLevelIdForAnswer = function(
+	local_supported_params = {},
+	remote_offered_params = {}
+)
+{
+	// If both local and remote params do not contain profile-level-id, they are
+	// both using the default profile. In this case, don't return anything.
+	if (
+		!local_supported_params['profile-level-id'] &&
+		!remote_offered_params['profile-level-id']
+	)
+	{
+		debug(
+			'generateProfileLevelIdForAnswer() | no profile-level-id in local and remote params');
+
+		return null;
+	}
+
+	// Parse profile-level-ids.
+	const local_profile_level_id =
+		exports.parseSdpProfileLevelId(local_supported_params);
+	const remote_profile_level_id =
+		exports.parseSdpProfileLevelId(remote_offered_params);
+
+	// The local and remote codec must have valid and equal H264 Profiles.
+	if (!local_profile_level_id)
+		throw new TypeError('invalid local_profile_level_id');
+
+	if (!remote_profile_level_id)
+		throw new TypeError('invalid remote_profile_level_id');
+
+	if (local_profile_level_id.profile !== remote_profile_level_id.profile)
+		throw new TypeError('H264 Profile mismatch');
+
+	// Parse level information.
+	const level_asymmetry_allowed = (
+		isLevelAsymmetryAllowed(local_supported_params) &&
+		isLevelAsymmetryAllowed(remote_offered_params)
+	);
+
+	const local_level = local_profile_level_id.level;
+	const remote_level = remote_profile_level_id.level;
+	const min_level = minLevel(local_level, remote_level);
+
+	// Determine answer level. When level asymmetry is not allowed, level upgrade
+	// is not allowed, i.e., the level in the answer must be equal to or lower
+	// than the level in the offer.
+	const answer_level = level_asymmetry_allowed ? local_level : min_level;
+
+	debug(
+		'generateProfileLevelIdForAnswer() | result: [profile:%s, level:%s]',
+		local_profile_level_id.profile, answer_level);
+
+	// Return the resulting profile-level-id for the answer parameters.
+	return exports.profileLevelIdToString(
+		new ProfileLevelId(local_profile_level_id.profile, answer_level));
+};
+
+// Convert a string of 8 characters into a byte where the positions containing
+// character c will have their bit set. For example, c = 'x', str = "x1xx0000"
+// will return 0b10110000.
+function byteMaskString(c, str)
+{
+	return (
+		((str[0] === c) << 7) | ((str[1] === c) << 6) | ((str[2] === c) << 5) |
+		((str[3] === c) << 4)	| ((str[4] === c) << 3)	| ((str[5] === c) << 2)	|
+		((str[6] === c) << 1)	| ((str[7] === c) << 0)
+	);
+}
+
+// Compare H264 levels and handle the level 1b case.
+function isLessLevel(a, b)
+{
+	if (a === Level1_b)
+		return b !== Level1 && b !== Level1_b;
+
+	if (b === Level1_b)
+		return a !== Level1;
+
+	return a < b;
+}
+
+function minLevel(a, b)
+{
+	return isLessLevel(a, b) ? a : b;
+}
+
+function isLevelAsymmetryAllowed(params = {})
+{
+	const level_asymmetry_allowed = params['level-asymmetry-allowed'];
+
+	return (
+		level_asymmetry_allowed === 1 ||
+		level_asymmetry_allowed === '1'
+	);
+}
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+class AwaitQueue {
+    constructor({ ClosedErrorClass = Error, StoppedErrorClass = Error, RemovedTaskErrorClass = Error } = {
+        ClosedErrorClass: Error,
+        StoppedErrorClass: Error,
+        RemovedTaskErrorClass: Error
+    }) {
+        // Closed flag.
+        this.closed = false;
+        // Queue of pending tasks.
+        this.pendingTasks = [];
+        // Error class used when rejecting a task due to AwaitQueue being closed.
+        this.ClosedErrorClass = Error;
+        // Error class used when rejecting a task due to AwaitQueue being stopped.
+        this.StoppedErrorClass = Error;
+        // Error class used when removing a pending task when calling removeTask().
+        this.RemovedTaskErrorClass = Error;
+        this.ClosedErrorClass = ClosedErrorClass;
+        this.StoppedErrorClass = StoppedErrorClass;
+        this.RemovedTaskErrorClass = RemovedTaskErrorClass;
+    }
+    get size() {
+        return this.pendingTasks.length;
+    }
+    close() {
+        if (this.closed)
+            return;
+        this.closed = true;
+        for (const pendingTask of this.pendingTasks) {
+            pendingTask.stopped = true;
+            pendingTask.reject(new this.ClosedErrorClass('AwaitQueue closed'));
+        }
+        // Enpty the pending tasks array.
+        this.pendingTasks.length = 0;
+    }
+    push(task, name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.closed)
+                throw new this.ClosedErrorClass('AwaitQueue closed');
+            if (typeof task !== 'function')
+                throw new TypeError('given task is not a function');
+            if (!task.name && name) {
+                try {
+                    Object.defineProperty(task, 'name', { value: name });
+                }
+                catch (error) { }
+            }
+            return new Promise((resolve, reject) => {
+                const pendingTask = {
+                    task,
+                    name,
+                    resolve,
+                    reject,
+                    stopped: false,
+                    enqueuedAt: new Date(),
+                    executedAt: undefined
+                };
+                // Append task to the queue.
+                this.pendingTasks.push(pendingTask);
+                // And run it if this is the only task in the queue.
+                if (this.pendingTasks.length === 1)
+                    this.next();
+            });
+        });
+    }
+    removeTask(idx) {
+        if (idx === 0) {
+            throw new TypeError('cannot remove task with index 0');
+        }
+        const pendingTask = this.pendingTasks[idx];
+        if (!pendingTask)
+            return;
+        this.pendingTasks.splice(idx, 1);
+        pendingTask.reject(new this.RemovedTaskErrorClass('task removed from the queue'));
+    }
+    stop() {
+        if (this.closed)
+            return;
+        for (const pendingTask of this.pendingTasks) {
+            pendingTask.stopped = true;
+            pendingTask.reject(new this.StoppedErrorClass('AwaitQueue stopped'));
+        }
+        // Enpty the pending tasks array.
+        this.pendingTasks.length = 0;
+    }
+    dump() {
+        const now = new Date();
+        let idx = 0;
+        return this.pendingTasks.map((pendingTask) => ({
+            idx: idx++,
+            task: pendingTask.task,
+            name: pendingTask.name,
+            enqueuedTime: pendingTask.executedAt
+                ? pendingTask.executedAt.getTime() - pendingTask.enqueuedAt.getTime()
+                : now.getTime() - pendingTask.enqueuedAt.getTime(),
+            executingTime: pendingTask.executedAt
+                ? now.getTime() - pendingTask.executedAt.getTime()
+                : 0
+        }));
+    }
+    next() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Take the first pending task.
+            const pendingTask = this.pendingTasks[0];
+            if (!pendingTask)
+                return;
+            // Execute it.
+            yield this.executeTask(pendingTask);
+            // Remove the first pending task (the completed one) from the queue.
+            this.pendingTasks.shift();
+            // And continue.
+            this.next();
+        });
+    }
+    executeTask(pendingTask) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // If the task is stopped, ignore it.
+            if (pendingTask.stopped)
+                return;
+            pendingTask.executedAt = new Date();
+            try {
+                const result = yield pendingTask.task();
+                // If the task is stopped, ignore it.
+                if (pendingTask.stopped)
+                    return;
+                // Resolve the task with the returned result (if any).
+                pendingTask.resolve(result);
+            }
+            catch (error) {
+                // If the task is stopped, ignore it.
+                if (pendingTask.stopped)
+                    return;
+                // Reject the task with its own error.
+                pendingTask.reject(error);
+            }
+        });
+    }
+}
+exports.AwaitQueue = AwaitQueue;
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Chrome74 = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+const Logger_1 = __webpack_require__(1);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const sdpCommonUtils = __importStar(__webpack_require__(7));
+const sdpUnifiedPlanUtils = __importStar(__webpack_require__(11));
+const HandlerInterface_1 = __webpack_require__(6);
+const RemoteSdp_1 = __webpack_require__(8);
+const scalabilityModes_1 = __webpack_require__(13);
+const logger = new Logger_1.Logger('Chrome74');
+const SCTP_NUM_STREAMS = { OS: 1024, MIS: 1024 };
+class Chrome74 extends HandlerInterface_1.HandlerInterface {
+    constructor() {
+        super();
+        // Map of RTCTransceivers indexed by MID.
+        this._mapMidTransceiver = new Map();
+        // Local stream for sending.
+        this._sendStream = new MediaStream();
+        // Whether a DataChannel m=application section has been created.
+        this._hasDataChannelMediaSection = false;
+        // Sending DataChannel id value counter. Incremented for each new DataChannel.
+        this._nextSendSctpStreamId = 0;
+        // Got transport local and remote parameters.
+        this._transportReady = false;
+    }
+    /**
+     * Creates a factory function.
+     */
+    static createFactory() {
+        return () => new Chrome74();
+    }
+    get name() {
+        return 'Chrome74';
+    }
+    close() {
+        logger.debug('close()');
+        // Close RTCPeerConnection.
+        if (this._pc) {
+            try {
+                this._pc.close();
+            }
+            catch (error) { }
+        }
+    }
+    async getNativeRtpCapabilities() {
+        logger.debug('getNativeRtpCapabilities()');
+        const pc = new RTCPeerConnection({
+            iceServers: [],
+            iceTransportPolicy: 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'unified-plan'
+        });
+        try {
+            pc.addTransceiver('audio');
+            pc.addTransceiver('video');
+            const offer = await pc.createOffer();
+            try {
+                pc.close();
+            }
+            catch (error) { }
+            const sdpObject = sdpTransform.parse(offer.sdp);
+            const nativeRtpCapabilities = sdpCommonUtils.extractRtpCapabilities({ sdpObject });
+            return nativeRtpCapabilities;
+        }
+        catch (error) {
+            try {
+                pc.close();
+            }
+            catch (error2) { }
+            throw error;
+        }
+    }
+    async getNativeSctpCapabilities() {
+        logger.debug('getNativeSctpCapabilities()');
+        return {
+            numStreams: SCTP_NUM_STREAMS
+        };
+    }
+    run({ direction, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, extendedRtpCapabilities }) {
+        logger.debug('run()');
+        this._direction = direction;
+        this._remoteSdp = new RemoteSdp_1.RemoteSdp({
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters
+        });
+        this._sendingRtpParametersByKind =
+            {
+                audio: ortc.getSendingRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._sendingRemoteRtpParametersByKind =
+            {
+                audio: ortc.getSendingRemoteRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRemoteRtpParameters('video', extendedRtpCapabilities)
+            };
+        if (dtlsParameters.role && dtlsParameters.role !== 'auto') {
+            this._forcedLocalDtlsRole = dtlsParameters.role === 'server'
+                ? 'client'
+                : 'server';
+        }
+        this._pc = new RTCPeerConnection({
+            iceServers: iceServers || [],
+            iceTransportPolicy: iceTransportPolicy || 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'unified-plan',
+            ...additionalSettings
+        }, proprietaryConstraints);
+        // Handle RTCPeerConnection connection status.
+        this._pc.addEventListener('iceconnectionstatechange', () => {
+            switch (this._pc.iceConnectionState) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+    }
+    async updateIceServers(iceServers) {
+        logger.debug('updateIceServers()');
+        const configuration = this._pc.getConfiguration();
+        configuration.iceServers = iceServers;
+        this._pc.setConfiguration(configuration);
+    }
+    async restartIce(iceParameters) {
+        logger.debug('restartIce()');
+        // Provide the remote SDP handler with new remote ICE parameters.
+        this._remoteSdp.updateIceParameters(iceParameters);
+        if (!this._transportReady)
+            return;
+        if (this._direction === 'send') {
+            const offer = await this._pc.createOffer({ iceRestart: true });
+            logger.debug('restartIce() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+        }
+        else {
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            logger.debug('restartIce() | calling pc.setLocalDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+        }
+    }
+    async getTransportStats() {
+        return this._pc.getStats();
+    }
+    async send({ track, encodings, codecOptions, codec }) {
+        var _a;
+        this._assertSendDirection();
+        logger.debug('send() [kind:%s, track.id:%s]', track.kind, track.id);
+        if (encodings && encodings.length > 1) {
+            encodings.forEach((encoding, idx) => {
+                encoding.rid = `r${idx}`;
+            });
+        }
+        const sendingRtpParameters = utils.clone(this._sendingRtpParametersByKind[track.kind], {});
+        // This may throw.
+        sendingRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRtpParameters.codecs, codec);
+        const sendingRemoteRtpParameters = utils.clone(this._sendingRemoteRtpParametersByKind[track.kind], {});
+        // This may throw.
+        sendingRemoteRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRemoteRtpParameters.codecs, codec);
+        const mediaSectionIdx = this._remoteSdp.getNextMediaSectionIdx();
+        const transceiver = this._pc.addTransceiver(track, {
+            direction: 'sendonly',
+            streams: [this._sendStream],
+            sendEncodings: encodings
+        });
+        let offer = await this._pc.createOffer();
+        let localSdpObject = sdpTransform.parse(offer.sdp);
+        let offerMediaObject;
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        // Special case for VP9 with SVC.
+        let hackVp9Svc = false;
+        const layers = (0, scalabilityModes_1.parse)((encodings || [{}])[0].scalabilityMode);
+        if (encodings &&
+            encodings.length === 1 &&
+            layers.spatialLayers > 1 &&
+            sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp9') {
+            logger.debug('send() | enabling legacy simulcast for VP9 SVC');
+            hackVp9Svc = true;
+            localSdpObject = sdpTransform.parse(offer.sdp);
+            offerMediaObject = localSdpObject.media[mediaSectionIdx.idx];
+            sdpUnifiedPlanUtils.addLegacySimulcast({
+                offerMediaObject,
+                numStreams: layers.spatialLayers
+            });
+            offer = { type: 'offer', sdp: sdpTransform.write(localSdpObject) };
+        }
+        logger.debug('send() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        // We can now get the transceiver.mid.
+        const localId = transceiver.mid;
+        // Set MID.
+        sendingRtpParameters.mid = localId;
+        localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        offerMediaObject = localSdpObject.media[mediaSectionIdx.idx];
+        // Set RTCP CNAME.
+        sendingRtpParameters.rtcp.cname =
+            sdpCommonUtils.getCname({ offerMediaObject });
+        // Set RTP encodings by parsing the SDP offer if no encodings are given.
+        if (!encodings) {
+            sendingRtpParameters.encodings =
+                sdpUnifiedPlanUtils.getRtpEncodings({ offerMediaObject });
+        }
+        // Set RTP encodings by parsing the SDP offer and complete them with given
+        // one if just a single encoding has been given.
+        else if (encodings.length === 1) {
+            let newEncodings = sdpUnifiedPlanUtils.getRtpEncodings({ offerMediaObject });
+            Object.assign(newEncodings[0], encodings[0]);
+            // Hack for VP9 SVC.
+            if (hackVp9Svc)
+                newEncodings = [newEncodings[0]];
+            sendingRtpParameters.encodings = newEncodings;
+        }
+        // Otherwise if more than 1 encoding are given use them verbatim.
+        else {
+            sendingRtpParameters.encodings = encodings;
+        }
+        // If VP8 or H264 and there is effective simulcast, add scalabilityMode to
+        // each encoding.
+        if (sendingRtpParameters.encodings.length > 1 &&
+            (sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp8' ||
+                sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/h264')) {
+            for (const encoding of sendingRtpParameters.encodings) {
+                encoding.scalabilityMode = 'S1T3';
+            }
+        }
+        this._remoteSdp.send({
+            offerMediaObject,
+            reuseMid: mediaSectionIdx.reuseMid,
+            offerRtpParameters: sendingRtpParameters,
+            answerRtpParameters: sendingRemoteRtpParameters,
+            codecOptions,
+            extmapAllowMixed: true
+        });
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('send() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        // Store in the map.
+        this._mapMidTransceiver.set(localId, transceiver);
+        return {
+            localId,
+            rtpParameters: sendingRtpParameters,
+            rtpSender: transceiver.sender
+        };
+    }
+    async stopSending(localId) {
+        this._assertSendDirection();
+        logger.debug('stopSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        transceiver.sender.replaceTrack(null);
+        this._pc.removeTrack(transceiver.sender);
+        this._remoteSdp.closeMediaSection(transceiver.mid);
+        const offer = await this._pc.createOffer();
+        logger.debug('stopSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        this._mapMidTransceiver.delete(localId);
+    }
+    async replaceTrack(localId, track) {
+        this._assertSendDirection();
+        if (track) {
+            logger.debug('replaceTrack() [localId:%s, track.id:%s]', localId, track.id);
+        }
+        else {
+            logger.debug('replaceTrack() [localId:%s, no track]', localId);
+        }
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        await transceiver.sender.replaceTrack(track);
+    }
+    async setMaxSpatialLayer(localId, spatialLayer) {
+        this._assertSendDirection();
+        logger.debug('setMaxSpatialLayer() [localId:%s, spatialLayer:%s]', localId, spatialLayer);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        const parameters = transceiver.sender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            if (idx <= spatialLayer)
+                encoding.active = true;
+            else
+                encoding.active = false;
+        });
+        await transceiver.sender.setParameters(parameters);
+    }
+    async setRtpEncodingParameters(localId, params) {
+        this._assertSendDirection();
+        logger.debug('setRtpEncodingParameters() [localId:%s, params:%o]', localId, params);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        const parameters = transceiver.sender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            parameters.encodings[idx] = { ...encoding, ...params };
+        });
+        await transceiver.sender.setParameters(parameters);
+    }
+    async getSenderStats(localId) {
+        this._assertSendDirection();
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        return transceiver.sender.getStats();
+    }
+    async sendDataChannel({ ordered, maxPacketLifeTime, maxRetransmits, label, protocol }) {
+        var _a;
+        this._assertSendDirection();
+        const options = {
+            negotiated: true,
+            id: this._nextSendSctpStreamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('sendDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // Increase next id.
+        this._nextSendSctpStreamId =
+            ++this._nextSendSctpStreamId % SCTP_NUM_STREAMS.MIS;
+        // If this is the first DataChannel we need to create the SDP answer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            const offer = await this._pc.createOffer();
+            const localSdpObject = sdpTransform.parse(offer.sdp);
+            const offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'application');
+            if (!this._transportReady) {
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('sendDataChannel() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            this._remoteSdp.sendSctpAssociation({ offerMediaObject });
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        const sctpStreamParameters = {
+            streamId: options.id,
+            ordered: options.ordered,
+            maxPacketLifeTime: options.maxPacketLifeTime,
+            maxRetransmits: options.maxRetransmits
+        };
+        return { dataChannel, sctpStreamParameters };
+    }
+    async receive(optionsList) {
+        var _a;
+        this._assertRecvDirection();
+        const results = [];
+        const mapLocalId = new Map();
+        for (const options of optionsList) {
+            const { trackId, kind, rtpParameters } = options;
+            logger.debug('receive() [trackId:%s, kind:%s]', trackId, kind);
+            const localId = rtpParameters.mid || String(this._mapMidTransceiver.size);
+            mapLocalId.set(trackId, localId);
+            this._remoteSdp.receive({
+                mid: localId,
+                kind,
+                offerRtpParameters: rtpParameters,
+                streamId: rtpParameters.rtcp.cname,
+                trackId
+            });
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('receive() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        let answer = await this._pc.createAnswer();
+        const localSdpObject = sdpTransform.parse(answer.sdp);
+        for (const options of optionsList) {
+            const { trackId, rtpParameters } = options;
+            const localId = mapLocalId.get(trackId);
+            const answerMediaObject = localSdpObject.media
+                .find((m) => String(m.mid) === localId);
+            // May need to modify codec parameters in the answer based on codec
+            // parameters in the offer.
+            sdpCommonUtils.applyCodecParameters({
+                offerRtpParameters: rtpParameters,
+                answerMediaObject
+            });
+        }
+        answer = { type: 'answer', sdp: sdpTransform.write(localSdpObject) };
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        logger.debug('receive() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        for (const options of optionsList) {
+            const { trackId } = options;
+            const localId = mapLocalId.get(trackId);
+            const transceiver = this._pc.getTransceivers()
+                .find((t) => t.mid === localId);
+            if (!transceiver) {
+                throw new Error('new RTCRtpTransceiver not found');
+            }
+            else {
+                // Store in the map.
+                this._mapMidTransceiver.set(localId, transceiver);
+                results.push({
+                    localId,
+                    track: transceiver.receiver.track,
+                    rtpReceiver: transceiver.receiver
+                });
+            }
+        }
+        return results;
+    }
+    async stopReceiving(localId) {
+        this._assertRecvDirection();
+        logger.debug('stopReceiving() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        this._remoteSdp.closeMediaSection(transceiver.mid);
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        this._mapMidTransceiver.delete(localId);
+    }
+    async pauseReceiving(localIds) {
+        this._assertRecvDirection();
+        for (const localId of localIds) {
+            logger.debug('pauseReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            transceiver.direction = 'inactive';
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('pauseReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('pauseReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async resumeReceiving(localIds) {
+        this._assertRecvDirection();
+        for (const localId of localIds) {
+            logger.debug('resumeReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            transceiver.direction = 'recvonly';
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('resumeReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('resumeReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async getReceiverStats(localId) {
+        this._assertRecvDirection();
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        return transceiver.receiver.getStats();
+    }
+    async receiveDataChannel({ sctpStreamParameters, label, protocol }) {
+        var _a;
+        this._assertRecvDirection();
+        const { streamId, ordered, maxPacketLifeTime, maxRetransmits } = sctpStreamParameters;
+        const options = {
+            negotiated: true,
+            id: streamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('receiveDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // If this is the first DataChannel we need to create the SDP offer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            this._remoteSdp.receiveSctpAssociation();
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            if (!this._transportReady) {
+                const localSdpObject = sdpTransform.parse(answer.sdp);
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        return { dataChannel };
+    }
+    async _setupTransport({ localDtlsRole, localSdpObject }) {
+        if (!localSdpObject)
+            localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        // Get our local DTLS parameters.
+        const dtlsParameters = sdpCommonUtils.extractDtlsParameters({ sdpObject: localSdpObject });
+        // Set our DTLS role.
+        dtlsParameters.role = localDtlsRole;
+        // Update the remote DTLS role in the SDP.
+        this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
+        // Need to tell the remote transport about our parameters.
+        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        this._transportReady = true;
+    }
+    _assertSendDirection() {
+        if (this._direction !== 'send') {
+            throw new Error('method can just be called for handlers with "send" direction');
+        }
+    }
+    _assertRecvDirection() {
+        if (this._direction !== 'recv') {
+            throw new Error('method can just be called for handlers with "recv" direction');
+        }
+    }
+}
+exports.Chrome74 = Chrome74;
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toIntIfInt = function (v) {
+  return String(Number(v)) === v ? Number(v) : v;
+};
+
+var attachProperties = function (match, location, names, rawName) {
+  if (rawName && !names) {
+    location[rawName] = toIntIfInt(match[1]);
+  }
+  else {
+    for (var i = 0; i < names.length; i += 1) {
+      if (match[i+1] != null) {
+        location[names[i]] = toIntIfInt(match[i+1]);
+      }
+    }
+  }
+};
+
+var parseReg = function (obj, location, content) {
+  var needsBlank = obj.name && obj.names;
+  if (obj.push && !location[obj.push]) {
+    location[obj.push] = [];
+  }
+  else if (needsBlank && !location[obj.name]) {
+    location[obj.name] = {};
+  }
+  var keyLocation = obj.push ?
+    {} :  // blank object that will be pushed
+    needsBlank ? location[obj.name] : location; // otherwise, named location or root
+
+  attachProperties(content.match(obj.reg), keyLocation, obj.names, obj.name);
+
+  if (obj.push) {
+    location[obj.push].push(keyLocation);
+  }
+};
+
+var grammar = __webpack_require__(22);
+var validLine = RegExp.prototype.test.bind(/^([a-z])=(.*)/);
+
+exports.parse = function (sdp) {
+  var session = {}
+    , media = []
+    , location = session; // points at where properties go under (one of the above)
+
+  // parse lines we understand
+  sdp.split(/(\r\n|\r|\n)/).filter(validLine).forEach(function (l) {
+    var type = l[0];
+    var content = l.slice(2);
+    if (type === 'm') {
+      media.push({rtp: [], fmtp: []});
+      location = media[media.length-1]; // point at latest media line
+    }
+
+    for (var j = 0; j < (grammar[type] || []).length; j += 1) {
+      var obj = grammar[type][j];
+      if (obj.reg.test(content)) {
+        return parseReg(obj, location, content);
+      }
+    }
+  });
+
+  session.media = media; // link it up
+  return session;
+};
+
+var paramReducer = function (acc, expr) {
+  var s = expr.split(/=(.+)/, 2);
+  if (s.length === 2) {
+    acc[s[0]] = toIntIfInt(s[1]);
+  } else if (s.length === 1 && expr.length > 1) {
+    acc[s[0]] = undefined;
+  }
+  return acc;
+};
+
+exports.parseParams = function (str) {
+  return str.split(/;\s?/).reduce(paramReducer, {});
+};
+
+// For backward compatibility - alias will be removed in 3.0.0
+exports.parseFmtpConfig = exports.parseParams;
+
+exports.parsePayloads = function (str) {
+  return str.toString().split(' ').map(Number);
+};
+
+exports.parseRemoteCandidates = function (str) {
+  var candidates = [];
+  var parts = str.split(' ').map(toIntIfInt);
+  for (var i = 0; i < parts.length; i += 3) {
+    candidates.push({
+      component: parts[i],
+      ip: parts[i + 1],
+      port: parts[i + 2]
+    });
+  }
+  return candidates;
+};
+
+exports.parseImageAttributes = function (str) {
+  return str.split(' ').map(function (item) {
+    return item.substring(1, item.length-1).split(',').reduce(paramReducer, {});
+  });
+};
+
+exports.parseSimulcastStreamList = function (str) {
+  return str.split(';').map(function (stream) {
+    return stream.split(',').map(function (format) {
+      var scid, paused = false;
+
+      if (format[0] !== '~') {
+        scid = toIntIfInt(format);
+      } else {
+        scid = toIntIfInt(format.substring(1, format.length));
+        paused = true;
+      }
+
+      return {
+        scid: scid,
+        paused: paused
+      };
+    });
+  });
+};
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var grammar = __webpack_require__(22);
+
+// customized util.format - discards excess arguments and can void middle ones
+var formatRegExp = /%[sdv%]/g;
+var format = function (formatStr) {
+  var i = 1;
+  var args = arguments;
+  var len = args.length;
+  return formatStr.replace(formatRegExp, function (x) {
+    if (i >= len) {
+      return x; // missing argument
+    }
+    var arg = args[i];
+    i += 1;
+    switch (x) {
+    case '%%':
+      return '%';
+    case '%s':
+      return String(arg);
+    case '%d':
+      return Number(arg);
+    case '%v':
+      return '';
+    }
+  });
+  // NB: we discard excess arguments - they are typically undefined from makeLine
+};
+
+var makeLine = function (type, obj, location) {
+  var str = obj.format instanceof Function ?
+    (obj.format(obj.push ? location : location[obj.name])) :
+    obj.format;
+
+  var args = [type + '=' + str];
+  if (obj.names) {
+    for (var i = 0; i < obj.names.length; i += 1) {
+      var n = obj.names[i];
+      if (obj.name) {
+        args.push(location[obj.name][n]);
+      }
+      else { // for mLine and push attributes
+        args.push(location[obj.names[i]]);
+      }
+    }
+  }
+  else {
+    args.push(location[obj.name]);
+  }
+  return format.apply(null, args);
+};
+
+// RFC specified order
+// TODO: extend this with all the rest
+var defaultOuterOrder = [
+  'v', 'o', 's', 'i',
+  'u', 'e', 'p', 'c',
+  'b', 't', 'r', 'z', 'a'
+];
+var defaultInnerOrder = ['i', 'c', 'b', 'a'];
+
+
+module.exports = function (session, opts) {
+  opts = opts || {};
+  // ensure certain properties exist
+  if (session.version == null) {
+    session.version = 0; // 'v=0' must be there (only defined version atm)
+  }
+  if (session.name == null) {
+    session.name = ' '; // 's= ' must be there if no meaningful name set
+  }
+  session.media.forEach(function (mLine) {
+    if (mLine.payloads == null) {
+      mLine.payloads = '';
+    }
+  });
+
+  var outerOrder = opts.outerOrder || defaultOuterOrder;
+  var innerOrder = opts.innerOrder || defaultInnerOrder;
+  var sdp = [];
+
+  // loop through outerOrder for matching properties on session
+  outerOrder.forEach(function (type) {
+    grammar[type].forEach(function (obj) {
+      if (obj.name in session && session[obj.name] != null) {
+        sdp.push(makeLine(type, obj, session));
+      }
+      else if (obj.push in session && session[obj.push] != null) {
+        session[obj.push].forEach(function (el) {
+          sdp.push(makeLine(type, obj, el));
+        });
+      }
+    });
+  });
+
+  // then for each media line, follow the innerOrder
+  session.media.forEach(function (mLine) {
+    sdp.push(makeLine('m', grammar.m[0], mLine));
+
+    innerOrder.forEach(function (type) {
+      grammar[type].forEach(function (obj) {
+        if (obj.name in mLine && mLine[obj.name] != null) {
+          sdp.push(makeLine(type, obj, mLine));
+        }
+        else if (obj.push in mLine && mLine[obj.push] != null) {
+          mLine[obj.push].forEach(function (el) {
+            sdp.push(makeLine(type, obj, el));
+          });
+        }
+      });
+    });
+  });
+
+  return sdp.join('\r\n') + '\r\n';
+};
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OfferMediaSection = exports.AnswerMediaSection = exports.MediaSection = void 0;
+const utils = __importStar(__webpack_require__(2));
+class MediaSection {
+    constructor({ iceParameters, iceCandidates, dtlsParameters, planB = false }) {
+        this._mediaObject = {};
+        this._planB = planB;
+        if (iceParameters) {
+            this.setIceParameters(iceParameters);
+        }
+        if (iceCandidates) {
+            this._mediaObject.candidates = [];
+            for (const candidate of iceCandidates) {
+                const candidateObject = {};
+                // mediasoup does mandates rtcp-mux so candidates component is always
+                // RTP (1).
+                candidateObject.component = 1;
+                candidateObject.foundation = candidate.foundation;
+                candidateObject.ip = candidate.ip;
+                candidateObject.port = candidate.port;
+                candidateObject.priority = candidate.priority;
+                candidateObject.transport = candidate.protocol;
+                candidateObject.type = candidate.type;
+                if (candidate.tcpType)
+                    candidateObject.tcptype = candidate.tcpType;
+                this._mediaObject.candidates.push(candidateObject);
+            }
+            this._mediaObject.endOfCandidates = 'end-of-candidates';
+            this._mediaObject.iceOptions = 'renomination';
+        }
+        if (dtlsParameters) {
+            this.setDtlsRole(dtlsParameters.role);
+        }
+    }
+    get mid() {
+        return String(this._mediaObject.mid);
+    }
+    get closed() {
+        return this._mediaObject.port === 0;
+    }
+    getObject() {
+        return this._mediaObject;
+    }
+    setIceParameters(iceParameters) {
+        this._mediaObject.iceUfrag = iceParameters.usernameFragment;
+        this._mediaObject.icePwd = iceParameters.password;
+    }
+    disable() {
+        this._mediaObject.direction = 'inactive';
+        delete this._mediaObject.ext;
+        delete this._mediaObject.ssrcs;
+        delete this._mediaObject.ssrcGroups;
+        delete this._mediaObject.simulcast;
+        delete this._mediaObject.simulcast_03;
+        delete this._mediaObject.rids;
+    }
+    close() {
+        this._mediaObject.direction = 'inactive';
+        this._mediaObject.port = 0;
+        delete this._mediaObject.ext;
+        delete this._mediaObject.ssrcs;
+        delete this._mediaObject.ssrcGroups;
+        delete this._mediaObject.simulcast;
+        delete this._mediaObject.simulcast_03;
+        delete this._mediaObject.rids;
+        delete this._mediaObject.extmapAllowMixed;
+    }
+}
+exports.MediaSection = MediaSection;
+class AnswerMediaSection extends MediaSection {
+    constructor({ iceParameters, iceCandidates, dtlsParameters, sctpParameters, plainRtpParameters, planB = false, offerMediaObject, offerRtpParameters, answerRtpParameters, codecOptions, extmapAllowMixed = false }) {
+        super({ iceParameters, iceCandidates, dtlsParameters, planB });
+        this._mediaObject.mid = String(offerMediaObject.mid);
+        this._mediaObject.type = offerMediaObject.type;
+        this._mediaObject.protocol = offerMediaObject.protocol;
+        if (!plainRtpParameters) {
+            this._mediaObject.connection = { ip: '127.0.0.1', version: 4 };
+            this._mediaObject.port = 7;
+        }
+        else {
+            this._mediaObject.connection =
+                {
+                    ip: plainRtpParameters.ip,
+                    version: plainRtpParameters.ipVersion
+                };
+            this._mediaObject.port = plainRtpParameters.port;
+        }
+        switch (offerMediaObject.type) {
+            case 'audio':
+            case 'video':
+                {
+                    this._mediaObject.direction = 'recvonly';
+                    this._mediaObject.rtp = [];
+                    this._mediaObject.rtcpFb = [];
+                    this._mediaObject.fmtp = [];
+                    for (const codec of answerRtpParameters.codecs) {
+                        const rtp = {
+                            payload: codec.payloadType,
+                            codec: getCodecName(codec),
+                            rate: codec.clockRate
+                        };
+                        if (codec.channels > 1)
+                            rtp.encoding = codec.channels;
+                        this._mediaObject.rtp.push(rtp);
+                        const codecParameters = utils.clone(codec.parameters, {});
+                        if (codecOptions) {
+                            const { opusStereo, opusFec, opusDtx, opusMaxPlaybackRate, opusMaxAverageBitrate, opusPtime, videoGoogleStartBitrate, videoGoogleMaxBitrate, videoGoogleMinBitrate } = codecOptions;
+                            const offerCodec = offerRtpParameters.codecs
+                                .find((c) => (c.payloadType === codec.payloadType));
+                            switch (codec.mimeType.toLowerCase()) {
+                                case 'audio/opus':
+                                    {
+                                        if (opusStereo !== undefined) {
+                                            offerCodec.parameters['sprop-stereo'] = opusStereo ? 1 : 0;
+                                            codecParameters.stereo = opusStereo ? 1 : 0;
+                                        }
+                                        if (opusFec !== undefined) {
+                                            offerCodec.parameters.useinbandfec = opusFec ? 1 : 0;
+                                            codecParameters.useinbandfec = opusFec ? 1 : 0;
+                                        }
+                                        if (opusDtx !== undefined) {
+                                            offerCodec.parameters.usedtx = opusDtx ? 1 : 0;
+                                            codecParameters.usedtx = opusDtx ? 1 : 0;
+                                        }
+                                        if (opusMaxPlaybackRate !== undefined) {
+                                            codecParameters.maxplaybackrate = opusMaxPlaybackRate;
+                                        }
+                                        if (opusMaxAverageBitrate !== undefined) {
+                                            codecParameters.maxaveragebitrate = opusMaxAverageBitrate;
+                                        }
+                                        if (opusPtime !== undefined) {
+                                            offerCodec.parameters.ptime = opusPtime;
+                                            codecParameters.ptime = opusPtime;
+                                        }
+                                        break;
+                                    }
+                                case 'video/vp8':
+                                case 'video/vp9':
+                                case 'video/h264':
+                                case 'video/h265':
+                                    {
+                                        if (videoGoogleStartBitrate !== undefined)
+                                            codecParameters['x-google-start-bitrate'] = videoGoogleStartBitrate;
+                                        if (videoGoogleMaxBitrate !== undefined)
+                                            codecParameters['x-google-max-bitrate'] = videoGoogleMaxBitrate;
+                                        if (videoGoogleMinBitrate !== undefined)
+                                            codecParameters['x-google-min-bitrate'] = videoGoogleMinBitrate;
+                                        break;
+                                    }
+                            }
+                        }
+                        const fmtp = {
+                            payload: codec.payloadType,
+                            config: ''
+                        };
+                        for (const key of Object.keys(codecParameters)) {
+                            if (fmtp.config)
+                                fmtp.config += ';';
+                            fmtp.config += `${key}=${codecParameters[key]}`;
+                        }
+                        if (fmtp.config)
+                            this._mediaObject.fmtp.push(fmtp);
+                        for (const fb of codec.rtcpFeedback) {
+                            this._mediaObject.rtcpFb.push({
+                                payload: codec.payloadType,
+                                type: fb.type,
+                                subtype: fb.parameter
+                            });
+                        }
+                    }
+                    this._mediaObject.payloads = answerRtpParameters.codecs
+                        .map((codec) => codec.payloadType)
+                        .join(' ');
+                    this._mediaObject.ext = [];
+                    for (const ext of answerRtpParameters.headerExtensions) {
+                        // Don't add a header extension if not present in the offer.
+                        const found = (offerMediaObject.ext || [])
+                            .some((localExt) => localExt.uri === ext.uri);
+                        if (!found)
+                            continue;
+                        this._mediaObject.ext.push({
+                            uri: ext.uri,
+                            value: ext.id
+                        });
+                    }
+                    // Allow both 1 byte and 2 bytes length header extensions.
+                    if (extmapAllowMixed &&
+                        offerMediaObject.extmapAllowMixed === 'extmap-allow-mixed') {
+                        this._mediaObject.extmapAllowMixed = 'extmap-allow-mixed';
+                    }
+                    // Simulcast.
+                    if (offerMediaObject.simulcast) {
+                        this._mediaObject.simulcast =
+                            {
+                                dir1: 'recv',
+                                list1: offerMediaObject.simulcast.list1
+                            };
+                        this._mediaObject.rids = [];
+                        for (const rid of offerMediaObject.rids || []) {
+                            if (rid.direction !== 'send')
+                                continue;
+                            this._mediaObject.rids.push({
+                                id: rid.id,
+                                direction: 'recv'
+                            });
+                        }
+                    }
+                    // Simulcast (draft version 03).
+                    else if (offerMediaObject.simulcast_03) {
+                        // eslint-disable-next-line camelcase
+                        this._mediaObject.simulcast_03 =
+                            {
+                                value: offerMediaObject.simulcast_03.value.replace(/send/g, 'recv')
+                            };
+                        this._mediaObject.rids = [];
+                        for (const rid of offerMediaObject.rids || []) {
+                            if (rid.direction !== 'send')
+                                continue;
+                            this._mediaObject.rids.push({
+                                id: rid.id,
+                                direction: 'recv'
+                            });
+                        }
+                    }
+                    this._mediaObject.rtcpMux = 'rtcp-mux';
+                    this._mediaObject.rtcpRsize = 'rtcp-rsize';
+                    if (this._planB && this._mediaObject.type === 'video')
+                        this._mediaObject.xGoogleFlag = 'conference';
+                    break;
+                }
+            case 'application':
+                {
+                    // New spec.
+                    if (typeof offerMediaObject.sctpPort === 'number') {
+                        this._mediaObject.payloads = 'webrtc-datachannel';
+                        this._mediaObject.sctpPort = sctpParameters.port;
+                        this._mediaObject.maxMessageSize = sctpParameters.maxMessageSize;
+                    }
+                    // Old spec.
+                    else if (offerMediaObject.sctpmap) {
+                        this._mediaObject.payloads = sctpParameters.port;
+                        this._mediaObject.sctpmap =
+                            {
+                                app: 'webrtc-datachannel',
+                                sctpmapNumber: sctpParameters.port,
+                                maxMessageSize: sctpParameters.maxMessageSize
+                            };
+                    }
+                    break;
+                }
+        }
+    }
+    setDtlsRole(role) {
+        switch (role) {
+            case 'client':
+                this._mediaObject.setup = 'active';
+                break;
+            case 'server':
+                this._mediaObject.setup = 'passive';
+                break;
+            case 'auto':
+                this._mediaObject.setup = 'actpass';
+                break;
+        }
+    }
+}
+exports.AnswerMediaSection = AnswerMediaSection;
+class OfferMediaSection extends MediaSection {
+    constructor({ iceParameters, iceCandidates, dtlsParameters, sctpParameters, plainRtpParameters, planB = false, mid, kind, offerRtpParameters, streamId, trackId, oldDataChannelSpec = false }) {
+        super({ iceParameters, iceCandidates, dtlsParameters, planB });
+        this._mediaObject.mid = String(mid);
+        this._mediaObject.type = kind;
+        if (!plainRtpParameters) {
+            this._mediaObject.connection = { ip: '127.0.0.1', version: 4 };
+            if (!sctpParameters)
+                this._mediaObject.protocol = 'UDP/TLS/RTP/SAVPF';
+            else
+                this._mediaObject.protocol = 'UDP/DTLS/SCTP';
+            this._mediaObject.port = 7;
+        }
+        else {
+            this._mediaObject.connection =
+                {
+                    ip: plainRtpParameters.ip,
+                    version: plainRtpParameters.ipVersion
+                };
+            this._mediaObject.protocol = 'RTP/AVP';
+            this._mediaObject.port = plainRtpParameters.port;
+        }
+        switch (kind) {
+            case 'audio':
+            case 'video':
+                {
+                    this._mediaObject.direction = 'sendonly';
+                    this._mediaObject.rtp = [];
+                    this._mediaObject.rtcpFb = [];
+                    this._mediaObject.fmtp = [];
+                    if (!this._planB)
+                        this._mediaObject.msid = `${streamId || '-'} ${trackId}`;
+                    for (const codec of offerRtpParameters.codecs) {
+                        const rtp = {
+                            payload: codec.payloadType,
+                            codec: getCodecName(codec),
+                            rate: codec.clockRate
+                        };
+                        if (codec.channels > 1)
+                            rtp.encoding = codec.channels;
+                        this._mediaObject.rtp.push(rtp);
+                        const fmtp = {
+                            payload: codec.payloadType,
+                            config: ''
+                        };
+                        for (const key of Object.keys(codec.parameters)) {
+                            if (fmtp.config)
+                                fmtp.config += ';';
+                            fmtp.config += `${key}=${codec.parameters[key]}`;
+                        }
+                        if (fmtp.config)
+                            this._mediaObject.fmtp.push(fmtp);
+                        for (const fb of codec.rtcpFeedback) {
+                            this._mediaObject.rtcpFb.push({
+                                payload: codec.payloadType,
+                                type: fb.type,
+                                subtype: fb.parameter
+                            });
+                        }
+                    }
+                    this._mediaObject.payloads = offerRtpParameters.codecs
+                        .map((codec) => codec.payloadType)
+                        .join(' ');
+                    this._mediaObject.ext = [];
+                    for (const ext of offerRtpParameters.headerExtensions) {
+                        this._mediaObject.ext.push({
+                            uri: ext.uri,
+                            value: ext.id
+                        });
+                    }
+                    this._mediaObject.rtcpMux = 'rtcp-mux';
+                    this._mediaObject.rtcpRsize = 'rtcp-rsize';
+                    const encoding = offerRtpParameters.encodings[0];
+                    const ssrc = encoding.ssrc;
+                    const rtxSsrc = (encoding.rtx && encoding.rtx.ssrc)
+                        ? encoding.rtx.ssrc
+                        : undefined;
+                    this._mediaObject.ssrcs = [];
+                    this._mediaObject.ssrcGroups = [];
+                    if (offerRtpParameters.rtcp.cname) {
+                        this._mediaObject.ssrcs.push({
+                            id: ssrc,
+                            attribute: 'cname',
+                            value: offerRtpParameters.rtcp.cname
+                        });
+                    }
+                    if (this._planB) {
+                        this._mediaObject.ssrcs.push({
+                            id: ssrc,
+                            attribute: 'msid',
+                            value: `${streamId || '-'} ${trackId}`
+                        });
+                    }
+                    if (rtxSsrc) {
+                        if (offerRtpParameters.rtcp.cname) {
+                            this._mediaObject.ssrcs.push({
+                                id: rtxSsrc,
+                                attribute: 'cname',
+                                value: offerRtpParameters.rtcp.cname
+                            });
+                        }
+                        if (this._planB) {
+                            this._mediaObject.ssrcs.push({
+                                id: rtxSsrc,
+                                attribute: 'msid',
+                                value: `${streamId || '-'} ${trackId}`
+                            });
+                        }
+                        // Associate original and retransmission SSRCs.
+                        this._mediaObject.ssrcGroups.push({
+                            semantics: 'FID',
+                            ssrcs: `${ssrc} ${rtxSsrc}`
+                        });
+                    }
+                    break;
+                }
+            case 'application':
+                {
+                    // New spec.
+                    if (!oldDataChannelSpec) {
+                        this._mediaObject.payloads = 'webrtc-datachannel';
+                        this._mediaObject.sctpPort = sctpParameters.port;
+                        this._mediaObject.maxMessageSize = sctpParameters.maxMessageSize;
+                    }
+                    // Old spec.
+                    else {
+                        this._mediaObject.payloads = sctpParameters.port;
+                        this._mediaObject.sctpmap =
+                            {
+                                app: 'webrtc-datachannel',
+                                sctpmapNumber: sctpParameters.port,
+                                maxMessageSize: sctpParameters.maxMessageSize
+                            };
+                    }
+                    break;
+                }
+        }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setDtlsRole(role) {
+        // Always 'actpass'.
+        this._mediaObject.setup = 'actpass';
+    }
+    planBReceive({ offerRtpParameters, streamId, trackId }) {
+        const encoding = offerRtpParameters.encodings[0];
+        const ssrc = encoding.ssrc;
+        const rtxSsrc = (encoding.rtx && encoding.rtx.ssrc)
+            ? encoding.rtx.ssrc
+            : undefined;
+        const payloads = this._mediaObject.payloads.split(' ');
+        for (const codec of offerRtpParameters.codecs) {
+            if (payloads.includes(String(codec.payloadType))) {
+                continue;
+            }
+            const rtp = {
+                payload: codec.payloadType,
+                codec: getCodecName(codec),
+                rate: codec.clockRate
+            };
+            if (codec.channels > 1)
+                rtp.encoding = codec.channels;
+            this._mediaObject.rtp.push(rtp);
+            const fmtp = {
+                payload: codec.payloadType,
+                config: ''
+            };
+            for (const key of Object.keys(codec.parameters)) {
+                if (fmtp.config)
+                    fmtp.config += ';';
+                fmtp.config += `${key}=${codec.parameters[key]}`;
+            }
+            if (fmtp.config)
+                this._mediaObject.fmtp.push(fmtp);
+            for (const fb of codec.rtcpFeedback) {
+                this._mediaObject.rtcpFb.push({
+                    payload: codec.payloadType,
+                    type: fb.type,
+                    subtype: fb.parameter
+                });
+            }
+        }
+        this._mediaObject.payloads += ` ${offerRtpParameters
+            .codecs
+            .filter((codec) => !this._mediaObject.payloads.includes(codec.payloadType))
+            .map((codec) => codec.payloadType)
+            .join(' ')}`;
+        this._mediaObject.payloads = this._mediaObject.payloads.trim();
+        if (offerRtpParameters.rtcp.cname) {
+            this._mediaObject.ssrcs.push({
+                id: ssrc,
+                attribute: 'cname',
+                value: offerRtpParameters.rtcp.cname
+            });
+        }
+        this._mediaObject.ssrcs.push({
+            id: ssrc,
+            attribute: 'msid',
+            value: `${streamId || '-'} ${trackId}`
+        });
+        if (rtxSsrc) {
+            if (offerRtpParameters.rtcp.cname) {
+                this._mediaObject.ssrcs.push({
+                    id: rtxSsrc,
+                    attribute: 'cname',
+                    value: offerRtpParameters.rtcp.cname
+                });
+            }
+            this._mediaObject.ssrcs.push({
+                id: rtxSsrc,
+                attribute: 'msid',
+                value: `${streamId || '-'} ${trackId}`
+            });
+            // Associate original and retransmission SSRCs.
+            this._mediaObject.ssrcGroups.push({
+                semantics: 'FID',
+                ssrcs: `${ssrc} ${rtxSsrc}`
+            });
+        }
+    }
+    planBStopReceiving({ offerRtpParameters }) {
+        const encoding = offerRtpParameters.encodings[0];
+        const ssrc = encoding.ssrc;
+        const rtxSsrc = (encoding.rtx && encoding.rtx.ssrc)
+            ? encoding.rtx.ssrc
+            : undefined;
+        this._mediaObject.ssrcs = this._mediaObject.ssrcs
+            .filter((s) => s.id !== ssrc && s.id !== rtxSsrc);
+        if (rtxSsrc) {
+            this._mediaObject.ssrcGroups = this._mediaObject.ssrcGroups
+                .filter((group) => group.ssrcs !== `${ssrc} ${rtxSsrc}`);
+        }
+    }
+}
+exports.OfferMediaSection = OfferMediaSection;
+function getCodecName(codec) {
+    const MimeTypeRegex = new RegExp('^(audio|video)/(.+)', 'i');
+    const mimeTypeMatch = MimeTypeRegex.exec(codec.mimeType);
+    if (!mimeTypeMatch)
+        throw new TypeError('invalid codec.mimeType');
+    return mimeTypeMatch[2];
+}
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Chrome70 = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+const Logger_1 = __webpack_require__(1);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const sdpCommonUtils = __importStar(__webpack_require__(7));
+const sdpUnifiedPlanUtils = __importStar(__webpack_require__(11));
+const HandlerInterface_1 = __webpack_require__(6);
+const RemoteSdp_1 = __webpack_require__(8);
+const scalabilityModes_1 = __webpack_require__(13);
+const logger = new Logger_1.Logger('Chrome70');
+const SCTP_NUM_STREAMS = { OS: 1024, MIS: 1024 };
+class Chrome70 extends HandlerInterface_1.HandlerInterface {
+    constructor() {
+        super();
+        // Map of RTCTransceivers indexed by MID.
+        this._mapMidTransceiver = new Map();
+        // Local stream for sending.
+        this._sendStream = new MediaStream();
+        // Whether a DataChannel m=application section has been created.
+        this._hasDataChannelMediaSection = false;
+        // Sending DataChannel id value counter. Incremented for each new DataChannel.
+        this._nextSendSctpStreamId = 0;
+        // Got transport local and remote parameters.
+        this._transportReady = false;
+    }
+    /**
+     * Creates a factory function.
+     */
+    static createFactory() {
+        return () => new Chrome70();
+    }
+    get name() {
+        return 'Chrome70';
+    }
+    close() {
+        logger.debug('close()');
+        // Close RTCPeerConnection.
+        if (this._pc) {
+            try {
+                this._pc.close();
+            }
+            catch (error) { }
+        }
+    }
+    async getNativeRtpCapabilities() {
+        logger.debug('getNativeRtpCapabilities()');
+        const pc = new RTCPeerConnection({
+            iceServers: [],
+            iceTransportPolicy: 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'unified-plan'
+        });
+        try {
+            pc.addTransceiver('audio');
+            pc.addTransceiver('video');
+            const offer = await pc.createOffer();
+            try {
+                pc.close();
+            }
+            catch (error) { }
+            const sdpObject = sdpTransform.parse(offer.sdp);
+            const nativeRtpCapabilities = sdpCommonUtils.extractRtpCapabilities({ sdpObject });
+            return nativeRtpCapabilities;
+        }
+        catch (error) {
+            try {
+                pc.close();
+            }
+            catch (error2) { }
+            throw error;
+        }
+    }
+    async getNativeSctpCapabilities() {
+        logger.debug('getNativeSctpCapabilities()');
+        return {
+            numStreams: SCTP_NUM_STREAMS
+        };
+    }
+    run({ direction, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, extendedRtpCapabilities }) {
+        logger.debug('run()');
+        this._direction = direction;
+        this._remoteSdp = new RemoteSdp_1.RemoteSdp({
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters
+        });
+        this._sendingRtpParametersByKind =
+            {
+                audio: ortc.getSendingRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._sendingRemoteRtpParametersByKind =
+            {
+                audio: ortc.getSendingRemoteRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRemoteRtpParameters('video', extendedRtpCapabilities)
+            };
+        if (dtlsParameters.role && dtlsParameters.role !== 'auto') {
+            this._forcedLocalDtlsRole = dtlsParameters.role === 'server'
+                ? 'client'
+                : 'server';
+        }
+        this._pc = new RTCPeerConnection({
+            iceServers: iceServers || [],
+            iceTransportPolicy: iceTransportPolicy || 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'unified-plan',
+            ...additionalSettings
+        }, proprietaryConstraints);
+        // Handle RTCPeerConnection connection status.
+        this._pc.addEventListener('iceconnectionstatechange', () => {
+            switch (this._pc.iceConnectionState) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+    }
+    async updateIceServers(iceServers) {
+        logger.debug('updateIceServers()');
+        const configuration = this._pc.getConfiguration();
+        configuration.iceServers = iceServers;
+        this._pc.setConfiguration(configuration);
+    }
+    async restartIce(iceParameters) {
+        logger.debug('restartIce()');
+        // Provide the remote SDP handler with new remote ICE parameters.
+        this._remoteSdp.updateIceParameters(iceParameters);
+        if (!this._transportReady)
+            return;
+        if (this._direction === 'send') {
+            const offer = await this._pc.createOffer({ iceRestart: true });
+            logger.debug('restartIce() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+        }
+        else {
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            logger.debug('restartIce() | calling pc.setLocalDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+        }
+    }
+    async getTransportStats() {
+        return this._pc.getStats();
+    }
+    async send({ track, encodings, codecOptions, codec }) {
+        var _a;
+        this._assertSendDirection();
+        logger.debug('send() [kind:%s, track.id:%s]', track.kind, track.id);
+        const sendingRtpParameters = utils.clone(this._sendingRtpParametersByKind[track.kind], {});
+        // This may throw.
+        sendingRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRtpParameters.codecs, codec);
+        const sendingRemoteRtpParameters = utils.clone(this._sendingRemoteRtpParametersByKind[track.kind], {});
+        // This may throw.
+        sendingRemoteRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRemoteRtpParameters.codecs, codec);
+        const mediaSectionIdx = this._remoteSdp.getNextMediaSectionIdx();
+        const transceiver = this._pc.addTransceiver(track, { direction: 'sendonly', streams: [this._sendStream] });
+        let offer = await this._pc.createOffer();
+        let localSdpObject = sdpTransform.parse(offer.sdp);
+        let offerMediaObject;
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        if (encodings && encodings.length > 1) {
+            logger.debug('send() | enabling legacy simulcast');
+            localSdpObject = sdpTransform.parse(offer.sdp);
+            offerMediaObject = localSdpObject.media[mediaSectionIdx.idx];
+            sdpUnifiedPlanUtils.addLegacySimulcast({
+                offerMediaObject,
+                numStreams: encodings.length
+            });
+            offer = { type: 'offer', sdp: sdpTransform.write(localSdpObject) };
+        }
+        // Special case for VP9 with SVC.
+        let hackVp9Svc = false;
+        const layers = (0, scalabilityModes_1.parse)((encodings || [{}])[0].scalabilityMode);
+        if (encodings &&
+            encodings.length === 1 &&
+            layers.spatialLayers > 1 &&
+            sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp9') {
+            logger.debug('send() | enabling legacy simulcast for VP9 SVC');
+            hackVp9Svc = true;
+            localSdpObject = sdpTransform.parse(offer.sdp);
+            offerMediaObject = localSdpObject.media[mediaSectionIdx.idx];
+            sdpUnifiedPlanUtils.addLegacySimulcast({
+                offerMediaObject,
+                numStreams: layers.spatialLayers
+            });
+            offer = { type: 'offer', sdp: sdpTransform.write(localSdpObject) };
+        }
+        logger.debug('send() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        // If encodings are given, apply them now.
+        if (encodings) {
+            logger.debug('send() | applying given encodings');
+            const parameters = transceiver.sender.getParameters();
+            for (let idx = 0; idx < (parameters.encodings || []).length; ++idx) {
+                const encoding = parameters.encodings[idx];
+                const desiredEncoding = encodings[idx];
+                // Should not happen but just in case.
+                if (!desiredEncoding)
+                    break;
+                parameters.encodings[idx] = Object.assign(encoding, desiredEncoding);
+            }
+            await transceiver.sender.setParameters(parameters);
+        }
+        // We can now get the transceiver.mid.
+        const localId = transceiver.mid;
+        // Set MID.
+        sendingRtpParameters.mid = localId;
+        localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        offerMediaObject = localSdpObject.media[mediaSectionIdx.idx];
+        // Set RTCP CNAME.
+        sendingRtpParameters.rtcp.cname =
+            sdpCommonUtils.getCname({ offerMediaObject });
+        // Set RTP encodings.
+        sendingRtpParameters.encodings =
+            sdpUnifiedPlanUtils.getRtpEncodings({ offerMediaObject });
+        // Complete encodings with given values.
+        if (encodings) {
+            for (let idx = 0; idx < sendingRtpParameters.encodings.length; ++idx) {
+                if (encodings[idx])
+                    Object.assign(sendingRtpParameters.encodings[idx], encodings[idx]);
+            }
+        }
+        // Hack for VP9 SVC.
+        if (hackVp9Svc) {
+            sendingRtpParameters.encodings = [sendingRtpParameters.encodings[0]];
+        }
+        // If VP8 or H264 and there is effective simulcast, add scalabilityMode to
+        // each encoding.
+        if (sendingRtpParameters.encodings.length > 1 &&
+            (sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp8' ||
+                sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/h264')) {
+            for (const encoding of sendingRtpParameters.encodings) {
+                encoding.scalabilityMode = 'S1T3';
+            }
+        }
+        this._remoteSdp.send({
+            offerMediaObject,
+            reuseMid: mediaSectionIdx.reuseMid,
+            offerRtpParameters: sendingRtpParameters,
+            answerRtpParameters: sendingRemoteRtpParameters,
+            codecOptions
+        });
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('send() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        // Store in the map.
+        this._mapMidTransceiver.set(localId, transceiver);
+        return {
+            localId,
+            rtpParameters: sendingRtpParameters,
+            rtpSender: transceiver.sender
+        };
+    }
+    async stopSending(localId) {
+        this._assertSendDirection();
+        logger.debug('stopSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        transceiver.sender.replaceTrack(null);
+        this._pc.removeTrack(transceiver.sender);
+        this._remoteSdp.closeMediaSection(transceiver.mid);
+        const offer = await this._pc.createOffer();
+        logger.debug('stopSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        this._mapMidTransceiver.delete(localId);
+    }
+    async replaceTrack(localId, track) {
+        this._assertSendDirection();
+        if (track) {
+            logger.debug('replaceTrack() [localId:%s, track.id:%s]', localId, track.id);
+        }
+        else {
+            logger.debug('replaceTrack() [localId:%s, no track]', localId);
+        }
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        await transceiver.sender.replaceTrack(track);
+    }
+    async setMaxSpatialLayer(localId, spatialLayer) {
+        this._assertSendDirection();
+        logger.debug('setMaxSpatialLayer() [localId:%s, spatialLayer:%s]', localId, spatialLayer);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        const parameters = transceiver.sender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            if (idx <= spatialLayer)
+                encoding.active = true;
+            else
+                encoding.active = false;
+        });
+        await transceiver.sender.setParameters(parameters);
+    }
+    async setRtpEncodingParameters(localId, params) {
+        this._assertSendDirection();
+        logger.debug('setRtpEncodingParameters() [localId:%s, params:%o]', localId, params);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        const parameters = transceiver.sender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            parameters.encodings[idx] = { ...encoding, ...params };
+        });
+        await transceiver.sender.setParameters(parameters);
+    }
+    async getSenderStats(localId) {
+        this._assertSendDirection();
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        return transceiver.sender.getStats();
+    }
+    async sendDataChannel({ ordered, maxPacketLifeTime, maxRetransmits, label, protocol }) {
+        var _a;
+        this._assertSendDirection();
+        const options = {
+            negotiated: true,
+            id: this._nextSendSctpStreamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmitTime: maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('sendDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // Increase next id.
+        this._nextSendSctpStreamId =
+            ++this._nextSendSctpStreamId % SCTP_NUM_STREAMS.MIS;
+        // If this is the first DataChannel we need to create the SDP answer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            const offer = await this._pc.createOffer();
+            const localSdpObject = sdpTransform.parse(offer.sdp);
+            const offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'application');
+            if (!this._transportReady) {
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('sendDataChannel() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            this._remoteSdp.sendSctpAssociation({ offerMediaObject });
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        const sctpStreamParameters = {
+            streamId: options.id,
+            ordered: options.ordered,
+            maxPacketLifeTime: options.maxPacketLifeTime,
+            maxRetransmits: options.maxRetransmits
+        };
+        return { dataChannel, sctpStreamParameters };
+    }
+    async receive(optionsList) {
+        var _a;
+        this._assertRecvDirection();
+        const results = [];
+        const mapLocalId = new Map();
+        for (const options of optionsList) {
+            const { trackId, kind, rtpParameters } = options;
+            logger.debug('receive() [trackId:%s, kind:%s]', trackId, kind);
+            const localId = rtpParameters.mid || String(this._mapMidTransceiver.size);
+            mapLocalId.set(trackId, localId);
+            this._remoteSdp.receive({
+                mid: localId,
+                kind,
+                offerRtpParameters: rtpParameters,
+                streamId: rtpParameters.rtcp.cname,
+                trackId
+            });
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('receive() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        let answer = await this._pc.createAnswer();
+        const localSdpObject = sdpTransform.parse(answer.sdp);
+        for (const options of optionsList) {
+            const { trackId, rtpParameters } = options;
+            const localId = mapLocalId.get(trackId);
+            const answerMediaObject = localSdpObject.media
+                .find((m) => String(m.mid) === localId);
+            // May need to modify codec parameters in the answer based on codec
+            // parameters in the offer.
+            sdpCommonUtils.applyCodecParameters({
+                offerRtpParameters: rtpParameters,
+                answerMediaObject
+            });
+        }
+        answer = { type: 'answer', sdp: sdpTransform.write(localSdpObject) };
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        logger.debug('receive() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        for (const options of optionsList) {
+            const { trackId } = options;
+            const localId = mapLocalId.get(trackId);
+            const transceiver = this._pc.getTransceivers()
+                .find((t) => t.mid === localId);
+            if (!transceiver)
+                throw new Error('new RTCRtpTransceiver not found');
+            // Store in the map.
+            this._mapMidTransceiver.set(localId, transceiver);
+            results.push({
+                localId,
+                track: transceiver.receiver.track,
+                rtpReceiver: transceiver.receiver
+            });
+        }
+        return results;
+    }
+    async stopReceiving(localId) {
+        this._assertRecvDirection();
+        logger.debug('stopReceiving() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        this._remoteSdp.closeMediaSection(transceiver.mid);
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        this._mapMidTransceiver.delete(localId);
+    }
+    async pauseReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async resumeReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async getReceiverStats(localId) {
+        this._assertRecvDirection();
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        return transceiver.receiver.getStats();
+    }
+    async receiveDataChannel({ sctpStreamParameters, label, protocol }) {
+        var _a;
+        this._assertRecvDirection();
+        const { streamId, ordered, maxPacketLifeTime, maxRetransmits } = sctpStreamParameters;
+        const options = {
+            negotiated: true,
+            id: streamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmitTime: maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('receiveDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // If this is the first DataChannel we need to create the SDP offer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            this._remoteSdp.receiveSctpAssociation();
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            if (!this._transportReady) {
+                const localSdpObject = sdpTransform.parse(answer.sdp);
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        return { dataChannel };
+    }
+    async _setupTransport({ localDtlsRole, localSdpObject }) {
+        if (!localSdpObject)
+            localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        // Get our local DTLS parameters.
+        const dtlsParameters = sdpCommonUtils.extractDtlsParameters({ sdpObject: localSdpObject });
+        // Set our DTLS role.
+        dtlsParameters.role = localDtlsRole;
+        // Update the remote DTLS role in the SDP.
+        this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
+        // Need to tell the remote transport about our parameters.
+        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        this._transportReady = true;
+    }
+    _assertSendDirection() {
+        if (this._direction !== 'send') {
+            throw new Error('method can just be called for handlers with "send" direction');
+        }
+    }
+    _assertRecvDirection() {
+        if (this._direction !== 'recv') {
+            throw new Error('method can just be called for handlers with "recv" direction');
+        }
+    }
+}
+exports.Chrome70 = Chrome70;
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Chrome67 = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+const Logger_1 = __webpack_require__(1);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const sdpCommonUtils = __importStar(__webpack_require__(7));
+const sdpPlanBUtils = __importStar(__webpack_require__(12));
+const HandlerInterface_1 = __webpack_require__(6);
+const RemoteSdp_1 = __webpack_require__(8);
+const logger = new Logger_1.Logger('Chrome67');
+const SCTP_NUM_STREAMS = { OS: 1024, MIS: 1024 };
+class Chrome67 extends HandlerInterface_1.HandlerInterface {
+    constructor() {
+        super();
+        // Local stream for sending.
+        this._sendStream = new MediaStream();
+        // Map of RTCRtpSender indexed by localId.
+        this._mapSendLocalIdRtpSender = new Map();
+        // Next sending localId.
+        this._nextSendLocalId = 0;
+        // Map of MID, RTP parameters and RTCRtpReceiver indexed by local id.
+        // Value is an Object with mid, rtpParameters and rtpReceiver.
+        this._mapRecvLocalIdInfo = new Map();
+        // Whether a DataChannel m=application section has been created.
+        this._hasDataChannelMediaSection = false;
+        // Sending DataChannel id value counter. Incremented for each new DataChannel.
+        this._nextSendSctpStreamId = 0;
+        // Got transport local and remote parameters.
+        this._transportReady = false;
+    }
+    /**
+     * Creates a factory function.
+     */
+    static createFactory() {
+        return () => new Chrome67();
+    }
+    get name() {
+        return 'Chrome67';
+    }
+    close() {
+        logger.debug('close()');
+        // Close RTCPeerConnection.
+        if (this._pc) {
+            try {
+                this._pc.close();
+            }
+            catch (error) { }
+        }
+    }
+    async getNativeRtpCapabilities() {
+        logger.debug('getNativeRtpCapabilities()');
+        const pc = new RTCPeerConnection({
+            iceServers: [],
+            iceTransportPolicy: 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'plan-b'
+        });
+        try {
+            const offer = await pc.createOffer({
+                offerToReceiveAudio: true,
+                offerToReceiveVideo: true
+            });
+            try {
+                pc.close();
+            }
+            catch (error) { }
+            const sdpObject = sdpTransform.parse(offer.sdp);
+            const nativeRtpCapabilities = sdpCommonUtils.extractRtpCapabilities({ sdpObject });
+            return nativeRtpCapabilities;
+        }
+        catch (error) {
+            try {
+                pc.close();
+            }
+            catch (error2) { }
+            throw error;
+        }
+    }
+    async getNativeSctpCapabilities() {
+        logger.debug('getNativeSctpCapabilities()');
+        return {
+            numStreams: SCTP_NUM_STREAMS
+        };
+    }
+    run({ direction, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, extendedRtpCapabilities }) {
+        logger.debug('run()');
+        this._direction = direction;
+        this._remoteSdp = new RemoteSdp_1.RemoteSdp({
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters,
+            planB: true
+        });
+        this._sendingRtpParametersByKind =
+            {
+                audio: ortc.getSendingRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._sendingRemoteRtpParametersByKind =
+            {
+                audio: ortc.getSendingRemoteRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRemoteRtpParameters('video', extendedRtpCapabilities)
+            };
+        if (dtlsParameters.role && dtlsParameters.role !== 'auto') {
+            this._forcedLocalDtlsRole = dtlsParameters.role === 'server'
+                ? 'client'
+                : 'server';
+        }
+        this._pc = new RTCPeerConnection({
+            iceServers: iceServers || [],
+            iceTransportPolicy: iceTransportPolicy || 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'plan-b',
+            ...additionalSettings
+        }, proprietaryConstraints);
+        // Handle RTCPeerConnection connection status.
+        this._pc.addEventListener('iceconnectionstatechange', () => {
+            switch (this._pc.iceConnectionState) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+    }
+    async updateIceServers(iceServers) {
+        logger.debug('updateIceServers()');
+        const configuration = this._pc.getConfiguration();
+        configuration.iceServers = iceServers;
+        this._pc.setConfiguration(configuration);
+    }
+    async restartIce(iceParameters) {
+        logger.debug('restartIce()');
+        // Provide the remote SDP handler with new remote ICE parameters.
+        this._remoteSdp.updateIceParameters(iceParameters);
+        if (!this._transportReady)
+            return;
+        if (this._direction === 'send') {
+            const offer = await this._pc.createOffer({ iceRestart: true });
+            logger.debug('restartIce() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+        }
+        else {
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            logger.debug('restartIce() | calling pc.setLocalDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+        }
+    }
+    async getTransportStats() {
+        return this._pc.getStats();
+    }
+    async send({ track, encodings, codecOptions, codec }) {
+        var _a;
+        this._assertSendDirection();
+        logger.debug('send() [kind:%s, track.id:%s]', track.kind, track.id);
+        if (codec) {
+            logger.warn('send() | codec selection is not available in %s handler', this.name);
+        }
+        this._sendStream.addTrack(track);
+        this._pc.addTrack(track, this._sendStream);
+        let offer = await this._pc.createOffer();
+        let localSdpObject = sdpTransform.parse(offer.sdp);
+        let offerMediaObject;
+        const sendingRtpParameters = utils.clone(this._sendingRtpParametersByKind[track.kind], {});
+        sendingRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRtpParameters.codecs);
+        const sendingRemoteRtpParameters = utils.clone(this._sendingRemoteRtpParametersByKind[track.kind], {});
+        sendingRemoteRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRemoteRtpParameters.codecs);
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        if (track.kind === 'video' && encodings && encodings.length > 1) {
+            logger.debug('send() | enabling simulcast');
+            localSdpObject = sdpTransform.parse(offer.sdp);
+            offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'video');
+            sdpPlanBUtils.addLegacySimulcast({
+                offerMediaObject,
+                track,
+                numStreams: encodings.length
+            });
+            offer = { type: 'offer', sdp: sdpTransform.write(localSdpObject) };
+        }
+        logger.debug('send() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        offerMediaObject = localSdpObject.media
+            .find((m) => m.type === track.kind);
+        // Set RTCP CNAME.
+        sendingRtpParameters.rtcp.cname =
+            sdpCommonUtils.getCname({ offerMediaObject });
+        // Set RTP encodings.
+        sendingRtpParameters.encodings =
+            sdpPlanBUtils.getRtpEncodings({ offerMediaObject, track });
+        // Complete encodings with given values.
+        if (encodings) {
+            for (let idx = 0; idx < sendingRtpParameters.encodings.length; ++idx) {
+                if (encodings[idx])
+                    Object.assign(sendingRtpParameters.encodings[idx], encodings[idx]);
+            }
+        }
+        // If VP8 and there is effective simulcast, add scalabilityMode to each
+        // encoding.
+        if (sendingRtpParameters.encodings.length > 1 &&
+            sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp8') {
+            for (const encoding of sendingRtpParameters.encodings) {
+                encoding.scalabilityMode = 'S1T3';
+            }
+        }
+        this._remoteSdp.send({
+            offerMediaObject,
+            offerRtpParameters: sendingRtpParameters,
+            answerRtpParameters: sendingRemoteRtpParameters,
+            codecOptions
+        });
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('send() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        const localId = String(this._nextSendLocalId);
+        this._nextSendLocalId++;
+        const rtpSender = this._pc.getSenders()
+            .find((s) => s.track === track);
+        // Insert into the map.
+        this._mapSendLocalIdRtpSender.set(localId, rtpSender);
+        return {
+            localId: localId,
+            rtpParameters: sendingRtpParameters,
+            rtpSender
+        };
+    }
+    async stopSending(localId) {
+        this._assertSendDirection();
+        logger.debug('stopSending() [localId:%s]', localId);
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        this._pc.removeTrack(rtpSender);
+        if (rtpSender.track)
+            this._sendStream.removeTrack(rtpSender.track);
+        this._mapSendLocalIdRtpSender.delete(localId);
+        const offer = await this._pc.createOffer();
+        logger.debug('stopSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        try {
+            await this._pc.setLocalDescription(offer);
+        }
+        catch (error) {
+            // NOTE: If there are no sending tracks, setLocalDescription() will fail with
+            // "Failed to create channels". If so, ignore it.
+            if (this._sendStream.getTracks().length === 0) {
+                logger.warn('stopSending() | ignoring expected error due no sending tracks: %s', error.toString());
+                return;
+            }
+            throw error;
+        }
+        if (this._pc.signalingState === 'stable')
+            return;
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
+    async replaceTrack(localId, track) {
+        this._assertSendDirection();
+        if (track) {
+            logger.debug('replaceTrack() [localId:%s, track.id:%s]', localId, track.id);
+        }
+        else {
+            logger.debug('replaceTrack() [localId:%s, no track]', localId);
+        }
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        const oldTrack = rtpSender.track;
+        await rtpSender.replaceTrack(track);
+        // Remove the old track from the local stream.
+        if (oldTrack)
+            this._sendStream.removeTrack(oldTrack);
+        // Add the new track to the local stream.
+        if (track)
+            this._sendStream.addTrack(track);
+    }
+    async setMaxSpatialLayer(localId, spatialLayer) {
+        this._assertSendDirection();
+        logger.debug('setMaxSpatialLayer() [localId:%s, spatialLayer:%s]', localId, spatialLayer);
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        const parameters = rtpSender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            if (idx <= spatialLayer)
+                encoding.active = true;
+            else
+                encoding.active = false;
+        });
+        await rtpSender.setParameters(parameters);
+    }
+    async setRtpEncodingParameters(localId, params) {
+        this._assertSendDirection();
+        logger.debug('setRtpEncodingParameters() [localId:%s, params:%o]', localId, params);
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        const parameters = rtpSender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            parameters.encodings[idx] = { ...encoding, ...params };
+        });
+        await rtpSender.setParameters(parameters);
+    }
+    async getSenderStats(localId) {
+        this._assertSendDirection();
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        return rtpSender.getStats();
+    }
+    async sendDataChannel({ ordered, maxPacketLifeTime, maxRetransmits, label, protocol }) {
+        var _a;
+        this._assertSendDirection();
+        const options = {
+            negotiated: true,
+            id: this._nextSendSctpStreamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmitTime: maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('sendDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // Increase next id.
+        this._nextSendSctpStreamId =
+            ++this._nextSendSctpStreamId % SCTP_NUM_STREAMS.MIS;
+        // If this is the first DataChannel we need to create the SDP answer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            const offer = await this._pc.createOffer();
+            const localSdpObject = sdpTransform.parse(offer.sdp);
+            const offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'application');
+            if (!this._transportReady) {
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('sendDataChannel() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            this._remoteSdp.sendSctpAssociation({ offerMediaObject });
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        const sctpStreamParameters = {
+            streamId: options.id,
+            ordered: options.ordered,
+            maxPacketLifeTime: options.maxPacketLifeTime,
+            maxRetransmits: options.maxRetransmits
+        };
+        return { dataChannel, sctpStreamParameters };
+    }
+    async receive(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    optionsList) {
+        var _a;
+        this._assertRecvDirection();
+        const results = [];
+        for (const options of optionsList) {
+            const { trackId, kind, rtpParameters } = options;
+            logger.debug('receive() [trackId:%s, kind:%s]', trackId, kind);
+            const mid = kind;
+            this._remoteSdp.receive({
+                mid,
+                kind,
+                offerRtpParameters: rtpParameters,
+                streamId: rtpParameters.rtcp.cname,
+                trackId
+            });
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('receive() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        let answer = await this._pc.createAnswer();
+        const localSdpObject = sdpTransform.parse(answer.sdp);
+        for (const options of optionsList) {
+            const { kind, rtpParameters } = options;
+            const mid = kind;
+            const answerMediaObject = localSdpObject.media
+                .find((m) => String(m.mid) === mid);
+            // May need to modify codec parameters in the answer based on codec
+            // parameters in the offer.
+            sdpCommonUtils.applyCodecParameters({
+                offerRtpParameters: rtpParameters,
+                answerMediaObject
+            });
+        }
+        answer = { type: 'answer', sdp: sdpTransform.write(localSdpObject) };
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        logger.debug('receive() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        for (const options of optionsList) {
+            const { kind, trackId, rtpParameters } = options;
+            const localId = trackId;
+            const mid = kind;
+            const rtpReceiver = this._pc.getReceivers()
+                .find((r) => r.track && r.track.id === localId);
+            if (!rtpReceiver)
+                throw new Error('new RTCRtpReceiver not');
+            // Insert into the map.
+            this._mapRecvLocalIdInfo.set(localId, { mid, rtpParameters, rtpReceiver });
+            results.push({
+                localId,
+                track: rtpReceiver.track,
+                rtpReceiver
+            });
+        }
+        return results;
+    }
+    async stopReceiving(localId) {
+        this._assertRecvDirection();
+        logger.debug('stopReceiving() [localId:%s]', localId);
+        const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
+        // Remove from the map.
+        this._mapRecvLocalIdInfo.delete(localId);
+        this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async pauseReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async resumeReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async getReceiverStats(localId) {
+        this._assertRecvDirection();
+        const { rtpReceiver } = this._mapRecvLocalIdInfo.get(localId) || {};
+        if (!rtpReceiver)
+            throw new Error('associated RTCRtpReceiver not found');
+        return rtpReceiver.getStats();
+    }
+    async receiveDataChannel({ sctpStreamParameters, label, protocol }) {
+        var _a;
+        this._assertRecvDirection();
+        const { streamId, ordered, maxPacketLifeTime, maxRetransmits } = sctpStreamParameters;
+        const options = {
+            negotiated: true,
+            id: streamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmitTime: maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('receiveDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // If this is the first DataChannel we need to create the SDP offer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            this._remoteSdp.receiveSctpAssociation({ oldDataChannelSpec: true });
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            if (!this._transportReady) {
+                const localSdpObject = sdpTransform.parse(answer.sdp);
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        return { dataChannel };
+    }
+    async _setupTransport({ localDtlsRole, localSdpObject }) {
+        if (!localSdpObject)
+            localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        // Get our local DTLS parameters.
+        const dtlsParameters = sdpCommonUtils.extractDtlsParameters({ sdpObject: localSdpObject });
+        // Set our DTLS role.
+        dtlsParameters.role = localDtlsRole;
+        // Update the remote DTLS role in the SDP.
+        this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
+        // Need to tell the remote transport about our parameters.
+        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        this._transportReady = true;
+    }
+    _assertSendDirection() {
+        if (this._direction !== 'send') {
+            throw new Error('method can just be called for handlers with "send" direction');
+        }
+    }
+    _assertRecvDirection() {
+        if (this._direction !== 'recv') {
+            throw new Error('method can just be called for handlers with "recv" direction');
+        }
+    }
+}
+exports.Chrome67 = Chrome67;
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Chrome55 = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+const Logger_1 = __webpack_require__(1);
+const errors_1 = __webpack_require__(4);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const sdpCommonUtils = __importStar(__webpack_require__(7));
+const sdpPlanBUtils = __importStar(__webpack_require__(12));
+const HandlerInterface_1 = __webpack_require__(6);
+const RemoteSdp_1 = __webpack_require__(8);
+const logger = new Logger_1.Logger('Chrome55');
+const SCTP_NUM_STREAMS = { OS: 1024, MIS: 1024 };
+class Chrome55 extends HandlerInterface_1.HandlerInterface {
+    constructor() {
+        super();
+        // Local stream for sending.
+        this._sendStream = new MediaStream();
+        // Map of sending MediaStreamTracks indexed by localId.
+        this._mapSendLocalIdTrack = new Map();
+        // Next sending localId.
+        this._nextSendLocalId = 0;
+        // Map of MID, RTP parameters and RTCRtpReceiver indexed by local id.
+        // Value is an Object with mid, rtpParameters and rtpReceiver.
+        this._mapRecvLocalIdInfo = new Map();
+        // Whether a DataChannel m=application section has been created.
+        this._hasDataChannelMediaSection = false;
+        // Sending DataChannel id value counter. Incremented for each new DataChannel.
+        this._nextSendSctpStreamId = 0;
+        // Got transport local and remote parameters.
+        this._transportReady = false;
+    }
+    /**
+     * Creates a factory function.
+     */
+    static createFactory() {
+        return () => new Chrome55();
+    }
+    get name() {
+        return 'Chrome55';
+    }
+    close() {
+        logger.debug('close()');
+        // Close RTCPeerConnection.
+        if (this._pc) {
+            try {
+                this._pc.close();
+            }
+            catch (error) { }
+        }
+    }
+    async getNativeRtpCapabilities() {
+        logger.debug('getNativeRtpCapabilities()');
+        const pc = new RTCPeerConnection({
+            iceServers: [],
+            iceTransportPolicy: 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'plan-b'
+        });
+        try {
+            const offer = await pc.createOffer({
+                offerToReceiveAudio: true,
+                offerToReceiveVideo: true
+            });
+            try {
+                pc.close();
+            }
+            catch (error) { }
+            const sdpObject = sdpTransform.parse(offer.sdp);
+            const nativeRtpCapabilities = sdpCommonUtils.extractRtpCapabilities({ sdpObject });
+            return nativeRtpCapabilities;
+        }
+        catch (error) {
+            try {
+                pc.close();
+            }
+            catch (error2) { }
+            throw error;
+        }
+    }
+    async getNativeSctpCapabilities() {
+        logger.debug('getNativeSctpCapabilities()');
+        return {
+            numStreams: SCTP_NUM_STREAMS
+        };
+    }
+    run({ direction, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, extendedRtpCapabilities }) {
+        logger.debug('run()');
+        this._direction = direction;
+        this._remoteSdp = new RemoteSdp_1.RemoteSdp({
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters,
+            planB: true
+        });
+        this._sendingRtpParametersByKind =
+            {
+                audio: ortc.getSendingRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._sendingRemoteRtpParametersByKind =
+            {
+                audio: ortc.getSendingRemoteRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRemoteRtpParameters('video', extendedRtpCapabilities)
+            };
+        if (dtlsParameters.role && dtlsParameters.role !== 'auto') {
+            this._forcedLocalDtlsRole = dtlsParameters.role === 'server'
+                ? 'client'
+                : 'server';
+        }
+        this._pc = new RTCPeerConnection({
+            iceServers: iceServers || [],
+            iceTransportPolicy: iceTransportPolicy || 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'plan-b',
+            ...additionalSettings
+        }, proprietaryConstraints);
+        // Handle RTCPeerConnection connection status.
+        this._pc.addEventListener('iceconnectionstatechange', () => {
+            switch (this._pc.iceConnectionState) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+    }
+    async updateIceServers(iceServers) {
+        logger.debug('updateIceServers()');
+        const configuration = this._pc.getConfiguration();
+        configuration.iceServers = iceServers;
+        this._pc.setConfiguration(configuration);
+    }
+    async restartIce(iceParameters) {
+        logger.debug('restartIce()');
+        // Provide the remote SDP handler with new remote ICE parameters.
+        this._remoteSdp.updateIceParameters(iceParameters);
+        if (!this._transportReady)
+            return;
+        if (this._direction === 'send') {
+            const offer = await this._pc.createOffer({ iceRestart: true });
+            logger.debug('restartIce() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+        }
+        else {
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            logger.debug('restartIce() | calling pc.setLocalDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+        }
+    }
+    async getTransportStats() {
+        return this._pc.getStats();
+    }
+    async send({ track, encodings, codecOptions, codec }) {
+        var _a;
+        this._assertSendDirection();
+        logger.debug('send() [kind:%s, track.id:%s]', track.kind, track.id);
+        if (codec) {
+            logger.warn('send() | codec selection is not available in %s handler', this.name);
+        }
+        this._sendStream.addTrack(track);
+        this._pc.addStream(this._sendStream);
+        let offer = await this._pc.createOffer();
+        let localSdpObject = sdpTransform.parse(offer.sdp);
+        let offerMediaObject;
+        const sendingRtpParameters = utils.clone(this._sendingRtpParametersByKind[track.kind], {});
+        sendingRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRtpParameters.codecs);
+        const sendingRemoteRtpParameters = utils.clone(this._sendingRemoteRtpParametersByKind[track.kind], {});
+        sendingRemoteRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRemoteRtpParameters.codecs);
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        if (track.kind === 'video' && encodings && encodings.length > 1) {
+            logger.debug('send() | enabling simulcast');
+            localSdpObject = sdpTransform.parse(offer.sdp);
+            offerMediaObject = localSdpObject.media.find((m) => m.type === 'video');
+            sdpPlanBUtils.addLegacySimulcast({
+                offerMediaObject,
+                track,
+                numStreams: encodings.length
+            });
+            offer = { type: 'offer', sdp: sdpTransform.write(localSdpObject) };
+        }
+        logger.debug('send() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        offerMediaObject = localSdpObject.media
+            .find((m) => m.type === track.kind);
+        // Set RTCP CNAME.
+        sendingRtpParameters.rtcp.cname =
+            sdpCommonUtils.getCname({ offerMediaObject });
+        // Set RTP encodings.
+        sendingRtpParameters.encodings =
+            sdpPlanBUtils.getRtpEncodings({ offerMediaObject, track });
+        // Complete encodings with given values.
+        if (encodings) {
+            for (let idx = 0; idx < sendingRtpParameters.encodings.length; ++idx) {
+                if (encodings[idx])
+                    Object.assign(sendingRtpParameters.encodings[idx], encodings[idx]);
+            }
+        }
+        // If VP8 and there is effective simulcast, add scalabilityMode to each
+        // encoding.
+        if (sendingRtpParameters.encodings.length > 1 &&
+            sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp8') {
+            for (const encoding of sendingRtpParameters.encodings) {
+                encoding.scalabilityMode = 'S1T3';
+            }
+        }
+        this._remoteSdp.send({
+            offerMediaObject,
+            offerRtpParameters: sendingRtpParameters,
+            answerRtpParameters: sendingRemoteRtpParameters,
+            codecOptions
+        });
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('send() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        const localId = String(this._nextSendLocalId);
+        this._nextSendLocalId++;
+        // Insert into the map.
+        this._mapSendLocalIdTrack.set(localId, track);
+        return {
+            localId: localId,
+            rtpParameters: sendingRtpParameters
+        };
+    }
+    async stopSending(localId) {
+        this._assertSendDirection();
+        logger.debug('stopSending() [localId:%s]', localId);
+        const track = this._mapSendLocalIdTrack.get(localId);
+        if (!track)
+            throw new Error('track not found');
+        this._mapSendLocalIdTrack.delete(localId);
+        this._sendStream.removeTrack(track);
+        this._pc.addStream(this._sendStream);
+        const offer = await this._pc.createOffer();
+        logger.debug('stopSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        try {
+            await this._pc.setLocalDescription(offer);
+        }
+        catch (error) {
+            // NOTE: If there are no sending tracks, setLocalDescription() will fail with
+            // "Failed to create channels". If so, ignore it.
+            if (this._sendStream.getTracks().length === 0) {
+                logger.warn('stopSending() | ignoring expected error due no sending tracks: %s', error.toString());
+                return;
+            }
+            throw error;
+        }
+        if (this._pc.signalingState === 'stable')
+            return;
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
+    async replaceTrack(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localId, track) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async setMaxSpatialLayer(localId, spatialLayer) {
+        throw new errors_1.UnsupportedError(' not implemented');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async setRtpEncodingParameters(localId, params) {
+        throw new errors_1.UnsupportedError('not supported');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getSenderStats(localId) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    async sendDataChannel({ ordered, maxPacketLifeTime, maxRetransmits, label, protocol }) {
+        var _a;
+        this._assertSendDirection();
+        const options = {
+            negotiated: true,
+            id: this._nextSendSctpStreamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmitTime: maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('sendDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // Increase next id.
+        this._nextSendSctpStreamId =
+            ++this._nextSendSctpStreamId % SCTP_NUM_STREAMS.MIS;
+        // If this is the first DataChannel we need to create the SDP answer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            const offer = await this._pc.createOffer();
+            const localSdpObject = sdpTransform.parse(offer.sdp);
+            const offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'application');
+            if (!this._transportReady) {
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('sendDataChannel() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            this._remoteSdp.sendSctpAssociation({ offerMediaObject });
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        const sctpStreamParameters = {
+            streamId: options.id,
+            ordered: options.ordered,
+            maxPacketLifeTime: options.maxPacketLifeTime,
+            maxRetransmits: options.maxRetransmits
+        };
+        return { dataChannel, sctpStreamParameters };
+    }
+    async receive(optionsList) {
+        var _a;
+        this._assertRecvDirection();
+        const results = [];
+        for (const options of optionsList) {
+            const { trackId, kind, rtpParameters } = options;
+            logger.debug('receive() [trackId:%s, kind:%s]', trackId, kind);
+            const mid = kind;
+            const streamId = rtpParameters.rtcp.cname;
+            this._remoteSdp.receive({
+                mid,
+                kind,
+                offerRtpParameters: rtpParameters,
+                streamId,
+                trackId
+            });
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('receive() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        let answer = await this._pc.createAnswer();
+        const localSdpObject = sdpTransform.parse(answer.sdp);
+        for (const options of optionsList) {
+            const { kind, rtpParameters } = options;
+            const mid = kind;
+            const answerMediaObject = localSdpObject.media
+                .find((m) => String(m.mid) === mid);
+            // May need to modify codec parameters in the answer based on codec
+            // parameters in the offer.
+            sdpCommonUtils.applyCodecParameters({
+                offerRtpParameters: rtpParameters,
+                answerMediaObject
+            });
+        }
+        answer = { type: 'answer', sdp: sdpTransform.write(localSdpObject) };
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        logger.debug('receive() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        for (const options of optionsList) {
+            const { kind, trackId, rtpParameters } = options;
+            const mid = kind;
+            const localId = trackId;
+            const streamId = rtpParameters.rtcp.cname;
+            const stream = this._pc.getRemoteStreams()
+                .find((s) => s.id === streamId);
+            const track = stream.getTrackById(localId);
+            if (!track)
+                throw new Error('remote track not found');
+            // Insert into the map.
+            this._mapRecvLocalIdInfo.set(localId, { mid, rtpParameters });
+            results.push({ localId, track });
+        }
+        return results;
+    }
+    async stopReceiving(localId) {
+        this._assertRecvDirection();
+        logger.debug('stopReceiving() [localId:%s]', localId);
+        const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
+        // Remove from the map.
+        this._mapRecvLocalIdInfo.delete(localId);
+        this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async pauseReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async resumeReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getReceiverStats(localId) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    async receiveDataChannel({ sctpStreamParameters, label, protocol }) {
+        var _a;
+        this._assertRecvDirection();
+        const { streamId, ordered, maxPacketLifeTime, maxRetransmits } = sctpStreamParameters;
+        const options = {
+            negotiated: true,
+            id: streamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmitTime: maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('receiveDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // If this is the first DataChannel we need to create the SDP offer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            this._remoteSdp.receiveSctpAssociation({ oldDataChannelSpec: true });
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            if (!this._transportReady) {
+                const localSdpObject = sdpTransform.parse(answer.sdp);
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        return { dataChannel };
+    }
+    async _setupTransport({ localDtlsRole, localSdpObject }) {
+        if (!localSdpObject)
+            localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        // Get our local DTLS parameters.
+        const dtlsParameters = sdpCommonUtils.extractDtlsParameters({ sdpObject: localSdpObject });
+        // Set our DTLS role.
+        dtlsParameters.role = localDtlsRole;
+        // Update the remote DTLS role in the SDP.
+        this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
+        // Need to tell the remote transport about our parameters.
+        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        this._transportReady = true;
+    }
+    _assertSendDirection() {
+        if (this._direction !== 'send') {
+            throw new Error('method can just be called for handlers with "send" direction');
+        }
+    }
+    _assertRecvDirection() {
+        if (this._direction !== 'recv') {
+            throw new Error('method can just be called for handlers with "recv" direction');
+        }
+    }
+}
+exports.Chrome55 = Chrome55;
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Firefox60 = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+const Logger_1 = __webpack_require__(1);
+const errors_1 = __webpack_require__(4);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const sdpCommonUtils = __importStar(__webpack_require__(7));
+const sdpUnifiedPlanUtils = __importStar(__webpack_require__(11));
+const HandlerInterface_1 = __webpack_require__(6);
+const RemoteSdp_1 = __webpack_require__(8);
+const logger = new Logger_1.Logger('Firefox60');
+const SCTP_NUM_STREAMS = { OS: 16, MIS: 2048 };
+class Firefox60 extends HandlerInterface_1.HandlerInterface {
+    constructor() {
+        super();
+        // Map of RTCTransceivers indexed by MID.
+        this._mapMidTransceiver = new Map();
+        // Local stream for sending.
+        this._sendStream = new MediaStream();
+        // Whether a DataChannel m=application section has been created.
+        this._hasDataChannelMediaSection = false;
+        // Sending DataChannel id value counter. Incremented for each new DataChannel.
+        this._nextSendSctpStreamId = 0;
+        // Got transport local and remote parameters.
+        this._transportReady = false;
+    }
+    /**
+     * Creates a factory function.
+     */
+    static createFactory() {
+        return () => new Firefox60();
+    }
+    get name() {
+        return 'Firefox60';
+    }
+    close() {
+        logger.debug('close()');
+        // Close RTCPeerConnection.
+        if (this._pc) {
+            try {
+                this._pc.close();
+            }
+            catch (error) { }
+        }
+    }
+    async getNativeRtpCapabilities() {
+        logger.debug('getNativeRtpCapabilities()');
+        const pc = new RTCPeerConnection({
+            iceServers: [],
+            iceTransportPolicy: 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require'
+        });
+        // NOTE: We need to add a real video track to get the RID extension mapping.
+        const canvas = document.createElement('canvas');
+        // NOTE: Otherwise Firefox fails in next line.
+        canvas.getContext('2d');
+        const fakeStream = canvas.captureStream();
+        const fakeVideoTrack = fakeStream.getVideoTracks()[0];
+        try {
+            pc.addTransceiver('audio', { direction: 'sendrecv' });
+            const videoTransceiver = pc.addTransceiver(fakeVideoTrack, { direction: 'sendrecv' });
+            const parameters = videoTransceiver.sender.getParameters();
+            const encodings = [
+                { rid: 'r0', maxBitrate: 100000 },
+                { rid: 'r1', maxBitrate: 500000 }
+            ];
+            parameters.encodings = encodings;
+            await videoTransceiver.sender.setParameters(parameters);
+            const offer = await pc.createOffer();
+            try {
+                canvas.remove();
+            }
+            catch (error) { }
+            try {
+                fakeVideoTrack.stop();
+            }
+            catch (error) { }
+            try {
+                pc.close();
+            }
+            catch (error) { }
+            const sdpObject = sdpTransform.parse(offer.sdp);
+            const nativeRtpCapabilities = sdpCommonUtils.extractRtpCapabilities({ sdpObject });
+            return nativeRtpCapabilities;
+        }
+        catch (error) {
+            try {
+                canvas.remove();
+            }
+            catch (error2) { }
+            try {
+                fakeVideoTrack.stop();
+            }
+            catch (error2) { }
+            try {
+                pc.close();
+            }
+            catch (error2) { }
+            throw error;
+        }
+    }
+    async getNativeSctpCapabilities() {
+        logger.debug('getNativeSctpCapabilities()');
+        return {
+            numStreams: SCTP_NUM_STREAMS
+        };
+    }
+    run({ direction, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, extendedRtpCapabilities }) {
+        logger.debug('run()');
+        this._direction = direction;
+        this._remoteSdp = new RemoteSdp_1.RemoteSdp({
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters
+        });
+        this._sendingRtpParametersByKind =
+            {
+                audio: ortc.getSendingRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._sendingRemoteRtpParametersByKind =
+            {
+                audio: ortc.getSendingRemoteRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRemoteRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._pc = new RTCPeerConnection({
+            iceServers: iceServers || [],
+            iceTransportPolicy: iceTransportPolicy || 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            ...additionalSettings
+        }, proprietaryConstraints);
+        // Handle RTCPeerConnection connection status.
+        this._pc.addEventListener('iceconnectionstatechange', () => {
+            switch (this._pc.iceConnectionState) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async updateIceServers(iceServers) {
+        // NOTE: Firefox does not implement pc.setConfiguration().
+        throw new errors_1.UnsupportedError('not supported');
+    }
+    async restartIce(iceParameters) {
+        logger.debug('restartIce()');
+        // Provide the remote SDP handler with new remote ICE parameters.
+        this._remoteSdp.updateIceParameters(iceParameters);
+        if (!this._transportReady)
+            return;
+        if (this._direction === 'send') {
+            const offer = await this._pc.createOffer({ iceRestart: true });
+            logger.debug('restartIce() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+        }
+        else {
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            logger.debug('restartIce() | calling pc.setLocalDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+        }
+    }
+    async getTransportStats() {
+        return this._pc.getStats();
+    }
+    async send({ track, encodings, codecOptions, codec }) {
+        this._assertSendDirection();
+        logger.debug('send() [kind:%s, track.id:%s]', track.kind, track.id);
+        if (encodings) {
+            encodings = utils.clone(encodings, []);
+            if (encodings.length > 1) {
+                encodings.forEach((encoding, idx) => {
+                    encoding.rid = `r${idx}`;
+                });
+                // Clone the encodings and reverse them because Firefox likes them
+                // from high to low.
+                encodings.reverse();
+            }
+        }
+        const sendingRtpParameters = utils.clone(this._sendingRtpParametersByKind[track.kind], {});
+        // This may throw.
+        sendingRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRtpParameters.codecs, codec);
+        const sendingRemoteRtpParameters = utils.clone(this._sendingRemoteRtpParametersByKind[track.kind], {});
+        // This may throw.
+        sendingRemoteRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRemoteRtpParameters.codecs, codec);
+        // NOTE: Firefox fails sometimes to properly anticipate the closed media
+        // section that it should use, so don't reuse closed media sections.
+        //   https://github.com/versatica/mediasoup-client/issues/104
+        //
+        // const mediaSectionIdx = this._remoteSdp!.getNextMediaSectionIdx();
+        const transceiver = this._pc.addTransceiver(track, { direction: 'sendonly', streams: [this._sendStream] });
+        // NOTE: This is not spec compliants. Encodings should be given in addTransceiver
+        // second argument, but Firefox does not support it.
+        if (encodings) {
+            const parameters = transceiver.sender.getParameters();
+            parameters.encodings = encodings;
+            await transceiver.sender.setParameters(parameters);
+        }
+        const offer = await this._pc.createOffer();
+        let localSdpObject = sdpTransform.parse(offer.sdp);
+        // In Firefox use DTLS role client even if we are the "offerer" since
+        // Firefox does not respect ICE-Lite.
+        if (!this._transportReady)
+            await this._setupTransport({ localDtlsRole: 'client', localSdpObject });
+        logger.debug('send() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        // We can now get the transceiver.mid.
+        const localId = transceiver.mid;
+        // Set MID.
+        sendingRtpParameters.mid = localId;
+        localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        const offerMediaObject = localSdpObject.media[localSdpObject.media.length - 1];
+        // Set RTCP CNAME.
+        sendingRtpParameters.rtcp.cname =
+            sdpCommonUtils.getCname({ offerMediaObject });
+        // Set RTP encodings by parsing the SDP offer if no encodings are given.
+        if (!encodings) {
+            sendingRtpParameters.encodings =
+                sdpUnifiedPlanUtils.getRtpEncodings({ offerMediaObject });
+        }
+        // Set RTP encodings by parsing the SDP offer and complete them with given
+        // one if just a single encoding has been given.
+        else if (encodings.length === 1) {
+            const newEncodings = sdpUnifiedPlanUtils.getRtpEncodings({ offerMediaObject });
+            Object.assign(newEncodings[0], encodings[0]);
+            sendingRtpParameters.encodings = newEncodings;
+        }
+        // Otherwise if more than 1 encoding are given use them verbatim (but
+        // reverse them back since we reversed them above to satisfy Firefox).
+        else {
+            sendingRtpParameters.encodings = encodings.reverse();
+        }
+        // If VP8 or H264 and there is effective simulcast, add scalabilityMode to
+        // each encoding.
+        if (sendingRtpParameters.encodings.length > 1 &&
+            (sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp8' ||
+                sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/h264')) {
+            for (const encoding of sendingRtpParameters.encodings) {
+                encoding.scalabilityMode = 'S1T3';
+            }
+        }
+        this._remoteSdp.send({
+            offerMediaObject,
+            offerRtpParameters: sendingRtpParameters,
+            answerRtpParameters: sendingRemoteRtpParameters,
+            codecOptions,
+            extmapAllowMixed: true
+        });
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('send() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        // Store in the map.
+        this._mapMidTransceiver.set(localId, transceiver);
+        return {
+            localId,
+            rtpParameters: sendingRtpParameters,
+            rtpSender: transceiver.sender
+        };
+    }
+    async stopSending(localId) {
+        logger.debug('stopSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated transceiver not found');
+        transceiver.sender.replaceTrack(null);
+        this._pc.removeTrack(transceiver.sender);
+        // NOTE: Cannot use closeMediaSection() due to the the note above in send()
+        // method.
+        // this._remoteSdp!.closeMediaSection(transceiver.mid);
+        this._remoteSdp.disableMediaSection(transceiver.mid);
+        const offer = await this._pc.createOffer();
+        logger.debug('stopSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        this._mapMidTransceiver.delete(localId);
+    }
+    async replaceTrack(localId, track) {
+        this._assertSendDirection();
+        if (track) {
+            logger.debug('replaceTrack() [localId:%s, track.id:%s]', localId, track.id);
+        }
+        else {
+            logger.debug('replaceTrack() [localId:%s, no track]', localId);
+        }
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        await transceiver.sender.replaceTrack(track);
+    }
+    async setMaxSpatialLayer(localId, spatialLayer) {
+        this._assertSendDirection();
+        logger.debug('setMaxSpatialLayer() [localId:%s, spatialLayer:%s]', localId, spatialLayer);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated transceiver not found');
+        const parameters = transceiver.sender.getParameters();
+        // NOTE: We require encodings given from low to high, however Firefox
+        // requires them in reverse order, so do magic here.
+        spatialLayer = parameters.encodings.length - 1 - spatialLayer;
+        parameters.encodings.forEach((encoding, idx) => {
+            if (idx >= spatialLayer)
+                encoding.active = true;
+            else
+                encoding.active = false;
+        });
+        await transceiver.sender.setParameters(parameters);
+    }
+    async setRtpEncodingParameters(localId, params) {
+        this._assertSendDirection();
+        logger.debug('setRtpEncodingParameters() [localId:%s, params:%o]', localId, params);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        const parameters = transceiver.sender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            parameters.encodings[idx] = { ...encoding, ...params };
+        });
+        await transceiver.sender.setParameters(parameters);
+    }
+    async getSenderStats(localId) {
+        this._assertSendDirection();
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        return transceiver.sender.getStats();
+    }
+    async sendDataChannel({ ordered, maxPacketLifeTime, maxRetransmits, label, protocol }) {
+        this._assertSendDirection();
+        const options = {
+            negotiated: true,
+            id: this._nextSendSctpStreamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('sendDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // Increase next id.
+        this._nextSendSctpStreamId =
+            ++this._nextSendSctpStreamId % SCTP_NUM_STREAMS.MIS;
+        // If this is the first DataChannel we need to create the SDP answer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            const offer = await this._pc.createOffer();
+            const localSdpObject = sdpTransform.parse(offer.sdp);
+            const offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'application');
+            if (!this._transportReady)
+                await this._setupTransport({ localDtlsRole: 'client', localSdpObject });
+            logger.debug('sendDataChannel() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            this._remoteSdp.sendSctpAssociation({ offerMediaObject });
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        const sctpStreamParameters = {
+            streamId: options.id,
+            ordered: options.ordered,
+            maxPacketLifeTime: options.maxPacketLifeTime,
+            maxRetransmits: options.maxRetransmits
+        };
+        return { dataChannel, sctpStreamParameters };
+    }
+    async receive(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    optionsList) {
+        this._assertRecvDirection();
+        const results = [];
+        const mapLocalId = new Map();
+        for (const options of optionsList) {
+            const { trackId, kind, rtpParameters } = options;
+            logger.debug('receive() [trackId:%s, kind:%s]', trackId, kind);
+            const localId = rtpParameters.mid || String(this._mapMidTransceiver.size);
+            mapLocalId.set(trackId, localId);
+            this._remoteSdp.receive({
+                mid: localId,
+                kind,
+                offerRtpParameters: rtpParameters,
+                streamId: rtpParameters.rtcp.cname,
+                trackId
+            });
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('receive() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        let answer = await this._pc.createAnswer();
+        const localSdpObject = sdpTransform.parse(answer.sdp);
+        for (const options of optionsList) {
+            const { trackId, rtpParameters } = options;
+            const localId = mapLocalId.get(trackId);
+            const answerMediaObject = localSdpObject.media
+                .find((m) => String(m.mid) === localId);
+            // May need to modify codec parameters in the answer based on codec
+            // parameters in the offer.
+            sdpCommonUtils.applyCodecParameters({
+                offerRtpParameters: rtpParameters,
+                answerMediaObject
+            });
+            answer = { type: 'answer', sdp: sdpTransform.write(localSdpObject) };
+        }
+        if (!this._transportReady)
+            await this._setupTransport({ localDtlsRole: 'client', localSdpObject });
+        logger.debug('receive() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        for (const options of optionsList) {
+            const { trackId } = options;
+            const localId = mapLocalId.get(trackId);
+            const transceiver = this._pc.getTransceivers()
+                .find((t) => t.mid === localId);
+            if (!transceiver)
+                throw new Error('new RTCRtpTransceiver not found');
+            // Store in the map.
+            this._mapMidTransceiver.set(localId, transceiver);
+            results.push({
+                localId,
+                track: transceiver.receiver.track,
+                rtpReceiver: transceiver.receiver
+            });
+        }
+        return results;
+    }
+    async stopReceiving(localId) {
+        this._assertRecvDirection();
+        logger.debug('stopReceiving() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        this._remoteSdp.closeMediaSection(transceiver.mid);
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        this._mapMidTransceiver.delete(localId);
+    }
+    async pauseReceiving(localIds) {
+        this._assertRecvDirection();
+        for (const localId of localIds) {
+            logger.debug('pauseReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            transceiver.direction = 'inactive';
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('pauseReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('pauseReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async resumeReceiving(localIds) {
+        this._assertRecvDirection();
+        for (const localId of localIds) {
+            logger.debug('resumeReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            transceiver.direction = 'recvonly';
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('resumeReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('resumeReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async getReceiverStats(localId) {
+        this._assertRecvDirection();
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        return transceiver.receiver.getStats();
+    }
+    async receiveDataChannel({ sctpStreamParameters, label, protocol }) {
+        this._assertRecvDirection();
+        const { streamId, ordered, maxPacketLifeTime, maxRetransmits } = sctpStreamParameters;
+        const options = {
+            negotiated: true,
+            id: streamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('receiveDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // If this is the first DataChannel we need to create the SDP offer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            this._remoteSdp.receiveSctpAssociation();
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            if (!this._transportReady) {
+                const localSdpObject = sdpTransform.parse(answer.sdp);
+                await this._setupTransport({ localDtlsRole: 'client', localSdpObject });
+            }
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        return { dataChannel };
+    }
+    async _setupTransport({ localDtlsRole, localSdpObject }) {
+        if (!localSdpObject)
+            localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        // Get our local DTLS parameters.
+        const dtlsParameters = sdpCommonUtils.extractDtlsParameters({ sdpObject: localSdpObject });
+        // Set our DTLS role.
+        dtlsParameters.role = localDtlsRole;
+        // Update the remote DTLS role in the SDP.
+        this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
+        // Need to tell the remote transport about our parameters.
+        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        this._transportReady = true;
+    }
+    _assertSendDirection() {
+        if (this._direction !== 'send') {
+            throw new Error('method can just be called for handlers with "send" direction');
+        }
+    }
+    _assertRecvDirection() {
+        if (this._direction !== 'recv') {
+            throw new Error('method can just be called for handlers with "recv" direction');
+        }
+    }
+}
+exports.Firefox60 = Firefox60;
+
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Safari12 = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+const Logger_1 = __webpack_require__(1);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const sdpCommonUtils = __importStar(__webpack_require__(7));
+const sdpUnifiedPlanUtils = __importStar(__webpack_require__(11));
+const HandlerInterface_1 = __webpack_require__(6);
+const RemoteSdp_1 = __webpack_require__(8);
+const logger = new Logger_1.Logger('Safari12');
+const SCTP_NUM_STREAMS = { OS: 1024, MIS: 1024 };
+class Safari12 extends HandlerInterface_1.HandlerInterface {
+    constructor() {
+        super();
+        // Map of RTCTransceivers indexed by MID.
+        this._mapMidTransceiver = new Map();
+        // Local stream for sending.
+        this._sendStream = new MediaStream();
+        // Whether a DataChannel m=application section has been created.
+        this._hasDataChannelMediaSection = false;
+        // Sending DataChannel id value counter. Incremented for each new DataChannel.
+        this._nextSendSctpStreamId = 0;
+        // Got transport local and remote parameters.
+        this._transportReady = false;
+    }
+    /**
+     * Creates a factory function.
+     */
+    static createFactory() {
+        return () => new Safari12();
+    }
+    get name() {
+        return 'Safari12';
+    }
+    close() {
+        logger.debug('close()');
+        // Close RTCPeerConnection.
+        if (this._pc) {
+            try {
+                this._pc.close();
+            }
+            catch (error) { }
+        }
+    }
+    async getNativeRtpCapabilities() {
+        logger.debug('getNativeRtpCapabilities()');
+        const pc = new RTCPeerConnection({
+            iceServers: [],
+            iceTransportPolicy: 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require'
+        });
+        try {
+            pc.addTransceiver('audio');
+            pc.addTransceiver('video');
+            const offer = await pc.createOffer();
+            try {
+                pc.close();
+            }
+            catch (error) { }
+            const sdpObject = sdpTransform.parse(offer.sdp);
+            const nativeRtpCapabilities = sdpCommonUtils.extractRtpCapabilities({ sdpObject });
+            return nativeRtpCapabilities;
+        }
+        catch (error) {
+            try {
+                pc.close();
+            }
+            catch (error2) { }
+            throw error;
+        }
+    }
+    async getNativeSctpCapabilities() {
+        logger.debug('getNativeSctpCapabilities()');
+        return {
+            numStreams: SCTP_NUM_STREAMS
+        };
+    }
+    run({ direction, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, extendedRtpCapabilities }) {
+        logger.debug('run()');
+        this._direction = direction;
+        this._remoteSdp = new RemoteSdp_1.RemoteSdp({
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters
+        });
+        this._sendingRtpParametersByKind =
+            {
+                audio: ortc.getSendingRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._sendingRemoteRtpParametersByKind =
+            {
+                audio: ortc.getSendingRemoteRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRemoteRtpParameters('video', extendedRtpCapabilities)
+            };
+        if (dtlsParameters.role && dtlsParameters.role !== 'auto') {
+            this._forcedLocalDtlsRole = dtlsParameters.role === 'server'
+                ? 'client'
+                : 'server';
+        }
+        this._pc = new RTCPeerConnection({
+            iceServers: iceServers || [],
+            iceTransportPolicy: iceTransportPolicy || 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            ...additionalSettings
+        }, proprietaryConstraints);
+        // Handle RTCPeerConnection connection status.
+        this._pc.addEventListener('iceconnectionstatechange', () => {
+            switch (this._pc.iceConnectionState) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+    }
+    async updateIceServers(iceServers) {
+        logger.debug('updateIceServers()');
+        const configuration = this._pc.getConfiguration();
+        configuration.iceServers = iceServers;
+        this._pc.setConfiguration(configuration);
+    }
+    async restartIce(iceParameters) {
+        logger.debug('restartIce()');
+        // Provide the remote SDP handler with new remote ICE parameters.
+        this._remoteSdp.updateIceParameters(iceParameters);
+        if (!this._transportReady)
+            return;
+        if (this._direction === 'send') {
+            const offer = await this._pc.createOffer({ iceRestart: true });
+            logger.debug('restartIce() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+        }
+        else {
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            logger.debug('restartIce() | calling pc.setLocalDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+        }
+    }
+    async getTransportStats() {
+        return this._pc.getStats();
+    }
+    async send({ track, encodings, codecOptions, codec }) {
+        var _a;
+        this._assertSendDirection();
+        logger.debug('send() [kind:%s, track.id:%s]', track.kind, track.id);
+        const sendingRtpParameters = utils.clone(this._sendingRtpParametersByKind[track.kind], {});
+        // This may throw.
+        sendingRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRtpParameters.codecs, codec);
+        const sendingRemoteRtpParameters = utils.clone(this._sendingRemoteRtpParametersByKind[track.kind], {});
+        // This may throw.
+        sendingRemoteRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRemoteRtpParameters.codecs, codec);
+        const mediaSectionIdx = this._remoteSdp.getNextMediaSectionIdx();
+        const transceiver = this._pc.addTransceiver(track, { direction: 'sendonly', streams: [this._sendStream] });
+        let offer = await this._pc.createOffer();
+        let localSdpObject = sdpTransform.parse(offer.sdp);
+        let offerMediaObject;
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        if (encodings && encodings.length > 1) {
+            logger.debug('send() | enabling legacy simulcast');
+            localSdpObject = sdpTransform.parse(offer.sdp);
+            offerMediaObject = localSdpObject.media[mediaSectionIdx.idx];
+            sdpUnifiedPlanUtils.addLegacySimulcast({
+                offerMediaObject,
+                numStreams: encodings.length
+            });
+            offer = { type: 'offer', sdp: sdpTransform.write(localSdpObject) };
+        }
+        logger.debug('send() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        // We can now get the transceiver.mid.
+        const localId = transceiver.mid;
+        // Set MID.
+        sendingRtpParameters.mid = localId;
+        localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        offerMediaObject = localSdpObject.media[mediaSectionIdx.idx];
+        // Set RTCP CNAME.
+        sendingRtpParameters.rtcp.cname =
+            sdpCommonUtils.getCname({ offerMediaObject });
+        // Set RTP encodings.
+        sendingRtpParameters.encodings =
+            sdpUnifiedPlanUtils.getRtpEncodings({ offerMediaObject });
+        // Complete encodings with given values.
+        if (encodings) {
+            for (let idx = 0; idx < sendingRtpParameters.encodings.length; ++idx) {
+                if (encodings[idx])
+                    Object.assign(sendingRtpParameters.encodings[idx], encodings[idx]);
+            }
+        }
+        // If VP8 or H264 and there is effective simulcast, add scalabilityMode to
+        // each encoding.
+        if (sendingRtpParameters.encodings.length > 1 &&
+            (sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp8' ||
+                sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/h264')) {
+            for (const encoding of sendingRtpParameters.encodings) {
+                encoding.scalabilityMode = 'S1T3';
+            }
+        }
+        this._remoteSdp.send({
+            offerMediaObject,
+            reuseMid: mediaSectionIdx.reuseMid,
+            offerRtpParameters: sendingRtpParameters,
+            answerRtpParameters: sendingRemoteRtpParameters,
+            codecOptions
+        });
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('send() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        // Store in the map.
+        this._mapMidTransceiver.set(localId, transceiver);
+        return {
+            localId,
+            rtpParameters: sendingRtpParameters,
+            rtpSender: transceiver.sender
+        };
+    }
+    async stopSending(localId) {
+        this._assertSendDirection();
+        logger.debug('stopSending() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        transceiver.sender.replaceTrack(null);
+        this._pc.removeTrack(transceiver.sender);
+        this._remoteSdp.closeMediaSection(transceiver.mid);
+        const offer = await this._pc.createOffer();
+        logger.debug('stopSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        this._mapMidTransceiver.delete(localId);
+    }
+    async replaceTrack(localId, track) {
+        this._assertSendDirection();
+        if (track) {
+            logger.debug('replaceTrack() [localId:%s, track.id:%s]', localId, track.id);
+        }
+        else {
+            logger.debug('replaceTrack() [localId:%s, no track]', localId);
+        }
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        await transceiver.sender.replaceTrack(track);
+    }
+    async setMaxSpatialLayer(localId, spatialLayer) {
+        this._assertSendDirection();
+        logger.debug('setMaxSpatialLayer() [localId:%s, spatialLayer:%s]', localId, spatialLayer);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        const parameters = transceiver.sender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            if (idx <= spatialLayer)
+                encoding.active = true;
+            else
+                encoding.active = false;
+        });
+        await transceiver.sender.setParameters(parameters);
+    }
+    async setRtpEncodingParameters(localId, params) {
+        this._assertSendDirection();
+        logger.debug('setRtpEncodingParameters() [localId:%s, params:%o]', localId, params);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        const parameters = transceiver.sender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            parameters.encodings[idx] = { ...encoding, ...params };
+        });
+        await transceiver.sender.setParameters(parameters);
+    }
+    async getSenderStats(localId) {
+        this._assertSendDirection();
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        return transceiver.sender.getStats();
+    }
+    async sendDataChannel({ ordered, maxPacketLifeTime, maxRetransmits, label, protocol }) {
+        var _a;
+        this._assertSendDirection();
+        const options = {
+            negotiated: true,
+            id: this._nextSendSctpStreamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('sendDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // Increase next id.
+        this._nextSendSctpStreamId =
+            ++this._nextSendSctpStreamId % SCTP_NUM_STREAMS.MIS;
+        // If this is the first DataChannel we need to create the SDP answer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            const offer = await this._pc.createOffer();
+            const localSdpObject = sdpTransform.parse(offer.sdp);
+            const offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'application');
+            if (!this._transportReady) {
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('sendDataChannel() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            this._remoteSdp.sendSctpAssociation({ offerMediaObject });
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        const sctpStreamParameters = {
+            streamId: options.id,
+            ordered: options.ordered,
+            maxPacketLifeTime: options.maxPacketLifeTime,
+            maxRetransmits: options.maxRetransmits
+        };
+        return { dataChannel, sctpStreamParameters };
+    }
+    async receive(optionsList) {
+        var _a;
+        this._assertRecvDirection();
+        const results = [];
+        const mapLocalId = new Map();
+        for (const options of optionsList) {
+            const { trackId, kind, rtpParameters } = options;
+            logger.debug('receive() [trackId:%s, kind:%s]', trackId, kind);
+            const localId = rtpParameters.mid || String(this._mapMidTransceiver.size);
+            mapLocalId.set(trackId, localId);
+            this._remoteSdp.receive({
+                mid: localId,
+                kind,
+                offerRtpParameters: rtpParameters,
+                streamId: rtpParameters.rtcp.cname,
+                trackId
+            });
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('receive() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        let answer = await this._pc.createAnswer();
+        const localSdpObject = sdpTransform.parse(answer.sdp);
+        for (const options of optionsList) {
+            const { trackId, rtpParameters } = options;
+            const localId = mapLocalId.get(trackId);
+            const answerMediaObject = localSdpObject.media
+                .find((m) => String(m.mid) === localId);
+            // May need to modify codec parameters in the answer based on codec
+            // parameters in the offer.
+            sdpCommonUtils.applyCodecParameters({
+                offerRtpParameters: rtpParameters,
+                answerMediaObject
+            });
+        }
+        answer = { type: 'answer', sdp: sdpTransform.write(localSdpObject) };
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        logger.debug('receive() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        for (const options of optionsList) {
+            const { trackId } = options;
+            const localId = mapLocalId.get(trackId);
+            const transceiver = this._pc.getTransceivers()
+                .find((t) => t.mid === localId);
+            if (!transceiver)
+                throw new Error('new RTCRtpTransceiver not found');
+            // Store in the map.
+            this._mapMidTransceiver.set(localId, transceiver);
+            results.push({
+                localId,
+                track: transceiver.receiver.track,
+                rtpReceiver: transceiver.receiver
+            });
+        }
+        return results;
+    }
+    async stopReceiving(localId) {
+        this._assertRecvDirection();
+        logger.debug('stopReceiving() [localId:%s]', localId);
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        this._remoteSdp.closeMediaSection(transceiver.mid);
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        this._mapMidTransceiver.delete(localId);
+    }
+    async pauseReceiving(localIds) {
+        this._assertRecvDirection();
+        for (const localId of localIds) {
+            logger.debug('pauseReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            transceiver.direction = 'inactive';
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('pauseReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('pauseReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async resumeReceiving(localIds) {
+        this._assertRecvDirection();
+        for (const localId of localIds) {
+            logger.debug('resumeReceiving() [localId:%s]', localId);
+            const transceiver = this._mapMidTransceiver.get(localId);
+            if (!transceiver)
+                throw new Error('associated RTCRtpTransceiver not found');
+            transceiver.direction = 'recvonly';
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('resumeReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('resumeReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async getReceiverStats(localId) {
+        this._assertRecvDirection();
+        const transceiver = this._mapMidTransceiver.get(localId);
+        if (!transceiver)
+            throw new Error('associated RTCRtpTransceiver not found');
+        return transceiver.receiver.getStats();
+    }
+    async receiveDataChannel({ sctpStreamParameters, label, protocol }) {
+        var _a;
+        this._assertRecvDirection();
+        const { streamId, ordered, maxPacketLifeTime, maxRetransmits } = sctpStreamParameters;
+        const options = {
+            negotiated: true,
+            id: streamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('receiveDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // If this is the first DataChannel we need to create the SDP offer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            this._remoteSdp.receiveSctpAssociation();
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            if (!this._transportReady) {
+                const localSdpObject = sdpTransform.parse(answer.sdp);
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        return { dataChannel };
+    }
+    async _setupTransport({ localDtlsRole, localSdpObject }) {
+        if (!localSdpObject)
+            localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        // Get our local DTLS parameters.
+        const dtlsParameters = sdpCommonUtils.extractDtlsParameters({ sdpObject: localSdpObject });
+        // Set our DTLS role.
+        dtlsParameters.role = localDtlsRole;
+        // Update the remote DTLS role in the SDP.
+        this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
+        // Need to tell the remote transport about our parameters.
+        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        this._transportReady = true;
+    }
+    _assertSendDirection() {
+        if (this._direction !== 'send') {
+            throw new Error('method can just be called for handlers with "send" direction');
+        }
+    }
+    _assertRecvDirection() {
+        if (this._direction !== 'recv') {
+            throw new Error('method can just be called for handlers with "recv" direction');
+        }
+    }
+}
+exports.Safari12 = Safari12;
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Safari11 = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+const Logger_1 = __webpack_require__(1);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const sdpCommonUtils = __importStar(__webpack_require__(7));
+const sdpPlanBUtils = __importStar(__webpack_require__(12));
+const HandlerInterface_1 = __webpack_require__(6);
+const RemoteSdp_1 = __webpack_require__(8);
+const logger = new Logger_1.Logger('Safari11');
+const SCTP_NUM_STREAMS = { OS: 1024, MIS: 1024 };
+class Safari11 extends HandlerInterface_1.HandlerInterface {
+    constructor() {
+        super();
+        // Local stream for sending.
+        this._sendStream = new MediaStream();
+        // Map of RTCRtpSender indexed by localId.
+        this._mapSendLocalIdRtpSender = new Map();
+        // Next sending localId.
+        this._nextSendLocalId = 0;
+        // Map of MID, RTP parameters and RTCRtpReceiver indexed by local id.
+        // Value is an Object with mid, rtpParameters and rtpReceiver.
+        this._mapRecvLocalIdInfo = new Map();
+        // Whether a DataChannel m=application section has been created.
+        this._hasDataChannelMediaSection = false;
+        // Sending DataChannel id value counter. Incremented for each new DataChannel.
+        this._nextSendSctpStreamId = 0;
+        // Got transport local and remote parameters.
+        this._transportReady = false;
+    }
+    /**
+     * Creates a factory function.
+     */
+    static createFactory() {
+        return () => new Safari11();
+    }
+    get name() {
+        return 'Safari11';
+    }
+    close() {
+        logger.debug('close()');
+        // Close RTCPeerConnection.
+        if (this._pc) {
+            try {
+                this._pc.close();
+            }
+            catch (error) { }
+        }
+    }
+    async getNativeRtpCapabilities() {
+        logger.debug('getNativeRtpCapabilities()');
+        const pc = new RTCPeerConnection({
+            iceServers: [],
+            iceTransportPolicy: 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'plan-b'
+        });
+        try {
+            const offer = await pc.createOffer({
+                offerToReceiveAudio: true,
+                offerToReceiveVideo: true
+            });
+            try {
+                pc.close();
+            }
+            catch (error) { }
+            const sdpObject = sdpTransform.parse(offer.sdp);
+            const nativeRtpCapabilities = sdpCommonUtils.extractRtpCapabilities({ sdpObject });
+            return nativeRtpCapabilities;
+        }
+        catch (error) {
+            try {
+                pc.close();
+            }
+            catch (error2) { }
+            throw error;
+        }
+    }
+    async getNativeSctpCapabilities() {
+        logger.debug('getNativeSctpCapabilities()');
+        return {
+            numStreams: SCTP_NUM_STREAMS
+        };
+    }
+    run({ direction, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, extendedRtpCapabilities }) {
+        logger.debug('run()');
+        this._direction = direction;
+        this._remoteSdp = new RemoteSdp_1.RemoteSdp({
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters,
+            planB: true
+        });
+        this._sendingRtpParametersByKind =
+            {
+                audio: ortc.getSendingRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._sendingRemoteRtpParametersByKind =
+            {
+                audio: ortc.getSendingRemoteRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRemoteRtpParameters('video', extendedRtpCapabilities)
+            };
+        if (dtlsParameters.role && dtlsParameters.role !== 'auto') {
+            this._forcedLocalDtlsRole = dtlsParameters.role === 'server'
+                ? 'client'
+                : 'server';
+        }
+        this._pc = new RTCPeerConnection({
+            iceServers: iceServers || [],
+            iceTransportPolicy: iceTransportPolicy || 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            ...additionalSettings
+        }, proprietaryConstraints);
+        // Handle RTCPeerConnection connection status.
+        this._pc.addEventListener('iceconnectionstatechange', () => {
+            switch (this._pc.iceConnectionState) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+    }
+    async updateIceServers(iceServers) {
+        logger.debug('updateIceServers()');
+        const configuration = this._pc.getConfiguration();
+        configuration.iceServers = iceServers;
+        this._pc.setConfiguration(configuration);
+    }
+    async restartIce(iceParameters) {
+        logger.debug('restartIce()');
+        // Provide the remote SDP handler with new remote ICE parameters.
+        this._remoteSdp.updateIceParameters(iceParameters);
+        if (!this._transportReady)
+            return;
+        if (this._direction === 'send') {
+            const offer = await this._pc.createOffer({ iceRestart: true });
+            logger.debug('restartIce() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+        }
+        else {
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            logger.debug('restartIce() | calling pc.setLocalDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+        }
+    }
+    async getTransportStats() {
+        return this._pc.getStats();
+    }
+    async send({ track, encodings, codecOptions, codec }) {
+        var _a;
+        this._assertSendDirection();
+        logger.debug('send() [kind:%s, track.id:%s]', track.kind, track.id);
+        if (codec) {
+            logger.warn('send() | codec selection is not available in %s handler', this.name);
+        }
+        this._sendStream.addTrack(track);
+        this._pc.addTrack(track, this._sendStream);
+        let offer = await this._pc.createOffer();
+        let localSdpObject = sdpTransform.parse(offer.sdp);
+        let offerMediaObject;
+        const sendingRtpParameters = utils.clone(this._sendingRtpParametersByKind[track.kind], {});
+        sendingRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRtpParameters.codecs);
+        const sendingRemoteRtpParameters = utils.clone(this._sendingRemoteRtpParametersByKind[track.kind], {});
+        sendingRemoteRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRemoteRtpParameters.codecs);
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        if (track.kind === 'video' && encodings && encodings.length > 1) {
+            logger.debug('send() | enabling simulcast');
+            localSdpObject = sdpTransform.parse(offer.sdp);
+            offerMediaObject = localSdpObject.media.find((m) => m.type === 'video');
+            sdpPlanBUtils.addLegacySimulcast({
+                offerMediaObject,
+                track,
+                numStreams: encodings.length
+            });
+            offer = { type: 'offer', sdp: sdpTransform.write(localSdpObject) };
+        }
+        logger.debug('send() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        offerMediaObject = localSdpObject.media
+            .find((m) => m.type === track.kind);
+        // Set RTCP CNAME.
+        sendingRtpParameters.rtcp.cname =
+            sdpCommonUtils.getCname({ offerMediaObject });
+        // Set RTP encodings.
+        sendingRtpParameters.encodings =
+            sdpPlanBUtils.getRtpEncodings({ offerMediaObject, track });
+        // Complete encodings with given values.
+        if (encodings) {
+            for (let idx = 0; idx < sendingRtpParameters.encodings.length; ++idx) {
+                if (encodings[idx])
+                    Object.assign(sendingRtpParameters.encodings[idx], encodings[idx]);
+            }
+        }
+        // If VP8 and there is effective simulcast, add scalabilityMode to each
+        // encoding.
+        if (sendingRtpParameters.encodings.length > 1 &&
+            sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp8') {
+            for (const encoding of sendingRtpParameters.encodings) {
+                encoding.scalabilityMode = 'S1T3';
+            }
+        }
+        this._remoteSdp.send({
+            offerMediaObject,
+            offerRtpParameters: sendingRtpParameters,
+            answerRtpParameters: sendingRemoteRtpParameters,
+            codecOptions
+        });
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('send() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        const localId = String(this._nextSendLocalId);
+        this._nextSendLocalId++;
+        const rtpSender = this._pc.getSenders()
+            .find((s) => s.track === track);
+        // Insert into the map.
+        this._mapSendLocalIdRtpSender.set(localId, rtpSender);
+        return {
+            localId: localId,
+            rtpParameters: sendingRtpParameters,
+            rtpSender
+        };
+    }
+    async stopSending(localId) {
+        this._assertSendDirection();
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        if (rtpSender.track)
+            this._sendStream.removeTrack(rtpSender.track);
+        this._mapSendLocalIdRtpSender.delete(localId);
+        const offer = await this._pc.createOffer();
+        logger.debug('stopSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        try {
+            await this._pc.setLocalDescription(offer);
+        }
+        catch (error) {
+            // NOTE: If there are no sending tracks, setLocalDescription() will fail with
+            // "Failed to create channels". If so, ignore it.
+            if (this._sendStream.getTracks().length === 0) {
+                logger.warn('stopSending() | ignoring expected error due no sending tracks: %s', error.toString());
+                return;
+            }
+            throw error;
+        }
+        if (this._pc.signalingState === 'stable')
+            return;
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
+    async replaceTrack(localId, track) {
+        this._assertSendDirection();
+        if (track) {
+            logger.debug('replaceTrack() [localId:%s, track.id:%s]', localId, track.id);
+        }
+        else {
+            logger.debug('replaceTrack() [localId:%s, no track]', localId);
+        }
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        const oldTrack = rtpSender.track;
+        await rtpSender.replaceTrack(track);
+        // Remove the old track from the local stream.
+        if (oldTrack)
+            this._sendStream.removeTrack(oldTrack);
+        // Add the new track to the local stream.
+        if (track)
+            this._sendStream.addTrack(track);
+    }
+    async setMaxSpatialLayer(localId, spatialLayer) {
+        this._assertSendDirection();
+        logger.debug('setMaxSpatialLayer() [localId:%s, spatialLayer:%s]', localId, spatialLayer);
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        const parameters = rtpSender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            if (idx <= spatialLayer)
+                encoding.active = true;
+            else
+                encoding.active = false;
+        });
+        await rtpSender.setParameters(parameters);
+    }
+    async setRtpEncodingParameters(localId, params) {
+        this._assertSendDirection();
+        logger.debug('setRtpEncodingParameters() [localId:%s, params:%o]', localId, params);
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        const parameters = rtpSender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            parameters.encodings[idx] = { ...encoding, ...params };
+        });
+        await rtpSender.setParameters(parameters);
+    }
+    async getSenderStats(localId) {
+        this._assertSendDirection();
+        const rtpSender = this._mapSendLocalIdRtpSender.get(localId);
+        if (!rtpSender)
+            throw new Error('associated RTCRtpSender not found');
+        return rtpSender.getStats();
+    }
+    async sendDataChannel({ ordered, maxPacketLifeTime, maxRetransmits, label, protocol }) {
+        var _a;
+        this._assertSendDirection();
+        const options = {
+            negotiated: true,
+            id: this._nextSendSctpStreamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('sendDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // Increase next id.
+        this._nextSendSctpStreamId =
+            ++this._nextSendSctpStreamId % SCTP_NUM_STREAMS.MIS;
+        // If this is the first DataChannel we need to create the SDP answer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            const offer = await this._pc.createOffer();
+            const localSdpObject = sdpTransform.parse(offer.sdp);
+            const offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'application');
+            if (!this._transportReady) {
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('sendDataChannel() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            this._remoteSdp.sendSctpAssociation({ offerMediaObject });
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        const sctpStreamParameters = {
+            streamId: options.id,
+            ordered: options.ordered,
+            maxPacketLifeTime: options.maxPacketLifeTime,
+            maxRetransmits: options.maxRetransmits
+        };
+        return { dataChannel, sctpStreamParameters };
+    }
+    async receive(optionsList) {
+        var _a;
+        this._assertRecvDirection();
+        const results = [];
+        for (const options of optionsList) {
+            const { trackId, kind, rtpParameters } = options;
+            logger.debug('receive() [trackId:%s, kind:%s]', trackId, kind);
+            const mid = kind;
+            this._remoteSdp.receive({
+                mid,
+                kind,
+                offerRtpParameters: rtpParameters,
+                streamId: rtpParameters.rtcp.cname,
+                trackId
+            });
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('receive() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        let answer = await this._pc.createAnswer();
+        const localSdpObject = sdpTransform.parse(answer.sdp);
+        for (const options of optionsList) {
+            const { kind, rtpParameters } = options;
+            const mid = kind;
+            const answerMediaObject = localSdpObject.media
+                .find((m) => String(m.mid) === mid);
+            // May need to modify codec parameters in the answer based on codec
+            // parameters in the offer.
+            sdpCommonUtils.applyCodecParameters({
+                offerRtpParameters: rtpParameters,
+                answerMediaObject
+            });
+        }
+        answer = { type: 'answer', sdp: sdpTransform.write(localSdpObject) };
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        logger.debug('receive() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        for (const options of optionsList) {
+            const { kind, trackId, rtpParameters } = options;
+            const mid = kind;
+            const localId = trackId;
+            const rtpReceiver = this._pc.getReceivers()
+                .find((r) => r.track && r.track.id === localId);
+            if (!rtpReceiver)
+                throw new Error('new RTCRtpReceiver not');
+            // Insert into the map.
+            this._mapRecvLocalIdInfo.set(localId, { mid, rtpParameters, rtpReceiver });
+            results.push({
+                localId,
+                track: rtpReceiver.track,
+                rtpReceiver
+            });
+        }
+        return results;
+    }
+    async stopReceiving(localId) {
+        this._assertRecvDirection();
+        logger.debug('stopReceiving() [localId:%s]', localId);
+        const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
+        // Remove from the map.
+        this._mapRecvLocalIdInfo.delete(localId);
+        this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async getReceiverStats(localId) {
+        this._assertRecvDirection();
+        const { rtpReceiver } = this._mapRecvLocalIdInfo.get(localId) || {};
+        if (!rtpReceiver)
+            throw new Error('associated RTCRtpReceiver not found');
+        return rtpReceiver.getStats();
+    }
+    async pauseReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async resumeReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async receiveDataChannel({ sctpStreamParameters, label, protocol }) {
+        var _a;
+        this._assertRecvDirection();
+        const { streamId, ordered, maxPacketLifeTime, maxRetransmits } = sctpStreamParameters;
+        const options = {
+            negotiated: true,
+            id: streamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('receiveDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // If this is the first DataChannel we need to create the SDP offer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            this._remoteSdp.receiveSctpAssociation({ oldDataChannelSpec: true });
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            if (!this._transportReady) {
+                const localSdpObject = sdpTransform.parse(answer.sdp);
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        return { dataChannel };
+    }
+    async _setupTransport({ localDtlsRole, localSdpObject }) {
+        if (!localSdpObject)
+            localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        // Get our local DTLS parameters.
+        const dtlsParameters = sdpCommonUtils.extractDtlsParameters({ sdpObject: localSdpObject });
+        // Set our DTLS role.
+        dtlsParameters.role = localDtlsRole;
+        // Update the remote DTLS role in the SDP.
+        this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
+        // Need to tell the remote transport about our parameters.
+        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        this._transportReady = true;
+    }
+    _assertSendDirection() {
+        if (this._direction !== 'send') {
+            throw new Error('method can just be called for handlers with "send" direction');
+        }
+    }
+    _assertRecvDirection() {
+        if (this._direction !== 'recv') {
+            throw new Error('method can just be called for handlers with "recv" direction');
+        }
+    }
+}
+exports.Safari11 = Safari11;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Edge11 = void 0;
+const Logger_1 = __webpack_require__(1);
+const errors_1 = __webpack_require__(4);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const edgeUtils = __importStar(__webpack_require__(41));
+const HandlerInterface_1 = __webpack_require__(6);
+const logger = new Logger_1.Logger('Edge11');
+class Edge11 extends HandlerInterface_1.HandlerInterface {
+    constructor() {
+        super();
+        // Map of RTCRtpSenders indexed by id.
+        this._rtpSenders = new Map();
+        // Map of RTCRtpReceivers indexed by id.
+        this._rtpReceivers = new Map();
+        // Next localId for sending tracks.
+        this._nextSendLocalId = 0;
+        // Got transport local and remote parameters.
+        this._transportReady = false;
+    }
+    /**
+     * Creates a factory function.
+     */
+    static createFactory() {
+        return () => new Edge11();
+    }
+    get name() {
+        return 'Edge11';
+    }
+    close() {
+        logger.debug('close()');
+        // Close the ICE gatherer.
+        // NOTE: Not yet implemented by Edge.
+        try {
+            this._iceGatherer.close();
+        }
+        catch (error) { }
+        // Close the ICE transport.
+        try {
+            this._iceTransport.stop();
+        }
+        catch (error) { }
+        // Close the DTLS transport.
+        try {
+            this._dtlsTransport.stop();
+        }
+        catch (error) { }
+        // Close RTCRtpSenders.
+        for (const rtpSender of this._rtpSenders.values()) {
+            try {
+                rtpSender.stop();
+            }
+            catch (error) { }
+        }
+        // Close RTCRtpReceivers.
+        for (const rtpReceiver of this._rtpReceivers.values()) {
+            try {
+                rtpReceiver.stop();
+            }
+            catch (error) { }
+        }
+    }
+    async getNativeRtpCapabilities() {
+        logger.debug('getNativeRtpCapabilities()');
+        return edgeUtils.getCapabilities();
+    }
+    async getNativeSctpCapabilities() {
+        logger.debug('getNativeSctpCapabilities()');
+        return {
+            numStreams: { OS: 0, MIS: 0 }
+        };
+    }
+    run({ direction, // eslint-disable-line @typescript-eslint/no-unused-vars
+    iceParameters, iceCandidates, dtlsParameters, sctpParameters, // eslint-disable-line @typescript-eslint/no-unused-vars
+    iceServers, iceTransportPolicy, additionalSettings, // eslint-disable-line @typescript-eslint/no-unused-vars
+    proprietaryConstraints, // eslint-disable-line @typescript-eslint/no-unused-vars
+    extendedRtpCapabilities }) {
+        logger.debug('run()');
+        this._sendingRtpParametersByKind =
+            {
+                audio: ortc.getSendingRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._remoteIceParameters = iceParameters;
+        this._remoteIceCandidates = iceCandidates;
+        this._remoteDtlsParameters = dtlsParameters;
+        this._cname = `CNAME-${utils.generateRandomNumber()}`;
+        this._setIceGatherer({ iceServers, iceTransportPolicy });
+        this._setIceTransport();
+        this._setDtlsTransport();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async updateIceServers(iceServers) {
+        // NOTE: Edge 11 does not implement iceGatherer.gater().
+        throw new errors_1.UnsupportedError('not supported');
+    }
+    async restartIce(iceParameters) {
+        logger.debug('restartIce()');
+        this._remoteIceParameters = iceParameters;
+        if (!this._transportReady)
+            return;
+        logger.debug('restartIce() | calling iceTransport.start()');
+        this._iceTransport.start(this._iceGatherer, iceParameters, 'controlling');
+        for (const candidate of this._remoteIceCandidates) {
+            this._iceTransport.addRemoteCandidate(candidate);
+        }
+        this._iceTransport.addRemoteCandidate({});
+    }
+    async getTransportStats() {
+        return this._iceTransport.getStats();
+    }
+    async send(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    { track, encodings, codecOptions, codec }) {
+        logger.debug('send() [kind:%s, track.id:%s]', track.kind, track.id);
+        if (!this._transportReady)
+            await this._setupTransport({ localDtlsRole: 'server' });
+        logger.debug('send() | calling new RTCRtpSender()');
+        const rtpSender = new RTCRtpSender(track, this._dtlsTransport);
+        const rtpParameters = utils.clone(this._sendingRtpParametersByKind[track.kind], {});
+        rtpParameters.codecs = ortc.reduceCodecs(rtpParameters.codecs, codec);
+        const useRtx = rtpParameters.codecs
+            .some((_codec) => /.+\/rtx$/i.test(_codec.mimeType));
+        if (!encodings)
+            encodings = [{}];
+        for (const encoding of encodings) {
+            encoding.ssrc = utils.generateRandomNumber();
+            if (useRtx)
+                encoding.rtx = { ssrc: utils.generateRandomNumber() };
+        }
+        rtpParameters.encodings = encodings;
+        // Fill RTCRtpParameters.rtcp.
+        rtpParameters.rtcp =
+            {
+                cname: this._cname,
+                reducedSize: true,
+                mux: true
+            };
+        // NOTE: Convert our standard RTCRtpParameters into those that Edge
+        // expects.
+        const edgeRtpParameters = edgeUtils.mangleRtpParameters(rtpParameters);
+        logger.debug('send() | calling rtpSender.send() [params:%o]', edgeRtpParameters);
+        await rtpSender.send(edgeRtpParameters);
+        const localId = String(this._nextSendLocalId);
+        this._nextSendLocalId++;
+        // Store it.
+        this._rtpSenders.set(localId, rtpSender);
+        return { localId, rtpParameters, rtpSender };
+    }
+    async stopSending(localId) {
+        logger.debug('stopSending() [localId:%s]', localId);
+        const rtpSender = this._rtpSenders.get(localId);
+        if (!rtpSender)
+            throw new Error('RTCRtpSender not found');
+        this._rtpSenders.delete(localId);
+        try {
+            logger.debug('stopSending() | calling rtpSender.stop()');
+            rtpSender.stop();
+        }
+        catch (error) {
+            logger.warn('stopSending() | rtpSender.stop() failed:%o', error);
+            throw error;
+        }
+    }
+    async replaceTrack(localId, track) {
+        if (track) {
+            logger.debug('replaceTrack() [localId:%s, track.id:%s]', localId, track.id);
+        }
+        else {
+            logger.debug('replaceTrack() [localId:%s, no track]', localId);
+        }
+        const rtpSender = this._rtpSenders.get(localId);
+        if (!rtpSender)
+            throw new Error('RTCRtpSender not found');
+        rtpSender.setTrack(track);
+    }
+    async setMaxSpatialLayer(localId, spatialLayer) {
+        logger.debug('setMaxSpatialLayer() [localId:%s, spatialLayer:%s]', localId, spatialLayer);
+        const rtpSender = this._rtpSenders.get(localId);
+        if (!rtpSender)
+            throw new Error('RTCRtpSender not found');
+        const parameters = rtpSender.getParameters();
+        parameters.encodings
+            .forEach((encoding, idx) => {
+            if (idx <= spatialLayer)
+                encoding.active = true;
+            else
+                encoding.active = false;
+        });
+        await rtpSender.setParameters(parameters);
+    }
+    async setRtpEncodingParameters(localId, params) {
+        logger.debug('setRtpEncodingParameters() [localId:%s, params:%o]', localId, params);
+        const rtpSender = this._rtpSenders.get(localId);
+        if (!rtpSender)
+            throw new Error('RTCRtpSender not found');
+        const parameters = rtpSender.getParameters();
+        parameters.encodings.forEach((encoding, idx) => {
+            parameters.encodings[idx] = { ...encoding, ...params };
+        });
+        await rtpSender.setParameters(parameters);
+    }
+    async getSenderStats(localId) {
+        const rtpSender = this._rtpSenders.get(localId);
+        if (!rtpSender)
+            throw new Error('RTCRtpSender not found');
+        return rtpSender.getStats();
+    }
+    async sendDataChannel(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    options) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    async receive(optionsList) {
+        const results = [];
+        for (const options of optionsList) {
+            const { trackId, kind } = options;
+            logger.debug('receive() [trackId:%s, kind:%s]', trackId, kind);
+        }
+        if (!this._transportReady)
+            await this._setupTransport({ localDtlsRole: 'server' });
+        for (const options of optionsList) {
+            const { trackId, kind, rtpParameters } = options;
+            logger.debug('receive() | calling new RTCRtpReceiver()');
+            const rtpReceiver = new RTCRtpReceiver(this._dtlsTransport, kind);
+            rtpReceiver.addEventListener('error', (event) => {
+                logger.error('rtpReceiver "error" event [event:%o]', event);
+            });
+            // NOTE: Convert our standard RTCRtpParameters into those that Edge
+            // expects.
+            const edgeRtpParameters = edgeUtils.mangleRtpParameters(rtpParameters);
+            logger.debug('receive() | calling rtpReceiver.receive() [params:%o]', edgeRtpParameters);
+            await rtpReceiver.receive(edgeRtpParameters);
+            const localId = trackId;
+            // Store it.
+            this._rtpReceivers.set(localId, rtpReceiver);
+            results.push({
+                localId,
+                track: rtpReceiver.track,
+                rtpReceiver
+            });
+        }
+        return results;
+    }
+    async stopReceiving(localId) {
+        logger.debug('stopReceiving() [localId:%s]', localId);
+        const rtpReceiver = this._rtpReceivers.get(localId);
+        if (!rtpReceiver)
+            throw new Error('RTCRtpReceiver not found');
+        this._rtpReceivers.delete(localId);
+        try {
+            logger.debug('stopReceiving() | calling rtpReceiver.stop()');
+            rtpReceiver.stop();
+        }
+        catch (error) {
+            logger.warn('stopReceiving() | rtpReceiver.stop() failed:%o', error);
+        }
+    }
+    async pauseReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async resumeReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async getReceiverStats(localId) {
+        const rtpReceiver = this._rtpReceivers.get(localId);
+        if (!rtpReceiver)
+            throw new Error('RTCRtpReceiver not found');
+        return rtpReceiver.getStats();
+    }
+    async receiveDataChannel(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    options) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    _setIceGatherer({ iceServers, iceTransportPolicy }) {
+        // @ts-ignore
+        const iceGatherer = new RTCIceGatherer({
+            iceServers: iceServers || [],
+            gatherPolicy: iceTransportPolicy || 'all'
+        });
+        iceGatherer.addEventListener('error', (event) => {
+            logger.error('iceGatherer "error" event [event:%o]', event);
+        });
+        // NOTE: Not yet implemented by Edge, which starts gathering automatically.
+        try {
+            iceGatherer.gather();
+        }
+        catch (error) {
+            logger.debug('_setIceGatherer() | iceGatherer.gather() failed: %s', error.toString());
+        }
+        this._iceGatherer = iceGatherer;
+    }
+    _setIceTransport() {
+        const iceTransport = new RTCIceTransport(this._iceGatherer);
+        // NOTE: Not yet implemented by Edge.
+        iceTransport.addEventListener('statechange', () => {
+            switch (iceTransport.state) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+        // NOTE: Not standard, but implemented by Edge.
+        iceTransport.addEventListener('icestatechange', () => {
+            switch (iceTransport.state) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+        iceTransport.addEventListener('candidatepairchange', (event) => {
+            logger.debug('iceTransport "candidatepairchange" event [pair:%o]', event.pair);
+        });
+        this._iceTransport = iceTransport;
+    }
+    _setDtlsTransport() {
+        const dtlsTransport = new RTCDtlsTransport(this._iceTransport);
+        // NOTE: Not yet implemented by Edge.
+        dtlsTransport.addEventListener('statechange', () => {
+            logger.debug('dtlsTransport "statechange" event [state:%s]', dtlsTransport.state);
+        });
+        // NOTE: Not standard, but implemented by Edge.
+        dtlsTransport.addEventListener('dtlsstatechange', () => {
+            logger.debug('dtlsTransport "dtlsstatechange" event [state:%s]', dtlsTransport.state);
+            if (dtlsTransport.state === 'closed')
+                this.emit('@connectionstatechange', 'closed');
+        });
+        dtlsTransport.addEventListener('error', (event) => {
+            logger.error('dtlsTransport "error" event [event:%o]', event);
+        });
+        this._dtlsTransport = dtlsTransport;
+    }
+    async _setupTransport({ localDtlsRole }) {
+        logger.debug('_setupTransport()');
+        // Get our local DTLS parameters.
+        const dtlsParameters = this._dtlsTransport.getLocalParameters();
+        dtlsParameters.role = localDtlsRole;
+        // Need to tell the remote transport about our parameters.
+        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        // Start the RTCIceTransport.
+        this._iceTransport.start(this._iceGatherer, this._remoteIceParameters, 'controlling');
+        // Add remote ICE candidates.
+        for (const candidate of this._remoteIceCandidates) {
+            this._iceTransport.addRemoteCandidate(candidate);
+        }
+        // Also signal a 'complete' candidate as per spec.
+        // NOTE: It should be {complete: true} but Edge prefers {}.
+        // NOTE: If we don't signal end of candidates, the Edge RTCIceTransport
+        // won't enter the 'completed' state.
+        this._iceTransport.addRemoteCandidate({});
+        // NOTE: Edge does not like SHA less than 256.
+        this._remoteDtlsParameters.fingerprints = this._remoteDtlsParameters.fingerprints
+            .filter((fingerprint) => {
+            return (fingerprint.algorithm === 'sha-256' ||
+                fingerprint.algorithm === 'sha-384' ||
+                fingerprint.algorithm === 'sha-512');
+        });
+        // Start the RTCDtlsTransport.
+        this._dtlsTransport.start(this._remoteDtlsParameters);
+        this._transportReady = true;
+    }
+}
+exports.Edge11 = Edge11;
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.mangleRtpParameters = exports.getCapabilities = void 0;
+const utils = __importStar(__webpack_require__(2));
+/**
+ * Normalize ORTC based Edge's RTCRtpReceiver.getCapabilities() to produce a full
+ * compliant ORTC RTCRtpCapabilities.
+ */
+function getCapabilities() {
+    const nativeCaps = RTCRtpReceiver.getCapabilities();
+    const caps = utils.clone(nativeCaps, {});
+    for (const codec of caps.codecs) {
+        // Rename numChannels to channels.
+        codec.channels = codec.numChannels;
+        delete codec.numChannels;
+        // Add mimeType.
+        codec.mimeType = codec.mimeType || `${codec.kind}/${codec.name}`;
+        // NOTE: Edge sets some numeric parameters as string rather than number. Fix them.
+        if (codec.parameters) {
+            const parameters = codec.parameters;
+            if (parameters.apt)
+                parameters.apt = Number(parameters.apt);
+            if (parameters['packetization-mode'])
+                parameters['packetization-mode'] = Number(parameters['packetization-mode']);
+        }
+        // Delete emty parameter String in rtcpFeedback.
+        for (const feedback of codec.rtcpFeedback || []) {
+            if (!feedback.parameter)
+                feedback.parameter = '';
+        }
+    }
+    return caps;
+}
+exports.getCapabilities = getCapabilities;
+/**
+ * Generate RTCRtpParameters as ORTC based Edge likes.
+ */
+function mangleRtpParameters(rtpParameters) {
+    const params = utils.clone(rtpParameters, {});
+    // Rename mid to muxId.
+    if (params.mid) {
+        params.muxId = params.mid;
+        delete params.mid;
+    }
+    for (const codec of params.codecs) {
+        // Rename channels to numChannels.
+        if (codec.channels) {
+            codec.numChannels = codec.channels;
+            delete codec.channels;
+        }
+        // Add codec.name (requried by Edge).
+        if (codec.mimeType && !codec.name)
+            codec.name = codec.mimeType.split('/')[1];
+        // Remove mimeType.
+        delete codec.mimeType;
+    }
+    return params;
+}
+exports.mangleRtpParameters = mangleRtpParameters;
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ReactNative = void 0;
+const sdpTransform = __importStar(__webpack_require__(5));
+const Logger_1 = __webpack_require__(1);
+const errors_1 = __webpack_require__(4);
+const utils = __importStar(__webpack_require__(2));
+const ortc = __importStar(__webpack_require__(3));
+const sdpCommonUtils = __importStar(__webpack_require__(7));
+const sdpPlanBUtils = __importStar(__webpack_require__(12));
+const HandlerInterface_1 = __webpack_require__(6);
+const RemoteSdp_1 = __webpack_require__(8);
+const logger = new Logger_1.Logger('ReactNative');
+const SCTP_NUM_STREAMS = { OS: 1024, MIS: 1024 };
+class ReactNative extends HandlerInterface_1.HandlerInterface {
+    constructor() {
+        super();
+        // Local stream for sending.
+        this._sendStream = new MediaStream();
+        // Map of sending MediaStreamTracks indexed by localId.
+        this._mapSendLocalIdTrack = new Map();
+        // Next sending localId.
+        this._nextSendLocalId = 0;
+        // Map of MID, RTP parameters and RTCRtpReceiver indexed by local id.
+        // Value is an Object with mid, rtpParameters and rtpReceiver.
+        this._mapRecvLocalIdInfo = new Map();
+        // Whether a DataChannel m=application section has been created.
+        this._hasDataChannelMediaSection = false;
+        // Sending DataChannel id value counter. Incremented for each new DataChannel.
+        this._nextSendSctpStreamId = 0;
+        // Got transport local and remote parameters.
+        this._transportReady = false;
+    }
+    /**
+     * Creates a factory function.
+     */
+    static createFactory() {
+        return () => new ReactNative();
+    }
+    get name() {
+        return 'ReactNative';
+    }
+    close() {
+        logger.debug('close()');
+        // Free/dispose native MediaStream but DO NOT free/dispose native
+        // MediaStreamTracks (that is parent's business).
+        // @ts-ignore (proprietary API in react-native-webrtc).
+        this._sendStream.release(/* releaseTracks */ false);
+        // Close RTCPeerConnection.
+        if (this._pc) {
+            try {
+                this._pc.close();
+            }
+            catch (error) { }
+        }
+    }
+    async getNativeRtpCapabilities() {
+        logger.debug('getNativeRtpCapabilities()');
+        const pc = new RTCPeerConnection({
+            iceServers: [],
+            iceTransportPolicy: 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'plan-b'
+        });
+        try {
+            const offer = await pc.createOffer({
+                offerToReceiveAudio: true,
+                offerToReceiveVideo: true
+            });
+            try {
+                pc.close();
+            }
+            catch (error) { }
+            const sdpObject = sdpTransform.parse(offer.sdp);
+            const nativeRtpCapabilities = sdpCommonUtils.extractRtpCapabilities({ sdpObject });
+            return nativeRtpCapabilities;
+        }
+        catch (error) {
+            try {
+                pc.close();
+            }
+            catch (error2) { }
+            throw error;
+        }
+    }
+    async getNativeSctpCapabilities() {
+        logger.debug('getNativeSctpCapabilities()');
+        return {
+            numStreams: SCTP_NUM_STREAMS
+        };
+    }
+    run({ direction, iceParameters, iceCandidates, dtlsParameters, sctpParameters, iceServers, iceTransportPolicy, additionalSettings, proprietaryConstraints, extendedRtpCapabilities }) {
+        logger.debug('run()');
+        this._direction = direction;
+        this._remoteSdp = new RemoteSdp_1.RemoteSdp({
+            iceParameters,
+            iceCandidates,
+            dtlsParameters,
+            sctpParameters,
+            planB: true
+        });
+        this._sendingRtpParametersByKind =
+            {
+                audio: ortc.getSendingRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRtpParameters('video', extendedRtpCapabilities)
+            };
+        this._sendingRemoteRtpParametersByKind =
+            {
+                audio: ortc.getSendingRemoteRtpParameters('audio', extendedRtpCapabilities),
+                video: ortc.getSendingRemoteRtpParameters('video', extendedRtpCapabilities)
+            };
+        if (dtlsParameters.role && dtlsParameters.role !== 'auto') {
+            this._forcedLocalDtlsRole = dtlsParameters.role === 'server'
+                ? 'client'
+                : 'server';
+        }
+        this._pc = new RTCPeerConnection({
+            iceServers: iceServers || [],
+            iceTransportPolicy: iceTransportPolicy || 'all',
+            bundlePolicy: 'max-bundle',
+            rtcpMuxPolicy: 'require',
+            sdpSemantics: 'plan-b',
+            ...additionalSettings
+        }, proprietaryConstraints);
+        // Handle RTCPeerConnection connection status.
+        this._pc.addEventListener('iceconnectionstatechange', () => {
+            switch (this._pc.iceConnectionState) {
+                case 'checking':
+                    this.emit('@connectionstatechange', 'connecting');
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.emit('@connectionstatechange', 'connected');
+                    break;
+                case 'failed':
+                    this.emit('@connectionstatechange', 'failed');
+                    break;
+                case 'disconnected':
+                    this.emit('@connectionstatechange', 'disconnected');
+                    break;
+                case 'closed':
+                    this.emit('@connectionstatechange', 'closed');
+                    break;
+            }
+        });
+    }
+    async updateIceServers(iceServers) {
+        logger.debug('updateIceServers()');
+        const configuration = this._pc.getConfiguration();
+        configuration.iceServers = iceServers;
+        this._pc.setConfiguration(configuration);
+    }
+    async restartIce(iceParameters) {
+        logger.debug('restartIce()');
+        // Provide the remote SDP handler with new remote ICE parameters.
+        this._remoteSdp.updateIceParameters(iceParameters);
+        if (!this._transportReady)
+            return;
+        if (this._direction === 'send') {
+            const offer = await this._pc.createOffer({ iceRestart: true });
+            logger.debug('restartIce() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+        }
+        else {
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('restartIce() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            logger.debug('restartIce() | calling pc.setLocalDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+        }
+    }
+    async getTransportStats() {
+        return this._pc.getStats();
+    }
+    async send({ track, encodings, codecOptions, codec }) {
+        var _a;
+        this._assertSendDirection();
+        logger.debug('send() [kind:%s, track.id:%s]', track.kind, track.id);
+        if (codec) {
+            logger.warn('send() | codec selection is not available in %s handler', this.name);
+        }
+        this._sendStream.addTrack(track);
+        this._pc.addStream(this._sendStream);
+        let offer = await this._pc.createOffer();
+        let localSdpObject = sdpTransform.parse(offer.sdp);
+        let offerMediaObject;
+        const sendingRtpParameters = utils.clone(this._sendingRtpParametersByKind[track.kind], {});
+        sendingRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRtpParameters.codecs);
+        const sendingRemoteRtpParameters = utils.clone(this._sendingRemoteRtpParametersByKind[track.kind], {});
+        sendingRemoteRtpParameters.codecs =
+            ortc.reduceCodecs(sendingRemoteRtpParameters.codecs);
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        if (track.kind === 'video' && encodings && encodings.length > 1) {
+            logger.debug('send() | enabling simulcast');
+            localSdpObject = sdpTransform.parse(offer.sdp);
+            offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'video');
+            sdpPlanBUtils.addLegacySimulcast({
+                offerMediaObject,
+                track,
+                numStreams: encodings.length
+            });
+            offer = { type: 'offer', sdp: sdpTransform.write(localSdpObject) };
+        }
+        logger.debug('send() | calling pc.setLocalDescription() [offer:%o]', offer);
+        await this._pc.setLocalDescription(offer);
+        localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        offerMediaObject = localSdpObject.media
+            .find((m) => m.type === track.kind);
+        // Set RTCP CNAME.
+        sendingRtpParameters.rtcp.cname =
+            sdpCommonUtils.getCname({ offerMediaObject });
+        // Set RTP encodings.
+        sendingRtpParameters.encodings =
+            sdpPlanBUtils.getRtpEncodings({ offerMediaObject, track });
+        // Complete encodings with given values.
+        if (encodings) {
+            for (let idx = 0; idx < sendingRtpParameters.encodings.length; ++idx) {
+                if (encodings[idx])
+                    Object.assign(sendingRtpParameters.encodings[idx], encodings[idx]);
+            }
+        }
+        // If VP8 or H264 and there is effective simulcast, add scalabilityMode to
+        // each encoding.
+        if (sendingRtpParameters.encodings.length > 1 &&
+            (sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/vp8' ||
+                sendingRtpParameters.codecs[0].mimeType.toLowerCase() === 'video/h264')) {
+            for (const encoding of sendingRtpParameters.encodings) {
+                encoding.scalabilityMode = 'S1T3';
+            }
+        }
+        this._remoteSdp.send({
+            offerMediaObject,
+            offerRtpParameters: sendingRtpParameters,
+            answerRtpParameters: sendingRemoteRtpParameters,
+            codecOptions
+        });
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('send() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+        const localId = String(this._nextSendLocalId);
+        this._nextSendLocalId++;
+        // Insert into the map.
+        this._mapSendLocalIdTrack.set(localId, track);
+        return {
+            localId: localId,
+            rtpParameters: sendingRtpParameters
+        };
+    }
+    async stopSending(localId) {
+        this._assertSendDirection();
+        logger.debug('stopSending() [localId:%s]', localId);
+        const track = this._mapSendLocalIdTrack.get(localId);
+        if (!track)
+            throw new Error('track not found');
+        this._mapSendLocalIdTrack.delete(localId);
+        this._sendStream.removeTrack(track);
+        this._pc.addStream(this._sendStream);
+        const offer = await this._pc.createOffer();
+        logger.debug('stopSending() | calling pc.setLocalDescription() [offer:%o]', offer);
+        try {
+            await this._pc.setLocalDescription(offer);
+        }
+        catch (error) {
+            // NOTE: If there are no sending tracks, setLocalDescription() will fail with
+            // "Failed to create channels". If so, ignore it.
+            if (this._sendStream.getTracks().length === 0) {
+                logger.warn('stopSending() | ignoring expected error due no sending tracks: %s', error.toString());
+                return;
+            }
+            throw error;
+        }
+        if (this._pc.signalingState === 'stable')
+            return;
+        const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopSending() | calling pc.setRemoteDescription() [answer:%o]', answer);
+        await this._pc.setRemoteDescription(answer);
+    }
+    async replaceTrack(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localId, track) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async setMaxSpatialLayer(localId, spatialLayer) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async setRtpEncodingParameters(localId, params) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getSenderStats(localId) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    async sendDataChannel({ ordered, maxPacketLifeTime, maxRetransmits, label, protocol }) {
+        var _a;
+        this._assertSendDirection();
+        const options = {
+            negotiated: true,
+            id: this._nextSendSctpStreamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmitTime: maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('sendDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // Increase next id.
+        this._nextSendSctpStreamId =
+            ++this._nextSendSctpStreamId % SCTP_NUM_STREAMS.MIS;
+        // If this is the first DataChannel we need to create the SDP answer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            const offer = await this._pc.createOffer();
+            const localSdpObject = sdpTransform.parse(offer.sdp);
+            const offerMediaObject = localSdpObject.media
+                .find((m) => m.type === 'application');
+            if (!this._transportReady) {
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('sendDataChannel() | calling pc.setLocalDescription() [offer:%o]', offer);
+            await this._pc.setLocalDescription(offer);
+            this._remoteSdp.sendSctpAssociation({ offerMediaObject });
+            const answer = { type: 'answer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('sendDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setRemoteDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        const sctpStreamParameters = {
+            streamId: options.id,
+            ordered: options.ordered,
+            maxPacketLifeTime: options.maxPacketLifeTime,
+            maxRetransmits: options.maxRetransmits
+        };
+        return { dataChannel, sctpStreamParameters };
+    }
+    async receive(optionsList) {
+        var _a;
+        this._assertRecvDirection();
+        const results = [];
+        const mapStreamId = new Map();
+        for (const options of optionsList) {
+            const { trackId, kind, rtpParameters } = options;
+            logger.debug('receive() [trackId:%s, kind:%s]', trackId, kind);
+            const mid = kind;
+            let streamId = rtpParameters.rtcp.cname;
+            // NOTE: In React-Native we cannot reuse the same remote MediaStream for new
+            // remote tracks. This is because react-native-webrtc does not react on new
+            // tracks generated within already existing streams, so force the streamId
+            // to be different.
+            logger.debug('receive() | forcing a random remote streamId to avoid well known bug in react-native-webrtc');
+            streamId += `-hack-${utils.generateRandomNumber()}`;
+            mapStreamId.set(trackId, streamId);
+            this._remoteSdp.receive({
+                mid,
+                kind,
+                offerRtpParameters: rtpParameters,
+                streamId,
+                trackId
+            });
+        }
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('receive() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        let answer = await this._pc.createAnswer();
+        const localSdpObject = sdpTransform.parse(answer.sdp);
+        for (const options of optionsList) {
+            const { kind, rtpParameters } = options;
+            const mid = kind;
+            const answerMediaObject = localSdpObject.media
+                .find((m) => String(m.mid) === mid);
+            // May need to modify codec parameters in the answer based on codec
+            // parameters in the offer.
+            sdpCommonUtils.applyCodecParameters({
+                offerRtpParameters: rtpParameters,
+                answerMediaObject
+            });
+        }
+        answer = { type: 'answer', sdp: sdpTransform.write(localSdpObject) };
+        if (!this._transportReady) {
+            await this._setupTransport({
+                localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                localSdpObject
+            });
+        }
+        logger.debug('receive() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+        for (const options of optionsList) {
+            const { kind, trackId, rtpParameters } = options;
+            const localId = trackId;
+            const mid = kind;
+            const streamId = mapStreamId.get(trackId);
+            const stream = this._pc.getRemoteStreams()
+                .find((s) => s.id === streamId);
+            const track = stream.getTrackById(localId);
+            if (!track)
+                throw new Error('remote track not found');
+            // Insert into the map.
+            this._mapRecvLocalIdInfo.set(localId, { mid, rtpParameters });
+            results.push({ localId, track });
+        }
+        return results;
+    }
+    async stopReceiving(localId) {
+        this._assertRecvDirection();
+        logger.debug('stopReceiving() [localId:%s]', localId);
+        const { mid, rtpParameters } = this._mapRecvLocalIdInfo.get(localId) || {};
+        // Remove from the map.
+        this._mapRecvLocalIdInfo.delete(localId);
+        this._remoteSdp.planBStopReceiving({ mid: mid, offerRtpParameters: rtpParameters });
+        const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+        logger.debug('stopReceiving() | calling pc.setRemoteDescription() [offer:%o]', offer);
+        await this._pc.setRemoteDescription(offer);
+        const answer = await this._pc.createAnswer();
+        logger.debug('stopReceiving() | calling pc.setLocalDescription() [answer:%o]', answer);
+        await this._pc.setLocalDescription(answer);
+    }
+    async pauseReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    async resumeReceiving(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    localIds) {
+        // Unimplemented.
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getReceiverStats(localId) {
+        throw new errors_1.UnsupportedError('not implemented');
+    }
+    async receiveDataChannel({ sctpStreamParameters, label, protocol }) {
+        var _a;
+        this._assertRecvDirection();
+        const { streamId, ordered, maxPacketLifeTime, maxRetransmits } = sctpStreamParameters;
+        const options = {
+            negotiated: true,
+            id: streamId,
+            ordered,
+            maxPacketLifeTime,
+            maxRetransmitTime: maxPacketLifeTime,
+            maxRetransmits,
+            protocol
+        };
+        logger.debug('receiveDataChannel() [options:%o]', options);
+        const dataChannel = this._pc.createDataChannel(label, options);
+        // If this is the first DataChannel we need to create the SDP offer with
+        // m=application section.
+        if (!this._hasDataChannelMediaSection) {
+            this._remoteSdp.receiveSctpAssociation({ oldDataChannelSpec: true });
+            const offer = { type: 'offer', sdp: this._remoteSdp.getSdp() };
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [offer:%o]', offer);
+            await this._pc.setRemoteDescription(offer);
+            const answer = await this._pc.createAnswer();
+            if (!this._transportReady) {
+                const localSdpObject = sdpTransform.parse(answer.sdp);
+                await this._setupTransport({
+                    localDtlsRole: (_a = this._forcedLocalDtlsRole) !== null && _a !== void 0 ? _a : 'client',
+                    localSdpObject
+                });
+            }
+            logger.debug('receiveDataChannel() | calling pc.setRemoteDescription() [answer:%o]', answer);
+            await this._pc.setLocalDescription(answer);
+            this._hasDataChannelMediaSection = true;
+        }
+        return { dataChannel };
+    }
+    async _setupTransport({ localDtlsRole, localSdpObject }) {
+        if (!localSdpObject)
+            localSdpObject = sdpTransform.parse(this._pc.localDescription.sdp);
+        // Get our local DTLS parameters.
+        const dtlsParameters = sdpCommonUtils.extractDtlsParameters({ sdpObject: localSdpObject });
+        // Set our DTLS role.
+        dtlsParameters.role = localDtlsRole;
+        // Update the remote DTLS role in the SDP.
+        this._remoteSdp.updateDtlsRole(localDtlsRole === 'client' ? 'server' : 'client');
+        // Need to tell the remote transport about our parameters.
+        await this.safeEmitAsPromise('@connect', { dtlsParameters });
+        this._transportReady = true;
+    }
+    _assertSendDirection() {
+        if (this._direction !== 'send') {
+            throw new Error('method can just be called for handlers with "send" direction');
+        }
+    }
+    _assertRecvDirection() {
+        if (this._direction !== 'recv') {
+            throw new Error('method can just be called for handlers with "recv" direction');
+        }
+    }
+}
+exports.ReactNative = ReactNative;
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(16), exports);
+__exportStar(__webpack_require__(17), exports);
+__exportStar(__webpack_require__(18), exports);
+__exportStar(__webpack_require__(19), exports);
+__exportStar(__webpack_require__(20), exports);
+__exportStar(__webpack_require__(21), exports);
+__exportStar(__webpack_require__(44), exports);
+__exportStar(__webpack_require__(45), exports);
+__exportStar(__webpack_require__(6), exports);
+__exportStar(__webpack_require__(4), exports);
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/**
+ * The RTP capabilities define what mediasoup or an endpoint can receive at
+ * media level.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__46__;
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__47__;
+
+/***/ }),
+/* 48 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "ConferenceApi", function() { return /* reexport */ conference_api_ConferenceApi; });
+__webpack_require__.d(__webpack_exports__, "Utils", function() { return /* reexport */ utils_Utils; });
+
+// EXTERNAL MODULE: ./node_modules/events/events.js
+var events = __webpack_require__(14);
+
+// EXTERNAL MODULE: ./node_modules/mediasoup-client/lib/index.js
+var lib = __webpack_require__(23);
+
+// EXTERNAL MODULE: ./node_modules/debug/src/browser.js
+var browser = __webpack_require__(10);
+
+// EXTERNAL MODULE: ../api/dist/index.js
+var dist = __webpack_require__(0);
+
+// CONCATENATED MODULE: ./src/conference-api.ts
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+
+class conference_api_ConferenceApi extends events["EventEmitter"] {
+    constructor(configs) {
+        super();
+        this.connectors = new Map();
+        this.layers = new Map();
+        this.availableKinds = [];
+        this.configs = Object.assign({ worker: 0, stopTracks: true, kinds: ['video', 'audio'], maxIncomingBitrate: 0, timeout: {
+                stats: 1000,
+                transport: 3000,
+                consumer: 5000
+            } }, configs);
+        this.log = Object(browser["debug"])(`conference-api [${this.configs.stream}]:`);
+        this.createClient();
+        this.device = new lib["Device"]();
+    }
+    setPreferredLayers(layers) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.operation === dist["API_OPERATION"].SUBSCRIBE) {
+                const kind = 'video';
+                this.layers.set(kind, layers);
+                const consumer = this.connectors.get(kind);
+                if (consumer && typeof consumer !== 'number') {
+                    try {
+                        yield this.api.setPreferredLayers({ consumerId: consumer.id, layers });
+                    }
+                    catch (e) { }
+                }
+            }
+        });
+    }
+    addTrack(track) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.log('addTrack', track);
+            if (this.operation === dist["API_OPERATION"].PUBLISH && this.mediaStream) {
+                const kind = track.kind;
+                if (!this.configs.kinds.includes(kind)) {
+                    this.configs.kinds.push(kind);
+                }
+                this.mediaStream.addTrack(track);
+                this.emit("addtrack", new MediaStreamTrackEvent("addtrack", { track }));
+                yield this.publishTrack(track);
+            }
+        });
+    }
+    removeTrack(track) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.log('removeTrack', track);
+            if (this.operation === dist["API_OPERATION"].PUBLISH && this.mediaStream) {
+                this.mediaStream.removeTrack(track);
+                this.emit("removetrack", new MediaStreamTrackEvent("removetrack", { track }));
+                const producer = this.connectors.get(track.kind);
+                if (producer && typeof producer !== 'number') {
+                    producer.close();
+                    producer.emit('close');
+                }
+            }
+        });
+    }
+    setMaxPublisherBitrate(bitrate) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.configs.maxIncomingBitrate = bitrate;
+            if (this.transport) {
+                yield this.api.setMaxIncomingBitrate({ transportId: this.transport.id, bitrate });
+            }
+        });
+    }
+    updateKinds(kinds) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.operation === dist["API_OPERATION"].SUBSCRIBE) {
+                this.log('updateKinds', kinds);
+                const oldKinds = this.configs.kinds;
+                this.configs.kinds = kinds;
+                for (const kind of oldKinds) {
+                    if (!kinds.includes(kind)) {
+                        this.unsubscribeTrack(kind);
+                    }
+                }
+                const promises = [];
+                for (const kind of kinds) {
+                    if (!this.connectors.get(kind) && this.availableKinds.includes(kind)) {
+                        promises.push(this.subscribeTrack(kind));
+                    }
+                }
+                yield Promise.all(promises);
+            }
+        });
+    }
+    destroyClient() {
+        if (this.api) {
+            this.api.clear();
+        }
+    }
+    createClient() {
+        this.api = new dist["MediasoupSocketApi"](this.configs.url, this.configs.worker, this.configs.token, this.log);
+        const api = this;
+        this.api.client.on('disconnect', () => __awaiter(this, void 0, void 0, function* () {
+            yield api.restartAll();
+        }));
+    }
+    init(operation) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.operation) {
+                throw new Error("Already processing");
+            }
+            this.operation = operation;
+            if (!this.device.loaded) {
+                const { routerRtpCapabilities, iceServers, simulcast, timeout } = yield this.api.getServerConfigs();
+                if (routerRtpCapabilities.headerExtensions) {
+                    routerRtpCapabilities.headerExtensions = routerRtpCapabilities.headerExtensions.
+                        filter((ext) => ext.uri !== 'urn:3gpp:video-orientation');
+                }
+                yield this.device.load({ routerRtpCapabilities });
+                this.iceServers = iceServers;
+                this.simulcast = simulcast;
+                this.configs.timeout = Object.assign(Object.assign({}, this.configs.timeout), timeout);
+            }
+            yield this.getTransport();
+        });
+    }
+    publish(mediaStream) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.init(dist["API_OPERATION"].PUBLISH);
+            this.mediaStream = mediaStream;
+            yield Promise.all(mediaStream.getTracks().map(track => this.publishTrack(track)));
+            return mediaStream;
+        });
+    }
+    subscribe() {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('subscribe');
+            yield this.init(dist["API_OPERATION"].SUBSCRIBE);
+            const mediaStream = this.mediaStream || new MediaStream();
+            this.mediaStream = mediaStream;
+            const { stream } = this.configs;
+            const promises = [];
+            this.api.client.on(dist["EVENT"].STREAM_STARTED, ({ stream, kind }) => __awaiter(this, void 0, void 0, function* () {
+                if (!this.availableKinds.includes(kind)) {
+                    this.availableKinds.push(kind);
+                }
+                this.unsubscribeTrack(kind);
+                console.log('on stream started', kind);
+                if (this.configs.kinds.includes(kind)) {
+                    yield this.subscribeTrack(kind);
+                }
+            }));
+            this.api.client.on(dist["EVENT"].STREAM_STOPPED, ({ stream, kind }) => __awaiter(this, void 0, void 0, function* () {
+                if (this.availableKinds.includes(kind)) {
+                    this.availableKinds.splice(this.availableKinds.indexOf(kind), 1);
+                }
+                console.log('on stream stopped', kind);
+                this.unsubscribeTrack(kind);
+            }));
+            let origin;
+            if (this.configs.origin && (this.configs.url !== this.configs.origin.url || this.configs.worker !== this.configs.origin.worker)) {
+                const { token, worker, url } = this.configs;
+                origin = {
+                    target: { url, worker, token },
+                    source: {
+                        url: this.configs.origin.url,
+                        worker: this.configs.origin.worker,
+                        token: this.configs.origin.token || token,
+                    }
+                };
+            }
+            for (const kind of ['audio', 'video']) {
+                promises.push(this.api.listenStreamStarted({ stream, kind, origin }), this.api.listenStreamStopped({ stream, kind }));
+            }
+            yield Promise.all(promises);
+            return mediaStream;
+        });
+    }
+    unsubscribeTrack(kind) {
+        const connector = this.connectors.get(kind);
+        if (connector) {
+            if (typeof connector !== 'number') {
+                connector.close();
+                connector.emit('close');
+            }
+            else {
+                this.connectors.delete(kind);
+            }
+        }
+    }
+    subscribeTrack(kind) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const d = Math.random();
+            console.log('new connector', d);
+            this.connectors.set(kind, d);
+            const { stream } = this.configs;
+            const api = this;
+            const rtpCapabilities = this.device.rtpCapabilities;
+            try {
+                if (!this.transport) {
+                    throw { errorId: dist["ERROR"].INVALID_TRANSPORT };
+                }
+                const consumeData = { rtpCapabilities, stream, kind, transportId: this.transport.id };
+                const data = yield this.api.consume(consumeData);
+                const layers = this.layers.get(kind);
+                if (layers) {
+                    try {
+                        yield this.api.setPreferredLayers({ consumerId: data.id, layers });
+                    }
+                    catch (e) { }
+                }
+                const consumer = yield this.transport.consume(data);
+                consumer.on('close', () => __awaiter(this, void 0, void 0, function* () {
+                    if (this.mediaStream) {
+                        consumer.track.stop();
+                        this.mediaStream.removeTrack(consumer.track);
+                        this.emit("removetrack", new MediaStreamTrackEvent("removetrack", { track: consumer.track }));
+                    }
+                    if (this.transport && !this.transport.closed) {
+                        const _consumer = this.connectors.get(kind);
+                        try {
+                            yield this.api.closeConsumer({ consumerId: consumer.id });
+                        }
+                        catch (e) { }
+                        if (_consumer && typeof _consumer !== 'number' && consumer.id === _consumer.id) {
+                            this.connectors.delete(consumer.track.kind);
+                        }
+                    }
+                }));
+                if (this.connectors.get(kind) === d && this.configs.kinds.includes(kind)) {
+                    this.connectors.set(kind, consumer);
+                    this.emit('newConsumerId', { id: consumer.id, kind });
+                    this.listenStats(consumer, 'inbound-rtp');
+                    yield api.api.resumeConsumer({ consumerId: consumer.id });
+                    if (this.mediaStream) {
+                        this.mediaStream.addTrack(consumer.track);
+                        this.emit("addtrack", new MediaStreamTrackEvent("addtrack", { track: consumer.track }));
+                    }
+                }
+                else {
+                    console.log('wrong connector', this.connectors.get(kind));
+                    this.unsubscribeTrack(kind);
+                }
+            }
+            catch (e) {
+                if (e) {
+                    if (e.errorId === dist["ERROR"].INVALID_STREAM) {
+                    }
+                    else if (e.errorId === dist["ERROR"].INVALID_TRANSPORT || e.errorId === dist["ERROR"].INVALID_CONSUMER) {
+                        this.restartAll().then(() => { }).catch(() => { });
+                    }
+                    else {
+                        throw e;
+                    }
+                }
+            }
+        });
+    }
+    publishTrack(track) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const kind = track.kind;
+            if (this.configs.kinds.includes(kind)) {
+                track.addEventListener('ended', () => __awaiter(this, void 0, void 0, function* () {
+                    yield this.removeTrack(track);
+                }));
+                const params = { track, stopTracks: false };
+                if (this.configs.simulcast && kind === 'video' && this.simulcast) {
+                    if (this.simulcast.encodings) {
+                        params.encodings = this.simulcast.encodings;
+                    }
+                    if (this.simulcast.codecOptions) {
+                        params.codecOptions = this.simulcast.codecOptions;
+                    }
+                }
+                const producer = yield this.transport.produce(params);
+                producer.on('close', () => __awaiter(this, void 0, void 0, function* () {
+                    const producer = this.connectors.get(kind);
+                    if (producer && typeof producer !== 'number') {
+                        this.connectors.delete(kind);
+                        try {
+                            yield this.api.closeProducer({ producerId: producer.id });
+                        }
+                        catch (e) { }
+                    }
+                }));
+                this.listenStats(producer, 'outbound-rtp');
+                this.connectors.set(kind, producer);
+                this.emit('newProducerId', { id: producer.id, kind });
+            }
+        });
+    }
+    listenStats(target, type) {
+        let lastBytes = 0;
+        let lastBytesTime = Date.now();
+        const bytesField = type === 'inbound-rtp' ? 'bytesReceived' : 'bytesSent';
+        target.on('close', () => {
+            this.emit('bitRate', { bitRate: 0, kind: target.kind });
+        });
+        const getStats = () => {
+            if (target && !target.closed) {
+                target.getStats().then((stats) => __awaiter(this, void 0, void 0, function* () {
+                    if (target && !target.closed) {
+                        if (stats['size']) {
+                            stats.forEach((s) => {
+                                if (s && s.type === type) {
+                                    if (s[bytesField] && s[bytesField] > lastBytes) {
+                                        const bitRate = Math.round((s[bytesField] - lastBytes) / (Date.now() - lastBytesTime) * 1000 * 8);
+                                        this.emit('bitRate', { bitRate, kind: target.kind });
+                                        lastBytes = s[bytesField];
+                                        lastBytesTime = Date.now();
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            this.emit('bitRate', { bitRate: 0, kind: target.kind });
+                        }
+                        setTimeout(getStats, this.configs.timeout.stats);
+                    }
+                }));
+            }
+        };
+        getStats();
+    }
+    close(hard = true) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.transport) {
+                if (!this.transport.closed) {
+                    this.transport.close();
+                }
+                const transportId = this.transport.id;
+                delete this.transport;
+                try {
+                    yield this.api.closeTransport({ transportId });
+                }
+                catch (e) { }
+                this.emit('connectionstatechange', { state: 'disconnected' });
+            }
+            if ((hard || this.operation === dist["API_OPERATION"].SUBSCRIBE) && this.mediaStream && this.configs.stopTracks) {
+                console.log('stopping tracks');
+                this.mediaStream.getTracks().forEach(function (track) {
+                    track.stop();
+                });
+            }
+            yield this.closeConnectors();
+            delete this.operation;
+            if (hard && this.api) {
+                this.api.clear();
+            }
+        });
+    }
+    closeConnectors() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.connectors.size) {
+                yield new Promise(resolve => {
+                    this.connectors.forEach((connector, kind) => {
+                        this.connectors.delete(kind);
+                        try {
+                            if (connector && typeof connector !== 'number') {
+                                connector.close();
+                                connector.emit('close');
+                            }
+                        }
+                        catch (e) { }
+                        if (!this.connectors.size) {
+                            resolve(null);
+                        }
+                    });
+                });
+            }
+        });
+    }
+    restartAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const operation = this.operation;
+            this.destroyClient();
+            yield this.close(false);
+            this.createClient();
+            if (operation === dist["API_OPERATION"].SUBSCRIBE) {
+                yield this.subscribe();
+            }
+            else if (operation === dist["API_OPERATION"].PUBLISH && this.mediaStream) {
+                yield this.publish(this.mediaStream);
+            }
+        });
+    }
+    getTransport() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.transport) {
+                const api = this;
+                const data = yield this.api.createTransport();
+                if (this.iceServers) {
+                    data.iceServers = this.iceServers;
+                }
+                if (this.operation === dist["API_OPERATION"].SUBSCRIBE) {
+                    this.transport = this.device.createRecvTransport(data);
+                }
+                else if (this.operation === dist["API_OPERATION"].PUBLISH) {
+                    this.transport = this.device.createSendTransport(data);
+                }
+                this.emit('newTransportId', { id: this.transport.id });
+                if (this.configs.maxIncomingBitrate) {
+                    yield this.api.setMaxIncomingBitrate({ transportId: this.transport.id, bitrate: this.configs.maxIncomingBitrate });
+                }
+                this.transport.on('connect', ({ dtlsParameters }, callback, errback) => {
+                    api.api.connectTransport({
+                        transportId: this.transport.id,
+                        dtlsParameters
+                    }).then(callback).catch(errback);
+                });
+                if (this.operation === dist["API_OPERATION"].PUBLISH) {
+                    this.transport.on('produce', ({ kind, rtpParameters }, callback, errback) => __awaiter(this, void 0, void 0, function* () {
+                        try {
+                            const data = yield api.api.produce({
+                                transportId: this.transport.id,
+                                stream: api.configs.stream,
+                                kind,
+                                rtpParameters,
+                                keyFrameRequestDelay: api.configs.keyFrameRequestDelay
+                            });
+                            callback(data);
+                        }
+                        catch (err) {
+                            errback(err);
+                        }
+                    }));
+                }
+                this.transport.on('connectionstatechange', (state) => __awaiter(this, void 0, void 0, function* () {
+                    this.emit('connectionstatechange', { state });
+                    switch (state) {
+                        case 'connected':
+                            if (this.transportTimeout) {
+                                clearTimeout(this.transportTimeout);
+                            }
+                            break;
+                        case 'failed':
+                        case 'disconnected':
+                            break;
+                    }
+                }));
+            }
+            return this.transport;
+        });
+    }
+}
+
+// EXTERNAL MODULE: ./node_modules/path-browserify/index.js
+var path_browserify = __webpack_require__(24);
+
+// CONCATENATED MODULE: ./src/utils.ts
+var utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+class utils_Utils {
+    static getUserMedia(constraints, isDisplay = false) {
+        return utils_awaiter(this, void 0, void 0, function* () {
+            if (isDisplay) {
+                return yield navigator.mediaDevices.getDisplayMedia(constraints);
+            }
+            else {
+                return yield navigator.mediaDevices.getUserMedia(constraints);
+            }
+        });
+    }
+    static hlsPlaylistPath(pipeId) {
+        return Object(path_browserify["join"])(dist["HLS"].ROOT, pipeId, dist["HLS"].PLAYLIST);
+    }
+}
+utils_Utils.isFirefox = typeof window.InstallTrigger !== 'undefined';
+utils_Utils.isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+utils_Utils.isChrome = !!window.chrome && !utils_Utils.isOpera;
+utils_Utils.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// CONCATENATED MODULE: ./src/index.ts
+
+
+
+
+/***/ })
+/******/ ]);
+});
