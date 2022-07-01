@@ -345,7 +345,11 @@ public class UiSession {
 	}
 
 	public void close(UiSessionClosingReason reason) {
+		if (this.state == UiSessionState.CLOSED) {
+			return; // already closed. nothing to do
+		}
 		setState(UiSessionState.CLOSED);
+		failsafeInvokeSessionListeners(sl -> sl.onClosed(sessionId, reason)); // note that this is executed AFTER the state change handlers!
 		this.messageSender.close(reason, null);
 	}
 

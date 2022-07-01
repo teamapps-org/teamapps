@@ -185,13 +185,12 @@ enum UiSessionClosingReason {
 	// EXPIRED
 	SESSION_NOT_FOUND,    			// reacting to unknown client
 	SESSION_TIMEOUT,      			// actively sent by server
-	HTTP_SESSION_CLOSED,
 	TERMINATED_BY_CLIENT, 			// got leaving beacon
 
 	// ERROR
 	SERVER_SIDE_ERROR,    			// every uncaught exception on the server side within the client's SessionContext...
 	COMMANDS_OVERFLOW,    			// server-side command queue filled up
-	REINIT_COMMAND_ID_NOT_FOUND, 	// server did not find the command id the client would like to get
+	REINIT_COMMAND_ID_NOT_FOUND, 	// server did not find the command id the client would like to resume at
 	CMD_REQUEST_TOO_LARGE, 			// the client is requesting a too high amount of commands
 	WRONG_TEAMAPPS_VERSION,          // The client is connecting with another teamapps version than the server serves.
 

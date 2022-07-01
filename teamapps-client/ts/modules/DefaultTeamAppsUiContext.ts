@@ -114,7 +114,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 						<h3>Caching problem!</h3>
 						<p>Your browser uses an old client version to connect to our server. Please <a onclick="location.reload()">refresh this page</a>. If this does not help, please clear your browser's cache.</p>
 					<div>`;
-				} else if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT || reason == UiSessionClosingReason.HTTP_SESSION_CLOSED) {
+				} else if (reason == UiSessionClosingReason.SESSION_NOT_FOUND || reason == UiSessionClosingReason.SESSION_TIMEOUT) {
 					if (this.expiredMessageWindow != null) {
 						this.expiredMessageWindow.show(500);
 					} else {
