@@ -386,6 +386,20 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 	public static async navigateForward(steps: number) {
 		window.history.go(steps);
 	}
+
+	public static setFavicon(url: string) {
+		let link:HTMLLinkElement = document.querySelector("link[rel~='icon']");
+		if (!link) {
+			link = document.createElement('link');
+			link.rel = 'icon';
+			document.getElementsByTagName('head')[0].appendChild(link);
+		}
+		link.href = url;
+	}
+
+	public static setTitle(title: string) {
+		document.title = title;
+	}
 }
 TeamAppsUiComponentRegistry.registerComponentClass("UiRootPanel", UiRootPanel);
 

@@ -61,6 +61,10 @@ class UiRootPanel extends UiComponent {
 
 	static command pushHistoryState(String relativeUrl);
 	static command navigateForward(int steps);
+
+	static command setFavicon(String url);
+	static command setTitle(String title);
+
     static event navigationStateChange(UiLocation location, boolean triggeredByUser);
 }
 
