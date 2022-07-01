@@ -660,6 +660,22 @@ public class SessionContext {
 		queueCommand(new UiRootPanel.GoToUrlCommand(url, blankPage));
 	}
 
+	public void setFavicon(Icon<?, ?> icon) {
+		setFavicon(resolveIcon(icon));
+	}
+
+	public void setFavicon(Resource resource) {
+		setFavicon(createResourceLink(resource));
+	}
+
+	public void setFavicon(String url) {
+		queueCommand(new UiRootPanel.SetFaviconCommand(url));
+	}
+
+	public void setTitle(String title) {
+		queueCommand(new UiRootPanel.SetTitleCommand(title));
+	}
+
 	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
 		queueCommand(new UiRootPanel.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
 	}

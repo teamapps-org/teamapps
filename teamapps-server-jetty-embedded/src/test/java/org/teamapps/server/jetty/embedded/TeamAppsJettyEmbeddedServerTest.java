@@ -36,7 +36,10 @@ public class TeamAppsJettyEmbeddedServerTest {
 			sessionContext.showNotification(MaterialIcon.MESSAGE, "Hello World");
 			RootPanel rootPanel = sessionContext.addRootPanel();
 			Button<BaseTemplateRecord> button = Button.create("destroy session!");
-			button.onClicked.addListener(() -> sessionContext.destroy());
+			button.onClicked.addListener(() -> {
+				sessionContext.setFavicon(MaterialIcon.SMS);
+				sessionContext.setTitle("My new title " + System.currentTimeMillis());
+			});
 			rootPanel.setContent(button);
 		};
 
