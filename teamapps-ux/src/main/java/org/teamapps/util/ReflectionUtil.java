@@ -27,7 +27,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -169,7 +171,7 @@ public class ReflectionUtil {
 		}
 	}
 
-	public static <RECORD> Object readField(RECORD object, Field field, boolean makeAccessibleIfNecessary) {
+	public static Object readField(Object object, Field field, boolean makeAccessibleIfNecessary) {
 		try {
 			if (makeAccessibleIfNecessary && !field.canAccess(object)) {
 				field.setAccessible(true);
@@ -180,7 +182,12 @@ public class ReflectionUtil {
 		}
 	}
 
-	public static <RECORD> void setField(RECORD object, Field field, Object value, boolean makeAccessibleIfNecessary) {
+	public static void readField(Object object, String fieldName, boolean makeAccessibleIfNecessary)  {
+		Field field = ReflectionUtil.findField(object.getClass(), fieldName);
+		ReflectionUtil.readField(object, field, makeAccessibleIfNecessary);
+	}
+
+	public static void setField(Object object, Field field, Object value, boolean makeAccessibleIfNecessary) {
 		try {
 			if (makeAccessibleIfNecessary && !field.canAccess(object)) {
 				field.setAccessible(true);
@@ -189,5 +196,10 @@ public class ReflectionUtil {
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static void setField(Object object, String fieldName, Object value, boolean makeAccessibleIfNecessary)  {
+		Field field = ReflectionUtil.findField(object.getClass(), fieldName);
+		ReflectionUtil.setField(object, field, value, makeAccessibleIfNecessary);
 	}
 }

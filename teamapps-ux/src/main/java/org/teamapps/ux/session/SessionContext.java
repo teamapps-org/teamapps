@@ -78,7 +78,7 @@ public class SessionContext {
 	public final Event<KeyboardEvent> onGlobalKeyEventOccurred = new Event<>();
 	public final Event<NavigationStateChangeEvent> onNavigationStateChange = new Event<>();
 	public final Event<UiSessionActivityState> onActivityStateChanged = new Event<>();
-	public final Event<Void> onDestroyed = new Event<>();
+	public final Event<UiSessionClosingReason> onDestroyed = new Event<>();
 	/**
 	 * Decorators around all executions inside this SessionContext. These will be invoked when the Thread is already bound to the SessionContext, so SessionContext.current() will
 	 * return this instance.
@@ -151,14 +151,18 @@ public class SessionContext {
 			runWithContext(() -> {
 				boolean activityStateChanged = SessionContext.this.state.isActive() != state.isActive();
 				SessionContext.this.state = state;
-				if (state == UiSessionState.CLOSED) {
-					onDestroyed.fireIgnoringExceptions(null);
-					// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
-					sessionExecutor.submit(sessionExecutor::shutdown);
-				}
 				if (activityStateChanged) {
 					onActivityStateChanged.fire(new UiSessionActivityState(state.isActive()));
 				}
+			});
+		}
+
+		@Override
+		public void onClosed(String sessionId, UiSessionClosingReason reason) {
+			runWithContext(() -> {
+				onDestroyed.fireIgnoringExceptions(reason);
+				// Enqueue this at the end, so all onDestroyed handlers have already been executed before disabling any more executions inside the context!
+				sessionExecutor.submit(sessionExecutor::shutdown);
 			});
 		}
 	};
@@ -261,10 +265,6 @@ public class SessionContext {
 
 	private void destroy(UiSessionClosingReason reason) {
 		uiSession.close(reason);
-	}
-
-	public Event<Void> onDestroyed() {
-		return onDestroyed;
 	}
 
 	public <RESULT> void queueCommand(UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {

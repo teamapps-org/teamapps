@@ -231,7 +231,7 @@ public class EventTest {
 		event.addListener(unboundRunnableListener);
 		Assert.assertEquals(4, event.getListeners().size());
 
-		sessionContext.onDestroyed().fire();
+		sessionContext.onDestroyed.fire();
 		Assert.assertEquals(2, event.getListeners().size());
 	}
 

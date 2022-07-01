@@ -124,11 +124,11 @@ public class Event<EVENT_DATA> {
 	 * When the session gets destroyed, remove this listener (preventing memory-leaks and degrading performance due to stale listeners).
 	 */
 	private void removeWhenSessionDestroyed(Consumer<EVENT_DATA> listener, SessionContext currentSessionContext) {
-		if (this != currentSessionContext.onDestroyed()) { // prevent infinite recursion!
+		if (this != currentSessionContext.onDestroyed) { // prevent infinite recursion!
 			// use a weak reference here, so the fact that this is registered to the sessionContext's destroyed event
 			// does not mean it has to survive (not being garbage collected) as long as the session context.
 			WeakReference<Consumer<EVENT_DATA>> listenerWeakReference = new WeakReference<>(listener);
-			currentSessionContext.onDestroyed().listeners.add(aVoid -> {
+			currentSessionContext.onDestroyed.listeners.add(aVoid -> {
 				Consumer<EVENT_DATA> l = listenerWeakReference.get();
 				if (l != null) {
 					removeListener(l);
