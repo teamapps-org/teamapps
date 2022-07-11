@@ -25,10 +25,10 @@ import DataProvider = Slick.DataProvider;
 export class TableDataProvider implements DataProvider<UiTableClientRecordConfig> {
 	public onDataLoading = new Slick.Event();
 
-	private dataStartIndex: number;
+	private dataStartIndex: number = 0;
 	private data: UiTableClientRecordConfig[] = [];
 	private recordById: Map<number, UiTableClientRecordConfig> = new Map();
-	private totalNumberOfRecords: number;
+	private totalNumberOfRecords: number = 0;
 
 	public getLength(): number {
 		return this.totalNumberOfRecords;
@@ -71,8 +71,8 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 		return changedRowNumbers;
 	}
 
-	private calculateChangingRowNumbers(startIndex: number, recordIds: number[]) {
-		const everythingChanged = startIndex > (this.dataStartIndex + this.data.length) || (startIndex + recordIds.length) < this.dataStartIndex;
+	private calculateChangingRowNumbers(startIndex: number, recordIds: number[]): number[] | true {
+		const everythingChanged = startIndex >= (this.dataStartIndex + this.data.length) || (startIndex + recordIds.length) < this.dataStartIndex;
 		let changedRowNumbers: number[] = [];
 		if (!everythingChanged) {
 			for (let i = Math.min(startIndex, this.dataStartIndex); i < Math.max(startIndex + recordIds.length, this.dataStartIndex + this.data.length); i++) {
@@ -83,7 +83,7 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 				}
 			}
 		}
-		return everythingChanged || changedRowNumbers;
+		return everythingChanged ? true : changedRowNumbers;
 	}
 
 	public clear(): void {
@@ -135,7 +135,7 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 	getSelectedRowsIndexes() {
 		const selectedRowIndexes = [];
 		for (let i = 0; i < this.data.length; i++) {
-			if (this.data[i].selected) {
+			if (this.data[i]?.selected) {
 				selectedRowIndexes.push(i + this.dataStartIndex);
 			}
 		}
@@ -143,7 +143,11 @@ export class TableDataProvider implements DataProvider<UiTableClientRecordConfig
 	}
 
 	setSelectedRows(rows: number[]) {
-		this.data.forEach(d => d.selected = false)
+		this.data.forEach(d => {
+			if (d != null) {
+				d.selected = false
+			}
+		})
 		rows.forEach(r => {
 			let record = this.data[r - this.dataStartIndex];
 			if (record != null) {
