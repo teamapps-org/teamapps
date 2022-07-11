@@ -94,7 +94,7 @@ public class CompletableFutureChainSequentialExecutorFactory implements Sequenti
 				return CompletableFuture.failedFuture(new SequentialExecutorClosedException());
 			}
 			int queueSize = this.queueSize.incrementAndGet();
-			LOGGER.debug("{}: Queue size: {}", name, queueSize);
+			LOGGER.trace("{}: Queue size: {}", name, queueSize);
 			if (queueSize >= 500 && queueSize % 10 == 0) { // the queue gets quite long when destroying a session, since there are very many listeners to the destroyed event
 				LOGGER.warn("{}: Queue is very long: {}", name, queueSize);
 			}
