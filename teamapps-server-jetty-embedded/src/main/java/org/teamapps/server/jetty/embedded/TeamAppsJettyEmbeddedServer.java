@@ -19,6 +19,8 @@
  */
 package org.teamapps.server.jetty.embedded;
 
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -31,8 +33,6 @@ import org.teamapps.util.threading.CompletableFutureChainSequentialExecutorFacto
 import org.teamapps.ux.servlet.TeamAppsServletContextListener;
 import org.teamapps.webcontroller.WebController;
 
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

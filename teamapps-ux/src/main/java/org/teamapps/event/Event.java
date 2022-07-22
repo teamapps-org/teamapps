@@ -38,8 +38,8 @@ import java.util.function.Function;
  * Listeners can be added to this event using the various {@link #addListener(Consumer) addListener(...)} methods.
  * <p>
  * <h2>SessionContext-bound Event Listeners</h2>
- * Note that if a listener is added while the thread is bound to a {@link SessionContext} <code>A</code> (so while {@link SessionContext#currentOrNull()} is not null),
- * the event will be bound to this SessionContext (<code>A</code>) by default, i.e.:
+ * Note that if a listener <code>L</code> is added while the thread is bound to a {@link SessionContext} <code>A</code> (so while {@link SessionContext#currentOrNull()} is not null),
+ * <code>L</code>'s execution will be bound to <code>A</code> by default, i.e.:
  * <ul>
  *     <li>When this event fires, the SessionContext-bound listener will get invoked bound to the SessionContext <code>A</code>,
  *     regardless of the SessionContext (or the lack of it) the event was fired in.</li>

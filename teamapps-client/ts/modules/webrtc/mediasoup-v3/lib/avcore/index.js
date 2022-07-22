@@ -7,129 +7,117 @@
 		exports["avcore"] = factory(require("socket.io-client"), require("axios"));
 	else
 		root["avcore"] = factory(root["io"], root["axios"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE__0__, __WEBPACK_EXTERNAL_MODULE__1__) {
-return /******/ (function(modules) { // webpackBootstrap
+})(this, (__WEBPACK_EXTERNAL_MODULE__173__, __WEBPACK_EXTERNAL_MODULE__781__) => {
+return /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 781:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__781__;
+
+/***/ }),
+
+/***/ 173:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__173__;
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
 /******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
-/******/ })
+/******/ 	
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE__0__;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
-__webpack_require__.d(__webpack_exports__, "ERROR", function() { return /* reexport */ ERROR; });
-__webpack_require__.d(__webpack_exports__, "ACTION", function() { return /* reexport */ ACTION; });
-__webpack_require__.d(__webpack_exports__, "API_OPERATION", function() { return /* reexport */ API_OPERATION; });
-__webpack_require__.d(__webpack_exports__, "EVENT", function() { return /* reexport */ EVENT; });
-__webpack_require__.d(__webpack_exports__, "STAT", function() { return /* reexport */ STAT; });
-__webpack_require__.d(__webpack_exports__, "MIXER_PIPE_TYPE", function() { return /* reexport */ MIXER_PIPE_TYPE; });
-__webpack_require__.d(__webpack_exports__, "NEXMO", function() { return /* reexport */ NEXMO; });
-__webpack_require__.d(__webpack_exports__, "HLS", function() { return /* reexport */ HLS; });
-__webpack_require__.d(__webpack_exports__, "PATH", function() { return /* reexport */ PATH; });
-__webpack_require__.d(__webpack_exports__, "SOCKET_ONLY_ACTIONS", function() { return /* reexport */ SOCKET_ONLY_ACTIONS; });
-__webpack_require__.d(__webpack_exports__, "REST_ACTIONS", function() { return /* reexport */ REST_ACTIONS; });
-__webpack_require__.d(__webpack_exports__, "MIXER_RENDER_TYPE", function() { return /* reexport */ MIXER_RENDER_TYPE; });
-__webpack_require__.d(__webpack_exports__, "MediasoupSocketApi", function() { return /* reexport */ mediasoup_socket_api_MediasoupSocketApi; });
+__webpack_require__.d(__webpack_exports__, {
+  "ACTION": () => (/* reexport */ ACTION),
+  "API_OPERATION": () => (/* reexport */ API_OPERATION),
+  "ERROR": () => (/* reexport */ ERROR),
+  "EVENT": () => (/* reexport */ EVENT),
+  "HLS": () => (/* reexport */ HLS),
+  "MIXER_PIPE_TYPE": () => (/* reexport */ MIXER_PIPE_TYPE),
+  "MIXER_RENDER_TYPE": () => (/* reexport */ MIXER_RENDER_TYPE),
+  "MediasoupSocketApi": () => (/* reexport */ MediasoupSocketApi),
+  "NEXMO": () => (/* reexport */ NEXMO),
+  "PATH": () => (/* reexport */ PATH),
+  "REST_ACTIONS": () => (/* reexport */ REST_ACTIONS),
+  "SOCKET_ONLY_ACTIONS": () => (/* reexport */ SOCKET_ONLY_ACTIONS),
+  "STAT": () => (/* reexport */ STAT)
+});
 
-// CONCATENATED MODULE: ./src/constants.ts
+;// CONCATENATED MODULE: ./src/constants.ts
 var ACTION;
 (function (ACTION) {
     ACTION["GET_SERVER_CONFIGS"] = "getServerConfigs";
@@ -258,17 +246,12 @@ var MIXER_RENDER_TYPE;
     MIXER_RENDER_TYPE["PAD"] = "pad";
 })(MIXER_RENDER_TYPE || (MIXER_RENDER_TYPE = {}));
 
-// CONCATENATED MODULE: ./src/client-interfaces.ts
-
-
 // EXTERNAL MODULE: external {"root":"io","commonjs":"socket.io-client","commonjs2":"socket.io-client","amd":"socket.io-client"}
-var external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_ = __webpack_require__(0);
-
+var external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_ = __webpack_require__(173);
 // EXTERNAL MODULE: external {"root":"axios","commonjs2":"axios","commonjs":"axios","amd":"axios"}
-var external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_ = __webpack_require__(1);
+var external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_ = __webpack_require__(781);
 var external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_default = /*#__PURE__*/__webpack_require__.n(external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_);
-
-// CONCATENATED MODULE: ./src/mediasoup-socket-api.ts
+;// CONCATENATED MODULE: ./src/mediasoup-socket-api.ts
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -281,7 +264,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 
-class mediasoup_socket_api_MediasoupSocketApi {
+class MediasoupSocketApi {
     constructor(url, worker, token, log) {
         this.closed = false;
         this.log = log || console.log;
@@ -291,7 +274,7 @@ class mediasoup_socket_api_MediasoupSocketApi {
     }
     get client() {
         if (!this._client) {
-            this._client = Object(external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_["io"])(this.url, {
+            this._client = (0,external_root_io_commonjs_socket_io_client_commonjs2_socket_io_client_amd_socket_io_client_.io)(this.url, {
                 // path:"",
                 // transports:['websocket'],
                 query: {
@@ -611,7 +594,7 @@ class mediasoup_socket_api_MediasoupSocketApi {
     restRequest(action, json = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { data } = yield external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_default.a.post(`${this.url}/${PATH.API}/${this.worker}/${action}`, json, {
+                const { data } = yield external_root_axios_commonjs2_axios_commonjs_axios_amd_axios_default().post(`${this.url}/${PATH.API}/${this.worker}/${action}`, json, {
                     headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${this.token}` },
                 });
                 this.log('got message', action, JSON.stringify(data));
@@ -629,12 +612,14 @@ class mediasoup_socket_api_MediasoupSocketApi {
     }
 }
 
-// CONCATENATED MODULE: ./src/index.ts
+;// CONCATENATED MODULE: ./src/index.ts
 
 
 
 
+})();
 
-/***/ })
-/******/ ]);
+/******/ 	return __webpack_exports__;
+/******/ })()
+;
 });
