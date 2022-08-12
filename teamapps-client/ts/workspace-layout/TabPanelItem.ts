@@ -19,17 +19,17 @@
  */
 import * as log from "loglevel";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
+import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {UiTabPanel} from "../UiTabPanel";
 
-import {UiTabPanelTabStyle} from "../../generated/UiTabPanelTabStyle";
+import {UiTabPanelTabStyle} from "../generated/UiTabPanelTabStyle";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {generateUUID, parseHtml} from "../Common";
-import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
-import {UiWindowButtonType} from "../../generated/UiWindowButtonType";
+import {UiViewGroupPanelState} from "../generated/UiViewGroupPanelState";
+import {UiWindowButtonType} from "../generated/UiWindowButtonType";
 import {UiComponent} from "../UiComponent";
 
 class MinimizableTabPanel extends UiTabPanel {
@@ -209,7 +209,7 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 		let iconSize = this.context.config.optimizedForTouch ? 16 : 12;
 		this.$minimizedTrayButton.innerHTML = '';
 		// noinspection CssUnknownTarget
-		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('/resources/window-restore-grey.png')"></div>`));
+		this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize} ta-icon-window-restore-grey"></div>`));
 		this._tabs.forEach(tab => this.$minimizedTrayButton.append(parseHtml(`<div class="tab-icon img img-${iconSize}" style="background-image: url('${tab.view.tabIcon}')"></div>`)));
 		this.$minimizedTrayButton.addEventListener("click", () => this.onPanelStateChangeTriggered.fire(UiViewGroupPanelState.NORMAL));
 	}

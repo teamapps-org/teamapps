@@ -20,14 +20,14 @@
 
 import {bind} from "./util/Bind";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
+import {UiComponentConfig} from "./generated/UiComponentConfig";
 import {Emptyable, isEmptyable} from "./util/Emptyable";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {capitalizeFirstLetter, css, parseHtml} from "./Common";
-import {UiSplitPane_SplitResizedEvent, UiSplitPaneCommandHandler, UiSplitPaneConfig, UiSplitPaneEventSource} from "../generated/UiSplitPaneConfig";
-import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
-import {UiSplitDirection} from "../generated/UiSplitDirection";
+import {UiSplitPane_SplitResizedEvent, UiSplitPaneCommandHandler, UiSplitPaneConfig, UiSplitPaneEventSource} from "./generated/UiSplitPaneConfig";
+import {UiSplitSizePolicy} from "./generated/UiSplitSizePolicy";
+import {UiSplitDirection} from "./generated/UiSplitDirection";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
 

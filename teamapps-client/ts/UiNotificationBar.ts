@@ -29,12 +29,11 @@ import {
 	UiNotificationBarCommandHandler,
 	UiNotificationBarConfig,
 	UiNotificationBarEventSource
-} from "../generated/UiNotificationBarConfig";
-import {UiNotificationBarItemConfig} from "../generated/UiNotificationBarItemConfig";
+} from "./generated/UiNotificationBarConfig";
+import {UiNotificationBarItemConfig} from "./generated/UiNotificationBarItemConfig";
 import {createUiSpacingValueCssString} from "./util/CssFormatUtil";
 import {ProgressBar} from "./micro-components/ProgressBar";
-import {UiExitAnimation} from "../generated/UiExitAnimation";
-import {UiEntranceAnimation} from "../generated/UiEntranceAnimation";
+import {UiExitAnimation} from "./generated/UiExitAnimation";
 
 export class UiNotificationBar extends AbstractUiComponent<UiNotificationBarConfig> implements UiNotificationBarCommandHandler, UiNotificationBarEventSource {
 

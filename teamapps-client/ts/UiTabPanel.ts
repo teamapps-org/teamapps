@@ -19,9 +19,9 @@
  */
 
 import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
-import {UiComponentConfig} from "../generated/UiComponentConfig";
+import {UiComponentConfig} from "./generated/UiComponentConfig";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiTabConfig} from "../generated/UiTabConfig";
+import {UiTabConfig} from "./generated/UiTabConfig";
 import {bind} from "./util/Bind";
 import {Emptyable, isEmptyable} from "./util/Emptyable";
 import {UiToolButton} from "./micro-components/UiToolButton";
@@ -37,12 +37,12 @@ import {
 	UiTabPanelCommandHandler,
 	UiTabPanelConfig,
 	UiTabPanelEventSource
-} from "../generated/UiTabPanelConfig";
-import {createUiToolButtonConfig} from "../generated/UiToolButtonConfig";
+} from "./generated/UiTabPanelConfig";
+import {createUiToolButtonConfig} from "./generated/UiToolButtonConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiTabPanelTabStyle} from "../generated/UiTabPanelTabStyle";
+import {UiTabPanelTabStyle} from "./generated/UiTabPanelTabStyle";
 import {insertAtIndex, insertBefore, maximizeComponent, parseHtml, prependChild} from "./Common";
-import {UiWindowButtonType} from "../generated/UiWindowButtonType";
+import {UiWindowButtonType} from "./generated/UiWindowButtonType";
 import {StaticIcons} from "./util/StaticIcons";
 import {UiComponent} from "./UiComponent";
 
@@ -277,9 +277,8 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
                 </div>`);
 
 		if (closeable) {
-			const closeIconPath = "/resources/window-close-grey.png";
 			let closeButtonHtml = `<div class="tab-button-close-button">
-                        <div class="img ${this._context.config.optimizedForTouch ? 'img-16' : 'img-12'}" style="background-image: url('${closeIconPath}');"></div>
+                        <div class="img ${this._context.config.optimizedForTouch ? 'img-16' : 'img-12'} ta-icon-window-close-grey"></div>
                     </div>`;
 			const $closeButton1 = $tabButton.appendChild(parseHtml(closeButtonHtml));
 			$closeButton1.addEventListener("mousedown", () => {
@@ -295,7 +294,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	public selectTab(tabId: string, sendSelectionEvent = false) {
 		let tab = this.getTabById(tabId);
 		if (!tab) {
-			this.logger.error("Cannot select non-existing tab " + this._config.id + "~" + tabId);
+			console.error("Cannot select non-existing tab " + this._config.id + "~" + tabId);
 			return;
 		}
 		this.selectedTab = tab;
@@ -465,7 +464,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	private getTabById(tabId: string, warnIfNull: boolean = true): Tab {
 		const tab = this.getAllTabs().filter(tab => tab.config.tabId === tabId)[0];
 		if (tab == null && warnIfNull) {
-			this.logger.error(`Cannot find tab by id: ${tabId}`);
+			console.error(`Cannot find tab by id: ${tabId}`);
 		}
 		return tab;
 	}

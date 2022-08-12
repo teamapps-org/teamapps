@@ -17,11 +17,11 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
+import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiSplitPane} from "../UiSplitPane";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {UiSplitDirection} from "../../generated/UiSplitDirection";
-import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
+import {UiSplitDirection} from "../generated/UiSplitDirection";
+import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
 import {ItemTreeItem} from "./ItemTree";
 import {generateUUID} from "../Common";
 import {UiComponent} from "../UiComponent";

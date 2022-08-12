@@ -18,8 +18,8 @@
  * =========================LICENSE_END==================================
  */
 export enum StaticIcons {
-	CLOSE = "/resources/window-close-grey.png",
-	MAXIMIZE = "/resources/window-maximize-grey.png",
-	MINIMIZE = "/resources/window-minimize-grey.png",
-	RESTORE = "/resources/window-restore-grey.png"
+	CLOSE = "/assets/window-close-grey.png",
+	MAXIMIZE = "/assets/window-maximize-grey.png",
+	MINIMIZE = "/assets/window-minimize-grey.png",
+	RESTORE = "/assets/window-restore-grey.png"
 }

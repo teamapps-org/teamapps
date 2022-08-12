@@ -23,8 +23,8 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {parseHtml} from "./Common";
-import {UiDefaultMultiProgressDisplayCommandHandler, UiDefaultMultiProgressDisplayConfig, UiDefaultMultiProgressDisplayEventSource} from "../generated/UiDefaultMultiProgressDisplayConfig";
-import {UiMultiProgressDisplay_ClickedEvent, UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayConfig, UiMultiProgressDisplayEventSource} from "../generated/UiMultiProgressDisplayConfig";
+import {UiDefaultMultiProgressDisplayCommandHandler, UiDefaultMultiProgressDisplayConfig, UiDefaultMultiProgressDisplayEventSource} from "./generated/UiDefaultMultiProgressDisplayConfig";
+import {UiMultiProgressDisplay_ClickedEvent, UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayConfig, UiMultiProgressDisplayEventSource} from "./generated/UiMultiProgressDisplayConfig";
 
 export abstract class UiMultiProgressDisplay<C extends UiMultiProgressDisplayConfig = UiMultiProgressDisplayConfig> extends AbstractUiComponent<C> implements UiMultiProgressDisplayCommandHandler, UiMultiProgressDisplayEventSource {
 	public readonly onClicked: TeamAppsEvent<UiMultiProgressDisplay_ClickedEvent> = new TeamAppsEvent();

@@ -21,18 +21,18 @@
 import * as log from "loglevel";
 import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./UiWorkSpaceLayout";
 import {UiRootPanel} from "../UiRootPanel";
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
+import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
 import {logException} from "../Common";
-import {UiConfigurationConfig} from "../../generated/UiConfigurationConfig";
-import {UiEvent} from "../../generated/UiEvent";
+import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
+import {UiEvent} from "../generated/UiEvent";
 import {ComponentEventSubscriptionManager} from "../util/ComponentEventSubscriptionManager";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TemplateRegistry} from "../TemplateRegistry";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiCommand} from "../../generated/UiCommand";
+import {UiCommand} from "../generated/UiCommand";
 import {UiComponent} from "../UiComponent";
-import {componentEventDescriptors, staticComponentEventDescriptors} from "../../generated/ComponentEventDescriptors";
+import {componentEventDescriptors, staticComponentEventDescriptors} from "../generated/ComponentEventDescriptors";
 
 export class UiWorkSpaceLayoutChildWindowTeamAppsUiContext implements TeamAppsUiContext, TeamAppsUiContextInternalApi {
 

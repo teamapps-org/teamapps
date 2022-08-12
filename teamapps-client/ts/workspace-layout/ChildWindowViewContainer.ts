@@ -18,17 +18,17 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {UiRelativeWorkSpaceViewPosition} from "../../generated/UiRelativeWorkSpaceViewPosition";
+import {UiRelativeWorkSpaceViewPosition} from "../generated/UiRelativeWorkSpaceViewPosition";
 import {DeferredExecutor} from "../util/DeferredExecutor";
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
-import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
+import {UiComponentConfig} from "../generated/UiComponentConfig";
+import {UiWorkSpaceLayoutViewConfig} from "../generated/UiWorkSpaceLayoutViewConfig";
 import {ViewInfo} from "./ViewInfo";
 import {UiWorkSpaceLayout, UiWorkspaceLayoutSubWindowProtocol_INIT_OK} from "./UiWorkSpaceLayout";
-import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
+import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
 import {generateUUID} from "../Common";
 import {ViewContainer, ViewContainerListener} from "./ViewContainer";
-import {UiEvent} from "../../generated/UiEvent";
-import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
+import {UiEvent} from "../generated/UiEvent";
+import {UiWorkSpaceLayoutItemConfig} from "../generated/UiWorkSpaceLayoutItemConfig";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {UiComponent} from "../UiComponent";

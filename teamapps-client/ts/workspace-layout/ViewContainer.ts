@@ -17,14 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiRelativeWorkSpaceViewPosition} from "../../generated/UiRelativeWorkSpaceViewPosition";
-import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
-import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
+import {UiRelativeWorkSpaceViewPosition} from "../generated/UiRelativeWorkSpaceViewPosition";
+import {UiWorkSpaceLayoutItemConfig} from "../generated/UiWorkSpaceLayoutItemConfig";
+import {UiWorkSpaceLayoutViewConfig} from "../generated/UiWorkSpaceLayoutViewConfig";
 import {ViewInfo} from "./ViewInfo";
-import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
+import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
+import {UiViewGroupPanelState} from "../generated/UiViewGroupPanelState";
 import {UiComponent} from "../UiComponent";
 
 export interface ViewContainer {

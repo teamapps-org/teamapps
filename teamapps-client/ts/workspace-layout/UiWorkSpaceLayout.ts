@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiConfigurationConfig} from "../../generated/UiConfigurationConfig";
+import {UiConfigurationConfig} from "../generated/UiConfigurationConfig";
 import {
 	UiWorkSpaceLayout_ChildWindowClosedEvent,
 	UiWorkSpaceLayout_ChildWindowCreationFailedEvent,
@@ -31,13 +31,13 @@ import {
 	UiWorkSpaceLayoutCommandHandler,
 	UiWorkSpaceLayoutConfig,
 	UiWorkSpaceLayoutEventSource
-} from "../../generated/UiWorkSpaceLayoutConfig";
-import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
-import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
+} from "../generated/UiWorkSpaceLayoutConfig";
+import {UiWorkSpaceLayoutViewConfig} from "../generated/UiWorkSpaceLayoutViewConfig";
+import {UiWorkSpaceLayoutItemConfig} from "../generated/UiWorkSpaceLayoutItemConfig";
 import {AbstractUiComponent} from "../AbstractUiComponent";
 import {TeamAppsUiContext, TeamAppsUiContextInternalApi} from "../TeamAppsUiContext";
-import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
-import {UiRelativeWorkSpaceViewPosition} from "../../generated/UiRelativeWorkSpaceViewPosition";
+import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
+import {UiRelativeWorkSpaceViewPosition} from "../generated/UiRelativeWorkSpaceViewPosition";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {ViewInfo} from "./ViewInfo";
 import {ViewContainer} from "./ViewContainer";
@@ -45,14 +45,14 @@ import {RelativeDropPosition} from "./RelativeDropPosition";
 import {LocalViewContainer} from "./LocalViewContainer";
 import {ChildWindowViewContainer} from "./ChildWindowViewContainer";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
-import {UiWorkSpaceLayoutViewGroupItemConfig} from "../../generated/UiWorkSpaceLayoutViewGroupItemConfig";
-import {UiWorkSpaceLayoutSplitItemConfig} from "../../generated/UiWorkSpaceLayoutSplitItemConfig";
-import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
-import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
+import {UiWorkSpaceLayoutViewGroupItemConfig} from "../generated/UiWorkSpaceLayoutViewGroupItemConfig";
+import {UiWorkSpaceLayoutSplitItemConfig} from "../generated/UiWorkSpaceLayoutSplitItemConfig";
+import {UiTemplateConfig} from "../generated/UiTemplateConfig";
+import {UiViewGroupPanelState} from "../generated/UiViewGroupPanelState";
 import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
 import {UiComponent} from "../UiComponent";
 import {UiProgressDisplay} from "../UiProgressDisplay";
-import {UiMultiProgressDisplay} from "../UiDefaultMultiProgressDisplay";
+import {UiMultiProgressDisplay} from "../UiMultiProgressDisplay";
 
 export type UiWorkspaceLayoutSubWindowProtocol_INIT_OK = {
 	_type: 'INIT_OK',
@@ -411,7 +411,7 @@ export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConf
 					return desciptorsByWindowId;
 				});
 		} else {
-			this.logger.warn("getCurrentLayout was called from non-root window!");
+			console.warn("getCurrentLayout was called from non-root window!");
 			return null;
 		}
 	}

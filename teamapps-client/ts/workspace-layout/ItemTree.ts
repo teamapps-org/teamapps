@@ -18,7 +18,7 @@
  * =========================LICENSE_END==================================
  */
 import * as log from "loglevel";
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
+import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
 import {TabPanelItem} from "./TabPanelItem";

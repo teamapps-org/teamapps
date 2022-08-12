@@ -273,7 +273,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			this._executingCommand = true;
 			const commandMethodName = command._type.substring(command._type.lastIndexOf('.') + 1);
 			if (command.componentId) {
-				console.trace(`Trying to call ${command.componentId}.${commandMethodName}()`);
+				console.debug(`Trying to call ${command.componentId}.${commandMethodName}()`);
 				let component: any = this.getClientObjectById(command.componentId);
 				if (!component) {
 					throw new Error("The component " + command.componentId + " does not exist, so cannot call " + commandMethodName + "() on it.");
@@ -282,7 +282,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 				}
 				return await this.commandExecutor.executeCommand(component, command);
 			} else {
-				console.trace(`Trying to call static method ${command._type}()`);
+				console.debug(`Trying to call static method ${command._type}()`);
 				const result = await this.commandExecutor.executeStaticCommand(command, this);
 				await this.onStaticMethodCommandInvocation.fire(command);
 				return result;

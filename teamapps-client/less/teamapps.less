@@ -22,93 +22,37 @@
 
 // third party
 @import "bootstrap-imports";
-@import "trivial-components/trivial-components";
-@import (inline) "../node_modules/slickgrid/slick.grid.css";
-@import (less) "../node_modules/@fullcalendar/core/main.css";
-@import (less) "../node_modules/@fullcalendar/daygrid/main.css";
-@import (less) "../node_modules/@fullcalendar/timegrid/main.css";
-@import (less) "../node_modules/jquery-ui/themes/base/resizable.css"; // TODO do we still need this???
-@import (less) "../node_modules/animate.css/animate.css";
-@import (less) "../node_modules/mediaelement/build/mediaelementplayer.css";
-@import (less) "../node_modules/leaflet/dist/leaflet.css";
-@import (less) "../node_modules/leaflet.markercluster/dist/MarkerCluster.css";
-@import (less) "../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css";
-@import (less) "../node_modules/maplibre-gl/dist/mapbox-gl.css";
-@import (less) "../node_modules/webui-popover/dist/jquery.webui-popover.css";
-@import (less) "../node_modules/pickr-widget/dist/pickr.min.css";
-@import (less) "../node_modules/slick-carousel/slick/slick.less";
-@import (less) "../node_modules/slick-carousel/slick/slick-theme.less";
 
 // own
-@import "third-party-fixes/bootstrap-fixes"; // overrides default bootstrap variables
-@import "third-party-fixes/trivial-components-fixes";
 @import "general";
+@import "icons";
 
 @import "components/UiComponent";
 @import "components/UiDummyComponent";
-@import "components/UiTemplateTestContainer";
 @import "components/UiRootPanel";
 @import "components/UiSplitPane";
 @import "components/UiPanel";
-@import "components/UiElegantPanel";
-@import "components/UiApplicationLayout";
+@import "components/UiWindow";
 @import "components/UiWorkSpaceLayout";
 @import "components/UiMobileLayout";
 @import "components/UiTabPanel";
 @import "components/UiToolbar";
 @import "components/UiToolAccordion";
 @import "components/UiNavigationBar";
-@import "components/UiVerticalLayout";
-@import "components/UiTable";
-@import "components/UiTree";
-@import "components/UiGridForm";
 @import "components/UiTextCellTemplate";
 @import "components/UiGridTemplate";
-@import "components/UiItemView";
-@import "components/UiWindow";
 @import "components/UiHtmlView";
-@import "components/UiPageViewBlock";
-@import "components/UiCalendar";
-@import "components/UiMap";
-@import "components/UiMap2";
-@import "components/UiTimeGraph";
-@import "components/UiNetworkGraph";
-@import "components/UiDocumentViewer";
-@import "components/UiPageView";
-@import "components/UiImageDisplay";
-@import "components/UiVideoPlayer";
-@import "components/UiLiveStreamComponent";
-@import "components/UiWebRtcPublisher";
-@import "components/UiMediaTrackGraph";
-@import "components/UiFormDesigner";
-@import "components/UiFormDesignerFieldChooser";
-@import "components/UiPropertyEditor";
-@import "components/UiInfiniteItemView";
-@import "components/UiInfiniteItemView2";
-@import "components/UiImageCropper";
-@import "components/UiGauge";
-@import "components/UiResponsiveGridLayout";
 @import "components/UiIFrame";
 @import "components/UiFlexContainer";
-@import "components/UiChatDisplay";
-@import "components/UiChatInput";
 @import "components/UiAbsoluteLayout";
-@import "components/UiTreeGraph";
-@import "components/UiFieldGroup";
-@import "components/UiFloatingComponent";
-@import "components/UiPopup";
 @import "components/UiProgressDisplay";
 @import "components/UiDefaultMultiProgressDisplay";
 @import "components/UiNotification";
 @import "components/UiNotificationBar";
-@import "components/UiQrCodeScanner";
-@import "components/UiMediaSoupV3WebRtcClient";
-@import "components/UiPieChart";
-
+@import "components/UiLinkButton";
 
 // formfield
 @import "formfield/UiField";
-@import "formfield/UiSimpleFileField";
 @import "formfield/UiLabel";
 @import "formfield/UiMultiLineTextField";
 @import "formfield/UiTextField";
@@ -116,21 +60,8 @@
 @import "formfield/UiDisplayField";
 @import "formfield/UiCheckBox";
 @import "formfield/UiButton";
-@import "formfield/UiCurrencyField";
 @import "formfield/UiNumberField";
-@import "formfield/UiFileField";
-@import "formfield/UiPictureChooser";
-@import "formfield/UiComboBox";
-@import "formfield/UiTagComboBox";
-@import "formfield/UiDateField";
-@import "formfield/UiTimeField";
-@import "formfield/UiDateTimeField";
 @import "formfield/UiComponentField";
-@import "formfield/UiCompositeField";
-@import "formfield/UiImageField";
-@import "formfield/UiRichTextEditor";
-@import "formfield/UiColorPicker";
-@import "formfield/UiLinkButton";
 
 // micro-components
 @import "micro-components/ProgressBar";
@@ -140,7 +71,6 @@
 @import "micro-components/UiAudioLevelIndicator";
 @import "micro-components/UiDropDown";
 @import "micro-components/tooltip";
-@import "micro-components/CalendarEventListPopper";
 @import "micro-components/ContextMenu";
 
 // util

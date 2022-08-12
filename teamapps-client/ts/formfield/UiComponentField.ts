@@ -17,17 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiField} from "./UiField";
+import {UiComponentConfig} from "../generated/UiComponentConfig";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
+import {AbstractUiField} from "./AbstractUiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {UiComponentFieldCommandHandler, UiComponentFieldConfig, UiComponentFieldEventSource} from "../../generated/UiComponentFieldConfig";
+import {UiComponentFieldCommandHandler, UiComponentFieldConfig, UiComponentFieldEventSource} from "../generated/UiComponentFieldConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
 
 
-export class UiComponentField extends UiField<UiComponentFieldConfig, void> implements UiComponentFieldEventSource, UiComponentFieldCommandHandler {
+export class UiComponentField extends AbstractUiField<UiComponentFieldConfig, void> implements UiComponentFieldEventSource, UiComponentFieldCommandHandler {
 
 	private component: UiComponent<UiComponentConfig>;
 	private $componentWrapper: HTMLElement;

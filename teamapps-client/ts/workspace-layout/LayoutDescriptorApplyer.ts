@@ -17,19 +17,19 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
+import {UiWorkSpaceLayoutItemConfig} from "../generated/UiWorkSpaceLayoutItemConfig";
 import {ItemTreeItem} from "./ItemTree";
 import {View} from "./View";
 import {SplitPaneItem} from "./SplitPaneItem";
-import {UiWorkSpaceLayoutSplitItemConfig} from "../../generated/UiWorkSpaceLayoutSplitItemConfig";
+import {UiWorkSpaceLayoutSplitItemConfig} from "../generated/UiWorkSpaceLayoutSplitItemConfig";
 import {TabPanelItem} from "./TabPanelItem";
-import {UiWorkSpaceLayoutViewGroupItemConfig} from "../../generated/UiWorkSpaceLayoutViewGroupItemConfig";
+import {UiWorkSpaceLayoutViewGroupItemConfig} from "../generated/UiWorkSpaceLayoutViewGroupItemConfig";
 import {LocalViewContainer} from "./LocalViewContainer";
 import * as log from "loglevel";
-import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
+import {UiWorkSpaceLayoutViewConfig} from "../generated/UiWorkSpaceLayoutViewConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {isSplitPanelDescriptor, isTabPanelDescriptor} from "./UiWorkSpaceLayout";
-import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
+import {UiViewGroupPanelState} from "../generated/UiViewGroupPanelState";
 import {UiComponent} from "../UiComponent";
 
 export class LayoutDescriptorApplyer {
@@ -153,9 +153,9 @@ export class LayoutDescriptorApplyer {
 		if (descriptor == null) {
 			return null;
 		}
-		let clientSideItem = this.clientItemsById[descriptor.id];
+		let clientSideItem: ItemTreeItem<any> = this.clientItemsById[descriptor.id];
 		let itemMovedToStash = this.clientItemStash[descriptor.id] != null;
-		let item: ItemTreeItem;
+		let item: ItemTreeItem<any>;
 		if (clientSideItem != null) {
 			item = clientSideItem;
 			if (isSplitPanelDescriptor(descriptor)) {

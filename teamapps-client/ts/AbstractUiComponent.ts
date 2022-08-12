@@ -64,7 +64,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		this.height = height;
 		this.displayedDeferredExecutor.ready = hasSize; // do this after onResize gets called, since
 		if (hasSize) {
-			console.trace("resize: " + this.getId());
+			console.debug("resize: " + this.getId());
 			this.onResized.fire({width: this.width, height: this.height});
 			this.onResize();
 		}

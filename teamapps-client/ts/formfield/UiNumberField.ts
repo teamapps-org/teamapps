@@ -17,23 +17,22 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "./UiField";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiNumberFieldCommandHandler, UiNumberFieldConfig, UiNumberFieldEventSource} from "../../generated/UiNumberFieldConfig";
+import {AbstractUiField} from "./AbstractUiField";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
+import {UiNumberFieldCommandHandler, UiNumberFieldConfig, UiNumberFieldEventSource} from "../generated/UiNumberFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {getAutoCompleteOffValue, parseHtml} from "../Common";
-import {keyCodes} from "../trivial-components/TrivialCore";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
-} from "../../generated/UiTextInputHandlingFieldConfig";
+} from "../generated/UiTextInputHandlingFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiSpecialKey} from "../../generated/UiSpecialKey";
-import {UiNumberFieldSliderMode} from "../../generated/UiNumberFieldSliderMode";
+import {UiSpecialKey} from "../generated/UiSpecialKey";
+import {UiNumberFieldSliderMode} from "../generated/UiNumberFieldSliderMode";
 import {NumberParser} from "../util/NumberParser";
 
-export class UiNumberField extends UiField<UiNumberFieldConfig, number> implements UiNumberFieldEventSource, UiNumberFieldCommandHandler {
+export class UiNumberField extends AbstractUiField<UiNumberFieldConfig, number> implements UiNumberFieldEventSource, UiNumberFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({
 		throttlingMode: "debounce",
@@ -116,22 +115,22 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 			this.updateClearButton();
 		});
 		this.$field.addEventListener("keydown", (e) => {
-			if (e.keyCode === keyCodes.escape) {
+			if (e.key === "Escape") {
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
 				this.$field.select();
 				this.onSpecialKeyPressed.fire({
 					key: UiSpecialKey.ESCAPE
 				});
-			} else if (e.keyCode === keyCodes.up_arrow || e.keyCode == keyCodes.down_arrow) {
+			} else if (e.key === "ArrowUp" || e.key == "ArrowDown") {
 				if (this.getTransientValue() != null) {
 					e.preventDefault(); // no jumping cursor to start or end
-					const newValue = this.getBoundedValue(this.getTransientValue() + (e.keyCode === keyCodes.up_arrow ? this.sliderStep : -this.sliderStep));
+					const newValue = this.getBoundedValue(this.getTransientValue() + (e.key === "ArrowUp" ? this.sliderStep : -this.sliderStep));
 					this.setEditorValue(newValue);
 					this.setSliderPositionByValue(newValue);
 					this.$field.select();
 				}
-			} else if (e.keyCode === keyCodes.enter) {
+			} else if (e.key === "Enter") {
 				this.commit();
 				this.onSpecialKeyPressed.fire({
 					key: UiSpecialKey.ENTER
@@ -313,7 +312,7 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => this.$field);
+		AbstractUiField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
 	public getReadOnlyHtml(value: number, availableWidth: number): string {

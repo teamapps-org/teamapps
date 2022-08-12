@@ -22,11 +22,11 @@ import {UiToolbar} from "./tool-container/toolbar/UiToolbar";
 import {UiNavigationBar} from "./UiNavigationBar";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiMobileLayoutCommandHandler, UiMobileLayoutConfig} from "../generated/UiMobileLayoutConfig";
+import {UiMobileLayoutCommandHandler, UiMobileLayoutConfig} from "./generated/UiMobileLayoutConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {pageTransition, pageTransitionAnimationPairs, parseHtml} from "./Common";
 import {UiComponent} from "./UiComponent";
-import {UiPageTransition} from "../generated/UiPageTransition";
+import {UiPageTransition} from "./generated/UiPageTransition";
 
 
 export class UiMobileLayout extends AbstractUiComponent<UiMobileLayoutConfig> implements UiMobileLayoutCommandHandler {

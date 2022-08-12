@@ -329,7 +329,7 @@ export class UiRootPanel extends AbstractUiComponent<UiRootPanelConfig> implemen
 			content: null
 		}, context);
 		let $contentElement = parseHtml(`<div class="UiGenericErrorMessage">
-	<div class="icon img img-48" style="background-image: url('/resources/window-close-grey.png'); display: ${showErrorIcon ? 'block' : 'none'}"></div>
+	<div class="icon img img-48 ta-icon-window-close-grey" style="display: ${showErrorIcon ? 'block' : 'none'}"></div>
 	<div class="message" style="text-align: justify;">${message}</div>
 	<div class="option-buttons">
 		${options.map(o => `<div class="btn btn-default ${UiGenericErrorMessageOption[o].toLowerCase()}">${UiGenericErrorMessageOption[o]}</div>`).join("")}

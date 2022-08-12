@@ -18,12 +18,12 @@
  * =========================LICENSE_END==================================
  */
 import {UiPanel} from "../UiPanel";
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
+import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {bind} from "../util/Bind";
 import {TabPanelItem} from "./TabPanelItem";
 import {ViewInfo} from "./ViewInfo";
-import {UiWindowButtonType} from "../../generated/UiWindowButtonType";
-import {UiPanel_WindowButtonClickedEvent} from "../../generated/UiPanelConfig";
+import {UiWindowButtonType} from "../generated/UiWindowButtonType";
+import {UiPanel_WindowButtonClickedEvent} from "../generated/UiPanelConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiComponent} from "../UiComponent";
 

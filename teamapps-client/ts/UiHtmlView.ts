@@ -19,7 +19,7 @@
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiHtmlViewCommandHandler, UiHtmlViewConfig} from "../generated/UiHtmlViewConfig";
+import {UiHtmlViewCommandHandler, UiHtmlViewConfig} from "./generated/UiHtmlViewConfig";
 import {parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
@@ -54,7 +54,7 @@ export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements
 			}
 			containerElement.appendChild((component as UiComponent).getMainElement());
 		} else {
-			this.logger.error(`Could not add child component since selector does not match any element: ${containerElementSelector}`);
+			console.error(`Could not add child component since selector does not match any element: ${containerElementSelector}`);
 		}
 	}
 
@@ -71,7 +71,7 @@ export class UiHtmlView extends AbstractUiComponent<UiHtmlViewConfig> implements
 				childNodes.forEach(cn => containerElement.appendChild(cn))
 			}
 		} else {
-			this.logger.error(`Could not set content HTML since selector does not match any element: ${containerElementSelector}`);
+			console.error(`Could not set content HTML since selector does not match any element: ${containerElementSelector}`);
 		}
 	}
 

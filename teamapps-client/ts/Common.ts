@@ -400,9 +400,9 @@ export function calculateDisplayModeInnerSize(containerDimensions: { width: numb
 	let viewPortAspectRatio = containerDimensions.width / containerDimensions.height;
 	let imageAspectRatio = innerPreferredDimensions.width / innerPreferredDimensions.height;
 
-	console.trace(`outer dimensions: ${containerDimensions.width}x${containerDimensions.height}`);
-	console.trace(`inner dimensions: ${innerPreferredDimensions.width}x${innerPreferredDimensions.height}`);
-	console.trace(`displayMode: ${UiPageDisplayMode[displayMode]}`);
+	console.debug(`outer dimensions: ${containerDimensions.width}x${containerDimensions.height}`);
+	console.debug(`inner dimensions: ${innerPreferredDimensions.width}x${innerPreferredDimensions.height}`);
+	console.debug(`displayMode: ${UiPageDisplayMode[displayMode]}`);
 
 	if (displayMode === UiPageDisplayMode.FIT_WIDTH) {
 		let width = Math.floor(containerDimensions.width * zoomFactor);
@@ -615,10 +615,10 @@ export function focusNextByTabIndex(navigatableElements: HTMLElement[], navDirec
 	navigatableElements.sort((e1: HTMLElement, e2: HTMLElement) => e2.tabIndex - e1.tabIndex);
 	let current = document.activeElement;
 	let currentIndex = navigatableElements.indexOf(current as HTMLElement);
-	console.trace("selectables: " + navigatableElements.length + "; current: " + currentIndex);
+	console.debug("selectables: " + navigatableElements.length + "; current: " + currentIndex);
 	let newIndex = currentIndex + navDirection;
 	if (newIndex > 0 && newIndex < navigatableElements.length) {
-		console.trace(navigatableElements[newIndex]);
+		console.debug(navigatableElements[newIndex]);
 		navigatableElements[newIndex].focus();
 		return true;
 	} else {

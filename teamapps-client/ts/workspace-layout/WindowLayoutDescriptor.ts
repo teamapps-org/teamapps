@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
+import {UiWorkSpaceLayoutItemConfig} from "../generated/UiWorkSpaceLayoutItemConfig";
 
 export const typescriptDeclarationFixConstant = 1;
 

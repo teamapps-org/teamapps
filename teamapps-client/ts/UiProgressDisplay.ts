@@ -29,9 +29,8 @@ import {
 	UiProgressDisplayCommandHandler,
 	UiProgressDisplayConfig,
 	UiProgressDisplayEventSource
-} from "../generated/UiProgressDisplayConfig";
+} from "./generated/UiProgressDisplayConfig";
 import {ProgressBar} from "./micro-components/ProgressBar";
-import {UiProgressStatus} from "../generated/UiProgressStatus";
 
 
 export class UiProgressDisplay extends AbstractUiComponent<UiProgressDisplayConfig> implements UiProgressDisplayCommandHandler, UiProgressDisplayEventSource {

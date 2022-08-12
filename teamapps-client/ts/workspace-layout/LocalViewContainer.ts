@@ -19,20 +19,23 @@
  */
 import * as log from "loglevel";
 import {isEmptyable} from "../util/Emptyable";
-import {UiRelativeWorkSpaceViewPosition} from "../../generated/UiRelativeWorkSpaceViewPosition";
+import {UiRelativeWorkSpaceViewPosition} from "../generated/UiRelativeWorkSpaceViewPosition";
 import {UiPanel} from "../UiPanel";
-import {UiWorkSpaceLayoutViewConfig} from "../../generated/UiWorkSpaceLayoutViewConfig";
-import {UiComponentConfig} from "../../generated/UiComponentConfig";
+import {UiWorkSpaceLayoutViewConfig} from "../generated/UiWorkSpaceLayoutViewConfig";
+import {UiComponentConfig} from "../generated/UiComponentConfig";
 import {UiWorkSpaceLayout, UiWorkspaceLayoutDndDataTransfer} from "./UiWorkSpaceLayout";
 
-import {UiSplitDirection} from "../../generated/UiSplitDirection";
-import {UiSplitSizePolicy} from "../../generated/UiSplitSizePolicy";
+import {UiSplitDirection} from "../generated/UiSplitDirection";
+import {UiSplitSizePolicy} from "../generated/UiSplitSizePolicy";
 import {css, generateUUID, getMicrosoftBrowserVersion, parseHtml} from "../Common";
 import {bind} from "../util/Bind";
 import {UiToolbar} from "../tool-container/toolbar/UiToolbar";
-import {createUiWorkSpaceLayoutSplitItemConfig} from "../../generated/UiWorkSpaceLayoutSplitItemConfig";
-import {UiWorkSpaceLayoutItemConfig} from "../../generated/UiWorkSpaceLayoutItemConfig";
-import {createUiWorkSpaceLayoutViewGroupItemConfig, UiWorkSpaceLayoutViewGroupItemConfig} from "../../generated/UiWorkSpaceLayoutViewGroupItemConfig";
+import {createUiWorkSpaceLayoutSplitItemConfig} from "../generated/UiWorkSpaceLayoutSplitItemConfig";
+import {UiWorkSpaceLayoutItemConfig} from "../generated/UiWorkSpaceLayoutItemConfig";
+import {
+	createUiWorkSpaceLayoutViewGroupItemConfig,
+	UiWorkSpaceLayoutViewGroupItemConfig
+} from "../generated/UiWorkSpaceLayoutViewGroupItemConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {SplitPaneItem} from "./SplitPaneItem";
 import {View} from "./View";
@@ -42,15 +45,12 @@ import {ViewContainer, ViewContainerListener} from "./ViewContainer";
 import {RelativeDropPosition} from "./RelativeDropPosition";
 import {WindowLayoutDescriptor} from "./WindowLayoutDescriptor";
 import {LayoutDescriptorApplyer} from "./LayoutDescriptorApplyer";
-import {UiViewGroupPanelState} from "../../generated/UiViewGroupPanelState";
+import {UiViewGroupPanelState} from "../generated/UiViewGroupPanelState";
 import {UiComponent} from "../UiComponent";
-import {UiMultiProgressDisplayConfig} from "../../generated/UiMultiProgressDisplayConfig";
-import {UiMultiProgressDisplay} from "../UiDefaultMultiProgressDisplay";
-import {UiProgressDisplay} from "../UiProgressDisplay";
+import {UiMultiProgressDisplay} from "../UiMultiProgressDisplay";
 
 export class LocalViewContainer implements ViewContainer {
 
-	private static logger: log.Logger = log.getLogger("LocalViewContainer");
 	private static DND_MIME_TYPE: string = getMicrosoftBrowserVersion() ? 'text' : 'teamapps/uiworkspaceview';
 
 	private itemTree = new ItemTree();
@@ -293,7 +293,7 @@ export class LocalViewContainer implements ViewContainer {
 						}
 					}
 				} else {
-					LocalViewContainer.logger.warn("The user dropped a view from another UiWorkSpaceLayout. Not accepting this.");
+					console.warn("The user dropped a view from another UiWorkSpaceLayout. Not accepting this.");
 					return true;
 				}
 				return false;
@@ -350,7 +350,7 @@ export class LocalViewContainer implements ViewContainer {
 		let childWindow = window.open("index.html" + (location.search ? location.search + "&" : "?") + "teamAppsContext=UiWorkSpaceLayoutChildWindowTeamAppsUiContext", childWindowId, "height=600,width=800,location=0");
 
 		if (!childWindow || childWindow.closed || typeof childWindow.closed === 'undefined') {
-			LocalViewContainer.logger.warn("Popup window was blocked.");
+			console.warn("Popup window was blocked.");
 			this.listener.handleChildWindowCreationFailed(viewName);
 		} else {
 			let onWindowLoaded = () => {
@@ -574,7 +574,7 @@ export class LocalViewContainer implements ViewContainer {
 	public removeView(viewName: string, updateIndex = true) {
 		let view = this.itemTree.getViewByName(viewName);
 		if (view == null) {
-			LocalViewContainer.logger.warn(`Cannot remove view ${viewName}. View not found.`);
+			console.warn(`Cannot remove view ${viewName}. View not found.`);
 			return;
 		}
 		let tabPanelItem: TabPanelItem = view.parent;
