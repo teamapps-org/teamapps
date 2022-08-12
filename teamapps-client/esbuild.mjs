@@ -2,13 +2,14 @@ import esbuild from 'esbuild';
 import {lessLoader} from 'esbuild-plugin-less';
 import path from "node:path";
 import alias from 'esbuild-plugin-alias';
+import {createReadStream, createWriteStream} from "fs";
+import {createGzip} from "zlib";
+
 
 import {fileURLToPath} from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-console.log(__dirname);
 
 esbuild.build({
     entryPoints: ['dist/index.js'],
@@ -33,6 +34,30 @@ esbuild.build({
         }),
         lessLoader(),
     ],
+    minify: process.env.NODE_ENV === 'production'
 })
-    .then(() => console.log("⚡ Build complete! ⚡"))
+    .then(async (result, x, y) => {
+        console.log("Compressing result files...");
+        await compressFile("dist/teamapps-core.js");
+        await compressFile("dist/teamapps-core.css");
+        console.log("⚡ Build complete! ⚡")
+    })
     .catch(() => process.exit(1));
+
+
+function compressFile(filePath) {
+    return new Promise((resolve, reject) => {
+        const stream = createReadStream(filePath);
+        let resultFilePath = `${filePath}.gz`;
+        stream
+            .pipe(createGzip())
+            .pipe(createWriteStream(resultFilePath))
+            .on("finish", () => {
+                console.log(`Compressed ${filePath} to ${resultFilePath}`);
+                resolve();
+            })
+            .on("error", () => {
+                reject();
+            });
+    });
+}
