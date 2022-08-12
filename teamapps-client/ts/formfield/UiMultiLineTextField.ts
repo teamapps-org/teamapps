@@ -17,26 +17,25 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {keyCodes} from "../trivial-components/TrivialCore";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {
 	UiMultiLineTextFieldCommandHandler,
 	UiMultiLineTextFieldConfig,
 	UiMultiLineTextFieldEventSource
-} from "../../generated/UiMultiLineTextFieldConfig";
-import {UiSpecialKey} from "../../generated/UiSpecialKey";
+} from "../generated/UiMultiLineTextFieldConfig";
+import {UiSpecialKey} from "../generated/UiSpecialKey";
 import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
-} from "../../generated/UiTextInputHandlingFieldConfig";
+} from "../generated/UiTextInputHandlingFieldConfig";
 import {Constants, escapeHtml, hasVerticalScrollBar, parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "../util/ExecuteWhenFirstDisplayed";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiField} from "./UiField";
+import {AbstractUiField} from "./AbstractUiField";
 
-export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, string> implements UiMultiLineTextFieldEventSource, UiMultiLineTextFieldCommandHandler {
+export class UiMultiLineTextField extends AbstractUiField<UiMultiLineTextFieldConfig, string> implements UiMultiLineTextFieldEventSource, UiMultiLineTextFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({
 		throttlingMode: "debounce",
@@ -85,13 +84,13 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 			this.updateClearButton();
 		});
 		this.$field.addEventListener("keydown", (e) => {
-			if (e.keyCode === keyCodes.escape) {
+			if (e.key === 'Escape') {
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
 				this.onSpecialKeyPressed.fire({
 					key: UiSpecialKey.ESCAPE
 				});
-			} else if (e.keyCode === keyCodes.enter) {
+			} else if (e.key === 'Enter') {
 				this.onSpecialKeyPressed.fire({
 					key: UiSpecialKey.ENTER
 				});
@@ -173,7 +172,7 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => this.$field);
+		AbstractUiField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
@@ -190,4 +189,4 @@ export class UiMultiLineTextField extends UiField<UiMultiLineTextFieldConfig, st
 
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiMultiLineTextField", UiMultiLineTextField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiMultiLineTextField", UiMultiLineTextField);

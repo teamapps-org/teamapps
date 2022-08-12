@@ -332,4 +332,4 @@ export class UiSimpleFileField extends UiField<UiSimpleFileFieldConfig, UiFileIt
 
 
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiSimpleFileField", UiSimpleFileField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiSimpleFileField", UiSimpleFileField);

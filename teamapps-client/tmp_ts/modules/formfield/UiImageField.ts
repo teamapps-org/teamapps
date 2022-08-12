@@ -115,4 +115,4 @@ export class UiImageField extends UiField<UiImageFieldConfig, string> implements
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiImageField", UiImageField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiImageField", UiImageField);

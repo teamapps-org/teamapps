@@ -1,4 +1,5 @@
 /*-
+/*-
  * ========================LICENSE_START=================================
  * TeamApps
  * ---
@@ -26,10 +27,14 @@ import org.teamapps.ux.component.Component;
 public class Div extends AbstractComponent {
 
 	private Component content;
-	private boolean stretchContent;
+	private String innerHtml;
 
 	public Div(Component content) {
 		this.content = content;
+	}
+
+	public Div(String innerHtml) {
+		this.innerHtml = innerHtml;
 	}
 
 	public Div() {
@@ -40,6 +45,7 @@ public class Div extends AbstractComponent {
 		UiDiv ui = new UiDiv();
 		mapAbstractUiComponentProperties(ui);
 		ui.setContent(content != null ? content.createUiReference() : null);
+		ui.setInnerHtml(innerHtml);
 		return ui;
 	}
 
@@ -52,7 +58,12 @@ public class Div extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiDiv.SetContentCommand(getId(), content != null ? content.createUiReference() : null));
 	}
 
-	public void setStretchContent(boolean stretchContent) {
-		this.toggleCssClass("full-size-children", true);
+	public String getInnerHtml() {
+		return innerHtml;
+	}
+
+	public void setInnerHtml(String innerHtml) {
+		this.innerHtml = innerHtml;
+		queueCommandIfRendered(() -> new UiDiv.SetInnerHtmlCommand(getId(), innerHtml));
 	}
 }

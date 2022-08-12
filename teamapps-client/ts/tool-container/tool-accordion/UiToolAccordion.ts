@@ -31,7 +31,6 @@ import {TeamAppsUiComponentRegistry} from "../../TeamAppsUiComponentRegistry";
 import {OrderedDictionary} from "../../util/OrderedDictionary";
 import {UiComponent} from "../../UiComponent";
 import {UiToolAccordionButton} from "./UiToolAccordionButton";
-require("jquery-ui/ui/scroll-parent.js")
 
 export class UiToolAccordion extends AbstractUiToolContainer<UiToolAccordionConfig> implements UiToolAccordionCommandHandler, UiToolAccordionEventSource {
 

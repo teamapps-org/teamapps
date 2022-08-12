@@ -17,19 +17,17 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiCheckBoxCommandHandler, UiCheckBoxConfig, UiCheckBoxEventSource} from "../../generated/UiCheckBoxConfig";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiField} from "./UiField";
+import {UiCheckBoxCommandHandler, UiCheckBoxConfig, UiCheckBoxEventSource} from "../generated/UiCheckBoxConfig";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
+import {AbstractUiField, getHighestSeverity} from "./AbstractUiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {generateUUID, parseHtml} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {keyCodes} from "../trivial-components/TrivialCore";
-import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
-import {getHighestSeverity} from "../micro-components/FieldMessagesPopper";
-import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
+import {UiFieldMessageConfig} from "../generated/UiFieldMessageConfig";
+import {UiFieldMessageSeverity} from "../generated/UiFieldMessageSeverity";
 
 
-export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements UiCheckBoxEventSource, UiCheckBoxCommandHandler {
+export class UiCheckBox extends AbstractUiField<UiCheckBoxConfig, boolean> implements UiCheckBoxEventSource, UiCheckBoxCommandHandler {
 
 	private $main: HTMLElement;
 	private $check: HTMLElement;
@@ -66,7 +64,7 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 			this.toggleCommittedValue();
 		});
 		this.$check.addEventListener("keydown", (e) => {
-			if (e.keyCode === keyCodes.space) {
+			if (e.key === ' ') {
 				this.toggleCommittedValue();
 				e.preventDefault(); // no scroll-down!
 			}
@@ -167,4 +165,4 @@ export class UiCheckBox extends UiField<UiCheckBoxConfig, boolean> implements Ui
 
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiCheckBox", UiCheckBox);
+TeamAppsUiComponentRegistry.registerComponentClass("UiCheckBox", UiCheckBox);

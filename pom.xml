@@ -49,7 +49,6 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
         <slf4j-version>1.7.36</slf4j-version>
         <jackson-version>2.13.2</jackson-version>
         <jackson-version-patched>2.13.2.2</jackson-version-patched>

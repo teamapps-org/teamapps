@@ -214,4 +214,4 @@ export class UiComboBox extends UiField<UiComboBoxConfig, UiComboBoxTreeRecordCo
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiComboBox", UiComboBox);
+TeamAppsUiComponentRegistry.registerComponentClass("UiComboBox", UiComboBox);

@@ -86,4 +86,4 @@ export class UiLocalTimeField extends AbstractUiTimeField<UiLocalTimeFieldConfig
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiLocalTimeField", UiLocalTimeField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiLocalTimeField", UiLocalTimeField);

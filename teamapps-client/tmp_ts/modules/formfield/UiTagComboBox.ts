@@ -242,4 +242,4 @@ export class UiTagComboBox extends UiField<UiTagComboBoxConfig, UiComboBoxTreeRe
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiTagComboBox", UiTagComboBox);
+TeamAppsUiComponentRegistry.registerComponentClass("UiTagComboBox", UiTagComboBox);

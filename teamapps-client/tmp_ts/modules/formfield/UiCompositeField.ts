@@ -397,4 +397,4 @@ export class UiCompositeField extends UiField<UiCompositeFieldConfig, any> {
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiCompositeField", UiCompositeField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiCompositeField", UiCompositeField);

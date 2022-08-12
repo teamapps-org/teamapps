@@ -223,4 +223,4 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiCurrencyField", UiCurrencyField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiCurrencyField", UiCurrencyField);

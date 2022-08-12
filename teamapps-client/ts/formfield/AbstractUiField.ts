@@ -26,14 +26,14 @@ import {
 	UiFieldCommandHandler,
 	UiFieldConfig,
 	UiFieldEventSource
-} from "../../generated/UiFieldConfig";
+} from "../generated/UiFieldConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {AbstractUiComponent} from "../AbstractUiComponent";
-import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
-import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
-import {UiFieldMessagePosition} from "../../generated/UiFieldMessagePosition";
-import {UiFieldMessageVisibilityMode} from "../../generated/UiFieldMessageVisibilityMode";
+import {UiFieldMessageConfig} from "../generated/UiFieldMessageConfig";
+import {UiFieldMessageSeverity} from "../generated/UiFieldMessageSeverity";
+import {UiFieldMessagePosition} from "../generated/UiFieldMessagePosition";
+import {UiFieldMessageVisibilityMode} from "../generated/UiFieldMessageVisibilityMode";
 import {createPopper, Instance as Popper} from '@popperjs/core';
 import {bind} from "../util/Bind";
 import {parseHtml, prependChild} from "../Common";
@@ -49,7 +49,7 @@ interface FieldMessage {
 	$message: HTMLElement
 }
 
-export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> extends AbstractUiComponent<C> implements UiFieldCommandHandler, UiFieldEventSource {
+export abstract class AbstractUiField<C extends UiFieldConfig = UiFieldConfig, V = any> extends AbstractUiComponent<C> implements UiFieldCommandHandler, UiFieldEventSource {
 
 	public readonly onValueChanged: TeamAppsEvent<UiField_ValueChangedEvent> = new TeamAppsEvent();
 	public readonly onFocus: TeamAppsEvent<UiField_FocusEvent> = new TeamAppsEvent();
@@ -254,9 +254,9 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		return this.getEditingMode() === UiFieldEditingMode.EDITABLE || this.getEditingMode() === UiFieldEditingMode.EDITABLE_IF_FOCUSED;
 	}
 
-	public static defaultOnEditingModeChangedImpl(field: UiField<UiFieldConfig, any>, $focusableElementProvider: () => HTMLElement) {
-		field.getMainElement().classList.remove(...Object.values(UiField.editingModeCssClasses));
-		field.getMainElement().classList.add(UiField.editingModeCssClasses[field.getEditingMode()]);
+	public static defaultOnEditingModeChangedImpl(field: AbstractUiField<UiFieldConfig, any>, $focusableElementProvider: () => HTMLElement) {
+		field.getMainElement().classList.remove(...Object.values(AbstractUiField.editingModeCssClasses));
+		field.getMainElement().classList.add(AbstractUiField.editingModeCssClasses[field.getEditingMode()]);
 
 		const $focusableElement = $focusableElementProvider();
 		if ($focusableElement) {
@@ -415,4 +415,11 @@ export abstract class UiField<C extends UiFieldConfig = UiFieldConfig, V = any> 
 		}
 	}
 
+}
+
+export function getHighestSeverity (messages: UiFieldMessageConfig[], defaultSeverity: UiFieldMessageSeverity | null = UiFieldMessageSeverity.INFO) {
+	if (messages == null) {
+		return defaultSeverity;
+	}
+	return messages.reduce((highestSeverity, message) => (highestSeverity == null || message.severity > highestSeverity) ? message.severity : highestSeverity, defaultSeverity);
 }

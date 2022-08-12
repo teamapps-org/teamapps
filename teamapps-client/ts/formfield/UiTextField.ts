@@ -17,21 +17,20 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "./UiField";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {AbstractUiField} from "./AbstractUiField";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {escapeHtml, getAutoCompleteOffValue, parseHtml} from "../Common";
-import {UiTextFieldCommandHandler, UiTextFieldConfig, UiTextFieldEventSource} from "../../generated/UiTextFieldConfig";
-import {keyCodes} from "../trivial-components/TrivialCore";
+import {UiTextFieldCommandHandler, UiTextFieldConfig, UiTextFieldEventSource} from "../generated/UiTextFieldConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {
 	UiTextInputHandlingField_SpecialKeyPressedEvent,
 	UiTextInputHandlingField_TextInputEvent
-} from "../../generated/UiTextInputHandlingFieldConfig";
-import {UiSpecialKey} from "../../generated/UiSpecialKey";
+} from "../generated/UiTextInputHandlingFieldConfig";
+import {UiSpecialKey} from "../generated/UiSpecialKey";
 
-export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends UiField<C, string> implements UiTextFieldEventSource, UiTextFieldCommandHandler {
+export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extends AbstractUiField<C, string> implements UiTextFieldEventSource, UiTextFieldCommandHandler {
 
 	public readonly onTextInput: TeamAppsEvent<UiTextInputHandlingField_TextInputEvent> = new TeamAppsEvent<UiTextInputHandlingField_TextInputEvent>({throttlingMode: "debounce", delay: 250});
 	public readonly onSpecialKeyPressed: TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent> = new TeamAppsEvent<UiTextInputHandlingField_SpecialKeyPressedEvent>({throttlingMode: "debounce", delay: 250});
@@ -77,14 +76,14 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 			this.updateClearButton();
 		});
 		this.$field.addEventListener("keydown", (e) => {
-			if (e.keyCode === keyCodes.escape) {
+			if (e.key === 'Escape') {
 				this.displayCommittedValue(); // back to committedValue
 				this.fireTextInput();
 				this.$field.select();
 				this.onSpecialKeyPressed.fire({
 					key: UiSpecialKey.ESCAPE
 				});
-			} else if (e.keyCode === keyCodes.enter) {
+			} else if (e.key === 'Enter') {
 				if (this.getEditingMode() !== UiFieldEditingMode.READONLY) {
 					// this needs to be done here, additionally, since otherwise the onSpecialKeyPressed gets fired before the commit...
 					this.commit();
@@ -151,7 +150,7 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => this.$field);
+		AbstractUiField.defaultOnEditingModeChangedImpl(this, () => this.$field);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
@@ -168,4 +167,4 @@ export class UiTextField<C extends UiTextFieldConfig = UiTextFieldConfig> extend
 
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiTextField", UiTextField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiTextField", UiTextField);

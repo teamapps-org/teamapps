@@ -145,4 +145,4 @@ export class UiColorPicker extends UiField<UiColorPickerConfig, string> implemen
 
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiColorPicker", UiColorPicker);
+TeamAppsUiComponentRegistry.registerComponentClass("UiColorPicker", UiColorPicker);

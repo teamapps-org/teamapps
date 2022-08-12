@@ -19,6 +19,8 @@
  */
 class UiDiv extends UiComponent {
     UiComponent* content;
+    String innerHtml;
 
     command setContent(UiComponent* content);
+    command setInnerHtml(String innerHtml);
 }

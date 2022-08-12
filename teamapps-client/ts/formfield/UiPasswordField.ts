@@ -19,7 +19,7 @@
  */
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import md5 from "md5";
-import {UiPasswordFieldCommandHandler, UiPasswordFieldConfig, UiPasswordFieldEventSource} from "../../generated/UiPasswordFieldConfig";
+import {UiPasswordFieldCommandHandler, UiPasswordFieldConfig, UiPasswordFieldEventSource} from "../generated/UiPasswordFieldConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiTextField} from "./UiTextField";
 import {getAutoCompleteOffValue} from "../Common";
@@ -75,4 +75,4 @@ export class UiPasswordField extends UiTextField<UiPasswordFieldConfig> implemen
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiPasswordField", UiPasswordField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiPasswordField", UiPasswordField);

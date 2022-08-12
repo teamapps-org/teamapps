@@ -19,11 +19,11 @@
  */
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiDivConfig} from "../generated/UiDivConfig";
+import {UiDivConfig} from "./generated/UiDivConfig";
 import {parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
-import {UiDivCommandHandler} from "../generated/UiDivConfig";
+import {UiDivCommandHandler} from "./generated/UiDivConfig";
 
 export class UiDiv extends AbstractUiComponent<UiDivConfig> implements UiDivCommandHandler {
 
@@ -32,11 +32,16 @@ export class UiDiv extends AbstractUiComponent<UiDivConfig> implements UiDivComm
 	constructor(config: UiDivConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiDiv"></div>`);
+		this.setInnerHtml(config.innerHtml);
 		this.setContent(config.content);
 	}
 
 	public doGetMainElement(): HTMLElement {
 		return this.$main;
+	}
+
+	setInnerHtml(innerHtml: string): void {
+		this.$main.innerHTML = innerHtml;
 	}
 
 	setContent(content: unknown): void {

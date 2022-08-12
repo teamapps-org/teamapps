@@ -47,8 +47,6 @@ import {QueryFunctionAdder} from "./generated/QueryFunctionAdder";
 import {UiQuery} from "./generated/UiQuery";
 import {componentEventDescriptors, staticComponentEventDescriptors} from "./generated/ComponentEventDescriptors";
 
-declare var __TEAMAPPS_VERSION__: string;
-
 function isComponent(o: UiClientObject<UiClientObjectConfig>): o is UiComponent {
 	return o != null && (o as any).getMainElement;
 }
@@ -95,7 +93,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			clientTokens: UiRootPanel.getClientTokens(),
 			location: createUiLocation(),
 			clientParameters: clientParameters,
-			teamAppsVersion: __TEAMAPPS_VERSION__
+			teamAppsVersion: '__TEAMAPPS_VERSION__'
 		});
 
 		let connectionListener: TeamAppsConnectionListener = {

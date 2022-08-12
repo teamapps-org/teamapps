@@ -17,16 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "./UiField";
+import {AbstractUiField} from "./AbstractUiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
-import {UiLabel_ClickedEvent, UiLabelCommandHandler, UiLabelConfig, UiLabelEventSource} from "../../generated/UiLabelConfig";
+import {UiLabel_ClickedEvent, UiLabelCommandHandler, UiLabelConfig, UiLabelEventSource} from "../generated/UiLabelConfig";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
 
-export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEventSource, UiLabelCommandHandler {
+export class UiLabel extends AbstractUiField<UiLabelConfig, string> implements UiLabelEventSource, UiLabelCommandHandler {
 	public readonly onClicked: TeamAppsEvent<UiLabel_ClickedEvent> = new TeamAppsEvent<UiLabel_ClickedEvent>();
 
 	private $main: HTMLElement;
@@ -43,7 +43,7 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 		this.$main.addEventListener('click',() => {
 			this.onClicked.fire({});
 			if (this.targetComponent != null) {
-				if (this.targetComponent instanceof UiField) {
+				if (this.targetComponent instanceof AbstractUiField) {
 					this.targetComponent.focus();
 				}
 			}
@@ -105,4 +105,4 @@ export class UiLabel extends UiField<UiLabelConfig, string> implements UiLabelEv
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiLabel", UiLabel);
+TeamAppsUiComponentRegistry.registerComponentClass("UiLabel", UiLabel);

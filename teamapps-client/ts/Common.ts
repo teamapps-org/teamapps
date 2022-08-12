@@ -840,23 +840,9 @@ export function selectElementContents(domElement: Node, start?: number, end?: nu
 }
 
 export function parseHtml<E extends HTMLElement>(htmlString: string): E {
-	// let tagStartCount = (htmlString.match(/<\w+/g) || []).length;
-	// let tagEndCount = (htmlString.match(/<\//g) || []).length;
-	// if (tagStartCount > 1 && tagStartCount !== tagEndCount) {
-	// 	throw new Error("HTML strings need to have explicit closing tags! " + htmlString);
-	// }
-	// const node: E = new DOMParser().parseFromString(htmlString, 'text/html').querySelector('html > * > *');
-	// node.remove(); // detach from DOMParser <body>!
-	// return node;
-
-	// let tmpl = document.createElement('template');
-	// tmpl.innerHTML = htmlString;
-	// return tmpl.content.cloneNode(true).firstChild as E;
-	htmlString = htmlString.trim();
-	if (!htmlString.startsWith("<") || !htmlString.endsWith(">")) {
-		htmlString = "<div>" + htmlString + "</div>";
-	}
-	return $(htmlString)[0] as E;
+	let tmpl = document.createElement('template');
+	tmpl.innerHTML = htmlString;
+	return tmpl.content.cloneNode(true).firstChild as E;
 }
 
 export function parseSvg<E extends Element>(htmlString: string): E {
@@ -1426,4 +1412,16 @@ export function getScrollParent(element, includeHidden) {
 	}
 
 	return document.body;
+}
+
+export function allUrlParameters() {
+	const query = location.search.substr(1);
+	const result = {};
+	query.split("&").forEach(function (part) {
+		let [key, value] = part.split("=");
+		if (value != null) {
+			result[key] = decodeURIComponent(value);
+		}
+	});
+	return result;
 }

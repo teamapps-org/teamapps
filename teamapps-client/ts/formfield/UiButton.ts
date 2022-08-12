@@ -17,27 +17,26 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiItemView} from "../UiItemView";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 import {UiDropDown} from "../micro-components/UiDropDown";
-import {UiTemplateConfig} from "../../generated/UiTemplateConfig";
+import {UiTemplateConfig} from "../generated/UiTemplateConfig";
 import {
 	UiButton_ClickedEvent,
 	UiButton_DropDownOpenedEvent,
 	UiButtonCommandHandler,
 	UiButtonConfig,
 	UiButtonEventSource
-} from "../../generated/UiButtonConfig";
-import {UiField} from "./UiField";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+} from "../generated/UiButtonConfig";
+import {AbstractUiField} from "./AbstractUiField";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {bind} from "../util/Bind";
-import {UiFieldMessageConfig} from "../../generated/UiFieldMessageConfig";
+import {UiFieldMessageConfig} from "../generated/UiFieldMessageConfig";
 import {parseHtml} from "../Common";
 import {UiComponent} from "../UiComponent";
 
-export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonEventSource, UiButtonCommandHandler {
+export class UiButton extends AbstractUiField<UiButtonConfig, void> implements UiButtonEventSource, UiButtonCommandHandler {
 
 	public readonly onClicked: TeamAppsEvent<UiButton_ClickedEvent> = new TeamAppsEvent();
 	public readonly onDropDownOpened: TeamAppsEvent<UiButton_DropDownOpenedEvent> = new TeamAppsEvent();
@@ -101,13 +100,13 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 	}
 
 	setDropDownComponent(component: UiComponent): void {
-		if (this.dropDownComponent != null && this.dropDownComponent instanceof UiItemView) {
-			this.dropDownComponent.onItemClicked.removeListener(this.closeDropDown);
+		if (this.dropDownComponent != null && (this.dropDownComponent as any).onItemClicked != null) {
+			(this.dropDownComponent as any).onItemClicked.removeListener(this.closeDropDown);
 		}
 		this.dropDownComponent = component;
 		if (component != null) {
-			if (this.dropDownComponent instanceof UiItemView) {
-				this.dropDownComponent.onItemClicked.addListener(this.closeDropDown);
+			if ((this.dropDownComponent as any).onItemClicked != null) {
+				(this.dropDownComponent as any).onItemClicked.addListener(this.closeDropDown);
 			}
 			this.dropDown.setContentComponent(this.dropDownComponent);
 		} else {
@@ -171,7 +170,7 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => this.$main);
+		AbstractUiField.defaultOnEditingModeChangedImpl(this, () => this.$main);
 	}
 
 	public getReadOnlyHtml(value: void, availableWidth: number): string {
@@ -197,4 +196,4 @@ export class UiButton extends UiField<UiButtonConfig, void> implements UiButtonE
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiButton", UiButton);
+TeamAppsUiComponentRegistry.registerComponentClass("UiButton", UiButton);

@@ -92,13 +92,6 @@ export class FieldMessagesPopper {
 	}
 }
 
-export function getHighestSeverity (messages: UiFieldMessageConfig[], defaultSeverity: UiFieldMessageSeverity | null = UiFieldMessageSeverity.INFO) {
-	if (messages == null) {
-		return defaultSeverity;
-	}
-	return messages.reduce((highestSeverity, message) => (highestSeverity == null || message.severity > highestSeverity) ? message.severity : highestSeverity, defaultSeverity);
-}
-
 export function createMessageElement(message: UiFieldMessageConfig) {
 	const severityCssClass = `field-message-${UiFieldMessageSeverity[message.severity].toLowerCase()}`;
 	const positionCssClass = `position-${UiFieldMessagePosition[message.position].toLowerCase()}`;

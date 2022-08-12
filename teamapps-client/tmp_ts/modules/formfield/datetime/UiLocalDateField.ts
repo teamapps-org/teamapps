@@ -258,5 +258,5 @@ export class UiLocalDateField extends UiField<UiLocalDateFieldConfig, UiLocalDat
 
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiLocalDateField", UiLocalDateField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiLocalDateField", UiLocalDateField);
 

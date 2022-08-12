@@ -523,4 +523,4 @@ class UploadItem {
 
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiFileField", UiFileField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiFileField", UiFileField);

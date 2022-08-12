@@ -570,4 +570,4 @@ export class UiRichTextEditor extends UiField<UiRichTextEditorConfig, string> im
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiRichTextEditor", UiRichTextEditor);
+TeamAppsUiComponentRegistry.registerComponentClass("UiRichTextEditor", UiRichTextEditor);

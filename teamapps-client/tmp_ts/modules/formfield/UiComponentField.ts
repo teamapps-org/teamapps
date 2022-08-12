@@ -89,4 +89,4 @@ export class UiComponentField extends UiField<UiComponentFieldConfig, void> impl
 
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiComponentField", UiComponentField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiComponentField", UiComponentField);

@@ -90,4 +90,4 @@ export class UiInstantDateTimeField extends AbstractUiDateTimeField<UiInstantDat
 
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiInstantDateTimeField", UiInstantDateTimeField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiInstantDateTimeField", UiInstantDateTimeField);

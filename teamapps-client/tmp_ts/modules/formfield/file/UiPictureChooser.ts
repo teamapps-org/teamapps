@@ -286,4 +286,4 @@ export function formatString(s: string, ...params: any[]) {
 	return s;
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiPictureChooser", UiPictureChooser);
+TeamAppsUiComponentRegistry.registerComponentClass("UiPictureChooser", UiPictureChooser);

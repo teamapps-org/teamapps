@@ -17,16 +17,16 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiField} from "./UiField";
-import {UiClientRecordConfig} from "../../generated/UiClientRecordConfig";
+import {AbstractUiField} from "./AbstractUiField";
+import {UiClientRecordConfig} from "../generated/UiClientRecordConfig";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {UiTemplateField_ClickedEvent, UiTemplateFieldCommandHandler, UiTemplateFieldConfig, UiTemplateFieldEventSource} from "../../generated/UiTemplateFieldConfig";
+import {UiTemplateField_ClickedEvent, UiTemplateFieldCommandHandler, UiTemplateFieldConfig, UiTemplateFieldEventSource} from ".././generated/UiTemplateFieldConfig";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {parseHtml, Renderer} from "../Common";
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientRecordConfig> implements UiTemplateFieldCommandHandler, UiTemplateFieldEventSource {
+export class UiTemplateField extends AbstractUiField<UiTemplateFieldConfig, UiClientRecordConfig> implements UiTemplateFieldCommandHandler, UiTemplateFieldEventSource {
 
     public readonly onClicked: TeamAppsEvent<UiTemplateField_ClickedEvent> = new TeamAppsEvent();
 
@@ -82,4 +82,4 @@ export class UiTemplateField extends UiField<UiTemplateFieldConfig, UiClientReco
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiTemplateField", UiTemplateField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiTemplateField", UiTemplateField);

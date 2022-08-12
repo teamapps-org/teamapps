@@ -35,8 +35,8 @@ import org.teamapps.ux.component.ClientObject;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.animation.EntranceAnimation;
 import org.teamapps.ux.component.animation.ExitAnimation;
+import org.teamapps.ux.component.div.Div;
 import org.teamapps.ux.component.field.Button;
-import org.teamapps.ux.component.field.DisplayField;
 import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.linkbutton.LinkButton;
 import org.teamapps.ux.component.notification.Notification;
@@ -608,9 +608,8 @@ public class SessionContext {
 
 		VerticalLayout verticalLayout = new VerticalLayout();
 
-		DisplayField messageField = new DisplayField(false, false);
+		Div messageField = new Div(message);
 		messageField.setCssStyle("font-size", "110%");
-		messageField.setValue(message);
 		verticalLayout.addComponentFillRemaining(messageField);
 
 		Button<?> refreshButton = new Button<>(null, refreshButtonCaption);

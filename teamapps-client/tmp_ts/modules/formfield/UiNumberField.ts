@@ -396,4 +396,4 @@ export class UiNumberField extends UiField<UiNumberFieldConfig, number> implemen
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiNumberField", UiNumberField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiNumberField", UiNumberField);

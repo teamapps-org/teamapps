@@ -17,15 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {UiFieldEditingMode} from "../../generated/UiFieldEditingMode";
-import {UiDisplayFieldCommandHandler, UiDisplayFieldConfig, UiDisplayFieldEventSource} from "../../generated/UiDisplayFieldConfig";
-import {UiField} from "./UiField";
+import {UiFieldEditingMode} from "../generated/UiFieldEditingMode";
+import {UiDisplayFieldCommandHandler, UiDisplayFieldConfig, UiDisplayFieldEventSource} from "../generated/UiDisplayFieldConfig";
+import {AbstractUiField} from "./AbstractUiField";
 import {TeamAppsUiContext} from "../TeamAppsUiContext";
 import {escapeHtml, parseHtml, removeTags} from "../Common";
 import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
 
 
-export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implements UiDisplayFieldEventSource, UiDisplayFieldCommandHandler {
+export class UiDisplayField extends AbstractUiField<UiDisplayFieldConfig, string> implements UiDisplayFieldEventSource, UiDisplayFieldCommandHandler {
 
 	private _$field: HTMLElement;
 	private showHtml: boolean;
@@ -84,7 +84,7 @@ export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implem
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {
-		UiField.defaultOnEditingModeChangedImpl(this, () => null);
+		AbstractUiField.defaultOnEditingModeChangedImpl(this, () => null);
 	}
 
 	public getReadOnlyHtml(value: string, availableWidth: number): string {
@@ -110,4 +110,4 @@ export class UiDisplayField extends UiField<UiDisplayFieldConfig, string> implem
 	}
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiDisplayField", UiDisplayField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiDisplayField", UiDisplayField);

@@ -97,4 +97,4 @@ export class UiLocalDateTimeField extends AbstractUiDateTimeField<UiLocalDateTim
 
 }
 
-TeamAppsUiComponentRegistry.registerFieldClass("UiLocalDateTimeField", UiLocalDateTimeField);
+TeamAppsUiComponentRegistry.registerComponentClass("UiLocalDateTimeField", UiLocalDateTimeField);
