@@ -31,7 +31,7 @@ classConfigDefinition(c) ::= <<
 import {UiCommand} from "./UiCommand";
 import {UiEvent} from "./UiEvent";
 import {UiQuery} from "./UiQuery";
-import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 <c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
@@ -105,7 +105,7 @@ interfaceConfigDefinition(c) ::= <<
 
 import {UiEvent} from "./UiEvent";
 import {UiCommand} from "./UiCommand";
-import {TeamAppsEvent} from "../modules/util/TeamAppsEvent";
+import {TeamAppsEvent} from "../util/TeamAppsEvent";
 <c.allReferencedClassesAndInterfaces:{c|import {<c.Identifier>Config\} from "./<c.Identifier>Config";}; separator="\n">
 <c.allReferencedEnums:{e|import {<e.Identifier>\} from "./<e.Identifier>";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
@@ -165,10 +165,10 @@ commandExecutor(nonStaticCommands, staticCommands, name) ::= <<
 <typeScriptFilePrelude()>
 
 <if (staticCommands)>
-import {UiClientObject} from "../modules/UiClientObject";
+import {UiClientObject} from "../UiClientObject";
 import {UiClientObjectReference} from "./UiClientObjectConfig";
-import {TeamAppsUiComponentRegistry} from "../modules/TeamAppsUiComponentRegistry";
-import {TeamAppsUiContext} from "../modules/TeamAppsUiContext";
+import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
+import {TeamAppsUiContext} from "../TeamAppsUiContext";
 <endif>
 
 export class <name> {

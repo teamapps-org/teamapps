@@ -1,43 +1,38 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes, shrink-to-fit=no">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=10, user-scalable=yes, shrink-to-fit=no">
     <title></title>
 
-    <script>
-		(function () {
-			function allUrlParameters() {
-				query = location.search.substr(1);
-				let result = {};
-				query.split("&").forEach(function(part) {
-					let [key, value] = part.split("=");
-					if (value != null) {
-						result[key] = decodeURIComponent(value);
-					}
-				});
-				return result;
-			}
+    <script type="module">
+        import {TeamAppsUiManager, allUrlParameters} from "./dist/teamapps-core.js"
 
-			window.$ = undefined;
-			window.addEventListener('load', function() {
-				var appServerUrl = allUrlParameters()["appServerUrl"] || "<%= htmlWebpackPlugin.options.appServerUrl %>";
-                var webSocketUrl;
-                if (appServerUrl) {
-	                webSocketUrl = appServerUrl.replace("https://", "wss://").replace("http://", "ws://") + "/communication";
-			    } else {
-                    var port = window.location.port || (window.location.protocol === "https:" ? "443" : "80");
-                    webSocketUrl = (window.location.protocol === "https:" ? "wss:" : "ws:") + "//" + window.location.hostname + ':' + port + "/communication";
+        function allUrlParameters() {
+            const query = location.search.substr(1);
+            const result = {};
+            query.split("&").forEach(function (part) {
+                let [key, value] = part.split("=");
+                if (value != null) {
+                    result[key] = decodeURIComponent(value);
                 }
+            });
+            return result;
+        }
 
-				var contextClass = teamapps[allUrlParameters()["teamAppsContext"]] || teamapps.DefaultTeamAppsUiContext;
-
-				window.teamAppsContext = new contextClass(webSocketUrl, allUrlParameters());
-			});
-		})();
+        window.addEventListener('load', function () {
+            const appServerUrl = allUrlParameters()["appServerUrl"];
+            let webSocketUrl;
+            if (appServerUrl) {
+                webSocketUrl = appServerUrl.replace("https://", "wss://").replace("http://", "ws://") + "/communication";
+            } else {
+                const port = window.location.port || (window.location.protocol === "https:" ? "443" : "80");
+                webSocketUrl = (window.location.protocol === "https:" ? "wss:" : "ws:") + "//" + window.location.hostname + ':' + port + "/communication";
+            }
+            window.teamAppsContext = new TeamAppsUiManager(webSocketUrl, allUrlParameters());
+        });
     </script>
-
 </head>
 <body>
 </body>

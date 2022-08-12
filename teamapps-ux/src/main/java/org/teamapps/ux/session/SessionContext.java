@@ -20,6 +20,7 @@
 package org.teamapps.ux.session;
 
 import com.ibm.icu.util.ULocale;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.common.format.Color;
@@ -40,7 +41,6 @@ import org.teamapps.ux.component.flexcontainer.VerticalLayout;
 import org.teamapps.ux.component.linkbutton.LinkButton;
 import org.teamapps.ux.component.notification.Notification;
 import org.teamapps.ux.component.notification.NotificationPosition;
-import org.teamapps.ux.component.popup.Popup;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.rootpanel.WakeLock;
 import org.teamapps.ux.component.template.Template;
@@ -53,11 +53,12 @@ import org.teamapps.ux.icon.TeamAppsIconBundle;
 import org.teamapps.ux.json.UxJacksonSerializationTemplate;
 import org.teamapps.ux.resource.Resource;
 
-import jakarta.servlet.http.HttpSession;
-
 import java.io.File;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -418,14 +419,6 @@ public class SessionContext {
 		this.sessionConfiguration = config;
 		queueCommand(new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
 		updateSessionMessageWindows();
-	}
-
-	public void showPopupAtCurrentMousePosition(Popup popup) {
-		queueCommand(new UiRootPanel.ShowPopupAtCurrentMousePositionCommand(popup.createUiReference()));
-	}
-
-	public void showPopup(Popup popup) {
-		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiReference()));
 	}
 
 	public ZoneId getTimeZone() {
