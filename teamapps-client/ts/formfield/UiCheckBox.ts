@@ -85,7 +85,7 @@ export class UiCheckBox extends AbstractUiField<UiCheckBoxConfig, boolean> imple
 	}
 
 	setCaption(caption: string): void {
-		if (!this._config.htmlEnabled) {
+		if (!this.config.htmlEnabled) {
 			this.$label.textContent = caption || '';
 		} else {
 			this.$label.innerHTML = caption || '';
@@ -117,7 +117,7 @@ export class UiCheckBox extends AbstractUiField<UiCheckBoxConfig, boolean> imple
 		if (highestMessageSeverity > UiFieldMessageSeverity.INFO) {
 			this.$style.textContent = ''; // styles are defined by message severity styles
 		} else {
-			this.$style.textContent = `[data-teamapps-id=${this._config.id}] > .checkbox-check {
+			this.$style.textContent = `[data-teamapps-id=${this.config.id}] > .checkbox-check {
 			background-color: ${(this.backgroundColor ?? '')};
 			color: ${(this.checkColor ?? '')};
 			border: 1px solid ${(this.borderColor ?? '')};  
@@ -151,7 +151,7 @@ export class UiCheckBox extends AbstractUiField<UiCheckBoxConfig, boolean> imple
 	public getReadOnlyHtml(value: boolean, availableWidth: number): string {
 		return `<div class="UiCheckBox">
                     <div class="checkbox-check">${value ? '\ue013' : '\u200b'}</div>
-                    <div class="checkbox-label">${this._config.caption /*TODO make caption a changeable instance field*/ || ""}</div>
+                    <div class="checkbox-label">${this.config.caption /*TODO make caption a changeable instance field*/ || ""}</div>
                 </div>`;
 	}
 

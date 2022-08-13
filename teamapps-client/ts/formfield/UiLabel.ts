@@ -93,7 +93,7 @@ export class UiLabel extends AbstractUiField<UiLabelConfig, string> implements U
 	}
 
 	protected displayCommittedValue(): void {
-		this.$caption.textContent = this.getCommittedValue() || this._config.caption || "";
+		this.$caption.textContent = this.getCommittedValue() || this.config.caption || "";
 	}
 
 	protected onEditingModeChanged(editingMode: UiFieldEditingMode): void {

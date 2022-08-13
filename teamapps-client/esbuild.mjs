@@ -40,7 +40,7 @@ esbuild.build({
         console.log("Compressing result files...");
         await compressFile("dist/teamapps-core.js");
         await compressFile("dist/teamapps-core.css");
-        console.log("⚡ Build complete! ⚡")
+        console.log("⚡ esbuild complete! ⚡")
     })
     .catch(() => process.exit(1));
 

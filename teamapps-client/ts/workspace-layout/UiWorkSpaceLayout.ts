@@ -123,7 +123,7 @@ export class UiWorkSpaceLayout extends AbstractUiComponent<UiWorkSpaceLayoutConf
 		if (this.isRootWindow) {
 			let childWindow = window.open("", childWindowId);
 			let childWindowViewContainer = new ChildWindowViewContainer(childWindow, childWindowId, messagePort, initialViewInfo, this,
-				this._context, this._config.newWindowBackgroundImage, this._config.newWindowBlurredBackgroundImage, {
+				this._context, this.config.newWindowBackgroundImage, this.config.newWindowBlurredBackgroundImage, {
 					handleChildWindowCreated: (childWindowId, messagePort, initialViewInfo) => this.handleChildWindowCreated(childWindowId, messagePort, initialViewInfo),
 					handleChildWindowCreationFailed: (viewName: string) => this.handleChildWindowCreationFailed(viewName),
 					handleViewDroppedFromOtherWindow: (sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition) => this.handleViewDroppedFromOtherWindow(sourceWindowId, targetWindowId, viewInfo, existingViewName, relativePosition),

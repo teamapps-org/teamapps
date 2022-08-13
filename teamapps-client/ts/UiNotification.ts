@@ -146,7 +146,7 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 	}
 
 	public update(config: UiNotificationConfig) {
-		this._config = config;
+		this.config = config;
 		this.$main.style.backgroundColor = config.backgroundColor;
 		// this.$main.style.borderColor = createUiColorCssString(config.borderColor, "#00000022");
 		this.$contentContainer.style.padding = createUiSpacingValueCssString(config.padding);
@@ -179,12 +179,12 @@ export class UiNotification extends AbstractUiComponent<UiNotificationConfig> im
 		if (this.closeTimeout != null) {
 			window.clearTimeout(this.closeTimeout);
 		}
-		if (this._config.displayTimeInMillis > 0) {
+		if (this.config.displayTimeInMillis > 0) {
 			this.closeTimeout = window.setTimeout(() => {
 				this.close();
 				this.onClosed.fire({byUser: false});
 				this.onClosedAnyWay.fire();
-			}, this._config.displayTimeInMillis);
+			}, this.config.displayTimeInMillis);
 		}
 	}
 

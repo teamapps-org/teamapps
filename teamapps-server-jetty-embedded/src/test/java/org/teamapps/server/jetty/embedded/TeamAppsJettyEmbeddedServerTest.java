@@ -19,10 +19,9 @@
  */
 package org.teamapps.server.jetty.embedded;
 
-import org.teamapps.icon.material.MaterialIcon;
-import org.teamapps.ux.component.field.Button;
+import org.teamapps.ux.component.div.Div;
+import org.teamapps.ux.component.dummy.DummyComponent;
 import org.teamapps.ux.component.rootpanel.RootPanel;
-import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
@@ -31,16 +30,16 @@ public class TeamAppsJettyEmbeddedServerTest {
 	public static void main(String[] args) throws Exception {
 
 		WebController controller = (SessionContext sessionContext) -> {
-			sessionContext.onDestroyed.addListener(uiSessionClosingReason -> System.out.println("Session destroyed: " + uiSessionClosingReason));
-
-			sessionContext.showNotification(MaterialIcon.MESSAGE, "Hello World");
 			RootPanel rootPanel = sessionContext.addRootPanel();
-			Button<BaseTemplateRecord> button = Button.create("destroy session!");
-			button.onClicked.addListener(() -> {
-				sessionContext.setFavicon(MaterialIcon.SMS);
-				sessionContext.setTitle("My new title " + System.currentTimeMillis());
-			});
-			rootPanel.setContent(button);
+			rootPanel.setCssStyle("background-color", "blue");
+			rootPanel.setCssStyle("ui-div", "background-color", "green");
+			Div div = new Div(new DummyComponent());
+			div.setAttribute("blah", "blub");
+			div.toggleCssClass("xxxx", true);
+			div.toggleCssClass("slot", "asdflksjdf", true);
+			div.setCssStyle("font-size", "200%");
+			div.setCssStyle("slot", "color", "red");
+			rootPanel.setContent(div);
 		};
 
 		TeamAppsJettyEmbeddedServer jettyServer = new TeamAppsJettyEmbeddedServer(controller, 8082);

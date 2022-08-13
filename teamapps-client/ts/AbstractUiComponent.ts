@@ -24,12 +24,13 @@ import {generateUUID} from "./Common";
 import {debounce, DebounceMode} from "./util/debounce";
 import {DeferredExecutor} from "./util/DeferredExecutor";
 import {UiComponent} from "./UiComponent";
+import {StyleManager} from "./util/StyleManager";
 
 export abstract class AbstractUiComponent<C extends UiComponentConfig = UiComponentConfig> implements UiComponent<C> {
 
 	public readonly onVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
 	public readonly deFactoVisibilityChanged: TeamAppsEvent<boolean> = new TeamAppsEvent();
-	public readonly onResized: TeamAppsEvent<{width: number; height: number}> = new TeamAppsEvent();
+	public readonly onResized: TeamAppsEvent<{ width: number; height: number }> = new TeamAppsEvent();
 
 	private width: number = 0;
 	private height: number = 0;
@@ -38,21 +39,25 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 
 	public displayedDeferredExecutor = new DeferredExecutor();
 
-	constructor(protected _config: C,
-	            protected _context: TeamAppsUiContext) {
-		if (_config.id == null) {
-			_config.id = generateUUID();
+	protected styleManager: StyleManager;
+
+	constructor(protected config: C, protected _context: TeamAppsUiContext) {
+		if (config.id == null) {
+			config.id = generateUUID();
 		}
 
-		this.visible = _config.visible ?? false;
+		this.styleManager = new StyleManager(() => this.getMainElement(), `[data-teamapps-id=${this.getId()}]`, `[data-teamapps-id=${this.getId()}]`);
+		this.displayedDeferredExecutor.invokeOnceWhenReady(() => this.styleManager.apply());
+
+		this.visible = config.visible ?? false;
 	}
 
 	public getId(): string {
-		return this._config.id ?? "";
+		return this.config.id ?? "";
 	}
 
 	public getTeamAppsType(): string {
-		return this._config._type;
+		return this.config._type;
 	}
 
 	protected reLayout(width: number, height: number): void {
@@ -62,7 +67,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		}
 		this.width = width;
 		this.height = height;
-		this.displayedDeferredExecutor.ready = hasSize; // do this after onResize gets called, since
+		this.displayedDeferredExecutor.ready = hasSize;
 		if (hasSize) {
 			console.debug("resize: " + this.getId());
 			this.onResized.fire({width: this.width, height: this.height});
@@ -89,6 +94,7 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 	}
 
 	private firstTimeGetMainElementCalled = true;
+
 	/**
 	 * @return The main DOM element of this component.
 	 */
@@ -98,25 +104,25 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		if (this.firstTimeGetMainElementCalled) {
 			this.firstTimeGetMainElementCalled = false;
 
-			element.setAttribute("data-teamapps-id", this._config.id);
+			element.setAttribute("data-teamapps-id", this.config.id);
 
-			if (this._config.debuggingId != null) {
-				element.setAttribute("data-teamapps-debugging-id", this._config.debuggingId);
+			if (this.config.debuggingId != null) {
+				element.setAttribute("data-teamapps-debugging-id", this.config.debuggingId);
 			}
 
 			element.classList.toggle("invisible-component", this.visible == null ? false : !this.visible);
-			if (this._config.stylesBySelector != null) { // might be null when used via JavaScript API!
-				Object.keys(this._config.stylesBySelector).forEach(selector => this.setStyle(selector, this._config.stylesBySelector[selector]));
+			if (this.config.stylesBySelector != null) { // might be null when used via JavaScript API!
+				Object.keys(this.config.stylesBySelector).forEach(selector => this.setStyle(selector, this.config.stylesBySelector[selector]));
 			}
-			if (this._config.classNamesBySelector != null) { // might be null when used via JavaScript API!
-				Object.keys(this._config.classNamesBySelector).forEach(selector => this.setClassNames(selector, this._config.classNamesBySelector[selector]));
+			if (this.config.classNamesBySelector != null) { // might be null when used via JavaScript API!
+				Object.keys(this.config.classNamesBySelector).forEach(selector => this.setClassNames(selector, this.config.classNamesBySelector[selector]));
 			}
-			if (this._config.attributesBySelector != null) { // might be null when used via JavaScript API!
-				Object.keys(this._config.attributesBySelector).forEach(selector => this.setAttributes(selector, this._config.attributesBySelector[selector]));
+			if (this.config.attributesBySelector != null) { // might be null when used via JavaScript API!
+				Object.keys(this.config.attributesBySelector).forEach(selector => this.setAttributes(selector, this.config.attributesBySelector[selector]));
 			}
 
 			let relayoutCalled = false;
-			let debouncedRelayout: (size?: {width: number, height: number}) => void = debounce((size?: {width: number, height: number}) => {
+			let debouncedRelayout: (size?: { width: number, height: number }) => void = debounce((size?: { width: number, height: number }) => {
 				relayoutCalled = true;
 				this.reLayout(size.width, size.height);
 			}, 200, DebounceMode.BOTH);
@@ -161,44 +167,37 @@ export abstract class AbstractUiComponent<C extends UiComponentConfig = UiCompon
 		}
 	}
 
-	// TODO change this implementation to generate style sheets instead of setting styles!
-	public setStyle(selector:string, style: {[property: string]: string}) {
-		let targetElement = this.getElementForSelector(selector);
-		if (targetElement.length === 0) {
-			console.error("Cannot set style on non-existing element. Selector: " + selector);
-		} else {
-			targetElement.forEach(t => Object.assign(t.style, style));
-		}
+	public setStyle(selector: string, style: { [property: string]: string }) {
+		this.styleManager.setStyle(selector, style, true);
+		this.styleManager.apply()
 	}
 
-	public setClassNames(selector:string, classNames: {[className: string]: boolean}) {
+	public setClassNames(selector: string, classNames: { [className: string]: boolean }) {
 		let targetElement = this.getElementForSelector(selector);
 		if (targetElement.length === 0) {
 			console.error("Cannot set css class on non-existing element. Selector: " + selector);
-		} else {
-			targetElement.forEach(el => {
-				for (let [className, enabled] of Object.entries(classNames)) {
-					el.classList.toggle(className, enabled);
-				}
-			});
 		}
+		targetElement.forEach(el => {
+			for (let [className, enabled] of Object.entries(classNames)) {
+				el.classList.toggle(className, enabled);
+			}
+		});
 	}
 
-	public setAttributes(selector:string, attributes: {[property: string]: string}) {
+	public setAttributes(selector: string, attributes: { [property: string]: string }) {
 		let targetElement = this.getElementForSelector(selector);
 		if (targetElement.length === 0) {
 			console.error("Cannot set attribute on non-existing element. Selector: " + selector);
-		} else {
-			targetElement.forEach(el => {
-				for (let [attribute, value] of Object.entries(attributes)) {
-					if (value === "__ta-deleted-attribute__") {
-						el.removeAttribute(attribute);
-					} else {
-						el.setAttribute(attribute, value);
-					}
-				}
-			});
 		}
+		targetElement.forEach(el => {
+			for (let [attribute, value] of Object.entries(attributes)) {
+				if (value === "__ta-deleted-attribute__") {
+					el.removeAttribute(attribute);
+				} else {
+					el.setAttribute(attribute, value);
+				}
+			}
+		});
 	}
 
 	private getElementForSelector(selector: string) {

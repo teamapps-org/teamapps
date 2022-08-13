@@ -61,8 +61,8 @@ export class UiNumberField extends AbstractUiField<UiNumberFieldConfig, number> 
 
 	protected initialize(config: UiNumberFieldConfig, context: TeamAppsUiContext) {
 		this.numberFormat = new Intl.NumberFormat(config.locale, {
-			minimumFractionDigits: this._config.precision,
-			maximumFractionDigits: this._config.precision,
+			minimumFractionDigits: this.config.precision,
+			maximumFractionDigits: this.config.precision,
 			useGrouping: true
 		});
 		this.numberParser = new NumberParser(config.locale);
@@ -331,10 +331,10 @@ export class UiNumberField extends AbstractUiField<UiNumberFieldConfig, number> 
 
 	setLocale(locale: string): void {
 		let value = this.getTransientValue();
-		this._config.locale = locale;
+		this.config.locale = locale;
 		this.numberFormat = new Intl.NumberFormat(locale, {
-			minimumFractionDigits: this._config.precision,
-			maximumFractionDigits: this._config.precision,
+			minimumFractionDigits: this.config.precision,
+			maximumFractionDigits: this.config.precision,
 			useGrouping: true
 		});
 		this.numberParser = new NumberParser(locale);
@@ -342,10 +342,10 @@ export class UiNumberField extends AbstractUiField<UiNumberFieldConfig, number> 
 	}
 
 	setPrecision(precision: number): void {
-		this._config.precision = precision;
-		this.numberFormat = new Intl.NumberFormat(this._config.locale, {
-			minimumFractionDigits: this._config.precision,
-			maximumFractionDigits: this._config.precision,
+		this.config.precision = precision;
+		this.numberFormat = new Intl.NumberFormat(this.config.locale, {
+			minimumFractionDigits: this.config.precision,
+			maximumFractionDigits: this.config.precision,
 			useGrouping: true
 		});
 		this.ensureDecimalInput();

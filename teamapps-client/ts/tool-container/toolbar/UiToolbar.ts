@@ -97,7 +97,7 @@ export class UiToolbar extends AbstractUiToolContainer<UiToolbarConfig> implemen
 	}
 
 	private createDropDownAccordion(): UiToolAccordion {
-		let accordionConfig = $.extend({}, this._config, {
+		let accordionConfig = $.extend({}, this.config, {
 			buttonGroups: [...this.leftButtonGroups, ...this.rightButtonGroups].map(group => $.extend({}, group.getConfig(), {buttons: group.getButtonConfigs()}))
 		});
 		let toolAccordion = new UiToolAccordion(accordionConfig, this._context);

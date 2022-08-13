@@ -131,7 +131,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		if (config.content) {
 			this.setContent(config.content as UiComponent);
 		}
-		this.leftComponentFirstMinimized = this._config.headerComponentMinimizationPolicy == UiPanel_HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
+		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == UiPanel_HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
 
 		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
 			if (this.restoreFunction == null) {

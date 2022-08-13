@@ -47,8 +47,11 @@ import {QueryFunctionAdder} from "./generated/QueryFunctionAdder";
 import {UiQuery} from "./generated/UiQuery";
 import {componentEventDescriptors, staticComponentEventDescriptors} from "./generated/ComponentEventDescriptors";
 
-function isComponent(o: UiClientObject<UiClientObjectConfig>): o is UiComponent {
-	return o != null && (o as any).getMainElement;
+function isClassicComponent(o: UiClientObject): o is UiComponent {
+	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE !== 1;
+}
+function isWebComponent(o: UiClientObject): o is UiComponent {
+	return o != null && (o as any).getMainElement && (o as any).ELEMENT_NODE === 1;
 }
 
 export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
@@ -168,7 +171,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 
 	public registerClientObject(clientObject: UiClientObject, id: string, teamappsType: string): void {
 		console.debug("registering ClientObject: ", id);
-		if (isComponent(clientObject)) {
+		if (isClassicComponent(clientObject)) {
 			let existingProxy = this.components[id];
 			if (existingProxy != null) {
 				(existingProxy as RefreshableComponentProxyHandle).component = clientObject;
@@ -187,7 +190,14 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			QueryFunctionAdder.addQueryFunctionsToConfig(config, (componentId, queryTypeId, queryObject) => {
 				return this.sendQuery({...queryObject, _type: queryTypeId, componentId: componentId});
 			});
-			return new componentClass(config, this);
+			let isWebComponent = (componentClass as any).ELEMENT_NODE === 1;
+			if (isWebComponent) {
+				let webComponent = document.createElement('ui-div');
+				(webComponent as any).setConfig(config);
+				return webComponent as unknown as UiComponent;
+			} else {
+				return new componentClass(config, this);
+			}
 		} else {
 			console.error("Unknown component type: " + config._type);
 			return null;
@@ -209,7 +219,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 			if (isRefreshableComponentProxyHandle(o)) {
 				o = o.component;
 			}
-			if (isComponent(o)) {
+			if (isClassicComponent(o)) {
 				o.getMainElement().remove();
 			}
 			o.destroy();

@@ -102,7 +102,7 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 	}
 
 	public get splitDirection(): UiSplitDirection {
-		return this._config.splitDirection
+		return this.config.splitDirection
 	}
 
 	public doGetMainElement(): HTMLElement {
@@ -147,7 +147,7 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 		const initialFirstContainerWidth = this._$firstChildContainer[this._offsetSizeAttribute];
 		const splitPaneSize = this._$splitPane[this._offsetSizeAttribute];
 		return (event: MouseEvent) => {
-			const diff = (this._config.splitDirection === UiSplitDirection.HORIZONTAL) ? this.pageYof(event) - dragStartY : this.pageXof(event) - dragStartX;
+			const diff = (this.config.splitDirection === UiSplitDirection.HORIZONTAL) ? this.pageYof(event) - dragStartY : this.pageXof(event) - dragStartX;
 			const newFirstChildSize = initialFirstContainerWidth + diff;
 
 			if (this.sizePolicy === UiSplitSizePolicy.RELATIVE) {
@@ -213,11 +213,11 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 			this._$firstChildContainerWrapper.classList.remove("single-child");
 			this._$lastChildContainerWrapper.classList.add("empty-child");
 			this._$lastChildContainerWrapper.classList.remove("single-child");
-		} else if (firstEmpty && this._config.fillIfSingleChild) {
+		} else if (firstEmpty && this.config.fillIfSingleChild) {
 			this._$firstChildContainerWrapper.classList.add("empty-child");
 			this._$lastChildContainerWrapper.classList.add("single-child");
 			this._$lastChildContainerWrapper.classList.remove("empty-child");
-		} else if (lastEmpty && this._config.fillIfSingleChild) {
+		} else if (lastEmpty && this.config.fillIfSingleChild) {
 			this._$firstChildContainerWrapper.classList.add("single-child");
 			this._$firstChildContainerWrapper.classList.remove("empty-child");
 			this._$lastChildContainerWrapper.classList.add("empty-child");
@@ -226,7 +226,7 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 			this._$lastChildContainerWrapper.classList.remove("single-child", "empty-child");
 		}
 		this._$dividerWrapper.classList.toggle("hidden", firstEmpty || lastEmpty);
-		this._$divider.classList.toggle("hidden", !this._config.resizable);
+		this._$divider.classList.toggle("hidden", !this.config.resizable);
 		this.onResize(); // yes!! Maybe this splitpane does not need it for itself, but we want the children to relayout if necessary!
 	}
 
@@ -276,11 +276,11 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 	}
 
 	private isFirstEmpty() {
-		return (!this._firstChildComponent || this._config.collapseEmptyChildren && isEmptyable(this._firstChildComponent) && this._firstChildComponent.empty);
+		return (!this._firstChildComponent || this.config.collapseEmptyChildren && isEmptyable(this._firstChildComponent) && this._firstChildComponent.empty);
 	}
 
 	private isLastEmtpy() {
-		return (!this._lastChildComponent || this._config.collapseEmptyChildren && isEmptyable(this._lastChildComponent) && this._lastChildComponent.empty);
+		return (!this._lastChildComponent || this.config.collapseEmptyChildren && isEmptyable(this._lastChildComponent) && this._lastChildComponent.empty);
 	}
 
 	get firstChildComponent() {
@@ -292,7 +292,7 @@ export class UiSplitPane extends AbstractUiComponent<UiSplitPaneConfig> implemen
 	}
 
 	get id() {
-		return this._config.id;
+		return this.config.id;
 	}
 
 	get empty() {

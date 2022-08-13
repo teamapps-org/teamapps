@@ -17,39 +17,56 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-import {AbstractUiComponent} from "./AbstractUiComponent";
-import {TeamAppsUiContext} from "./TeamAppsUiContext";
-import {UiDivConfig} from "./generated/UiDivConfig";
-import {parseHtml} from "./Common";
+import {UiDivCommandHandler, UiDivConfig} from "./generated/UiDivConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {UiComponent} from "./UiComponent";
-import {UiDivCommandHandler} from "./generated/UiDivConfig";
+import {AbstractUiWebComponent} from "./AbstractUiWebComponent";
 
-export class UiDiv extends AbstractUiComponent<UiDivConfig> implements UiDivCommandHandler {
+const template = document.createElement("template");
+template.innerHTML = `
+<style>
+	:host {
+		display: block;
+	}
+</style>
+<slot></slot>
+`;
 
-	private $main: HTMLDivElement;
+export class UiDiv extends AbstractUiWebComponent<UiDivConfig> implements UiDivCommandHandler {
+	private $slot: HTMLSlotElement;
 
-	constructor(config: UiDivConfig, context: TeamAppsUiContext) {
-		super(config, context);
-		this.$main = parseHtml(`<div class="UiDiv"></div>`);
-		this.setInnerHtml(config.innerHtml);
-		this.setContent(config.content);
+	constructor() {
+		super();
+		this.shadowRoot?.appendChild(template.content.cloneNode(true));
+		this.$slot = this.shadowRoot.querySelector("slot");
 	}
 
-	public doGetMainElement(): HTMLElement {
-		return this.$main;
+	public setConfig(config: UiDivConfig) {
+		super.setConfig(config);
+		if (config.innerHtml != null) {
+			this.setInnerHtml(config.innerHtml);
+		}
+		if (config.content != null) {
+			this.setContent(config.content);
+		}
 	}
 
-	setInnerHtml(innerHtml: string): void {
-		this.$main.innerHTML = innerHtml;
+	setContent(content: unknown): any {
+		if (content == null) {
+			this.innerHTML = '';
+		} else {
+			this.appendChild((content as UiComponent).getMainElement())
+		}
 	}
 
-	setContent(content: unknown): void {
-		this.$main.innerHTML = "";
-		if (content != null) {
-			this.$main.append((content as UiComponent).getMainElement());
+	setInnerHtml(innerHtml: string): any {
+		if (innerHtml == null) {
+			this.innerHTML = '';
+		} else {
+			this.innerHTML = innerHtml;
 		}
 	}
 }
 
 TeamAppsUiComponentRegistry.registerComponentClass("UiDiv", UiDiv);
+window.customElements.define("ui-div", UiDiv);

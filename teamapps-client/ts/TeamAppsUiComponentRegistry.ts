@@ -28,7 +28,7 @@ export class TeamAppsUiComponentRegistry {
 
 	private static componentClasses: { [componentName: string]: ComponentClass<UiComponent> } = {};
 
-	public static registerComponentClass<F extends AbstractUiComponent>(componentName: string, componentClass: ComponentClass<F>): void {
+	public static registerComponentClass<F extends UiComponent>(componentName: string, componentClass: ComponentClass<F>): void {
 		this.componentClasses[componentName] = componentClass;
 	}
 

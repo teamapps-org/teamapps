@@ -160,7 +160,7 @@ export abstract class AbstractUiField<C extends UiFieldConfig = UiFieldConfig, V
 	protected abstract initialize(config: C, context: TeamAppsUiContext): void;
 
 	public getTeamAppsType(): string {
-		return this._config._type;
+		return this.config._type;
 	}
 
 	public doGetMainElement(): HTMLElement {
@@ -239,15 +239,15 @@ export abstract class AbstractUiField<C extends UiFieldConfig = UiFieldConfig, V
 	}
 
 	public setEditingMode(editingMode: UiFieldEditingMode = UiFieldEditingMode.EDITABLE): void {
-		const oldEditingMode = this._config.editingMode;
-		this._config.editingMode = editingMode;
+		const oldEditingMode = this.config.editingMode;
+		this.config.editingMode = editingMode;
 		this.onEditingModeChanged(editingMode, oldEditingMode);
 	}
 
 	protected abstract onEditingModeChanged(editingMode: UiFieldEditingMode, oldEditingMode?: UiFieldEditingMode): void;
 
 	public getEditingMode(): UiFieldEditingMode {
-		return this._config.editingMode;
+		return this.config.editingMode;
 	}
 
 	public isEditable(): boolean {

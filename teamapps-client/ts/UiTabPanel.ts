@@ -294,7 +294,7 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	public selectTab(tabId: string, sendSelectionEvent = false) {
 		let tab = this.getTabById(tabId);
 		if (!tab) {
-			console.error("Cannot select non-existing tab " + this._config.id + "~" + tabId);
+			console.error("Cannot select non-existing tab " + this.config.id + "~" + tabId);
 			return;
 		}
 		this.selectedTab = tab;

@@ -35,9 +35,9 @@ export class UiLinkButton extends AbstractUiComponent<UiLinkButtonConfig> implem
 		super(config, context);
 		this.$main = parseHtml(`<a class="UiLinkButton" tabindex="0"></a>`)
 		this.$main.addEventListener("click", ev => {
-			if (this._config.onClickJavaScript != null) {
+			if (this.config.onClickJavaScript != null) {
 				let context = this._context; // make context available in evaluated javascript
-				eval(this._config.onClickJavaScript);
+				eval(this.config.onClickJavaScript);
 			}
 			this.onClicked.fire({});
 		});
