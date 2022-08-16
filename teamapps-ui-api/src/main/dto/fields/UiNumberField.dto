@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiNumberField extends UiField implements UiTextInputHandlingField {
   	String locale;
 	int precision = -1; //if == 0 then don't show fractions, if < 0 then show the available precision of the current number

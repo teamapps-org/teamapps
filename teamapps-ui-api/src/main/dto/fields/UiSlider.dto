@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiSlider extends UiField {
 	double min = 0;
 	double max = 100;

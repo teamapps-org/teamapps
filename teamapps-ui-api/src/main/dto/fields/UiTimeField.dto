@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 abstract class AbstractUiTimeField extends UiField implements UiTextInputHandlingField {
     boolean showDropDownButton = true;
     boolean showClearButton;

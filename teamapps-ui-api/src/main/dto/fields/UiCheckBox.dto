@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiCheckBox extends UiField {
 	String caption; // displayed on the right side of the checkbox
 	String backgroundColor = "rgb(255, 255, 255)";

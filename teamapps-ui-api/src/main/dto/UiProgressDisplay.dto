@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 
 enum UiProgressStatus {
 	NOT_YET_STARTED = "not-yet-started",

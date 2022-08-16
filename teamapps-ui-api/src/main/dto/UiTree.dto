@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiTree extends UiComponent {
 	Dictionary<UiTemplate> templates;
 	String defaultTemplateId = null; // null: use asString property

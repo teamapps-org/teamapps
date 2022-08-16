@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiAudioLevelIndicator extends UiComponent {
     String deviceId;
     int barWidth;

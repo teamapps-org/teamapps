@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiComponentField extends UiField {
 	UiComponent* component;
 	int height; // 0 = the height will be determined by the component's content and context

@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiIFrame extends UiComponent {
 	String url;
 	command setUrl(String url);

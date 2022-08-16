@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 interface UiTextInputHandlingField {
 	event textInput(String enteredString);
 	event specialKeyPressed(UiSpecialKey key); // CAUTION: unfiltered at the moment. E.g. ComboBox selection via ENTER or TextField reset via ESCAPE

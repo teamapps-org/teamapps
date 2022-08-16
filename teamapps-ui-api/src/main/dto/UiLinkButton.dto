@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiLinkButton extends UiComponent {
 	String text;
 	String url = null; // null = still render as link but do not open a page

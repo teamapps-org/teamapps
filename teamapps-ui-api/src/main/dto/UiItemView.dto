@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiItemView extends UiComponent {
 	UiTemplate groupHeaderTemplate;
 	List<UiItemViewItemGroup> itemGroups;

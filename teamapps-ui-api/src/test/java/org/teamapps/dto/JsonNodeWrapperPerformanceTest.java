@@ -3,16 +3,7 @@ package org.teamapps.dto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Test;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class JsonNodeWrapperPerformanceTest {
 
@@ -37,7 +28,7 @@ public class JsonNodeWrapperPerformanceTest {
 		System.out.println(event2String);
 
 		int x = 0;
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 5; i++) {
 			x += measureFullDeserialization("runFullDeserialization", event1String, event2String, this::runFullDeserialization);
 			x += measureFullDeserialization("runWrapping", event1String, event2String, this::runWrapping);
 		}

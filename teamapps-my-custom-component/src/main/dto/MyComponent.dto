@@ -1,5 +1,6 @@
+package org.teamapps.custom.dto;
 
-class UiMyComponent extends UiComponent {
+class UiMyComponent extends org.teamapps.dto.UiComponent {
 
     String text;
 

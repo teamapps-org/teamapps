@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 // TODO IMHO, this should be removed. It is not touch-friendly and very strange to implement the way we initially designed it.
 
 class UiContextMenu extends UiComponent {

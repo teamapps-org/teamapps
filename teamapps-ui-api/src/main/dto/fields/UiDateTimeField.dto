@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 abstract class AbstractUiDateTimeField extends UiField {
 	boolean showDropDownButton = true;
 	boolean favorPastDates = false; // TODO!!!

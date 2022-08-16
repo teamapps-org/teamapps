@@ -3,7 +3,7 @@ package org.teamapps.dto;
 import com.fasterxml.jackson.databind.JsonNode;
 
 class JsonWrapper {
-	JsonNode jsonNode;
+	protected JsonNode jsonNode;
 
 	public JsonWrapper(JsonNode jsonNode) {
 		this.jsonNode = jsonNode;

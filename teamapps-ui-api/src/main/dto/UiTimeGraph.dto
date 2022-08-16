@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiTimeGraph extends UiComponent {
 	UiLineChartYScaleZoomMode yScaleZoomMode = UiLineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO;
 	required UiLongInterval intervalX;

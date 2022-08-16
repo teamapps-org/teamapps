@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiNavigationBar extends UiComponent {
 	required UiTemplate buttonTemplate;
 	List<UiNavigationBarButton> buttons;

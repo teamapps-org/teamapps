@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiDateTimeFormatDescriptor {
 
 	// either dateStyle and/or timeStyle can be set, or the other fields. Both does not work. Exception: hourCycle

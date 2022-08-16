@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiChatDisplay extends UiComponent {
 	UiChatMessageBatch initialMessages;
     boolean contextMenuEnabled = false;

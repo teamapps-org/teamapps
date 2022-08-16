@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiDocumentViewer extends UiComponent {
 	List<String> pageUrls;
 	UiPageDisplayMode displayMode = UiPageDisplayMode.FIT_WIDTH;

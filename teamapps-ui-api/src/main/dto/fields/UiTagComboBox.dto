@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiTagComboBox extends UiComboBox {
 	int maxEntries; // if 0, then the list is unbounded
 	UiTagComboBoxWrappingMode wrappingMode = UiTagComboBoxWrappingMode.MULTI_LINE;

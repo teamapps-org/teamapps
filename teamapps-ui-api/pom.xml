@@ -86,7 +86,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>org.teamapps.dto.generate.TeamAppsJavaDtoGenerator</mainClass>
+                            <mainClass>org.teamapps.dsl.generate.TeamAppsJavaDtoGenerator</mainClass>
                             <commandlineArgs>-p "org.teamapps.dto" "${project.basedir}/src/main/dto" "${project.basedir}/target/generated-sources/dto"</commandlineArgs>
                             <classpathScope>test</classpathScope>
                         </configuration>
@@ -98,7 +98,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>org.teamapps.dto.generate.TeamAppsTypeScriptGenerator</mainClass>
+                            <mainClass>org.teamapps.dsl.generate.TeamAppsTypeScriptGenerator</mainClass>
                             <commandlineArgs>"${project.basedir}/src/main/dto" "${project.basedir}/../teamapps-client/ts/generated"</commandlineArgs>
                             <classpathScope>test</classpathScope>
                         </configuration>

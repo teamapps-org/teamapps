@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiLabel extends UiField {
 	required String caption; // this is only displayed if value == null
 	String icon;

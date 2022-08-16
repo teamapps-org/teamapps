@@ -1,10 +1,14 @@
 grammar TeamAppsDto;
 
 @header {
-package org.teamapps.dto;
+package org.teamapps.dsl;
 }
 
-classCollection : typeDeclaration*;
+classCollection : packageDeclaration typeDeclaration*;
+
+packageDeclaration : 'package' packageName ';' ;
+
+packageName : Identifier | packageName '.' Identifier;
 
 typeDeclaration : classDeclaration | interfaceDeclaration | enumDeclaration;
 
@@ -17,10 +21,10 @@ classDeclaration  : typescriptFactoryAnnotation? abstractModifier? 'class' Ident
 interfaceDeclaration  : 'interface' Identifier superInterfaceDecl? '{'
 	(propertyDeclaration|commandDeclaration|eventDeclaration|queryDeclaration)*
 '}';
-superClassDecl: 'extends' Identifier;
+superClassDecl: 'extends' typeName;
 superInterfaceDecl: 'extends' classList;
 implementsDecl: 'implements' classList;
-classList: ((Identifier ',')* Identifier)?;
+classList: ((typeName ',')* typeName)?;
 propertyDeclaration : referenceableAnnotation? requiredModifier? type Identifier (defaultValueAssignment)? ';';
 commandDeclaration : staticModifier? 'command' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ('returns' type)? ';';
 eventDeclaration : staticModifier? 'event' Identifier '(' ((formalParameterWithDefault ',')* formalParameterWithDefault)? ')' ';';
@@ -30,22 +34,18 @@ formalParameterWithDefault : type Identifier (defaultValueAssignment)?;
 
 defaultValueAssignment : '=' expression;
 
-type :   typeReference
-     |   subCommandReference
-     |   subEventReference
-     |   primitiveType ;
+type : typeReference | primitiveType ;
 
-typeReference : Identifier referenceTypeModifier? typeArguments?;
+typeReference : typeName referenceTypeModifier? typeArguments?;
 referenceTypeModifier : '*';
+
+typeName : (packageName '.')? Identifier ;
 
 typeArguments
     :   '<' typeArgument (',' typeArgument)* '>'
     ;
 
 typeArgument : type;
-
-subCommandReference : 'subcommand' '<' typeReference '>';
-subEventReference : 'subevent' '<' typeReference '>';
 
 primitiveType
     :   'boolean'

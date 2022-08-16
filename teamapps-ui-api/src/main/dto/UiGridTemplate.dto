@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiGridTemplate implements UiTemplate {
     required List<UiGridColumn> columns;
     required List<UiGridRow> rows;

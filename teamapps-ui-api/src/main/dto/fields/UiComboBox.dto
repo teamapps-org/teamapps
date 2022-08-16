@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiComboBox extends UiField implements UiTextInputHandlingField {
 	Dictionary<UiTemplate> templates;
 	boolean showDropDownButton = true;

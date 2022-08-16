@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiButton extends UiField {
 	required UiTemplate template;
 	required Object templateRecord;

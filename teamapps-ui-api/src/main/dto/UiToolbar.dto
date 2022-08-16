@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 abstract class AbstractUiToolContainer extends UiComponent {
 	required List<UiToolbarButtonGroup> leftButtonGroups; // horizontally aligned (no flow)
 	required List<UiToolbarButtonGroup> rightButtonGroups; // horizontally aligned (no flow)

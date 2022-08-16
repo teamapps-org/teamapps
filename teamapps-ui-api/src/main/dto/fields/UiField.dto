@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 enum UiFieldEditingMode {
 	EDITABLE,
 	EDITABLE_IF_FOCUSED, // UiGridForm and UiCompositeField only!!

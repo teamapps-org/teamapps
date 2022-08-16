@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiTabPanel extends UiComponent implements Emptyable {
 	List<UiTab> tabs;
 	String selectedTabId; // TODO

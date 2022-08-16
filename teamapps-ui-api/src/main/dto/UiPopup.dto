@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiPopup extends UiComponent {
 	UiComponent* contentComponent;
 	int width; // 0 = full width, -1 = auto

@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiHtmlTemplate implements UiTemplate {
 	required String html;
 }

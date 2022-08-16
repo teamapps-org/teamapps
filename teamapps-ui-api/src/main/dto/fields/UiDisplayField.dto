@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiDisplayField extends UiField {
 	boolean showBorder; //if true, show a border like for text fields
 	boolean showHtml; //if true, treat the value as valid HTML

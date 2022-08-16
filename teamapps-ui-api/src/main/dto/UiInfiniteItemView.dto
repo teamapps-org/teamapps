@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiInfiniteItemView extends UiComponent {
 	required UiTemplate itemTemplate;
 	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width

@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiMap extends UiComponent {
 	required Dictionary<UiTemplate> markerTemplates;
 	String accessToken;

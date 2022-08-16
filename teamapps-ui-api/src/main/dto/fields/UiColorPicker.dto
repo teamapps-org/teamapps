@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+package org.teamapps.dto;
+
 class UiColorPicker extends UiField {
 	String defaultColor = "rgb(0, 0, 0)";
 	String saveButtonCaption = "Save";
