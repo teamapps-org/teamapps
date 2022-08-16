@@ -141,6 +141,15 @@ public class TeamAppsJavaDtoGenerator {
 		writer.close();
 	}
 
+	private void generateEventJsonWrapper(TeamAppsDtoParser.EventDeclarationContext interfaceContext, Writer writer) throws IOException {
+		ST template = stGroup.getInstanceOf("jsonWrapper")
+				.add("package", packageName)
+				.add("c", interfaceContext);
+		AutoIndentWriter out = new AutoIndentWriter(writer);
+		template.write(out, new StringTemplatesErrorListener());
+		writer.close();
+	}
+
 	void generateClass(TeamAppsDtoParser.ClassDeclarationContext clazzContext, Writer writer) throws IOException {
 		ST template = stGroup.getInstanceOf("class")
 				.add("package", packageName)

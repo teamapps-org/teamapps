@@ -41,7 +41,7 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
 
     static {
         try {
-            COMPONENT_ID_PARAMETER = ParserFactory.createParser(new StringReader("UiComponentId componentId")).formalParameterWithDefault();
+            COMPONENT_ID_PARAMETER = ParserFactory.createParser(new StringReader("String componentId")).formalParameterWithDefault();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

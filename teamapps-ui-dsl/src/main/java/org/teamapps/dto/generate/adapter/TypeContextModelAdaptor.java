@@ -91,8 +91,6 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			return getJavaTypeString(typeContext);
 		} else if ("primitiveTypeName".equals(propertyName)) {
 			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.inverse().getOrDefault(typeContext.getText(), getJavaTypeString(typeContext));
-		} else if ("isUiComponentId".equals(propertyName)) {
-			return isUiComponentId(typeContext);
 		} else if ("javaTypeWrapperString".equals(propertyName)) {
 			return getJavaTypeWrapperString(typeContext);
 		} else if ("isString".equals(propertyName)) {
@@ -163,8 +161,6 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			return "Map<String, " + getJavaTypeString(typeContext.typeReference().typeArguments().typeArgument(0).type()) + ">";
 		} else if (isUiClientObjectReference(typeContext)) {
 			return model.findSelfNearestAncestorClassWithReferenceableAttribute(model.findReferencedClass(typeContext)).Identifier().getText() + "Reference";
-		} else if (isUiComponentId(typeContext)) {
-			return "String";
 		} else if (isRawJsonString(typeContext)) {
 			return "@com.fasterxml.jackson.annotation.JsonRawValue String";
 		} else {
@@ -180,6 +176,8 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			return "Map<String, " + getJavaTypeWrapperString(typeContext.typeReference().typeArguments().typeArgument(0).type()) + ">";
 		} else if (model.isReferenceToJsonAware(typeContext)) {
 			return getJavaTypeString(typeContext) + "Wrapper";
+		} else if (isObject(typeContext)) {
+			return "JsonWrapper";
 		} else {
 			return getJavaTypeString(typeContext);
 		}
@@ -199,10 +197,6 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		return false;
 	}
 
-	private boolean isUiComponentId(TeamAppsDtoParser.TypeContext typeContext) {
-		return "UiComponentId".equals(typeContext.getText());
-	}
-
 	private String getTypeScriptType(TeamAppsDtoParser.TypeContext typeContext) {
 		if (isObject(typeContext)) {
 			return "any";
@@ -216,8 +210,6 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			return getTypeScriptType(getFirstTypeArgument(typeContext)) + "[]";
 		} else if (isDictionary(typeContext)) {
 			return "{[name: string]: " + getTypeScriptType(getFirstTypeArgument(typeContext)) + "}";
-		} else if (isUiComponentId(typeContext)) {
-			return "string";
 		} else if (isUiClientObjectReference(typeContext)) {
 			return "unknown";
 		} else if (IMPLICITELY_REFERENCEABLE_CLASSES.contains(typeContext.getText())) {

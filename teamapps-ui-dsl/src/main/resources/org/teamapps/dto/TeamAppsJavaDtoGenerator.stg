@@ -41,6 +41,7 @@ public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superC
 	<c.propertiesNotImplementedBySuperClasses:setter(c); separator="\n\n">
 
 	<c.eventDeclaration:eventClass(); separator="\n\n">
+	<c.eventDeclaration:eventJsonWrapper(package); separator="\n\n">
 
 	<c.queryDeclaration:queryClass(); separator="\n\n">
 
@@ -108,6 +109,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 /**
  * THIS IS GENERATED CODE!
@@ -386,13 +390,21 @@ public class CMD {
 
 jsonWrapper(c, package) ::= <<
 <javaFilePrelude(package)>
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
-public class <c.Identifier.text>Wrapper extends JsonWrapper{
+public class <c.Identifier.text>Wrapper extends <if(c.superClassDecl)><c.superClassDecl.Identifier>Wrapper<else>JsonWrapper<endif> {
 
     public <c.Identifier.text>Wrapper(JsonNode jsonNode) {
+        super(jsonNode);
+    }
+
+    <c.propertiesNotImplementedBySuperClasses:jsonWrapperGetter(); separator="\n\n">
+}
+>>
+
+eventJsonWrapper(c, package) ::= <<
+public static class <c.Identifier.text; format="cap">EventWrapper extends JsonWrapper {
+
+    public <c.Identifier.text; format="cap">EventWrapper(JsonNode jsonNode) {
         super(jsonNode);
     }
 
@@ -451,7 +463,7 @@ return <variableName>.textValue();
 <elseif (type.isPrimitiveOrWrapperType)>
 return <variableName>.as<type.primitiveTypeName; format="cap">();
 <elseif (type.isObjectReference)>
-throw new IllegalArgumentException("Plaing Object deserialization not supported here!");
+return new JsonWrapper(node);
 <else>
 return ???;
 <endif>

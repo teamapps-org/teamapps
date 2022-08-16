@@ -96,7 +96,7 @@ public class JsonNodeWrapperPerformanceTest {
 		x += eventWrapper.getSessionId().hashCode();
 		x += eventWrapper.getId();
 		UiEventWrapper uiEventWrapper = eventWrapper.getUiEvent();
-		CellValueChangedEventWrapper cellValueChangedEventWrapper = uiEventWrapper.as(CellValueChangedEventWrapper.class);
+		UiTable.CellValueChangedEventWrapper cellValueChangedEventWrapper = uiEventWrapper.as(UiTable.CellValueChangedEventWrapper.class);
 		x += cellValueChangedEventWrapper.getComponentId().hashCode();
 		x += cellValueChangedEventWrapper.getRecordId();
 		x += cellValueChangedEventWrapper.getColumnPropertyName().hashCode();
@@ -112,159 +112,11 @@ public class JsonNodeWrapperPerformanceTest {
 		x += eventWrapper.getSessionId().hashCode();
 		x += eventWrapper.getId();
 		uiEventWrapper = eventWrapper.getUiEvent();
-		SortingChangedEventWrapper sortingChangedEventWrapper = uiEventWrapper.as(SortingChangedEventWrapper.class);
+		UiTable.SortingChangedEventWrapper sortingChangedEventWrapper = uiEventWrapper.as(UiTable.SortingChangedEventWrapper.class);
 		x += sortingChangedEventWrapper.getComponentId().hashCode();
 		x += sortingChangedEventWrapper.getSortField().hashCode();
 		x += sortingChangedEventWrapper.getSortDirection().hashCode();
 
 		return x;
-	}
-
-
-//	private static class JsonWrapper {
-//		JsonNode jsonNode;
-//
-//		public JsonWrapper(JsonNode jsonNode) {
-//			this.jsonNode = jsonNode;
-//		}
-//
-//		public JsonNode getJsonNode() {
-//			return jsonNode;
-//		}
-//
-//		public <W extends JsonWrapper> W as(Class<W> clazz) {
-//			try {
-//				return clazz.getConstructor(JsonNode.class).newInstance(jsonNode);
-//			} catch (Exception e) {
-//				throw new RuntimeException(e);
-//			}
-//		}
-//	}
-//
-//	private static class EVENTWrapper extends JsonWrapper {
-//
-//		public EVENTWrapper(JsonNode jsonNode) {
-//			super(jsonNode);
-//		}
-//
-//		public String getSessionId() {
-//			return jsonNode.get("sessionId").asText();
-//		}
-//
-//		public int getId() {
-//			return jsonNode.get("id").asInt();
-//		}
-//
-//		public UiEventWrapper getUiEvent() {
-//			JsonNode event = jsonNode.get("uiEvent");
-//			return event != null ? new UiEventWrapper(event) : null;
-//		}
-//	}
-//
-//	public static class UiEventWrapper extends JsonWrapper {
-//		public UiEventWrapper(JsonNode jsonNode) {
-//			super(jsonNode);
-//		}
-//	}
-//
-	private static class CellValueChangedEventWrapper extends JsonWrapper {
-
-		public CellValueChangedEventWrapper(JsonNode jsonNode) {
-			super(jsonNode);
-		}
-
-		public String getComponentId() {
-			return jsonNode.get("componentId").asText();
-		}
-
-		public int getRecordId() {
-			return jsonNode.get("recordId").asInt();
-		}
-
-		public String getColumnPropertyName() {
-			return jsonNode.get("columnPropertyName").asText();
-		}
-
-		public JsonWrapper getValue() {
-			return new JsonWrapper(jsonNode.get("value"));
-		}
-	}
-//
-//	private static class CurrencyValueWrapper extends JsonWrapper {
-//		public CurrencyValueWrapper(JsonNode jsonNode) {
-//			super(jsonNode);
-//		}
-//
-//		public UiCurrencyUnitWrapper getCurrencyUnit() {
-//			JsonNode currencyUnit = jsonNode.get("currencyUnit");
-//			return currencyUnit != null ? new UiCurrencyUnitWrapper(currencyUnit) : null;
-//		}
-//
-//		public String getAmount() {
-//			return jsonNode.get("amount").asText();
-//		}
-//	}
-//
-//	public static class UiCurrencyUnitWrapper extends JsonWrapper {
-//
-//		public UiCurrencyUnitWrapper(JsonNode jsonNode) {
-//			super(jsonNode);
-//		}
-//
-//		public String getCode() {
-//			return jsonNode.get("code").asText();
-//		}
-//
-//		public int getFractionDigits() {
-//			return jsonNode.get("fractionDigits").asInt();
-//		}
-//
-//		public String getName() {
-//			return jsonNode.get("name").asText();
-//		}
-//
-//		public String getSymbol() {
-//			return jsonNode.get("symbol").asText();
-//		}
-//	}
-//
-	public static class SortingChangedEventWrapper extends JsonWrapper {
-
-		public SortingChangedEventWrapper(JsonNode jsonNode) {
-			super(jsonNode);
-		}
-
-		public String getComponentId() {
-			return jsonNode.get("componentId").asText();
-		}
-
-		public String getSortField() {
-			return jsonNode.get("sortField").asText();
-		}
-
-		public UiSortDirection getSortDirection() {
-			JsonNode x = jsonNode.get("sortDirection");
-			if (x.isInt()) {
-				return UiSortDirection.values()[x.intValue()];
-			} else if (x.isTextual()) {
-				return UiSortDirection.valueOf(x.textValue());
-			} else {
-				return null;
-			}
-		}
-
-		public List<EVENTWrapper> getX() {
-			ArrayNode a = ((ArrayNode) jsonNode.get("x"));
-			return a != null ? StreamSupport.stream(Spliterators.spliterator(a.elements(), a.size(), Spliterator.ORDERED), false)
-					.map(e -> new EVENTWrapper(e))
-					.collect(Collectors.toList()) : null;
-		}
-
-		public Map<String, EVENTWrapper> getY() {
-			ObjectNode a = ((ObjectNode) jsonNode.get("x"));
-			return a != null ? StreamSupport.stream(Spliterators.spliterator(a.fields(), a.size(), Spliterator.ORDERED), false)
-					.collect(Collectors.toMap(e -> e.getKey(), e -> new EVENTWrapper(e.getValue()))) : null;
-		}
-
 	}
 }
