@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,40 +74,33 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
-		if (!defaultHandleTextInputEvent(event)) {
-			switch (event.getUiEventType()) {
-				case UI_RICH_TEXT_EDITOR_IMAGE_UPLOAD_TOO_LARGE:
-					UiRichTextEditor.ImageUploadTooLargeEvent tooLargeEvent = (UiRichTextEditor.ImageUploadTooLargeEvent) event;
-					onImageUploadTooLarge.fire(new ImageUploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
-					break;
-				case UI_RICH_TEXT_EDITOR_IMAGE_UPLOAD_STARTED:
-					UiRichTextEditor.ImageUploadStartedEvent uploadStartedEvent = (UiRichTextEditor.ImageUploadStartedEvent) event;
-					onImageUploadStarted.fire(new ImageUploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(),
-							uploadStartedEvent.getIncompleteUploadsCount()));
-					break;
-				case UI_RICH_TEXT_EDITOR_IMAGE_UPLOAD_SUCCESSFUL:
-					UiRichTextEditor.ImageUploadSuccessfulEvent imageUploadedEvent = (UiRichTextEditor.ImageUploadSuccessfulEvent) event;
-					onImageUploadSuccessful.fire(new ImageUploadSuccessfulEventData(imageUploadedEvent.getFileUuid(), imageUploadedEvent.getName(), imageUploadedEvent.getMimeType(),
-							imageUploadedEvent.getSizeInBytes(), imageUploadedEvent.getIncompleteUploadsCount()));
-					String fileUuid = imageUploadedEvent.getFileUuid();
-					UploadedFile uploadedFile = new UploadedFile(imageUploadedEvent.getFileUuid(), imageUploadedEvent.getName(), imageUploadedEvent.getSizeInBytes(), imageUploadedEvent.getMimeType(),
-							() -> {
-								try {
-									return new FileInputStream(getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid()));
-								} catch (FileNotFoundException e) {
-									throw new UploadedFileAccessException(e);
-								}
-							},
-							() -> getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid())
-					);
-					queueCommandIfRendered(() -> new UiRichTextEditor.SetUploadedImageUrlCommand(getId(), fileUuid, this.uploadedFileToUrlConverter.convert(uploadedFile)));
-					break;
-				case UI_RICH_TEXT_EDITOR_IMAGE_UPLOAD_FAILED:
-					UiRichTextEditor.ImageUploadFailedEvent uploadFailedEvent = (UiRichTextEditor.ImageUploadFailedEvent) event;
-					onImageUploadFailed.fire(new ImageUploadFailedEventData(uploadFailedEvent.getName(), uploadFailedEvent.getMimeType(), uploadFailedEvent.getSizeInBytes(), uploadFailedEvent
-							.getIncompleteUploadsCount()));
-					break;
-			}
+		if (event instanceof UiRichTextEditor.ImageUploadTooLargeEvent) {
+			UiRichTextEditor.ImageUploadTooLargeEvent tooLargeEvent = (UiRichTextEditor.ImageUploadTooLargeEvent) event;
+			onImageUploadTooLarge.fire(new ImageUploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
+		} else if (event instanceof UiRichTextEditor.ImageUploadStartedEvent) {
+			UiRichTextEditor.ImageUploadStartedEvent uploadStartedEvent = (UiRichTextEditor.ImageUploadStartedEvent) event;
+			onImageUploadStarted.fire(new ImageUploadStartedEventData(uploadStartedEvent.getFileName(), uploadStartedEvent.getMimeType(), uploadStartedEvent.getSizeInBytes(),
+					uploadStartedEvent.getIncompleteUploadsCount()));
+		} else if (event instanceof UiRichTextEditor.ImageUploadSuccessfulEvent) {
+			UiRichTextEditor.ImageUploadSuccessfulEvent imageUploadedEvent = (UiRichTextEditor.ImageUploadSuccessfulEvent) event;
+			onImageUploadSuccessful.fire(new ImageUploadSuccessfulEventData(imageUploadedEvent.getFileUuid(), imageUploadedEvent.getName(), imageUploadedEvent.getMimeType(),
+					imageUploadedEvent.getSizeInBytes(), imageUploadedEvent.getIncompleteUploadsCount()));
+			String fileUuid = imageUploadedEvent.getFileUuid();
+			UploadedFile uploadedFile = new UploadedFile(imageUploadedEvent.getFileUuid(), imageUploadedEvent.getName(), imageUploadedEvent.getSizeInBytes(), imageUploadedEvent.getMimeType(),
+					() -> {
+						try {
+							return new FileInputStream(getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid()));
+						} catch (FileNotFoundException e) {
+							throw new UploadedFileAccessException(e);
+						}
+					},
+					() -> getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid())
+			);
+			queueCommandIfRendered(() -> new UiRichTextEditor.SetUploadedImageUrlCommand(getId(), fileUuid, this.uploadedFileToUrlConverter.convert(uploadedFile)));
+		} else if (event instanceof UiRichTextEditor.ImageUploadFailedEvent) {
+			UiRichTextEditor.ImageUploadFailedEvent uploadFailedEvent = (UiRichTextEditor.ImageUploadFailedEvent) event;
+			onImageUploadFailed.fire(new ImageUploadFailedEventData(uploadFailedEvent.getName(), uploadFailedEvent.getMimeType(), uploadFailedEvent.getSizeInBytes(), uploadFailedEvent
+					.getIncompleteUploadsCount()));
 		}
 	}
 

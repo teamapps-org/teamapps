@@ -33,7 +33,7 @@ public class SplitPaneDefinition extends LayoutItemDefinition {
 
 	private final SplitDirection splitDirection;
 	private SplitSizePolicy sizePolicy;
-	private float referenceChildSize;
+	private double referenceChildSize;
 	private LayoutItemDefinition firstChild;
 	private LayoutItemDefinition lastChild;
 
@@ -52,7 +52,7 @@ public class SplitPaneDefinition extends LayoutItemDefinition {
 		updateViewGroupParents();
 	}
 
-	public SplitPaneDefinition(String id, SplitDirection splitDirection, SplitSizePolicy sizePolicy, float referenceChildSize, LayoutItemDefinition firstChild, LayoutItemDefinition lastChild) {
+	public SplitPaneDefinition(String id, SplitDirection splitDirection, SplitSizePolicy sizePolicy, double referenceChildSize, LayoutItemDefinition firstChild, LayoutItemDefinition lastChild) {
 		super(id);
 		this.splitDirection = splitDirection;
 		this.sizePolicy = sizePolicy;
@@ -120,7 +120,7 @@ public class SplitPaneDefinition extends LayoutItemDefinition {
 		this.sizePolicy = sizePolicy;
 	}
 
-	public float getReferenceChildSize() {
+	public double getReferenceChildSize() {
 		return referenceChildSize;
 	}
 

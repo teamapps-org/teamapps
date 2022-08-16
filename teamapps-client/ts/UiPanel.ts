@@ -24,7 +24,7 @@ import {UiToolButton} from "./micro-components/UiToolButton";
 import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
-import {UiPanel_HeaderComponentMinimizationPolicy, UiPanel_WindowButtonClickedEvent, UiPanelCommandHandler, UiPanelConfig, UiPanelEventSource,} from "./generated/UiPanelConfig";
+import {UiPanel_WindowButtonClickedEvent, UiPanelCommandHandler, UiPanelConfig, UiPanelEventSource,} from "./generated/UiPanelConfig";
 import {createUiToolButtonConfig} from "./generated/UiToolButtonConfig";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {StaticIcons} from "./util/StaticIcons";
@@ -32,6 +32,7 @@ import {UiWindowButtonType} from "./generated/UiWindowButtonType";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 import {insertBefore, maximizeComponent, outerWidthIncludingMargins, parseHtml, prependChild} from "./Common";
 import {UiComponent} from "./UiComponent";
+import {UiPanelHeaderComponentMinimizationPolicy} from "./generated/UiPanelHeaderComponentMinimizationPolicy";
 
 interface HeaderField {
 	config: UiPanelHeaderFieldConfig;
@@ -131,7 +132,7 @@ export class UiPanel extends AbstractUiComponent<UiPanelConfig> implements UiPan
 		if (config.content) {
 			this.setContent(config.content as UiComponent);
 		}
-		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == UiPanel_HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
+		this.leftComponentFirstMinimized = this.config.headerComponentMinimizationPolicy == UiPanelHeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
 
 		this.defaultToolButtons[UiWindowButtonType.MAXIMIZE_RESTORE].onClicked.addListener(() => {
 			if (this.restoreFunction == null) {

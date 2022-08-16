@@ -50,25 +50,22 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case ABSTRACT_UI_TOOL_CONTAINER_TOOLBAR_BUTTON_CLICK: {
-				UiToolbar.ToolbarButtonClickEvent clickEvent = (UiToolbar.ToolbarButtonClickEvent) event;
-				ToolbarButton button = getButtonByClientId(clickEvent.getGroupId(), clickEvent.getButtonId());
-				if (button != null) {
-					UiDropDownButtonClickInfo uiDropDownButtonClickInfo = clickEvent.getDropDownClickInfo();
-					if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
-						Component dropdownComponent = button.getDropDownComponent();
-						if (dropdownComponent != null) {
-							getSessionContext().queueCommand(new UiToolbar.SetDropDownComponentCommand(getId(), clickEvent.getGroupId(),
-									((AbstractUiToolContainer.ToolbarButtonClickEvent) event).getButtonId(), dropdownComponent.createUiReference()));
-						}
+		if (event instanceof AbstractUiToolContainer.ToolbarButtonClickEvent) {
+			AbstractUiToolContainer.ToolbarButtonClickEvent clickEvent = (AbstractUiToolContainer.ToolbarButtonClickEvent) event;
+			ToolbarButton button = getButtonByClientId(clickEvent.getGroupId(), clickEvent.getButtonId());
+			if (button != null) {
+				UiDropDownButtonClickInfo uiDropDownButtonClickInfo = clickEvent.getDropDownClickInfo();
+				if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
+					Component dropdownComponent = button.getDropDownComponent();
+					if (dropdownComponent != null) {
+						getSessionContext().queueCommand(new UiToolbar.SetDropDownComponentCommand(getId(), clickEvent.getGroupId(),
+								((AbstractUiToolContainer.ToolbarButtonClickEvent) event).getButtonId(), dropdownComponent.createUiReference()));
 					}
-					button.onClick.fire(clickEvent);
-					DropDownButtonClickInfo dropDownButtonClickInfo = uiDropDownButtonClickInfo != null ? new DropDownButtonClickInfo(uiDropDownButtonClickInfo.getIsOpening(),
-							uiDropDownButtonClickInfo.getIsContentSet()) : null;
-					onButtonClick.fire(new ToolbarButtonClickEventData(button, dropDownButtonClickInfo));
 				}
-				break;
+				button.onClick.fire(clickEvent);
+				DropDownButtonClickInfo dropDownButtonClickInfo = uiDropDownButtonClickInfo != null ? new DropDownButtonClickInfo(uiDropDownButtonClickInfo.getIsOpening(),
+						uiDropDownButtonClickInfo.getIsContentSet()) : null;
+				onButtonClick.fire(new ToolbarButtonClickEventData(button, dropDownButtonClickInfo));
 			}
 		}
 	}

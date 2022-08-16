@@ -89,16 +89,16 @@ enum UiMapType {
 
 @TypeScriptFactory
 class UiMapLocation {
-	required float latitude;
-	required float longitude;
+	required double latitude;
+	required double longitude;
 }
 
 @TypeScriptFactory
 class UiMapArea {
-	required float minLatitude;
-	required float maxLatitude;
-	required float minLongitude;
-	required float maxLongitude;
+	required double minLatitude;
+	required double maxLatitude;
+	required double minLongitude;
+	required double maxLongitude;
 }
 
 class UiMapMarkerClientRecord extends UiIdentifiableClientRecord {
@@ -133,8 +133,8 @@ class UiHeatMapData {
 }
 
 class UiHeatMapDataElement {
-	required float latitude;
-	required float longitude;
+	required double latitude;
+	required double longitude;
 	required int count;
 }
 
@@ -182,7 +182,7 @@ class UiMapRectangle extends AbstractUiMapShape {
 
 class UiShapeProperties {
   String strokeColor;
-  float strokeWeight;
-  List<Float> strokeDashArray;
+  double strokeWeight;
+  List<Double> strokeDashArray;
   String fillColor;
 }

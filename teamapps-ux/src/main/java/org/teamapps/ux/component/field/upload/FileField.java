@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -145,62 +145,49 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
-		switch (event.getUiEventType()) {
-			case UI_FILE_FIELD_UPLOAD_TOO_LARGE: {
-				UiFileField.UploadTooLargeEvent tooLargeEvent = (UiFileField.UploadTooLargeEvent) event;
-				this.onUploadTooLarge.fire(new UploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
-				break;
+		if (event instanceof UiFileField.UploadTooLargeEvent) {
+			UiFileField.UploadTooLargeEvent tooLargeEvent = (UiFileField.UploadTooLargeEvent) event;
+			this.onUploadTooLarge.fire(new UploadTooLargeEventData(tooLargeEvent.getFileName(), tooLargeEvent.getMimeType(), tooLargeEvent.getSizeInBytes()));
+		} else if (event instanceof UiFileField.UploadStartedEvent) {
+			UiFileField.UploadStartedEvent uploadStartedEvent = (UiFileField.UploadStartedEvent) event;
+			this.onUploadStarted.fire(new UploadStartedEventData(
+					uploadStartedEvent.getFileName(),
+					uploadStartedEvent.getMimeType(),
+					uploadStartedEvent.getSizeInBytes(),
+					() -> this.queueCommandIfRendered(() -> new UiFileField.CancelUploadCommand(getId(), uploadStartedEvent.getFileItemUuid()))
+			));
+		} else if (event instanceof UiFileField.UploadCanceledEvent) {
+			UiFileField.UploadCanceledEvent canceledEvent = (UiFileField.UploadCanceledEvent) event;
+			this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()
+			));
+		} else if (event instanceof UiFileField.UploadFailedEvent) {
+			UiFileField.UploadFailedEvent failedEvent = (UiFileField.UploadFailedEvent) event;
+			this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()
+			));
+		} else if (event instanceof UiFileField.UploadSuccessfulEvent) {
+			UiFileField.UploadSuccessfulEvent uploadedEvent = (UiFileField.UploadSuccessfulEvent) event;
+			UploadedFile uploadedFile = new UploadedFile(uploadedEvent.getUploadedFileUuid(), uploadedEvent.getFileName(), uploadedEvent.getSizeInBytes(), uploadedEvent.getMimeType(),
+					() -> {
+						try {
+							return new FileInputStream(getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid()));
+						} catch (FileNotFoundException e) {
+							throw new UploadedFileAccessException(e);
+						}
+					},
+					() -> getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid())
+			);
+			RECORD record = uploadedFileToRecordConverter.convert(uploadedFile);
+			CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
+			if (isRendered()) {
+				getSessionContext().queueCommand(new UiFileField.ReplaceFileItemCommand(getId(), uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
+			} else {
+				cacheResponse.commit();
 			}
-			case UI_FILE_FIELD_UPLOAD_STARTED: {
-				UiFileField.UploadStartedEvent uploadStartedEvent = (UiFileField.UploadStartedEvent) event;
-				this.onUploadStarted.fire(new UploadStartedEventData(
-						uploadStartedEvent.getFileName(),
-						uploadStartedEvent.getMimeType(),
-						uploadStartedEvent.getSizeInBytes(),
-						() -> this.queueCommandIfRendered(() -> new UiFileField.CancelUploadCommand(getId(), uploadStartedEvent.getFileItemUuid()))
-				));
-				break;
-			}
-			case UI_FILE_FIELD_UPLOAD_CANCELED: {
-				UiFileField.UploadCanceledEvent canceledEvent = (UiFileField.UploadCanceledEvent) event;
-				this.onUploadCanceled.fire(new UploadCanceledEventData(canceledEvent.getFileName(), canceledEvent.getMimeType(), canceledEvent.getSizeInBytes()
-				));
-				break;
-			}
-			case UI_FILE_FIELD_UPLOAD_FAILED: {
-				UiFileField.UploadFailedEvent failedEvent = (UiFileField.UploadFailedEvent) event;
-				this.onUploadFailed.fire(new UploadFailedEventData(failedEvent.getFileName(), failedEvent.getMimeType(), failedEvent.getSizeInBytes()
-				));
-				break;
-			}
-			case UI_FILE_FIELD_UPLOAD_SUCCESSFUL: {
-				UiFileField.UploadSuccessfulEvent uploadedEvent = (UiFileField.UploadSuccessfulEvent) event;
-				UploadedFile uploadedFile = new UploadedFile(uploadedEvent.getUploadedFileUuid(), uploadedEvent.getFileName(), uploadedEvent.getSizeInBytes(), uploadedEvent.getMimeType(),
-						() -> {
-							try {
-								return new FileInputStream(getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid()));
-							} catch (FileNotFoundException e) {
-								throw new UploadedFileAccessException(e);
-							}
-						},
-						() -> getSessionContext().getUploadedFileByUuid(uploadedEvent.getUploadedFileUuid())
-				);
-				RECORD record = uploadedFileToRecordConverter.convert(uploadedFile);
-				CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
-				if (isRendered()) {
-					getSessionContext().queueCommand(new UiFileField.ReplaceFileItemCommand(getId(), uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
-				} else {
-					cacheResponse.commit();
-				}
-				onUploadSuccessful.fire(new UploadSuccessfulEventData<>(uploadedFile, record));
-				break;
-			}
-			case UI_FILE_FIELD_FILE_ITEM_CLICKED: {
-				UiFileField.FileItemClickedEvent fileClickedEvent = (UiFileField.FileItemClickedEvent) event;
-				RECORD record = recordCache.getRecordByClientId(fileClickedEvent.getClientId());
-				onFileItemClicked.fire(record);
-				break;
-			}
+			onUploadSuccessful.fire(new UploadSuccessfulEventData<>(uploadedFile, record));
+		} else if (event instanceof UiFileField.FileItemClickedEvent) {
+			UiFileField.FileItemClickedEvent fileClickedEvent = (UiFileField.FileItemClickedEvent) event;
+			RECORD record = recordCache.getRecordByClientId(fileClickedEvent.getClientId());
+			onFileItemClicked.fire(record);
 		}
 	}
 

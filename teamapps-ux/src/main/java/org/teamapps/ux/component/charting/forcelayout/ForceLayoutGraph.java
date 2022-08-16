@@ -22,12 +22,7 @@ package org.teamapps.ux.component.charting.forcelayout;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiClientRecord;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiNetworkGraph;
-import org.teamapps.dto.UiNetworkLink;
-import org.teamapps.dto.UiNetworkNode;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 
@@ -119,30 +114,25 @@ public class ForceLayoutGraph<RECORD> extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_NETWORK_GRAPH_NODE_CLICKED: {
-				UiNetworkGraph.NodeClickedEvent clickEvent = (UiNetworkGraph.NodeClickedEvent) event;
-				nodes.stream()
-						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
-						.findFirst()
-						.ifPresent(onNodeClicked::fire);
-				break;
-			}
-			case UI_NETWORK_GRAPH_NODE_DOUBLE_CLICKED: {
-				UiNetworkGraph.NodeDoubleClickedEvent clickEvent = (UiNetworkGraph.NodeDoubleClickedEvent) event;
-				nodes.stream()
-						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
-						.findFirst()
-						.ifPresent(onNodeDoubleClicked::fire);
-				break;
-			}
-			case UI_NETWORK_GRAPH_NODE_EXPANDED_OR_COLLAPSED:
-				UiNetworkGraph.NodeExpandedOrCollapsedEvent clickEvent = (UiNetworkGraph.NodeExpandedOrCollapsedEvent) event;
-				nodes.stream()
-						.filter(n -> n.getId().equals(clickEvent.getNodeId()))
-						.findFirst()
-						.ifPresent(n -> onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<RECORD>(n, clickEvent.getExpanded())));
-				break;
+		if (event instanceof UiNetworkGraph.NodeClickedEvent) {
+			UiNetworkGraph.NodeClickedEvent clickEvent = (UiNetworkGraph.NodeClickedEvent) event;
+			nodes.stream()
+					.filter(n -> n.getId().equals(clickEvent.getNodeId()))
+					.findFirst()
+					.ifPresent(onNodeClicked::fire);
+		}    else if (event instanceof UiNetworkGraph.NodeDoubleClickedEvent) {
+			UiNetworkGraph.NodeDoubleClickedEvent clickEvent = (UiNetworkGraph.NodeDoubleClickedEvent) event;
+			nodes.stream()
+					.filter(n -> n.getId().equals(clickEvent.getNodeId()))
+					.findFirst()
+					.ifPresent(onNodeDoubleClicked::fire);
+		}
+		if (event instanceof UiNetworkGraph.NodeExpandedOrCollapsedEvent) {
+			UiNetworkGraph.NodeExpandedOrCollapsedEvent clickEvent = (UiNetworkGraph.NodeExpandedOrCollapsedEvent) event;
+			nodes.stream()
+					.filter(n -> n.getId().equals(clickEvent.getNodeId()))
+					.findFirst()
+					.ifPresent(n -> onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<RECORD>(n, clickEvent.getExpanded())));
 		}
 	}
 

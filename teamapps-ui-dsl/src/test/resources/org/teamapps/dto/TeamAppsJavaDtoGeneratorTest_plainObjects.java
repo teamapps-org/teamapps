@@ -8,6 +8,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,6 +25,9 @@ import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type", defaultImpl = A.class)
 public class A implements UiObject {
 
+        static {
+            var x = UiObjectJacksonTypeIdMaps.class; // make sure the types are registered
+        }
 
 	@JsonSerialize(using = ObjectSerializer.class)
 	@JsonDeserialize(using = ObjectDeserializer.class)
@@ -36,11 +42,6 @@ public class A implements UiObject {
 	protected Map<String, Object> z;
 
 	public A() {
-	}
-
-	@com.fasterxml.jackson.annotation.JsonIgnore
-	public UiObjectType getUiObjectType() {
-		return UiObjectType.A;
 	}
 
 	@SuppressWarnings("unchecked")

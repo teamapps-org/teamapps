@@ -76,7 +76,7 @@ interface UiGraph {
 class UiLineGraph implements UiGraph {
 	String dataSeriesId;
 	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
-    float dataDotRadius;
+    double dataDotRadius;
     String lineColorScaleMin;
     String lineColorScaleMax;
     String areaColorScaleMin;
@@ -88,7 +88,7 @@ class UiHoseGraph implements UiGraph {
 	String middleLineDataSeriesId;
 	String lowerBoundDataSeriesId;
 	UiLineChartCurveType graphType = UiLineChartCurveType.MONOTONE;
-    float dataDotRadius;
+    double dataDotRadius;
     String areaColor;
     boolean stripedArea;
     String middleLineColor;

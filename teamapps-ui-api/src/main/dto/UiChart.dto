@@ -27,18 +27,18 @@ class AbstractUiChart extends UiComponent {
 
 class UiPieChart extends AbstractUiChart {
 	UiDataPointWeighting dataPointWeighting = UiDataPointWeighting.RELATIVE;
-	float rotation3D = 0; // degrees from 0 to 90
-	float height3D = 0;
-	float rotationClockwise = 0; // 0 - 360
-	float innerRadiusProportion = 0; // 0 - 1
+	double rotation3D = 0; // degrees from 0 to 90
+	double height3D = 0;
+	double rotationClockwise = 0; // 0 - 360
+	double innerRadiusProportion = 0; // 0 - 1
 
 	List<UiChartNamedDataPoint> dataPoints;
 
 	command setDataPointWeighting(UiDataPointWeighting dataPointWeighting);
-	command setRotation3D(float rotation3D);
-	command setHeight3D(float height3D);
-	command setRotationClockwise(float rotationClockwise);
-	command setInnerRadiusProportion(float innerRadiusProportion);
+	command setRotation3D(double rotation3D);
+	command setHeight3D(double height3D);
+	command setRotationClockwise(double rotationClockwise);
+	command setInnerRadiusProportion(double innerRadiusProportion);
 	command setDataPoints(List<UiChartNamedDataPoint> dataPoints, long animationDuration);
 
 	event dataPointClicked(String dataPointName);

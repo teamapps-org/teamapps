@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -239,122 +239,102 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_TABLE_ROWS_SELECTED: {
-				UiTable.RowsSelectedEvent rowsSelectedEvent = (UiTable.RowsSelectedEvent) event;
-				selectedRecords = renderedRecords.getRecords(rowsSelectedEvent.getRecordIds());
-				this.onRowsSelected.fire(selectedRecords);
-				if (selectedRecords.size() == 1) {
-					this.onSingleRowSelected.fire(selectedRecords.get(0));
-				} else if (selectedRecords.size() > 1) {
-					this.onMultipleRowsSelected.fire(selectedRecords);
-				}
-				break;
+		if (event instanceof UiTable.RowsSelectedEvent) {
+			UiTable.RowsSelectedEvent rowsSelectedEvent = (UiTable.RowsSelectedEvent) event;
+			selectedRecords = renderedRecords.getRecords(rowsSelectedEvent.getRecordIds());
+			this.onRowsSelected.fire(selectedRecords);
+			if (selectedRecords.size() == 1) {
+				this.onSingleRowSelected.fire(selectedRecords.get(0));
+			} else if (selectedRecords.size() > 1) {
+				this.onMultipleRowsSelected.fire(selectedRecords);
 			}
-			case UI_TABLE_CELL_CLICKED: {
-				UiTable.CellClickedEvent cellClickedEvent = (UiTable.CellClickedEvent) event;
-				RECORD record = renderedRecords.getRecord(cellClickedEvent.getRecordId());
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
-				if (record != null && column != null) {
-					this.onCellClicked.fire(new CellClickedEvent<>(record, column));
-				}
-				break;
+		} else if (event instanceof UiTable.CellClickedEvent) {
+			UiTable.CellClickedEvent cellClickedEvent = (UiTable.CellClickedEvent) event;
+			RECORD record = renderedRecords.getRecord(cellClickedEvent.getRecordId());
+			TableColumn<RECORD, ?> column = getColumnByPropertyName(cellClickedEvent.getColumnPropertyName());
+			if (record != null && column != null) {
+				this.onCellClicked.fire(new CellClickedEvent<>(record, column));
 			}
-			case UI_TABLE_CELL_EDITING_STARTED: {
-				UiTable.CellEditingStartedEvent editingStartedEvent = (UiTable.CellEditingStartedEvent) event;
-				RECORD record = renderedRecords.getRecord(editingStartedEvent.getRecordId());
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
-				if (record == null || column == null) {
-					return;
-				}
-				this.activeEditorCell = new TableCellCoordinates<>(record, editingStartedEvent.getColumnPropertyName());
-				this.selectedRecords = List.of(activeEditorCell.getRecord());
-				Object cellValue = getCellValue(record, column);
-				AbstractField activeEditorField = getActiveEditorField();
-				activeEditorField.setValue(cellValue);
-				List<FieldMessage> cellMessages = getCellMessages(record, editingStartedEvent.getColumnPropertyName());
-				List<FieldMessage> columnMessages = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName()).getMessages();
-				if (columnMessages == null) {
-					columnMessages = Collections.emptyList();
-				}
-				List<FieldMessage> messages = new ArrayList<>(cellMessages);
-				messages.addAll(columnMessages);
-				activeEditorField.setCustomFieldMessages(messages);
-				this.onCellEditingStarted.fire(new CellEditingStartedEvent(record, column, cellValue));
-				break;
+		} else if (event instanceof UiTable.CellEditingStartedEvent) {
+			UiTable.CellEditingStartedEvent editingStartedEvent = (UiTable.CellEditingStartedEvent) event;
+			RECORD record = renderedRecords.getRecord(editingStartedEvent.getRecordId());
+			TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName());
+			if (record == null || column == null) {
+				return;
 			}
-			case UI_TABLE_CELL_EDITING_STOPPED: {
-				this.activeEditorCell = null;
-				UiTable.CellEditingStoppedEvent editingStoppedEvent = (UiTable.CellEditingStoppedEvent) event;
-				RECORD record = renderedRecords.getRecord(editingStoppedEvent.getRecordId());
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
-				if (record == null || column == null) {
-					return;
-				}
-				this.onCellEditingStopped.fire(new CellEditingStoppedEvent<>(record, column));
-				break;
+			this.activeEditorCell = new TableCellCoordinates<>(record, editingStartedEvent.getColumnPropertyName());
+			this.selectedRecords = List.of(activeEditorCell.getRecord());
+			Object cellValue = getCellValue(record, column);
+			AbstractField activeEditorField = getActiveEditorField();
+			activeEditorField.setValue(cellValue);
+			List<FieldMessage> cellMessages = getCellMessages(record, editingStartedEvent.getColumnPropertyName());
+			List<FieldMessage> columnMessages = getColumnByPropertyName(editingStartedEvent.getColumnPropertyName()).getMessages();
+			if (columnMessages == null) {
+				columnMessages = Collections.emptyList();
 			}
-			case UI_TABLE_CELL_VALUE_CHANGED: {
-				UiTable.CellValueChangedEvent changeEvent = (UiTable.CellValueChangedEvent) event;
-				RECORD record = renderedRecords.getRecord(changeEvent.getRecordId());
-				TableColumn<RECORD, ?> column = this.getColumnByPropertyName(changeEvent.getColumnPropertyName());
-				if (record == null || column == null) {
-					return;
-				}
-				Object value = column.getField().convertUiValueToUxValue(changeEvent.getValue());
-				transientChangesByRecordAndPropertyName
-						.computeIfAbsent(record, idValue -> new HashMap<>())
-						.put(column.getPropertyName(), value);
-				onCellValueChanged.fire(new FieldValueChangedEventData(record, column, value));
-				break;
+			List<FieldMessage> messages = new ArrayList<>(cellMessages);
+			messages.addAll(columnMessages);
+			activeEditorField.setCustomFieldMessages(messages);
+			this.onCellEditingStarted.fire(new CellEditingStartedEvent(record, column, cellValue));
+		} else if (event instanceof UiTable.CellEditingStoppedEvent) {
+			this.activeEditorCell = null;
+			UiTable.CellEditingStoppedEvent editingStoppedEvent = (UiTable.CellEditingStoppedEvent) event;
+			RECORD record = renderedRecords.getRecord(editingStoppedEvent.getRecordId());
+			TableColumn<RECORD, ?> column = getColumnByPropertyName(editingStoppedEvent.getColumnPropertyName());
+			if (record == null || column == null) {
+				return;
 			}
-			case UI_TABLE_SORTING_CHANGED:
-				UiTable.SortingChangedEvent sortingChangedEvent = (UiTable.SortingChangedEvent) event;
-				var sortField = sortingChangedEvent.getSortField();
-				var sortDirection = SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection());
-				this.sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
-				getModel().setSorting(sorting);
-				onSortingChanged.fire(new SortingChangedEventData(sortingChangedEvent.getSortField(), SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection())));
-				break;
-			case UI_TABLE_DISPLAYED_RANGE_CHANGED: {
-				UiTable.DisplayedRangeChangedEvent d = (UiTable.DisplayedRangeChangedEvent) event;
-				try {
-					handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
-				} catch (DuplicateEntriesException e) {
-					// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
-					// So try to refresh the whole data instead.
-					LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
-					refreshData();
-				}
-				break;
+			this.onCellEditingStopped.fire(new CellEditingStoppedEvent<>(record, column));
+		} else if (event instanceof UiTable.CellValueChangedEvent) {
+			UiTable.CellValueChangedEvent changeEvent = (UiTable.CellValueChangedEvent) event;
+			RECORD record = renderedRecords.getRecord(changeEvent.getRecordId());
+			TableColumn<RECORD, ?> column = this.getColumnByPropertyName(changeEvent.getColumnPropertyName());
+			if (record == null || column == null) {
+				return;
 			}
-			case UI_TABLE_FIELD_ORDER_CHANGE: {
-				UiTable.FieldOrderChangeEvent fieldOrderChangeEvent = (UiTable.FieldOrderChangeEvent) event;
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(fieldOrderChangeEvent.getColumnPropertyName());
-				onColumnOrderChange.fire(new ColumnOrderChangeEventData<>(column, fieldOrderChangeEvent.getPosition()));
-				break;
+			Object value = column.getField().convertUiValueToUxValue(changeEvent.getValue());
+			transientChangesByRecordAndPropertyName
+					.computeIfAbsent(record, idValue -> new HashMap<>())
+					.put(column.getPropertyName(), value);
+			onCellValueChanged.fire(new FieldValueChangedEventData(record, column, value));
+		} else if (event instanceof UiTable.SortingChangedEvent) {
+			UiTable.SortingChangedEvent sortingChangedEvent = (UiTable.SortingChangedEvent) event;
+			var sortField = sortingChangedEvent.getSortField();
+			var sortDirection = SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection());
+			this.sorting = sortField != null && sortDirection != null ? new Sorting(sortField, sortDirection) : null;
+			getModel().setSorting(sorting);
+			onSortingChanged.fire(new SortingChangedEventData(sortingChangedEvent.getSortField(), SortDirection.fromUiSortDirection(sortingChangedEvent.getSortDirection())));
+		} else if (event instanceof UiTable.DisplayedRangeChangedEvent) {
+			UiTable.DisplayedRangeChangedEvent d = (UiTable.DisplayedRangeChangedEvent) event;
+			try {
+				handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
+			} catch (DuplicateEntriesException e) {
+				// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
+				// So try to refresh the whole data instead.
+				LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
+				refreshData();
 			}
-			case UI_TABLE_COLUMN_SIZE_CHANGE: {
-				UiTable.ColumnSizeChangeEvent columnSizeChangeEvent = (UiTable.ColumnSizeChangeEvent) event;
-				TableColumn<RECORD, ?> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
-				onColumnSizeChange.fire(new ColumnSizeChangeEventData<>(column, columnSizeChangeEvent.getSize()));
-				break;
-			}
-			case UI_TABLE_CONTEXT_MENU_REQUESTED: {
-				UiTable.ContextMenuRequestedEvent e = (UiTable.ContextMenuRequestedEvent) event;
-				lastSeenContextMenuRequestId = e.getRequestId();
-				RECORD record = renderedRecords.getRecord(e.getRecordId());
-				if (record != null && contextMenuProvider != null) {
-					Component contextMenuContent = contextMenuProvider.apply(record);
-					if (contextMenuContent != null) {
-						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
-					} else {
-						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
-					}
+		} else if (event instanceof UiTable.FieldOrderChangeEvent) {
+			UiTable.FieldOrderChangeEvent fieldOrderChangeEvent = (UiTable.FieldOrderChangeEvent) event;
+			TableColumn<RECORD, ?> column = getColumnByPropertyName(fieldOrderChangeEvent.getColumnPropertyName());
+			onColumnOrderChange.fire(new ColumnOrderChangeEventData<>(column, fieldOrderChangeEvent.getPosition()));
+		} else if (event instanceof UiTable.ColumnSizeChangeEvent) {
+			UiTable.ColumnSizeChangeEvent columnSizeChangeEvent = (UiTable.ColumnSizeChangeEvent) event;
+			TableColumn<RECORD, ?> column = getColumnByPropertyName(columnSizeChangeEvent.getColumnPropertyName());
+			onColumnSizeChange.fire(new ColumnSizeChangeEventData<>(column, columnSizeChangeEvent.getSize()));
+		} else if (event instanceof UiTable.ContextMenuRequestedEvent) {
+			UiTable.ContextMenuRequestedEvent e = (UiTable.ContextMenuRequestedEvent) event;
+			lastSeenContextMenuRequestId = e.getRequestId();
+			RECORD record = renderedRecords.getRecord(e.getRecordId());
+			if (record != null && contextMenuProvider != null) {
+				Component contextMenuContent = contextMenuProvider.apply(record);
+				if (contextMenuContent != null) {
+					queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
 				} else {
-					closeContextMenu();
+					queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
 				}
-				break;
+			} else {
+				closeContextMenu();
 			}
 		}
 	}

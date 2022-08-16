@@ -187,7 +187,7 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 		TeamAppsDtoModel model = new TeamAppsDtoModel(classCollectionContext);
 
 		StringWriter stringWriter = new StringWriter();
-		new TeamAppsTypeScriptGenerator(model).generateCommandExecutor(model.getCommandDeclarations(), stringWriter);
+		new TeamAppsTypeScriptGenerator(model).generateCommandExecutor(model.getOwnCommandDeclarations(), stringWriter);
 
 		GeneratorTestUtil.compareCodeWithResource("org/teamapps/dto/TeamAppsTypeScriptGeneratorTest_commandExecutor.tsd", stringWriter.toString());
 	}

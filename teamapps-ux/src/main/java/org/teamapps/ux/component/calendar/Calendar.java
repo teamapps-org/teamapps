@@ -222,74 +222,55 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_CALENDAR_EVENT_CLICKED: {
-				UiCalendar.EventClickedEvent clickEvent = (UiCalendar.EventClickedEvent) event;
-				CEVENT calendarEvent = recordCache.getRecordByClientId(clickEvent.getEventId());
-				if (calendarEvent != null) {
-					onEventClicked.fire(new EventClickedEventData<>(calendarEvent, clickEvent.getIsDoubleClick()));
-				}
-				break;
+		if (event instanceof UiCalendar.EventClickedEvent) {
+			UiCalendar.EventClickedEvent clickEvent = (UiCalendar.EventClickedEvent) event;
+			CEVENT calendarEvent = recordCache.getRecordByClientId(clickEvent.getEventId());
+			if (calendarEvent != null) {
+				onEventClicked.fire(new EventClickedEventData<>(calendarEvent, clickEvent.getIsDoubleClick()));
 			}
-			case UI_CALENDAR_EVENT_MOVED: {
-				UiCalendar.EventMovedEvent eventMovedEvent = (UiCalendar.EventMovedEvent) event;
-				CEVENT calendarEvent = recordCache.getRecordByClientId(eventMovedEvent.getEventId());
-				if (calendarEvent != null) {
-					onEventMoved.fire(new EventMovedEventData<>(calendarEvent, Instant.ofEpochMilli(eventMovedEvent.getNewStart()), Instant.ofEpochMilli(eventMovedEvent.getNewEnd())));
-				}
+		} else if (event instanceof UiCalendar.EventMovedEvent) {
+			UiCalendar.EventMovedEvent eventMovedEvent = (UiCalendar.EventMovedEvent) event;
+			CEVENT calendarEvent = recordCache.getRecordByClientId(eventMovedEvent.getEventId());
+			if (calendarEvent != null) {
+				onEventMoved.fire(new EventMovedEventData<>(calendarEvent, Instant.ofEpochMilli(eventMovedEvent.getNewStart()), Instant.ofEpochMilli(eventMovedEvent.getNewEnd())));
+			}
+		} else if (event instanceof UiCalendar.DayClickedEvent) {
+			UiCalendar.DayClickedEvent dayClickedEvent = (UiCalendar.DayClickedEvent) event;
+			onDayClicked.fire(new DayClickedEventData(timeZone, Instant.ofEpochMilli(dayClickedEvent.getDate()), dayClickedEvent.getIsDoubleClick()));
 
-				break;
-			}
-			case UI_CALENDAR_DAY_CLICKED: {
-				UiCalendar.DayClickedEvent dayClickedEvent = (UiCalendar.DayClickedEvent) event;
-				onDayClicked.fire(new DayClickedEventData(timeZone, Instant.ofEpochMilli(dayClickedEvent.getDate()), dayClickedEvent.getIsDoubleClick()));
-				break;
-			}
-			case UI_CALENDAR_INTERVAL_SELECTED: {
-				UiCalendar.IntervalSelectedEvent selectionEvent = (UiCalendar.IntervalSelectedEvent) event;
-				onIntervalSelected.fire(new IntervalSelectedEventData(timeZone, Instant.ofEpochMilli(selectionEvent.getStart()), Instant.ofEpochMilli(selectionEvent.getEnd()),
-						selectionEvent.getAllDay()));
-				break;
-			}
-			case UI_CALENDAR_VIEW_CHANGED: {
-				UiCalendar.ViewChangedEvent viewChangedEvent = (UiCalendar.ViewChangedEvent) event;
-				this.displayedDate = Instant.ofEpochMilli(viewChangedEvent.getMainIntervalStart()).atZone(timeZone).toLocalDate();
-				this.activeViewMode = CalendarViewMode.valueOf(viewChangedEvent.getViewMode().name());
-				onViewChanged.fire(new ViewChangedEventData(
-						timeZone,
-						activeViewMode,
-						Instant.ofEpochMilli(viewChangedEvent.getMainIntervalStart()),
-						Instant.ofEpochMilli(viewChangedEvent.getMainIntervalEnd()),
-						Instant.ofEpochMilli(viewChangedEvent.getDisplayedIntervalStart()),
-						Instant.ofEpochMilli(viewChangedEvent.getDisplayedIntervalEnd())
-				));
-				break;
-			}
-			case UI_CALENDAR_DATA_NEEDED: {
-				UiCalendar.DataNeededEvent dataNeededEvent = (UiCalendar.DataNeededEvent) event;
-				Instant queryStart = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalStart());
-				Instant queryEnd = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalEnd());
-				queryAndSendCalendarData(queryStart, queryEnd);
-				break;
-			}
-			case UI_CALENDAR_MONTH_HEADER_CLICKED: {
-				UiCalendar.MonthHeaderClickedEvent clickEvent = (UiCalendar.MonthHeaderClickedEvent) event;
-				LocalDate startOfMonth = Instant.ofEpochMilli(clickEvent.getMonthStartDate()).atZone(timeZone).toLocalDate();
-				onMonthHeaderClicked.fire(startOfMonth);
-				break;
-			}
-			case UI_CALENDAR_WEEK_HEADER_CLICKED: {
-				UiCalendar.WeekHeaderClickedEvent clickEvent = (UiCalendar.WeekHeaderClickedEvent) event;
-				LocalDate startOfWeek = Instant.ofEpochMilli(clickEvent.getWeekStartDate()).atZone(timeZone).toLocalDate();
-				onWeekHeaderClicked.fire(new WeeHeaderClickedEventData(timeZone, clickEvent.getYear(), clickEvent.getWeek(), startOfWeek));
-				break;
-			}
-			case UI_CALENDAR_DAY_HEADER_CLICKED: {
-				UiCalendar.DayHeaderClickedEvent clickEvent = (UiCalendar.DayHeaderClickedEvent) event;
-				LocalDate date = Instant.ofEpochMilli(clickEvent.getDate()).atZone(timeZone).toLocalDate();
-				onDayHeaderClicked.fire(date);
-				break;
-			}
+		}   else if (event instanceof UiCalendar.IntervalSelectedEvent) {
+			UiCalendar.IntervalSelectedEvent selectionEvent = (UiCalendar.IntervalSelectedEvent) event;
+			onIntervalSelected.fire(new IntervalSelectedEventData(timeZone, Instant.ofEpochMilli(selectionEvent.getStart()), Instant.ofEpochMilli(selectionEvent.getEnd()),
+					selectionEvent.getAllDay()));
+		}  else if (event instanceof UiCalendar.ViewChangedEvent) {
+			UiCalendar.ViewChangedEvent viewChangedEvent = (UiCalendar.ViewChangedEvent) event;
+			this.displayedDate = Instant.ofEpochMilli(viewChangedEvent.getMainIntervalStart()).atZone(timeZone).toLocalDate();
+			this.activeViewMode = CalendarViewMode.valueOf(viewChangedEvent.getViewMode().name());
+			onViewChanged.fire(new ViewChangedEventData(
+					timeZone,
+					activeViewMode,
+					Instant.ofEpochMilli(viewChangedEvent.getMainIntervalStart()),
+					Instant.ofEpochMilli(viewChangedEvent.getMainIntervalEnd()),
+					Instant.ofEpochMilli(viewChangedEvent.getDisplayedIntervalStart()),
+					Instant.ofEpochMilli(viewChangedEvent.getDisplayedIntervalEnd())
+			));
+		} else if (event instanceof UiCalendar.DataNeededEvent) {
+			UiCalendar.DataNeededEvent dataNeededEvent = (UiCalendar.DataNeededEvent) event;
+			Instant queryStart = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalStart());
+			Instant queryEnd = Instant.ofEpochMilli(dataNeededEvent.getRequestIntervalEnd());
+			queryAndSendCalendarData(queryStart, queryEnd);
+		} else if (event instanceof UiCalendar.MonthHeaderClickedEvent) {
+			UiCalendar.MonthHeaderClickedEvent clickEvent = (UiCalendar.MonthHeaderClickedEvent) event;
+			LocalDate startOfMonth = Instant.ofEpochMilli(clickEvent.getMonthStartDate()).atZone(timeZone).toLocalDate();
+			onMonthHeaderClicked.fire(startOfMonth);
+		}    else if (event instanceof UiCalendar.WeekHeaderClickedEvent) {
+			UiCalendar.WeekHeaderClickedEvent clickEvent = (UiCalendar.WeekHeaderClickedEvent) event;
+			LocalDate startOfWeek = Instant.ofEpochMilli(clickEvent.getWeekStartDate()).atZone(timeZone).toLocalDate();
+			onWeekHeaderClicked.fire(new WeeHeaderClickedEventData(timeZone, clickEvent.getYear(), clickEvent.getWeek(), startOfWeek));
+		} else if (event instanceof UiCalendar.DayHeaderClickedEvent) {
+			UiCalendar.DayHeaderClickedEvent clickEvent = (UiCalendar.DayHeaderClickedEvent) event;
+			LocalDate date = Instant.ofEpochMilli(clickEvent.getDate()).atZone(timeZone).toLocalDate();
+			onDayHeaderClicked.fire(date);
 		}
 	}
 

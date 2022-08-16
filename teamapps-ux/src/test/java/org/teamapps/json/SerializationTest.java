@@ -21,14 +21,7 @@ package org.teamapps.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import org.teamapps.dto.INIT;
-import org.teamapps.dto.INIT_NOK;
-import org.teamapps.dto.UiClientObjectReference;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiMultiLineTextField;
-import org.teamapps.dto.UiObject;
-import org.teamapps.dto.UiSessionClosingReason;
-import org.teamapps.dto.UiWorkSpaceLayout;
+import org.teamapps.dto.*;
 
 public class SerializationTest {
 

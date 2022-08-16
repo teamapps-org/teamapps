@@ -22,14 +22,15 @@ package org.teamapps.ux.component.charting.common;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiTreeGraphNodeImage;
+import org.teamapps.dto.UiTreeGraphNodeImageCornerShape;
 
 public class GraphNodeImage {
 
 	public enum CornerShape {
 		ORIGINAL, ROUNDED, CIRCLE;
 
-		public UiTreeGraphNodeImage.CornerShape toUiCornerShape() {
-			return UiTreeGraphNodeImage.CornerShape.valueOf(this.name());
+		public UiTreeGraphNodeImageCornerShape toUiCornerShape() {
+			return UiTreeGraphNodeImageCornerShape.valueOf(this.name());
 		}
 	}
 	private String url;

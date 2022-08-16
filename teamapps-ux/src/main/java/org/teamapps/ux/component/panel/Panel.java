@@ -33,12 +33,7 @@ import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbutton.ToolButton;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -221,12 +216,9 @@ public class Panel extends AbstractComponent implements Component {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_PANEL_WINDOW_BUTTON_CLICKED: {
-				UiPanel.WindowButtonClickedEvent clickedEvent = (UiPanel.WindowButtonClickedEvent) event;
-				this.onWindowButtonClicked.fire(WindowButtonType.fromUiWindowButtonType(clickedEvent.getWindowButton()));
-				break;
-			}
+		if (event instanceof UiPanel.WindowButtonClickedEvent) {
+			UiPanel.WindowButtonClickedEvent clickedEvent = (UiPanel.WindowButtonClickedEvent) event;
+			this.onWindowButtonClicked.fire(WindowButtonType.fromUiWindowButtonType(clickedEvent.getWindowButton()));
 		}
 	}
 

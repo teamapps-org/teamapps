@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -156,32 +156,27 @@ public class TimeGraph extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_TIME_GRAPH_ZOOMED: {
-				UiTimeGraph.ZoomedEvent zoomedEvent = (UiTimeGraph.ZoomedEvent) event;
+		if (event instanceof UiTimeGraph.ZoomedEvent) {
+			UiTimeGraph.ZoomedEvent zoomedEvent = (UiTimeGraph.ZoomedEvent) event;
 
-				Interval displayedInterval = new Interval(zoomedEvent.getDisplayedInterval().getMin(), zoomedEvent.getDisplayedInterval().getMax());
-				TimePartitioning timePartitioning = zoomLevels.get(zoomedEvent.getZoomLevelIndex());
+			Interval displayedInterval = new Interval(zoomedEvent.getDisplayedInterval().getMin(), zoomedEvent.getDisplayedInterval().getMax());
+			TimePartitioning timePartitioning = zoomLevels.get(zoomedEvent.getZoomLevelIndex());
 
-				if (zoomedEvent.getNeededIntervalsByGraphId() != null) {
-					final Map<String, List<Interval>> neededIntervalsByGraphId = zoomedEvent.getNeededIntervalsByGraphId().entrySet().stream()
-							.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(i -> new Interval(i.getMin(), i.getMax())).collect(Collectors.toList())));
-					Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededIntervalsByGraphId);
-					queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), zoomedEvent.getZoomLevelIndex(), convertToUiData(data)));
-				}
-
-				this.displayedInterval = displayedInterval;
-				this.millisecondsPerPixel = zoomedEvent.getMillisecondsPerPixel();
-				this.onZoomed.fire(new ZoomEventData(displayedInterval, zoomedEvent.getMillisecondsPerPixel(), timePartitioning));
-				break;
+			if (zoomedEvent.getNeededIntervalsByGraphId() != null) {
+				final Map<String, List<Interval>> neededIntervalsByGraphId = zoomedEvent.getNeededIntervalsByGraphId().entrySet().stream()
+						.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(i -> new Interval(i.getMin(), i.getMax())).collect(Collectors.toList())));
+				Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededIntervalsByGraphId);
+				queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), zoomedEvent.getZoomLevelIndex(), convertToUiData(data)));
 			}
-			case UI_TIME_GRAPH_INTERVAL_SELECTED: {
-				UiTimeGraph.IntervalSelectedEvent selectedEvent = (UiTimeGraph.IntervalSelectedEvent) event;
-				Interval interval = selectedEvent.getIntervalX() != null ? new Interval(selectedEvent.getIntervalX().getMin(), selectedEvent.getIntervalX().getMax()) : null;
-				this.selectedInterval = interval;
-				this.onIntervalSelected.fire(interval);
-				break;
-			}
+
+			this.displayedInterval = displayedInterval;
+			this.millisecondsPerPixel = zoomedEvent.getMillisecondsPerPixel();
+			this.onZoomed.fire(new ZoomEventData(displayedInterval, zoomedEvent.getMillisecondsPerPixel(), timePartitioning));
+		} else if (event instanceof UiTimeGraph.IntervalSelectedEvent) {
+			UiTimeGraph.IntervalSelectedEvent selectedEvent = (UiTimeGraph.IntervalSelectedEvent) event;
+			Interval interval = selectedEvent.getIntervalX() != null ? new Interval(selectedEvent.getIntervalX().getMin(), selectedEvent.getIntervalX().getMax()) : null;
+			this.selectedInterval = interval;
+			this.onIntervalSelected.fire(interval);
 		}
 	}
 

@@ -20,12 +20,12 @@
 class UiImageCropper extends UiComponent {
 	required String imageUrl;
 	required UiImageCropperSelectionMode selectionMode;
-	required float aspectRatio = 1; // width/height; 0 = no aspect ratio constraint!
+	required double aspectRatio = 1; // width/height; 0 = no aspect ratio constraint!
 	UiImageCropperSelection selection;
 
 	command setImageUrl(String imageUrl);
 	command setSelectionMode(UiImageCropperSelectionMode selectionMode);
-	command setAspectRatio(float aspectRatio);
+	command setAspectRatio(double aspectRatio);
 	command setSelection(UiImageCropperSelection selection);
 
 	event selectionChanged(UiImageCropperSelection selection);

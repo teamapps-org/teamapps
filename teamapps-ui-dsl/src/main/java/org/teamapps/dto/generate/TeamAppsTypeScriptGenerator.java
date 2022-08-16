@@ -20,6 +20,7 @@
 package org.teamapps.dto.generate;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.AutoIndentWriter;
@@ -31,7 +32,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TeamAppsTypeScriptGenerator {
@@ -40,18 +43,37 @@ public class TeamAppsTypeScriptGenerator {
     private final STGroupFile stGroup;
     private final TeamAppsDtoModel model;
 
-    public static void main(String[] args) throws IOException {
-        if (args.length < 2) {
-            System.err.println("Usage: sourceDir targetDir");
+    public static void main(String[] args) throws IOException, ParseException {
+        Options options = new Options();
+        options.addOption(Option.builder()
+                .option("i")
+                .longOpt("import")
+                .hasArg(true)
+                .desc("Additional directory with model files to include")
+                .build());
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd = parser.parse(options, args);
+
+        TeamAppsDtoModel[] importedModels = Optional.ofNullable(cmd.getOptionValues('i')).stream().flatMap(Arrays::stream)
+                .map(dir -> {
+                    try {
+                        return new TeamAppsDtoModel(TeamAppsGeneratorUtil.parseClassCollections(new File(dir)));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toArray(TeamAppsDtoModel[]::new);
+
+        if (cmd.getArgs().length < 2) {
+            new HelpFormatter().printHelp("generator", options);
             System.exit(1);
         }
 
-        File sourceDir = new File(args[0]);
-        File targetDir = new File(args[1]);
+        File sourceDir = new File(cmd.getArgs()[0]);
+        File targetDir = new File(cmd.getArgs()[1]);
 
         System.out.println("Generating TypeScript from " + sourceDir.getAbsolutePath() + " to " + targetDir.getAbsolutePath());
 
-        new TeamAppsTypeScriptGenerator(new TeamAppsDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir)))
+        new TeamAppsTypeScriptGenerator(new TeamAppsDtoModel(TeamAppsGeneratorUtil.parseClassCollections(sourceDir), importedModels))
                 .generate(targetDir);
     }
 
@@ -64,14 +86,14 @@ public class TeamAppsTypeScriptGenerator {
         FileUtils.deleteDirectory(targetDir);
         File parentDir = FileUtils.createDirectory(targetDir);
 
-        for (TeamAppsDtoParser.EnumDeclarationContext enumContext : model.getEnumDeclarations()) {
+        for (TeamAppsDtoParser.EnumDeclarationContext enumContext : model.getOwnEnumDeclarations()) {
             generateEnum(enumContext, new FileWriter(new File(parentDir, enumContext.Identifier() + ".ts")));
         }
-        for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext : model.getInterfaceDeclarations()) {
+        for (TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext : model.getOwnInterfaceDeclarations()) {
             logger.info("Generating typescript definitions for interface: " + interfaceContext.Identifier());
             generateInterfaceDefinition(interfaceContext, new FileWriter(new File(parentDir, interfaceContext.Identifier() + "Config.ts")));
         }
-        for (TeamAppsDtoParser.ClassDeclarationContext clazzContext : model.getClassDeclarations()) {
+        for (TeamAppsDtoParser.ClassDeclarationContext clazzContext : model.getOwnClassDeclarations()) {
             logger.info("Generating typescript definitions for class: " + clazzContext.Identifier());
             generateClassDefinition(clazzContext, new FileWriter(new File(parentDir, clazzContext.Identifier() + "Config.ts")));
         }
@@ -79,10 +101,10 @@ public class TeamAppsTypeScriptGenerator {
         generateCommandBaseDefinition(new FileWriter(new File(parentDir, "UiCommand.ts")));
         generateCommandExecutor(model.getCommandDeclarations(), new FileWriter(new File(parentDir, "CommandExecutor.ts")));
 
-        generateEventBaseDefinition(model.getEventDeclarations(), new FileWriter(new File(parentDir, "UiEvent.ts")));
+        generateEventBaseDefinition(new FileWriter(new File(parentDir, "UiEvent.ts")));
         generateEventRegistrator(model.getAllClassesAndInterfacesWithEvents(), new FileWriter(new File(parentDir, "ComponentEventDescriptors.ts")));
 
-        generateQueryBaseDefinition(model.getEventDeclarations(), new FileWriter(new File(parentDir, "UiQuery.ts")));
+        generateQueryBaseDefinition(new FileWriter(new File(parentDir, "UiQuery.ts")));
         generateQueryFunctionAdder(model.getAllClassesAndInterfacesWithQueries(), new FileWriter(new File(parentDir, "QueryFunctionAdder.ts")));
     }
 
@@ -127,14 +149,14 @@ public class TeamAppsTypeScriptGenerator {
         writer.close();
     }
 
-    public void generateEventBaseDefinition(List<TeamAppsDtoParser.EventDeclarationContext> eventDeclarations, Writer writer) throws IOException {
+    public void generateEventBaseDefinition(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("uiEventBaseDefinition");
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();
     }
 
-    public void generateQueryBaseDefinition(List<TeamAppsDtoParser.EventDeclarationContext> eventDeclarations, Writer writer) throws IOException {
+    public void generateQueryBaseDefinition(Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("uiQueryBaseDefinition");
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());

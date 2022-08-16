@@ -19,18 +19,7 @@
  */
 package org.teamapps.ux.component.grid.bootstrap;
 
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiComponentGridPlacement;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiGridColumn;
-import org.teamapps.dto.UiGridLayout;
-import org.teamapps.dto.UiGridPlacement;
-import org.teamapps.dto.UiGridRow;
-import org.teamapps.dto.UiResponsiveGridLayout;
-import org.teamapps.dto.UiResponsiveGridLayoutPolicy;
-import org.teamapps.dto.UiSizeType;
-import org.teamapps.dto.UiSizingPolicy;
-import org.teamapps.dto.UiSpacing;
+import org.teamapps.dto.*;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.format.HorizontalElementAlignment;

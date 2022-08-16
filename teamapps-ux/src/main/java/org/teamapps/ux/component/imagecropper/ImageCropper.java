@@ -47,14 +47,11 @@ public class ImageCropper extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch(event.getUiEventType()) {
-			case UI_IMAGE_CROPPER_SELECTION_CHANGED: {
-				UiImageCropperSelection uiSelection = ((UiImageCropper.SelectionChangedEvent) event).getSelection();
-				ImageCropperSelection selection = new ImageCropperSelection(uiSelection.getLeft(), uiSelection.getTop(), uiSelection.getWidth(), uiSelection.getHeight());
-				this.selection = selection;
-				this.onSelectionChanged.fire(selection);
-				break;
-			}
+		if (event instanceof UiImageCropper.SelectionChangedEvent) {
+			UiImageCropperSelection uiSelection = ((UiImageCropper.SelectionChangedEvent) event).getSelection();
+			ImageCropperSelection selection = new ImageCropperSelection(uiSelection.getLeft(), uiSelection.getTop(), uiSelection.getWidth(), uiSelection.getHeight());
+			this.selection = selection;
+			this.onSelectionChanged.fire(selection);
 		}
 	}
 

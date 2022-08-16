@@ -47,7 +47,7 @@ abstract class AbstractUiTemplateElement {
 
 class UiTextElement extends AbstractUiTemplateElement {
 	UiFontStyle fontStyle;
-	float lineHeight = 1.2f;
+	double lineHeight = 1.2f;
 	boolean wrapLines;
 	UiSpacing padding;
 	UiTextAlignment textAlignment = UiTextAlignment.LEFT;
@@ -116,20 +116,20 @@ class UiFontStyle {
 	boolean bold;
 	boolean underline;
 	boolean italic;
-	float relativeFontSize = 1;
+	double relativeFontSize = 1;
 }
 
 class UiSizingPolicy {
 	required UiSizeType type;
-    float value;
+    double value;
     int minAbsoluteSize;
 }
 
 class UiSpacing {
-	float top = 0;
-	float right = 0;
-	float bottom = 0;
-	float left = 0;
+	double top = 0;
+	double right = 0;
+	double bottom = 0;
+	double left = 0;
 }
 
 class UiBorder {
@@ -137,15 +137,15 @@ class UiBorder {
 	UiLine left;
 	UiLine bottom;
 	UiLine right;
-	float borderRadius;
+	double borderRadius;
 }
 
 class UiShadow {
 	required String color;
-	required float blur;
-	float offsetX;
-	float offsetY;
-	float spread;
+	required double blur;
+	double offsetX;
+	double offsetY;
+	double spread;
 }
 
 enum UiSizeType {
@@ -156,7 +156,7 @@ enum UiSizeType {
 }
 
 class UiLine {
-	required float thickness;
+	required double thickness;
 	required String color;
 	UiLineType type = UiLineType.SOLID;
 }

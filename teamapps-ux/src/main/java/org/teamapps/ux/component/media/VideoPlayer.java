@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,27 +58,20 @@ public class VideoPlayer extends AbstractComponent {
 		uiVideoPlayer.setPosterImageUrl(posterImageUrl);
 		uiVideoPlayer.setPosterImageSize(posterImageSize.toUiPosterImageSize());
 		uiVideoPlayer.setSendPlayerProgressEventsEachXSeconds(sendPlayerProgressEventsEachXSeconds);
-		uiVideoPlayer.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString(): null);
+		uiVideoPlayer.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		uiVideoPlayer.setPreloadMode(preloadMode.toUiPreloadMode());
 		return uiVideoPlayer;
 	}
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_VIDEO_PLAYER_ERROR_LOADING: {
-				onErrorLoading.fire(null);
-				break;
-			}
-			case UI_VIDEO_PLAYER_PLAYER_PROGRESS: {
-				UiVideoPlayer.PlayerProgressEvent e = (UiVideoPlayer.PlayerProgressEvent) event;
-				onProgress.fire(e.getPositionInSeconds());
-				break;
-			}
-			case UI_VIDEO_PLAYER_ENDED: {
-				onEnded.fire();
-				break;
-			}
+		if (event instanceof UiVideoPlayer.ErrorLoadingEvent) {
+			onErrorLoading.fire(null);
+		} else if (event instanceof UiVideoPlayer.PlayerProgressEvent) {
+			UiVideoPlayer.PlayerProgressEvent e = (UiVideoPlayer.PlayerProgressEvent) event;
+			onProgress.fire(e.getPositionInSeconds());
+		} else if (event instanceof UiVideoPlayer.EndedEvent) {
+			onEnded.fire();
 		}
 	}
 

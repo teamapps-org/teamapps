@@ -19,7 +19,11 @@
  */
 class UiTagComboBox extends UiComboBox {
 	int maxEntries; // if 0, then the list is unbounded
-	enum {SINGLE_LINE, MULTI_LINE, SINGLE_TAG_PER_LINE} wrappingMode = WrappingMode.MULTI_LINE;
+	UiTagComboBoxWrappingMode wrappingMode = UiTagComboBoxWrappingMode.MULTI_LINE;
 	boolean distinct = true; // if true, do not allow the same entry to be selected multiple times!
 	boolean twoStepDeletion; // This will cause tags to not directly be deleted when pressing the backspace or delete key, but first marked for deletion.
+}
+
+enum UiTagComboBoxWrappingMode {
+    SINGLE_LINE, MULTI_LINE, SINGLE_TAG_PER_LINE
 }

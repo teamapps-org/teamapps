@@ -28,11 +28,11 @@ import org.teamapps.ux.component.Component;
 
 public class SplitPane extends AbstractComponent {
 
-	public Event<Float> onResized = new Event<>();
+	public Event<Double> onResized = new Event<>();
 
 	private SplitDirection splitDirection;
 	private SplitSizePolicy sizePolicy;
-	private float referenceChildSize;
+	private double referenceChildSize;
 	private Component firstChild;
 	private Component lastChild;
 	private int firstChildMinSize = 10;
@@ -81,12 +81,10 @@ public class SplitPane extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_SPLIT_PANE_SPLIT_RESIZED:
-				UiSplitPane.SplitResizedEvent resizedEvent = (UiSplitPane.SplitResizedEvent) event;
-				this.referenceChildSize = resizedEvent.getReferenceChildSize();
-				onResized.fire(resizedEvent.getReferenceChildSize());
-				break;
+		if (event instanceof UiSplitPane.SplitResizedEvent) {
+			UiSplitPane.SplitResizedEvent resizedEvent = (UiSplitPane.SplitResizedEvent) event;
+			this.referenceChildSize = resizedEvent.getReferenceChildSize();
+			onResized.fire(resizedEvent.getReferenceChildSize());
 		}
 	}
 
@@ -135,7 +133,7 @@ public class SplitPane extends AbstractComponent {
 		queueCommandIfRendered(() -> new UiSplitPane.SetSizeCommand(getId(), referenceChildSize, sizePolicy.toUiSplitSizePolicy()));
 	}
 
-	public float getReferenceChildSize() {
+	public double getReferenceChildSize() {
 		return referenceChildSize;
 	}
 

@@ -8,7 +8,6 @@ import {UiEvent} from "./UiEvent";
 import {UiCommand} from "./UiCommand";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-
 export interface XConfig {
 	_type?: string;
 	queryEntries: (query: X_QueryEntriesQuery) => Promise<string[]>

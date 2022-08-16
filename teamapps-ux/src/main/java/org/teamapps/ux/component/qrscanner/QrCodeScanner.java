@@ -43,10 +43,8 @@ public class QrCodeScanner extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_QR_CODE_SCANNER_QR_CODE_DETECTED:
-				onQrCodeDetected.fire(((UiQrCodeScanner.QrCodeDetectedEvent) event).getCode());
-				break;
+		if (event instanceof UiQrCodeScanner.QrCodeDetectedEvent) {
+			onQrCodeDetected.fire(((UiQrCodeScanner.QrCodeDetectedEvent) event).getCode());
 		}
 	}
 

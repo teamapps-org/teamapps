@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,30 +29,21 @@ import org.teamapps.ux.component.field.validator.FieldValidator;
 import org.teamapps.ux.i18n.TeamAppsDictionary;
 import org.teamapps.ux.session.CurrentSessionContext;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractField.class);
-	
+
 	private final FieldValidator<VALUE> requiredValidator = (value) ->
 			this.isEmptyValue(value) ? Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
-			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
+					CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
 	private final FieldValidator<VALUE> requiredIfVisibleAndEditableValidator = (value) ->
 			(this.isVisible() && (this.getEditingMode() == FieldEditingMode.EDITABLE || this.getEditingMode() == FieldEditingMode.EDITABLE_IF_FOCUSED) && this.isEmptyValue(value)) ?
 					Collections.singletonList(new FieldMessage(FieldMessage.Severity.ERROR,
-			CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
+							CurrentSessionContext.get().getLocalized(TeamAppsDictionary.REQUIRED_FIELD.getKey()))) : List.of();
 
 	public final Event<VALUE> onFocus = new Event<>();
 	public final Event<VALUE> onBlur = new Event<>();
@@ -129,17 +120,13 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_FIELD_VALUE_CHANGED:
-				applyValueFromUi(((UiField.ValueChangedEvent) event).getValue());
-				validate();
-				break;
-			case UI_FIELD_FOCUS:
-				onFocus.fire();
-				break;
-			case UI_FIELD_BLUR:
-				onBlur.fire();
-				break;
+		if (event instanceof UiField.ValueChangedEvent) {
+			applyValueFromUi(((UiField.ValueChangedEvent) event).getValue());
+			validate();
+		} else if (event instanceof UiField.FocusEvent) {
+			onFocus.fire();
+		} else if (event instanceof UiField.BlurEvent) {
+			onBlur.fire();
 		}
 	}
 

@@ -9,7 +9,6 @@ import {UiEvent} from "./UiEvent";
 import {UiQuery} from "./UiQuery";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-
 export interface AConfig {
 	_type?: string;
 	a: string;

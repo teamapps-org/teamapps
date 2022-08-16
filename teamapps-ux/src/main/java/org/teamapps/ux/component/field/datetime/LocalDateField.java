@@ -23,6 +23,7 @@ import com.ibm.icu.util.ULocale;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiLocalDate;
 import org.teamapps.dto.UiLocalDateField;
+import org.teamapps.dto.UiLocalDateFieldDropDownMode;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.SpecialKey;
@@ -69,7 +70,7 @@ public class LocalDateField extends AbstractField<LocalDate> implements TextInpu
 		dateField.setShowClearButton(showClearButton);
 		dateField.setDefaultSuggestionDate(convertUxValueToUiValue(defaultSuggestionDate));
 		dateField.setShuffledFormatSuggestionsEnabled(shuffledFormatSuggestionsEnabled);
-		dateField.setDropDownMode(UiLocalDateField.DropDownMode.valueOf(dropDownMode.name()));
+		dateField.setDropDownMode(UiLocalDateFieldDropDownMode.valueOf(dropDownMode.name()));
 		dateField.setPlaceholderText(this.emptyText);
 		return dateField;
 	}

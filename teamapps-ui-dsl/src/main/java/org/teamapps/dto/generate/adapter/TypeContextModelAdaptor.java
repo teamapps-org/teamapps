@@ -19,8 +19,8 @@
  */
 package org.teamapps.dto.generate.adapter;
 
-import com.google.common.collect.Sets;
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
@@ -30,16 +30,15 @@ import org.teamapps.dto.generate.TeamAppsDtoModel;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+
+import static org.teamapps.dto.generate.TeamAppsDtoModel.IMPLICITELY_REFERENCEABLE_CLASSES;
 
 public class TypeContextModelAdaptor extends PojoModelAdaptor {
 
-	static final Map<String, String> PRIMITIVE_TYPE_TO_WRAPPER_TYPE = new HashMap<>();
+	static final BiMap<String, String> PRIMITIVE_TYPE_TO_WRAPPER_TYPE = HashBiMap.create();
 	private static final Map<String, String> PRIMITIVE_TYPE_TO_TYPESCRIPT_TYPE = new HashMap<>();
 	private static final Map<String, String> PRIMITIVE_TYPE_TO_DEFAULT_VALUE = new HashMap<>();
 	private static final Map<String, String> TYPESCRIPT_PRIMITIVE_TYPE_TO_DEFAULT_VALUE = new HashMap<>();
-
-	private static final Set<String> IMPLICITELY_REFERENCEABLE_CLASSES = Sets.newHashSet("UiEvent", "UiCommand");
 
 	static {
 		PRIMITIVE_TYPE_TO_WRAPPER_TYPE.put("boolean", "Boolean");
@@ -78,10 +77,10 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		PRIMITIVE_TYPE_TO_DEFAULT_VALUE.put("double", "0");
 	}
 
-	private final TeamAppsDtoModel astUtil;
+	private final TeamAppsDtoModel model;
 
-	public TypeContextModelAdaptor(TeamAppsDtoModel astUtil) {
-		this.astUtil = astUtil;
+	public TypeContextModelAdaptor(TeamAppsDtoModel model) {
+		this.model = model;
 	}
 
 	@Override
@@ -90,22 +89,26 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 
 		if ("javaTypeString".equals(propertyName)) {
 			return getJavaTypeString(typeContext);
+		} else if ("primitiveTypeName".equals(propertyName)) {
+			return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.inverse().getOrDefault(typeContext.getText(), getJavaTypeString(typeContext));
 		} else if ("isUiComponentId".equals(propertyName)) {
 			return isUiComponentId(typeContext);
+		} else if ("javaTypeWrapperString".equals(propertyName)) {
+			return getJavaTypeWrapperString(typeContext);
 		} else if ("isString".equals(propertyName)) {
 			return "String".equals(typeContext.getText());
 		} else if ("isEnum".equals(propertyName)) {
-			return typeContext.inlineEnum() != null || astUtil.findReferencedEnum(typeContext) != null;
+			return model.findReferencedEnum(typeContext) != null;
 		} else if ("isList".equals(propertyName)) {
 			return isList(typeContext);
 		} else if ("isDictionary".equals(propertyName)) {
 			return isDictionary(typeContext);
 		} else if ("isReferenceList".equals(propertyName)) {
-			return isList(typeContext) && isReferenceToJsonAware(getFirstTypeArgument(typeContext));
+			return isList(typeContext) && model.isReferenceToJsonAware(getFirstTypeArgument(typeContext));
 		} else if ("firstTypeArgument".equals(propertyName)) {
 			return getFirstTypeArgument(typeContext);
 		} else if ("isReferenceToJsonAware".equals(propertyName)) {
-			return isReferenceToJsonAware(typeContext);
+			return model.isReferenceToJsonAware(typeContext);
 		} else if ("isTypeScriptConfig".equals(propertyName)) {
 			return isTypeScriptConfigSuffixed(typeContext);
 		} else if ("isPrimitiveType".equals(propertyName)) {
@@ -124,8 +127,8 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			} else {
 				throw new IllegalArgumentException(typeContext.getText() + " is not a primitive type!");
 			}
-		} else if ("isReference".equals(propertyName)) {
-			return isReference(typeContext);
+		} else if ("isUiClientObjectReferenceOrCollectionOfThese".equals(propertyName)) {
+			return isUiClientObjectReferenceOrCollectionOfThese(typeContext);
 		} else if ("objectType".equals(propertyName)) {
 			if (PRIMITIVE_TYPE_TO_WRAPPER_TYPE.keySet().contains(typeContext.getText())) {
 				return PRIMITIVE_TYPE_TO_WRAPPER_TYPE.get(typeContext.getText());
@@ -149,16 +152,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 	}
 
 	private String getJavaTypeString(TeamAppsDtoParser.TypeContext typeContext) {
-		if (typeContext.inlineEnum() != null) {
-			String propName = ((TeamAppsDtoParser.PropertyDeclarationContext) typeContext.parent).Identifier().getText();
-			return StringUtils.capitalize(propName);
-		} else if (typeContext.subCommandReference() != null) {
-			String className = typeContext.subCommandReference().typeReference().Identifier().getText();
-			return className + "." + className + "SubCommand";
-		} else if (typeContext.subEventReference() != null) {
-			String className = typeContext.subEventReference().typeReference().Identifier().getText();
-			return className + "." + className + "SubEvent";
-		} else if (isList(typeContext)) {
+		if (isList(typeContext)) {
 			TeamAppsDtoParser.TypeContext firstTypeArgument = getFirstTypeArgument(typeContext);
 			if (isObject(firstTypeArgument)) {
 				return "List";
@@ -167,8 +161,8 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			}
 		} else if (isDictionary(typeContext)) {
 			return "Map<String, " + getJavaTypeString(typeContext.typeReference().typeArguments().typeArgument(0).type()) + ">";
-		} else if (isReference(typeContext)) {
-			return astUtil.findSelfNearestAncestorClassWithReferenceableAttribute(astUtil.findReferencedClass(typeContext)).Identifier().getText() + "Reference";
+		} else if (isUiClientObjectReference(typeContext)) {
+			return model.findSelfNearestAncestorClassWithReferenceableAttribute(model.findReferencedClass(typeContext)).Identifier().getText() + "Reference";
 		} else if (isUiComponentId(typeContext)) {
 			return "String";
 		} else if (isRawJsonString(typeContext)) {
@@ -178,8 +172,31 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		}
 	}
 
-	private boolean isReference(TeamAppsDtoParser.TypeContext typeContext) {
+	private String getJavaTypeWrapperString(TeamAppsDtoParser.TypeContext typeContext) {
+		if (isList(typeContext)) {
+			TeamAppsDtoParser.TypeContext firstTypeArgument = getFirstTypeArgument(typeContext);
+			return "List<" + getJavaTypeWrapperString(firstTypeArgument) + ">";
+		} else if (isDictionary(typeContext)) {
+			return "Map<String, " + getJavaTypeWrapperString(typeContext.typeReference().typeArguments().typeArgument(0).type()) + ">";
+		} else if (model.isReferenceToJsonAware(typeContext)) {
+			return getJavaTypeString(typeContext) + "Wrapper";
+		} else {
+			return getJavaTypeString(typeContext);
+		}
+	}
+
+	private boolean isUiClientObjectReference(TeamAppsDtoParser.TypeContext typeContext) {
 		return typeContext.typeReference() != null && typeContext.typeReference().referenceTypeModifier() != null;
+	}
+
+	private boolean isUiClientObjectReferenceOrCollectionOfThese(TeamAppsDtoParser.TypeContext typeContext) {
+		while (typeContext != null) {
+			if (isUiClientObjectReference(typeContext)) {
+				return true;
+			}
+			typeContext = getFirstTypeArgument(typeContext);
+		}
+		return false;
 	}
 
 	private boolean isUiComponentId(TeamAppsDtoParser.TypeContext typeContext) {
@@ -189,11 +206,6 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 	private String getTypeScriptType(TeamAppsDtoParser.TypeContext typeContext) {
 		if (isObject(typeContext)) {
 			return "any";
-		} else if (typeContext.inlineEnum() != null) {
-			TeamAppsDtoParser.PropertyDeclarationContext propertyDecl = (TeamAppsDtoParser.PropertyDeclarationContext) typeContext.getParent();
-			String propertyName = propertyDecl.Identifier().getText();
-			TeamAppsDtoParser.ClassDeclarationContext classDeclaration = astUtil.findAncestorOfType(propertyDecl, TeamAppsDtoParser.ClassDeclarationContext.class);
-			return classDeclaration.Identifier().getText() + "_" + StringUtils.capitalize(propertyName);
 		} else if (typeContext.subCommandReference() != null) {
 			return "any";
 		} else if (typeContext.subEventReference() != null) {
@@ -206,7 +218,7 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 			return "{[name: string]: " + getTypeScriptType(getFirstTypeArgument(typeContext)) + "}";
 		} else if (isUiComponentId(typeContext)) {
 			return "string";
-		} else if (isReference(typeContext)) {
+		} else if (isUiClientObjectReference(typeContext)) {
 			return "unknown";
 		} else if (IMPLICITELY_REFERENCEABLE_CLASSES.contains(typeContext.getText())) {
 			return typeContext.getText();
@@ -225,16 +237,8 @@ public class TypeContextModelAdaptor extends PojoModelAdaptor {
 		return typeContext.typeReference() != null && "Object".equals(typeContext.typeReference().Identifier().getText());
 	}
 
-	private boolean isReferenceToJsonAware(TeamAppsDtoParser.TypeContext typeContext) {
-		return astUtil.findReferencedClass(typeContext) != null
-				|| astUtil.findReferencedInterface(typeContext) != null
-				|| typeContext.subCommandReference() != null
-				|| typeContext.subEventReference() != null
-				|| IMPLICITELY_REFERENCEABLE_CLASSES.contains(typeContext.getText());
-	}
-
 	private boolean isTypeScriptConfigSuffixed(TeamAppsDtoParser.TypeContext typeContext) {
-		return astUtil.findReferencedClass(typeContext) != null || astUtil.findReferencedInterface(typeContext) != null;
+		return model.findReferencedClass(typeContext) != null || model.findReferencedInterface(typeContext) != null;
 	}
 
 	private boolean isList(TeamAppsDtoParser.TypeContext typeContext) {

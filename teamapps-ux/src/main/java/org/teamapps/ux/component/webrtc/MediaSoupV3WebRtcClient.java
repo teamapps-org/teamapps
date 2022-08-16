@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,13 +20,7 @@
 package org.teamapps.ux.component.webrtc;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiInfiniteItemView;
-import org.teamapps.dto.UiMediaDeviceInfo;
-import org.teamapps.dto.UiMediaServerUrlAndToken;
-import org.teamapps.dto.UiMediaSoupPlaybackParameters;
-import org.teamapps.dto.UiMediaSoupPublishingParameters;
-import org.teamapps.dto.UiMediaSoupV3WebRtcClient;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -65,7 +59,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	private String caption;
 	private String noVideoImageUrl;
 
-	private Float displayAreaAspectRatio; // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
+	private Double displayAreaAspectRatio; // width / height. Makes the display always use this aspect ratio. If null, use 100% of available space
 
 	private double playbackVolume = 1;
 
@@ -104,65 +98,55 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_VOICE_ACTIVITY_CHANGED: {
-				UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent e = (UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent) event;
-				this.onVoiceActivityChanged.fire(e.getActive());
-				break;
-			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_CLICKED: {
-				UiMediaSoupV3WebRtcClient.ClickedEvent e = (UiMediaSoupV3WebRtcClient.ClickedEvent) event;
-				this.onClicked.fire();
-				break;
-			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_SOURCE_MEDIA_TRACK_RETRIEVAL_FAILED: {
-				UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent e = (UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent) event;
-				this.onSourceMediaTrackRetrievalFailed.fire(MediaRetrievalFailureReason.valueOf(e.getReason().name()));
-				break;
-			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_SOURCE_MEDIA_TRACK_ENDED: {
-				UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent e = (UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent) event;
-				this.onSourceMediaTrackEnded.fire(SourceMediaTrackType.valueOf(e.getTrackType().name()));
-				break;
-			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_TRACK_PUBLISHING_SUCCESSFUL: {
-				UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent) event;
-				this.onTrackPublishingSuccessful.fire(new TrackPublishingSuccessfulEventData(e.getAudio(), e.getVideo()));
-				break;
-			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_TRACK_PUBLISHING_FAILED: {
-				UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent) event;
-				this.onTrackPublishingFailed.fire(new TrackPublishingFailedEventData(e.getAudio(), e.getVideo(), e.getErrorMessage()));
-				break;
-			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_SUBSCRIBING_SUCCESSFUL: {
-				UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent e = (UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent) event;
-				this.onSubscribingSuccessful.fire();
-				break;
-			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_SUBSCRIBING_FAILED: {
-				UiMediaSoupV3WebRtcClient.SubscribingFailedEvent e = (UiMediaSoupV3WebRtcClient.SubscribingFailedEvent) event;
-				this.onSubscribingFailed.fire(e.getErrorMessage());
-				break;
-			}
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_CONNECTION_STATE_CHANGED:
-				this.onConnectionStateChanged.fire(((UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent) event).getConnected());
-				break;
-			case UI_MEDIA_SOUP_V3_WEB_RTC_CLIENT_CONTEXT_MENU_REQUESTED: {
-				UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent e = (UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent) event;
-				lastSeenContextMenuRequestId = e.getRequestId();
-				if (contextMenuProvider != null) {
-					Component contextMenuContent = contextMenuProvider.get();
-					if (contextMenuContent != null) {
-						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
-					} else {
-						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
-					}
+		if (event instanceof UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent) {
+			UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent e = (UiMediaSoupV3WebRtcClient.VoiceActivityChangedEvent) event;
+			this.onVoiceActivityChanged.fire(e.getActive());
+
+		} else if (event instanceof UiMediaSoupV3WebRtcClient.ClickedEvent) {
+			UiMediaSoupV3WebRtcClient.ClickedEvent e = (UiMediaSoupV3WebRtcClient.ClickedEvent) event;
+			this.onClicked.fire();
+
+		} else if (event instanceof UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent) {
+			UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent e = (UiMediaSoupV3WebRtcClient.SourceMediaTrackRetrievalFailedEvent) event;
+			this.onSourceMediaTrackRetrievalFailed.fire(MediaRetrievalFailureReason.valueOf(e.getReason().name()));
+
+		} else if (event instanceof UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent) {
+			UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent e = (UiMediaSoupV3WebRtcClient.SourceMediaTrackEndedEvent) event;
+			this.onSourceMediaTrackEnded.fire(SourceMediaTrackType.valueOf(e.getTrackType().name()));
+
+		} else if (event instanceof UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent) {
+			UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingSuccessfulEvent) event;
+			this.onTrackPublishingSuccessful.fire(new TrackPublishingSuccessfulEventData(e.getAudio(), e.getVideo()));
+
+		} else if (event instanceof UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent) {
+			UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent e = (UiMediaSoupV3WebRtcClient.TrackPublishingFailedEvent) event;
+			this.onTrackPublishingFailed.fire(new TrackPublishingFailedEventData(e.getAudio(), e.getVideo(), e.getErrorMessage()));
+
+		} else if (event instanceof UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent) {
+			UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent e = (UiMediaSoupV3WebRtcClient.SubscribingSuccessfulEvent) event;
+			this.onSubscribingSuccessful.fire();
+
+		} else if (event instanceof UiMediaSoupV3WebRtcClient.SubscribingFailedEvent) {
+			UiMediaSoupV3WebRtcClient.SubscribingFailedEvent e = (UiMediaSoupV3WebRtcClient.SubscribingFailedEvent) event;
+			this.onSubscribingFailed.fire(e.getErrorMessage());
+
+		} else if (event instanceof UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent) {
+			this.onConnectionStateChanged.fire(((UiMediaSoupV3WebRtcClient.ConnectionStateChangedEvent) event).getConnected());
+
+		} else if (event instanceof UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent) {
+			UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent e = (UiMediaSoupV3WebRtcClient.ContextMenuRequestedEvent) event;
+			lastSeenContextMenuRequestId = e.getRequestId();
+			if (contextMenuProvider != null) {
+				Component contextMenuContent = contextMenuProvider.get();
+				if (contextMenuContent != null) {
+					queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
 				} else {
-					closeContextMenu();
+					queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
 				}
-				break;
+			} else {
+				closeContextMenu();
 			}
+
 		}
 	}
 
@@ -298,11 +282,11 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 		}
 	}
 
-	public Float getDisplayAreaAspectRatio() {
+	public Double getDisplayAreaAspectRatio() {
 		return displayAreaAspectRatio;
 	}
 
-	public void setDisplayAreaAspectRatio(Float displayAreaAspectRatio) {
+	public void setDisplayAreaAspectRatio(Double displayAreaAspectRatio) {
 		if (!Objects.equals(displayAreaAspectRatio, this.displayAreaAspectRatio)) {
 			this.displayAreaAspectRatio = displayAreaAspectRatio;
 			update();

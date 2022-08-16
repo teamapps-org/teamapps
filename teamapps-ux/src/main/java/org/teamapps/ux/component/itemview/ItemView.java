@@ -220,15 +220,13 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_ITEM_VIEW_ITEM_CLICKED:
-				UiItemView.ItemClickedEvent itemClickedEvent = (UiItemView.ItemClickedEvent) event;
-				ItemGroup<HEADERRECORD, RECORD> itemGroup = getItemGroupByClientId(itemClickedEvent.getGroupId());
-				if (itemGroup != null) {
-					RECORD item = itemGroup.getItemByClientId(itemClickedEvent.getItemId());
-					this.onItemClicked.fire(new ItemClickedEventData<>(itemGroup, item));
-				}
-				break;
+		if (event instanceof UiItemView.ItemClickedEvent) {
+			UiItemView.ItemClickedEvent itemClickedEvent = (UiItemView.ItemClickedEvent) event;
+			ItemGroup<HEADERRECORD, RECORD> itemGroup = getItemGroupByClientId(itemClickedEvent.getGroupId());
+			if (itemGroup != null) {
+				RECORD item = itemGroup.getItemByClientId(itemClickedEvent.getItemId());
+				this.onItemClicked.fire(new ItemClickedEventData<>(itemGroup, item));
+			}
 		}
 	}
 

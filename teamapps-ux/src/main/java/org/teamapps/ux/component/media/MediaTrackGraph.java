@@ -47,13 +47,11 @@ public class MediaTrackGraph extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_MEDIA_TRACK_GRAPH_HANDLE_TIME_SELECTION:
-				UiMediaTrackGraph.HandleTimeSelectionEvent timeSelectionEvent = (UiMediaTrackGraph.HandleTimeSelectionEvent) event;
-				long start = timeSelectionEvent.getStart();
-				long end = timeSelectionEvent.getEnd();
-				onTimeSelection.fire(new TimeSelection(start, end));
-				break;
+		if (event instanceof UiMediaTrackGraph.HandleTimeSelectionEvent) {
+			UiMediaTrackGraph.HandleTimeSelectionEvent timeSelectionEvent = (UiMediaTrackGraph.HandleTimeSelectionEvent) event;
+			long start = timeSelectionEvent.getStart();
+			long end = timeSelectionEvent.getEnd();
+			onTimeSelection.fire(new TimeSelection(start, end));
 		}
 	}
 

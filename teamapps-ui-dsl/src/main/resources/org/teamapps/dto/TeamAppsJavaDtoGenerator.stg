@@ -28,19 +28,17 @@ class(c, package) ::= <<
 <endif>
 public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superClassDecl)>extends <c.superClassDecl.Identifier> <endif>implements <if(c.implementsDecl)><c.implementsDecl.classList.Identifier:{id|<id>}; separator=", ">, <endif>UiObject {
 
-	<c.inlineEnumProperties:inlineEnum(); separator="\n\n">
+    <typeRegistrations(c)>
 
 	<c.propertiesNotImplementedBySuperClasses:propertyDeclaration(); separator="\n">
 
 	<constructor(c, "")>
 
-	<if(!c.abstractModifier)><uiObjectTypeGetter(c)><endif>
-
 	<toString(c)>
 
 	<c.propertiesNotImplementedBySuperClasses:getter(); separator="\n\n">
 
-	<c.allNonRequiredProperties:setter(c); separator="\n\n">
+	<c.propertiesNotImplementedBySuperClasses:setter(c); separator="\n\n">
 
 	<c.eventDeclaration:eventClass(); separator="\n\n">
 
@@ -49,6 +47,12 @@ public <if(c.abstractModifier)>abstract <endif>class <c.Identifier> <if(c.superC
 	<c.commandDeclaration:commandClass(); separator="\n\n">
 
 }>>
+
+typeRegistrations(c) ::= <<
+    static {
+        var x = UiObjectJacksonTypeIdMaps.class; // make sure the types are registered
+    }
+>>
 
 classReference(c, package) ::= <<
 <javaFilePrelude(package)>
@@ -76,8 +80,6 @@ public interface <i.Identifier> extends <if(i.superInterfaceDecl)><i.superInterf
 	<i.propertyDeclaration:getterStub(); separator="\n">
 	<i.nonRequiredProperties:setterStub(i); separator="\n">
 	
-	<i.inlineEnumProperties:inlineEnum(); separator="\n\n">
-
 	<i.eventDeclaration:eventClass(); separator="\n\n">
 
 	<i.queryDeclaration:queryClass(); separator="\n\n">
@@ -97,6 +99,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -115,7 +120,7 @@ propertyDeclaration(p) ::= <<
 @JsonSerialize(using = ObjectSerializer.class)
 @JsonDeserialize(using = ObjectDeserializer.class)
 <endif>
-<if(p.type.isUiComponentId)>@UiComponentId <endif>protected <p.type.javaTypeString> <p.Identifier><if(p.defaultValueAssignment)> = <defaultValue(p)><endif>;
+protected <p.type.javaTypeString> <p.Identifier><if(p.defaultValueAssignment)> = <defaultValue(p)><endif>;
 >>
 
 getterStub(p) ::= <<
@@ -187,17 +192,6 @@ public <clazz.Identifier> set<propertyDeclaration.Identifier.text; format="cap">
 
 propertyAssignment(p) ::= "this.<p.Identifier> = <p.Identifier>;"
 
-inlineEnum(propertyDeclaration) ::= <<
-public enum <propertyDeclaration.Identifier.text; format="cap"> {
-	<propertyDeclaration.type.inlineEnum.enumConstant:{c|<c.Identifier>}; separator=", ">;
-
-	@com.fasterxml.jackson.annotation.JsonValue
-	public int jsonValue() {
-		return ordinal();
-	}
-}
->>
-
 enumClass(e, package) ::= <<
 <javaFilePrelude(package)>
 public enum <e.Identifier> {
@@ -234,8 +228,6 @@ public static class <ed.Identifier.text; format="cap">Event implements UiEvent {
 
 	<constructor(ed, "Event")>
 
-	<typeGetter(ed, "Event")>
-
 	<toString(ed)>
 
 	<ed.allProperties:getter(); separator="\n\n">
@@ -256,8 +248,6 @@ public static class <qd.Identifier.text; format="cap">Query implements UiQuery {
 
 	<constructor(qd, "Query")>
 
-	<typeGetter(qd, "Query")>
-
 	<toString(qd)>
 
 	<qd.allProperties:getter(); separator="\n\n">
@@ -265,11 +255,6 @@ public static class <qd.Identifier.text; format="cap">Query implements UiQuery {
 }
 >>
 
-typeGetter(e, kind) ::= <<
-public Ui<kind>Type getUi<kind>Type() {
-	return Ui<kind>Type.<e.parent.Identifier.text; format="javaConstant">_<e.Identifier.text; format="javaConstant">;
-}
->>
 
 commandClass(cmd) ::= <<
 public static class <cmd.Identifier.text; format="cap">Command implements UiCommand\<<cmd.returnType>\> {
@@ -311,15 +296,8 @@ public enum UiObjectType {
 }
 >>
 
-uiObjectTypeGetter(enumTypeString) ::= <<
-@com.fasterxml.jackson.annotation.JsonIgnore
-public UiObjectType getUiObjectType() {
-	return UiObjectType.<c.Identifier.text; format="javaConstant">;
-}
->>
 
-
-uiEventBaseClass(package, allEventDeclarations) ::= <<
+uiEventBaseClass(package) ::= <<
 <javaFilePrelude(package)>
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
@@ -328,76 +306,6 @@ uiEventBaseClass(package, allEventDeclarations) ::= <<
 public interface UiEvent {
 
 	String getComponentId();
-
-	UiEventType getUiEventType();
-
-}
->>
-
-uiQueryBaseClass(package, allQueryDeclarations) ::= <<
-<javaFilePrelude(package)>
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
-@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public interface UiQuery {
-
-	String getComponentId();
-
-	UiQueryType getUiQueryType();
-
-}
->>
-
-uiObjectBaseClass(package, allClasses) ::= <<
-<javaFilePrelude(package)>
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
-@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public interface UiObject {
-
-	UiObjectType getUiObjectType();
-
-}
->>
-
-uiEventEnum(package, allEventDeclarations) ::= <<
-<javaFilePrelude(package)>
-
-public enum UiEventType {
-
-	<allEventDeclarations:{e|<e.parent.Identifier.text; format="javaConstant">_<e.Identifier.text; format="javaConstant">(<e.parent.Identifier.text>.<e.Identifier.text; format="cap">Event.class)}; separator=",\n">;
-
-	private final Class\<? extends UiEvent> apiClass;
-
-	UiEventType(Class\<? extends UiEvent> apiClass) {
-		this.apiClass = apiClass;
-	}
-
-	public Class\<? extends UiEvent> getApiClass() {
-		return apiClass;
-	}
-
-}
->>
-
-uiQueryEnum(package, allQueryDeclarations) ::= <<
-<javaFilePrelude(package)>
-
-public enum UiQueryType {
-
-	<allQueryDeclarations:{e|<e.parent.Identifier.text; format="javaConstant">_<e.Identifier.text; format="javaConstant">(<e.parent.Identifier.text>.<e.Identifier.text; format="cap">Query.class)}; separator=",\n">;
-
-	private final Class\<? extends UiQuery> apiClass;
-
-	UiQueryType(Class\<? extends UiQuery> apiClass) {
-		this.apiClass = apiClass;
-	}
-
-	public Class\<? extends UiQuery> getApiClass() {
-		return apiClass;
-	}
 
 }
 >>
@@ -429,6 +337,10 @@ public class UiObjectJacksonTypeIdMaps {
 	public static final Map\<String, Class> CLASS_BY_ID = Collections.unmodifiableMap(new HashMap\<String, Class>() {{
 		<allJsonSerializableClasses:{c|this.put("<c._type>", <c.javaClassName>.class);}; separator=";\n">
 	}});
+
+	static {
+        TeamAppsJacksonTypeIdResolver.registerAll(ID_BY_CLASS);
+    }
 }
 >>
 
@@ -471,3 +383,79 @@ public class CMD {
 
 }
 >>
+
+jsonWrapper(c, package) ::= <<
+<javaFilePrelude(package)>
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
+public class <c.Identifier.text>Wrapper extends JsonWrapper{
+
+    public <c.Identifier.text>Wrapper(JsonNode jsonNode) {
+        super(jsonNode);
+    }
+
+    <c.allProperties:jsonWrapperGetter(); separator="\n\n">
+}
+>>
+
+jsonWrapperGetter(propertyDeclaration) ::= <<
+<if(propertyDeclaration.type.isUiClientObjectReferenceOrCollectionOfThese)>
+// skipped <propertyDeclaration.Identifier>
+<else>
+<uiObjectWrapperGetter(propertyDeclaration)>
+<endif>
+>>
+
+uiObjectWrapperGetter(propertyDeclaration) ::= <<
+public <propertyDeclaration.type.javaTypeWrapperString> get<propertyDeclaration.Identifier.text; format="cap">() {
+    var node = jsonNode.get("<propertyDeclaration.Identifier>");
+    <wrapperPropertyValueExtractor(propertyDeclaration.type, "node")>
+}
+>>
+
+wrapperPropertyValueExtractor(type, variableName) ::= <<
+if (<variableName> == null || <variableName>.isNull()) {
+    return <type.defaultValue>;
+}
+<if (type.isList)>
+ArrayNode <variableName>ArrayNode = ((ArrayNode) <variableName>);
+return StreamSupport.stream(Spliterators.spliterator(<variableName>ArrayNode.elements(), <variableName>ArrayNode.size(), Spliterator.ORDERED), false)
+    .map(<variableName>X -> {
+        <wrapperPropertyValueExtractor(type.firstTypeArgument, [variableName,"X"])>
+    })
+    .collect(Collectors.toList());
+<elseif (type.isDictionary)>
+ObjectNode <variableName>ArrayNode = ((ObjectNode) <variableName>);
+return StreamSupport.stream(Spliterators.spliterator(<variableName>ArrayNode.fields(), <variableName>ArrayNode.size(), Spliterator.ORDERED), false)
+        .collect(Collectors.toMap(e -> e.getKey(), <variableName>Field -> {
+            JsonNode <variableName>X = <variableName>Field.getValue();
+            <wrapperPropertyValueExtractor(type.firstTypeArgument, [variableName,"X"])>
+        }));
+<elseif (type.isReferenceToJsonAware)>
+if (!<variableName>.isObject()) {
+    throw new IllegalArgumentException("<variableName> must be an object!");
+}
+return new <type.javaTypeWrapperString>(<variableName>);
+<elseif (type.isEnum)>
+if (<variableName>.isInt()) {
+    return <type.javaTypeString>.values()[<variableName>.intValue()];
+} else if (<variableName>.isTextual()) {
+    return <type.javaTypeString>.valueOf(<variableName>.textValue());
+} else {
+    return null;
+}
+<elseif (type.isString)>
+return <variableName>.textValue();
+<elseif (type.isPrimitiveOrWrapperType)>
+return <variableName>.as<type.primitiveTypeName; format="cap">();
+<elseif (type.isObjectReference)>
+throw new IllegalArgumentException("Plaing Object deserialization not supported here!");
+<else>
+return ???;
+<endif>
+>>
+
+
+

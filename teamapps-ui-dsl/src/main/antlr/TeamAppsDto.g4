@@ -30,13 +30,10 @@ formalParameterWithDefault : type Identifier (defaultValueAssignment)?;
 
 defaultValueAssignment : '=' expression;
 
-type :   inlineEnum ('[' ']')*
-     |   typeReference ('[' ']')*
+type :   typeReference
      |   subCommandReference
      |   subEventReference
-     |   primitiveType ('[' ']')* ;
-
-inlineEnum : 'enum' '{' (enumConstant (',' enumConstant)*) '}';
+     |   primitiveType ;
 
 typeReference : Identifier referenceTypeModifier? typeArguments?;
 referenceTypeModifier : '*';

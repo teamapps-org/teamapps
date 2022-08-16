@@ -10,7 +10,6 @@ import {UiQuery} from "./UiQuery";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {AConfig} from "./AConfig";
 
-
 export interface BConfig {
 	_type?: string;
 	aObjects?: AConfig[]

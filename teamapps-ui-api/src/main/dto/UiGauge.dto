@@ -90,7 +90,7 @@ class UiGaugeOptions {
 	Double value;
 	String units;
 	boolean exactTicks;
-	String[] majorTicks;
+	List<String> majorTicks;
 	Double minorTicks;
 	boolean strokeTicks;
 	boolean animatedValue;

@@ -10,7 +10,6 @@ import {UiQuery} from "./UiQuery";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {UiWeekDay} from "./UiWeekDay";
 
-
 export interface UiCalendarConfig {
 	_type?: string;
 	workingDays?: UiWeekDay[]

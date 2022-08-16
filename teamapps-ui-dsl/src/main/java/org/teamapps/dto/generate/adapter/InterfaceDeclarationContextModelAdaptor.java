@@ -91,8 +91,6 @@ public class InterfaceDeclarationContextModelAdaptor extends ReferencableEntityM
 			return astUtil.getSuperInterfacesWithCommands(interfaceContext);
 		} else if ("superInterfacesWithEvents".equals(propertyName)) {
 			return astUtil.getSuperInterfacesWithEvents(interfaceContext);
-		} else if ("inlineEnumProperties".equals(propertyName)) {
-			return interfaceContext.propertyDeclaration().stream().filter(p -> p.type().inlineEnum() != null).collect(Collectors.toList());
 		} else if ("allReferencedClassesAndInterfaces".equals(propertyName)) {
 			return astUtil.findAllReferencedClassesAndInterfaces(interfaceContext);
 		} else if ("allReferencedEnums".equals(propertyName)) {

@@ -30,12 +30,12 @@ class UiWorkSpaceLayout extends UiComponent {
 
 	command addViewAsTab(UiWorkSpaceLayoutView newView, String viewGroupId, boolean select);
 	command addViewAsNeighbourTab(UiWorkSpaceLayoutView newView, String existingViewName, boolean select);
-	command addViewRelativeToOtherView(UiWorkSpaceLayoutView newView, String existingViewName, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, float referenceChildSize);
-	command addViewToTopLevel(UiWorkSpaceLayoutView newView, String windowId, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, float referenceChildSize);
+	command addViewRelativeToOtherView(UiWorkSpaceLayoutView newView, String existingViewName, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, double referenceChildSize);
+	command addViewToTopLevel(UiWorkSpaceLayoutView newView, String windowId, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, double referenceChildSize);
 
 	command moveViewToNeighbourTab(String viewName, String existingViewName, boolean select);
-  	command moveViewRelativeToOtherView(String viewName, String existingViewName, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, float referenceChildSize);
-  	command moveViewToTopLevel(String viewName, String windowId, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, float referenceChildSize);
+  	command moveViewRelativeToOtherView(String viewName, String existingViewName, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, double referenceChildSize);
+  	command moveViewToTopLevel(String viewName, String windowId, UiRelativeWorkSpaceViewPosition relativePosition, UiSplitSizePolicy sizePolicy, double referenceChildSize);
 
 	command redefineLayout(Dictionary<UiWorkSpaceLayoutItem> layoutsByWindowId, List<UiWorkSpaceLayoutView> addedViews);
 
@@ -86,7 +86,7 @@ abstract class UiWorkSpaceLayoutItem {
 class UiWorkSpaceLayoutSplitItem extends UiWorkSpaceLayoutItem {
     required UiSplitDirection splitDirection;
     UiSplitSizePolicy sizePolicy = UiSplitSizePolicy.RELATIVE;
-    float referenceChildSize = 0.5f;
+    double referenceChildSize = 0.5f;
     required UiWorkSpaceLayoutItem firstChild;
     required UiWorkSpaceLayoutItem lastChild;
 }

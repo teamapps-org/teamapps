@@ -29,7 +29,7 @@ class UiLiveStreamComponent extends UiComponent {
 
 	String backgroundImage; //display if no live stream of waiting video is available, null == transparent
 	UiPageDisplayMode backgroundImageDisplayMode = UiPageDisplayMode.COVER;
-	float volume = 1;
+	double volume = 1;
 
 	/**
 	 * Show these videos looping through them.
@@ -60,7 +60,7 @@ class UiLiveStreamComponent extends UiComponent {
 	command displayInfoTextOverlay(String text); // position at bottom, use text size optimization code as is
 	command removeInfoTextOverlay();
 
-	command setVolume(float volume); // for liveStream AND waitingVideos!!
+	command setVolume(double volume); // for liveStream AND waitingVideos!!
 
 	event resultOfRequestInputDeviceAccess(boolean microphoneAccessGranted, boolean cameraAccessGranted);
 	event resultOfRequestInputDeviceInfo(UiAudioInputDeviceInfo audioInputDeviceInfo, UiVideoInputDeviceInfo videoInputDeviceInfo);
@@ -69,7 +69,7 @@ class UiLiveStreamComponent extends UiComponent {
 class AbstractUiLiveStreamPlayer extends UiComponent {
 	command play(String url);
     command stop();
-    command setVolume(float volume);
+    command setVolume(double volume);
 }
 
 class UiMpegDashPlayer extends AbstractUiLiveStreamPlayer {}

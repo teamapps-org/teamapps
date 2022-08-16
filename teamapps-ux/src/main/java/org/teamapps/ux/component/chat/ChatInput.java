@@ -52,30 +52,23 @@ public class ChatInput extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_CHAT_INPUT_MESSAGE_SENT:
-				UiChatInput.MessageSentEvent messageSentEvent = (UiChatInput.MessageSentEvent) event;
-				String text = messageSentEvent.getMessage().getText();
-				if (messageLengthLimit > 0 && text.length() > messageLengthLimit) {
-					text = text.substring(0, messageLengthLimit);
-				}
-				List<NewChatMessageData.UploadedFile> uploadedFiles = messageSentEvent.getMessage().getUploadedFiles().stream()
-						.map(uiFile -> new NewChatMessageData.UploadedFile(uiFile.getUploadedFileUuid(), uiFile.getFileName()))
-						.collect(Collectors.toList());
-				NewChatMessageData newChatMessageData = new NewChatMessageData(text, uploadedFiles);
-				onMessageSent.fire(newChatMessageData);
-				break;
-			case UI_CHAT_INPUT_UPLOAD_TOO_LARGE:
-				break;
-			case UI_CHAT_INPUT_UPLOAD_STARTED:
-				break;
-			case UI_CHAT_INPUT_UPLOAD_CANCELED:
-				break;
-			case UI_CHAT_INPUT_UPLOAD_FAILED:
-				break;
-			case UI_CHAT_INPUT_UPLOAD_SUCCESSFUL:
-				break;
+		if (event instanceof UiChatInput.MessageSentEvent) {
+			UiChatInput.MessageSentEvent messageSentEvent = (UiChatInput.MessageSentEvent) event;
+			String text = messageSentEvent.getMessage().getText();
+			if (messageLengthLimit > 0 && text.length() > messageLengthLimit) {
+				text = text.substring(0, messageLengthLimit);
+			}
+			List<NewChatMessageData.UploadedFile> uploadedFiles = messageSentEvent.getMessage().getUploadedFiles().stream()
+					.map(uiFile -> new NewChatMessageData.UploadedFile(uiFile.getUploadedFileUuid(), uiFile.getFileName()))
+					.collect(Collectors.toList());
+			NewChatMessageData newChatMessageData = new NewChatMessageData(text, uploadedFiles);
+			onMessageSent.fire(newChatMessageData);
 		}
+		// TODO case UI_CHAT_INPUT_UPLOAD_TOO_LARGE:
+		// TODO case UI_CHAT_INPUT_UPLOAD_STARTED:
+		// TODO case UI_CHAT_INPUT_UPLOAD_CANCELED:
+		// TODO case UI_CHAT_INPUT_UPLOAD_FAILED:
+		// TODO case UI_CHAT_INPUT_UPLOAD_SUCCESSFUL:
 	}
 
 	public long getMaxBytesPerUpload() {

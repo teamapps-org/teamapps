@@ -19,7 +19,7 @@
  */
 class UiInfiniteItemView extends UiComponent {
 	required UiTemplate itemTemplate;
-	float itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
+	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
 	required int rowHeight;
 	List<UiIdentifiableClientRecord> data;
 	int totalNumberOfRecords = 0;
@@ -32,7 +32,7 @@ class UiInfiniteItemView extends UiComponent {
 	command addData(int startIndex, List<UiIdentifiableClientRecord> data, int totalNumberOfRecords, boolean clear);
 	command removeData(List<Integer> ids);
 	command setItemTemplate(UiTemplate itemTemplate);
-    command setItemWidth(float itemWidth);
+    command setItemWidth(double itemWidth);
     command setHorizontalItemMargin(int horizontalItemMargin);
     command setItemJustification(UiItemJustification itemJustification);
     command setVerticalItemAlignment(UiVerticalItemAlignment verticalItemAlignment);
@@ -47,11 +47,11 @@ class UiInfiniteItemView extends UiComponent {
 class UiInfiniteItemView2 extends UiComponent {
 	required UiTemplate itemTemplate;
 
-	float itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
-	float itemHeight = 100;
-	float horizontalSpacing;
-	float verticalSpacing;
-	float itemPositionAnimationTime; // ms
+	double itemWidth = 0; // 0: full width, 0<x<1: relative width, >=1: fixed width
+	double itemHeight = 100;
+	double horizontalSpacing;
+	double verticalSpacing;
+	double itemPositionAnimationTime; // ms
 	UiHorizontalElementAlignment itemContentHorizontalAlignment = UiHorizontalElementAlignment.CENTER;
 	UiVerticalElementAlignment itemContentVerticalAlignment = UiVerticalElementAlignment.STRETCH;
 	UiItemJustification rowHorizontalAlignment = UiItemJustification.SPACE_AROUND;
@@ -62,10 +62,10 @@ class UiInfiniteItemView2 extends UiComponent {
 	command setData(int startIndex, List<Integer> recordIds, List<UiIdentifiableClientRecord> newRecords, int totalNumberOfRecords);
 
 	command setItemTemplate(UiTemplate itemTemplate);
-    command setItemWidth(float itemWidth);
-    command setItemHeight(float itemHeight);
-    command setHorizontalSpacing(float horizontalSpacing);
-    command setVerticalSpacing(float verticalSpacing);
+    command setItemWidth(double itemWidth);
+    command setItemHeight(double itemHeight);
+    command setHorizontalSpacing(double horizontalSpacing);
+    command setVerticalSpacing(double verticalSpacing);
     command setItemContentHorizontalAlignment(UiHorizontalElementAlignment itemContentHorizontalAlignment);
     command setItemContentVerticalAlignment(UiVerticalElementAlignment itemContentVerticalAlignment);
     command setRowHorizontalAlignment(UiItemJustification rowHorizontalAlignment);

@@ -56,10 +56,8 @@ public class Label extends AbstractField<String> {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
-		switch (event.getUiEventType()) {
-			case UI_LABEL_CLICKED:
-				this.onClicked.fire(null);
-				break;
+		if (event instanceof UiLabel.ClickedEvent) {
+			this.onClicked.fire();
 		}
 	}
 

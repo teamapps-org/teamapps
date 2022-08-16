@@ -24,7 +24,7 @@ class UiMap2 extends UiComponent {
 	String styleUrl;
 	boolean displayAttributionControl;
 
-	float zoomLevel = 5;
+	double zoomLevel = 5;
 	UiMapLocation mapPosition;
 	Dictionary<AbstractUiMapShape> shapes;
 	List<UiMapMarkerClientRecord> markers;
@@ -48,13 +48,13 @@ class UiMap2 extends UiComponent {
 	command startDrawingShape(UiMapShapeType shapeType, UiShapeProperties shapeProperties);
 	command stopDrawingShape();
 	
-	command setZoomLevel(float zoom);
-	command setLocation(UiMapLocation location, long animationDurationMillis, float targetZoomLevel);
+	command setZoomLevel(double zoom);
+	command setLocation(UiMapLocation location, long animationDurationMillis, double targetZoomLevel);
 	command setStyleUrl(String styleUrl);
 
 	command fitBounds(UiMapLocation southWest, UiMapLocation northEast);
 
-	event zoomLevelChanged(float zoomLevel);
+	event zoomLevelChanged(double zoomLevel);
 	event locationChanged(UiMapLocation center, UiMapArea displayedArea);
 	event mapClicked(UiMapLocation location);
 	event markerClicked(int markerId);

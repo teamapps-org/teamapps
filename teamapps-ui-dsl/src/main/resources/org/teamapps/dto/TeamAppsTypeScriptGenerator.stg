@@ -37,8 +37,6 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
 
-<c.inlineEnumProperties:inlineEnum(); separator="\n\n">
-
 export interface <c.Identifier.text>Config <if(c.superClassAndDirectlyImplementedInterfaces)>extends <c.superClassAndDirectlyImplementedInterfaces:{c|<c.Identifier>Config};  separator=", "> <endif>{
 	_type?: string;
 	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
@@ -111,8 +109,6 @@ import {TeamAppsEvent} from "../util/TeamAppsEvent";
 <c.superClassAndDirectlyImplementedInterfacesWithCommands:{c|import {<c.Identifier>CommandHandler\} from "./<c.Identifier>Config";}; separator="\n">
 <c.superClassAndDirectlyImplementedInterfacesWithEvents:{c|import {<c.Identifier>EventSource\} from "./<c.Identifier>Config";}; separator="\n">
 
-<c.inlineEnumProperties:inlineEnum(); separator="\n\n">
-
 export interface <c.Identifier.text>Config <if(c.superInterfaces)>extends <c.superInterfaces:{superInterface|<superInterface.Identifier>Config}; separator=", "> <endif>{
 	_type?: string;
 	<c.propertyDeclaration:typeScriptPropertyDeclaration(false); separator=";\n">
@@ -134,12 +130,6 @@ export interface <c.Identifier>EventSource <if(c.superInterfacesWithEvents)>exte
 <c.eventDeclaration:eventInterface(); separator="\n\n">
 
 <c.queryDeclaration:queryInterface(); separator="\n\n">
->>
-
-inlineEnum(propertyDeclaration) ::= <<
-export enum <propertyDeclaration.parent.Identifier>_<propertyDeclaration.Identifier.text; format="cap"> {
-	<propertyDeclaration.type.inlineEnum.enumConstant:{c|<c.Identifier>}; separator=", ">
-}
 >>
 
 typeScriptPropertyDeclaration(p, forceRequired) ::= <<

@@ -39,8 +39,16 @@ class EVENT extends AbstractClientPayloadMessage {
     required UiEvent uiEvent;
 }
 
+interface UiEvent {
+    required String componentId;
+}
+
 class QUERY extends AbstractClientPayloadMessage {
     required UiQuery uiQuery;
+}
+
+interface UiQuery {
+   required String componentId;
 }
 
 class CMD_RESULT extends AbstractClientPayloadMessage {

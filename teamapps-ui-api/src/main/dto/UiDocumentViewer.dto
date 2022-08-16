@@ -20,15 +20,15 @@
 class UiDocumentViewer extends UiComponent {
 	List<String> pageUrls;
 	UiPageDisplayMode displayMode = UiPageDisplayMode.FIT_WIDTH;
-	float zoomFactor = 1f; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
+	double zoomFactor = 1f; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
 	UiBorder pageBorder;
 	UiShadow pageShadow;
 	int padding = 0;
 	int pageSpacing = 5;
 
 	command setPageUrls(List<String> pageUrls); //replace all current pages
-	command setDisplayMode(UiPageDisplayMode displayMode, float zoomFactor);
-	command setZoomFactor(float zoomFactor);
+	command setDisplayMode(UiPageDisplayMode displayMode, double zoomFactor);
+	command setZoomFactor(double zoomFactor);
 	command setPageBorder(UiBorder pageBorder);
 	command setPageShadow(UiShadow pageShadow);
 	command setPaddding(int padding);

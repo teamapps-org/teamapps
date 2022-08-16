@@ -32,11 +32,11 @@ public class WorkSpaceLayoutSplitPane extends WorkSpaceLayoutItem {
 
 	private final SplitDirection splitDirection;
 	private SplitSizePolicy sizePolicy;
-	private float referenceChildSize;
+	private double referenceChildSize;
 	private WorkSpaceLayoutItem firstChild;
 	private WorkSpaceLayoutItem lastChild;
 
-	public WorkSpaceLayoutSplitPane(String id, SplitDirection splitDirection, SplitSizePolicy sizePolicy, float referenceChildSize, WorkSpaceLayout workSpaceLayout) {
+	public WorkSpaceLayoutSplitPane(String id, SplitDirection splitDirection, SplitSizePolicy sizePolicy, double referenceChildSize, WorkSpaceLayout workSpaceLayout) {
 		this(id, splitDirection, sizePolicy, referenceChildSize, null, null, workSpaceLayout);
 	}
 
@@ -53,7 +53,7 @@ public class WorkSpaceLayoutSplitPane extends WorkSpaceLayoutItem {
 			String id,
 			SplitDirection splitDirection,
 			SplitSizePolicy sizePolicy,
-			float referenceChildSize,
+			double referenceChildSize,
 			WorkSpaceLayoutItem firstChild,
 			WorkSpaceLayoutItem lastChild,
 			WorkSpaceLayout workSpaceLayout
@@ -179,7 +179,7 @@ public class WorkSpaceLayoutSplitPane extends WorkSpaceLayoutItem {
 		}
 	}
 
-	public float getReferenceChildSize() {
+	public double getReferenceChildSize() {
 		return referenceChildSize;
 	}
 
@@ -215,7 +215,7 @@ public class WorkSpaceLayoutSplitPane extends WorkSpaceLayoutItem {
 		this.sizePolicy = sizePolicy;
 	}
 
-	/*package-private*/ void setReferenceChildSizeSilently(float referenceChildSize) {
+	/*package-private*/ void setReferenceChildSizeSilently(double referenceChildSize) {
 		this.referenceChildSize = referenceChildSize;
 	}
 

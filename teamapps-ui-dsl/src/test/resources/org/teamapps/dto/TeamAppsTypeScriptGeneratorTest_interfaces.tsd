@@ -8,7 +8,6 @@ import {UiEvent} from "./UiEvent";
 import {UiCommand} from "./UiCommand";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 
-
 export interface AConfig {
 	_type?: string;
 	a: string;

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -119,57 +119,50 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
-		switch (event.getUiEventType()) {
-			case UI_TEXT_INPUT_HANDLING_FIELD_TEXT_INPUT:
-				UiTextInputHandlingField.TextInputEvent keyStrokeEvent = (UiTextInputHandlingField.TextInputEvent) event;
-				String string = keyStrokeEvent.getEnteredString() != null ? keyStrokeEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
-				this.onTextInput.fire(string);
-				break;
-			case UI_TEXT_INPUT_HANDLING_FIELD_SPECIAL_KEY_PRESSED:
-				UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
-				this.onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
-				break;
+		if (event instanceof UiTextInputHandlingField.TextInputEvent) {
+			UiTextInputHandlingField.TextInputEvent textInputEvent = (UiTextInputHandlingField.TextInputEvent) event;
+			String string = textInputEvent.getEnteredString() != null ? textInputEvent.getEnteredString() : ""; // prevent NPEs in combobox model implementations
+			this.onTextInput.fire(string);
+		} else if (event instanceof UiTextInputHandlingField.SpecialKeyPressedEvent) {
+			UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
+			this.onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
 		}
 	}
 
 	@Override
 	public Object handleUiQuery(UiQuery query) {
-		switch (query.getUiQueryType()) {
-			case UI_COMBO_BOX_RETRIEVE_DROPDOWN_ENTRIES: {
-				final UiComboBox.RetrieveDropdownEntriesQuery q = (UiComboBox.RetrieveDropdownEntriesQuery) query;
-				String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
+		if (query instanceof UiComboBox.RetrieveDropdownEntriesQuery) {
+			final UiComboBox.RetrieveDropdownEntriesQuery q = (UiComboBox.RetrieveDropdownEntriesQuery) query;
+			String string = q.getQueryString() != null ? q.getQueryString() : ""; // prevent NPEs in combobox model implementations
+			if (model != null) {
+				List<RECORD> resultRecords = model.getRecords(string);
+				if (distinctModelResultFiltering) {
+					resultRecords = filterOutSelected(resultRecords);
+				}
+				CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
+				cacheResponse.commit();
+				return cacheResponse.getAndClearResult();
+			} else {
+				return List.of();
+			}
+		} else if (query instanceof UiComboBox.LazyChildrenQuery) {
+			UiComboBox.LazyChildrenQuery lazyChildrenQuery = (UiComboBox.LazyChildrenQuery) query;
+			RECORD parentRecord = recordCache.getRecordByClientId(lazyChildrenQuery.getParentId());
+			if (parentRecord != null) {
 				if (model != null) {
-					List<RECORD> resultRecords = model.getRecords(string);
+					List<RECORD> childRecords = model.getChildRecords(parentRecord);
 					if (distinctModelResultFiltering) {
-						resultRecords = filterOutSelected(resultRecords);
+						childRecords = filterOutSelected(childRecords);
 					}
-					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.replaceRecords(resultRecords);
+					CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
 					cacheResponse.commit();
 					return cacheResponse.getAndClearResult();
-				} else {
-					return List.of();
 				}
+			} else {
+				return Collections.emptyList();
 			}
-			case UI_COMBO_BOX_LAZY_CHILDREN: {
-				UiComboBox.LazyChildrenQuery lazyChildrenQuery = (UiComboBox.LazyChildrenQuery) query;
-				RECORD parentRecord = recordCache.getRecordByClientId(lazyChildrenQuery.getParentId());
-				if (parentRecord != null) {
-					if (model != null) {
-						List<RECORD> childRecords = model.getChildRecords(parentRecord);
-						if (distinctModelResultFiltering) {
-							childRecords = filterOutSelected(childRecords);
-						}
-						CacheManipulationHandle<List<UiComboBoxTreeRecord>> cacheResponse = recordCache.addRecords(childRecords);
-						cacheResponse.commit();
-						return cacheResponse.getAndClearResult();
-					}
-				} else {
-					return Collections.emptyList();
-				}
-			}
-			default:
-				return super.handleUiQuery(query);
 		}
+		return super.handleUiQuery(query);
 	}
 
 	private List<RECORD> filterOutSelected(List<RECORD> resultRecords) {

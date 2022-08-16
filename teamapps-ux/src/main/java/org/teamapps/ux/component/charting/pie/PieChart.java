@@ -69,14 +69,12 @@ public class PieChart extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_PIE_CHART_DATA_POINT_CLICKED:
-				UiPieChart.DataPointClickedEvent clickEvent = (UiPieChart.DataPointClickedEvent) event;
-				dataPoints.stream()
-						.filter(p -> Objects.equals(p.getName(), clickEvent.getDataPointName()))
-						.findFirst()
-						.ifPresent(onDataPointClicked::fire);
-				break;
+		if (event instanceof UiPieChart.DataPointClickedEvent) {
+			UiPieChart.DataPointClickedEvent clickEvent = (UiPieChart.DataPointClickedEvent) event;
+			dataPoints.stream()
+					.filter(p -> Objects.equals(p.getName(), clickEvent.getDataPointName()))
+					.findFirst()
+					.ifPresent(onDataPointClicked::fire);
 		}
 	}
 

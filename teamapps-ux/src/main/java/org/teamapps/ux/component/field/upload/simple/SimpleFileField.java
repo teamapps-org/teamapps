@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -124,83 +124,66 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
-		switch (event.getUiEventType()) {
-			case UI_SIMPLE_FILE_FIELD_UPLOAD_INITIATED_BY_USER: {
-				UiSimpleFileField.UploadInitiatedByUserEvent initEvent = (UiSimpleFileField.UploadInitiatedByUserEvent) event;
-				FileItem fileItem = new FileItem(initEvent.getUuid(), initEvent.getFileName(), FileItemState.INITIATING, initEvent.getMimeType(), initEvent.getSizeInBytes());
-				fileItem.setFileField(this);
-				this.fileItems.add(fileItem);
-				onUploadInitiatedByUser.fire(fileItem);
-				break;
+		if (event instanceof UiSimpleFileField.UploadInitiatedByUserEvent) {
+			UiSimpleFileField.UploadInitiatedByUserEvent initEvent = (UiSimpleFileField.UploadInitiatedByUserEvent) event;
+			FileItem fileItem = new FileItem(initEvent.getUuid(), initEvent.getFileName(), FileItemState.INITIATING, initEvent.getMimeType(), initEvent.getSizeInBytes());
+			fileItem.setFileField(this);
+			this.fileItems.add(fileItem);
+			onUploadInitiatedByUser.fire(fileItem);
+		} else if (event instanceof UiSimpleFileField.UploadTooLargeEvent) {
+			UiSimpleFileField.UploadTooLargeEvent tooLargeEvent = (UiSimpleFileField.UploadTooLargeEvent) event;
+			FileItem fileItem = getFileItemByUuid(tooLargeEvent.getFileItemUuid());
+			if (fileItem != null) {
+				fileItem.setState(FileItemState.TOO_LARGE);
+				onUploadTooLarge.fire(fileItem);
 			}
-			case UI_SIMPLE_FILE_FIELD_UPLOAD_TOO_LARGE: {
-				UiSimpleFileField.UploadTooLargeEvent tooLargeEvent = (UiSimpleFileField.UploadTooLargeEvent) event;
-				FileItem fileItem = getFileItemByUuid(tooLargeEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.TOO_LARGE);
-					onUploadTooLarge.fire(fileItem);
-				}
-				break;
+		} else if (event instanceof UiSimpleFileField.UploadStartedEvent) {
+			UiSimpleFileField.UploadStartedEvent startedEvent = (UiSimpleFileField.UploadStartedEvent) event;
+			FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
+			if (fileItem != null) {
+				fileItem.setState(FileItemState.UPLOADING);
+				onUploadStarted.fire(fileItem);
 			}
-			case UI_SIMPLE_FILE_FIELD_UPLOAD_STARTED: {
-				UiSimpleFileField.UploadStartedEvent startedEvent = (UiSimpleFileField.UploadStartedEvent) event;
-				FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.UPLOADING);
-					onUploadStarted.fire(fileItem);
-				}
-				break;
+		} else if (event instanceof UiSimpleFileField.UploadCanceledEvent) {
+			UiSimpleFileField.UploadCanceledEvent canceledEvent = (UiSimpleFileField.UploadCanceledEvent) event;
+			FileItem fileItem = getFileItemByUuid(canceledEvent.getFileItemUuid());
+			if (fileItem != null) {
+				fileItem.setState(FileItemState.CANCELED);
+				onUploadCanceledByUser.fire(fileItem);
 			}
-			case UI_SIMPLE_FILE_FIELD_UPLOAD_CANCELED: {
-				UiSimpleFileField.UploadCanceledEvent startedEvent = (UiSimpleFileField.UploadCanceledEvent) event;
-				FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.CANCELED);
-					onUploadCanceledByUser.fire(fileItem);
-				}
-				break;
+		} else if (event instanceof UiSimpleFileField.UploadFailedEvent) {
+			UiSimpleFileField.UploadFailedEvent startedEvent = (UiSimpleFileField.UploadFailedEvent) event;
+			FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
+			if (fileItem != null) {
+				fileItem.setState(FileItemState.FAILED);
+				onUploadFailed.fire(fileItem);
 			}
-			case UI_SIMPLE_FILE_FIELD_UPLOAD_FAILED: {
-				UiSimpleFileField.UploadFailedEvent startedEvent = (UiSimpleFileField.UploadFailedEvent) event;
-				FileItem fileItem = getFileItemByUuid(startedEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.FAILED);
-					onUploadFailed.fire(fileItem);
+		} else if (event instanceof UiSimpleFileField.UploadSuccessfulEvent) {
+			UiSimpleFileField.UploadSuccessfulEvent successEvent = (UiSimpleFileField.UploadSuccessfulEvent) event;
+			FileItem fileItem = getFileItemByUuid(successEvent.getFileItemUuid());
+			if (fileItem != null) {
+				fileItem.setState(FileItemState.DONE);
+				fileItem.setIcon(this.defaultItemIcon);
+				File uploadedFile = getSessionContext().getUploadedFileByUuid(successEvent.getUploadedFileUuid());
+				if (uploadedFile != null) {
+					fileItem.setLinkUrl(getSessionContext().createFileLink(uploadedFile));
+					fileItem.setFile(uploadedFile);
 				}
-				break;
+				onUploadSuccessful.fire(fileItem);
+				onValueChanged.fire(getValue());
 			}
-			case UI_SIMPLE_FILE_FIELD_UPLOAD_SUCCESSFUL: {
-				UiSimpleFileField.UploadSuccessfulEvent successEvent = (UiSimpleFileField.UploadSuccessfulEvent) event;
-				FileItem fileItem = getFileItemByUuid(successEvent.getFileItemUuid());
-				if (fileItem != null) {
-					fileItem.setState(FileItemState.DONE);
-					fileItem.setIcon(this.defaultItemIcon);
-					File uploadedFile = getSessionContext().getUploadedFileByUuid(successEvent.getUploadedFileUuid());
-					if (uploadedFile != null) {
-						fileItem.setLinkUrl(getSessionContext().createFileLink(uploadedFile));
-						fileItem.setFile(uploadedFile);
-					}
-					onUploadSuccessful.fire(fileItem);
-					onValueChanged.fire(getValue());
-				}
-				break;
+		} else if (event instanceof UiSimpleFileField.FileItemClickedEvent) {
+			UiSimpleFileField.FileItemClickedEvent clickEvent = (UiSimpleFileField.FileItemClickedEvent) event;
+			FileItem fileItem = getFileItemByUuid(clickEvent.getFileItemUuid());
+			if (fileItem != null) {
+				onFileItemClicked.fire(fileItem);
 			}
-			case UI_SIMPLE_FILE_FIELD_FILE_ITEM_CLICKED: {
-				UiSimpleFileField.FileItemClickedEvent clickEvent = (UiSimpleFileField.FileItemClickedEvent) event;
-				FileItem fileItem = getFileItemByUuid(clickEvent.getFileItemUuid());
-				if (fileItem != null) {
-					onFileItemClicked.fire(fileItem);
-				}
-				break;
-			}
-			case UI_SIMPLE_FILE_FIELD_FILE_ITEM_REMOVED: {
-				UiSimpleFileField.FileItemRemovedEvent removedEvent = (UiSimpleFileField.FileItemRemovedEvent) event;
-				FileItem fileItem = getFileItemByUuid(removedEvent.getFileItemUuid());
-				if (fileItem != null) {
-					removeFileItemInternal(fileItem);
-					onFileItemRemoved.fire(fileItem);
-				}
-				break;
+		} else if (event instanceof UiSimpleFileField.FileItemRemovedEvent) {
+			UiSimpleFileField.FileItemRemovedEvent removedEvent = (UiSimpleFileField.FileItemRemovedEvent) event;
+			FileItem fileItem = getFileItemByUuid(removedEvent.getFileItemUuid());
+			if (fileItem != null) {
+				removeFileItemInternal(fileItem);
+				onFileItemRemoved.fire(fileItem);
 			}
 		}
 	}

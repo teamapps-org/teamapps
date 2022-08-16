@@ -9,7 +9,6 @@ import {UiCommand} from "./UiCommand";
 import {TeamAppsEvent} from "../util/TeamAppsEvent";
 import {AConfig} from "./AConfig";
 
-
 export interface BConfig extends AConfig {
 	_type?: string;
 	b?: string

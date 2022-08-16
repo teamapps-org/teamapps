@@ -677,37 +677,31 @@ public class SessionContext {
 	}
 
 	public void handleStaticEvent(UiEvent event) {
-		UiEventType uiEventType = event.getUiEventType();
-		switch (uiEventType) {
-			case UI_ROOT_PANEL_GLOBAL_KEY_EVENT_OCCURRED: {
-				UiRootPanel.GlobalKeyEventOccurredEvent e = (UiRootPanel.GlobalKeyEventOccurredEvent) event;
-				onGlobalKeyEventOccurred.fire(new KeyboardEvent(
-						e.getEventType(),
-						(e.getSourceComponentId() != null ? (Component) getClientObject(e.getSourceComponentId()) : null),
-						e.getCode(),
-						e.getIsComposing(),
-						e.getKey(),
-						e.getCharCode(),
-						e.getKeyCode(),
-						e.getLocale(),
-						e.getLocation(),
-						e.getRepeat(),
-						e.getAltKey(),
-						e.getCtrlKey(),
-						e.getShiftKey(),
-						e.getMetaKey()
-				));
-				break;
-			}
-			case UI_ROOT_PANEL_NAVIGATION_STATE_CHANGE: {
-				UiRootPanel.NavigationStateChangeEvent e = (UiRootPanel.NavigationStateChangeEvent) event;
-				Location location = Location.fromUiLocation(e.getLocation());
-				this.currentLocation = location;
-				onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
-				break;
-			}
-			default:
-				throw new TeamAppsUiApiException(getSessionId(), uiEventType.toString());
+		if (event instanceof UiRootPanel.GlobalKeyEventOccurredEvent) {
+			UiRootPanel.GlobalKeyEventOccurredEvent e = (UiRootPanel.GlobalKeyEventOccurredEvent) event;
+			onGlobalKeyEventOccurred.fire(new KeyboardEvent(
+					e.getEventType(),
+					(e.getSourceComponentId() != null ? (Component) getClientObject(e.getSourceComponentId()) : null),
+					e.getCode(),
+					e.getIsComposing(),
+					e.getKey(),
+					e.getCharCode(),
+					e.getKeyCode(),
+					e.getLocale(),
+					e.getLocation(),
+					e.getRepeat(),
+					e.getAltKey(),
+					e.getCtrlKey(),
+					e.getShiftKey(),
+					e.getMetaKey()
+			));
+		} else if (event instanceof UiRootPanel.NavigationStateChangeEvent) {
+			UiRootPanel.NavigationStateChangeEvent e = (UiRootPanel.NavigationStateChangeEvent) event;
+			Location location = Location.fromUiLocation(e.getLocation());
+			this.currentLocation = location;
+			onNavigationStateChange.fire(new NavigationStateChangeEvent(location, e.getTriggeredByUser()));
+		} else {
+			throw new TeamAppsUiApiException(getSessionId(), event.getClass().getName());
 		}
 	}
 

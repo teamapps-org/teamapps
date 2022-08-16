@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,11 +22,7 @@ package org.teamapps.ux.component.charting.tree;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiBaseTreeGraphNode;
-import org.teamapps.dto.UiClientRecord;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiTreeGraph;
-import org.teamapps.dto.UiTreeGraphNode;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.template.Template;
@@ -153,41 +149,32 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_TREE_GRAPH_NODE_CLICKED: {
-				UiTreeGraph.NodeClickedEvent e = (UiTreeGraph.NodeClickedEvent) event;
-				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
-				if (node != null) {
-					onNodeClicked.fire(node);
-				}
-				break;
+		if (event instanceof UiTreeGraph.NodeClickedEvent) {
+			UiTreeGraph.NodeClickedEvent e = (UiTreeGraph.NodeClickedEvent) event;
+			TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+			if (node != null) {
+				onNodeClicked.fire(node);
 			}
-			case UI_TREE_GRAPH_NODE_EXPANDED_OR_COLLAPSED: {
-				UiTreeGraph.NodeExpandedOrCollapsedEvent e = (UiTreeGraph.NodeExpandedOrCollapsedEvent) event;
-				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
-				if (node != null) {
-					node.setExpanded(e.getExpanded());
-					onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
-				}
-				break;
+		} else if (event instanceof UiTreeGraph.NodeExpandedOrCollapsedEvent) {
+			UiTreeGraph.NodeExpandedOrCollapsedEvent e = (UiTreeGraph.NodeExpandedOrCollapsedEvent) event;
+			TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+			if (node != null) {
+				node.setExpanded(e.getExpanded());
+				onNodeExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
 			}
-			case UI_TREE_GRAPH_PARENT_EXPANDED_OR_COLLAPSED: {
-				UiTreeGraph.ParentExpandedOrCollapsedEvent e = (UiTreeGraph.ParentExpandedOrCollapsedEvent) event;
-				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
-				if (node != null) {
-					node.setParentExpanded(e.getExpanded());
-					onParentExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
-				}
-				break;
+		} else if (event instanceof UiTreeGraph.ParentExpandedOrCollapsedEvent) {
+			UiTreeGraph.ParentExpandedOrCollapsedEvent e = (UiTreeGraph.ParentExpandedOrCollapsedEvent) event;
+			TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+			if (node != null) {
+				node.setParentExpanded(e.getExpanded());
+				onParentExpandedOrCollapsed.fire(new NodeExpandedOrCollapsedEvent<>(node, e.getExpanded(), e.getLazyLoad()));
 			}
-			case UI_TREE_GRAPH_SIDE_LIST_EXPANDED_OR_COLLAPSED: {
-				UiTreeGraph.SideListExpandedOrCollapsedEvent e = (UiTreeGraph.SideListExpandedOrCollapsedEvent) event;
-				TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
-				if (node != null) {
-					node.setSideListExpanded(e.getExpanded());
-					onSideListExpandedOrCollapsed.fire(new SideListExpandedOrCollapsedEvent<>(node, e.getExpanded()));
-				}
-				break;
+		} else if (event instanceof UiTreeGraph.SideListExpandedOrCollapsedEvent) {
+			UiTreeGraph.SideListExpandedOrCollapsedEvent e = (UiTreeGraph.SideListExpandedOrCollapsedEvent) event;
+			TreeGraphNode<RECORD> node = this.nodesById.get(e.getNodeId());
+			if (node != null) {
+				node.setSideListExpanded(e.getExpanded());
+				onSideListExpandedOrCollapsed.fire(new SideListExpandedOrCollapsedEvent<>(node, e.getExpanded()));
 			}
 		}
 	}

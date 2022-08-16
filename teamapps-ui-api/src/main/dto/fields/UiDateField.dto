@@ -32,8 +32,12 @@ class UiLocalDateField extends UiField {
 	UiDateTimeFormatDescriptor dateFormat = null; // if null, UiConfiguration.dateFormat applies
 	UiLocalDate defaultSuggestionDate; // null == today
 	boolean shuffledFormatSuggestionsEnabled;
-	enum {CALENDAR, CALENDAR_SUGGESTION_LIST, SUGGESTION_LIST} dropDownMode = DropDownMode.CALENDAR_SUGGESTION_LIST;
+	UiLocalDateFieldDropDownMode dropDownMode = UiLocalDateFieldDropDownMode.CALENDAR_SUGGESTION_LIST;
 	String placeholderText;
 
     command update(UiLocalDateField config);
+}
+
+enum UiLocalDateFieldDropDownMode {
+    CALENDAR, CALENDAR_SUGGESTION_LIST, SUGGESTION_LIST;
 }

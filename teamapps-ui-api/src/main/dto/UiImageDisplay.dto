@@ -28,7 +28,7 @@ class UiImageDisplay extends UiComponent {
 	List<UiCachedImage> cachedImages;
 
 	UiPageDisplayMode displayMode = UiPageDisplayMode.FIT_WIDTH;
-	float zoomFactor = 1f; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
+	double zoomFactor = 1f; //1= current displayMode (e.g. FIT_WITH), 0.5= 1/2 * dMode, 2.5 = 2.5 * dMode (if the factor would be relative to the actual image size and not the FIT_WIDTH/FIT_HEIGHT/ORIGINAL_SIZE, then the server would always have to read every image's size)
 	String backgroundColor = "#444";
 	int padding = 0;
 	boolean loop = false; // if true, return to first image from end of image list. If false, hide buttons at end of list.
@@ -38,7 +38,7 @@ class UiImageDisplay extends UiComponent {
 	event imageDisplayed(String imageId);
 
 	command setCachedImages(int startIndex, List<UiCachedImage> cachedImages, int totalNumberOfRecords);
-	command setDisplayMode(UiPageDisplayMode displayMode, float zoomFactor);
-	command setZoomFactor(float zoomFactor);
+	command setDisplayMode(UiPageDisplayMode displayMode, double zoomFactor);
+	command setZoomFactor(double zoomFactor);
 	command showImage(String id);
 }

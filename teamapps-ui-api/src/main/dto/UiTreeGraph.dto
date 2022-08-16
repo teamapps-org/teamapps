@@ -21,7 +21,7 @@ class UiTreeGraph extends UiComponent {
     List<UiTreeGraphNode> nodes;
 
 	String backgroundColor = "rgba(0, 0, 0, 0)";
-    float zoomFactor = 1;
+    double zoomFactor = 1;
     boolean compact;
 
     int verticalLayerGap;
@@ -32,7 +32,7 @@ class UiTreeGraph extends UiComponent {
 
     command update(UiTreeGraph config);
 
-    command setZoomFactor(float zoomFactor); // > 0
+    command setZoomFactor(double zoomFactor); // > 0
     command setNodes(List<UiTreeGraphNode> nodes);
     command addNode(UiTreeGraphNode node);
     command removeNode(String nodeId);
@@ -54,8 +54,8 @@ class UiBaseTreeGraphNode {
     required int height;
     String backgroundColor = "rgb(255, 255, 255)";
     String borderColor = "rgb(100, 100, 100)";
-    float borderWidth = 1;
-    float borderRadius = 0;
+    double borderWidth = 1;
+    double borderRadius = 0;
 
     UiTreeGraphNodeImage image;
     UiTreeGraphNodeIcon icon;
@@ -86,10 +86,14 @@ class UiTreeGraphNodeImage {
     required int height;
     int centerTopDistance; //top distance of image center from top-left corner of node, e.g. -10 and height 30 means image will be 25 pixels above the top line of the node
     int centerLeftDistance; //left distance of image center from top-left corner of node
-    enum { ORIGINAL, ROUNDED, CIRCLE } cornerShape = CornerShape.ROUNDED;
+    UiTreeGraphNodeImageCornerShape cornerShape = UiTreeGraphNodeImageCornerShape.ROUNDED;
     boolean shadow = false;
-    float borderWidth = 0;
+    double borderWidth = 0;
     String borderColor = "rgb(100, 100, 100)";
+}
+
+enum UiTreeGraphNodeImageCornerShape {
+    ORIGINAL, ROUNDED, CIRCLE;
 }
 
 class UiTreeGraphNodeIcon {

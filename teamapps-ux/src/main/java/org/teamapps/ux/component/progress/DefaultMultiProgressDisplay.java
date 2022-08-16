@@ -19,8 +19,9 @@
  */
 package org.teamapps.ux.component.progress;
 
-import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiDefaultMultiProgressDisplay;
+import org.teamapps.dto.UiEvent;
+import org.teamapps.dto.UiMultiProgressDisplay;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.AbstractComponent;
@@ -82,21 +83,19 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_MULTI_PROGRESS_DISPLAY_CLICKED: {
-				this.onClicked.fire(null);
-				if (showingNotificationWithoutTimeout) {
-					this.showingNotificationWithoutTimeout = false;
-					progressListNotification.close();
+		if (event instanceof UiMultiProgressDisplay.ClickedEvent) {
+			this.onClicked.fire(null);
+			if (showingNotificationWithoutTimeout) {
+				this.showingNotificationWithoutTimeout = false;
+				progressListNotification.close();
+			} else {
+				this.showingNotificationWithoutTimeout = true;
+				if (progresses.size() > 0) {
+					progressListNotification.setDisplayTimeInMillis(-1);
 				} else {
-					this.showingNotificationWithoutTimeout = true;
-					if (progresses.size() > 0) {
-						progressListNotification.setDisplayTimeInMillis(-1);
-					} else {
-						progressListNotification.setDisplayTimeInMillis(2000);
-					}
-					getSessionContext().showNotification(progressListNotification, notificationPosition);
+					progressListNotification.setDisplayTimeInMillis(2000);
 				}
+				getSessionContext().showNotification(progressListNotification, notificationPosition);
 			}
 		}
 	}

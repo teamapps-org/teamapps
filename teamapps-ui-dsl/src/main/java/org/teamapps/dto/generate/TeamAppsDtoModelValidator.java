@@ -37,9 +37,9 @@ public class TeamAppsDtoModelValidator {
 		List<TeamAppsDtoParser.ClassDeclarationContext> classDeclarations = model.getClassDeclarations();
 
 		validateNoDuplicateClassDeclarations(classDeclarations);
-		for (TeamAppsDtoParser.ClassDeclarationContext classDeclaration : classDeclarations) {
-			validateRequiredPropertiesHaveNoDefaultValue(classDeclaration);
-		}
+//		for (TeamAppsDtoParser.ClassDeclarationContext classDeclaration : classDeclarations) {
+//			validateRequiredPropertiesHaveNoDefaultValue(classDeclaration);
+//		}
 
 		List<TeamAppsDtoParser.EnumDeclarationContext> enumDeclarations = model.getEnumDeclarations();
 

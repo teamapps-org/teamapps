@@ -99,43 +99,37 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_INFINITE_ITEM_VIEW2_DISPLAYED_RANGE_CHANGED:
-				UiInfiniteItemView2.DisplayedRangeChangedEvent d = (UiInfiniteItemView2.DisplayedRangeChangedEvent) event;
-				try {
-					handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
-				} catch (DuplicateEntriesException e) {
-					// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
-					// So try to refresh the whole data instead.
-					LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
-					refresh();
-				}
-				break;
-			case UI_INFINITE_ITEM_VIEW2_ITEM_CLICKED: {
-				UiInfiniteItemView2.ItemClickedEvent e = (UiInfiniteItemView2.ItemClickedEvent) event;
+		if (event instanceof UiInfiniteItemView2.DisplayedRangeChangedEvent) {
+			UiInfiniteItemView2.DisplayedRangeChangedEvent d = (UiInfiniteItemView2.DisplayedRangeChangedEvent) event;
+			try {
+				handleScrollOrResize(ItemRange.startLength(d.getStartIndex(), d.getLength()));
+			} catch (DuplicateEntriesException e) {
+				// if the model returned a duplicate entry while scrolling, the underlying data apparently changed.
+				// So try to refresh the whole data instead.
+				LOGGER.warn("DuplicateEntriesException while retrieving data from model. This means the underlying data of the model has changed without the model notifying this component, so will refresh the whole data of this component.");
+				refresh();
+			}
+		} else if (event instanceof UiInfiniteItemView2.ItemClickedEvent) {
+			UiInfiniteItemView2.ItemClickedEvent e = (UiInfiniteItemView2.ItemClickedEvent) event;
+			RECORD record = renderedRecords.getRecord(e.getRecordId());
+			if (record != null) {
+				onItemClicked.fire(new ItemClickedEventData<>(record, e.getIsDoubleClick()));
+			}
+		} else if (event instanceof UiInfiniteItemView2.ContextMenuRequestedEvent) {
+			UiInfiniteItemView2.ContextMenuRequestedEvent e = (UiInfiniteItemView2.ContextMenuRequestedEvent) event;
+			lastSeenContextMenuRequestId = e.getRequestId();
+			if (contextMenuProvider == null) {
+				closeContextMenu();
+			} else {
 				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null) {
-					onItemClicked.fire(new ItemClickedEventData<>(record, e.getIsDoubleClick()));
-				}
-				break;
-			}
-			case UI_INFINITE_ITEM_VIEW2_CONTEXT_MENU_REQUESTED: {
-				UiInfiniteItemView2.ContextMenuRequestedEvent e = (UiInfiniteItemView2.ContextMenuRequestedEvent) event;
-				lastSeenContextMenuRequestId = e.getRequestId();
-				if (contextMenuProvider == null) {
-					closeContextMenu();
-				} else {
-					RECORD record = renderedRecords.getRecord(e.getRecordId());
-					if (record != null) {
-						Component contextMenuContent = contextMenuProvider.apply(record);
-						if (contextMenuContent != null) {
-							queueCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
-						} else {
-							queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), e.getRequestId()));
-						}
+					Component contextMenuContent = contextMenuProvider.apply(record);
+					if (contextMenuContent != null) {
+						queueCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
+					} else {
+						queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), e.getRequestId()));
 					}
 				}
-				break;
 			}
 		}
 	}

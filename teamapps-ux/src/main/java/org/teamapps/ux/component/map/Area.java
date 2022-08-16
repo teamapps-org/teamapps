@@ -21,31 +21,31 @@ package org.teamapps.ux.component.map;
 
 public class Area {
 
-	protected final float minLatitude;
-	protected final float maxLatitude;
-	protected final float minLongitude;
-	protected final float maxLongitude;
+	protected final double minLatitude;
+	protected final double maxLatitude;
+	protected final double minLongitude;
+	protected final double maxLongitude;
 
-	public Area(float minLatitude, float maxLatitude, float minLongitude, float maxLongitude) {
+	public Area(double minLatitude, double maxLatitude, double minLongitude, double maxLongitude) {
 		this.minLatitude = minLatitude;
 		this.maxLatitude = maxLatitude;
 		this.minLongitude = minLongitude;
 		this.maxLongitude = maxLongitude;
 	}
 
-	public float getMinLatitude() {
+	public double getMinLatitude() {
 		return minLatitude;
 	}
 
-	public float getMaxLatitude() {
+	public double getMaxLatitude() {
 		return maxLatitude;
 	}
 
-	public float getMinLongitude() {
+	public double getMinLongitude() {
 		return minLongitude;
 	}
 
-	public float getMaxLongitude() {
+	public double getMaxLongitude() {
 		return maxLongitude;
 	}
 

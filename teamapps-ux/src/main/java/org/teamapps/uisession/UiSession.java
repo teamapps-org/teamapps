@@ -79,7 +79,7 @@ public class UiSession {
 
 	public UiSession(String sessionId, long creationTime, TeamAppsConfiguration config, ObjectMapper objectMapper, MessageSender messageSender) {
 		this.sessionId = sessionId;
-		this.name = sessionId.toString();
+		this.name = sessionId;
 		this.config = config;
 		this.objectMapper = objectMapper;
 		this.timestampOfLastMessageFromClient.set(creationTime);
@@ -120,7 +120,7 @@ public class UiSession {
 
 	public int sendCommand(UiCommandWithResultCallback commandWithCallback) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Sending command ({}): {}", sessionId.toString().substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
+			LOGGER.debug("Sending command ({}): {}", sessionId.substring(0, 8), commandWithCallback.getUiCommand().getClass().getSimpleName());
 		}
 		statistics.commandSent(commandWithCallback.getUiCommand());
 		CMD cmd = createCMD(commandWithCallback);
@@ -250,7 +250,7 @@ public class UiSession {
 		statistics.eventReceived(event);
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Recieved event ({}): {}", sessionId.toString().substring(0, 8), event.getUiEventType());
+			LOGGER.debug("Recieved event ({}): {}", sessionId.substring(0, 8), event.getClass());
 		}
 		updateClientMessageId(clientMessageId);
 		reviveConnection();
@@ -261,7 +261,7 @@ public class UiSession {
 		statistics.queryReceived(query);
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Recieved query ({}): {}", sessionId.toString().substring(0, 8), query.getUiQueryType());
+			LOGGER.debug("Recieved query ({}): {}", sessionId.substring(0, 8), query.getClass());
 		}
 		updateClientMessageId(clientMessageId);
 		reviveConnection();
@@ -278,7 +278,7 @@ public class UiSession {
 	public void handleCommandResult(int clientMessageId, int cmdId, Object result) {
 		this.timestampOfLastMessageFromClient.set(System.currentTimeMillis());
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Recieved command result ({}): {}", sessionId.toString().substring(0, 8), result);
+			LOGGER.debug("Recieved command result ({}): {}", sessionId.substring(0, 8), result);
 		}
 		updateClientMessageId(clientMessageId);
 		reviveConnection();

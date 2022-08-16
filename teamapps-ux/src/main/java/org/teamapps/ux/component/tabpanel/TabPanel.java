@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -162,39 +162,35 @@ public class TabPanel extends AbstractComponent implements Component {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_TAB_PANEL_TAB_SELECTED:
-				UiTabPanel.TabSelectedEvent tabSelectedEvent = (UiTabPanel.TabSelectedEvent) event;
-				if (tabSelectedEvent.getTabId() == null) {
-					this.selectedTab = null;
-				} else {
-					Tab oldSelectedTab = this.selectedTab;
-					Tab selectedTab = this.getTabByClientId(tabSelectedEvent.getTabId());
-					this.selectedTab = selectedTab;
-					if (oldSelectedTab != null) {
-						oldSelectedTab.onDeselected.fire(null);
-					}
-					if (selectedTab != null) {
-						selectedTab.onSelected.fire(null);
-					}
+		if (event instanceof UiTabPanel.TabSelectedEvent) {
+			UiTabPanel.TabSelectedEvent tabSelectedEvent = (UiTabPanel.TabSelectedEvent) event;
+			if (tabSelectedEvent.getTabId() == null) {
+				this.selectedTab = null;
+			} else {
+				Tab oldSelectedTab = this.selectedTab;
+				Tab selectedTab = this.getTabByClientId(tabSelectedEvent.getTabId());
+				this.selectedTab = selectedTab;
+				if (oldSelectedTab != null) {
+					oldSelectedTab.onDeselected.fire(null);
 				}
-				onTabSelected.fire(selectedTab);
-				break;
-			case UI_TAB_PANEL_TAB_NEEDS_REFRESH:
-				UiTabPanel.TabNeedsRefreshEvent tabNeedsRefreshEvent = (UiTabPanel.TabNeedsRefreshEvent) event;
-				Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
-				queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(getId(), tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
-				break;
-			case UI_TAB_PANEL_TAB_CLOSED:
-				UiTabPanel.TabClosedEvent tabClosedEvent = (UiTabPanel.TabClosedEvent) event;
-				String tabId = tabClosedEvent.getTabId();
-				Tab closedTab = this.getTabByClientId(tabId);
-				if (closedTab != null) {
-					tabs.remove(closedTab);
-					closedTab.onClosed.fire(null);
-					onTabClosed.fire(closedTab);
+				if (selectedTab != null) {
+					selectedTab.onSelected.fire(null);
 				}
-				break;
+			}
+			onTabSelected.fire(selectedTab);
+		} else if (event instanceof UiTabPanel.TabNeedsRefreshEvent) {
+			UiTabPanel.TabNeedsRefreshEvent tabNeedsRefreshEvent = (UiTabPanel.TabNeedsRefreshEvent) event;
+			Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
+			queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(getId(), tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
+		} else if (event instanceof UiTabPanel.TabClosedEvent) {
+			UiTabPanel.TabClosedEvent tabClosedEvent = (UiTabPanel.TabClosedEvent) event;
+			String tabId = tabClosedEvent.getTabId();
+			Tab closedTab = this.getTabByClientId(tabId);
+			if (closedTab != null) {
+				tabs.remove(closedTab);
+				closedTab.onClosed.fire(null);
+				onTabClosed.fire(closedTab);
+			}
 		}
 	}
 

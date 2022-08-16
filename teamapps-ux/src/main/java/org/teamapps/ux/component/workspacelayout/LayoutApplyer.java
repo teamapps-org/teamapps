@@ -270,7 +270,7 @@ class LayoutApplyer {
 
 		SplitSizePolicy getSizePolicy();
 
-		float getReferenceChildSize();
+		double getReferenceChildSize();
 
 		LayoutItemWrapper getFirstChild();
 
@@ -310,7 +310,7 @@ class LayoutApplyer {
 		}
 
 		@Override
-		public float getReferenceChildSize() {
+		public double getReferenceChildSize() {
 			return item.getReferenceChildSize();
 		}
 
@@ -382,7 +382,7 @@ class LayoutApplyer {
 		}
 
 		@Override
-		public float getReferenceChildSize() {
+		public double getReferenceChildSize() {
 			return item.getReferenceChildSize();
 		}
 

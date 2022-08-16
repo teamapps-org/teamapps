@@ -91,23 +91,17 @@ public class ProgressDisplay extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_PROGRESS_DISPLAY_CLICKED: {
-				UiProgressDisplay.ClickedEvent clickedEvent = (UiProgressDisplay.ClickedEvent) event;
-				this.onClicked.fire(null);
-				break;
+		if (event instanceof UiProgressDisplay.ClickedEvent) {
+			UiProgressDisplay.ClickedEvent clickedEvent = (UiProgressDisplay.ClickedEvent) event;
+			this.onClicked.fire(null);
+		} else if (event instanceof UiProgressDisplay.CancelButtonClickedEvent) {
+			UiProgressDisplay.CancelButtonClickedEvent cancelButtonClickedEvent = (UiProgressDisplay.CancelButtonClickedEvent) event;
+			if (this.observedProgress != null) {
+				this.observedProgress.requestCancellation();
 			}
-			case UI_PROGRESS_DISPLAY_CANCEL_BUTTON_CLICKED: {
-				UiProgressDisplay.CancelButtonClickedEvent cancelButtonClickedEvent = (UiProgressDisplay.CancelButtonClickedEvent) event;
-				if (this.observedProgress != null) {
-					this.observedProgress.requestCancellation();
-				}
-				this.onCancelButtonClicked.fire(null);
-				break;
-			}
+			this.onCancelButtonClicked.fire(null);
 
 		}
-
 	}
 
 	public void setObservedProgress(ObservableProgress observableProgress) {

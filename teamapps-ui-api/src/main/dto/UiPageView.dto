@@ -26,8 +26,12 @@ class UiPageView extends UiComponent {
 
 class UiPageViewBlock {
 	String id;
-	enum {LEFT, RIGHT, FULL} alignment;
+	UiPageViewBlockAlignment alignment;
 	List<UiToolButton*> toolButtons;
+}
+
+enum UiPageViewBlockAlignment {
+    LEFT, RIGHT, FULL
 }
 
 class UiMessagePageViewBlock extends UiPageViewBlock {

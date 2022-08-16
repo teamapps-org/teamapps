@@ -47,9 +47,8 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
-		switch (event.getUiEventType()) {
-			case UI_TEMPLATE_FIELD_CLICKED:
-				onClicked.fire();
+		if (event instanceof UiTemplateField.ClickedEvent) {
+			onClicked.fire();
 		}
 	}
 

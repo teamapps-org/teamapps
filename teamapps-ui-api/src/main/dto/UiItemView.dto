@@ -44,7 +44,7 @@ class UiItemViewItemGroup {
 	List<UiIdentifiableClientRecord> items;
 	boolean headerVisible = true;
 	UiItemViewFloatStyle floatStyle = UiItemViewFloatStyle.HORIZONTAL_FLOAT; // if true, the buttons are placed one
-	float buttonWidth = -1; // -1: use natural width, 0: full width, 0<x<1: relative width, >=1: fixed width
+	double buttonWidth = -1; // -1: use natural width, 0: full width, 0<x<1: relative width, >=1: fixed width
 	int horizontalPadding = 0;
 	int verticalPadding = 0;
 	int horizontalItemMargin = 0;

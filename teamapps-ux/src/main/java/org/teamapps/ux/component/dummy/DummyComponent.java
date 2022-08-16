@@ -49,7 +49,9 @@ public class DummyComponent extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		onClick.fire(null);
+		if (event instanceof UiDummyComponent.ClickedEvent) {
+			onClick.fire(null);
+		}
 	}
 
 	public String getText() {

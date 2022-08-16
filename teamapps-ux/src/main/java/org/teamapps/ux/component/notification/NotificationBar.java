@@ -45,34 +45,27 @@ public class NotificationBar extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_NOTIFICATION_BAR_ITEM_CLICKED: {
-				UiNotificationBar.ItemClickedEvent e = (UiNotificationBar.ItemClickedEvent) event;
-				NotificationBarItem item = itemsByUiId.get(e.getId());
-				if (item != null) {
-					item.onClicked.fire();
-					onItemClicked.fire(item);
-				}
-				break;
+		if (event instanceof UiNotificationBar.ItemClickedEvent) {
+			UiNotificationBar.ItemClickedEvent e = (UiNotificationBar.ItemClickedEvent) event;
+			NotificationBarItem item = itemsByUiId.get(e.getId());
+			if (item != null) {
+				item.onClicked.fire();
+				onItemClicked.fire(item);
 			}
-			case UI_NOTIFICATION_BAR_ITEM_ACTION_LINK_CLICKED: {
-				UiNotificationBar.ItemActionLinkClickedEvent e = (UiNotificationBar.ItemActionLinkClickedEvent) event;
-				NotificationBarItem item = itemsByUiId.get(e.getId());
-				if (item != null) {
-					item.onActionLinkClicked.fire();
-					onItemActionLinkClicked.fire(item);
-				}
-				break;
+		} else if (event instanceof UiNotificationBar.ItemActionLinkClickedEvent) {
+			UiNotificationBar.ItemActionLinkClickedEvent e = (UiNotificationBar.ItemActionLinkClickedEvent) event;
+			NotificationBarItem item = itemsByUiId.get(e.getId());
+			if (item != null) {
+				item.onActionLinkClicked.fire();
+				onItemActionLinkClicked.fire(item);
 			}
-			case UI_NOTIFICATION_BAR_ITEM_CLOSED: {
-				UiNotificationBar.ItemClosedEvent e = (UiNotificationBar.ItemClosedEvent) event;
-				NotificationBarItem item = itemsByUiId.get(e.getId());
-				if (item != null) {
-					NotificationBarItemClosedEvent.ClosingReason reason = e.getWasTimeout() ? TIMEOUT : USER;
-					item.onClosed.fire(reason);
-					onItemClosed.fire(new NotificationBarItemClosedEvent(item, reason));
-				}
-				break;
+		} else if (event instanceof UiNotificationBar.ItemClosedEvent) {
+			UiNotificationBar.ItemClosedEvent e = (UiNotificationBar.ItemClosedEvent) event;
+			NotificationBarItem item = itemsByUiId.get(e.getId());
+			if (item != null) {
+				NotificationBarItemClosedEvent.ClosingReason reason = e.getWasTimeout() ? TIMEOUT : USER;
+				item.onClosed.fire(reason);
+				onItemClosed.fire(new NotificationBarItemClosedEvent(item, reason));
 			}
 		}
 	}

@@ -23,38 +23,40 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
-import org.teamapps.dto.generate.TeamAppsDtoModel;
 import org.teamapps.dto.TeamAppsDtoParser;
+import org.teamapps.dto.generate.TeamAppsDtoModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.ClassDeclarationContext> {
 
-    private final TeamAppsDtoModel astUtil;
+    private final TeamAppsDtoModel model;
 
-    public ClassDeclarationContextModelAdaptor(TeamAppsDtoModel astUtil) {
-        this.astUtil = astUtil;
+    public ClassDeclarationContextModelAdaptor(TeamAppsDtoModel model) {
+        this.model = model;
     }
 
     @Override
     public Object getProperty(Interpreter interpreter, ST seld, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
         TeamAppsDtoParser.ClassDeclarationContext classContext = (TeamAppsDtoParser.ClassDeclarationContext) o;
         if ("allProperties".equals(propertyName)) {
-            return astUtil.findAllProperties(classContext);
+            return model.findAllProperties(classContext);
         } else if ("allRequiredProperties".equals(propertyName)) {
-            return astUtil.filterRequiredProperties(astUtil.findAllProperties(classContext), true);
+            return model.filterRequiredProperties(model.findAllProperties(classContext), true);
         } else if ("nonRequiredProperties".equals(propertyName)) {
             return classContext.propertyDeclaration().stream().filter(p -> p.requiredModifier() == null).collect(Collectors.toList());
         } else if ("allNonRequiredProperties".equals(propertyName)) {
-            return astUtil.filterRequiredProperties(astUtil.findAllProperties(classContext), false);
+            return model.filterRequiredProperties(model.findAllProperties(classContext), false);
         } else if ("superClass".equals(propertyName)) {
-            return astUtil.findSuperClass(classContext);
+            return model.findSuperClass(classContext);
         } else if ("allSuperClasses".equals(propertyName)) {
-            return astUtil.findAllSuperClasses(classContext);
+            return model.findAllSuperClasses(classContext);
         } else if ("superClassAndDirectlyImplementedInterfaces".equals(propertyName)) {
-            return astUtil.findSuperClassAndDirectlyImplementedInterfaces(classContext);
+            return model.findSuperClassAndDirectlyImplementedInterfaces(classContext);
         } else if ("hasCommands".equals(propertyName)) {
-            return !astUtil.getAllCommands(classContext).isEmpty();
+            return !model.getAllCommands(classContext).isEmpty();
         }  else if ("nonStaticCommandDeclarations".equals(propertyName)) {
             return classContext.commandDeclaration().stream()
                     .filter(cmd -> cmd.staticModifier() == null)
@@ -64,49 +66,53 @@ public class ClassDeclarationContextModelAdaptor extends ReferencableEntityModel
                     .filter(cmd -> cmd.staticModifier() == null)
                     .collect(Collectors.toList());
         } else if ("hasEvents".equals(propertyName)) {
-            return !astUtil.getAllEvents(classContext).isEmpty();
+            return !model.getAllEvents(classContext).isEmpty();
         } else if ("allEvents".equals(propertyName)) {
-            return astUtil.getAllEvents(classContext);
+            return model.getAllEvents(classContext);
         } else if ("allNonStaticEvents".equals(propertyName)) {
-            return astUtil.getAllEvents(classContext).stream()
+            return model.getAllEvents(classContext).stream()
                     .filter(eventDeclarationContext -> eventDeclarationContext.staticModifier() == null)
                     .collect(Collectors.toList());
         } else if ("allStaticEvents".equals(propertyName)) {
-            return astUtil.getAllEvents(classContext).stream()
+            return model.getAllEvents(classContext).stream()
                     .filter(eventDeclarationContext -> eventDeclarationContext.staticModifier() != null)
                     .collect(Collectors.toList());
         } else if ("allQueries".equals(propertyName)) {
-            return astUtil.getAllQueries(classContext);
+            return model.getAllQueries(classContext);
         } else if ("superClassAndDirectlyImplementedInterfacesWithCommands".equals(propertyName)) {
-            return astUtil.superClassAndDirectlyImplementedInterfacesWithCommands(classContext);
+            return model.superClassAndDirectlyImplementedInterfacesWithCommands(classContext);
         } else if ("superClassAndDirectlyImplementedInterfacesWithEvents".equals(propertyName)) {
-            return astUtil.superClassAndDirectlyImplementedInterfacesWithEvents(classContext);
+            return model.superClassAndDirectlyImplementedInterfacesWithEvents(classContext);
         } else if ("subEventBaseClassName".equals(propertyName)) {
             return classContext.Identifier().getText() + "SubEvent";
         } else if ("isDescendantOfClassOrInterfaceReferencedForSubEvents".equals(propertyName)) {
-            return astUtil.isDescendantOfClassOrInterfaceReferencedForSubEvents(classContext);
+            return model.isDescendantOfClassOrInterfaceReferencedForSubEvents(classContext);
         } else if ("allSubClasses".equals(propertyName)) {
-            return astUtil.findAllSubClasses(classContext);
+            return model.findAllSubClasses(classContext);
         } else if ("hasSubTypes".equals(propertyName)) {
-            return astUtil.findAllSubClasses(classContext).size() > 0;
-        } else if ("inlineEnumProperties".equals(propertyName)) {
-            return classContext.propertyDeclaration().stream().filter(p -> p.type().inlineEnum() != null).collect(Collectors.toList());
+            return model.findAllSubClasses(classContext).size() > 0;
         } else if ("allReferencedClassesAndInterfaces".equals(propertyName)) {
-            return astUtil.findAllReferencedClassesAndInterfaces(classContext);
+            return model.findAllReferencedClassesAndInterfaces(classContext);
         } else if ("allReferencedEnums".equals(propertyName)) {
-            return astUtil.findAllReferencedEnums(classContext);
+            return model.findAllReferencedEnums(classContext);
         } else if ("propertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return astUtil.findPropertiesNotImplementedBySuperClasses(classContext);
+            return model.findPropertiesNotImplementedBySuperClasses(classContext);
         } else if ("requiredPropertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return astUtil.filterRequiredProperties(astUtil.findPropertiesNotImplementedBySuperClasses(classContext), true);
+            return model.filterRequiredProperties(model.findPropertiesNotImplementedBySuperClasses(classContext), true);
         } else if ("nonRequiredPropertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return astUtil.filterRequiredProperties(astUtil.findPropertiesNotImplementedBySuperClasses(classContext), false);
+            return model.filterRequiredProperties(model.findPropertiesNotImplementedBySuperClasses(classContext), false);
         } else if ("simplePropertiesByRelevance".equals(propertyName)) {
-            return astUtil.getSimplePropertiesSortedByRelevance(astUtil.findAllProperties(classContext));
+            return model.getSimplePropertiesSortedByRelevance(model.findAllProperties(classContext));
         } else if ("referenceableProperties".equals(propertyName)) {
-            return astUtil.getReferenceableProperties(classContext);
+            return model.getReferenceableProperties(classContext);
         } else if ("referenceableBaseClass".equals(propertyName)) {
-            return astUtil.isReferenceableBaseClass(classContext);
+            return model.isReferenceableBaseClass(classContext);
+        } else if ("innerClasses".equals(propertyName)) {
+            List<Object> innerClassDeclarations = new ArrayList<>();
+            innerClassDeclarations.addAll(classContext.eventDeclaration());
+            innerClassDeclarations.addAll(classContext.queryDeclaration());
+            innerClassDeclarations.addAll(classContext.commandDeclaration());
+            return innerClassDeclarations;
         } else {
             return super.getProperty(interpreter, seld, o, property, propertyName);
         }

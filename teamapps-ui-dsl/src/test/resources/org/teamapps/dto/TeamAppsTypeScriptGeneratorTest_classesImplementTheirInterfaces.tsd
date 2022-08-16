@@ -12,7 +12,6 @@ import {AConfig} from "./AConfig";
 import {BConfig} from "./BConfig";
 import {CConfig} from "./CConfig";
 
-
 export interface DConfig extends AConfig, BConfig, CConfig {
 	_type?: string;
 }

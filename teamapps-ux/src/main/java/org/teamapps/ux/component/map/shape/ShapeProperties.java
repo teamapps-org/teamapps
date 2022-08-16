@@ -28,7 +28,7 @@ public class ShapeProperties {
 
 	private Color strokeColor;
 	private float strokeWeight = 2f;
-	private List<Float> strokeDashArray;
+	private List<Double> strokeDashArray;
 	private Color fillColor = Color.TRANSPARENT;
 
 	public ShapeProperties(Color strokeColor) {
@@ -40,7 +40,7 @@ public class ShapeProperties {
 		this.strokeWeight = strokeWeight;
 	}
 
-	public ShapeProperties(Color strokeColor, float strokeWeight, List<Float> strokeDashArray) {
+	public ShapeProperties(Color strokeColor, float strokeWeight, List<Double> strokeDashArray) {
 		this.strokeColor = strokeColor;
 		this.strokeWeight = strokeWeight;
 		this.strokeDashArray = strokeDashArray;
@@ -76,11 +76,11 @@ public class ShapeProperties {
 		this.fillColor = fillColor;
 	}
 
-	public List<Float> getStrokeDashArray() {
+	public List<Double> getStrokeDashArray() {
 		return strokeDashArray;
 	}
 
-	public void setStrokeDashArray(List<Float> strokeDashArray) {
+	public void setStrokeDashArray(List<Double> strokeDashArray) {
 		this.strokeDashArray = strokeDashArray;
 	}
 

@@ -19,12 +19,12 @@
  */
 package org.teamapps.ux.component.panel;
 
-import org.teamapps.dto.UiPanel;
+import org.teamapps.dto.UiPanelHeaderComponentMinimizationPolicy;
 
 public enum HeaderComponentMinimizationPolicy {
 	LEFT_COMPONENT_FIRST, RIGHT_COMPONENT_FIRST;
 
-	public UiPanel.HeaderComponentMinimizationPolicy toUiHeaderComponentMinimizationPolicy() {
-		return UiPanel.HeaderComponentMinimizationPolicy.valueOf(this.name());
+	public UiPanelHeaderComponentMinimizationPolicy toUiHeaderComponentMinimizationPolicy() {
+		return UiPanelHeaderComponentMinimizationPolicy.valueOf(this.name());
 	}
 }

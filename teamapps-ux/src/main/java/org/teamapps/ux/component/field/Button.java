@@ -114,15 +114,10 @@ public class Button<RECORD> extends AbstractField<Void> {
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		super.handleUiEvent(event);
-		switch (event.getUiEventType()) {
-			case UI_BUTTON_CLICKED: {
-				this.onClicked.fire();
-				break;
-			}
-			case UI_BUTTON_DROP_DOWN_OPENED: {
-				this.onDropDownOpened.fire(null);
-				break;
-			}
+		if (event instanceof UiButton.ClickedEvent) {
+			this.onClicked.fire();
+		} else if (event instanceof UiButton.DropDownOpenedEvent) {
+			this.onDropDownOpened.fire();
 		}
 	}
 

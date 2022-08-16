@@ -152,12 +152,6 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_GRID_FORM_SECTION_COLLAPSED_STATE_CHANGED:
-				break;
-			default:
-				//todo error msg
-		}
 	}
 
 	private List<String> getPropertyNames() {

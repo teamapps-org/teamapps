@@ -15,7 +15,6 @@ import {ICommandHandler} from "./IConfig";
 import {AEventSource} from "./AConfig";
 import {IEventSource} from "./IConfig";
 
-
 export interface BConfig extends AConfig, IConfig {
 	_type?: string;
 }

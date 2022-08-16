@@ -31,7 +31,7 @@ class UiCompositeField extends UiField { // TODO #ux
 }
 
 class UiColumnDefinition {
-	required float width; // values <1 are treated relative widths. Values >= 1 are treated fixed/absolute widths in px.
+	required double width; // values <1 are treated relative widths. Values >= 1 are treated fixed/absolute widths in px.
 	required int minWidth;
 }
 

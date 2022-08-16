@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,11 +20,7 @@
 package org.teamapps.ux.component.mobile;
 
 import org.teamapps.common.format.Color;
-import org.teamapps.dto.UiClientObjectReference;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiNavigationBar;
-import org.teamapps.dto.UiNavigationBarButton;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -82,20 +78,17 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_NAVIGATION_BAR_BUTTON_CLICKED:
-				UiNavigationBar.ButtonClickedEvent clickedEvent = (UiNavigationBar.ButtonClickedEvent) event;
-				String buttonId = clickedEvent.getButtonId();
-				buttons.stream()
-						.filter(btn -> btn.getClientId().equals(buttonId))
-						.forEach(button -> {
-							onButtonClick.fire(button);
-							button.onClick.fire(null);
-						});
-				break;
-			case UI_NAVIGATION_BAR_FANOUT_CLOSED_DUE_TO_CLICK_OUTSIDE_FANOUT:
-				this.activeFanOutComponent = null;
-				break;
+		if (event instanceof UiNavigationBar.ButtonClickedEvent) {
+			UiNavigationBar.ButtonClickedEvent clickedEvent = (UiNavigationBar.ButtonClickedEvent) event;
+			String buttonId = clickedEvent.getButtonId();
+			buttons.stream()
+					.filter(btn -> btn.getClientId().equals(buttonId))
+					.forEach(button -> {
+						onButtonClick.fire(button);
+						button.onClick.fire(null);
+					});
+		} else if (event instanceof UiNavigationBar.FanoutClosedDueToClickOutsideFanoutEvent) {
+			this.activeFanOutComponent = null;
 		}
 	}
 

@@ -22,11 +22,7 @@ package org.teamapps.ux.component.infiniteitemview;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiIdentifiableClientRecord;
-import org.teamapps.dto.UiInfiniteItemView;
-import org.teamapps.dto.UiInfiniteItemViewDataRequest;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.cache.record.legacy.CacheManipulationHandle;
 import org.teamapps.ux.cache.record.legacy.ClientRecordCache;
@@ -121,42 +117,36 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_INFINITE_ITEM_VIEW_DISPLAYED_RANGE_CHANGED:
-				UiInfiniteItemView.DisplayedRangeChangedEvent rangeChangedEvent = (UiInfiniteItemView.DisplayedRangeChangedEvent) event;
-				viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
-				displayedRangeStart = rangeChangedEvent.getStartIndex();
-				displayedRangeLength = rangeChangedEvent.getLength();
-				if (rangeChangedEvent.getDataRequest() != null) {
-					UiInfiniteItemViewDataRequest dataRequest = rangeChangedEvent.getDataRequest();
-					int startIndex = dataRequest.getStartIndex();
-					int length = dataRequest.getLength();
-					this.sendRecords(startIndex, length, false);
-				}
-				break;
-			case UI_INFINITE_ITEM_VIEW_ITEM_CLICKED: {
-				UiInfiniteItemView.ItemClickedEvent itemClickedEvent = (UiInfiniteItemView.ItemClickedEvent) event;
-				RECORD record = itemCache.getRecordByClientId(itemClickedEvent.getRecordId());
-				if (record != null) {
-					onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick()));
-				}
-				break;
+		if (event instanceof UiInfiniteItemView.DisplayedRangeChangedEvent) {
+			UiInfiniteItemView.DisplayedRangeChangedEvent rangeChangedEvent = (UiInfiniteItemView.DisplayedRangeChangedEvent) event;
+			viewportDisplayedRecordClientIds = rangeChangedEvent.getDisplayedRecordIds();
+			displayedRangeStart = rangeChangedEvent.getStartIndex();
+			displayedRangeLength = rangeChangedEvent.getLength();
+			if (rangeChangedEvent.getDataRequest() != null) {
+				UiInfiniteItemViewDataRequest dataRequest = rangeChangedEvent.getDataRequest();
+				int startIndex = dataRequest.getStartIndex();
+				int length = dataRequest.getLength();
+				this.sendRecords(startIndex, length, false);
 			}
-			case UI_INFINITE_ITEM_VIEW_CONTEXT_MENU_REQUESTED: {
-				UiInfiniteItemView.ContextMenuRequestedEvent e = (UiInfiniteItemView.ContextMenuRequestedEvent) event;
-				lastSeenContextMenuRequestId = e.getRequestId();
-				RECORD record = itemCache.getRecordByClientId(e.getRecordId());
-				if (record != null && contextMenuProvider != null) {
-					Component contextMenuContent = contextMenuProvider.apply(record);
-					if (contextMenuContent != null) {
-						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
-					} else {
-						queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
-					}
+		} else if (event instanceof UiInfiniteItemView.ItemClickedEvent) {
+			UiInfiniteItemView.ItemClickedEvent itemClickedEvent = (UiInfiniteItemView.ItemClickedEvent) event;
+			RECORD record = itemCache.getRecordByClientId(itemClickedEvent.getRecordId());
+			if (record != null) {
+				onItemClicked.fire(new ItemClickedEventData<>(record, itemClickedEvent.getIsDoubleClick()));
+			}
+		} else if (event instanceof UiInfiniteItemView.ContextMenuRequestedEvent) {
+			UiInfiniteItemView.ContextMenuRequestedEvent e = (UiInfiniteItemView.ContextMenuRequestedEvent) event;
+			lastSeenContextMenuRequestId = e.getRequestId();
+			RECORD record = itemCache.getRecordByClientId(e.getRecordId());
+			if (record != null && contextMenuProvider != null) {
+				Component contextMenuContent = contextMenuProvider.apply(record);
+				if (contextMenuContent != null) {
+					queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
 				} else {
-					closeContextMenu();
+					queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
 				}
-				break;
+			} else {
+				closeContextMenu();
 			}
 		}
 	}

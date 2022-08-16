@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,11 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.teamapps.data.extract.BeanPropertyExtractor;
 import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.data.extract.PropertyProvider;
-import org.teamapps.dto.UiComboBoxTreeRecord;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiTree;
-import org.teamapps.dto.UiTreeRecord;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.field.combobox.TemplateDecider;
@@ -202,26 +198,23 @@ public class Tree<RECORD> extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_TREE_NODE_SELECTED:
-				UiTree.NodeSelectedEvent nodeSelectedEvent = (UiTree.NodeSelectedEvent) event;
-				RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
-				selectedNode = record;
-				if (record != null) {
-					onNodeSelected.fire(record);
+		if (event instanceof UiTree.NodeSelectedEvent) {
+			UiTree.NodeSelectedEvent nodeSelectedEvent = (UiTree.NodeSelectedEvent) event;
+			RECORD record = getRecordByUiId(nodeSelectedEvent.getNodeId());
+			selectedNode = record;
+			if (record != null) {
+				onNodeSelected.fire(record);
+			}
+		} else if (event instanceof UiTree.RequestTreeDataEvent) {
+			UiTree.RequestTreeDataEvent requestTreeDataEvent = (UiTree.RequestTreeDataEvent) event;
+			RECORD parentNode = getRecordByUiId(requestTreeDataEvent.getParentNodeId());
+			if (parentNode != null) {
+				List<RECORD> children = model.getChildRecords(parentNode);
+				List<UiTreeRecord> uiChildren = createOrUpdateUiRecords(children);
+				if (isRendered()) {
+					getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), Collections.emptyList(), uiChildren));
 				}
-				break;
-			case UI_TREE_REQUEST_TREE_DATA:
-				UiTree.RequestTreeDataEvent requestTreeDataEvent = (UiTree.RequestTreeDataEvent) event;
-				RECORD parentNode = getRecordByUiId(requestTreeDataEvent.getParentNodeId());
-				if (parentNode != null) {
-					List<RECORD> children = model.getChildRecords(parentNode);
-					List<UiTreeRecord> uiChildren = createOrUpdateUiRecords(children);
-					if (isRendered()) {
-						getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), Collections.emptyList(), uiChildren));
-					}
-				}
-				break;
+			}
 		}
 	}
 

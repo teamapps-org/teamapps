@@ -26,7 +26,7 @@ enum UiSplitSizePolicy {
 class UiSplitPane extends UiComponent implements Emptyable {
 	required UiSplitDirection splitDirection;
 	required UiSplitSizePolicy sizePolicy;
-	float referenceChildSize = 0.5f; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1
+	double referenceChildSize = 0.5f; // first or fixed child. If the resizePolicy is KEEP_RELATIVE the value must be <= 1
 	UiComponent* firstChild;
 	UiComponent* lastChild;
 	int firstChildMinSize = 10; // in pixels
@@ -37,9 +37,9 @@ class UiSplitPane extends UiComponent implements Emptyable {
 
 	command setFirstChild(UiComponent* firstChild);
 	command setLastChild(UiComponent* lastChild);
-	command setSize(float referenceChildSize, UiSplitSizePolicy sizePolicy);
+	command setSize(double referenceChildSize, UiSplitSizePolicy sizePolicy);
 	command setFirstChildMinSize(int firstChildMinSize);
 	command setLastChildMinSize(int lastChildMinSize);
 
-	event splitResized(float referenceChildSize);
+	event splitResized(double referenceChildSize);
 }

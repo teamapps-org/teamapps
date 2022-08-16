@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,11 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teamapps.dto.UiComponent;
-import org.teamapps.dto.UiEvent;
-import org.teamapps.dto.UiWorkSpaceLayout;
-import org.teamapps.dto.UiWorkSpaceLayoutItem;
-import org.teamapps.dto.UiWorkSpaceLayoutView;
+import org.teamapps.dto.*;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
@@ -123,79 +119,62 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_WORK_SPACE_LAYOUT_LAYOUT_CHANGED: {
-				UiWorkSpaceLayout.LayoutChangedEvent layoutChangedEvent = (UiWorkSpaceLayout.LayoutChangedEvent) event;
-				this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, layoutChangedEvent.getLayoutsByWindowId());
-				printLayoutSyncTraceMessage(layoutChangedEvent.getLayoutsByWindowId());
-				break;
+		if (event instanceof UiWorkSpaceLayout.LayoutChangedEvent) {
+			UiWorkSpaceLayout.LayoutChangedEvent layoutChangedEvent = (UiWorkSpaceLayout.LayoutChangedEvent) event;
+			this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, layoutChangedEvent.getLayoutsByWindowId());
+			printLayoutSyncTraceMessage(layoutChangedEvent.getLayoutsByWindowId());
+		} else if (event instanceof UiWorkSpaceLayout.ViewDraggedToNewWindowEvent) {
+			UiWorkSpaceLayout.ViewDraggedToNewWindowEvent newWindowEvent = (UiWorkSpaceLayout.ViewDraggedToNewWindowEvent) event;
+			Map<String, UiWorkSpaceLayoutItem> newLayoutsByWindowId = newWindowEvent.getLayoutsByWindowId();
+			this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, newLayoutsByWindowId);
+			printLayoutSyncTraceMessage(newWindowEvent.getLayoutsByWindowId());
+		} else if (event instanceof UiWorkSpaceLayout.ViewNeedsRefreshEvent) {
+			UiWorkSpaceLayout.ViewNeedsRefreshEvent needsRefreshEvent = (UiWorkSpaceLayout.ViewNeedsRefreshEvent) event;
+			String viewName = needsRefreshEvent.getViewName();
+			WorkSpaceLayoutView view = getViewById(viewName);
+			getSessionContext().queueCommand(new UiWorkSpaceLayout.RefreshViewComponentCommand(getId(), viewName, view.createUiView().getComponent()));
+		} else if (event instanceof UiWorkSpaceLayout.ChildWindowCreationFailedEvent) {
+			UiWorkSpaceLayout.ChildWindowCreationFailedEvent windowCreationFailedEvent = (UiWorkSpaceLayout.ChildWindowCreationFailedEvent) event;
+			WorkSpaceLayoutView view = getViewById(windowCreationFailedEvent.getViewName());
+			if (view != null) {
+				this.onChildWindowCreationFailed.fire(view);
 			}
-			case UI_WORK_SPACE_LAYOUT_VIEW_DRAGGED_TO_NEW_WINDOW: {
-				UiWorkSpaceLayout.ViewDraggedToNewWindowEvent newWindowEvent = (UiWorkSpaceLayout.ViewDraggedToNewWindowEvent) event;
-				Map<String, UiWorkSpaceLayoutItem> newLayoutsByWindowId = newWindowEvent.getLayoutsByWindowId();
-				this.rootItemsByWindowId = new LayoutApplyer(this).applyFromUiLayoutDescriptor(rootItemsByWindowId, newLayoutsByWindowId);
-				printLayoutSyncTraceMessage(newWindowEvent.getLayoutsByWindowId());
-				break;
+		} else if (event instanceof UiWorkSpaceLayout.ChildWindowClosedEvent) {
+			UiWorkSpaceLayout.ChildWindowClosedEvent windowClosedEvent = (UiWorkSpaceLayout.ChildWindowClosedEvent) event;
+			WorkSpaceLayoutItem windowRootItem = this.rootItemsByWindowId.remove(windowClosedEvent.getWindowId());
+			if (windowRootItem != null) {
+				getMainRootItem().getSelfAndAncestors().stream()
+						.filter(item -> item instanceof WorkSpaceLayoutViewGroup)
+						.map(item -> ((WorkSpaceLayoutViewGroup) item))
+						.findFirst().ifPresent(viewGroup -> {
+							windowRootItem.getAllViews().forEach(viewGroup::addView);
+						});
 			}
-			case UI_WORK_SPACE_LAYOUT_VIEW_NEEDS_REFRESH: {
-				UiWorkSpaceLayout.ViewNeedsRefreshEvent needsRefreshEvent = (UiWorkSpaceLayout.ViewNeedsRefreshEvent) event;
-				String viewName = needsRefreshEvent.getViewName();
-				WorkSpaceLayoutView view = getViewById(viewName);
-				getSessionContext().queueCommand(new UiWorkSpaceLayout.RefreshViewComponentCommand(getId(), viewName, view.createUiView().getComponent()));
-				break;
+			this.onChildWindowClosed.fire(new ChildWindowClosedEventData(windowClosedEvent.getWindowId(), windowRootItem));
+		} else if (event instanceof UiWorkSpaceLayout.ViewSelectedEvent) {
+			UiWorkSpaceLayout.ViewSelectedEvent tabSelectedEvent = (UiWorkSpaceLayout.ViewSelectedEvent) event;
+			WorkSpaceLayoutViewGroup viewGroup = this.getViewGroupById(tabSelectedEvent.getViewGroupId());
+			if (viewGroup != null) {
+				viewGroup.handleViewSelectedByClient(tabSelectedEvent.getViewName());
+				WorkSpaceLayoutView view = getViewById(tabSelectedEvent.getViewName());
+				this.onViewSelected.fire(new ViewSelectedEventData(viewGroup, view));
 			}
-			case UI_WORK_SPACE_LAYOUT_CHILD_WINDOW_CREATION_FAILED: {
-				UiWorkSpaceLayout.ChildWindowCreationFailedEvent windowCreationFailedEvent = (UiWorkSpaceLayout.ChildWindowCreationFailedEvent) event;
-				WorkSpaceLayoutView view = getViewById(windowCreationFailedEvent.getViewName());
-				if (view != null) {
-					this.onChildWindowCreationFailed.fire(view);
-				}
-				break;
-			}
-			case UI_WORK_SPACE_LAYOUT_CHILD_WINDOW_CLOSED: {
-				UiWorkSpaceLayout.ChildWindowClosedEvent windowClosedEvent = (UiWorkSpaceLayout.ChildWindowClosedEvent) event;
-				WorkSpaceLayoutItem windowRootItem = this.rootItemsByWindowId.remove(windowClosedEvent.getWindowId());
-				if (windowRootItem != null) {
-					getMainRootItem().getSelfAndAncestors().stream()
-							.filter(item -> item instanceof WorkSpaceLayoutViewGroup)
-							.map(item -> ((WorkSpaceLayoutViewGroup) item))
-							.findFirst().ifPresent(viewGroup -> {
-						windowRootItem.getAllViews().forEach(viewGroup::addView);
-					});
-				}
-				this.onChildWindowClosed.fire(new ChildWindowClosedEventData(windowClosedEvent.getWindowId(), windowRootItem));
-				break;
-			}
-			case UI_WORK_SPACE_LAYOUT_VIEW_SELECTED: {
-				UiWorkSpaceLayout.ViewSelectedEvent tabSelectedEvent = (UiWorkSpaceLayout.ViewSelectedEvent) event;
-				WorkSpaceLayoutViewGroup viewGroup = this.getViewGroupById(tabSelectedEvent.getViewGroupId());
+		} else if (event instanceof UiWorkSpaceLayout.ViewClosedEvent) {
+			UiWorkSpaceLayout.ViewClosedEvent viewClosedEvent = (UiWorkSpaceLayout.ViewClosedEvent) event;
+			WorkSpaceLayoutView view = getViewById(viewClosedEvent.getViewName());
+			if (view != null) {
+				WorkSpaceLayoutViewGroup viewGroup = getViewGroupForViewName(viewClosedEvent.getViewName());
 				if (viewGroup != null) {
-					viewGroup.handleViewSelectedByClient(tabSelectedEvent.getViewName());
-					WorkSpaceLayoutView view = getViewById(tabSelectedEvent.getViewName());
-					this.onViewSelected.fire(new ViewSelectedEventData(viewGroup, view));
+					viewGroup.removeViewSilently(view);
 				}
-				break;
+				this.onViewClosed.fire(view);
 			}
-			case UI_WORK_SPACE_LAYOUT_VIEW_CLOSED: {
-				UiWorkSpaceLayout.ViewClosedEvent viewClosedEvent = (UiWorkSpaceLayout.ViewClosedEvent) event;
-				WorkSpaceLayoutView view = getViewById(viewClosedEvent.getViewName());
-				if (view != null) {
-					WorkSpaceLayoutViewGroup viewGroup = getViewGroupForViewName(viewClosedEvent.getViewName());
-					if (viewGroup != null) {
-						viewGroup.removeViewSilently(view);
-					}
-					this.onViewClosed.fire(view);
-				}
-				break;
-			}
-			case UI_WORK_SPACE_LAYOUT_VIEW_GROUP_PANEL_STATE_CHANGED: {
-				UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent stateChangedEvent = (UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent) event;
-				WorkSpaceLayoutViewGroup viewGroup = getViewGroupById(stateChangedEvent.getViewGroupId());
-				if (viewGroup != null) {
-					viewGroup.setPanelStateSilently(ViewGroupPanelState.valueOf(stateChangedEvent.getPanelState().name()));
-					this.onViewGroupPanelStateChanged.fire(viewGroup);
-				}
-				break;
+		} else if (event instanceof UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent) {
+			UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent stateChangedEvent = (UiWorkSpaceLayout.ViewGroupPanelStateChangedEvent) event;
+			WorkSpaceLayoutViewGroup viewGroup = getViewGroupById(stateChangedEvent.getViewGroupId());
+			if (viewGroup != null) {
+				viewGroup.setPanelStateSilently(ViewGroupPanelState.valueOf(stateChangedEvent.getPanelState().name()));
+				this.onViewGroupPanelStateChanged.fire(viewGroup);
 			}
 		}
 	}
@@ -287,7 +266,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 		queueCommandIfRendered(() -> new UiWorkSpaceLayout.RefreshViewAttributesCommand(getId(), view.getId(), getSessionContext().resolveIcon(view.getIcon()), view.getTabTitle(), view.isCloseable(), view.isVisible()));
 	}
 
-	/*package-private*/ void handleSplitPaneSizingChanged(SplitSizePolicy sizePolicy, float referenceChildSize) {
+	/*package-private*/ void handleSplitPaneSizingChanged(SplitSizePolicy sizePolicy, double referenceChildSize) {
 		this.updateClientSideLayout(Collections.emptyList());
 	}
 
@@ -341,6 +320,6 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {
-		   return multiProgressDisplay;
+		return multiProgressDisplay;
 	}
 }

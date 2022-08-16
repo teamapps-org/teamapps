@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class MapView2<RECORD> extends AbstractComponent {
 
 	public final Event<LocationChangedEventData> onLocationChanged = new Event<>();
-	public final Event<Float> onZoomLevelChanged = new Event<>();
+	public final Event<Double> onZoomLevelChanged = new Event<>();
 	public final Event<Location> onMapClicked = new Event<>();
 	public final Event<Marker<RECORD>> onMarkerClicked = new Event<>();
 	public final Event<AbstractMapShape> onShapeDrawn = new Event<>();
@@ -47,7 +47,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 	private final String accessToken;
 	private String styleUrl;
 	private boolean displayAttributionControl = true;
-	private float zoomLevel = 10f;
+	private double zoomLevel = 10f;
 	private Location location = new Location(0, 0);
 	private final Map<String, AbstractMapShape> shapesByClientId = new HashMap<>();
 	private List<Marker<RECORD>> clusterMarkers = new ArrayList<>();
@@ -132,65 +132,46 @@ public class MapView2<RECORD> extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_MAP2_MAP_CLICKED: {
-				UiMap2.MapClickedEvent mapClickedEvent = (UiMap2.MapClickedEvent) event;
-				this.onMapClicked.fire(new Location(mapClickedEvent.getLocation().getLatitude(), mapClickedEvent.getLocation().getLongitude()));
-				break;
+		if (event instanceof UiMap2.MapClickedEvent) {
+			UiMap2.MapClickedEvent mapClickedEvent = (UiMap2.MapClickedEvent) event;
+			this.onMapClicked.fire(new Location(mapClickedEvent.getLocation().getLatitude(), mapClickedEvent.getLocation().getLongitude()));
+		} else if (event instanceof UiMap2.MarkerClickedEvent) {
+			UiMap2.MarkerClickedEvent markerClickedEvent = (UiMap2.MarkerClickedEvent) event;
+			Marker<RECORD> marker = markersByClientId.get(markerClickedEvent.getMarkerId());
+			this.onMarkerClicked.fire(marker);
+		}       else if (event instanceof UiMap2.ZoomLevelChangedEvent) {
+			UiMap2.ZoomLevelChangedEvent zoomEvent = (UiMap2.ZoomLevelChangedEvent) event;
+			this.zoomLevel = zoomEvent.getZoomLevel();
+			this.onZoomLevelChanged.fire(zoomLevel);
+		} else if (event instanceof UiMap2.LocationChangedEvent) {
+			UiMap2.LocationChangedEvent locationEvent = (UiMap2.LocationChangedEvent) event;
+			this.location = Location.fromUiMapLocation(locationEvent.getCenter());
+			UiMapArea displayedUiArea = locationEvent.getDisplayedArea();
+			Area displayedArea = new Area(displayedUiArea.getMinLatitude(), displayedUiArea.getMaxLatitude(), displayedUiArea.getMinLongitude(), displayedUiArea.getMaxLongitude());
+			this.onLocationChanged.fire(new LocationChangedEventData(this.location, displayedArea));
+		} else if (event instanceof UiMap2.ShapeDrawnEvent) {
+			UiMap2.ShapeDrawnEvent drawnEvent = (UiMap2.ShapeDrawnEvent) event;
+			AbstractMapShape shape;
+			AbstractUiMapShape uiShape = drawnEvent.getShape();
+			if (uiShape instanceof UiMapCircle) {
+				UiMapCircle uiCircle = (UiMapCircle) uiShape;
+				shape = new MapCircle(Location.fromUiMapLocation(uiCircle.getCenter()), uiCircle.getRadius());
+			} else if (uiShape instanceof UiMapPolygon) {
+				UiMapPolygon uiPolygon = (UiMapPolygon) uiShape;
+				shape = new MapPolygon(uiPolygon.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), null);
+			} else if (uiShape instanceof UiMapPolyline) {
+				UiMapPolyline uiPolyLine = (UiMapPolyline) uiShape;
+				shape = new MapPolyline(uiPolyLine.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), null);
+			} else if (uiShape instanceof UiMapRectangle) {
+				UiMapRectangle uiRect = (UiMapRectangle) uiShape;
+				shape = new MapRectangle(Location.fromUiMapLocation(uiRect.getL1()), Location.fromUiMapLocation(uiRect.getL2()), null);
+			} else {
+				throw new IllegalArgumentException("Unknown shape type from UI: " + drawnEvent.getShape().getClass());
 			}
-			case UI_MAP2_MARKER_CLICKED: {
-				UiMap2.MarkerClickedEvent markerClickedEvent = (UiMap2.MarkerClickedEvent) event;
-				Marker<RECORD> marker = markersByClientId.get(markerClickedEvent.getMarkerId());
-				this.onMarkerClicked.fire(marker);
-				break;
-			}
-			case UI_MAP2_ZOOM_LEVEL_CHANGED: {
-				UiMap2.ZoomLevelChangedEvent zoomEvent = (UiMap2.ZoomLevelChangedEvent) event;
-				this.zoomLevel = zoomEvent.getZoomLevel();
-				this.onZoomLevelChanged.fire(zoomLevel);
-				break;
-			}
-			case UI_MAP2_LOCATION_CHANGED: {
-				UiMap2.LocationChangedEvent locationEvent = (UiMap2.LocationChangedEvent) event;
-				this.location = Location.fromUiMapLocation(locationEvent.getCenter());
-				UiMapArea displayedUiArea = locationEvent.getDisplayedArea();
-				Area displayedArea = new Area(displayedUiArea.getMinLatitude(), displayedUiArea.getMaxLatitude(), displayedUiArea.getMinLongitude(), displayedUiArea.getMaxLongitude());
-				this.onLocationChanged.fire(new LocationChangedEventData(this.location, displayedArea));
-				break;
-			}
-			case UI_MAP2_SHAPE_DRAWN: {
-				UiMap2.ShapeDrawnEvent drawnEvent = (UiMap2.ShapeDrawnEvent) event;
-				AbstractMapShape shape;
-				switch (drawnEvent.getShape().getUiObjectType()) {
-					case UI_MAP_CIRCLE: {
-						UiMapCircle uiCircle = (UiMapCircle) drawnEvent.getShape();
-						shape = new MapCircle(Location.fromUiMapLocation(uiCircle.getCenter()), uiCircle.getRadius());
-						break;
-					}
-					case UI_MAP_POLYGON: {
-						UiMapPolygon uiPolygon = (UiMapPolygon) drawnEvent.getShape();
-						shape = new MapPolygon(uiPolygon.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), null);
-						break;
-					}
-					case UI_MAP_POLYLINE: {
-						UiMapPolyline uiPolyLine = (UiMapPolyline) drawnEvent.getShape();
-						shape = new MapPolyline(uiPolyLine.getPath().stream().map(Location::fromUiMapLocation).collect(Collectors.toList()), null);
-						break;
-					}
-					case UI_MAP_RECTANGLE: {
-						UiMapRectangle uiRect = (UiMapRectangle) drawnEvent.getShape();
-						shape = new MapRectangle(Location.fromUiMapLocation(uiRect.getL1()), Location.fromUiMapLocation(uiRect.getL2()), null);
-						break;
-					}
-					default:
-						throw new IllegalArgumentException("Unknown shape type from UI: " + drawnEvent.getShape().getUiObjectType());
-				}
-				shape.setClientIdInternal(drawnEvent.getShapeId());
-				shapesByClientId.put(drawnEvent.getShapeId(), shape);
-				shape.setListenerInternal(shapeListener);
-				this.onShapeDrawn.fire(shape);
-				break;
-			}
+			shape.setClientIdInternal(drawnEvent.getShapeId());
+			shapesByClientId.put(drawnEvent.getShapeId(), shape);
+			shape.setListenerInternal(shapeListener);
+			this.onShapeDrawn.fire(shape);
 		}
 	}
 
@@ -291,7 +272,7 @@ public class MapView2<RECORD> extends AbstractComponent {
 		setLocation(new Location(location.getLatitude(), longitude));
 	}
 
-	public float getZoomLevel() {
+	public double getZoomLevel() {
 		return zoomLevel;
 	}
 

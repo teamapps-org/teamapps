@@ -55,10 +55,8 @@ public class LinkButton extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_LINK_BUTTON_CLICKED:
-				onClicked.fire();
-				break;
+		if (event instanceof UiLinkButton.ClickedEvent) {
+			onClicked.fire();
 		}
 	}
 

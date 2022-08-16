@@ -8,6 +8,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -28,10 +31,9 @@ public interface A extends UiObject {
 	public String getB();
 	public A setB(String b);
 
-
 	public static class YEvent implements UiEvent {
 
-		@UiComponentId protected String componentId;
+		protected String componentId;
 		protected String y;
 
 		/**
@@ -45,10 +47,6 @@ public interface A extends UiObject {
 		public YEvent(String componentId, String y) {
 			this.componentId = componentId;
 			this.y = y;
-		}
-
-		public UiEventType getUiEventType() {
-			return UiEventType.A_Y;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -73,7 +71,7 @@ public interface A extends UiObject {
 
 	public static class QQuery implements UiQuery {
 
-		@UiComponentId protected String componentId;
+		protected String componentId;
 		protected String y;
 
 		/**
@@ -87,10 +85,6 @@ public interface A extends UiObject {
 		public QQuery(String componentId, String y) {
 			this.componentId = componentId;
 			this.y = y;
-		}
-
-		public UiQueryType getUiQueryType() {
-			return UiQueryType.A_Q;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -115,7 +109,7 @@ public interface A extends UiObject {
 
 	public static class XCommand implements UiCommand<Void> {
 
-		@UiComponentId protected String componentId;
+		protected String componentId;
 		protected String x;
 
 		/**
@@ -153,7 +147,7 @@ public interface A extends UiObject {
 
 	public static class X2Command implements UiCommand<Boolean> {
 
-		@UiComponentId protected String componentId;
+		protected String componentId;
 		protected String x2;
 
 		/**

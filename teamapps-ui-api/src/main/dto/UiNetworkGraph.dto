@@ -21,19 +21,19 @@ class UiNetworkGraph extends UiComponent{
 	required List<UiNetworkNode> nodes;
 	required List<UiNetworkLink> links;
 	required List<UiNetworkImage> images;
-	float gravity = 0.1f;
-	float theta = 0.3f;
-	float alpha = 0.1f;
+	double gravity = 0.1f;
+	double theta = 0.3f;
+	double alpha = 0.1f;
 	int charge = -300;
 	int distance = 30;
 	int strength = -30;
 	String highlightColor;
 	int animationDuration = 1000;
 
-	command setZoomFactor(float zoomFactor);
-	command setGravity(float gravity);
+	command setZoomFactor(double zoomFactor);
+	command setGravity(double gravity);
 	command setCharge(int charge, boolean overrideNodeCharge);
-	command setDistance(float linkDistance, float nodeDistance);
+	command setDistance(double linkDistance, double nodeDistance);
 
 	command zoomAllNodesIntoView(int animationDuration);
 	command addNodesAndLinks(List<UiNetworkNode> nodes, List<UiNetworkLink> links);
@@ -51,10 +51,10 @@ class UiNetworkNode {
 
 	String backgroundColor = "rgb(255, 255, 255)";
 	String borderColor = "rgb(100, 100, 100)";
-	float borderWidth = 1;
-	float borderRadius = 0;
+	double borderWidth = 1;
+	double borderRadius = 0;
 
-	float distanceFactor = 0.6f;
+	double distanceFactor = 0.6f;
 
 	UiTreeGraphNodeImage image;
 	UiTreeGraphNodeIcon icon;
@@ -62,14 +62,18 @@ class UiNetworkNode {
 	UiTemplate template;     // will get embedded using foreignObject
 	UiClientRecord record;   // will get embedded using foreignObject
 
-	enum {NOT_EXPANDABLE, EXPANDED, COLLAPSED} expandState;
+	UiNetworkNodeExpandState expandState;
+}
+
+enum UiNetworkNodeExpandState {
+    NOT_EXPANDABLE, EXPANDED, COLLAPSED;
 }
 
 class UiNetworkLink {
 	required String source;
 	required String target;
 	String lineColor = "rgb(127, 127, 127)";
-	float lineWidth = 1.5f;
+	double lineWidth = 1.5f;
 	String lineDashArray;
 	int linkLength;
 }

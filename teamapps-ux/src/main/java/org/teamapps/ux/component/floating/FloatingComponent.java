@@ -159,11 +159,8 @@ public class FloatingComponent extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_FLOATING_COMPONENT_EXPANDED_OR_COLLAPSED: {
-				onExpandedOrCollapsed.fire(((UiFloatingComponent.ExpandedOrCollapsedEvent) event).getExpanded());
-				break;
-			}
+		if (event instanceof UiFloatingComponent.ExpandedOrCollapsedEvent) {
+			onExpandedOrCollapsed.fire(((UiFloatingComponent.ExpandedOrCollapsedEvent) event).getExpanded());
 		}
 	}
 }

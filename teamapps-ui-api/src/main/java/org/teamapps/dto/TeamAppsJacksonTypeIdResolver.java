@@ -51,16 +51,18 @@ public class TeamAppsJacksonTypeIdResolver implements TypeIdResolver {
 
 	public TeamAppsJacksonTypeIdResolver() {
 		// register all ui classes for de/serialization
-		UiObjectJacksonTypeIdMaps.CLASS_BY_ID.forEach((typeId, clazz) -> {
-			registerPojoClass(clazz, typeId);
-		});
+		registerAll(UiObjectJacksonTypeIdMaps.ID_BY_CLASS);
+	}
+
+	public static void registerAll(Map<Class, String> idByClass) {
+		idByClass.forEach(TeamAppsJacksonTypeIdResolver::registerPojoClass);
 	}
 
 	public static String registerPojoClass(Class clazz) {
 		return registerPojoClass(clazz, clazz.getCanonicalName());
 	}
 
-	private static String registerPojoClass(Class clazz, String typeId) {
+	public static String registerPojoClass(Class clazz, String typeId) {
 		ID_BY_CLASS.put(clazz, typeId);
 		JAVA_TYPE_BY_ID.put(typeId, TypeFactory.defaultInstance().constructType(clazz));
 		return typeId;

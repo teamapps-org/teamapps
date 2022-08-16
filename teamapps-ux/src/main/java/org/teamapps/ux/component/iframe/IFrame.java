@@ -45,9 +45,6 @@ public class IFrame extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			// none
-		}
 	}
 
 	public String getUrl() {

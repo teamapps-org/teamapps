@@ -22,7 +22,7 @@ class UiPanel extends UiComponent {
 	String title;
 	UiPanelHeaderField leftHeaderField;
 	UiPanelHeaderField rightHeaderField;
-	enum {LEFT_COMPONENT_FIRST, RIGHT_COMPONENT_FIRST} headerComponentMinimizationPolicy = HeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
+	UiPanelHeaderComponentMinimizationPolicy headerComponentMinimizationPolicy = UiPanelHeaderComponentMinimizationPolicy.LEFT_COMPONENT_FIRST;
 	boolean alwaysShowHeaderFieldIcons = true;
 	boolean hideTitleBar;
 
@@ -45,6 +45,10 @@ class UiPanel extends UiComponent {
 	command setStretchContent(boolean stretch);
 
 	event windowButtonClicked(UiWindowButtonType windowButton);
+}
+
+enum UiPanelHeaderComponentMinimizationPolicy {
+    LEFT_COMPONENT_FIRST, RIGHT_COMPONENT_FIRST
 }
 
 class UiPanelHeaderField {

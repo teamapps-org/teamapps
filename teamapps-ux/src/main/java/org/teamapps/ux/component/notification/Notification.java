@@ -82,17 +82,12 @@ public class Notification extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_NOTIFICATION_OPENED: {
-				this.showing = true;
-				onOpened.fire(null);
-				break;
-			}
-			case UI_NOTIFICATION_CLOSED: {
-				this.showing = false;
-				onClosed.fire(((UiNotification.ClosedEvent) event).getByUser());
-				break;
-			}
+		if (event instanceof UiNotification.OpenedEvent) {
+			this.showing = true;
+			onOpened.fire(null);
+		} else if (event instanceof UiNotification.ClosedEvent) {
+			this.showing = false;
+			onClosed.fire(((UiNotification.ClosedEvent) event).getByUser());
 		}
 	}
 

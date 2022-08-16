@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,6 +36,7 @@ public class ShakaPlayer extends AbstractComponent {
 	public final Event<UiShakaManifest> onManifestLoaded = new Event<>();
 	public final Event<Long> onTimeUpdate = new Event<>();
 	public final Event<Void> onEnded = new Event<>();
+
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
 		SessionContext.current().queueCommand(new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
@@ -70,7 +71,7 @@ public class ShakaPlayer extends AbstractComponent {
 		ui.setPosterImageUrl(posterImageUrl);
 		ui.setPosterImageSize(posterImageSize.toUiPosterImageSize());
 		ui.setTimeUpdateEventThrottleMillis(timeUpdateEventThrottleMillis);
-		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString(): null);
+		ui.setBackgroundColor(backgroundColor != null ? backgroundColor.toHtmlColorString() : null);
 		ui.setTrackLabelFormat(trackLabelFormat.toUiTrackLabelFormat());
 		ui.setVideoDisabled(videoDisabled);
 		ui.setTimeMillis(timeMillis);
@@ -80,26 +81,17 @@ public class ShakaPlayer extends AbstractComponent {
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
-		switch (event.getUiEventType()) {
-			case UI_SHAKA_PLAYER_ERROR_LOADING: {
-				onErrorLoading.fire(null);
-				break;
-			}
-			case UI_SHAKA_PLAYER_MANIFEST_LOADED: {
-				UiShakaPlayer.ManifestLoadedEvent e = (UiShakaPlayer.ManifestLoadedEvent) event;
-				onManifestLoaded.fire(e.getManifest());
-				break;
-			}
-			case UI_SHAKA_PLAYER_TIME_UPDATE: {
-				UiShakaPlayer.TimeUpdateEvent e = (UiShakaPlayer.TimeUpdateEvent) event;
-				onTimeUpdate.fire(e.getTimeMillis());
-				this.timeMillis = e.getTimeMillis();
-				break;
-			}
-			case UI_SHAKA_PLAYER_ENDED: {
-				onEnded.fire();
-				break;
-			}
+		if (event instanceof UiShakaPlayer.ErrorLoadingEvent) {
+			onErrorLoading.fire(null);
+		} else if (event instanceof UiShakaPlayer.ManifestLoadedEvent) {
+			UiShakaPlayer.ManifestLoadedEvent e = (UiShakaPlayer.ManifestLoadedEvent) event;
+			onManifestLoaded.fire(e.getManifest());
+		} else if (event instanceof UiShakaPlayer.TimeUpdateEvent) {
+			UiShakaPlayer.TimeUpdateEvent e = (UiShakaPlayer.TimeUpdateEvent) event;
+			onTimeUpdate.fire(e.getTimeMillis());
+			this.timeMillis = e.getTimeMillis();
+		} else if (event instanceof UiShakaPlayer.EndedEvent) {
+			onEnded.fire();
 		}
 	}
 
