@@ -39,6 +39,7 @@
         <module>teamapps-ui-api</module>
         <module>teamapps-ux</module>
         <module>teamapps-client</module>
+        <module>teamapps-my-custom-component</module>
         <module>teamapps-application-management</module>
         <module>teamapps-server-jetty-embedded</module>
         <module>teamapps-server-undertow-embedded</module>
