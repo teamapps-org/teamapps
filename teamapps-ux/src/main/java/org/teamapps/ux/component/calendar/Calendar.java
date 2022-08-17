@@ -156,7 +156,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String id = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, id);
-			queueCommandIfRendered(() -> new UiCalendar.RegisterTemplateCommand(getId(), id, template.createUiTemplate()));
+			queueCommandIfRendered(() -> new UiCalendar.RegisterTemplateCommand(id, template.createUiTemplate()));
 		}
 		return template;
 	}
@@ -278,7 +278,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 		List<CEVENT> calendarEvents = query(queryStart, queryEnd);
 		CacheManipulationHandle<List<UiCalendarEventClientRecord>> cacheResponse = recordCache.replaceRecords(calendarEvents);
 		if (isRendered()) {
-			getSessionContext().queueCommand(new UiCalendar.SetCalendarDataCommand(getId(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
+			getSessionContext().sendCommand(getId(), new UiCalendar.SetCalendarDataCommand(cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 		} else {
 			cacheResponse.commit();
 		}
@@ -337,7 +337,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setActiveViewMode(CalendarViewMode activeViewMode) {
 		this.activeViewMode = activeViewMode;
-		queueCommandIfRendered(() -> new UiCalendar.SetViewModeCommand(getId(), activeViewMode.toUiCalendarViewMode()));
+		queueCommandIfRendered(() -> new UiCalendar.SetViewModeCommand(activeViewMode.toUiCalendarViewMode()));
 		refreshEvents();
 	}
 
@@ -347,7 +347,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setDisplayedDate(LocalDate displayedDate) {
 		this.displayedDate = displayedDate;
-		queueCommandIfRendered(() -> new UiCalendar.SetDisplayedDateCommand(getId(), displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
+		queueCommandIfRendered(() -> new UiCalendar.SetDisplayedDateCommand(displayedDate.atStartOfDay(timeZone).toInstant().toEpochMilli()));
 	}
 
 	public void setDisplayDateOneUnitPrevious() {
@@ -536,7 +536,7 @@ public class Calendar<CEVENT extends CalendarEvent> extends AbstractComponent {
 
 	public void setTimeZone(ZoneId timeZone) {
 		this.timeZone = timeZone;
-		queueCommandIfRendered(() -> new UiCalendar.SetTimeZoneIdCommand(getId(), timeZone.getId()));
+		queueCommandIfRendered(() -> new UiCalendar.SetTimeZoneIdCommand(timeZone.getId()));
 	}
 
 	public int getMinYearViewMonthTileWidth() {

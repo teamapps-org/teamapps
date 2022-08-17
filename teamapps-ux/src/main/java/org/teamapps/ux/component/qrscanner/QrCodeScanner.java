@@ -51,15 +51,15 @@ public class QrCodeScanner extends AbstractComponent {
 	public void startScanning(boolean stopScanningAtFirstResult) {
 		scanning = true;
 		this.stopsScanningAtFirstResult = stopScanningAtFirstResult;
-		queueCommandIfRendered(() -> new UiQrCodeScanner.StartScanningCommand(getId(), stopScanningAtFirstResult));
+		queueCommandIfRendered(() -> new UiQrCodeScanner.StartScanningCommand(stopScanningAtFirstResult));
 	}
 
 	public void stopScanning() {
 		scanning = false;
-		queueCommandIfRendered(() -> new UiQrCodeScanner.StopScanningCommand(getId()));
+		queueCommandIfRendered(() -> new UiQrCodeScanner.StopScanningCommand());
 	}
 
 	public void switchCamera() {
-		queueCommandIfRendered(() -> new UiQrCodeScanner.SwitchCameraCommand(getId()));
+		queueCommandIfRendered(() -> new UiQrCodeScanner.SwitchCameraCommand());
 	}
 }

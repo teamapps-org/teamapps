@@ -78,7 +78,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setPrecision(int precision) {
 		this.precision = precision;
-		queueCommandIfRendered(() -> new UiNumberField.SetPrecisionCommand(getId(), precision));
+		queueCommandIfRendered(() -> new UiNumberField.SetPrecisionCommand(precision));
 		return this;
 	}
 
@@ -88,7 +88,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		queueCommandIfRendered(() -> new UiNumberField.SetPlaceholderTextCommand(getId(), emptyText));
+		queueCommandIfRendered(() -> new UiNumberField.SetPlaceholderTextCommand(emptyText));
 		return this;
 	}
 
@@ -98,7 +98,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		queueCommandIfRendered(() -> new UiNumberField.SetShowClearButtonCommand(getId(), showClearButton));
+		queueCommandIfRendered(() -> new UiNumberField.SetShowClearButtonCommand(showClearButton));
 		return this;
 	}
 
@@ -108,7 +108,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setMinValue(double minValue) {
 		this.minValue = minValue;
-		queueCommandIfRendered(() -> new UiNumberField.SetMinValueCommand(getId(), minValue));
+		queueCommandIfRendered(() -> new UiNumberField.SetMinValueCommand(minValue));
 		return this;
 	}
 
@@ -118,7 +118,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setMaxValue(double maxValue) {
 		this.maxValue = maxValue;
-		queueCommandIfRendered(() -> new UiNumberField.SetMaxValueCommand(getId(), maxValue));
+		queueCommandIfRendered(() -> new UiNumberField.SetMaxValueCommand(maxValue));
 		return this;
 	}
 
@@ -128,7 +128,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setSliderMode(NumberFieldSliderMode sliderMode) {
 		this.sliderMode = sliderMode;
-		queueCommandIfRendered(() -> new UiNumberField.SetSliderModeCommand(getId(), sliderMode.toUiNumberFieldSliderMode()));
+		queueCommandIfRendered(() -> new UiNumberField.SetSliderModeCommand(sliderMode.toUiNumberFieldSliderMode()));
 		return this;
 	}
 
@@ -138,7 +138,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setSliderStep(double sliderStep) {
 		this.sliderStep = sliderStep;
-		queueCommandIfRendered(() -> new UiNumberField.SetSliderStepCommand(getId(), sliderStep));
+		queueCommandIfRendered(() -> new UiNumberField.SetSliderStepCommand(sliderStep));
 		return this;
 	}
 
@@ -148,7 +148,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public NumberField setCommitOnSliderChange(boolean commitOnSliderChange) {
 		this.commitOnSliderChange = commitOnSliderChange;
-		queueCommandIfRendered(() -> new UiNumberField.SetCommitOnSliderChangeCommand(getId(), commitOnSliderChange));
+		queueCommandIfRendered(() -> new UiNumberField.SetCommitOnSliderChangeCommand(commitOnSliderChange));
 		return this;
 	}
 
@@ -166,7 +166,7 @@ public class NumberField extends AbstractField<Number> implements TextInputHandl
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		queueCommandIfRendered(() -> new UiNumberField.SetLocaleCommand(getId(), locale.toLanguageTag()));
+		queueCommandIfRendered(() -> new UiNumberField.SetLocaleCommand(locale.toLanguageTag()));
 	}
 
 	@Override

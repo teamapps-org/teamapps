@@ -104,17 +104,17 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		} else {
 			buttons.add(button);
 		}
-		queueCommandIfRendered(() -> new UiNavigationBar.SetButtonsCommand(getId(), createUiButtons()));
+		queueCommandIfRendered(() -> new UiNavigationBar.SetButtonsCommand(createUiButtons()));
 		return this;
 	}
 
 	/*package-private*/ void handleButtonVisibilityChanged(NavigationBarButton<RECORD> button) {
-		queueCommandIfRendered(() -> new UiNavigationBar.SetButtonVisibleCommand(getId(), button.getClientId(), button.isVisible()));
+		queueCommandIfRendered(() -> new UiNavigationBar.SetButtonVisibleCommand(button.getClientId(), button.isVisible()));
 	}
 
 	public void removeButton(NavigationBarButton<RECORD> button) {
 		buttons.remove(button);
-		queueCommandIfRendered(() -> new UiNavigationBar.SetButtonsCommand(getId(), createUiButtons()));
+		queueCommandIfRendered(() -> new UiNavigationBar.SetButtonsCommand(createUiButtons()));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 		if (component != null) {
 			component.setParent(this);
 		}
-		queueCommandIfRendered(() -> new UiNavigationBar.AddFanOutComponentCommand(getId(), component != null ? component.createUiReference() : null));
+		queueCommandIfRendered(() -> new UiNavigationBar.AddFanOutComponentCommand(component != null ? component.createUiReference() : null));
 	}
 
 	public void showFanOutComponent(Component component) {
@@ -134,7 +134,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 			preloadFanOutComponent(component);
 		}
 		activeFanOutComponent = component;
-		queueCommandIfRendered(() -> new UiNavigationBar.ShowFanOutComponentCommand(getId(), component != null ? component.createUiReference() : null));
+		queueCommandIfRendered(() -> new UiNavigationBar.ShowFanOutComponentCommand(component != null ? component.createUiReference() : null));
 	}
 
 	public void hideFanOutComponent() {
@@ -142,7 +142,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 			return;
 		}
 		activeFanOutComponent = null;
-		queueCommandIfRendered(() -> new UiNavigationBar.HideFanOutComponentCommand(getId()));
+		queueCommandIfRendered(() -> new UiNavigationBar.HideFanOutComponentCommand());
 	}
 
 	public void showOrHideFanoutComponent(Component component) {
@@ -176,7 +176,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiNavigationBar.SetBackgroundColorCommand(getId(), backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiNavigationBar.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 	}
 
 	public Color getBorderColor() {
@@ -185,7 +185,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	public void setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
-		queueCommandIfRendered(() -> new UiNavigationBar.SetBorderColorCommand(getId(), borderColor != null ? borderColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiNavigationBar.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null));
 	}
 
 	public List<Component> getFanOutComponents() {
@@ -198,7 +198,7 @@ public class NavigationBar<RECORD> extends AbstractComponent implements Componen
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		queueCommandIfRendered(() -> new UiNavigationBar.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiReference()));
+		queueCommandIfRendered(() -> new UiNavigationBar.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

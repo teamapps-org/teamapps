@@ -155,10 +155,9 @@ public class UiSession {
 		CMD cmd;
 		try {
 			int cmdId = commandIdCounter.incrementAndGet();
-			cmd = new CMD(cmdId, objectMapper.writeValueAsString(commandWithCallback.getUiCommand()));
-
-			if (commandWithCallback.getResultCallback() != null) {
-				cmd.setAwaitsResponse(true);
+			boolean awaitsResponse = commandWithCallback.getResultCallback() != null;
+			cmd = new CMD(cmdId, commandWithCallback.getClientObjectId(), objectMapper.writeValueAsString(commandWithCallback.getUiCommand()), awaitsResponse);
+			if (awaitsResponse) {
 				resultCallbacksByCmdId.put(cmdId, new ResultCallbackWithCommandClass(commandWithCallback.getResultCallback(), commandWithCallback.getUiCommand().getClass()));
 			}
 		} catch (JsonProcessingException e) {

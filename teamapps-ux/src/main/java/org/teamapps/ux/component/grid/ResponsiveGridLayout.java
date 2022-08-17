@@ -58,7 +58,7 @@ public class ResponsiveGridLayout extends AbstractComponent {
 	}
 
 	public void refreshLayout() {
-		queueCommandIfRendered(() -> new UiResponsiveGridLayout.UpdateLayoutPoliciesCommand(getId(), createUiLayoutPolicies()));
+		queueCommandIfRendered(() -> new UiResponsiveGridLayout.UpdateLayoutPoliciesCommand(createUiLayoutPolicies()));
 	}
 
 

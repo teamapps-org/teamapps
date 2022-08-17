@@ -125,9 +125,9 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 				if (record != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
 					if (contextMenuContent != null) {
-						queueCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
+						queueCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
-						queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), e.getRequestId()));
+						queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(e.getRequestId()));
 					}
 				}
 			}
@@ -149,9 +149,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 		queueCommandIfRendered(() -> {
 			LOGGER.debug("SENDING: renderedRange.start: {}; uiRecordIds.size: {}; renderedRecords.size: {}; totalCount: {}",
 					start, uiRecordIds.size(), renderedRecords.size(), totalNumberOfRecords);
-			return new UiInfiniteItemView2.SetDataCommand(
-					getId(),
-					start,
+			return new UiInfiniteItemView2.SetDataCommand(start,
 					uiRecordIds,
 					newUiRecords,
 					totalNumberOfRecords
@@ -176,7 +174,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 	}
 
 	public void closeContextMenu() {
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
 	}
 
 	public Template getItemTemplate() {
@@ -185,7 +183,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemTemplateCommand(getId(), itemTemplate.createUiTemplate()));
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
 		return this;
 	}
 
@@ -195,7 +193,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemWidth(float itemWidth) {
 		this.itemWidth = itemWidth;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemWidthCommand(getId(), itemWidth));
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemWidthCommand(itemWidth));
 		return this;
 	}
 
@@ -205,7 +203,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemHeight(float itemHeight) {
 		this.itemHeight = itemHeight;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemHeightCommand(getId(), itemHeight));
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemHeightCommand(itemHeight));
 		return this;
 	}
 
@@ -215,7 +213,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 	//
 	// public InfiniteItemView2<RECORD> setHorizontalSpacing(float horizontalSpacing) {
 	// 	this.horizontalSpacing = horizontalSpacing;
-	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetHorizontalSpacingCommand(getId(), horizontalSpacing));
+	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetHorizontalSpacingCommand(horizontalSpacing));
 	// 	return this;
 	// }
 	//
@@ -225,7 +223,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 	//
 	// public InfiniteItemView2<RECORD> setVerticalSpacing(float verticalSpacing) {
 	// 	this.verticalSpacing = verticalSpacing;
-	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetVerticalSpacingCommand(getId(), verticalSpacing));
+	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetVerticalSpacingCommand(verticalSpacing));
 	// 	return this;
 	// }
 
@@ -235,7 +233,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemContentHorizontalAlignment(HorizontalElementAlignment itemContentHorizontalAlignment) {
 		this.itemContentHorizontalAlignment = itemContentHorizontalAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentHorizontalAlignmentCommand(getId(), itemContentHorizontalAlignment.toUiHorizontalElementAlignment()));
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentHorizontalAlignmentCommand(itemContentHorizontalAlignment.toUiHorizontalElementAlignment()));
 		return this;
 	}
 
@@ -245,7 +243,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public InfiniteItemView2<RECORD> setItemContentVerticalAlignment(VerticalElementAlignment itemContentVerticalAlignment) {
 		this.itemContentVerticalAlignment = itemContentVerticalAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentVerticalAlignmentCommand(getId(), itemContentVerticalAlignment.toUiVerticalElementAlignment()));
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemContentVerticalAlignmentCommand(itemContentVerticalAlignment.toUiVerticalElementAlignment()));
 		return this;
 	}
 
@@ -255,7 +253,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	// public InfiniteItemView2<RECORD> setRowHorizontalAlignment(ItemViewRowJustification rowHorizontalAlignment) {
 	// 	this.rowHorizontalAlignment = rowHorizontalAlignment;
-	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetRowHorizontalAlignmentCommand(getId(), rowHorizontalAlignment.toUiItemJustification()));
+	// 	queueCommandIfRendered(() -> new UiInfiniteItemView2.SetRowHorizontalAlignmentCommand(rowHorizontalAlignment.toUiItemJustification()));
 	// 	return this;
 	// }
 
@@ -265,7 +263,7 @@ public class InfiniteItemView2<RECORD> extends AbstractInfiniteListComponent<REC
 
 	public void setItemPositionAnimationTime(int itemPositionAnimationTime) {
 		this.itemPositionAnimationTime = itemPositionAnimationTime;
-		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemPositionAnimationTimeCommand(getId(), itemPositionAnimationTime));
+		queueCommandIfRendered(() -> new UiInfiniteItemView2.SetItemPositionAnimationTimeCommand(itemPositionAnimationTime));
 	}
 
 	public PropertyProvider<RECORD> getItemPropertyProvider() {

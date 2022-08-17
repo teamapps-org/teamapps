@@ -60,7 +60,7 @@ public class AbsoluteLayout extends AbstractComponent {
 	}
 
 	private void updateUiLayout() {
-		queueCommandIfRendered(() -> new UiAbsoluteLayout.UpdateCommand(getId(), createUiAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing()));
+		queueCommandIfRendered(() -> new UiAbsoluteLayout.UpdateCommand(createUiAbsolutePositionedComponents(), animationDuration, animationEasing.toUiAnimationEasing()));
 	}
 
 	private List<UiAbsolutePositionedComponent> createUiAbsolutePositionedComponents() {

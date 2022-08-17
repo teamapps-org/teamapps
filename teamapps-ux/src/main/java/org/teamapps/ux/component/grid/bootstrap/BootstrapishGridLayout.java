@@ -133,7 +133,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 	}
 
 	public void refreshLayout() {
-		queueCommandIfRendered(() -> new UiResponsiveGridLayout.UpdateLayoutPoliciesCommand(getId(), createUiLayoutPolicies()));
+		queueCommandIfRendered(() -> new UiResponsiveGridLayout.UpdateLayoutPoliciesCommand(createUiLayoutPolicies()));
 	}
 
 	@Override
@@ -175,7 +175,7 @@ public class BootstrapishGridLayout extends AbstractComponent implements Compone
 
 	public void setFillHeight(boolean fillHeight) {
 		this.fillHeight = fillHeight;
-		queueCommandIfRendered(() -> new UiResponsiveGridLayout.SetFillHeightCommand(getId(), fillHeight));
+		queueCommandIfRendered(() -> new UiResponsiveGridLayout.SetFillHeightCommand(fillHeight));
 	}
 
 	public Map<BootstrapishBreakpoint, Integer> getResponsiveBreakpointMinWidths() {

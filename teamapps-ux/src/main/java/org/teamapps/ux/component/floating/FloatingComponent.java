@@ -74,7 +74,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setWidth(int width) {
 		this.width = width;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetDimensionsCommand(getId(), width, height));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetDimensionsCommand(width, height));
 	}
 
 	public int getHeight() {
@@ -83,7 +83,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setHeight(int height) {
 		this.height = height;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetDimensionsCommand(getId(), width, height));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetDimensionsCommand(width, height));
 	}
 
 	public int getMarginX() {
@@ -92,7 +92,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setMarginX(int marginX) {
 		this.marginX = marginX;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetMarginsCommand(getId(), marginX, marginY));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetMarginsCommand(marginX, marginY));
 	}
 
 	public int getMarginY() {
@@ -101,7 +101,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setMarginY(int marginY) {
 		this.marginY = marginY;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetMarginsCommand(getId(), marginX, marginY));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetMarginsCommand(marginX, marginY));
 	}
 
 	public FloatingPosition getPosition() {
@@ -110,7 +110,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setPosition(FloatingPosition position) {
 		this.position = position;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetPositionCommand(getId(), position.toUiPosition()));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetPositionCommand(position.toUiPosition()));
 	}
 
 	public Color getBackgroundColor() {
@@ -119,7 +119,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetBackgroundColorCommand(getId(), backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 	}
 
 	public Color getExpanderHandleColor() {
@@ -128,7 +128,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanderHandleColor(Color expanderHandleColor) {
 		this.expanderHandleColor = expanderHandleColor;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpanderHandleColorCommand(getId(), expanderHandleColor != null ? expanderHandleColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpanderHandleColorCommand(expanderHandleColor != null ? expanderHandleColor.toHtmlColorString() : null));
 	}
 
 	public boolean isCollapsible() {
@@ -145,7 +145,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpandedCommand(getId(), expanded));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetExpandedCommand(expanded));
 	}
 
 	public Component getContentComponent() {
@@ -154,7 +154,7 @@ public class FloatingComponent extends AbstractComponent {
 
 	public void setContentComponent(Component contentComponent) {
 		this.contentComponent = contentComponent;
-		queueCommandIfRendered(() -> new UiFloatingComponent.SetContentComponentCommand(getId(), contentComponent != null ? contentComponent.createUiReference() : null));
+		queueCommandIfRendered(() -> new UiFloatingComponent.SetContentComponentCommand(contentComponent != null ? contentComponent.createUiReference() : null));
 	}
 
 	@Override

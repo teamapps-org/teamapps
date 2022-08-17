@@ -96,7 +96,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencies(List<CurrencyUnit> currencies) {
 		this.currencies = currencies;
-		queueCommandIfRendered(() -> new UiCurrencyField.SetCurrencyUnitsCommand(getId(), currencies != null ? currencies.stream()
+		queueCommandIfRendered(() -> new UiCurrencyField.SetCurrencyUnitsCommand(currencies != null ? currencies.stream()
 				.map(unit -> unit.toUiCurrencyUnit(locale.toLocale()))
 				.collect(Collectors.toList()) : null));
 		return this;
@@ -162,7 +162,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencyBeforeAmount(boolean currencyBeforeAmount) {
 		this.currencyBeforeAmount = currencyBeforeAmount;
-		queueCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencyBeforeAmountCommand(getId(), currencyBeforeAmount));
+		queueCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencyBeforeAmountCommand(currencyBeforeAmount));
 		return this;
 	}
 
@@ -172,7 +172,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public CurrencyField setCurrencySymbolsEnabled(boolean currencySymbolsEnabled) {
 		this.currencySymbolsEnabled = currencySymbolsEnabled;
-		queueCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencySymbolCommand(getId(), currencySymbolsEnabled));
+		queueCommandIfRendered(() -> new UiCurrencyField.SetShowCurrencySymbolCommand(currencySymbolsEnabled));
 		return this;
 	}
 
@@ -182,7 +182,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 
 	public void setFixedPrecision(int fixedPrecision) {
 		this.fixedPrecision = fixedPrecision;
-		queueCommandIfRendered(() -> new UiCurrencyField.SetFixedPrecisionCommand(getId(), fixedPrecision));
+		queueCommandIfRendered(() -> new UiCurrencyField.SetFixedPrecisionCommand(fixedPrecision));
 	}
 
 	public void setAlphabeticKeysQueryEnabled(boolean alphabeticKeysQueryEnabled) {
@@ -205,7 +205,7 @@ public class CurrencyField extends AbstractField<CurrencyValue> implements TextI
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
 		setCurrencies(currencies);
-		queueCommandIfRendered(() -> new UiCurrencyField.SetLocaleCommand(getId(), locale.toLanguageTag()));
+		queueCommandIfRendered(() -> new UiCurrencyField.SetLocaleCommand(locale.toLanguageTag()));
 	}
 
 	@Override

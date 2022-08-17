@@ -61,7 +61,7 @@ public class ImageCropper extends AbstractComponent {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
-		queueCommandIfRendered(() -> new UiImageCropper.SetImageUrlCommand(getId(), imageUrl));
+		queueCommandIfRendered(() -> new UiImageCropper.SetImageUrlCommand(imageUrl));
 	}
 
 	public ImageCropperSelectionMode getSelectionMode() {
@@ -70,7 +70,7 @@ public class ImageCropper extends AbstractComponent {
 
 	public void setSelectionMode(ImageCropperSelectionMode selectionMode) {
 		this.selectionMode = selectionMode;
-		queueCommandIfRendered(() -> new UiImageCropper.SetSelectionModeCommand(getId(), selectionMode.toUiImageCropperSelectionMode()));
+		queueCommandIfRendered(() -> new UiImageCropper.SetSelectionModeCommand(selectionMode.toUiImageCropperSelectionMode()));
 	}
 
 	public Float getAspectRatio() {
@@ -79,7 +79,7 @@ public class ImageCropper extends AbstractComponent {
 
 	public void setAspectRatio(Float aspectRatio) {
 		this.aspectRatio = aspectRatio;
-		queueCommandIfRendered(() -> new UiImageCropper.SetAspectRatioCommand(getId(), aspectRatio));
+		queueCommandIfRendered(() -> new UiImageCropper.SetAspectRatioCommand(aspectRatio));
 	}
 
 	public ImageCropperSelection getSelection() {
@@ -88,7 +88,7 @@ public class ImageCropper extends AbstractComponent {
 
 	public void setSelection(ImageCropperSelection selection) {
 		this.selection = selection;
-		queueCommandIfRendered(() -> new UiImageCropper.SetSelectionCommand(getId(), selection.createUiImageCropperSelection()));
+		queueCommandIfRendered(() -> new UiImageCropper.SetSelectionCommand(selection.createUiImageCropperSelection()));
 	}
 
 }

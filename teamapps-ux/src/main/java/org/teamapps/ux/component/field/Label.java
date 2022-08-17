@@ -67,7 +67,7 @@ public class Label extends AbstractField<String> {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
-		queueCommandIfRendered(() -> new UiLabel.SetCaptionCommand(getId(), caption));
+		queueCommandIfRendered(() -> new UiLabel.SetCaptionCommand(caption));
 	}
 
 	public Icon getIcon() {
@@ -76,7 +76,7 @@ public class Label extends AbstractField<String> {
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
-		queueCommandIfRendered(() -> new UiLabel.SetIconCommand(getId(), getSessionContext().resolveIcon(icon)));
+		queueCommandIfRendered(() -> new UiLabel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
 	public Component getTargetComponent() {
@@ -88,7 +88,7 @@ public class Label extends AbstractField<String> {
 			throw new IllegalArgumentException("Labels may not reference themselves!");
 		}
 		this.targetComponent = targetComponent;
-		queueCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(getId(), Component.createUiClientObjectReference(targetComponent)));
+		queueCommandIfRendered(() -> new UiLabel.SetTargetComponentCommand(Component.createUiClientObjectReference(targetComponent)));
 		return this;
 	}
 }

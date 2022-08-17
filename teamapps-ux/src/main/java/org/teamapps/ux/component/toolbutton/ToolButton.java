@@ -95,7 +95,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
-		queueCommandIfRendered(() -> new UiToolButton.SetIconCommand(getId(), getSessionContext().resolveIcon(icon)));
+		queueCommandIfRendered(() -> new UiToolButton.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
 	public String getCaption() {
@@ -113,7 +113,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setPopoverText(String popoverText) {
 		this.popoverText = popoverText;
-		queueCommandIfRendered(() -> new UiToolButton.SetPopoverTextCommand(getId(), popoverText));
+		queueCommandIfRendered(() -> new UiToolButton.SetPopoverTextCommand(popoverText));
 	}
 
 	public boolean isOpenDropDownIfNotSet() {
@@ -122,7 +122,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setOpenDropDownIfNotSet(boolean openDropDownIfNotSet) {
 		this.openDropDownIfNotSet = openDropDownIfNotSet;
-		queueCommandIfRendered(() -> new UiToolButton.SetOpenDropDownIfNotSetCommand(getId(), openDropDownIfNotSet));
+		queueCommandIfRendered(() -> new UiToolButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet));
 	}
 
 	public Component getDropDownComponent() {
@@ -131,7 +131,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		queueCommandIfRendered(() -> new UiToolButton.SetDropDownComponentCommand(getId(), dropDownComponent != null ? dropDownComponent.createUiReference() : null));
+		queueCommandIfRendered(() -> new UiToolButton.SetDropDownComponentCommand(dropDownComponent != null ? dropDownComponent.createUiReference() : null));
 	}
 
 	public Integer getMinDropDownWidth() {
@@ -140,7 +140,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setMinDropDownWidth(Integer minDropDownWidth) {
 		this.minDropDownWidth = minDropDownWidth;
-		queueCommandIfRendered(() -> new UiToolButton.SetDropDownSizeCommand(getId(), minDropDownWidth, minDropDownHeight));
+		queueCommandIfRendered(() -> new UiToolButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
 	}
 
 	public Integer getMinDropDownHeight() {
@@ -149,7 +149,7 @@ public class ToolButton extends AbstractComponent {
 
 	public void setMinDropDownHeight(Integer minDropDownHeight) {
 		this.minDropDownHeight = minDropDownHeight;
-		queueCommandIfRendered(() -> new UiToolButton.SetDropDownSizeCommand(getId(), minDropDownWidth, minDropDownHeight));
+		queueCommandIfRendered(() -> new UiToolButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
 	}
 
 }

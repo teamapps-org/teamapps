@@ -35,7 +35,6 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class TeamAppsTypeScriptGenerator {
 	private final static Logger logger = LoggerFactory.getLogger(TeamAppsTypeScriptGenerator.class);
@@ -99,7 +98,6 @@ public class TeamAppsTypeScriptGenerator {
         }
 
         generateCommandBaseDefinition(new FileWriter(new File(parentDir, "UiCommand.ts")));
-        generateCommandExecutor(model.getCommandDeclarations(), new FileWriter(new File(parentDir, "CommandExecutor.ts")));
 
         generateEventBaseDefinition(new FileWriter(new File(parentDir, "UiEvent.ts")));
         generateEventRegistrator(model.getAllClassesAndInterfacesWithEvents(), new FileWriter(new File(parentDir, "ComponentEventDescriptors.ts")));
@@ -127,16 +125,6 @@ public class TeamAppsTypeScriptGenerator {
     public void generateInterfaceDefinition(TeamAppsDtoParser.InterfaceDeclarationContext interfaceContext, Writer writer) throws IOException {
         ST template = stGroup.getInstanceOf("interfaceConfigDefinition")
                 .add("c", interfaceContext);
-        AutoIndentWriter out = new AutoIndentWriter(writer);
-        template.write(out, new StringTemplatesErrorListener());
-        writer.close();
-    }
-
-    public void generateCommandExecutor(List<TeamAppsDtoParser.CommandDeclarationContext> commandDeclarationContexts, Writer writer) throws IOException {
-        ST template = stGroup.getInstanceOf("commandExecutor")
-                .add("name", "CommandExecutor")
-                .add("nonStaticCommands", commandDeclarationContexts.stream().filter(c -> c.staticModifier() == null).collect(Collectors.toList()))
-                .add("staticCommands", commandDeclarationContexts.stream().filter(c -> c.staticModifier() != null).collect(Collectors.toList()));
         AutoIndentWriter out = new AutoIndentWriter(writer);
         template.write(out, new StringTemplatesErrorListener());
         writer.close();

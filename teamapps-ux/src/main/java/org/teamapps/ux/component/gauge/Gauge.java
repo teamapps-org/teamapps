@@ -52,12 +52,12 @@ public class Gauge extends AbstractComponent {
 			return;
 		}
 		this.value = value;
-		queueCommandIfRendered(() -> new UiGauge.SetValueCommand(getId(), value));
+		queueCommandIfRendered(() -> new UiGauge.SetValueCommand(value));
 	}
 
 	public void setOptions(UiGaugeOptions options) {
 		this.options = options;
-		queueCommandIfRendered(() -> new UiGauge.SetOptionsCommand(getId(), options));
+		queueCommandIfRendered(() -> new UiGauge.SetOptionsCommand(options));
 	}
 
 	public double getValue() {

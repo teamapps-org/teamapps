@@ -53,6 +53,6 @@ public class IFrame extends AbstractComponent {
 
 	public void setUrl(String url) {
 		this.url = url;
-		queueCommandIfRendered(() -> new UiIFrame.SetUrlCommand(getId(), url));
+		queueCommandIfRendered(() -> new UiIFrame.SetUrlCommand(url));
 	}
 }

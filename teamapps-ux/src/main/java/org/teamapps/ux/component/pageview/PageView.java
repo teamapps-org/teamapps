@@ -43,12 +43,12 @@ public class PageView extends AbstractComponent {
 
 	public void addBlock(AbstractPageViewBlock block) {
 		blocks.add(block);
-		queueCommandIfRendered(() -> new UiPageView.AddBlockCommand(getId(), block.createUiBlock(), false, null));
+		queueCommandIfRendered(() -> new UiPageView.AddBlockCommand(block.createUiBlock(), false, null));
 	}
 
 	public void removeBlock(AbstractPageViewBlock block) {
 		blocks.add(block);
-		queueCommandIfRendered(() -> new UiPageView.RemoveBlockCommand(getId(), block.getClientId()));
+		queueCommandIfRendered(() -> new UiPageView.RemoveBlockCommand(block.getClientId()));
 	}
 
 	@Override

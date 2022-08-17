@@ -162,12 +162,10 @@ public class TagComboBox<RECORD> extends AbstractComboBox<RECORD, List<RECORD>> 
 					records.add(record);
 
 					if (isRendered()) {
-						getSessionContext().queueCommand(
-								new UiTagComboBox.ReplaceFreeTextEntryCommand(getId(), newFreeText, cacheResponse.getAndClearResult()),
+						getSessionContext().sendCommand(getId(), new UiTagComboBox.ReplaceFreeTextEntryCommand(newFreeText, cacheResponse.getAndClearResult()),
 								aVoid -> {
 									cacheResponse.commit();
-								}
-						);
+								});
 					} else {
 						cacheResponse.commit();
 					}

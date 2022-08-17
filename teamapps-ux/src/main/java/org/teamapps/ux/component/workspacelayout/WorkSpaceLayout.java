@@ -96,7 +96,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 			List<UiWorkSpaceLayoutView> newUiViews = newViews.stream()
 					.map(WorkSpaceLayoutView::createUiView)
 					.collect(Collectors.toList());
-			return new UiWorkSpaceLayout.RedefineLayoutCommand(getId(), uiRootItemsByWindowId, newUiViews);
+			return new UiWorkSpaceLayout.RedefineLayoutCommand(uiRootItemsByWindowId, newUiViews);
 		});
 	}
 
@@ -132,7 +132,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 			UiWorkSpaceLayout.ViewNeedsRefreshEvent needsRefreshEvent = (UiWorkSpaceLayout.ViewNeedsRefreshEvent) event;
 			String viewName = needsRefreshEvent.getViewName();
 			WorkSpaceLayoutView view = getViewById(viewName);
-			getSessionContext().queueCommand(new UiWorkSpaceLayout.RefreshViewComponentCommand(getId(), viewName, view.createUiView().getComponent()));
+			getSessionContext().sendCommand(getId(), new UiWorkSpaceLayout.RefreshViewComponentCommand(viewName, view.createUiView().getComponent()));
 		} else if (event instanceof UiWorkSpaceLayout.ChildWindowCreationFailedEvent) {
 			UiWorkSpaceLayout.ChildWindowCreationFailedEvent windowCreationFailedEvent = (UiWorkSpaceLayout.ChildWindowCreationFailedEvent) event;
 			WorkSpaceLayoutView view = getViewById(windowCreationFailedEvent.getViewName());
@@ -244,15 +244,15 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	// ============== Internal API ======================
 
 	/*package-private*/ void handleViewAddedToGroup(WorkSpaceLayoutViewGroup workSpaceLayoutViewGroup, WorkSpaceLayoutView view, boolean selected) {
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.AddViewAsTabCommand(getId(), view.createUiView(), workSpaceLayoutViewGroup.getId(), selected));
+		queueCommandIfRendered(() -> new UiWorkSpaceLayout.AddViewAsTabCommand(view.createUiView(), workSpaceLayoutViewGroup.getId(), selected));
 	}
 
 	/*package-private*/ void handleViewGroupPanelStateChangedViaApi(WorkSpaceLayoutViewGroup viewGroup, ViewGroupPanelState panelState) {
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetViewGroupPanelStateCommand(getId(), viewGroup.getId(), panelState.toUiViewGroupPanelState()));
+		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetViewGroupPanelStateCommand(viewGroup.getId(), panelState.toUiViewGroupPanelState()));
 	}
 
 	/*package-private*/ void handleViewSelectedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView workSpaceLayoutView) {
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SelectViewCommand(getId(), workSpaceLayoutView.getId()));
+		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SelectViewCommand(workSpaceLayoutView.getId()));
 	}
 
 	/*package-private*/ void handleViewRemovedViaApi(WorkSpaceLayoutViewGroup viewGroup, WorkSpaceLayoutView view) {
@@ -263,7 +263,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 	}
 
 	/*package-private*/ void handleViewAttributeChangedViaApi(WorkSpaceLayoutView view) {
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.RefreshViewAttributesCommand(getId(), view.getId(), getSessionContext().resolveIcon(view.getIcon()), view.getTabTitle(), view.isCloseable(), view.isVisible()));
+		queueCommandIfRendered(() -> new UiWorkSpaceLayout.RefreshViewAttributesCommand(view.getId(), getSessionContext().resolveIcon(view.getIcon()), view.getTabTitle(), view.isCloseable(), view.isVisible()));
 	}
 
 	/*package-private*/ void handleSplitPaneSizingChanged(SplitSizePolicy sizePolicy, double referenceChildSize) {
@@ -316,7 +316,7 @@ public class WorkSpaceLayout extends AbstractComponent implements Component {
 
 	public void setMultiProgressDisplay(MultiProgressDisplay multiProgressDisplay) {
 		this.multiProgressDisplay = multiProgressDisplay;
-		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(getId(), multiProgressDisplay.createUiReference()));
+		queueCommandIfRendered(() -> new UiWorkSpaceLayout.SetMultiProgressDisplayCommand(multiProgressDisplay.createUiReference()));
 	}
 
 	public MultiProgressDisplay getMultiProgressDisplay() {

@@ -38,7 +38,7 @@ public class ShakaPlayer extends AbstractComponent {
 	public final Event<Void> onEnded = new Event<>();
 
 	public static void setDistinctManifestAudioTracksFixEnabled(boolean enabled) {
-		SessionContext.current().queueCommand(new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
+		SessionContext.current().sendCommand(null, new UiShakaPlayer.SetDistinctManifestAudioTracksFixEnabledCommand(enabled));
 	}
 
 
@@ -97,7 +97,7 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void setTime(long timeMillis) {
 		this.timeMillis = timeMillis;
-		queueCommandIfRendered(() -> new UiShakaPlayer.SetTimeCommand(getId(), timeMillis));
+		queueCommandIfRendered(() -> new UiShakaPlayer.SetTimeCommand(timeMillis));
 	}
 
 	public long getTime() {
@@ -108,7 +108,7 @@ public class ShakaPlayer extends AbstractComponent {
 		this.timeMillis = 0;
 		this.hlsUrl = hlsUrl;
 		this.dashUrl = dashUrl;
-		queueCommandIfRendered(() -> new UiShakaPlayer.SetUrlsCommand(getId(), hlsUrl, dashUrl));
+		queueCommandIfRendered(() -> new UiShakaPlayer.SetUrlsCommand(hlsUrl, dashUrl));
 	}
 
 	public String getHlsUrl() {
@@ -187,6 +187,6 @@ public class ShakaPlayer extends AbstractComponent {
 
 	public void selectAudioLanguage(String language, String role) {
 		this.audioLanguage = language;
-		queueCommandIfRendered(() -> new UiShakaPlayer.SelectAudioLanguageCommand(getId(), language, role));
+		queueCommandIfRendered(() -> new UiShakaPlayer.SelectAudioLanguageCommand(language, role));
 	}
 }

@@ -54,7 +54,7 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setComponent(Component component) {
         this.component = component;
-        queueCommandIfRendered(() -> new UiComponentField.SetComponentCommand(getId(), Component.createUiClientObjectReference(component)));
+        queueCommandIfRendered(() -> new UiComponentField.SetComponentCommand(Component.createUiClientObjectReference(component)));
     }
 
     public int getHeight() {
@@ -63,7 +63,7 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setHeight(int height) {
         this.height = height;
-        queueCommandIfRendered(() -> new UiComponentField.SetHeightCommand(getId(), height));
+        queueCommandIfRendered(() -> new UiComponentField.SetHeightCommand(height));
     }
 
     public boolean isBordered() {
@@ -72,7 +72,7 @@ public class ComponentField extends AbstractField<Void> {
 
     public void setBordered(boolean bordered) {
         this.bordered = bordered;
-        queueCommandIfRendered(() -> new UiComponentField.SetBorderedCommand(getId(), bordered));
+        queueCommandIfRendered(() -> new UiComponentField.SetBorderedCommand(bordered));
     }
 
 }

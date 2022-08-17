@@ -84,7 +84,7 @@ public class Window extends Panel {
 
 	public void setModal(boolean modal) {
 		this.modal = modal;
-		queueCommandIfRendered(() -> new UiWindow.SetModalCommand(getId(), modal));
+		queueCommandIfRendered(() -> new UiWindow.SetModalCommand(modal));
 	}
 
 	public int getWidth() {
@@ -113,7 +113,7 @@ public class Window extends Panel {
 		if (height < 0) { // auto-height -> do not stretch the content (#safariflex). TODO remove once Safari got fixed!
 			this.setStretchContent(false);
 		}
-		queueCommandIfRendered(() -> new UiWindow.SetSizeCommand(getId(), width, height));
+		queueCommandIfRendered(() -> new UiWindow.SetSizeCommand(width, height));
 	}
 
 	public Color getModalBackgroundDimmingColor() {
@@ -122,7 +122,7 @@ public class Window extends Panel {
 
 	public void setModalBackgroundDimmingColor(Color modalBackgroundDimmingColor) {
 		this.modalBackgroundDimmingColor = modalBackgroundDimmingColor;
-		queueCommandIfRendered(() -> new UiWindow.SetModalBackgroundDimmingColorCommand(getId(), modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiWindow.SetModalBackgroundDimmingColorCommand(modalBackgroundDimmingColor != null ? modalBackgroundDimmingColor.toHtmlColorString() : null));
 	}
 
 	public void show() {
@@ -131,7 +131,7 @@ public class Window extends Panel {
 
 	public void show(int animationDuration) {
 		render();
-		queueCommandIfRendered(() -> new UiWindow.ShowCommand(getId(), animationDuration));
+		queueCommandIfRendered(() -> new UiWindow.ShowCommand(animationDuration));
 	}
 
 	public void close() {
@@ -139,7 +139,7 @@ public class Window extends Panel {
 	}
 
 	public void close(int animationDuration) {
-		queueCommandIfRendered(() -> new UiWindow.CloseCommand(getId(), animationDuration));
+		queueCommandIfRendered(() -> new UiWindow.CloseCommand(animationDuration));
 	}
 
 	public boolean isCloseable() {
@@ -148,7 +148,7 @@ public class Window extends Panel {
 
 	public void setCloseable(boolean closeable) {
 		this.closeable = closeable;
-		queueCommandIfRendered(() -> new UiWindow.SetCloseableCommand(getId(), closeable));
+		queueCommandIfRendered(() -> new UiWindow.SetCloseableCommand(closeable));
 	}
 
 	public boolean isCloseOnEscape() {
@@ -157,7 +157,7 @@ public class Window extends Panel {
 
 	public void setCloseOnEscape(boolean closeOnEscape) {
 		this.closeOnEscape = closeOnEscape;
-		queueCommandIfRendered(() -> new UiWindow.SetCloseOnEscapeCommand(getId(), closeOnEscape));
+		queueCommandIfRendered(() -> new UiWindow.SetCloseOnEscapeCommand(closeOnEscape));
 	}
 
 	public boolean isCloseOnClickOutside() {
@@ -166,6 +166,6 @@ public class Window extends Panel {
 
 	public void setCloseOnClickOutside(boolean closeOnClickOutside) {
 		this.closeOnClickOutside = closeOnClickOutside;
-		queueCommandIfRendered(() -> new UiWindow.SetCloseOnClickOutsideCommand(getId(), closeOnClickOutside));
+		queueCommandIfRendered(() -> new UiWindow.SetCloseOnClickOutsideCommand(closeOnClickOutside));
 	}
 }

@@ -229,7 +229,7 @@ public abstract class AbstractComboBox<RECORD, VALUE> extends AbstractField<VALU
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String uuid = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, uuid);
-			queueCommandIfRendered(() -> new UiComboBox.RegisterTemplateCommand(getId(), uuid, template.createUiTemplate()));
+			queueCommandIfRendered(() -> new UiComboBox.RegisterTemplateCommand(uuid, template.createUiTemplate()));
 		}
 		return template;
 	}

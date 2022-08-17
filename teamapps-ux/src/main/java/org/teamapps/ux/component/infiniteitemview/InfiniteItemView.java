@@ -82,7 +82,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 		itemCache.setPurgeListener(operationHandle -> {
 			if (isRendered()) {
 				List<Integer> removedItemIds = operationHandle.getAndClearResult();
-				getSessionContext().queueCommand(new UiInfiniteItemView.RemoveDataCommand(getId(), removedItemIds), aVoid -> operationHandle.commit());
+				getSessionContext().sendCommand(getId(), new UiInfiniteItemView.RemoveDataCommand(removedItemIds), aVoid -> operationHandle.commit());
 			} else {
 				operationHandle.commit();
 			}
@@ -141,9 +141,9 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 			if (record != null && contextMenuProvider != null) {
 				Component contextMenuContent = contextMenuProvider.apply(record);
 				if (contextMenuContent != null) {
-					queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
+					queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
 				} else {
-					queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
+					queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 				}
 			} else {
 				closeContextMenu();
@@ -180,7 +180,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemTemplate(Template itemTemplate) {
 		this.itemTemplate = itemTemplate;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemTemplateCommand(getId(), itemTemplate.createUiTemplate()));
+		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemTemplateCommand(itemTemplate.createUiTemplate()));
 		return this;
 	}
 
@@ -190,7 +190,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemWidth(float itemWidth) {
 		this.itemWidth = itemWidth;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemWidthCommand(getId(), itemWidth));
+		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemWidthCommand(itemWidth));
 		return this;
 	}
 
@@ -209,7 +209,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public void setVerticalItemAlignment(ItemViewVerticalItemAlignment verticalItemAlignment) {
 		this.verticalItemAlignment = verticalItemAlignment;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetVerticalItemAlignmentCommand(getId(), verticalItemAlignment.toUiItemJustification()));
+		queueCommandIfRendered(() -> new UiInfiniteItemView.SetVerticalItemAlignmentCommand(verticalItemAlignment.toUiItemJustification()));
 	}
 
 	public int getHorizontalItemMargin() {
@@ -218,7 +218,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setHorizontalItemMargin(int horizontalItemMargin) {
 		this.horizontalItemMargin = horizontalItemMargin;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetHorizontalItemMarginCommand(getId(), horizontalItemMargin));
+		queueCommandIfRendered(() -> new UiInfiniteItemView.SetHorizontalItemMarginCommand(horizontalItemMargin));
 		return this;
 	}
 
@@ -228,7 +228,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 
 	public InfiniteItemView<RECORD> setItemJustification(ItemViewRowJustification itemJustification) {
 		this.itemJustification = itemJustification;
-		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemJustificationCommand(getId(), itemJustification.toUiItemJustification()));
+		queueCommandIfRendered(() -> new UiInfiniteItemView.SetItemJustificationCommand(itemJustification.toUiItemJustification()));
 		return this;
 	}
 
@@ -280,8 +280,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 			} else {
 				cacheResponse = itemCache.addRecords(records);
 			}
-			getSessionContext().queueCommand(new UiInfiniteItemView.AddDataCommand(getId(), startIndex, cacheResponse.getAndClearResult(), totalCount, clear),
-					aVoid -> cacheResponse.commit());
+			getSessionContext().sendCommand(getId(), new UiInfiniteItemView.AddDataCommand(startIndex, cacheResponse.getAndClearResult(), totalCount, clear), aVoid -> cacheResponse.commit());
 		}
 	}
 
@@ -298,7 +297,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
-		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
+		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
 	}
 
 }

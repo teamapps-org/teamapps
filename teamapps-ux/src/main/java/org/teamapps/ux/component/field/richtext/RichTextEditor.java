@@ -96,7 +96,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 					},
 					() -> getSessionContext().getUploadedFileByUuid(imageUploadedEvent.getFileUuid())
 			);
-			queueCommandIfRendered(() -> new UiRichTextEditor.SetUploadedImageUrlCommand(getId(), fileUuid, this.uploadedFileToUrlConverter.convert(uploadedFile)));
+			queueCommandIfRendered(() -> new UiRichTextEditor.SetUploadedImageUrlCommand(fileUuid, this.uploadedFileToUrlConverter.convert(uploadedFile)));
 		} else if (event instanceof UiRichTextEditor.ImageUploadFailedEvent) {
 			UiRichTextEditor.ImageUploadFailedEvent uploadFailedEvent = (UiRichTextEditor.ImageUploadFailedEvent) event;
 			onImageUploadFailed.fire(new ImageUploadFailedEventData(uploadFailedEvent.getName(), uploadFailedEvent.getMimeType(), uploadFailedEvent.getSizeInBytes(), uploadFailedEvent
@@ -110,7 +110,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setToolbarVisibilityMode(ToolbarVisibilityMode toolbarVisibilityMode) {
 		this.toolbarVisibilityMode = toolbarVisibilityMode;
-		queueCommandIfRendered(() -> new UiRichTextEditor.SetToolbarVisibilityModeCommand(getId(), toolbarVisibilityMode.toToolbarVisibilityMode()));
+		queueCommandIfRendered(() -> new UiRichTextEditor.SetToolbarVisibilityModeCommand(toolbarVisibilityMode.toToolbarVisibilityMode()));
 	}
 
 	public UploadedFileToUrlConverter getUploadedFileToUrlConverter() {
@@ -127,7 +127,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		queueCommandIfRendered(() -> new UiRichTextEditor.SetUploadUrlCommand(getId(), uploadUrl));
+		queueCommandIfRendered(() -> new UiRichTextEditor.SetUploadUrlCommand(uploadUrl));
 	}
 
 	public int getMaxImageFileSizeInBytes() {
@@ -136,7 +136,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setMaxImageFileSizeInBytes(int maxImageFileSizeInBytes) {
 		this.maxImageFileSizeInBytes = maxImageFileSizeInBytes;
-		queueCommandIfRendered(() -> new UiRichTextEditor.SetMaxImageFileSizeInBytesCommand(getId(), maxImageFileSizeInBytes));
+		queueCommandIfRendered(() -> new UiRichTextEditor.SetMaxImageFileSizeInBytesCommand(maxImageFileSizeInBytes));
 	}
 
 	public int getMinHeight() {
@@ -145,7 +145,7 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setMinHeight(int minHeight) {
 		this.minHeight = minHeight;
-		queueCommandIfRendered(() -> new UiRichTextEditor.SetMinHeightCommand(getId(), minHeight));
+		queueCommandIfRendered(() -> new UiRichTextEditor.SetMinHeightCommand(minHeight));
 	}
 
 	public int getMaxHeight() {
@@ -154,14 +154,14 @@ public class RichTextEditor extends AbstractField<String> implements TextInputHa
 
 	public void setMaxHeight(int maxHeight) {
 		this.maxHeight = maxHeight;
-		queueCommandIfRendered(() -> new UiRichTextEditor.SetMaxHeightCommand(getId(), maxHeight));
+		queueCommandIfRendered(() -> new UiRichTextEditor.SetMaxHeightCommand(maxHeight));
 	}
 
 	public void setFixedHeight(int height) {
 		this.minHeight = height;
 		this.maxHeight = height;
-		queueCommandIfRendered(() -> new UiRichTextEditor.SetMinHeightCommand(getId(), height));
-		queueCommandIfRendered(() -> new UiRichTextEditor.SetMaxHeightCommand(getId(), height));
+		queueCommandIfRendered(() -> new UiRichTextEditor.SetMinHeightCommand(height));
+		queueCommandIfRendered(() -> new UiRichTextEditor.SetMaxHeightCommand(height));
 	}
 
 	@Override

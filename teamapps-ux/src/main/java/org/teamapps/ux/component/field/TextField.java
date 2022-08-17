@@ -45,7 +45,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setMaxCharacters(int maxCharacters) {
 		this.maxCharacters = maxCharacters;
-		queueCommandIfRendered(() -> new UiTextField.SetMaxCharactersCommand(getId(), maxCharacters));
+		queueCommandIfRendered(() -> new UiTextField.SetMaxCharactersCommand(maxCharacters));
 		return this;
 	}
 
@@ -55,7 +55,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		queueCommandIfRendered(() -> new UiTextField.SetShowClearButtonCommand(getId(), showClearButton));
+		queueCommandIfRendered(() -> new UiTextField.SetShowClearButtonCommand(showClearButton));
 		return this;
 	}
 
@@ -65,7 +65,7 @@ public class TextField extends AbstractField<String> implements TextInputHandlin
 
 	public TextField setEmptyText(String emptyText) {
 		this.emptyText = emptyText;
-		queueCommandIfRendered(() -> new UiTextField.SetPlaceholderTextCommand(getId(), emptyText));
+		queueCommandIfRendered(() -> new UiTextField.SetPlaceholderTextCommand(emptyText));
 		return this;
 	}
 

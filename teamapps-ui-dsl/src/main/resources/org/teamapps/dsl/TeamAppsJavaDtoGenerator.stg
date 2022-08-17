@@ -104,10 +104,12 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.StreamSupport;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -264,6 +266,8 @@ public static class <qd.Identifier.text; format="cap">Query implements UiQuery {
 
 
 commandClass(cmd) ::= <<
+@JsonFormat(shape = JsonFormat.Shape.ARRAY)
+@JsonPropertyOrder({<cmd.allProperties:{p|"<p.Identifier>"}; separator=", ">})
 public static class <cmd.Identifier.text; format="cap">Command implements UiCommand\<<cmd.returnType>\> {
 
 	<cmd.allProperties:propertyDeclaration(); separator="\n">
@@ -273,12 +277,6 @@ public static class <cmd.Identifier.text; format="cap">Command implements UiComm
 	<toString(cmd)>
 
 	<cmd.allProperties:getter(); separator="\n\n">
-
-	<if(cmd.staticModifier)>
-	public String getComponentId() {
-		return null;
-	}
-	<endif>
 
 }
 >>
@@ -311,19 +309,6 @@ uiEventBaseClass(package) ::= <<
 @JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface UiEvent {
-
-	String getComponentId();
-
-}
->>
-
-uiCommandBaseClass(package, allCommandDeclarations) ::= <<
-<javaFilePrelude(package)>
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "_type")
-@JsonTypeIdResolver(TeamAppsJacksonTypeIdResolver.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public interface UiCommand\<RESULT> {
 
 	String getComponentId();
 

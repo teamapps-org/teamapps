@@ -118,18 +118,18 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public void setZoomFactor(float zoomFactor) {
 		this.zoomFactor = zoomFactor;
-		queueCommandIfRendered(() -> new UiTreeGraph.SetZoomFactorCommand(getId(), zoomFactor));
+		queueCommandIfRendered(() -> new UiTreeGraph.SetZoomFactorCommand(zoomFactor));
 	}
 
 	public void setNodes(List<TreeGraphNode<RECORD>> nodes) {
 		this.nodesById.clear();
 		nodes.forEach(n -> nodesById.put(n.getId(), n));
-		queueCommandIfRendered(() -> new UiTreeGraph.SetNodesCommand(getId(), createUiNodes(nodes)));
+		queueCommandIfRendered(() -> new UiTreeGraph.SetNodesCommand(createUiNodes(nodes)));
 	}
 
 	public void addNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		queueCommandIfRendered(() -> new UiTreeGraph.AddNodeCommand(getId(), createUiNode(node)));
+		queueCommandIfRendered(() -> new UiTreeGraph.AddNodeCommand(createUiNode(node)));
 	}
 
 	public void addNodes(List<TreeGraphNode<RECORD>> nodes) {
@@ -139,12 +139,12 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 
 	public void removeNode(TreeGraphNode<RECORD> node) {
 		this.nodesById.remove(node.getId());
-		queueCommandIfRendered(() -> new UiTreeGraph.RemoveNodeCommand(getId(), node.getId()));
+		queueCommandIfRendered(() -> new UiTreeGraph.RemoveNodeCommand(node.getId()));
 	}
 
 	public void updateNode(TreeGraphNode<RECORD> node) {
 		nodesById.put(node.getId(), node);
-		queueCommandIfRendered(() -> new UiTreeGraph.UpdateNodeCommand(getId(), createUiNode(node)));
+		queueCommandIfRendered(() -> new UiTreeGraph.UpdateNodeCommand(createUiNode(node)));
 	}
 
 	@Override
@@ -189,15 +189,15 @@ public class TreeGraph<RECORD> extends AbstractComponent {
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiTreeGraph.UpdateCommand(createUiComponent()));
 	}
 
 	public void moveToRootNode() {
-		queueCommandIfRendered(() -> new UiTreeGraph.MoveToRootNodeCommand(getId()));
+		queueCommandIfRendered(() -> new UiTreeGraph.MoveToRootNodeCommand());
 	}
 
 	public void moveToNode(TreeGraphNode<RECORD> node) {
-		queueCommandIfRendered(() -> new UiTreeGraph.MoveToNodeCommand(getId(), node.getId()));
+		queueCommandIfRendered(() -> new UiTreeGraph.MoveToNodeCommand(node.getId()));
 	}
 
 	private Collection<TreeGraphNode<RECORD>> getAllDescendants(TreeGraphNode<RECORD> node, boolean includeSelf) {

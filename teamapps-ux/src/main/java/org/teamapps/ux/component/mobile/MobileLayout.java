@@ -67,7 +67,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 		if (this.content != component) {
 			content = component;
 			component.setParent(this);
-			queueCommandIfRendered(() -> new UiMobileLayout.ShowViewCommand(getId(), component.createUiReference(), animation != null ? animation.toUiPageTransition() : null,
+			queueCommandIfRendered(() -> new UiMobileLayout.ShowViewCommand(component.createUiReference(), animation != null ? animation.toUiPageTransition() : null,
 					animationDuration));
 		}
 	}
@@ -93,7 +93,7 @@ public class MobileLayout extends AbstractComponent implements Component {
 		if (navigationBar != null) {
 			navigationBar.setParent(this);
 		}
-		queueCommandIfRendered(() -> new UiMobileLayout.SetNavigationBarCommand(getId(), navigationBar != null ? navigationBar.createUiReference() : null));
+		queueCommandIfRendered(() -> new UiMobileLayout.SetNavigationBarCommand(navigationBar != null ? navigationBar.createUiReference() : null));
 	}
 
 }

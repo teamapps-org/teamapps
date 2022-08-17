@@ -48,7 +48,7 @@ public class InstantDateTimeField extends AbstractDateTimeField<Instant> {
 
 	public void setTimeZoneId(ZoneId timeZoneId) {
 		this.timeZoneId = timeZoneId;
-		queueCommandIfRendered(() -> new UiInstantDateTimeField.SetTimeZoneIdCommand(getId(), timeZoneId.getId()));
+		queueCommandIfRendered(() -> new UiInstantDateTimeField.SetTimeZoneIdCommand(timeZoneId.getId()));
 	}
 
 	@Override

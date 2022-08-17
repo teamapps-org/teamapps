@@ -63,20 +63,20 @@ public class TabPanel extends AbstractComponent implements Component {
 		}
 		tabs.add(tab);
 		tab.setTabPanel(this);
-		queueCommandIfRendered(() -> new UiTabPanel.AddTabCommand(getId(), tab.createUiTab(), select));
+		queueCommandIfRendered(() -> new UiTabPanel.AddTabCommand(tab.createUiTab(), select));
 	}
 
 	public void removeTab(Tab tab) {
 		boolean wasRemoved = tabs.remove(tab);
 		if (wasRemoved) {
-			queueCommandIfRendered(() -> new UiTabPanel.RemoveTabCommand(getId(), tab.getClientId()));
+			queueCommandIfRendered(() -> new UiTabPanel.RemoveTabCommand(tab.getClientId()));
 		}
 	}
 
 	public void setSelectedTab(Tab tab) {
 		if (tab != null) {
 			this.selectedTab = tab;
-			queueCommandIfRendered(() -> new UiTabPanel.SelectTabCommand(getId(), tab.getClientId()));
+			queueCommandIfRendered(() -> new UiTabPanel.SelectTabCommand(tab.getClientId()));
 		}
 	}
 
@@ -110,7 +110,7 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	private void updateToolButtons() {
-		queueCommandIfRendered(() -> new UiTabPanel.SetToolButtonsCommand(getId(), this.toolButtons.stream()
+		queueCommandIfRendered(() -> new UiTabPanel.SetToolButtonsCommand(this.toolButtons.stream()
 				.map(toolButton -> toolButton.createUiReference())
 				.collect(Collectors.toList())));
 	}
@@ -125,7 +125,7 @@ public class TabPanel extends AbstractComponent implements Component {
 
 	public void setHideTabBarIfSingleTab(boolean hideTabBarIfSingleTab) {
 		this.hideTabBarIfSingleTab = hideTabBarIfSingleTab;
-		this.queueCommandIfRendered(() -> new UiTabPanel.SetHideTabBarIfSingleTabCommand(getId(), hideTabBarIfSingleTab));
+		this.queueCommandIfRendered(() -> new UiTabPanel.SetHideTabBarIfSingleTabCommand(hideTabBarIfSingleTab));
 	}
 
 	public TabPanelTabStyle getTabStyle() {
@@ -134,7 +134,7 @@ public class TabPanel extends AbstractComponent implements Component {
 
 	public void setTabStyle(TabPanelTabStyle tabStyle) {
 		this.tabStyle = tabStyle;
-		this.queueCommandIfRendered(() -> new UiTabPanel.SetTabStyleCommand(getId(), tabStyle.toUiTabPanelTabStyle()));
+		this.queueCommandIfRendered(() -> new UiTabPanel.SetTabStyleCommand(tabStyle.toUiTabPanelTabStyle()));
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class TabPanel extends AbstractComponent implements Component {
 		} else if (event instanceof UiTabPanel.TabNeedsRefreshEvent) {
 			UiTabPanel.TabNeedsRefreshEvent tabNeedsRefreshEvent = (UiTabPanel.TabNeedsRefreshEvent) event;
 			Tab tab = getTabByClientId(tabNeedsRefreshEvent.getTabId());
-			queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(getId(), tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
+			queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
 		} else if (event instanceof UiTabPanel.TabClosedEvent) {
 			UiTabPanel.TabClosedEvent tabClosedEvent = (UiTabPanel.TabClosedEvent) event;
 			String tabId = tabClosedEvent.getTabId();
@@ -199,23 +199,23 @@ public class TabPanel extends AbstractComponent implements Component {
 	}
 
 	/*package-private*/ void handleTabToolbarChanged(Tab tab) {
-		queueCommandIfRendered(() -> new UiTabPanel.SetTabToolbarCommand(getId(), tab.getClientId(), Component.createUiClientObjectReference(tab.getToolbar())));
+		queueCommandIfRendered(() -> new UiTabPanel.SetTabToolbarCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getToolbar())));
 	}
 
 	/*package-private*/ void handleTabContentChanged(Tab tab) {
-		queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(getId(), tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
+		queueCommandIfRendered(() -> new UiTabPanel.SetTabContentCommand(tab.getClientId(), Component.createUiClientObjectReference(tab.getContent())));
 	}
 
 	/*package-private*/ void handleTabConfigurationChanged(Tab tab) {
 		String iconString = getSessionContext().resolveIcon(tab.getIcon());
 		String caption = tab.getTitle();
-		queueCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(getId(), tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
+		queueCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
 	}
 
 	/*package-private*/ void handleTabVisibilityChanged(Tab tab) {
 		String iconString = getSessionContext().resolveIcon(tab.getIcon());
 		String caption = tab.getTitle();
-		queueCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(getId(), tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
+		queueCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
 	}
 
 }

@@ -65,7 +65,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		queueCommandIfRendered(() -> new AbstractUiTimeField.SetShowDropDownButtonCommand(getId(), showDropDownButton));
+		queueCommandIfRendered(() -> new AbstractUiTimeField.SetShowDropDownButtonCommand(showDropDownButton));
 	}
 
 
@@ -83,7 +83,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		queueCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(getId(), locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
+		queueCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public DateTimeFormatDescriptor getTimeFormat() {
@@ -92,7 +92,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		queueCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(getId(), locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
+		queueCommandIfRendered(() -> new AbstractUiTimeField.SetLocaleAndTimeFormatCommand(locale.toLanguageTag(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public boolean isShowClearButton() {
@@ -101,7 +101,7 @@ public abstract class AbstractTimeField<VALUE> extends AbstractField<VALUE> impl
 
 	public void setShowClearButton(boolean showClearButton) {
 		this.showClearButton = showClearButton;
-		queueCommandIfRendered(() -> new AbstractUiTimeField.SetShowClearButtonCommand(getId(), showClearButton));
+		queueCommandIfRendered(() -> new AbstractUiTimeField.SetShowClearButtonCommand(showClearButton));
 	}
 
 	@Override

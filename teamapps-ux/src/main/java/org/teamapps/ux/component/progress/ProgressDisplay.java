@@ -86,7 +86,7 @@ public class ProgressDisplay extends AbstractComponent {
 	}
 
 	private void updateUi() {
-		queueCommandIfRendered(() -> new UiProgressDisplay.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiProgressDisplay.UpdateCommand(createUiComponent()));
 	}
 
 	@Override

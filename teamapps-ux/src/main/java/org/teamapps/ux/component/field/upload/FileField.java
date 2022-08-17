@@ -112,7 +112,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 	}
 
 	public void cancelUploads() {
-		this.queueCommandIfRendered(() -> new UiFileField.CancelAllUploadsCommand(getId()));
+		this.queueCommandIfRendered(() -> new UiFileField.CancelAllUploadsCommand());
 	}
 
 	private UiIdentifiableClientRecord createUiIdentifiableClientRecord(RECORD record) {
@@ -154,7 +154,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 					uploadStartedEvent.getFileName(),
 					uploadStartedEvent.getMimeType(),
 					uploadStartedEvent.getSizeInBytes(),
-					() -> this.queueCommandIfRendered(() -> new UiFileField.CancelUploadCommand(getId(), uploadStartedEvent.getFileItemUuid()))
+					() -> this.queueCommandIfRendered(() -> new UiFileField.CancelUploadCommand(uploadStartedEvent.getFileItemUuid()))
 			));
 		} else if (event instanceof UiFileField.UploadCanceledEvent) {
 			UiFileField.UploadCanceledEvent canceledEvent = (UiFileField.UploadCanceledEvent) event;
@@ -179,7 +179,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 			RECORD record = uploadedFileToRecordConverter.convert(uploadedFile);
 			CacheManipulationHandle<UiIdentifiableClientRecord> cacheResponse = recordCache.addRecord(record);
 			if (isRendered()) {
-				getSessionContext().queueCommand(new UiFileField.ReplaceFileItemCommand(getId(), uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
+				getSessionContext().sendCommand(getId(), new UiFileField.ReplaceFileItemCommand(uploadedEvent.getFileItemUuid(), cacheResponse.getAndClearResult()), aVoid -> cacheResponse.commit());
 			} else {
 				cacheResponse.commit();
 			}
@@ -212,7 +212,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setFileItemTemplate(Template fileItemTemplate) {
 		this.fileItemTemplate = fileItemTemplate;
-		queueCommandIfRendered(() -> new UiFileField.SetItemTemplateCommand(getId(), fileItemTemplate.createUiTemplate()));
+		queueCommandIfRendered(() -> new UiFileField.SetItemTemplateCommand(fileItemTemplate.createUiTemplate()));
 	}
 
 	public long getMaxBytesPerFile() {
@@ -221,7 +221,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setMaxBytesPerFile(long maxBytesPerFile) {
 		this.maxBytesPerFile = maxBytesPerFile;
-		queueCommandIfRendered(() -> new UiFileField.SetMaxBytesPerFileCommand(getId(), maxBytesPerFile));
+		queueCommandIfRendered(() -> new UiFileField.SetMaxBytesPerFileCommand(maxBytesPerFile));
 	}
 
 	public String getUploadUrl() {
@@ -230,7 +230,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		queueCommandIfRendered(() -> new UiFileField.SetUploadUrlCommand(getId(), uploadUrl));
+		queueCommandIfRendered(() -> new UiFileField.SetUploadUrlCommand(uploadUrl));
 	}
 
 	public Template getUploadButtonTemplate() {
@@ -239,7 +239,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonTemplate(Template uploadButtonTemplate) {
 		this.uploadButtonTemplate = uploadButtonTemplate;
-		queueCommandIfRendered(() -> new UiFileField.SetUploadButtonTemplateCommand(getId(), uploadButtonTemplate.createUiTemplate()));
+		queueCommandIfRendered(() -> new UiFileField.SetUploadButtonTemplateCommand(uploadButtonTemplate.createUiTemplate()));
 	}
 
 	public Object getUploadButtonData() {
@@ -248,7 +248,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setUploadButtonData(Object uploadButtonData) {
 		this.uploadButtonData = uploadButtonData;
-		queueCommandIfRendered(() -> new UiFileField.SetUploadButtonDataCommand(getId(), uploadButtonData));
+		queueCommandIfRendered(() -> new UiFileField.SetUploadButtonDataCommand(uploadButtonData));
 	}
 
 	public boolean isShowEntriesAsButtonsOnHover() {
@@ -257,7 +257,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setShowEntriesAsButtonsOnHover(boolean showEntriesAsButtonsOnHover) {
 		this.showEntriesAsButtonsOnHover = showEntriesAsButtonsOnHover;
-		queueCommandIfRendered(() -> new UiFileField.SetShowEntriesAsButtonsOnHoverCommand(getId(), showEntriesAsButtonsOnHover));
+		queueCommandIfRendered(() -> new UiFileField.SetShowEntriesAsButtonsOnHoverCommand(showEntriesAsButtonsOnHover));
 	}
 
 	public FileFieldDisplayType getDisplayType() {
@@ -266,7 +266,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setDisplayType(FileFieldDisplayType displayType) {
 		this.displayType = displayType;
-		queueCommandIfRendered(() -> new UiFileField.SetDisplayTypeCommand(getId(), displayType.toUiFileFieldDisplayType()));
+		queueCommandIfRendered(() -> new UiFileField.SetDisplayTypeCommand(displayType.toUiFileFieldDisplayType()));
 	}
 
 	public int getMaxFiles() {
@@ -275,7 +275,7 @@ public class FileField<RECORD> extends AbstractField<List<RECORD>> {
 
 	public void setMaxFiles(int maxFiles) {
 		this.maxFiles = maxFiles;
-		queueCommandIfRendered(() -> new UiFileField.SetMaxFilesCommand(getId(), maxFiles));
+		queueCommandIfRendered(() -> new UiFileField.SetMaxFilesCommand(maxFiles));
 	}
 
 	public PropertyProvider getUploadButtonPropertyProvider() {

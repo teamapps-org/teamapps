@@ -77,7 +77,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 	protected void addComponent(Component component) {
 		children.add(component);
 		component.setParent(this);
-		queueCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(getId(), component.createUiReference()));
+		queueCommandIfRendered(() -> new UiGridForm.AddOrReplaceFieldCommand(component.createUiReference()));
 	}
 
 	public abstract List<FormLayoutPolicy> getLayoutPolicies();
@@ -118,7 +118,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 
 	protected void updateLayoutPolicies() {
 		List<UiFormLayoutPolicy> uiFormLayoutPolicies = getUiFormLayoutPolicies();
-		queueCommandIfRendered(() -> new UiGridForm.UpdateLayoutPoliciesCommand(getId(), uiFormLayoutPolicies));
+		queueCommandIfRendered(() -> new UiGridForm.UpdateLayoutPoliciesCommand(uiFormLayoutPolicies));
 	}
 
 	public void applyRecordValuesToFields(RECORD record) {
@@ -172,7 +172,7 @@ public abstract class AbstractForm<RECORD> extends AbstractComponent implements 
 	}
 
 	public void setSectionCollapsed(String sectionId, boolean collapsed) {
-		queueCommandIfRendered(() -> new UiGridForm.SetSectionCollapsedCommand(getId(), sectionId, collapsed));
+		queueCommandIfRendered(() -> new UiGridForm.SetSectionCollapsedCommand(sectionId, collapsed));
 	}
 
 	public void addMultiFieldValidator(MultiFieldValidator multiFieldValidator) {

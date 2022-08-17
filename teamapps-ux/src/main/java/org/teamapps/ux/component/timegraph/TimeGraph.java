@@ -113,10 +113,10 @@ public class TimeGraph extends AbstractComponent {
 		graphs.forEach(graph -> {
 			final GraphAndListener graphAndListener = new GraphAndListener(graph, aVoid -> handleGraphDataChanged(graph));
 			this.graphsAndListeners.add(graphAndListener);
-			graph.setChangeListener(display -> queueCommandIfRendered(() -> new UiTimeGraph.AddOrUpdateGraphCommand(getId(), display.createUiFormat())));
+			graph.setChangeListener(display -> queueCommandIfRendered(() -> new UiTimeGraph.AddOrUpdateGraphCommand(display.createUiFormat())));
 			graph.getModel().onDataChanged().addListener(graphAndListener.changeListener);
 		});
-		queueCommandIfRendered(() -> new UiTimeGraph.SetGraphsCommand(getId(), toUiLineFormats(graphs)));
+		queueCommandIfRendered(() -> new UiTimeGraph.SetGraphsCommand(toUiLineFormats(graphs)));
 		refresh();
 	}
 
@@ -166,7 +166,7 @@ public class TimeGraph extends AbstractComponent {
 				final Map<String, List<Interval>> neededIntervalsByGraphId = zoomedEvent.getNeededIntervalsByGraphId().entrySet().stream()
 						.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(i -> new Interval(i.getMin(), i.getMax())).collect(Collectors.toList())));
 				Map<String, GraphData> data = retrieveData(displayedInterval, timePartitioning, neededIntervalsByGraphId);
-				queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(this.getId(), zoomedEvent.getZoomLevelIndex(), convertToUiData(data)));
+				queueCommandIfRendered(() -> new UiTimeGraph.AddDataCommand(zoomedEvent.getZoomLevelIndex(), convertToUiData(data)));
 			}
 
 			this.displayedInterval = displayedInterval;
@@ -207,13 +207,12 @@ public class TimeGraph extends AbstractComponent {
 	public void refresh() {
 		Interval domainX = retrieveDomainX();
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
-		queueCommandIfRendered(() -> new UiTimeGraph.ResetAllDataCommand(getId(), uiIntervalX, createUiZoomlevels()));
+		queueCommandIfRendered(() -> new UiTimeGraph.ResetAllDataCommand(uiIntervalX, createUiZoomlevels()));
 	}
 
 	public void zoomTo(long minX, long maxX) {
 		if (isRendered()) {
-			getSessionContext().queueCommand(new UiTimeGraph.ZoomToCommand(getId(), new UiLongInterval(minX, maxX)),
-					aVoid -> this.displayedInterval = new Interval(minX, maxX));
+			getSessionContext().sendCommand(getId(), new UiTimeGraph.ZoomToCommand(new UiLongInterval(minX, maxX)), aVoid -> this.displayedInterval = new Interval(minX, maxX));
 		} else {
 			this.displayedInterval = new Interval(minX, maxX);
 		}
@@ -225,7 +224,7 @@ public class TimeGraph extends AbstractComponent {
 
 	public void setMaxPixelsBetweenDataPoints(int maxPixelsBetweenDataPoints) {
 		this.maxPixelsBetweenDataPoints = maxPixelsBetweenDataPoints;
-		queueCommandIfRendered(() -> new UiTimeGraph.SetMaxPixelsBetweenDataPointsCommand(getId(), maxPixelsBetweenDataPoints));
+		queueCommandIfRendered(() -> new UiTimeGraph.SetMaxPixelsBetweenDataPointsCommand(maxPixelsBetweenDataPoints));
 	}
 
 	public LineChartMouseScrollZoomPanMode getMouseScrollZoomPanMode() {
@@ -234,7 +233,7 @@ public class TimeGraph extends AbstractComponent {
 
 	public void setMouseScrollZoomPanMode(LineChartMouseScrollZoomPanMode mouseScrollZoomPanMode) {
 		this.mouseScrollZoomPanMode = mouseScrollZoomPanMode;
-		queueCommandIfRendered(() -> new UiTimeGraph.SetMouseScrollZoomPanModeCommand(getId(), mouseScrollZoomPanMode.toUiLineChartMouseScrollZoomPanMode()));
+		queueCommandIfRendered(() -> new UiTimeGraph.SetMouseScrollZoomPanModeCommand(mouseScrollZoomPanMode.toUiLineChartMouseScrollZoomPanMode()));
 	}
 
 	public Interval getSelectedInterval() {
@@ -243,14 +242,14 @@ public class TimeGraph extends AbstractComponent {
 
 	public void setSelectedInterval(Interval selectedInterval) {
 		this.selectedInterval = selectedInterval;
-		queueCommandIfRendered(() -> new UiTimeGraph.SetSelectedIntervalCommand(getId(), selectedInterval.toUiLongInterval()));
+		queueCommandIfRendered(() -> new UiTimeGraph.SetSelectedIntervalCommand(selectedInterval.toUiLongInterval()));
 	}
 
 	private void handleGraphDataChanged(AbstractGraph<?, ?> graph) {
 		Interval domainX = retrieveDomainX();
 		UiLongInterval uiIntervalX = new Interval(domainX.getMin(), domainX.getMax()).toUiLongInterval();
-		queueCommandIfRendered(() -> new UiTimeGraph.SetIntervalXCommand(getId(), uiIntervalX));
-		queueCommandIfRendered(() -> new UiTimeGraph.ResetGraphDataCommand(getId(), graph.getId()));
+		queueCommandIfRendered(() -> new UiTimeGraph.SetIntervalXCommand(uiIntervalX));
+		queueCommandIfRendered(() -> new UiTimeGraph.ResetGraphDataCommand(graph.getId()));
 	}
 
 	public Locale getLocale() {

@@ -56,7 +56,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setShowDropDownButton(boolean showDropDownButton) {
 		this.showDropDownButton = showDropDownButton;
-		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetShowDropDownButtonCommand(getId(), showDropDownButton));
+		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetShowDropDownButtonCommand(showDropDownButton));
 	}
 
 	public boolean isFavorPastDates() {
@@ -65,7 +65,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setFavorPastDates(boolean favorPastDates) {
 		this.favorPastDates = favorPastDates;
-		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetFavorPastDatesCommand(getId(), favorPastDates));
+		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetFavorPastDatesCommand(favorPastDates));
 	}
 
 	public Locale getLocale() {
@@ -82,7 +82,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setULocale(ULocale locale) {
 		this.locale = locale;
-		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(getId(), locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
+		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public DateTimeFormatDescriptor getDateFormat() {
@@ -91,7 +91,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setDateFormat(DateTimeFormatDescriptor dateFormat) {
 		this.dateFormat = dateFormat;
-		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(getId(), locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
+		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 	public DateTimeFormatDescriptor getTimeFormat() {
@@ -100,7 +100,7 @@ public abstract class AbstractDateTimeField<VALUE> extends AbstractField<VALUE> 
 
 	public void setTimeFormat(DateTimeFormatDescriptor timeFormat) {
 		this.timeFormat = timeFormat;
-		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(getId(), locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
+		queueCommandIfRendered(() -> new AbstractUiDateTimeField.SetLocaleAndFormatsCommand(locale.toLanguageTag(), dateFormat.toDateTimeFormatDescriptor(), timeFormat.toDateTimeFormatDescriptor()));
 	}
 
 }

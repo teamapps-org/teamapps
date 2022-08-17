@@ -65,12 +65,12 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 		fileItem.setState(FileItemState.DONE);
 		this.fileItems.add(fileItem);
 		fileItem.setFileField(this);
-		queueCommandIfRendered(() -> new UiSimpleFileField.AddFileItemCommand(getId(), fileItem.createUiFileItem()));
+		queueCommandIfRendered(() -> new UiSimpleFileField.AddFileItemCommand(fileItem.createUiFileItem()));
 	}
 
 	public void removeFileItem(FileItem fileItem) {
 		removeFileItemInternal(fileItem);
-		queueCommandIfRendered(() -> new UiSimpleFileField.RemoveFileItemCommand(getId(), fileItem.getUuid()));
+		queueCommandIfRendered(() -> new UiSimpleFileField.RemoveFileItemCommand(fileItem.getUuid()));
 	}
 
 	private void removeFileItemInternal(FileItem fileItem) {
@@ -79,7 +79,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 	}
 
 	/*package-private*/  void handleFileItemChanged(FileItem fileItem) {
-		queueCommandIfRendered(() -> new UiSimpleFileField.UpdateFileItemCommand(getId(), fileItem.createUiFileItem()));
+		queueCommandIfRendered(() -> new UiSimpleFileField.UpdateFileItemCommand(fileItem.createUiFileItem()));
 	}
 
 	private FileItem getFileItemByUuid(String uuid) {
@@ -194,7 +194,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setDisplayType(FileFieldDisplayType displayType) {
 		this.displayType = displayType;
-		queueCommandIfRendered(() -> new UiSimpleFileField.SetDisplayModeCommand(getId(), displayType.toUiFileFieldDisplayType()));
+		queueCommandIfRendered(() -> new UiSimpleFileField.SetDisplayModeCommand(displayType.toUiFileFieldDisplayType()));
 	}
 
 	public int getMaxFiles() {
@@ -203,7 +203,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setMaxFiles(int maxFiles) {
 		this.maxFiles = maxFiles;
-		queueCommandIfRendered(() -> new UiSimpleFileField.SetMaxFilesCommand(getId(), maxFiles));
+		queueCommandIfRendered(() -> new UiSimpleFileField.SetMaxFilesCommand(maxFiles));
 	}
 
 	public long getMaxBytesPerFile() {
@@ -212,8 +212,8 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setMaxBytesPerFile(long maxBytesPerFile) {
 		this.maxBytesPerFile = maxBytesPerFile;
-		queueCommandIfRendered(() -> new UiSimpleFileField.SetMaxBytesPerFileCommand(getId(), maxBytesPerFile));
-		queueCommandIfRendered(() -> new UiSimpleFileField.SetFileTooLargeMessageCommand(getId(), getSessionContext().getLocalized(TeamAppsDictionary.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1))));
+		queueCommandIfRendered(() -> new UiSimpleFileField.SetMaxBytesPerFileCommand(maxBytesPerFile));
+		queueCommandIfRendered(() -> new UiSimpleFileField.SetFileTooLargeMessageCommand(getSessionContext().getLocalized(TeamAppsDictionary.FILE_TOO_LARGE_SHORT_MESSAGE.getKey(), FileSizeFormatter.humanReadableByteCount(maxBytesPerFile, true, 1))));
 	}
 
 	public String getUploadUrl() {
@@ -222,7 +222,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		queueCommandIfRendered(() -> new UiSimpleFileField.SetUploadUrlCommand(getId(), uploadUrl));
+		queueCommandIfRendered(() -> new UiSimpleFileField.SetUploadUrlCommand(uploadUrl));
 	}
 
 	public Icon getBrowseButtonIcon() {
@@ -231,7 +231,7 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setBrowseButtonIcon(Icon browseButtonIcon) {
 		this.browseButtonIcon = browseButtonIcon;
-		queueCommandIfRendered(() -> new UiSimpleFileField.SetBrowseButtonIconCommand(getId(), getSessionContext().resolveIcon(browseButtonIcon)));
+		queueCommandIfRendered(() -> new UiSimpleFileField.SetBrowseButtonIconCommand(getSessionContext().resolveIcon(browseButtonIcon)));
 	}
 
 	public String getBrowseButtonCaption() {
@@ -240,6 +240,6 @@ public class SimpleFileField extends AbstractField<List<FileItem>> {
 
 	public void setBrowseButtonCaption(String browseButtonCaption) {
 		this.browseButtonCaption = browseButtonCaption;
-		queueCommandIfRendered(() -> new UiSimpleFileField.SetBrowseButtonCaptionCommand(getId(), browseButtonCaption));
+		queueCommandIfRendered(() -> new UiSimpleFileField.SetBrowseButtonCaptionCommand(browseButtonCaption));
 	}
 }

@@ -76,15 +76,15 @@ public class VideoPlayer extends AbstractComponent {
 	}
 
 	public void play() {
-		queueCommandIfRendered(() -> new UiVideoPlayer.PlayCommand(getId()));
+		queueCommandIfRendered(() -> new UiVideoPlayer.PlayCommand());
 	}
 
 	public void pause() {
-		queueCommandIfRendered(() -> new UiVideoPlayer.PauseCommand(getId()));
+		queueCommandIfRendered(() -> new UiVideoPlayer.PauseCommand());
 	}
 
 	public void setPosition(int timeInSeconds) {
-		queueCommandIfRendered(() -> new UiVideoPlayer.JumpToCommand(getId(), timeInSeconds));
+		queueCommandIfRendered(() -> new UiVideoPlayer.JumpToCommand(timeInSeconds));
 	}
 
 	public String getUrl() {
@@ -93,7 +93,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setUrl(String url) {
 		this.url = url;
-		queueCommandIfRendered(() -> new UiVideoPlayer.SetUrlCommand(getId(), url));
+		queueCommandIfRendered(() -> new UiVideoPlayer.SetUrlCommand(url));
 	}
 
 	public boolean isAutoplay() {
@@ -102,7 +102,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setAutoplay(boolean autoplay) {
 		this.autoplay = autoplay;
-		queueCommandIfRendered(() -> new UiVideoPlayer.SetAutoplayCommand(getId(), autoplay));
+		queueCommandIfRendered(() -> new UiVideoPlayer.SetAutoplayCommand(autoplay));
 	}
 
 	public boolean isShowControls() {
@@ -156,7 +156,7 @@ public class VideoPlayer extends AbstractComponent {
 
 	public void setPreloadMode(PreloadMode preloadMode) {
 		this.preloadMode = preloadMode;
-		queueCommandIfRendered(() -> new UiVideoPlayer.SetPreloadModeCommand(getId(), preloadMode.toUiPreloadMode()));
+		queueCommandIfRendered(() -> new UiVideoPlayer.SetPreloadModeCommand(preloadMode.toUiPreloadMode()));
 	}
 
 }

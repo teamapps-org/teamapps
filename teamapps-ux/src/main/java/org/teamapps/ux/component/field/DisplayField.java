@@ -54,7 +54,7 @@ public class DisplayField extends AbstractField<String> {
 
 	public DisplayField setShowBorder(boolean showBorder) {
 		this.showBorder = showBorder;
-		queueCommandIfRendered(() -> new UiDisplayField.SetShowBorderCommand(getId(), showBorder));
+		queueCommandIfRendered(() -> new UiDisplayField.SetShowBorderCommand(showBorder));
 		return this;
 	}
 
@@ -64,7 +64,7 @@ public class DisplayField extends AbstractField<String> {
 
 	public DisplayField setShowHtml(boolean showHtml) {
 		this.showHtml = showHtml;
-		queueCommandIfRendered(() -> new UiDisplayField.SetShowHtmlCommand(getId(), showHtml));
+		queueCommandIfRendered(() -> new UiDisplayField.SetShowHtmlCommand(showHtml));
 		return this;
 	}
 
@@ -74,7 +74,7 @@ public class DisplayField extends AbstractField<String> {
 
 	public DisplayField setRemoveStyleTags(boolean removeStyleTags) {
 		this.removeStyleTags = removeStyleTags;
-		queueCommandIfRendered(() -> new UiDisplayField.SetRemoveStyleTagsCommand(getId(), removeStyleTags));
+		queueCommandIfRendered(() -> new UiDisplayField.SetRemoveStyleTagsCommand(removeStyleTags));
 		return this;
 	}
 }

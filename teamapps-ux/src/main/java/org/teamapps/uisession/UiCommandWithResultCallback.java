@@ -25,16 +25,22 @@ import java.util.function.Consumer;
 
 public class UiCommandWithResultCallback<RESULT> {
 
+	private final String clientObjectId;
 	private final UiCommand<RESULT> uiCommand;
 	private final Consumer<RESULT> resultCallback;
 
-	public UiCommandWithResultCallback(UiCommand<RESULT> uiCommand, Consumer<RESULT> resultCallback) {
+	public UiCommandWithResultCallback(String clientObjectId, UiCommand<RESULT> uiCommand, Consumer<RESULT> resultCallback) {
+		this.clientObjectId = clientObjectId;
 		this.uiCommand = uiCommand;
 		this.resultCallback = resultCallback;
 	}
 
-	public UiCommandWithResultCallback(UiCommand<RESULT> uiCommand) {
-		this(uiCommand, null);
+	public UiCommandWithResultCallback(String clientObjectId, UiCommand<RESULT> uiCommand) {
+		this(clientObjectId, uiCommand, null);
+	}
+
+	public String getClientObjectId() {
+		return clientObjectId;
 	}
 
 	public UiCommand<RESULT> getUiCommand() {

@@ -247,6 +247,6 @@ public class CommandBufferTest {
 	}
 
 	private CMD createCmd(int id, int length) {
-		return new CMD(id, StringUtils.repeat('x', length));
+		return new CMD(id, "clientObjectId", StringUtils.repeat('x', length), false);
 	}
 }

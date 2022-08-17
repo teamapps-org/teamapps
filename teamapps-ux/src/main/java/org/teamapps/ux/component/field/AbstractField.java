@@ -67,7 +67,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 
 	public void setEditingMode(FieldEditingMode editingMode) {
 		this.editingMode = editingMode;
-		queueCommandIfRendered(() -> new UiField.SetEditingModeCommand(getId(), editingMode.toUiFieldEditingMode()));
+		queueCommandIfRendered(() -> new UiField.SetEditingModeCommand(editingMode.toUiFieldEditingMode()));
 	}
 
 	public void setVisible(boolean visible) {
@@ -76,7 +76,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	public void focus() {
-		queueCommandIfRendered(() -> new UiField.FocusCommand(getId()));
+		queueCommandIfRendered(() -> new UiField.FocusCommand());
 	}
 
 	protected void mapAbstractFieldAttributesToUiField(UiField uiField) {
@@ -93,7 +93,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 		MultiWriteLockableValue.Lock lock = this.value.writeAndLock(value);
 		Object uiValue = this.convertUxValueToUiValue(value);
 		if (isRendered()) {
-			getSessionContext().queueCommand(new UiField.SetValueCommand(getId(), uiValue), aVoid -> lock.release());
+			getSessionContext().sendCommand(getId(), new UiField.SetValueCommand(uiValue), aVoid -> lock.release());
 		} else {
 			lock.release();
 		}
@@ -254,7 +254,7 @@ public abstract class AbstractField<VALUE> extends AbstractComponent {
 	}
 
 	private void updateFieldMessages() {
-		queueCommandIfRendered(() -> new UiField.SetFieldMessagesCommand(getId(), getFieldMessages().stream()
+		queueCommandIfRendered(() -> new UiField.SetFieldMessagesCommand(getFieldMessages().stream()
 				.map(fieldMessage -> fieldMessage.createUiFieldMessage(defaultMessagePosition, defaultMessageVisibility))
 				.collect(Collectors.toList())));
 	}

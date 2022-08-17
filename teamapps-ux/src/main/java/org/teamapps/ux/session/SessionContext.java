@@ -192,7 +192,7 @@ public class SessionContext {
 
 
 	public void pushNavigationState(String relativeUrl) {
-		queueCommand(new UiRootPanel.PushHistoryStateCommand(relativeUrl));
+		sendCommand(null, new UiRootPanel.PushHistoryStateCommand(relativeUrl));
 	}
 
 	public void navigateBack(int steps) {
@@ -200,7 +200,7 @@ public class SessionContext {
 	}
 
 	public void navigateForward(int steps) {
-		queueCommand(new UiRootPanel.NavigateForwardCommand(steps));
+		sendCommand(null, new UiRootPanel.NavigateForwardCommand(steps));
 	}
 
 	public static SessionContext current() {
@@ -268,7 +268,7 @@ public class SessionContext {
 		uiSession.close(reason);
 	}
 
-	public <RESULT> void queueCommand(UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
+	public <RESULT> void sendCommand(String clientObjectId, UiCommand<RESULT> command, Consumer<RESULT> resultCallback) {
 		if (CurrentSessionContext.get() != this) {
 			String errorMessage = "Trying to queue a command for foreign/null SessionContext (CurrentSessionContext.get() != this)."
 					+ " Please use SessionContext.runWithContext(Runnable). NOTE: The command will not get queued!";
@@ -277,11 +277,11 @@ public class SessionContext {
 		}
 		Consumer<RESULT> wrappedCallback = resultCallback != null ? result -> this.runWithContext(() -> resultCallback.accept(result)) : null;
 
-		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(command, wrappedCallback)));
+		uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> uiSession.sendCommand(new UiCommandWithResultCallback<>(clientObjectId, command, wrappedCallback)));
 	}
 
-	public void queueCommand(UiCommand<?> command) {
-		this.queueCommand(command, null);
+	public void sendCommand(String clientObjectId, UiCommand<?> command) {
+		this.sendCommand(clientObjectId, command, null);
 	}
 
 	public ClientInfo getClientInfo() {
@@ -314,13 +314,13 @@ public class SessionContext {
 
 	public TemplateReference registerTemplate(String id, Template template) {
 		registeredTemplates.put(id, template);
-		queueCommand(new UiRootPanel.RegisterTemplateCommand(id, template.createUiTemplate()));
+		sendCommand(null, new UiRootPanel.RegisterTemplateCommand(id, template.createUiTemplate()));
 		return new TemplateReference(template, id);
 	}
 
 	public void registerTemplates(Map<String, Template> templates) {
 		registeredTemplates.putAll(templates);
-		queueCommand(new UiRootPanel.RegisterTemplatesCommand(templates.entrySet().stream()
+		sendCommand(null, new UiRootPanel.RegisterTemplatesCommand(templates.entrySet().stream()
 				.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().createUiTemplate()))));
 	}
 
@@ -417,7 +417,7 @@ public class SessionContext {
 
 	public void setConfiguration(SessionConfiguration config) {
 		this.sessionConfiguration = config;
-		queueCommand(new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
+		sendCommand(null, new UiRootPanel.SetConfigCommand(config.createUiConfiguration()));
 		updateSessionMessageWindows();
 	}
 
@@ -472,15 +472,15 @@ public class SessionContext {
 	}
 
 	public void download(String url, String downloadFileName) {
-		runWithContext(() -> queueCommand(new UiRootPanel.DownloadFileCommand(url, downloadFileName)));
+		runWithContext(() -> sendCommand(null, new UiRootPanel.DownloadFileCommand(url, downloadFileName)));
 	}
 
 	public void registerBackgroundImage(String id, String image, String blurredImage) {
-		queueCommand(new UiRootPanel.RegisterBackgroundImageCommand(id, image, blurredImage));
+		sendCommand(null, new UiRootPanel.RegisterBackgroundImageCommand(id, image, blurredImage));
 	}
 
 	public void setBackgroundImage(String id, int animationDuration) {
-		queueCommand(new UiRootPanel.SetBackgroundImageCommand(id, animationDuration));
+		sendCommand(null, new UiRootPanel.SetBackgroundImageCommand(id, animationDuration));
 	}
 
 	public void showDefaultBackground(int animationDuration) {
@@ -492,11 +492,11 @@ public class SessionContext {
 	}
 
 	public void setBackgroundColor(Color color, int animationDuration) {
-		queueCommand(new UiRootPanel.SetBackgroundColorCommand(color != null ? color.toHtmlColorString() : null, animationDuration));
+		sendCommand(null, new UiRootPanel.SetBackgroundColorCommand(color != null ? color.toHtmlColorString() : null, animationDuration));
 	}
 
 	public void exitFullScreen() {
-		queueCommand(new UiRootPanel.ExitFullScreenCommand());
+		sendCommand(null, new UiRootPanel.ExitFullScreenCommand());
 	}
 
 	public void addRootComponent(String containerElementSelector, Component component) {
@@ -504,7 +504,7 @@ public class SessionContext {
 	}
 
 	public void addRootPanel(String containerElementSelector, Component rootPanel) {
-		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementSelector, rootPanel.createUiReference()));
+		sendCommand(null, new UiRootPanel.BuildRootPanelCommand(containerElementSelector, rootPanel.createUiReference()));
 	}
 
 	public RootPanel addRootPanel(String containerElementSelector) {
@@ -519,22 +519,22 @@ public class SessionContext {
 
 	public void addClientToken(String token) {
 		getClientInfo().getClientTokens().add(token);
-		queueCommand(new UiRootPanel.AddClientTokenCommand(token));
+		sendCommand(null, new UiRootPanel.AddClientTokenCommand(token));
 	}
 
 	public void removeClientToken(String token) {
 		getClientInfo().getClientTokens().remove(token);
-		queueCommand(new UiRootPanel.RemoveClientTokenCommand(token));
+		sendCommand(null, new UiRootPanel.RemoveClientTokenCommand(token));
 	}
 
 	public void clearClientTokens() {
 		getClientInfo().getClientTokens().clear();
-		queueCommand(new UiRootPanel.ClearClientTokensCommand());
+		sendCommand(null, new UiRootPanel.ClearClientTokensCommand());
 	}
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
+			sendCommand(null, new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});
 	}
@@ -591,15 +591,15 @@ public class SessionContext {
 	}
 
 	private void updateSessionMessageWindows() {
-		queueCommand(new UiRootPanel.SetSessionMessageWindowsCommand(
-				sessionExpiredWindow != null ? sessionExpiredWindow.createUiReference()
-						: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
-						getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
-				sessionErrorWindow != null ? sessionErrorWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
-						getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
-				sessionTerminatedWindow != null ? sessionTerminatedWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
-						getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference())
-		);
+		sendCommand(null,
+				new UiRootPanel.SetSessionMessageWindowsCommand(
+						sessionExpiredWindow != null ? sessionExpiredWindow.createUiReference()
+								: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
+								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
+						sessionErrorWindow != null ? sessionErrorWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
+								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
+						sessionTerminatedWindow != null ? sessionTerminatedWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
+								getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference()));
 	}
 
 	public static Window createDefaultSessionMessageWindow(String title, String message, String refreshButtonCaption, String cancelButtonCaption) {
@@ -637,9 +637,9 @@ public class SessionContext {
 		String uuid = UUID.randomUUID().toString();
 		CompletableFuture<WakeLock> completableFuture = new CompletableFuture<>();
 		runWithContext(() -> {
-			queueCommand(new UiRootPanel.RequestWakeLockCommand(uuid), successful -> {
+			sendCommand(null, new UiRootPanel.RequestWakeLockCommand(uuid), successful -> {
 				if (successful) {
-					completableFuture.complete(() -> queueCommand(new UiRootPanel.ReleaseWakeLockCommand(uuid)));
+					completableFuture.complete(() -> sendCommand(null, new UiRootPanel.ReleaseWakeLockCommand(uuid)));
 				} else {
 					completableFuture.completeExceptionally(new RuntimeException("Could not acquire WakeLock"));
 				}
@@ -649,7 +649,7 @@ public class SessionContext {
 	}
 
 	public void goToUrl(String url, boolean blankPage) {
-		queueCommand(new UiRootPanel.GoToUrlCommand(url, blankPage));
+		sendCommand(null, new UiRootPanel.GoToUrlCommand(url, blankPage));
 	}
 
 	public void setFavicon(Icon<?, ?> icon) {
@@ -661,15 +661,15 @@ public class SessionContext {
 	}
 
 	public void setFavicon(String url) {
-		queueCommand(new UiRootPanel.SetFaviconCommand(url));
+		sendCommand(null, new UiRootPanel.SetFaviconCommand(url));
 	}
 
 	public void setTitle(String title) {
-		queueCommand(new UiRootPanel.SetTitleCommand(title));
+		sendCommand(null, new UiRootPanel.SetTitleCommand(title));
 	}
 
 	public void setGlobalKeyEventsEnabled(boolean unmodified, boolean modifiedWithAltKey, boolean modifiedWithCtrlKey, boolean modifiedWithMetaKey, boolean includeRepeats, boolean keyDown, boolean keyUp) {
-		queueCommand(new UiRootPanel.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
+		sendCommand(null, new UiRootPanel.SetGlobalKeyEventsEnabledCommand(unmodified, modifiedWithAltKey, modifiedWithCtrlKey, modifiedWithMetaKey, includeRepeats, keyDown, keyUp));
 	}
 
 	public String getSessionId() {

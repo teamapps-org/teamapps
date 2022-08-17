@@ -88,7 +88,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setTemplate(Template template) {
 		this.template = template;
-		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -98,7 +98,7 @@ public class TemplateField<RECORD> extends AbstractField<RECORD> {
 
 	public TemplateField<RECORD> setPropertyProvider(PropertyProvider<RECORD> propertyProvider) {
 		this.propertyProvider = propertyProvider;
-		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiTemplateField.UpdateCommand(createUiComponent()));
 		return this;
 	}
 

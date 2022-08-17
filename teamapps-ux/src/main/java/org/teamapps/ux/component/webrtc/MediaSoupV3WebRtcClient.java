@@ -139,9 +139,9 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 			if (contextMenuProvider != null) {
 				Component contextMenuContent = contextMenuProvider.get();
 				if (contextMenuContent != null) {
-					queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
+					queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(e.getRequestId(), contextMenuContent.createUiReference()));
 				} else {
-					queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), e.getRequestId()));
+					queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(e.getRequestId()));
 				}
 			} else {
 				closeContextMenu();
@@ -205,7 +205,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.UpdateCommand(createUiComponent()));
 	}
 
 	public boolean isActivityLineVisible() {
@@ -242,7 +242,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	public void setActive(boolean active) {
 		if (active != this.active) {
 			this.active = active;
-			queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.SetActiveCommand(getId(), active));
+			queueCommandIfRendered(() -> new UiMediaSoupV3WebRtcClient.SetActiveCommand(active));
 		}
 	}
 
@@ -317,7 +317,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 
 	public static CompletableFuture<List<UiMediaDeviceInfo>> enumerateDevices() {
 		CompletableFuture<List<UiMediaDeviceInfo>> future = new CompletableFuture<>();
-		SessionContext.current().queueCommand(new UiMediaSoupV3WebRtcClient.EnumerateDevicesCommand(), value -> {
+		SessionContext.current().sendCommand(null, new UiMediaSoupV3WebRtcClient.EnumerateDevicesCommand(), value -> {
 			future.complete(value);
 		});
 		return future;
@@ -332,7 +332,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
-		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
+		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(this.lastSeenContextMenuRequestId));
 	}
 
 	public void reconnect() {

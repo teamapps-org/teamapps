@@ -61,7 +61,7 @@ public class LinkButton extends AbstractComponent {
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiLinkButton.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiLinkButton.UpdateCommand(createUiComponent()));
 	}
 
 	public String getText() {

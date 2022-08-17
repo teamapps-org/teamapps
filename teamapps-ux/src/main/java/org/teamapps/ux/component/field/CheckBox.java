@@ -60,7 +60,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public CheckBox setCaption(String caption) {
 		this.caption = caption;
-		queueCommandIfRendered(() -> new UiCheckBox.SetCaptionCommand(getId(), caption));
+		queueCommandIfRendered(() -> new UiCheckBox.SetCaptionCommand(caption));
 		return this;
 	}
 
@@ -70,7 +70,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public CheckBox setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiCheckBox.SetBackgroundColorCommand(getId(), backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiCheckBox.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 		return this;
 	}
 
@@ -80,7 +80,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public CheckBox setCheckColor(Color checkColor) {
 		this.checkColor = checkColor;
-		queueCommandIfRendered(() -> new UiCheckBox.SetCheckColorCommand(getId(), checkColor != null ? checkColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiCheckBox.SetCheckColorCommand(checkColor != null ? checkColor.toHtmlColorString() : null));
 		return this;
 	}
 
@@ -90,7 +90,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
 	public CheckBox setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
-		queueCommandIfRendered(() -> new UiCheckBox.SetBorderColorCommand(getId(), borderColor != null ? borderColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiCheckBox.SetBorderColorCommand(borderColor != null ? borderColor.toHtmlColorString() : null));
 		return this;
 	}
 

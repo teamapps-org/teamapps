@@ -92,7 +92,7 @@ public class Notification extends AbstractComponent {
 	}
 
 	public void close() {
-		queueCommandIfRendered(() -> new UiNotification.CloseCommand(getId()));
+		queueCommandIfRendered(() -> new UiNotification.CloseCommand());
 	}
 
 	public Color getBackgroundColor() {
@@ -101,7 +101,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -111,7 +111,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setPadding(Spacing padding) {
 		this.padding = padding;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -121,7 +121,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDisplayTimeInMillis(int displayTimeInMillis) {
 		this.displayTimeInMillis = displayTimeInMillis;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -131,7 +131,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setDismissible(boolean dismissible) {
 		this.dismissible = dismissible;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -141,7 +141,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setShowProgressBar(boolean showProgressBar) {
 		this.showProgressBar = showProgressBar;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -151,7 +151,7 @@ public class Notification extends AbstractComponent {
 
 	public Notification setContent(Component content) {
 		this.content = content;
-		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiNotification.UpdateCommand(createUiComponent()));
 		return this;
 	}
 

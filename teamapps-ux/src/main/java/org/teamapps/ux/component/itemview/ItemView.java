@@ -114,7 +114,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 			@Override
 			public void handleAddItem(UiIdentifiableClientRecord itemClientRecord, Consumer<Void> uiCommandCallback) {
 				if (isRendered()) {
-					getSessionContext().queueCommand(new UiItemView.AddItemCommand(getId(), group.getClientId(), itemClientRecord), uiCommandCallback);
+					getSessionContext().sendCommand(getId(), new UiItemView.AddItemCommand(group.getClientId(), itemClientRecord), uiCommandCallback);
 				} else {
 					uiCommandCallback.accept(null);
 				}
@@ -123,16 +123,16 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 			@Override
 			public void handleRemoveItem(int itemClientRecordId, Consumer<Void> uiCommandCallback) {
 				if (isRendered()) {
-					getSessionContext().queueCommand(new UiItemView.RemoveItemCommand(getId(), group.getClientId(), itemClientRecordId), uiCommandCallback);
+					getSessionContext().sendCommand(getId(), new UiItemView.RemoveItemCommand(group.getClientId(), itemClientRecordId), uiCommandCallback);
 				}
 			}
 
 			@Override
 			public void handleRefreshRequired() {
-				queueCommandIfRendered(() -> new UiItemView.RefreshItemGroupCommand(getId(), group.createUiItemViewItemGroup()));
+				queueCommandIfRendered(() -> new UiItemView.RefreshItemGroupCommand(group.createUiItemViewItemGroup()));
 			}
 		});
-		queueCommandIfRendered(() -> new UiItemView.AddItemGroupCommand(getId(), group.createUiItemViewItemGroup()));
+		queueCommandIfRendered(() -> new UiItemView.AddItemGroupCommand(group.createUiItemViewItemGroup()));
 	}
 
 	public String getFilter() {
@@ -141,7 +141,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void setFilter(String filter) {
 		this.filter = filter;
-		queueCommandIfRendered(() -> new UiItemView.SetFilterCommand(getId(), filter));
+		queueCommandIfRendered(() -> new UiItemView.SetFilterCommand(filter));
 	}
 
 	public void removeAllGroups() {
@@ -150,7 +150,7 @@ public class ItemView<HEADERRECORD, RECORD> extends AbstractComponent {
 
 	public void removeItemGroup(ItemGroup itemGroup) {
 		itemGroups.remove(itemGroup);
-		queueCommandIfRendered(() -> new UiItemView.RemoveItemGroupCommand(getId(), itemGroup.getClientId()));
+		queueCommandIfRendered(() -> new UiItemView.RemoveItemGroupCommand(itemGroup.getClientId()));
 	}
 
 	public int getHorizontalPadding() {

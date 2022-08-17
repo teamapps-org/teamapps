@@ -127,7 +127,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setTemplate(Template template) {
 		this.template = template;
-		queueCommandIfRendered(() -> new UiButton.SetTemplateCommand(getId(), template.createUiTemplate(), createUiRecord()));
+		queueCommandIfRendered(() -> new UiButton.SetTemplateCommand(template.createUiTemplate(), createUiRecord()));
 		return this;
 	}
 
@@ -137,7 +137,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setTemplateRecord(RECORD templateRecord) {
 		this.templateRecord = templateRecord;
-		queueCommandIfRendered(() -> new UiButton.SetTemplateRecordCommand(getId(), templateRecord));
+		queueCommandIfRendered(() -> new UiButton.SetTemplateRecordCommand(templateRecord));
 		return this;
 	}
 
@@ -164,7 +164,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setMinDropDownWidth(Integer minDropDownWidth) {
 		this.minDropDownWidth = minDropDownWidth;
-		queueCommandIfRendered(() -> new UiButton.SetDropDownSizeCommand(getId(), minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
+		queueCommandIfRendered(() -> new UiButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
 		return this;
 	}
 
@@ -174,14 +174,14 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setMinDropDownHeight(Integer minDropDownHeight) {
 		this.minDropDownHeight = minDropDownHeight;
-		queueCommandIfRendered(() -> new UiButton.SetDropDownSizeCommand(getId(), minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
+		queueCommandIfRendered(() -> new UiButton.SetDropDownSizeCommand(minDropDownWidth != null ? minDropDownWidth : 0, minDropDownHeight != null ? minDropDownHeight : 0));
 		return this;
 	}
 
 	public Button<RECORD> setMinDropDownSize(Integer minDropDownWidth, Integer minDropDownHeight) {
 		this.minDropDownWidth = minDropDownWidth;
 		this.minDropDownHeight = minDropDownHeight;
-		queueCommandIfRendered(() -> new UiButton.SetDropDownSizeCommand(getId(), minDropDownWidth, minDropDownHeight));
+		queueCommandIfRendered(() -> new UiButton.SetDropDownSizeCommand(minDropDownWidth, minDropDownHeight));
 		return this;
 	}
 
@@ -191,7 +191,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setOpenDropDownIfNotSet(boolean openDropDownIfNotSet) {
 		this.openDropDownIfNotSet = openDropDownIfNotSet;
-		queueCommandIfRendered(() -> new UiButton.SetOpenDropDownIfNotSetCommand(getId(), openDropDownIfNotSet));
+		queueCommandIfRendered(() -> new UiButton.SetOpenDropDownIfNotSetCommand(openDropDownIfNotSet));
 		return this;
 	}
 
@@ -201,7 +201,7 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public Button<RECORD> setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponent = dropDownComponent;
-		queueCommandIfRendered(() -> new UiButton.SetDropDownComponentCommand(getId(), Component.createUiClientObjectReference(dropDownComponent)));
+		queueCommandIfRendered(() -> new UiButton.SetDropDownComponentCommand(Component.createUiClientObjectReference(dropDownComponent)));
 		return this;
 	}
 
@@ -211,6 +211,6 @@ public class Button<RECORD> extends AbstractField<Void> {
 
 	public void setOnClickJavaScript(String onClickJavaScript) {
 		this.onClickJavaScript = onClickJavaScript;
-		queueCommandIfRendered(() -> new UiButton.SetOnClickJavaScriptCommand(getId(), onClickJavaScript));
+		queueCommandIfRendered(() -> new UiButton.SetOnClickJavaScriptCommand(onClickJavaScript));
 	}
 }

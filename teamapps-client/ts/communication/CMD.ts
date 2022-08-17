@@ -20,7 +20,8 @@
 import {UiCommand} from "../generated/UiCommand";
 
 export interface CMD {
-	id: number
+	id: number, // sequence number
+	cid: string|null, // client object id
 	c: UiCommand, // uiCommand
 	r: boolean    // awaitsResult
 }

@@ -60,6 +60,6 @@ public class DummyComponent extends AbstractComponent {
 
 	public void setText(String text) {
 		this.text = text;
-		queueCommandIfRendered(() -> new UiDummyComponent.SetTextCommand(getId(), text));
+		queueCommandIfRendered(() -> new UiDummyComponent.SetTextCommand(text));
 	}
 }

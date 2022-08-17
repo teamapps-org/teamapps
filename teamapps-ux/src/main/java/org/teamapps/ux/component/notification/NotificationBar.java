@@ -82,14 +82,14 @@ public class NotificationBar extends AbstractComponent {
 
 	public void addItem(NotificationBarItem item) {
 		itemsByUiId.put(item.getUiId(), item);
-		item.setListener(() -> queueCommandIfRendered(() -> new UiNotificationBar.UpdateItemCommand(getId(), item.toUiNotificationBarItem())));
-		queueCommandIfRendered(() -> new UiNotificationBar.AddItemCommand(getId(), item.toUiNotificationBarItem()));
+		item.setListener(() -> queueCommandIfRendered(() -> new UiNotificationBar.UpdateItemCommand(item.toUiNotificationBarItem())));
+		queueCommandIfRendered(() -> new UiNotificationBar.AddItemCommand(item.toUiNotificationBarItem()));
 	}
 
 	public void removeItem(NotificationBarItem item) {
 		itemsByUiId.remove(item.getUiId());
 		item.setListener(null);
-		queueCommandIfRendered(() -> new UiNotificationBar.RemoveItemCommand(getId(), item.getUiId(), null));
+		queueCommandIfRendered(() -> new UiNotificationBar.RemoveItemCommand(item.getUiId(), null));
 	}
 
 }

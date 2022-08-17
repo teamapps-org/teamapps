@@ -151,46 +151,6 @@ export enum <e.Identifier> {
 }
 >>
 
-commandExecutor(nonStaticCommands, staticCommands, name) ::= <<
-<typeScriptFilePrelude()>
-
-<if (staticCommands)>
-import {UiClientObject} from "../UiClientObject";
-import {UiClientObjectReference} from "./UiClientObjectConfig";
-import {TeamAppsUiComponentRegistry} from "../TeamAppsUiComponentRegistry";
-import {TeamAppsUiContext} from "../TeamAppsUiContext";
-<endif>
-
-export class <name> {
-	private commandExecutorsByCommandName: {[commandName: string]: (targetObject: any, command: any) => void} = {
-		<nonStaticCommands:nonStaticCommandExecutorEntry(); separator=",\n">
-	};
-
-	private staticCommandExecutorsByCommandName: {[commandName: string]: (command: any, context: TeamAppsUiContext) => void} = {
-		<staticCommands:staticCommandExecutorEntry(); separator=",\n">
-	};
-
-	public async executeCommand(targetObject: any, command: any) {
-		return await this.commandExecutorsByCommandName[command._type](targetObject, command);
-	}
-
-	public async executeStaticCommand(command: any, context: TeamAppsUiContext) {
-		return await this.staticCommandExecutorsByCommandName[command._type](command, context);
-	}
-}
->>
-nonStaticCommandExecutorEntry(command) ::= <<
-    '<command._type>': async (targetObject: any, command: any) => {
-		return await targetObject.<command.Identifier>(<command.formalParameterWithDefault:commandExecutorMethodInvocationParameter(); separator=", ">);
-	}
->>
-staticCommandExecutorEntry(command) ::= <<
-    '<command._type>': async (command: any, context: TeamAppsUiContext) => {
-		return await (TeamAppsUiComponentRegistry.getComponentClassForName("<command.declaringClass.Identifier>") as any).<command.Identifier>(<command.formalParameterWithDefault:commandExecutorMethodInvocationParameter(); separator=", "><if (command.formalParameterWithDefault)>, <endif>context);
-	}
->>
-commandExecutorMethodInvocationParameter(p) ::= "command.<p.Identifier>"
-
 componentEventDescriptors(classesAndInterfacesWithEvents) ::= <<
 <typeScriptFilePrelude()>
 

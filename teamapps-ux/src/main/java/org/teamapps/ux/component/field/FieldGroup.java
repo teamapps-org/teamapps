@@ -53,7 +53,7 @@ public class FieldGroup extends AbstractComponent {
 			index = this.fields.size();
 		}
 		this.fields.add(index, field);
-		queueCommandIfRendered(() -> new UiFieldGroup.SetFieldsCommand(getId(), createUiFieldReferences()));
+		queueCommandIfRendered(() -> new UiFieldGroup.SetFieldsCommand(createUiFieldReferences()));
 	}
 
 	public void addField(AbstractField field, FlexSizingPolicy sizingPolicy) {
@@ -84,7 +84,7 @@ public class FieldGroup extends AbstractComponent {
 
 	public void removeField(AbstractField field) {
 		this.fields.remove(field);
-		queueCommandIfRendered(() -> new UiFieldGroup.SetFieldsCommand(getId(), createUiFieldReferences()));
+		queueCommandIfRendered(() -> new UiFieldGroup.SetFieldsCommand(createUiFieldReferences()));
 	}
 
 }

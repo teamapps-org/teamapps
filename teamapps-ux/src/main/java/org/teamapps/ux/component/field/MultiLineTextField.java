@@ -44,7 +44,7 @@ public class MultiLineTextField extends TextField {
 	public void append(String s, boolean scrollToBottom) {
 		MultiWriteLockableValue.Lock lock = setAndLockValue(s);
 		if (isRendered()) {
-			getSessionContext().queueCommand(new UiMultiLineTextField.AppendCommand(getId(), s, scrollToBottom), aVoid -> lock.release());
+			getSessionContext().sendCommand(getId(), new UiMultiLineTextField.AppendCommand(s, scrollToBottom), aVoid -> lock.release());
 		} else {
 			lock.release();
 		}

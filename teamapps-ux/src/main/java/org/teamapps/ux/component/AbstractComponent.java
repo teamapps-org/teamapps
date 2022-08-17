@@ -99,7 +99,7 @@ public abstract class AbstractComponent implements Component {
 		boolean changed = visible != this.visible;
 		this.visible = visible;
 		if (changed) {
-			queueCommandIfRendered(() -> new UiComponent.SetVisibleCommand(getId(), visible));
+			queueCommandIfRendered(() -> new UiComponent.SetVisibleCommand(visible));
 		}
 	}
 
@@ -117,16 +117,16 @@ public abstract class AbstractComponent implements Component {
 
 		this.renderingState = RenderingState.RENDERING;
 		UiComponent uiComponent = createUiComponent();
-		sessionContext.queueCommand(new UiRootPanel.CreateComponentCommand(uiComponent));
+		sessionContext.sendCommand(null, new UiRootPanel.CreateComponentCommand(uiComponent));
 		this.renderingState = RenderingState.RENDERED; // NOTE: after queuing creation! otherwise commands might be queued for this component before it creation is queued!
 		onRendered.fire(null);
 	}
 
 	@Override
 	public final void unrender() {
-		sessionContext.queueCommand(new UiRootPanel.DestroyComponentCommand(getId()),
+		sessionContext.sendCommand(null,
 				// unregister only after the ui destroyed the object!
-				unused -> sessionContext.unregisterClientObject(this));
+				new UiRootPanel.DestroyComponentCommand(), unused -> sessionContext.unregisterClientObject(this));
 		renderingState = RenderingState.NOT_RENDERED;
 	}
 
@@ -143,13 +143,13 @@ public abstract class AbstractComponent implements Component {
 
 	public void reRenderIfRendered() {
 		if (renderingState == RenderingState.RENDERED) {
-			sessionContext.queueCommand(new UiRootPanel.RefreshComponentCommand(createUiComponent()));
+			sessionContext.sendCommand(null, new UiRootPanel.RefreshComponentCommand(createUiComponent()));
 		}
 	}
 
 	protected void queueCommandIfRendered(Supplier<UiCommand<?>> commandSupplier) {
 		if (renderingState == RenderingState.RENDERED) {
-			sessionContext.queueCommand(commandSupplier.get());
+			sessionContext.sendCommand(getId(), commandSupplier.get());
 		} else if (renderingState == RenderingState.RENDERING) {
 			/*
 			This accounts for a very rare case. A component that is rendering itself may, while one of its children is rendered, be changed due to a thrown event. This change must be transported to the client
@@ -162,7 +162,7 @@ public abstract class AbstractComponent implements Component {
 			the panel was rendered (which is only after completing its createUiComponent() method).
 			 */
 			sessionContext.runWithContext(() -> {
-				sessionContext.queueCommand(commandSupplier.get());
+				sessionContext.sendCommand(getId(), commandSupplier.get());
 			}, true);
 		}
 	}
@@ -176,7 +176,7 @@ public abstract class AbstractComponent implements Component {
 		styles.put(propertyName, value);
 
 		final String selector2 = selector;
-		queueCommandIfRendered(() -> new UiComponent.SetStyleCommand(getId(), selector2, styles));
+		queueCommandIfRendered(() -> new UiComponent.SetStyleCommand(selector2, styles));
 	}
 
 	@Override
@@ -188,7 +188,7 @@ public abstract class AbstractComponent implements Component {
 		classNames.put(className, enabled);
 
 		final String selector2 = selector;
-		queueCommandIfRendered(() -> new UiComponent.SetClassNamesCommand(getId(), selector2, classNames));
+		queueCommandIfRendered(() -> new UiComponent.SetClassNamesCommand(selector2, classNames));
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public abstract class AbstractComponent implements Component {
 		}
 
 		final String selector2 = selector;
-		queueCommandIfRendered(() -> new UiComponent.SetAttributesCommand(getId(), selector2, attributes));
+		queueCommandIfRendered(() -> new UiComponent.SetAttributesCommand(selector2, attributes));
 	}
 
 	//	@Override

@@ -12,10 +12,12 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.StreamSupport;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -113,9 +115,10 @@ public interface A extends UiObject {
 
 	}
 
+	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
+	@JsonPropertyOrder({"x"})
 	public static class XCommand implements UiCommand<Void> {
 
-		protected String componentId;
 		protected String x;
 
 		/**
@@ -126,22 +129,15 @@ public interface A extends UiObject {
 			// default constructor for Jackson
 		}
 
-		public XCommand(String componentId, String x) {
-			this.componentId = componentId;
+		public XCommand(String x) {
 			this.x = x;
 		}
 
 		@SuppressWarnings("unchecked")
 		public String toString() {
 			return new StringBuilder(getClass().getSimpleName()).append(": ")
-					.append("componentId=" + componentId).append(", ")
 					.append("x=" + x)
 					.toString();
-		}
-
-		@com.fasterxml.jackson.annotation.JsonGetter("componentId")
-		public String getComponentId() {
-			return componentId;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonGetter("x")
@@ -151,9 +147,10 @@ public interface A extends UiObject {
 
 	}
 
+	@JsonFormat(shape = JsonFormat.Shape.ARRAY)
+	@JsonPropertyOrder({"x2"})
 	public static class X2Command implements UiCommand<Boolean> {
 
-		protected String componentId;
 		protected String x2;
 
 		/**
@@ -164,22 +161,15 @@ public interface A extends UiObject {
 			// default constructor for Jackson
 		}
 
-		public X2Command(String componentId, String x2) {
-			this.componentId = componentId;
+		public X2Command(String x2) {
 			this.x2 = x2;
 		}
 
 		@SuppressWarnings("unchecked")
 		public String toString() {
 			return new StringBuilder(getClass().getSimpleName()).append(": ")
-					.append("componentId=" + componentId).append(", ")
 					.append("x2=" + x2)
 					.toString();
-		}
-
-		@com.fasterxml.jackson.annotation.JsonGetter("componentId")
-		public String getComponentId() {
-			return componentId;
 		}
 
 		@com.fasterxml.jackson.annotation.JsonGetter("x2")

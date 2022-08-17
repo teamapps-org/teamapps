@@ -71,7 +71,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (isRendered()) {
 			uiRecordsByRecord.clear();
 			List<UiTreeRecord> uiRecords = createOrUpdateUiRecords(model.getRecords());
-			getSessionContext().queueCommand(new UiTree.ReplaceDataCommand(getId(), uiRecords));
+			getSessionContext().sendCommand(getId(), new UiTree.ReplaceDataCommand(uiRecords));
 		}
 	};
 
@@ -81,7 +81,7 @@ public class Tree<RECORD> extends AbstractComponent {
 					.map(key -> uiRecordsByRecord.remove(key).getId())
 					.collect(Collectors.toList());
 			List<UiTreeRecord> addedOrUpdatedUiTreeRecords = createOrUpdateUiRecords(changedEventData.getAddedOrUpdatedNodes());
-			getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), removedUiIds, addedOrUpdatedUiTreeRecords));
+			getSessionContext().sendCommand(getId(), new UiTree.BulkUpdateCommand(removedUiIds, addedOrUpdatedUiTreeRecords));
 		}
 	};
 
@@ -165,7 +165,7 @@ public class Tree<RECORD> extends AbstractComponent {
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String uuid = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, uuid);
-			queueCommandIfRendered(() -> new UiTree.RegisterTemplateCommand(getId(), uuid, template.createUiTemplate()));
+			queueCommandIfRendered(() -> new UiTree.RegisterTemplateCommand(uuid, template.createUiTemplate()));
 		}
 		return template;
 	}
@@ -212,7 +212,7 @@ public class Tree<RECORD> extends AbstractComponent {
 				List<RECORD> children = model.getChildRecords(parentNode);
 				List<UiTreeRecord> uiChildren = createOrUpdateUiRecords(children);
 				if (isRendered()) {
-					getSessionContext().queueCommand(new UiTree.BulkUpdateCommand(getId(), Collections.emptyList(), uiChildren));
+					getSessionContext().sendCommand(getId(), new UiTree.BulkUpdateCommand(Collections.emptyList(), uiChildren));
 				}
 			}
 		}
@@ -225,7 +225,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	public void setSelectedNode(RECORD selectedNode) {
 		int uiRecordId = uiRecordsByRecord.get(selectedNode) != null ? uiRecordsByRecord.get(selectedNode).getId() : -1;
 		this.selectedNode = selectedNode;
-		queueCommandIfRendered(() -> new UiTree.SetSelectedNodeCommand(getId(), uiRecordId));
+		queueCommandIfRendered(() -> new UiTree.SetSelectedNodeCommand(uiRecordId));
 	}
 
 	public TreeModel<RECORD> getModel() {

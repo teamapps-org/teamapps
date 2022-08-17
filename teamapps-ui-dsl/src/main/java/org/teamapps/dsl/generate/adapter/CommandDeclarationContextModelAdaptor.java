@@ -23,29 +23,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
-import org.teamapps.dsl.generate.ParserFactory;
-import org.teamapps.dsl.generate.TeamAppsDtoModel;
 import org.teamapps.dsl.TeamAppsDtoParser;
+import org.teamapps.dsl.generate.TeamAppsDtoModel;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CommandDeclarationContextModelAdaptor extends ReferencableEntityModelAdaptor<TeamAppsDtoParser.CommandDeclarationContext> {
 
-    private static final TeamAppsDtoParser.FormalParameterWithDefaultContext COMPONENT_ID_PARAMETER;
     private final TeamAppsDtoModel astUtil;
-
-    static {
-        try {
-            COMPONENT_ID_PARAMETER = ParserFactory.createParser(new StringReader("String componentId")).formalParameterWithDefault();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
 
     public CommandDeclarationContextModelAdaptor(TeamAppsDtoModel astUtil) {
         this.astUtil = astUtil;
@@ -57,15 +44,15 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
         if ("declaringClass".equals(propertyName)) {
             return TeamAppsDtoModel.getDeclaringClassOrInterface(commandContext);
         } else if ("allProperties".equals(propertyName)) {
-            return getAllParameters(commandContext);
+            return new ArrayList<>(commandContext.formalParameterWithDefault());
         } else if ("allRequiredProperties".equals(propertyName)) {
-            return getAllParameters(commandContext);
+            return new ArrayList<>(commandContext.formalParameterWithDefault());
         } else if ("requiredPropertiesNotImplementedBySuperClasses".equals(propertyName)) {
-            return getAllParameters(commandContext);
+            return new ArrayList<>(commandContext.formalParameterWithDefault());
         } else if ("superClassDecl".equals(propertyName)) {
             return null;
         } else if ("simplePropertiesByRelevance".equals(propertyName)) {
-            return getAllParameters(commandContext).stream()
+            return new ArrayList<>(commandContext.formalParameterWithDefault()).stream()
                     .sorted((p1, p2) -> {
                         Function<TeamAppsDtoParser.FormalParameterWithDefaultContext, Integer> getPriority = (p) -> {
                             if (p.Identifier().getText().equals("id")) {
@@ -103,14 +90,6 @@ public class CommandDeclarationContextModelAdaptor extends ReferencableEntityMod
     @Override
     protected String getTypeScriptIdentifier(TeamAppsDtoParser.CommandDeclarationContext node) {
 	    return getDeclaringTypeScriptFileBaseName(node) + "_" + StringUtils.capitalize(node.Identifier().getText()) + "Command";
-    }
-
-    private List<TeamAppsDtoParser.FormalParameterWithDefaultContext> getAllParameters(TeamAppsDtoParser.CommandDeclarationContext commandContext) {
-        ArrayList<TeamAppsDtoParser.FormalParameterWithDefaultContext> allProperties = new ArrayList<>(commandContext.formalParameterWithDefault());
-        if (commandContext.staticModifier() == null) {
-            allProperties.add(0, COMPONENT_ID_PARAMETER);
-        }
-        return allProperties;
     }
 
     @Override

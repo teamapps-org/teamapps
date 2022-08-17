@@ -27,7 +27,6 @@ import {UiEvent} from "./generated/UiEvent";
 import {UiRootPanel} from "./UiRootPanel";
 import {ComponentEventSubscriptionManager} from "./util/ComponentEventSubscriptionManager";
 import {UiCommand} from './generated/UiCommand';
-import {CommandExecutor} from "./generated/CommandExecutor";
 import {TeamAppsConnection, TeamAppsConnectionListener} from "./communication/TeamAppsConnection";
 import * as jstz from "jstz";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
@@ -70,8 +69,6 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 	private components: { [identifier: string]: UiClientObject | RefreshableComponentProxyHandle<UiComponent> } = {};
 	private _executingCommand: boolean = false;
 	private connection: TeamAppsConnection;
-
-	private commandExecutor = new CommandExecutor();
 
 	private expiredMessageWindow: UiWindow;
 	private errorMessageWindow: UiWindow;
@@ -135,7 +132,7 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 					}
 				}
 			},
-			executeCommand: (uiCommand: UiCommand) => this.executeCommand(uiCommand)
+			executeCommand: (clientObjectId: string, uiCommand: UiCommand) => this.executeCommand(clientObjectId, uiCommand)
 		};
 
 		this.connection = new TeamAppsConnectionImpl(webSocketUrl, this.sessionId, clientInfo, connectionListener);
@@ -276,24 +273,27 @@ export class DefaultTeamAppsUiContext implements TeamAppsUiContextInternalApi {
 		}
 	}
 
-	private async executeCommand(command: UiCommand): Promise<any> {
+	private async executeCommand(clientObjectId: string, command: UiCommand): Promise<any> {
 		try {
-			// console.warn(command);
 			this.replaceComponentReferencesWithInstances(command);
 			this._executingCommand = true;
-			const commandMethodName = command._type.substring(command._type.lastIndexOf('.') + 1);
-			if (command.componentId) {
-				console.debug(`Trying to call ${command.componentId}.${commandMethodName}()`);
-				let component: any = this.getClientObjectById(command.componentId);
+			const qualifiedMethodName = command[0];
+			const className = qualifiedMethodName.substring(0, qualifiedMethodName.indexOf('.'));
+			const methodName = qualifiedMethodName.substring(qualifiedMethodName.lastIndexOf('.') + 1);
+			const parameters = command[1];
+			if (clientObjectId != null) {
+				console.debug(`Trying to call ${clientObjectId}.${methodName}()`);
+				let component: any = this.getClientObjectById(clientObjectId);
 				if (!component) {
-					throw new Error("The component " + command.componentId + " does not exist, so cannot call " + commandMethodName + "() on it.");
-				} else if (typeof component[commandMethodName] !== "function") {
-					throw new Error(`The ${(<any>component.constructor).name || 'component'} ${command.componentId} does not have a method ${commandMethodName}()!`);
+					throw new Error("The component " + clientObjectId + " does not exist, so cannot call " + methodName + "() on it.");
+				} else if (typeof component[methodName] !== "function") {
+					throw new Error(`The ${(<any>component.constructor).name || 'component'} ${clientObjectId} does not have a method ${methodName}()!`);
 				}
-				return await this.commandExecutor.executeCommand(component, command);
+				return await component[methodName].apply(component, parameters);
 			} else {
-				console.debug(`Trying to call static method ${command._type}()`);
-				const result = await this.commandExecutor.executeStaticCommand(command, this);
+				console.debug(`Trying to call static method ${qualifiedMethodName}()`);
+				const clazz = TeamAppsUiComponentRegistry.getComponentClassForName(className) as any;
+				const result = await clazz[methodName].apply(clazz, [...parameters, this]);
 				await this.onStaticMethodCommandInvocation.fire(command);
 				return result;
 			}

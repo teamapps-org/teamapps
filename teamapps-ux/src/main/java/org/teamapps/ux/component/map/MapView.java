@@ -65,7 +65,7 @@ public class MapView<RECORD> extends AbstractComponent {
 	private final AbstractMapShape.MapShapeListener shapeListener = new AbstractMapShape.MapShapeListener() {
 		@Override
 		public void handleShapeChanged(AbstractMapShape shape) {
-			queueCommandIfRendered(() -> new UiMap.UpdateShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
+			queueCommandIfRendered(() -> new UiMap.UpdateShapeCommand(shape.getClientIdInternal(), shape.createUiMapShape()));
 		}
 
 		@Override
@@ -75,7 +75,7 @@ public class MapView<RECORD> extends AbstractComponent {
 
 		@Override
 		public void handleShapeRemoved(AbstractMapShape shape) {
-			queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
+			queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(shape.getClientIdInternal()));
 		}
 	};
 
@@ -184,17 +184,17 @@ public class MapView<RECORD> extends AbstractComponent {
 	public void addShape(AbstractMapShape shape) {
 		shape.setListenerInternal(shapeListener);
 		shapesByClientId.put(shape.getClientIdInternal(), shape);
-		queueCommandIfRendered(() -> new UiMap.AddShapeCommand(getId(), shape.getClientIdInternal(), shape.createUiMapShape()));
+		queueCommandIfRendered(() -> new UiMap.AddShapeCommand(shape.getClientIdInternal(), shape.createUiMapShape()));
 	}
 
 	public void removeShape(AbstractMapShape shape) {
 		shapesByClientId.remove(shape.getClientIdInternal());
-		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(getId(), shape.getClientIdInternal()));
+		queueCommandIfRendered(() -> new UiMap.RemoveShapeCommand(shape.getClientIdInternal()));
 	}
 
 	public void clearShapes() {
 		shapesByClientId.clear();
-		queueCommandIfRendered(() -> new UiMap.ClearShapesCommand(getId()));
+		queueCommandIfRendered(() -> new UiMap.ClearShapesCommand());
 	}
 
 	public void setMarkerCluster(List<Marker<RECORD>> markers) {
@@ -205,8 +205,7 @@ public class MapView<RECORD> extends AbstractComponent {
 				UiMapMarkerCluster markerCluster = new UiMapMarkerCluster(clusterMarkers.stream()
 						.map(marker -> createUiMarkerRecord(marker, markersByClientId.getKey(marker)))
 						.collect(Collectors.toList()));
-				return new UiMap.SetMapMarkerClusterCommand(getId(),
-						markerCluster);
+				return new UiMap.SetMapMarkerClusterCommand(markerCluster);
 			});
 		}
 	}
@@ -214,7 +213,7 @@ public class MapView<RECORD> extends AbstractComponent {
 	public void clearMarkerCluster() {
 		clusterMarkers.forEach(this.markersByClientId::removeValue);
 		clusterMarkers.clear();
-		queueCommandIfRendered(() -> new UiMap.ClearMarkerClusterCommand(getId()));
+		queueCommandIfRendered(() -> new UiMap.ClearMarkerClusterCommand());
 	}
 
 	public void unCacheMarkers(List<Marker<RECORD>> markers) {
@@ -224,15 +223,15 @@ public class MapView<RECORD> extends AbstractComponent {
 	public void setHeatMap(List<Location> locations) {
 		List<UiHeatMapDataElement> heatMapElements = locations.stream().map(loc -> new UiHeatMapDataElement((float) loc.getLatitude(), (float) loc.getLongitude(), 1)).collect(Collectors.toList());
 		UiHeatMapData heatMap = new UiHeatMapData(heatMapElements);
-		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(getId(), heatMap));
+		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(heatMap));
 	}
 
 	public void setHeatMap(UiHeatMapData heatMap) {
-		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(getId(), heatMap));
+		queueCommandIfRendered(() -> new UiMap.SetHeatMapCommand(heatMap));
 	}
 
 	public void clearHeatMap() {
-		queueCommandIfRendered(() -> new UiMap.ClearHeatMapCommand(getId()));
+		queueCommandIfRendered(() -> new UiMap.ClearHeatMapCommand());
 	}
 
 	private Template getTemplateForRecord(Marker<RECORD> record, TemplateDecider<Marker<RECORD>> templateDecider) {
@@ -240,7 +239,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		if (template != null && !templateIdsByTemplate.containsKey(template)) {
 			String uuid = "" + templateIdCounter++;
 			this.templateIdsByTemplate.put(template, uuid);
-			queueCommandIfRendered(() -> new UiMap.RegisterTemplateCommand(getId(), uuid, template.createUiTemplate()));
+			queueCommandIfRendered(() -> new UiMap.RegisterTemplateCommand(uuid, template.createUiTemplate()));
 		}
 		return template;
 	}
@@ -251,17 +250,17 @@ public class MapView<RECORD> extends AbstractComponent {
 
 	public void setMapType(MapType mapType) {
 		this.mapType = mapType;
-		queueCommandIfRendered(() -> new UiMap.SetMapTypeCommand(getId(), this.mapType.toUiMapType()));
+		queueCommandIfRendered(() -> new UiMap.SetMapTypeCommand(this.mapType.toUiMapType()));
 	}
 
 	public void setZoomLevel(int zoomLevel) {
 		this.zoomLevel = zoomLevel;
-		queueCommandIfRendered(() -> new UiMap.SetZoomLevelCommand(getId(), zoomLevel));
+		queueCommandIfRendered(() -> new UiMap.SetZoomLevelCommand(zoomLevel));
 	}
 
 	public void setLocation(Location location) {
 		this.location = location;
-		queueCommandIfRendered(() -> new UiMap.SetLocationCommand(getId(), location.createUiLocation()));
+		queueCommandIfRendered(() -> new UiMap.SetLocationCommand(location.createUiLocation()));
 	}
 
 	public void setLocation(double latitude, double longitude) {
@@ -288,7 +287,7 @@ public class MapView<RECORD> extends AbstractComponent {
 		int clientId = clientIdCounter++;
 		this.markersByClientId.put(clientId, marker);
 		if (isRendered()) {
-			getSessionContext().queueCommand(new UiMap.AddMarkerCommand(getId(), createUiMarkerRecord(marker, clientId)));
+			getSessionContext().sendCommand(getId(), new UiMap.AddMarkerCommand(createUiMarkerRecord(marker, clientId)));
 		}
 	}
 
@@ -296,19 +295,19 @@ public class MapView<RECORD> extends AbstractComponent {
 		Integer clientId = markersByClientId.removeValue(marker);
 		if (clientId != null) {
 			if (isRendered()) {
-				getSessionContext().queueCommand(new UiMap.RemoveMarkerCommand(getId(), clientId));
+				getSessionContext().sendCommand(getId(), new UiMap.RemoveMarkerCommand(clientId));
 			}
 		}
 	}
 
 	public void clearMarkers() {
 		this.markersByClientId.values().removeIf(m -> !clusterMarkers.contains(m));
-		queueCommandIfRendered(() -> new UiMap.ClearMarkersCommand(getId()));
+		queueCommandIfRendered(() -> new UiMap.ClearMarkersCommand());
 	}
 
 	public void fitBounds(Location southWest, Location northEast) {
 		this.location = new Location((southWest.getLatitude() + northEast.getLatitude()) / 2, (southWest.getLongitude() + northEast.getLongitude()) / 2);
-		queueCommandIfRendered(() -> new UiMap.FitBoundsCommand(this.getId(), southWest.createUiLocation(), northEast.createUiLocation()));
+		queueCommandIfRendered(() -> new UiMap.FitBoundsCommand(southWest.createUiLocation(), northEast.createUiLocation()));
 	}
 
 	public Template getDefaultTemplate() {
@@ -340,11 +339,11 @@ public class MapView<RECORD> extends AbstractComponent {
 	}
 
 	public void startDrawingShape(MapShapeType shapeType, ShapeProperties shapeProperties) {
-		queueCommandIfRendered(() -> new UiMap.StartDrawingShapeCommand(getId(), shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
+		queueCommandIfRendered(() -> new UiMap.StartDrawingShapeCommand(shapeType.toUiMapShapeType(), shapeProperties.createUiShapeProperties()));
 	}
 
 	public void stopDrawingShape() {
-		queueCommandIfRendered(() -> new UiMap.StopDrawingShapeCommand(getId()));
+		queueCommandIfRendered(() -> new UiMap.StopDrawingShapeCommand());
 	}
 
 }

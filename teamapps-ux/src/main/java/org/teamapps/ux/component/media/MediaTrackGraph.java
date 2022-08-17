@@ -56,7 +56,7 @@ public class MediaTrackGraph extends AbstractComponent {
 	}
 
 	public void setCursorPosition(long time) {
-		queueCommandIfRendered(() -> new UiMediaTrackGraph.SetCursorPositionCommand(getId(), time));
+		queueCommandIfRendered(() -> new UiMediaTrackGraph.SetCursorPositionCommand(time));
 	}
 
 	public static class TimeSelection {

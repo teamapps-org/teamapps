@@ -110,7 +110,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	private void updateToolButtons() {
-		queueCommandIfRendered(() -> new UiPanel.SetToolButtonsCommand(getId(), this.toolButtons.stream()
+		queueCommandIfRendered(() -> new UiPanel.SetToolButtonsCommand(this.toolButtons.stream()
 				.map(toolButton -> toolButton.createUiReference())
 				.collect(Collectors.toList())));
 	}
@@ -126,7 +126,7 @@ public class Panel extends AbstractComponent implements Component {
 	}
 
 	private void updateWindowButtons() {
-		queueCommandIfRendered(() -> new UiPanel.SetWindowButtonsCommand(getId(), this.windowButtons.stream()
+		queueCommandIfRendered(() -> new UiPanel.SetWindowButtonsCommand(this.windowButtons.stream()
 				.map(b -> b.toUiWindowButtonType())
 				.collect(Collectors.toList())));
 	}
@@ -181,7 +181,7 @@ public class Panel extends AbstractComponent implements Component {
 		this.leftHeaderFieldIcon = icon;
 		this.leftHeaderFieldMinWidth = minWidth;
 		this.leftHeaderFieldMaxWidth = maxWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(getId(), createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 		return this;
 	}
 
@@ -197,7 +197,7 @@ public class Panel extends AbstractComponent implements Component {
 		this.rightHeaderFieldIcon = icon;
 		this.rightHeaderFieldMinWidth = minWidth;
 		this.rightHeaderFieldMaxWidth = maxWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(getId(), createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 		return this;
 	}
@@ -211,7 +211,7 @@ public class Panel extends AbstractComponent implements Component {
 		if (content != null) {
 			content.setParent(this);
 		}
-		queueCommandIfRendered(() -> new UiPanel.SetContentCommand(getId(), content != null ? content.createUiReference() : null));
+		queueCommandIfRendered(() -> new UiPanel.SetContentCommand(content != null ? content.createUiReference() : null));
 	}
 
 	@Override
@@ -228,7 +228,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setTitle(String title) {
 		this.title = title;
-		queueCommandIfRendered(() -> new UiPanel.SetTitleCommand(getId(), title));
+		queueCommandIfRendered(() -> new UiPanel.SetTitleCommand(title));
 	}
 
 	public Icon getIcon() {
@@ -237,7 +237,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
-		queueCommandIfRendered(() -> new UiPanel.SetIconCommand(getId(), getSessionContext().resolveIcon(icon)));
+		queueCommandIfRendered(() -> new UiPanel.SetIconCommand(getSessionContext().resolveIcon(icon)));
 	}
 
 	public Component getContent() {
@@ -311,7 +311,7 @@ public class Panel extends AbstractComponent implements Component {
 		}
 		this.leftHeaderField = leftHeaderField;
 		leftHeaderField.setParent(this);
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(getId(), createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public Icon getLeftHeaderFieldIcon() {
@@ -320,7 +320,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setLeftHeaderFieldIcon(Icon leftHeaderFieldIcon) {
 		this.leftHeaderFieldIcon = leftHeaderFieldIcon;
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(getId(), createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public int getLeftHeaderFieldMinWidth() {
@@ -329,7 +329,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setLeftHeaderFieldMinWidth(int leftHeaderFieldMinWidth) {
 		this.leftHeaderFieldMinWidth = leftHeaderFieldMinWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(getId(), createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public int getLeftHeaderFieldMaxWidth() {
@@ -338,7 +338,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setLeftHeaderFieldMaxWidth(int leftHeaderFieldMaxWidth) {
 		this.leftHeaderFieldMaxWidth = leftHeaderFieldMaxWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(getId(), createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
+		queueCommandIfRendered(() -> new UiPanel.SetLeftHeaderFieldCommand(createUiPanelHeaderField(leftHeaderField, leftHeaderFieldIcon, leftHeaderFieldMinWidth, leftHeaderFieldMaxWidth)));
 	}
 
 	public void setRightHeaderField(AbstractField<?> rightHeaderField) {
@@ -347,7 +347,7 @@ public class Panel extends AbstractComponent implements Component {
 		}
 		this.rightHeaderField = rightHeaderField;
 		rightHeaderField.setParent(this);
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(getId(), createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -357,7 +357,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setRightHeaderFieldIcon(Icon rightHeaderFieldIcon) {
 		this.rightHeaderFieldIcon = rightHeaderFieldIcon;
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(getId(), createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -367,7 +367,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setRightHeaderFieldMinWidth(int rightHeaderFieldMinWidth) {
 		this.rightHeaderFieldMinWidth = rightHeaderFieldMinWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(getId(), createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -377,7 +377,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setRightHeaderFieldMaxWidth(int rightHeaderFieldMaxWidth) {
 		this.rightHeaderFieldMaxWidth = rightHeaderFieldMaxWidth;
-		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(getId(), createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
+		queueCommandIfRendered(() -> new UiPanel.SetRightHeaderFieldCommand(createUiPanelHeaderField(rightHeaderField, rightHeaderFieldIcon, rightHeaderFieldMinWidth,
 				rightHeaderFieldMaxWidth)));
 	}
 
@@ -396,7 +396,7 @@ public class Panel extends AbstractComponent implements Component {
 
 	public void setStretchContent(boolean stretchContent) {
 		this.stretchContent = stretchContent;
-		queueCommandIfRendered(() -> new UiPanel.SetStretchContentCommand(getId(), stretchContent));
+		queueCommandIfRendered(() -> new UiPanel.SetStretchContentCommand(stretchContent));
 	}
 
 

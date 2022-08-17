@@ -182,19 +182,6 @@ public class TeamAppsTypeScriptDtoGeneratorTest {
 	}
 
 	@Test
-	public void commandExecutor() throws Exception {
-		TeamAppsDtoParser.ClassCollectionContext classCollectionContext = ParserFactory.createParser(new StringReader(
-				"package org.teamapps.dto; abstract class A { static command staticCommand(String x); command nonStaticCommand(String x); }"
-		)).classCollection();
-		TeamAppsDtoModel model = new TeamAppsDtoModel(classCollectionContext);
-
-		StringWriter stringWriter = new StringWriter();
-		new TeamAppsTypeScriptGenerator(model).generateCommandExecutor(model.getOwnCommandDeclarations(), stringWriter);
-
-		GeneratorTestUtil.compareCodeWithResource("org/teamapps/dsl/TeamAppsTypeScriptGeneratorTest_commandExecutor.tsd", stringWriter.toString());
-	}
-
-	@Test
 	public void queries() throws Exception {
 		String dslString = "package org.teamapps.dto; interface X { query queryEntries(int x) returns List<String>; }";
 		executeInterfaceTest(

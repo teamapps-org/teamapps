@@ -56,7 +56,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setWidth(Length width) {
 		this.width = width;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -66,7 +66,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setHeight(Length height) {
 		this.height = height;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -76,7 +76,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setBorder(Border border) {
 		this.border = border;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -86,7 +86,7 @@ public class ImageField extends AbstractField<String> {
 
 	public ImageField setImageSizing(ImageSizing imageSizing) {
 		this.imageSizing = imageSizing;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
 		return this;
 	}
 
@@ -96,6 +96,6 @@ public class ImageField extends AbstractField<String> {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiImageField.UpdateCommand(createUiComponent()));
 	}
 }

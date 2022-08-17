@@ -66,7 +66,7 @@ public class Popup extends AbstractComponent {
 
 	public void setContentComponent(Component contentComponent) {
 		this.contentComponent = contentComponent;
-		// queueCommandIfRendered(() -> new UiPopup.SetContentComponentCommand(getId(), contentComponent));
+		// queueCommandIfRendered(() -> new UiPopup.SetContentComponentCommand(contentComponent));
 	}
 
 	public int getX() {
@@ -75,7 +75,7 @@ public class Popup extends AbstractComponent {
 
 	public void setX(int x) {
 		this.x = x;
-		queueCommandIfRendered(() -> new UiPopup.SetPositionCommand(getId(), x, y));
+		queueCommandIfRendered(() -> new UiPopup.SetPositionCommand(x, y));
 	}
 
 	public int getY() {
@@ -84,13 +84,13 @@ public class Popup extends AbstractComponent {
 
 	public void setY(int y) {
 		this.y = y;
-		queueCommandIfRendered(() -> new UiPopup.SetPositionCommand(getId(), x, y));
+		queueCommandIfRendered(() -> new UiPopup.SetPositionCommand(x, y));
 	}
 
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
-		queueCommandIfRendered(() -> new UiPopup.SetPositionCommand(getId(), x, y));
+		queueCommandIfRendered(() -> new UiPopup.SetPositionCommand(x, y));
 	}
 
 	public int getWidth() {
@@ -99,7 +99,7 @@ public class Popup extends AbstractComponent {
 
 	public void setWidth(int width) {
 		this.width = width;
-		queueCommandIfRendered(() -> new UiPopup.SetDimensionsCommand(getId(), width, height));
+		queueCommandIfRendered(() -> new UiPopup.SetDimensionsCommand(width, height));
 	}
 
 	public int getHeight() {
@@ -108,7 +108,7 @@ public class Popup extends AbstractComponent {
 
 	public void setHeight(int height) {
 		this.height = height;
-		queueCommandIfRendered(() -> new UiPopup.SetDimensionsCommand(getId(), width, height));
+		queueCommandIfRendered(() -> new UiPopup.SetDimensionsCommand(width, height));
 	}
 
 	public Color getBackgroundColor() {
@@ -117,7 +117,7 @@ public class Popup extends AbstractComponent {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		queueCommandIfRendered(() -> new UiPopup.SetBackgroundColorCommand(getId(), backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiPopup.SetBackgroundColorCommand(backgroundColor != null ? backgroundColor.toHtmlColorString() : null));
 	}
 
 	public boolean isModal() {
@@ -126,7 +126,7 @@ public class Popup extends AbstractComponent {
 
 	public void setModal(boolean modal) {
 		this.modal = modal;
-		// queueCommandIfRendered(() -> new UiPopup.SetModalCommand(getId(), modal));
+		// queueCommandIfRendered(() -> new UiPopup.SetModalCommand(modal));
 	}
 
 	public Color getDimmingColor() {
@@ -135,7 +135,7 @@ public class Popup extends AbstractComponent {
 
 	public void setDimmingColor(Color dimmingColor) {
 		this.dimmingColor = dimmingColor;
-		queueCommandIfRendered(() -> new UiPopup.SetDimmingColorCommand(getId(), dimmingColor != null ? dimmingColor.toHtmlColorString() : null));
+		queueCommandIfRendered(() -> new UiPopup.SetDimmingColorCommand(dimmingColor != null ? dimmingColor.toHtmlColorString() : null));
 	}
 
 	public boolean isCloseOnEscape() {
@@ -144,7 +144,7 @@ public class Popup extends AbstractComponent {
 
 	public void setCloseOnEscape(boolean closeOnEscape) {
 		this.closeOnEscape = closeOnEscape;
-		// queueCommandIfRendered(() -> new UiPopup.SetCloseOnEscapeCommand(getId(), closeOnEscape));
+		// queueCommandIfRendered(() -> new UiPopup.SetCloseOnEscapeCommand(closeOnEscape));
 	}
 
 	public boolean isCloseOnClickOutside() {
@@ -153,10 +153,10 @@ public class Popup extends AbstractComponent {
 
 	public void setCloseOnClickOutside(boolean closeOnClickOutside) {
 		this.closeOnClickOutside = closeOnClickOutside;
-		// queueCommandIfRendered(() -> new UiPopup.SetCloseOnClickOutsideCommand(getId(), closeOnClickOutside));
+		// queueCommandIfRendered(() -> new UiPopup.SetCloseOnClickOutsideCommand(closeOnClickOutside));
 	}
 
 	public void close() {
-		queueCommandIfRendered(() -> new UiPopup.CloseCommand(getId()));
+		queueCommandIfRendered(() -> new UiPopup.CloseCommand());
 	}
 }

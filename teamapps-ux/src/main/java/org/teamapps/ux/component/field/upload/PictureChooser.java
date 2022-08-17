@@ -214,7 +214,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setMaxFileSize(long maxFileSize) {
 		this.maxFileSize = maxFileSize;
-		queueCommandIfRendered(() -> new UiPictureChooser.SetMaxFileSizeCommand(getId(), maxFileSize));
+		queueCommandIfRendered(() -> new UiPictureChooser.SetMaxFileSizeCommand(maxFileSize));
 	}
 
 	public String getUploadUrl() {
@@ -223,7 +223,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setUploadUrl(String uploadUrl) {
 		this.uploadUrl = uploadUrl;
-		queueCommandIfRendered(() -> new UiPictureChooser.SetUploadUrlCommand(getId(), uploadUrl));
+		queueCommandIfRendered(() -> new UiPictureChooser.SetUploadUrlCommand(uploadUrl));
 	}
 
 	public String getFileTooLargeMessage() {
@@ -232,7 +232,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setFileTooLargeMessage(String fileTooLargeMessage) {
 		this.fileTooLargeMessage = fileTooLargeMessage;
-		queueCommandIfRendered(() -> new UiPictureChooser.SetFileTooLargeMessageCommand(getId(), fileTooLargeMessage));
+		queueCommandIfRendered(() -> new UiPictureChooser.SetFileTooLargeMessageCommand(fileTooLargeMessage));
 	}
 
 	public String getUploadErrorMessage() {
@@ -241,7 +241,7 @@ public class PictureChooser extends AbstractField<Resource> {
 
 	public void setUploadErrorMessage(String uploadErrorMessage) {
 		this.uploadErrorMessage = uploadErrorMessage;
-		queueCommandIfRendered(() -> new UiPictureChooser.SetUploadErrorMessageCommand(getId(), uploadErrorMessage));
+		queueCommandIfRendered(() -> new UiPictureChooser.SetUploadErrorMessageCommand(uploadErrorMessage));
 	}
 
 	public Icon getBrowseButtonIcon() {

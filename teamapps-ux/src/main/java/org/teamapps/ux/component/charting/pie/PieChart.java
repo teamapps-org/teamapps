@@ -98,7 +98,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setLegendStyle(ChartLegendStyle legendStyle) {
 		this.legendStyle = legendStyle;
-		queueCommandIfRendered(() -> new UiPieChart.SetLegendStyleCommand(getId(), legendStyle.toUiChartLegendStyle()));
+		queueCommandIfRendered(() -> new UiPieChart.SetLegendStyleCommand(legendStyle.toUiChartLegendStyle()));
 	}
 
 	public DataPointWeighting getDataPointWeighting() {
@@ -107,7 +107,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setDataPointWeighting(DataPointWeighting dataPointWeighting) {
 		this.dataPointWeighting = dataPointWeighting;
-		queueCommandIfRendered(() -> new UiPieChart.SetDataPointWeightingCommand(getId(), dataPointWeighting.toUiDataPointWeighting()));
+		queueCommandIfRendered(() -> new UiPieChart.SetDataPointWeightingCommand(dataPointWeighting.toUiDataPointWeighting()));
 	}
 
 	public float getRotation3D() {
@@ -116,7 +116,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setRotation3D(float rotation3D) {
 		this.rotation3D = rotation3D;
-		queueCommandIfRendered(() -> new UiPieChart.SetRotation3DCommand(getId(), rotation3D));
+		queueCommandIfRendered(() -> new UiPieChart.SetRotation3DCommand(rotation3D));
 	}
 
 	public float getHeight3D() {
@@ -125,7 +125,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setHeight3D(float height3D) {
 		this.height3D = height3D;
-		queueCommandIfRendered(() -> new UiPieChart.SetHeight3DCommand(getId(), height3D));
+		queueCommandIfRendered(() -> new UiPieChart.SetHeight3DCommand(height3D));
 	}
 
 	public float getRotationClockwise() {
@@ -134,7 +134,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setRotationClockwise(float rotationClockwise) {
 		this.rotationClockwise = rotationClockwise;
-		queueCommandIfRendered(() -> new UiPieChart.SetRotationClockwiseCommand(getId(), rotationClockwise));
+		queueCommandIfRendered(() -> new UiPieChart.SetRotationClockwiseCommand(rotationClockwise));
 	}
 
 	public float getInnerRadiusProportion() {
@@ -143,7 +143,7 @@ public class PieChart extends AbstractComponent {
 
 	public void setInnerRadiusProportion(float innerRadiusProportion) {
 		this.innerRadiusProportion = innerRadiusProportion;
-		queueCommandIfRendered(() -> new UiPieChart.SetInnerRadiusProportionCommand(getId(), innerRadiusProportion));
+		queueCommandIfRendered(() -> new UiPieChart.SetInnerRadiusProportionCommand(innerRadiusProportion));
 	}
 
 	public List<ChartNamedDataPoint> getDataPoints() {
@@ -153,6 +153,6 @@ public class PieChart extends AbstractComponent {
 	public void setDataPoints(List<ChartNamedDataPoint> dataPoints) {
 		this.dataPoints.clear();
 		this.dataPoints.addAll(dataPoints);
-		queueCommandIfRendered(() -> new UiPieChart.SetDataPointsCommand(getId(), createUiDataPoints(), animationDuration));
+		queueCommandIfRendered(() -> new UiPieChart.SetDataPointsCommand(createUiDataPoints(), animationDuration));
 	}
 }

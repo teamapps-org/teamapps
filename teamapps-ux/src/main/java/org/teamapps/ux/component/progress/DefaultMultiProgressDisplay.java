@@ -139,7 +139,7 @@ public class DefaultMultiProgressDisplay extends AbstractComponent implements Mu
 	}
 
 	private void update() {
-		queueCommandIfRendered(() -> new UiDefaultMultiProgressDisplay.UpdateCommand(this.getId(), createUiComponent()));
+		queueCommandIfRendered(() -> new UiDefaultMultiProgressDisplay.UpdateCommand(createUiComponent()));
 	}
 
 	public boolean isShowNotificationOnProgressAdded() {

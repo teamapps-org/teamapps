@@ -58,7 +58,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 				if (uiDropDownButtonClickInfo != null && uiDropDownButtonClickInfo.getIsOpening() && !uiDropDownButtonClickInfo.getIsContentSet()) {
 					Component dropdownComponent = button.getDropDownComponent();
 					if (dropdownComponent != null) {
-						getSessionContext().queueCommand(new UiToolbar.SetDropDownComponentCommand(getId(), clickEvent.getGroupId(),
+						getSessionContext().sendCommand(getId(), new UiToolbar.SetDropDownComponentCommand(clickEvent.getGroupId(),
 								((AbstractUiToolContainer.ToolbarButtonClickEvent) event).getButtonId(), dropdownComponent.createUiReference()));
 					}
 				}
@@ -85,7 +85,7 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 	public ToolbarButtonGroup addButtonGroup(ToolbarButtonGroup buttonGroup) {
 		buttonGroups.add(buttonGroup);
 		buttonGroup.setToolContainer(this);
-		queueCommandIfRendered(() -> new UiToolbar.AddButtonGroupCommand(getId(), buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide()));
+		queueCommandIfRendered(() -> new UiToolbar.AddButtonGroupCommand(buttonGroup.createUiToolbarButtonGroup(), buttonGroup.isRightSide()));
 		return buttonGroup;
 	}
 
@@ -95,32 +95,32 @@ public abstract class AbstractToolContainer extends AbstractComponent {
 
 	public void removeToolbarButtonGroup(ToolbarButtonGroup group) {
 		buttonGroups.remove(group);
-		queueCommandIfRendered(() -> new UiToolbar.RemoveButtonGroupCommand(getId(), group.getClientId()));
+		queueCommandIfRendered(() -> new UiToolbar.RemoveButtonGroupCommand(group.getClientId()));
 	}
 
 	protected void handleGroupVisibilityChange(String groupId, boolean visible) {
-		queueCommandIfRendered(() -> new UiToolbar.SetButtonGroupVisibleCommand(this.getId(), groupId, visible));
+		queueCommandIfRendered(() -> new UiToolbar.SetButtonGroupVisibleCommand(groupId, visible));
 	}
 
 	protected void handleButtonVisibilityChange(String groupClientId, String buttonClientId, boolean visible) {
-		queueCommandIfRendered(() -> new UiToolbar.SetButtonVisibleCommand(this.getId(), groupClientId, buttonClientId, visible));
+		queueCommandIfRendered(() -> new UiToolbar.SetButtonVisibleCommand(groupClientId, buttonClientId, visible));
 	}
 
 	protected void handleButtonColorChange(String groupClientId, String buttonClientId, Color backgroundColor, Color hoverBackgroundColor) {
-		queueCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(this.getId(), groupClientId, buttonClientId, backgroundColor != null ? backgroundColor.toHtmlColorString() : null,
+		queueCommandIfRendered(() -> new UiToolbar.SetButtonColorsCommand(groupClientId, buttonClientId, backgroundColor != null ? backgroundColor.toHtmlColorString() : null,
 				hoverBackgroundColor != null ? hoverBackgroundColor.toHtmlColorString() : null));
 	}
 
 	protected void handleAddButton(ToolbarButtonGroup group, ToolbarButton button, String neighborButtonId, boolean beforeNeighbor) {
-		queueCommandIfRendered(() -> new UiToolbar.AddButtonCommand(getId(), group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor));
+		queueCommandIfRendered(() -> new UiToolbar.AddButtonCommand(group.getClientId(), button.createUiToolbarButton(), neighborButtonId, beforeNeighbor));
 	}
 
 	protected void handleButtonRemoved(ToolbarButtonGroup group, ToolbarButton button) {
-		queueCommandIfRendered(() -> new UiToolbar.RemoveButtonCommand(getId(), group.getClientId(), button.getClientId()));
+		queueCommandIfRendered(() -> new UiToolbar.RemoveButtonCommand(group.getClientId(), button.getClientId()));
 	}
 
 	protected void handleButtonSetDropDownComponent(ToolbarButtonGroup group, ToolbarButton button, Component component) {
-		queueCommandIfRendered(() -> new UiToolbar.SetDropDownComponentCommand(getId(), group.getClientId(), button.getClientId(), component.createUiReference()));
+		queueCommandIfRendered(() -> new UiToolbar.SetDropDownComponentCommand(group.getClientId(), button.getClientId(), component.createUiReference()));
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {

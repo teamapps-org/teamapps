@@ -41,7 +41,7 @@ public class SerializationTest {
 
 	@Test
 	public void serializeCommands() throws Exception {
-		UiWorkSpaceLayout.RefreshViewComponentCommand o = new UiWorkSpaceLayout.RefreshViewComponentCommand("componentId", "viewName", new UiClientObjectReference("asdf"));
+		UiWorkSpaceLayout.RefreshViewComponentCommand o = new UiWorkSpaceLayout.RefreshViewComponentCommand("viewName", new UiClientObjectReference("asdf"));
 		System.out.println(teamAppsObjectMapper.writeValueAsString(o));
 	}
 
@@ -59,7 +59,7 @@ public class SerializationTest {
 
 	@Test
 	public void blah() throws Exception {
-		UiMultiLineTextField.AppendCommand o = new UiMultiLineTextField.AppendCommand("id", "string", true);
+		UiMultiLineTextField.AppendCommand o = new UiMultiLineTextField.AppendCommand("string", true);
 		System.out.println(teamAppsObjectMapper.writeValueAsString(o));
 	}
 }
