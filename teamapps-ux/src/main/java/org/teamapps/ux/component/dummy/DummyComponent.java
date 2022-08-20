@@ -24,7 +24,10 @@ import org.teamapps.dto.UiDummyComponent;
 import org.teamapps.dto.UiEvent;
 import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
+import org.teamapps.ux.component.CoreComponentLibrary;
+import org.teamapps.ux.component.TeamAppsComponent;
 
+@TeamAppsComponent(library = CoreComponentLibrary.class)
 public class DummyComponent extends AbstractComponent {
 
 	public final Event<Void> onClick = new Event<>();
